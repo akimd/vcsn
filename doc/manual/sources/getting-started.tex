@@ -3,10 +3,13 @@ The Vaucanson system is free software, and as such comes with full source code.
 However, particularly as a convenience to prospective users who want to quickly
 start exploring the software, we also provide a virtual machine image.
 
+\index{virtual machine}
 The virtual machine image is particularly easy to use and requires no set up;
 we recommend it as a first choice to all beginners.
 
 \section{Using the Virtual Machine image}
+\index{Vagrant}
+\index{VirtualBox}
 The Virtual Machine image works on x86 and x86\_64 machines, using any
 operating system supported by VirtualBox.  It relies on VirtualBox and Vagrant,
 which can be found at \url{https://www.virtualbox.org/wiki/Downloads} and
@@ -33,27 +36,180 @@ file contained there:
 $ cd Vaucanson-\vcsnversion-VM
 $ vagrant up
 \end{alltt}
+\index{tunnel}
+\index{port}
+\index{URL}
+\index{port}%\index{port!TCP/IP}
+\index{share}
+\index{directory}
+\index{filesystem}
 The last command will boot the virtual machine, consisting of a full GNU/Linux
 system running a Vaucanson server on a port accessible as port 8888 on the host
-machine.  In order to connect with it the user should open a web browser and
-open the \url{http://localhost:8888} URL, connecting to the local machine on
-port 8888.  The directory \FILE{Vaucanson-\vcsnversion-VM} is \textit{shared}
-between the virtual machine and the host machine, which can be convenient to
-exchange files, such as notebooks.
+machine.  In order to connect with it the user should open the
+URL \url{http://localhost:8888} with a web browser, thus connecting to the
+local machine on port 8888, transparently \textit{tunneled} to the Vaucanson server on the
+virtual machine.  The directory \FILE{Vaucanson-\vcsnversion-VM}
+is \textit{shared} between the virtual machine and the host machine, which can be
+convenient to exchange files such as notebooks.
 
 To turn off the virtual machine the user should issue the command:
 \begin{alltt}
 $ vagrant halt
 \end{alltt}
-
 The file \FILE{Vaucanson-\vcsnversion-VM.tar} can be safely removed to save
 space.
+\\
+\\
+The rest of this chapter deals with the way to run the system starting from its
+source code.  A user who is only interested in running Vaucanson from the
+virtual machine may safely skip to §\ref{chapter-right-after-getting-started}.
 
-\TODO{the following contains some correct information but needs reorganization}
 
-\section{Startig up after compiling from sources}
+\section{Compiling and installing from a source tarball}
+\label{compiling-from-a-source-tarball}
+\index{build system}
+\index{make}
+\index{Autoconf}
+\index{Automake}
+\index{GNU!build system}
+\index{\FILE{configure}}
+\index{\FILE{local.mk}}
+\index{configure}
+The Vaucanson build system follows the standard GNU conventions described in the Autoconf
+and Automake documentation, and is comparatively simple.  The \FILE{configure}
+script generates a single \FILE{Makefile}, even if its Automake sources are
+divided, for conceptual clarity, into several \FILE{local.mk} files throughout
+several source subdirectories.
 
-\CODE{PYTHONPATH=/opt /usr/local/bin/vcsn notebook -m vcsn-site --no-browser --ip='*' \&}
+In the following we are going to show how a simple example of the configuration
+and build process.
+\label{assume-we-build-in-the-source-directory}
+We assume for simplicity that the software is built in its
+source directory, which is the convenient choice for end-users.  Building in a
+separate directory is however fully supported, and actually encouraged for
+developers who may wish to experiment with different configurations.
+
+\subsection{Requirements}
+\label{requirements-tarball}
+\index{requirements}
+Vaucanson is written in C++ and Python and developed on GNU/Linux and Mac
+OS X systems.  Support for additional platforms in the Unix family is 
+likely easy to add, as long as a suitable C++ compiler and a IPython
+implementation exist on the platform.
+
+\index{C++11}
+\index{GCC}
+\index{Clang}
+The implementation uses modern features of the C++ language only available in
+the comparatively recent C++11 language revision.  The authors routinely test
+the system with recent versions of GCC and Clang; both are supported.
+
+\index{requirements}
+\index{IPython notebook}
+\index{C++}
+\index{GMP}
+\index{Boost}
+The system depends on IPython notebook, the Boost general-purpose C++ library,
+and the GMP library.  In every case header files should be installed as well
+along with libraries.
+\index{runtime compilation}
+\index{compilation!runtime}
+\index{\FILE{ccache}}
+Since the software performs runtime compilation of complex C++ code, we strongly
+recommend the use of \FILE{ccache} to speed it up.
+
+The unusual nature of a system compiling code while running entails one
+restriction: compile-time dependencies are also run-time dependencies, and the
+user may not (in general) safely uninstall the compilers and library headers
+which were used to build Vaucanson.
+
+\subsection{Downloading}
+
+\index{tarball}
+\index{download}
+The user should download a tarball file from some URL such as
+\url{http://vaucanson-project.org/releases/Vaucanson-\vcsnversion.tar.gz}
+into some convenient directory she has write access to, and then
+\FILE{cd} to the directory.
+
+The next step is uncompressing the archive:
+\begin{alltt}
+$ tar -xfvz Vaucanson-\vcsnversion.tar.gz
+\end{alltt}
+The command above will uncompress the tarball and print each extracted file
+name to the terminal as long as it is written to the disk.
+
+As soon as the prompt reappears the user can enter the new \FILE{vaucanson}
+subdirectory:
+\begin{alltt}
+$ cd vaucanson
+\end{alltt}
+
+\subsection{Configuring}
+\label{compiling-from-a-source-tarball-configuring}
+\FILL
+\begin{alltt}
+$ cd vaucanson
+\end{alltt}
+
+?????
+\subsection{Compiling}
+\subsection{Installing}
+
+\subsection{GNU/Linux notes}
+\subsection{Mac OS X notes}
+\FIXME{The ``ports'' system is recommended.  If you don't use ports then pay attention to prerequisites.}
+
+
+\section{Compiling and installing from git}
+\index{\FILE{git}}
+Compiling from git amounts to downloading a source snapshot, generating the
+configuration script and then following the instructions for compiling
+from a tarball, as explained in
+§\ref{compiling-from-a-source-tarball}.
+
+\index{requirements}
+\index{\FILE{git}}
+\index{\FILE{Autoconf}}
+\index{\FILE{Automake}}
+\index{\FILE{Libtool}}
+\index{\TeX{}Live}
+There are a few more requirements in addition to the ones in
+§\ref{requirements-tarball}: of course \FILE{git}, then Autoconf, Automake,
+Libtool, and a recent \LaTeX{} system to compile the manual --- the entire
+\TeX{}Live distribution is a safe choice, if somewhat overkill.
+
+\index{git!public repository}
+\index{git!repository}
+\index{source repository}
+\index{public repository}
+The Vaucanson git repository can be accessed (read-only) by anybody at the address
+% Using \url here is probably a bad idea: there's nothing interesting for users
+% to see unless they have an account on the LRDE system.  Am I wrong?
+\texttt{https://gitlab.lrde.epita.fr/vcsn/vaucanson.git}
+with no need for authentication; the address
+\texttt{git@gitlab.lrde.epita.fr:vcsn/vaucanson.git} provides write access, but
+is only available to registered project members.
+
+In order to download a copy from the \CODE{master} branch the user should enter
+some appropriate directory she has write access to, and type:
+\begin{alltt}
+$ git clone https://gitlab.lrde.epita.fr/vcsn/vaucanson.git
+\end{alltt}
+The command above creates a \FILE{vaucanson} subdirectory containing the sources.  The user
+should enter it and generate configuration files by invoking the provided script:
+\begin{alltt}
+$ cd vaucanson
+$ ./bootstrap
+\end{alltt}
+At this point a \FILE{configure} script will be available.  The user may
+configure, compile and install exactly as shown above, following the
+instructions starting at §\ref{compiling-from-a-source-tarball-configuring}.
+
+\section{Starting up after compiling from sources}
+
+%\CODE{PYTHONPATH=/opt /usr/local/bin/vcsn notebook -m vcsn-site --no-browser --ip='*'\&}
+\CODE{PYTHONPATH=/opt /usr/local/bin/vcsn notebook -m vcsn-site \&}
 
 Sources:
 
@@ -81,17 +237,3 @@ in lieu of the more verbose
 We will omit explicit module names in the following, assuming the user to
 either use a site file or manually type the two \CODE{import} lines above at
 the beginning of every notebook.
-
-
-\section{Compiling and installing from sources}
-Since the software does dynamic compilation of complex C++ files, we strongly
-recommend ccache to speed it up.
-
-\subsection{Requirements}
-
-\subsection{GNU/Linux}
-\subsection{Mac OS X}
-\FIXME{The ``ports'' system is recommended.  If you don't use ports then pay attention to prerequisites.}
-
-\label{assume-we-build-in-the-source-directory}
-\FIXME{source and build directories: we assume they are the same in the following.}

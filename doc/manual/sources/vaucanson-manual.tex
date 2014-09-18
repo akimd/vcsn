@@ -12,7 +12,8 @@
 
 % FIXME: add abstract, acknowledgments and the like
 
-% Add Contents to PDF bookmarks:
+% Add Contents to the PDF bookmarks, but not as an entry within the table of
+% contents itself, which would look silly:
 \hypertarget{contents}{}
 \bookmark[level=chapter,dest=contents]{Contents}
 \tableofcontents
@@ -35,8 +36,10 @@
 
 \chapter{Getting started}
 \input{getting-started}
+% Please keep the label chapter-right-after-getting-started at the right place!
 
 \chapter{How to use notebooks}
+\label{chapter-right-after-getting-started}
 \input{How-to-use-notebooks}
 %% \index{notebook}
 %% \index{IPython notebook}
