@@ -60,22 +60,16 @@ namespace vcsn
         , input_(a)
         , finals_(state_size_)
       {
-        // Input final states.
-        for (auto t : input_->final_transitions())
-          finals_.set(input_->src_of(t));
-
-        // The input initial states.
-        //
-        // We could start with pre only, but then on an input
-        // automaton without initial state, we would produce an empty
-        // automaton (no states).  This would not conform to Jacques'
-        // definition of determinization.
+        // Pre.
         state_name_t n;
         n.resize(state_size_);
-        for (auto t : input_->initial_transitions())
-          n.set(input_->dst_of(t));
-        // Also pushes the initial state in the todo.
-        this->set_initial(state(n));
+        n.set(input_->pre());
+        map_[n] = super_t::pre();
+        todo_.push(n);
+
+        // Final states.
+        for (auto t : input_->final_transitions())
+          finals_.set(input_->src_of(t));
       }
 
       static std::string sname()
@@ -326,11 +320,11 @@ namespace vcsn
         : super_t(a->context())
         , input_(a)
       {
-        // The initial state.
+        // Pre.
         state_name_t n;
-        for (auto t : input_->initial_transitions())
-          n.emplace(input_->dst_of(t), input_->weight_of(t));
-        this->set_initial(state_(n));
+        n.emplace(input_->pre(), ws_.one());
+        map_[n] = super_t::pre();
+        todo_.push(n);
 
         // Post.
         n.clear();

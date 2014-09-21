@@ -53,6 +53,7 @@ namespace vcsn
         const auto transposed = transpose(aut);
         auto codet = determinize(transposed);
         map_t origin = codet->origins();
+        origin.erase(codet->pre());
 
         // the 'origin' is a map from co_det's state_t to
         // minimal's state_set_t.

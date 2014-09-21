@@ -26,7 +26,7 @@ def xfail(algo, aut):
 ## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
 ## as of revision a0761d6.
 a = aut("redundant.gv")
-exp = file_to_string("redundant.exp.gv")
+exp = file_to_string('redundant.exp.gv')
 check('brzozowski', a, vcsn.automaton(exp))
 check('moore',      a, exp)
 check('signature',  a, exp)
@@ -42,7 +42,7 @@ xfail('weighted',   a)
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
 a = aut('no-initial-states.gv')
-z = vcsn.context('lal_char(a-e)_b').ratexp('\z').standard().format('dot')
+z = file_to_string('no-initial-states.exp.gv')
 check('brzozowski', a, z)
 xfail('moore',      a)
 xfail('signature',  a)

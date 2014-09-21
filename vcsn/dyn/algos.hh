@@ -130,7 +130,7 @@ namespace vcsn
     ///     "weighted"    accept non Boolean automata (might not terminate)
     ///     "auto"        "boolean" if the automaton is Boolean,
     ///                   "weighted" otherwise.
-    /// \pre  \a aut must be LAL.
+    /// \pre  the labelset of \a aut must be free.
     automaton determinize(const automaton& aut,
                           const std::string& algo  = "weighted");
 

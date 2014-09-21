@@ -5,6 +5,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-21
+### determinize: Empty-In, Empty-Out
+Now when given an empty automaton (no states), determinize returns an
+empty automaton, whereas it used to return an automaton with one
+state, initial.  This is more consistent (e.g., when given a
+deterministic automaton, determinize now consistently returns the
+accessible part of its input).
+
 ## 2014-09-17
 ### is_cycle_ambiguous: new algorithm
 Whether an automaton is cycle-ambiguous (or "exponentially ambiguous").
