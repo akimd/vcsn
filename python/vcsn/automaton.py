@@ -7,12 +7,13 @@ import os
 import re
 import subprocess
 
+from vcsn.conjunction import Conjunction
 from vcsn_cxx import automaton, label, weight
 from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file
 from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex, from_dot, to_dot
 
 automaton.__add__ = automaton.sum
-automaton.__and__ = lambda l, r: _conjunction(l, r)
+automaton.__and__ = lambda l, r: Conjunction(l, r)
 automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__invert__ = automaton.complement
 automaton.__mod__ = automaton.difference
@@ -24,38 +25,6 @@ automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
 automaton._repr_svg_ = lambda self: self.as_svg()
-
-class _conjunction(object):
-    """A proxy class that delays calls to the & operator in order
-    to turn a & b & c into a variadic evaluation of
-    automaton._product(a, b, c)."""
-    def __init__(self, *args):
-        self.auts = [args[0]]
-        for arg in args[1:]:
-            self.__and__(arg)
-    def __and__(self, arg):
-        if isinstance(arg, int):
-            self.auts[-1] = self.auts[-1].power(arg)
-        else:
-            self.auts += (arg,)
-        return self
-    def value(self):
-        if isinstance(self.auts, list):
-            if len(self.auts) == 1:
-                self.auts = self.auts[0]
-            else:
-                self.auts = automaton._product(self.auts)
-        return self.auts
-    def __nonzero__(self):
-        return bool(self.value())
-    def __str__(self):
-        return str(self.value())
-    def __repr__(self):
-        return repr(self.value())
-    def __getattr__(self, name):
-        return getattr(self.value(), name)
-    def __hasattr__(self, name):
-        return hasattr(self.value(), name)
 
 def _automaton_as_svg(self, format = "dot", engine = "dot"):
     if format == "dot":

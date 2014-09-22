@@ -683,3 +683,15 @@ res = r'''digraph
 }'''
 
 CHECK_EQ(res, str(vcsn.automaton._product([a1, a2])))
+
+## ---------------------- ##
+## Conjunction            ##
+## ---------------------- ##
+
+#Show that Conjunction is callable trough wrapper
+#The call is perfectly transparent
+
+b = vcsn.context('lal_char(a)_b')
+a = b.ratexp('a').standard()
+a = a & a & a
+CHECK_EQ(str(a('a')), '1')

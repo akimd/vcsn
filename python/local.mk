@@ -17,6 +17,7 @@ vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \
   %D%/vcsn/__init__.py                          \
   %D%/vcsn/automaton.py                         \
+  %D%/vcsn/conjunction.py                       \
   %D%/vcsn/context.py                           \
   %D%/vcsn/dot.py                               \
   %D%/vcsn/expansion.py                         \
