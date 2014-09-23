@@ -233,6 +233,7 @@ AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
 AC_ARG_VAR([BISON], [Bison parser generator])
 AC_CHECK_PROGS([BISON], [bison])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
+AC_CHECK_PROGS([PERL], [perl])
 
 
 ## ----------- ##

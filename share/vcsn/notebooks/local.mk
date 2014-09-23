@@ -90,6 +90,8 @@ uninstall-hook-%C%:
 # nbviewer, but not for us.  So s/ipynb/html/.
 IPYTHON = ipython
 NBCONVERT = $(IPYTHON) nbconvert
+MATHJAX_BAD = <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'></script>
 html:
 	rm -rf notebooks
 	for f in $(dist_notebooks_data);				 \
@@ -100,6 +102,9 @@ html:
 	  $(MKDIR_P) "$$dest" || exit 1;				 \
 	  $(NBCONVERT) --output="$$out" $(abs_top_srcdir)/"$$f"		 \
 	    || exit 1;							 \
-	  perl -pi -e 's{(<a href=".*?\.)ipynb(">)}{$$1html$$2}' "$$out.html" \
+	  $(PERL) -pi                                                    \
+	     -e 's{(<a href=".*?\.)ipynb(">)}{$$1html$$2};'              \
+	     -e 's{\Q$(MATHJAX_BAD)\E}'"{$(MATHJAX_OK)};"                \
+	     "$$out.html"                                                \
 	    || exit 1;							 \
 	done

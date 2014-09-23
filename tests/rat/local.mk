@@ -13,9 +13,9 @@
 
 TEST_EXTENSIONS += .rat
 RAT_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/tests/bin/rat.py
-AM_RAT_LOG_DEPS =				\
-  $(RAT_LOG_DRIVER)				\
-  $(VCSN_PYTHON_DEPS)				\
+AM_RAT_LOG_DEPS =                               \
+  $(srcdir)/tests/bin/rat.py                    \
+  $(VCSN_PYTHON_DEPS)                           \
   $(srcdir)/tests/bin/test.py                   \
   %D%/common.rat %D%/common-weights.rat
 $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
@@ -28,8 +28,8 @@ $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
   %D%/zrr.rat
 
 dist_TESTS += $(%C%_TESTS)
-EXTRA_DIST +=					\
-  $(RAT_LOG_DRIVER)				\
+EXTRA_DIST +=                                   \
+  $(srcdir)/tests/bin/rat.py                    \
   %D%/common.rat %D%/common-weights.rat
 
 # These tests check that the test suite does catch errors.
