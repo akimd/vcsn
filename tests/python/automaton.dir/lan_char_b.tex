@@ -1,14 +1,13 @@
 \documentclass{standalone}
   \usepackage{tikz}
-  \usetikzlibrary{arrows, automata, positioning}
-  \tikzstyle{automaton}=[shorten >=1pt, pos=.4,
-                         >=stealth', initial text=]
+  \usetikzlibrary{arrows, automata, positioning, shapes.misc}
+  \tikzstyle{automaton}=[shorten >=1pt, >=stealth', initial text=]
   \tikzstyle{accepting}=[accepting by arrow]
 
 \begin{document}
-\begin{tikzpicture}[automaton]
+\begin{tikzpicture}[automaton, auto]
   \node[state,initial] (0) {$0$};
   \node[state,accepting] (1) [right=of 0] {$1$};
-  \path[->] (0) edge node[above] {$\varepsilon, a$} (1);
+  \path[->] (0) edge node {$\varepsilon, a$} (1);
 \end{tikzpicture}
 \end{document}

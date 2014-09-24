@@ -42,9 +42,9 @@ namespace vcsn
 
       using super_type::super_type;
 
-      /// Format a TikZ attribute.
-      /// \param kind  the attribute name (e.g., "initial").
-      /// \param w     the associated weight (e.g., initial weight).
+      /// Format an initial/final weight.
+      /// \param kind  the weight name (e.g., "initial").
+      /// \param w     the weight
       void format(const std::string& kind, const weight_t& w)
       {
         if (!ws_.is_zero(w))
@@ -63,13 +63,12 @@ namespace vcsn
         os_ <<
           "\\documentclass{standalone}\n"
           "  \\usepackage{tikz}\n"
-          "  \\usetikzlibrary{arrows, automata, positioning}\n"
-          "  \\tikzstyle{automaton}=[shorten >=1pt, pos=.4,\n"
-          "                         >=stealth', initial text=]\n"
+          "  \\usetikzlibrary{arrows, automata, positioning, shapes.misc}\n"
+          "  \\tikzstyle{automaton}=[shorten >=1pt, >=stealth', initial text=]\n"
           "  \\tikzstyle{accepting}=[accepting by arrow]\n"
           "\n"
           "\\begin{document}\n"
-          "\\begin{tikzpicture}[automaton]\n"
+          "\\begin{tikzpicture}[automaton, auto]\n"
           ;
 
         state_t prev = aut_->null_state();
@@ -105,7 +104,7 @@ namespace vcsn
                 os_ << ')'
                     << " edge"
                     << (src == dst ? "[loop above]" : "")
-                    << " node[above]"
+                    << " node"
                     << " {$" << format_entry_(src, dst, "latex") << "$}"
                     << " (";
                 aut_->print_state(dst, os_);

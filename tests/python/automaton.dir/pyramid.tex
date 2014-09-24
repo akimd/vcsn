@@ -1,12 +1,11 @@
 \documentclass{standalone}
   \usepackage{tikz}
-  \usetikzlibrary{arrows, automata, positioning}
-  \tikzstyle{automaton}=[shorten >=1pt, pos=.4,
-                         >=stealth', initial text=]
+  \usetikzlibrary{arrows, automata, positioning, shapes.misc}
+  \tikzstyle{automaton}=[shorten >=1pt, >=stealth', initial text=]
   \tikzstyle{accepting}=[accepting by arrow]
 
 \begin{document}
-\begin{tikzpicture}[automaton]
+\begin{tikzpicture}[automaton, auto]
   \node[state,initial] (0) {$0$};
   \node[state] (1) [right=of 0] {$1$};
   \node[state] (2) [right=of 1] {$2$};
@@ -22,45 +21,45 @@
   \node[state,accepting] (12) [right=of 11] {$12$};
   \node[state,accepting] (13) [right=of 12] {$13$};
   \node[state,accepting] (14) [right=of 13] {$14$};
-  \path[->] (0) edge node[above] {$a$} (1);
-  \path[->] (0) edge node[above] {$a$} (2);
-  \path[->] (1) edge node[above] {$a$} (3);
-  \path[->] (1) edge node[above] {$a$} (4);
-  \path[->] (1) edge node[above] {$a$} (5);
-  \path[->] (2) edge node[above] {$a$} (3);
-  \path[->] (2) edge node[above] {$a$} (4);
-  \path[->] (2) edge node[above] {$a$} (5);
-  \path[->] (3) edge node[above] {$a$} (6);
-  \path[->] (3) edge node[above] {$a$} (7);
-  \path[->] (3) edge node[above] {$a$} (8);
-  \path[->] (3) edge node[above] {$a$} (9);
-  \path[->] (4) edge node[above] {$a$} (6);
-  \path[->] (4) edge node[above] {$a$} (7);
-  \path[->] (4) edge node[above] {$a$} (8);
-  \path[->] (4) edge node[above] {$a$} (9);
-  \path[->] (5) edge node[above] {$a$} (6);
-  \path[->] (5) edge node[above] {$a$} (7);
-  \path[->] (5) edge node[above] {$a$} (8);
-  \path[->] (5) edge node[above] {$a$} (9);
-  \path[->] (6) edge node[above] {$a$} (10);
-  \path[->] (6) edge node[above] {$a$} (11);
-  \path[->] (6) edge node[above] {$a$} (12);
-  \path[->] (6) edge node[above] {$a$} (13);
-  \path[->] (6) edge node[above] {$a$} (14);
-  \path[->] (7) edge node[above] {$a$} (10);
-  \path[->] (7) edge node[above] {$a$} (11);
-  \path[->] (7) edge node[above] {$a$} (12);
-  \path[->] (7) edge node[above] {$a$} (13);
-  \path[->] (7) edge node[above] {$a$} (14);
-  \path[->] (8) edge node[above] {$a$} (10);
-  \path[->] (8) edge node[above] {$a$} (11);
-  \path[->] (8) edge node[above] {$a$} (12);
-  \path[->] (8) edge node[above] {$a$} (13);
-  \path[->] (8) edge node[above] {$a$} (14);
-  \path[->] (9) edge node[above] {$a$} (10);
-  \path[->] (9) edge node[above] {$a$} (11);
-  \path[->] (9) edge node[above] {$a$} (12);
-  \path[->] (9) edge node[above] {$a$} (13);
-  \path[->] (9) edge node[above] {$a$} (14);
+  \path[->] (0) edge node {$a$} (1);
+  \path[->] (0) edge node {$a$} (2);
+  \path[->] (1) edge node {$a$} (3);
+  \path[->] (1) edge node {$a$} (4);
+  \path[->] (1) edge node {$a$} (5);
+  \path[->] (2) edge node {$a$} (3);
+  \path[->] (2) edge node {$a$} (4);
+  \path[->] (2) edge node {$a$} (5);
+  \path[->] (3) edge node {$a$} (6);
+  \path[->] (3) edge node {$a$} (7);
+  \path[->] (3) edge node {$a$} (8);
+  \path[->] (3) edge node {$a$} (9);
+  \path[->] (4) edge node {$a$} (6);
+  \path[->] (4) edge node {$a$} (7);
+  \path[->] (4) edge node {$a$} (8);
+  \path[->] (4) edge node {$a$} (9);
+  \path[->] (5) edge node {$a$} (6);
+  \path[->] (5) edge node {$a$} (7);
+  \path[->] (5) edge node {$a$} (8);
+  \path[->] (5) edge node {$a$} (9);
+  \path[->] (6) edge node {$a$} (10);
+  \path[->] (6) edge node {$a$} (11);
+  \path[->] (6) edge node {$a$} (12);
+  \path[->] (6) edge node {$a$} (13);
+  \path[->] (6) edge node {$a$} (14);
+  \path[->] (7) edge node {$a$} (10);
+  \path[->] (7) edge node {$a$} (11);
+  \path[->] (7) edge node {$a$} (12);
+  \path[->] (7) edge node {$a$} (13);
+  \path[->] (7) edge node {$a$} (14);
+  \path[->] (8) edge node {$a$} (10);
+  \path[->] (8) edge node {$a$} (11);
+  \path[->] (8) edge node {$a$} (12);
+  \path[->] (8) edge node {$a$} (13);
+  \path[->] (8) edge node {$a$} (14);
+  \path[->] (9) edge node {$a$} (10);
+  \path[->] (9) edge node {$a$} (11);
+  \path[->] (9) edge node {$a$} (12);
+  \path[->] (9) edge node {$a$} (13);
+  \path[->] (9) edge node {$a$} (14);
 \end{tikzpicture}
 \end{document}
