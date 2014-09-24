@@ -5,6 +5,18 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-25
+### Automaton conjunction
+On occasions, in Python, expressions such as `(a & b)('a')` failed to
+behave properly.  It does now, and does correspond to the evaluation
+of the word "a" on the conjunction (synchronized product) of automata
+a and b.
+
+### TikZ: state names
+Conversion of automata into the TikZ format now includes the state
+"names" (e.g., derived-term automata now show the states' rational
+expressions).
+
 ## 2014-09-21
 ### determinize: Empty-In, Empty-Out
 Now when given an empty automaton (no states), determinize returns an

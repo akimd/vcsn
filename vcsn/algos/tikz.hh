@@ -77,6 +77,8 @@ namespace vcsn
             os_ << "  \\node[state";
             format("initial", aut_->get_initial_weight(s));
             format("accepting", aut_->get_final_weight(s));
+            if (aut_->state_has_name(s))
+              os_ << ",rounded rectangle";
             os_ << "] (";
             aut_->print_state(s, os_);
             os_ << ')';
@@ -87,7 +89,7 @@ namespace vcsn
                 os_ << ']';
               }
             os_ << " {$";
-            aut_->print_state(s, os_);
+            aut_->print_state_name(s, os_, "latex");
             os_ << "$};\n";
             prev = s;
         }

@@ -126,7 +126,7 @@ namespace vcsn
         if (i == std::end(origins()))
           this->print_state(s, o);
         else
-          o << str_escape(format(rs_, i->second, fmt));
+          o << format(rs_, i->second, fmt);
         return o;
       }
 

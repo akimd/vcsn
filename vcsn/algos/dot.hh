@@ -3,6 +3,7 @@
 
 # include <algorithm>
 # include <iostream>
+# include <sstream>
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -93,7 +94,9 @@ namespace vcsn
             if (aut_->state_has_name(s))
               {
                 os_ << "label = \"";
-                aut_->print_state_name(s, os_, "latex");
+                std::ostringstream o;
+                aut_->print_state_name(s, o, "latex");
+                os_ << str_escape(o.str());
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   os_ << " (" << s << ')';
@@ -119,7 +122,9 @@ namespace vcsn
               {
                 has_attributes = true;
                 os_ << " [label = \"";
-                aut_->print_state_name(s, os_, "text");
+                std::ostringstream o;
+                aut_->print_state_name(s, o, "text");
+                os_ << str_escape(o.str());
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   os_ << " (" << s << ')';

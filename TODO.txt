@@ -136,6 +136,17 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** Printers and escapes
+We have some ugly bits for the output, e.g., in dot.hh:
+
+  std::ostringstream o;
+  aut_->print_state_name(s, os_, "text");
+  os_ << str_escape(o.str());
+
+because sometimes we need to escape the output (e.g., label = "\\langle 1
+\\rangle" in dot), and sometimes not (e.g., "\langle 1 \rangle" in TikZ).
+Find something more elegant to address this issue.  See what was done in tc?
+
 ** Beware of our use of subprocess
 I think my code is really wrong.
 http://stackoverflow.com/questions/6341451/piping-together-several-subprocesses

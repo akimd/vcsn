@@ -294,6 +294,12 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(exp, a.format('tikz'))
 
 
+# Check state names in TikZ.
+a = vcsn.context('lal_char_b').ratexp('\e+a').derived_term()
+exp = open(os.path.join(medir, 'derived-term.tex')).read().strip()
+CHECK_EQ(exp, a.format('tikz'))
+
+
 ## ----------- ##
 ## I/O: Daut.  ##
 ## ----------- ##
