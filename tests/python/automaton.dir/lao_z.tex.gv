@@ -10,5 +10,5 @@ digraph
     0 [style = "state, initial, initial text={666}"]
     1 [style = "state, accepting, accepting text={999}"]
   }
-  0 -> 1 [label = "\\langle 93\\rangle "]
+  0 -> 1 [label = "\\left\\langle 93\\right\\rangle "]
 }

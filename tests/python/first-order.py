@@ -203,7 +203,7 @@ check_conjunction(r'<1/10>(ab{\}<1/2>ab+c)<2>', '<1/20>(ab{\}<1/3>ab+c)<3>',
 ## LaTeX rendering.  ##
 ## ----------------- ##
 
-CHECK_EQ(r'a \odot \left[a \oplus \langle x\rangle b \, c\right] \oplus b \odot \left[\langle y\rangle c\right]',
+CHECK_EQ(r'a \odot \left[a \oplus \left\langle x\right\rangle b \, c\right] \oplus b \odot \left[\left\langle y\right\rangle c\right]',
          c.ratexp(r'aa+<x>abc+<y>bc').first_order().format("latex"))
 
 

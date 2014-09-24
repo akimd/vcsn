@@ -82,8 +82,8 @@ namespace vcsn
         {
           lgroup_       = "{";
           rgroup_       = "}";
-          langle_       = " \\langle ";
-          rangle_       = " \\rangle ";
+          langle_       = " \\left\\langle ";
+          rangle_       = " \\right\\rangle ";
           lparen_       = "\\left(";
           rparen_       = "\\right)";
           star_         = "^{*}";

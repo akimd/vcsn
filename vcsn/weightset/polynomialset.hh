@@ -660,9 +660,9 @@ namespace vcsn
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(w))
         {
-          out << (format == "latex" ? "\\langle " : std::string{langle});
+          out << (format == "latex" ? "\\left\\langle " : std::string{langle});
           weightset()->print(w, out, format);
-          out << (format == "latex" ? "\\rangle " : std::string{rangle});
+          out << (format == "latex" ? "\\right\\rangle " : std::string{rangle});
         }
       return out;
     }

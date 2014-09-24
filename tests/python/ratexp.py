@@ -154,7 +154,7 @@ check_format('lal_char(abcd)_b',
 check_format('lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>',
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
-             r' \langle  \langle  \langle 42 \rangle \,x \rangle \,d \rangle \,a +  \langle  \langle  \langle 51 \rangle \,x \rangle \,d \rangle \,a + \left( \langle  \langle  \langle 42 \rangle \,y \rangle \,e \rangle \,b\right)^{*}')
+             r' \left\langle  \left\langle  \left\langle 42 \right\rangle \,x \right\rangle \,d \right\rangle \,a +  \left\langle  \left\langle  \left\langle 51 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Check that we do support digits as letters.
 check_format('lal_char(0123)_b',
@@ -164,7 +164,7 @@ check_format('lal_char(0123)_b',
 check_format('lal_char(0123)_z',
              "<0123>0123",
              "<123>0123",
-             r' \langle 123 \rangle \,0 \, 1 \, 2 \, 3')
+             r' \left\langle 123 \right\rangle \,0 \, 1 \, 2 \, 3')
 
 ## -------- ##
 ## Series.  ##

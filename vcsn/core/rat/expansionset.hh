@@ -67,9 +67,9 @@ namespace vcsn
         bool first = true;
         if (!ws_.is_zero(v.constant) || v.polynomials.empty())
           {
-            o << (format == "latex" ? "\\langle " : "<");
+            o << (format == "latex" ? "\\left\\langle " : "<");
             ws_.print(v.constant, o, format);
-            o << (format == "latex" ? "\\rangle " : ">");
+            o << (format == "latex" ? "\\right\\rangle " : ">");
             first = false;
           }
         for (const auto& p: v.polynomials)

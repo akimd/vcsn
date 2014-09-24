@@ -44,5 +44,5 @@ XFAIL(lambda: vcsn.context('lal_char(ab)_z').polynomial('<123>a*'))
 ## ----------------- ##
 
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
-CHECK_EQ(r'\langle \varepsilon + \varepsilon\rangle a \oplus \langle x + y\rangle b',
+CHECK_EQ(r'\left\langle \varepsilon + \varepsilon\right\rangle a \oplus \left\langle x + y\right\rangle b',
          c.polynomial(r'a + a + <x>b + <y>b').format("latex"))
