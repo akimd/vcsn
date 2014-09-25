@@ -34,7 +34,7 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
     else:
         raise(ValueError("invalid format: ", format))
 
-automaton.as_svg = lambda self, fmt = "dot", engine = "dot": _automaton_as_svg(self, fmt, engine)
+automaton.as_svg = _automaton_as_svg
 
 def _automaton_convert(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
@@ -183,7 +183,7 @@ def _lan_to_lal(a):
     dot = re.sub(r'"lan<(lat<lal_char\(.*?\)(?:, *lal_char\(.*?\))*>)>',
                  r'"\1', dot)
     return automaton(dot, 'dot')
-automaton.lan_to_lal = lambda self: _lan_to_lal(self)
+automaton.lan_to_lal = _lan_to_lal
 
 def _automaton_load(file, format = "dot"):
     return automaton(open(file, "r").read(), format)

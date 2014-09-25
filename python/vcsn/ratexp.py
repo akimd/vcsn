@@ -22,13 +22,13 @@ ratexp.__rmul__ = _left_mult
 ratexp.__str__ = lambda self: self.format('text')
 ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
-def _ratexp_derivation(self, w, *args):
+def derivation(self, w, *args):
     "Derive wrt. w, but convert it into a label if needed."
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
     return self._derivation(w, *args)
-ratexp.derivation = _ratexp_derivation
+ratexp.derivation = derivation
 
 ratexp.enumerate = lambda self, num = 1: self.standard().enumerate(num)
 
@@ -37,18 +37,18 @@ ratexp.info = lambda self, detailed = False: _info_to_dict(self.format('info'))
 ratexp.shortest = lambda self, num = 1: self.standard().shortest(num)
 ratexp.star = lambda self: self.chain(-1)
 
-def _copy_ratexp(self, context = None):
+def _as_ratexp(self, context = None):
     "Convert to ratexp, possibly in a different context"
     if context is None:
-        return self._copy_ratexp()
+        return self._as_ratexp()
     else:
-        return self._copy_ratexp_in(context)
-ratexp.copy_ratexp = _copy_ratexp
+        return self._as_ratexp_in(context)
+ratexp.as_ratexp = _as_ratexp
 
-def _copy_series(self, context = None):
+def _as_series(self, context = None):
     "Convert to series, possibly in a different context"
     if context is None:
-        return self._copy_series()
+        return self._as_series()
     else:
-        return self._copy_series_in(context)
-ratexp.copy_series = _copy_series
+        return self._as_series_in(context)
+ratexp.as_series = _as_series
