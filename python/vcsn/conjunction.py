@@ -1,4 +1,4 @@
-from vcsn_cxx import automaton, label, weight
+from vcsn_cxx import automaton
 
 class Conjunction(object):
     """A proxy class that delays calls to the & operator in order
@@ -79,7 +79,6 @@ class Conjunction(object):
         return type("%s(%s)" % (cls.__name__, theclass.__name__), (cls,), namespace)
 
     def __new__(cls, obj, *args, **kwargs):
-        print("New", cls, obj)
         try:
             cache = cls.__dict__["_class_proxy_cache"]
         except KeyError:
