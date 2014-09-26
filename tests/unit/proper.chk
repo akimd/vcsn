@@ -24,7 +24,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<lal_char(ab)_b>
+type: sub_automaton<mutable_automaton<lal_char(ab)_b>>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -46,7 +46,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<lal_char(ab)_b>
+type: sub_automaton<mutable_automaton<lal_char(ab)_b>>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -112,7 +112,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<law_char(ab)_b>
+type: sub_automaton<mutable_automaton<law_char(ab)_b>>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -134,7 +134,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<law_char(ab)_b>
+type: sub_automaton<mutable_automaton<law_char(ab)_b>>
 number of states: 3
 number of initial states: 3
 number of final states: 1
@@ -200,7 +200,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<lal_char(ab)_z>
+type: sub_automaton<mutable_automaton<lal_char(ab)_z>>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -290,7 +290,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<law_char(ab)_z>
+type: sub_automaton<mutable_automaton<law_char(ab)_z>>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -312,7 +312,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<law_char(ab)_z>
+type: sub_automaton<mutable_automaton<law_char(ab)_z>>
 number of states: 3
 number of initial states: 3
 number of final states: 1
@@ -402,7 +402,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<law_char(ab)_zmin>
+type: sub_automaton<mutable_automaton<law_char(ab)_zmin>>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -424,7 +424,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<law_char(ab)_zmin>
+type: sub_automaton<mutable_automaton<law_char(ab)_zmin>>
 number of states: 3
 number of initial states: 3
 number of final states: 1
@@ -459,9 +459,9 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0 [label = "<0>"]
   I1 -> 1 [label = "<-2>"]

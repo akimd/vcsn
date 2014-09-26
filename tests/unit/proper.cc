@@ -39,10 +39,10 @@ static void check_lal_b()
   std::cout << "***LAL***" << std::endl;
   print(res);
   std::cout << "proper:" << std::endl;
-  automaton_t pro = proper(res);
+  auto pro = proper(res);
   print(pro);
   std::cout << "forward_proper:" << std::endl;
-  automaton_t pro2 = proper(res, direction_t::FORWARD);
+  auto pro2 = proper(res, direction_t::FORWARD);
   print(pro2);
   std::cout << "proper_here:"<< std::endl;
   proper_here(res);
@@ -71,10 +71,10 @@ static void check_law_char_b()
   std::cout << "***LAW***" << std::endl;
   print(res);
   std::cout << "proper:" << std::endl;
-  automaton_t pro = proper(res);
+  auto pro = proper(res);
   print(pro);
   std::cout << "forward_proper:" << std::endl;
-  automaton_t pro2 = proper(res, direction_t::FORWARD);
+  auto pro2 = proper(res, direction_t::FORWARD);
   print(pro2);
   std::cout << "proper_here:"<< std::endl;
   proper_here(res);
@@ -100,7 +100,7 @@ static void check_lal_char_z()
   std::cout << "***LAL Z***" << std::endl;
   print(res);
   std::cout << "proper:" << std::endl;
-  automaton_t pro = proper(res);
+  auto pro = proper(res);
   print(pro);
   std::cout << "proper_here:"<< std::endl;
   proper_here(res);
@@ -130,7 +130,7 @@ static void check_law_char_z()
   std::cout << "* Circuit of eps-transition" << std::endl;
   print(res);
   try {
-    automaton_t pro = proper(res);
+    auto pro = proper(res);
     print(pro);
   }
   catch(std::runtime_error& e) {
@@ -141,10 +141,10 @@ static void check_law_char_z()
   print(res);
   //dot(res,std::cerr);
   std::cout << "proper:" << std::endl;
-  automaton_t pro = proper(res);
+  auto pro = proper(res);
   print(pro);
   std::cout << "forward_proper:" << std::endl;
-  automaton_t pro2 = proper(res, direction_t::FORWARD);
+  auto pro2 = proper(res, direction_t::FORWARD);
   print(pro2);
   //dot(pro2,std::cerr);
   std::cout << "proper_here:"<< std::endl;
@@ -175,7 +175,7 @@ static void check_law_char_zmin()
   std::cout << "* Circuit of eps-transition" << std::endl;
   print(res);
   try {
-    automaton_t pro = proper(res);
+    auto pro = proper(res);
     print(pro);
   }
   catch(std::runtime_error& e) {
@@ -186,10 +186,10 @@ static void check_law_char_zmin()
   print(res);
   //dot(res,std::cerr);
   std::cout << "proper:" << std::endl;
-  automaton_t pro = proper(res);
+  auto pro = proper(res);
   print(pro);
   std::cout << "forward_proper:" << std::endl;
-  automaton_t pro2 = proper(res, direction_t::FORWARD);
+  auto pro2 = proper(res, direction_t::FORWARD);
   print(pro2);
   dot(pro2, std::cout) << std::endl;
   std::cout << "proper_here:" << std::endl;

@@ -221,19 +221,23 @@ namespace vcsn
   const std::vector<std::unordered_set<state_t_of<Aut>>>
   scc(const Aut& aut, SCC_ALGO algo = SCC_ALGO::TARJAN)
   {
+    std::vector<std::unordered_set<state_t_of<Aut>>> res;
     switch (algo)
       {
       case SCC_ALGO::TARJAN:
         {
           detail::scc_tarjan_impl<Aut> scc(aut);
-          return scc.components();
+          res = scc.components();
+          break;
         }
       case SCC_ALGO::KOSARAJU:
         {
           detail::scc_kosaraju_impl<Aut> scc(aut);
-          return scc.components();
+          res = scc.components();
+          break;
         }
       }
+    return res;
   }
 
   /// Generate a subautomaton corresponding to an SCC.

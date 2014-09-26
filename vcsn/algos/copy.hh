@@ -4,6 +4,7 @@
 # include <unordered_map>
 
 # include <vcsn/algos/fwd.hh> // blind_automaton.
+# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/copy.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -15,23 +16,33 @@
 namespace vcsn
 {
 
-  /*------------------.
-  | copy(automaton).  |
-  `------------------*/
-
+  /*--------------------------.
+  | sub automaton decorator.  |
+  `--------------------------*/
   namespace detail
   {
-    /// Copy an automaton.
-    /// \pre AutIn <: AutOut.
-    template <typename AutIn, typename AutOut>
-    struct copier
+    /// \brief The sub automaton.
+    /// Copy \a automaton type Aut1 to sub_automaton
+    /// Or copy \a automaton type Aut1 to other automaton type Aut2
+    template <typename Aut1,
+              typename Aut2 = mutable_automaton<context_t_of<Aut1>>>
+    class sub_automaton_impl
+      : public automaton_decorator<Aut2>
     {
-      using in_state_t = state_t_of<AutIn>;
-      using out_state_t = state_t_of<AutOut>;
+    public:
+      using automaton_t = Aut1;
+      using automaton_nocv_t = Aut2;
+      using super_t = automaton_decorator<automaton_nocv_t>;
+      using state_t = state_t_of<automaton_t>;
 
-      copier(const AutIn& in, AutOut& out)
-        : in_(in)
-        , out_(out)
+      sub_automaton_impl(const automaton_t& input, automaton_nocv_t res)
+        : super_t(res)
+        , input_(input)
+      {}
+
+      sub_automaton_impl(const automaton_t& input)
+        : super_t(input->context())
+        , input_(input)
       {}
 
       template <typename Pred>
@@ -39,75 +50,146 @@ namespace vcsn
       {
         // Copy the states.  We cannot iterate on the transitions
         // only, as we would lose the states without transitions.
-        out_state[in_->pre()] = out_->pre();
-        out_state[in_->post()] = out_->post();
-        for (auto s: in_->states())
+        map_[input_->pre()] = this->pre();
+        map_[input_->post()] = this->post();
+        for (auto s: input_->states())
           if (keep_state(s))
-            out_state[s] = out_->new_state();
+            map_[s] = this->new_state();
 
-        for (auto t : in_->all_transitions())
+        for (auto t : input_->all_transitions())
           {
-            auto src = out_state.find(in_->src_of(t));
-            auto dst = out_state.find(in_->dst_of(t));
-            if (src != out_state.end() && dst != out_state.end())
-              out_->new_transition_copy(src->second, dst->second,
-                                        in_, t);
+            auto src = map_.find(input_->src_of(t));
+            auto dst = map_.find(input_->dst_of(t));
+            if (src != map_.end() && dst != map_.end())
+              this->new_transition_copy(src->second, dst->second,
+                                        input_, t);
           }
       }
 
-      /// A map from result state to original state.
-      using origins_t = std::map<out_state_t, in_state_t>;
-      origins_t
-      origins() const
+      static std::string sname()
       {
-        origins_t res;
-        for (const auto& p: out_state)
-          res[p.second] = p.first;
-        return res;
+        return "sub_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      /// Print the origins.
-      static
-      std::ostream&
-      print(const origins_t& orig, std::ostream& o)
+      std::string vname(bool full = true) const
       {
-        o << "/* Origins.\n"
-          << "    node [shape = box, style = rounded]\n";
-        for (auto p : orig)
-          if (2 <= p.first)
-            o << "    " << p.first - 2
-              << " [label = \"" << p.second - 2 << "\"]\n";
-        o << "*/\n";
+        return "sub_automaton<" + input_->vname(full) + ">";
+      }
+
+      bool state_has_name(state_t s) const
+      {
+        return (s != super_t::pre()
+                && s != super_t::post()
+                && has(origins(), s));
+      }
+
+      std::ostream&
+      print_state_name(state_t s, std::ostream& o,
+                       const std::string& fmt = "text") const
+      {
+        auto i = origins().find(s);
+        if (i == origins().end())
+            this->print_state(s, o);
+        else
+          input_->print_state_name(i->second, o, fmt);
         return o;
       }
 
+      /// A map from result state to original state.
+      using origins_t = std::map<state_t, state_t>;
+      mutable origins_t origins_;
+      const origins_t& origins() const
+      {
+        if (origins_.empty())
+          for (const auto& p : map_)
+            origins_.emplace(p.second, p.first);
+        return origins_;
+      }
+
+    private:
+      std::map<state_t, state_t> map_;
+
       /// Input automaton.
-      const AutIn& in_;
-      /// Output automaton.
-      AutOut& out_;
-      /// input state -> output state.
-      std::unordered_map<in_state_t, out_state_t> out_state;
+      automaton_t input_;
     };
   }
 
-  /// Copy an automaton.
-  /// \pre AutIn <: AutOut.
-  template <typename AutIn, typename AutOut, typename Pred>
+  template <typename Aut1,
+            typename Aut2 = mutable_automaton<context_t_of<Aut1>>>
+  using sub_automaton
+  = std::shared_ptr<detail::sub_automaton_impl<Aut1, Aut2>>;
+
+  template <typename Aut1,
+            typename Aut2,
+            typename Pred>
   inline
   void
-  copy_into(const AutIn& in, AutOut& out, Pred keep_state)
+  copy_into(const Aut1& in, Aut2& out, Pred keep_state)
   {
-    detail::copier<AutIn, AutOut> copy(in, out);
-    return copy(keep_state);
+    auto res = make_shared_ptr<sub_automaton<Aut1, Aut2>>(in, out);
+    (*res)(keep_state);
   }
 
-  template <typename AutIn, typename AutOut>
+  template <typename Aut1,
+            typename Aut2>
   inline
   void
-  copy_into(const AutIn& in, AutOut& out)
+  copy_into(const Aut1& in, Aut2& out)
   {
-    return copy_into(in, out, [](state_t_of<AutIn>) { return true; });
+    copy_into(in, out, [](state_t_of<Aut1>) { return true; });
   }
+
+  template <typename Aut,
+            typename Pred>
+  inline
+  sub_automaton<Aut>
+  copy(const Aut& a, Pred keep_state)
+  {
+    auto res = make_shared_ptr<sub_automaton<Aut>>(a);
+    (*res)(keep_state);
+    return res;
+  }
+
+
+  template <typename Aut>
+  inline
+  sub_automaton<Aut>
+  copy(const Aut& a)
+  {
+    auto res = make_shared_ptr<sub_automaton<Aut>>(a);
+    (*res)([](state_t_of<Aut>) { return true; });
+    return res;
+  }
+
+  template <typename Aut>
+  inline
+  sub_automaton<Aut>
+  copy(const Aut& a, const std::set<state_t_of<Aut>>& keep)
+  {
+    auto res = make_shared_ptr<sub_automaton<Aut>>(a);
+    (*res)([&keep](state_t_of<Aut> s) { return has(keep, s); });
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      inline
+      automaton
+      copy(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::copy(a));
+      }
+
+      REGISTER_DECLARE(copy,
+                       (const automaton&) -> automaton);
+    }
+  }
+
 
   namespace detail
   {
@@ -158,65 +240,6 @@ namespace vcsn
     }
   }
 
-  /// A copy of \a input keeping only its states that are accepted by
-  /// \a keep_state.
-  template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t,
-            typename Pred>
-  inline
-  AutOut
-  copy(const AutIn& input, Pred keep_state)
-  {
-    // FIXME: here, we need a means to convert the given input context
-    // (e.g. letter -> B) into the destination one (e.g., letter ->
-    // Q).  The automaton constructor wants the exact context type.
-    auto res = make_shared_ptr<AutOut>(detail::real_context(input));
-    ::vcsn::copy_into(input, res, keep_state);
-    return res;
-  }
-
-  /// A copy of \a input.
-  template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
-  inline
-  AutOut
-  copy(const AutIn& input)
-  {
-    return ::vcsn::copy<AutIn, AutOut>(input,
-                                       [](state_t_of<AutIn>) { return true; });
-  }
-
-  /// A copy of \a input keeping only its states that are members of
-  /// \a keep.
-  template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
-  inline
-  AutOut
-  copy(const AutIn& input, const std::set<state_t_of<AutIn>>& keep)
-  {
-    return ::vcsn::copy<AutIn, AutOut>
-      (input,
-       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut>
-      inline
-      automaton
-      copy(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::copy(a));
-      }
-
-      REGISTER_DECLARE(copy,
-                       (const automaton&) -> automaton);
-    }
-  }
 
   /*---------------.
   | copy(ratexp).  |

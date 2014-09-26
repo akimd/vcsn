@@ -7,6 +7,7 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/product.hh> // join_automata
 # include <vcsn/algos/standard.hh>
+# include <vcsn/algos/strip.hh>
 # include <vcsn/algos/sum.hh>
 # include <vcsn/core/join.hh>
 # include <vcsn/core/mutable-automaton.hh>
@@ -102,7 +103,7 @@ namespace vcsn
     require(is_standard(lhs), __func__, ": lhs must be standard");
     require(is_standard(rhs), __func__, ": rhs must be standard");
     auto res = join_automata(lhs, rhs);
-    ::vcsn::copy_into(lhs, res);
+    ::vcsn::copy_into(strip(lhs), res);
     concatenate_here(res, rhs);
     return res;
   }
@@ -138,7 +139,7 @@ namespace vcsn
       make_shared_ptr<Aut>(aut->context());
     if (max == -1)
       {
-        res = star(aut);
+        res = strip(star(aut));
         if (min != -1)
           res = concatenate(chain(aut, min, min), res);
       }
@@ -155,7 +156,7 @@ namespace vcsn
           }
         else
           {
-            res = vcsn::copy(aut);
+            res = strip(copy(aut));
             for (int n = 1; n < min; ++n)
               res = concatenate(res, aut);
           }

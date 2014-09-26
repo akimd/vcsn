@@ -37,6 +37,7 @@ namespace vcsn
           || w == "permutation"
           || w == "product"
           || w == "ratexp"
+          || w == "sub"
           || w == "transpose"
           || w == "tuple")
         return automaton_(w);
@@ -263,6 +264,7 @@ namespace vcsn
                || prefix == "partition"
                || prefix == "permutation"
                || prefix == "ratexp"
+               || prefix == "sub"
                || prefix == "transpose")
         {
           prefix += eat(is_, "_automaton");

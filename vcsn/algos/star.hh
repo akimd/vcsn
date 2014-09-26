@@ -57,8 +57,9 @@ namespace vcsn
 
   /// Star of a standard automaton.
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  auto
   star(const Aut& aut)
+    -> decltype(copy(aut))
   {
     auto res = copy(aut);
     star_here(res);

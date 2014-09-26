@@ -48,11 +48,11 @@ digraph {
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
-    4
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
+    3 [label = "3", shape = box]
+    4 [label = "4", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -86,10 +86,10 @@ digraph {
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [color = DimGray]
-    1 [color = DimGray]
-    2 [color = DimGray]
-    3 [color = DimGray]
+    0 [label = "0", shape = box, color = DimGray]
+    1 [label = "1", shape = box, color = DimGray]
+    2 [label = "2", shape = box, color = DimGray]
+    3 [label = "3", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]
@@ -140,10 +140,10 @@ digraph {
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
+    3 [label = "3", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -337,8 +337,8 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -370,9 +370,9 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]

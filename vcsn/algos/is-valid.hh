@@ -27,8 +27,9 @@ namespace vcsn
     /// Copy of \a aut, with absolute values.
     /// Templated to avoid useless instantiations.
     template <typename Aut>
-    typename Aut::element_type::automaton_nocv_t
+    auto
     absval(const Aut& aut)
+      -> decltype(::vcsn::copy(aut))
     {
       auto res = copy(aut);
       // Apply absolute value to the weight of each transition.

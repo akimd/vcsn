@@ -10,7 +10,7 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
+    0 [label = "0", shape = box]
   }
   I0 -> 0 [label = "<3>"]
   0 -> F0 [label = "<7>"]

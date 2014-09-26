@@ -34,7 +34,7 @@ namespace vcsn
         if (!is_deterministic(automaton))
           return work_(determinize(automaton)->strip());
         else if (!is_complete(automaton))
-          return work_(complete(automaton));
+          return work_(complete(automaton)->strip());
         else
           return work_(automaton);
       }

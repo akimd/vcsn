@@ -195,7 +195,11 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = typename context_t::weightset_t;
+
+    public:
       using output_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
+
+    private:
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using output_state_t = state_t_of<output_automaton_t>;
@@ -592,22 +596,30 @@ namespace vcsn
 
   }
 
-  template<typename Aut>
+  template <typename Aut>
   auto
   left_reduce(const Aut& input)
-    -> decltype(copy(input))
+    -> typename detail::left_reductioner<Aut>::output_automaton_t
   {
     detail::left_reductioner<Aut> left_reduce(input);
     return left_reduce();
   }
 
+  template <typename Aut>
+  auto
+  right_reduce(const Aut& input)
+    -> typename detail::left_reductioner<Aut>::output_automaton_t
+  {
+    return left_reduce(transpose(input));
+  }
 
-  template<typename Aut>
+
+  template <typename Aut>
   auto
   reduce(const Aut& input)
-    -> decltype(copy(input))
+    -> typename detail::left_reductioner<Aut>::output_automaton_t
   {
-    return left_reduce(transpose(left_reduce(transpose(input))));
+    return left_reduce(transpose(right_reduce(input)));
   }
 
   namespace dyn
@@ -620,7 +632,7 @@ namespace vcsn
       reduce(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(reduce(a));
+        return make_automaton(::vcsn::reduce(a));
       }
 
       REGISTER_DECLARE(reduce,

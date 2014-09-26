@@ -10,8 +10,8 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    2
+    0 [label = "0", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> 2 [label = "<ab*c>"]

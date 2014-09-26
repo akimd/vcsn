@@ -64,9 +64,23 @@ namespace vcsn
       static automaton_t&
       zero_here(automaton_t& res)
       {
-        automaton_t a = make_shared_ptr<automaton_t>(res->context());
-        a->set_initial(a->new_state());
-        res = std::move(a);
+        //auto a = copy(strip(res), [](state_t_of<automaton_t>) { return false; });
+        //a->set_initial(a->new_state());
+        //res = std::move(a);
+        // FIXME: Just only create an atomaton same type res
+        //        and it has just a initial state.
+        bool is_first = true;
+        for (auto s : res->states())
+          {
+            if (is_first)
+              {
+                is_first = false;
+                continue;
+              }
+            res->del_state(s);
+          }
+        if (is_first)
+          res->set_initial(res->new_state());
         return res;
       }
     };
@@ -84,13 +98,13 @@ namespace vcsn
     return detail::standard_operations<Aut>::left_mult_here(w, res);
   }
 
-  template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
+  template <typename AutIn>
   inline
-  AutOut
-  left_mult(const weight_t_of<AutOut>& w, const AutIn& aut)
+  auto
+  left_mult(const weight_t_of<AutIn>& w, const AutIn& aut)
+    -> decltype(::vcsn::copy(aut))
   {
-    auto res = copy<AutIn, AutOut>(aut);
+    auto res = copy(aut);
     left_mult_here(w, res);
     return res;
   }

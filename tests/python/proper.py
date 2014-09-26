@@ -50,7 +50,7 @@ check(r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
+    0 [label = "0", shape = box]
   }
   I0 -> 0
   0 -> F0 [label = "<2>"]
@@ -87,9 +87,9 @@ check(r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -153,10 +153,10 @@ check('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
+    3 [label = "3", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "<2>a"]
@@ -225,8 +225,8 @@ check(r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    4
+    0 [label = "0", shape = box]
+    4 [label = "4", shape = box]
   }
   I0 -> 0
   0 -> 4 [label = "<(abcd)*>z"]
@@ -281,9 +281,9 @@ check(r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1 [color = DimGray]
-    7 [color = DimGray]
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box, color = DimGray]
+    7 [label = "7", shape = box, color = DimGray]
   }
   I0 -> 0
   0 -> F0 [label = "<beg>"]
@@ -351,9 +351,9 @@ check(r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -368,7 +368,6 @@ check(r'''digraph
 ## --------------------------- ##
 ## lat<lan_char, lal_char>_b.  ##
 ## --------------------------- ##
-
 check(r'''digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
@@ -391,9 +390,9 @@ check(r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "(a,x)"]

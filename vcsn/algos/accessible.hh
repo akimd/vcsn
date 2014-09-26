@@ -120,22 +120,25 @@ namespace vcsn
   `-----------------------------------------------*/
 
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  auto
   accessible(const Aut& a)
+    -> decltype(vcsn::copy(a, accessible_states(a)))
   {
     return vcsn::copy(a, accessible_states(a));
   }
 
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  auto
   coaccessible(const Aut& a)
+    -> decltype(vcsn::copy(a, coaccessible_states(a)))
   {
     return vcsn::copy(a, coaccessible_states(a));
   }
 
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  auto
   trim(const Aut& a)
+    -> decltype(vcsn::copy(a, useful_states(a)))
   {
     return vcsn::copy(a, useful_states(a));
   }
