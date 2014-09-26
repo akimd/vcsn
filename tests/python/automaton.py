@@ -233,6 +233,7 @@ CHECK_EQ('''digraph
 }''',
          _dot_pretty(a.dot()))
 
+# conjunction: state names, and useless states, etc.
 CHECK_EQ('''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
@@ -274,6 +275,93 @@ CHECK_EQ('''digraph
   11 -> F11
 }''',
          _dot_pretty((a&a).dot()))
+
+# Tooltip.
+CHECK_EQ('''digraph
+{
+  vcsn_context = "lan<lal_char(ab)>_z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F11
+  }
+  {
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    0 [tooltip = "0, 0"]
+    1 [tooltip = "2, 0"]
+    2 [tooltip = "4, 0"]
+    3 [tooltip = "2, 2"]
+    4 [tooltip = "2, 4", fillcolor = lightgray]
+    5 [tooltip = "4, 2", fillcolor = lightgray]
+    6 [tooltip = "4, 4"]
+    7 [tooltip = "3, 3"]
+    8 [tooltip = "5, 5"]
+    9 [tooltip = "1, 3"]
+    10 [tooltip = "1, 5"]
+    11 [tooltip = "1, 1"]
+  }
+  I0 -> 0
+  0 -> 1 [label = "ε"]
+  0 -> 2 [label = "ε"]
+  1 -> 3 [label = "ε"]
+  1 -> 4 [label = "ε", color = DimGray]
+  2 -> 5 [label = "ε", color = DimGray]
+  2 -> 6 [label = "ε"]
+  3 -> 7 [label = "⟨4⟩a"]
+  6 -> 8 [label = "⟨4⟩b"]
+  7 -> 9 [label = "ε"]
+  8 -> 10 [label = "ε"]
+  9 -> 11 [label = "ε"]
+  10 -> 11 [label = "ε"]
+  11 -> F11
+}''',
+         _dot_pretty((a&a).dot(), "tooltip"))
+
+# Transitions.
+CHECK_EQ('''digraph
+{
+  vcsn_context = "lan<lal_char(ab)>_z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F11
+  }
+  {
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    0 [label = "0, 0"]
+    1 [label = "2, 0"]
+    2 [label = "4, 0"]
+    3 [label = "2, 2"]
+    4 [label = "2, 4", fillcolor = lightgray]
+    5 [label = "4, 2", fillcolor = lightgray]
+    6 [label = "4, 4"]
+    7 [label = "3, 3"]
+    8 [label = "5, 5"]
+    9 [label = "1, 3"]
+    10 [label = "1, 5"]
+    11 [label = "1, 1"]
+  }
+  I0 -> 0
+  0 -> 1 [label = "ε"]
+  0 -> 2 [label = "ε"]
+  1 -> 3 [label = "ε"]
+  1 -> 4 [label = "ε", color = DimGray]
+  2 -> 5 [label = "ε", color = DimGray]
+  2 -> 6 [label = "ε"]
+  3 -> 7 [label = "⟨4⟩a"]
+  6 -> 8 [label = "⟨4⟩b"]
+  7 -> 9 [label = "ε"]
+  8 -> 10 [label = "ε"]
+  9 -> 11 [label = "ε"]
+  10 -> 11 [label = "ε"]
+  11 -> F11
+}''',
+         _dot_pretty((a&a).dot(), "transitions"))
+
 
 ## ------------------------------- ##
 ## Output: dot, dot2tex and TikZ.  ##

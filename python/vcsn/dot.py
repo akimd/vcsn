@@ -24,7 +24,7 @@ def _label_pretty(s):
             .replace(r'\\e', 'ε'))
 
 def _labels_as_tooltips(s):
-    return re.sub(r'label = (".*?"), shape = box, style = rounded',
+    return re.sub(r'label = (".*?"), shape = box',
                   r'tooltip = \1',
                   s)
 
@@ -32,7 +32,7 @@ def _nodes_as_points(s):
     '''Transform all the nodes into simple points, as to reveal only
     the transitions.'''
     s = s.replace(state_style, state_point)
-    s = s.replace('shape = box', '')
+    s = s.replace(', shape = box', '')
     return s
 
 def _dot_gray_node(m):
@@ -44,12 +44,14 @@ def _dot_gray_node(m):
                                                'fillcolor = lightgray')
 
 def _dot_pretty(s, mode = "dot"):
-    '''Improve pretty-printing in a dot source.
+    '''
+    Improve pretty-printing in a dot source.
 
     Use some HTML entities instead of ugly ASCII sequences.
     Use nicer arrows.
 
     If `mode` is tooltip, convert node labels to tooltips.
+    If it is `transitions`, then hide the states.
     '''
     s = re.sub(r'(label * = *)(".*?")',
                lambda m: m.group(1) + _label_pretty(m.group(2)),
