@@ -258,7 +258,8 @@ namespace vcsn
     /// \pre \a aut is a transducer.
     bool is_functional(const automaton& aut);
 
-    /// Whether is normalized (in the Thompson sense).
+    /// Whether is normalized (in the Thompson sense), i.e., standard
+    /// and co-standard.
     bool is_normalized(const automaton& aut);
 
     /// Whether the outgoing transitions of each state have increasing labels.
@@ -478,7 +479,7 @@ namespace vcsn
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
 
-    /// Break \a ratexp.
+    /// Break \a exp.
     polynomial split(const ratexp& exp);
 
     /// A standardized \a a.

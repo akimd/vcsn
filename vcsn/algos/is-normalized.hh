@@ -6,6 +6,7 @@
 
 namespace vcsn
 {
+  /// Whether \a a is standard and co-standard.
   template <typename Aut>
   bool
   is_normalized(const Aut& a)
@@ -27,6 +28,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       bool
       is_normalized(const automaton& aut)

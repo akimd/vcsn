@@ -46,6 +46,34 @@ namespace vcsn
 
   namespace rat
   {
+    /// Break a rational expression into a polynomial.
+    ///
+    /// This is based on the following paper:
+    /// @verbatim
+    /// @article{angrand.2010.jalc,
+    ///   author =       {Pierre-Yves Angrand and Sylvain Lombardy and Jacques
+    ///                   Sakarovitch},
+    ///   journal =      {Journal of Automata, Languages and Combinatorics},
+    ///   number =       {1/2},
+    ///   pages =        {27--51},
+    ///   title =        {On the Number of Broken Derived Terms of a Rational
+    ///                   Expression},
+    ///   volume =       15,
+    ///   year =         2010,
+    ///   abstract =     {Bounds are given on the number of broken derived
+    ///                   terms (a variant of Antimirov's ``partial
+    ///                   derivatives'') of a rational expression $E$. It is
+    ///                   shown that this number is less than or equal to
+    ///                   $2l(E) + 1$ in the general case, where $l(E)$ is the
+    ///                   literal length of the expression $E$, and that the
+    ///                   classical bound $l(E) + 1$ which holds for partial
+    ///                   derivatives also holds for broken derived terms if E
+    ///                   is in star normal form.\\In a second part of the
+    ///                   paper, the influence of the bracketing of an
+    ///                   expression on the number of its derived terms is
+    ///                   also discussed.}
+    /// }
+    ///@endverbatim
     template <typename RatExpSet>
     class split_visitor
       : public RatExpSet::const_visitor
