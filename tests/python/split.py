@@ -12,6 +12,8 @@ def check(re, exp):
     r = ctx.ratexp(re)
     s = r.split()
     CHECK_EQ(exp, str(s))
+    # Split polynomials is idempotent.
+    CHECK_EQ(s, s.split())
 
 check('<x>\z', '\z')
 check('<x>\e', '<x>\e')

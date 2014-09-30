@@ -260,6 +260,27 @@ namespace vcsn
     return split(e);
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet>
+      polynomial
+      split(const ratexp& exp)
+      {
+        const auto& e = exp->as<RatExpSet>();
+        const auto& rs = e.ratexpset();
+        auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
+        return make_polynomial(ps,
+                               vcsn::split<RatExpSet>(rs, e.ratexp()));
+      }
+
+      REGISTER_DECLARE(split,
+                       (const ratexp& e) -> polynomial);
+    }
+  }
+
   /// Split a polynomial of ratexps.
   template <typename RatExpSet>
   inline
@@ -275,24 +296,40 @@ namespace vcsn
     return res;
   }
 
+  /// Split a polynomial of ratexps.
+  template <typename PolynomialSet>
+  inline
+  typename PolynomialSet::value_t
+  split_polynomial(const PolynomialSet& ps,
+                   const typename PolynomialSet::value_t& p)
+  {
+    using polynomial_t = typename PolynomialSet::value_t;
+    // This is a polynomial of rational expressions.
+    const auto& rs = *ps.labelset();
+    polynomial_t res;
+    for (const auto& m: p)
+      res = ps.add(res, ps.lmul(m.second, split(rs, m.first)));
+    return res;
+  }
+
   namespace dyn
   {
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename PolynomialSet>
       polynomial
-      split(const ratexp& exp)
+      split_polynomial(const polynomial& poly)
       {
-        const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.ratexpset();
-        auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
-        return make_polynomial(ps,
-                               split<RatExpSet>(rs, e.ratexp()));
+        const auto& p = poly->as<PolynomialSet>();
+        const auto& ps = p.polynomialset();
+        return make_polynomial
+          (ps,
+           vcsn::split_polynomial<PolynomialSet>(ps, p.polynomial()));
       }
 
-      REGISTER_DECLARE(split,
-                       (const ratexp& e) -> polynomial);
+      REGISTER_DECLARE(split_polynomial,
+                       (const polynomial& p) -> polynomial);
     }
   }
 

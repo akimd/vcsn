@@ -28,6 +28,11 @@ def check(re, s, exp, breaking = False):
     eff = re.derivation(s, breaking)
     print("d/d{}({}) = {}".format(s, re, eff));
     CHECK_EQ(exp, str(eff))
+    # Check that the breaking derivation is exactly the breaking of
+    # the regular derivation.
+    if breaking:
+        CHECK_EQ(re.derivation(s, True),
+                 re.derivation(s).split())
 
 
 ##########################

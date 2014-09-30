@@ -52,5 +52,16 @@ namespace vcsn
     {
       return detail::split_registry().call(e);
     }
+
+    /*---------------------.
+    | split(polynomial).   |
+    `---------------------*/
+    REGISTER_DEFINE(split_polynomial);
+
+    polynomial
+    split(const polynomial& p)
+    {
+      return detail::split_polynomial_registry().call(p);
+    }
   }
 }

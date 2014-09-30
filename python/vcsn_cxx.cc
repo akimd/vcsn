@@ -517,6 +517,11 @@ struct polynomial
     return os.str();
   }
 
+  polynomial split() const
+  {
+    return vcsn::dyn::split(val_);
+  }
+
   polynomial sum(const polynomial& rhs) const
   {
     return vcsn::dyn::sum(val_, rhs.val_);
@@ -1015,6 +1020,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
      bp::init<const context&, const std::string&>())
     .def("concatenate", &polynomial::concatenate)
     .def("format", &polynomial::format)
+    .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
    ;
 

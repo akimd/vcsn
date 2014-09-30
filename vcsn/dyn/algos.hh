@@ -479,6 +479,9 @@ namespace vcsn
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
 
+    /// Break all the expressions in \a p.
+    polynomial split(const polynomial& p);
+
     /// Break \a exp.
     polynomial split(const ratexp& exp);
 
