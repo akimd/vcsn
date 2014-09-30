@@ -9,7 +9,7 @@ namespace vcsn
   {
 
     /*----------------.
-    | insplit(aut).  |
+    | insplit(aut).   |
     `----------------*/
     REGISTER_DEFINE(insplit);
 
@@ -20,4 +20,3 @@ namespace vcsn
     }
   }
 }
-

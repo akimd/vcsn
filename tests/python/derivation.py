@@ -155,6 +155,7 @@ check_dt(E1t, 'e1-dt')
 def check_br(re, letter, exp):
     check(re, letter, exp, True)
 
+
 ## ---------------------------- ##
 ## Derive wrt a single letter.  ##
 ## ---------------------------- ##
@@ -196,9 +197,9 @@ check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 # On The Number Of Broken Derived Terms Of A Rational Expression.
 ctx = vcsn.context('lal_char(ab)_b')
 F2 = 'a*+b*'
-E2 = "({})(a({}))".format(F2, F2)
+E2 = "({F2})(a({F2}))".format(F2=F2)
 E2t = ctx.ratexp(E2)
-check(E2t, 'a', "{} + a*a({})".format(F2, F2))
+check(E2t, 'a', "{F2} + a*a({F2})".format(F2=F2))
 check(E2t, 'b', "b*a({})".format(F2))
 
 # Example 2.
@@ -209,13 +210,6 @@ check(E2t, 'bb', "b*a({})".format(F2))
 
 # Example 3.
 check_dt(E2t, 'e2-dt')
-
-# FIXME: Support for polynomials.
-# Example 4.
-CHECK_EQ("a*a({}) + b*a({})".format(F2, F2),
-         str(ctx.ratexp(E2).split()))
-CHECK_EQ("a* + b*",
-         str(ctx.ratexp(F2).split()))
 
 # Example 5.
 check_br(E2t,  'a', "a* + b* + a*a({})".format(F2))

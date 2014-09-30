@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx=vcsn.context('lal_char(abc)_ratexpset<lal_char(wxyz)_z>')
+ctx = vcsn.context('lal_char(abc)_ratexpset<lal_char(wxyz)_z>')
 
 # check RAT-EXP RESULT
 # --------------------
@@ -29,7 +29,7 @@ check('(<w>a+<x>b)&(<y>a+<z>b)', '<w>a&(<y>a+<z>b) + <x>b&(<y>a+<z>b)')
 
 # On The Number Of Broken Derived Terms Of A Rational Expression.
 # Example 4.
-F2='a*+b*'
-E2="(" + F2 + ")(a(" + F2 + "))"
-check(E2, "a*a(" + F2 + ") + b*a(" + F2 + ")")
+F2 = 'a*+b*'
+E2 = "({F2})(a({F2}))".format(F2=F2)
+check(E2, "a*a({F2}) + b*a({F2})".format(F2=F2))
 check(F2, "a* + b*")
