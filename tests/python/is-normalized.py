@@ -111,3 +111,13 @@ digraph
   2 -> F
 }
 '''))
+
+# Regression: we used to crash on this.
+a = vcsn.automaton('''context = lal_char_z
+$ -> 0
+0 -> 1 <-1>a
+0 -> 2 <1>a
+1 -> $
+2 -> $''', 'daut')
+CHECK_EQ(False,
+         a.transpose().determinize().transpose().is_normalized())
