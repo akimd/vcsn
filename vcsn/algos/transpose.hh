@@ -72,6 +72,8 @@ namespace vcsn
       DEFINE(dst_of(transition_t t),         src_of(t));
       DEFINE(initial_transitions(),          final_transitions());
       DEFINE(final_transitions(),            initial_transitions());
+      DEFINE(num_initials(),                 num_finals());
+      DEFINE(num_finals(),                   num_initials());
 
       DEFINE(in(state_t s, label_t l),
              out(s, this->aut_->labelset()->transpose(l)));

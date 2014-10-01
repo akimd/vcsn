@@ -36,6 +36,38 @@ CHECK_EQ('''digraph
          a.transpose())
 CHECK_EQ(a, a.transpose().transpose())
 
+# a and a.transpose().transpose() must be exactly the same object, in
+# particular its type should be mutable_automaton, not
+# transpose_automaton<transpose_automaton<mutable_automaton>>.
+CHECK_EQ(a.info(), a.transpose().transpose().info())
+
+# Regression: we used to not transpose the number of initial and final
+# transitions.
+a = vcsn.context('lal_char_b').ratexp('a+b').standard()
+CHECK_EQ({
+           'is complete': False,
+           'is deterministic': False,
+           'is empty': False,
+           'is eps-acyclic': True,
+           'is normalized': False,
+           'is proper': True,
+           'is standard': False,
+           'is trim': True,
+           'is useless': False,
+           'is valid': True,
+           'number of accessible states': 3,
+           'number of coaccessible states': 3,
+           'number of deterministic states': 3,
+           'number of eps transitions': 0,
+           'number of final states': 1,
+           'number of initial states': 2,
+           'number of states': 3,
+           'number of strongly connected components': 3,
+           'number of transitions': 2,
+           'number of useful states': 3,
+           'type': 'transpose_automaton<mutable_automaton<lal_char(ab)_b>>',
+         },
+         a.transpose().info())
 
 ## ------------------- ##
 ## transpose(ratexp).  ##

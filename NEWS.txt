@@ -7,7 +7,6 @@ changes in the internal API may also be documented.
 
 ## 2014-10-01
 ### split: now works on polynomials
-
 In addition to splitting (aka, breaking) a ratexp, it is now possible
 to split a polynomial.  This, for instance, provides another way to
 compute the breaking derivation of a ratexp:
@@ -26,6 +25,12 @@ compute the breaking derivation of a ratexp:
 ### derivation: fix a Python bug
 `ratexp.derivation` features a `breaking` optional argument, which
 defaulted to `True` instead of `False`.
+
+### transpose: fix the number of final and initial states
+Because `num_initials` and `num_finals` were not "transposed", on
+occasions `automaton.is_standard` could crash (when it thinks there is
+one initial state while there is none, but it still wants to check
+that its initial weight is one).
 
 ## 2014-09-25
 ### Automaton conjunction
