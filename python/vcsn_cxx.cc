@@ -593,7 +593,7 @@ struct ratexp
     return vcsn::dyn::context_of(val_);
   }
 
-  polynomial derivation(const label& l, bool breaking = true) const
+  polynomial derivation(const label& l, bool breaking = false) const
   {
     return vcsn::dyn::derivation(val_, l.val_, breaking);
   }

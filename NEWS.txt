@@ -5,6 +5,28 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-10-01
+### split: now works on polynomials
+
+In addition to splitting (aka, breaking) a ratexp, it is now possible
+to split a polynomial.  This, for instance, provides another way to
+compute the breaking derivation of a ratexp:
+
+    In [1]: r = vcsn.context('lal_char_z').ratexp('a(b+a)+a(a+b)')
+
+    In [2]: p = r.derivation('a'); p
+    Out[2]: a+b + b+a
+
+    In [3]: p.split()
+    Out[3]: <2>a + <2>b
+
+    In [4]: r.derivation('a', True)
+    Out[4]: <2>a + <2>b
+
+### derivation: fix a Python bug
+`ratexp.derivation` features a `breaking` optional argument, which
+defaulted to `True` instead of `False`.
+
 ## 2014-09-25
 ### Automaton conjunction
 On occasions, in Python, expressions such as `(a & b)('a')` failed to

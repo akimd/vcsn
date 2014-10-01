@@ -39,6 +39,11 @@ def check(re, s, exp, breaking = False):
 ## Regular derivation.  ##
 ##########################
 
+# Check that by default, derivation is non-breaking.  The difference
+# is thin: we expect a polynomial with a single ratexp "b+a", not a
+# polynomial of two ratexps: "a + b".
+CHECK_EQ('b+a',
+         ctx.ratexp('a(b+a)').derivation('a'))
 
 
 ## ---------------------------- ##
