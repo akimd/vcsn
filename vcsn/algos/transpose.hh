@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_TRANSPOSE_HH
 
 # include <vcsn/algos/fwd.hh>
+# include <vcsn/algos/strip.hh>
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/ratexpset.hh>
@@ -49,6 +50,20 @@ namespace vcsn
       std::string vname(bool full = true) const
       {
         return "transpose_automaton<" + aut_->vname(full) + ">";
+      }
+
+      /// The automaton we are decorating (typically a mutable_automaton).
+      automaton_t
+      naked_automaton()
+      {
+        return aut_;
+      }
+
+      auto
+      strip()
+        -> decltype(transpose(vcsn::strip(this->naked_automaton())))
+      {
+        return transpose(vcsn::strip(this->naked_automaton()));
       }
 
       /*-------------------------------.
@@ -206,7 +221,7 @@ namespace vcsn
   Aut
   transpose(const transpose_automaton<Aut>& aut, int = 0)
   {
-    return aut->strip();
+    return aut->naked_automaton();
   }
 
   template <typename Aut>

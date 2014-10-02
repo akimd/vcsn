@@ -69,6 +69,12 @@ CHECK_EQ({
          },
          a.transpose().info())
 
+# Stripping a transposed automaton strips the inner automaton, but not
+# the transposition shell.
+a = vcsn.context('lal_char_b').ratexp('ab').derived_term().determinize()
+CHECK_EQ('transpose_automaton<mutable_automaton<lal_char(ab)_b>>',
+         a.transpose().strip().info()['type'])
+
 ## ------------------- ##
 ## transpose(ratexp).  ##
 ## ------------------- ##

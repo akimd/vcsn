@@ -5,6 +5,13 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-10-02
+### Strip vs. transpose
+Up to now, stripping a transposed automaton returned the non-transposed
+automaton, without even stripping it.  This has finally been
+addressed, and `a.determinize().transpose().strip()` is now strictly
+equivalent to `a.determinize().strip().transpose()`.
+
 ## 2014-10-01
 ### split: now works on polynomials
 In addition to splitting (aka, breaking) a ratexp, it is now possible

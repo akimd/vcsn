@@ -31,6 +31,7 @@ namespace vcsn
     }
   }
 
+  /// Remove (all) the decorations from a decorated automaton.
   template <typename Aut>
   inline
   auto
