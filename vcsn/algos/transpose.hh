@@ -213,13 +213,10 @@ namespace vcsn
     };
   }
 
-  // Rely on the fact that int takes precedence over long to express
-  // a precedence of this first function over the second one.
-
   template <typename Aut>
   inline
   Aut
-  transpose(const transpose_automaton<Aut>& aut, int = 0)
+  transpose(const transpose_automaton<Aut>& aut)
   {
     return aut->naked_automaton();
   }
@@ -227,7 +224,7 @@ namespace vcsn
   template <typename Aut>
   inline
   transpose_automaton<Aut>
-  transpose(Aut aut, long = 0)
+  transpose(Aut aut)
   {
     return make_shared_ptr<transpose_automaton<Aut>>(aut);
   }
