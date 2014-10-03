@@ -39,6 +39,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.transpose.ipynb'                 \
   '%D%/algos/automaton.trim.ipynb'                      \
   '%D%/algos/index.ipynb'                               \
+  '%D%/algos/ratexp.derived_term.ipynb'                 \
   '%D%/algos/ratexp.is_valid.ipynb'                     \
   '%D%/algos/ratexp.standard.ipynb'                     \
   '%D%/algos/ratexp.transpose.ipynb'                    \
