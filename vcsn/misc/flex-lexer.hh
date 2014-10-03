@@ -35,14 +35,14 @@
 // to rename each yyFlexLexer to some other xxFlexLexer.  You then
 // include <FlexLexer.h> in your other sources once per lexer class:
 //
-//	#undef yyFlexLexer
-//	#define yyFlexLexer xxFlexLexer
-//	#include <FlexLexer.h>
+//      #undef yyFlexLexer
+//      #define yyFlexLexer xxFlexLexer
+//      #include <FlexLexer.h>
 //
-//	#undef yyFlexLexer
-//	#define yyFlexLexer zzFlexLexer
-//	#include <FlexLexer.h>
-//	...
+//      #undef yyFlexLexer
+//      #define yyFlexLexer zzFlexLexer
+//      #include <FlexLexer.h>
+//      ...
 
 #ifndef VCSN_MISC_FLEX_LEXER_HH
 # define VCSN_MISC_FLEX_LEXER_HH
@@ -53,10 +53,10 @@ typedef int yy_state_type;
 class FlexLexer
 {
 public:
-  virtual ~FlexLexer()	{ }
+  virtual ~FlexLexer()  { }
 
-  const char* YYText() const	{ return yytext; }
-  int YYLeng()	const	{ return yyleng; }
+  const char* YYText() const    { return yytext; }
+  int YYLeng()  const   { return yyleng; }
 
   virtual void
   yy_switch_to_buffer( struct yy_buffer_state* new_buffer ) = 0;
@@ -69,16 +69,16 @@ public:
   // indicates "keep the current one".
   virtual void switch_streams( std::istream* new_in = nullptr,
                                std::ostream* new_out = nullptr ) = 0;
-  int lineno() const		{ return yylineno; }
+  int lineno() const            { return yylineno; }
 
-  int debug() const		{ return yy_flex_debug; }
-  void set_debug( int flag )	{ yy_flex_debug = flag; }
+  int debug() const             { return yy_flex_debug; }
+  void set_debug( int flag )    { yy_flex_debug = flag; }
 
 protected:
   char* yytext;
   int yyleng;
-  int yylineno;		// only maintained if you use %option yylineno
-  int yy_flex_debug;	// only has effect with -d or "%option debug"
+  int yylineno;                 // only maintained if you use %option yylineno
+  int yy_flex_debug;    // only has effect with -d or "%option debug"
 };
 
 YY_FLEX_NAMESPACE_BEGIN
@@ -117,7 +117,7 @@ public:
                               std::ostream* new_out = nullptr );
   virtual int yywrap();
 
-  std::istream* yyin;	// input source for default LexerInput
+  std::istream* yyin;   // input source for default LexerInput
 
 protected:
   virtual int LexerInput( char* buf, int max_size );
@@ -143,7 +143,7 @@ protected:
   yy_state_type yy_try_NUL_trans( yy_state_type current_state );
   int yy_get_next_buffer();
 
-  std::ostream* yyout;	// output sink for default LexerOutput
+  std::ostream* yyout;  // output sink for default LexerOutput
 
   // yy_hold_char holds the character lost when yytext is formed.
   char yy_hold_char;
@@ -154,8 +154,8 @@ protected:
   // Points to current character in buffer.
   char* yy_c_buf_p;
 
-  int yy_init;		// whether we need to initialize
-  int yy_start;		// start state number
+  int yy_init;          // whether we need to initialize
+  int yy_start;                 // start state number
 
   // Flag which is used to allow yywrap()'s to do buffer switches
   // instead of setting up a fresh yyin.  A bit of a hack ...

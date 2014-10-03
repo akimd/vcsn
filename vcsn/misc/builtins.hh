@@ -13,8 +13,8 @@
 
 #  define BUILTIN_UNREACHABLE()                 \
   do {                                          \
-    assert(!"unreachable code");		\
-    abort();					\
+    assert(!"unreachable code");                \
+    abort();                                    \
   } while (false)
 
 # endif

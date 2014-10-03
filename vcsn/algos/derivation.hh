@@ -117,7 +117,7 @@ namespace vcsn
       VCSN_RAT_VISIT(conjunction, e)
       {
         // The first polynomial.
-	e.head()->accept(*this);
+        e.head()->accept(*this);
         auto res = res_;
         for (unsigned i = 1, n = e.size(); i < n; ++i)
           {

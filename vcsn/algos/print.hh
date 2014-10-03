@@ -27,7 +27,7 @@ namespace vcsn
       /// Bridge.
       template <typename Context, typename Ostream, typename String>
       std::ostream& print_ctx(const context& ctx, std::ostream& o,
-			      const std::string& format)
+                              const std::string& format)
       {
         const auto& c = ctx->as<Context>();
         return c.print_set(o, format);
@@ -190,7 +190,7 @@ namespace vcsn
 
       REGISTER_DECLARE(print_ratexp,
                        (const ratexp& aut, std::ostream& o,
-			const std::string& format) -> std::ostream&);
+                        const std::string& format) -> std::ostream&);
     }
   }
 

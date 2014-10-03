@@ -36,8 +36,8 @@ namespace vcsn
 
     private:
 
-# define DEFINE(Type)						\
-      using Type ## _t = typename super_type::Type ## _t;	\
+# define DEFINE(Type)                                           \
+      using Type ## _t = typename super_type::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom)         { (void) v; }

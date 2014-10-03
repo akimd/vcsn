@@ -42,8 +42,8 @@ namespace vcsn
     // Be sure to be able to restore the stream flags.
     char fill = o.fill(' ');
     return o << std::setw(detail::indentation(o))
-	     << ""
-	     << std::setfill(fill);
+             << ""
+             << std::setfill(fill);
   }
 
   std::ostream& iendl(std::ostream& o)

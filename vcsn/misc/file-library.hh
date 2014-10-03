@@ -132,7 +132,7 @@ namespace vcsn
     void push_cwd();
 
     /** \brief Find file \a filename using include path.
-	\return Absolute    path where the file lies.
+        \return Absolute path where the file lies.
         \throw  not_found   file not found. */
     path find_in_search_path(const path& filename) const;
 

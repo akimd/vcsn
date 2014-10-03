@@ -237,13 +237,13 @@ conjunction:
       virtual void
       visit(const hadam_t& e)
       {
-	e.head()->accept(*this);
-	auto res = ratexp(res_);
-	for (auto v: e.tail())
-	  {
-	    v->accept(*this);
-	    res = rs_.hadam(res, ratexp(res_));
-	  }
+        e.head()->accept(*this);
+        auto res = ratexp(res_);
+        for (auto v: e.tail())
+          {
+            v->accept(*this);
+            res = rs_.hadam(res, ratexp(res_));
+          }
         res_ = {{res, ws_.one()}};
         apply_weights(e);
       }

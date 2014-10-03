@@ -106,12 +106,12 @@ namespace vcsn
   {
     for (auto s : useful_states(aut))
       if (s != aut->pre() && s != aut->post())
-	{
-	  if (!aut->is_initial(s))
-	    aut->set_initial(s);
-	  if (!aut->is_final(s))
-	    aut->set_final(s);
-	}
+        {
+          if (!aut->is_initial(s))
+            aut->set_initial(s);
+          if (!aut->is_final(s))
+            aut->set_final(s);
+        }
     return aut;
   }
 
@@ -134,12 +134,12 @@ namespace vcsn
       automaton
       factor(const automaton& aut)
       {
-	const auto& a = aut->as<Aut>();
-	return make_automaton(::vcsn::factor(a));
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::factor(a));
       }
 
       REGISTER_DECLARE(factor,
-		       (const automaton& aut) -> automaton);
+                       (const automaton& aut) -> automaton);
     }
   }
 
@@ -189,12 +189,12 @@ namespace vcsn
       automaton
       subword(const automaton& aut)
       {
-	const auto& a = aut->as<Aut>();
-	return make_automaton(::vcsn::subword(a));
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::subword(a));
       }
 
       REGISTER_DECLARE(subword,
-		       (const automaton& aut) -> automaton);
+                       (const automaton& aut) -> automaton);
     }
   }
 } // namespace vcsn
