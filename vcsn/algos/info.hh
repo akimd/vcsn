@@ -82,6 +82,25 @@ namespace vcsn
       return "N/A";
     }
 
+    /*---------------------.
+    | is_codeterministic.  |
+    `---------------------*/
+    template <typename Aut>
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
+                            bool>::type
+    is_codeterministic(const Aut& a)
+    {
+      return vcsn::is_codeterministic(a);
+    }
+
+    template <typename Aut>
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
+                            std::string>::type
+    is_codeterministic(const Aut&)
+    {
+      return "N/A";
+    }
+
     /*-------------------.
     | is_deterministic.  |
     `-------------------*/
@@ -116,6 +135,25 @@ namespace vcsn
     typename std::enable_if<!labelset_t_of<Aut>::is_free(),
                             std::string>::type
     is_synchronizing(const Aut&)
+    {
+      return "N/A";
+    }
+
+    /*---------------------------.
+    | num_codeterministic_states.  |
+    `---------------------------*/
+    template <typename Aut>
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
+                            size_t>::type
+    num_codeterministic_states(const Aut& a)
+    {
+      return vcsn::num_codeterministic_states(a);
+    }
+
+    template <typename Aut>
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
+                            std::string>::type
+    num_codeterministic_states(const Aut&)
     {
       return "N/A";
     }
@@ -189,6 +227,8 @@ namespace vcsn
     ECHO("number of coaccessible states", num_coaccessible_states(aut));
     ECHO("number of useful states", num_useful_states(aut));
     ECHO("number of transitions", aut->num_transitions());
+    ECHO("number of codeterministic states",
+         detail_info::num_codeterministic_states(aut));
     ECHO("number of deterministic states",
          detail_info::num_deterministic_states(aut));
     ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));
@@ -199,6 +239,7 @@ namespace vcsn
     if (detailed)
       ECHO("is cycle ambiguous", detail_info::is_cycle_ambiguous(aut));
     ECHO("is deterministic", detail_info::is_deterministic(aut));
+    ECHO("is codeterministic", detail_info::is_codeterministic(aut));
     ECHO("is empty", is_empty(aut));
     ECHO("is eps-acyclic", is_eps_acyclic(aut));
     ECHO("is normalized", is_normalized(aut));

@@ -14,11 +14,20 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename Aut::element_type::automaton_nocv_t
+  auto
   minimize_brzozowski(const Aut& a)
+    -> decltype(determinize(codeterminize(a)))
   {
-    auto codet = strip(determinize(transpose(strip(a))));
-    return strip(determinize(transpose(codet)));
+    return determinize(codeterminize(a));
+  }
+
+  template <typename Aut>
+  inline
+  auto
+  cominimize_brzozowski(const Aut& a)
+    -> decltype(transpose(minimize_brzozowski(transpose(a))))
+  {
+    return transpose(minimize_brzozowski(transpose(a)));
   }
 
 } // namespace vcsn

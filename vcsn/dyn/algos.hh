@@ -134,6 +134,25 @@ namespace vcsn
     automaton determinize(const automaton& aut,
                           const std::string& algo  = "weighted");
 
+    /// The codeterminized automaton.
+    /// \param aut       the automaton to codeterminize
+    /// \param algo
+    ///     "boolean"     use efficient bitsets
+    ///     "weighted"    accept non Boolean automata (might not terminate)
+    ///     "auto"        "boolean" if the automaton is Boolean,
+    ///                   "weighted" otherwise.
+    /// \pre  the labelset of \a aut must be free.
+    automaton codeterminize(const automaton& aut,
+                            const std::string& algo  = "weighted");
+
+    /// The cominimized automaton.
+    /// \param aut       the automaton to cominimize
+    /// \param algo      the specific algorithm to use
+    /// \pre  \a aut must be LAL.
+    /// \pre  \a aut must be deterministic.
+    automaton cominimize(const automaton& aut,
+                         const std::string& algo = "signature");
+
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.
     /// \param lhs   a LAL automaton
@@ -236,6 +255,10 @@ namespace vcsn
 
     /// Whether \a aut is coaccessible.
     bool is_coaccessible(const automaton& aut);
+
+    /// Whether \a aut is codeterministic.
+    /// \pre \a aut is LAL.
+    bool is_codeterministic(const automaton& aut);
 
     /// Whether \a aut is complete.
     /// \pre \a aut is LAL.

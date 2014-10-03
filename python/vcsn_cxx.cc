@@ -128,6 +128,16 @@ struct automaton
     return vcsn::dyn::coaccessible(val_);
   }
 
+  automaton codeterminize(const std::string& algo = "auto") const
+  {
+    return vcsn::dyn::codeterminize(val_, algo);
+  }
+
+  automaton cominimize(const std::string& algo = "weighted") const
+  {
+    return vcsn::dyn::cominimize(val_, algo);
+  }
+
   automaton complement() const
   {
     return vcsn::dyn::complement(val_);
@@ -217,6 +227,11 @@ struct automaton
   bool is_coaccessible() const
   {
     return vcsn::dyn::is_coaccessible(val_);
+  }
+
+  bool is_codeterministic() const
+  {
+    return vcsn::dyn::is_codeterministic(val_);
   }
 
   bool is_complete() const
@@ -899,6 +914,8 @@ ratexp ratexp::right_mult(const weight& w) const
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(codeterminize, codeterminize, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(cominimize, cominimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
@@ -921,6 +938,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("blind", &automaton::blind)
     .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
+    .def("codeterminize", &automaton::codeterminize, codeterminize())
+    .def("cominimize", &automaton::cominimize, cominimize())
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
     .def("compose", &automaton::compose)
@@ -940,6 +959,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_coaccessible", &automaton::is_coaccessible)
+    .def("is_codeterministic", &automaton::is_codeterministic)
     .def("is_complete", &automaton::is_complete)
     .def("is_cycle_ambiguous", &automaton::is_cycle_ambiguous)
     .def("is_deterministic", &automaton::is_deterministic)

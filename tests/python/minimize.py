@@ -12,6 +12,8 @@ def file_to_string(file):
 
 def check(algo, aut, exp):
     CHECK_EQ(exp, aut.minimize(algo))
+    # Cominimize
+    CHECK_EQ(aut.minimize(algo), aut.transpose().cominimize(algo).transpose())
 
 def xfail(algo, aut):
     res = ''

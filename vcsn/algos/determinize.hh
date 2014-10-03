@@ -7,6 +7,7 @@
 # include <type_traits>
 # include <queue>
 
+# include <vcsn/algos/transpose.hh>
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/ctx/traits.hh>
@@ -249,6 +250,15 @@ namespace vcsn
     return res;
   }
 
+  template <typename Aut>
+  inline
+  auto
+  codeterminize(const Aut& a)
+    -> decltype(transpose(determinize(transpose(a))))
+  {
+    return transpose(determinize(transpose(a)));
+  }
+
   /*---------------------------.
   | weighted determinization.  |
   `---------------------------*/
@@ -473,7 +483,18 @@ namespace vcsn
     return res;
   }
 
+  template <typename Aut>
+  inline
+  auto
+  codeterminize_weighted(const Aut& aut)
+    -> decltype(transpose(determinize_weighted(transpose(aut))))
+  {
+    return transpose(determinize_weighted(transpose(aut)));
+  }
 
+  /*-------------------.
+  | dyn::determinize.  |
+  `-------------------*/
 
   namespace dyn
   {
@@ -523,6 +544,48 @@ namespace vcsn
     }
   }
 
+
+  /*---------------------.
+  | dyn::codeterminize.  |
+  `---------------------*/
+
+  /// FIXME: duplicate code with determinize.
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Boolean Bridge.
+      template <typename Aut, typename String>
+      if_boolean_t<Aut, automaton>
+      codeterminize(const automaton& aut, const std::string& algo)
+      {
+        const auto& a = aut->as<Aut>();
+        if (algo == "auto" || algo == "boolean")
+          return make_automaton(::vcsn::codeterminize(a));
+        else if (algo == "weighted")
+          return make_automaton(::vcsn::codeterminize_weighted(a));
+        else
+          raise("codeterminize: invalid algorithm: ", str_escape(algo));
+      }
+
+      /// Weighted Bridge.
+      template <typename Aut, typename String>
+      if_not_boolean_t<Aut, automaton>
+      codeterminize(const automaton& aut, const std::string& algo)
+      {
+        const auto& a = aut->as<Aut>();
+        if (algo == "boolean")
+          raise("codeterminize: cannot apply Boolean determinization");
+        else if (algo == "auto" || algo == "weighted")
+          return make_automaton(::vcsn::codeterminize_weighted(a));
+        else
+          raise("codeterminize: invalid algorithm: ", str_escape(algo));
+      }
+
+      REGISTER_DECLARE(codeterminize,
+                       (const automaton& aut, const std::string& algo) -> automaton);
+    }
+  }
 
 } // namespace vcsn
 

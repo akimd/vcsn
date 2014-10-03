@@ -17,5 +17,14 @@ namespace vcsn
     {
       return detail::is_deterministic_registry().call(aut);
     }
+
+
+    REGISTER_DEFINE(is_codeterministic);
+
+    bool
+    is_codeterministic(const automaton& aut)
+    {
+      return detail::is_codeterministic_registry().call(aut);
+    }
   }
 }

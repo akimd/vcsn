@@ -21,5 +21,12 @@ namespace vcsn
     {
       return detail::reduce_registry().call(aut);
     }
+
+    REGISTER_DEFINE(cominimize);
+    automaton
+    cominimize(const automaton& aut, const std::string& algo)
+    {
+      return detail::cominimize_registry().call(aut, algo);
+    }
   }
 }

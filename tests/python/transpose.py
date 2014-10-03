@@ -46,6 +46,7 @@ CHECK_EQ(a.info(), a.transpose().transpose().info())
 a = vcsn.context('lal_char_b').ratexp('a+b').standard()
 CHECK_EQ({
            'is complete': False,
+           'is codeterministic': True,
            'is deterministic': False,
            'is empty': False,
            'is eps-acyclic': True,
@@ -57,6 +58,7 @@ CHECK_EQ({
            'is valid': True,
            'number of accessible states': 3,
            'number of coaccessible states': 3,
+           'number of codeterministic states': 3,
            'number of deterministic states': 3,
            'number of eps transitions': 0,
            'number of final states': 1,

@@ -32,6 +32,8 @@ namespace vcsn
       ALGO("ambiguous-word", "is-ambiguous");
       ALGO("chain", "concatenate");
       ALGO("coaccessible", "accessible");
+      ALGO("codeterminize", "determinize");
+      ALGO("cominimize", "minimize");
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
       ALGO("difference", "are-equivalent");
@@ -40,8 +42,9 @@ namespace vcsn
       ALGO("infiltration", "product");
       ALGO("invert", "has-twins-property");
       ALGO("is-accessible", "accessible");
-      ALGO("is-cycle-ambiguous", "is-ambiguous");
       ALGO("is-coaccessible", "accessible");
+      ALGO("is-codeterministic", "is-deterministic");
+      ALGO("is-cycle-ambiguous", "is-ambiguous");
       ALGO("is-empty", "accessible");
       ALGO("is-out-sorted", "sort");
       ALGO("is-standard", "standard");

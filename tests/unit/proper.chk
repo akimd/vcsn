@@ -10,11 +10,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -32,11 +34,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -54,11 +58,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -76,11 +82,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -98,11 +106,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 3
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
 is normalized: 0
@@ -120,11 +130,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 9
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -142,11 +154,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 9
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -164,11 +178,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 9
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -186,11 +202,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -208,11 +226,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -230,11 +250,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 3
+number of codeterministic states: 3
 number of deterministic states: 3
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: 0
 is deterministic: 1
+is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -253,11 +275,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 3
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
 is normalized: 0
@@ -276,11 +300,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 5
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 2
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -298,11 +324,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -320,11 +348,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -342,11 +372,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -365,11 +397,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 3
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
 is normalized: 0
@@ -388,11 +422,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 6
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 3
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
 is normalized: 0
@@ -410,11 +446,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 9
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -432,11 +470,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 9
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0
@@ -486,11 +526,13 @@ number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
 number of transitions: 9
+number of codeterministic states: N/A
 number of deterministic states: N/A
 number of eps transitions: 0
 number of strongly connected components: 1
 is complete: N/A
 is deterministic: N/A
+is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
 is normalized: 0

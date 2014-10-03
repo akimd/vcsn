@@ -4,6 +4,7 @@
 # include <queue>
 # include <unordered_set>
 
+# include <vcsn/algos/transpose.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
 
@@ -41,6 +42,14 @@ namespace vcsn
     return res;
   }
 
+ /// Number of non-deterministic states of transpositive automaton.
+  template <class Aut>
+  inline size_t
+  num_codeterministic_states(const Aut& aut)
+  {
+    return num_deterministic_states(transpose(aut));
+  }
+
   /// Whether has at most an initial state, and all its states
   /// are deterministic.
   template <class Aut>
@@ -59,6 +68,14 @@ namespace vcsn
     return true;
   }
 
+  /// Whether the transpositive automaton is deterministic.
+  template <class Aut>
+  inline bool
+  is_codeterministic(const Aut& aut)
+  {
+    return is_deterministic(transpose(aut));
+  }
+
   namespace dyn
   {
     namespace detail
@@ -73,6 +90,17 @@ namespace vcsn
 
       REGISTER_DECLARE(is_deterministic,
                        (const automaton& aut) -> bool);
+
+      template <typename Aut>
+      bool
+      is_codeterministic(const automaton& aut)
+      {
+        return is_codeterministic(aut->as<Aut>());
+      }
+
+      REGISTER_DECLARE(is_codeterministic,
+                       (const automaton& aut) -> bool);
+
     }
   }
 } // namespace vscn

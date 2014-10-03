@@ -23,7 +23,6 @@ namespace vcsn
   }
 
   // FIXME: there must exist some nicer way to do this.
-
   template <typename Aut>
   inline
   typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
@@ -70,6 +69,15 @@ namespace vcsn
       raise("minimize: invalid algorithm (non-Boolean): ", str_escape(algo));
   }
 
+  template <typename Aut>
+  inline
+  auto
+  cominimize(const Aut& a, const std::string& algo)
+    -> decltype(transpose(minimize(transpose(a), algo)))
+  {
+    return transpose(minimize(transpose(a), algo));
+  }
+
 
   /*----------------.
   | dyn::minimize.  |
@@ -105,6 +113,46 @@ namespace vcsn
 
       REGISTER_DECLARE
       (minimize,
+       (const automaton& aut, const std::string& algo) -> automaton);
+
+    }
+  }
+
+
+  /*-----------------.
+  | dyn::cominimize. |
+  `-----------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+
+      template <typename Aut, typename String>
+      inline
+      typename std::enable_if<::vcsn::detail::can_use_brzozowski<Aut>(),
+                              automaton>::type
+      cominimize(const automaton& aut, const std::string& algo)
+      {
+        const auto& a = aut->as<Aut>();
+        if (algo == "brzozowski")
+          return make_automaton(::vcsn::cominimize_brzozowski(a));
+        else
+          return make_automaton(::vcsn::cominimize(a, algo));
+      }
+
+      template <typename Aut, typename String>
+      inline
+      typename std::enable_if<!::vcsn::detail::can_use_brzozowski<Aut>(),
+                              automaton>::type
+      cominimize(const automaton& aut, const std::string& algo)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::cominimize(a, algo));
+      }
+
+      REGISTER_DECLARE
+      (cominimize,
        (const automaton& aut, const std::string& algo) -> automaton);
     }
   }

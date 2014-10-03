@@ -8,6 +8,8 @@ from test import *
 # Check that is-deterministic(INPUT) = EXPECT in lal.
 def check(expect, i):
     CHECK_EQ(expect, i.is_deterministic())
+    # check codeterministic.
+    CHECK_EQ(i.transpose().is_deterministic(), i.is_codeterministic())
 
 check(True, vcsn.automaton('''
 digraph

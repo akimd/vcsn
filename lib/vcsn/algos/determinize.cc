@@ -14,5 +14,14 @@ namespace vcsn
     {
       return detail::determinize_registry().call(aut, algo);
     }
+
+    REGISTER_DEFINE(codeterminize);
+
+    automaton
+    codeterminize(const automaton& aut, const std::string& algo)
+    {
+      return detail::codeterminize_registry().call(aut, algo);
+    }
+
   }
 }
