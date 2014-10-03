@@ -25,9 +25,15 @@ namespace vcsn
     public:
       /// The type of automaton to wrap.
       using automaton_t = Aut;
-      using super = automaton_decorator<Aut>;
-      using automaton_nocv_t = typename super::automaton_nocv_t;
 
+      /// The type to use to build an automaton of the same type:
+      /// remove the inner const-volatile qualifiers, but still build
+      /// a transpose_automaton.
+      using automaton_nocv_t
+        = transpose_automaton<typename
+                              automaton_t::element_type::automaton_nocv_t>;
+
+      using super = automaton_decorator<Aut>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -38,7 +44,6 @@ namespace vcsn
       using weightset_t = weightset_t_of<automaton_t>;
       using kind_t = typename automaton_t::element_type::kind_t;
 
-    public:
       using super::super;
       using super::aut_;
 
