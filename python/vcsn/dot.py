@@ -21,7 +21,8 @@ def _label_pretty(s):
     '''
     return (s.replace('<', '⟨')
             .replace('>', '⟩')
-            .replace(r'\\e', 'ε'))
+            .replace(r'\\e', 'ε')
+            .replace(r'\\z', '∅'))
 
 def _labels_as_tooltips(s):
     return re.sub(r'label = (".*?"), shape = box',

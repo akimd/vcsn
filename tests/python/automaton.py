@@ -363,6 +363,26 @@ CHECK_EQ('''digraph
          _dot_pretty((a&a).dot(), "transitions"))
 
 
+# Empty set.
+CHECK_EQ('''digraph
+{
+  vcsn_context = "lal_char()_b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+  }
+  {
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    0 [label = "∅{c}", shape = box]
+  }
+  I0 -> 0
+  0 -> F0
+}''',
+         _dot_pretty(vcsn.context('lal_char_b').ratexp('\z{c}').derived_term().dot()))
+
 ## ------------------------------- ##
 ## Output: dot, dot2tex and TikZ.  ##
 ## ------------------------------- ##
