@@ -14,7 +14,7 @@ from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex, from_dot, to
 
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: Conjunction(l, r)
-automaton.__eq__ = lambda self, other: str(self) == str(other)
+automaton.__eq__ = lambda self, other: str(self.strip()) == str(other.strip())
 automaton.__invert__ = automaton.complement
 automaton.__mod__ = automaton.difference
 automaton.__mul__ = _right_mult

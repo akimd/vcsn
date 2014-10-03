@@ -11,7 +11,7 @@ def file_to_string(file):
     return open(medir + "/" + file, "r").read().strip()
 
 def check(algo, aut, exp):
-    CHECK_EQ(exp, aut.minimize(algo).format('dot'))
+    CHECK_EQ(exp, aut.minimize(algo))
 
 def xfail(algo, aut):
     res = ''
