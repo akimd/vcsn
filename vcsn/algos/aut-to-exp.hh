@@ -212,7 +212,7 @@ namespace vcsn
   {
     if (s == res->null_state())
       s = next_naive(res);
-    auto eliminate_state = vcsn::detail::make_state_eliminator(res);
+    auto eliminate_state = detail::make_state_eliminator(res);
     eliminate_state(s);
     return res;
   }
@@ -292,9 +292,9 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename String>
       ratexp
-      aut_to_exp(const automaton& aut)
+      aut_to_exp(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         // FIXME: So far, there is a single implementation of ratexps,
@@ -302,11 +302,16 @@ namespace vcsn
         using context_t = context_t_of<Aut>;
         using ratexpset_t = vcsn::ratexpset<context_t>;
         ratexpset_t rs(a->context(), ratexpset_t::identities_t::trivial);
-        return make_ratexp(rs, ::vcsn::aut_to_exp_naive(a));
+        if (algo == "auto" || algo == "naive")
+          return make_ratexp(rs, ::vcsn::aut_to_exp_naive(a));
+        else
+          raise("aut-to-exp: invalid algorithm: ", str_escape(algo),
+                ": expected \"auto\", or \"naive\"");
       }
 
       REGISTER_DECLARE(aut_to_exp,
-                       (const automaton& aut) -> ratexp);
+                       (const automaton& aut, const std::string& algo)
+                       -> ratexp);
     }
   }
 

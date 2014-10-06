@@ -303,7 +303,7 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
-        REGISTER(aut_to_exp, aut_t);
+        REGISTER(aut_to_exp, aut_t, const std::string);
         REGISTER(chain, aut_t, int, int);
         REGISTER(chain_ratexp, rs_t, int, int);
         REGISTER(coaccessible, aut_t);

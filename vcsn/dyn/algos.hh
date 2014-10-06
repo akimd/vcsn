@@ -36,8 +36,7 @@ namespace vcsn
     bool are_isomorphic(const automaton& lhs, const automaton& rhs);
 
     /// A ratexp denoting the language of \a aut.
-    /// Uses the "naive" heuristics.
-    ratexp aut_to_exp(const automaton& aut);
+    ratexp aut_to_exp(const automaton& aut, const std::string& algo = "auto");
 
     /// A ratexp denoting the language of \a aut.
     ratexp aut_to_exp_in_degree(const automaton& aut);

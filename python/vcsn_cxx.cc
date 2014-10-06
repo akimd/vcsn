@@ -409,7 +409,7 @@ struct automaton
 
   label synchronizing_word(const std::string& algo = "greedy") const;
 
-  ratexp to_ratexp() const;
+  ratexp to_ratexp(const std::string& algo = "auto") const;
 
   automaton transpose()
   {
@@ -824,9 +824,9 @@ label automaton::synchronizing_word(const std::string& algo) const
   return vcsn::dyn::synchronizing_word(val_, algo);
 }
 
-ratexp automaton::to_ratexp() const
+ratexp automaton::to_ratexp(const std::string& algo) const
 {
-  return vcsn::dyn::aut_to_exp(val_);
+  return vcsn::dyn::aut_to_exp(val_, algo);
 }
 
 /*-------------------------.
@@ -918,6 +918,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(synchronizing_word, synchronizing_word,
                                        0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(to_ratexp, to_ratexp, 0, 1);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -981,7 +982,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("_proper", &automaton::proper, proper())
     .def("push_weights", &automaton::push_weights)
-    .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
+    .def("ratexp", &automaton::to_ratexp, to_ratexp())
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
     .def("shortest", &automaton::shortest)

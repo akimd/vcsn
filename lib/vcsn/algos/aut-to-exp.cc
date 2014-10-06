@@ -28,9 +28,9 @@ namespace vcsn
     REGISTER_DEFINE(aut_to_exp);
 
     ratexp
-    aut_to_exp(const automaton& aut)
+    aut_to_exp(const automaton& aut, const std::string& algo)
     {
-      return detail::aut_to_exp_registry().call(aut);
+      return detail::aut_to_exp_registry().call(aut, algo);
     }
   }
 }
