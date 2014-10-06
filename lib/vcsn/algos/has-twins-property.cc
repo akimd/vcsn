@@ -16,12 +16,5 @@ namespace vcsn
       return detail::has_twins_property_registry().call(aut);
     }
 
-    REGISTER_DEFINE(invert);
-
-    automaton
-    invert(const automaton& aut)
-    {
-      return detail::invert_registry().call(aut);
-    }
   }
 }

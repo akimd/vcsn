@@ -40,7 +40,6 @@ namespace vcsn
       ALGO("eliminate-state", "aut-to-exp");
       ALGO("factor", "prefix");
       ALGO("infiltration", "product");
-      ALGO("invert", "has-twins-property");
       ALGO("is-accessible", "accessible");
       ALGO("is-coaccessible", "accessible");
       ALGO("is-codeterministic", "is-deterministic");

@@ -2,7 +2,6 @@
 # define VCSN_ALGOS_HAS_TWINS_PROPERTY_HH
 
 # include <stack>
-# include <vector>
 
 # include <vcsn/algos/accessible.hh> // vcsn::trim
 # include <vcsn/algos/is-ambiguous.hh> // is_cycle_ambiguous
@@ -16,52 +15,6 @@
 
 namespace vcsn
 {
-
-  /*---------.
-  | invert.  |
-  `---------*/
-
-  /// Invert the weight of each transition of \a aut.
-  template <typename Aut>
-  Aut&
-  invert_here(Aut& aut)
-  {
-    const auto& ws = *aut->weightset();
-    for (auto t : aut->all_transitions())
-      {
-        auto w = aut->weight_of(t);
-        aut->set_weight(t, ws.rdiv(ws.one(), w));
-      }
-    return aut;
-  }
-
-  template <typename Aut>
-  auto
-  invert(const Aut& aut)
-    -> decltype(::vcsn::copy(aut))
-  {
-    auto res = copy(aut);
-    return invert_here(res);
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut>
-      automaton
-      invert(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::invert(a));
-      }
-
-      REGISTER_DECLARE(invert,
-                       (const automaton&) -> automaton);
-    }
-  }
-
 
   /*-----------------.
   | cycle_identity.  |

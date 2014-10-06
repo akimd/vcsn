@@ -20,34 +20,6 @@ digraph
 ''')
 CHECK_EQ(True, aut1.has_twins_property())
 
-oaut1 = '''digraph
-{
-  vcsn_context = "lal_char(abcd)_zmin"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F3
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
-  }
-  I0 -> 0 [label = "<0>"]
-  0 -> 1 [label = "<-1>a"]
-  0 -> 2 [label = "<-2>a"]
-  1 -> 1 [label = "<-3>b"]
-  1 -> 3 [label = "<-5>c"]
-  2 -> 2 [label = "<-3>b"]
-  2 -> 3 [label = "<-6>d"]
-  3 -> F3 [label = "<0>"]
-}'''
-CHECK_EQ(oaut1, aut1.invert())
-
 
 aut2 = vcsn.automaton(r'''
 digraph
