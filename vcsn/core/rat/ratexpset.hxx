@@ -497,8 +497,10 @@ namespace vcsn
     else if (type_ignoring_lweight_(l) == type_t::atom
              && type_ignoring_lweight_(r) == type_t::atom)
       {
-        auto lhs = down_pointer_cast<const atom_t>(unwrap_possible_lweight_(l))->value();
-        auto rhs = down_pointer_cast<const atom_t>(unwrap_possible_lweight_(r))->value();
+        auto lhs =
+          down_pointer_cast<const atom_t>(unwrap_possible_lweight_(l))->value();
+        auto rhs =
+          down_pointer_cast<const atom_t>(unwrap_possible_lweight_(r))->value();
         if (labelset()->equals(lhs, rhs))
           res = rmul(l, possibly_implicit_lweight_(r));
         else

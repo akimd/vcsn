@@ -30,9 +30,9 @@ namespace dyn
     ratexpset_wrapper<RatExpSet>
 
     DEFINE::down(const value_t& v) const
-      -> std::shared_ptr<const node_t>
+      -> typename ratexpset_t::value_t
     {
-      return down_pointer_cast<const node_t>(v);
+      return down_pointer_cast<const typename ratexpset_t::value_t::element_type>(v);
     }
 
     DEFINE::down(const std::string& w) const -> weight_t

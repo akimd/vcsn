@@ -106,8 +106,6 @@ namespace detail
     using label_t = label_t_of<context_t>;
     using weight_t = weight_t_of<context_t>;
     using value_t = typename super_type::value_t;
-    /// Concrete value type.
-    using node_t = typename context_t::node_t;
 
     /// Constructor.
     /// \param rs    the wrapped ratexpset.
@@ -125,8 +123,7 @@ namespace detail
     }
 
     /// From weak to strong typing.
-    std::shared_ptr<const node_t>
-    down(const value_t& v) const;
+    typename ratexpset_t::value_t down(const value_t& v) const;
 
     /// From string, to typed weight.
     weight_t down(const std::string& w) const;

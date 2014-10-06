@@ -66,6 +66,7 @@ namespace vcsn
     template <typename Aut, typename Kind = typename context_t_of<Aut>::kind_t>
     struct state_eliminator;
 
+    /// Eliminate states in an automaton whose labelset is oneset.
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_one>
     {
@@ -83,7 +84,7 @@ namespace vcsn
       /// Eliminate state s.
       void operator()(state_t s)
       {
-        require(aut_->has_state(s), "not a valid state: " + std::to_string(s));
+        require(aut_->has_state(s), "not a valid state: ", s);
 
         // The loop's weight.
         auto loop = ws_.zero();
@@ -124,6 +125,8 @@ namespace vcsn
       const weightset_t& ws_ = *aut_->weightset();
     };
 
+
+    /// Eliminate states in an automaton whose labelset is a ratexpset.
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_ratexps>
     {
@@ -151,7 +154,7 @@ namespace vcsn
       /// Eliminate state s.
       void operator()(state_t s)
       {
-        require(aut_->has_state(s), "not a valid state: " + std::to_string(s));
+        require(aut_->has_state(s), "not a valid state: ", s);
 
         // The loops' ratexp.
         auto loop = rs_.zero();
