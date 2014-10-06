@@ -23,7 +23,7 @@ namespace vcsn
   {
   public:
     using context_t = Context;
-    /// The (shared pointer) type to use it we have to create an
+    /// The (shared pointer) type to use if we have to create an
     /// automaton of the same (underlying) type.
     using automaton_nocv_t = mutable_automaton<context_t>;
     using labelset_t = labelset_t_of<context_t>;
@@ -132,8 +132,9 @@ namespace vcsn
     // have greater numbers.  We also assume that pre()<post().
     static constexpr state_t      pre()  { return 0U; }
     static constexpr state_t      post()  { return 1U; }
-    // Invalid transition or state.
+    /// Invalid  state.
     static constexpr state_t      null_state()      { return -1U; }
+    /// Invalid transition.
     static constexpr transition_t null_transition() { return -1U; }
 
     label_t prepost_label() const
