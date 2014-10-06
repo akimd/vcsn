@@ -2,15 +2,13 @@
 # define VCSN_ALGOS_SCC_HH
 
 # include <stack>
-# include <unordered_map>
-# include <unordered_set>
-# include <vector>
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/misc/unordered_map.hh>
-# include <vcsn/misc/unordered_set.hh>
+# include <vcsn/misc/set.hh>
+# include <vcsn/misc/vector.hh> // has
 
 namespace vcsn
 {
@@ -20,6 +18,14 @@ namespace vcsn
 
   namespace detail
   {
+    /// An strongly-connected component: list of states.
+    template <typename Aut>
+    using component_t = std::set<state_t_of<Aut>>;
+
+    /// A set of strongly-connected components.
+    template <typename Aut>
+    using components_t = std::vector<component_t<Aut>>;
+
     /// Use Tarjan's algorithm to find all strongly
     /// connected components.
     template <typename Aut>
@@ -27,14 +33,14 @@ namespace vcsn
     {
     public:
       using state_t = state_t_of<Aut>;
-      using component_t = std::unordered_set<state_t>;
-      using components_t = std::vector<component_t>;
+      using component_t = detail::component_t<Aut>;
+      using components_t = detail::components_t<Aut>;
 
       scc_tarjan_impl(const Aut& aut)
       {
         for (auto s : aut->states())
-            if (!has(marked_, s))
-              dfs(s, aut);
+          if (!has(marked_, s))
+            dfs(s, aut);
       }
 
       const components_t components()
@@ -86,7 +92,7 @@ namespace vcsn
       /// All compnents
       components_t components_;
       /// List visited vertices
-      std::unordered_set<state_t> marked_;
+      std::set<state_t> marked_;
       /// low_[s] is minimum of vertex that it can go
       std::unordered_map<state_t, std::size_t> low_;
       /// Contains list vertices same the component
@@ -134,7 +140,7 @@ namespace vcsn
         rvp_.push(s);
       }
       std::stack<state_t> rvp_;
-      std::unordered_set<state_t> marked_;
+      std::set<state_t> marked_;
       std::stack<state_t> todo_;
     };
   }
@@ -162,8 +168,8 @@ namespace vcsn
     {
     public:
       using state_t = state_t_of<Aut>;
-      using component_t = std::unordered_set<state_t>;
-      using components_t = std::vector<component_t>;
+      using component_t = detail::component_t<Aut>;
+      using components_t = detail::components_t<Aut>;
 
       scc_kosaraju_impl(const Aut& aut)
       {
@@ -206,7 +212,7 @@ namespace vcsn
       /// The current component number.
       std::size_t num_ = 0;
       components_t components_;
-      std::unordered_set<state_t> marked_;
+      std::set<state_t> marked_;
     };
   }
 
@@ -218,7 +224,7 @@ namespace vcsn
 
   /// Find all strongly connected components of \a aut.
   template <typename Aut>
-  const std::vector<std::unordered_set<state_t_of<Aut>>>
+  const detail::components_t<Aut>
   scc(const Aut& aut, SCC_ALGO algo = SCC_ALGO::TARJAN)
   {
     switch (algo)
@@ -239,8 +245,7 @@ namespace vcsn
   /// Generate a subautomaton corresponding to an SCC.
   template <typename Aut>
   typename Aut::element_type::automaton_nocv_t
-  aut_of_component(const std::unordered_set<state_t_of<Aut>>& com,
-                   const Aut& aut)
+  aut_of_component(const detail::component_t<Aut>& com, const Aut& aut)
   {
     using res_t = typename Aut::element_type::automaton_nocv_t;
     res_t res = make_shared_ptr<res_t>(aut->context());

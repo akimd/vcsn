@@ -11,7 +11,6 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/labelset/tupleset.hh>
 # include <vcsn/misc/unordered_map.hh> // vcsn::has
-# include <vcsn/misc/unordered_set.hh> // vcsn::has
 
 namespace vcsn
 {
@@ -36,8 +35,7 @@ namespace vcsn
       using transition_t = transition_t_of<Aut>;
       using weight_t = weight_t_of<Aut>;
       using state_t = state_t_of<Aut>;
-      // FIXME: ordered?
-      using component_t = std::unordered_set<state_t> ;
+      using component_t = detail::component_t<Aut> ;
 
       /// By DFS starting in s0, check that all the states are reached
       /// with a single weight.
@@ -57,8 +55,8 @@ namespace vcsn
           {
             auto s = todo.top();
             todo.pop();
-            // FIXME: all_out should suffice, and probably faster.
-            for (auto t : aut->out(s))
+
+            for (auto t : aut->all_out(s))
               {
                 auto dst = aut->dst_of(t);
                 if (has(component, dst))
@@ -86,7 +84,7 @@ namespace vcsn
 
   /// Check the weight of two states on this component is unique.
   template <typename Aut>
-  bool cycle_identity(const std::unordered_set<state_t_of<Aut>>& c,
+  bool cycle_identity(const detail::component_t<Aut>& c,
                       const Aut& aut)
   {
     detail::cycle_identity_impl<Aut> ci;

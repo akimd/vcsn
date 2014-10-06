@@ -136,6 +136,13 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** Copy
+There are numerous opportunities for an improve copy.  For instance when
+computing the square automaton (see has_twins_property), we would like to
+call copy with a lambda that transforms the weights: \w.w -> (w, 1) and
+likewise for the other tape.  If we can do that on-the-fly, then the
+remainder can benefit from it too.
+
 ** Printers and escapes
 We have some ugly bits for the output, e.g., in dot.hh:
 
