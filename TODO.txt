@@ -210,10 +210,6 @@ sure this is not (much) costlier.
 
 Getting rid of this will allow rat::node to use single inheritance.
 
-** Remove references to ratexp/ratexpset from context
-On second thought, while it is definitely handy, it is not normal that
-contexts depend on ratexpset.
-
 ** polynomialset
 It seems that monomials would be a useful abstraction.
 

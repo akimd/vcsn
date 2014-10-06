@@ -37,11 +37,6 @@ namespace vcsn
     using label_t = typename labelset_t::value_t;
     /// Type of weights.
     using weight_t = typename weightset_t::value_t;
-    /// Type of RatExp ratexps objects.
-    using node_t = rat::node<label_t, weight_t>;
-    using ratexp_t = std::shared_ptr<const node_t>;
-    /// Type of RatExp visitor.
-    using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
     context(const context& that)
       : context(that.ls_, that.ws_)
