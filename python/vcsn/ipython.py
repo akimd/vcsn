@@ -4,7 +4,7 @@ import re
 
 from IPython.core.magic import (Magics, magics_class, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
-from IPython.display import display, SVG
+from IPython.display import display, HTML, Latex, SVG
 from IPython.html import widgets
 from IPython.html.widgets import interactive
 from IPython.utils.warn import info, error
@@ -98,3 +98,32 @@ def interact_h(_interact_f, **kwargs):
     w.remove_class('vbox')
     w.add_class('hbox')
     return f
+
+
+class table(list):
+    """ Overridden list class which takes a 2-dimensional list of
+        the form [[1,2,3],[4,5,6]], and renders an HTML Table in
+        IPython Notebook. """
+
+    def to_html(self, s):
+        try:
+            return s._repr_latex_()
+        except AttributeError as e:
+            pass
+        try:
+            return s._repr_html_()
+        except AttributeError as e:
+            pass
+        return s
+
+    def _repr_html_(self):
+        html = ["<table>"]
+        for row in self:
+            html.append("<tr>")
+
+            for col in row:
+                html.append("<td>{0}</td>".format(self.to_html(col)))
+
+            html.append("</tr>")
+        html.append("</table>")
+        return ''.join(html)
