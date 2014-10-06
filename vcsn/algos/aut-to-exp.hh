@@ -195,7 +195,40 @@ namespace vcsn
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
     };
+
+    template <typename Aut>
+    state_eliminator<Aut>
+    make_state_eliminator(Aut& a)
+    {
+      return a;
+    }
   }
+
+
+  /// Remove state \a s from automaton \a res.
+  template <typename Aut>
+  Aut&
+  eliminate_state_here(Aut& res, state_t_of<Aut> s)
+  {
+    if (s == res->null_state())
+      s = next_naive(res);
+    auto eliminate_state = vcsn::detail::make_state_eliminator(res);
+    eliminate_state(s);
+    return res;
+  }
+
+  /// A copy of automaton \a res without the state \a s.
+  template <typename Aut>
+  Aut
+  eliminate_state(const Aut& aut, state_t_of<Aut> s)
+  {
+    // FIXME: this is soooo wrong: we eliminate a state in a copy,
+    // whose state numbers might be completely different.  We _need_
+    // the state names.
+    auto res = vcsn::copy(aut);
+    return eliminate_state_here(res, s);
+  }
+
 
   /*-----------------------.
   | dyn::eliminate_state.  |
@@ -210,13 +243,11 @@ namespace vcsn
       automaton
       eliminate_state(const automaton& aut, int state)
       {
-        using state_t = state_t_of<Aut>;
         const auto& a = aut->as<Aut>();
-        auto res = vcsn::copy(a);
-        state_t s = state == -1 ? next_naive(res) : state + 2;
-        vcsn::detail::state_eliminator<decltype(res)> eliminate_state(res);
-        eliminate_state(s);
-        return make_automaton(std::move(res));
+        auto s = a->null_state();
+        if (state != -1)
+          s = state + 2;
+        return make_automaton(vcsn::eliminate_state(a, s));
       }
 
       REGISTER_DECLARE(eliminate_state,
@@ -230,22 +261,22 @@ namespace vcsn
   `-------------*/
 
   template <typename Aut,
-            typename Context = context_t_of<Aut>>
-  typename Context::ratexp_t
+            typename RatExpSet = ratexpset<context_t_of<Aut>>>
+  typename RatExpSet::value_t
   aut_to_exp(const Aut& a,
              const state_chooser_t<Aut>& next_state)
   {
     // State elimination is performed on the lifted automaton.
     auto aut = lift(a);
-    detail::state_eliminator<decltype(aut)> eliminate_states(aut);
+    auto eliminate_states = detail::make_state_eliminator(aut);
     eliminate_states(next_state);
     return aut->get_initial_weight(aut->post());
   }
 
 
   template <typename Aut,
-            typename Context = context_t_of<Aut>>
-  typename Context::ratexp_t
+            typename RatExpSet = ratexpset<context_t_of<Aut>>>
+  typename RatExpSet::value_t
   aut_to_exp_naive(const Aut& a)
   {
     state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
@@ -265,14 +296,13 @@ namespace vcsn
       ratexp
       aut_to_exp(const automaton& aut)
       {
+        const auto& a = aut->as<Aut>();
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
         using context_t = context_t_of<Aut>;
         using ratexpset_t = vcsn::ratexpset<context_t>;
-        const auto& a = aut->as<Aut>();
-        return make_ratexp(ratexpset_t(a->context(),
-                                       ratexpset_t::identities_t::trivial),
-                           ::vcsn::aut_to_exp_naive(a));
+        ratexpset_t rs(a->context(), ratexpset_t::identities_t::trivial);
+        return make_ratexp(rs, ::vcsn::aut_to_exp_naive(a));
       }
 
       REGISTER_DECLARE(aut_to_exp,
