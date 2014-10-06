@@ -460,6 +460,7 @@ namespace vcsn
       return res;
     }
 
+    ATTRIBUTE_PURE
     static size_t hash(const monomial_t& m)
     {
       size_t res = 0;
@@ -468,6 +469,7 @@ namespace vcsn
       return res;
     }
 
+    ATTRIBUTE_PURE
     static size_t hash(const value_t& v)
     {
       size_t res = 0;

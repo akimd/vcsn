@@ -6,6 +6,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/algos/transpose.hh>
+# include <vcsn/misc/builtins.hh>
 # include <vcsn/misc/unordered_map.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/vector.hh> // has
@@ -240,6 +241,7 @@ namespace vcsn
           return scc.components();
         }
       }
+    BUILTIN_UNREACHABLE();
   }
 
   /// Generate a subautomaton corresponding to an SCC.
