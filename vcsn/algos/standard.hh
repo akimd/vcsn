@@ -118,37 +118,37 @@ namespace vcsn
 
   namespace rat
   {
-    /// Convert a ratexp to a standard automaton.
+    /// Build a standard automaton from a ratexp.
     ///
-    /// \tparam Aut      relative the generated automaton
-    /// \tparam Context  relative to the RatExp.
+    /// \tparam Aut        relative the generated automaton
+    /// \tparam RatExpSet  relative to the RatExp.
     template <typename Aut,
-              typename Context = context_t_of<Aut>>
+              typename RatExpSet>
     class standard_visitor
-      : public Context::const_visitor
+      : public RatExpSet::const_visitor
     {
     public:
       using automaton_t = Aut;
-      using context_t = Context;
-      using weightset_t = weightset_t_of<context_t>;
-      using weight_t = weight_t_of<context_t>;
+      using ratexpset_t = RatExpSet;
+      using weightset_t = weightset_t_of<ratexpset_t>;
+      using weight_t = weight_t_of<ratexpset_t>;
       using state_t = state_t_of<automaton_t>;
 
-      using super_type = typename Context::const_visitor;
+      using super_type = typename ratexpset_t::const_visitor;
 
       constexpr static const char* me() { return "standard"; }
 
-      standard_visitor(const context_t& ctx)
-        : ws_(*ctx.weightset())
-        , res_(make_shared_ptr<automaton_t>(ctx))
+      standard_visitor(const ratexpset_t& rs)
+        : rs_(rs)
+        , res_(make_shared_ptr<automaton_t>(rs_.context()))
       {}
 
       automaton_t
-      operator()(const typename context_t::ratexp_t& v)
+      operator()(const typename ratexpset_t::value_t& v)
       {
         v->accept(*this);
         res_->set_initial(initial_);
-        return std::move(res_);
+        return res_;
       }
 
       VCSN_RAT_UNSUPPORTED(complement)
@@ -311,7 +311,8 @@ namespace vcsn
       }
 
     private:
-      const weightset_t& ws_;
+      const ratexpset_t& rs_;
+      const weightset_t& ws_ = *rs_.weightset();
       automaton_t res_;
       state_t initial_ = automaton_t::element_type::null_state();
     };
@@ -319,17 +320,17 @@ namespace vcsn
   } // rat::
 
 
-  /// Convert a ratexp to a standard automaton.
+  /// Build a standard automaton from a ratexp.
   ///
-  /// \tparam Aut      relative to the generated automaton.
-  /// \tparam Context  relative to the RatExp.
+  /// \tparam Aut        relative to the generated automaton.
+  /// \tparam RatExpSet  relative to the RatExp.
   template <typename Aut,
-            typename Context = context_t_of<Aut>>
+            typename RatExpSet>
   Aut
-  standard(const Context& ctx, const typename Context::ratexp_t& e)
+  standard(const RatExpSet& rs, const typename RatExpSet::value_t& r)
   {
-    rat::standard_visitor<Aut, Context> standard{ctx};
-    return standard(e);
+    rat::standard_visitor<Aut, RatExpSet> standard{rs};
+    return standard(r);
   }
 
   namespace dyn
@@ -343,11 +344,10 @@ namespace vcsn
       {
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
-        using context_t = context_t_of<RatExpSet>;
         using ratexpset_t = RatExpSet;
-        using automaton_t = vcsn::mutable_automaton<context_t>;
+        using automaton_t = vcsn::mutable_automaton<context_t_of<ratexpset_t>>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(::vcsn::standard<automaton_t>(e.ratexpset().context(),
+        return make_automaton(::vcsn::standard<automaton_t>(e.ratexpset(),
                                                             e.ratexp()));
       }
 

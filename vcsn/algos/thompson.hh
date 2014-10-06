@@ -13,35 +13,36 @@ namespace vcsn
 {
   namespace rat
   {
-    /// Compute the Thompson automaton of an expression.
+    /// Build a Thompson automaton from a ratexp.
     ///
-    /// \tparam Aut      relative the generated automaton
-    /// \tparam Context  relative to the RatExp.
+    /// \tparam Aut        relative the generated automaton
+    /// \tparam RatExpSet  relative to the RatExp.
     template <typename Aut,
-              typename Context = context_t_of<Aut>>
+              typename RatExpSet>
     class thompson_visitor
-      : public Context::const_visitor
+      : public RatExpSet::const_visitor
     {
     public:
       using automaton_t = Aut;
-      using context_t = Context;
-      using weightset_t = weightset_t_of<context_t>;
-      using weight_t = weight_t_of<context_t>;
+      using ratexpset_t = RatExpSet;
+      using weightset_t = weightset_t_of<ratexpset_t>;
+      using weight_t = weight_t_of<ratexpset_t>;
       using state_t = state_t_of<automaton_t>;
 
-      using super_type = typename Context::const_visitor;
+      using super_type = typename ratexpset_t::const_visitor;
 
-      static_assert(context_t::has_one(),
+      static_assert(labelset_t_of<Aut>::has_one(),
                     "thompson: requires nullable labels");
 
       constexpr static const char* me() { return "thompson"; }
 
-      thompson_visitor(const context_t& ctx)
-        : res_(make_shared_ptr<automaton_t>(ctx))
+      thompson_visitor(const ratexpset_t& rs)
+        : rs_(rs)
+        , res_(make_shared_ptr<automaton_t>(rs_.context()))
       {}
 
       automaton_t
-      operator()(const typename context_t::ratexp_t& v)
+      operator()(const typename ratexpset_t::value_t& v)
       {
         v->accept(*this);
         res_->set_initial(initial_);
@@ -136,8 +137,9 @@ namespace vcsn
       }
 
     private:
+      const ratexpset_t& rs_;
+      const weightset_t& ws_ = *rs_.weightset();
       automaton_t res_;
-      const weightset_t& ws_ = *res_->weightset();
       using label_t = label_t_of<automaton_t>;
       const label_t epsilon_ = res_->labelset()->one();
       state_t initial_ = automaton_t::element_type::null_state();
@@ -146,17 +148,18 @@ namespace vcsn
 
   } // rat::
 
-  /// \tparam Aut      relative to the generated automaton.
-  /// \tparam Context  relative to the RatExp.
+  /// Build a Thompson automaton from a ratexp.
+  ///
+  /// \tparam Aut        relative to the generated automaton.
+  /// \tparam RatExpSet  relative to the RatExp.
   template <typename Aut,
-            typename Context = context_t_of<Aut>>
+            typename RatExpSet>
   Aut
-  thompson(const Context& ctx, const typename Context::ratexp_t& e)
+  thompson(const RatExpSet& rs, const typename RatExpSet::value_t& r)
   {
-    rat::thompson_visitor<Aut, Context> thompson{ctx};
-    return thompson(e);
+    rat::thompson_visitor<Aut, RatExpSet> thompson{rs};
+    return thompson(r);
   }
-
   namespace dyn
   {
     namespace detail
@@ -172,11 +175,10 @@ namespace vcsn
       {
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
-        using context_t = context_t_of<RatExpSet>;
         using ratexpset_t = RatExpSet;
-        using automaton_t = mutable_automaton<context_t>;
+        using automaton_t = mutable_automaton<context_t_of<ratexpset_t>>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(::vcsn::thompson<automaton_t>(e.ratexpset().context(),
+        return make_automaton(::vcsn::thompson<automaton_t>(e.ratexpset(),
                                                             e.ratexp()));
       }
 
