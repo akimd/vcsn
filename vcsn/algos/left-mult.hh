@@ -131,7 +131,7 @@ namespace vcsn
 
   template <typename RatExpSet>
   inline
-  typename RatExpSet::ratexp_t
+  typename RatExpSet::value_t
   left_mult(const RatExpSet& rs,
             const weight_t_of<RatExpSet>& w,
             const typename RatExpSet::value_t& r)
@@ -246,7 +246,7 @@ namespace vcsn
 
   template <typename RatExpSet>
   inline
-  typename RatExpSet::ratexp_t
+  typename RatExpSet::value_t
   right_mult(const RatExpSet& rs,
              const typename RatExpSet::value_t& r,
              const weight_t_of<RatExpSet>& w)

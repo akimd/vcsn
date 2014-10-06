@@ -146,8 +146,8 @@ namespace vcsn
   }
 
   template <class RatExpSet>
-  typename RatExpSet::ratexp_t
-  less_than(const RatExpSet& rs, const typename RatExpSet::ratexp_t& v)
+  typename RatExpSet::value_t
+  less_than(const RatExpSet& rs, const typename RatExpSet::value_t& v)
   {
     return rs.less_than(v);
   }

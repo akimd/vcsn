@@ -46,7 +46,7 @@ namespace vcsn
       public:
         using ratexpset_t = RatExpSet;
         using super_type = ratexp_base;
-        using ratexp_t = typename ratexpset_t::ratexp_t;
+        using ratexp_t = typename ratexpset_t::value_t;
         ratexp_wrapper(const ratexp_t& ratexp,
                        const ratexpset_t& ratexpset)
           : ratexp_(ratexp)
@@ -83,7 +83,7 @@ namespace vcsn
     inline
     ratexp
     make_ratexp(const RatExpSet& rs,
-                const typename RatExpSet::ratexp_t& ratexp)
+                const typename RatExpSet::value_t& ratexp)
     {
       using wrapper_t = detail::ratexp_wrapper<RatExpSet>;
       return std::make_shared<wrapper_t>(ratexp, rs);

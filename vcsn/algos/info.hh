@@ -281,7 +281,7 @@ namespace vcsn
 
   template <class RatExpSet>
   void
-  info(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+  info(const RatExpSet& rs, const typename RatExpSet::value_t& e,
        std::ostream& o)
   {
     rat::size<RatExpSet> sizer;

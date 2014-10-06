@@ -168,7 +168,7 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   std::ostream&
-  print(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+  print(const RatExpSet& rs, const typename RatExpSet::value_t& e,
         std::ostream& o, const std::string& format)
   {
     return rs.print(e, o, format);

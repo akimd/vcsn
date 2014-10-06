@@ -194,7 +194,7 @@ namespace vcsn
       prod_(typename prod_t::iterator begin,
             typename prod_t::iterator end) const
       {
-        using ratexps_t = typename prod_t::ratexps_t;
+        using ratexps_t = typename prod_t::values_t;
         if (begin == end)
           return rs_.one();
         else if (std::next(begin, 1) == end)
@@ -415,7 +415,7 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   typename rat::expansionset<RatExpSet>::value_t
-  first_order(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  first_order(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
     rat::first_order_visitor<RatExpSet> first_order{rs};
     return first_order.first_order(e);

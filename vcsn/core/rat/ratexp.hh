@@ -60,10 +60,11 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using node_t = rat::node<label_t, weight_t>;
+      /// A ratexp usable with value semantics.
       using value_t = std::shared_ptr<const node_t>;
       /// Same as value_t, but writable.  Use with care.
       using wvalue_t = std::shared_ptr<node_t>;
-      using ratexps_t = std::vector<value_t>;
+      using values_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
       virtual void accept(const_visitor &v) const = 0;
@@ -105,14 +106,14 @@ namespace vcsn
       using super_type = inner<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
-      using ratexps_t = typename super_type::ratexps_t;
+      using values_t = typename super_type::values_t;
 
-      using const_iterator = typename ratexps_t::const_iterator;
+      using const_iterator = typename values_t::const_iterator;
       // Needed by boost::make_iterator_range, but since we iterate
       // over const value (well, shared_ptr to const values), make it
       // a const_iterator anyway.  Otherwise, clang won't compile.
       using iterator = const_iterator;
-      using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
+      using const_reverse_iterator = typename values_t::const_reverse_iterator;
       using reverse_iterator = const_reverse_iterator;
 
       virtual type_t type() const { return Type; };
@@ -135,19 +136,19 @@ namespace vcsn
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
-      variadic(const ratexps_t& ns = ratexps_t());
+      variadic(const values_t& ns = values_t());
       variadic(const variadic& that)
         : super_type(that)
         , sub_(that.sub_)
       {}
 
       /// Return a copy of children.
-      ratexps_t subs() const;
+      values_t subs() const;
 
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
-      ratexps_t sub_;
+      values_t sub_;
     };
 
     /*--------.

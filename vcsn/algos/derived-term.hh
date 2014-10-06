@@ -115,7 +115,7 @@ namespace vcsn
   inline
   ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
   derived_term_derivation(const RatExpSet& rs,
-                          const typename RatExpSet::ratexp_t& r,
+                          const typename RatExpSet::value_t& r,
                           bool breaking = false)
   {
     detail::derived_termer<RatExpSet> dt{rs, breaking};
@@ -127,7 +127,7 @@ namespace vcsn
   inline
   ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
   derived_term_expansion(const RatExpSet& rs,
-                         const typename RatExpSet::ratexp_t& r,
+                         const typename RatExpSet::value_t& r,
                          bool breaking = false)
   {
     detail::derived_termer<RatExpSet> dt{rs, breaking};

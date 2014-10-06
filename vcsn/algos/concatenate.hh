@@ -240,11 +240,11 @@ namespace vcsn
   `--------------------------*/
 
   template <typename RatExpSet>
-  typename RatExpSet::ratexp_t
-  chain(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
+  typename RatExpSet::value_t
+  chain(const RatExpSet& rs, const typename RatExpSet::value_t& r,
         int min, int max)
   {
-    typename RatExpSet::ratexp_t res;
+    typename RatExpSet::value_t res;
     if (max == -1)
       {
         res = rs.star(r);
@@ -265,7 +265,7 @@ namespace vcsn
           }
         if (min < max)
           {
-            typename RatExpSet::ratexp_t sum = rs.one();
+            typename RatExpSet::value_t sum = rs.one();
             for (int n = 1; n <= max - min; ++n)
               sum = rs.add(sum, chain(rs, r, n, n));
             res = rs.mul(res, sum);

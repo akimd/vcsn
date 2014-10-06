@@ -487,7 +487,7 @@ Static:
     template <typename RatExpSet>
     inline
     rat::ratexp_polynomial_t<RatExpSet>
-    derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+    derivation(const RatExpSet& rs, const typename RatExpSet::value_t& e,
                const std::string& word, bool breaking = false)
 
 Dyn:
@@ -500,7 +500,7 @@ These signatures are now:
     template <typename RatExpSet>
     inline
     rat::ratexp_polynomial_t<RatExpSet>
-    derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+    derivation(const RatExpSet& rs, const typename RatExpSet::value_t& e,
                const typename RatExpSet::labelset_t::word_t& word,
                bool breaking = false)
 

@@ -60,7 +60,7 @@ namespace vcsn
     | variadic.  |
     `-----------*/
 
-    DEFINE_CTOR(variadic)(const ratexps_t& ns)
+    DEFINE_CTOR(variadic)(const values_t& ns)
       : sub_(ns)
     {}
 
@@ -120,7 +120,7 @@ namespace vcsn
     }
 
     DEFINE(variadic)::subs() const
-      -> ratexps_t
+      -> values_t
     {
       return sub_;
     }

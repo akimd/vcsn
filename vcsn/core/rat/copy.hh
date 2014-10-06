@@ -57,7 +57,7 @@ namespace vcsn
       copy_variadic(const variadic_t<Type>& v)
       {
         using out_variadic_t = typename out_ratexpset_t::template variadic_t<Type>;
-        typename out_ratexpset_t::ratexps_t sub;
+        typename out_ratexpset_t::values_t sub;
         for (auto s: v)
           sub.emplace_back(copy(s));
         res_ = std::make_shared<out_variadic_t>(sub);

@@ -15,7 +15,7 @@ namespace vcsn
   /// Whether \a e has only computable stars.
   template <typename RatExpSet>
   bool
-  is_valid(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  is_valid(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
     try
     {

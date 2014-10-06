@@ -737,10 +737,10 @@ namespace vcsn
   /// Intersection/Hadamard product of ratexps.
   template <typename RatExpSet>
   inline
-  typename RatExpSet::ratexp_t
+  typename RatExpSet::value_t
   conjunction(const RatExpSet& rs,
-               const typename RatExpSet::ratexp_t& lhs,
-               const typename RatExpSet::ratexp_t& rhs)
+               const typename RatExpSet::value_t& lhs,
+               const typename RatExpSet::value_t& rhs)
   {
     return rs.conjunction(lhs, rhs);
   }

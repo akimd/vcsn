@@ -8,15 +8,15 @@
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/ctx/context.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/labelset/oneset.hh>
 # include <vcsn/labelset/labelset.hh>
 # include <vcsn/labelset/letterset.hh>
+# include <vcsn/labelset/oneset.hh>
+# include <vcsn/misc/raise.hh>
+# include <vcsn/misc/star_status.hh>
 # include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/z.hh>
 # include <vcsn/weightset/q.hh>
 # include <vcsn/weightset/r.hh>
+# include <vcsn/weightset/z.hh>
 # include <vcsn/weightset/zmin.hh>
 
 namespace vcsn
@@ -68,16 +68,13 @@ namespace vcsn
     using unary_t = unary<Type, label_t, weight_t>;
     template <exp::type_t Type>
     using variadic_t = variadic<Type, label_t, weight_t>;
-    using ratexp_t = std::shared_ptr<const node_t>;
 
-    using type_t = typename node_t::type_t;
-    using ratexps_t = typename node_t::ratexps_t;
-
-    /// The value this is a set of: typeful shared pointers.
+    /// A ratexp (a shared pointer to a tree).
     using value_t = typename node_t::value_t;
-
-    /// A value sequence.
-    using values_t = std::vector<value_t>;
+    /// Type tag for AST classes.
+    using type_t = typename node_t::type_t;
+    /// A list (vector) of ratexps.
+    using values_t = typename node_t::values_t;
 
     using word_t = self_type;
     using letter_t = self_type;
@@ -101,17 +98,17 @@ namespace vcsn
     /// \returns   the previous status.
     bool open(bool o) const;
 
+    /// Accessor to the context.
     const context_t& context() const;
 
-
+    /// Accessor to the identities set.
     identities_t identities() const;
     bool is_series() const;
 
+    /// Accessor to the labelset.
     const labelset_ptr& labelset() const;
-    const weightset_ptr& weightset() const;
-
-    static auto atom(const label_t& v)
-      -> value_t;
+    /// Accessor to the weightset.
+     const weightset_ptr& weightset() const;
 
     /// When used as a LabelSet for automata.
     static value_t special()
@@ -232,6 +229,10 @@ namespace vcsn
     /// Hash \a l.
     static size_t hash(const value_t& l);
 
+    /// Build a label.
+    static auto atom(const label_t& v)
+      -> value_t;
+
     // Concrete type implementation.
     value_t zero() const;
     static value_t one();
@@ -269,8 +270,8 @@ namespace vcsn
   private:
     void require_weightset_commutativity() const;
     bool less_than_ignoring_weight_(value_t l, value_t r) const;
-    value_t remove_from_sum_series_(ratexps_t addends,
-                                    typename ratexps_t::iterator i) const;
+    value_t remove_from_sum_series_(values_t addends,
+                                    typename values_t::iterator i) const;
     value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;
     value_t merge_sum_series_(const sum_t& addends1, value_t aa2) const;
     value_t add_nonzero_series_(value_t l, value_t r) const;
@@ -298,14 +299,14 @@ namespace vcsn
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be sum, conjunction, shuffle, or prod.
     template <exp::type_t Type>
-    void gather(ratexps_t& res, value_t v) const;
+    void gather(values_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be SUM or PROD.
     template <exp::type_t Type>
-    ratexps_t gather(value_t l, value_t r) const;
+    values_t gather(value_t l, value_t r) const;
 
     /// If Context is LAW.
     value_t concat_(value_t l, value_t r, std::true_type) const;

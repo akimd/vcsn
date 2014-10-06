@@ -136,7 +136,7 @@ namespace vcsn
             e[i]->accept(*this);
             for (const auto& m: res_)
               {
-                typename node_t::ratexps_t ratexps;
+                typename node_t::values_t ratexps;
                 for (unsigned j = 0; j < e.size(); ++j)
                   if (i == j)
                     ratexps.emplace_back(m.first);
@@ -199,7 +199,7 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
-             const typename RatExpSet::ratexp_t& e,
+             const typename RatExpSet::value_t& e,
              label_t_of<RatExpSet> a,
              bool breaking = false)
   {
@@ -237,7 +237,7 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
-             const typename RatExpSet::ratexp_t& e,
+             const typename RatExpSet::value_t& e,
              const typename RatExpSet::labelset_t::word_t& l,
              bool breaking = false)
   {

@@ -141,8 +141,8 @@ namespace vcsn
 
   template <typename RatExpSet>
   inline
-  typename detail::lifted_ratexpset_t<RatExpSet>::ratexp_t
-  lift(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  typename detail::lifted_ratexpset_t<RatExpSet>::value_t
+  lift(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
     auto lrs = detail::lift_ratexpset(rs);
     return lrs.lmul(e, lrs.one());

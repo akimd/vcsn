@@ -254,7 +254,7 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
-  split(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  split(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
     rat::split_visitor<RatExpSet> split{rs};
     return split(e);

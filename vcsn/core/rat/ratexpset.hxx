@@ -149,7 +149,7 @@ namespace vcsn
   template <exp::type_t Type>
   inline
   auto
-  ratexpset_impl<Context>::gather(ratexps_t& res, value_t v) const
+  ratexpset_impl<Context>::gather(values_t& res, value_t v) const
     -> void
   {
     static bool binary = !! getenv("VCSN_BINARY");
@@ -165,9 +165,9 @@ namespace vcsn
   inline
   auto
   ratexpset_impl<Context>::gather(value_t l, value_t r) const
-    -> ratexps_t
+    -> values_t
   {
-    ratexps_t res;
+    values_t res;
     gather<Type>(res, l);
     gather<Type>(res, r);
     return res;
@@ -197,8 +197,8 @@ namespace vcsn
     return less_than(unwrap_possible_lweight_(l), unwrap_possible_lweight_(r));
   }
 
-  DEFINE::remove_from_sum_series_(ratexps_t addends,
-                                  typename ratexps_t::iterator i) const
+  DEFINE::remove_from_sum_series_(values_t addends,
+                                  typename values_t::iterator i) const
     -> value_t
   {
     switch (addends.size())
@@ -221,7 +221,7 @@ namespace vcsn
   {
     // We have to clone the addends (actually, their shared_ptr's)
     // into something we can modify.
-    ratexps_t copy = addends.subs();
+    values_t copy = addends.subs();
     assert(copy.size() > 0);
 
     // Find the right spot where to insert r.
@@ -279,7 +279,7 @@ namespace vcsn
           return add_nonzero_series_(r, l);
 
         // Neither argument is a sum.
-        auto ls = std::make_shared<sum_t>(ratexps_t{l}); // Not in normal form.
+        auto ls = std::make_shared<sum_t>(values_t{l}); // Not in normal form.
         return insert_in_sum_series_(*ls, r);
       }
   }
@@ -530,7 +530,7 @@ namespace vcsn
     else if (r->type() == type_t::zero)
       res = r;
     else
-      res = std::make_shared<ldiv_t>(ratexps_t{l, r});
+      res = std::make_shared<ldiv_t>(values_t{l, r});
     return res;
   }
 
@@ -587,10 +587,10 @@ namespace vcsn
         && (r->type() == type_t::atom || r->type() == type_t::prod))
       {
         // Left-hand sides.
-        ratexps_t ls;
+        values_t ls;
         gather<type_t::prod>(ls, l);
         // Right-hand sides.
-        ratexps_t rs;
+        values_t rs;
         gather<type_t::prod>(rs, r);
 
         if (ls.back()->type() == type_t::atom
@@ -701,7 +701,7 @@ namespace vcsn
         const auto& ss = down_pointer_cast<const sum_t>(s);
         // We can build the result faster by emplace_back'ing addends without
         // passing thru add; the order will be the same as in *ss.
-        ratexps_t addends;
+        values_t addends;
         for (auto& a: *ss)
           addends.emplace_back(lmul(w, a));
         return std::make_shared<sum_t>(std::move(addends));

@@ -83,7 +83,7 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   unsigned
-  star_height(const typename RatExpSet::ratexp_t& e)
+  star_height(const typename RatExpSet::value_t& e)
   {
     detail::star_heighter<RatExpSet> s;
     return s(e);
