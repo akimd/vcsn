@@ -62,8 +62,6 @@ namespace vcsn
       using node_t = rat::node<label_t, weight_t>;
       /// A ratexp usable with value semantics.
       using value_t = std::shared_ptr<const node_t>;
-      /// Same as value_t, but writable.  Use with care.
-      using wvalue_t = std::shared_ptr<node_t>;
       using values_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
