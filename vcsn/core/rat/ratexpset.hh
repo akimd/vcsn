@@ -110,32 +110,37 @@ namespace vcsn
     /// Accessor to the weightset.
      const weightset_ptr& weightset() const;
 
-    /// When used as a LabelSet for automata.
+    /// When used as a LabelSet.
     static value_t special()
     {
       return atom(labelset_t::special());
     }
 
-    /// When used as a LabelSet for automata.
-    /// When used as WeightSet for automata.
+    /// When used as a LabelSet.
     static bool is_special(value_t v)
     {
       return equals(special(), v);
     }
 
+    /// When used as a LabelSet.
     bool is_letter(value_t) const
     {
       return false;
     }
 
+    /// When used as WeightSet.
     bool is_zero(value_t v) const ATTRIBUTE_PURE;
+
+    /// When used as WeightSet.
     static bool is_one(value_t v) ATTRIBUTE_PURE;
 
-    static constexpr bool is_commutative()
+    /// When used as WeightSet.
+     static constexpr bool is_commutative()
     {
       return false;
     }
 
+    /// When used as WeightSet.
     static constexpr bool is_idempotent()
     {
       // FIXME: well, the truth is that we are idempotent if the
@@ -143,32 +148,36 @@ namespace vcsn
       return weightset_t::is_idempotent();
     }
 
+    /// When used as WeightSet.
     static constexpr bool show_one()
     {
       return false;
     }
 
+    /// When used as WeightSet.
     static constexpr bool has_one()
     {
       return true;
     }
 
+    /// When used as WeightSet.
     static constexpr bool is_ratexpset()
     {
       return true;
     }
 
+    /// When used as WeightSet.
     static constexpr bool is_free()
     {
       return false;
     }
 
+    /// When used as WeightSet.
     static constexpr star_status_t star_status()
     {
       return star_status_t::STARRABLE;
     }
 
-    value_t conv(std::istream& is) const;
     template <typename GenSet>
     value_t conv(const letterset<GenSet>& ls,
                  typename letterset<GenSet>::value_t v) const;
@@ -181,45 +190,6 @@ namespace vcsn
     value_t conv(const ratexpset_impl<Ctx2>& ws,
                  typename ratexpset_impl<Ctx2>::value_t v) const;
 
-    value_t conv(self_type, value_t v) const;
-
-    std::set<value_t> convs(std::istream&) const
-    {
-      raise(vname(), ": ranges not implemented");
-    }
-
-    std::ostream& print(const value_t v, std::ostream& o,
-                        const std::string& format = "text") const;
-
-    std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
-    {
-      if (format == "latex")
-        {
-          o << "\\mathsf{";
-          switch (identities())
-            {
-            case identities_t::trivial:
-              o << "RatE";
-              break;
-            case identities_t::series:
-              o << "Series";
-              break;
-            default:
-              assert(false);
-            };
-          o << "}[";
-          context().print_set(o, format);
-          o << ']';
-        }
-      else if (format == "text")
-        o << vname();
-      else
-        raise("invalid format: ", format);
-      return o;
-    }
-
-  public:
     /// Whether \a l < \a r.
     static bool less_than(value_t l, value_t r);
 
@@ -267,6 +237,48 @@ namespace vcsn
 
     std::string to_string(value_t e) const; // Mostly for internal convenience.
 
+    /// Parsing a ratexp in a stream.
+    value_t conv(std::istream& is) const;
+
+    /// Converting from ourself: identity.
+    value_t conv(self_type, value_t v) const;
+
+    std::set<value_t> convs(std::istream&) const
+    {
+      raise(vname(), ": ranges not implemented");
+    }
+
+    std::ostream& print(const value_t v, std::ostream& o,
+                        const std::string& format = "text") const;
+
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format = "text") const
+    {
+      if (format == "latex")
+        {
+          o << "\\mathsf{";
+          switch (identities())
+            {
+            case identities_t::trivial:
+              o << "RatE";
+              break;
+            case identities_t::series:
+              o << "Series";
+              break;
+            default:
+              assert(false);
+            };
+          o << "}[";
+          context().print_set(o, format);
+          o << ']';
+        }
+      else if (format == "text")
+        o << vname();
+      else
+        raise("invalid format: ", format);
+      return o;
+    }
+
   private:
     void require_weightset_commutativity() const;
     bool less_than_ignoring_weight_(value_t l, value_t r) const;
@@ -284,8 +296,12 @@ namespace vcsn
     bool is_unweighted_nonsum_(value_t v) const;
     bool is_nonsum_(value_t v) const;
     value_t mul_atoms_(const label_t& l, const label_t& r) const;
-    value_t mul_atoms_(const label_t& l, const label_t& r, std::true_type) const; // law.
-    value_t mul_atoms_(const label_t& l, const label_t& r, std::false_type) const; // ! law.
+    /// LAW.
+    value_t mul_atoms_(const label_t& l, const label_t& r,
+                       std::true_type) const;
+    /// !LAW.
+    value_t mul_atoms_(const label_t& l, const label_t& r,
+                       std::false_type) const;
     value_t mul_unweighted_nontrivial_products_(value_t a, value_t b) const;
     value_t mul_products_(value_t a, value_t b) const;
     value_t nontrivial_mul_expressions_(value_t l, value_t r) const;
@@ -321,9 +337,9 @@ namespace vcsn
     template <typename LabelSet_>
     value_t
     letter_class_(std::set<std::pair<typename LabelSet_::letter_t,
-                                   typename LabelSet_::letter_t>> chars,
-                bool accept,
-                std::false_type) const;
+                                     typename LabelSet_::letter_t>> chars,
+                  bool accept,
+                  std::false_type) const;
 
   private:
     context_t ctx_;
@@ -393,7 +409,7 @@ namespace vcsn
       static type join(const z& ws, const ratexpset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                          rs.identities()};
+                rs.identities()};
       }
     };
 
@@ -407,7 +423,7 @@ namespace vcsn
       static type join(const q& ws, const ratexpset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                          rs.identities()};
+                rs.identities()};
       }
     };
 
@@ -421,7 +437,7 @@ namespace vcsn
       static type join(const r& ws, const ratexpset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                          rs.identities()};
+                rs.identities()};
       }
     };
 
@@ -435,7 +451,7 @@ namespace vcsn
       static type join(const zmin& ws, const ratexpset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                          rs.identities()};
+                rs.identities()};
       }
     };
 

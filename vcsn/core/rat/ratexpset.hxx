@@ -864,17 +864,15 @@ namespace vcsn
     return lmul(weightset()->conv(ws, v), one());
   }
 
-  // Convert from another ratexpset \a rs to ourself.  Requires a full
-  // rewrite of the ratexp \a v.
   template <typename Context>
   template <typename Ctx2>
   inline
   auto
   ratexpset_impl<Context>::conv(const ratexpset_impl<Ctx2>& rs,
-                                typename ratexpset_impl<Ctx2>::value_t v) const
+                                typename ratexpset_impl<Ctx2>::value_t r) const
     -> value_t
   {
-    return copy(rs, *this, v);
+    return copy(rs, *this, r);
   }
 
   DEFINE::conv(std::istream& is) const
