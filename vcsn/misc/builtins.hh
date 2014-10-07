@@ -1,7 +1,7 @@
 #ifndef VCSN_MISC_BUILTINS_HH
 # define VCSN_MISC_BUILTINS_HH
 
-# if defined __clang__ || defined __GNU__
+# if defined __clang__ || defined __GNUC__
 
 #  define BUILTIN_UNREACHABLE() __builtin_unreachable()
 
