@@ -104,7 +104,6 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using super_type = inner<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
       using values_t = typename super_type::values_t;
 
@@ -145,7 +144,7 @@ namespace vcsn
       /// Return a copy of children.
       values_t subs() const;
 
-      virtual void accept(typename node_t::const_visitor &v) const;
+      virtual void accept(typename super_type::const_visitor &v) const;
 
     private:
       values_t sub_;
@@ -165,15 +164,14 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using super_type = inner<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using value_t = typename node_t::value_t;
+      using value_t = typename super_type::value_t;
 
       unary(value_t exp);
       virtual type_t type() const { return Type; };
 
       const value_t sub() const;
 
-      virtual void accept(typename node_t::const_visitor &v) const;
+      virtual void accept(typename super_type::const_visitor &v) const;
 
     private:
       value_t sub_;
@@ -199,7 +197,6 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using super_type = inner<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
 
       virtual type_t type() const { return Type; };
@@ -214,7 +211,7 @@ namespace vcsn
         , weight_(that.weight_)
       {}
 
-      virtual void accept(typename node_t::const_visitor &v) const;
+      virtual void accept(typename super_type::const_visitor &v) const;
 
     private:
       value_t sub_;
@@ -234,10 +231,7 @@ namespace vcsn
     public:
       using label_t = Label;
       using weight_t = Weight;
-      using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
-      using value_t = typename node_t::value_t;
-      using super_type = node_t;
+      using super_type = node<label_t, weight_t>;
     };
 
 
@@ -250,12 +244,12 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using super_type = leaf<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using value_t = typename node_t::value_t;
+      using value_t = typename super_type::value_t;
+      using type_t = typename super_type::type_t;
 
       virtual type_t type() const { return Type; };
 
-      virtual void accept(typename node_t::const_visitor &v) const;
+      virtual void accept(typename super_type::const_visitor &v) const;
     };
 
 
@@ -267,15 +261,14 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using super_type = leaf<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
-      using value_t = typename node_t::value_t;
+      using type_t = typename super_type::type_t;
+      using value_t = typename super_type::value_t;
 
       atom(const label_t& value);
 
       virtual type_t type() const { return type_t::atom; };
 
-      virtual void accept(typename node_t::const_visitor &v) const;
+      virtual void accept(typename super_type::const_visitor &v) const;
       const label_t& value() const;
 
     private:

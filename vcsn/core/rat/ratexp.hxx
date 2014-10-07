@@ -28,7 +28,7 @@ namespace vcsn
       : value_(value)
     {}
 
-    DEFINE(atom)::accept(typename node_t::const_visitor& v) const
+    DEFINE(atom)::accept(typename super_type::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -125,7 +125,7 @@ namespace vcsn
       return sub_;
     }
 
-    DEFINE(variadic)::accept(typename node_t::const_visitor& v) const
+    DEFINE(variadic)::accept(typename super_type::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -158,7 +158,7 @@ namespace vcsn
       weight_ = w;
     }
 
-    DEFINE(weight_node)::accept(typename node_t::const_visitor& v) const
+    DEFINE(weight_node)::accept(typename super_type::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -178,7 +178,7 @@ namespace vcsn
       return sub_;
     }
 
-    DEFINE(unary)::accept(typename node_t::const_visitor& v) const
+    DEFINE(unary)::accept(typename super_type::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -188,7 +188,7 @@ namespace vcsn
     | constant.  |
     `-----------*/
 
-    DEFINE(constant)::accept(typename node_t::const_visitor& v) const
+    DEFINE(constant)::accept(typename super_type::const_visitor& v) const
       -> void
     {
       v.visit(*this);
