@@ -146,7 +146,7 @@ namespace vcsn
   template <exp::type_t Type>
   inline
   auto
-  ratexpset_impl<Context>::gather(values_t& res, value_t v) const
+  ratexpset_impl<Context>::gather_(values_t& res, value_t v) const
     -> void
   {
     static bool binary = !! getenv("VCSN_BINARY");
@@ -161,12 +161,12 @@ namespace vcsn
   template <exp::type_t Type>
   inline
   auto
-  ratexpset_impl<Context>::gather(value_t l, value_t r) const
+  ratexpset_impl<Context>::gather_(value_t l, value_t r) const
     -> values_t
   {
     values_t res;
-    gather<Type>(res, l);
-    gather<Type>(res, r);
+    gather_<Type>(res, l);
+    gather_<Type>(res, r);
     return res;
   }
 
@@ -184,7 +184,7 @@ namespace vcsn
     else if (is_series())
       res = add_nonzero_series_(l, r);
     else
-      res = std::make_shared<sum_t>(gather<type_t::sum>(l, r));
+      res = std::make_shared<sum_t>(gather_<type_t::sum>(l, r));
     return res;
   }
 
@@ -427,7 +427,7 @@ namespace vcsn
   DEFINE::nontrivial_mul_expressions_(value_t l, value_t r) const
     -> value_t
   {
-    return std::make_shared<prod_t>(gather<type_t::prod>(l, r));
+    return std::make_shared<prod_t>(gather_<type_t::prod>(l, r));
   }
 
   DEFINE::nontrivial_mul_series_(value_t l, value_t r) const
@@ -456,7 +456,7 @@ namespace vcsn
         value_t nl = unwrap_possible_lweight_(l)
           , nr = unwrap_possible_lweight_(r);
         return lmul(weightset()->mul(lw, rw),
-                    std::make_shared<prod_t>(gather<type_t::prod>(nl, nr)));
+                    std::make_shared<prod_t>(gather_<type_t::prod>(nl, nr)));
       }
      return res;
    }
@@ -498,7 +498,7 @@ namespace vcsn
       res = zero();
     // END: Trivial Identity
     else
-      res = std::make_shared<conjunction_t>(gather<type_t::conjunction>(l, r));
+      res = std::make_shared<conjunction_t>(gather_<type_t::conjunction>(l, r));
     return res;
   }
 
@@ -544,7 +544,7 @@ namespace vcsn
       res = l;
     // END: Trivial Identity
     else
-      res = std::make_shared<shuffle_t>(gather<type_t::shuffle>(l, r));
+      res = std::make_shared<shuffle_t>(gather_<type_t::shuffle>(l, r));
     return res;
   }
 
@@ -574,10 +574,10 @@ namespace vcsn
       {
         // Left-hand sides.
         values_t ls;
-        gather<type_t::prod>(ls, l);
+        gather_<type_t::prod>(ls, l);
         // Right-hand sides.
         values_t rs;
-        gather<type_t::prod>(rs, r);
+        gather_<type_t::prod>(rs, r);
 
         if (ls.back()->type() == type_t::atom
             && rs.front()->type() == type_t::atom)

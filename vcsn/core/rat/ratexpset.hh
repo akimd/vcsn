@@ -309,25 +309,25 @@ namespace vcsn
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be sum, conjunction, shuffle, or prod.
     template <exp::type_t Type>
-    void gather(values_t& res, value_t v) const;
+    void gather_(values_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be SUM or PROD.
     template <exp::type_t Type>
-    values_t gather(value_t l, value_t r) const;
+    values_t gather_(value_t l, value_t r) const;
 
-    /// If Context is LAW.
+    /// If labelset is wordset.
     value_t concat_(value_t l, value_t r, std::true_type) const;
-    /// If Context is not LAW.
+    /// If labelset is not wordset.
     value_t concat_(value_t l, value_t r, std::false_type) const;
 
-    /// If context is oneset.
+    /// If labelset is oneset.
     template <typename LabelSet_, typename... Args>
     value_t letter_class_(const Args&&... chars, std::true_type) const;
 
-    /// If context is not oneset.
+    /// If labelset is not oneset.
     template <typename LabelSet_>
     value_t
     letter_class_(std::set<std::pair<typename LabelSet_::letter_t,
