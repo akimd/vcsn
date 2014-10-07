@@ -44,13 +44,13 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-equivalent.py                          \
   %D%/is-functional.py                          \
   %D%/is-isomorphic.py                          \
-  %D%/is-normalized.py                          \
   %D%/is-proper.py                              \
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
   %D%/lift.py                                   \
   %D%/minimize.py                               \
+  %D%/normalize.py                              \
   %D%/polynomial.py                             \
   %D%/power.py                                  \
   %D%/prefix.py                                 \

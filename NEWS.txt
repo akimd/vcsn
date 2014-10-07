@@ -11,12 +11,13 @@ changes in the internal API may also be documented.
 The static and dyn:: algorithm that was named `aut_to_exp` is now
 named `to_expression`.  In Python it is still `automaton.ratexp()`.
 
-### costandard, is_costandard: new algorithms.
+### costandard, is_costandard: new algorithms
 Calling `aut.costandard()` is equivalent to calling
 `aut.transpose().standard().transpose()`, and `aut.is_costandard()` is
 the same with `aut.transpose().is_standard()`.
 
-Available in static, dyn and Python.
+### normalize: new algorithm
+Composes standard and costandard on an automaton.
 
 ## 2014-10-02
 ### Strip vs. transpose

@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/is-normalized.hh>
+#include <vcsn/algos/normalize.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 
@@ -19,4 +19,20 @@ namespace vcsn
       return detail::is_normalized_registry().call(aut);
     }
   }
+
+  /*-----------.
+  | normalize. |
+  `-----------*/
+
+  namespace dyn
+  {
+    REGISTER_DEFINE(normalize);
+
+    automaton
+    normalize(const automaton& aut)
+    {
+      return detail::normalize_registry().call(aut);
+    }
+  }
+
 }

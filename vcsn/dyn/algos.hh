@@ -346,6 +346,9 @@ namespace vcsn
     /// Multiply two weights.
     weight multiply(const weight& lhs, const weight& rhs);
 
+    /// Normalize automaton \a aut.
+    automaton normalize(const automaton& aut);
+
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut, bool keep_initials = false);
 

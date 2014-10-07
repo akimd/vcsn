@@ -55,6 +55,7 @@ namespace vcsn
       ALGO("list", "print");
       ALGO("make-ratexpset", "make-context");
       ALGO("make-word-context", "make-context");
+      ALGO("is-normalized", "normalize");
       ALGO("multiply", "concatenate");
       ALGO("num-sccs", "scc");
       ALGO("pair", "synchronizing-word");

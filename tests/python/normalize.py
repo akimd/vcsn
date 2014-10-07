@@ -8,6 +8,8 @@ from test import *
 # Check that is-normalized(INPUT) = EXPECT.
 def check(expect, i):
     CHECK_EQ(expect, i.is_normalized())
+    # Check normalize
+    CHECK_EQ(i.standard().costandard(), i.normalize())
 
 # A simple, normalized, non-Thompson, automaton.
 check(True, vcsn.automaton('''

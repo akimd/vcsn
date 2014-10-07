@@ -65,7 +65,6 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/is-deterministic.cc                 \
   %D%/algos/is-eps-acyclic.cc                   \
   %D%/algos/is-functional.cc                    \
-  %D%/algos/is-normalized.cc                    \
   %D%/algos/is-proper.cc                        \
   %D%/algos/is-valid.cc                         \
   %D%/algos/ladybird.cc                         \
@@ -73,6 +72,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/lift.cc                             \
   %D%/algos/make-context.cc                     \
   %D%/algos/minimize.cc                         \
+  %D%/algos/normalize.cc                        \
   %D%/algos/prefix.cc                           \
   %D%/algos/print.cc                            \
   %D%/algos/product.cc                          \

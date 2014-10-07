@@ -46,7 +46,6 @@ nobase_include_HEADERS =                        \
   %D%/algos/is-deterministic.hh                 \
   %D%/algos/is-eps-acyclic.hh                   \
   %D%/algos/is-functional.hh                    \
-  %D%/algos/is-normalized.hh                    \
   %D%/algos/is-proper.hh                        \
   %D%/algos/is-valid-ratexp.hh                  \
   %D%/algos/is-valid.hh                         \
@@ -59,6 +58,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/minimize-signature.hh               \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
+  %D%/algos/normalize.hh                        \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
