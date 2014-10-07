@@ -64,10 +64,6 @@ namespace vcsn
     DEFINE(transposition);
     DEFINE(zero);
 # undef DEFINE
-    template <exp::type_t Type>
-    using unary_t = unary<Type, label_t, weight_t>;
-    template <exp::type_t Type>
-    using variadic_t = variadic<Type, label_t, weight_t>;
 
     /// A ratexp (a shared pointer to a tree).
     using value_t = typename node_t::value_t;
@@ -75,6 +71,11 @@ namespace vcsn
     using type_t = typename node_t::type_t;
     /// A list (vector) of ratexps.
     using values_t = typename node_t::values_t;
+
+    template <type_t Type>
+    using unary_t = unary<Type, label_t, weight_t>;
+    template <type_t Type>
+    using variadic_t = variadic<Type, label_t, weight_t>;
 
     using word_t = self_type;
     using letter_t = self_type;
@@ -108,7 +109,7 @@ namespace vcsn
     /// Accessor to the labelset.
     const labelset_ptr& labelset() const;
     /// Accessor to the weightset.
-     const weightset_ptr& weightset() const;
+    const weightset_ptr& weightset() const;
 
     /// When used as a LabelSet.
     static value_t special()
@@ -135,7 +136,7 @@ namespace vcsn
     static bool is_one(value_t v) ATTRIBUTE_PURE;
 
     /// When used as WeightSet.
-     static constexpr bool is_commutative()
+    static constexpr bool is_commutative()
     {
       return false;
     }
@@ -285,7 +286,7 @@ namespace vcsn
     value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;
     value_t merge_sum_series_(const sum_t& addends1, value_t aa2) const;
     value_t add_nonzero_series_(value_t l, value_t r) const;
-    exp::type_t type_ignoring_lweight_(value_t e) const;
+    type_t type_ignoring_lweight_(value_t e) const;
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
     value_t mul_expressions_(value_t l, value_t r) const;
@@ -294,10 +295,10 @@ namespace vcsn
     bool is_unweighted_nonsum_(value_t v) const;
     bool is_nonsum_(value_t v) const;
     value_t mul_atoms_(const label_t& l, const label_t& r) const;
-    /// LAW.
+    /// If labelset is wordset.
     value_t mul_atoms_(const label_t& l, const label_t& r,
                        std::true_type) const;
-    /// !LAW.
+    /// If labelset is not wordset.
     value_t mul_atoms_(const label_t& l, const label_t& r,
                        std::false_type) const;
     value_t mul_unweighted_nontrivial_products_(value_t a, value_t b) const;
@@ -308,14 +309,14 @@ namespace vcsn
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be sum, conjunction, shuffle, or prod.
-    template <exp::type_t Type>
+    template <type_t Type>
     void gather_(values_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be SUM or PROD.
-    template <exp::type_t Type>
+    template <type_t Type>
     values_t gather_(value_t l, value_t r) const;
 
     /// If labelset is wordset.

@@ -143,7 +143,7 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <exp::type_t Type>
+  template <typename ratexpset_impl<Context>::type_t Type>
   inline
   auto
   ratexpset_impl<Context>::gather_(values_t& res, value_t v) const
@@ -158,7 +158,7 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <exp::type_t Type>
+  template <typename ratexpset_impl<Context>::type_t Type>
   inline
   auto
   ratexpset_impl<Context>::gather_(value_t l, value_t r) const
@@ -281,7 +281,7 @@ namespace vcsn
   }
 
   DEFINE::type_ignoring_lweight_(value_t e) const
-    -> exp::type_t
+    -> type_t
   {
     return unwrap_possible_lweight_(e)->type();
   }
