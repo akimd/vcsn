@@ -1,5 +1,5 @@
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/aut-to-exp.hh>
+#include <vcsn/algos/to-expression.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
@@ -21,16 +21,16 @@ namespace vcsn
       return detail::eliminate_state_registry().call(aut, i);
     }
 
-    /*-------------.
-    | aut_to_exp.  |
-    `-------------*/
+    /*-----------------.
+    | to_expression.   |
+    `-----------------*/
 
-    REGISTER_DEFINE(aut_to_exp);
+    REGISTER_DEFINE(to_expression);
 
     ratexp
-    aut_to_exp(const automaton& aut, const std::string& algo)
+    to_expression(const automaton& aut, const std::string& algo)
     {
-      return detail::aut_to_exp_registry().call(aut, algo);
+      return detail::to_expression_registry().call(aut, algo);
     }
   }
 }

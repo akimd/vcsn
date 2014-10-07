@@ -4,7 +4,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/are-equivalent.hh> // difference
 # include <vcsn/algos/are-isomorphic.hh>
-# include <vcsn/algos/aut-to-exp.hh>
+# include <vcsn/algos/to-expression.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
@@ -93,10 +93,10 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class LIBVCSN_API mutable_automaton<Ctx>;                             \
                                                                         \
-  /* aut_to_exp. */                                                     \
+  /* to_expression. */                                                     \
   MAYBE_EXTERN template                                                 \
   Ctx::ratexp_t                                                         \
-  aut_to_exp<mutable_automaton<Ctx>>                                    \
+  to_expression<mutable_automaton<Ctx>>                                    \
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
                                                                         \
@@ -303,7 +303,7 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
-        REGISTER(aut_to_exp, aut_t, const std::string);
+        REGISTER(to_expression, aut_t, const std::string);
         REGISTER(chain, aut_t, int, int);
         REGISTER(chain_ratexp, rs_t, int, int);
         REGISTER(coaccessible, aut_t);

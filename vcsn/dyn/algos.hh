@@ -35,12 +35,6 @@ namespace vcsn
     /// lhs and those of \a rhs.
     bool are_isomorphic(const automaton& lhs, const automaton& rhs);
 
-    /// A ratexp denoting the language of \a aut.
-    ratexp aut_to_exp(const automaton& aut, const std::string& algo = "auto");
-
-    /// A ratexp denoting the language of \a aut.
-    ratexp aut_to_exp_in_degree(const automaton& aut);
-
     /// Focus on a specific tape of a tupleset automaton.
     automaton blind(automaton& aut, unsigned tape);
 
@@ -556,6 +550,10 @@ namespace vcsn
 
     /// Output \a aut in LaTeX's TikZ format.
     std::ostream& tikz(const automaton& aut, std::ostream& out);
+
+    /// A ratexp denoting the language of \a aut.
+    ratexp to_expression(const automaton& aut,
+                         const std::string& algo = "auto");
 
     /// Transpose \a aut.
     automaton transpose(automaton& aut);

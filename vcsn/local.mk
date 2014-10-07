@@ -15,7 +15,6 @@ nobase_include_HEADERS =                        \
   %D%/algos/accessible.hh                       \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
-  %D%/algos/aut-to-exp.hh                       \
   %D%/algos/blind.hh                            \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
@@ -50,8 +49,8 @@ nobase_include_HEADERS =                        \
   %D%/algos/is-functional.hh                    \
   %D%/algos/is-normalized.hh                    \
   %D%/algos/is-proper.hh                        \
-  %D%/algos/is-valid.hh                         \
   %D%/algos/is-valid-ratexp.hh                  \
+  %D%/algos/is-valid.hh                         \
   %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
   %D%/algos/lift.hh                             \
@@ -82,6 +81,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/synchronizing-word.hh               \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
+  %D%/algos/to-expression.hh                    \
   %D%/algos/transpose.hh                        \
   %D%/algos/u.hh                                \
   %D%/algos/union.hh                            \

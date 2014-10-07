@@ -35,7 +35,6 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/accessible.cc                       \
   %D%/algos/are-equivalent.cc                   \
   %D%/algos/are-isomorphic.cc                   \
-  %D%/algos/aut-to-exp.cc                       \
   %D%/algos/blind.cc                            \
   %D%/algos/complement.cc                       \
   %D%/algos/complete.cc                         \
@@ -85,14 +84,15 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/scc.cc                              \
   %D%/algos/sort.cc                             \
   %D%/algos/standard.cc                         \
-  %D%/algos/star.cc                             \
   %D%/algos/star-height.cc                      \
   %D%/algos/star-normal-form.cc                 \
+  %D%/algos/star.cc                             \
   %D%/algos/strip.cc                            \
   %D%/algos/sum.cc                              \
   %D%/algos/synchronizing-word.cc               \
   %D%/algos/thompson.cc                         \
   %D%/algos/tikz.cc                             \
+  %D%/algos/to-expression.cc                    \
   %D%/algos/transpose.cc                        \
   %D%/algos/u.cc                                \
   %D%/algos/union.cc                            \

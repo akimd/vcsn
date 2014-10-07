@@ -1,4 +1,3 @@
-
 ## Vaucanson 2, a generic library for finite state machines.
 ## Copyright (C) 2013, 2014 Vaucanson Group.
 ##
@@ -17,7 +16,6 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
 
 %C%_TESTS =                                     \
   %D%/accessible.py                             \
-  %D%/aut-to-exp.py                             \
   %D%/automaton.py                              \
   %D%/blind.py                                  \
   %D%/chain.py                                  \
@@ -54,9 +52,9 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/label.py                                  \
   %D%/lift.py                                   \
   %D%/minimize.py                               \
-  %D%/prefix.py                                 \
   %D%/polynomial.py                             \
   %D%/power.py                                  \
+  %D%/prefix.py                                 \
   %D%/product.py                                \
   %D%/proper.py                                 \
   %D%/push-weights.py                           \
@@ -70,9 +68,10 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/star-height.py                            \
   %D%/star-normal-form.py                       \
   %D%/star.py                                   \
-  %D%/synchronizing-word.py                     \
   %D%/sum.py                                    \
+  %D%/synchronizing-word.py                     \
   %D%/thompson.py                               \
+  %D%/to-expression.py                          \
   %D%/transpose.py                              \
   %D%/tuples.py                                 \
   %D%/union.py                                  \
@@ -84,7 +83,6 @@ $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) $(srcdir)/tests/bin/test.py
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
-  %D%/aut-to-exp.dir/a.gv                       \
   %D%/automaton.dir/a.grail                     \
   %D%/automaton.dir/a.gv                        \
   %D%/automaton.dir/derived-term.tex            \
@@ -174,8 +172,8 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/intricate.exp.gv             \
   %D%/minimize.dir/no-final-states.gv           \
   %D%/minimize.dir/no-final-states.moore.gv     \
-  %D%/minimize.dir/no-initial-states.gv         \
   %D%/minimize.dir/no-initial-states.exp.gv     \
+  %D%/minimize.dir/no-initial-states.gv         \
   %D%/minimize.dir/no-initial-states.moore.gv   \
   %D%/minimize.dir/nonlal.exp.gv                \
   %D%/minimize.dir/redundant.exp.gv             \
@@ -213,21 +211,22 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xa.gv                         \
   %D%/product.dir/xy.gv                         \
   %D%/product.dir/xyz.gv                        \
+  %D%/to-expression.dir/a.gv                    \
   %D%/union.dir/abc.gv
 
-%D%/aut-to-exp.log:      $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/automaton.log:       $(wildcard $(srcdir)/%D%/automaton.dir/*)
 %D%/compose.log:         $(wildcard $(srcdir)/%D%/compose.dir/*)
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
-%D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)
+%D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/infiltration.log:    $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
 %D%/product.log:         $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)
 
 .PHONY: check-python

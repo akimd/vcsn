@@ -826,7 +826,7 @@ label automaton::synchronizing_word(const std::string& algo) const
 
 ratexp automaton::to_ratexp(const std::string& algo) const
 {
-  return vcsn::dyn::aut_to_exp(val_, algo);
+  return vcsn::dyn::to_expression(val_, algo);
 }
 
 /*-------------------------.

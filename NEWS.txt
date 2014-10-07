@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-10-07
+### to-expression
+The static and dyn:: algorithm that was named `aut_to_exp` is now
+named `to_expression`.  In Python it is still `automaton.ratexp()`.
+
 ## 2014-10-02
 ### Strip vs. transpose
 Up to now, stripping a transposed automaton returned the non-transposed

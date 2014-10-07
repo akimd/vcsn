@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_AUT_TO_EXP_HH
-# define VCSN_ALGOS_AUT_TO_EXP_HH
+#ifndef VCSN_ALGOS_TO_EXPRESSION_HH
+# define VCSN_ALGOS_TO_EXPRESSION_HH
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/lift.hh>
@@ -256,15 +256,15 @@ namespace vcsn
   }
 
 
-  /*-------------.
-  | aut_to_exp.  |
-  `-------------*/
+  /*-----------------.
+  | to_expression.   |
+  `-----------------*/
 
   template <typename Aut,
             typename RatExpSet = ratexpset<context_t_of<Aut>>>
   typename RatExpSet::value_t
-  aut_to_exp(const Aut& a,
-             const state_chooser_t<Aut>& next_state)
+  to_expression(const Aut& a,
+                const state_chooser_t<Aut>& next_state)
   {
     // State elimination is performed on the lifted automaton.
     auto aut = lift(a);
@@ -277,15 +277,15 @@ namespace vcsn
   template <typename Aut,
             typename RatExpSet = ratexpset<context_t_of<Aut>>>
   typename RatExpSet::value_t
-  aut_to_exp_naive(const Aut& a)
+  to_expression_naive(const Aut& a)
   {
     state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
-    return aut_to_exp(a, next);
+    return to_expression(a, next);
   }
 
-  /*------------------.
-  | dyn::aut_to_exp.  |
-  `------------------*/
+  /*----------------------.
+  | dyn::to_expression.   |
+  `----------------------*/
 
   namespace dyn
   {
@@ -294,7 +294,7 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename String>
       ratexp
-      aut_to_exp(const automaton& aut, const std::string& algo)
+      to_expression(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         // FIXME: So far, there is a single implementation of ratexps,
@@ -303,13 +303,13 @@ namespace vcsn
         using ratexpset_t = vcsn::ratexpset<context_t>;
         ratexpset_t rs(a->context(), ratexpset_t::identities_t::trivial);
         if (algo == "auto" || algo == "naive")
-          return make_ratexp(rs, ::vcsn::aut_to_exp_naive(a));
+          return make_ratexp(rs, ::vcsn::to_expression_naive(a));
         else
-          raise("aut-to-exp: invalid algorithm: ", str_escape(algo),
+          raise("to-expression: invalid algorithm: ", str_escape(algo),
                 ": expected \"auto\", or \"naive\"");
       }
 
-      REGISTER_DECLARE(aut_to_exp,
+      REGISTER_DECLARE(to_expression,
                        (const automaton& aut, const std::string& algo)
                        -> ratexp);
     }
@@ -317,4 +317,4 @@ namespace vcsn
 
 } // vcsn::
 
-#endif // !VCSN_ALGOS_AUT_TO_EXP_HH
+#endif // !VCSN_ALGOS_TO_EXPRESSION_HH

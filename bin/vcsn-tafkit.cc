@@ -159,7 +159,6 @@
 
 
 DEFINE_AUT_FUNCTION(accessible);
-DEFINE_AUT_FUNCTION(aut_to_exp);
 DEFINE_AUT_FUNCTION(coaccessible);
 DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
@@ -192,6 +191,7 @@ DEFINE_AUT_FUNCTION(star);
 DEFINE_RATEXP_FUNCTION(star_normal_form);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
 DEFINE_RATEXP_FUNCTION(thompson);
+DEFINE_AUT_FUNCTION(to_expression);
 DEFINE_AUT__RATEXP_FUNCTION(transpose);
 DEFINE_AUT_FUNCTION(trim);
 DEFINE_AUT_VARIADIC_FUNCTION(union_a);
@@ -652,7 +652,6 @@ try
       ALGO(accessible);
       ALGO(are_equivalent);
       ALGO(are_isomorphic);
-      ALGO(aut_to_exp);
       ALGO(cat);
       ALGO(coaccessible);
       ALGO(complement);
@@ -693,6 +692,7 @@ try
       ALGO(star_normal_form);
       ALGO(sum);
       ALGO(thompson);
+      ALGO(to_expression);
       ALGO(transpose);
       ALGO(trim);
       ALGO(union_a);

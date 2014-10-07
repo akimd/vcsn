@@ -20,7 +20,7 @@ If COMMAND is "notebook", run Vaucanson as an IPython Notebook.
 If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:
 
-  accessible are-equivalent are-isomorphic aut-to-exp cat coaccessible
+  accessible are-equivalent are-isomorphic to-expression cat coaccessible
   complement complete compose concatenate constant-term derivation
   derived-term de-bruijn derivation divkbaseb term determinize
   difference divkbaseb double-ring eliminate-state enumerate evaluate
@@ -39,7 +39,7 @@ For instance:
   $ vcsn derived-term -C 'lal_char(abc)_b' -e '(a+b+a)*' |
      vcsn determinize |
      vcsn minimize |
-     vcsn aut-to-exp
+     vcsn to-expression
 EOF
   exit 0
 }
@@ -60,7 +60,7 @@ case $1 in
   (-v|--version) version;;
 
   (accessible|are-equivalent|are-isomorphic \
-      |aut-to-exp \
+      |to-expression \
       |cat|chain|coaccessible|complement|complete \
       |compose|concatenate \
       |de-bruijn \

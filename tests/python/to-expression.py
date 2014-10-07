@@ -9,7 +9,7 @@ from test import *
 
 # check_aut AUTOMATON EXP-OUT
 # ---------------------------
-# Check that aut-to-exp(AUTOMATON) = EXP-OUT.
+# Check that to-expression(AUTOMATON) = EXP-OUT.
 def check_aut(aut, exp):
     CHECK_EQ(exp, str(aut.ratexp()))
 
@@ -40,7 +40,7 @@ ctx = vcsn.context("lal_char(abc)_b")
 
 # check_exp RAT EXP-OUT
 # ---------------------
-# Check that aut-to-exp(standard(RAT)) = EXP-OUT.
+# Check that to-expression(standard(RAT)) = EXP-OUT.
 def check_exp(rat, exp):
     check_aut(ctx.ratexp(rat).standard(), exp)
 

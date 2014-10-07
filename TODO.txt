@@ -313,7 +313,7 @@ that if there are no deletions, references and iterator remain valid.  So we
 should store references or iterators in the working queue, instead of
 duplicating the monomials.
 
-* aut-to-exp
+* to-expression
 ** More heuristics
 See what V1 did.
 
@@ -413,7 +413,7 @@ Is this what we want?
 
 * mutable_automaton::set_transition
 We should find a means to forbid transition from pre to post.  This was the
-case initially, but it is troublesome aut-to-exp.  Maybe it should be
+case initially, but it is troublesome to-expression.  Maybe it should be
 efforced only in non labels_are_unit case.
 
 * Readings

@@ -7,7 +7,7 @@ ctx = vcsn.context('lal_char(abcd)_b')
 
 # check LHS RHS EXPECTED
 # ----------------------
-# Check that aut-to-exp(difference(dterm(LHS), dterm(RHS))) == EXPECTED.
+# Check that to-expression(difference(dterm(LHS), dterm(RHS))) == EXPECTED.
 def check(lhs, rhs, exp):
     l = ctx.ratexp(lhs).derived_term()
     r = ctx.ratexp(rhs).derived_term()
