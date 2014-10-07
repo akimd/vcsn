@@ -270,11 +270,10 @@ namespace vcsn
         else
           return insert_in_sum_series_(*ls, r);
       }
+    else if (r->type() == type_t::sum)
+      return add_nonzero_series_(r, l);
     else
       {
-        if (r->type() == type_t::sum)
-          return add_nonzero_series_(r, l);
-
         // Neither argument is a sum.
         auto ls = std::make_shared<sum_t>(values_t{l}); // Not in normal form.
         return insert_in_sum_series_(*ls, r);
@@ -413,23 +412,16 @@ namespace vcsn
     assert(! is_zero(b));
     value_t na = unwrap_possible_lweight_(a), nb = unwrap_possible_lweight_(b);
 
-    switch (na->type())
-      {
-      case type_t::one:
-        return lmul(possibly_implicit_lweight_(a), b);
-      default:
-        switch (nb->type())
-          {
-          case type_t::one:
-            return lmul(weightset()->mul(possibly_implicit_lweight_(a),
-                                         possibly_implicit_lweight_(b)),
-                        na);
-          default:
-            return lmul(weightset()->mul(possibly_implicit_lweight_(a),
-                                         possibly_implicit_lweight_(b)),
-                        mul_unweighted_nontrivial_products_(na, nb));
-          } // inner switch
-      } // outer switch
+    if (na->type() == type_t::one)
+      return lmul(possibly_implicit_lweight_(a), b);
+    else if (nb->type() == type_t::one)
+      return lmul(weightset()->mul(possibly_implicit_lweight_(a),
+                                   possibly_implicit_lweight_(b)),
+                  na);
+    else
+      return lmul(weightset()->mul(possibly_implicit_lweight_(a),
+                                   possibly_implicit_lweight_(b)),
+                  mul_unweighted_nontrivial_products_(na, nb));
   }
 
   DEFINE::nontrivial_mul_expressions_(value_t l, value_t r) const
@@ -450,25 +442,21 @@ namespace vcsn
       // l is a sum, and r might be as well.
       for (const auto& la: *down_pointer_cast<const sum_t>(l))
         res = add(res, mul(la, r));
-    else // l is not a sum.
+    else if (rt == type_t::sum)
+      // r is a sum, l is not.
+      for (const auto& ra: *down_pointer_cast<const sum_t>(r))
+        res = add(res, mul(l, ra));
+    // Neither l nor r is a sum.
+    else if (is_nonsum_(l) && is_nonsum_(r))
+      return mul_products_(l, r);
+    else
       {
-        if (rt == type_t::sum) // r is a sum, l is not.
-          for (const auto& ra: *down_pointer_cast<const sum_t>(r))
-            res = add(res, mul(l, ra));
-        else // neither is a sum.
-          {
-            if (is_nonsum_(l) && is_nonsum_(r))
-              return mul_products_(l, r);
-            else
-              {
-                weight_t lw = possibly_implicit_lweight_(l)
-                       , rw = possibly_implicit_lweight_(r);
-                value_t nl = unwrap_possible_lweight_(l)
-                      , nr = unwrap_possible_lweight_(r);
-                return lmul(weightset()->mul(lw, rw),
-                            std::make_shared<prod_t>(gather<type_t::prod>(nl, nr)));
-              }
-          }
+        weight_t lw = possibly_implicit_lweight_(l)
+          , rw = possibly_implicit_lweight_(r);
+        value_t nl = unwrap_possible_lweight_(l)
+          , nr = unwrap_possible_lweight_(r);
+        return lmul(weightset()->mul(lw, rw),
+                    std::make_shared<prod_t>(gather<type_t::prod>(nl, nr)));
       }
      return res;
    }
@@ -477,19 +465,19 @@ namespace vcsn
     -> value_t
   {
     value_t res = nullptr;
-    // Trivial Identity.
-    // E&0 = 0&E = 0.
+    // Trivial Identity: 0&E = 0.
     if (l->type() == type_t::zero)
       res = l;
+    // Trivial Identity: E&0 = 0.
     else if (r->type() == type_t::zero)
       res = r;
-    // <k>1&<h>1 = <k.h>1.
+    // <k>1&<h>1 = <kh>1.
     else if (type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
       res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
                                   possibly_implicit_lweight_(r)),
                  one());
-    // <k>a&<h>a = <k.h>a.  <k>a&<h>b = 0.
+    // <k>a&<h>a = <kh>a.  <k>a&<h>b = 0.
     else if (type_ignoring_lweight_(l) == type_t::atom
              && type_ignoring_lweight_(r) == type_t::atom)
       {
@@ -667,93 +655,64 @@ namespace vcsn
   DEFINE::lmul(const weight_t& w, value_t e) const
     -> value_t
   {
-    // Trivial identities $T_K$: <k>0 => 0, <0>E => 0.
-    if (e->type() == type_t::zero || weightset()->is_zero(w))
-      return zero();
-    // Trivial identity: <1>E => E.
-    else if (weightset()->is_one(w))
+    // Trivial identities <k>0 => 0, <1>E => E.
+    if (e->type() == type_t::zero || weightset()->is_one(w))
       return e;
+    // Trivial identity: <0>E => 0.
+    else if (weightset()->is_zero(w))
+      return zero();
     // Trivial identity: <k>(<h>E) => <kh>E.
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
       return lmul(weightset()->mul(w, lw->weight()), lw->sub());
     // General case: <k>E.
-    else if (is_series())
-      return nontrivial_lmul_series_(w, e);
-    else
-      return nontrivial_lmul_expression_(w, e);
-  }
-
-  DEFINE::nontrivial_lmul_expression_(const weight_t& w, value_t s) const
-    -> value_t
-  {
-    return std::make_shared<lweight_t>(w, s);
-  }
-
-  DEFINE::nontrivial_lmul_series_(const weight_t& w, value_t s) const
-    -> value_t
-  {
-    if (s->type() != type_t::sum)
-      return nontrivial_lmul_expression_(w, s);
-     else
+    else if (is_series() && e->type() == type_t::sum)
       {
-        const auto& ss = down_pointer_cast<const sum_t>(s);
+        const auto& s = down_pointer_cast<const sum_t>(e);
         // We can build the result faster by emplace_back'ing addends without
         // passing thru add; the order will be the same as in *ss.
         values_t addends;
-        for (auto& a: *ss)
+        for (auto& a: *s)
           addends.emplace_back(lmul(w, a));
         return std::make_shared<sum_t>(std::move(addends));
       }
+    else
+      return std::make_shared<lweight_t>(w, e);
   }
 
   DEFINE::rmul(value_t e, const weight_t& w) const
     -> value_t
   {
-    if (e->is_leaf())
-      // Can only have left weights and lmul takes care of normalization.
-      return lmul(w, e);
-    // Trivial identities $T_K$: E<0> => 0.
-    else if (weightset()->is_zero(w))
+    // Trivial identity: E<0> => 0.
+    if (weightset()->is_zero(w))
       return zero();
     // Trivial identity: E<1> => E.
     else if (weightset()->is_one(w))
       return e;
+    else if (e->is_leaf())
+      // Can only have left weights and lmul takes care of normalization.
+      return lmul(w, e);
     // Trivial identity: (<k>E)<h> => <k>(E<h>).
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
       return lmul(lw->weight(), rmul(lw->sub(), w));
     // Trivial identity: (E<k>)<h> => E<kh>.
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
       return rmul(rw->sub(), weightset()->mul(rw->weight(), w));
-    // General case: E<k>.
-    else if (is_series())
-      return nontrivial_rmul_series_(e, w);
-    else
-      return nontrivial_rmul_expression_(e, w);
-  }
-
-  DEFINE::nontrivial_rmul_expression_(value_t e, const weight_t& w) const
-    -> value_t
-  {
-    return std::make_shared<rweight_t>(w, e);
-  }
-
-  DEFINE::nontrivial_rmul_series_(value_t s, const weight_t& w) const
-    -> value_t
-  {
-    if (s->type() != type_t::sum)
-      return nontrivial_rmul_expression_(s, w);
-    else
+    // Series: distribute rmul on sums.
+    else if (is_series() && e->type() == type_t::sum)
       {
-        const auto& ss = down_pointer_cast<const sum_t>(s);
+        const auto& s = down_pointer_cast<const sum_t>(e);
         // Differently from the lmul case here the order of addends in
         // the result may be different from the order in *ss, so we
         // have to use add.
         value_t res = zero();
-        for (auto& a: *ss)
+        for (auto& a: *s)
           res = add(res, rmul(a, w));
         return res;
       }
-   }
+    // General case: E<k>.
+    else
+      return std::make_shared<rweight_t>(w, e);
+  }
 
   /*----------------------------------.
   | ratexpset as a WeightSet itself.  |

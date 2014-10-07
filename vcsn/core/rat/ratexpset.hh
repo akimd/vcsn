@@ -304,10 +304,6 @@ namespace vcsn
     value_t mul_products_(value_t a, value_t b) const;
     value_t nontrivial_mul_expressions_(value_t l, value_t r) const;
     value_t nontrivial_mul_series_(value_t l, value_t r) const;
-    value_t nontrivial_lmul_expression_(const weight_t& w, value_t s) const;
-    value_t nontrivial_lmul_series_(const weight_t& w, value_t s) const;
-    value_t nontrivial_rmul_expression_(value_t e, const weight_t& w) const;
-    value_t nontrivial_rmul_series_(value_t e, const weight_t& w) const;
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
