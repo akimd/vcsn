@@ -36,8 +36,8 @@ namespace vcsn
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
+      using super_t = typename ratexpset_t::const_visitor;
+      using node_t = typename super_t::node_t;
 
       constexpr static const char* me() { return "derivation"; }
 

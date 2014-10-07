@@ -41,19 +41,19 @@ namespace vcsn
     {
     protected:
       using automaton_t = Aut;
-      using super_type = outputter<Aut>;
+      using super_t = outputter<Aut>;
 
-      using label_t = typename super_type::label_t;
-      using state_t = typename super_type::state_t;
-      using transition_t = typename super_type::transition_t;
+      using label_t = typename super_t::label_t;
+      using state_t = typename super_t::state_t;
+      using transition_t = typename super_t::transition_t;
 
-      using super_type::os_;
-      using super_type::aut_;
-      using super_type::ls_;
-      using super_type::ws_;
+      using super_t::os_;
+      using super_t::aut_;
+      using super_t::ls_;
+      using super_t::ws_;
 
     public:
-      using super_type::super_type;
+      using super_t::super_t;
 
       /// Actually output \a aut_ on \a os_.
       void operator()()

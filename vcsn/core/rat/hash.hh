@@ -17,16 +17,16 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using context_t = context_t_of<ratexpset_t>;
       using weight_t = typename context_t::weightset_t::value_t;
-      using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
+      using super_t = typename ratexpset_t::const_visitor;
+      using node_t = typename super_t::node_t;
+      using inner_t = typename super_t::inner_t;
       template <type_t Type>
-      using variadic_t = typename super_type::template variadic_t<Type>;
+      using variadic_t = typename super_t::template variadic_t<Type>;
       template <type_t Type>
-      using unary_t = typename super_type::template unary_t<Type>;
+      using unary_t = typename super_t::template unary_t<Type>;
       template <type_t Type>
-      using weight_node_t = typename super_type::template weight_node_t<Type>;
-      using leaf_t = typename super_type::leaf_t;
+      using weight_node_t = typename super_t::template weight_node_t<Type>;
+      using leaf_t = typename super_t::leaf_t;
 
       /// Entry point: return the hash of \a v.
       size_t
@@ -47,7 +47,7 @@ namespace vcsn
     private:
 
 # define DEFINE(Type)                                           \
-      using Type ## _t = typename super_type::Type ## _t;       \
+      using Type ## _t = typename super_t::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom);

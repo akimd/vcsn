@@ -44,7 +44,7 @@ namespace vcsn
       {
       public:
         using polynomialset_t = PolynomialSet;
-        using super_type = polynomial_base;
+        using super_t = polynomial_base;
         using polynomial_t = typename polynomialset_t::value_t;
         polynomial_wrapper(const polynomial_t& polynomial,
                            const polynomialset_t& polynomialset)

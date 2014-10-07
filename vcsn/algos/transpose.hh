@@ -33,7 +33,7 @@ namespace vcsn
         = transpose_automaton<typename
                               automaton_t::element_type::automaton_nocv_t>;
 
-      using super = automaton_decorator<Aut>;
+      using super_t = automaton_decorator<Aut>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -44,8 +44,8 @@ namespace vcsn
       using weightset_t = weightset_t_of<automaton_t>;
       using kind_t = typename automaton_t::element_type::kind_t;
 
-      using super::super;
-      using super::aut_;
+      using super_t::super_t;
+      using super_t::aut_;
 
       static std::string sname()
       {

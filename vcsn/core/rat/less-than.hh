@@ -23,15 +23,15 @@ namespace vcsn
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
       using ratexp_t = typename ratexpset_t::value_t;
-      using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
+      using super_t = typename ratexpset_t::const_visitor;
+      using node_t = typename super_t::node_t;
+      using inner_t = typename super_t::inner_t;
       template <rat::exp::type_t Type>
-      using unary_t = typename super_type::template unary_t<Type>;
+      using unary_t = typename super_t::template unary_t<Type>;
       template <rat::exp::type_t Type>
-      using variadic_t = typename super_type::template variadic_t<Type>;
+      using variadic_t = typename super_t::template variadic_t<Type>;
       template <rat::exp::type_t Type>
-      using weight_node_t = typename super_type::template weight_node_t<Type>;
+      using weight_node_t = typename super_t::template weight_node_t<Type>;
 
       /// Whether \a lhs < \a rhs.
       bool
@@ -62,7 +62,7 @@ namespace vcsn
       `-----------------------------------------------------------*/
 
 #define VISIT(Type)                                                     \
-      using Type ## _t = typename super_type::Type ## _t;               \
+      using Type ## _t = typename super_t::Type ## _t;               \
       virtual void                                                      \
       visit(const Type ## _t& lhs)                                      \
       {                                                                 \

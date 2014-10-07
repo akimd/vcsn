@@ -34,7 +34,7 @@ namespace vcsn
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = typename weightset_t::value_t;
 
-      using super_type = typename RatExpSet::const_visitor;
+      using super_t = typename RatExpSet::const_visitor;
 
       constexpr static const char* me() { return "star_normal_form"; }
 

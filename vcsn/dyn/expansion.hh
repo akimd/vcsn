@@ -38,7 +38,7 @@ namespace vcsn
       {
       public:
         using expansionset_t = ExpansionSet;
-        using super_type = expansion_base;
+        using super_t = expansion_base;
         using expansion_t = typename expansionset_t::value_t;
         expansion_wrapper(const expansion_t& expansion,
                           const expansionset_t& expansionset)

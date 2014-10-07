@@ -29,18 +29,18 @@ namespace vcsn
     class tikzer: public outputter<Aut>
     {
     public:
-      using super_type = outputter<Aut>;
-      using typename super_type::automaton_t;
-      using typename super_type::state_t;
-      using typename super_type::transition_t;
-      using typename super_type::weight_t;
+      using super_t = outputter<Aut>;
+      using typename super_t::automaton_t;
+      using typename super_t::state_t;
+      using typename super_t::transition_t;
+      using typename super_t::weight_t;
 
-      using super_type::aut_;
-      using super_type::format_entry_;
-      using super_type::os_;
-      using super_type::ws_;
+      using super_t::aut_;
+      using super_t::format_entry_;
+      using super_t::os_;
+      using super_t::ws_;
 
-      using super_type::super_type;
+      using super_t::super_t;
 
       /// Format an initial/final weight.
       /// \param kind  the weight name (e.g., "initial").

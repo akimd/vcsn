@@ -13,10 +13,10 @@ namespace vcsn
     {
     public:
       using ratexpset_t = RatExpSet;
-      using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
+      using super_t = typename ratexpset_t::const_visitor;
+      using node_t = typename super_t::node_t;
       template <rat::type_t Type>
-      using variadic_t = typename super_type::template variadic_t<Type>;
+      using variadic_t = typename super_t::template variadic_t<Type>;
 
       /// Entry point: return the size of \a v.
       unsigned
@@ -37,7 +37,7 @@ namespace vcsn
     private:
 
 # define DEFINE(Type)                                           \
-      using Type ## _t = typename super_type::Type ## _t;       \
+      using Type ## _t = typename super_t::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom)         { (void) v; }

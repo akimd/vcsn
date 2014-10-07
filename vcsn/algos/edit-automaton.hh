@@ -83,9 +83,9 @@ namespace vcsn
   class edit_automaton: public automaton_editor
   {
   public:
-    using super_type = automaton_editor;
+    using super_t = automaton_editor;
     using automaton_t = Aut;
-    using string_t = super_type::string_t;
+    using string_t = super_t::string_t;
 
   private:
     using context_t = context_t_of<automaton_t>;

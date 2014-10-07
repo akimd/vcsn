@@ -45,7 +45,7 @@ namespace vcsn
       {
       public:
         using ratexpset_t = RatExpSet;
-        using super_type = ratexp_base;
+        using super_t = ratexp_base;
         using ratexp_t = typename ratexpset_t::value_t;
         ratexp_wrapper(const ratexp_t& ratexp,
                        const ratexpset_t& ratexpset)

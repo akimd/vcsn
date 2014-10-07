@@ -20,14 +20,14 @@ namespace vcsn
   template <typename WeightSet>
   struct variadic_mul_mixin : WeightSet
   {
-    using super = WeightSet;
-    using typename super::value_t;
+    using super_t = WeightSet;
+    using typename super_t::value_t;
 
     // Inherit the constructors.
-    using super::super;
+    using super_t::super_t;
 
     // Provide a variadic mul.
-    using super::mul;
+    using super_t::mul;
 
     template <typename... Ts>
     value_t mul(const Ts&... ts) const
@@ -37,7 +37,7 @@ namespace vcsn
       using swallow = int[];
       (void) swallow
         {
-          ((res = super::mul(res, ts)), 0)...
+          ((res = super_t::mul(res, ts)), 0)...
         };
       return res;
     }

@@ -80,8 +80,8 @@ namespace vcsn
     public:
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = node<label_t, weight_t>;
-      using value_t = typename super_type::value_t;
+      using super_t = node<label_t, weight_t>;
+      using value_t = typename super_t::value_t;
     };
 
 
@@ -101,9 +101,9 @@ namespace vcsn
 
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = inner<label_t, weight_t>;
-      using value_t = typename super_type::value_t;
-      using values_t = typename super_type::values_t;
+      using super_t = inner<label_t, weight_t>;
+      using value_t = typename super_t::value_t;
+      using values_t = typename super_t::values_t;
 
       using const_iterator = typename values_t::const_iterator;
       // Needed by boost::make_iterator_range, but since we iterate
@@ -135,14 +135,14 @@ namespace vcsn
 
       variadic(const values_t& ns = values_t());
       variadic(const variadic& that)
-        : super_type(that)
+        : super_t(that)
         , sub_(that.sub_)
       {}
 
       /// Return a copy of children.
       values_t subs() const;
 
-      virtual void accept(typename super_type::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor &v) const;
 
     private:
       values_t sub_;
@@ -161,15 +161,15 @@ namespace vcsn
 
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = inner<label_t, weight_t>;
-      using value_t = typename super_type::value_t;
+      using super_t = inner<label_t, weight_t>;
+      using value_t = typename super_t::value_t;
 
       unary(value_t exp);
       virtual type_t type() const { return Type; };
 
       const value_t sub() const;
 
-      virtual void accept(typename super_type::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor &v) const;
 
     private:
       value_t sub_;
@@ -194,8 +194,8 @@ namespace vcsn
 
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = inner<label_t, weight_t>;
-      using value_t = typename super_type::value_t;
+      using super_t = inner<label_t, weight_t>;
+      using value_t = typename super_t::value_t;
 
       virtual type_t type() const { return Type; };
 
@@ -209,7 +209,7 @@ namespace vcsn
         , weight_(that.weight_)
       {}
 
-      virtual void accept(typename super_type::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor &v) const;
 
     private:
       value_t sub_;
@@ -229,7 +229,7 @@ namespace vcsn
     public:
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = node<label_t, weight_t>;
+      using super_t = node<label_t, weight_t>;
     };
 
 
@@ -241,13 +241,13 @@ namespace vcsn
       static_assert(is_constant(Type), "invalid type");
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = leaf<label_t, weight_t>;
-      using value_t = typename super_type::value_t;
-      using type_t = typename super_type::type_t;
+      using super_t = leaf<label_t, weight_t>;
+      using value_t = typename super_t::value_t;
+      using type_t = typename super_t::type_t;
 
       virtual type_t type() const { return Type; };
 
-      virtual void accept(typename super_type::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor &v) const;
     };
 
 
@@ -258,15 +258,15 @@ namespace vcsn
     public:
       using label_t = Label;
       using weight_t = Weight;
-      using super_type = leaf<label_t, weight_t>;
-      using type_t = typename super_type::type_t;
-      using value_t = typename super_type::value_t;
+      using super_t = leaf<label_t, weight_t>;
+      using type_t = typename super_t::type_t;
+      using value_t = typename super_t::value_t;
 
       atom(const label_t& value);
 
       virtual type_t type() const { return type_t::atom; };
 
-      virtual void accept(typename super_type::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor &v) const;
       const label_t& value() const;
 
     private:

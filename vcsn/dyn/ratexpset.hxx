@@ -19,7 +19,7 @@ namespace dyn
     inline
     ratexpset_wrapper<RatExpSet>::ratexpset_wrapper
       (const ratexpset_t& rs)
-      : super_type()
+      : super_t()
       , rs_(rs)
     {}
 

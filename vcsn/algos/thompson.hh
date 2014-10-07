@@ -29,7 +29,7 @@ namespace vcsn
       using weight_t = weight_t_of<ratexpset_t>;
       using state_t = state_t_of<automaton_t>;
 
-      using super_type = typename ratexpset_t::const_visitor;
+      using super_t = typename ratexpset_t::const_visitor;
 
       static_assert(labelset_t_of<Aut>::has_one(),
                     "thompson: requires nullable labels");

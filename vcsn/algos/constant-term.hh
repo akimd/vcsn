@@ -31,7 +31,7 @@ namespace vcsn
       using weight_t = weight_t_of<ratexpset_t>;
       using weightset_t = weightset_t_of<ratexpset_t>;
 
-      using super_type = typename ratexpset_t::const_visitor;
+      using super_t = typename ratexpset_t::const_visitor;
 
       constexpr static const char* me() { return "constant_term"; }
 

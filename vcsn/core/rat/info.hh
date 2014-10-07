@@ -16,14 +16,14 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using node_t = typename ratexpset_t::node_t;
-      using super_type = typename ratexpset_t::const_visitor;
+      using super_t = typename ratexpset_t::const_visitor;
 
       /// For each node type, count its number of occurrences.
       void operator()(const node_t& v);
 
 # define DEFINE(Type)                                           \
     public:                                                     \
-      using Type ## _t = typename super_type::Type ## _t;       \
+      using Type ## _t = typename super_t::Type ## _t;       \
       size_t Type = 0;                                          \
                                                                 \
     private:                                                    \

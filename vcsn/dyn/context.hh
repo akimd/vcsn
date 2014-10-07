@@ -45,7 +45,7 @@ namespace vcsn
       {
       public:
         using context_t = Context;
-        using super_type = context_base;
+        using super_t = context_base;
 
         context_wrapper(const context_t& context)
           : context_(context)

@@ -21,7 +21,7 @@ namespace vcsn
   {
   public:
     using genset_t = GenSet;
-    using super_type = detail::genset_labelset<genset_t>;
+    using super_t = detail::genset_labelset<genset_t>;
     using self_type = letterset;
     using genset_ptr = std::shared_ptr<const genset_t>;
 
@@ -34,7 +34,7 @@ namespace vcsn
     using kind_t = labels_are_letters;
 
     letterset(const genset_ptr& gs)
-      : super_type{gs}
+      : super_t{gs}
     {}
 
     letterset(const genset_t& gs = {})
@@ -45,15 +45,15 @@ namespace vcsn
       : letterset(std::make_shared<const genset_t>(letters))
     {}
 
-    const super_type&
+    const super_t&
     super() const
     {
-      return static_cast<const super_type&>(*this);
+      return static_cast<const super_t&>(*this);
     }
 
     static std::string sname()
     {
-      return "lal_" + super_type::sname();
+      return "lal_" + super_t::sname();
     }
 
     std::string vname(bool full = true) const

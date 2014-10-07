@@ -49,7 +49,7 @@ namespace vcsn
 } // namespace vcsn
 
 # define VCSN_RAT_VISIT(Type, Val)                      \
-  using Type ## _t = typename super_type::Type ## _t;   \
+  using Type ## _t = typename super_t::Type ## _t;   \
   virtual void visit(const Type ## _t& Val)
 
 # define VCSN_RAT_UNSUPPORTED(Type)                     \

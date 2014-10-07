@@ -250,7 +250,7 @@ namespace vcsn
       {
         minimizer& minimizer_;
         const state_to_class_t& state_to_class_;
-        using super_type
+        using super_t
           = std::unordered_map<state_output_t*, set_t,
                                signature_hasher, signature_equal_to>;
       public:
@@ -259,7 +259,7 @@ namespace vcsn
                            const labelset_t& ls,
                            state_to_class_t& state_to_class,
                            const size_t class_bound)
-          : super_type(1,
+          : super_t(1,
                        signature_hasher(the_minimizer, class_bound),
                        signature_equal_to(the_minimizer,
                                           ls, state_to_class, class_bound))

@@ -168,17 +168,17 @@ namespace vcsn
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "fado: requires Boolean weights");
 
-      using super_type = outputter<Aut>;
+      using super_t = outputter<Aut>;
 
-      using super_type::aut_;
-      using super_type::finals_;
-      using super_type::initials_;
-      using super_type::list_states_;
-      using super_type::os_;
-      using super_type::output_transitions_;
-      using super_type::ws_;
+      using super_t::aut_;
+      using super_t::finals_;
+      using super_t::initials_;
+      using super_t::list_states_;
+      using super_t::os_;
+      using super_t::output_transitions_;
+      using super_t::ws_;
 
-      using super_type::super_type;
+      using super_t::super_t;
 
     public:
       /// Actually output \a aut_ on \a os_.
@@ -268,20 +268,20 @@ namespace vcsn
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "grail:requires Boolean weights");
 
-      using super_type = outputter<Aut>;
+      using super_t = outputter<Aut>;
 
-      using typename super_type::automaton_t;
-      using typename super_type::state_t;
-      using typename super_type::transition_t;
+      using typename super_t::automaton_t;
+      using typename super_t::state_t;
+      using typename super_t::transition_t;
 
-      using super_type::aut_;
-      using super_type::finals_;
-      using super_type::initials_;
-      using super_type::os_;
-      using super_type::output_transitions_;
-      using super_type::ws_;
+      using super_t::aut_;
+      using super_t::finals_;
+      using super_t::initials_;
+      using super_t::os_;
+      using super_t::output_transitions_;
+      using super_t::ws_;
 
-      using super_type::super_type;
+      using super_t::super_t;
 
     public:
       /// Actually output \a aut_ on \a os_.

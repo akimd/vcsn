@@ -247,13 +247,13 @@ namespace vcsn
                                     signature_hasher, signature_equal_to>
       {
         minimizer& minimizer_;
-        using super_type
+        using super_t
           = std::unordered_map<state_output_t*, set_t,
                                signature_hasher, signature_equal_to>;
       public:
         signature_multimap(minimizer& the_minimizer,
                            const size_t class_bound)
-          : super_type(1,
+          : super_t(1,
                        signature_hasher(the_minimizer, class_bound),
                        signature_equal_to(the_minimizer, class_bound))
           , minimizer_(the_minimizer)

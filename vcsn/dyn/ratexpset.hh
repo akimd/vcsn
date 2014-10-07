@@ -102,10 +102,10 @@ namespace detail
   public:
     using ratexpset_t = RatExpSet;
     using context_t = context_t_of<ratexpset_t>;
-    using super_type = ratexpset_base;
+    using super_t = ratexpset_base;
     using label_t = label_t_of<context_t>;
     using weight_t = weight_t_of<context_t>;
-    using value_t = typename super_type::value_t;
+    using value_t = typename super_t::value_t;
 
     /// Constructor.
     /// \param rs    the wrapped ratexpset.

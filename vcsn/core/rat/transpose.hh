@@ -21,7 +21,7 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using ratexp_t = typename ratexpset_t::value_t;
-      using super_type = typename ratexpset_t::const_visitor;
+      using super_t = typename ratexpset_t::const_visitor;
 
       transposer(const ratexpset_t& rs)
         : rs_{rs}

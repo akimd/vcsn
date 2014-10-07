@@ -22,7 +22,7 @@ namespace vcsn
   {
   public:
     using genset_t = GenSet;
-    using super_type = detail::genset_labelset<genset_t>;
+    using super_t = detail::genset_labelset<genset_t>;
     using self_type = wordset;
     using genset_ptr = std::shared_ptr<const genset_t>;
 
@@ -35,22 +35,22 @@ namespace vcsn
     using kind_t = labels_are_words;
 
     wordset(const genset_ptr& gs)
-      : super_type{gs}
+      : super_t{gs}
     {}
 
     wordset(const genset_t& gs = {})
       : wordset{std::make_shared<const genset_t>(gs)}
     {}
 
-    const super_type&
+    const super_t&
     super() const
     {
-      return static_cast<const super_type&>(*this);
+      return static_cast<const super_t&>(*this);
     }
 
     static std::string sname()
     {
-      return "law_" + super_type::sname();
+      return "law_" + super_t::sname();
     }
 
     std::string vname(bool full = true) const

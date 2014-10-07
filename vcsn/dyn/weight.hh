@@ -43,7 +43,7 @@ namespace vcsn
       {
       public:
         using weightset_t = WeightSet;
-        using super_type = weight_base;
+        using super_t = weight_base;
         using weight_t = typename weightset_t::value_t;
         weight_wrapper(const weight_t& w, const weightset_t& ws)
           : weight_(w)

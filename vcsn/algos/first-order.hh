@@ -53,7 +53,7 @@ namespace vcsn
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_type = typename ratexpset_t::const_visitor;
+      using super_t = typename ratexpset_t::const_visitor;
 
       constexpr static const char* me() { return "first_order"; }
 

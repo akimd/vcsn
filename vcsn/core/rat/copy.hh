@@ -20,14 +20,14 @@ namespace vcsn
       using out_ratexpset_t = OutRatExpSet;
       using in_value_t = typename in_ratexpset_t::value_t;
       using out_value_t = typename out_ratexpset_t::value_t;
-      using super_type = typename in_ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
+      using super_t = typename in_ratexpset_t::const_visitor;
+      using node_t = typename super_t::node_t;
+      using inner_t = typename super_t::inner_t;
       template <type_t Type>
-      using unary_t = typename super_type::template unary_t<Type>;
+      using unary_t = typename super_t::template unary_t<Type>;
       template <type_t Type>
-      using variadic_t = typename super_type::template variadic_t<Type>;
-      using leaf_t = typename super_type::leaf_t;
+      using variadic_t = typename super_t::template variadic_t<Type>;
+      using leaf_t = typename super_t::leaf_t;
 
       copier(const in_ratexpset_t& in_rs, const out_ratexpset_t& out_rs)
         : in_rs_(in_rs)
@@ -71,7 +71,7 @@ namespace vcsn
       }
 
 # define DEFINE(Type)                                           \
-      using Type ## _t = typename super_type::Type ## _t;       \
+      using Type ## _t = typename super_t::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(conjunction)  { copy_variadic(v); }

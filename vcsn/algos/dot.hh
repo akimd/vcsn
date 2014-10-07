@@ -28,21 +28,21 @@ namespace vcsn
     class dotter: public outputter<Aut>
     {
     private:
-      using super_type = outputter<Aut>;
-      using typename super_type::automaton_t;
-      using typename super_type::state_t;
-      using typename super_type::transition_t;
-      using typename super_type::weightset_t;
-      using typename super_type::weight_t;
+      using super_t = outputter<Aut>;
+      using typename super_t::automaton_t;
+      using typename super_t::state_t;
+      using typename super_t::transition_t;
+      using typename super_t::weightset_t;
+      using typename super_t::weight_t;
 
-      using super_type::aut_;
-      using super_type::finals_;
-      using super_type::format_entry_;
-      using super_type::initials_;
-      using super_type::os_;
-      using super_type::ws_;
+      using super_t::aut_;
+      using super_t::finals_;
+      using super_t::format_entry_;
+      using super_t::initials_;
+      using super_t::os_;
+      using super_t::ws_;
 
-      using super_type::super_type;
+      using super_t::super_t;
 
       // Dot, by default, uses the X11 color naming scheme, whose "gray"
       // is really light (it looks almost blue in some cases).
@@ -51,7 +51,7 @@ namespace vcsn
     public:
       dotter(const automaton_t& aut, std::ostream& out,
              bool dot2tex = false)
-        : super_type(aut, out)
+        : super_t(aut, out)
         , dot2tex_(dot2tex)
       {}
 
