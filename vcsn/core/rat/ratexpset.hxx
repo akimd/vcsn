@@ -71,9 +71,6 @@ namespace vcsn
     else
       res += "ratexpset<";
     res += context().vname(full) + '>';
-    // if (full)
-    //   // FIXME: why do I need rat::?  this->to_string is not applicable anyway!
-    //   res += "(" + rat::to_string(identities_) +")";
     return res;
   }
 
@@ -758,14 +755,6 @@ namespace vcsn
         return res;
       }
    }
-
-  DEFINE::to_string(value_t e) const
-    -> std::string
-  {
-    std::ostringstream o;
-    print(e, o, "text");
-    return o.str();
-  }
 
   /*----------------------------------.
   | ratexpset as a WeightSet itself.  |

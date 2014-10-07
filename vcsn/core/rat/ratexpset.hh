@@ -235,8 +235,6 @@ namespace vcsn
     template <typename... Args>
     value_t letter_class(Args&&... chars) const;
 
-    std::string to_string(value_t e) const; // Mostly for internal convenience.
-
     /// Parsing a ratexp in a stream.
     value_t conv(std::istream& is) const;
 
