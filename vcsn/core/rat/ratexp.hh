@@ -65,7 +65,7 @@ namespace vcsn
       using values_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
-      virtual void accept(const_visitor &v) const = 0;
+      virtual void accept(const_visitor& v) const = 0;
     };
 
     /*--------.
@@ -142,7 +142,7 @@ namespace vcsn
       /// Return a copy of children.
       values_t subs() const;
 
-      virtual void accept(typename super_t::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor& v) const;
 
     private:
       values_t sub_;
@@ -169,7 +169,7 @@ namespace vcsn
 
       const value_t sub() const;
 
-      virtual void accept(typename super_t::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor& v) const;
 
     private:
       value_t sub_;
@@ -209,7 +209,7 @@ namespace vcsn
         , weight_(that.weight_)
       {}
 
-      virtual void accept(typename super_t::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor& v) const;
 
     private:
       value_t sub_;
@@ -247,7 +247,7 @@ namespace vcsn
 
       virtual type_t type() const { return Type; };
 
-      virtual void accept(typename super_t::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor& v) const;
     };
 
 
@@ -266,7 +266,7 @@ namespace vcsn
 
       virtual type_t type() const { return type_t::atom; };
 
-      virtual void accept(typename super_t::const_visitor &v) const;
+      virtual void accept(typename super_t::const_visitor& v) const;
       const label_t& value() const;
 
     private:
