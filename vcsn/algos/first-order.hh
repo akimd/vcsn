@@ -71,9 +71,11 @@ namespace vcsn
         return res_;
       }
 
+#if CACHE
       std::unordered_map<ratexp_t, expansion_t,
                          vcsn::hash<ratexpset_t>,
                          vcsn::equal_to<ratexpset_t>> cache_;
+#endif
 
       expansion_t first_order(const ratexp_t& e)
       {
