@@ -4,20 +4,21 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/are-equivalent.hh> // difference
 # include <vcsn/algos/are-isomorphic.hh>
-# include <vcsn/algos/to-expression.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/de-bruijn.hh>
 # include <vcsn/algos/derivation.hh>
 # include <vcsn/algos/derived-term.hh>
+# include <vcsn/algos/divkbaseb.hh>
 # include <vcsn/algos/dot.hh>
+# include <vcsn/algos/double-ring.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
 # include <vcsn/algos/enumerate.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/expand.hh>
-# include <vcsn/algos/first-order.hh>
 # include <vcsn/algos/identities.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-ambiguous.hh>
@@ -26,8 +27,9 @@
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
-# include <vcsn/algos/is-valid.hh>
 # include <vcsn/algos/is-valid-ratexp.hh>
+# include <vcsn/algos/is-valid.hh>
+# include <vcsn/algos/ladybird.hh>
 # include <vcsn/algos/left-mult.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
@@ -36,6 +38,7 @@
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/push-weights.hh>
+# include <vcsn/algos/random.hh>
 # include <vcsn/algos/read.hh>
 # include <vcsn/algos/sort.hh>
 # include <vcsn/algos/split.hh>
@@ -47,15 +50,11 @@
 # include <vcsn/algos/synchronizing-word.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
+# include <vcsn/algos/to-expansion.hh>
+# include <vcsn/algos/to-expression.hh>
 # include <vcsn/algos/transpose.hh>
-# include <vcsn/algos/union.hh>
-
-# include <vcsn/algos/de-bruijn.hh>
-# include <vcsn/algos/divkbaseb.hh>
-# include <vcsn/algos/double-ring.hh>
-# include <vcsn/algos/ladybird.hh>
-# include <vcsn/algos/random.hh>
 # include <vcsn/algos/u.hh>
+# include <vcsn/algos/union.hh>
 
 # include <vcsn/core/rat/identities.hh>
 
@@ -93,10 +92,10 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class LIBVCSN_API mutable_automaton<Ctx>;                             \
                                                                         \
-  /* to_expression. */                                                     \
+  /* to_expression. */                                                  \
   MAYBE_EXTERN template                                                 \
   Ctx::ratexp_t                                                         \
-  to_expression<mutable_automaton<Ctx>>                                    \
+  to_expression<mutable_automaton<Ctx>>                                 \
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
                                                                         \
@@ -303,7 +302,6 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
-        REGISTER(to_expression, aut_t, const std::string);
         REGISTER(chain, aut_t, int, int);
         REGISTER(chain_ratexp, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
@@ -319,7 +317,6 @@ namespace vcsn
         REGISTER(dot, aut_t, std::ostream, bool);
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
-        REGISTER(first_order, rs_t);
         REGISTER(identities, rs_t);
         REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(info_ratexp, rs_t, std::ostream);
@@ -370,6 +367,8 @@ namespace vcsn
         REGISTER(sum_ratexp, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(tikz, aut_t, std::ostream);
+        REGISTER(to_expansion, rs_t);
+        REGISTER(to_expression, aut_t, const std::string);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_ratexp, rs_t);
         REGISTER(transposition_ratexp, rs_t);

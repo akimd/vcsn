@@ -648,9 +648,9 @@ struct ratexp
     return vcsn::dyn::expand(val_);
   }
 
-  expansion first_order() const
+  expansion to_expansion() const
   {
-    return vcsn::dyn::first_order(val_);
+    return vcsn::dyn::to_expansion(val_);
   }
 
   std::string format(const std::string& format = "text") const
@@ -1054,7 +1054,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("derived_term", &ratexp::derived_term, derived_term())
     .def("difference", &ratexp::difference)
     .def("expand", &ratexp::expand)
-    .def("first_order", &ratexp::first_order)
+    .def("expansion", &ratexp::to_expansion)
     .def("format", &ratexp::format)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_series", &ratexp::is_series)

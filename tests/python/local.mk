@@ -34,7 +34,6 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/evaluate.py                               \
   %D%/expand.py                                 \
   %D%/factory.py                                \
-  %D%/first-order.py                            \
   %D%/has-twins-property.py                     \
   %D%/infiltration.py                           \
   %D%/info.py                                   \
@@ -71,6 +70,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/sum.py                                    \
   %D%/synchronizing-word.py                     \
   %D%/thompson.py                               \
+  %D%/to-expansion.py                           \
   %D%/to-expression.py                          \
   %D%/transpose.py                              \
   %D%/tuples.py                                 \

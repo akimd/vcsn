@@ -35,7 +35,6 @@ nobase_include_HEADERS =                        \
   %D%/algos/enumerate.hh                        \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
-  %D%/algos/first-order.hh                      \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/has-twins-property.hh               \
@@ -81,6 +80,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/synchronizing-word.hh               \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
+  %D%/algos/to-expansion.hh                     \
   %D%/algos/to-expression.hh                    \
   %D%/algos/transpose.hh                        \
   %D%/algos/u.hh                                \

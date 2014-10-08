@@ -1,7 +1,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/derivation.hh>
 #include <vcsn/algos/derived-term.hh>
-#include <vcsn/algos/first-order.hh>
+#include <vcsn/algos/to-expansion.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
@@ -31,15 +31,15 @@ namespace vcsn
       return detail::derived_term_registry().call(e, algo);
     }
 
-    /*-------------------.
-    | first_order(exp).  |
-    `-------------------*/
-    REGISTER_DEFINE(first_order);
+    /*---------------------.
+    | to_expansion(exp).   |
+    `---------------------*/
+    REGISTER_DEFINE(to_expansion);
 
     expansion
-    first_order(const ratexp& e)
+    to_expansion(const ratexp& e)
     {
-      return detail::first_order_registry().call(e);
+      return detail::to_expansion_registry().call(e);
     }
 
     /*-------------.

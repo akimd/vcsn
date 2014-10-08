@@ -198,10 +198,6 @@ namespace vcsn
     /// Output in FAdo format.
     std::ostream& fado(const automaton& aut, std::ostream& out);
 
-    /// First order development of a \a exp.
-    /// \param exp              the input ratexp
-    expansion first_order(const ratexp& exp);
-
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
 
@@ -550,6 +546,10 @@ namespace vcsn
 
     /// Output \a aut in LaTeX's TikZ format.
     std::ostream& tikz(const automaton& aut, std::ostream& out);
+
+    /// First order development of a \a exp.
+    /// \param exp              the input ratexp
+    expansion to_expansion(const ratexp& exp);
 
     /// A ratexp denoting the language of \a aut.
     ratexp to_expression(const automaton& aut,

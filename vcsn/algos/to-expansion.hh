@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_FIRST_ORDER_HH
-# define VCSN_ALGOS_FIRST_ORDER_HH
+#ifndef VCSN_ALGOS_TO_EXPANSION_HH
+# define VCSN_ALGOS_TO_EXPANSION_HH
 
 # include <stack>
 
@@ -32,12 +32,12 @@ namespace vcsn
   namespace rat
   {
 
-    /*----------------------.
-    | first_order_visitor.  |
-    `----------------------*/
+    /*------------------------.
+    | to_expansion_visitor.   |
+    `------------------------*/
 
     template <typename RatExpSet>
-    class first_order_visitor
+    class to_expansion_visitor
       : public RatExpSet::const_visitor
     {
     public:
@@ -55,12 +55,12 @@ namespace vcsn
 
       using super_t = typename ratexpset_t::const_visitor;
 
-      constexpr static const char* me() { return "first_order"; }
+      constexpr static const char* me() { return "to_expansion"; }
 
       using polys_t = typename expansionset_t::polys_t;
       using expansion_t = typename expansionset_t::value_t;
 
-      first_order_visitor(const ratexpset_t& rs)
+      to_expansion_visitor(const ratexpset_t& rs)
         : rs_(rs)
       {}
 
@@ -77,7 +77,7 @@ namespace vcsn
                          vcsn::equal_to<ratexpset_t>> cache_;
 #endif
 
-      expansion_t first_order(const ratexp_t& e)
+      expansion_t to_expansion(const ratexp_t& e)
       {
 #if CACHE
         auto insert = cache_.emplace(e, es_.zero());
@@ -114,7 +114,7 @@ namespace vcsn
 #endif
       }
 
-      polynomial_t first_order_as_polynomial(const ratexp_t& e)
+      polynomial_t to_expansion_as_polynomial(const ratexp_t& e)
       {
         operator()(e);
         return es_.as_polynomial(res_);
@@ -151,7 +151,7 @@ namespace vcsn
       {
         res_ = es_.zero();
         for (const auto& v: e)
-          es_.add_here(res_, first_order(v));
+          es_.add_here(res_, to_expansion(v));
       }
 
       VCSN_RAT_VISIT(prod, e)
@@ -177,7 +177,7 @@ namespace vcsn
           else
             {
               auto r = e[transposed_ ? size-1 - i : i];
-              expansion_t rhs = first_order(r);
+              expansion_t rhs = to_expansion(r);
               if (transposed_)
                 r = rs_.transposition(r);
 
@@ -242,8 +242,8 @@ namespace vcsn
 
         bool transposed = transposed_;
         transposed_ = false;
-        expansion_t lhs = first_order(e[0]);
-        expansion_t rhs = first_order(e[1]);
+        expansion_t lhs = to_expansion(e[0]);
+        expansion_t rhs = to_expansion(e[1]);
         transposed_ = transposed;
         DEBUG_IF(
                  std::cerr << "Lhs: "; print_(lhs, std::cerr) << '\n';
@@ -255,7 +255,7 @@ namespace vcsn
           {
             if (transposed_)
               {
-                auto rhs_transposed = first_order(e[1]);
+                auto rhs_transposed = to_expansion(e[1]);
                 es_.add_here(res_,
                              es_.ldiv_here(lhs.constant, rhs_transposed));
               }
@@ -281,9 +281,9 @@ namespace vcsn
 
       VCSN_RAT_VISIT(conjunction, e)
       {
-        res_ = first_order(e.head());
+        res_ = to_expansion(e.head());
         for (const auto& r: e.tail())
-          res_ = es_.conjunction(res_, first_order(r));
+          res_ = es_.conjunction(res_, to_expansion(r));
       }
 
       // FO(E:F) = FO(E):F + E:FO(F)
@@ -299,7 +299,7 @@ namespace vcsn
             expansion_t lhs; lhs.constant = ws_.zero();
             std::swap(res, lhs);
 
-            expansion_t r = first_order(rhs);
+            expansion_t r = to_expansion(rhs);
             res.constant = ws_.mul(lhs.constant, r.constant);
 
             // (i) fo(lhs) -> fo(lhs):r, that is, shuffle-multiply the
@@ -338,7 +338,7 @@ namespace vcsn
       typename std::enable_if<IsFree, void>::type
       visit_complement(const complement_t& e)
       {
-        expansion_t res = first_order(e.sub());
+        expansion_t res = to_expansion(e.sub());
         res_.constant = ws_.is_zero(res.constant) ? ws_.one() : ws_.zero();
 
         // Turn the polynomials into a ratexp, and complement it.
@@ -359,7 +359,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(star, e)
       {
-        expansion_t res = first_order(e.sub());
+        expansion_t res = to_expansion(e.sub());
         res_.constant = ws_.star(res.constant);
         auto f = e.shared_from_this();
         if (transposed_)
@@ -377,7 +377,7 @@ namespace vcsn
       VCSN_RAT_VISIT(lweight, e)
       {
         auto l = e.weight();
-        auto r = first_order(e.sub());
+        auto r = to_expansion(e.sub());
         res_
           = transposed_
           ? es_.rmul(r, ws_.transpose(l))
@@ -386,7 +386,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(rweight, e)
       {
-        auto l = first_order(e.sub());
+        auto l = to_expansion(e.sub());
         auto r = e.weight();
         res_
           = transposed_
@@ -417,10 +417,10 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   typename rat::expansionset<RatExpSet>::value_t
-  first_order(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  to_expansion(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
-    rat::first_order_visitor<RatExpSet> first_order{rs};
-    return first_order.first_order(e);
+    rat::to_expansion_visitor<RatExpSet> to_expansion{rs};
+    return to_expansion.to_expansion(e);
   }
 
   namespace dyn
@@ -430,19 +430,19 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       expansion
-      first_order(const ratexp& exp)
+      to_expansion(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.ratexpset();
         auto es = vcsn::rat::expansionset<RatExpSet>(rs);
         return make_expansion(es,
-                              first_order<RatExpSet>(rs, e.ratexp()));
+                              to_expansion<RatExpSet>(rs, e.ratexp()));
       }
 
-      REGISTER_DECLARE(first_order,
+      REGISTER_DECLARE(to_expansion,
                        (const ratexp& e) -> expansion);
     }
   }
 } // vcsn::
 
-#endif // !VCSN_ALGOS_FIRST_ORDER_HH
+#endif // !VCSN_ALGOS_TO_EXPANSION_HH

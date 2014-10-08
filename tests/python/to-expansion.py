@@ -13,7 +13,7 @@ def check(re, exp, use_spontaneous = False):
     (`derivation` and `expansion`) compute the same result.
     '''
     r = c.ratexp(re)
-    eff = r.first_order()
+    eff = r.expansion()
     print("d: {} => {}".format(r, eff));
     CHECK_EQ(exp, str(eff))
     # Check that if derived_term can do it, them it's the same
@@ -204,7 +204,7 @@ check_conjunction(r'<1/10>(ab{\}<1/2>ab+c)<2>', '<1/20>(ab{\}<1/3>ab+c)<3>',
 ## ----------------- ##
 
 CHECK_EQ(r'a \odot \left[a \oplus \left\langle x\right\rangle b \, c\right] \oplus b \odot \left[\left\langle y\right\rangle c\right]',
-         c.ratexp(r'aa+<x>abc+<y>bc').first_order().format("latex"))
+         c.ratexp(r'aa+<x>abc+<y>bc').expansion().format("latex"))
 
 
 ## ------------ ##

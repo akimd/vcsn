@@ -3,7 +3,7 @@
 
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/derivation.hh>
-# include <vcsn/algos/first-order.hh>
+# include <vcsn/algos/to-expansion.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/ratexp-automaton.hh>
@@ -66,7 +66,7 @@ namespace vcsn
       {
         init_(ratexp);
 
-        rat::first_order_visitor<ratexpset_t> expand{rs_};
+        rat::to_expansion_visitor<ratexpset_t> expand{rs_};
         while (!res_->todo_.empty())
           {
             ratexp_t src = res_->todo_.top();
