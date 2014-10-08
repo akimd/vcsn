@@ -232,9 +232,6 @@ namespace vcsn
     /// \pre aut is lal or lan
     automaton insplit(const automaton& aut);
 
-    /// Same automaton, but with the inverse of each weight.
-    automaton invert(const automaton& aut);
-
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);
 
