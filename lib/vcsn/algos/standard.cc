@@ -18,6 +18,17 @@ namespace vcsn
       return detail::is_standard_registry().call(a);
     }
 
+    /*---------------------.
+    | is_costandard(aut).  |
+    `---------------------*/
+    REGISTER_DEFINE(is_costandard);
+
+    bool
+    is_costandard(const automaton& a)
+    {
+      return detail::is_costandard_registry().call(a);
+    }
+
     /*----------------.
     | standard(aut).  |
     `----------------*/
@@ -27,6 +38,17 @@ namespace vcsn
     standard(const automaton& a)
     {
       return detail::standard_registry().call(a);
+    }
+
+    /*------------------.
+    | costandard(aut).  |
+    `------------------*/
+    REGISTER_DEFINE(costandard);
+
+    automaton
+    costandard(const automaton& a)
+    {
+      return detail::costandard_registry().call(a);
     }
 
     /*----------------.

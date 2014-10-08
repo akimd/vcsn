@@ -163,6 +163,11 @@ struct automaton
     return vcsn::dyn::context_of(val_);
   }
 
+  automaton costandard() const
+  {
+    return vcsn::dyn::costandard(val_);
+  }
+
   automaton determinize(const std::string& algo = "auto") const
   {
     return vcsn::dyn::determinize(val_, algo);
@@ -232,6 +237,11 @@ struct automaton
   bool is_complete() const
   {
     return vcsn::dyn::is_complete(val_);
+  }
+
+  bool is_costandard() const
+  {
+    return vcsn::dyn::is_costandard(val_);
   }
 
   bool is_cycle_ambiguous() const
@@ -941,6 +951,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("compose", &automaton::compose)
     .def("concatenate", &automaton::concatenate)
     .def("context", &automaton::context)
+    .def("costandard", &automaton::costandard)
     .def("determinize", &automaton::determinize, determinize())
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)
@@ -956,6 +967,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_coaccessible", &automaton::is_coaccessible)
     .def("is_codeterministic", &automaton::is_codeterministic)
     .def("is_complete", &automaton::is_complete)
+    .def("is_costandard", &automaton::is_costandard)
     .def("is_cycle_ambiguous", &automaton::is_cycle_ambiguous)
     .def("is_deterministic", &automaton::is_deterministic)
     .def("is_empty", &automaton::is_empty)

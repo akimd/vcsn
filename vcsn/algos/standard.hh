@@ -4,6 +4,7 @@
 # include <set>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/transpose.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
@@ -33,6 +34,15 @@ namespace vcsn
       && a->in(a->dst_of(inis.front())).empty();
   }
 
+  /// Whether \a a is costandard.
+  template <typename Aut>
+  bool
+  is_costandard(const Aut& a)
+  {
+    return is_standard(transpose(a));
+  }
+
+
   namespace dyn
   {
     namespace detail
@@ -47,6 +57,18 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(is_standard,
+                       (const automaton& e) -> bool);
+
+      /// Bridge.
+      template <typename Aut>
+      bool
+      is_costandard(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return is_costandard(a);
+      }
+
+      REGISTER_DECLARE(is_costandard,
                        (const automaton& e) -> bool);
     }
   }
@@ -93,6 +115,25 @@ namespace vcsn
     aut->set_initial(ini);
   }
 
+  template <typename Aut>
+  auto
+  standard(const Aut& aut)
+    -> decltype(copy(aut))
+  {
+    auto res = copy(aut);
+    standard_here(res);
+    return res;
+  }
+
+  template <typename Aut>
+  auto
+  costandard(const Aut& aut)
+    -> decltype(copy(aut))
+  {
+    return transpose(standard(transpose(aut)));
+  }
+
+
   namespace dyn
   {
     namespace detail
@@ -102,12 +143,22 @@ namespace vcsn
       automaton
       standard(const automaton& aut)
       {
-        auto res = copy(aut->as<Aut>());
-        ::vcsn::standard_here(res);
-        return make_automaton(std::move(res));
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::standard(a));
       }
 
       REGISTER_DECLARE(standard, (const automaton& e) -> automaton);
+
+      /// Bridge.
+      template <typename Aut>
+      automaton
+      costandard(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(costandard(a));
+      }
+
+      REGISTER_DECLARE(costandard, (const automaton& e) -> automaton);
     }
   }
 

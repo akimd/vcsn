@@ -36,6 +36,7 @@ namespace vcsn
       ALGO("cominimize", "minimize");
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
+      ALGO("costandard", "standard");
       ALGO("difference", "are-equivalent");
       ALGO("eliminate-state", "to-expression");
       ALGO("factor", "prefix");
@@ -43,6 +44,7 @@ namespace vcsn
       ALGO("is-accessible", "accessible");
       ALGO("is-coaccessible", "accessible");
       ALGO("is-codeterministic", "is-deterministic");
+      ALGO("is-costandard", "standard");
       ALGO("is-cycle-ambiguous", "is-ambiguous");
       ALGO("is-empty", "accessible");
       ALGO("is-out-sorted", "sort");

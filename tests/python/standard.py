@@ -67,6 +67,8 @@ digraph
   3 -> 2 [label = "<1/4>a, <1/4>b"]
 }''')
 CHECK_EQ(exp, a.standard())
+CHECK_EQ(a.transpose().standard().transpose(), a.costandard())
+CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 
 # Make sure we deleted former initial states that become inaccessible.
 a = vcsn.automaton('''digraph
@@ -106,6 +108,8 @@ exp = '''digraph
   1 -> F1 [label = "<xy>"]
 }'''
 CHECK_EQ(exp, str(a.standard()))
+CHECK_EQ(a.transpose().standard().transpose(), a.costandard())
+CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 
 
 ## --------------- ##

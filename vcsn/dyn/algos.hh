@@ -94,6 +94,9 @@ namespace vcsn
     /// Copy of \a exp, but built with \a rs.
     ratexp copy(const ratexp& exp, const ratexpset& rs);
 
+    /// A standardized transpositive \a a.
+    automaton costandard(const automaton& a);
+
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
@@ -249,6 +252,10 @@ namespace vcsn
     /// Whether \a aut is complete.
     /// \pre \a aut is LAL.
     bool is_complete(const automaton& aut);
+
+    /// Whether is costandard (unique final state, with weight one, no
+    /// outcoming transition).
+    bool is_costandard(const automaton& aut);
 
     /// Whether the automaton is cycle-ambiguous.
     bool is_cycle_ambiguous(const automaton& aut);

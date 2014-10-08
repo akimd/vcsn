@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_IS_NORMALIZED_HH
 # define VCSN_ALGOS_IS_NORMALIZED_HH
 
+# include <vcsn/algos/standard.hh>
 # include <vcsn/dyn/algos.hh>
 # include <vcsn/dyn/automaton.hh>
 
@@ -11,17 +12,7 @@ namespace vcsn
   bool
   is_normalized(const Aut& a)
   {
-    auto inis = a->initial_transitions();
-    auto fins = a->final_transitions();
-    return
-      inis.size() == 1
-      && a->weightset()->is_one(a->weight_of(inis.front()))
-      && fins.size() == 1
-      && a->weightset()->is_one(a->weight_of(fins.front()))
-      // No arrival on the initial state.
-      && a->in(a->dst_of(inis.front())).empty()
-      // No departure from the final state.
-      && a->out(a->src_of(fins.front())).empty();
+    return is_standard(a) && is_costandard(a);
   }
 
   namespace dyn
