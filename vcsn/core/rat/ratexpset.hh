@@ -39,14 +39,14 @@ namespace vcsn
     using label_t = label_t_of<context_t>;
     using weight_t = typename weightset_t::value_t;
     using identities_t = rat::identities;
-    using const_visitor = rat::const_visitor<label_t, weight_t>;
+    using const_visitor = rat::const_visitor<context_t>;
     /// Type of ratexps.
     //
     // See http://stackoverflow.com/questions/15537023 to know why we
     // add the vcsn::rat:: part: GCC wants it, Clang does not care,
     // both are right.
 # define DEFINE(Type)                                           \
-    using Type ## _t = vcsn::rat::Type<label_t, weight_t>
+    using Type ## _t = vcsn::rat::Type<context_t>
     DEFINE(atom);
     DEFINE(complement);
     DEFINE(inner);
@@ -73,9 +73,9 @@ namespace vcsn
     using values_t = typename node_t::values_t;
 
     template <type_t Type>
-    using unary_t = unary<Type, label_t, weight_t>;
+    using unary_t = unary<Type, context_t>;
     template <type_t Type>
-    using variadic_t = variadic<Type, label_t, weight_t>;
+    using variadic_t = variadic<Type, context_t>;
 
     using word_t = self_type;
     using letter_t = self_type;

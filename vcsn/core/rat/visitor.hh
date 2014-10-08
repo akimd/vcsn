@@ -9,24 +9,23 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename Label, typename Weight>
+    template <typename Context>
     class const_visitor
     {
     public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using node_t = node<label_t, weight_t>;
-      using inner_t = inner<label_t, weight_t>;
-      using leaf_t = leaf<label_t, weight_t>;
+      using context_t = Context;
+      using node_t = node<context_t>;
+      using inner_t = inner<context_t>;
+      using leaf_t = leaf<context_t>;
       template <type_t Type>
-      using unary_t = rat::unary<Type, label_t, weight_t>;
+      using unary_t = rat::unary<Type, context_t>;
       template <type_t Type>
-      using variadic_t = rat::variadic<Type, label_t, weight_t>;
+      using variadic_t = rat::variadic<Type, context_t>;
       template <type_t Type>
-      using weight_node_t = rat::weight_node<Type, label_t, weight_t>;
+      using weight_node_t = rat::weight_node<Type, context_t>;
 
-# define DEFINE(Type)                                   \
-      using Type ## _t = Type<label_t, weight_t>;       \
+# define DEFINE(Type)                           \
+      using Type ## _t = Type<context_t>;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom);
@@ -49,7 +48,7 @@ namespace vcsn
 } // namespace vcsn
 
 # define VCSN_RAT_VISIT(Type, Val)                      \
-  using Type ## _t = typename super_t::Type ## _t;   \
+  using Type ## _t = typename super_t::Type ## _t;      \
   virtual void visit(const Type ## _t& Val)
 
 # define VCSN_RAT_UNSUPPORTED(Type)                     \

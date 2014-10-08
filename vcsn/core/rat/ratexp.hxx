@@ -10,15 +10,15 @@ namespace vcsn
   {
 
 #define DEFINE_CTOR(Node)                       \
-    template <typename Label, typename Weight>  \
+    template <typename Context>                 \
     inline                                      \
-    Node<Label, Weight>::Node
+    Node<Context>::Node
 
 #define DEFINE(Node)                            \
-    template <typename Label, typename Weight>  \
+    template <typename Context>                 \
     inline                                      \
     auto                                        \
-    Node<Label, Weight>
+    Node<Context>
 
     /*-------.
     | atom.  |
@@ -44,16 +44,16 @@ namespace vcsn
 # undef DEFINE
 
 
-#define DEFINE_CTOR(Node)                                       \
-    template <type_t Type, typename Label, typename Weight>     \
-    inline                                                      \
-    Node<Type, Label, Weight>::Node
+#define DEFINE_CTOR(Node)                       \
+    template <type_t Type, typename Context>    \
+    inline                                      \
+    Node<Type, Context>::Node
 
-#define DEFINE(Node)                                         \
-    template <type_t Type, typename Label, typename Weight>  \
-    inline                                                   \
-    auto                                                     \
-    Node<Type, Label, Weight>
+#define DEFINE(Node)                            \
+    template <type_t Type, typename Context>    \
+    inline                                      \
+    auto                                        \
+    Node<Type, Context>
 
 
     /*-----------.

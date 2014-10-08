@@ -73,8 +73,8 @@ namespace vcsn
     std::ostream&
     operator<<(std::ostream& o, type_t t);
 
-# define DEFINE(Node)                           \
-    template <typename Label, typename Weight>  \
+# define DEFINE(Node)            \
+    template <typename Context>  \
     class Node
 
     DEFINE(node);
@@ -90,70 +90,70 @@ namespace vcsn
     | constant.  |
     `-----------*/
 
-    template <type_t Type, typename Label, typename Weight>
+    template <type_t Type, typename Context>
     class constant;
 
-    template <typename Label, typename Weight>
-    using zero = constant<type_t::zero, Label, Weight>;
+    template <typename Context>
+    using zero = constant<type_t::zero, Context>;
 
-    template <typename Label, typename Weight>
-    using one = constant<type_t::one, Label, Weight>;
+    template <typename Context>
+    using one = constant<type_t::one, Context>;
 
     /*--------.
     | unary.  |
     `--------*/
 
-    template <type_t Type, typename Label, typename Weight>
+    template <type_t Type, typename Context>
     class unary;
 
-    template <typename Label, typename Weight>
-    using complement = unary<type_t::complement, Label, Weight>;
+    template <typename Context>
+    using complement = unary<type_t::complement, Context>;
 
-    template <typename Label, typename Weight>
-    using star = unary<type_t::star, Label, Weight>;
+    template <typename Context>
+    using star = unary<type_t::star, Context>;
 
-    template <typename Label, typename Weight>
-    using transposition = unary<type_t::transposition, Label, Weight>;
+    template <typename Context>
+    using transposition = unary<type_t::transposition, Context>;
 
     /*-----------.
     | variadic.  |
     `-----------*/
 
-    template <type_t Type, typename Label, typename Weight>
+    template <type_t Type, typename Context>
     class variadic;
 
-    template <typename Label, typename Weight>
-    using prod = variadic<type_t::prod, Label, Weight>;
+    template <typename Context>
+    using prod = variadic<type_t::prod, Context>;
 
-    template <typename Label, typename Weight>
-    using conjunction = variadic<type_t::conjunction, Label, Weight>;
+    template <typename Context>
+    using conjunction = variadic<type_t::conjunction, Context>;
 
-    template <typename Label, typename Weight>
-    using ldiv = variadic<type_t::ldiv, Label, Weight>;
+    template <typename Context>
+    using ldiv = variadic<type_t::ldiv, Context>;
 
-    template <typename Label, typename Weight>
-    using shuffle = variadic<type_t::shuffle, Label, Weight>;
+    template <typename Context>
+    using shuffle = variadic<type_t::shuffle, Context>;
 
-    template <typename Label, typename Weight>
-    using sum = variadic<type_t::sum, Label, Weight>;
+    template <typename Context>
+    using sum = variadic<type_t::sum, Context>;
 
     /*--------------.
     | weight_node.  |
     `--------------*/
 
-    template <type_t Type, typename Label, typename Weight>
+    template <type_t Type, typename Context>
     class weight_node;
 
-    template <typename Label, typename Weight>
-    using lweight = weight_node<type_t::lweight, Label, Weight>;
+    template <typename Context>
+    using lweight = weight_node<type_t::lweight, Context>;
 
-    template <typename Label, typename Weight>
-    using rweight = weight_node<type_t::rweight, Label, Weight>;
+    template <typename Context>
+    using rweight = weight_node<type_t::rweight, Context>;
 
 
 
-    template <typename Label, typename Weight>
-    using ratexp = std::shared_ptr<const node<Label, Weight>>;
+    template <typename Context>
+    using ratexp = std::shared_ptr<const node<Context>>;
 
 
     // ratexpset.hh.

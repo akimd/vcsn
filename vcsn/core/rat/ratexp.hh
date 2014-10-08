@@ -8,6 +8,7 @@
 
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {
@@ -51,19 +52,44 @@ namespace vcsn
 
     /// The abstract parameterized, root for all rational expression
     /// types.
-    template <typename Label, typename Weight>
+    ///
+    /// The rational expressions are values, and as such, they are
+    /// "stupid", and just "contain" some value without knowing how to
+    /// interpret them (very much the same way as "bool" weights do
+    /// not know whether they below to F2 or to B).
+    ///
+    /// However, in order to support hash-consing on the ratexp,
+    /// ratexps need to be able to hash and equality-compare the
+    /// ratexps, which means to be able to hash the labels and
+    /// weights, which is something that only labelset and weightset
+    /// can do.
+    ///
+    /// So there are two options:
+    ///
+    /// a. have the ratexp know the labelset and weightset (their
+    /// types suffices, we don't need a value as the hash function is
+    /// static in valuesets), i.e., have the ratexp know its context
+    /// type.
+    ///
+    /// b. move the hash and equality-compare functions from valueset
+    /// to value.  This seems wrong, as it would prevent the valueset
+    /// from using equivalences to between values, or use a specific
+    /// order.
+    ///
+    /// So nodes are parameterized by Context, instead of only
+    /// <Label, Weight> as was the case before.
+    template <typename Context>
     class node
-      : public std::enable_shared_from_this<node<Label, Weight>>
+      : public std::enable_shared_from_this<node<Context>>
       , public exp
     {
     public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using node_t = rat::node<label_t, weight_t>;
+      using context_t = Context;
+      using node_t = rat::node<context_t>;
       /// A ratexp usable with value semantics.
       using value_t = std::shared_ptr<const node_t>;
       using values_t = std::vector<value_t>;
-      using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
+      using const_visitor = vcsn::rat::const_visitor<context_t>;
 
       virtual void accept(const_visitor& v) const = 0;
     };
@@ -73,14 +99,12 @@ namespace vcsn
     `--------*/
 
     /// An inner node.
-    template <typename Label, typename Weight>
+    template <typename Context>
     class inner
-      : public node<Label, Weight>
+      : public node<Context>
     {
     public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = node<label_t, weight_t>;
+      using super_t = node<Context>;
       using value_t = typename super_t::value_t;
     };
 
@@ -92,16 +116,14 @@ namespace vcsn
     /// An inner node with multiple children.
     ///
     /// Implements the Composite Design Pattern.
-    template <exp::type_t Type, typename Label, typename Weight>
+    template <exp::type_t Type, typename Context>
     class variadic
-      : public inner<Label, Weight>
+      : public inner<Context>
     {
     public:
       static_assert(vcsn::rat::is_variadic(Type), "invalid type");
 
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = inner<label_t, weight_t>;
+      using super_t = inner<Context>;
       using value_t = typename super_t::value_t;
       using values_t = typename super_t::values_t;
 
@@ -152,16 +174,14 @@ namespace vcsn
     | unary.  |
     `--------*/
 
-    template <exp::type_t Type, typename Label, typename Weight>
+    template <exp::type_t Type, typename Context>
     class unary
-      : public inner<Label, Weight>
+      : public inner<Context>
     {
     public:
       static_assert(is_unary(Type), "invalid type");
 
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = inner<label_t, weight_t>;
+      using super_t = inner<Context>;
       using value_t = typename super_t::value_t;
 
       unary(value_t exp);
@@ -183,18 +203,17 @@ namespace vcsn
     /// An inner node implementing a weight.
     ///
     /// Implements the Composite Design Pattern.
-    template <exp::type_t Type, typename Label, typename Weight>
+    template <exp::type_t Type, typename Context>
     class weight_node
-      : public inner<Label, Weight>
+      : public inner<Context>
     {
     public:
       static_assert(Type == type_t::lweight
                     || Type == type_t::rweight,
                     "invalid type");
 
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = inner<label_t, weight_t>;
+      using super_t = inner<Context>;
+      using weight_t = weight_t_of<Context>;
       using value_t = typename super_t::value_t;
 
       virtual type_t type() const { return Type; };
@@ -222,26 +241,22 @@ namespace vcsn
     `-------*/
 
     /// The root from which to derive the final node types.
-    template <typename Label, typename Weight>
+    template <typename Context>
     class leaf
-      : public node<Label, Weight>
+      : public node<Context>
     {
     public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = node<label_t, weight_t>;
+      using super_t = node<Context>;
     };
 
 
-    template <exp::type_t Type, typename Label, typename Weight>
+    template <exp::type_t Type, typename Context>
     class constant
-      : public leaf<Label, Weight>
+      : public leaf<Context>
     {
     public:
       static_assert(is_constant(Type), "invalid type");
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = leaf<label_t, weight_t>;
+      using super_t = leaf<Context>;
       using value_t = typename super_t::value_t;
       using type_t = typename super_t::type_t;
 
@@ -251,14 +266,13 @@ namespace vcsn
     };
 
 
-    template <typename Label, typename Weight>
+    template <typename Context>
     class atom
-      : public leaf<Label, Weight>
+      : public leaf<Context>
     {
     public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_t = leaf<label_t, weight_t>;
+      using super_t = leaf<Context>;
+      using label_t = label_t_of<Context>;
       using type_t = typename super_t::type_t;
       using value_t = typename super_t::value_t;
 
