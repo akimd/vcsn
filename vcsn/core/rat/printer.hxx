@@ -3,6 +3,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/indent.hh>
+# include <vcsn/misc/memory.hh> // address
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -59,15 +60,12 @@ namespace vcsn
       static bool print = !! getenv("VCSN_PRINT");
       static bool debug = !! getenv("VCSN_DEBUG");
       if (print)
-        out_ << '<' << v.type() << '>' << vcsn::incendl;
-      if (debug && format_ == "latex" && identities_ == identities_t::series)
-        out_ << "{\\color{red}{";
-      else if (debug && format_ == "latex" && identities_ == identities_t::trivial)
-        out_ << "{\\color{blue}{";
+        out_ << '<' << v.type() << "@0x" << address(v) << '>' << vcsn::incendl;
+      if (debug && format_ == "latex")
+        out_ << (identities_ == identities_t::series
+                 ? "{\\color{red}{" : "{\\color{blue}{");
       v.accept(*this);
-      if (debug && format_ == "latex" && identities_ == identities_t::series)
-        out_ << "}}";
-      else if (debug && format_ == "latex" && identities_ == identities_t::trivial)
+      if (debug && format_ == "latex")
         out_ << "}}";
       if (print)
         out_ << vcsn::decendl << "</" << v.type() << '>';
