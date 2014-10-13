@@ -87,6 +87,12 @@ case $1 in
      prog="vcsn-$1"; shift; exec "$prog" "$@";;
 esac
 
+cat >&2 <<EOF
+vcsn: missing file operand
+Try 'vcsn --help' for more information.
+EOF
+exit 1
+
 # Local Variables:
 # mode: shell-script
 # End:
