@@ -22,6 +22,34 @@ namespace vcsn
 
   namespace detail
   {
+    /// Compute the derived-term automaton from an expression.
+    ///
+    /// Supports derivation/expansion as its core computation,
+    /// with breaking/non breaking flavors for both.
+    ///
+    /// The handling of initial and final states can be simplified by
+    /// working on a delimited rational expression ('$r$' with '$'
+    /// being the special label), and mapping '$r$' to pre(), and '\e'
+    /// to post().  Then, there is no special treatment needed to
+    /// handle the initial split in the case of a breaking derivation,
+    /// and there is no special need to handle the final transitions.
+    ///
+    /// However there are two problems.
+    ///
+    /// One is that derivation loops over the alphabets, so we have to
+    /// add $, the special label, to the alphabet.  But then, the
+    /// handling of complement starts making idiotic things by trying
+    /// to add $-labels in inner transitions.  This is a real problem,
+    /// with no clear work-around.
+    ///
+    /// But this is not an issue for expansion-based construction.
+    /// However it means that the states are no longer labeled by the
+    /// expressions as the user would expect them: there is always the
+    /// terminating $.  Not showing it does not address the issue,
+    /// which is that we'd rather not have it at all.
+    ///
+    /// So, after experimentation, as of 2014-10, I prefer not to use
+    /// the pre/post based construct in neither case.
     template <typename RatExpSet>
     struct derived_termer
     {
@@ -44,10 +72,12 @@ namespace vcsn
         , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
 
+      /// Compute the derived-term automaton via derivation.
       automaton_t via_derivation(const ratexp_t& ratexp)
       {
         init_(ratexp);
 
+        // The alphabet.
         const auto& ls = rs_.labelset()->genset();
         while (!res_->todo_.empty())
           {
@@ -62,6 +92,7 @@ namespace vcsn
         return res_;
       }
 
+      /// Compute the derived-term automaton via expansion.
       automaton_t via_expansion(const ratexp_t& ratexp)
       {
         init_(ratexp);
@@ -90,20 +121,18 @@ namespace vcsn
     private:
       void init_(const ratexp_t& ratexp)
       {
-        // Turn the ratexp into a polynomial.
-        polynomial_t initial
-          = breaking_ ? split(rs_, ratexp)
-          : polynomial_t{{ratexp, ws_.one()}};
-        for (const auto& p: initial)
-          // Also loads todo_.
-          res_->set_initial(p.first, p.second);
+        if (breaking_)
+          for (const auto& p: split(rs_, ratexp))
+            res_->set_initial(p.first, p.second);
+        else
+          res_->set_initial(ratexp, ws_.one());
       }
 
       /// The ratexp's set.
       ratexpset_t rs_;
       /// Its weightset.
       weightset_t ws_ = *rs_.weightset();
-      /// Whether to perform a breaking derivation.
+      /// Whether to break the polynomials.
       bool breaking_ = false;
       /// The resulting automaton.
       automaton_t res_;
