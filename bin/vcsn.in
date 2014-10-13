@@ -20,15 +20,15 @@ If COMMAND is "notebook", run Vaucanson as an IPython Notebook.
 If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:
 
-  accessible are-equivalent are-isomorphic to-expression cat coaccessible
-  complement complete compose concatenate constant-term derivation
-  derived-term de-bruijn derivation divkbaseb term determinize
-  difference divkbaseb double-ring eliminate-state enumerate evaluate
-  expand infiltration is-ambiguous is-complete is-deterministic
-  is-empty is-eps-acyclic is-normalized is-proper is-standard is-trim
-  is-useless is-valid ladybird left-mult lift minimize power product
-  proper right-mult shortest shuffle split standard star
-  star-normal-form sum thompson transpose trim u union universal
+  accessible are-equivalent are-isomorphic cat coaccessible complement
+  complete compose concatenate constant-term derivation derived-term
+  de-bruijn derivation divkbaseb term determinize difference divkbaseb
+  double-ring eliminate-state enumerate evaluate expand infiltration
+  is-ambiguous is-complete is-deterministic is-empty is-eps-acyclic
+  is-normalized is-proper is-standard is-trim is-useless is-valid
+  ladybird left-mult lift minimize power product proper right-mult
+  shortest shuffle split standard star star-normal-form sum thompson
+  to-expression transpose trim u union universal
 
 For more information, run:
 
@@ -60,7 +60,6 @@ case $1 in
   (-v|--version) version;;
 
   (accessible|are-equivalent|are-isomorphic \
-      |to-expression \
       |cat|chain|coaccessible|complement|complete \
       |compose|concatenate \
       |de-bruijn \
@@ -77,7 +76,9 @@ case $1 in
       |power|product|proper \
       |random|right-mult \
       |shuffle|shortest|split|standard|star|star-normal-form|sum \
-      |thompson|transpose|trim \
+      |thompson \
+      |to-expression \
+      |transpose|trim \
       |u|union|universal)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
