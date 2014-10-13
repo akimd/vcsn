@@ -2,7 +2,11 @@
 
 from __future__ import print_function
 
-import argparse, re, timeit, vcsn
+import argparse
+import re
+import sys
+import timeit
+import vcsn
 
 parser = argparse.ArgumentParser(description='Bench some algorithms.')
 parser.add_argument('--only', metavar='RE',
@@ -18,6 +22,7 @@ def bench(title, comment, cmd, number=1):
         if 1 < number:
             comment += ', {}x'.format(number)
         print("{:5.2f}s: {:20s} # {}".format(t, title, comment))
+        sys.stdout.flush()
 
 b = vcsn.context('lal_char(abc)_b')
 
@@ -100,7 +105,7 @@ for n in [13, 14, 16]:
 # Something more realistic: the previous automata explode in an
 # exponential number of states, and half of them end up being final.
 # This exagerates the importance of the handling of the final states.
-# 
+#
 # The following bench tries to be more realistic (i.e., more NLP
 # like): the automata are almost deterministic (and easy to
 # determinize), are "wide", and have few final states.
