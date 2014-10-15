@@ -266,7 +266,7 @@ namespace vcsn
         const auto& rs = e.ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
-                               derivation(rs, e.ratexp(), l, breaking));
+                               vcsn::derivation(rs, e.ratexp(), l, breaking));
       }
 
       REGISTER_DECLARE(derivation,

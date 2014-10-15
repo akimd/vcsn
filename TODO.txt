@@ -66,6 +66,16 @@ order "not to break too much") rather that something like expand.  What are
 the expected features of the right definition?
 
 * Bugs
+** derivation
+We have ambiguous calls:
+
+  ctx = vcsn.context('lat<law_char(0-9), law_char(a-zA-Z)>_b')
+  r = ctx.ratexp("('(11,eleven)'+'(12,twelve)'+'(13,thirteen)')*")
+  r.derivation("(11,eleven)")
+
+It should not work, but it fails for the wrong reason, and therefore does
+not show the failed assertion.
+
 ** shortest
 Loops forever:
 

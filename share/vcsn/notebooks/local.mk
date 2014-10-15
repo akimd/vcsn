@@ -19,6 +19,7 @@ notebooksdir = $(datadir)/vcsn/notebooks
 dist_notebooks_data =                                   \
   '%D%/01 - Playing with contexts.ipynb'                \
   '%D%/02 - Playing with magic command.ipynb'           \
+  '%D%/References.ipynb'                                \
   '%D%/Some developer documentation.ipynb'              \
   '%D%/algos/automaton.accessible.ipynb'                \
   '%D%/algos/automaton.ambiguous_word.ipynb'            \
@@ -41,6 +42,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/index.ipynb'                               \
   '%D%/algos/ratexp.derivation.ipynb'                   \
   '%D%/algos/ratexp.derived_term.ipynb'                 \
+  '%D%/algos/ratexp.expansion.ipynb'                    \
   '%D%/algos/ratexp.is_valid.ipynb'                     \
   '%D%/algos/ratexp.standard.ipynb'                     \
   '%D%/algos/ratexp.transpose.ipynb'                    \
