@@ -17,8 +17,8 @@ notebooksdir = $(datadir)/vcsn/notebooks
 # and it is really unacceptable to forbid them.  So work around
 # Automake.
 dist_notebooks_data =                                   \
-  '%D%/01 - Playing with contexts.ipynb'                \
-  '%D%/02 - Playing with magic command.ipynb'           \
+  '%D%/Contexts.ipynb'                                  \
+  '%D%/Editing Automata.ipynb'                          \
   '%D%/References.ipynb'                                \
   '%D%/Some developer documentation.ipynb'              \
   '%D%/algos/automaton.accessible.ipynb'                \
