@@ -42,8 +42,11 @@ dload_dir = /var/www/dload/vcsn/$(PACKAGE_VERSION)
 ## incremental builds.  Do not propagate them, they are not needed to
 ## browse the documentation
 ## (http://osdir.com/ml/text.doxygen.general/2005-04/msg00064.html).
-RSYNCFLAGS =                                            \
-  --checksum --compress --delete --recursive --verbose  \
+RSYNCFLAGS =                                    \
+  --checksum --compress                         \
+  --delete --delete-excluded                    \
+  --recursive --verbose                         \
   --exclude '*.md5' --exclude '*.map'
-upload-doc: %D%/vcsn.htmldir
+upload-doc: upload-doxygen
+upload-doxygen: %D%/vcsn.htmldir
 	rsync $(RSYNCFLAGS) $^ $(dload_host):$(dload_dir)

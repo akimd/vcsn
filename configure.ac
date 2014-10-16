@@ -247,8 +247,11 @@ AC_CHECK_HEADERS([ltdl.h], [],
 ## Documentation.  ##
 ## --------------- ##
 
-VCSN_DOXYGEN
+VCSN_PROG_DOXYGEN
 AC_CONFIG_FILES([doc/vcsn.dox])
+# Choose a simple file, hopefully fast to convert.
+VCSN_PROG_NBCONVERT([$srcdir/share/vcsn/notebooks/Algorithms.ipynb])
+
 
 
 ## --------------- ##
