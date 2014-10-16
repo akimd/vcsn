@@ -19,9 +19,9 @@ EXTRA_DIST +=					\
   %D%/figs/vcsn.png				\
   %D%/figs/vcsn.mini.png
 
-## ----- ##
-## Doc.  ##
-## ----- ##
+## --------- ##
+## Doyxgen.  ##
+## --------- ##
 
 CLEANFILES += %D%/vcsn.dox
 %.dox: %.dox.in
@@ -30,3 +30,20 @@ CLEANFILES += %D%/vcsn.dox
 # We cannot simply use html_DATA here, since Automake does not
 # support installing directories.
 html_DIR += %D%/vcsn.htmldir
+
+
+## ------------- ##
+## install-doc.  ##
+## ------------- ##
+
+dload_host = doc@perso
+dload_dir = /var/www/dload/vcsn/$(PACKAGE_VERSION)
+## Doxygen creates *.md5 and *.map files that serve only for
+## incremental builds.  Do not propagate them, they are not needed to
+## browse the documentation
+## (http://osdir.com/ml/text.doxygen.general/2005-04/msg00064.html).
+RSYNCFLAGS =                                            \
+  --checksum --compress --delete --recursive --verbose  \
+  --exclude '*.md5' --exclude '*.map'
+upload-doc: %D%/vcsn.htmldir
+	rsync $(RSYNCFLAGS) $^ $(dload_host):$(dload_dir)
