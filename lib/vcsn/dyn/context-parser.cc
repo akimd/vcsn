@@ -1,4 +1,5 @@
 #include <vcsn/dyn/context-parser.hh>
+#include <vcsn/dyn/signature-printer.hh>
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
@@ -9,19 +10,32 @@ namespace vcsn
   namespace ast
   {
 
+    /// We managed to read \a res in \a is, check that \a is is
+    /// finished.
+    void check_eof(std::istream& is,
+                   std::shared_ptr<ast_node> res)
+    {
+      if (is.peek() != -1)
+        {
+          std::ostringstream o;
+          signature_printer printer(o, true);
+          res->accept(printer);
+          vcsn::fail_reading(is, "unexpected trailing characters after: " +
+                             o.str());
+        }
+    }
+
     std::shared_ptr<ast_node> context_parser::parse()
     {
       auto res = any_();
-      if (is_.peek() != -1)
-        vcsn::fail_reading(is_, "unexpected trailing characters");
+      check_eof(is_, res);
       return res;
     }
 
     std::shared_ptr<ast_node> context_parser::parse_context()
     {
       auto res = context_();
-      if (is_.peek() != -1)
-        vcsn::fail_reading(is_, "unexpected trailing characters");
+      check_eof(is_, res);
       return res;
     }
 
@@ -74,12 +88,20 @@ namespace vcsn
           eat(is_, '>');
           return res;
         }
+      // std::integral_constant<unsigned, 2>.
       else if (w == "std::integral")
         {
-          // std::integral_constant<unsigned, 2>.
           w += eat(is_, "_constant<");
           w += word();
           w += eat(is_, ',');
+          w += word();
+          w += eat(is_, '>');
+          return std::make_shared<other>(w);
+        }
+      // std::vector<unsigned>.
+      else if (w == "const std::vector")
+        {
+          w += eat(is_, '<');
           w += word();
           w += eat(is_, '>');
           return std::make_shared<other>(w);
