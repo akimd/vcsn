@@ -4,6 +4,26 @@
 me=$(basename "$0")
 medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
+# Handle our options.
+while true
+do
+  case $1 in
+    (--symbols)  usyms=$2 ; shift 2;;
+    (--isymbols) uisyms=$2; shift 2;;
+    (--osymbols) uosyms=$2; shift 2;;
+    (*) break;;
+  esac
+done
+
+: ${uisyms=$usyms}
+: ${uosyms=$usyms}
+
+# If the binary fst file does not "know" where its symbol tables are,
+# the users can provide them to it via --[io]symbols.  With or without
+# this option, --save_[io]symbols does what we want.
+test -z "$uisyms" || fstprint_opts+=' --isymbols=$uisyms'
+test -z "$uosyms" || fstprint_opts+=' --osymbols=$uosyms'
+
 # We are going to read the input several times.  Be sure to save it,
 # in case it were stdin.
 input=$medir/a.fst
@@ -24,9 +44,16 @@ trans=$medir/transitions.fsm
 #
 # Therefore check that transitions have equal symbol numbers and that
 # symbol tables are equal.
-fstprint --save_isymbols=$isyms \
+fstprint $fstprint_opts                 \
+         --save_isymbols=$isyms         \
          --save_osymbols=$osyms $input > $trans
-if fstinfo $input | grep -q '^acceptor  *y$' && cmp $isyms $osyms; then
+
+# If fstprint did not provide the symbols tables, use the ones from
+# the user.
+test -f $isyms || isyms=$uisyms
+test -f $osyms || osyms=$uosyms
+
+if fstinfo $input | grep -q '^acceptor  *y$' && cmp "$isyms" "$osyms"; then
   acceptor=true
   fstprint --acceptor \
            --save_isymbols=$isyms $input > $trans
