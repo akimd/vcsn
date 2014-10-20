@@ -87,11 +87,11 @@ ip = get_ipython()
 ip.register_magics(EditAutomaton)
 
 
-def interact_h(_interact_f, **kwargs):
+def interact_h(_interact_f, *args, **kwargs):
     '''Similar to IPython's interact function, but with widgets
     packed horizontally.'''
     f = _interact_f
-    w = interactive(f, **kwargs)
+    w = interactive(f, *args, **kwargs)
     f.widget = w
     # Weirdly enough, be sure to display before changing the class.
     display(w)

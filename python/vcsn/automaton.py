@@ -82,8 +82,8 @@ def _automaton_interact(self):
         modes = ['dot', 'info']
     modes += ['info,detailed', 'tooltip', 'transitions', 'type', 'dot2tex']
     engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
-    interact_h(lambda engine, mode: _automaton_display(self, mode, engine),
-                mode = modes, engine = engines)
+    interact_h(lambda mode, engine: _automaton_display(self, mode, engine),
+               mode = modes, engine = engines)
 automaton.display = _automaton_interact
 
 automaton.dot = lambda self, mode = "dot": _dot_pretty(self.format('dot'), mode)
