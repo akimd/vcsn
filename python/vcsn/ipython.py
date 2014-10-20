@@ -80,7 +80,6 @@ class EditAutomaton(Magics):
         else:
             a =  vcsn.automaton(cell.encode('utf-8'), args.format)
             self.shell.user_ns[args.var] = a
-            from IPython.display import display
             display(a)
 
 ip = get_ipython()
