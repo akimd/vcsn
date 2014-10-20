@@ -21,8 +21,8 @@ done
 # If the binary fst file does not "know" where its symbol tables are,
 # the users can provide them to it via --[io]symbols.  With or without
 # this option, --save_[io]symbols does what we want.
-test -z "$uisyms" || fstprint_opts+=' --isymbols=$uisyms'
-test -z "$uosyms" || fstprint_opts+=' --osymbols=$uosyms'
+test -z "$uisyms" || fstprint_opts+=" --isymbols=$uisyms"
+test -z "$uosyms" || fstprint_opts+=" --osymbols=$uosyms"
 
 # We are going to read the input several times.  Be sure to save it,
 # in case it were stdin.
@@ -53,9 +53,12 @@ fstprint $fstprint_opts                 \
 test -f $isyms || isyms=$uisyms
 test -f $osyms || osyms=$uosyms
 
+# If it turns out to be an acceptor, print it again with --acceptor.
+# See the above comment to understand the cmp call.
 if fstinfo $input | grep -q '^acceptor  *y$' && cmp "$isyms" "$osyms"; then
   acceptor=true
-  fstprint --acceptor \
+  fstprint $fstprint_opts                 \
+           --acceptor                     \
            --save_isymbols=$isyms $input > $trans
 else
   acceptor=false
