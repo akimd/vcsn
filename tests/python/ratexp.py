@@ -9,8 +9,8 @@ ctx = vcsn.context("lal_char(abcd)_b")
 ## Complement.  ##
 ## ------------ ##
 def check_complement(r1):
-    """Check that `complement` on a rational expression corresponds to
-    its concrete syntax."""
+    '''Check that `complement` on a rational expression corresponds to
+    its concrete syntax.'''
     eff = ctx.ratexp(r1).complement()
     exp = ctx.ratexp('({}){{c}}'.format(r1))
     CHECK_EQ(exp, eff)
@@ -22,8 +22,8 @@ check_complement('ab')
 ## Concat.  ##
 ## -------- ##
 def check_concat(r1, r2):
-    """Check that `*` between rational expression corresponds to
-    concatenation concrete syntax."""
+    '''Check that `*` between rational expression corresponds to
+    concatenation concrete syntax.'''
     eff = ctx.ratexp(r1) * ctx.ratexp(r2)
     exp = ctx.ratexp('({})({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
@@ -41,8 +41,8 @@ check_concat('a', '\z')
 ## Difference.  ##
 ## ------------ ##
 def check_difference(r1, r2):
-    """Check that `%` between rational expression corresponds to
-    `%` in concrete syntax."""
+    '''Check that `%` between rational expression corresponds to
+    `%` in concrete syntax.'''
     eff = ctx.ratexp(r1) % ctx.ratexp(r2)
     exp = ctx.ratexp('({})%({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
@@ -60,8 +60,8 @@ check_difference('a', '\z')
 ## Conjunction.  ##
 ## ------------- ##
 def check_conj(r1, r2):
-    """Check that `&` between rational expression corresponds to
-    `&` in concrete syntax."""
+    '''Check that `&` between rational expression corresponds to
+    `&` in concrete syntax.'''
     eff = ctx.ratexp(r1) & ctx.ratexp(r2)
     exp = ctx.ratexp('({})&({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
@@ -79,8 +79,8 @@ check_conj('a', '\z')
 ## Sum.  ##
 ## ----- ##
 def check_sum(r1, r2):
-    """Check that `+` between rational expression corresponds to
-    `+` in concrete syntax."""
+    '''Check that `+` between rational expression corresponds to
+    `+` in concrete syntax.'''
     eff = ctx.ratexp(r1) + ctx.ratexp(r2)
     exp = ctx.ratexp('({})+({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
@@ -99,8 +99,8 @@ check_sum('a', '\z')
 ## Transposition.  ##
 ## --------------- ##
 def check_transposition(r1):
-    """Check that `transposition` on a rational expression corresponds to
-    its concrete syntax."""
+    '''Check that `transposition` on a rational expression corresponds to
+    its concrete syntax.'''
     eff = ctx.ratexp(r1).transposition()
     exp = ctx.ratexp('({}){{T}}'.format(r1))
     CHECK_EQ(exp, eff)

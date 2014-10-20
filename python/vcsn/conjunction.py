@@ -1,13 +1,13 @@
 from vcsn_cxx import automaton
 
 class Conjunction(object):
-    """A proxy class that delays calls to the & operator in order
+    '''A proxy class that delays calls to the & operator in order
     to turn a & b & c into a variadic evaluation of
     automaton._product(a, b, c).
 
     Based on
     http://code.activestate.com/recipes/496741-object-proxying
-    """
+    '''
     __slots__ = ["auts", "__weakref__"]
     def __init__(self, *args):
         object.__setattr__(self, "auts", [args[0]])

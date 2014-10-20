@@ -7,9 +7,9 @@ from vcsn_cxx import *
 from vcsn_version import *
 
 def _info_to_dict(info):
-    """Convert a "key: value" list of lines into a dictionary.
+    '''Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers.
-    """
+    '''
     res = dict()
     for l in info.splitlines():
         (k, v) = l.split(':')
@@ -41,12 +41,12 @@ def _is_equal(lhs, rhs):
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
 def _left_mult(self, lhs):
-    """Support "aut * weight".  Also serves for ratexps."""
+    '''Support "aut * weight".  Also serves for ratexps.'''
     return self.left_mult(self.context().weight(str(lhs)))
 
 def _right_mult(self, rhs):
-    """Support both "aut * aut" and "aut * weight".  Also serves for
-    ratexps."""
+    '''Support both "aut * aut" and "aut * weight".  Also serves for
+    ratexps.'''
     if isinstance(rhs, type(self)):
         return self.concatenate(rhs)
     elif isinstance(rhs, weight):

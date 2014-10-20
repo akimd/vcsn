@@ -39,7 +39,7 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
 automaton.as_svg = _automaton_as_svg
 
 def _automaton_convert(self, mode, engine = "dot"):
-    """Display automaton `self` in `mode` with Graphviz `engine`."""
+    '''Display automaton `self` in `mode` with Graphviz `engine`.'''
     from IPython.display import SVG
     if mode in ["dot", "tooltip", "transitions"]:
         svg = _dot_to_svg(self.dot(mode), engine)
@@ -56,7 +56,7 @@ def _automaton_convert(self, mode, engine = "dot"):
         raise(ValueError("invalid display format: " + mode))
 
 def _automaton_display(self, mode, engine = "dot"):
-    """Display automaton `self` in `mode` with Graphviz `engine`."""
+    '''Display automaton `self` in `mode` with Graphviz `engine`.'''
     from IPython.display import display
     display(_automaton_convert(self, mode, engine))
 
@@ -73,10 +73,10 @@ def _automaton_init(self, text, fmt = "dot"):
 automaton.__init__ = lambda *args: _automaton_init(*args)
 
 def _automaton_interact(self):
-    """Display automaton `self` with a local menu to the select
+    '''Display automaton `self` with a local menu to the select
     the display mode.  Pay attention to not displaying large
     automata by default.
-    """
+    '''
     from ipython import interact_h
     if 20 < self.state_number():
         modes = ['info', 'dot']
@@ -92,9 +92,9 @@ automaton.dot = lambda self, mode = "dot": _dot_pretty(self.format('dot'), mode)
 
 # automaton.eval.
 def _automaton_eval(self, w):
-    """Evaluation of word `w` on `self`, with possible conversion from
+    '''Evaluation of word `w` on `self`, with possible conversion from
     plain string to genuine label object.
-    """
+    '''
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
@@ -175,9 +175,9 @@ def _automaton_is_synchronized_by(self, w):
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
 def _lan_to_lal(a):
-    """Convert an automaton from supporting spontaneous transitions
+    '''Convert an automaton from supporting spontaneous transitions
     to not supporting them by modifying its context specification.
-    """
+    '''
     dot = a.format('dot')
     dot = re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1', dot)
     dot = re.sub(r'"lat<lan<(lal_char\(.*?\))>, *lan<(lal_char\(.*?\))>',

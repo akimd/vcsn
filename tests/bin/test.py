@@ -47,7 +47,7 @@ def rst_file(name, content):
     print()
 
 def format(d):
-    """Pretty-print `d` into a diffable string."""
+    '''Pretty-print `d` into a diffable string.'''
     if isinstance(d, dict):
         return "\n".join(["{}: {}".format(k, format(d[k]))
                           for k in sorted(d.keys())])
@@ -139,7 +139,7 @@ def CHECK_EQ(expected, effective, loc = None):
         rst_diff(exp, eff)
 
 def CHECK_EQUIV(a1, a2):
-    """Check that `a1` and `a2` are equivalent."""
+    '''Check that `a1` and `a2` are equivalent.'''
     num = 10
     a1 = a1.strip()
     a2 = a2.strip()

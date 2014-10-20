@@ -100,9 +100,9 @@ def interact_h(_interact_f, *args, **kwargs):
 
 
 class table(list):
-    """ Overridden list class which takes a 2-dimensional list of
+    ''' Overridden list class which takes a 2-dimensional list of
         the form [[1,2,3],[4,5,6]], and renders an HTML Table in
-        IPython Notebook. """
+        IPython Notebook. '''
 
     def to_html(self, s):
         try:
