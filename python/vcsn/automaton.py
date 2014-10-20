@@ -65,12 +65,15 @@ def _automaton_display(self, mode, engine = "dot"):
 # the original, C++ based, implementation of __init__ as _init,
 # and then provide a new __init__.
 automaton._init = automaton.__init__
-def _automaton_init(self, text, fmt = "dot"):
-    if fmt == "daut":
-        self._init(to_dot(text), "dot")
+def _automaton_init(self, data = '', format = '', filename = ''):
+    if format == "daut":
+        if filename:
+            data = open(filename).read()
+        data = to_dot(data)
+        self._init(data = data, format = 'dot')
     else:
-        self._init(text, fmt)
-automaton.__init__ = lambda *args: _automaton_init(*args)
+        self._init(data = data, format = format, filename = filename)
+automaton.__init__ = _automaton_init
 
 def _automaton_interact(self):
     '''Display automaton `self` with a local menu to the select
@@ -186,10 +189,6 @@ def _lan_to_lal(a):
                  r'"\1', dot)
     return automaton(dot, 'dot')
 automaton.lan_to_lal = _lan_to_lal
-
-def _automaton_load(file, format = "dot"):
-    return automaton(open(file, "r").read(), format)
-automaton.load = staticmethod(_automaton_load)
 
 # Somewhat cheating: in Python, proper returns a LAL, not a LAN.
 # _proper is the genuine binding to dyn::proper.

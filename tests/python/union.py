@@ -5,7 +5,7 @@ from test import *
 
 ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
-CHECK_EQ(vcsn.automaton.load(medir + '/abc.gv'), ab | bc)
+CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab | bc)
 
 ## ------------ ##
 ## lal_char_z.  ##

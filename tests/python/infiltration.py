@@ -22,7 +22,7 @@ a1 = b.ratexp('a*a').derived_term()
 ## -------------------- ##
 
 # a infiltration a
-a = vcsn.automaton.load(medir + "/a.gv")
+a = vcsn.automaton(filename = medir + "/a.gv")
 CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -50,7 +50,7 @@ CHECK_EQ('''digraph
 }''',  a.infiltration(a))
 
 # abc infiltration abc
-abc = vcsn.automaton.load(medir + "/abc.gv")
+abc = vcsn.automaton(filename = medir + "/abc.gv")
 CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -112,7 +112,7 @@ CHECK_EQ('''digraph
 }''', abc.infiltration(abc))
 
 # abc infiltration xy
-xy = vcsn.automaton.load(medir + "/xy.gv")
+xy = vcsn.automaton(filename = medir + "/xy.gv")
 CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abcxy)_z"

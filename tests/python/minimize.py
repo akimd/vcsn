@@ -5,7 +5,7 @@ import vcsn
 from test import *
 
 def aut(file):
-    return vcsn.automaton.load(medir + "/" + file)
+    return vcsn.automaton(filename = medir + "/" + file)
 
 def file_to_string(file):
     return open(medir + "/" + file, "r").read().strip()

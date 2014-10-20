@@ -91,12 +91,20 @@ struct automaton
 
   automaton(const ratexp& r);
 
-  automaton(const std::string& s, const std::string& format = "default")
+  automaton(const std::string& data = "",
+            const std::string& format = "default",
+            const std::string& filename = "")
   {
-    std::istringstream is(s);
-    val_ = vcsn::dyn::read_automaton(is, format);
-    if (is.peek() != -1)
-      vcsn::fail_reading(is, "unexpected trailing characters");
+    std::shared_ptr<std::istream> is;
+    if (!data.empty())
+      is = std::make_shared<std::istringstream>(data);
+    else if (!filename.empty())
+      is = vcsn::open_input_file(filename);
+    else
+      throw "cannot provide both data and filename";
+    val_ = vcsn::dyn::read_automaton(*is, format);
+    if (is->peek() != -1)
+      vcsn::fail_reading(*is, "unexpected trailing characters");
   }
 
   automaton accessible() const
@@ -936,8 +944,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<automaton>
     ("automaton",
      bp::init<const ratexp&>())
-    .def(bp::init<const std::string&, bp::optional<const std::string&>>())
-
+    .def(bp::init<const std::string&, const std::string&, const std::string&>
+         ((arg("data") = "", arg("format") = "default", arg("filename") = "")))
     .def("accessible", &automaton::accessible)
     .def("ambiguous_word", &automaton::ambiguous_word)
     .def("blind", &automaton::blind)

@@ -7,6 +7,13 @@ changes in the internal API may also be documented.
 
 
 ## 2014-10-20
+### Python: loading automata from files
+The `vcsn.automaton` constructor now support a `filename` named argument
+to load an automaton from a file.
+
+    vcsn.automaton(filename = 'a.gv')
+    vcsn.automaton(filename = 'a.efsm', format = 'efsm')
+
 ### minimize: default algorithm is "auto"
 Now minimize and cominimize both support the "auto" algorithm, which is
 the default value.  It uses the "signature" algorithm for the Boolean

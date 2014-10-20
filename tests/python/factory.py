@@ -11,17 +11,17 @@ from test import *
 
 a = vcsn.context('lal_char(abc)_b').cerny(6)
 CHECK_EQ(a.info()['number of states'], 6)
-CHECK_EQ(vcsn.automaton.load(medir + '/cerny-6.gv'), a)
+CHECK_EQ(vcsn.automaton(filename = medir + '/cerny-6.gv'), a)
 
 
 ## ----------- ##
 ## de_bruijn.  ##
 ## ----------- ##
 
-CHECK_EQ(vcsn.automaton.load(medir + '/de-bruijn-2.gv'),
+CHECK_EQ(vcsn.automaton(filename = medir + '/de-bruijn-2.gv'),
          vcsn.context('lal_char(ab)_b').de_bruijn(2))
 
-CHECK_EQ(vcsn.automaton.load(medir + '/de-bruijn-3.gv'),
+CHECK_EQ(vcsn.automaton(filename = medir + '/de-bruijn-3.gv'),
          vcsn.context('lal_char(xyz)_b').de_bruijn(3))
 
 ## ----------- ##
@@ -61,10 +61,10 @@ digraph
 '''))
 
 CHECK_EQ(ctx.double_ring(1, [0]),
-vcsn.automaton.load(medir + '/double-ring-1-0.gv'))
+vcsn.automaton(filename = medir + '/double-ring-1-0.gv'))
 
 CHECK_EQ(ctx.double_ring(4, [2, 3]),
-vcsn.automaton.load(medir + '/double-ring-4-2-3.gv'))
+vcsn.automaton(filename = medir + '/double-ring-4-2-3.gv'))
 
 
 ## ---------- ##
@@ -74,12 +74,12 @@ vcsn.automaton.load(medir + '/double-ring-4-2-3.gv'))
 b = vcsn.context('lal_char(abc)_b')
 z = vcsn.context('lal_char(abc)_z')
 
-exp = vcsn.automaton.load(medir + '/ladybird-2.gv')
+exp = vcsn.automaton(filename = medir + '/ladybird-2.gv')
 
 CHECK_EQ(exp, b.ladybird(2))
 CHECK_EQ(vcsn.automaton(str(exp).replace('_b', '_z')), z.ladybird(2))
 
-exp = vcsn.automaton.load(medir + '/ladybird-2-zmin.gv')
+exp = vcsn.automaton(filename = medir + '/ladybird-2-zmin.gv')
 CHECK_EQ(exp,
          vcsn.context('lal_char(abc)_zmin').ladybird(2))
 
@@ -90,7 +90,7 @@ CHECK_EQ(exp,
 
 # Expect a clique.
 c1 = vcsn.context('lal_char(a)_b').random(4, 1, 4, 4)
-c2 = vcsn.automaton.load(medir + '/clique-a-4.gv')
+c2 = vcsn.automaton(filename = medir + '/clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
@@ -117,5 +117,5 @@ CHECK_EQ(a.is_complete(), True)
 ## u.  ##
 ## --- ##
 
-CHECK_EQ(vcsn.automaton.load(medir + '/u-5.gv'),
+CHECK_EQ(vcsn.automaton(filename = medir + '/u-5.gv'),
          vcsn.context('lal_char(abc)_b').u(5))

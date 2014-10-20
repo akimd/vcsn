@@ -196,6 +196,6 @@ check(c_r.ratexp("<3.1>'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
 ## Fibonacci normalizer ##
 ##########################
 
-check(vcsn.automaton.load(medir + "/left.gv"),
-      vcsn.automaton.load(medir + "/right.gv"),
+check(vcsn.automaton(filename = medir + "/left.gv"),
+      vcsn.automaton(filename = medir + "/right.gv"),
       open(medir + "/result.gv").read().strip())

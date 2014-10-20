@@ -70,7 +70,7 @@ def rst_diff(expected, effective):
 def load(fname):
     "Load the library automaton file `fname`."
     import vcsn
-    return vcsn.automaton.load(vcsn.datadir + "/" + fname)
+    return vcsn.automaton(filename = vcsn.datadir + "/" + fname)
 
 def here():
     # Find the top-level call.

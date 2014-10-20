@@ -54,7 +54,7 @@ a = load('lal_char_z/binary.gv')
 check(a, 'binary.efsm')
 
 for f in ["lal-char-z", "lat-z"]:
-  a = vcsn.automaton.load(medir + "/" + f + '.gv')
+  a = vcsn.automaton(filename = medir + "/" + f + '.gv')
   check(a, f + '.efsm')
 
 # Check the case of an automaton without any transition.

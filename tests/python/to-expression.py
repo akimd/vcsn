@@ -14,7 +14,7 @@ def check_aut(aut, exp):
     CHECK_EQ(exp, str(aut.ratexp()))
 
 # Check the associativity of the product.
-check_aut(vcsn.automaton.load(medir + "/a.gv"), '<x>a(<y>b)*<z>c')
+check_aut(vcsn.automaton(filename = medir + "/a.gv"), '<x>a(<y>b)*<z>c')
 
 check_aut(load('lal_char_b/a1.gv'), '(a+b)*ab(a+b)*')
 check_aut(load('lal_char_b/b1.gv'), '(a+b)*a(a+b)*')

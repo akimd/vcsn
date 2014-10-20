@@ -390,7 +390,7 @@ CHECK_EQ('''digraph
 import glob
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     print(fn)
-    a = vcsn.automaton.load(fn)
+    a = vcsn.automaton(filename = fn)
 
     exp = open(fn.replace('.in.gv', '.out.gv')).read().strip()
     CHECK_EQ(exp, a.format('dot'))
@@ -414,7 +414,7 @@ CHECK_EQ(exp, a.format('tikz'))
 
 from vcsn.dot import to_dot, from_dot
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
-    a = vcsn.automaton.load(fn)
+    a = vcsn.automaton(filename = fn)
 
     # Check output.
     daut = a.format('daut')
@@ -449,8 +449,8 @@ def check_fado(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.fado')):
-    a = vcsn.automaton.load(fn, 'fado')
-    exp = vcsn.automaton.load(fn.replace('.fado', '.gv'))
+    a = vcsn.automaton(filename = fn, format = 'fado')
+    exp = vcsn.automaton(filename = fn.replace('.fado', '.gv'))
     # Check that we can read FAdo.
     CHECK_EQ(exp, a)
 
@@ -477,7 +477,7 @@ def check_grail(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.grail')):
-    a = vcsn.automaton.load(fn.replace('.grail', '.gv'))
+    a = vcsn.automaton(filename = fn.replace('.grail', '.gv'))
     # Check that we can print Grail.
     grail  = open(fn).read().strip()
     CHECK_EQ(grail, a.format('grail'))
