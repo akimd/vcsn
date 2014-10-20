@@ -16,7 +16,9 @@ ctx = vcsn.context('lal_char(a-z)_z')
 ## automaton.info.  ##
 ## ---------------- ##
 
-check(ctx.ratexp("a+ab").standard(),
+# Check that ':', which is used as a separator by info, is also
+# properly treated as a letter.
+check(vcsn.context('lal_char(:a-z)_z').ratexp("a+a':'").standard(),
       {'is ambiguous': False,
        'is codeterministic': False,
        'is complete': False,
@@ -42,7 +44,7 @@ check(ctx.ratexp("a+ab").standard(),
        'number of strongly connected components': 4,
        'number of transitions': 3,
        'number of useful states': 4,
-       'type': 'mutable_automaton<lal_char(abcdefghijklmnopqrstuvwxyz)_z>'})
+       'type': 'mutable_automaton<lal_char(:abcdefghijklmnopqrstuvwxyz)_z>'})
 
 check(ctx.ratexp("<1>a+(<2>b<3>*<4>)<5>").standard(),
       {'is ambiguous': False,
