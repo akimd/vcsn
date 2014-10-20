@@ -65,14 +65,27 @@ check(r'''digraph
 check(r'''digraph
 {
   vcsn_context = "law_char(ab)_b"
-  I0 -> -1
-  -1 -> 0 [label="a"]
-  0 -> 1 [label="a"]
-  1 -> -1 [label="a"]
-  -1 -> 1 [label="\\e"]
-  0 -> -1 [label="\\e"]
-  1 ->  0 [label="\\e"]
-  0 -> F1
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "\\e"]
+  1 -> F1
+  1 -> 0 [label = "\\e"]
+  1 -> 2 [label = "a"]
+  2 -> 0 [label = "a"]
+  2 -> 1 [label = "\\e"]
 }''', '''digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -111,17 +124,31 @@ check(r'''digraph
 ## law_char_z: invalid \e-cycle (weight is not 0).  ##
 ## ------------------------------------------------ ##
 
-check_fail('''digraph
+check_fail(r'''digraph
 {
   vcsn_context = "law_char(ab)_z"
-  I0 -> -1
-  -1 -> 0 [label="<2>a"]
-  1 -> 2 [label="<2>a"]
-  2 -> -1 [label="<2>a"]
-  -1 -> 1 [label="<-1>"]
-  0 -> -1 [label="<-1>"]
-  1 -> 0 [label="<-1>"]
-  0 -> F1
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+  }
+  I0 -> 0
+  0 -> 1 [label = "<2>a"]
+  0 -> 2 [label = "<-1>\\e"]
+  1 -> F1
+  1 -> 0 [label = "<-1>\\e"]
+  2 -> 1 [label = "<-1>\\e"]
+  2 -> 3 [label = "<2>a"]
+  3 -> 0 [label = "<2>a"]
 }''')
 
 
@@ -129,17 +156,31 @@ check_fail('''digraph
 ## law_char_z.  ##
 ## ------------ ##
 
-check('''digraph
+check(r'''digraph
 {
   vcsn_context = "law_char(ab)_z"
-  I0 -> -1
-  -1 -> 0 [label="<2>a"]
-  1 -> 2 [label="<2>a"]
-  2 -> -1 [label="<2>a"]
-  -1 -> 1 [label="<-1>a"]
-  0 -> -1 [label="<-1>"]
-  1 -> 0 [label="<-1>"]
-  0 -> F1
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+  }
+  I0 -> 0
+  0 -> 1 [label = "<2>a"]
+  0 -> 2 [label = "<-1>a"]
+  1 -> F1
+  1 -> 0 [label = "<-1>\\e"]
+  2 -> 1 [label = "<-1>\\e"]
+  2 -> 3 [label = "<2>a"]
+  3 -> 0 [label = "<2>a"]
 }''', '''digraph
 {
   vcsn_context = "law_char(ab)_z"
@@ -173,21 +214,34 @@ check('''digraph
 
 
 
-## ------------------------------ ##
-## law_char_z: invalid \e-cycle.  ##
-## ------------------------------ ##
+## --------------------------------- ##
+## law_char_zmin: invalid \e-cycle.  ##
+## --------------------------------- ##
 
-check_fail('''digraph
+check_fail(r'''digraph
 {
   vcsn_context = "law_char(ab)_zmin"
-  I0 -> -1
-  -1 -> 0 [label="<2>a"]
-  0 -> 1 [label="<2>a"]
-  1 -> -1 [label="<2>a"]
-  -1 -> 1 [label="<-1>"]
-  0 -> -1 [label="<-1>"]
-  1 -> 0 [label="<-1>"]
-  0 -> F1
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+  }
+  I0 -> 0 [label = "<0>"]
+  0 -> 1 [label = "<2>a"]
+  0 -> 2 [label = "<-1>\\e"]
+  1 -> F1 [label = "<0>"]
+  1 -> 0 [label = "<-1>\\e"]
+  1 -> 2 [label = "<2>a"]
+  2 -> 0 [label = "<2>a"]
+  2 -> 1 [label = "<-1>\\e"]
 }''')
 
 
