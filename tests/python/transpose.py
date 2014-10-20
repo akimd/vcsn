@@ -64,7 +64,6 @@ CHECK_EQ({
            'number of final states': 1,
            'number of initial states': 2,
            'number of states': 3,
-           'number of strongly connected components': 3,
            'number of transitions': 2,
            'number of useful states': 3,
            'type': 'transpose_automaton<mutable_automaton<lal_char(ab)_b>>',
