@@ -7,6 +7,11 @@ changes in the internal API may also be documented.
 
 
 ## 2014-10-20
+### minimize: default algorithm is "auto"
+Now minimize and cominimize both support the "auto" algorithm, which is
+the default value.  It uses the "signature" algorithm for the Boolean
+automata, otherwise the "weighted" algorithm.
+
 ### proper: forward closure available in dyn:: and Python
 It is now possible to require a forward elimination of spontaneous
 transitions.  Calling `a.proper()` is equivalent to calling

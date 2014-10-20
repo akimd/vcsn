@@ -32,7 +32,7 @@ namespace vcsn
   {
     if (algo == "moore")
       return minimize_moore(a);
-    else if (algo == "signature")
+    else if (algo == "auto" || algo == "signature")
       return minimize_signature(a);
     else if (algo == "weighted")
       return minimize_weighted(a);
@@ -48,7 +48,7 @@ namespace vcsn
                           partition_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
   {
-    if (algo == "signature")
+    if (algo == "auto" || algo == "signature")
       return minimize_signature(a);
     else if (algo == "weighted")
       return minimize_weighted(a);
@@ -63,7 +63,7 @@ namespace vcsn
                           partition_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
   {
-    if (algo == "weighted")
+    if (algo == "auto" || algo == "weighted")
       return minimize_weighted(a);
     else
       raise("minimize: invalid algorithm (non-Boolean): ", str_escape(algo));

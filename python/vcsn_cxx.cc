@@ -133,7 +133,7 @@ struct automaton
     return vcsn::dyn::codeterminize(val_, algo);
   }
 
-  automaton cominimize(const std::string& algo = "weighted") const
+  automaton cominimize(const std::string& algo = "auto") const
   {
     return vcsn::dyn::cominimize(val_, algo);
   }
@@ -328,7 +328,7 @@ struct automaton
     return vcsn::dyn::lift(val_);
   }
 
-  automaton minimize(const std::string& algo = "weighted") const
+  automaton minimize(const std::string& algo = "auto") const
   {
     return vcsn::dyn::minimize(val_, algo);
   }
@@ -867,7 +867,8 @@ automaton context::divkbaseb(unsigned divisor, unsigned base) const
   return vcsn::dyn::divkbaseb(val_, divisor, base);
 }
 
-automaton context::double_ring(unsigned n, const boost::python::list& finals) const
+automaton context::double_ring(unsigned n,
+                               const boost::python::list& finals) const
 {
   return vcsn::dyn::double_ring(val_, n, to_vector<unsigned>(finals));
 }
@@ -926,17 +927,6 @@ ratexp ratexp::right_mult(const weight& w) const
 `-----------*/
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(codeterminize, codeterminize, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(cominimize, cominimize, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(synchronizing_word, synchronizing_word,
-                                       0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(to_ratexp, to_ratexp, 0, 1);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -953,15 +943,15 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("blind", &automaton::blind)
     .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
-    .def("codeterminize", &automaton::codeterminize, codeterminize())
-    .def("cominimize", &automaton::cominimize, cominimize())
+    .def("codeterminize", &automaton::codeterminize, (arg("algo") = "auto"))
+    .def("cominimize", &automaton::cominimize, (arg("algo") = "auto"))
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
     .def("compose", &automaton::compose)
     .def("concatenate", &automaton::concatenate)
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
-    .def("determinize", &automaton::determinize, determinize())
+    .def("determinize", &automaton::determinize, (arg("algo") = "auto"))
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)
@@ -995,17 +985,17 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("lift", &automaton::lift)
-    .def("minimize", &automaton::minimize, minimize())
+    .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("normalize", &automaton::normalize)
     .def("num_sccs", &automaton::num_sccs)
-    .def("pair", &automaton::pair, pair())
+    .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("_proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)
-    .def("ratexp", &automaton::to_ratexp, to_ratexp())
+    .def("ratexp", &automaton::to_ratexp, (arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
     .def("shortest", &automaton::shortest)
@@ -1017,8 +1007,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("suffix", &automaton::suffix)
     .def("subword", &automaton::subword)
     .def("sum", &automaton::sum)
-    .def("synchronizing_word", &automaton::synchronizing_word,
-                               synchronizing_word())
+    .def("synchronizing_word",
+         &automaton::synchronizing_word, (arg("algo") = "greedy"))
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
     .def("union", &automaton::union_a)
@@ -1034,7 +1024,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("double_ring", &context::double_ring)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
-    .def("random", &context::random, random_overloads())
+    .def("random", &context::random,
+         (arg("num_states"), arg("density") = 0.1,
+          arg("num_initial") = 1, arg("num_final") = 1))
     .def("random_deterministic", &context::random_deterministic)
     .def("series", &context::series)
     .def("u", &context::u)
@@ -1073,8 +1065,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("context", &ratexp::context)
     .def("_as_ratexp_in", &ratexp::as_ratexp_in)
     .def("_as_series_in", &ratexp::as_series_in)
-    .def("_derivation", &ratexp::derivation, derivation())
-    .def("derived_term", &ratexp::derived_term, derived_term())
+    .def("_derivation", &ratexp::derivation,
+         (arg("label"), arg("breaking") = false))
+    .def("derived_term", &ratexp::derived_term, (arg("algo") = "auto"))
     .def("difference", &ratexp::difference)
     .def("expand", &ratexp::expand)
     .def("expansion", &ratexp::to_expansion)
