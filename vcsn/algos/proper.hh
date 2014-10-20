@@ -69,7 +69,10 @@ namespace vcsn
       {}
 
       /**@brief Remove the epsilon-transitions of the input
-         The behaviour of this method depends on the star_status of the weight_set:
+
+        The behaviour of this method depends on the star_status of the
+        weight_set:
+
          -- starrable : always valid, does not throw any exception
          -- tops : the proper algo is directly launched on the input;
          if it returns false, an exception is launched
@@ -545,15 +548,15 @@ namespace vcsn
   /// automaton was not valid.
   template <typename Aut>
   inline
-  void proper_here(Aut& aut, direction_t dir = direction_t::BACKWARD,
+  void proper_here(Aut& aut, direction dir = direction::backward,
                    bool prune = true)
   {
     switch (dir)
       {
-      case direction_t::BACKWARD:
+      case direction::backward:
         detail::properer<Aut>::proper_here(aut, prune);
         return;
-      case direction_t::FORWARD:
+      case direction::forward:
         auto tr_aut = transpose(aut);
         using tr_aut_t = decltype(tr_aut);
         detail::properer<tr_aut_t>::proper_here(tr_aut, prune);
@@ -565,7 +568,7 @@ namespace vcsn
   /// is invalid.
   template <typename Aut>
   auto
-  proper(const Aut& aut, direction_t dir = direction_t::BACKWARD,
+  proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true)
     -> decltype(copy(aut))
   {
@@ -581,14 +584,16 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Bool>
-      automaton proper(const automaton& aut, bool prune)
+      template <typename Aut, typename Dir, typename Bool>
+      automaton proper(const automaton& aut, direction dir, bool prune)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::proper(a, direction_t::BACKWARD, prune));
+        return make_automaton(::vcsn::proper(a, dir, prune));
       }
 
-      REGISTER_DECLARE(proper, (const automaton& aut, bool prune) -> automaton);
+      REGISTER_DECLARE(proper,
+                       (const automaton& aut, direction dir, bool prune)
+                       -> automaton);
     }
 
   }

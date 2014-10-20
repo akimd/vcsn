@@ -2,6 +2,8 @@
 ## automaton.  ##
 ## ----------- ##
 
+from __future__ import print_function
+
 import tempfile
 import os
 import re
@@ -191,7 +193,9 @@ automaton.load = staticmethod(_automaton_load)
 
 # Somewhat cheating: in Python, proper returns a LAL, not a LAN.
 # _proper is the genuine binding to dyn::proper.
-automaton.proper = lambda self, prune = True: self._proper(prune).lan_to_lal()
+def _automaton_proper(self, *args, **kwargs):
+    return self._proper(*args, **kwargs).lan_to_lal()
+automaton.proper = _automaton_proper
 
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 

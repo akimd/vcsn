@@ -102,6 +102,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \
   %D%/dyn/translate.cc                          \
+  %D%/misc/direction.cc                         \
   %D%/misc/escape.cc                            \
   %D%/misc/file-library.cc                      \
   %D%/misc/indent.cc                            \

@@ -119,6 +119,9 @@ crange should not feature size and empty if !VCSN_DEBUG.
 It does not work for weighted ratexps.
 
 * Improvements
+** eliminate-state
+Support several arguments.
+
 ** products: lazyness
 We need a lazy implementation of product.
 

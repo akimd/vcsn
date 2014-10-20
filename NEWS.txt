@@ -6,6 +6,12 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 
+## 2014-10-20
+### proper: forward closure available in dyn:: and Python
+It is now possible to require a forward elimination of spontaneous
+transitions.  Calling `a.proper()` is equivalent to calling
+`a.proper(prune = True, backward = True)`.
+
 ## 2014-10-07
 ### to-expression
 The static and dyn:: algorithm that was named `aut_to_exp` is now

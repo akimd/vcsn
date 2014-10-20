@@ -9,6 +9,7 @@
 # include <vcsn/core/rat/identities.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/direction.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn
@@ -402,8 +403,11 @@ namespace vcsn
 
     /// An equivalent automaton without spontaneous transitions.
     /// \param aut    the automaton in which to remove them
+    /// \param dir    the direction of the closure
     /// \param prune  whether to delete states that become inaccessible
-    automaton proper(const automaton& aut, bool prune = true);
+    automaton proper(const automaton& aut,
+                     direction dir = direction::backward,
+                     bool prune = true);
 
     /// The weight pushing automaton of \a aut.
     automaton push_weights(const automaton& aut);

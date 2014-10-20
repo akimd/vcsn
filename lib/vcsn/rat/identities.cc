@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include <vcsn/core/rat/identities.hh>
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -17,9 +18,8 @@ namespace vcsn
           return "trivial";
         case identities::series:
           return "series";
-        default:
-          throw std::runtime_error("unknown identities");
         }
+      BUILTIN_UNREACHABLE();
     }
 
     std::ostream& operator<<(std::ostream& os, identities i)

@@ -497,3 +497,57 @@ check_to_lal(r'''digraph
   1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''')
+
+
+## ---------------------- ##
+## Forward vs. backward.  ##
+## ---------------------- ##
+
+a = vcsn.context('lan_char(ab)_b').ratexp('a*').thompson()
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I1
+    F0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I1 -> 1
+  0 -> F0
+  0 -> 0 [label = "a"]
+  1 -> F1
+  1 -> 0 [label = "a"]
+}''',
+         a.proper(backward = True))
+
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    I1
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I0 -> 0
+  I1 -> 1
+  0 -> 0 [label = "a"]
+  0 -> 1 [label = "a"]
+  1 -> F1
+}''',
+         a.proper(backward = False))

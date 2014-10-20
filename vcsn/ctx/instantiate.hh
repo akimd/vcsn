@@ -348,7 +348,7 @@ namespace vcsn
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
-        REGISTER(proper, aut_t, bool);
+        REGISTER(proper, aut_t, direction, bool);
         REGISTER(push_weights, aut_t);
         REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(read_label, std::istream, ctx_t);

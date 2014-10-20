@@ -4,10 +4,11 @@
 # include <initializer_list>
 # include <iostream>
 # include <memory>
-# include <vector>
 # include <string>
+# include <vector>
 
 # include <vcsn/core/rat/identities.hh>
+# include <vcsn/misc/direction.hh>
 # include <vcsn/misc/signature.hh>
 
 namespace vcsn
@@ -104,7 +105,9 @@ namespace vcsn
   DEFINE(const std::string);
   DEFINE(const std::vector<unsigned>);
   DEFINE(std::ostream);
+
   DEFINE(vcsn::rat::identities);
+  DEFINE(vcsn::direction);
 #undef DEFINE
 
 

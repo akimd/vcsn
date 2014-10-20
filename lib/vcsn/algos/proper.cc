@@ -6,18 +6,13 @@
 namespace vcsn
 {
 
-  /*--------.
-  | proper. |
-  `--------*/
-
   namespace dyn
   {
     REGISTER_DEFINE(proper);
-
     automaton
-    proper(const automaton& aut, bool prune)
+    proper(const automaton& aut, direction dir, bool prune)
     {
-      return detail::proper_registry().call(aut, prune);
+      return detail::proper_registry().call(aut, dir, prune);
     }
   }
 }

@@ -363,9 +363,13 @@ struct automaton
     return vcsn::dyn::product(automata_(auts));
   }
 
-  automaton proper(bool prune = true) const
+  automaton proper(bool prune = true, bool backward = true) const
   {
-    return vcsn::dyn::proper(val_, prune);
+    return vcsn::dyn::proper(val_,
+                             backward
+                             ? vcsn::direction::backward
+                             : vcsn::direction::forward,
+                             prune);
   }
 
   automaton push_weights() const
@@ -929,7 +933,6 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(cominimize, cominimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(synchronizing_word, synchronizing_word,
                                        0, 1);
@@ -938,6 +941,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(to_ratexp, to_ratexp, 0, 1);
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
   namespace bp = boost::python;
+  using bp::arg;
 
   bp::class_<automaton>
     ("automaton",
@@ -998,7 +1002,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
-    .def("_proper", &automaton::proper, proper())
+    .def("_proper", &automaton::proper,
+         (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)
     .def("ratexp", &automaton::to_ratexp, to_ratexp())
     .def("reduce", &automaton::reduce)
