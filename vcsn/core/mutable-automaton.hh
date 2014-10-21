@@ -222,9 +222,8 @@ namespace vcsn
             std::find_if(begin(succ), end(succ),
                          [this,l,ls,dst] (transition_t t) -> bool
                          {
-                           const stored_transition_t& st = transitions_[t];
-                           return (st.dst == dst
-                                   && ls.equals(st.get_label(), l));
+                           return (dst_of(t) == dst
+                                   && ls.equals(label_of(t), l));
                          });
           if (i != end(succ))
             return *i;
@@ -235,9 +234,8 @@ namespace vcsn
             std::find_if(begin(pred), end(pred),
                          [this,l,ls,src] (transition_t t) -> bool
                          {
-                           const stored_transition_t& st = transitions_[t];
-                           return (st.src == src
-                                   && ls.equals(st.get_label(), l));
+                           return (src_of(t) == src
+                                   && ls.equals(label_of(t), l));
                          });
           if (i != end(pred))
             return *i;
@@ -691,47 +689,67 @@ namespace vcsn
       container_filter_range<boost::integer_range<state_t>>;
 
   protected:
+    /// The range of state numbers in [b .. e] that validate the
+    /// predicate \a pred.
+    template <typename Pred>
     states_output_t
-    state_range(state_t b, state_t e) const
+    state_range(state_t b, state_t e, Pred pred) const
     {
       return
         {boost::irange<state_t>(b, e),
-         [this] (state_t i) -> bool
+         [this,pred] (state_t s) -> bool
          {
-           const stored_state_t& ss = states_[i];
-           return (ss.succ.empty()
-                   || ss.succ.front() != this->null_transition());
+           const stored_state_t& ss = states_[s];
+           return ((ss.succ.empty()
+                    || ss.succ.front() != this->null_transition())
+                   && pred(s));
          }};
     }
 
-  public:
-    /// All states excluding pre()/post().
-    /// Guaranteed in increasing order.
+    /// The range of state numbers in [b .. e].
     states_output_t
-    states() const     { return state_range(post() + 1, states_.size()); }
+    state_range(state_t b, state_t e) const
+    {
+      return state_range(b, e, [](state_t) { return true; });
+    }
 
+  public:
     /// All states including pre()/post().
     /// Guaranteed in increasing order.
     states_output_t
     all_states() const { return state_range(0U, states_.size()); }
 
+    /// All states including pre()/post() that validate \a pred.
+    /// Guaranteed in increasing order.
+    template <typename Pred>
+    states_output_t
+    all_states(Pred pred) const
+    {
+      return state_range(0U, states_.size(), pred);
+    }
+
+    /// All states excluding pre()/post().
+    /// Guaranteed in increasing order.
+    states_output_t
+    states() const     { return state_range(post() + 1, states_.size()); }
+
     using transitions_output_t =
       container_filter_range<boost::integer_range<transition_t>>;
 
-    /// All the transition indexes between visible states.
+    /// All the transition indexes between all states (including pre and post),
+    /// that validate \a pred.
+    template <typename Pred>
     transitions_output_t
-    transitions() const
+    all_transitions(Pred pred) const
     {
       return
         {
           boost::irange<transition_t>(0U, transitions_.size()),
-          [this] (transition_t i) -> bool
-            {
-              state_t src = transitions_[i].src;
-              if (src == this->null_state() || src == this->pre())
-                return false;
-              return transitions_[i].dst != this->post();
-            }
+            [this,pred] (transition_t t)
+              {
+                return (src_of(t) != this->null_state()
+                        && pred(t));
+              }
         };
     }
 
@@ -739,14 +757,18 @@ namespace vcsn
     transitions_output_t
     all_transitions() const
     {
-      return
-        {
-          boost::irange<transition_t>(0U, transitions_.size()),
-          [this] (transition_t i)
-            {
-              return transitions_[i].src != this->null_state();
-            }
-        };
+      return all_transitions([] (transition_t) { return true; });
+    }
+
+    /// All the transition indexes between visible states.
+    transitions_output_t
+    transitions() const
+    {
+      return all_transitions([this] (transition_t t)
+                             {
+                               return (src_of(t) != pre()
+                                       && dst_of(t) != post());
+                             });
     }
 
     /// Indexes of transitions to visible initial states.
@@ -763,17 +785,6 @@ namespace vcsn
       return in(post());
     }
 
-    /// Indexes of visible transitions leaving state \a s.
-    /// Invalidated by del_transition() and del_state().
-    container_filter_range<const tr_cont_t&>
-    out(state_t s) const
-    {
-      assert(has_state(s));
-      return {states_[s].succ,
-              [this] (transition_t i)
-                { return transitions_[i].dst != this->post(); }};
-    }
-
     /// Indexes of all transitions leaving state \a s.
     /// Invalidated by del_transition() and del_state().
     container_range<const tr_cont_t&>
@@ -783,28 +794,38 @@ namespace vcsn
       return states_[s].succ;
     }
 
+    /// Indexes of transitions leaving state \a s that validate the
+    /// predicate.
+    ///
+    /// Invalidated by del_transition() and del_state().
+    template <typename Pred>
+    container_filter_range<const tr_cont_t&>
+    all_out(state_t s, Pred pred) const
+    {
+      assert(has_state(s));
+      return {states_[s].succ, pred};
+    }
+
+    /// Indexes of visible transitions leaving state \a s.
+    /// Invalidated by del_transition() and del_state().
+    container_filter_range<const tr_cont_t&>
+    out(state_t s) const
+    {
+      return all_out(s,
+                     [this] (transition_t t)
+                     { return dst_of(t) != post(); });
+    }
+
     /// Indexes of all transitions leaving state \a s on label \a l.
     /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     out(state_t s, const label_t& l) const
     {
-      assert(has_state(s));
-      const stored_state_t& ss = states_[s];
-      return {ss.succ,
-              [this,l] (transition_t i) {
-                return this->labelset()->equals(transitions_[i].get_label(), l);
-            }};
-    }
-
-    /// Indexes of visible transitions arriving to state \a s.
-    /// Invalidated by del_transition() and del_state().
-    container_filter_range<const tr_cont_t&>
-    in(state_t s) const
-    {
-      assert(has_state(s));
-      return {states_[s].pred,
-              [this] (transition_t i)
-                { return transitions_[i].src != this->pre(); }};
+      return all_out(s,
+                     [this,l] (transition_t t)
+                     {
+                       return labelset()->equals(label_of(t), l);
+                     });
     }
 
     /// Indexes of all transitions arriving to state \a s.
@@ -816,17 +837,38 @@ namespace vcsn
       return states_[s].pred;
     }
 
+    /// Indexes of transitions entering state \a s that validate the
+    /// predicate.
+    ///
+    /// Invalidated by del_transition() and del_state().
+    template <typename Pred>
+    container_filter_range<const tr_cont_t&>
+    all_in(state_t s, Pred pred) const
+    {
+      assert(has_state(s));
+      return {states_[s].pred, pred};
+    }
+
+    /// Indexes of visible transitions arriving to state \a s.
+    /// Invalidated by del_transition() and del_state().
+    container_filter_range<const tr_cont_t&>
+    in(state_t s) const
+    {
+      return all_in(s,
+                    [this] (transition_t t)
+                    { return src_of(t) != pre(); });
+    }
+
     /// Indexes of visible transitions arriving to state \a s on label \a l.
     /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     in(state_t s, const label_t& l) const
     {
-      assert(has_state(s));
-      const stored_state_t& ss = states_[s];
-      return {ss.pred,
-              [this,l] (transition_t i) {
-                return this->labelset()->equals(transitions_[i].get_label(), l);
-        }};
+      return all_in(s,
+                    [this,l] (transition_t t)
+                    {
+                      return labelset()->equals(label_of(t), l);
+                    });
     }
 
     /// Indexes of visible transitions from state \a s to state \a d.
@@ -834,12 +876,11 @@ namespace vcsn
     container_filter_range<const tr_cont_t&>
     outin(state_t s, state_t d) const
     {
-      assert(has_state(s));
-      assert(has_state(d));
-      const stored_state_t& ss = states_[s];
-      return {ss.succ,
-              [this,d] (transition_t i)
-                { return this->transitions_[i].dst == d; }};
+      return all_out(s,
+                     [this,d] (transition_t t)
+                     {
+                       return dst_of(t) == d;
+                     });
     }
   };
   }
