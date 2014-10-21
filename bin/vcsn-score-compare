@@ -51,17 +51,22 @@ def normalize(k):
 def read(fn):
     with open(fn) as f:
         for line in f:
-            v, k = map(str.strip, line.split(':', 2))
+            v, k = map(str.strip, line.split(':', 1))
+            # Get rid of "s", we know the unit.
+            v = v[:-1]
+            # Fix errors in algo descriptions.
             k = normalize(k)
             if k not in bench:
                 bench[k] = dict()
             bench[k][fn] = v
 
+# Read the score files.
 for fn in sys.argv[1:]:
     read(fn)
 
+# Print the score table.
 for k in sorted(bench.keys()):
     for fn in sys.argv[1:]:
         v = bench[k][fn] if fn in bench[k] else "N/A"
-        print("{:6}".format(v), end = ' ')
+        print("{:5}".format(v), end = ' ')
     print(k)
