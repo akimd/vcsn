@@ -292,14 +292,14 @@ namespace vcsn
                   // might add a final transition for the same state
                   // later.
                   //
-                  // For instance on "{2}a+({3}\e+{5}a)", the final
-                  // state s1 of {2}a will be made final thanks to
-                  // {3}\e.  So if we compute the new transitions from
+                  // For instance on "<2>a+(<3>\e+<5>a)", the final
+                  // state s1 of <2>a will be made final thanks to
+                  // <3>\e.  So if we compute the new transitions from
                   // s1 and then remove t1, we will have removed the
-                  // fact that s1 is final thanks to {3}\e.
+                  // fact that s1 is final thanks to <3>\e.
                   //
-                  // Besides, s1 will become final with weight {3}, which
-                  // might interfere with {5}a too.
+                  // Besides, s1 will become final with weight <3>, which
+                  // might interfere with <5>a too.
                   auto s1 = res_->src_of(t1);
                   auto w1 = res_->weight_of(t1);
                   res_->del_transition(t1);

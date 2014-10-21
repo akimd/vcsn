@@ -245,6 +245,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         auto s = a->null_state();
+        // FIXME: weak.
         if (state != -1)
           s = state + 2;
         return make_automaton(vcsn::eliminate_state(a, s));

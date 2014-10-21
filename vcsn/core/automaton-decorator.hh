@@ -24,7 +24,8 @@ namespace vcsn
 
       /// The (shared pointer) type to use it we have to create an
       /// automaton of the same (underlying) type.
-      using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
+      using automaton_nocv_t
+        = typename automaton_t::element_type::automaton_nocv_t;
 
       using context_t = Context;
       using kind_t = typename context_t::kind_t;
@@ -110,8 +111,8 @@ namespace vcsn
       Name(Args&&... args) const                                \
         -> decltype(aut_->Name(std::forward<Args>(args)...))    \
       {                                                         \
-      return aut_->Name(std::forward<Args>(args)...);           \
-    }
+        return aut_->Name(std::forward<Args>(args)...);         \
+      }
 
       DEFINE(all_in);
       DEFINE(all_out);
