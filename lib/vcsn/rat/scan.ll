@@ -18,7 +18,9 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/regex.hh>
+
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
@@ -42,8 +44,6 @@ namespace
 %}
 
 %x SC_CLASS SC_CONTEXT SC_WEIGHT
-
-char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
 %%
 %{
@@ -92,14 +92,8 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   /* Weights. */
   "<"     yy_push_state(SC_WEIGHT);
 
-  /* Labels.  */
-  {char}        return parser::make_LETTER(yytext, loc);
-  "'"[^\']+"'"  return parser::make_LETTER(std::string(yytext+1, yyleng-2), loc);
-
   /* Character classes.  */
   "["     yy_push_state(SC_CLASS); return parser::make_LBRACKET(loc);
-
-  \\.|.|\n   driver_.invalid(loc, yytext);
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
@@ -110,14 +104,38 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "^" return parser::make_CARET(loc);
   "-" return parser::make_DASH(loc);
 
-  {char}        return parser::make_LETTER(yytext, loc);
-  "'"[^\']+"'"  return parser::make_LETTER(std::string(yytext+1, yyleng-2), loc);
-
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a character-class");
     unput(']');
   }
 }
+
+
+<INITIAL,SC_CLASS>{ /* Labels.  */
+  "'"[^\']+"'"  return parser::make_LETTER({yytext+1, size_t(yyleng-2)}, loc);
+
+  \\[0-7]{3}         {
+    long c = strtol(yytext + 1, 0, 8);
+    if (255 < c)
+      driver_.error(loc, "invalid escape: " + str_escape(yytext));
+    return parser::make_LETTER({char(c)}, loc);
+  }
+
+  \\x[0-9a-fA-F]{2}  {
+    return parser::make_LETTER({char(strtol(yytext + 2, 0, 16))}, loc);
+  }
+
+  \\a        return parser::make_LETTER({'\a'}, loc);
+  \\b        return parser::make_LETTER({'\b'}, loc);
+  \\f        return parser::make_LETTER({'\f'}, loc);
+  \\n        return parser::make_LETTER({'\n'}, loc);
+  \\r        return parser::make_LETTER({'\r'}, loc);
+  \\t        return parser::make_LETTER({'\t'}, loc);
+  \\v        return parser::make_LETTER({'\v'}, loc);
+  "\\".      return parser::make_LETTER(yytext+1, loc+1);
+  .          return parser::make_LETTER(yytext, loc);
+}
+
 
 <SC_CONTEXT>{ /* Context embedded in a $(?@...) directive.  */
   "("   {
