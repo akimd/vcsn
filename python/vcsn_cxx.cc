@@ -1011,7 +1011,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
-    .def("_proper", &automaton::proper,
+    .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)
     .def("ratexp", &automaton::to_ratexp, (arg("algo") = "auto"))

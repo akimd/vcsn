@@ -66,9 +66,8 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(x, d)'*").standard(), a)
 
 t1 = c1.ratexp("'(a, x)'*").thompson()
 t2 = c2.ratexp("'(x, d)'*").thompson()
-CHECK_EQ(re.compile("lan<(lal_char\(.*?\))>").sub("\\1",
-                                                  str(vcsn.automaton(a).strip())),
-         t1.compose(t2).trim().proper().strip())
+CHECK_EQ(vcsn.automaton(a),
+         t1.compose(t2).trim().proper())
 
 check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(y, d)'*").standard(),
       '''digraph

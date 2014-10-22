@@ -564,18 +564,63 @@ namespace vcsn
       }
   }
 
+
+  /// From a labelset, its non-nullable labelset.
+  ///
+  /// Unfortunately cannot be always done.  For instance,
+  /// tupleset<nullableset<letterset>, nullableset<letterset>> cannot
+  /// be turned in tupleset<letterset, letterset>, as it also forbids
+  /// (a, \e) and (\e, x) which should be kept legitimate.
+  template <typename LabelSet>
+  struct proper_labelset
+  {
+    using type = LabelSet;
+    static std::shared_ptr<const type>
+    value(const std::shared_ptr<const LabelSet>& ls)
+    {
+      return ls;
+    }
+  };
+
+  template <typename LabelSet>
+  struct proper_labelset<nullableset<LabelSet>>
+  {
+    using type = LabelSet;
+    static std::shared_ptr<const type>
+    value(const std::shared_ptr<const nullableset<LabelSet>>& ls)
+    {
+      return ls->labelset();
+    }
+  };
+
+  /// From a context, its non-nullable context.
+  template <typename LabelSet, typename WeightSet>
+  auto
+  proper_context(const context<LabelSet, WeightSet>& ctx)
+    -> context<typename proper_labelset<LabelSet>::type, WeightSet>
+  {
+    using proper_labelset = proper_labelset<LabelSet>;
+    std::shared_ptr<const typename proper_labelset::type> ls
+      = proper_labelset::value(ctx.labelset());
+    std::shared_ptr<const WeightSet> ws = ctx.weightset();
+    return {ls, ws};
+  }
+
   /// Eliminate spontaneous transitions.  Raise if the input automaton
   /// is invalid.
   template <typename Aut>
   auto
   proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true)
-    -> decltype(copy(aut))
+    -> mutable_automaton<decltype(proper_context(copy(aut)->context()))>
   {
     // FIXME: We could avoid copying if the automaton is already
     // proper.
-    auto res = copy(aut);
-    proper_here(res, dir, prune);
+    auto a = copy(aut);
+    proper_here(a, dir, prune);
+    auto ctx = proper_context(a->context());
+    auto res = make_mutable_automaton(ctx);
+    copy_into(a, res);
     return res;
   }
 

@@ -7,12 +7,12 @@ from test import *
 # ---------------
 def check(i, o):
   i = vcsn.automaton(i)
-  CHECK_EQ(o, i._proper())
+  CHECK_EQ(o, i.proper())
   # FIXME: Because _proper uses copy, state numbers are changed.
   #
   # FIXME: cannot use is_isomorphic because there may be unreachable
   # states.
-  CHECK_EQ(i._proper().sort().strip(), i._proper()._proper().sort().strip())
+  CHECK_EQ(i.proper().sort().strip(), i.proper().proper().sort().strip())
 
 def check_fail(aut):
   a = vcsn.automaton(aut)
@@ -269,22 +269,22 @@ check(r'''digraph
   4 -> F
 }''', '''digraph
 {
-  vcsn_context = "lan<lal_char(z)>_ratexpset<lal_char(abcd)_z>"
+  vcsn_context = "lal_char(z)_ratexpset<lal_char(abcd)_z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
-    F4
+    F1
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
-    4
+    1
   }
   I0 -> 0
-  0 -> 4 [label = "<(abcd)*>z"]
-  4 -> F4
+  0 -> 1 [label = "<(abcd)*>z"]
+  1 -> F1
 }''')
 
 
@@ -324,24 +324,24 @@ check(r'''digraph
   9 -> F
 }''', '''digraph
 {
-  vcsn_context = "lan<lal_char(z)>_ratexpset<lal_char(abcdefgh)_z>"
+  vcsn_context = "lal_char(z)_ratexpset<lal_char(abcdefgh)_z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
-    F7
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1 [color = DimGray]
-    7 [color = DimGray]
+    2 [color = DimGray]
   }
   I0 -> 0
   0 -> F0 [label = "<beg>"]
-  7 -> F7 [label = "<fh>", color = DimGray]
+  2 -> F2 [label = "<fh>", color = DimGray]
 }''')
 
 

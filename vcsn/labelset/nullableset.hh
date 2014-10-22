@@ -252,7 +252,7 @@ namespace vcsn
     bool
     is_valid(value_t v) const
     {
-      return labelset()->is_valid(get_value(v)) || is_one(v);
+      return is_one(v) || labelset()->is_valid(get_value(v));
     }
 
     value_t
@@ -265,6 +265,14 @@ namespace vcsn
     conv(oneset, typename oneset::value_t) const
     {
       return one();
+    }
+
+    /// Conversion from another type: let it be handled by our wrapped labelset.
+    template <typename LabelSet_>
+    value_t
+    conv(const LabelSet_& ls, typename LabelSet_::value_t v) const
+    {
+      return labelset()->conv(ls, v);
     }
 
     const labelset_ptr labelset() const
@@ -424,7 +432,7 @@ namespace vcsn
       return o;
     }
 
-  private:
+    /// Return the value when it's not one.
     static typename labelset_t::value_t
     get_value(const value_t& v)
     {

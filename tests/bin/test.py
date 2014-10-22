@@ -6,6 +6,8 @@ import os
 import re
 import sys
 
+import vcsn
+
 count = 0
 npass = 0
 nfail = 0
@@ -138,15 +140,21 @@ def CHECK_EQ(expected, effective, loc = None):
             rst_file("Effective output", eff)
         rst_diff(exp, eff)
 
+def normalize(a):
+    '''Turn automaton `a` into something we can check equivalence with.'''
+    a = a.strip()
+    if 'lan' in str(a.context()):
+        a = a.proper()
+    # Eliminate nullablesets if there are that remain.
+    to = re.sub(r'lan<(lal_char\(.*?\))>', r'\1', a.context().format('text'))
+    return a.automaton(vcsn.context(to))
+
+
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.'''
     num = 10
-    a1 = a1.strip()
-    a2 = a2.strip()
-    if 'lan' in str(a1.context()):
-        a1 = a1.proper()
-    if 'lan' in str(a2.context()):
-        a2 = a2.proper()
+    a1 = normalize(a1)
+    a2 = normalize(a2)
 
     # Cannot compare automata on Zmin.
     if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
@@ -158,8 +166,8 @@ def CHECK_EQUIV(a1, a2):
         PASS()
     else:
         FAIL("automata are not equivalent")
-        rst_file("Left automaton", a1)
-        rst_file("Right automaton", a2)
+        rst_file("Left automaton", a1.format('dot'))
+        rst_file("Right automaton", a2.format('dot'))
         s1 = a1.shortest(num).format('list')
         s2 = a2.shortest(num).format('list')
         rst_file("Left automaton shortest", s1)

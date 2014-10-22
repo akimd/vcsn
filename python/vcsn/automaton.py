@@ -177,25 +177,6 @@ def _automaton_is_synchronized_by(self, w):
     return self._is_synchronized_by(w)
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
-def _lan_to_lal(a):
-    '''Convert an automaton from supporting spontaneous transitions
-    to not supporting them by modifying its context specification.
-    '''
-    dot = a.format('dot')
-    dot = re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1', dot)
-    dot = re.sub(r'"lat<lan<(lal_char\(.*?\))>, *lan<(lal_char\(.*?\))>',
-                 r'"lat<\1, \2', dot)
-    dot = re.sub(r'"lan<(lat<lal_char\(.*?\)(?:, *lal_char\(.*?\))*>)>',
-                 r'"\1', dot)
-    return automaton(dot, 'dot')
-automaton.lan_to_lal = _lan_to_lal
-
-# Somewhat cheating: in Python, proper returns a LAL, not a LAN.
-# _proper is the genuine binding to dyn::proper.
-def _automaton_proper(self, *args, **kwargs):
-    return self._proper(*args, **kwargs).lan_to_lal()
-automaton.proper = _automaton_proper
-
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 
 automaton.state_number = lambda self: self.info(False)['number of states']

@@ -6,6 +6,22 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 
+## 2014-10-23
+### proper: strip nullableset from labelsets
+
+Our (current) implementation of `proper` is in-place, and as a
+consequence, the result features the same context as the input
+automaton, with a nullable labelset.
+
+Now, `proper` copies the result in a context with a de-nullabled
+labelset.  So for instance:
+
+    In [2]: vcsn.context('lan_char(ab)_b').ratexp('(ab)*').thompson().proper()
+    Out[2]: mutable_automaton<lal_char(ab)_b>
+
+There is no measurable performance regression.  However state numbers
+are now unrelated to the input automaton.
+
 ## 2014-10-20
 ### Python: loading automata from files
 The `vcsn.automaton` constructor now support a `filename` named argument

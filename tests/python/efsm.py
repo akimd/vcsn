@@ -54,6 +54,7 @@ a = load('lal_char_z/binary.gv')
 check(a, 'binary.efsm')
 
 for f in ["lal-char-z", "lat-z"]:
+  print("f:", f)
   a = vcsn.automaton(filename = medir + "/" + f + '.gv')
   check(a, f + '.efsm')
 

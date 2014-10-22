@@ -145,7 +145,7 @@ bench('a.sort()', 'a = std({})'.format(r),
 # proper.
 r = "a?{1200}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
-bench('a.proper()', 'a = thompson({})'.format(r), lambda: a._proper())
+bench('a.proper()', 'a = thompson({})'.format(r), lambda: a.proper())
 
 # to-ratexp.
 r = '[a-d]?{100}'

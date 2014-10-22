@@ -39,7 +39,8 @@ namespace vcsn
     struct labelset_types<decltype(pass{typename ValueSets::word_t()...}, void()),
                           ValueSets...>
     {
-      using genset_t = cross_sequences<decltype(std::declval<ValueSets>().genset())...>;
+      using genset_t
+        = cross_sequences<decltype(std::declval<ValueSets>().genset())...>;
       using letter_t = std::tuple<typename ValueSets::letter_t...>;
       using word_t = std::tuple<typename ValueSets::word_t...>;
     };
@@ -382,6 +383,24 @@ namespace vcsn
       return v ? one() : zero();
     }
 
+    /// Convert a value from tupleset<...> to value_t.
+    template <typename... VS>
+    value_t
+    conv(const tupleset<VS...>& vs,
+         const typename tupleset<VS...>::value_t& v) const
+    {
+      return conv_(vs, v, indices);
+    }
+
+    /// Convert a value from nullableset<tupleset<...>> to value_t.
+    template <typename... VS>
+    value_t
+    conv(const nullableset<tupleset<VS...>>& vs,
+         const typename nullableset<tupleset<VS...>>::value_t& v) const
+    {
+      return conv(*vs.labelset(), vs.get_value(v));
+    }
+
     /// Read one label from i, return the corresponding value.
     value_t
     conv(std::istream& i) const
@@ -697,6 +716,15 @@ namespace vcsn
     concat_(const LhsValue& l, const RhsValue& r, seq<I...>) const
     {
       return word_t{set<I>().concat(std::get<I>(l), std::get<I>(r))...};
+    }
+
+    template <typename... VS, std::size_t... I>
+    value_t
+    conv_(const tupleset<VS...>& vs,
+          const typename tupleset<VS...>::value_t& v,
+          seq<I...>) const
+    {
+      return value_t{set<I>().conv(vs.template set<I>(), std::get<I>(v))...};
     }
 
     template <std::size_t... I>
