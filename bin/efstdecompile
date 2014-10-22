@@ -4,6 +4,12 @@
 me=$(basename "$0")
 medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
+error ()
+{
+  echo "$me: $*" >&2
+  exit 1
+}
+
 # Handle our options.
 while true
 do
@@ -46,7 +52,8 @@ trans=$medir/transitions.fsm
 # symbol tables are equal.
 fstprint $fstprint_opts                 \
          --save_isymbols=$isyms         \
-         --save_osymbols=$osyms $input > $trans
+         --save_osymbols=$osyms $input > $trans ||
+  error "fstprint failed"
 
 # If fstprint did not provide the symbols tables, use the ones from
 # the user.
@@ -59,7 +66,8 @@ if fstinfo $input | grep -q '^acceptor  *y$' && cmp "$isyms" "$osyms"; then
   acceptor=true
   fstprint $fstprint_opts                 \
            --acceptor                     \
-           --save_isymbols=$isyms $input > $trans
+           --save_isymbols=$isyms $input > $trans ||
+    error "fstprint failed"
 else
   acceptor=false
 fi

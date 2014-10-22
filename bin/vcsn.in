@@ -17,6 +17,11 @@ usage: vcsn COMMAND ARGS...
 
 If COMMAND is "notebook", run Vaucanson as an IPython Notebook.
 
+If COMMAND is "run" (or "-e"), run the ARGS...
+
+If COMMAND is "efstdecompile" or "efstcompile", run the corresponding
+program.
+
 If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:
 
@@ -55,9 +60,11 @@ EOF
 
 case $1 in
   ('') ;; # We are sourced to set up the environment.
-  (-e) shift 1; exec "$@";;
+  (-e|run) shift 1; exec "$@";;
   (-h|--help) help;;
   (-v|--version) version;;
+
+  (efstcompile|efstdecompile) exec "$@";;
 
   (accessible|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
@@ -83,6 +90,7 @@ case $1 in
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
      exec "vcsn-tafkit" "$cmd" "$@";;
+
   (*)
      prog="vcsn-$1"; shift; exec "$prog" "$@";;
 esac

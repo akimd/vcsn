@@ -39,7 +39,6 @@ export VCSN_LDFLAGS
 
 case $1 in
   ('') ;; # We are sourced to set up the environment.
-  (-e) shift 1; exec "$@";;
   (*) # Hopefully not looping here, thanks to the change of PATH.
       exec vcsn "$@";;
 esac
