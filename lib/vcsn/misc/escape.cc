@@ -22,7 +22,7 @@ namespace vcsn
         if (0 <= c && c <= 0177 && std::isprint(c))
           os << char(c);
         else
-          os << "\\0x" << std::setw(3) << c;
+          os << "\\x" << std::setw(2) << c;
         break;
       }
     os.fill(fill);
