@@ -63,8 +63,10 @@ namespace vcsn
         os_ <<
           "\\documentclass{standalone}\n"
           "  \\usepackage{tikz}\n"
-          "  \\usetikzlibrary{arrows, automata, positioning, shapes.misc}\n"
-          "  \\tikzstyle{automaton}=[shorten >=1pt, >=stealth', initial text=]\n"
+          "  \\usetikzlibrary{arrows.meta, automata, bend,"
+          " positioning, shapes.misc}\n"
+          "  \\tikzstyle{automaton}=[shorten >=1pt,"
+          " >={Stealth[bend,round]}, initial text=]\n"
           "  \\tikzstyle{accepting}=[accepting by arrow]\n"
           "\n"
           "\\begin{document}\n"
