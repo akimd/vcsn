@@ -6,7 +6,9 @@
 # include <vcsn/algos/fwd.hh> // blind_automaton.
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/copy.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/dyn/automaton.hh>
+# include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/dyn/ratexpset.hh>
 # include <vcsn/misc/attributes.hh>
@@ -203,6 +205,22 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
+      template <typename Aut, typename Ctx>
+      inline
+      automaton
+      copy_convert(const automaton& aut, const context& ctx)
+      {
+        const auto& a = aut->as<Aut>();
+        const auto& c = ctx->as<Ctx>();
+        auto res = make_mutable_automaton(c);
+        ::vcsn::copy_into(a, res);
+        return make_automaton(res);
+      }
+
+      REGISTER_DECLARE(copy_convert,
+                       (const automaton&, const context&) -> automaton);
+
       /// Bridge.
       template <typename Aut>
       inline

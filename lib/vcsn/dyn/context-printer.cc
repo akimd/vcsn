@@ -37,6 +37,7 @@ namespace vcsn
       ALGO("cominimize", "minimize");
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
+      ALGO("copy-convert", "copy");
       ALGO("costandard", "standard");
       ALGO("difference", "are-equivalent");
       ALGO("eliminate-state", "to-expression");

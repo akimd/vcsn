@@ -128,6 +128,12 @@ struct automaton
     return vcsn::dyn::blind(val_, tape);
   }
 
+  /// Convert \a this to \a ctx, using \a ids.
+  automaton as(const ::context& ctx) const
+  {
+    return vcsn::dyn::copy(val_, ctx.val_);
+  }
+
   automaton chain(int min, int max) const
   {
     return vcsn::dyn::chain(val_, min, max);
@@ -952,6 +958,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          ((arg("data") = "", arg("format") = "default", arg("filename") = "")))
     .def("accessible", &automaton::accessible)
     .def("ambiguous_word", &automaton::ambiguous_word)
+    .def("automaton", &automaton::as)
     .def("blind", &automaton::blind)
     .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)

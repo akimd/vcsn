@@ -12,11 +12,17 @@ namespace vcsn
     `------------------*/
 
     REGISTER_DEFINE(copy);
-
     automaton
     copy(const automaton& aut)
     {
       return detail::copy_registry().call(aut);
+    }
+
+    REGISTER_DEFINE(copy_convert);
+    automaton
+    copy(const automaton& aut, const context& ctx)
+    {
+      return detail::copy_convert_registry().call(aut, ctx);
     }
 
     /*------------------------------.
@@ -24,7 +30,6 @@ namespace vcsn
     `------------------------------*/
 
     REGISTER_DEFINE(copy_ratexp);
-
     ratexp
     copy(const ratexp& e, const ratexpset& rs)
     {

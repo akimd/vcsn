@@ -92,6 +92,9 @@ namespace vcsn
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
 
+    /// A copy of \a aut converted to context \a ctx.
+    automaton copy(const automaton& aut, const context& ctx);
+
     /// Copy of \a exp, but built with \a rs.
     ratexp copy(const ratexp& exp, const ratexpset& rs);
 
