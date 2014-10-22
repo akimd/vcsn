@@ -41,6 +41,10 @@ to_vector(const boost::python::list& list)
 
 struct context
 {
+  context()
+    : val_(nullptr)
+  {}
+
   context(const vcsn::dyn::context& ctx)
     : val_(ctx)
   {}
@@ -48,6 +52,11 @@ struct context
   context(const std::string& ctx)
     : context(vcsn::dyn::make_context(ctx))
   {}
+
+  explicit operator bool() const
+  {
+    return bool(val_);
+  }
 
   automaton cerny(unsigned n) const;
 
@@ -596,6 +605,26 @@ struct ratexp
     return ratexp(ctx, r, vcsn::rat::identities::series);
   }
 
+  /// Convert \a this to \a ctx, using \a ids.
+  ratexp as_(const ::context& ctx, vcsn::rat::identities ids)
+  {
+    // The destination ratexpset.
+    auto rs = vcsn::dyn::make_ratexpset((ctx ? ctx : context()).val_, ids);
+    return vcsn::dyn::copy(val_, rs);
+  }
+
+  /// Same ratexp/series, but in context \a ctx, with ratexp identities.
+  ratexp as_ratexp(const ::context& ctx = {})
+  {
+    return as_(ctx, vcsn::rat::identities::trivial);
+  }
+
+  /// Same ratexp/series, but in context \a ctx, with series identities.
+  ratexp as_series(const ::context& ctx = {})
+  {
+    return as_(ctx, vcsn::rat::identities::series);
+  }
+
   ratexp chain(int min, int max) const
   {
     return vcsn::dyn::chain(val_, min, max);
@@ -633,31 +662,6 @@ struct ratexp
   polynomial derivation(const label& l, bool breaking = false) const
   {
     return vcsn::dyn::derivation(val_, l.val_, breaking);
-  }
-
-  ratexp as_(const ::context& ctx, vcsn::rat::identities ids)
-  {
-    auto rs = vcsn::dyn::make_ratexpset(ctx.val_, ids);
-    return vcsn::dyn::copy(val_, rs);
-  }
-
-  ratexp as_ratexp_in(const ::context ctx)
-  {
-    return as_(ctx, vcsn::rat::identities::trivial);
-  }
-  ratexp as_ratexp()
-  {
-    return as_(::context(vcsn::dyn::context_of(val_)),
-                 vcsn::rat::identities::trivial);
-  }
-  ratexp as_series_in(const ::context ctx)
-  {
-    return as_(ctx, vcsn::rat::identities::series);
-  }
-  ratexp as_series()
-  {
-    return as_(::context(vcsn::dyn::context_of(val_)),
-                 vcsn::rat::identities::series);
   }
 
   automaton derived_term(const std::string& algo = "auto") const
@@ -1071,8 +1075,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("conjunction", &ratexp::conjunction)
     .def("constant_term", &ratexp::constant_term)
     .def("context", &ratexp::context)
-    .def("_as_ratexp_in", &ratexp::as_ratexp_in)
-    .def("_as_series_in", &ratexp::as_series_in)
     .def("_derivation", &ratexp::derivation,
          (arg("label"), arg("breaking") = false))
     .def("derived_term", &ratexp::derived_term, (arg("algo") = "auto"))
@@ -1085,9 +1087,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &ratexp::is_valid)
     .def("left_mult", &ratexp::left_mult)
     .def("lift", &ratexp::lift)
-    .def("ratexp", &ratexp::as_ratexp)
+    .def("ratexp", &ratexp::as_ratexp, (arg("context") = context()))
     .def("right_mult", &ratexp::right_mult)
-    .def("series", &ratexp::as_series)
+    .def("series", &ratexp::as_series, (arg("context") = context()))
     .def("shuffle", &ratexp::shuffle)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)

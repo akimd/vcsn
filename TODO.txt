@@ -66,6 +66,12 @@ order "not to break too much") rather that something like expand.  What are
 the expected features of the right definition?
 
 * Bugs
+** ratexp::copy
+The implementation by-passes the ratexpset when building the new ratexp; for
+instance in the case of sum, the list of operands is copied by hand instead
+of using the ratexpset.  As a result, a ratexp "a+b+a", when "converted" to
+a series, gives "a+b+a" instead of "a+b".
+
 ** derivation
 We have ambiguous calls:
 
