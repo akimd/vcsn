@@ -48,6 +48,7 @@ namespace vcsn
       ALGO("is-costandard", "standard");
       ALGO("is-cycle-ambiguous", "is-ambiguous");
       ALGO("is-empty", "accessible");
+      ALGO("is-normalized", "normalize");
       ALGO("is-out-sorted", "sort");
       ALGO("is-standard", "standard");
       ALGO("is-synchronized-by", "synchronizing-word");
@@ -56,16 +57,15 @@ namespace vcsn
       ALGO("list", "print");
       ALGO("make-ratexpset", "make-context");
       ALGO("make-word-context", "make-context");
-      ALGO("is-normalized", "normalize");
       ALGO("multiply", "concatenate");
       ALGO("num-sccs", "scc");
       ALGO("pair", "synchronizing-word");
-      ALGO("suffix", "prefix");
       ALGO("power", "product");
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
       ALGO("subword", "prefix");
+      ALGO("suffix", "prefix");
       ALGO("trim", "accessible");
       ALGO("union-a", "union");
 #undef ALGO

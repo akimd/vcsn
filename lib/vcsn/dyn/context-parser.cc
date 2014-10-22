@@ -12,16 +12,16 @@ namespace vcsn
 
     /// We managed to read \a res in \a is, check that \a is is
     /// finished.
-    void check_eof(std::istream& is,
-                   std::shared_ptr<ast_node> res)
+    static void check_eof(std::istream& is, std::shared_ptr<ast_node> res)
     {
       if (is.peek() != -1)
         {
           std::ostringstream o;
           signature_printer printer(o, true);
           res->accept(printer);
-          vcsn::fail_reading(is, "unexpected trailing characters after: " +
-                             o.str());
+          vcsn::fail_reading(is,
+                             "unexpected trailing characters after '" +
+                             o.str() + "'");
         }
     }
 

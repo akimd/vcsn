@@ -1428,7 +1428,7 @@ vcsn-enumerate is biased to prefer the 'list' output format:
     aa
     aaa
 
-however the proper syntax for polynomial can be asked for.
+however the proper syntax for polynomials can be asked for.
 
     $ vcsn enumerate -O text -Ee 'a*' 3
     \e + a + aa + aaa
@@ -1454,19 +1454,19 @@ performance impact on some algorithms.  This is fixed.
 
 Before:
     9.08s (0.33s+8.75s): ladybird 21 | determinize -O null
- 16.88s (0.85s+16.03s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
- 21.30s (9.76s+11.54s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
+   16.88s (0.85s+16.03s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
+   21.30s (9.76s+11.54s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
     7.29s (0.04s+7.25s): standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | power -O null -f- 10
     0.04s (0.04s): standard -E -e "(a?){70}" -o a70.gv
- 24.20s (24.20s): product -O null -f a70.gv a70.gv
+   24.20s (24.20s): product -O null -f a70.gv a70.gv
 
 After:
     8.54s (0.13s+8.41s): ladybird 21 | determinize -O null
- 11.87s (0.86s+11.01s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
- 21.03s (9.40s+11.63s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
+   11.87s (0.86s+11.01s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
+   21.03s (9.40s+11.63s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
     6.58s (0.06s+6.52s): standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | power -O null -f- 10
     0.07s (0.07s): standard -E -e "(a?){70}" -o a70.gv
- 13.16s (13.16s): product -O null -f a70.gv a70.gv
+   13.16s (13.16s): product -O null -f a70.gv a70.gv
 
 Note in particular that the spontaneous transition elimination algorithm is
 faster, going from 16s to 11s on a MacBook Pro i7 2.9GHz 8GB RAM, on the

@@ -808,8 +808,9 @@ namespace vcsn
     template <typename WS1, typename Ctx2>
     struct join_impl<WS1, polynomialset<Ctx2>>
     {
-      using type = polynomialset<context<typename Ctx2::labelset_t,
-                                         join_t<WS1, typename Ctx2::weightset_t>>>;
+      using type
+        = polynomialset<context<typename Ctx2::labelset_t,
+                                join_t<WS1, typename Ctx2::weightset_t>>>;
       static type join(const WS1& ws1, const polynomialset<Ctx2>& ps2)
       {
         return {*ps2.labelset(), vcsn::join(ws1, *ps2.weightset())};

@@ -707,9 +707,10 @@ namespace vcsn
       return value_t{(eat_separator_<I>(i, '(', ','),
                       set<I>().conv(i))...};
 #  else
+      constexpr auto S = sizeof...(ValueSets)-1;
       return
-        detail::make_gcc_tuple((eat_separator_<sizeof...(ValueSets)-1 - I>(i, '(', ','),
-                                std::get<sizeof...(ValueSets)-1 - I>(sets_).conv(i))...);
+        detail::make_gcc_tuple((eat_separator_<S - I>(i, '(', ','),
+                                std::get<S - I>(sets_).conv(i))...);
 #  endif
     }
 

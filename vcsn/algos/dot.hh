@@ -161,7 +161,8 @@ namespace vcsn
 
         if (dot2tex_)
           os_ <<
-            "  d2toptions = \"--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize\"\n"
+            "  d2toptions = \"--format tikz --tikzedgelabels"
+            " --graphstyle=automaton --crop --nominsize --autosize\"\n"
             "  d2tdocpreamble = \""
             "    \\usepackage{amssymb}"
             "    \\usetikzlibrary{arrows, automata}"

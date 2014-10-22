@@ -64,10 +64,11 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(x, d)'*").standard(), a)
 ## Epsilon-transitions ##
 #########################
 
+t1 = c1.ratexp("'(a, x)'*").thompson()
+t2 = c2.ratexp("'(x, d)'*").thompson()
 CHECK_EQ(re.compile("lan<(lal_char\(.*?\))>").sub("\\1",
                                                   str(vcsn.automaton(a).strip())),
-         c1.ratexp("'(a, x)'*").thompson().compose(
-             c2.ratexp("'(x, d)'*").thompson()).trim().proper().strip())
+         t1.compose(t2).trim().proper().strip())
 
 check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(y, d)'*").standard(),
       '''digraph

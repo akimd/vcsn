@@ -282,6 +282,7 @@ namespace vcsn
     word_t
     word(const value_t& l) const
     {
+      // FIXME: looks wrong: are sure to issue the empty word on one?
       return labelset()->word(get_value(l));
     }
 
@@ -311,9 +312,9 @@ namespace vcsn
     }
 
     static bool
-    is_special(const value_t& l)
+    is_special(const value_t& v)
     {
-      return !is_one(l) && labelset_t::is_special(get_value(l));
+      return !is_one(v) && labelset_t::is_special(get_value(v));
     }
 
     size_t size(const value_t& v) const
@@ -321,6 +322,7 @@ namespace vcsn
       return is_one(v) ? 0 : labelset_t::size(get_value(v));
     }
 
+    // FIXME: specialize for both implementation.
     static size_t hash(const value_t& v)
     {
       std::size_t res = 0;
