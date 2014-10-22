@@ -143,9 +143,9 @@ def CHECK_EQUIV(a1, a2):
     num = 10
     a1 = a1.strip()
     a2 = a2.strip()
-    if str(a1.context()).startswith('lan'):
+    if 'lan' in str(a1.context()):
         a1 = a1.proper()
-    if str(a2.context()).startswith('lan'):
+    if 'lan' in str(a2.context()):
         a2 = a2.proper()
 
     # Cannot compare automata on Zmin.

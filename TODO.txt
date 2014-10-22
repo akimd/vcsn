@@ -125,6 +125,19 @@ crange should not feature size and empty if !VCSN_DEBUG.
 It does not work for weighted ratexps.
 
 * Improvements
+** are-equivalent
+V1 was calling letterize and proper, so it was more general than we are now.
+This should be fixed.  One question is whether proper should do something
+when the automaton is already proper.  We have a problem, though, when the
+output type is not the same as the input type (e.g., LAN -> LAL).  Maybe
+proper_here should do that.  But then, what should are-equivalent do?
+Always call proper, even if the automaton is already proper?
+
+FWIW, V1 was really performing proper when proper is called, it does not
+check whether is_proper first.  However are-equivalent actually uses
+a.realtime() = a.letterize().proper(), and a.realtime() checks first if the
+automaton is not already realtime.
+
 ** eliminate-state
 Support several arguments.
 

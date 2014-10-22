@@ -381,7 +381,7 @@ res = r'''digraph
   25 -> 10 [label = "\\e", color = DimGray]
 }'''
 CHECK_EQ(res, str(lhs & rhs))
-CHECK_EQUIV(vcsn.automaton(res).proper(),
+CHECK_EQUIV(vcsn.automaton(res),
             vcsn.context("lal_char(b)_b").ratexp("b*").standard())
 
 third = vcsn.context('lan_char(bcd)_b').ratexp('(b+c+d)*').thompson()
@@ -603,7 +603,7 @@ res = r'''digraph
   91 -> 40 [label = "\\e", color = DimGray]
 }'''
 CHECK_EQ(res, str(lhs & rhs & third))
-CHECK_EQUIV(vcsn.automaton(res).proper(),
+CHECK_EQUIV(vcsn.automaton(res),
             vcsn.context("lal_char(b)_b").ratexp("b*").standard())
 
 ###############################################
