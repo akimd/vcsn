@@ -195,7 +195,8 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = typename context_t::weightset_t;
-      using output_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
+      using output_automaton_t
+        = typename automaton_t::element_type::automaton_nocv_t;
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using output_state_t = state_t_of<output_automaton_t>;
@@ -480,7 +481,9 @@ namespace vcsn
       /** Core algorithm
           This algorithm computes a basis of I.mu(w).
           The basis is scaled.
-          An automaton where states correspond to the vectors of this basis is built
+
+          An automaton where states correspond to the vectors of
+          this basis is built
        */
     public:
       output_automaton_t operator()()
@@ -493,8 +496,8 @@ namespace vcsn
         // a state of the output
         std::vector<vector_t> basis;
         // The permutation array corresponds to a permutation of the indices
-        // (i.e. the columns of the matrices)
-        // such that permtuation[k] is the pivot of the k-th vector of the basis.
+        // (i.e. the columns of the matrices) such that permtuation[k]
+        // is the pivot of the k-th vector of the basis.
         unsigned permutation[dimension];
         for (unsigned i = 0; i < dimension; ++i)
           permutation[i] = i;
