@@ -484,7 +484,7 @@ namespace vcsn
     /// Build from the description in \a is.
     static self_type make(std::istream& is)
     {
-      // name is, for instance, "polynomialset<lal_char(abcd)_z>".
+      // name is, for instance, "polynomialset<lal_char(abcd), z>".
       eat(is, "polynomialset<");
       auto ctx = Context::make(is);
       eat(is, '>');

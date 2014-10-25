@@ -7,7 +7,7 @@ from test import *
 XFAIL(lambda: vcsn.automaton('''
 digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   I -> 0
   0 -> 0 [label="a, b"]
   0 -> F
@@ -18,7 +18,7 @@ digraph
 XFAIL(lambda: vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I -> 0
   0 -> 0 [label="a, b"]
   0 -> F
@@ -29,7 +29,7 @@ digraph
 XFAIL(lambda: vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   I -> 0
   0 -> 1 [label="a"]
   0 -> 2 [label="a,b"]
@@ -42,7 +42,7 @@ digraph
 XFAIL(lambda: vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   I -> 0
   0 -> 0 [label="a"]
   0 -> F
@@ -53,7 +53,7 @@ digraph
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -78,7 +78,7 @@ digraph
 o = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]

@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-b = vcsn.context('lal_char(abcd)_b')
+b = vcsn.context('lal_char(abcd), b')
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -23,7 +23,7 @@ CHECK_EQ('a*(aa*a+aa*a)', str(a1.shuffle(a1).ratexp()))
 abs = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -45,7 +45,7 @@ digraph
 mabs = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -100,8 +100,8 @@ CHECK_EQ('''digraph
 ## ---------------------- ##
 # TAFKIT manual, Figure 3.13, right [as of 2013-10-10]
 
-pas = vcsn.context("lal_char(a)_z").ratexp('a*').derived_term()
-mas = vcsn.context("lal_char(a)_z").ratexp('(<-1>a)*').derived_term()
+pas = vcsn.context("lal_char(a), z").ratexp('a*').derived_term()
+mas = vcsn.context("lal_char(a), z").ratexp('(<-1>a)*').derived_term()
 CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(a), z"
@@ -125,8 +125,8 @@ CHECK_EQ('''digraph
 ## ABC )( ab. ##
 ## ---------- ##
 
-ab = vcsn.context('lal_char(ab)_z').ratexp('ab').standard()
-ABC = vcsn.context('lal_char(ABC)_z').ratexp('ABC').standard()
+ab = vcsn.context('lal_char(ab), z').ratexp('ab').standard()
+ABC = vcsn.context('lal_char(ABC), z').ratexp('ABC').standard()
 ABCab = ABC.shuffle(ab)
 CHECK_EQ('''digraph
 {
@@ -192,9 +192,9 @@ abABC''', ABCab.enumerate(10).format('list'))
 ## --------------------- ##
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+a1 = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
          .ratexp('(<u>a+<v>b)*').standard()
-a2 = vcsn.context('lal_char(ab)_b').ratexp('a').standard()
+a2 = vcsn.context('lal_char(ab), b').ratexp('a').standard()
 CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
          a1.shuffle(a2).shortest(4).format('text'))
 CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
@@ -205,9 +205,9 @@ CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+a1 = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
          .ratexp('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
+a2 = vcsn.context('lal_char(ab), ratexpset<lal_char(xy), b>') \
          .ratexp('<x>a<y>b').standard()
 CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 <uvxy+xyuv>abab''', a1.shuffle(a2).enumerate(4).format('list'))
@@ -217,7 +217,7 @@ CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 ## n-ary.  ##
 ## ------- ##
 
-ctx = vcsn.context('lal_char(x)_seriesset<lal_char(abcd)_b>')
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()

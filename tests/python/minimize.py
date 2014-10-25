@@ -60,11 +60,11 @@ xfail('weighted',   a)
 
 ## Non-regression testcase: ensure that moore works and produces a
 ## correct result even with no non-final states.
-all_states_final = vcsn.context('lal_char(a)_b').ratexp('a*').standard()
+all_states_final = vcsn.context('lal_char(a), b').ratexp('a*').standard()
 check('moore', all_states_final, all_states_final.minimize('signature'))
 
 ## Minimize an intricate automaton into a linear one.
-a = vcsn.context('lal_char(a-k)_b') \
+a = vcsn.context('lal_char(a-k), b') \
         .ratexp('[a-k]{10}') \
         .standard()
 exp = file_to_string("intricate.exp.gv")
@@ -75,7 +75,7 @@ check('weighted',   a, exp)
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
-a = vcsn.context('lal_char(a)_b') \
+a = vcsn.context('lal_char(a), b') \
         .ratexp('a{2}*+a{2}*') \
         .standard()
 exp = file_to_string("small-nfa.exp.gv")
@@ -93,7 +93,7 @@ xfail('signature',  a)
 check('weighted',   a, exp)
 
 ## Non-lal automata.
-a = vcsn.context('law_char(a-c)_b').ratexp("abc(bc)*+acb(bc)*").standard()
+a = vcsn.context('law_char(a-c), b').ratexp("abc(bc)*+acb(bc)*").standard()
 exp = file_to_string("nonlal.exp.gv")
 check("signature", a, exp)
 check("weighted",  a, exp)
@@ -114,12 +114,12 @@ check("weighted",  a, exp)
 ## It remained associated to its old class identifier in
 ## state_to_class, which in the mean time would come to identify some
 ## subset of its old value.
-a = vcsn.context('lal_char(ab)_b').ratexp("a+ba").derived_term().strip()
+a = vcsn.context('lal_char(ab), b').ratexp("a+ba").derived_term().strip()
 check('brzozowski', a, a)
 CHECK_ISOMORPHIC(a.minimize('moore'), a)
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 
 ## Check minimization idempotency in the non-lal case as well.
-a = vcsn.context('law_char(ab)_b').ratexp("ab").standard()
+a = vcsn.context('law_char(ab), b').ratexp("ab").standard()
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 CHECK_ISOMORPHIC(a.minimize('weighted'), a)

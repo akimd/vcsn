@@ -38,7 +38,7 @@ struct options
   std::string input_format = "default";
 
   /// Context.
-  std::string context = "lal_char(abcd)_b";
+  std::string context = "lal_char(abcd), b";
 
   /// Output file name ("-" for stdout).
   std::string output = "-";

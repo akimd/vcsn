@@ -20,13 +20,13 @@ def check_accessible(input, output):
   CHECK_EQ(True, input.accessible().is_accessible())
 
 # Regression.
-a = vcsn.context('lal_char(abcd)_b').ratexp('ab+cd').standard().sort().strip()
+a = vcsn.context('lal_char(abcd), b').ratexp('ab+cd').standard().sort().strip()
 check_accessible(a, a)
 
 # Cycle.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab)_b"
+    vcsn_context = "law_char(ab), b"
     I0 -> 0
     0 -> 1 [label="a"]
     1 -> 2 [label="a"]
@@ -67,7 +67,7 @@ digraph {
 # No final state.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab)_b"
+    vcsn_context = "law_char(ab), b"
     I0 -> 0
     0 -> 1 [label="a"]
     1 -> 2 [label="a"]
@@ -100,7 +100,7 @@ digraph {
 # No initial state.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab)_b"
+    vcsn_context = "law_char(ab), b"
     0 -> 1 [label="a"]
     1 -> 2[label="a"]
     2 -> 3[label="a"]
@@ -119,7 +119,7 @@ digraph {
 # Simple input.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab)_b"
+    vcsn_context = "law_char(ab), b"
     I0 -> 0
     0 -> 1 [label="a"]
     1 -> 2[label="a"]
@@ -169,7 +169,7 @@ check_is_trim(minab, True)
 check_is_trim('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   1 -> F1
   1 -> 2 [label = a]
@@ -181,7 +181,7 @@ digraph
 check_is_trim('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   1 -> F1
   1 -> 2 [label = a]
@@ -193,7 +193,7 @@ digraph
 check_is_trim('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   1 -> 2 [label = a]
   2 -> 1 [label = a]
@@ -216,7 +216,7 @@ check_is_empty(minab, False)
 check_is_empty('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   I0 -> 0
 }
 ''', False)
@@ -224,7 +224,7 @@ digraph
 check_is_empty('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> F0
 }
 ''', False)
@@ -232,7 +232,7 @@ digraph
 check_is_empty('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   I0
   F0
 }
@@ -240,7 +240,7 @@ digraph
 check_is_empty('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
 }
 ''', True)
 
@@ -259,7 +259,7 @@ check_is_useless(minab, False)
 check_is_useless('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   I0 -> 0
 }
 ''', True)
@@ -267,7 +267,7 @@ digraph
 check_is_useless('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> F0
 }
 ''', True)
@@ -276,7 +276,7 @@ digraph
 check_is_useless('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   1 -> F1
   1 -> 2 [label = a]
@@ -288,7 +288,7 @@ digraph
 check_is_useless('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   1 -> 2 [label = a]
   2 -> 1 [label = a]
@@ -319,7 +319,7 @@ check_trim(minab, minab)
 check_trim('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   1 -> F1
   1 -> 2 [label = a]
@@ -348,7 +348,7 @@ digraph
 check_trim('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = a]
   0 -> 4 [label = a]
   1 -> F1

@@ -33,7 +33,7 @@ digraph
 
 for ls in ["lal", "lan", "law"]:
   for ws in ["b", "z"]:
-    check_context(True, a, ls + "_char(ab)_" + ws)
+    check_context(True, a, ls + "_char(ab), " + ws)
 
 a = '''
 digraph
@@ -47,13 +47,13 @@ digraph
 
 for ls in ["lan", "law"]:
   for ws in ["b", "z"]:
-    check_context(False, a, ls + "_char(ab)_" + ws)
+    check_context(False, a, ls + "_char(ab), " + ws)
 
 # Tuples of lan
 a = '''
 digraph
 {
-  vcsn_context = "lat<lan_char(ab), lan_char(xy)>_b"
+  vcsn_context = "lat<lan_char(ab), lan_char(xy)>, b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -67,7 +67,7 @@ check(True, a)
 a = '''
 digraph
 {
-  vcsn_context = "lat<lan_char(ab), lan_char(xy)>_b"
+  vcsn_context = "lat<lan_char(ab), lan_char(xy)>, b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -83,7 +83,7 @@ check(False, a)
 a = '''
 digraph
 {
-  vcsn_context = "lat<lal_char(ab), lan_char(xy)>_b"
+  vcsn_context = "lat<lal_char(ab), lan_char(xy)>, b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]

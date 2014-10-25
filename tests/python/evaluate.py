@@ -11,13 +11,13 @@ def check(aut, word, exp):
     CHECK_EQ(exp, aut(word))
 
 ## ------------ ##
-## lal_char_z.  ##
+## lal_char, z.  ##
 ## ------------ ##
-ctx = vcsn.context("lal_char(ab)_z")
+ctx = vcsn.context("lal_char(ab), z")
 simple = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   node [shape = circle]
   {
@@ -42,7 +42,7 @@ check(simple, 'a',     '2')
 initial_weight = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   node [shape = circle]
   {
@@ -61,11 +61,11 @@ check(initial_weight, 'a',      '4')
 check(initial_weight, 'abab',   '8')
 check(initial_weight, 'aabab', '12')
 
-ctx = vcsn.context("lal_char(abc)_z")
+ctx = vcsn.context("lal_char(abc), z")
 more_letters = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   node [shape = circle]
   {
@@ -88,7 +88,7 @@ check(more_letters, 'caa', '6')
 prod = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   node [shape = circle]
   {
@@ -108,11 +108,11 @@ digraph
 ''')
 check(prod, "aabab", '12')
 
-ctx = vcsn.context("lal_char(abc)_z")
+ctx = vcsn.context("lal_char(abc), z")
 cmplex = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   node [shape = circle]
   {
@@ -139,7 +139,7 @@ check(cmplex, 'aabab', '36')
 ## lal_char_zmin.  ##
 ## --------------- ##
 
-ctx = vcsn.context('lal_char(abc)_zmin')
+ctx = vcsn.context('lal_char(abc), zmin')
 a = ctx.ratexp('a').standard()
 check(a, '',   'oo')
 check(a, 'a',  '0')

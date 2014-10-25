@@ -18,7 +18,7 @@ ctx = vcsn.context('lal_char(a-z), z')
 
 # Check that ':', which is used as a separator by info, is also
 # properly treated as a letter.
-check(vcsn.context('lal_char(:a-z)_z').ratexp("a+a':'").standard(),
+check(vcsn.context('lal_char(:a-z), z').ratexp("a+a':'").standard(),
       {'is ambiguous': False,
        'is codeterministic': False,
        'is complete': False,
@@ -75,7 +75,7 @@ check(ctx.ratexp("<1>a+(<2>b<3>*<4>)<5>").standard(),
        'type': 'mutable_automaton<lal_char(abcdefghijklmnopqrstuvwxyz), z>'})
 
 # Test what happens with "N/A".
-check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
+check(vcsn.context('law_char(ab), b').ratexp('a(a+b)*').standard(),
       {'is ambiguous': 'N/A',
        'is codeterministic': 'N/A',
        'is complete': 'N/A',
@@ -108,7 +108,7 @@ check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
 ## ratexp.info.  ##
 ## ------------- ##
 
-check(vcsn.context('lal_char(abc)_b').ratexp('abc'),
+check(vcsn.context('lal_char(abc), b').ratexp('abc'),
       {'type': 'ratexpset<lal_char(abc), b>',
        'size': 5,
        'sum': 0,
@@ -123,7 +123,7 @@ check(vcsn.context('lal_char(abc)_b').ratexp('abc'),
        'lweight': 0,
        'rweight': 0})
 
-check(vcsn.context('lal_char(abc)_b').ratexp('\e+bc*'),
+check(vcsn.context('lal_char(abc), b').ratexp('\e+bc*'),
       {'type': 'ratexpset<lal_char(abc), b>',
        'size': 6,
        'sum': 1,
@@ -138,7 +138,7 @@ check(vcsn.context('lal_char(abc)_b').ratexp('\e+bc*'),
        'lweight': 0,
        'rweight': 0})
 
-check(vcsn.context('lal_char(abc)_z').ratexp('<2>a<3>'),
+check(vcsn.context('lal_char(abc), z').ratexp('<2>a<3>'),
       {'type': 'ratexpset<lal_char(abc), z>',
        'size': 2,
        'sum': 0,
@@ -153,7 +153,7 @@ check(vcsn.context('lal_char(abc)_z').ratexp('<2>a<3>'),
        'lweight': 1,
        'rweight': 0})
 
-check(vcsn.context('lal_char(abc)_z').ratexp('<2>(a+b)<3>'),
+check(vcsn.context('lal_char(abc), z').ratexp('<2>(a+b)<3>'),
       {'type': 'ratexpset<lal_char(abc), z>',
        'size': 5,
        'sum': 1,

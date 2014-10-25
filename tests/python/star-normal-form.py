@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(ab)_b')
+ctx = vcsn.context('lal_char(ab), b')
 
 # check INPUT OUTPUT
 # ------------------
@@ -32,18 +32,18 @@ XFAIL(lambda: ctx.ratexp("a*&b*").star_normal_form())
 
 ## FIXME: This is crap, it does not work when there are weights!!!
 
-ctx = vcsn.context('lal_char(ab)_z')
+ctx = vcsn.context('lal_char(ab), z')
 fail('\e*')
 fail('a**')
 check('(a+b)*', '(a+b)*')
 
-ctx = vcsn.context('lal_char(ab)_q')
+ctx = vcsn.context('lal_char(ab), q')
 fail('\e*')
 check('(<1/2>\e+a)*', '<2>a*')
 fail('(<1/2>\e+a)**')
 check('(<1/6>a*<1/3>b*)*', '<18/17>(<1/6>a+<1/3>b)*')
 check('(<1/6>a*+<1/3>b*)*', '<2>(<1/6>a+<1/3>b)*')
 
-ctx = vcsn.context('lal_char(ab)_ratexpset<lal_char(wxyz)_z>')
+ctx = vcsn.context('lal_char(ab), ratexpset<lal_char(wxyz), z>')
 check('<w>(<x>\e+<y>a)*<z>', '<wx*>(<y>a)*<z>')
 check('<w>(<x>\e+<y>a)*<z>*', '<(wx*z)*>(<wyz>a)*')

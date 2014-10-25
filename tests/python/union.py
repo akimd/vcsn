@@ -3,8 +3,8 @@
 import vcsn
 from test import *
 
-ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
+ab = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc), b').ratexp('(b+c)*').standard()
 CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab | bc)
 
 ## ------------ ##
@@ -15,7 +15,7 @@ CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab | bc)
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -47,7 +47,7 @@ digraph
 b = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -69,7 +69,7 @@ digraph
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -107,12 +107,12 @@ digraph
 CHECK_EQ(exp, a | b)
 
 # Check union of contexts.
-a1 = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
-a2 = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
+a1 = vcsn.context('lal_char(a), ratexpset<lal_char(x), b>').ratexp('<x>a*').standard()
+a2 = vcsn.context('lal_char(b), ratexpset<lal_char(y), b>').ratexp('<y>b*').standard()
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
+  vcsn_context = "lal_char(ab), ratexpset<lal_char(xy), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -155,16 +155,16 @@ def check(exp, eff):
     CHECK_EQ(exp, str(eff.ratexp()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
+a1 = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>') \
          .ratexp('<u>a').derived_term()
-a2 = vcsn.context('lal_char(b)_b').ratexp('b*').derived_term()
+a2 = vcsn.context('lal_char(b), b').ratexp('b*').derived_term()
 check('<u>a+b*', a1|a2)
 check('<u>a+b*', a2|a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
-q = vcsn.context('lal_char(b)_q').ratexp('<1/3>b').derived_term()
-r = vcsn.context('lal_char(c)_r').ratexp('<.4>c') .derived_term()
+z = vcsn.context('lal_char(a), z').ratexp('<2>a')  .derived_term()
+q = vcsn.context('lal_char(b), q').ratexp('<1/3>b').derived_term()
+r = vcsn.context('lal_char(c), r').ratexp('<.4>c') .derived_term()
 
 check('<2>a+<1/3>b', z|q)
 check('<1/3>b+<2>a', q|z)

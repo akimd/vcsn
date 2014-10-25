@@ -30,12 +30,12 @@ def check_to_lal(i, o):
 
 
 ## ------------------------------------------- ##
-## law_char_r: check the computation of star.  ##
+## law_char, r: check the computation of star.  ##
 ## ------------------------------------------- ##
 
 check(r'''digraph
 {
-  vcsn_context = "law_char(ab)_r"
+  vcsn_context = "law_char(ab), r"
   I -> 0 -> F
   0 -> 0 [label = "<.5>\\e"]
 }''','''digraph
@@ -64,7 +64,7 @@ check(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -126,7 +126,7 @@ check(r'''digraph
 
 check_fail(r'''digraph
 {
-  vcsn_context = "law_char(ab)_z"
+  vcsn_context = "law_char(ab), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -158,7 +158,7 @@ check_fail(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "law_char(ab)_z"
+  vcsn_context = "law_char(ab), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -220,7 +220,7 @@ check(r'''digraph
 
 check_fail(r'''digraph
 {
-  vcsn_context = "law_char(ab)_zmin"
+  vcsn_context = "law_char(ab), zmin"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -251,7 +251,7 @@ check_fail(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "lan_char(z)_ratexpset<lal_char(abcd)_z>"
+  vcsn_context = "lan_char(z), ratexpset<lal_char(abcd), z>"
   rankdir = LR
   node [shape = circle]
   {
@@ -299,7 +299,7 @@ check(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "lan_char(z)_ratexpset<lal_char(abcdefgh)_z>"
+  vcsn_context = "lan_char(z), ratexpset<lal_char(abcdefgh), z>"
   rankdir = LR
   node [shape = circle]
   {
@@ -351,7 +351,7 @@ check(r'''digraph
 
 check_to_lal(r'''digraph
 {
-  vcsn_context = "lan_char(ab)_b"
+  vcsn_context = "lan_char(ab), b"
   I -> 0
   0 -> 1 [label = "\\e"]
   1 -> 0 [label = "\\e"]
@@ -378,12 +378,12 @@ check_to_lal(r'''digraph
 }''')
 
 ## --------------------------- ##
-## lat<lan_char, lan_char>_b.  ##
+## lat<lan_char, lan_char>, b.  ##
 ## --------------------------- ##
 
 check(r'''digraph
 {
-  vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
+  vcsn_context = "lat<lan_char(ab),lan_char(xy)>, b"
   I0 -> 0
   0 -> 1 [label = "(\\e,\\e)"]
   0 -> 1 [label = "(a,x)"]
@@ -420,12 +420,12 @@ check(r'''digraph
 
 
 ## --------------------------- ##
-## lat<lan_char, lal_char>_b.  ##
+## lat<lan_char, lal_char>, b.  ##
 ## --------------------------- ##
 
 check(r'''digraph
 {
-  vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
+  vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
   I0 -> 0
   0 -> 1 [label = "(a,x)"]
   0 -> 2 [label = "(b,y)"]
@@ -460,13 +460,13 @@ check(r'''digraph
 
 
 ## ---------------------------------------------------------------- ##
-## Check that lat<lan_char, lal_char>_b is not ruined by the lan to ##
+## Check that lat<lan_char, lal_char>, b is not ruined by the lan to ##
 ## lal transition.                                                  ##
 ## ---------------------------------------------------------------- ##
 
 check_to_lal(r'''digraph
 {
-  vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
+  vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
   I0 -> 0
   0 -> 1 [label = "(a,x)"]
   0 -> 2 [label = "(b,y)"]
@@ -503,7 +503,7 @@ check_to_lal(r'''digraph
 ## Forward vs. backward.  ##
 ## ---------------------- ##
 
-a = vcsn.context('lan_char(ab)_b').ratexp('a*').thompson()
+a = vcsn.context('lan_char(ab), b').ratexp('a*').thompson()
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "lal_char(ab), b"

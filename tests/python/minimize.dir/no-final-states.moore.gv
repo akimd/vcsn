@@ -1,5 +1,5 @@
 digraph
 {
-  vcsn_context = "lal_char(abcde)_b"
+  vcsn_context = "lal_char(abcde), b"
   rankdir = LR
 }

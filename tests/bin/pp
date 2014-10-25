@@ -1,0 +1,10 @@
+#! /bin/sh
+
+for i
+do
+  if vcsn cat -f "$i" >"$i.new"; then
+    move-if-change -v -c "$i.new" "$i"
+  else
+    rm "$i.new"
+  fi
+done

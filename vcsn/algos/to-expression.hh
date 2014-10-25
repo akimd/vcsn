@@ -130,9 +130,9 @@ namespace vcsn
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_ratexps>
     {
-      // FIXME: ratexpset<lal_char(a-c)_z>_q for instance cannot work,
+      // FIXME: ratexpset<lal_char(a-c), z>_q for instance cannot work,
       // because we need to move the q weights inside the
-      // lal_char(a-c)_z ratexps, which obviously not possible.  So we
+      // lal_char(a-c), z ratexps, which obviously not possible.  So we
       // need to require that there is a subtype relationship between
       // the weightset and the weightset of the ratexp.
       //

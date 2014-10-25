@@ -77,7 +77,7 @@ namespace vcsn
   DEFINE::make(std::istream& is)
     -> ratexpset<Context>
   {
-    // name is, for instance, "ratexpset<lal_char(abcd)_z>(trivial)".
+    // name is, for instance, "ratexpset<lal_char(abcd), z>(trivial)".
     eat(is, "ratexpset<");
     auto ctx = Context::make(is);
     eat(is, '>');

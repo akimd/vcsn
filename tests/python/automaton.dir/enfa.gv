@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_b"
+  vcsn_context = "lan<lal_char(ab)>, b"
   rankdir = LR
   {
     node [shape = point, width = 0]

@@ -3,8 +3,8 @@
 import vcsn
 from test import *
 
-lal = vcsn.context('lal_char(abc)_r')
-lan = vcsn.context('lan_char(abc)_r')
+lal = vcsn.context('lal_char(abc), r')
+lan = vcsn.context('lan_char(abc), r')
 
 # check(OUTPUT, RAT_EXP)
 # ----------------------

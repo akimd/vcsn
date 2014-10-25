@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-z = vcsn.context('lal_char(01)_z')
+z = vcsn.context('lal_char(01), z')
 
 # FIXME: check that only the accessible part is kept.  Start from
 # binary.gv, modified with an inaccessible state.

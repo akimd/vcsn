@@ -14,7 +14,7 @@ def check(expect, i):
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -29,7 +29,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 0 [label = "a"]
@@ -43,7 +43,7 @@ digraph
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -58,7 +58,7 @@ digraph
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   I0 -> 0
   0 -> 1 [label = "b"]
   0 -> 2 [label = "a"]
@@ -71,7 +71,7 @@ digraph
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
 }
 '''))
 
@@ -79,7 +79,7 @@ digraph
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   0 -> 1 [label = "a"]
 }
 '''))
@@ -88,7 +88,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   I0 -> 0
   I1 -> 1
   0 -> 2 [label = "a"]
@@ -101,7 +101,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   I0 -> 0
   1 -> 2 [label = "a"]
   1 -> 3 [label = "a"]

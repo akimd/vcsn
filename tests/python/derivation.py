@@ -5,7 +5,7 @@ from __future__ import print_function
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
+ctx = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
 
 def check_derived_term(r, exp, algo):
     CHECK_EQ(open(medir + '/' + exp + '.gv').read().strip(),
@@ -147,7 +147,7 @@ check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
 # EAT, Example 4.3.
 E1='(<1/6>a*+<1/3>b*)*'
 # E1 typed.
-E1t = vcsn.context('lal_char(ab)_q').ratexp(E1)
+E1t = vcsn.context('lal_char(ab), q').ratexp(E1)
 check(E1t,  'a',  "<1/3>a*"+E1)
 check(E1t,  'b',  "<2/3>b*"+E1)
 check(E1t, 'aa',  "<4/9>a*"+E1)
@@ -205,7 +205,7 @@ check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 ## --------------------- ##
 
 # On The Number Of Broken Derived Terms Of A Rational Expression.
-ctx = vcsn.context('lal_char(ab)_b')
+ctx = vcsn.context('lal_char(ab), b')
 F2 = 'a*+b*'
 E2 = "({F2})(a({F2}))".format(F2=F2)
 E2t = ctx.ratexp(E2)
@@ -233,6 +233,6 @@ check_br(E2t, 'bb', "b*a({})".format(F2))
 check_bdt(E2t, 'e2-dt-breaking')
 
 # Figure 3.
-fig3 = vcsn.context('lal_char(abcd)_b').ratexp('a(b+c+d)')
+fig3 = vcsn.context('lal_char(abcd), b').ratexp('a(b+c+d)')
 check_dt(fig3, 'h3-dt')
 check_bdt(fig3, 'h3-dt-breaking')

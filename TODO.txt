@@ -85,7 +85,7 @@ not show the failed assertion.
 ** shortest
 Loops forever:
 
-  $ VCSN_ORIGINS=1 vcsn standard -C 'lal_char(a)_z' -Ee 'a*+<-1>a*)' \
+  $ VCSN_ORIGINS=1 vcsn standard -C 'lal_char(a), z' -Ee 'a*+<-1>a*)' \
      | vcsn shortest -f-  1
 
 We can check that we reach the same state, but can we have periodic
@@ -94,8 +94,8 @@ behaviors?
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 
-  $ vcsn derived-term -C 'lal_char(ab)_b' -e 'a' -o a.gv
-  $ vcsn derived-term -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+  $ vcsn derived-term -C 'lal_char(ab), b' -e 'a' -o a.gv
+  $ vcsn derived-term -C 'lal_char(ab)_ratexpset<lal_char(uv), b>' \
                       -e '(<u>a+<v>b)*' -o ab.gv
   $ vcsn infiltration -f ab.gv a.gv | vcsn shortest -f - 4
   Assertion failed: (!has_transition(src, dst, l)), function new_transition, file ../../vcsn/core/mutable-automaton.hh, line 442.
@@ -109,7 +109,7 @@ Uncomment the tests in infiltration.chk (there are two places).
 ** eliminate-states
 This won't work:
 
-  vcsn.context('ratexpset<lal_char(abc)_b>_ratexpset<lal_char(uv)_b>')
+  vcsn.context('ratexpset<lal_char(abc), b>_ratexpset<lal_char(uv), b>')
 
 that's because we need to multiply weights of different natures, which is
 something already solved in product (using conv).  See also the previous

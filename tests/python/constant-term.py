@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
+ctx = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
 
 # check WEIGHT RAT-EXP
 # --------------------

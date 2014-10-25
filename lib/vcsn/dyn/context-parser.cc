@@ -42,34 +42,35 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::any_()
     {
       std::string w = word();
-      if (w == "blind"
-          || w == "determinized"
-          || w == "detweighted"
-          || w == "mutable"
-          || w == "pair"
-          || w == "partition"
-          || w == "permutation"
-          || w == "product"
-          || w == "ratexp"
-          || w == "transpose"
-          || w == "tuple")
+      if (w == "blind_automaton"
+          || w == "determinized_automaton"
+          || w == "detweighted_automaton"
+          || w == "mutable_automaton"
+          || w == "pair_automaton"
+          || w == "partition_automaton"
+          || w == "permutation_automaton"
+          || w == "product_automaton"
+          || w == "ratexp_automaton"
+          || w == "transpose_automaton"
+          || w == "tuple_automaton")
         return automaton_(w);
-      else if (w == "lal"
+      else if (w == "lal_char"
                || w == "lan"
+               || w == "lan_char"
                || w == "lao"
-               || w == "law"
+               || w == "law_char"
                || w == "ratexpset"
                || w == "seriesset")
         {
           std::shared_ptr<ast_node> res = labelset_(w);
-          if (is_.peek() == '_' || is_.peek() == '-' || is_.peek() == ',')
+          if (is_.peek() == ',')
             return context_(res);
           return res;
         }
       else if (w == "lat")
         {
           std::shared_ptr<tupleset> res = tupleset_();
-          if (is_.peek() == '_' || is_.peek() == '-' || is_.peek() == ',')
+          if (is_.peek() == ',')
             return context_(res);
           return res;
         }
@@ -89,9 +90,9 @@ namespace vcsn
           return res;
         }
       // std::integral_constant<unsigned, 2>.
-      else if (w == "std::integral")
+      else if (w == "std::integral_constant")
         {
-          w += eat(is_, "_constant<");
+          w += eat(is_, '<');
           w += word();
           w += eat(is_, ',');
           w += word();
@@ -125,10 +126,11 @@ namespace vcsn
         return ratexpset_();
       else if (w == "seriesset")
         return ratexpset_series_();
-      else if (w == "lal"
+      else if (w == "lal_char"
                || w == "lan"
+               || w == "lan_char"
                || w == "lao"
-               || w == "law")
+               || w == "law_char")
         return labelset_(w);
       else if (w == "b"
                || w == "f2"
@@ -149,7 +151,7 @@ namespace vcsn
       while (is_.peek() == ' ')
         is_.get();
       while ((c = is_.get()) != EOF)
-        if (c == '<' || c == ',' || c == '_' || c == '>' || c == '-')
+        if (c == '<' || c == ',' || c == '>' || c == '(')
           {
             is_.unget();
             break;
@@ -162,15 +164,16 @@ namespace vcsn
     std::string context_parser::alphabet_()
     {
       std::string res;
-      if (is_.peek() != '(')
-        return res;
-      res += '(';
-      int c = is_.get();
-      while ((c = is_.get()) != EOF)
+      if (is_.peek() == '(')
         {
-          res += c;
-          if (c == ')')
-            break;
+          res += '(';
+          int c = is_.get();
+          while ((c = is_.get()) != EOF)
+            {
+              res += c;
+              if (c == ')')
+                break;
+            }
         }
       return res;
     }
@@ -183,14 +186,9 @@ namespace vcsn
     std::shared_ptr<context>
     context_parser::context_(const std::shared_ptr<ast_node>& ls)
     {
-      if (is_.peek() == '_')
-        eat(is_, '_');
-      else
-        {
-          eat(is_, ',');
-          while (isspace(is_.peek()))
-            is_.ignore();
-        }
+      eat(is_, ',');
+      while (isspace(is_.peek()))
+        is_.ignore();
       return std::make_shared<context>(ls, weightset_());
     }
 
@@ -208,36 +206,26 @@ namespace vcsn
     std::shared_ptr<ast_node>
     context_parser::labelset_(const std::string& kind)
     {
-      if (kind == "lal" || kind == "law")
-        {
-          eat(is_, "_char");
-          if (kind == "lal")
-            return std::make_shared<letterset>(alphabet_());
-          else if (kind == "law")
-            return std::make_shared<wordset>(alphabet_());
-        }
-      else if (kind == "lao")
-        return std::make_shared<oneset>();
+      if (kind == "lal_char")
+        return std::make_shared<letterset>(alphabet_());
       else if (kind == "lan")
         {
-          if (is_.peek() == '_')
-            {
-              eat(is_, "_char");
-              return std::make_shared<nullableset>(std::make_shared<letterset>
-                                                   (alphabet_()));
-            }
-          else
-            {
-              eat(is_, '<');
-              auto res = labelset_();
-              if (!res->has_one())
-                res = std::make_shared<nullableset>(res);
-              eat(is_, '>');
-              return res;
-            }
+          eat(is_, '<');
+          auto res = labelset_();
+          if (!res->has_one())
+            res = std::make_shared<nullableset>(res);
+          eat(is_, '>');
+          return res;
         }
+      else if (kind == "lan_char")
+        return std::make_shared<nullableset>(std::make_shared<letterset>
+                                             (alphabet_()));
+      else if (kind == "lao")
+        return std::make_shared<oneset>();
       else if (kind == "lat")
         return tupleset_();
+      else if (kind == "law_char")
+        return std::make_shared<wordset>(alphabet_());
       else if (kind == "ratexpset")
         return ratexpset_();
       else if (kind == "seriesset")
@@ -273,42 +261,41 @@ namespace vcsn
     {
       std::shared_ptr<automaton> res = nullptr;
       // blind_automaton<TapeNum, Aut>.
-      if (prefix == "blind")
+      if (prefix == "blind_automaton")
         {
-          prefix += eat(is_, "_automaton");
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
                                             std::make_shared<other>(word()));
           eat(is_, ',');
           res->get_content().emplace_back(automaton_(word()));
+          eat(is_, '>');
         }
       // xxx_automaton<Aut>.
-      else if (prefix == "determinized"
-               || prefix == "detweighted"
-               || prefix == "pair"
-               || prefix == "partition"
-               || prefix == "permutation"
-               || prefix == "ratexp"
-               || prefix == "transpose")
+      else if (prefix == "determinized_automaton"
+               || prefix == "detweighted_automaton"
+               || prefix == "pair_automaton"
+               || prefix == "partition_automaton"
+               || prefix == "permutation_automaton"
+               || prefix == "ratexp_automaton"
+               || prefix == "transpose_automaton")
         {
-          prefix += eat(is_, "_automaton");
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
                                             automaton_(word()));
+          eat(is_, '>');
         }
       // mutable_automaton<Context>.
-      else if (prefix == "mutable")
+      else if (prefix == "mutable_automaton")
         {
-          prefix += eat(is_, "_automaton");
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
                                             context_());
+          eat(is_, '>');
         }
       // xxx_automaton<Aut...>.
-      else if (prefix == "product"
-               || prefix == "tuple")
+      else if (prefix == "product_automaton"
+               || prefix == "tuple_automaton")
         {
-          prefix += eat(is_, "_automaton");
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
                                             automaton_(word()));
@@ -317,10 +304,10 @@ namespace vcsn
               eat(is_, ',');
               res->get_content().emplace_back(automaton_(word()));
             }
+          eat(is_, '>');
         }
       else
         raise("invalid automaton name: ", str_escape(prefix));
-      eat(is_, '>');
       return res;
     }
 

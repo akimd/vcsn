@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-b = vcsn.context('lal_char(abcd)_b')
+b = vcsn.context('lal_char(abcd), b')
 
 medir = srcdir + '/tests/python/product.dir'
 
@@ -165,9 +165,9 @@ CHECK_EQ('''digraph
 ## --------------------- ##
 
 # RatE and B, in both directions.
-ab = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+ab = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
     .ratexp('(<u>a+<v>b)*').standard()
-a = vcsn.context('lal_char(ab)_b').ratexp('a').standard()
+a = vcsn.context('lal_char(ab), b').ratexp('a').standard()
 # FIXME: ABORT
 ### CHECK_EQ('<u+\e>a + <uu+uu+u+u>aa + <uv+v>ab + <vu+v>ba',
 ###     str(ab.infiltration(a).shortest(4)))
@@ -179,9 +179,9 @@ a = vcsn.context('lal_char(ab)_b').ratexp('a').standard()
 ## Non-commutative.  ##
 ## ----------------- ##
 
-uavb = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+uavb = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
     .ratexp('<u>a<v>b').standard()
-xayb = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
+xayb = vcsn.context('lal_char(ab), ratexpset<lal_char(xy), b>') \
     .ratexp('<x>a<y>b').standard()
 CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
     str(uavb.infiltration(xayb).enumerate(4)))
@@ -191,7 +191,7 @@ CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb
 ## n-ary: not yet implemented for infiltration.  ##
 ## --------------------------------------------- ##
 
-ctx = vcsn.context('lal_char(x)_seriesset<lal_char(abcd)_b>')
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()

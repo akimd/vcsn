@@ -3,14 +3,14 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(ab)_ratexpset<lal_char(xyz)_b>')
+ctx = vcsn.context('lal_char(ab), ratexpset<lal_char(xyz), b>')
 
 ## ---------- ##
 ## automata.  ##
 ## ---------- ##
 
 # Standard automata.
-q = vcsn.context('lal_char(ab)_q')
+q = vcsn.context('lal_char(ab), q')
 # This automaton is standard.
 r = q.ratexp('\e+[ab]b[ab]*')
 

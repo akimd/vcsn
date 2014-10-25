@@ -10,16 +10,16 @@ labels = 'letters'
 # The current weightset (argument for -w).
 ws = 'b';
 # The current context.
-name = 'lal_char(abcd)_b'
+name = 'lal_char(abcd), b'
 ctx = vcsn.context(name)
 
 # Compute the name of the context.
 contexts = {
-  'b'  : "law_char(abcd)_b",
-  'br' : "law_char(abcd)_ratexpset<law_char(efgh)_b>",
-  'z'  : "law_char(abcd)_z",
-  'zr' : "law_char(abcd)_ratexpset<law_char(efgh)_z>",
-  'zrr': "law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>"
+  'b'  : "law_char(abcd), b",
+  'br' : "law_char(abcd), ratexpset<law_char(efgh), b>",
+  'z'  : "law_char(abcd), z",
+  'zr' : "law_char(abcd), ratexpset<law_char(efgh), z>",
+  'zrr': "law_char(abcd), ratexpset<law_char(efgh), ratexpset<law_char(xyz), z>>"
 }
 
 def context_update():

@@ -3,12 +3,12 @@
 import vcsn
 from test import *
 
-ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*')
-bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*')
+ab = vcsn.context('lal_char(ab), b').ratexp('(a+b)*')
+bc = vcsn.context('lal_char(bc), b').ratexp('(b+c)*')
 result = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -53,12 +53,12 @@ digraph
 ''')
 CHECK_EQ(result, ab.standard().concatenate(bc.standard()))
 
-CHECK_EQ(vcsn.context('lal_char(abc)_b').ratexp('[ab]*[bc]*'), ab * bc)
+CHECK_EQ(vcsn.context('lal_char(abc), b').ratexp('[ab]*[bc]*'), ab * bc)
 
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -82,7 +82,7 @@ digraph
 CHECK_EQ(vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -118,16 +118,16 @@ def check(exp, eff):
     CHECK_EQ(exp, str(eff.ratexp()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
+a1 = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>') \
          .ratexp('<u>a').derived_term()
-a2 = vcsn.context('lal_char(b)_b').ratexp('b*').standard()
+a2 = vcsn.context('lal_char(b), b').ratexp('b*').standard()
 check('<u>a+<u>abb*', a1*a2)
 check('<u>a+bb*<u>a', a2*a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
-q = vcsn.context('lal_char(b)_q').ratexp('<1/3>b').derived_term()
-r = vcsn.context('lal_char(c)_r').ratexp('<.4>c') .derived_term()
+z = vcsn.context('lal_char(a), z').ratexp('<2>a')  .derived_term()
+q = vcsn.context('lal_char(b), q').ratexp('<1/3>b').derived_term()
+r = vcsn.context('lal_char(c), r').ratexp('<.4>c') .derived_term()
 
 check('<2>a<1/3>b', z*q)
 check('<1/3>b<2>a', q*z)
@@ -144,9 +144,9 @@ check('<0.4>c<0.333333>b', r*q)
 ## ratexp * ratexp.  ##
 ## ----------------- ##
 
-br = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
+br = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>') \
          .ratexp('<u>a')
-z = vcsn.context('lal_char(b)_z').ratexp('<2>b')
-q = vcsn.context('lal_char(c)_q').ratexp('<1/3>c')
-r = vcsn.context('lal_char(d)_r').ratexp('<.4>d')
+z = vcsn.context('lal_char(b), z').ratexp('<2>b')
+q = vcsn.context('lal_char(c), q').ratexp('<1/3>c')
+r = vcsn.context('lal_char(d), r').ratexp('<.4>d')
 CHECK_EQ('<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))

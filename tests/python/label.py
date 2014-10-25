@@ -14,10 +14,10 @@ def check(ctx, w, output):
     w = ctx.label(w)
     CHECK_EQ(output, str(w))
 
-check('lal_char(a)_b', 'a', 'a')
-check('law_char(a)_b', 'a', 'a')
-check('law_char(ab)_b', 'ababab', 'ababab')
+check('lal_char(a), b', 'a', 'a')
+check('law_char(a), b', 'a', 'a')
+check('law_char(ab), b', 'ababab', 'ababab')
 
 
 # Check that we don't ignore trailing characters.
-XFAIL(lambda: vcsn.context('law_char(ab)_b').label('ab*'))
+XFAIL(lambda: vcsn.context('law_char(ab), b').label('ab*'))

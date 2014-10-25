@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abcd)_b")
+ctx = vcsn.context("lal_char(abcd), b")
 
 ## ------------ ##
 ## Complement.  ##
@@ -117,7 +117,7 @@ check_transposition('ab')
 def xfail(r):
     XFAIL(lambda: ctx.ratexp(r))
 
-ctx = vcsn.context('lal_char(abc)_b')
+ctx = vcsn.context('lal_char(abc), b')
 xfail('')
 xfail('<2>a')
 xfail('x')
@@ -129,9 +129,9 @@ xfail('&a')
 xfail('a&')
 xfail('\a')
 
-ctx = vcsn.context('lal_char(abc)_z')
-xfail('(?@lal_char(abc)_b)<2>a')
-xfail('(?@lal_char(abc)_b')
+ctx = vcsn.context('lal_char(abc), z')
+xfail('(?@lal_char(abc), b)<2>a')
+xfail('(?@lal_char(abc), b')
 xfail('(?@foobar)foo')
 xfail('<2>')
 xfail('a<2')
@@ -146,22 +146,22 @@ def check_format(ctx, r, text, latex):
     CHECK_EQ(text, ctx.ratexp(r).format('text'))
     CHECK_EQ(latex, ctx.ratexp(r).format('latex'))
 
-check_format('lal_char(abcd)_b',
+check_format('lal_char(abcd), b',
             "abcd",
             "abcd",
             "a \\, b \\, c \\, d")
 
-check_format('lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>',
+check_format('lal_char(abc), ratexpset<lal_char(def), ratexpset<lal_char(xyz), z>>',
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
              r' \left\langle  \left\langle  \left\langle 42 \right\rangle \,x \right\rangle \,d \right\rangle \,a +  \left\langle  \left\langle  \left\langle 51 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Check that we do support digits as letters.
-check_format('lal_char(0123)_b',
+check_format('lal_char(0123), b',
              "0123",
              "0123",
              "0 \\, 1 \\, 2 \\, 3")
-check_format('lal_char(0123)_z',
+check_format('lal_char(0123), z',
              "<0123>0123",
              "<123>0123",
              r' \left\langle 123 \right\rangle \,0 \, 1 \, 2 \, 3')
@@ -173,7 +173,7 @@ def check(ctx, s1, exp):
     eff = ctx.series(s1)
     CHECK_EQ(exp, eff.format('text'))
 
-ctx = vcsn.context("lal_char(abcd)_z")
+ctx = vcsn.context("lal_char(abcd), z")
 check(ctx, 'a+b', 'a+b')
 check(ctx, '(a+a)*', '(<2>a)*')
 
@@ -183,7 +183,7 @@ check(ctx, '(<5>a)(b)(c*)', '<5>(abc*)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 
-ctx = vcsn.context("law_char(abcd)_z")
+ctx = vcsn.context("law_char(abcd), z")
 
 check(ctx, '(a<5>)b', '<5>(ab)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')

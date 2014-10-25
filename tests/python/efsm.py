@@ -59,30 +59,30 @@ for f in ["lal-char-z", "lat-z"]:
   check(a, f + '.efsm')
 
 # Check the case of an automaton without any transition.
-a = vcsn.context('lal_char()_b').ratexp('\e').standard()
+a = vcsn.context('lal_char(), b').ratexp('\e').standard()
 check(a, 'one.efsm')
 
 # Check the support of spontaneous transitions.
 # Note that "sort" is critical here, otherwise the transitions
 # are not issued in the state-order, so when we read back, the
 # states numbers are different.
-a = vcsn.context('lan_char(ab)_b').ratexp('ab*').thompson().sort().strip()
+a = vcsn.context('lan_char(ab), b').ratexp('ab*').thompson().sort().strip()
 check(a, 'abs.efsm')
 
-# Using law_char(a-z)_b is tempting, but when reading back, we take
+# Using law_char(a-z), b is tempting, but when reading back, we take
 # the smallest possible alphabet.
-a = vcsn.context('law_char(acdeghilnprt)_b')\
+a = vcsn.context('law_char(acdeghilnprt), b')\
       .ratexp('(grand)*(parent+child)').thompson().sort().strip()
 check(a, 'str.efsm')
 
 # A transducer that looks like an acceptor when looking at the symbol
 # numbers.
-a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>_b')\
+a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>, b')\
       .ratexp("('(a,x)'+'(b,y)'+'(c,z)')*").standard().sort().strip()
 check(a, 'a2x.efsm')
 
 # A transducer that cannot be seen as an acceptor.
-a = vcsn.context('lat<lal_char(a),lal_char(xyz)>_b')\
+a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
       .ratexp("('(a,x)'+'(a,y)'+'(a,z)')*").standard().sort().strip()
 check(a, 'a2xyz.efsm')
 

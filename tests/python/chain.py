@@ -6,7 +6,7 @@ from test import *
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -27,7 +27,7 @@ digraph
 CHECK_EQ(a.chain(0), vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -46,7 +46,7 @@ digraph
 CHECK_EQ(a.chain(5), vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -76,7 +76,7 @@ digraph
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -101,7 +101,7 @@ digraph
 CHECK_EQ(a.chain(3), vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -139,7 +139,7 @@ digraph
 ## chain on ratexps vs on automata.  ##
 ## --------------------------------- ##
 
-ctx = vcsn.context('lal_char(ab)_z')
+ctx = vcsn.context('lal_char(ab), z')
 def check(r, *args):
     "Check that standard and chain commute."
     r = ctx.ratexp(r)

@@ -10,7 +10,7 @@ def push_weights_check(i, o, words):
     CHECK_EQ(o.eval(w), i1.eval(w))
 
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_q"
+  vcsn_context = "lal_char(abc), q"
   I0 -> 0
   0 -> 1 [label = "<2>a"]
   1 -> 2 [label = "<3>b"]
@@ -20,7 +20,7 @@ i = vcsn.automaton('''digraph {
   4 -> F4
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_q"
+  vcsn_context = "lal_char(abc), q"
   I0 -> 0 [label = "<92>"]
   0 -> 1 [label = "a"]
   1 -> 2 [label = "<15/23>b"]
@@ -33,7 +33,7 @@ words = ["abcb", "ac", "abc", "bc"]
 push_weights_check(i, o, words)
 
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(a-f)_zmin"
+  vcsn_context = "lal_char(a-f), zmin"
   I0 -> 0
   0 -> 1 [label = "<0>a, <1>b, <4>c"]
   0 -> 2 [label = "<0>d,<1>e"]
@@ -42,7 +42,7 @@ i = vcsn.automaton('''digraph {
   3 -> F3
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(a-f)_zmin"
+  vcsn_context = "lal_char(a-f), zmin"
   I0 -> 0
   0 -> 1 [label = "<0>a, <1>b, <4>c"]
   0 -> 2 [label = "<10>d, <11>e"]
@@ -54,7 +54,7 @@ words = ["a", "af", "bde", "bc", "ca"]
 push_weights_check(i, o, words)
 
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_q"
+  vcsn_context = "lal_char(abc), q"
   I0 -> 0
   0 -> 1 [label = "<5>a"]
   1 -> 2 [label = "<2>b"]
@@ -64,7 +64,7 @@ i = vcsn.automaton('''digraph {
   3 -> F3 [label = "<2>"]
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_q"
+  vcsn_context = "lal_char(abc), q"
   I0 -> 0 [label = "<220>"]
   0 -> 1 [label = "a"]
   1 -> 2 [label = "<19/22>b"]
@@ -77,7 +77,7 @@ words = ["ab", "abc", "ac", "cb"]
 push_weights_check(i, o, words)
 
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_zmin"
+  vcsn_context = "lal_char(abc), zmin"
   I0 -> 0
   0 -> 1 [label = "<5>a"]
   1 -> 2 [label = "<2>b"]
@@ -87,7 +87,7 @@ i = vcsn.automaton('''digraph {
   3 -> F3 [label = "<2>"]
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_zmin"
+  vcsn_context = "lal_char(abc), zmin"
   I0 -> 0 [label = "<10>"]
   0 -> 1 [label = "<0>a"]
   1 -> 2 [label = "<2>b"]

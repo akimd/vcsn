@@ -4,19 +4,19 @@ import vcsn
 from test import *
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
 }''')
 CHECK_EQ(0, a.num_sccs())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> F0
 }''')
 CHECK_EQ(1, a.num_sccs())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
@@ -24,7 +24,7 @@ a = vcsn.automaton('''digraph {
 CHECK_EQ(2, a.num_sccs())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
@@ -36,7 +36,7 @@ CHECK_EQ(1, a.num_sccs())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> 1 [label = "c"]
   1 -> 2 [label = "a"]
@@ -54,7 +54,7 @@ CHECK_EQ(1, a.num_sccs())
 
 a = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abcd)_zmin"
+  vcsn_context = "lal_char(abcd), zmin"
   I0 -> 0
   0 -> 1 [label = "<2>a"]
   0 -> 2 [label = "<3>a"]

@@ -7,7 +7,7 @@ from test import *
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab)_b"
+  vcsn_context="lal_char(ab), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -22,7 +22,7 @@ CHECK_EQ(False, a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab)_b"
+  vcsn_context="lal_char(ab), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -38,7 +38,7 @@ CHECK_EQ(False, a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab)_ratexpset<lal_char(xy)_b>"
+  vcsn_context="lal_char(ab), ratexpset<lal_char(xy), b>"
   I -> 0
   0 -> 1 [label = "<x>a"]
   0 -> 2 [label = "<y>a"]
@@ -54,7 +54,7 @@ CHECK_EQ(False, a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab)_b"
+  vcsn_context="lal_char(ab), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -72,7 +72,7 @@ CHECK_EQ(True, a.is_deterministic())
 ## -------------------- ##
 
 aut1 = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -86,7 +86,7 @@ aut1 = vcsn.automaton('''digraph {
 CHECK_EQ(True, aut1.is_cycle_ambiguous())
 
 aut2 = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -102,7 +102,7 @@ CHECK_EQ(False, aut2.is_cycle_ambiguous())
 aut3 = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> 1 [label = "c"]
   1 -> 2 [label = "a"]
@@ -119,19 +119,19 @@ digraph
 CHECK_EQ(True, aut3.is_cycle_ambiguous())
 
 r1 = "((abc)*){5}abc" + format(aut1.ratexp())
-aut4 = vcsn.context("lal_char(abc)_b").ratexp(r1).derived_term()
+aut4 = vcsn.context("lal_char(abc), b").ratexp(r1).derived_term()
 CHECK_EQ(True, aut4.is_cycle_ambiguous())
 
 r2 = "((abc)*){5}abc" + format(aut2.ratexp())
-aut5 = vcsn.context("lal_char(abc)_b").ratexp(r2).derived_term()
+aut5 = vcsn.context("lal_char(abc), b").ratexp(r2).derived_term()
 CHECK_EQ(False, aut5.is_cycle_ambiguous())
 
 
-CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
+CHECK_EQ(True, vcsn.context("lal_char(abc), b").
          ladybird(5).is_cycle_ambiguous())
-CHECK_EQ(False, vcsn.context("lal_char(abc)_b").
+CHECK_EQ(False, vcsn.context("lal_char(abc), b").
          de_bruijn(5).is_cycle_ambiguous())
-CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
+CHECK_EQ(True, vcsn.context("lal_char(abc), b").
          ladybird(20).is_cycle_ambiguous())
-CHECK_EQ(False, vcsn.context("lal_char(abc)_b").
+CHECK_EQ(False, vcsn.context("lal_char(abc), b").
         de_bruijn(20).is_cycle_ambiguous())

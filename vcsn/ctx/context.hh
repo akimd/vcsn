@@ -96,7 +96,7 @@ namespace vcsn
     }
 
     /// The name of this context, built from its parameters.
-    /// E.g., "lal_char_b", "law_char_zmin".
+    /// E.g., "lal_char, b", "law_char, zmin".
     static std::string sname()
     {
       return (labelset_t::sname()

@@ -3,13 +3,13 @@
 import vcsn
 from test import *
 
-ctxbr = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>')
-ctxz = vcsn.context('lal_char(b)_z')
-ctxq = vcsn.context('lal_char(c)_q')
-ctxr = vcsn.context('lal_char(d)_r')
+ctxbr = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>')
+ctxz = vcsn.context('lal_char(b), z')
+ctxq = vcsn.context('lal_char(c), q')
+ctxr = vcsn.context('lal_char(d), r')
 
-ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
+ab = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc), b').ratexp('(b+c)*').standard()
 result = '''digraph
 {
   vcsn_context = "lal_char(abc), b"
@@ -56,7 +56,7 @@ CHECK_EQ(result, ab.sum(bc))
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
     rankdir = LR
     {
       node [shape = point, width = 0]
@@ -81,7 +81,7 @@ digraph
 b = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
   rankdir = LR
     {
       node [shape = point, width = 0]
@@ -131,8 +131,8 @@ result = '''digraph
 CHECK_EQ(result, a.sum(b))
 
 # Check join of contexts.
-a = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
-b = vcsn.context('lal_char(b)_q').ratexp('<1/2>b*').standard()
+a = vcsn.context('lal_char(a), ratexpset<lal_char(x), b>').ratexp('<x>a*').standard()
+b = vcsn.context('lal_char(b), q').ratexp('<1/2>b*').standard()
 
 result = r'''digraph
 {

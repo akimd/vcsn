@@ -1,7 +1,7 @@
 // Z-automaton D_1.
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   node [shape = circle]
   {

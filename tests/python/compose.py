@@ -12,8 +12,8 @@ def check(a1, a2, exp):
 ## Composition ##
 #################
 
-c1 = vcsn.context("lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>_b")
-c2 = vcsn.context("lat<lan<lal_char(xyz)>,lan<lal_char(def)>>_b")
+c1 = vcsn.context("lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>, b")
+c2 = vcsn.context("lat<lan<lal_char(xyz)>,lan<lal_char(def)>>, b")
 
 check(c1.ratexp("'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
       '''digraph
@@ -92,8 +92,8 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(y, d)'*").standard(),
 ## Heterogeneous contexts ##
 ############################
 
-c_ratb = vcsn.context("lat<lan_char(abc),lan_char(xyz)>_ratexpset<lal_char(mno)_b>")
-c_q = vcsn.context("lat<lan_char(xyz),lan_char(def)>_q")
+c_ratb = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, ratexpset<lal_char(mno), b>")
+c_q = vcsn.context("lat<lan_char(xyz),lan_char(def)>, q")
 check(c_ratb.ratexp("<o>'(a, x)'").standard(),
       c_q.ratexp("<3/2>'(x, d)'").standard(),
       '''digraph
@@ -123,7 +123,7 @@ check(c_ratb.ratexp("<o>'(a, x)'").standard(),
 
 a1 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(xyz)>, lan<lal_char(abc)>>_b"
+  vcsn_context = "lat<lan<lal_char(xyz)>, lan<lal_char(abc)>>, b"
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   1 -> F1
@@ -134,7 +134,7 @@ a1 = vcsn.automaton(r'''digraph
 
 a2 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(abc)>, lan<lal_char(def)>>_b"
+  vcsn_context = "lat<lan<lal_char(abc)>, lan<lal_char(def)>>, b"
   I0 -> 0
   0 -> 1 [label = "(\\e, d)"]
   1 -> 2 [label = "(a, e)"]
@@ -170,7 +170,7 @@ res = r'''digraph
 check(a1, a2, res)
 
 
-c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>_r")
+c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, r")
 check(c_r.ratexp("<3.1>'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
       '''digraph
 {

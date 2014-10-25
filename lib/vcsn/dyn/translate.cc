@@ -122,7 +122,7 @@ namespace vcsn
         }
 
         /// Generate C++ syntax for context \a ctx (which might use
-        /// our syntax: 'lal_char(ab)_z').
+        /// our syntax: 'lal_char(ab), z').
         void print_context(const std::string& ctx)
         {
           is.clear();

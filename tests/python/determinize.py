@@ -28,11 +28,11 @@ def check(aut, expfile, algo = "auto", deterministic = False):
     CHECK_EQ(True, aut.transpose().codeterminize().transpose().is_deterministic())
     CHECK_EQ(True, aut.codeterminize().transpose().is_deterministic())
 
-ctx = vcsn.context('lal_char(ab)_b')
+ctx = vcsn.context('lal_char(ab), b')
 check(ctx.de_bruijn(3), 'de-bruijn-3-det')
 check(ctx.de_bruijn(8), 'de-bruijn-8-det')
 
-ctx = vcsn.context('lal_char(abc)_b')
+ctx = vcsn.context('lal_char(abc), b')
 check(ctx.ladybird(4), 'ladybird-4-det')
 check(ctx.ladybird(8), 'ladybird-8-det')
 

@@ -23,7 +23,7 @@ class EditAutomatonWidget:
             # anyway.
             aut = self.ipython.shell.user_ns[self.name].strip()
         else:
-            aut = vcsn.context('lal_char(abc)_b').ratexp(r'\e').standard()
+            aut = vcsn.context('lal_char(abc), b').ratexp(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
 
         text = aut.format(self.format)

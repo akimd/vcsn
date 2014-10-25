@@ -12,8 +12,8 @@ def check(ctx, exp):
     finally:
         PASS()
 
-check('lal_char(ab)_lat<q, ratexpset<lal_char(xyz)_b>, z>', 'a')
-check('lal_char(ab)_lat<q, ratexpset<lal_char(xyz)_b>, z>', '<(2/3, x, -3)>a')
-check('lal_char(ab)_lat<q, ratexpset<lal_char(xyz)_b>, z>', '<(2/3, x*+y, -3)>a')
-check('lal_char(ab)_lat<ratexpset<lal_char(xyz)_lat<q, q>>, lat<q, q>>',
+check('lal_char(ab), lat<q, ratexpset<lal_char(xyz), b>, z>', 'a')
+check('lal_char(ab), lat<q, ratexpset<lal_char(xyz), b>, z>', '<(2/3, x, -3)>a')
+check('lal_char(ab), lat<q, ratexpset<lal_char(xyz), b>, z>', '<(2/3, x*+y, -3)>a')
+check('lal_char(ab), lat<ratexpset<lal_char(xyz), lat<q, q>>, lat<q, q>>',
       '<(<(1, 2)>x+<(2, 1/3)>y*, (2, 3))>a')

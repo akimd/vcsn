@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lao_ratexpset<lal_char(abc)_b>"
+  vcsn_context = "lao, ratexpset<lal_char(abc), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]

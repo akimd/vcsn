@@ -33,7 +33,7 @@ def check(re, size, *exp):
   check_shortest(re, size, *exp)
 
 
-ctx = vcsn.context('lal_char(ab)_b')
+ctx = vcsn.context('lal_char(ab), b')
 
 check('\z', 3, '\z')
 check('\e', 3, '\e')
@@ -47,7 +47,7 @@ check_enumerate('ababab', 2, '\z')
 check_shortest('ababab', 2, 'ababab')
 
 
-ctx = vcsn.context('lal_char(01)_z')
+ctx = vcsn.context('lal_char(01), z')
 check_enumerate('(0+1)*1(<2>0+<2>1)*', 3, \
       '1',
       '01', '<2>10', '<3>11', \
@@ -55,5 +55,5 @@ check_enumerate('(0+1)*1(<2>0+<2>1)*', 3, \
 
 check_shortest('(0+1)*1(<2>0+<2>1)*', 3, '1 + 01 + <2>10')
 
-ctx = vcsn.context('lal_char(a)_z')
+ctx = vcsn.context('lal_char(a), z')
 check('a+<-1>a', 2, '\z')

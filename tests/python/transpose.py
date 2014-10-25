@@ -9,7 +9,7 @@ from test import *
 ## transpose(automaton).  ##
 ## ---------------------- ##
 
-c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
+c = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
 a = c.ratexp("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
@@ -43,7 +43,7 @@ CHECK_EQ(a.info(), a.transpose().transpose().info())
 
 # Regression: we used to not transpose the number of initial and final
 # transitions.
-a = vcsn.context('lal_char_b').ratexp('a+b').standard()
+a = vcsn.context('lal_char, b').ratexp('a+b').standard()
 CHECK_EQ({
            'is complete': False,
            'is codeterministic': True,
@@ -72,7 +72,7 @@ CHECK_EQ({
 
 # Stripping a transposed automaton strips the inner automaton, but not
 # the transposition shell.
-a = vcsn.context('lal_char_b').ratexp('ab').derived_term().determinize()
+a = vcsn.context('lal_char, b').ratexp('ab').derived_term().determinize()
 CHECK_EQ('transpose_automaton<mutable_automaton<lal_char(ab), b>>',
          a.transpose().strip().info()['type'])
 
@@ -86,7 +86,7 @@ def check(re, exp):
     CHECK_EQ(exp, r.transpose())
     CHECK_EQ(r, exp.transpose())
 
-ctx = vcsn.context('lal_char(abcd)_b')
+ctx = vcsn.context('lal_char(abcd), b')
 check('\e', '\e')
 check('\z', '\z')
 check('a', 'a')
@@ -98,7 +98,7 @@ check('(abcd){T}', '(abcd){T}{T}')
 check('ab{\}cd', '(ab{\}cd){T}')
 check('ab{/}cd', '((cd){T}{\}(ab){T})')
 
-ctx = vcsn.context('law_char(abcd)_b')
+ctx = vcsn.context('law_char(abcd), b')
 check('\e', '\e')
 check('\z', '\z')
 check('a', 'a')
@@ -107,6 +107,6 @@ check('abc+aba', 'cba+aba')
 check('(ab)*&(ab)*', '(ba)*&(ba)*')
 check('(ab)*', '(ba)*')
 
-ctx = vcsn.context('law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>')
+ctx = vcsn.context('law_char(abcd), ratexpset<law_char(efgh), ratexpset<law_char(xyz), z>>')
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')

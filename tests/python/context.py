@@ -19,12 +19,12 @@ XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 check('lal_char, b', 'lal_char(), b')
 check('lal_char(), b')
 check('lal_char(ab), b')
-check('lal_char(a-kv-z)_b', 'lal_char(abcdefghijkvwxyz), b')
+check('lal_char(a-kv-z), b', 'lal_char(abcdefghijkvwxyz), b')
 check('lal_char(-0-9), b', 'lal_char(-0123456789), b')
 # FIXME: This is obviously wrong: we will not be able to re-read the
 # result, as the backslash is not escaped.
-check(r'lal_char(\\\-)_b', r'lal_char(-\), b')
-check(r'lal_char(\--\-)_b', r'lal_char(-), b')
+check(r'lal_char(\\\-), b', r'lal_char(-\), b')
+check(r'lal_char(\--\-), b', r'lal_char(-), b')
 
 check('lal_char(ab), q')
 check('ratexpset<lal_char(ab), b>, b')
@@ -40,7 +40,7 @@ check('lal_char(ab), lat<b, z>', 'lal_char(ab), lat<b, z>')
 check('lat<lal_char(ba),lan<lal_char(vu)>, law_char(x-z)>, lat<ratexpset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>',
       'lat<lal_char(ab), lan<lal_char(uv)>, law_char(xyz)>, lat<ratexpset<lat<lal_char(ef), lal_char(gh)>, q>, r, q>')
 
-check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<ratexpset<lan<lat<lan_char(fe),lan_char(hg)>>_lat<r, q>>, lat<b, z>>',
+check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<ratexpset<lan<lat<lan_char(fe),lan_char(hg)>>, lat<r, q>>, lat<b, z>>',
       'lan<lat<lal_char(ab), lat<lan<lal_char(uv)>, law_char(xyz)>>>, lat<ratexpset<lat<lan<lal_char(ef)>, lan<lal_char(gh)>>, lat<r, q>>, lat<b, z>>')
 
 

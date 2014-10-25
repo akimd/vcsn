@@ -109,7 +109,7 @@ namespace vcsn
       make(std::istream& is)
       {
         using genset_t = typename labelset_t::genset_t;
-        // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+        // name: lal_char(abc), ratexpset<law_char(xyz), b>.
         //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
         //        |   |    |        weightset
         //        |   |    +-- gens

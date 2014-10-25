@@ -1,7 +1,7 @@
 // Z-automaton slowgrow.
 digraph
 {
-  vcsn_context = "lal_char(ab)_zmin"
+  vcsn_context = "lal_char(ab), zmin"
   rankdir = LR
   node [shape = circle]
   {

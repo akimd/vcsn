@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-z = vcsn.context('lal_char(abcd)_z')
+z = vcsn.context('lal_char(abcd), z')
 
 # check(INPUT, EXP)
 # -----------------

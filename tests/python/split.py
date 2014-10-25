@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(abc)_ratexpset<lal_char(wxyz)_z>')
+ctx = vcsn.context('lal_char(abc), ratexpset<lal_char(wxyz), z>')
 
 # check RAT-EXP RESULT
 # --------------------

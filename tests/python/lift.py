@@ -7,7 +7,7 @@ from test import *
 ## Automata.  ##
 ## ---------- ##
 
-l4 = vcsn.context('lal_char(abc)_b').ladybird(4)
+l4 = vcsn.context('lal_char(abc), b').ladybird(4)
 CHECK_EQ('''digraph
 {
   vcsn_context = "lao, ratexpset<lal_char(abc), b>"
@@ -44,6 +44,6 @@ CHECK_EQ('''digraph
 ## ------------- ##
 
 CHECK_EQ('''<abc>\e''',
-         vcsn.context('lal_char(abc)_b').ratexp('abc').lift())
+         vcsn.context('lal_char(abc), b').ratexp('abc').lift())
 CHECK_EQ('''<<2>abc>\e''',
-         vcsn.context('lal_char(abc)_z').ratexp('<2>abc').lift())
+         vcsn.context('lal_char(abc), z').ratexp('<2>abc').lift())

@@ -9,7 +9,7 @@ from test import *
 ## cerny.  ##
 ## ------- ##
 
-a = vcsn.context('lal_char(abc)_b').cerny(6)
+a = vcsn.context('lal_char(abc), b').cerny(6)
 CHECK_EQ(a.info()['number of states'], 6)
 CHECK_EQ(vcsn.automaton(filename = medir + '/cerny-6.gv'), a)
 
@@ -19,16 +19,16 @@ CHECK_EQ(vcsn.automaton(filename = medir + '/cerny-6.gv'), a)
 ## ----------- ##
 
 CHECK_EQ(vcsn.automaton(filename = medir + '/de-bruijn-2.gv'),
-         vcsn.context('lal_char(ab)_b').de_bruijn(2))
+         vcsn.context('lal_char(ab), b').de_bruijn(2))
 
 CHECK_EQ(vcsn.automaton(filename = medir + '/de-bruijn-3.gv'),
-         vcsn.context('lal_char(xyz)_b').de_bruijn(3))
+         vcsn.context('lal_char(xyz), b').de_bruijn(3))
 
 ## ----------- ##
 ## divkbaseb.  ##
 ## ----------- ##
 
-b = vcsn.context('lal_char(0-9)_b')
+b = vcsn.context('lal_char(0-9), b')
 
 XFAIL(lambda: b.divkbaseb(0, 2))
 XFAIL(lambda: b.divkbaseb(2, 0))
@@ -50,12 +50,12 @@ CHECK_EQ(r'\e + 0 + 3 + 6 + 9 + 00 + 03 + 06 + 09 + 12',
 ## double_ring.  ##
 ## ------------- ##
 
-ctx = vcsn.context('lal_char(abcd)_b')
+ctx = vcsn.context('lal_char(abcd), b')
 CHECK_EQ(ctx.double_ring(0, []),
 vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abcd)_b"
+  vcsn_context = "lal_char(abcd), b"
   rankdir = LR
 }
 '''))
@@ -71,8 +71,8 @@ vcsn.automaton(filename = medir + '/double-ring-4-2-3.gv'))
 ## ladybird.  ##
 ## ---------- ##
 
-b = vcsn.context('lal_char(abc)_b')
-z = vcsn.context('lal_char(abc)_z')
+b = vcsn.context('lal_char(abc), b')
+z = vcsn.context('lal_char(abc), z')
 
 exp = vcsn.automaton(filename = medir + '/ladybird-2.gv')
 
@@ -81,7 +81,7 @@ CHECK_EQ(vcsn.automaton(str(exp).replace(', b', ', z')), z.ladybird(2))
 
 exp = vcsn.automaton(filename = medir + '/ladybird-2-zmin.gv')
 CHECK_EQ(exp,
-         vcsn.context('lal_char(abc)_zmin').ladybird(2))
+         vcsn.context('lal_char(abc), zmin').ladybird(2))
 
 
 ## -------- ##
@@ -89,12 +89,12 @@ CHECK_EQ(exp,
 ## -------- ##
 
 # Expect a clique.
-c1 = vcsn.context('lal_char(a)_b').random(4, 1, 4, 4)
+c1 = vcsn.context('lal_char(a), b').random(4, 1, 4, 4)
 c2 = vcsn.automaton(filename = medir + '/clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
-a = vcsn.context('lal_char(a)_b').random(100, .1, 20, 30)
+a = vcsn.context('lal_char(a), b').random(100, .1, 20, 30)
 CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a), b>')
 CHECK_EQ(a.info()['number of states'], 100)
 CHECK_EQ(a.info()['number of initial states'], 20)
@@ -105,7 +105,7 @@ CHECK_EQ(a.info()['number of final states'], 30)
 ## random_deterministic.  ##
 ## ---------------- ##
 
-a = vcsn.context('lal_char(a)_b').random_deterministic(100)
+a = vcsn.context('lal_char(a), b').random_deterministic(100)
 CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a), b>')
 CHECK_EQ(a.info()['number of states'], 100)
 CHECK_EQ(a.info()['number of initial states'], 1)
@@ -118,4 +118,4 @@ CHECK_EQ(a.is_complete(), True)
 ## --- ##
 
 CHECK_EQ(vcsn.automaton(filename = medir + '/u-5.gv'),
-         vcsn.context('lal_char(abc)_b').u(5))
+         vcsn.context('lal_char(abc), b').u(5))

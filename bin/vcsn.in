@@ -41,7 +41,7 @@ For more information, run:
 
 For instance:
 
-  $ vcsn derived-term -C 'lal_char(abc)_b' -e '(a+b+a)*' |
+  $ vcsn derived-term -C 'lal_char(abc), b' -e '(a+b+a)*' |
      vcsn determinize |
      vcsn minimize |
      vcsn to-expression

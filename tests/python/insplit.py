@@ -13,7 +13,7 @@ def check(i, exp):
 check('''
 digraph
 {
-  vcsn_context = "lal_char(abc)_b"
+  vcsn_context = "lal_char(abc), b"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -47,7 +47,7 @@ digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lan_char(abc), b"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -83,7 +83,7 @@ digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lan_char(abc), b"
 
   I0 -> 0
   0 -> 1 [label = "\\e"]

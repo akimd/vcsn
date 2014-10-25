@@ -15,7 +15,7 @@ def check(expect, i):
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I0 -> 0
   0 -> 1 [label = "a,b"]
   1 -> F1
@@ -26,7 +26,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   0 -> 1 [label = "a,b"]
   1 -> F
 }
@@ -36,7 +36,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I -> 0
   0 -> 1 [label = "a,b"]
   I -> 1
@@ -48,7 +48,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I -> 0
   0 -> 1 [label = "a,b"]
 }
@@ -58,7 +58,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I -> 0
   0 -> F
   0 -> 1 [label = "a,b"]
@@ -70,7 +70,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I0 -> 0 [label = "<2>"]
   0 -> 1 [label = "a,b"]
   1 -> F1
@@ -81,7 +81,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I0 -> 0
   0 -> 1 [label = "a,b"]
   1 -> F1 [label = "<2>"]
@@ -92,7 +92,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I -> 0
   0 -> 1 [label = "a,b"]
   1 -> 2 [label = "a"]
@@ -105,7 +105,7 @@ digraph
 check(False, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   I -> 0
   0 -> 1 [label = "a,b"]
   1 -> 2 [label = "a"]
@@ -115,7 +115,7 @@ digraph
 '''))
 
 # Regression: we used to crash on this.
-a = vcsn.automaton('''context = lal_char_z
+a = vcsn.automaton('''context = lal_char, z
 $ -> 0
 0 -> 1 <-1>a
 0 -> 2 <1>a
