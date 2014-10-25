@@ -19,11 +19,6 @@ namespace vcsn
           case ')':
             --nesting;
             break;
-          case ' ':
-            // Recognize 'lat<lal_char(ab), lal_char(xy)>_lat<q, r>'
-            // as 'lat<lal_char(ab),lal_char(xy)>_lat<q,r>': ignore
-            // spaces.
-            break;
           default:
             if (!nesting)
               res += c;

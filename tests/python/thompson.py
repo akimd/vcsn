@@ -30,7 +30,7 @@ xfail('a*&b*')
 check('(?@lan_char(a)_z)<12>\e',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(a)>_z"
+  vcsn_context = "lan<lal_char(a)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -56,7 +56,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)\e+a+\e',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -92,7 +92,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)<12>\e+<23>a+<34>b',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -128,7 +128,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)<12>(\e+a+<10>b+<10>\e)',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -169,7 +169,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)(\e+a+<2>b+<3>\e)<10>',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -214,7 +214,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)<12>(ab)<23>',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -243,7 +243,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)\z*',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -264,7 +264,7 @@ r'''digraph
 check('(?@lan_char(ab)_b)\e*',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_b"
+  vcsn_context = "lan<lal_char(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -291,7 +291,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)(<2>a)*',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -318,7 +318,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)<2>a*<3>',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -345,7 +345,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)(<2>a+<3>b)*',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -381,7 +381,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)<2>(<3>a+<5>b)*<7>',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -417,7 +417,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -448,7 +448,7 @@ r'''digraph
 check('(?@lan_char(ab)_z)a**',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -485,7 +485,7 @@ r'''digraph
 check('(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
+  vcsn_context = "lan<lal_char(abcd)>, ratexpset<lal_char(efgh), z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -529,7 +529,7 @@ r'''digraph
 check('(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
+  vcsn_context = "lan<lal_char(abcd)>, ratexpset<lal_char(efgh), z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -571,7 +571,7 @@ r'''digraph
 check('(?@lan_char(a)_ratexpset<lal_char(xyz)_z>)<x>a(<y>\e+<z>a)',
 r'''digraph
 {
-  vcsn_context = "lan<lal_char(a)>_ratexpset<lal_char(xyz)_z>"
+  vcsn_context = "lan<lal_char(a)>, ratexpset<lal_char(xyz), z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

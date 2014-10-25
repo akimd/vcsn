@@ -10,7 +10,7 @@ from test import *
 def check(obj, exp):
     CHECK_EQ(exp, obj.info(True))
 
-ctx = vcsn.context('lal_char(a-z)_z')
+ctx = vcsn.context('lal_char(a-z), z')
 
 ## ---------------- ##
 ## automaton.info.  ##
@@ -44,7 +44,7 @@ check(vcsn.context('lal_char(:a-z)_z').ratexp("a+a':'").standard(),
        'number of strongly connected components': 4,
        'number of transitions': 3,
        'number of useful states': 4,
-       'type': 'mutable_automaton<lal_char(:abcdefghijklmnopqrstuvwxyz)_z>'})
+       'type': 'mutable_automaton<lal_char(:abcdefghijklmnopqrstuvwxyz), z>'})
 
 check(ctx.ratexp("<1>a+(<2>b<3>*<4>)<5>").standard(),
       {'is ambiguous': False,
@@ -72,7 +72,7 @@ check(ctx.ratexp("<1>a+(<2>b<3>*<4>)<5>").standard(),
        'number of strongly connected components': 3,
        'number of transitions': 3,
        'number of useful states': 3,
-       'type': 'mutable_automaton<lal_char(abcdefghijklmnopqrstuvwxyz)_z>'})
+       'type': 'mutable_automaton<lal_char(abcdefghijklmnopqrstuvwxyz), z>'})
 
 # Test what happens with "N/A".
 check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
@@ -101,7 +101,7 @@ check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
        'number of strongly connected components': 3,
        'number of transitions': 7,
        'number of useful states': 4,
-       'type': 'mutable_automaton<law_char(ab)_b>'})
+       'type': 'mutable_automaton<law_char(ab), b>'})
 
 
 ## ------------- ##
@@ -109,7 +109,7 @@ check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
 ## ------------- ##
 
 check(vcsn.context('lal_char(abc)_b').ratexp('abc'),
-      {'type': 'ratexpset<lal_char(abc)_b>',
+      {'type': 'ratexpset<lal_char(abc), b>',
        'size': 5,
        'sum': 0,
        'shuffle': 0,
@@ -124,7 +124,7 @@ check(vcsn.context('lal_char(abc)_b').ratexp('abc'),
        'rweight': 0})
 
 check(vcsn.context('lal_char(abc)_b').ratexp('\e+bc*'),
-      {'type': 'ratexpset<lal_char(abc)_b>',
+      {'type': 'ratexpset<lal_char(abc), b>',
        'size': 6,
        'sum': 1,
        'shuffle': 0,
@@ -139,7 +139,7 @@ check(vcsn.context('lal_char(abc)_b').ratexp('\e+bc*'),
        'rweight': 0})
 
 check(vcsn.context('lal_char(abc)_z').ratexp('<2>a<3>'),
-      {'type': 'ratexpset<lal_char(abc)_z>',
+      {'type': 'ratexpset<lal_char(abc), z>',
        'size': 2,
        'sum': 0,
        'shuffle': 0,
@@ -154,7 +154,7 @@ check(vcsn.context('lal_char(abc)_z').ratexp('<2>a<3>'),
        'rweight': 0})
 
 check(vcsn.context('lal_char(abc)_z').ratexp('<2>(a+b)<3>'),
-      {'type': 'ratexpset<lal_char(abc)_z>',
+      {'type': 'ratexpset<lal_char(abc), z>',
        'size': 5,
        'sum': 1,
        'shuffle': 0,

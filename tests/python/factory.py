@@ -77,7 +77,7 @@ z = vcsn.context('lal_char(abc)_z')
 exp = vcsn.automaton(filename = medir + '/ladybird-2.gv')
 
 CHECK_EQ(exp, b.ladybird(2))
-CHECK_EQ(vcsn.automaton(str(exp).replace('_b', '_z')), z.ladybird(2))
+CHECK_EQ(vcsn.automaton(str(exp).replace(', b', ', z')), z.ladybird(2))
 
 exp = vcsn.automaton(filename = medir + '/ladybird-2-zmin.gv')
 CHECK_EQ(exp,
@@ -95,7 +95,7 @@ CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
 a = vcsn.context('lal_char(a)_b').random(100, .1, 20, 30)
-CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a)_b>')
+CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a), b>')
 CHECK_EQ(a.info()['number of states'], 100)
 CHECK_EQ(a.info()['number of initial states'], 20)
 CHECK_EQ(a.info()['number of final states'], 30)
@@ -106,7 +106,7 @@ CHECK_EQ(a.info()['number of final states'], 30)
 ## ---------------- ##
 
 a = vcsn.context('lal_char(a)_b').random_deterministic(100)
-CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a)_b>')
+CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a), b>')
 CHECK_EQ(a.info()['number of states'], 100)
 CHECK_EQ(a.info()['number of initial states'], 1)
 CHECK_EQ(a.info()['number of final states'], 1)

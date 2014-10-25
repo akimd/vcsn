@@ -23,7 +23,7 @@ lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 rhs = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(b)_b"
+  vcsn_context = "lal_char(b), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -53,7 +53,7 @@ lhs = vcsn.context('lal_char(ab)_b').ratexp('ab').standard()
 rhs = vcsn.context('lal_char(cd)_b').ratexp('cd').standard()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char()_b"
+  vcsn_context = "lal_char(), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -77,7 +77,7 @@ lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 rhs = vcsn.context('lal_char(cd)_b').ratexp('(c+d)*').standard()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char()_b"
+  vcsn_context = "lal_char(), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -157,7 +157,7 @@ digraph
 
 exp = '''digraph
 {
-  vcsn_context = "lal_char(abc)_z"
+  vcsn_context = "lal_char(abc), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -242,7 +242,7 @@ check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 # unary case: return only the accessible part.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -261,7 +261,7 @@ CHECK_EQ('''digraph
 }''', str(vcsn.automaton._product([vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -309,7 +309,7 @@ lhs = vcsn.context('lan_char(ab)_b').ratexp('(a+b)*').thompson()
 rhs = vcsn.context('lan_char(bc)_b').ratexp('(b+c)*').thompson()
 res = r'''digraph
 {
-  vcsn_context = "lan<lal_char(b)>_b"
+  vcsn_context = "lan<lal_char(b)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -387,7 +387,7 @@ CHECK_EQUIV(vcsn.automaton(res),
 third = vcsn.context('lan_char(bcd)_b').ratexp('(b+c+d)*').thompson()
 res = r'''digraph
 {
-  vcsn_context = "lan<lal_char(b)>_b"
+  vcsn_context = "lan<lal_char(b)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -658,7 +658,7 @@ a2 = vcsn.automaton(r'''digraph
 
 res = r'''digraph
 {
-  vcsn_context = "lan<lal_char(abc)>_b"
+  vcsn_context = "lan<lal_char(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

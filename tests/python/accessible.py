@@ -38,7 +38,7 @@ digraph {
 }''',
 '''digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -77,7 +77,7 @@ digraph {
 ''',
 '''digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -110,7 +110,7 @@ digraph {
 ''',
 '''digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
 }''')
@@ -130,7 +130,7 @@ digraph {
 ''',
 '''digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -327,7 +327,7 @@ digraph
 }
 ''', '''digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -360,7 +360,7 @@ digraph
 }
 ''', '''digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lal_char(a), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

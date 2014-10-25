@@ -100,20 +100,22 @@ namespace vcsn
     static std::string sname()
     {
       return (labelset_t::sname()
-              + "_" + weightset_t::sname());
+              + ", " + weightset_t::sname());
     }
 
     std::string vname(bool full = true) const
     {
       return (labelset()->vname(full)
-              + "_" + weightset()->vname(full));
+              + ", " + weightset()->vname(full));
     }
 
     /// Build from the description in \a is.
     static context make(std::istream& is)
     {
       auto ls = labelset_t::make(is);
-      eat(is, '_');
+      eat(is, ',');
+      while (isspace(is.peek()))
+        is.ignore();
       auto ws = weightset_t::make(is);
       return {ls, ws};
     }
@@ -135,7 +137,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\rightarrow";
       else
-        o << '_';
+        o << ", ";
       return weightset()->print_set(o, format);
     }
 

@@ -40,7 +40,7 @@ check(r'''digraph
   0 -> 0 [label = "<.5>\\e"]
 }''','''digraph
 {
-  vcsn_context = "law_char(ab)_r"
+  vcsn_context = "law_char(ab), r"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -88,7 +88,7 @@ check(r'''digraph
   2 -> 1 [label = "\\e"]
 }''', '''digraph
 {
-  vcsn_context = "law_char(ab)_b"
+  vcsn_context = "law_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -183,7 +183,7 @@ check(r'''digraph
   3 -> 0 [label = "<2>a"]
 }''', '''digraph
 {
-  vcsn_context = "law_char(ab)_z"
+  vcsn_context = "law_char(ab), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -269,7 +269,7 @@ check(r'''digraph
   4 -> F
 }''', '''digraph
 {
-  vcsn_context = "lal_char(z)_ratexpset<lal_char(abcd)_z>"
+  vcsn_context = "lal_char(z), ratexpset<lal_char(abcd), z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -324,7 +324,7 @@ check(r'''digraph
   9 -> F
 }''', '''digraph
 {
-  vcsn_context = "lal_char(z)_ratexpset<lal_char(abcdefgh)_z>"
+  vcsn_context = "lal_char(z), ratexpset<lal_char(abcdefgh), z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -359,7 +359,7 @@ check_to_lal(r'''digraph
   4 -> F
 }''', '''digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -393,7 +393,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(ab)>,lan<lal_char(xy)>>_b"
+  vcsn_context = "lat<lan<lal_char(ab)>, lan<lal_char(xy)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -434,7 +434,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(ab)>,lal_char(xy)>_b"
+  vcsn_context = "lat<lan<lal_char(ab)>, lal_char(xy)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -475,7 +475,7 @@ check_to_lal(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(ab)>,lal_char(xy)>_b"
+  vcsn_context = "lat<lan<lal_char(ab)>, lal_char(xy)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -506,7 +506,7 @@ check_to_lal(r'''digraph
 a = vcsn.context('lan_char(ab)_b').ratexp('a*').thompson()
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -530,7 +530,7 @@ CHECK_EQ(r'''digraph
 
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "lal_char(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

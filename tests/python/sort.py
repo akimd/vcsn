@@ -24,7 +24,7 @@ a = vcsn.automaton(r'''digraph
 
 check(a, '''digraph
 {
-  vcsn_context = "lal_char(abcde)_b"
+  vcsn_context = "lal_char(abcde), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -50,7 +50,7 @@ check(a, '''digraph
 
 check(a.transpose(), '''digraph
 {
-  vcsn_context = "lal_char(abcde)_b"
+  vcsn_context = "lal_char(abcde), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -31,7 +31,7 @@ namespace vcsn
       for (auto c: t.get_content())
         {
           if (!first)
-            os_ << ',';
+            os_ << ", ";
           first = false;
           c->accept(*this);
         }
@@ -41,7 +41,7 @@ namespace vcsn
     DEFINE(context)
     {
       t.get_labelset()->accept(*this);
-      os_ << '_';
+      os_ << ", ";
       t.get_weightset()->accept(*this);
     }
 

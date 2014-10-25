@@ -67,7 +67,7 @@ digraph
 
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(ab)_z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -104,7 +104,7 @@ pas = vcsn.context("lal_char(a)_z").ratexp('a*').derived_term()
 mas = vcsn.context("lal_char(a)_z").ratexp('(<-1>a)*').derived_term()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(a)_z"
+  vcsn_context = "lal_char(a), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -130,7 +130,7 @@ ABC = vcsn.context('lal_char(ABC)_z').ratexp('ABC').standard()
 ABCab = ABC.shuffle(ab)
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(ABCab)_z"
+  vcsn_context = "lal_char(ABCab), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

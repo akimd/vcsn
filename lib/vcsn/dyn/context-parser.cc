@@ -62,14 +62,14 @@ namespace vcsn
                || w == "seriesset")
         {
           std::shared_ptr<ast_node> res = labelset_(w);
-          if (is_.peek() == '_' || is_.peek() == '-')
+          if (is_.peek() == '_' || is_.peek() == '-' || is_.peek() == ',')
             return context_(res);
           return res;
         }
       else if (w == "lat")
         {
           std::shared_ptr<tupleset> res = tupleset_();
-          if (is_.peek() == '_' || is_.peek() == '-')
+          if (is_.peek() == '_' || is_.peek() == '-' || is_.peek() == ',')
             return context_(res);
           return res;
         }
@@ -186,7 +186,11 @@ namespace vcsn
       if (is_.peek() == '_')
         eat(is_, '_');
       else
-        eat(is_, "->");
+        {
+          eat(is_, ',');
+          while (isspace(is_.peek()))
+            is_.ignore();
+        }
       return std::make_shared<context>(ls, weightset_());
     }
 

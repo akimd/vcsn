@@ -3,7 +3,7 @@
 run 0 - tests/unit/transpose <<\EOF
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
+  vcsn_context = "law_char(abcd), ratexpset<lal_char(wxyz), b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -25,7 +25,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
+  vcsn_context = "law_char(abcd), ratexpset<lal_char(wxyz), b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -47,7 +47,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
+  vcsn_context = "law_char(abcd), ratexpset<lal_char(wxyz), b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -448,7 +448,7 @@ namespace vcsn
         {
           res += sep;
           res += n;
-          sep = ",";
+          sep = ", ";
         }
       res.push_back('>');
       return res;
@@ -463,7 +463,7 @@ namespace vcsn
         {
           res += sep;
           res += n;
-          sep = ",";
+          sep = ", ";
         }
       res.push_back('>');
       return res;
@@ -785,7 +785,7 @@ namespace vcsn
       else if (format == "text")
         {
           o << "lat<";
-          sep = ",";
+          sep = ", ";
         }
       else
         raise("invalid format: ", format);

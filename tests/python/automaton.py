@@ -205,7 +205,7 @@ c = vcsn.context('lan_char(ab)_z')
 a = c.ratexp('<2>a+<2>b').thompson()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -236,7 +236,7 @@ CHECK_EQ('''digraph
 # conjunction: state names, and useless states, etc.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -279,7 +279,7 @@ CHECK_EQ('''digraph
 # Tooltip.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -322,7 +322,7 @@ CHECK_EQ('''digraph
 # Transitions.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<lal_char(ab)>_z"
+  vcsn_context = "lan<lal_char(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -366,7 +366,7 @@ CHECK_EQ('''digraph
 # Empty set.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char()_b"
+  vcsn_context = "lal_char(), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
