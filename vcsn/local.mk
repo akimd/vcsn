@@ -224,6 +224,7 @@ nobase_include_HEADERS =                        \
   %D%/weightset/q.hh                            \
   %D%/weightset/qmp.hh                          \
   %D%/weightset/r.hh                            \
+  %D%/weightset/rmin.hh                         \
   %D%/weightset/weightset.hh                    \
   %D%/weightset/z.hh                            \
   %D%/weightset/zmin.hh

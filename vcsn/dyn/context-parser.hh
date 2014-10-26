@@ -77,6 +77,7 @@ namespace vcsn
           "q",
           "qmp",
           "r",
+          "rmin",
           "z",
           "zmin",
         };
