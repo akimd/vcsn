@@ -6,6 +6,7 @@
 
 # include <vcsn/core/rat/identities.hh>
 # include <vcsn/dyn/type-ast.hh>
+# include <vcsn/misc/set.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -64,8 +65,21 @@ namespace vcsn
       /// `<LabelSet> | <WeightSet>`
       std::shared_ptr<ast_node> labelset_or_weightset_();
       std::shared_ptr<ast_node> labelset_or_weightset_(const std::string& kind);
-
+      /// The stream we are parsing.
       std::istringstream& is_;
+
+      /// The set of terminal weightset names.
+      std::set<std::string> weightsets_
+        =
+        {
+          "b",
+          "f2",
+          "q",
+          "qmp",
+          "r",
+          "z",
+          "zmin",
+        };
     };
   }
 }

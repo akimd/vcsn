@@ -74,13 +74,7 @@ namespace vcsn
             return context_(res);
           return res;
         }
-      else if (w == "b"
-               || w == "f2"
-               || w == "q"
-               || w == "qmp"
-               || w == "r"
-               || w == "z"
-               || w == "zmin")
+      else if (has(weightsets_, w))
         return weightset_(w);
       else if (w == "polynomialset")
         {
@@ -132,13 +126,7 @@ namespace vcsn
                || w == "lao"
                || w == "law_char")
         return labelset_(w);
-      else if (w == "b"
-               || w == "f2"
-               || w == "q"
-               || w == "qmp"
-               || w == "r"
-               || w == "z"
-               || w == "zmin")
+      else if (has(weightsets_, w))
         return weightset_(w);
       else
         raise("invalid weightset or labelset name: " + w);
@@ -241,8 +229,7 @@ namespace vcsn
     std::shared_ptr<ast_node>
     context_parser::weightset_(const std::string& ws)
     {
-      if (ws == "b" || ws == "f2" || ws == "q" || ws == "qmp"
-          || ws == "r" || ws == "z" || ws == "zmin")
+      if (has(weightsets_, ws))
         return std::make_shared<weightset>(ws);
       else if (ws == "ratexpset")
         return ratexpset_();
