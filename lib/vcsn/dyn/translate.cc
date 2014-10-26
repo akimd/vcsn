@@ -140,19 +140,17 @@ namespace vcsn
           ast->accept(printer_);
         }
 
-        /// Run C++ compiler with arguments \a s.
+        /// Run C++ compiler.
         ///
+        /// \param prefix  a possible command prefix (i.e., "ccache")
         /// \param cmd  the compiler arguments
         /// \param tmp  the base name for temporary files
         void cxx(std::string cmd, const std::string& tmp)
         {
-          auto err =  tmp + ".err";
+          auto err = tmp + ".err";
           // We try to read the error message via a regexp below.  So
           // avoid translation (we did "erreur" instead of "error").
-          cmd = "LC_ALL=C "
-            + xgetenv("VCSN_CXX", VCSN_CXX)
-            + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
-            + " " + cmd;
+          cmd = "LC_ALL=C " + cmd;
 
           if (getenv("VCSN_DEBUG"))
             std::cerr << "run: " << cmd << std::endl;
@@ -190,6 +188,36 @@ namespace vcsn
             boost::filesystem::remove(err);
         }
 
+        /// Run C++ compiler to compile.
+        ///
+        /// \param base  the file base name
+        void cxx_compile(const std::string& base)
+        {
+          auto tmp = tmpname(base);
+          auto cmd = (xgetenv("VCSN_CCACHE", VCSN_CCACHE)
+                      + " " + xgetenv("VCSN_CXX", VCSN_CXX)
+                      + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
+                      + " " + xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS)
+                      + " -fPIC  '" + base + ".cc' -c"
+                      + " -o '" + tmp + ".o'");
+          cxx(cmd, tmp);
+        }
+
+        /// Run C++ compiler to link.
+        ///
+        /// \param base  the file base name
+        void cxx_link(const std::string& base)
+        {
+          auto tmp = tmpname(base);
+          auto cmd = (xgetenv("VCSN_CXX", VCSN_CXX)
+                      + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
+                      + " " + xgetenv("VCSN_LDFLAGS", VCSN_LDFLAGS)
+                      + " -fPIC  -lvcsn '" + tmp + ".o' -shared"
+                      + " -o '" + tmp + ".so'"
+                      + printer_.linkflags());
+          cxx(cmd, tmp);
+        }
+
         /// Where the runtime compilation files must be put.
         std::string plugindir() const
         {
@@ -224,14 +252,9 @@ namespace vcsn
         /// compilation-and-linking in a single run.
         void jit(const std::string& base)
         {
-          // Use a temporary base name for object file.
-          std::string tmp = tmpname(base);
-          auto cppflags = xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS);
-          cxx("-fPIC " + cppflags + " '" + base + ".cc' -c"
-              " -o '" + tmp + ".o'", tmp);
-          auto ldflags = xgetenv("VCSN_LDFLAGS", VCSN_LDFLAGS);
-          cxx("-fPIC " + ldflags + " -lvcsn '" + tmp + ".o' -shared"
-              " -o '" + tmp + ".so'" + printer_.linkflags(), tmp);
+          cxx_compile(base);
+          cxx_link(base);
+          auto tmp = tmpname(base);
           boost::filesystem::rename(tmp + ".so", base + ".so");
           static bool first = true;
           if (first)
@@ -241,10 +264,10 @@ namespace vcsn
             }
           lt_dlhandle lib = lt_dlopen((base + ".so").c_str());
           require(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
-          // Upon success, remove the .o file, it useless and large
-          // (10x compared to the *.so on erebus using clang).  Note
-          // that the debug symbols are in there, so when debugging,
-          // leave them!
+          // Upon success, remove the .o file, it is large (10x
+          // compared to the *.so on erebus using clang) and not
+          // required.  However the debug symbols are in there, so
+          // when debugging, leave them!
           if (!getenv("VCSN_DEBUG"))
             {
               boost::filesystem::remove(tmp + ".cc");

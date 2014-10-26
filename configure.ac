@@ -206,10 +206,15 @@ AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
 AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
 
 # We compile C++ at runtime.
+VCSN_PROG_CCACHE
+AC_DEFINE_UNQUOTED([CCACHE], ["$CCACHE"],
+                   [Define to the ccache program name.])
 AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR $BOOST_CPPFLAGS"],
                    [Define to the preprocessor flags.])
-AC_DEFINE_UNQUOTED([CXX], ["$CXX"],
-                   [Define to the C++ compiler.])
+# We add $CCACHE when calling the compiler, don't stack it twice.
+CXX_NO_CCACHE=$(echo "$CXX" | sed -e "s/^ccache //;s,^$CCACHE ,,")
+AC_DEFINE_UNQUOTED([CXX], ["$CXX_NO_CCACHE"],
+                   [Define to the C++ compiler (without ccache).])
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
                    [Define to the C++ compiler flags.])
 AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
