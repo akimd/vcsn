@@ -41,7 +41,7 @@ namespace vcsn
 
     std::shared_ptr<ast_node> context_parser::any_()
     {
-      std::string w = word();
+      std::string w = word_();
       if (w == "blind_automaton"
           || w == "determinized_automaton"
           || w == "detweighted_automaton"
@@ -87,9 +87,9 @@ namespace vcsn
       else if (w == "std::integral_constant")
         {
           w += eat(is_, '<');
-          w += word();
+          w += word_();
           w += eat(is_, ',');
-          w += word();
+          w += word_();
           w += eat(is_, '>');
           return std::make_shared<other>(w);
         }
@@ -97,7 +97,7 @@ namespace vcsn
       else if (w == "const std::vector")
         {
           w += eat(is_, '<');
-          w += word();
+          w += word_();
           w += eat(is_, '>');
           return std::make_shared<other>(w);
         }
@@ -108,7 +108,7 @@ namespace vcsn
     std::shared_ptr<ast_node>
     context_parser::labelset_or_weightset_()
     {
-      return labelset_or_weightset_(word());
+      return labelset_or_weightset_(word_());
     }
 
     std::shared_ptr<ast_node>
@@ -132,7 +132,7 @@ namespace vcsn
         raise("invalid weightset or labelset name: " + w);
     }
 
-    std::string context_parser::word()
+    std::string context_parser::word_()
     {
       std::string res;
       int c;
@@ -168,7 +168,7 @@ namespace vcsn
 
     std::shared_ptr<context> context_parser::context_()
     {
-      return context_(word());
+      return context_(word_());
     }
 
     std::shared_ptr<context>
@@ -188,7 +188,7 @@ namespace vcsn
 
     std::shared_ptr<ast_node> context_parser::labelset_()
     {
-      return labelset_(word());
+      return labelset_(word_());
     }
 
     std::shared_ptr<ast_node>
@@ -223,7 +223,7 @@ namespace vcsn
 
     std::shared_ptr<ast_node> context_parser::weightset_()
     {
-      return weightset_(word());
+      return weightset_(word_());
     }
 
     std::shared_ptr<ast_node>
@@ -252,9 +252,9 @@ namespace vcsn
         {
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
-                                            std::make_shared<other>(word()));
+                                            std::make_shared<other>(word_()));
           eat(is_, ',');
-          res->get_content().emplace_back(automaton_(word()));
+          res->get_content().emplace_back(automaton_(word_()));
           eat(is_, '>');
         }
       // xxx_automaton<Aut>.
@@ -268,7 +268,7 @@ namespace vcsn
         {
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
-                                            automaton_(word()));
+                                            automaton_(word_()));
           eat(is_, '>');
         }
       // mutable_automaton<Context>.
@@ -285,11 +285,11 @@ namespace vcsn
         {
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,
-                                            automaton_(word()));
+                                            automaton_(word_()));
           while (is_.peek() == ',')
             {
               eat(is_, ',');
-              res->get_content().emplace_back(automaton_(word()));
+              res->get_content().emplace_back(automaton_(word_()));
             }
           eat(is_, '>');
         }

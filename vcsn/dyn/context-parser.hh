@@ -32,7 +32,7 @@ namespace vcsn
 
       /// Return the next word in the stream.  Does not consider that
       /// underscore is word-constituent.
-      std::string word();
+      std::string word_();
 
       /// List of letters.
       std::string alphabet_();
