@@ -38,6 +38,10 @@ namespace vcsn
       bool full_;
     };
 
+    /// The signature, normalized.
+    ///
+    /// For instance 'lan_char(ab), b' ->
+    /// 'lan<letterset<char_letters(ab)>, b'
     std::string normalize(const std::string& sig);
 
   }

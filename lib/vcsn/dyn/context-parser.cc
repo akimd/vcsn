@@ -192,11 +192,11 @@ namespace vcsn
     }
 
     std::shared_ptr<ast_node>
-    context_parser::labelset_(const std::string& kind)
+    context_parser::labelset_(const std::string& ls)
     {
-      if (kind == "lal_char")
+      if (ls == "lal_char")
         return std::make_shared<letterset>(alphabet_());
-      else if (kind == "lan")
+      else if (ls == "lan")
         {
           eat(is_, '<');
           auto res = labelset_();
@@ -205,20 +205,20 @@ namespace vcsn
           eat(is_, '>');
           return res;
         }
-      else if (kind == "lan_char")
+      else if (ls == "lan_char")
         return std::make_shared<nullableset>(std::make_shared<letterset>
                                              (alphabet_()));
-      else if (kind == "lao")
+      else if (ls == "lao")
         return std::make_shared<oneset>();
-      else if (kind == "lat")
+      else if (ls == "lat")
         return tupleset_();
-      else if (kind == "law_char")
+      else if (ls == "law_char")
         return std::make_shared<wordset>(alphabet_());
-      else if (kind == "ratexpset")
+      else if (ls == "ratexpset")
         return ratexpset_();
-      else if (kind == "seriesset")
+      else if (ls == "seriesset")
         return ratexpset_series_();
-      raise("invalid labelset name: ", str_escape(kind));
+      raise("invalid labelset name: ", str_escape(ls));
     }
 
     std::shared_ptr<ast_node> context_parser::weightset_()
