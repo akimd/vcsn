@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<lan<lal_char(ab)>, lan<lal_char(ab)>>, b"
+  vcsn_context = "lat<lan<letterset<char_letters(ab)>>, lan<letterset<char_letters(ab)>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

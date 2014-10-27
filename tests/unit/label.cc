@@ -52,17 +52,21 @@ check_tupleset()
   wlset_t wlset{ls1, letterset_t{gs2}};
 
   // sname.
-  ASSERT_EQ(wwset_t::sname(), "lat<law_char, law_char>");
+  ASSERT_EQ(wwset_t::sname(),
+            "lat<wordset<char_letters>, wordset<char_letters>>");
 
   // vname.
-  ASSERT_EQ(wwset.vname(false), "lat<law_char, law_char>");
-  ASSERT_EQ(wwset.vname(), "lat<law_char(abc), law_char(xyz)>");
+  ASSERT_EQ(wwset.vname(false),
+            "lat<wordset<char_letters>, wordset<char_letters>>");
+  ASSERT_EQ(wwset.vname(),
+            "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
 
   // print_set.
   {
     std::ostringstream o;
     wwset.print_set(o, "text");
-    ASSERT_EQ(o.str(), "lat<law_char(abc), law_char(xyz)>");
+    ASSERT_EQ(o.str(),
+              "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
   }
   {
     std::ostringstream o;
@@ -79,12 +83,14 @@ check_tupleset()
   // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
   // But really, you should no longer see such errors: tupleset has workarounds.
   {
-    std::string n = "lat<law_char(ABC), law_char(XYZ)>";
+    std::string n
+      = "lat<wordset<char_letters(ABC)>, wordset<char_letters(XYZ)>>";
     std::istringstream is(n);
     ASSERT_EQ(wwset_t::make(is).vname(), n);
   }
   {
-    std::string n = "lat<law_char(ABC), lal_char(XYZ)>";
+    std::string n
+      = "lat<wordset<char_letters(ABC)>, letterset<char_letters(XYZ)>>";
     std::istringstream is(n);
     ASSERT_EQ(wlset_t::make(is).vname(), n);
   }

@@ -17,7 +17,7 @@ namespace vcsn
 
     static std::string sname()
     {
-      return "char_letter";
+      return "char_letters";
     }
 
     virtual std::string vname(bool = true) const

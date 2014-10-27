@@ -71,11 +71,18 @@ namespace vcsn
       os_ << "lao";
     }
 
+    DEFINE(genset)
+    {
+      os_ << t.letter_type();
+      if (full_)
+        os_ << t.generators();
+    }
+
     DEFINE(letterset)
     {
-      os_ << "lal_char";
-      if (full_)
-        os_ << t.get_alpha();
+      os_ << "letterset<";
+      t.genset()->accept(*this);
+      os_ << '>';
     }
 
     DEFINE(ratexpset)
@@ -94,9 +101,9 @@ namespace vcsn
 
     DEFINE(wordset)
     {
-      os_ << "law_char";
-      if (full_)
-        os_ << t.get_alpha();
+      os_ << "wordset<";
+      t.genset()->accept(*this);
+      os_ << '>';
     }
 
     DEFINE(other)

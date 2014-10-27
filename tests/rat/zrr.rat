@@ -4,9 +4,9 @@
 # Check the alphabets.
 <<<2>x>e>a => <<<2>x>e>a
 <<<l>x>e>a ! 1.1-10: 1.1-7: 1.1-4: z: invalid value: l
-<<<3>l>e>a ! 1.1-10: 1.1-7: 1.4: law_char: invalid value: l, unexpected l
-<<<4>x>l>a ! 1.1-10: 1.7: law_char: invalid value: l, unexpected l
-<<<5>x>e>l ! 1.10: law_char: invalid value: l, unexpected l
+<<<3>l>e>a ! 1.1-10: 1.1-7: 1.4: wordset<char_letters>: invalid value: l, unexpected l
+<<<4>x>l>a ! 1.1-10: 1.7: wordset<char_letters>: invalid value: l, unexpected l
+<<<5>x>e>l ! 1.10: wordset<char_letters>: invalid value: l, unexpected l
 
 # Check weight products.
 <<<1>\e>e>a => <e>a

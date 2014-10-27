@@ -5,9 +5,9 @@
 
 # Check the alphabets.
 <f>a => <f>a
-<e>x ! 1.4: law_char: invalid value: x, unexpected x
-<x>a ! 1.1-4: 1.1: law_char: invalid value: x, unexpected x
-a<x> ! 1.2-5: 1.1: law_char: invalid value: x, unexpected x
+<e>x ! 1.4: wordset<char_letters>: invalid value: x, unexpected x
+<x>a ! 1.1-4: 1.1: wordset<char_letters>: invalid value: x, unexpected x
+a<x> ! 1.2-5: 1.1: wordset<char_letters>: invalid value: x, unexpected x
 
 # Check associativities.
 %labels: letters

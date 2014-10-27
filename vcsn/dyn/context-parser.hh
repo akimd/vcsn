@@ -34,10 +34,11 @@ namespace vcsn
       /// underscore is word-constituent.
       std::string word_();
 
-      /// List of letters.
-      std::string alphabet_();
+      /// A generator set (e.g., "char(abc)" or "char").
+      std::shared_ptr<const genset> genset_();
+      std::shared_ptr<const genset> genset_(const std::string& letter_type);
 
-      /// `<LabelSet>_<WeightSet>`.
+      /// `<LabelSet>, <WeightSet>`.
       std::shared_ptr<context> context_();
       std::shared_ptr<context> context_(const std::string& word);
       /// When the labelset was already parsed.

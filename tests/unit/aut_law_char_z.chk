@@ -3,7 +3,7 @@
 run 0 - tests/unit/aut_law_char_z <<\EOF
 digraph
 {
-  vcsn_context = "law_char(abcd), z"
+  vcsn_context = "wordset<char_letters(abcd)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

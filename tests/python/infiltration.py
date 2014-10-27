@@ -25,7 +25,7 @@ a1 = b.ratexp('a*a').derived_term()
 a = vcsn.automaton(filename = medir + "/a.gv")
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(a), z"
+  vcsn_context = "letterset<char_letters(a)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -53,7 +53,7 @@ CHECK_EQ('''digraph
 abc = vcsn.automaton(filename = medir + "/abc.gv")
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "letterset<char_letters(abc)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -115,7 +115,7 @@ CHECK_EQ('''digraph
 xy = vcsn.automaton(filename = medir + "/xy.gv")
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(abcxy), z"
+  vcsn_context = "letterset<char_letters(abcxy)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

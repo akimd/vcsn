@@ -22,7 +22,7 @@ namespace vcsn
 
     static std::string sname()
     {
-      return "char";
+      return L::sname();
     }
 
     virtual std::string vname(bool full = true) const
@@ -45,7 +45,7 @@ namespace vcsn
       //        |    |
       //        |    +-- gens
       //        +-- letter_type, currently only "char".
-      eat(is, "char");
+      eat(is, sname());
 
       // The result.
       set_alphabet res;

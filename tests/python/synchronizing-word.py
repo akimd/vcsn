@@ -31,7 +31,7 @@ g = vcsn.automaton('''digraph
 
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

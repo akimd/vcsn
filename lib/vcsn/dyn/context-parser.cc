@@ -60,7 +60,9 @@ namespace vcsn
                || w == "lao"
                || w == "law_char"
                || w == "ratexpset"
-               || w == "seriesset")
+               || w == "seriesset"
+               || w == "letterset"
+               || w == "wordset")
         {
           std::shared_ptr<ast_node> res = labelset_(w);
           if (is_.peek() == ',')
@@ -124,7 +126,9 @@ namespace vcsn
                || w == "lan"
                || w == "lan_char"
                || w == "lao"
-               || w == "law_char")
+               || w == "law_char"
+               || w == "letterset"
+               || w == "wordset")
         return labelset_(w);
       else if (has(weightsets_, w))
         return weightset_(w);
@@ -149,21 +153,27 @@ namespace vcsn
       return res;
     }
 
-    std::string context_parser::alphabet_()
+    std::shared_ptr<const genset>
+    context_parser::genset_(const std::string& letter_type)
     {
-      std::string res;
+      std::string gens;
       if (is_.peek() == '(')
         {
-          res += '(';
+          gens += '(';
           int c = is_.get();
           while ((c = is_.get()) != EOF)
             {
-              res += c;
+              gens += c;
               if (c == ')')
                 break;
             }
         }
-      return res;
+      return std::make_shared<const genset>(letter_type, gens);
+    }
+
+    std::shared_ptr<const genset> context_parser::genset_()
+    {
+      return genset_(word_());
     }
 
     std::shared_ptr<context> context_parser::context_()
@@ -195,7 +205,7 @@ namespace vcsn
     context_parser::labelset_(const std::string& ls)
     {
       if (ls == "lal_char")
-        return std::make_shared<letterset>(alphabet_());
+        return std::make_shared<letterset>(genset_("char_letters"));
       else if (ls == "lan")
         {
           eat(is_, '<');
@@ -207,13 +217,27 @@ namespace vcsn
         }
       else if (ls == "lan_char")
         return std::make_shared<nullableset>(std::make_shared<letterset>
-                                             (alphabet_()));
+                                             (genset_("char_letters")));
       else if (ls == "lao")
         return std::make_shared<oneset>();
       else if (ls == "lat")
         return tupleset_();
       else if (ls == "law_char")
-        return std::make_shared<wordset>(alphabet_());
+        return std::make_shared<wordset>(genset_("char_letters"));
+      else if (ls == "letterset")
+        {
+          eat(is_, '<');
+          auto gs = genset_();
+          eat(is_, '>');
+          return std::make_shared<letterset>(gs);
+        }
+      else if (ls == "wordset")
+        {
+          eat(is_, '<');
+          auto gs = genset_();
+          eat(is_, '>');
+          return std::make_shared<wordset>(gs);
+        }
       else if (ls == "ratexpset")
         return ratexpset_();
       else if (ls == "seriesset")

@@ -115,40 +115,76 @@ namespace vcsn
       virtual bool has_one() const { return true; }
     };
 
+    /// Represents the "alphabets", or "generator set".
+    ///
+    /// e.g. "char_letter(abc)".
+    class genset: public ast_node
+    {
+    public:
+      genset(const std::string& letter_type, const std::string& gens)
+        : letter_type_(letter_type)
+        , generators_(gens)
+      {}
+
+      ACCEPT()
+
+      /// The char type.
+      const std::string& letter_type() const
+      {
+        return letter_type_;
+      }
+
+      /// The generators.
+      const std::string& generators() const
+      {
+        return generators_;
+      }
+
+    private:
+      const std::string letter_type_;
+      const std::string generators_;
+    };
+
+    /// Support for letterset<GenSet>.
     class letterset: public ast_node
     {
     public:
-      letterset(const std::string& alpha)
-        : alpha_(alpha)
+      letterset(const std::shared_ptr<const ast_node>& gs)
+        : gs_(gs)
       {}
 
-      const std::string& get_alpha() const
+      /// The generator set.
+      std::shared_ptr<const ast_node> genset() const
       {
-        return alpha_;
+        return gs_;
       }
 
       ACCEPT()
       virtual bool has_one() const { return false; }
+
     private:
-      const std::string alpha_;
+      const std::shared_ptr<const ast_node> gs_;
     };
 
+    /// Support for wordset<GenSet>.
     class wordset: public ast_node
     {
     public:
-      wordset(const std::string& alpha)
-        : alpha_(alpha)
+      wordset(const std::shared_ptr<const ast_node>& gs)
+        : gs_(gs)
       {}
 
-      const std::string& get_alpha() const
+      /// The generator set.
+      std::shared_ptr<const ast_node> genset() const
       {
-        return alpha_;
+        return gs_;
       }
 
       ACCEPT()
       virtual bool has_one() const { return true; }
+
     private:
-      const std::string alpha_;
+      const std::shared_ptr<const ast_node> gs_;
     };
 
     class ratexpset: public ast_node

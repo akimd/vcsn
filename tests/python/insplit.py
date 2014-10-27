@@ -22,7 +22,7 @@ digraph
   2 -> F2
 }''','''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "letterset<char_letters(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -56,7 +56,7 @@ digraph
   2 -> F2
 }''',r'''digraph
 {
-  vcsn_context = "lan<lal_char(abc)>, b"
+  vcsn_context = "lan<letterset<char_letters(abc)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -92,7 +92,7 @@ digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lan<lal_char(abc)>, b"
+  vcsn_context = "lan<letterset<char_letters(abc)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

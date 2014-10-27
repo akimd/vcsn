@@ -92,7 +92,7 @@ a = vcsn.automaton('''digraph
 
 exp = '''digraph
 {
-  vcsn_context = "lal_char(a), ratexpset<lal_char(xyz), b>"
+  vcsn_context = "letterset<char_letters(a)>, ratexpset<letterset<char_letters(xyz)>, b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -136,7 +136,7 @@ def xfail(re):
 check('(?@lal_char(ab), b)\z',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -154,7 +154,7 @@ check('(?@lal_char(ab), b)\z',
 check('(?@lal_char(ab), b)\e',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -174,7 +174,7 @@ check('(?@lal_char(ab), b)\e',
 check('(?@lal_char(ab), b)a',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -196,7 +196,7 @@ check('(?@lal_char(ab), b)a',
 check('(?@lal_char(ab), b)a+b',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -225,7 +225,7 @@ xfail('(?@lal_char(abc), b)a*&b*')
 check('(?@lal_char(abc), b)abc',
 '''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "letterset<char_letters(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -251,7 +251,7 @@ check('(?@lal_char(abc), b)abc',
 check('(?@lal_char(abcd), b)ab+cd',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -281,7 +281,7 @@ check('(?@lal_char(abcd), b)ab+cd',
 check('(?@lal_char(abcd), b)a(b+c)d',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -310,7 +310,7 @@ check('(?@lal_char(abcd), b)a(b+c)d',
 check('(?@lal_char(abcd), b)(ab+cd+abcd)abc',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -358,7 +358,7 @@ check('(?@lal_char(abcd), b)(ab+cd+abcd)abc',
 check('(?@lal_char(abcd), b)\z*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -377,7 +377,7 @@ check('(?@lal_char(abcd), b)\z*',
 check('(?@lal_char(abcd), b)\e*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -396,7 +396,7 @@ check('(?@lal_char(abcd), b)\e*',
 check('(?@lal_char(abcd), b)a*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -420,7 +420,7 @@ check('(?@lal_char(abcd), b)a*',
 check('(?@lal_char(abcd), b)(a+b)*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -451,7 +451,7 @@ check('(?@lal_char(abcd), b)(a+b)*',
 check('(?@lal_char(abcd), b)(ab)*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -477,7 +477,7 @@ check('(?@lal_char(abcd), b)(ab)*',
 check('(?@lal_char(abcd), b)a**',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "letterset<char_letters(abcd)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -507,7 +507,7 @@ check('(?@lal_char(abcd), b)a**',
 check('(?@lal_char(a), ratexpset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
 '''digraph
 {
-  vcsn_context = "lal_char(a), ratexpset<lal_char(xyz), b>"
+  vcsn_context = "letterset<char_letters(a)>, ratexpset<letterset<char_letters(xyz)>, b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -539,7 +539,7 @@ check('(?@lal_char(a), ratexpset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
 check('(?@lal_char(ab), z)<12>\e',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -563,7 +563,7 @@ check('(?@lal_char(ab), z)<12>\e',
 check('(?@lal_char(ab), z)\e+a+\e',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -587,7 +587,7 @@ check('(?@lal_char(ab), z)\e+a+\e',
 check('(?@lal_char(ab), z)<12>\e+<23>a+<34>b',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -615,7 +615,7 @@ check('(?@lal_char(ab), z)<12>\e+<23>a+<34>b',
 check('(?@lal_char(ab), z)<12>(\e+a+<10>b+<10>\e)',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -643,7 +643,7 @@ check('(?@lal_char(ab), z)<12>(\e+a+<10>b+<10>\e)',
 check('(?@lal_char(ab), z)(\e+a+<2>b+<3>\e)<10>',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -675,7 +675,7 @@ check('(?@lal_char(ab), z)(\e+a+<2>b+<3>\e)<10>',
 check('(?@lal_char(ab), z)<12>(ab)<23>',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -702,7 +702,7 @@ check('(?@lal_char(ab), z)<12>(ab)<23>',
 check('(?@lal_char(ab), z)\z*',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -723,7 +723,7 @@ xfail('(?@lal_char(ab), z)\e*')
 check('(?@lal_char(ab), z)(<2>a)*',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -747,7 +747,7 @@ check('(?@lal_char(ab), z)(<2>a)*',
 check('(?@lal_char(ab), z)<2>a*<3>',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -771,7 +771,7 @@ check('(?@lal_char(ab), z)<2>a*<3>',
 check('(?@lal_char(ab), z)(<2>a+<3>b)*',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -802,7 +802,7 @@ check('(?@lal_char(ab), z)(<2>a+<3>b)*',
 check('(?@lal_char(ab), z)<2>(<3>a+<5>b)*<7>',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -833,7 +833,7 @@ check('(?@lal_char(ab), z)<2>(<3>a+<5>b)*<7>',
 check('(?@lal_char(ab), z)<2>(<3>(ab)<5>)*<7>',
 '''digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -865,7 +865,7 @@ xfail('(?@lal_char(ab), z)a**')
 check('(?@lal_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+abc)*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), ratexpset<lal_char(efgh), z>"
+  vcsn_context = "letterset<char_letters(abcd)>, ratexpset<letterset<char_letters(efgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -893,7 +893,7 @@ check('(?@lal_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+abc)*',
 check('(?@lal_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+(ab)<f>)*',
 '''digraph
 {
-  vcsn_context = "lal_char(abcd), ratexpset<lal_char(efgh), z>"
+  vcsn_context = "letterset<char_letters(abcd)>, ratexpset<letterset<char_letters(efgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

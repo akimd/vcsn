@@ -16,32 +16,35 @@ XFAIL(lambda: vcsn.context("lal_char(a)_UNKNOWN"))
 XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 
 # An open context is not printed as open.
-check('lal_char, b', 'lal_char(), b')
-check('lal_char(), b')
-check('lal_char(ab), b')
-check('lal_char(a-kv-z), b', 'lal_char(abcdefghijkvwxyz), b')
-check('lal_char(-0-9), b', 'lal_char(-0123456789), b')
+check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
+check('lal_char, b',                'letterset<char_letters()>, b')
+
+check('lal_char(), b', 'letterset<char_letters()>, b')
+check('lal_char(ab), b', 'letterset<char_letters(ab)>, b')
+check('lal_char(a-kv-z), b', 'letterset<char_letters(abcdefghijkvwxyz)>, b')
+check('lal_char(-0-9), b', 'letterset<char_letters(-0123456789)>, b')
 # FIXME: This is obviously wrong: we will not be able to re-read the
 # result, as the backslash is not escaped.
-check(r'lal_char(\\\-), b', r'lal_char(-\), b')
-check(r'lal_char(\--\-), b', r'lal_char(-), b')
+check(r'lal_char(\\\-), b',  r'letterset<char_letters(-\)>, b')
+check(r'lal_char(\--\-), b', r'letterset<char_letters(-)>, b')
 
-check('lal_char(ab), q')
-check('ratexpset<lal_char(ab), b>, b')
+check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
+check('ratexpset<lal_char(ab), b>, b', 'ratexpset<letterset<char_letters(ab)>, b>, b')
 
 # Arguably useless, but stresses our tupleset implementation.
-check('lat<lat<lal_char(a)>>, b')
+check('lat<lat<lal_char(a)>>, b',
+      'lat<lat<letterset<char_letters(a)>>>, b')
 
-check('lat<lal_char(a), lal_char(a)>, b')
-check('lat<lal_char(a),lal_char(a)>,b', 'lat<lal_char(a), lal_char(a)>, b')
-check('lal_char(ab), lat<b, z>', 'lal_char(ab), lat<b, z>')
+check('lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b')
+check('lat<lal_char(a),lal_char(a)>,b', 'lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b')
+check('lal_char(ab), lat<b, z>', 'letterset<char_letters(ab)>, lat<b, z>')
 
 # End of level bosses.
 check('lat<lal_char(ba),lan<lal_char(vu)>, law_char(x-z)>, lat<ratexpset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>',
-      'lat<lal_char(ab), lan<lal_char(uv)>, law_char(xyz)>, lat<ratexpset<lat<lal_char(ef), lal_char(gh)>, q>, r, q>')
+      'lat<letterset<char_letters(ab)>, lan<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<ratexpset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>')
 
 check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<ratexpset<lan<lat<lan_char(fe),lan_char(hg)>>, lat<r, q>>, lat<b, z>>',
-      'lan<lat<lal_char(ab), lat<lan<lal_char(uv)>, law_char(xyz)>>>, lat<ratexpset<lat<lan<lal_char(ef)>, lan<lal_char(gh)>>, lat<r, q>>, lat<b, z>>')
+      'lan<lat<letterset<char_letters(ab)>, lat<lan<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>>>, lat<ratexpset<lat<lan<letterset<char_letters(ef)>>, lan<letterset<char_letters(gh)>>>, lat<r, q>>, lat<b, z>>')
 
 
 ## ------- ##

@@ -50,23 +50,23 @@ namespace vcsn
 
     static std::string sname()
     {
-      return "law_" + super_t::sname();
+      return "wordset<" + super_t::sname() + ">";
     }
 
     std::string vname(bool full = true) const
     {
-      return "law_" + super().vname(full);
+      return "wordset<" + super().vname(full) + ">";
     }
 
     /// Build from the description in \a is.
     static wordset make(std::istream& is)
     {
-      // name: law_char(abc).
-      //       ^^^ ^^^^^^^^^
+      // name: wordset<char(abc)>.
+      //       ^^^^^^^ ^^^^^^^^^
       //      kind   genset
-      kind_t::make(is);
-      eat(is, '_');
+      eat(is, "wordset<");
       auto gs = genset_t::make(is);
+      eat(is, ">");
       return gs;
     }
 

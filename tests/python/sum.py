@@ -12,7 +12,7 @@ ab = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc), b').ratexp('(b+c)*').standard()
 result = '''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "letterset<char_letters(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -103,7 +103,7 @@ digraph
 
 result = '''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "letterset<char_letters(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -136,7 +136,7 @@ b = vcsn.context('lal_char(b), q').ratexp('<1/2>b*').standard()
 
 result = r'''digraph
 {
-  vcsn_context = "lal_char(ab), ratexpset<lal_char(x), q>"
+  vcsn_context = "letterset<char_letters(ab)>, ratexpset<letterset<char_letters(x)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -53,23 +53,23 @@ namespace vcsn
 
     static std::string sname()
     {
-      return "lal_" + super_t::sname();
+      return "letterset<" + super_t::sname() + ">";
     }
 
     std::string vname(bool full = true) const
     {
-      return "lal_" + super().vname(full);
+      return "letterset<" + super().vname(full) + ">";
     }
 
     /// Build from the description in \a is.
     static letterset make(std::istream& is)
     {
-      // name: lal_char(abc).
-      //       ^^^ ^^^^^^^^^
+      // name: letterset<char_letters(abc)>.
+      //       ^^^^^^^^^ ^^^^^^^^^^^^^^^^^
       //      kind   genset
-      kind_t::make(is);
-      eat(is, '_');
+      eat(is, "letterset<");
       auto gs = genset_t::make(is);
+      eat(is, ">");
       return gs;
     }
 

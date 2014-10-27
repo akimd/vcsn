@@ -13,7 +13,7 @@ c = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
 a = c.ratexp("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lal_char(abc), ratexpset<lal_char(xyz), z>"
+  vcsn_context = "letterset<char_letters(abc)>, ratexpset<letterset<char_letters(xyz)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -66,14 +66,14 @@ CHECK_EQ({
            'number of states': 3,
            'number of transitions': 2,
            'number of useful states': 3,
-           'type': 'transpose_automaton<mutable_automaton<lal_char(ab), b>>',
+           'type': 'transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
          },
          a.transpose().info())
 
 # Stripping a transposed automaton strips the inner automaton, but not
 # the transposition shell.
 a = vcsn.context('lal_char, b').ratexp('ab').derived_term().determinize()
-CHECK_EQ('transpose_automaton<mutable_automaton<lal_char(ab), b>>',
+CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
          a.transpose().strip().info()['type'])
 
 ## ------------------- ##

@@ -58,7 +58,7 @@ def exp(ws):
     if ws == 'z':
         return '''digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "letterset<char_letters(abc)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -79,7 +79,7 @@ def exp(ws):
         # bin/update-tests.
         return '''digraph
 {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "letterset<char_letters(abc)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -106,7 +106,7 @@ a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>, z') \
     .standard()
 check_reduce(a, '''digraph
 {
-  vcsn_context = "lat<lal_char(abc), lal_char(xyz)>, z"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -142,7 +142,7 @@ digraph {
 ''')
 check_reduce(a, '''digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "letterset<char_letters(abc)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

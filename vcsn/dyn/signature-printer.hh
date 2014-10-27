@@ -21,15 +21,16 @@ namespace vcsn
 
       DEFINE(automaton);
       DEFINE(context);
-      DEFINE(tupleset);
+      DEFINE(genset);
+      DEFINE(letterset);
       DEFINE(nullableset);
       DEFINE(oneset);
-      DEFINE(letterset);
-      DEFINE(ratexpset);
-      DEFINE(weightset);
-      DEFINE(wordset);
       DEFINE(other);
       DEFINE(polynomialset);
+      DEFINE(ratexpset);
+      DEFINE(tupleset);
+      DEFINE(weightset);
+      DEFINE(wordset);
 
 # undef DEFINE
 

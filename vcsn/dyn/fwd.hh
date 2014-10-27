@@ -87,15 +87,16 @@ namespace vcsn
     class ast_node;
     class automaton;
     class context;
-    class tupleset;
-    class polynomialset;
+    class genset;
+    class letterset;
     class nullableset;
     class oneset;
-    class letterset;
+    class other;
+    class polynomialset;
     class ratexpset;
+    class tupleset;
     class weightset;
     class wordset;
-    class other;
   }
 } // namespace vcsn
 

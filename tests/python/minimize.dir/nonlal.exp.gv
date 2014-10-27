@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "law_char(abc), b"
+  vcsn_context = "wordset<char_letters(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -2,7 +2,7 @@
 
 run 0 - tests/unit/proper <<\EOF
 ***LAL***
-type: mutable_automaton<lal_char(ab), b>
+type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -25,7 +25,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<lal_char(ab), b>
+type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -48,7 +48,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<lal_char(ab), b>
+type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -71,7 +71,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper_here:
-type: mutable_automaton<lal_char(ab), b>
+type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -94,7 +94,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 ***LAW***
-type: mutable_automaton<law_char(ab), b>
+type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -117,7 +117,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<law_char(ab), b>
+type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -140,7 +140,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<law_char(ab), b>
+type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 3
 number of final states: 1
@@ -163,7 +163,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper_here:
-type: mutable_automaton<law_char(ab), b>
+type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -186,7 +186,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 ***LAL Z***
-type: mutable_automaton<lal_char(ab), z>
+type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -209,7 +209,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<lal_char(ab), z>
+type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -232,7 +232,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper_here:
-type: mutable_automaton<lal_char(ab), z>
+type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -256,7 +256,7 @@ is useless: 0
 is valid: 1
 ***LAW Z***
 * Circuit of eps-transition
-type: mutable_automaton<law_char(ab), z>
+type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -280,7 +280,7 @@ is useless: 0
 is valid: 0
 Exception: invalid automaton
 * No circuit of eps-transition
-type: mutable_automaton<law_char(ab), z>
+type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -303,7 +303,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<law_char(ab), z>
+type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -326,7 +326,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<law_char(ab), z>
+type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 3
 number of final states: 1
@@ -349,7 +349,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper_here:
-type: mutable_automaton<law_char(ab), z>
+type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -373,7 +373,7 @@ is useless: 0
 is valid: 1
 ***LAW Z-min+***
 * Circuit of eps-transition
-type: mutable_automaton<law_char(ab), zmin>
+type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -397,7 +397,7 @@ is useless: 0
 is valid: 0
 Exception: invalid automaton
 * No negative circuit
-type: mutable_automaton<law_char(ab), zmin>
+type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 1
@@ -420,7 +420,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
-type: mutable_automaton<law_char(ab), zmin>
+type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 3
@@ -443,7 +443,7 @@ is trim: 1
 is useless: 0
 is valid: 1
 forward_proper:
-type: mutable_automaton<law_char(ab), zmin>
+type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
 number of initial states: 3
 number of final states: 1
@@ -467,7 +467,7 @@ is useless: 0
 is valid: 1
 digraph
 {
-  vcsn_context = "law_char(ab), zmin"
+  vcsn_context = "wordset<char_letters(ab)>, zmin"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -498,7 +498,7 @@ digraph
   2 -> 2 [label = "<1>a"]
 }
 proper_here:
-type: mutable_automaton<law_char(ab), zmin>
+type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 3

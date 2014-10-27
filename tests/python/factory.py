@@ -95,22 +95,22 @@ CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
 a = vcsn.context('lal_char(a), b').random(100, .1, 20, 30)
-CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a), b>')
-CHECK_EQ(a.info()['number of states'], 100)
-CHECK_EQ(a.info()['number of initial states'], 20)
-CHECK_EQ(a.info()['number of final states'], 30)
+CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
+CHECK_EQ(100, a.info()['number of states'])
+CHECK_EQ(20, a.info()['number of initial states'])
+CHECK_EQ(30, a.info()['number of final states'])
 
 
-## ---------------- ##
+## ---------------------- ##
 ## random_deterministic.  ##
-## ---------------- ##
+## ---------------------- ##
 
 a = vcsn.context('lal_char(a), b').random_deterministic(100)
-CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a), b>')
-CHECK_EQ(a.info()['number of states'], 100)
-CHECK_EQ(a.info()['number of initial states'], 1)
-CHECK_EQ(a.info()['number of final states'], 1)
-CHECK_EQ(a.is_complete(), True)
+CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
+CHECK_EQ(100, a.info()['number of states'])
+CHECK_EQ(1, a.info()['number of initial states'])
+CHECK_EQ(1, a.info()['number of final states'])
+CHECK_EQ(True, a.is_complete())
 
 
 ## --- ##

@@ -184,7 +184,7 @@ namespace vcsn
 
     DEFINE(nullableset)
     {
-      header("vcsn/ctx/lan_char.hh");
+      header("vcsn/labelset/nullableset.hh");
       os_ << "vcsn::nullableset<" << incendl;
       t.get_labelset()->accept(*this);
       os_ << decendl << ">";
@@ -197,13 +197,20 @@ namespace vcsn
       os_ << "vcsn::oneset";
     }
 
+    DEFINE(genset)
+    {
+      header("vcsn/alphabets/setalpha.hh"); // set_alphabet
+      if (t.letter_type() == "char_letters")
+        header("vcsn/alphabets/char.hh");
+      os_ << "vcsn::set_alphabet<vcsn::" << t.letter_type() << '>';
+    }
+
     DEFINE(letterset)
     {
-      (void) t;
       header("vcsn/labelset/letterset.hh");
-      // Some instantiation happen here:
-      header("vcsn/ctx/lal_char.hh");
-      os_ << "vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>";
+      os_ << "vcsn::letterset<";
+      t.genset()->accept(*this);
+      os_ << '>';
     }
 
     DEFINE(ratexpset)
@@ -224,9 +231,10 @@ namespace vcsn
 
     DEFINE(wordset)
     {
-      (void) t;
-      header("vcsn/ctx/law_char.hh");
-      os_ << "vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>";
+      header("vcsn/labelset/wordset.hh");
+      os_ << "vcsn::wordset<";
+      t.genset()->accept(*this);
+      os_ << '>';
     }
 
     DEFINE(other)

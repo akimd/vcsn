@@ -146,7 +146,7 @@ def normalize(a):
     if 'lan' in str(a.context()):
         a = a.proper()
     # Eliminate nullablesets if there are that remain.
-    to = re.sub(r'lan<(lal_char\(.*?\))>', r'\1', a.context().format('text'))
+    to = re.sub(r'lan<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>', r'\1', a.context().format('text'))
     return a.automaton(vcsn.context(to))
 
 

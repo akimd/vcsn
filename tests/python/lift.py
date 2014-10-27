@@ -10,7 +10,7 @@ from test import *
 l4 = vcsn.context('lal_char(abc), b').ladybird(4)
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lao, ratexpset<lal_char(abc), b>"
+  vcsn_context = "lao, ratexpset<letterset<char_letters(abc)>, b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
