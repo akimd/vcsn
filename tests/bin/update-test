@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 
-# A very rough utility to update a test file from its log file.  This
+# A very rough utility to update test files from their log file.  This
 # is very handy when there is a change of syntax: changing every
 # single expected output is tedious and error-prone.
 #
 # usage:
-#   update-test --builddir=_build tests/python/*.py
+#   update-test --builddir=_build tests/python/*.py tests/python/determinize.dir/*
 
 from __future__ import print_function
 import argparse, os, re, sys
@@ -26,6 +26,7 @@ args = parser.parse_args()
 subst = dict()
 
 def contents(file):
+  '''The contents of a file.'''
   f = open(file)
   return f.read()
 
@@ -90,7 +91,12 @@ def update(test, log):
 for t in args.tests:
   old = contents(t)
   new = old
-  for l in args.log + [t[:t.rfind('.')] + '.log']:
+  # Use the logs provided by the user, and the ones computed from the
+  # test file name (e.g., tests/python/automaton.py ->
+  # tests/python/automaton.log), and the ones from the test
+  # directories (tests/python/automaton.dir/a1.gv ->
+  # tests/python/automaton.log)
+  for l in args.log + [t[:t.rfind('.')] + '.log'] + [t[:t.rfind('.dir/')] + '.log']:
     new = update(new, l)
   if new != old:
     open(t, 'w').write(new)
