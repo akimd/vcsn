@@ -39,15 +39,15 @@ namespace vcsn
     static void make(std::istream& is)                                  \
     {                                                                   \
       /*                                                                \
-       * name: lal_char(abc), ratexpset<law_char(xyz), b>.                \
-       *       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^                  \
+       * name: lal_char(abc), ratexpset<law_char(xyz), b>.              \
+       *       ^^^ ^^^^ ^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^^                \
        *        |   |    |        weightset                             \
        *        |   |    +-- gens                                       \
        *        |   +-- letter_type                                     \
        *        +-- kind                                                \
        *                                                                \
-       * name: lao_ratexpset<law_char(xyz), b>                           \
-       *       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^                           \
+       * name: lao, ratexpset<law_char(xyz), b>                         \
+       *       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^                         \
        *       kind         weightset                                   \
        */                                                               \
       char kind[4];                                                     \

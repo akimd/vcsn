@@ -162,7 +162,7 @@ namespace vcsn
       return o << format(w);
     }
 
-    std::string
+    word_t
     format(const letter_t l) const
     {
       if (l == one_letter() || l == special_letter())
@@ -171,12 +171,12 @@ namespace vcsn
         return str_escape(l);
     }
 
-    std::string
+    word_t
     format(const word_t& w) const
     {
       size_t s = w.size();
 
-      std::string res;
+      word_t res;
       if (s == 0
           || (s == 1 && w[0] == one_letter()))
         res = "\\e";

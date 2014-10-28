@@ -9,7 +9,8 @@ namespace vcsn
 {
   namespace ctx
   {
-    using lan_char = nullableset<vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>>;
+    using lan_char
+      = nullableset<vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>>;
   }
 }
 

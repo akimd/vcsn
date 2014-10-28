@@ -5,6 +5,7 @@
 # include <set>
 
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
