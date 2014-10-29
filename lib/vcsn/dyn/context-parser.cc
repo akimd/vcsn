@@ -54,15 +54,9 @@ namespace vcsn
           || w == "transpose_automaton"
           || w == "tuple_automaton")
         return automaton_(w);
-      else if (w == "lal_char"
-               || w == "lan"
-               || w == "lan_char"
-               || w == "lao"
-               || w == "law_char"
+      else if (has(labelsets_, w)
                || w == "ratexpset"
-               || w == "seriesset"
-               || w == "letterset"
-               || w == "wordset")
+               || w == "seriesset")
         {
           std::shared_ptr<ast_node> res = labelset_(w);
           if (is_.peek() == ',')
@@ -122,13 +116,7 @@ namespace vcsn
         return ratexpset_();
       else if (w == "seriesset")
         return ratexpset_series_();
-      else if (w == "lal_char"
-               || w == "lan"
-               || w == "lan_char"
-               || w == "lao"
-               || w == "law_char"
-               || w == "letterset"
-               || w == "wordset")
+      else if (has(labelsets_, w))
         return labelset_(w);
       else if (has(weightsets_, w))
         return weightset_(w);

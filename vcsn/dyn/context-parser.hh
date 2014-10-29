@@ -82,6 +82,19 @@ namespace vcsn
           "z",
           "zmin",
         };
+
+      /// The set of weightset names.
+      std::set<std::string> labelsets_
+        =
+        {
+          "lal_char",
+          "lan",
+          "lan_char",
+          "lao",
+          "law_char",
+          "letterset",
+          "wordset",
+        };
     };
   }
 }
