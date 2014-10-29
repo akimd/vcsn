@@ -27,7 +27,7 @@ def bench(title, comment, cmd, number=1):
 b = vcsn.context('lal_char(abc), b')
 
 # Check the cost of dyn calls.
-bench('b.format("text")', 'b = lal_char(abc), b',
+bench('b.format("text")', 'b = [abc] -> B',
       lambda: b.format('text'),
       number=100000)
 

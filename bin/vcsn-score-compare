@@ -6,8 +6,12 @@ import os, re, sys
 bench = dict()
 
 def normalize(k):
-    k, c = map(str.strip, k.split('#', 2))
-    k += " # " + c
+    '''Fix a bench fix, i.e., fix errors, update APIs etc.
+    '''
+
+    # Separate with " # " only.
+    k = " # ".join(map(str.strip, k.split('#', 2)))
+
     # The right symbol for repeated &.
     k = re.sub(r'a\*\*(\d+) ', r'a & \1', k)
     # Fix: spello.
@@ -44,8 +48,10 @@ def normalize(k):
     k = re.sub(r'a.sort\(\) (# a = std\(\[a-e\]\?\{600\}\))',
                r'a.shortest(5) \1', k)
 
-    k, c = map(str.strip, k.split('#', 2))
-    k = "{:20s} # {}".format(k, c)
+    # The syntax of contexts has changed.
+    k = re.sub(r'lal_char\(abc\)(_|, )b', '[abc] -> B', k)
+
+    k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 
 def read(fn):
