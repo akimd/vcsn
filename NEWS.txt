@@ -1,10 +1,20 @@
-Vaucanson 2 news
-================
+Vcsn 2 news
+===========
 
 This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+
+## 2014-10-29
+### New project name: Vcsn
+The Vaucanson 2 project, which was funded by a (French) program (ANR),
+is now "closed".  Of course, it will continue to exist, but now there
+will be two Vaucansa!  One will be led by Sylvain Lombardy and Jacques
+Sakarovitch, and the other by Alexandre Duret-Lutz and Akim Demaille
+from EPITA.
+
+This file is about the latter, named "Vcsn".
 
 ## 2014-10-27
 ### WARNING: resyntaxed contexts

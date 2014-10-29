@@ -1,4 +1,4 @@
-# Vaucanson 2, a generic library for finite state machines.
+# Vcsn 2, a generic library for finite state machines.
 # Copyright (C) 2012-2014 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
@@ -15,9 +15,9 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.69])
 
-AC_INIT([Vaucanson], [2.0],
-        [vaucanson-bugs@lrde.epita.fr], [],
-        [http://vaucanson.lrde.epita.fr/])
+AC_INIT([Vcsn], [2.0],
+        [vcsn-bugs@lrde.epita.fr], [],
+        [http://vcsn.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 # For Autoconf 2.70:
@@ -196,14 +196,13 @@ case $ac_cv_GLIBCXX_DEBUG:$vcsn_cv_cxx_is_clang in (yes:no)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
-# Use "vcsn", not "vaucanson".
-AC_SUBST([pkglibdir], ['${libdir}/vcsn'])
-
 # We look for our data files at runtime, including to compile.
-AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$datadir/vcsn])`])
+AC_SUBST([pkglibdir],  ['${libdir}/${PACKAGE}'])
+AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$datadir/$PACKAGE])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
 AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
+
 
 # We compile C++ at runtime.
 VCSN_PROG_CCACHE

@@ -14,7 +14,7 @@ distcheck()
     # If distcheck was run and failed in its course, it probably
     # left readonly directories that Teamcity will fail to clean.
     #
-    for distdir in vaucanson-*
+    for distdir in vcsn-*
     do
       if test -d "$distdir"; then
         # Taken from Automake's am__remove_distdir.
