@@ -1,6 +1,7 @@
 #ifndef VCSN_ALPHABETS_SETALPHA_HH
 # define VCSN_ALPHABETS_SETALPHA_HH
 
+# include <cassert>
 # include <initializer_list>
 # include <stdexcept>
 
