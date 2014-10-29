@@ -38,7 +38,7 @@ VCSN_LDFLAGS="-L $abs_builddir/lib/.libs @LDFLAGS@"
 export VCSN_LDFLAGS
 
 case $1 in
-  ('') ;; # We are sourced to set up the environment.
+  ('--export') ;; # We are sourced to set up the environment.
   (*) # Hopefully not looping here, thanks to the change of PATH.
       exec vcsn "$@";;
 esac

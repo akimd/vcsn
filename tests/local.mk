@@ -93,7 +93,7 @@ AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 # Use the wrappers to run the non-installed executables.
 # Find test.py which is in tests/bin.
 BUILDCHECK_ENVIRONMENT +=                               \
-  . $(abs_top_builddir)/tests/bin/vcsn;                 \
+  . $(abs_top_builddir)/tests/bin/vcsn --export;        \
   PYTHONPATH=$(abs_top_srcdir)/tests/bin:$$PYTHONPATH;  \
   export PYTHONPATH;
 
@@ -122,7 +122,7 @@ installcheck-local:
 	$(MAKE) $(AM_MAKEFLAGS)					\
 	  AM_TESTS_ENVIRONMENT='$$(INSTALLCHECK_ENVIRONMENT)'	\
 	  RECHECK_LOGS='$$(TEST_LOGS)'				\
-	  check;						\
+	  check &&						\
 	rm -rf "$$VCSN_HOME"
 
 # Left by FAdo when the test suite runs.

@@ -15,9 +15,10 @@ help ()
   cat <<EOF
 usage: vcsn COMMAND ARGS...
 
-If COMMAND is "notebook", run Vaucanson as an IPython Notebook.
+If COMMAND is "notebook", run Vcsn as an IPython Notebook.
 
-If COMMAND is "run" (or "-e"), run the ARGS...
+If COMMAND is "run" (or "-e"), set up the environment to find
+Vcsn, and run the ARGS...
 
 If COMMAND is "efstdecompile" or "efstcompile", run the corresponding
 program.
@@ -58,8 +59,17 @@ EOF
   exit 0
 }
 
+
+if test $# = 0; then
+  cat >&2 <<EOF
+vcsn: missing file operand
+Try 'vcsn --help' for more information.
+EOF
+  exit 1
+fi
+
 case $1 in
-  ('') ;; # We are sourced to set up the environment.
+  ('--export') ;; # We are sourced to set up the environment.
   (-e|run) shift 1; exec "$@";;
   (-h|--help) help;;
   (-v|--version) version;;
@@ -94,12 +104,6 @@ case $1 in
   (*)
      prog="vcsn-$1"; shift; exec "$prog" "$@";;
 esac
-
-cat >&2 <<EOF
-vcsn: missing file operand
-Try 'vcsn --help' for more information.
-EOF
-exit 1
 
 # Local Variables:
 # mode: shell-script
