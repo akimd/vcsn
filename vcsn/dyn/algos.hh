@@ -205,6 +205,9 @@ namespace vcsn
     /// Output in FAdo format.
     std::ostream& fado(const automaton& aut, std::ostream& out);
 
+    /// The subautomaton based on \a aut, with only states in \a ss visible.
+    automaton filter(const automaton& aut, const std::vector<unsigned>& ss);
+
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
 

@@ -5,6 +5,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-10-30
+### filter: new algorithm
+Hide states of another automaton, revealing only selected ones.  This
+does not copy the original automaton.
 
 ## 2014-10-29
 ### New project name: Vcsn

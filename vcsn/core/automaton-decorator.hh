@@ -41,6 +41,9 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
+      using transitions_output_t
+        = typename Aut::element_type::transitions_output_t;
+
     public:
       automaton_decorator(automaton_t aut)
         : aut_{aut}

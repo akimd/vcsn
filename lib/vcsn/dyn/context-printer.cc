@@ -125,6 +125,8 @@ namespace vcsn
         header("vcsn/algos/determinize.hh");
       else if (type == "detweighted_automaton")
         header("vcsn/algos/determinize.hh");
+      else if (type == "filter_automaton")
+        header("vcsn/algos/filter.hh");
       else if (type == "mutable_automaton")
         header("vcsn/core/mutable-automaton.hh");
       else if (type == "pair_automaton")

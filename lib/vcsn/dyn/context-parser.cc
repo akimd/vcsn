@@ -45,6 +45,7 @@ namespace vcsn
       if (w == "blind_automaton"
           || w == "determinized_automaton"
           || w == "detweighted_automaton"
+          || w == "filter_automaton"
           || w == "mutable_automaton"
           || w == "pair_automaton"
           || w == "partition_automaton"
@@ -272,6 +273,7 @@ namespace vcsn
       // xxx_automaton<Aut>.
       else if (prefix == "determinized_automaton"
                || prefix == "detweighted_automaton"
+               || prefix == "filter_automaton"
                || prefix == "pair_automaton"
                || prefix == "partition_automaton"
                || prefix == "permutation_automaton"

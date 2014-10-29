@@ -71,6 +71,7 @@ namespace vcsn
         return transpose(vcsn::strip(this->naked_automaton()));
       }
 
+
       /*-------------------------------.
       | const methods that transpose.  |
       `-------------------------------*/
@@ -82,19 +83,24 @@ namespace vcsn
         return aut_->Value;                     \
       }
 
-      DEFINE(is_initial(state_t s),          is_final(s));
-      DEFINE(is_final(state_t s),            is_initial(s));
       DEFINE(all_in(state_t s),              all_out(s));
+      template <typename Pred>
+      DEFINE(all_in(state_t s, Pred pred),   all_out(s, pred));
       DEFINE(all_out(state_t s),             all_in(s));
+      template <typename Pred>
+      DEFINE(all_out(state_t s, Pred pred),  all_in(s, pred));
+
+      DEFINE(dst_of(transition_t t),         src_of(t));
+      DEFINE(final_transitions(),            initial_transitions());
       DEFINE(in(state_t s),                  out(s));
+      DEFINE(initial_transitions(),          final_transitions());
+      DEFINE(is_final(state_t s),            is_initial(s));
+      DEFINE(num_finals(),                   num_initials());
+      DEFINE(num_initials(),                 num_finals());
       DEFINE(out(state_t s),                 in(s));
       DEFINE(outin(state_t s, state_t d),    outin(d, s));
       DEFINE(src_of(transition_t t),         dst_of(t));
-      DEFINE(dst_of(transition_t t),         src_of(t));
-      DEFINE(initial_transitions(),          final_transitions());
-      DEFINE(final_transitions(),            initial_transitions());
-      DEFINE(num_initials(),                 num_finals());
-      DEFINE(num_finals(),                   num_initials());
+      DEFINE(is_initial(state_t s),          is_final(s));
 
       DEFINE(in(state_t s, label_t l),
              out(s, aut_->labelset()->transpose(l)));

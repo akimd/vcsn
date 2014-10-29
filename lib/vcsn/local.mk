@@ -54,6 +54,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/eval.cc                             \
   %D%/algos/expand.cc                           \
   %D%/algos/fado.cc                             \
+  %D%/algos/filter.cc                           \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.cc                            \
   %D%/algos/has-twins-property.cc               \

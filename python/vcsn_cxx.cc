@@ -215,6 +215,11 @@ struct automaton
     return vcsn::dyn::factor(val_);
   }
 
+  automaton filter(const boost::python::list& states) const
+  {
+    return vcsn::dyn::filter(val_, to_vector<unsigned>(states));
+  }
+
   std::string format(const std::string& format = "dot") const
   {
     std::ostringstream os;
@@ -976,6 +981,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("enumerate", &automaton::enumerate)
     .def("_eval", &automaton::eval)
     .def("factor", &automaton::factor)
+    .def("filter", &automaton::filter)
     .def("_format", &automaton::format)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")

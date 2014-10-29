@@ -13,6 +13,7 @@
 # include <vcsn/dyn/ratexpset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/set.hh>
+# include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -189,12 +190,25 @@ namespace vcsn
   }
 
   /// A copy of \a input keeping only its states that are members of
-  /// \a keep.
+  /// std::set \a keep.
   template <typename AutIn,
             typename AutOut = typename AutIn::element_type::automaton_nocv_t>
   inline
   AutOut
   copy(const AutIn& input, const std::set<state_t_of<AutIn>>& keep)
+  {
+    return ::vcsn::copy<AutIn, AutOut>
+      (input,
+       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
+  }
+
+  /// A copy of \a input keeping only its states that are members of
+  /// std::unordered_set \a keep.
+  template <typename AutIn,
+            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
+  inline
+  AutOut
+  copy(const AutIn& input, const std::unordered_set<state_t_of<AutIn>>& keep)
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
