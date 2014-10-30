@@ -15,10 +15,11 @@ namespace std
   | hash(set<T>).  |
   `---------------*/
 
-  template <typename T>
-  struct hash<set<T>>
+  template <typename T, typename Compare, typename Alloc>
+  struct hash<set<T, Compare, Alloc>>
   {
-    size_t operator()(const set<T>& ss) const
+    using type = set<T, Compare, Alloc>;
+    size_t operator()(const type& ss) const
     {
       size_t res = 0;
       for (const auto& s: ss)

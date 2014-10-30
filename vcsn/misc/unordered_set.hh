@@ -12,12 +12,15 @@ namespace std
   | hash(unordered_set<T>).  |
   `-------------------------*/
 
-  template <typename T>
-  struct hash<unordered_set<T>>
+  template <typename Key, typename Hash, typename KeyEqual, typename Alloc>
+  struct hash<unordered_set<Key, Hash, KeyEqual, Alloc>>
   {
-    size_t operator()(const unordered_set<T>& ss) const
+    using type = unordered_set<Key, Hash, KeyEqual, Alloc>;
+    size_t operator()(const type& ss) const
     {
-      std::hash<T> hasher;
+      // Compute the sum of the hashes.  Beware that we must be
+      // independant of the order, since this is an unordered_set.
+      Hash hasher;
       size_t res = 0;
       for (auto s: ss)
         res += hasher(s);
