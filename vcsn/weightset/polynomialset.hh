@@ -701,6 +701,10 @@ namespace vcsn
         return print_without_ranges_(v, out, format, sep);
 
       // No ranges if the weights aren't all the same.
+      //
+      // While at it, gather the letters.  We can use a vector, as we
+      // know that the labels are already sorted, and random access
+      // iteration will be handy below.
       std::vector<label_t> letters;
       weight_t first_w = weightset()->zero();
       for (const auto& m: v)

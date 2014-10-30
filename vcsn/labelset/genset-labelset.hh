@@ -46,6 +46,12 @@ namespace vcsn
         return this->genset().vname(full);
       }
 
+      /// Read a range of letters.
+      ///
+      /// Stream \a i is right on a '['.  Read up to the closing ']',
+      /// and return the list of the matching labels.
+      ///
+      /// For instance "[a-d0-9_]".
       std::set<letter_t>
       convs_(std::istream& i) const
       {

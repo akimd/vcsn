@@ -242,6 +242,7 @@ namespace vcsn
     /// Converting from ourself: identity.
     value_t conv(self_type, value_t v) const;
 
+    /// Read a range of ratexps.
     std::set<value_t> convs(std::istream&) const
     {
       raise(vname(), ": ranges not implemented");

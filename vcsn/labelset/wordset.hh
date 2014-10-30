@@ -192,6 +192,12 @@ namespace vcsn
       return this->genset().conv(i);
     }
 
+    /// Read a range of labels.
+    ///
+    /// Stream \a i is right on a '['.  Read up to the closing ']',
+    /// and return the list of the matching labels.
+    ///
+    /// For instance "[a-d0-9_]".
     std::set<value_t>
     convs(std::istream& i) const
     {
