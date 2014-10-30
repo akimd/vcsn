@@ -228,3 +228,9 @@ r = "'(a, x)'{2000}'(b, y)'"
 a = vcsn.context("lat<lal_char(ab), lal_char(xy)>, b").ratexp(r).standard()
 bench('a.is_functional()', 'a = std({})'.format(r),
       lambda: a.is_functional())
+
+# accessible.
+r = "[a-m]{20000}"
+a = vcsn.context('lan_char(a-z), b').ratexp(r).thompson().proper(False)
+bench('a.accessible', 'a = thompson({}).proper(False)'.format(r),
+      lambda: a.accessible())

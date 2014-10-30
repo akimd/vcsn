@@ -11,6 +11,7 @@
 # include <vcsn/algos/accessible.hh> // useful_states
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/set.hh>
+# include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -286,7 +287,7 @@ namespace vcsn
       /// Whether to format for dot2tex.
       bool dot2tex_ = false;
       /// Useful states.
-      std::set<state_t_of<Aut>> useful_ = useful_states(aut_);
+      std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_);
     };
   }
 

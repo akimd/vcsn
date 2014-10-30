@@ -27,6 +27,9 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
 
       /// States set that we want to filter.
+      /// Using std::unordered_set because when test states_t and
+      /// accessible states are std::unordered_set the
+      /// score(perfomance) is better(x2) than using std::set.
       using states_t = std::unordered_set<state_t>;
 
       using tr_cont_t = std::vector<transition_t>;

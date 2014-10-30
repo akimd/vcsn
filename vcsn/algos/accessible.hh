@@ -5,11 +5,11 @@
 # include <queue>
 # include <map>
 
-# include <vcsn/algos/copy.hh>
+# include <vcsn/algos/filter.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/set.hh>
+# include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -18,9 +18,12 @@ namespace vcsn
   | Sets of accessible, coaccessible, useful states.  |
   `--------------------------------------------------*/
 
+  template <typename Aut>
+  using states_t = std::unordered_set<state_t_of<Aut>>;
+
   // The set of accessible states, including pre(), and possibly post().
   template <typename Aut>
-  std::set<state_t_of<Aut>>
+  states_t<Aut>
   accessible_states(const Aut& aptr)
   {
     using automaton_t = Aut;
@@ -28,7 +31,7 @@ namespace vcsn
 
     // Reachable states.
     const auto& a = *aptr;
-    std::set<state_t> res{a.pre()};
+    states_t<Aut> res{a.pre()};
 
     // States work list.
     using worklist_t = std::queue<state_t>;
@@ -54,7 +57,7 @@ namespace vcsn
 
   // The set of coaccessible states, including post(), and possibly pre().
   template <typename Aut>
-  std::set<state_t_of<Aut>>
+  states_t<Aut>
   coaccessible_states(const Aut& a)
   {
     return accessible_states(transpose(a));
@@ -62,7 +65,7 @@ namespace vcsn
 
   // The set of coaccessible states, including post(), and possibly pre().
   template <typename Aut>
-  std::set<state_t_of<Aut>>
+  states_t<Aut>
   useful_states(const Aut& a)
   {
     auto accessible = accessible_states(a);
@@ -120,24 +123,24 @@ namespace vcsn
   `-----------------------------------------------*/
 
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  filter_automaton<Aut>
   accessible(const Aut& a)
   {
-    return vcsn::copy(a, accessible_states(a));
+    return vcsn::filter(a, accessible_states(a));
   }
 
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  filter_automaton<Aut>
   coaccessible(const Aut& a)
   {
-    return vcsn::copy(a, coaccessible_states(a));
+    return vcsn::filter(a, coaccessible_states(a));
   }
 
   template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
+  filter_automaton<Aut>
   trim(const Aut& a)
   {
-    return vcsn::copy(a, useful_states(a));
+    return vcsn::filter(a, useful_states(a));
   }
 
   /*----------------------------------------------------------------.
