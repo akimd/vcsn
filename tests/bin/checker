@@ -270,7 +270,7 @@ EOF
   {
     cat <<EOF
 command
-  $prog $@
+  $PREPROG $prog $@
 
 EOF
     # Is the exit status correct?
