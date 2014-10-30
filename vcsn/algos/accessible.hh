@@ -36,18 +36,18 @@ namespace vcsn
     todo.emplace(a.pre());
 
     while (!todo.empty())
-    {
-      const state_t src = todo.front();
-      todo.pop();
-
-      for (auto tr : a.all_out(src))
       {
-        state_t dst = a.dst_of(tr);
-        // If we have not seen it already, explore its successors.
-        if (res.emplace(dst).second)
-          todo.emplace(dst);
+        const state_t src = todo.front();
+        todo.pop();
+
+        for (auto tr : a.all_out(src))
+          {
+            state_t dst = a.dst_of(tr);
+            // If we have not seen it already, explore its successors.
+            if (res.emplace(dst).second)
+              todo.emplace(dst);
+          }
       }
-    }
 
     return res;
   }
