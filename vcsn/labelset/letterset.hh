@@ -45,12 +45,6 @@ namespace vcsn
       : letterset(std::make_shared<const genset_t>(letters))
     {}
 
-    const super_t&
-    super() const
-    {
-      return static_cast<const super_t&>(*this);
-    }
-
     static std::string sname()
     {
       return "letterset<" + super_t::sname() + ">";
@@ -58,7 +52,7 @@ namespace vcsn
 
     std::string vname(bool full = true) const
     {
-      return "letterset<" + super().vname(full) + ">";
+      return "letterset<" + super_t::vname(full) + ">";
     }
 
     /// Build from the description in \a is.

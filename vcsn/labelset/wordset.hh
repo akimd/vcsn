@@ -42,12 +42,6 @@ namespace vcsn
       : wordset{std::make_shared<const genset_t>(gs)}
     {}
 
-    const super_t&
-    super() const
-    {
-      return static_cast<const super_t&>(*this);
-    }
-
     static std::string sname()
     {
       return "wordset<" + super_t::sname() + ">";
@@ -55,7 +49,7 @@ namespace vcsn
 
     std::string vname(bool full = true) const
     {
-      return "wordset<" + super().vname(full) + ">";
+      return "wordset<" + super_t::vname(full) + ">";
     }
 
     /// Build from the description in \a is.
