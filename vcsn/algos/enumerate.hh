@@ -2,11 +2,8 @@
 # define VCSN_ALGOS_ENUMERATE_HH
 
 # include <algorithm>
-# include <iostream>
-# include <list>
 # include <map>
 # include <queue>
-# include <vector>
 
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -46,7 +43,7 @@ namespace vcsn
 
       /// Same as polynomial_t::value_type.
       using monomial_t = std::pair<word_t, weight_t>;
-      using queue_t = std::list<std::pair<state_t, monomial_t>>;
+      using queue_t = std::queue<std::pair<state_t, monomial_t>>;
 
       enumerater(const automaton_t& aut)
         : aut_(aut)
@@ -58,7 +55,7 @@ namespace vcsn
       polynomial_t enumerate(unsigned max)
       {
         queue_t queue;
-        queue.emplace_back(aut_->pre(), ps_.monomial_one());
+        queue.emplace(aut_->pre(), ps_.monomial_one());
 
         // We match words that include the initial and final special
         // characters.
@@ -79,7 +76,7 @@ namespace vcsn
       polynomial_t shortest(unsigned num)
       {
         queue_t queue;
-        queue.emplace_back(aut_->pre(), ps_.monomial_one());
+        queue.emplace(aut_->pre(), ps_.monomial_one());
 
         while (past_[aut_->post()].size() < num && !queue.empty())
           propagate_(queue);
@@ -107,14 +104,14 @@ namespace vcsn
             state_t s;
             monomial_t m;
             tie(s, m) = std::move(q1.front());
-            q1.pop_front();
+            q1.pop();
             for (const auto t: aut_->all_out(s))
               {
                 // FIXME: monomial mul.
                 monomial_t n(ls_.concat(m.first, aut_->label_of(t)),
                              ws_.mul(m.second, aut_->weight_of(t)));
                 ps_.add_here(past_[aut_->dst_of(t)], n);
-                q2.emplace_back(aut_->dst_of(t), n);
+                q2.emplace(aut_->dst_of(t), n);
               }
           }
         q1.swap(q2);
@@ -185,7 +182,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(shortest,
-                        (const automaton& aut, unsigned num) -> polynomial);
+                       (const automaton& aut, unsigned num) -> polynomial);
     }
   }
 }
