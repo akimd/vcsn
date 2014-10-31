@@ -7,6 +7,7 @@
 
 namespace vcsn
 {
+  // Accept int to catch EOF too.
   std::ostream&
   str_escape(std::ostream& os, const int c)
   {
@@ -42,7 +43,14 @@ namespace vcsn
   str_escape(std::ostream& os, const std::string& str)
   {
     for (auto c: str)
-      str_escape(os, c);
+      // Turn into an unsigned, otherwise if c has its highest but
+      // set, will be interpreted as a negative char, which will be
+      // mapped to a negtive int.  So for instance c = 255 is mapped
+      // to \xFFFFFFF instead of 255.
+      //
+      // This happens only when char is "signed char".  Which is
+      // common.
+      str_escape(os, uint8_t(c));
     return os;
   }
 
