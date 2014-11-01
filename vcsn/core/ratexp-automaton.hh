@@ -30,14 +30,15 @@ namespace vcsn
   {
     /// An incremental automaton whose states are ratexps.
     template <typename Aut>
-    class ratexp_automaton_impl : public automaton_decorator<Aut>
+    class ratexp_automaton_impl
+      : public automaton_decorator<Aut>
     {
     public:
       using automaton_t = Aut;
-      using context_t = context_t_of<Aut>;
+      using super_t = automaton_decorator<automaton_t>;
+      using context_t = context_t_of<automaton_t>;
       using ratexpset_t = ratexpset<context_t>;
       using ratexp_t = typename ratexpset_t::value_t;
-      using super_t = automaton_decorator<mutable_automaton<context_t>>;
       using state_t = state_t_of<super_t>;
       using label_t = label_t_of<super_t>;
       using weight_t = weight_t_of<super_t>;

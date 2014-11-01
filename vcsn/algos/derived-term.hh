@@ -82,7 +82,7 @@ namespace vcsn
         while (!res_->todo_.empty())
           {
             ratexp_t src = res_->todo_.top();
-            auto s = res_->state(src);
+            state_t s = res_->state(src);
             res_->todo_.pop();
             res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
