@@ -156,6 +156,12 @@ check_format('lal_char(abc), ratexpset<lal_char(def), ratexpset<lal_char(xyz), z
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
              r' \left\langle  \left\langle  \left\langle 42 \right\rangle \,x \right\rangle \,d \right\rangle \,a +  \left\langle  \left\langle  \left\langle 51 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
+# Words are in \mathit to get correct inter-letter spacing.
+check_format('law_char(abc), z',
+             "(abc)a(bc)",
+             "(abc)a(bc)",
+             r'\left(\mathit{abc}\right) \, a \, \left(\mathit{bc}\right)')
+
 # Check that we do support digits as letters.
 check_format('lal_char(0123), b',
              "0123",

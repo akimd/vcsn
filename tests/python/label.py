@@ -7,17 +7,25 @@ from test import *
 ## Labels.  ##
 ## -------- ##
 
-# check CONTEXT INPUT OUTPUT
-# --------------------------
-def check(ctx, w, output):
+# check CONTEXT INPUT OUTPUT [LATEX]
+# ----------------------------------
+def check(ctx, l, output, latex = None):
     ctx = vcsn.context(ctx)
-    w = ctx.label(w)
-    CHECK_EQ(output, str(w))
+    l = ctx.label(l)
+    CHECK_EQ(output, str(l))
+    if latex:
+        CHECK_EQ(latex, l.format('latex'))
 
+
+# letterset.
 check('lal_char(a), b', 'a', 'a')
-check('law_char(a), b', 'a', 'a')
-check('law_char(ab), b', 'ababab', 'ababab')
+# This is not a label, it's a word.
+XFAIL(lambda: vcsn.context('lal_char(ab), b').label('ab'))
+CHECK_EQ(vcsn.context('law_char(ab), b').label('ab'),
+         vcsn.context('law_char(ab), b').word('ab'))
 
-
-# Check that we don't ignore trailing characters.
+# wordset.
+check('law_char(a), b',  'a',  'a',   'a')
+check('law_char(ab), b', 'ab', 'ab', r'\mathit{ab}')
+# Trailing characters.
 XFAIL(lambda: vcsn.context('law_char(ab), b').label('ab*'))
