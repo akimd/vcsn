@@ -78,46 +78,46 @@ namespace vcsn
       format_ = format;
       if (format_ == "latex")
         {
-          lgroup_       = "{";
-          rgroup_       = "}";
-          langle_       = " \\left\\langle ";
-          rangle_       = " \\right\\rangle ";
-          lparen_       = "\\left(";
-          rparen_       = "\\right)";
-          star_         = "^{*}";
-          complement_   = "^{c}";
+          lgroup_        = "{";
+          rgroup_        = "}";
+          langle_        = " \\left\\langle ";
+          rangle_        = " \\right\\rangle ";
+          lparen_        = "\\left(";
+          rparen_        = "\\right)";
+          star_          = "^{*}";
+          complement_    = "^{c}";
           transposition_ = "^{T}";
-          conjunction_  = " \\& ";
-          shuffle_      = " \\between ";
-          product_      = " \\, ";
-          sum_
-            = (identities_ == identities_t::series) ? " \\oplus " : " + ";
-          zero_         = "\\emptyset";
-          one_          = "\\varepsilon";
-          lmul_         = "\\,";
-          rmul_         = "\\,";
-          ldiv_         = " \\backslash ";
+          conjunction_   = " \\& ";
+          shuffle_       = " \\between ";
+          product_       = " \\, ";
+          sum_           = (identities_ == identities_t::series
+                            ? " \\oplus " : " + ");
+          zero_          = "\\emptyset";
+          one_           = "\\varepsilon";
+          lmul_          = "\\,";
+          rmul_          = "\\,";
+          ldiv_          = " \\backslash ";
         }
       else if (format_ == "text")
         {
-          lgroup_       = "";
-          rgroup_       = "";
-          langle_       = "<";
-          rangle_       = ">";
-          lparen_       = "(";
-          rparen_       = ")";
-          star_         = "*";
-          complement_   = "{c}";
+          lgroup_        = "";
+          rgroup_        = "";
+          langle_        = "<";
+          rangle_        = ">";
+          lparen_        = "(";
+          rparen_        = ")";
+          star_          = "*";
+          complement_    = "{c}";
           transposition_ = "{T}";
-          conjunction_  = "&";
-          shuffle_      = ":";
-          product_      = "";
-          sum_          = "+";
-          zero_         = "\\z";
-          one_          = "\\e";
-          lmul_         = "";
-          rmul_         = "";
-          ldiv_         = "{\\}";
+          conjunction_   = "&";
+          shuffle_       = ":";
+          product_       = "";
+          sum_           = "+";
+          zero_          = "\\z";
+          one_           = "\\e";
+          lmul_          = "";
+          rmul_          = "";
+          ldiv_          = "{\\}";
         }
       else
         raise("invalid output format for ratexp: ", str_escape(format));
