@@ -51,25 +51,32 @@ namespace vcsn
 
     private:
 
-# define DEFINE(Type)                                           \
+# define DEFINE(Type)                                        \
       using Type ## _t = typename super_t::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom);
-      DEFINE(complement)    { print(v, complement_); }
-      DEFINE(conjunction)   { print(v, conjunction_); }
-      DEFINE(ldiv)          { print(v, ldiv_); }
+      DEFINE(complement)    { print_(v, complement_); }
+      DEFINE(conjunction)   { print_(v, conjunction_); }
+      DEFINE(ldiv)          { print_(v, ldiv_); }
       DEFINE(lweight);
       DEFINE(one);
-      DEFINE(prod)          { print(v, product_); }
+      DEFINE(prod)          { print_(v, product_); }
       DEFINE(rweight);
-      DEFINE(shuffle)       { print(v, shuffle_); }
-      DEFINE(star)          { print(v, star_); }
-      DEFINE(sum)           { print(v, sum_); }
-      DEFINE(transposition) { print(v, transposition_); }
+      DEFINE(shuffle)       { print_(v, shuffle_); }
+      DEFINE(star)          { print_(v, star_); }
+      DEFINE(sum)           { print_(v, sum_); }
+      DEFINE(transposition) { print_(v, transposition_); }
       DEFINE(zero);
 
 # undef DEFINE
+
+      /// Whether \a is an atom whose label is not a letter.
+      bool is_word_(const node_t& v) const
+      {
+        const atom_t* atom = dynamic_cast<const atom_t*>(&v);
+        return atom && ! ctx_.labelset()->is_letter(atom->value());
+      }
 
       /// The possible node precedence levels, increasing.
       ///
@@ -97,18 +104,18 @@ namespace vcsn
       };
 
       /// The precedence of \a v (to decide when to print parens).
-      precedence_t precedence(const node_t& v) const;
+      precedence_t precedence_(const node_t& v) const;
 
       /// Print the given child node, also knowing its parent.
-      void print_child(const node_t& child, const node_t& parent);
+      void print_child_(const node_t& child, const node_t& parent);
 
       /// Print a unary node.
       template <rat::exp::type_t Type>
-      void print(const unary_t<Type>& n, const char* op);
+      void print_(const unary_t<Type>& n, const char* op);
 
       /// Print an n-ary node.
       template <rat::exp::type_t Type>
-      void print(const variadic_t<Type>& n, const char* op);
+      void print_(const variadic_t<Type>& n, const char* op);
 
       /// Whether the left weight shows.
       ATTRIBUTE_PURE
@@ -128,6 +135,9 @@ namespace vcsn
       const bool debug_;
 
       /// Left and right boundaries (typically braces for LaTeX).
+      ///
+      /// Used to group operand of unary operators, e.g. "a" -> "a",
+      /// "a*" -> "{a}^{*}" and "a**" -> "{{a}^{*}}^{*}".
       const char* lgroup_ = nullptr;
       const char* rgroup_ = nullptr;
       /// Left and right angle brackets for weights.

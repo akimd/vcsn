@@ -123,11 +123,10 @@ namespace vcsn
         raise("invalid output format for ratexp: ", str_escape(format));
     }
 
-    DEFINE::precedence(const node_t& v) const
+    DEFINE::precedence_(const node_t& v) const
       -> precedence_t
     {
-      const atom_t* atom = dynamic_cast<const atom_t*>(&v);
-      if (atom && ! ctx_.labelset()->is_letter(atom->value()))
+      if (is_word_(v))
         return precedence_t::word;
       else
         switch (v.type())
@@ -162,12 +161,12 @@ namespace vcsn
       out_ << langle_;
       ctx_.weightset()->print(v.weight(), out_, format_);
       out_ << rangle_ << lmul_;
-      print_child(*v.sub(), v);
+      print_child_(*v.sub(), v);
     }
 
     VISIT(rweight)
     {
-      print_child(*v.sub(), v);
+      print_child_(*v.sub(), v);
       out_ << rmul_ << langle_;
       ctx_.weightset()->print(v.weight(), out_, format_);
       out_ << rangle_;
@@ -190,11 +189,11 @@ namespace vcsn
       ctx_.labelset()->print(v.value(), out_, format_);
     }
 
-    DEFINE::print_child(const node_t& child, const node_t& parent)
+    DEFINE::print_child_(const node_t& child, const node_t& parent)
       -> void
     {
       static bool force = !! getenv("VCSN_PARENS");
-      bool parent_has_precedence = precedence(child) <= precedence(parent);
+      bool parent_has_precedence = precedence_(child) <= precedence_(parent);
       bool needs_parens =
         (force
          || (parent_has_precedence
@@ -214,10 +213,10 @@ namespace vcsn
     template <type_t Type>
     inline
     auto
-    printer<RatExpSet>::print(const unary_t<Type>& v, const char* op)
+    printer<RatExpSet>::print_(const unary_t<Type>& v, const char* op)
       -> void
     {
-      print_child(*v.sub(), v);
+      print_child_(*v.sub(), v);
       out_ << op;
     }
 
@@ -225,7 +224,7 @@ namespace vcsn
     template <type_t Type>
     inline
     auto
-    printer<RatExpSet>::print(const variadic_t<Type>& n, const char* op)
+    printer<RatExpSet>::print_(const variadic_t<Type>& n, const char* op)
       -> void
     {
       bool first = true;
@@ -233,7 +232,7 @@ namespace vcsn
         {
           if (! first)
             out_ << op;
-          print_child(*i, n);
+          print_child_(*i, n);
           first = false;
         }
     }
