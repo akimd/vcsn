@@ -22,13 +22,13 @@ ratexp.__rmul__ = _left_mult
 ratexp.__str__ = lambda self: self.format('text')
 ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
-def derivation(self, w, *args):
+def _ratexp_derivation(self, w, *args):
     "Derive wrt. w, but convert it into a label if needed."
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
     return self._derivation(w, *args)
-ratexp.derivation = derivation
+ratexp.derivation = _ratexp_derivation
 
 ratexp.enumerate = lambda self, num = 1: self.standard().enumerate(num)
 
