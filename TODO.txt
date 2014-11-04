@@ -138,6 +138,12 @@ check whether is_proper first.  However are-equivalent actually uses
 a.realtime() = a.letterize().proper(), and a.realtime() checks first if the
 automaton is not already realtime.
 
+** are-equivalent
+We cannot compare Z-automaton.is_equivalent(B-automaton), because the
+B-automaton does not support -1 * aut.  However we must perform these
+operations on the joined weightset, so adjust that.  This should also solve
+non-commutativity: as is, (a, b) can work, but not (b, a).
+
 ** eliminate-state
 Support several arguments.
 

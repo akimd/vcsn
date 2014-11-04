@@ -39,8 +39,8 @@ namespace vcsn
   template <typename Aut1, typename Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> decltype((a1->weightset()->sub(a1->weightset()->zero(),
-                                      a1->weightset()->one()),
+    -> decltype((a2->weightset()->sub(a2->weightset()->zero(),
+                                      a2->weightset()->one()),
                  true))
   {
     const auto& ws2 = *a2->weightset();
