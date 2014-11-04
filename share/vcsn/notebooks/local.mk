@@ -42,6 +42,7 @@ dist_notebooks_DATA =                           \
   %D%/ratexp.derivation.ipynb                   \
   %D%/ratexp.derived_term.ipynb                 \
   %D%/ratexp.expansion.ipynb                    \
+  %D%/ratexp.is_equivalent.ipynb                \
   %D%/ratexp.is_valid.ipynb                     \
   %D%/ratexp.standard.ipynb                     \
   %D%/ratexp.transpose.ipynb                    \
