@@ -9,7 +9,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/grail.hh>
 # include <vcsn/algos/accessible.hh> // useful_states
-# include <vcsn/misc/escape.hh>
+# include <vcsn/misc/iostream.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/unordered_set.hh>
 
@@ -54,7 +54,22 @@ namespace vcsn
              bool dot2tex = false)
         : super_t(aut, out)
         , dot2tex_(dot2tex)
-      {}
+      {
+        bos_.push(detail::backslashify_output_filter());
+        bos_.push(out);
+      }
+
+      void enable()
+      {
+        boost::iostreams::flush(bos_);
+        bos_.component<detail::backslashify_output_filter>(0)->enable();
+      }
+
+      void disable()
+      {
+        boost::iostreams::flush(bos_);
+        bos_.component<detail::backslashify_output_filter>(0)->disable();
+      }
 
       /// Format a TikZ attribute.
       /// \param sep   the separator to print before (if we print something).
@@ -67,11 +82,11 @@ namespace vcsn
           return false;
         else
           {
-            os_ << sep << kind;
+            bos_ << sep << kind;
             if (ws_.show_one() || !ws_.is_one(w))
               {
-                os_ << ", " << kind << " text={";
-                ws_.print(w, os_) << '}';
+                bos_ << ", " << kind << " text={";
+                ws_.print(w, bos_) << '}';
               }
             return true;
           }
@@ -81,12 +96,12 @@ namespace vcsn
       void
       print_state_(state_t s)
       {
-        aut_->print_state(s, os_);
+        aut_->print_state(s, bos_);
         bool has_attributes = false;
         if (dot2tex_)
           {
             has_attributes = true;
-            os_ << " [";
+            bos_ << " [";
             std::string style;
             std::string sep;
             std::string close;
@@ -94,14 +109,14 @@ namespace vcsn
             // better looking...
             if (aut_->state_has_name(s))
               {
-                os_ << "label = \"";
-                std::ostringstream o;
-                aut_->print_state_name(s, o, "latex");
-                os_ << str_escape(o.str());
+                bos_ << "label = \"";
+                enable();
+                aut_->print_state_name(s, bos_, "latex");
+                disable();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
-                  os_ << " (" << s << ')';
-                os_ << "\", style = \"named";
+                  bos_ << " (" << s << ')';
+                bos_ << "\", style = \"named";
                 sep = ", ";
                 close = "\"";
               }
@@ -114,7 +129,7 @@ namespace vcsn
               }
             if (format(sep, "accepting", aut_->get_final_weight(s)))
               close = "\"";
-            os_ << close;
+            bos_ << close;
           }
         else
           {
@@ -122,34 +137,34 @@ namespace vcsn
             if (aut_->state_has_name(s))
               {
                 has_attributes = true;
-                os_ << " [label = \"";
-                std::ostringstream o;
-                aut_->print_state_name(s, o, "text");
-                os_ << str_escape(o.str());
+                bos_ << " [label = \"";
+                enable();
+                aut_->print_state_name(s, bos_, "text");
+                disable();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
-                  os_ << " (" << s << ')';
-                os_ << "\", shape = box";
+                  bos_ << " (" << s << ')';
+                bos_ << "\", shape = box";
               }
           }
         if (!has(useful_, s))
           {
             if (has_attributes)
-              os_ << ", ";
+              bos_ << ", ";
             else
               {
-                os_ << " [";
+                bos_ << " [";
                 has_attributes = true;
               }
-            os_ << gray;
+            bos_ << gray;
           }
         if (has_attributes)
-          os_ << ']';
+          bos_ << ']';
       }
 
       std::ostream& operator()()
       {
-        os_ <<
+        bos_ <<
           "digraph\n"
           "{\n"
           "  vcsn_context = \"" << aut_->context().vname() << "\"\n"
@@ -161,7 +176,7 @@ namespace vcsn
             << "]\n";
 
         if (dot2tex_)
-          os_ <<
+          bos_ <<
             "  d2toptions = \"--format tikz --tikzedgelabels"
             " --graphstyle=automaton --crop --nominsize --autosize\"\n"
             "  d2tdocpreamble = \""
@@ -179,22 +194,22 @@ namespace vcsn
             if (!aut_->initial_transitions().empty()
                 || !aut_->final_transitions().empty())
               {
-                os_ <<
+                bos_ <<
                   "  {\n"
                   "    node [shape = point, width = 0]\n";
                 for (auto s : initials_())
                   {
-                    os_ << "    I";
-                    aut_->print_state(s, os_);
-                    os_ << '\n';
+                    bos_ << "    I";
+                    aut_->print_state(s, bos_);
+                    bos_ << '\n';
                   }
                 for (auto s : finals_())
                   {
-                    os_ << "    F";
-                    aut_->print_state(s, os_);
-                    os_ << '\n';
+                    bos_ << "    F";
+                    aut_->print_state(s, bos_);
+                    bos_ << '\n';
                   }
-                os_ << "  }\n";
+                bos_ << "  }\n";
               }
           }
 
@@ -213,7 +228,7 @@ namespace vcsn
         // box, and simpler to set it once for all.
         if (!aut_->states().empty())
           {
-            os_ << "  {\n"
+            bos_ << "  {\n"
                 << "    node ["
                 << (dot2tex_
                     ? "texmode = math, style = state"
@@ -221,11 +236,11 @@ namespace vcsn
                 << "]\n";
             for (auto s : aut_->states())
               {
-                os_ << "    ";
+                bos_ << "    ";
                 print_state_(s);
-                os_ << '\n';
+                bos_ << '\n';
               }
-            os_ << "  }\n";
+            bos_ << "  }\n";
           }
 
         for (auto src : dot2tex_ ? aut_->states() : aut_->all_states())
@@ -240,26 +255,26 @@ namespace vcsn
                 ds.insert(aut_->dst_of(t));
             for (auto dst: ds)
               {
-                os_ << "  ";
+                bos_ << "  ";
                 if (src == aut_->pre())
                   {
-                    os_ << 'I';
-                    aut_->print_state(dst, os_);
-                    os_ << " -> ";
-                    aut_->print_state(dst, os_);
+                    bos_ << 'I';
+                    aut_->print_state(dst, bos_);
+                    bos_ << " -> ";
+                    aut_->print_state(dst, bos_);
                   }
                 else if (dst == aut_->post())
                   {
-                    aut_->print_state(src, os_);
-                    os_ << " -> ";
-                    os_ << 'F';
-                    aut_->print_state(src, os_);
+                    aut_->print_state(src, bos_);
+                    bos_ << " -> ";
+                    bos_ << 'F';
+                    aut_->print_state(src, bos_);
                   }
                 else
                   {
-                    aut_->print_state(src, os_);
-                    os_ << " -> ";
-                    aut_->print_state(dst, os_);
+                    aut_->print_state(src, bos_);
+                    bos_ << " -> ";
+                    aut_->print_state(dst, bos_);
                   }
 
                 std::string s = format_entry_(src, dst,
@@ -267,27 +282,31 @@ namespace vcsn
                 bool useless = !has(useful_, src) || !has(useful_, dst);
                 if (!s.empty() || useless)
                   {
-                    os_ << " [";
+                    bos_ << " [";
                     const char* sep = "";
                     if (!s.empty())
                       {
-                        os_ << "label = \"" << str_escape(s) << "\"";
+                        enable();
+                        bos_ << "label = \"" << s << "\"";
+                        disable();
                         sep = ", ";
                       }
                     if (useless)
-                      os_ << sep << gray;
-                    os_ << ']';
+                      bos_ << sep << gray;
+                    bos_ << ']';
                   }
-                os_ << '\n';
+                bos_ << '\n';
               }
           }
-        return os_ << '}';
+        bos_ << '}';
+        return os_;
       }
 
       /// Whether to format for dot2tex.
       bool dot2tex_ = false;
       /// Useful states.
       std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_);
+      detail::io::filtering_ostream bos_;
     };
   }
 

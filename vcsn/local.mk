@@ -193,6 +193,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/fwd.hh                               \
   %D%/misc/hash.hh                              \
   %D%/misc/indent.hh                            \
+  %D%/misc/iostream.hh                          \
   %D%/misc/map.hh                               \
   %D%/misc/math.hh                              \
   %D%/misc/memory.hh                            \
