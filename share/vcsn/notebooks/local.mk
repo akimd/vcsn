@@ -32,6 +32,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_equivalent.ipynb             \
   %D%/automaton.is_functional.ipynb             \
   %D%/automaton.is_standard.ipynb               \
+  %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.reduce.ipynb                    \
   %D%/automaton.standard.ipynb                  \
