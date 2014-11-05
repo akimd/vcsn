@@ -1,0 +1,54 @@
+#! /usr/bin/env python
+
+from __future__ import print_function
+
+import argparse
+import regex as re
+import sys
+
+parameters = r'''
+(?<rec>    # capturing group rec
+ (?:       # non-capturing group
+  [^<>]++  # anything but parenthesis one or more times without backtracking
+  |        # or
+  <(?&rec)>  # recursive substitute of group rec
+ )*
+)'''
+
+def sub(pattern, repl, string, *args, **kwargs):
+    num = 1
+    while num:
+        (string, num) = re.subn(pattern, repl, string, *args, **kwargs)
+#        print(string, num)
+    return string
+
+def normalize(s):
+    # Labesets.
+    s = sub(r'vcsn::letterset<vcsn::set_alphabet<vcsn::(\w+)_letters> >',
+            r'lal_\1',
+            s)
+    s = sub(r'vcsn::wordset<vcsn::set_alphabet<vcsn::(\w+)_letters> >',
+            r'law_\1',
+            s)
+
+    # Weightsets.
+    s = sub(r'vcsn::variadic_mul_mixin<vcsn::detail::(b)_impl>',
+            r'vcsn::\1',
+            s)
+
+    # Typedef.
+    s = sub(r'(vcsn::detail::partition_automaton_impl<Aut>)::(transition|state)_t',
+            r'\2_t_of<\1>',
+            s)
+
+    # Automata.
+    s = sub(r'std::shared_ptr<vcsn::detail::(\w+_automaton)_impl({params})>'
+            .format(params = parameters),
+            r'\1\2',
+            s,
+            flags=re.VERBOSE)
+    return s
+
+for line in sys.stdin:
+    print(normalize(line), end = '')
+    sys.stdout.flush()
