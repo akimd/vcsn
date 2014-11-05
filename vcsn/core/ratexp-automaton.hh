@@ -7,7 +7,6 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/map.hh>
-# include <vcsn/misc/stream.hh> // format
 # include <vcsn/misc/unordered_map.hh>
 
 # include <vcsn/core/fwd.hh> // ratexp_automaton
@@ -127,7 +126,7 @@ namespace vcsn
         if (i == std::end(origins()))
           this->print_state(s, o);
         else
-          o << format(rs_, i->second, fmt);
+          rs_.print(i->second, o, fmt);
         return o;
       }
 

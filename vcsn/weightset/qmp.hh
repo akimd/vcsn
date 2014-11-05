@@ -92,7 +92,7 @@ namespace vcsn
         // No need to reduce: numerator and denominators are primes.
         return {v.get_den(), v.get_den() - v.get_num()};
       else
-        raise(sname(), ": star: invalid value: ", format(*this, v));
+        raise(sname(), ": star: invalid value: ", to_string(*this, v));
     }
 
     static bool is_special(const value_t) // C++11: cannot be constexpr.
@@ -142,7 +142,7 @@ namespace vcsn
     static size_t hash(value_t v)
     {
       // FIXME: be serious...
-      return hash_value(format(qmp_impl(), v));
+      return hash_value(to_string(qmp_impl(), v));
     }
 
     static value_t

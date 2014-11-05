@@ -52,7 +52,7 @@ namespace vcsn
           return one();
         else
           // FIXME: sname.
-          raise("star: invalid value: ", format(*this, v));
+          raise("star: invalid value: ", to_string(*this, v));
       }
 
       static value_t

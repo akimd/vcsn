@@ -14,7 +14,7 @@ check_conv_fail(T& ps, const std::string& str)
   try
     {
       auto p = conv(ps, str);
-      std::cerr << "ERROR: " << str << " -> " << format(ps, p) << std::endl;
+      std::cerr << "ERROR: " << str << " -> " << to_string(ps, p) << std::endl;
     }
   catch (const std::exception&)
     {
@@ -33,10 +33,10 @@ check_assoc(const PolynomialSet& ps)
   using ps_t = PolynomialSet;
   typename ps_t::value_t u = ps.one();
   ps.set_weight(u, "ab", 12);
-  ASSERT_EQ(format(ps, u), "\\e + <12>ab");
+  ASSERT_EQ(to_string(ps, u), "\\e + <12>ab");
 
   u = ps.add(u, u);
-  ASSERT_EQ(format(ps, u), "<2>\\e + <24>ab");
+  ASSERT_EQ(to_string(ps, u), "<2>\\e + <24>ab");
 
   assert(!ps.is_zero(u));
   assert(ps.is_zero(ps.zero()));
@@ -47,7 +47,7 @@ check_assoc(const PolynomialSet& ps)
   assert(u == v);
 
   u = ps.mul(u, u);
-  ASSERT_EQ(format(ps, u), "<4>\\e + <96>ab + <576>abab");
+  ASSERT_EQ(to_string(ps, u), "<4>\\e + <96>ab + <576>abab");
 
   ps.add_here(v, "ab", 96 - 24);
   ps.set_weight(v, "", 4);
@@ -66,11 +66,11 @@ check_conv(const PolynomialSet& ps)
 {
   size_t nerrs = 0;
 
-#define CHECK(In, Out)                          \
-  do {                                          \
-    if (getenv("VERBOSE"))                      \
-      std::cerr << "check_conv: In: " << In;    \
-    ASSERT_EQ(format(ps, conv(ps, In)), Out);     \
+#define CHECK(In, Out)                                  \
+  do {                                                  \
+    if (getenv("VERBOSE"))                              \
+      std::cerr << "check_conv: In: " << In;            \
+    ASSERT_EQ(to_string(ps, conv(ps, In)), Out);        \
   } while (false)
 #define CHECK_FAIL(In)                          \
   ASSERT_EQ(check_conv_fail(ps, In), true);
@@ -131,11 +131,11 @@ check_star(const PolynomialSet& ps)
 {
   size_t nerrs = 0;
 
-#define CHECK(In, Out)                                  \
-  do {                                                  \
-    if (getenv("VERBOSE"))                              \
-      std::cerr << "check_star: In: " << In;            \
-    ASSERT_EQ(format(ps, ps.star(conv(ps, In))), Out);    \
+#define CHECK(In, Out)                                          \
+  do {                                                          \
+    if (getenv("VERBOSE"))                                      \
+      std::cerr << "check_star: In: " << In;                    \
+    ASSERT_EQ(to_string(ps, ps.star(conv(ps, In))), Out);       \
   } while (false)
 
   CHECK("<123>\\e",         "<0>\\e");
@@ -146,7 +146,7 @@ check_star(const PolynomialSet& ps)
   ASSERT_EQ(check_star_fail(ps, "<-1>\\e"), true);
   ASSERT_EQ(check_star_fail(ps, "<123>a"), true);
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<12>a"), true);
-  ASSERT_EQ(format(ps, ps.star(conv(ps, "<12>\\e+<oo>a"))), "<0>\\e");
+  ASSERT_EQ(to_string(ps, ps.star(conv(ps, "<12>\\e+<oo>a"))), "<0>\\e");
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<oo>a+<3>a"), true);
   return nerrs;
 }

@@ -31,8 +31,8 @@ bool check_common(const WeightSet& ws)
   ASSERT_EQ(ws.equals(ws.mul(o, o), o), true);
 
   // conv, format.
-  ASSERT_EQ(ws.equals(conv(ws, format(ws, z)), z), true);
-  ASSERT_EQ(ws.equals(conv(ws, format(ws, o)), o), true);
+  ASSERT_EQ(ws.equals(conv(ws, to_string(ws, z)), z), true);
+  ASSERT_EQ(ws.equals(conv(ws, to_string(ws, o)), o), true);
 
   return nerrs;
 }

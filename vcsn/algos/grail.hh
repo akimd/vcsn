@@ -53,7 +53,7 @@ namespace vcsn
       virtual std::string
       label_(const label_t& l)
       {
-        return ls_.is_one(l) ? "@epsilon" : format(ls_, l);
+        return ls_.is_one(l) ? "@epsilon" : to_string(ls_, l);
       }
 
       /// Output the transition \a t.  Do not insert eol.

@@ -92,7 +92,7 @@ namespace vcsn
       if (-1 < v && v < 1)
         return 1/(1-v);
       else
-        raise(sname(), ": star: invalid value: ", format(*this, v));
+        raise(sname(), ": star: invalid value: ", to_string(*this, v));
     }
 
     constexpr static bool is_special(value_t)

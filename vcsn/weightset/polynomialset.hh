@@ -225,7 +225,7 @@ namespace vcsn
           if (i != v.end())
             return {{i->first, weightset()->star(i->second)}};
         }
-      raise(sname(), ": star: invalid value: ", vcsn::format(*this, v));
+      raise(sname(), ": star: invalid value: ", to_string(*this, v));
     }
 
     /// Left exterior product.

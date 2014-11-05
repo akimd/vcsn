@@ -118,7 +118,7 @@ namespace vcsn
         // No need to reduce: numerator and denominators are primes.
         return {int(v.den), v.den - v.num};
       else
-        raise(sname(), ": star: invalid value: ", format(*this, v));
+        raise(sname(), ": star: invalid value: ", to_string(*this, v));
     }
 
     static bool is_special(const value_t) // C++11: cannot be constexpr.

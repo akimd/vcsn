@@ -11,7 +11,7 @@ check_concat(const Ctx& ctx)
   auto ks = vcsn::ratexpset<Ctx>(ctx, vcsn::rat::identities::trivial);
 
 #define CHECK(Lhs, Rhs, Res)                                            \
-  ASSERT_EQ(format(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))),        \
+  ASSERT_EQ(to_string(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))),     \
             Res)
 
   CHECK("ab.a", "b", "(ab)(ab)");

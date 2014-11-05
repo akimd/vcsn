@@ -25,8 +25,8 @@ check_letterset()
 
   ASSERT_EQ(ls.is_valid('x'), false);
 
-  ASSERT_EQ(format(ls, conv(ls, "a")), "a");
-  ASSERT_EQ(format(ls, ls.transpose(conv(ls, "a"))), "a");
+  ASSERT_EQ(to_string(ls, conv(ls, "a")), "a");
+  ASSERT_EQ(to_string(ls, ls.transpose(conv(ls, "a"))), "a");
 
   return nerrs;
 }
@@ -122,8 +122,8 @@ check_tupleset()
   // special, is_special.
   ASSERT_EQ(wwset.equals(wwset.special(), ww_t{ls1.special(),ls2.special()}),
             true);
-  ASSERT_EQ(format(wwset, ww_t{ls1.special(),ls2.special()}), "");
-  ASSERT_EQ(format(wwset, wwset.special()), "");
+  ASSERT_EQ(to_string(wwset, ww_t{ls1.special(),ls2.special()}), "");
+  ASSERT_EQ(to_string(wwset, wwset.special()), "");
   ASSERT_EQ(wwset.is_special(wwset.special()), true);
   ASSERT_EQ(!wwset.is_special(ww_t{"abc", "xyz"}), true);
 
@@ -137,8 +137,8 @@ check_tupleset()
   ASSERT_EQ(wlset_t::has_one(), false);
 
   // format, transpose.
-  ASSERT_EQ(format(wwset, ww_t{"abc", "xyz"}), "(abc,xyz)");
-  ASSERT_EQ(format(wwset, wwset.transpose(ww_t{"abc","xyz"})), "(cba,zyx)");
+  ASSERT_EQ(to_string(wwset, ww_t{"abc", "xyz"}), "(abc,xyz)");
+  ASSERT_EQ(to_string(wwset, wwset.transpose(ww_t{"abc","xyz"})), "(cba,zyx)");
 
   // conv.
   // Exposed to the same bugs as make, see above.

@@ -883,9 +883,9 @@ namespace vcsn
           auto end = std::find(i, std::end(gens), cc.second);
           require(end != std::end(gens),
                   "invalid letter interval: ",
-                  format(*labelset(), labelset()->value(std::get<0>(cc))),
+                  to_string(*labelset(), labelset()->value(std::get<0>(cc))),
                   '-',
-                  format(*labelset(), labelset()->value(std::get<1>(cc))));
+                  to_string(*labelset(), labelset()->value(std::get<1>(cc))));
           for (end = std::next(end); i != end; ++i)
             res = add(res, atom(labelset()->value(*i)));
         }
@@ -904,9 +904,9 @@ namespace vcsn
             auto end = std::find(i, std::end(gens), cc.second);
             require(end != std::end(gens),
                     "invalid letter interval: ",
-                    format(*labelset(), labelset()->value(std::get<0>(cc))),
+                    to_string(*labelset(), labelset()->value(std::get<0>(cc))),
                     '-',
-                    format(*labelset(), labelset()->value(std::get<1>(cc))));
+                    to_string(*labelset(), labelset()->value(std::get<1>(cc))));
             for (end = std::next(end); i != end; ++i)
               accepted.emplace(*i);
           }

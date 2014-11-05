@@ -64,8 +64,8 @@ namespace vcsn LIBVCSN_API
   /// Format v via vs.print.
   template <typename ValueSet, typename... Args>
   auto
-  format(const ValueSet& vs,
-         const typename ValueSet::value_t& v, Args&&... args)
+  to_string(const ValueSet& vs,
+            const typename ValueSet::value_t& v, Args&&... args)
     -> std::string
   {
     std::ostringstream o;
