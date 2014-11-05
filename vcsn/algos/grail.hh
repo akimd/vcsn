@@ -70,11 +70,12 @@ namespace vcsn
       /// The main advantage of using polynomials instead of directly
       /// iterating over aut_->outin(src, dst) is to get a result which
       /// is sorted (hence more deterministic).
-      std::string format_entry_(state_t src, state_t dst,
-                                const std::string& fmt = "text")
+      std::ostream& print_entry_(state_t src, state_t dst,
+                                 std::ostream& os,
+                                 const std::string& fmt = "text")
       {
         auto entry = get_entry(aut_, src, dst);
-        return ps_.format(entry, ", ", fmt);
+        return ps_.print(entry, os, fmt, ", ");
       }
 
       /// Output transitions, sorted lexicographically on (Label, Dest).

@@ -38,7 +38,7 @@ namespace vcsn
 
       using super_t::aut_;
       using super_t::finals_;
-      using super_t::format_entry_;
+      using super_t::print_entry_;
       using super_t::initials_;
       using super_t::os_;
       using super_t::ws_;
@@ -292,17 +292,18 @@ namespace vcsn
                     aut_->print_state(dst, bos_);
                   }
 
-                std::string s = format_entry_(src, dst,
-                                              dot2tex_ ? "latex" : "text");
+                std::ostringstream o;
+                print_entry_(src, dst, o,
+                             dot2tex_ ? "latex" : "text");
                 bool useless = !has(useful_, src) || !has(useful_, dst);
-                if (!s.empty() || useless)
+                if (!o.str().empty() || useless)
                   {
                     bos_ << " [";
                     const char* sep = "";
-                    if (!s.empty())
+                    if (!o.str().empty())
                       {
                         enable_();
-                        bos_ << "label = \"" << s << "\"";
+                        bos_ << "label = \"" << o.str() << "\"";
                         disable_();
                         sep = ", ";
                       }

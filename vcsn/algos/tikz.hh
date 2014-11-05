@@ -7,9 +7,7 @@
 # include <unordered_set>
 # include <vector>
 
-// FIXME: factor dot and tikz.
 # include <vcsn/algos/grail.hh> // outputter
-# include <vcsn/algos/dot.hh> // format_entry
 
 # include <vcsn/dyn/fwd.hh>
 
@@ -36,7 +34,7 @@ namespace vcsn
       using typename super_t::weight_t;
 
       using super_t::aut_;
-      using super_t::format_entry_;
+      using super_t::print_entry_;
       using super_t::os_;
       using super_t::ws_;
 
@@ -105,12 +103,12 @@ namespace vcsn
               {
                 os_ << "  \\path[->] (";
                 aut_->print_state(src, os_);
-                os_ << ')'
-                    << " edge"
+                os_ << ") edge"
                     << (src == dst ? "[loop above]" : "")
                     << " node"
-                    << " {$" << format_entry_(src, dst, "latex") << "$}"
-                    << " (";
+                    << " {$";
+                print_entry_(src, dst, os_, "latex");
+                os_ << "$} (";
                 aut_->print_state(dst, os_);
                 os_ << ");\n";
               }
