@@ -159,38 +159,22 @@ namespace vcsn
     std::ostream&
     print(const word_t& w, std::ostream& o) const
     {
-      return o << format(w);
-    }
-
-    word_t
-    format(const letter_t l) const
-    {
-      if (l == one_letter() || l == special_letter())
-        return {};
-      else
-        return str_escape(l);
-    }
-
-    word_t
-    format(const word_t& w) const
-    {
       size_t s = w.size();
 
-      word_t res;
       if (s == 0
           || (s == 1 && w[0] == one_letter()))
-        res = "\\e";
+        o << "\\e";
 
       // If the string starts or ends with the special letter, skip
       // it.  If the resulting string is empty, format it this way.
       // (We DON'T want to format it as "\\e".)
       else if (w[0] == special_letter())
-        res = (s == 1) ? "" : str_escape(w.substr(1));
+        o << ((s == 1) ? "" : str_escape(w.substr(1)));
       else if (s > 1 && w[s - 1] == special_letter())
-        res = str_escape(w.substr(0, s - 1));
+        o << str_escape(w.substr(0, s - 1));
       else
-        res = str_escape(w);
-      return res;
+        o << str_escape(w);
+      return o;
     }
 
     /// Special character, used to label transitions from pre() and to

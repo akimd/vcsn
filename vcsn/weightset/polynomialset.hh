@@ -640,24 +640,6 @@ namespace vcsn
       return out;
     }
 
-    std::string
-    format(const value_t& v, const std::string& sep = " + ",
-           const std::string& fmt = "text") const
-    {
-      std::ostringstream o;
-      print(v, o, fmt, sep);
-      return o.str();
-    }
-
-    /// Format a monomial.
-    std::string
-    format(const monomial_t& m) const
-    {
-      std::ostringstream o;
-      print(m, o, "text");
-      return o.str();
-    }
-
   private:
     /// Print a weight.
     std::ostream&
