@@ -59,24 +59,58 @@ namespace vcsn
         bos_.push(out);
       }
 
-      void enable()
+      /// Print the automaton on the stream.
+      std::ostream& operator()()
       {
-        boost::iostreams::flush(bos_);
-        bos_.component<detail::backslashify_output_filter>(0)->enable();
+        print_prologue_();
+        print_states_();
+        print_transitions_();
+        print_epilogue_();
+        return os_;
       }
 
-      void disable()
+    private:
+      /// Start the dot graph.
+      void print_prologue_()
       {
-        boost::iostreams::flush(bos_);
-        bos_.component<detail::backslashify_output_filter>(0)->disable();
+        bos_ <<
+          "digraph\n"
+          "{\n"
+          "  vcsn_context = \"" << aut_->context().vname() << "\"\n"
+          "  rankdir = LR\n"
+          "  edge ["
+            << (dot2tex_
+                ? "texmode = math, lblstyle = auto"
+                : "arrowhead = vee, arrowsize = .6")
+            << "]\n";
+
+        if (dot2tex_)
+          bos_ <<
+            "  d2toptions = \"--format tikz --tikzedgelabels"
+            " --graphstyle=automaton --crop --nominsize --autosize\"\n"
+            "  d2tdocpreamble = \""
+            "    \\usepackage{amssymb}"
+            "    \\usetikzlibrary{arrows.meta, automata, bending}"
+            "    \\tikzstyle{automaton}=[shorten >=1pt, pos=.4,"
+            " >={Stealth[bend,round]}, initial text=]"
+            "    \\tikzstyle{named}=[rectangle, rounded corners]"
+            "    \\tikzstyle{initial}=[initial by arrow]"
+            "    \\tikzstyle{accepting}=[accepting by arrow]"
+            "  \"\n";
+      }
+
+      /// Finish the dot graph.
+      void print_epilogue_()
+      {
+        bos_ << '}';
       }
 
       /// Format a TikZ attribute.
       /// \param sep   the separator to print before (if we print something).
       /// \param kind  the attribute name (e.g., "initial").
       /// \param w     the associated weight (e.g., initial weight).
-      bool format(const std::string& sep,
-                  const std::string& kind, const weight_t& w)
+      bool format_(const std::string& sep,
+                   const std::string& kind, const weight_t& w)
       {
         if (ws_.is_zero(w))
           return false;
@@ -110,9 +144,9 @@ namespace vcsn
             if (aut_->state_has_name(s))
               {
                 bos_ << "label = \"";
-                enable();
+                enable_();
                 aut_->print_state_name(s, bos_, "latex");
-                disable();
+                disable_();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   bos_ << " (" << s << ')';
@@ -122,12 +156,12 @@ namespace vcsn
               }
             else
               sep = "style = \"state, ";
-            if (format(sep, "initial", aut_->get_initial_weight(s)))
+            if (format_(sep, "initial", aut_->get_initial_weight(s)))
               {
                 sep = ", ";
                 close = "\"";
               }
-            if (format(sep, "accepting", aut_->get_final_weight(s)))
+            if (format_(sep, "accepting", aut_->get_final_weight(s)))
               close = "\"";
             bos_ << close;
           }
@@ -138,9 +172,9 @@ namespace vcsn
               {
                 has_attributes = true;
                 bos_ << " [label = \"";
-                enable();
+                enable_();
                 aut_->print_state_name(s, bos_, "text");
-                disable();
+                disable_();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   bos_ << " (" << s << ')';
@@ -162,33 +196,10 @@ namespace vcsn
           bos_ << ']';
       }
 
-      std::ostream& operator()()
+      /// Print the states.
+      void print_states_()
       {
-        bos_ <<
-          "digraph\n"
-          "{\n"
-          "  vcsn_context = \"" << aut_->context().vname() << "\"\n"
-          "  rankdir = LR\n"
-          "  edge ["
-            << (dot2tex_
-                ? "texmode = math, lblstyle = auto"
-                : "arrowhead = vee, arrowsize = .6")
-            << "]\n";
-
-        if (dot2tex_)
-          bos_ <<
-            "  d2toptions = \"--format tikz --tikzedgelabels"
-            " --graphstyle=automaton --crop --nominsize --autosize\"\n"
-            "  d2tdocpreamble = \""
-            "    \\usepackage{amssymb}"
-            "    \\usetikzlibrary{arrows.meta, automata, bending}"
-            "    \\tikzstyle{automaton}=[shorten >=1pt, pos=.4,"
-            " >={Stealth[bend,round]}, initial text=]"
-            "    \\tikzstyle{named}=[rectangle, rounded corners]"
-            "    \\tikzstyle{initial}=[initial by arrow]"
-            "    \\tikzstyle{accepting}=[accepting by arrow]"
-            "  \"\n";
-        else
+        if (!dot2tex_)
           {
             // Output the pre-initial and post-final states.
             if (!aut_->initial_transitions().empty()
@@ -242,7 +253,11 @@ namespace vcsn
               }
             bos_ << "  }\n";
           }
+      }
 
+      /// Print all the transitions.
+      void print_transitions_()
+      {
         for (auto src : dot2tex_ ? aut_->states() : aut_->all_states())
           {
             // Sort by destination state.
@@ -286,9 +301,9 @@ namespace vcsn
                     const char* sep = "";
                     if (!s.empty())
                       {
-                        enable();
+                        enable_();
                         bos_ << "label = \"" << s << "\"";
-                        disable();
+                        disable_();
                         sep = ", ";
                       }
                     if (useless)
@@ -298,14 +313,27 @@ namespace vcsn
                 bos_ << '\n';
               }
           }
-        bos_ << '}';
-        return os_;
+      }
+
+      /// Enable the escaping of backslashes.
+      void enable_()
+      {
+        boost::iostreams::flush(bos_);
+        bos_.component<detail::backslashify_output_filter>(0)->enable();
+      }
+
+      /// Disable the escaping of backslashes.
+      void disable_()
+      {
+        boost::iostreams::flush(bos_);
+        bos_.component<detail::backslashify_output_filter>(0)->disable();
       }
 
       /// Whether to format for dot2tex.
       bool dot2tex_ = false;
       /// Useful states.
       std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_);
+      /// The output stream, with a backslashify filter.
       detail::io::filtering_ostream bos_;
     };
   }
