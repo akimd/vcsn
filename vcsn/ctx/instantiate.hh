@@ -4,6 +4,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/are-equivalent.hh> // difference
 # include <vcsn/algos/are-isomorphic.hh>
+# include <vcsn/algos/cerny.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>

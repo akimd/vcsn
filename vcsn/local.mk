@@ -16,6 +16,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
   %D%/algos/blind.hh                            \
+  %D%/algos/cerny.hh                            \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
   %D%/algos/compose.hh                          \
@@ -60,6 +61,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
   %D%/algos/normalize.hh                        \
+  %D%/algos/pair.hh                             \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
