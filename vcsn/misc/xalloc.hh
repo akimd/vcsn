@@ -14,7 +14,7 @@
 namespace vcsn
 {
   /// Defines the operator() for the classes get_type, set_type and swap_type.
-  struct iomanipulator : public std::unary_function<void, std::ostream>
+  struct iomanipulator
   {
     virtual void operator()(std::ostream& o) const = 0;
   };
