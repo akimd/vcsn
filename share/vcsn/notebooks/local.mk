@@ -38,6 +38,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
+  %D%/context.cerny.ipynb                       \
   %D%/index.ipynb                               \
   %D%/ratexp.derivation.ipynb                   \
   %D%/ratexp.derived_term.ipynb                 \
