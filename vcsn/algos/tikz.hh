@@ -45,7 +45,7 @@ namespace vcsn
       /// Format an initial/final weight.
       /// \param kind  the weight name (e.g., "initial").
       /// \param w     the weight
-      void format(const std::string& kind, const weight_t& w)
+      void print_finitial_(const std::string& kind, const weight_t& w)
       {
         if (!ws_.is_zero(w))
           {
@@ -77,8 +77,8 @@ namespace vcsn
         for (auto s : aut_->states())
           {
             os_ << "  \\node[state";
-            format("initial", aut_->get_initial_weight(s));
-            format("accepting", aut_->get_final_weight(s));
+            print_finitial_("initial", aut_->get_initial_weight(s));
+            print_finitial_("accepting", aut_->get_final_weight(s));
             if (aut_->state_has_name(s))
               os_ << ",rounded rectangle";
             os_ << "] (";
@@ -122,7 +122,7 @@ namespace vcsn
     };
   }
 
-  /// \brief Format automaton to TikZ format.
+  /// \brief Print automaton to TikZ format.
   ///
   /// \tparam AutPtr an automaton type.
   template <typename AutPtr>
