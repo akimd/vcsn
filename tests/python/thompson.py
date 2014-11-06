@@ -17,17 +17,20 @@ def xfail(re, err = None):
     r = ctx.ratexp(re)
     XFAIL(lambda: r.thompson(), err)
 
-xfail('(?@lal_char(abc), b)a', 'requires nullable labels')
+# We don't support extended expressions.
+xfail(r'a*&b*')
+xfail(r'a:b')
+xfail(r'a{c}')
+xfail(r'a{\}b')
+xfail(r'(ab){T}')
 
-# We don't support conjunction.
-xfail('a*&b*')
 
 ## --- ##
 ## Z.  ##
 ## --- ##
 
 # Z: "<12>\e".
-check('(?@lan_char(a), z)<12>\e',
+check('(?@lal_char(a), z)<12>\e',
 r'''digraph
 {
   vcsn_context = "lan<letterset<char_letters(a)>>, z"
@@ -53,7 +56,7 @@ r'''digraph
 ## -------- ##
 
 # Z: "\e+a+\e"
-check('(?@lan_char(ab), z)\e+a+\e',
+check('(?@lal_char(ab), z)\e+a+\e',
 r'''digraph
 {
   vcsn_context = "lan<letterset<char_letters(ab)>>, z"
@@ -89,10 +92,10 @@ r'''digraph
 }''')
 
 # Z: "<12>\e+<23>a+<34>b".
-check('(?@lan_char(ab), z)<12>\e+<23>a+<34>b',
+check('(?@law_char(ab), z)<12>\e+<23>a+<34>b',
 r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(ab)>>, z"
+  vcsn_context = "wordset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -211,7 +214,7 @@ r'''digraph
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check('(?@lan_char(ab), z)<12>(ab)<23>',
+check('(?@lal_char(ab), z)<12>(ab)<23>',
 r'''digraph
 {
   vcsn_context = "lan<letterset<char_letters(ab)>>, z"

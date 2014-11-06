@@ -1,12 +1,13 @@
 #ifndef VCSN_ALGOS_THOMPSON_HH
 # define VCSN_ALGOS_THOMPSON_HH
 
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/ctx/traits.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/ctx/fwd.hh>
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/labelset/labelset.hh> // make_nullableset_context
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -25,6 +26,7 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using ratexpset_t = RatExpSet;
+      using context_t = context_t_of<automaton_t>;
       using weightset_t = weightset_t_of<ratexpset_t>;
       using weight_t = weight_t_of<ratexpset_t>;
       using state_t = state_t_of<automaton_t>;
@@ -36,9 +38,14 @@ namespace vcsn
 
       constexpr static const char* me() { return "thompson"; }
 
-      thompson_visitor(const ratexpset_t& rs)
+      /// Build an automaton of context \a ctx.
+      thompson_visitor(const context_t& ctx, const ratexpset_t& rs)
         : rs_(rs)
-        , res_(make_shared_ptr<automaton_t>(rs_.context()))
+        , res_(make_shared_ptr<automaton_t>(ctx))
+      {}
+
+      thompson_visitor(const ratexpset_t& rs)
+        : thompson_visitor(rs.context(), rs)
       {}
 
       automaton_t
@@ -49,6 +56,13 @@ namespace vcsn
         res_->set_final(final_);
         return std::move(res_);
       }
+
+    private:
+      VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(conjunction)
+      VCSN_RAT_UNSUPPORTED(ldiv)
+      VCSN_RAT_UNSUPPORTED(shuffle)
+      VCSN_RAT_UNSUPPORTED(transposition)
 
       VCSN_RAT_VISIT(zero,)
       {
@@ -67,7 +81,11 @@ namespace vcsn
       {
         initial_ = res_->new_state();
         final_ = res_->new_state();
-        res_->new_transition(initial_, final_, e.value());
+        // The automaton and the expression might have different
+        // labelsets.
+        res_->new_transition(initial_, final_,
+                             res_->labelset()->conv(*rs_.labelset(),
+                                                    e.value()));
       }
 
       VCSN_RAT_VISIT(sum, e)
@@ -83,12 +101,6 @@ namespace vcsn
         initial_ = initial;
         final_ = final;
       }
-
-      VCSN_RAT_UNSUPPORTED(complement)
-      VCSN_RAT_UNSUPPORTED(conjunction)
-      VCSN_RAT_UNSUPPORTED(ldiv)
-      VCSN_RAT_UNSUPPORTED(shuffle)
-      VCSN_RAT_UNSUPPORTED(transposition)
 
       VCSN_RAT_VISIT(prod, e)
       {
@@ -155,11 +167,26 @@ namespace vcsn
   template <typename Aut,
             typename RatExpSet>
   Aut
+  thompson(const context_t_of<Aut>& ctx,
+           const RatExpSet& rs, const typename RatExpSet::value_t& r)
+  {
+    rat::thompson_visitor<Aut, RatExpSet> thompson{ctx, rs};
+    return thompson(r);
+  }
+
+  /// Build a Thompson automaton from a ratexp.
+  ///
+  /// \tparam Aut        relative to the generated automaton.
+  /// \tparam RatExpSet  relative to the RatExp.
+  template <typename Aut,
+            typename RatExpSet>
+  Aut
   thompson(const RatExpSet& rs, const typename RatExpSet::value_t& r)
   {
     rat::thompson_visitor<Aut, RatExpSet> thompson{rs};
     return thompson(r);
   }
+
   namespace dyn
   {
     namespace detail
@@ -176,9 +203,13 @@ namespace vcsn
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
         using ratexpset_t = RatExpSet;
-        using automaton_t = mutable_automaton<context_t_of<ratexpset_t>>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(::vcsn::thompson<automaton_t>(e.ratexpset(),
+        auto ctx
+          = vcsn::detail::make_nullableset_context(e.ratexpset().context());
+        using ctx_t = decltype(ctx);
+        using automaton_t = mutable_automaton<ctx_t>;
+        return make_automaton(::vcsn::thompson<automaton_t>(ctx,
+                                                            e.ratexpset(),
                                                             e.ratexp()));
       }
 

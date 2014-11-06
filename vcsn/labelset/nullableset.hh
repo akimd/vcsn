@@ -267,12 +267,14 @@ namespace vcsn
       return one();
     }
 
-    /// Conversion from another type: let it be handled by our wrapped labelset.
+    /// Conversion from another type: first by the wrapped labelset,
+    /// and then by our wrappers (in case the wrapped labelset does
+    /// not support "one").
     template <typename LabelSet_>
     value_t
     conv(const LabelSet_& ls, typename LabelSet_::value_t v) const
     {
-      return labelset()->conv(ls, v);
+      return value(labelset()->conv(ls, v));
     }
 
     const labelset_ptr labelset() const

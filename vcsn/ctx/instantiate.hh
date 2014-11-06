@@ -264,25 +264,6 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_functions_has_one(std::true_type)
-      {
-        using ctx_t = Ctx;
-        using rs_t = ratexpset<ctx_t>;
-        using namespace dyn::detail;
-
-        REGISTER(thompson, rs_t);
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
-      register_functions_has_one(std::false_type)
-      {
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
       register_functions()
       {
         using ctx_t = Ctx;
@@ -367,6 +348,7 @@ namespace vcsn
         REGISTER(sum, aut_t, aut_t);
         REGISTER(sum_ratexp, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);
+        REGISTER(thompson, rs_t);
         REGISTER(tikz, aut_t, std::ostream);
         REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, const std::string);
@@ -376,7 +358,6 @@ namespace vcsn
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 
-        register_functions_has_one<ctx_t>(std::integral_constant<bool, ctx_t::has_one()>());
         register_functions_is_free<ctx_t>(std::integral_constant<bool, ctx_t::labelset_t::is_free()>());
 
         return register_kind_functions<ctx_t>(typename ctx_t::kind_t());

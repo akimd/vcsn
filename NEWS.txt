@@ -5,6 +5,29 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-11-07
+### thompson: the labelset no longer needs to feature a "one"
+
+The Thompson automata count many spontaneous transitions, so require a
+labelset which supports `\e` (e.g., `lan`, `law`).  This is annoying,
+especially when teaching about Automata Theory: one does not want to
+dive into the arcane details of contexts.
+
+So now, if the context of the input expression does not support `\e`,
+the Thompson automaton will be built with a generalized context which
+does support it:
+
+    In [1]: import vcsn
+
+    In [2]: vcsn.context('lan_char, b').ratexp('a').thompson().context()
+    Out[2]: lan<letterset<char_letters(a)>>, b
+
+    In [3]: vcsn.context('law_char, b').ratexp('a').thompson().context()
+    Out[3]: wordset<char_letters(a)>, b
+
+    In [4]: vcsn.context('lal_char, b').ratexp('a').thompson().context()
+    Out[4]: lan<letterset<char_letters(a)>>, b
+
 ## 2014-10-30
 ### filter: new algorithm
 Hide states of another automaton, revealing only selected ones.  This
