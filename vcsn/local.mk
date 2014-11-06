@@ -181,7 +181,6 @@ nobase_include_HEADERS =                        \
   %D%/misc/attributes.hh                        \
   %D%/misc/builtins.hh                          \
   %D%/misc/cast.hh                              \
-  %D%/misc/const_traits.hh                      \
   %D%/misc/cross.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
@@ -213,6 +212,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/star_status.hh                       \
   %D%/misc/stream.hh                            \
   %D%/misc/tuple.hh                             \
+  %D%/misc/type_traits.hh                       \
   %D%/misc/unordered_map.hh                     \
   %D%/misc/unordered_set.hh                     \
   %D%/misc/vector.hh                            \

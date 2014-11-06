@@ -1,14 +1,12 @@
 #ifndef VCSN_CORE_JOIN_HH
 # define VCSN_CORE_JOIN_HH
 
+# include <vcsn/misc/type_traits.hh>
+
 namespace vcsn
 {
   namespace detail
   {
-
-    /// A simple enable_if.
-    template <bool Cond>
-    using enable_if_t = typename std::enable_if<Cond>::type;
 
     /// A structure that implements the computation of join(V1, V2).
     /// "type" is the type of the result, and "join" computes the
