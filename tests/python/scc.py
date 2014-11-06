@@ -4,11 +4,8 @@ import vcsn
 from test import *
 
 def check(num_sccs, a):
-    # Algorithm tarjan iterator
     CHECK_EQ(num_sccs, a.num_sccs("tarjan_iterative"))
-    # Algorithm tarjan recursive
     CHECK_EQ(num_sccs, a.num_sccs("tarjan_recursive"))
-    # Algorithm kosaraju
     CHECK_EQ(num_sccs, a.num_sccs("kosaraju"))
 
 a = vcsn.automaton('''digraph {

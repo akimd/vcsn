@@ -48,7 +48,8 @@ namespace vcsn
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_tarjan_recursive_impl(const Aut& aut) : aut_{aut}
+      scc_tarjan_recursive_impl(const Aut& aut)
+        : aut_{aut}
       {
         for (auto s : aut_->states())
           if (!has(marked_, s))
@@ -92,7 +93,7 @@ namespace vcsn
             com.emplace(w);
             // This vertex belong only one component
             // so remove it by update low value to max size.
-            low_[w] = std::numeric_limits<unsigned int>::max();
+            low_[w] = std::numeric_limits<size_t>::max();
           }
         while (w != s);
       }
@@ -100,12 +101,14 @@ namespace vcsn
       /// Input automaton.
       Aut aut_;
       /// The current visited vertex.
+      /// It used to preorder number counter.
       std::size_t curr_vertex_num_ = 0;
       /// All compnents.
       components_t components_;
-      /// List visited vertices.
+      /// Visited vertices.
       std::unordered_set<state_t> marked_;
-      /// low_[s] is minimum of vertex that it can go.
+      /// low_[s] is minimum of low_{X},
+      /// with X is all states on output transitions of s.
       std::unordered_map<state_t, std::size_t> low_;
       /// Contains list vertices same the component.
       std::stack<state_t> stack_;
@@ -121,7 +124,8 @@ namespace vcsn
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_tarjan_iterative_impl(const Aut& aut) : aut_{aut}
+      scc_tarjan_iterative_impl(const Aut& aut)
+        : aut_{aut}
       {
         for (auto s : aut_->states())
           if (!has(number_, s))
@@ -240,7 +244,8 @@ namespace vcsn
     public:
       using state_t = state_t_of<Aut>;
 
-      reverse_postorder_impl(const Aut& aut) : aut_{aut}
+      reverse_postorder_impl(const Aut& aut)
+        : aut_{aut}
       {
         for (auto s : aut->states())
           if (!has(marked_, s))
@@ -265,10 +270,12 @@ namespace vcsn
         rvp_.push(s);
       }
 
+      /// Input automaton.
       Aut aut_;
+      /// Revert postorder of dfs.
       std::stack<state_t> rvp_;
+      /// Store the visited states.
       std::set<state_t> marked_;
-      std::stack<state_t> todo_;
     };
   }
 
@@ -298,7 +305,8 @@ namespace vcsn
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_kosaraju_impl(const Aut& aut) : aut_{aut}
+      scc_kosaraju_impl(const Aut& aut)
+        : aut_{aut}
       {
         auto trans = ::vcsn::transpose(aut);
         auto todo = ::vcsn::reverse_postorder(trans);
@@ -348,9 +356,9 @@ namespace vcsn
 
   enum class scc_algo_t
   {
-    tarjan_iterative = 0,
-    tarjan_recursive = 1,
-    kosaraju = 2
+    tarjan_iterative,
+    tarjan_recursive,
+    kosaraju
   };
 
   inline scc_algo_t scc_algo_to_enum(const std::string& algo)
@@ -363,7 +371,7 @@ namespace vcsn
     else if (algo == "kosaraju")
       res = scc_algo_t::kosaraju;
     else
-      raise("num_sccs: invalid algorithm: ", str_escape(algo));
+      raise("sccs: invalid algorithm: ", str_escape(algo));
     return res;
   }
 
@@ -392,6 +400,7 @@ namespace vcsn
       }
     BUILTIN_UNREACHABLE();
   }
+
 
   /// Generate a subautomaton corresponding to an SCC.
   template <typename Aut>
@@ -430,16 +439,7 @@ namespace vcsn
   template <typename Aut>
   std::size_t num_sccs(const Aut& aut, const std::string& algo = "auto")
   {
-    scc_algo_t algo_choice;
-    if (algo == "auto" || algo == "tarjan_iterative")
-      algo_choice = scc_algo_t::tarjan_iterative;
-    else if (algo == "tarjan_recursive")
-      algo_choice = scc_algo_t::tarjan_recursive;
-    else if (algo == "kosaraju")
-      algo_choice = scc_algo_t::kosaraju;
-    else
-      raise("num_sccs: invalide algorithm: ", str_escape(algo));
-    return scc(aut, algo_choice).size();
+    return scc(aut, scc_algo_to_enum(algo)).size();
   }
 
   namespace dyn
