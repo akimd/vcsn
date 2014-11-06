@@ -257,6 +257,17 @@ namespace vcsn
 
   namespace detail
   {
+    /// wordset is already a nullableset.
+    template <typename GenSet>
+    struct nullableset_traits<wordset<GenSet>>
+    {
+      using type = wordset<GenSet>;
+      static type value(const wordset<GenSet>& ls)
+      {
+        return ls;
+      }
+    };
+
     template <typename GenSet>
     struct law_traits<wordset<GenSet>>
     {

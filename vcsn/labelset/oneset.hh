@@ -191,7 +191,18 @@ namespace vcsn
 
   namespace detail
   {
-    // Converting labelsets.
+    /// Conversion to a nullableset: identity.
+    template <>
+    struct nullableset_traits<oneset>
+    {
+      using type = oneset;
+      static type value(oneset)
+      {
+        return {};
+      }
+    };
+
+    /// Conversion to a wordset: identity.
     template <>
     struct law_traits<oneset>
     {

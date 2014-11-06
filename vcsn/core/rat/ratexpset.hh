@@ -345,6 +345,18 @@ namespace vcsn
 
   namespace detail
   {
+    /// Conversion to a nullableset: identity.
+    template <typename Ctx>
+    struct nullableset_traits<ratexpset<Ctx>>
+    {
+      using type = ratexpset<Ctx>;
+      static type value(const type& ls)
+      {
+        return ls;
+      }
+    };
+
+    /// Conversion to a wordset: identity.
     template <typename Ctx>
     struct law_traits<ratexpset<Ctx>>
     {

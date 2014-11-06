@@ -11,6 +11,7 @@
 # include <vcsn/misc/set.hh> // intersection
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/labelset/labelset.hh>
+# include <vcsn/labelset/nullableset.hh>
 # include <vcsn/labelset/wordset.hh>
 
 namespace vcsn
@@ -214,6 +215,18 @@ namespace vcsn
 
   namespace detail
   {
+    /// Conversion for letterset<GenSet> to a nullableset.
+    template <typename GenSet>
+    struct nullableset_traits<letterset<GenSet>>
+    {
+      using type = nullableset<letterset<GenSet>>;
+      static type value(const letterset<GenSet>& ls)
+      {
+        return ls;
+      }
+    };
+
+    /// Conversion for letterset<GenSet> to a super wordset.
     template <typename GenSet>
     struct law_traits<letterset<GenSet>>
     {

@@ -437,6 +437,18 @@ namespace vcsn
 
   namespace detail
   {
+    /// Conversion for nullable<LabelSet> to a nullableset: id.
+    template <typename LabelSet>
+    struct nullableset_traits<nullableset<LabelSet>>
+    {
+      using type = nullableset<LabelSet>;
+      static type value(const nullableset<LabelSet>& ls)
+      {
+        return ls;
+      }
+    };
+
+    /// Conversion for nullable<LabelSet> to a super wordset.
     template <typename LabelSet>
     struct law_traits<nullableset<LabelSet>>
     {
