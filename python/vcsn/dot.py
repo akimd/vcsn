@@ -214,7 +214,7 @@ class Daut:
 
     def daut_to_dot(self, s):
         '''Convert from Daut syntax to Dot.'''
-        self.context = "lal_char(abc), b"
+        self.context = "lal_char, b"
         self.hidden = []
         s = re.sub('^ *(?:vcsn_)?(?:context|ctx) *= *"?(.*?)"?$',
                    self.parse_context, s, flags = re.MULTILINE)
