@@ -86,10 +86,8 @@ namespace vcsn
     static value_t
     star(const value_t v)
     {
-      if (!v)
-        return true;
-      else
-        throw std::domain_error("f2: star: invalid value: 1");
+      require(v != 1, "f2: star: invalid value: 1");
+      return true;
     }
 
     static bool

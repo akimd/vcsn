@@ -50,7 +50,6 @@ namespace detail
 
     virtual value_t zero() const = 0;
     virtual value_t one() const = 0;
-    /// Throws std::domain_error if w is not a valid label_t.
     virtual value_t atom(const std::string& w) const = 0;
     virtual value_t add(value_t l, value_t r) const = 0;
     /// Explicit product.

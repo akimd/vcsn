@@ -339,7 +339,6 @@ namespace vcsn
       return res;
     }
 
-    /// \throws std::domain_error if there is no label here.
     value_t
     conv(std::istream& i) const
     {
@@ -348,9 +347,8 @@ namespace vcsn
       if (c == '\\')
         {
           i.ignore();
-          c = i.peek();
+          c = i.get();
           require(c == 'e', "invalid label: unexpected \\", str_escape(c));
-          i.ignore();
           res = one();
         }
       else
@@ -382,12 +380,7 @@ namespace vcsn
     static void
     make_nullableset_kind(std::istream& is)
     {
-      char kind[4];
-      is.get(kind, sizeof kind);
-      if (strncmp("lan", kind, 4))
-        throw std::runtime_error("kind::make: unexpected: "
-                                 + str_escape(kind)
-                                 + ", expected: " + "lan");
+      eat(is, "lan");
     }
 
     value_t

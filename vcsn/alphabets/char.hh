@@ -4,9 +4,9 @@
 # include <cassert>
 # include <string>
 # include <iostream>
-# include <stdexcept>
 
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -154,14 +154,9 @@ namespace vcsn
     static char get_char(std::istream& i)
     {
       int res = i.get();
-      if (res == EOF)
-        throw std::domain_error("invalid label: unexpected end-of-file");
-      else if (res == '\\')
-        {
-          res = i.get();
-          if (res == EOF)
-            throw std::domain_error("invalid label: unexpected end-of-file");
-        }
+      if (res == '\\')
+        res = i.get();
+      require(res != EOF, "invalid label: unexpected end-of-file");
       return res;
     }
 

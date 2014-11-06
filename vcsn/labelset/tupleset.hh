@@ -405,19 +405,9 @@ namespace vcsn
     value_t
     conv(std::istream& i) const
     {
-      // "eat" throws a runtime_error, but our parsing scheme (see
-      // polynomialset.hh) expects to detect failed parsing by
-      // catching domain_error.
-      try
-        {
-          value_t res = conv_(i, indices);
-          eat(i, ')');
-          return res;
-        }
-      catch (std::runtime_error& e)
-        {
-          throw std::domain_error(e.what());
-        }
+      value_t res = conv_(i, indices);
+      eat(i, ')');
+      return res;
     }
 
     std::set<value_t> convs(std::istream&) const

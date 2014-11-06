@@ -94,11 +94,9 @@ namespace vcsn
             else
               {
                 letter_t l = genset_t::get_letter(i);
-                if (this->has(l))
-                  res.insert(l);
-                else
-                  throw std::domain_error("invalid label: unexpected "
-                                          + str_escape(l));
+                require(this->has(l),
+                        "invalid label: unexpected ", str_escape(l));
+                res.insert(l);
                 previous = l;
               }
           }

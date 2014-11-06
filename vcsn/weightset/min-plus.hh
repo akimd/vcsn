@@ -129,12 +129,9 @@ namespace vcsn
         if (is.peek() == 'o')
           {
             is.ignore();
-            char c = is.get();
-            if (c == 'o')
-              res = zero();
-            else
-              // FIXME: sname.
-              throw std::domain_error("invalid value: o" + str_escape(c));
+            int c = is.get();
+            require(c == 'o', "invalid value: o", str_escape(c));
+            res = zero();
           }
         else if (!(is >> res))
           // FIXME: sname.

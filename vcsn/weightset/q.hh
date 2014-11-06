@@ -218,8 +218,7 @@ namespace vcsn
       if (i >> den)
         {
           // Make sure our rational respects our constraints.
-          if (den == 0)
-            throw std::domain_error(sname() + ": zero denominator");
+          require(den, sname(),  ": zero denominator");
           return value_t{num, den}.reduce();
         }
       else

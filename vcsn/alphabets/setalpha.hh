@@ -65,7 +65,7 @@ namespace vcsn
             switch (is.peek())
               {
               case EOF:
-                throw std::domain_error("invalid end-of-file");
+                raise("invalid end-of-file");
                 break;
 
               case ')':
@@ -147,14 +147,13 @@ namespace vcsn
       word_t res;
       require(!i.bad(),
               "conv: invalid stream");
+      // Either an empty word: "\e", or a sequence of non-separators.
       if (i.good() && i.peek() == '\\')
         {
           i.ignore();
-          int c = i.peek();
-          if (c != 'e')
-            throw std::domain_error("invalid label: unexpected \\"
-                                    + str_escape(c));
-          i.ignore();
+          int c = i.get();
+          require(c == 'e',
+                  "invalid label: unexpected \\", str_escape(c));
         }
       else
         {

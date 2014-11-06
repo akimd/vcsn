@@ -8,6 +8,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/export.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -31,10 +32,9 @@ namespace vcsn LIBVCSN_API
   {
     std::istringstream i{str};
     auto res = vs.conv(i, std::forward<Args>(args)...);
-    if (i.peek() != -1)
-      throw std::domain_error(vs.sname() + ": invalid value: " + str
-                              + ", unexpected "
-                              + str_escape(i.peek()));
+    require(i.peek() == EOF,
+            vs.sname(), ": invalid value: ", str,
+            ", unexpected ", str_escape(i.peek()));
     return res;
   }
 
@@ -52,12 +52,11 @@ namespace vcsn LIBVCSN_API
   /// \throws std::runtime_error if the next character is not \a s.
   const std::string& eat(std::istream& is, const std::string& s);
 
-  /// Throw an exception after failing to read from \a is.
-  /// Reset the stream to a "good" state, and read the presumably
-  /// ill-formed input into a buffer string; then throw
-  /// std::domain_error with the given \a explanation followed by
-  /// the buffer string.  \a explanation should not contain
-  /// trailing punctuation or spaces.
+  /// Throw an exception after failing to read from \a is.  Reset the
+  /// stream to a "good" state, and read the presumably ill-formed
+  /// input into a buffer string; then throw with the given \a
+  /// explanation followed by the buffer string.  \a explanation
+  /// should not contain trailing punctuation or spaces.
   ATTRIBUTE_NORETURN
   void fail_reading(std::istream& is, std::string explanation);
 
