@@ -314,14 +314,6 @@ namespace vcsn
     /// sub-expressions are starrable).
     bool is_valid(const expression& e);
 
-    /// The minimized automaton.
-    /// \param aut       the automaton to minimize
-    /// \param algo      the specific algorithm to use
-    /// \pre  \a aut must be LAL.
-    /// \pre  \a aut must be deterministic.
-    automaton minimize(const automaton& aut,
-                       const std::string& algo = "auto");
-
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 
@@ -354,8 +346,25 @@ namespace vcsn
     /// Multiply two weights.
     weight multiply(const weight& lhs, const weight& rhs);
 
+    /// The minimized automaton.
+    /// \param aut       the automaton to minimize
+    /// \param algo      the specific algorithm to use
+    /// \pre  \a aut must be LAL.
+    /// \pre  \a aut must be deterministic.
+    automaton minimize(const automaton& aut,
+                       const std::string& algo = "auto");
+
     /// Normalize automaton \a aut.
     automaton normalize(const automaton& aut);
+
+    /// The number of strongly connected components.
+    /// \param aut    the input automaton.
+    /// \param algo   the specific algorithm to use.
+    ///     "auto" or "tarjan_iterator"     Tarjan iterative
+    ///     "tarjan_recursive"              Tarjan recursive
+    ///     "kosaraju"                      Kosaraju
+    std::size_t num_sccs(const automaton& aut,
+                         const std::string& algo = "auto");
 
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut, bool keep_initials = false);
@@ -487,9 +496,6 @@ namespace vcsn
 
     /// The right-multiplication of a expression with \a w as weight.
     expression right_mult(const expression& aut, const weight& w);
-
-    /// The number of strongly connected components.
-    std::size_t num_sccs(const automaton& aut);
 
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);

@@ -1,14 +1,18 @@
 #ifndef VCSN_ALGOS_SCC_HH
 # define VCSN_ALGOS_SCC_HH
 
+# include <limits>
 # include <stack>
 
+# include <boost/range/irange.hpp>
+
+# include <vcsn/algos/transpose.hh>
+# include <vcsn/core/crange.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/algos/transpose.hh>
 # include <vcsn/misc/builtins.hh>
 # include <vcsn/misc/unordered_map.hh>
-# include <vcsn/misc/set.hh>
+# include <vcsn/misc/unordered_set.hh>
 # include <vcsn/misc/vector.hh> // has
 
 namespace vcsn
@@ -20,24 +24,31 @@ namespace vcsn
   namespace detail
   {
     /// An strongly-connected component: list of states.
+    /// Bench show that using std::unordered_set is better than
+    /// std::set ~10x. For example:
+    /// std::set:
+    ///   5.53s: a.num_sccs("tarjan_iterative") # a = std((abc)*{1000})
+    /// std::unordereset:
+    ///   0.58s: a.num_sccs("tarjan_iterative") # a = std((abc)*{1000})
     template <typename Aut>
-    using component_t = std::set<state_t_of<Aut>>;
+    using component_t = std::unordered_set<state_t_of<Aut>>;
 
     /// A set of strongly-connected components.
     template <typename Aut>
     using components_t = std::vector<component_t<Aut>>;
 
+
     /// Use Tarjan's algorithm to find all strongly
     /// connected components.
     template <typename Aut>
-    class scc_tarjan_impl
+    class scc_tarjan_recursive_impl
     {
     public:
       using state_t = state_t_of<Aut>;
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_tarjan_impl(const Aut& aut)
+      scc_tarjan_recursive_impl(const Aut& aut)
       {
         for (auto s : aut->states())
           if (!has(marked_, s))
@@ -99,6 +110,119 @@ namespace vcsn
       /// Contains list vertices same the component
       std::stack<state_t> stack_;
     };
+
+    template <typename Aut>
+    class scc_tarjan_iterative_impl
+    {
+    public:
+      using state_t = state_t_of<Aut>;
+      using transition_t = transition_t_of<Aut>;
+
+      using component_t = detail::component_t<Aut>;
+      using components_t = detail::components_t<Aut>;
+
+      scc_tarjan_iterative_impl(const Aut& aut) : aut_{aut}
+      {
+        for (auto s : aut_->states())
+          if (!has(number_, s))
+            dfs(s);
+      }
+
+      const components_t& components() const
+      {
+        return components_;
+      }
+
+    private:
+      using tr_cont_t = std::vector<transition_t>;
+      using tr_filter_t = container_filter_range<const tr_cont_t&>;
+      using iterator_t = typename tr_filter_t::const_iterator;
+      struct step_t;
+
+      void dfs(state_t s)
+      {
+        number_[s] = low_[s] = curr_vertex_num_++;
+        dfs_stack_.emplace_back(s, aut_->out(s).begin(),
+                                aut_->out(s).end());
+        stack_.push_back(s);
+        while (!dfs_stack_.empty())
+          {
+            auto& st = dfs_stack_.back();
+            auto src = st.state;
+            if (st.pos != st.end)
+              {
+                auto dst = aut_->dst_of(*st.pos);
+                ++st.pos;
+                if (!has(number_, dst))
+                  {
+                    number_[dst] = low_[dst] = curr_vertex_num_++;
+                    const auto& out = aut_->out(dst);
+                    dfs_stack_.emplace_back(dst, out.begin(),
+                                            out.end());
+                    stack_.push_back(dst);
+                  }
+                else if (low_[dst] < low_[src])
+                  low_[src] = low_[dst];
+              }
+            else
+              {
+                if (low_[src] == number_[src])
+                  {
+                    components_.emplace_back(component_t{});
+                    auto& com = components_.back();
+                    state_t w;
+                    do
+                      {
+                        w = stack_.back();
+                        stack_.pop_back();
+                        com.emplace(w);
+                        low_[w] = low_max_;
+                      }
+                    while (w != src);
+                  }
+                dfs_stack_.pop_back();
+                if (!dfs_stack_.empty())
+                  {
+                    auto& parent = dfs_stack_.back();
+                    if (low_[src] < low_[parent.state])
+                      low_[parent.state] = low_[src];
+                  }
+              }
+          }
+      }
+
+      /// Input automaton.
+      Aut aut_;
+
+      /// Stack used to simulate with dfs recursive.
+      std::vector<step_t> dfs_stack_;
+
+      /// The current visited vertex.
+      std::size_t curr_vertex_num_ = 0;
+      /// Store the visit order of each state.
+      std::unordered_map<state_t, std::size_t> number_;
+      /// low_[s] is minimum of vertex that it can go.
+
+      std::unordered_map<state_t, std::size_t> low_;
+      /// the maximum possible of a value in low_.
+      std::size_t low_max_ = std::numeric_limits<unsigned int>::max();
+
+      /// Contains list vertices same the component.
+      std::vector<state_t> stack_;
+      /// All compnents.
+      components_t components_;
+
+      /// Step of one state contain infomation next successor and end
+      /// iterator(output transitions or successors of this state).
+      struct step_t
+      {
+        step_t(state_t s, iterator_t p, iterator_t e)
+        : state{s}, pos{p}, end{e} {}
+        state_t state;
+        iterator_t pos;
+        iterator_t end;
+      };
+    };
   }
 
 
@@ -118,7 +242,7 @@ namespace vcsn
 
       reverse_postorder_impl(const Aut& aut)
       {
-        for (auto s : aut->all_states())
+        for (auto s : aut->states())
           if (!has(marked_, s))
             dfs(s, aut);
       }
@@ -217,25 +341,45 @@ namespace vcsn
     };
   }
 
-  enum class SCC_ALGO
+  enum class scc_algo_t
   {
-    TARJAN = 0,
-    KOSARAJU = 1
+    tarjan_iterative = 0,
+    tarjan_recursive = 1,
+    kosaraju = 2
   };
+
+  inline scc_algo_t scc_algo_to_enum(const std::string& algo)
+  {
+    scc_algo_t res;
+    if (algo == "auto" || algo == "tarjan_iterative")
+      res = scc_algo_t::tarjan_iterative;
+    else if (algo == "tarjan_recursive")
+      res = scc_algo_t::tarjan_recursive;
+    else if (algo == "kosaraju")
+      res = scc_algo_t::kosaraju;
+    else
+      raise("num_sccs: invalid algorithm: ", str_escape(algo));
+    return res;
+  }
 
   /// Find all strongly connected components of \a aut.
   template <typename Aut>
   const detail::components_t<Aut>
-  scc(const Aut& aut, SCC_ALGO algo = SCC_ALGO::TARJAN)
+  scc(const Aut& aut, scc_algo_t algo = scc_algo_t::tarjan_iterative)
   {
     switch (algo)
       {
-      case SCC_ALGO::TARJAN:
+      case scc_algo_t::tarjan_recursive:
         {
-          detail::scc_tarjan_impl<Aut> scc(aut);
+          detail::scc_tarjan_recursive_impl<Aut> scc(aut);
           return scc.components();
         }
-      case SCC_ALGO::KOSARAJU:
+      case scc_algo_t::tarjan_iterative:
+        {
+          detail::scc_tarjan_iterative_impl<Aut> scc(aut);
+          return scc.components();
+        }
+      case scc_algo_t::kosaraju:
         {
           detail::scc_kosaraju_impl<Aut> scc(aut);
           return scc.components();
@@ -273,11 +417,24 @@ namespace vcsn
   }
 
 
+  /*------------.
+  | num_sccs.   |
+  `------------*/
+
   /// Get number of strongly connected components.
   template <typename Aut>
-  std::size_t num_sccs(const Aut& aut)
+  std::size_t num_sccs(const Aut& aut, const std::string& algo = "auto")
   {
-    return scc(aut).size();
+    scc_algo_t algo_choice;
+    if (algo == "auto" || algo == "tarjan_iterative")
+      algo_choice = scc_algo_t::tarjan_iterative;
+    else if (algo == "tarjan_recursive")
+      algo_choice = scc_algo_t::tarjan_recursive;
+    else if (algo == "kosaraju")
+      algo_choice = scc_algo_t::kosaraju;
+    else
+      raise("num_sccs: invalide algorithm: ", str_escape(algo));
+    return scc(aut, algo_choice).size();
   }
 
   namespace dyn
@@ -285,15 +442,16 @@ namespace vcsn
     namespace detail
     {
       // Bridge.
-      template <typename Aut>
-      std::size_t num_sccs(const automaton& aut)
+      template <typename Aut, typename String>
+      std::size_t num_sccs(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return ::vcsn::num_sccs(a);
+        return ::vcsn::num_sccs(a, algo);
       }
 
       REGISTER_DECLARE(num_sccs,
-                       (const automaton&) -> std::size_t);
+                       (const automaton&, const std::string& algo)
+                       -> std::size_t);
     }
   }
 

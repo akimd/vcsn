@@ -366,9 +366,9 @@ struct automaton
     return vcsn::dyn::normalize(val_);
   }
 
-  std::size_t num_sccs() const
+  std::size_t num_sccs(const std::string& algo = "auto") const
   {
-    return vcsn::dyn::num_sccs(val_);
+    return vcsn::dyn::num_sccs(val_, algo);
   }
 
   automaton pair(bool keep_initials = false) const
@@ -1012,7 +1012,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lift", &automaton::lift)
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("normalize", &automaton::normalize)
-    .def("num_sccs", &automaton::num_sccs)
+    .def("num_sccs", &automaton::num_sccs, (arg("algo") = "auto"))
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)

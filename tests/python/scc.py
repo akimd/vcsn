@@ -3,17 +3,25 @@
 import vcsn
 from test import *
 
+def check(num_sccs, a):
+    # Algorithm tarjan iterator
+    CHECK_EQ(num_sccs, a.num_sccs("tarjan_iterative"))
+    # Algorithm tarjan recursive
+    CHECK_EQ(num_sccs, a.num_sccs("tarjan_recursive"))
+    # Algorithm kosaraju
+    CHECK_EQ(num_sccs, a.num_sccs("kosaraju"))
+
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
 }''')
-CHECK_EQ(0, a.num_sccs())
+check(0, a)
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
   I0 -> 0
   0 -> F0
 }''')
-CHECK_EQ(1, a.num_sccs())
+check(1, a)
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
@@ -21,7 +29,7 @@ a = vcsn.automaton('''digraph {
   0 -> 1 [label = "a"]
   1 -> F1
 }''')
-CHECK_EQ(2, a.num_sccs())
+check(2, a)
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
@@ -31,7 +39,7 @@ a = vcsn.automaton('''digraph {
   1 -> 2 [label = "b"]
   2 -> 0 [label = "b"]
 }''')
-CHECK_EQ(1, a.num_sccs())
+check(1, a)
 
 a = vcsn.automaton('''
 digraph
@@ -50,7 +58,7 @@ digraph
   7 -> F7
   7 -> 2 [label = "a"]
 }''')
-CHECK_EQ(1, a.num_sccs())
+check(1, a)
 
 a = vcsn.automaton('''digraph
 {
@@ -68,4 +76,4 @@ a = vcsn.automaton('''digraph
   6 -> 1 [label = "<9>d"]
   7 -> 2 [label = "<13>d"]
 }''')
-CHECK_EQ(4, a.num_sccs())
+check(4, a)

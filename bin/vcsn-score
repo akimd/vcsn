@@ -262,3 +262,14 @@ r = "[a-m]{20000}"
 a = vcsn.context('lan_char(a-z), b').expression(r).thompson().proper(False)
 bench('a.accessible', 'a = thompson({}).proper(False)'.format(r),
       lambda: a.accessible())
+
+# scc.
+r = "(abc)*{1000}"
+n = 20
+a = vcsn.context('lal_char(abc), b').ratexp(r).standard()
+bench('a.num_sccs("tarjan_recursive")', 'a = std({})'.format(r),
+      lambda: a.num_sccs("tarjan_recursive"), number = n)
+bench('a.num_sccs("tarjan_iterative")', 'a = std({})'.format(r),
+      lambda: a.num_sccs("tarjan_iterative"), number = n)
+bench('a.num_sccs("kosaraju")', 'a = std({})'.format(r),
+      lambda: a.num_sccs("kosaraju"), number = n)

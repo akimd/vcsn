@@ -1,3 +1,5 @@
+#include <string>
+
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/algos.hh>
@@ -15,9 +17,9 @@ namespace vcsn
     REGISTER_DEFINE(num_sccs);
 
     std::size_t
-    num_sccs(const automaton& aut)
+    num_sccs(const automaton& aut, const std::string& algo)
     {
-      return detail::num_sccs_registry().call(aut);
+      return detail::num_sccs_registry().call(aut, algo);
     }
   }
 }
