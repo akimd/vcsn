@@ -12,10 +12,13 @@ namespace vcsn
     `---------------*/
 
     /// The LAW from a LAL.
+    ///
+    /// Made to be specialized (e.g., in wordset).
     template <typename ValueSet>
     struct law_traits
     {};
 
+    /// The smallest wordset that includes LabelSet.
     template <typename LabelSet>
     using law_t = typename law_traits<LabelSet>::type;
 
@@ -35,7 +38,7 @@ namespace vcsn
     using word_context_t
       = context<law_t<labelset_t_of<Ctx>>, weightset_t_of<Ctx>>;
 
-    /// The wordset context of a labelset.
+    /// The wordset context of a context.
     template <typename LabelSet, typename WeightSet>
     inline word_context_t<context<LabelSet, WeightSet>>
     make_word_context(const context<LabelSet, WeightSet>& ctx)
