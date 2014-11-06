@@ -93,8 +93,12 @@ check_conv(const PolynomialSet& ps)
   CHECK_FAIL("<2>a++<3>a");
   CHECK_FAIL("+<1>a");
   CHECK_FAIL("<2>a+");
-  CHECK("<2>+a", "<2>\\e + a");
-  CHECK("  <2>  ", "<2>\\e");
+  // An "invisible" label is actually denoting '$', the special label.
+  // It is not the same as \e.
+  CHECK("<2>\\e+a", "<2>\\e + a");
+  CHECK("  <2>  \\e  ", "<2>\\e");
+  CHECK("<2>+a", "a + <2>");
+  CHECK("  <2>  ", "<2>");
   CHECK("a+<1>a+<-2>a", "\\z");
   // Check long numbers before smaller ones to exercise some issues
   // when reusing an ostringstream: we might keep previous characters.

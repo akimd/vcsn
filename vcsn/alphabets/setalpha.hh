@@ -5,6 +5,8 @@
 # include <initializer_list>
 # include <stdexcept>
 
+# include <boost/optional.hpp>
+
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/stream.hh> // eat.
@@ -54,50 +56,44 @@ namespace vcsn
       // This labelset might be open: no initial letter is given, they
       // will be discovered afterwards.
       if (is.peek() == '(')
-      {
-        eat(is, '(');
-        // Previously read character.
-        int prev = -1;
-        char l;
-        while (is >> l && l != ')')
-          switch (l)
-            {
-            case '-':
-              if (prev == -1)
-                goto insert;
-              else
-                {
-                  int l2 = is.get();
-                  require(l2 != EOF,
-                          "unexpected end in character class");
-                  if (l2 == '\\')
-                    {
-                      l2 = is.get();
-                      require(l2 != EOF,
-                              "unexpected end after escape in character class");
-                    }
-                  for (l = prev; l <= l2; ++l)
-                    res.add_letter(l);
-                  prev = -1;
-                  continue;
-                }
-
-            case '\\':
+        {
+          is.ignore();
+          // Previously read character, for intervals.
+          boost::optional<letter_t> prev;
+          bool done = false;
+          while (!done)
+            switch (is.peek())
               {
-                int l2 = is.get();
-                require(l2 != EOF,
-                        "unexpected end after escape");
-                l = l2;
-                goto insert;
-              }
+              case EOF:
+                throw std::domain_error("invalid end-of-file");
+                break;
 
-            default:
-            insert:
-              res.add_letter(l);
-              prev = l;
-          }
-      }
-      else
+              case ')':
+                is.ignore();
+                done = true;
+                break;
+              case '-':
+                if (prev == boost::none)
+                  goto insert;
+                else
+                  {
+                    is.ignore();
+                    letter_t l2 = L::get_letter(is);
+                    for (letter_t l = prev.get(); l <= l2; ++l)
+                      res.add_letter(l);
+                    prev = boost::none;
+                    break;
+                  }
+              insert:
+              default:
+                {
+                  prev = L::get_letter(is);
+                  res.add_letter(prev.get());
+                  break;
+                }
+              }
+        }
+      else // is.peek() != '('
         res.open_ = true;
       return res;
     }
@@ -146,7 +142,7 @@ namespace vcsn
 
     /// Extract and return the next word from \a i.
     word_t
-    conv(std::istream& i) const
+    get_word(std::istream& i) const
     {
       word_t res;
       require(!i.bad(),
@@ -162,16 +158,21 @@ namespace vcsn
         }
       else
         {
-          // FIXME: This wrongly assumes that letters are characters.
-          // It will break with integer or string alphabets.
+          // Stop as soon as it might be a special character (such as
+          // delimiters in polynomials).
           int c;
           while (i.good()
                  && (c = i.peek()) != EOF
+                 && !isspace(c)
+                 && c != '+'
                  && c != ','
                  && c != '('
-                 && c != ')'
-                 && has(c))
-            res = this->concat(res, letter_t(i.get()));
+                 && c != ')')
+            {
+              letter_t l = L::get_letter(i);
+              require(has(l), "invalid letter: ", str_escape(l));
+              res = this->concat(res, l);
+            }
         }
       return res;
     }

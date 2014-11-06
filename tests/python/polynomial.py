@@ -20,6 +20,11 @@ check('lal_char(a), b', r'\z+\z', r'\z')
 check('lal_char(a), b', r'a', r'a')
 check('lal_char(ab), b', r'a+b+b+a', r'a + b')
 
+check('lal_char(abcd), b', r'[abcd]', r'a + b + c + d')
+check('lal_char(abcd), z', r'[abcdabcd]', r'a + b + c + d')
+check('lal_char(abcd), z', r'[a-d]', r'a + b + c + d')
+check('lal_char(abcd), z', r'[a-bd]', r'a + b + d')
+
 check('lal_char(ab), z', r'a+b+b+a+b', r'<2>a + <3>b')
 check('lal_char(ab), z', r'a+b+b+<-1>a+b', r'<3>b')
 

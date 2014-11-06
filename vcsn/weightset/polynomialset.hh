@@ -561,33 +561,40 @@ namespace vcsn
           if (!is_zero)
             {
               // The label is not \z.
-
+              int peek = i.peek();
               // Handle ranges
-              if (i.peek() == '[')
+              if (peek == '[')
                 for (auto c : labelset()->convs(i))
                   add_here(res, c, w);
               else
                 {
-                  // Register the current position in the stream, so that
-                  // we reject inputs such as "a++a" in LAW (where the
-                  // labelset::conv would accept the empty string between
-                  // the two "+").
-                  std::streampos p = i.tellg();
-                  label_t label = labelset()->special();
-                  // Accept an implicit label (which can be an error,
-                  // e.g., for LAL) if there is an explicit weight.
-                  try
+                  // Check if there is a label that comes.  Or rather,
+                  // check if there is something else than EOF or the
+                  // separator, in which case it must be a label.
+                  label_t label;
+                  if (peek == EOF || peek == sep || isspace(peek))
                     {
-                      label = labelset()->conv(i);
+                      // There is no label.  This counts as '$', the
+                      // special label.
+                      //
+                      // Indeed, that how we represent the initial and
+                      // final transitions: '$ -> 0 "<2>"'.  Using the
+                      // one label is tempting, but it does not exist
+                      // for lal_char for instance.  And it would be
+                      // wrong to have '\e' when we can, and '$'
+                      // otherwise...
+                      //
+                      // However, we must have at least a weight: a
+                      // completely empty mononial ($ -> 0 "<2>,") is
+                      // invalid.
+                      require(!default_w,
+                              sname(), ": conv: invalid monomial: ",
+                              str_escape(peek),
+                              " (did you mean \\e or \\z?)");
+                      label = labelset()->special();
                     }
-                  catch (const std::domain_error&)
-                    {}
-                  // We must have at least a weight or a label.
-                  if (default_w && p == i.tellg())
-                    raise(sname(), ": conv: invalid value: ",
-                          str_escape(i.peek()),
-                          " contains an empty label"
-                          " (did you mean \\e or \\z?)");
+                  else
+                    label = labelset()->conv(i);
                   add_here(res, label, w);
                 }
             }

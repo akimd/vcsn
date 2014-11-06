@@ -4,6 +4,8 @@
 # include <memory>
 # include <set>
 
+# include <boost/optional.hpp>
+
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -58,43 +60,49 @@ namespace vcsn
         int c = i.get();
         require(c == '[',
                 "expected '[', found ", str_escape(c));
-        int previous = -1;
+        // The last letter we read, for intervals.
+        boost::optional<letter_t> previous;
         std::set<letter_t> res;
-        while (!i.eof() && i.peek() != ']')
+        while (i.peek() != EOF && i.peek() != ']')
           {
-            c = i.get();
-            if (c == '-')
+            if (i.peek() == '-')
               {
-                require(previous != -1, "bracket cannot begin with '-'.");
-                // Handle ranges
-                int endrange = i.peek();
-                if (endrange == ']')
-                  res.insert('-');
+                require(previous != boost::none,
+                        "bracket cannot begin with '-'");
+                i.ignore();
+                // Handle ranges.
+                if (i.peek() == ']')
+                  // [abc-] does not denote an interval.
+                  res.insert(letter_t{'-'});
                 else
                   {
-                    auto it = this->genset().find(previous);
-                    for (; *it != endrange && it != this->genset().end();
-                         it++)
-                      res.insert(*it);
-                    require(it != this->genset().end(),
-                            "unexpected ", str_escape(endrange));
+                    // [prev - l2].
+                    letter_t l2 = genset_t::get_letter(i);
+                    require(this->has(l2),
+                            "invalid label: unexpected ", str_escape(l2));
+                    for (auto i = this->genset().find(previous.get());
+                         i != this->genset().end();
+                         ++i)
+                      {
+                        res.insert(*i);
+                        if (*i == l2)
+                          break;
+                      }
+                    previous = boost::none;
                   }
               }
             else
               {
-                if (c == '\\')
-                  c = i.get();
-                if (this->has(c))
-                  res.insert(c);
+                letter_t l = genset_t::get_letter(i);
+                if (this->has(l))
+                  res.insert(l);
                 else
                   throw std::domain_error("invalid label: unexpected "
-                                          + str_escape(c));
-                previous = c;
+                                          + str_escape(l));
+                previous = l;
               }
           }
-        require(!i.eof(), "EOF, expected ']'");
-        i.ignore(); // Eat ]
-
+        eat(i, ']');
         return res;
       }
 
@@ -111,7 +119,7 @@ namespace vcsn
 
       DEFINE(begin,);
       DEFINE(concat,);
-      DEFINE(conv,);
+      DEFINE(get_word,);
       DEFINE(delimit,);
       DEFINE(undelimit,);
       DEFINE(end,);

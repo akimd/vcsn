@@ -175,11 +175,10 @@ namespace vcsn
     value_t
     conv(std::istream& i) const
     {
-      int c = i.peek();
-      if (this->has(c))
-        return i.get();
-      else
-        throw std::domain_error("invalid label: unexpected " + str_escape(c));
+      letter_t l = this->genset().get_letter(i);
+      require(this->has(l),
+              "invalid label: unexpected ", str_escape(l));
+      return value_t{l};
     }
 
     std::set<value_t>

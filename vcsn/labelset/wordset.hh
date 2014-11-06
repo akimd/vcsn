@@ -178,12 +178,10 @@ namespace vcsn
       return v;
     }
 
-    // FIXME: Why do I need to repeat this?
-    // It should be inherited from genset-labelset.
     value_t
     conv(std::istream& i) const
     {
-      return this->genset().conv(i);
+      return this->genset().get_word(i);
     }
 
     /// Read a range of labels.

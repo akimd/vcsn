@@ -4,6 +4,7 @@
 # include <cassert>
 # include <string>
 # include <iostream>
+# include <stdexcept>
 
 # include <vcsn/misc/escape.hh>
 
@@ -148,6 +149,31 @@ namespace vcsn
     static constexpr letter_t special_letter() { return 127; }
 
   public:
+    /// Read a single char, with possible \-escape support.
+    /// EOF is an error.
+    static char get_char(std::istream& i)
+    {
+      int res = i.get();
+      if (res == EOF)
+        throw std::domain_error("invalid label: unexpected end-of-file");
+      else if (res == '\\')
+        {
+          res = i.get();
+          if (res == EOF)
+            throw std::domain_error("invalid label: unexpected end-of-file");
+        }
+      return res;
+    }
+
+
+    /// Read one letter from i.
+    ///
+    /// Either a single char, or a "letter" enclosed in single-quotes.
+    static letter_t get_letter(std::istream& i)
+    {
+      return get_char(i);
+    }
+
     std::ostream&
     print(const letter_t& l, std::ostream& o) const
     {
