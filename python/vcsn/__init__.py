@@ -73,3 +73,6 @@ try:
     from vcsn.ipython import *
 except (ImportError, NameError):
     pass
+
+# An predefined context for casual users.
+b = context('lal_char, b')
