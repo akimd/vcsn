@@ -20,8 +20,8 @@ If COMMAND is "notebook", run Vcsn as an IPython Notebook.
 If COMMAND is "run" (or "-e"), set up the environment to find
 Vcsn, and run the ARGS...
 
-If COMMAND is "efstdecompile" or "efstcompile", run the corresponding
-program.
+If COMMAND is "efstcompile", "efstdecompile", "python", or "ipython",
+run the corresponding program.
 
 If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:
@@ -74,7 +74,7 @@ case $1 in
   (-h|--help) help;;
   (-v|--version) version;;
 
-  (efstcompile|efstdecompile) exec "$@";;
+  (efstcompile|efstdecompile|python*|ipython*) exec "$@";;
 
   (accessible|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
