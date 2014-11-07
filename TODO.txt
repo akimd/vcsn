@@ -91,6 +91,10 @@ Loops forever:
 We can check that we reach the same state, but can we have periodic
 behaviors?
 
+It also loops when we have a sink state:
+
+  vcsn.context('lal_char, b').ratexp('a').standard().complete().shortest(2)
+
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 
