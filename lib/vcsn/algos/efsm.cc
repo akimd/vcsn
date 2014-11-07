@@ -8,7 +8,7 @@
 #include <vcsn/algos/efsm.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/misc/flyweight.hh>
+#include <vcsn/misc/symbol.hh>
 #include <vcsn/misc/regex.hh>
 
 namespace vcsn

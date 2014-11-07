@@ -14,7 +14,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/flyweight.hh>
+# include <vcsn/misc/symbol.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/weightset/polynomialset.hh>
@@ -30,8 +30,7 @@ namespace vcsn
   class automaton_editor
   {
   public:
-    using string_t =
-      boost::flyweight<std::string, boost::flyweights::no_tracking>;
+    using string_t = symbol;
 
     virtual ~automaton_editor() {}
     virtual void add_initial(string_t s, string_t w) = 0;

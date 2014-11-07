@@ -2,7 +2,7 @@
 #include <set>
 #include <string>
 
-#include <vcsn/misc/flyweight.hh>
+#include <vcsn/misc/symbol.hh>
 
 #include <lib/vcsn/algos/registry.hh>
 #include <lib/vcsn/algos/fwd.hh>

@@ -1,8 +1,7 @@
-#ifndef VCSN_MISC_FLYWEIGHT_HH
-# define VCSN_MISC_FLYWEIGHT_HH
+#pragma once
 
-# include <boost/flyweight.hpp>
-# include <boost/flyweight/no_tracking.hpp>
+#include <boost/flyweight.hpp>
+#include <boost/flyweight/no_tracking.hpp>
 
 namespace std
 {
@@ -19,4 +18,8 @@ namespace std
   };
 }
 
-#endif // !VCSN_MISC_FLYWEIGHT_HH
+namespace vcsn
+{
+  /// An internalized string.
+  using symbol = boost::flyweight<std::string, boost::flyweights::no_tracking>;
+}
