@@ -330,12 +330,12 @@ namespace vcsn
         bos_.component<detail::backslashify_output_filter>(0)->disable();
       }
 
+      /// The output stream, with a backslashify filter.
+      detail::io::filtering_ostream bos_;
       /// Whether to format for dot2tex.
       bool dot2tex_ = false;
       /// Useful states.
       std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_);
-      /// The output stream, with a backslashify filter.
-      detail::io::filtering_ostream bos_;
     };
   }
 
