@@ -18,9 +18,7 @@ namespace vcsn
       {
       public:
         /// A description of the weight type.
-        /// \param full  whether to include the genset.
-        ///              if false, same as sname.
-        virtual std::string vname(bool full) const = 0;
+        virtual std::string vname() const = 0;
 
         /// Extract wrapped typed weight.
         template <typename WeightSet>
@@ -50,9 +48,9 @@ namespace vcsn
           , weightset_(ws)
         {}
 
-        virtual std::string vname(bool full) const override
+        virtual std::string vname() const override
         {
-          return weightset().vname(full);
+          return weightset().sname();
         }
 
         const weight_t weight() const

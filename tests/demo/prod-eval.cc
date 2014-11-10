@@ -10,6 +10,7 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -37,10 +38,10 @@ namespace vcsn
   {
     dyn::automaton res = dyn::read_automaton(f);
     // Automaton typename.
-    auto sname = res->vname(false);
-    if (sname != Aut::element_type::sname())
-      throw std::runtime_error(f + ": invalid context: " + sname
-                               + ", expected: " + Aut::element_type::sname());
+    auto vname = res->vname();
+    require(vname == Aut::element_type::sname(),
+            f, ": invalid context: ", vname,
+            ", expected: ", Aut::element_type::sname());
     auto& r = res->as<Aut>();
     return std::move(r);
   }

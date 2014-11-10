@@ -57,7 +57,7 @@ namespace vcsn
   {
     std::string operator()(T& t)
     {
-      return t->vname(false);
+      return t->vname();
     }
   };
 

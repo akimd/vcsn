@@ -28,9 +28,7 @@ namespace detail
     using value_t = rat::exp_t;
 
     /// A description of the ratexp type.
-    /// \param full  whether to include the genset.
-    ///              if false, same as sname.
-    virtual std::string vname(bool full) const = 0;
+    virtual std::string vname() const = 0;
 
     /// Extract wrapped typed ratexpset.
     template <typename RatExpSet>
@@ -110,9 +108,9 @@ namespace detail
     /// \param rs    the wrapped ratexpset.
     ratexpset_wrapper(const ratexpset_t& rs);
 
-    virtual std::string vname(bool full) const override
+    virtual std::string vname() const override
     {
-      return ratexpset().vname(full);
+      return ratexpset().sname();
     }
 
     /// The ratexpset which this wraps.
