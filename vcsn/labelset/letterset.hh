@@ -195,9 +195,7 @@ namespace vcsn
     print(const value_t& l, std::ostream& o,
           const std::string& = "text") const
     {
-      if (!is_special(l))
-        o << str_escape(l);
-      return o;
+      return this->genset().print(l, o);
     }
 
     std::ostream&

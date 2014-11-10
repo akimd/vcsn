@@ -206,13 +206,7 @@ namespace vcsn
       if (is_one(l))
         o << (format == "latex" ? "\\varepsilon" : "\\e");
       else if (!is_special(l))
-        {
-          if (format == "latex" && ! this->is_letter(l))
-            o << "\\mathit{";
-          o << str_escape(l);
-          if (format == "latex" && ! this->is_letter(l))
-            o << "}";
-        }
+        this->genset().print(l, o, format);
       return o;
     }
 

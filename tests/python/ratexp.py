@@ -160,7 +160,7 @@ check_format('lal_char(abc), ratexpset<lal_char(def), ratexpset<lal_char(xyz), z
 check_format('law_char(abc), z',
              "(abc)a(bc)",
              "(abc)a(bc)",
-             r'\left(\mathit{abc}\right) \, a \, \left(\mathit{bc}\right)')
+             r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
 
 # Check that we do support digits as letters.
 check_format('lal_char(0123), b',

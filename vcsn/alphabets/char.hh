@@ -170,7 +170,8 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const letter_t& l, std::ostream& o) const
+    print(const letter_t& l, std::ostream& o,
+          const std::string& = "text") const
     {
       if (l != one_letter() && l != special_letter())
         o << l;
@@ -178,23 +179,24 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const word_t& w, std::ostream& o) const
+    print(const word_t& w, std::ostream& o,
+          const std::string& format = "text") const
     {
       size_t s = w.size();
 
       if (s == 0
           || (s == 1 && w[0] == one_letter()))
         o << "\\e";
-
-      // If the string starts or ends with the special letter, skip
-      // it.  If the resulting string is empty, format it this way.
-      // (We DON'T want to format it as "\\e".)
-      else if (w[0] == special_letter())
-        o << ((s == 1) ? "" : str_escape(w.substr(1)));
-      else if (s > 1 && w[s - 1] == special_letter())
-        o << str_escape(w.substr(0, s - 1));
+      else if (s == 1 && w[0] == special_letter())
+        o << '$';
       else
-        o << str_escape(w);
+        {
+          if (format == "latex")
+            o << "\\mathit{";
+          o << str_escape(w);
+          if (format == "latex")
+            o << '}';
+        }
       return o;
     }
 

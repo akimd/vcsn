@@ -243,9 +243,17 @@ namespace vcsn
         {
           o << "\\{";
           const char *sep = "";
-          for (auto c: *this)
+          for (auto l: *this)
             {
-              o << sep << c;
+              o << sep;
+
+              if (format == "latex" && ! this->is_letter(l))
+                o << "\\mathit{";
+              // FIXME:o << str_escape(l);
+              this->print(l, o);
+              if (format == "latex" && ! this->is_letter(l))
+                o << "}";
+
               sep = ", ";
             }
           o << "\\}";
