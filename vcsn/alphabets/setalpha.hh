@@ -7,6 +7,7 @@
 
 # include <boost/optional.hpp>
 
+# include <vcsn/misc/type_traits.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/stream.hh> // eat.
@@ -69,7 +70,7 @@ namespace vcsn
                 break;
 
               case ')':
-                is.ignore();
+                eat(is, ')');
                 done = true;
                 break;
               case '-':
@@ -77,10 +78,8 @@ namespace vcsn
                   goto insert;
                 else
                   {
-                    is.ignore();
-                    letter_t l2 = L::get_letter(is);
-                    for (letter_t l = prev.get(); l <= l2; ++l)
-                      res.add_letter(l);
+                    eat(is, '-');
+                    res.add_range(prev.get(), L::get_letter(is));
                     prev = boost::none;
                     break;
                   }
@@ -124,6 +123,39 @@ namespace vcsn
       assert(l != this->template special<letter_t>());
       alphabet_.insert(l);
       return *this;
+    }
+
+    /// Whether the genset supports the range concept.
+    template <typename Letter, typename Enable = void>
+    struct has_range: std::false_type {};
+
+    template <typename Letter>
+    struct has_range<Letter,
+                     decltype((++std::declval<Letter&>(), void()))>
+      : std::true_type
+    {};
+
+    /// Add a range of letters, if it is accepted by the labelset.
+    auto add_range(letter_t l1, letter_t l2)
+      -> set_alphabet&
+    {
+      return add_range_<letter_t>(l1, l2);
+    }
+
+    template <typename Letter>
+    auto add_range_(Letter l1, Letter l2)
+      -> enable_if_t<has_range<Letter>{}, set_alphabet&>
+    {
+      for (/* empty */; l1 <= l2; ++l1)
+        add_letter(l1);
+      return *this;
+    }
+
+    template <typename Letter>
+    auto add_range_(Letter, Letter)
+      -> enable_if_t<!has_range<Letter>{}, set_alphabet&>
+    {
+      raise(sname(), " does not support letter ranges");
     }
 
     /// Whether \a l is a letter.
