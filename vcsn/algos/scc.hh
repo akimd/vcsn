@@ -48,31 +48,31 @@ namespace vcsn
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_tarjan_recursive_impl(const Aut& aut)
+      scc_tarjan_recursive_impl(const Aut& aut) : aut_{aut}
       {
-        for (auto s : aut->states())
+        for (auto s : aut_->states())
           if (!has(marked_, s))
-            dfs(s, aut);
+            dfs(s);
       }
 
-      const components_t components()
+      const components_t& components() const
       {
         return components_;
       }
 
     private:
-      void dfs(state_t s, const Aut& aut)
+      void dfs(state_t s)
       {
         std::size_t min = curr_vertex_num_++;
         low_.emplace(s, min);
         marked_.emplace(s);
         stack_.push(s);
 
-        for (auto t : aut->out(s))
+        for (auto t : aut_->out(s))
           {
-            auto dst = aut->dst_of(t);
+            auto dst = aut_->dst_of(t);
             if (!has(marked_, dst))
-              dfs(dst, aut);
+              dfs(dst);
             if (low_[dst] < min)
               min = low_[dst];
           }
@@ -84,30 +84,30 @@ namespace vcsn
 
         state_t w;
         components_.emplace_back(component_t{});
+        auto& com = components_.back();
         do
           {
             w = stack_.top();
             stack_.pop();
-            components_[curr_comp_num_].emplace(w);
+            com.emplace(w);
             // This vertex belong only one component
             // so remove it by update low value to max size.
-            low_[w] = aut->num_states() + 1;
+            low_[w] = std::numeric_limits<unsigned int>::max();
           }
         while (w != s);
-        curr_comp_num_++;
       }
 
-      /// The current component number.
-      std::size_t curr_comp_num_ = 0;
-      /// The current visited vertex
+      /// Input automaton.
+      Aut aut_;
+      /// The current visited vertex.
       std::size_t curr_vertex_num_ = 0;
-      /// All compnents
+      /// All compnents.
       components_t components_;
-      /// List visited vertices
-      std::set<state_t> marked_;
-      /// low_[s] is minimum of vertex that it can go
+      /// List visited vertices.
+      std::unordered_set<state_t> marked_;
+      /// low_[s] is minimum of vertex that it can go.
       std::unordered_map<state_t, std::size_t> low_;
-      /// Contains list vertices same the component
+      /// Contains list vertices same the component.
       std::stack<state_t> stack_;
     };
 
@@ -240,11 +240,11 @@ namespace vcsn
     public:
       using state_t = state_t_of<Aut>;
 
-      reverse_postorder_impl(const Aut& aut)
+      reverse_postorder_impl(const Aut& aut) : aut_{aut}
       {
         for (auto s : aut->states())
           if (!has(marked_, s))
-            dfs(s, aut);
+            dfs(s);
       }
 
       std::stack<state_t>& reverse_post()
@@ -253,17 +253,19 @@ namespace vcsn
       }
 
     private:
-      void dfs(state_t s, const Aut& aut)
+      void dfs(state_t s)
       {
         marked_.emplace(s);
-        for (auto t : aut->out(s))
+        for (auto t : aut_->out(s))
           {
-            auto dst = aut->dst_of(t);
+            auto dst = aut_->dst_of(t);
             if (!has(marked_, dst))
-              dfs(dst, aut);
+              dfs(dst);
           }
         rvp_.push(s);
       }
+
+      Aut aut_;
       std::stack<state_t> rvp_;
       std::set<state_t> marked_;
       std::stack<state_t> todo_;
@@ -296,7 +298,7 @@ namespace vcsn
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_kosaraju_impl(const Aut& aut)
+      scc_kosaraju_impl(const Aut& aut) : aut_{aut}
       {
         auto trans = ::vcsn::transpose(aut);
         auto todo = ::vcsn::reverse_postorder(trans);
@@ -306,19 +308,19 @@ namespace vcsn
             todo.pop();
             if (!has(marked_, s))
               {
-                dfs(s, aut);
+                dfs(s);
                 ++num_;
               }
           }
       }
 
-      const components_t components()
+      const components_t& components() const
       {
         return components_;
       }
 
     private:
-      void dfs(state_t s, const Aut& aut)
+      void dfs(state_t s)
       {
         marked_.emplace(s);
         if (num_ == components_.size())
@@ -326,18 +328,21 @@ namespace vcsn
         else
           components_[num_].emplace(s);
 
-        for (auto t : aut->out(s))
+        for (auto t : aut_->out(s))
           {
-            auto dst = aut->dst_of(t);
+            auto dst = aut_->dst_of(t);
             if (!has(marked_, dst))
-              dfs(dst, aut);
+              dfs(dst);
           }
       }
 
+      /// Input automaton.
+      Aut aut_;
       /// The current component number.
       std::size_t num_ = 0;
+      // All components.
       components_t components_;
-      std::set<state_t> marked_;
+      std::unordered_set<state_t> marked_;
     };
   }
 
