@@ -32,7 +32,7 @@ namespace vcsn
       return "qmp";
     }
 
-    std::string vname(bool = true) const
+    std::string vname(bool) const
     {
       return sname();
     }
@@ -193,7 +193,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{Q}_{\\text{mp}}";
       else if (format == "text")
-        o << vname();
+        o << vname(true);
       else
         raise("invalid format: ", format);
       return o;

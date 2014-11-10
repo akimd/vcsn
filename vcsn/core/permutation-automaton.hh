@@ -48,7 +48,7 @@ namespace vcsn
       }
 
       /// Dynamic name.
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "permutation_automaton<" + input_->vname(full) + ">";
       }

@@ -20,7 +20,7 @@ namespace vcsn
         /// A description of the label type.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
-        virtual std::string vname(bool full = true) const = 0;
+        virtual std::string vname(bool full) const = 0;
 
         /// Extract wrapped typed label.
         template <typename LabelSet>
@@ -50,7 +50,7 @@ namespace vcsn
           , labelset_(ls)
         {}
 
-        virtual std::string vname(bool full = true) const override
+        virtual std::string vname(bool full) const override
         {
           return labelset().vname(full);
         }

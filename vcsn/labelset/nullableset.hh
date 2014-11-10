@@ -193,7 +193,7 @@ namespace vcsn
       return "lan<" + labelset_t::sname() + ">";
     }
 
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return "lan<" + labelset()->vname(full) + ">";
     }

@@ -29,7 +29,7 @@ namespace vcsn
       return L::sname();
     }
 
-    virtual std::string vname(bool full = true) const
+    virtual std::string vname(bool full) const
     {
       std::string res = sname();
       if (full)

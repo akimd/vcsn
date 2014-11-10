@@ -26,7 +26,7 @@ namespace vcsn
       return "f2";
     }
 
-    std::string vname(bool = true) const
+    std::string vname(bool) const
     {
       return sname();
     }
@@ -167,7 +167,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{F}_2";
       else if (format == "text")
-        o << vname();
+        o << vname(true);
       else
         raise("invalid format: ", format);
       return o;

@@ -54,7 +54,7 @@ namespace vcsn
       }
 
       /// Dynamic name.
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "partition_automaton<" + input_->vname(full) + ">";
       }

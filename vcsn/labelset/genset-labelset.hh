@@ -43,7 +43,7 @@ namespace vcsn
         return genset_t::sname();
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return this->genset().vname(full);
       }

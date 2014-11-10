@@ -103,7 +103,7 @@ namespace vcsn
               + ", " + weightset_t::sname());
     }
 
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return (labelset()->vname(full)
               + ", " + weightset()->vname(full));

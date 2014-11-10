@@ -98,7 +98,7 @@ namespace vcsn
       return sname_(indices);
     }
 
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return vname_(full, indices);
     }

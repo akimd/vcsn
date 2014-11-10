@@ -30,7 +30,7 @@ namespace vcsn
       return "lao";
     }
 
-    static std::string vname(bool = true)
+    static std::string vname(bool)
     {
       return sname();
     }

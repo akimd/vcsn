@@ -20,7 +20,7 @@ namespace vcsn
         /// A description of the polynomial.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
-        virtual std::string vname(bool full = true) const = 0;
+        virtual std::string vname(bool full) const = 0;
 
         template <typename PolynomialSet>
         polynomial_wrapper<PolynomialSet>& as()
@@ -53,7 +53,7 @@ namespace vcsn
         {}
         virtual ~polynomial_wrapper() {}
 
-        virtual std::string vname(bool full = true) const override
+        virtual std::string vname(bool full) const override
         {
           return polynomialset().vname(full);
         }

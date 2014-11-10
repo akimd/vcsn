@@ -114,7 +114,7 @@ namespace vcsn
       return "mutable_automaton<" + context_t::sname() + ">";
     }
 
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return "mutable_automaton<" + context().vname(full) + ">";
     }

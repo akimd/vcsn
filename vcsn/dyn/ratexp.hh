@@ -21,7 +21,7 @@ namespace vcsn
         /// A description of the ratexp type.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
-        virtual std::string vname(bool full = true) const = 0;
+        virtual std::string vname(bool full) const = 0;
 
         /// Extract wrapped typed ratexp.
         template <typename RatExpSet>
@@ -53,7 +53,7 @@ namespace vcsn
           , ratexpset_(ratexpset)
         {}
 
-        virtual std::string vname(bool full = true) const override
+        virtual std::string vname(bool full) const override
         {
           return ratexpset().vname(full);
         }

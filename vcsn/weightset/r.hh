@@ -29,7 +29,7 @@ namespace vcsn
       return "r";
     }
 
-    std::string vname(bool = true) const
+    std::string vname(bool) const
     {
       return sname();
     }
@@ -194,7 +194,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{R}";
       else if (format == "text")
-        o << vname();
+        o << vname(true);
       else
         raise("invalid format: ", format);
       return o;

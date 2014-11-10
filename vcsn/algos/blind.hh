@@ -121,7 +121,7 @@ namespace vcsn
                 + automaton_t::element_type::sname() + ">");
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return ("blind_automaton<" + std::to_string(Tape) + ", "
                 + aut_->vname(full) + ">");

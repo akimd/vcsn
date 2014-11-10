@@ -51,7 +51,7 @@ namespace vcsn
       return "letterset<" + super_t::sname() + ">";
     }
 
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return "letterset<" + super_t::vname(full) + ">";
     }

@@ -74,7 +74,7 @@ namespace vcsn
         return "product_automaton" + super_t::sname_();
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "product_automaton" + super_t::vname_(full);
       }

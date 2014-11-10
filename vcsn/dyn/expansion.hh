@@ -17,7 +17,7 @@ namespace vcsn
         /// A description of the expansion.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
-        virtual std::string vname(bool full = true) const = 0;
+        virtual std::string vname(bool full) const = 0;
 
         template <typename ExpansionSet>
         expansion_wrapper<ExpansionSet>& as()
@@ -47,7 +47,7 @@ namespace vcsn
         {}
         virtual ~expansion_wrapper() {}
 
-        virtual std::string vname(bool full = true) const override
+        virtual std::string vname(bool full) const override
         {
           return expansionset().vname(full);
         }

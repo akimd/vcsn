@@ -47,7 +47,7 @@ namespace vcsn
       return "wordset<" + super_t::sname() + ">";
     }
 
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return "wordset<" + super_t::vname(full) + ">";
     }

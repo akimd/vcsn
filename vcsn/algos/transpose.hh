@@ -52,7 +52,7 @@ namespace vcsn
         return "transpose_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "transpose_automaton<" + aut_->vname(full) + ">";
       }

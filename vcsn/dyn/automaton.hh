@@ -19,7 +19,7 @@ namespace vcsn
         /// A description of the automaton, sufficient to build it.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
-        virtual std::string vname(bool full = true) const = 0;
+        virtual std::string vname(bool full) const = 0;
 
         /// Extract wrapped typed automaton.
         template <typename Aut>
@@ -47,7 +47,7 @@ namespace vcsn
           : automaton_(aut)
         {}
 
-        virtual std::string vname(bool full = true) const override
+        virtual std::string vname(bool full) const override
         {
           return automaton()->vname(full);
         }

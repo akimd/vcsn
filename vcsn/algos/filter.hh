@@ -55,7 +55,7 @@ namespace vcsn
       }
 
       /// Dynamic name.
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "filter_automaton<" + aut_->vname(full) + ">";
       }

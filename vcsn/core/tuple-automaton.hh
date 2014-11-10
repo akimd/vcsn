@@ -40,7 +40,7 @@ namespace vcsn
         return "tuple_automaton" + sname_();
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "tuple_automaton" + vname_(full);
       }

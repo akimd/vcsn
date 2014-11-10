@@ -78,7 +78,7 @@ namespace vcsn
         return "determinized_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "determinized_automaton<" + input_->vname(full) + ">";
       }
@@ -347,7 +347,7 @@ namespace vcsn
         return "detweighted_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "detweighted_automaton<" + input_->vname(full) + ">";
       }

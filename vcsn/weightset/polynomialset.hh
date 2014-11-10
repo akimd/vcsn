@@ -83,7 +83,7 @@ namespace vcsn
     }
 
     /// The dynamic name.
-    std::string vname(bool full = true) const
+    std::string vname(bool full) const
     {
       return "polynomialset<" + context().vname(full) + ">";
     }

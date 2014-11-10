@@ -55,7 +55,7 @@ namespace vcsn
       }
 
       /// The dynamic name.
-      std::string vname(bool full = true) const
+      std::string vname(bool full) const
       {
         return "expansionset<" + rs_.vname(full) + ">";
       }

@@ -58,7 +58,7 @@ check_tupleset()
   // vname.
   ASSERT_EQ(wwset.vname(false),
             "lat<wordset<char_letters>, wordset<char_letters>>");
-  ASSERT_EQ(wwset.vname(),
+  ASSERT_EQ(wwset.vname(true),
             "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
 
   // print_set.
@@ -86,13 +86,13 @@ check_tupleset()
     std::string n
       = "lat<wordset<char_letters(ABC)>, wordset<char_letters(XYZ)>>";
     std::istringstream is(n);
-    ASSERT_EQ(wwset_t::make(is).vname(), n);
+    ASSERT_EQ(wwset_t::make(is).vname(true), n);
   }
   {
     std::string n
       = "lat<wordset<char_letters(ABC)>, letterset<char_letters(XYZ)>>";
     std::istringstream is(n);
-    ASSERT_EQ(wlset_t::make(is).vname(), n);
+    ASSERT_EQ(wlset_t::make(is).vname(true), n);
   }
 
   // equals.

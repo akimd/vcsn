@@ -20,7 +20,7 @@ namespace vcsn
         /// A description of the context, sufficient to build it.
         /// \param full  whether to include the gensets.
         ///              if false, same as sname.
-        virtual std::string vname(bool full = true) const = 0;
+        virtual std::string vname(bool full) const = 0;
 
         /// Convert a dynamic name into a static one.
         /// (from vname to sname, i.e., strip generators).
@@ -51,7 +51,7 @@ namespace vcsn
           : context_(context)
         {}
 
-        virtual std::string vname(bool full = true) const override
+        virtual std::string vname(bool full) const override
         {
           return context().vname(full);
         }
