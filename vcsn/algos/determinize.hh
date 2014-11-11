@@ -78,9 +78,11 @@ namespace vcsn
         return "determinized_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "determinized_automaton<" + input_->vname(full) + ">";
+        o << "determinized_automaton<";
+        input_->print_set(o, format);
+        return o << '>';
       }
 
       /// The state for set of states \a ss.
@@ -347,9 +349,11 @@ namespace vcsn
         return "detweighted_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "detweighted_automaton<" + input_->vname(full) + ">";
+        o << "detweighted_automaton<";
+        input_->print_set(o, format);
+        return o << '>';
       }
 
       /// The determinization of weighted automaton

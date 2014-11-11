@@ -98,11 +98,6 @@ namespace vcsn
       return sname_(indices);
     }
 
-    std::string vname(bool full) const
-    {
-      return vname_(full, indices);
-    }
-
     static constexpr std::size_t size()
     {
       return sizeof...(ValueSets);
@@ -435,21 +430,6 @@ namespace vcsn
       std::string res = "lat<";
       const char *sep = "";
       for (auto n: {valueset_t<I>::sname()...})
-        {
-          res += sep;
-          res += n;
-          sep = ", ";
-        }
-      res.push_back('>');
-      return res;
-    }
-
-    template <std::size_t... I>
-    std::string vname_(bool full, seq<I...>) const
-    {
-      std::string res = "lat<";
-      const char *sep = "";
-      for (auto n: {set<I>().vname(full)...})
         {
           res += sep;
           res += n;

@@ -54,10 +54,11 @@ namespace vcsn
         return "expansionset<" + ratexpset_t::sname() + ">";
       }
 
-      /// The dynamic name.
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "expansionset<" + rs_.vname(full) + ">";
+        o << "expansionset<";
+        rs_.print(o, format);
+        return o << '>';
       }
 
       /// Print a first order development.

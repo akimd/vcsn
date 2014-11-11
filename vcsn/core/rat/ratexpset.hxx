@@ -52,27 +52,6 @@ namespace vcsn
     return "ratexpset<" + context_t::sname() + '>';
   }
 
-  DEFINE::vname(bool full) const
-    -> std::string
-  {
-    std::string res;
-    if (full)
-      switch (identities_)
-        {
-        case identities_t::trivial:
-          res += "ratexpset<";
-          break;
-        case identities_t::series:
-          res += "seriesset<";
-          break;
-        default:
-          assert(false);
-        }
-    else
-      res += "ratexpset<";
-    res += context().vname(full) + '>';
-    return res;
-  }
 
   DEFINE::make(std::istream& is)
     -> ratexpset<Context>

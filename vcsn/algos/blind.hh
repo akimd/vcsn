@@ -121,10 +121,11 @@ namespace vcsn
                 + automaton_t::element_type::sname() + ">");
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return ("blind_automaton<" + std::to_string(Tape) + ", "
-                + aut_->vname(full) + ">");
+        o << "blind_automaton<" << std::to_string(Tape) << ", ";
+        aut_->print_set(o, format);
+        return o << '>';
       }
 
       full_context_t full_context() const

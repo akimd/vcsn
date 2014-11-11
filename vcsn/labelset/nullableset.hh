@@ -193,11 +193,6 @@ namespace vcsn
       return "lan<" + labelset_t::sname() + ">";
     }
 
-    std::string vname(bool full) const
-    {
-      return "lan<" + labelset()->vname(full) + ">";
-    }
-
     /// Build from the description in \a is.
     static nullableset make(std::istream& i)
     {
@@ -421,7 +416,11 @@ namespace vcsn
           o << ")^?";
         }
       else if (format == "text")
-        o << vname(true);
+        {
+          o <<  "lan<";
+          labelset()->print_set(o, format);
+          o << '>';
+        }
       else
         raise("invalid format: ", format);
       return o;

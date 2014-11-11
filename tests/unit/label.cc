@@ -31,6 +31,15 @@ check_letterset()
   return nerrs;
 }
 
+template <typename ValueSet>
+std::string
+set_name(const ValueSet& vs, const std::string& format = "text")
+{
+  std::ostringstream o;
+  vs.print_set(o, format);
+  return o.str();
+}
+
 static unsigned
 check_tupleset()
 {
@@ -55,24 +64,15 @@ check_tupleset()
   ASSERT_EQ(wwset_t::sname(),
             "lat<wordset<char_letters>, wordset<char_letters>>");
 
-  // vname.
-  ASSERT_EQ(wwset.vname(false),
+  // sname.
+  ASSERT_EQ(wwset.sname(),
             "lat<wordset<char_letters>, wordset<char_letters>>");
-  ASSERT_EQ(wwset.vname(true),
-            "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
 
   // print_set.
-  {
-    std::ostringstream o;
-    wwset.print_set(o, "text");
-    ASSERT_EQ(o.str(),
-              "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
-  }
-  {
-    std::ostringstream o;
-    wwset.print_set(o, "latex");
-    ASSERT_EQ(o.str(), "\\{a, b, c\\}^* \\times \\{x, y, z\\}^*");
-  }
+  ASSERT_EQ(set_name(wwset, "text"),
+            "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
+  ASSERT_EQ(set_name(wwset, "latex"),
+            "\\{a, b, c\\}^* \\times \\{x, y, z\\}^*");
 
   // make.
   // If you observe a runtime exception here, such as
@@ -86,13 +86,13 @@ check_tupleset()
     std::string n
       = "lat<wordset<char_letters(ABC)>, wordset<char_letters(XYZ)>>";
     std::istringstream is(n);
-    ASSERT_EQ(wwset_t::make(is).vname(true), n);
+    ASSERT_EQ(set_name(wwset_t::make(is)), n);
   }
   {
     std::string n
       = "lat<wordset<char_letters(ABC)>, letterset<char_letters(XYZ)>>";
     std::istringstream is(n);
-    ASSERT_EQ(wlset_t::make(is).vname(true), n);
+    ASSERT_EQ(set_name(wlset_t::make(is)), n);
   }
 
   // equals.

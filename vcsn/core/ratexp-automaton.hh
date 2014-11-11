@@ -53,10 +53,11 @@ namespace vcsn
         return "ratexp_automaton<" + super_t::sname() + ">";
       }
 
-      /// Dynamic name.
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "ratexp_automaton<" + super_t::vname(full) + ">";
+        o << "ratexp_automaton<";
+        super_t::print_set(o, format);
+        return o << '>';
       }
 
       /// Symbolic states to state handlers.

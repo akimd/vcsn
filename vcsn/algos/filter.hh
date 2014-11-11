@@ -54,10 +54,11 @@ namespace vcsn
         return "filter_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      /// Dynamic name.
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "filter_automaton<" + aut_->vname(full) + ">";
+        o << "filter_automaton<";
+        aut_->print_set(o, format);
+        return o << '>';
       }
 
       bool state_has_name(state_t s) const

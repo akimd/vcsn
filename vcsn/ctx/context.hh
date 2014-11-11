@@ -103,12 +103,6 @@ namespace vcsn
               + ", " + weightset_t::sname());
     }
 
-    std::string vname(bool full) const
-    {
-      return (labelset()->vname(full)
-              + ", " + weightset()->vname(full));
-    }
-
     /// Build from the description in \a is.
     static context make(std::istream& is)
     {

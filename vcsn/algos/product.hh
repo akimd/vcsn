@@ -74,9 +74,10 @@ namespace vcsn
         return "product_automaton" + super_t::sname_();
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "product_automaton" + super_t::vname_(full);
+        o << "product_automaton";
+        return super_t::print_set_(o, format);
       }
 
       /// The context of the result.

@@ -217,9 +217,10 @@ namespace vcsn
   std::ostream&
   info(const A& aut, std::ostream& out, bool detailed = false)
   {
+    out << "type: ";
+    aut->print_set(out, "text") << '\n';
 #define ECHO(Name, Value)                               \
     out << Name ": " << Value << '\n'
-    ECHO("type", aut->vname(true));
     ECHO("number of states", aut->num_states());
     ECHO("number of initial states", aut->num_initials());
     ECHO("number of final states", aut->num_finals());
@@ -289,24 +290,23 @@ namespace vcsn
     vcsn::rat::info<RatExpSet> nfo;
     nfo(*e);
 
-# define DEFINE(Type)                            \
-    << "\n" #Type ": " << nfo.Type
-    o
-      << "type: " << rs.vname(true)
-      << "\nsize: " << sizer(e)
-      DEFINE(sum)
-      DEFINE(shuffle)
-      DEFINE(conjunction)
-      DEFINE(prod)
-      DEFINE(star)
-      DEFINE(complement)
-      DEFINE(zero)
-      DEFINE(one)
-      DEFINE(atom)
-      DEFINE(lweight)
-      DEFINE(rweight)
-      ;
-# undef DEFINE
+    o << "type: ";
+    rs.print_set(o, "text");
+    o << "\nsize: " << sizer(e);
+# define ECHO(Type)                            \
+    o << "\n" #Type ": " << nfo.Type;
+    ECHO(sum);
+    ECHO(shuffle);
+    ECHO(conjunction);
+    ECHO(prod);
+    ECHO(star);
+    ECHO(complement);
+    ECHO(zero);
+    ECHO(one);
+    ECHO(atom);
+    ECHO(lweight);
+    ECHO(rweight);
+# undef ECHO
   }
 
 

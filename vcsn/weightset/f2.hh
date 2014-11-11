@@ -26,11 +26,6 @@ namespace vcsn
       return "f2";
     }
 
-    std::string vname(bool) const
-    {
-      return sname();
-    }
-
     /// Build from the description in \a is.
     static f2 make(std::istream& is)
     {
@@ -167,7 +162,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{F}_2";
       else if (format == "text")
-        o << vname(true);
+        o << sname();
       else
         raise("invalid format: ", format);
       return o;

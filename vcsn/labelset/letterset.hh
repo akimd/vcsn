@@ -51,11 +51,6 @@ namespace vcsn
       return "letterset<" + super_t::sname() + ">";
     }
 
-    std::string vname(bool full) const
-    {
-      return "letterset<" + super_t::vname(full) + ">";
-    }
-
     /// Build from the description in \a is.
     static letterset make(std::istream& is)
     {
@@ -204,7 +199,11 @@ namespace vcsn
       if (format == "latex")
         this->genset().print_set(o, format);
       else if (format == "text")
-        o << vname(true);
+        {
+          o << "letterset<";
+          this->genset().print_set(o, format);
+          o << '>';
+        }
       else
         raise("invalid format: ", format);
       return o;

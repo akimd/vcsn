@@ -30,11 +30,6 @@ namespace vcsn
       return "lao";
     }
 
-    static std::string vname(bool)
-    {
-      return sname();
-    }
-
     /// Build from the description in \a is.
     static oneset make(std::istream& is)
     {
@@ -182,7 +177,7 @@ namespace vcsn
       if (format == "latex")
         o << "1";
       else if (format == "text")
-        o << vname(true);
+        o << sname();
       else
         raise("invalid format: ", format);
       return o;

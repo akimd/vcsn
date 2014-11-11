@@ -83,8 +83,6 @@ namespace vcsn
   public:
     /// Static description key.
     static std::string sname();
-    /// Dynamic description key.
-    std::string vname(bool full) const;
     /// Build from the description in \a is.
     static self_type make(std::istream& is);
 
@@ -245,7 +243,7 @@ namespace vcsn
     /// Read a range of ratexps.
     std::set<value_t> convs(std::istream&) const
     {
-      raise(vname(true), ": ranges not implemented");
+      raise(sname(), ": ranges not implemented");
     }
 
     std::ostream& print(const value_t v, std::ostream& o,
@@ -273,7 +271,21 @@ namespace vcsn
           o << ']';
         }
       else if (format == "text")
-        o << vname(true);
+        {
+          switch (identities_)
+            {
+            case identities_t::trivial:
+              o <<  "ratexpset<";
+              break;
+            case identities_t::series:
+              o << "seriesset<";
+              break;
+            default:
+              assert(false);
+            }
+          context().print_set(o, format);
+          o << '>';
+        }
       else
         raise("invalid format: ", format);
       return o;

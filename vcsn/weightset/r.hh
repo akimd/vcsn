@@ -29,11 +29,6 @@ namespace vcsn
       return "r";
     }
 
-    std::string vname(bool) const
-    {
-      return sname();
-    }
-
     /// Build from the description in \a is.
     static r make(std::istream& is)
     {
@@ -194,7 +189,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{R}";
       else if (format == "text")
-        o << vname(true);
+        o << sname();
       else
         raise("invalid format: ", format);
       return o;

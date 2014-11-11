@@ -76,7 +76,9 @@ namespace vcsn
         bos_ <<
           "digraph\n"
           "{\n"
-          "  vcsn_context = \"" << aut_->context().vname(true) << "\"\n"
+          "  vcsn_context = \"";
+        aut_->context().print_set(bos_, "text");
+        bos_ << "\"\n"
           "  rankdir = LR\n"
           "  edge ["
             << (dot2tex_

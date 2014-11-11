@@ -25,11 +25,6 @@ namespace vcsn
         return "zmin";
       }
 
-      std::string vname(bool) const
-      {
-        return sname();
-      }
-
       /// Build from the description in \a is.
       static zmin make(std::istream& is)
       {
@@ -50,7 +45,7 @@ namespace vcsn
         if (format == "latex")
           o << "\\mathbb{Z}_{\\text{min}}";
         else if (format == "text")
-          o << vname(true);
+          o << sname();
         else
           raise("invalid format: ", format);
         return o;

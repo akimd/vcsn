@@ -82,12 +82,6 @@ namespace vcsn
       return "polynomialset<" + context_t::sname() + ">";
     }
 
-    /// The dynamic name.
-    std::string vname(bool full) const
-    {
-      return "polynomialset<" + context().vname(full) + ">";
-    }
-
     const context_t& context() const { return ctx_; }
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }

@@ -32,11 +32,6 @@ namespace vcsn
       return "qmp";
     }
 
-    std::string vname(bool) const
-    {
-      return sname();
-    }
-
     /// Build from the description in \a is.
     static qmp make(std::istream& is)
     {
@@ -193,7 +188,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{Q}_{\\text{mp}}";
       else if (format == "text")
-        o << vname(true);
+        o << sname();
       else
         raise("invalid format: ", format);
       return o;

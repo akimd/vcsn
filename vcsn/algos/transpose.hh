@@ -52,9 +52,11 @@ namespace vcsn
         return "transpose_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "transpose_automaton<" + aut_->vname(full) + ">";
+        o << "transpose_automaton<";
+        aut_->print_set(o, format);
+        return o << '>';
       }
 
       /// The automaton we are decorating (typically a mutable_automaton).

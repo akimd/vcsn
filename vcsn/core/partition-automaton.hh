@@ -53,10 +53,11 @@ namespace vcsn
         return "partition_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      /// Dynamic name.
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "partition_automaton<" + input_->vname(full) + ">";
+        o << "partition_automaton<";
+        input_->print_set(o, format);
+        return o << '>';
       }
 
       bool state_has_name(state_t s) const

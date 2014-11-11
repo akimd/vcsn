@@ -29,11 +29,6 @@ namespace vcsn
       return "q";
     }
 
-    std::string vname(bool) const
-    {
-      return sname();
-    }
-
     /// Build from the description in \a is.
     static q make(std::istream& is)
     {
@@ -251,7 +246,7 @@ namespace vcsn
       if (format == "latex")
         o << "\\mathbb{Q}";
       else if (format == "text")
-        o << vname(true);
+        o << sname();
       else
         raise("invalid format: ", format);
       return o;

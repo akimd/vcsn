@@ -114,9 +114,11 @@ namespace vcsn
       return "mutable_automaton<" + context_t::sname() + ">";
     }
 
-    std::string vname(bool full) const
+    std::ostream& print_set(std::ostream& o, const std::string& format) const
     {
-      return "mutable_automaton<" + context().vname(full) + ">";
+      o << "mutable_automaton<";
+      context().print_set(o, format);
+      return o << '>';
     }
 
     const context_t& context() const { return ctx_; }

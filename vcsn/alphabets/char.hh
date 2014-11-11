@@ -21,11 +21,6 @@ namespace vcsn
       return "char_letters";
     }
 
-    virtual std::string vname(bool) const
-    {
-      return sname();
-    }
-
     word_t
     to_word(const letter_t l) const
     {

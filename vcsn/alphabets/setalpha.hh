@@ -29,19 +29,6 @@ namespace vcsn
       return L::sname();
     }
 
-    virtual std::string vname(bool full) const
-    {
-      std::string res = sname();
-      if (full)
-        {
-          res += '(';
-          for (letter_t c: alphabet_)
-            res += c;
-          res += ')';
-        }
-      return res;
-    }
-
     static set_alphabet make(std::istream& is)
     {
       // name: char(abc)
@@ -246,20 +233,23 @@ namespace vcsn
           for (auto l: *this)
             {
               o << sep;
-
-              if (format == "latex" && ! this->is_letter(l))
+              if (! this->is_letter(l))
                 o << "\\mathit{";
-              // FIXME:o << str_escape(l);
               this->print(l, o);
-              if (format == "latex" && ! this->is_letter(l))
-                o << "}";
-
+              if (! this->is_letter(l))
+                o << '}';
               sep = ", ";
             }
           o << "\\}";
         }
       else if (format == "text")
-        o << vname(true);
+        {
+          o << sname();
+          o <<  '(';
+          for (letter_t c: alphabet_)
+            o <<  c;
+          o << ')';
+        }
       else
         raise("invalid format: ", format);
       return o;

@@ -128,9 +128,11 @@ namespace vcsn
         return "pair_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "pair_automaton<" + input_->vname(full) + ">";
+        o << "pair_automaton<";
+        input_->print_set(o, format);
+        return o << '>';
       }
 
       const std::unordered_map<pair_t, state_t>& get_map_pair() const

@@ -40,9 +40,11 @@ namespace vcsn
         return "tuple_automaton" + sname_();
       }
 
-      std::string vname(bool full) const
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        return "tuple_automaton" + vname_(full);
+        o << "tuple_automaton<";
+        print_set_(o, format);
+        return o << '>';
       }
 
       /// The type of context of the result.
@@ -138,24 +140,29 @@ namespace vcsn
         return res;
       }
 
-      /// The vname of the sub automata.
-      std::string vname_(bool full = true) const
+      /// The setname of the sub automata.
+      void print_set_(std::ostream& o, const std::string& format) const
       {
-        return vname_(full, indices);
+        return print_set_(o, format, indices);
       }
 
       template <size_t... I>
-      std::string vname_(bool full, seq<I...>) const
+      void print_set_(std::ostream& o, const std::string& format,
+                      seq<I...>) const
       {
-        std::string res = "<" + aut_->vname(full) + ", ";
+        o << '<';
+        aut_->print_set(o, format);
+        o << ", ";
         const char* sep = "";
         using swallow = int[];
         (void) swallow
           {
-            (res += sep + std::get<I>(auts_)->vname(full), sep = ", ", 0)...
+            (o << sep,
+             std::get<I>(auts_)->print_set(o, format),
+             sep = ", ",
+             0)...
           };
-        res += ">";
-        return res;
+        o <<  '>';
       }
 
       /// The name of the pre of the output automaton.

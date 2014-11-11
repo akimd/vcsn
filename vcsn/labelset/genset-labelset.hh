@@ -43,11 +43,6 @@ namespace vcsn
         return genset_t::sname();
       }
 
-      std::string vname(bool full) const
-      {
-        return this->genset().vname(full);
-      }
-
       /// Read a range of letters.
       ///
       /// Stream \a i is right on a '['.  Read up to the closing ']',

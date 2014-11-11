@@ -47,11 +47,6 @@ namespace vcsn
       return "wordset<" + super_t::sname() + ">";
     }
 
-    std::string vname(bool full) const
-    {
-      return "wordset<" + super_t::vname(full) + ">";
-    }
-
     /// Build from the description in \a is.
     static wordset make(std::istream& is)
     {
@@ -219,7 +214,11 @@ namespace vcsn
           o << "^*";
         }
       else if (format == "text")
-        o << vname(true);
+        {
+          o << "wordset<";
+          this->genset().print_set(o, format);
+          o << '>';
+        }
       else
         raise("invalid format: ", format);
       return o;
