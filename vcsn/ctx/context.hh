@@ -90,10 +90,11 @@ namespace vcsn
 
     /// The name of this context, built from its parameters.
     /// E.g., "lal_char, b", "law_char, zmin".
-    static std::string sname()
+    static symbol sname()
     {
-      return (labelset_t::sname()
-              + ", " + weightset_t::sname());
+      static symbol res(labelset_t::sname()
+                        + ", " + weightset_t::sname());
+      return res;
     }
 
     /// Build from the description in \a is.

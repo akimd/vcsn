@@ -82,7 +82,7 @@ namespace vcsn
 
   public:
     /// Static description key.
-    static std::string sname();
+    static symbol sname();
     /// Build from the description in \a is.
     static self_type make(std::istream& is);
 

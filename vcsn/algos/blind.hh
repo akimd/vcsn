@@ -115,10 +115,11 @@ namespace vcsn
         : super_t(aut)
       {}
 
-      static std::string sname()
+      static symbol sname()
       {
-        return ("blind_automaton<" + std::to_string(Tape) + ", "
-                + automaton_t::element_type::sname() + ">");
+        static symbol res(("blind_automaton<" + std::to_string(Tape) + ", "
+                + automaton_t::element_type::sname() + ">"));
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const

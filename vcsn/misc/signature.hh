@@ -7,17 +7,18 @@
 
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/export.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn LIBVCSN_API
 {
   /// Signature of a function call.
   struct signature
   {
-    using sig_t = std::vector<std::string>;
+    using sig_t = std::vector<symbol>;
 
     signature() = default;
 
-    signature(const std::initializer_list<std::string>& l)
+    signature(const std::initializer_list<symbol>& l)
       : sig(l)
     {}
 

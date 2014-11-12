@@ -46,9 +46,10 @@ namespace vcsn
       : letterset(std::make_shared<const genset_t>(letters))
     {}
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "letterset<" + super_t::sname() + ">";
+      static symbol res("letterset<" + super_t::sname() + ">");
+      return res;
     }
 
     /// Build from the description in \a is.

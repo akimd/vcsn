@@ -47,9 +47,9 @@ namespace vcsn
   ratexpset_impl<Context>
 
   DEFINE::sname()
-    -> std::string
+    -> symbol
   {
-    return "ratexpset<" + context_t::sname() + '>';
+    return symbol("ratexpset<" + context_t::sname() + '>');
   }
 
 

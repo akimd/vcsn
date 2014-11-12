@@ -11,6 +11,7 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/misc/symbol.hh>
 # include <vcsn/weightset/fwd.hh>
 # include <vcsn/weightset/weightset.hh>
 
@@ -23,9 +24,10 @@ namespace vcsn
   public:
     using self_type = b;
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "b";
+      static symbol res("b");
+      return res;
     }
 
     /// Build from the description in \a is.

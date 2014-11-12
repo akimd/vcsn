@@ -27,9 +27,10 @@ namespace vcsn
   public:
     using self_type = qmp;
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "qmp";
+      static symbol res("qmp");
+      return res;
     }
 
     /// Build from the description in \a is.

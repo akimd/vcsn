@@ -4,6 +4,8 @@
 # include <memory>
 # include <string>
 
+# include <vcsn/misc/symbol.hh>
+
 namespace vcsn
 {
   namespace dyn
@@ -15,7 +17,7 @@ namespace vcsn
       {
       public:
         /// A description of the expansion.
-        virtual std::string vname() const = 0;
+        virtual symbol vname() const = 0;
 
         template <typename ExpansionSet>
         expansion_wrapper<ExpansionSet>& as()
@@ -45,7 +47,7 @@ namespace vcsn
         {}
         virtual ~expansion_wrapper() {}
 
-        virtual std::string vname() const override
+        virtual symbol vname() const override
         {
           return expansionset().sname();
         }

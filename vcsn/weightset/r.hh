@@ -24,9 +24,10 @@ namespace vcsn
   public:
     using self_type = r;
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "r";
+      static symbol res("r");
+      return res;
     }
 
     /// Build from the description in \a is.

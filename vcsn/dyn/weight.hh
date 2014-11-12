@@ -18,7 +18,7 @@ namespace vcsn
       {
       public:
         /// A description of the weight type.
-        virtual std::string vname() const = 0;
+        virtual symbol vname() const = 0;
 
         /// Extract wrapped typed weight.
         template <typename WeightSet>
@@ -48,7 +48,7 @@ namespace vcsn
           , weightset_(ws)
         {}
 
-        virtual std::string vname() const override
+        virtual symbol vname() const override
         {
           return weightset().sname();
         }

@@ -123,9 +123,10 @@ namespace vcsn
         return singletons_;
       }
 
-      static std::string sname()
+      static symbol sname()
       {
-        return "pair_automaton<" + automaton_t::element_type::sname() + ">";
+        static symbol res("pair_automaton<" + automaton_t::element_type::sname() + ">");
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const

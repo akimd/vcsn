@@ -38,9 +38,10 @@ namespace vcsn
         return *gs_;
       }
 
-      static std::string sname()
+      static symbol sname()
       {
-        return genset_t::sname();
+        static symbol res(genset_t::sname());
+        return res;
       }
 
       /// Read a range of letters.

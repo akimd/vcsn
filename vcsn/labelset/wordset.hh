@@ -42,9 +42,10 @@ namespace vcsn
       : wordset{std::make_shared<const genset_t>(gs)}
     {}
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "wordset<" + super_t::sname() + ">";
+      static symbol res("wordset<" + super_t::sname() + ">");
+      return res;
     }
 
     /// Build from the description in \a is.

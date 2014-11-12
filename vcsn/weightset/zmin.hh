@@ -20,9 +20,10 @@ namespace vcsn
       using self_type = zmin;
       using value_t = typename super_t::value_t;
 
-      static std::string sname()
+      static symbol sname()
       {
-        return "zmin";
+        static symbol res("zmin");
+        return res;
       }
 
       /// Build from the description in \a is.

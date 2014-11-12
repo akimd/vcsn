@@ -6,6 +6,7 @@
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -18,11 +19,11 @@ namespace vcsn
       {
       public:
         /// A description of the context, sufficient to build it.
-        virtual std::string vname() const = 0;
+        virtual symbol vname() const = 0;
 
         /// Convert a dynamic name into a static one.
         /// (from vname to sname, i.e., strip generators).
-        static std::string sname(const std::string& vname);
+        static symbol sname(const std::string& vname);
 
         template <typename Ctx>
         Ctx as()
@@ -49,7 +50,7 @@ namespace vcsn
           : context_(context)
         {}
 
-        virtual std::string vname() const override
+        virtual symbol vname() const override
         {
           return context().sname();
         }

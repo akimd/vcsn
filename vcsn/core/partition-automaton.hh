@@ -48,9 +48,10 @@ namespace vcsn
       {}
 
       /// Static name.
-      static std::string sname()
+      static symbol sname()
       {
-        return "partition_automaton<" + automaton_t::element_type::sname() + ">";
+        static symbol res("partition_automaton<" + automaton_t::element_type::sname() + ">");
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const

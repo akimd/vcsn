@@ -69,9 +69,10 @@ namespace vcsn
 
       using super_t::state;
 
-      static std::string sname()
+      static symbol sname()
       {
-        return "product_automaton" + super_t::sname_();
+        static symbol res("product_automaton" + super_t::sname_());
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const

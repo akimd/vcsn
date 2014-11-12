@@ -5,6 +5,7 @@
 # include <string>
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -18,7 +19,7 @@ namespace vcsn
       {
       public:
         /// A description of the polynomial.
-        virtual std::string vname() const = 0;
+        virtual symbol vname() const = 0;
 
         template <typename PolynomialSet>
         polynomial_wrapper<PolynomialSet>& as()
@@ -51,7 +52,7 @@ namespace vcsn
         {}
         virtual ~polynomial_wrapper() {}
 
-        virtual std::string vname() const override
+        virtual symbol vname() const override
         {
           return polynomialset().sname();
         }

@@ -13,6 +13,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/misc/memory.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -109,9 +110,10 @@ namespace vcsn
     // Related sets
     ///////////////
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "mutable_automaton<" + context_t::sname() + ">";
+      static symbol res("mutable_automaton<" + context_t::sname() + ">");
+      return res;
     }
 
     std::ostream& print_set(std::ostream& o, const std::string& format) const

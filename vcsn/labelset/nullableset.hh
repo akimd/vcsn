@@ -188,9 +188,10 @@ namespace vcsn
       : labelset_t{ls}, ls_{ls}
     {}
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "lan<" + labelset_t::sname() + ">";
+      static symbol res("lan<" + labelset_t::sname() + ">");
+      return res;
     }
 
     /// Build from the description in \a is.

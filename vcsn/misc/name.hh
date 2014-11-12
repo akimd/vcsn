@@ -10,6 +10,7 @@
 # include <vcsn/core/rat/identities.hh>
 # include <vcsn/misc/direction.hh>
 # include <vcsn/misc/signature.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -21,20 +22,20 @@ namespace vcsn
   template <typename T>
   struct snamer
   {
-    std::string operator()()
+    symbol operator()()
     {
       return T::sname();
     }
   };
 
   template <typename T>
-  std::string sname()
+  symbol sname()
   {
     return snamer<T>()();
   }
 
   template <typename T>
-  std::string sname(T&)
+  symbol sname(T&)
   {
     return sname<T>();
   }
@@ -55,14 +56,14 @@ namespace vcsn
   template <typename T>
   struct vnamer
   {
-    std::string operator()(T& t)
+    symbol operator()(T& t)
     {
       return t->vname();
     }
   };
 
   template <typename T>
-  std::string vname(T& t)
+  symbol vname(T& t)
   {
     return vnamer<T>()(t);
   }
@@ -80,18 +81,20 @@ namespace vcsn
   template <>                                   \
   struct snamer<Type>                           \
   {                                             \
-    std::string operator()()                    \
+    symbol operator()()                         \
     {                                           \
-      return #Type;                             \
+      symbol res(#Type);                        \
+      return res;                               \
     }                                           \
   };                                            \
                                                 \
   template <>                                   \
   struct vnamer<Type>                           \
   {                                             \
-    std::string operator()(Type&)               \
+    symbol operator()(Type&)                    \
     {                                           \
-      return #Type;                             \
+      symbol res(#Type);                        \
+      return res;                               \
     }                                           \
   };
 
@@ -119,9 +122,11 @@ namespace vcsn
   template <typename T, T Value>
   struct snamer<std::integral_constant<T, Value>>
   {
-    std::string operator()()
+    symbol operator()()
     {
-      return "std::integral_constant<unsigned, " + std::to_string(Value) + ">";
+      symbol res("std::integral_constant<unsigned, "
+                 + std::to_string(Value) + '>');
+      return res;
     }
   };
 
@@ -129,7 +134,7 @@ namespace vcsn
   struct vnamer<std::integral_constant<T, Value>>
   {
     using type = std::integral_constant<T, Value>;
-    std::string operator()(type)
+    symbol operator()(type)
     {
       return sname<type>();
     }
@@ -154,13 +159,13 @@ namespace vcsn
   /// std::integral_constant<unsigned, tape>".
   struct integral_constant
   {
-    std::string name;
+    symbol name;
   };
 
   template <>
   struct vnamer<integral_constant>
   {
-    std::string operator()(integral_constant t)
+    symbol operator()(integral_constant t)
     {
       return t.name;
     }

@@ -93,9 +93,10 @@ namespace vcsn
       : sets_(ls...)
     {}
 
-    static std::string sname()
+    static symbol sname()
     {
-      return sname_(indices);
+      static symbol res(sname_(indices));
+      return res;
     }
 
     static constexpr std::size_t size()

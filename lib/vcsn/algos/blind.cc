@@ -13,8 +13,8 @@ namespace vcsn
     automaton
     blind(automaton& aut, unsigned tape)
     {
-      integral_constant t
-        = {"std::integral_constant<unsigned, " + std::to_string(tape) + ">"};
+      integral_constant t = {symbol("std::integral_constant<unsigned, "
+                                    + std::to_string(tape) + '>')};
       return detail::blind_registry().call(aut, t);
     }
   }

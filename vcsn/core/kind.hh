@@ -4,6 +4,7 @@
 # include <istream>
 
 # include <vcsn/misc/stream.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -18,20 +19,17 @@ namespace vcsn
   /// labels_are_words.  See ratexpset::atom and ratexpset::atom_ for
   /// an example.
   ///
-  /// It is very tempting to turns these guys into members of
+  /// It is very tempting to turn these guys into members of
   /// context, but then, instead of "(if_lal<Ctx, letter_t> v)",
   /// one must write "(typename Cxx::template if_lal<letter_t> v)".
 
 # define DEFINE(Abbrev, Name)                                           \
   struct labels_are_ ## Name                                            \
   {                                                                     \
-    static std::string name()                                           \
+    static symbol sname()                                               \
     {                                                                   \
-      return "labels_are_" #Name;                                       \
-    }                                                                   \
-    static std::string sname()                                          \
-    {                                                                   \
-      return #Abbrev;                                                   \
+      static symbol res(#Abbrev);                                       \
+      return res;                                                       \
     }                                                                   \
                                                                         \
     static void make(std::istream& is)                                  \

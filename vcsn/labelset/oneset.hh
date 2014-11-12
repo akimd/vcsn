@@ -25,9 +25,10 @@ namespace vcsn
 
     oneset() = default;
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "lao";
+      static symbol res("lao");
+      return res;
     }
 
     /// Build from the description in \a is.

@@ -7,6 +7,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/raise.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -16,9 +17,10 @@ namespace vcsn
     using letter_t = char;
     using word_t = std::string;
 
-    static std::string sname()
+    static symbol sname()
     {
-      return "char_letters";
+      static symbol res("char_letters");
+      return res;
     }
 
     word_t

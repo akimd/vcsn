@@ -18,7 +18,7 @@ namespace vcsn
       {
       public:
         /// A description of the label type.
-        virtual std::string vname() const = 0;
+        virtual symbol vname() const = 0;
 
         /// Extract wrapped typed label.
         template <typename LabelSet>
@@ -48,7 +48,7 @@ namespace vcsn
           , labelset_(ls)
         {}
 
-        virtual std::string vname() const override
+        virtual symbol vname() const override
         {
           return labelset().sname();
         }

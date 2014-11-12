@@ -5,9 +5,10 @@
 # include <set>
 # include <string>
 
+# include <vcsn/core/rat/fwd.hh> // rat::exp_t.
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/fwd.hh> // dyn::ratexp.
-# include <vcsn/core/rat/fwd.hh> // rat::exp_t.
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -28,7 +29,7 @@ namespace detail
     using value_t = rat::exp_t;
 
     /// A description of the ratexp type.
-    virtual std::string vname() const = 0;
+    virtual symbol vname() const = 0;
 
     /// Extract wrapped typed ratexpset.
     template <typename RatExpSet>
@@ -108,7 +109,7 @@ namespace detail
     /// \param rs    the wrapped ratexpset.
     ratexpset_wrapper(const ratexpset_t& rs);
 
-    virtual std::string vname() const override
+    virtual symbol vname() const override
     {
       return ratexpset().sname();
     }

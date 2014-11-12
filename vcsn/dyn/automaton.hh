@@ -5,6 +5,7 @@
 # include <string>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -17,7 +18,7 @@ namespace vcsn
       {
       public:
         /// A description of the automaton, sufficient to build it.
-        virtual std::string vname() const = 0;
+        virtual symbol vname() const = 0;
 
         /// Extract wrapped typed automaton.
         template <typename Aut>
@@ -45,7 +46,7 @@ namespace vcsn
           : automaton_(aut)
         {}
 
-        virtual std::string vname() const override
+        virtual symbol vname() const override
         {
           return automaton()->sname();
         }

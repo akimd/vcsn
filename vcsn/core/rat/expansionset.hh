@@ -49,9 +49,10 @@ namespace vcsn
       {}
 
       /// The static name.
-      static std::string sname()
+      static symbol sname()
       {
-        return "expansionset<" + ratexpset_t::sname() + ">";
+        static symbol res("expansionset<" + ratexpset_t::sname() + ">");
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const

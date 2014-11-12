@@ -24,9 +24,10 @@ namespace vcsn
     /// The type of our values, when seen as a container.
     using value_type = letter_t;
 
-    static std::string sname()
+    static symbol sname()
     {
-      return L::sname();
+      static symbol res(L::sname());
+      return res;
     }
 
     static set_alphabet make(std::istream& is)

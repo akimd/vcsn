@@ -4,7 +4,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    std::string detail::context_base::sname(const std::string& vname)
+    symbol detail::context_base::sname(const std::string& vname)
     {
       std::string res;
       int nesting = 0;
@@ -22,7 +22,7 @@ namespace vcsn
               res += c;
             break;
           }
-      return res;
+      return symbol(res);
     }
   }
 }

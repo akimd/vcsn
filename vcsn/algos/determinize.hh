@@ -73,9 +73,10 @@ namespace vcsn
           finals_.set(input_->src_of(t));
       }
 
-      static std::string sname()
+      static symbol sname()
       {
-        return "determinized_automaton<" + automaton_t::element_type::sname() + ">";
+        static symbol res("determinized_automaton<" + automaton_t::element_type::sname() + ">");
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const
@@ -344,9 +345,10 @@ namespace vcsn
         map_[n] = super_t::post();
       }
 
-      static std::string sname()
+      static symbol sname()
       {
-        return "detweighted_automaton<" + automaton_t::element_type::sname() + ">";
+        static symbol res("detweighted_automaton<" + automaton_t::element_type::sname() + ">");
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const

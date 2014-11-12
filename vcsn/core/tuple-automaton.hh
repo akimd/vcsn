@@ -35,9 +35,10 @@ namespace vcsn
       using super_t = automaton_decorator<automaton_t>;
 
     public:
-      static std::string sname()
+      static symbol sname()
       {
-        return "tuple_automaton" + sname_();
+        static symbol res("tuple_automaton" + sname_());
+        return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const
