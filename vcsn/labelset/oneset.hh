@@ -33,11 +33,9 @@ namespace vcsn
     /// Build from the description in \a is.
     static oneset make(std::istream& is)
     {
-      // name: lao_ratexpset<law_char(xyz), b>
-      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
+      // name: lao, ratexpset<law_char(xyz), b>
+      //       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
       //       kind         weightset
-      //
-      // There is no "char(...)_".
       kind_t::make(is);
       return {};
     }

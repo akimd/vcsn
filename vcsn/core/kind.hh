@@ -2,10 +2,8 @@
 # define VCSN_CORE_KIND_HH
 
 # include <istream>
-# include <stdexcept>
-# include <type_traits>
 
-# include <vcsn/misc/escape.hh>
+# include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -50,12 +48,7 @@ namespace vcsn
        *       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^                         \
        *       kind         weightset                                   \
        */                                                               \
-      char kind[4];                                                     \
-      is.get(kind, sizeof kind);                                        \
-      if (sname() != kind)                                              \
-        throw std::runtime_error("kind::make: unexpected: "             \
-                                 + str_escape(kind)                     \
-                                 + ", expected: " + sname());           \
+      eat(is, sname());                                                 \
     }                                                                   \
                                                                         \
   };                                                                    \
