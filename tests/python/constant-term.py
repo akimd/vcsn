@@ -3,17 +3,17 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
+ctx = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
 
 # check WEIGHT RAT-EXP
 # --------------------
 # Check that the constant-term of RAT-EXP is WEIGHT, and check that
 # this is indeed the evaluation of the empty word on derived-term(RAT-EXP).
 #
-# Use a context with ratexp weights to check the order of products.
+# Use a context with expression weights to check the order of products.
 def check(weight, exp):
     w = ctx.weight(weight)
-    re = ctx.ratexp(exp)
+    re = ctx.expression(exp)
     CHECK_EQ(w, re.constant_term())
     CHECK_EQ(w, re.derived_term().eval(''))
 

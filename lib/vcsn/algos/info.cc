@@ -21,15 +21,15 @@ namespace vcsn
     }
 
     /*---------------.
-    | info(ratexp).  |
+    | info(expression).  |
     `---------------*/
 
-    REGISTER_DEFINE(info_ratexp);
+    REGISTER_DEFINE(info_expression);
 
     std::ostream&
-    info(const dyn::ratexp& e, std::ostream& out)
+    info(const dyn::expression& e, std::ostream& out)
     {
-      detail::info_ratexp_registry().call(e, out);
+      detail::info_expression_registry().call(e, out);
       return out;
     }
   }

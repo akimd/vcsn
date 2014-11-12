@@ -9,11 +9,11 @@ from test import *
 ## transpose(automaton).  ##
 ## ---------------------- ##
 
-c = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
-a = c.ratexp("(<xyz>abc)*").derived_term()
+c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+a = c.expression("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, ratexpset<letterset<char_letters(xyz)>, z>"
+  vcsn_context = "letterset<char_letters(abc)>, expressionset<letterset<char_letters(xyz)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -43,7 +43,7 @@ CHECK_EQ(a.info(), a.transpose().transpose().info())
 
 # Regression: we used to not transpose the number of initial and final
 # transitions.
-a = vcsn.context('lal_char, b').ratexp('a+b').standard()
+a = vcsn.context('lal_char, b').expression('a+b').standard()
 CHECK_EQ({
            'is complete': False,
            'is codeterministic': True,
@@ -72,17 +72,17 @@ CHECK_EQ({
 
 # Stripping a transposed automaton strips the inner automaton, but not
 # the transposition shell.
-a = vcsn.context('lal_char, b').ratexp('ab').derived_term().determinize()
+a = vcsn.context('lal_char, b').expression('ab').derived_term().determinize()
 CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
          a.transpose().strip().info()['type'])
 
 ## ------------------- ##
-## transpose(ratexp).  ##
+## transpose(expression).  ##
 ## ------------------- ##
 
 def check(re, exp):
-    exp = ctx.ratexp(exp)
-    r = ctx.ratexp(re)
+    exp = ctx.expression(exp)
+    r = ctx.expression(re)
     CHECK_EQ(exp, r.transpose())
     CHECK_EQ(r, exp.transpose())
 
@@ -107,6 +107,6 @@ check('abc+aba', 'cba+aba')
 check('(ab)*&(ab)*', '(ba)*&(ba)*')
 check('(ab)*', '(ba)*')
 
-ctx = vcsn.context('law_char(abcd), ratexpset<law_char(efgh), ratexpset<law_char(xyz), z>>')
+ctx = vcsn.context('law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), z>>')
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')

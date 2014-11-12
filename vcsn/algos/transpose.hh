@@ -4,8 +4,8 @@
 # include <vcsn/algos/fwd.hh>
 # include <vcsn/algos/strip.hh>
 # include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/rat/ratexp.hh>
-# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/expression.hh>
+# include <vcsn/core/rat/expressionset.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/attributes.hh>
@@ -263,7 +263,7 @@ namespace vcsn
 
 
   /*-------------------------.
-  | dyn::transpose(ratexp).  |
+  | dyn::transpose(expression).  |
   `-------------------------*/
   namespace dyn
   {
@@ -271,23 +271,23 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet>
-      ratexp
-      transpose_ratexp(const ratexp& exp)
+      expression
+      transpose_expression(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
 
-        return make_ratexp(e.ratexpset(),
-                           ::vcsn::transpose(e.ratexpset(),
-                                     e.ratexp()));
+        return make_expression(e.expressionset(),
+                           ::vcsn::transpose(e.expressionset(),
+                                     e.expression()));
       }
 
-      REGISTER_DECLARE(transpose_ratexp,
-                       (const ratexp& e) -> ratexp);
+      REGISTER_DECLARE(transpose_expression,
+                       (const expression& e) -> expression);
     }
   }
 
   /*-----------------------------.
-  | dyn::transposition(ratexp).  |
+  | dyn::transposition(expression).  |
   `-----------------------------*/
   namespace dyn
   {
@@ -295,17 +295,17 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet>
-      ratexp
-      transposition_ratexp(const ratexp& exp)
+      expression
+      transposition_expression(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
 
-        return make_ratexp(e.ratexpset(),
-                           e.ratexpset().transposition(e.ratexp()));
+        return make_expression(e.expressionset(),
+                           e.expressionset().transposition(e.expression()));
       }
 
-      REGISTER_DECLARE(transposition_ratexp,
-                       (const ratexp& e) -> ratexp);
+      REGISTER_DECLARE(transposition_expression,
+                       (const expression& e) -> expression);
     }
   }
 

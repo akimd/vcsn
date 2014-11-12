@@ -3,13 +3,13 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(abc), ratexpset<lal_char(wxyz), z>')
+ctx = vcsn.context('lal_char(abc), expressionset<lal_char(wxyz), z>')
 
 # check RAT-EXP RESULT
 # --------------------
 # Check that the splitting of RAT-EXP is RESULT.
 def check(re, exp):
-    r = ctx.ratexp(re)
+    r = ctx.expression(re)
     s = r.split()
     CHECK_EQ(exp, str(s))
     # Split polynomials is idempotent.

@@ -30,7 +30,7 @@ namespace vcsn
     /// Whether define the same language.
     /// \pre The labelsets of lhs and rhs are free.
     /// \pre lhs and rhs are Boolean, or on Z, or on a field.
-    bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
+    bool are_equivalent(const expression& lhs, const expression& rhs);
 
     /// Whether there exists an isomorphism between the states of \a
     /// lhs and those of \a rhs.
@@ -46,7 +46,7 @@ namespace vcsn
     automaton chain(const automaton& aut, int min, int max);
 
     /// Repeated concatenation of \a e with itself.
-    ratexp chain(const ratexp& e, int min, int max);
+    expression chain(const expression& e, int min, int max);
 
     /// The coaccessible subautomaton of \a aut.
     automaton coaccessible(const automaton& aut);
@@ -59,7 +59,7 @@ namespace vcsn
     automaton complement(const automaton& aut);
 
     /// Add the complement operator to \a r.
-    ratexp complement(const ratexp& r);
+    expression complement(const expression& r);
 
     /// A completed copy of \a aut.
     /// \pre aut is lal
@@ -74,20 +74,20 @@ namespace vcsn
     /// Concatenate two polynomials.
     polynomial concatenate(const polynomial& lhs, const polynomial& rhs);
 
-    /// Concatenate two ratexps.
-    ratexp concatenate(const ratexp& lhs, const ratexp& rhs);
+    /// Concatenate two expressions.
+    expression concatenate(const expression& lhs, const expression& rhs);
 
-    /// The Hadamard product of ratexps \a lhs and \a rhs.
-    ratexp conjunction(const ratexp& lhs, const ratexp& rhs);
+    /// The Hadamard product of expressions \a lhs and \a rhs.
+    expression conjunction(const expression& lhs, const expression& rhs);
 
     /// The weight associated to the empty word in \a e.
-    weight constant_term(const ratexp& e);
+    weight constant_term(const expression& e);
 
     /// The context of this automaton.
     context context_of(const automaton& a);
 
-    /// The context of this ratexp.
-    context context_of(const ratexp& r);
+    /// The context of this expression.
+    context context_of(const expression& r);
 
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
@@ -96,7 +96,7 @@ namespace vcsn
     automaton copy(const automaton& aut, const context& ctx);
 
     /// Copy of \a exp, but built with \a rs.
-    ratexp copy(const ratexp& exp, const ratexpset& rs);
+    expression copy(const expression& exp, const expressionset& rs);
 
     /// A standardized transpositive \a a.
     automaton costandard(const automaton& a);
@@ -105,22 +105,22 @@ namespace vcsn
     automaton de_bruijn(const context& ctx, unsigned n);
 
     /// Derive \a exp with respect to \a s.
-    /// \param exp       the input ratexp
+    /// \param exp       the input expression
     /// \param l         the label used for derivation
     /// \param breaking  whether to split the result
     /// \pre  \a exp must be LAL.
-    polynomial derivation(const ratexp& exp, const label& l,
+    polynomial derivation(const expression& exp, const label& l,
                           bool breaking = false);
 
     /// The derived-term automaton of \a e.
-    /// \param e      the input ratexp
+    /// \param e      the input expression
     /// \param algo   how the derived terms are computed:
     ///    "auto"                  alias for "expansion"
     ///    "derivation"            compute by derivation
     ///    "breaking_derivation"   compute by breaking derivation
     ///    "expansion"             compute by expansion
     ///    "breaking_expansion"    compute by breaking expansion
-    automaton derived_term(const ratexp& e,
+    automaton derived_term(const expression& e,
                            const std::string& algo = "auto");
 
     /// The determinized automaton.
@@ -161,7 +161,7 @@ namespace vcsn
     automaton difference(const automaton& lhs, const automaton& rhs);
 
     /// Words accepted by \a lhs, but not by \a rhs.
-    ratexp difference(const ratexp& lhs, const ratexp& rhs);
+    expression difference(const expression& lhs, const expression& rhs);
 
     /// An automaton which accepts a word n representing a number in
     /// base b iff k|n.
@@ -197,7 +197,7 @@ namespace vcsn
 
     /// Distribute product over addition recursively under the starred
     /// subexpressions and group the equal monomials.
-    ratexp expand(const ratexp& e);
+    expression expand(const expression& e);
 
     /// Create a factor automaton from \a aut.
     automaton factor(const automaton& aut);
@@ -214,8 +214,8 @@ namespace vcsn
     /// Whether the automaton has the twins property.
     bool has_twins_property(const automaton& aut);
 
-    /// The identities of ratexp \a exp.
-    rat::identities identities(const ratexp& exp);
+    /// The identities of expression \a exp.
+    rat::identities identities(const expression& exp);
 
     /// The infiltration of automata \a lhs and \a rhs.
     /// Performs the join of their types.
@@ -234,7 +234,7 @@ namespace vcsn
                        bool detailed = false);
 
     /// Output various facts about \a exp.
-    std::ostream& info(const ratexp& exp, std::ostream& out);
+    std::ostream& info(const expression& exp, std::ostream& out);
 
     /// Split automaton on the incoming transition.
     /// Every state either has only epsilon incoming transitions
@@ -312,7 +312,7 @@ namespace vcsn
 
     /// Whether rational expression is valid (all the starred
     /// sub-expressions are starrable).
-    bool is_valid(const ratexp& e);
+    bool is_valid(const expression& e);
 
     /// The minimized automaton.
     /// \param aut       the automaton to minimize
@@ -329,14 +329,14 @@ namespace vcsn
     /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);
 
-    /// The left-multiplication of a ratexp with \a w as weight.
-    ratexp left_mult(const weight& w, const ratexp& aut);
+    /// The left-multiplication of a expression with \a w as weight.
+    expression left_mult(const weight& w, const expression& aut);
 
     /// The lifted LAO automaton from \a aut.
     automaton lift(const automaton& aut);
 
     /// The lifted LAO rational expression from \a e.
-    ratexp lift(const ratexp& e);
+    expression lift(const expression& e);
 
     /// Build a context from its name.
     context make_context(const std::string& name);
@@ -344,8 +344,9 @@ namespace vcsn
     /// Build an automatonset from its context.
     automaton_editor* make_automaton_editor(const context& ctx);
 
-    /// Build an ratexpset from its context.
-    ratexpset make_ratexpset(const context& ctx, ::vcsn::rat::identities is);
+    /// Build an expressionset from its context.
+    expressionset make_expressionset(const context& ctx,
+                                     ::vcsn::rat::identities is);
 
     /// The context for words.
     context make_word_context(const context& ctx);
@@ -385,8 +386,8 @@ namespace vcsn
     std::ostream& print(const polynomial& p, std::ostream& o,
                         const std::string& format = "default");
 
-    /// Print ratexp \a e on \a o using format \a format.
-    std::ostream& print(const ratexp& e, std::ostream& o,
+    /// Print expression \a e on \a o using format \a format.
+    std::ostream& print(const expression& e, std::ostream& o,
                         const std::string& format = "default");
 
     /// Print weight \a w on \a o using format \a format.
@@ -460,12 +461,12 @@ namespace vcsn
     /// \param ctx   the context.
     label read_label(std::istream& is, const context& ctx);
 
-    /// Read a ratexp from a stream.
+    /// Read a expression from a stream.
     /// \param is      the input stream.
-    /// \param rs      the ratexp's ratexpset.
-    /// \param format  the ratexp's format.
-    ratexp read_ratexp(std::istream& is, const ratexpset& rs,
-                       const std::string& format = "default");
+    /// \param rs      the expression's expressionset.
+    /// \param format  the expression's format.
+    expression read_expression(std::istream& is, const expressionset& rs,
+                               const std::string& format = "default");
 
     /// Read a polynomial from a stream
     /// \param is    the stream to parse.
@@ -484,8 +485,8 @@ namespace vcsn
     /// \pre aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
 
-    /// The right-multiplication of a ratexp with \a w as weight.
-    ratexp right_mult(const ratexp& aut, const weight& w);
+    /// The right-multiplication of a expression with \a w as weight.
+    expression right_mult(const expression& aut, const weight& w);
 
     /// The number of strongly connected components.
     std::size_t num_sccs(const automaton& aut);
@@ -501,9 +502,9 @@ namespace vcsn
     /// Performs the join of their types.
     automaton shuffle(const std::vector<automaton>& as);
 
-    /// The shuffle product of ratexps \a lhs and \a rhs.
+    /// The shuffle product of expressions \a lhs and \a rhs.
     /// Performs the join of their type.
-    ratexp shuffle(const ratexp& lhs, const ratexp& rhs);
+    expression shuffle(const expression& lhs, const expression& rhs);
 
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
@@ -512,23 +513,23 @@ namespace vcsn
     polynomial split(const polynomial& p);
 
     /// Break \a exp.
-    polynomial split(const ratexp& exp);
+    polynomial split(const expression& exp);
 
     /// A standardized \a a.
     automaton standard(const automaton& a);
 
     /// The standard automaton of \a e.
-    automaton standard(const ratexp& e);
+    automaton standard(const expression& e);
 
     /// Star of a standard automaton.
     automaton star(const automaton& aut);
 
-    /// Star height of a ratexp.
-    unsigned star_height(const ratexp& rs);
+    /// Star height of a expression.
+    unsigned star_height(const expression& rs);
 
     /// A normalized form where star is applied only to expression
     /// without null constant-term.
-    ratexp star_normal_form(const ratexp& e);
+    expression star_normal_form(const expression& e);
 
     /// The automaton in \a a with its metadata layers removed.
     automaton strip(const automaton& a);
@@ -548,8 +549,8 @@ namespace vcsn
     /// Sum of two polynomials.
     polynomial sum(const polynomial& lhs, const polynomial& rhs);
 
-    /// Sum of two ratexps.
-    ratexp sum(const ratexp& lhs, const ratexp& rhs);
+    /// Sum of two expressions.
+    expression sum(const expression& lhs, const expression& rhs);
 
     /// Sum of two weights.
     weight sum(const weight& lhs, const weight& rhs);
@@ -559,27 +560,27 @@ namespace vcsn
                              const std::string& algo = "greedy");
 
     /// The Thompson automaton of \a e.
-    automaton thompson(const ratexp& e);
+    automaton thompson(const expression& e);
 
     /// Output \a aut in LaTeX's TikZ format.
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
     /// First order development of a \a exp.
-    /// \param exp              the input ratexp
-    expansion to_expansion(const ratexp& exp);
+    /// \param exp              the input expression
+    expansion to_expansion(const expression& exp);
 
-    /// A ratexp denoting the language of \a aut.
-    ratexp to_expression(const automaton& aut,
-                         const std::string& algo = "auto");
+    /// A expression denoting the language of \a aut.
+    expression to_expression(const automaton& aut,
+                             const std::string& algo = "auto");
 
     /// Transpose \a aut.
     automaton transpose(automaton& aut);
 
     /// Transpose \a e.
-    ratexp transpose(const ratexp& e);
+    expression transpose(const expression& e);
 
     /// Add the transposition operator to \a r.
-    ratexp transposition(const ratexp& r);
+    expression transposition(const expression& r);
 
     /// The useful subautomaton of \a aut.
     automaton trim(const automaton& aut);
@@ -614,8 +615,8 @@ namespace std LIBVCSN_API
   /// Output polynomial \a p on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::polynomial& p);
 
-  /// Output ratexp \a e on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::ratexp& e);
+  /// Output expression \a e on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expression& e);
 
   /// Output weight \a w on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);

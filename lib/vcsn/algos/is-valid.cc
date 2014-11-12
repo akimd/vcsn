@@ -1,6 +1,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/is-valid.hh>
-#include <vcsn/algos/is-valid-ratexp.hh>
+#include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
@@ -24,12 +24,12 @@ namespace vcsn
     | is_valid(exp).  |
     `----------------*/
 
-    REGISTER_DEFINE(is_valid_ratexp);
+    REGISTER_DEFINE(is_valid_expression);
 
     bool
-    is_valid(const ratexp& e)
+    is_valid(const expression& e)
     {
-      return detail::is_valid_ratexp_registry().call(e);
+      return detail::is_valid_expression_registry().call(e);
     }
   }
 }

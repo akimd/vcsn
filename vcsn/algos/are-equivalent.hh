@@ -11,7 +11,7 @@
 # include <vcsn/algos/strip.hh>
 # include <vcsn/algos/union.hh>
 # include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 
 namespace vcsn
 {
@@ -110,10 +110,10 @@ namespace vcsn
   }
 
   /*-----------------------------.
-  | difference(ratexp, ratexp).  |
+  | difference(expression, expression).  |
   `-----------------------------*/
 
-  /// Difference of ratexps.
+  /// Difference of expressions.
   template <typename RatExpSet>
   inline
   typename RatExpSet::value_t
@@ -130,19 +130,19 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSetLhs, typename RatExpSetRhs>
-      ratexp
-      difference_ratexp(const ratexp& lhs, const ratexp& rhs)
+      expression
+      difference_expression(const expression& lhs, const expression& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetLhs>();
-        return make_ratexp(l.ratexpset(),
-                           ::vcsn::difference<RatExpSetLhs>(l.ratexpset(),
-                                                            l.ratexp(),
-                                                            r.ratexp()));
+        return make_expression(l.expressionset(),
+                           ::vcsn::difference<RatExpSetLhs>(l.expressionset(),
+                                                            l.expression(),
+                                                            r.expression()));
       }
 
-      REGISTER_DECLARE(difference_ratexp,
-                       (const ratexp&, const ratexp&) -> ratexp);
+      REGISTER_DECLARE(difference_expression,
+                       (const expression&, const expression&) -> expression);
     }
   }
 }

@@ -64,7 +64,7 @@ namespace vcsn
     size<RatExpSet>::visit_variadic(const variadic_t<Type>& n)
     {
       /* An n-ary node contributes n-1 unit (plus the sum of its
-         children sizes) to the ratexp size. */
+         children sizes) to the expression size. */
       -- size_;
       for (auto child : n)
         {

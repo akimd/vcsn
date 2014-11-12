@@ -2,7 +2,7 @@
 #include <tests/unit/test.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/mutable-automaton.hh>
-#include <vcsn/core/rat/ratexpset.hh>
+#include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/labelset/wordset.hh>
 
@@ -14,13 +14,13 @@ check_mutable_automaton()
   // labels_are_letters (w, x, y, z) for weights.
   auto ctx_b = vcsn::ctx::lal_char_b{{'w', 'x', 'y', 'z'}};
   auto ids = vcsn::rat::identities::trivial;
-  auto ks_b = vcsn::ratexpset<vcsn::ctx::lal_char_b>(ctx_b, ids);
+  auto ks_b = vcsn::expressionset<vcsn::ctx::lal_char_b>(ctx_b, ids);
   // labels_are_words (a, b, c, d) for labels.
   auto ctx_br =
     vcsn::context<vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                   decltype(ks_b)>
     {{'a', 'b', 'c', 'd'}, ks_b};
-  //  auto ks_br = ctx_br.make_ratexpset();
+  //  auto ks_br = ctx_br.make_expressionset();
 
   auto aut1 = vcsn::make_mutable_automaton(ctx_br);
 
@@ -45,7 +45,7 @@ check_mutable_automaton()
 
   // Check has_transition and get_transition.
   assert(aut1->has_transition(s0, s1, "cd"));
-  // FIXME: we would really like to have equality here on ratexp.
+  // FIXME: we would really like to have equality here on expression.
   ASSERT_WEIGHT(aut1, s0, s1, "cd", "wxyz");
   assert(aut2->has_transition(s1, s0, "dc"));
   ASSERT_WEIGHT(aut2, s1, s0, "dc", "zyxw");

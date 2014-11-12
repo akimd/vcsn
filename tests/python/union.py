@@ -3,8 +3,8 @@
 import vcsn
 from test import *
 
-ab = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc), b').ratexp('(b+c)*').standard()
+ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
 CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab | bc)
 
 ## ------------ ##
@@ -107,12 +107,12 @@ digraph
 CHECK_EQ(exp, a | b)
 
 # Check union of contexts.
-a1 = vcsn.context('lal_char(a), ratexpset<lal_char(x), b>').ratexp('<x>a*').standard()
-a2 = vcsn.context('lal_char(b), ratexpset<lal_char(y), b>').ratexp('<y>b*').standard()
+a1 = vcsn.context('lal_char(a), expressionset<lal_char(x), b>').expression('<x>a*').standard()
+a2 = vcsn.context('lal_char(b), expressionset<lal_char(y), b>').expression('<y>b*').standard()
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab), ratexpset<lal_char(xy), b>"
+  vcsn_context = "lal_char(ab), expressionset<lal_char(xy), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -152,19 +152,19 @@ CHECK_EQ(exp, a1 | a2)
 # check RES AUT
 # -------------
 def check(exp, eff):
-    CHECK_EQ(exp, str(eff.ratexp()))
+    CHECK_EQ(exp, str(eff.expression()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>') \
-         .ratexp('<u>a').derived_term()
-a2 = vcsn.context('lal_char(b), b').ratexp('b*').derived_term()
+a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
+         .expression('<u>a').derived_term()
+a2 = vcsn.context('lal_char(b), b').expression('b*').derived_term()
 check('<u>a+b*', a1|a2)
 check('<u>a+b*', a2|a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(a), z').ratexp('<2>a')  .derived_term()
-q = vcsn.context('lal_char(b), q').ratexp('<1/3>b').derived_term()
-r = vcsn.context('lal_char(c), r').ratexp('<.4>c') .derived_term()
+z = vcsn.context('lal_char(a), z').expression('<2>a')  .derived_term()
+q = vcsn.context('lal_char(b), q').expression('<1/3>b').derived_term()
+r = vcsn.context('lal_char(c), r').expression('<.4>c') .derived_term()
 
 check('<2>a+<1/3>b', z|q)
 check('<1/3>b+<2>a', q|z)

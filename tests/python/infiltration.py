@@ -13,9 +13,9 @@ medir = srcdir + '/tests/python/product.dir'
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-a1 = b.ratexp('a*a').derived_term()
+a1 = b.expression('a*a').derived_term()
 # FIXME: ABORT
-### CHECK_EQ('a*(a+(a+a)a*a+(a+a)a*a)', str(a1.infiltration(a1).ratexp()))
+### CHECK_EQ('a*(a+(a+a)a*a+(a+a)a*a)', str(a1.infiltration(a1).expression()))
 
 ## -------------------- ##
 ## Hand crafted tests.  ##
@@ -165,9 +165,9 @@ CHECK_EQ('''digraph
 ## --------------------- ##
 
 # RatE and B, in both directions.
-ab = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
-    .ratexp('(<u>a+<v>b)*').standard()
-a = vcsn.context('lal_char(ab), b').ratexp('a').standard()
+ab = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+    .expression('(<u>a+<v>b)*').standard()
+a = vcsn.context('lal_char(ab), b').expression('a').standard()
 # FIXME: ABORT
 ### CHECK_EQ('<u+\e>a + <uu+uu+u+u>aa + <uv+v>ab + <vu+v>ba',
 ###     str(ab.infiltration(a).shortest(4)))
@@ -179,10 +179,10 @@ a = vcsn.context('lal_char(ab), b').ratexp('a').standard()
 ## Non-commutative.  ##
 ## ----------------- ##
 
-uavb = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
-    .ratexp('<u>a<v>b').standard()
-xayb = vcsn.context('lal_char(ab), ratexpset<lal_char(xy), b>') \
-    .ratexp('<x>a<y>b').standard()
+uavb = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+    .expression('<u>a<v>b').standard()
+xayb = vcsn.context('lal_char(ab), expressionset<lal_char(xy), b>') \
+    .expression('<x>a<y>b').standard()
 CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
     str(uavb.infiltration(xayb).enumerate(4)))
 
@@ -194,7 +194,7 @@ CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb
 ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
-    a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+    a[l] = ctx.expression("<{}>x".format(l)).standard()
 
 CHECK_EQ('''<abcd>x
 <abcd+abdc+acbd+acdb+adbc+bacd+bcad+bcda+bdac+cabd+cdab+dabc>xx

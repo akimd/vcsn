@@ -16,10 +16,10 @@ ctx = vcsn.context(name)
 # Compute the name of the context.
 contexts = {
   'b'  : "law_char(abcd), b",
-  'br' : "law_char(abcd), ratexpset<law_char(efgh), b>",
+  'br' : "law_char(abcd), expressionset<law_char(efgh), b>",
   'z'  : "law_char(abcd), z",
-  'zr' : "law_char(abcd), ratexpset<law_char(efgh), z>",
-  'zrr': "law_char(abcd), ratexpset<law_char(efgh), ratexpset<law_char(xyz), z>>"
+  'zr' : "law_char(abcd), expressionset<law_char(efgh), z>",
+  'zrr': "law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), z>>"
 }
 
 def context_update():
@@ -38,7 +38,7 @@ def pp(re):
   '''Parse and pretty-print.  If it fails, prepend "! " to the error
   message and return it as result.  Strip the "try -h" line.'''
   try:
-    return str(ctx.ratexp(re))
+    return str(ctx.expression(re))
   except RuntimeError:
     return "! " + str(sys.exc_info()[1])
 

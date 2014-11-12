@@ -14,7 +14,7 @@ namespace vcsn
   {
     using lal_char_b = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
-    using lao_br = context<oneset, vcsn::ratexpset<lal_char_b>>;
+    using lao_br = context<oneset, vcsn::expressionset<lal_char_b>>;
   }
 }
 

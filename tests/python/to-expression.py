@@ -4,14 +4,14 @@ import vcsn
 from test import *
 
 ## -------------------- ##
-## automaton.ratexp().  ##
+## automaton.expression().  ##
 ## -------------------- ##
 
 # check_aut AUTOMATON EXP-OUT
 # ---------------------------
 # Check that to-expression(AUTOMATON) = EXP-OUT.
 def check_aut(aut, exp):
-    CHECK_EQ(exp, str(aut.ratexp()))
+    CHECK_EQ(exp, str(aut.expression()))
 
 # Check the associativity of the product.
 check_aut(vcsn.automaton(filename = medir + "/a.gv"), '<x>a(<y>b)*<z>c')
@@ -33,7 +33,7 @@ check_aut(load('lal_char_zmin/slowgrow.gv'),
 
 
 ## ---------------------------- ##
-## ratexp.standard().ratexp().  ##
+## expression.standard().expression().  ##
 ## ---------------------------- ##
 
 ctx = vcsn.context("lal_char(abc), b")
@@ -42,7 +42,7 @@ ctx = vcsn.context("lal_char(abc), b")
 # ---------------------
 # Check that to-expression(standard(RAT)) = EXP-OUT.
 def check_exp(rat, exp):
-    check_aut(ctx.ratexp(rat).standard(), exp)
+    check_aut(ctx.expression(rat).standard(), exp)
 
 check_exp('a',                            'a')
 check_exp('ab',                           'ab')
@@ -56,5 +56,5 @@ check_exp('(?@lal_char(abc), z)(<2>(<3>a+<5>b)<7>c)<11>', \
       '(<6>a<7>c+<10>b<7>c)<11>')
 
 # Likewise, but check the order of the products.
-check_exp('(?@lal_char(abc), ratexpset<lal_char(vwxyz), b>)(<v>(<w>a+<x>b)<y>c)<z>', \
+check_exp('(?@lal_char(abc), expressionset<lal_char(vwxyz), b>)(<v>(<w>a+<x>b)<y>c)<z>', \
       '(<vw>a<y>c+<vx>b<y>c)<z>')

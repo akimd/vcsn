@@ -32,7 +32,7 @@
       </UML:Package>
       <UML:Package visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="mPUmyD8ksKEH" name="vcsn">
        <UML:Namespace.ownedElement>
-        <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="0FHuMe1zqcrC" name="ratexpset_wrapper">
+        <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="0FHuMe1zqcrC" name="expressionset_wrapper">
          <UML:ModelElement.templateParameter>
           <UML:TemplateParameter visibility="public" isSpecification="false" namespace="0FHuMe1zqcrC" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="6ASXujkzqa95" name="Context"/>
          </UML:ModelElement.templateParameter>
@@ -40,7 +40,7 @@
           <UML:Generalization xmi.idref="cL3vIQAE4rRr"/>
          </UML:GeneralizableElement.generalization>
         </UML:Class>
-        <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="Gt4VbabKxxYx" name="ratexpset_base"/>
+        <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="Gt4VbabKxxYx" name="expressionset_base"/>
         <UML:Package visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ROGwGJ2KUHqN" name="rat">
          <UML:Namespace.ownedElement>
           <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="jUXOQCOSYiWN" name="prod">
@@ -128,7 +128,7 @@
           </UML:Class>
          </UML:Namespace.ownedElement>
         </UML:Package>
-        <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="iFNDd3I7MZr3" name="ratexpset">
+        <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="iFNDd3I7MZr3" name="expressionset">
          <UML:ModelElement.templateParameter>
           <UML:TemplateParameter visibility="public" isSpecification="false" namespace="iFNDd3I7MZr3" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Kw5opF47ORpb" name="Context"/>
          </UML:ModelElement.templateParameter>
@@ -137,7 +137,7 @@
          <UML:Namespace.ownedElement>
           <UML:Package visibility="public" isSpecification="false" namespace="9xnyEuwaoGoI" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="LQvrzDFAkhVW" name="details">
            <UML:Namespace.ownedElement>
-            <UML:Class visibility="public" isSpecification="false" namespace="LQvrzDFAkhVW" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="hhmBCeCYvACP" name="ratexp_base"/>
+            <UML:Class visibility="public" isSpecification="false" namespace="LQvrzDFAkhVW" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="hhmBCeCYvACP" name="expression_base"/>
            </UML:Namespace.ownedElement>
           </UML:Package>
           <UML:Class visibility="public" isSpecification="false" namespace="9xnyEuwaoGoI" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="OJc8IFaVLz0A" name="context"/>

@@ -22,7 +22,7 @@ namespace vcsn
       DEFINE(oneset);
       DEFINE(other);
       DEFINE(polynomialset);
-      DEFINE(ratexpset);
+      DEFINE(expressionset);
       DEFINE(tupleset);
       DEFINE(weightset);
       DEFINE(wordset);

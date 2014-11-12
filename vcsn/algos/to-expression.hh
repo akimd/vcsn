@@ -3,7 +3,7 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/lift.hh>
-# include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/core/rat/expression.hh>
 # include <vcsn/misc/vector.hh>
 
 namespace vcsn
@@ -126,22 +126,22 @@ namespace vcsn
     };
 
 
-    /// Eliminate states in an automaton whose labelset is a ratexpset.
+    /// Eliminate states in an automaton whose labelset is a expressionset.
     template <typename Aut>
-    struct state_eliminator<Aut, labels_are_ratexps>
+    struct state_eliminator<Aut, labels_are_expressions>
     {
-      // FIXME: ratexpset<lal_char(a-c), z>_q for instance cannot work,
+      // FIXME: expressionset<lal_char(a-c), z>_q for instance cannot work,
       // because we need to move the q weights inside the
-      // lal_char(a-c), z ratexps, which obviously not possible.  So we
+      // lal_char(a-c), z expressions, which obviously not possible.  So we
       // need to require that there is a subtype relationship between
-      // the weightset and the weightset of the ratexp.
+      // the weightset and the weightset of the expression.
       //
       // Yet as of 2014-07, there is no means to check that subtype
       // relationship in Vaucanson.
 
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
-      using ratexpset_t = labelset_t_of<automaton_t>;
+      using expressionset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
@@ -156,7 +156,7 @@ namespace vcsn
       {
         require(aut_->has_state(s), "not a valid state: ", s);
 
-        // The loops' ratexp.
+        // The loops' expression.
         auto loop = rs_.zero();
         for (auto t: to_vector(aut_->outin(s, s)))
           {
@@ -190,8 +190,8 @@ namespace vcsn
       int debug_;
       /// The automaton we work on.
       automaton_t& aut_;
-      /// Shorthand to the labelset, which is a ratexpset.
-      const ratexpset_t& rs_ = *aut_->labelset();
+      /// Shorthand to the labelset, which is a expressionset.
+      const expressionset_t& rs_ = *aut_->labelset();
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
     };
@@ -262,7 +262,7 @@ namespace vcsn
   `-----------------*/
 
   template <typename Aut,
-            typename RatExpSet = ratexpset<context_t_of<Aut>>>
+            typename RatExpSet = expressionset<context_t_of<Aut>>>
   typename RatExpSet::value_t
   to_expression(const Aut& a,
                 const state_chooser_t<Aut>& next_state)
@@ -276,7 +276,7 @@ namespace vcsn
 
 
   template <typename Aut,
-            typename RatExpSet = ratexpset<context_t_of<Aut>>>
+            typename RatExpSet = expressionset<context_t_of<Aut>>>
   typename RatExpSet::value_t
   to_expression_naive(const Aut& a)
   {
@@ -294,17 +294,17 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut, typename String>
-      ratexp
+      expression
       to_expression(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        // FIXME: So far, there is a single implementation of ratexps,
+        // FIXME: So far, there is a single implementation of expressions,
         // but we should actually be parameterized by its type too.
         using context_t = context_t_of<Aut>;
-        using ratexpset_t = vcsn::ratexpset<context_t>;
-        ratexpset_t rs(a->context(), ratexpset_t::identities_t::trivial);
+        using expressionset_t = vcsn::expressionset<context_t>;
+        expressionset_t rs(a->context(), expressionset_t::identities_t::trivial);
         if (algo == "auto" || algo == "naive")
-          return make_ratexp(rs, ::vcsn::to_expression_naive(a));
+          return make_expression(rs, ::vcsn::to_expression_naive(a));
         else
           raise("to-expression: invalid algorithm: ", str_escape(algo),
                 ": expected \"auto\", or \"naive\"");
@@ -312,7 +312,7 @@ namespace vcsn
 
       REGISTER_DECLARE(to_expression,
                        (const automaton& aut, const std::string& algo)
-                       -> ratexp);
+                       -> expression);
     }
   }
 

@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/dyn/ratexp.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/algos/identities.hh>
 #include <vcsn/dyn/algos.hh>
 
@@ -10,7 +10,7 @@ namespace vcsn
     REGISTER_DEFINE(identities);
 
     rat::identities
-    identities(const ratexp& exp)
+    identities(const expression& exp)
     {
       return detail::identities_registry().call(exp);
     }

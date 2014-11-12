@@ -7,7 +7,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/weightset/polynomialset.hh>
 
@@ -15,7 +15,7 @@ namespace vcsn
 {
 
   /*---------------------.
-  | derivation(ratexp).  |
+  | derivation(expression).  |
   `---------------------*/
 
   namespace rat
@@ -25,28 +25,28 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using weightset_t = weightset_t_of<ratexpset_t>;
+      using expression_t = typename expressionset_t::value_t;
+      using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = typename weightset_t::value_t;
 
-      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
 
       constexpr static const char* me() { return "derivation"; }
 
-      derivation_visitor(const ratexpset_t& rs)
+      derivation_visitor(const expressionset_t& rs)
         : rs_(rs)
       {}
 
       polynomial_t
-      operator()(const ratexp_t& v, label_t var)
+      operator()(const expression_t& v, label_t var)
       {
         variable_ = var;
         v->accept(*this);
@@ -54,10 +54,10 @@ namespace vcsn
       }
 
       // FIXME: duplicate with expand.
-      ratexp_t
-      ratexp(const polynomial_t p)
+      expression_t
+      expression(const polynomial_t p)
       {
-        ratexp_t res = rs_.zero();
+        expression_t res = rs_.zero();
         for (const auto& m: p)
           res = rs_.add(res, rs_.lmul(m.second, m.first));
          return res;
@@ -136,15 +136,15 @@ namespace vcsn
             e[i]->accept(*this);
             for (const auto& m: res_)
               {
-                typename node_t::values_t ratexps;
+                typename node_t::values_t expressions;
                 for (unsigned j = 0; j < e.size(); ++j)
                   if (i == j)
-                    ratexps.emplace_back(m.first);
+                    expressions.emplace_back(m.first);
                   else
-                    ratexps.emplace_back(e[j]);
+                    expressions.emplace_back(e[j]);
                 // FIXME: we need better n-ary constructors.
                 ps_.add_here(res,
-                             std::make_shared<shuffle_t>(ratexps),
+                             std::make_shared<shuffle_t>(expressions),
                              m.second);
               }
           }
@@ -154,8 +154,8 @@ namespace vcsn
       VCSN_RAT_VISIT(complement, e)
       {
         e.sub()->accept(*this);
-        // Turn the polynomial into a ratexp, and complement it.
-        res_ = polynomial_t{{rs_.complement(ratexp(res_)), ws_.one()}};
+        // Turn the polynomial into a expression, and complement it.
+        res_ = polynomial_t{{rs_.complement(expression(res_)), ws_.one()}};
       }
 
       VCSN_RAT_VISIT(star, e)
@@ -182,10 +182,10 @@ namespace vcsn
       }
 
     private:
-      ratexpset_t rs_;
+      expressionset_t rs_;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
-      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// The result.
       polynomial_t res_;
       /// The derivation variable.
@@ -194,10 +194,10 @@ namespace vcsn
 
   } // rat::
 
-  /// Derive a ratexp wrt to a letter.
+  /// Derive a expression wrt to a letter.
   template <typename RatExpSet>
   inline
-  rat::ratexp_polynomial_t<RatExpSet>
+  rat::expression_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const typename RatExpSet::value_t& e,
              label_t_of<RatExpSet> a,
@@ -213,17 +213,17 @@ namespace vcsn
   }
 
 
-  /// Derive a polynomial of ratexps wrt to a letter.
+  /// Derive a polynomial of expressions wrt to a letter.
   template <typename RatExpSet>
   inline
-  rat::ratexp_polynomial_t<RatExpSet>
+  rat::expression_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
-             const rat::ratexp_polynomial_t<RatExpSet>& p,
+             const rat::expression_polynomial_t<RatExpSet>& p,
              label_t_of<RatExpSet> a,
              bool breaking = false)
   {
-    auto ps = rat::make_ratexp_polynomialset(rs);
-    using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
+    auto ps = rat::make_expression_polynomialset(rs);
+    using polynomial_t = rat::expression_polynomial_t<RatExpSet>;
     polynomial_t res;
     for (const auto& m: p)
       res = ps.add(res,
@@ -232,10 +232,10 @@ namespace vcsn
   }
 
 
-  /// Derive a ratexp wrt to a word.
+  /// Derive a expression wrt to a word.
   template <typename RatExpSet>
   inline
-  rat::ratexp_polynomial_t<RatExpSet>
+  rat::expression_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const typename RatExpSet::value_t& e,
              const typename RatExpSet::labelset_t::word_t& l,
@@ -259,18 +259,18 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Label, typename Bool>
       polynomial
-      derivation(const ratexp& exp, const label& lbl, bool breaking = false)
+      derivation(const expression& exp, const label& lbl, bool breaking = false)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& l = lbl->as<Label>().label();
-        const auto& rs = e.ratexpset();
-        auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
+        const auto& rs = e.expressionset();
+        auto ps = vcsn::rat::make_expression_polynomialset(rs);
         return make_polynomial(ps,
-                               vcsn::derivation(rs, e.ratexp(), l, breaking));
+                               vcsn::derivation(rs, e.expression(), l, breaking));
       }
 
       REGISTER_DECLARE(derivation,
-                       (const ratexp& e, const label& l,
+                       (const expression& e, const label& l,
                         bool breaking) -> polynomial);
     }
   }

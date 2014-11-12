@@ -3,10 +3,10 @@
 ## -------- ##
 
 from vcsn_cxx import weight
-from vcsn import automaton, _is_equal, ratexp
+from vcsn import automaton, _is_equal, expression
 
 def _weight_mul(self, rhs):
-    if isinstance(rhs, automaton) or isinstance(rhs, ratexp):
+    if isinstance(rhs, automaton) or isinstance(rhs, expression):
         return rhs.left_mult(self)
     else:
         return self.multiply(rhs)

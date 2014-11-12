@@ -10,13 +10,13 @@ z = vcsn.context('lal_char(abc), z')
 # Check that RAT1.standard().is_isomorphic(RAT2.standard()) == EXPECTED
 # and that swapping RAT1 and RAT2 yield the same result.
 def check(exp, r1, r2):
-    eff = z.ratexp(r1).standard().is_isomorphic(z.ratexp(r2).standard())
-    if not z.ratexp(r1).standard().is_isomorphic(z.ratexp(r1).standard()):
+    eff = z.expression(r1).standard().is_isomorphic(z.expression(r2).standard())
+    if not z.expression(r1).standard().is_isomorphic(z.expression(r1).standard()):
         FAIL('isomorphism check is not reflexive on ' + r1)
-    if not z.ratexp(r2).standard().is_isomorphic(z.ratexp(r2).standard()):
+    if not z.expression(r2).standard().is_isomorphic(z.expression(r2).standard()):
         FAIL('isomorphism check is not reflexive on ' + r2)
     if r1 != r2:
-        eff2 = z.ratexp(r2).standard().is_isomorphic(z.ratexp(r1).standard())
+        eff2 = z.expression(r2).standard().is_isomorphic(z.expression(r1).standard())
         if eff != eff2:
             FAIL('isomorphism check is not commutative on ' + r1 + ' and ' + r2)
     CHECK_EQ(exp, eff)

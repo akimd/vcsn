@@ -73,7 +73,7 @@ CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 # Make sure we deleted former initial states that become inaccessible.
 a = vcsn.automaton('''digraph
 {
- vcsn_context = "lal_char(a), ratexpset<lal_char(xyz), b>"
+ vcsn_context = "lal_char(a), expressionset<lal_char(xyz), b>"
  rankdir = LR
  {
    node [shape = point, width = 0]
@@ -92,7 +92,7 @@ a = vcsn.automaton('''digraph
 
 exp = '''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, ratexpset<letterset<char_letters(xyz)>, b>"
+  vcsn_context = "letterset<char_letters(a)>, expressionset<letterset<char_letters(xyz)>, b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -120,12 +120,12 @@ def check(re, exp):
     # We compare automata as strings, since when parsing the expected
     # automaton we drop the hole in the state numbers created by
     # standard.
-    a = ctx.ratexp(re).standard()
+    a = ctx.expression(re).standard()
     CHECK_EQ(exp, str(a))
     CHECK_EQ(True, a.is_standard())
 
 def xfail(re):
-    r = ctx.ratexp(re)
+    r = ctx.expression(re)
     XFAIL(lambda: r.standard())
 
 ## --- ##
@@ -504,10 +504,10 @@ check('(?@lal_char(abcd), b)a**',
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check('(?@lal_char(a), ratexpset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
+check('(?@lal_char(a), expressionset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, ratexpset<letterset<char_letters(xyz)>, b>"
+  vcsn_context = "letterset<char_letters(a)>, expressionset<letterset<char_letters(xyz)>, b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -862,10 +862,10 @@ xfail('(?@lal_char(ab), z)a**')
 ## ZR: star.  ##
 ## ---------- ##
 
-check('(?@lal_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+abc)*',
+check('(?@lal_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+abc)*',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, ratexpset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -890,10 +890,10 @@ check('(?@lal_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+abc)*',
   5 -> 2 [label = "<e*>a"]
 }''')
 
-check('(?@lal_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+(ab)<f>)*',
+check('(?@lal_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+(ab)<f>)*',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, ratexpset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

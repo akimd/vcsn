@@ -18,7 +18,7 @@ check('lal_char(a), b', '0', '0')
 check('lal_char(a), b', '1', '1')
 check('lal_char(a), z', '123', '123')
 check('lal_char(a), f2', '1', '1')
-check('lal_char(x), ratexpset<lal_char(abc), z>', 'a*<23>bc', 'a*<23>bc')
+check('lal_char(x), expressionset<lal_char(abc), z>', 'a*<23>bc', 'a*<23>bc')
 check('lal_char(x), seriesset<lal_char(abc), z>', 'a*<23>bc', '<23>(a*bc)')
 
 

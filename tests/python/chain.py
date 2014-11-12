@@ -136,13 +136,13 @@ digraph
 
 
 ## --------------------------------- ##
-## chain on ratexps vs on automata.  ##
+## chain on expressions vs on automata.  ##
 ## --------------------------------- ##
 
 ctx = vcsn.context('lal_char(ab), z')
 def check(r, *args):
     "Check that standard and chain commute."
-    r = ctx.ratexp(r)
+    r = ctx.expression(r)
     a = r.standard()
     CHECK_ISOMORPHIC(a.chain(*args), (r ** args).standard())
 

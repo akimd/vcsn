@@ -38,7 +38,7 @@ namespace vcsn
 
     template <typename RatExpSet>
     inline
-    printer<RatExpSet>::printer(const ratexpset_t& rs,
+    printer<RatExpSet>::printer(const expressionset_t& rs,
                                 std::ostream& out,
                                 const bool debug)
       : out_(out)
@@ -120,7 +120,7 @@ namespace vcsn
           ldiv_          = "{\\}";
         }
       else
-        raise("invalid output format for ratexp: ", str_escape(format));
+        raise("invalid output format for expression: ", str_escape(format));
     }
 
     DEFINE::precedence_(const node_t& v) const

@@ -59,16 +59,16 @@ bench('b.format("text")', 'b = [abc] -> B',
       lambda: b.format('text'),
       number=100000)
 
-# I/O on ratexps.
+# I/O on expressions.
 e = '(\e+a)' * 500
-bench('b.ratexp(e)', 'e = "(\e+a)" * 500', lambda: b.ratexp(e), number=100)
-r = b.ratexp(e)
-bench('r.format("text")', 'r = b.ratexp("(\e+a)" * 500)',
+bench('b.expression(e)', 'e = "(\e+a)" * 500', lambda: b.expression(e), number=100)
+r = b.expression(e)
+bench('r.format("text")', 'r = b.expression("(\e+a)" * 500)',
       lambda: r.format('text'), number=1000)
 
 # Output should be fast.
 r = 'a?{500}'
-a = b.ratexp(r).standard()
+a = b.expression(r).standard()
 auts = dict()
 for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
     bench('a.format("'+ fmt + '")', 'a = std({})'.format(r), lambda: a.format(fmt))
@@ -84,27 +84,27 @@ del auts
 ## derived_term.  ##
 ## -------------- ##
 e = "(a+b)*b(<2>a+<2>b){150}"
-r = vcsn.context('lal_char(ab), z').ratexp(e)
+r = vcsn.context('lal_char(ab), z').expression(e)
 bench('r.derived_term("derivation")', 'r = {}, c = [ab] -> Z'.format(e),
       lambda: r.derived_term("derivation"))
 
-r = vcsn.context('lal_char(a-z), z').ratexp(e)
+r = vcsn.context('lal_char(a-z), z').expression(e)
 bench('r.derived_term("derivation")', 'r = {}, c = [a-z] -> Z'.format(e),
       lambda: r.derived_term("derivation"))
 
-r = vcsn.context('lal_char(a-z), z').ratexp(e)
+r = vcsn.context('lal_char(a-z), z').expression(e)
 bench('r.derived_term("expansion")', 'r = {}, c = [a-z] -> Z'.format(e),
       lambda: r.derived_term("expansion"))
 
 # standard
 e = "(a+b)*b(<2>a+<2>b){20000}"
-r = vcsn.context('lal_char(a-z), z').ratexp(e)
+r = vcsn.context('lal_char(a-z), z').expression(e)
 bench('r.standard()', 'r = {}, c = [a-z] -> Z'.format(e),
       lambda: r.standard())
 
 # thompson
 e = "(a+b)*b(<2>a+<2>b){20000}"
-r = vcsn.context('lan_char(a-z), z').ratexp(e)
+r = vcsn.context('lan_char(a-z), z').expression(e)
 bench('r.thompson()', 'r = {}, c = [a-z]? -> Z'.format(e),
       lambda: r.thompson())
 
@@ -139,7 +139,7 @@ for n in [13, 14, 16]:
 # determinize), are "wide", and have few final states.
 n = 100
 r = '([^]+a){{{}}}'.format(n)
-a = vcsn.context('lal_char(a-zA-Z0-9), b').ratexp(r).standard()
+a = vcsn.context('lal_char(a-zA-Z0-9), b').expression(r).standard()
 bench('a.determinize()', 'a = std({}), c = [a-zA-Z0-9] -> B'.format(r),
       lambda: a.determinize())
 bench('a.determinize("weighted")', 'a = std({}), c = [a-zA-Z0-9] -> B'.format(r),
@@ -147,81 +147,81 @@ bench('a.determinize("weighted")', 'a = std({}), c = [a-zA-Z0-9] -> B'.format(r)
 
 # eval.
 n = 150
-# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term('derivation')
+# too slow: db = b.expression('(a+b)*a(a+b){' + str(n) + '}').derived_term('derivation')
 a = b.de_bruijn(n)
 bench('a.eval("a"*{})'.format(n+1), 'a = de_bruijn({})'.format(n),
       lambda: a.eval('a'*(n+1)), number=1000)
 
 # shortest.
 n = 9
-# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term('derivation')
+# too slow: db = b.expression('(a+b)*a(a+b){' + str(n) + '}').derived_term('derivation')
 a = b.de_bruijn(n)
 bench('a.shortest(5)', 'a = de_bruijn({})'.format(n),
       lambda: a.shortest(5))
 
 r = "[a-e]?{600}"
-a = vcsn.context("lal_char(a-e), z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-e), z").expression(r).standard()
 bench('a.shortest(5)', 'a = std({})'.format(r),
       lambda: a.shortest(5))
 
 # sort.
 r = "[a-e]?{700}"
-a = vcsn.context("lal_char(a-e), z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-e), z").expression(r).standard()
 bench('a.sort()', 'a = std({})'.format(r),
       lambda: a.sort())
 
 # proper.
 r = "a?{1200}"
-a = vcsn.context("lan_char(a), b").ratexp(r).thompson()
+a = vcsn.context("lan_char(a), b").expression(r).thompson()
 bench('a.proper()', 'a = thompson({})'.format(r), lambda: a.proper())
 
-# to-ratexp.
+# to-expression.
 r = '[a-d]?{100}'
-a = vcsn.context('lal_char(a-d), b').ratexp(r).standard()
-bench('a.ratexp()', 'a = std({})'.format(r), lambda: a.ratexp())
+a = vcsn.context('lal_char(a-d), b').expression(r).standard()
+bench('a.expression()', 'a = std({})'.format(r), lambda: a.expression())
 
 # Other product and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new product algorithm.
 r = "[a-e]?{50}"
-a = vcsn.context("lal_char(a-e), z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-e), z").expression(r).standard()
 bench('a.product(a)', 'a = std({})'.format(r), lambda: a._product([a,a]))
 bench('a.shuffle(a)', 'a = std({})'.format(r), lambda: a.shuffle(a))
 
 # infiltration.
 r = "[a-e]?{30}"
-a = vcsn.context("lal_char(a-e), z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-e), z").expression(r).standard()
 bench('a.infiltration(a)', 'a = std({})'.format(r), lambda: a.infiltration(a))
 
 # Product with spontaneous transitions.
 r = "[a-e]?{80}"
-a = vcsn.context("lan_char(a-e), z").ratexp(r).thompson()
+a = vcsn.context("lan_char(a-e), z").expression(r).thompson()
 bench('a.product(a)', 'a = thompson({})'.format(r), lambda: a._product([a,a]))
 
 # power.
 r = "[a-e]*b(<2>[a-e])*"
 n = 12
-a = vcsn.context("lal_char(a-e), z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-e), z").expression(r).standard()
 bench('a & {}'.format(n), 'a = std({})'.format(r), lambda: a & n)
 
 # compose.
 r = "['(a,a)'-'(i,z)']{4}"
 a = vcsn.context('lat<lal_char(a-z), lal_char(a-z)>, b') \
-        .ratexp(r).standard()
+        .expression(r).standard()
 bench('a.compose(a)', 'a = std({})'.format(r), lambda: a.compose(a))
 
 r = "['(a,a)'-'(i,z)']{4}"
 a = vcsn.context('lat<lan_char(a-z), lan_char(a-z)>, b') \
-        .ratexp(r).thompson()
+        .expression(r).thompson()
 bench('a.compose(a)', 'a = thompson({})'.format(r), lambda: a.compose(a))
 
 # Minimize a big deterministic automaton over booleans.
 r = "[a-g]{800}"
-a = vcsn.context("lal_char(a-k), b").ratexp(r).standard()
+a = vcsn.context("lal_char(a-k), b").expression(r).standard()
 bench('a.minimize("signature")', 'a = std({0})'.format(r),
       lambda: a.minimize('signature'))
 
 r = "[a-k]{2000}"
-a = vcsn.context("lal_char(a-k), b").ratexp(r).standard()
+a = vcsn.context("lal_char(a-k), b").expression(r).standard()
 bench('a.minimize("moore")', 'a = std({0})'.format(r),
       lambda: a.minimize('moore'))
 
@@ -231,34 +231,34 @@ bench('a.synchronizing_word()', 'a = de_bruijn(6)',
 
 # reduce.
 r = "[a-g]{300}"
-a = vcsn.context("lal_char(a-k), z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-k), z").expression(r).standard()
 bench('a.reduce()', 'a = std({0}), c = [a-k] -> Z'.format(r),
       lambda: a.reduce())
 r = "[a-g]{300}"
-a = vcsn.context("lal_char(a-k), q").ratexp(r).standard()
+a = vcsn.context("lal_char(a-k), q").expression(r).standard()
 bench('a.reduce()', 'a = std({0}), c = [a-k] -> Q'.format(r),
       lambda: a.reduce())
 
 # twins property.
 r = "[a-c]{200}*+[a-c]{200}*"
-a = vcsn.context("lal_char(a-c), zmin").ratexp(r).standard()
+a = vcsn.context("lal_char(a-c), zmin").expression(r).standard()
 bench('a.has_twins_property()', 'a = std({0}), c = [abc] -> Q'.format(r),
       lambda: a.has_twins_property())
 
 # cycle ambiguous.
 r = "[a-c]{2000}(<2>ab+a<3>b)"
-a = vcsn.context("lal_char(abc), z").ratexp(r).standard()
+a = vcsn.context("lal_char(abc), z").expression(r).standard()
 bench('a.is_cycle_ambiguous()', 'a = std({0}), c = [abc] -> B'.format(r),
       lambda: a.is_cycle_ambiguous())
 
 # is_functional.
 r = "'(a, x)'{2000}'(b, y)'"
-a = vcsn.context("lat<lal_char(ab), lal_char(xy)>, b").ratexp(r).standard()
+a = vcsn.context("lat<lal_char(ab), lal_char(xy)>, b").expression(r).standard()
 bench('a.is_functional()', 'a = std({})'.format(r),
       lambda: a.is_functional())
 
 # accessible.
 r = "[a-m]{20000}"
-a = vcsn.context('lan_char(a-z), b').ratexp(r).thompson().proper(False)
+a = vcsn.context('lan_char(a-z), b').expression(r).thompson().proper(False)
 bench('a.accessible', 'a = thompson({}).proper(False)'.format(r),
       lambda: a.accessible())

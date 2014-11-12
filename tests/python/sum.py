@@ -3,13 +3,13 @@
 import vcsn
 from test import *
 
-ctxbr = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>')
+ctxbr = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>')
 ctxz = vcsn.context('lal_char(b), z')
 ctxq = vcsn.context('lal_char(c), q')
 ctxr = vcsn.context('lal_char(d), r')
 
-ab = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc), b').ratexp('(b+c)*').standard()
+ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
 result = '''digraph
 {
   vcsn_context = "letterset<char_letters(abc)>, b"
@@ -131,12 +131,12 @@ result = '''digraph
 CHECK_EQ(result, a.sum(b))
 
 # Check join of contexts.
-a = vcsn.context('lal_char(a), ratexpset<lal_char(x), b>').ratexp('<x>a*').standard()
-b = vcsn.context('lal_char(b), q').ratexp('<1/2>b*').standard()
+a = vcsn.context('lal_char(a), expressionset<lal_char(x), b>').expression('<x>a*').standard()
+b = vcsn.context('lal_char(b), q').expression('<1/2>b*').standard()
 
 result = r'''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, ratexpset<letterset<char_letters(x)>, q>"
+  vcsn_context = "letterset<char_letters(ab)>, expressionset<letterset<char_letters(x)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -176,13 +176,13 @@ CHECK_EQ('<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
 
 
 ## ----------------- ##
-## ratexp + ratexp.  ##
+## expression + expression.  ##
 ## ----------------- ##
 
-br = ctxbr.ratexp('<u>a')
-z = ctxz.ratexp('<2>b')
-q = ctxq.ratexp('<1/3>c')
-r = ctxr.ratexp('<.4>d')
+br = ctxbr.expression('<u>a')
+z = ctxz.expression('<2>b')
+q = ctxq.expression('<1/3>c')
+r = ctxr.expression('<.4>d')
 CHECK_EQ('<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br + z + q + r))
 
 

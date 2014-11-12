@@ -10,7 +10,7 @@
 # include <vcsn/algos/sum.hh>
 # include <vcsn/core/join.hh>
 # include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/expressionset.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/weight.hh>
@@ -198,10 +198,10 @@ namespace vcsn
 
 
   /*------------------------------.
-  | concatenate(ratexp, ratexp).  |
+  | concatenate(expression, expression).  |
   `------------------------------*/
 
-  /// Concatenation/product of polynomials/ratexps.
+  /// Concatenation/product of polynomials/expressions.
   template <typename ValueSet>
   inline
   typename ValueSet::value_t
@@ -218,25 +218,25 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSetLhs, typename RatExpSetRhs>
-      ratexp
-      concatenate_ratexp(const ratexp& lhs, const ratexp& rhs)
+      expression
+      concatenate_expression(const expression& lhs, const expression& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = vcsn::join(l.ratexpset(), r.ratexpset());
-        auto lr = rs.conv(l.ratexpset(), l.ratexp());
-        auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, ::vcsn::concatenate(rs, lr, rr));
+        auto rs = vcsn::join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        return make_expression(rs, ::vcsn::concatenate(rs, lr, rr));
       }
 
-      REGISTER_DECLARE(concatenate_ratexp,
-                       (const ratexp&, const ratexp&) -> ratexp);
+      REGISTER_DECLARE(concatenate_expression,
+                       (const expression&, const expression&) -> expression);
     }
   }
 
 
   /*--------------------------.
-  | chain(ratexp, min, max).  |
+  | chain(expression, min, max).  |
   `--------------------------*/
 
   template <typename RatExpSet>
@@ -280,16 +280,16 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename Int1, typename Int2>
-      ratexp
-      chain_ratexp(const ratexp& re, int min, int max)
+      expression
+      chain_expression(const expression& re, int min, int max)
       {
         const auto& r = re->as<RatExpSet>();
-        return make_ratexp(r.ratexpset(),
-                           ::vcsn::chain(r.ratexpset(), r.ratexp(), min, max));
+        return make_expression(r.expressionset(),
+                           ::vcsn::chain(r.expressionset(), r.expression(), min, max));
       }
 
-      REGISTER_DECLARE(chain_ratexp,
-                       (const ratexp&, int, int) -> ratexp);
+      REGISTER_DECLARE(chain_expression,
+                       (const expression&, int, int) -> expression);
     }
   }
 

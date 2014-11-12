@@ -11,8 +11,8 @@ b = vcsn.context('lal_char(abcd), b')
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-a1 = b.ratexp('a*a').derived_term()
-CHECK_EQ('a*(aa*a+aa*a)', str(a1.shuffle(a1).ratexp()))
+a1 = b.expression('a*a').derived_term()
+CHECK_EQ('a*(aa*a+aa*a)', str(a1.shuffle(a1).expression()))
 
 
 ## ------------------------ ##
@@ -100,8 +100,8 @@ CHECK_EQ('''digraph
 ## ---------------------- ##
 # TAFKIT manual, Figure 3.13, right [as of 2013-10-10]
 
-pas = vcsn.context("lal_char(a), z").ratexp('a*').derived_term()
-mas = vcsn.context("lal_char(a), z").ratexp('(<-1>a)*').derived_term()
+pas = vcsn.context("lal_char(a), z").expression('a*').derived_term()
+mas = vcsn.context("lal_char(a), z").expression('(<-1>a)*').derived_term()
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters(a)>, z"
@@ -125,8 +125,8 @@ CHECK_EQ('''digraph
 ## ABC )( ab. ##
 ## ---------- ##
 
-ab = vcsn.context('lal_char(ab), z').ratexp('ab').standard()
-ABC = vcsn.context('lal_char(ABC), z').ratexp('ABC').standard()
+ab = vcsn.context('lal_char(ab), z').expression('ab').standard()
+ABC = vcsn.context('lal_char(ABC), z').expression('ABC').standard()
 ABCab = ABC.shuffle(ab)
 CHECK_EQ('''digraph
 {
@@ -192,9 +192,9 @@ abABC''', ABCab.enumerate(10).format('list'))
 ## --------------------- ##
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
-         .ratexp('(<u>a+<v>b)*').standard()
-a2 = vcsn.context('lal_char(ab), b').ratexp('a').standard()
+a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+         .expression('(<u>a+<v>b)*').standard()
+a2 = vcsn.context('lal_char(ab), b').expression('a').standard()
 CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
          a1.shuffle(a2).shortest(4).format('text'))
 CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
@@ -205,10 +205,10 @@ CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
-         .ratexp('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), ratexpset<lal_char(xy), b>') \
-         .ratexp('<x>a<y>b').standard()
+a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+         .expression('<u>a<v>b').standard()
+a2 = vcsn.context('lal_char(ab), expressionset<lal_char(xy), b>') \
+         .expression('<x>a<y>b').standard()
 CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 <uvxy+xyuv>abab''', a1.shuffle(a2).enumerate(4).format('list'))
 
@@ -220,7 +220,7 @@ CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
-    a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+    a[l] = ctx.expression("<{}>x".format(l)).standard()
 
 CHECK_EQ('<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx',
          a['a'].shuffle(a['b'], a['c'], a['d'])

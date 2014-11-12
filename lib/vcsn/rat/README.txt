@@ -1,5 +1,5 @@
 This parser is in charge of reading a weighted rational expression,
-and to build the corresponding AST (see ratexps.hh).
+and to build the corresponding AST (see expressions.hh).
 
 * Directives, or LL-style?
 The precedence between the different operators are very tricky to
@@ -73,8 +73,8 @@ One idea is to have a new non-terminal, say "label", that would collect all
 the letters together, so "exp: exp exp" would always use mul(), never
 concat().  Wrong again: "ab*" will be parsed as "(ab)*".
 
-So we need to remember whether the ratexp was in parens, which is done in
-braced_ratexp.  So to handle the "exp" part, we write:
+So we need to remember whether the expression was in parens, which is done in
+braced_expression.  So to handle the "exp" part, we write:
 
   exp: exp "." exp   { $$.exp = MAKE(mul, $1.exp, $3.exp); }
 

@@ -1,4 +1,4 @@
-#include <vcsn/dyn/ratexp.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/algos/star-height.hh>
 #include <lib/vcsn/algos/registry.hh>
@@ -14,7 +14,7 @@ namespace vcsn
     REGISTER_DEFINE(star_height);
 
     unsigned
-    star_height(const ratexp& e)
+    star_height(const expression& e)
     {
       return detail::star_height_registry().call(e);
     }

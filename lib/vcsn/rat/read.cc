@@ -1,15 +1,15 @@
 #include <lib/vcsn/rat/read.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/ratexp.hh>
-#include <vcsn/dyn/ratexpset.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/expressionset.hh>
 #include <lib/vcsn/rat/driver.hh>
-#include <vcsn/dyn/algos.hh> // make_ratexpset
+#include <vcsn/dyn/algos.hh> // make_expressionset
 
 namespace vcsn
 {
   namespace rat
   {
-    dyn::ratexp read(std::istream& is, const dyn::ratexpset& rs,
+    dyn::expression read(std::istream& is, const dyn::expressionset& rs,
                      const location& l)
     {
       vcsn::rat::driver d(rs);

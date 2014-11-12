@@ -1,7 +1,7 @@
-#ifndef VCSN_CORE_RAT_RATEXP_HXX_
-# define VCSN_CORE_RAT_RATEXP_HXX_
+#ifndef VCSN_CORE_RAT_EXPRESSION_HXX_
+# define VCSN_CORE_RAT_EXPRESSION_HXX_
 
-# include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/core/rat/expression.hh>
 # include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
@@ -200,4 +200,4 @@ namespace vcsn
   } // namespace exp
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_RATEXP_HXX_
+#endif // !VCSN_CORE_RAT_EXPRESSION_HXX_

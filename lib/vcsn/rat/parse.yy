@@ -19,14 +19,14 @@
   #include <string>
   #include <tuple>
   #include "location.hh"
-  #include <vcsn/core/rat/ratexp.hh>
+  #include <vcsn/core/rat/expression.hh>
   #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn
   {
     namespace rat
     {
-      struct braced_ratexp
+      struct braced_expression
       {
         /// The expression parsed so far.
         exp_t exp;
@@ -34,7 +34,7 @@
         bool lparen = false;
         /// Whether there was a right-paren.
         bool rparen = false;
-        braced_ratexp& operator=(exp_t e)
+        braced_expression& operator=(exp_t e)
         {
           exp = e;
           return *this;
@@ -55,7 +55,7 @@
 
 %code
 {
-  #include <vcsn/dyn/ratexpset.hh>
+  #include <vcsn/dyn/expressionset.hh>
   #include <lib/vcsn/rat/driver.hh>
   #include <lib/vcsn/rat/scan.hh>
 
@@ -63,13 +63,13 @@
   {
     namespace rat
     {
-      /// Generate a ratexp for "e{range.first, range.second}".
+      /// Generate a expression for "e{range.first, range.second}".
       static
-      exp_t power(const dyn::ratexpset& rs, exp_t e, std::tuple<int, int> range);
+      exp_t power(const dyn::expressionset& rs, exp_t e, std::tuple<int, int> range);
 
-      /// Generate a ratexp for "e <+ f = e % f + f".
+      /// Generate a expression for "e <+ f = e % f + f".
       static
-      exp_t prefer(const dyn::ratexpset& rs, exp_t e, exp_t f);
+      exp_t prefer(const dyn::expressionset& rs, exp_t e, exp_t f);
 
       /// Use our local scanner object.
       static
@@ -91,7 +91,7 @@
 
   /// Call the factory to make a Kind.
 #define MAKE(Kind, ...)                         \
-  driver_.ratexpset_->Kind(__VA_ARGS__)
+  driver_.expressionset_->Kind(__VA_ARGS__)
 
   /// Run Stm, and bounces exceptions into parse errors at Loc.
 #define TRY(Loc, Stm)                           \
@@ -121,10 +121,10 @@
 %printer { yyo << '<' << $$ << '>'; } "weight";
 %printer
 {
-  driver_.ratexpset_->print($$.exp, yyo);
+  driver_.expressionset_->print($$.exp, yyo);
   yyo << ($$.lparen ? " (lpar, " : " (no lpar, ");
   yyo << ($$.rparen ? "rpar)" : "no rpar)");
-} <braced_ratexp>;
+} <braced_expression>;
 
 %token
   AMPERSAND  "&"
@@ -153,7 +153,7 @@
 %token <std::string> LETTER  "letter";
 %token <std::string> WEIGHT  "weight";
 
-%type <braced_ratexp> exp input weights;
+%type <braced_expression> exp input weights;
 %type <std::set<std::pair<std::string,std::string>>> class;
 
 %left "+" "<+"
@@ -196,7 +196,7 @@ exp:
 | exp "&" exp                 { $$ = MAKE(conjunction, $1.exp, $3.exp); }
 | exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
 | exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
-| exp "<+" exp                { $$ = prefer(driver_.ratexpset_, $1.exp, $3.exp); }
+| exp "<+" exp                { $$ = prefer(driver_.expressionset_, $1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = MAKE(rdiv, $1.exp, $3.exp); }
 | exp "%" exp                 { $$ = MAKE(conjunction,
@@ -209,7 +209,7 @@ exp:
     if (!$1.rparen && !$2.lparen
         // This is very ugly, but lets us parse "<2>abcd" as <2>(abcd)
         // rather than (<2>a)(bcd).
-        && driver_.ratexpset_->identities() != rat::identities::series)
+        && driver_.expressionset_->identities() != rat::identities::series)
       $$ = MAKE(concat, $1.exp, $2.exp);
     else
       {
@@ -218,7 +218,7 @@ exp:
         $$.rparen = $2.rparen;
       }
   }
-| exp "*"           { $$ = power(driver_.ratexpset_, $1.exp, $2); }
+| exp "*"           { $$ = power(driver_.expressionset_, $1.exp, $2); }
 | exp "{c}"         { $$ = MAKE(complement, $1.exp); }
 | exp "{T}"         { $$ = MAKE(transposition, $1.exp); }
 | "\\z"             { $$ = MAKE(zero); }
@@ -248,7 +248,7 @@ namespace vcsn
   {
     static
     exp_t
-    power(const dyn::ratexpset& es, exp_t e, int min, int max)
+    power(const dyn::expressionset& es, exp_t e, int min, int max)
     {
       exp_t res;
       if (max == -1)
@@ -282,14 +282,14 @@ namespace vcsn
 
     static
     exp_t
-    power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
+    power(const dyn::expressionset& es, exp_t e, std::tuple<int, int> range)
     {
       return power(es, e, std::get<0>(range), std::get<1>(range));
     }
 
     // "e <+ f = e + (f % e) = e + e{c} & f".
     static
-    exp_t prefer(const dyn::ratexpset& rs, exp_t e, exp_t f)
+    exp_t prefer(const dyn::expressionset& rs, exp_t e, exp_t f)
     {
       return rs->add(e, rs->conjunction(rs->complement(e), f));
     }

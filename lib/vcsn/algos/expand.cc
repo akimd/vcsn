@@ -1,4 +1,4 @@
-#include <vcsn/dyn/ratexp.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/algos/expand.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
@@ -12,8 +12,8 @@ namespace vcsn
     `--------------*/
     REGISTER_DEFINE(expand);
 
-    ratexp
-    expand(const ratexp& e)
+    expression
+    expand(const expression& e)
     {
       return detail::expand_registry().call(e);
     }

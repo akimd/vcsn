@@ -6,18 +6,18 @@
 # include <vcsn/algos/to-expansion.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/ratexp-automaton.hh>
+# include <vcsn/core/expression-automaton.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
   /*-----------------------.
-  | derived_term(ratexp).  |
+  | derived_term(expression).  |
   `-----------------------*/
 
   namespace detail
@@ -53,35 +53,35 @@ namespace vcsn
     template <typename RatExpSet>
     struct derived_termer
     {
-      using ratexpset_t = RatExpSet;
-      using ratexp_t = typename ratexpset_t::value_t;
+      using expressionset_t = RatExpSet;
+      using expression_t = typename expressionset_t::value_t;
 
-      using context_t = context_t_of<ratexpset_t>;
+      using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<context_t>;
 
-      using automaton_t = ratexp_automaton<mutable_automaton<context_t>>;
+      using automaton_t = expression_automaton<mutable_automaton<context_t>>;
       using state_t = state_t_of<automaton_t>;
 
-      /// Symbolic states: the derived terms are polynomials of ratexps.
-      using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
+      /// Symbolic states: the derived terms are polynomials of expressions.
+      using polynomialset_t = rat::expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      derived_termer(const ratexpset_t& rs, bool breaking = false)
+      derived_termer(const expressionset_t& rs, bool breaking = false)
         : rs_(rs)
         , breaking_(breaking)
         , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
 
       /// Compute the derived-term automaton via derivation.
-      automaton_t via_derivation(const ratexp_t& ratexp)
+      automaton_t via_derivation(const expression_t& expression)
       {
-        init_(ratexp);
+        init_(expression);
 
         // The alphabet.
         const auto& ls = rs_.labelset()->genset();
         while (!res_->todo_.empty())
           {
-            ratexp_t src = res_->todo_.top();
+            expression_t src = res_->todo_.top();
             state_t s = res_->state(src);
             res_->todo_.pop();
             res_->set_final(s, constant_term(rs_, src));
@@ -93,14 +93,14 @@ namespace vcsn
       }
 
       /// Compute the derived-term automaton via expansion.
-      automaton_t via_expansion(const ratexp_t& ratexp)
+      automaton_t via_expansion(const expression_t& expression)
       {
-        init_(ratexp);
+        init_(expression);
 
-        rat::to_expansion_visitor<ratexpset_t> expand{rs_};
+        rat::to_expansion_visitor<expressionset_t> expand{rs_};
         while (!res_->todo_.empty())
           {
-            ratexp_t src = res_->todo_.top();
+            expression_t src = res_->todo_.top();
             auto s = res_->state(src);
             res_->todo_.pop();
             auto expansion = expand(src);
@@ -119,17 +119,17 @@ namespace vcsn
       }
 
     private:
-      void init_(const ratexp_t& ratexp)
+      void init_(const expression_t& expression)
       {
         if (breaking_)
-          for (const auto& p: split(rs_, ratexp))
+          for (const auto& p: split(rs_, expression))
             res_->set_initial(p.first, p.second);
         else
-          res_->set_initial(ratexp, ws_.one());
+          res_->set_initial(expression, ws_.one());
       }
 
-      /// The ratexp's set.
-      ratexpset_t rs_;
+      /// The expression's set.
+      expressionset_t rs_;
       /// Its weightset.
       weightset_t ws_ = *rs_.weightset();
       /// Whether to break the polynomials.
@@ -142,7 +142,7 @@ namespace vcsn
   /// The derived-term automaton, computed by derivation.
   template <typename RatExpSet>
   inline
-  ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
+  expression_automaton<mutable_automaton<typename RatExpSet::context_t>>
   derived_term_derivation(const RatExpSet& rs,
                           const typename RatExpSet::value_t& r,
                           bool breaking = false)
@@ -154,7 +154,7 @@ namespace vcsn
   /// The derived-term automaton, computed by expansion.
   template <typename RatExpSet>
   inline
-  ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
+  expression_automaton<mutable_automaton<typename RatExpSet::context_t>>
   derived_term_expansion(const RatExpSet& rs,
                          const typename RatExpSet::value_t& r,
                          bool breaking = false)
@@ -172,11 +172,11 @@ namespace vcsn
       inline
       typename std::enable_if<RatExpSet::context_t::labelset_t::is_free(),
                               automaton>::type
-      derived_term(const ratexp& exp, const std::string& algo)
+      derived_term(const expression& exp, const std::string& algo)
       {
         const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.ratexpset();
-        const auto& r = e.ratexp();
+        const auto& rs = e.expressionset();
+        const auto& r = e.expression();
         auto res
           = algo == "derivation"
           ? ::vcsn::derived_term_derivation(rs, r)
@@ -196,11 +196,11 @@ namespace vcsn
       inline
       typename std::enable_if<!RatExpSet::context_t::labelset_t::is_free(),
                               automaton>::type
-      derived_term(const ratexp& exp, const std::string& algo)
+      derived_term(const expression& exp, const std::string& algo)
       {
         const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.ratexpset();
-        const auto& r = e.ratexp();
+        const auto& rs = e.expressionset();
+        const auto& r = e.expression();
         auto res
           = algo == "auto" || algo == "expansion"
           ? ::vcsn::derived_term_expansion(rs, r)
@@ -212,7 +212,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(derived_term,
-                       (const ratexp& e, const std::string& algo) -> automaton);
+                       (const expression& e, const std::string& algo) -> automaton);
     }
   }
 

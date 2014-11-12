@@ -20,16 +20,16 @@ namespace vcsn
     }
 
     /*---------------.
-    | lift(ratexp).  |
+    | lift(expression).  |
     `---------------*/
 
 
-    REGISTER_DEFINE(lift_ratexp);
+    REGISTER_DEFINE(lift_expression);
 
-    ratexp
-    lift(const ratexp& e)
+    expression
+    lift(const expression& e)
     {
-      return detail::lift_ratexp_registry().call(e);
+      return detail::lift_expression_registry().call(e);
     }
   }
 }

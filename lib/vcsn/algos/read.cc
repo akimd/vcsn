@@ -55,17 +55,17 @@ namespace vcsn
     }
 
     /*--------------.
-    | read_ratexp.  |
+    | read_expression.  |
     `--------------*/
 
-    ratexp
-    read_ratexp(std::istream& is, const ratexpset& rs,
+    expression
+    read_expression(std::istream& is, const expressionset& rs,
                 const std::string& t)
     {
       if (t == "text" || t == "default" || t == "")
         return rat::read(is, rs);
       else
-        raise("invalid input format for ratexp: ", t);
+        raise("invalid input format for expression: ", t);
     }
 
 

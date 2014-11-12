@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-# Check the factories (of automata, ratexps, etc.)
+# Check the factories (of automata, expressions, etc.)
 
 import vcsn
 from test import *

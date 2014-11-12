@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+#include <vcsn/dyn/expression.hh> // dyn::make_expression
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/cast.hh> // down_pointer_cast
 #include <vcsn/misc/stream.hh> // conv
@@ -12,13 +12,13 @@ namespace dyn
   namespace detail
   {
     /*--------------------.
-    | ratexpset_wrapper.  |
+    | expressionset_wrapper.  |
     `--------------------*/
 
     template <typename RatExpSet>
     inline
-    ratexpset_wrapper<RatExpSet>::ratexpset_wrapper
-      (const ratexpset_t& rs)
+    expressionset_wrapper<RatExpSet>::expressionset_wrapper
+      (const expressionset_t& rs)
       : super_t()
       , rs_(rs)
     {}
@@ -27,12 +27,12 @@ namespace dyn
     template <typename RatExpSet>               \
     inline                                      \
     auto                                        \
-    ratexpset_wrapper<RatExpSet>
+    expressionset_wrapper<RatExpSet>
 
     DEFINE::down(const value_t& v) const
-      -> typename ratexpset_t::value_t
+      -> typename expressionset_t::value_t
     {
-      return down_pointer_cast<const typename ratexpset_t::value_t::element_type>(v);
+      return down_pointer_cast<const typename expressionset_t::value_t::element_type>(v);
     }
 
     DEFINE::down(const std::string& w) const -> weight_t
@@ -40,10 +40,10 @@ namespace dyn
       return ::vcsn::conv(*rs_.weightset(), w);
     }
 
-    DEFINE::make_ratexp(const value_t& v) const
-      -> dyn::ratexp
+    DEFINE::make_expression(const value_t& v) const
+      -> dyn::expression
     {
-      return dyn::make_ratexp(rs_, down(v));
+      return dyn::make_expression(rs_, down(v));
     }
 
     DEFINE::identities() const -> rat::identities
@@ -128,18 +128,18 @@ namespace dyn
 
     DEFINE::letter_class(const letter_class_t& cs, bool accept) const -> value_t
     {
-      using labelset_t = labelset_t_of<ratexpset_t>;
+      using labelset_t = labelset_t_of<expressionset_t>;
       return letter_class_<labelset_t>(cs, accept,
                                        std::is_same<labelset_t, vcsn::oneset>{},
                                        std::integral_constant<bool,
-                                       labelset_t::is_ratexpset()>{});
+                                       labelset_t::is_expressionset()>{});
     }
 
     template <typename RatExpSet>
     template <typename LabelSet_>
     inline
     auto
-    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
+    expressionset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
                                                 bool,
                                                 std::false_type,
                                                 std::true_type) const
@@ -152,7 +152,7 @@ namespace dyn
     template <typename LabelSet_>
     inline
     auto
-    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t& chars,
+    expressionset_wrapper<RatExpSet>::letter_class_(const letter_class_t& chars,
                                                 bool accept,
                                                 std::false_type,
                                                 std::false_type) const
@@ -187,7 +187,7 @@ namespace dyn
     template <typename LabelSet_, typename Bool>
     inline
     auto
-    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
+    expressionset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
                                                 bool,
                                                 std::true_type,
                                                 Bool) const
@@ -212,10 +212,10 @@ namespace dyn
 
   template <typename RatExpSet>
   inline
-  ratexpset
-  make_ratexpset(const RatExpSet& rs)
+  expressionset
+  make_expressionset(const RatExpSet& rs)
   {
-    using wrapper_t = detail::ratexpset_wrapper<RatExpSet>;
+    using wrapper_t = detail::expressionset_wrapper<RatExpSet>;
     return std::make_shared<wrapper_t>(rs);
   }
 

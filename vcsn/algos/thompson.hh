@@ -6,7 +6,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/labelset/labelset.hh> // make_nullableset_context
 # include <vcsn/misc/raise.hh>
 
@@ -14,7 +14,7 @@ namespace vcsn
 {
   namespace rat
   {
-    /// Build a Thompson automaton from a ratexp.
+    /// Build a Thompson automaton from a expression.
     ///
     /// \tparam Aut        relative the generated automaton
     /// \tparam RatExpSet  relative to the RatExp.
@@ -25,13 +25,13 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
-      using ratexpset_t = RatExpSet;
+      using expressionset_t = RatExpSet;
       using context_t = context_t_of<automaton_t>;
-      using weightset_t = weightset_t_of<ratexpset_t>;
-      using weight_t = weight_t_of<ratexpset_t>;
+      using weightset_t = weightset_t_of<expressionset_t>;
+      using weight_t = weight_t_of<expressionset_t>;
       using state_t = state_t_of<automaton_t>;
 
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
 
       static_assert(labelset_t_of<Aut>::has_one(),
                     "thompson: requires nullable labels");
@@ -39,17 +39,17 @@ namespace vcsn
       constexpr static const char* me() { return "thompson"; }
 
       /// Build an automaton of context \a ctx.
-      thompson_visitor(const context_t& ctx, const ratexpset_t& rs)
+      thompson_visitor(const context_t& ctx, const expressionset_t& rs)
         : rs_(rs)
         , res_(make_shared_ptr<automaton_t>(ctx))
       {}
 
-      thompson_visitor(const ratexpset_t& rs)
+      thompson_visitor(const expressionset_t& rs)
         : thompson_visitor(rs.context(), rs)
       {}
 
       automaton_t
-      operator()(const typename ratexpset_t::value_t& v)
+      operator()(const typename expressionset_t::value_t& v)
       {
         v->accept(*this);
         res_->set_initial(initial_);
@@ -149,7 +149,7 @@ namespace vcsn
       }
 
     private:
-      const ratexpset_t& rs_;
+      const expressionset_t& rs_;
       const weightset_t& ws_ = *rs_.weightset();
       automaton_t res_;
       using label_t = label_t_of<automaton_t>;
@@ -160,7 +160,7 @@ namespace vcsn
 
   } // rat::
 
-  /// Build a Thompson automaton from a ratexp.
+  /// Build a Thompson automaton from a expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam RatExpSet  relative to the RatExp.
@@ -174,7 +174,7 @@ namespace vcsn
     return thompson(r);
   }
 
-  /// Build a Thompson automaton from a ratexp.
+  /// Build a Thompson automaton from a expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam RatExpSet  relative to the RatExp.
@@ -198,23 +198,23 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       automaton
-      thompson(const ratexp& exp)
+      thompson(const expression& exp)
       {
-        // FIXME: So far, there is a single implementation of ratexps,
+        // FIXME: So far, there is a single implementation of expressions,
         // but we should actually be parameterized by its type too.
-        using ratexpset_t = RatExpSet;
-        const auto& e = exp->as<ratexpset_t>();
+        using expressionset_t = RatExpSet;
+        const auto& e = exp->as<expressionset_t>();
         auto ctx
-          = vcsn::detail::make_nullableset_context(e.ratexpset().context());
+          = vcsn::detail::make_nullableset_context(e.expressionset().context());
         using ctx_t = decltype(ctx);
         using automaton_t = mutable_automaton<ctx_t>;
         return make_automaton(::vcsn::thompson<automaton_t>(ctx,
-                                                            e.ratexpset(),
-                                                            e.ratexp()));
+                                                            e.expressionset(),
+                                                            e.expression()));
       }
 
       REGISTER_DECLARE(thompson,
-                       (const ratexp& e) -> automaton);
+                       (const expression& e) -> automaton);
     }
   }
 

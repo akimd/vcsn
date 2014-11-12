@@ -10,7 +10,7 @@ namespace vcsn
   namespace ctx
   {
     using law_char_b  = context<law_char, vcsn::b>;
-    using law_char_br = context<law_char, vcsn::ratexpset<law_char_b>>;
+    using law_char_br = context<law_char, vcsn::expressionset<law_char_b>>;
   }
 }
 

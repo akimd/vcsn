@@ -2,8 +2,8 @@
 # define LIB_VCSN_RAT_DRIVER_HH
 
 # include <vcsn/core/rat/fwd.hh>
-# include <vcsn/dyn/ratexp.hh>
-# include <vcsn/dyn/ratexpset.hh>
+# include <vcsn/dyn/expression.hh>
+# include <vcsn/dyn/expressionset.hh>
 # include <lib/vcsn/rat/location.hh>
 # include <vcsn/misc/export.hh>
 
@@ -19,15 +19,15 @@ namespace vcsn
     class LIBVCSN_API driver
     {
     public:
-      driver(const dyn::ratexpset& rs);
+      driver(const dyn::expressionset& rs);
       ~driver();
-      /// Set the ratexpset to use.
-      void ratexpset(const dyn::ratexpset& rs);
-      /// Set the ratexpset to use from its context name.
+      /// Set the expressionset to use.
+      void expressionset(const dyn::expressionset& rs);
+      /// Set the expressionset to use from its context name.
       void context(const std::string& ctx);
 
       /// Parse this stream.
-      dyn::ratexp parse(std::istream& is, const location& l = location{});
+      dyn::expression parse(std::istream& is, const location& l = location{});
 
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
@@ -42,7 +42,7 @@ namespace vcsn
     private:
       /// The inital location.
       location location_;
-      dyn::ratexpset ratexpset_;
+      dyn::expressionset expressionset_;
       vcsn::rat::exp_t result_;
       friend class parser;
     };

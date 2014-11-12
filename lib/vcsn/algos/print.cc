@@ -138,30 +138,30 @@ namespace vcsn
 
 
     /*------------------------.
-    | print(ratexp, stream).  |
+    | print(expression, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE(print_ratexp);
+    REGISTER_DEFINE(print_expression);
 
     std::ostream&
-    print(const ratexp& exp, std::ostream& out, const std::string& format)
+    print(const expression& exp, std::ostream& out, const std::string& format)
     {
       if (format == "info")
         info(exp, out);
       else if (format == "null")
         {}
       else if (format == "latex")
-        detail::print_ratexp_registry().call(exp, out, format);
+        detail::print_expression_registry().call(exp, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
           // FIXME: problem with rvalue if we pass
           // 'std::string("text")'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
-          detail::print_ratexp_registry().call(exp, out, format);
+          detail::print_expression_registry().call(exp, out, format);
         }
       else
-        raise("invalid output format for ratexp: ", str_escape(format));
+        raise("invalid output format for expression: ", str_escape(format));
       return out;
     }
 
@@ -251,7 +251,7 @@ namespace std
   }
 
   std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::ratexp& r)
+  operator<<(std::ostream& o, const vcsn::dyn::expression& r)
   {
     return vcsn::dyn::print(r, o, vcsn::dyn::get_format(o));
   }

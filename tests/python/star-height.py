@@ -3,10 +3,10 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
+ctx = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
 
-def check(ratexp, height):
-    res = ctx.ratexp(ratexp).star_height()
+def check(expression, height):
+    res = ctx.expression(expression).star_height()
     if res == height:
         PASS()
     else:

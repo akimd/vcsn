@@ -129,7 +129,7 @@ namespace vcsn
     }
 
     static constexpr bool
-    is_ratexpset()
+    is_expressionset()
     {
       return false;
     }

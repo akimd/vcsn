@@ -251,7 +251,7 @@ check_fail(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "lan_char(z), ratexpset<lal_char(abcd), z>"
+  vcsn_context = "lan_char(z), expressionset<lal_char(abcd), z>"
   rankdir = LR
   node [shape = circle]
   {
@@ -269,7 +269,7 @@ check(r'''digraph
   4 -> F
 }''', '''digraph
 {
-  vcsn_context = "letterset<char_letters(z)>, ratexpset<letterset<char_letters(abcd)>, z>"
+  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcd)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -299,7 +299,7 @@ check(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "lan_char(z), ratexpset<lal_char(abcdefgh), z>"
+  vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), z>"
   rankdir = LR
   node [shape = circle]
   {
@@ -324,7 +324,7 @@ check(r'''digraph
   9 -> F
 }''', '''digraph
 {
-  vcsn_context = "letterset<char_letters(z)>, ratexpset<letterset<char_letters(abcdefgh)>, z>"
+  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcdefgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -503,7 +503,7 @@ check_to_lal(r'''digraph
 ## Forward vs. backward.  ##
 ## ---------------------- ##
 
-a = vcsn.context('lan_char(ab), b').ratexp('a*').thompson()
+a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"

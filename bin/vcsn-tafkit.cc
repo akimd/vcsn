@@ -5,7 +5,7 @@
 
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/polynomial.hh>
-#include <vcsn/dyn/ratexp.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/raise.hh>
 
 #include "parse-args.hh"
@@ -100,7 +100,7 @@
           || opts.output_format == "")                                  \
         vcsn::dyn::set_format(*opts.out, "list");                       \
                                                                         \
-      auto exp = read_ratexp(opts);                                     \
+      auto exp = read_expression(opts);                                     \
       unsigned max = (0 < opts.argv.size()                              \
                       ? boost::lexical_cast<unsigned>(opts.argv[0])     \
                       : 1);                                             \
@@ -120,7 +120,7 @@
     {                                           \
       using namespace vcsn::dyn;                \
       /* Input. */                              \
-      auto exp = read_ratexp(opts);             \
+      auto exp = read_expression(opts);             \
                                                 \
       /* Process. */                            \
       auto res = vcsn::dyn::Name(exp);          \
@@ -148,7 +148,7 @@
     int work_exp(const options& opts) const     \
     {                                           \
       using namespace vcsn::dyn;                \
-      ratexp exp = read_ratexp(opts);           \
+      expression exp = read_expression(opts);           \
                                                 \
       auto res = vcsn::dyn::Name(exp);          \
                                                 \
@@ -221,11 +221,11 @@ struct are_equivalent: vcsn_function
   {
     using namespace vcsn::dyn;
     // Input.
-    ratexp lhs = read_ratexp(opts);
+    expression lhs = read_expression(opts);
     // Hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
-    ratexp rhs = read_ratexp(opts2);
+    expression rhs = read_expression(opts2);
 
     // Process.
     auto res = vcsn::dyn::are_equivalent(lhs, rhs);
@@ -275,7 +275,7 @@ struct cat: vcsn_function
   {
     using namespace vcsn::dyn;
     // Input.
-    auto exp = read_ratexp(opts);
+    auto exp = read_expression(opts);
     // Output.
     opts.print(exp);
     return 0;
@@ -308,7 +308,7 @@ struct derivation: vcsn_function
   {
     // Input.
     using namespace vcsn::dyn;
-    ratexp exp = read_ratexp(opts);
+    expression exp = read_expression(opts);
     assert(0 < opts.argv.size());
     options opts2 = opts;
     opts2.input = opts.argv[0];
@@ -333,7 +333,7 @@ struct derived_term: vcsn_function
   {
     // Input.
     using namespace vcsn::dyn;
-    ratexp exp = read_ratexp(opts);
+    expression exp = read_expression(opts);
     std::string algo = 1 <= opts.argv.size() ? opts.argv[0] : "auto";
 
     // Process.

@@ -5,9 +5,19 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-11-13
+### ratexp -> expression
+The name "ratexp" is an unattractive jargon, and since Vcsn will not
+feature other kinds of "expressions", it is hardly justified: it is
+the only abbreviation we use (automaton, context, expansion,
+polynomial, etc.).
+
+So _everywhere_ (static, dyn::, Python) "ratexp" was replaced by
+"expression" (including "make_ratexpset" -> "make_expressionset",
+etc.).
+
 ## 2014-11-07
 ### thompson: the labelset no longer needs to feature a "one"
-
 The Thompson automata count many spontaneous transitions, so require a
 labelset which supports `\e` (e.g., `lan`, `law`).  This is annoying,
 especially when teaching about Automata Theory: one does not want to

@@ -11,14 +11,14 @@
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/normalize.hh>
 # include <vcsn/algos/is-valid.hh>
-# include <vcsn/algos/is-valid-ratexp.hh>
+# include <vcsn/algos/is-valid-expression.hh>
 # include <vcsn/algos/scc.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/synchronizing-word.hh>
 # include <vcsn/core/rat/info.hh>
 # include <vcsn/core/rat/size.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 
 namespace vcsn
 {
@@ -278,7 +278,7 @@ namespace vcsn
 
 
   /*-----------------------.
-  | info(ratexp, stream).  |
+  | info(expression, stream).  |
   `-----------------------*/
 
   template <class RatExpSet>
@@ -316,15 +316,15 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename Ostream>
-      std::ostream& info_ratexp(const ratexp& exp, std::ostream& o)
+      std::ostream& info_expression(const expression& exp, std::ostream& o)
       {
         const auto& e = exp->as<RatExpSet>();
-        vcsn::info<RatExpSet>(e.ratexpset(), e.ratexp(), o);
+        vcsn::info<RatExpSet>(e.expressionset(), e.expression(), o);
         return o;
       }
 
-      REGISTER_DECLARE(info_ratexp,
-                        (const ratexp& aut, std::ostream& o) -> std::ostream&);
+      REGISTER_DECLARE(info_expression,
+                        (const expression& aut, std::ostream& o) -> std::ostream&);
     }
   }
 }

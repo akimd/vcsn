@@ -6,7 +6,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/dyn/weight.hh>
 
 namespace vcsn
@@ -16,38 +16,38 @@ namespace vcsn
   {
 
     /*------------------------.
-    | constant_term(ratexp).  |
+    | constant_term(expression).  |
     `------------------------*/
 
-    /// \tparam RatExpSet  the ratexp set type.
+    /// \tparam RatExpSet  the expression set type.
     template <typename RatExpSet>
     class constant_term_visitor
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using weight_t = weight_t_of<ratexpset_t>;
-      using weightset_t = weightset_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
+      using expression_t = typename expressionset_t::value_t;
+      using weight_t = weight_t_of<expressionset_t>;
+      using weightset_t = weightset_t_of<expressionset_t>;
 
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
 
       constexpr static const char* me() { return "constant_term"; }
 
-      constant_term_visitor(const ratexpset_t& rs)
+      constant_term_visitor(const expressionset_t& rs)
         : ws_(*rs.weightset())
       {}
 
       weight_t
-      operator()(const ratexp_t& v)
+      operator()(const expression_t& v)
       {
         v->accept(*this);
         return std::move(res_);
       }
 
       /// Easy recursion.
-      weight_t constant_term(const ratexp_t& v)
+      weight_t constant_term(const expression_t& v)
       {
         v->accept(*this);
         return std::move(res_);
@@ -131,7 +131,7 @@ namespace vcsn
       }
 
     private:
-      //ratexpset_t ws_;
+      //expressionset_t ws_;
       weightset_t ws_;
       weight_t res_;
     };
@@ -155,15 +155,15 @@ namespace vcsn
       `--------------------------*/
       template <typename RatExpSet>
       weight
-      constant_term(const ratexp& exp)
+      constant_term(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_weight(*e.ratexpset().weightset(),
-                           constant_term<RatExpSet>(e.ratexpset(),
-                                                    e.ratexp()));
+        return make_weight(*e.expressionset().weightset(),
+                           constant_term<RatExpSet>(e.expressionset(),
+                                                    e.expression()));
       }
 
-      REGISTER_DECLARE(constant_term, (const ratexp& e) -> weight);
+      REGISTER_DECLARE(constant_term, (const expression& e) -> weight);
     }
   }
 

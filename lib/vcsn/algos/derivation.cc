@@ -15,7 +15,7 @@ namespace vcsn
     REGISTER_DEFINE(derivation);
 
     polynomial
-    derivation(const ratexp& e, const label& l, bool breaking)
+    derivation(const expression& e, const label& l, bool breaking)
     {
       return detail::derivation_registry().call(e, l, breaking);
     }
@@ -26,7 +26,7 @@ namespace vcsn
     REGISTER_DEFINE(derived_term);
 
     automaton
-    derived_term(const ratexp& e, const std::string& algo)
+    derived_term(const expression& e, const std::string& algo)
     {
       return detail::derived_term_registry().call(e, algo);
     }
@@ -37,7 +37,7 @@ namespace vcsn
     REGISTER_DEFINE(to_expansion);
 
     expansion
-    to_expansion(const ratexp& e)
+    to_expansion(const expression& e)
     {
       return detail::to_expansion_registry().call(e);
     }
@@ -48,7 +48,7 @@ namespace vcsn
     REGISTER_DEFINE(split);
 
     polynomial
-    split(const ratexp& e)
+    split(const expression& e)
     {
       return detail::split_registry().call(e);
     }

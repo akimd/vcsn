@@ -10,7 +10,7 @@ namespace vcsn
   namespace ctx
   {
     using lal_char_b  = context<lal_char, vcsn::b>;
-    using lal_char_br = context<lal_char, vcsn::ratexpset<lal_char_b>>;
+    using lal_char_br = context<lal_char, vcsn::expressionset<lal_char_b>>;
   }
 }
 

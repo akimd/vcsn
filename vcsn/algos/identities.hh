@@ -6,14 +6,14 @@
 # include <vcsn/algos/product.hh> // join_automata
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+# include <vcsn/dyn/expression.hh> // dyn::make_expression
 # include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
 {
 
   /*---------------------.
-  | identities(ratexp).  |
+  | identities(expression).  |
   `---------------------*/
 
   namespace dyn
@@ -23,15 +23,15 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       rat::identities
-      identities(const ratexp& exp)
+      identities(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        auto rs = e.ratexpset();
+        auto rs = e.expressionset();
         return rs.identities();
       }
 
       REGISTER_DECLARE(identities,
-                       (const ratexp&) -> rat::identities);
+                       (const expression&) -> rat::identities);
     }
 
   }

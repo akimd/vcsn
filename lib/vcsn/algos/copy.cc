@@ -26,14 +26,14 @@ namespace vcsn
     }
 
     /*------------------------------.
-    | copy(ratexp, out_ratexpset).  |
+    | copy(expression, out_expressionset).  |
     `------------------------------*/
 
-    REGISTER_DEFINE(copy_ratexp);
-    ratexp
-    copy(const ratexp& e, const ratexpset& rs)
+    REGISTER_DEFINE(copy_expression);
+    expression
+    copy(const expression& e, const expressionset& rs)
     {
-      return detail::copy_ratexp_registry().call(e, rs);
+      return detail::copy_expression_registry().call(e, rs);
     }
   }
 }

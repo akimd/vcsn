@@ -9,9 +9,9 @@ ctx = vcsn.context('lal_char(abcd), b')
 # ----------------------
 # Check that to-expression(difference(dterm(LHS), dterm(RHS))) == EXPECTED.
 def check(lhs, rhs, exp):
-    l = ctx.ratexp(lhs).derived_term()
-    r = ctx.ratexp(rhs).derived_term()
-    CHECK_EQ(exp, str((l-r).ratexp()))
+    l = ctx.expression(lhs).derived_term()
+    r = ctx.expression(rhs).derived_term()
+    CHECK_EQ(exp, str((l-r).expression()))
 
 check('(a+b)*', 'b*',            'b*a(a+b)*')
 check('(a+b)*', '(a+b)*b(a+b)*', 'a*')

@@ -16,11 +16,11 @@ namespace vcsn
       : public InRatExpSet::const_visitor
     {
     public:
-      using in_ratexpset_t = InRatExpSet;
-      using out_ratexpset_t = OutRatExpSet;
-      using in_value_t = typename in_ratexpset_t::value_t;
-      using out_value_t = typename out_ratexpset_t::value_t;
-      using super_t = typename in_ratexpset_t::const_visitor;
+      using in_expressionset_t = InRatExpSet;
+      using out_expressionset_t = OutRatExpSet;
+      using in_value_t = typename in_expressionset_t::value_t;
+      using out_value_t = typename out_expressionset_t::value_t;
+      using super_t = typename in_expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
@@ -29,7 +29,7 @@ namespace vcsn
       using variadic_t = typename super_t::template variadic_t<Type>;
       using leaf_t = typename super_t::leaf_t;
 
-      copier(const in_ratexpset_t& in_rs, const out_ratexpset_t& out_rs)
+      copier(const in_expressionset_t& in_rs, const out_expressionset_t& out_rs)
         : in_rs_(in_rs)
         , out_rs_(out_rs)
       {}
@@ -47,7 +47,7 @@ namespace vcsn
       void
       copy_unary(const unary_t<Type>& v)
       {
-        using out_unary_t = typename out_ratexpset_t::template unary_t<Type>;
+        using out_unary_t = typename out_expressionset_t::template unary_t<Type>;
         res_ = std::make_shared<out_unary_t>(copy(v.sub()));
       }
 
@@ -56,8 +56,8 @@ namespace vcsn
       void
       copy_variadic(const variadic_t<Type>& v)
       {
-        using out_variadic_t = typename out_ratexpset_t::template variadic_t<Type>;
-        typename out_ratexpset_t::values_t sub;
+        using out_variadic_t = typename out_expressionset_t::template variadic_t<Type>;
+        typename out_expressionset_t::values_t sub;
         for (auto s: v)
           sub.emplace_back(copy(s));
         res_ = std::make_shared<out_variadic_t>(sub);
@@ -118,10 +118,10 @@ namespace vcsn
 
 
 # undef DEFINE
-      /// ratexpset to decode the input value.
-      const in_ratexpset_t& in_rs_;
-      /// ratexpset to build the output value.
-      const out_ratexpset_t& out_rs_;
+      /// expressionset to decode the input value.
+      const in_expressionset_t& in_rs_;
+      /// expressionset to build the output value.
+      const out_expressionset_t& out_rs_;
       /// Output value, under construction.
       out_value_t res_;
     };

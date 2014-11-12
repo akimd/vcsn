@@ -73,7 +73,7 @@ The print functions take the printee first, then the stream.
 
 * Environment variables
 ** VCSN_BINARY
-Force ratexpset to build AST variadic nodes with only two children.
+Force expressionset to build AST variadic nodes with only two children.
 
 ** VCSN_DEBUG
 Don't remove temporary files (which is especially useful to keep debug
@@ -112,7 +112,7 @@ Force the display of useless parentheses.
 Where the runtime context instantiation are generated and compiled.
 
 ** VCSN_PRINT
-Force a more verbose display of ratexp (XML like), where one can
+Force a more verbose display of expression (XML like), where one can
 actually see the nesting of the structures.
 
 ** VCSN_SEED
@@ -128,7 +128,7 @@ Make the test suite more verbose.
 ** YYDEBUG, YYSCAN
 Set to enable Bison parser/ Flex scanner tracing.  Can be an integer
 to denote nesting (which is useful for instance for dot parsing which
-can fire ratexp parsing: specify how many layers you want to make
+can fire expression parsing: specify how many layers you want to make
 verbose).
 
 Local Variables:

@@ -14,9 +14,9 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using node_t = typename ratexpset_t::node_t;
-      using super_t = typename ratexpset_t::const_visitor;
+      using expressionset_t = RatExpSet;
+      using node_t = typename expressionset_t::node_t;
+      using super_t = typename expressionset_t::const_visitor;
 
       /// For each node type, count its number of occurrences.
       void operator()(const node_t& v);

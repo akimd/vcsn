@@ -187,10 +187,10 @@ namespace vcsn
       const std::shared_ptr<const ast_node> gs_;
     };
 
-    class ratexpset: public ast_node
+    class expressionset: public ast_node
     {
     public:
-      ratexpset(std::shared_ptr<context> ctx,
+      expressionset(std::shared_ptr<context> ctx,
                 rat::identities ids)
         : ctx_(ctx)
         , identities_(ids)

@@ -1,12 +1,12 @@
-#ifndef VCSN_CORE_RAT_RATEXPSET_HH
-# define VCSN_CORE_RAT_RATEXPSET_HH
+#ifndef VCSN_CORE_RAT_EXPRESSIONSET_HH
+# define VCSN_CORE_RAT_EXPRESSIONSET_HH
 
 # include <set>
 # include <string>
 
 # include <vcsn/core/rat/identities.hh>
 # include <vcsn/core/rat/printer.hh>
-# include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/core/rat/expression.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/labelset/labelset.hh>
 # include <vcsn/labelset/letterset.hh>
@@ -23,24 +23,24 @@ namespace vcsn
 {
   namespace rat
   {
-  /// A typed ratexp set.
+  /// A typed expression set.
   /// \tparam Context  the LabelSet and WeightSet types.
   template <typename Context>
-  class ratexpset_impl
+  class expressionset_impl
   {
   public:
-    using self_type = ratexpset<Context>;
+    using self_type = expressionset<Context>;
     using context_t = Context;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
-    using kind_t = labels_are_ratexps;
+    using kind_t = labels_are_expressions;
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
     using label_t = label_t_of<context_t>;
     using weight_t = typename weightset_t::value_t;
     using identities_t = rat::identities;
     using const_visitor = rat::const_visitor<context_t>;
-    /// Type of ratexps.
+    /// Type of expressions.
     //
     // See http://stackoverflow.com/questions/15537023 to know why we
     // add the vcsn::rat:: part: GCC wants it, Clang does not care,
@@ -65,11 +65,11 @@ namespace vcsn
     DEFINE(zero);
 # undef DEFINE
 
-    /// A ratexp (a shared pointer to a tree).
+    /// A expression (a shared pointer to a tree).
     using value_t = typename node_t::value_t;
     /// Type tag for AST classes.
     using type_t = typename node_t::type_t;
-    /// A list (vector) of ratexps.
+    /// A list (vector) of expressions.
     using values_t = typename node_t::values_t;
 
     template <type_t Type>
@@ -89,7 +89,7 @@ namespace vcsn
     /// Constructor.
     /// \param ctx        the generator set for the labels, and the weight set.
     /// \param identities the identities to guarantee
-    ratexpset_impl(const context_t& ctx,
+    expressionset_impl(const context_t& ctx,
                    identities_t identities); // FIXME: make this optional again?
 
     /// Whether unknown letters should be added, or rejected.
@@ -160,7 +160,7 @@ namespace vcsn
     }
 
     /// When used as WeightSet.
-    static constexpr bool is_ratexpset()
+    static constexpr bool is_expressionset()
     {
       return true;
     }
@@ -186,8 +186,8 @@ namespace vcsn
     value_t conv(const r& ws, typename r::value_t v) const;
     value_t conv(const zmin& ws, typename zmin::value_t v) const;
     template <typename Ctx2>
-    value_t conv(const ratexpset_impl<Ctx2>& ws,
-                 typename ratexpset_impl<Ctx2>::value_t v) const;
+    value_t conv(const expressionset_impl<Ctx2>& ws,
+                 typename expressionset_impl<Ctx2>::value_t v) const;
 
     /// Whether \a l < \a r.
     static bool less_than(value_t l, value_t r);
@@ -224,23 +224,23 @@ namespace vcsn
     /// The transposed of this rational expression.
     value_t transpose(value_t e) const;
 
-    /// Make a `word' out of a ratexp
+    /// Make a `word' out of a expression
     word_t word(label_t l) const
     {
       return l;
     }
 
-    /// A ratexp matching one character amongst \a chars.
+    /// A expression matching one character amongst \a chars.
     template <typename... Args>
     value_t letter_class(Args&&... chars) const;
 
-    /// Parsing a ratexp in a stream.
+    /// Parsing a expression in a stream.
     value_t conv(std::istream& is) const;
 
     /// Converting from ourself: identity.
     value_t conv(self_type, value_t v) const;
 
-    /// Read a range of ratexps.
+    /// Read a range of expressions.
     std::set<value_t> convs(std::istream&) const
     {
       raise(sname(), ": ranges not implemented");
@@ -275,7 +275,7 @@ namespace vcsn
           switch (identities_)
             {
             case identities_t::trivial:
-              o <<  "ratexpset<";
+              o <<  "expressionset<";
               break;
             case identities_t::series:
               o << "seriesset<";
@@ -320,14 +320,14 @@ namespace vcsn
     value_t nontrivial_mul_series_(value_t l, value_t r) const;
 
     /// Push \a v in \a res, applying associativity if possible.
-    /// \tparam Type  the kind of ratexps on which to apply associativity.
+    /// \tparam Type  the kind of expressions on which to apply associativity.
     ///               Must be sum, conjunction, shuffle, or prod.
     template <type_t Type>
     void gather_(values_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
-    /// \tparam Type  the kind of ratexps on which to apply associativity.
+    /// \tparam Type  the kind of expressions on which to apply associativity.
     ///               Must be SUM or PROD.
     template <type_t Type>
     values_t gather_(value_t l, value_t r) const;
@@ -359,9 +359,9 @@ namespace vcsn
   {
     /// Conversion to a nullableset: identity.
     template <typename Ctx>
-    struct nullableset_traits<ratexpset<Ctx>>
+    struct nullableset_traits<expressionset<Ctx>>
     {
-      using type = ratexpset<Ctx>;
+      using type = expressionset<Ctx>;
       static type value(const type& ls)
       {
         return ls;
@@ -370,38 +370,38 @@ namespace vcsn
 
     /// Conversion to a wordset: identity.
     template <typename Ctx>
-    struct law_traits<ratexpset<Ctx>>
+    struct law_traits<expressionset<Ctx>>
     {
-      using type = ratexpset<Ctx>;
+      using type = expressionset<Ctx>;
       static type value(const type& ls)
       {
         return ls;
       }
     };
 
-    /// The join of two ratexpsets.
+    /// The join of two expressionsets.
     template <typename Ctx1, typename Ctx2>
-    struct join_impl<ratexpset<Ctx1>, ratexpset<Ctx2>>
+    struct join_impl<expressionset<Ctx1>, expressionset<Ctx2>>
     {
-      using type = ratexpset<join_t<Ctx1, Ctx2>>;
+      using type = expressionset<join_t<Ctx1, Ctx2>>;
 
-      static type join(const ratexpset<Ctx1>& lhs, const ratexpset<Ctx2>& rhs)
+      static type join(const expressionset<Ctx1>& lhs, const expressionset<Ctx2>& rhs)
       {
         return {vcsn::join(lhs.context(), rhs.context()),
                 vcsn::join(lhs.identities(), rhs.identities())};
       }
     };
 
-    /// Join of a letterset and a ratexpset.
+    /// Join of a letterset and a expressionset.
     // FIXME: what about the other labelsets?
     template <typename GenSet1,  typename Ctx2>
-    struct join_impl<letterset<GenSet1>, ratexpset<Ctx2>>
+    struct join_impl<letterset<GenSet1>, expressionset<Ctx2>>
     {
       using context_t = context<join_t<letterset<GenSet1>, labelset_t_of<Ctx2>>,
                                 weightset_t_of<Ctx2>>;
-      using type = ratexpset<context_t>;
+      using type = expressionset<context_t>;
 
-      static type join(const letterset<GenSet1>& a, const ratexpset<Ctx2>& b)
+      static type join(const letterset<GenSet1>& a, const expressionset<Ctx2>& b)
       {
         return {context_t{vcsn::join(a, *b.labelset()), *b.weightset()},
                           b.identities()};
@@ -410,10 +410,10 @@ namespace vcsn
 
     // B.  FIXME: screams for refactoring!
     template <typename Context>
-    struct join_impl<b, ratexpset<Context>>
+    struct join_impl<b, expressionset<Context>>
     {
-      using type = ratexpset<Context>;
-      static type join(const b&, const ratexpset<Context>& rhs)
+      using type = expressionset<Context>;
+      static type join(const b&, const expressionset<Context>& rhs)
       {
         return rhs;
       }
@@ -421,12 +421,12 @@ namespace vcsn
 
     // Z.
     template <typename Context>
-    struct join_impl<z, ratexpset<Context>>
+    struct join_impl<z, expressionset<Context>>
     {
       using context_t = context<labelset_t_of<Context>,
                                 join_t<z, weightset_t_of<Context>>>;
-      using type = ratexpset<context_t>;
-      static type join(const z& ws, const ratexpset<Context>& rs)
+      using type = expressionset<context_t>;
+      static type join(const z& ws, const expressionset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
                 rs.identities()};
@@ -435,12 +435,12 @@ namespace vcsn
 
     // Q.
     template <typename Context>
-    struct join_impl<q, ratexpset<Context>>
+    struct join_impl<q, expressionset<Context>>
     {
       using context_t = context<labelset_t_of<Context>,
                                 join_t<q, weightset_t_of<Context>>>;
-      using type = ratexpset<context_t>;
-      static type join(const q& ws, const ratexpset<Context>& rs)
+      using type = expressionset<context_t>;
+      static type join(const q& ws, const expressionset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
                 rs.identities()};
@@ -449,12 +449,12 @@ namespace vcsn
 
     // R.
     template <typename Context>
-    struct join_impl<r, ratexpset<Context>>
+    struct join_impl<r, expressionset<Context>>
     {
       using context_t = context<labelset_t_of<Context>,
                                 join_t<r, weightset_t_of<Context>>>;
-      using type = ratexpset<context_t>;
-      static type join(const r& ws, const ratexpset<Context>& rs)
+      using type = expressionset<context_t>;
+      static type join(const r& ws, const expressionset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
                 rs.identities()};
@@ -463,12 +463,12 @@ namespace vcsn
 
     // Zmin.
     template <typename Context>
-    struct join_impl<zmin, ratexpset<Context>>
+    struct join_impl<zmin, expressionset<Context>>
     {
       using context_t = context<labelset_t_of<Context>,
                                 join_t<zmin, weightset_t_of<Context>>>;
-      using type = ratexpset<context_t>;
-      static type join(const zmin& ws, const ratexpset<Context>& rs)
+      using type = expressionset<context_t>;
+      static type join(const zmin& ws, const expressionset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
                 rs.identities()};
@@ -477,20 +477,20 @@ namespace vcsn
 
   }
 
-  /// Shorthand to ratexpset constructor.
+  /// Shorthand to expressionset constructor.
   template <typename Context>
-  ratexpset<Context>
-  make_ratexpset(const Context& ctx, rat::identities identities)
+  expressionset<Context>
+  make_expressionset(const Context& ctx, rat::identities identities)
   {
     return {ctx, identities};
   }
 
-  /// The meet of two ratexpsets.
+  /// The meet of two expressionsets.
   template <typename Ctx1, typename Ctx2>
   inline
   auto
-  meet(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
-    -> ratexpset<meet_t<Ctx1, Ctx2>>
+  meet(const expressionset<Ctx1>& a, const expressionset<Ctx2>& b)
+    -> expressionset<meet_t<Ctx1, Ctx2>>
   {
     return {meet(a.context(), b.context()),
             meet(a.identities(), b.identities())};
@@ -498,16 +498,16 @@ namespace vcsn
 
 } // namespace vcsn
 
-# include <vcsn/core/rat/ratexpset.hxx>
+# include <vcsn/core/rat/expressionset.hxx>
 
-#endif // !VCSN_CORE_RAT_RATEXPSET_HH
+#endif // !VCSN_CORE_RAT_EXPRESSIONSET_HH
 
 // This is ugly, yet I don't know how to address this circular
-// dependency another way: ratexpset.hxx uses is-valid-ratexp.hh,
-// which, of course, also uses ratexpset.hh.
+// dependency another way: expressionset.hxx uses is-valid-expression.hh,
+// which, of course, also uses expressionset.hh.
 //
-// So let's have ratexpset.hh first accept a forward declaration (via
+// So let's have expressionset.hh first accept a forward declaration (via
 // algos/fwd.hh), then provide here the needed definition.  Do not
 // leave this inside the CPP guard.
 
-#include <vcsn/algos/is-valid-ratexp.hh>
+#include <vcsn/algos/is-valid-expression.hh>

@@ -7,8 +7,8 @@
 # include <vcsn/labelset/oneset.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/ratexpset.hh>
-# include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/core/rat/expressionset.hh>
+# include <vcsn/core/rat/expression.hh>
 
 namespace vcsn
 {
@@ -36,15 +36,15 @@ namespace vcsn
 
     template <typename Context>
     using lifted_context_t =
-      context<oneset, ratexpset<Context>>;
+      context<oneset, expressionset<Context>>;
 
     template <typename Aut>
     using lifted_automaton_t =
       mutable_automaton<lifted_context_t<context_t_of<Aut>>>;
 
     template <typename RatExpSet>
-    using lifted_ratexpset_t =
-      ratexpset<lifted_context_t<context_t_of<RatExpSet>>>;
+    using lifted_expressionset_t =
+      expressionset<lifted_context_t<context_t_of<RatExpSet>>>;
 
     // lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet>
@@ -52,15 +52,15 @@ namespace vcsn
     lift_context(const context<LabelSet, WeightSet>& ctx)
     {
       auto rs_in
-        = ratexpset<context<LabelSet, WeightSet>>(ctx,
+        = expressionset<context<LabelSet, WeightSet>>(ctx,
                                                   rat::identities::trivial);
       return {oneset{}, rs_in};
     }
 
-    // lift(ratexpset) -> ratexpset
+    // lift(expressionset) -> expressionset
     template <typename Context>
-    lifted_ratexpset_t<ratexpset<Context>>
-    lift_ratexpset(const ratexpset<Context>& rs)
+    lifted_expressionset_t<expressionset<Context>>
+    lift_expressionset(const expressionset<Context>& rs)
     {
       return {lift_context(rs.context()), rs.identities()};
     }
@@ -81,7 +81,7 @@ namespace vcsn
     using state_in_t = state_t_of<auto_in_t>;
 
     // Produce RatExps of the same context as the original automaton.
-    using rs_in_t = ratexpset<ctx_in_t>;
+    using rs_in_t = expressionset<ctx_in_t>;
     rs_in_t rs_in{a->context(), rs_in_t::identities_t::trivial};
 
     auto ctx_out = detail::lift_context(a->context());
@@ -129,22 +129,22 @@ namespace vcsn
 
 
   /*---------------.
-  | lift(ratexp).  |
+  | lift(expression).  |
   `---------------*/
 
   namespace detail
   {
     template <typename Exp>
-    using lifted_ratexp_t =
-      typename lifted_context_t<context_t_of<Exp>>::ratexp_t;
+    using lifted_expression_t =
+      typename lifted_context_t<context_t_of<Exp>>::expression_t;
   }
 
   template <typename RatExpSet>
   inline
-  typename detail::lifted_ratexpset_t<RatExpSet>::value_t
+  typename detail::lifted_expressionset_t<RatExpSet>::value_t
   lift(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
-    auto lrs = detail::lift_ratexpset(rs);
+    auto lrs = detail::lift_expressionset(rs);
     return lrs.lmul(e, lrs.one());
   }
 
@@ -154,21 +154,21 @@ namespace vcsn
     namespace detail
     {
       /*--------------------.
-      | dyn::lift(ratexp).  |
+      | dyn::lift(expression).  |
       `--------------------*/
 
       /// Bridge.
       template <typename RatExpSet>
-      ratexp
-      lift_ratexp(const ratexp& exp)
+      expression
+      lift_expression(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_ratexp(::vcsn::detail::lift_ratexpset(e.ratexpset()),
-                           ::vcsn::lift(e.ratexpset(), e.ratexp()));
+        return make_expression(::vcsn::detail::lift_expressionset(e.expressionset()),
+                           ::vcsn::lift(e.expressionset(), e.expression()));
       }
 
-      REGISTER_DECLARE(lift_ratexp,
-                       (const ratexp& aut) -> ratexp);
+      REGISTER_DECLARE(lift_expression,
+                       (const expression& aut) -> expression);
     }
   }
 

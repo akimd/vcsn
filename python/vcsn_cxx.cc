@@ -21,7 +21,7 @@ struct context;
 struct expansion;
 struct label;
 struct polynomial;
-struct ratexp;
+struct expression;
 struct weight;
 
 /// Convert a Python list to a C++ vector.
@@ -79,7 +79,7 @@ struct context
                    unsigned num_initial = 1, unsigned num_final = 1) const;
   automaton random_deterministic(unsigned num_states) const;
 
-  ratexp series(const std::string& s) const;
+  expression series(const std::string& s) const;
 
   automaton u(unsigned num_states) const;
 
@@ -98,7 +98,7 @@ struct automaton
     : val_(a)
   {}
 
-  automaton(const ratexp& r);
+  automaton(const expression& r);
 
   automaton(const std::string& data = "",
             const std::string& format = "default",
@@ -456,7 +456,7 @@ struct automaton
 
   label synchronizing_word(const std::string& algo = "greedy") const;
 
-  ratexp to_ratexp(const std::string& algo = "auto") const;
+  expression to_expression(const std::string& algo = "auto") const;
 
   automaton transpose()
   {
@@ -588,77 +588,77 @@ struct polynomial
 };
 
 /*---------.
-| ratexp.  |
+| expression.  |
 `---------*/
 
-struct ratexp
+struct expression
 {
-  ratexp(const vcsn::dyn::ratexp& r)
+  expression(const vcsn::dyn::expression& r)
     : val_(r)
   {}
 
-  ratexp(const context& ctx, const std::string& r,
+  expression(const context& ctx, const std::string& r,
          vcsn::rat::identities i)
   {
     std::istringstream is(r);
-    auto rs = vcsn::dyn::make_ratexpset(ctx.val_, i);
-    val_ = vcsn::dyn::read_ratexp(is, rs);
+    auto rs = vcsn::dyn::make_expressionset(ctx.val_, i);
+    val_ = vcsn::dyn::read_expression(is, rs);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
-  ratexp(const context& ctx, const std::string& r)
-    : ratexp(ctx, r, vcsn::rat::identities::trivial)
+  expression(const context& ctx, const std::string& r)
+    : expression(ctx, r, vcsn::rat::identities::trivial)
   {}
 
-  static ratexp series(const context& ctx, const std::string& r)
+  static expression series(const context& ctx, const std::string& r)
   {
-    return ratexp(ctx, r, vcsn::rat::identities::series);
+    return expression(ctx, r, vcsn::rat::identities::series);
   }
 
   /// Convert \a this to \a ctx, using \a ids.
-  ratexp as_(const ::context& ctx, vcsn::rat::identities ids)
+  expression as_(const ::context& ctx, vcsn::rat::identities ids)
   {
-    // The destination ratexpset.
-    auto rs = vcsn::dyn::make_ratexpset((ctx ? ctx : context()).val_, ids);
+    // The destination expressionset.
+    auto rs = vcsn::dyn::make_expressionset((ctx ? ctx : context()).val_, ids);
     return vcsn::dyn::copy(val_, rs);
   }
 
-  /// Same ratexp/series, but in context \a ctx, with ratexp identities.
-  ratexp as_ratexp(const ::context& ctx = {})
+  /// Same expression/series, but in context \a ctx, with expression identities.
+  expression as_expression(const ::context& ctx = {})
   {
     return as_(ctx, vcsn::rat::identities::trivial);
   }
 
-  /// Same ratexp/series, but in context \a ctx, with series identities.
-  ratexp as_series(const ::context& ctx = {})
+  /// Same expression/series, but in context \a ctx, with series identities.
+  expression as_series(const ::context& ctx = {})
   {
     return as_(ctx, vcsn::rat::identities::series);
   }
 
-  ratexp chain(int min, int max) const
+  expression chain(int min, int max) const
   {
     return vcsn::dyn::chain(val_, min, max);
   }
   /// The type of the previous function.
-  using bin_chain_t = ratexp (ratexp::*)(int min, int max) const;
+  using bin_chain_t = expression (expression::*)(int min, int max) const;
 
-  ratexp chain(int min) const
+  expression chain(int min) const
   {
     return chain(min, min);
   }
 
-  ratexp complement() const
+  expression complement() const
   {
     return vcsn::dyn::complement(val_);
   }
 
-  ratexp concatenate(const ratexp& rhs) const
+  expression concatenate(const expression& rhs) const
   {
     return vcsn::dyn::concatenate(val_, rhs.val_);
   }
 
-  ratexp conjunction(const ratexp& rhs) const
+  expression conjunction(const expression& rhs) const
   {
     return vcsn::dyn::conjunction(val_, rhs.val_);
   }
@@ -680,12 +680,12 @@ struct ratexp
     return vcsn::dyn::derived_term(val_, algo);
   }
 
-  ratexp difference(const ratexp& rhs) const
+  expression difference(const expression& rhs) const
   {
     return vcsn::dyn::difference(val_, rhs.val_);
   }
 
-  ratexp expand() const
+  expression expand() const
   {
     return vcsn::dyn::expand(val_);
   }
@@ -702,7 +702,7 @@ struct ratexp
     return os.str();
   }
 
-  bool is_equivalent(const ratexp& rhs) const
+  bool is_equivalent(const expression& rhs) const
   {
     return vcsn::dyn::are_equivalent(val_, rhs.val_);
   }
@@ -717,16 +717,16 @@ struct ratexp
     return vcsn::dyn::is_valid(val_);
   }
 
-  ratexp left_mult(const weight& w) const;
+  expression left_mult(const weight& w) const;
 
-  ratexp lift() const
+  expression lift() const
   {
     return vcsn::dyn::lift(val_);
   }
 
-  ratexp right_mult(const weight& w) const;
+  expression right_mult(const weight& w) const;
 
-  ratexp shuffle(const ratexp& rhs)
+  expression shuffle(const expression& rhs)
   {
     return vcsn::dyn::shuffle(val_, rhs.val_);
   }
@@ -746,12 +746,12 @@ struct ratexp
     return vcsn::dyn::star_height(val_);
   }
 
-  ratexp star_normal_form() const
+  expression star_normal_form() const
   {
     return vcsn::dyn::star_normal_form(val_);
   }
 
-  ratexp sum(const ratexp& rhs) const
+  expression sum(const expression& rhs) const
   {
     return vcsn::dyn::sum(val_, rhs.val_);
   }
@@ -761,22 +761,22 @@ struct ratexp
     return vcsn::dyn::thompson(val_);
   }
 
-  ratexp transpose() const
+  expression transpose() const
   {
     return vcsn::dyn::transpose(val_);
   }
 
-  ratexp transposition() const
+  expression transposition() const
   {
     return vcsn::dyn::transposition(val_);
   }
 
-  vcsn::dyn::ratexp val_;
+  vcsn::dyn::expression val_;
 };
 
-ratexp context::series(const std::string& s) const
+expression context::series(const std::string& s) const
 {
-  return ratexp::series(*this, s);
+  return expression::series(*this, s);
 }
 
 /*---------.
@@ -821,7 +821,7 @@ struct weight
 | automaton implementation.  |
 `---------------------------*/
 
-automaton::automaton(const ratexp& r)
+automaton::automaton(const expression& r)
 {
   *this = r.derived_term();
 }
@@ -866,7 +866,7 @@ label automaton::synchronizing_word(const std::string& algo) const
   return vcsn::dyn::synchronizing_word(val_, algo);
 }
 
-ratexp automaton::to_ratexp(const std::string& algo) const
+expression automaton::to_expression(const std::string& algo) const
 {
   return vcsn::dyn::to_expression(val_, algo);
 }
@@ -926,20 +926,20 @@ label context::word(const std::string& s) const
 
 
 /*------------------------.
-| ratexp implementation.  |
+| expression implementation.  |
 `------------------------*/
 
-weight ratexp::constant_term() const
+weight expression::constant_term() const
 {
   return vcsn::dyn::constant_term(val_);
 }
 
-ratexp ratexp::left_mult(const weight& w) const
+expression expression::left_mult(const weight& w) const
 {
   return vcsn::dyn::left_mult(w.val_, val_);
 }
 
-ratexp ratexp::right_mult(const weight& w) const
+expression expression::right_mult(const weight& w) const
 {
   return vcsn::dyn::right_mult(val_, w.val_);
 }
@@ -958,7 +958,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<automaton>
     ("automaton",
-     bp::init<const ratexp&>())
+     bp::init<const expression&>())
     .def(bp::init<const std::string&, const std::string&, const std::string&>
          ((arg("data") = "", arg("format") = "default", arg("filename") = "")))
     .def("accessible", &automaton::accessible)
@@ -1020,7 +1020,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)
-    .def("ratexp", &automaton::to_ratexp, (arg("algo") = "auto"))
+    .def("expression", &automaton::to_expression, (arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
     .def("shortest", &automaton::shortest)
@@ -1079,39 +1079,39 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("sum", &polynomial::sum)
    ;
 
-  bp::class_<ratexp>
-    ("ratexp",
+  bp::class_<expression>
+    ("expression",
      bp::init<const context&, const std::string&>())
-    .def("chain", static_cast<ratexp::bin_chain_t>(&ratexp::chain), chain())
-    .def("complement", &ratexp::complement)
-    .def("concatenate", &ratexp::concatenate)
-    .def("conjunction", &ratexp::conjunction)
-    .def("constant_term", &ratexp::constant_term)
-    .def("context", &ratexp::context)
-    .def("_derivation", &ratexp::derivation,
+    .def("chain", static_cast<expression::bin_chain_t>(&expression::chain), chain())
+    .def("complement", &expression::complement)
+    .def("concatenate", &expression::concatenate)
+    .def("conjunction", &expression::conjunction)
+    .def("constant_term", &expression::constant_term)
+    .def("context", &expression::context)
+    .def("_derivation", &expression::derivation,
          (arg("label"), arg("breaking") = false))
-    .def("derived_term", &ratexp::derived_term, (arg("algo") = "auto"))
-    .def("difference", &ratexp::difference)
-    .def("expand", &ratexp::expand)
-    .def("expansion", &ratexp::to_expansion)
-    .def("format", &ratexp::format)
-    .def("is_equivalent", &ratexp::is_equivalent)
-    .def("is_series", &ratexp::is_series)
-    .def("is_valid", &ratexp::is_valid)
-    .def("left_mult", &ratexp::left_mult)
-    .def("lift", &ratexp::lift)
-    .def("ratexp", &ratexp::as_ratexp, (arg("context") = context()))
-    .def("right_mult", &ratexp::right_mult)
-    .def("series", &ratexp::as_series, (arg("context") = context()))
-    .def("shuffle", &ratexp::shuffle)
-    .def("split", &ratexp::split)
-    .def("standard", &ratexp::standard)
-    .def("star_height", &ratexp::star_height)
-    .def("star_normal_form", &ratexp::star_normal_form)
-    .def("sum", &ratexp::sum)
-    .def("thompson", &ratexp::thompson)
-    .def("transpose", &ratexp::transpose)
-    .def("transposition", &ratexp::transposition)
+    .def("derived_term", &expression::derived_term, (arg("algo") = "auto"))
+    .def("difference", &expression::difference)
+    .def("expand", &expression::expand)
+    .def("expansion", &expression::to_expansion)
+    .def("format", &expression::format)
+    .def("is_equivalent", &expression::is_equivalent)
+    .def("is_series", &expression::is_series)
+    .def("is_valid", &expression::is_valid)
+    .def("left_mult", &expression::left_mult)
+    .def("lift", &expression::lift)
+    .def("expression", &expression::as_expression, (arg("context") = context()))
+    .def("right_mult", &expression::right_mult)
+    .def("series", &expression::as_series, (arg("context") = context()))
+    .def("shuffle", &expression::shuffle)
+    .def("split", &expression::split)
+    .def("standard", &expression::standard)
+    .def("star_height", &expression::star_height)
+    .def("star_normal_form", &expression::star_normal_form)
+    .def("sum", &expression::sum)
+    .def("thompson", &expression::thompson)
+    .def("transpose", &expression::transpose)
+    .def("transposition", &expression::transposition)
     ;
 
   bp::class_<weight>

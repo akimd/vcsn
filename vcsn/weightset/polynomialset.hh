@@ -401,7 +401,7 @@ namespace vcsn
 
     /// FIXME: use enable_if to prevent this from being instantiated
     /// when WS is a polynomialset.  Then use this same technique for
-    /// ratexps.
+    /// expressions.
     template <typename WS>
     value_t
     conv(const WS& ws, const typename WS::value_t& v) const

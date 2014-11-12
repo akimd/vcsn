@@ -27,7 +27,7 @@ namespace vcsn
 
     REGISTER_DEFINE(to_expression);
 
-    ratexp
+    expression
     to_expression(const automaton& aut, const std::string& algo)
     {
       return detail::to_expression_registry().call(aut, algo);

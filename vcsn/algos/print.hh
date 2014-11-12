@@ -9,7 +9,7 @@
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -44,7 +44,7 @@ namespace vcsn
   `---------------------------*/
 
   /// Applies to (ValueSet, Value, ostream, string): for expansionset,
-  /// polynomialset, ratexpset, and weightset.
+  /// polynomialset, expressionset, and weightset.
   template <typename ValueSet>
   inline
   std::ostream&
@@ -160,7 +160,7 @@ namespace vcsn
 
 
   /*------------------------.
-  | print(ratexp, stream).  |
+  | print(expression, stream).  |
   `------------------------*/
 
 #if 0
@@ -181,15 +181,15 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename Ostream, typename String>
-      std::ostream& print_ratexp(const ratexp& exp, std::ostream& o,
+      std::ostream& print_expression(const expression& exp, std::ostream& o,
                                  const std::string& format)
       {
         const auto& e = exp->as<RatExpSet>();
-        return vcsn::print(e.ratexpset(), e.ratexp(), o, format);
+        return vcsn::print(e.expressionset(), e.expression(), o, format);
       }
 
-      REGISTER_DECLARE(print_ratexp,
-                       (const ratexp& aut, std::ostream& o,
+      REGISTER_DECLARE(print_expression,
+                       (const expression& aut, std::ostream& o,
                         const std::string& format) -> std::ostream&);
     }
   }

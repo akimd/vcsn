@@ -3,9 +3,9 @@
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 
-# include <vcsn/algos/derivation.hh> // ratexp_polynomialset_t.
+# include <vcsn/algos/derivation.hh> // expression_polynomialset_t.
 
 namespace vcsn
 {
@@ -14,7 +14,7 @@ namespace vcsn
   {
 
     /*-----------------.
-    | expand(ratexp).  |
+    | expand(expression).  |
     `-----------------*/
 
     /// \tparam RatExpSet  relative to the RatExp.
@@ -23,41 +23,41 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using context_t = context_t_of<ratexpset_t>;
-      using weightset_t = weightset_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using expression_t = typename expressionset_t::value_t;
+      using context_t = context_t_of<expressionset_t>;
+      using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = typename weightset_t::value_t;
 
-      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
       using super_t = typename RatExpSet::const_visitor;
 
       constexpr static const char* me() { return "expand"; }
 
-      expand_visitor(const ratexpset_t& rs)
+      expand_visitor(const expressionset_t& rs)
         : rs_(rs)
       {}
 
-      ratexp_t
-      operator()(const ratexp_t& v)
+      expression_t
+      operator()(const expression_t& v)
       {
         v->accept(*this);
-        return ratexp(res_);
+        return expression(res_);
       }
 
-      ratexp_t
-      ratexp(const polynomial_t p)
+      expression_t
+      expression(const polynomial_t p)
       {
-        ratexp_t res = rs_.zero();
+        expression_t res = rs_.zero();
         for (const auto& m: p)
           res = rs_.add(res, rs_.lmul(m.second, m.first));
          return res;
       }
 
       /// Syntactic sugar: recursive call to this visitor.
-      polynomial_t expand(const ratexp_t& e)
+      polynomial_t expand(const expression_t& e)
       {
         e->accept(*this);
         return res_;
@@ -119,7 +119,7 @@ namespace vcsn
       {
         // Recurse, but make it a star.
         v.sub()->accept(*this);
-        res_ = polynomial_t{{rs_.star(ratexp(res_)), ws_.one()}};
+        res_ = polynomial_t{{rs_.star(expression(res_)), ws_.one()}};
       }
 
       VCSN_RAT_VISIT(lweight, v)
@@ -135,18 +135,18 @@ namespace vcsn
       }
 
     private:
-      ratexpset_t rs_;
+      expressionset_t rs_;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
-      /// Polynomialset of ratexps.
-      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      /// Polynomialset of expressions.
+      polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// The result.
       polynomial_t res_;
     };
 
   } // rat::
 
-  /// Expanding a typed ratexp shared_ptr.
+  /// Expanding a typed expression shared_ptr.
   template <typename RatExpSet>
   typename RatExpSet::value_t
   expand(const RatExpSet& rs, const typename RatExpSet::value_t& e)
@@ -161,15 +161,15 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet>
-      ratexp
-      expand(const ratexp& exp)
+      expression
+      expand(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_ratexp(e.ratexpset(),
-                           ::vcsn::expand(e.ratexpset(), e.ratexp()));
+        return make_expression(e.expressionset(),
+                           ::vcsn::expand(e.expressionset(), e.expression()));
       }
 
-      REGISTER_DECLARE(expand, (const ratexp& e) -> ratexp);
+      REGISTER_DECLARE(expand, (const expression& e) -> expression);
     }
   }
 

@@ -11,13 +11,13 @@ lan = vcsn.context('lan_char(abc), r')
 # Check that RAT-EXP's validity is OUTPUT ("true" or "false").
 # Also check is-valid on its Thompson.
 #
-# Use a context with ratexp weights to check the order of products.
+# Use a context with expression weights to check the order of products.
 def check (exp, re):
-    r = lal.ratexp(re)
+    r = lal.expression(re)
     CHECK_EQ(exp, r.is_valid())
     # Check that we are consistent with the validity of the Thompson
     # of RAT_EXP.
-    a = lan.ratexp(re).thompson()
+    a = lan.expression(re).thompson()
     CHECK_EQ(exp, a.is_valid())
 
 check(True, 'a*')

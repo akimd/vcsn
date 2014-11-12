@@ -49,7 +49,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/is-eps-acyclic.hh                   \
   %D%/algos/is-functional.hh                    \
   %D%/algos/is-proper.hh                        \
-  %D%/algos/is-valid-ratexp.hh                  \
+  %D%/algos/is-valid-expression.hh              \
   %D%/algos/is-valid.hh                         \
   %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
@@ -93,6 +93,7 @@ nobase_include_HEADERS =                        \
   %D%/alphabets/setalpha.hh                     \
   %D%/core/automaton-decorator.hh               \
   %D%/core/crange.hh                            \
+  %D%/core/expression-automaton.hh              \
   %D%/core/fwd.hh                               \
   %D%/core/join.hh                              \
   %D%/core/kind.hh                              \
@@ -101,6 +102,10 @@ nobase_include_HEADERS =                        \
   %D%/core/permutation-automaton.hh             \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/expansionset.hh                  \
+  %D%/core/rat/expression.hh                    \
+  %D%/core/rat/expression.hxx                   \
+  %D%/core/rat/expressionset.hh                 \
+  %D%/core/rat/expressionset.hxx                \
   %D%/core/rat/fwd.hh                           \
   %D%/core/rat/hash.hh                          \
   %D%/core/rat/hash.hxx                         \
@@ -110,16 +115,11 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/less-than.hh                     \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \
-  %D%/core/rat/ratexp.hh                        \
-  %D%/core/rat/ratexp.hxx                       \
-  %D%/core/rat/ratexpset.hh                     \
-  %D%/core/rat/ratexpset.hxx                    \
   %D%/core/rat/size.hh                          \
   %D%/core/rat/size.hxx                         \
   %D%/core/rat/transpose.hh                     \
   %D%/core/rat/visitor.hh                       \
   %D%/core/rat/visitor.hxx                      \
-  %D%/core/ratexp-automaton.hh                  \
   %D%/core/transition-map.hh                    \
   %D%/core/transition.hh                        \
   %D%/core/tuple-automaton.hh                   \
@@ -157,12 +157,12 @@ nobase_include_HEADERS =                        \
   %D%/dyn/context-visitor.hh                    \
   %D%/dyn/context.hh                            \
   %D%/dyn/expansion.hh                          \
+  %D%/dyn/expression.hh                         \
+  %D%/dyn/expressionset.hh                      \
+  %D%/dyn/expressionset.hxx                     \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/label.hh                              \
   %D%/dyn/polynomial.hh                         \
-  %D%/dyn/ratexp.hh                             \
-  %D%/dyn/ratexpset.hh                          \
-  %D%/dyn/ratexpset.hxx                         \
   %D%/dyn/signature-printer.hh                  \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \

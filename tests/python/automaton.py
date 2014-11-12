@@ -202,7 +202,7 @@ from vcsn.dot import _dot_pretty
 # Make sure to check the rendering useful/useless named/nameless
 # states, weights, and spontaneous transitions.
 c = vcsn.context('lan_char(ab), z')
-a = c.ratexp('<2>a+<2>b').thompson()
+a = c.expression('<2>a+<2>b').thompson()
 CHECK_EQ('''digraph
 {
   vcsn_context = "lan<letterset<char_letters(ab)>>, z"
@@ -381,7 +381,7 @@ CHECK_EQ('''digraph
   I0 -> 0
   0 -> F0
 }''',
-         _dot_pretty(vcsn.context('lal_char, b').ratexp('\z{c}').derived_term().dot()))
+         _dot_pretty(vcsn.context('lal_char, b').expression('\z{c}').derived_term().dot()))
 
 ## ------------------------------- ##
 ## Output: dot, dot2tex and TikZ.  ##
@@ -403,7 +403,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
 
 
 # Check state names in TikZ.
-a = vcsn.context('lal_char, b').ratexp('\e+a').derived_term()
+a = vcsn.context('lal_char, b').expression('\e+a').derived_term()
 exp = open(os.path.join(medir, 'derived-term.tex')).read().strip()
 CHECK_EQ(exp, a.format('tikz'))
 

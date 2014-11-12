@@ -5,13 +5,13 @@
 #include <vcsn/algos/fwd.hh> // is-valid
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less-than.hh>
-#include <vcsn/core/rat/ratexp.hh>
+#include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/hash.hh>
 #include <vcsn/core/rat/transpose.hh>
-#include <vcsn/dyn/algos.hh> // dyn::read_ratexp_string
+#include <vcsn/dyn/algos.hh> // dyn::read_expression_string
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/ratexpset.hh> // dyn::make_ratexpset
+#include <vcsn/dyn/expressionset.hh> // dyn::make_expressionset
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
@@ -24,7 +24,7 @@ namespace vcsn
   {
 
   template <typename Context>
-  ratexpset_impl<Context>::ratexpset_impl(const context_t& ctx,
+  expressionset_impl<Context>::expressionset_impl(const context_t& ctx,
                                           identities_t identities)
     : ctx_(ctx)
     , identities_(identities)
@@ -33,7 +33,7 @@ namespace vcsn
   }
 
   template <typename Context>
-  void ratexpset_impl<Context>::require_weightset_commutativity() const
+  void expressionset_impl<Context>::require_weightset_commutativity() const
   {
     require(identities_ != identities_t::series
             || weightset_t_of<Context>::is_commutative(),
@@ -44,20 +44,20 @@ namespace vcsn
   template <typename Context>                   \
   inline                                        \
   auto                                          \
-  ratexpset_impl<Context>
+  expressionset_impl<Context>
 
   DEFINE::sname()
     -> symbol
   {
-    return symbol("ratexpset<" + context_t::sname() + '>');
+    return symbol("expressionset<" + context_t::sname() + '>');
   }
 
 
   DEFINE::make(std::istream& is)
-    -> ratexpset<Context>
+    -> expressionset<Context>
   {
-    // name is, for instance, "ratexpset<lal_char(abcd), z>(trivial)".
-    eat(is, "ratexpset<");
+    // name is, for instance, "expressionset<lal_char(abcd), z>(trivial)".
+    eat(is, "expressionset<");
     auto ctx = Context::make(is);
     eat(is, '>');
     identities_t ids = rat::identities::trivial;
@@ -122,10 +122,10 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <typename ratexpset_impl<Context>::type_t Type>
+  template <typename expressionset_impl<Context>::type_t Type>
   inline
   auto
-  ratexpset_impl<Context>::gather_(values_t& res, value_t v) const
+  expressionset_impl<Context>::gather_(values_t& res, value_t v) const
     -> void
   {
     static bool binary = !! getenv("VCSN_BINARY");
@@ -137,10 +137,10 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <typename ratexpset_impl<Context>::type_t Type>
+  template <typename expressionset_impl<Context>::type_t Type>
   inline
   auto
-  ratexpset_impl<Context>::gather_(value_t l, value_t r) const
+  expressionset_impl<Context>::gather_(value_t l, value_t r) const
     -> values_t
   {
     values_t res;
@@ -546,7 +546,7 @@ namespace vcsn
   {
     // concat((ab).c, d.(ef)) = (ab).(cd).(ef).
     //
-    // Store (ab) in ratexp, then concat(c, d) if c and d are atoms,
+    // Store (ab) in expression, then concat(c, d) if c and d are atoms,
     // otherwise c then d, then (ef).
     if ((l->type() == type_t::atom || l->type() == type_t::prod)
         && (r->type() == type_t::atom || r->type() == type_t::prod))
@@ -694,7 +694,7 @@ namespace vcsn
   }
 
   /*----------------------------------.
-  | ratexpset as a WeightSet itself.  |
+  | expressionset as a WeightSet itself.  |
   `----------------------------------*/
 
   DEFINE::is_zero(value_t v) const
@@ -712,7 +712,7 @@ namespace vcsn
   DEFINE::less_than(value_t lhs, value_t rhs)
     -> bool
   {
-    size<ratexpset_impl> sizer;
+    size<expressionset_impl> sizer;
     size_t l = sizer(lhs), r = sizer(rhs);
 
     if (l < r)
@@ -721,7 +721,7 @@ namespace vcsn
       return false;
     else
       {
-        using less_than_t = rat::less_than<ratexpset_impl>;
+        using less_than_t = rat::less_than<expressionset_impl>;
         less_than_t lt;
         return lt(lhs, rhs);
       }
@@ -736,7 +736,7 @@ namespace vcsn
   DEFINE::hash(const value_t& v)
     -> size_t
   {
-    rat::hash<ratexpset_impl> hasher;
+    rat::hash<expressionset_impl> hasher;
     return hasher(v);
   }
 
@@ -753,7 +753,7 @@ namespace vcsn
   template <typename GenSet>
   inline
   auto
-  ratexpset_impl<Context>::conv(const letterset<GenSet>& ls,
+  expressionset_impl<Context>::conv(const letterset<GenSet>& ls,
                                 typename letterset<GenSet>::value_t v) const
     -> value_t
   {
@@ -794,8 +794,8 @@ namespace vcsn
   template <typename Ctx2>
   inline
   auto
-  ratexpset_impl<Context>::conv(const ratexpset_impl<Ctx2>& rs,
-                                typename ratexpset_impl<Ctx2>::value_t r) const
+  expressionset_impl<Context>::conv(const expressionset_impl<Ctx2>& rs,
+                                typename expressionset_impl<Ctx2>::value_t r) const
     -> value_t
   {
     return copy(rs, *this, r);
@@ -804,16 +804,16 @@ namespace vcsn
   DEFINE::conv(std::istream& is) const
     -> value_t
   {
-    auto dynres = dyn::read_ratexp(is, dyn::make_ratexpset(*this));
-    const auto& res = dynres->template as<ratexpset_impl>();
-    return res.ratexp();
+    auto dynres = dyn::read_expression(is, dyn::make_expressionset(*this));
+    const auto& res = dynres->template as<expressionset_impl>();
+    return res.expression();
   }
 
   DEFINE::print(const value_t v, std::ostream& o,
                 const std::string& format) const
     -> std::ostream&
   {
-    using printer_t = printer<ratexpset_impl>;
+    using printer_t = printer<expressionset_impl>;
     printer_t print(*this, o);
     print.format(format);
     return print(v);
@@ -822,7 +822,7 @@ namespace vcsn
   DEFINE::transpose(const value_t v) const
     -> value_t
   {
-    detail::transposer<ratexpset_impl> tr{*this};
+    detail::transposer<expressionset_impl> tr{*this};
     return tr(v);
   }
 
@@ -830,7 +830,7 @@ namespace vcsn
   template <typename... Args>
   inline
   auto
-  ratexpset_impl<Context>::letter_class(Args&&... args) const
+  expressionset_impl<Context>::letter_class(Args&&... args) const
     -> value_t
   {
     return letter_class_<labelset_t>(std::forward<Args>(args)...,
@@ -841,7 +841,7 @@ namespace vcsn
   template <typename LabelSet_>
   inline
   auto
-  ratexpset_impl<Context>::letter_class_
+  expressionset_impl<Context>::letter_class_
     (std::set<std::pair<typename LabelSet_::letter_t,
                         typename LabelSet_::letter_t>> ccs,
      bool accept,
@@ -902,7 +902,7 @@ namespace vcsn
   template <typename LabelSet_, typename... Args>
   inline
   auto
-  ratexpset_impl<Context>::letter_class_(const Args&&...,
+  expressionset_impl<Context>::letter_class_(const Args&&...,
                                        std::true_type) const
     -> value_t
   {

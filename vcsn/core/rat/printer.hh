@@ -19,11 +19,11 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
-      using identities_t = typename ratexpset_t::identities_t;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
+      using identities_t = typename expressionset_t::identities_t;
       using weight_t = typename context_t::weightset_t::value_t;
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
@@ -32,7 +32,7 @@ namespace vcsn
       using variadic_t = typename super_t::template variadic_t<Type>;
       using leaf_t = typename super_t::leaf_t;
 
-      printer(const ratexpset_t& rs,
+      printer(const expressionset_t& rs,
               std::ostream& out,
               const bool debug = !!getenv("VCSN_PARENS"));
 
@@ -151,7 +151,7 @@ namespace vcsn
       const char* rmul_ = nullptr;
       /// Quotient.
       const char* ldiv_ = nullptr;
-      /// The ratexp operators.
+      /// The expression operators.
       const char* star_ = nullptr;
       const char* complement_ = nullptr;
       const char* transposition_ = nullptr;

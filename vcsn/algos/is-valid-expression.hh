@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_IS_VALID_RATEXP_HH
-# define VCSN_ALGOS_IS_VALID_RATEXP_HH
+#ifndef VCSN_ALGOS_IS_VALID_EXPRESSION_HH
+# define VCSN_ALGOS_IS_VALID_EXPRESSION_HH
 
 # include <stdexcept>
 
@@ -9,7 +9,7 @@ namespace vcsn
 {
 
   /*-------------------.
-  | is_valid(ratexp).  |
+  | is_valid(expression).  |
   `-------------------*/
 
   /// Whether \a e has only computable stars.
@@ -35,15 +35,15 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       bool
-      is_valid_ratexp(const ratexp& exp)
+      is_valid_expression(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return ::vcsn::is_valid(e.ratexpset(), e.ratexp());
+        return ::vcsn::is_valid(e.expressionset(), e.expression());
       }
 
-      REGISTER_DECLARE(is_valid_ratexp, (const ratexp& e) -> bool);
+      REGISTER_DECLARE(is_valid_expression, (const expression& e) -> bool);
     }
   }
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_IS_VALID_RATEXP_HH
+#endif // !VCSN_ALGOS_IS_VALID_EXPRESSION_HH

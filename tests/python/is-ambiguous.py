@@ -38,7 +38,7 @@ CHECK_EQ(False, a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), ratexpset<lal_char(xy), b>"
+  vcsn_context="lal_char(ab), expressionset<lal_char(xy), b>"
   I -> 0
   0 -> 1 [label = "<x>a"]
   0 -> 2 [label = "<y>a"]
@@ -118,12 +118,12 @@ digraph
 }''')
 CHECK_EQ(True, aut3.is_cycle_ambiguous())
 
-r1 = "((abc)*){5}abc" + format(aut1.ratexp())
-aut4 = vcsn.context("lal_char(abc), b").ratexp(r1).derived_term()
+r1 = "((abc)*){5}abc" + format(aut1.expression())
+aut4 = vcsn.context("lal_char(abc), b").expression(r1).derived_term()
 CHECK_EQ(True, aut4.is_cycle_ambiguous())
 
-r2 = "((abc)*){5}abc" + format(aut2.ratexp())
-aut5 = vcsn.context("lal_char(abc), b").ratexp(r2).derived_term()
+r2 = "((abc)*){5}abc" + format(aut2.expression())
+aut5 = vcsn.context("lal_char(abc), b").expression(r2).derived_term()
 CHECK_EQ(False, aut5.is_cycle_ambiguous())
 
 

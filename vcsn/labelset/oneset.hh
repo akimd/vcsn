@@ -34,7 +34,7 @@ namespace vcsn
     /// Build from the description in \a is.
     static oneset make(std::istream& is)
     {
-      // name: lao, ratexpset<law_char(xyz), b>
+      // name: lao, expressionset<law_char(xyz), b>
       //       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
       //       kind         weightset
       kind_t::make(is);
@@ -88,7 +88,7 @@ namespace vcsn
     }
 
     static constexpr bool
-    is_ratexpset()
+    is_expressionset()
     {
       return false;
     }

@@ -56,9 +56,9 @@ namespace vcsn
       std::shared_ptr<automaton> automaton_(std::string prefix);
       std::shared_ptr<tupleset> tupleset_();
 
-      /// `"ratexpset" "<" <Context> ">"`.
-      std::shared_ptr<ratexpset> ratexpset_();
-      std::shared_ptr<ratexpset> ratexpset_series_(); // No optional parameter
+      /// `"expressionset" "<" <Context> ">"`.
+      std::shared_ptr<expressionset> expressionset_();
+      std::shared_ptr<expressionset> expressionset_series_(); // No optional parameter
 
       /// `"polynomialset" "<" <Context> ">"`.
       std::shared_ptr<polynomialset> polynomialset_();

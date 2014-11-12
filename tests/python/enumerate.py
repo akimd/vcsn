@@ -8,7 +8,7 @@ from test import *
 ## --------------------------
 ## Check that EXP accepts EXP has shortest words up to size MAX.
 def check_enumerate(re, size, *exp):
-  r = ctx.ratexp(re)
+  r = ctx.expression(re)
   p = r.standard().enumerate(size)
   # It would be nicer to build a polynomial, but currently we don't
   # have a means to build the right context, with LAW, not LAL etc.
@@ -19,7 +19,7 @@ def check_enumerate(re, size, *exp):
 ## --------------------------
 ## Check that EXP accepts EXP has shortest word, or throws if empty.
 def check_shortest(re, num, *exp):
-  r = ctx.ratexp(re)
+  r = ctx.expression(re)
   p = r.standard().shortest(num)
   exp = " + ".join(exp)
   CHECK_EQ(exp, str(p))

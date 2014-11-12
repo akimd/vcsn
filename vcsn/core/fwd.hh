@@ -38,17 +38,17 @@ namespace vcsn
     = std::shared_ptr<detail::permutation_automaton_impl<Aut>>;
 
 
-  // vcsn/core/ratexp-automaton.hh.
+  // vcsn/core/expression-automaton.hh.
   namespace detail
   {
     template <typename Aut>
-    class ratexp_automaton_impl;
+    class expression_automaton_impl;
   }
 
-  /// A ratexp automaton as a shared pointer.
+  /// A expression automaton as a shared pointer.
   template <typename Aut>
-  using ratexp_automaton
-    = std::shared_ptr<detail::ratexp_automaton_impl<Aut>>;
+  using expression_automaton
+    = std::shared_ptr<detail::expression_automaton_impl<Aut>>;
 
 } // namespace vcsn
 

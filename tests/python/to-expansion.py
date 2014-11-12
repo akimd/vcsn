@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-c = vcsn.context("lal_char(abc), ratexpset<lal_char(xyz), z>")
+c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
 
 def is_wordset(c):
     return str(c).startswith("law_")
@@ -12,7 +12,7 @@ def check(re, exp, use_spontaneous = False):
     '''Check that fo(re) = exp.  Also check that both derived_term algorithms
     (`derivation` and `expansion`) compute the same result.
     '''
-    r = c.ratexp(re)
+    r = c.expression(re)
     eff = r.expansion()
     print("d: {} => {}".format(r, eff));
     CHECK_EQ(exp, str(eff))
@@ -97,7 +97,7 @@ check('(<xy>(abc)<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 ## With spontaneous transitions.  ##
 ## ------------------------------ ##
 
-c = vcsn.context("lan_char(abcd), ratexpset<lal_char(xyz), z>")
+c = vcsn.context("lan_char(abcd), expressionset<lal_char(xyz), z>")
 
 # Lquotient with spontaneous transitions.
 check('\e{\}\z', '<\z>')
@@ -162,11 +162,11 @@ check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 # check_conjunction RE1 RE2...
 # -----------------------------
 # Check derived-term(conjunction) = conjunction(derived-term).
-def check_conjunction(*ratexps, **kwargs):
+def check_conjunction(*expressions, **kwargs):
     rat = None
     auts = []
-    for r in ratexps:
-        exp = ctx.ratexp(r)
+    for r in expressions:
+        exp = ctx.expression(r)
         if rat is None:
             rat = exp
         else:
@@ -186,7 +186,7 @@ check_conjunction('(<1/6>a*+<1/3>b*)*', 'a*')
 check_conjunction('(<1/6>a*+<1/3>b*)*', 'b*')
 check_conjunction('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
 
-ctx = vcsn.context('lal_char(abc), ratexpset<lal_char(xyz), b>')
+ctx = vcsn.context('lal_char(abc), expressionset<lal_char(xyz), b>')
 check_conjunction('(a+b+c)*<x>a(a+b+c)*',
                   '(a+b+c)*<y>b(a+b+c)*',
                   '(a+b+c)*<z>c(a+b+c)*')
@@ -204,14 +204,14 @@ check_conjunction(r'<1/10>(ab{\}<1/2>ab+c)<2>', '<1/20>(ab{\}<1/3>ab+c)<3>',
 ## ----------------- ##
 
 CHECK_EQ(r'a \odot \left[a \oplus \left\langle x\right\rangle b \, c\right] \oplus b \odot \left[\left\langle y\right\rangle c\right]',
-         c.ratexp(r'aa+<x>abc+<y>bc').expansion().format("latex"))
+         c.expression(r'aa+<x>abc+<y>bc').expansion().format("latex"))
 
 
 ## ------------ ##
 ## On wordset.  ##
 ## ------------ ##
 
-c = vcsn.context("law_char(a-z), ratexpset<lal_char(xyz), z>")
+c = vcsn.context("law_char(a-z), expressionset<lal_char(xyz), z>")
 
 # Transposition is the most risky one, as we must not forget to
 # transpose the labels in the expansion.

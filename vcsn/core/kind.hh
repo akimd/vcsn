@@ -16,7 +16,7 @@ namespace vcsn
   /// if_ABBREV<Kinded, R = Kinded>:
   /// Provide "overloading" on parameter types, for instance to require
   /// letter_t when labels_are_letters, and word_t when
-  /// labels_are_words.  See ratexpset::atom and ratexpset::atom_ for
+  /// labels_are_words.  See expressionset::atom and expressionset::atom_ for
   /// an example.
   ///
   /// It is very tempting to turn these guys into members of
@@ -35,14 +35,14 @@ namespace vcsn
     static void make(std::istream& is)                                  \
     {                                                                   \
       /*                                                                \
-       * name: lal_char(abc), ratexpset<law_char(xyz), b>.              \
+       * name: lal_char(abc), expressionset<law_char(xyz), b>.              \
        *       ^^^ ^^^^ ^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^^                \
        *        |   |    |        weightset                             \
        *        |   |    +-- gens                                       \
        *        |   +-- letter_type                                     \
        *        +-- kind                                                \
        *                                                                \
-       * name: lao, ratexpset<law_char(xyz), b>                         \
+       * name: lao, expressionset<law_char(xyz), b>                         \
        *       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^                         \
        *       kind         weightset                                   \
        */                                                               \
@@ -59,7 +59,7 @@ namespace vcsn
   DEFINE(lal, letters);
   DEFINE(lan, nullable);
   DEFINE(lao, one);
-  DEFINE(lar, ratexps);
+  DEFINE(lar, expressions);
   DEFINE(lat, tuples);
   DEFINE(law, words);
 

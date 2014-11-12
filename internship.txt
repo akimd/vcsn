@@ -89,13 +89,13 @@ alphabet is "abc" and the weights are booleans.
 Labels can also be words (law), or letters (lal).
 Weights can be:
     - Real (_r)
-    - Rational expressions (_ratexpset<lal_char(ab), b)
+    - Rational expressions (_expressionset<lal_char(ab), b)
     - z_min (Shortest path).
     - And many others.
 If we take lal_char(ab), z, another way for intepreting that context is:
 {a,b}->Z which is a function that takes a's and b's as input and returns
 an integer.
-And law_char(ab), ratexpset<lal_char(x,y), z> can be intepreted as:
+And law_char(ab), expressionset<lal_char(x,y), z> can be intepreted as:
 {a,b}*->{x,y}->Z which is an automaton that take words composed of a's and b's
 and that returns a rational expression that takes x's and y's as input and
 returns integers.

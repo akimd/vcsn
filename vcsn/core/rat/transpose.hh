@@ -10,35 +10,35 @@ namespace vcsn
   {
 
     /*--------------------.
-    | transpose(ratexp).  |
+    | transpose(expression).  |
     `--------------------*/
 
-    /// \tparam RatExpSet  the ratexp set.
+    /// \tparam RatExpSet  the expression set.
     template <class RatExpSet>
     class transposer
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using super_t = typename ratexpset_t::const_visitor;
+      using expressionset_t = RatExpSet;
+      using expression_t = typename expressionset_t::value_t;
+      using super_t = typename expressionset_t::const_visitor;
 
-      transposer(const ratexpset_t& rs)
+      transposer(const expressionset_t& rs)
         : rs_{rs}
         , res_{}
       {}
 
-      ratexp_t
-      operator()(const ratexp_t& e)
+      expression_t
+      operator()(const expression_t& e)
       {
         e->accept(*this);
         return std::move(res_);
       }
 
-      ratexp_t
-      transpose(const ratexp_t& e)
+      expression_t
+      transpose(const expression_t& e)
       {
-        ratexp_t res;
+        expression_t res;
         std::swap(res_, res);
         e->accept(*this);
         std::swap(res_, res);
@@ -144,8 +144,8 @@ namespace vcsn
 
 
     private:
-      ratexpset_t rs_;
-      ratexp_t res_;
+      expressionset_t rs_;
+      expression_t res_;
     };
   }
 

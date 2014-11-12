@@ -23,7 +23,7 @@ namespace vcsn
     template <typename Context>
     class printer;
 
-    /// The possible types of ratexps.
+    /// The possible types of expressions.
     ///
     /// They also code the order in which they are sorted by
     /// less_than, so that, for instance, polynomials always display
@@ -153,17 +153,17 @@ namespace vcsn
 
 
     template <typename Context>
-    using ratexp = std::shared_ptr<const node<Context>>;
+    using expression = std::shared_ptr<const node<Context>>;
 
 
-    // ratexpset.hh.
+    // expressionset.hh.
     template <typename Context>
-    class ratexpset_impl;
+    class expressionset_impl;
 
   } // namespace rat
 
   template <typename Context>
-  using ratexpset = variadic_mul_mixin<rat::ratexpset_impl<Context>>;
+  using expressionset = variadic_mul_mixin<rat::expressionset_impl<Context>>;
 
 } // namespace vcsn
 

@@ -41,12 +41,12 @@ def _is_equal(lhs, rhs):
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
 def _left_mult(self, lhs):
-    '''Support "aut * weight".  Also serves for ratexps.'''
+    '''Support "aut * weight".  Also serves for expressions.'''
     return self.left_mult(self.context().weight(str(lhs)))
 
 def _right_mult(self, rhs):
     '''Support both "aut * aut" and "aut * weight".  Also serves for
-    ratexps.'''
+    expressions.'''
     if isinstance(rhs, type(self)):
         return self.concatenate(rhs)
     elif isinstance(rhs, weight):
@@ -63,9 +63,9 @@ def _tmp_file(suffix, **kwargs):
 from vcsn.automaton  import *
 from vcsn.context    import *
 from vcsn.expansion  import *
+from vcsn.expression import *
 from vcsn.label      import *
 from vcsn.polynomial import *
-from vcsn.ratexp     import *
 from vcsn.weight     import *
 
 # Load IPython specific support if we can.

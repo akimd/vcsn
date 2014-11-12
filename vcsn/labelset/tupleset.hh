@@ -250,9 +250,9 @@ namespace vcsn
     }
 
     static constexpr bool
-    is_ratexpset()
+    is_expressionset()
     {
-      return is_ratexpset_(indices);
+      return is_expressionset_(indices);
     }
 
     static constexpr bool
@@ -582,9 +582,9 @@ namespace vcsn
 
     template <std::size_t... I>
     static constexpr bool
-    is_ratexpset_(seq<I...>)
+    is_expressionset_(seq<I...>)
     {
-      return all_<valueset_t<I>::is_ratexpset()...>();
+      return all_<valueset_t<I>::is_expressionset()...>();
     }
 
     template <std::size_t... I>

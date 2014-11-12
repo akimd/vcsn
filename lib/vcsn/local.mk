@@ -119,8 +119,8 @@ lib_libvcsn_la_LIBADD =					\
   $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)		\
   -lltdl $(RT_LIBS)
 
-# ratexpset.hxx depends on rat/driver.hh which requires
-# rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_
+# expressionset.hxx depends on rat/driver.hh which requires
+# rat/location.hh.  The dot parser, loads expressionset.hxx, so we _must_
 # compile the rat parser first.
 %D%/dot/parse.stamp: %D%/rat/parse.stamp
 

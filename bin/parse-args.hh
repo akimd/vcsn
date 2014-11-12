@@ -14,7 +14,7 @@ enum class type
   {
     automaton,
     polynomial,
-    ratexp,
+    expression,
     weight,
   };
 
@@ -53,7 +53,7 @@ struct options
 
   void print(bool a) const;
   void print(vcsn::dyn::automaton a) const;
-  void print(vcsn::dyn::ratexp a) const;
+  void print(vcsn::dyn::expression a) const;
   void print(vcsn::dyn::polynomial a) const;
   void print(vcsn::dyn::weight a) const;
 };
@@ -62,10 +62,10 @@ struct options
 void parse_args(options& opts, int& argc, char* const*& argv);
 options parse_args(int& argc, char* const*& argv);
 
-/// Read automaton/ratexp according to \a opts.
+/// Read automaton/expression according to \a opts.
 vcsn::dyn::automaton read_automaton(const options& opts);
 vcsn::dyn::label read_label(const options& opts);
-vcsn::dyn::ratexp read_ratexp(const options& opts);
+vcsn::dyn::expression read_expression(const options& opts);
 vcsn::dyn::polynomial read_polynomial(const options& opts);
 vcsn::dyn::weight read_weight(const options& opts);
 vcsn::dyn::label read_word(const options& opts);

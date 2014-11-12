@@ -22,11 +22,11 @@ namespace vcsn
       return detail::context_of_registry().call(a);
     }
 
-    REGISTER_DEFINE(context_of_ratexp);
+    REGISTER_DEFINE(context_of_expression);
     context
-    context_of(const ratexp& e)
+    context_of(const expression& e)
     {
-      return detail::context_of_ratexp_registry().call(e);
+      return detail::context_of_expression_registry().call(e);
     }
 
     /*---------------.
@@ -49,14 +49,14 @@ namespace vcsn
 
 
     /*-----------------.
-    | make_ratexpset.  |
+    | make_expressionset.  |
     `-----------------*/
 
-    REGISTER_DEFINE(make_ratexpset);
-    ratexpset
-    make_ratexpset(const context& ctx, ::vcsn::rat::identities ids)
+    REGISTER_DEFINE(make_expressionset);
+    expressionset
+    make_expressionset(const context& ctx, ::vcsn::rat::identities ids)
     {
-      return detail::make_ratexpset_registry().call(ctx, ids);
+      return detail::make_expressionset_registry().call(ctx, ids);
     }
 
     /*--------------------.

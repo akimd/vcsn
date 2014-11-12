@@ -1,6 +1,6 @@
 * Exercises
 ** subword, prefix, suffix, factor
-Provide the same routines for ratexps.
+Provide the same routines for expressions.
 
 * Documentation
 ** Doxygen
@@ -15,11 +15,11 @@ Something similar to IPython's "?" shortcut.
 
 * Naming issues
 ** Wrong names
-power for ratexp denotes {n,m} which is related to concat, not to mul.
+power for expression denotes {n,m} which is related to concat, not to mul.
 
 ** concat/mul
 polynomialset uses the "concat" operator on its "labelset".  However, when
-we use polynomials of ratexps, it is just "by chance" that there is a
+we use polynomials of expressions, it is just "by chance" that there is a
 function "concat" which is *mostly* like mul.
 
 We should really name "concat" as "mul" in our labelsets.
@@ -48,7 +48,7 @@ To force it (which is needed), use -Wc,-fsanitize=address when linking it.
 
 * Tests
 ** operations on automata
-Use ratexps as weights to check multiplication order.  As in checks for
+Use expressions as weights to check multiplication order.  As in checks for
 standard(exp).  We should use fewer contexts, to speed up our development.
 
 ** operations on polynomials
@@ -66,17 +66,17 @@ order "not to break too much") rather that something like expand.  What are
 the expected features of the right definition?
 
 * Bugs
-** ratexp::copy
-The implementation by-passes the ratexpset when building the new ratexp; for
-instance in the case of sum, the list of operands is copied by hand instead
-of using the ratexpset.  As a result, a ratexp "a+b+a", when "converted" to
-a series, gives "a+b+a" instead of "a+b".
+** expression::copy
+The implementation by-passes the expressionset when building the new
+expression; for instance in the case of sum, the list of operands is copied
+by hand instead of using the expressionset.  As a result, a expression
+"a+b+a", when "converted" to a series, gives "a+b+a" instead of "a+b".
 
 ** derivation
 We have ambiguous calls:
 
   ctx = vcsn.context('lat<law_char(0-9), law_char(a-zA-Z)>_b')
-  r = ctx.ratexp("('(11,eleven)'+'(12,twelve)'+'(13,thirteen)')*")
+  r = ctx.expression("('(11,eleven)'+'(12,twelve)'+'(13,thirteen)')*")
   r.derivation("(11,eleven)")
 
 It should not work, but it fails for the wrong reason, and therefore does
@@ -93,13 +93,13 @@ behaviors?
 
 It also loops when we have a sink state:
 
-  vcsn.context('lal_char, b').ratexp('a').standard().complete().shortest(2)
+  vcsn.context('lal_char, b').expression('a').standard().complete().shortest(2)
 
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 
   $ vcsn derived-term -C 'lal_char(ab), b' -e 'a' -o a.gv
-  $ vcsn derived-term -C 'lal_char(ab)_ratexpset<lal_char(uv), b>' \
+  $ vcsn derived-term -C 'lal_char(ab), expressionset<lal_char(uv), b>' \
                       -e '(<u>a+<v>b)*' -o ab.gv
   $ vcsn infiltration -f ab.gv a.gv | vcsn shortest -f - 4
   Assertion failed: (!has_transition(src, dst, l)), function new_transition, file ../../vcsn/core/mutable-automaton.hh, line 442.
@@ -113,20 +113,20 @@ Uncomment the tests in infiltration.chk (there are two places).
 ** eliminate-states
 This won't work:
 
-  vcsn.context('ratexpset<lal_char(abc), b>_ratexpset<lal_char(uv), b>')
+  vcsn.context('expressionset<lal_char(abc), b>, expressionset<lal_char(uv), b>')
 
 that's because we need to multiply weights of different natures, which is
 something already solved in product (using conv).  See also the previous
 item.
 
 ** is-valid(automaton)
-In the case of RW, check that the ratexp is valid.
+In the case of RW, check that the expression is valid.
 
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 
 ** star-normal-form
-It does not work for weighted ratexps.
+It does not work for weighted expressions.
 
 * Improvements
 ** are-equivalent
@@ -244,10 +244,10 @@ header-only.  A mixture of both might be the best: where they suffice,
 format _are_ superior.
 
 ** Eliminate rat::exp
-It does seem to be useful, except for one thing: dyn::ratexpset uses a
-shared_ptr to exp (which is rat::exp_t is) as a means to handle ratexps.  It
-would make much more sense for dyn::ratexpset to use dyn::ratexp as an
-abstraction to typed ratexp, but this should be thoroughly benched to make
+It does seem to be useful, except for one thing: dyn::expressionset uses a
+shared_ptr to exp (which is rat::exp_t is) as a means to handle expressions.  It
+would make much more sense for dyn::expressionset to use dyn::expression as an
+abstraction to typed expression, but this should be thoroughly benched to make
 sure this is not (much) costlier.
 
 Getting rid of this will allow rat::node to use single inheritance.
@@ -283,11 +283,11 @@ conjunction:
       visit(const hadam_t& e)
       {
         e.head()->accept(*this);
-        auto res = ratexp(res_);
+        auto res = expression(res_);
         for (auto v: e.tail())
           {
             v->accept(*this);
-            res = rs_.hadam(res, ratexp(res_));
+            res = rs_.hadam(res, expression(res_));
           }
         res_ = {{res, ws_.one()}};
         apply_weights(e);
@@ -322,7 +322,7 @@ In particular, it might be a good idea to use a distance map to ensure that
 we good (one of the) shortest ambiguous word.
 
 ** constant-term
-To compute the constant-term of a ratexp, we compute that of its subratexp,
+To compute the constant-term of a expression, we compute that of its subexpression,
 which will be recomputed uselessly by derived-term.
 
 ** difference
@@ -362,11 +362,6 @@ See what V1 did.
 ** Incremental
 Transform the current implementation of the "naive" heuristics into
 something incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
-
-** Rename to a better name.
-Drop "aut", because we have more entries than that.  Drop "to", as it's
-clear enough from its name.  Move to "ratexp" for consistency with the name
-used everywhere else.
 
 * dyn::
 ** Implement implicit conversions

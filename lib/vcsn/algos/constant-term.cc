@@ -13,7 +13,7 @@ namespace vcsn
     REGISTER_DEFINE(constant_term);
 
     weight
-    constant_term(const ratexp& e)
+    constant_term(const expression& e)
     {
       return detail::constant_term_registry().call(e);
     }

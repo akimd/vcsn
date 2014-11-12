@@ -20,8 +20,8 @@ namespace vcsn
       for (auto s: {"-automaton",
                     "-ctx",
                     "-expansion", "-label", "-polynomial",
-                    "-ratexp", "-vector", "-weight"})
-        if (boost::ends_with(h, s))
+                    "-expression", "-vector", "-weight"})
+        if (boost::ends_with(h, s) && h != "to-expression")
           boost::erase_tail(h, strlen(s));
       // Open code some mismatches between algo name, and header name.
       //
@@ -56,7 +56,7 @@ namespace vcsn
       ALGO("is-trim", "accessible");
       ALGO("is-useless", "accessible");
       ALGO("list", "print");
-      ALGO("make-ratexpset", "make-context");
+      ALGO("make-expressionset", "make-context");
       ALGO("make-word-context", "make-context");
       ALGO("multiply", "concatenate");
       ALGO("num-sccs", "scc");
@@ -71,8 +71,8 @@ namespace vcsn
       ALGO("union-a", "union");
 #undef ALGO
       // Exceptions.
-      if (algo == "is_valid_ratexp")
-        h = "is-valid-ratexp";
+      if (algo == "is_valid_expression")
+        h = "is-valid-expression";
 
       h = "vcsn/algos/" + h + ".hh";
       headers_late_.insert(h);
@@ -137,8 +137,8 @@ namespace vcsn
         header("vcsn/algos/product.hh");
       else if (type == "permutation_automaton")
         header("vcsn/core/permutation-automaton.hh");
-      else if (type == "ratexp_automaton")
-        header("vcsn/core/ratexp-automaton.hh");
+      else if (type == "expression_automaton")
+        header("vcsn/core/expression-automaton.hh");
       else if (type == "transpose_automaton")
         header("vcsn/algos/transpose.hh");
       else if (type == "tuple_automaton")
@@ -215,12 +215,12 @@ namespace vcsn
       os_ << '>';
     }
 
-    DEFINE(ratexpset)
+    DEFINE(expressionset)
     {
-      os_ << "vcsn::ratexpset<" << incendl;
+      os_ << "vcsn::expressionset<" << incendl;
       t.get_context()->accept(*this);
       os_ << decendl << '>';
-      header("vcsn/core/rat/ratexpset.hh");
+      header("vcsn/core/rat/expressionset.hh");
     }
 
     DEFINE(weightset)

@@ -4,7 +4,7 @@
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/weightset/polynomialset.hh>
 
@@ -18,20 +18,20 @@ namespace vcsn
 
     /// Type of PolynomialSet of RatExps from the RatExpSet type.
     template <typename RatExpSet>
-    using ratexp_polynomialset_t
+    using expression_polynomialset_t
       = polynomialset<context<RatExpSet,
                               weightset_t_of<RatExpSet>>>;
 
-    /// Type of polynomials of ratexps from the RatExpSet type.
+    /// Type of polynomials of expressions from the RatExpSet type.
     template <typename RatExpSet>
-    using ratexp_polynomial_t
-      = typename ratexp_polynomialset_t<RatExpSet>::value_t;
+    using expression_polynomial_t
+      = typename expression_polynomialset_t<RatExpSet>::value_t;
 
     /// From a RatExpSet to its polynomialset.
     template <typename RatExpSet>
     inline
-    ratexp_polynomialset_t<RatExpSet>
-    make_ratexp_polynomialset(const RatExpSet& rs)
+    expression_polynomialset_t<RatExpSet>
+    make_expression_polynomialset(const RatExpSet& rs)
     {
       using context_t = context<RatExpSet,
                                 weightset_t_of<RatExpSet>>;
@@ -41,7 +41,7 @@ namespace vcsn
 
 
   /*----------------.
-  | split(ratexp).  |
+  | split(expression).  |
   `----------------*/
 
   namespace rat
@@ -79,33 +79,33 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using weightset_t = weightset_t_of<ratexpset_t>;
+      using expression_t = typename expressionset_t::value_t;
+      using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = typename weightset_t::value_t;
 
-      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
 
       constexpr static const char* me() { return "split"; }
 
-      split_visitor(const ratexpset_t& rs)
+      split_visitor(const expressionset_t& rs)
         : rs_(rs)
       {}
 
-      /// Break a ratexp into a polynomial.
-      polynomial_t operator()(const ratexp_t& v)
+      /// Break a expression into a polynomial.
+      polynomial_t operator()(const expression_t& v)
       {
         return split(v);
       }
 
       /// Easy recursion.
-      polynomial_t split(const ratexp_t& v)
+      polynomial_t split(const expression_t& v)
       {
         v->accept(*this);
         return std::move(res_);
@@ -141,7 +141,7 @@ namespace vcsn
       ///
       /// Returns split(l) x split(r).
       /// FIXME: This is inefficient, we split the lhs way too often.
-      polynomial_t product(const ratexp_t& l, const ratexp_t& r)
+      polynomial_t product(const expression_t& l, const expression_t& r)
       {
         // B(l).
         polynomial_t l_split = split(l);
@@ -158,7 +158,7 @@ namespace vcsn
       /// The split-product of \a l with \a r.
       ///
       /// Returns l x split(r).
-      polynomial_t product(const polynomial_t& l, const ratexp_t& r)
+      polynomial_t product(const polynomial_t& l, const expression_t& r)
       {
         polynomial_t res;
         for (const auto& m: l)
@@ -179,7 +179,7 @@ namespace vcsn
       ///
       /// Returns split(l) x split(r).
       /// FIXME: This is inefficient, we split the lhs way too often.
-      polynomial_t conjunction(const ratexp_t& l, const ratexp_t& r)
+      polynomial_t conjunction(const expression_t& l, const expression_t& r)
       {
         // B(l).
         polynomial_t l_split = split(l);
@@ -201,7 +201,7 @@ namespace vcsn
       /// The split-product of \a l with \a r.
       ///
       /// Returns l x split(r).
-      polynomial_t conjunction(const polynomial_t& l, const ratexp_t& r)
+      polynomial_t conjunction(const polynomial_t& l, const expression_t& r)
       {
         polynomial_t res;
         for (const auto& m: l)
@@ -241,19 +241,19 @@ namespace vcsn
       }
 
     private:
-      ratexpset_t rs_;
+      expressionset_t rs_;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
-      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// The result.
       polynomial_t res_;
     };
   }
 
-  /// Split a ratexp.
+  /// Split a expression.
   template <typename RatExpSet>
   inline
-  rat::ratexp_polynomial_t<RatExpSet>
+  rat::expression_polynomial_t<RatExpSet>
   split(const RatExpSet& rs, const typename RatExpSet::value_t& e)
   {
     rat::split_visitor<RatExpSet> split{rs};
@@ -267,28 +267,28 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       polynomial
-      split(const ratexp& exp)
+      split(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.ratexpset();
-        auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
+        const auto& rs = e.expressionset();
+        auto ps = vcsn::rat::make_expression_polynomialset(rs);
         return make_polynomial(ps,
-                               vcsn::split<RatExpSet>(rs, e.ratexp()));
+                               vcsn::split<RatExpSet>(rs, e.expression()));
       }
 
       REGISTER_DECLARE(split,
-                       (const ratexp& e) -> polynomial);
+                       (const expression& e) -> polynomial);
     }
   }
 
-  /// Split a polynomial of ratexps.
+  /// Split a polynomial of expressions.
   template <typename RatExpSet>
   inline
-  rat::ratexp_polynomial_t<RatExpSet>
-  split(const RatExpSet& rs, const rat::ratexp_polynomial_t<RatExpSet>& p)
+  rat::expression_polynomial_t<RatExpSet>
+  split(const RatExpSet& rs, const rat::expression_polynomial_t<RatExpSet>& p)
   {
-    auto ps = rat::make_ratexp_polynomialset(rs);
-    using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
+    auto ps = rat::make_expression_polynomialset(rs);
+    using polynomial_t = rat::expression_polynomial_t<RatExpSet>;
     rat::split_visitor<RatExpSet> split{rs};
     polynomial_t res;
     for (const auto& m: p)
@@ -296,7 +296,7 @@ namespace vcsn
     return res;
   }
 
-  /// Split a polynomial of ratexps.
+  /// Split a polynomial of expressions.
   template <typename PolynomialSet>
   inline
   typename PolynomialSet::value_t

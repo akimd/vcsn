@@ -3,10 +3,10 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/standard.hh>
-# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/expressionset.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -126,7 +126,7 @@ namespace vcsn
 
 
   /*--------------------.
-  | left-mult(ratexp).  |
+  | left-mult(expression).  |
   `--------------------*/
 
   template <typename RatExpSet>
@@ -139,34 +139,34 @@ namespace vcsn
     return rs.lmul(w, r);
   }
 
-  /// Join between a ratexpset and a weightset.
+  /// Join between a expressionset and a weightset.
   ///
   /// We must not perform a plain
   ///
-  /// join(w1.weightset(), r1.ratexpset())
+  /// join(w1.weightset(), r1.expressionset())
   ///
   /// here.  Consider for instance
   ///
-  /// ratexpset<lal(abc), ratexpset<law(xyz), b>>
+  /// expressionset<lal(abc), expressionset<law(xyz), b>>
   ///
   /// we would perform
   ///
-  /// join(ratexpset<law(xyz), b>,
-  ///      ratexpset<lal(abc), ratexpset<law(xyz), b>>)
+  /// join(expressionset<law(xyz), b>,
+  ///      expressionset<lal(abc), expressionset<law(xyz), b>>)
   ///
   /// i.e., a join of contexts which applies to both labelsets
   /// (here, join(lal(abc), "law(xyz)) = law(abcxyz)") and
-  /// weightsets.  Here, the "ratexpset<law(xyz), b>" must really
+  /// weightsets.  Here, the "expressionset<law(xyz), b>" must really
   /// be considered as a weightset, so compute the join of
   /// weightsets by hand, and leave the labelset alone.
   template <typename WeightSet, typename RatExpSet>
-  ratexpset<context<labelset_t_of<RatExpSet>,
+  expressionset<context<labelset_t_of<RatExpSet>,
                     join_t<WeightSet, weightset_t_of<RatExpSet>>>>
-  join_weightset_ratexpset(const WeightSet& ws,
+  join_weightset_expressionset(const WeightSet& ws,
                            const RatExpSet& rs)
   {
     auto ctx = make_context(*rs.labelset(), join(ws, *rs.weightset()));
-    return make_ratexpset(ctx, rs.identities());
+    return make_expressionset(ctx, rs.identities());
   }
 
   namespace dyn
@@ -175,20 +175,20 @@ namespace vcsn
     {
       /// Bridge.
       template <typename WeightSet, typename RatExpSet>
-      ratexp
-      left_mult_ratexp(const weight& weight, const ratexp& exp)
+      expression
+      left_mult_expression(const weight& weight, const expression& exp)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<RatExpSet>();
-        auto rs = join_weightset_ratexpset(w1.weightset(), r1.ratexpset());
+        auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
-        auto r2 = rs.conv(r1.ratexpset(), r1.ratexp());
-        return make_ratexp(rs,
+        auto r2 = rs.conv(r1.expressionset(), r1.expression());
+        return make_expression(rs,
                            ::vcsn::left_mult(rs, w2, r2));
       }
 
-      REGISTER_DECLARE(left_mult_ratexp,
-                       (const weight&, const ratexp&) -> ratexp);
+      REGISTER_DECLARE(left_mult_expression,
+                       (const weight&, const expression&) -> expression);
 
     }
   }
@@ -241,7 +241,7 @@ namespace vcsn
   }
 
   /*---------------------.
-  | right-mult(ratexp).  |
+  | right-mult(expression).  |
   `---------------------*/
 
   template <typename RatExpSet>
@@ -260,20 +260,20 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename WeightSet>
-      ratexp
-      right_mult_ratexp(const ratexp& exp, const weight& weight)
+      expression
+      right_mult_expression(const expression& exp, const weight& weight)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<RatExpSet>();
-        auto rs = join_weightset_ratexpset(w1.weightset(), r1.ratexpset());
+        auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
-        auto r2 = rs.conv(r1.ratexpset(), r1.ratexp());
-        return make_ratexp(rs,
+        auto r2 = rs.conv(r1.expressionset(), r1.expression());
+        return make_expression(rs,
                            ::vcsn::right_mult(rs, r2, w2));
       }
 
-      REGISTER_DECLARE(right_mult_ratexp,
-                       (const ratexp&, const weight&) -> ratexp);
+      REGISTER_DECLARE(right_mult_expression,
+                       (const expression&, const weight&) -> expression);
 
     }
   }

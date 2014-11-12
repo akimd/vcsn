@@ -9,8 +9,8 @@ namespace vcsn
 {
   namespace rat LIBVCSN_API
   {
-    /// The ratexp in stream \a is, with \a rs as default ratexpset.
-    dyn::ratexp read(std::istream& is, const dyn::ratexpset& rs,
+    /// The expression in stream \a is, with \a rs as default expressionset.
+    dyn::expression read(std::istream& is, const dyn::expressionset& rs,
                      const location& l = location{});
   }
 }

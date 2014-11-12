@@ -12,8 +12,8 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using super_t = typename ratexpset_t::const_visitor;
+      using expressionset_t = RatExpSet;
+      using super_t = typename expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
       template <rat::type_t Type>
       using variadic_t = typename super_t::template variadic_t<Type>;
@@ -79,7 +79,7 @@ namespace vcsn
   } // namespace detail
 
 
-  /// Star height of a ratexp.
+  /// Star height of a expression.
   template <typename RatExpSet>
   inline
   unsigned
@@ -96,14 +96,14 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       unsigned
-      star_height(const ratexp& exp)
+      star_height(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return ::vcsn::star_height<RatExpSet>(e.ratexp());
+        return ::vcsn::star_height<RatExpSet>(e.expression());
       }
 
       REGISTER_DECLARE(star_height,
-                       (const ratexp& e) -> unsigned);
+                       (const expression& e) -> unsigned);
     }
   }
 

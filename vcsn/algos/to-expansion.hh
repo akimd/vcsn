@@ -5,13 +5,13 @@
 
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/expansionset.hh>
-# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/expressionset.hh>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/core/ratexp-automaton.hh>
+# include <vcsn/core/expression-automaton.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/expansion.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/misc/indent.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/weightset/polynomialset.hh>
@@ -41,30 +41,30 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using weightset_t = weightset_t_of<ratexpset_t>;
+      using expression_t = typename expressionset_t::value_t;
+      using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = typename weightset_t::value_t;
-      using expansionset_t = expansionset<ratexpset_t>;
+      using expansionset_t = expansionset<expressionset_t>;
 
-      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
 
       constexpr static const char* me() { return "to_expansion"; }
 
       using polys_t = typename expansionset_t::polys_t;
       using expansion_t = typename expansionset_t::value_t;
 
-      to_expansion_visitor(const ratexpset_t& rs)
+      to_expansion_visitor(const expressionset_t& rs)
         : rs_(rs)
       {}
 
-      expansion_t operator()(const ratexp_t& v)
+      expansion_t operator()(const expression_t& v)
       {
         res_ = es_.zero();
         v->accept(*this);
@@ -72,12 +72,12 @@ namespace vcsn
       }
 
 #if CACHE
-      std::unordered_map<ratexp_t, expansion_t,
-                         vcsn::hash<ratexpset_t>,
-                         vcsn::equal_to<ratexpset_t>> cache_;
+      std::unordered_map<expression_t, expansion_t,
+                         vcsn::hash<expressionset_t>,
+                         vcsn::equal_to<expressionset_t>> cache_;
 #endif
 
-      expansion_t to_expansion(const ratexp_t& e)
+      expansion_t to_expansion(const expression_t& e)
       {
 #if CACHE
         auto insert = cache_.emplace(e, es_.zero());
@@ -114,7 +114,7 @@ namespace vcsn
 #endif
       }
 
-      polynomial_t to_expansion_as_polynomial(const ratexp_t& e)
+      polynomial_t to_expansion_as_polynomial(const expression_t& e)
       {
         operator()(e);
         return es_.as_polynomial(res_);
@@ -166,7 +166,7 @@ namespace vcsn
               // ps.mul) improves the score for
               // derived-term([ab]*a[ab]{150}) from 0.32s to 0.23s on
               // erebus, clang++ 3.4.
-              ratexp_t rhss
+              expression_t rhss
                 = transposed_
                 ? rs_.transposition(prod_(e.begin(),
                                           std::next(e.begin(), size-i)))
@@ -192,17 +192,17 @@ namespace vcsn
 
       /// Build a product for these expressions.  Pay attention to not
       /// building products with 0 or 1 expression.
-      ratexp_t
+      expression_t
       prod_(typename prod_t::iterator begin,
             typename prod_t::iterator end) const
       {
-        using ratexps_t = typename prod_t::values_t;
+        using expressions_t = typename prod_t::values_t;
         if (begin == end)
           return rs_.one();
         else if (std::next(begin, 1) == end)
           return *begin;
         else
-          return std::make_shared<prod_t>(ratexps_t{begin, end});
+          return std::make_shared<prod_t>(expressions_t{begin, end});
       }
 
       label_t one_(std::true_type)
@@ -220,7 +220,7 @@ namespace vcsn
       /// Otherwise return nullptr.
       ///
       /// FIXME: What about complement?
-      ratexp_t star_child(const ratexp_t r)
+      expression_t star_child(const expression_t r)
       {
         if (auto c = std::dynamic_pointer_cast<const transposition_t>(r))
           {
@@ -292,7 +292,7 @@ namespace vcsn
         expansion_t res = es_.one();
         // The shuffle-product of the previously traversed siblings.
         // Initially the neutral element: \e.
-        ratexp_t prev = rs_.one();
+        expression_t prev = rs_.one();
         for (const auto& rhs: e)
           {
             // Save current result in lhs, and compute the result in res.
@@ -341,11 +341,11 @@ namespace vcsn
         expansion_t res = to_expansion(e.sub());
         res_.constant = ws_.is_zero(res.constant) ? ws_.one() : ws_.zero();
 
-        // Turn the polynomials into a ratexp, and complement it.
+        // Turn the polynomials into a expression, and complement it.
         for (auto l: rs_.labelset()->genset())
           ps_.add_here
             (res_.polynomials[l],
-             polynomial_t{{rs_.complement(es_.as_ratexp(res.polynomials[l])),
+             polynomial_t{{rs_.complement(es_.as_expression(res.polynomials[l])),
                            ws_.one()}});
       }
 
@@ -394,14 +394,14 @@ namespace vcsn
           : es_.rmul(l, r);
       }
 
-      /// Manipulate the ratexps.
-      ratexpset_t rs_;
+      /// Manipulate the expressions.
+      expressionset_t rs_;
       /// Manipulate the labels.
       labelset_t ls_ = *rs_.labelset();
       /// Manipulate the weights.
       weightset_t ws_ = *rs_.weightset();
-      /// Manipulate the polynomials of ratexps.
-      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      /// Manipulate the polynomials of expressions.
+      polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// Manipulate the expansions.
       expansionset_t es_ = expansionset_t(rs_);
 
@@ -430,17 +430,17 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       expansion
-      to_expansion(const ratexp& exp)
+      to_expansion(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.ratexpset();
+        const auto& rs = e.expressionset();
         auto es = vcsn::rat::expansionset<RatExpSet>(rs);
         return make_expansion(es,
-                              to_expansion<RatExpSet>(rs, e.ratexp()));
+                              to_expansion<RatExpSet>(rs, e.expression()));
       }
 
       REGISTER_DECLARE(to_expansion,
-                       (const ratexp& e) -> expansion);
+                       (const expression& e) -> expansion);
     }
   }
 } // vcsn::

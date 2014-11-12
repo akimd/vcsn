@@ -54,23 +54,23 @@ namespace vcsn
     }
     using polynomial = std::shared_ptr<const detail::polynomial_base>;
 
-    // vcsn/dyn/ratexp.hh.
+    // vcsn/dyn/expression.hh.
     namespace detail
     {
-      class ratexp_base;
+      class expression_base;
       template <typename RatExpSet>
-      class ratexp_wrapper;
+      class expression_wrapper;
     }
-    using ratexp = std::shared_ptr<detail::ratexp_base>;
+    using expression = std::shared_ptr<detail::expression_base>;
 
-    // vcsn/dyn/ratexpset.hh
+    // vcsn/dyn/expressionset.hh
     namespace detail
     {
-      class ratexpset_base;
+      class expressionset_base;
       template <typename RatExpSet>
-      class ratexpset_wrapper;
+      class expressionset_wrapper;
     }
-    using ratexpset = std::shared_ptr<const detail::ratexpset_base>;
+    using expressionset = std::shared_ptr<const detail::expressionset_base>;
 
     // vcsn/dyn/weight.hh.
     namespace detail
@@ -93,7 +93,7 @@ namespace vcsn
     class oneset;
     class other;
     class polynomialset;
-    class ratexpset;
+    class expressionset;
     class tupleset;
     class weightset;
     class wordset;

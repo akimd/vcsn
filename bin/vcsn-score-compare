@@ -28,7 +28,7 @@ def normalize(k):
     # Now we display the number of repetitions.
     k = re.sub(r'(# a = de_bruijn\(150\))$', r'\1, 1000x', k)
     k = re.sub(r'(# e = "\(\\e\+a\)" \* 500)$', r'\1, 100x', k)
-    k = re.sub(r'(# r = b\.ratexp\("\(\\e\+a\)" \* 500\))$', r'\1, 1000x', k)
+    k = re.sub(r'(# r = b\.expression\("\(\\e\+a\)" \* 500\))$', r'\1, 1000x', k)
     # Now, instead of "   on [a-z]  -> Z", ", c = [a-z] -> Z".
     k = re.sub(r' +on (\[.*?\][?*]?) *-> *([BQZ])',
                r', c = \1 -> \2', k)

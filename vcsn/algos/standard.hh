@@ -10,7 +10,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/misc/memory.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -164,12 +164,12 @@ namespace vcsn
 
 
   /*-------------------.
-  | standard(ratexp).  |
+  | standard(expression).  |
   `-------------------*/
 
   namespace rat
   {
-    /// Build a standard automaton from a ratexp.
+    /// Build a standard automaton from a expression.
     ///
     /// \tparam Aut        relative the generated automaton
     /// \tparam RatExpSet  relative to the RatExp.
@@ -180,22 +180,22 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
-      using ratexpset_t = RatExpSet;
-      using weightset_t = weightset_t_of<ratexpset_t>;
-      using weight_t = weight_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using weightset_t = weightset_t_of<expressionset_t>;
+      using weight_t = weight_t_of<expressionset_t>;
       using state_t = state_t_of<automaton_t>;
 
-      using super_t = typename ratexpset_t::const_visitor;
+      using super_t = typename expressionset_t::const_visitor;
 
       constexpr static const char* me() { return "standard"; }
 
-      standard_visitor(const ratexpset_t& rs)
+      standard_visitor(const expressionset_t& rs)
         : rs_(rs)
         , res_(make_shared_ptr<automaton_t>(rs_.context()))
       {}
 
       automaton_t
-      operator()(const typename ratexpset_t::value_t& v)
+      operator()(const typename expressionset_t::value_t& v)
       {
         v->accept(*this);
         res_->set_initial(initial_);
@@ -362,7 +362,7 @@ namespace vcsn
       }
 
     private:
-      const ratexpset_t& rs_;
+      const expressionset_t& rs_;
       const weightset_t& ws_ = *rs_.weightset();
       automaton_t res_;
       state_t initial_ = automaton_t::element_type::null_state();
@@ -371,7 +371,7 @@ namespace vcsn
   } // rat::
 
 
-  /// Build a standard automaton from a ratexp.
+  /// Build a standard automaton from a expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam RatExpSet  relative to the RatExp.
@@ -391,19 +391,19 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       automaton
-      standard_ratexp(const ratexp& exp)
+      standard_expression(const expression& exp)
       {
-        // FIXME: So far, there is a single implementation of ratexps,
+        // FIXME: So far, there is a single implementation of expressions,
         // but we should actually be parameterized by its type too.
-        using ratexpset_t = RatExpSet;
-        using automaton_t = vcsn::mutable_automaton<context_t_of<ratexpset_t>>;
-        const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(::vcsn::standard<automaton_t>(e.ratexpset(),
-                                                            e.ratexp()));
+        using expressionset_t = RatExpSet;
+        using automaton_t = vcsn::mutable_automaton<context_t_of<expressionset_t>>;
+        const auto& e = exp->as<expressionset_t>();
+        return make_automaton(::vcsn::standard<automaton_t>(e.expressionset(),
+                                                            e.expression()));
       }
 
-      REGISTER_DECLARE(standard_ratexp,
-                       (const ratexp& e) -> automaton);
+      REGISTER_DECLARE(standard_expression,
+                       (const expression& e) -> automaton);
     }
   }
 

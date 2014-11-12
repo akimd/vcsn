@@ -14,11 +14,11 @@ namespace vcsn
       return detail::left_mult_registry().call(w, aut);
     }
 
-    REGISTER_DEFINE(left_mult_ratexp);
-    ratexp
-    left_mult(const weight& w, const ratexp& r)
+    REGISTER_DEFINE(left_mult_expression);
+    expression
+    left_mult(const weight& w, const expression& r)
     {
-      return detail::left_mult_ratexp_registry().call(w, r);
+      return detail::left_mult_expression_registry().call(w, r);
     }
 
     REGISTER_DEFINE(right_mult);
@@ -28,11 +28,11 @@ namespace vcsn
       return detail::right_mult_registry().call(aut, w);
     }
 
-    REGISTER_DEFINE(right_mult_ratexp);
-    ratexp
-    right_mult(const ratexp& r, const weight& w)
+    REGISTER_DEFINE(right_mult_expression);
+    expression
+    right_mult(const expression& r, const weight& w)
     {
-      return detail::right_mult_ratexp_registry().call(r, w);
+      return detail::right_mult_expression_registry().call(r, w);
     }
   }
 }

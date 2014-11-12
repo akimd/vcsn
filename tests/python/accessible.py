@@ -20,7 +20,7 @@ def check_accessible(input, output):
   CHECK_EQ(True, input.accessible().is_accessible())
 
 # Regression.
-a = vcsn.context('lal_char(abcd), b').ratexp('ab+cd').standard().sort().strip()
+a = vcsn.context('lal_char(abcd), b').expression('ab+cd').standard().sort().strip()
 check_accessible(a, a)
 
 # Cycle.

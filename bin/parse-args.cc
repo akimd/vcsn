@@ -35,7 +35,7 @@ void options::print(vcsn::dyn::automaton a) const
   *out << a << std::endl;
 }
 
-void options::print(vcsn::dyn::ratexp a) const
+void options::print(vcsn::dyn::expression a) const
 {
   *out << a << std::endl;
 }
@@ -99,13 +99,13 @@ read_label(const options& opts)
   return res;
 }
 
-vcsn::dyn::ratexp
-read_ratexp(const options& opts)
+vcsn::dyn::expression
+read_expression(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
-  auto rs = vcsn::dyn::make_ratexpset(ctx, vcsn::rat::identities::trivial);
+  auto rs = vcsn::dyn::make_expressionset(ctx, vcsn::rat::identities::trivial);
   auto is = input(opts);
-  auto res = vcsn::dyn::read_ratexp(*is, rs, opts.input_format);
+  auto res = vcsn::dyn::read_expression(*is, rs, opts.input_format);
   check_eof(*is);
   return res;
 }
@@ -219,7 +219,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
         opts.context = optarg;
         break;
       case 'E':
-        opts.input_type = type::ratexp;
+        opts.input_type = type::expression;
         break;
       case 'e':
         opts.input = optarg;
@@ -291,7 +291,7 @@ vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
         {
         case type::automaton:  return fun.work_aut(opts);
         case type::polynomial: return fun.work_polynomial(opts);
-        case type::ratexp:     return fun.work_exp(opts);
+        case type::expression:     return fun.work_exp(opts);
         case type::weight:     return fun.work_weight(opts);
         }
       abort();

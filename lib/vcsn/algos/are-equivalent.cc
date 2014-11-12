@@ -14,7 +14,7 @@ namespace vcsn
     }
 
     bool
-    are_equivalent(const ratexp& lhs, const ratexp& rhs)
+    are_equivalent(const expression& lhs, const expression& rhs)
     {
       return are_equivalent(standard(lhs), standard(rhs));
     }
@@ -26,11 +26,11 @@ namespace vcsn
       return detail::difference_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE(difference_ratexp);
-    ratexp
-    difference(const ratexp& lhs, const ratexp& rhs)
+    REGISTER_DEFINE(difference_expression);
+    expression
+    difference(const expression& lhs, const expression& rhs)
     {
-      return detail::difference_ratexp_registry().call(lhs, rhs);
+      return detail::difference_expression_registry().call(lhs, rhs);
     }
   }
 }

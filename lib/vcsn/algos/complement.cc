@@ -14,11 +14,11 @@ namespace vcsn
       return detail::complement_registry().call(aut);
     }
 
-    REGISTER_DEFINE(complement_ratexp);
-    ratexp
-    complement(const ratexp& r)
+    REGISTER_DEFINE(complement_expression);
+    expression
+    complement(const expression& r)
     {
-      return detail::complement_ratexp_registry().call(r);
+      return detail::complement_expression_registry().call(r);
     }
   }
 }

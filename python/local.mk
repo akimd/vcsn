@@ -22,10 +22,10 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/d3Widget.py                          \
   %D%/vcsn/dot.py                               \
   %D%/vcsn/expansion.py                         \
+  %D%/vcsn/expression.py                        \
   %D%/vcsn/ipython.py                           \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
-  %D%/vcsn/ratexp.py                            \
   %D%/vcsn/weight.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la

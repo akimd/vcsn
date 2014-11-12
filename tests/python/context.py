@@ -29,7 +29,7 @@ check(r'lal_char(\\\-), b',  r'letterset<char_letters(-\)>, b')
 check(r'lal_char(\--\-), b', r'letterset<char_letters(-)>, b')
 
 check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
-check('ratexpset<lal_char(ab), b>, b', 'ratexpset<letterset<char_letters(ab)>, b>, b')
+check('expressionset<lal_char(ab), b>, b', 'expressionset<letterset<char_letters(ab)>, b>, b')
 
 # Arguably useless, but stresses our tupleset implementation.
 check('lat<lat<lal_char(a)>>, b',
@@ -40,11 +40,11 @@ check('lat<lal_char(a),lal_char(a)>,b', 'lat<letterset<char_letters(a)>, letters
 check('lal_char(ab), lat<b, z>', 'letterset<char_letters(ab)>, lat<b, z>')
 
 # End of level bosses.
-check('lat<lal_char(ba),lan<lal_char(vu)>, law_char(x-z)>, lat<ratexpset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>',
-      'lat<letterset<char_letters(ab)>, lan<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<ratexpset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>')
+check('lat<lal_char(ba),lan<lal_char(vu)>, law_char(x-z)>, lat<expressionset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>',
+      'lat<letterset<char_letters(ab)>, lan<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>')
 
-check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<ratexpset<lan<lat<lan_char(fe),lan_char(hg)>>, lat<r, q>>, lat<b, z>>',
-      'lan<lat<letterset<char_letters(ab)>, lat<lan<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>>>, lat<ratexpset<lat<lan<letterset<char_letters(ef)>>, lan<letterset<char_letters(gh)>>>, lat<r, q>>, lat<b, z>>')
+check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<expressionset<lan<lat<lan_char(fe),lan_char(hg)>>, lat<r, q>>, lat<b, z>>',
+      'lan<lat<letterset<char_letters(ab)>, lat<lan<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>>>, lat<expressionset<lat<lan<letterset<char_letters(ef)>>, lan<letterset<char_letters(gh)>>>, lat<r, q>>, lat<b, z>>')
 
 
 ## ------- ##

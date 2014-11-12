@@ -109,7 +109,7 @@ namespace vcsn
       make(std::istream& is)
       {
         using genset_t = typename labelset_t::genset_t;
-        // name: lal_char(abc), ratexpset<law_char(xyz), b>.
+        // name: lal_char(abc), expressionset<law_char(xyz), b>.
         //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
         //        |   |    |        weightset
         //        |   |    +-- gens
@@ -215,7 +215,7 @@ namespace vcsn
     }
 
     static constexpr bool
-    is_ratexpset()
+    is_expressionset()
     {
       return false;
     }

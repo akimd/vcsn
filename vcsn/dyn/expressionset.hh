@@ -1,5 +1,5 @@
-#ifndef VCSN_DYN_RATEXPSET_HH
-# define VCSN_DYN_RATEXPSET_HH
+#ifndef VCSN_DYN_EXPRESSIONSET_HH
+# define VCSN_DYN_EXPRESSIONSET_HH
 
 # include <memory>  // shared_ptr
 # include <set>
@@ -7,7 +7,7 @@
 
 # include <vcsn/core/rat/fwd.hh> // rat::exp_t.
 # include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/fwd.hh> // dyn::ratexp.
+# include <vcsn/dyn/fwd.hh> // dyn::expression.
 # include <vcsn/misc/symbol.hh>
 
 namespace vcsn
@@ -17,32 +17,32 @@ namespace dyn
 namespace detail
 {
 
-  /// Abstract wrapper around a (typeful) ratexpset.
+  /// Abstract wrapper around a (typeful) expressionset.
   ///
-  /// Use it when you want to avoid depending on the ratexpset
+  /// Use it when you want to avoid depending on the expressionset
   /// parameters (e.g., from a parser).  To use it, actually create a
-  /// derived class (ratexpset_wrapper) with the given
-  /// parameters, but handle as a reference to a ratexpset_base.
-  class ratexpset_base
+  /// derived class (expressionset_wrapper) with the given
+  /// parameters, but handle as a reference to a expressionset_base.
+  class expressionset_base
   {
   public:
     using value_t = rat::exp_t;
 
-    /// A description of the ratexp type.
+    /// A description of the expression type.
     virtual symbol vname() const = 0;
 
-    /// Extract wrapped typed ratexpset.
+    /// Extract wrapped typed expressionset.
     template <typename RatExpSet>
-    ratexpset_wrapper<RatExpSet>& as()
+    expressionset_wrapper<RatExpSet>& as()
     {
-      return dynamic_cast<ratexpset_wrapper<RatExpSet>&>(*this);
+      return dynamic_cast<expressionset_wrapper<RatExpSet>&>(*this);
     }
 
-    /// Extract wrapped typed ratexp.
+    /// Extract wrapped typed expression.
     template <typename RatExpSet>
-    const ratexpset_wrapper<RatExpSet>& as() const
+    const expressionset_wrapper<RatExpSet>& as() const
     {
-      return dynamic_cast<const ratexpset_wrapper<RatExpSet>&>(*this);
+      return dynamic_cast<const expressionset_wrapper<RatExpSet>&>(*this);
     }
 
     virtual rat::identities identities() const = 0;
@@ -76,7 +76,7 @@ namespace detail
 
     using letter_class_t = std::set<std::pair<std::string, std::string>>;
 
-    /// A ratexp matching one character amongst \a chars.
+    /// A expression matching one character amongst \a chars.
     /// \param chars
     ///   The letter class as a set of ranges.
     /// \param accept
@@ -85,7 +85,7 @@ namespace detail
     virtual value_t letter_class(const letter_class_t& chars,
                                  bool accept = true) const = 0;
 
-    virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
+    virtual dyn::expression make_expression(const value_t& v) const = 0;
 
     /// Parsing.
     virtual value_t conv(std::istream& s) const = 0;
@@ -93,43 +93,43 @@ namespace detail
     virtual std::ostream& print(const value_t v, std::ostream& o) const = 0;
   };
 
-  /// Wrapper around a ratexpset.
+  /// Wrapper around a expressionset.
   template <typename RatExpSet>
-  class ratexpset_wrapper : public ratexpset_base
+  class expressionset_wrapper : public expressionset_base
   {
   public:
-    using ratexpset_t = RatExpSet;
-    using context_t = context_t_of<ratexpset_t>;
-    using super_t = ratexpset_base;
+    using expressionset_t = RatExpSet;
+    using context_t = context_t_of<expressionset_t>;
+    using super_t = expressionset_base;
     using label_t = label_t_of<context_t>;
     using weight_t = weight_t_of<context_t>;
     using value_t = typename super_t::value_t;
 
     /// Constructor.
-    /// \param rs    the wrapped ratexpset.
-    ratexpset_wrapper(const ratexpset_t& rs);
+    /// \param rs    the wrapped expressionset.
+    expressionset_wrapper(const expressionset_t& rs);
 
     virtual symbol vname() const override
     {
-      return ratexpset().sname();
+      return expressionset().sname();
     }
 
-    /// The ratexpset which this wraps.
-    const ratexpset_t& ratexpset() const
+    /// The expressionset which this wraps.
+    const expressionset_t& expressionset() const
     {
       return rs_;
     }
 
     /// From weak to strong typing.
-    typename ratexpset_t::value_t down(const value_t& v) const;
+    typename expressionset_t::value_t down(const value_t& v) const;
 
     /// From string, to typed weight.
     weight_t down(const std::string& w) const;
 
-    virtual dyn::ratexp make_ratexp(const value_t& v) const override;
+    virtual dyn::expression make_expression(const value_t& v) const override;
 
     /*--------------------------------------.
-    | Specializations from ratexpset_base.  |
+    | Specializations from expressionset_base.  |
     `--------------------------------------*/
 
     virtual rat::identities identities() const override;
@@ -187,17 +187,17 @@ namespace detail
                                bool accept, std::false_type,
                                std::true_type) const;
 
-    ratexpset_t rs_;
+    expressionset_t rs_;
   };
 } // namespace detail
 
-  /// Build a dyn::ratexpset from its static ratexpset.
+  /// Build a dyn::expressionset from its static expressionset.
   template <typename RatExpSet>
-  ratexpset make_ratexpset(const RatExpSet& rs);
+  expressionset make_expressionset(const RatExpSet& rs);
 
 } // namespace dyn
 } // namespace vcsn
 
-# include <vcsn/dyn/ratexpset.hxx>
+# include <vcsn/dyn/expressionset.hxx>
 
-#endif // !VCSN_DYN_RATEXPSET_HH
+#endif // !VCSN_DYN_EXPRESSIONSET_HH

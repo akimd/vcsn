@@ -8,8 +8,8 @@ z = vcsn.context('lal_char(abcd), z')
 # check(INPUT, EXP)
 # -----------------
 def check(input, exp):
-    eff = z.ratexp(input).expand()
-    exp = z.ratexp(exp)
+    eff = z.expression(input).expand()
+    exp = z.expression(exp)
     if eff == exp:
         PASS()
     else:

@@ -43,16 +43,16 @@ dist_notebooks_DATA =                           \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
   %D%/context.cerny.ipynb                       \
-  %D%/index.ipynb                               \
-  %D%/ratexp.derivation.ipynb                   \
-  %D%/ratexp.derived_term.ipynb                 \
-  %D%/ratexp.expansion.ipynb                    \
-  %D%/ratexp.is_equivalent.ipynb                \
-  %D%/ratexp.is_valid.ipynb                     \
-  %D%/ratexp.standard.ipynb                     \
-  %D%/ratexp.thompson.ipynb                     \
-  %D%/ratexp.transpose.ipynb                    \
-  %D%/ratexp.transposition.ipynb
+  %D%/expression.derivation.ipynb               \
+  %D%/expression.derived_term.ipynb             \
+  %D%/expression.expansion.ipynb                \
+  %D%/expression.is_equivalent.ipynb            \
+  %D%/expression.is_valid.ipynb                 \
+  %D%/expression.standard.ipynb                 \
+  %D%/expression.thompson.ipynb                 \
+  %D%/expression.transpose.ipynb                \
+  %D%/expression.transposition.ipynb            \
+  %D%/index.ipynb
 
 if HAVE_NBCONVERT
 nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html)

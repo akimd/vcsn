@@ -28,7 +28,7 @@
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/normalize.hh>
 # include <vcsn/algos/is-proper.hh>
-# include <vcsn/algos/is-valid-ratexp.hh>
+# include <vcsn/algos/is-valid-expression.hh>
 # include <vcsn/algos/is-valid.hh>
 # include <vcsn/algos/ladybird.hh>
 # include <vcsn/algos/left-mult.hh>
@@ -95,7 +95,7 @@ namespace vcsn
                                                                         \
   /* to_expression. */                                                  \
   MAYBE_EXTERN template                                                 \
-  Ctx::ratexp_t                                                         \
+  Ctx::expression_t                                                         \
   to_expression<mutable_automaton<Ctx>>                                 \
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
@@ -114,8 +114,8 @@ namespace vcsn
   /* print. */                                                          \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
-  print<ratexpset<Ctx>>(const ratexpset<Ctx>& rs,                       \
-                        const Ctx::ratexp_t& e, std::ostream& o,        \
+  print<expressionset<Ctx>>(const expressionset<Ctx>& rs,                       \
+                        const Ctx::expression_t& e, std::ostream& o,        \
                         const std::string& format);                     \
                                                                         \
   /* standard. */                                                       \
@@ -129,7 +129,7 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class LIBVCSN_API detail::transpose_automaton<mutable_automaton<Ctx>>; \
   MAYBE_EXTERN template                                                 \
-  class LIBVCSN_API detail::transposer<ratexpset<Ctx>>
+  class LIBVCSN_API detail::transposer<expressionset<Ctx>>
 
 
   /*----------------------------------.
@@ -156,7 +156,7 @@ namespace vcsn
       {
         using ctx_t = Ctx;
         using aut_t = vcsn::mutable_automaton<ctx_t>;
-        using rs_t = ratexpset<ctx_t>;
+        using rs_t = expressionset<ctx_t>;
 
         // Wordset.
         using wls_t = vcsn::detail::law_t<labelset_t_of<Ctx>>;
@@ -166,7 +166,7 @@ namespace vcsn
 
         // Same labelset, but over Booleans.
         using b_ctx_t = context<labelset_t_of<Ctx>, b>;
-        using b_rs_t = ratexpset<b_ctx_t>;
+        using b_rs_t = expressionset<b_ctx_t>;
 
         using namespace dyn::detail;
         REGISTER(are_isomorphic, aut_t, aut_t);
@@ -175,7 +175,7 @@ namespace vcsn
         REGISTER(concatenate_polynomial, wps_t, wps_t);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
-        REGISTER(difference_ratexp, rs_t, b_rs_t);
+        REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(enumerate, aut_t, unsigned);
@@ -242,7 +242,7 @@ namespace vcsn
       template <typename Ctx>
       ATTRIBUTE_CONST
       bool
-      register_kind_functions(labels_are_ratexps)
+      register_kind_functions(labels_are_expressions)
       {
         return true;
       }
@@ -268,14 +268,14 @@ namespace vcsn
       {
         using ctx_t = Ctx;
         using aut_t = vcsn::mutable_automaton<ctx_t>;
-        using rs_t = ratexpset<ctx_t>;
+        using rs_t = expressionset<ctx_t>;
         using ls_t = labelset_t_of<ctx_t>;
         using ws_t = weightset_t_of<ctx_t>;
 
         // label polynomialset.
         using lps_t = polynomialset<ctx_t>;
-        // ratexp polynomialset.
-        using rps_t = rat::ratexp_polynomialset_t<rs_t>;
+        // expression polynomialset.
+        using rps_t = rat::expression_polynomialset_t<rs_t>;
         // expansionset.
         using es_t = rat::expansionset<rs_t>;
 
@@ -285,15 +285,15 @@ namespace vcsn
         REGISTER(accessible, aut_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(chain, aut_t, int, int);
-        REGISTER(chain_ratexp, rs_t, int, int);
+        REGISTER(chain_expression, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
-        REGISTER(complement_ratexp, rs_t);
+        REGISTER(complement_expression, rs_t);
         REGISTER(concatenate, aut_t, aut_t);
-        REGISTER(concatenate_ratexp, rs_t, rs_t);
-        REGISTER(conjunction_ratexp, rs_t, rs_t);
+        REGISTER(concatenate_expression, rs_t, rs_t);
+        REGISTER(conjunction_expression, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
-        REGISTER(context_of_ratexp, rs_t);
+        REGISTER(context_of_expression, rs_t);
         REGISTER(copy, aut_t);
         REGISTER(derived_term, rs_t, const std::string);
         REGISTER(dot, aut_t, std::ostream, bool);
@@ -301,7 +301,7 @@ namespace vcsn
         REGISTER(expand, rs_t);
         REGISTER(identities, rs_t);
         REGISTER(info, aut_t, std::ostream, bool);
-        REGISTER(info_ratexp, rs_t, std::ostream);
+        REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);
@@ -311,15 +311,15 @@ namespace vcsn
         REGISTER(is_trim, aut_t);
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
-        REGISTER(is_valid_ratexp, rs_t);
+        REGISTER(is_valid_expression, rs_t);
         REGISTER(left_mult, ws_t, aut_t);
-        REGISTER(left_mult_ratexp, ws_t, rs_t);
+        REGISTER(left_mult_expression, ws_t, rs_t);
         REGISTER(lift_automaton, aut_t);
-        REGISTER(lift_ratexp, rs_t);
+        REGISTER(lift_expression, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);
-        REGISTER(make_ratexpset, ctx_t, rat::identities);
+        REGISTER(make_expressionset, ctx_t, rat::identities);
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply_weight, ws_t, ws_t);
@@ -328,7 +328,7 @@ namespace vcsn
         REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
-        REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
+        REGISTER(print_expression, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, direction, bool);
         REGISTER(push_weights, aut_t);
@@ -337,24 +337,24 @@ namespace vcsn
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
-        REGISTER(right_mult_ratexp, rs_t, ws_t);
+        REGISTER(right_mult_expression, rs_t, ws_t);
         REGISTER(sort, aut_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
-        REGISTER(standard_ratexp, rs_t);
+        REGISTER(standard_expression, rs_t);
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
         REGISTER(star_normal_form, rs_t);
         REGISTER(sum, aut_t, aut_t);
-        REGISTER(sum_ratexp, rs_t, rs_t);
+        REGISTER(sum_expression, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(thompson, rs_t);
         REGISTER(tikz, aut_t, std::ostream);
         REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, const std::string);
         REGISTER(transpose, aut_t);
-        REGISTER(transpose_ratexp, rs_t);
-        REGISTER(transposition_ratexp, rs_t);
+        REGISTER(transpose_expression, rs_t);
+        REGISTER(transposition_expression, rs_t);
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 

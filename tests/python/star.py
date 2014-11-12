@@ -11,12 +11,12 @@ def check(input, exp):
   CHECK_EQ(exp, input.star())
 
 # This used to trigger an assert.
-l_br = vcsn.context('lal_char(a), ratexpset<lal_char(xy), b>')
-check(l_br.ratexp('<y>a(<x>a)*').derived_term(),
+l_br = vcsn.context('lal_char(a), expressionset<lal_char(xy), b>')
+check(l_br.expression('<y>a(<x>a)*').derived_term(),
 '''
 digraph
 {
-  vcsn_context = "lal_char(a), ratexpset<lal_char(xy), b>"
+  vcsn_context = "lal_char(a), expressionset<lal_char(xy), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -96,7 +96,7 @@ digraph
 check('''
 digraph
 {
-  vcsn_context = "lal_char(ab), ratexpset<lal_char(xyz), b>"
+  vcsn_context = "lal_char(ab), expressionset<lal_char(xyz), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -120,7 +120,7 @@ digraph
 '''
 digraph
 {
-  vcsn_context = "lal_char(ab), ratexpset<lal_char(xyz), b>"
+  vcsn_context = "lal_char(ab), expressionset<lal_char(xyz), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]

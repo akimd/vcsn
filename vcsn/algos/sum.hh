@@ -8,7 +8,7 @@
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+# include <vcsn/dyn/expression.hh> // dyn::make_expression
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh> // require
 
@@ -133,7 +133,7 @@ namespace vcsn
 
 
   /*----------------------.
-  | sum(ratexp, ratexp).  |
+  | sum(expression, expression).  |
   `----------------------*/
 
   namespace dyn
@@ -142,19 +142,19 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSetLhs, typename RatExpSetRhs>
-      ratexp
-      sum_ratexp(const ratexp& lhs, const ratexp& rhs)
+      expression
+      sum_expression(const expression& lhs, const expression& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = join(l.ratexpset(), r.ratexpset());
-        auto lr = rs.conv(l.ratexpset(), l.ratexp());
-        auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, ::vcsn::sum(rs, lr, rr));
+        auto rs = join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        return make_expression(rs, ::vcsn::sum(rs, lr, rr));
       }
 
-      REGISTER_DECLARE(sum_ratexp,
-                       (const ratexp&, const ratexp&) -> ratexp);
+      REGISTER_DECLARE(sum_expression,
+                       (const expression&, const expression&) -> expression);
     }
   }
 

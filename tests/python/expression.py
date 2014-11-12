@@ -11,8 +11,8 @@ ctx = vcsn.context("lal_char(abcd), b")
 def check_complement(r1):
     '''Check that `complement` on a rational expression corresponds to
     its concrete syntax.'''
-    eff = ctx.ratexp(r1).complement()
-    exp = ctx.ratexp('({}){{c}}'.format(r1))
+    eff = ctx.expression(r1).complement()
+    exp = ctx.expression('({}){{c}}'.format(r1))
     CHECK_EQ(exp, eff)
 
 check_complement('\z')
@@ -24,8 +24,8 @@ check_complement('ab')
 def check_concat(r1, r2):
     '''Check that `*` between rational expression corresponds to
     concatenation concrete syntax.'''
-    eff = ctx.ratexp(r1) * ctx.ratexp(r2)
-    exp = ctx.ratexp('({})({})'.format(r1, r2))
+    eff = ctx.expression(r1) * ctx.expression(r2)
+    exp = ctx.expression('({})({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
 
 check_concat('ab', 'cd')
@@ -43,8 +43,8 @@ check_concat('a', '\z')
 def check_difference(r1, r2):
     '''Check that `%` between rational expression corresponds to
     `%` in concrete syntax.'''
-    eff = ctx.ratexp(r1) % ctx.ratexp(r2)
-    exp = ctx.ratexp('({})%({})'.format(r1, r2))
+    eff = ctx.expression(r1) % ctx.expression(r2)
+    exp = ctx.expression('({})%({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
 
 check_difference('ab', 'cd')
@@ -62,8 +62,8 @@ check_difference('a', '\z')
 def check_conj(r1, r2):
     '''Check that `&` between rational expression corresponds to
     `&` in concrete syntax.'''
-    eff = ctx.ratexp(r1) & ctx.ratexp(r2)
-    exp = ctx.ratexp('({})&({})'.format(r1, r2))
+    eff = ctx.expression(r1) & ctx.expression(r2)
+    exp = ctx.expression('({})&({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
 
 check_conj('ab', 'cd')
@@ -81,8 +81,8 @@ check_conj('a', '\z')
 def check_sum(r1, r2):
     '''Check that `+` between rational expression corresponds to
     `+` in concrete syntax.'''
-    eff = ctx.ratexp(r1) + ctx.ratexp(r2)
-    exp = ctx.ratexp('({})+({})'.format(r1, r2))
+    eff = ctx.expression(r1) + ctx.expression(r2)
+    exp = ctx.expression('({})+({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
 
 check_sum('ab', 'cd')
@@ -101,8 +101,8 @@ check_sum('a', '\z')
 def check_transposition(r1):
     '''Check that `transposition` on a rational expression corresponds to
     its concrete syntax.'''
-    eff = ctx.ratexp(r1).transposition()
-    exp = ctx.ratexp('({}){{T}}'.format(r1))
+    eff = ctx.expression(r1).transposition()
+    exp = ctx.expression('({}){{T}}'.format(r1))
     CHECK_EQ(exp, eff)
 
 check_transposition('\z')
@@ -110,12 +110,12 @@ check_transposition('ab')
 
 
 ## ----------------- ##
-## Invalid ratexps.  ##
+## Invalid expressions.  ##
 ## ----------------- ##
 
 # Check invalid input.
 def xfail(r):
-    XFAIL(lambda: ctx.ratexp(r))
+    XFAIL(lambda: ctx.expression(r))
 
 ctx = vcsn.context('lal_char(abc), b')
 xfail('')
@@ -143,15 +143,15 @@ xfail('a<2')
 
 def check_format(ctx, r, text, latex):
     ctx = vcsn.context(ctx)
-    CHECK_EQ(text, ctx.ratexp(r).format('text'))
-    CHECK_EQ(latex, ctx.ratexp(r).format('latex'))
+    CHECK_EQ(text, ctx.expression(r).format('text'))
+    CHECK_EQ(latex, ctx.expression(r).format('latex'))
 
 check_format('lal_char(abcd), b',
             "abcd",
             "abcd",
             "a \\, b \\, c \\, d")
 
-check_format('lal_char(abc), ratexpset<lal_char(def), ratexpset<lal_char(xyz), z>>',
+check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), z>>',
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
              "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
              r' \left\langle  \left\langle  \left\langle 42 \right\rangle \,x \right\rangle \,d \right\rangle \,a +  \left\langle  \left\langle  \left\langle 51 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')

@@ -1,7 +1,7 @@
 #include <cstring> // strerror
 #include <sstream>
 
-#include <vcsn/dyn/algos.hh> // make_ratexpset.
+#include <vcsn/dyn/algos.hh> // make_expressionset.
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
@@ -12,24 +12,24 @@ namespace vcsn
   namespace rat
   {
 
-    driver::driver(const dyn::ratexpset& rs)
+    driver::driver(const dyn::expressionset& rs)
       : scanner_(new yyFlexLexer)
     {
-      ratexpset(rs);
+      expressionset(rs);
     }
 
     driver::~driver()
     {}
 
-    void driver::ratexpset(const dyn::ratexpset& rs)
+    void driver::expressionset(const dyn::expressionset& rs)
     {
-      ratexpset_ = rs;
+      expressionset_ = rs;
     }
 
     void driver::context(const std::string& ctx)
     {
       rat::identities ids = rat::identities::trivial;
-      ratexpset(dyn::make_ratexpset(dyn::make_context(ctx), ids));
+      expressionset(dyn::make_expressionset(dyn::make_context(ctx), ids));
     }
 
     void
@@ -65,7 +65,7 @@ namespace vcsn
 
     auto
     driver::parse(std::istream& is, const location& l)
-      -> dyn::ratexp
+      -> dyn::expression
     {
       scanner_->scan_open_(is);
       location_ = l;
@@ -83,10 +83,10 @@ namespace vcsn
       scanner_->scan_close_();
       --nesting;
 
-      dyn::ratexp res = nullptr;
+      dyn::expression res = nullptr;
       if (result_)
         {
-          res = ratexpset_->make_ratexp(result_);
+          res = expressionset_->make_expression(result_);
           result_ = nullptr;
         }
       return res;

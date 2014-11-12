@@ -76,7 +76,7 @@ namespace vcsn
   }
 
   /*---------------------.
-  | complement(ratexp).  |
+  | complement(expression).  |
   `---------------------*/
 
   namespace dyn
@@ -85,17 +85,17 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet>
-      ratexp
-      complement_ratexp(const ratexp& exp)
+      expression
+      complement_expression(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
 
-        return make_ratexp(e.ratexpset(),
-                           e.ratexpset().complement(e.ratexp()));
+        return make_expression(e.expressionset(),
+                           e.expressionset().complement(e.expression()));
       }
 
-      REGISTER_DECLARE(complement_ratexp,
-                       (const ratexp& e) -> ratexp);
+      REGISTER_DECLARE(complement_expression,
+                       (const expression& e) -> expression);
     }
   }
 

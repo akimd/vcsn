@@ -43,11 +43,11 @@ namespace vcsn
       return detail::shuffle_vector_registry().call_variadic(auts);
     }
 
-    REGISTER_DEFINE(shuffle_ratexp);
-    ratexp
-    shuffle(const ratexp& lhs, const ratexp& rhs)
+    REGISTER_DEFINE(shuffle_expression);
+    expression
+    shuffle(const expression& lhs, const expression& rhs)
     {
-      return detail::shuffle_ratexp_registry().call(lhs, rhs);
+      return detail::shuffle_expression_registry().call(lhs, rhs);
     }
 
     /*---------------.
@@ -79,11 +79,11 @@ namespace vcsn
       return detail::power_registry().call(aut, n);
     }
 
-    REGISTER_DEFINE(conjunction_ratexp);
-    ratexp
-    conjunction(const ratexp& lhs, const ratexp& rhs)
+    REGISTER_DEFINE(conjunction_expression);
+    expression
+    conjunction(const expression& lhs, const expression& rhs)
     {
-      return detail::conjunction_ratexp_registry().call(lhs, rhs);
+      return detail::conjunction_expression_registry().call(lhs, rhs);
     }
   }
 }

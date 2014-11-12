@@ -51,12 +51,12 @@ namespace vcsn
           || w == "partition_automaton"
           || w == "permutation_automaton"
           || w == "product_automaton"
-          || w == "ratexp_automaton"
+          || w == "expression_automaton"
           || w == "transpose_automaton"
           || w == "tuple_automaton")
         return automaton_(w);
       else if (has(labelsets_, w)
-               || w == "ratexpset"
+               || w == "expressionset"
                || w == "seriesset")
         {
           std::shared_ptr<ast_node> res = labelset_(w);
@@ -113,10 +113,10 @@ namespace vcsn
     {
       if (w == "lat")
         return tupleset_();
-      else if (w == "ratexpset")
-        return ratexpset_();
+      else if (w == "expressionset")
+        return expressionset_();
       else if (w == "seriesset")
-        return ratexpset_series_();
+        return expressionset_series_();
       else if (has(labelsets_, w))
         return labelset_(w);
       else if (has(weightsets_, w))
@@ -227,10 +227,10 @@ namespace vcsn
           eat(is_, '>');
           return std::make_shared<wordset>(gs);
         }
-      else if (ls == "ratexpset")
-        return ratexpset_();
+      else if (ls == "expressionset")
+        return expressionset_();
       else if (ls == "seriesset")
-        return ratexpset_series_();
+        return expressionset_series_();
       raise("invalid labelset name: ", str_escape(ls));
     }
 
@@ -244,10 +244,10 @@ namespace vcsn
     {
       if (has(weightsets_, ws))
         return std::make_shared<weightset>(ws);
-      else if (ws == "ratexpset")
-        return ratexpset_();
+      else if (ws == "expressionset")
+        return expressionset_();
       else if (ws == "seriesset")
-        return ratexpset_series_();
+        return expressionset_series_();
       else if (ws == "polynomialset")
         return polynomialset_();
       else if (ws == "lat")
@@ -277,7 +277,7 @@ namespace vcsn
                || prefix == "pair_automaton"
                || prefix == "partition_automaton"
                || prefix == "permutation_automaton"
-               || prefix == "ratexp_automaton"
+               || prefix == "expression_automaton"
                || prefix == "transpose_automaton")
         {
           eat(is_, '<');
@@ -327,8 +327,8 @@ namespace vcsn
       return std::make_shared<tupleset>(res);
     }
 
-    std::shared_ptr<ratexpset>
-    context_parser::ratexpset_()
+    std::shared_ptr<expressionset>
+    context_parser::expressionset_()
     {
       eat(is_, '<');
       auto context = context_();
@@ -340,16 +340,16 @@ namespace vcsn
           is_ >> identities;
           eat(is_, ')');
         }
-      return std::make_shared<ratexpset>(context, identities);
+      return std::make_shared<expressionset>(context, identities);
     }
 
-    std::shared_ptr<ratexpset>
-    context_parser::ratexpset_series_()
+    std::shared_ptr<expressionset>
+    context_parser::expressionset_series_()
     {
       eat(is_, '<');
       auto context = context_();
       eat(is_, '>');
-      return std::make_shared<ratexpset>(context, rat::identities::series);
+      return std::make_shared<expressionset>(context, rat::identities::series);
     }
 
     std::shared_ptr<polynomialset> context_parser::polynomialset_()

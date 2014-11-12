@@ -1,7 +1,7 @@
 #ifndef VCSN_CORE_RAT_EXPANSIONSET_HH
 # define VCSN_CORE_RAT_EXPANSIONSET_HH
 
-# include <vcsn/algos/split.hh> // ratexp_polynomialset_t.
+# include <vcsn/algos/split.hh> // expression_polynomialset_t.
 # include <vcsn/misc/map.hh>
 
 namespace vcsn
@@ -18,15 +18,15 @@ namespace vcsn
     struct expansionset
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using weightset_t = weightset_t_of<ratexpset_t>;
+      using expression_t = typename expressionset_t::value_t;
+      using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = typename weightset_t::value_t;
 
-      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using monomial_t = typename polynomialset_t::monomial_t;
 
@@ -44,14 +44,14 @@ namespace vcsn
         polys_t polynomials;
       };
 
-      expansionset(const ratexpset_t& rs)
+      expansionset(const expressionset_t& rs)
         : rs_(rs)
       {}
 
       /// The static name.
       static symbol sname()
       {
-        static symbol res("expansionset<" + ratexpset_t::sname() + '>');
+        static symbol res("expansionset<" + expressionset_t::sname() + '>');
         return res;
       }
 
@@ -190,8 +190,8 @@ namespace vcsn
         return res;
       }
 
-      /// In place right multiplication by a ratexp.
-      value_t& rmul_here(value_t& res, const ratexp_t& rhs) const
+      /// In place right multiplication by a expression.
+      value_t& rmul_here(value_t& res, const expression_t& rhs) const
       {
         for (auto& p: res.polynomials)
           p.second = ps_.rmul(p.second, rhs);
@@ -277,27 +277,27 @@ namespace vcsn
           // FIXME: shouldn't polynomialset do that itself?
           if (!ps_.is_zero(p.second))
             ps_.add_here(res,
-                         rs_.mul(rs_.atom(p.first), as_ratexp(p.second)),
+                         rs_.mul(rs_.atom(p.first), as_expression(p.second)),
                          ws_.one());
         return res;
       }
 
       // FIXME: duplicate with expand.
-      ratexp_t as_ratexp(const polynomial_t& p) const
+      expression_t as_expression(const polynomial_t& p) const
       {
-        ratexp_t res = rs_.zero();
+        expression_t res = rs_.zero();
         for (const auto& m: p)
           res = rs_.add(res, rs_.lmul(m.second, m.first));
          return res;
       }
 
     private:
-      /// The ratexpset used for the expressions.
-      ratexpset_t rs_;
+      /// The expressionset used for the expressions.
+      expressionset_t rs_;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
       /// The polynomialset for the polynomials.
-      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      polynomialset_t ps_ = make_expression_polynomialset(rs_);
     };
   }
 }

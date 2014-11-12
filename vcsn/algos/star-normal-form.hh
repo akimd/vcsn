@@ -4,7 +4,7 @@
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/expression.hh>
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -14,7 +14,7 @@ namespace vcsn
   {
 
     /*---------------------------.
-    | star_normal_form(ratexp).  |
+    | star_normal_form(expression).  |
     `---------------------------*/
 
     /// \tparam RatExpSet relative to the RatExp.
@@ -28,9 +28,9 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using context_t = context_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using expression_t = typename expressionset_t::value_t;
+      using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = typename weightset_t::value_t;
 
@@ -41,12 +41,12 @@ namespace vcsn
       /// The type of the operator.
       enum operation_t { dot, box };
 
-      star_normal_form_visitor(const ratexpset_t& rs)
+      star_normal_form_visitor(const expressionset_t& rs)
         : rs_(rs)
       {}
 
-      ratexp_t
-      operator()(const ratexp_t& v)
+      expression_t
+      operator()(const expression_t& v)
       {
         operation_ = dot;
         v->accept(*this);
@@ -72,7 +72,7 @@ namespace vcsn
       VCSN_RAT_VISIT(sum, v)
       {
         v.head()->accept(*this);
-        ratexp_t res = res_;
+        expression_t res = res_;
         for (auto c: v.tail())
           {
             c->accept(*this);
@@ -99,7 +99,7 @@ namespace vcsn
       void box_of(const prod_t& v)
       {
         if (std::any_of(std::begin(v), std::end(v),
-                        [this](const ratexp_t& n)
+                        [this](const expression_t& n)
                         {
                           return ws_.is_zero(constant_term(rs_, n));
                         }))
@@ -113,7 +113,7 @@ namespace vcsn
           {
             // All the factors have a non null constant-term.
             v.head()->accept(*this);
-            ratexp_t res = res_;
+            expression_t res = res_;
             for (auto c: v.tail())
               {
                 c->accept(*this);
@@ -127,7 +127,7 @@ namespace vcsn
       void dot_of(const prod_t& v)
       {
         v.head()->accept(*this);
-        ratexp_t res = res_;
+        expression_t res = res_;
         for (auto c: v.tail())
           {
             c->accept(*this);
@@ -165,18 +165,18 @@ namespace vcsn
       }
 
     private:
-      ratexpset_t rs_;
+      expressionset_t rs_;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
       /// The result.
-      ratexp_t res_;
+      expression_t res_;
       /// The current operation.
       operation_t operation_ = dot;
     };
 
   } // rat::
 
-  /// Star_Normal_Forming a typed ratexp shared_ptr.
+  /// Star_Normal_Forming a typed expression shared_ptr.
   template <typename RatExpSet>
   typename RatExpSet::value_t
   star_normal_form(const RatExpSet& rs, const typename RatExpSet::value_t& e)
@@ -191,15 +191,15 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet>
-      ratexp
-      star_normal_form(const ratexp& exp)
+      expression
+      star_normal_form(const expression& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_ratexp(e.ratexpset(),
-                           ::vcsn::star_normal_form(e.ratexpset(), e.ratexp()));
+        return make_expression(e.expressionset(),
+                           ::vcsn::star_normal_form(e.expressionset(), e.expression()));
       }
 
-      REGISTER_DECLARE(star_normal_form, (const ratexp& e) -> ratexp);
+      REGISTER_DECLARE(star_normal_form, (const expression& e) -> expression);
     }
   }
 

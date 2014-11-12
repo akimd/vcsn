@@ -17,13 +17,13 @@ namespace vcsn
       : public RatExpSet::const_visitor
     {
     public:
-      using ratexpset_t = RatExpSet;
-      using context_t = context_t_of<ratexpset_t>;
+      using expressionset_t = RatExpSet;
+      using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
-      using super_t = typename ratexpset_t::const_visitor;
+      using expression_t = typename expressionset_t::value_t;
+      using super_t = typename expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
       using inner_t = typename super_t::inner_t;
       template <rat::exp::type_t Type>
@@ -35,7 +35,7 @@ namespace vcsn
 
       /// Whether \a lhs < \a rhs.
       bool
-      operator()(ratexp_t lhs, ratexp_t rhs)
+      operator()(expression_t lhs, expression_t rhs)
       {
         rat::size<RatExpSet> sizer;
         size_t lhss = sizer(lhs);
@@ -114,9 +114,9 @@ namespace vcsn
           return false;
         else
           for (size_t i = 0; i < ls; ++i)
-            if (ratexpset_t::less_than(lhs[i], rhs[i]))
+            if (expressionset_t::less_than(lhs[i], rhs[i]))
               return true;
-            else if (ratexpset_t::less_than(rhs[i], lhs[i]))
+            else if (expressionset_t::less_than(rhs[i], lhs[i]))
               return false;
         return false;
       }
@@ -124,23 +124,23 @@ namespace vcsn
       template <rat::exp::type_t Type>
       bool less_than_(const unary_t<Type>& lhs, const unary_t<Type>& rhs)
       {
-        return ratexpset_t::less_than(lhs.sub(), rhs.sub());
+        return expressionset_t::less_than(lhs.sub(), rhs.sub());
       }
 
       template <rat::exp::type_t Type>
       bool less_than_(const weight_node_t<Type>& lhs, const weight_node_t<Type>& rhs)
       {
         // Lexicographic comparison on sub-expression, and then weight.
-        if (ratexpset_t::less_than(lhs.sub(), rhs.sub()))
+        if (expressionset_t::less_than(lhs.sub(), rhs.sub()))
           return true;
-        else if (ratexpset_t::less_than(rhs.sub(), lhs.sub()))
+        else if (expressionset_t::less_than(rhs.sub(), lhs.sub()))
           return false;
         else
           return weightset_t::less_than(lhs.weight(), rhs.weight());
       }
 
    private:
-      ratexp_t rhs_;
+      expression_t rhs_;
       bool res_;
     };
   }

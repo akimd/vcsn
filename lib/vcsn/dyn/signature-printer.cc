@@ -85,9 +85,9 @@ namespace vcsn
       os_ << '>';
     }
 
-    DEFINE(ratexpset)
+    DEFINE(expressionset)
     {
-      os_ << "ratexpset<";
+      os_ << "expressionset<";
       t.get_context()->accept(*this);
       os_ << '>';
       if (full_)

@@ -140,7 +140,7 @@ check(cmplex, 'aabab', '36')
 ## --------------- ##
 
 ctx = vcsn.context('lal_char(abc), zmin')
-a = ctx.ratexp('a').standard()
+a = ctx.expression('a').standard()
 check(a, '',   'oo')
 check(a, 'a',  '0')
 check(a, 'aa', 'oo')

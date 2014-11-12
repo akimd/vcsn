@@ -11,16 +11,16 @@ b = vcsn.context('lal_char(abcd), b')
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-a1 = b.ratexp('a*a').derived_term()
+a1 = b.expression('a*a').derived_term()
 a2 = a1 & a1
-CHECK_EQ('a*a', str(a2.ratexp()))
+CHECK_EQ('a*a', str(a2.expression()))
 
 ## ---------------------- ##
 ## (a+b)* & (b+c)* = b*.  ##
 ## ---------------------- ##
 
-lhs = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
-rhs = vcsn.context('lal_char(bc), b').ratexp('(b+c)*').standard()
+lhs = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
+rhs = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters(b)>, b"
@@ -49,8 +49,8 @@ CHECK_EQ('''digraph
 ## ab & cd = 0.  ##
 ## ------------- ##
 
-lhs = vcsn.context('lal_char(ab), b').ratexp('ab').standard()
-rhs = vcsn.context('lal_char(cd), b').ratexp('cd').standard()
+lhs = vcsn.context('lal_char(ab), b').expression('ab').standard()
+rhs = vcsn.context('lal_char(cd), b').expression('cd').standard()
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
@@ -73,8 +73,8 @@ CHECK_EQ('''digraph
 ## (a+b)* & (c+d)* = \e.  ##
 ## ---------------------- ##
 
-lhs = vcsn.context('lal_char(ab), b').ratexp('(a+b)*').standard()
-rhs = vcsn.context('lal_char(cd), b').ratexp('(c+d)*').standard()
+lhs = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
+rhs = vcsn.context('lal_char(cd), b').expression('(c+d)*').standard()
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
@@ -191,19 +191,19 @@ CHECK_EQ(exp, str(lhs & rhs))
 # check OPERATION RES AUT...
 # --------------------------
 def check(operation, exp, *args):
-    CHECK_EQ(exp, str(vcsn.automaton._product(list(args)).ratexp()))
+    CHECK_EQ(exp, str(vcsn.automaton._product(list(args)).expression()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
-         .ratexp('(<u>a+<v>b)*').standard()
-a2 = vcsn.context('lal_char(ab), b').ratexp('a{+}').standard()
+a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+         .expression('(<u>a+<v>b)*').standard()
+a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
 check('product', '<u>a+<u>a<u>a(<u>a)*', a1, a2)
 check('product', '<u>a+<u>a<u>a(<u>a)*', a2, a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(ab), z').ratexp('(<2>a+<3>b)*')    .derived_term()
-q = vcsn.context('lal_char(ab), q').ratexp('(<1/2>a+<1/3>b)*').derived_term()
-r = vcsn.context('lal_char(ab), r').ratexp('(<.2>a+<.3>b)*')  .derived_term()
+z = vcsn.context('lal_char(ab), z').expression('(<2>a+<3>b)*')    .derived_term()
+q = vcsn.context('lal_char(ab), q').expression('(<1/2>a+<1/3>b)*').derived_term()
+r = vcsn.context('lal_char(ab), r').expression('(<.2>a+<.3>b)*')  .derived_term()
 
 check('product', '(a+b)*', z, q)
 check('product', '(a+b)*', q, z)
@@ -221,10 +221,10 @@ check('product', '(<0.1>a+<0.1>b)*', r, q)
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), ratexpset<lal_char(uv), b>') \
-         .ratexp('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), ratexpset<lal_char(xy), b>') \
-         .ratexp('<x>a<y>b').standard()
+a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+         .expression('<u>a<v>b').standard()
+a2 = vcsn.context('lal_char(ab), expressionset<lal_char(xy), b>') \
+         .expression('<x>a<y>b').standard()
 
 def check_enumerate(exp, aut):
     CHECK_EQ(exp, str(aut.strip().enumerate(4)))
@@ -281,32 +281,32 @@ digraph
 ''')])))
 
 # four arguments.
-ctx = vcsn.context('lal_char(x), ratexpset<lal_char(abcd), b>')
+ctx = vcsn.context('lal_char(x), expressionset<lal_char(abcd), b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
-    a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+    a[l] = ctx.expression("<{}>x".format(l)).standard()
 check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 
 
 ## ----------------- ##
-## ratexp & ratexp.  ##
+## expression & expression.  ##
 ## ----------------- ##
 
 # Add stars (<u>a*, not <u>a) to avoid that the trivial identities
 # (a&b -> \z) fire and yield a global \z.
-br = vcsn.context('lal_char(a), ratexpset<lal_char(uv), b>') \
-         .ratexp('<u>a*')
-z = vcsn.context('lal_char(b), z').ratexp('<2>b*')
-q = vcsn.context('lal_char(c), q').ratexp('<1/3>c*')
-r = vcsn.context('lal_char(d), r').ratexp('<.4>d*')
+br = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
+         .expression('<u>a*')
+z = vcsn.context('lal_char(b), z').expression('<2>b*')
+q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
+r = vcsn.context('lal_char(d), r').expression('<.4>d*')
 CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', str(br & z & q & r))
 
 ## ----------------- ##
 ## nullable labels.  ##
 ## ----------------- ##
 
-lhs = vcsn.context('lan_char(ab), b').ratexp('(a+b)*').thompson()
-rhs = vcsn.context('lan_char(bc), b').ratexp('(b+c)*').thompson()
+lhs = vcsn.context('lan_char(ab), b').expression('(a+b)*').thompson()
+rhs = vcsn.context('lan_char(bc), b').expression('(b+c)*').thompson()
 res = r'''digraph
 {
   vcsn_context = "lan<letterset<char_letters(b)>>, b"
@@ -382,9 +382,9 @@ res = r'''digraph
 }'''
 CHECK_EQ(res, str(lhs & rhs))
 CHECK_EQUIV(vcsn.automaton(res),
-            vcsn.context("lal_char(b), b").ratexp("b*").standard())
+            vcsn.context("lal_char(b), b").expression("b*").standard())
 
-third = vcsn.context('lan_char(bcd), b').ratexp('(b+c+d)*').thompson()
+third = vcsn.context('lan_char(bcd), b').expression('(b+c+d)*').thompson()
 res = r'''digraph
 {
   vcsn_context = "lan<letterset<char_letters(b)>>, b"
@@ -604,7 +604,7 @@ res = r'''digraph
 }'''
 CHECK_EQ(res, str(lhs & rhs & third))
 CHECK_EQUIV(vcsn.automaton(res),
-            vcsn.context("lal_char(b), b").ratexp("b*").standard())
+            vcsn.context("lal_char(b), b").expression("b*").standard())
 
 ###############################################
 ## Check mixed epsilon and letters going out ##
@@ -692,6 +692,6 @@ CHECK_EQ(res, str(vcsn.automaton._product([a1, a2])))
 #The call is perfectly transparent
 
 b = vcsn.context('lal_char(a), b')
-a = b.ratexp('a').standard()
+a = b.expression('a').standard()
 a = a & a & a
 CHECK_EQ(str(a('a')), '1')

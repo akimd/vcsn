@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/dyn/ratexp.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/algos/sum.hh>
 #include <vcsn/dyn/algos.hh>
 
@@ -22,11 +22,11 @@ namespace vcsn
       return detail::sum_polynomial_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE(sum_ratexp);
-    ratexp
-    sum(const ratexp& lhs, const ratexp& rhs)
+    REGISTER_DEFINE(sum_expression);
+    expression
+    sum(const expression& lhs, const expression& rhs)
     {
-      return detail::sum_ratexp_registry().call(lhs, rhs);
+      return detail::sum_expression_registry().call(lhs, rhs);
     }
 
     REGISTER_DEFINE(sum_weight);

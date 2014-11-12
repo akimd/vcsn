@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_RATEXP_HH
-# define VCSN_CORE_RAT_RATEXP_HH
+#ifndef VCSN_CORE_RAT_EXPRESSION_HH
+# define VCSN_CORE_RAT_EXPRESSION_HH
 
 # include <vector>
 # include <string>
@@ -24,7 +24,7 @@ namespace vcsn
       virtual ~exp() = default;
 #endif
 
-      /// The possible types of ratexps.
+      /// The possible types of expressions.
       using type_t = rat::type_t;
 
       /// The type of this node.
@@ -36,7 +36,7 @@ namespace vcsn
         return vcsn::rat::is_unary(type());
       }
 
-      /// Whether a leaf of the ratexp tree.
+      /// Whether a leaf of the expression tree.
       bool is_leaf() const
       {
         type_t t = type();
@@ -58,17 +58,17 @@ namespace vcsn
     /// interpret them (very much the same way as "bool" weights do
     /// not know whether they below to F2 or to B).
     ///
-    /// However, in order to support hash-consing on the ratexp,
-    /// ratexps need to be able to hash and equality-compare the
-    /// ratexps, which means to be able to hash the labels and
+    /// However, in order to support hash-consing on the expression,
+    /// expressions need to be able to hash and equality-compare the
+    /// expressions, which means to be able to hash the labels and
     /// weights, which is something that only labelset and weightset
     /// can do.
     ///
     /// So there are two options:
     ///
-    /// a. have the ratexp know the labelset and weightset (their
+    /// a. have the expression know the labelset and weightset (their
     /// types suffices, we don't need a value as the hash function is
-    /// static in valuesets), i.e., have the ratexp know its context
+    /// static in valuesets), i.e., have the expression know its context
     /// type.
     ///
     /// b. move the hash and equality-compare functions from valueset
@@ -86,7 +86,7 @@ namespace vcsn
     public:
       using context_t = Context;
       using node_t = rat::node<context_t>;
-      /// A ratexp usable with value semantics.
+      /// A expression usable with value semantics.
       using value_t = std::shared_ptr<const node_t>;
       using values_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<context_t>;
@@ -290,6 +290,6 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-#include <vcsn/core/rat/ratexp.hxx>
+#include <vcsn/core/rat/expression.hxx>
 
-#endif // !VCSN_CORE_RAT_RATEXP_HH
+#endif // !VCSN_CORE_RAT_EXPRESSION_HH

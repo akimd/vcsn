@@ -1,14 +1,14 @@
 #include <tests/unit/test.hh>
 #include <iostream>
 #include <vcsn/ctx/law_char_z.hh>
-#include <vcsn/core/rat/ratexpset.hh>
+#include <vcsn/core/rat/expressionset.hh>
 
 template <typename Ctx>
 static size_t
 check_concat(const Ctx& ctx)
 {
   size_t nerrs = 0;
-  auto ks = vcsn::ratexpset<Ctx>(ctx, vcsn::rat::identities::trivial);
+  auto ks = vcsn::expressionset<Ctx>(ctx, vcsn::rat::identities::trivial);
 
 #define CHECK(Lhs, Rhs, Res)                                            \
   ASSERT_EQ(to_string(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))),     \
@@ -26,7 +26,7 @@ static size_t
 check_conv(const Ctx& ctx)
 {
   size_t nerrs = 0;
-  auto ks = vcsn::ratexpset<Ctx>(ctx, vcsn::rat::identities::trivial);
+  auto ks = vcsn::expressionset<Ctx>(ctx, vcsn::rat::identities::trivial);
   auto ls = *ctx.labelset();
 
   // Check that the empty word is really recognized as \e.

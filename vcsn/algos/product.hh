@@ -12,7 +12,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+# include <vcsn/dyn/expression.hh> // dyn::make_expression
 # include <vcsn/misc/vector.hh> // cross_tuple
 # include <vcsn/misc/zip-maps.hh>
 
@@ -571,10 +571,10 @@ namespace vcsn
 
 
   /*--------------------------.
-  | shuffle(ratexp, ratexp).  |
+  | shuffle(expression, expression).  |
   `--------------------------*/
 
-  /// Shuffle product of ratexps.
+  /// Shuffle product of expressions.
   template <typename ValueSet>
   inline
   typename ValueSet::value_t
@@ -591,19 +591,19 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSetLhs, typename RatExpSetRhs>
-      ratexp
-      shuffle_ratexp(const ratexp& lhs, const ratexp& rhs)
+      expression
+      shuffle_expression(const expression& lhs, const expression& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = join(l.ratexpset(), r.ratexpset());
-        auto lr = rs.conv(l.ratexpset(), l.ratexp());
-        auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, ::vcsn::shuffle(rs, lr, rr));
+        auto rs = join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        return make_expression(rs, ::vcsn::shuffle(rs, lr, rr));
       }
 
-      REGISTER_DECLARE(shuffle_ratexp,
-                       (const ratexp&, const ratexp&) -> ratexp);
+      REGISTER_DECLARE(shuffle_expression,
+                       (const expression&, const expression&) -> expression);
     }
   }
 
@@ -733,10 +733,10 @@ namespace vcsn
 
 
   /*------------------------------.
-  | conjunction(ratexp, ratexp).  |
+  | conjunction(expression, expression).  |
   `------------------------------*/
 
-  /// Intersection/Hadamard product of ratexps.
+  /// Intersection/Hadamard product of expressions.
   template <typename RatExpSet>
   inline
   typename RatExpSet::value_t
@@ -753,19 +753,19 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSetLhs, typename RatExpSetRhs>
-      ratexp
-      conjunction_ratexp(const ratexp& lhs, const ratexp& rhs)
+      expression
+      conjunction_expression(const expression& lhs, const expression& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = join(l.ratexpset(), r.ratexpset());
-        auto lr = rs.conv(l.ratexpset(), l.ratexp());
-        auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, ::vcsn::conjunction(rs, lr, rr));
+        auto rs = join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        return make_expression(rs, ::vcsn::conjunction(rs, lr, rr));
       }
 
-      REGISTER_DECLARE(conjunction_ratexp,
-                       (const ratexp&, const ratexp&) -> ratexp);
+      REGISTER_DECLARE(conjunction_expression,
+                       (const expression&, const expression&) -> expression);
     }
   }
 }

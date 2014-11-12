@@ -98,11 +98,11 @@ def exp(ws):
 
 for ws in ['z', 'q', 'r']:
     ctx = vcsn.context('lal_char(abc), ' + ws)
-    a = ctx.ratexp(r).standard()
+    a = ctx.expression(r).standard()
     check_reduce(a, exp(ws))
 
 a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>, z') \
-    .ratexp("<2>(<3>'(a,x)'+<5>'(b,y)'+<7>'(a,x)')*<11>") \
+    .expression("<2>(<3>'(a,x)'+<5>'(b,y)'+<7>'(a,x)')*<11>") \
     .standard()
 check_reduce(a, '''digraph
 {
@@ -171,5 +171,5 @@ check_reduce(a, '''digraph
 
 # Make sure decorated automata work properly.
 q = vcsn.context('lal_char(abc), q')
-r = q.ratexp('<2>aa+<3>ab')
-CHECK_EQ('<2>a(a+<3/2>b)', r.derived_term().reduce().ratexp())
+r = q.expression('<2>aa+<3>ab')
+CHECK_EQ('<2>a(a+<3/2>b)', r.derived_term().reduce().expression())

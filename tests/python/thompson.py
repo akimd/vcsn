@@ -9,12 +9,12 @@ def check(re, exp):
     # We compare automata as strings, since when parsing the expected
     # automaton we drop the hole in the state numbers created by
     # standard.
-    a = ctx.ratexp(re).thompson()
+    a = ctx.expression(re).thompson()
     CHECK_EQ(exp, a)
     CHECK_EQ(True, a.is_normalized())
 
 def xfail(re, err = None):
-    r = ctx.ratexp(re)
+    r = ctx.expression(re)
     XFAIL(lambda: r.thompson(), err)
 
 # We don't support extended expressions.
@@ -485,10 +485,10 @@ r'''digraph
 ## ZR: star.  ##
 ## ---------- ##
 
-check('(?@lan_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+abc)*',
+check('(?@lan_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+abc)*',
 r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(abcd)>>, ratexpset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "lan<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -529,10 +529,10 @@ r'''digraph
   11 -> F11
 }''')
 
-check('(?@lan_char(abcd), ratexpset<lal_char(efgh), z>)(<e>\e+ab<f>)*',
+check('(?@lan_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+ab<f>)*',
 r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(abcd)>>, ratexpset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "lan<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -571,10 +571,10 @@ r'''digraph
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check('(?@lan_char(a), ratexpset<lal_char(xyz), z>)<x>a(<y>\e+<z>a)',
+check('(?@lan_char(a), expressionset<lal_char(xyz), z>)<x>a(<y>\e+<z>a)',
 r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(a)>>, ratexpset<letterset<char_letters(xyz)>, z>"
+  vcsn_context = "lan<letterset<char_letters(a)>>, expressionset<letterset<char_letters(xyz)>, z>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

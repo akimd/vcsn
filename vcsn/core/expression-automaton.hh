@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RATEXP_AUTOMATON_HH
-# define VCSN_CORE_RATEXP_AUTOMATON_HH
+#ifndef VCSN_CORE_EXPRESSION_AUTOMATON_HH
+# define VCSN_CORE_EXPRESSION_AUTOMATON_HH
 
 # include <memory>
 # include <stack>
@@ -9,9 +9,9 @@
 # include <vcsn/misc/map.hh>
 # include <vcsn/misc/unordered_map.hh>
 
-# include <vcsn/core/fwd.hh> // ratexp_automaton
+# include <vcsn/core/fwd.hh> // expression_automaton
 # include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/expressionset.hh>
 
 //# define DEBUG 1
 
@@ -27,22 +27,22 @@ namespace vcsn
 {
   namespace detail
   {
-    /// An incremental automaton whose states are ratexps.
+    /// An incremental automaton whose states are expressions.
     template <typename Aut>
-    class ratexp_automaton_impl
+    class expression_automaton_impl
       : public automaton_decorator<Aut>
     {
     public:
       using automaton_t = Aut;
       using super_t = automaton_decorator<automaton_t>;
       using context_t = context_t_of<automaton_t>;
-      using ratexpset_t = ratexpset<context_t>;
-      using ratexp_t = typename ratexpset_t::value_t;
+      using expressionset_t = expressionset<context_t>;
+      using expression_t = typename expressionset_t::value_t;
       using state_t = state_t_of<super_t>;
       using label_t = label_t_of<super_t>;
       using weight_t = weight_t_of<super_t>;
 
-      ratexp_automaton_impl(const context_t& ctx)
+      expression_automaton_impl(const context_t& ctx)
         : super_t(ctx)
         , rs_(ctx, rat::identities::trivial)
       {}
@@ -50,25 +50,25 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("ratexp_automaton<" + super_t::sname() + '>');
+        static symbol res("expression_automaton<" + super_t::sname() + '>');
         return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        o << "ratexp_automaton<";
+        o << "expression_automaton<";
         super_t::print_set(o, format);
         return o << '>';
       }
 
       /// Symbolic states to state handlers.
-      using smap = std::unordered_map<ratexp_t, state_t,
-                                      vcsn::hash<ratexpset_t>,
-                                      vcsn::equal_to<ratexpset_t>>;
+      using smap = std::unordered_map<expression_t, state_t,
+                                      vcsn::hash<expressionset_t>,
+                                      vcsn::equal_to<expressionset_t>>;
 
-      /// The state for ratexp \a r.
+      /// The state for expression \a r.
       /// If this is a new state, schedule it for visit.
-      state_t state(const ratexp_t& r)
+      state_t state(const expression_t& r)
       {
         // Benches show that the map_.emplace technique is slower, and
         // then that operator[] is faster than emplace.
@@ -91,7 +91,7 @@ namespace vcsn
 
       using super_t::add_transition;
       void
-      add_transition(state_t src, const ratexp_t& dst,
+      add_transition(state_t src, const expression_t& dst,
                      const label_t& l, const weight_t& w)
       {
         super_t::add_transition(src, state(dst), l, w);
@@ -99,7 +99,7 @@ namespace vcsn
 
       using super_t::new_transition;
       void
-      new_transition(state_t src, const ratexp_t& dst,
+      new_transition(state_t src, const expression_t& dst,
                      const label_t& l, const weight_t& w)
       {
         super_t::new_transition(src, state(dst), l, w);
@@ -107,7 +107,7 @@ namespace vcsn
 
       using super_t::set_initial;
       void
-      set_initial(const ratexp_t& s, const weight_t& w)
+      set_initial(const expression_t& s, const weight_t& w)
       {
         super_t::set_initial(state(s), w);
       }
@@ -133,7 +133,7 @@ namespace vcsn
       }
 
       /// Ordered map: state -> its derived term.
-      using origins_t = std::map<state_t, ratexp_t>;
+      using origins_t = std::map<state_t, expression_t>;
       mutable origins_t origins_;
       const origins_t&
       origins() const
@@ -144,14 +144,14 @@ namespace vcsn
         return origins_;
       }
 
-      /// The ratexp's set.
-      ratexpset_t rs_;
+      /// The expression's set.
+      expressionset_t rs_;
       /// States to visit.
-      std::stack<ratexp_t> todo_;
-      /// ratexp -> state.
+      std::stack<expression_t> todo_;
+      /// expression -> state.
       smap map_;
     };
   }
 }
 
-#endif // !VCSN_CORE_RATEXP_AUTOMATON_HH
+#endif // !VCSN_CORE_EXPRESSION_AUTOMATON_HH

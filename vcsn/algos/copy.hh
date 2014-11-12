@@ -9,8 +9,8 @@
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/ratexp.hh>
-# include <vcsn/dyn/ratexpset.hh>
+# include <vcsn/dyn/expression.hh>
+# include <vcsn/dyn/expressionset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/unordered_set.hh>
@@ -251,7 +251,7 @@ namespace vcsn
   }
 
   /*---------------.
-  | copy(ratexp).  |
+  | copy(expression).  |
   `---------------*/
 
   namespace dyn
@@ -261,19 +261,19 @@ namespace vcsn
       /// Bridge.
       template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
       inline
-      ratexp
-      copy_ratexp(const ratexp& exp, const ratexpset& out_rs)
+      expression
+      copy_expression(const expression& exp, const expressionset& out_rs)
       {
         const auto& r = exp->as<InRatExpSet>();
-        const auto& ors = out_rs->as<OutRatExpSet>().ratexpset();
+        const auto& ors = out_rs->as<OutRatExpSet>().expressionset();
 
-        return make_ratexp(ors,
-                           ::vcsn::rat::copy(r.ratexpset(), ors,
-                                             r.ratexp()));
+        return make_expression(ors,
+                           ::vcsn::rat::copy(r.expressionset(), ors,
+                                             r.expression()));
       }
 
-      REGISTER_DECLARE(copy_ratexp,
-                       (const ratexp& exp, const ratexpset& out_rs) -> ratexp);
+      REGISTER_DECLARE(copy_expression,
+                       (const expression& exp, const expressionset& out_rs) -> expression);
     }
   }
 

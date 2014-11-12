@@ -20,18 +20,18 @@ namespace vcsn
       return detail::chain_registry().call(aut, min, max);
     }
 
-    REGISTER_DEFINE(concatenate_ratexp);
-    ratexp
-    concatenate(const ratexp& lhs, const ratexp& rhs)
+    REGISTER_DEFINE(concatenate_expression);
+    expression
+    concatenate(const expression& lhs, const expression& rhs)
     {
-      return detail::concatenate_ratexp_registry().call(lhs, rhs);
+      return detail::concatenate_expression_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE(chain_ratexp);
-    ratexp
-    chain(const ratexp& r, int min, int max)
+    REGISTER_DEFINE(chain_expression);
+    expression
+    chain(const expression& r, int min, int max)
     {
-      return detail::chain_ratexp_registry().call(r, min, max);
+      return detail::chain_expression_registry().call(r, min, max);
     }
 
     REGISTER_DEFINE(concatenate_polynomial);
