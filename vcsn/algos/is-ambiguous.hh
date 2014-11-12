@@ -121,7 +121,8 @@ namespace vcsn
   bool is_cycle_ambiguous(const Aut& aut)
   {
     // Find all strongly connected components.
-    const auto& coms = scc(aut);
+    const auto& coms = strong_components(aut,
+                                         scc_algo_t::tarjan_iterative);
     if (getenv("VCSN_DEBUG"))
       {
         std::cerr << "number states of automaton: " <<
@@ -148,13 +149,14 @@ namespace vcsn
   bool is_cycle_ambiguous_scc(const Aut& aut)
   {
     auto prod = product(aut, aut);
-    auto coms = scc(prod);
+    const auto& coms = strong_components(prod,
+                                         scc_algo_t::tarjan_iterative);
     const auto& origins = prod->origins();
     // In one SCC of prod = aut & aut, if there exist two states (s0,
     // s0) (on the diagonal) and (s1, s2) with s1 != s2 (off the
     // diagonal) then aut has two cycles with the same label:
     // s0->s1->s0 and s0->s2->s0.
-    for (auto c : coms)
+    for (const auto& c : coms)
       {
         bool on = false;
         bool off = false;

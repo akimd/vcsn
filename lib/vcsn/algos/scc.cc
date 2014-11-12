@@ -21,5 +21,12 @@ namespace vcsn
     {
       return detail::num_sccs_registry().call(aut, algo);
     }
+
+    REGISTER_DEFINE(scc);
+    automaton
+    scc(const automaton& aut, const std::string& algo)
+    {
+      return detail::scc_registry().call(aut, algo);
+    }
   }
 }

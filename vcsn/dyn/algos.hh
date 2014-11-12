@@ -497,6 +497,13 @@ namespace vcsn
     /// The right-multiplication of a expression with \a w as weight.
     expression right_mult(const expression& aut, const weight& w);
 
+    /// The new automaton that each state has name corresponding
+    /// [component.state], for example [1.2] means that state 2 has
+    /// component number 1.
+    /// \param aut    the input automaton.
+    /// \param algo   the specific algorithm to use.
+    automaton scc(const automaton& aut, const std::string& algo = "auto");
+
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);
 

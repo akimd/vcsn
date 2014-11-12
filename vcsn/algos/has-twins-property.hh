@@ -150,10 +150,10 @@ namespace vcsn
     auto a = product(naut1, naut2);
 
     // Find all components of automate a.
-    auto cs = scc(a);
+    auto cs = strong_components(a, scc_algo_t::tarjan_iterative);
 
     // Check unique weight of two states on each component.
-    for (auto c : cs)
+    for (const auto& c : cs)
       if (!cycle_identity(c, a))
         return false;
 

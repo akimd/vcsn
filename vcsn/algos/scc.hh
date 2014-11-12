@@ -23,9 +23,9 @@ namespace vcsn
 
   namespace detail
   {
-    /// An strongly-connected component: list of states.
+    /// A strongly-connected component: set of states.
     /// Bench show that using std::unordered_set is better than
-    /// std::set ~10x. For example:
+    /// std::set about ~10x. For example:
     /// std::set:
     ///   5.53s: a.num_sccs("tarjan_iterative") # a = std((abc)*{1000})
     /// std::unordereset:
@@ -378,29 +378,29 @@ namespace vcsn
   /// Find all strongly connected components of \a aut.
   template <typename Aut>
   const detail::components_t<Aut>
-  scc(const Aut& aut, scc_algo_t algo = scc_algo_t::tarjan_iterative)
+  strong_components(const Aut& aut,
+                    scc_algo_t algo = scc_algo_t::tarjan_iterative)
   {
     switch (algo)
       {
       case scc_algo_t::tarjan_recursive:
         {
-          detail::scc_tarjan_recursive_impl<Aut> scc(aut);
+          detail::scc_tarjan_recursive_impl<Aut> scc{aut};
           return scc.components();
         }
       case scc_algo_t::tarjan_iterative:
         {
-          detail::scc_tarjan_iterative_impl<Aut> scc(aut);
+          detail::scc_tarjan_iterative_impl<Aut> scc{aut};
           return scc.components();
         }
       case scc_algo_t::kosaraju:
         {
-          detail::scc_kosaraju_impl<Aut> scc(aut);
+          detail::scc_kosaraju_impl<Aut> scc{aut};
           return scc.components();
         }
       }
     BUILTIN_UNREACHABLE();
   }
-
 
   /// Generate a subautomaton corresponding to an SCC.
   template <typename Aut>
@@ -439,14 +439,14 @@ namespace vcsn
   template <typename Aut>
   std::size_t num_sccs(const Aut& aut, const std::string& algo = "auto")
   {
-    return scc(aut, scc_algo_to_enum(algo)).size();
+    return strong_components(aut, scc_algo_to_enum(algo)).size();
   }
 
   namespace dyn
   {
     namespace detail
     {
-      // Bridge.
+      /// Bridge.
       template <typename Aut, typename String>
       std::size_t num_sccs(const automaton& aut, const std::string& algo)
       {
@@ -457,6 +457,112 @@ namespace vcsn
       REGISTER_DECLARE(num_sccs,
                        (const automaton&, const std::string& algo)
                        -> std::size_t);
+    }
+  }
+
+
+  /*-----------------.
+  | scc_automaton.   |
+  `-----------------*/
+
+  namespace detail
+  {
+    template <typename Aut>
+    class scc_automaton_impl
+      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
+    {
+    public:
+      using automaton_t = Aut;
+      using automaton_nocv_t =
+        typename automaton_t::element_type::automaton_nocv_t;
+      using super_t = automaton_decorator<automaton_nocv_t>;
+      using state_t = state_t_of<Aut>;
+
+      scc_automaton_impl(const Aut& input, scc_algo_t algo)
+        : super_t(input), algo_{algo}
+      {}
+
+      void operator()()
+      {
+        const auto& sccs = ::vcsn::strong_components(aut_, algo_);
+        size_t num_sccs = sccs.size();
+        for (int i = 0; i < num_sccs; ++i)
+          for (auto s : sccs[i])
+            component_[s] = i + 1;
+      }
+
+      /// Static name.
+      static symbol sname()
+      {
+        static symbol res("scc_automaton<"
+                          + automaton_t::element_type::sname() + '>');
+        return res;
+      }
+
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      {
+        o << "scc_automaton<";
+        aut_->print_set(o, format);
+        return o << '>';
+      }
+
+      bool state_has_name(state_t s) const
+      {
+        return s != super_t::pre() && s != super_t::post();
+      }
+
+      std::ostream& print_state_name(state_t s, std::ostream& o,
+                                     const std::string& fmt = "text",
+                                     bool = false) const
+      {
+        o << component_.at(s) << ".";
+        aut_->print_state_name(s, o, fmt, true);
+        return o;
+      }
+
+    protected:
+      using super_t::aut_;
+
+    private:
+      /// Store the component number of a state.
+      std::map<state_t, size_t> component_;
+      std::map<state_t, state_t> map_;
+
+      /// Algorithm apply to find strongly connected component.
+      scc_algo_t algo_;
+    };
+  }
+
+  template <typename Aut>
+  using scc_automaton = std::shared_ptr<detail::scc_automaton_impl<Aut>>;
+
+  /// Get scc_automaton from \a aut.
+  template <typename Aut>
+  inline
+  scc_automaton<Aut>
+  scc(const Aut& aut, const std::string& algo)
+  {
+    auto res = make_shared_ptr<scc_automaton<Aut>>(aut,
+                                                   scc_algo_to_enum(algo));
+    res->operator()();
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      // Bridge.
+      template <typename Aut, typename String>
+      automaton scc(const automaton& aut, const std::string& algo)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::scc(a, algo));
+      }
+
+      REGISTER_DECLARE(scc,
+                       (const automaton&, const std::string& algo)
+                       -> automaton);
     }
   }
 

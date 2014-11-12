@@ -125,6 +125,8 @@ namespace vcsn
         header("vcsn/algos/determinize.hh");
       else if (type == "detweighted_automaton")
         header("vcsn/algos/determinize.hh");
+      else if (type == "expression_automaton")
+        header("vcsn/core/expression-automaton.hh");
       else if (type == "filter_automaton")
         header("vcsn/algos/filter.hh");
       else if (type == "mutable_automaton")
@@ -137,8 +139,8 @@ namespace vcsn
         header("vcsn/algos/product.hh");
       else if (type == "permutation_automaton")
         header("vcsn/core/permutation-automaton.hh");
-      else if (type == "expression_automaton")
-        header("vcsn/core/expression-automaton.hh");
+      else if (type == "scc_automaton")
+        header("vcsn/algos/scc.hh");
       else if (type == "transpose_automaton")
         header("vcsn/algos/transpose.hh");
       else if (type == "tuple_automaton")

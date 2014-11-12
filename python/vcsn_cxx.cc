@@ -412,6 +412,11 @@ struct automaton
 
   automaton right_mult(const weight& w) const;
 
+  automaton scc(const std::string& algo) const
+  {
+    return vcsn::dyn::scc(val_, algo);
+  }
+
   polynomial shortest(unsigned max) const;
 
   static automaton shuffle_(const boost::python::list& auts)
@@ -1023,6 +1028,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expression", &automaton::to_expression, (arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
+    .def("scc", &automaton::scc, (arg("algo") = "auto"))
     .def("shortest", &automaton::shortest)
     .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")
     .def("sort", &automaton::sort)

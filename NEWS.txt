@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+
+## 2014-11-14
+### scc: new algorithm
+Create an automaton whose states correspond with a strongly connnected
+component of the input automaton.
+
 ## 2014-11-13
 ### ratexp -> expression
 The name "ratexp" is an unattractive jargon, and since Vcsn will not

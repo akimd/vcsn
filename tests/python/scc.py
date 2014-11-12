@@ -7,6 +7,8 @@ def check(num_sccs, a):
     CHECK_EQ(num_sccs, a.num_sccs("tarjan_iterative"))
     CHECK_EQ(num_sccs, a.num_sccs("tarjan_recursive"))
     CHECK_EQ(num_sccs, a.num_sccs("kosaraju"))
+    scc_a = a.scc();
+    CHECK_EQ(True, scc_a.is_isomorphic(a))
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"

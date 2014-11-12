@@ -45,13 +45,14 @@ namespace vcsn
       if (w == "blind_automaton"
           || w == "determinized_automaton"
           || w == "detweighted_automaton"
+          || w == "expression_automaton"
           || w == "filter_automaton"
           || w == "mutable_automaton"
           || w == "pair_automaton"
           || w == "partition_automaton"
           || w == "permutation_automaton"
           || w == "product_automaton"
-          || w == "expression_automaton"
+          || w == "scc_automaton"
           || w == "transpose_automaton"
           || w == "tuple_automaton")
         return automaton_(w);
@@ -273,11 +274,12 @@ namespace vcsn
       // xxx_automaton<Aut>.
       else if (prefix == "determinized_automaton"
                || prefix == "detweighted_automaton"
+               || prefix == "expression_automaton"
                || prefix == "filter_automaton"
                || prefix == "pair_automaton"
                || prefix == "partition_automaton"
                || prefix == "permutation_automaton"
-               || prefix == "expression_automaton"
+               || prefix == "scc_automaton"
                || prefix == "transpose_automaton")
         {
           eat(is_, '<');
