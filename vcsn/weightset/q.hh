@@ -191,7 +191,7 @@ namespace vcsn
     {
       int num;
       if (! (i >> num))
-        vcsn::fail_reading(i, sname() + ": invalid numerator");
+        vcsn::fail_reading(i, sname(), ", invalid numerator");
 
       // If we have a slash after the numerator then we have a
       // denominator as well.
@@ -217,7 +217,7 @@ namespace vcsn
           return value_t{num, den}.reduce();
         }
       else
-        vcsn::fail_reading(i, sname() + ": invalid denominator");
+        vcsn::fail_reading(i, sname(), ", invalid denominator");
     }
 
     static std::ostream&

@@ -146,7 +146,7 @@ namespace vcsn
       if ((stream >> i) && (i == 0 || i == 1))
         return i;
       else
-        vcsn::fail_reading(stream, sname() + ": invalid value");
+        vcsn::fail_reading(stream, sname(), ", invalid value");
     }
 
     static std::ostream&

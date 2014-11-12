@@ -57,8 +57,22 @@ namespace vcsn LIBVCSN_API
   /// input into a buffer string; then throw with the given \a
   /// explanation followed by the buffer string.  \a explanation
   /// should not contain trailing punctuation or spaces.
+  template <typename... Args>
   ATTRIBUTE_NORETURN
-  void fail_reading(std::istream& is, std::string explanation);
+  inline
+  void fail_reading(std::istream& is, Args&&... args)
+  {
+    is.clear();
+    std::string buf;
+    std::getline(is, buf, '\n');
+    if (!is.good())
+      // This shouldn't really happen; however it's best to fail cleanly.
+      is.clear();
+    if (buf.empty())
+      raise(std::forward<Args>(args)...);
+    else
+      raise(std::forward<Args>(args)..., ": ", str_escape(buf));
+  }
 
   /// Format v via vs.print.
   template <typename ValueSet, typename... Args>

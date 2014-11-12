@@ -14,14 +14,14 @@ namespace vcsn
     /// finished.
     static void check_eof(std::istream& is, std::shared_ptr<ast_node> res)
     {
-      if (is.peek() != -1)
+      if (is.peek() != EOF)
         {
           std::ostringstream o;
           signature_printer printer(o, true);
           res->accept(printer);
           vcsn::fail_reading(is,
-                             "unexpected trailing characters after '" +
-                             o.str() + "'");
+                             "unexpected trailing characters after '",
+                             o.str(), "'");
         }
     }
 

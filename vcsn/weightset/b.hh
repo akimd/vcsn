@@ -145,10 +145,10 @@ namespace vcsn
             return i;
           else
             fail_reading(is,
-                         sname() + ": invalid value: " + std::to_string(i));
+                         sname(), ": invalid value: ", std::to_string(i));
         }
       else
-        fail_reading(is, sname() + ": invalid value");
+        fail_reading(is, sname(), ": invalid value");
     }
 
     static std::ostream&

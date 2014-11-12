@@ -173,7 +173,7 @@ namespace vcsn
       if (i >> res)
         return res;
       else
-        vcsn::fail_reading(i, sname() + ": invalid value");
+        vcsn::fail_reading(i, sname(), ", invalid value");
     }
 
     static std::ostream&

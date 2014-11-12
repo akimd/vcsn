@@ -103,17 +103,4 @@ namespace vcsn
       }
     return res;
   }
-
-  void fail_reading(std::istream& is, std::string explanation)
-  {
-    is.clear();
-    std::string buf;
-    std::getline(is, buf, '\n');
-    if (!is.good())
-      // This shouldn't really happen; however it's best to fail cleanly.
-      is.clear();
-    if (!buf.empty())
-      explanation += ": " + str_escape(buf);
-    raise(explanation);
-  }
 }
