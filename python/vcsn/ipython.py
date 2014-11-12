@@ -10,10 +10,11 @@ from IPython.html.widgets import interactive
 from IPython.utils.warn import info, error
 
 import vcsn
+
 from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
 
 # The class MUST call this class decorator at creation time
-class EditAutomatonWidget:
+class AutomatonTextWidget:
     def __init__(self, ipython, name, format, mode):
         self.ipython = ipython
         self.name = name
@@ -23,7 +24,7 @@ class EditAutomatonWidget:
             # anyway.
             aut = self.ipython.shell.user_ns[self.name].strip()
         else:
-            aut = vcsn.context('lal_char, b').ratexp(r'\e').standard()
+            aut = vcsn.context('lal_char(abc), b').ratexp(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
 
         text = aut.format(self.format)
@@ -74,9 +75,13 @@ class EditAutomaton(Magics):
               (h for horizontal and v for vertical).  Default: h.''')
     @line_cell_magic
     def automaton(self, line, cell=None):
+        import d3Widget
         args = parse_argstring(self.automaton, line)
         if cell is None:
-            EditAutomatonWidget(self, args.var, args.format, args.mode)
+            if(args.format == 'gui'):
+                d3Widget.VcsnD3DataFrame(self, args.var).show()
+            else:
+                AutomatonTextWidget(self, args.var, args.format, args.mode)
         else:
             a =  vcsn.automaton(cell.encode('utf-8'), args.format)
             self.shell.user_ns[args.var] = a
@@ -84,7 +89,6 @@ class EditAutomaton(Magics):
 
 ip = get_ipython()
 ip.register_magics(EditAutomaton)
-
 
 def interact_h(_interact_f, *args, **kwargs):
     '''Similar to IPython's interact function, but with widgets
