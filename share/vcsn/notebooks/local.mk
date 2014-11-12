@@ -24,6 +24,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.coaccessible.ipynb              \
   %D%/automaton.complement.ipynb                \
   %D%/automaton.complete.ipynb                  \
+  %D%/automaton.costandard.ipynb                \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.is_ambiguous.ipynb              \
