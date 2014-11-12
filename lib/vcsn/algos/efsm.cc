@@ -72,8 +72,7 @@ namespace vcsn
     read_efsm(std::istream& is)
     {
       std::string file = "file.efsm";
-      using string_t =
-        boost::flyweight<std::string, boost::flyweights::no_tracking>;
+      using string_t = symbol;
 
       // Whether has both isysmbols and osymbols.
       bool is_transducer = false;

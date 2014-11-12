@@ -2,14 +2,13 @@
 #include <set>
 #include <string>
 
-#include <vcsn/misc/symbol.hh>
-
-#include <lib/vcsn/algos/registry.hh>
 #include <lib/vcsn/algos/fwd.hh>
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/algos/grail.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -24,8 +23,7 @@ namespace vcsn
     read_fado(std::istream& is)
     {
       std::string file = "file.fado";
-      using string_t =
-        boost::flyweight<std::string, boost::flyweights::no_tracking>;
+      using string_t = symbol;
 
       // The header (the first line) looks like:
       //

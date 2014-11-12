@@ -18,8 +18,7 @@
   #include <iostream>
   #include <string>
 
-  #include <boost/flyweight.hpp>
-  #include <boost/flyweight/no_tracking.hpp>
+  #include <vcsn/misc/symbol.hh>
   #include <lib/vcsn/rat/location.hh>
   #include <lib/vcsn/dot/driver.hh>
 
@@ -37,8 +36,7 @@
         // We should try to have an arena in which the flyweight
         // performs its allocation, and flush the whole arena once
         // we're done parsing.
-        using string_t =
-          boost::flyweight<std::string, boost::flyweights::no_tracking>;
+        using string_t = symbol;
 
         // A set of states.
         using states_t = std::vector<string_t>;
