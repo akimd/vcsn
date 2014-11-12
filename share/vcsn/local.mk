@@ -13,6 +13,10 @@
 
 include %D%/notebooks/local.mk
 
+jsdir = $(datadir)/vcsn/js
+dist_js_DATA =                                  \
+  %D%/js/AutomatonD3Widget.js
+
 lal_char_bdir = $(datadir)/vcsn/lal_char_b
 dist_lal_char_b_DATA =				\
   %D%/lal_char_b/a1.gv				\
