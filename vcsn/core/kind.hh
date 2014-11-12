@@ -63,11 +63,7 @@ namespace vcsn
   template <typename Kinded>                                            \
   struct is_ ## Abbrev                                                  \
     : std::is_same<typename Kinded::kind_t, labels_are_ ## Name>::type  \
-  {};                                                                   \
-                                                                        \
-  template <typename Kinded, typename R = Kinded>                       \
-  using if_ ## Abbrev                                                   \
-    = typename std::enable_if<is_ ## Abbrev<Kinded>::value, R>::type
+  {}
 
   DEFINE(lal, letters);
   DEFINE(lan, nullable);

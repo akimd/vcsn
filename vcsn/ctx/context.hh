@@ -52,7 +52,7 @@ namespace vcsn
     /// Build a context.
     /// \param ls  the labelset
     /// \param ws  the weightset
-    context(const labelset_t& ls, const weightset_t& ws = {})
+    context(const labelset_t& ls = {}, const weightset_t& ws = {})
       : context(std::make_shared<const labelset_t>(ls),
                 std::make_shared<const weightset_t>(ws))
     {}
@@ -76,13 +76,6 @@ namespace vcsn
     context(const std::initializer_list<typename LabelSet2::letter_t>& gs,
             const weightset_t& ws = {})
       : context{labelset_t{gs}, ws}
-    {}
-
-    /// Build a context whose labelset constructor takes no argument.
-    template <typename LabelSet2 = labelset_t>
-    context()
-      : context{typename std::enable_if<is_lao, labelset_t>::type{},
-                weightset_t{}}
     {}
 
     context& operator=(context&& that)
