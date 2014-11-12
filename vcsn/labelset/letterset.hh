@@ -57,10 +57,10 @@ namespace vcsn
     {
       // name: letterset<char_letters(abc)>.
       //       ^^^^^^^^^ ^^^^^^^^^^^^^^^^^
-      //      kind   genset
+      //         kind         genset
       eat(is, "letterset<");
       auto gs = genset_t::make(is);
-      eat(is, ">");
+      eat(is, '>');
       return gs;
     }
 

@@ -137,4 +137,3 @@ a = vcsn.automaton(r'''digraph {
   3 -> F
 }''')
 CHECK_EQ(True, a.is_functional())
-

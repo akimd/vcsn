@@ -11,6 +11,7 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/stream.hh> // eat.
+# include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -32,11 +33,9 @@ namespace vcsn
 
     static set_alphabet make(std::istream& is)
     {
-      // name: char(abc)
-      //       ^^^^ ^^^
-      //        |    |
-      //        |    +-- gens
-      //        +-- letter_type, currently only "char".
+      // name: char_letters(abc)
+      //       ^^^^^^^^^^^^ ^^^
+      //       letter_type  gens
       eat(is, sname());
 
       // The result.

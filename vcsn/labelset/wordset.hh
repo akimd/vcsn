@@ -51,12 +51,12 @@ namespace vcsn
     /// Build from the description in \a is.
     static wordset make(std::istream& is)
     {
-      // name: wordset<char(abc)>.
-      //       ^^^^^^^ ^^^^^^^^^
-      //      kind   genset
+      // name: wordset<char_letters(abc)>.
+      //       ^^^^^^^ ^^^^^^^^^^^^^^^^^
+      //         kind      genset
       eat(is, "wordset<");
       auto gs = genset_t::make(is);
-      eat(is, ">");
+      eat(is, '>');
       return gs;
     }
 
