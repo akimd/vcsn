@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function
 
@@ -27,6 +28,33 @@ def bench(title, comment, cmd, number=1):
 b = vcsn.context('lal_char(abc), b')
 
 # Check the cost of dyn calls.
+#
+# We used to check a call to "b.format('text')", but that makes us too
+# sensitive to the cost of the formatting itself.  Any operation can
+# hardly be simpler than `automaton.is_proper`, which just returns
+# "true" for an automaton on a free labelset.  So this does measure
+# the pure speed of our interface with Python, and dispatch.
+#
+# To check the cost of the dispatch, it must be done in C++.
+#
+# FWIW:
+#
+# %timeit a.is_empty()
+# 1000000 loops, best of 3: 1.03 µs per loop
+#
+# %timeit a.proper()
+# 10000 loops, best of 3: 62.8 µs per loop
+#
+# %timeit a.is_proper()
+# 1000000 loops, best of 3: 1 µs per loop
+#
+# So really, is_proper looks the right tool.
+a = vcsn.automaton('', 'daut')
+bench('a.is_proper()', 'a = ""',
+      lambda: a.is_proper(),
+      number=200000)
+
+# Check formatting.  was used to check dyn:: round-trip.
 bench('b.format("text")', 'b = [abc] -> B',
       lambda: b.format('text'),
       number=100000)

@@ -18,6 +18,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/aut_law_char_z                            \
   %D%/concat                                    \
   %D%/cross                                     \
+  %D%/dyn                                       \
   %D%/label                                     \
   %D%/polynomialset                             \
   %D%/proper                                    \
@@ -34,6 +35,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_aut_lal_char_z_LDADD = $(liblal_char_z) $(unit_ldadd)
 %C%_aut_law_char_z_LDADD = $(liblaw_char_z) $(unit_ldadd)
 %C%_concat_LDADD         = $(liblaw_char_z) $(unit_ldadd)
+%C%_dyn_LDADD            = $(liblal_char_b) $(unit_ldadd)
 %C%_label_LDADD          = $(liblal_char_b) $(unit_ldadd)
 %C%_polynomialset_LDADD  = $(liblaw_char_z) $(unit_ldadd)
 %C%_proper_LDADD         = $(all_libctx) $(unit_ldadd)
@@ -46,6 +48,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/aut_law_char_z.chk                        \
   %D%/concat.chk                                \
   %D%/cross.chk                                 \
+  %D%/dyn.chk                                   \
   %D%/label.chk                                 \
   %D%/polynomialset.chk                         \
   %D%/proper.chk                                \
@@ -64,6 +67,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/aut_law_char_z.log: %D%/aut_law_char_z
 %D%/concat.log: %D%/concat
 %D%/cross.log: %D%/cross
+%D%/dyn.log: %D%/dyn
 %D%/label.log: %D%/label
 %D%/polynomialset.log: %D%/polynomialset
 %D%/proper.log: %D%/proper

@@ -169,7 +169,7 @@ rst_pre ()
 # rst_expect BASE [DIFF-FLAGS]
 # ----------------------------
 # Compare expected output with effective, actual, output.
-# Increment $nfailures if there is a failure.
+# Return 0 if success, otherwise 1.
 rst_expect ()
 {
   local base=$1
@@ -293,7 +293,8 @@ EOF
     # Stdout.
     case $out_exp in
       (ignore)
-        rst_pre "Standard error" err.eff || fail=true
+        rst_pre "Standard output" out.eff
+        rst_pre "Standard error" err.eff
         ;;
       (*)
         case $out_exp in
@@ -304,7 +305,7 @@ EOF
           cp out.eff stdout
           ;;
         esac
-        rst_pre "Standard error" err.eff || fail=true
+        rst_pre "Standard error" err.eff
         rst_expect out $diff_opts || fail=true
         ;;
     esac
