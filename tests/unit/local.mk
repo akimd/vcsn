@@ -13,8 +13,8 @@
 
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
-  %D%/aut_lao_z                                 \
   %D%/aut_lal_char_z                            \
+  %D%/aut_lao_z                                 \
   %D%/aut_law_char_z                            \
   %D%/concat                                    \
   %D%/cross                                     \
@@ -40,19 +40,19 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_transpose_LDADD      = $(liblal_char_b) $(liblal_char_z) $(unit_ldadd)
 %C%_weight_LDADD         = $(unit_ldadd)
 
-%C%_TESTS =                                    \
-  %D%/aut_lao_z.chk                            \
-  %D%/aut_lal_char_z.chk                       \
-  %D%/aut_law_char_z.chk                       \
-  %D%/concat.chk                               \
-  %D%/cross.chk                                \
-  %D%/label.chk                                \
-  %D%/polynomialset.chk                        \
-  %D%/proper.chk                               \
-  %D%/transpose.chk                            \
-  %D%/weight.chk                               \
-  %D%/zip.chk                                  \
-  %D%/zip-maps.chk
+%C%_TESTS =                                     \
+  %D%/aut_lal_char_z.chk                        \
+  %D%/aut_lao_z.chk                             \
+  %D%/aut_law_char_z.chk                        \
+  %D%/concat.chk                                \
+  %D%/cross.chk                                 \
+  %D%/label.chk                                 \
+  %D%/polynomialset.chk                         \
+  %D%/proper.chk                                \
+  %D%/transpose.chk                             \
+  %D%/weight.chk                                \
+  %D%/zip-maps.chk                              \
+  %D%/zip.chk
 
 dist_TESTS += $(%C%_TESTS)
 
@@ -64,7 +64,6 @@ dist_TESTS += $(%C%_TESTS)
 %D%/aut_law_char_z.log: %D%/aut_law_char_z
 %D%/concat.log: %D%/concat
 %D%/cross.log: %D%/cross
-%D%/determinize.log: %D%/determinize
 %D%/label.log: %D%/label
 %D%/polynomialset.log: %D%/polynomialset
 %D%/proper.log: %D%/proper
