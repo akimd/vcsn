@@ -190,7 +190,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res("lan<" + labelset_t::sname() + ">");
+      static symbol res("lan<" + labelset_t::sname() + '>');
       return res;
     }
 

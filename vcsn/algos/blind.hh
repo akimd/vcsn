@@ -118,7 +118,7 @@ namespace vcsn
       static symbol sname()
       {
         static symbol res(("blind_automaton<" + std::to_string(Tape) + ", "
-                + automaton_t::element_type::sname() + ">"));
+                + automaton_t::element_type::sname() + '>'));
         return res;
       }
 

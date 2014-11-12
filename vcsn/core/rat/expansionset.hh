@@ -51,7 +51,7 @@ namespace vcsn
       /// The static name.
       static symbol sname()
       {
-        static symbol res("expansionset<" + ratexpset_t::sname() + ">");
+        static symbol res("expansionset<" + ratexpset_t::sname() + '>');
         return res;
       }
 

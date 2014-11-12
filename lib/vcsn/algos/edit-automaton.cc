@@ -103,7 +103,7 @@ namespace vcsn
       input_type_ = labelset_type::lal;
     auto ctx = to_string(input_type_);
     if (output_type_ != labelset_type::empty)
-      ctx = "lat<" + ctx + "," + to_string(output_type_) + ">";
+      ctx = "lat<" + ctx + "," + to_string(output_type_) + '>';
     ctx += ", ";
     ctx += (real_ ? "r"
             : weighted_ ? "z"

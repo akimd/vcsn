@@ -75,7 +75,8 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("determinized_automaton<" + automaton_t::element_type::sname() + ">");
+        static symbol res("determinized_automaton<"
+                          + automaton_t::element_type::sname() + '>');
         return res;
       }
 
@@ -347,7 +348,8 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("detweighted_automaton<" + automaton_t::element_type::sname() + ">");
+        static symbol res("detweighted_automaton<"
+                          + automaton_t::element_type::sname() + '>');
         return res;
       }
 

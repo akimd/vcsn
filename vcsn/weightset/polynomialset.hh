@@ -79,7 +79,7 @@ namespace vcsn
     /// The static name.
     static symbol sname()
     {
-      static symbol res("polynomialset<" + context_t::sname() + ">");
+      static symbol res("polynomialset<" + context_t::sname() + '>');
       return res;
     }
 

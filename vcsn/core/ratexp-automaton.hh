@@ -50,7 +50,7 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("ratexp_automaton<" + super_t::sname() + ">");
+        static symbol res("ratexp_automaton<" + super_t::sname() + '>');
         return res;
       }
 
