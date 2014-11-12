@@ -98,9 +98,9 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/u.cc                                \
   %D%/algos/union.cc                            \
   %D%/algos/universal.cc                        \
-  %D%/ctx/ctx.cc                                \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-printer.cc                    \
+  %D%/dyn/context.cc                            \
   %D%/dyn/signature-printer.cc                  \
   %D%/dyn/translate.cc                          \
   %D%/misc/direction.cc                         \
