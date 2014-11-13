@@ -173,11 +173,22 @@ if test "$vcsn_cv_cxx_is_clang" = no; then
     AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
       [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
 fi
+if test x"$VISIBILITY_CXXFLAGS" != x; then
+  AC_DEFINE([HAVE_VISIBILITY_HIDDEN], 1,
+            [Define to 1 if we use ELF hidden visibility by default.])
+  # We will use Boost.Flyweight's intermodule_holder which uses
+  # Boost.Interprocess, which uses shm_open, which is in -lrt on
+  # GNU/Linux.
+  save_LIBS=$LIBS
+  AC_SEARCH_LIBS([shm_open], [rt])
+  case $ac_cv_search_shm_open in
+    (-l*) AC_SUBST([RT_LIBS], [$ac_cv_search_shm_open]);;
+  esac
+  LIBS=$save_LIBS
+fi
+
 
 VCSN_LDFLAGS_AS_NEEDED
-
-# Check for Python, for the VCSN Python interface.
-AM_PATH_PYTHON
 
 BOOST_REQUIRE([1.49])
 BOOST_FILESYSTEM
@@ -225,9 +236,12 @@ AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS -L$LIBDIR"],
 AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
                    [Define to the location of the libraries.])
 
-## -------------------- ##
-## Auxiliary programs.  ##
-## -------------------- ##
+
+## ---------- ##
+## Programs.  ##
+## ---------- ##
+
+AM_PATH_PYTHON
 
 # Flex 2.3.33 has a problem with REJECT and produces a scanner that
 # does not compile.
@@ -246,6 +260,7 @@ AC_CHECK_PROGS([PERL], [perl])
 
 AC_CHECK_HEADERS([ltdl.h], [],
                  [AC_MSG_ERROR([libltdl (a component from Libtool) is needed])])
+
 
 ## --------------- ##
 ## Documentation.  ##

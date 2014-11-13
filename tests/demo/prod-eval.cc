@@ -39,6 +39,20 @@ namespace vcsn
     dyn::automaton res = dyn::read_automaton(f);
     // Automaton typename.
     auto vname = res->vname();
+
+    // Interestingly the equality test below is currently the only
+    // place where we check two 'symbol's from different dl-modules.
+    // This requires that we use a single symbol holder for the whole
+    // program, not just one per shared library.
+    //
+    // This fails when we use ELF visibility control (the linker no
+    // longer fuses the different static_holders), hence we must use
+    // use Boost.Flyweight's intermodule_holder.  But since this is
+    // costly (according to the documentation), we do it only when
+    // required.
+    //
+    // Therefore if there is something wrong here (failed
+    // requirement), the problem is actually in vcsn/misc/symbol.hh.
     require(vname == Aut::element_type::sname(),
             f, ": invalid context: ", vname,
             ", expected: ", Aut::element_type::sname());
@@ -82,7 +96,7 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
   automaton l = read_automaton(lhs);
   automaton r = read_automaton(rhs);
   automaton prod = product(l, r);
-  label input = read_word(word, context_of(prod));
+  vcsn::dyn::label input = read_word(word, context_of(prod));
   weight w = eval(prod, input);
   print(w, std::cout, "text");
 }

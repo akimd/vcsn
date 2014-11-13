@@ -313,7 +313,7 @@ struct derivation: vcsn_function
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;
-    label l = read_word(opts2);
+    vcsn::dyn::label l = read_word(opts2);
     bool breaking = (1 < opts.argv.size()
                      ? boost::lexical_cast<bool>(opts.argv[1])
                      : false);
@@ -394,7 +394,7 @@ struct evaluate: vcsn_function
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;
-    label l = read_word(opts2);
+    vcsn::dyn::label l = read_word(opts2);
 
     // Process.
     auto res = vcsn::dyn::eval(aut, l);

@@ -27,7 +27,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/zip                                       \
   %D%/zip-maps
 
-unit_ldadd = $(libvcsn)
+unit_ldadd = $(libvcsn) $(RT_LIBS)
 
 noinst_HEADERS = %D%/test.hh %D%/weight.hh
 

@@ -117,7 +117,7 @@ lib_libvcsn_la_LDFLAGS =					\
 lib_libvcsn_la_LIBADD =					\
   $(BOOST_FLYWEIGHT_LIBS) $(BOOST_FILESYSTEM_LIBS)	\
   $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)		\
-  -lltdl
+  -lltdl $(RT_LIBS)
 
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_

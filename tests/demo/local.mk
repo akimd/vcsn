@@ -25,7 +25,7 @@ dist_TESTS += $(%C%_TESTS)
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-%D%/prod-eval.log: %D%/prod-eval
+%D%/prod-eval.log: %D%/prod-eval bin/vcsn-tafkit
 
 .PHONY: check-demo
 check-demo:
