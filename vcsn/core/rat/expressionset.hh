@@ -65,7 +65,7 @@ namespace vcsn
     DEFINE(zero);
 # undef DEFINE
 
-    /// A expression (a shared pointer to a tree).
+    /// An expression (a shared pointer to a tree).
     using value_t = typename node_t::value_t;
     /// Type tag for AST classes.
     using type_t = typename node_t::type_t;
@@ -224,17 +224,17 @@ namespace vcsn
     /// The transposed of this rational expression.
     value_t transpose(value_t e) const;
 
-    /// Make a `word' out of a expression
+    /// Make a `word' out of an expression
     word_t word(label_t l) const
     {
       return l;
     }
 
-    /// A expression matching one character amongst \a chars.
+    /// An expression matching one character amongst \a chars.
     template <typename... Args>
     value_t letter_class(Args&&... chars) const;
 
-    /// Parsing a expression in a stream.
+    /// Parsing an expression in a stream.
     value_t conv(std::istream& is) const;
 
     /// Converting from ourself: identity.
@@ -392,7 +392,7 @@ namespace vcsn
       }
     };
 
-    /// Join of a letterset and a expressionset.
+    /// Join of a letterset and an expressionset.
     // FIXME: what about the other labelsets?
     template <typename GenSet1,  typename Ctx2>
     struct join_impl<letterset<GenSet1>, expressionset<Ctx2>>

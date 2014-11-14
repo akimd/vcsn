@@ -79,7 +79,7 @@ namespace vcsn
   } // namespace detail
 
 
-  /// Star height of a expression.
+  /// Star height of an expression.
   template <typename RatExpSet>
   inline
   unsigned

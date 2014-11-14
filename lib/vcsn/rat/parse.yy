@@ -63,11 +63,11 @@
   {
     namespace rat
     {
-      /// Generate a expression for "e{range.first, range.second}".
+      /// Generate an expression for "e{range.first, range.second}".
       static
       exp_t power(const dyn::expressionset& rs, exp_t e, std::tuple<int, int> range);
 
-      /// Generate a expression for "e <+ f = e % f + f".
+      /// Generate an expression for "e <+ f = e % f + f".
       static
       exp_t prefer(const dyn::expressionset& rs, exp_t e, exp_t f);
 

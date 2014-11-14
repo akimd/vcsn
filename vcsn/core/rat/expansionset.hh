@@ -190,7 +190,7 @@ namespace vcsn
         return res;
       }
 
-      /// In place right multiplication by a expression.
+      /// In place right multiplication by an expression.
       value_t& rmul_here(value_t& res, const expression_t& rhs) const
       {
         for (auto& p: res.polynomials)

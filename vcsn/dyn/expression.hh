@@ -38,7 +38,7 @@ namespace vcsn
       };
 
 
-      /// Aggregate a expression and its expressionset.
+      /// Aggregate an expression and its expressionset.
       template <typename RatExpSet>
       class expression_wrapper: public expression_base
       {

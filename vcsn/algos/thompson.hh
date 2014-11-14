@@ -14,7 +14,7 @@ namespace vcsn
 {
   namespace rat
   {
-    /// Build a Thompson automaton from a expression.
+    /// Build a Thompson automaton from an expression.
     ///
     /// \tparam Aut        relative the generated automaton
     /// \tparam RatExpSet  relative to the RatExp.
@@ -160,7 +160,7 @@ namespace vcsn
 
   } // rat::
 
-  /// Build a Thompson automaton from a expression.
+  /// Build a Thompson automaton from an expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam RatExpSet  relative to the RatExp.
@@ -174,7 +174,7 @@ namespace vcsn
     return thompson(r);
   }
 
-  /// Build a Thompson automaton from a expression.
+  /// Build a Thompson automaton from an expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam RatExpSet  relative to the RatExp.

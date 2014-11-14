@@ -321,7 +321,7 @@ namespace vcsn
     /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);
 
-    /// The left-multiplication of a expression with \a w as weight.
+    /// The left-multiplication of an expression with \a w as weight.
     expression left_mult(const weight& w, const expression& aut);
 
     /// The lifted LAO automaton from \a aut.
@@ -470,7 +470,7 @@ namespace vcsn
     /// \param ctx   the context.
     label read_label(std::istream& is, const context& ctx);
 
-    /// Read a expression from a stream.
+    /// Read an expression from a stream.
     /// \param is      the input stream.
     /// \param rs      the expression's expressionset.
     /// \param format  the expression's format.
@@ -494,7 +494,7 @@ namespace vcsn
     /// \pre aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
 
-    /// The right-multiplication of a expression with \a w as weight.
+    /// The right-multiplication of an expression with \a w as weight.
     expression right_mult(const expression& aut, const weight& w);
 
     /// The new automaton that each state has name corresponding
@@ -537,7 +537,7 @@ namespace vcsn
     /// Star of a standard automaton.
     automaton star(const automaton& aut);
 
-    /// Star height of a expression.
+    /// Star height of an expression.
     unsigned star_height(const expression& rs);
 
     /// A normalized form where star is applied only to expression
@@ -582,7 +582,7 @@ namespace vcsn
     /// \param exp              the input expression
     expansion to_expansion(const expression& exp);
 
-    /// A expression denoting the language of \a aut.
+    /// An expression denoting the language of \a aut.
     expression to_expression(const automaton& aut,
                              const std::string& algo = "auto");
 

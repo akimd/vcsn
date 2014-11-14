@@ -139,7 +139,7 @@ namespace vcsn
     return rs.lmul(w, r);
   }
 
-  /// Join between a expressionset and a weightset.
+  /// Join between an expressionset and a weightset.
   ///
   /// We must not perform a plain
   ///

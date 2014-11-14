@@ -341,7 +341,7 @@ namespace vcsn
         expansion_t res = to_expansion(e.sub());
         res_.constant = ws_.is_zero(res.constant) ? ws_.one() : ws_.zero();
 
-        // Turn the polynomials into a expression, and complement it.
+        // Turn the polynomials into an expression, and complement it.
         for (auto l: rs_.labelset()->genset())
           ps_.add_here
             (res_.polynomials[l],

@@ -32,7 +32,7 @@ namespace vcsn
         }
       };
 
-      /// Aggregate a expansion and its expansionset.
+      /// Aggregate an expansion and its expansionset.
       template <typename ExpansionSet>
       class expansion_wrapper: public expansion_base
       {

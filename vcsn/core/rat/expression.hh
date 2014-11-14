@@ -86,7 +86,7 @@ namespace vcsn
     public:
       using context_t = Context;
       using node_t = rat::node<context_t>;
-      /// A expression usable with value semantics.
+      /// An expression usable with value semantics.
       using value_t = std::shared_ptr<const node_t>;
       using values_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<context_t>;

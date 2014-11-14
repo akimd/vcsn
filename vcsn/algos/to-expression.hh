@@ -126,7 +126,7 @@ namespace vcsn
     };
 
 
-    /// Eliminate states in an automaton whose labelset is a expressionset.
+    /// Eliminate states in an automaton whose labelset is an expressionset.
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_expressions>
     {
@@ -190,7 +190,7 @@ namespace vcsn
       int debug_;
       /// The automaton we work on.
       automaton_t& aut_;
-      /// Shorthand to the labelset, which is a expressionset.
+      /// Shorthand to the labelset, which is an expressionset.
       const expressionset_t& rs_ = *aut_->labelset();
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();

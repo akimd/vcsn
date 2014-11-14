@@ -98,7 +98,7 @@ namespace vcsn
         : rs_(rs)
       {}
 
-      /// Break a expression into a polynomial.
+      /// Break an expression into a polynomial.
       polynomial_t operator()(const expression_t& v)
       {
         return split(v);
@@ -250,7 +250,7 @@ namespace vcsn
     };
   }
 
-  /// Split a expression.
+  /// Split an expression.
   template <typename RatExpSet>
   inline
   rat::expression_polynomial_t<RatExpSet>

@@ -154,7 +154,7 @@ namespace vcsn
       VCSN_RAT_VISIT(complement, e)
       {
         e.sub()->accept(*this);
-        // Turn the polynomial into a expression, and complement it.
+        // Turn the polynomial into an expression, and complement it.
         res_ = polynomial_t{{rs_.complement(expression(res_)), ws_.one()}};
       }
 
@@ -194,7 +194,7 @@ namespace vcsn
 
   } // rat::
 
-  /// Derive a expression wrt to a letter.
+  /// Derive an expression wrt to a letter.
   template <typename RatExpSet>
   inline
   rat::expression_polynomial_t<RatExpSet>
@@ -232,7 +232,7 @@ namespace vcsn
   }
 
 
-  /// Derive a expression wrt to a word.
+  /// Derive an expression wrt to a word.
   template <typename RatExpSet>
   inline
   rat::expression_polynomial_t<RatExpSet>

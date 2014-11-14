@@ -45,7 +45,7 @@ namespace vcsn
     class expression_automaton_impl;
   }
 
-  /// A expression automaton as a shared pointer.
+  /// An expression automaton as a shared pointer.
   template <typename Aut>
   using expression_automaton
     = std::shared_ptr<detail::expression_automaton_impl<Aut>>;

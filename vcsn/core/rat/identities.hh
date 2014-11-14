@@ -12,7 +12,7 @@ namespace vcsn LIBVCSN_API
   namespace rat
   {
 
-    /// A expressionset can implement several different sets of identities on
+    /// An expressionset can implement several different sets of identities on
     /// expressions.  This type represents one of those sets.
     enum class identities
     {

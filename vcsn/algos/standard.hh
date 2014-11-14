@@ -169,7 +169,7 @@ namespace vcsn
 
   namespace rat
   {
-    /// Build a standard automaton from a expression.
+    /// Build a standard automaton from an expression.
     ///
     /// \tparam Aut        relative the generated automaton
     /// \tparam RatExpSet  relative to the RatExp.
@@ -371,7 +371,7 @@ namespace vcsn
   } // rat::
 
 
-  /// Build a standard automaton from a expression.
+  /// Build a standard automaton from an expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam RatExpSet  relative to the RatExp.

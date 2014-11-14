@@ -22,7 +22,7 @@ namespace detail
   /// Use it when you want to avoid depending on the expressionset
   /// parameters (e.g., from a parser).  To use it, actually create a
   /// derived class (expressionset_wrapper) with the given
-  /// parameters, but handle as a reference to a expressionset_base.
+  /// parameters, but handle as a reference to an expressionset_base.
   class expressionset_base
   {
   public:
@@ -76,7 +76,7 @@ namespace detail
 
     using letter_class_t = std::set<std::pair<std::string, std::string>>;
 
-    /// A expression matching one character amongst \a chars.
+    /// An expression matching one character amongst \a chars.
     /// \param chars
     ///   The letter class as a set of ranges.
     /// \param accept
@@ -93,7 +93,7 @@ namespace detail
     virtual std::ostream& print(const value_t v, std::ostream& o) const = 0;
   };
 
-  /// Wrapper around a expressionset.
+  /// Wrapper around an expressionset.
   template <typename RatExpSet>
   class expressionset_wrapper : public expressionset_base
   {
@@ -128,9 +128,9 @@ namespace detail
 
     virtual dyn::expression make_expression(const value_t& v) const override;
 
-    /*--------------------------------------.
-    | Specializations from expressionset_base.  |
-    `--------------------------------------*/
+    /*-------------------------------------------.
+    | Specializations from expressionset_base.   |
+    `-------------------------------------------*/
 
     virtual rat::identities identities() const override;
 
