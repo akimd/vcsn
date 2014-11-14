@@ -548,7 +548,8 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(determinize,
-                       (const automaton& aut, const std::string& algo) -> automaton);
+                       (const automaton& aut, const std::string& algo)
+                       -> automaton);
     }
   }
 
@@ -557,7 +558,7 @@ namespace vcsn
   | dyn::codeterminize.  |
   `---------------------*/
 
-  /// FIXME: duplicate code with determinize.
+  // FIXME: duplicate code with determinize.
   namespace dyn
   {
     namespace detail
@@ -591,7 +592,8 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(codeterminize,
-                       (const automaton& aut, const std::string& algo) -> automaton);
+                       (const automaton& aut, const std::string& algo)
+                       -> automaton);
     }
   }
 
