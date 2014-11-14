@@ -15,7 +15,6 @@
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/fwd.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
-# include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is-valid.hh>
 # include <vcsn/core/kind.hh>
@@ -427,7 +426,7 @@ namespace vcsn
               update_heap_(n);
             if (1 < debug_)
               std::cerr << " #tr: "
-                        << detail_info::num_eps_transitions(aut_)
+                        << num_spontaneous_transitions_()
                         << "/" << aut_->num_transitions() << std::endl;
             if (2 < debug_)
               {
@@ -488,6 +487,18 @@ namespace vcsn
       {
         require(is_valid(aut), "invalid automaton");
         in_situ_remover(aut, prune);
+      }
+
+      /// The number of spontaneous transitions in aut_.
+      ///
+      /// Duplicates info.hh, but since info.hh uses this file, we get
+      /// an insane mutual dependency.  Break it.
+      size_t num_spontaneous_transitions_() const
+      {
+        size_t res = 0;
+        for (auto t : aut_->transitions())
+          res += aut_->labelset()->is_one(aut_->label_of(t));
+        return res;
       }
 
     private:
