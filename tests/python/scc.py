@@ -76,3 +76,7 @@ a = vcsn.automaton('''digraph
   7 -> 2 [label = "<13>d"]
 }''')
 check(4, a)
+
+ctx = vcsn.context("lal_char(abc), z")
+a = ctx.expression("(abc)*{5}").standard()
+check(6, a)
