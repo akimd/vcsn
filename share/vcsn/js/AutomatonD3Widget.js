@@ -627,10 +627,7 @@ function(WidgetManager, d3, $,  _){
                 .on("mouseover", function() {
                     this.focus();
                     that.overtext = true;
-                })
-                .attr("value", function() {
-                    if(that.selected_transition) {
-                        return that.selected_transition.label;}
+                    this.value = that.selected_transition.label;
                 })
                 .on("mouseout", function() {
                     this.blur()
@@ -638,7 +635,19 @@ function(WidgetManager, d3, $,  _){
                     if(that.selected_transition) {
                         var txt = that.frame.node().value;
                         that.selected_transition.label = txt;
-                        that.model.set('transitions', that.transitions);
+
+                        // trick to update automatically the label for vcsn
+                        var old_transitions = that.transitions;
+                        var last_transition = that.transitions[that.transitions.length -1]
+                        var new_transitions1 = that.model.get('transitions').slice();
+                        new_transitions1.splice(that.transitions.indexOf(that.transitions[that.transitions.length -1]),1)
+                        that.model.set('transitions', new_transitions1)
+                        var new_transitions2 = that.model.get('transitions').slice();
+                        new_transitions2.push(last_transition)
+                        that.model.set('transitions', new_transitions2)
+                        that.touch()
+
+                        that.model.set('transitions', old_transitions);
                         that.touch();
                     }
                     this.value = '';
