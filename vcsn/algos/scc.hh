@@ -17,12 +17,13 @@
 
 namespace vcsn
 {
-  /*-------------------------------.
-  | strongly connected component.  |
-  `-------------------------------*/
-
   namespace detail
   {
+
+    /*--------------------------------.
+    | strongly connected component.   |
+    `--------------------------------*/
+
     /// A strongly-connected component: set of states.
     /// Bench show that using std::unordered_set is better than
     /// std::set about ~10x. For example:
@@ -38,8 +39,16 @@ namespace vcsn
     using components_t = std::vector<component_t<Aut>>;
 
 
-    /// Use Tarjan's algorithm to find all strongly
-    /// connected components.
+
+    /*--------------------.
+    | tarjan_recursive.   |
+    `--------------------*/
+
+    /// Tarjan's algorithm to find all strongly connected components:
+    /// iterative implementation.
+    ///
+    /// Often slightly slower than the recursive implementation, but
+    /// no limitation due to the stack.
     template <typename Aut>
     class scc_tarjan_recursive_impl
     {
@@ -114,6 +123,15 @@ namespace vcsn
       std::stack<state_t> stack_;
     };
 
+    /*--------------------.
+    | tarjan_recursive.   |
+    `--------------------*/
+
+    /// Tarjan's algorithm to find all strongly connected components:
+    /// recursive implementation.
+    ///
+    /// Often slightly faster than the recursive implementation, but
+    /// may overflow the stack.
     template <typename Aut>
     class scc_tarjan_iterative_impl
     {
@@ -227,15 +245,12 @@ namespace vcsn
         iterator_t end;
       };
     };
-  }
 
 
-  /*--------------------.
-  | reverse_postorder.  |
-  `--------------------*/
+    /*---------------------.
+    | reverse_postorder.   |
+    `---------------------*/
 
-  namespace detail
-  {
     /// Get all vertices in reverse postorder
     /// by using depth first search.
     template <typename Aut>
@@ -361,7 +376,7 @@ namespace vcsn
     kosaraju
   };
 
-  inline scc_algo_t scc_algo_to_enum(const std::string& algo)
+  inline scc_algo_t scc_algo(const std::string& algo)
   {
     scc_algo_t res;
     if (algo == "auto" || algo == "tarjan_iterative")
@@ -439,7 +454,7 @@ namespace vcsn
   template <typename Aut>
   std::size_t num_sccs(const Aut& aut, const std::string& algo = "auto")
   {
-    return strong_components(aut, scc_algo_to_enum(algo)).size();
+    return strong_components(aut, scc_algo(algo)).size();
   }
 
   namespace dyn
@@ -467,24 +482,20 @@ namespace vcsn
 
   namespace detail
   {
+    /// An automaton decorator that maps states to their scc-number.
     template <typename Aut>
     class scc_automaton_impl
-      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
+      : public automaton_decorator<Aut>
     {
     public:
       using automaton_t = Aut;
-      using automaton_nocv_t =
-        typename automaton_t::element_type::automaton_nocv_t;
-      using super_t = automaton_decorator<automaton_nocv_t>;
+      using super_t = automaton_decorator<automaton_t>;
       using state_t = state_t_of<Aut>;
 
-      scc_automaton_impl(const Aut& input, scc_algo_t algo)
-        : super_t(input), algo_{algo}
-      {}
-
-      void operator()()
+      scc_automaton_impl(const automaton_t& input, scc_algo_t algo)
+        : super_t(input)
       {
-        const auto& sccs = ::vcsn::strong_components(aut_, algo_);
+        const auto& sccs = ::vcsn::strong_components(aut_, algo);
         size_t num_sccs = sccs.size();
         for (int i = 0; i < num_sccs; ++i)
           for (auto s : sccs[i])
@@ -520,16 +531,11 @@ namespace vcsn
         return o;
       }
 
-    protected:
-      using super_t::aut_;
-
     private:
+      using super_t::aut_;
       /// Store the component number of a state.
       std::map<state_t, size_t> component_;
       std::map<state_t, state_t> map_;
-
-      /// Algorithm apply to find strongly connected component.
-      scc_algo_t algo_;
     };
   }
 
@@ -542,17 +548,14 @@ namespace vcsn
   scc_automaton<Aut>
   scc(const Aut& aut, const std::string& algo)
   {
-    auto res = make_shared_ptr<scc_automaton<Aut>>(aut,
-                                                   scc_algo_to_enum(algo));
-    res->operator()();
-    return res;
+    return make_shared_ptr<scc_automaton<Aut>>(aut, scc_algo(algo));
   }
 
   namespace dyn
   {
     namespace detail
     {
-      // Bridge.
+      /// Bridge.
       template <typename Aut, typename String>
       automaton scc(const automaton& aut, const std::string& algo)
       {
