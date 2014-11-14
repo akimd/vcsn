@@ -171,6 +171,11 @@ struct automaton
     return vcsn::dyn::complete(val_);
   }
 
+  automaton component(unsigned com_num) const
+  {
+    return vcsn::dyn::component(val_, com_num);
+  }
+
   automaton compose(automaton& rhs)
   {
     return vcsn::dyn::compose(val_, rhs.val_);
@@ -179,6 +184,11 @@ struct automaton
   automaton concatenate(const automaton& rhs) const
   {
     return vcsn::dyn::concatenate(val_, rhs.val_);
+  }
+
+  automaton condense() const
+  {
+    return vcsn::dyn::condense(val_);
   }
 
   ::context context() const
@@ -366,9 +376,9 @@ struct automaton
     return vcsn::dyn::normalize(val_);
   }
 
-  std::size_t num_sccs(const std::string& algo = "auto") const
+  std::size_t num_components() const
   {
-    return vcsn::dyn::num_sccs(val_, algo);
+    return vcsn::dyn::num_components(val_);
   }
 
   automaton pair(bool keep_initials = false) const
@@ -976,8 +986,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("cominimize", &automaton::cominimize, (arg("algo") = "auto"))
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
+    .def("component", &automaton::component)
     .def("compose", &automaton::compose)
     .def("concatenate", &automaton::concatenate)
+    .def("condense", &automaton::condense)
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
     .def("determinize", &automaton::determinize, (arg("algo") = "auto"))
@@ -1017,7 +1029,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lift", &automaton::lift)
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("normalize", &automaton::normalize)
-    .def("num_sccs", &automaton::num_sccs, (arg("algo") = "auto"))
+    .def("num_components", &automaton::num_components)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)

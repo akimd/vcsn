@@ -14,12 +14,11 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE(num_sccs);
-
+    REGISTER_DEFINE(num_components);
     std::size_t
-    num_sccs(const automaton& aut, const std::string& algo)
+    num_components(const automaton& aut)
     {
-      return detail::num_sccs_registry().call(aut, algo);
+      return detail::num_components_registry().call(aut);
     }
 
     REGISTER_DEFINE(scc);
@@ -28,5 +27,20 @@ namespace vcsn
     {
       return detail::scc_registry().call(aut, algo);
     }
+
+    REGISTER_DEFINE(component);
+    automaton
+    component(const automaton& aut, unsigned com_num)
+    {
+      return detail::component_registry().call(aut, com_num);
+    }
+
+    REGISTER_DEFINE(condense);
+    automaton
+    condense(const automaton& aut)
+    {
+      return detail::condense_registry().call(aut);
+    }
+
   }
 }

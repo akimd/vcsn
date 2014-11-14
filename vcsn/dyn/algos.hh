@@ -65,6 +65,11 @@ namespace vcsn
     /// \pre aut is lal
     automaton complete(const automaton& aut);
 
+    /// The automaton of a strongly connected component.
+    /// \param aut    the input automaton.
+    /// \param com_num    the component number.
+    automaton component(const automaton& aut, unsigned com_num);
+
     /// The composition of transducers \a lhs and \a rhs.
     automaton compose(automaton& lhs, automaton& rhs);
 
@@ -76,6 +81,10 @@ namespace vcsn
 
     /// Concatenate two expressions.
     expression concatenate(const expression& lhs, const expression& rhs);
+
+    /// The condensation of \a aut such that each state is a strongly
+    /// connected component.
+    automaton condense(const automaton& aut);
 
     /// The Hadamard product of expressions \a lhs and \a rhs.
     expression conjunction(const expression& lhs, const expression& rhs);
@@ -358,13 +367,7 @@ namespace vcsn
     automaton normalize(const automaton& aut);
 
     /// The number of strongly connected components.
-    /// \param aut    the input automaton.
-    /// \param algo   the specific algorithm to use.
-    ///     "auto" or "tarjan_iterator"     Tarjan iterative
-    ///     "tarjan_recursive"              Tarjan recursive
-    ///     "kosaraju"                      Kosaraju
-    std::size_t num_sccs(const automaton& aut,
-                         const std::string& algo = "auto");
+    std::size_t num_components(const automaton& aut);
 
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut, bool keep_initials = false);

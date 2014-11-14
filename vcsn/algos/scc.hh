@@ -3,11 +3,14 @@
 
 # include <limits>
 # include <stack>
+# include <queue>
 
 # include <boost/range/irange.hpp>
 
+# include <vcsn/algos/filter.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/misc/crange.hh>
+# include <vcsn/core/partition-automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/builtins.hh>
@@ -28,9 +31,9 @@ namespace vcsn
     /// Bench show that using std::unordered_set is better than
     /// std::set about ~10x. For example:
     /// std::set:
-    ///   5.53s: a.num_sccs("tarjan_iterative") # a = std((abc)*{1000})
+    ///   5.53s: a.scc("tarjan_iterative") # a = std((abc)*{1000})
     /// std::unordereset:
-    ///   0.58s: a.num_sccs("tarjan_iterative") # a = std((abc)*{1000})
+    ///   0.58s: a.scc("tarjan_iterative") # a = std((abc)*{1000})
     template <typename Aut>
     using component_t = std::unordered_set<state_t_of<Aut>>;
 
@@ -445,37 +448,6 @@ namespace vcsn
     return res;
   }
 
-
-  /*------------.
-  | num_sccs.   |
-  `------------*/
-
-  /// Get number of strongly connected components.
-  template <typename Aut>
-  std::size_t num_sccs(const Aut& aut, const std::string& algo = "auto")
-  {
-    return strong_components(aut, scc_algo(algo)).size();
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut, typename String>
-      std::size_t num_sccs(const automaton& aut, const std::string& algo)
-      {
-        const auto& a = aut->as<Aut>();
-        return ::vcsn::num_sccs(a, algo);
-      }
-
-      REGISTER_DECLARE(num_sccs,
-                       (const automaton&, const std::string& algo)
-                       -> std::size_t);
-    }
-  }
-
-
   /*-----------------.
   | scc_automaton.   |
   `-----------------*/
@@ -491,14 +463,16 @@ namespace vcsn
       using automaton_t = Aut;
       using super_t = automaton_decorator<automaton_t>;
       using state_t = state_t_of<Aut>;
+      using components_t = detail::components_t<Aut>;
+      using component_t = detail::component_t<Aut>;
 
       scc_automaton_impl(const automaton_t& input, scc_algo_t algo)
         : super_t(input)
       {
-        const auto& sccs = ::vcsn::strong_components(aut_, algo);
-        size_t num_sccs = sccs.size();
+        components_ = ::vcsn::strong_components(aut_, algo);
+        size_t num_sccs = components_.size();
         for (int i = 0; i < num_sccs; ++i)
-          for (auto s : sccs[i])
+          for (auto s : components_[i])
             component_[s] = i + 1;
       }
 
@@ -531,11 +505,28 @@ namespace vcsn
         return o;
       }
 
+      const component_t component(unsigned com_num) const
+      {
+        if (com_num < 0 || components_.size() <= com_num)
+          raise("component: com_num must have between 0 and "
+                + components_.size());
+        return components_[com_num];
+      }
+
+      const components_t components() const
+      {
+        return components_;
+      }
+
+      size_t num_components() const
+      {
+        return components_.size();
+      }
     private:
       using super_t::aut_;
       /// Store the component number of a state.
       std::map<state_t, size_t> component_;
-      std::map<state_t, state_t> map_;
+      components_t components_;
     };
   }
 
@@ -566,6 +557,159 @@ namespace vcsn
       REGISTER_DECLARE(scc,
                        (const automaton&, const std::string& algo)
                        -> automaton);
+    }
+  }
+
+  /*----------------.
+  | num_components. |
+  `----------------*/
+
+  /// Get number of strongly connected components.
+  template <typename Aut>
+  std::size_t num_components(const scc_automaton<Aut>& aut)
+  {
+    return aut->num_components();
+  }
+
+  template <typename Aut>
+  std::size_t num_components(const Aut&)
+  {
+    raise("num_components: requires a scc_automaton");
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      std::size_t num_components(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return ::vcsn::num_components(a);
+      }
+
+      REGISTER_DECLARE(num_components,
+                       (const automaton&) -> std::size_t);
+    }
+  }
+
+
+  /*-----------.
+  | component. |
+  `-----------*/
+
+  /// Get a sub automaton who is a strongly connected component.
+  template <typename Aut>
+  inline
+  filter_automaton<scc_automaton<Aut>>
+  component(const scc_automaton<Aut>& aut, unsigned com_num)
+  {
+    std::unordered_set<state_t_of<Aut>> ss;
+    for (auto s : aut->component(com_num - 1))
+      ss.emplace(s);
+    return vcsn::filter(aut, ss);
+  }
+
+  template <typename Aut>
+  filter_automaton<scc_automaton<Aut>>
+  component(const Aut&, unsigned)
+  {
+    raise("component: requires a scc_automaton");
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut, typename Unsigned>
+      automaton component(const automaton& aut, unsigned com_num)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::component(a, com_num));
+      }
+
+      REGISTER_DECLARE(component,
+                       (const automaton&, unsigned) -> automaton);
+    }
+  }
+
+
+  /*----------.
+  | condense. |
+  `----------*/
+
+  /// Create a condensation of automaton with each its state who is a strongly
+  /// connected component of \a aut.
+  template <typename Aut>
+  partition_automaton<scc_automaton<Aut>>
+  condense(const scc_automaton<Aut>& aut)
+  {
+    auto res = make_shared_ptr<partition_automaton<scc_automaton<Aut>>>(aut);
+    using state_t = state_t_of<Aut>;
+    /// map from state of aut to state(component) of new automaton.
+    std::unordered_map<state_t, state_t> map;
+
+    // Add states to new automaton.
+    std::set<state_t> ss;
+    for (const auto& com : aut->components())
+      {
+        ss.clear();
+        for (auto s : com)
+          ss.emplace(s);
+        state_t new_state = res->new_state(ss);
+        for (auto s : com)
+          map[s] = new_state;
+      }
+    map[aut->pre()] = res->pre();
+    map[aut->post()] = res->post();
+
+    // Add transitions to new automaton.
+    std::unordered_set<state_t> marked;
+    std::queue<state_t> todo;
+    todo.emplace(aut->pre());
+    marked.emplace(aut->pre());
+    while (!todo.empty())
+      {
+        auto s = todo.front();
+        todo.pop();
+        for (auto t : aut->all_out(s))
+          {
+            auto dst = aut->dst_of(t);
+            res->add_transition(map[s], map[dst], aut->label_of(t),
+                                aut->weight_of(t));
+            if (!has(marked, dst))
+              {
+                todo.emplace(dst);
+                marked.emplace(dst);
+              }
+          }
+      }
+    return res;
+  }
+
+  template <typename Aut>
+  partition_automaton<Aut>
+  condense(const Aut& aut)
+  {
+    raise("condense: The automaton must have type scc_automaton");
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      automaton condense(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::condense(a));
+      }
+
+      REGISTER_DECLARE(condense,
+                       (const automaton&) -> automaton);
     }
   }
 

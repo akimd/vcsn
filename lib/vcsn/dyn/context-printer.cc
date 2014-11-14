@@ -35,6 +35,8 @@ namespace vcsn
       ALGO("coaccessible", "accessible");
       ALGO("codeterminize", "determinize");
       ALGO("cominimize", "minimize");
+      ALGO("component", "scc");
+      ALGO("condense", "scc");
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
       ALGO("copy-convert", "copy");
@@ -59,7 +61,7 @@ namespace vcsn
       ALGO("make-expressionset", "make-context");
       ALGO("make-word-context", "make-context");
       ALGO("multiply", "concatenate");
-      ALGO("num-sccs", "scc");
+      ALGO("num-components", "scc");
       ALGO("pair", "synchronizing-word");
       ALGO("power", "product");
       ALGO("right-mult", "left-mult");

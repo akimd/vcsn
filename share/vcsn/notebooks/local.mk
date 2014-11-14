@@ -38,6 +38,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.reduce.ipynb                    \
+  %D%/automaton.scc.ipynb                       \
   %D%/automaton.standard.ipynb                  \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \

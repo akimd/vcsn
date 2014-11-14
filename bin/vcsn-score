@@ -267,5 +267,5 @@ bench('a.accessible', 'a = thompson({}).proper(False)'.format(r),
 r = "(abc)*{1000}"
 a = vcsn.context('lal_char(abc), b').expression(r).standard()
 for algo in ["kosaraju", "tarjan_iterative", "tarjan_recursive"]:
-    bench('a.num_sccs("{}")'.format(algo), 'a = std({})'.format(r),
-          lambda: a.num_sccs(algo), number = 20)
+    bench('a.scc("{}")'.format(algo), 'a = std({})'.format(r),
+          lambda: a.scc(algo), number = 20)
