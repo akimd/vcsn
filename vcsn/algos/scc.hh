@@ -41,7 +41,7 @@ namespace vcsn
 
 
     /*--------------------.
-    | tarjan_recursive.   |
+    | tarjan_iterative.   |
     `--------------------*/
 
     /// Tarjan's algorithm to find all strongly connected components:
@@ -49,89 +49,6 @@ namespace vcsn
     ///
     /// Often slightly slower than the recursive implementation, but
     /// no limitation due to the stack.
-    template <typename Aut>
-    class scc_tarjan_recursive_impl
-    {
-    public:
-      using state_t = state_t_of<Aut>;
-      using component_t = detail::component_t<Aut>;
-      using components_t = detail::components_t<Aut>;
-
-      scc_tarjan_recursive_impl(const Aut& aut)
-        : aut_{aut}
-      {
-        for (auto s : aut_->states())
-          if (!has(marked_, s))
-            dfs(s);
-      }
-
-      const components_t& components() const
-      {
-        return components_;
-      }
-
-    private:
-      void dfs(state_t s)
-      {
-        std::size_t min = curr_vertex_num_++;
-        low_.emplace(s, min);
-        marked_.emplace(s);
-        stack_.push(s);
-
-        for (auto t : aut_->out(s))
-          {
-            auto dst = aut_->dst_of(t);
-            if (!has(marked_, dst))
-              dfs(dst);
-            if (low_[dst] < min)
-              min = low_[dst];
-          }
-        if (min < low_[s])
-          {
-            low_[s] = min;
-            return;
-          }
-
-        state_t w;
-        components_.emplace_back(component_t{});
-        auto& com = components_.back();
-        do
-          {
-            w = stack_.top();
-            stack_.pop();
-            com.emplace(w);
-            // This vertex belong only one component
-            // so remove it by update low value to max size.
-            low_[w] = std::numeric_limits<size_t>::max();
-          }
-        while (w != s);
-      }
-
-      /// Input automaton.
-      Aut aut_;
-      /// The current visited vertex.
-      /// It used to preorder number counter.
-      std::size_t curr_vertex_num_ = 0;
-      /// All compnents.
-      components_t components_;
-      /// Visited vertices.
-      std::unordered_set<state_t> marked_;
-      /// low_[s] is minimum of low_{X},
-      /// with X is all states on output transitions of s.
-      std::unordered_map<state_t, std::size_t> low_;
-      /// Contains list vertices same the component.
-      std::stack<state_t> stack_;
-    };
-
-    /*--------------------.
-    | tarjan_recursive.   |
-    `--------------------*/
-
-    /// Tarjan's algorithm to find all strongly connected components:
-    /// recursive implementation.
-    ///
-    /// Often slightly faster than the recursive implementation, but
-    /// may overflow the stack.
     template <typename Aut>
     class scc_tarjan_iterative_impl
     {
@@ -243,6 +160,90 @@ namespace vcsn
         iterator_t pos;
         iterator_t end;
       };
+    };
+
+
+    /*--------------------.
+    | tarjan_recursive.   |
+    `--------------------*/
+
+    /// Tarjan's algorithm to find all strongly connected components:
+    /// recursive implementation.
+    ///
+    /// Often slightly faster than the iterative implementation, but
+    /// may overflow the stack.
+    template <typename Aut>
+    class scc_tarjan_recursive_impl
+    {
+    public:
+      using state_t = state_t_of<Aut>;
+      using component_t = detail::component_t<Aut>;
+      using components_t = detail::components_t<Aut>;
+
+      scc_tarjan_recursive_impl(const Aut& aut)
+        : aut_{aut}
+      {
+        for (auto s : aut_->states())
+          if (!has(marked_, s))
+            dfs(s);
+      }
+
+      const components_t& components() const
+      {
+        return components_;
+      }
+
+    private:
+      void dfs(state_t s)
+      {
+        std::size_t min = curr_vertex_num_++;
+        low_.emplace(s, min);
+        marked_.emplace(s);
+        stack_.push(s);
+
+        for (auto t : aut_->out(s))
+          {
+            auto dst = aut_->dst_of(t);
+            if (!has(marked_, dst))
+              dfs(dst);
+            if (low_[dst] < min)
+              min = low_[dst];
+          }
+        if (min < low_[s])
+          {
+            low_[s] = min;
+            return;
+          }
+
+        state_t w;
+        components_.emplace_back(component_t{});
+        auto& com = components_.back();
+        do
+          {
+            w = stack_.top();
+            stack_.pop();
+            com.emplace(w);
+            // This vertex belong only one component
+            // so remove it by update low value to max size.
+            low_[w] = std::numeric_limits<size_t>::max();
+          }
+        while (w != s);
+      }
+
+      /// Input automaton.
+      Aut aut_;
+      /// The current visited vertex.
+      /// It used to preorder number counter.
+      std::size_t curr_vertex_num_ = 0;
+      /// All compnents.
+      components_t components_;
+      /// Visited vertices.
+      std::unordered_set<state_t> marked_;
+      /// low_[s] is minimum of low_{X},
+      /// with X is all states on output transitions of s.
+      std::unordered_map<state_t, std::size_t> low_;
+      /// Contains list vertices same the component.
+      std::stack<state_t> stack_;
     };
 
 
