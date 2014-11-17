@@ -21,9 +21,10 @@ class VcsnD3DataFrame(object):
             aut = self.ipython.shell.user_ns[self.name].strip()
         # Here Add the conversion from vcsn to d3 datas
         else:
-            aut = AutomatonD3Widget(states=[{'id': 0}],
-                                    transitions=[{'source':'0','label':''},
-                                                 {'target':'0','label':''}])
+            states = [{'id': 0}]
+            transitions = [{'source': '0', 'label': ''},
+                           {'target': '0', 'label': ''}]
+        aut = AutomatonD3Widget(states=states, transitions=transitions)
         self._widget = aut
         self._widget.on_trait_change(self._on_transitions_changed, 'transitions')
 
@@ -49,13 +50,14 @@ class VcsnD3DataFrame(object):
         display(self._widget)
 
 class AutomatonD3Widget(widgets.DOMWidget):
-    _view_name = traitlets.Unicode('AutomatonView', sync=True)
-    states = traitlets.List(sync=True)
-    transitions = traitlets.List(sync=True)
 
-    # Here the Javascript Code
-    # Using D3, Jquery and Backbone
-    # We load and display it from the js file
-    f = open(vcsn.datadir + '/js/AutomatonD3Widget.js', 'r')
-    js = f.read()
-    display(Javascript(js))
+        # Here the Javascript Code
+        # Using D3, Jquery and Backbone
+        # We load and display it from the js file
+        f = open(vcsn.datadir + '/js/AutomatonD3Widget.js', 'r')
+        js = f.read()
+        display(Javascript(js))
+
+        _view_name = traitlets.Unicode('AutomatonView', sync=True)
+        states = traitlets.List(sync=True)
+        transitions = traitlets.List(sync=True)

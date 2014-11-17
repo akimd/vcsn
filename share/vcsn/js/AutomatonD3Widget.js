@@ -101,7 +101,7 @@ function(WidgetManager, d3, $,  _){
             this.svg.on('mousedown', function(d,i){ that.mousedown(this, d, i);})
                 .on('mousemove', function(d,i){ that.mousemove(this, d, i);})
                 .on('mouseup', function(d,i){ that.mouseup(this, d, i);});
-            d3.select(window)
+            d3.select("body")
                 .on('keydown', function(d,i){ that.keydown(this, d, i);})
                 .on('keyup', function(d,i){ that.keyup(this, d, i);});
 
@@ -331,15 +331,25 @@ function(WidgetManager, d3, $,  _){
                 case 66: // key delete
                     if(!this.overtext){
                         if(this.selected_state) {
+                            var new_transitions = this.model.get('transitions').slice();
                             this.states.splice(this.states.indexOf(this.selected_state), 1);
-                            this.spliceTransitionsForState(this.selected_state, this.transitions);
+                            this.spliceTransitionsForState(this.selected_state, new_transitions);
+                            this.model.set('transitions', new_transitions)
+                            this.touch();
                         }
                         else if(this.selected_transition && !this.overtext) {
                             if(this.selected_transition.target == this.selected_transition.source){
-                                this.transitions.splice(this.transitions.indexOf(this.selected_transition), 1);
+                                var new_transitions = this.model.get('transitions').slice();
+                                new_transitions.splice(new_transitions.indexOf(this.selected_transition), 1);
+                                this.model.set('transitions', new_transitions)
+                                this.touch();
                             }
                             else {
-                                this.transitions.splice(this.transitions.indexOf(this.selected_transition), 1);
+                                var new_transitions = this.model.get('transitions').slice();
+                                new_transitions.splice(new_transitions.indexOf(this.selected_transition), 1);
+                                this.model.set('transitions', new_transitions)
+                                this.touch();
+
                             }
                         }
                         if(!this.overtext) {
@@ -358,7 +368,7 @@ function(WidgetManager, d3, $,  _){
                     this.update();
                     break;
                 case 70: // key F : create final transition
-                    if(!this.overtext){
+                    if(!(this.isHidden(this.selected_state)) && !this.overtext){
                         if(this.selected_state) {
                             if(!(this.isFinal(this.selected_state, this.transitions))) {
                                 var pointx = this.selected_state.x,
@@ -377,15 +387,18 @@ function(WidgetManager, d3, $,  _){
                                 this.touch();
                             }
                             else { // delete final transitions
-                                this.spliceTransitionsForState(this.findFinalState(this.selected_state, this.states), this.transitions);
+                                var new_transitions = this.model.get('transitions').slice();
+                                this.spliceTransitionsForState(this.findFinalState(this.selected_state, this.states), new_transitions);
                                 this.states.splice(this.states.indexOf(this.findFinalState(this.selected_state, this.states)), 1);
+                                this.model.set('transitions', new_transitions);
+                                this.touch();
                             }
                         }
                     this.update();
                     break;
                     }
                 case 73: // key I : create initial transition
-                    if(!this.overtext){
+                    if(!(this.isHidden(this.selected_state)) && !this.overtext){
                         if(this.selected_state) {
                             if(!(this.isInitial(this.selected_state, this.transitions))) {
                                 var pointx = this.selected_state.x,
@@ -404,15 +417,18 @@ function(WidgetManager, d3, $,  _){
                                 this.touch();
                             }
                             else { // delete initial transitions
-                                this.spliceTransitionsForState(this.findInitialState(this.selected_state, this.states), this.transitions);
+                                var new_transitions = this.model.get('transitions').slice();
+                                this.spliceTransitionsForState(this.findInitialState(this.selected_state, this.states), new_transitions);
                                 this.states.splice(this.states.indexOf(this.findInitialState(this.selected_state, this.states)), 1);
+                                this.model.set('transitions', new_transitions);
+                                this.touch();
                             }
                         }
                     this.update();
                     break;
                     }
                 case 76: // key L : create loop on node
-                    if(!this.overtext){
+                    if(!(this.isHidden(this.selected_state)) && !this.overtext){
                         if(this.selected_state && !(this.isLoop(this.selected_state, this.transitions))) {
                             var loop = {source: this.selected_state, target: this.selected_state, label:'a', short: false};
                             var new_transitions = this.model.get('transitions').slice();
@@ -627,7 +643,8 @@ function(WidgetManager, d3, $,  _){
                 .on("mouseover", function() {
                     this.focus();
                     that.overtext = true;
-                    this.value = that.selected_transition.label;
+                    if(that.selected_transition)
+                        this.value = that.selected_transition.label;
                 })
                 .on("mouseout", function() {
                     this.blur()
@@ -734,6 +751,14 @@ function(WidgetManager, d3, $,  _){
                     else {return d3.rgb(colors(d.id)).darker().toString(); }})
                 .on('mouseover', function(d) {
                     that.mouseover_state = d;
+                    if(that.isHidden(d)) {
+                        d3.select(this).style('stroke','black')
+                    }
+                })
+                .on('mouseout', function(d) {
+                    if(that.isHidden(d)) {
+                        d3.select(this).style('stroke','transparent')
+                    }
                 })
                 .on('mousedown', function(d) {
                     d3.event.preventDefault();
@@ -765,7 +790,12 @@ function(WidgetManager, d3, $,  _){
             // STATES ID
             // Update states ID
             this.circle.selectAll('text')
-                .text(function(d) {return d.id;})
+                .text(function(d) {
+                    if(that.isHidden(d))
+                    {return '';}
+                    else
+                    { return d.id;}
+                })
 
             // Show states ID
             g.append('svg:text')
@@ -779,9 +809,6 @@ function(WidgetManager, d3, $,  _){
                     else return "white";})
                 .text(function(d) { return d.id; })
                 .style('cursor', 'pointer')
-                .on('mouseover', function(d) {
-                    that.mouseover_state = d;
-                })
                 .on('mousedown', function(d) {
                     d3.event.preventDefault();
                     if(d3.event.keyCode === 77) return;

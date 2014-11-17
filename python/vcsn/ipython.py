@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import re
+import d3Widget
 
 from IPython.core.magic import (Magics, magics_class, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
@@ -75,11 +76,11 @@ class EditAutomaton(Magics):
               (h for horizontal and v for vertical).  Default: h.''')
     @line_cell_magic
     def automaton(self, line, cell=None):
-        import d3Widget
         args = parse_argstring(self.automaton, line)
         if cell is None:
             if(args.format == 'gui'):
-                d3Widget.VcsnD3DataFrame(self, args.var).show()
+                a = d3Widget.VcsnD3DataFrame(self, args.var)
+                a.show()
             else:
                 AutomatonTextWidget(self, args.var, args.format, args.mode)
         else:
