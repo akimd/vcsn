@@ -15,9 +15,13 @@ XFAIL(lambda: vcsn.context("lal_char(a)_UNKNOWN"))
 # Invalid context: trailing garbage.
 XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 
-# An open context is not printed as open.
+# An open context is not printed as open in text.
 check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
 check('lal_char, b',                'letterset<char_letters()>, b')
+# An open context is printed as open in LaTeX.
+check('letterset<char_letters>, b', r'\{\ldots\}\rightarrow\mathbb{B}', 'latex')
+check('lal_char, b',                r'\{\ldots\}\rightarrow\mathbb{B}', 'latex')
+
 
 check('lal_char(), b', 'letterset<char_letters()>, b')
 check('lal_char(ab), b', 'letterset<char_letters(ab)>, b')

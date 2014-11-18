@@ -240,6 +240,8 @@ namespace vcsn
                 o << '}';
               sep = ", ";
             }
+          if (open_)
+            o << sep << "\\ldots";
           o << "\\}";
         }
       else if (format == "text")
@@ -248,6 +250,8 @@ namespace vcsn
           o <<  '(';
           for (letter_t c: alphabet_)
             o <<  c;
+          // Don't display openness here, as our "make()" parser is
+          // not ready for it.
           o << ')';
         }
       else
