@@ -109,9 +109,9 @@ namespace vcsn
     }
   }
 
-  /*-----------------------------.
-  | difference(expression, expression).  |
-  `-----------------------------*/
+  /*--------------------------------------.
+  | difference(expression, expression).   |
+  `--------------------------------------*/
 
   /// Difference of expressions.
   template <typename RatExpSet>
@@ -136,9 +136,9 @@ namespace vcsn
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetLhs>();
         return make_expression(l.expressionset(),
-                           ::vcsn::difference<RatExpSetLhs>(l.expressionset(),
-                                                            l.expression(),
-                                                            r.expression()));
+                               ::vcsn::difference(l.expressionset(),
+                                                  l.expression(),
+                                                  r.expression()));
       }
 
       REGISTER_DECLARE(difference_expression,
