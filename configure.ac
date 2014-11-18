@@ -243,11 +243,15 @@ AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
 
 AM_PATH_PYTHON
 
-# Flex 2.3.33 has a problem with REJECT and produces a scanner that
-# does not compile.
-TC_PROG([flex], [>= 2.5.35], [FLEX], [Flex scanner generator])
+# Ask for Flex support from Automake, yet do not require Flex here, so
+# that casual users can install Vcsn without having Flex.  Flex++ will
+# check the existance of Flex when really needed.
+AC_ARG_VAR([FLEX], [Flex, the scanner generator])
+AC_CHECK_PROGS([FLEX], [flex], [no])
+LEX=$FLEX
 AM_PROG_LEX
 AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
+
 AC_ARG_VAR([BISON], [Bison parser generator])
 AC_CHECK_PROGS([BISON], [bison])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])

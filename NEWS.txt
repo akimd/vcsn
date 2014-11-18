@@ -7,6 +7,10 @@ changes in the internal API may also be documented.
 
 
 ## 2014-11-18
+### Flex
+The Flex program (a scanner generator) should no longer be required
+for builds from a tarball.
+
 ### blind -> focus
 The `blind` algorithm (and the `blind_automaton` structure) has been
 renamed `focus` (and `focus_automaton`) as it is much clearer on its
