@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/blind.hh>
+#include <vcsn/algos/focus.hh>
 #include <vcsn/dyn/algos.hh>
 
 namespace vcsn
@@ -7,15 +7,15 @@ namespace vcsn
   namespace dyn
   {
     /*-------------------.
-    | blind(automaton).  |
+    | focus(automaton).  |
     `-------------------*/
-    REGISTER_DEFINE(blind);
+    REGISTER_DEFINE(focus);
     automaton
-    blind(automaton& aut, unsigned tape)
+    focus(automaton& aut, unsigned tape)
     {
       integral_constant t = {symbol("std::integral_constant<unsigned, "
                                     + std::to_string(tape) + '>')};
-      return detail::blind_registry().call(aut, t);
+      return detail::focus_registry().call(aut, t);
     }
   }
 }

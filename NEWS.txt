@@ -6,6 +6,12 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 
+## 2014-11-18
+### blind -> focus
+The `blind` algorithm (and the `blind_automaton` structure) has been
+renamed `focus` (and `focus_automaton`) as it is much clearer on its
+purpose.
+
 ## 2014-11-14
 ### scc: new algorithm
 Create an automaton whose states correspond with a strongly connnected
@@ -403,7 +409,7 @@ Lift arbitrary restrictions on the labelset of the 'weighted' and
 ## 2014-06-04
 ### More systematic use of decorators
 In addition to the venerable `transpose_automaton`, several automaton
-decorator types have been introduced (`blind_automaton`,
+decorator types have been introduced (`focus_automaton`,
 `determinized_automaton`, `pair_automaton`, `product_automaton`,
 `ratexp_automaton`), and are now used in the many algorithms,
 including: `compose`, `determinize`, `product`, `shuffle`,

@@ -142,7 +142,7 @@ namespace vcsn
 
   /// A simple placeholder for integral constants.
   ///
-  /// Consider the case of `blind(automaton, tape)`: it must turn the
+  /// Consider the case of `focus(automaton, tape)`: it must turn the
   /// `tape` (runtime) argument into a (compile time) parameter.
   ///
   /// The compile-time parameter as a value is painful, as it is an
@@ -152,7 +152,7 @@ namespace vcsn
   /// std::integral_constant.
   ///
   /// Now the tricky part is therefore going from a runtime integer to
-  /// a std::integral_constant.  This is done by having dyn::blind
+  /// a std::integral_constant.  This is done by having dyn::focus
   /// turn its "unsigned tape" argument into a "integral_constant
   /// tape" one, and the latter, when queried by the signature
   /// extraction mechanism, must simply say "I'm

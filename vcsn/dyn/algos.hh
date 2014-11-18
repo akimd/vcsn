@@ -37,7 +37,7 @@ namespace vcsn
     bool are_isomorphic(const automaton& lhs, const automaton& rhs);
 
     /// Focus on a specific tape of a tupleset automaton.
-    automaton blind(automaton& aut, unsigned tape);
+    automaton focus(automaton& aut, unsigned tape);
 
     /// Produce a Černý automaton of \a num_states states.
     automaton cerny(const context& ctx, unsigned num_states);

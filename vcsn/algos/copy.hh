@@ -3,7 +3,7 @@
 
 # include <unordered_map>
 
-# include <vcsn/algos/fwd.hh> // blind_automaton.
+# include <vcsn/algos/fwd.hh> // focus_automaton.
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/copy.hh>
 # include <vcsn/core/mutable-automaton.hh>
@@ -133,9 +133,9 @@ namespace vcsn
     };
 
     template <std::size_t Tape, typename Aut>
-    struct real_context_impl<blind_automaton<Tape, Aut>>
+    struct real_context_impl<focus_automaton<Tape, Aut>>
     {
-      static auto context(const blind_automaton<Tape, Aut>& aut)
+      static auto context(const focus_automaton<Tape, Aut>& aut)
         -> decltype(aut->full_context())
       {
         return aut->full_context();

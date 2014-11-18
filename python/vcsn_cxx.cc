@@ -123,9 +123,9 @@ struct automaton
 
   label ambiguous_word() const;
 
-  automaton blind(unsigned tape)
+  automaton focus(unsigned tape)
   {
-    return vcsn::dyn::blind(val_, tape);
+    return vcsn::dyn::focus(val_, tape);
   }
 
   /// Convert \a this to \a ctx, using \a ids.
@@ -969,7 +969,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("accessible", &automaton::accessible)
     .def("ambiguous_word", &automaton::ambiguous_word)
     .def("automaton", &automaton::as)
-    .def("blind", &automaton::blind)
+    .def("focus", &automaton::focus)
     .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
     .def("codeterminize", &automaton::codeterminize, (arg("algo") = "auto"))

@@ -11,17 +11,17 @@
 
 namespace vcsn
 {
-  // vcsn/algos/blind.hh
+  // vcsn/algos/focus.hh
   namespace detail
   {
     template <std::size_t Tape, typename Aut>
-    class blind_automaton_impl;
+    class focus_automaton_impl;
   }
 
-  /// A blind automaton as a shared pointer.
+  /// A focus automaton as a shared pointer.
   template <std::size_t Tape, typename Aut>
-  using blind_automaton
-    = std::shared_ptr<detail::blind_automaton_impl<Tape, Aut>>;
+  using focus_automaton
+    = std::shared_ptr<detail::focus_automaton_impl<Tape, Aut>>;
 
   // vcsn/algos/edit-automaton.hh.
   class automaton_editor;

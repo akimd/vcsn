@@ -17,7 +17,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
 %C%_TESTS =                                     \
   %D%/accessible.py                             \
   %D%/automaton.py                              \
-  %D%/blind.py                                  \
+  %D%/focus.py                                  \
   %D%/chain.py                                  \
   %D%/complement.py                             \
   %D%/complete.py                               \

@@ -35,7 +35,6 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/accessible.cc                       \
   %D%/algos/are-equivalent.cc                   \
   %D%/algos/are-isomorphic.cc                   \
-  %D%/algos/blind.cc                            \
   %D%/algos/complement.cc                       \
   %D%/algos/complete.cc                         \
   %D%/algos/compose.cc                          \
@@ -55,6 +54,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/expand.cc                           \
   %D%/algos/fado.cc                             \
   %D%/algos/filter.cc                           \
+  %D%/algos/focus.cc                            \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.cc                            \
   %D%/algos/has-twins-property.cc               \

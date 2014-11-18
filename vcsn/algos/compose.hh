@@ -5,7 +5,7 @@
 # include <iostream>
 # include <map>
 
-# include <vcsn/algos/blind.hh>
+# include <vcsn/algos/focus.hh>
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/core/tuple-automaton.hh>
@@ -287,11 +287,11 @@ namespace vcsn
   template <typename Lhs, typename Rhs>
   auto
   compose(Lhs& lhs, Rhs& rhs)
-    -> typename detail::composer<blind_automaton<1, Lhs>,
-                                 blind_automaton<0, Rhs>>::automaton_t
+    -> typename detail::composer<focus_automaton<1, Lhs>,
+                                 focus_automaton<0, Rhs>>::automaton_t
   {
-    auto l = blind<1>(lhs);
-    auto r = insplit(blind<0>(rhs));
+    auto l = focus<1>(lhs);
+    auto r = insplit(focus<0>(rhs));
     detail::composer<decltype(l), decltype(r)> compose(l, r);
     return compose.compose();
   }

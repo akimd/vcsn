@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_BLIND_HH
-# define VCSN_ALGOS_BLIND_HH
+#ifndef VCSN_ALGOS_FOCUS_HH
+# define VCSN_ALGOS_FOCUS_HH
 
 # include <vcsn/algos/fwd.hh>
 # include <vcsn/core/automaton-decorator.hh>
@@ -30,41 +30,41 @@ namespace vcsn
 
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
-    auto blind_context(const context<LabelSet, WeightSet>& ctx)
+    auto focus_context(const context<LabelSet, WeightSet>& ctx)
       -> context<typename LabelSet::template valueset_t<Tape>, WeightSet>
     {
       return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
     }
 
     template <typename Context, size_t Tape>
-    using blind_context_t = decltype(blind_context<Tape>(std::declval<Context>()));
+    using focus_context_t = decltype(focus_context<Tape>(std::declval<Context>()));
 
     /*------------------.
-    | blind_automaton.  |
+    | focus_automaton.  |
     `------------------*/
 
     /// Read-write on an automaton, that hides all tapes but one.
     template <std::size_t Tape, typename Aut>
-    class blind_automaton_impl
+    class focus_automaton_impl
       : public automaton_decorator<Aut,
-                                   blind_context_t<context_t_of<Aut>, Tape>>
+                                   focus_context_t<context_t_of<Aut>, Tape>>
     {
     public:
       /// The type of the wrapped automaton.
       using automaton_t = Aut;
 
       static_assert(context_t_of<Aut>::is_lat,
-                    "blind: requires labels_are_tuples");
+                    "focus: requires labels_are_tuples");
       static_assert(Tape < labelset_t_of<Aut>::size(),
-                    "blind: invalid tape number");
+                    "focus: invalid tape number");
 
       /// The type of automata to produce this kind of automata.  For
-      /// instance, insplitting on a blind_automaton<const
+      /// instance, insplitting on a focus_automaton<const
       /// mutable_automaton<Ctx>> should yield a
-      /// blind_automaton<mutable_automaton<Ctx>>, without the "inner"
+      /// focus_automaton<mutable_automaton<Ctx>>, without the "inner"
       /// const.
       using automaton_nocv_t
-        = blind_automaton<Tape,
+        = focus_automaton<Tape,
                           typename automaton_t::element_type::automaton_nocv_t>;
 
       /// This automaton's state and transition types are those of the
@@ -80,7 +80,7 @@ namespace vcsn
       using full_label_t = typename full_labelset_t::value_t;
 
       /// Exposed context.
-      using context_t = blind_context_t<full_context_t, Tape>;
+      using context_t = focus_context_t<full_context_t, Tape>;
 
       /// Exposed labelset.
       using labelset_t = typename context_t::labelset_t;
@@ -107,24 +107,24 @@ namespace vcsn
 
     public:
 
-      blind_automaton_impl(const full_context_t& ctx)
-        : blind_automaton_impl(make_shared_ptr<automaton_t>(ctx))
+      focus_automaton_impl(const full_context_t& ctx)
+        : focus_automaton_impl(make_shared_ptr<automaton_t>(ctx))
       {}
 
-      blind_automaton_impl(const automaton_t& aut)
+      focus_automaton_impl(const automaton_t& aut)
         : super_t(aut)
       {}
 
       static symbol sname()
       {
-        static symbol res(("blind_automaton<" + std::to_string(Tape) + ", "
+        static symbol res(("focus_automaton<" + std::to_string(Tape) + ", "
                 + automaton_t::element_type::sname() + '>'));
         return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        o << "blind_automaton<" << std::to_string(Tape) << ", ";
+        o << "focus_automaton<" << std::to_string(Tape) << ", ";
         aut_->print_set(o, format);
         return o << '>';
       }
@@ -308,7 +308,7 @@ namespace vcsn
 #define DEFINE(Name, Sig)                       \
       auto Name Sig                             \
       {                                         \
-        raise("blind: cannot provide " #Name);  \
+        raise("focus: cannot provide " #Name);  \
       }
 
       DEFINE(add_transition,
@@ -328,16 +328,16 @@ namespace vcsn
       /// benches show that in some cases, intensive (and admittedly
       /// wrong: they should have been cached on the caller side)
       /// calls to context() ruins the performances.
-      context_t context_ = blind_context<Tape>(full_context());
+      context_t context_ = focus_context<Tape>(full_context());
     };
   }
 
   template <unsigned Tape, typename Aut>
   inline
-  blind_automaton<Tape, Aut>
-  blind(Aut aut)
+  focus_automaton<Tape, Aut>
+  focus(Aut aut)
   {
-    return std::make_shared<detail::blind_automaton_impl<Tape, Aut>>(aut);
+    return std::make_shared<detail::focus_automaton_impl<Tape, Aut>>(aut);
   }
 
 
@@ -348,17 +348,17 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Tape>
       automaton
-      blind(automaton& aut, integral_constant)
+      focus(automaton& aut, integral_constant)
       {
         auto& a = aut->as<Aut>();
-        return make_automaton(vcsn::blind<Tape::value>(a));
+        return make_automaton(vcsn::focus<Tape::value>(a));
       }
 
-      REGISTER_DECLARE(blind,
+      REGISTER_DECLARE(focus,
                        (automaton& aut, integral_constant tape) -> automaton);
     }
   }
 
 }
 
-#endif // !VCSN_ALGOS_BLIND_HH
+#endif // !VCSN_ALGOS_FOCUS_HH

@@ -42,7 +42,7 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::any_()
     {
       std::string w = word_();
-      if (w == "blind_automaton"
+      if (w == "focus_automaton"
           || w == "determinized_automaton"
           || w == "detweighted_automaton"
           || w == "expression_automaton"
@@ -261,8 +261,8 @@ namespace vcsn
     context_parser::automaton_(std::string prefix)
     {
       std::shared_ptr<automaton> res = nullptr;
-      // blind_automaton<TapeNum, Aut>.
-      if (prefix == "blind_automaton")
+      // focus_automaton<TapeNum, Aut>.
+      if (prefix == "focus_automaton")
         {
           eat(is_, '<');
           res = std::make_shared<automaton>(prefix,

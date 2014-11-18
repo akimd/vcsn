@@ -15,7 +15,6 @@ nobase_include_HEADERS =                        \
   %D%/algos/accessible.hh                       \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
-  %D%/algos/blind.hh                            \
   %D%/algos/cerny.hh                            \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
@@ -37,6 +36,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
   %D%/algos/filter.hh                           \
+  %D%/algos/focus.hh                            \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/has-twins-property.hh               \
