@@ -90,7 +90,8 @@ namespace vcsn
     /// \param ctx        the generator set for the labels, and the weight set.
     /// \param identities the identities to guarantee
     expressionset_impl(const context_t& ctx,
-                   identities_t identities); // FIXME: make this optional again?
+                       identities_t identities); // FIXME: make this
+                                                 // optional again?
 
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept unknown letters
@@ -385,7 +386,8 @@ namespace vcsn
     {
       using type = expressionset<join_t<Ctx1, Ctx2>>;
 
-      static type join(const expressionset<Ctx1>& lhs, const expressionset<Ctx2>& rhs)
+      static type join(const expressionset<Ctx1>& lhs,
+                       const expressionset<Ctx2>& rhs)
       {
         return {vcsn::join(lhs.context(), rhs.context()),
                 vcsn::join(lhs.identities(), rhs.identities())};
@@ -401,7 +403,8 @@ namespace vcsn
                                 weightset_t_of<Ctx2>>;
       using type = expressionset<context_t>;
 
-      static type join(const letterset<GenSet1>& a, const expressionset<Ctx2>& b)
+      static type join(const letterset<GenSet1>& a,
+                       const expressionset<Ctx2>& b)
       {
         return {context_t{vcsn::join(a, *b.labelset()), *b.weightset()},
                           b.identities()};
