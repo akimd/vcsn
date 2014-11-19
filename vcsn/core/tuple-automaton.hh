@@ -90,12 +90,12 @@ namespace vcsn
 
       std::ostream&
       print_state_name(typename super_t::state_t s, std::ostream& o,
-                       const std::string& fmt = "text", bool delimit = false)
+                       const std::string& format = "text", bool delimit = false)
                       const
       {
         if (delimit)
           o << '(';
-        print_state_name_(s, o, fmt, indices);
+        print_state_name_(s, o, format, indices);
         if (delimit)
           o << ')';
         return o;
@@ -219,7 +219,7 @@ namespace vcsn
       template <size_t... I>
       std::ostream&
       print_state_name_(typename super_t::state_t s, std::ostream& o,
-                        const std::string& fmt,
+                        const std::string& format,
                         seq<I...>) const
       {
         auto i = origins().find(s);
@@ -233,7 +233,7 @@ namespace vcsn
               {
                 (o << sep,
                  std::get<I>(auts_)->print_state_name(std::get<I>(i->second),
-                                                      o, fmt, true),
+                                                      o, format, true),
                  sep = ", ",
                  0)...
                };

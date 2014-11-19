@@ -165,7 +165,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& fmt = "text",
+                       const std::string& format = "text",
                        bool delimit = false) const
       {
         auto i = origins().find(s);
@@ -179,7 +179,7 @@ namespace vcsn
             for (auto s: i->second)
               {
                 o << sep;
-                input_->print_state_name(s, o, fmt, true);
+                input_->print_state_name(s, o, format, true);
                 sep = ", ";
               }
             if (delimit)
@@ -412,13 +412,13 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
-                       const std::string& fmt = "text") const
+                       const std::string& format = "text") const
       {
         auto i = origins().find(ss);
         if (i == origins().end())
           this->print_state(ss, o);
         else
-          ns_.print(i->second, o, fmt, ", ");
+          ns_.print(i->second, o, format, ", ");
         return o;
       }
 

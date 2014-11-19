@@ -31,7 +31,7 @@ namespace vcsn
   is_out_sorted(const Aut& a)
   {
     using transition_t = transition_t_of<Aut>;
-    for (state_t_of<Aut> s: a->states())
+    for (auto s: a->states())
       if (!detail::is_sorted(a->out(s),
                              [&a] (transition_t l, transition_t r)
                              {

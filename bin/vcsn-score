@@ -249,13 +249,13 @@ bench('a.has_twins_property()', 'a = std({0}), c = [abc] -> Q'.format(r),
 r = "[a-c]{2000}(<2>ab+a<3>b)"
 a = vcsn.context("lal_char(abc), z").expression(r).standard()
 bench('a.is_cycle_ambiguous()', 'a = std({0}), c = [abc] -> B'.format(r),
-      lambda: a.is_cycle_ambiguous())
+      lambda: a.is_cycle_ambiguous(), number = 20)
 
 # is_functional.
 r = "'(a, x)'{2000}'(b, y)'"
 a = vcsn.context("lat<lal_char(ab), lal_char(xy)>, b").expression(r).standard()
 bench('a.is_functional()', 'a = std({})'.format(r),
-      lambda: a.is_functional())
+      lambda: a.is_functional(), number = 50)
 
 # accessible.
 r = "[a-m]{20000}"
@@ -265,11 +265,7 @@ bench('a.accessible', 'a = thompson({}).proper(False)'.format(r),
 
 # scc.
 r = "(abc)*{1000}"
-n = 20
-a = vcsn.context('lal_char(abc), b').ratexp(r).standard()
-bench('a.num_sccs("tarjan_recursive")', 'a = std({})'.format(r),
-      lambda: a.num_sccs("tarjan_recursive"), number = n)
-bench('a.num_sccs("tarjan_iterative")', 'a = std({})'.format(r),
-      lambda: a.num_sccs("tarjan_iterative"), number = n)
-bench('a.num_sccs("kosaraju")', 'a = std({})'.format(r),
-      lambda: a.num_sccs("kosaraju"), number = n)
+a = vcsn.context('lal_char(abc), b').expression(r).standard()
+for algo in ["kosaraju", "tarjan_iterative", "tarjan_recursive"]:
+    bench('a.num_sccs("{}")'.format(algo), 'a = std({})'.format(r),
+          lambda: a.num_sccs(algo), number = 20)

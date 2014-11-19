@@ -523,11 +523,11 @@ namespace vcsn
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
-                                     const std::string& fmt = "text",
+                                     const std::string& format = "text",
                                      bool = false) const
       {
         o << component_.at(s) << ".";
-        aut_->print_state_name(s, o, fmt, true);
+        aut_->print_state_name(s, o, format, true);
         return o;
       }
 

@@ -69,7 +69,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& fmt = "text",
+                       const std::string& format = "text",
                        bool delimit = false) const
       {
         const auto& set = origins_.at(s);
@@ -79,7 +79,7 @@ namespace vcsn
         for (auto s : set)
           {
             o << separator;
-            input_->print_state_name(s, o, fmt, true);
+            input_->print_state_name(s, o, format, true);
             separator = ", ";
           }
         if (delimit)

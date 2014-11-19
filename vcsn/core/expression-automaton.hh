@@ -121,14 +121,14 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& fmt = "text",
+                       const std::string& format = "text",
                        bool = false) const
       {
         auto i = origins().find(s);
         if (i == std::end(origins()))
           this->print_state(s, o);
         else
-          rs_.print(i->second, o, fmt);
+          rs_.print(i->second, o, format);
         return o;
       }
 

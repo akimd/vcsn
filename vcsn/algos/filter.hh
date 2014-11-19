@@ -51,7 +51,8 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("filter_automaton<" + automaton_t::element_type::sname() + '>');
+        static symbol res("filter_automaton<"
+                          + automaton_t::element_type::sname() + '>');
         return res;
       }
 
@@ -74,11 +75,11 @@ namespace vcsn
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
-                                     const std::string& fmt = "text",
+                                     const std::string& format = "text",
                                      bool delimit = false) const
       {
         assert(has(ss_, s));
-        return aut_->print_state_name(s, o, fmt, delimit);
+        return aut_->print_state_name(s, o, format, delimit);
       }
 
       size_t num_states()

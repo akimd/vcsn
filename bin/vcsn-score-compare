@@ -51,6 +51,8 @@ def normalize(k):
     # The syntax of contexts has changed.
     k = re.sub(r'lal_char\(abc\)(_|, )b', '[abc] -> B', k)
 
+    k = k.replace('ratexp', 'expression')
+
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 

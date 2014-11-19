@@ -413,15 +413,15 @@ Lift arbitrary restrictions on the labelset of the 'weighted' and
 ## 2014-06-04
 ### More systematic use of decorators
 In addition to the venerable `transpose_automaton`, several automaton
-decorator types have been introduced (`focus_automaton`,
+decorator types have been introduced (`blind_automaton`,
 `determinized_automaton`, `pair_automaton`, `product_automaton`,
-`ratexp_automaton`), and are now used in the many algorithms,
-including: `compose`, `determinize`, `product`, `shuffle`,
-`infiltration`, `synchronizing_word`, etc.
+`ratexp_automaton`), and are now used in many algorithms, including:
+`compose`, `determinize`, `product`, `shuffle`, `infiltration`,
+`synchronizing_word`, etc.
 
-Coupled with the fact that automata can now display state names (as opposed
-to numbers) in Dot output, one gets rich displays of automata.  For
-instance:
+Coupled with the fact that automata can now display state names (as
+opposed to state numbers) in Dot output, one gets rich displays of
+automata.  For instance:
 
     >>> ctx = vcsn.context('lal_char(ab)_b')
     >>> ctx.ratexp('aa+ab').derived_term().determinize()

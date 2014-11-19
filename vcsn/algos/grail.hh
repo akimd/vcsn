@@ -72,10 +72,10 @@ namespace vcsn
       /// is sorted (hence more deterministic).
       std::ostream& print_entry_(state_t src, state_t dst,
                                  std::ostream& os,
-                                 const std::string& fmt = "text")
+                                 const std::string& format = "text")
       {
         auto entry = get_entry(aut_, src, dst);
-        return ps_.print(entry, os, fmt, ", ");
+        return ps_.print(entry, os, format, ", ");
       }
 
       /// Output transitions, sorted lexicographically on (Label, Dest).

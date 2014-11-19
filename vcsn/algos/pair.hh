@@ -164,16 +164,16 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
-                       const std::string& fmt = "text") const
+                       const std::string& format = "text") const
       {
         auto i = origins().find(ss);
         if (i == std::end(origins()))
           this->print_state(ss, o);
         else
           {
-            input_->print_state_name(i->second.first, o, fmt);
+            input_->print_state_name(i->second.first, o, format);
             o << ", ";
-            input_->print_state_name(i->second.second, o, fmt);
+            input_->print_state_name(i->second.second, o, format);
           }
         return o;
       }

@@ -7,10 +7,10 @@ namespace vcsn
 {
 
   // vcsn/core/crange.hh
-  template <class C>
+  template <typename C>
   struct container_range;
 
-  template <class C>
+  template <typename Cont>
   struct container_filter_range;
 
 
