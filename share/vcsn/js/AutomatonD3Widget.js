@@ -11,14 +11,6 @@ function(WidgetManager, d3, $,  _){
             // Attributs of the SVG
             this.width =960, this.height = 500;
 
-            // Disable some key shorcut from notebook
-            var cmd = IPython.keyboard_manager.command_shortcuts;
-            cmd.remove_shortcut('i');
-            cmd.remove_shortcut('l');
-            cmd.remove_shortcut('f');
-            cmd.remove_shortcut('m');
-            cmd.remove_shortcut('s');
-
             // Render the svg
             this.svg = d3.select(this.el).append('svg')
                 .attr('width', this.width)
@@ -100,10 +92,72 @@ function(WidgetManager, d3, $,  _){
             // Listen for mouse and keyboard events on the whole document
             this.svg.on('mousedown', function(d,i){ that.mousedown(this, d, i);})
                 .on('mousemove', function(d,i){ that.mousemove(this, d, i);})
-                .on('mouseup', function(d,i){ that.mouseup(this, d, i);});
-            d3.select("body")
-                .on('keydown', function(d,i){ that.keydown(this, d, i);})
-                .on('keyup', function(d,i){ that.keyup(this, d, i);});
+                .on('mouseup', function(d,i){ that.mouseup(this, d, i);})
+            // Active keyboard action and disable notebook shortcuts when we are
+            // over the widget
+                .on("mouseover", function(d,i) {
+                    console.log('mouseover of svg')
+                    // Disable some notebook key shortcuts
+                    var cmd = IPython.keyboard_manager.command_shortcuts;
+                    cmd.remove_shortcut('i');
+                    cmd.remove_shortcut('l');
+                    cmd.remove_shortcut('f');
+                    cmd.remove_shortcut('m');
+                    cmd.remove_shortcut('s');
+
+                    d3.select(window).on('keydown', function(d,i){
+                        that.keydown(this, d, i);})
+                        .on('keyup',  function(d,i){
+                            that.keyup(this, d, i);});
+                })
+            // if we leave the widget area, then disable keyboard action and
+            // reactive notebook shortcuts
+                .on("mouseout", function(d,i) {
+                    console.log('mouseout of svg')
+                    // reset selections if we leave widget
+                    // that.selected_transition = null;
+                    // that.selected_state = null;
+                    // that.mousedown_state = null;
+                    // that.mouseup_state = null;
+                    // that.mousedown_transition = null;
+                    var cmd = IPython.keyboard_manager.command_shortcuts;
+                        cmd.add_shortcut('i', {
+                            help    : 'interrupt kernel (press twice)',
+                            help_index : 'ha',
+                            count: 2,
+                            handler : function (event) {
+                                IPython.notebook.kernel.interrupt();
+                                return false;
+                            }
+                        });
+                        cmd.add_shortcut('l', {
+                            help    : 'toggle line numbers',
+                            help_index : 'ga',
+                            handler : function (event) {
+                                IPython.notebook.cell_toggle_line_numbers();
+                                return false;
+                            }
+                        });
+                        cmd.add_shortcut('m', {
+                            help    : 'to markdown',
+                            help_index : 'cb',
+                            handler : function (event) {
+                                IPython.notebook.to_markdown();
+                                return false;
+                            }
+                        });
+                        cmd.add_shortcut('s', {
+                            help    : 'save notebook',
+                            help_index : 'fa',
+                            handler : function (event) {
+                                IPython.notebook.save_checkpoint();
+                                return false;
+                            }
+                        });
+                    d3.select(window).on('keydown', function() {
+                        return null})
+                        .on('keyup', function() {return null;});
+                });
 
             this.hackUpdate();
         },
@@ -224,6 +278,7 @@ function(WidgetManager, d3, $,  _){
         },
         mousedown: function(doc, data, id){
             d3.event.preventDefault();
+
             // Active for webkit
             this.svg.classed('active', true);
 
