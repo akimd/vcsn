@@ -257,65 +257,70 @@ namespace vcsn
           }
       }
 
-      /// Print all the transitions.
+      /// Print the transitions between state \a src and state \a dst.
+      void print_transitions_(state_t src, state_t dst)
+      {
+        bos_ << "  ";
+        if (src == aut_->pre())
+          {
+            bos_ << 'I';
+            aut_->print_state(dst, bos_);
+            bos_ << " -> ";
+            aut_->print_state(dst, bos_);
+          }
+        else if (dst == aut_->post())
+          {
+            aut_->print_state(src, bos_);
+            bos_ << " -> ";
+            bos_ << 'F';
+            aut_->print_state(src, bos_);
+          }
+        else
+          {
+            aut_->print_state(src, bos_);
+            bos_ << " -> ";
+            aut_->print_state(dst, bos_);
+          }
+
+        std::ostringstream o;
+        // FIXME: inefficient, we should gather the entries while we
+        // iterate on the all_out.
+        print_entry_(src, dst, o,
+                     dot2tex_ ? "latex" : "text");
+        bool useless = !has(useful_, src) || !has(useful_, dst);
+        if (!o.str().empty() || useless)
+          {
+            bos_ << " [";
+            const char* sep = "";
+            if (!o.str().empty())
+              {
+                enable_();
+                bos_ << "label = \"" << o.str() << "\"";
+                disable_();
+                sep = ", ";
+              }
+            if (useless)
+              bos_ << sep << gray;
+            bos_ << ']';
+          }
+        bos_ << '\n';
+      }
+
+      /// Print all the transitions, sorted by src state, then dst state.
       void print_transitions_()
       {
-        for (auto src : dot2tex_ ? aut_->states() : aut_->all_states())
-          {
-            // Sort by destination state.
-            std::set<state_t> ds;
-            if (dot2tex_)
-              for (auto t: aut_->out(src))
-                ds.insert(aut_->dst_of(t));
-            else
+        // For each src state, the destinations, sorted.
+        std::set<state_t> dsts;
+        for (auto src : aut_->all_states())
+          if (!dot2tex_ || src != aut_->pre())
+            {
+              dsts.clear();
               for (auto t: aut_->all_out(src))
-                ds.insert(aut_->dst_of(t));
-            for (auto dst: ds)
-              {
-                bos_ << "  ";
-                if (src == aut_->pre())
-                  {
-                    bos_ << 'I';
-                    aut_->print_state(dst, bos_);
-                    bos_ << " -> ";
-                    aut_->print_state(dst, bos_);
-                  }
-                else if (dst == aut_->post())
-                  {
-                    aut_->print_state(src, bos_);
-                    bos_ << " -> ";
-                    bos_ << 'F';
-                    aut_->print_state(src, bos_);
-                  }
-                else
-                  {
-                    aut_->print_state(src, bos_);
-                    bos_ << " -> ";
-                    aut_->print_state(dst, bos_);
-                  }
-
-                std::ostringstream o;
-                print_entry_(src, dst, o,
-                             dot2tex_ ? "latex" : "text");
-                bool useless = !has(useful_, src) || !has(useful_, dst);
-                if (!o.str().empty() || useless)
-                  {
-                    bos_ << " [";
-                    const char* sep = "";
-                    if (!o.str().empty())
-                      {
-                        enable_();
-                        bos_ << "label = \"" << o.str() << "\"";
-                        disable_();
-                        sep = ", ";
-                      }
-                    if (useless)
-                      bos_ << sep << gray;
-                    bos_ << ']';
-                  }
-                bos_ << '\n';
-              }
-          }
+                if (!dot2tex_ || aut_->dst_of(t) != aut_->post())
+                  dsts.insert(aut_->dst_of(t));
+              for (auto dst: dsts)
+                print_transitions_(src, dst);
+            }
       }
 
       /// Enable the escaping of backslashes.
