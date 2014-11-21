@@ -243,7 +243,7 @@ bench('a.reduce()', 'a = std({0}), c = [a-k] -> Q'.format(r),
 r = "[a-c]{200}*+[a-c]{200}*"
 a = vcsn.context("lal_char(a-c), zmin").expression(r).standard()
 bench('a.has_twins_property()', 'a = std({0}), c = [abc] -> Q'.format(r),
-      lambda: a.has_twins_property())
+      lambda: a.has_twins_property(), number = 20)
 
 # cycle ambiguous.
 r = "[a-c]{2000}(<2>ab+a<3>b)"
@@ -255,7 +255,7 @@ bench('a.is_cycle_ambiguous()', 'a = std({0}), c = [abc] -> B'.format(r),
 r = "'(a, x)'{2000}'(b, y)'"
 a = vcsn.context("lat<lal_char(ab), lal_char(xy)>, b").expression(r).standard()
 bench('a.is_functional()', 'a = std({})'.format(r),
-      lambda: a.is_functional(), number = 50)
+      lambda: a.is_functional(), number = 100)
 
 # accessible.
 r = "[a-m]{20000}"
