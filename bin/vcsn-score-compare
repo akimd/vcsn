@@ -11,6 +11,9 @@ parser.add_argument('files', metavar='files', nargs='+',
 parser.add_argument('--only', metavar='RE',
                     type=re.compile, default='.*',
                     help='Report only benches whose title is matched by RE')
+parser.add_argument('--treshold', metavar='treshold',
+                    type=float, default=0.1,
+                    help='show good and bad scores with associated treshold')
 args = parser.parse_args()
 
 bench = dict()
@@ -82,10 +85,59 @@ def read(fn):
 for fn in args.files:
     read(fn)
 
+# SET COLORS FOR TERM
+BLACK, RED, GREEN, WHITE = range(4)
+def has_colours(stream):
+    if not hasattr(stream, "isatty"):
+        return False
+    if not stream.isatty():
+        return False # auto color only on TTYs
+    try:
+        import curses
+        curses.setupterm()
+        return curses.tigetnum("colors") > 2
+    except:
+        return False
+has_colours = has_colours(sys.stdout)
+# print method with associated color
+def printout(text, colour=WHITE):
+        if has_colours:
+                seq = "\x1b[1;%dm" % (30+colour) + text + "\x1b[0m"
+                sys.stdout.write(seq)
+        else:
+                sys.stdout.write(text)
+
 # Print the score table.
 for k in sorted(bench.keys()):
     if args.only.search(k):
         for fn in args.files:
-            v = bench[k][fn] if fn in bench[k] else "N/A"
-            print ("{:5}".format(v), end = ' ')
+            # avoid computing error with N/A
+            def nb_na():
+                nb = 0
+                for b in args.files:
+                    if not(b in bench[k]):
+                        nb += 1
+                return nb
+            # compute average of benchs
+            res = 0
+            for x in args.files:
+                if x in bench[k]:
+                    res += float(bench[k][x])
+            res = res/(len(args.files)-nb_na())
+            # print with right colors
+            if fn in bench[k]:
+                if float(bench[k][fn]) <= res - args.treshold * res:
+                    v = bench[k][fn] if fn in bench[k] else "N/A"
+                    printout ("{:5}".format(v), GREEN )
+                    print ( end = ' ')
+                elif float(bench[k][fn]) >= args.treshold * res + res:
+                    v = bench[k][fn] if fn in bench[k] else "N/A"
+                    printout ("{:5}".format(v), RED )
+                    print ( end = ' ')
+                else:
+                    v = bench[k][fn] if fn in bench[k] else "N/A"
+                    print ("{:5}".format(v), end= ' ' )
+            else:
+                    v = bench[k][fn] if fn in bench[k] else "N/A"
+                    print ("{:5}".format(v), end= ' ' )
         print(k)
