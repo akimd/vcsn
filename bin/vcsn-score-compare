@@ -2,6 +2,16 @@
 
 from __future__ import print_function
 import os, re, sys
+import argparse
+
+parser = argparse.ArgumentParser(description='Bench some algorithms.')
+parser.add_argument('files', metavar='files', nargs='+',
+                    type=str, default=None,
+                    help='Bench files (from vcsn score) to compare')
+parser.add_argument('--only', metavar='RE',
+                    type=re.compile, default='.*',
+                    help='Report only benches whose title is matched by RE')
+args = parser.parse_args()
 
 bench = dict()
 
@@ -69,12 +79,13 @@ def read(fn):
             bench[k][fn] = v
 
 # Read the score files.
-for fn in sys.argv[1:]:
+for fn in args.files:
     read(fn)
 
 # Print the score table.
 for k in sorted(bench.keys()):
-    for fn in sys.argv[1:]:
-        v = bench[k][fn] if fn in bench[k] else "N/A"
-        print("{:5}".format(v), end = ' ')
-    print(k)
+    if args.only.search(k):
+        for fn in args.files:
+            v = bench[k][fn] if fn in bench[k] else "N/A"
+            print ("{:5}".format(v), end = ' ')
+        print(k)
