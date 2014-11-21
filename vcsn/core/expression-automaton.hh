@@ -92,7 +92,7 @@ namespace vcsn
       using super_t::add_transition;
       void
       add_transition(state_t src, const expression_t& dst,
-                     const label_t& l, const weight_t& w)
+                     label_t l, const weight_t& w)
       {
         super_t::add_transition(src, state(dst), l, w);
       }
@@ -100,7 +100,7 @@ namespace vcsn
       using super_t::new_transition;
       void
       new_transition(state_t src, const expression_t& dst,
-                     const label_t& l, const weight_t& w)
+                     label_t l, const weight_t& w)
       {
         super_t::new_transition(src, state(dst), l, w);
       }

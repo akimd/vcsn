@@ -175,7 +175,7 @@ namespace vcsn
       }
 
       container_filter_range<const tr_cont_t&>
-      out(state_t s, const label_t& l) const
+      out(state_t s, label_t l) const
       {
         return all_out(s,
                        [this, l] (transition_t t)
@@ -212,7 +212,7 @@ namespace vcsn
       }
 
       container_filter_range<const tr_cont_t&>
-      in(state_t s, const label_t& l) const
+      in(state_t s, label_t l) const
       {
         return all_in(s,
                       [this, l] (transition_t t)

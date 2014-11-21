@@ -37,7 +37,8 @@ namespace vcsn
     }
 
     template <typename Context, size_t Tape>
-    using focus_context_t = decltype(focus_context<Tape>(std::declval<Context>()));
+    using focus_context_t
+      = decltype(focus_context<Tape>(std::declval<Context>()));
 
     /*------------------.
     | focus_automaton.  |
@@ -229,7 +230,7 @@ namespace vcsn
       ///
       /// FIXME: costly structure.
       std::vector<transition_t>
-      out(state_t s, const label_t& l) const
+      out(state_t s, label_t l) const
       {
         std::vector<transition_t> res;
         for (auto t: aut_->all_out(s))
@@ -244,7 +245,7 @@ namespace vcsn
       /// FIXME: costly structure.
       using super_t::in;
       std::vector<transition_t>
-      in(state_t s, const label_t& l) const
+      in(state_t s, label_t l) const
       {
         std::vector<transition_t> res;
         for (auto t: aut_->all_in(s))
