@@ -5,7 +5,7 @@
 # include <boost/range/irange.hpp>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/crange.hh>
+# include <vcsn/misc/crange.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/unordered_set.hh>
 # include <vcsn/misc/vector.hh>

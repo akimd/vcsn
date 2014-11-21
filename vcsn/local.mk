@@ -92,7 +92,6 @@ nobase_include_HEADERS =                        \
   %D%/alphabets/char.hh                         \
   %D%/alphabets/setalpha.hh                     \
   %D%/core/automaton-decorator.hh               \
-  %D%/core/crange.hh                            \
   %D%/core/expression-automaton.hh              \
   %D%/core/fwd.hh                               \
   %D%/core/join.hh                              \
@@ -181,6 +180,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/attributes.hh                        \
   %D%/misc/builtins.hh                          \
   %D%/misc/cast.hh                              \
+  %D%/misc/crange.hh                            \
   %D%/misc/cross.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \

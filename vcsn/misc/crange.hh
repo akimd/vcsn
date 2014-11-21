@@ -1,9 +1,10 @@
-#ifndef VCSN_CORE_CRANGE_HH
-# define VCSN_CORE_CRANGE_HH
+#pragma once
 
-# include <type_traits>
+#include <type_traits>
 
-# include <boost/iterator/filter_iterator.hpp>
+#include <boost/iterator/filter_iterator.hpp>
+
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -89,11 +90,13 @@ namespace vcsn
       return cont_.back();
     }
 
+    ATTRIBUTE_PURE
     bool empty() const
     {
       return begin() == end();
     }
 
+    ATTRIBUTE_PURE
     size_t size() const
     {
       return std::distance(begin(), end());
@@ -111,5 +114,3 @@ namespace vcsn
     return {cont, pred};
   }
 }
-
-#endif // !VCSN_CORE_CRANGE_HH

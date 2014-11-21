@@ -7,7 +7,7 @@
 # include <boost/range/irange.hpp>
 
 # include <vcsn/algos/transpose.hh>
-# include <vcsn/core/crange.hh>
+# include <vcsn/misc/crange.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/builtins.hh>

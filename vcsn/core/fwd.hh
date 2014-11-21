@@ -5,7 +5,7 @@
 namespace vcsn
 {
 
-  // vcsn/core/crange.hh
+  // vcsn/misc/crange.hh
   template <typename C>
   struct container_range;
 

@@ -7,7 +7,7 @@
 
 # include <boost/range/irange.hpp>
 
-# include <vcsn/core/crange.hh>
+# include <vcsn/misc/crange.hh>
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/context.hh>
