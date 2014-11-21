@@ -33,8 +33,6 @@ namespace vcsn
       using states_t = std::unordered_set<state_t>;
 
       using tr_cont_t = std::vector<transition_t>;
-      using states_output_t =
-        container_filter_range<boost::integer_range<state_t>>;
 
       using super_t::pre;
       using super_t::post;
@@ -92,133 +90,203 @@ namespace vcsn
         return all_states().size();
       }
 
+      // FIXME: clang workaround.
       template <typename Pred>
-      states_output_t all_states(Pred pred) const
+      struct has_state_p
       {
-        return aut_->all_states([this, pred](state_t s)
-                                { return pred(s) && has(ss_, s); });
-      }
-
-      states_output_t all_states() const
-      {
-        return all_states([](state_t) { return true; });
-      }
-
-
-      states_output_t states() const
-      {
-        return all_states([this](state_t s)
-                          {
-                            // In the case transposing
-                            // pre() > post().
-			    return std::max(pre(), post()) < s;
-                          });
-      }
+        bool operator()(state_t s) const
+        {
+          return pred(s) && has(aut_.ss_, s);
+        }
+        const filter_automaton_impl& aut_;
+        Pred pred;
+      };
 
       template <typename Pred>
-      typename super_t::transitions_output_t
-      all_transitions(Pred pred) const
+      auto all_states(Pred pred) const
+        -> decltype(this->aut_->all_states(has_state_p<Pred>{*this, pred}))
       {
-        return aut_->all_transitions([this, pred] (transition_t t)
-                                     {
-                                       return (pred(t)
-                                               && has(ss_, src_of(t))
-                                               && has(ss_, dst_of(t)));
-                                     });
+        return aut_->all_states(has_state_p<Pred>{*this, pred});
       }
+
+      // FIXME: clang workaround.
+      struct all_states_p
+      {
+        bool operator()(state_t) const { return true; };
+      };
+
+      auto all_states() const
+        -> decltype(this->all_states(all_states_p{}))
+      {
+        return all_states(all_states_p{});
+      }
+
+      // FIXME: clang workaround.
+      struct visible_state_p
+      {
+        bool operator()(state_t s) const
+        {
+          // When transposing post() < pre().
+          return std::max(pre(), post()) < s;
+        }
+        const filter_automaton_impl& aut_;
+      };
+
+      auto states() const
+        -> decltype(this->all_states(visible_state_p{*this}))
+      {
+        return all_states(visible_state_p{*this});
+      }
+
+      // FIXME: clang workaround.
+      template <typename Pred>
+      struct has_transition_p
+      {
+        bool operator()(transition_t t) const
+        {
+          return (pred(t)
+                  && has(aut_.ss_, aut_.src_of(t))
+                  && has(aut_.ss_, aut_.dst_of(t)));
+        }
+        const filter_automaton_impl& aut_;
+        Pred pred;
+      };
+
+      template <typename Pred>
+      auto all_transitions(Pred pred) const
+        -> decltype(this->aut_->all_transitions(has_transition_p<Pred>{*this,
+                                                                       pred}))
+      {
+        return aut_->all_transitions(has_transition_p<Pred>{*this, pred});
+      }
+
+      // FIXME: clang workaround.
+      struct all_transitions_p
+      {
+        bool operator()(transition_t) const { return true; };
+      };
 
       /// All the transition indexes between all states (including pre
       /// and post).
-      typename super_t::transitions_output_t
-      all_transitions() const
+      auto all_transitions() const
+        -> decltype(this->all_transitions(all_transitions_p{}))
       {
-        return all_transitions([] (transition_t) { return true; });
+        return all_transitions(all_transitions_p{});
       }
 
       /// All the transition indexes between visible states.
-      typename super_t::transitions_output_t
-      transitions() const
+      auto transitions() const
+        -> decltype(this->all_transitions(has_transition_p<all_transitions_p>
+                                          {*this, all_transitions_p{}}))
       {
-        return all_transitions([this] (transition_t t)
-                               {
-                                 return (src_of(t) != pre()
-                                         && dst_of(t) != post());
-                               });
+        auto pred
+          = has_transition_p<all_transitions_p>{*this, all_transitions_p{}};
+        return all_transitions(pred);
       }
+
+      // FIXME: clang workaround.
+      template <typename Pred>
+      struct has_dst_p
+      {
+        bool operator()(transition_t t) const
+        {
+          return pred(t) && has(aut_.ss_, aut_.dst_of(t));
+        }
+        const filter_automaton_impl& aut_;
+        Pred pred;
+      };
 
       template <typename Pred>
-      container_filter_range<const tr_cont_t&>
-      all_out(state_t s, Pred pred) const
+      auto all_out(state_t s, Pred pred) const
+        -> decltype(this->aut_->all_out(s, has_dst_p<Pred>{*this, pred}))
       {
-        return aut_->all_out(s,
-                             [this, pred] (transition_t t)
-                             {
-                               return pred(t) && has(ss_, dst_of(t));
-                             });
+        return aut_->all_out(s, has_dst_p<Pred>{*this, pred});
       }
 
-      container_filter_range<const tr_cont_t&>
-      all_out(state_t s) const
+      auto all_out(state_t s) const
+      -> decltype(this->all_out(s, all_transitions_p{}))
       {
-        return all_out(s,
-                       [] (transition_t) { return true; });
+        return all_out(s, all_transitions_p{});
       }
 
-      container_filter_range<const tr_cont_t&>
-      out(state_t s) const
+      // FIXME: clang workaround.
+      struct not_to_post_p
       {
-        return all_out(s,
-                       [this] (transition_t t)
-                       {
-                         return dst_of(t) != post();
-                       });
+        bool operator()(transition_t t) const
+        {
+          return aut_.dst_of(t) != aut_.post();
+        }
+        const filter_automaton_impl& aut_;
+      };
+
+      auto out(state_t s) const
+        -> decltype(this->all_out(s, not_to_post_p{*this}))
+      {
+        return all_out(s, not_to_post_p{*this});
       }
 
-      container_filter_range<const tr_cont_t&>
-      out(state_t s, label_t l) const
+      // FIXME: clang workaround.
+      struct label_equal_p
       {
-        return all_out(s,
-                       [this, l] (transition_t t)
-                       {
-                         return aut_.labelset()->equal(aut_->label_of(t, l));
-                       });
+        bool operator()(transition_t t) const
+        {
+          return aut_.labelset()->equals(aut_.label_of(t), label_);
+        }
+        const filter_automaton_impl& aut_;
+        label_t label_;
+      };
+
+      auto out(state_t s, label_t l) const
+        -> decltype(this->all_out(s, label_equal_p{*this, l}))
+      {
+        return all_out(s, label_equal_p{*this, l});
       }
+
+      // FIXME: clang workaround.
+      template <typename Pred>
+      struct has_src_p
+      {
+        bool operator()(transition_t t) const
+        {
+          return pred(t) && has(aut_.ss_, aut_.src_of(t));
+        }
+        const filter_automaton_impl& aut_;
+        Pred pred;
+      };
 
       template <typename Pred>
-      container_filter_range<const tr_cont_t&>
-      all_in(state_t s, Pred pred) const
+      auto all_in(state_t s, Pred pred) const
+        -> decltype(this->aut_->all_in(s, has_src_p<Pred>{*this, pred}))
       {
-        return aut_->all_in(s,
-                            [this, pred] (transition_t t)
-                            {
-                              return pred(t) && has(ss_, src_of(t));
-                            });
+        return aut_->all_in(s, has_src_p<Pred>{*this, pred});
       }
 
-      container_filter_range<const tr_cont_t&>
-      all_in(state_t s) const
+      auto all_in(state_t s) const
+        -> decltype(this->all_in(s, all_transitions_p{}))
       {
-        return all_in(s, [] (transition_t) { return true; });
+        return all_in(s, all_transitions_p{});
       }
 
-      container_filter_range<const tr_cont_t&>
-      in(state_t s) const
+      // FIXME: clang workaround.
+      struct not_from_pre_p
       {
-        return all_in(s,
-                      [this] (transition_t t)
-                      {
-                        return src_of(t) != post();
-                      });
+        bool operator()(transition_t t) const
+        {
+          return aut_.src_of(t) != aut_.pre();
+        }
+        const filter_automaton_impl& aut_;
+      };
+
+      auto in(state_t s) const
+        -> decltype(this->all_in(s, not_from_pre_p{*this}))
+      {
+        return all_in(s, not_from_pre_p{*this});
       }
 
-      container_filter_range<const tr_cont_t&>
-      in(state_t s, label_t l) const
+      auto in(state_t s, label_t l) const
+        -> decltype(this->all_in(s, label_equal_p{*this, l}))
       {
-        return all_in(s,
-                      [this, l] (transition_t t)
-                      {
-                        return (aut_.labelset()->equal(aut_->label_of(t), l));
-                      });
+        return all_in(s, label_equal_p{*this, l});
       }
 
       typename automaton_t::element_type::automaton_nocv_t
@@ -228,15 +296,15 @@ namespace vcsn
       }
 
       /// Indexes of transitions to visible initial states.
-      container_filter_range<const tr_cont_t&>
-      initial_transitions() const
+      auto initial_transitions() const
+        -> decltype(this->out(pre()))
       {
         return out(pre());
       }
 
       /// Indexes of transitions from visible final states.
-      container_filter_range<const tr_cont_t&>
-      final_transitions() const
+      auto final_transitions() const
+        -> decltype(this->in(post()))
       {
         return in(post());
       }

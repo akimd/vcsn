@@ -178,6 +178,16 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** Clang 3.5 and C++14 limitations
+Clang 3.5 and before, while supporting quite well C++14, dies when it tries
+to emit debug symbols for functions with deduced return type.  So we must
+generate explicit return types, which in turn, forbids the use of lambda
+declared inside the functions.  So mutable_automaton and filter_automaton
+are littered with tons of simple functors that should be converted to simple
+lambdas as soon as Clang 3.6 (hopefully...) is wide-spread enough.
+
+Look for "workaround" in these files, and possibly for other predicates.
+
 ** Copy
 There are numerous opportunities for an improve copy.  For instance when
 computing the square automaton (see has_twins_property), we would like to

@@ -31,13 +31,13 @@ namespace vcsn
   is_out_sorted(const Aut& a)
   {
     using transition_t = transition_t_of<Aut>;
+    auto less = [&a] (transition_t l, transition_t r)
+      {
+        return a->labelset()->less_than(a->label_of(l),
+                                        a->label_of(r));
+      };
     for (auto s: a->states())
-      if (!detail::is_sorted(a->out(s),
-                             [&a] (transition_t l, transition_t r)
-                             {
-                               return a->labelset()->less_than(a->label_of(l),
-                                                              a->label_of(r));
-                             }))
+      if (!detail::is_sorted_forward(a->out(s), less))
         return false;
     return true;
   }

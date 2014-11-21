@@ -1,7 +1,6 @@
 #ifndef VCSN_ALGOS_EVAL_HH
 # define VCSN_ALGOS_EVAL_HH
 
-# include <algorithm>
 # include <vector>
 
 # include <vcsn/ctx/traits.hh>
@@ -9,6 +8,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/weight.hh>
+# include <vcsn/misc/algorithm.hh>
 
 namespace vcsn
 {
@@ -45,8 +45,7 @@ namespace vcsn
 
         /// An array indexed by state numbers.
         const auto& states = a_->states();
-        size_t last_state = *std::max_element(std::begin(states),
-                                              std::end(states));
+        size_t last_state = detail::max_forward(states);
         // Do not use braces (v1{size, zero}): the type of zero might
         // result in the compiler believing we are building a vector
         // with two values: a_->num_all_states() and zero.

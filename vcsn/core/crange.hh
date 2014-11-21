@@ -1,7 +1,6 @@
 #ifndef VCSN_CORE_CRANGE_HH
 # define VCSN_CORE_CRANGE_HH
 
-# include <functional> // std::function
 # include <type_traits>
 
 # include <boost/iterator/filter_iterator.hpp>
@@ -44,13 +43,14 @@ namespace vcsn
   };
 
 
-  template <typename C>
+  template <typename Cont, typename Pred>
   struct container_filter_range
   {
   public:
-    using unref_C = typename std::remove_reference<C>::type;
+    using container_t = Cont;
+    using unref_C = typename std::remove_reference<container_t>::type;
     using value_type = typename unref_C::value_type;
-    using predicate_t = std::function<bool(value_type)>;
+    using predicate_t = Pred;
     using const_iterator
       = boost::filter_iterator<predicate_t, typename unref_C::const_iterator>;
   public:
@@ -100,9 +100,16 @@ namespace vcsn
     }
 
   private:
-    const C cont_;
+    const container_t cont_;
     predicate_t predicate_;
   };
+
+  template <typename Cont, typename Pred>
+  container_filter_range<Cont, Pred>
+  make_container_filter_range(const Cont& cont, Pred pred)
+  {
+    return {cont, pred};
+  }
 }
 
 #endif // !VCSN_CORE_CRANGE_HH

@@ -1,7 +1,6 @@
-#ifndef VCSN_CORE_FWD_HH
-# define VCSN_CORE_FWD_HH
+#pragma once
 
-# include <vcsn/misc/memory.hh> // make_shared_ptr.
+#include <vcsn/misc/memory.hh> // make_shared_ptr.
 
 namespace vcsn
 {
@@ -10,7 +9,7 @@ namespace vcsn
   template <typename C>
   struct container_range;
 
-  template <typename Cont>
+  template <typename Cont, typename Pred>
   struct container_filter_range;
 
 
@@ -51,5 +50,3 @@ namespace vcsn
     = std::shared_ptr<detail::expression_automaton_impl<Aut>>;
 
 } // namespace vcsn
-
-#endif // !VCSN_CORE_FWD_HH

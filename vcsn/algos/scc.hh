@@ -156,11 +156,6 @@ namespace vcsn
       }
 
     private:
-      using tr_cont_t = std::vector<transition_t>;
-      using tr_filter_t = container_filter_range<const tr_cont_t&>;
-      using iterator_t = typename tr_filter_t::const_iterator;
-      struct step_t;
-
       void dfs(state_t s)
       {
         number_[s] = low_[s] = curr_vertex_num_++;
@@ -217,6 +212,7 @@ namespace vcsn
       Aut aut_;
 
       /// Stack used to simulate with dfs recursive.
+      struct step_t;
       std::vector<step_t> dfs_stack_;
 
       /// The current visited vertex.
@@ -234,12 +230,15 @@ namespace vcsn
       /// All compnents.
       components_t components_;
 
+      /// Iterator on outgoing transitions.
+      using iterator_t = decltype(aut_->out(state_t{}).begin());
+
       /// Step of one state contain infomation next successor and end
       /// iterator(output transitions or successors of this state).
       struct step_t
       {
         step_t(state_t s, iterator_t p, iterator_t e)
-        : state{s}, pos{p}, end{e} {}
+          : state{s}, pos{p}, end{e} {}
         state_t state;
         iterator_t pos;
         iterator_t end;
