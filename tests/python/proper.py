@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
+
 import vcsn
 from test import *
 
@@ -8,11 +10,26 @@ from test import *
 def check(i, o):
   i = vcsn.automaton(i)
   CHECK_EQ(o, i.proper())
-  # FIXME: Because _proper uses copy, state numbers are changed.
-  #
-  # FIXME: cannot use is_isomorphic because there may be unreachable
+
+  # Since we remove only states that _become_ inaccessible,
+  # i.proper(prune = False).accessible() is not the same as
+  # i.proper(): in the former case we also removed the non-accessible
   # states.
-  CHECK_EQ(i.proper().sort().strip(), i.proper().proper().sort().strip())
+  print("checking proper(prune = False)")
+  CHECK_EQ(vcsn.automaton(o).accessible(),
+           i.proper(prune = False).accessible())
+
+  # FIXME: Because proper uses copy, state numbers are changed.
+  #
+  # FIXME: cannot use is_isomorphic because some of our test cases
+  # have unreachable states, which is considered invalid by
+  # is_isomorphic.
+  print("checking idempotence")
+  if i.proper().is_accessible():
+    CHECK_ISOMORPHIC(i.proper(), i.proper().proper())
+  else:
+    CHECK_EQ(i.proper().sort().strip(),
+             i.proper().proper().sort().strip())
 
 def check_fail(aut):
   a = vcsn.automaton(aut)
@@ -22,16 +39,10 @@ def check_fail(aut):
   except RuntimeError:
     PASS()
 
-# check the artificial conversion lan -> lal with proper
-# ------------------------------------------------------
-def check_to_lal(i, o):
-  i = vcsn.automaton(i)
-  CHECK_EQ(o, i.proper())
 
-
-## ------------------------------------------- ##
+## -------------------------------------------- ##
 ## law_char, r: check the computation of star.  ##
-## ------------------------------------------- ##
+## -------------------------------------------- ##
 
 check(r'''digraph
 {
@@ -345,11 +356,11 @@ check(r'''digraph
 }''')
 
 
-## -------------------------------------- ##
-## lan_char_zr: Check conversion to lal.  ##
-## -------------------------------------- ##
+## ------------ ##
+## lan_char_b.  ##
+## ------------ ##
 
-check_to_lal(r'''digraph
+check(r'''digraph
 {
   vcsn_context = "lan_char(ab), b"
   I -> 0
@@ -377,9 +388,9 @@ check_to_lal(r'''digraph
   1 -> F1
 }''')
 
-## --------------------------- ##
+## ---------------------------- ##
 ## lat<lan_char, lan_char>, b.  ##
-## --------------------------- ##
+## ---------------------------- ##
 
 check(r'''digraph
 {
@@ -419,52 +430,11 @@ check(r'''digraph
 }''')
 
 
-## --------------------------- ##
+## ---------------------------- ##
 ## lat<lan_char, lal_char>, b.  ##
-## --------------------------- ##
+## ---------------------------- ##
 
 check(r'''digraph
-{
-  vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
-  I0 -> 0
-  0 -> 1 [label = "(a,x)"]
-  0 -> 2 [label = "(b,y)"]
-  1 -> F1
-  1 -> 2 [label = "(\\e,y)"]
-  2 -> F2
-}''', r'''digraph
-{
-  vcsn_context = "lat<lan<letterset<char_letters(ab)>>, letterset<char_letters(xy)>>, b"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-    F2
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-  }
-  I0 -> 0
-  0 -> 1 [label = "(a,x)"]
-  0 -> 2 [label = "(b,y)"]
-  1 -> F1
-  1 -> 2 [label = "(\\e,y)"]
-  2 -> F2
-}''')
-
-
-
-## ---------------------------------------------------------------- ##
-## Check that lat<lan_char, lal_char>, b is not ruined by the lan to ##
-## lal transition.                                                  ##
-## ---------------------------------------------------------------- ##
-
-check_to_lal(r'''digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
   I0 -> 0
