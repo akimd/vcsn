@@ -143,6 +143,23 @@ namespace vcsn
   {
     namespace detail
     {
+
+      /// Instantiate the core functions for automata of type \a Aut.
+      template <typename Aut>
+      bool
+      register_automaton_functions()
+      {
+        using aut_t = Aut;
+        using namespace dyn::detail;
+        REGISTER(copy, aut_t);
+        REGISTER(dot, aut_t, std::ostream, bool);
+        REGISTER(efsm, aut_t, std::ostream);
+        REGISTER(info, aut_t, std::ostream, bool);
+        REGISTER(proper, aut_t, direction, bool);
+        REGISTER(tikz, aut_t, std::ostream);
+        return true;
+      }
+
       template <typename Ctx>
       bool
       register_kind_functions(labels_are_letters)
@@ -282,6 +299,8 @@ namespace vcsn
 
         using namespace dyn::detail;
 
+        register_automaton_functions<aut_t>();
+
         REGISTER(accessible, aut_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(chain, aut_t, int, int);
@@ -294,13 +313,9 @@ namespace vcsn
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
         REGISTER(context_of_expression, rs_t);
-        REGISTER(copy, aut_t);
         REGISTER(derived_term, rs_t, const std::string);
-        REGISTER(dot, aut_t, std::ostream, bool);
-        REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
         REGISTER(identities, rs_t);
-        REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
@@ -330,7 +345,6 @@ namespace vcsn
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_expression, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
-        REGISTER(proper, aut_t, direction, bool);
         REGISTER(push_weights, aut_t);
         REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(read_label, std::istream, ctx_t);
@@ -349,7 +363,6 @@ namespace vcsn
         REGISTER(sum_expression, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(thompson, rs_t);
-        REGISTER(tikz, aut_t, std::ostream);
         REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, const std::string);
         REGISTER(transpose, aut_t);
@@ -358,7 +371,9 @@ namespace vcsn
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 
-        register_functions_is_free<ctx_t>(std::integral_constant<bool, ctx_t::labelset_t::is_free()>());
+        using is_free_t
+          = std::integral_constant<bool, ctx_t::labelset_t::is_free()>;
+        register_functions_is_free<ctx_t>(is_free_t());
 
         return register_kind_functions<ctx_t>(typename ctx_t::kind_t());
       }
