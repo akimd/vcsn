@@ -270,16 +270,18 @@ namespace vcsn
       return res;
     }
 
-    static value_t
-    rdiv(const value_t&, const value_t&)
+    value_t
+    rdiv(const value_t& l, const value_t& r) const
     {
-      throw std::runtime_error("not implemented for polynomials");
+      raise(sname(), ": rdiv: not implemented (",
+            to_string(*this, l), ", ", to_string(*this, r), ")");
     }
 
-    static value_t
-    ldiv(const value_t& l, const value_t& r)
+    value_t
+    ldiv(const value_t& l, const value_t& r) const
     {
-      return rdiv(r, l);
+      raise(sname(), ": ldiv: not implemented (",
+            to_string(*this, l), ", ", to_string(*this, r), ")");
     }
 
     /// Left exterior division.
