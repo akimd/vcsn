@@ -22,19 +22,24 @@ dist_notebooks_DATA =                           \
   %D%/automaton.accessible.ipynb                \
   %D%/automaton.ambiguous_word.ipynb            \
   %D%/automaton.coaccessible.ipynb              \
+  %D%/automaton.codeterminize.ipynb             \
+  %D%/automaton.cominimize.ipynb                \
   %D%/automaton.complement.ipynb                \
   %D%/automaton.complete.ipynb                  \
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.determinize.ipynb               \
+  %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.is_ambiguous.ipynb              \
+  %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
   %D%/automaton.is_cycle_ambiguous.ipynb        \
   %D%/automaton.is_deterministic.ipynb          \
   %D%/automaton.is_equivalent.ipynb             \
-  %D%/automaton.is_isomorphic.ipynb             \
   %D%/automaton.is_functional.ipynb             \
+  %D%/automaton.is_isomorphic.ipynb             \
   %D%/automaton.is_standard.ipynb               \
+  %D%/automaton.minimize.ipynb                  \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.reduce.ipynb                    \
