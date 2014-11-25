@@ -111,33 +111,20 @@ def printout(text, colour=WHITE):
 for k in sorted(bench.keys()):
     if args.only.search(k):
         for fn in args.files:
-            # avoid computing error with N/A
-            def nb_na():
-                nb = 0
-                for b in args.files:
-                    if not(b in bench[k]):
-                        nb += 1
-                return nb
-            # compute average of benchs
-            res = 0
-            for x in args.files:
-                if x in bench[k]:
-                    res += float(bench[k][x])
-            res = res/(len(args.files)-nb_na())
-            # print with right colors
+            # Compute average of benchs.
+            bs = [float(bench[k][f]) for f in args.files if f in bench[k]]
+            avg = sum(bs) / len(bs)
+            # print with right colors.
+            v = bench[k][fn] if fn in bench[k] else "N/A"
             if fn in bench[k]:
-                if float(bench[k][fn]) <= res - args.treshold * res:
-                    v = bench[k][fn] if fn in bench[k] else "N/A"
-                    printout ("{:5}".format(v), GREEN )
-                    print ( end = ' ')
-                elif float(bench[k][fn]) >= args.treshold * res + res:
-                    v = bench[k][fn] if fn in bench[k] else "N/A"
-                    printout ("{:5}".format(v), RED )
-                    print ( end = ' ')
+                if float(bench[k][fn]) <= avg - args.treshold * avg:
+                    printout("{:5}".format(v), GREEN)
+                    print(end = ' ')
+                elif float(bench[k][fn]) >= args.treshold * avg + avg:
+                    printout("{:5}".format(v), RED)
+                    print(end = ' ')
                 else:
-                    v = bench[k][fn] if fn in bench[k] else "N/A"
-                    print ("{:5}".format(v), end= ' ' )
+                    print("{:5}".format(v), end= ' ')
             else:
-                    v = bench[k][fn] if fn in bench[k] else "N/A"
-                    print ("{:5}".format(v), end= ' ' )
+                    print("{:5}".format(v), end= ' ')
         print(k)
