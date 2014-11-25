@@ -471,7 +471,7 @@ namespace vcsn
       {
         components_ = ::vcsn::strong_components(aut_, algo);
         size_t num_sccs = components_.size();
-        for (int i = 0; i < num_sccs; ++i)
+        for (size_t i = 0; i < num_sccs; ++i)
           for (auto s : components_[i])
             component_[s] = i + 1;
       }
@@ -508,8 +508,8 @@ namespace vcsn
       const component_t component(unsigned com_num) const
       {
         if (com_num < 0 || components_.size() <= com_num)
-          raise("component: com_num must have between 0 and "
-                + components_.size());
+          raise("component: com_num must have between 0 and ",
+                components_.size());
         return components_[com_num];
       }
 
@@ -574,7 +574,7 @@ namespace vcsn
   template <typename Aut>
   std::size_t num_components(const Aut&)
   {
-    raise("num_components: requires a scc_automaton");
+    raise("num_components: requires an scc_automaton");
   }
 
   namespace dyn
@@ -615,7 +615,7 @@ namespace vcsn
   filter_automaton<scc_automaton<Aut>>
   component(const Aut&, unsigned)
   {
-    raise("component: requires a scc_automaton");
+    raise("component: requires an scc_automaton");
   }
 
   namespace dyn
@@ -691,9 +691,9 @@ namespace vcsn
 
   template <typename Aut>
   partition_automaton<Aut>
-  condense(const Aut& aut)
+  condense(const Aut&)
   {
-    raise("condense: The automaton must have type scc_automaton");
+    raise("condense: requires an scc_automaton");
   }
 
   namespace dyn

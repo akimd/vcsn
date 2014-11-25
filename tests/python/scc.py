@@ -4,12 +4,11 @@ import vcsn
 from test import *
 
 def check(num_sccs, a):
-    algos = ["tarjan_iterative", "tarjan_recursive", "kosaraju"]
-    for algo in algos:
-        ati = a.scc(algo)
-        CHECK_EQ(True, ati.is_isomorphic(a))
-        CHECK_EQ(num_sccs, ati.num_components())
-        CHECK_EQ(num_sccs, ati.condense().info()["number of states"])
+    for algo in ["tarjan_iterative", "tarjan_recursive", "kosaraju"]:
+        scc = a.scc(algo)
+        CHECK_EQ(True, scc.is_isomorphic(a))
+        CHECK_EQ(num_sccs, scc.num_components())
+        CHECK_EQ(num_sccs, scc.condense().info()["number of states"])
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
@@ -84,21 +83,9 @@ check(6, a)
 
 # component
 a = ctx.expression("(ab)*(bc)*").standard()
-ati = a.scc("tarjan_iterative")
-CHECK_EQ(ati.component(1), ati.filter([4, 6]))
-CHECK_EQ(ati.component(2), ati.filter([1, 3]))
-CHECK_EQ(ati.component(3), ati.filter([0]))
-
-try:
-    ati.component(0)
-except RuntimeError:
-    PASS()
-else:
-    FAIL('num_components egal 0: did not raise an exception')
-
-try:
-    ati.component(4)
-except RuntimeError:
-    PASS()
-else:
-    FAIL('num_components egal 0: did not raise an exception')
+scc = a.scc("tarjan_iterative")
+XFAIL(lambda: scc.component(0))
+CHECK_EQ(scc.component(1), scc.filter([4, 6]))
+CHECK_EQ(scc.component(2), scc.filter([1, 3]))
+CHECK_EQ(scc.component(3), scc.filter([0]))
+XFAIL(lambda: scc.component(4))
