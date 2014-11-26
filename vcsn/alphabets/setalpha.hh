@@ -53,13 +53,14 @@ namespace vcsn
             switch (is.peek())
               {
               case EOF:
-                raise("invalid end-of-file");
+                raise(sname(), ": make: invalid end-of-file");
                 break;
 
               case ')':
                 eat(is, ')');
                 done = true;
                 break;
+
               case '-':
                 if (prev == boost::none)
                   goto insert;
@@ -70,6 +71,7 @@ namespace vcsn
                     prev = boost::none;
                     break;
                   }
+
               insert:
               default:
                 {
@@ -142,7 +144,7 @@ namespace vcsn
     auto add_range_(Letter, Letter)
       -> enable_if_t<!has_range<Letter>{}, set_alphabet&>
     {
-      raise(sname(), " does not support letter ranges");
+      raise(sname(), ": does not support letter ranges");
     }
 
     /// Whether \a l is a letter.
@@ -255,7 +257,7 @@ namespace vcsn
           o << ')';
         }
       else
-        raise("invalid format: ", format);
+        raise(sname(), ": print_set: invalid format: ", format);
       return o;
     }
 

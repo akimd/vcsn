@@ -221,14 +221,15 @@ namespace vcsn
           o << '>';
         }
       else
-        raise("invalid format: ", format);
+        raise(sname(), ": print_set: invalid format: ", format);
       return o;
     }
 
     /// The longest common prefix.
     static value_t lgcd(const value_t& w1, const value_t& w2)
     {
-      return {w1.begin(), std::mismatch(w1.begin(), w1.end(), w2.begin()).first};
+      return {w1.begin(),
+              std::mismatch(w1.begin(), w1.end(), w2.begin()).first};
     }
 
     /// Compute w1 \ w2 = w1^{-1}w2.
