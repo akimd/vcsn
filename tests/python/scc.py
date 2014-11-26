@@ -89,3 +89,41 @@ CHECK_EQ(scc.component(1), scc.filter([4, 6]))
 CHECK_EQ(scc.component(2), scc.filter([1, 3]))
 CHECK_EQ(scc.component(3), scc.filter([0]))
 XFAIL(lambda: scc.component(4))
+
+
+# condense: make sure we don't lose inaccessible parts.
+a = vcsn.automaton(
+    r'''
+    0 -> 0 a
+    0 -> 1 b
+    1 -> 1 c''',
+    'daut')
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "letterset<char_letters(abc)>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "2.0", shape = box, color = DimGray]
+    1 [label = "1.1", shape = box, color = DimGray]
+  }
+  0 -> 0 [label = "a", color = DimGray]
+  0 -> 1 [label = "b", color = DimGray]
+  1 -> 1 [label = "c", color = DimGray]
+}''',
+         a.scc())
+
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "letterset<char_letters(abc)>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "1.1", shape = box, color = DimGray]
+    1 [label = "2.0", shape = box, color = DimGray]
+  }
+  1 -> 0 [label = "b", color = DimGray]
+}''',
+         a.scc().condense())

@@ -2,8 +2,6 @@
 # define VCSN_ALGOS_SCC_HH
 
 # include <limits>
-# include <stack>
-# include <queue>
 
 # include <boost/range/irange.hpp>
 
@@ -140,14 +138,13 @@ namespace vcsn
       /// Store the visit order of each state.
       std::unordered_map<state_t, std::size_t> number_;
       /// low_[s] is minimum of vertex that it can go.
-
       std::unordered_map<state_t, std::size_t> low_;
       /// the maximum possible of a value in low_.
       std::size_t low_max_ = std::numeric_limits<unsigned int>::max();
 
       /// Contains list vertices same the component.
       std::vector<state_t> stack_;
-      /// All compnents.
+      /// All components.
       components_t components_;
 
       /// Iterator on outgoing transitions.
@@ -202,7 +199,7 @@ namespace vcsn
         std::size_t min = curr_vertex_num_++;
         low_.emplace(s, min);
         marked_.emplace(s);
-        stack_.push(s);
+        stack_.push_back(s);
 
         for (auto t : aut_->out(s))
           {
@@ -218,13 +215,13 @@ namespace vcsn
             return;
           }
 
-        state_t w;
         components_.emplace_back(component_t{});
         auto& com = components_.back();
+        state_t w;
         do
           {
-            w = stack_.top();
-            stack_.pop();
+            w = stack_.back();
+            stack_.pop_back();
             com.emplace(w);
             // This vertex belong only one component
             // so remove it by update low value to max size.
@@ -238,7 +235,7 @@ namespace vcsn
       /// The current visited vertex.
       /// It used to preorder number counter.
       std::size_t curr_vertex_num_ = 0;
-      /// All compnents.
+      /// All components.
       components_t components_;
       /// Visited vertices.
       std::unordered_set<state_t> marked_;
@@ -246,7 +243,7 @@ namespace vcsn
       /// with X is all states on output transitions of s.
       std::unordered_map<state_t, std::size_t> low_;
       /// Contains list vertices same the component.
-      std::stack<state_t> stack_;
+      std::vector<state_t> stack_;
     };
 
 
@@ -270,7 +267,7 @@ namespace vcsn
             dfs(s);
       }
 
-      std::stack<state_t>& reverse_post()
+      std::vector<state_t>& reverse_post()
       {
         return rvp_;
       }
@@ -285,13 +282,13 @@ namespace vcsn
             if (!has(marked_, dst))
               dfs(dst);
           }
-        rvp_.push(s);
+        rvp_.push_back(s);
       }
 
       /// Input automaton.
       Aut aut_;
       /// Revert postorder of dfs.
-      std::stack<state_t> rvp_;
+      std::vector<state_t> rvp_;
       /// Store the visited states.
       std::set<state_t> marked_;
     };
@@ -299,7 +296,7 @@ namespace vcsn
 
   /// Get all vertices in reverse postorder.
   template <typename Aut>
-  std::stack<state_t_of<Aut>>
+  std::vector<state_t_of<Aut>>
   reverse_postorder(const Aut& aut)
   {
     detail::reverse_postorder_impl<Aut> dv(aut);
@@ -330,8 +327,8 @@ namespace vcsn
         auto todo = ::vcsn::reverse_postorder(trans);
         while (!todo.empty())
           {
-            auto s = todo.top();
-            todo.pop();
+            auto s = todo.back();
+            todo.pop_back();
             if (!has(marked_, s))
               {
                 dfs(s);
@@ -656,8 +653,7 @@ namespace vcsn
     for (const auto& com : aut->components())
       {
         ss.clear();
-        for (auto s : com)
-          ss.emplace(s);
+        ss.insert(begin(com), end(com));
         state_t new_state = res->new_state(ss);
         for (auto s : com)
           map[s] = new_state;
@@ -666,25 +662,12 @@ namespace vcsn
     map[aut->post()] = res->post();
 
     // Add transitions to new automaton.
-    std::unordered_set<state_t> marked;
-    std::queue<state_t> todo;
-    todo.emplace(aut->pre());
-    marked.emplace(aut->pre());
-    while (!todo.empty())
+    for (auto t: aut->all_transitions())
       {
-        auto s = todo.front();
-        todo.pop();
-        for (auto t : aut->all_out(s))
-          {
-            auto dst = aut->dst_of(t);
-            res->add_transition(map[s], map[dst], aut->label_of(t),
-                                aut->weight_of(t));
-            if (!has(marked, dst))
-              {
-                todo.emplace(dst);
-                marked.emplace(dst);
-              }
-          }
+        auto s = map[aut->src_of(t)];
+        auto d = map[aut->dst_of(t)];
+        if (s != d)
+          res->add_transition(s, d, aut->label_of(t), aut->weight_of(t));
       }
     return res;
   }

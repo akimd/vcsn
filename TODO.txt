@@ -160,6 +160,17 @@ We don't need to insplit in the case of idempotent semirings.
 ** product: lazy insplit
 Explore the possibility to apply insplitting lazily.
 
+** scc
+Dijkstra is often more efficient than Tarjan, so we should have an
+implementation too.  See
+http://www.cs.princeton.edu/courses/archive/fall09/cos521/Handouts/pathbaseddepthfirst.pdf
+for what seems to be the state of the art.
+
+The condensation automaton should not be built by traversing the whole set
+of transitions of the input automaton again: the process of computing the
+SCC already discovers the sccs via the condensation, so rather, we should
+keep this information somewhere.
+
 * Cleanup
 ** automaton_t members in decorators
 In most cases it's reasonable to use const shared_pointer (which is to say
