@@ -122,7 +122,7 @@ class Daut:
     def __init__(self):
         self.transitions = []
         self.id = r'(?:\w+|"(?:[^\\"]|\\.)*")'
-
+        self.re_daut_tr = '^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id)
     # Using split(',') is tempting, but will break strings
     # that contain commas --- e.g., [label = "a, b"].
     def attr_dot_split(self, s):
@@ -163,6 +163,7 @@ class Daut:
             return "";
 
     def parse_attr_daut(self, s):
+        '''Return the list of attributes in Daut syntax.'''
         if s:
             s.strip()
             if s.startswith('[') and s.endswith(']'):
@@ -181,11 +182,13 @@ class Daut:
             return ""
 
     def transition_daut(self, s, d, a):
+        '''Format a transition to Daut syntax.'''
         a = self.attr_daut(a)
         return "{} -> {}{}{}".format(s or '$', d or '$',
                                      " " if a else "", a)
 
     def transition_dot(self, s, d, a):
+        '''Format a transition to Dot syntax.'''
         if s == "" or s == "$":
             s = "I" + d
             self.hidden.append(s)
@@ -196,6 +199,7 @@ class Daut:
         return "  {} -> {}{}{}".format(s, d, " " if a else "", a)
 
     def parse_context(self, match):
+        '''Record the context.'''
         self.context = match.group(1)
 
     def parse_transition(self, match, format):
@@ -215,10 +219,11 @@ class Daut:
     def daut_to_dot(self, s):
         '''Convert from Daut syntax to Dot.'''
         self.context = "lal_char, b"
+        # The list of pre/post states.
         self.hidden = []
         s = re.sub('^ *(?:vcsn_)?(?:context|ctx) *= *"?(.*?)"?$',
                    self.parse_context, s, flags = re.MULTILINE)
-        s = re.sub('^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id),
+        s = re.sub(self.re_daut_tr,
                    lambda m: self.transition_dot(*self.parse_transition(m, "daut")),
                    s, flags = re.MULTILINE)
         return '''digraph
@@ -237,6 +242,10 @@ class Daut:
              state_style = state_style,
              edge_style = edge_style,
              hidden=" ".join(self.hidden))
+
+    def daut_to_transitions(self, s):
+        '''Extract the list of transitions (as triples) from Daut.'''
+        return re.findall(self.re_daut_tr, s, flags = re.MULTILINE)
 
     def dot_to_daut(self, s):
         '''Convert from Dot syntax to Daut.'''
@@ -258,3 +267,9 @@ def from_dot(s):
     '''Read a Dot input, simplify it into Daut.'''
     d = Daut()
     return d.dot_to_daut(s)
+
+def daut_to_transitions(s):
+    '''From a Daut, return the list of transitions as triples
+    `(src, dst, entry)`, using `$` to denote pre/post states.'''
+    d = Daut()
+    return d.daut_to_transitions(s)
