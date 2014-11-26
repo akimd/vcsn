@@ -122,7 +122,21 @@ class Daut:
     def __init__(self):
         self.transitions = []
         self.id = r'(?:\w+|"(?:[^\\"]|\\.)*")'
+        # An RE than matches transitions in Daut syntax.
         self.re_daut_tr = '^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id)
+
+    def quote(self, s):
+        '''Turn a string (label) into a string in double-quotes.'''
+        if len(s) < 2 or s[0] != '"' or s[-1] != '"':
+            s = '"' + re.sub(r'([\\"])', r'\\\1', s) + '"'
+        return s
+
+    def unquote(self, s):
+        '''Strip double-quotes and escapes from a string.'''
+        if 2 <= len(s) and s[0] == "'" and s[-1] == "'":
+            s = re.sub(r'\\(.)', r'\1', s[1:-1])
+        return s
+
     # Using split(',') is tempting, but will break strings
     # that contain commas --- e.g., [label = "a, b"].
     def attr_dot_split(self, s):
@@ -152,7 +166,7 @@ class Daut:
         prepend 'label=' to it.
         '''
         if attrs and not attrs[0].startswith("label"):
-            attrs[0] = 'label = "{}"'.format(attrs[0].strip('"'))
+            attrs[0] = 'label = {}'.format(self.quote(attrs[0]))
         for i, a in enumerate(attrs):
             if a in ['blue', 'red', 'green']:
                 attrs[i] = "color={a}, fontcolor={a}".format(a = a)
@@ -176,7 +190,7 @@ class Daut:
     def attr_daut(self, attrs):
         '''Return a list of attributes with the Daut syntax.'''
         if attrs:
-            attrs[0] = re.sub("label *= *", '', attrs[0])
+            attrs[0] = self.unquote(re.sub("label *= *", '', attrs[0]))
             return "; ".join(attrs)
         else:
             return ""
