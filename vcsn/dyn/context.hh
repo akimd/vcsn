@@ -21,16 +21,14 @@ namespace vcsn
         /// A description of the context, sufficient to build it.
         virtual symbol vname() const = 0;
 
-        /// Convert a dynamic name into a static one.
-        /// (from vname to sname, i.e., strip generators).
-        static symbol sname(const std::string& vname);
-
+        /// Downcast to the exact type.
         template <typename Ctx>
         Ctx as()
         {
           return dynamic_cast<context_wrapper<Ctx>&>(*this).context();
         }
 
+        /// Downcast to the exact type.
         template <typename Ctx>
         const Ctx as() const
         {

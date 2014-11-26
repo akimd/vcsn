@@ -41,9 +41,13 @@ namespace vcsn
 
     /// The signature, normalized.
     ///
-    /// For instance 'lan_char(ab), b' ->
-    /// 'lan<letterset<char_letters(ab)>, b'
-    std::string normalize(const std::string& sig);
+    /// E.g., 'lan_char(ab), b' -> 'lan<letterset<char_letters(ab)>, b'.
+    ///
+    /// \param sig   the signature to normalize.
+    /// \param full  whether to keep the runtime values
+    ///    (e.g., the generators: 'lan<letterset<char_letters(ab)>, b' or
+    ///                           'lan<letterset<char_letters>, b').
+    std::string normalize(const std::string& sig, bool full = true);
 
   }
 }

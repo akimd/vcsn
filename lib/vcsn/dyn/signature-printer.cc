@@ -9,10 +9,10 @@ namespace vcsn
   namespace ast
   {
 
-    std::string normalize(const std::string& sig)
+    std::string normalize(const std::string& sig, bool full)
     {
       std::ostringstream os;
-      ast::signature_printer printer(os, true);
+      ast::signature_printer printer(os, full);
       std::istringstream is;
       ast::context_parser parser(is);
       is.str(sig);

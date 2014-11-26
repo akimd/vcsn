@@ -280,7 +280,7 @@ namespace vcsn
         {
           printer_.header("vcsn/ctx/instantiate.hh");
           std::string base =
-            plugindir() + "contexts/" + split(detail::context_base::sname(ctx));
+            plugindir() + "contexts/" + split(ctx);
           os << "using ctx_t =" << incendl;
           print_context(ctx);
           os << ';' << decendl

@@ -37,14 +37,11 @@ namespace vcsn
     context
     make_context(const std::string& n)
     {
-      std::string name = ast::normalize(n);
-      // If the context is not known, try to compile and load it
-      // first.
-      auto sname = detail::context_base::sname(name);
-      // Turn the context name into a signature: {sname}.
+      symbol sname{ast::normalize(n, false)};
+      std::string full_name = ast::normalize(n, true);
       if (!detail::make_context_registry().get0({sname}))
         vcsn::dyn::compile(sname);
-      return detail::make_context_registry().call({sname}, name);
+      return detail::make_context_registry().call({sname}, full_name);
     }
 
 

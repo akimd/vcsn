@@ -151,12 +151,17 @@ namespace vcsn
         {
           gens += '(';
           int c = is_.get();
-          while ((c = is_.get()) != EOF)
+          while ((c = is_.get()) != EOF && c != ')')
             {
               gens += c;
-              if (c == ')')
-                break;
+              if (c == '\\')
+                {
+                  c = is_.get();
+                  require(c != EOF, "unexpected end of file");
+                  gens += c;
+                }
             }
+          gens += ')';
         }
       return std::make_shared<const genset>(letter_type, gens);
     }
