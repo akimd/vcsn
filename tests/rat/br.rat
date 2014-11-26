@@ -5,9 +5,9 @@
 
 # Check the alphabets.
 <f>a => <f>a
-<e>x ! 1.4: invalid letter: x
-<x>a ! 1.1-4: 1.1: invalid letter: x
-a<x> ! 1.2-5: 1.1: invalid letter: x
+<e>x ! 1.4: char_letters: invalid letter: x
+<x>a ! 1.1-4: 1.1: char_letters: invalid letter: x
+a<x> ! 1.2-5: 1.1: char_letters: invalid letter: x
 
 # Check associativities.
 %labels: letters

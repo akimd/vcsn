@@ -5,7 +5,7 @@
 # Base cases.
 ab => ab
 # Error cases.
-x ! 1.1: invalid label: unexpected x
+x ! 1.1: letterset<char_letters>: conv: invalid label: unexpected x
 
 # Precedence and associativity.
 (ab)* => (ab)*
@@ -19,8 +19,8 @@ a(bc) == a.b.c
 # Base cases.
 ab => ab
 # Error cases.
-x ! 1.1: invalid letter: x
-axb ! 1.2: invalid letter: x
+x ! 1.1: char_letters: invalid letter: x
+axb ! 1.2: char_letters: invalid letter: x
 
 # Precedence and associativity.
 (ab)* => (ab)*

@@ -145,6 +145,14 @@ xfail(r'''digraph
 }
 ''')
 
+# \e makes no sense when not in lan.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(\\e), b"
+  0 -> 1 [label = "\\e"]
+}
+''')
+
 # An open context (letters are not specified).
 CHECK_EQ(vcsn.automaton(r'''digraph
 {

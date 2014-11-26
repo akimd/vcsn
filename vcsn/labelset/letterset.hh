@@ -174,7 +174,7 @@ namespace vcsn
     {
       letter_t l = this->genset().get_letter(i);
       require(this->has(l),
-              "invalid label: unexpected ", str_escape(l));
+              sname(), ": conv: invalid label: unexpected ", str_escape(l));
       return value_t{l};
     }
 

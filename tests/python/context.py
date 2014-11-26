@@ -28,8 +28,8 @@ check('lal_char(ab), b', 'letterset<char_letters(ab)>, b')
 check('lal_char(a-kv-z), b', 'letterset<char_letters(abcdefghijkvwxyz)>, b')
 check('lal_char(-0-9), b', 'letterset<char_letters(-0123456789)>, b')
 # FIXME: This is obviously wrong: we will not be able to re-read the
-# result, as the backslash is not escaped.
-check(r'lal_char(\\\-), b',  r'letterset<char_letters(-\)>, b')
+# result, as neither the dash nor the paren is escaped.
+check(r'lal_char(\\\-\)), b',  r'letterset<char_letters()-\\)>, b')
 check(r'lal_char(\--\-), b', r'letterset<char_letters(-)>, b')
 
 check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')

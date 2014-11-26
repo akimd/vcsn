@@ -2,6 +2,7 @@
 # define VCSN_ALPHABETS_CHAR_HH
 
 # include <cassert>
+# include <cstring> // strchr
 # include <string>
 # include <iostream>
 
@@ -152,8 +153,15 @@ namespace vcsn
     {
       int res = i.get();
       if (res == '\\')
-        res = i.get();
-      require(res != EOF, "invalid label: unexpected end-of-file");
+        {
+          int c = i.peek();
+          // \(, \) and \- are used in setalpha::make, e.g.,
+          // char_letters(\(\-\)).
+          if (strchr("\"\\()-", c))
+            res = i.get();
+        }
+      require(res != EOF,
+              sname(), ": conv: invalid label: unexpected end-of-file");
       return res;
     }
 
@@ -168,9 +176,11 @@ namespace vcsn
 
     std::ostream&
     print(const letter_t& l, std::ostream& o,
-          const std::string& = "text") const
+          const std::string& format = "text") const
     {
-      if (l != one_letter() && l != special_letter())
+      if (l == '\\')
+        o << (format == "latex" ? "\\backslash{}" : "\\\\");
+      else if (l != one_letter() && l != special_letter())
         o << l;
       return o;
     }

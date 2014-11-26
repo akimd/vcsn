@@ -190,7 +190,8 @@ namespace vcsn
                  && c != ')')
             {
               letter_t l = L::get_letter(i);
-              require(has(l), "invalid letter: ", str_escape(l));
+              require(has(l),
+                      sname(), ": invalid letter: ", str_escape(l));
               res = this->concat(res, l);
             }
         }
@@ -232,12 +233,12 @@ namespace vcsn
         {
           o << "\\{";
           const char *sep = "";
-          for (auto l: *this)
+          for (letter_t l: alphabet_)
             {
               o << sep;
               if (! this->is_letter(l))
                 o << "\\mathit{";
-              this->print(l, o);
+              this->print(l, o, format);
               if (! this->is_letter(l))
                 o << '}';
               sep = ", ";
@@ -248,10 +249,10 @@ namespace vcsn
         }
       else if (format == "text")
         {
-          o << sname();
-          o <<  '(';
-          for (letter_t c: alphabet_)
-            o <<  c;
+          o << sname() << '(';
+          for (letter_t l: alphabet_)
+            // FIXME: escape ')' and '-'.
+            this->print(l, o, format);
           // Don't display openness here, as our "make()" parser is
           // not ready for it.
           o << ')';
