@@ -66,6 +66,8 @@ def normalize(k):
 
     k = k.replace('ratexp', 'expression')
 
+    k = k.replace('a.num_sccs', 'a.scc')
+
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 
