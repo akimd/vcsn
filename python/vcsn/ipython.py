@@ -25,7 +25,7 @@ class AutomatonTextWidget:
             # anyway.
             aut = self.ipython.shell.user_ns[self.name].strip()
         else:
-            aut = vcsn.context('lal_char(abc), b').expression(r'\e').standard()
+            aut = vcsn.context('lal_char, b').expression(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
 
         text = aut.format(self.format)
