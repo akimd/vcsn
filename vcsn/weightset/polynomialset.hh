@@ -811,6 +811,7 @@ namespace vcsn
         return {*ps2.labelset(), vcsn::join(ws1, *ps2.weightset())};
       }
     };
+
   }
 }
 

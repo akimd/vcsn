@@ -1,11 +1,11 @@
 #pragma once
 
-#include <map>
-#include <unordered_map>
 #include <vector>
 
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/transition-map.hh>
+#include <vcsn/misc/map.hh>
+#include <vcsn/misc/unordered_map.hh>
 #include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn

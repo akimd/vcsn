@@ -21,6 +21,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/label.hh>
+# include <vcsn/labelset/labelset.hh> // make_wordset
 # include <vcsn/misc/map.hh>
 # include <vcsn/misc/pair.hh>
 # include <vcsn/misc/raise.hh>

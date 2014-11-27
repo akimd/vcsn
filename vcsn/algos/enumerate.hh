@@ -9,12 +9,10 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/weightset/polynomialset.hh>
+# include <vcsn/labelset/word-polynomialset.hh>
 
 namespace vcsn
 {
-
 
   /*-----------------------.
   | enumerate(automaton).  |
