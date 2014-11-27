@@ -57,6 +57,7 @@ namespace vcsn
       ALGO("is-synchronized-by", "synchronizing-word");
       ALGO("is-trim", "accessible");
       ALGO("is-useless", "accessible");
+      ALGO("ldiv", "divide");
       ALGO("list", "print");
       ALGO("make-expressionset", "make-context");
       ALGO("make-word-context", "make-context");
@@ -64,6 +65,7 @@ namespace vcsn
       ALGO("num-components", "scc");
       ALGO("pair", "synchronizing-word");
       ALGO("power", "product");
+      ALGO("rdiv", "divide");
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");

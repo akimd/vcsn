@@ -326,6 +326,9 @@ namespace vcsn
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 
+    /// Left-division of two polynomials (lhs \ rhs).
+    polynomial ldiv(const polynomial& lhs, const polynomial& rhs);
+
     /// The left-multiplication of an automaton with \a w as weight.
     /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);

@@ -27,6 +27,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/derived-term.hh                     \
   %D%/algos/determinize.hh                      \
   %D%/algos/distance.hh                         \
+  %D%/algos/divide.hh                           \
   %D%/algos/divkbaseb.hh                        \
   %D%/algos/dot.hh                              \
   %D%/algos/double-ring.hh                      \

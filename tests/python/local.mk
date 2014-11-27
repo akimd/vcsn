@@ -28,6 +28,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/derivation.py                             \
   %D%/determinize.py                            \
   %D%/difference.py                             \
+  %D%/divide.py                                 \
   %D%/efsm.py                                   \
   %D%/eliminate-state.py                        \
   %D%/enumerate.py                              \

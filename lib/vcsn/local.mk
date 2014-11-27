@@ -44,6 +44,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/de-bruijn.cc                        \
   %D%/algos/derivation.cc                       \
   %D%/algos/determinize.cc                      \
+  %D%/algos/divide.cc                           \
   %D%/algos/divkbaseb.cc                        \
   %D%/algos/dot.cc                              \
   %D%/algos/double-ring.cc                      \

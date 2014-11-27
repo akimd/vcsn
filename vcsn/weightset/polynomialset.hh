@@ -147,6 +147,32 @@ namespace vcsn
       return v;
     }
 
+    /// v -= <k>l.
+    value_t&
+    sub_here(value_t& v, const monomial_t& r) const
+    {
+      if (!label_is_zero(*labelset(), &r.first))
+        {
+          auto i = v.find(r.first);
+          if (i == v.end())
+            {
+              raise(sname(), ": sub_here: invalid arguments: ",
+                    to_string(*this, v), ", ", to_string(*this, r));
+            }
+          else
+            {
+              // Do not use set_weight() because it would lookup w
+              // again and we already have the right iterator.
+              auto w2 = weightset()->sub(i->second, r.second);
+              if (weightset()->is_zero(w2))
+                v.erase(i);
+              else
+                i->second = w2;
+            }
+        }
+      return v;
+    }
+
     const weight_t
     get_weight(const value_t& v, const label_t& w) const ATTRIBUTE_PURE
     {
@@ -163,6 +189,16 @@ namespace vcsn
     {
       value_t res = l;
       add_here(res, r);
+      return res;
+    }
+
+    /// The subtraction of polynomials \a l and \a r.
+    value_t
+    sub(const value_t& l, const value_t& r) const
+    {
+      value_t res = l;
+      for (const auto& rm: r)
+        sub_here(res, rm);
       return res;
     }
 
@@ -270,6 +306,18 @@ namespace vcsn
       return res;
     }
 
+    /// Right product by a monomial.
+    value_t
+    mul(const value_t& l, const monomial_t& rhs) const
+    {
+      value_t res;
+      for (const auto& lhs: l)
+        add_here(res,
+                 labelset()->concat(lhs.first, rhs.first),
+                 weightset()->mul(lhs.second, rhs.second));
+      return res;
+    }
+
     value_t
     rdiv(const value_t& l, const value_t& r) const
     {
@@ -277,11 +325,45 @@ namespace vcsn
             to_string(*this, l), ", ", to_string(*this, r), ")");
     }
 
+    monomial_t
+    ldiv(const monomial_t& l, const monomial_t& r) const
+    {
+      return {labelset()->ldiv(l.first, r.first),
+          weightset()->ldiv(l.second, r.second)};
+    }
+
     value_t
     ldiv(const value_t& l, const value_t& r) const
     {
-      raise(sname(), ": ldiv: not implemented (",
-            to_string(*this, l), ", ", to_string(*this, r), ")");
+      value_t res;
+      if (is_zero(l))
+        raise(sname(), ": ldiv: division by zero");
+      else
+        {
+          value_t remainder = r;
+          std::cerr << "ldiv(";
+          print(l, std::cerr) << ", ";
+          print(r, std::cerr) << "\n";
+          while (!is_zero(remainder))
+            {
+              auto factor = ldiv(*begin(l), *begin(remainder));
+              std::cerr << "factor = "; print(factor, std::cerr) << "\n";
+              add_here(res, factor);
+              std::cerr << "res = "; print(res, std::cerr) << "\n";
+              std::cerr << "sub = "; print(mul(l, factor), std::cerr) << "\n";
+              remainder = sub(remainder, mul(l, factor));
+              std::cerr << "rem = "; print(remainder, std::cerr) << "\n";
+            }
+          std::cerr << "ldiv(";
+          print(l, std::cerr) << ", ";
+          print(r, std::cerr) << ") = ";
+          print(res, std::cerr) << " rem: ";
+          print(remainder, std::cerr) << "\n";
+          if (!is_zero(remainder))
+            raise(sname(), ": ldiv: not implemented (",
+                  to_string(*this, l), ", ", to_string(*this, r), ")");
+        }
+      return res;
     }
 
     /// Left exterior division.
