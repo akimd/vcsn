@@ -602,9 +602,9 @@ struct polynomial
   vcsn::dyn::polynomial val_;
 };
 
-/*---------.
-| expression.  |
-`---------*/
+/*--------------.
+| expression.   |
+`--------------*/
 
 struct expression
 {
@@ -1082,21 +1082,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &expansion::format)
    ;
 
-  bp::class_<label>
-    ("label",
-     bp::init<const context&, const std::string&>())
-    .def("format", &label::format)
-   ;
-
-  bp::class_<polynomial>
-    ("polynomial",
-     bp::init<const context&, const std::string&>())
-    .def("concatenate", &polynomial::concatenate)
-    .def("format", &polynomial::format)
-    .def("split", &polynomial::split)
-    .def("sum", &polynomial::sum)
-   ;
-
   bp::class_<expression>
     ("expression",
      bp::init<const context&, const std::string&>())
@@ -1131,6 +1116,21 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("transpose", &expression::transpose)
     .def("transposition", &expression::transposition)
     ;
+
+  bp::class_<label>
+    ("label",
+     bp::init<const context&, const std::string&>())
+    .def("format", &label::format)
+   ;
+
+  bp::class_<polynomial>
+    ("polynomial",
+     bp::init<const context&, const std::string&>())
+    .def("concatenate", &polynomial::concatenate)
+    .def("format", &polynomial::format)
+    .def("split", &polynomial::split)
+    .def("sum", &polynomial::sum)
+   ;
 
   bp::class_<weight>
     ("weight",

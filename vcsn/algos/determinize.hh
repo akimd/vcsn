@@ -18,6 +18,7 @@
 # include <vcsn/misc/raise.hh> // b
 # include <vcsn/misc/unordered_map.hh> // vcsn::has
 # include <vcsn/weightset/fwd.hh> // b
+# include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {

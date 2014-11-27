@@ -36,9 +36,6 @@ namespace vcsn
     /// lhs and those of \a rhs.
     bool are_isomorphic(const automaton& lhs, const automaton& rhs);
 
-    /// Focus on a specific tape of a tupleset automaton.
-    automaton focus(automaton& aut, unsigned tape);
-
     /// Produce a Černý automaton of \a num_states states.
     automaton cerny(const context& ctx, unsigned num_states);
 
@@ -50,6 +47,25 @@ namespace vcsn
 
     /// The coaccessible subautomaton of \a aut.
     automaton coaccessible(const automaton& aut);
+
+    /// The codeterminized automaton.
+    /// \param aut       the automaton to codeterminize
+    /// \param algo
+    ///     "boolean"     use efficient bitsets
+    ///     "weighted"    accept non Boolean automata (might not terminate)
+    ///     "auto"        "boolean" if the automaton is Boolean,
+    ///                   "weighted" otherwise.
+    /// \pre  the labelset of \a aut must be free.
+    automaton codeterminize(const automaton& aut,
+                            const std::string& algo  = "weighted");
+
+    /// The cominimized automaton.
+    /// \param aut       the automaton to cominimize
+    /// \param algo      the specific algorithm to use
+    /// \pre  \a aut must be LAL.
+    /// \pre  \a aut must be deterministic.
+    automaton cominimize(const automaton& aut,
+                         const std::string& algo = "auto");
 
     /// The complement of \a aut.
     /// \pre aut is lal
@@ -67,8 +83,8 @@ namespace vcsn
 
     /// The automaton of a strongly connected component.
     /// \param aut    the input automaton.
-    /// \param com_num    the component number.
-    automaton component(const automaton& aut, unsigned com_num);
+    /// \param num    the component number.
+    automaton component(const automaton& aut, unsigned num);
 
     /// The composition of transducers \a lhs and \a rhs.
     automaton compose(automaton& lhs, automaton& rhs);
@@ -143,25 +159,6 @@ namespace vcsn
     automaton determinize(const automaton& aut,
                           const std::string& algo  = "weighted");
 
-    /// The codeterminized automaton.
-    /// \param aut       the automaton to codeterminize
-    /// \param algo
-    ///     "boolean"     use efficient bitsets
-    ///     "weighted"    accept non Boolean automata (might not terminate)
-    ///     "auto"        "boolean" if the automaton is Boolean,
-    ///                   "weighted" otherwise.
-    /// \pre  the labelset of \a aut must be free.
-    automaton codeterminize(const automaton& aut,
-                            const std::string& algo  = "weighted");
-
-    /// The cominimized automaton.
-    /// \param aut       the automaton to cominimize
-    /// \param algo      the specific algorithm to use
-    /// \pre  \a aut must be LAL.
-    /// \pre  \a aut must be deterministic.
-    automaton cominimize(const automaton& aut,
-                         const std::string& algo = "auto");
-
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.
     /// \param lhs   a LAL automaton
@@ -216,6 +213,9 @@ namespace vcsn
 
     /// The subautomaton based on \a aut, with only states in \a ss visible.
     automaton filter(const automaton& aut, const std::vector<unsigned>& ss);
+
+    /// Focus on a specific tape of a tupleset automaton.
+    automaton focus(automaton& aut, unsigned tape);
 
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);

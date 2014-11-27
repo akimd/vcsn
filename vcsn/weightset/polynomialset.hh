@@ -122,7 +122,7 @@ namespace vcsn
       return add_here(v, p.first, p.second);
     }
 
-    /// v += (l, k).
+    /// v += <k>l.
     value_t&
     add_here(value_t& v, const label_t& l, const weight_t k) const
     {
@@ -171,11 +171,11 @@ namespace vcsn
     mul(const value_t& l, const value_t& r) const
     {
       value_t res;
-      for (auto i: l)
-        for (auto j: r)
+      for (const auto& lm: l)
+        for (const auto& rm: r)
           add_here(res,
-                   labelset()->concat(i.first, j.first),
-                   weightset()->mul(i.second, j.second));
+                   labelset()->concat(lm.first, rm.first),
+                   weightset()->mul(lm.second, rm.second));
       return res;
     }
 
@@ -239,11 +239,11 @@ namespace vcsn
     lmul(const label_t& lhs, const value_t& v) const
     {
       value_t res;
-      for (auto i: v)
+      for (const auto& m: v)
         add_here(res,
                  // FIXME: This is wrong, it should be mul, not concat.
-                 labelset()->concat(lhs, i.first),
-                 i.second);
+                 labelset()->concat(lhs, m.first),
+                 m.second);
       return res;
     }
 

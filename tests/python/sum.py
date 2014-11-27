@@ -175,9 +175,9 @@ r = ctxr.polynomial('<.4>d')
 CHECK_EQ('<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
 
 
-## ----------------- ##
+## ------------------------- ##
 ## expression + expression.  ##
-## ----------------- ##
+## ------------------------- ##
 
 br = ctxbr.expression('<u>a')
 z = ctxz.expression('<2>b')

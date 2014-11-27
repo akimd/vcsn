@@ -197,9 +197,9 @@ namespace vcsn
   }
 
 
-  /*------------------------------.
-  | concatenate(expression, expression).  |
-  `------------------------------*/
+  /*---------------------------------------.
+  | concatenate(expression, expression).   |
+  `---------------------------------------*/
 
   /// Concatenation/product of polynomials/expressions.
   template <typename ValueSet>

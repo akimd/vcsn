@@ -732,9 +732,9 @@ namespace vcsn
   }
 
 
-  /*------------------------------.
-  | conjunction(expression, expression).  |
-  `------------------------------*/
+  /*---------------------------------------.
+  | conjunction(expression, expression).   |
+  `---------------------------------------*/
 
   /// Intersection/Hadamard product of expressions.
   template <typename RatExpSet>

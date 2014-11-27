@@ -1,6 +1,9 @@
 #ifndef VCSN_LABELSET_LABELSET_HH
 # define VCSN_LABELSET_LABELSET_HH
 
+# include <vcsn/ctx/context.hh>
+# include <vcsn/ctx/traits.hh> // labelset_t_of
+
 # include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
@@ -15,8 +18,10 @@ namespace vcsn
     ///
     /// Made to be specialized (e.g., in nullableset and wordset).
     ///
-    /// \tparam LabelSet  the labelset for which we look for a nullable superset
-    /// \tparam Enable    place for easy SFINAE tricks (e.g., in tupleset)
+    /// \tparam LabelSet
+    ///         the labelset for which we look for a nullable superset.
+    /// \tparam Enable
+    ///         place for easy SFINAE tricks (e.g., in tupleset).
     template <typename LabelSet,
               typename Enable = void>
     struct nullableset_traits
