@@ -388,7 +388,7 @@ namespace vcsn
       return v.empty();
     }
 
-    static constexpr bool show_one() { return true; }
+    static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status()
     {
       return weightset_t::star_status();
