@@ -35,11 +35,12 @@ namespace vcsn
   }
 
 
-  /// Check equivalence between Boolean automata on fields, or Z.
+  /// Check equivalence between automata on fields, or Z.
   template <typename Aut1, typename Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> decltype((a2->weightset()->sub(a2->weightset()->zero(),
+    -> decltype((enable_if_t<!std::is_same<weightset_t_of<Aut1>, b>::value>(),
+                 a2->weightset()->sub(a2->weightset()->zero(),
                                       a2->weightset()->one()),
                  true))
   {
