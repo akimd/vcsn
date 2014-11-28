@@ -160,6 +160,18 @@ older ()
   return 1
 }
 
+# compute_package_id
+# ------------------
+# Set PACKAGE_ID to the basename of the tarball, e.g., "vcsn-2.0".
+# Use only when configure was generated.
+compute_package_id ()
+{
+  PACKAGE_TARNAME=$(sed -ne "/^PACKAGE_TARNAME=/{s///;s/'//g;p;}" \
+                        "$DIR_SOURCE/configure")
+  PACKAGE_VERSION=$(sed -ne "/^PACKAGE_VERSION=/{s///;s/'//g;p;}" \
+                        "$DIR_SOURCE/configure")
+  PACKAGE_ID=$PACKAGE_TARNAME-$PACKAGE_VERSION
+}
 
 ## ----------- ##
 ## Variables.  ##
@@ -195,15 +207,8 @@ export DIR_ROOT_BUILD=$DIR_ROOT/build
 
 export DIR_BUILD=$DIR_ROOT_BUILD/$BUILDDIR
 
+# The DESTDIR to use for the fake install.
 export DIR_INSTALL=$DIR_ROOT/install
-
-# Where we make a temporary install before going into DIR_INSTALL.
-# See buildfarm/install.
-export DIR_STAGE=$DIR_ROOT/stage
-
-# Where to put the packages that will be published.
-export DIR_PACKAGES=$DIR_ROOT/packages
-
 
 
 # Please ccache by allowing different source trees to share the cache.

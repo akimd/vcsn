@@ -3,26 +3,11 @@
 set -e
 . $(dirname "$0")/common
 
+compute_package_id
+
 cd "$DIR_BUILD"
 
-distcheck()
-{
-  if make -j${NBPROC:-2} vcsn-distcheck "$@"; then
-    :
-  else
-    sta=$?
-    # If distcheck was run and failed in its course, it probably
-    # left readonly directories that Teamcity will fail to clean.
-    #
-    for distdir in vcsn-*
-    do
-      if test -d "$distdir"; then
-        # Taken from Automake's am__remove_distdir.
-        find "$distdir" -type d ! -perm -200 -exec chmod u+w {} ';'
-      fi
-    done
-    exit $sta
-  fi
-}
-
-distcheck DISTCHECK_CONFIGURE_FLAGS='CXX="$(CXX)"'
+rm -rf $DIR_INSTALL $PACKAGE_ID.install
+make install DESTDIR=$DIR_INSTALL
+mv $DIR_INSTALL/usr/local $PACKAGE_ID.install
+tar jcf $PACKAGE_ID.binary.tar.bz2 $PACKAGE_ID.install

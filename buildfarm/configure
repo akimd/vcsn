@@ -17,7 +17,6 @@ if $(older "$DIR_BUILD/Makefile" "$0"); then
   cd "$DIR_BUILD"
   env >$DIR_BUILD/environment.log
 
-
   # If we are using ccache with clang, then we have spurious warnings:
   #
   # clang: warning: argument unused during compilation: '-I .'
