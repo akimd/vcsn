@@ -38,11 +38,15 @@ AC_SUBST([LIBTOOL_DEPS])
 AC_PROG_CXX
 AC_LANG([C++])
 
-m4_define([_AX_CXX_COMPILE_STDCXX_11_testbody],
-[AC_LANG_SOURCE([#include <memory>
+m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody],
+[AC_LANG_SOURCE([
+#include <algorithm>
+#include <memory>
 #include <set>
 #include <string>
+#include <vector>
 
+  // C++11
   template <typename T>
   struct check
   {
@@ -83,16 +87,27 @@ m4_define([_AX_CXX_COMPILE_STDCXX_11_testbody],
     for (int r: std::set<int>{1, 2})
       continue;
   }
+
+  // C++14
+  void mismatch()
+  {
+    using ints = std::vector<int>;
+    auto v1 = ints{1, 2, 3};
+    auto v2 = ints{1, 2};
+    std::mismatch(std::begin(v1), std::end(v1),
+                  std::begin(v2), std::end(v2));
+  }
 ])])
 
-for f in '-std=c++11' '-std=c++11 -stdlib=libc++'
+for f in '-std=c++14' '-std=c++14 -stdlib=libc++' \
+         '-std=c++1y' '-std=c++1y -stdlib=libc++'
 do
   AX_CHECK_COMPILE_FLAG([$f], [CXXFLAGS="$CXXFLAGS $f" stdpass=true], [], [],
-                        [_AX_CXX_COMPILE_STDCXX_11_testbody])
+                        [_AX_CXX_COMPILE_STDCXX_14_testbody])
   ${stdpass-false} && break
 done
 if ! "${stdpass-false}"; then
-  AC_ERROR([unable to turn on C++11 mode with this compiler])
+  AC_ERROR([unable to turn on C++14 mode with this compiler])
 fi
 
 # Check for a long-term GCC bug that prevents proper behavior of
