@@ -288,7 +288,7 @@ AC_CHECK_HEADERS([ltdl.h], [],
 VCSN_PROG_DOXYGEN
 AC_CONFIG_FILES([doc/vcsn.dox])
 # Choose a simple file, hopefully fast to convert.
-VCSN_PROG_NBCONVERT([$srcdir/share/vcsn/notebooks/Algorithms.ipynb])
+VCSN_PROG_NBCONVERT([$srcdir/doc/notebooks/Algorithms.ipynb])
 
 
 

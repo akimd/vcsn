@@ -11,8 +11,6 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-include %D%/notebooks/local.mk
-
 jsdir = $(datadir)/vcsn/js
 dist_js_DATA =                                  \
   %D%/js/AutomatonD3Widget.js

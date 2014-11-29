@@ -11,7 +11,7 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-notebooksdir = $(datadir)/vcsn/notebooks
+notebooksdir = $(htmldir)/notebooks
 
 dist_notebooks_DATA =                           \
   %D%/Algorithms.ipynb                          \

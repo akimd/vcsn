@@ -16,7 +16,9 @@ $1 >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD
 # suffice, because it may work, but not nbconvert, if for instance,
 # neither node.js nor pandoc is installed.
 AC_DEFUN([_VCSN_PROG_NBCONVERT],
-[_vcsn_try([$IPYTHON nbconvert --output=conftest "$2"])
+[test -f "$2" ||
+  AC_MSG_ERROR([cannot read the nbconvert test file: $2])
+_vcsn_try([$IPYTHON nbconvert --output=conftest "$2"])
 if test -f conftest.html; then
   $1='$(IPYTHON) nbconvert'
 else
