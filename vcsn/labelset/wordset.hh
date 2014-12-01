@@ -8,8 +8,8 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/fwd.hh>
-# include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/labelset/labelset.hh>
+# include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/algorithm.hh>
 # include <vcsn/misc/hash.hh>
@@ -239,7 +239,8 @@ namespace vcsn
     static value_t ldiv(const value_t& w1, const value_t& w2)
     {
       using boost::algorithm::starts_with;
-      require(starts_with(w2, w1), "ldiv: invalid arguments: ", str_escape(w1),
+      require(starts_with(w2, w1),
+              sname(), ": ldiv: invalid arguments: ", str_escape(w1),
               ", ", str_escape(w2));
       return w2.substr(size(w1));
     }
