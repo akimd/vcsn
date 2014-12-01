@@ -5,6 +5,7 @@
 # include <string>
 
 # include <vcsn/core/join.hh>
+# include <vcsn/misc/math.hh> // gcd
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
@@ -64,6 +65,20 @@ namespace vcsn
     mul(const value_t l, const value_t r)
     {
       return l * r;
+    }
+
+    static value_t
+    lgcd(const value_t l, const value_t r)
+    {
+      require(!is_zero(l), sname(), ": lgcd: invalid lhs: zero");
+      require(!is_zero(r), sname(), ": lgcd: invalid rhs: zero");
+      return detail::gcd(l, r);
+    }
+
+    static value_t
+    rgcd(const value_t l, const value_t r)
+    {
+      return lgcd(l, r);
     }
 
     static value_t

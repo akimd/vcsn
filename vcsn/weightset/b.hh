@@ -64,6 +64,20 @@ namespace vcsn
     }
 
     static value_t
+    lgcd(const value_t l, const value_t r)
+    {
+      require(!is_zero(l), sname(), ": lgcd: invalid lhs: zero");
+      require(!is_zero(r), sname(), ": lgcd: invalid rhs: zero");
+      return one();
+    }
+
+    static value_t
+    rgcd(const value_t l, const value_t r)
+    {
+      return lgcd(l, r);
+    }
+
+    static value_t
     rdiv(const value_t l, const value_t r)
     {
       require(!is_zero(r), "div: division by zero");
