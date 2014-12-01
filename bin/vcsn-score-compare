@@ -3,25 +3,29 @@
 from __future__ import print_function
 import os, re, sys
 import argparse
+from colorama import init, Fore, Style
+init(autoreset = True)
 
 parser = argparse.ArgumentParser(description='Bench some algorithms.')
 parser.add_argument('files', metavar='files', nargs='+',
                     type=str, default=None,
-                    help='Bench files (from vcsn score) to compare')
+                    help='first file to compare')
 parser.add_argument('--only', metavar='RE',
                     type=re.compile, default='.*',
-                    help='Report only benches whose title is matched by RE')
+                    help='run only benches whose title is matched by RE')
 parser.add_argument('--treshold', metavar='treshold',
                     type=float, default=0.1,
                     help='show good and bad scores with associated treshold')
+parser.add_argument('--csv', type=str,
+                    help='create associated csv file')
 args = parser.parse_args()
 
 bench = dict()
+benc_csv = dict()
 
 def normalize(k):
     '''Fix a bench fix, i.e., fix errors, update APIs etc.
     '''
-
     # Separate with " # " only.
     k = " # ".join(map(str.strip, k.split('#', 2)))
 
@@ -89,28 +93,6 @@ def read(fn):
 for fn in args.files:
     read(fn)
 
-# SET COLORS FOR TERM
-BLACK, RED, GREEN, WHITE = range(4)
-def has_colours(stream):
-    if not hasattr(stream, "isatty"):
-        return False
-    if not stream.isatty():
-        return False # auto color only on TTYs
-    try:
-        import curses
-        curses.setupterm()
-        return curses.tigetnum("colors") > 2
-    except:
-        return False
-has_colours = has_colours(sys.stdout)
-# print method with associated color
-def printout(text, colour=WHITE):
-        if has_colours:
-                seq = "\x1b[1;%dm" % (30+colour) + text + "\x1b[0m"
-                sys.stdout.write(seq)
-        else:
-                sys.stdout.write(text)
-
 # Print the score table.
 for k in sorted(bench.keys()):
     if args.only.search(k):
@@ -120,15 +102,36 @@ for k in sorted(bench.keys()):
             avg = sum(bs) / len(bs)
             # print with right colors.
             v = bench[k][fn] if fn in bench[k] else "N/A"
+            # print with right colors
             if fn in bench[k]:
                 if float(bench[k][fn]) <= avg - args.treshold * avg:
-                    printout("{:5}".format(v), GREEN)
-                    print(end = ' ')
+                    print(Fore.GREEN + Style.BRIGHT + "{:5}".format(v), end = ' ')
                 elif float(bench[k][fn]) >= args.treshold * avg + avg:
-                    printout("{:5}".format(v), RED)
-                    print(end = ' ')
+                    print(Fore.RED +  Style.BRIGHT + "{:5}".format(v), end = ' ')
                 else:
-                    print("{:5}".format(v), end= ' ')
+                    print ("{:5}".format(v), end= ' ' )
             else:
-                    print("{:5}".format(v), end= ' ')
+                    print ("{:5}".format(v), end= ' ' )
         print(k)
+
+if args.csv is not None:
+    benches = sorted(bench.keys())
+    fl = open(args.csv, 'wa') if (args.csv and args.csv is not '-') else sys.stdout
+    fl.write(' ,')
+    for k in sorted(bench.keys()):
+        str = '\"' + k.replace('\"', '\"\"') + '\"'
+        fl.write(str)
+        if(k!=benches[len(bench.keys())-1]):
+            fl.write(',')
+    fl.write('\n')
+    for f in args.files:
+        fl.write(os.path.basename(f))
+        fl.write(',')
+        for b in benches:
+            v = 'n/a'
+            if b in bench and f in bench[b]:
+                v = bench[b][f]
+            fl.write(v)
+            if(b!=sorted(bench.keys())[len(bench.keys())-1]):
+                fl.write(',')
+        fl.write('\n')
