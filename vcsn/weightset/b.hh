@@ -57,6 +57,14 @@ namespace vcsn
       return l || r;
     }
 
+    // This is highly debatable.  Was introduced to allow the division
+    // of polynomials.  It should rather be handled there.
+    static value_t
+    sub(const value_t l, const value_t r)
+    {
+      return l && !r;
+    }
+
     static value_t
     mul(const value_t l, const value_t r)
     {
