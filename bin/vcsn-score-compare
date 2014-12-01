@@ -103,9 +103,7 @@ def csv(keys, fn):
         fl.write(os.path.basename(f))
         fl.write(',')
         for k in keys:
-            v = 'n/a'
-            if k in bench and f in bench[k]:
-                v = bench[k][f]
+            v = bench[k][f] if k in bench and f in bench[k] else ''
             fl.write(v)
             if k != keys[-1]:
                 fl.write(',')

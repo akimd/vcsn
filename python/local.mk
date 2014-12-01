@@ -26,6 +26,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/ipython.py                           \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
+  %D%/vcsn/score.py                             \
   %D%/vcsn/weight.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
