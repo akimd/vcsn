@@ -199,6 +199,9 @@ lambdas as soon as Clang 3.6 (hopefully...) is wide-spread enough.
 
 Look for "workaround" in these files, and possibly for other predicates.
 
+Also, remove mismatch from misc/algorithm.hh, and restore the proper check
+about it in configure.ac.
+
 ** Copy
 There are numerous opportunities for an improve copy.  For instance when
 computing the square automaton (see has_twins_property), we would like to

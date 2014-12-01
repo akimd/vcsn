@@ -1,7 +1,6 @@
-#ifndef VCSN_MISC_ALGORITHM_HH
-# define VCSN_MISC_ALGORITHM_HH
+#pragma once
 
-# include <algorithm>
+#include <algorithm>
 
 namespace vcsn
 {
@@ -47,7 +46,23 @@ namespace vcsn
         }
       abort();
     }
+
+    /// Same as C++14's mismatch, which is not available in G++-4.8
+    /// with -std=c++1y.  Get rid of this once we drop G++ 4.8
+    /// compatibility.
+    template <typename InputIt1, typename InputIt2>
+    std::pair<InputIt1, InputIt2>
+    mismatch(InputIt1 first1, InputIt1 last1,
+             InputIt2 first2, InputIt2 last2)
+    {
+      while (first1 != last1
+             && first2 != last2
+             && *first1 == *first2)
+        {
+          ++first1;
+          ++first2;
+        }
+      return std::make_pair(first1, first2);
+    }
   }
 }
-
-#endif // !VCSN_MISC_ALGORITHM_HH

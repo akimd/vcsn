@@ -11,6 +11,7 @@
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/labelset/labelset.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/algorithm.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -229,8 +230,8 @@ namespace vcsn
     static value_t lgcd(const value_t& w1, const value_t& w2)
     {
       return {w1.begin(),
-              std::mismatch(w1.begin(), w1.end(),
-                            w2.begin(), w2.end()).first};
+              detail::mismatch(w1.begin(), w1.end(),
+                               w2.begin(), w2.end()).first};
     }
 
     /// Compute w1 \ w2 = w1^{-1}w2.
