@@ -58,6 +58,7 @@ namespace vcsn
       ALGO("is-trim", "accessible");
       ALGO("is-useless", "accessible");
       ALGO("ldiv", "divide");
+      ALGO("lgcd", "divide");
       ALGO("list", "print");
       ALGO("make-expressionset", "make-context");
       ALGO("make-word-context", "make-context");

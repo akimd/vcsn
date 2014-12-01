@@ -329,6 +329,9 @@ namespace vcsn
     /// Left-division of two polynomials (lhs \ rhs).
     polynomial ldiv(const polynomial& lhs, const polynomial& rhs);
 
+    /// Left greatest common divisor of two polynomials (lhs \ rhs).
+    polynomial lgcd(const polynomial& lhs, const polynomial& rhs);
+
     /// The left-multiplication of an automaton with \a w as weight.
     /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);

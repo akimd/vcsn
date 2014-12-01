@@ -20,6 +20,9 @@
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/zip-maps.hh>
 
+# include <vcsn/labelset/wordset.hh>
+# include <vcsn/weightset/z.hh>
+
 namespace vcsn
 {
   // http://llvm.org/bugs/show_bug.cgi?id=18571
@@ -46,6 +49,24 @@ namespace vcsn
   bool label_is_zero(const LabelSet&, ...)
   {
     return false;
+  }
+
+  namespace detail
+  {
+    template <typename WeightSet>
+    struct is_division_ring
+      : std::true_type
+    {};
+
+    template <>
+    struct is_division_ring<z>
+      : std::false_type
+    {};
+
+    template <typename Context>
+    struct is_division_ring<polynomialset<Context>>
+      : std::false_type
+    {};
   }
 
   /// Linear combination of labels: map labels to weights.
@@ -86,6 +107,8 @@ namespace vcsn
     const context_t& context() const { return ctx_; }
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
+
+    static constexpr bool is_commutative() { return false; }
 
     /// Remove the monomial of \a w in \a v.
     value_t&
@@ -283,6 +306,18 @@ namespace vcsn
       return res;
     }
 
+    /// Left product by a monomial.
+    value_t
+    mul(const monomial_t& lhs, const value_t& v) const
+    {
+      value_t res;
+      for (const auto& m: v)
+        add_here(res,
+                 labelset()->concat(lhs.first, m.first),
+                 weightset()->mul(lhs.second, m.second));
+      return res;
+    }
+
     /// Right exterior product.
     value_t
     rmul(const value_t& v, const weight_t& w) const
@@ -329,7 +364,17 @@ namespace vcsn
     ldiv(const monomial_t& l, const monomial_t& r) const
     {
       return {labelset()->ldiv(l.first, r.first),
-          weightset()->ldiv(l.second, r.second)};
+              weightset()->ldiv(l.second, r.second)};
+    }
+
+    /// Left division by a monomial.
+    value_t
+    ldiv(const monomial_t& l, const value_t& r) const
+    {
+      value_t res;
+      for (const auto& m: r)
+        add_here(res, ldiv(l, m));
+      return res;
     }
 
     value_t
@@ -341,24 +386,34 @@ namespace vcsn
       else
         {
           value_t remainder = r;
+#  if DEBUG
           std::cerr << "ldiv(";
           print(l, std::cerr) << ", ";
           print(r, std::cerr) << "\n";
+#  endif
           while (!is_zero(remainder))
             {
               auto factor = ldiv(*begin(l), *begin(remainder));
+#  if DEBUG
               std::cerr << "factor = "; print(factor, std::cerr) << "\n";
+#  endif
               add_here(res, factor);
+#  if DEBUG
               std::cerr << "res = "; print(res, std::cerr) << "\n";
               std::cerr << "sub = "; print(mul(l, factor), std::cerr) << "\n";
+#  endif
               remainder = sub(remainder, mul(l, factor));
+#  if DEBUG
               std::cerr << "rem = "; print(remainder, std::cerr) << "\n";
+#  endif
             }
+#  if DEBUG
           std::cerr << "ldiv(";
           print(l, std::cerr) << ", ";
           print(r, std::cerr) << ") = ";
           print(res, std::cerr) << " rem: ";
           print(remainder, std::cerr) << "\n";
+#  endif
           if (!is_zero(remainder))
             raise(sname(), ": ldiv: not implemented (",
                   to_string(*this, l), ", ", to_string(*this, r), ")");
@@ -370,8 +425,9 @@ namespace vcsn
     value_t&
     ldiv_here(const weight_t& w, value_t& v) const
     {
-      for (auto& m: v)
-        m.second = weightset()->ldiv(w, m.second);
+      if (!weightset()->is_one(w))
+        for (auto& m: v)
+          m.second = weightset()->ldiv(w, m.second);
       return v;
     }
 
@@ -379,41 +435,116 @@ namespace vcsn
     value_t&
     rdiv_here(value_t& v, const weight_t& w) const
     {
-      for (auto& m: v)
-        m.second = weightset()->rdiv(m.second, w);
+      if (!weightset()->is_one(w))
+        for (auto& m: v)
+          m.second = weightset()->rdiv(m.second, w);
       return v;
     }
 
     /// In the general case, normalize by the first (non null) weight.
-    template <typename WeightSet,
-              typename std::enable_if<!std::is_same<WeightSet, z>::value, int>::type = 0>
-    typename WeightSet::value_t
-    norm_(value_t& v) const
+    template <typename WeightSet, typename Dummy = void>
+    struct norm_
     {
-      return begin(v)->second;
-    }
+      typename WeightSet::value_t operator()(const value_t& v) const
+      {
+        return begin(v)->second;
+      }
+      const WeightSet& ws_;
+    };
 
     /// For Z, take the GCD, with the sign of the first value.
-    template <typename WeightSet,
-              typename std::enable_if<std::is_same<WeightSet, z>::value, int>::type = 0>
-    typename WeightSet::value_t
-    norm_(value_t& v) const
+    template <typename Dummy>
+    struct norm_<z, Dummy>
     {
-      int sign = 0 < begin(v)->second ? 1 : -1;
-      auto res = abs(begin(v)->second);
-      for (const auto& m: v)
-        res = detail::gcd(res, abs(m.second));
-      res *= sign;
+      typename z::value_t operator()(const value_t& v) const
+      {
+        int sign = 0 < begin(v)->second ? 1 : -1;
+        auto res = abs(begin(v)->second);
+        for (const auto& m: v)
+          res = detail::gcd(res, abs(m.second));
+        res *= sign;
+        return res;
+      }
+      const z& z_;
+    };
+
+    value_t lgcd(const value_t& lhs, const value_t& rhs) const
+    {
+      value_t res;
+      // For each monomial, look for the matching GCD of the weight.
+      auto i = begin(lhs), i_end = end(lhs);
+      auto j = begin(rhs), j_end = end(rhs);
+      for (;
+           i != i_end && j != j_end
+             && labelset()->equals(i->first, j->first);
+           ++i, ++j)
+        res[i->first] = weightset()->lgcd(i->second, j->second);
+      // If the sets of labels are different, the polynomials
+      // cannot be "colinear", and the GCD is just 1.
+      if (i != i_end || j != j_end)
+        res = one();
       return res;
     }
 
-    /// Normalize v in place, and return the factor which was divided.
-    weight_t
-    normalize_here(value_t& v) const
+    /// Compute the left GCD of weights which are polynomials.
+    template <typename Ctx, typename Dummy>
+    struct norm_<polynomialset<Ctx>, Dummy>
     {
-      auto res = norm_<weightset_t>(v);
-      ldiv_here(res, v);
-      return res;
+      using ps_t = polynomialset<Ctx>;
+
+      typename ps_t::value_t operator()(const value_t& v) const
+      {
+        typename ps_t::value_t res = begin(v)->second;
+        for (const auto& p: v)
+          res = ps_.lgcd(res, p.second);
+        return res;
+      }
+      const ps_t& ps_;
+    };
+
+    auto norm(const value_t& v) const
+      -> decltype(norm_<weightset_t>{*this->weightset()}(v))
+    {
+      return norm_<weightset_t>{*weightset()}(v);
+    }
+
+    /// Normalization: general case: just divide by the GCD of the
+    /// weights.
+    template <typename LabelSet>
+    struct normalize_here_
+    {
+      weight_t operator()(value_t& v)
+      {
+        auto res = ps_.norm(v);
+        ps_.ldiv_here(res, v);
+        return res;
+      }
+      const polynomialset& ps_;
+    };
+
+    /// Normalization: when labels are words: left-factor the longest
+    /// common prefix.
+    template <typename GenSet>
+    struct normalize_here_<wordset<GenSet>>
+    {
+      label_t operator()(value_t& v)
+      {
+        label_t res = begin(v)->first;
+        for (const auto& m: v)
+          res = ps_.labelset()->lgcd(res, m.first);
+        for (auto& m: v)
+          m.first = ps_.labelset()->ldiv(res, m.first);
+        return res;
+      }
+      const polynomialset& ps_;
+    };
+
+    /// Normalize v in place, and return the factor which was divided.
+    auto normalize_here(value_t& v) const
+      -> decltype(normalize_here_<labelset_t>{*this}(v))
+    {
+      auto n = normalize_here_<labelset_t>{*this};
+      return n(v);
     }
 
     ATTRIBUTE_PURE

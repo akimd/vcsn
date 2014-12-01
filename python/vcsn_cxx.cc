@@ -594,6 +594,11 @@ struct polynomial
     return vcsn::dyn::ldiv(val_, rhs.val_);
   }
 
+  polynomial lgcd(const polynomial& rhs) const
+  {
+    return vcsn::dyn::lgcd(val_, rhs.val_);
+  }
+
   polynomial split() const
   {
     return vcsn::dyn::split(val_);
@@ -1134,6 +1139,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("concatenate", &polynomial::concatenate)
     .def("format", &polynomial::format)
     .def("ldiv", &polynomial::ldiv)
+    .def("lgcd", &polynomial::lgcd)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
    ;
