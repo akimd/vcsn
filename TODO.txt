@@ -2,6 +2,13 @@
 ** subword, prefix, suffix, factor
 Provide the same routines for expressions.
 
+** Levenshtein automata
+Suggested by ADL.
+
+http://blog.notdot.net/2010/07/Damn-Cool-Algorithms-Levenshtein-Automata
+
+http://en.wikipedia.org/wiki/Levenshtein_automata
+
 * Documentation
 ** Doxygen
 The Doxygen style documentation is way too poor.  Aim at completion.
@@ -379,6 +386,32 @@ that if there are no deletions, references and iterator remain valid.  So we
 should store references or iterators in the working queue, instead of
 duplicating the monomials.
 
+** standard
+Converting an expression with ? into standard automaton is incredibly
+expensive:
+
+  In [47]: e = vcsn.context('lal_char(a-e), z').expression("[a-e]{700}")
+
+  In [48]: %timeit e.standard()
+  100 loops, best of 3: 4.07 ms per loop
+
+  In [49]: e = vcsn.context('lal_char(a-e), z').expression("[a-e]?{700}")
+
+  In [50]: %timeit e.standard()
+  1 loops, best of 3: 11.2 s per loop
+
+The impact on 'vcsn score' is terrible: we use many such automata in
+benches, i.e., we build many of these guys, and they terribly slow down
+`vcsn score` in pure set up.
+
+We should probably rewrite expression.standard, using the more traditional
+approach (with positions).  cachegrind can probably help too.
+
+I have tried several things to speed it up, but none of them really works.
+The core issue is really that we build a monster: 6'119'750 transitions for
+the latter, and 17'480 for the former.  The ratio, 355, is still smaller
+than that of timings: 2750.
+
 * to-expression
 ** More heuristics
 See what V1 did.
@@ -394,6 +427,26 @@ So that, for instance, we can run is-derministic on a proper lan.
 ** product
 Change product signature to take a vector<const automaton&> instead of a
 vector<automaton>.
+
+** Automata contexts
+We should be ready to instantiate some "automata contexts".  For instance
+when working with determinized_automaton, most routines we need (print,
+info, etc.) are not available, and we have to wait way too long for a
+result.  So when instantiating an algorithm creating a given automaton type,
+we should get a minimal set of routine compiled.
+
+** Fewer automata types
+Do we really need both determinized_automaton and partition_automaton?  I
+think both should actually be "subset_automaton", with the possibility of
+being weighted_subset_automaton.  Of course, a lazy determinized_automaton
+would exist, but as a derived class from weighted_subset_automaton.
+
+Having fewer decorated types will cause fewer compilations.
+
+** Hotness
+Maybe we should compile with -O0 by default, count the number of calls, and
+decide for a -O3 recompilation if needed.  Actually, profile guided
+optimizations could even be experimented.
 
 * I/O
 ** fado
@@ -459,9 +512,6 @@ We need generalizations of minimization for weighted automata.  See TAF-Kit
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
-
-** Levenshtein automata
-http://en.wikipedia.org/wiki/Levenshtein_automata
 
 * edit-automaton
 Currently it converts the \e in initial/final labels to the special-letter.
