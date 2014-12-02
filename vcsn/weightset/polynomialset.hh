@@ -461,7 +461,7 @@ namespace vcsn
         int sign = 0 < begin(v)->second ? 1 : -1;
         auto res = abs(begin(v)->second);
         for (const auto& m: v)
-          res = detail::gcd(res, abs(m.second));
+          res = z_.lgcd(res, abs(m.second));
         res *= sign;
         return res;
       }
