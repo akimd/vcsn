@@ -51,7 +51,7 @@ out_aut = vcsn.automaton('''digraph
 check(in_aut, [0], out_aut)
 check(in_aut, [0, 2], out_aut)
 
-# Check automaton has many states
+# Automaton with several states.
 in_aut = vcsn.automaton('''digraph
 {
   vcsn_context = "lal_char(abc), b"
@@ -98,5 +98,15 @@ check(in_aut, [0, 1, 2, 3, 7], out_aut)
 check(in_aut.filter([0, 1, 2, 3, 4, 5]), [0, 1, 2, 3], out_aut)
 check(in_aut.filter([0, 1, 2, 3, 4]), [0, 1, 2, 3, 7], out_aut)
 
-check(in_aut.transpose(), [0, 1, 2, 3, 7]
-             , in_aut.filter([0, 1, 2, 3]).transpose())
+check(in_aut.transpose(), [0, 1, 2, 3, 7],
+      in_aut.filter([0, 1, 2, 3]).transpose())
+
+# Regression: eval did not work once.
+CHECK_EQ('1', in_aut.filter([0, 1, 2, 3, 4, 5]).eval('cba'))
+CHECK_EQ('1', in_aut.filter([0, 1, 2, 3, 4, 5]).eval('a'))
+
+CHECK_EQ('0', in_aut.filter([0, 1]).eval('cba'))
+CHECK_EQ('1', in_aut.filter([0, 1]).eval('a'))
+
+CHECK_EQ('0', in_aut.filter([]).eval('cba'))
+CHECK_EQ('0', in_aut.filter([]).eval('a'))

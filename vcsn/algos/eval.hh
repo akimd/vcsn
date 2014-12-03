@@ -44,8 +44,7 @@ namespace vcsn
         // all the states, they are costly at each iteration.
 
         /// An array indexed by state numbers.
-        const auto& states = a_->states();
-        size_t last_state = detail::max_forward(states);
+        size_t last_state = detail::back(a_->all_states());
         // Do not use braces (v1{size, zero}): the type of zero might
         // result in the compiler believing we are building a vector
         // with two values: a_->num_all_states() and zero.

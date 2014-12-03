@@ -10,9 +10,9 @@ def check(aut, word, exp):
     CHECK_EQ(exp, aut.eval(word))
     CHECK_EQ(exp, aut(word))
 
-## ------------ ##
+## ------------- ##
 ## lal_char, z.  ##
-## ------------ ##
+## ------------- ##
 ctx = vcsn.context("lal_char(ab), z")
 simple = vcsn.automaton('''
 digraph

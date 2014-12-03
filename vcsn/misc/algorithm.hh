@@ -6,6 +6,27 @@ namespace vcsn
 {
   namespace detail
   {
+    /// The last member of this Container.
+    ///
+    /// Should specialized with containers with random access.
+    template <typename Container>
+    typename Container::value_type
+    back(const Container& container)
+    {
+      auto i = std::begin(container);
+      auto end = std::end(container);
+      assert(i != end);
+      if (i != end)
+        {
+          auto res = *i;
+          for (++i; i != end; ++i)
+            res = *i;
+          return res;
+        }
+      abort();
+    }
+
+
     /// Same as std::is_sorted, but works with an input iterator, not
     /// just a forward iterator.
     ///
