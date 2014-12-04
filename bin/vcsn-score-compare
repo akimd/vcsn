@@ -9,15 +9,15 @@ init(autoreset = True)
 parser = argparse.ArgumentParser(description='Bench some algorithms.')
 parser.add_argument('files', metavar='files', nargs='+',
                     type=str, default=None,
-                    help='first file to compare')
+                    help='Bench files (from vcsn score) to compare')
 parser.add_argument('--only', metavar='RE',
                     type=re.compile, default='.*',
-                    help='run only benches whose title is matched by RE')
-parser.add_argument('--treshold', metavar='treshold',
+                    help='Report only benches whose title is matched by RE')
+parser.add_argument('--threshold', metavar='threshold',
                     type=float, default=0.1,
-                    help='show good and bad scores with associated treshold')
+                    help='Show good and bad scores with associated threshold')
 parser.add_argument('--csv', type=str,
-                    help='create associated csv file')
+                    help='Create a csv file')
 args = parser.parse_args()
 
 bench = dict()
@@ -89,13 +89,29 @@ def read(fn):
                 bench[k] = dict()
             bench[k][fn] = v
 
-# Read the score files.
-for fn in args.files:
-    read(fn)
+def csv(keys, fn):
+    fl = sys.stdout if args.csv in ['', '-'] else open(args.csv, 'wa')
+    fl.write(' ,')
+    for k in keys:
+        str = '\"' + k.replace('\"', '\"\"') + '\"'
+        fl.write(str)
+        if k != keys[-1]:
+            fl.write(',')
+    fl.write('\n')
+    for f in args.files:
+        fl.write(os.path.basename(f))
+        fl.write(',')
+        for k in keys:
+            v = 'n/a'
+            if k in bench and f in bench[k]:
+                v = bench[k][f]
+            fl.write(v)
+            if k != keys[-1]:
+                fl.write(',')
+        fl.write('\n')
 
-# Print the score table.
-for k in sorted(bench.keys()):
-    if args.only.search(k):
+def text(keys):
+    for k in keys:
         for fn in args.files:
             # Compute average of benchs.
             bs = [float(bench[k][f]) for f in args.files if f in bench[k]]
@@ -103,35 +119,25 @@ for k in sorted(bench.keys()):
             # print with right colors.
             v = bench[k][fn] if fn in bench[k] else "N/A"
             # print with right colors
+            color = ''
             if fn in bench[k]:
-                if float(bench[k][fn]) <= avg - args.treshold * avg:
-                    print(Fore.GREEN + Style.BRIGHT + "{:5}".format(v), end = ' ')
-                elif float(bench[k][fn]) >= args.treshold * avg + avg:
-                    print(Fore.RED +  Style.BRIGHT + "{:5}".format(v), end = ' ')
-                else:
-                    print ("{:5}".format(v), end= ' ' )
-            else:
-                    print ("{:5}".format(v), end= ' ' )
+                score = float(bench[k][fn])
+                if score <= avg - args.threshold * avg:
+                    color = Fore.GREEN + Style.BRIGHT
+                elif args.threshold * avg + avg <= score:
+                    color = Fore.RED + Style.BRIGHT
+            print(color + "{:5}".format(v), end = ' ')
         print(k)
 
+# Read the score files.
+for fn in args.files:
+    read(fn)
+
+# The keys we are interested in.
+keys = [k for k in sorted(bench.keys()) if args.only.search(k)]
+
+# Print the score table.
 if args.csv is not None:
-    benches = sorted(bench.keys())
-    fl = open(args.csv, 'wa') if (args.csv and args.csv is not '-') else sys.stdout
-    fl.write(' ,')
-    for k in sorted(bench.keys()):
-        str = '\"' + k.replace('\"', '\"\"') + '\"'
-        fl.write(str)
-        if(k!=benches[len(bench.keys())-1]):
-            fl.write(',')
-    fl.write('\n')
-    for f in args.files:
-        fl.write(os.path.basename(f))
-        fl.write(',')
-        for b in benches:
-            v = 'n/a'
-            if b in bench and f in bench[b]:
-                v = bench[b][f]
-            fl.write(v)
-            if(b!=sorted(bench.keys())[len(bench.keys())-1]):
-                fl.write(',')
-        fl.write('\n')
+    csv(keys, args.csv)
+else:
+    text(keys)
