@@ -60,6 +60,13 @@ bench('b.format("text")', 'b = [abc] -> B',
       number=100000)
 
 # I/O on expressions.
+# e{N} is amazingly costly, which is bad, since we often use it to
+# build large automata for benches.
+e = '[ab]{20000}'
+bench('b.expression(e)',
+      'e = {}'.format(e),
+      lambda: b.expression(e))
+
 e = '(\e+a)' * 500
 bench('b.expression(e)', 'e = "(\e+a)" * 500', lambda: b.expression(e), number=100)
 r = b.expression(e)
