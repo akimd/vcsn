@@ -112,10 +112,10 @@ def csv(keys, fn):
 
 def text(keys):
     for k in keys:
+        # Compute average of benchs.
+        bs = [float(bench[k][f]) for f in args.files if f in bench[k]]
+        avg = sum(bs) / len(bs)
         for fn in args.files:
-            # Compute average of benchs.
-            bs = [float(bench[k][f]) for f in args.files if f in bench[k]]
-            avg = sum(bs) / len(bs)
             # print with right colors.
             v = bench[k][fn] if fn in bench[k] else "N/A"
             # print with right colors
