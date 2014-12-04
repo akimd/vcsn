@@ -68,6 +68,8 @@ def normalize(k):
 
     k = k.replace('a.num_sccs', 'a.scc')
 
+    k = k.replace('a.accessible ', 'a.accessible() ')
+
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 
