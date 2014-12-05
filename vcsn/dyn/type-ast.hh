@@ -25,9 +25,7 @@ namespace vcsn
     class ast_node
     {
     public:
-#ifndef COVERAGE
       virtual ~ast_node() = default;
-#endif
 
       virtual void accept(context_visitor &v) const = 0;
 

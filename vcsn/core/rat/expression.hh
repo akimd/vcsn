@@ -20,9 +20,7 @@ namespace vcsn
     class exp
     {
     public:
-#ifndef COVERAGE
       virtual ~exp() = default;
-#endif
 
       /// The possible types of expressions.
       using type_t = rat::type_t;
