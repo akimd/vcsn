@@ -352,9 +352,18 @@ speed were an issue, we should do it another way.
 In particular, it might be a good idea to use a distance map to ensure that
 we good (one of the) shortest ambiguous word.
 
+** bool is true
+In automata, false never appears for both b and f2.  mutable_automaton takes
+care them of not storing them, as the only possible value is "true".
+However, we don't do that everywhere: do it for expressions, polynomials,
+etc.
+
+Working on this for polynomials should also help fusing the two
+determinization algorithms.
+
 ** constant-term
-To compute the constant-term of an expression, we compute that of its subexpression,
-which will be recomputed uselessly by derived-term.
+To compute the constant-term of an expression, we compute that of its
+subexpression, which will be recomputed uselessly by derived-term.
 
 ** difference
 We don't need the rhs to be complete, it suffices to adjust product to
