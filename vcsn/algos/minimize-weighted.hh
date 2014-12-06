@@ -71,7 +71,7 @@ namespace vcsn
         bool operator()(const label_t& a,
                         const label_t& b) const noexcept
         {
-          return minimizer_.ls_.less_than(a, b);
+          return minimizer_.ls_.less(a, b);
         }
       }; // class label_less
 
@@ -319,7 +319,7 @@ namespace vcsn
                             else if (r.second < l.second)
                               return false;
                             else
-                              return weightset_t::less_than(l.first, r.first);
+                              return weightset_t::less(l.first, r.first);
                           });
                 state_output.emplace_back(state_output_for_label_t{l_wss.first,
                       std::move(l_wss.second)});

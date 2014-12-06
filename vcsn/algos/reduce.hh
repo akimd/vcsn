@@ -308,7 +308,7 @@ namespace vcsn
         for (unsigned i = begin; i < dimension; ++i)
           if (!ws_.is_zero(v[permutation[i]])
               && (pivot == dimension
-                  || ws_.less_than(norm(v[permutation[i]]), min)))
+                  || ws_.less(norm(v[permutation[i]]), min)))
             {
               pivot = i;
               min = norm(v[permutation[i]]);

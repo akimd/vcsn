@@ -112,7 +112,7 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
   %D%/core/rat/info.hxx                         \
-  %D%/core/rat/less-than.hh                     \
+  %D%/core/rat/less.hh                          \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \
   %D%/core/rat/size.hh                          \
@@ -176,8 +176,8 @@ nobase_include_HEADERS =                        \
   %D%/labelset/nullableset.hh                   \
   %D%/labelset/oneset.hh                        \
   %D%/labelset/tupleset.hh                      \
-  %D%/labelset/wordset.hh                       \
   %D%/labelset/word-polynomialset.hh            \
+  %D%/labelset/wordset.hh                       \
   %D%/misc/algorithm.hh                         \
   %D%/misc/attributes.hh                        \
   %D%/misc/builtins.hh                          \

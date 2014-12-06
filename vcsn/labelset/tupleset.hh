@@ -214,9 +214,9 @@ namespace vcsn
 
     /// Whether \a l < \a r.
     static bool
-    less_than(const value_t& l, const value_t& r)
+    less(const value_t& l, const value_t& r)
     {
-      return less_than_(l, r, indices);
+      return less_(l, r, indices);
     }
 
     static value_t
@@ -516,11 +516,11 @@ namespace vcsn
 
     template <std::size_t... I>
     static bool
-    less_than_(const value_t& l, const value_t& r, seq<I...>)
+    less_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {std::make_pair(valueset_t<I>::less_than(std::get<I>(l),
+      for (auto n: {std::make_pair(valueset_t<I>::less(std::get<I>(l),
                                                             std::get<I>(r)),
-                                   valueset_t<I>::less_than(std::get<I>(r),
+                                   valueset_t<I>::less(std::get<I>(r),
                                                             std::get<I>(l)))...})
         if (n.first)
           return true;

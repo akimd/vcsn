@@ -191,7 +191,7 @@ namespace vcsn
                  typename expressionset_impl<Ctx2>::value_t v) const;
 
     /// Whether \a l < \a r.
-    static bool less_than(value_t l, value_t r);
+    static bool less(value_t l, value_t r);
 
     /// Whether \a l == \a r.
     static bool equals(value_t l, value_t r);
@@ -294,7 +294,7 @@ namespace vcsn
 
   private:
     void require_weightset_commutativity() const;
-    bool less_than_ignoring_weight_(value_t l, value_t r) const;
+    bool less_ignoring_weight_(value_t l, value_t r) const;
     value_t remove_from_sum_series_(values_t addends,
                                     typename values_t::iterator i) const;
     value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;

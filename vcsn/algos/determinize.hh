@@ -306,7 +306,7 @@ namespace vcsn
           return l == r;
         }
 
-        static bool less_than(state_t l, state_t r)
+        static bool less(state_t l, state_t r)
         {
           return l < r;
         }

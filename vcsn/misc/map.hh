@@ -46,7 +46,7 @@ namespace vcsn
 
     bool operator()(const value_t& lhs, const value_t& rhs) const
     {
-      return valueset_t::less_than(lhs, rhs);
+      return valueset_t::less(lhs, rhs);
     }
   };
 

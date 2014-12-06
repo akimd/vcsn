@@ -33,7 +33,7 @@ namespace vcsn
     using transition_t = transition_t_of<Aut>;
     auto less = [&a] (transition_t l, transition_t r)
       {
-        return a->labelset()->less_than(a->label_of(l),
+        return a->labelset()->less(a->label_of(l),
                                         a->label_of(r));
       };
     for (auto s: a->states())
@@ -132,7 +132,7 @@ namespace vcsn
                   [&](const input_transition_t t1,
                       const input_transition_t t2) -> bool
                   {
-                    return transition_less_than_(t1, t2);
+                    return transition_less_(t1, t2);
                   });
 
         for (auto t: ts)
@@ -148,7 +148,7 @@ namespace vcsn
           res_->state(s);
       }
 
-      bool transition_less_than_(const input_transition_t t1,
+      bool transition_less_(const input_transition_t t1,
                                  const input_transition_t t2) const
         ATTRIBUTE_PURE
       {
@@ -156,13 +156,13 @@ namespace vcsn
         // be identical when we call this.
         auto& aut = res_->input_;
         assert(aut->src_of(t1) == aut->src_of(t2));
-        if (ls_.less_than(aut->label_of(t1), aut->label_of(t2)))
+        if (ls_.less(aut->label_of(t1), aut->label_of(t2)))
           return true;
-        else if (ls_.less_than(aut->label_of(t2), aut->label_of(t1)))
+        else if (ls_.less(aut->label_of(t2), aut->label_of(t1)))
           return false;
-        else if (ws_.less_than(aut->weight_of(t1), aut->weight_of(t2)))
+        else if (ws_.less(aut->weight_of(t1), aut->weight_of(t2)))
           return true;
-        else if (ws_.less_than(aut->weight_of(t2), aut->weight_of(t1)))
+        else if (ws_.less(aut->weight_of(t2), aut->weight_of(t1)))
           return false;
         else if (aut->dst_of(t1) < aut->dst_of(t2))
           return true;

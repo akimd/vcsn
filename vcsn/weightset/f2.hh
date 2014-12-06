@@ -94,7 +94,7 @@ namespace vcsn
     }
 
     /// Whether \a lhs < \a rhs.
-    static bool less_than(value_t lhs, value_t rhs)
+    static bool less(value_t lhs, value_t rhs)
     {
       return lhs < rhs;
     }

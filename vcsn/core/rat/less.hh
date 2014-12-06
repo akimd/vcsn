@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_LESS_THAN_HH
-# define VCSN_CORE_RAT_LESS_THAN_HH
+#ifndef VCSN_CORE_RAT_LESS_HH
+# define VCSN_CORE_RAT_LESS_HH
 
 # include <vcsn/misc/cast.hh>
 
@@ -13,7 +13,7 @@ namespace vcsn
   {
 
     template <class RatExpSet>
-    class less_than
+    class less
       : public RatExpSet::const_visitor
     {
     public:
@@ -66,7 +66,7 @@ namespace vcsn
       virtual void                                                      \
       visit(const Type ## _t& lhs)                                      \
       {                                                                 \
-        res_ = less_than_(lhs, *down_pointer_cast<const Type ## _t>(rhs_)); \
+        res_ = less_(lhs, *down_pointer_cast<const Type ## _t>(rhs_)); \
       }
 
       VISIT(atom);
@@ -88,23 +88,23 @@ namespace vcsn
       | Binary functions that compare two nodes of same type.  |
       `-------------------------------------------------------*/
 
-      bool less_than_(const zero_t&, const zero_t&)
+      bool less_(const zero_t&, const zero_t&)
       {
         return false;
       }
 
-      bool less_than_(const one_t&, const one_t&)
+      bool less_(const one_t&, const one_t&)
       {
         return false;
       }
 
-      bool less_than_(const atom_t& lhs, const atom_t& rhs)
+      bool less_(const atom_t& lhs, const atom_t& rhs)
       {
-        return labelset_t::less_than(lhs.value(), rhs.value());
+        return labelset_t::less(lhs.value(), rhs.value());
       }
 
       template <rat::exp::type_t Type>
-      bool less_than_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
+      bool less_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
       {
         auto ls = lhs.size();
         auto rs = rhs.size();
@@ -114,29 +114,29 @@ namespace vcsn
           return false;
         else
           for (size_t i = 0; i < ls; ++i)
-            if (expressionset_t::less_than(lhs[i], rhs[i]))
+            if (expressionset_t::less(lhs[i], rhs[i]))
               return true;
-            else if (expressionset_t::less_than(rhs[i], lhs[i]))
+            else if (expressionset_t::less(rhs[i], lhs[i]))
               return false;
         return false;
       }
 
       template <rat::exp::type_t Type>
-      bool less_than_(const unary_t<Type>& lhs, const unary_t<Type>& rhs)
+      bool less_(const unary_t<Type>& lhs, const unary_t<Type>& rhs)
       {
-        return expressionset_t::less_than(lhs.sub(), rhs.sub());
+        return expressionset_t::less(lhs.sub(), rhs.sub());
       }
 
       template <rat::exp::type_t Type>
-      bool less_than_(const weight_node_t<Type>& lhs, const weight_node_t<Type>& rhs)
+      bool less_(const weight_node_t<Type>& lhs, const weight_node_t<Type>& rhs)
       {
         // Lexicographic comparison on sub-expression, and then weight.
-        if (expressionset_t::less_than(lhs.sub(), rhs.sub()))
+        if (expressionset_t::less(lhs.sub(), rhs.sub()))
           return true;
-        else if (expressionset_t::less_than(rhs.sub(), lhs.sub()))
+        else if (expressionset_t::less(rhs.sub(), lhs.sub()))
           return false;
         else
-          return weightset_t::less_than(lhs.weight(), rhs.weight());
+          return weightset_t::less(lhs.weight(), rhs.weight());
       }
 
    private:
@@ -144,14 +144,6 @@ namespace vcsn
       bool res_;
     };
   }
-
-  template <class RatExpSet>
-  typename RatExpSet::value_t
-  less_than(const RatExpSet& rs, const typename RatExpSet::value_t& v)
-  {
-    return rs.less_than(v);
-  }
-
 }
 
-#endif // !VCSN_CORE_RAT_LESS_THAN_HH
+#endif // !VCSN_CORE_RAT_LESS_HH

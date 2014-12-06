@@ -4,7 +4,7 @@
 
 #include <vcsn/algos/fwd.hh> // is-valid
 #include <vcsn/core/rat/copy.hh>
-#include <vcsn/core/rat/less-than.hh>
+#include <vcsn/core/rat/less.hh>
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/hash.hh>
@@ -167,10 +167,10 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::less_than_ignoring_weight_(value_t l, value_t r) const
+  DEFINE::less_ignoring_weight_(value_t l, value_t r) const
     -> bool
   {
-    return less_than(unwrap_possible_lweight_(l), unwrap_possible_lweight_(r));
+    return less(unwrap_possible_lweight_(l), unwrap_possible_lweight_(r));
   }
 
   DEFINE::remove_from_sum_series_(values_t addends,
@@ -207,7 +207,7 @@ namespace vcsn
     auto closure =
       [this] (value_t l, value_t r)
       {
-        return less_than_ignoring_weight_(l, r);
+        return less_ignoring_weight_(l, r);
       };
     const auto i = std::lower_bound(copy.begin(), copy.end(), rn, closure);
     if (i != copy.end()
@@ -709,7 +709,7 @@ namespace vcsn
     return (v->type() == type_t::one);
   }
 
-  DEFINE::less_than(value_t lhs, value_t rhs)
+  DEFINE::less(value_t lhs, value_t rhs)
     -> bool
   {
     size<expressionset_impl> sizer;
@@ -721,8 +721,8 @@ namespace vcsn
       return false;
     else
       {
-        using less_than_t = rat::less_than<expressionset_impl>;
-        less_than_t lt;
+        using less_t = rat::less<expressionset_impl>;
+        less_t lt;
         return lt(lhs, rhs);
       }
   }
@@ -730,7 +730,7 @@ namespace vcsn
   DEFINE::equals(value_t lhs, value_t rhs)
     -> bool
   {
-    return ! less_than(lhs, rhs) && ! less_than(rhs, lhs);
+    return ! less(lhs, rhs) && ! less(rhs, lhs);
   }
 
   DEFINE::hash(const value_t& v)

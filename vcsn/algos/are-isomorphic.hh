@@ -259,15 +259,15 @@ namespace vcsn
       using transition_t = std::pair<weight_t_of<Automaton>,
                                      label_t_of<Automaton>>;
       using transitions_t = std::vector<transition_t>;
-      const auto less_than =
+      const auto less =
         [&](const transition_t& t1, const transition_t& t2)
         {
-          if (ws.less_than(t1.first, t2.first))
+          if (ws.less(t1.first, t2.first))
             return true;
-          else if (ws.less_than(t2.first, t1.first))
+          else if (ws.less(t2.first, t1.first))
             return false;
           else
-            return ls.less_than(t1.second, t2.second);
+            return ls.less(t1.second, t2.second);
         };
 
 #define HASH_TRANSITIONS(expression, endpoint_getter)                     \
@@ -279,7 +279,7 @@ namespace vcsn
             tt.emplace_back(transition_t{a->weight_of(t), a->label_of(t)}); \
             endpoint_states.emplace(a->endpoint_getter(t));                \
           }                                                               \
-        std::sort(tt.begin(), tt.end(), less_than);                       \
+        std::sort(tt.begin(), tt.end(), less);                       \
         for (const auto& t: tt)                                           \
           {                                                               \
             std::hash_combine(res, ws.hash(t.first));                     \

@@ -70,7 +70,7 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool less_than(const value_t, const value_t)
+    static bool less(const value_t, const value_t)
     {
       return false;
     }

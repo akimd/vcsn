@@ -111,7 +111,7 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool less_than(const value_t l, const value_t r)
+    static bool less(const value_t l, const value_t r)
     {
       return l < r;
     }

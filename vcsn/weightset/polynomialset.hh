@@ -642,23 +642,23 @@ namespace vcsn
 
 
     ATTRIBUTE_PURE
-    static bool monomial_less_than(const monomial_t& lhs,
+    static bool monomial_less(const monomial_t& lhs,
                                    const monomial_t& rhs)
     {
-      if (labelset_t::less_than(lhs.first, rhs.first))
+      if (labelset_t::less(lhs.first, rhs.first))
         return true;
-      else if (labelset_t::less_than(rhs.first, lhs.first))
+      else if (labelset_t::less(rhs.first, lhs.first))
         return false;
       else
-        return weightset_t::less_than(lhs.second, rhs.second);
+        return weightset_t::less(lhs.second, rhs.second);
     }
 
-    static bool less_than(const value_t& lhs,
+    static bool less(const value_t& lhs,
                           const value_t& rhs)
     {
       return std::lexicographical_compare(lhs.begin(), lhs.end(),
                                           rhs.begin(), rhs.end(),
-                                          monomial_less_than);
+                                          monomial_less);
     }
 
     value_t

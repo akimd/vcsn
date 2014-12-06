@@ -103,11 +103,11 @@ check_tupleset()
   ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "y"}), false);
   ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", ""}), false);
 
-  // less_than.
+  // less.
 #define CHECK(L, R, Res)                                \
   do {                                                  \
-    ASSERT_EQ(wwset.less_than(ww_t L, ww_t R), Res);    \
-    ASSERT_EQ(wwset.less_than(ww_t R, ww_t L), !Res);   \
+    ASSERT_EQ(wwset.less(ww_t L, ww_t R), Res);    \
+    ASSERT_EQ(wwset.less(ww_t R, ww_t L), !Res);   \
   } while (false)
 
   CHECK(("", ""),   ("a", ""),    true);

@@ -301,13 +301,13 @@ namespace vcsn
     }
 
     /// Whether l < r.
-    static bool less_than(const value_t& l, const value_t& r)
+    static bool less(const value_t& l, const value_t& r)
     {
       if (is_one(r))
         return false;
       else if (is_one(l))
         return true;
-      return labelset_t::less_than(get_value(l),
+      return labelset_t::less(get_value(l),
                                    get_value(r));
     }
 

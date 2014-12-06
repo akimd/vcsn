@@ -102,7 +102,7 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool less_than(const value_t l, const value_t r)
+    static bool less(const value_t l, const value_t r)
     {
       return (std::forward_as_tuple(l.size(), l)
               < std::forward_as_tuple(r.size(), r));
