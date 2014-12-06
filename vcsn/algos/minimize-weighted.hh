@@ -77,17 +77,8 @@ namespace vcsn
 
       // This structure is only useful at initialization time, when
       // sorting transitions from a given state in a canonical order.
-      class label_to_weights_and_states_t: public std::map<label_t,
-                                                           std::vector<weight_and_state_t>,
-                                                           label_less>
-      {
-      public:
-        label_to_weights_and_states_t(minimizer& the_minimizer)
-          : std::map<label_t,
-                     std::vector<weight_and_state_t>,
-                     label_less>(the_minimizer)
-        {}
-      }; // class label_to_weights_and_states_t
+      using label_to_weights_and_states_t
+        = std::map<label_t, std::vector<weight_and_state_t>, label_less>;
 
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
