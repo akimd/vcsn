@@ -1,12 +1,11 @@
-#ifndef VCSN_ALGOS_UNION_HH
-# define VCSN_ALGOS_UNION_HH
+#pragma once
 
-# include <unordered_map>
+#include <unordered_map>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/product.hh> // join_automata
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/algos/copy.hh>
+#include <vcsn/core/join-automata.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
 namespace vcsn
 {
@@ -62,5 +61,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_UNION_HH

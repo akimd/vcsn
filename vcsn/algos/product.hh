@@ -7,8 +7,9 @@
 
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/algos/strip.hh>
-# include <vcsn/core/tuple-automaton.hh>
+# include <vcsn/core/join-automata.hh>
 # include <vcsn/core/transition-map.hh>
+# include <vcsn/core/tuple-automaton.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -18,24 +19,6 @@
 
 namespace vcsn
 {
-  /// Join between automata.
-  template <typename... Auts>
-  auto
-  join_automata(Auts&&... auts)
-    -> decltype(make_mutable_automaton(join(auts->context()...)))
-  {
-    return make_mutable_automaton(join(auts->context()...));
-  }
-
-  /// Meet between automata.
-  template <typename... Auts>
-  auto
-  meet_automata(Auts&&... auts)
-    -> decltype(make_mutable_automaton(meet(auts->context()...)))
-  {
-    return make_mutable_automaton(meet(auts->context()...));
-  }
-
   namespace detail
   {
     /*---------------------------------.

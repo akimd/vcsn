@@ -1,16 +1,15 @@
-#ifndef VCSN_ALGOS_SUM_HH
-# define VCSN_ALGOS_SUM_HH
+#pragma once
 
-# include <map>
+#include <map>
 
-# include <vcsn/algos/product.hh> // join_automata
-# include <vcsn/algos/standard.hh> // is_standard
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/expression.hh> // dyn::make_expression
-# include <vcsn/dyn/weight.hh>
-# include <vcsn/misc/raise.hh> // require
+#include <vcsn/algos/standard.hh> // is_standard
+#include <vcsn/core/join-automata.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/expression.hh> // dyn::make_expression
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
 {
@@ -132,9 +131,9 @@ namespace vcsn
   }
 
 
-  /*----------------------.
-  | sum(expression, expression).  |
-  `----------------------*/
+  /*-------------------------------.
+  | sum(expression, expression).   |
+  `-------------------------------*/
 
   namespace dyn
   {
@@ -185,5 +184,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_SUM_HH

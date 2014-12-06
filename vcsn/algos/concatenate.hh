@@ -1,20 +1,18 @@
-#ifndef VCSN_ALGOS_CONCATENATE_HH
-# define VCSN_ALGOS_CONCATENATE_HH
+#pragma once
 
-# include <unordered_map>
-# include <vector>
+#include <unordered_map>
+#include <vector>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/product.hh> // join_automata
-# include <vcsn/algos/standard.hh>
-# include <vcsn/algos/sum.hh>
-# include <vcsn/core/join.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/expressionset.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/weight.hh>
-# include <vcsn/misc/raise.hh> // require
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/standard.hh>
+#include <vcsn/algos/sum.hh>
+#include <vcsn/core/join-automata.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
 {
@@ -357,5 +355,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_CONCATENATE_HH
