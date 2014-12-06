@@ -101,9 +101,9 @@ static size_t check_q()
   CHECK("-1/2", "2/3");
 #undef CHECK
 
-  // equals.
+  // equal.
 #define CHECK(Lhs, Rhs, Out)                            \
-  ASSERT_EQ(ws.equals(conv(ws, Lhs), conv(ws, Rhs)), Out)
+  ASSERT_EQ(ws.equal(conv(ws, Lhs), conv(ws, Rhs)), Out)
   CHECK("8/16",  "1/2",  true);
   CHECK("0/16",  "0",    true);
   CHECK("16/8",  "2",    true);
@@ -192,9 +192,9 @@ static size_t check_r()
   ASSERT_EQ(ws.mul(ws.one(), 8.3), 8.3);
   ASSERT_EQ(ws.mul(.5, 4), 2);
 
-  // equals
+  // equal
 #define CHECK(Lhs, Rhs, Out)                            \
-  ASSERT_EQ(ws.equals(Lhs, Rhs), Out)
+  ASSERT_EQ(ws.equal(Lhs, Rhs), Out)
   CHECK(.5, .5, true);
   CHECK(0.1, 1.0, false);
 #undef CHECK
@@ -231,9 +231,9 @@ static size_t check_zmin()
   ASSERT_EQ(ws.mul(ws.one(), 12), 12);
   ASSERT_EQ(ws.mul(-12, ws.one()), -12);
 
-  // equals
+  // equal
 #define CHECK(Lhs, Rhs, Out)                            \
-  ASSERT_EQ(ws.equals(Lhs, Rhs), Out)
+  ASSERT_EQ(ws.equal(Lhs, Rhs), Out)
   CHECK(1, 1, true);
   CHECK(0, 1, false);
 #undef CHECK

@@ -119,7 +119,7 @@ namespace vcsn
     /// When used as a LabelSet.
     static bool is_special(value_t v)
     {
-      return equals(special(), v);
+      return equal(special(), v);
     }
 
     /// When used as a LabelSet.
@@ -194,7 +194,7 @@ namespace vcsn
     static bool less(value_t l, value_t r);
 
     /// Whether \a l == \a r.
-    static bool equals(value_t l, value_t r);
+    static bool equal(value_t l, value_t r);
 
     /// Hash \a l.
     static size_t hash(const value_t& l);

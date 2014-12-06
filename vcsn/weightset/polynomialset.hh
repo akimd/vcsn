@@ -476,7 +476,7 @@ namespace vcsn
       auto j = begin(rhs), j_end = end(rhs);
       for (;
            i != i_end && j != j_end
-             && labelset()->equals(i->first, j->first);
+             && labelset()->equal(i->first, j->first);
            ++i, ++j)
         res[i->first] = weightset()->lgcd(i->second, j->second);
       // If the sets of labels are different, the polynomials
@@ -548,19 +548,19 @@ namespace vcsn
     }
 
     ATTRIBUTE_PURE
-    static bool monomial_equals(const monomial_t& lhs,
+    static bool monomial_equal(const monomial_t& lhs,
                                 const monomial_t& rhs)
     {
-      return (labelset_t::equals(lhs.first, rhs.first)
-              && weightset_t::equals(lhs.second, rhs.second));
+      return (labelset_t::equal(lhs.first, rhs.first)
+              && weightset_t::equal(lhs.second, rhs.second));
     }
 
     static bool
-    equals(const value_t& l, const value_t& r) ATTRIBUTE_PURE
+    equal(const value_t& l, const value_t& r) ATTRIBUTE_PURE
     {
       return l.size() == r.size()
         && std::equal(l.begin(), l.end(), r.begin(),
-                      monomial_equals);
+                      monomial_equal);
     }
 
     const value_t&
@@ -910,7 +910,7 @@ namespace vcsn
         {
           if (weightset()->is_zero(first_w))
             first_w = m.second;
-          else if (!weightset()->equals(m.second, first_w))
+          else if (!weightset()->equal(m.second, first_w))
             return print_without_ranges_(v, out, format, sep);
           letters.push_back(m.first);
         }

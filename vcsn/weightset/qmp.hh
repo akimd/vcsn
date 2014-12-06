@@ -107,7 +107,7 @@ namespace vcsn
       return v.get_num() == 1 && v.get_den() == 1;
     }
 
-    static bool equals(const value_t l, const value_t r)
+    static bool equal(const value_t l, const value_t r)
     {
       return l == r;
     }

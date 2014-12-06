@@ -67,7 +67,7 @@ namespace vcsn
                     rs.emplace(dst, p);
                     todo.emplace(dst);
                   }
-                else if (!ls.equals(p, rs[dst]))
+                else if (!ls.equal(p, rs[dst]))
                   return false;
               }
           }

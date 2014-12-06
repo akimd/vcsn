@@ -227,7 +227,7 @@ namespace vcsn
                          [this,l,ls,dst] (transition_t t) -> bool
                          {
                            return (dst_of(t) == dst
-                                   && ls.equals(label_of(t), l));
+                                   && ls.equal(label_of(t), l));
                          });
           if (i != end(succ))
             return *i;
@@ -239,7 +239,7 @@ namespace vcsn
                          [this,l,ls,src] (transition_t t) -> bool
                          {
                            return (src_of(t) == src
-                                   && ls.equals(label_of(t), l));
+                                   && ls.equal(label_of(t), l));
                          });
           if (i != end(pred))
             return *i;
@@ -880,7 +880,7 @@ namespace vcsn
     {
       bool operator()(transition_t t) const
       {
-        return aut_.labelset()->equals(aut_.label_of(t), label_);
+        return aut_.labelset()->equal(aut_.label_of(t), label_);
       }
       const mutable_automaton_impl& aut_;
       // Capture by copy: in the case of the transpose_automaton, the

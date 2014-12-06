@@ -301,7 +301,7 @@ namespace vcsn
 
         using value_t = state_t;
         using kind_t = void;
-        static bool equals(state_t l, state_t r)
+        static bool equal(state_t l, state_t r)
         {
           return l == r;
         }

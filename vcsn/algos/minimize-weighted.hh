@@ -174,7 +174,7 @@ namespace vcsn
               const auto& cwb = b.find(cw.first);
               if (cwb == b.end())
                 return false;
-              if (! weightset_t::equals(cw.second, cwb->second))
+              if (! weightset_t::equal(cw.second, cwb->second))
                 return false;
             }
           return true;
@@ -233,7 +233,7 @@ namespace vcsn
           for (/* Nothing. */;
                ia != as.cend() && ib != bs.cend();
                next(as, ia, mapa), next(bs, ib, mapb))
-            if (! minimizer_.ls_.equals(ia->label, ib->label)
+            if (! minimizer_.ls_.equal(ia->label, ib->label)
                 || ! match(mapa, mapb))
               return false;
 

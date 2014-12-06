@@ -134,7 +134,7 @@ namespace vcsn
       return v.num == 1 && v.den == 1;
     }
 
-    static bool equals(const value_t l, const value_t r)
+    static bool equal(const value_t l, const value_t r)
     {
       return l.num == r.num && l.den == r.den;
     }

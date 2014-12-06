@@ -4,9 +4,6 @@
 # include <algorithm>
 # include <iostream>
 # include <limits>
-# include <map>
-# include <queue>
-# include <set>
 # include <unordered_map>
 # include <unordered_set>
 # include <utility>
@@ -184,8 +181,8 @@ namespace vcsn
         todo_ = std::move(new_todo);
       }
 
-      // "Apply" a word to the set of active states (for each state, for each
-      // label, perform s = d(s))
+      /// "Apply" a word to the set of active states (for each state,
+      /// for each label, perform s = d(s))
       void apply_path(const std::vector<transition_t>& path)
       {
         for (auto t : path)

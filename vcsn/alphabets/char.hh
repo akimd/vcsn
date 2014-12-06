@@ -111,13 +111,13 @@ namespace vcsn
     }
 
     bool
-    equals(const letter_t& l1, const letter_t& l2) const
+    equal(const letter_t& l1, const letter_t& l2) const
     {
       return l1 == l2;
     }
 
     bool
-    equals(const word_t& w1, const word_t& w2) const
+    equal(const word_t& w1, const word_t& w2) const
     {
       return w1 == w2;
     }

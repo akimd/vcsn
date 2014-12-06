@@ -230,7 +230,7 @@ namespace vcsn
       {
         bool operator()(transition_t t) const
         {
-          return aut_.labelset()->equals(aut_.label_of(t), label_);
+          return aut_.labelset()->equal(aut_.label_of(t), label_);
         }
         const filter_automaton_impl& aut_;
         label_t label_;

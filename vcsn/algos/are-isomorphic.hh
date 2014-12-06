@@ -613,7 +613,7 @@ namespace vcsn
               weight2_t w2 = s2outl->second.first;
               state2_t dst2 = s2outl->second.second;
 
-              if (! weightset_t::equals(w1, w2))
+              if (! weightset_t::equal(w1, w2))
                 return fr_;
 
               const auto& isomorphics_to_dst1 = fr_.s1tos2_.find(dst1);

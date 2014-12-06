@@ -204,7 +204,7 @@ namespace vcsn
               const std::vector<state_t>& a_states = a.to_states;
               const std::vector<state_t>& b_states = b_i->to_states;
 
-              if (! ls_.equals(a_label, b_label))
+              if (! ls_.equal(a_label, b_label))
                 {
 #if DEBUG
                   std::cerr << "false 2" << std::endl;

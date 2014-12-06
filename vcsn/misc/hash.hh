@@ -31,7 +31,7 @@ namespace vcsn
 
     bool operator()(const value_t& v1, const value_t& v2) const
     {
-      return valueset_t::equals(v1, v2);
+      return valueset_t::equal(v1, v2);
     }
   };
 

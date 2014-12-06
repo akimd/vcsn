@@ -51,7 +51,7 @@ namespace vcsn
             auto dst = aut->dst_of(t);
             auto w1 = ws.mul(r1, aut->weight_of(t));
             auto w = ws.add(d[dst], w1);
-            if (!ws.equals(d[dst], w))
+            if (!ws.equal(d[dst], w))
               {
                 d[dst] = w;
                 r[dst] = ws.add(r[dst], w1);

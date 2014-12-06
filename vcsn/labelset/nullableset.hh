@@ -293,11 +293,11 @@ namespace vcsn
     }
 
     /// Whether l == r.
-    static bool equals(const value_t& l, const value_t& r)
+    static bool equal(const value_t& l, const value_t& r)
     {
       if (is_one(l))
         return is_one(r);
-      return !is_one(r) && labelset_t::equals(get_value(l), get_value(r));
+      return !is_one(r) && labelset_t::equal(get_value(l), get_value(r));
     }
 
     /// Whether l < r.

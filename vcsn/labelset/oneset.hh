@@ -64,7 +64,7 @@ namespace vcsn
 
     /// Whether \a l == \a r.
     static bool
-    equals(const value_t, const value_t)
+    equal(const value_t, const value_t)
     {
       return true;
     }

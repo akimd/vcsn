@@ -234,7 +234,7 @@ namespace vcsn
       {
         std::vector<transition_t> res;
         for (auto t: aut_->all_out(s))
-          if (labelset()->equals(label_of(t), l))
+          if (labelset()->equal(label_of(t), l))
             res.emplace_back(t);
         return res;
       }
@@ -249,7 +249,7 @@ namespace vcsn
       {
         std::vector<transition_t> res;
         for (auto t: aut_->all_in(s))
-          if (this->labelset()->equals(label_of(t), l))
+          if (this->labelset()->equal(label_of(t), l))
             res.emplace_back(t);
         return res;
       }

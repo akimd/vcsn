@@ -207,9 +207,9 @@ namespace vcsn
     }
 
     static bool
-    equals(const value_t& l, const value_t& r)
+    equal(const value_t& l, const value_t& r)
     {
-      return equals_(l, r, indices);
+      return equal_(l, r, indices);
     }
 
     /// Whether \a l < \a r.
@@ -505,9 +505,9 @@ namespace vcsn
 
     template <std::size_t... I>
     static bool
-    equals_(const value_t& l, const value_t& r, seq<I...>)
+    equal_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {valueset_t<I>::equals(std::get<I>(l),
+      for (auto n: {valueset_t<I>::equal(std::get<I>(l),
                                           std::get<I>(r))...})
         if (!n)
           return false;

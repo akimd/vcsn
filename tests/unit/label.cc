@@ -95,13 +95,13 @@ check_tupleset()
     ASSERT_EQ(set_name(wlset_t::make(is)), n);
   }
 
-  // equals.
-  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "x"}), true);
-  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"abc", "x"}), false);
-  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"", "x"}), false);
-  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "xx"}), false);
-  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "y"}), false);
-  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", ""}), false);
+  // equal.
+  ASSERT_EQ(wwset.equal(ww_t{"ab", "x"}, ww_t{"ab", "x"}), true);
+  ASSERT_EQ(wwset.equal(ww_t{"ab", "x"}, ww_t{"abc", "x"}), false);
+  ASSERT_EQ(wwset.equal(ww_t{"ab", "x"}, ww_t{"", "x"}), false);
+  ASSERT_EQ(wwset.equal(ww_t{"ab", "x"}, ww_t{"ab", "xx"}), false);
+  ASSERT_EQ(wwset.equal(ww_t{"ab", "x"}, ww_t{"ab", "y"}), false);
+  ASSERT_EQ(wwset.equal(ww_t{"ab", "x"}, ww_t{"ab", ""}), false);
 
   // less.
 #define CHECK(L, R, Res)                                \
@@ -120,7 +120,7 @@ check_tupleset()
 #undef CHECK
 
   // special, is_special.
-  ASSERT_EQ(wwset.equals(wwset.special(), ww_t{ls1.special(),ls2.special()}),
+  ASSERT_EQ(wwset.equal(wwset.special(), ww_t{ls1.special(),ls2.special()}),
             true);
   ASSERT_EQ(to_string(wwset, ww_t{ls1.special(),ls2.special()}), "");
   ASSERT_EQ(to_string(wwset, wwset.special()), "");
@@ -142,16 +142,16 @@ check_tupleset()
 
   // conv.
   // Exposed to the same bugs as make, see above.
-  ASSERT_EQ(wwset.equals(conv(wwset, "(abc,xyz)"), ww_t{"abc", "xyz"}), true);
-  ASSERT_EQ(wwset.equals(conv(wwset, "(abc,\\e)"), ww_t{"abc", ""}), true);
-  ASSERT_EQ(wwset.equals(conv(wwset, "(\\e,x)"),   ww_t{"", "x"}), true);
-  ASSERT_EQ(wwset.equals(conv(wwset, "(\\e,\\e)"), ww_t{"", ""}), true);
+  ASSERT_EQ(wwset.equal(conv(wwset, "(abc,xyz)"), ww_t{"abc", "xyz"}), true);
+  ASSERT_EQ(wwset.equal(conv(wwset, "(abc,\\e)"), ww_t{"abc", ""}), true);
+  ASSERT_EQ(wwset.equal(conv(wwset, "(\\e,x)"),   ww_t{"", "x"}), true);
+  ASSERT_EQ(wwset.equal(conv(wwset, "(\\e,\\e)"), ww_t{"", ""}), true);
 
-  ASSERT_EQ(wlset.equals(conv(wlset, "(abc,x)"),   wl_t{"abc", 'x'}), true);
+  ASSERT_EQ(wlset.equal(conv(wlset, "(abc,x)"),   wl_t{"abc", 'x'}), true);
 
   // concat.
 #define CHECK(L1, R1, L2, R2)                                           \
-  ASSERT_EQ(wwset.equals(wwset.concat(ww_t{L1, R1}, ww_t{L2, R2}),      \
+  ASSERT_EQ(wwset.equal(wwset.concat(ww_t{L1, R1}, ww_t{L2, R2}),      \
                          ww_t{L1 L2, R1 R2}), true)
   CHECK("a",  "x",    "b",   "y");
   CHECK("aa", "xx",   "bb",  "yy");

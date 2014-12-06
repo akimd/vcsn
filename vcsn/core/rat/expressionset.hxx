@@ -211,7 +211,7 @@ namespace vcsn
       };
     const auto i = std::lower_bound(copy.begin(), copy.end(), rn, closure);
     if (i != copy.end()
-        && equals(unwrap_possible_lweight_(*i), rn))
+        && equal(unwrap_possible_lweight_(*i), rn))
       {
         // An addend alraedy exists whose un-left-weighted value is rn.
         const weight_t& iw = possibly_implicit_lweight_(*i);
@@ -464,7 +464,7 @@ namespace vcsn
           down_pointer_cast<const atom_t>(unwrap_possible_lweight_(l))->value();
         auto rhs =
           down_pointer_cast<const atom_t>(unwrap_possible_lweight_(r))->value();
-        if (labelset()->equals(lhs, rhs))
+        if (labelset()->equal(lhs, rhs))
           res = rmul(l, possibly_implicit_lweight_(r));
         else
           res = zero();
@@ -727,7 +727,7 @@ namespace vcsn
       }
   }
 
-  DEFINE::equals(value_t lhs, value_t rhs)
+  DEFINE::equal(value_t lhs, value_t rhs)
     -> bool
   {
     return ! less(lhs, rhs) && ! less(rhs, lhs);

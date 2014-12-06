@@ -71,7 +71,7 @@ namespace vcsn
                       {
                         auto w2 = ws.mul(wm[dst], w);
                         // FIXME: return the counter example?
-                        if (!ws1.equals(std::get<0>(w2), std::get<1>(w2)))
+                        if (!ws1.equal(std::get<0>(w2), std::get<1>(w2)))
                           return false;
                       }
                   }
