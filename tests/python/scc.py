@@ -84,11 +84,10 @@ check(6, a)
 # component
 a = ctx.expression("(ab)*(bc)*").standard()
 scc = a.scc("tarjan_iterative")
-XFAIL(lambda: scc.component(0))
-CHECK_EQ(scc.component(1), scc.filter([4, 6]))
-CHECK_EQ(scc.component(2), scc.filter([1, 3]))
-CHECK_EQ(scc.component(3), scc.filter([0]))
-XFAIL(lambda: scc.component(4))
+CHECK_EQ(scc.component(0), scc.filter([0]))
+CHECK_EQ(scc.component(1), scc.filter([1, 3]))
+CHECK_EQ(scc.component(2), scc.filter([4, 6]))
+XFAIL(lambda: scc.component(3))
 
 
 # condense: make sure we don't lose inaccessible parts.
@@ -105,7 +104,7 @@ CHECK_EQ(r'''digraph
   edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "2.0", shape = box, color = DimGray]
+    0 [label = "0.0", shape = box, color = DimGray]
     1 [label = "1.1", shape = box, color = DimGray]
   }
   0 -> 0 [label = "a", color = DimGray]
@@ -121,9 +120,9 @@ CHECK_EQ(r'''digraph
   edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "1.1", shape = box, color = DimGray]
-    1 [label = "2.0", shape = box, color = DimGray]
+    0 [label = "0.0", shape = box, color = DimGray]
+    1 [label = "1.1", shape = box, color = DimGray]
   }
-  1 -> 0 [label = "b", color = DimGray]
+  0 -> 1 [label = "b", color = DimGray]
 }''',
          a.scc().condense())

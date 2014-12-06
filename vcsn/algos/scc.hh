@@ -1,9 +1,12 @@
 #ifndef VCSN_ALGOS_SCC_HH
 # define VCSN_ALGOS_SCC_HH
 
+# include <iterator> // std::rbegin
 # include <limits>
 
 # include <boost/range/irange.hpp>
+# include <boost/range/rbegin.hpp>
+# include <boost/range/rend.hpp>
 
 # include <vcsn/algos/filter.hh>
 # include <vcsn/algos/transpose.hh>
@@ -77,8 +80,7 @@ namespace vcsn
       void dfs(state_t s)
       {
         number_[s] = low_[s] = curr_vertex_num_++;
-        dfs_stack_.emplace_back(s, aut_->out(s).begin(),
-                                aut_->out(s).end());
+        dfs_stack_.emplace_back(s, aut_->out(s).begin(), aut_->out(s).end());
         stack_.push_back(s);
         while (!dfs_stack_.empty())
           {
@@ -92,8 +94,7 @@ namespace vcsn
                   {
                     number_[dst] = low_[dst] = curr_vertex_num_++;
                     const auto& out = aut_->out(dst);
-                    dfs_stack_.emplace_back(dst, out.begin(),
-                                            out.end());
+                    dfs_stack_.emplace_back(dst, out.begin(), out.end());
                     stack_.push_back(dst);
                   }
                 else if (low_[dst] < low_[src])
@@ -466,11 +467,17 @@ namespace vcsn
       scc_automaton_impl(const automaton_t& input, scc_algo_t algo)
         : super_t(input)
       {
-        components_ = ::vcsn::strong_components(aut_, algo);
+        // Components are numbered by ordered of discovery.  Reverse
+        // this, so that components are roughly numbered as the
+        // condensation state numbers would be (0 as an initial
+        // state).
+        const auto& cs = vcsn::strong_components(aut_, algo);
+        // FIXME: std::rbegin/rend does not work with libstdc++.
+        components_.assign(boost::rbegin(cs), boost::rend(cs));
         size_t num_sccs = components_.size();
         for (size_t i = 0; i < num_sccs; ++i)
           for (auto s : components_[i])
-            component_[s] = i + 1;
+            component_[s] = i;
       }
 
       /// Static name.
@@ -497,17 +504,17 @@ namespace vcsn
                                      const std::string& format = "text",
                                      bool = false) const
       {
-        o << component_.at(s) << ".";
+        o << component_.at(s) << '.';
         aut_->print_state_name(s, o, format, true);
         return o;
       }
 
-      const component_t component(unsigned com_num) const
+      const component_t component(unsigned num) const
       {
-        if (com_num < 0 || components_.size() <= com_num)
-          raise("component: com_num must have between 0 and ",
-                components_.size());
-        return components_[com_num];
+        require(num < components_.size(),
+                "component: invalid component number: ",
+                num, ": there are ", components_.size(), " components");
+        return components_[num];
       }
 
       const components_t components() const
@@ -603,7 +610,7 @@ namespace vcsn
   component(const scc_automaton<Aut>& aut, unsigned com_num)
   {
     std::unordered_set<state_t_of<Aut>> ss;
-    for (auto s : aut->component(com_num - 1))
+    for (auto s : aut->component(com_num))
       ss.emplace(s);
     return vcsn::filter(aut, ss);
   }

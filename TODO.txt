@@ -178,6 +178,10 @@ of transitions of the input automaton again: the process of computing the
 SCC already discovers the sccs via the condensation, so rather, we should
 keep this information somewhere.
 
+Our algorithms compute the scc as vectors, but return them as const&, so we
+have to duplicate them, although it would better to return as std::move, as
+we don't need to keep this in the functor.
+
 * Cleanup
 ** automaton_t members in decorators
 In most cases it's reasonable to use const shared_pointer (which is to say
