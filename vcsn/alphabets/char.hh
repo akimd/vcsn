@@ -1,14 +1,13 @@
-#ifndef VCSN_ALPHABETS_CHAR_HH
-# define VCSN_ALPHABETS_CHAR_HH
+#pragma once
 
-# include <cassert>
-# include <cstring> // strchr
-# include <string>
-# include <iostream>
+#include <cassert>
+#include <cstring> // strchr
+#include <string>
+#include <iostream>
 
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -230,5 +229,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_ALPHABETS_CHAR_HH
