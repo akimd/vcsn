@@ -1,14 +1,14 @@
-#ifndef VCSN_ALGOS_MINIMIZE_MOORE_HH
-# define VCSN_ALGOS_MINIMIZE_MOORE_HH
+#pragma once
 
-# include <unordered_map>
-# include <vector>
+#include <unordered_map>
+#include <vector>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/algos/quotient.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/quotient.hh>
+#include <vcsn/core/transition-map.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -80,13 +80,12 @@ namespace vcsn
 
       /// An auxiliary data structure enabling fast access to
       /// transitions from a given state and label, in random order.
-      /// This is a clear win for automata with many transitions
-      /// between a couple of states.
-      /// FIXME: this uglyish hash-of-hashes is slightly faster than
-      /// an unordered_map of pairs, as of GCC 4.8.2 on Luca's amd64
-      /// laptop, compiled with -O3.
-      std::unordered_map<state_t, std::unordered_map<label_t, state_t>>
-        out_;
+      using transition_map_t
+        = detail::transition_map<automaton_t,
+                                 weightset_t_of<automaton_t>,
+                                 /* Deterministic: */ true,
+                                 /* AllOut:        */ true>;
+      transition_map_t transition_map_;
 
       void clear()
       {
@@ -94,7 +93,7 @@ namespace vcsn
         state_to_class_.clear();
         num_classes_ = 0;
         class_to_res_state_.clear();
-        out_.clear();
+        transition_map_.clear();
       }
 
       /// Make a new class with the given set of states.
@@ -123,32 +122,31 @@ namespace vcsn
       /// Return \a class_invalid if \a s has no successor with \a l.
       class_t out_class(state_t s, label_t l)
       {
-        auto i = out_.find(s);
-        if (i == out_.end())
+        const auto& map = transition_map_[s];
+        auto dst = map.find(l);
+        if (dst == std::end(map))
           return class_invalid;
-        auto j = i->second.find(l);
-        if (j == i->second.end())
-          return class_invalid;
-        return state_to_class_[j->second];
+        else
+          return state_to_class_[dst->second.dst];
       }
 
     public:
       minimizer(const Aut& a)
         : a_(a)
         , gs_(a_->labelset()->genset())
+        , transition_map_(a)
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
         require(is_deterministic(a_), me(), ": input must be deterministic");
         require(is_trim(a_), me(), ": input must be trim");
-        for (auto t : a_->all_transitions())
-          out_[a_->src_of(t)][a_->label_of(t)] = a_->dst_of(t);
       }
 
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
-        // Initialization: two classes, partitioning final and non-final states.
+        // Initialization: two classes, partitioning final and
+        // non-final states.
         make_class({a_->pre()});
         make_class({a_->post()});
         {
@@ -164,8 +162,8 @@ namespace vcsn
             make_class(std::move(finals));
         }
 
-        bool go_on;
-        do
+        bool go_on = true;
+        while (go_on)
           {
             go_on = false;
             for (class_t c = 0; c < num_classes_; ++c)
@@ -200,7 +198,6 @@ namespace vcsn
                   } // for on labels
               } // for on classes
           }
-        while (go_on);
       }
 
       /// Return the quotient.
@@ -212,6 +209,7 @@ namespace vcsn
     };
   }
 
+  /// Minimize automaton \a a using the Moore algorithm.
   template <typename Aut>
   inline
   auto
@@ -222,7 +220,4 @@ namespace vcsn
     return minimize();
   }
 
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_MINIMIZE_MOORE_HH

@@ -158,6 +158,21 @@ non-commutativity: as is, (a, b) can work, but not (b, a).
 ** eliminate-state
 Support several arguments.
 
+** minimize: moore
+I have extremely weird performances regressions:
+
+  v score-compare --only v2b.3-{599-g773e66b,640-gceb9785,641-gec01365,642-g842cccf}
+  2.72  2.73  3.01  3.01  a.minimize("moore")  # a = std([a-k]{2000})
+
+(these commits are about synchronizing_word!) and then a bunch of suspicious
+measures:
+
+  v score-compare --only moore +scores/35s/v2b.3-67*
+  2.68  3.87  2.67  3.95  4.32  4.05  3.17  a.minimize("moore")  # a = std([a-k]{2000})
+
+Currently the score is rather 3.23.  Why this regression?  Track it, and fix
+it.
+
 ** products: lazyness
 We need a lazy implementation of product.
 
