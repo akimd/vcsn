@@ -35,10 +35,12 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_complete.ipynb               \
   %D%/automaton.is_cycle_ambiguous.ipynb        \
   %D%/automaton.is_deterministic.ipynb          \
+  %D%/automaton.is_empty.ipynb                  \
   %D%/automaton.is_equivalent.ipynb             \
   %D%/automaton.is_functional.ipynb             \
   %D%/automaton.is_isomorphic.ipynb             \
   %D%/automaton.is_standard.ipynb               \
+  %D%/automaton.is_useless.ipynb                \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
