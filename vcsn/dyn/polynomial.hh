@@ -73,7 +73,7 @@ namespace vcsn
           return polynomial_.empty();
         }
 
-      protected:
+      private:
         /// The polynomial.
         const polynomial_t polynomial_;
         /// The polynomial set.

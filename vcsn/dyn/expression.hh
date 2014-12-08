@@ -67,7 +67,7 @@ namespace vcsn
           return expressionset_;
         }
 
-      protected:
+      private:
         /// The expression.
         const expression_t expression_;
         /// The expression set.

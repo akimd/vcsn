@@ -61,7 +61,7 @@ namespace vcsn
           return automaton_;
         }
 
-      protected:
+      private:
         /// The automaton.
         automaton_t automaton_;
       };

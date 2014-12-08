@@ -63,7 +63,7 @@ namespace vcsn
           return weightset_;
         }
 
-      protected:
+      private:
         /// The weight.
         const weight_t weight_;
         /// The weight set.

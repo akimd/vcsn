@@ -58,7 +58,7 @@ namespace vcsn
           return context_;
         }
 
-      protected:
+      private:
         /// The context.
         const context_t context_;
       };

@@ -62,7 +62,7 @@ namespace vcsn
           return expansionset_;
         }
 
-      protected:
+      private:
         /// The expansion.
         const expansion_t expansion_;
         /// The expansion set.

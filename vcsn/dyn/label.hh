@@ -64,7 +64,7 @@ namespace vcsn
           return labelset_;
         }
 
-      protected:
+      private:
         /// The label.
         const label_t label_;
         /// The label set.
