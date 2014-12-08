@@ -73,7 +73,7 @@ def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
 bench('a.is_proper()',
       'a = ""',
       setup = '''a = vcsn.automaton('', 'daut')''',
-      number = 200000)
+      number = 1000000)
 
 # Check formatting.  was used to check dyn:: round-trip.
 bench('b.format("text")',
@@ -104,7 +104,8 @@ for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
     bench('a.format("{}")'.format(fmt),
           'a = std({})'.format(r),
           setup = ['r = "{}"'.format(r),
-                   '''a = b.expression(r).standard()'''])
+                   '''a = b.expression(r).standard()'''],
+          number = 5)
 
 # Input should be too.
 r = 'a?{500}'
@@ -135,13 +136,15 @@ e = "(a+b)*b(<2>a+<2>b){20000}"
 bench('r.standard()',
       'r = {}, c = [a-z] -> Z'.format(e),
       setup = ['e = "{}"'.format(e),
-               '''r = vcsn.context('lal_char(a-z), z').expression(e)'''])
+               '''r = vcsn.context('lal_char(a-z), z').expression(e)'''],
+      number = 10)
 
 # thompson
 bench('r.thompson()',
       'r = {}, c = [a-z]? -> Z'.format(e),
       setup = ['e = "{}"'.format(e),
-               '''r = vcsn.context('lan_char(a-z), z').expression(e)'''])
+               '''r = vcsn.context('lan_char(a-z), z').expression(e)'''],
+      number = 10)
 
 # determinize.  These are the well known worst cases.  21 is too long,
 # slowly moving to use 18 as reference.
