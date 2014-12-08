@@ -22,14 +22,14 @@ namespace vcsn
 
         /// Extract wrapped typed label.
         template <typename LabelSet>
-        label_wrapper<LabelSet>& as()
+        auto& as()
         {
           return dynamic_cast<label_wrapper<LabelSet>&>(*this);
         }
 
         /// Extract wrapped typed label.
         template <typename LabelSet>
-        const label_wrapper<LabelSet>& as() const
+        auto& as() const
         {
           return dynamic_cast<const label_wrapper<LabelSet>&>(*this);
         }

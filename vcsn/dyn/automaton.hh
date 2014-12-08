@@ -22,14 +22,14 @@ namespace vcsn
 
         /// Extract wrapped typed automaton.
         template <typename Aut>
-        Aut& as()
+        auto& as()
         {
           return dynamic_cast<automaton_wrapper<Aut>&>(*this).automaton();
         }
 
         /// Extract wrapped typed automaton.
         template <typename Aut>
-        const Aut& as() const
+        auto& as() const
         {
           return dynamic_cast<const automaton_wrapper<Aut>&>(*this).automaton();
         }

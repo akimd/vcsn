@@ -22,14 +22,14 @@ namespace vcsn
 
         /// Extract wrapped typed weight.
         template <typename WeightSet>
-        weight_wrapper<WeightSet>& as()
+        auto& as()
         {
           return dynamic_cast<weight_wrapper<WeightSet>&>(*this);
         }
 
         /// Extract wrapped typed weight.
         template <typename WeightSet>
-        const weight_wrapper<WeightSet>& as() const
+        auto& as() const
         {
           return dynamic_cast<const weight_wrapper<WeightSet>&>(*this);
         }

@@ -20,13 +20,13 @@ namespace vcsn
         virtual symbol vname() const = 0;
 
         template <typename ExpansionSet>
-        expansion_wrapper<ExpansionSet>& as()
+        auto& as()
         {
           return dynamic_cast<expansion_wrapper<ExpansionSet>&>(*this);
         }
 
         template <typename ExpansionSet>
-        const expansion_wrapper<ExpansionSet>& as() const
+        auto& as() const
         {
           return dynamic_cast<const expansion_wrapper<ExpansionSet>&>(*this);
         }

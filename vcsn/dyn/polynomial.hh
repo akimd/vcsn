@@ -22,13 +22,13 @@ namespace vcsn
         virtual symbol vname() const = 0;
 
         template <typename PolynomialSet>
-        polynomial_wrapper<PolynomialSet>& as()
+        auto& as()
         {
           return dynamic_cast<polynomial_wrapper<PolynomialSet>&>(*this);
         }
 
         template <typename PolynomialSet>
-        const polynomial_wrapper<PolynomialSet>& as() const
+        auto& as() const
         {
           return dynamic_cast<const polynomial_wrapper<PolynomialSet>&>(*this);
         }

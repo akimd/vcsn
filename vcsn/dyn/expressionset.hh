@@ -33,14 +33,14 @@ namespace detail
 
     /// Extract wrapped typed expressionset.
     template <typename RatExpSet>
-    expressionset_wrapper<RatExpSet>& as()
+    auto& as()
     {
       return dynamic_cast<expressionset_wrapper<RatExpSet>&>(*this);
     }
 
     /// Extract wrapped typed expression.
     template <typename RatExpSet>
-    const expressionset_wrapper<RatExpSet>& as() const
+    auto& as() const
     {
       return dynamic_cast<const expressionset_wrapper<RatExpSet>&>(*this);
     }

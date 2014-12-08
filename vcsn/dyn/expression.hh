@@ -24,14 +24,14 @@ namespace vcsn
 
         /// Extract wrapped typed expression.
         template <typename RatExpSet>
-        expression_wrapper<RatExpSet>& as()
+        auto& as()
         {
           return dynamic_cast<expression_wrapper<RatExpSet>&>(*this);
         }
 
         /// Extract wrapped typed expression.
         template <typename RatExpSet>
-        const expression_wrapper<RatExpSet>& as() const
+        auto& as() const
         {
           return dynamic_cast<const expression_wrapper<RatExpSet>&>(*this);
         }
