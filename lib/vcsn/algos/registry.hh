@@ -79,7 +79,8 @@ namespace vcsn
                 auto fun = get0(sig);
                 require(fun,
                         name_,
-                        ": compilation succeeded, but function is unavailable\n",
+                        ": compilation succeeded, "
+                        "but function is unavailable\n",
                         signatures(sig));
                 return *fun;
               }
@@ -126,7 +127,7 @@ namespace vcsn
     private:
       /// Function name (e.g., "determinize").
       std::string name_;
-      /// Context name -> pointer to implementation.
+      /// Signature -> pointer to implementation.
       using map_t = std::map<signature, Fun*>;
       map_t map_;
     };

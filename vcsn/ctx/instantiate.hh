@@ -95,7 +95,7 @@ namespace vcsn
                                                                         \
   /* to_expression. */                                                  \
   MAYBE_EXTERN template                                                 \
-  Ctx::expression_t                                                         \
+  Ctx::expression_t                                                     \
   to_expression<mutable_automaton<Ctx>>                                 \
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
@@ -114,9 +114,9 @@ namespace vcsn
   /* print. */                                                          \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
-  print<expressionset<Ctx>>(const expressionset<Ctx>& rs,                       \
-                        const Ctx::expression_t& e, std::ostream& o,        \
-                        const std::string& format);                     \
+  print<expressionset<Ctx>>(const expressionset<Ctx>& rs,               \
+                            const Ctx::expression_t& e, std::ostream& o, \
+                            const std::string& format);                 \
                                                                         \
   /* standard. */                                                       \
   MAYBE_EXTERN template                                                 \

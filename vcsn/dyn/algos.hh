@@ -198,7 +198,7 @@ namespace vcsn
     /// All the accepted words of at most \a max letters.
     polynomial enumerate(const automaton& aut, unsigned max);
 
-    /// Evaluate \a s on \a aut.
+    /// Evaluate \a l on \a aut.
     weight eval(const automaton& aut, const label& l);
 
     /// Distribute product over addition recursively under the starred

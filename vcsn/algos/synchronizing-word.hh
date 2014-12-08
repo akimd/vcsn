@@ -30,6 +30,7 @@ namespace vcsn
   | is_synchronized_by(automaton, word).  |
   `--------------------------------------*/
 
+  /// Whether \a w synchronizes automaton \a aut.
   template <typename Aut>
   bool
   is_synchronized_by(const Aut& aut, const word_t_of<Aut>& w)
@@ -380,6 +381,7 @@ namespace vcsn
   | is_synchronizing(automaton). |
   `-----------------------------*/
 
+  /// Whether this automaton is synchronizing, i.e., has synchronizing words.
   template <typename Aut>
   bool is_synchronizing(const Aut& aut)
   {
@@ -408,6 +410,7 @@ namespace vcsn
   | synchronizing_word(automaton). |
   `-------------------------------*/
 
+  /// Return a synchronizing word for \a aut using algo \a algo.
   template <typename Aut>
   word_t_of<Aut>
   synchronizing_word(const Aut& aut, const std::string& algo = "greedy")

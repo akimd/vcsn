@@ -43,6 +43,7 @@ namespace vcsn
         using labelset_t = LabelSet;
         using super_t = label_base;
         using label_t = typename labelset_t::value_t;
+
         label_wrapper(const label_t& l, const labelset_t& ls)
           : label_(l)
           , labelset_(ls)
