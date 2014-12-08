@@ -66,13 +66,13 @@ namespace vcsn
   `-----------------*/
 
   template <typename Aut>
-  typename labelset_t_of<Aut>::word_t ambiguous_word(const Aut& aut)
+  word_t_of<Aut> ambiguous_word(const Aut& aut)
   {
     std::tuple<state_t_of<Aut>, state_t_of<Aut>> witness;
     require(is_ambiguous(aut, witness),
             "automaton is unambiguous");
     const auto& ls = *aut->labelset();
-    typename labelset_t_of<Aut>::word_t res;
+    word_t_of<Aut> res;
     // Find the shortest word from initial to the witness.
     auto s = std::get<0>(witness);
     for (auto t: path_bfs(aut, aut->pre(), s))

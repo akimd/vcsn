@@ -1,7 +1,7 @@
-#ifndef VCSN_CTX_TRAITS_HH
-# define VCSN_CTX_TRAITS_HH
+#pragma once
 
-# include <memory>
+#include <memory>
+#include <type_traits>
 
 namespace vcsn
 {
@@ -15,7 +15,15 @@ namespace vcsn
   | Computing types.  |
   `------------------*/
 
-# define DEFINE(Type)                                                   \
+  /// Extract various ValueSets/Value types from objects, or pointers
+  /// to objects.
+  ///
+  /// Example of valid uses:
+  ///
+  /// labelset_t_of<mutable_automaton_impl> // a class
+  /// labelset_t_of<mutable_automaton>      // a shared_ptr
+
+#define DEFINE(Type)                                                    \
   namespace detail                                                      \
   {                                                                     \
     template <typename ValueSet>                                        \
@@ -23,6 +31,11 @@ namespace vcsn
     {                                                                   \
       using type = typename ValueSet::Type;                             \
     };                                                                  \
+                                                                        \
+    template <typename ValueSet>                                        \
+    struct Type ## _of_impl<std::shared_ptr<ValueSet>>                  \
+      : Type ## _of_impl<base_t<ValueSet>>                              \
+    {};                                                                 \
   }                                                                     \
                                                                         \
   template <typename ValueSet>                                          \
@@ -37,31 +50,9 @@ namespace vcsn
   DEFINE(weight_t);
   DEFINE(weightset_t);
 
-# undef DEFINE
+#undef DEFINE
 
-
-  /*------------------.
-  | shared pointers.  |
-  `------------------*/
-
-  // Forward traits about shared_ptr<T> to T.
-  namespace detail
-  {
-# define DEFINE(Traits)                                         \
-    template <typename ValueSet>                                \
-    struct Traits ## _of_impl<std::shared_ptr<ValueSet>>        \
-      : Traits ## _of_impl<base_t<ValueSet>>                    \
-    {}
-
-    DEFINE(context_t);
-    DEFINE(label_t);
-    DEFINE(labelset_t);
-    DEFINE(state_t);
-    DEFINE(transition_t);
-    DEFINE(weight_t);
-    DEFINE(weightset_t);
-# undef DEFINE
-  }
+  template <typename ValueSet>
+  using word_t_of
+    = typename labelset_t_of<base_t<ValueSet>>::word_t;
 }
-
-#endif // !VCSN_CTX_TRAITS_HH

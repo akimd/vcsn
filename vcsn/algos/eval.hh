@@ -22,7 +22,7 @@ namespace vcsn
 
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
-      using word_t = typename labelset_t_of<automaton_t>::word_t;
+      using word_t = word_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
 
@@ -80,7 +80,7 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  eval(const Aut& a, const typename labelset_t_of<Aut>::word_t& w)
+  eval(const Aut& a, const word_t_of<Aut>& w)
     -> weight_t_of<Aut>
   {
     detail::evaluator<Aut> e(a);

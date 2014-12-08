@@ -32,8 +32,7 @@ namespace vcsn
 
   template <typename Aut>
   bool
-  is_synchronized_by(const Aut& aut,
-                     const typename labelset_t_of<Aut>::word_t& w)
+  is_synchronized_by(const Aut& aut, const word_t_of<Aut>& w)
   {
     using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
@@ -91,7 +90,7 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
-      using word_t = typename labelset_t_of<automaton_t>::word_t;
+      using word_t = word_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
@@ -410,7 +409,7 @@ namespace vcsn
   `-------------------------------*/
 
   template <typename Aut>
-  typename labelset_t_of<Aut>::word_t
+  word_t_of<Aut>
   synchronizing_word(const Aut& aut, const std::string& algo = "greedy")
   {
     vcsn::detail::synchronizer<Aut> sync(aut);

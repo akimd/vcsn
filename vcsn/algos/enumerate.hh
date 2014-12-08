@@ -37,7 +37,7 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
-      using word_t = typename labelset_t::word_t;
+      using word_t = word_t_of<automaton_t>;
 
       /// Same as polynomial_t::value_type.
       using monomial_t = std::pair<word_t, weight_t>;

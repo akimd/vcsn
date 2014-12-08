@@ -238,7 +238,7 @@ namespace vcsn
   rat::expression_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const typename RatExpSet::value_t& e,
-             const typename RatExpSet::labelset_t::word_t& l,
+             const word_t_of<RatExpSet>& l,
              bool breaking = false)
   {
     auto word = rs.labelset()->letters_of(l);
