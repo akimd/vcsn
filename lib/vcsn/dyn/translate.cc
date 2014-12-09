@@ -142,7 +142,6 @@ namespace vcsn
 
         /// Run C++ compiler.
         ///
-        /// \param prefix  a possible command prefix (i.e., "ccache")
         /// \param cmd  the compiler arguments
         /// \param tmp  the base name for temporary files
         void cxx(std::string cmd, const std::string& tmp)
