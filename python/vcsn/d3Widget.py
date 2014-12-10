@@ -1,30 +1,46 @@
 from __future__ import print_function
 
 from IPython.display import display, Javascript
-from IPython.html import widgets
+from IPython.html import widgets, nbextensions
+from IPython.html.nbextensions import install_nbextension
 from IPython.utils import traitlets
-
-import vcsn
 from vcsn.dot import daut_to_transitions
 
+import cgi
+import os
+import vcsn
+import ipython
+
 class VcsnD3DataFrame(object):
-    def __init__(self, ipython, name):
-        self.ipython = ipython
+    def __init__(self, ip, name):
+        # Here we call ipython ip to avoid conflict with the ipython file
+        self.ip = ip
         self.name = name
-        if self.name in self.ipython.shell.user_ns:
-            aut = self.ipython.shell.user_ns[self.name].strip()
-            states, transitions = self._d3_of_aut(aut)
+        if self.name in self.ip.shell.user_ns:
+            aut = self.ip.shell.user_ns[self.name].strip()
+            states, transitions, context = self._d3_of_aut(aut)
+            self.context = vcsn.context(context)
         # Here Add the conversion from vcsn to d3 datas
         else:
             states = [{'id': 0}]
             transitions = [{'source': '0', 'label': ''},
                            {'target': '0', 'label': ''}]
-        aut = AutomatonD3Widget(states=states, transitions=transitions)
-        self._widget = aut
-        self._widget.on_trait_change(self._on_transitions_changed, 'transitions')
+            self.context = vcsn.context('letterset<char_letters(b)>, b')
 
-    def _aut_of_d3(self, e, trans):
+        aut = AutomatonD3Widget(states=states, transitions=transitions)#, context=self.context)
+        self.error = widgets.HTMLWidget(value = '')
+
+        self._widget_ctx = ipython.ContextTextWidget(self, self.context)
+        self._widget_ctx.text.on_trait_change(lambda: self._on_change())
+
+        self._widget = aut
+        self._widget.on_trait_change(lambda: self._on_change())
+
+    def _aut_of_d3(self):
         '''Conversion from d3 to an automaton, via "daut".'''
+        self.error.value = ''
+        ctx = 'context = '+ '{}\n'.format(self.context)
+        trans = self._widget.transitions
         aut = ''
         for t in trans:
             src = float(t['source']['id'])
@@ -34,7 +50,11 @@ class VcsnD3DataFrame(object):
                 dst = int(dst) if dst == int(dst) else '$',
                 label = t['label']
             )
-        return vcsn.automaton(aut, 'daut')
+        res = ctx + aut
+        try:
+            return vcsn.automaton(res, 'daut')
+        except RuntimeError as e:
+            self.error.value = cgi.escape(str(e))
 
     def _d3_of_aut(self, aut):
         '''Convert an automaton into a list of states and a list
@@ -51,28 +71,49 @@ class VcsnD3DataFrame(object):
         states = [{'id': s}
                   for s in set().union(*[set([t[0], t[1]]) for t in ts])
                   if s != '$']
-        return (states, transitions)
+        context = str(aut.context())
+        return (states, transitions, context)
 
-    def _on_transitions_changed(self, e, trans):
+    def _on_change(self):
         # d3 ==> python (called every time the user changes a value on
         # the gui).  Here the conversion from d3 to vcsn.
+        self.context = self._widget_ctx.text.value.encode('utf-8')
         try:
-            self.ipython.shell.user_ns[self.name] = self._aut_of_d3(e, trans)
+            self.ip.shell.user_ns[self.name] = self._aut_of_d3()
         except TypeError:
             pass
 
     def show(self):
+        wc1 = widgets.ContainerWidget()
+        wc1.children = [self._widget_ctx.text]
+        wc2 = widgets.ContainerWidget()
+        self._widget_ctx.svg.set_css({
+            'padding-left': '10px',
+            'padding-top' : '15px',})
+        wc2.children = [wc1, self._widget_ctx.svg]
+        wc3 = widgets.ContainerWidget()
+        self.error.set_css({
+            'padding-left': '20px',
+            'padding-top': '15px',
+            'color': 'maroon',})
+        wc3.children = [wc2, self.error]
+        display(wc3)
+        wc2.remove_class('vbox')
+        wc2.add_class('hbox')
+        wc3.remove_class('vbox')
+        wc3.add_class('hbox')
         display(self._widget)
 
 class AutomatonD3Widget(widgets.DOMWidget):
+    # Here the Javascript Code
+    # Using D3, Jquery and Backbone
+    # We load and display it from the js file we install in nb_extension
 
-        # Here the Javascript Code
-        # Using D3, Jquery and Backbone
-        # We load and display it from the js file
-        f = open(vcsn.datadir + '/js/AutomatonD3Widget.js', 'r')
-        js = f.read()
-        display(Javascript(js))
+    install_nbextension(os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'))
+    script = """IPython.load_extensions("AutomatonD3Widget")"""
+    display(Javascript(script));
 
-        _view_name = traitlets.Unicode('AutomatonView', sync=True)
-        states = traitlets.List(sync=True)
-        transitions = traitlets.List(sync=True)
+    _view_name = traitlets.Unicode('AutomatonView', sync=True)
+    states = traitlets.List(sync=True)
+    transitions = traitlets.List(sync=True)
+    context = traitlets.Unicode(sync=True)

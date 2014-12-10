@@ -9,12 +9,76 @@ from IPython.display import display, HTML, Latex, SVG
 from IPython.html import widgets
 from IPython.html.widgets import interactive
 from IPython.utils.warn import info, error
-
+import cgi
 import vcsn
 
 from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
 
 # The class MUST call this class decorator at creation time
+class ContextTextWidget:
+    def __init__(self, ipython, name=None):
+        self.ipython = ipython
+        self.name = name
+        if self.name:
+            #Here the way to differenciate the use into the d3 widget
+            if type(self.name) != str:
+                ctx = name
+            elif self.name in self.ipython.shell.user_ns:
+                ctx = vcsn.context(format(self.ipython.shell.user_ns[self.name]))
+            else:
+                ctx = vcsn.context('lal_char, b')
+                self.ipython.shell.user_ns[self.name] = ctx
+        else:
+            ctx = ctx = vcsn.context('lal_char, b')
+        text = format(ctx)
+        self.text = widgets.TextareaWidget(description='Context: ', value = text)
+        self.text.set_css({
+            'width': '250px',
+            'height': '25px',
+        })
+        self.text.set_css({'lines': '500'})
+        self.text.on_trait_change(lambda: self.update())
+        self.error = widgets.HTMLWidget(value = ' ')
+        self.svg = widgets.LatexWidget(value = ctx._repr_latex_())
+        # Display the widget if it is not use into the d3 widget
+        if type(self.name) == str:
+
+            wc1 = widgets.ContainerWidget()
+            wc1.children = [self.text]
+
+            wc2 = widgets.ContainerWidget()
+            wc2.children = [wc1, self.svg]
+            wc3 = widgets.ContainerWidget()
+            wc3.children = [wc2, self.error]
+            display(wc3)
+            wc2.remove_class('vbox')
+            wc2.add_class('hbox')
+
+    def update(self):
+        try:
+            self.error.value = ''
+            txt = self.text.value.encode('utf-8')
+            c = vcsn.context(txt)
+            if type(self.name) == str:
+                self.ipython.shell.user_ns[self.name] = c
+            self.svg.value = c._repr_latex_()
+        except RuntimeError as e:
+            self.error.value = cgi.escape(str(e))
+
+@magics_class
+class EditContext(Magics):
+    @magic_arguments()
+    @argument('var', type=str, nargs='?', default=None,
+              help='The name of the context to edit')
+    @line_cell_magic
+    def context(self, line, cell=None):
+        args = parse_argstring(self.context, line)
+        if cell is None:
+            ContextTextWidget(self, args.var)
+
+ip = get_ipython()
+ip.register_magics(EditContext)
+
 class AutomatonTextWidget:
     def __init__(self, ipython, name, format, mode):
         self.ipython = ipython
@@ -62,7 +126,7 @@ class AutomatonTextWidget:
             dot = to_dot(txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
         except RuntimeError as e:
-            self.error.value = str(e)
+            self.error.value = cgi.escape(str(e))
 
 @magics_class
 class EditAutomaton(Magics):

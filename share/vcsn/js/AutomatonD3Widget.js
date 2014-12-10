@@ -8,6 +8,23 @@ function(WidgetManager, d3, $,  _){
         render: function(){
             // Here we define variables with 'this' to call them from everywhere
 
+            // Editable text for labels
+            this.svg_for_frame = d3.select(this.el).append('svg')
+                .attr('width', 960)
+                .attr('height', 100)
+            this.frame_title = this.svg_for_frame.append('svg:text')
+                .text('Label: ')
+                .attr('x', 25)
+                .attr('y', 25)
+            this.frame = this.svg_for_frame.append('foreignObject')
+                .attr('x', 85)
+                .attr('y', 10)
+                .attr("width", 800)
+                .attr("height", 50)
+                .append("xhtml:form")
+                .attr('class', 'frame')
+                .append('input')
+
             // Attributs of the SVG
             this.width =960, this.height = 500;
 
@@ -33,16 +50,6 @@ function(WidgetManager, d3, $,  _){
             // Define here to avoid recreation in every update
             this.path = this.svg.append('svg:g').selectAll('g');
             this.circle = this.svg.append('svg:g').selectAll('g');
-
-            // Editable text for labels
-            this.frame = this.svg.append('foreignObject')
-                                .attr('x', 0)
-                                .attr('y', 0)
-                                .attr("width", 800)
-                                .attr("height", 50)
-                                .append("xhtml:form")
-                                .attr('class', 'frame')
-                                 .append('input');
 
             // Lines displayed when draggind new states
             this.drag_line = this.svg.append('svg:path')
@@ -96,7 +103,6 @@ function(WidgetManager, d3, $,  _){
             // Active keyboard action and disable notebook shortcuts when we are
             // over the widget
                 .on("mouseover", function(d,i) {
-                    console.log('mouseover of svg')
                     // Disable some notebook key shortcuts
                     var cmd = IPython.keyboard_manager.command_shortcuts;
                     cmd.remove_shortcut('i');
@@ -113,7 +119,6 @@ function(WidgetManager, d3, $,  _){
             // if we leave the widget area, then disable keyboard action and
             // reactive notebook shortcuts
                 .on("mouseout", function(d,i) {
-                    console.log('mouseout of svg')
                     // reset selections if we leave widget
                     // that.selected_transition = null;
                     // that.selected_state = null;
@@ -380,7 +385,7 @@ function(WidgetManager, d3, $,  _){
                 this.svg.classed('m', true);
             }
 
-            if(!this.selected_state && !this.selected_transition) return;
+            if(!this.selected_state && !this.selected_transition && !this.selected_frame) return;
             switch(d3.event.keyCode) {
                 case 8:
                 case 66: // key delete
@@ -677,7 +682,6 @@ function(WidgetManager, d3, $,  _){
         update: function(){
 
             var colors = d3.scale.category10();
-
             // Update force
             this.force.nodes(this.states)
                 .links(this.transitions)
@@ -693,19 +697,46 @@ function(WidgetManager, d3, $,  _){
             this.model.set('states', this.states);
             this.touch();
 
-            // Frame for labels
-            this.frame.attr("onSubmit", function(){return false;})
-                .on("mouseover", function() {
-                    this.focus();
-                    that.overtext = true;
+            // Update the frame for label
+            this.frame.selectAll('input').attr('value', function(){
                     if(that.selected_transition)
                         this.value = that.selected_transition.label;
+                    else
+                        this.value = '';
+            })
+            this.frame.attr('value', function(){
+                    if(that.selected_transition)
+                        this.value = that.selected_transition.label;
+                    else
+                        this.value = '';
+            })
+                .on("mousedown", function() {
+                    this.focus();
+                    that.overtext = true;
+                    that.selected_frame = true;
+                    that.update();
+                    if(that.selected_transition)
+                        this.value = that.selected_transition.label;
+                    else
+                        this.value = '';
                 })
-                .on("mouseout", function() {
-                    this.blur()
-                    that.overtext = false;
-                    if(that.selected_transition) {
+                .on("keypress", function() {
+
+                    // IE fix
+                    if (!d3.event)
+                        d3.event = window.event;
+
+                    var e = d3.event;
+                    if (e.keyCode == 13)
+                    {
+                        if (typeof(e.cancelBubble) !== 'undefined') // IE
+                            e.cancelBubble = true;
+                        if (e.stopPropagation)
+                            e.stopPropagation();
+                        e.preventDefault();
+
                         var txt = that.frame.node().value;
+
                         that.selected_transition.label = txt;
 
                         // trick to update automatically the label for vcsn
@@ -721,10 +752,11 @@ function(WidgetManager, d3, $,  _){
 
                         that.model.set('transitions', old_transitions);
                         that.touch();
+                        that.selected_transition = null;
+                        this.value = ''
+                        that.update();
                     }
-                    this.value = '';
-                    that.update();
-                });
+                })
 
             // Define elements groups and bound them data
             this.path = this.path.data(this.transitions, function(d) {
@@ -761,6 +793,7 @@ function(WidgetManager, d3, $,  _){
                           that.selected_transition = null;
                       else that.selected_transition = that.mousedown_transition;
                       that.selected_state = null;
+                      that.selected_frame = false;
                       that.update();
                 })
 
@@ -836,6 +869,7 @@ function(WidgetManager, d3, $,  _){
                                   that.mousedown_state.x + ',' +
                                   that.mousedown_state.y);
                     }
+                    that.selected_frame = false;
                     that.update();
                 })
 
@@ -885,6 +919,7 @@ function(WidgetManager, d3, $,  _){
                                   that.mousedown_state.x + ',' +
                                   that.mousedown_state.y);
                     }
+                    that.selected_frame = false;
                     that.update();
                 })
             this.force.start();
