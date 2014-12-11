@@ -1,11 +1,10 @@
-#ifndef VCSN_CORE_RAT_IDENTITIES_HH
-# define VCSN_CORE_RAT_IDENTITIES_HH
+#pragma once
 
-# include <iostream>
-# include <string>
+#include <iostream>
+#include <string>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/export.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -44,5 +43,3 @@ namespace vcsn LIBVCSN_API
     };
   }
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_IDENTITIES_HH

@@ -163,9 +163,9 @@ namespace vcsn
   }
 
 
-  /*-------------------.
-  | standard(expression).  |
-  `-------------------*/
+  /*------------------------.
+  | standard(expression).   |
+  `------------------------*/
 
   namespace rat
   {
@@ -396,7 +396,8 @@ namespace vcsn
         // FIXME: So far, there is a single implementation of expressions,
         // but we should actually be parameterized by its type too.
         using expressionset_t = RatExpSet;
-        using automaton_t = vcsn::mutable_automaton<context_t_of<expressionset_t>>;
+        using automaton_t
+          = vcsn::mutable_automaton<context_t_of<expressionset_t>>;
         const auto& e = exp->as<expressionset_t>();
         return make_automaton(::vcsn::standard<automaton_t>(e.expressionset(),
                                                             e.expression()));
