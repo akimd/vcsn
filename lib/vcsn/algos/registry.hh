@@ -32,7 +32,7 @@ namespace vcsn
       bool debug = getenv("VCSN_DYN");
 
       /// Register function \a fn for signature \a sig.
-      bool set(const signature& sig, Fun fn)
+      bool set(const signature& sig, Fun* fn)
       {
         if (debug)
           std::cerr << "Register(" << name_ << ").set(" << sig << ")\n";
@@ -65,34 +65,32 @@ namespace vcsn
       }
 
       /// Get function for signature \a sig.
-      const Fun& get(const signature& sig)
+      const Fun* get(const signature& sig)
       {
         // Maybe already loaded.
         if (auto fun = get0(sig))
-          return *fun;
+          return fun;
         else
-          {
-            // No, try to compile it.
-            try
-              {
-                vcsn::dyn::compile(name_, sig);
-                auto fun = get0(sig);
-                require(fun,
-                        name_,
-                        ": compilation succeeded, "
-                        "but function is unavailable\n",
-                        signatures(sig));
-                return *fun;
-              }
-            catch (const jit_error& e)
-              {
-                raise(e.assertions.empty()
-                      ? name_ + ": no such implementation\n"
-                      : e.assertions,
-                      signatures(sig),
-                      e.what());
-              }
-          }
+          // No, try to compile it.
+          try
+            {
+              vcsn::dyn::compile(name_, sig);
+              auto fun = get0(sig);
+              require(fun,
+                      name_,
+                      ": compilation succeeded, "
+                      "but function is unavailable\n",
+                      signatures(sig));
+              return fun;
+            }
+          catch (const jit_error& e)
+            {
+              raise(e.assertions.empty()
+                    ? name_ + ": no such implementation\n"
+                    : e.assertions,
+                    signatures(sig),
+                    e.what());
+            }
       }
 
       /// Call function for signature \a sig.
@@ -123,7 +121,7 @@ namespace vcsn
         signature sig;
         for (const auto& t: ts)
           sig.sig.emplace_back(vname(t));
-        return (get(sig))(ts);
+        return call(sig, ts);
       }
 
     private:
