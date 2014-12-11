@@ -4,6 +4,7 @@
 # include <memory>
 # include <string>
 
+# include <vcsn/ctx/fwd.hh> // vcsn::context
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
 # include <vcsn/misc/symbol.hh>
@@ -67,12 +68,13 @@ namespace vcsn
 
     using context = std::shared_ptr<const detail::context_base>;
 
-    template <typename Context>
+    template <typename LabelSet, typename WeightSet>
     inline
     context
-    make_context(const Context& ctx)
+    make_context(const vcsn::context<LabelSet, WeightSet>& ctx)
     {
-      return std::make_shared<detail::context_wrapper<Context>>(ctx);
+      using context_t = vcsn::context<LabelSet, WeightSet>;
+      return std::make_shared<detail::context_wrapper<context_t>>(ctx);
     }
 
   }
