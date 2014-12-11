@@ -94,7 +94,7 @@ read_label(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto is = input(opts);
-  auto res = vcsn::dyn::read_label(*is, ctx);
+  auto res = vcsn::dyn::read_label(ctx, *is);
   check_eof(*is);
   return res;
 }
@@ -105,7 +105,7 @@ read_expression(const options& opts)
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto rs = vcsn::dyn::make_expressionset(ctx, vcsn::rat::identities::trivial);
   auto is = input(opts);
-  auto res = vcsn::dyn::read_expression(*is, rs, opts.input_format);
+  auto res = vcsn::dyn::read_expression(rs, *is, opts.input_format);
   check_eof(*is);
   return res;
 }
@@ -115,7 +115,7 @@ read_polynomial(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto is = input(opts);
-  auto res = vcsn::dyn::read_polynomial(*is, ctx);
+  auto res = vcsn::dyn::read_polynomial(ctx, *is);
   check_eof(*is);
   return res;
 }
@@ -125,7 +125,7 @@ read_weight(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto is = input(opts);
-  auto res = vcsn::dyn::read_weight(*is, ctx);
+  auto res = vcsn::dyn::read_weight(ctx, *is);
   check_eof(*is);
   return res;
 }
@@ -133,9 +133,10 @@ read_weight(const options& opts)
 vcsn::dyn::label
 read_word(const options& opts)
 {
-  auto ctx = vcsn::dyn::make_word_context(vcsn::dyn::make_context(opts.context));
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  auto wctx = vcsn::dyn::make_word_context(ctx);
   auto is = input(opts);
-  auto res = vcsn::dyn::read_label(*is, ctx);
+  auto res = vcsn::dyn::read_label(wctx, *is);
   check_eof(*is);
   return res;
 }

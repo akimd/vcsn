@@ -49,21 +49,21 @@ namespace vcsn
 
     REGISTER_DEFINE(read_label);
     label
-    read_label(std::istream& is, const dyn::context& ctx)
+    read_label(const dyn::context& ctx, std::istream& is)
     {
-      return detail::read_label_registry().call(is, ctx);
+      return detail::read_label_registry().call(ctx, is);
     }
 
-    /*--------------.
-    | read_expression.  |
-    `--------------*/
+    /*-------------------.
+    | read_expression.   |
+    `-------------------*/
 
     expression
-    read_expression(std::istream& is, const expressionset& rs,
-                const std::string& t)
+    read_expression(const expressionset& rs, std::istream& is,
+                    const std::string& t)
     {
       if (t == "text" || t == "default" || t == "")
-        return rat::read(is, rs);
+        return rat::read(rs, is);
       else
         raise("invalid input format for expression: ", t);
     }
@@ -75,7 +75,7 @@ namespace vcsn
 
     REGISTER_DEFINE(read_polynomial);
     polynomial
-    read_polynomial(std::istream& is, const dyn::context& ctx)
+    read_polynomial(const dyn::context& ctx, std::istream& is)
     {
       return detail::read_polynomial_registry().call(ctx, is);
     }
@@ -86,7 +86,7 @@ namespace vcsn
 
     REGISTER_DEFINE(read_weight);
     weight
-    read_weight(std::istream& is, const dyn::context& ctx)
+    read_weight(const dyn::context& ctx, std::istream& is)
     {
       return detail::read_weight_registry().call(ctx, is);
     }

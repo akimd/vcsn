@@ -474,27 +474,27 @@ namespace vcsn
     automaton read_automaton(std::istream& is,
                              const std::string& format = "default");
 
-    /// Read a label from a stream.
-    /// \param is    the input stream.
-    /// \param ctx   the context.
-    label read_label(std::istream& is, const context& ctx);
-
     /// Read an expression from a stream.
+    /// \param rs      the expressionset.
     /// \param is      the input stream.
-    /// \param rs      the expression's expressionset.
     /// \param format  the expression's format.
-    expression read_expression(std::istream& is, const expressionset& rs,
+    expression read_expression(const expressionset& rs, std::istream& is,
                                const std::string& format = "default");
 
+    /// Read a label from a stream.
+    /// \param ctx   the context.
+    /// \param is    the input stream.
+    label read_label(const context& ctx, std::istream& is);
+
     /// Read a polynomial from a stream
-    /// \param is    the stream to parse.
     /// \param ctx   its context, from which is built its polynomialset.
-    polynomial read_polynomial(std::istream& is, const context& ctx);
+    /// \param is    the stream to parse.
+    polynomial read_polynomial(const context& ctx, std::istream& is);
 
     /// Read a weight from a stream.
-    /// \param is    the input stream.
     /// \param ctx   the context.
-    weight read_weight(std::istream& is, const context& ctx);
+    /// \param is    the input stream.
+    weight read_weight(const context& ctx, std::istream& is);
 
     /// Reduce \a aut.
     automaton reduce(const automaton& aut);

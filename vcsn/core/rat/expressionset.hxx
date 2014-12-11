@@ -9,7 +9,7 @@
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/hash.hh>
 #include <vcsn/core/rat/transpose.hh>
-#include <vcsn/dyn/algos.hh> // dyn::read_expression_string
+#include <vcsn/dyn/algos.hh> // dyn::read_expression
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/expressionset.hh> // dyn::make_expressionset
 #include <vcsn/labelset/oneset.hh>
@@ -794,8 +794,9 @@ namespace vcsn
   template <typename Ctx2>
   inline
   auto
-  expressionset_impl<Context>::conv(const expressionset_impl<Ctx2>& rs,
-                                typename expressionset_impl<Ctx2>::value_t r) const
+  expressionset_impl<Context>::conv
+  (const expressionset_impl<Ctx2>& rs,
+   typename expressionset_impl<Ctx2>::value_t r) const
     -> value_t
   {
     return copy(rs, *this, r);
@@ -804,7 +805,7 @@ namespace vcsn
   DEFINE::conv(std::istream& is) const
     -> value_t
   {
-    auto dynres = dyn::read_expression(is, dyn::make_expressionset(*this));
+    auto dynres = dyn::read_expression(dyn::make_expressionset(*this), is);
     const auto& res = dynres->template as<expressionset_impl>();
     return res.expression();
   }

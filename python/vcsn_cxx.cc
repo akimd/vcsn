@@ -544,7 +544,7 @@ struct label
   label(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_label(is, ctx.val_);
+    val_ = vcsn::dyn::read_label(ctx.val_, is);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -572,7 +572,7 @@ struct polynomial
   polynomial(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_polynomial(is, ctx.val_);
+    val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -623,11 +623,11 @@ struct expression
   {}
 
   expression(const context& ctx, const std::string& r,
-         vcsn::rat::identities i)
+             vcsn::rat::identities i)
   {
     std::istringstream is(r);
     auto rs = vcsn::dyn::make_expressionset(ctx.val_, i);
-    val_ = vcsn::dyn::read_expression(is, rs);
+    val_ = vcsn::dyn::read_expression(rs, is);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -649,7 +649,8 @@ struct expression
     return vcsn::dyn::copy(val_, rs);
   }
 
-  /// Same expression/series, but in context \a ctx, with expression identities.
+  /// Same expression/series, but in context \a ctx, with expression
+  /// identities.
   expression as_expression(const ::context& ctx = {})
   {
     return as_(ctx, vcsn::rat::identities::trivial);
@@ -817,7 +818,7 @@ struct weight
   weight(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_weight(is, ctx.val_);
+    val_ = vcsn::dyn::read_weight(ctx.val_, is);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -950,9 +951,9 @@ label context::word(const std::string& s) const
 }
 
 
-/*------------------------.
-| expression implementation.  |
-`------------------------*/
+/*-----------------------------.
+| expression implementation.   |
+`-----------------------------*/
 
 weight expression::constant_term() const
 {

@@ -18,7 +18,7 @@ namespace vcsn
   template <typename Context>
   inline
   auto
-  read_label(std::istream& is, const Context& ctx)
+  read_label(const Context& ctx, std::istream& is)
     -> label_t_of<Context>
   {
     return ctx.labelset()->conv(is);
@@ -29,18 +29,18 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Istream, typename Context>
+      template <typename Context, typename Istream>
       auto
-      read_label(std::istream& is, const context& ctx)
+      read_label(const context& ctx, std::istream& is)
         -> label
       {
         const auto& c = ctx->as<Context>();
-        auto res = ::vcsn::read_label(is, c);
+        auto res = ::vcsn::read_label(c, is);
         return make_label(*c.labelset(), res);
       }
 
       REGISTER_DECLARE(read_label,
-                       (std::istream& is, const context& ctx) -> label);
+                       (const context& ctx, std::istream& is) -> label);
     }
   }
 

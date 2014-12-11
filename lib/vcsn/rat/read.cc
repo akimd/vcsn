@@ -9,8 +9,9 @@ namespace vcsn
 {
   namespace rat
   {
-    dyn::expression read(std::istream& is, const dyn::expressionset& rs,
-                     const location& l)
+    dyn::expression
+    read(const dyn::expressionset& rs, std::istream& is,
+         const location& l)
     {
       vcsn::rat::driver d(rs);
       auto res = d.parse(is, l);
