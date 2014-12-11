@@ -96,6 +96,8 @@ namespace vcsn
       }
 
       /// Call function for signature \a sig.
+      ///
+      /// make_context needs this signature.
       template <typename... Args>
       auto
       call(const signature& sig, Args&&... args)

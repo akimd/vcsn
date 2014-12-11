@@ -195,7 +195,8 @@ namespace vcsn
               ([&] (const typename transition_map_t<Auts>::transition&... ts)
                {
                  aut_->new_transition(src, state(ts.dst...),
-                                      t.first, aut_->weightset()->mul(ts.wgt...));
+                                      t.first,
+                                      aut_->weightset()->mul(ts.wgt...));
                },
                t.second);
         add_one_transitions_(src, psrc, indices);
@@ -553,9 +554,9 @@ namespace vcsn
   }
 
 
-  /*--------------------------.
-  | shuffle(expression, expression).  |
-  `--------------------------*/
+  /*-----------------------------------.
+  | shuffle(expression, expression).   |
+  `-----------------------------------*/
 
   /// Shuffle product of expressions.
   template <typename ValueSet>

@@ -45,9 +45,9 @@ namespace vcsn
     }
 
 
-    /*-----------------.
-    | make_expressionset.  |
-    `-----------------*/
+    /*----------------------.
+    | make_expressionset.   |
+    `----------------------*/
 
     REGISTER_DEFINE(make_expressionset);
     expressionset
