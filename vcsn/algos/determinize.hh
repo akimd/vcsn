@@ -511,13 +511,11 @@ namespace vcsn
     {
       template <typename Aut, typename Type>
       using if_boolean_t
-        = typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value,
-                                  Type>::type;
+        = vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
       template <typename Aut, typename Type>
       using if_not_boolean_t
-        = typename std::enable_if<!std::is_same<weightset_t_of<Aut>, b>::value,
-                                  Type>::type;
+        = vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
 
       /// Boolean Bridge.

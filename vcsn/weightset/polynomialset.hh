@@ -951,8 +951,7 @@ namespace vcsn
 
     /// Print a non-null value for neither LAL nor LAN.
     template <typename context>
-    typename std::enable_if<!(context::is_lal || context::is_lan),
-                            std::ostream&>::type
+    vcsn::enable_if_t<!(context::is_lal || context::is_lan), std::ostream&>
     print_(const value_t& v, std::ostream& out,
            const std::string& format = "text",
            const std::string& sep = " + ") const
@@ -962,8 +961,7 @@ namespace vcsn
 
     /// Print a non-null value for LAL or LAN.
     template <typename Ctx>
-    typename std::enable_if<Ctx::is_lal || Ctx::is_lan,
-                            std::ostream&>::type
+    vcsn::enable_if_t<Ctx::is_lal || Ctx::is_lan, std::ostream&>
     print_(const value_t& v, std::ostream& out,
            const std::string& format = "text",
            const std::string& sep = " + ") const

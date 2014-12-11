@@ -19,6 +19,7 @@
 # include <vcsn/core/rat/size.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/expression.hh>
+# include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -29,16 +30,14 @@ namespace vcsn
     | is-ambiguous.  |
     `---------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
     is_ambiguous(const Aut& a)
     {
       return vcsn::is_ambiguous(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     is_ambiguous(const Aut&)
     {
       return "N/A";
@@ -48,16 +47,14 @@ namespace vcsn
     | is-complete.  |
     `--------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
     is_complete(const Aut& a)
     {
       return vcsn::is_complete(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     is_complete(const Aut&)
     {
       return "N/A";
@@ -67,16 +64,14 @@ namespace vcsn
     | is_cycle_ambiguous.  |
     `---------------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
     is_cycle_ambiguous(const Aut& a)
     {
       return vcsn::is_cycle_ambiguous(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     is_cycle_ambiguous(const Aut&)
     {
       return "N/A";
@@ -86,16 +81,14 @@ namespace vcsn
     | is_codeterministic.  |
     `---------------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
     is_codeterministic(const Aut& a)
     {
       return vcsn::is_codeterministic(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     is_codeterministic(const Aut&)
     {
       return "N/A";
@@ -105,16 +98,14 @@ namespace vcsn
     | is_deterministic.  |
     `-------------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
     is_deterministic(const Aut& a)
     {
       return vcsn::is_deterministic(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     is_deterministic(const Aut&)
     {
       return "N/A";
@@ -124,35 +115,31 @@ namespace vcsn
     | is_synchronizing.  |
     `-------------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
     is_synchronizing(const Aut& a)
     {
       return vcsn::is_synchronizing(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     is_synchronizing(const Aut&)
     {
       return "N/A";
     }
 
-    /*---------------------------.
-    | num_codeterministic_states.  |
-    `---------------------------*/
+    /*------------------------------.
+    | num_codeterministic_states.   |
+    `------------------------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            size_t>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), size_t>
     num_codeterministic_states(const Aut& a)
     {
       return vcsn::num_codeterministic_states(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     num_codeterministic_states(const Aut&)
     {
       return "N/A";
@@ -162,16 +149,14 @@ namespace vcsn
     | num_deterministic_states.  |
     `---------------------------*/
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::is_free(),
-                            size_t>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::is_free(), size_t>
     num_deterministic_states(const Aut& a)
     {
       return vcsn::num_deterministic_states(a);
     }
 
     template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
-                            std::string>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
     num_deterministic_states(const Aut&)
     {
       return "N/A";
@@ -182,16 +167,14 @@ namespace vcsn
     `----------------------*/
     template <typename Aut>
     ATTRIBUTE_CONST
-    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                            size_t>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), size_t>
     num_eps_transitions_(const Aut&)
     {
       return 0;
     }
 
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                            size_t>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), size_t>
     num_eps_transitions_(const Aut& aut)
     {
       size_t res = 0;

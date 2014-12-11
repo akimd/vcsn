@@ -47,7 +47,7 @@ namespace vcsn
     /// Case where T features a size() member function.
     template <typename T2>
     auto lt_(const T2& x, const T2& y) const
-      -> typename std::enable_if<has_size_member_function<T2>::value, bool>::type
+      -> vcsn::enable_if_t<has_size_member_function<T2>::value, bool>
     {
       return
         std::forward_as_tuple(x.size(), x) < std::forward_as_tuple(y.size(), y);
@@ -56,7 +56,7 @@ namespace vcsn
     /// Case where T does not feature a size() member function.
     template <typename T2>
     auto lt_(const T2& x, const T2& y) const
-      -> typename std::enable_if<!has_size_member_function<T2>::value, bool>::type
+      -> vcsn::enable_if_t<!has_size_member_function<T2>::value, bool>
     {
       return x < y;
     }

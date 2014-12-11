@@ -449,7 +449,7 @@ namespace vcsn
       /// TOPS: valid iff proper succeeds.
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::TOPS>::type
+      vcsn::enable_if_t<Status == star_status_t::TOPS>
       proper_here_(automaton_t& aut, bool = true)
       {
         if (!in_situ_remover(aut))
@@ -460,7 +460,7 @@ namespace vcsn
       /// the automaton.
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::ABSVAL>::type
+      vcsn::enable_if_t<Status == star_status_t::ABSVAL>
       proper_here_(automaton_t& aut, bool prune = true)
       {
         require(is_valid(aut), "invalid automaton");
@@ -470,7 +470,7 @@ namespace vcsn
       /// STARRABLE: always valid.
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::STARRABLE>::type
+      vcsn::enable_if_t<Status == star_status_t::STARRABLE>
       proper_here_(automaton_t& aut, bool prune = true)
       {
         in_situ_remover(aut, prune);
@@ -482,7 +482,7 @@ namespace vcsn
       /// semirings.
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::NON_STARRABLE>::type
+      vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE>
       proper_here_(automaton_t& aut, bool prune = true)
       {
         require(is_valid(aut), "invalid automaton");

@@ -14,8 +14,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                            bool>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut& aut)
     {
       for (auto t: aut->transitions())
@@ -26,8 +25,7 @@ namespace vcsn
 
     template <typename Aut>
     constexpr
-    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                            bool>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut&)
     {
       return true;

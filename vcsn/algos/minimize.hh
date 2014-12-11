@@ -25,9 +25,9 @@ namespace vcsn
   // FIXME: there must exist some nicer way to do this.
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
-                          && labelset_t_of<Aut>::is_free(),
-                          partition_automaton<Aut>>::type
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+                    && labelset_t_of<Aut>::is_free(),
+                    partition_automaton<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "moore")
@@ -43,9 +43,9 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
-                          && ! labelset_t_of<Aut>::is_free(),
-                          partition_automaton<Aut>>::type
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+                    && ! labelset_t_of<Aut>::is_free(),
+                    partition_automaton<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "auto" || algo == "signature")
@@ -59,8 +59,8 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<!std::is_same<weightset_t_of<Aut>, b>::value,
-                          partition_automaton<Aut>>::type
+  vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+                    partition_automaton<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "auto" || algo == "weighted")
@@ -90,8 +90,7 @@ namespace vcsn
 
       template <typename Aut, typename String>
       inline
-      typename std::enable_if<::vcsn::detail::can_use_brzozowski<Aut>(),
-                              automaton>::type
+      vcsn::enable_if_t<::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
       minimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -103,8 +102,7 @@ namespace vcsn
 
       template <typename Aut, typename String>
       inline
-      typename std::enable_if<!::vcsn::detail::can_use_brzozowski<Aut>(),
-                              automaton>::type
+      vcsn::enable_if_t<!::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
       minimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -130,8 +128,7 @@ namespace vcsn
 
       template <typename Aut, typename String>
       inline
-      typename std::enable_if<::vcsn::detail::can_use_brzozowski<Aut>(),
-                              automaton>::type
+      vcsn::enable_if_t<::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
       cominimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -143,8 +140,7 @@ namespace vcsn
 
       template <typename Aut, typename String>
       inline
-      typename std::enable_if<!::vcsn::detail::can_use_brzozowski<Aut>(),
-                              automaton>::type
+      vcsn::enable_if_t<!::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
       cominimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();

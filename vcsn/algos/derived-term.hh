@@ -170,8 +170,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename String>
       inline
-      typename std::enable_if<RatExpSet::context_t::labelset_t::is_free(),
-                              automaton>::type
+      vcsn::enable_if_t<RatExpSet::context_t::labelset_t::is_free(), automaton>
       derived_term(const expression& exp, const std::string& algo)
       {
         const auto& e = exp->as<RatExpSet>();
@@ -194,8 +193,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename String>
       inline
-      typename std::enable_if<!RatExpSet::context_t::labelset_t::is_free(),
-                              automaton>::type
+      vcsn::enable_if_t<!RatExpSet::context_t::labelset_t::is_free(), automaton>
       derived_term(const expression& exp, const std::string& algo)
       {
         const auto& e = exp->as<RatExpSet>();

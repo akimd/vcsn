@@ -327,7 +327,7 @@ namespace vcsn
 
       /// Cannot complement on a non-free labelset.
       template <bool IsFree>
-      typename std::enable_if<!IsFree, void>::type
+      vcsn::enable_if_t<!IsFree, void>
       visit_complement(const complement_t&)
       {
         raise(me(), ": cannot handle complement without generators");
@@ -335,7 +335,7 @@ namespace vcsn
 
       /// Complement on a free labelset.
       template <bool IsFree>
-      typename std::enable_if<IsFree, void>::type
+      vcsn::enable_if_t<IsFree, void>
       visit_complement(const complement_t& e)
       {
         expansion_t res = to_expansion(e.sub());

@@ -80,16 +80,14 @@ namespace vcsn
       }
 
       template <typename A>
-      typename std::enable_if<labelset_t_of<A>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<labelset_t_of<A>::has_one(), bool>
       is_one(const A& aut, transition_t tr)
       {
         return aut->labelset()->is_one(aut->label_of(tr));
       }
 
       template <typename A>
-      typename std::enable_if<!labelset_t_of<A>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<!labelset_t_of<A>::has_one(), bool>
       is_one(const A&, transition_t)
       {
         raise("lal should not reach this point!");
@@ -99,7 +97,7 @@ namespace vcsn
     };
 
     template<typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::has_one(), Aut>::type
+    vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), Aut>
     insplit(Aut& aut)
     {
       insplitter<Aut> insplit{aut};
@@ -107,7 +105,7 @@ namespace vcsn
     }
 
     template<typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::has_one(), Aut>::type
+    vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), Aut>
     insplit(Aut& aut)
     {
       return aut;

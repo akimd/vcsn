@@ -80,8 +80,7 @@ namespace vcsn
     private:
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::TOPS,
-                              bool>::type
+      vcsn::enable_if_t<Status == star_status_t::TOPS, bool>
       is_valid_(const automaton_t& aut)
       {
         return (is_proper(aut)
@@ -91,8 +90,7 @@ namespace vcsn
 
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::ABSVAL,
-                              bool>::type
+      vcsn::enable_if_t<Status == star_status_t::ABSVAL, bool>
       is_valid_(const automaton_t& aut)
       {
         return (is_proper(aut)
@@ -102,8 +100,7 @@ namespace vcsn
 
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::STARRABLE,
-                              bool>::type
+      vcsn::enable_if_t<Status == star_status_t::STARRABLE, bool>
       is_valid_(const automaton_t&)
       {
         return true;
@@ -111,8 +108,7 @@ namespace vcsn
 
       template <star_status_t Status>
       static
-      typename std::enable_if<Status == star_status_t::NON_STARRABLE,
-                              bool>::type
+      vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE, bool>
       is_valid_(const automaton_t& aut)
       {
         return is_proper(aut) || is_eps_acyclic(aut);

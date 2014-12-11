@@ -101,7 +101,8 @@ namespace vcsn
                                      std::tuple_size<full_label_t>::value - Tape - 1>::type>;
 
       // All tapes except the exposed one.
-      using res_labelset_t = typename hidden_label_type<Aut, hidden_indices_t>::type;
+      using res_labelset_t
+        = typename hidden_label_type<Aut, hidden_indices_t>::type;
       using res_label_t = typename res_labelset_t::value_t;
 
       using super_t = automaton_decorator<automaton_t, context_t>;
@@ -183,7 +184,7 @@ namespace vcsn
       }
 
       template <typename L, std::size_t... I>
-      typename std::enable_if<L::has_one(), res_label_t>::type
+      vcsn::enable_if_t<L::has_one(), res_label_t>
       hidden_one_(index_sequence<I...>) const
       {
         full_label_t l = aut_->labelset()->one();
@@ -191,7 +192,7 @@ namespace vcsn
       }
 
       template <typename L, std::size_t... I>
-      typename std::enable_if<!L::has_one(), res_label_t>::type
+      vcsn::enable_if_t<!L::has_one(), res_label_t>
       hidden_one_(index_sequence<I...>) const
       {
         raise("Should not get here");

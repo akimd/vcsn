@@ -219,14 +219,14 @@ namespace vcsn
 
       /// In the case where the labelset doesn't have one, do nothing
       template <std::size_t I, typename L>
-      typename std::enable_if<!L::has_one(), void>::type
+      vcsn::enable_if_t<!L::has_one(), void>
       maybe_add_one_transitions_(const L&, const state_t, const state_name_t&)
       {}
 
       /// If the labelset has one, add the relevant
       /// spontaneous-transitions leaving the state
       template <std::size_t I, typename L>
-      typename std::enable_if<L::has_one(), void>::type
+      vcsn::enable_if_t<L::has_one(), void>
       maybe_add_one_transitions_(const L& ls, const state_t src,
                                  const state_name_t& psrc)
       {
@@ -275,8 +275,7 @@ namespace vcsn
       /// Check if the transition is spontaneous (in the case of a
       /// labelset with one).
       template <typename Aut_>
-      typename std::enable_if<labelset_t_of<Aut_>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
       is_one(const Aut_& aut, transition_t_of<Aut_> tr) const
       {
         return aut->labelset()->is_one(aut->label_of(tr));
@@ -285,8 +284,7 @@ namespace vcsn
       /// Same as above, but for labelsets without one, so it's always
       /// false.
       template <typename Aut_>
-      constexpr typename std::enable_if<!labelset_t_of<Aut_>::has_one(),
-                              bool>::type
+      constexpr vcsn::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
       is_one(const Aut_&, transition_t_of<Aut_>) const
       {
         return false;
@@ -296,8 +294,7 @@ namespace vcsn
       /// transitions.  As it is in the case of the one-free labelset,
       /// it's always false.
       template <typename Aut_>
-      constexpr typename std::enable_if<!labelset_t_of<Aut_>::has_one(),
-                  bool>::type
+      constexpr vcsn::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
       has_only_ones_in(const Aut_&,
                        state_t_of<Aut_>) const
       {
@@ -306,8 +303,7 @@ namespace vcsn
 
       /// Whether the state has only incoming spontaneous transitions.
       template <typename Aut_>
-      typename std::enable_if<labelset_t_of<Aut_>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
       has_only_ones_in(const Aut_& rhs, state_t_of<Aut_> rst) const
       {
         auto rin = rhs->all_in(rst);
@@ -444,16 +440,14 @@ namespace vcsn
     {
 
       template <std::size_t I, typename Aut>
-      typename std::enable_if<labelset_t_of<Aut>::has_one()
-                              && I != 0, Aut>::type
+      vcsn::enable_if_t<labelset_t_of<Aut>::has_one() && I != 0, Aut>
       do_insplit(Aut& aut)
       {
         return insplit(aut);
       }
 
       template <std::size_t I, typename Aut>
-      typename std::enable_if<!labelset_t_of<Aut>::has_one()
-                              || I == 0, Aut&>::type
+      vcsn::enable_if_t<!labelset_t_of<Aut>::has_one() || I == 0, Aut&>
       do_insplit(Aut& aut)
       {
         return aut;

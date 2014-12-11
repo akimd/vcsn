@@ -145,16 +145,16 @@ namespace vcsn
       }
 
       template<typename Aut>
-      typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                              typename Aut::element_type::res_label_t>::type
+      vcsn::enable_if_t<labelset_t_of<Aut>::has_one(),
+                        typename Aut::element_type::res_label_t>
       get_hidden_one(const Aut& aut)
       {
         return aut->hidden_one();
       }
 
       template<typename Aut>
-      typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                              typename Aut::element_type::res_label_t>::type
+      vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(),
+                        typename Aut::element_type::res_label_t>
       get_hidden_one(const Aut&)
       {
         raise("should not get here");
@@ -236,8 +236,7 @@ namespace vcsn
       }
 
       template <typename A>
-      typename std::enable_if<labelset_t_of<A>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<labelset_t_of<A>::has_one(), bool>
       is_one(const A& aut, transition_t_of<A> tr) const
       {
         return aut->labelset()->is_one(aut->label_of(tr));
@@ -245,8 +244,7 @@ namespace vcsn
 
       template <typename A>
       constexpr
-      typename std::enable_if<!labelset_t_of<A>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<!labelset_t_of<A>::has_one(), bool>
       is_one(const A&, transition_t_of<A>)
       const
       {
@@ -255,16 +253,14 @@ namespace vcsn
 
       template <typename Aut>
       constexpr
-      typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
       has_only_ones_in(const Aut&, state_t_of<Aut>) const
       {
         return false;
       }
 
       template <typename Aut>
-      typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                              bool>::type
+      vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
       has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
         auto rin = rhs->all_in(rst);

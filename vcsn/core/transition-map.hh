@@ -99,7 +99,7 @@ namespace vcsn
       void
       insert_(map_t& map,
               label_t_of<Aut> l, transition t,
-              typename std::enable_if<Deterministic_>::type* = nullptr)
+              vcsn::enable_if_t<Deterministic_>* = nullptr)
       {
         map.emplace(l, t);
       }
@@ -109,7 +109,7 @@ namespace vcsn
       void
       insert_(map_t& map,
               label_t_of<Aut> l, transition t,
-              typename std::enable_if<!Deterministic_>::type* = nullptr)
+              vcsn::enable_if_t<!Deterministic_>* = nullptr)
       {
         map[l].emplace_back(t);
       }

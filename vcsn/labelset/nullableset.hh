@@ -58,7 +58,7 @@ namespace vcsn
 
       template <typename Ls>
       ATTRIBUTE_PURE
-      static typename std::enable_if<Ls::has_one(), bool>::type
+      static vcsn::enable_if_t<Ls::has_one(), bool>
       is_one_(value_t l)
       {
         return std::get<1>(l) || Ls::is_one(get_value(l));
@@ -66,7 +66,7 @@ namespace vcsn
 
       template <typename Ls>
       ATTRIBUTE_PURE
-      static typename std::enable_if<!Ls::has_one(), bool>::type
+      static vcsn::enable_if_t<!Ls::has_one(), bool>
       is_one_(value_t l)
       {
         return std::get<1>(l);

@@ -24,11 +24,10 @@ namespace vcsn
   template <typename Aut1, typename Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> typename std::enable_if<(labelset_t_of<Aut1>::is_free()
+    -> vcsn::enable_if_t<(labelset_t_of<Aut1>::is_free()
                                 && std::is_same<weightset_t_of<Aut1>, b>::value
                                 && labelset_t_of<Aut2>::is_free()
-                                && std::is_same<weightset_t_of<Aut2>, b>::value),
-                               bool>::type
+                                && std::is_same<weightset_t_of<Aut2>, b>::value), bool>
   {
     return (is_useless(difference(a1, a2))
             && is_useless(difference(a2, a1)));
