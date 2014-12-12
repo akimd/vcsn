@@ -3,22 +3,24 @@
 #include <vcsn/config.hh>
 
 #include <boost/flyweight.hpp>
-#if VCSN_HAVE_VISIBILITY_HIDDEN
-# include <boost/flyweight/intermodule_holder.hpp>
-#endif
+#include <boost/flyweight/intermodule_holder.hpp>
 #include <boost/flyweight/no_tracking.hpp>
 
 namespace vcsn
 {
   /// An internalized string.
+  ///
+  /// We do use different modules, since we dlopen plugins.  For a
+  /// while, we had the illusion that it work properly, but that's
+  /// only because we were using the default operator< which actually
+  /// compares the strings, not the address of the symbols.  So we did
+  /// have synonymous symbols, which the code gracefully accepted.
+  ///
+  /// Play it safe and make our symbols unique.
   using symbol
-    = boost::flyweight<std::string
-                       , boost::flyweights::no_tracking
-#if VCSN_HAVE_VISIBILITY_HIDDEN
-                       // See the comments in demo/prod-eval.cc.
-                       , boost::flyweights::intermodule_holder
-#endif
-                       >;
+    = boost::flyweight<std::string,
+                       boost::flyweights::no_tracking,
+                       boost::flyweights::intermodule_holder>;
 
   inline
   std::string operator+(symbol l, const char* r)

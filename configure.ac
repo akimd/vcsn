@@ -197,15 +197,6 @@ fi
 if test x"$VISIBILITY_CXXFLAGS" != x; then
   AC_DEFINE([HAVE_VISIBILITY_HIDDEN], 1,
             [Define to 1 if we use ELF hidden visibility by default.])
-  # We will use Boost.Flyweight's intermodule_holder which uses
-  # Boost.Interprocess, which uses shm_open, which is in -lrt on
-  # GNU/Linux.
-  save_LIBS=$LIBS
-  AC_SEARCH_LIBS([shm_open], [rt])
-  case $ac_cv_search_shm_open in
-    (-l*) AC_SUBST([RT_LIBS], [$ac_cv_search_shm_open]);;
-  esac
-  LIBS=$save_LIBS
 fi
 
 
@@ -214,6 +205,15 @@ VCSN_LDFLAGS_AS_NEEDED
 BOOST_REQUIRE([1.49])
 BOOST_FILESYSTEM
 BOOST_FLYWEIGHT
+# We will use Boost.Flyweight's intermodule_holder which uses
+# Boost.Interprocess, which uses shm_open, which is in -lrt on
+# GNU/Linux.
+save_LIBS=$LIBS
+AC_SEARCH_LIBS([shm_open], [rt])
+case $ac_cv_search_shm_open in
+  (-l*) AC_SUBST([RT_LIBS], [$ac_cv_search_shm_open]);;
+esac
+LIBS=$save_LIBS
 BOOST_PYTHON
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
