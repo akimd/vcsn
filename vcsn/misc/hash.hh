@@ -55,9 +55,12 @@ namespace vcsn
     using argument_type = value_t;
   };
 
-  // Following the naming convention of Boost.
+  /// Following the naming convention of Boost.
+  ///
+  /// Use SFINAE to avoid being too eager.
   template <class T>
-  inline std::size_t hash_value(const T& v)
+  inline auto hash_value(const T& v)
+    -> decltype(std::hash<T>{}(v))
   {
     std::hash<T> hasher;
     return hasher(v);
