@@ -3,8 +3,7 @@
 from __future__ import print_function
 import os, re, sys
 import argparse
-from colorama import init, Fore, Style
-init(autoreset = True)
+from colorama import Fore, Style
 
 parser = argparse.ArgumentParser(description='Bench some algorithms.')
 parser.add_argument('files', metavar='files', nargs='+',
@@ -126,7 +125,7 @@ def text(keys):
                     color = Fore.GREEN + Style.BRIGHT
                 elif args.threshold * avg + avg <= score:
                     color = Fore.RED + Style.BRIGHT
-            print(color + "{:5}".format(v), end = ' ')
+            print(color + "{:5}".format(v) + Style.RESET_ALL, end = ' ')
         print(k)
 
 # Read the score files.
