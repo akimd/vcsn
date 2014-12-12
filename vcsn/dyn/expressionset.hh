@@ -35,14 +35,14 @@ namespace detail
     template <typename RatExpSet>
     auto& as()
     {
-      return dynamic_cast<expressionset_wrapper<RatExpSet>&>(*this);
+      return dyn_cast<expressionset_wrapper<RatExpSet>&>(*this);
     }
 
     /// Extract wrapped typed expression.
     template <typename RatExpSet>
     auto& as() const
     {
-      return dynamic_cast<const expressionset_wrapper<RatExpSet>&>(*this);
+      return dyn_cast<const expressionset_wrapper<RatExpSet>&>(*this);
     }
 
     virtual rat::identities identities() const = 0;

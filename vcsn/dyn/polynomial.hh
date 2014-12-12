@@ -24,13 +24,13 @@ namespace vcsn
         template <typename PolynomialSet>
         auto& as()
         {
-          return dynamic_cast<polynomial_wrapper<PolynomialSet>&>(*this);
+          return dyn_cast<polynomial_wrapper<PolynomialSet>&>(*this);
         }
 
         template <typename PolynomialSet>
         auto& as() const
         {
-          return dynamic_cast<const polynomial_wrapper<PolynomialSet>&>(*this);
+          return dyn_cast<const polynomial_wrapper<PolynomialSet>&>(*this);
         }
 
         /// Whether is zero.

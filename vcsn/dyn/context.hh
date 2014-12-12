@@ -26,14 +26,14 @@ namespace vcsn
         template <typename Ctx>
         auto& as()
         {
-          return dynamic_cast<context_wrapper<Ctx>&>(*this).context();
+          return dyn_cast<context_wrapper<Ctx>&>(*this).context();
         }
 
         /// Downcast to the exact type.
         template <typename Ctx>
         auto& as() const
         {
-          return dynamic_cast<const context_wrapper<Ctx>&>(*this).context();
+          return dyn_cast<const context_wrapper<Ctx>&>(*this).context();
         }
       };
 

@@ -22,13 +22,13 @@ namespace vcsn
         template <typename ExpansionSet>
         auto& as()
         {
-          return dynamic_cast<expansion_wrapper<ExpansionSet>&>(*this);
+          return dyn_cast<expansion_wrapper<ExpansionSet>&>(*this);
         }
 
         template <typename ExpansionSet>
         auto& as() const
         {
-          return dynamic_cast<const expansion_wrapper<ExpansionSet>&>(*this);
+          return dyn_cast<const expansion_wrapper<ExpansionSet>&>(*this);
         }
       };
 

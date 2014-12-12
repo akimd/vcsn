@@ -24,14 +24,14 @@ namespace vcsn
         template <typename Aut>
         auto& as()
         {
-          return dynamic_cast<automaton_wrapper<Aut>&>(*this).automaton();
+          return dyn_cast<automaton_wrapper<Aut>&>(*this).automaton();
         }
 
         /// Extract wrapped typed automaton.
         template <typename Aut>
         auto& as() const
         {
-          return dynamic_cast<const automaton_wrapper<Aut>&>(*this).automaton();
+          return dyn_cast<const automaton_wrapper<Aut>&>(*this).automaton();
         }
       };
 

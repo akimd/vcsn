@@ -1,14 +1,29 @@
-#ifndef VCSN_DYN_FWD_HH
-# define VCSN_DYN_FWD_HH
+#pragma once
 
-# include <vcsn/misc/export.hh> // LIBVCSN_API
-# include <vcsn/misc/fwd.hh>
-# include <vcsn/misc/memory.hh> // make_shared_ptr
+#include <memory> // shared_ptr
+
+#include <vcsn/misc/export.hh> // LIBVCSN_API
+#include <vcsn/misc/fwd.hh>
 
 namespace vcsn
 {
   namespace dyn
   {
+    namespace detail
+    {
+      /// A dynamic_cast in debug mode, static_cast with NDEBUG.
+      template <typename To, typename From>
+      inline
+      To dyn_cast(From&& from)
+      {
+#ifdef NDEBUG
+        return static_cast<To>(std::forward<From>(from));
+#else
+        return dynamic_cast<To>(std::forward<From>(from));
+#endif
+      }
+    }
+
     // vcsn/dyn/automaton.hh.
     namespace detail
     {
@@ -101,9 +116,7 @@ namespace vcsn
 } // namespace vcsn
 
 // FIXME: Not the best place for this.
-# define REGISTER_DECLARE(Name, Signature)                      \
+#define REGISTER_DECLARE(Name, Signature)                       \
   using Name ## _t = auto Signature;                            \
   LIBVCSN_API                                                   \
   bool Name ## _register(const signature& sig, Name ## _t fn)
-
-#endif // !VCSN_DYN_FWD_HH
