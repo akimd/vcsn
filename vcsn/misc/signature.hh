@@ -30,6 +30,12 @@ namespace vcsn LIBVCSN_API
       return sig < that.sig;
     }
 
+    ATTRIBUTE_PURE
+    bool operator==(const signature& that) const
+    {
+      return sig == that.sig;
+    }
+
     sig_t::const_iterator begin() const
     {
       return std::begin(sig);
@@ -47,3 +53,14 @@ namespace vcsn LIBVCSN_API
   std::ostream& operator<<(std::ostream& os, const signature& sig);
 }
 
+namespace std
+{
+  template <>
+  struct hash<vcsn::signature>
+  {
+    size_t operator()(const vcsn::signature& sig) const
+    {
+      return vcsn::hash_value(sig.sig);
+    }
+  };
+}

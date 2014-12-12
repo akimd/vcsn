@@ -78,3 +78,17 @@ namespace vcsn
   }
 }
 
+namespace std
+{
+  template <typename T, typename Alloc>
+  struct hash<vector<T, Alloc>>
+  {
+    size_t operator()(const std::vector<T, Alloc>& vs) const
+    {
+      size_t res = 0;
+      for (const auto& v: vs)
+        hash_combine(res, v);
+      return res;
+    }
+  };
+}

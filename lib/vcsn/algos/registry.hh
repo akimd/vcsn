@@ -1,13 +1,12 @@
 #pragma once
 
-# include <map>
 #include <iostream>
-#include <stdexcept>
 
 #include <vcsn/dyn/translate.hh> // compile
 #include <vcsn/misc/name.hh>
-#include <vcsn/misc/signature.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/signature.hh>
+#include <vcsn/misc/unordered_map.hh>
 
 namespace vcsn
 {
@@ -127,7 +126,7 @@ namespace vcsn
       /// Function name (e.g., "determinize").
       std::string name_;
       /// Signature -> pointer to implementation.
-      using map_t = std::map<signature, Fun*>;
+      using map_t = std::unordered_map<signature, Fun*>;
       map_t map_;
     };
   }
