@@ -1,7 +1,6 @@
-#ifndef VCSN_MISC_HASH_HH
-# define VCSN_MISC_HASH_HH
+#pragma once
 
-# include <functional> // std::equal_to
+#include <functional> // std::equal_to
 
 namespace std
 {
@@ -63,7 +62,4 @@ namespace vcsn
     std::hash<T> hasher;
     return hasher(v);
   }
-
 } // namespace vcsn
-
-#endif // !VCSN_MISC_HASH_HH

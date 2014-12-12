@@ -1,11 +1,10 @@
-#ifndef VCSN_MISC_VECTOR_HH
-# define VCSN_MISC_VECTOR_HH
+#pragma once
 
-# include <algorithm>
-# include <vector>
+#include <algorithm>
+#include <vector>
 
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/tuple.hh> // make_index_sequence.
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/tuple.hh> // make_index_sequence.
 
 namespace vcsn
 {
@@ -79,4 +78,3 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_MISC_VECTOR_HH

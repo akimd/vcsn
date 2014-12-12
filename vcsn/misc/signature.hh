@@ -1,13 +1,13 @@
-#ifndef VCSN_MISC_SIGNATURE_HH
-# define VCSN_MISC_SIGNATURE_HH
+#pragma once
 
-# include <iosfwd>
-# include <string>
-# include <vector>
+#include <iosfwd>
+#include <string>
 
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/export.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/export.hh>
+#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/vector.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -47,4 +47,3 @@ namespace vcsn LIBVCSN_API
   std::ostream& operator<<(std::ostream& os, const signature& sig);
 }
 
-#endif // !VCSN_MISC_SIGNATURE_HH

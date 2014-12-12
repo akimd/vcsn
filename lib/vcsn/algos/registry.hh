@@ -1,14 +1,13 @@
-#ifndef LIB_VCSN_ALGOS_REGISTRY_HH
-# define LIB_VCSN_ALGOS_REGISTRY_HH
+#pragma once
 
-# include <iostream>
 # include <map>
-# include <stdexcept>
+#include <iostream>
+#include <stdexcept>
 
-# include <vcsn/dyn/translate.hh> // compile
-# include <vcsn/misc/name.hh>
-# include <vcsn/misc/signature.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/dyn/translate.hh> // compile
+#include <vcsn/misc/name.hh>
+#include <vcsn/misc/signature.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -136,7 +135,7 @@ namespace vcsn
 }
 
 /// Implement a registry named Name, with unary dispatch.
-# define REGISTER_DEFINE(Name)                                  \
+#define REGISTER_DEFINE(Name)                                   \
   namespace detail                                              \
   {                                                             \
     static                                                      \
@@ -153,5 +152,3 @@ namespace vcsn
       return Name ## _registry().set(sig, fn);                  \
     }                                                           \
   }
-
-#endif // !LIB_VCSN_ALGOS_REGISTRY_HH
