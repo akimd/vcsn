@@ -422,7 +422,7 @@ struct automaton
 
   automaton right_mult(const weight& w) const;
 
-  automaton scc(const std::string& algo) const
+  automaton scc(const std::string& algo = "auto") const
   {
     return vcsn::dyn::scc(val_, algo);
   }
@@ -1096,7 +1096,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<expression>
     ("expression",
      bp::init<const context&, const std::string&>())
-    .def("chain", static_cast<expression::bin_chain_t>(&expression::chain), chain())
+    .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
+         chain())
     .def("complement", &expression::complement)
     .def("concatenate", &expression::concatenate)
     .def("conjunction", &expression::conjunction)
@@ -1114,7 +1115,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &expression::is_valid)
     .def("left_mult", &expression::left_mult)
     .def("lift", &expression::lift)
-    .def("expression", &expression::as_expression, (arg("context") = context()))
+    .def("expression", &expression::as_expression,
+         (arg("context") = context()))
     .def("right_mult", &expression::right_mult)
     .def("series", &expression::as_series, (arg("context") = context()))
     .def("shuffle", &expression::shuffle)

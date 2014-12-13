@@ -297,6 +297,7 @@ namespace vcsn
 
   /// Get all vertices in reverse postorder.
   template <typename Aut>
+  inline
   std::vector<state_t_of<Aut>>
   reverse_postorder(const Aut& aut)
   {
@@ -387,12 +388,13 @@ namespace vcsn
     else if (algo == "kosaraju")
       res = scc_algo_t::kosaraju;
     else
-      raise("sccs: invalid algorithm: ", str_escape(algo));
+      raise("scc: invalid algorithm: ", str_escape(algo));
     return res;
   }
 
   /// Find all strongly connected components of \a aut.
   template <typename Aut>
+  inline
   const detail::components_t<Aut>
   strong_components(const Aut& aut,
                     scc_algo_t algo = scc_algo_t::tarjan_iterative)
@@ -420,6 +422,7 @@ namespace vcsn
 
   /// Generate a subautomaton corresponding to an SCC.
   template <typename Aut>
+  inline
   typename Aut::element_type::automaton_nocv_t
   aut_of_component(const detail::component_t<Aut>& com, const Aut& aut)
   {
@@ -541,7 +544,7 @@ namespace vcsn
   template <typename Aut>
   inline
   scc_automaton<Aut>
-  scc(const Aut& aut, const std::string& algo)
+  scc(const Aut& aut, const std::string& algo = "auto")
   {
     return make_shared_ptr<scc_automaton<Aut>>(aut, scc_algo(algo));
   }
@@ -552,6 +555,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut, typename String>
+      inline
       automaton scc(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -570,12 +574,14 @@ namespace vcsn
 
   /// Get number of strongly connected components.
   template <typename Aut>
+  inline
   std::size_t num_components(const scc_automaton<Aut>& aut)
   {
     return aut->num_components();
   }
 
   template <typename Aut>
+  inline
   std::size_t num_components(const Aut&)
   {
     raise("num_components: requires an scc_automaton");
@@ -587,6 +593,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
+      inline
       std::size_t num_components(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
@@ -628,6 +635,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut, typename Unsigned>
+      inline
       automaton component(const automaton& aut, unsigned com_num)
       {
         const auto& a = aut->as<Aut>();
@@ -647,6 +655,7 @@ namespace vcsn
   /// Create a condensation of automaton with each its state who is a strongly
   /// connected component of \a aut.
   template <typename Aut>
+  inline
   partition_automaton<scc_automaton<Aut>>
   condense(const scc_automaton<Aut>& aut)
   {
@@ -680,6 +689,7 @@ namespace vcsn
   }
 
   template <typename Aut>
+  inline
   partition_automaton<Aut>
   condense(const Aut&)
   {
@@ -692,6 +702,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
+      inline
       automaton condense(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
