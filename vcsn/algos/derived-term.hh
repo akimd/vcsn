@@ -16,9 +16,9 @@
 
 namespace vcsn
 {
-  /*-----------------------.
-  | derived_term(expression).  |
-  `-----------------------*/
+  /*----------------------------.
+  | derived_term(expression).   |
+  `----------------------------*/
 
   namespace detail
   {
@@ -139,27 +139,70 @@ namespace vcsn
     };
   }
 
-  /// The derived-term automaton, computed by derivation.
-  template <typename RatExpSet>
-  inline
-  expression_automaton<mutable_automaton<typename RatExpSet::context_t>>
-  derived_term_derivation(const RatExpSet& rs,
-                          const typename RatExpSet::value_t& r,
-                          bool breaking = false)
+
+  enum class derived_term_algo_t
+    {
+      derivation,
+      derivation_breaking,
+      expansion,
+      expansion_breaking,
+    };
+
+  /// From algo name to algo enum.
+  inline derived_term_algo_t derived_term_algo(std::string algo)
   {
-    detail::derived_termer<RatExpSet> dt{rs, breaking};
-    return dt.via_derivation(r);
+    // Normalize the name.
+    if (algo == "auto")
+      algo = "expansion";
+    else if (algo == "breaking_derivation")
+      algo = "derivation_breaking";
+    else if (algo == "breaking_expansion")
+      algo = "expansion_breaking";
+
+#define CASE(Name)                                      \
+    if (algo == #Name) return derived_term_algo_t::Name;
+    CASE(derivation);
+    CASE(derivation_breaking);
+    CASE(expansion);
+    CASE(expansion_breaking);
+#undef CASE
+    raise("derived_term: invalid algorithm: ", algo);
   }
 
-  /// The derived-term automaton, computed by expansion.
+  /// The derived-term automaton, for free labelsets.
   template <typename RatExpSet>
   inline
-  expression_automaton<mutable_automaton<typename RatExpSet::context_t>>
-  derived_term_expansion(const RatExpSet& rs,
-                         const typename RatExpSet::value_t& r,
-                         bool breaking = false)
+  vcsn::enable_if_t<labelset_t_of<RatExpSet>::is_free(),
+    expression_automaton<mutable_automaton<typename RatExpSet::context_t>>>
+  derived_term(const RatExpSet& rs,
+               const typename RatExpSet::value_t& r,
+               const std::string& algo = "auto")
   {
+    auto a = derived_term_algo(algo);
+    bool breaking = (a == derived_term_algo_t::derivation_breaking
+                     || a == derived_term_algo_t::expansion_breaking);
     detail::derived_termer<RatExpSet> dt{rs, breaking};
+    bool expansion = (a == derived_term_algo_t::expansion
+                      || a == derived_term_algo_t::expansion_breaking);
+    return expansion ? dt.via_expansion(r) : dt.via_derivation(r);
+  }
+
+  /// The derived-term automaton, for non free labelsets.
+  template <typename RatExpSet>
+  inline
+  vcsn::enable_if_t<!labelset_t_of<RatExpSet>::is_free(),
+    expression_automaton<mutable_automaton<typename RatExpSet::context_t>>>
+  derived_term(const RatExpSet& rs,
+               const typename RatExpSet::value_t& r,
+               const std::string& algo = "auto")
+  {
+    auto a = derived_term_algo(algo);
+    bool breaking = (a == derived_term_algo_t::derivation_breaking
+                     || a == derived_term_algo_t::expansion_breaking);
+    detail::derived_termer<RatExpSet> dt{rs, breaking};
+    require(a == derived_term_algo_t::expansion
+            || a == derived_term_algo_t::expansion_breaking,
+            "derived_term: cannot use derivation on non-free labelsets");
     return dt.via_expansion(r);
   }
 
@@ -170,47 +213,17 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename String>
       inline
-      vcsn::enable_if_t<RatExpSet::context_t::labelset_t::is_free(), automaton>
-      derived_term(const expression& exp, const std::string& algo)
+      automaton derived_term(const expression& exp, const std::string& algo)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.expressionset();
         const auto& r = e.expression();
-        auto res
-          = algo == "derivation"
-          ? ::vcsn::derived_term_derivation(rs, r)
-          : algo == "breaking_derivation"
-          ? ::vcsn::derived_term_derivation(rs, r, true)
-          : algo == "auto" || algo == "expansion"
-          ? ::vcsn::derived_term_expansion(rs, r)
-          : algo == "breaking_expansion"
-          ? ::vcsn::derived_term_expansion(rs, r, true)
-          : nullptr;
-        require(!!res, "derived_term: invalid algorithm: " + algo);
-        return make_automaton(res);
-      }
-
-      /// Bridge.
-      template <typename RatExpSet, typename String>
-      inline
-      vcsn::enable_if_t<!RatExpSet::context_t::labelset_t::is_free(), automaton>
-      derived_term(const expression& exp, const std::string& algo)
-      {
-        const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.expressionset();
-        const auto& r = e.expression();
-        auto res
-          = algo == "auto" || algo == "expansion"
-          ? ::vcsn::derived_term_expansion(rs, r)
-          : algo == "breaking_expansion"
-          ? ::vcsn::derived_term_expansion(rs, r, true)
-          : nullptr;
-        require(!!res, "derived_term: invalid algorithm: " + algo);
-        return make_automaton(res);
+        return make_automaton(::vcsn::derived_term(rs, r, algo));
       }
 
       REGISTER_DECLARE(derived_term,
-                       (const expression& e, const std::string& algo) -> automaton);
+                       (const expression& e, const std::string& algo)
+                       -> automaton);
     }
   }
 

@@ -14,9 +14,9 @@
 namespace vcsn
 {
 
-  /*---------------------.
-  | derivation(expression).  |
-  `---------------------*/
+  /*--------------------------.
+  | derivation(expression).   |
+  `--------------------------*/
 
   namespace rat
   {
@@ -258,6 +258,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename Label, typename Bool>
+      inline
       polynomial
       derivation(const expression& exp, const label& lbl, bool breaking = false)
       {
@@ -266,7 +267,8 @@ namespace vcsn
         const auto& rs = e.expressionset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);
         return make_polynomial(ps,
-                               vcsn::derivation(rs, e.expression(), l, breaking));
+                               vcsn::derivation(rs, e.expression(),
+                                                l, breaking));
       }
 
       REGISTER_DECLARE(derivation,
