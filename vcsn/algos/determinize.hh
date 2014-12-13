@@ -520,6 +520,7 @@ namespace vcsn
 
       /// Boolean Bridge.
       template <typename Aut, typename String>
+      inline
       if_boolean_t<Aut, automaton>
       determinize(const automaton& aut, const std::string& algo)
       {
@@ -534,6 +535,7 @@ namespace vcsn
 
       /// Weighted Bridge.
       template <typename Aut, typename String>
+      inline
       if_not_boolean_t<Aut, automaton>
       determinize(const automaton& aut, const std::string& algo)
       {
@@ -564,6 +566,7 @@ namespace vcsn
     {
       /// Boolean Bridge.
       template <typename Aut, typename String>
+      inline
       if_boolean_t<Aut, automaton>
       codeterminize(const automaton& aut, const std::string& algo)
       {
@@ -578,6 +581,7 @@ namespace vcsn
 
       /// Weighted Bridge.
       template <typename Aut, typename String>
+      inline
       if_not_boolean_t<Aut, automaton>
       codeterminize(const automaton& aut, const std::string& algo)
       {
