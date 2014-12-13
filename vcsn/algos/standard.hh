@@ -49,6 +49,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
+      inline
       bool
       is_standard(const automaton& aut)
       {
@@ -61,6 +62,7 @@ namespace vcsn
 
       /// Bridge.
       template <typename Aut>
+      inline
       bool
       is_costandard(const automaton& aut)
       {
@@ -140,6 +142,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
+      inline
       automaton
       standard(const automaton& aut)
       {
@@ -151,6 +154,7 @@ namespace vcsn
 
       /// Bridge.
       template <typename Aut>
+      inline
       automaton
       costandard(const automaton& aut)
       {
