@@ -43,6 +43,8 @@ namespace vcsn
         return cp ? cp : val;
       }
 
+#define XGETENV(Name) xgetenv(#Name, Name)
+
       /// Expand initial "~" in res.
       // http://stackoverflow.com/questions/4891006.
       std::string expand_tilda(std::string res)
@@ -148,13 +150,13 @@ namespace vcsn
         {
           auto err = tmp + ".err";
           // We try to read the error message via a regexp below.  So
-          // avoid translation (we did "erreur" instead of "error").
+          // avoid translation (we once had "erreur" instead of "error").
           cmd = "LC_ALL=C " + cmd;
 
           if (getenv("VCSN_DEBUG"))
             std::cerr << "run: " << cmd << std::endl;
           std::string assertions;
-          if (system((cmd + + " 2>'" + err + "'").c_str()))
+          if (system((cmd + " 2>'" + err + "'").c_str()))
             {
               // Try to find assertion failures in the error log.
               //
@@ -193,11 +195,11 @@ namespace vcsn
         void cxx_compile(const std::string& base)
         {
           auto tmp = tmpname(base);
-          auto cmd = (xgetenv("VCSN_CCACHE", VCSN_CCACHE)
-                      + " " + xgetenv("VCSN_CXX", VCSN_CXX)
-                      + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
-                      + " " + xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS)
-                      + " -fPIC  '" + base + ".cc' -c"
+          auto cmd = (XGETENV(VCSN_CCACHE)
+                      + " " + XGETENV(VCSN_CXX)
+                      + " " + XGETENV(VCSN_CXXFLAGS)
+                      + " " + XGETENV(VCSN_CPPFLAGS)
+                      + " -fPIC '" + base + ".cc' -c"
                       + " -o '" + tmp + ".o'");
           cxx(cmd, tmp);
         }
@@ -208,10 +210,10 @@ namespace vcsn
         void cxx_link(const std::string& base)
         {
           auto tmp = tmpname(base);
-          auto cmd = (xgetenv("VCSN_CXX", VCSN_CXX)
-                      + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
-                      + " " + xgetenv("VCSN_LDFLAGS", VCSN_LDFLAGS)
-                      + " -fPIC  -lvcsn '" + tmp + ".o' -shared"
+          auto cmd = (XGETENV(VCSN_CXX)
+                      + " " + XGETENV(VCSN_CXXFLAGS)
+                      + " " + XGETENV(VCSN_LDFLAGS)
+                      + " -fPIC -lvcsn '" + tmp + ".o' -shared"
                       + " -o '" + tmp + ".so'"
                       + printer_.linkflags());
           cxx(cmd, tmp);
