@@ -28,7 +28,7 @@ namespace vcsn
   vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && labelset_t_of<Aut>::is_free(),
                     partition_automaton<Aut>>
-  minimize(const Aut& a, const std::string& algo)
+  minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "moore")
       return minimize_moore(a);
@@ -46,7 +46,7 @@ namespace vcsn
   vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && ! labelset_t_of<Aut>::is_free(),
                     partition_automaton<Aut>>
-  minimize(const Aut& a, const std::string& algo)
+  minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "auto" || algo == "signature")
       return minimize_signature(a);
@@ -61,7 +61,7 @@ namespace vcsn
   inline
   vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     partition_automaton<Aut>>
-  minimize(const Aut& a, const std::string& algo)
+  minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "auto" || algo == "weighted")
       return minimize_weighted(a);
@@ -72,7 +72,7 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  cominimize(const Aut& a, const std::string& algo)
+  cominimize(const Aut& a, const std::string& algo = "auto")
     -> decltype(transpose(minimize(transpose(a), algo)))
   {
     return transpose(minimize(transpose(a), algo));
