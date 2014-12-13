@@ -5,14 +5,16 @@ import os, re, sys
 import argparse
 from colorama import Fore, Style
 
-parser = argparse.ArgumentParser(description='Bench some algorithms.')
-parser.add_argument('files', metavar='files', nargs='+',
+parser = argparse.ArgumentParser(description='Compare benches.')
+parser.add_argument('file', nargs='+',
                     type=str, default=None,
-                    help='Bench files (from vcsn score) to compare')
+                    help='Bench file (from vcsn score) to compare')
+parser.add_argument('--all', action='store_true',
+                    help='Report also benches with no differences')
 parser.add_argument('--only', metavar='RE',
                     type=re.compile, default='.*',
                     help='Report only benches whose title is matched by RE')
-parser.add_argument('--threshold', metavar='threshold',
+parser.add_argument('--threshold',
                     type=float, default=0.1,
                     help='Show good and bad scores with associated threshold')
 parser.add_argument('--csv', type=str,
@@ -97,7 +99,7 @@ def csv(keys, fn):
         if k != keys[-1]:
             fl.write(',')
     fl.write('\n')
-    for f in args.files:
+    for f in args.file:
         fl.write(os.path.basename(f))
         fl.write(',')
         for k in keys:
@@ -111,25 +113,28 @@ def csv(keys, fn):
 
 def text(keys):
     for k in keys:
+        # All the benches as strings.
+        bs = [bench[k][f] if f in bench[k] else "N/A" for f in args.file]
+        # If all the same, there is nothing to say.
+        if not args.all and len(set(bs)) == 1:
+            continue
+        # All the benches as floats.
+        bfs = [float(b) for b in bs if b != "N/A"]
         # Compute average of benchs.
-        bs = [float(bench[k][f]) for f in args.files if f in bench[k]]
-        avg = sum(bs) / len(bs)
-        for fn in args.files:
-            # print with right colors.
-            v = bench[k][fn] if fn in bench[k] else "N/A"
-            # print with right colors
-            color = ''
-            if fn in bench[k]:
-                score = float(bench[k][fn])
+        avg = sum(bfs) / len(bfs)
+        for b in bs:
+            if b != "N/A":
+                color = ''
+                score = float(b)
                 if score <= avg - args.threshold * avg:
                     color = Fore.GREEN + Style.BRIGHT
                 elif args.threshold * avg + avg <= score:
                     color = Fore.RED + Style.BRIGHT
-            print(color + "{:5}".format(v) + Style.RESET_ALL, end = ' ')
+            print(color + "{:5}".format(b) + Style.RESET_ALL, end = ' ')
         print(k)
 
 # Read the score files.
-for fn in args.files:
+for fn in args.file:
     read(fn)
 
 # The keys we are interested in.
