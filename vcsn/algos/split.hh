@@ -16,7 +16,7 @@ namespace vcsn
     // FIXME: this is a general feature which is useful elsewhere.
     // E.g., expand.
 
-    /// Type of PolynomialSet of RatExps from the ExpSet type.
+    /// Type of PolynomialSet of expressions from the ExpSet type.
     template <typename ExpSet>
     using expression_polynomialset_t
       = polynomialset<context<ExpSet,

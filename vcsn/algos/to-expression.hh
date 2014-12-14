@@ -302,7 +302,8 @@ namespace vcsn
         // but we should actually be parameterized by its type too.
         using context_t = context_t_of<Aut>;
         using expressionset_t = vcsn::expressionset<context_t>;
-        expressionset_t rs(a->context(), expressionset_t::identities_t::trivial);
+        expressionset_t rs(a->context(),
+                           expressionset_t::identities_t::trivial);
         if (algo == "auto" || algo == "naive")
           return make_expression(rs, ::vcsn::to_expression_naive(a));
         else

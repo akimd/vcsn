@@ -176,7 +176,7 @@ namespace vcsn
     /// Build a standard automaton from an expression.
     ///
     /// \tparam Aut        relative the generated automaton
-    /// \tparam ExpSet  relative to the RatExp.
+    /// \tparam ExpSet  relative to the expression.
     template <typename Aut,
               typename ExpSet>
     class standard_visitor
@@ -378,7 +378,7 @@ namespace vcsn
   /// Build a standard automaton from an expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
-  /// \tparam ExpSet  relative to the RatExp.
+  /// \tparam ExpSet  relative to the expression.
   template <typename Aut,
             typename ExpSet>
   Aut

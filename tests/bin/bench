@@ -226,7 +226,7 @@ sub standard ($$$)
         }
       elsif ($d eq 'Vcsn 1')
         {
-          # Generate the RatExp with V2, but translate for V1.
+          # Generate the expression with V2, but translate for V1.
           run "vcsn-cat -Ee '$exp' | \
                     sed -e 's/\\\\e/1/g' | "
                     . v1_command ($ctx) . " standard - >$base.xml";
@@ -264,7 +264,7 @@ sub thompson ($$$)
         }
       elsif ($d eq 'Vcsn 1')
         {
-          # Generate the RatExp with V2, but translate for V1.
+          # Generate the expression with V2, but translate for V1.
           run "vcsn-cat -Ee '$exp' | \
                     sed -e 's/\\\\e/1/g' | "
                     . v1_command ($ctx) . " thompson - >$base.xml";

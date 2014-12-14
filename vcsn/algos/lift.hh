@@ -80,7 +80,7 @@ namespace vcsn
     using ctx_in_t = context_t_of<auto_in_t>;
     using state_in_t = state_t_of<auto_in_t>;
 
-    // Produce RatExps of the same context as the original automaton.
+    // Produce expressions of the same context as the original automaton.
     using rs_in_t = expressionset<ctx_in_t>;
     rs_in_t rs_in{a->context(), rs_in_t::identities_t::trivial};
 

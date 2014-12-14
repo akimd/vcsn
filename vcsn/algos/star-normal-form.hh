@@ -1,11 +1,10 @@
-#ifndef VCSN_ALGOS_STAR_NORMAL_FORM_HH
-# define VCSN_ALGOS_STAR_NORMAL_FORM_HH
+#pragma once
 
-# include <vcsn/algos/constant-term.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/algos/constant-term.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -13,11 +12,11 @@ namespace vcsn
   namespace rat
   {
 
-    /*---------------------------.
-    | star_normal_form(expression).  |
-    `---------------------------*/
+    /*--------------------------------.
+    | star_normal_form(expression).   |
+    `--------------------------------*/
 
-    /// \tparam ExpSet relative to the RatExp.
+    /// \tparam ExpSet relative to the expression.
     ///
     /// Implementation based on the dot/box operators as defined in
     /// "On the Number of Broken Derived Terms of a Rational
@@ -176,8 +175,9 @@ namespace vcsn
 
   } // rat::
 
-  /// Star_Normal_Forming a typed expression shared_ptr.
+  /// Star-normal form a typed expression.
   template <typename ExpSet>
+  inline
   typename ExpSet::value_t
   star_normal_form(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
@@ -191,12 +191,14 @@ namespace vcsn
     {
       /// Bridge.
       template <typename ExpSet>
+      inline
       expression
       star_normal_form(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
         return make_expression(e.expressionset(),
-                           ::vcsn::star_normal_form(e.expressionset(), e.expression()));
+                               ::vcsn::star_normal_form(e.expressionset(),
+                                                        e.expression()));
       }
 
       REGISTER_DECLARE(star_normal_form, (const expression& e) -> expression);
@@ -204,5 +206,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_STAR_NORMAL_FORM_HH

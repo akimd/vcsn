@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_THOMPSON_HH
-# define VCSN_ALGOS_THOMPSON_HH
+#pragma once
 
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/labelset/labelset.hh> // make_nullableset_context
-# include <vcsn/misc/raise.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/labelset/labelset.hh> // make_nullableset_context
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -17,7 +16,7 @@ namespace vcsn
     /// Build a Thompson automaton from an expression.
     ///
     /// \tparam Aut        relative the generated automaton
-    /// \tparam ExpSet  relative to the RatExp.
+    /// \tparam ExpSet  relative to the expression.
     template <typename Aut,
               typename ExpSet>
     class thompson_visitor
@@ -162,10 +161,10 @@ namespace vcsn
 
   /// Build a Thompson automaton from an expression.
   ///
-  /// \tparam Aut        relative to the generated automaton.
-  /// \tparam ExpSet  relative to the RatExp.
-  template <typename Aut,
-            typename ExpSet>
+  /// \tparam Aut     relative to the generated automaton.
+  /// \tparam ExpSet  relative to the expression.
+  template <typename Aut, typename ExpSet>
+  inline
   Aut
   thompson(const context_t_of<Aut>& ctx,
            const ExpSet& rs, const typename ExpSet::value_t& r)
@@ -176,10 +175,10 @@ namespace vcsn
 
   /// Build a Thompson automaton from an expression.
   ///
-  /// \tparam Aut        relative to the generated automaton.
-  /// \tparam ExpSet  relative to the RatExp.
-  template <typename Aut,
-            typename ExpSet>
+  /// \tparam Aut     relative to the generated automaton.
+  /// \tparam ExpSet  relative to the expression.
+  template <typename Aut, typename ExpSet>
+  inline
   Aut
   thompson(const ExpSet& rs, const typename ExpSet::value_t& r)
   {
@@ -197,6 +196,7 @@ namespace vcsn
 
       /// Bridge.
       template <typename ExpSet>
+      inline
       automaton
       thompson(const expression& exp)
       {
@@ -219,5 +219,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_THOMPSON_HH

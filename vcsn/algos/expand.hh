@@ -1,11 +1,10 @@
-#ifndef VCSN_ALGOS_EXPAND_HH
-# define VCSN_ALGOS_EXPAND_HH
+#pragma once
 
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/dyn/expression.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/dyn/expression.hh>
 
-# include <vcsn/algos/derivation.hh> // expression_polynomialset_t.
+#include <vcsn/algos/derivation.hh> // expression_polynomialset_t.
 
 namespace vcsn
 {
@@ -13,11 +12,11 @@ namespace vcsn
   namespace rat
   {
 
-    /*-----------------.
-    | expand(expression).  |
-    `-----------------*/
+    /*----------------------.
+    | expand(expression).   |
+    `----------------------*/
 
-    /// \tparam ExpSet  relative to the RatExp.
+    /// \tparam ExpSet  relative to the expression.
     template <typename ExpSet>
     class expand_visitor
       : public ExpSet::const_visitor
@@ -146,8 +145,9 @@ namespace vcsn
 
   } // rat::
 
-  /// Expanding a typed expression shared_ptr.
+  /// Expand a typed expression.
   template <typename ExpSet>
+  inline
   typename ExpSet::value_t
   expand(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
@@ -161,6 +161,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename ExpSet>
+      inline
       expression
       expand(const expression& exp)
       {
@@ -174,5 +175,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_EXPAND_HH
