@@ -32,17 +32,17 @@ namespace detail
     virtual symbol vname() const = 0;
 
     /// Extract wrapped typed expressionset.
-    template <typename RatExpSet>
+    template <typename ExpSet>
     auto& as()
     {
-      return dyn_cast<expressionset_wrapper<RatExpSet>&>(*this);
+      return dyn_cast<expressionset_wrapper<ExpSet>&>(*this);
     }
 
     /// Extract wrapped typed expression.
-    template <typename RatExpSet>
+    template <typename ExpSet>
     auto& as() const
     {
-      return dyn_cast<const expressionset_wrapper<RatExpSet>&>(*this);
+      return dyn_cast<const expressionset_wrapper<ExpSet>&>(*this);
     }
 
     virtual rat::identities identities() const = 0;
@@ -94,11 +94,11 @@ namespace detail
   };
 
   /// Wrapper around an expressionset.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   class expressionset_wrapper : public expressionset_base
   {
   public:
-    using expressionset_t = RatExpSet;
+    using expressionset_t = ExpSet;
     using context_t = context_t_of<expressionset_t>;
     using super_t = expressionset_base;
     using label_t = label_t_of<context_t>;
@@ -192,8 +192,8 @@ namespace detail
 } // namespace detail
 
   /// Build a dyn::expressionset from its static expressionset.
-  template <typename RatExpSet>
-  expressionset make_expressionset(const RatExpSet& rs);
+  template <typename ExpSet>
+  expressionset make_expressionset(const ExpSet& rs);
 
 } // namespace dyn
 } // namespace vcsn

@@ -7,10 +7,10 @@ namespace vcsn
   {
 
 # define DEFINE                                 \
-    template <typename RatExpSet>               \
+    template <typename ExpSet>               \
     inline                                      \
     auto                                        \
-    info<RatExpSet>
+    info<ExpSet>
 
     DEFINE::operator()(const node_t& v)
       -> void

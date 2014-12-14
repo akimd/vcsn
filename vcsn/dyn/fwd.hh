@@ -73,7 +73,7 @@ namespace vcsn
     namespace detail
     {
       class expression_base;
-      template <typename RatExpSet>
+      template <typename ExpSet>
       class expression_wrapper;
     }
     using expression = std::shared_ptr<detail::expression_base>;
@@ -82,7 +82,7 @@ namespace vcsn
     namespace detail
     {
       class expressionset_base;
-      template <typename RatExpSet>
+      template <typename ExpSet>
       class expressionset_wrapper;
     }
     using expressionset = std::shared_ptr<const detail::expressionset_base>;

@@ -129,12 +129,12 @@ namespace vcsn
   | left-mult(expression).  |
   `--------------------*/
 
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  typename RatExpSet::value_t
-  left_mult(const RatExpSet& rs,
-            const weight_t_of<RatExpSet>& w,
-            const typename RatExpSet::value_t& r)
+  typename ExpSet::value_t
+  left_mult(const ExpSet& rs,
+            const weight_t_of<ExpSet>& w,
+            const typename ExpSet::value_t& r)
   {
     return rs.lmul(w, r);
   }
@@ -159,11 +159,11 @@ namespace vcsn
   /// weightsets.  Here, the "expressionset<law(xyz), b>" must really
   /// be considered as a weightset, so compute the join of
   /// weightsets by hand, and leave the labelset alone.
-  template <typename WeightSet, typename RatExpSet>
-  expressionset<context<labelset_t_of<RatExpSet>,
-                    join_t<WeightSet, weightset_t_of<RatExpSet>>>>
+  template <typename WeightSet, typename ExpSet>
+  expressionset<context<labelset_t_of<ExpSet>,
+                    join_t<WeightSet, weightset_t_of<ExpSet>>>>
   join_weightset_expressionset(const WeightSet& ws,
-                           const RatExpSet& rs)
+                           const ExpSet& rs)
   {
     auto ctx = make_context(*rs.labelset(), join(ws, *rs.weightset()));
     return make_expressionset(ctx, rs.identities());
@@ -174,12 +174,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename WeightSet, typename RatExpSet>
+      template <typename WeightSet, typename ExpSet>
       expression
       left_mult_expression(const weight& weight, const expression& exp)
       {
         const auto& w1 = weight->as<WeightSet>();
-        const auto& r1 = exp->as<RatExpSet>();
+        const auto& r1 = exp->as<ExpSet>();
         auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
@@ -244,12 +244,12 @@ namespace vcsn
   | right-mult(expression).  |
   `---------------------*/
 
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  typename RatExpSet::value_t
-  right_mult(const RatExpSet& rs,
-             const typename RatExpSet::value_t& r,
-             const weight_t_of<RatExpSet>& w)
+  typename ExpSet::value_t
+  right_mult(const ExpSet& rs,
+             const typename ExpSet::value_t& r,
+             const weight_t_of<ExpSet>& w)
   {
     return rs.rmul(r, w);
   }
@@ -259,12 +259,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename WeightSet>
+      template <typename ExpSet, typename WeightSet>
       expression
       right_mult_expression(const expression& exp, const weight& weight)
       {
         const auto& w1 = weight->as<WeightSet>();
-        const auto& r1 = exp->as<RatExpSet>();
+        const auto& r1 = exp->as<ExpSet>();
         auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());

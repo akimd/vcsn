@@ -20,12 +20,12 @@ namespace vcsn
 
   namespace rat
   {
-    template <typename RatExpSet>
+    template <typename ExpSet>
     class derivation_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
@@ -195,17 +195,17 @@ namespace vcsn
   } // rat::
 
   /// Derive an expression wrt to a letter.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  rat::expression_polynomial_t<RatExpSet>
-  derivation(const RatExpSet& rs,
-             const typename RatExpSet::value_t& e,
-             label_t_of<RatExpSet> a,
+  rat::expression_polynomial_t<ExpSet>
+  derivation(const ExpSet& rs,
+             const typename ExpSet::value_t& e,
+             label_t_of<ExpSet> a,
              bool breaking = false)
   {
-    static_assert(RatExpSet::context_t::labelset_t::is_free(),
+    static_assert(ExpSet::context_t::labelset_t::is_free(),
                   "derivation: requires free labelset");
-    rat::derivation_visitor<RatExpSet> derivation{rs};
+    rat::derivation_visitor<ExpSet> derivation{rs};
     auto res = derivation(e, a);
     if (breaking)
       res = split(rs, res);
@@ -214,16 +214,16 @@ namespace vcsn
 
 
   /// Derive a polynomial of expressions wrt to a letter.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  rat::expression_polynomial_t<RatExpSet>
-  derivation(const RatExpSet& rs,
-             const rat::expression_polynomial_t<RatExpSet>& p,
-             label_t_of<RatExpSet> a,
+  rat::expression_polynomial_t<ExpSet>
+  derivation(const ExpSet& rs,
+             const rat::expression_polynomial_t<ExpSet>& p,
+             label_t_of<ExpSet> a,
              bool breaking = false)
   {
     auto ps = rat::make_expression_polynomialset(rs);
-    using polynomial_t = rat::expression_polynomial_t<RatExpSet>;
+    using polynomial_t = rat::expression_polynomial_t<ExpSet>;
     polynomial_t res;
     for (const auto& m: p)
       res = ps.add(res,
@@ -233,12 +233,12 @@ namespace vcsn
 
 
   /// Derive an expression wrt to a word.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  rat::expression_polynomial_t<RatExpSet>
-  derivation(const RatExpSet& rs,
-             const typename RatExpSet::value_t& e,
-             const word_t_of<RatExpSet>& l,
+  rat::expression_polynomial_t<ExpSet>
+  derivation(const ExpSet& rs,
+             const typename ExpSet::value_t& e,
+             const word_t_of<ExpSet>& l,
              bool breaking = false)
   {
     auto word = rs.labelset()->letters_of(l);
@@ -257,12 +257,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Label, typename Bool>
+      template <typename ExpSet, typename Label, typename Bool>
       inline
       polynomial
       derivation(const expression& exp, const label& lbl, bool breaking = false)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         const auto& l = lbl->as<Label>().label();
         const auto& rs = e.expressionset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);

@@ -23,27 +23,27 @@ namespace vcsn
         virtual symbol vname() const = 0;
 
         /// Extract wrapped typed expression.
-        template <typename RatExpSet>
+        template <typename ExpSet>
         auto& as()
         {
-          return dyn_cast<expression_wrapper<RatExpSet>&>(*this);
+          return dyn_cast<expression_wrapper<ExpSet>&>(*this);
         }
 
         /// Extract wrapped typed expression.
-        template <typename RatExpSet>
+        template <typename ExpSet>
         auto& as() const
         {
-          return dyn_cast<const expression_wrapper<RatExpSet>&>(*this);
+          return dyn_cast<const expression_wrapper<ExpSet>&>(*this);
         }
       };
 
 
       /// Aggregate an expression and its expressionset.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       class expression_wrapper: public expression_base
       {
       public:
-        using expressionset_t = RatExpSet;
+        using expressionset_t = ExpSet;
         using super_t = expression_base;
         using expression_t = typename expressionset_t::value_t;
         expression_wrapper(const expression_t& expression,
@@ -78,13 +78,13 @@ namespace vcsn
 
     using expression = std::shared_ptr<detail::expression_base>;
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     inline
     expression
-    make_expression(const RatExpSet& rs,
-                const typename RatExpSet::value_t& expression)
+    make_expression(const ExpSet& rs,
+                const typename ExpSet::value_t& expression)
     {
-      using wrapper_t = detail::expression_wrapper<RatExpSet>;
+      using wrapper_t = detail::expression_wrapper<ExpSet>;
       return std::make_shared<wrapper_t>(expression, rs);
     }
 

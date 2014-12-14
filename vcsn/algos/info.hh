@@ -265,13 +265,13 @@ namespace vcsn
   | info(expression, stream).  |
   `-----------------------*/
 
-  template <class RatExpSet>
+  template <class ExpSet>
   void
-  info(const RatExpSet& rs, const typename RatExpSet::value_t& e,
+  info(const ExpSet& rs, const typename ExpSet::value_t& e,
        std::ostream& o)
   {
-    rat::size<RatExpSet> sizer;
-    vcsn::rat::info<RatExpSet> nfo;
+    rat::size<ExpSet> sizer;
+    vcsn::rat::info<ExpSet> nfo;
     nfo(*e);
 
     o << "type: ";
@@ -299,11 +299,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Ostream>
+      template <typename ExpSet, typename Ostream>
       std::ostream& info_expression(const expression& exp, std::ostream& o)
       {
-        const auto& e = exp->as<RatExpSet>();
-        vcsn::info<RatExpSet>(e.expressionset(), e.expression(), o);
+        const auto& e = exp->as<ExpSet>();
+        vcsn::info<ExpSet>(e.expressionset(), e.expression(), o);
         return o;
       }
 

@@ -17,15 +17,15 @@ namespace vcsn
     /// Build a Thompson automaton from an expression.
     ///
     /// \tparam Aut        relative the generated automaton
-    /// \tparam RatExpSet  relative to the RatExp.
+    /// \tparam ExpSet  relative to the RatExp.
     template <typename Aut,
-              typename RatExpSet>
+              typename ExpSet>
     class thompson_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
       using automaton_t = Aut;
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = weight_t_of<expressionset_t>;
@@ -163,27 +163,27 @@ namespace vcsn
   /// Build a Thompson automaton from an expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
-  /// \tparam RatExpSet  relative to the RatExp.
+  /// \tparam ExpSet  relative to the RatExp.
   template <typename Aut,
-            typename RatExpSet>
+            typename ExpSet>
   Aut
   thompson(const context_t_of<Aut>& ctx,
-           const RatExpSet& rs, const typename RatExpSet::value_t& r)
+           const ExpSet& rs, const typename ExpSet::value_t& r)
   {
-    rat::thompson_visitor<Aut, RatExpSet> thompson{ctx, rs};
+    rat::thompson_visitor<Aut, ExpSet> thompson{ctx, rs};
     return thompson(r);
   }
 
   /// Build a Thompson automaton from an expression.
   ///
   /// \tparam Aut        relative to the generated automaton.
-  /// \tparam RatExpSet  relative to the RatExp.
+  /// \tparam ExpSet  relative to the RatExp.
   template <typename Aut,
-            typename RatExpSet>
+            typename ExpSet>
   Aut
-  thompson(const RatExpSet& rs, const typename RatExpSet::value_t& r)
+  thompson(const ExpSet& rs, const typename ExpSet::value_t& r)
   {
-    rat::thompson_visitor<Aut, RatExpSet> thompson{rs};
+    rat::thompson_visitor<Aut, ExpSet> thompson{rs};
     return thompson(r);
   }
 
@@ -196,13 +196,13 @@ namespace vcsn
       `---------------------*/
 
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       automaton
       thompson(const expression& exp)
       {
         // FIXME: So far, there is a single implementation of expressions,
         // but we should actually be parameterized by its type too.
-        using expressionset_t = RatExpSet;
+        using expressionset_t = ExpSet;
         const auto& e = exp->as<expressionset_t>();
         auto ctx
           = vcsn::detail::make_nullableset_context(e.expressionset().context());

@@ -9,12 +9,12 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     class info
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using node_t = typename expressionset_t::node_t;
       using super_t = typename expressionset_t::const_visitor;
 

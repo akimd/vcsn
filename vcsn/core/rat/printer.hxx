@@ -36,9 +36,9 @@ namespace vcsn
       return o;
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     inline
-    printer<RatExpSet>::printer(const expressionset_t& rs,
+    printer<ExpSet>::printer(const expressionset_t& rs,
                                 std::ostream& out,
                                 const bool debug)
       : out_(out)
@@ -49,10 +49,10 @@ namespace vcsn
 
 
 # define DEFINE                                 \
-    template <typename RatExpSet>               \
+    template <typename ExpSet>               \
     inline                                      \
     auto                                        \
-    printer<RatExpSet>
+    printer<ExpSet>
 
     DEFINE::operator()(const node_t& v)
       -> std::ostream&
@@ -209,22 +209,22 @@ namespace vcsn
         out_ << rgroup_;
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <type_t Type>
     inline
     auto
-    printer<RatExpSet>::print_(const unary_t<Type>& v, const char* op)
+    printer<ExpSet>::print_(const unary_t<Type>& v, const char* op)
       -> void
     {
       print_child_(*v.sub(), v);
       out_ << op;
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <type_t Type>
     inline
     auto
-    printer<RatExpSet>::print_(const variadic_t<Type>& n, const char* op)
+    printer<ExpSet>::print_(const variadic_t<Type>& n, const char* op)
       -> void
     {
       bool first = true;

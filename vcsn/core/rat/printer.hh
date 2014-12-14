@@ -14,12 +14,12 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     class printer
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using identities_t = typename expressionset_t::identities_t;
       using weight_t = typename context_t::weightset_t::value_t;

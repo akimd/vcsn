@@ -215,12 +215,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       concatenate_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<RatExpSetLhs>();
-        const auto& r = rhs->as<RatExpSetRhs>();
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
         auto rs = vcsn::join(l.expressionset(), r.expressionset());
         auto lr = rs.conv(l.expressionset(), l.expression());
         auto rr = rs.conv(r.expressionset(), r.expression());
@@ -237,12 +237,12 @@ namespace vcsn
   | chain(expression, min, max).  |
   `--------------------------*/
 
-  template <typename RatExpSet>
-  typename RatExpSet::value_t
-  chain(const RatExpSet& rs, const typename RatExpSet::value_t& r,
+  template <typename ExpSet>
+  typename ExpSet::value_t
+  chain(const ExpSet& rs, const typename ExpSet::value_t& r,
         int min, int max)
   {
-    typename RatExpSet::value_t res;
+    typename ExpSet::value_t res;
     if (max == -1)
       {
         res = rs.star(r);
@@ -263,7 +263,7 @@ namespace vcsn
           }
         if (min < max)
           {
-            typename RatExpSet::value_t sum = rs.one();
+            typename ExpSet::value_t sum = rs.one();
             for (int n = 1; n <= max - min; ++n)
               sum = rs.add(sum, chain(rs, r, n, n));
             res = rs.mul(res, sum);
@@ -277,11 +277,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Int1, typename Int2>
+      template <typename ExpSet, typename Int1, typename Int2>
       expression
       chain_expression(const expression& re, int min, int max)
       {
-        const auto& r = re->as<RatExpSet>();
+        const auto& r = re->as<ExpSet>();
         return make_expression(r.expressionset(),
                            ::vcsn::chain(r.expressionset(), r.expression(), min, max));
       }

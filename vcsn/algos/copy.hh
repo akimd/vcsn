@@ -259,13 +259,13 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
+      template <typename InExpSet, typename OutExpSet = InExpSet>
       inline
       expression
       copy_expression(const expression& exp, const expressionset& out_rs)
       {
-        const auto& r = exp->as<InRatExpSet>();
-        const auto& ors = out_rs->as<OutRatExpSet>().expressionset();
+        const auto& r = exp->as<InExpSet>();
+        const auto& ors = out_rs->as<OutExpSet>().expressionset();
 
         return make_expression(ors,
                            ::vcsn::rat::copy(r.expressionset(), ors,

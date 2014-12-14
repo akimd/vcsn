@@ -262,8 +262,8 @@ namespace vcsn
   `-----------------*/
 
   template <typename Aut,
-            typename RatExpSet = expressionset<context_t_of<Aut>>>
-  typename RatExpSet::value_t
+            typename ExpSet = expressionset<context_t_of<Aut>>>
+  typename ExpSet::value_t
   to_expression(const Aut& a,
                 const state_chooser_t<Aut>& next_state)
   {
@@ -276,8 +276,8 @@ namespace vcsn
 
 
   template <typename Aut,
-            typename RatExpSet = expressionset<context_t_of<Aut>>>
-  typename RatExpSet::value_t
+            typename ExpSet = expressionset<context_t_of<Aut>>>
+  typename ExpSet::value_t
   to_expression_naive(const Aut& a)
   {
     state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;

@@ -165,10 +165,10 @@ namespace vcsn
 
 #if 0
   /// See PolynomialSet.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
   std::ostream&
-  print(const RatExpSet& rs, const typename RatExpSet::value_t& e,
+  print(const ExpSet& rs, const typename ExpSet::value_t& e,
         std::ostream& o, const std::string& format)
   {
     return rs.print(e, o, format);
@@ -180,11 +180,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Ostream, typename String>
+      template <typename ExpSet, typename Ostream, typename String>
       std::ostream& print_expression(const expression& exp, std::ostream& o,
                                  const std::string& format)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         return vcsn::print(e.expressionset(), e.expression(), o, format);
       }
 

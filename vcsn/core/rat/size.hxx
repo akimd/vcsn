@@ -7,10 +7,10 @@ namespace vcsn
   {
 
 # define DEFINE                                 \
-    template <typename RatExpSet>               \
+    template <typename ExpSet>               \
     inline                                      \
     auto                                        \
-    size<RatExpSet>
+    size<ExpSet>
 
 # define VISIT(Type)                          \
     DEFINE::visit(const Type ## _t& v)        \
@@ -47,21 +47,21 @@ namespace vcsn
       v.sub()->accept(*this);
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <type_t Type>
     inline
     void
-    size<RatExpSet>::visit_unary(const unary_t<Type>& v)
+    size<ExpSet>::visit_unary(const unary_t<Type>& v)
     {
       ++ size_;
       v.sub()->accept(*this);
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <type_t Type>
     inline
     void
-    size<RatExpSet>::visit_variadic(const variadic_t<Type>& n)
+    size<ExpSet>::visit_variadic(const variadic_t<Type>& n)
     {
       /* An n-ary node contributes n-1 unit (plus the sum of its
          children sizes) to the expression size. */

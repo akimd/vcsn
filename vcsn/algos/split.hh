@@ -16,25 +16,25 @@ namespace vcsn
     // FIXME: this is a general feature which is useful elsewhere.
     // E.g., expand.
 
-    /// Type of PolynomialSet of RatExps from the RatExpSet type.
-    template <typename RatExpSet>
+    /// Type of PolynomialSet of RatExps from the ExpSet type.
+    template <typename ExpSet>
     using expression_polynomialset_t
-      = polynomialset<context<RatExpSet,
-                              weightset_t_of<RatExpSet>>>;
+      = polynomialset<context<ExpSet,
+                              weightset_t_of<ExpSet>>>;
 
-    /// Type of polynomials of expressions from the RatExpSet type.
-    template <typename RatExpSet>
+    /// Type of polynomials of expressions from the ExpSet type.
+    template <typename ExpSet>
     using expression_polynomial_t
-      = typename expression_polynomialset_t<RatExpSet>::value_t;
+      = typename expression_polynomialset_t<ExpSet>::value_t;
 
-    /// From a RatExpSet to its polynomialset.
-    template <typename RatExpSet>
+    /// From a ExpSet to its polynomialset.
+    template <typename ExpSet>
     inline
-    expression_polynomialset_t<RatExpSet>
-    make_expression_polynomialset(const RatExpSet& rs)
+    expression_polynomialset_t<ExpSet>
+    make_expression_polynomialset(const ExpSet& rs)
     {
-      using context_t = context<RatExpSet,
-                                weightset_t_of<RatExpSet>>;
+      using context_t = context<ExpSet,
+                                weightset_t_of<ExpSet>>;
       return context_t{rs, *rs.weightset()};
     }
   }
@@ -74,12 +74,12 @@ namespace vcsn
     ///                   also discussed.}
     /// }
     ///@endverbatim
-    template <typename RatExpSet>
+    template <typename ExpSet>
     class split_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
@@ -251,12 +251,12 @@ namespace vcsn
   }
 
   /// Split an expression.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  rat::expression_polynomial_t<RatExpSet>
-  split(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  rat::expression_polynomial_t<ExpSet>
+  split(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::split_visitor<RatExpSet> split{rs};
+    rat::split_visitor<ExpSet> split{rs};
     return split(e);
   }
 
@@ -265,15 +265,15 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       polynomial
       split(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         const auto& rs = e.expressionset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);
         return make_polynomial(ps,
-                               vcsn::split<RatExpSet>(rs, e.expression()));
+                               vcsn::split<ExpSet>(rs, e.expression()));
       }
 
       REGISTER_DECLARE(split,
@@ -282,14 +282,14 @@ namespace vcsn
   }
 
   /// Split a polynomial of expressions.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  rat::expression_polynomial_t<RatExpSet>
-  split(const RatExpSet& rs, const rat::expression_polynomial_t<RatExpSet>& p)
+  rat::expression_polynomial_t<ExpSet>
+  split(const ExpSet& rs, const rat::expression_polynomial_t<ExpSet>& p)
   {
     auto ps = rat::make_expression_polynomialset(rs);
-    using polynomial_t = rat::expression_polynomial_t<RatExpSet>;
-    rat::split_visitor<RatExpSet> split{rs};
+    using polynomial_t = rat::expression_polynomial_t<ExpSet>;
+    rat::split_visitor<ExpSet> split{rs};
     polynomial_t res;
     for (const auto& m: p)
       res = ps.add(res, ps.lmul(m.second, split(m.first)));

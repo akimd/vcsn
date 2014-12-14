@@ -75,11 +75,11 @@ namespace vcsn
                        (const automaton& aut) -> context);
 
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       context
       context_of_expression(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>().expressionset();
+        const auto& e = exp->as<ExpSet>().expressionset();
         return dyn::make_context(e.context());
       }
 

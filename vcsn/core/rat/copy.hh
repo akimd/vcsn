@@ -11,13 +11,13 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
+    template <typename InExpSet, typename OutExpSet = InExpSet>
     class copier
-      : public InRatExpSet::const_visitor
+      : public InExpSet::const_visitor
     {
     public:
-      using in_expressionset_t = InRatExpSet;
-      using out_expressionset_t = OutRatExpSet;
+      using in_expressionset_t = InExpSet;
+      using out_expressionset_t = OutExpSet;
       using in_value_t = typename in_expressionset_t::value_t;
       using out_value_t = typename out_expressionset_t::value_t;
       using super_t = typename in_expressionset_t::const_visitor;
@@ -126,12 +126,12 @@ namespace vcsn
       out_value_t res_;
     };
 
-    template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
-    typename OutRatExpSet::value_t
-    copy(const InRatExpSet& in_rs, const OutRatExpSet& out_rs,
-         const typename InRatExpSet::value_t& v)
+    template <typename InExpSet, typename OutExpSet = InExpSet>
+    typename OutExpSet::value_t
+    copy(const InExpSet& in_rs, const OutExpSet& out_rs,
+         const typename InExpSet::value_t& v)
     {
-      copier<InRatExpSet, OutRatExpSet> copy(in_rs, out_rs);
+      copier<InExpSet, OutExpSet> copy(in_rs, out_rs);
       return copy(v);
     }
 

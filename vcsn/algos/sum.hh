@@ -140,12 +140,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       sum_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<RatExpSetLhs>();
-        const auto& r = rhs->as<RatExpSetRhs>();
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
         auto rs = join(l.expressionset(), r.expressionset());
         auto lr = rs.conv(l.expressionset(), l.expression());
         auto rr = rs.conv(r.expressionset(), r.expression());

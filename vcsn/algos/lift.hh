@@ -42,9 +42,9 @@ namespace vcsn
     using lifted_automaton_t =
       mutable_automaton<lifted_context_t<context_t_of<Aut>>>;
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     using lifted_expressionset_t =
-      expressionset<lifted_context_t<context_t_of<RatExpSet>>>;
+      expressionset<lifted_context_t<context_t_of<ExpSet>>>;
 
     // lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet>
@@ -139,10 +139,10 @@ namespace vcsn
       typename lifted_context_t<context_t_of<Exp>>::expression_t;
   }
 
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  typename detail::lifted_expressionset_t<RatExpSet>::value_t
-  lift(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  typename detail::lifted_expressionset_t<ExpSet>::value_t
+  lift(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
     auto lrs = detail::lift_expressionset(rs);
     return lrs.lmul(e, lrs.one());
@@ -158,11 +158,11 @@ namespace vcsn
       `--------------------*/
 
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expression
       lift_expression(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         return make_expression(::vcsn::detail::lift_expressionset(e.expressionset()),
                            ::vcsn::lift(e.expressionset(), e.expression()));
       }

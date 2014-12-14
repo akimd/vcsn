@@ -84,11 +84,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expression
       complement_expression(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
 
         return make_expression(e.expressionset(),
                            e.expressionset().complement(e.expression()));

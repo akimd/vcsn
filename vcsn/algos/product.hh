@@ -568,12 +568,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       shuffle_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<RatExpSetLhs>();
-        const auto& r = rhs->as<RatExpSetRhs>();
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
         auto rs = join(l.expressionset(), r.expressionset());
         auto lr = rs.conv(l.expressionset(), l.expression());
         auto rr = rs.conv(r.expressionset(), r.expression());
@@ -715,12 +715,12 @@ namespace vcsn
   `---------------------------------------*/
 
   /// Intersection/Hadamard product of expressions.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  typename RatExpSet::value_t
-  conjunction(const RatExpSet& rs,
-               const typename RatExpSet::value_t& lhs,
-               const typename RatExpSet::value_t& rhs)
+  typename ExpSet::value_t
+  conjunction(const ExpSet& rs,
+               const typename ExpSet::value_t& lhs,
+               const typename ExpSet::value_t& rhs)
   {
     return rs.conjunction(lhs, rhs);
   }
@@ -730,12 +730,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       conjunction_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<RatExpSetLhs>();
-        const auto& r = rhs->as<RatExpSetRhs>();
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
         auto rs = join(l.expressionset(), r.expressionset());
         auto lr = rs.conv(l.expressionset(), l.expression());
         auto rr = rs.conv(r.expressionset(), r.expression());

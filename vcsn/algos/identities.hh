@@ -21,11 +21,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       rat::identities
       identities(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         auto rs = e.expressionset();
         return rs.identities();
       }

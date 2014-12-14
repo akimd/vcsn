@@ -50,10 +50,10 @@ namespace vcsn
     ///
     /// So, after experimentation, as of 2014-10, I prefer not to use
     /// the pre/post based construct in neither case.
-    template <typename RatExpSet>
+    template <typename ExpSet>
     struct derived_termer
     {
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
 
       using context_t = context_t_of<expressionset_t>;
@@ -170,36 +170,36 @@ namespace vcsn
   }
 
   /// The derived-term automaton, for free labelsets.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  vcsn::enable_if_t<labelset_t_of<RatExpSet>::is_free(),
-    expression_automaton<mutable_automaton<typename RatExpSet::context_t>>>
-  derived_term(const RatExpSet& rs,
-               const typename RatExpSet::value_t& r,
+  vcsn::enable_if_t<labelset_t_of<ExpSet>::is_free(),
+    expression_automaton<mutable_automaton<typename ExpSet::context_t>>>
+  derived_term(const ExpSet& rs,
+               const typename ExpSet::value_t& r,
                const std::string& algo = "auto")
   {
     auto a = derived_term_algo(algo);
     bool breaking = (a == derived_term_algo_t::derivation_breaking
                      || a == derived_term_algo_t::expansion_breaking);
-    detail::derived_termer<RatExpSet> dt{rs, breaking};
+    detail::derived_termer<ExpSet> dt{rs, breaking};
     bool expansion = (a == derived_term_algo_t::expansion
                       || a == derived_term_algo_t::expansion_breaking);
     return expansion ? dt.via_expansion(r) : dt.via_derivation(r);
   }
 
   /// The derived-term automaton, for non free labelsets.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  vcsn::enable_if_t<!labelset_t_of<RatExpSet>::is_free(),
-    expression_automaton<mutable_automaton<typename RatExpSet::context_t>>>
-  derived_term(const RatExpSet& rs,
-               const typename RatExpSet::value_t& r,
+  vcsn::enable_if_t<!labelset_t_of<ExpSet>::is_free(),
+    expression_automaton<mutable_automaton<typename ExpSet::context_t>>>
+  derived_term(const ExpSet& rs,
+               const typename ExpSet::value_t& r,
                const std::string& algo = "auto")
   {
     auto a = derived_term_algo(algo);
     bool breaking = (a == derived_term_algo_t::derivation_breaking
                      || a == derived_term_algo_t::expansion_breaking);
-    detail::derived_termer<RatExpSet> dt{rs, breaking};
+    detail::derived_termer<ExpSet> dt{rs, breaking};
     require(a == derived_term_algo_t::expansion
             || a == derived_term_algo_t::expansion_breaking,
             "derived_term: cannot use derivation on non-free labelsets");
@@ -211,11 +211,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename String>
+      template <typename ExpSet, typename String>
       inline
       automaton derived_term(const expression& exp, const std::string& algo)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         const auto& rs = e.expressionset();
         const auto& r = e.expression();
         return make_automaton(::vcsn::derived_term(rs, r, algo));

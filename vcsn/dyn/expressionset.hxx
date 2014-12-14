@@ -15,19 +15,19 @@ namespace dyn
     | expressionset_wrapper.  |
     `--------------------*/
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     inline
-    expressionset_wrapper<RatExpSet>::expressionset_wrapper
+    expressionset_wrapper<ExpSet>::expressionset_wrapper
       (const expressionset_t& rs)
       : super_t()
       , rs_(rs)
     {}
 
 #define DEFINE                                  \
-    template <typename RatExpSet>               \
+    template <typename ExpSet>               \
     inline                                      \
     auto                                        \
-    expressionset_wrapper<RatExpSet>
+    expressionset_wrapper<ExpSet>
 
     DEFINE::down(const value_t& v) const
       -> typename expressionset_t::value_t
@@ -135,11 +135,11 @@ namespace dyn
                                        labelset_t::is_expressionset()>{});
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <typename LabelSet_>
     inline
     auto
-    expressionset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
+    expressionset_wrapper<ExpSet>::letter_class_(const letter_class_t&,
                                                 bool,
                                                 std::false_type,
                                                 std::true_type) const
@@ -148,11 +148,11 @@ namespace dyn
       raise("not implemented");
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <typename LabelSet_>
     inline
     auto
-    expressionset_wrapper<RatExpSet>::letter_class_(const letter_class_t& chars,
+    expressionset_wrapper<ExpSet>::letter_class_(const letter_class_t& chars,
                                                 bool accept,
                                                 std::false_type,
                                                 std::false_type) const
@@ -183,11 +183,11 @@ namespace dyn
       return rs_.letter_class(ccs, accept);
     }
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     template <typename LabelSet_, typename Bool>
     inline
     auto
-    expressionset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
+    expressionset_wrapper<ExpSet>::letter_class_(const letter_class_t&,
                                                 bool,
                                                 std::true_type,
                                                 Bool) const
@@ -210,12 +210,12 @@ namespace dyn
 
   } // namespace detail
 
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
   expressionset
-  make_expressionset(const RatExpSet& rs)
+  make_expressionset(const ExpSet& rs)
   {
-    using wrapper_t = detail::expressionset_wrapper<RatExpSet>;
+    using wrapper_t = detail::expressionset_wrapper<ExpSet>;
     return std::make_shared<wrapper_t>(rs);
   }
 

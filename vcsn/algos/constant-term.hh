@@ -19,13 +19,13 @@ namespace vcsn
     | constant_term(expression).  |
     `------------------------*/
 
-    /// \tparam RatExpSet  the expression set type.
-    template <typename RatExpSet>
+    /// \tparam ExpSet  the expression set type.
+    template <typename ExpSet>
     class constant_term_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using expression_t = typename expressionset_t::value_t;
       using weight_t = weight_t_of<expressionset_t>;
@@ -138,11 +138,11 @@ namespace vcsn
 
   } // rat::
 
-  template <typename RatExpSet>
-  weight_t_of<RatExpSet>
-  constant_term(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  template <typename ExpSet>
+  weight_t_of<ExpSet>
+  constant_term(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::constant_term_visitor<RatExpSet> constant_term{rs};
+    rat::constant_term_visitor<ExpSet> constant_term{rs};
     return constant_term(e);
   }
 
@@ -153,13 +153,13 @@ namespace vcsn
       /*--------------------------.
       | dyn::constant_term(exp).  |
       `--------------------------*/
-      template <typename RatExpSet>
+      template <typename ExpSet>
       weight
       constant_term(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         return make_weight(*e.expressionset().weightset(),
-                           constant_term<RatExpSet>(e.expressionset(),
+                           constant_term<ExpSet>(e.expressionset(),
                                                     e.expression()));
       }
 

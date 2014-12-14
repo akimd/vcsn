@@ -13,13 +13,13 @@ namespace vcsn
     | transpose(expression).  |
     `--------------------*/
 
-    /// \tparam RatExpSet  the expression set.
-    template <class RatExpSet>
+    /// \tparam ExpSet  the expression set.
+    template <class ExpSet>
     class transposer
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
       using super_t = typename expressionset_t::const_visitor;
 
@@ -149,9 +149,9 @@ namespace vcsn
     };
   }
 
-  template <class RatExpSet>
-  typename RatExpSet::value_t
-  transpose(const RatExpSet& rs, const typename RatExpSet::value_t& v)
+  template <class ExpSet>
+  typename ExpSet::value_t
+  transpose(const ExpSet& rs, const typename ExpSet::value_t& v)
   {
     return rs.transpose(v);
   }

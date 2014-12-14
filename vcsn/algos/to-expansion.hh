@@ -36,12 +36,12 @@ namespace vcsn
     | to_expansion_visitor.   |
     `------------------------*/
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     class to_expansion_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
@@ -414,12 +414,12 @@ namespace vcsn
   } // rat::
 
   /// First order expansion.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  typename rat::expansionset<RatExpSet>::value_t
-  to_expansion(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  typename rat::expansionset<ExpSet>::value_t
+  to_expansion(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::to_expansion_visitor<RatExpSet> to_expansion{rs};
+    rat::to_expansion_visitor<ExpSet> to_expansion{rs};
     return to_expansion.to_expansion(e);
   }
 
@@ -428,15 +428,15 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expansion
       to_expansion(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         const auto& rs = e.expressionset();
-        auto es = vcsn::rat::expansionset<RatExpSet>(rs);
+        auto es = vcsn::rat::expansionset<ExpSet>(rs);
         return make_expansion(es,
-                              to_expansion<RatExpSet>(rs, e.expression()));
+                              to_expansion<ExpSet>(rs, e.expression()));
       }
 
       REGISTER_DECLARE(to_expansion,

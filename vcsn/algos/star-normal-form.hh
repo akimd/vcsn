@@ -17,24 +17,24 @@ namespace vcsn
     | star_normal_form(expression).  |
     `---------------------------*/
 
-    /// \tparam RatExpSet relative to the RatExp.
+    /// \tparam ExpSet relative to the RatExp.
     ///
     /// Implementation based on the dot/box operators as defined in
     /// "On the Number of Broken Derived Terms of a Rational
     /// Expression", Pierre-Yves Angrand, Sylvain Lombardy, Jacques
     /// Sakarovitch.
-    template <typename RatExpSet>
+    template <typename ExpSet>
     class star_normal_form_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
       using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = typename weightset_t::value_t;
 
-      using super_t = typename RatExpSet::const_visitor;
+      using super_t = typename ExpSet::const_visitor;
 
       constexpr static const char* me() { return "star_normal_form"; }
 
@@ -177,11 +177,11 @@ namespace vcsn
   } // rat::
 
   /// Star_Normal_Forming a typed expression shared_ptr.
-  template <typename RatExpSet>
-  typename RatExpSet::value_t
-  star_normal_form(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  template <typename ExpSet>
+  typename ExpSet::value_t
+  star_normal_form(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::star_normal_form_visitor<RatExpSet> star_normal_form{rs};
+    rat::star_normal_form_visitor<ExpSet> star_normal_form{rs};
     return star_normal_form(e);
   }
 
@@ -190,11 +190,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expression
       star_normal_form(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         return make_expression(e.expressionset(),
                            ::vcsn::star_normal_form(e.expressionset(), e.expression()));
       }

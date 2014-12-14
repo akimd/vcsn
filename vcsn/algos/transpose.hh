@@ -270,11 +270,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expression
       transpose_expression(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
 
         return make_expression(e.expressionset(),
                            ::vcsn::transpose(e.expressionset(),
@@ -294,11 +294,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expression
       transposition_expression(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
 
         return make_expression(e.expressionset(),
                            e.expressionset().transposition(e.expression()));

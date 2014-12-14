@@ -14,11 +14,11 @@ namespace vcsn
     | expansionset.  |
     `---------------*/
 
-    template <typename RatExpSet>
+    template <typename ExpSet>
     struct expansionset
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;

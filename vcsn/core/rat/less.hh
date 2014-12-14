@@ -12,12 +12,12 @@ namespace vcsn
   namespace rat
   {
 
-    template <class RatExpSet>
+    template <class ExpSet>
     class less
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using weightset_t = weightset_t_of<context_t>;
@@ -37,7 +37,7 @@ namespace vcsn
       bool
       operator()(expression_t lhs, expression_t rhs)
       {
-        rat::size<RatExpSet> sizer;
+        rat::size<ExpSet> sizer;
         size_t lhss = sizer(lhs);
         size_t rhss = sizer(rhs);
 

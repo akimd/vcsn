@@ -17,13 +17,13 @@ namespace vcsn
     | expand(expression).  |
     `-----------------*/
 
-    /// \tparam RatExpSet  relative to the RatExp.
-    template <typename RatExpSet>
+    /// \tparam ExpSet  relative to the RatExp.
+    template <typename ExpSet>
     class expand_visitor
-      : public RatExpSet::const_visitor
+      : public ExpSet::const_visitor
     {
     public:
-      using expressionset_t = RatExpSet;
+      using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
       using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<expressionset_t>;
@@ -32,7 +32,7 @@ namespace vcsn
       using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_t = typename RatExpSet::const_visitor;
+      using super_t = typename ExpSet::const_visitor;
 
       constexpr static const char* me() { return "expand"; }
 
@@ -147,11 +147,11 @@ namespace vcsn
   } // rat::
 
   /// Expanding a typed expression shared_ptr.
-  template <typename RatExpSet>
-  typename RatExpSet::value_t
-  expand(const RatExpSet& rs, const typename RatExpSet::value_t& e)
+  template <typename ExpSet>
+  typename ExpSet::value_t
+  expand(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::expand_visitor<RatExpSet> expand{rs};
+    rat::expand_visitor<ExpSet> expand{rs};
     return expand(e);
   }
 
@@ -160,11 +160,11 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename ExpSet>
       expression
       expand(const expression& exp)
       {
-        const auto& e = exp->as<RatExpSet>();
+        const auto& e = exp->as<ExpSet>();
         return make_expression(e.expressionset(),
                            ::vcsn::expand(e.expressionset(), e.expression()));
       }

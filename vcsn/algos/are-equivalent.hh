@@ -114,12 +114,12 @@ namespace vcsn
   `--------------------------------------*/
 
   /// Difference of expressions.
-  template <typename RatExpSet>
+  template <typename ExpSet>
   inline
-  typename RatExpSet::value_t
-  difference(const RatExpSet& rs,
-             const typename RatExpSet::value_t& lhs,
-             const typename RatExpSet::value_t& rhs)
+  typename ExpSet::value_t
+  difference(const ExpSet& rs,
+             const typename ExpSet::value_t& lhs,
+             const typename ExpSet::value_t& rhs)
   {
     return rs.conjunction(lhs, rs.complement(rhs));
   }
@@ -129,12 +129,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       difference_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<RatExpSetLhs>();
-        const auto& r = rhs->as<RatExpSetLhs>();
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetLhs>();
         return make_expression(l.expressionset(),
                                ::vcsn::difference(l.expressionset(),
                                                   l.expression(),
