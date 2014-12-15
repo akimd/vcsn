@@ -142,14 +142,14 @@ namespace vcsn
       }
 
       /// The setname of the sub automata.
-      void print_set_(std::ostream& o, const std::string& format) const
+      std::ostream& print_set_(std::ostream& o, const std::string& format) const
       {
         return print_set_(o, format, indices);
       }
 
       template <size_t... I>
-      void print_set_(std::ostream& o, const std::string& format,
-                      seq<I...>) const
+      std::ostream& print_set_(std::ostream& o, const std::string& format,
+                               seq<I...>) const
       {
         o << '<';
         aut_->print_set(o, format);
@@ -163,7 +163,7 @@ namespace vcsn
              sep = ", ",
              0)...
           };
-        o <<  '>';
+        return o << '>';
       }
 
       /// The name of the pre of the output automaton.
