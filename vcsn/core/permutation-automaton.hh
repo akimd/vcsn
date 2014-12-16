@@ -22,8 +22,9 @@ namespace vcsn
     public:
       /// Input automaton type.
       using automaton_t = Aut;
-      /// Sorted automaton type.
-      using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
+      /// Generated automaton type.
+      using automaton_nocv_t
+        = typename automaton_t::element_type::automaton_nocv_t;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
       /// Symbolic state name: input automaton state type.
@@ -44,7 +45,8 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("permutation_automaton<" + automaton_t::element_type::sname() + '>');
+        static symbol res("permutation_automaton<"
+                          + automaton_t::element_type::sname() + '>');
         return res;
       }
 

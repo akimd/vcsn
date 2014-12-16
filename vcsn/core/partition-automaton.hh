@@ -21,8 +21,11 @@ namespace vcsn
       : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
     public:
+      /// Input automaton type.
       using automaton_t = Aut;
-      using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
+      /// Generated automaton type.
+      using automaton_nocv_t
+        = typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
