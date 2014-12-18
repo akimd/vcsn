@@ -13,7 +13,8 @@ export VCSN_PLUGINDIR
 test -d $VCSN_PLUGINDIR || mkdir -p $VCSN_PLUGINDIR
 
 # Use the shipped files, not those installed.
-VCSN_DATA_PATH=$abs_srcdir/share/vcsn
+: ${VCSN_DATA_PATH=${VCSN_DATADIR=$abs_srcdir/share/vcsn}}
+export VCSN_DATADIR
 export VCSN_DATA_PATH
 
 # Use the non-installed binaries.

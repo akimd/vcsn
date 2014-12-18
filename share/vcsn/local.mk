@@ -12,8 +12,16 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 jsdir = $(datadir)/vcsn/js
-dist_js_DATA =                                  \
+dist_js_DATA =                                         \
   %D%/js/AutomatonD3Widget.js
+
+notebook_profiledir = $(datadir)/vcsn/notebook_profile
+dist_notebook_profile_DATA =                           \
+  %D%/notebook_profile/history.sqlite                  \
+  %D%/notebook_profile/ipython_config.py               \
+  %D%/notebook_profile/ipython_nbconvert_config.py     \
+  %D%/notebook_profile/ipython_notebook_config.py      \
+  %D%/notebook_profile/ipython_qtconsole_config.py     \
 
 lal_char_bdir = $(datadir)/vcsn/lal_char_b
 dist_lal_char_b_DATA =				\
