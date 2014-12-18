@@ -40,7 +40,7 @@ namespace vcsn
 
       /// Aggregate an expression and its expressionset.
       template <typename ExpSet>
-      class expression_wrapper: public expression_base
+      class expression_wrapper final: public expression_base
       {
       public:
         using expressionset_t = ExpSet;

@@ -34,7 +34,7 @@ namespace vcsn
 
       /// Aggregate an expansion and its expansionset.
       template <typename ExpansionSet>
-      class expansion_wrapper: public expansion_base
+      class expansion_wrapper final: public expansion_base
       {
       public:
         using expansionset_t = ExpansionSet;

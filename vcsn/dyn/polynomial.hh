@@ -39,7 +39,7 @@ namespace vcsn
 
       /// Aggregate a polynomial and its polynomialset.
       template <typename PolynomialSet>
-      class polynomial_wrapper: public polynomial_base
+      class polynomial_wrapper final: public polynomial_base
       {
       public:
         using polynomialset_t = PolynomialSet;

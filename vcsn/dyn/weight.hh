@@ -37,7 +37,7 @@ namespace vcsn
 
       /// Aggregate a weight and its weightset.
       template <typename WeightSet>
-      class weight_wrapper: public weight_base
+      class weight_wrapper final: public weight_base
       {
       public:
         using weightset_t = WeightSet;

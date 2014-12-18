@@ -39,7 +39,7 @@ namespace vcsn
 
       /// A wrapped typed context.
       template <typename Context>
-      class context_wrapper: public context_base
+      class context_wrapper final: public context_base
       {
       public:
         using context_t = Context;

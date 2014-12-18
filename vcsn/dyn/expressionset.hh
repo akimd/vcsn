@@ -95,7 +95,7 @@ namespace detail
 
   /// Wrapper around an expressionset.
   template <typename ExpSet>
-  class expressionset_wrapper : public expressionset_base
+  class expressionset_wrapper final: public expressionset_base
   {
   public:
     using expressionset_t = ExpSet;

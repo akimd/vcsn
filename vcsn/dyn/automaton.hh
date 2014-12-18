@@ -37,7 +37,7 @@ namespace vcsn
 
       /// A wrapped typed automaton.
       template <typename Aut>
-      class automaton_wrapper: public automaton_base
+      class automaton_wrapper final: public automaton_base
       {
       public:
         using automaton_t = Aut;

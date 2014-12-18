@@ -37,7 +37,7 @@ namespace vcsn
 
       /// Aggregate a label and its labelset.
       template <typename LabelSet>
-      class label_wrapper: public label_base
+      class label_wrapper final: public label_base
       {
       public:
         using labelset_t = LabelSet;
