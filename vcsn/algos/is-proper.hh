@@ -1,12 +1,11 @@
-#ifndef VCSN_ALGOS_IS_PROPER_HH
-# define VCSN_ALGOS_IS_PROPER_HH
+#pragma once
 
-# include <type_traits>
+#include <type_traits>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/core/kind.hh>
-# include <vcsn/dyn/automaton.hh> // make_automaton
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/dyn/automaton.hh> // make_automaton
 
 namespace vcsn
 {
@@ -14,6 +13,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
+    inline
     vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut& aut)
     {
@@ -24,7 +24,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    constexpr
+    inline constexpr
     vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut&)
     {
@@ -43,6 +43,7 @@ namespace vcsn
   bool is_proper(const Aut& aut) ATTRIBUTE_CONST;
 
   template <typename Aut>
+  inline
   bool
   is_proper(const Aut& aut)
   {
@@ -59,6 +60,7 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
+      inline
       bool is_proper(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
@@ -68,9 +70,5 @@ namespace vcsn
      REGISTER_DECLARE(is_proper,
                       (const automaton& aut) -> bool);
     }
-
   }
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_IS_PROPER_HH

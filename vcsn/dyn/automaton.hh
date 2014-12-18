@@ -1,11 +1,10 @@
-#ifndef VCSN_DYN_AUTOMATON_HH
-# define VCSN_DYN_AUTOMATON_HH
+#pragma once
 
-# include <memory> // shared_ptr
-# include <string>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/export.hh>
-# include <vcsn/misc/symbol.hh>
+#include <memory> // shared_ptr
+#include <string>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/export.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -79,5 +78,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_DYN_AUTOMATON_HH

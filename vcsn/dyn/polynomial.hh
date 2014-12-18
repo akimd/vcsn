@@ -1,11 +1,10 @@
-#ifndef VCSN_DYN_POLYNOMIAL_HH
-# define VCSN_DYN_POLYNOMIAL_HH
+#pragma once
 
-# include <memory>
-# include <string>
+#include <memory>
+#include <string>
 
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -94,5 +93,3 @@ namespace vcsn
     }
   } // namespace dyn
 } // namespace vcsn
-
-#endif // !VCSN_DYN_POLYNOMIAL_HH

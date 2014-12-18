@@ -1,10 +1,9 @@
-#ifndef VCSN_DYN_WEIGHT_HH
-# define VCSN_DYN_WEIGHT_HH
+#pragma once
 
-# include <memory>
-# include <string>
+#include <memory>
+#include <string>
 
-# include <vcsn/misc/export.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -84,5 +83,3 @@ namespace vcsn
     }
   } // namespace dyn
 } // namespace vcsn
-
-#endif // !VCSN_DYN_WEIGHT_HH
