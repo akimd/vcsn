@@ -3,7 +3,10 @@
 : ${IPYTHON=ipython}
 
 if ($IPYTHON --version) >/dev/null 2>&1; then
-  exec $IPYTHON notebook --matplotlib=inline "$@"
+    exec $IPYTHON notebook                              \
+         --matplotlib=inline                            \
+         --profile-dir="$VCSN_DATADIR/notebook_profile" \
+         "$@"
 else
   cat >&2 <<EOF
 $0: error: cannot find $IPYTHON

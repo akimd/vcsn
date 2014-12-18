@@ -1,6 +1,8 @@
 #! /bin/sh
 
-pyexecdir='@PYEXECDIR@'
+: ${pyexecdir='@PYEXECDIR@'}
+: ${VCSN_DATADIR='@DATADIR@'}
+export VCSN_DATADIR
 
 # _Append_ pyexecdir, not prepend, so that the user can still override
 # this path via $PYTHONPATH.  Note in particular that the
