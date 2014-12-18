@@ -46,10 +46,10 @@ namespace vcsn
         using expressionset_t = ExpSet;
         using super_t = expression_base;
         using expression_t = typename expressionset_t::value_t;
-        expression_wrapper(const expression_t& expression,
-                       const expressionset_t& expressionset)
-          : expression_(expression)
-          , expressionset_(expressionset)
+        expression_wrapper(const expressionset_t& rs,
+                           const expression_t& r)
+          : expressionset_(rs)
+          , expression_(r)
         {}
 
         virtual symbol vname() const override
@@ -57,21 +57,21 @@ namespace vcsn
           return expressionset().sname();
         }
 
-        const expression_t expression() const
-        {
-          return expression_;
-        }
-
         const expressionset_t& expressionset() const
         {
           return expressionset_;
         }
 
+        const expression_t expression() const
+        {
+          return expression_;
+        }
+
       private:
-        /// The expression.
-        const expression_t expression_;
         /// The expression set.
         const expressionset_t expressionset_;
+        /// The expression.
+        const expression_t expression_;
       };
 
     } // namespace detail
@@ -82,10 +82,10 @@ namespace vcsn
     inline
     expression
     make_expression(const ExpSet& rs,
-                const typename ExpSet::value_t& expression)
+                    const typename ExpSet::value_t& r)
     {
       using wrapper_t = detail::expression_wrapper<ExpSet>;
-      return std::make_shared<wrapper_t>(expression, rs);
+      return std::make_shared<wrapper_t>(rs, r);
     }
 
   } // namespace dyn

@@ -40,10 +40,10 @@ namespace vcsn
         using expansionset_t = ExpansionSet;
         using super_t = expansion_base;
         using expansion_t = typename expansionset_t::value_t;
-        expansion_wrapper(const expansion_t& expansion,
-                          const expansionset_t& expansionset)
-          : expansion_(expansion)
-          , expansionset_(expansionset)
+        expansion_wrapper(const expansionset_t& expansionset,
+                          const expansion_t& expansion)
+          : expansionset_(expansionset)
+          , expansion_(expansion)
         {}
         virtual ~expansion_wrapper() {}
 
@@ -52,21 +52,21 @@ namespace vcsn
           return expansionset().sname();
         }
 
-        const expansion_t expansion() const
-        {
-          return expansion_;
-        }
-
         const expansionset_t& expansionset() const
         {
           return expansionset_;
         }
 
+        const expansion_t expansion() const
+        {
+          return expansion_;
+        }
+
       private:
-        /// The expansion.
-        const expansion_t expansion_;
         /// The expansion set.
         const expansionset_t expansionset_;
+        /// The expansion.
+        const expansion_t expansion_;
       };
 
     } // namespace detail
@@ -77,10 +77,10 @@ namespace vcsn
     inline
     expansion
     make_expansion(const ExpansionSet& ps,
-                    const typename ExpansionSet::value_t& expansion)
+                   const typename ExpansionSet::value_t& expansion)
     {
       using wrapper_t = detail::expansion_wrapper<ExpansionSet>;
-      return std::make_shared<wrapper_t>(expansion, ps);
+      return std::make_shared<wrapper_t>(ps, expansion);
     }
   } // namespace dyn
 } // namespace vcsn

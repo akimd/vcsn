@@ -45,10 +45,9 @@ namespace vcsn
         using polynomialset_t = PolynomialSet;
         using super_t = polynomial_base;
         using polynomial_t = typename polynomialset_t::value_t;
-        polynomial_wrapper(const polynomial_t& polynomial,
-                           const polynomialset_t& polynomialset)
-          : polynomial_(polynomial)
-          , polynomialset_(polynomialset)
+        polynomial_wrapper(const polynomialset_t& ps, const polynomial_t& p)
+          : polynomialset_(ps)
+          , polynomial_(p)
         {}
         virtual ~polynomial_wrapper() {}
 
@@ -57,14 +56,14 @@ namespace vcsn
           return polynomialset().sname();
         }
 
-        const polynomial_t polynomial() const
-        {
-          return polynomial_;
-        }
-
         const polynomialset_t& polynomialset() const
         {
           return polynomialset_;
+        }
+
+        const polynomial_t polynomial() const
+        {
+          return polynomial_;
         }
 
         /// Whether is zero.
@@ -74,10 +73,10 @@ namespace vcsn
         }
 
       private:
-        /// The polynomial.
-        const polynomial_t polynomial_;
         /// The polynomial set.
         const polynomialset_t polynomialset_;
+        /// The polynomial.
+        const polynomial_t polynomial_;
       };
 
     } // namespace detail
@@ -88,10 +87,10 @@ namespace vcsn
     inline
     polynomial
     make_polynomial(const PolynomialSet& ps,
-                    const typename PolynomialSet::value_t& polynomial)
+                    const typename PolynomialSet::value_t& p)
     {
       using wrapper_t = detail::polynomial_wrapper<PolynomialSet>;
-      return std::make_shared<wrapper_t>(polynomial, ps);
+      return std::make_shared<wrapper_t>(ps, p);
     }
   } // namespace dyn
 } // namespace vcsn

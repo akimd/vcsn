@@ -43,9 +43,9 @@ namespace vcsn
         using weightset_t = WeightSet;
         using super_t = weight_base;
         using weight_t = typename weightset_t::value_t;
-        weight_wrapper(const weight_t& w, const weightset_t& ws)
-          : weight_(w)
-          , weightset_(ws)
+        weight_wrapper(const weightset_t& ws, const weight_t& w)
+          : weightset_(ws)
+          , weight_(w)
         {}
 
         virtual symbol vname() const override
@@ -53,21 +53,21 @@ namespace vcsn
           return weightset().sname();
         }
 
-        const weight_t weight() const
-        {
-          return weight_;
-        }
-
         const weightset_t& weightset() const
         {
           return weightset_;
         }
 
+        const weight_t weight() const
+        {
+          return weight_;
+        }
+
       private:
-        /// The weight.
-        const weight_t weight_;
         /// The weight set.
         const weightset_t weightset_;
+        /// The weight.
+        const weight_t weight_;
       };
 
     } // namespace detail
@@ -80,7 +80,7 @@ namespace vcsn
     make_weight(const WeightSet& ws,
                 const typename WeightSet::value_t& w)
     {
-      return std::make_shared<detail::weight_wrapper<WeightSet>>(w, ws);
+      return std::make_shared<detail::weight_wrapper<WeightSet>>(ws, w);
     }
   } // namespace dyn
 } // namespace vcsn

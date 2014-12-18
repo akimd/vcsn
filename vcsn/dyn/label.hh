@@ -44,9 +44,9 @@ namespace vcsn
         using super_t = label_base;
         using label_t = typename labelset_t::value_t;
 
-        label_wrapper(const label_t& l, const labelset_t& ls)
-          : label_(l)
-          , labelset_(ls)
+        label_wrapper(const labelset_t& ls, const label_t& l)
+          : labelset_(ls)
+          , label_(l)
         {}
 
         virtual symbol vname() const override
@@ -54,21 +54,21 @@ namespace vcsn
           return labelset().sname();
         }
 
-        const label_t label() const
-        {
-          return label_;
-        }
-
         const labelset_t& labelset() const
         {
           return labelset_;
         }
 
+        const label_t label() const
+        {
+          return label_;
+        }
+
       private:
-        /// The label.
-        const label_t label_;
         /// The label set.
         const labelset_t labelset_;
+        /// The label.
+        const label_t label_;
       };
 
     } // namespace detail
@@ -81,7 +81,7 @@ namespace vcsn
     make_label(const LabelSet& ls,
                const typename LabelSet::value_t& l)
     {
-      return std::make_shared<detail::label_wrapper<LabelSet>>(l, ls);
+      return std::make_shared<detail::label_wrapper<LabelSet>>(ls, l);
     }
 
     template <typename LabelSet>
