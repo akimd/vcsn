@@ -123,8 +123,8 @@ def text(keys):
         # Compute average of benchs.
         avg = sum(bfs) / len(bfs)
         for b in bs:
+            color = ''
             if b != "N/A":
-                color = ''
                 score = float(b)
                 if score <= avg - args.threshold * avg:
                     color = Fore.GREEN + Style.BRIGHT
