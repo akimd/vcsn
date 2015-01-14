@@ -490,3 +490,34 @@ for fn in glob.glob(os.path.join(medir, '*.grail')):
     grail  = open(fn).read().strip()
     CHECK_EQ(grail, a.format('grail'))
     check_grail(a)
+
+
+## ------------ ##
+## Conversion.  ##
+## ------------ ##
+
+# Convert an automaton from lal_char, b to law_char, z.
+CHECK_EQ(vcsn.automaton('''context = "law_char, z"
+  $ -> 0
+  0 -> 1 a, b
+  1 -> 1 c
+  1 -> $''', 'daut'),
+         vcsn.automaton('''context = "lal_char(abc), b"
+  $ -> 0
+  0 -> 1 a, b
+  1 -> 1 c
+  1 -> $''', 'daut').automaton(vcsn.context("law_char(abc), z")))
+
+# Convert an automaton to a smaller, valid, alphabet.
+CHECK_EQ(vcsn.automaton('''context = "law_char(abc), z"
+  0 -> 1 a, b''', 'daut'),
+         vcsn.automaton('''context = "lal_char(a-z), b"
+  0 -> 1 a, b''', 'daut').automaton(vcsn.context("law_char(abc), z")))
+
+# Convert an automaton to a smaller, invalid, alphabet.
+XFAIL(lambda: vcsn.automaton('''context = "lal_char(abc), b"
+  0 -> 1 a, b''', 'daut').automaton(vcsn.context("law_char(xy), z")))
+
+# Convert to an invalid smaller weightset.
+XFAIL(lambda: vcsn.automaton('''context = "lal_char(abc), z"
+  0 -> 1 <3>a, b''', 'daut').automaton(vcsn.context("lal_char(xy), b")))

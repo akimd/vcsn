@@ -504,11 +504,10 @@ namespace vcsn
     ///
     /// \param src  source state
     /// \param dst  destination state
-    /// \param aut  the automaton whose transition will be copied.
+    /// \param aut  the automaton whose transition will be copied
     /// \param t    transition of \a aut whose label and weight are to copy
     /// \param transpose   whether label and weight should be transposed
     ///
-    /// \pre the label is _not checked_, for efficiency.
     /// \pre ! has_transition(src, dst, label_of(l)).
     template <typename A>
     transition_t
@@ -619,9 +618,6 @@ namespace vcsn
     /// \param aut  the automaton whose transition will be copied.
     /// \param t    transition of \a aut whose label and weight are to copy
     /// \param transpose   whether label and weight should be transposed
-    ///
-    /// \pre the label is _not checked_, for efficiency.  Letters out
-    /// of the alphabet will be accepted.
     template <typename A>
     weight_t
     add_transition_copy(state_t src, state_t dst,

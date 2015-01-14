@@ -168,10 +168,37 @@ namespace vcsn
       return hash_value(v);
     }
 
-    static value_t
-    conv(self_type, value_t v)
+    value_t
+    conv(self_type, value_t v) const
     {
       return v;
+    }
+
+    template <typename GenSet_>
+    value_t
+    conv(const letterset<GenSet_>& ls,
+         typename letterset<GenSet_>::value_t v) const
+    {
+      if (ls.is_special(v))
+        return special();
+      else
+        {
+          auto res = value(v);
+          require(is_valid(res),
+                  sname(), ": conv: invalid label: ", str_escape(v));
+          return res;
+        }
+    }
+
+    template <typename LabelSet_>
+    value_t
+    conv(const nullableset<LabelSet_>& ls,
+         typename nullableset<LabelSet_>::value_t v) const
+    {
+      if (ls.is_one(v))
+        return one();
+      else
+        return conv(*ls->labelset(), ls->get_value(v));
     }
 
     value_t

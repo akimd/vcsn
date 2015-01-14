@@ -161,9 +161,11 @@ namespace vcsn
       return hash_value(v);
     }
 
-    static value_t
-    conv(self_type, value_t v)
+    value_t
+    conv(self_type, value_t v) const
     {
+      require(is_valid(v) || is_special(v),
+              sname(), ": conv: invalid label: ", str_escape(v));
       return v;
     }
 
