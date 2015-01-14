@@ -129,7 +129,7 @@ namespace vcsn
       return v;
     }
 
-    /// v += p.
+    /// `v += p`.
     value_t&
     add_here(value_t& v, const value_t& p) const
     {
@@ -138,14 +138,14 @@ namespace vcsn
       return v;
     }
 
-    /// v += m.
+    /// `v += m`.
     value_t&
     add_here(value_t& v, const monomial_t& p) const
     {
       return add_here(v, p.first, p.second);
     }
 
-    /// v += <k>l.
+    /// `v += <k>l`.
     value_t&
     add_here(value_t& v, const label_t& l, const weight_t k) const
     {
@@ -170,7 +170,7 @@ namespace vcsn
       return v;
     }
 
-    /// v -= <k>l.
+    /// `v -= <k>l`.
     value_t&
     sub_here(value_t& v, const monomial_t& r) const
     {

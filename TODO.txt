@@ -79,6 +79,11 @@ expression; for instance in the case of sum, the list of operands is copied
 by hand instead of using the expressionset.  As a result, an expression
 "a+b+a", when "converted" to a series, gives "a+b+a" instead of "a+b".
 
+** efst
+We really need something safer to read automata.  For instance when we
+determinize ladybird in Zmin, we read it back as a Boolean automaton.  The
+also need routines to convert automata, expressions, etc. to other contexts.
+
 ** derivation
 We have ambiguous calls:
 
@@ -172,6 +177,14 @@ measures:
 
 Currently the score is rather 3.23.  Why this regression?  Track it, and fix
 it.
+
+Actually, I have tracked it down, and it appears to be a mirage.  Or rather,
+when I run again the benchs of the previous commits, the loss of performance
+propagates backward!  So I guess the problem is actually due to a
+compiler/libc++ update that degradated this algorithm (or quite surprisingly
+enough, no other).
+
+In other words, I'd say we should no longer bother about this.
 
 ** products: lazyness
 We need a lazy implementation of product.
@@ -267,6 +280,8 @@ The current implementation has too many short coming.
 
 See vcsn/experiments.git/join, there is something there which could be a
 good start.
+
+Actually, join has already been modernized.  Meet was not though.
 
 ** copy
 We need a more robust copy function that can promote to a supertype.

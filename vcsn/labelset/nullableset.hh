@@ -465,7 +465,7 @@ namespace vcsn
     | Join.  |
     `-------*/
 
-    /// oneset v LS -> nullableset<LS> if !LS::has_one.
+    /// `oneset v LS -> nullableset<LS>` if \c !LS\::has_one.
     template <typename LS>
     struct join_impl<oneset, LS,
                      enable_if_t<!LS::has_one()>>
@@ -477,7 +477,7 @@ namespace vcsn
       }
     };
 
-    /// oneset v LS -> LS if LS::has_one.
+    /// `oneset v LS -> LS` if \c LS\::has_one.
     template <typename LS>
     struct join_impl<oneset, LS,
                      enable_if_t<LS::has_one()>>

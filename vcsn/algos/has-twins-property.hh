@@ -97,8 +97,8 @@ namespace vcsn
   `---------------------*/
 
   /// Create states and the transitions two new automata \a naut1 and
-  /// \a naut2 with weight of transition <(w, one)> and <(one, w)>
-  /// corresponding with the weight of transition <w> of \a aut.
+  /// \a naut2 with weight of transition `<(w, one)>` and `<(one, w)>`
+  /// corresponding with the weight of transition `<w>` of \a aut.
   template <typename InAut, typename OutAut>
   void create_states_and_trans_(const InAut& aut,
                                 OutAut& naut1, OutAut& naut2)

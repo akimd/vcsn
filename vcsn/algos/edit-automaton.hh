@@ -36,6 +36,7 @@ namespace vcsn
     virtual void add_initial(string_t s, string_t w) = 0;
     virtual void add_final(string_t s, string_t w) = 0;
 
+    /// Register the existence of state named \a s.
     virtual void add_state(string_t s) = 0;
 
     /// Declare that \a s denotes the preinitial state in entries.
@@ -306,7 +307,8 @@ namespace vcsn
 
   private:
     /// The collected transitions: (Source, Destination, Label, Weight).
-    std::vector<std::tuple<string_t, string_t, string_t, string_t>> transitions_;
+    using transition_t = std::tuple<string_t, string_t, string_t, string_t>;
+    std::vector<transition_t> transitions_;
     /// The collected initial states: (State, Weight).
     std::vector<std::pair<string_t, string_t>> initial_states_;
     /// The collected final states: (State, Weight).

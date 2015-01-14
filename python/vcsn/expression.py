@@ -1,6 +1,6 @@
-## -------- ##
+## ------------ ##
 ## expression.  ##
-## -------- ##
+## ------------ ##
 
 from vcsn_cxx import label, expression
 from vcsn import _is_equal, _info_to_dict, _left_mult, _right_mult

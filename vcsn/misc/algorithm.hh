@@ -48,8 +48,8 @@ namespace vcsn
       return true;
     }
 
-    /// Same as *std::max_element, but works with an input iterator, not
-    /// just a forward iterator.
+    /// Same as \c *std\::max_element, but works with an input iterator,
+    /// not just a forward iterator.
     template <typename Container>
     typename Container::value_type
     max_forward(const Container& container)
