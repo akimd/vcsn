@@ -1,18 +1,17 @@
-#ifndef VCSN_LABELSET_LETTERSET_HH
-# define VCSN_LABELSET_LETTERSET_HH
+#pragma once
 
-# include <memory>
+#include <memory>
 
-# include <vcsn/alphabets/setalpha.hh> // intersection
-# include <vcsn/core/kind.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/set.hh> // intersection
-# include <vcsn/labelset/genset-labelset.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/labelset/nullableset.hh>
-# include <vcsn/labelset/wordset.hh>
+#include <vcsn/alphabets/setalpha.hh> // intersection
+#include <vcsn/core/kind.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/set.hh> // intersection
+#include <vcsn/labelset/genset-labelset.hh>
+#include <vcsn/labelset/labelset.hh>
+#include <vcsn/labelset/nullableset.hh>
+#include <vcsn/labelset/wordset.hh>
 
 namespace vcsn
 {
@@ -259,5 +258,3 @@ namespace vcsn
     return {intersection(lhs.genset(), rhs.genset())};
   }
 }
-
-#endif // !VCSN_LABELSET_LETTERSET_HH

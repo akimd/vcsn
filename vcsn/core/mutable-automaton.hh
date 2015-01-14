@@ -224,7 +224,7 @@ namespace vcsn
         {
           auto i =
             std::find_if(begin(succ), end(succ),
-                         [this,l,ls,dst] (transition_t t) -> bool
+                         [this,l,ls,dst] (transition_t t)
                          {
                            return (dst_of(t) == dst
                                    && ls.equal(label_of(t), l));
@@ -236,7 +236,7 @@ namespace vcsn
         {
           auto i =
             std::find_if(begin(pred), end(pred),
-                         [this,l,ls,src] (transition_t t) -> bool
+                         [this,l,ls,src] (transition_t t)
                          {
                            return (src_of(t) == src
                                    && ls.equal(label_of(t), l));

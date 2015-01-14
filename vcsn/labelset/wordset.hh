@@ -1,19 +1,18 @@
-#ifndef VCSN_LABELSET_WORDSET_HH
-# define VCSN_LABELSET_WORDSET_HH
+#pragma once
 
-# include <memory>
-# include <set>
+#include <memory>
+#include <set>
 
-# include <boost/algorithm/string/predicate.hpp> // starts_with
+#include <boost/algorithm/string/predicate.hpp> // starts_with
 
-# include <vcsn/core/kind.hh>
-# include <vcsn/labelset/fwd.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/labelset/genset-labelset.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/algorithm.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/labelset/fwd.hh>
+#include <vcsn/labelset/labelset.hh>
+#include <vcsn/labelset/genset-labelset.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/algorithm.hh>
+#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -308,5 +307,3 @@ namespace vcsn
     return {intersection(lhs.genset(), rhs.genset())};
   }
 }
-
-#endif // !VCSN_LABELSET_WORDSET_HH

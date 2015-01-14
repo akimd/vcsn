@@ -25,6 +25,11 @@ namespace vcsn
   namespace detail
   {
     /// Copy an automaton.
+    ///
+    /// \tparam AutIn
+    ///    The type of the automaton to copy.
+    /// \tparam AutOut
+    ///    The type of the resulting automaton.
     /// \pre AutIn <: AutOut.
     template <typename AutIn, typename AutOut>
     struct copier

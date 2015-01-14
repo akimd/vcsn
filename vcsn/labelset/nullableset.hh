@@ -1,20 +1,19 @@
-#ifndef VCSN_LABELSET_NULLABLESET_HH
-# define VCSN_LABELSET_NULLABLESET_HH
+#pragma once
 
-# include <cstring> //strncmp
-# include <memory>
-# include <set>
-# include <sstream>
+#include <cstring> //strncmp
+#include <memory>
+#include <set>
+#include <sstream>
 
-# include <vcsn/alphabets/setalpha.hh> // intersect
-# include <vcsn/core/kind.hh>
-# include <vcsn/labelset/fwd.hh>
-# include <vcsn/labelset/genset-labelset.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/labelset/oneset.hh>
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/alphabets/setalpha.hh> // intersect
+#include <vcsn/core/kind.hh>
+#include <vcsn/labelset/fwd.hh>
+#include <vcsn/labelset/genset-labelset.hh>
+#include <vcsn/labelset/labelset.hh>
+#include <vcsn/labelset/oneset.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -307,8 +306,7 @@ namespace vcsn
         return false;
       else if (is_one(l))
         return true;
-      return labelset_t::less(get_value(l),
-                                   get_value(r));
+      return labelset_t::less(get_value(l), get_value(r));
     }
 
     static value_t
@@ -508,7 +506,8 @@ namespace vcsn
     struct join_impl<nullableset<LS1>, nullableset<LS2>>
     {
       using type = nullableset<join_t<LS1, LS2>>;
-      static type join(const nullableset<LS1>& ls1, const nullableset<LS2>& ls2)
+      static type join(const nullableset<LS1>& ls1,
+                       const nullableset<LS2>& ls2)
       {
         return {::vcsn::join(*ls1.labelset(), *ls2.labelset())};
       }
@@ -541,11 +540,10 @@ namespace vcsn
   nullableset<meet_t<Lls, Rls>>
   meet(const nullableset<Lls>& lhs, const nullableset<Rls>& rhs)
   {
-    return nullableset<meet_t<Lls, Rls>>{meet(*lhs.labelset(), *rhs.labelset())};
+    return nullableset<meet_t<Lls, Rls>>{meet(*lhs.labelset(),
+                                              *rhs.labelset())};
   }
 
 #undef DEFINE
 
 }
-
-#endif // !VCSN_LABELSET_NULLABLESET_HH
