@@ -1,4 +1,0 @@
-context = "lan<letterset<char_letters(a)>>, b"
-$ -> 0
-0 -> 1 "\\e, a"
-1 -> $

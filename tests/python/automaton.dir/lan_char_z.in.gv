@@ -1,0 +1,15 @@
+digraph
+{
+  vcsn_context = "lan<lal_char(a-z)>, z"
+  I -> 0
+  0 -> 1 [label = "\\e"]
+  1 -> 2 [label = "<2>\\e"]
+  2 -> 3 [label = "[abcdijklz]"]
+  3 -> 4 [label = "<2>[abcdijklz]"]
+  4 -> 5 [label = "<2>[abcdijklz], e"]
+  5 -> 6 [label = "\\e, [a-dijklz]"]
+  6 -> 7 [label = "<2>\\e, <2>[a-dijklz]"]
+  7 -> 8 [label = "<2>\\e, <3>[a-dijklz]"]
+  8 -> 9 [label = "<2>\\e, <3>[a-dijklz], e"]
+  9 -> F
+}

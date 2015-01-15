@@ -4,9 +4,9 @@
 import vcsn
 from test import *
 
-## ------------------ ##
-## Invalid automata.  ##
-## ------------------ ##
+## -------------- ##
+## dot: parsing.  ##
+## -------------- ##
 
 # Check invalid input.
 def xfail(a):
@@ -202,9 +202,9 @@ vcsn.automaton(r'''digraph "a graph
 }'''))
 
 
-## ------------ ##
-## Pretty dot.  ##
-## ------------ ##
+## ------------- ##
+## dot: pretty.  ##
+## ------------- ##
 
 from vcsn.dot import _dot_pretty
 # Make sure to check the rendering useful/useless named/nameless
@@ -397,7 +397,7 @@ CHECK_EQ('''digraph
 
 import glob
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
-    print(fn)
+    print("Checking: ", fn)
     a = vcsn.automaton(filename = fn)
 
     exp = open(fn.replace('.in.gv', '.out.gv')).read().strip()

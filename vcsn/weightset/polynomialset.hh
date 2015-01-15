@@ -899,7 +899,7 @@ namespace vcsn
       if (sep == " + " || v.size() <= 2)
         return print_without_ranges_(v, out, format, sep);
 
-      // No ranges if the weights aren't all the same.
+      // No ranges if the weights of the letters aren't all the same.
       //
       // While at it, gather the letters.  We can use a vector, as we
       // know that the labels are already sorted, and random access
@@ -907,13 +907,15 @@ namespace vcsn
       std::vector<label_t> letters;
       weight_t first_w = weightset()->zero();
       for (const auto& m: v)
-        {
-          if (weightset()->is_zero(first_w))
-            first_w = m.second;
-          else if (!weightset()->equal(m.second, first_w))
-            return print_without_ranges_(v, out, format, sep);
-          letters.push_back(m.first);
-        }
+        if (!labelset()->is_one(m.first))
+          {
+            if (weightset()->is_zero(first_w))
+              first_w = m.second;
+            else if (!weightset()->equal(m.second, first_w))
+              return print_without_ranges_(v, out, format, sep);
+
+            letters.push_back(m.first);
+          }
 
       // Print with ranges.  First, the constant-term.
       if (labelset()->is_one(std::begin(v)->first))

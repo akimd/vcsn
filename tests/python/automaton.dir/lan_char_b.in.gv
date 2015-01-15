@@ -1,8 +1,0 @@
-digraph
-{
-  vcsn_context = "lan<lal_char(a)>, b"
-  0 -> 1 [label = a]
-  0 -> 1 [label = "\\e"]
-  1 -> F1
-  I0 -> 0
-}
