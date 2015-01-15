@@ -1,19 +1,18 @@
-#ifndef VCSN_ALGOS_COPY_HH
-# define VCSN_ALGOS_COPY_HH
+#pragma once
 
-# include <unordered_map>
+#include <unordered_map>
 
-# include <vcsn/algos/fwd.hh> // focus_automaton.
-# include <vcsn/core/fwd.hh>
-# include <vcsn/core/rat/copy.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/dyn/expressionset.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/set.hh>
-# include <vcsn/misc/unordered_set.hh>
+#include <vcsn/algos/fwd.hh> // focus_automaton.
+#include <vcsn/core/fwd.hh>
+#include <vcsn/core/rat/copy.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/expressionset.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/set.hh>
+#include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -98,7 +97,7 @@ namespace vcsn
     };
   }
 
-  /// Copy an automaton.
+  /// Copy selected states of an automaton.
   /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut, typename Pred>
   inline
@@ -109,6 +108,8 @@ namespace vcsn
     return copy(keep_state);
   }
 
+  /// Copy an automaton.
+  /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut>
   inline
   void
@@ -255,9 +256,9 @@ namespace vcsn
     }
   }
 
-  /*---------------.
-  | copy(expression).  |
-  `---------------*/
+  /*--------------------.
+  | copy(expression).   |
+  `--------------------*/
 
   namespace dyn
   {
@@ -278,12 +279,11 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(copy_expression,
-                       (const expression& exp, const expressionset& out_rs) -> expression);
+                       (const expression& exp, const expressionset& out_rs)
+                       -> expression);
     }
   }
 
 
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_COPY_HH

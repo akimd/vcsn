@@ -1,26 +1,25 @@
-#ifndef VCSN_ALGOS_PROPER_HH
-# define VCSN_ALGOS_PROPER_HH
+#pragma once
 
-# include <stdexcept>
-# include <type_traits>
-# include <unordered_map>
-# include <unordered_set>
-# include <utility>
-# include <vector>
+#include <stdexcept>
+#include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
-# include <boost/lexical_cast.hpp>
-# include <boost/heap/fibonacci_heap.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/heap/fibonacci_heap.hpp>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/dot.hh>
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/algos/is-eps-acyclic.hh>
-# include <vcsn/algos/is-proper.hh>
-# include <vcsn/algos/is-valid.hh>
-# include <vcsn/core/kind.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/direction.hh>
-# include <vcsn/misc/star_status.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/dot.hh>
+#include <vcsn/algos/fwd.hh>
+#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/is-proper.hh>
+#include <vcsn/algos/is-valid.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/direction.hh>
+#include <vcsn/misc/star_status.hh>
 
 #define STATS
 
@@ -548,6 +547,9 @@ namespace vcsn
 
   /// Blindly eliminate epsilon transitions without checking for the
   /// validity of the automaton.  Return true iff the process worked.
+  ///
+  /// \param aut   the input automaton
+  /// \param prune whether to suppress states becoming inaccessible
   template <typename Aut>
   inline
   bool in_situ_remover(Aut& aut, bool prune)
@@ -557,6 +559,10 @@ namespace vcsn
 
   /// Eliminate spontaneous transitions in place.  Raise if the
   /// automaton was not valid.
+  ///
+  /// \param aut   the input automaton
+  /// \param dir   whether backward or forward elimination
+  /// \param prune whether to suppress states becoming inaccessible
   template <typename Aut>
   inline
   void proper_here(Aut& aut, direction dir = direction::backward,
@@ -579,7 +585,7 @@ namespace vcsn
   /// From a labelset, its non-nullable labelset.
   ///
   /// Unfortunately cannot be always done.  For instance,
-  /// `tupleset<nullableset<letterset>`, `nullableset<letterset>>` cannot
+  /// `tupleset<nullableset<letterset>, nullableset<letterset>>` cannot
   /// be turned in `tupleset<letterset, letterset>`, as it also forbids
   /// `(a, \e)` and `(\e, x)` which should be kept legitimate.
   template <typename LabelSet>
@@ -619,6 +625,10 @@ namespace vcsn
 
   /// Eliminate spontaneous transitions.  Raise if the input automaton
   /// is invalid.
+  ///
+  /// \param aut   the input automaton
+  /// \param dir   whether backward or forward elimination
+  /// \param prune whether to suppress states becoming inaccessible
   template <typename Aut>
   auto
   proper(const Aut& aut, direction dir = direction::backward,
@@ -655,5 +665,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_PROPER_HH

@@ -140,9 +140,9 @@ namespace dyn
     inline
     auto
     expressionset_wrapper<ExpSet>::letter_class_(const letter_class_t&,
-                                                bool,
-                                                std::false_type,
-                                                std::true_type) const
+                                                 bool,
+                                                 std::false_type,
+                                                 std::true_type) const
       -> value_t
     {
       raise("not implemented");
@@ -153,9 +153,9 @@ namespace dyn
     inline
     auto
     expressionset_wrapper<ExpSet>::letter_class_(const letter_class_t& chars,
-                                                bool accept,
-                                                std::false_type,
-                                                std::false_type) const
+                                                 bool accept,
+                                                 std::false_type,
+                                                 std::false_type) const
       -> value_t
     {
       auto ls = *rs_.labelset();
@@ -188,9 +188,9 @@ namespace dyn
     inline
     auto
     expressionset_wrapper<ExpSet>::letter_class_(const letter_class_t&,
-                                                bool,
-                                                std::true_type,
-                                                Bool) const
+                                                 bool,
+                                                 std::true_type,
+                                                 Bool) const
       -> value_t
     {
       return one();
