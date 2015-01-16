@@ -17,7 +17,8 @@ namespace vcsn
   mutable_automaton<Context>
   de_bruijn(const Context& ctx, unsigned n)
   {
-    const auto& gens = ctx.labelset()->genset();
+    const auto& ls = *ctx.labelset();
+    const auto& gens = ls.genset();
     size_t sz = std::distance(std::begin(gens), std::end(gens));
     require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
     using context_t = Context;
@@ -27,16 +28,16 @@ namespace vcsn
     auto init = res->new_state();
     res->set_initial(init);
     for (auto l: gens)
-      res->new_transition(init, init, l);
+      res->new_transition(init, init, ls.value(l));
 
     auto prev = res->new_state();
-    res->new_transition(init, prev, *std::begin(gens));
+    res->new_transition(init, prev, ls.value(*std::begin(gens)));
 
     while (n--)
       {
         auto next = res->new_state();
         for (auto l: gens)
-          res->new_transition(prev, next, l);
+          res->new_transition(prev, next, ls.value(l));
         prev = next;
       }
     res->set_final(prev);

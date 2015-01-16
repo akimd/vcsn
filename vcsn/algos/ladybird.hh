@@ -6,6 +6,7 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable-automaton.hh>
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -16,14 +17,15 @@ namespace vcsn
   ladybird(const Context& ctx, unsigned n)
   {
     using context_t = Context;
-    const auto& gens = ctx.labelset()->genset();
-    std::vector<typename context_t::labelset_t::letter_t> letters
+    const auto& ls = *ctx.labelset();
+    const auto& gens = ls.genset();
+    std::vector<letter_t_of<context_t>> letters
       {std::begin(gens), std::end(gens)};
     require(3 <= letters.size(),
             "ladybird: the alphabet needs at least 3 letters");
-    auto a = letters[0];
-    auto b = letters[1];
-    auto c = letters[2];
+    auto a = ls.value(letters[0]);
+    auto b = ls.value(letters[1]);
+    auto c = ls.value(letters[2]);
 
     using automaton_t = mutable_automaton<Context>;
     automaton_t res = make_shared_ptr<automaton_t>(ctx);

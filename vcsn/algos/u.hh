@@ -20,9 +20,11 @@ namespace vcsn
     using automaton_t = mutable_automaton<context_t>;
     using state_t = state_t_of<automaton_t>;
     require(2 <= n, "u: n must be at least 3");
-    const auto& gens = ctx.labelset()->genset();
-    std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(gens), std::end(gens)};
+    const auto& ls = *ctx.labelset();
+    const auto& gens = ls.genset();
+    std::vector<label_t_of<context_t>> letters;
+    for (auto l: gens)
+      letters.emplace_back(ls.value(l));
     require(3 <= letters.size(), "u: the alphabet needs at least 3 letters");
     automaton_t res = make_shared_ptr<automaton_t>(ctx);
 

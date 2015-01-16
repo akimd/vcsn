@@ -53,6 +53,10 @@ namespace vcsn
 #undef DEFINE
 
   template <typename ValueSet>
+  using letter_t_of
+    = typename labelset_t_of<base_t<ValueSet>>::letter_t;
+
+  template <typename ValueSet>
   using word_t_of
     = typename labelset_t_of<base_t<ValueSet>>::word_t;
 }

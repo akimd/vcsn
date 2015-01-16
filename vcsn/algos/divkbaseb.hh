@@ -20,19 +20,20 @@ namespace vcsn
     using context_t = Context;
     using automaton_t = mutable_automaton<context_t>;
     using state_t = state_t_of<automaton_t>;
-    const auto& gens = ctx.labelset()->genset();
-    std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(gens), std::end(gens)};
+    const auto& ls = *ctx.labelset();
+    const auto& gens = ls.genset();
+    std::vector<label_t_of<context_t>> letters;
+    for (auto l: gens)
+      letters.emplace_back(ls.value(l));
 
     require(divisor,
             "divkbaseb: divisor cannot be 0");
     require(2 <= base,
-            "divkbaseb: base (" + std::to_string(base)
-            + ") must be at least 2");
+            "divkbaseb: base (", base, ") must be at least 2");
     require(base <= letters.size(),
-            "divkbaseb: base (" + std::to_string(base)
-            + ") must be less than or equal to the alphabet size ("
-            + std::to_string(letters.size()) + ")");
+            "divkbaseb: base (", base,
+            ") must be less than or equal to the alphabet size (",
+            letters.size(), ')');
 
     automaton_t res = make_shared_ptr<automaton_t>(ctx);
 

@@ -18,13 +18,14 @@ namespace vcsn
               const std::vector<unsigned>& finals)
   {
     using context_t = Context;
-    const auto& gens = ctx.labelset()->genset();
+    const auto& ls = *ctx.labelset();
+    const auto& gens = ls.genset();
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(gens), std::end(gens)};
     require(2 <= letters.size(),
             "double_ring: the alphabet needs at least 2 letters");
-    auto a = letters[0];
-    auto b = letters[1];
+    auto a = ls.value(letters[0]);
+    auto b = ls.value(letters[1]);
 
     using automaton_t = mutable_automaton<context_t>;
     using state_t = state_t_of<automaton_t>;
