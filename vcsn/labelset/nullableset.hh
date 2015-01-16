@@ -21,38 +21,28 @@ namespace vcsn
   {
     /// Add support for an empty word to a LabelSet that does not
     /// provide such special label to this end.
+    ///
+    /// \tparam LabelSet
+    ///    the LabelSet to which we want to add nullable support
+    ///    (e.g., a letterset<>).
     template <typename LabelSet>
     struct nullable_helper
     {
       using labelset_t = LabelSet;
-      using null = nullableset<labelset_t>;
       using value_t = std::pair<typename labelset_t::value_t, bool>;
-      using kind_t = typename LabelSet::kind_t;
-
-      static null make(std::istream& is)
-      {
-        // name: nullableset<lal_char(abc)>.
-        //                   ^^^^^^^^^^^^
-        //                     labelset
-        null::make_nullableset_kind(is);
-        eat(is, '<');
-        auto ls = null::labelset_t::make(is);
-        eat(is, '>');
-        return null{ls};
-      }
 
       ATTRIBUTE_PURE
       static constexpr value_t
       one()
       {
-        return value_t{null::labelset_t::special(), true};
+        return value_t{labelset_t::special(), true};
       }
 
       ATTRIBUTE_PURE
       static constexpr value_t
       special()
       {
-        return value_t{null::labelset_t::special(), false};
+        return value_t{labelset_t::special(), false};
       }
 
       template <typename Ls>
@@ -78,6 +68,15 @@ namespace vcsn
         return is_one_<labelset_t>(l);
       }
 
+      static value_t
+      transpose(const labelset_t& ls, value_t l)
+      {
+        if (is_one(l))
+          return l;
+        else
+          return {ls.transpose(get_value(l)), false};
+      }
+
       template <typename... Args>
       static value_t
       value(const labelset_t& ls, Args&&... args)
@@ -95,48 +94,26 @@ namespace vcsn
 
     /// Add support for an empty word to a letterset thanks to the
     /// one() of its genset.
+    ///
+    /// \tparam GenSet
+    ///    the GenSet of the LabelSet to which we want to add nullable
+    ///    support (i.e., letterset<GenSet>).
     template <typename GenSet>
     struct nullable_helper<letterset<GenSet>>
     {
-      using labelset_t = letterset<GenSet>;
       using genset_t = GenSet;
-      using null = nullableset<labelset_t>;
+      using labelset_t = letterset<genset_t>;
       using value_t = typename labelset_t::value_t;
-      using kind_t = labels_are_nullable;
-
-      static null
-      make(std::istream& is)
-      {
-        using genset_t = typename labelset_t::genset_t;
-        // name: lal_char(abc), expressionset<law_char(xyz), b>.
-        //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-        //        |   |    |        weightset
-        //        |   |    +-- gens
-        //        |   +-- letter_type
-        //        +-- kind
-        null::make_nullableset_kind(is);
-        if (is.peek() == '_')
-        {
-          eat(is, '_');
-          auto gs = genset_t::make(is);
-          auto ls = labelset_t{gs};
-          return null{ls};
-        }
-        eat(is, '<');
-        auto ls = labelset_t::make(is);
-        eat(is, '>');
-        return null{ls};
-      }
 
       ATTRIBUTE_PURE
-      static constexpr typename null::value_t
+      static constexpr value_t
       special()
       {
         return genset_t::special();
       }
 
       ATTRIBUTE_PURE
-      static constexpr typename null::value_t
+      static constexpr value_t
       one()
       {
         return genset_t::one_letter();
@@ -149,6 +126,12 @@ namespace vcsn
         return l == one();
       }
 
+      static value_t
+      transpose(const labelset_t&, value_t l)
+      {
+        return l;
+      }
+
       template <typename... Args>
       static value_t
       value(const labelset_t& ls, Args&&... args)
@@ -157,7 +140,7 @@ namespace vcsn
       }
 
       ATTRIBUTE_PURE
-      static typename labelset_t::value_t
+      static value_t
       get_value(const value_t& v)
       {
         return v;
@@ -167,24 +150,31 @@ namespace vcsn
 
   /// Implementation of labels are nullables (letter or empty).
   template <typename LabelSet>
-  class nullableset : public LabelSet
+  class nullableset
   {
   public:
     using labelset_t = LabelSet;
     using labelset_ptr = std::shared_ptr<const labelset_t>;
     using self_type = nullableset;
     using helper_t = detail::nullable_helper<labelset_t>;
-    using kind_t = typename helper_t::kind_t;
+    using kind_t = labels_are_nullable;
 
     using value_t = typename helper_t::value_t;
+    using letter_t = typename labelset_t::letter_t;
     using word_t = typename labelset_t::word_t;
 
-    nullableset(const labelset_t& ls)
-      : labelset_t{ls}, ls_{std::make_shared<const labelset_t>(ls)}
+  private:
+    /// The wrapped LabelSet.
+    /// Declared early to please decltype.
+    labelset_ptr ls_;
+
+  public:
+    nullableset(const labelset_ptr& ls)
+      : ls_{ls}
     {}
 
-    nullableset(const std::shared_ptr<const labelset_t>& ls)
-      : labelset_t{ls}, ls_{ls}
+    nullableset(const labelset_t& ls)
+      : nullableset{std::make_shared<const labelset_t>(ls)}
     {}
 
     static symbol sname()
@@ -194,9 +184,15 @@ namespace vcsn
     }
 
     /// Build from the description in \a is.
-    static nullableset make(std::istream& i)
+    static nullableset make(std::istream& is)
     {
-      return helper_t::make(i);
+      // name: lan<lal_char(abc)>.
+      //           ^^^^^^^^^^^^
+      //                     labelset
+      eat(is, "lan<");
+      auto ls = labelset_t::make(is);
+      eat(is, '>');
+      return {ls};
     }
 
     /// Whether unknown letters should be added, or rejected.
@@ -250,6 +246,14 @@ namespace vcsn
       return is_one(v) || labelset()->is_valid(get_value(v));
     }
 
+    /// The generators.  Meaningful for labelsets only.
+    auto
+    genset() const
+      -> decltype(this->ls_->genset())
+    {
+      return ls_->genset();
+    }
+
     value_t
     conv(self_type, value_t v) const
     {
@@ -287,8 +291,25 @@ namespace vcsn
     word_t
     word(const value_t& l) const
     {
-      // FIXME: looks wrong: are sure to issue the empty word on one?
-      return labelset()->word(get_value(l));
+      if (is_one(l))
+        return make_wordset(*labelset()).one();
+      else
+        return labelset()->word(get_value(l));
+    }
+
+    /// Prepare to iterate over the letters of v.
+    auto static
+    letters_of(word_t v)
+      -> decltype(labelset_t::letters_of(v))
+    {
+      return labelset_t::letters_of(v);
+    }
+
+    auto
+    letters_of(value_t v) const
+      -> word_t
+    {
+      return letters_of(word(v));
     }
 
     /// Whether l == r.
@@ -329,10 +350,8 @@ namespace vcsn
     // FIXME: specialize for both implementation.
     static size_t hash(const value_t& v)
     {
-      std::size_t res = 0;
-      std::hash_combine(res, labelset_t::hash(get_value(v)));
-      std::hash_combine(res, helper_t::is_one(v));
-      return res;
+      // Do not use get_value when is_one.  Let's hash one() as 0.
+      return is_one(v) ? 0 : labelset_t::hash(get_value(v));
     }
 
     value_t
@@ -373,12 +392,6 @@ namespace vcsn
       return o;
     }
 
-    static void
-    make_nullableset_kind(std::istream& is)
-    {
-      eat(is, "lan");
-    }
-
     value_t
     zero() const
     {
@@ -388,21 +401,19 @@ namespace vcsn
     bool
     is_zero(const value_t& v) const
     {
-      return labelset()->is_zero(get_value(v));
+      return !is_one(v) && labelset()->is_zero(get_value(v));
     }
 
     bool
     is_letter(const value_t& v) const
     {
-      return labelset()->is_letter(get_value(v));
+      return !is_one(v) && labelset()->is_letter(get_value(v));
     }
 
     value_t
     transpose(const value_t& l) const
     {
-      if (is_one(l))
-        return l;
-      return value(ls_->transpose(get_value(l)));
+      return helper_t::transpose(*ls_, l);
     }
 
     std::ostream&
@@ -429,10 +440,9 @@ namespace vcsn
     static typename labelset_t::value_t
     get_value(const value_t& v)
     {
+      assert(!is_one(v));
       return helper_t::get_value(v);
     }
-
-    labelset_ptr ls_;
   };
 
   namespace detail

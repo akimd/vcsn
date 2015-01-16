@@ -169,6 +169,17 @@ namespace vcsn
       return v;
     }
 
+    /// Convert from nullableset to letterset.
+    template <typename LabelSet_>
+    value_t
+    conv(const nullableset<LabelSet_>& ls,
+         typename nullableset<LabelSet_>::value_t v) const
+    {
+      require(!ls.is_one(v),
+              sname(), ": conv: invalid label: \\e");
+      return conv(*ls.labelset(), ls.get_value(v));
+    }
+
     /// Read one letter from i, return the corresponding label.
     value_t
     conv(std::istream& i) const
