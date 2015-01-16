@@ -25,6 +25,9 @@ int main()
     = { "one", "deux", "three", "four" };
 
   using vcsn::zip;
+  for (auto i: zip(ints))
+    std::cout << i << std::endl;
+
   for (auto i: zip(ints, floats, strings))
     std::cout << i << std::endl;
 

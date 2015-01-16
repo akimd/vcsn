@@ -1,6 +1,10 @@
 #! /bin/sh
 
 run 0 - tests/unit/zip <<EOF
+(1)
+(20)
+(30)
+(40)
 (1, 1.1, one)
 (20, 2.22, deux)
 (30, 3.3, three)
