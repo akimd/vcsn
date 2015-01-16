@@ -198,7 +198,7 @@ namespace vcsn
       if (ls.is_one(v))
         return one();
       else
-        return conv(*ls->labelset(), ls->get_value(v));
+        return conv(*ls.labelset(), ls.get_value(v));
     }
 
     value_t
