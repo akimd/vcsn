@@ -1,14 +1,14 @@
-#ifndef VCSN_ALGOS_DE_BRUIJN_HH
-# define VCSN_ALGOS_DE_BRUIJN_HH
+#pragma once
 
-# include <iterator> // std::distance
-# include <stdexcept>
+#include <iterator> // std::distance
+#include <stdexcept>
 
-# include <vcsn/alphabets/char.hh>
-# include <vcsn/alphabets/setalpha.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/alphabets/char.hh>
+#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -67,5 +67,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_ALGOS_DE_BRUIJN_HH

@@ -1,14 +1,14 @@
-#ifndef VCSN_ALGOS_DOUBLE_RING_HH
-# define VCSN_ALGOS_DOUBLE_RING_HH
+#pragma once
 
-# include <map>
+#include <map>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/alphabets/char.hh>
-# include <vcsn/alphabets/setalpha.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/alphabets/char.hh>
+#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -36,7 +36,12 @@ namespace vcsn
     // Set initial.
     auto p = res->new_state();
     res->set_initial(p);
-    // Have states start on base 0. No need for pre and post states here.
+    // Have states start on base 0. No need for pre and post states
+    // here.
+    //
+    // FIXME: this map is ridiculous, should be a vector.  Maybe we
+    // should turn finals into a set and not store this map/vector at
+    // all: perform the set_final in the main loop.
     std::map<unsigned, state_t> states;
     // We want first state to be 0 and not 2.
     states.emplace(0, p);
@@ -87,5 +92,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_DOUBLE_RING_HH

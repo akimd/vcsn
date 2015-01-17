@@ -1,12 +1,12 @@
-#ifndef VCSN_ALGOS_U_HH
-# define VCSN_ALGOS_U_HH
+#pragma once
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/alphabets/char.hh>
-# include <vcsn/alphabets/setalpha.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/alphabets/char.hh>
+#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -79,5 +79,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_ALGOS_U_HH
