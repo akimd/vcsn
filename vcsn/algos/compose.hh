@@ -195,8 +195,9 @@ namespace vcsn
         // non-spontaneous transitions, issue follow all the rhs
         // spontaneous-transitions.
         const bool lhs_has_non_sp_trans =
-          !lhs->labelset()->is_one(ltm.begin()->first)
-          || 2 <= ltm.size();
+          !ltm.empty()
+          && (!lhs->labelset()->is_one(ltm.begin()->first)
+              || 2 <= ltm.size());
 
         if ((!has_eps_out || lhs_has_non_sp_trans)
             && !rtm.empty()
