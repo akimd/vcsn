@@ -1,10 +1,10 @@
-#ifndef VCSN_CORE_KIND_HH
-# define VCSN_CORE_KIND_HH
+#pragma once
 
-# include <istream>
+#include <istream>
 
-# include <vcsn/misc/stream.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/stream.hh> // eat
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/type_traits.hh> // vcsn::is_same_t
 
 namespace vcsn
 {
@@ -23,7 +23,7 @@ namespace vcsn
   /// context, but then, instead of "(if_lal<Ctx, letter_t> v)",
   /// one must write "(typename Cxx::template if_lal<letter_t> v)".
 
-# define DEFINE(Abbrev, Name)                                           \
+#define DEFINE(Abbrev, Name)                                            \
   struct labels_are_ ## Name                                            \
   {                                                                     \
     static symbol sname()                                               \
@@ -34,18 +34,6 @@ namespace vcsn
                                                                         \
     static void make(std::istream& is)                                  \
     {                                                                   \
-      /*                                                                \
-       * name: lal_char(abc), expressionset<law_char(xyz), b>.              \
-       *       ^^^ ^^^^ ^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^^                \
-       *        |   |    |        weightset                             \
-       *        |   |    +-- gens                                       \
-       *        |   +-- letter_type                                     \
-       *        +-- kind                                                \
-       *                                                                \
-       * name: lao, expressionset<law_char(xyz), b>                         \
-       *       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^                         \
-       *       kind         weightset                                   \
-       */                                                               \
       eat(is, sname());                                                 \
     }                                                                   \
                                                                         \
@@ -53,7 +41,7 @@ namespace vcsn
                                                                         \
   template <typename Kinded>                                            \
   struct is_ ## Abbrev                                                  \
-    : std::is_same<typename Kinded::kind_t, labels_are_ ## Name>::type  \
+    : vcsn::is_same_t<typename Kinded::kind_t, labels_are_ ## Name>     \
   {}
 
   DEFINE(lal, letters);
@@ -63,7 +51,5 @@ namespace vcsn
   DEFINE(lat, tuples);
   DEFINE(law, words);
 
-# undef DEFINE
+#undef DEFINE
 }
-
-#endif // !VCSN_CORE_KIND_HH

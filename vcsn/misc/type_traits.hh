@@ -8,4 +8,7 @@ namespace vcsn
   // the like.
   template <bool Cond, typename T = void>
   using enable_if_t = typename std::enable_if<Cond, T>::type;
+
+  template <typename T, typename U>
+  using is_same_t = typename std::is_same<T, U>::type;
 }
