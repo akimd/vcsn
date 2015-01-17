@@ -3,9 +3,9 @@
 import vcsn
 from test import *
 
-## ----------- ##
-## LAL x LAL.  ##
-## ----------- ##
+## ----- ##
+## LAL.  ##
+## ----- ##
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lat<lal_char(abc), lal_char(xyz)>, z"

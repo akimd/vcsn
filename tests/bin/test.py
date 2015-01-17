@@ -122,6 +122,13 @@ def XFAIL(fun, exp = None):
     else:
         FAIL('did not raise an exception', str(fun))
 
+def CHECK(effective, loc = None):
+    "Check that `effective` is `True`."
+    if effective:
+        PASS(loc=loc)
+    else:
+        FAIL("assertion failed", loc=loc)
+
 def CHECK_EQ(expected, effective, loc = None):
     "Check that `effective` is equal to `expected`."
     if isinstance(expected, str) and not isinstance(effective, str):

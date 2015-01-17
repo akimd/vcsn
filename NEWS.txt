@@ -1,9 +1,9 @@
-Vcsn 2 news
-===========
+Vcsn news
+=========
 
 This file describes user visible changes in the course of the development of
-Vaucanson 2, in reverse chronological order.  On occasions, significant
-changes in the internal API may also be documented.
+Vcsn, in reverse chronological order.  On occasions, significant changes in
+the internal API may also be documented.
 
 
 ## 2014-11-18

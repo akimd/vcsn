@@ -290,6 +290,10 @@ namespace vcsn
     /// \pre \a aut is a transducer.
     bool is_functional(const automaton& aut);
 
+    /// Whether \a aut realizes a partial identity.
+    /// \pre \a aut is a transducer.
+    bool is_partial_identity(const automaton& aut);
+
     /// Whether is normalized (in the Thompson sense), i.e., standard
     /// and co-standard.
     bool is_normalized(const automaton& aut);

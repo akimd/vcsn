@@ -49,6 +49,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/is-deterministic.hh                 \
   %D%/algos/is-eps-acyclic.hh                   \
   %D%/algos/is-functional.hh                    \
+  %D%/algos/is-partial-identity.hh              \
   %D%/algos/is-proper.hh                        \
   %D%/algos/is-valid-expression.hh              \
   %D%/algos/is-valid.hh                         \

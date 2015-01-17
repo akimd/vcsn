@@ -46,6 +46,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-equivalent.py                          \
   %D%/is-functional.py                          \
   %D%/is-isomorphic.py                          \
+  %D%/is-partial-identity.py                    \
   %D%/is-proper.py                              \
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
