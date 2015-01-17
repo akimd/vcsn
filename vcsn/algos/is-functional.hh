@@ -18,9 +18,9 @@ namespace vcsn
   {
     // Compose aut and its invert.
     auto l = focus<0>(aut);
-    auto r = insplit(focus<0>(aut));
-    detail::composer<decltype(l), decltype(r)> compose(l, r);
-    auto c = compose.compose();
+    auto r = insplit(l);
+    auto compose = detail::make_composer(l, r);
+    auto c = compose();
     return is_partial_identity(c);
   }
 

@@ -108,7 +108,7 @@ namespace vcsn
       }
 
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
-      automaton_t compose()
+      automaton_t operator()()
       {
         initialize_compose();
 
@@ -130,7 +130,8 @@ namespace vcsn
       /// The type of our transition maps: convert the weight to weightset_t,
       /// non deterministic, and including transitions to post().
       template <typename A>
-      using transition_map_t = transition_map<A, weightset_t, false, true, true>;
+      using transition_map_t
+        = transition_map<A, weightset_t, false, true, true>;
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
@@ -175,21 +176,19 @@ namespace vcsn
         const auto& rtm = std::get<1>(transition_maps_)[std::get<1>(psrc)];
 
         bool has_eps_out = false;
-        if (!has_only_ones_in(rhs, std::get<1>(psrc)))
-          {
+        if (!has_only_ones_in(rhs, std::get<1>(psrc))
             // "Loop" only on the spontaneous transitions.  "One" is
             // guaranteed to be first in the transition maps.
-            if (!ltm.empty()
-                && lhs->labelset()->is_one(ltm.begin()->first))
-              {
-                has_eps_out = true;
-                for (auto t: ltm.begin()->second)
-                  res_->new_transition(src,
-                                       res_->state(t.dst, std::get<1>(psrc)),
-                                       join_label(lhs->hidden_label_of(t.transition),
-                                                  get_hidden_one(rhs)),
-                                       t.wgt);
-              }
+            && !ltm.empty()
+            && lhs->labelset()->is_one(ltm.begin()->first))
+          {
+            has_eps_out = true;
+            for (auto t: ltm.begin()->second)
+              res_->new_transition(src,
+                                   res_->state(t.dst, std::get<1>(psrc)),
+                                   join_label(lhs->hidden_label_of(t.transition),
+                                              get_hidden_one(rhs)),
+                                   t.wgt);
           }
 
         // If lhs did not issue spontaneous transitions but has
@@ -199,19 +198,15 @@ namespace vcsn
           !lhs->labelset()->is_one(ltm.begin()->first)
           || 2 <= ltm.size();
 
-        if (!has_eps_out || lhs_has_non_sp_trans)
-          {
-            if (!rtm.empty()
-                && rhs->labelset()->is_one(rtm.begin()->first))
-              {
-                for (auto t: rtm.begin()->second)
-                  res_->new_transition(src,
-                                       res_->state(std::get<0>(psrc), t.dst),
-                                       join_label(get_hidden_one(lhs),
-                                                  rhs->hidden_label_of(t.transition)),
-                                       t.wgt);
-              }
-          }
+        if ((!has_eps_out || lhs_has_non_sp_trans)
+            && !rtm.empty()
+            && rhs->labelset()->is_one(rtm.begin()->first))
+          for (auto t: rtm.begin()->second)
+            res_->new_transition(src,
+                                 res_->state(std::get<0>(psrc), t.dst),
+                                 join_label(get_hidden_one(lhs),
+                                            rhs->hidden_label_of(t.transition)),
+                                 t.wgt);
 
         for (auto t: zip_maps(ltm, rtm))
           // The type of the common label is that of the visible tape
@@ -273,6 +268,14 @@ namespace vcsn
       /// Transition caches.
       std::tuple<transition_map_t<Lhs>, transition_map_t<Rhs>> transition_maps_;
     };
+
+    template <typename Lhs, typename Rhs>
+    auto
+    make_composer(Lhs& lhs, Rhs& rhs)
+      -> typename detail::composer<Lhs, Rhs>
+    {
+      return detail::composer<Lhs, Rhs>{lhs, rhs};
+    }
   }
 
   /*--------------------------------.
@@ -280,16 +283,17 @@ namespace vcsn
   `--------------------------------*/
 
   /// Build the (accessible part of the) composition.
-  template <typename Lhs, typename Rhs>
+  template <typename Lhs, typename Rhs,
+            unsigned OutTape = 1, unsigned InTape = 0>
   auto
   compose(Lhs& lhs, Rhs& rhs)
-    -> typename detail::composer<focus_automaton<1, Lhs>,
-                                 focus_automaton<0, Rhs>>::automaton_t
+    -> typename detail::composer<focus_automaton<OutTape, Lhs>,
+                                 focus_automaton<InTape, Rhs>>::automaton_t
   {
-    auto l = focus<1>(lhs);
-    auto r = insplit(focus<0>(rhs));
-    detail::composer<decltype(l), decltype(r)> compose(l, r);
-    return compose.compose();
+    auto l = focus<OutTape>(lhs);
+    auto r = insplit(focus<InTape>(rhs));
+    auto compose = detail::make_composer(l, r);
+    return compose();
   }
 
   namespace dyn
