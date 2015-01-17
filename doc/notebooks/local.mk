@@ -39,6 +39,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_equivalent.ipynb             \
   %D%/automaton.is_functional.ipynb             \
   %D%/automaton.is_isomorphic.ipynb             \
+  %D%/automaton.is_partial_identity.ipynb       \
   %D%/automaton.is_standard.ipynb               \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.minimize.ipynb                  \
@@ -51,6 +52,8 @@ dist_notebooks_DATA =                           \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
   %D%/context.cerny.ipynb                       \
+  %D%/context.de_bruijn.ipynb                   \
+  %D%/context.ladybird.ipynb                    \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
   %D%/expression.expansion.ipynb                \
