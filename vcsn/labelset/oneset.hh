@@ -102,7 +102,7 @@ namespace vcsn
     static constexpr bool
     is_letterized()
     {
-      return true;
+      return false;
     }
 
     static empty_t one()

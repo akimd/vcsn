@@ -931,11 +931,16 @@ namespace vcsn
       // Print the character class.  letters are sorted, since
       // polynomials are shortlex-sorted on the labels.
       out << '[';
-      const auto& alphabet = labelset()->genset();
+      std::vector<label_t> alphabet;
+      for (auto l : labelset()->genset())
+        alphabet.emplace_back(labelset()->value(l));
       for (auto it = std::begin(letters), letters_end = std::end(letters);
            it != letters_end; ++it)
         {
-          auto end = std::mismatch(it, letters_end, alphabet.find(*it)).first;
+          auto end
+            = std::mismatch(it, letters_end,
+                            std::find(std::begin(alphabet), std::end(alphabet),
+                                      *it)).first;
           labelset()->print(*it, out, format);
           // No ranges for two letters or less.
           auto width = std::distance(it, end);
@@ -951,9 +956,10 @@ namespace vcsn
       return out;
     }
 
-    /// Print a non-null value for neither LAL nor LAN.
-    template <typename context>
-    vcsn::enable_if_t<!(context::is_lal || context::is_lan), std::ostream&>
+    /// Print a non-null value for a non letterized labelset.
+    template <typename Ctx>
+    vcsn::enable_if_t<!labelset_t_of<Ctx>::is_letterized(),
+                      std::ostream&>
     print_(const value_t& v, std::ostream& out,
            const std::string& format = "text",
            const std::string& sep = " + ") const
@@ -961,9 +967,11 @@ namespace vcsn
       return print_without_ranges_(v, out, format, sep);
     }
 
-    /// Print a non-null value for LAL or LAN.
+    /// Print a non-null value for a letterized labelset (e.g., letterset
+    /// or nullableset.
     template <typename Ctx>
-    vcsn::enable_if_t<Ctx::is_lal || Ctx::is_lan, std::ostream&>
+    vcsn::enable_if_t<labelset_t_of<Ctx>::is_letterized(),
+                      std::ostream&>
     print_(const value_t& v, std::ostream& out,
            const std::string& format = "text",
            const std::string& sep = " + ") const

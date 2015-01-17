@@ -134,6 +134,12 @@ namespace vcsn
     /// When used as WeightSet.
     static bool is_one(value_t v) ATTRIBUTE_PURE;
 
+    /// When used as a labelset.
+    static constexpr bool is_letterized()
+    {
+      return false;
+    }
+
     /// When used as WeightSet.
     static constexpr bool is_commutative()
     {

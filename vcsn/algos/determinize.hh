@@ -300,6 +300,14 @@ namespace vcsn
         {}
 
         using value_t = state_t;
+
+        // So that we don't try to print ranges of states.
+        static constexpr bool
+        is_letterized()
+        {
+          return false;
+        }
+
         using kind_t = void;
         static bool equal(state_t l, state_t r)
         {
