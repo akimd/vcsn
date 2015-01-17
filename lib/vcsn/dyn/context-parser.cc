@@ -201,7 +201,7 @@ namespace vcsn
     {
       if (ls == "lal_char")
         return std::make_shared<letterset>(genset_("char_letters"));
-      else if (ls == "lan")
+      else if (ls == "lan" | ls == "nullableset")
         {
           eat(is_, '<');
           auto res = labelset_();

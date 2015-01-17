@@ -404,7 +404,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(ab)>>, lan<letterset<char_letters(xy)>>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(ab)>>, nullableset<letterset<char_letters(xy)>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -445,7 +445,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(ab)>>, letterset<char_letters(xy)>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(ab)>>, letterset<char_letters(xy)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

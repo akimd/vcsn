@@ -56,7 +56,7 @@ digraph
   2 -> F2
 }''',r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(abc)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -92,7 +92,7 @@ digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(abc)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

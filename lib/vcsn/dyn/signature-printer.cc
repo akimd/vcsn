@@ -60,7 +60,7 @@ namespace vcsn
 
     DEFINE(nullableset)
     {
-      os_ << "lan<";
+      os_ << "nullableset<";
       t.get_labelset()->accept(*this);
       os_ << '>';
     }

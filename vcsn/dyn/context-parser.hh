@@ -71,8 +71,7 @@ namespace vcsn
       std::istringstream& is_;
 
       /// The set of terminal weightset names.
-      std::set<std::string> weightsets_
-        =
+      std::set<std::string> weightsets_ =
         {
           "b",
           "f2",
@@ -85,8 +84,7 @@ namespace vcsn
         };
 
       /// The set of weightset names.
-      std::set<std::string> labelsets_
-        =
+      std::set<std::string> labelsets_ =
         {
           "lal_char",
           "lan",
@@ -94,6 +92,7 @@ namespace vcsn
           "lao",
           "law_char",
           "letterset",
+          "nullableset",
           "wordset",
         };
     };

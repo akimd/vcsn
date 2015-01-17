@@ -309,7 +309,7 @@ lhs = vcsn.context('lan_char(ab), b').expression('(a+b)*').thompson()
 rhs = vcsn.context('lan_char(bc), b').expression('(b+c)*').thompson()
 res = r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(b)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(b)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -387,7 +387,7 @@ CHECK_EQUIV(vcsn.automaton(res),
 third = vcsn.context('lan_char(bcd), b').expression('(b+c+d)*').thompson()
 res = r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(b)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(b)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -658,7 +658,7 @@ a2 = vcsn.automaton(r'''digraph
 
 res = r'''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(abc)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

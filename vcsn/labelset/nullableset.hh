@@ -179,17 +179,17 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res("lan<" + labelset_t::sname() + '>');
+      static symbol res("nullableset<" + labelset_t::sname() + '>');
       return res;
     }
 
     /// Build from the description in \a is.
     static nullableset make(std::istream& is)
     {
-      // name: lan<lal_char(abc)>.
-      //           ^^^^^^^^^^^^
+      // name: nullableset<lal_char(abc)>.
+      //                   ^^^^^^^^^^^^
       //                     labelset
-      eat(is, "lan<");
+      eat(is, "nullableset<");
       auto ls = labelset_t::make(is);
       eat(is, '>');
       return {ls};
@@ -427,7 +427,7 @@ namespace vcsn
         }
       else if (format == "text")
         {
-          o <<  "lan<";
+          o <<  "nullableset<";
           labelset()->print_set(o, format);
           o << '>';
         }

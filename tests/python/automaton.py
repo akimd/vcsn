@@ -214,7 +214,7 @@ c = vcsn.context('lan_char(ab), z')
 a = c.expression('<2>a+<2>b').thompson()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(ab)>>, z"
+  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -245,7 +245,7 @@ CHECK_EQ('''digraph
 # conjunction: state names, and useless states, etc.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(ab)>>, z"
+  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -288,7 +288,7 @@ CHECK_EQ('''digraph
 # Tooltip.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(ab)>>, z"
+  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -331,7 +331,7 @@ CHECK_EQ('''digraph
 # Transitions.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "lan<letterset<char_letters(ab)>>, z"
+  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

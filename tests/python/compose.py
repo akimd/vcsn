@@ -18,7 +18,7 @@ c2 = vcsn.context("lat<lan<lal_char(xyz)>,lan<lal_char(def)>>, b")
 check(c1.expression("'(a, x)'").standard(), c2.expression("'(x, d)'").standard(),
       '''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(abc)>>, lan<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -38,7 +38,7 @@ check(c1.expression("'(a, x)'").standard(), c2.expression("'(x, d)'").standard()
 
 a = '''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(abc)>>, lan<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -72,7 +72,7 @@ CHECK_EQ(vcsn.automaton(a),
 check(c1.expression("'(a, x)'*").standard(), c2.expression("'(y, d)'*").standard(),
       '''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(abc)>>, lan<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -98,7 +98,7 @@ check(c_ratb.expression("<o>'(a, x)'").standard(),
       c_q.expression("<3/2>'(x, d)'").standard(),
       '''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(abc)>>, lan<letterset<char_letters(def)>>>, expressionset<letterset<char_letters(mno)>, q>"
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, expressionset<letterset<char_letters(mno)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -143,7 +143,7 @@ a2 = vcsn.automaton(r'''digraph
 
 res = r'''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(xyz)>>, lan<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(xyz)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -174,7 +174,7 @@ c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, r")
 check(c_r.expression("<3.1>'(a, x)'").standard(), c2.expression("'(x, d)'").standard(),
       '''digraph
 {
-  vcsn_context = "lat<lan<letterset<char_letters(abc)>>, lan<letterset<char_letters(def)>>>, r"
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, r"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

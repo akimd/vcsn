@@ -143,10 +143,10 @@ def CHECK_EQ(expected, effective, loc = None):
 def normalize(a):
     '''Turn automaton `a` into something we can check equivalence with.'''
     a = a.strip()
-    if 'lan' in str(a.context()):
+    if 'nullableset' in str(a.context()):
         a = a.proper()
     # Eliminate nullablesets if there are that remain.
-    to = re.sub(r'lan<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>', r'\1', a.context().format('text'))
+    to = re.sub(r'nullableset<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>', r'\1', a.context().format('text'))
     return a.automaton(vcsn.context(to))
 
 
