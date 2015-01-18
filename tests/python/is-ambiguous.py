@@ -14,9 +14,9 @@ digraph
   1 -> F
 }
 ''')
-CHECK_EQ(False, a.is_ambiguous())
+CHECK(not a.is_ambiguous())
 XFAIL(lambda: a.ambiguous_word(), "automaton is unambiguous")
-CHECK_EQ(False, a.is_deterministic())
+CHECK(not a.is_deterministic())
 
 # Not deterministic, and ambiguous.
 a = vcsn.automaton('''
@@ -30,9 +30,9 @@ digraph
   2 -> F
 }
 ''')
-CHECK_EQ(True, a.is_ambiguous())
+CHECK(a.is_ambiguous())
 CHECK_EQ("a", a.ambiguous_word())
-CHECK_EQ(False, a.is_deterministic())
+CHECK(not a.is_deterministic())
 
 # Likewise, but with a non-commutative product.
 a = vcsn.automaton('''
@@ -46,9 +46,9 @@ digraph
   2 -> F
 }
 ''')
-CHECK_EQ(True, a.is_ambiguous())
+CHECK(a.is_ambiguous())
 CHECK_EQ("a", a.ambiguous_word())
-CHECK_EQ(False, a.is_deterministic())
+CHECK(not a.is_deterministic())
 
 # deterministic, and unambiguous (obviously).
 a = vcsn.automaton('''
@@ -62,9 +62,9 @@ digraph
   2 -> F
 }
 ''')
-CHECK_EQ(False, a.is_ambiguous())
+CHECK(not a.is_ambiguous())
 XFAIL(lambda: a.ambiguous_word(), "automaton is unambiguous")
-CHECK_EQ(True, a.is_deterministic())
+CHECK(a.is_deterministic())
 
 
 ## -------------------- ##
@@ -83,7 +83,7 @@ aut1 = vcsn.automaton('''digraph {
   3 -> F3
   3 -> 1 [label = "c"]
 }''')
-CHECK_EQ(True, aut1.is_cycle_ambiguous())
+CHECK(aut1.is_cycle_ambiguous())
 
 aut2 = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
@@ -97,7 +97,7 @@ aut2 = vcsn.automaton('''digraph {
   3 -> F3
   3 -> 1 [label = "b"]
 }''')
-CHECK_EQ(False, aut2.is_cycle_ambiguous())
+CHECK(not aut2.is_cycle_ambiguous())
 
 aut3 = vcsn.automaton('''
 digraph
@@ -116,22 +116,22 @@ digraph
   7 -> F7
   7 -> 2 [label = "a"]
 }''')
-CHECK_EQ(True, aut3.is_cycle_ambiguous())
+CHECK(aut3.is_cycle_ambiguous())
 
 r1 = "((abc)*){5}abc" + format(aut1.expression())
 aut4 = vcsn.context("lal_char(abc), b").expression(r1).derived_term()
-CHECK_EQ(True, aut4.is_cycle_ambiguous())
+CHECK(aut4.is_cycle_ambiguous())
 
 r2 = "((abc)*){5}abc" + format(aut2.expression())
 aut5 = vcsn.context("lal_char(abc), b").expression(r2).derived_term()
-CHECK_EQ(False, aut5.is_cycle_ambiguous())
+CHECK(not aut5.is_cycle_ambiguous())
 
 
-CHECK_EQ(True, vcsn.context("lal_char(abc), b").
+CHECK(vcsn.context("lal_char(abc), b").
          ladybird(5).is_cycle_ambiguous())
-CHECK_EQ(False, vcsn.context("lal_char(abc), b").
+CHECK(not vcsn.context("lal_char(abc), b").
          de_bruijn(5).is_cycle_ambiguous())
-CHECK_EQ(True, vcsn.context("lal_char(abc), b").
+CHECK(vcsn.context("lal_char(abc), b").
          ladybird(20).is_cycle_ambiguous())
-CHECK_EQ(False, vcsn.context("lal_char(abc), b").
+CHECK(not vcsn.context("lal_char(abc), b").
         de_bruijn(20).is_cycle_ambiguous())

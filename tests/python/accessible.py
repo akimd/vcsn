@@ -17,7 +17,7 @@ def check_accessible(input, output):
   if isinstance(input, str):
     input = vcsn.automaton(input)
   CHECK_EQ(output, input.accessible())
-  CHECK_EQ(True, input.accessible().is_accessible())
+  CHECK(input.accessible().is_accessible())
 
 # Regression.
 a = vcsn.context('lal_char(abcd), b').expression('ab+cd').standard().sort().strip()
@@ -305,9 +305,9 @@ def check_trim(input, exp):
     input = vcsn.automaton(input)
   aut = input.trim()
   CHECK_EQ(exp, aut)
-  CHECK_EQ(True, aut.is_trim())
-  CHECK_EQ(True, aut.is_accessible())
-  CHECK_EQ(True, aut.is_coaccessible())
+  CHECK(aut.is_trim())
+  CHECK(aut.is_accessible())
+  CHECK(aut.is_coaccessible())
 
   CHECK_EQ(exp, input.coaccessible().accessible())
   CHECK_EQ(exp, input.accessible().coaccessible())

@@ -9,7 +9,7 @@ digraph {
     2 -> 2 [label="a"]
 }
 ''')
-CHECK_EQ(False, a.is_complete())
+CHECK(not a.is_complete())
 
 a = vcsn.automaton('''
 digraph {
@@ -17,7 +17,7 @@ digraph {
     2 -> 2 [label="a, b"]
 }
 ''')
-CHECK_EQ(False, a.is_complete())
+CHECK(not a.is_complete())
 
 a = vcsn.automaton('''
 digraph {
@@ -26,7 +26,7 @@ digraph {
     2 -> 2 [label="a"]
 }
 ''')
-CHECK_EQ(False, a.is_complete())
+CHECK(not a.is_complete())
 
 a = vcsn.automaton('''
 digraph {
@@ -35,4 +35,4 @@ digraph {
     2 -> 2 [label="a, b"]
 }
 ''')
-CHECK_EQ(True, a.is_complete())
+CHECK(a.is_complete())

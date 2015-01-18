@@ -19,7 +19,7 @@ def fail(re):
     re = ctx.expression(re)
     XFAIL(lambda: re.star_normal_form())
     # If it does not work, it's because anyway the expression is invalid.
-    CHECK_EQ(False, re.is_valid())
+    CHECK(not re.is_valid())
 
 check('a', 'a')
 check('a*', 'a*')

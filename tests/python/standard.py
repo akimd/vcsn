@@ -122,7 +122,7 @@ def check(re, exp):
     # standard.
     a = ctx.expression(re).standard()
     CHECK_EQ(exp, str(a))
-    CHECK_EQ(True, a.is_standard())
+    CHECK(a.is_standard())
 
 def xfail(re):
     r = ctx.expression(re)

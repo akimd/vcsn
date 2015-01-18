@@ -11,7 +11,7 @@ def check(re, exp):
     # standard.
     a = ctx.expression(re).thompson()
     CHECK_EQ(exp, a)
-    CHECK_EQ(True, a.is_normalized())
+    CHECK(a.is_normalized())
 
 def xfail(re, err = None):
     r = ctx.expression(re)

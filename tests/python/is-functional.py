@@ -14,7 +14,7 @@ a = vcsn.automaton('''digraph {
   1 -> 2 [label = "<3>(b, y)"]
   2 -> F2
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
   vcsn_context = "lat<lal_char(abc),lal_char(xyz)>, b"
@@ -25,7 +25,7 @@ a = vcsn.automaton(r'''digraph {
   2 -> 3 [label = "(b, y)"]
   3 -> F3
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lat<lal_char(abc),lal_char(xyz)>, b"
@@ -36,7 +36,7 @@ a = vcsn.automaton('''digraph {
   2 -> 3 [label = "(b, y)"]
   3 -> F3
 }''')
-CHECK_EQ(False, a.is_functional())
+CHECK(not a.is_functional())
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lat<lal_char(abc),lal_char(xyz)>, b"
@@ -48,7 +48,7 @@ a = vcsn.automaton('''digraph {
   3 -> 4 [label = "(b, y)"]
   4 -> F
 }''')
-CHECK_EQ(False, a.is_functional())
+CHECK(not a.is_functional())
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lat<lal_char(abc),lal_char(xyz)>, b"
@@ -60,7 +60,7 @@ a = vcsn.automaton('''digraph {
   3 -> 4 [label = "(b, y)"]
   4 -> F
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lat<lal_char(ab), lal_char(xy)>, z"
@@ -68,7 +68,7 @@ a = vcsn.automaton('''digraph {
   0 -> 1 [label = "<2>(a, x), <3>(b, y)"]
   1 -> F1
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 ## ----- ##
 ## LAN.  ##
@@ -83,7 +83,7 @@ a = vcsn.automaton(r'''digraph {
   2 -> 3 [label = "(b, \\e)"]
   3 -> F3
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
   vcsn_context = "lat<lan_char(xy),lan_char(ab)>, b"
@@ -95,7 +95,7 @@ a = vcsn.automaton(r'''digraph {
   3 -> 4 [label = "(y, b)"]
   4 -> F4
 }''')
-CHECK_EQ(False, a.is_functional())
+CHECK(not a.is_functional())
 
 # states non coaccessible
 a = vcsn.automaton(r'''digraph {
@@ -108,7 +108,7 @@ a = vcsn.automaton(r'''digraph {
   2 -> 4 [label = "(c, x)"]
   3 -> 4 [label = "(c, z)"]
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 ## ----- ##
 ## LAW.  ##
@@ -124,7 +124,7 @@ a = vcsn.automaton(r'''digraph {
   2 -> 3 [label = "(aa, xxx)"]
   3 -> F
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
   vcsn_context = "lat<law_char(abc),law_char(xyz)>, b"
@@ -136,4 +136,4 @@ a = vcsn.automaton(r'''digraph {
   2 -> 3 [label = "(aa, xx)"]
   3 -> F
 }''')
-CHECK_EQ(True, a.is_functional())
+CHECK(a.is_functional())

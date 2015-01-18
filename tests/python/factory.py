@@ -110,7 +110,7 @@ CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
 CHECK_EQ(100, a.info()['number of states'])
 CHECK_EQ(1, a.info()['number of initial states'])
 CHECK_EQ(1, a.info()['number of final states'])
-CHECK_EQ(True, a.is_complete())
+CHECK(a.is_complete())
 
 
 ## --- ##

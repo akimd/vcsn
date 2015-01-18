@@ -8,10 +8,10 @@ from test import *
 def check(input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  CHECK_EQ(False, input.is_out_sorted())
+  CHECK(not input.is_out_sorted())
   aut = input.sort()
   CHECK_EQ(exp, aut)
-  CHECK_EQ(True, aut.is_out_sorted())
+  CHECK(aut.is_out_sorted())
 
 a = vcsn.automaton(r'''digraph
 {

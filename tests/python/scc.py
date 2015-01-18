@@ -6,7 +6,7 @@ from test import *
 def check(num_sccs, a):
     for algo in ["tarjan_iterative", "tarjan_recursive", "kosaraju"]:
         scc = a.scc(algo)
-        CHECK_EQ(True, scc.is_isomorphic(a))
+        CHECK(scc.is_isomorphic(a))
         CHECK_EQ(num_sccs, scc.num_components())
         CHECK_EQ(num_sccs, scc.condense().info()["number of states"])
 

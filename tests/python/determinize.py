@@ -20,13 +20,13 @@ def check(aut, expfile, algo = "auto", deterministic = False):
     det = aut.determinize()
     exp = load(expfile)
     CHECK_EQ(exp, det)
-    CHECK_EQ(True, det.is_deterministic())
+    CHECK(det.is_deterministic())
     CHECK_EQ(det, det.determinize(algo))
 
     # Codeterminization.
     CHECK_EQ(aut.codeterminize(), aut.transpose().determinize().transpose())
-    CHECK_EQ(True, aut.transpose().codeterminize().transpose().is_deterministic())
-    CHECK_EQ(True, aut.codeterminize().transpose().is_deterministic())
+    CHECK(aut.transpose().codeterminize().transpose().is_deterministic())
+    CHECK(aut.codeterminize().transpose().is_deterministic())
 
 ctx = vcsn.context('lal_char(ab), b')
 check(ctx.de_bruijn(3), 'de-bruijn-3-det')
