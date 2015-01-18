@@ -96,6 +96,7 @@ def FAIL(*msg, **kwargs):
     loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] is not None else here()
     print(loc + ": fail:", *msg)
     print()
+    sys.stdout.flush()
 
 def PASS(*msg, **kwargs):
     global count, npass
@@ -105,6 +106,7 @@ def PASS(*msg, **kwargs):
     loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] is not None else here()
     print(loc + ": pass:", *msg)
     print()
+    sys.stdout.flush()
 
 def SKIP(*msg):
     PASS('SKIP', *msg)
