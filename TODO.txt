@@ -210,6 +210,16 @@ Our algorithms compute the scc as vectors, but return them as const&, so we
 have to duplicate them, although it would better to return as std::move, as
 we don't need to keep this in the functor.
 
+** sort
+Commit ff43b0f introduced a 2x time penalty on the sort bench:
+
+  v score-compare --only sort +scores/35s/v2.0-{482-gb6dfc12,483-gff43b0f}
+  0.89  1.69  a.sort() # a = std([a-e]?{700})
+
+this is because the core of sort is a loop calling new_transition_copy,
+which before did not check that the letter was in the alphabet, and now it
+does.  In this case, it is guaranteed to be, so it is uselessly costly.
+
 * Cleanup
 ** automaton_t members in decorators
 In most cases it's reasonable to use const shared_pointer (which is to say
