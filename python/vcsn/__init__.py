@@ -70,6 +70,8 @@ from vcsn.weight     import *
 
 # Load IPython specific support if we can.
 try:
+    # Load only if we are running IPython.
+    __IPYTHON__
     from vcsn.ipython import *
     from vcsn.score import *
 except (ImportError, NameError):
