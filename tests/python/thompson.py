@@ -29,6 +29,27 @@ xfail(r'(ab){T}')
 ## Z.  ##
 ## --- ##
 
+# Z: "\z".
+check('(?@lal_char(), z)\z',
+r'''digraph
+{
+  vcsn_context = "nullableset<letterset<char_letters()>>, z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [color = DimGray]
+    1 [color = DimGray]
+  }
+  I0 -> 0 [color = DimGray]
+  1 -> F1 [color = DimGray]
+}''')
+
 # Z: "<12>\e".
 check('(?@lal_char(a), z)<12>\e',
 r'''digraph
