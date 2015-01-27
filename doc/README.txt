@@ -97,14 +97,6 @@ Where data is stored at runtime.  See VCSN_PLUGINDIR
 Specify that "power" should perform the naive iterative multiplicative
 approach, instead of the squaring one.
 
-** VCSN_ORIGINS
-Works only in TAF-Kit.  Dump on stdout the "origins" of states for
-algorithms that build automata from sets of states of input automata
-or other types of information (e.g., derived-term, product,
-determinize, minimize, shuffle, infiltration...).  Use
-tests/bin/teedot to put turn this information in something that
-Graphviz displays.
-
 ** VCSN_PARENS
 Force the display of useless parentheses.
 
@@ -121,6 +113,10 @@ default seed.
 
 ** VCSN_TMPDIR [/tmp]
 Path to the folder in which compiled contexts should be stored.
+
+** VCSN_VERBOSE
+When reporting compilation error, include the full compiler error
+message.
 
 ** VERBOSE
 Make the test suite more verbose.

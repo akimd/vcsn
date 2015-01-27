@@ -90,17 +90,23 @@ $(TEST_LOGS): %D%/bin/vcsn
 # By default, tests are buildcheck.
 AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
+# Common to build and install check.
+CHECK_ENVIRONMENT +=                            \
+  VCSN_VERBOSE=1; export VCSN_VERBOSE
+
 # Use the wrappers to run the non-installed executables.
 # Find test.py which is in tests/bin.
 BUILDCHECK_ENVIRONMENT +=                               \
+  $(CHECK_ENVIRONMENT);                                 \
   . $(abs_top_builddir)/tests/bin/vcsn --export;        \
   PYTHONPATH=$(abs_top_srcdir)/tests/bin:$$PYTHONPATH;  \
   export PYTHONPATH;
 
-INSTALLCHECK_ENVIRONMENT +=						      \
-  PATH=$(DESTDIR)$(bindir):$$PATH;					      \
-  export PATH;								      \
-  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH; \
+INSTALLCHECK_ENVIRONMENT +=                                                     \
+  $(CHECK_ENVIRONMENT);                                                         \
+  PATH=$(DESTDIR)$(bindir):$$PATH;                                              \
+  export PATH;                                                                  \
+  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH;   \
   export PYTHONPATH;
 
 # Run the tests with the install-environment.
@@ -114,7 +120,7 @@ INSTALLCHECK_ENVIRONMENT +=						      \
 # shells, yielding several such directories instead of a single one
 # for the whole installcheck run.
 #
-# Disable testsuite laziness, otherwise, installcheck is just not run
+# Disable testsuite laziness, otherwise, installcheck is not run
 # because of the results of check.
 installcheck-local:
 	VCSN_HOME="$${TMPDIR-/tmp}/vcsn.dc.$$$$/";		\

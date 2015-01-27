@@ -178,10 +178,13 @@ namespace vcsn
               std::string line;
               std::smatch smatch;
               while (std::getline(*is, line))
+                if (std::regex_search(line, smatch, r1)
+                    || std::regex_search(line, smatch, r2))
+                  assertions += std::string(smatch[1]) + '\n';
+              if (getenv("VCSN_VERBOSE"))
                 {
-                  if (std::regex_search(line, smatch, r1)
-                      || std::regex_search(line, smatch, r2))
-                    assertions += std::string(smatch[1]) + "\n";
+                  cmd += "\n  compiler error messages:\n";
+                  cmd += get_file_contents(err);
                 }
               throw jit_error(assertions, "  failed command:\n    " + cmd);
             }
