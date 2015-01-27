@@ -70,7 +70,8 @@ namespace vcsn
         = typename std::conditional<Deterministic,
                                     transition,
                                     std::vector<transition>>::type;
-      using map_t = std::map<label_t_of<Aut>, transitions_t>;
+      using map_t = std::map<label_t_of<Aut>, transitions_t,
+                             less<labelset_t_of<Aut>>>;
 
       transition_map(const Aut& aut, const weightset_t& ws)
         : aut_(aut)

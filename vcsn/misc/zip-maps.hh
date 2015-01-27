@@ -170,7 +170,8 @@ namespace vcsn
 
         // Look for the beginning of the range for key k.
         // first = second;
-        while (first != std::get<I>(ends_) && first->first < k)
+        while (first != std::get<I>(ends_)
+               && std::get<I>(zip_.maps_).key_comp()(first->first, k))
           ++first;
         if (first == std::get<I>(ends_))
           // Nothing left.

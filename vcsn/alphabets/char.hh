@@ -155,7 +155,10 @@ namespace vcsn
     /// final transitions.
     ///
     /// Use the public special() interface.
-    static constexpr letter_t special_letter() { return 127; }
+    ///
+    /// The value is chosen to put subliminal transitions last when
+    /// sorted.  Requires unsigned comparison.
+    static constexpr letter_t special_letter() { return -1; }
 
   public:
     /// Read a single char, with possible \-escape support.

@@ -39,13 +39,13 @@ check_letterset()
   ASSERT_EQ(to_string(ls, ls.transpose(conv(ls, "a"))), "a");
 
   {
-    // Skip the special letter: 127 dec = 7f hex.
-    std::string n = "letterset<char_letters(\x01-\x7e\x80-\xff)>";
+    // Skip the empty word (\x00), and the special letter (\xff).
+    std::string n = "letterset<char_letters(\x01-\xfe)>";
     std::string all = "letterset<char_letters(";
-    for (int i = 1; i < 256; ++i)
+    for (int i = 1; i < 255; ++i)
       if (char(i) == '\\')
         all += "\\\\";
-      else if (!ls.is_special(char(i)))
+      else
         all += char(i);
     all += ")>";
     std::istringstream is(n);
