@@ -37,11 +37,6 @@ namespace vcsn
   has(const std::set<T, Compare, Alloc>& s, const T& e)
     ATTRIBUTE_PURE;
 
-  /// The set of values of a map.
-  template <typename Key, typename Value, typename Comp, typename Alloc>
-  std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>
-  image(const std::map<Key, Value, Comp, Alloc>& m);
-
   /// The intersection of two sets.
   template <typename T, typename Compare, typename Alloc>
   std::set<T, Compare, Alloc>

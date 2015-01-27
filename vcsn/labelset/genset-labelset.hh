@@ -53,9 +53,7 @@ namespace vcsn
       std::set<letter_t>
       convs_(std::istream& i) const
       {
-        int c = i.get();
-        require(c == '[',
-                "expected '[', found ", str_escape(c));
+        eat(i, '[');
         // The last letter we read, for intervals.
         boost::optional<letter_t> previous;
         std::set<letter_t> res;

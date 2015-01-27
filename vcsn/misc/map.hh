@@ -37,6 +37,18 @@ namespace vcsn
     return s.find(e) != std::end(s);
   }
 
+  /// The set of values of a map.
+  template <typename Key, typename Value, typename Comp, typename Alloc>
+  std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>
+  image(const std::map<Key, Value, Comp, Alloc>& m)
+  {
+    std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type> res;
+    for (const auto& p: m)
+      res.insert(p.second);
+    return res;
+  }
+
+  /// Functor to compare Values of ValueSets.
   template <typename ValueSet>
   class less : public std::less<typename ValueSet::value_t>
   {

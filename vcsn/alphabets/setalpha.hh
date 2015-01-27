@@ -15,6 +15,9 @@
 
 namespace vcsn
 {
+  /// A set of letters of type \a L.
+  ///
+  /// \a L is not simply `char` or so.  Rather, see char_letters.
   template <typename L>
   class set_alphabet: public L
   {
@@ -114,7 +117,8 @@ namespace vcsn
       return *this;
     }
 
-    /// Whether the genset supports the range concept.
+    /// Whether the genset supports the range concept: whether we can
+    /// use '++' on letters.
     template <typename Letter, typename Enable = void>
     struct has_range: std::false_type {};
 

@@ -2,33 +2,24 @@
 
 namespace vcsn
 {
-  template <typename T>
+  template <typename T, typename Compare, typename Alloc>
   inline
   bool
-  has(const std::set<T>& s, const T& e)
+  has(const std::set<T, Compare, Alloc>& s, const T& e)
   {
     return s.find(e) != std::end(s);
   }
 
-  template <typename Key, typename Value, typename Comp, typename Alloc>
-  inline
-  std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>
-  image(const std::map<Key, Value, Comp, Alloc>& m)
-  {
-    std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type> res;
-    for (const auto& p: m)
-      res.insert(p.second);
-    return res;
-  }
 
-
-  template <typename T>
+  template <typename T, typename Compare, typename Alloc>
   inline
-  std::set<T>
-  intersection(const std::set<T>& set1, const std::set<T>& set2)
+  std::set<T, Compare, Alloc>
+  intersection(const std::set<T, Compare, Alloc>& set1,
+               const std::set<T, Compare, Alloc>& set2)
   {
-    std::set<T> res;
-    std::insert_iterator<std::set<T>> i{res, begin(res)};
+    using set_t = std::set<T, Compare, Alloc>;
+    set_t res;
+    std::insert_iterator<set_t> i{res, begin(res)};
     std::set_intersection(begin(set1), end(set1),
                           begin(set2), end(set2),
                           i);
@@ -36,10 +27,10 @@ namespace vcsn
   }
 
 
-  template <typename T>
+  template <typename T, typename Compare, typename Alloc>
   inline
-  std::set<std::set<T>>
-  intersection_closure(std::set<std::set<T>> pset)
+  std::set<std::set<T, Compare, Alloc>>
+  intersection_closure(std::set<std::set<T, Compare, Alloc>> pset)
   {
     while (true)
       {
@@ -55,24 +46,26 @@ namespace vcsn
   }
 
 
-
-  template <typename T>
+  template <typename T, typename Compare, typename Alloc>
   inline
-  std::set<T>
-  get_union(const std::set<T>& set1, const std::set<T>& set2)
+  std::set<T, Compare, Alloc>
+  get_union(const std::set<T, Compare, Alloc>& set1,
+            const std::set<T, Compare, Alloc>& set2)
   {
-    std::set<T> res;
-    std::insert_iterator<std::set<T>> i{res, begin(res)};
+    using set_t = std::set<T, Compare, Alloc>;
+    set_t res;
+    std::insert_iterator<set_t> i{res, begin(res)};
     std::set_union(begin(set1), end(set1),
-                          begin(set2), end(set2),
-                          i);
+                   begin(set2), end(set2),
+                   i);
     return res;
   }
 
-  template <typename T>
+
+  template <typename T, typename Compare, typename Alloc>
   inline
   std::ostream&
-  print(const std::set<T>& set, std::ostream& o)
+  print(const std::set<T, Compare, Alloc>& set, std::ostream& o)
   {
     const char* sep = "";
     for (const auto& m: set)
@@ -82,6 +75,7 @@ namespace vcsn
       }
     return o;
   }
+
 
   template <typename Container1, typename Container2>
   inline

@@ -122,14 +122,12 @@ namespace vcsn
       return w1 == w2;
     }
 
-    bool
-    is_letter(const letter_t&) const
+    bool is_letter(const letter_t&) const
     {
       return true;
     }
 
-    bool
-    is_letter(const word_t& w) const
+    bool is_letter(const word_t& w) const
     {
       return w.size() == 1;
     }
@@ -155,7 +153,8 @@ namespace vcsn
         {
           int c = i.peek();
           // \(, \) and \- are used in setalpha::make, e.g.,
-          // char_letters(\(\-\)).
+          // char_letters(\(\-\)), so strip the backslash.  Otherwise,
+          // return the backslash itself.
           if (strchr("\"\\()-", c))
             res = i.get();
         }

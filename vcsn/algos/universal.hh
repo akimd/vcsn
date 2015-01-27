@@ -1,11 +1,10 @@
 #ifndef VCSN_ALGOS_UNIVERSAL_HH
 # define VCSN_ALGOS_UNIVERSAL_HH
 
-# include <map>
-
-# include <vcsn/misc/set.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/transpose.hh>
+# include <vcsn/misc/map.hh>
+# include <vcsn/misc/set.hh>
 # include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
