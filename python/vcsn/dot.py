@@ -86,7 +86,7 @@ def _dot_to_svg(dot, engine="dot", *args):
                stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(dot)
+    p1.stdin.write(bytes(dot, 'utf-8'))
     p1.stdin.close()
     out, err = p3.communicate()
     if p1.wait():
