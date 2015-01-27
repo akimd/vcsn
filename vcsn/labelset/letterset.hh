@@ -27,9 +27,10 @@ namespace vcsn
 
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using letters_t = std::set<letter_t>;
+    using letters_t = typename genset_t::letters_t;
 
     using value_t = letter_t;
+    using values_t = letters_t;
 
     using kind_t = labels_are_letters;
 
@@ -106,13 +107,13 @@ namespace vcsn
     static bool
     equal(const value_t l, const value_t r)
     {
-      return l == r;
+      return genset_t::equal(l, r);
     }
 
     /// Whether \a l < \a r.
     static bool less(const value_t l, const value_t r)
     {
-      return l < r;
+      return genset_t::less(l, r);
     }
 
     static constexpr bool
@@ -190,10 +191,10 @@ namespace vcsn
       return value_t{l};
     }
 
-    std::set<value_t>
+    values_t
     convs(std::istream& i) const
     {
-      std::set<value_t> res;
+      values_t res;
       for (auto r : this->convs_(i))
         res.insert(value_t{r});
       return res;

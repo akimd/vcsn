@@ -110,16 +110,30 @@ namespace vcsn
       return l;
     }
 
-    bool
-    equal(const letter_t& l1, const letter_t& l2) const
+    /// Whether \a l == \a r.
+    static bool equal(const letter_t& l1, const letter_t& l2)
     {
       return l1 == l2;
     }
 
-    bool
-    equal(const word_t& w1, const word_t& w2) const
+    /// Whether \a l == \a r.
+    static bool equal(const word_t& w1, const word_t& w2)
     {
       return w1 == w2;
+    }
+
+    /// Whether \a l < \a r.
+    static bool less(const letter_t l, const letter_t r)
+    {
+      // Be sure to convert the whole 8-bit spectrum.
+      return uint8_t(l) < uint8_t(r);
+    }
+
+    /// Whether \a l < \a r.
+    static bool less(const word_t l, const word_t r)
+    {
+      // FIXME: do we need an unsigned comparison?
+      return l < r;
     }
 
     bool is_letter(const letter_t&) const

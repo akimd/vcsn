@@ -103,8 +103,15 @@ namespace vcsn
     /// Whether \a l < \a r.
     static bool less(const value_t l, const value_t r)
     {
-      return (std::forward_as_tuple(l.size(), l)
-              < std::forward_as_tuple(r.size(), r));
+      // Be sure to use genset::less().
+      auto s1 = l.size();
+      auto s2 = r.size();
+      if (s1 < s2)
+        return true;
+      else if (s2 < s1)
+        return false;
+      else
+        return genset_t::less(l, r);
     }
 
     static value_t

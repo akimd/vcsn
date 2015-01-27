@@ -23,7 +23,7 @@ namespace vcsn
   public:
     using letter_t = typename L::letter_t;
     using word_t = typename L::word_t;
-    using letters_t = std::set<letter_t>;
+    using letters_t = std::set<letter_t, std::less<uint8_t>>;
     /// The type of our values, when seen as a container.
     using value_type = letter_t;
 
@@ -50,8 +50,7 @@ namespace vcsn
           is.ignore();
           // Previously read character, for intervals.
           boost::optional<letter_t> prev;
-          bool done = false;
-          while (!done)
+          while (true)
             switch (is.peek())
               {
               case EOF:
@@ -60,8 +59,7 @@ namespace vcsn
 
               case ')':
                 eat(is, ')');
-                done = true;
-                break;
+                goto done;
 
               case '-':
                 if (prev == boost::none)
@@ -69,7 +67,8 @@ namespace vcsn
                 else
                   {
                     eat(is, '-');
-                    res.add_range(prev.get(), L::get_letter(is));
+                    // We already added prev, start from prev + 1.
+                    res.add_range(prev.get() + 1, L::get_letter(is));
                     prev = boost::none;
                     break;
                   }
@@ -82,6 +81,8 @@ namespace vcsn
                   break;
                 }
               }
+    done:
+          ;
         }
       else // is.peek() != '('
         res.open_ = true;
@@ -111,7 +112,8 @@ namespace vcsn
     set_alphabet&
     add_letter(letter_t l)
     {
-      assert(l != this->template special<letter_t>());
+      require(l != this->template special<letter_t>(),
+              "add_letter: the special letter is reserved: ", int(l));
       alphabet_.insert(l);
       return *this;
     }
@@ -138,7 +140,12 @@ namespace vcsn
     auto add_range_(Letter l1, Letter l2)
       -> enable_if_t<has_range<Letter>{}, set_alphabet&>
     {
-      for (/* empty */; l1 <= l2; ++l1)
+      for (/* empty */; L::less(l1, l2); ++l1)
+        add_letter(l1);
+      // Also add the last letter.  Do not do this in the loop, we
+      // might overflow the capacity of char.  Do check equality
+      // though, so that 'z-a' is empty.
+      if (L::equal(l1, l2))
         add_letter(l1);
       return *this;
     }

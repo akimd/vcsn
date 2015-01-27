@@ -22,7 +22,7 @@ namespace vcsn
 
       using letter_t = typename genset_t::letter_t;
       using word_t = typename genset_t::word_t;
-      using letters_t = std::set<letter_t>;
+      using letters_t = typename genset_t::letters_t;
 
       genset_labelset(const genset_ptr& gs)
         : gs_{gs}
@@ -49,13 +49,13 @@ namespace vcsn
       /// and return the list of the matching labels.
       ///
       /// For instance "[a-d0-9_]".
-      std::set<letter_t>
+      letters_t
       convs_(std::istream& i) const
       {
         eat(i, '[');
         // The last letter we read, for intervals.
         boost::optional<letter_t> previous;
-        std::set<letter_t> res;
+        letters_t res;
         while (i.peek() != EOF && i.peek() != ']')
           {
             if (i.peek() == '-')
@@ -110,14 +110,15 @@ namespace vcsn
 
       DEFINE(begin,);
       DEFINE(concat,);
-      DEFINE(get_word,);
       DEFINE(delimit,);
-      DEFINE(undelimit,);
       DEFINE(end,);
       DEFINE(equal, ATTRIBUTE_PURE);
+      DEFINE(get_word,);
       DEFINE(has, ATTRIBUTE_PURE);
       DEFINE(is_letter, ATTRIBUTE_PURE);
+      DEFINE(less, ATTRIBUTE_PURE);
       DEFINE(transpose, ATTRIBUTE_PURE);
+      DEFINE(undelimit,);
 
 # undef DEFINE
 

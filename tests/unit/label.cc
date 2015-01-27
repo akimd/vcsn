@@ -10,6 +10,16 @@
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/labelset/wordset.hh>
 
+/// The name of \a vs.
+template <typename ValueSet>
+std::string
+set_name(const ValueSet& vs, const std::string& format = "text")
+{
+  std::ostringstream o;
+  vs.print_set(o, format);
+  return o.str();
+}
+
 static unsigned
 check_letterset()
 {
@@ -28,16 +38,21 @@ check_letterset()
   ASSERT_EQ(to_string(ls, conv(ls, "a")), "a");
   ASSERT_EQ(to_string(ls, ls.transpose(conv(ls, "a"))), "a");
 
-  return nerrs;
-}
+  {
+    // Skip the special letter: 127 dec = 7f hex.
+    std::string n = "letterset<char_letters(\x01-\x7e\x80-\xff)>";
+    std::string all = "letterset<char_letters(";
+    for (int i = 1; i < 256; ++i)
+      if (char(i) == '\\')
+        all += "\\\\";
+      else if (!ls.is_special(char(i)))
+        all += char(i);
+    all += ")>";
+    std::istringstream is(n);
+    ASSERT_EQ(all, set_name(labelset_t::make(is)));
+  }
 
-template <typename ValueSet>
-std::string
-set_name(const ValueSet& vs, const std::string& format = "text")
-{
-  std::ostringstream o;
-  vs.print_set(o, format);
-  return o.str();
+  return nerrs;
 }
 
 static unsigned
