@@ -1,13 +1,12 @@
-#ifndef VCSN_LABELSET_GENSET_LABELSET_HH
-# define VCSN_LABELSET_GENSET_LABELSET_HH
+#pragma once
 
-# include <memory>
-# include <set>
+#include <memory>
+#include <set>
 
-# include <boost/optional.hpp>
+#include <boost/optional.hpp>
 
-# include <vcsn/core/kind.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -127,5 +126,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_LABELSET_GENSET_LABELSET_HH

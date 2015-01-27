@@ -1,11 +1,10 @@
-#ifndef VCSN_TESTS_UNIT_TEST_HH
-# define VCSN_TESTS_UNIT_TEST_HH
+#pragma once
 
-# include <iostream>
+#include <iostream>
 
-# include <vcsn/misc/echo.hh>
+#include <vcsn/misc/echo.hh>
 
-# define ASSERT_EQ(Lhs, Rhs)                            \
+#define ASSERT_EQ(Lhs, Rhs)                             \
   do {                                                  \
     auto lhs_ = Lhs;                                    \
     auto rhs_ = Rhs;                                    \
@@ -20,6 +19,3 @@
         SHOWH("PASS: " #Lhs " == " #Rhs);               \
       }                                                 \
   } while (false)
-
-#endif // !VCSN_TESTS_UNIT_TEST_HH
-

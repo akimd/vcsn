@@ -1,11 +1,8 @@
-#ifndef VCSN_ALGOS_UNIVERSAL_HH
-# define VCSN_ALGOS_UNIVERSAL_HH
+#pragma once
 
-# include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/misc/map.hh>
-# include <vcsn/misc/set.hh>
-# include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -120,7 +117,7 @@ namespace vcsn
     };
   }
 
-  template <class Aut>
+  template <typename Aut>
   inline
   Aut
   universal(const Aut& a)
@@ -152,5 +149,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_ALGOS_UNIVERSAL_HH

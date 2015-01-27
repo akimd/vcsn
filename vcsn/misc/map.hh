@@ -1,8 +1,7 @@
-#ifndef VCSN_MISC_MAP_HH
-# define VCSN_MISC_MAP_HH
+#pragma once
 
-# include <map>
-# include <vcsn/misc/hash.hh>
+#include <map>
+#include <vcsn/misc/hash.hh>
 
 namespace std
 {
@@ -29,6 +28,8 @@ namespace std
 
 namespace vcsn
 {
+
+  /// Whether \a e is in \a s.
   template <typename Key, typename Value, typename Compare, typename Alloc>
   inline
   bool
@@ -63,5 +64,3 @@ namespace vcsn
   };
 
 }
-
-#endif // !VCSN_MISC_MAP_HH

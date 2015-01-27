@@ -1,17 +1,16 @@
-#ifndef VCSN_ALPHABETS_SETALPHA_HH
-# define VCSN_ALPHABETS_SETALPHA_HH
+#pragma once
 
-# include <cassert>
-# include <initializer_list>
-# include <stdexcept>
+#include <cassert>
+#include <initializer_list>
+#include <stdexcept>
 
-# include <boost/optional.hpp>
+#include <boost/optional.hpp>
 
-# include <vcsn/misc/type_traits.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/set.hh>
-# include <vcsn/misc/stream.hh> // eat.
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/type_traits.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/set.hh>
+#include <vcsn/misc/stream.hh> // eat.
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -288,5 +287,3 @@ namespace vcsn
     mutable bool open_ = false;
   };
 }
-
-#endif // !VCSN_ALPHABETS_SETALPHA_HH

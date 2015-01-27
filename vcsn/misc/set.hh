@@ -1,12 +1,10 @@
-#ifndef VCSN_MISC_SET_HH
-# define VCSN_MISC_SET_HH
+#pragma once
 
-# include <algorithm> // set_intersection
-# include <map>
-# include <set>
+#include <algorithm> // set_intersection
+#include <set>
 
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/hash.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/hash.hh>
 
 namespace std
 {
@@ -65,6 +63,4 @@ namespace vcsn
   ATTRIBUTE_PURE;
 }
 
-# include <vcsn/misc/set.hxx>
-
-#endif // !VCSN_MISC_SET_HH
+#include <vcsn/misc/set.hxx>
