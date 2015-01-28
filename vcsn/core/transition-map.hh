@@ -1,8 +1,8 @@
-#ifndef VCSN_CORE_TRANSITION_MAP_HH
-# define VCSN_CORE_TRANSITION_MAP_HH
+#pragma once
 
-# include <map>
-# include <type_traits>
+#include <type_traits>
+
+#include <vcsn/misc/map.hh> // vcsn::less
 
 namespace vcsn
 {
@@ -140,5 +140,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_CORE_TRANSITION_MAP_HH

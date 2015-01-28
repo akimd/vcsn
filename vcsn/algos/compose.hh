@@ -1,21 +1,16 @@
-#ifndef VCSN_ALGOS_COMPOSE_HH
-# define VCSN_ALGOS_COMPOSE_HH
+#pragma once
 
-# include <deque>
-# include <iostream>
-# include <map>
-
-# include <vcsn/algos/focus.hh>
-# include <vcsn/algos/insplit.hh>
-# include <vcsn/core/transition-map.hh>
-# include <vcsn/core/tuple-automaton.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/labelset/tupleset.hh>
-# include <vcsn/misc/vector.hh> // cross_tuple
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/tuple.hh> // make_index_sequence
-# include <vcsn/misc/zip-maps.hh> // make_index_sequence
+#include <vcsn/algos/focus.hh>
+#include <vcsn/algos/insplit.hh>
+#include <vcsn/core/transition-map.hh>
+#include <vcsn/core/tuple-automaton.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/labelset/tupleset.hh>
+#include <vcsn/misc/vector.hh> // cross_tuple
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/tuple.hh> // make_index_sequence
+#include <vcsn/misc/zip-maps.hh> // make_index_sequence
 
 namespace vcsn
 {
@@ -318,6 +313,3 @@ namespace vcsn
   }
 
 }
-
-
-#endif // !VCSN_ALGOS_COMPOSE_HH

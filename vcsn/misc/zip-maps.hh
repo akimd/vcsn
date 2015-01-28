@@ -1,11 +1,10 @@
-#ifndef VCSN_MISC_ZIP_MAPS_HH
-# define VCSN_MISC_ZIP_MAPS_HH
+#pragma once
 
-# include <cassert>
-# include <type_traits>
+#include <cassert>
+#include <type_traits>
 
-# include <vcsn/misc/raise.hh> // pass
-# include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/raise.hh> // pass
+#include <vcsn/misc/tuple.hh>
 
 namespace vcsn
 {
@@ -163,7 +162,7 @@ namespace vcsn
 
       /// Given the current candidate key, try to find the proper range
       /// for I.  Return the first supported key <= k.
-      template<std::size_t I>
+      template <std::size_t I>
       key_t align_(key_t k)
       {
         assert(!is_done_);
@@ -266,5 +265,3 @@ namespace vcsn
     return {maps};
   }
 }
-
-#endif // !VCSN_MISC_ZIP_MAPS_HH

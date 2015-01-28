@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstring> //strncmp
 #include <memory>
 #include <set>
 #include <sstream>
@@ -317,7 +316,8 @@ namespace vcsn
     {
       if (is_one(l))
         return is_one(r);
-      return !is_one(r) && labelset_t::equal(get_value(l), get_value(r));
+      else
+        return !is_one(r) && labelset_t::equal(get_value(l), get_value(r));
     }
 
     /// Whether l < r.
