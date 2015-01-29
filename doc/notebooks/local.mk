@@ -90,4 +90,5 @@ MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/
 
 upload-doc: upload-notebooks
 upload-notebooks: $(dist_notebooks_DATA) $(nodist_notebooks_DATA)
+	ssh $(dload_host) mkdir -p $(dload_dir)/notebooks
 	rsync $(RSYNCFLAGS) $^ $(dload_host):$(dload_dir)/notebooks

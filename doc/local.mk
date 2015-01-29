@@ -34,9 +34,9 @@ CLEANFILES += %D%/vcsn.dox
 html_DIR += %D%/vcsn.htmldir
 
 
-## ------------- ##
-## install-doc.  ##
-## ------------- ##
+## ------------ ##
+## upload-doc.  ##
+## ------------ ##
 
 dload_host = doc@perso
 dload_dir = /var/www/dload/vcsn/$(PACKAGE_VERSION)
@@ -51,4 +51,5 @@ RSYNCFLAGS =                                    \
   --exclude '*.md5' --exclude '*.map'
 upload-doc: upload-doxygen
 upload-doxygen: %D%/vcsn.htmldir
+	ssh $(dload_host) mkdir -p $(dload_dir)
 	rsync $(RSYNCFLAGS) $^ $(dload_host):$(dload_dir)
