@@ -130,7 +130,7 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool less(const word_t l, const word_t r)
+    static bool less(const word_t& l, const word_t& r)
     {
       // FIXME: do we need an unsigned comparison?
       return l < r;
