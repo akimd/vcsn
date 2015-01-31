@@ -111,7 +111,7 @@ namespace vcsn
     }
 
     /// Whether \a l == \a r.
-    static bool equal(const letter_t& l1, const letter_t& l2)
+    static bool equal(const letter_t l1, const letter_t l2)
     {
       return l1 == l2;
     }
@@ -136,7 +136,7 @@ namespace vcsn
       return l < r;
     }
 
-    bool is_letter(const letter_t&) const
+    bool is_letter(const letter_t) const
     {
       return true;
     }
@@ -190,7 +190,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const letter_t& l, std::ostream& o,
+    print(const letter_t l, std::ostream& o,
           const std::string& format = "text") const
     {
       if (l == '\\')

@@ -88,20 +88,20 @@ namespace vcsn
 
     /// Prepare to iterate over the letters of v.
     static word_t
-    letters_of(word_t v)
+    letters_of(const value_t& v)
     {
       return v;
     }
 
     /// Whether \a l == \a r.
     static bool
-    equal(const value_t l, const value_t r)
+    equal(const value_t& l, const value_t& r)
     {
       return l == r;
     }
 
     /// Whether \a l < \a r.
-    static bool less(const value_t l, const value_t r)
+    static bool less(const value_t& l, const value_t& r)
     {
       // Be sure to use genset::less().
       auto s1 = l.size();
@@ -176,7 +176,7 @@ namespace vcsn
     }
 
     value_t
-    conv(self_type, value_t v) const
+    conv(self_type, const value_t& v) const
     {
       return v;
     }
@@ -200,7 +200,7 @@ namespace vcsn
     template <typename LabelSet_>
     value_t
     conv(const nullableset<LabelSet_>& ls,
-         typename nullableset<LabelSet_>::value_t v) const
+         typename nullableset<LabelSet_>::value_t& v) const
     {
       if (ls.is_one(v))
         return one();
