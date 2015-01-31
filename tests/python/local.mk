@@ -41,7 +41,6 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/info.py                                   \
   %D%/insplit.py                                \
   %D%/is-ambiguous.py                           \
-  %D%/is-complete.py                            \
   %D%/is-deterministic.py                       \
   %D%/is-equivalent.py                          \
   %D%/is-functional.py                          \
