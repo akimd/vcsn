@@ -1,13 +1,9 @@
-#ifndef VCSN_ALGOS_COMPLETE_HH
-# define VCSN_ALGOS_COMPLETE_HH
+#pragma once
 
-# include <queue>
-# include <unordered_map>
-
-# include <vcsn/algos/copy.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/unordered_set.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -38,6 +34,7 @@ namespace vcsn
     for (auto st : aut->states())
       if (st != sink)
         {
+          labels_met.clear();
           for (auto tr : aut->out(st))
             labels_met.insert(aut->label_of(tr));
 
@@ -48,10 +45,10 @@ namespace vcsn
                   sink = aut->new_state();
                 aut->new_transition(st, sink, letter);
               }
-
-          labels_met.clear();
         }
 
+    // Sink is created in two different cases, be careful if you want
+    // to factor.
     if (sink != aut->null_state())
       for (auto letter : ls.genset())
         aut->new_transition(sink, sink, letter);
@@ -88,5 +85,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_COMPLETE_HH
