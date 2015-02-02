@@ -24,22 +24,6 @@ div.navbar-inner.navbar-nobg {
     border: 0px;
 }
 
-/* Fading in the menubar */
-div#menubar-container {
-    height: 8px;
-    width: 100%;
-    opacity: 1;
-    -webkit-transition: all 1s ease;
-    -moz-transition   : all 1s ease;
-    -o-transition     : all 1s ease;
-    -ms-transition    : all 1s ease;
-    transition        : all 1s ease;
-    overflow: hidden;
-}
-div#menubar-container:hover {
-    height: 300px;
-    opacity: 1;
-}
 ul.dropdown-menu {
     overflow: visible;
     position: absolute;
