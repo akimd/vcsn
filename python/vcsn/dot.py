@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 
-from subprocess import check_call, PIPE, Popen
+from subprocess import PIPE
 
-from vcsn import _tmp_file
+from vcsn import _tmp_file, _popen, _check_call
 
 # Style of states in dot.
 state_style = 'node [shape = circle, style = rounded, width = 0.5]'
@@ -78,24 +78,24 @@ def _dot_pretty(s, mode = "dot"):
 def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
-    p1 = Popen([engine] + list(args),
+    p1 = _popen([engine] + list(args),
                stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    p2 = Popen(['gvpr', '-c', 'E[head.name == "F*"]{lp=pos=""}'],
+    p2 = _popen(['gvpr', '-c', 'E[head.name == "F*"]{lp=pos=""}'],
                stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
-    p3 = Popen(['neato', '-n2', '-Tsvg'],
+    p3 = _popen(['neato', '-n2', '-Tsvg'],
                stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(dot.encode('utf-8'))
+    p1.stdin.write(dot)
     p1.stdin.close()
     out, err = p3.communicate()
     if p1.wait():
-        raise RuntimeError(engine + " failed: " + p1.stderr.read().decode('utf-8'))
+        raise RuntimeError(engine + " failed: " + p1.stderr.read())
     if p2.wait():
-        raise RuntimeError("gprv failed: " + p2.stderr.read().decode('utf-8'))
+        raise RuntimeError("gprv failed: " + p2.stderr.read())
     if p3.wait():
-        raise RuntimeError("neato failed: " + err.decode('utf-8'))
-    return out.decode('utf-8')
+        raise RuntimeError("neato failed: " + err)
+    return out
 
 def _dot_to_svg_dot2tex(dot, engine="dot", *args):
     '''The conversion of a Dot source into SVG by dot2tex.
@@ -105,15 +105,15 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
     with _tmp_file('tex') as tex, \
          _tmp_file('pdf') as pdf, \
          _tmp_file('svg') as svg:
-        p1 = Popen(['dot2tex', '--prog', engine],
+        p1 = _popen(['dot2tex', '--prog', engine],
                    stdin=PIPE, stdout=tex, stderr=PIPE)
         p1.stdin.write(dot)
         out, err = p1.communicate()
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
-        check_call(["texi2pdf", "--batch", "--clean", "--quiet",
+        _check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                     "--output", pdf.name, tex.name])
-        check_call(["pdf2svg", pdf.name, svg.name])
+        _check_call(["pdf2svg", pdf.name, svg.name])
         return open(svg.name).read()
 
 
