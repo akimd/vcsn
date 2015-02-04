@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import locale
 import re
+import sys
 
 from subprocess import PIPE
 
@@ -86,7 +88,9 @@ def _dot_to_svg(dot, engine="dot", *args):
                stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(dot.encode())
+    if 3 <= sys.version_info.major:
+        dot = dot.encode(locale.getpreferredencoding())
+    p1.stdin.write(dot)
     p1.stdin.close()
     out, err = p3.communicate()
     if p1.wait():
@@ -95,7 +99,9 @@ def _dot_to_svg(dot, engine="dot", *args):
         raise RuntimeError("gprv failed: " + p2.stderr.read())
     if p3.wait():
         raise RuntimeError("neato failed: " + err)
-    return out.decode()
+    if 3 <= sys.version_info.major:
+        out = out.decode(locale.getpreferredencoding())
+    return out
 
 def _dot_to_svg_dot2tex(dot, engine="dot", *args):
     '''The conversion of a Dot source into SVG by dot2tex.
