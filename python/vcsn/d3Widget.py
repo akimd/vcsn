@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 
 from IPython.display import display, Javascript
 from IPython.html import widgets, nbextensions
@@ -9,7 +9,7 @@ from vcsn.dot import daut_to_transitions
 import cgi
 import os
 import vcsn
-import ipython
+import vcsn.ipython
 
 class VcsnD3DataFrame(object):
     def __init__(self, ip, name):

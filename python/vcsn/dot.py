@@ -81,15 +81,15 @@ def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
     p1 = _popen([engine] + list(args),
-               stdin=PIPE, stdout=PIPE, stderr=PIPE)
+               stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     p2 = _popen(['gvpr', '-c', 'E[head.name == "F*"]{lp=pos=""}'],
-               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
+               stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
+               universal_newlines=True)
     p3 = _popen(['neato', '-n2', '-Tsvg'],
-               stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
+               stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
+               universal_newlines=True)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    if 3 <= sys.version_info.major:
-        dot = dot.encode(locale.getpreferredencoding())
     p1.stdin.write(dot)
     p1.stdin.close()
     out, err = p3.communicate()
@@ -99,8 +99,6 @@ def _dot_to_svg(dot, engine="dot", *args):
         raise RuntimeError("gprv failed: " + p2.stderr.read())
     if p3.wait():
         raise RuntimeError("neato failed: " + err)
-    if 3 <= sys.version_info.major:
-        out = out.decode(locale.getpreferredencoding())
     return out
 
 def _dot_to_svg_dot2tex(dot, engine="dot", *args):
@@ -112,11 +110,11 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
          _tmp_file('pdf') as pdf, \
          _tmp_file('svg') as svg:
         p1 = _popen(['dot2tex', '--prog', engine],
-                   stdin=PIPE, stdout=tex, stderr=PIPE)
-        p1.stdin.write(dot)
-        out, err = p1.communicate()
+                   stdin=PIPE, stdout=tex, stderr=PIPE,
+                   universal_newlines=True)
+        out, err = p1.communicate(dot)
         if p1.wait():
-            raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
+            raise RuntimeError("dot2tex failed: " + err)
         _check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                     "--output", pdf.name, tex.name])
         _check_call(["pdf2svg", pdf.name, svg.name])

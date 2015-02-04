@@ -2,7 +2,7 @@
 ## automaton.  ##
 ## ----------- ##
 
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 
 import tempfile
 import os
@@ -81,7 +81,7 @@ def _automaton_interact(self):
     the display mode.  Pay attention to not displaying large
     automata by default.
     '''
-    from ipython import interact_h
+    from vcsn.ipython import interact_h
     if 20 < self.state_number():
         modes = ['info', 'dot']
     else:

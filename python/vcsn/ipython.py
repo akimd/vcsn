@@ -1,7 +1,6 @@
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 
 import re
-import d3Widget
 
 from IPython.core.magic import (Magics, magics_class, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
@@ -13,6 +12,7 @@ import cgi
 import vcsn
 
 from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
+from vcsn import d3Widget
 
 # The class MUST call this class decorator at creation time
 class ContextTextWidget:
