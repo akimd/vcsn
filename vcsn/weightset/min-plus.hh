@@ -37,7 +37,7 @@ namespace vcsn
       rdiv(const value_t l, const value_t r)
       {
         require(!is_zero(r), "div: division by zero");
-        return l - r;
+        return is_zero(l) ? l : l - r;
       }
 
       static value_t
