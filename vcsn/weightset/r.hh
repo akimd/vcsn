@@ -1,19 +1,18 @@
-#ifndef VCSN_WEIGHTSET_R_HH
-# define VCSN_WEIGHTSET_R_HH
+#pragma once
 
-# include <string>
-# include <ostream>
+#include <string>
+#include <ostream>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh>
-# include <vcsn/weightset/fwd.hh>
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/q.hh>
-# include <vcsn/weightset/qmp.hh>
-# include <vcsn/weightset/z.hh>
-# include <vcsn/weightset/weightset.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh>
+#include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/qmp.hh>
+#include <vcsn/weightset/z.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
@@ -105,7 +104,7 @@ namespace vcsn
         raise(sname(), ": star: invalid value: ", to_string(*this, v));
     }
 
-    constexpr static bool is_special(value_t)
+    constexpr static bool is_special(const value_t)
     {
       return false;
     }
@@ -129,7 +128,7 @@ namespace vcsn
     }
 
     /// Whether \a lhs < \a rhs.
-    static bool less(value_t lhs, value_t rhs)
+    static bool less(const value_t lhs, const value_t rhs)
     {
       return lhs < rhs;
     }
@@ -152,31 +151,31 @@ namespace vcsn
       return v;
     }
 
-    static size_t hash(value_t v)
+    static size_t hash(const value_t v)
     {
       return hash_value(v);
     }
 
     static value_t
-    conv(self_type, value_t v)
+    conv(self_type, const value_t v)
     {
       return v;
     }
 
     static value_t
-    conv(q, q::value_t v)
+    conv(q, const q::value_t v)
     {
       return value_t(v.num) / value_t(v.den);
     }
 
     static value_t
-    conv(z, z::value_t v)
+    conv(z, const z::value_t v)
     {
       return v;
     }
 
     static value_t
-    conv(b, b::value_t v)
+    conv(b, const b::value_t v)
     {
       return v;
     }
@@ -219,5 +218,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_WEIGHTSET_R_HH

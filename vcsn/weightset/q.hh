@@ -1,20 +1,19 @@
-#ifndef VCSN_WEIGHTSET_Q_HH
-# define VCSN_WEIGHTSET_Q_HH
+#pragma once
 
-# include <string>
-# include <ostream>
+#include <string>
+#include <ostream>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/math.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh> // eat
-# include <vcsn/misc/symbol.hh>
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/fwd.hh>
-# include <vcsn/weightset/weightset.hh>
-# include <vcsn/weightset/z.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/math.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh> // eat
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/weightset.hh>
+#include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -110,9 +109,8 @@ namespace vcsn
 
     value_t star(const value_t v) const
     {
-      // Bad casting when v.den is too big
       if (abs(v.num) < v.den)
-        // No need to reduce: numerator and denominators are primes.
+        // No need to reduce: numerator and denominator are coprime.
         return {int(v.den), v.den - v.num};
       else
         raise(sname(), ": star: invalid value: ", to_string(*this, v));
@@ -140,7 +138,7 @@ namespace vcsn
     }
 
     /// Whether \a lhs < \a rhs.
-    static bool less(value_t lhs, value_t rhs)
+    static bool less(const value_t lhs, const value_t rhs)
     {
       return lhs.num * rhs.den < rhs.num * lhs.den;
     }
@@ -162,7 +160,7 @@ namespace vcsn
       return v;
     }
 
-    static size_t hash(value_t v)
+    static size_t hash(const value_t v)
     {
       size_t res = 0;
       std::hash_combine(res, hash_value(v.num));
@@ -171,19 +169,19 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_type, value_t v)
+    conv(self_type, const value_t v)
     {
       return v;
     }
 
     static value_t
-    conv(z, z::value_t v)
+    conv(z, const z::value_t v)
     {
       return {v, 1};
     }
 
     static value_t
-    conv(b, b::value_t v)
+    conv(b, const b::value_t v)
     {
       return {v, 1};
     }
@@ -264,5 +262,3 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(q, q);
   }
 }
-
-#endif // !VCSN_WEIGHTSET_Q_HH

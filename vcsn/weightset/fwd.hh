@@ -1,5 +1,4 @@
-#ifndef VCSN_WEIGHTSET_FWD_HH
-# define VCSN_WEIGHTSET_FWD_HH
+#pragma once
 
 namespace vcsn
 {
@@ -48,5 +47,3 @@ namespace vcsn
   using zmin = variadic_mul_mixin<detail::zmin_impl>;
 
 } // namespace vcsn
-
-#endif // !VCSN_WEIGHTSET_FWD_HH
