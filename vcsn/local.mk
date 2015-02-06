@@ -228,6 +228,7 @@ nobase_include_HEADERS =                        \
   %D%/weightset/b.hh                            \
   %D%/weightset/f2.hh                           \
   %D%/weightset/fwd.hh                          \
+  %D%/weightset/log.hh                          \
   %D%/weightset/min-plus.hh                     \
   %D%/weightset/polynomialset.hh                \
   %D%/weightset/q.hh                            \

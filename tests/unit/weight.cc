@@ -2,6 +2,7 @@
 #include <limits>
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/f2.hh>
+#include <vcsn/weightset/log.hh>
 #include <vcsn/weightset/r.hh>
 #include <vcsn/weightset/q.hh>
 #include <vcsn/weightset/zmin.hh>
@@ -231,6 +232,61 @@ static size_t check_zmin()
   ASSERT_EQ(ws.mul(ws.one(), 12), 12);
   ASSERT_EQ(ws.mul(-12, ws.one()), -12);
 
+  // div: sub.
+  ASSERT_EQ(ws.rdiv(23, 42), 23-42);
+  ASSERT_EQ(ws.rdiv(42, 23), 42-23);
+  ASSERT_EQ(ws.rdiv(ws.zero(), 12), ws.zero());
+  ASSERT_EQ(ws.rdiv(ws.one(), 12), -12);
+  ASSERT_EQ(ws.rdiv(-12, ws.one()), -12);
+
+
+  // equal
+#define CHECK(Lhs, Rhs, Out)                            \
+  ASSERT_EQ(ws.equal(Lhs, Rhs), Out)
+  CHECK(1, 1, true);
+  CHECK(0, 1, false);
+#undef CHECK
+
+  return nerrs;
+}
+
+static size_t check_log()
+{
+  size_t nerrs = 0;
+  vcsn::log ws;
+
+  // format.
+  ASSERT_EQ(to_string(ws, ws.zero()), "oo");
+  ASSERT_EQ(to_string(ws, ws.one()), "0");
+  ASSERT_EQ(to_string(ws, 42), "42");
+
+  // conv.
+  ASSERT_EQ(to_string(ws, conv(ws, "oo")), "oo");
+  ASSERT_EQ(to_string(ws, conv(ws, "0")), "0");
+  ASSERT_EQ(to_string(ws, conv(ws, "42")), "42");
+
+  // add: +log
+  ASSERT_EQ(ws.add(23, 42), -log(exp(-23) + exp(-42)));
+  ASSERT_EQ(ws.add(42, 23), -log(exp(-23) + exp(-42)));
+  ASSERT_EQ(ws.add(ws.zero(), 12), 12);
+  ASSERT_EQ(ws.add(-12, ws.zero()), -12);
+
+  // mul: add.
+  ASSERT_EQ(ws.mul(23, 42), 23+42);
+  ASSERT_EQ(ws.mul(42, 23), 42+23);
+  ASSERT_EQ(ws.mul(ws.zero(), 12), ws.zero());
+  ASSERT_EQ(ws.mul(-12, ws.zero()), ws.zero());
+  ASSERT_EQ(ws.mul(ws.one(), 12), 12);
+  ASSERT_EQ(ws.mul(-12, ws.one()), -12);
+
+  // div: sub.
+  ASSERT_EQ(ws.rdiv(23, 42), 23-42);
+  ASSERT_EQ(ws.rdiv(42, 23), 42-23);
+  ASSERT_EQ(ws.rdiv(ws.zero(), 12), ws.zero());
+  ASSERT_EQ(ws.rdiv(ws.one(), 12), -12);
+  ASSERT_EQ(ws.rdiv(-12, ws.one()), -12);
+
+
   // equal
 #define CHECK(Lhs, Rhs, Out)                            \
   ASSERT_EQ(ws.equal(Lhs, Rhs), Out)
@@ -246,6 +302,7 @@ int main()
   size_t nerrs = 0;
   nerrs += check_b();
   nerrs += check_f2();
+  nerrs += check_log();
   nerrs += check_zmin();
   nerrs += check_r();
   nerrs += check_q();
