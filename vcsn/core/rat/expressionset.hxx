@@ -693,9 +693,9 @@ namespace vcsn
       return std::make_shared<rweight_t>(w, e);
   }
 
-  /*----------------------------------.
+  /*--------------------------------------.
   | expressionset as a WeightSet itself.  |
-  `----------------------------------*/
+  `--------------------------------------*/
 
   DEFINE::is_zero(value_t v) const
     -> bool

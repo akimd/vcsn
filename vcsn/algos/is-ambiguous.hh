@@ -49,7 +49,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <class Aut>
+      template <typename Aut>
       bool is_ambiguous(const automaton& aut)
       {
         return is_ambiguous(aut->as<Aut>());
