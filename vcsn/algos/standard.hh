@@ -1,18 +1,17 @@
-#ifndef VCSN_ALGOS_STANDARD_HH
-# define VCSN_ALGOS_STANDARD_HH
+#pragma once
 
-# include <set>
+#include <set>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/memory.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/memory.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -413,5 +412,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_STANDARD_HH
