@@ -237,6 +237,11 @@ struct automaton
     return os.str();
   }
 
+  bool has_bounded_lag() const
+  {
+    return vcsn::dyn::has_bounded_lag(val_);
+  }
+
   bool has_twins_property() const
   {
     return vcsn::dyn::has_twins_property(val_);
@@ -1016,6 +1021,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("factor", &automaton::factor)
     .def("filter", &automaton::filter)
     .def("_format", &automaton::format)
+    .def("has_bounded_lag", &automaton::has_bounded_lag)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
     .def("insplit", &automaton::insplit)

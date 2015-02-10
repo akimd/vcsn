@@ -58,6 +58,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/focus.cc                            \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.cc                            \
+  %D%/algos/has-bounded-lag.cc                  \
   %D%/algos/has-twins-property.cc               \
   %D%/algos/identities.cc                       \
   %D%/algos/info.cc                             \

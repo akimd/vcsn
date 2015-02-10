@@ -40,6 +40,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/focus.hh                            \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
+  %D%/algos/has-bounded-lag.hh                  \
   %D%/algos/has-twins-property.hh               \
   %D%/algos/identities.hh                       \
   %D%/algos/info.hh                             \

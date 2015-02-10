@@ -231,6 +231,9 @@ namespace vcsn
     /// Whether the automaton has the twins property.
     bool has_twins_property(const automaton& aut);
 
+    /// Whether the transducer has bounded lag.
+    bool has_bounded_lag(const automaton& aut);
+
     /// The identities of expression \a exp.
     rat::identities identities(const expression& exp);
 
