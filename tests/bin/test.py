@@ -198,6 +198,15 @@ def CHECK_ISOMORPHIC(a1, a2):
         rst_file("Right automaton", a2)
         rst_diff(a1, a2)
 
+def CHECK_IS_EPS_ACYCLIC(a):
+    "Check if `a` is epsilon acyclic."
+    if a.is_eps_acyclic():
+        PASS()
+    else:
+        a = format(a)
+        FAIL("automata is not epsilon acyclic")
+        rst_file(a)
+
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
     print('1..'+str(count))
