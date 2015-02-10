@@ -202,6 +202,8 @@ class Daut:
     def transition_daut(self, s, d, a):
         '''Format a transition to Daut syntax.'''
         a = self.attr_daut(a)
+        if a[0:5] == 'color':
+            a = ""
         return "{} -> {}{}{}".format(s or '$', d or '$',
                                      " " if a else "", a)
 
