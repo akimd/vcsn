@@ -342,7 +342,7 @@ namespace vcsn
       return !is_one(v) && labelset_t::is_special(get_value(v));
     }
 
-    size_t size(const value_t& v) const
+    static size_t size(const value_t& v)
     {
       return is_one(v) ? 0 : labelset_t::size(get_value(v));
     }
