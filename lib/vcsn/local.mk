@@ -100,6 +100,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/u.cc                                \
   %D%/algos/union.cc                            \
   %D%/algos/universal.cc                        \
+  %D%/algos/zpc.cc                              \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \

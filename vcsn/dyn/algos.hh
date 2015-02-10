@@ -650,6 +650,9 @@ namespace vcsn
 
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
+
+    /// The ZPC automaton of \a e.
+    automaton zpc(const expression& e);
   }
 }
 
