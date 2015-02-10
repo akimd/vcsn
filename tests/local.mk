@@ -16,13 +16,14 @@
 ## ------- ##
 
 check_PROGRAMS =
-TAP_DRIVER = $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl
+TAP_DRIVER = $(top_srcdir)/build-aux/bin/tap-driver.sh
 
 EXTRA_DIST += %D%/bin/test.py
 
 dist_noinst_SCRIPTS += %D%/bin/checker
 TEST_EXTENSIONS += .chk
-CHK_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/%D%/bin/checker
+CHK_LOG_DRIVER = $(TAP_DRIVER)
+CHK_LOG_COMPILER = $(srcdir)/%D%/bin/checker
 $(dist_TESTS:.chk=.log): %D%/bin/checker
 
 TESTS = $(dist_TESTS)

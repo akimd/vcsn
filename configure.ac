@@ -26,7 +26,7 @@ AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
                   color-tests parallel-tests nostdinc silent-rules
                   subdir-objects])
-AC_REQUIRE_AUX_FILE([tap-driver.pl])
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AM_SILENT_RULES([yes])
 
 # Shared libs.
