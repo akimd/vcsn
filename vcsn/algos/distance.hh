@@ -2,10 +2,13 @@
 
 #include <algorithm>
 #include <iostream>
+#include <limits>
 #include <queue>
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
+
+#include <boost/range/algorithm/max_element.hpp>
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/ctx/context.hh>
@@ -282,5 +285,26 @@ namespace vcsn
       }
     // FIXME: why don't we raise here?
     return std::vector<transition_t>();
+  }
+
+  template <typename Aut>
+  std::vector<std::vector<weight_t_of<Aut>>>
+  all_distances(const Aut& aut)
+  {
+    using automaton_t = Aut;
+    using weight_t = weight_t_of<automaton_t>;
+
+    auto ws = aut->weightset();
+    auto n = aut->all_states().back() + 1;
+    std::vector<std::vector<weight_t>> res(
+      n, std::vector<weight_t>(n, ws->zero()));
+
+    for (auto t : aut->all_transitions())
+      res[aut->src_of(t)][aut->dst_of(t)] = aut->weight_of(t);
+    for (auto k : aut->all_states())
+      for (auto i : aut->all_states())
+        for (auto j : aut->all_states())
+          res[i][j] = ws->add(res[i][j], ws->mul(res[i][k], res[k][j]));
+    return res;
   }
 }

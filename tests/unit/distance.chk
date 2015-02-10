@@ -1,0 +1,19 @@
+#! /bin/sh
+
+run 0 - tests/unit/distance <<\EOF
+** CHECK_BASIC **
+     0     0     0     0     0
+     0     0     0     0     0
+     0     0     0     1     2
+     0     0     0     0     2
+     0     0     0     0     0
+** CHECK_ZMIN **
+    oo    oo    oo    oo    oo    oo    oo    oo
+    oo    oo    oo    oo    oo    oo    oo    oo
+    oo    oo     4     1     5     5     1     3
+    oo    oo     9     7     4     4     6     8
+    oo    oo     5     3     7     7     2     4
+    oo    oo     6     4     1     8     3     5
+    oo    oo     3     4     8     8     4     2
+    oo    oo     3     4     8     8     4     6
+EOF
