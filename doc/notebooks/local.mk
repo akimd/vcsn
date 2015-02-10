@@ -60,6 +60,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
   %D%/expression.standard.ipynb                 \
+  %D%/expression.star_normal_form.ipynb         \
   %D%/expression.thompson.ipynb                 \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \

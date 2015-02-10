@@ -1,9 +1,8 @@
-#ifndef VCSN_CTX_LAL_CHAR_B_HH
-# define VCSN_CTX_LAL_CHAR_B_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/lal_char.hh>
-# include <vcsn/weightset/b.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/lal_char.hh>
+#include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -13,18 +12,19 @@ namespace vcsn
   }
 }
 
-# include <vcsn/misc/name.hh>
-# include <vcsn/ctx/instantiate.hh>
-# include <vcsn/algos/are-equivalent.hh>
-# include <vcsn/algos/complement.hh>
-# include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/grail.hh>
-# include <vcsn/algos/universal.hh>
+#include <vcsn/misc/name.hh>
+#include <vcsn/ctx/instantiate.hh>
+#include <vcsn/algos/are-equivalent.hh>
+#include <vcsn/algos/complement.hh>
+#include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/grail.hh>
+#include <vcsn/algos/star-normal-form.hh>
+#include <vcsn/algos/universal.hh>
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lal_char_b);
-# if 0
+#if 0
   MAYBE_EXTERN template
   auto
   determinize(const mutable_automaton<ctx::lal_char_b>& aut)
@@ -51,9 +51,9 @@ namespace vcsn
   grail<vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>>
   (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>& aut,
    std::ostream& out);
-# endif
+#endif
 
-# if VCSN_INSTANTIATION
+#if VCSN_INSTANTIATION
   namespace ctx
   {
     namespace detail
@@ -62,9 +62,11 @@ namespace vcsn
       bool
       register_b_functions()
       {
-        using aut_t = mutable_automaton<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
+        using rs_t = expressionset<ctx_t>;
 
-#define REGISTER(Algo, ...)                                             \
+# define REGISTER(Algo, ...)                                             \
         Algo ## _register(ssignature<__VA_ARGS__>(), dyn::detail::Algo<__VA_ARGS__>)
 
         REGISTER(are_equivalent, aut_t, aut_t);
@@ -72,8 +74,9 @@ namespace vcsn
         REGISTER(determinize, aut_t, const std::string);
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);
+        REGISTER(star_normal_form, rs_t);
         REGISTER(universal, aut_t);
-#  undef REGISTER
+# undef REGISTER
 
         return true;
       }
@@ -81,7 +84,5 @@ namespace vcsn
       static bool register_lal_char_b = register_b_functions<ctx::lal_char_b>();
     }
   }
-# endif // ! VCSN_INSTANTIATION
+#endif // ! VCSN_INSTANTIATION
 }
-
-#endif // !VCSN_CTX_LAL_CHAR_B_HH

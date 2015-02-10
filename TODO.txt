@@ -66,11 +66,11 @@ Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
 ** conjunction
-Check star-normal-form, standard, thompson.  Check the trivial identities.
-What should be the definition of the B (breaking/splitting) operator?  I
-have taken a definition which is modeled after the one of concatenation (on
-order "not to break too much") rather that something like expand.  What are
-the expected features of the right definition?
+Check standard, thompson.  Check the trivial identities.  What should be the
+definition of the B (breaking/splitting) operator?  I have taken a
+definition which is modeled after the one of concatenation (on order "not to
+break too much") rather that something like expand.  What are the expected
+features of the right definition?
 
 * Bugs
 ** expression::copy
@@ -136,9 +136,6 @@ In the case of RW, check that the expression is valid.
 
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
-
-** star-normal-form
-It does not work for weighted expressions.
 
 * Improvements
 ** are-equivalent

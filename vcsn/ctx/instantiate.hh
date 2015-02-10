@@ -44,7 +44,6 @@
 #include <vcsn/algos/split.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star-height.hh>
-#include <vcsn/algos/star-normal-form.hh>
 #include <vcsn/algos/star.hh>
 #include <vcsn/algos/sum.hh>
 #include <vcsn/algos/synchronizing-word.hh>
@@ -357,7 +356,6 @@ namespace vcsn
         REGISTER(standard_expression, rs_t);
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
-        REGISTER(star_normal_form, rs_t);
         REGISTER(sum, aut_t, aut_t);
         REGISTER(sum_expression, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);

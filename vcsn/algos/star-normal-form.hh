@@ -5,6 +5,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -31,6 +32,9 @@ namespace vcsn
       using expression_t = typename expressionset_t::value_t;
       using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<context_t>;
+      static_assert(std::is_same<weightset_t, b>::value,
+                    "star_normal_form: requires Boolean weights");
+
       using weight_t = typename weightset_t::value_t;
 
       using super_t = typename ExpSet::const_visitor;
@@ -85,6 +89,8 @@ namespace vcsn
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(shuffle)
       VCSN_RAT_UNSUPPORTED(transposition)
+      VCSN_RAT_UNSUPPORTED(lweight)
+      VCSN_RAT_UNSUPPORTED(rweight)
 
       VCSN_RAT_VISIT(prod, v)
       {
@@ -151,18 +157,6 @@ namespace vcsn
           }
       }
 
-      VCSN_RAT_VISIT(lweight, v)
-      {
-        v.sub()->accept(*this);
-        res_ = rs_.lmul(v.weight(), std::move(res_));
-      }
-
-      VCSN_RAT_VISIT(rweight, v)
-      {
-        v.sub()->accept(*this);
-        res_ = rs_.rmul(std::move(res_), v.weight());
-      }
-
     private:
       expressionset_t rs_;
       /// Shorthand to the weightset.
@@ -175,7 +169,7 @@ namespace vcsn
 
   } // rat::
 
-  /// Star-normal form a typed expression.
+  /// Star-normal form of an expression.
   template <typename ExpSet>
   inline
   typename ExpSet::value_t

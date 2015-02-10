@@ -577,8 +577,10 @@ namespace vcsn
     /// Star height of an expression.
     unsigned star_height(const expression& rs);
 
-    /// A normalized form where star is applied only to expression
-    /// without null constant-term.
+    /// A normalized form where star is applied only to proper
+    /// expressions.
+    ///
+    /// \pre \a e is Boolean.
     expression star_normal_form(const expression& e);
 
     /// The automaton in \a a with its metadata layers removed.
