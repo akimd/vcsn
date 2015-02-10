@@ -1,68 +1,67 @@
-#ifndef VCSN_CTX_INSTANTIATE_HH
-# define VCSN_CTX_INSTANTIATE_HH
+#pragma once
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/are-equivalent.hh> // difference
-# include <vcsn/algos/are-isomorphic.hh>
-# include <vcsn/algos/cerny.hh>
-# include <vcsn/algos/complete.hh>
-# include <vcsn/algos/concatenate.hh>
-# include <vcsn/algos/constant-term.hh>
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/de-bruijn.hh>
-# include <vcsn/algos/derivation.hh>
-# include <vcsn/algos/derived-term.hh>
-# include <vcsn/algos/divkbaseb.hh>
-# include <vcsn/algos/dot.hh>
-# include <vcsn/algos/double-ring.hh>
-# include <vcsn/algos/edit-automaton.hh>
-# include <vcsn/algos/efsm.hh>
-# include <vcsn/algos/enumerate.hh>
-# include <vcsn/algos/eval.hh>
-# include <vcsn/algos/expand.hh>
-# include <vcsn/algos/identities.hh>
-# include <vcsn/algos/info.hh>
-# include <vcsn/algos/is-ambiguous.hh>
-# include <vcsn/algos/is-complete.hh>
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/algos/is-eps-acyclic.hh>
-# include <vcsn/algos/normalize.hh>
-# include <vcsn/algos/is-proper.hh>
-# include <vcsn/algos/is-valid-expression.hh>
-# include <vcsn/algos/is-valid.hh>
-# include <vcsn/algos/ladybird.hh>
-# include <vcsn/algos/left-mult.hh>
-# include <vcsn/algos/lift.hh>
-# include <vcsn/algos/make-context.hh>
-# include <vcsn/algos/minimize.hh>
-# include <vcsn/algos/print.hh>
-# include <vcsn/algos/product.hh>
-# include <vcsn/algos/proper.hh>
-# include <vcsn/algos/push-weights.hh>
-# include <vcsn/algos/random.hh>
-# include <vcsn/algos/read.hh>
-# include <vcsn/algos/sort.hh>
-# include <vcsn/algos/split.hh>
-# include <vcsn/algos/standard.hh>
-# include <vcsn/algos/star-height.hh>
-# include <vcsn/algos/star-normal-form.hh>
-# include <vcsn/algos/star.hh>
-# include <vcsn/algos/sum.hh>
-# include <vcsn/algos/synchronizing-word.hh>
-# include <vcsn/algos/thompson.hh>
-# include <vcsn/algos/tikz.hh>
-# include <vcsn/algos/to-expansion.hh>
-# include <vcsn/algos/to-expression.hh>
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/algos/u.hh>
-# include <vcsn/algos/union.hh>
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/are-equivalent.hh> // difference
+#include <vcsn/algos/are-isomorphic.hh>
+#include <vcsn/algos/cerny.hh>
+#include <vcsn/algos/complete.hh>
+#include <vcsn/algos/concatenate.hh>
+#include <vcsn/algos/constant-term.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/de-bruijn.hh>
+#include <vcsn/algos/derivation.hh>
+#include <vcsn/algos/derived-term.hh>
+#include <vcsn/algos/divkbaseb.hh>
+#include <vcsn/algos/dot.hh>
+#include <vcsn/algos/double-ring.hh>
+#include <vcsn/algos/edit-automaton.hh>
+#include <vcsn/algos/efsm.hh>
+#include <vcsn/algos/enumerate.hh>
+#include <vcsn/algos/eval.hh>
+#include <vcsn/algos/expand.hh>
+#include <vcsn/algos/identities.hh>
+#include <vcsn/algos/info.hh>
+#include <vcsn/algos/is-ambiguous.hh>
+#include <vcsn/algos/is-complete.hh>
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/normalize.hh>
+#include <vcsn/algos/is-proper.hh>
+#include <vcsn/algos/is-valid-expression.hh>
+#include <vcsn/algos/is-valid.hh>
+#include <vcsn/algos/ladybird.hh>
+#include <vcsn/algos/left-mult.hh>
+#include <vcsn/algos/lift.hh>
+#include <vcsn/algos/make-context.hh>
+#include <vcsn/algos/minimize.hh>
+#include <vcsn/algos/print.hh>
+#include <vcsn/algos/product.hh>
+#include <vcsn/algos/proper.hh>
+#include <vcsn/algos/push-weights.hh>
+#include <vcsn/algos/random.hh>
+#include <vcsn/algos/read.hh>
+#include <vcsn/algos/sort.hh>
+#include <vcsn/algos/split.hh>
+#include <vcsn/algos/standard.hh>
+#include <vcsn/algos/star-height.hh>
+#include <vcsn/algos/star-normal-form.hh>
+#include <vcsn/algos/star.hh>
+#include <vcsn/algos/sum.hh>
+#include <vcsn/algos/synchronizing-word.hh>
+#include <vcsn/algos/thompson.hh>
+#include <vcsn/algos/tikz.hh>
+#include <vcsn/algos/to-expansion.hh>
+#include <vcsn/algos/to-expression.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/algos/u.hh>
+#include <vcsn/algos/union.hh>
 
-# include <vcsn/core/rat/identities.hh>
+#include <vcsn/core/rat/identities.hh>
 
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
-# include <vcsn/misc/name.hh>
+#include <vcsn/misc/name.hh>
 
 /* The purpose of this file is manyfold:
 
@@ -80,7 +79,7 @@
 
 namespace vcsn
 {
-# define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                        \
+#define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                         \
   MAYBE_EXTERN template                                                 \
   LIBVCSN_API                                                           \
   std::ostream& Format<Aut>(const Aut& aut, std::ostream& out)
@@ -89,7 +88,7 @@ namespace vcsn
   | Instantiate the function that work for every context.  |
   `-------------------------------------------------------*/
 
-# define VCSN_CTX_INSTANTIATE_1(Ctx)                                    \
+#define VCSN_CTX_INSTANTIATE_1(Ctx)                                     \
   MAYBE_EXTERN template                                                 \
   class LIBVCSN_API mutable_automaton<Ctx>;                             \
                                                                         \
@@ -172,7 +171,7 @@ namespace vcsn
       register_functions_is_free(std::true_type)
       {
         using ctx_t = Ctx;
-        using aut_t = vcsn::mutable_automaton<ctx_t>;
+        using aut_t = mutable_automaton<ctx_t>;
         using rs_t = expressionset<ctx_t>;
 
         // Wordset.
@@ -230,7 +229,7 @@ namespace vcsn
       register_kind_functions(labels_are_one)
       {
         using ctx_t = Ctx;
-        using aut_t = vcsn::mutable_automaton<ctx_t>;
+        using aut_t = mutable_automaton<ctx_t>;
 
         using namespace dyn::detail;
 
@@ -284,7 +283,7 @@ namespace vcsn
       register_functions()
       {
         using ctx_t = Ctx;
-        using aut_t = vcsn::mutable_automaton<ctx_t>;
+        using aut_t = mutable_automaton<ctx_t>;
         using rs_t = expressionset<ctx_t>;
         using ls_t = labelset_t_of<ctx_t>;
         using ws_t = weightset_t_of<ctx_t>;
@@ -380,10 +379,10 @@ namespace vcsn
     }
   }
 
-# undef REGISTER
+#undef REGISTER
 
-# if VCSN_INSTANTIATION
-#  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
+#if VCSN_INSTANTIATION
+# define VCSN_CTX_INSTANTIATE_2(Ctx)                            \
   namespace ctx                                                 \
   {                                                             \
     namespace detail                                            \
@@ -391,18 +390,16 @@ namespace vcsn
       static bool registered = register_functions<Ctx>();       \
     }                                                           \
   }
-# else
-#  define VCSN_CTX_INSTANTIATE_2(Ctx)
-# endif
+#else
+# define VCSN_CTX_INSTANTIATE_2(Ctx)
+#endif
 
-# define VCSN_CTX_INSTANTIATE(Ctx)              \
+#define VCSN_CTX_INSTANTIATE(Ctx)               \
   /* VCSN_CTX_INSTANTIATE_1(Ctx);*/             \
   VCSN_CTX_INSTANTIATE_2(Ctx)
 
-# ifndef MAYBE_EXTERN
-#  define MAYBE_EXTERN extern
-# endif
+#ifndef MAYBE_EXTERN
+# define MAYBE_EXTERN extern
+#endif
 
 }
-
-#endif // !VCSN_CTX_INSTANTIATE_HH

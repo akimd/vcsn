@@ -1,18 +1,17 @@
-#ifndef VCSN_ALGOS_DERIVED_TERM_HH
-# define VCSN_ALGOS_DERIVED_TERM_HH
+#pragma once
 
-# include <vcsn/algos/constant-term.hh>
-# include <vcsn/algos/derivation.hh>
-# include <vcsn/algos/to-expansion.hh>
-# include <vcsn/algos/split.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/expression-automaton.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/algos/constant-term.hh>
+#include <vcsn/algos/derivation.hh>
+#include <vcsn/algos/split.hh>
+#include <vcsn/algos/to-expansion.hh>
+#include <vcsn/core/expression-automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -170,6 +169,10 @@ namespace vcsn
   }
 
   /// The derived-term automaton, for free labelsets.
+  ///
+  /// \param rs    the expressionset
+  /// \param r     the expression
+  /// \param algo  the algo to run: "auto", "derivation", or "expansion".
   template <typename ExpSet>
   inline
   vcsn::enable_if_t<labelset_t_of<ExpSet>::is_free(),
@@ -188,6 +191,10 @@ namespace vcsn
   }
 
   /// The derived-term automaton, for non free labelsets.
+  ///
+  /// \param rs    the expressionset
+  /// \param r     the expression
+  /// \param algo  the algo to run: "auto", "derivation", or "expansion".
   template <typename ExpSet>
   inline
   vcsn::enable_if_t<!labelset_t_of<ExpSet>::is_free(),
@@ -228,5 +235,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_DERIVED_TERM_HH

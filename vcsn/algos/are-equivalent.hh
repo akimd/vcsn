@@ -1,17 +1,16 @@
-#ifndef VCSN_ALGOS_ARE_EQUIVALENT_HH
-# define VCSN_ALGOS_ARE_EQUIVALENT_HH
+#pragma once
 
-# include <vcsn/algos/accessible.hh> // is_useless
-# include <vcsn/algos/complement.hh>
-# include <vcsn/algos/complete.hh>
-# include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/left-mult.hh>
-# include <vcsn/algos/product.hh>
-# include <vcsn/algos/reduce.hh>
-# include <vcsn/algos/strip.hh>
-# include <vcsn/algos/union.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/expression.hh>
+#include <vcsn/algos/accessible.hh> // is_useless
+#include <vcsn/algos/complement.hh>
+#include <vcsn/algos/complete.hh>
+#include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/left-mult.hh>
+#include <vcsn/algos/product.hh>
+#include <vcsn/algos/reduce.hh>
+#include <vcsn/algos/strip.hh>
+#include <vcsn/algos/union.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
 
 namespace vcsn
 {
@@ -147,5 +146,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_ARE_EQUIVALENT_HH

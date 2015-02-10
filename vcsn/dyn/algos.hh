@@ -1,16 +1,15 @@
-#ifndef VCSN_DYN_ALGOS_HH
-# define VCSN_DYN_ALGOS_HH
+#pragma once
 
-# include <iosfwd>
-# include <string>
-# include <vector>
+#include <iosfwd>
+#include <string>
+#include <vector>
 
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/core/rat/identities.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/direction.hh>
-# include <vcsn/misc/export.hh>
+#include <vcsn/algos/fwd.hh>
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/direction.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -49,6 +48,7 @@ namespace vcsn
     automaton coaccessible(const automaton& aut);
 
     /// The codeterminized automaton.
+    ///
     /// \param aut        the automaton to codeterminize
     /// \param algo
     ///     "boolean"     use efficient bitsets
@@ -60,6 +60,7 @@ namespace vcsn
                             const std::string& algo = "auto");
 
     /// The cominimized automaton.
+    ///
     /// \param aut       the automaton to cominimize
     /// \param algo      the specific algorithm to use
     /// \pre  \a aut must be LAL.
@@ -68,6 +69,7 @@ namespace vcsn
                          const std::string& algo = "auto");
 
     /// The complement of \a aut.
+    ///
     /// \pre aut is lal
     /// \pre aut is Boolean
     /// \pre aut is deterministic
@@ -82,6 +84,7 @@ namespace vcsn
     automaton complete(const automaton& aut);
 
     /// The automaton of a strongly connected component.
+    ///
     /// \param aut    the input automaton.
     /// \param num    the component number.
     automaton component(const automaton& aut, unsigned num);
@@ -130,6 +133,7 @@ namespace vcsn
     automaton de_bruijn(const context& ctx, unsigned n);
 
     /// Derive \a exp with respect to \a s.
+    ///
     /// \param exp       the input expression
     /// \param l         the label used for derivation
     /// \param breaking  whether to split the result
@@ -138,6 +142,7 @@ namespace vcsn
                           bool breaking = false);
 
     /// The derived-term automaton of \a e.
+    ///
     /// \param e      the input expression
     /// \param algo   how the derived terms are computed:
     ///    "auto"                  alias for "expansion"
@@ -149,6 +154,7 @@ namespace vcsn
                            const std::string& algo = "auto");
 
     /// The determinized automaton.
+    ///
     /// \param aut        the automaton to determinize
     /// \param algo
     ///     "boolean"     use efficient bitsets
@@ -161,6 +167,7 @@ namespace vcsn
 
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.
+    ///
     /// \param lhs   a LAL automaton
     /// \param rhs   a LAL Boolean automaton
     /// \pre \a rhs is Boolean.
@@ -174,6 +181,7 @@ namespace vcsn
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
     /// Output \a aut in GraphViz' Dot format.
+    ///
     /// \param aut  the automaton to format
     /// \param out  the output stream where to print the dot file
     /// \param dot2tex
@@ -235,6 +243,7 @@ namespace vcsn
     automaton infiltration(const std::vector<automaton>& as);
 
     /// Output various facts about an automaton.
+    ///
     /// \param aut  the automaton under study
     /// \param out  the output stream where to print the info
     /// \param detailed
@@ -248,6 +257,7 @@ namespace vcsn
     /// Split automaton on the incoming transition.
     /// Every state either has only epsilon incoming transitions
     /// or non-epsilon ones.
+    ///
     /// \pre aut is lal or lan
     automaton insplit(const automaton& aut);
 
@@ -255,6 +265,7 @@ namespace vcsn
     bool is_accessible(const automaton& aut);
 
     /// Whether \a aut is ambiguous.
+    ///
     /// \pre \a aut is LAL.
     bool is_ambiguous(const automaton& aut);
 
@@ -262,10 +273,12 @@ namespace vcsn
     bool is_coaccessible(const automaton& aut);
 
     /// Whether \a aut is codeterministic.
+    ///
     /// \pre \a aut is LAL.
     bool is_codeterministic(const automaton& aut);
 
     /// Whether \a aut is complete.
+    ///
     /// \pre \a aut is LAL.
     bool is_complete(const automaton& aut);
 
@@ -287,10 +300,12 @@ namespace vcsn
     bool is_eps_acyclic(const automaton& aut);
 
     /// Whether \a aut is functional.
+    ///
     /// \pre \a aut is a transducer.
     bool is_functional(const automaton& aut);
 
     /// Whether \a aut realizes a partial identity.
+    ///
     /// \pre \a aut is a transducer.
     bool is_partial_identity(const automaton& aut);
 
@@ -337,6 +352,7 @@ namespace vcsn
     polynomial lgcd(const polynomial& lhs, const polynomial& rhs);
 
     /// The left-multiplication of an automaton with \a w as weight.
+    ///
     /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);
 
@@ -366,6 +382,7 @@ namespace vcsn
     weight multiply(const weight& lhs, const weight& rhs);
 
     /// The minimized automaton.
+    ///
     /// \param aut       the automaton to minimize
     /// \param algo      the specific algorithm to use
     /// \pre  \a aut must be LAL.
@@ -431,6 +448,7 @@ namespace vcsn
     automaton product(const std::vector<automaton>& as);
 
     /// An equivalent automaton without spontaneous transitions.
+    ///
     /// \param aut    the automaton in which to remove them
     /// \param dir    the direction of the closure
     /// \param prune  whether to delete states that become inaccessible
@@ -442,6 +460,7 @@ namespace vcsn
     automaton push_weights(const automaton& aut);
 
     /// Produce a random automaton.
+    ///
     /// \param ctx
     ///    The context of the result.
     /// \param num_states
@@ -465,6 +484,7 @@ namespace vcsn
                                unsigned num_final = 1);
 
     /// Produce a random deterministic automaton.
+    ///
     /// \param ctx
     ///    The context of the result.
     /// \param num_states
@@ -479,6 +499,7 @@ namespace vcsn
                              const std::string& format = "default");
 
     /// Read an expression from a stream.
+    ///
     /// \param rs      the expressionset.
     /// \param is      the input stream.
     /// \param format  the expression's format.
@@ -486,16 +507,19 @@ namespace vcsn
                                const std::string& format = "default");
 
     /// Read a label from a stream.
+    ///
     /// \param ctx   the context.
     /// \param is    the input stream.
     label read_label(const context& ctx, std::istream& is);
 
     /// Read a polynomial from a stream
+    ///
     /// \param ctx   its context, from which is built its polynomialset.
     /// \param is    the stream to parse.
     polynomial read_polynomial(const context& ctx, std::istream& is);
 
     /// Read a weight from a stream.
+    ///
     /// \param ctx   the context.
     /// \param is    the input stream.
     weight read_weight(const context& ctx, std::istream& is);
@@ -510,9 +534,9 @@ namespace vcsn
     /// The right-multiplication of an expression with \a w as weight.
     expression right_mult(const expression& aut, const weight& w);
 
-    /// The new automaton that each state has name corresponding
-    /// [component.state], for example [1.2] means that state 2 has
-    /// component number 1.
+    /// Build the SCC automaton whose states are labeled with number
+    /// of the strongly-connected component they belong to.
+    ///
     /// \param aut    the input automaton.
     /// \param algo   the specific algorithm to use.
     automaton scc(const automaton& aut, const std::string& algo = "auto");
@@ -592,6 +616,7 @@ namespace vcsn
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
     /// First order development of a \a exp.
+    ///
     /// \param exp              the input expression
     expansion to_expansion(const expression& exp);
 
@@ -620,7 +645,6 @@ namespace vcsn
 
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
-
   }
 }
 
@@ -647,5 +671,3 @@ namespace std LIBVCSN_API
   /// Output weight \a w on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);
 }
-
-#endif // !VCSN_DYN_ALGOS_HH
