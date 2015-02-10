@@ -13,10 +13,11 @@ namespace vcsn
       return detail::are_equivalent_registry().call(lhs, rhs);
     }
 
+    REGISTER_DEFINE(are_equivalent_expression);
     bool
     are_equivalent(const expression& lhs, const expression& rhs)
     {
-      return are_equivalent(standard(lhs), standard(rhs));
+      return detail::are_equivalent_expression_registry().call(lhs, rhs);
     }
 
     REGISTER_DEFINE(difference);

@@ -21,12 +21,12 @@ namespace vcsn
     /// An ambiguous word, or raise if there is none.
     label ambiguous_word(const automaton& aut);
 
-    /// Whether define the same language.
+    /// Whether compute the same series.
     /// \pre The labelsets of lhs and rhs are free.
     /// \pre lhs and rhs are Boolean, or on Z, or on a field.
     bool are_equivalent(const automaton& lhs, const automaton& rhs);
 
-    /// Whether define the same language.
+    /// Whether denote the same series.
     /// \pre The labelsets of lhs and rhs are free.
     /// \pre lhs and rhs are Boolean, or on Z, or on a field.
     bool are_equivalent(const expression& lhs, const expression& rhs);

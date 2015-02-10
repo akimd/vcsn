@@ -4,6 +4,7 @@
 #include <vcsn/algos/complement.hh>
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/derived-term.hh>
 #include <vcsn/algos/left-mult.hh>
 #include <vcsn/algos/product.hh>
 #include <vcsn/algos/reduce.hh>
@@ -68,6 +69,48 @@ namespace vcsn
 
       REGISTER_DECLARE(are_equivalent,
                        (const automaton&, const automaton&) -> bool);
+    }
+  }
+
+
+  /*-----------------------------------------.
+  | are_equivalent(expression, expression).  |
+  `-----------------------------------------*/
+
+  /// Check equivalence between two expressions.
+  template <typename ExpSet1, typename ExpSet2>
+  auto
+  are_equivalent(const ExpSet1& rs1,
+                 const typename ExpSet1::value_t r1,
+                 const ExpSet2& rs2,
+                 const typename ExpSet2::value_t r2)
+    -> bool
+  {
+    // We use derived-term because it supports all our operators.
+    // FIXME: bench to see if standard would not be a better bet in
+    // the other cases.
+    return are_equivalent(strip(derived_term(rs1, r1)),
+                          strip(derived_term(rs2, r2)));
+  }
+
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename ExpSet1, typename ExpSet2>
+      bool
+      are_equivalent_expression(const expression& r1, const expression& r2)
+      {
+        const auto& l = r1->as<ExpSet1>();
+        const auto& r = r2->as<ExpSet2>();
+        return ::vcsn::are_equivalent(l.expressionset(), l.expression(),
+                                      r.expressionset(), r.expression());
+      }
+
+      REGISTER_DECLARE(are_equivalent_expression,
+                       (const expression&, const expression&) -> bool);
     }
   }
 

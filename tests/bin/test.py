@@ -160,12 +160,14 @@ def normalize(a):
 
 
 def CHECK_EQUIV(a1, a2):
-    '''Check that `a1` and `a2` are equivalent.'''
-    num = 10
-    a1 = normalize(a1)
-    a2 = normalize(a2)
+    '''Check that `a1` and `a2` are equivalent.  Also works for
+    expressions.'''
+    if isinstance(a1, vcsn.automaton):
+        a1 = normalize(a1)
+    if isinstance(a2, vcsn.automaton):
+        a2 = normalize(a2)
 
-    # Cannot compare automata on Zmin.
+    # Cannot compute equivalence on Zmin, approximate with shortest.
     if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
         res = a1.shortest(num) == a2.shortest(num)
     else:
@@ -174,14 +176,15 @@ def CHECK_EQUIV(a1, a2):
     if res:
         PASS()
     else:
-        FAIL("automata are not equivalent")
-        rst_file("Left automaton", a1.format('dot'))
-        rst_file("Right automaton", a2.format('dot'))
+        FAIL("not equivalent")
+        rst_file("Left", a1)
+        rst_file("Right", a2)
         s1 = a1.shortest(num).format('list')
         s2 = a2.shortest(num).format('list')
-        rst_file("Left automaton shortest", s1)
-        rst_file("Right automaton shortest", s2)
+        rst_file("Left shortest", s1)
+        rst_file("Right shortest", s2)
         rst_diff(s1, s2)
+
 
 def CHECK_ISOMORPHIC(a1, a2):
     "Check that `a1` and `a2` are isomorphic."

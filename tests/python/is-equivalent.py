@@ -3,15 +3,18 @@
 import vcsn
 from test import *
 
-b = vcsn.context('lal_char(ab), b')
-
 # check EXPECTED RAT1 RAT2
 # ------------------------
-# Check that are-equivalent(RAT1, RAT2) == EXPECTED.
+#
+# Check that are-equivalent(RAT1, RAT2) == EXPECTED.  Because
+# is-equivalent on expressions uses is-equivalent on automata under
+# the hood, this also checks the case of automata equivalence tests.
 def check(exp, r1, r2):
-    eff = b.expression(r1).is_equivalent(b.expression(r2))
-    CHECK_EQ(exp, eff)
+    r1 = ctx.expression(r1)
+    r2 = ctx.expression(r2)
+    CHECK_EQ(exp, r1.is_equivalent(r2))
 
+ctx = vcsn.context('lal_char(ab), b')
 
 check(True, '\z', '\z')
 check(True, '\e', '\e')
@@ -25,3 +28,7 @@ check(False, '\z', '\e')
 check(False, 'a', 'b')
 check(False, 'ab', 'ba')
 check(False, 'aa*', 'a*')
+
+ctx = vcsn.context('lal_char(ab), z')
+check(True, 'a+b+a', '<2>a+b')
+check(True, 'a*+b+a*', '<2>a*+b')
