@@ -42,6 +42,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_partial_identity.ipynb       \
   %D%/automaton.is_standard.ipynb               \
   %D%/automaton.is_useless.ipynb                \
+  %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
