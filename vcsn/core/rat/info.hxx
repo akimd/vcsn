@@ -1,13 +1,12 @@
-#ifndef VCSN_CORE_RAT_INFO_HXX
-# define VCSN_CORE_RAT_INFO_HXX
+#pragma once
 
 namespace vcsn
 {
   namespace rat
   {
 
-# define DEFINE                                 \
-    template <typename ExpSet>               \
+#define DEFINE                                  \
+    template <typename ExpSet>                  \
     inline                                      \
     auto                                        \
     info<ExpSet>
@@ -31,7 +30,7 @@ namespace vcsn
       v.accept(*this);
     }
 
-# define VISIT(Type)                           \
+#define VISIT(Type)                            \
     DEFINE::visit(const Type ## _t& v)         \
     -> void
 
@@ -119,10 +118,8 @@ namespace vcsn
       v.sub()->accept(*this);
     }
 
-# undef VISIT
-# undef DEFINE
+#undef VISIT
+#undef DEFINE
 
   } // namespace rat
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_INFO_HXX

@@ -1,8 +1,7 @@
-#ifndef VCSN_CORE_RAT_INFO_HH
-# define VCSN_CORE_RAT_INFO_HH
+#pragma once
 
-# include <iostream>
-# include <vcsn/core/rat/visitor.hh>
+#include <iostream>
+#include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {
@@ -21,13 +20,13 @@ namespace vcsn
       /// For each node type, count its number of occurrences.
       void operator()(const node_t& v);
 
-# define DEFINE(Type)                                           \
-    public:                                                     \
-      using Type ## _t = typename super_t::Type ## _t;       \
-      size_t Type = 0;                                          \
-                                                                \
-    private:                                                    \
-      void visit(const Type ## _t& v);
+#define DEFINE(Type)                                    \
+    public:                                             \
+      using Type ## _t = typename super_t::Type ## _t;  \
+      size_t Type = 0;                                  \
+                                                        \
+    private:                                            \
+      void visit(const Type ## _t& v)
 
       DEFINE(atom);
       DEFINE(complement);
@@ -43,12 +42,10 @@ namespace vcsn
       DEFINE(transposition);
       DEFINE(zero);
 
-# undef DEFINE
+#undef DEFINE
     };
 
   } // namespace rat
 } // namespace vcsn
 
-# include <vcsn/core/rat/info.hxx>
-
-#endif // !VCSN_CORE_RAT_INFO_HH
+#include <vcsn/core/rat/info.hxx>

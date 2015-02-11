@@ -1,22 +1,21 @@
-#ifndef VCSN_LABELSET_TUPLESET_HH
-# define VCSN_LABELSET_TUPLESET_HH
+#pragma once
 
-# include <iosfwd>
-# include <istream>
-# include <set>
-# include <tuple>
+#include <iosfwd>
+#include <istream>
+#include <set>
+#include <tuple>
 
-# include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-# include <vcsn/labelset/fwd.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/stream.hh>
-# include <vcsn/misc/tuple.hh>
-# include <vcsn/misc/cross.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/zip.hh>
-# include <vcsn/weightset/b.hh>
+#include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+#include <vcsn/labelset/fwd.hh>
+#include <vcsn/labelset/labelset.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh>
+#include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/cross.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/zip.hh>
+#include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -130,7 +129,7 @@ namespace vcsn
     tupleset
     join(const tupleset& rhs) const
     {
-      return join_(rhs, indices);
+      return this->join_(rhs, indices);
     }
 
     /// The componants valuesets, as a tuple.
@@ -151,21 +150,21 @@ namespace vcsn
     /// \returns   the previous status.
     bool open(bool o) const
     {
-      return open_(o, indices);
+      return this->open_(o, indices);
     }
 
     /// Construct a value.
     template <typename... Args>
     value_t value(const std::tuple<Args...>& args) const
     {
-      return value_(args, indices);
+      return this->value_(args, indices);
     }
 
     /// The generators.  Meaningful for labelsets only.
     genset_t
     genset() const
     {
-      return genset_(indices);
+      return this->genset_(indices);
     }
 
     static constexpr bool is_free()
@@ -186,9 +185,9 @@ namespace vcsn
   public:
     /// Iterate over the letters of v.
     ///
-    /// Templated by Value so that we work for both word_t and label_t.
-    /// Besides, avoids the problem of instantiation with weighset that
-    /// do not provide a word_t type.
+    /// Templated by Value so that we work for both word_t and
+    /// label_t.  Besides, avoids the problem of instantiation with
+    /// weightsets that do not provide a word_t type.
     template <typename Value>
     static auto
     letters_of(const Value& v)
@@ -203,9 +202,10 @@ namespace vcsn
     word(const std::tuple<Args...>& v) const
       -> word_t
     {
-      return word_(v, indices);
+      return this->word_(v, indices);
     }
 
+    /// Whether \a l equals \a r.
     static bool
     equal(const value_t& l, const value_t& r)
     {
@@ -234,7 +234,7 @@ namespace vcsn
     value_t
     zero() const
     {
-      return zero_(indices);
+      return this->zero_(indices);
     }
 
     bool
@@ -288,7 +288,7 @@ namespace vcsn
     value_t
     add(const value_t& l, const value_t& r) const
     {
-      return add_(l, r, indices);
+      return this->add_(l, r, indices);
     }
 
     value_t
@@ -300,26 +300,26 @@ namespace vcsn
     value_t
     rdiv(const value_t& l, const value_t& r) const
     {
-      return rdiv_(l, r, indices);
+      return this->rdiv_(l, r, indices);
     }
 
     value_t
     ldiv(const value_t& l, const value_t& r) const
     {
-      return ldiv_(l, r, indices);
+      return this->ldiv_(l, r, indices);
     }
 
     /// This tupleset must be homegeneous.
     typename valueset_t<0>::value_t
     lnormalize_here(value_t& v) const
     {
-      return lnormalize_here_(v, indices);
+      return this->lnormalize_here_(v, indices);
     }
 
     value_t
     star(const value_t& l) const
     {
-      return star_(l, indices);
+      return this->star_(l, indices);
     }
 
     /// Add the special character first and last.
@@ -331,7 +331,7 @@ namespace vcsn
     Value
     delimit(const Value& l) const
     {
-      return delimit_(l, indices);
+      return this->delimit_(l, indices);
     }
 
     /// Remove first and last characters, that must be "special".
@@ -339,7 +339,7 @@ namespace vcsn
     Value
     undelimit(const Value& l) const
     {
-      return undelimit_(l, indices);
+      return this->undelimit_(l, indices);
     }
 
     // FIXME: this needs to be computed.
@@ -358,7 +358,7 @@ namespace vcsn
     value_t
     transpose(const value_t& l) const
     {
-      return transpose_(l, indices);
+      return this->transpose_(l, indices);
     }
 
     static size_t
@@ -385,7 +385,7 @@ namespace vcsn
     conv(const tupleset<VS...>& vs,
          const typename tupleset<VS...>::value_t& v) const
     {
-      return conv_(vs, v, indices);
+      return this->conv_(vs, v, indices);
     }
 
     /// Convert a value from nullableset<tupleset<...>> to value_t.
@@ -414,14 +414,14 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, const std::string& format = "text") const
     {
-      return print_set_(o, format, indices);
+      return this->print_set_(o, format, indices);
     }
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
           const std::string& format = "text") const
     {
-      return print_(l, o, format, indices);
+      return this->print_(l, o, format, indices);
     }
 
   private:
@@ -457,14 +457,14 @@ namespace vcsn
     template <std::size_t... I>
     static tupleset make_(std::istream& i, seq<I...>)
     {
-#  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+#if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
       return tupleset{(eat_separator_<I>(i, '<', ','),
                        valueset_t<I>::make(i))...};
-#  else
+#else
       return make_gcc_tuple
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
-#  endif
+#endif
     }
 
     template <std::size_t... I>
@@ -702,15 +702,15 @@ namespace vcsn
     value_t
     conv_(std::istream& i, seq<I...>) const
     {
-#  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+#if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
       return value_t{(eat_separator_<I>(i, '(', ','),
                       set<I>().conv(i))...};
-#  else
+#else
       constexpr auto S = sizeof...(ValueSets)-1;
       return
         detail::make_gcc_tuple((eat_separator_<S - I>(i, '(', ','),
                                 std::get<S - I>(sets_).conv(i))...);
-#  endif
+#endif
     }
 
     /// Read the separator from the input stream \a i.
@@ -892,4 +892,3 @@ namespace vcsn
   }
 
 }
-#endif // !VCSN_LABELSET_TUPLESET_HH

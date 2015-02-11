@@ -1,25 +1,24 @@
-#ifndef VCSN_ALGOS_INFO_HH
-# define VCSN_ALGOS_INFO_HH
+#pragma once
 
-# include <iostream>
+#include <iostream>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/has-twins-property.hh>
-# include <vcsn/algos/is-ambiguous.hh>
-# include <vcsn/algos/is-complete.hh>
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/algos/is-eps-acyclic.hh>
-# include <vcsn/algos/normalize.hh>
-# include <vcsn/algos/is-valid.hh>
-# include <vcsn/algos/is-valid-expression.hh>
-# include <vcsn/algos/scc.hh>
-# include <vcsn/algos/standard.hh>
-# include <vcsn/algos/synchronizing-word.hh>
-# include <vcsn/core/rat/info.hh>
-# include <vcsn/core/rat/size.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/type_traits.hh>
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/has-twins-property.hh>
+#include <vcsn/algos/is-ambiguous.hh>
+#include <vcsn/algos/is-complete.hh>
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/normalize.hh>
+#include <vcsn/algos/is-valid.hh>
+#include <vcsn/algos/is-valid-expression.hh>
+#include <vcsn/algos/scc.hh>
+#include <vcsn/algos/standard.hh>
+#include <vcsn/algos/synchronizing-word.hh>
+#include <vcsn/core/rat/info.hh>
+#include <vcsn/core/rat/size.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -261,9 +260,9 @@ namespace vcsn
   }
 
 
-  /*-----------------------.
-  | info(expression, stream).  |
-  `-----------------------*/
+  /*----------------------------.
+  | info(expression, stream).   |
+  `----------------------------*/
 
   template <class ExpSet>
   void
@@ -277,7 +276,7 @@ namespace vcsn
     o << "type: ";
     rs.print_set(o, "text");
     o << "\nsize: " << sizer(e);
-# define ECHO(Type)                            \
+#define ECHO(Type)                            \
     o << "\n" #Type ": " << nfo.Type;
     ECHO(sum);
     ECHO(shuffle);
@@ -290,7 +289,7 @@ namespace vcsn
     ECHO(atom);
     ECHO(lweight);
     ECHO(rweight);
-# undef ECHO
+#undef ECHO
   }
 
 
@@ -312,5 +311,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_INFO_HH
