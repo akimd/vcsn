@@ -225,6 +225,14 @@ namespace vcsn
       return res;
     }
 
+    /// The product of monomials \a l and \a r.
+    monomial_t
+    mul(const monomial_t& l, const monomial_t& r) const
+    {
+      return {labelset()->mul(l.first, r.first),
+              weightset()->mul(l.second, r.second)};
+    }
+
     /// The product of polynomials \a l and \a r.
     value_t
     mul(const value_t& l, const value_t& r) const
@@ -233,7 +241,7 @@ namespace vcsn
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
-                   labelset()->concat(lm.first, rm.first),
+                   labelset()->mul(lm.first, rm.first),
                    weightset()->mul(lm.second, rm.second));
       return res;
     }
@@ -300,8 +308,7 @@ namespace vcsn
       value_t res;
       for (const auto& m: v)
         add_here(res,
-                 // FIXME: This is wrong, it should be mul, not concat.
-                 labelset()->concat(lhs, m.first),
+                 labelset()->mul(lhs, m.first),
                  m.second);
       return res;
     }
@@ -313,7 +320,7 @@ namespace vcsn
       value_t res;
       for (const auto& m: v)
         add_here(res,
-                 labelset()->concat(lhs.first, m.first),
+                 labelset()->mul(lhs.first, m.first),
                  weightset()->mul(lhs.second, m.second));
       return res;
     }
@@ -336,7 +343,7 @@ namespace vcsn
       value_t res;
       for (auto i: v)
         add_here(res,
-                 labelset()->concat(i.first, rhs),
+                 labelset()->mul(i.first, rhs),
                  i.second);
       return res;
     }
@@ -348,7 +355,7 @@ namespace vcsn
       value_t res;
       for (const auto& lhs: l)
         add_here(res,
-                 labelset()->concat(lhs.first, rhs.first),
+                 labelset()->mul(lhs.first, rhs.first),
                  weightset()->mul(lhs.second, rhs.second));
       return res;
     }

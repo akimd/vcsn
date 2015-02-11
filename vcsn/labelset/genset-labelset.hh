@@ -109,7 +109,6 @@ namespace vcsn
       }
 
       DEFINE(begin,);
-      DEFINE(concat,);
       DEFINE(delimit,);
       DEFINE(end,);
       DEFINE(equal, ATTRIBUTE_PURE);
@@ -117,6 +116,7 @@ namespace vcsn
       DEFINE(has, ATTRIBUTE_PURE);
       DEFINE(is_letter, ATTRIBUTE_PURE);
       DEFINE(less, ATTRIBUTE_PURE);
+      DEFINE(mul,);
       DEFINE(transpose, ATTRIBUTE_PURE);
       DEFINE(undelimit,);
 

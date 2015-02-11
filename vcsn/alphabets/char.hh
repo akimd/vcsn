@@ -36,7 +36,7 @@ namespace vcsn
     }
 
     word_t
-    concat(const letter_t l, const letter_t r) const
+    mul(const letter_t l, const letter_t r) const
     {
       if (l == one_letter())
         {
@@ -52,19 +52,19 @@ namespace vcsn
     }
 
     word_t
-    concat(const word_t& l, const letter_t r) const
+    mul(const word_t& l, const letter_t r) const
     {
       return r == one_letter() ? l : l + r;
     }
 
     word_t
-    concat(const letter_t l, const word_t& r) const
+    mul(const letter_t l, const word_t& r) const
     {
       return l == one_letter() ? r : l + r;
     }
 
     word_t
-    concat(const word_t& l, const word_t& r) const
+    mul(const word_t& l, const word_t& r) const
     {
       return l + r;
     }
@@ -72,7 +72,7 @@ namespace vcsn
     /// Add the special character first and last.
     word_t delimit(const word_t& w) const
     {
-      return concat(concat(special_letter(), w), special_letter());
+      return mul(mul(special_letter(), w), special_letter());
     }
 
     /// Remove first and last characters, that must be "special".

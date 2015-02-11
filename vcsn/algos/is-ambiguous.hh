@@ -79,13 +79,13 @@ namespace vcsn
       {
         auto l = aut->label_of(t);
         if (!ls.is_special(l))
-          res = ls.concat(res, l);
+          res = ls.mul(res, l);
       }
     for (auto t: path_bfs(aut, s, aut->post()))
       {
         auto l = aut->label_of(t);
         if (!ls.is_special(l))
-          res = ls.concat(res, l);
+          res = ls.mul(res, l);
       }
     return res;
   }

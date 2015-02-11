@@ -106,7 +106,7 @@ namespace vcsn
             for (const auto t: aut_->all_out(s))
               {
                 // FIXME: monomial mul.
-                monomial_t n(ls_.concat(m.first, aut_->label_of(t)),
+                monomial_t n(ls_.mul(m.first, aut_->label_of(t)),
                              ws_.mul(m.second, aut_->weight_of(t)));
                 ps_.add_here(past_[aut_->dst_of(t)], n);
                 q2.emplace(aut_->dst_of(t), n);

@@ -202,7 +202,7 @@ namespace vcsn
               letter_t l = L::get_letter(i);
               require(has(l),
                       sname(), ": invalid letter: ", str_escape(l));
-              res = this->concat(res, l);
+              res = this->mul(res, l);
             }
         }
       return res;

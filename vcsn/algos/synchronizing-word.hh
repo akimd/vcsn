@@ -170,7 +170,7 @@ namespace vcsn
 
       void apply_label(const label_t& label)
       {
-        res_ = aut_->labelset()->concat(res_, label);
+        res_ = aut_->labelset()->mul(res_, label);
         std::unordered_set<state_t> new_todo;
         for (auto s : todo_)
           {

@@ -24,13 +24,6 @@ Something similar to IPython's "?" shortcut.
 ** Wrong names
 power for expression denotes {n,m} which is related to concat, not to mul.
 
-** concat/mul
-polynomialset uses the "concat" operator on its "labelset".  However, when
-we use polynomials of expressions, it is just "by chance" that there is a
-function "concat" which is *mostly* like mul.
-
-We should really name "concat" as "mul" in our labelsets.
-
 ** left_mult and right_mult should be lmul and rmul
 
 ** sum should be add

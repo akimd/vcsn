@@ -164,10 +164,10 @@ check_tupleset()
 
   ASSERT_EQ(wlset.equal(conv(wlset, "(abc,x)"),   wl_t{"abc", 'x'}), true);
 
-  // concat.
-#define CHECK(L1, R1, L2, R2)                                           \
-  ASSERT_EQ(wwset.equal(wwset.concat(ww_t{L1, R1}, ww_t{L2, R2}),      \
-                         ww_t{L1 L2, R1 R2}), true)
+  // mul.
+#define CHECK(L1, R1, L2, R2)                                   \
+  ASSERT_EQ(wwset.equal(wwset.mul(ww_t{L1, R1}, ww_t{L2, R2}),  \
+                        ww_t{L1 L2, R1 R2}), true)
   CHECK("a",  "x",    "b",   "y");
   CHECK("aa", "xx",   "bb",  "yy");
   CHECK("",   "xx",   "bb",  "yy");

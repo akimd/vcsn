@@ -30,7 +30,8 @@ namespace vcsn
     {
       using genset_t = void;
       using letter_t = void;
-      using word_t = void;
+      /// Same as value_t.
+      using word_t = std::tuple<typename ValueSets::value_t...>;
     };
 
     /// Specialization for tuples of labelsets.
@@ -182,6 +183,14 @@ namespace vcsn
       return zip(valueset_t<I>::letters_of(std::get<I>(v))...);
     }
 
+    template <typename LhsValue, typename RhsValue, std::size_t... I>
+    auto
+    mul_(const LhsValue& l, const RhsValue& r, seq<I...>) const
+      -> word_t
+    {
+      return word_t{set<I>().mul(std::get<I>(l), std::get<I>(r))...};
+    }
+
   public:
     /// Iterate over the letters of v.
     ///
@@ -291,10 +300,16 @@ namespace vcsn
       return this->add_(l, r, indices);
     }
 
-    value_t
-    mul(const value_t& l, const value_t& r) const
+    /// The product (possibly concatenation) of \a l and \a r.
+    ///
+    /// Templated in order to work with tuples of letters and/or words
+    /// in the case of labelsets.
+    template <typename LhsValue, typename RhsValue>
+    auto
+    mul(const LhsValue& l, const RhsValue& r) const
+      -> word_t
     {
-      return mul_(l, r, indices);
+      return this->mul_(l, r, indices);
     }
 
     value_t
@@ -346,13 +361,6 @@ namespace vcsn
     static constexpr star_status_t star_status()
     {
       return star_status_t::STARRABLE;
-    }
-
-    template <typename LhsValue, typename RhsValue>
-    word_t
-    concat(const LhsValue& l, const RhsValue& r) const
-    {
-      return concat_(l, r, indices);
     }
 
     value_t
@@ -630,13 +638,6 @@ namespace vcsn
 
     template <std::size_t... I>
     value_t
-    mul_(const value_t& l, const value_t& r, seq<I...>) const
-    {
-      return value_t{set<I>().mul(std::get<I>(l), std::get<I>(r))...};
-    }
-
-    template <std::size_t... I>
-    value_t
     rdiv_(const value_t& l, const value_t& r, seq<I...>) const
     {
       return value_t{set<I>().rdiv(std::get<I>(l), std::get<I>(r))...};
@@ -680,13 +681,6 @@ namespace vcsn
     undelimit_(Value const& l, seq<I...>) const
     {
       return Value{set<I>().undelimit(std::get<I>(l))...};
-    }
-
-    template <typename LhsValue, typename RhsValue, std::size_t... I>
-    word_t
-    concat_(const LhsValue& l, const RhsValue& r, seq<I...>) const
-    {
-      return word_t{set<I>().concat(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <typename... VS, std::size_t... I>

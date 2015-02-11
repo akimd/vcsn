@@ -358,7 +358,7 @@ namespace vcsn
   DEFINE::mul_atoms_(const label_t& a, const label_t& b, std::true_type) const
     -> value_t
   {
-    return atom(labelset()->concat(a, b));
+    return atom(labelset()->mul(a, b));
   }
 
   DEFINE::mul_atoms_(const label_t& a, const label_t& b, std::false_type) const
@@ -563,7 +563,7 @@ namespace vcsn
           {
             auto lhs = std::dynamic_pointer_cast<const atom_t>(ls.back());
             auto rhs = std::dynamic_pointer_cast<const atom_t>(rs.front());
-            ls.back() = atom(labelset()->concat(lhs->value(), rhs->value()));
+            ls.back() = atom(labelset()->mul(lhs->value(), rhs->value()));
             ls.insert(ls.end(), rs.begin() + 1, rs.end());
           }
         else

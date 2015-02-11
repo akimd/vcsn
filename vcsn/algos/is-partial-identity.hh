@@ -53,7 +53,7 @@ namespace vcsn
             if (has(coaccessibles, dst))
               {
                 // Compute the new residue.
-                auto r = ls.concat(rs[s], aut->label_of(t));
+                auto r = ls.mul(rs[s], aut->label_of(t));
                 // Eliminate longest common prefix.
                 ls.lnormalize_here(r);
                 if (!has(rs, dst))
