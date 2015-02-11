@@ -284,6 +284,18 @@ bench('a.compose(a)',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context('lat<lan_char(a-z), lan_char(a-z)>, b').expression(r).thompson()'''])
 
+# has_bounded_lag
+r = "(['(a,x)'-'(b,y)']{1000})*"
+bench('a.has_bounded_lag()',
+      'a = std({})'.format(r),
+      setup = ['r = "{}"'.format(r),
+               '''a = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b").expression(r).standard()'''])
+r = "(['(a,x)'-'(b,y)']*){600}"
+bench('a.has_bounded_lag()',
+      'a = std({})'.format(r),
+      setup = ['r = "{}"'.format(r),
+               '''a = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b").expression(r).standard()'''])
+
 # Minimize a big deterministic automaton over booleans.
 r = "[a-g]{800}"
 bench('a.minimize("signature")',
