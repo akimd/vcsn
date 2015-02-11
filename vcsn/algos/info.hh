@@ -284,6 +284,7 @@ namespace vcsn
     ECHO(prod);
     ECHO(star);
     ECHO(complement);
+    ECHO(ldiv);
     ECHO(zero);
     ECHO(one);
     ECHO(atom);
