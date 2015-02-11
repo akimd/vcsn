@@ -1,18 +1,15 @@
-#ifndef VCSN_ALGOS_IS_VALID_HH
-# define VCSN_ALGOS_IS_VALID_HH
+#pragma once
 
-# include <stdexcept>
-# include <type_traits>
-# include <utility>
+#include <type_traits>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/is-eps-acyclic.hh>
-# include <vcsn/algos/is-proper.hh>
-# include <vcsn/algos/proper.hh>
-# include <vcsn/algos/strip.hh>
-# include <vcsn/core/kind.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/direction.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/is-proper.hh>
+#include <vcsn/algos/proper.hh>
+#include <vcsn/algos/strip.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/direction.hh>
 
 namespace vcsn
 {
@@ -153,5 +150,3 @@ namespace vcsn
     }
   }
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_IS_VALID_HH

@@ -1,35 +1,34 @@
-#ifndef VCSN_WEIGHTSET_POLYNOMIALSET_HH
-# define VCSN_WEIGHTSET_POLYNOMIALSET_HH
+#pragma once
 
-# include <algorithm>
-# include <iostream>
-# include <sstream>
-# include <type_traits>
-# include <vector>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <type_traits>
+#include <vector>
 
-# include <vcsn/ctx/context.hh> // We need context to define join.
-# include <vcsn/weightset/fwd.hh>
+#include <vcsn/ctx/context.hh> // We need context to define join.
+#include <vcsn/weightset/fwd.hh>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/map.hh>
-# include <vcsn/misc/math.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh>
-# include <vcsn/misc/zip-maps.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/map.hh>
+#include <vcsn/misc/math.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh>
+#include <vcsn/misc/zip-maps.hh>
 
-# include <vcsn/labelset/wordset.hh>
-# include <vcsn/weightset/z.hh>
+#include <vcsn/labelset/wordset.hh>
+#include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
   // http://llvm.org/bugs/show_bug.cgi?id=18571
-# if defined __clang__
+#if defined __clang__
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wunused-value"
-# endif
+#endif
   template <typename LabelSet>
   auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t* l)
     -> decltype(ls.is_zero(l), bool())
@@ -37,9 +36,9 @@ namespace vcsn
     return ls.is_zero(*l);
   }
 
-# if defined __clang__
+#if defined __clang__
 # pragma clang diagnostic pop
-# endif
+#endif
 
   template <typename LabelSet>
   bool label_is_zero(const LabelSet&, ...)
@@ -110,22 +109,22 @@ namespace vcsn
 
     static constexpr bool is_commutative() { return false; }
 
-    /// Remove the monomial of \a w in \a v.
+    /// Remove the monomial of \a l in \a v.
     value_t&
-    del_weight(value_t& v, const label_t& w) const
+    del_weight(value_t& v, const label_t& l) const
     {
-      v.erase(w);
+      v.erase(l);
       return v;
     }
 
-    /// Set the monomial of \a w in \a v to weight \a k.
+    /// Set the monomial of \a l in \a v to weight \a k.
     value_t&
-    set_weight(value_t& v, const label_t& w, const weight_t k) const
+    set_weight(value_t& v, const label_t& l, const weight_t k) const
     {
       if (weightset()->is_zero(k))
-        del_weight(v, w);
+        del_weight(v, l);
       else
-        v[w] = k;
+        v[l] = k;
       return v;
     }
 
@@ -197,9 +196,9 @@ namespace vcsn
     }
 
     const weight_t
-    get_weight(const value_t& v, const label_t& w) const ATTRIBUTE_PURE
+    get_weight(const value_t& v, const label_t& l) const ATTRIBUTE_PURE
     {
-      auto i = v.find(w);
+      auto i = v.find(l);
       if (i == v.end())
         return weightset()->zero();
       else
@@ -393,34 +392,34 @@ namespace vcsn
       else
         {
           value_t remainder = r;
-#  if DEBUG
+#if DEBUG
           std::cerr << "ldiv(";
           print(l, std::cerr) << ", ";
           print(r, std::cerr) << "\n";
-#  endif
+#endif
           while (!is_zero(remainder))
             {
               auto factor = ldiv(*begin(l), *begin(remainder));
-#  if DEBUG
+#if DEBUG
               std::cerr << "factor = "; print(factor, std::cerr) << "\n";
-#  endif
+#endif
               add_here(res, factor);
-#  if DEBUG
+#if DEBUG
               std::cerr << "res = "; print(res, std::cerr) << "\n";
               std::cerr << "sub = "; print(mul(l, factor), std::cerr) << "\n";
-#  endif
+#endif
               remainder = sub(remainder, mul(l, factor));
-#  if DEBUG
+#if DEBUG
               std::cerr << "rem = "; print(remainder, std::cerr) << "\n";
-#  endif
+#endif
             }
-#  if DEBUG
+#if DEBUG
           std::cerr << "ldiv(";
           print(l, std::cerr) << ", ";
           print(r, std::cerr) << ") = ";
           print(res, std::cerr) << " rem: ";
           print(remainder, std::cerr) << "\n";
-#  endif
+#endif
           if (!is_zero(remainder))
             raise(sname(), ": ldiv: not implemented (",
                   to_string(*this, l), ", ", to_string(*this, r), ")");
@@ -1042,5 +1041,3 @@ namespace vcsn
 
   }
 }
-
-#endif // !VCSN_WEIGHTSET_POLYNOMIALSET_HH

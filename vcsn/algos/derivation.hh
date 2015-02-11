@@ -1,15 +1,14 @@
-#ifndef VCSN_ALGOS_DERIVATION_HH
-# define VCSN_ALGOS_DERIVATION_HH
+#pragma once
 
-# include <vcsn/algos/constant-term.hh>
-# include <vcsn/algos/split.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/label.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/algos/constant-term.hh>
+#include <vcsn/algos/split.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -309,5 +308,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_DERIVATION_HH

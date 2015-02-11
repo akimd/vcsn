@@ -15,6 +15,10 @@ XFAIL(lambda: vcsn.context("lal_char(a)_UNKNOWN"))
 # Invalid context: trailing garbage.
 XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 
+## ----------- ##
+## letterset.  ##
+## ----------- ##
+
 # An open context is not printed as open in text.
 check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
 check('lal_char, b',                'letterset<char_letters()>, b')
@@ -22,18 +26,29 @@ check('lal_char, b',                'letterset<char_letters()>, b')
 check('letterset<char_letters>, b', r'\{\ldots\}\rightarrow\mathbb{B}', 'latex')
 check('lal_char, b',                r'\{\ldots\}\rightarrow\mathbb{B}', 'latex')
 
-
-check('lal_char(), b', 'letterset<char_letters()>, b')
-check('lal_char(ab), b', 'letterset<char_letters(ab)>, b')
+# letterset and different char_letters.
+check('lal_char(), b',       'letterset<char_letters()>, b')
+check('lal_char(ab), b',     'letterset<char_letters(ab)>, b')
 check('lal_char(a-kv-z), b', 'letterset<char_letters(abcdefghijkvwxyz)>, b')
-check('lal_char(-0-9), b', 'letterset<char_letters(-0123456789)>, b')
+check('lal_char(-0-9), b',   'letterset<char_letters(-0123456789)>, b')
 # FIXME: This is obviously wrong: we will not be able to re-read the
 # result, as neither the dash nor the paren is escaped.
 check(r'lal_char(\\\-\)), b',  r'letterset<char_letters()-\\)>, b')
-check(r'lal_char(\--\-), b', r'letterset<char_letters(-)>, b')
+check(r'lal_char(\--\-), b',   r'letterset<char_letters(-)>, b')
 
 check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
+
+
+## --------------- ##
+## expressionset.  ##
+## --------------- ##
+
 check('expressionset<lal_char(ab), b>, b', 'expressionset<letterset<char_letters(ab)>, b>, b')
+
+
+## ---------- ##
+## tupleset.  ##
+## ---------- ##
 
 # Arguably useless, but stresses our tupleset implementation.
 check('lat<lat<lal_char(a)>>, b',

@@ -50,6 +50,8 @@ To force it (which is needed), use -Wc,-fsanitize=address when linking it.
 ** operations on automata
 Use expressions as weights to check multiplication order.  As in checks for
 standard(exp).  We should use fewer contexts, to speed up our development.
+Unfortunately we then have a problem: are-equivalent no longer applies, so
+it's not so clear what should be done.
 
 ** operations on polynomials
 Check + and *.
@@ -80,7 +82,7 @@ also need routines to convert automata, expressions, etc. to other contexts.
 ** derivation
 We have ambiguous calls:
 
-  ctx = vcsn.context('lat<law_char(0-9), law_char(a-zA-Z)>_b')
+  ctx = vcsn.context('lat<law_char(0-9), law_char(a-zA-Z)>, b')
   r = ctx.expression("('(11,eleven)'+'(12,twelve)'+'(13,thirteen)')*")
   r.derivation("(11,eleven)")
 

@@ -1,15 +1,14 @@
-#ifndef VCSN_CTX_CONTEXT_HH
-# define VCSN_CTX_CONTEXT_HH
+#pragma once
 
-# include <cassert>
-# include <memory>
-# include <string>
+#include <cassert>
+#include <memory>
+#include <string>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/core/kind.hh>
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/misc/stream.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -227,5 +226,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_CTX_CONTEXT_HH
