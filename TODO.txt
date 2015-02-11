@@ -79,16 +79,6 @@ We really need something safer to read automata.  For instance when we
 determinize ladybird in Zmin, we read it back as a Boolean automaton.  The
 also need routines to convert automata, expressions, etc. to other contexts.
 
-** derivation
-We have ambiguous calls:
-
-  ctx = vcsn.context('lat<law_char(0-9), law_char(a-zA-Z)>, b')
-  r = ctx.expression("('(11,eleven)'+'(12,twelve)'+'(13,thirteen)')*")
-  r.derivation("(11,eleven)")
-
-It should not work, but it fails for the wrong reason, and therefore does
-not show the failed assertion.
-
 ** shortest
 Loops forever:
 

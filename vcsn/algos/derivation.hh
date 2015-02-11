@@ -263,7 +263,17 @@ namespace vcsn
 
 
   /// Derive an expression wrt to a word.
-  template <typename ExpSet>
+  ///
+  /// Do not enable this overload when labels and words are the same
+  /// thing (e.g., when working on a wordset), since in this case we
+  /// fail with an ambiguous overload.  Thanks to this enable_if, only
+  /// the first overload (derivation wrt a label) is enabled, and the
+  /// compilation fails but this time with the right diagnostic: the
+  /// labelset must be free.
+  template <typename ExpSet,
+            typename = vcsn::enable_if_t<!std::is_same<word_t_of<ExpSet>,
+                                                       label_t_of<ExpSet>>
+                                         ::value>>
   inline
   rat::expression_polynomial_t<ExpSet>
   derivation(const ExpSet& rs,
