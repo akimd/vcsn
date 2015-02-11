@@ -121,6 +121,7 @@ namespace vcsn
     {
       // name: lat<law_char(abc), law_char(xyz)>
       kind_t::make(is);
+      eat(is, '<');
       auto res = make_(is, indices);
       eat(is, '>');
       return res;
@@ -409,8 +410,12 @@ namespace vcsn
     value_t
     conv(std::istream& i) const
     {
+      bool par = i.peek() == '(';
+      if (par)
+        eat(i, '(');
       value_t res = conv_(i, indices);
-      eat(i, ')');
+      if (par)
+        eat(i, ')');
       return res;
     }
 
@@ -466,11 +471,11 @@ namespace vcsn
     static tupleset make_(std::istream& i, seq<I...>)
     {
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return tupleset{(eat_separator_<I>(i, '<', ','),
+      return tupleset{(eat_separator_<I>(i, ','),
                        valueset_t<I>::make(i))...};
 #else
       return make_gcc_tuple
-        ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
+        ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, ','),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
 #endif
     }
@@ -697,12 +702,12 @@ namespace vcsn
     conv_(std::istream& i, seq<I...>) const
     {
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return value_t{(eat_separator_<I>(i, '(', ','),
+      return value_t{(eat_separator_<I>(i, ','),
                       set<I>().conv(i))...};
 #else
       constexpr auto S = sizeof...(ValueSets)-1;
       return
-        detail::make_gcc_tuple((eat_separator_<S - I>(i, '(', ','),
+        detail::make_gcc_tuple((eat_separator_<S - I>(i, ','),
                                 std::get<S - I>(sets_).conv(i))...);
 #endif
     }
@@ -712,9 +717,10 @@ namespace vcsn
     /// otherwise it is ',' (possibly followed by spaces).
     template <std::size_t I>
     static void
-    eat_separator_(std::istream& i, char first, char tail)
+    eat_separator_(std::istream& i, char sep)
     {
-      eat(i, I == 0 ? first : tail);
+      if (I)
+        eat(i, sep);
       while (isspace(i.peek()))
         i.ignore();
     }
