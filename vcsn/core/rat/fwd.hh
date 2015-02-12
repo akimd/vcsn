@@ -1,10 +1,9 @@
-#ifndef VCSN_CORE_RAT_FWD_HH
-# define VCSN_CORE_RAT_FWD_HH
+#pragma once
 
-# include <memory>
+#include <memory>
 
-# include <vcsn/core/rat/identities.hh>
-# include <vcsn/weightset/weightset.hh>
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
@@ -73,7 +72,7 @@ namespace vcsn
     std::ostream&
     operator<<(std::ostream& o, type_t t);
 
-# define DEFINE(Node)            \
+#define DEFINE(Node)             \
     template <typename Context>  \
     class Node
 
@@ -84,7 +83,7 @@ namespace vcsn
 
     DEFINE(const_visitor);
 
-# undef DEFINE
+#undef DEFINE
 
     /*-----------.
     | constant.  |
@@ -166,5 +165,3 @@ namespace vcsn
   using expressionset = variadic_mul_mixin<rat::expressionset_impl<Context>>;
 
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_FWD_HH

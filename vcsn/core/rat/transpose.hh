@@ -1,7 +1,6 @@
-#ifndef VCSN_CORE_RAT_TRANSPOSE_HH
-# define VCSN_CORE_RAT_TRANSPOSE_HH
+#pragma once
 
-# include <vcsn/core/rat/fwd.hh>
+#include <vcsn/core/rat/fwd.hh>
 
 namespace vcsn
 {
@@ -9,9 +8,9 @@ namespace vcsn
   namespace detail
   {
 
-    /*--------------------.
-    | transpose(expression).  |
-    `--------------------*/
+    /*-------------------------.
+    | transpose(expression).   |
+    `-------------------------*/
 
     /// \tparam ExpSet  the expression set.
     template <class ExpSet>
@@ -149,6 +148,10 @@ namespace vcsn
     };
   }
 
+  /// A expression that denotes the transposition of \a v.
+  ///
+  /// Works deeply, contrary to transposition() that merely applies
+  /// the `{T}` operator.
   template <class ExpSet>
   typename ExpSet::value_t
   transpose(const ExpSet& rs, const typename ExpSet::value_t& v)
@@ -157,5 +160,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_CORE_RAT_TRANSPOSE_HH

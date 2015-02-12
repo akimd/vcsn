@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_TRANSPOSE_HH
-# define VCSN_ALGOS_TRANSPOSE_HH
+#pragma once
 
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/algos/strip.hh>
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/rat/expression.hh>
-# include <vcsn/core/rat/expressionset.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/misc/attributes.hh>
+#include <vcsn/algos/fwd.hh>
+#include <vcsn/algos/strip.hh>
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/rat/expression.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -49,7 +48,8 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("transpose_automaton<" + automaton_t::element_type::sname() + '>');
+        static symbol res("transpose_automaton<"
+                          + automaton_t::element_type::sname() + '>');
         return res;
       }
 
@@ -78,7 +78,7 @@ namespace vcsn
       /*-------------------------------.
       | const methods that transpose.  |
       `-------------------------------*/
-# define DEFINE(Signature, Value)               \
+#define DEFINE(Signature, Value)                \
       auto                                      \
       Signature const                           \
       -> decltype(aut_->Value)                  \
@@ -128,14 +128,14 @@ namespace vcsn
       DEFINE(weight_of(transition_t t),
              weightset()->transpose(aut_->weight_of(t)));
 
-# undef DEFINE
+#undef DEFINE
 
 
       /*-----------------------------------.
       | non-const methods that transpose.  |
       `-----------------------------------*/
 
-# define DEFINE(Signature, Value)               \
+#define DEFINE(Signature, Value)                \
       auto                                      \
       Signature                                 \
         -> decltype(aut_->Value)                \
@@ -203,7 +203,7 @@ namespace vcsn
                                  bool transpose = false),
              new_transition_copy(dst, src, aut, t, !transpose));
 
-# undef DEFINE
+#undef DEFINE
 
 
 
@@ -211,7 +211,7 @@ namespace vcsn
       | constexpr methods that transpose.  |
       `-----------------------------------*/
 
-# define DEFINE(Signature, Value)                       \
+#define DEFINE(Signature, Value)                        \
       static constexpr                                  \
       auto                                              \
       Signature                                         \
@@ -262,9 +262,9 @@ namespace vcsn
   }
 
 
-  /*-------------------------.
-  | dyn::transpose(expression).  |
-  `-------------------------*/
+  /*------------------------------.
+  | dyn::transpose(expression).   |
+  `------------------------------*/
   namespace dyn
   {
     namespace detail
@@ -277,8 +277,8 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
 
         return make_expression(e.expressionset(),
-                           ::vcsn::transpose(e.expressionset(),
-                                     e.expression()));
+                               ::vcsn::transpose(e.expressionset(),
+                                                 e.expression()));
       }
 
       REGISTER_DECLARE(transpose_expression,
@@ -286,9 +286,9 @@ namespace vcsn
     }
   }
 
-  /*-----------------------------.
-  | dyn::transposition(expression).  |
-  `-----------------------------*/
+  /*----------------------------------.
+  | dyn::transposition(expression).   |
+  `----------------------------------*/
   namespace dyn
   {
     namespace detail
@@ -301,7 +301,7 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
 
         return make_expression(e.expressionset(),
-                           e.expressionset().transposition(e.expression()));
+                               e.expressionset().transposition(e.expression()));
       }
 
       REGISTER_DECLARE(transposition_expression,
@@ -310,5 +310,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_TRANSPOSE_HH

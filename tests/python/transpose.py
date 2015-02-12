@@ -76,9 +76,9 @@ a = vcsn.context('lal_char, b').expression('ab').derived_term().determinize()
 CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
          a.transpose().strip().info()['type'])
 
-## ------------------- ##
+## ----------------------- ##
 ## transpose(expression).  ##
-## ------------------- ##
+## ----------------------- ##
 
 def check(re, exp):
     exp = ctx.expression(exp)
@@ -93,10 +93,12 @@ check('a', 'a')
 check('ab', 'ba')
 check('abc+aba', 'cba+aba')
 check('abc&aba', 'cba&aba')
+check('abc:aba', 'cba:aba')
 check('(ab)*', '(ba)*')
 check('(abcd){T}', '(abcd){T}{T}')
 check('ab{\}cd', '(ab{\}cd){T}')
 check('ab{/}cd', '((cd){T}{\}(ab){T})')
+check('(ab){c}', '(ba){c}')
 
 ctx = vcsn.context('law_char(abcd), b')
 check('\e', '\e')
