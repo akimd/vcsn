@@ -71,11 +71,12 @@ namespace vcsn
 
 # undef DEFINE
 
-      /// Whether \a is an atom whose label is not a letter.
+      /// Whether \a v is an atom whose label is not a letter.
       bool is_word_(const node_t& v) const
       {
         const atom_t* atom = dynamic_cast<const atom_t*>(&v);
-        return atom && ! ctx_.labelset()->is_letter(atom->value());
+        return atom && ! context_t::is_lat
+                    && ! ctx_.labelset()->is_letter(atom->value());
       }
 
       /// The possible node precedence levels, increasing.
