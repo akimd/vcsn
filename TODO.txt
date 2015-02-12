@@ -107,15 +107,6 @@ The "NEWS.txt" entry is false.
 Fix this bug, but check that we don't ruin performances of infiltration.
 Uncomment the tests in infiltration.chk (there are two places).
 
-** eliminate-states
-This won't work:
-
-  vcsn.context('expressionset<lal_char(abc), b>, expressionset<lal_char(uv), b>')
-
-that's because we need to multiply weights of different natures, which is
-something already solved in product (using conv).  See also the previous
-item.
-
 ** is-valid(automaton)
 In the case of RW, check that the expression is valid.
 

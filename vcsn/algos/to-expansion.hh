@@ -371,7 +371,7 @@ namespace vcsn
         for (const auto& p: res.polynomials)
           res_.polynomials[p.first]
             = ps_.lmul(res_.constant,
-                       ps_.rmul(p.second, f));
+                       ps_.rmul_label(p.second, f));
       }
 
       VCSN_RAT_VISIT(lweight, e)

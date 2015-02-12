@@ -44,6 +44,8 @@ check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
 ## --------------- ##
 
 check('expressionset<lal_char(ab), b>, b', 'expressionset<letterset<char_letters(ab)>, b>, b')
+# expressions weighted by expressions.
+check('expressionset<letterset<char_letters(ab)>, expressionset<letterset<char_letters(xy)>, z>>, b')
 
 
 ## ---------- ##

@@ -302,7 +302,7 @@ namespace vcsn
 
     /// Left product by a label.
     value_t
-    lmul(const label_t& lhs, const value_t& v) const
+    lmul_label(const label_t& lhs, const value_t& v) const
     {
       value_t res;
       for (const auto& m: v)
@@ -337,7 +337,7 @@ namespace vcsn
 
     /// Right product.
     value_t
-    rmul(const value_t& v, const label_t& rhs) const
+    rmul_label(const value_t& v, const label_t& rhs) const
     {
       value_t res;
       for (auto i: v)

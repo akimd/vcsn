@@ -71,11 +71,11 @@ namespace vcsn
     // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56922
     // But clang rejects it.
     // http://llvm.org/bugs/show_bug.cgi?id=15724
-    template <typename LabelSet2 = labelset_t>
-    context(const std::initializer_list<typename LabelSet2::letter_t>& gs,
-            const weightset_t& ws = {})
-      : context{labelset_t{gs}, ws}
-    {}
+    //    template <typename LabelSet2 = labelset_t>
+    //    context(const std::initializer_list<typename LabelSet2::letter_t>& gs,
+    //            const weightset_t& ws = {})
+    //      : context{labelset_t{gs}, ws}
+    //    {}
 
     context& operator=(context&& that)
     {
@@ -201,8 +201,11 @@ namespace vcsn
       static type join(const context<LS1, WS1>& ctx1,
                        const context<LS2, WS2>& ctx2)
       {
-        return {vcsn::join(*ctx1.labelset(), *ctx2.labelset()),
-                vcsn::join(*ctx1.weightset(), *ctx2.weightset())};
+        // Don't use braces, otherwise the context constructor that
+        // takes a list-initializer for the labelset thinks both
+        // values here are letters for the labelset.
+        return type(vcsn::join(*ctx1.labelset(), *ctx2.labelset()),
+                    vcsn::join(*ctx1.weightset(), *ctx2.weightset()));
       }
     };
   }

@@ -194,7 +194,7 @@ namespace vcsn
       value_t& rmul_here(value_t& res, const expression_t& rhs) const
       {
         for (auto& p: res.polynomials)
-          p.second = ps_.rmul(p.second, rhs);
+          p.second = ps_.rmul_label(p.second, rhs);
         return res;
       }
 
@@ -228,8 +228,8 @@ namespace vcsn
               if (!rs_.labelset()->is_one(rhs.first))
                 ps_.add_here(res.polynomials[one],
                              ps_.conjunction(i->second,
-                                             ps_.lmul(rs_.atom(rhs.first),
-                                                      rhs.second)));
+                                             ps_.lmul_label(rs_.atom(rhs.first),
+                                                            rhs.second)));
         }
         // Spontaneous transitions from the rhs.
         {
@@ -238,8 +238,8 @@ namespace vcsn
             for (const auto& lhs: l.polynomials)
               if (!rs_.labelset()->is_one(lhs.first))
                 ps_.add_here(res.polynomials[one],
-                             ps_.conjunction(ps_.lmul(rs_.atom(lhs.first),
-                                                      lhs.second),
+                             ps_.conjunction(ps_.lmul_label(rs_.atom(lhs.first),
+                                                            lhs.second),
                                              i->second));
         }
         normalize(res);

@@ -111,7 +111,7 @@ namespace vcsn
               // derived-term([ab]*a[ab]{150}) from 0.32s to 0.23s on
               // erebus, clang++ 3.4.
               expression_t rhss = prod_(std::next(e.begin(), i), std::end(e));
-              res_ = ps_.rmul(res_, rhss);
+              res_ = ps_.rmul_label(res_, rhss);
               break;
             }
           else
@@ -119,7 +119,7 @@ namespace vcsn
               const auto& v = e[i];
               v->accept(*this);
               for (unsigned j = i + 1; j < n; ++j)
-                res_ = ps_.rmul(res_, e[j]);
+                res_ = ps_.rmul_label(res_, e[j]);
               ps_.add_here(res, ps_.lmul(constant, res_));
               constant = ws_.mul(constant, constant_term(rs_, v));
             }
@@ -193,7 +193,7 @@ namespace vcsn
         e.sub()->accept(*this);
         // We need a copy of e, but without its weights.
         res_ = ps_.lmul(ws_.star(constant_term(rs_, e.sub())),
-                        ps_.rmul(res_, e.shared_from_this()));
+                        ps_.rmul_label(res_, e.shared_from_this()));
       }
 
       VCSN_RAT_VISIT(lweight, e)

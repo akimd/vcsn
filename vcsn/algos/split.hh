@@ -151,7 +151,7 @@ namespace vcsn
         ps_.del_weight(l_split, rs_.one());
 
         // res = proper(B(l)).r + constant-term(B(l))B(r).
-        return ps_.add(ps_.rmul(l_split, r),
+        return ps_.add(ps_.rmul_label(l_split, r),
                        ps_.lmul(l_split_const, split(r)));
       }
 
