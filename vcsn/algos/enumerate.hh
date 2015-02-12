@@ -1,15 +1,14 @@
-#ifndef VCSN_ALGOS_ENUMERATE_HH
-# define VCSN_ALGOS_ENUMERATE_HH
+#pragma once
 
-# include <algorithm>
-# include <map>
-# include <queue>
+#include <algorithm>
+#include <map>
+#include <queue>
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/labelset/word-polynomialset.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/labelset/word-polynomialset.hh>
 
 namespace vcsn
 {
@@ -184,5 +183,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_ENUMERATE_HH

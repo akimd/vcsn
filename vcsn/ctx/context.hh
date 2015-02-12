@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
 #include <string>
 
@@ -9,6 +8,7 @@
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/misc/stream.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -55,27 +55,6 @@ namespace vcsn
       : context(std::make_shared<const labelset_t>(ls),
                 std::make_shared<const weightset_t>(ws))
     {}
-
-    /// Build a context.
-    /// \param gs  the generators
-    /// \param ws  the weightset
-    //
-    // Use SFINAE to avoid requiring labelset_t to define letter_t.
-    // labels_are_tuples does not define it for instance.
-    //
-    // It would be simpler to just use "= {}", but the C++ standard
-    // does not support it (and this is properly considered a
-    // defect: see http://cplusplus.github.io/LWG/lwg-active.html#2193).
-    //
-    // Gcc accepts though.
-    // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56922
-    // But clang rejects it.
-    // http://llvm.org/bugs/show_bug.cgi?id=15724
-    //    template <typename LabelSet2 = labelset_t>
-    //    context(const std::initializer_list<typename LabelSet2::letter_t>& gs,
-    //            const weightset_t& ws = {})
-    //      : context{labelset_t{gs}, ws}
-    //    {}
 
     context& operator=(context&& that)
     {
