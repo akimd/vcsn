@@ -19,6 +19,7 @@ dist_notebooks_DATA =                           \
   %D%/Editing-Automata.ipynb                    \
   %D%/Hacking.ipynb                             \
   %D%/References.ipynb                          \
+  %D%/Transducers.ipynb                         \
   %D%/automaton.accessible.ipynb                \
   %D%/automaton.ambiguous_word.ipynb            \
   %D%/automaton.coaccessible.ipynb              \
@@ -26,10 +27,12 @@ dist_notebooks_DATA =                           \
   %D%/automaton.cominimize.ipynb                \
   %D%/automaton.complement.ipynb                \
   %D%/automaton.complete.ipynb                  \
+  %D%/automaton.compose.ipynb                   \
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_twins_property.ipynb        \
+  %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.is_ambiguous.ipynb              \
   %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
