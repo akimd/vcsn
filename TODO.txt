@@ -145,7 +145,7 @@ I have extremely weird performances regressions:
 (these commits are about synchronizing_word!) and then a bunch of suspicious
 measures:
 
-  v score-compare --only moore +scores/35s/v2b.3-67*
+  v score-compare --only moore v2b.3-67*
   2.68  3.87  2.67  3.95  4.32  4.05  3.17  a.minimize("moore")  # a = std([a-k]{2000})
 
 Currently the score is rather 3.23.  Why this regression?  Track it, and fix
@@ -158,6 +158,11 @@ compiler/libc++ update that degradated this algorithm (or quite surprisingly
 enough, no other).
 
 In other words, I'd say we should no longer bother about this.
+
+** minimize: fuse signature and weighted
+Those two should really be the same algorithm, it's the signatures that
+change.  And rather than having two implementations, we should have a single
+implementation of the algorithm, but better data structures for signatures.
 
 ** products: lazyness
 We need a lazy implementation of product.
@@ -186,7 +191,7 @@ we don't need to keep this in the functor.
 ** sort
 Commit ff43b0f introduced a 2x time penalty on the sort bench:
 
-  v score-compare --only sort +scores/35s/v2.0-{482-gb6dfc12,483-gff43b0f}
+  v score-compare --only sort v2.0-{482-gb6dfc12,483-gff43b0f}
   0.89  1.69  a.sort() # a = std([a-e]?{700})
 
 this is because the core of sort is a loop calling new_transition_copy,
@@ -301,7 +306,8 @@ sure this is not (much) costlier.
 Getting rid of this will allow rat::node to use single inheritance.
 
 ** polynomialset
-It seems that monomials would be a useful abstraction.
+It seems that monomials would be a useful abstraction.  Actually, they are
+so useful, that they should be used in the automata transitions.
 
 We need to hide the map, and expose a polynomial_t type:
 
@@ -373,14 +379,17 @@ we good (one of the) shortest ambiguous word.
 In automata, false never appears for both b and f2.  mutable_automaton takes
 care them of not storing them, as the only possible value is "true".
 However, we don't do that everywhere: do it for expressions, polynomials,
-etc.
+etc.  If monomials get proper support, and are used in mutable_automaton,
+then that should follow naturally.
 
 Working on this for polynomials should also help fusing the two
 determinization algorithms.
 
 ** constant-term
 To compute the constant-term of an expression, we compute that of its
-subexpression, which will be recomputed uselessly by derived-term.
+subexpression, which will be recomputed uselessly by derived-term based on
+derivation.  Yet, the whole point of expansion is to address issues such as
+this one.
 
 ** difference
 We don't need the rhs to be complete, it suffices to adjust product to
