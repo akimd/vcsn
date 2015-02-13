@@ -1,13 +1,12 @@
-#ifndef VCSN_ALGOS_MINIMIZE_HH
-# define VCSN_ALGOS_MINIMIZE_HH
+#pragma once
 
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/algos/minimize-brzozowski.hh>
-# include <vcsn/algos/minimize-moore.hh>
-# include <vcsn/algos/minimize-signature.hh>
-# include <vcsn/algos/minimize-weighted.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/minimize-brzozowski.hh>
+#include <vcsn/algos/minimize-moore.hh>
+#include <vcsn/algos/minimize-signature.hh>
+#include <vcsn/algos/minimize-weighted.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -91,7 +90,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       vcsn::enable_if_t<::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      minimize(const automaton& aut, const std::string& algo)
+      minimize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         if (algo == "brzozowski")
@@ -103,7 +102,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       vcsn::enable_if_t<!::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      minimize(const automaton& aut, const std::string& algo)
+      minimize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::minimize(a, algo));
@@ -113,6 +112,14 @@ namespace vcsn
       (minimize,
        (const automaton& aut, const std::string& algo) -> automaton);
 
+      /// Bridge.
+      template <typename Aut, typename String>
+      inline
+      automaton
+      minimize(const automaton& aut, const std::string& algo)
+      {
+        return minimize_<Aut, String>(aut, algo);
+      }
     }
   }
 
@@ -125,11 +132,10 @@ namespace vcsn
   {
     namespace detail
     {
-
       template <typename Aut, typename String>
       inline
       vcsn::enable_if_t<::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      cominimize(const automaton& aut, const std::string& algo)
+      cominimize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         if (algo == "brzozowski")
@@ -141,7 +147,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       vcsn::enable_if_t<!::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      cominimize(const automaton& aut, const std::string& algo)
+      cominimize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::cominimize(a, algo));
@@ -150,9 +156,15 @@ namespace vcsn
       REGISTER_DECLARE
       (cominimize,
        (const automaton& aut, const std::string& algo) -> automaton);
+      /// Bridge.
+      template <typename Aut, typename String>
+      inline
+      automaton
+      cominimize(const automaton& aut, const std::string& algo)
+      {
+        return cominimize_<Aut, String>(aut, algo);
+      }
     }
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_MINIMIZE_HH

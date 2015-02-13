@@ -1,23 +1,21 @@
-#ifndef VCSN_ALGOS_EDIT_AUTOMATON_HH
-# define VCSN_ALGOS_EDIT_AUTOMATON_HH
+#pragma once
 
-# include <set>
-# include <tuple>
-# include <unordered_map>
-# include <utility>
-# include <vector>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/algos.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/symbol.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/stream.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -344,5 +342,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_EDIT_AUTOMATON_HH

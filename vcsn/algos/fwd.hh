@@ -1,13 +1,12 @@
-#ifndef VCSN_ALGOS_FWD_HH
-# define VCSN_ALGOS_FWD_HH
+#pragma once
 
-# include <memory>
+#include <memory>
 
 // Beware that this file is dangerous, as it prevents automatic
 // instantiation of these algos.  It exists only to solve mutual
 // dependencies (e.g.: proper uses is-valid which uses proper).
 //
-// FIXME: We should probably resolves these issues in some other way.
+// FIXME: We should resolve these issues in some other way.
 
 namespace vcsn
 {
@@ -60,5 +59,3 @@ namespace vcsn
   using transpose_automaton
     = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
 }
-
-#endif // !VCSN_ALGOS_FWD_HH

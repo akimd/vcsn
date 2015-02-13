@@ -300,7 +300,7 @@ namespace vcsn
       template <typename ExpSet, typename Label, typename Bool>
       inline
       polynomial
-      derivation(const expression& exp, const label& lbl, bool breaking = false)
+      derivation(const expression& exp, const label& lbl, bool breaking)
       {
         const auto& e = exp->as<ExpSet>();
         const auto& l = lbl->as<Label>().label();
@@ -316,5 +316,4 @@ namespace vcsn
                         bool breaking) -> polynomial);
     }
   }
-
 } // vcsn::

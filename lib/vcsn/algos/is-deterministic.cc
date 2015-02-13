@@ -4,14 +4,9 @@
 
 namespace vcsn
 {
-  /*-------------------.
-  | is_deterministic.  |
-  `-------------------*/
-
   namespace dyn
   {
     REGISTER_DEFINE(is_deterministic);
-
     bool
     is_deterministic(const automaton& aut)
     {
@@ -20,7 +15,6 @@ namespace vcsn
 
 
     REGISTER_DEFINE(is_codeterministic);
-
     bool
     is_codeterministic(const automaton& aut)
     {

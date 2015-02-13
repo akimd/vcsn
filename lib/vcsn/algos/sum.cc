@@ -8,7 +8,6 @@ namespace vcsn
   namespace dyn
   {
     REGISTER_DEFINE(sum);
-
     automaton
     sum(const automaton& lhs, const automaton& rhs)
     {

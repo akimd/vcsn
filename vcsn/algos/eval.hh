@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_EVAL_HH
-# define VCSN_ALGOS_EVAL_HH
+#pragma once
 
-# include <vector>
+#include <vector>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/label.hh>
-# include <vcsn/dyn/weight.hh>
-# include <vcsn/misc/algorithm.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/algorithm.hh>
 
 namespace vcsn
 {
@@ -93,9 +92,8 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut, typename LabelSet>
-      auto
+      weight
       eval(const automaton& aut, const label& lbl)
-        -> weight
       {
         const auto& a = aut->as<Aut>();
         const auto& l = lbl->as<LabelSet>().label();
@@ -108,8 +106,4 @@ namespace vcsn
                        (const automaton& aut, const label& s) -> weight);
     }
   }
-
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_EVAL_HH

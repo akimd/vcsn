@@ -1,16 +1,15 @@
-#ifndef VCSN_ALGOS_HAS_TWINS_PROPERTY_HH
-# define VCSN_ALGOS_HAS_TWINS_PROPERTY_HH
+#pragma once
 
-# include <stack>
+#include <stack>
 
-# include <vcsn/algos/accessible.hh> // vcsn::trim
-# include <vcsn/algos/is-ambiguous.hh> // is_cycle_ambiguous
-# include <vcsn/algos/product.hh>
-# include <vcsn/algos/scc.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/labelset/tupleset.hh>
-# include <vcsn/misc/unordered_map.hh> // vcsn::has
+#include <vcsn/algos/accessible.hh> // vcsn::trim
+#include <vcsn/algos/is-ambiguous.hh> // is_cycle_ambiguous
+#include <vcsn/algos/product.hh>
+#include <vcsn/algos/scc.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/labelset/tupleset.hh>
+#include <vcsn/misc/unordered_map.hh> // vcsn::has
 
 namespace vcsn
 {
@@ -164,7 +163,7 @@ namespace vcsn
   {
     namespace detail
     {
-      // Bridge.
+      /// Bridge.
       template <typename Aut>
       bool has_twins_property(const automaton& aut)
       {
@@ -177,4 +176,3 @@ namespace vcsn
     }
   }
 }
-#endif // !VCSN_ALGOS_HAS_TWINS_PROPERTY_HH

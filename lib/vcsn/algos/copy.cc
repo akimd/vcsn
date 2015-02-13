@@ -25,9 +25,9 @@ namespace vcsn
       return detail::copy_convert_registry().call(aut, ctx);
     }
 
-    /*------------------------------.
-    | copy(expression, out_expressionset).  |
-    `------------------------------*/
+    /*---------------------------------------.
+    | copy(expression, out_expressionset).   |
+    `---------------------------------------*/
 
     REGISTER_DEFINE(copy_expression);
     expression

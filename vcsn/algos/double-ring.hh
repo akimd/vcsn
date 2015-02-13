@@ -12,7 +12,7 @@
 
 namespace vcsn
 {
-  template <class Context>
+  template <typename Context>
   mutable_automaton<Context>
   double_ring(const Context& ctx, unsigned n,
               const std::vector<unsigned>& finals)
@@ -68,10 +68,6 @@ namespace vcsn
     return res;
   }
 
-  /*-------------------.
-  | dyn::double_ring.  |
-  `-------------------*/
-
   namespace dyn
   {
     namespace detail
@@ -79,11 +75,11 @@ namespace vcsn
       /// Bridge.
       template <typename Ctx, typename, typename>
       automaton
-      double_ring(const dyn::context& ctx, unsigned n,
-                  const std::vector<unsigned>& f)
+      double_ring(const context& ctx, unsigned n,
+                  const std::vector<unsigned>& finals)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(::vcsn::double_ring(c, n, f));
+        return make_automaton(::vcsn::double_ring(c, n, finals));
       }
 
       REGISTER_DECLARE(double_ring,

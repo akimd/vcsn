@@ -42,10 +42,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*---------------.
-      | dyn::union_a.  |
-      `---------------*/
-
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       inline
       automaton

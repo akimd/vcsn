@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_GRAIL_HH
-# define VCSN_ALGOS_GRAIL_HH
+#pragma once
 
-# include <iostream>
-# include <map>
+#include <iostream>
+#include <map>
 
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/escape.hh>
-# include <vcsn/weightset/fwd.hh> // b
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -230,10 +229,6 @@ namespace vcsn
   {
     namespace detail
     {
-      /*------------.
-      | dyn::fado.  |
-      `------------*/
-
       /// Bridge.
       template <typename Aut, typename Ostream>
       std::ostream& fado(const automaton& aut, std::ostream& out)
@@ -332,5 +327,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_GRAIL_HH

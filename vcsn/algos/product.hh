@@ -1,21 +1,20 @@
-#ifndef VCSN_ALGOS_PRODUCT_HH
-# define VCSN_ALGOS_PRODUCT_HH
+#pragma once
 
-# include <iostream>
-# include <map>
-# include <utility>
+#include <iostream>
+#include <map>
+#include <utility>
 
-# include <vcsn/algos/insplit.hh>
-# include <vcsn/algos/strip.hh>
-# include <vcsn/core/join-automata.hh>
-# include <vcsn/core/transition-map.hh>
-# include <vcsn/core/tuple-automaton.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/expression.hh> // dyn::make_expression
-# include <vcsn/misc/vector.hh> // cross_tuple
-# include <vcsn/misc/zip-maps.hh>
+#include <vcsn/algos/insplit.hh>
+#include <vcsn/algos/strip.hh>
+#include <vcsn/core/join-automata.hh>
+#include <vcsn/core/transition-map.hh>
+#include <vcsn/core/tuple-automaton.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/expression.hh> // dyn::make_expression
+#include <vcsn/misc/vector.hh> // cross_tuple
+#include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
@@ -438,7 +437,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       template <std::size_t I, typename Aut>
       vcsn::enable_if_t<labelset_t_of<Aut>::has_one() && I != 0, Aut>
       do_insplit(Aut& aut)
@@ -461,7 +459,7 @@ namespace vcsn
         return make_automaton(vcsn::product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
 
-      /// Binary bridge.
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       product(const automaton& lhs, const automaton& rhs)
@@ -474,7 +472,7 @@ namespace vcsn
       REGISTER_DECLARE(product,
                        (const automaton&, const automaton&) -> automaton);
 
-      /// Variadic bridge.
+      /// Bridge.
       template <typename... Auts>
       automaton
       product_vector(const std::vector<automaton>& as)
@@ -510,7 +508,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Binary bridge.
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       shuffle(const automaton& lhs, const automaton& rhs)
@@ -533,7 +531,7 @@ namespace vcsn
         return make_automaton(res);
       }
 
-      /// Variadic bridge.
+      /// Bridge.
       template <typename... Auts>
       automaton
       shuffle_vector(const std::vector<automaton>& as)
@@ -608,7 +606,7 @@ namespace vcsn
     namespace detail
     {
 
-      /// Binary bridge.
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       infiltration(const automaton& lhs, const automaton& rhs)
@@ -625,13 +623,13 @@ namespace vcsn
       template <typename... Auts, size_t... I>
       automaton
       infiltration_(const std::vector<automaton>& as,
-               vcsn::detail::index_sequence<I...>)
+                    vcsn::detail::index_sequence<I...>)
       {
         auto res = vcsn::infiltration(as[I]->as<Auts>()...);
         return make_automaton(res);
       }
 
-      /// Variadic bridge.
+      /// Bridge.
       template <typename... Auts>
       automaton
       infiltration_vector(const std::vector<automaton>& as)
@@ -747,5 +745,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_PRODUCT_HH

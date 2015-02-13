@@ -1,16 +1,15 @@
-#ifndef VCSN_ALGOS_RANDOM_HH
-# define VCSN_ALGOS_RANDOM_HH
+#pragma once
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/labelset/nullableset.hh>
-# include <vcsn/labelset/oneset.hh>
-# include <vcsn/labelset/tupleset.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/random.hh>
-# include <vcsn/misc/set.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/labelset/nullableset.hh>
+#include <vcsn/labelset/oneset.hh>
+#include <vcsn/labelset/tupleset.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/random.hh>
+#include <vcsn/misc/set.hh>
 
 namespace vcsn
 {
@@ -211,7 +210,7 @@ namespace vcsn
       automaton
       random(const context& ctx,
              unsigned num_states, float density,
-             unsigned num_initial = 1, unsigned num_final = 1)
+             unsigned num_initial, unsigned num_final)
       {
         const auto& c = ctx->as<Ctx>();
         return make_automaton(vcsn::random(c, num_states, density,
@@ -282,7 +281,4 @@ namespace vcsn
 
     }
   }
-
 } // vcsn::
-
-#endif // !VCSN_ALGOS_RANDOM_HH

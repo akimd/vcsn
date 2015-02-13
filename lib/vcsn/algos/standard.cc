@@ -11,7 +11,6 @@ namespace vcsn
     | is_standard(aut).  |
     `-------------------*/
     REGISTER_DEFINE(is_standard);
-
     bool
     is_standard(const automaton& a)
     {
@@ -22,7 +21,6 @@ namespace vcsn
     | is_costandard(aut).  |
     `---------------------*/
     REGISTER_DEFINE(is_costandard);
-
     bool
     is_costandard(const automaton& a)
     {
@@ -33,7 +31,6 @@ namespace vcsn
     | standard(aut).  |
     `----------------*/
     REGISTER_DEFINE(standard);
-
     automaton
     standard(const automaton& a)
     {
@@ -44,7 +41,6 @@ namespace vcsn
     | costandard(aut).  |
     `------------------*/
     REGISTER_DEFINE(costandard);
-
     automaton
     costandard(const automaton& a)
     {
@@ -55,7 +51,6 @@ namespace vcsn
     | standard(exp).  |
     `----------------*/
     REGISTER_DEFINE(standard_expression);
-
     automaton
     standard(const expression& e)
     {

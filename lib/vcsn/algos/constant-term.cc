@@ -7,11 +7,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*---------------------.
-    | constant_term(exp).  |
-    `---------------------*/
     REGISTER_DEFINE(constant_term);
-
     weight
     constant_term(const expression& e)
     {

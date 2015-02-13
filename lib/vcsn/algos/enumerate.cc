@@ -7,7 +7,6 @@ namespace vcsn
   namespace dyn
   {
     REGISTER_DEFINE(shortest);
-
     polynomial
     shortest(const automaton& aut, unsigned num)
     {
@@ -15,7 +14,6 @@ namespace vcsn
     }
 
     REGISTER_DEFINE(enumerate);
-
     polynomial
     enumerate(const automaton& aut, unsigned max)
     {

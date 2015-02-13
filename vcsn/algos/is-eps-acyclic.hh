@@ -1,12 +1,11 @@
-#ifndef VCSN_ALGOS_IS_EPS_ACYCLIC_HH
-# define VCSN_ALGOS_IS_EPS_ACYCLIC_HH
+#pragma once
 
-# include <unordered_map>
+#include <unordered_map>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/core/fwd.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/core/fwd.hh>
 
 namespace vcsn
 {
@@ -112,15 +111,11 @@ namespace vcsn
     return t.is_eps_acyclic();
   }
 
-  /*---------------------.
-  | dyn::is_eps_acyclic. |
-  `---------------------*/
-
   namespace dyn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Aut>
       bool is_eps_acyclic(const automaton& aut)
       {
@@ -133,5 +128,3 @@ namespace vcsn
     }
   }
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_IS_EPS_ACYCLIC_HH

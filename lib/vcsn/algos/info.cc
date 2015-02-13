@@ -12,7 +12,6 @@ namespace vcsn
     `------------------*/
 
     REGISTER_DEFINE(info);
-
     std::ostream&
     info(const automaton& aut, std::ostream& out, bool detailed)
     {
@@ -20,12 +19,11 @@ namespace vcsn
       return out;
     }
 
-    /*---------------.
-    | info(expression).  |
-    `---------------*/
+    /*--------------------.
+    | info(expression).   |
+    `--------------------*/
 
     REGISTER_DEFINE(info_expression);
-
     std::ostream&
     info(const dyn::expression& e, std::ostream& out)
     {

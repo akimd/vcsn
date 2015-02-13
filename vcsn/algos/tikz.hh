@@ -1,15 +1,14 @@
-#ifndef VCSN_ALGOS_TIKZ_HH
-# define VCSN_ALGOS_TIKZ_HH
+#pragma once
 
-# include <algorithm>
-# include <iostream>
-# include <unordered_map>
-# include <unordered_set>
-# include <vector>
+#include <algorithm>
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
-# include <vcsn/algos/grail.hh> // outputter
+#include <vcsn/algos/grail.hh> // outputter
 
-# include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {
@@ -144,9 +143,8 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(tikz,
-                       (const automaton& aut, std::ostream& out) -> std::ostream&);
+                       (const automaton& aut, std::ostream& out)
+                       -> std::ostream&);
     }
   }
 }
-
-#endif // !VCSN_ALGOS_TIKZ_HH

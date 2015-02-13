@@ -1,13 +1,10 @@
-#ifndef VCSN_ALGOS_CONSTANT_TERM_HH
-# define VCSN_ALGOS_CONSTANT_TERM_HH
+#pragma once
 
-# include <set>
-
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/dyn/weight.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/weight.hh>
 
 namespace vcsn
 {
@@ -15,9 +12,9 @@ namespace vcsn
   namespace rat
   {
 
-    /*------------------------.
-    | constant_term(expression).  |
-    `------------------------*/
+    /*-----------------------------.
+    | constant_term(expression).   |
+    `-----------------------------*/
 
     /// \tparam ExpSet  the expression set type.
     template <typename ExpSet>
@@ -131,7 +128,6 @@ namespace vcsn
       }
 
     private:
-      //expressionset_t ws_;
       weightset_t ws_;
       weight_t res_;
     };
@@ -150,9 +146,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*--------------------------.
-      | dyn::constant_term(exp).  |
-      `--------------------------*/
+      /// Bridge.
       template <typename ExpSet>
       weight
       constant_term(const expression& exp)
@@ -168,5 +162,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_CONSTANT_TERM_HH

@@ -1,24 +1,23 @@
-#ifndef VCSN_ALGOS_DETERMINIZE_HH
-# define VCSN_ALGOS_DETERMINIZE_HH
+#pragma once
 
-# include <set>
-# include <stack>
-# include <string>
-# include <type_traits>
-# include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <type_traits>
+#include <queue>
 
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/dynamic_bitset.hh>
-# include <vcsn/misc/map.hh> // vcsn::has
-# include <vcsn/misc/raise.hh> // b
-# include <vcsn/misc/unordered_map.hh> // vcsn::has
-# include <vcsn/weightset/fwd.hh> // b
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/dynamic_bitset.hh>
+#include <vcsn/misc/map.hh> // vcsn::has
+#include <vcsn/misc/raise.hh> // b
+#include <vcsn/misc/unordered_map.hh> // vcsn::has
+#include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -530,7 +529,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       if_boolean_t<Aut, automaton>
-      determinize(const automaton& aut, const std::string& algo)
+      determinize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         if (algo == "auto" || algo == "boolean")
@@ -545,7 +544,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       if_not_boolean_t<Aut, automaton>
-      determinize(const automaton& aut, const std::string& algo)
+      determinize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         if (algo == "boolean")
@@ -559,6 +558,14 @@ namespace vcsn
       REGISTER_DECLARE(determinize,
                        (const automaton& aut, const std::string& algo)
                        -> automaton);
+      /// Bridge.
+      template <typename Aut, typename String>
+      inline
+      automaton
+      determinize(const automaton& aut, const std::string& algo)
+      {
+        return determinize_<Aut, String>(aut, algo);
+      }
     }
   }
 
@@ -576,7 +583,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       if_boolean_t<Aut, automaton>
-      codeterminize(const automaton& aut, const std::string& algo)
+      codeterminize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         if (algo == "auto" || algo == "boolean")
@@ -591,7 +598,7 @@ namespace vcsn
       template <typename Aut, typename String>
       inline
       if_not_boolean_t<Aut, automaton>
-      codeterminize(const automaton& aut, const std::string& algo)
+      codeterminize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         if (algo == "boolean")
@@ -605,9 +612,14 @@ namespace vcsn
       REGISTER_DECLARE(codeterminize,
                        (const automaton& aut, const std::string& algo)
                        -> automaton);
+      /// Bridge.
+      template <typename Aut, typename String>
+      inline
+      automaton
+      codeterminize(const automaton& aut, const std::string& algo)
+      {
+        return codeterminize_<Aut, String>(aut, algo);
+      }
     }
   }
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_DETERMINIZE_HH

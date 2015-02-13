@@ -1,12 +1,11 @@
-#ifndef VCSN_ALGOS_READ_HH
-# define VCSN_ALGOS_READ_HH
+#pragma once
 
-# include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/label.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/weight.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -30,9 +29,8 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Context, typename Istream>
-      auto
+      label
       read_label(const context& ctx, std::istream& is)
-        -> label
       {
         const auto& c = ctx->as<Context>();
         auto res = ::vcsn::read_label(c, is);
@@ -64,9 +62,8 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Context, typename Istream>
-      auto
+      polynomial
       read_polynomial(const context& ctx, std::istream& is)
-        -> polynomial
       {
         const auto& c = ctx->as<Context>();
         auto ps = polynomialset<Context>(c);
@@ -99,9 +96,8 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Context, typename Istream>
-      auto
+      weight
       read_weight(const context& ctx, std::istream& is)
-        -> weight
       {
         const auto& c = ctx->as<Context>();
         auto res = ::vcsn::read_weight(c, is);
@@ -112,8 +108,4 @@ namespace vcsn
                        (const context& ctx, std::istream& is) -> weight);
     }
   }
-
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_READ_HH

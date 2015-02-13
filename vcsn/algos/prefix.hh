@@ -1,9 +1,8 @@
-#ifndef VCSN_ALGOS_PREFIX_HH
-# define VCSN_ALGOS_PREFIX_HH
+#pragma once
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/fwd.hh>
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {
@@ -129,7 +128,7 @@ namespace vcsn
   {
     namespace detail
     {
-      // Bridge.
+      /// Bridge.
       template <typename Aut>
       automaton
       factor(const automaton& aut)
@@ -198,5 +197,3 @@ namespace vcsn
     }
   }
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_PREFIX_HH

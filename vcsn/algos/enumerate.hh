@@ -147,10 +147,7 @@ namespace vcsn
     namespace detail
     {
 
-      /*-----------------.
-      | dyn::enumerate.  |
-      `-----------------*/
-
+      /// Bridge.
       template <typename Aut, typename Unsigned>
       polynomial
       enumerate(const automaton& aut, unsigned max)
@@ -165,10 +162,7 @@ namespace vcsn
        (const automaton& aut, unsigned max) -> polynomial);
 
 
-      /*----------------.
-      | dyn::shortest.  |
-      `----------------*/
-
+      /// Bridge.
       template <typename Aut, typename Unsigned>
       polynomial
       shortest(const automaton& aut, unsigned num)

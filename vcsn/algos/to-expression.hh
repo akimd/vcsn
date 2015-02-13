@@ -1,10 +1,9 @@
-#ifndef VCSN_ALGOS_TO_EXPRESSION_HH
-# define VCSN_ALGOS_TO_EXPRESSION_HH
+#pragma once
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/lift.hh>
-# include <vcsn/core/rat/expression.hh>
-# include <vcsn/misc/vector.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/lift.hh>
+#include <vcsn/core/rat/expression.hh>
+#include <vcsn/misc/vector.hh>
 
 namespace vcsn
 {
@@ -318,5 +317,3 @@ namespace vcsn
   }
 
 } // vcsn::
-
-#endif // !VCSN_ALGOS_TO_EXPRESSION_HH

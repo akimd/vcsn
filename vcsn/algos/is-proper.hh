@@ -52,13 +52,9 @@ namespace vcsn
 
   namespace dyn
   {
-
-    /*-----------------.
-    | dyn::is_proper.  |
-    `-----------------*/
-
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       inline
       bool is_proper(const automaton& aut)

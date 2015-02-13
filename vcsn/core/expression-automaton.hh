@@ -1,27 +1,26 @@
-#ifndef VCSN_CORE_EXPRESSION_AUTOMATON_HH
-# define VCSN_CORE_EXPRESSION_AUTOMATON_HH
+#pragma once
 
-# include <memory>
-# include <stack>
-# include <string>
+#include <memory>
+#include <stack>
+#include <string>
+#include <vector>
 
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/map.hh>
-# include <vcsn/misc/unordered_map.hh>
-
-# include <vcsn/core/fwd.hh> // expression_automaton
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/fwd.hh> // expression_automaton
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/misc/map.hh>
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/unordered_map.hh>
 
 //# define DEBUG 1
 
-# if DEBUG
-#  define DEBUG_IFELSE(Then, Else) Then
-# else
-#  define DEBUG_IFELSE(Then, Else) Else
-# endif
+#if DEBUG
+# define DEBUG_IFELSE(Then, Else) Then
+#else
+# define DEBUG_IFELSE(Then, Else) Else
+#endif
 
-# define DEBUG_IF(Then) DEBUG_IFELSE(Then,)
+#define DEBUG_IF(Then) DEBUG_IFELSE(Then,)
 
 namespace vcsn
 {
@@ -147,11 +146,9 @@ namespace vcsn
       /// The expression's set.
       expressionset_t rs_;
       /// States to visit.
-      std::stack<expression_t> todo_;
+      std::stack<expression_t, std::vector<expression_t>> todo_;
       /// expression -> state.
       smap map_;
     };
   }
 }
-
-#endif // !VCSN_CORE_EXPRESSION_AUTOMATON_HH

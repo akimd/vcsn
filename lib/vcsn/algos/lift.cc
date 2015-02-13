@@ -12,20 +12,17 @@ namespace vcsn
     `------------------*/
 
     REGISTER_DEFINE(lift_automaton);
-
     automaton
     lift(const automaton& aut)
     {
       return detail::lift_automaton_registry().call(aut);
     }
 
-    /*---------------.
-    | lift(expression).  |
-    `---------------*/
-
+    /*--------------------.
+    | lift(expression).   |
+    `--------------------*/
 
     REGISTER_DEFINE(lift_expression);
-
     expression
     lift(const expression& e)
     {

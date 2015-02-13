@@ -126,15 +126,11 @@ namespace vcsn
     return universal(a);
   }
 
-  /*-----------------.
-  | dyn::universal.  |
-  `-----------------*/
-
   namespace dyn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Aut>
       automaton
       universal(const automaton& aut)
@@ -147,5 +143,4 @@ namespace vcsn
                        (const automaton& aut) -> automaton);
     }
   }
-
 }

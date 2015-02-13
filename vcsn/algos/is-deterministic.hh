@@ -1,12 +1,11 @@
-#ifndef VCSN_ALGOS_IS_DETERMINISTIC_HH
-# define VCSN_ALGOS_IS_DETERMINISTIC_HH
+#pragma once
 
-# include <queue>
-# include <unordered_set>
+#include <queue>
+#include <unordered_set>
 
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -29,7 +28,7 @@ namespace vcsn
   }
 
   /// Number of non-deterministic states.
-  template <class Aut>
+  template <typename Aut>
   inline size_t
   num_deterministic_states(const Aut& aut)
   {
@@ -43,7 +42,7 @@ namespace vcsn
   }
 
  /// Number of non-deterministic states of transpositive automaton.
-  template <class Aut>
+  template <typename Aut>
   inline size_t
   num_codeterministic_states(const Aut& aut)
   {
@@ -52,7 +51,7 @@ namespace vcsn
 
   /// Whether has at most an initial state, and all its states
   /// are deterministic.
-  template <class Aut>
+  template <typename Aut>
   inline bool
   is_deterministic(const Aut& aut)
   {
@@ -69,7 +68,7 @@ namespace vcsn
   }
 
   /// Whether the transpositive automaton is deterministic.
-  template <class Aut>
+  template <typename Aut>
   inline bool
   is_codeterministic(const Aut& aut)
   {
@@ -91,6 +90,7 @@ namespace vcsn
       REGISTER_DECLARE(is_deterministic,
                        (const automaton& aut) -> bool);
 
+      /// Bridge.
       template <typename Aut>
       bool
       is_codeterministic(const automaton& aut)
@@ -104,5 +104,3 @@ namespace vcsn
     }
   }
 } // namespace vscn
-
-#endif // !VCSN_ALGOS_IS_DETERMINISTIC_HH

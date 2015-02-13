@@ -1,17 +1,16 @@
-#ifndef VCSN_ALGOS_DOT_HH
-# define VCSN_ALGOS_DOT_HH
+#pragma once
 
-# include <algorithm>
-# include <iostream>
-# include <sstream>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
 
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/algos/grail.hh>
-# include <vcsn/algos/accessible.hh> // useful_states
-# include <vcsn/misc/iostream.hh>
-# include <vcsn/misc/set.hh>
-# include <vcsn/misc/unordered_set.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/algos/grail.hh>
+#include <vcsn/algos/accessible.hh> // useful_states
+#include <vcsn/misc/iostream.hh>
+#include <vcsn/misc/set.hh>
+#include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -372,5 +371,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_DOT_HH

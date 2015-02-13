@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_MAKE_CONTEXT_HH
-# define VCSN_ALGOS_MAKE_CONTEXT_HH
+#pragma once
 
-# include <sstream>
+#include <sstream>
 
-# include <vcsn/core/rat/expressionset.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/expressionset.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expressionset.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -90,15 +89,15 @@ namespace vcsn
 
 
 
-  /*-----------------.
-  | make_expressionset.  |
-  `-----------------*/
+  /*----------------------.
+  | make_expressionset.   |
+  `----------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Ctx, typename Identities>
       expressionset
       make_expressionset(const context& ctx, ::vcsn::rat::identities ids)
@@ -121,7 +120,7 @@ namespace vcsn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Ctx>
       context
       make_word_context(const context& ctx)
@@ -134,7 +133,4 @@ namespace vcsn
                        (const context& ctx) -> context);
     }
   }
-
 } // vcsn::
-
-#endif // !VCSN_ALGOS_MAKE_CONTEXT_HH

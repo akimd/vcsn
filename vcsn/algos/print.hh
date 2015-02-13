@@ -1,17 +1,16 @@
-#ifndef VCSN_ALGOS_PRINT_HH
-# define VCSN_ALGOS_PRINT_HH
+#pragma once
 
-# include <iosfwd>
+#include <iosfwd>
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/expansion.hh>
-# include <vcsn/dyn/label.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/dyn/weight.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -182,7 +181,7 @@ namespace vcsn
       /// Bridge.
       template <typename ExpSet, typename Ostream, typename String>
       std::ostream& print_expression(const expression& exp, std::ostream& o,
-                                 const std::string& format)
+                                     const std::string& format)
       {
         const auto& e = exp->as<ExpSet>();
         return vcsn::print(e.expressionset(), e.expression(), o, format);
@@ -228,7 +227,4 @@ namespace vcsn
                         const std::string& format) -> std::ostream&);
     }
   }
-
 }
-
-#endif // !VCSN_ALGOS_PRINT_HH

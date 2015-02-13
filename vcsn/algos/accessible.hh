@@ -1,15 +1,12 @@
-#ifndef VCSN_ALGOS_ACCESSIBLE_HH
-# define VCSN_ALGOS_ACCESSIBLE_HH
+#pragma once
 
-# include <deque>
-# include <queue>
-# include <map>
+#include <queue>
 
-# include <vcsn/algos/filter.hh>
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/unordered_set.hh>
+#include <vcsn/algos/filter.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -187,10 +184,7 @@ namespace vcsn
     namespace detail
     {
 
-      /*------------------.
-      | dyn::accessible.  |
-      `------------------*/
-
+      /// Bridge.
       template <typename Aut>
       automaton
       accessible(const automaton& aut)
@@ -201,11 +195,7 @@ namespace vcsn
 
       REGISTER_DECLARE(accessible,
                        (const automaton&) -> automaton);
-
-      /*--------------------.
-      | dyn::coaccessible.  |
-      `--------------------*/
-
+      /// Bridge.
       template <typename Aut>
       automaton
       coaccessible(const automaton& aut)
@@ -217,10 +207,7 @@ namespace vcsn
       REGISTER_DECLARE(coaccessible,
                        (const automaton&) -> automaton);
 
-      /*------------.
-      | dyn::trim.  |
-      `------------*/
-
+      /// Bridge.
       template <typename Aut>
       automaton
       trim(const automaton& aut)
@@ -232,10 +219,7 @@ namespace vcsn
       REGISTER_DECLARE(trim,
                        (const automaton&) -> automaton);
 
-      /*---------------------.
-      | dyn::is_accessible.  |
-      `---------------------*/
-
+      /// Bridge.
       template <typename Aut>
       bool
       is_accessible(const automaton& aut)
@@ -247,10 +231,7 @@ namespace vcsn
       REGISTER_DECLARE(is_accessible,
                        (const automaton&) -> bool);
 
-      /*-----------------------.
-      | dyn::is_coaccessible.  |
-      `-----------------------*/
-
+      /// Bridge.
       template <typename Aut>
       bool
       is_coaccessible(const automaton& aut)
@@ -262,10 +243,7 @@ namespace vcsn
       REGISTER_DECLARE(is_coaccessible,
                        (const automaton&) -> bool);
 
-      /*---------------.
-      | dyn::is_trim.  |
-      `---------------*/
-
+      /// Bridge.
       template <typename Aut>
       bool
       is_trim(const automaton& aut)
@@ -277,10 +255,7 @@ namespace vcsn
       REGISTER_DECLARE(is_trim,
                        (const automaton&) -> bool);
 
-      /*------------------.
-      | dyn::is_useless.  |
-      `------------------*/
-
+      /// Bridge.
       template <typename Aut>
       bool
       is_useless(const automaton& aut)
@@ -292,10 +267,7 @@ namespace vcsn
       REGISTER_DECLARE(is_useless,
                        (const automaton&) -> bool);
 
-      /*----------------.
-      | dyn::is_empty.  |
-      `----------------*/
-
+      /// Bridge.
       template <typename Aut>
       bool
       is_empty(const automaton& aut)
@@ -309,5 +281,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_ACCESSIBLE_HH

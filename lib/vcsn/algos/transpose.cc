@@ -11,7 +11,6 @@ namespace vcsn
     `-----------------------*/
 
     REGISTER_DEFINE(transpose);
-
     automaton
     transpose(automaton& aut)
     {
@@ -19,12 +18,11 @@ namespace vcsn
     }
 
 
-    /*--------------------.
-    | transpose(expression).  |
-    `--------------------*/
+    /*-------------------------.
+    | transpose(expression).   |
+    `-------------------------*/
 
     REGISTER_DEFINE(transpose_expression);
-
     expression
     transpose(const dyn::expression& e)
     {

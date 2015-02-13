@@ -13,19 +13,17 @@ namespace vcsn
     `----------------------*/
 
     REGISTER_DEFINE(is_valid);
-
     bool
     is_valid(const automaton& a)
     {
       return detail::is_valid_registry().call(a);
     }
 
-    /*----------------.
-    | is_valid(exp).  |
-    `----------------*/
+    /*------------------------.
+    | is_valid(expression).   |
+    `------------------------*/
 
     REGISTER_DEFINE(is_valid_expression);
-
     bool
     is_valid(const expression& e)
     {

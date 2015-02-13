@@ -102,13 +102,13 @@ namespace vcsn
     class ast_node;
     class automaton;
     class context;
+    class expressionset;
     class genset;
     class letterset;
     class nullableset;
     class oneset;
     class other;
     class polynomialset;
-    class expressionset;
     class tupleset;
     class weightset;
     class wordset;

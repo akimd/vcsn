@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_FOCUS_HH
-# define VCSN_ALGOS_FOCUS_HH
+#pragma once
 
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/labelset/tupleset.hh>
-# include <vcsn/misc/name.hh> // integral_parameter
-# include <vcsn/misc/tuple.hh> // make_index_range
+#include <vcsn/algos/fwd.hh>
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/labelset/tupleset.hh>
+#include <vcsn/misc/name.hh> // integral_constant
+#include <vcsn/misc/tuple.hh> // make_index_range
 
 namespace vcsn
 {
@@ -360,7 +359,4 @@ namespace vcsn
                        (automaton& aut, integral_constant tape) -> automaton);
     }
   }
-
 }
-
-#endif // !VCSN_ALGOS_FOCUS_HH

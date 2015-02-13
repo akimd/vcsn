@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_LIFT_HH
-# define VCSN_ALGOS_LIFT_HH
+#pragma once
 
-# include <map>
+#include <map>
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/labelset/oneset.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/expressionset.hh>
-# include <vcsn/core/rat/expression.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/labelset/oneset.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/core/rat/expression.hh>
 
 namespace vcsn
 {
@@ -114,6 +113,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       automaton
       lift_automaton(const automaton& aut)
@@ -128,9 +128,9 @@ namespace vcsn
   }
 
 
-  /*---------------.
-  | lift(expression).  |
-  `---------------*/
+  /*--------------------.
+  | lift(expression).   |
+  `--------------------*/
 
   namespace detail
   {
@@ -153,25 +153,19 @@ namespace vcsn
   {
     namespace detail
     {
-      /*--------------------.
-      | dyn::lift(expression).  |
-      `--------------------*/
-
       /// Bridge.
       template <typename ExpSet>
       expression
       lift_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return make_expression(::vcsn::detail::lift_expressionset(e.expressionset()),
-                           ::vcsn::lift(e.expressionset(), e.expression()));
+        const auto& es = e.expressionset();
+        return make_expression(::vcsn::detail::lift_expressionset(es),
+                               ::vcsn::lift(es, e.expression()));
       }
 
       REGISTER_DECLARE(lift_expression,
                        (const expression& aut) -> expression);
     }
   }
-
 } // vcsn::
-
-#endif // !VCSN_ALGOS_LIFT_HH

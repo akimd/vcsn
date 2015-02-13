@@ -1,16 +1,15 @@
-#ifndef VCSN_MISC_NAME_HH
-# define VCSN_MISC_NAME_HH
+#pragma once
 
-# include <initializer_list>
-# include <iostream>
-# include <memory>
-# include <string>
-# include <vector>
+#include <initializer_list>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
 
-# include <vcsn/core/rat/identities.hh>
-# include <vcsn/misc/direction.hh>
-# include <vcsn/misc/signature.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/misc/direction.hh>
+#include <vcsn/misc/signature.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -186,5 +185,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_MISC_NAME_HH

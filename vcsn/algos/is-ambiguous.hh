@@ -1,11 +1,10 @@
-#ifndef VCSN_ALGOS_IS_AMBIGUOUS_HH
-# define VCSN_ALGOS_IS_AMBIGUOUS_HH
+#pragma once
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/distance.hh>
-# include <vcsn/algos/product.hh>
-# include <vcsn/algos/scc.hh>
-# include <vcsn/dyn/fwd.hh>
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/distance.hh>
+#include <vcsn/algos/product.hh>
+#include <vcsn/algos/scc.hh>
+#include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {
@@ -178,7 +177,7 @@ namespace vcsn
   {
     namespace detail
     {
-      // Bridge.
+      /// Bridge.
       template <typename Aut>
       bool
       is_cycle_ambiguous(const automaton& aut)
@@ -191,8 +190,4 @@ namespace vcsn
                        (const automaton&) -> bool);
     }
   }
-
-
 }
-
-#endif // !VCSN_ALGOS_IS_AMBIGUOUS_HH
