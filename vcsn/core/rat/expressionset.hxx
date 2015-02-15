@@ -349,24 +349,6 @@ namespace vcsn
     return is_unweighted_nonsum_(unwrap_possible_lweight_(v));
   }
 
-  DEFINE::mul_atoms_(const label_t& a, const label_t& b) const
-    -> value_t
-  {
-    return mul_atoms_(a, b, typename is_law<Context>::type{});
-  }
-
-  DEFINE::mul_atoms_(const label_t& a, const label_t& b, std::true_type) const
-    -> value_t
-  {
-    return atom(labelset()->mul(a, b));
-  }
-
-  DEFINE::mul_atoms_(const label_t& a, const label_t& b, std::false_type) const
-    -> value_t
-  {
-    return std::make_shared<prod_t>(values_t{atom(a), atom(b)});
-  }
-
   DEFINE::mul_unweighted_nontrivial_products_(value_t a, value_t b) const
     -> value_t
   {

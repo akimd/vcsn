@@ -314,13 +314,6 @@ namespace vcsn
     value_t mul_(value_t l, value_t r, bool series) const;
     bool is_unweighted_nonsum_(value_t v) const;
     bool is_nonsum_(value_t v) const;
-    value_t mul_atoms_(const label_t& l, const label_t& r) const;
-    /// If labelset is wordset.
-    value_t mul_atoms_(const label_t& l, const label_t& r,
-                       std::true_type) const;
-    /// If labelset is not wordset.
-    value_t mul_atoms_(const label_t& l, const label_t& r,
-                       std::false_type) const;
     value_t mul_unweighted_nontrivial_products_(value_t a, value_t b) const;
     value_t mul_products_(value_t a, value_t b) const;
     value_t nontrivial_mul_expressions_(value_t l, value_t r) const;
