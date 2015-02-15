@@ -66,9 +66,6 @@ namespace vcsn
         const auto& a2 = aut2->as<Aut2>();
         return ::vcsn::are_equivalent(a1, a2);
       }
-
-      REGISTER_DECLARE(are_equivalent,
-                       (const automaton&, const automaton&) -> bool);
     }
   }
 
@@ -108,9 +105,6 @@ namespace vcsn
         return ::vcsn::are_equivalent(l.expressionset(), l.expression(),
                                       r.expressionset(), r.expression());
       }
-
-      REGISTER_DECLARE(are_equivalent_expression,
-                       (const expression&, const expression&) -> bool);
     }
   }
 
@@ -146,9 +140,6 @@ namespace vcsn
         const auto& r = rhs->as<Rhs>();
         return make_automaton(::vcsn::difference(l, r));
       }
-
-      REGISTER_DECLARE(difference,
-                       (const automaton&, const automaton&) -> automaton);
     }
   }
 
@@ -183,9 +174,6 @@ namespace vcsn
                                                   l.expression(),
                                                   r.expression()));
       }
-
-      REGISTER_DECLARE(difference_expression,
-                       (const expression&, const expression&) -> expression);
     }
   }
 }

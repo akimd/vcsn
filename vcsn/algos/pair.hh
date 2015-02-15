@@ -233,8 +233,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::pair(a, keep_initials));
       }
-
-      REGISTER_DECLARE(pair, (const automaton&, bool) -> automaton);
     }
   }
 }

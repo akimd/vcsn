@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2014 Vaucanson Group.
+# Copyright (C) 2012-2015 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,12 +17,6 @@ ACLOCAL_AMFLAGS = -I build-aux/m4
 include build-aux/make/init.mk
 include build-aux/make/buildfarm.mk
 
-# Unfortunately Automake 1.14 does not generate this for us.
-vcsn/config.hh: $(top_builddir)/lib/config.h
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-BUILT_SOURCES += lib/config.h vcsn/config.hh
-DISTCLEANFILES += vcsn/config.hh python/vcsn_version.pyc
-
 AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir) $(BOOST_CPPFLAGS)
 
@@ -34,8 +28,9 @@ include share/local.mk
 include tests/local.mk
 include vcsn/local.mk
 
-EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt \
-  build-aux/bin/coverage build-aux/bin/fuse-switch
+EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt  \
+  build-aux/bin/coverage build-aux/bin/fuse-switch      \
+  build-aux/bin/move-if-change
 
 # Code coverage.
 .PHONY: coverage

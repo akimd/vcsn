@@ -121,10 +121,6 @@ namespace vcsn
       {
         return is_eps_acyclic(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(is_eps_acyclic,
-                       (const automaton&) -> bool);
-
     }
   }
 } // namespace vcsn

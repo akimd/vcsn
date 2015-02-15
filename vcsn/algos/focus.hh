@@ -354,9 +354,6 @@ namespace vcsn
         auto& a = aut->as<Aut>();
         return make_automaton(vcsn::focus<Tape::value>(a));
       }
-
-      REGISTER_DECLARE(focus,
-                       (automaton& aut, integral_constant tape) -> automaton);
     }
   }
 }

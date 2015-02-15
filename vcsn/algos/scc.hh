@@ -561,10 +561,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::scc(a, algo));
       }
-
-      REGISTER_DECLARE(scc,
-                       (const automaton&, const std::string& algo)
-                       -> automaton);
     }
   }
 
@@ -599,9 +595,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return ::vcsn::num_components(a);
       }
-
-      REGISTER_DECLARE(num_components,
-                       (const automaton&) -> std::size_t);
     }
   }
 
@@ -641,9 +634,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::component(a, com_num));
       }
-
-      REGISTER_DECLARE(component,
-                       (const automaton&, unsigned) -> automaton);
     }
   }
 
@@ -708,9 +698,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::condense(a));
       }
-
-      REGISTER_DECLARE(condense,
-                       (const automaton&) -> automaton);
     }
   }
 

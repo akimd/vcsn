@@ -66,9 +66,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return make_automaton(vcsn::cerny(c, num_states));
       }
-
-      REGISTER_DECLARE(cerny,
-                       (const context& ctx, unsigned n) -> automaton);
     }
   }
 }

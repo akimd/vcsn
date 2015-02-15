@@ -101,9 +101,6 @@ namespace vcsn
         const auto& ctx = a->context();
         return make_weight(*ctx.weightset(), res);
       }
-
-      REGISTER_DECLARE(eval,
-                       (const automaton& aut, const label& s) -> weight);
     }
   }
 } // namespace vcsn

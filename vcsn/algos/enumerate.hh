@@ -157,11 +157,6 @@ namespace vcsn
         return make_polynomial(ps, enumerate(a, max));
       }
 
-      REGISTER_DECLARE
-      (enumerate,
-       (const automaton& aut, unsigned max) -> polynomial);
-
-
       /// Bridge.
       template <typename Aut, typename Unsigned>
       polynomial
@@ -171,9 +166,6 @@ namespace vcsn
         auto ps = vcsn::detail::make_word_polynomialset(a->context());
         return make_polynomial(ps, shortest(a, num));
       }
-
-      REGISTER_DECLARE(shortest,
-                       (const automaton& aut, unsigned num) -> polynomial);
     }
   }
 }

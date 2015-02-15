@@ -53,9 +53,6 @@ namespace vcsn
       {
         return is_ambiguous(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(is_ambiguous,
-                       (const automaton&) -> bool);
     }
   }
 
@@ -103,9 +100,6 @@ namespace vcsn
         auto word = vcsn::ambiguous_word(a);
         return make_label(make_wordset(*a->labelset()), word);
       }
-
-      REGISTER_DECLARE(ambiguous_word,
-                       (const automaton&) -> label);
     }
   }
 
@@ -185,9 +179,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return ::vcsn::is_cycle_ambiguous(a);
       }
-
-      REGISTER_DECLARE(is_cycle_ambiguous,
-                       (const automaton&) -> bool);
     }
   }
 }

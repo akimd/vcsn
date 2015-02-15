@@ -193,8 +193,6 @@ namespace vcsn
         return make_automaton(::vcsn::accessible(a));
       }
 
-      REGISTER_DECLARE(accessible,
-                       (const automaton&) -> automaton);
       /// Bridge.
       template <typename Aut>
       automaton
@@ -203,9 +201,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::coaccessible(a));
       }
-
-      REGISTER_DECLARE(coaccessible,
-                       (const automaton&) -> automaton);
 
       /// Bridge.
       template <typename Aut>
@@ -216,9 +211,6 @@ namespace vcsn
         return make_automaton(::vcsn::trim(a));
       }
 
-      REGISTER_DECLARE(trim,
-                       (const automaton&) -> automaton);
-
       /// Bridge.
       template <typename Aut>
       bool
@@ -227,9 +219,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_accessible(a);
       }
-
-      REGISTER_DECLARE(is_accessible,
-                       (const automaton&) -> bool);
 
       /// Bridge.
       template <typename Aut>
@@ -240,9 +229,6 @@ namespace vcsn
         return is_coaccessible(a);
       }
 
-      REGISTER_DECLARE(is_coaccessible,
-                       (const automaton&) -> bool);
-
       /// Bridge.
       template <typename Aut>
       bool
@@ -251,9 +237,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_trim(a);
       }
-
-      REGISTER_DECLARE(is_trim,
-                       (const automaton&) -> bool);
 
       /// Bridge.
       template <typename Aut>
@@ -264,9 +247,6 @@ namespace vcsn
         return is_useless(a);
       }
 
-      REGISTER_DECLARE(is_useless,
-                       (const automaton&) -> bool);
-
       /// Bridge.
       template <typename Aut>
       bool
@@ -275,9 +255,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_empty(a);
       }
-
-      REGISTER_DECLARE(is_empty,
-                       (const automaton&) -> bool);
     }
   }
 }

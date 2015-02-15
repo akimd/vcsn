@@ -255,9 +255,6 @@ namespace vcsn
         auto& a = aut->as<Aut>();
         return make_automaton(vcsn::transpose(a));
       }
-
-      REGISTER_DECLARE(transpose,
-                       (automaton& aut) -> automaton);
     }
   }
 
@@ -280,9 +277,6 @@ namespace vcsn
                                ::vcsn::transpose(e.expressionset(),
                                                  e.expression()));
       }
-
-      REGISTER_DECLARE(transpose_expression,
-                       (const expression& e) -> expression);
     }
   }
 
@@ -303,9 +297,6 @@ namespace vcsn
         return make_expression(e.expressionset(),
                                e.expressionset().transposition(e.expression()));
       }
-
-      REGISTER_DECLARE(transposition_expression,
-                       (const expression& e) -> expression);
     }
   }
 

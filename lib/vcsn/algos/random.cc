@@ -1,6 +1,7 @@
-#include <vcsn/algos/random.hh>
-#include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/registers.hh>
 
 namespace vcsn
 {
@@ -8,7 +9,6 @@ namespace vcsn
   {
 
     REGISTER_DEFINE(random);
-
     automaton
     random_automaton(const context& ctx,
                      unsigned num_states, float density,
@@ -18,9 +18,7 @@ namespace vcsn
                                             num_initial, num_final);
     }
 
-
     REGISTER_DEFINE(random_deterministic);
-
     automaton
     random_automaton_deterministic(const context& ctx, unsigned num_states)
     {

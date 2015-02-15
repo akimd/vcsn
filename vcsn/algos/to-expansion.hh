@@ -438,9 +438,6 @@ namespace vcsn
         return make_expansion(es,
                               to_expansion<ExpSet>(rs, e.expression()));
       }
-
-      REGISTER_DECLARE(to_expansion,
-                       (const expression& e) -> expansion);
     }
   }
 } // vcsn::

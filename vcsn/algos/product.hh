@@ -469,9 +469,6 @@ namespace vcsn
         return make_automaton(::vcsn::product(l, r));
       }
 
-      REGISTER_DECLARE(product,
-                       (const automaton&, const automaton&) -> automaton);
-
       /// Bridge.
       template <typename... Auts>
       automaton
@@ -480,9 +477,6 @@ namespace vcsn
         auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
         return product_<Auts...>(as, indices);
       }
-
-      REGISTER_DECLARE(product_vector,
-                       (const std::vector<automaton>&) -> automaton);
     }
   }
 
@@ -518,9 +512,6 @@ namespace vcsn
         return make_automaton(::vcsn::shuffle(l, r));
       }
 
-      REGISTER_DECLARE(shuffle,
-                       (const automaton&, const automaton&) -> automaton);
-
       /// Variadic bridge helper.
       template <typename... Auts, size_t... I>
       automaton
@@ -539,9 +530,6 @@ namespace vcsn
         auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
         return shuffle_<Auts...>(as, indices);
       }
-
-      REGISTER_DECLARE(shuffle_vector,
-                       (const std::vector<automaton>&) -> automaton);
     }
   }
 
@@ -577,9 +565,6 @@ namespace vcsn
         auto rr = rs.conv(r.expressionset(), r.expression());
         return make_expression(rs, ::vcsn::shuffle(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(shuffle_expression,
-                       (const expression&, const expression&) -> expression);
     }
   }
 
@@ -616,9 +601,6 @@ namespace vcsn
         return make_automaton(::vcsn::infiltration(l, r));
       }
 
-      REGISTER_DECLARE(infiltration,
-                       (const automaton&, const automaton&) -> automaton);
-
       /// Variadic bridge helper.
       template <typename... Auts, size_t... I>
       automaton
@@ -637,9 +619,6 @@ namespace vcsn
         auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
         return infiltration_<Auts...>(as, indices);
       }
-
-      REGISTER_DECLARE(infiltration_vector,
-                       (const std::vector<automaton>&) -> automaton);
     }
   }
 
@@ -701,9 +680,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::power(a, n));
       }
-
-      REGISTER_DECLARE(power,
-                       (const automaton&, unsigned) -> automaton);
     }
   }
 
@@ -739,9 +715,6 @@ namespace vcsn
         auto rr = rs.conv(r.expressionset(), r.expression());
         return make_expression(rs, ::vcsn::conjunction(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(conjunction_expression,
-                       (const expression&, const expression&) -> expression);
     }
   }
 }

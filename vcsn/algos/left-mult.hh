@@ -118,9 +118,6 @@ namespace vcsn
         return make_automaton(::vcsn::left_mult_here(w2, a2));
       }
 
-      REGISTER_DECLARE(left_mult,
-                       (const weight&, const automaton&) -> automaton);
-
     }
   }
 
@@ -187,9 +184,6 @@ namespace vcsn
                            ::vcsn::left_mult(rs, w2, r2));
       }
 
-      REGISTER_DECLARE(left_mult_expression,
-                       (const weight&, const expression&) -> expression);
-
     }
   }
 
@@ -234,9 +228,6 @@ namespace vcsn
         auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
         return make_automaton(::vcsn::right_mult_here(a2, w2));
       }
-
-      REGISTER_DECLARE(right_mult,
-                       (const automaton&, const weight&) -> automaton);
     }
   }
 
@@ -271,9 +262,6 @@ namespace vcsn
         return make_expression(rs,
                            ::vcsn::right_mult(rs, r2, w2));
       }
-
-      REGISTER_DECLARE(right_mult_expression,
-                       (const expression&, const weight&) -> expression);
 
     }
   }

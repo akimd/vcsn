@@ -73,11 +73,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return make_automaton(::vcsn::divkbaseb(c, divisor, base));
       }
-
-      REGISTER_DECLARE
-      (divkbaseb,
-       (const context& ctx, unsigned k, unsigned b) -> automaton);
     }
   }
-
 }

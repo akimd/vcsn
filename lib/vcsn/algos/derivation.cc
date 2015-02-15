@@ -1,9 +1,10 @@
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/derivation.hh>
-#include <vcsn/algos/derived-term.hh>
-#include <vcsn/algos/to-expansion.hh>
-#include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/registers.hh>
 
 namespace vcsn
 {

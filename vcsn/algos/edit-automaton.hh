@@ -335,9 +335,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return new edit_automaton<mutable_automaton<Ctx>>(c);
       }
-
-      REGISTER_DECLARE(make_automaton_editor,
-                       (const context& ctx) -> automaton_editor*);
     }
   }
 

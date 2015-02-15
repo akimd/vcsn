@@ -77,9 +77,6 @@ namespace vcsn
         const auto& aut = a->as<Aut>();
         return make_automaton(::vcsn::star(aut));
       }
-
-      REGISTER_DECLARE(star,
-                       (const automaton& aut) -> automaton);
     }
   }
 }

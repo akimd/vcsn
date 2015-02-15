@@ -36,9 +36,6 @@ namespace vcsn
         return is_normalized(aut->as<Aut>());
       }
 
-      REGISTER_DECLARE(is_normalized,
-                       (const automaton& aut) -> bool);
-
       /// Bridge.
       template <typename Aut>
       automaton
@@ -47,9 +44,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::normalize(a));
       }
-
-      REGISTER_DECLARE(normalize,
-                      (const automaton& aut) -> automaton);
     }
   }
 } // vcsn::

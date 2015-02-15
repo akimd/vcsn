@@ -2,9 +2,6 @@
 
 #include <memory> // shared_ptr
 
-#include <vcsn/misc/export.hh> // LIBVCSN_API
-#include <vcsn/misc/fwd.hh>
-
 namespace vcsn
 {
   namespace dyn
@@ -114,9 +111,3 @@ namespace vcsn
     class wordset;
   }
 } // namespace vcsn
-
-// FIXME: Not the best place for this.
-#define REGISTER_DECLARE(Name, Signature)                       \
-  using Name ## _t = auto Signature;                            \
-  LIBVCSN_API                                                   \
-  bool Name ## _register(const signature& sig, Name ## _t fn)

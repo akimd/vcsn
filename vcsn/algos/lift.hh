@@ -121,9 +121,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::lift(a));
       }
-
-      REGISTER_DECLARE(lift_automaton,
-                       (const automaton& aut) -> automaton);
     }
   }
 
@@ -163,9 +160,6 @@ namespace vcsn
         return make_expression(::vcsn::detail::lift_expressionset(es),
                                ::vcsn::lift(es, e.expression()));
       }
-
-      REGISTER_DECLARE(lift_expression,
-                       (const expression& aut) -> expression);
     }
   }
 } // vcsn::

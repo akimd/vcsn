@@ -29,9 +29,6 @@ namespace vcsn
         auto rs = e.expressionset();
         return rs.identities();
       }
-
-      REGISTER_DECLARE(identities,
-                       (const expression&) -> rat::identities);
     }
 
   }

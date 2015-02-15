@@ -249,9 +249,6 @@ namespace vcsn
           s = state + 2;
         return make_automaton(vcsn::eliminate_state(a, s));
       }
-
-      REGISTER_DECLARE(eliminate_state,
-                       (const automaton& aut, int) -> automaton);
     }
   }
 
@@ -309,10 +306,6 @@ namespace vcsn
           raise("to-expression: invalid algorithm: ", str_escape(algo),
                 ": expected \"auto\", or \"naive\"");
       }
-
-      REGISTER_DECLARE(to_expression,
-                       (const automaton& aut, const std::string& algo)
-                       -> expression);
     }
   }
 

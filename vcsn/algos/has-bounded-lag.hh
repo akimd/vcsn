@@ -163,9 +163,6 @@ namespace vcsn
       {
         return has_bounded_lag(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(has_bounded_lag,
-                       (const automaton&) -> bool);
     }
   }
 

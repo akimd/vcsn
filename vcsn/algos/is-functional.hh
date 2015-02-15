@@ -34,9 +34,6 @@ namespace vcsn
       {
         return is_functional(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(is_functional,
-                       (const automaton&) -> bool);
     }
   }
 }

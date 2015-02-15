@@ -555,9 +555,6 @@ namespace vcsn
           raise("determinize: invalid algorithm: ", str_escape(algo));
       }
 
-      REGISTER_DECLARE(determinize,
-                       (const automaton& aut, const std::string& algo)
-                       -> automaton);
       /// Bridge.
       template <typename Aut, typename String>
       inline
@@ -609,9 +606,6 @@ namespace vcsn
           raise("codeterminize: invalid algorithm: ", str_escape(algo));
       }
 
-      REGISTER_DECLARE(codeterminize,
-                       (const automaton& aut, const std::string& algo)
-                       -> automaton);
       /// Bridge.
       template <typename Aut, typename String>
       inline

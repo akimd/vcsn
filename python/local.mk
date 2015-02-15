@@ -12,6 +12,7 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 nodist_python_PYTHON = %D%/vcsn_version.py
+DISTCLEANFILES += %D%/vcsn_version.pyc
 
 vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \

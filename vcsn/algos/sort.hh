@@ -54,9 +54,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_out_sorted(a);
       }
-
-      REGISTER_DECLARE(is_out_sorted,
-                       (const automaton&) -> bool);
     }
   }
 
@@ -202,9 +199,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::sort(a));
       }
-
-      REGISTER_DECLARE(sort,
-                       (const automaton&) -> automaton);
     }
   }
 }

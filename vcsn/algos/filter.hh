@@ -348,10 +348,6 @@ namespace vcsn
           ss.emplace(s + 2);
         return make_automaton(::vcsn::filter(a, ss));
       }
-
-      REGISTER_DECLARE(filter,
-                       (const automaton& aut,
-                        const std::vector<unsigned>& ss) -> automaton);
     }
   }
 }

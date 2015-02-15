@@ -227,10 +227,6 @@ namespace vcsn
         const auto& r = e.expression();
         return make_automaton(::vcsn::derived_term(rs, r, algo));
       }
-
-      REGISTER_DECLARE(derived_term,
-                       (const expression& e, const std::string& algo)
-                       -> automaton);
     }
   }
 

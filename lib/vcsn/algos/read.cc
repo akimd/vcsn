@@ -1,12 +1,13 @@
 #include <stdexcept>
 
-#include <vcsn/ctx/fwd.hh>
-#include <vcsn/dyn/algos.hh>
-#include <vcsn/algos/read.hh>
-#include <lib/vcsn/rat/read.hh>
-#include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/algos/fwd.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <lib/vcsn/dot/driver.hh>
+#include <lib/vcsn/rat/read.hh>
+#include <vcsn/algos/read.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/registers.hh>
 
 namespace vcsn
 {

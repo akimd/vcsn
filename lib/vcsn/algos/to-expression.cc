@@ -1,5 +1,5 @@
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/to-expression.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

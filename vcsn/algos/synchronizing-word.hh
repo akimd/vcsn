@@ -73,9 +73,6 @@ namespace vcsn
         const auto& w = word->as<LabelSet>();
         return vcsn::is_synchronized_by(a, w.label());
       }
-
-      REGISTER_DECLARE(is_synchronized_by,
-                       (const automaton&, const label&) -> bool);
     }
   }
 
@@ -400,8 +397,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return vcsn::is_synchronizing(a);
       }
-
-      REGISTER_DECLARE(is_synchronizing, (const automaton&) -> bool);
     }
   }
 
@@ -443,9 +438,6 @@ namespace vcsn
         auto word = vcsn::synchronizing_word(a, algo);
         return make_label(make_wordset(*a->labelset()), word);
       }
-
-      REGISTER_DECLARE(synchronizing_word,
-                       (const automaton&, const std::string&) -> label);
     }
   }
 

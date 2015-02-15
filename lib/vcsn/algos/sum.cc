@@ -1,7 +1,10 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/dyn/expression.hh>
-#include <vcsn/algos/sum.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/weight.hh>
 
 namespace vcsn
 {

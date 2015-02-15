@@ -51,9 +51,6 @@ namespace vcsn
       {
         return is_complete(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(is_complete,
-                       (const automaton&) -> bool);
     }
   }
 }

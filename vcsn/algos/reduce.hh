@@ -625,9 +625,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(reduce(a));
       }
-
-      REGISTER_DECLARE(reduce,
-                       (const automaton& aut) -> automaton);
     }
   }
 

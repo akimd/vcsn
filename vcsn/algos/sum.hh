@@ -85,9 +85,6 @@ namespace vcsn
         const auto& r = rhs->as<Rhs>();
         return make_automaton(::vcsn::sum(l, r));
       }
-
-      REGISTER_DECLARE(sum,
-                       (const automaton&, const automaton&) -> automaton);
     }
   }
 
@@ -124,9 +121,6 @@ namespace vcsn
         auto rr = rs.conv(r.polynomialset(), r.polynomial());
         return make_polynomial(rs, sum(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(sum_polynomial,
-                       (const polynomial&, const polynomial&) -> polynomial);
     }
   }
 
@@ -151,9 +145,6 @@ namespace vcsn
         auto rr = rs.conv(r.expressionset(), r.expression());
         return make_expression(rs, ::vcsn::sum(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(sum_expression,
-                       (const expression&, const expression&) -> expression);
     }
   }
 
@@ -178,9 +169,6 @@ namespace vcsn
         auto rr = rs.conv(r.weightset(), r.weight());
         return make_weight(rs, sum(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(sum_weight,
-                       (const weight&, const weight&) -> weight);
     }
   }
 }

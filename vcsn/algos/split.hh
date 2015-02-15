@@ -275,9 +275,6 @@ namespace vcsn
         return make_polynomial(ps,
                                vcsn::split<ExpSet>(rs, e.expression()));
       }
-
-      REGISTER_DECLARE(split,
-                       (const expression& e) -> polynomial);
     }
   }
 
@@ -327,9 +324,6 @@ namespace vcsn
           (ps,
            vcsn::split_polynomial<PolynomialSet>(ps, p.polynomial()));
       }
-
-      REGISTER_DECLARE(split_polynomial,
-                       (const polynomial& p) -> polynomial);
     }
   }
 

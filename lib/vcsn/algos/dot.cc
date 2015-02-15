@@ -1,4 +1,4 @@
-#include <vcsn/algos/dot.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <lib/vcsn/algos/registry.hh>

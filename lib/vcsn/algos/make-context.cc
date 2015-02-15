@@ -1,9 +1,12 @@
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/signature-printer.hh>
 #include <vcsn/dyn/translate.hh>
-#include <vcsn/algos/make-context.hh>
-#include <lib/vcsn/algos/registry.hh>
 
 
 namespace vcsn

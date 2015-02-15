@@ -194,8 +194,6 @@ namespace vcsn
                                ::vcsn::star_normal_form(e.expressionset(),
                                                         e.expression()));
       }
-
-      REGISTER_DECLARE(star_normal_form, (const expression& e) -> expression);
     }
   }
 

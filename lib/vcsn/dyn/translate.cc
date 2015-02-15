@@ -303,6 +303,7 @@ namespace vcsn
         void compile(const std::string& name, const signature& sig)
         {
           printer_.header("vcsn/misc/name.hh"); // ssignature
+          printer_.header("vcsn/dyn/registers.hh");
           printer_.header_algo(name);
           std::string base =
             plugindir() + "algos/" + name + "/" + split(sig.to_string());

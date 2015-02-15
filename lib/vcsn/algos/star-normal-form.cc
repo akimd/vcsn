@@ -1,5 +1,5 @@
 #include <vcsn/dyn/expression.hh>
-#include <vcsn/algos/star-normal-form.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

@@ -138,9 +138,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::universal(a));
       }
-
-      REGISTER_DECLARE(universal,
-                       (const automaton& aut) -> automaton);
     }
   }
 }

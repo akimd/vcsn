@@ -108,10 +108,6 @@ namespace vcsn
         return make_automaton(::vcsn::minimize(a, algo));
       }
 
-      REGISTER_DECLARE
-      (minimize,
-       (const automaton& aut, const std::string& algo) -> automaton);
-
       /// Bridge.
       template <typename Aut, typename String>
       inline
@@ -153,9 +149,6 @@ namespace vcsn
         return make_automaton(::vcsn::cominimize(a, algo));
       }
 
-      REGISTER_DECLARE
-      (cominimize,
-       (const automaton& aut, const std::string& algo) -> automaton);
       /// Bridge.
       template <typename Aut, typename String>
       inline

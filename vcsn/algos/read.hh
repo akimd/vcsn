@@ -36,9 +36,6 @@ namespace vcsn
         auto res = ::vcsn::read_label(c, is);
         return make_label(*c.labelset(), res);
       }
-
-      REGISTER_DECLARE(read_label,
-                       (const context& ctx, std::istream& is) -> label);
     }
   }
 
@@ -70,9 +67,6 @@ namespace vcsn
         auto res = ::vcsn::read_polynomial(c, is);
         return make_polynomial(ps, res);
       }
-
-      REGISTER_DECLARE(read_polynomial,
-                       (const context& ctx, std::istream& is) -> polynomial);
     }
   }
 
@@ -103,9 +97,6 @@ namespace vcsn
         auto res = ::vcsn::read_weight(c, is);
         return make_weight(*c.weightset(), res);
       }
-
-      REGISTER_DECLARE(read_weight,
-                       (const context& ctx, std::istream& is) -> weight);
     }
   }
 } // namespace vcsn

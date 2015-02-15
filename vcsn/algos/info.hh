@@ -252,10 +252,6 @@ namespace vcsn
         info(aut->as<Aut>(), out, detailed);
         return out;
       }
-
-      REGISTER_DECLARE(info,
-                       (const automaton& aut, std::ostream& out,
-                        bool detailed) -> std::ostream&);
     }
   }
 
@@ -306,9 +302,6 @@ namespace vcsn
         vcsn::info<ExpSet>(e.expressionset(), e.expression(), o);
         return o;
       }
-
-      REGISTER_DECLARE(info_expression,
-                        (const expression& aut, std::ostream& o) -> std::ostream&);
     }
   }
 }

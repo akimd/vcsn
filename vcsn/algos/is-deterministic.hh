@@ -87,9 +87,6 @@ namespace vcsn
         return is_deterministic(aut->as<Aut>());
       }
 
-      REGISTER_DECLARE(is_deterministic,
-                       (const automaton& aut) -> bool);
-
       /// Bridge.
       template <typename Aut>
       bool
@@ -97,10 +94,6 @@ namespace vcsn
       {
         return is_codeterministic(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(is_codeterministic,
-                       (const automaton& aut) -> bool);
-
     }
   }
 } // namespace vscn

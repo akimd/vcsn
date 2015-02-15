@@ -31,10 +31,6 @@ namespace vcsn
         const auto& c = ctx->as<Context>();
         return c.print_set(o, format);
       }
-
-      REGISTER_DECLARE(print_ctx,
-                       (const context& c, std::ostream& o,
-                        const std::string& format) -> std::ostream&);
     }
   }
 
@@ -65,10 +61,6 @@ namespace vcsn
         const auto& e = expansion->as<ExpansionSet>();
         return vcsn::print(e.expansionset(), e.expansion(), o, format);
       }
-
-      REGISTER_DECLARE(print_expansion,
-                       (const expansion& l, std::ostream& o,
-                        const std::string& format) -> std::ostream&);
     }
   }
 
@@ -88,10 +80,6 @@ namespace vcsn
         const auto& l = label->as<LabelSet>();
         return vcsn::print(l.labelset(), l.label(), o, format);
       }
-
-      REGISTER_DECLARE(print_label,
-                       (const label& l, std::ostream& o,
-                        const std::string& format) -> std::ostream&);
     }
   }
 
@@ -128,9 +116,6 @@ namespace vcsn
         const auto& p = polynomial->as<PolynomialSet>();
         return vcsn::list(p.polynomialset(), p.polynomial(), o);
       }
-
-      REGISTER_DECLARE(list_polynomial,
-                       (const polynomial& p, std::ostream& o) -> std::ostream&);
     }
   }
 
@@ -150,10 +135,6 @@ namespace vcsn
         const auto& p = polynomial->as<PolynomialSet>();
         return vcsn::print(p.polynomialset(), p.polynomial(), o, format);
       }
-
-      REGISTER_DECLARE(print_polynomial,
-                       (const polynomial& p, std::ostream& o,
-                        const std::string& format) -> std::ostream&);
     }
   }
 
@@ -186,10 +167,6 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
         return vcsn::print(e.expressionset(), e.expression(), o, format);
       }
-
-      REGISTER_DECLARE(print_expression,
-                       (const expression& aut, std::ostream& o,
-                        const std::string& format) -> std::ostream&);
     }
   }
 
@@ -221,10 +198,6 @@ namespace vcsn
         const auto& w = weight->as<WeightSet>();
         return vcsn::print(w.weightset(), w.weight(), o, format);
       }
-
-      REGISTER_DECLARE(print_weight,
-                       (const weight& aut, std::ostream& o,
-                        const std::string& format) -> std::ostream&);
     }
   }
 }

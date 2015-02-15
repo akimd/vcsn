@@ -57,6 +57,8 @@
 
 #include <vcsn/core/rat/identities.hh>
 
+#include <vcsn/dyn/registers.hh>
+
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/polynomialset.hh>
 

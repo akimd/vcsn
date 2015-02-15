@@ -656,10 +656,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::proper(a, dir, prune));
       }
-
-      REGISTER_DECLARE(proper,
-                       (const automaton& aut, direction dir, bool prune)
-                       -> automaton);
     }
 
   }

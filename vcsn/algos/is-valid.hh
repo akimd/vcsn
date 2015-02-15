@@ -144,9 +144,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_valid(strip(a));
       }
-
-     REGISTER_DECLARE(is_valid,
-                      (const automaton& aut) -> bool);
     }
   }
 } // namespace vcsn

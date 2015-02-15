@@ -82,9 +82,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::push_weights(a));
       }
-
-      REGISTER_DECLARE(push_weights,
-                       (const automaton& aut) -> automaton);
     }
   }
 

@@ -1,8 +1,9 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/cerny.hh>
-#include <vcsn/algos/pair.hh>
-#include <vcsn/algos/synchronizing-word.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/registers.hh>
 
 namespace vcsn
 {

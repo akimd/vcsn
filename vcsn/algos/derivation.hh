@@ -310,10 +310,6 @@ namespace vcsn
                                vcsn::derivation(rs, e.expression(),
                                                 l, breaking));
       }
-
-      REGISTER_DECLARE(derivation,
-                       (const expression& e, const label& l,
-                        bool breaking) -> polynomial);
     }
   }
 } // vcsn::

@@ -1,0 +1,79 @@
+#! /usr/bin/env python
+
+from __future__ import print_function
+import argparse
+import os
+import re
+
+# A dictionary of all the bridges, with the function name as key.
+bridges = {}
+
+bridge = re.compile(r'''///\ Bridge.
+\s*template\s*<.*?>
+(?:\s*inline)?
+\s*(?P<return>[\w:&*]+)\s+(?P<fun>\w+)\s*\((?P<args>.*?)\)''',
+                    flags=re.VERBOSE | re.DOTALL)
+
+register = '''  // {fun} ({file}).
+  REGISTER_DECLARE({fun},
+    ({args}) -> {return});
+
+'''
+
+def process_file(fn):
+    '''Store in bridges the signatures from header fn.'''
+    with open(fn, 'r') as f:
+        for m in bridge.finditer(f.read()):
+            bridges[m.group(2)] = m.groupdict()
+            bridges[m.group(2)]['file'] = os.path.basename(fn)
+
+parser = argparse.ArgumentParser(description='Generate registers file.')
+parser.add_argument('file', nargs='+', type=str, default=None,
+                    help='Headers to process')
+parser.add_argument('-o', '--output', type=str, default=None,
+                    help='output file')
+parser.add_argument('-s', '--srcdir', type=str, default='.',
+                    help='Path the the source tree')
+args = parser.parse_args()
+args.srcdir += '/'
+
+for fn in args.file:
+    process_file(args.srcdir + fn)
+
+# Generate the output.
+res = r'''#pragma once
+
+#include <vector>
+
+#include <vcsn/core/rat/identities.hh> // rat::identities
+#include <vcsn/dyn/fwd.hh> // dyn::automaton, etc.
+#include <vcsn/misc/export.hh> // LIBVCSN_API
+#include <vcsn/misc/fwd.hh> // signature
+#include <vcsn/misc/name.hh> // integral_constant
+
+namespace vcsn
+{
+  class automaton_editor;
+}
+
+namespace vcsn { namespace dyn { namespace detail {
+
+#define REGISTER_DECLARE(Name, Signature)                       \
+  using Name ## _t = auto Signature;                            \
+  LIBVCSN_API                                                   \
+  bool Name ## _register(const signature& sig, Name ## _t fn)
+
+'''
+for f in sorted(bridges):
+    res += register.format(**bridges[f])
+
+res += '''
+#undef REGISTER_DECLARE
+}}}
+'''
+
+if args.output:
+    out = open(args.output, 'w')
+    print(res, file = out)
+else:
+    print(res)

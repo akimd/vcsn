@@ -306,9 +306,6 @@ namespace vcsn
         auto& r = rhs->as<Rhs>();
         return make_automaton(::vcsn::compose(l, r));
       }
-
-      REGISTER_DECLARE(compose,
-                       (automaton&, automaton&) -> automaton);
     }
   }
 

@@ -72,9 +72,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return make_automaton(::vcsn::u(c, n));
       }
-
-      REGISTER_DECLARE(u,
-                        (const context& ctx, unsigned n) -> automaton);
     }
   }
 

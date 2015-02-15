@@ -1,6 +1,7 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/divide.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/polynomial.hh>
 
 namespace vcsn
 {

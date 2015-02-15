@@ -81,10 +81,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return make_automaton(::vcsn::double_ring(c, n, finals));
       }
-
-      REGISTER_DECLARE(double_ring,
-                       (const context& ctx, unsigned n,
-                        const std::vector<unsigned>& f) -> automaton);
     }
   }
 }

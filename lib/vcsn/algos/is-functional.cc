@@ -1,8 +1,8 @@
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/algos/is-functional.hh>
-#include <vcsn/algos/is-partial-identity.hh>
-#include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/registers.hh>
 
 namespace vcsn
 {

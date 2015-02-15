@@ -1,6 +1,8 @@
-#include <vcsn/dyn/algos.hh>
-#include <vcsn/algos/lift.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/registers.hh>
 
 namespace vcsn
 {

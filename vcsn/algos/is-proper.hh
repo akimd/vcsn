@@ -62,9 +62,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_proper(a);
       }
-
-     REGISTER_DECLARE(is_proper,
-                      (const automaton& aut) -> bool);
     }
   }
 } // namespace vcsn

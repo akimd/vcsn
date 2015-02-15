@@ -169,8 +169,6 @@ namespace vcsn
         return make_expression(e.expressionset(),
                            ::vcsn::expand(e.expressionset(), e.expression()));
       }
-
-      REGISTER_DECLARE(expand, (const expression& e) -> expression);
     }
   }
 

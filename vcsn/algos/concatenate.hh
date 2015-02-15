@@ -118,9 +118,6 @@ namespace vcsn
         const auto& r = rhs->as<Rhs>();
         return make_automaton(::vcsn::concatenate(l, r));
       }
-
-      REGISTER_DECLARE(concatenate,
-                       (const automaton&, const automaton&) -> automaton);
     }
   }
 
@@ -188,9 +185,6 @@ namespace vcsn
         const auto& aut = a->as<Aut>();
         return make_automaton(::vcsn::chain(aut, min, max));
       }
-
-      REGISTER_DECLARE(chain,
-                       (const automaton& aut, int min, int max) -> automaton);
     }
   }
 
@@ -226,9 +220,6 @@ namespace vcsn
         auto rr = rs.conv(r.expressionset(), r.expression());
         return make_expression(rs, ::vcsn::concatenate(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(concatenate_expression,
-                       (const expression&, const expression&) -> expression);
     }
   }
 
@@ -285,9 +276,6 @@ namespace vcsn
         return make_expression(r.expressionset(),
                            ::vcsn::chain(r.expressionset(), r.expression(), min, max));
       }
-
-      REGISTER_DECLARE(chain_expression,
-                       (const expression&, int, int) -> expression);
     }
   }
 
@@ -312,9 +300,6 @@ namespace vcsn
         auto rr = rs.conv(r.polynomialset(), r.polynomial());
         return make_polynomial(rs, concatenate(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(concatenate_polynomial,
-                       (const polynomial&, const polynomial&) -> polynomial);
     }
   }
 
@@ -349,9 +334,6 @@ namespace vcsn
         auto rr = rs.conv(r.weightset(), r.weight());
         return make_weight(rs, multiply(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(multiply_weight,
-                       (const weight&, const weight&) -> weight);
     }
   }
 }

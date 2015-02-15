@@ -235,11 +235,6 @@ namespace vcsn
       {
         return fado(aut->as<Aut>(), out);
       }
-
-      REGISTER_DECLARE(fado,
-                        (const automaton& aut, std::ostream& out)
-                        -> std::ostream&);
-
     }
   }
 
@@ -320,10 +315,6 @@ namespace vcsn
       {
         return grail(aut->as<Aut>(), out);
       }
-
-      REGISTER_DECLARE(grail,
-                        (const automaton& aut, std::ostream& out)
-                        -> std::ostream&);
     }
   }
 }

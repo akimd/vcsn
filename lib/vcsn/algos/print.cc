@@ -1,9 +1,13 @@
-#include <vcsn/algos/print.hh>
-
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/algos/print.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/xalloc.hh>

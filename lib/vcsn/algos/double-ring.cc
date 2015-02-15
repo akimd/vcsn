@@ -1,7 +1,8 @@
 #include <vector>
 
-#include <vcsn/algos/double-ring.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/context.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn

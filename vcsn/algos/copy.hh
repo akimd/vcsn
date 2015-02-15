@@ -238,9 +238,6 @@ namespace vcsn
         return make_automaton(res);
       }
 
-      REGISTER_DECLARE(copy_convert,
-                       (const automaton&, const context&) -> automaton);
-
       /// Bridge.
       template <typename Aut>
       inline
@@ -250,9 +247,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::copy(a));
       }
-
-      REGISTER_DECLARE(copy,
-                       (const automaton&) -> automaton);
     }
   }
 
@@ -277,10 +271,6 @@ namespace vcsn
                            ::vcsn::rat::copy(r.expressionset(), ors,
                                              r.expression()));
       }
-
-      REGISTER_DECLARE(copy_expression,
-                       (const expression& exp, const expressionset& out_rs)
-                       -> expression);
     }
   }
 

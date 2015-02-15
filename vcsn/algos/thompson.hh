@@ -212,9 +212,6 @@ namespace vcsn
                                                             e.expressionset(),
                                                             e.expression()));
       }
-
-      REGISTER_DECLARE(thompson,
-                       (const expression& e) -> automaton);
     }
   }
 

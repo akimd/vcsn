@@ -56,9 +56,6 @@ namespace vcsn
         return is_standard(a);
       }
 
-      REGISTER_DECLARE(is_standard,
-                       (const automaton& e) -> bool);
-
       /// Bridge.
       template <typename Aut>
       inline
@@ -68,9 +65,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return is_costandard(a);
       }
-
-      REGISTER_DECLARE(is_costandard,
-                       (const automaton& e) -> bool);
     }
   }
 
@@ -149,8 +143,6 @@ namespace vcsn
         return make_automaton(::vcsn::standard(a));
       }
 
-      REGISTER_DECLARE(standard, (const automaton& e) -> automaton);
-
       /// Bridge.
       template <typename Aut>
       inline
@@ -160,8 +152,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(costandard(a));
       }
-
-      REGISTER_DECLARE(costandard, (const automaton& e) -> automaton);
     }
   }
 
@@ -405,9 +395,6 @@ namespace vcsn
         return make_automaton(::vcsn::standard<automaton_t>(e.expressionset(),
                                                             e.expression()));
       }
-
-      REGISTER_DECLARE(standard_expression,
-                       (const expression& e) -> automaton);
     }
   }
 

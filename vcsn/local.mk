@@ -11,7 +11,7 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-nobase_include_HEADERS =                        \
+algo_headers =                                  \
   %D%/algos/accessible.hh                       \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
@@ -91,7 +91,10 @@ nobase_include_HEADERS =                        \
   %D%/algos/transpose.hh                        \
   %D%/algos/u.hh                                \
   %D%/algos/union.hh                            \
-  %D%/algos/universal.hh                        \
+  %D%/algos/universal.hh
+
+nobase_include_HEADERS =                        \
+  $(algo_headers)				\
   %D%/alphabets/char.hh                         \
   %D%/alphabets/setalpha.hh                     \
   %D%/core/automaton-decorator.hh               \
@@ -239,5 +242,21 @@ nobase_include_HEADERS =                        \
   %D%/weightset/z.hh                            \
   %D%/weightset/zmin.hh
 
+# Unfortunately Automake 1.14 does not generate this for us.
+vcsn/config.hh: $(top_builddir)/lib/config.h
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+BUILT_SOURCES += lib/config.h %D%/config.hh
+DISTCLEANFILES += %D%/config.hh
+
+registers_gen = build-aux/bin/registers-gen
+EXTRA_DIST += $(registers_gen)
+CLEANFILES += %D%/dyn/registers.hh
+%D%/dyn/registers.hh: $(registers_gen) $(algo_headers)
+	$(AM_V_GEN)$(mkdir_p) $(@D)
+	$(AM_V_at)$(srcdir)/$(registers_gen) -o $@.tmp -s $(srcdir) $(algo_headers)
+	$(AM_V_at)$(srcdir)/build-aux/bin/move-if-change --color --verbose $@.tmp $@
+
+BUILT_SOURCES += $(nobase_nodist_include_HEADERS)
 nobase_nodist_include_HEADERS =                 \
-  %D%/config.hh
+  %D%/config.hh                                 \
+  %D%/dyn/registers.hh

@@ -81,9 +81,6 @@ namespace vcsn
       {
         return is_partial_identity(aut->as<Aut>());
       }
-
-      REGISTER_DECLARE(is_partial_identity,
-                       (const automaton&) -> bool);
     }
   }
 }

@@ -46,9 +46,6 @@ namespace vcsn
       {
         return dyn::make_context(vcsn::make_context<Ctx>(name));
       }
-
-      REGISTER_DECLARE(make_context,
-                       (const std::string& name) -> context);
     }
   }
 
@@ -70,9 +67,6 @@ namespace vcsn
         return dyn::make_context(a->context());
       }
 
-      REGISTER_DECLARE(context_of,
-                       (const automaton& aut) -> context);
-
       /// Bridge.
       template <typename ExpSet>
       context
@@ -81,9 +75,6 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>().expressionset();
         return dyn::make_context(e.context());
       }
-
-      REGISTER_DECLARE(context_of_expression,
-                       (const expression& exp) -> context);
     }
   }
 
@@ -105,10 +96,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return ::vcsn::dyn::make_expressionset(::vcsn::expressionset<Ctx>(c, ids));
       }
-
-      REGISTER_DECLARE(make_expressionset,
-                       (const context& ctx, ::vcsn::rat::identities ids)
-                       -> expressionset);
     }
   }
 
@@ -128,9 +115,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return ::vcsn::dyn::make_context(::vcsn::detail::make_word_context(c));
       }
-
-      REGISTER_DECLARE(make_word_context,
-                       (const context& ctx) -> context);
     }
   }
 } // vcsn::

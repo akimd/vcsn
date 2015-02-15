@@ -101,9 +101,6 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
         return ::vcsn::star_height<ExpSet>(e.expression());
       }
-
-      REGISTER_DECLARE(star_height,
-                       (const expression& e) -> unsigned);
     }
   }
 

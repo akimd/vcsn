@@ -37,9 +37,6 @@ namespace vcsn
         auto rr = rs.conv(r.polynomialset(), r.polynomial());
         return make_polynomial(rs, ldiv(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(ldiv_polynomial,
-                       (const polynomial&, const polynomial&) -> polynomial);
     }
   }
 
@@ -75,9 +72,6 @@ namespace vcsn
         auto rr = rs.conv(r.polynomialset(), r.polynomial());
         return make_polynomial(rs, lgcd(rs, lr, rr));
       }
-
-      REGISTER_DECLARE(lgcd_polynomial,
-                       (const polynomial&, const polynomial&) -> polynomial);
     }
   }
 }

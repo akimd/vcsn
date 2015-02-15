@@ -1,6 +1,6 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/grail.hh>
+#include <vcsn/dyn/registers.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn

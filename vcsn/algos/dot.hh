@@ -364,10 +364,6 @@ namespace vcsn
       {
         return dot(aut->as<Aut>(), out, dot2tex);
       }
-
-      REGISTER_DECLARE(dot,
-                       (const automaton& aut, std::ostream& out,
-                        bool dot2tex) -> std::ostream&);
     }
   }
 }

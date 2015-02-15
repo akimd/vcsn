@@ -156,8 +156,6 @@ namespace vcsn
                            constant_term<ExpSet>(e.expressionset(),
                                                     e.expression()));
       }
-
-      REGISTER_DECLARE(constant_term, (const expression& e) -> weight);
     }
   }
 

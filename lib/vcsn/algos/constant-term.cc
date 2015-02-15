@@ -1,6 +1,7 @@
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/constant-term.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/expression.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn

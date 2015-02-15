@@ -69,9 +69,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::complement(a));
       }
-
-      REGISTER_DECLARE(complement,
-                       (const automaton& aut) -> automaton);
     }
   }
 
@@ -93,9 +90,6 @@ namespace vcsn
         return make_expression(e.expressionset(),
                            e.expressionset().complement(e.expression()));
       }
-
-      REGISTER_DECLARE(complement_expression,
-                       (const expression& e) -> expression);
     }
   }
 

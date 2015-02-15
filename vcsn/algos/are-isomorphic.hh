@@ -705,9 +705,6 @@ namespace vcsn
         const auto& a2 = aut2->as<Aut2>();
         return are_isomorphic(a1, a2);
       }
-
-      REGISTER_DECLARE(are_isomorphic,
-                       (const automaton&, const automaton&) -> bool);
     }
   }
 }

@@ -1,6 +1,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/label.hh>
-#include <vcsn/algos/eval.hh>
+#include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

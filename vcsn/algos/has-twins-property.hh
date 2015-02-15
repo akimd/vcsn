@@ -170,9 +170,6 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         return ::vcsn::has_twins_property(a);
       }
-
-      REGISTER_DECLARE(has_twins_property,
-                       (const automaton&) -> bool);
     }
   }
 }
