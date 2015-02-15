@@ -7,10 +7,30 @@ the internal API may also be documented.
 
 
 ## 2015-02-10
+### transducers ratexp
+When typing multi-tape transducers, it is now no longer necessary to
+explicit the parenthesis inside (multi-)letters.
+
+    In [1]: import vcsn
+
+    In [2]: c = vcsn.context('lat<lan_char, lan_char>, b')
+
+    In [3]: r = c.ratexp("'a,\\e'+'(b,c)'+'d,f'")
+
 ### has_bounded_lag: new algorithm
 This algorithm checks if a transducer has a bounded lag, i.e. if there
 is a maximum difference of length between the input words and their
 corresponding outputs.
+
+    In [1]: import vcsn
+
+    In [2]: c = vcsn.context('lat<lan_char, lan_char>, b')
+
+    In [3]: c.ratexp("'(a,\\e)'").standard().has_bounded_lag()
+    Out[3]: True
+
+    In [4]: c.ratexp("'(a,\\e)'*").standard().has_bounded_lag()
+    Out[4]: False
 
 ## 2014-11-18
 ### Flex
