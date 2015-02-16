@@ -362,6 +362,9 @@ namespace vcsn
     /// The left-multiplication of an expression with \a w as weight.
     expression left_mult(const weight& w, const expression& aut);
 
+    /// The automaton with letter transitions instead of words.
+    automaton letterize(const automaton& aut);
+
     /// The lifted LAO automaton from \a aut.
     automaton lift(const automaton& aut);
 

@@ -72,6 +72,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/is-valid.cc                         \
   %D%/algos/ladybird.cc                         \
   %D%/algos/left-mult.cc                        \
+  %D%/algos/letterize.cc                        \
   %D%/algos/lift.cc                             \
   %D%/algos/make-context.cc                     \
   %D%/algos/minimize.cc                         \

@@ -371,6 +371,11 @@ struct automaton
 
   automaton left_mult(const weight& w) const;
 
+  automaton letterize() const
+  {
+    return vcsn::dyn::letterize(val_);
+  }
+
   automaton lift() const
   {
     return vcsn::dyn::lift(val_);
@@ -1054,6 +1059,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
+    .def("letterize", &automaton::letterize)
     .def("lift", &automaton::lift)
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("normalize", &automaton::normalize)
