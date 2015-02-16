@@ -21,9 +21,9 @@ namespace vcsn
       static_assert(context_t_of<Aut>::is_lat,
                     "has_bounded_lag: automaton labelset must be a tupleset");
       // The algorithm makes no sense (and doesn't compile) if the transducer
-      // has only one band.
+      // has only one tape.
       static_assert(labelset_t_of<Aut>::size() >= 2,
-                    "has_bounded_lag: transducer labelset must have at least 2 bands");
+                    "has_bounded_lag: transducer labelset must have at least 2 tapes");
 
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
@@ -31,7 +31,7 @@ namespace vcsn
       using label_t = typename labelset_t::value_t;
       using transition_t = transition_t_of<automaton_t>;
 
-      static constexpr size_t number_of_bands = labelset_t_of<Aut>::size();
+      static constexpr size_t number_of_tapes = labelset_t_of<Aut>::size();
 
       enum visit_state {
         NOT_VISITED,
@@ -49,10 +49,10 @@ namespace vcsn
       template <std::size_t... I>
       using seq = vcsn::detail::index_sequence<I...>;
 
-      using delay_index_t = detail::make_index_sequence<number_of_bands - 1>;
+      using delay_index_t = detail::make_index_sequence<number_of_tapes - 1>;
 
       /// The delay associated with each state
-      using delay_t = std::array<int, number_of_bands - 1>;
+      using delay_t = std::array<int, number_of_tapes - 1>;
 
     public:
 
@@ -62,12 +62,12 @@ namespace vcsn
         , p_(detail::back(aut_->all_states()) + 1, -1)
       {}
 
-      // Get the size (number of letters) of a label on a specific band.
+      // Get the size (number of letters) of a label on a specific tape.
       template <std::size_t I>
-      int get_size_band(label_t l)
+      int get_size_tape(label_t l)
       {
-        using band_labelset_t = typename labelset_t::template valueset_t<I>;
-        return band_labelset_t::size(std::get<I>(l));
+        using tape_labelset_t = typename labelset_t::template valueset_t<I>;
+        return tape_labelset_t::size(std::get<I>(l));
       }
 
       // Add the delay from the transition's label to the given delay
@@ -75,8 +75,8 @@ namespace vcsn
       void add_delay(delay_t& d, transition_t tr, seq<I...>)
       {
         label_t l = aut_->label_of(tr);
-        int i0 = get_size_band<0>(l);
-        d = {(d[I] + i0 - get_size_band<I + 1>(l))...};
+        int i0 = get_size_tape<0>(l);
+        d = {(d[I] + i0 - get_size_tape<I + 1>(l))...};
       }
 
       void add_delay(delay_t& d, transition_t tr)
