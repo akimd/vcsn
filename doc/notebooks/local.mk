@@ -68,6 +68,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.thompson.ipynb                 \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
+  %D%/expression.zpc.ipynb                      \
   %D%/index.ipynb
 
 if HAVE_NBCONVERT
