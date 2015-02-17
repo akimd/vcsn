@@ -18,6 +18,8 @@ def check_dt(r, exp):
 
 def check_bdt(r, exp):
     'Check broken derived-term automaton.'
+    if not isinstance(r, vcsn.expression):
+        r = ctx.expression(r)
     for algo in ['breaking_derivation', 'breaking_expansion']:
         check_derived_term(r, exp, algo)
 
@@ -191,6 +193,9 @@ check_br('ab', 'a', 'b')
 check_br('ab', 'b', '\z')
 check_br('(<x>a)(<y>a)(<z>a)', 'a', '<xy>a<z>a')
 
+# Exterior products.
+check_br('(<x>ab)<y>', 'a', '<xy>b')
+
 # Star.
 check_br('a*', 'a', 'a*')
 check_br('a*', 'b', '\z')
@@ -199,6 +204,8 @@ check_br('(<x>a)*', 'b', '\z')
 check_br('<x>a*',   'a', '<x>a*')
 check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 
+# Check the right-exterior product.
+check_bdt('<x>(<y>a)*<z>', 'ext-prod-breaking')
 
 ## --------------------- ##
 ## Documented examples.  ##

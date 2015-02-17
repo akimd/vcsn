@@ -126,6 +126,7 @@ EXTRA_DIST +=                                   \
   %D%/derivation.dir/e1-dt.gv                   \
   %D%/derivation.dir/e2-dt-breaking.gv          \
   %D%/derivation.dir/e2-dt.gv                   \
+  %D%/derivation.dir/ext-prod-breaking.gv       \
   %D%/derivation.dir/h3-dt-breaking.gv          \
   %D%/derivation.dir/h3-dt.gv                   \
   %D%/determinize.dir/b-det.gv                  \

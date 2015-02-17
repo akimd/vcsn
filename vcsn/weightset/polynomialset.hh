@@ -325,13 +325,20 @@ namespace vcsn
     }
 
     /// Right exterior product.
+    ///
+    /// Beware that we do not multiply the weight here, but the label.
+    /// It seems that this routine is used _only_ when calling
+    /// "split", which is done only on polynomials of expressions, so
+    /// it is valid to rmul a label by a weight.  If some day we need
+    /// an rmul between weights, we will need additional properties to
+    /// allow it.
     value_t
     rmul(const value_t& v, const weight_t& w) const
     {
       value_t res;
       if (!weightset()->is_zero(w))
         for (const auto& m: v)
-          add_here(res, m.first, weightset()->mul(m.second, w));
+          add_here(res, labelset()->rmul(m.first, w), m.second);
       return res;
     }
 

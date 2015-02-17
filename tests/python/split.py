@@ -31,16 +31,7 @@ fail('a*{T}')
 check('\z')
 check('<x>\e')
 check('<x>a')
-# FIXME: we are completely wrong on the following example, because we
-# commute the product of the rweight to the level of the polynomial,
-# so we produce <y>(<x>a)*!!!  As a consequence, the broken
-# derived-term automaton is wrong...
-#
-# This needs to be fixed, but it is not entirely trivial: we need
-# properties about the possibility to commute products between weights
-# and labels.
-#
-# check('(<x>a)*<y>')
+check('(<x>a)*<y>')
 check('<xy>a<z>b')
 check('<x>a+<y>b', '<x>a + <y>b')
 check('<x>a+<y>b+<z>a', '<x+z>a + <y>b')

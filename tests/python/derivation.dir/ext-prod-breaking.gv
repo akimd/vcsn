@@ -1,0 +1,18 @@
+digraph
+{
+  vcsn_context = "letterset<char_letters(abc)>, expressionset<letterset<char_letters(xyz)>, z>"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "(<y>a)*<z>", shape = box]
+  }
+  I0 -> 0 [label = "<x>"]
+  0 -> F0 [label = "<z>"]
+  0 -> 0 [label = "<y>a"]
+}
