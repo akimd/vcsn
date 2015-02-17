@@ -142,7 +142,7 @@ class Daut:
 
     def unquote(self, s):
         '''Strip double-quotes and escapes from a string.'''
-        if 2 <= len(s) and s[0] == "'" and s[-1] == "'":
+        if 2 <= len(s) and s[0] == '"' and s[-1] == '"':
             s = re.sub(r'\\(.)', r'\1', s[1:-1])
         return s
 
@@ -189,28 +189,24 @@ class Daut:
         '''Return the list of attributes in Daut syntax.'''
         if s:
             s.strip()
-            if s.startswith('[') and s.endswith(']'):
-                s = s[1:-1]
             res = [a.strip() for a in s.split(';')]
         else:
             res = []
         return res
 
     def attr_daut(self, attrs):
-        '''Return a list of attributes with the Daut syntax.'''
+        '''Keep a single attribute: the label.'''
         if attrs:
-            attrs[0] = self.unquote(re.sub("label *= *", '', attrs[0]))
-            return "; ".join(attrs)
-        else:
-            return ""
+            for a in attrs:
+                if a.startswith('label'):
+                    return self.unquote(re.sub('label *= *', '', a))
+        return ''
 
     def transition_daut(self, s, d, a):
         '''Format a transition to Daut syntax.'''
-        a = self.attr_daut(a)
-        if a[0:5] == 'color':
-            a = ""
+        label = self.attr_daut(a)
         return "{} -> {}{}{}".format(s or '$', d or '$',
-                                     " " if a else "", a)
+                                     ' ' if label else '', label)
 
     def transition_dot(self, s, d, a):
         '''Format a transition to Dot syntax.'''
@@ -283,12 +279,12 @@ class Daut:
                s, flags = re.MULTILINE)
         return "\n".join(res)
 
-def to_dot(s):
+def daut_to_dot(s):
     '''Read a Daut input, translate to regular Dot.'''
     d = Daut()
     return d.daut_to_dot(s)
 
-def from_dot(s):
+def dot_to_daut(s):
     '''Read a Dot input, simplify it into Daut.'''
     d = Daut()
     return d.dot_to_daut(s)

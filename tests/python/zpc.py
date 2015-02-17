@@ -60,12 +60,12 @@ $ -> 0
 check('a+b',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> 1 "\\e"
-0 -> 3 "\\e"
-1 -> 2 "a"
-2 -> 5 "\\e"
-3 -> 4 "b"
-4 -> 5 "\\e"
+0 -> 1 \e
+0 -> 3 \e
+1 -> 2 a
+2 -> 5 \e
+3 -> 4 b
+4 -> 5 \e
 5 -> $''')
 
 # Z: "a+\e"
@@ -73,11 +73,11 @@ check('a+\e',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
-0 -> 1 "\\e"
-0 -> 3 "\\e"
-1 -> 2 "a"
-2 -> 5 "\\e"
-4 -> 5 "\\e"
+0 -> 1 \e
+0 -> 3 \e
+1 -> 2 a
+2 -> 5 \e
+4 -> 5 \e
 5 -> $''')
 
 ## ------- ##
@@ -88,31 +88,31 @@ $ -> 0
 check('ab',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> 1 "\\e"
-1 -> 2 "a"
-2 -> 3 "\\e"
-3 -> 4 "b"
-4 -> 5 "\\e"
+0 -> 1 \e
+1 -> 2 a
+2 -> 3 \e
+3 -> 4 b
+4 -> 5 \e
 5 -> $''')
 
 # Z: "a?bb"
 check('a?bb',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> 1 "\\e"
-1 -> 2 "\\e"
-1 -> 8 "\\e"
-2 -> 3 "\\e"
-2 -> 5 "\\e"
-4 -> 7 "\\e"
-5 -> 6 "a"
-6 -> 7 "\\e"
-7 -> 8 "\\e"
-8 -> 9 "b"
-9 -> 10 "\\e"
-10 -> 11 "\\e"
-11 -> 12 "b"
-12 -> 13 "\\e"
+0 -> 1 \e
+1 -> 2 \e
+1 -> 8 \e
+2 -> 3 \e
+2 -> 5 \e
+4 -> 7 \e
+5 -> 6 a
+6 -> 7 \e
+7 -> 8 \e
+8 -> 9 b
+9 -> 10 \e
+10 -> 11 \e
+11 -> 12 b
+12 -> 13 \e
 13 -> $''')
 
 ## -------- ##
@@ -124,10 +124,10 @@ check('a*',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
-0 -> 1 "\\e"
-1 -> 2 "a"
-2 -> 1 "\\e"
-2 -> 3 "\\e"
+0 -> 1 \e
+1 -> 2 a
+2 -> 1 \e
+2 -> 3 \e
 3 -> $''')
 
 ## ----------- ##
@@ -138,11 +138,11 @@ $ -> 0
 check('<x>a*',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> $ "<x>"
-0 -> 1 "<x>\\e"
-1 -> 2 "a"
-2 -> 1 "\\e"
-2 -> 3 "\\e"
+0 -> $ <x>
+0 -> 1 <x>\e
+1 -> 2 a
+2 -> 1 \e
+2 -> 3 \e
 3 -> $''')
 
 ## ----------- ##
@@ -153,13 +153,13 @@ $ -> 0
 check('(a?)<y>',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> $ "<y>"
-0 -> 1 "\\e"
-0 -> 3 "\\e"
-2 -> 5 "\\e"
-3 -> 4 "a"
-4 -> 5 "\\e"
-5 -> $ "<y>"''')
+0 -> $ <y>
+0 -> 1 \e
+0 -> 3 \e
+2 -> 5 \e
+3 -> 4 a
+4 -> 5 \e
+5 -> $ <y>''')
 
 ## ---------------------- ##
 ## Z: lweight and rweight ##
@@ -169,10 +169,10 @@ $ -> 0
 check('(<x>a?)<y>',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> $ "<xy>"
-0 -> 1 "<x>\\e"
-0 -> 3 "<x>\\e"
-2 -> 5 "\\e"
-3 -> 4 "a"
-4 -> 5 "\\e"
-5 -> $ "<y>"''')
+0 -> $ <xy>
+0 -> 1 <x>\e
+0 -> 3 <x>\e
+2 -> 5 \e
+3 -> 4 a
+4 -> 5 \e
+5 -> $ <y>''')

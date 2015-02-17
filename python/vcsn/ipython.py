@@ -11,7 +11,7 @@ from IPython.utils.warn import info, error
 import cgi
 import vcsn
 
-from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
+from vcsn.dot import _dot_to_svg, _dot_pretty, daut_to_dot
 from vcsn import d3Widget
 
 # The class MUST call this class decorator at creation time
@@ -123,7 +123,7 @@ class AutomatonTextWidget:
             txt = self.text.value.encode('utf-8')
             a = vcsn.automaton(txt, self.format)
             self.ipython.shell.user_ns[self.name] = a
-            dot = to_dot(txt) if self.format == "daut" else a.format('dot')
+            dot = daut_to_dot(txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
         except RuntimeError as e:
             self.error.value = cgi.escape(str(e))

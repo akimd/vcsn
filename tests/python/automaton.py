@@ -421,7 +421,6 @@ CHECK_EQ(exp, a.format('tikz'))
 ## I/O: Daut.  ##
 ## ----------- ##
 
-from vcsn.dot import to_dot, from_dot
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     a = vcsn.automaton(filename = fn)
 

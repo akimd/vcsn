@@ -79,7 +79,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/tuples.py                                 \
   %D%/union.py                                  \
   %D%/universal.py                              \
-  %D%/weight.py
+  %D%/weight.py                                 \
+  %D%/zpc.py
 
 $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) $(srcdir)/tests/bin/test.py
 

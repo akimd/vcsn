@@ -13,7 +13,7 @@ from subprocess import PIPE
 from vcsn.conjunction import Conjunction
 from vcsn_cxx import automaton, label, weight
 from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file, _popen
-from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex, from_dot, to_dot
+from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot
 
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: Conjunction(l, r)
@@ -70,7 +70,7 @@ def _automaton_init(self, data = '', format = '', filename = ''):
     if format == "daut":
         if filename:
             data = open(filename).read()
-        data = to_dot(data)
+        data = daut_to_dot(data)
         self._init(data = data, format = 'dot')
     else:
         self._init(data = data, format = format, filename = filename)
@@ -109,7 +109,7 @@ automaton.eval = _automaton_eval
 # automaton.format
 def _automaton_format(self, fmt = "daut"):
     if fmt == "daut":
-        return from_dot(self._format('dot'))
+        return dot_to_daut(self._format('dot'))
     else:
         return self._format(fmt)
 automaton.format = _automaton_format
