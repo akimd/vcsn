@@ -7,7 +7,7 @@ the internal API may also be documented.
 
 
 ## 2015-02-10
-### transducers ratexp
+### Multitape expressions
 When typing multi-tape transducers, it is now no longer necessary to
 explicit the parenthesis inside (multi-)letters.
 
@@ -15,7 +15,7 @@ explicit the parenthesis inside (multi-)letters.
 
     In [2]: c = vcsn.context('lat<lan_char, lan_char>, b')
 
-    In [3]: r = c.ratexp("'a,\\e'+'(b,c)'+'d,f'")
+    In [3]: r = c.expression(r"'a,\e'+'(b,c)'+'d,f'")
 
 ### has_bounded_lag: new algorithm
 This algorithm checks if a transducer has a bounded lag, i.e. if there
@@ -26,10 +26,10 @@ corresponding outputs.
 
     In [2]: c = vcsn.context('lat<lan_char, lan_char>, b')
 
-    In [3]: c.ratexp("'(a,\\e)'").standard().has_bounded_lag()
+    In [3]: c.expression(r"'a,\e'").standard().has_bounded_lag()
     Out[3]: True
 
-    In [4]: c.ratexp("'(a,\\e)'*").standard().has_bounded_lag()
+    In [4]: c.expression(r"'a,\e'*").standard().has_bounded_lag()
     Out[4]: False
 
 ## 2014-11-18
