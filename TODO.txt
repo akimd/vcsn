@@ -68,6 +68,10 @@ break too much") rather that something like expand.  What are the expected
 features of the right definition?
 
 * Bugs
+** polynomialset::rmul
+Split on (<x>a)*<y> gives <y>(<x>a)*.  This is because of rmul in
+polynomialset.  See the comments in tests/python/split.py.
+
 ** expression::copy
 The implementation by-passes the expressionset when building the new
 expression; for instance in the case of sum, the list of operands is copied

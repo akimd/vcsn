@@ -5,25 +5,52 @@ from test import *
 
 ctx = vcsn.context('lal_char(abc), expressionset<lal_char(wxyz), z>')
 
-# check RAT-EXP RESULT
-# --------------------
-# Check that the splitting of RAT-EXP is RESULT.
-def check(re, exp):
+# check INPUT [RESULT = INPUT]
+# ----------------------------
+# Check that the splitting of INPUT is RESULT.
+def check(re, exp = None):
+    if exp is None:
+        exp = re
     r = ctx.expression(re)
     s = r.split()
-    CHECK_EQ(exp, str(s))
+    CHECK_EQ(exp, s)
     # Split polynomials is idempotent.
     CHECK_EQ(s, s.split())
 
-check('<x>\z', '\z')
-check('<x>\e', '<x>\e')
-check('<x>a', '<x>a')
-check('<xy>a<z>b', '<xy>a<z>b')
+# fail INPUT
+# ----------
+def fail(re):
+    re = ctx.expression(re)
+    XFAIL(lambda: re.split())
+
+fail('a*{c}')
+fail('a*{\}b*')
+fail('a:b')
+fail('a*{T}')
+
+check('\z')
+check('<x>\e')
+check('<x>a')
+# FIXME: we are completely wrong on the following example, because we
+# commute the product of the rweight to the level of the polynomial,
+# so we produce <y>(<x>a)*!!!  As a consequence, the broken
+# derived-term automaton is wrong...
+#
+# This needs to be fixed, but it is not entirely trivial: we need
+# properties about the possibility to commute products between weights
+# and labels.
+#
+# check('(<x>a)*<y>')
+check('<xy>a<z>b')
 check('<x>a+<y>b', '<x>a + <y>b')
 check('<x>a+<y>b+<z>a', '<x+z>a + <y>b')
 
-check('(<w>a+<x>b)(<y>a+<z>b)', '<w>a(<y>a+<z>b) + <x>b(<y>a+<z>b)')
+check('(<w>a+<x>b)(<y>a+<z>b)',  '<w>a(<y>a+<z>b) + <x>b(<y>a+<z>b)')
 check('(<w>a+<x>b)&(<y>a+<z>b)', '<w>a&(<y>a+<z>b) + <x>b&(<y>a+<z>b)')
+# The code is really different when there are more than two operands
+# for conjunction.
+check('(<w>a+<x>b)&(<y>a+<z>b)&(<y>a+<z>b)',
+      '<w>a&(<y>a+<z>b)&(<y>a+<z>b) + <x>b&(<y>a+<z>b)&(<y>a+<z>b)')
 
 ## --------------------- ##
 ## Documented examples.  ##

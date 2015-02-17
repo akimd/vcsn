@@ -1,12 +1,11 @@
-#ifndef VCSN_ALGOS_SPLIT_HH
-# define VCSN_ALGOS_SPLIT_HH
+#pragma once
 
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -40,9 +39,9 @@ namespace vcsn
   }
 
 
-  /*----------------.
-  | split(expression).  |
-  `----------------*/
+  /*---------------------.
+  | split(expression).   |
+  `---------------------*/
 
   namespace rat
   {
@@ -278,22 +277,7 @@ namespace vcsn
     }
   }
 
-  /// Split a polynomial of expressions.
-  template <typename ExpSet>
-  inline
-  rat::expression_polynomial_t<ExpSet>
-  split(const ExpSet& rs, const rat::expression_polynomial_t<ExpSet>& p)
-  {
-    auto ps = rat::make_expression_polynomialset(rs);
-    using polynomial_t = rat::expression_polynomial_t<ExpSet>;
-    rat::split_visitor<ExpSet> split{rs};
-    polynomial_t res;
-    for (const auto& m: p)
-      res = ps.add(res, ps.lmul(m.second, split(m.first)));
-    return res;
-  }
-
-  /// Split a polynomial of expressions.
+  /// Split a polynomial of expressions, given the polynomialset.
   template <typename PolynomialSet>
   inline
   typename PolynomialSet::value_t
@@ -307,6 +291,15 @@ namespace vcsn
     for (const auto& m: p)
       res = ps.add(res, ps.lmul(m.second, split(rs, m.first)));
     return res;
+  }
+
+  /// Split a polynomial of expressions, given the expressionset.
+  template <typename ExpSet>
+  inline
+  rat::expression_polynomial_t<ExpSet>
+  split(const ExpSet& rs, const rat::expression_polynomial_t<ExpSet>& p)
+  {
+    return split_polynomial(rat::make_expression_polynomialset(rs), p);
   }
 
   namespace dyn
@@ -326,8 +319,4 @@ namespace vcsn
       }
     }
   }
-
-
 } // vcsn::
-
-#endif // !VCSN_ALGOS_SPLIT_HH
