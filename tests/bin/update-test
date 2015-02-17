@@ -20,6 +20,8 @@ parser.add_argument('--builddir', metavar='DIR',
 parser.add_argument('--log', metavar='FILE', nargs="+",
                     type=str, default=[],
                     help='consider DIR/FILE')
+parser.add_argument('-v', '--verbose', action='store_true',
+                    help='Be verbose')
 
 args = parser.parse_args()
 
@@ -67,9 +69,13 @@ def exp_eff_to_re(match):
   to = to[:-1]
   global subst
   subst[fr] = to
+  if args.verbose:
+    print("SUBST: {} -> {}".format(fr, to))
 
 def update(test, log):
   try:
+    if args.verbose:
+      print("LOG: ", args.builddir + '/' + log)
     log = contents(args.builddir + '/' + log)
     global subst
     subst = dict()
@@ -89,6 +95,8 @@ def update(test, log):
     return test
 
 for t in args.tests:
+  if args.verbose:
+    print("FILE:", t)
   old = contents(t)
   new = old
   # Use the logs provided by the user, and the ones computed from the
