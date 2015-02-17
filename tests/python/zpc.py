@@ -16,7 +16,7 @@ def check(exp, daut, z=False):
     std = e.standard()
     print(e)
     print('Check if zpc\'s daut expected format is correct.')
-    CHECK_EQ('''context = "''' + ctx_string + '''"''' + daut,
+    CHECK_EQ(daut,
              zpc.format('daut'))
     if z == False:
         print('Check if trimed and propered zpc is isomorphic to standard.')
@@ -41,13 +41,13 @@ xfail(r'(ab){T}')
 
 # Z: "\z".
 check('\z',
-'''
+'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 1 -> $''', True)
 
 # Z: "\e".
 check('\e',
-'''
+'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
 1 -> $''')
@@ -58,27 +58,27 @@ $ -> 0
 
 # Z: "a+b"
 check('a+b',
-r'''
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-0 -> 2 "\\e"
-0 -> 4 "\\e"
-1 -> $
-2 -> 3 "a"
-3 -> 1 "\\e"
-4 -> 5 "b"
-5 -> 1 "\\e"''')
+0 -> 1 "\\e"
+0 -> 3 "\\e"
+1 -> 2 "a"
+2 -> 5 "\\e"
+3 -> 4 "b"
+4 -> 5 "\\e"
+5 -> $''')
 
 # Z: "a+\e"
 check('a+\e',
-r'''
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
-0 -> 2 "\\e"
-0 -> 4 "\\e"
-1 -> $
-2 -> 3 "a"
-3 -> 1 "\\e"
-5 -> 1 "\\e"''')
+0 -> 1 "\\e"
+0 -> 3 "\\e"
+1 -> 2 "a"
+2 -> 5 "\\e"
+4 -> 5 "\\e"
+5 -> $''')
 
 ## ------- ##
 ## Z: mul. ##
@@ -86,34 +86,34 @@ $ -> 0
 
 # Z: "ab"
 check('ab',
-r'''
-$ -> 2
-0 -> 1 "a"
-1 -> 4 "\\e"
-2 -> 0 "\\e"
-3 -> $
-4 -> 5 "b"
-5 -> 3 "\\e"''')
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+$ -> 0
+0 -> 1 "\\e"
+1 -> 2 "a"
+2 -> 3 "\\e"
+3 -> 4 "b"
+4 -> 5 "\\e"
+5 -> $''')
 
 # Z: "a?bb"
 check('a?bb',
-r'''
-$ -> 10
-0 -> 2 "\\e"
-0 -> 4 "\\e"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+$ -> 0
+0 -> 1 "\\e"
+1 -> 2 "\\e"
 1 -> 8 "\\e"
-3 -> 1 "\\e"
-4 -> 5 "a"
-5 -> 1 "\\e"
-6 -> 0 "\\e"
-6 -> 8 "\\e"
-7 -> 12 "\\e"
+2 -> 3 "\\e"
+2 -> 5 "\\e"
+4 -> 7 "\\e"
+5 -> 6 "a"
+6 -> 7 "\\e"
+7 -> 8 "\\e"
 8 -> 9 "b"
-9 -> 7 "\\e"
-10 -> 6 "\\e"
-11 -> $
-12 -> 13 "b"
-13 -> 11 "\\e"''')
+9 -> 10 "\\e"
+10 -> 11 "\\e"
+11 -> 12 "b"
+12 -> 13 "\\e"
+13 -> $''')
 
 ## -------- ##
 ## Z: star. ##
@@ -121,14 +121,14 @@ $ -> 10
 
 # Z: "a*"
 check('a*',
-r'''
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
-0 -> 2 "\\e"
-1 -> $
-2 -> 3 "a"
-3 -> 1 "\\e"
-3 -> 2 "\\e"''')
+0 -> 1 "\\e"
+1 -> 2 "a"
+2 -> 1 "\\e"
+2 -> 3 "\\e"
+3 -> $''')
 
 ## ----------- ##
 ## Z: lweight. ##
@@ -136,14 +136,14 @@ $ -> 0
 
 # Z: <x>a*
 check('<x>a*',
-r'''
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $ "<x>"
-0 -> 2 "<x>\\e"
-1 -> $
-2 -> 3 "a"
-3 -> 1 "\\e"
-3 -> 2 "\\e"''')
+0 -> 1 "<x>\\e"
+1 -> 2 "a"
+2 -> 1 "\\e"
+2 -> 3 "\\e"
+3 -> $''')
 
 ## ----------- ##
 ## Z: rweight. ##
@@ -151,15 +151,15 @@ $ -> 0
 
 # Z: (a?)<y>
 check('(a?)<y>',
-r'''
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $ "<y>"
-0 -> 2 "\\e"
-0 -> 4 "\\e"
-1 -> $ "<y>"
-3 -> 1 "\\e"
-4 -> 5 "a"
-5 -> 1 "\\e"''')
+0 -> 1 "\\e"
+0 -> 3 "\\e"
+2 -> 5 "\\e"
+3 -> 4 "a"
+4 -> 5 "\\e"
+5 -> $ "<y>"''')
 
 ## ---------------------- ##
 ## Z: lweight and rweight ##
@@ -167,12 +167,12 @@ $ -> 0
 
 # Z: (<x>a?)<y>
 check('(<x>a?)<y>',
-r'''
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $ "<xy>"
-0 -> 2 "<x>\\e"
-0 -> 4 "<x>\\e"
-1 -> $ "<y>"
-3 -> 1 "\\e"
-4 -> 5 "a"
-5 -> 1 "\\e"''')
+0 -> 1 "<x>\\e"
+0 -> 3 "<x>\\e"
+2 -> 5 "\\e"
+3 -> 4 "a"
+4 -> 5 "\\e"
+5 -> $ "<y>"''')

@@ -96,18 +96,24 @@ namespace vcsn
       VCSN_RAT_VISIT(sum, e)
       {
         state_t initial = res_->new_state();
-        state_t final = res_->new_state();
+
         weight_t cst = ws_.zero();
+        std::vector<state_t> finals_;
 
         for (auto c: e)
         {
           c->accept(*this);
           res_->new_transition(initial, initial_, epsilon_);
-          res_->new_transition(final_, final, epsilon_);
+          finals_.push_back(final_);
 
           cst = ws_.add(cst, res_->get_final_weight(initial_));
           res_->unset_final(initial_);
         }
+
+        state_t final = res_->new_state();
+
+        for (auto s: finals_)
+          res_->new_transition(s, final, epsilon_);
 
         initial_ = initial;
         final_ = final;
@@ -118,56 +124,70 @@ namespace vcsn
 
       VCSN_RAT_VISIT(prod, e)
       {
-        weight_t cst = ws_.one();
+        // Number of 'initial' states to create.
+        auto size = e.size() - 1;
 
-        e.head()->accept(*this); // E
+        std::vector<state_t> state_stack;
 
-        state_t initial_of_e = initial_;
-        state_t final_of_e = final_;
+        for (auto i = 0; i < size; ++i)
+          state_stack.push_back(res_->new_state());
 
-        state_t initial_ef, final_ef;
+        e.head()->accept(*this);
 
-        for (auto c: e.tail())
+        state_t initial_e = initial_;
+        state_t final_e = final_;
+
+        state_t initial = state_stack.back();
+        state_stack.pop_back();
+
+        res_->new_transition(initial, initial_e, epsilon_);
+
+        state_t final;
+
+        for (auto t: e.tail())
           {
-            auto cst_e = res_->get_final_weight(initial_);
-            cst = cst_e;
-            res_->unset_final(initial_);
+            t->accept(*this);
+            final = res_->new_state();
 
-            initial_ef = res_->new_state();
-            final_ef = res_->new_state();
+            res_->new_transition(final_, final, epsilon_);
 
-            c->accept(*this); // F
-
+            auto cst_e = res_->get_final_weight(initial_e);
             auto cst_f = res_->get_final_weight(initial_);
-            cst = ws_.mul(cst, cst_f);
+
+            res_->new_transition(initial, initial_, epsilon_, cst_e);
+            res_->unset_final(initial_e);
+            res_->new_transition(final_e, final, epsilon_, cst_f);
             res_->unset_final(initial_);
 
-            state_t initial_of_f = initial_;
-            state_t final_of_f = final_;
+            res_->set_final(initial, ws_.mul(cst_e, cst_f));
 
-            res_->new_transition(initial_ef, initial_of_e, epsilon_);
-            res_->new_transition(final_of_e, initial_of_f, epsilon_);
-            res_->new_transition(final_of_f, final_ef, epsilon_);
+            res_->new_transition(final_e, initial_, epsilon_);
 
-            res_->new_transition(initial_ef, initial_of_f, epsilon_, cst_e);
-            res_->new_transition(final_of_e, final_ef, epsilon_, cst_f);
+            initial_e = initial;
+            final_e = final;
 
-            initial_of_e = initial_ef;
-            final_of_e = final_ef;
-         }
+            if (!state_stack.empty())
+              {
+                initial = state_stack.back();
+                state_stack.pop_back();
 
-        initial_ = initial_ef;
-        final_ = final_ef;
+                res_->new_transition(initial, initial_e, epsilon_);
+              }
+          }
 
-        res_->set_final(initial_, cst);
+        initial_ = initial;
+        final_ = final;
+
+        res_->set_initial(initial);
       }
 
       VCSN_RAT_VISIT(star, e)
       {
         state_t initial = res_->new_state();
-        state_t final = res_->new_state();
 
         e.sub()->accept(*this);
+
+        state_t final = res_->new_state();
 
         auto cst = ws_.star(res_->get_final_weight(initial_));
         res_->unset_final(initial_);
