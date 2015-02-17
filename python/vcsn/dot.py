@@ -99,6 +99,8 @@ def _dot_to_svg(dot, engine="dot", *args):
         raise RuntimeError("gprv failed: " + p2.stderr.read())
     if p3.wait():
         raise RuntimeError("neato failed: " + err)
+    if isinstance(out, bytes):
+        out = out.decode('utf-8')
     return out
 
 def _dot_to_svg_dot2tex(dot, engine="dot", *args):
@@ -118,7 +120,10 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
         _check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                     "--output", pdf.name, tex.name])
         _check_call(["pdf2svg", pdf.name, svg.name])
-        return open(svg.name).read()
+        res = open(svg.name).read()
+        if isinstance(res, bytes):
+            res = res.decode('utf-8')
+        return res
 
 
 class Daut:
