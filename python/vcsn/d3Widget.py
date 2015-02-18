@@ -109,7 +109,7 @@ class AutomatonD3Widget(widgets.DOMWidget):
     # Using D3, Jquery and Backbone
     # We load and display it from the js file we install in nb_extension
 
-    install_nbextension(os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'))
+    install_nbextension(os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'), verbose=0)
     script = """IPython.load_extensions("AutomatonD3Widget")"""
     display(Javascript(script));
 
