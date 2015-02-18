@@ -1,20 +1,17 @@
-#ifndef VCSN_ALGOS_TO_EXPANSION_HH
-# define VCSN_ALGOS_TO_EXPANSION_HH
+#pragma once
 
-# include <stack>
-
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/core/rat/expansionset.hh>
-# include <vcsn/core/rat/expressionset.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/core/expression-automaton.hh>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/expansion.hh>
-# include <vcsn/dyn/polynomial.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/misc/indent.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/rat/expansionset.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/core/expression-automaton.hh>
+#include <vcsn/ctx/fwd.hh>
+#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/indent.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 //# define DEBUG 1
 
@@ -24,7 +21,7 @@
 # define DEBUG_IFELSE(Then, Else) Else
 #endif
 
-# define DEBUG_IF(Then) DEBUG_IFELSE(Then,)
+#define DEBUG_IF(Then) DEBUG_IFELSE(Then,)
 
 namespace vcsn
 {
@@ -441,5 +438,3 @@ namespace vcsn
     }
   }
 } // vcsn::
-
-#endif // !VCSN_ALGOS_TO_EXPANSION_HH
