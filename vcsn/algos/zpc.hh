@@ -177,8 +177,6 @@ namespace vcsn
 
         initial_ = initial;
         final_ = final;
-
-        res_->set_initial(initial);
       }
 
       VCSN_RAT_VISIT(star, e)
