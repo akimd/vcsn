@@ -183,7 +183,7 @@ namespace vcsn
                                    res_->state(t.dst, std::get<1>(psrc)),
                                    join_label(lhs->hidden_label_of(t.transition),
                                               get_hidden_one(rhs)),
-                                   t.wgt);
+                                   t.weight());
           }
 
         // If lhs did not issue spontaneous transitions but has
@@ -202,7 +202,7 @@ namespace vcsn
                                  res_->state(std::get<0>(psrc), t.dst),
                                  join_label(get_hidden_one(lhs),
                                             rhs->hidden_label_of(t.transition)),
-                                 t.wgt);
+                                 t.weight());
 
         for (auto t: zip_maps(ltm, rtm))
           // The type of the common label is that of the visible tape
@@ -221,7 +221,7 @@ namespace vcsn
                     res_->state(lts.dst, rts.dst),
                     join_label(lhs->hidden_label_of(lts.transition),
                                rhs->hidden_label_of(rts.transition)),
-                    res_->weightset()->mul(lts.wgt, rts.wgt));
+                    res_->weightset()->mul(lts.weight(), rts.weight()));
                },
                t.second);
       }

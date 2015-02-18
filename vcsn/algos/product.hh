@@ -195,7 +195,7 @@ namespace vcsn
                {
                  aut_->new_transition(src, state(ts.dst...),
                                       t.first,
-                                      aut_->weightset()->mul(ts.wgt...));
+                                      aut_->weightset()->mul(ts.weight()...));
                },
                t.second);
         add_one_transitions_(src, psrc, indices);
@@ -239,7 +239,7 @@ namespace vcsn
                 {
                   auto pdst = psrc;
                   std::get<I>(pdst) = t.dst;
-                  aut_->new_transition(src, state(pdst), ls.one(), t.wgt);
+                  aut_->new_transition(src, state(pdst), ls.one(), t.weight());
                 }
           }
       }
@@ -373,7 +373,7 @@ namespace vcsn
         auto& ts = std::get<I>(transition_maps_)[std::get<I>(psrc)];
         for (auto t: ts)
           if (std::get<I>(auts_)->labelset()->is_special(t.first))
-            res = t.second.front().wgt;
+            res = t.second.front().weight();
           else
             // The src state is visited for the first time, so all
             // these transitions are new.  *Except* in the case where
@@ -384,12 +384,12 @@ namespace vcsn
             // transition in the first loop.
             for (auto d: t.second)
               if (std::get<I>(psrc) == d.dst)
-                aut_->add_transition(src, src, t.first, d.wgt);
+                aut_->add_transition(src, src, t.first, d.weight());
               else
                 {
                   auto pdst = psrc;
                   std::get<I>(pdst) = d.dst;
-                  aut_->new_transition(src, state(pdst), t.first, d.wgt);
+                  aut_->new_transition(src, state(pdst), t.first, d.weight());
                 }
         return res;
       }

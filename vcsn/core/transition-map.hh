@@ -39,7 +39,8 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
       /// Outgoing signature: weight, destination.
-      template <bool KeepTransitions_ = false, typename Dummy = void>
+      template <typename Weight = weight_t,
+                bool KeepTransitions_ = false, typename Dummy = void>
       struct transition_
       {
         transition_(weight_t w, state_t d, transition_t)
@@ -48,23 +49,52 @@ namespace vcsn
         {}
         /// The (converted) weight.
         weight_t wgt;
+        weight_t weight() const { return wgt; }
         state_t dst;
       };
 
-      /// Outgoing signature: weight, destination, transition
-      /// identifier.
+      /// Boolean outgoing signature: destination.
       template <typename Dummy>
-      struct transition_<true, Dummy>
+      struct transition_<bool, false, Dummy>
       {
+        transition_(weight_t, state_t d, transition_t)
+          : dst(d)
+        {}
+        static constexpr weight_t weight() { return true; }
+        state_t dst;
+      };
+
+      /// Weighted outgoing signature: weight, destination, transition
+      /// identifier.
+      template <typename Weight, typename Dummy>
+      struct transition_<Weight, true, Dummy>
+      {
+        transition_(weight_t w, state_t d, transition_t t)
+          : wgt(w), dst(d), transition(t)
+        {}
         /// The (converted) weight.
         weight_t wgt;
+        weight_t weight() const { return wgt; }
         state_t dst;
-        transition_t_of<Aut> transition;
+        transition_t transition;
+      };
+
+      /// Boolean outgoing signature: destination, transition
+      /// identifier.
+      template <typename Dummy>
+      struct transition_<bool, true, Dummy>
+      {
+        transition_(weight_t, state_t d, transition_t t)
+          : dst(d), transition(t)
+        {}
+        static constexpr bool weight() { return true; }
+        state_t dst;
+        transition_t transition;
       };
 
       /// Outgoing signature: weight, destination, and possibly
       /// transition identifier.
-      using transition = transition_<KeepTransitions>;
+      using transition = transition_<weight_t, KeepTransitions>;
 
       using transitions_t
         = typename std::conditional<Deterministic,
