@@ -655,7 +655,11 @@ namespace vcsn
     automaton universal(const automaton& aut);
 
     /// The ZPC automaton of \a e.
-    automaton zpc(const expression& e);
+    ///
+    /// \param e      the expression to build the automaton from.
+    /// \param algo   the specific algorithm to use.
+    ///               It can be "regular"/"auto" or the variant "compact".
+    automaton zpc(const expression& e, const std::string& algo = "auto");
   }
 }
 

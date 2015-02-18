@@ -7,22 +7,22 @@ ctx_string = 'nullableset<letterset<char_letters(abc)>>, seriesset<letterset<cha
 
 ctx = vcsn.context(ctx_string)
 
-def check(exp, daut, z=False):
+def check(exp, daut, v='auto'):
     # It compares automata as strings, then if zpc is isomorphic to standard.
     # At last it tests if it is epsilon acyclic.
     e = ctx.expression(exp)
-    zpc = e.zpc()
-    zpt = zpc.trim().proper()
+    zpc = e.zpc(v)
     std = e.standard()
     print(e)
     print('Check if zpc\'s daut expected format is correct.')
     CHECK_EQ(daut,
              zpc.format('daut'))
-    if z == False:
-        print('Check if trimed and propered zpc is isomorphic to standard.')
-        CHECK_ISOMORPHIC(zpt, std)
     print('Check if zpc is epsilon acyclic.')
     CHECK_IS_EPS_ACYCLIC(zpc)
+    zpt = zpc.trim()
+    if not zpt.is_empty():
+        print('Check if trimed and propered zpc is isomorphic to standard.')
+        CHECK_ISOMORPHIC(zpt.proper(), std)
 
 def xfail(re, err = None):
     r = ctx.expression(re)
@@ -43,7 +43,7 @@ xfail(r'(ab){T}')
 check('\z',
 '''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
-1 -> $''', True)
+1 -> $''')
 
 # Z: "\e".
 check('\e',
@@ -209,3 +209,69 @@ $ -> 0
 17 -> 18 c
 18 -> 19 \e
 19 -> $''')
+
+## ----------- ##
+## ZPC compact ##
+## ----------- ##
+
+## ------- ##
+## Z: sum. ##
+## ------- ##
+
+# Z: "a+b"
+check('a+b',
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+$ -> 0
+0 -> 1 a
+0 -> 2 \e
+1 -> 3 \e
+2 -> 3 b
+3 -> $''',
+'compact')
+
+# Z: "a+\e"
+check('a+\e',
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+$ -> 0
+0 -> $
+0 -> 1 a
+0 -> 2 \e
+1 -> 3 \e
+3 -> $''',
+'compact')
+
+## ------- ##
+## Z: mul. ##
+## ------- ##
+
+# Z: "ab"
+check('ab',
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+$ -> 0
+0 -> 1 a
+1 -> 2 \e
+2 -> 3 b
+3 -> $''',
+'compact')
+
+# Z: "a(a?b?)b"
+check('a(a?b?)b',
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+$ -> 0
+0 -> 1 a
+1 -> 2 \e
+1 -> 5 \e
+2 -> 4 \e
+3 -> 5 \e
+4 -> 5 a
+5 -> 6 \e
+5 -> 9 \e
+6 -> 8 \e
+7 -> 9 \e
+8 -> 9 b
+9 -> 10 \e
+10 -> 11 b
+11 -> $''',
+'compact')
+
+

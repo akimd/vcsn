@@ -10,9 +10,9 @@ namespace vcsn
   {
     REGISTER_DEFINE(zpc);
     automaton
-    zpc(const dyn::expression& e)
+    zpc(const dyn::expression& e, const std::string& algo)
     {
-      return detail::zpc_registry().call(e);
+      return detail::zpc_registry().call(e, algo);
     }
   }
 }

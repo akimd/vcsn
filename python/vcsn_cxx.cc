@@ -812,9 +812,9 @@ struct expression
     return vcsn::dyn::transposition(val_);
   }
 
-  automaton zpc() const
+  automaton zpc(const std::string& algo = "auto") const
   {
-    return vcsn::dyn::zpc(val_);
+    return vcsn::dyn::zpc(val_, algo);
   }
 
   vcsn::dyn::expression val_;
@@ -1151,7 +1151,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("thompson", &expression::thompson)
     .def("transpose", &expression::transpose)
     .def("transposition", &expression::transposition)
-    .def("zpc", &expression::zpc)
+    .def("zpc", &expression::zpc, (arg("algo") = "auto"))
     ;
 
   bp::class_<label>
