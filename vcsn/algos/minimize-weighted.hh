@@ -60,25 +60,11 @@ namespace vcsn
       // This is sorted by label.
       using state_output_t = std::vector<state_output_for_label_t>;
 
-      friend class label_less;
-      class label_less
-      {
-        minimizer& minimizer_;
-      public:
-        label_less(minimizer& the_minimizer)
-          : minimizer_(the_minimizer)
-        {}
-        bool operator()(const label_t& a,
-                        const label_t& b) const noexcept
-        {
-          return minimizer_.ls_.less(a, b);
-        }
-      }; // class label_less
-
       // This structure is only useful at initialization time, when
       // sorting transitions from a given state in a canonical order.
       using label_to_weights_and_states_t
-        = std::map<label_t, std::vector<weight_and_state_t>, label_less>;
+        = std::map<label_t, std::vector<weight_and_state_t>,
+                   vcsn::less<labelset_t>>;
 
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
@@ -290,11 +276,10 @@ namespace vcsn
         for (auto s : a_->all_states())
           {
             // Get the out-states from s, by label:
-            label_to_weights_and_states_t label_to_weights_and_states(*this);
+            label_to_weights_and_states_t label_to_weights_and_states;
             for (auto t : a_->all_out(s))
               label_to_weights_and_states[a_->label_of(t)]
-                .emplace_back(std::pair<weight_t, state_t>{a_->weight_of(t),
-                                                           a_->dst_of(t)});
+                .emplace_back(a_->weight_of(t), a_->dst_of(t));
 
             // Associate this information to s, as a vector sorted by label:
             state_output_t& state_output = state_to_state_output_[s];
