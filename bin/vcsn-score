@@ -14,10 +14,18 @@ parser = argparse.ArgumentParser(description = 'Bench some algorithms.')
 parser.add_argument('--only', metavar = 'RE',
                     type = re.compile, default = '.*',
                     help = 'run only benches whose title is matched by RE')
+parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose')
 
 args = parser.parse_args()
 
 last_setup = ['pass']
+
+def ctx_signature(ctx):
+    'A short, nice looking, description of a context.'
+    m = re.match('^lal_char\((.*?)\), *(.*?)$', ctx)
+    return "[{}] -> {}".format(m.group(1), m.group(2).upper())
+
+
 def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
     "Report the best timing of three batches of number runs of cmd."
     if title is None:
@@ -34,6 +42,8 @@ def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
         global last_setup
         if setup != last_setup:
             for s in setup:
+                if args.verbose:
+                    print("run:", s)
                 exec(s)
             last_setup = setup
 
@@ -42,6 +52,8 @@ def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
         # http://stackoverflow.com/a/5390326/4065671.
         __builtin__.__dict__.update(locals())
         __builtin__.__dict__.update({'vcsn': vcsn})
+        if args.verbose:
+            print("run:", stmt)
         t = round(min(timeit.repeat(stmt, number = number)), 2)
         if 1 < number:
             comment += ', {}x'.format(number)
@@ -296,18 +308,18 @@ bench('a.has_bounded_lag()',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b").expression(r).standard()'''])
 
-# Minimize a big deterministic automaton over booleans.
-r = "[a-g]{800}"
-bench('a.minimize("signature")',
-      'a = std({})'.format(r),
-      setup = ['r = "{}"'.format(r),
-               '''a = vcsn.context("lal_char(a-k), b").expression(r).standard()'''])
 
-r = "[a-k]{2000}"
-bench('a.minimize("moore")',
-      'a = std({})'.format(r),
-      setup = ['r = "{}"'.format(r),
-               '''a = vcsn.context("lal_char(a-k), b").expression(r).standard()'''])
+def bench_minimize(ctx, r, algo):
+    bench('a.minimize("{}")'.format(algo),
+          'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+          setup = ['ctx = vcsn.context("{}")'.format(ctx),
+                   'r = ctx.expression("{}")'.format(r),
+                   'a = r.standard()'])
+bench_minimize('lal_char(a-k), b', '[a-g]{800}',  'signature')
+bench_minimize('lal_char(a-k), b', '[a-k]{2000}', 'moore')
+bench_minimize('lal_char(a-k), b', '[a-g]{300}',  'weighted')
+bench_minimize('lal_char(a-k), z', '[a-g]{300}',  'weighted')
+
 
 bench('a.synchronizing_word()',
       '''a = de_bruijn(6)''',

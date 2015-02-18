@@ -75,6 +75,11 @@ def normalize(k):
 
     k = k.replace('a.accessible ', 'a.accessible() ')
 
+    # Now we display the context.
+    k = re.sub(r'(a.minimize\("(moore|signature)"\) # a = std\(.*?\))$',
+               r'\1, c = [a-k] -> B',
+               k)
+
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 
