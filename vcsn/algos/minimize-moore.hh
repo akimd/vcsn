@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/quotient.hh>
 #include <vcsn/core/transition-map.hh>

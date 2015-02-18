@@ -1,17 +1,15 @@
-#ifndef VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
-# define VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
+#pragma once
 
-# include <unordered_map>
-# include <unordered_set>
+#include <unordered_map>
+#include <unordered_set>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/quotient.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/misc/dynamic_bitset.hh>
-# include <vcsn/misc/indent.hh>
-# include <vcsn/misc/map.hh> // vcsn::less
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/algos/accessible.hh> // is_trim
+#include <vcsn/algos/quotient.hh>
+#include <vcsn/misc/dynamic_bitset.hh>
+#include <vcsn/misc/indent.hh>
+#include <vcsn/misc/map.hh> // vcsn::less
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -373,27 +371,26 @@ namespace vcsn
                   }
 
                 // Try to find distinguishable states in c_states:
-                signature_multimap
-                  signature_to_state(*this,
-                                     ls_, state_to_class_,
-                                     num_classes_);
+                auto sig_to_state = signature_multimap{*this,
+                                                       ls_, state_to_class_,
+                                                       num_classes_};
                 for (auto s : c_states)
                   {
 #if DEBUG
                     std::cerr << "class %" << c << " state: " << s << ' ';
                     print_(state_to_state_output_[s], std::cerr) << std::endl;
 #endif
-                    signature_to_state[&state_to_state_output_[s]].emplace_back(s);
+                    sig_to_state[&state_to_state_output_[s]].emplace_back(s);
                   }
 #if DEBUG
-                std::cerr << "signature_to_state: " << signature_to_state
+                std::cerr << "sig_to_state: " << sig_to_state
                           << std::endl;
 #endif
-                if (2 <= signature_to_state.size())
+                if (2 <= sig_to_state.size())
                   {
                     go_on = true;
                     i = classes.erase(i);
-                    for (auto p: signature_to_state)
+                    for (auto p: sig_to_state)
                       {
                         class_t c2 = make_class(std::move(p.second), c);
                         classes.insert(c2);
@@ -428,5 +425,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_MINIMIZE_SIGNATURE_HH

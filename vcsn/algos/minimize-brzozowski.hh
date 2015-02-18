@@ -1,9 +1,8 @@
-#ifndef VCSN_ALGOS_MINIMIZE_BRZOZOWSKI_HH
-# define VCSN_ALGOS_MINIMIZE_BRZOZOWSKI_HH
+#pragma once
 
-# include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/strip.hh>
-# include <vcsn/algos/transpose.hh>
+#include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/strip.hh>
+#include <vcsn/algos/transpose.hh>
 
 namespace vcsn
 {
@@ -31,5 +30,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_MINIMIZE_BRZOZOWSKI_HH

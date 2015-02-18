@@ -1,13 +1,13 @@
-#ifndef VCSN_ALGOS_MINIMIZE_WEIGHTED_HH
-# define VCSN_ALGOS_MINIMIZE_WEIGHTED_HH
+#pragma once
 
-# include <unordered_map>
-# include <unordered_set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/misc/indent.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/algos/accessible.hh> // is_trim
+#include <vcsn/misc/indent.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -390,7 +390,4 @@ namespace vcsn
     detail_weighted::minimizer<Aut> minimize(a);
     return minimize();
   }
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_MINIMIZE_WEIGHTED_HH
