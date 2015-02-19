@@ -85,7 +85,7 @@ namespace vcsn
     }
 
     /// Convert to a word.
-    word_t word(value_t v) const
+    static word_t word(value_t v)
     {
       return {v};
     }
@@ -104,6 +104,22 @@ namespace vcsn
     {
       return v;
     }
+
+    /// Prepare to iterate over v.
+    static word_t
+    letters_of(letter_t v)
+    {
+      return word(v);
+    }
+
+    /// Prepare to iterate over v.
+    /// This is for the padded case
+    static word_t
+    letters_of(letter_t v, letter_t)
+    {
+      return word(v);
+    }
+
 
     static value_t
     special() ATTRIBUTE_PURE
