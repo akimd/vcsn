@@ -97,6 +97,14 @@ namespace vcsn
       return v;
     }
 
+    /// Prepare to iterate over the letters of v.
+    /// This is for the padded case
+    static word_t
+    letters_of(const value_t& v, letter_t)
+    {
+      return v;
+    }
+
     /// Whether \a l == \a r.
     static bool
     equal(const value_t& l, const value_t& r)

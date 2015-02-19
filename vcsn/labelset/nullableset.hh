@@ -304,8 +304,17 @@ namespace vcsn
       return labelset_t::letters_of(v);
     }
 
+    /// Prepare to iterate over the letters of v.
+    /// This is for the padded case
+    auto static
+    letters_of(word_t v, letter_t l)
+      -> decltype(labelset_t::letters_of(v))
+    {
+      return labelset_t::letters_of(v, l);
+    }
+
     auto
-    letters_of(value_t v) const
+    letters_of(value_t v, letter_t) const
       -> word_t
     {
       return letters_of(word(v));

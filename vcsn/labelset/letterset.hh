@@ -97,6 +97,14 @@ namespace vcsn
       return v;
     }
 
+    /// Prepare to iterate over the letters of v.
+    /// This is for the padded case
+    static word_t
+    letters_of(word_t v, letter_t)
+    {
+      return v;
+    }
+
     static value_t
     special() ATTRIBUTE_PURE
     {
