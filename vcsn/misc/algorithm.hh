@@ -86,4 +86,22 @@ namespace vcsn
       return std::make_pair(first1, first2);
     }
   }
+
+  /// Check that two associative containers have the same keys.
+  template <typename Container>
+  bool
+  same_domain(const Container& x, const Container& y)
+  {
+    if (x.size() != y.size())
+      return false;
+    // FIXME: no cbegin etc. in C++11.
+    using std::begin; using std::end;
+    for (auto xi = begin(x), xend = end(x), yi = begin(y);
+         xi != xend;
+         ++xi, ++yi)
+      if (x.key_comp()(xi->first, yi->first)
+          || x.key_comp()(yi->first, xi->first))
+        return false;
+    return true;
+  }
 }
