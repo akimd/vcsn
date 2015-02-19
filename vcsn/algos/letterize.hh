@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iterator>
+
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh> // context_t_of
@@ -55,22 +57,24 @@ namespace vcsn
         for (auto st : _in_aut->all_states())
           for (auto tr : _in_aut->all_out(st))
             {
-              auto letters = in_ls->letters_of(_in_aut->label_of(tr));
-              if (! letters.empty())
+              auto letters = in_ls->letters_of(_in_aut->label_of(tr),
+                                               out_labelset_t::one());
+              auto it = letters.begin();
+              if (it != letters.end())
               {
-                size_t i = 0;
                 auto src = _state_map[st];
-                auto dst = letters.size() > 1 ? _out_aut->new_state()
-                                              : _state_map[_in_aut->dst_of(tr)];
+                auto dst = std::next(it) != letters.end()
+                         ? _out_aut->new_state()
+                         : _state_map[_in_aut->dst_of(tr)];
                 _out_aut->new_transition(src, dst,
-                                        letters[0], _in_aut->weight_of(tr));
+                                        *it, _in_aut->weight_of(tr));
                 src = dst;
-                std::cerr << letters.size() << std::endl;
-                for (i = 1; i < letters.size(); ++i)
+                for (++it; it != letters.end(); ++it)
                 {
-                  dst = i == letters.size() - 1 ? _state_map[_in_aut->dst_of(tr)]
-                                                : _out_aut->new_state();
-                  _out_aut->new_transition(src, dst, letters[i], out_ws->one());
+                  dst = std::next(it) == letters.end()
+                      ? _state_map[_in_aut->dst_of(tr)]
+                      : _out_aut->new_state();
+                  _out_aut->new_transition(src, dst, *it, out_ws->one());
                   src = dst;
                 }
               }
@@ -91,39 +95,92 @@ namespace vcsn
     };
 
     /// From an automaton, the corresponding automaton with a non-word labelset.
+    template <typename LabelSet>
+    struct letterized_labelset
+    {
+      static constexpr bool should_run = false;
+
+      using labelset_t = LabelSet;
+      static std::shared_ptr<labelset_t>
+      labelset(const labelset_t& ls)
+      {
+        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+      }
+
+    };
+
+    template <typename GenSet>
+    struct letterized_labelset<wordset<GenSet>>
+    {
+      static constexpr bool should_run = true;
+
+      using labelset_t = nullableset<letterset<GenSet>>;
+
+      static std::shared_ptr<labelset_t>
+      labelset(const wordset<GenSet>& ls)
+      {
+        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+      }
+    };
+
+    template <typename... LabelSets>
+    struct letterized_labelset<tupleset<LabelSets...>>
+    {
+      using indices_t = make_index_sequence<sizeof...(LabelSets)>;
+
+      template <std::size_t... I>
+      using seq = vcsn::detail::index_sequence<I...>;
+
+      template <size_t I>
+      using letterized_labelset_t =
+          letterized_labelset<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
+      template <std::size_t... I>
+      static constexpr bool _should_run(seq<I...>)
+      {
+        return any_<letterized_labelset_t<I>::should_run...>();
+      }
+      static constexpr bool should_run = _should_run(indices_t{});
+
+      using labelset_t =
+          tupleset<typename letterized_labelset<LabelSets>::labelset_t...>;
+
+      static std::shared_ptr<labelset_t>
+      labelset(const tupleset<LabelSets...>& ls)
+      {
+        return _labelset(ls, indices_t{});
+      }
+
+      template <std::size_t... I>
+      static std::shared_ptr<labelset_t>
+      _labelset(const tupleset<LabelSets...>& ls,
+                seq<I...>)
+      {
+        return std::make_shared<labelset_t>(*letterized_labelset_t<I>::labelset(std::get<I>(ls.sets()))...);
+      }
+    };
+
     template <typename Aut>
-    struct letterized_automaton
+    using letterized_ls = letterized_labelset<labelset_t_of<Aut>>;
+
+    template <typename Aut>
+    vcsn::enable_if_t<letterized_ls<Aut>::should_run,
+            mutable_automaton<context<typename letterized_ls<Aut>::labelset_t,
+                                      weightset_t_of<Aut>>>>
+    letterize(const Aut& aut)
     {
-      using automaton_t = Aut;
-      using result_t = const automaton_t;
+      using labelset_t = typename letterized_ls<Aut>::labelset_t;
+      letterizer<Aut, mutable_automaton<context<labelset_t, weightset_t_of<Aut>>>>
+                lt(aut, letterized_ls<Aut>::labelset(*(aut->labelset())));
+      return lt.letterize();
+    }
 
-      static result_t
-      letterize(const automaton_t& aut)
-      {
-        return aut;
-      }
-    };
-
-    template <typename GenSet, typename WeightSet>
-    struct letterized_automaton<mutable_automaton<context<wordset<GenSet>, WeightSet>>>
+    template <typename Aut>
+    vcsn::enable_if_t<!letterized_ls<Aut>::should_run,
+                      const Aut&>
+    letterize(const Aut& aut)
     {
-      using automaton_t = mutable_automaton<context<wordset<GenSet>, WeightSet>>;
-      using result_t = mutable_automaton<context<nullableset<letterset<GenSet>>, WeightSet>>;
-
-      using type = nullableset<letterset<GenSet>>;
-      static std::shared_ptr<type>
-      labelset(const std::shared_ptr<const wordset<GenSet>>& ls)
-      {
-        return std::make_shared<type>(type{ls->genset()});
-      }
-
-      static result_t
-      letterize(const automaton_t& aut)
-      {
-        letterizer<automaton_t, result_t> lt(aut, labelset(aut->labelset()));
-        return lt.letterize();
-      }
-    };
+      return aut;
+    }
 
   }
 
@@ -136,10 +193,11 @@ namespace vcsn
   /// \param[in] aut        the automaton
   /// \returns              the letterized automaton
   template <typename Aut>
-  typename detail::letterized_automaton<Aut>::result_t
+  auto
   letterize(const Aut& aut)
+    -> decltype(detail::letterize(aut))
   {
-    return detail::letterized_automaton<Aut>::letterize(aut);
+    return detail::letterize(aut);
   }
 
   namespace dyn
