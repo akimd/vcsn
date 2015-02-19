@@ -145,9 +145,9 @@ namespace vcsn
 
           if (!same_domain(pa, pb))
             return false;
-          for (auto z: vcsn::zip_maps<vcsn::as_tuple>(pa, pb))
-            if (! weightset_t::equal(std::get<0>(z).second,
-                                     std::get<1>(z).second))
+          for (auto z: vcsn::zip_maps<vcsn::as_pair>(pa, pb))
+            if (! weightset_t::equal(std::get<0>(z.second),
+                                     std::get<1>(z.second)))
               return false;
           return true;
         }
@@ -161,8 +161,8 @@ namespace vcsn
           if (!same_domain(as, bs))
             return false;
           // Check that we have the same images.
-          for (auto z: zip_maps<as_tuple>(as, bs))
-            if (! match(std::get<0>(z).second, std::get<1>(z).second))
+          for (auto z: zip_maps<as_pair>(as, bs))
+            if (! match(std::get<0>(z.second), std::get<1>(z.second)))
               return false;
 
           return true;
