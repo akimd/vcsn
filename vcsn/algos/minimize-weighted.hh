@@ -6,8 +6,10 @@
 #include <vector>
 
 #include <vcsn/algos/accessible.hh> // is_trim
+#include <vcsn/misc/algorithm.hh> // same_domain
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
@@ -48,25 +50,17 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
 
-      using weight_and_state_t = std::pair<weight_t, state_t>;
+      /// An auxiliary data structure enabling fast access to
+      /// transitions from a given state and label, in random order.
+      using transition_map_t
+        = detail::transition_map<automaton_t,
+                                 weightset_t_of<automaton_t>,
+                                 /* Deterministic: */ false,
+                                 /* AllOut:        */ true>;
+      transition_map_t transition_map_;
 
-      struct state_output_for_label_t
-      {
-        // For some unstored state.
-        label_t label;
-        std::vector<weight_and_state_t> weights_and_destinations;
-      };
-
-      // This is sorted by label.
-      using state_output_t = std::vector<state_output_for_label_t>;
-
-      // This structure is only useful at initialization time, when
-      // sorting transitions from a given state in a canonical order.
-      using label_to_weights_and_states_t
-        = std::map<label_t, std::vector<weight_and_state_t>,
-                   vcsn::less<labelset_t>>;
-
-      std::unordered_map<state_t, state_output_t> state_to_state_output_;
+      /// Outgoing transitions of a state: a map label -> destinations.
+      using state_output_t = typename transition_map_t::map_t;
 
       /// The output of a given letter from a given state, keeping
       /// into account classes and weights, in a format suitable to
@@ -75,19 +69,19 @@ namespace vcsn
       using state_label_output_map_t = std::map<class_t, weight_t>;
 
       const state_label_output_map_t
-      state_label_output_map(const std::vector<weight_and_state_t>& wss) const
+      state_label_output_map(const typename transition_map_t::transitions_t& ts) const
       {
         state_label_output_map_t res;
 
-        for (const auto& wd : wss)
+        for (const auto& t : ts)
           {
-            class_t c = state_to_class_.at(wd.second);
+            class_t c = state_to_class_.at(t.dst);
             const auto& i = res.find(c);
             if (i == res.end())
-              res[c] = wd.first;
+              res[c] = t.weight();
             else
               {
-                i->second = ws_.add(i->second, wd.first);
+                i->second = ws_.add(i->second, t.weight());
                 if (ws_.is_zero(i->second))
                   res.erase(c);
               }
@@ -101,8 +95,7 @@ namespace vcsn
         const minimizer& minimizer_;
         unsigned num_classes_;
       public:
-        signature_hasher(minimizer& the_minimizer,
-                         size_t num_classes)
+        signature_hasher(minimizer& the_minimizer, size_t num_classes)
           : minimizer_(the_minimizer)
           , num_classes_(num_classes)
         {}
@@ -113,12 +106,12 @@ namespace vcsn
           size_t res = 0;
           for (auto& t : state_output)
             {
-              state_label_output_map_t map =
-                minimizer_.state_label_output_map(t.weights_and_destinations);
+              state_label_output_map_t map
+                = minimizer_.state_label_output_map(t.second);
               // I've chosen *not* to hash the label when all
               // transitions with a given label cancel one another.
               if (! map.empty())
-                std::hash_combine(res, labelset_t::hash(t.label));
+                std::hash_combine(res, labelset_t::hash(t.first));
               for (const auto& cw : map)
                 {
                   std::hash_combine(res, cw.first);
@@ -141,55 +134,22 @@ namespace vcsn
           , class_bound_(class_bound)
         {}
 
-        bool match(const state_label_output_map_t& a,
-                    const state_label_output_map_t& b) const noexcept
+        /// Check that the image of two transition vectors on classes
+        /// coincidence.
+        bool match(const typename transition_map_t::transitions_t& a,
+                   const typename transition_map_t::transitions_t& b) const noexcept
         {
-          if (a.size() != b.size())
+          // Polynomials of classes.
+          auto pa = minimizer_.state_label_output_map(a);
+          auto pb = minimizer_.state_label_output_map(b);
+
+          if (!same_domain(pa, pb))
             return false;
-          for (const auto& cw : a)
-            {
-              const auto& cwb = b.find(cw.first);
-              if (cwb == b.end())
-                return false;
-              if (! weightset_t::equal(cw.second, cwb->second))
-                return false;
-            }
+          for (auto z: vcsn::zip_maps<vcsn::as_tuple>(pa, pb))
+            if (! weightset_t::equal(std::get<0>(z).second,
+                                     std::get<1>(z).second))
+              return false;
           return true;
-        }
-
-        /// Update the iterator to point to the first non-empty
-        /// state_output_for_label_t or v.cend(), and update the map to be the
-        /// one associated to *i, or empty.
-        void first(const state_output_t& v,
-                   typename state_output_t::const_iterator& i,
-                   state_label_output_map_t& map) const
-        {
-          i = v.cbegin();
-          map.clear();
-
-          if (i != v.cend())
-            map = std::move(minimizer_
-                            .state_label_output_map(i->weights_and_destinations));
-        }
-
-        /// Update the iterator to point to the next non-empty
-        /// state_output_for_label_t or v.cend(), and update the map to be the
-        /// one associated to *i, or empty.
-        void next(const state_output_t& v,
-                  typename state_output_t::const_iterator& i,
-                  state_label_output_map_t& map) const
-        {
-          while (true)
-            {
-              i ++;
-              map.clear();
-              if (i == v.cend())
-                return;
-              map = std::move(minimizer_
-                  .state_label_output_map(i->weights_and_destinations));
-              if (! map.empty())
-                return;
-            }
         }
 
         bool operator()(const state_output_t *as_,
@@ -198,23 +158,14 @@ namespace vcsn
           const state_output_t& as = *as_;
           const state_output_t& bs = *bs_;
 
-          // Scan as and bs in lockstep, verifying that they match for
-          // each letter.  Letters occur in the same order by
-          // construction.
-          typename state_output_t::const_iterator ia, ib;
-          state_label_output_map_t mapa, mapb;
-          first(as, ia, mapa);
-          first(bs, ib, mapb);
-          // if ((ia == as.cend()) != (ib == bs.cend()))
-          //   return false;
-          for (/* Nothing. */;
-               ia != as.cend() && ib != bs.cend();
-               next(as, ia, mapa), next(bs, ib, mapb))
-            if (! minimizer_.ls_.equal(ia->label, ib->label)
-                || ! match(mapa, mapb))
+          if (!same_domain(as, bs))
+            return false;
+          // Check that we have the same images.
+          for (auto z: zip_maps<as_tuple>(as, bs))
+            if (! match(std::get<0>(z).second, std::get<1>(z).second))
               return false;
 
-          return (ia == as.cend()) == (ib == bs.cend());
+          return true;
         }
       }; // class signature_equal_to
 
@@ -269,38 +220,9 @@ namespace vcsn
         : a_(a)
         , ls_(*a_->labelset())
         , ws_(*a_->weightset())
+        , transition_map_(a)
       {
         require(is_trim(a_), me(), ": input must be trim");
-
-        // Fill state_to_state_output.
-        for (auto s : a_->all_states())
-          {
-            // Get the out-states from s, by label:
-            label_to_weights_and_states_t label_to_weights_and_states;
-            for (auto t : a_->all_out(s))
-              label_to_weights_and_states[a_->label_of(t)]
-                .emplace_back(a_->weight_of(t), a_->dst_of(t));
-
-            // Associate this information to s, as a vector sorted by label:
-            state_output_t& state_output = state_to_state_output_[s];
-            for (auto& l_wss : label_to_weights_and_states)
-              {
-                std::sort(l_wss.second.begin(),
-                          l_wss.second.end(),
-                          [](const weight_and_state_t& l,
-                             const weight_and_state_t& r)
-                          {
-                            if (l.second < r.second)
-                              return true;
-                            else if (r.second < l.second)
-                              return false;
-                            else
-                              return weightset_t::less(l.first, r.first);
-                          });
-                state_output.emplace_back(state_output_for_label_t{l_wss.first,
-                      std::move(l_wss.second)});
-              }
-          }
       }
 
       /// Build the initial classes, and split until fix point.
@@ -337,7 +259,7 @@ namespace vcsn
                 // Try to find distinguishable states in c_states:
                 signature_multimap signature_to_state(*this, num_classes_);
                 for (auto s : c_states)
-                  signature_to_state[& state_to_state_output_[s]].emplace_back(s);
+                  signature_to_state[& transition_map_[s]].emplace_back(s);
                 if (2 <= signature_to_state.size())
                   {
                     go_on = true;
