@@ -91,33 +91,21 @@ namespace vcsn
         return not_equal_(that, indices_t{});
       }
 
-      std::pair<key_t, mapped_t> dereference_(as_pair)
+      /// Return as <k1, <v1, v2...>>.
+      auto dereference_(as_pair) -> std::pair<key_t, mapped_t>
       {
-        return dereference_as_pair();
-      }
-
-      values_t dereference_(as_tuple)
-      {
-        return dereference_as_tuple();
-      }
-
-      auto operator*()
-        // GCC wants "this->", clang does not need it.
-        -> decltype(this->dereference_(Dereference()))
-      {
-        return dereference_(Dereference());
+        return {dereference_first_(), dereference_second_(indices_t{})};
       }
 
       /// Return as <<k1, v1>, <k1, v2>, ...>.
-      references_t dereference_as_tuple()
+      auto dereference_(as_tuple) -> references_t
       {
         return dereference_(indices_t{});
       }
 
-      /// Return as <k1, <v1, v2...>>.
-      std::pair<key_t, mapped_t> dereference_as_pair()
+      auto operator*() -> decltype(this->dereference_(Dereference()))
       {
-        return {dereference_first_(), dereference_second_(indices_t{})};
+        return dereference_(Dereference());
       }
 
     private:
