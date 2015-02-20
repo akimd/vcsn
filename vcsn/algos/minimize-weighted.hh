@@ -62,30 +62,47 @@ namespace vcsn
       /// Outgoing transitions of a state: a map label -> destinations.
       using state_output_t = typename transition_map_t::map_t;
 
-      /// The output of a given letter from a given state, keeping
-      /// into account classes and weights, in a format suitable to
-      /// comparison or hashing.  If a class is reachable with weight
-      /// zero, it's guaranteed to be omitted from the table.
-      using state_label_output_map_t = std::map<class_t, weight_t>;
+      /// List of destinations.
+      using transitions_t = typename transition_map_t::transitions_t;
 
-      const state_label_output_map_t
-      state_label_output_map(const typename transition_map_t::transitions_t& ts) const
+      /// Dealing with class numbers.
+      struct classset
       {
-        state_label_output_map_t res;
+        using value_t = class_t;
 
+        using kind_t = void;
+        static bool equal(class_t l, class_t r)
+        {
+          return l == r;
+        }
+
+        static bool less(class_t l, class_t r)
+        {
+          return l < r;
+        }
+
+        static size_t hash(class_t s)
+        {
+          return hash_value(s);
+        }
+      };
+
+      /// The output of a given letter from a given state, keeping
+      /// into account classes and weights.
+      using class_polynomialset_t
+        = polynomialset<context<classset, weightset_t>>;
+
+      /// Class polynomialset.
+      class_polynomialset_t cps_{{classset{}, ws_}};
+
+      using class_polynomial_t = typename class_polynomialset_t::value_t;
+
+      /// The image of \t as a polynomial of weighted classes.
+      class_polynomial_t class_polynomial(const transitions_t& ts) const
+      {
+        class_polynomial_t res;
         for (const auto& t : ts)
-          {
-            class_t c = state_to_class_.at(t.dst);
-            const auto& i = res.find(c);
-            if (i == res.end())
-              res[c] = t.weight();
-            else
-              {
-                i->second = ws_.add(i->second, t.weight());
-                if (ws_.is_zero(i->second))
-                  res.erase(c);
-              }
-          }
+          cps_.add_here(res, state_to_class_.at(t.dst), t.weight());
         return res;
       }
 
@@ -106,17 +123,12 @@ namespace vcsn
           size_t res = 0;
           for (auto& t : state_output)
             {
-              state_label_output_map_t map
-                = minimizer_.state_label_output_map(t.second);
+              auto p = minimizer_.class_polynomial(t.second);
               // I've chosen *not* to hash the label when all
               // transitions with a given label cancel one another.
-              if (! map.empty())
-                std::hash_combine(res, labelset_t::hash(t.first));
-              for (const auto& cw : map)
-                {
-                  std::hash_combine(res, cw.first);
-                  std::hash_combine(res, weightset_t::hash(cw.second));
-                }
+              if (! p.empty())
+                std::hash_combine(res, minimizer_.ls_.hash(t.first));
+              std::hash_combine(res, minimizer_.cps_.hash(p));
             }
           return res;
         }
@@ -136,20 +148,13 @@ namespace vcsn
 
         /// Check that the image of two transition vectors on classes
         /// coincidence.
-        bool match(const typename transition_map_t::transitions_t& a,
-                   const typename transition_map_t::transitions_t& b) const noexcept
+        bool match(const transitions_t& a,
+                   const transitions_t& b) const noexcept
         {
           // Polynomials of classes.
-          auto pa = minimizer_.state_label_output_map(a);
-          auto pb = minimizer_.state_label_output_map(b);
-
-          if (!same_domain(pa, pb))
-            return false;
-          for (auto z: vcsn::zip_maps<vcsn::as_pair>(pa, pb))
-            if (! weightset_t::equal(std::get<0>(z.second),
-                                     std::get<1>(z.second)))
-              return false;
-          return true;
+          auto pa = minimizer_.class_polynomial(a);
+          auto pb = minimizer_.class_polynomial(b);
+          return minimizer_.cps_.equal(pa, pb);
         }
 
         bool operator()(const state_output_t *as_,
@@ -182,8 +187,8 @@ namespace vcsn
         signature_multimap(minimizer& the_minimizer,
                            const size_t class_bound)
           : super_t(1,
-                       signature_hasher(the_minimizer, class_bound),
-                       signature_equal_to(the_minimizer, class_bound))
+                    signature_hasher(the_minimizer, class_bound),
+                    signature_equal_to(the_minimizer, class_bound))
           , minimizer_(the_minimizer)
         {}
       }; // class signature_multimap
