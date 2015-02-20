@@ -109,11 +109,9 @@ namespace vcsn
       class signature_hasher : public std::hash<state_output_t*>
       {
         const minimizer& minimizer_;
-        unsigned num_classes_;
       public:
-        signature_hasher(minimizer& the_minimizer, size_t num_classes)
-          : minimizer_(the_minimizer)
-          , num_classes_(num_classes)
+        signature_hasher(minimizer& m)
+          : minimizer_(m)
         {}
 
         size_t operator()(const state_output_t* state_output_) const noexcept
@@ -133,11 +131,9 @@ namespace vcsn
       class signature_equal_to : public std::equal_to<state_output_t*>
       {
         minimizer& minimizer_;
-        const size_t class_bound_;
       public:
-        signature_equal_to(minimizer& the_minimizer, size_t class_bound)
-          : minimizer_(the_minimizer)
-          , class_bound_(class_bound)
+        signature_equal_to(minimizer& m)
+          : minimizer_(m)
         {}
 
         bool operator()(const state_output_t *as_,
@@ -173,12 +169,9 @@ namespace vcsn
           = std::unordered_map<state_output_t*, set_t,
                                signature_hasher, signature_equal_to>;
       public:
-        signature_multimap(minimizer& the_minimizer,
-                           const size_t class_bound)
-          : super_t(1,
-                    signature_hasher(the_minimizer, class_bound),
-                    signature_equal_to(the_minimizer, class_bound))
-          , minimizer_(the_minimizer)
+        signature_multimap(minimizer& m)
+          : super_t(1, signature_hasher(m), signature_equal_to(m))
+          , minimizer_(m)
         {}
       }; // class signature_multimap
 
@@ -251,7 +244,7 @@ namespace vcsn
                   }
 
                 // Look for distinguishable states in c_states:
-                signature_multimap signature_to_state(*this, num_classes_);
+                signature_multimap signature_to_state(*this);
                 for (auto s : c_states)
                   signature_to_state[& transition_map_[s]].emplace_back(s);
                 if (2 <= signature_to_state.size())
