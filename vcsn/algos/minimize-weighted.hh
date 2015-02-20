@@ -160,20 +160,9 @@ namespace vcsn
       }; // class signature_equal_to
 
 
-      class signature_multimap
-        : public std::unordered_map<state_output_t*, set_t,
-                                    signature_hasher, signature_equal_to>
-      {
-        minimizer& minimizer_;
-        using super_t
-          = std::unordered_map<state_output_t*, set_t,
-                               signature_hasher, signature_equal_to>;
-      public:
-        signature_multimap(minimizer& m)
-          : super_t(1, signature_hasher(m), signature_equal_to(m))
-          , minimizer_(m)
-        {}
-      }; // class signature_multimap
+      using signature_multimap
+        = std::unordered_map<state_output_t*, set_t,
+                             signature_hasher, signature_equal_to>;
 
       void clear()
       {
@@ -244,7 +233,10 @@ namespace vcsn
                   }
 
                 // Look for distinguishable states in c_states:
-                signature_multimap signature_to_state(*this);
+                auto signature_to_state
+                  = signature_multimap{1,
+                                       signature_hasher(*this),
+                                       signature_equal_to(*this)};
                 for (auto s : c_states)
                   signature_to_state[& transition_map_[s]].emplace_back(s);
                 if (2 <= signature_to_state.size())
@@ -253,7 +245,7 @@ namespace vcsn
                     i = classes.erase(i);
                     // To keep class numbers contiguous, reuse 'c' as
                     // first class number, and then use new one (via
-                    // "c = class_invalid below").
+                    // "c = class_invalid" below).
                     for (auto& p: signature_to_state)
                       {
                         class_t c2 = make_class(std::move(p.second), c);
