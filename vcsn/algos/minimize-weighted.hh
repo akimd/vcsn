@@ -106,7 +106,6 @@ namespace vcsn
         return res;
       }
 
-      friend class signature_hasher;
       class signature_hasher : public std::hash<state_output_t*>
       {
         const minimizer& minimizer_;
@@ -123,39 +122,23 @@ namespace vcsn
           size_t res = 0;
           for (auto& t : state_output)
             {
+              std::hash_combine(res, minimizer_.ls_.hash(t.first));
               auto p = minimizer_.class_polynomial(t.second);
-              // I've chosen *not* to hash the label when all
-              // transitions with a given label cancel one another.
-              if (! p.empty())
-                std::hash_combine(res, minimizer_.ls_.hash(t.first));
               std::hash_combine(res, minimizer_.cps_.hash(p));
             }
           return res;
         }
       }; // class signature_hasher
 
-      friend class signature_equal_to;
       class signature_equal_to : public std::equal_to<state_output_t*>
       {
         minimizer& minimizer_;
         const size_t class_bound_;
       public:
-        signature_equal_to(minimizer& the_minimizer,
-                           size_t class_bound)
+        signature_equal_to(minimizer& the_minimizer, size_t class_bound)
           : minimizer_(the_minimizer)
           , class_bound_(class_bound)
         {}
-
-        /// Check that the image of two transition vectors on classes
-        /// coincidence.
-        bool match(const transitions_t& a,
-                   const transitions_t& b) const noexcept
-        {
-          // Polynomials of classes.
-          auto pa = minimizer_.class_polynomial(a);
-          auto pb = minimizer_.class_polynomial(b);
-          return minimizer_.cps_.equal(pa, pb);
-        }
 
         bool operator()(const state_output_t *as_,
                         const state_output_t *bs_) const noexcept
@@ -165,16 +148,22 @@ namespace vcsn
 
           if (!same_domain(as, bs))
             return false;
+
           // Check that we have the same images.
           for (auto z: zip_maps<as_pair>(as, bs))
-            if (! match(std::get<0>(z.second), std::get<1>(z.second)))
-              return false;
+            {
+              // Polynomials of classes.
+              auto pa = minimizer_.class_polynomial(std::get<0>(z.second));
+              auto pb = minimizer_.class_polynomial(std::get<1>(z.second));
+              if (!minimizer_.cps_.equal(pa, pb))
+                return false;
+            }
 
           return true;
         }
       }; // class signature_equal_to
 
-      friend class signature_multimap;
+
       class signature_multimap
         : public std::unordered_map<state_output_t*, set_t,
                                     signature_hasher, signature_equal_to>
@@ -261,7 +250,7 @@ namespace vcsn
                     continue;
                   }
 
-                // Try to find distinguishable states in c_states:
+                // Look for distinguishable states in c_states:
                 signature_multimap signature_to_state(*this, num_classes_);
                 for (auto s : c_states)
                   signature_to_state[& transition_map_[s]].emplace_back(s);
@@ -269,6 +258,9 @@ namespace vcsn
                   {
                     go_on = true;
                     i = classes.erase(i);
+                    // To keep class numbers contiguous, reuse 'c' as
+                    // first class number, and then use new one (via
+                    // "c = class_invalid below").
                     for (auto& p: signature_to_state)
                       {
                         class_t c2 = make_class(std::move(p.second), c);
