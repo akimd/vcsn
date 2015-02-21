@@ -90,8 +90,8 @@ namespace vcsn
           size_t res = 0;
           for (auto& t : sig)
             {
-              std::hash_combine(res, minimizer_.ls_.hash(t.first));
-              std::hash_combine(res, minimizer_.cps_.hash(t.second));
+              std::hash_combine_hash(res, minimizer_.ls_.hash(t.first));
+              std::hash_combine_hash(res, minimizer_.cps_.hash(t.second));
             }
           return res;
         }
