@@ -217,44 +217,10 @@ namespace vcsn
         const size_t num_classes_ = minimizer_.num_classes_;
       }; // class signature_equal_to
 
-
-      class signature_multimap
-        : public std::unordered_map<state_output_t*, set_t,
-                                    signature_hasher, signature_equal_to>
-      {
-        const minimizer& minimizer_;
-        const state_to_class_t& state_to_class_ = minimizer_.state_to_class_;
-        using super_t
-          = std::unordered_map<state_output_t*, set_t,
-                               signature_hasher, signature_equal_to>;
-      public:
-        signature_multimap(const minimizer& the_minimizer)
-          : super_t{1,
-                    signature_hasher{the_minimizer},
-                    signature_equal_to{the_minimizer}}
-          , minimizer_{the_minimizer}
-        {}
-
-        friend std::ostream& operator<<(std::ostream& o,
-                                        const signature_multimap& mm)
-        {
-          o << '{' << incendl;
-          for (const auto& o_s : mm)
-            {
-              print_(*o_s.first, o);
-              o << " : {";
-              const char* sep = "";
-              for (auto s: o_s.second)
-                {
-                  o << sep << s << '%' << mm.state_to_class_.at(s);
-                  sep = ", ";
-                }
-              o << '}' << iendl;
-            }
-          o << '}' << decendl;
-          return o;
-        }
-      }; // class signature_multimap
+      /// Cluster states per signature.
+      using signature_multimap
+        = std::unordered_map<state_output_t*, set_t,
+                             signature_hasher, signature_equal_to>;
 
       void clear()
       {
@@ -340,8 +306,12 @@ namespace vcsn
                     continue;
                   }
 
-                // Try to find distinguishable states in c_states:
-                auto sig_to_state = signature_multimap{*this};
+                // Look for distinguishable states in c_states:
+                // cluster the signatures.
+                auto sig_to_state
+                  = signature_multimap{1,
+                                       signature_hasher{*this},
+                                       signature_equal_to{*this}};
                 for (auto s : c_states)
                   {
 #if DEBUG
