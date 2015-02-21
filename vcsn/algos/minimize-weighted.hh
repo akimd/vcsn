@@ -6,10 +6,8 @@
 #include <vector>
 
 #include <vcsn/algos/accessible.hh> // is_trim
-#include <vcsn/misc/algorithm.hh> // same_domain
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
@@ -139,22 +137,18 @@ namespace vcsn
         bool operator()(const state_output_t *as_,
                         const state_output_t *bs_) const noexcept
         {
-          const state_output_t& as = *as_;
-          const state_output_t& bs = *bs_;
-
-          if (!same_domain(as, bs))
+          if (as_->size() != bs_->size())
             return false;
 
-          // Check that we have the same images.
-          for (auto z: zip_maps<as_pair>(as, bs))
-            {
-              // Polynomials of classes.
-              auto pa = minimizer_.class_polynomial(std::get<0>(z.second));
-              auto pb = minimizer_.class_polynomial(std::get<1>(z.second));
-              if (!minimizer_.cps_.equal(pa, pb))
-                return false;
-            }
-
+          using std::begin; using std::end;
+          for (auto i = begin(*as_), i_end = end(*as_), j = begin(*bs_);
+               i != i_end;
+               ++i, ++j)
+            if (!minimizer_.ls_.equal(i->first, j->first)
+                || !minimizer_.cps_.equal
+                (minimizer_.class_polynomial(i->second),
+                 minimizer_.class_polynomial(j->second)))
+              return false;
           return true;
         }
       }; // class signature_equal_to
