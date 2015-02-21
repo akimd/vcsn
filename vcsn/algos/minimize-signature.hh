@@ -137,7 +137,7 @@ namespace vcsn
           for (auto& t : state_output)
             {
               const label_t& label = t.label;
-              std::hash_combine(res, label);
+              std::hash_combine_hash(res, minimizer_.ls_.hash(label));
               // Hash the set of classes reached with label.  Of
               // course the hash must not depend on class ordering.
               bits.reset();
