@@ -230,6 +230,11 @@ namespace vcsn
       }
 
       /// Make a new class with the given set of states.
+      ///
+      /// \param set
+      ///    the states belonging to this class
+      /// \param number
+      ///    the class number to use.  If \a class_invalid, allocate one.
       class_t make_class(set_t&& set, class_t number = class_invalid)
       {
         if (number == class_invalid)
@@ -286,25 +291,15 @@ namespace vcsn
           classes.insert(make_class(set_t{std::begin(all), std::end(all)}));
         }
 
-        bool go_on;
-        do
+        for (bool go_on = true; go_on; /* Nothing. */)
           {
             go_on = false;
-#if DEBUG
-            print_(class_to_set_, std::cerr) << std::endl;
-#endif
             for (auto i = std::begin(classes), end = std::end(classes);
                  i != end;
                  /* nothing. */)
               {
                 auto c = *i;
                 const set_t& c_states = class_to_set_.at(c);
-
-                if (c_states.size() < 2)
-                  {
-                    i = classes.erase(i);
-                    continue;
-                  }
 
                 // Look for distinguishable states in c_states:
                 // cluster the signatures.
@@ -326,12 +321,18 @@ namespace vcsn
 #endif
                 if (2 <= sig_to_state.size())
                   {
+                    // Split class c.
                     go_on = true;
                     i = classes.erase(i);
-                    for (auto p: sig_to_state)
+                    // To keep class numbers contiguous, reuse 'c' as
+                    // first class number, and then use new one (via
+                    // "c = class_invalid" below).
+                    for (auto& p: sig_to_state)
                       {
+                        bool singleton = p.second.size() == 1;
                         class_t c2 = make_class(std::move(p.second), c);
-                        classes.insert(c2);
+                        if (!singleton)
+                          classes.insert(c2);
                         c = class_invalid;
                       }
                   }
@@ -339,7 +340,6 @@ namespace vcsn
                   ++i;
               } // for on classes
           }
-        while (go_on);
       }
 
       /// The minimized automaton.
