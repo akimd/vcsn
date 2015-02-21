@@ -193,16 +193,12 @@ namespace vcsn
               return false;
             }
 
-          auto b_i = bs.cbegin();
           dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
-          for (const auto& a : as)
+          for (auto i = as.cbegin(), i_end = as.cend(), j = bs.cbegin();
+               i != i_end;
+               ++i, ++j)
             {
-              const label_t& a_label = a.label;
-              const label_t& b_label = b_i->label;
-              const std::vector<state_t>& a_states = a.to_states;
-              const std::vector<state_t>& b_states = b_i->to_states;
-
-              if (! ls_.equal(a_label, b_label))
+              if (! ls_.equal(i->label, j->label))
                 {
 #if DEBUG
                   std::cerr << "false 2" << std::endl;
@@ -210,16 +206,10 @@ namespace vcsn
                   return false;
                 }
 
-              // a_states and b_states may have different sizes, but
-              // still be considered "equal", up to the state-to-class
-              // assignment.
-
-              // FIXME: this can and should be optimized a lot.
-              //dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
               a_bits.reset(); b_bits.reset();
-              for (auto s : a_states)
+              for (auto s : i->to_states)
                 a_bits.set(state_to_class_.at(s));
-              for (auto s : b_states)
+              for (auto s : j->to_states)
                 b_bits.set(state_to_class_.at(s));
               if (a_bits != b_bits)
                 {
@@ -228,16 +218,11 @@ namespace vcsn
 #endif
                   return false;
                 }
-
-              ++b_i;
             }
-
-          {
 #if DEBUG
-            std::cerr << "true" << std::endl;
+          std::cerr << "true" << std::endl;
 #endif
-            return true;
-          }
+          return true;
         }
       }; // class signature_equal_to
 
@@ -258,9 +243,9 @@ namespace vcsn
                            state_to_class_t& state_to_class,
                            const size_t class_bound)
           : super_t(1,
-                       signature_hasher(the_minimizer, class_bound),
-                       signature_equal_to(the_minimizer,
-                                          ls, state_to_class, class_bound))
+                    signature_hasher(the_minimizer, class_bound),
+                    signature_equal_to(the_minimizer,
+                                       ls, state_to_class, class_bound))
           , minimizer_(the_minimizer)
           , state_to_class_(state_to_class)
         {}
