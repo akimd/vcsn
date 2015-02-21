@@ -122,16 +122,11 @@ namespace vcsn
 
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
-      friend class signature_hasher;
-      class signature_hasher : public std::hash<state_output_t*>
+      struct signature_hasher
       {
-        const state_to_class_t& state_to_class_;
-        unsigned num_classes_;
-      public:
-        signature_hasher(minimizer& the_minimizer,
-                         size_t num_classes)
-          : state_to_class_(the_minimizer.state_to_class_)
-          , num_classes_(num_classes)
+        // FIXME: G++ 4.9 requires this ctor, which is wrong.
+        signature_hasher(const minimizer& m)
+          : minimizer_(m)
         {}
 
         size_t operator()(const state_output_t* state_output_) const noexcept
@@ -155,27 +150,18 @@ namespace vcsn
 #endif
           return res;
         }
+
+        const minimizer& minimizer_;
+        const state_to_class_t& state_to_class_ = minimizer_.state_to_class_;
+        unsigned num_classes_ = minimizer_.num_classes_;
       }; // class signature_hasher
 
-      friend class signature_equal_to;
-      class signature_equal_to : public std::equal_to<state_output_t*>
+      struct signature_equal_to
       {
-        minimizer& minimizer_;
-        const labelset_t& ls_;
-        const state_to_class_t& state_to_class_;
-        const size_t class_bound_;
-      public:
-        signature_equal_to(minimizer& the_minimizer,
-                           // FIXME: remove these unless really needed
-                           const labelset_t& ls,
-                           const state_to_class_t& state_to_class,
-                           size_t class_bound)
-          : minimizer_(the_minimizer)
-          , ls_(ls)
-          , state_to_class_(state_to_class)
-          , class_bound_(class_bound)
+        // FIXME: G++ 4.9 requires this ctor, which is wrong.
+        signature_equal_to(const minimizer& m)
+          : minimizer_(m)
         {}
-
         bool operator()(const state_output_t *as_,
                         const state_output_t *bs_) const noexcept
         {
@@ -193,7 +179,7 @@ namespace vcsn
               return false;
             }
 
-          dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
+          dynamic_bitset a_bits(num_classes_), b_bits(num_classes_);
           for (auto i = as.cbegin(), i_end = as.cend(), j = bs.cbegin();
                i != i_end;
                ++i, ++j)
@@ -224,30 +210,29 @@ namespace vcsn
 #endif
           return true;
         }
+
+        const minimizer& minimizer_;
+        const labelset_t& ls_ = minimizer_.ls_;
+        const state_to_class_t& state_to_class_ = minimizer_.state_to_class_;
+        const size_t num_classes_ = minimizer_.num_classes_;
       }; // class signature_equal_to
 
-      friend class signature_multimap;
+
       class signature_multimap
         : public std::unordered_map<state_output_t*, set_t,
                                     signature_hasher, signature_equal_to>
       {
-        minimizer& minimizer_;
-        const state_to_class_t& state_to_class_;
+        const minimizer& minimizer_;
+        const state_to_class_t& state_to_class_ = minimizer_.state_to_class_;
         using super_t
           = std::unordered_map<state_output_t*, set_t,
                                signature_hasher, signature_equal_to>;
       public:
-        signature_multimap(minimizer& the_minimizer,
-                           // FIXME: remove these unless really needed.
-                           const labelset_t& ls,
-                           state_to_class_t& state_to_class,
-                           const size_t class_bound)
-          : super_t(1,
-                    signature_hasher(the_minimizer, class_bound),
-                    signature_equal_to(the_minimizer,
-                                       ls, state_to_class, class_bound))
-          , minimizer_(the_minimizer)
-          , state_to_class_(state_to_class)
+        signature_multimap(const minimizer& the_minimizer)
+          : super_t{1,
+                    signature_hasher{the_minimizer},
+                    signature_equal_to{the_minimizer}}
+          , minimizer_{the_minimizer}
         {}
 
         friend std::ostream& operator<<(std::ostream& o,
@@ -356,9 +341,7 @@ namespace vcsn
                   }
 
                 // Try to find distinguishable states in c_states:
-                auto sig_to_state = signature_multimap{*this,
-                                                       ls_, state_to_class_,
-                                                       num_classes_};
+                auto sig_to_state = signature_multimap{*this};
                 for (auto s : c_states)
                   {
 #if DEBUG

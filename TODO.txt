@@ -229,6 +229,11 @@ Look for "workaround" in these files, and possibly for other predicates.
 Also, remove mismatch from misc/algorithm.hh, and restore the proper check
 about it in configure.ac.
 
+** G++ 4.9 and C++14 limitations
+Uniform initialization is badly supported, so we have useless ctors to
+please GCC (e.g., see minimize-signature), and also places where we use
+parens instead of braces.  At some point, we want to rule out 4.9.
+
 ** Copy
 There are numerous opportunities for an improve copy.  For instance when
 computing the square automaton (see has_twins_property), we would like to
