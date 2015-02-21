@@ -48,21 +48,6 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
 
-      /// An auxiliary data structure enabling fast access to
-      /// transitions from a given state and label, in random order.
-      using transition_map_t
-        = detail::transition_map<automaton_t,
-                                 weightset_t_of<automaton_t>,
-                                 /* Deterministic: */ false,
-                                 /* AllOut:        */ true>;
-      transition_map_t transition_map_;
-
-      /// Outgoing transitions of a state: a map label -> destinations.
-      using state_output_t = typename transition_map_t::map_t;
-
-      /// List of destinations.
-      using transitions_t = typename transition_map_t::transitions_t;
-
       /// Dealing with class numbers.
       struct classset
       {
@@ -95,67 +80,49 @@ namespace vcsn
 
       using class_polynomial_t = typename class_polynomialset_t::value_t;
 
-      /// The image of \t as a polynomial of weighted classes.
-      class_polynomial_t class_polynomial(const transitions_t& ts) const
-      {
-        class_polynomial_t res;
-        for (const auto& t : ts)
-          cps_.add_here(res, state_to_class_.at(t.dst), t.weight());
-        return res;
-      }
+      /// A signature: for each label, the outgoing class polynomial.
+      using signature_t = std::map<label_t, class_polynomial_t>;
 
-      class signature_hasher : public std::hash<state_output_t*>
+      struct signature_hasher
       {
-        const minimizer& minimizer_;
-      public:
-        signature_hasher(minimizer& m)
-          : minimizer_(m)
-        {}
-
-        size_t operator()(const state_output_t* state_output_) const noexcept
+        size_t operator()(const signature_t& sig) const noexcept
         {
-          const state_output_t& state_output = *state_output_;
           size_t res = 0;
-          for (auto& t : state_output)
+          for (auto& t : sig)
             {
               std::hash_combine(res, minimizer_.ls_.hash(t.first));
-              auto p = minimizer_.class_polynomial(t.second);
-              std::hash_combine(res, minimizer_.cps_.hash(p));
+              std::hash_combine(res, minimizer_.cps_.hash(t.second));
             }
           return res;
         }
+
+        const minimizer& minimizer_;
       }; // class signature_hasher
 
-      class signature_equal_to : public std::equal_to<state_output_t*>
+      struct signature_equal_to
       {
-        minimizer& minimizer_;
-      public:
-        signature_equal_to(minimizer& m)
-          : minimizer_(m)
-        {}
-
-        bool operator()(const state_output_t *as_,
-                        const state_output_t *bs_) const noexcept
+        bool operator()(const signature_t& as,
+                        const signature_t& bs) const noexcept
         {
-          if (as_->size() != bs_->size())
+          if (as.size() != bs.size())
             return false;
 
           using std::begin; using std::end;
-          for (auto i = begin(*as_), i_end = end(*as_), j = begin(*bs_);
+          for (auto i = begin(as), i_end = end(as), j = begin(bs);
                i != i_end;
                ++i, ++j)
             if (!minimizer_.ls_.equal(i->first, j->first)
-                || !minimizer_.cps_.equal
-                (minimizer_.class_polynomial(i->second),
-                 minimizer_.class_polynomial(j->second)))
+                || !minimizer_.cps_.equal(i->second, j->second))
               return false;
           return true;
         }
+
+        const minimizer& minimizer_;
       }; // class signature_equal_to
 
-
+      /// Cluster states per signature.
       using signature_multimap
-        = std::unordered_map<state_output_t*, set_t,
+        = std::unordered_map<signature_t, set_t,
                              signature_hasher, signature_equal_to>;
 
       void clear()
@@ -195,7 +162,6 @@ namespace vcsn
         : a_(a)
         , ls_(*a_->labelset())
         , ws_(*a_->weightset())
-        , transition_map_(a)
       {
         require(is_trim(a_), me(), ": input must be trim");
       }
@@ -223,12 +189,22 @@ namespace vcsn
                 const set_t& c_states = class_to_set_.at(c);
 
                 // Look for distinguishable states in c_states:
+                // cluster the signatures.
                 auto signature_to_state
                   = signature_multimap{1,
-                                       signature_hasher(*this),
-                                       signature_equal_to(*this)};
-                for (auto s : c_states)
-                  signature_to_state[& transition_map_[s]].emplace_back(s);
+                                       signature_hasher{*this},
+                                       signature_equal_to{*this}};
+                for (auto s: c_states)
+                  {
+                    // For each state, its signature.
+                    auto sig = signature_t{};
+                    for (auto t: a_->all_out(s))
+                      cps_.add_here(sig[a_->label_of(t)],
+                                    state_to_class_.at(a_->dst_of(t)),
+                                    a_->weight_of(t));
+                    signature_to_state[sig].emplace_back(s);
+                  }
+
                 if (2 <= signature_to_state.size())
                   {
                     // Split class c.
