@@ -6,6 +6,12 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 
+## 2015-02-23
+### letterize: new algorithm
+Create the equivalent automaton, but with only single-letter transitions.
+Basically, do the conversion from law to lan. It also works recursively with
+multi-tape transducers.
+
 ## 2015-02-10
 ### Multitape expressions
 When typing multi-tape transducers, it is now no longer necessary to
