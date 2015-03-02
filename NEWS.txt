@@ -5,6 +5,26 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-03-02
+### zpc: new algorithm
+This algorithm generates the ZPC automaton from an expression.  It has
+a single initial state (whose final weight is the constant term of the
+expression), a unique distinct final state (which cannot be reached
+from the initial state via spontaneous transitions), and no cycles of
+spontaneous transitions.
+
+The `expression.zpc` function features an optional argument, which,
+when set to "compact", enables a variant, more compact, construction.
+
+   In [2]: vcsn.b.expression('ab').zpc()
+           ╭───╮  \e   ╭───╮  a   ╭───╮  \e   ╭───╮  b   ╭───╮  \e   ╭───╮
+   ★   ──> │ 0 │ ────> │ 1 │ ───> │ 2 │ ────> │ 3 │ ───> │ 4 │ ────> │ 5 │ ──>   ★
+           ╰───╯       ╰───╯      ╰───╯       ╰───╯      ╰───╯       ╰───╯
+
+   In [3]: vcsn.b.expression('ab').zpc('compact')
+           ╭───╮  a   ╭───╮  \e   ╭───╮  b   ╭───╮
+   ★   ──> │ 0 │ ───> │ 1 │ ────> │ 2 │ ───> │ 3 │ ──>   ★
+           ╰───╯      ╰───╯       ╰───╯      ╰───╯
 
 ## 2015-02-23
 ### letterize: new algorithm
