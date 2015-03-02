@@ -1,5 +1,5 @@
 ## Vaucanson 2, a generic library for finite state machines.
-## Copyright (C) 2014 Vaucanson Group.
+## Copyright (C) 2014-2015 Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -16,6 +16,7 @@ notebooksdir = $(htmldir)/notebooks
 dist_notebooks_DATA =                           \
   %D%/Algorithms.ipynb                          \
   %D%/Contexts.ipynb                            \
+  %D%/D3_IPython_widget.ipynb                   \
   %D%/Editing-Automata.ipynb                    \
   %D%/Hacking.ipynb                             \
   %D%/References.ipynb                          \
@@ -31,8 +32,8 @@ dist_notebooks_DATA =                           \
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.filter.ipynb                    \
-  %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.has_bounded_lag.ipynb           \
+  %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.is_ambiguous.ipynb              \
   %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
@@ -46,6 +47,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_standard.ipynb               \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
+  %D%/automaton.letterize.ipynb                 \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \

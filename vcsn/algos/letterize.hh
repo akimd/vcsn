@@ -39,59 +39,59 @@ namespace vcsn
       using map_t = std::vector<out_state_t>;
 
       letterizer(const in_automaton_t& in_aut, out_labelset_ptr ls)
-        : _in_aut(in_aut)
-        , _out_aut(make_mutable_automaton(out_ctx_t{ls, in_aut->weightset()}))
-        , _state_map(detail::back(in_aut->all_states()) + 1)
+        : in_aut_(in_aut)
+        , out_aut_(make_mutable_automaton(out_ctx_t{ls, in_aut->weightset()}))
+        , state_map_(detail::back(in_aut->all_states()) + 1)
       {}
 
       out_automaton_t letterize()
       {
-        auto in_ls = _in_aut->labelset();
-        auto out_ws = _out_aut->weightset();
+        auto in_ls = in_aut_->labelset();
+        auto out_ws = out_aut_->weightset();
         // Copy the states, and setup the map
-        _state_map[_in_aut->pre()] = _out_aut->pre();
-        _state_map[_in_aut->post()] = _out_aut->post();
-        for (auto st : _in_aut->states())
-          _state_map[st] = _out_aut->new_state();
+        state_map_[in_aut_->pre()] = out_aut_->pre();
+        state_map_[in_aut_->post()] = out_aut_->post();
+        for (auto st : in_aut_->states())
+          state_map_[st] = out_aut_->new_state();
 
-        for (auto st : _in_aut->all_states())
-          for (auto tr : _in_aut->all_out(st))
+        for (auto st : in_aut_->all_states())
+          for (auto tr : in_aut_->all_out(st))
             {
-              auto letters = in_ls->letters_of(_in_aut->label_of(tr),
+              auto letters = in_ls->letters_of(in_aut_->label_of(tr),
                                                out_labelset_t::one());
               auto it = letters.begin();
               if (it != letters.end())
               {
-                auto src = _state_map[st];
+                auto src = state_map_[st];
                 auto dst = std::next(it) != letters.end()
-                         ? _out_aut->new_state()
-                         : _state_map[_in_aut->dst_of(tr)];
-                _out_aut->new_transition(src, dst,
-                                        *it, _in_aut->weight_of(tr));
+                         ? out_aut_->new_state()
+                         : state_map_[in_aut_->dst_of(tr)];
+                out_aut_->new_transition(src, dst,
+                                        *it, in_aut_->weight_of(tr));
                 src = dst;
                 for (++it; it != letters.end(); ++it)
                 {
                   dst = std::next(it) == letters.end()
-                      ? _state_map[_in_aut->dst_of(tr)]
-                      : _out_aut->new_state();
-                  _out_aut->new_transition(src, dst, *it, out_ws->one());
+                      ? state_map_[in_aut_->dst_of(tr)]
+                      : out_aut_->new_state();
+                  out_aut_->new_transition(src, dst, *it, out_ws->one());
                   src = dst;
                 }
               }
               else
-                _out_aut->new_transition(_state_map[st],
-                                        _state_map[_in_aut->dst_of(tr)],
+                out_aut_->new_transition(state_map_[st],
+                                        state_map_[in_aut_->dst_of(tr)],
                                         out_labelset_t::one(),
-                                        _in_aut->weight_of(tr));
+                                        in_aut_->weight_of(tr));
             }
 
-        return std::move(_out_aut);
+        return std::move(out_aut_);
       }
 
     protected:
-      const in_automaton_t& _in_aut;
-      out_automaton_t _out_aut;
-      map_t _state_map;
+      const in_automaton_t& in_aut_;
+      out_automaton_t out_aut_;
+      map_t state_map_;
     };
 
     /// From an automaton, the corresponding automaton with a non-word labelset.
@@ -149,11 +149,11 @@ namespace vcsn
       using letterized_labelset_t =
           letterized_labelset<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
       template <std::size_t... I>
-      static constexpr bool _should_run(seq<I...>)
+      static constexpr bool should_run_(seq<I...>)
       {
         return any_<letterized_labelset_t<I>::should_run...>();
       }
-      static constexpr bool should_run = _should_run(indices_t{});
+      static constexpr bool should_run = should_run_(indices_t{});
 
       using labelset_t =
           tupleset<typename letterized_labelset<LabelSets>::labelset_t...>;
@@ -161,12 +161,12 @@ namespace vcsn
       static std::shared_ptr<labelset_t>
       labelset(const tupleset<LabelSets...>& ls)
       {
-        return _labelset(ls, indices_t{});
+        return labelset_(ls, indices_t{});
       }
 
       template <std::size_t... I>
       static std::shared_ptr<labelset_t>
-      _labelset(const tupleset<LabelSets...>& ls,
+      labelset_(const tupleset<LabelSets...>& ls,
                 seq<I...>)
       {
         return std::make_shared<labelset_t>(*letterized_labelset_t<I>::labelset(std::get<I>(ls.sets()))...);
