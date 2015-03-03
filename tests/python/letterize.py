@@ -14,7 +14,9 @@ def check(ctx, a, ctx2 = None, b = None):
         b = a
     aut = ctx.expression(a).derived_term()
     ref = ctx2.expression(b).derived_term()
-    CHECK_ISOMORPHIC(ref, aut.letterize())
+    res = aut.letterize()
+    CHECK_ISOMORPHIC(ref, res)
+    CHECK_EQ(True, res.is_letterized())
 
 # Idempotence for lal
 check(lal, 'a')
@@ -34,3 +36,42 @@ check(latw, "'(a,b)'", latn)
 check(latw, "<2>'(abc,x)'", latn, r"<2>'(a,x)''(b,\e)''(c,\e)'")
 check(latw, r"('(abc,x)'+'(def,y)')*'(ghi,z)'",
       latn, r"(('a,x''b,\e''c,\e')+('d,y''e,\e''f,\e'))*'g,z''h,\e''i,\e'")
+
+def check(aut, res):
+    CHECK_EQ(res, aut.is_letterized())
+    if not res:
+        CHECK_EQ(True, aut.letterize().is_letterized())
+
+def check_standard(ctx, a, res):
+    check(ctx.expression(a).standard(), res)
+
+def check_thompson(ctx, a, res):
+    check(ctx.expression(a).thompson(), res)
+
+check_standard(lal, "a", True)
+check_standard(lal, "abc", True)
+check_standard(lal, "a*+(bc+de*)*", True)
+
+check_thompson(lan, "a", True)
+check_thompson(lan, "abc", True)
+check_thompson(lan, "a*+(bc+de*)*", True)
+
+
+check_standard(law, "a", True)
+check_standard(law, "abc", False)
+check_standard(law, "a*+(bc+de*)*", False)
+
+check_thompson(law, "a", True)
+check_thompson(law, "abc", False)
+check_thompson(law, "a*+(bc+de*)*", False)
+
+
+check_standard(latw, "'(a,b)'", True)
+check_standard(latw, "'(abc,d)'", False)
+check_standard(latw, "'(a,d)''(b,e)''(c,f)'", True)
+check_standard(latw, "'(a,b)'+('(bc,x)'+'(de,z)')", False)
+
+check_thompson(latw, "'(a,b)'", True)
+check_thompson(latw, "'(abc,d)'", False)
+check_thompson(latw, "'(a,d)''(b,e)''(c,f)'", True)
+check_thompson(latw, "'(a,b)'+('(bc,x)'+'(de,z)')", False)
