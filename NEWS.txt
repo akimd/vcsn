@@ -16,15 +16,15 @@ spontaneous transitions.
 The `expression.zpc` function features an optional argument, which,
 when set to "compact", enables a variant, more compact, construction.
 
-   In [2]: vcsn.b.expression('ab').zpc()
-           ╭───╮  \e   ╭───╮  a   ╭───╮  \e   ╭───╮  b   ╭───╮  \e   ╭───╮
-   ★   ──> │ 0 │ ────> │ 1 │ ───> │ 2 │ ────> │ 3 │ ───> │ 4 │ ────> │ 5 │ ──>   ★
-           ╰───╯       ╰───╯      ╰───╯       ╰───╯      ╰───╯       ╰───╯
+    In [2]: vcsn.b.expression('ab').zpc()
+        ╭───╮  \e   ╭───╮  a   ╭───╮  \e   ╭───╮  b   ╭───╮  \e   ╭───╮
+    ──> │ 0 │ ────> │ 1 │ ───> │ 2 │ ────> │ 3 │ ───> │ 4 │ ────> │ 5 │ ──>
+        ╰───╯       ╰───╯      ╰───╯       ╰───╯      ╰───╯       ╰───╯
 
-   In [3]: vcsn.b.expression('ab').zpc('compact')
-           ╭───╮  a   ╭───╮  \e   ╭───╮  b   ╭───╮
-   ★   ──> │ 0 │ ───> │ 1 │ ────> │ 2 │ ───> │ 3 │ ──>   ★
-           ╰───╯      ╰───╯       ╰───╯      ╰───╯
+    In [3]: vcsn.b.expression('ab').zpc('compact')
+        ╭───╮  a   ╭───╮  \e   ╭───╮  b   ╭───╮
+    ──> │ 0 │ ───> │ 1 │ ────> │ 2 │ ───> │ 3 │ ──>
+        ╰───╯      ╰───╯       ╰───╯      ╰───╯
 
 ## 2015-02-23
 ### letterize: new algorithm
