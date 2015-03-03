@@ -7,7 +7,18 @@ compute_package_id
 
 cd "$DIR_BUILD"
 
+# Make a tarball.
 rm -rf $DIR_INSTALL $PACKAGE_ID.install
 make install DESTDIR=$DIR_INSTALL
 mv $DIR_INSTALL/usr/local $PACKAGE_ID.install
 tar jcf $PACKAGE_ID.binary.tar.bz2 $PACKAGE_ID.install
+
+# Build the docker package.
+cp "$DIR_SOURCE/Dockerfile" .
+docker build -t lrde/vcsn .
+
+# Save it locally, to provide it as an artifact for instance.
+docker save lrde/vcsn | gzip > vcsn-docker-image.tar.gz
+
+# Then push it to DockerHub.
+docker push lrde/vcsn
