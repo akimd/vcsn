@@ -82,6 +82,16 @@ namespace vcsn
 
       /// A signature: for each label, the outgoing class polynomial.
       using signature_t = std::map<label_t, class_polynomial_t>;
+      /// The signature of state \a s.
+      signature_t signature(state_t s) const
+      {
+        auto res = signature_t{};
+        for (auto t: a_->all_out(s))
+          cps_.add_here(res[a_->label_of(t)],
+                        state_to_class_.at(a_->dst_of(t)),
+                        a_->weight_of(t));
+        return res;
+      }
 
       struct signature_hasher
       {
@@ -195,15 +205,7 @@ namespace vcsn
                                        signature_hasher{*this},
                                        signature_equal_to{*this}};
                 for (auto s: c_states)
-                  {
-                    // For each state, its signature.
-                    auto sig = signature_t{};
-                    for (auto t: a_->all_out(s))
-                      cps_.add_here(sig[a_->label_of(t)],
-                                    state_to_class_.at(a_->dst_of(t)),
-                                    a_->weight_of(t));
-                    signature_to_state[sig].emplace_back(s);
-                  }
+                  signature_to_state[signature(s)].emplace_back(s);
 
                 if (2 <= signature_to_state.size())
                   {
