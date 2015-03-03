@@ -317,8 +317,8 @@ def bench_minimize(ctx, r, algo):
                    'a = r.standard()'])
 bench_minimize('lal_char(a-k), b', '[a-g]{800}',  'signature')
 bench_minimize('lal_char(a-k), b', '[a-k]{2000}', 'moore')
-bench_minimize('lal_char(a-k), b', '[a-g]{300}',  'weighted')
-bench_minimize('lal_char(a-k), z', '[a-g]{300}',  'weighted')
+bench_minimize('lal_char(a-k), b', '[a-g]{800}',  'weighted')
+bench_minimize('lal_char(a-k), z', '[a-g]{800}',  'weighted')
 
 
 bench('a.synchronizing_word()',

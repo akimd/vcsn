@@ -49,177 +49,51 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
 
-    public:
-      static std::ostream& print_(const set_t& ss, std::ostream& o)
-      {
-        o << '{';
-        const char* sep = "";
-        for (auto s : ss)
-          {
-            o << sep << s;
-            sep = ", ";
-          }
-        return o << "}";
-      }
+      /// Class polynomialset:
+      using class_polynomial_t = dynamic_bitset;
 
-    public:
-      static std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o)
-      {
-        const char* sep = "";
-        for (unsigned i = 0; i < c2ss.size(); ++i)
-          {
-            o << sep << '[' << i << "] = ";
-            print_(c2ss[i], o);
-            sep = "\n";
-          }
-        return o;
-      }
-
-      // For a given state, destination states for a specific label.
-      struct state_output_for_label_t
-      {
-        // For some unstored state.
-        label_t label;
-        std::vector<state_t> to_states; // Ordered.
-
-        friend
-        std::ostream&
-        operator<<(std::ostream& o, const state_output_for_label_t& out)
-        {
-          o << "out{" << out.label << " => ";
-          const char* sep = "";
-          for (auto s: out.to_states)
-            {
-              o << sep << s;
-              sep = ", ";
-            }
-          return o << "}";
-        }
-      };
-
-      // This is sorted by label.
-      using state_output_t = std::vector<state_output_for_label_t>;
-
-    public:
-      static std::ostream& print_(const state_output_t& outs, std::ostream& o)
-      {
-        bool first = true;
-        o << '{';
-        for (const auto& out: outs)
-          {
-            if (!first)
-              o << ", ";
-            o << out;
-            first = false;
-          }
-        return o << '}';
-      }
-
-      // This structure is only useful at initialization time, when
-      // sorting transitions from a given state in a canonical order.
-      using label_to_states_t
-        = std::map<label_t, std::vector<state_t>, vcsn::less<labelset_t>>;
-
-      std::unordered_map<state_t, state_output_t> state_to_state_output_;
+      /// A signature: for each label, the outgoing class polynomial.
+      using signature_t = std::map<label_t, class_polynomial_t>;
 
       struct signature_hasher
       {
-        // FIXME: G++ 4.9 requires this ctor, which is wrong.
-        signature_hasher(const minimizer& m)
-          : minimizer_(m)
-        {}
-
-        size_t operator()(const state_output_t* state_output_) const noexcept
+        size_t operator()(const signature_t& sig) const noexcept
         {
-          const state_output_t& state_output = *state_output_;
           size_t res = 0;
-          dynamic_bitset bits(num_classes_);
-          for (auto& t : state_output)
+          for (const auto& t : sig)
             {
-              const label_t& label = t.label;
-              std::hash_combine_hash(res, minimizer_.ls_.hash(label));
-              // Hash the set of classes reached with label.  Of
-              // course the hash must not depend on class ordering.
-              bits.reset();
-              for (auto s : t.to_states)
-                bits.set(state_to_class_.at(s));
-              std::hash_combine(res, bits);
+              std::hash_combine_hash(res, minimizer_.ls_.hash(t.first));
+              std::hash_combine(res, t.second);
             }
-#if DEBUG
-          print_(state_output, std::cerr) << " = " << res << std::endl;
-#endif
           return res;
         }
-
         const minimizer& minimizer_;
-        const state_to_class_t& state_to_class_ = minimizer_.state_to_class_;
-        unsigned num_classes_ = minimizer_.num_classes_;
       }; // class signature_hasher
 
       struct signature_equal_to
       {
-        // FIXME: G++ 4.9 requires this ctor, which is wrong.
-        signature_equal_to(const minimizer& m)
-          : minimizer_(m)
-        {}
-        bool operator()(const state_output_t *as_,
-                        const state_output_t *bs_) const noexcept
+        bool operator()(const signature_t& as,
+                        const signature_t& bs) const noexcept
         {
-          const state_output_t& as = *as_;
-          const state_output_t& bs = *bs_;
-#if DEBUG
-          print_(as, std::cerr) << " =? ";
-          print_(bs, std::cerr) << " = ";
-#endif
           if (as.size() != bs.size())
-            {
-#if DEBUG
-              std::cerr << "false 1" << std::endl;
-#endif
-              return false;
-            }
+            return false;
 
-          dynamic_bitset a_bits(num_classes_), b_bits(num_classes_);
-          for (auto i = as.cbegin(), i_end = as.cend(), j = bs.cbegin();
+          using std::begin; using std::end;
+          for (auto i = begin(as), i_end = end(as), j = begin(bs);
                i != i_end;
                ++i, ++j)
-            {
-              if (! ls_.equal(i->label, j->label))
-                {
-#if DEBUG
-                  std::cerr << "false 2" << std::endl;
-#endif
-                  return false;
-                }
-
-              a_bits.reset(); b_bits.reset();
-              for (auto s : i->to_states)
-                a_bits.set(state_to_class_.at(s));
-              for (auto s : j->to_states)
-                b_bits.set(state_to_class_.at(s));
-              if (a_bits != b_bits)
-                {
-#if DEBUG
-                  std::cerr << "false 3" << std::endl;
-#endif
-                  return false;
-                }
-            }
-#if DEBUG
-          std::cerr << "true" << std::endl;
-#endif
+            if (!minimizer_.ls_.equal(i->first, j->first)
+                || i->second != j->second)
+              return false;
           return true;
         }
 
         const minimizer& minimizer_;
-        const labelset_t& ls_ = minimizer_.ls_;
-        const state_to_class_t& state_to_class_ = minimizer_.state_to_class_;
-        const size_t num_classes_ = minimizer_.num_classes_;
       }; // class signature_equal_to
 
       /// Cluster states per signature.
       using signature_multimap
-        = std::unordered_map<state_output_t*, set_t,
+        = std::unordered_map<signature_t, set_t,
                              signature_hasher, signature_equal_to>;
 
       void clear()
@@ -260,31 +134,14 @@ namespace vcsn
         , ls_(*a_->labelset())
       {
         require(is_trim(a_), me(), ": input must be trim");
-
-        // Fill state_to_state_output.
-        for (auto s : a_->all_states())
-          {
-            // Get the out-states from s, by label:
-            label_to_states_t label_to_states;
-            for (auto t : a_->all_out(s))
-              label_to_states[a_->label_of(t)].emplace_back(a_->dst_of(t));
-
-            // Associate this information to s, as a vector sorted by label:
-            state_output_t& state_output = state_to_state_output_[s];
-            for (auto& l_ss : label_to_states)
-              {
-                std::sort(l_ss.second.begin(), l_ss.second.end());
-                state_output.emplace_back(state_output_for_label_t{l_ss.first,
-                      std::move(l_ss.second)});
-              }
-          }
       }
 
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
-        // Don't even bother to split between final and non-final
-        // states, this initialization is useless.
+        // Don't even bother splitting into final and non-final
+        // states: post will be set apart anyway because of its
+        // signature.
         std::unordered_set<class_t> classes;
         {
           const auto& all = a_->all_states();
@@ -296,30 +153,36 @@ namespace vcsn
             go_on = false;
             for (auto i = std::begin(classes), end = std::end(classes);
                  i != end;
-                 /* nothing. */)
+                 /* Nothing. */)
               {
                 auto c = *i;
                 const set_t& c_states = class_to_set_.at(c);
 
                 // Look for distinguishable states in c_states:
                 // cluster the signatures.
-                auto sig_to_state
+                auto signature_to_state
                   = signature_multimap{1,
                                        signature_hasher{*this},
                                        signature_equal_to{*this}};
-                for (auto s : c_states)
+                for (auto s: c_states)
                   {
-#if DEBUG
-                    std::cerr << "class %" << c << " state: " << s << ' ';
-                    print_(state_to_state_output_[s], std::cerr) << std::endl;
-#endif
-                    sig_to_state[&state_to_state_output_[s]].emplace_back(s);
+                    // For each state, its signature.
+                    auto sig = signature_t{};
+                    for (auto t: a_->all_out(s))
+                      {
+                        auto i = sig.find(a_->label_of(t));
+                        if (i == std::end(sig))
+                          i = sig
+                            .emplace(a_->label_of(t),
+                                     class_polynomial_t{num_classes_})
+                            .first;
+                        i->second
+                          .set(state_to_class_.at(a_->dst_of(t)));
+                      }
+                    signature_to_state[sig].emplace_back(s);
                   }
-#if DEBUG
-                std::cerr << "sig_to_state: " << sig_to_state
-                          << std::endl;
-#endif
-                if (2 <= sig_to_state.size())
+
+                if (2 <= signature_to_state.size())
                   {
                     // Split class c.
                     go_on = true;
@@ -327,7 +190,7 @@ namespace vcsn
                     // To keep class numbers contiguous, reuse 'c' as
                     // first class number, and then use new one (via
                     // "c = class_invalid" below).
-                    for (auto& p: sig_to_state)
+                    for (auto& p: signature_to_state)
                       {
                         bool singleton = p.second.size() == 1;
                         class_t c2 = make_class(std::move(p.second), c);
