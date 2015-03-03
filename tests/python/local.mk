@@ -51,6 +51,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
+  %D%/letterize.py                              \
   %D%/lift.py                                   \
   %D%/minimize.py                               \
   %D%/normalize.py                              \
