@@ -49,77 +49,19 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
 
-    public:
-      static std::ostream& print_(const set_t& ss, std::ostream& o)
-      {
-        o << '{';
-        const char* sep = "";
-        for (auto s : ss)
-          {
-            o << sep << s;
-            sep = ", ";
-          }
-        return o << "}";
-      }
-
-    public:
-      static std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o)
-      {
-        const char* sep = "";
-        for (unsigned i = 0; i < c2ss.size(); ++i)
-          {
-            o << sep << '[' << i << "] = ";
-            print_(c2ss[i], o);
-            sep = "\n";
-          }
-        return o;
-      }
-
       // For a given state, destination states for a specific label.
       struct state_output_for_label_t
       {
         // For some unstored state.
         label_t label;
         std::vector<state_t> to_states; // Ordered.
-
-        friend
-        std::ostream&
-        operator<<(std::ostream& o, const state_output_for_label_t& out)
-        {
-          o << "out{" << out.label << " => ";
-          const char* sep = "";
-          for (auto s: out.to_states)
-            {
-              o << sep << s;
-              sep = ", ";
-            }
-          return o << "}";
-        }
       };
 
       // This is sorted by label.
       using state_output_t = std::vector<state_output_for_label_t>;
 
-    public:
-      static std::ostream& print_(const state_output_t& outs, std::ostream& o)
-      {
-        bool first = true;
-        o << '{';
-        for (const auto& out: outs)
-          {
-            if (!first)
-              o << ", ";
-            o << out;
-            first = false;
-          }
-        return o << '}';
-      }
-
-      // This structure is only useful at initialization time, when
-      // sorting transitions from a given state in a canonical order.
-      using label_to_states_t
-        = std::map<label_t, std::vector<state_t>, vcsn::less<labelset_t>>;
-
+      /// Sort of a transition map for each state:
+      /// state -> vector of (label, destination states).
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
       struct signature_hasher
@@ -129,9 +71,8 @@ namespace vcsn
           : minimizer_(m)
         {}
 
-        size_t operator()(const state_output_t* state_output_) const noexcept
+        size_t operator()(const state_output_t& state_output) const noexcept
         {
-          const state_output_t& state_output = *state_output_;
           size_t res = 0;
           dynamic_bitset bits(num_classes_);
           for (auto& t : state_output)
@@ -145,10 +86,12 @@ namespace vcsn
                 bits.set(state_to_class_.at(s));
               std::hash_combine(res, bits);
             }
-#if DEBUG
-          print_(state_output, std::cerr) << " = " << res << std::endl;
-#endif
           return res;
+        }
+
+        size_t operator()(state_t s) const noexcept
+        {
+          return operator()(minimizer_.state_to_state_output_.at(s));
         }
 
         const minimizer& minimizer_;
@@ -162,22 +105,11 @@ namespace vcsn
         signature_equal_to(const minimizer& m)
           : minimizer_(m)
         {}
-        bool operator()(const state_output_t *as_,
-                        const state_output_t *bs_) const noexcept
+        bool operator()(const state_output_t& as,
+                        const state_output_t& bs) const noexcept
         {
-          const state_output_t& as = *as_;
-          const state_output_t& bs = *bs_;
-#if DEBUG
-          print_(as, std::cerr) << " =? ";
-          print_(bs, std::cerr) << " = ";
-#endif
           if (as.size() != bs.size())
-            {
-#if DEBUG
-              std::cerr << "false 1" << std::endl;
-#endif
-              return false;
-            }
+            return false;
 
           dynamic_bitset a_bits(num_classes_), b_bits(num_classes_);
           for (auto i = as.cbegin(), i_end = as.cend(), j = bs.cbegin();
@@ -185,12 +117,7 @@ namespace vcsn
                ++i, ++j)
             {
               if (! ls_.equal(i->label, j->label))
-                {
-#if DEBUG
-                  std::cerr << "false 2" << std::endl;
-#endif
-                  return false;
-                }
+                return false;
 
               a_bits.reset(); b_bits.reset();
               for (auto s : i->to_states)
@@ -198,17 +125,16 @@ namespace vcsn
               for (auto s : j->to_states)
                 b_bits.set(state_to_class_.at(s));
               if (a_bits != b_bits)
-                {
-#if DEBUG
-                  std::cerr << "false 3" << std::endl;
-#endif
-                  return false;
-                }
+                return false;
             }
-#if DEBUG
-          std::cerr << "true" << std::endl;
-#endif
+
           return true;
+        }
+
+        bool operator()(const state_t& a, const state_t& b) const noexcept
+        {
+          return operator()(minimizer_.state_to_state_output_.at(a),
+                            minimizer_.state_to_state_output_.at(b));
         }
 
         const minimizer& minimizer_;
@@ -218,8 +144,11 @@ namespace vcsn
       }; // class signature_equal_to
 
       /// Cluster states per signature.
+      ///
+      /// This appears to be hashing on states, but we actually hash
+      /// on the states' signatures behind the scene.
       using signature_multimap
-        = std::unordered_map<state_output_t*, set_t,
+        = std::unordered_map<state_t, set_t,
                              signature_hasher, signature_equal_to>;
 
       void clear()
@@ -264,6 +193,10 @@ namespace vcsn
         // Fill state_to_state_output.
         for (auto s : a_->all_states())
           {
+            // Sort of a transition-map for state s.
+            using label_to_states_t
+              = std::map<label_t, std::vector<state_t>, vcsn::less<labelset_t>>;
+
             // Get the out-states from s, by label:
             label_to_states_t label_to_states;
             for (auto t : a_->all_out(s))
@@ -283,6 +216,8 @@ namespace vcsn
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
+        // The list of classes candidates for splitting.
+        //
         // Don't even bother to split between final and non-final
         // states, this initialization is useless.
         std::unordered_set<class_t> classes;
@@ -308,17 +243,8 @@ namespace vcsn
                                        signature_hasher{*this},
                                        signature_equal_to{*this}};
                 for (auto s : c_states)
-                  {
-#if DEBUG
-                    std::cerr << "class %" << c << " state: " << s << ' ';
-                    print_(state_to_state_output_[s], std::cerr) << std::endl;
-#endif
-                    sig_to_state[&state_to_state_output_[s]].emplace_back(s);
-                  }
-#if DEBUG
-                std::cerr << "sig_to_state: " << sig_to_state
-                          << std::endl;
-#endif
+                  sig_to_state[s].emplace_back(s);
+
                 if (2 <= sig_to_state.size())
                   {
                     // Split class c.
