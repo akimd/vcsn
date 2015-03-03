@@ -5,6 +5,19 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-03-03
+### is_letterized: new algorithm
+This algorithm checks whether an automaton is letterized, i.e. whether each
+transition's label is a single letter (in the sense of the labelset).
+
+    In [2]: ctx = vcsn.context("law_char, b")
+
+    In [3]: ctx.expression("abc").standard().is_letterized()
+    Out[3]: False
+
+    In [4]: ctx.expression("a*(b+c)").standard().is_letterized()
+    Out[4]: True
+
 ## 2015-03-02
 ### zpc: new algorithm
 This algorithm generates the ZPC automaton from an expression.  It has
