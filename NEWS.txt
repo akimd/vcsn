@@ -6,6 +6,12 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2015-03-03
+### realtime: new algorithm
+Compute the letterized, proper equivalent of an automaton. The result automaton
+will have only letter transitions (no words, no spontaneous transitions).
+It comes with the is_realtime algorithm, to check if an automaton is realtime
+or not.
+
 ### is_letterized: new algorithm
 This algorithm checks whether an automaton is letterized, i.e. whether each
 transition's label is a single letter (in the sense of the labelset).
