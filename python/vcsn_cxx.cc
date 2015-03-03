@@ -349,6 +349,11 @@ struct automaton
     return vcsn::dyn::is_proper(val_);
   }
 
+  bool is_realtime() const
+  {
+    return vcsn::dyn::is_realtime(val_);
+  }
+
   bool is_standard() const
   {
     return vcsn::dyn::is_standard(val_);
@@ -435,6 +440,11 @@ struct automaton
   automaton push_weights() const
   {
     return vcsn::dyn::push_weights(val_);
+  }
+
+  automaton realtime() const
+  {
+    return vcsn::dyn::realtime(val_);
   }
 
   automaton reduce() const
@@ -1060,6 +1070,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_normalized", &automaton::is_normalized)
     .def("is_proper", &automaton::is_proper)
     .def("is_out_sorted", &automaton::is_out_sorted)
+    .def("is_realtime", &automaton::is_realtime)
     .def("is_standard", &automaton::is_standard)
     .def("_is_synchronized_by", &automaton::is_synchronized_by)
     .def("is_synchronizing", &automaton::is_synchronizing)
@@ -1079,6 +1090,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)
+    .def("realtime", &automaton::realtime)
     .def("expression", &automaton::to_expression, (arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)

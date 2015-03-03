@@ -325,6 +325,9 @@ namespace vcsn
     /// Whether has no spontaneous transition.
     bool is_proper(const automaton& aut);
 
+    /// Whether has no spontaneous transition, and is letterized.
+    bool is_realtime(const automaton& aut);
+
     /// Whether is standard (unique initial state, with weight one, no
     /// incoming transition).
     bool is_standard(const automaton& aut);
@@ -532,6 +535,9 @@ namespace vcsn
     /// \param ctx   the context.
     /// \param is    the input stream.
     weight read_weight(const context& ctx, std::istream& is);
+
+    /// Create the realtime automaton (letterized and proper).
+    automaton realtime(const automaton& aut);
 
     /// Reduce \a aut.
     automaton reduce(const automaton& aut);

@@ -54,6 +54,7 @@ namespace vcsn
       ALGO("is-letterized", "letterize");
       ALGO("is-normalized", "normalize");
       ALGO("is-out-sorted", "sort");
+      ALGO("is-realtime", "letterize");
       ALGO("is-standard", "standard");
       ALGO("is-synchronized-by", "synchronizing-word");
       ALGO("is-trim", "accessible");
@@ -68,6 +69,7 @@ namespace vcsn
       ALGO("pair", "synchronizing-word");
       ALGO("power", "product");
       ALGO("rdiv", "divide");
+      ALGO("realtime", "letterize");
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");

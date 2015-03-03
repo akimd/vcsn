@@ -2,6 +2,7 @@
 
 #include <iterator>
 
+#include <vcsn/algos/proper.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh> // context_t_of
@@ -289,6 +290,64 @@ namespace vcsn
       bool is_letterized(const automaton& aut)
       {
         return ::vcsn::is_letterized(aut->as<Aut>());
+      }
+    }
+  }
+
+  /*-----------.
+  | realtime.  |
+  `-----------*/
+
+  /// Split the word transitions in the input automaton into letter ones, and
+  /// remove the spontaneous transitions
+  ///
+  /// \param[in] aut        the automaton
+  /// \returns              the realtime automaton
+  template <typename Aut>
+  auto
+  realtime(const Aut& aut)
+    -> decltype(proper(::vcsn::letterize(aut)))
+  {
+    return proper(::vcsn::letterize(aut));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      automaton realtime(const automaton& aut)
+      {
+        return make_automaton(::vcsn::realtime(aut->as<Aut>()));
+      }
+    }
+  }
+
+  /*--------------.
+  | is_realtime.  |
+  `--------------*/
+
+  /// Check if the automaton is realtime, i.e. it is letterized and proper.
+  ///
+  /// \param[in] aut        the automaton
+  /// \returns              whether the automaton is realtime
+  template <typename Aut>
+  bool
+  is_realtime(const Aut& aut)
+  {
+    return ::vcsn::is_letterized(aut) && is_proper(aut);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      bool is_realtime(const automaton& aut)
+      {
+        return ::vcsn::is_realtime(aut->as<Aut>());
       }
     }
   }
