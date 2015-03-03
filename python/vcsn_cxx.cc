@@ -319,6 +319,11 @@ struct automaton
     return vcsn::dyn::is_functional(val_);
   }
 
+  bool is_letterized() const
+  {
+    return vcsn::dyn::is_letterized(val_);
+  }
+
   bool is_partial_identity() const
   {
     return vcsn::dyn::is_partial_identity(val_);
@@ -1049,6 +1054,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_eps_acyclic", &automaton::is_eps_acyclic)
     .def("is_equivalent", &automaton::is_equivalent)
     .def("is_functional", &automaton::is_functional)
+    .def("is_letterized", &automaton::is_letterized)
     .def("is_partial_identity", &automaton::is_partial_identity)
     .def("is_isomorphic", &automaton::is_isomorphic)
     .def("is_normalized", &automaton::is_normalized)

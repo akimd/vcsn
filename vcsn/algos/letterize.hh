@@ -210,6 +210,30 @@ namespace vcsn
       return aut;
     }
 
+    template <typename Aut>
+    vcsn::enable_if_t<letterized_ls<Aut>::should_run, bool>
+    is_letterized(const Aut& aut)
+    {
+      auto ls = aut->labelset();
+      for (auto t : aut->transitions())
+      {
+        auto it = ls->letters_of_padded(aut->label_of(t),
+                                        letterized_ls<Aut>::labelset_t::one());
+        // size is not 0 or 1, then it's a word
+        // we can't use size, as it's not defined for zip_iterators
+        if (it.begin() != it.end() && ++(it.begin()) != it.end())
+          return false;
+      }
+      return true;
+    }
+
+    template <typename Aut>
+    vcsn::enable_if_t<!letterized_ls<Aut>::should_run, bool>
+    is_letterized(const Aut& aut)
+    {
+      return true;
+    }
+
   }
 
   /*------------.
@@ -237,6 +261,34 @@ namespace vcsn
       automaton letterize(const automaton& aut)
       {
         return make_automaton(::vcsn::letterize(aut->as<Aut>()));
+      }
+    }
+  }
+
+  /*----------------.
+  | is_letterized.  |
+  `----------------*/
+
+  /// Check if the transitions are all letters.
+  ///
+  /// \param[in] aut        the automaton
+  /// \returns              whether the transitions are letters
+  template <typename Aut>
+  bool
+  is_letterized(const Aut& aut)
+  {
+    return detail::is_letterized(aut);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      bool is_letterized(const automaton& aut)
+      {
+        return ::vcsn::is_letterized(aut->as<Aut>());
       }
     }
   }

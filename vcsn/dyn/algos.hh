@@ -307,6 +307,9 @@ namespace vcsn
     /// \pre \a aut is a transducer.
     bool is_functional(const automaton& aut);
 
+    /// Whether \a aut is letterized.
+    bool is_letterized(const automaton& aut);
+
     /// Whether \a aut realizes a partial identity.
     ///
     /// \pre \a aut is a transducer.

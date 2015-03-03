@@ -51,6 +51,7 @@ namespace vcsn
       ALGO("is-costandard", "standard");
       ALGO("is-cycle-ambiguous", "is-ambiguous");
       ALGO("is-empty", "accessible");
+      ALGO("is-letterized", "letterize");
       ALGO("is-normalized", "normalize");
       ALGO("is-out-sorted", "sort");
       ALGO("is-standard", "standard");
