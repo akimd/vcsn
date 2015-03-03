@@ -106,7 +106,6 @@ namespace vcsn
       {
         return std::make_shared<labelset_t>(labelset_t{ls.genset()});
       }
-
     };
 
     template <typename GenSet>
@@ -120,6 +119,21 @@ namespace vcsn
       labelset(const letterset<GenSet>& ls)
       {
         return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+      }
+    };
+
+    template <typename LabelSet>
+    struct letterized_labelset<nullableset<LabelSet>>
+    {
+      using letterized_ls = letterized_labelset<LabelSet>;
+      static constexpr bool should_run = letterized_ls::should_run;
+
+      using labelset_t = typename letterized_ls::labelset_t;
+
+      static std::shared_ptr<labelset_t>
+      labelset(const nullableset<LabelSet>& ls)
+      {
+        return letterized_ls::labelset(*ls.labelset());
       }
     };
 
