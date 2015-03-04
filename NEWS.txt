@@ -369,10 +369,10 @@ general case.
 Series currently depend on the commutativity of their weightset, and only
 support a subset of the available operations.
 
-    >>> vcsn.context('lal_char(a-c)_ratexpset<lal_char(x-z)_b>') # series
-    >>> vcsn.context('lal_char(a-c)_seriesset<lal_char(x-z)_b>') # series
-    >>> vcsn.context(ratexpset<lal_char(x-z)_b>_z')              # trivial
-    >>> vcsn.context('lal_char(a-c)_ratexpset<lal_char(x-z)_b>(trivial)')
+    >>> vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>(series)') # series
+    >>> vcsn.context('lal_char(a)_seriesset<lal_char(x)_b>')         # series
+    >>> vcsn.context(ratexpset<lal_char(x)_b>_z')                    # trivial
+    >>> vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>(trivial)')# trivial
     >>> e = vcsn.context('lal_char(a-c)_z').ratexp('b+a+b'); e
     b+a+b
     >>> s = vcsn.context('lal_char(a-c)_z').series('b+a+b'); s
