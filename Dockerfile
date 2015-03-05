@@ -20,6 +20,7 @@ RUN useradd -d /vcsn -m -r vcsn
 ADD vcsn-2.0a.binary.tar.bz2 /usr/local/stow/
 RUN stow -d /usr/local/stow vcsn-2.0a.install
 RUN ln -s /usr/local/share/doc/vcsn/notebooks /vcsn/
+RUN ln -s /usr/local/share/doc/vcsn/notebooks/index.ipynb /vcsn/Documentation.ipynb
 
 EXPOSE 8888
 
@@ -28,5 +29,4 @@ RUN mkdir /vcsn/.ipython
 RUN chown vcsn:vcsn /vcsn/.ipython
 ENV VCSN_DATADIR /vcsn/.ipython
 
-CMD su vcsn -s /bin/bash -c 'vcsn-notebook --ip=* --port 8888'
-
+CMD su vcsn -s /bin/bash -c 'vcsn notebook --ip=* --port 8888'
