@@ -100,7 +100,7 @@ namespace vcsn
     /// Prepare to iterate over the letters of v.
     /// This is for the padded case
     static word_t
-    letters_of(const value_t& v, letter_t)
+    letters_of_padded(const value_t& v, letter_t)
     {
       return v;
     }

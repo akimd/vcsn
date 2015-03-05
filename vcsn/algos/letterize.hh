@@ -57,8 +57,8 @@ namespace vcsn
         for (auto st : in_aut_->all_states())
           for (auto tr : in_aut_->all_out(st))
             {
-              auto letters = in_ls->letters_of(in_aut_->label_of(tr),
-                                               out_labelset_t::one());
+              auto letters = in_ls->letters_of_padded(in_aut_->label_of(tr),
+                                                      out_labelset_t::one());
               auto it = letters.begin();
               if (it != letters.end())
               {

@@ -175,27 +175,6 @@ namespace vcsn
     }
 
   private:
-    /// Must be declared before, as we use its result in decltype.
-    template <typename Value, std::size_t... I>
-    static auto
-    letters_of_(const Value& v, seq<I...>)
-      -> decltype(zip(valueset_t<I>::letters_of(std::get<I>(v))...))
-    {
-      return zip(valueset_t<I>::letters_of(std::get<I>(v))...);
-    }
-
-    /// Must be declared before, as we use its result in decltype.
-    template <typename Value, typename... Defaults, std::size_t... I>
-    static auto
-    letters_of_(const Value& v, const std::tuple<Defaults...>& def, seq<I...>)
-      -> decltype(zip_with_padding(def, valueset_t<I>::letters_of(std::get<I>(v),
-                                                                  std::get<I>(def))...))
-    {
-      return zip_with_padding(def,
-                              valueset_t<I>::letters_of(std::get<I>(v),
-                                                        std::get<I>(def))...);
-    }
-
     template <typename LhsValue, typename RhsValue, std::size_t... I>
     auto
     mul_(const LhsValue& l, const RhsValue& r, seq<I...>) const
@@ -205,32 +184,6 @@ namespace vcsn
     }
 
   public:
-    /// Iterate over the letters of v.
-    ///
-    /// Templated by Value so that we work for both word_t and
-    /// label_t.  Besides, avoids the problem of instantiation with
-    /// weightsets that do not provide a word_t type.
-    template <typename Value>
-    static auto
-    letters_of(const Value& v)
-      -> decltype(letters_of_(v, indices))
-    {
-      return letters_of_(v, indices);
-    }
-
-    /// Iterate over the letters of v.
-    ///
-    /// When the tapes are not the same length, instead of stopping when the
-    /// shortest tape is consumed, continue until the end of every tape,
-    /// padding with the default values provided.
-    template <typename Value, typename... Defaults>
-    static auto
-    letters_of(const Value& v, const std::tuple<Defaults...>& def)
-      -> decltype(letters_of_(v, def, indices))
-    {
-      return letters_of_(v, def, indices);
-    }
-
     /// Convert to a word.
     template <typename... Args>
     auto
@@ -846,6 +799,56 @@ namespace vcsn
 
     valuesets_t sets_;
     mutable bool open__ = false;
+
+  private:
+    /// Must be declared before, as we use its result in decltype.
+    template <typename Value, std::size_t... I>
+    static auto
+    letters_of_(const Value& v, seq<I...>)
+      -> decltype(zip(valueset_t<I>::letters_of(std::get<I>(v))...))
+    {
+      return zip(valueset_t<I>::letters_of(std::get<I>(v))...);
+    }
+
+    /// Must be declared before, as we use its result in decltype.
+    template <typename Value, typename... Defaults, std::size_t... I>
+    auto
+    letters_of_padded_(const Value& v, const std::tuple<Defaults...>& def, seq<I...>) const
+      -> decltype(zip_with_padding(def, std::get<I>(this->sets_).letters_of_padded(std::get<I>(v),
+                                                                                   std::get<I>(def))...))
+    {
+      return zip_with_padding(def,
+                              std::get<I>(sets_).letters_of_padded(std::get<I>(v),
+                                                                   std::get<I>(def))...);
+    }
+
+  public:
+    /// Iterate over the letters of v.
+    ///
+    /// Templated by Value so that we work for both word_t and
+    /// label_t.  Besides, avoids the problem of instantiation with
+    /// weightsets that do not provide a word_t type.
+    template <typename Value>
+    static auto
+    letters_of(const Value& v)
+      -> decltype(letters_of_(v, indices))
+    {
+      return letters_of_(v, indices);
+    }
+
+    /// Iterate over the letters of v.
+    ///
+    /// When the tapes are not the same length, instead of stopping when the
+    /// shortest tape is consumed, continue until the end of every tape,
+    /// padding with the default values provided.
+    template <typename Value, typename... Defaults>
+    auto
+    letters_of_padded(const Value& v, const std::tuple<Defaults...>& def) const
+      -> decltype(this->letters_of_padded_(v, def, indices))
+    {
+      return letters_of_padded_(v, def, indices);
+    }
+
   };
 
   namespace detail
