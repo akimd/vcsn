@@ -54,9 +54,16 @@ namespace vcsn
         : super_t(aut, out)
         , dot2tex_(dot2tex)
       {
-        // GCC warnings: see
+#if defined __GNUC__ && ! defined __clang__
+        // GCC 4.9 and 5.0 warnings: see
         // <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65324>.
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
         bos_.push(detail::backslashify_output_filter());
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic pop
+#endif
         bos_.push(out);
       }
 
