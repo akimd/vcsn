@@ -5,7 +5,7 @@
 #include <cmath>
 
 #include <vcsn/core/join.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh> // hash_value
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star_status.hh>

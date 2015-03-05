@@ -4,7 +4,7 @@
 #include <set>
 
 #include <vcsn/misc/attributes.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 
 namespace std
 {

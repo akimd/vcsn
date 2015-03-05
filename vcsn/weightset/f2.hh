@@ -1,17 +1,15 @@
-#ifndef VCSN_WEIGHTSET_F2_HH
-# define VCSN_WEIGHTSET_F2_HH
+#pragma once
 
-# include <cassert>
-# include <ostream>
+#include <cassert>
+#include <ostream>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh>
-# include <vcsn/misc/symbol.hh>
-# include <vcsn/weightset/weightset.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh>
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
@@ -178,5 +176,3 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(f2, f2);
   }// detail::
 }
-
-#endif // !VCSN_WEIGHTSET_F2_HH

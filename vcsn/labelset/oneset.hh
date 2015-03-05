@@ -1,15 +1,14 @@
-#ifndef VCSN_LABELSET_ONESET_HH
-# define VCSN_LABELSET_ONESET_HH
+#pragma once
 
-# include <iostream>
-# include <set>
-# include <stdexcept>
+#include <iostream>
+#include <set>
+#include <stdexcept>
 
-# include <vcsn/core/kind.hh>
-# include <vcsn/empty.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/empty.hh>
+#include <vcsn/labelset/labelset.hh>
+#include <vcsn/misc/functional.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -34,9 +33,6 @@ namespace vcsn
     /// Build from the description in \a is.
     static oneset make(std::istream& is)
     {
-      // name: lao, expressionset<law_char(xyz), b>
-      //       ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      //       kind         weightset
       kind_t::make(is);
       return {};
     }
@@ -230,5 +226,3 @@ namespace vcsn
     return {};
   }
 }
-
-#endif // !VCSN_LABELSET_ONESET_HH

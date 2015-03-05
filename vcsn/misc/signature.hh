@@ -5,7 +5,7 @@
 
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/export.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 #include <vcsn/misc/vector.hh>
 #include <vcsn/misc/symbol.hh>
 

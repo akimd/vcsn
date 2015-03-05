@@ -2,25 +2,6 @@
 
 #include <functional> // std::equal_to
 
-namespace std
-{
-
-  // http://stackoverflow.com/questions/2590677
-  inline void hash_combine_hash(std::size_t& seed, size_t h)
-  {
-    seed ^= h + 0x9e3779b9 + (seed<<6) + (seed>>2);
-  }
-
-  // http://stackoverflow.com/questions/2590677
-  template <typename T>
-  inline void hash_combine(std::size_t& seed, const T& v)
-  {
-    std::hash<T> hasher;
-    hash_combine_hash(seed, hasher(v));
-  }
-
-}
-
 namespace vcsn
 {
 
@@ -39,6 +20,20 @@ namespace vcsn
       return valueset_t::equal(v1, v2);
     }
   };
+
+  // http://stackoverflow.com/questions/2590677
+  inline void hash_combine_hash(std::size_t& seed, size_t h)
+  {
+    seed ^= h + 0x9e3779b9 + (seed<<6) + (seed>>2);
+  }
+
+  // http://stackoverflow.com/questions/2590677
+  template <typename T>
+  inline void hash_combine(std::size_t& seed, const T& v)
+  {
+    std::hash<T> hasher;
+    hash_combine_hash(seed, hasher(v));
+  }
 
   /// This is useful to make hashes with labels or weights as keys
   /// without using non-default constructors; to be used along with
@@ -71,4 +66,17 @@ namespace vcsn
     std::hash<T> hasher;
     return hasher(v);
   }
+
+  /// Functor to compare Values of ValueSets.
+  template <typename ValueSet, typename Value = typename ValueSet::value_t>
+  struct less
+  {
+    using valueset_t = ValueSet;
+    using value_t = Value;
+
+    bool operator()(const value_t& lhs, const value_t& rhs) const
+    {
+      return valueset_t::less(lhs, rhs);
+    }
+  };
 } // namespace vcsn

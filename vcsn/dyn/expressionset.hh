@@ -1,14 +1,12 @@
-#ifndef VCSN_DYN_EXPRESSIONSET_HH
-# define VCSN_DYN_EXPRESSIONSET_HH
+#pragma once
 
-# include <memory>  // shared_ptr
-# include <set>
-# include <string>
+#include <set>
+#include <string>
 
-# include <vcsn/core/rat/fwd.hh> // rat::exp_t.
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/fwd.hh> // dyn::expression.
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/core/rat/fwd.hh> // rat::exp_t.
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/fwd.hh> // dyn::expression.
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -199,5 +197,3 @@ namespace detail
 } // namespace vcsn
 
 # include <vcsn/dyn/expressionset.hxx>
-
-#endif // !VCSN_DYN_EXPRESSIONSET_HH

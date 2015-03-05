@@ -1,20 +1,17 @@
-#ifndef VCSN_CORE_RAT_HASH_HXX
-# define VCSN_CORE_RAT_HASH_HXX
-
-# include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 
 namespace vcsn
 {
   namespace rat
   {
 
-# define DEFINE                                 \
-    template <typename ExpSet>               \
+#define DEFINE                                  \
+    template <typename ExpSet>                  \
     inline                                      \
     auto                                        \
     hash<ExpSet>
 
-# define VISIT(Type)                          \
+#define VISIT(Type)                           \
     DEFINE::visit(const Type ## _t& v)        \
       -> void
 
@@ -22,7 +19,7 @@ namespace vcsn
     VISIT(atom)
     {
       visit_nullary(v);
-      std::hash_combine(res_, ExpSet::labelset_t::hash(v.value()));
+      hash_combine(res_, ExpSet::labelset_t::hash(v.value()));
     }
 
     VISIT(lweight)
@@ -40,7 +37,7 @@ namespace vcsn
     void
     hash<ExpSet>::combine_type(const node_t& node)
     {
-      std::hash_combine(res_, int(node.type()));
+      hash_combine(res_, int(node.type()));
     }
 
     template <typename ExpSet>
@@ -68,7 +65,7 @@ namespace vcsn
     hash<ExpSet>::visit_weight_node(const weight_node_t<Type>& n)
     {
       combine_type(n);
-      std::hash_combine(res_, ExpSet::weightset_t::hash(n.weight()));
+      hash_combine(res_, ExpSet::weightset_t::hash(n.weight()));
       n.sub()->accept(*this);
     }
 
@@ -82,10 +79,8 @@ namespace vcsn
       for (auto child : n)
         child->accept(*this);
     }
-# undef VISIT
-# undef DEFINE
+#undef VISIT
+#undef DEFINE
 
   } // namespace rat
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_HASH_HXX

@@ -1,7 +1,6 @@
-#ifndef VCSN_MISC_UNORDERED_MAP_HH
-# define VCSN_MISC_UNORDERED_MAP_HH
+#pragma once
 
-# include <unordered_map>
+#include <unordered_map>
 
 namespace vcsn
 {
@@ -29,7 +28,4 @@ namespace vcsn
   {
     return m.find(k) != std::end(m);
   }
-
 }
-
-#endif // !VCSN_MISC_UNORDERED_MAP_HH

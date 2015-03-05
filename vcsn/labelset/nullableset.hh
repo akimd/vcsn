@@ -11,7 +11,7 @@
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/escape.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn

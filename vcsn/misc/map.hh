@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 
 namespace std
 {
@@ -48,19 +48,4 @@ namespace vcsn
       res.insert(p.second);
     return res;
   }
-
-  /// Functor to compare Values of ValueSets.
-  template <typename ValueSet>
-  class less : public std::less<typename ValueSet::value_t>
-  {
-  public:
-    using valueset_t = ValueSet;
-    using value_t = typename valueset_t::value_t;
-
-    bool operator()(const value_t& lhs, const value_t& rhs) const
-    {
-      return valueset_t::less(lhs, rhs);
-    }
-  };
-
 }

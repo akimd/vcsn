@@ -1,13 +1,13 @@
-#ifndef VCSN_WEIGHTSET_MIN_PLUS_HH
-# define VCSN_WEIGHTSET_MIN_PLUS_HH
+#pragma once
 
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh> // eat
-# include <vcsn/misc/symbol.hh>
-# include <vcsn/weightset/fwd.hh>
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/weightset.hh>
+#include <vcsn/misc/functional.hh> // hash_value
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh> // eat
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
@@ -152,5 +152,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_WEIGHTSET_MIN_PLUS_HH

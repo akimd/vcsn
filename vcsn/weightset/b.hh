@@ -5,7 +5,7 @@
 
 #include <vcsn/core/join.hh>
 #include <vcsn/misc/escape.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh> // hash_value
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star_status.hh>
 #include <vcsn/misc/stream.hh>

@@ -11,7 +11,7 @@
 
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/attributes.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
@@ -687,8 +687,8 @@ namespace vcsn
     static size_t hash(const monomial_t& m)
     {
       size_t res = 0;
-      std::hash_combine(res, labelset_t::hash(m.first));
-      std::hash_combine(res, weightset_t::hash(m.second));
+      hash_combine(res, labelset_t::hash(m.first));
+      hash_combine(res, weightset_t::hash(m.second));
       return res;
     }
 
@@ -698,8 +698,8 @@ namespace vcsn
       size_t res = 0;
       for (const auto& m: v)
         {
-          std::hash_combine(res, labelset_t::hash(m.first));
-          std::hash_combine(res, weightset_t::hash(m.second));
+          hash_combine(res, labelset_t::hash(m.first));
+          hash_combine(res, weightset_t::hash(m.second));
         }
       return res;
     }

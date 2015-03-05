@@ -573,7 +573,7 @@ namespace vcsn
     {
       std::size_t res = 0;
       for (auto h: {valueset_t<I>::hash(std::get<I>(v))...})
-        std::hash_combine(res, h);
+        hash_combine(res, h);
       return res;
     }
 

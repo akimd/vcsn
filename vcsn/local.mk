@@ -200,8 +200,8 @@ nobase_include_HEADERS =                        \
   %D%/misc/file-library.hh                      \
   %D%/misc/file-library.hxx                     \
   %D%/misc/flex-lexer.hh                        \
+  %D%/misc/functional.hh                        \
   %D%/misc/fwd.hh                               \
-  %D%/misc/hash.hh                              \
   %D%/misc/indent.hh                            \
   %D%/misc/iostream.hh                          \
   %D%/misc/map.hh                               \

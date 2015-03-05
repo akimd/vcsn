@@ -11,9 +11,9 @@ namespace dyn
 {
   namespace detail
   {
-    /*--------------------.
-    | expressionset_wrapper.  |
-    `--------------------*/
+    /*-------------------------.
+    | expressionset_wrapper.   |
+    `-------------------------*/
 
     template <typename ExpSet>
     inline
@@ -24,7 +24,7 @@ namespace dyn
     {}
 
 #define DEFINE                                  \
-    template <typename ExpSet>               \
+    template <typename ExpSet>                  \
     inline                                      \
     auto                                        \
     expressionset_wrapper<ExpSet>
@@ -32,7 +32,8 @@ namespace dyn
     DEFINE::down(const value_t& v) const
       -> typename expressionset_t::value_t
     {
-      return down_pointer_cast<const typename expressionset_t::value_t::element_type>(v);
+      using node_t = typename expressionset_t::value_t::element_type;
+      return down_pointer_cast<const node_t>(v);
     }
 
     DEFINE::down(const std::string& w) const -> weight_t

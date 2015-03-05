@@ -1,10 +1,9 @@
-#ifndef VCSN_MISC_TUPLE_HH
-# define VCSN_MISC_TUPLE_HH
+#pragma once
 
-# include <iostream>
-# include <tuple>
+#include <iostream>
+#include <tuple>
 
-# include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 
 namespace vcsn
 {
@@ -187,7 +186,7 @@ namespace vcsn
 
     /// Same as make_tuple, unless the evaluation of arguments if
     /// right-to-left, in which case reverse the result.
-#  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+#if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
     template <typename... Ts>
     inline auto
     make_gcc_tuple(Ts&&... ts)
@@ -195,7 +194,7 @@ namespace vcsn
     {
       return std::make_tuple(std::forward<Ts>(ts)...);
     }
-#  else
+#else
     template <typename... Ts>
     inline auto
     make_gcc_tuple(Ts&&... ts)
@@ -203,7 +202,7 @@ namespace vcsn
     {
       return reverse_tuple(std::make_tuple(std::forward<Ts>(ts)...));
     }
-#  endif
+#endif
 
 
     /*------------------------.
@@ -330,11 +329,9 @@ namespace std
       using swallow = int[];
       (void) swallow
         {
-          (std::hash_combine(res, std::get<I>(v)), 0)...
+          (vcsn::hash_combine(res, std::get<I>(v)), 0)...
         };
       return res;
     }
   };
 }
-
-#endif // !VCSN_MISC_TUPLE_HH

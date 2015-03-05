@@ -1,22 +1,21 @@
-#ifndef VCSN_WEIGHTSET_QMP_HH
-# define VCSN_WEIGHTSET_QMP_HH
+#pragma once
 
-# include <string>
-# include <ostream>
+#include <string>
+#include <ostream>
 
-# include <cstddef> // https://gcc.gnu.org/gcc-4.9/porting_to.html
-# include <gmpxx.h>
+#include <cstddef> // https://gcc.gnu.org/gcc-4.9/porting_to.html
+#include <gmpxx.h>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh> // eat
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/fwd.hh>
-# include <vcsn/weightset/q.hh>
-# include <vcsn/weightset/weightset.hh>
-# include <vcsn/weightset/z.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/functional.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh> // eat
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/weightset.hh>
+#include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -206,5 +205,3 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(qmp, qmp);
   }
 }
-
-#endif // !VCSN_WEIGHTSET_QMP_HH

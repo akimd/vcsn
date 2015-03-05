@@ -1,9 +1,8 @@
-#ifndef VCSN_MISC_UNORDERED_SET_HH
-# define VCSN_MISC_UNORDERED_SET_HH
+#pragma once
 
-# include <unordered_set>
+#include <unordered_set>
 
-# include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 
 namespace std
 {
@@ -57,7 +56,4 @@ namespace vcsn
         return res;
       }
   }
-
 }
-
-#endif // !VCSN_MISC_UNORDERED_SET_HH

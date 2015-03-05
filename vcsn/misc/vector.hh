@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/functional.hh> // hash_combine
 #include <vcsn/misc/tuple.hh> // make_index_sequence.
 
 namespace vcsn
@@ -87,7 +88,7 @@ namespace std
     {
       size_t res = 0;
       for (const auto& v: vs)
-        hash_combine(res, v);
+        vcsn::hash_combine(res, v);
       return res;
     }
   };

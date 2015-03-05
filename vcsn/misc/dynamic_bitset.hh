@@ -1,10 +1,10 @@
 #pragma once
 
 // http://stackoverflow.com/questions/3896357/
-# define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
+#define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
 #include <boost/dynamic_bitset.hpp>
 
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 
 namespace std
 {
@@ -14,7 +14,7 @@ namespace std
     size_t operator()(const boost::dynamic_bitset<B, A>& bs) const
     {
       size_t res = boost::hash_value(bs.m_num_bits);
-      hash_combine_hash(res, boost::hash_value(bs.m_bits));
+      vcsn::hash_combine_hash(res, boost::hash_value(bs.m_bits));
       return res;
     }
   };

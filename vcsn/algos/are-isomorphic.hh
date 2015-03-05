@@ -1,18 +1,17 @@
-#ifndef VCSN_ALGOS_ARE_ISOMORPHIC_HH
-# define VCSN_ALGOS_ARE_ISOMORPHIC_HH
+#pragma once
 
-# include <algorithm>
-# include <map>
-# include <stack>
-# include <unordered_map>
-# include <unordered_set>
+#include <algorithm>
+#include <map>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/map.hh>
-# include <vcsn/misc/vector.hh>
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/functional.hh>
+#include <vcsn/misc/map.hh>
+#include <vcsn/misc/vector.hh>
 
 // What we refer to as "sequentiality" in this algorithm is an obvious
 // generalization to any context of the notion of sequentiality
@@ -250,8 +249,8 @@ namespace vcsn
     {
       class_id res = 0;
 
-      std::hash_combine(res, s == a->pre());
-      std::hash_combine(res, s == a->post());
+      hash_combine(res, s == a->pre());
+      hash_combine(res, s == a->post());
 
       const auto ws = * a->weightset();
       const auto ls = * a->labelset();
@@ -270,22 +269,22 @@ namespace vcsn
             return ls.less(t1.second, t2.second);
         };
 
-#define HASH_TRANSITIONS(expression, endpoint_getter)                     \
-      {                                                                   \
-        std::unordered_set<state_t_of<Automaton>> endpoint_states;        \
-        transitions_t tt;                                                 \
-        for (auto& t: expression)                                         \
-          {                                                               \
+#define HASH_TRANSITIONS(expression, endpoint_getter)                   \
+      {                                                                 \
+        std::unordered_set<state_t_of<Automaton>> endpoint_states;      \
+        transitions_t tt;                                               \
+        for (auto& t: expression)                                       \
+          {                                                             \
             tt.emplace_back(transition_t{a->weight_of(t), a->label_of(t)}); \
-            endpoint_states.emplace(a->endpoint_getter(t));                \
-          }                                                               \
-        std::sort(tt.begin(), tt.end(), less);                       \
-        for (const auto& t: tt)                                           \
-          {                                                               \
-            std::hash_combine(res, ws.hash(t.first));                     \
-            std::hash_combine(res, ls.hash(t.second));                    \
-          }                                                               \
-        std::hash_combine(res, endpoint_states.size());                   \
+            endpoint_states.emplace(a->endpoint_getter(t));             \
+          }                                                             \
+        std::sort(tt.begin(), tt.end(), less);                          \
+        for (const auto& t: tt)                                         \
+          {                                                             \
+            hash_combine(res, ws.hash(t.first));                        \
+            hash_combine(res, ls.hash(t.second));                       \
+          }                                                             \
+        hash_combine(res, endpoint_states.size());                      \
       }
 
       // Hash input transitions data, in a way which doesn't depend on
@@ -708,5 +707,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_ARE_ISOMORPHIC_HH

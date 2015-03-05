@@ -1,17 +1,17 @@
-#ifndef VCSN_WEIGHTSET_Z_HH
-# define VCSN_WEIGHTSET_Z_HH
+#pragma once
 
-# include <ostream>
-# include <string>
+#include <ostream>
+#include <string>
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/math.hh> // gcd
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh>
-# include <vcsn/misc/symbol.hh>
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/fwd.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/functional.hh> // hash_value
+#include <vcsn/misc/math.hh> // gcd
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/stream.hh>
+#include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/fwd.hh>
 
 namespace vcsn
 {
@@ -203,5 +203,3 @@ namespace vcsn
   }
 
 }
-
-#endif // !VCSN_WEIGHTSET_Z_HH

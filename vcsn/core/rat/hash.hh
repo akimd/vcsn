@@ -1,9 +1,6 @@
-#ifndef VCSN_CORE_RAT_HASH_HH
-# define VCSN_CORE_RAT_HASH_HH
+#pragma once
 
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/cast.hh>
+#include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {
@@ -46,8 +43,8 @@ namespace vcsn
 
     private:
 
-# define DEFINE(Type)                                           \
-      using Type ## _t = typename super_t::Type ## _t;       \
+#define DEFINE(Type)                                    \
+      using Type ## _t = typename super_t::Type ## _t;  \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom);
@@ -64,7 +61,7 @@ namespace vcsn
       DEFINE(transposition){ visit_unary(v); }
       DEFINE(zero)         { visit_nullary(v); }
 
-# undef DEFINE
+#undef DEFINE
 
       /// Update res_ by hashing the node type; this is needed for any node.
       void combine_type(const node_t& node);
@@ -89,6 +86,4 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-# include <vcsn/core/rat/hash.hxx>
-
-#endif // !VCSN_CORE_RAT_HASH_HH
+#include <vcsn/core/rat/hash.hxx>

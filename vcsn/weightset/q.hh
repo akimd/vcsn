@@ -4,7 +4,7 @@
 #include <ostream>
 
 #include <vcsn/core/join.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh> // hash_combine
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star_status.hh>
@@ -163,8 +163,8 @@ namespace vcsn
     static size_t hash(const value_t v)
     {
       size_t res = 0;
-      std::hash_combine(res, hash_value(v.num));
-      std::hash_combine(res, hash_value(v.den));
+      hash_combine(res, hash_value(v.num));
+      hash_combine(res, hash_value(v.den));
       return res;
     }
 

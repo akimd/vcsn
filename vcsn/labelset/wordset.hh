@@ -11,7 +11,7 @@
 #include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/algorithm.hh>
-#include <vcsn/misc/hash.hh>
+#include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
