@@ -121,7 +121,7 @@ namespace vcsn
       return false;
     }
 
-    static empty_t concat(empty_t, empty_t)
+    static empty_t mul(empty_t, empty_t)
     {
       return {};
     }

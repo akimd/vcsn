@@ -23,7 +23,7 @@ namespace vcsn
   public:
     using letter_t = typename L::letter_t;
     using word_t = typename L::word_t;
-    using letters_t = std::set<letter_t, std::less<uint8_t>>;
+    using letters_t = std::set<letter_t, vcsn::less<L, letter_t>>;
     /// The type of our values, when seen as a container.
     using value_type = letter_t;
 
@@ -48,7 +48,12 @@ namespace vcsn
       if (is.peek() == '(')
         {
           is.ignore();
-          // Previously read character, for intervals.
+          // Previously read character, for intervals.  We don't
+          // immediately add the letters: on 'a-z' we would firsts add
+          // 'a', and then ask for the interval from 'a' to 'z', which
+          // would add 'a' twice uselessly.
+          //
+          // Rather, keep the 'a' in \a prev, and flush prev when needed.
           boost::optional<letter_t> prev;
           while (true)
             switch (is.peek())
@@ -67,8 +72,7 @@ namespace vcsn
                 else
                   {
                     eat(is, '-');
-                    // We already added prev, start from prev + 1.
-                    res.add_range(prev.get() + 1, L::get_letter(is));
+                    res.add_range(prev.get(), L::get_letter(is));
                     prev = boost::none;
                     break;
                   }
@@ -76,12 +80,15 @@ namespace vcsn
               insert:
               default:
                 {
+                  if (prev != boost::none)
+                    res.add_letter(prev.get());
                   prev = L::get_letter(is);
-                  res.add_letter(prev.get());
                   break;
                 }
               }
     done:
+          if (prev != boost::none)
+            res.add_letter(prev.get());
           ;
         }
       else // is.peek() != '('
@@ -113,7 +120,7 @@ namespace vcsn
     add_letter(letter_t l)
     {
       require(l != this->template special<letter_t>(),
-              "add_letter: the special letter is reserved: ", int(l));
+              "add_letter: the special letter is reserved: ", l);
       alphabet_.insert(l);
       return *this;
     }

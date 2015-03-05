@@ -111,15 +111,15 @@ namespace vcsn
     }
 
     /// Whether \a l == \a r.
-    static bool equal(const letter_t l1, const letter_t l2)
+    static bool equal(const letter_t l, const letter_t r)
     {
-      return l1 == l2;
+      return l == r;
     }
 
     /// Whether \a l == \a r.
-    static bool equal(const word_t& w1, const word_t& w2)
+    static bool equal(const word_t& l, const word_t& r)
     {
-      return w1 == w2;
+      return l == r;
     }
 
     /// Whether \a l < \a r.
