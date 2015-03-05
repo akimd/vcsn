@@ -1,8 +1,7 @@
-#ifndef VCSN_LABELSET_LABELSET_HH
-# define VCSN_LABELSET_LABELSET_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/traits.hh> // labelset_t_of
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/traits.hh> // labelset_t_of
 
 namespace vcsn
 {
@@ -94,5 +93,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_LABELSET_LABELSET_HH

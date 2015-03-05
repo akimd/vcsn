@@ -1,14 +1,12 @@
-#ifndef VCSN_CORE_RAT_EXPRESSION_HH
-# define VCSN_CORE_RAT_EXPRESSION_HH
+#pragma once
 
-# include <vector>
-# include <string>
+#include <vector>
 
-# include <boost/range.hpp> // make_iterator_range
+#include <boost/range.hpp> // make_iterator_range
 
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/ctx/traits.hh>
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {
@@ -289,5 +287,3 @@ namespace vcsn
 } // namespace vcsn
 
 #include <vcsn/core/rat/expression.hxx>
-
-#endif // !VCSN_CORE_RAT_EXPRESSION_HH

@@ -1,8 +1,7 @@
-#ifndef VCSN_CORE_RAT_EXPRESSION_HXX_
-# define VCSN_CORE_RAT_EXPRESSION_HXX_
+#pragma once
 
-# include <vcsn/core/rat/expression.hh>
-# include <vcsn/core/rat/visitor.hh>
+#include <vcsn/core/rat/expression.hh>
+#include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {
@@ -40,8 +39,8 @@ namespace vcsn
       return value_;
     }
 
-# undef DEFINE_CTOR
-# undef DEFINE
+#undef DEFINE_CTOR
+#undef DEFINE
 
 
 #define DEFINE_CTOR(Node)                       \
@@ -194,10 +193,8 @@ namespace vcsn
       v.visit(*this);
     }
 
-# undef DEFINE_CTOR
-# undef DEFINE
+#undef DEFINE_CTOR
+#undef DEFINE
 
   } // namespace exp
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_EXPRESSION_HXX_

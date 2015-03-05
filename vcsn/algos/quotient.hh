@@ -1,15 +1,10 @@
-#ifndef VCSN_ALGOS_QUOTIENT_HH
-# define VCSN_ALGOS_QUOTIENT_HH
+#pragma once
 
-# include <algorithm> // min_element.
-# include <unordered_map>
-# include <unordered_set>
+#include <algorithm> // min_element.
+#include <unordered_map>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/core/partition-automaton.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/misc/dynamic_bitset.hh>
+#include <vcsn/core/partition-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -94,7 +89,8 @@ namespace vcsn
               {
                 state_t d = aut->dst_of(t);
                 state_t dst = class_to_res_state_[state_to_class[d]];
-                res->add_transition(src, dst, aut->label_of(t), aut->weight_of(t));
+                res->add_transition(src, dst,
+                                    aut->label_of(t), aut->weight_of(t));
               }
           }
         return std::move(res);
@@ -104,30 +100,6 @@ namespace vcsn
       partition_automaton_t operator()(const automaton_t& aut)
       {
         return build_result_(aut);
-      }
-
-    private:
-      std::ostream& print_(const set_t& ss, std::ostream& o) const
-      {
-        o << '{';
-        const char* sep = "";
-        for (auto s : ss)
-          {
-            o << sep << s;
-            sep = ", ";
-          }
-        return o << '}';
-      }
-      std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o) const
-      {
-        const char* sep = "";
-        for (unsigned i = 0; i < c2ss.size(); ++i)
-          {
-            o << sep << '[' << i << "] = ";
-            print_(c2ss[i], o);
-            sep = "\n";
-          }
-        return o;
       }
 
     private:
@@ -149,5 +121,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_QUOTIENT_HH

@@ -1,13 +1,12 @@
-#ifndef VCSN_DYN_CONTEXT_PARSER_HH
-# define VCSN_DYN_CONTEXT_PARSER_HH
+#pragma once
 
-# include <sstream>
-# include <string>
+#include <sstream>
+#include <string>
 
-# include <vcsn/core/rat/identities.hh>
-# include <vcsn/dyn/type-ast.hh>
-# include <vcsn/misc/set.hh>
-# include <vcsn/misc/stream.hh>
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/dyn/type-ast.hh>
+#include <vcsn/misc/set.hh>
+#include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -99,5 +98,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_DYN_CONTEXT_PARSER_HH

@@ -1,14 +1,12 @@
-#ifndef VCSN_ALGOS_EFSM_HH
-# define VCSN_ALGOS_EFSM_HH
+#pragma once
 
-# include <algorithm>
-# include <iostream>
-# include <map>
+#include <algorithm>
+#include <iostream>
 
-# include <vcsn/algos/grail.hh> // outputter
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/labelset/fwd.hh>
-# include <vcsn/misc/escape.hh>
+#include <vcsn/algos/grail.hh> // outputter
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/labelset/fwd.hh>
+#include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
@@ -318,5 +316,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_EFSM_HH

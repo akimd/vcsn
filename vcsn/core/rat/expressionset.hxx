@@ -106,7 +106,8 @@ namespace vcsn
   {
     if (labelset_t::is_one(v))
       return one();
-    return std::make_shared<atom_t>(v);
+    else
+      return std::make_shared<atom_t>(v);
   }
 
   DEFINE::zero() const

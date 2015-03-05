@@ -1,5 +1,4 @@
-#ifndef VCSN_LABELSET_FWD_HH
-# define VCSN_LABELSET_FWD_HH
+#pragma once
 
 namespace vcsn
 {
@@ -24,5 +23,3 @@ namespace vcsn
   class wordset;
 
 } // namespace vcsn
-
-#endif // !VCSN_LABELSET_FWD_HH
