@@ -149,6 +149,14 @@ esac
 
 # Do not apply to C++: -Wbad-function-cast, -Wmissing-prototypes,
 # -Wstrict-prototypes.
+#
+# -Wno-maybe-uninitialized: See http://stackoverflow.com/questions/21755206/,
+# there are too many spurious warnings from -Wmaybe-uninitialized, which is
+# enabled by -Wall :(.
+#
+# Disable these, that cause way too many warnings we can't clearly deal with.
+# [-Wsuggest-attribute=const -Wno-error=suggest-attribute=const],
+# [-Wsuggest-attribute=pure -Wno-error=suggest-attribute=pure],
 TC_CXX_WARNINGS(
   [[-Wall],
    [-Wextra],
@@ -162,9 +170,8 @@ TC_CXX_WARNINGS(
    [-Wnoexcept],
    [-Woverloaded-virtual],
    [-Wpointer-arith],
-   [-Wsuggest-attribute=const -Wno-error=suggest-attribute=const],
+   [-Wno-maybe-uninitialized],
    [-Wsuggest-attribute=noreturn -Wno-error=suggest-attribute=noreturn],
-   [-Wsuggest-attribute=pure -Wno-error=suggest-attribute=pure],
    [-Wwrite-strings],
    [-Wzero-as-null-pointer-constant]])
 

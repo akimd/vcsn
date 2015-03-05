@@ -54,6 +54,8 @@ namespace vcsn
         : super_t(aut, out)
         , dot2tex_(dot2tex)
       {
+        // GCC warnings: see
+        // <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65324>.
         bos_.push(detail::backslashify_output_filter());
         bos_.push(out);
       }

@@ -127,3 +127,32 @@ lib_liblal_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zrr
 
 lib_liblaw_char_zrr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zrr
+
+# BUILT_SOURCES suffices for the "all" target, but it is not enough
+# when running "make lib/liblal_char_b.la" for instance.  So we have
+# to add vcsn/dyn/registers.hh as a dependency.  And we must hide this
+# from Automake, so that it does not remove the corresponding
+# compilation rule.
+all_libctx_names =                              \
+  liblal_char_b                                 \
+  liblal_char_br                                \
+  liblal_char_q                                 \
+  liblal_char_r                                 \
+  liblal_char_z                                 \
+  liblal_char_zr                                \
+  liblal_char_zrr                               \
+  liblan_char_b                                 \
+  liblan_char_r                                 \
+  liblan_char_z                                 \
+  liblan_char_zr                                \
+  liblao_br                                     \
+  liblao_z                                      \
+  liblaw_char_b                                 \
+  liblaw_char_br                                \
+  liblaw_char_r                                 \
+  liblaw_char_z                                 \
+  liblaw_char_zr                                \
+  liblaw_char_zrr
+
+$(patsubst %, lib/ctx/lib_%_la-libctx.lo, $(all_libctx_names)):	\
+  vcsn/dyn/registers.hh
