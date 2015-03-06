@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-import __builtin__
+try:
+    import builtins
+except:
+    import __builtin__ as builtins
 
 import argparse
 import re
@@ -47,11 +50,11 @@ def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
                 exec(s)
             last_setup = setup
 
-        # Inject the result of the __builtin__, so that the stmt run
-        # by timeit finds them.  See
+        # Inject the result into `builtins`, so that the stmt run by
+        # timeit finds them.  See
         # http://stackoverflow.com/a/5390326/4065671.
-        __builtin__.__dict__.update(locals())
-        __builtin__.__dict__.update({'vcsn': vcsn})
+        builtins.__dict__.update(locals())
+        builtins.__dict__.update({'vcsn': vcsn})
         if args.verbose:
             print("run:", stmt)
         t = round(min(timeit.repeat(stmt, number = number)), 2)
