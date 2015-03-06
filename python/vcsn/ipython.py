@@ -148,7 +148,7 @@ class EditAutomaton(Magics):
             else:
                 AutomatonTextWidget(self, args.var, args.format, args.mode)
         else:
-            a =  vcsn.automaton(cell.encode('utf-8'), args.format)
+            a =  vcsn.automaton(cell, args.format)
             self.shell.user_ns[args.var] = a
             display(a)
 
