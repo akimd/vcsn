@@ -87,9 +87,14 @@ namespace vcsn
           (begin(ts), end(ts),
            [this](transition_t l, transition_t r)
            {
-             return
-               (std::forward_as_tuple(aut_->label_of(l), aut_->dst_of(l))
-                < std::forward_as_tuple(aut_->label_of(r), aut_->dst_of(r)));
+             const auto& llab = aut_->label_of(l);
+             const auto& rlab = aut_->label_of(r);
+             if (aut_->labelset()->less(llab, rlab))
+               return true;
+             else if (aut_->labelset()->less(rlab, llab))
+               return false;
+             else
+               return aut_->dst_of(l) < aut_->dst_of(r);
            });
         for (auto t : ts)
           {
