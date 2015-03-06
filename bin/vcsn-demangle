@@ -16,6 +16,7 @@ parameters = r'''
 )'''
 
 def sub(pattern, repl, string, *args, **kwargs):
+    '''Beware that in pattern the spaces are ignored: use \s.'''
     pattern = pattern.format(params = parameters)
     num = 1
     while num:
@@ -32,6 +33,12 @@ def normalize(s):
     s = sub(r'std::basic_string<char(?:,\s*(?:std::)?char_traits<char>,\s*(?:std::)?allocator<char>\s*)?>',
             r'std::string',
             s)
+
+    # Misc.
+    s = sub(r'boost::flyweights::flyweight<std::string,\s*boost::flyweights::no_tracking,\s*boost::flyweights::intermodule_holder,\s*boost::parameter::void_,\s*boost::parameter::void_,\s*boost::parameter::void_>',
+            r'vcsn::symbol',
+            s)
+
     # Labesets.
     s = sub(r'vcsn::letterset<vcsn::set_alphabet<vcsn::(\w+)_letters>\s*>',
             r'lal_\1',
