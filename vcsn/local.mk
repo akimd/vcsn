@@ -252,11 +252,27 @@ DISTCLEANFILES += %D%/config.hh
 
 registers_gen = build-aux/bin/registers-gen
 EXTRA_DIST += $(registers_gen)
-CLEANFILES += %D%/dyn/registers.hh
-%D%/dyn/registers.hh: $(registers_gen) $(algo_headers)
+CLEANFILES += %D%/dyn/registers.stamp %D%/dyn/registers.hh	\
+  lib/vcsn/algos/algos.cc
+move_if_change = $(srcdir)/build-aux/bin/move-if-change --color --verbose
+%D%/dyn/registers.stamp: $(registers_gen) $(algo_headers)
 	$(AM_V_GEN)$(mkdir_p) $(@D)
-	$(AM_V_at)$(srcdir)/$(registers_gen) -o $@.tmp -s $(srcdir) $(algo_headers)
-	$(AM_V_at)$(srcdir)/build-aux/bin/move-if-change --color --verbose $@.tmp $@
+	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
+	$(AM_V_at)$(srcdir)/$(registers_gen)	\
+	  --output lib/vcsn/algos/algos.cc.tmp	\
+	  --header %D%/dyn/registers.hh.tmp	\
+	  -s $(srcdir)				\
+	  $(algo_headers)
+	$(AM_V_at)$(move_if_change) %D%/dyn/registers.hh.tmp %D%/dyn/registers.hh
+	$(AM_V_at)$(move_if_change) lib/vcsn/algos/algos.cc.tmp lib/vcsn/algos/algos.cc
+	$(AM_V_at)mv -f $@.tmp $@
+
+%D%/dyn/registers.hh lib/vcsn/algos/algos.cc: %D%/dyn/registers.stamp
+	@if test ! -f $@; then			\
+	  rm -f $<;				\
+	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
+	fi
 
 BUILT_SOURCES += $(nobase_nodist_include_HEADERS)
 nobase_nodist_include_HEADERS =                 \

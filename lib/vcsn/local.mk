@@ -31,77 +31,18 @@ pkglib_LTLIBRARIES = $(libvcsn)
 lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN	\
   $(BOOST_FLYWEIGHT_CPPFLAGS) $(BOOST_FILESYSTEM_CPPFLAGS)	\
   $(BOOST_SYSTEM_CPPFLAGS) $(BOOST_REGEX_CPPFLAGS)
+nodist_lib_libvcsn_la_SOURCES =                 \
+  %D%/algos/algos.cc
 lib_libvcsn_la_SOURCES =                        \
-  %D%/algos/accessible.cc                       \
-  %D%/algos/are-equivalent.cc                   \
-  %D%/algos/are-isomorphic.cc                   \
-  %D%/algos/complement.cc                       \
-  %D%/algos/complete.cc                         \
-  %D%/algos/compose.cc                          \
-  %D%/algos/concatenate.cc                      \
-  %D%/algos/constant-term.cc                    \
-  %D%/algos/copy.cc                             \
-  %D%/algos/de-bruijn.cc                        \
-  %D%/algos/derivation.cc                       \
-  %D%/algos/determinize.cc                      \
-  %D%/algos/divide.cc                           \
-  %D%/algos/divkbaseb.cc                        \
-  %D%/algos/dot.cc                              \
-  %D%/algos/double-ring.cc                      \
   %D%/algos/edit-automaton.cc                   \
   %D%/algos/efsm.cc                             \
-  %D%/algos/enumerate.cc                        \
-  %D%/algos/eval.cc                             \
-  %D%/algos/expand.cc                           \
   %D%/algos/fado.cc                             \
-  %D%/algos/filter.cc                           \
   %D%/algos/focus.cc                            \
   %D%/algos/fwd.hh                              \
-  %D%/algos/grail.cc                            \
-  %D%/algos/has-bounded-lag.cc                  \
-  %D%/algos/has-twins-property.cc               \
-  %D%/algos/identities.cc                       \
-  %D%/algos/info.cc                             \
-  %D%/algos/insplit.cc                          \
-  %D%/algos/is-ambiguous.cc                     \
-  %D%/algos/is-complete.cc                      \
-  %D%/algos/is-deterministic.cc                 \
-  %D%/algos/is-eps-acyclic.cc                   \
-  %D%/algos/is-functional.cc                    \
-  %D%/algos/is-proper.cc                        \
-  %D%/algos/is-valid.cc                         \
-  %D%/algos/ladybird.cc                         \
-  %D%/algos/left-mult.cc                        \
-  %D%/algos/letterize.cc                        \
-  %D%/algos/lift.cc                             \
   %D%/algos/make-context.cc                     \
-  %D%/algos/minimize.cc                         \
-  %D%/algos/normalize.cc                        \
-  %D%/algos/prefix.cc                           \
   %D%/algos/print.cc                            \
-  %D%/algos/product.cc                          \
-  %D%/algos/proper.cc                           \
-  %D%/algos/push-weights.cc                     \
-  %D%/algos/random.cc                           \
   %D%/algos/read.cc                             \
   %D%/algos/registry.hh                         \
-  %D%/algos/scc.cc                              \
-  %D%/algos/sort.cc                             \
-  %D%/algos/standard.cc                         \
-  %D%/algos/star-height.cc                      \
-  %D%/algos/star-normal-form.cc                 \
-  %D%/algos/star.cc                             \
-  %D%/algos/strip.cc                            \
-  %D%/algos/sum.cc                              \
-  %D%/algos/synchronizing-word.cc               \
-  %D%/algos/thompson.cc                         \
-  %D%/algos/tikz.cc                             \
-  %D%/algos/to-expression.cc                    \
-  %D%/algos/transpose.cc                        \
-  %D%/algos/u.cc                                \
-  %D%/algos/union.cc                            \
-  %D%/algos/universal.cc                        \
-  %D%/algos/zpc.cc                              \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \

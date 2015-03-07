@@ -48,17 +48,6 @@ namespace vcsn
       return out;
     }
 
-    /*-------------------------.
-    | print(context, stream).  |
-    `-------------------------*/
-
-    REGISTER_DEFINE(print_ctx);
-    std::ostream&
-    print(const dyn::context& ctx, std::ostream& out, const std::string& format)
-    {
-      return detail::print_ctx_registry().call(ctx, out, format);
-    }
-
     /*---------------------------.
     | print(expansion, stream).  |
     `---------------------------*/
@@ -141,9 +130,9 @@ namespace vcsn
     }
 
 
-    /*------------------------.
-    | print(expression, stream).  |
-    `------------------------*/
+    /*-----------------------------.
+    | print(expression, stream).   |
+    `-----------------------------*/
 
     REGISTER_DEFINE(print_expression);
 

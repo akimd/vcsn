@@ -5,43 +5,67 @@ import argparse
 import os
 import re
 
-# A dictionary of all the bridges, with the function name as key.
+# A dictionary of all the bridges, with the register name as key.
+# Bridges are dictionaries providing the following keys:
+#
+# args: the effective arguments (e.g., "aut, i").
+# call: 'call' or 'call_variadic'.
+# file: the vcsn/algos header that provides the bridge.
+# formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
+# fun: function name (e.g., concatenate).
+# reg: register name (e.g., concatenate_polynomial).
+# return: return type.
 bridges = {}
 
-bridge = re.compile(r'''///\ Bridge.
+bridge_pattern = re.compile(r'''///\ Bridge.
 \s*template\s*<.*?>
 (?:\s*inline)?
-\s*(?P<return>[\w:&*]+)\s+(?P<fun>\w+)\s*\((?P<args>.*?)\)''',
+\s*(?P<return>[\w:&*]+)\s+(?P<reg>\w+)\s*\((?P<formals>.*?)\)''',
                     flags=re.VERBOSE | re.DOTALL)
 
-register = '''  // {fun} ({file}).
-  REGISTER_DECLARE({fun},
-    ({args}) -> {return});
+register = '''  // {reg} ({file}).
+  REGISTER_DECLARE({reg},
+    ({formals}) -> {return});
+
+'''
+
+implementation = '''
+  // {reg} ({file}).
+  REGISTER_DEFINE({reg});
+  {return}
+  {fun}({formals})
+  {{
+    return detail::{reg}_registry().{call}({args});
+  }}
 
 '''
 
 def process_file(fn):
     '''Store in bridges the signatures from header fn.'''
     with open(fn, 'r') as f:
-        for m in bridge.finditer(f.read()):
-            bridges[m.group(2)] = m.groupdict()
-            bridges[m.group(2)]['file'] = os.path.basename(fn)
+        for m in bridge_pattern.finditer(f.read()):
+            bridge = m.groupdict()
+            bridge['file'] = os.path.basename(fn)
+            reg = bridge['reg']
+            bridge['fun'] = re.sub('_(automaton|ctx|expansion|expression|label|polynomial|vector|weight)$',
+                                   '', reg)
+            # to_expression etc. are not to be reduce to "to".
+            # Likewise for random_automaton, and read_polynomial.
+            if bridge['fun'] in ['random', 'read', 'to']:
+                bridge['fun'] = reg
+            if reg == "copy_convert":
+                bridge['fun'] = 'copy'
+            bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',
+                                              r'\1',
+                                              bridge['formals']).split(','))
+            # If the bridge if "foo_vector", it's actually for a
+            # variadic call.
+            bridge['call'] = 'call_variadic' if reg.endswith('_vector') else 'call'
+            bridges[reg] = bridge
 
-parser = argparse.ArgumentParser(description='Generate registers file.')
-parser.add_argument('file', nargs='+', type=str, default=None,
-                    help='Headers to process')
-parser.add_argument('-o', '--output', type=str, default=None,
-                    help='output file')
-parser.add_argument('-s', '--srcdir', type=str, default='.',
-                    help='Path the the source tree')
-args = parser.parse_args()
-args.srcdir += '/'
-
-for fn in args.file:
-    process_file(args.srcdir + fn)
-
-# Generate the output.
-res = r'''#pragma once
+# Generate the header.
+def header():
+    res = r'''#pragma once
 
 #include <vector>
 
@@ -64,16 +88,61 @@ namespace vcsn { namespace dyn { namespace detail {
   bool Name ## _register(const signature& sig, Name ## _t fn)
 
 '''
-for f in sorted(bridges):
-    res += register.format(**bridges[f])
+    for f in sorted(bridges):
+        res += register.format(**bridges[f])
 
-res += '''
+    res += '''
 #undef REGISTER_DECLARE
 }}}
 '''
+    return res
 
-if args.output:
-    out = open(args.output, 'w')
-    print(res, file = out)
-else:
-    print(res)
+# Generate the implementation file.
+def output():
+    res = r'''#include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/expressionset.hh>
+#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/registers.hh>
+
+namespace vcsn { namespace dyn {
+'''
+    for f in sorted(bridges):
+        if f not in ['focus', 'read_polynomial', 'read_context',
+                     'read_weight', 'read_label', 'read_automaton',
+                     'read_expression', 'make_context', 'list_polynomial',
+                     'print_polynomial', 'print_expansion', 'print_expression',
+                     'print_weight', 'print_label']:
+            res += implementation.format(**bridges[f])
+
+    res += '''
+}}'''
+
+    return res
+
+
+parser = argparse.ArgumentParser(description='Generate registers file.')
+parser.add_argument('file', nargs='+', type=str, default=None,
+                    help='Headers to process')
+parser.add_argument('--header',
+                    type=argparse.FileType('w'), default = '-',
+                    help='header file to generate')
+parser.add_argument('--output',
+                    type=argparse.FileType('w'), default = '-',
+                    help='implementation file to generate')
+parser.add_argument('-s', '--srcdir', type=str, default='.',
+                    help='Path the the source tree')
+args = parser.parse_args()
+args.srcdir += '/'
+
+for fn in args.file:
+    process_file(args.srcdir + fn)
+
+print(header(), file=args.header)
+print(output(), file=args.output)

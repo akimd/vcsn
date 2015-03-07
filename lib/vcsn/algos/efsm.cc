@@ -144,19 +144,5 @@ namespace vcsn
         continue;
       return edit.result();
     }
-
-
-    /*------------.
-    | efsm(aut).  |
-    `------------*/
-
-    REGISTER_DEFINE(efsm);
-
-    std::ostream&
-    efsm(const automaton& aut, std::ostream& out)
-    {
-      detail::efsm_registry().call(aut, out);
-      return out;
-    }
   }
 }

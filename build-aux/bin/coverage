@@ -26,7 +26,8 @@ lcov --remove vcsn.info.tmp -o vcsn.info        \
    '*/rat/location.hh'                          \
    '*/rat/position.hh'                          \
    '*/rat/stack.hh'                             \
-   '*/scan.cc'
+   '*/scan.cc'                                  \
+   'lib/vcsn/algos/algos.cc'
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn.cov.html           \

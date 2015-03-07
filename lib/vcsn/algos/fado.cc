@@ -3,12 +3,9 @@
 #include <string>
 
 #include <lib/vcsn/algos/fwd.hh>
-#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
-#include <vcsn/algos/grail.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/registers.hh>
 #include <vcsn/misc/symbol.hh>
 
 namespace vcsn
@@ -97,19 +94,5 @@ namespace vcsn
       }
       return edit.result();
     }
-
-    /*------------.
-    | fado(aut).  |
-    `------------*/
-
-    REGISTER_DEFINE(fado);
-
-    std::ostream&
-    fado(const automaton& aut, std::ostream& out)
-    {
-      detail::fado_registry().call(aut, out);
-      return out;
-    }
-
   }// dyn::
 }// vcsn::

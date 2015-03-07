@@ -132,16 +132,4 @@ namespace vcsn
     final_states_.clear();
     initial_states_.clear();
   }
-
-
-  namespace dyn
-  {
-    REGISTER_DEFINE(make_automaton_editor);
-
-    automaton_editor*
-    make_automaton_editor(const dyn::context& ctx)
-    {
-      return detail::make_automaton_editor_registry().call(ctx);
-    }
-  }
 }
