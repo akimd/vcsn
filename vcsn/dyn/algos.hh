@@ -135,22 +135,22 @@ namespace vcsn
     /// Derive \a exp with respect to \a s.
     ///
     /// \param exp       the input expression
-    /// \param l         the label used for derivation
+    /// \param lbl       the label used for derivation
     /// \param breaking  whether to split the result
     /// \pre  \a exp must be LAL.
-    polynomial derivation(const expression& exp, const label& l,
+    polynomial derivation(const expression& exp, const label& lbl,
                           bool breaking = false);
 
-    /// The derived-term automaton of \a e.
+    /// The derived-term automaton of \a exp.
     ///
-    /// \param e      the input expression
+    /// \param exp    the input expression
     /// \param algo   how the derived terms are computed:
     ///    "auto"                  alias for "expansion"
     ///    "derivation"            compute by derivation
     ///    "breaking_derivation"   compute by breaking derivation
     ///    "expansion"             compute by expansion
     ///    "breaking_expansion"    compute by breaking expansion
-    automaton derived_term(const expression& e,
+    automaton derived_term(const expression& exp,
                            const std::string& algo = "auto");
 
     /// The determinized automaton.
@@ -654,12 +654,12 @@ namespace vcsn
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
 
-    /// The ZPC automaton of \a e.
+    /// The ZPC automaton of \a exp.
     ///
-    /// \param e      the expression to build the automaton from.
+    /// \param exp    the expression to build the automaton from.
     /// \param algo   the specific algorithm to use.
     ///               It can be "regular"/"auto" or the variant "compact".
-    automaton zpc(const expression& e, const std::string& algo = "auto");
+    automaton zpc(const expression& exp, const std::string& algo = "auto");
   }
 }
 

@@ -1,23 +1,22 @@
-#ifndef VCSN_ALGOS_SCC_HH
-# define VCSN_ALGOS_SCC_HH
+#pragma once
 
-# include <iterator> // std::rbegin
-# include <limits>
+#include <iterator> // std::rbegin
+#include <limits>
 
-# include <boost/range/irange.hpp>
-# include <boost/range/rbegin.hpp>
-# include <boost/range/rend.hpp>
+#include <boost/range/irange.hpp>
+#include <boost/range/rbegin.hpp>
+#include <boost/range/rend.hpp>
 
-# include <vcsn/algos/filter.hh>
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/misc/crange.hh>
-# include <vcsn/core/partition-automaton.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/builtins.hh>
-# include <vcsn/misc/unordered_map.hh>
-# include <vcsn/misc/unordered_set.hh>
-# include <vcsn/misc/vector.hh> // has
+#include <vcsn/algos/filter.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/misc/crange.hh>
+#include <vcsn/core/partition-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/builtins.hh>
+#include <vcsn/misc/unordered_map.hh>
+#include <vcsn/misc/unordered_set.hh>
+#include <vcsn/misc/vector.hh> // has
 
 namespace vcsn
 {
@@ -607,10 +606,10 @@ namespace vcsn
   template <typename Aut>
   inline
   filter_automaton<scc_automaton<Aut>>
-  component(const scc_automaton<Aut>& aut, unsigned com_num)
+  component(const scc_automaton<Aut>& aut, unsigned num)
   {
     std::unordered_set<state_t_of<Aut>> ss;
-    for (auto s : aut->component(com_num))
+    for (auto s : aut->component(num))
       ss.emplace(s);
     return vcsn::filter(aut, ss);
   }
@@ -629,10 +628,10 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Unsigned>
       inline
-      automaton component(const automaton& aut, unsigned com_num)
+      automaton component(const automaton& aut, unsigned num)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::component(a, com_num));
+        return make_automaton(::vcsn::component(a, num));
       }
     }
   }
@@ -700,6 +699,4 @@ namespace vcsn
       }
     }
   }
-
 }
-#endif // !VCSN_ALGOS_SCC_HH
