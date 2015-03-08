@@ -1,11 +1,13 @@
-#if defined __GNUC__ && ! defined __clang__
-# pragma GCC diagnostic ignored "-Wmissing-declarations"
-
+#if defined __clang__
+# if 3 <= __clang_major__ && 6 <= __clang_minor__
 // python/vcsn_cxx.cc: In constructor 'minimize::minimize(const boost::python::detail::keywords<nkeywords>&, const char*)':
 // python/vcsn_cxx.cc:445:1531: warning: typedef 'assertion' locally defined but not used [-Wunused-local-typedefs]
 // BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 # pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-
+# endif
+#elif defined __GNUC__
+# pragma GCC diagnostic ignored "-Wmissing-declarations"
+# pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
