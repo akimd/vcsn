@@ -5,7 +5,7 @@ MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 RUN apt-get update && apt-get install -y \
         ccache \
         g++ \
-        ipython-notebook \
+        ipython3-notebook \
         libboost-all-dev \
         libgmp-dev \
         doxygen \
