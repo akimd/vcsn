@@ -55,29 +55,6 @@ namespace vcsn
       state_to_class_t state_to_class_;
       class_to_state_t class_to_res_state_;
 
-      std::ostream& print_(const set_t& ss, std::ostream& o) const
-      {
-        o << '{';
-        const char* sep = "";
-        for (auto s : ss)
-          {
-            o << sep << s;
-            sep = ", ";
-          }
-        return o << '}';
-      }
-      std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o) const
-      {
-        const char* sep = "";
-        for (unsigned i = 0; i < c2ss.size(); ++i)
-          {
-            o << sep << '[' << i << "] = ";
-            print_(c2ss[i], o);
-            sep = "\n";
-          }
-        return o;
-      }
-
       /// An auxiliary data structure enabling fast access to
       /// transitions from a given state and label, in random order.
       using transition_map_t
