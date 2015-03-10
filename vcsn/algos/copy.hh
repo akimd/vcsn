@@ -41,8 +41,8 @@ namespace vcsn
         , out_(out)
       {}
 
-      template <typename Pred>
-      void operator()(Pred keep_state)
+      template <typename KeepState, typename KeepTrans>
+      void operator()(KeepState keep_state, KeepTrans keep_trans)
       {
         // Copy the states.  We cannot iterate on the transitions
         // only, as we would lose the states without transitions.
@@ -53,13 +53,14 @@ namespace vcsn
             out_state[s] = out_->new_state();
 
         for (auto t : in_->all_transitions())
-          {
-            auto src = out_state.find(in_->src_of(t));
-            auto dst = out_state.find(in_->dst_of(t));
-            if (src != out_state.end() && dst != out_state.end())
-              out_->new_transition_copy(src->second, dst->second,
-                                        in_, t);
-          }
+          if (keep_trans(t))
+            {
+              auto src = out_state.find(in_->src_of(t));
+              auto dst = out_state.find(in_->dst_of(t));
+              if (src != out_state.end() && dst != out_state.end())
+                out_->new_transition_copy(src->second, dst->second,
+                                          in_, t);
+            }
       }
 
       /// A map from result state to original state.
@@ -97,15 +98,27 @@ namespace vcsn
     };
   }
 
-  /// Copy selected states of an automaton.
+  /// Copy selected states and transitions of an automaton.
   /// \pre AutIn <: AutOut.
-  template <typename AutIn, typename AutOut, typename Pred>
-  inline
-  void
-  copy_into(const AutIn& in, AutOut& out, Pred keep_state)
+  template <typename AutIn, typename AutOut,
+            typename KeepState, typename KeepTrans>
+  inline void
+  copy_into(const AutIn& in, AutOut& out,
+            KeepState keep_state, KeepTrans keep_trans)
   {
     detail::copier<AutIn, AutOut> copy(in, out);
-    return copy(keep_state);
+    return copy(keep_state, keep_trans);
+  }
+
+  /// Copy the selected states an automaton.
+  /// \pre AutIn <: AutOut.
+  template <typename AutIn, typename AutOut, typename KeepState>
+  inline
+  void
+  copy_into(const AutIn& in, AutOut& out, KeepState keep_state)
+  {
+    return copy_into(in, out, keep_state,
+                     [](transition_t_of<AutIn>) { return true; });
   }
 
   /// Copy an automaton.
@@ -115,7 +128,9 @@ namespace vcsn
   void
   copy_into(const AutIn& in, AutOut& out)
   {
-    return copy_into(in, out, [](state_t_of<AutIn>) { return true; });
+    return copy_into(in, out,
+                     [](state_t_of<AutIn>) { return true; },
+                     [](transition_t_of<AutIn>) { return true; });
   }
 
   namespace detail
@@ -190,14 +205,29 @@ namespace vcsn
   /// \a keep_state.
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>,
-            typename Pred>
+            typename KeepState, typename KeepTrans>
   inline
   AutOut
-  copy(const AutIn& input, Pred keep_state)
+  copy(const AutIn& input, KeepState keep_state, KeepTrans keep_trans)
   {
     auto res = make_fresh_automaton<AutIn, AutOut>(input);
-    ::vcsn::copy_into(input, res, keep_state);
+    ::vcsn::copy_into(input, res, keep_state, keep_trans);
     return res;
+  }
+
+  /// A copy of \a input.
+  template <typename AutIn,
+            typename AutOut = fresh_automaton_t_of<AutIn>,
+            typename KeepState>
+  inline
+  AutOut
+  copy(const AutIn& input, KeepState keep_state)
+  {
+    return ::vcsn::copy<AutIn, AutOut>(
+             input,
+             keep_state,
+             [](transition_t_of<AutIn>) { return true; }
+    );
   }
 
   /// A copy of \a input.
@@ -207,8 +237,11 @@ namespace vcsn
   AutOut
   copy(const AutIn& input)
   {
-    return ::vcsn::copy<AutIn, AutOut>(input,
-                                       [](state_t_of<AutIn>) { return true; });
+    return ::vcsn::copy<AutIn, AutOut>(
+             input,
+             [](state_t_of<AutIn>) { return true; },
+             [](transition_t_of<AutIn>) { return true; }
+    );
   }
 
   /// A copy of \a input keeping only its states that are members of
