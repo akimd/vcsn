@@ -213,6 +213,14 @@ namespace vcsn
           }
       }
 
+      /// The partition, as a list of classes.
+      class_to_set_t& classes()
+      {
+        build_classes_();
+        return class_to_set_;
+      }
+
+    private:
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
@@ -267,13 +275,6 @@ namespace vcsn
               } // for on classes
           }
       }
-
-      /// The minimized automaton.
-      partition_automaton<automaton_t> operator()()
-      {
-        build_classes_();
-        return quotient(a_, class_to_set_);
-      }
     };
 
   } // detail_signature::
@@ -284,8 +285,8 @@ namespace vcsn
   minimize_signature(const Aut& a)
     -> partition_automaton<Aut>
   {
-    detail_signature::minimizer<Aut> minimize(a);
-    return minimize();
+    auto minimize = detail_signature::minimizer<Aut>{a};
+    return quotient(a, minimize.classes());
   }
 
 } // namespace vcsn

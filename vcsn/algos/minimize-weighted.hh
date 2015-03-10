@@ -176,6 +176,13 @@ namespace vcsn
         require(is_trim(a_), me(), ": input must be trim");
       }
 
+      /// The minimized automaton.
+      class_to_set_t& classes()
+      {
+        build_classes_();
+        return class_to_set_;
+      }
+
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
@@ -229,13 +236,6 @@ namespace vcsn
               } // for on classes
           }
       }
-
-      /// The minimized automaton.
-      partition_automaton<automaton_t> operator()()
-      {
-        build_classes_();
-        return quotient(a_, class_to_set_);
-      }
     };
 
   } // weighted::
@@ -246,7 +246,7 @@ namespace vcsn
   minimize_weighted(const Aut& a)
     -> partition_automaton<Aut>
   {
-    detail_weighted::minimizer<Aut> minimize(a);
-    return minimize();
+    auto minimize = detail_weighted::minimizer<Aut>{a};
+    return quotient(a, minimize.classes());
   }
 } // namespace vcsn

@@ -108,6 +108,7 @@ namespace vcsn
       }
 
     public:
+      /// Build the minimizer.  Computes the classes.
       minimizer(const Aut& a)
         : a_(a)
         , gs_(a_->labelset()->genset())
@@ -119,6 +120,14 @@ namespace vcsn
         require(is_trim(a_), me(), ": input must be trim");
       }
 
+      /// The partition, as a list of classes.
+      class_to_set_t& classes()
+      {
+        build_classes_();
+        return class_to_set_;
+      }
+
+    private:
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
@@ -176,25 +185,17 @@ namespace vcsn
               } // for on classes
           }
       }
-
-      /// Return the quotient.
-      partition_automaton<automaton_t> operator()()
-      {
-        build_classes_();
-        return quotient(a_, class_to_set_);
-      }
     };
   }
 
   /// Minimize automaton \a a using the Moore algorithm.
   template <typename Aut>
-  inline
-  auto
+  inline auto
   minimize_moore(const Aut& a)
     -> partition_automaton<Aut>
   {
-    detail_moore::minimizer<Aut> minimize(a);
-    return minimize();
+    auto minimize = detail_moore::minimizer<Aut>{a};
+    return quotient(a, minimize.classes());
   }
 
 } // namespace vcsn
