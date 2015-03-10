@@ -89,25 +89,30 @@ namespace vcsn
         return o;
       }
 
+      const origins_t& origins() const
+      {
+        return origins_;
+      }
+
+      const automaton_t& input_automaton() const
+      {
+        return input_;
+      }
+
       using super_t::new_state;
 
       /// Make a new state representing the given input state set,
       /// which is required to be new -- no error-checking on this.
-      state_t
-      new_state(const state_name_t& set)
+      state_t new_state(const state_name_t& set)
       {
         state_t res = new_state();
         origins_[res] = set;
         return res;
       }
 
-      state_t
-      new_state(const std::vector<state_t>& v)
+      state_t new_state(const std::vector<state_t>& v)
       {
-        state_name_t set;
-        for (auto s: v)
-          set.emplace(s);
-        return new_state(std::move(set));
+        return new_state(state_name_t{begin(v), end(v)});
       }
     }; // class
   } // namespace detail
