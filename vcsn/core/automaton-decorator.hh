@@ -1,8 +1,7 @@
-#ifndef VCSN_CORE_AUTOMATON_DECORATOR_HH
-# define VCSN_CORE_AUTOMATON_DECORATOR_HH
+#pragma once
 
-# include <vcsn/misc/memory.hh>
-# include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/memory.hh>
+#include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {
@@ -22,10 +21,12 @@ namespace vcsn
       /// The type of automaton to wrap.
       using automaton_t = Aut;
 
+      /// The automaton type, without shared_ptr.
+      using element_type = typename automaton_t::element_type;
+
       /// The (shared pointer) type to use it we have to create an
       /// automaton of the same (underlying) type.
-      using automaton_nocv_t
-        = typename automaton_t::element_type::automaton_nocv_t;
+      using automaton_nocv_t = typename element_type::automaton_nocv_t;
 
       using context_t = Context;
       using kind_t = typename context_t::kind_t;
@@ -83,14 +84,14 @@ namespace vcsn
       | constexpr.  |
       `------------*/
 
-# define DEFINE(Name)                                                   \
+#define DEFINE(Name)                                                    \
       template <typename... Args>                                       \
       static constexpr                                                  \
       auto                                                              \
       Name(Args&&... args)                                              \
-        -> decltype(automaton_t::element_type::Name(std::forward<Args>(args)...))     \
+        -> decltype(element_type::Name(std::forward<Args>(args)...))    \
       {                                                                 \
-        return automaton_t::element_type::Name(std::forward<Args>(args)...);          \
+        return element_type::Name(std::forward<Args>(args)...);         \
       }
 
       DEFINE(null_state);
@@ -105,7 +106,7 @@ namespace vcsn
       | const.  |
       `--------*/
 
-# define DEFINE(Name)                                           \
+#define DEFINE(Name)                                            \
       template <typename... Args>                               \
       auto                                                      \
       Name(Args&&... args) const                                \
@@ -149,20 +150,20 @@ namespace vcsn
       DEFINE(weight_of);
       DEFINE(weightset);
 
-# undef DEFINE
+#undef DEFINE
 
 
       /*------------.
       | non const.  |
       `------------*/
 
-# define DEFINE(Name)                                           \
+#define DEFINE(Name)                                            \
       template <typename... Args>                               \
       auto                                                      \
       Name(Args&&... args)                                      \
         -> decltype(aut_->Name(std::forward<Args>(args)...))    \
       {                                                         \
-      return aut_->Name(std::forward<Args>(args)...);           \
+        return aut_->Name(std::forward<Args>(args)...);         \
       }
 
       DEFINE(add_final);
@@ -184,9 +185,7 @@ namespace vcsn
       DEFINE(unset_final);
       DEFINE(unset_initial);
 
-# undef DEFINE
+#undef DEFINE
     };
   }
 }
-
-#endif // !VCSN_CORE_AUTOMATON_DECORATOR_HH

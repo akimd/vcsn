@@ -1,11 +1,10 @@
-#ifndef VCSN_CORE_PARTITION_AUTOMATON_HH
-# define VCSN_CORE_PARTITION_AUTOMATON_HH
+#pragma once
 
-# include <map>
-# include <set>
-# include <vector>
+#include <map>
+#include <set>
+#include <vector>
 
-# include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/automaton-decorator.hh>
 
 namespace vcsn
 {
@@ -119,5 +118,3 @@ namespace vcsn
     = std::shared_ptr<detail::partition_automaton_impl<Aut>>;
 
 } // namespace vcsn
-
-#endif // !VCSN_CORE_PARTITION_AUTOMATON_HH
