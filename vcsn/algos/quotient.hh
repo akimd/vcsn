@@ -12,12 +12,17 @@ namespace vcsn
   namespace detail
   {
     /// Apply a quotient onto an automaton: fuse equivalent states.
+    ///
+    /// \tparam Aut  the type of the input automaton
     template <typename Aut>
     class quotienter
     {
     public:
       using automaton_t = Aut;
-      using partition_automaton_t = partition_automaton<automaton_t>;
+      using quotient_t = partition_automaton_t<automaton_t>;
+      using automaton_nocv_t = automaton_nocv_t_of<automaton_t>;
+      using origins_t
+        = typename partition_automaton<automaton_nocv_t>::element_type::origins_t;
 
       using class_t = unsigned;
       using state_t = state_t_of<automaton_t>;
@@ -62,14 +67,15 @@ namespace vcsn
 
       /// Build the resulting automaton.
       /// \param aut   the input automaton to quotient
-      partition_automaton_t operator()(const automaton_t& aut)
+      quotient_t operator()(const automaton_t& aut)
       {
         state_to_class_t state_to_class;
         for (unsigned c = 0; c < num_classes_; ++c)
           for (auto s: class_to_set_[c])
             state_to_class[s] = c;
 
-        auto res = make_shared_ptr<partition_automaton_t>(aut);
+        auto origins = origins_t{};
+        auto res = make_shared_ptr<automaton_nocv_t>(aut->context());
         auto class_to_res_state = class_to_state_t(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
@@ -78,12 +84,14 @@ namespace vcsn
             class_to_res_state[c]
               = s == aut->pre()  ? res->pre()
               : s == aut->post() ? res->post()
-              : res->new_state(set);
+              : res->new_state();
+            origins[class_to_res_state[c]].
+              insert(begin(set), end(set));
           }
         for (unsigned c = 0; c < num_classes_; ++c)
           {
-            // Copy the transitions of the first state of the class in
-            // the result.
+            // Copy the outgoing transitions of the first state of the
+            // class in the result.
             state_t s = class_to_set_[c][0];
             state_t src = class_to_res_state[c];
             for (auto t : aut->all_out(s))
@@ -94,21 +102,25 @@ namespace vcsn
                                     aut->label_of(t), aut->weight_of(t));
               }
           }
-        return res;
+        return make_partition_automaton(res, aut, origins);
       }
 
     private:
       class_to_set_t& class_to_set_;
       unsigned num_classes_;
     };
-  } // detail::
+  }
+
+  /// The return type when calling quotient on Aut.
+  template <typename Aut>
+  using quotient_t = partition_automaton_t<Aut>;
 
   template <typename Aut>
   inline
   auto
   quotient(const Aut& a,
            typename detail::quotienter<Aut>::class_to_set_t& cs)
-    -> partition_automaton<Aut>
+    -> quotient_t<Aut>
   {
     detail::quotienter<Aut> quotient(cs);
     return quotient(a);

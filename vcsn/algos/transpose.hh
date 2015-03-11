@@ -299,5 +299,4 @@ namespace vcsn
       }
     }
   }
-
 } // vcsn::

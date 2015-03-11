@@ -103,7 +103,7 @@ namespace vcsn
         // Don't stack indefinitly transpositions on top of
         // transitions.  Not only is this useless, it would also break
         // the involution as r.transpose().transpose() would not be r,
-        // but "r{T}{T}".  On the other hand, if "(abc){T}".tranpose()
+        // but "r{T}{T}".  On the other hand, if "(abc){T}".transpose()
         // return "abc", we also lose the involution.
         //
         // So rather, don't stack more that two transpositions:

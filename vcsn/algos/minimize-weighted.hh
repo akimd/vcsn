@@ -244,7 +244,7 @@ namespace vcsn
   inline
   auto
   minimize_weighted(const Aut& a)
-    -> partition_automaton<Aut>
+    -> quotient_t<Aut>
   {
     auto minimize = detail_weighted::minimizer<Aut>{a};
     return quotient(a, minimize.classes());

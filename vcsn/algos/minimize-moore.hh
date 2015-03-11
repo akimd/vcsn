@@ -192,7 +192,7 @@ namespace vcsn
   template <typename Aut>
   inline auto
   minimize_moore(const Aut& a)
-    -> partition_automaton<Aut>
+    -> quotient_t<Aut>
   {
     auto minimize = detail_moore::minimizer<Aut>{a};
     return quotient(a, minimize.classes());

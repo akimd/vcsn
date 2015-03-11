@@ -283,7 +283,7 @@ namespace vcsn
   inline
   auto
   minimize_signature(const Aut& a)
-    -> partition_automaton<Aut>
+    -> quotient_t<Aut>
   {
     auto minimize = detail_signature::minimizer<Aut>{a};
     return quotient(a, minimize.classes());

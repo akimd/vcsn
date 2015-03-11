@@ -12,6 +12,10 @@ def file_to_string(file):
 
 def check(algo, aut, exp):
     CHECK_EQ(exp, aut.minimize(algo))
+    # Check that repeated minimization still gives the same type of
+    # automaton.  We don't want to get partition_automaton of
+    # partition_automaton: one "layer" suffices.
+    CHECK_EQ(exp, aut.minimize(algo).minimize(algo))
     # Cominimize
     CHECK_EQ(aut.minimize(algo), aut.transpose().cominimize(algo).transpose())
 

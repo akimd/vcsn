@@ -879,7 +879,7 @@ namespace vcsn
       }
       const mutable_automaton_impl& aut_;
       // Capture by copy: in the case of the transpose_automaton, the
-      // labels are tranposed, so they are temporaries.
+      // labels are transposed, so they are temporaries.
       label_t label_;
     };
 

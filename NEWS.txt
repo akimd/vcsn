@@ -5,6 +5,17 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-03-15
+### Repeated minimization
+Now, minimization and cominimization return automata of the same type
+--- cominimization used to return an automaton whose type reveals the
+double transposition.  In actually, calling several times the
+minimization and/or cominimization no longer generates decorators of
+decorators of etc.: the result is always a single layer decorator.
+Not only is this, in general, the desired result, it's also more
+'economic' as it uses fewer automaton types (hence less runtime
+compilations).
+
 ## 2015-03-03
 ### realtime: new algorithm
 Compute the letterized, proper equivalent of an automaton. The result automaton

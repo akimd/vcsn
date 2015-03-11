@@ -26,7 +26,7 @@ namespace vcsn
   inline
   vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && labelset_t_of<Aut>::is_free(),
-                    partition_automaton<Aut>>
+                    quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "moore")
@@ -44,7 +44,7 @@ namespace vcsn
   inline
   vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && ! labelset_t_of<Aut>::is_free(),
-                    partition_automaton<Aut>>
+                    quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "auto" || algo == "signature")
@@ -59,7 +59,7 @@ namespace vcsn
   template <typename Aut>
   inline
   vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
-                    partition_automaton<Aut>>
+                    quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "auto" || algo == "weighted")

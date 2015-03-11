@@ -52,6 +52,10 @@ namespace vcsn
 
 #undef DEFINE
 
+  template <typename Aut>
+  using automaton_nocv_t_of
+    = typename Aut::element_type::automaton_nocv_t;
+
   template <typename ValueSet>
   using letter_t_of
     = typename labelset_t_of<base_t<ValueSet>>::letter_t;
