@@ -1,19 +1,18 @@
-#ifndef VCSN_CORE_MUTABLE_AUTOMATON_HH
-# define VCSN_CORE_MUTABLE_AUTOMATON_HH
+#pragma once
 
-# include <algorithm>
-# include <cassert>
-# include <vector>
+#include <algorithm>
+#include <cassert>
+#include <vector>
 
-# include <boost/range/irange.hpp>
+#include <boost/range/irange.hpp>
 
-# include <vcsn/misc/crange.hh>
-# include <vcsn/core/fwd.hh>
-# include <vcsn/core/transition.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/misc/memory.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/crange.hh>
+#include <vcsn/core/fwd.hh>
+#include <vcsn/core/transition.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/memory.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -972,5 +971,3 @@ namespace vcsn
     return make_shared_ptr<mutable_automaton<Context>>(ctx);
   }
 }
-
-#endif // !VCSN_CORE_MUTABLE_AUTOMATON_HH

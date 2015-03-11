@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_FILTER_HH
-# define VCSN_ALGOS_FILTER_HH
+#pragma once
 
-# include <algorithm> // std::max
-# include <boost/range/irange.hpp>
-# include <vcsn/algos/copy.hh>
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/misc/crange.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/unordered_set.hh>
-# include <vcsn/misc/vector.hh>
+#include <algorithm> // std::max
+#include <boost/range/irange.hpp>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/misc/crange.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/unordered_set.hh>
+#include <vcsn/misc/vector.hh>
 
 namespace vcsn
 {
@@ -351,5 +350,3 @@ namespace vcsn
     }
   }
 }
-
-#endif //!VCSN_ALGOS_FILTER_HH
