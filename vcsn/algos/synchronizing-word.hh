@@ -78,14 +78,14 @@ namespace vcsn
   }
 
 
-  /*----------------.
-  | synchronizer.   |
-  `----------------*/
+  /*---------------------.
+  | word_synchronizer.   |
+  `---------------------*/
 
   namespace detail
   {
     template <typename Aut>
-    class synchronizer
+    class word_synchronizer
     {
     public:
       using automaton_t = Aut;
@@ -105,7 +105,7 @@ namespace vcsn
       word_t res_;
 
     public:
-      synchronizer(const automaton_t& aut)
+      word_synchronizer(const automaton_t& aut)
         : aut_(aut)
       {}
 
@@ -202,7 +202,7 @@ namespace vcsn
 
       word_t greedy()
       {
-        return synchro(&synchronizer::dist);
+        return synchro(&word_synchronizer::dist);
       }
 
       word_t cycle()
@@ -212,12 +212,12 @@ namespace vcsn
 
       word_t synchroP()
       {
-        return synchro(&synchronizer::phi_1);
+        return synchro(&word_synchronizer::phi_1);
       }
 
       word_t synchroPL()
       {
-        return synchro(&synchronizer::phi_2);
+        return synchro(&word_synchronizer::phi_2);
       }
 
       word_t fastsynchro()
@@ -226,7 +226,7 @@ namespace vcsn
       }
 
     private:
-      using heuristic_t = auto (synchronizer::*)(state_t) -> int;
+      using heuristic_t = auto (word_synchronizer::*)(state_t) -> int;
 
       word_t synchro(heuristic_t heuristic)
       {
@@ -383,7 +383,7 @@ namespace vcsn
   template <typename Aut>
   bool is_synchronizing(const Aut& aut)
   {
-    vcsn::detail::synchronizer<Aut> sync(aut);
+    vcsn::detail::word_synchronizer<Aut> sync(aut);
     return sync.is_synchronizing();
   }
 
@@ -411,7 +411,7 @@ namespace vcsn
   word_t_of<Aut>
   synchronizing_word(const Aut& aut, const std::string& algo = "greedy")
   {
-    vcsn::detail::synchronizer<Aut> sync(aut);
+    vcsn::detail::word_synchronizer<Aut> sync(aut);
     if (boost::iequals(algo, "greedy") || boost::iequals(algo, "eppstein"))
       return sync.greedy();
     else if (boost::iequals(algo, "cycle"))
