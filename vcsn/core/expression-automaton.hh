@@ -49,7 +49,7 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("expression_automaton<" + super_t::sname() + '>');
+        static symbol res("expression_automaton<" + automaton_t::element_type::sname() + '>');
         return res;
       }
 
