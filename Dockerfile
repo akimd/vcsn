@@ -29,4 +29,4 @@ RUN mkdir /vcsn/.ipython
 RUN chown vcsn:vcsn /vcsn/.ipython
 ENV VCSN_DATADIR /vcsn/.ipython
 
-CMD su vcsn -s /bin/bash -c 'vcsn notebook --ip=* --port 8888'
+CMD su vcsn -s /bin/bash -c 'IPYTHON=ipython3 vcsn notebook --ip=* --port 8888'
