@@ -70,8 +70,11 @@ def normalize(s):
             s)
 
     # Automata.
-    s = sub(r'std::shared_ptr<vcsn::detail::(\w+_automaton)_impl({params})>',
-            r'\1\2',
+    #
+    # The optional 'std::' is surprising, granted, but I do have seen
+    # it (with clang 3.6).
+    s = sub(r'(?:std::)?shared_ptr<(?:vcsn::)?(?:detail::)?(\w+_automaton)_impl<({params})>\s*>',
+            r'\1<\2>',
             s)
 
     # Dyn::.
