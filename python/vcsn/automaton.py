@@ -23,7 +23,7 @@ automaton.__mod__ = automaton.difference
 automaton.__mul__ = _right_mult
 automaton.__or__ = automaton.union
 automaton.__pow__ = automaton.power
-automaton.__repr__ = lambda self: self.info()['type']
+automaton.__repr__ = lambda self: self.type()
 automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
@@ -166,8 +166,10 @@ automaton.fstminimize = lambda self: _automaton_fst("fstminimize", self)
 
 automaton.infiltration = lambda *auts: automaton._infiltration(list(auts))
 
-automaton.info = lambda self, detailed = False: \
-  _info_to_dict(self.format('info,detailed' if detailed else 'info'))
+def _automaton_info(self, key = None, detailed = False):
+    res = _info_to_dict(self.format('info,detailed' if detailed else 'info'))
+    return res[key] if key else res
+automaton.info = _automaton_info
 
 def _automaton_is_synchronized_by(self, w):
     c = self.context()
@@ -179,3 +181,5 @@ automaton.is_synchronized_by = _automaton_is_synchronized_by
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 
 automaton.state_number = lambda self: self.info(False)['number of states']
+
+automaton.type = lambda self: self.info('type')
