@@ -10,7 +10,7 @@ from test import *
 # ------------------
 # Check that OBJ.info(True) == EXPECTED.
 def check(obj, exp):
-    CHECK_EQ(exp, obj.info(True))
+    CHECK_EQ(exp, obj.info(detailed = True))
 
 ## ---------------- ##
 ## automaton.info.  ##

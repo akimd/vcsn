@@ -1,18 +1,9 @@
-#ifndef VCSN_ALGOS_PUSH_WEIGHTS_HH
-# define VCSN_ALGOS_PUSH_WEIGHTS_HH
+#pragma once
 
-# include <queue>
-# include <unordered_map>
-
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/compose.hh>
-# include <vcsn/algos/distance.hh>
-# include <vcsn/algos/is-ambiguous.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/labelset/tupleset.hh>
-# include <vcsn/misc/unordered_map.hh>
-# include <vcsn/misc/unordered_set.hh>
+#include <vcsn/algos/distance.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/unordered_map.hh>
 
 namespace vcsn
 {
@@ -30,7 +21,7 @@ namespace vcsn
     return d[aut->post()];
   }
 
-  /// Find all shortest distance of each state
+  /// Find all shortest distances of each state
   /// to the final states of \a aut.
   template <typename Aut>
   std::unordered_map<state_t_of<Aut>, weight_t_of<Aut>>
@@ -86,5 +77,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_PUSH_WEIGHTS_HH

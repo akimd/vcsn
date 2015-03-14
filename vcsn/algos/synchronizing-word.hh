@@ -1,27 +1,26 @@
-#ifndef VCSN_ALGOS_SYNCHRONIZING_WORD_HH
-# define VCSN_ALGOS_SYNCHRONIZING_WORD_HH
+#pragma once
 
-# include <algorithm>
-# include <iostream>
-# include <limits>
-# include <unordered_map>
-# include <unordered_set>
-# include <utility>
-# include <vector>
+#include <algorithm>
+#include <iostream>
+#include <limits>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
-# include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string.hpp>
 
-# include <vcsn/algos/distance.hh>
-# include <vcsn/algos/pair.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/context.hh>
-# include <vcsn/dyn/label.hh>
-# include <vcsn/labelset/labelset.hh> // make_wordset
-# include <vcsn/misc/map.hh>
-# include <vcsn/misc/pair.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/algos/distance.hh>
+#include <vcsn/algos/pair.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/labelset/labelset.hh> // make_wordset
+#include <vcsn/misc/map.hh>
+#include <vcsn/misc/pair.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -50,8 +49,10 @@ namespace vcsn
           {
             auto ntf = aut->out(s, l);
             auto size = ntf.size();
-            require(0 < size, "automaton must be complete");
-            require(size < 2, "automaton must be deterministic");
+            require(0 < size,
+                    "is_synchronized_by: automaton must be complete");
+            require(size < 2,
+                    "is_synchronized_by: automaton must be deterministic");
             new_todo.insert(aut->dst_of(*ntf.begin()));
           }
         todo = std::move(new_todo);
@@ -106,7 +107,7 @@ namespace vcsn
     public:
       synchronizer(const automaton_t& aut)
         : aut_(aut)
-        {}
+      {}
 
     private:
       void init_pair(bool keep_initials = false)
@@ -440,7 +441,4 @@ namespace vcsn
       }
     }
   }
-
 }
-
-#endif // !VCSN_ALGOS_SYNCHRONIZING_WORD_HH

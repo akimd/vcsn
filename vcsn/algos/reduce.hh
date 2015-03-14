@@ -1,17 +1,16 @@
-#ifndef VCSN_ALGOS_REDUCE_HH
-# define VCSN_ALGOS_REDUCE_HH
+#pragma once
 
-# include <map>
-# include <unordered_map>
-# include <vector>
+#include <map>
+#include <unordered_map>
+#include <vector>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/transpose.hh>
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/weightset/q.hh>
-# include <vcsn/weightset/r.hh>
-# include <vcsn/weightset/z.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/r.hh>
+#include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -627,7 +626,4 @@ namespace vcsn
       }
     }
   }
-
 }
-
-#endif

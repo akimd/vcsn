@@ -1,17 +1,16 @@
-#ifndef VCSN_ALGOS_DISTANCE_HH
-# define VCSN_ALGOS_DISTANCE_HH
+#pragma once
 
-# include <algorithm>
-# include <iostream>
-# include <queue>
-# include <unordered_set>
-# include <unordered_map>
-# include <vector>
+#include <algorithm>
+#include <iostream>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <vector>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/dyn/label.hh>
-# include <vcsn/misc/pair.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/label.hh>
+#include <vcsn/misc/pair.hh>
 
 namespace vcsn
 {
@@ -69,9 +68,9 @@ namespace vcsn
 
   template<typename Aut>
   std::unordered_map<state_t_of<Aut>,
-                     std::pair<unsigned,
+                     std::pair<state_t_of<Aut>,
                                transition_t_of<Aut>>>
-  paths_ibfs(const Aut& aut, std::vector<state_t_of<Aut>> start)
+  paths_ibfs(const Aut& aut, const std::vector<state_t_of<Aut>>& start)
   {
     using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
@@ -97,11 +96,9 @@ namespace vcsn
               {
                 todo.push(s);
                 auto cur_p = parent.find(p);
-                unsigned cur_d;
-                if (cur_p == parent.end())
-                  cur_d = 1;
-                else
-                  cur_d = cur_p->second.first + 1;
+                unsigned cur_d
+                  = cur_p == parent.end() ? 1
+                  : cur_p->second.first + 1;
                 parent[s] = {cur_d, t};
               }
           }
@@ -162,5 +159,3 @@ namespace vcsn
     return std::vector<transition_t>();
   }
 }
-
-#endif // !VCSN_ALGOS_DISTANCE_HH
