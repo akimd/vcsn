@@ -77,6 +77,20 @@ def _dot_pretty(s, mode = "dot"):
     s = re.sub('^(.*)(\[.*\])$', _dot_gray_node, s, flags = re.MULTILINE);
     return s
 
+def _dot_to_boxart(dot):
+    dot = dot.replace('digraph', 'digraph a')
+    p = _popen(["/opt/local/libexec/perl5.16/sitebin/graph-easy",
+                "--from=graphviz", "--as=boxart"],
+               stdin=PIPE, stdout=PIPE, stderr=PIPE,
+               universal_newlines=True)
+    p.stdin.write(dot)
+    out, err = p.communicate()
+    if p.wait():
+        raise RuntimeError("graph-easy failed: " + p.stderr.read())
+    if isinstance(out, bytes):
+        out = out.decode('utf-8')
+    return out
+
 def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata

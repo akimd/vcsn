@@ -13,7 +13,7 @@ from subprocess import PIPE
 from vcsn.conjunction import Conjunction
 from vcsn_cxx import automaton, label, weight
 from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file, _popen
-from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot
+from vcsn.dot import _dot_pretty, _dot_to_boxart, _dot_to_svg, _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot
 
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: Conjunction(l, r)
@@ -28,6 +28,8 @@ automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
 automaton._repr_svg_ = lambda self: self.as_svg()
+
+automaton.as_boxart = lambda self: _dot_to_boxart(self.dot())
 
 def _automaton_as_svg(self, format = "dot", engine = "dot"):
     if format == "dot":
