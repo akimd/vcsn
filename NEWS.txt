@@ -5,6 +5,15 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-03-16
+### Python 3 is now required
+We have tried hard to remain compatible with Python 2, but support for
+Unicode is just too hard to get to work properly with both Python 2 and
+Python 3.  Since there were constantly problems arising in one whose
+fixes break the other, we decided to drop support for Python 2.  Given
+that all major platforms ship Python 3, we don't expect this to be a
+real problem.
+
 ## 2015-03-15
 ### Repeated minimization
 Now, minimization and cominimization return automata of the same type

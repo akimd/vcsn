@@ -221,6 +221,7 @@ case $ac_cv_search_shm_open in
   (-l*) AC_SUBST([RT_LIBS], [$ac_cv_search_shm_open]);;
 esac
 LIBS=$save_LIBS
+AM_PATH_PYTHON([3.0])
 BOOST_PYTHON
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
@@ -268,8 +269,6 @@ AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
 ## ---------- ##
 ## Programs.  ##
 ## ---------- ##
-
-AM_PATH_PYTHON
 
 # Ask for Flex support from Automake, yet do not require Flex here, so
 # that casual users can install Vcsn without having Flex.  Flex++ will

@@ -13,6 +13,7 @@
 
 TEST_EXTENSIONS += .py
 PY_LOG_DRIVER = $(TAP_DRIVER)
+PY_LOG_COMPILER = $(PYTHON)
 
 %C%_TESTS =                                     \
   %D%/accessible.py                             \
