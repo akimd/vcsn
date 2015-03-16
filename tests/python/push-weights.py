@@ -3,12 +3,12 @@
 import vcsn
 from test import *
 
-def push_weights_check(i, o, words):
+def check(i, o):
   i1 = i.push_weights()
   CHECK_EQ(o, i1)
-  for w in words:
-    CHECK_EQ(o.eval(w), i1.eval(w))
+  CHECK_EQUIV(o, i1)
 
+# q
 i = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), q"
   I0 -> 0
@@ -29,9 +29,9 @@ o = vcsn.automaton('''digraph {
   3 -> 4 [label = "b"]
   4 -> F4
 }''')
-words = ["abcb", "ac", "abc", "bc"]
-push_weights_check(i, o, words)
+check(i, o)
 
+# zmin.
 i = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(a-f), zmin"
   I0 -> 0
@@ -50,9 +50,9 @@ o = vcsn.automaton('''digraph {
   2 -> 3 [label = "<0>e, <1>f"]
   3 -> F3
 }''')
-words = ["a", "af", "bde", "bc", "ca"]
-push_weights_check(i, o, words)
+check(i, o)
 
+# q
 i = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), q"
   I0 -> 0
@@ -73,9 +73,9 @@ o = vcsn.automaton('''digraph {
   2 -> 3 [label = "<14/19>c"]
   3 -> F3
 }''')
-words = ["ab", "abc", "ac", "cb"]
-push_weights_check(i, o, words)
+check(i, o)
 
+# zmin
 i = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), zmin"
   I0 -> 0
@@ -96,5 +96,4 @@ o = vcsn.automaton('''digraph {
   2 -> 3 [label = "<4>c"]
   3 -> F3 [label = "<0>"]
 }''')
-words = ["ab", "abc", "ac", "cb"]
-push_weights_check(i, o, words)
+check(i, o)

@@ -169,6 +169,7 @@ def CHECK_EQUIV(a1, a2):
 
     # Cannot compute equivalence on Zmin, approximate with shortest.
     if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
+        num = 10
         res = a1.shortest(num) == a2.shortest(num)
     else:
         res = a1.is_equivalent(a2)
