@@ -32,7 +32,10 @@ expression.derivation = _expression_derivation
 
 expression.enumerate = lambda self, num = 1: self.standard().enumerate(num)
 
-expression.info = lambda self, detailed = False: _info_to_dict(self.format('info'))
+def _expression_info(self, key = None, detailed = False):
+    res = _info_to_dict(self.format('info'))
+    return res[key] if key else res
+expression.info = _expression_info
 
 expression.shortest = lambda self, num = 1: self.standard().shortest(num)
 expression.star = lambda self: self.chain(-1)
