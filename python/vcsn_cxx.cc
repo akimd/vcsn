@@ -437,9 +437,9 @@ struct automaton
                              prune);
   }
 
-  automaton push_weights() const
+  automaton push_weights(const std::string& algo = "auto") const
   {
-    return vcsn::dyn::push_weights(val_);
+    return vcsn::dyn::push_weights(val_, algo);
   }
 
   automaton realtime() const
@@ -1089,7 +1089,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
-    .def("push_weights", &automaton::push_weights)
+    .def("push_weights", &automaton::push_weights, (arg("algo") = "auto"))
     .def("realtime", &automaton::realtime)
     .def("expression", &automaton::to_expression, (arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)

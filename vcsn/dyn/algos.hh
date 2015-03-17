@@ -468,8 +468,14 @@ namespace vcsn
                      direction dir = direction::backward,
                      bool prune = true);
 
-    /// The weight pushing automaton of \a aut.
-    automaton push_weights(const automaton& aut);
+    /// Push weights towards the initial state.
+    /// \param aut        the automaton in which to push weights
+    /// \param algo
+    ///     "distance"    use the distance to final state to
+    ///                   normalize the weights
+    ///     "auto"        "distance"
+    automaton push_weights(const automaton& aut,
+                           const std::string& algo = "auto");
 
     /// Produce a random automaton.
     ///
