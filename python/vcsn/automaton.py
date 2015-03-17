@@ -134,7 +134,7 @@ def _automaton_fst(cmd, aut):
         raise RuntimeError(" ".join(cmd) + " failed: " + p2.stderr.read().decode('utf-8'))
     if p3.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
-    return automaton(res, "efsm")
+    return automaton(res.decode('utf-8'), 'efsm')
 
 def _automaton_fst_files(cmd, *aut):
     '''Run the command `cmd` on the automata `aut` coded in OpenFST
@@ -160,7 +160,7 @@ def _automaton_fst_files(cmd, *aut):
         raise RuntimeError(" ".join(cmd) + " failed: " + proc.stderr.read().decode('utf-8'))
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
-    return automaton(res, "efsm")
+    return automaton(res.decode('utf-8'), 'efsm')
 
 automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
 automaton.fstintersect = lambda a, b: _automaton_fst_files("fstintersect", a, b)
