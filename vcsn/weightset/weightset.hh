@@ -1,7 +1,6 @@
-#ifndef VCSN_WEIGHTSET_WEIGHTSET_HH
-# define VCSN_WEIGHTSET_WEIGHTSET_HH
+#pragma once
 
-# include <iostream>
+#include <iostream>
 
 // It is much simpler and saner in C++ to put types and functions on
 // these types in the same namespace.  Since "using q =
@@ -23,10 +22,10 @@ namespace vcsn
     using super_t = WeightSet;
     using typename super_t::value_t;
 
-    // Inherit the constructors.
+    /// Inherit the constructors.
     using super_t::super_t;
 
-    // Provide a variadic mul.
+    /// Provide a variadic mul.
     using super_t::mul;
 
     template <typename... Ts>
@@ -43,5 +42,3 @@ namespace vcsn
     }
   };
 }
-
-#endif // !VCSN_WEIGHTSET_WEIGHTSET_HH
