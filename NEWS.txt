@@ -5,6 +5,14 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-03-17
+### is_functional: new algorithm
+Whether a transducer is functional, i.e., whether each input words
+maps to (at most) a single word.
+
+Actually, was implemented in September 2014, but was not registered
+here.
+
 ## 2015-03-16
 ### Python 3 is now required
 We have tried hard to remain compatible with Python 2, but support for
