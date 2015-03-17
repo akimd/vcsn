@@ -3,16 +3,15 @@
  ** \brief Manage sets of inclusion paths.
  */
 
-#ifndef VCSN_MISC_FILE_LIBRARY_HH
-# define VCSN_MISC_FILE_LIBRARY_HH
+#pragma once
 
-# include <stdexcept>
-# include <list>
-# include <string>
+#include <stdexcept>
+#include <list>
+#include <string>
 
-# include <vcsn/misc/path.hh>
+#include <vcsn/misc/path.hh>
 
-# include <vcsn/misc/export.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -148,6 +147,4 @@ namespace vcsn
 
 }
 
-# include <vcsn/misc/file-library.hxx>
-
-#endif // !VCSN_MISC_FILE_LIBRARY_HH
+#include <vcsn/misc/file-library.hxx>

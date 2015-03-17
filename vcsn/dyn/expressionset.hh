@@ -47,17 +47,27 @@ namespace detail
 
     virtual value_t zero() const = 0;
     virtual value_t one() const = 0;
+
+    /// Convert a plain string into an atom.
+    /// Ask the labelset for the conversion.
     virtual value_t atom(const std::string& w) const = 0;
+
     virtual value_t add(value_t l, value_t r) const = 0;
     /// Explicit product.
     virtual value_t mul(value_t l, value_t r) const = 0;
     virtual value_t conjunction(value_t l, value_t r) const = 0;
     virtual value_t shuffle(value_t l, value_t r) const = 0;
+
+    /// Left division: l \ r.
     virtual value_t ldiv(value_t l, value_t r) const = 0;
+    /// Right division: l / r.
     virtual value_t rdiv(value_t l, value_t r) const = 0;
+
     /// Implicit product.  If both \a l and \a r are weightless words,
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
     virtual value_t concat(value_t l, value_t r) const = 0;
+
+    /// e*.
     virtual value_t star(value_t e) const = 0;
 
     /// Add a complement operator.

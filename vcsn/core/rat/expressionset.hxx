@@ -25,7 +25,7 @@ namespace vcsn
 
   template <typename Context>
   expressionset_impl<Context>::expressionset_impl(const context_t& ctx,
-                                          identities_t identities)
+                                                  identities_t identities)
     : ctx_(ctx)
     , identities_(identities)
   {
@@ -737,7 +737,7 @@ namespace vcsn
   inline
   auto
   expressionset_impl<Context>::conv(const letterset<GenSet>& ls,
-                                typename letterset<GenSet>::value_t v) const
+                                    typename letterset<GenSet>::value_t v) const
     -> value_t
   {
     return atom(labelset()->conv(ls, v));

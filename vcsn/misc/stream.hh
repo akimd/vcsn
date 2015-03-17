@@ -1,14 +1,13 @@
-#ifndef VCSN_MISC_STREAM_HH
-# define VCSN_MISC_STREAM_HH
+#pragma once
 
-# include <sstream>
-# include <stdexcept>
-# include <iostream> // cin
-# include <memory> // shared_ptr
+#include <sstream>
+#include <stdexcept>
+#include <iostream> // cin
+#include <memory> // shared_ptr
 
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/export.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/export.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -98,5 +97,3 @@ namespace vcsn LIBVCSN_API
   std::shared_ptr<std::ostream> open_output_file(const std::string& file);
 
 }
-
-#endif // !VCSN_MISC_STREAM_HH
