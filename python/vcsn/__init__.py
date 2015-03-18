@@ -96,5 +96,8 @@ try:
 except (ImportError, NameError):
     pass
 
-# An predefined context for casual users.
-b = context('lal_char, b')
+# Predefined contexts for casual users.
+B = context('lal_char, b')
+Z = context('lal_char, z')
+Q = context('lal_char, q')
+b = B
