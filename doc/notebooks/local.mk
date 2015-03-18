@@ -34,6 +34,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_twins_property.ipynb        \
+  %D%/automaton.infiltration.ipynb              \
   %D%/automaton.is_ambiguous.ipynb              \
   %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
