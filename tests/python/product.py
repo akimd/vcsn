@@ -194,7 +194,7 @@ def check(operation, exp, *args):
     CHECK_EQ(exp, str(vcsn.automaton._product(list(args)).expression()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
 check('product', '<u>a+<u>a<u>a(<u>a)*', a1, a2)
@@ -221,9 +221,9 @@ check('product', '(<0.1>a+<0.1>b)*', r, q)
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), expressionset<lal_char(xy), b>') \
+a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
          .expression('<x>a<y>b').standard()
 
 def check_enumerate(exp, aut):
@@ -236,7 +236,7 @@ check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 
 
 ## ---------- ##
-## variadic.  ##
+## Variadic.  ##
 ## ---------- ##
 
 # unary case: return only the accessible part.
@@ -280,21 +280,21 @@ digraph
 }
 ''')])))
 
-# four arguments.
-ctx = vcsn.context('lal_char(x), expressionset<lal_char(abcd), b>')
+# Four arguments.
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()
 check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 
 
-## ----------------- ##
+## ------------------------- ##
 ## expression & expression.  ##
-## ----------------- ##
+## ------------------------- ##
 
 # Add stars (<u>a*, not <u>a) to avoid that the trivial identities
 # (a&b -> \z) fire and yield a global \z.
-br = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
+br = vcsn.context('lal_char(a), seriesset<lal_char(uv), z>') \
          .expression('<u>a*')
 z = vcsn.context('lal_char(b), z').expression('<2>b*')
 q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
@@ -684,9 +684,9 @@ res = r'''digraph
 
 CHECK_EQ(res, str(vcsn.automaton._product([a1, a2])))
 
-## ---------------------- ##
-## Conjunction            ##
-## ---------------------- ##
+## ------------- ##
+## Conjunction.  ##
+## ------------- ##
 
 #Show that Conjunction is callable trough wrapper
 #The call is perfectly transparent

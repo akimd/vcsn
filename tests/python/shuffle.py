@@ -192,12 +192,12 @@ abABC''', ABCab.enumerate(10).format('list'))
 ## --------------------- ##
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a').standard()
-CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
+CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
          a1.shuffle(a2).shortest(4).format('text'))
-CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
+CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
          a2.shuffle(a1).shortest(4).format('text'))
 
 
@@ -205,19 +205,19 @@ CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), expressionset<lal_char(xy), b>') \
+a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
          .expression('<x>a<y>b').standard()
 CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 <uvxy+xyuv>abab''', a1.shuffle(a2).enumerate(4).format('list'))
 
 
-## ------- ##
-## n-ary.  ##
-## ------- ##
+## ---------- ##
+## Variadic.  ##
+## ---------- ##
 
-ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), b>')
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()
