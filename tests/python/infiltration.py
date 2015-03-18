@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-b = vcsn.context('lal_char(abcd), b')
+z = vcsn.context('lal_char(abcd), z')
 
 medir = srcdir + '/tests/python/product.dir'
 
@@ -13,9 +13,8 @@ medir = srcdir + '/tests/python/product.dir'
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-a1 = b.expression('a*a').derived_term()
-# FIXME: ABORT
-### CHECK_EQ('a*(a+(a+a)a*a+(a+a)a*a)', str(a1.infiltration(a1).expression()))
+a1 = z.expression('a*a').derived_term().strip()
+CHECK_EQ('(<3>a)*(a+<2>aa*a+<2>aa*a)', str(a1.infiltration(a1).expression()))
 
 ## -------------------- ##
 ## Hand crafted tests.  ##
@@ -165,40 +164,39 @@ CHECK_EQ('''digraph
 ## --------------------- ##
 
 # RatE and B, in both directions.
-ab = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+ab = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
     .expression('(<u>a+<v>b)*').standard()
 a = vcsn.context('lal_char(ab), b').expression('a').standard()
-# FIXME: ABORT
-### CHECK_EQ('<u+\e>a + <uu+uu+u+u>aa + <uv+v>ab + <vu+v>ba',
-###     str(ab.infiltration(a).shortest(4)))
-### CHECK_EQ('<u+\e>a + <uu+u+uu+u>aa + <uv+v>ab + <vu+v>ba',
-###     str(a.infiltration(ab).shortest(4)))
+CHECK_EQ('<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
+         str(ab.infiltration(a).shortest(4)))
+CHECK_EQ('<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
+         str(a.infiltration(ab).shortest(4)))
 
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-uavb = vcsn.context('lal_char(ab), expressionset<lal_char(uv), b>') \
+uavb = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
     .expression('<u>a<v>b').standard()
-xayb = vcsn.context('lal_char(ab), expressionset<lal_char(xy), b>') \
+xayb = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
     .expression('<x>a<y>b').standard()
 CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
-    str(uavb.infiltration(xayb).enumerate(4)))
+         str(uavb.infiltration(xayb).enumerate(4)))
 
 
 ## --------------------------------------------- ##
 ## n-ary: not yet implemented for infiltration.  ##
 ## --------------------------------------------- ##
 
-ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), b>')
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()
 
 CHECK_EQ('''<abcd>x
-<abcd+abdc+acbd+acdb+adbc+bacd+bcad+bcda+bdac+cabd+cdab+dabc>xx
-<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab>xxx
+<<3>(abcd)+abdc+acbd+acdb+adbc+bacd+bcad+bcda+bdac+cabd+cdab+dabc>xx
+<<3>(abcd)+<2>(abdc)+<2>(acbd)+<2>(acdb)+<2>(adbc)+adcb+<2>(bacd)+badc+<2>(bcad)+<2>(bcda)+<2>(bdac)+bdca+<2>(cabd)+cadb+cbad+cbda+<2>(cdab)+cdba+<2>(dabc)+dacb+dbac+dbca+dcab>xxx
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
          a['a']
          .infiltration(a['b']).strip()

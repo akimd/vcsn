@@ -84,7 +84,7 @@ namespace vcsn
 
       product_automaton_impl(Aut aut, const Auts&... auts)
         : super_t(aut, auts...)
-        , transition_maps_{{auts, *aut_->weightset()}...}
+        , transition_maps_{{auts, ws_}...}
       {}
 
       /// Compute the (accessible part of the) product.
@@ -113,7 +113,7 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            add_shuffle_transitions(src, psrc);
+            add_shuffle_transitions<false>(src, psrc);
           }
       }
 
@@ -137,7 +137,7 @@ namespace vcsn
             // this way "product" can use "new_transition" only, which
             // is faster than "add_transition".
             add_product_transitions(src, psrc);
-            add_shuffle_transitions(src, psrc);
+            add_shuffle_transitions<true>(src, psrc);
           }
       }
 
@@ -195,7 +195,7 @@ namespace vcsn
                {
                  aut_->new_transition(src, state(ts.dst...),
                                       t.first,
-                                      aut_->weightset()->mul(ts.weight()...));
+                                      ws_.mul(ts.weight()...));
                },
                t.second);
         add_one_transitions_(src, psrc, indices);
@@ -330,10 +330,12 @@ namespace vcsn
       /// the given result input state, which must correspond to the
       /// given tuple of input state automata.  Update the worklist
       /// with the needed source-state pairs.
+      template <bool Infiltration = false>
       void add_shuffle_transitions(const state_t src,
                                    const state_name_t& psrc)
       {
-        weight_t final = add_shuffle_transitions_(src, psrc, indices);
+        weight_t final
+          = add_shuffle_transitions_<Infiltration>(src, psrc, indices);
         aut_->set_final(src, final);
       }
 
@@ -341,17 +343,17 @@ namespace vcsn
       /// corresponding transitions in the output.
       ///
       /// Return the product of the final states.
-      template <size_t... I>
+      template <bool Infiltration, size_t... I>
       weight_t add_shuffle_transitions_(const state_t src,
                                         const state_name_t& psrc,
                                         seq<I...>)
       {
-        weight_t res = aut_->weightset()->one();
+        weight_t res = ws_.one();
         using swallow = int[];
         (void) swallow
         {
-          (res = aut_->weightset()->mul(res,
-                                        add_shuffle_transitions_<I>(src, psrc)),
+          (res = ws_.mul(res,
+                         add_shuffle_transitions_<Infiltration, I>(src, psrc)),
            0)...
         };
         return res;
@@ -362,13 +364,18 @@ namespace vcsn
       ///
       /// If we reach a final state, return the corresponding final
       /// weight (zero otherwise).
-      template <size_t I>
+      ///
+      /// \tparam Infiltration
+      ///    whether we are called after add_product_transitions.
+      /// \tparam I
+      ///    the tape on which to perform a transition.
+      template <bool Infiltration, size_t I>
       weight_t
       add_shuffle_transitions_(const state_t src,
                                const state_name_t& psrc)
       {
         // Whether is a final state.
-        weight_t res = aut_->weightset()->zero();
+        weight_t res = ws_.zero();
 
         auto& ts = std::get<I>(transition_maps_)[std::get<I>(psrc)];
         for (auto t: ts)
@@ -382,17 +389,24 @@ namespace vcsn
             // If add_product_transitions was called before (in the
             // case of infiltration), there may even exist such a
             // transition in the first loop.
+            //
+            // To trigger the later case, try the self-infiltration on
+            // derived_term('a*a').
             for (auto d: t.second)
-              if (std::get<I>(psrc) == d.dst)
-                aut_->add_transition(src, src, t.first, d.weight());
-              else
-                {
-                  auto pdst = psrc;
-                  std::get<I>(pdst) = d.dst;
+              {
+                auto pdst = psrc;
+                std::get<I>(pdst) = d.dst;
+                if (Infiltration
+                    || std::get<I>(psrc) == d.dst)
+                  aut_->add_transition(src, state(pdst), t.first, d.weight());
+                else
                   aut_->new_transition(src, state(pdst), t.first, d.weight());
-                }
+              }
         return res;
       }
+
+      /// The resulting weightset.
+      const weightset_t& ws_ = *aut_->weightset();
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
