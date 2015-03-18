@@ -120,6 +120,27 @@ namespace vcsn
       /// Compute the (accessible part of the) infiltration product.
       void infiltration()
       {
+        // Variadic infiltration is not trivial to implement, it's not
+        // just product and shuffle in series.  For instance, consider
+        // three automata:
+        //
+        //          <x>a
+        // x = -> 0 -----> 1 ->
+        //
+        // and likewise for y and z.  Let's use # to denote infiltration.
+        // In (x # y) there is a transition ((0,0), <xy>a, (1,1)) coming
+        // from the product-like transitions.
+        //
+        // Therefore in (x # y) # z there is a transition
+        // ((0,0),0), <xy>a, (1,1), 0) by virtue of the shuffle-like
+        // transitions.
+        //
+        // This kind of transition that mixes product and shuffle would
+        // never appear in a naive implementation with only product
+        // and shuffle transitions, but no combinations.
+        require(sizeof...(Auts) == 2,
+                "infiltration: variadic product does not work");
+
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
         // initial states for product:
@@ -588,16 +609,26 @@ namespace vcsn
   `-----------------------------*/
 
   /// The (accessible part of the) infiltration product.
-  template <typename... Auts>
+  template <typename A1, typename A2>
   inline
   auto
-  infiltration(const Auts&... as)
-    -> product_automaton<decltype(join_automata(as...)),
-                         Auts...>
+  infiltration(const A1& a1, const A2& a2)
+    -> product_automaton<decltype(join_automata(a1, a2)),
+                         A1, A2>
   {
-    auto res = make_product_automaton(join_automata(as...), as...);
+    auto res = make_product_automaton(join_automata(a1, a2), a1, a2);
     res->infiltration();
     return res;
+  }
+
+  /// The (accessible part of the) infiltration product.
+  template <typename A1, typename A2, typename A3, typename... Auts>
+  inline
+  auto
+  infiltration(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
+    -> decltype(infiltration(infiltration(a1, a2), a3, as...))
+  {
+    return infiltration(infiltration(a1, a2), a3, as...);
   }
 
   namespace dyn

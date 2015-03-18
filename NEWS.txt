@@ -6,11 +6,15 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2015-03-18
-### infiltration: fix a long standing bug
+### infiltration: fix long standing bugs
 Optimizations in the computation of the shuffle-product broke the
 infiltration-product.  This is fixed.  However, the performances of
 infiltration are then degraded (about 2.5x).  Conjunction
 (synchronized product) and shuffle are unaffected.
+
+Besides, the support for variadic infiltration products was naive, and
+produced incorrect results.  This is fixed by simply repeating the
+binary infiltration.
 
 ## 2015-03-17
 ### is_functional: new algorithm

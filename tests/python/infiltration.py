@@ -185,9 +185,9 @@ CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb
          str(uavb.infiltration(xayb).enumerate(4)))
 
 
-## --------------------------------------------- ##
-## n-ary: not yet implemented for infiltration.  ##
-## --------------------------------------------- ##
+## ---------- ##
+## Variadic.  ##
+## ---------- ##
 
 ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
 a = dict()
@@ -198,9 +198,7 @@ CHECK_EQ('''<abcd>x
 <<3>(abcd)+abdc+acbd+acdb+adbc+bacd+bcad+bcda+bdac+cabd+cdab+dabc>xx
 <<3>(abcd)+<2>(abdc)+<2>(acbd)+<2>(acdb)+<2>(adbc)+adcb+<2>(bacd)+badc+<2>(bcad)+<2>(bcda)+<2>(bdac)+bdca+<2>(cabd)+cadb+cbad+cbda+<2>(cdab)+cdba+<2>(dabc)+dacb+dbac+dbca+dcab>xxx
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
-         a['a']
-         .infiltration(a['b']).strip()
-         .infiltration(a['c']).strip()
-         .infiltration(a['d']).strip()
+         a['a'].infiltration(a['b'], a['c'], a['d'])
+         .strip()
          .enumerate(10)
          .format('list'))
