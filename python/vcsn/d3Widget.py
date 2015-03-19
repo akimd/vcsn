@@ -2,7 +2,7 @@ from __future__ import print_function, absolute_import
 
 from IPython.display import display, Javascript
 from IPython.html import widgets, nbextensions
-from IPython.html.nbextensions import install_nbextension
+#from IPython.html.nbextensions import install_nbextension
 from IPython.utils import traitlets
 from vcsn.dot import daut_to_transitions
 
@@ -108,8 +108,7 @@ class AutomatonD3Widget(widgets.DOMWidget):
     # Here the Javascript Code
     # Using D3, Jquery and Backbone
     # We load and display it from the js file we install in nb_extension
-
-    install_nbextension(os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'), verbose=0)
+    # install_nbextension(os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'), verbose=0)
     script = """IPython.load_extensions("AutomatonD3Widget")"""
     display(Javascript(script));
 

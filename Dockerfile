@@ -26,7 +26,7 @@ RUN useradd -d /vcsn -m -r vcsn
 
 ADD vcsn-2.0a.binary.tar.bz2 /usr/local/stow/
 RUN stow -d /usr/local/stow vcsn-2.0a.install
-RUN ln -s /usr/local/share/doc/vcsn/notebooks /vcsn/
+RUN ln -s /usr/local/share/doc/vcsn/notebooks /vcsn/Documentation
 RUN touch "/vcsn/Please read the index.ipynb file in Documentation"
 
 EXPOSE 8888
