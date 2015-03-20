@@ -29,6 +29,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.complement.ipynb                \
   %D%/automaton.complete.ipynb                  \
   %D%/automaton.compose.ipynb                   \
+  %D%/automaton.conjunction.ipynb               \
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.filter.ipynb                    \
