@@ -112,6 +112,11 @@ check whether is_proper first.  However are-equivalent actually uses
 a.realtime() = a.letterize().proper(), and a.realtime() checks first if the
 automaton is not already realtime.
 
+Update: now we do call realtime (which includes proper).  We should also use
+synchronize: currently we can't compare a lan x lan with a lal x lal, even
+if the former does not have (\e, \e) transitions.  Once we do, remove the
+calls to "normalize" in tests/python/efsm.py:check.
+
 ** are-equivalent
 We cannot compare Z-automaton.is_equivalent(B-automaton), because the
 B-automaton does not support -1 * aut.  However we must perform these

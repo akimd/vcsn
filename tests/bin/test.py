@@ -151,22 +151,18 @@ def CHECK_EQ(expected, effective, loc = None):
 
 def normalize(a):
     '''Turn automaton `a` into something we can check equivalence with.'''
-    a = a.strip()
-    if 'nullableset' in str(a.context()):
-        a = a.proper()
-    # Eliminate nullablesets if there are that remain.
-    to = re.sub(r'nullableset<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>', r'\1', a.context().format('text'))
+    a = a.strip().realtime()
+    # Eliminate nullablesets if there are that remain.  If there are
+    # \e that remains, the following conversion _will_ reject it.
+    to = re.sub(r'nullableset<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>',
+                r'\1',
+                a.context().format('text'))
     return a.automaton(vcsn.context(to))
 
 
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.  Also works for
     expressions.'''
-    if isinstance(a1, vcsn.automaton):
-        a1 = normalize(a1)
-    if isinstance(a2, vcsn.automaton):
-        a2 = normalize(a2)
-
     # Cannot compute equivalence on Zmin, approximate with shortest.
     if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
         num = 10

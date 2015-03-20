@@ -6,6 +6,9 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2015-03-21
+### are-equivalent: now uses realtime
+One may, finally, compare LAL, LAN, and LAW automata.
+
 ### join: improvements
 The "join" of tuplesets now works properly, so one may, for instance,
 add automata on A? x B and A x B? to get an automata on A? x B?.
@@ -16,8 +19,10 @@ infix `or` operator.
 
     In [2]: c1 = vcsn.context('lat<lal_char(a), lan_char(x)>, z'); c1
     Out[2]: {a} × ({x})? → ℤ
+
     In [3]: c2 = vcsn.context('lat<lan_char(b), lal_char(y)>, q'); c2
     Out[3]: ({b})? × {y} → ℚ
+
     In [4]: c1 | c2
     Out[4]: ({a,b})? × ({x,y})? → ℚ
 

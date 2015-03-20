@@ -36,7 +36,7 @@ def check(aut, fefsm):
     CHECK_EQ(aut, aut2)
     CHECK_EQ(efsm, aut2.format('efsm'))
   else:
-    CHECK_EQUIV(aut, aut2)
+    CHECK_EQUIV(aut, normalize(aut2))
 
   # Check that OpenFST accepts and reproduces our EFSM files.
   if have_ofst:
@@ -44,7 +44,7 @@ def check(aut, fefsm):
     if aut.is_standard():
       CHECK_EQ(aut, aut3)
     else:
-      CHECK_EQUIV(aut, aut3)
+      CHECK_EQUIV(aut, normalize(aut3))
   else:
     SKIP('OpenFST is missing')
 

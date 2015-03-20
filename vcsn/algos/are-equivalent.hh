@@ -6,6 +6,7 @@
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/derived-term.hh>
 #include <vcsn/algos/left-mult.hh>
+#include <vcsn/algos/letterize.hh> // rea
 #include <vcsn/algos/product.hh>
 #include <vcsn/algos/reduce.hh>
 #include <vcsn/algos/strip.hh>
@@ -24,14 +25,14 @@ namespace vcsn
   template <typename Aut1, typename Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> vcsn::enable_if_t<(labelset_t_of<Aut1>::is_free()
-                          && std::is_same<weightset_t_of<Aut1>, b>::value
-                          && labelset_t_of<Aut2>::is_free()
+    -> vcsn::enable_if_t<(std::is_same<weightset_t_of<Aut1>, b>::value
                           && std::is_same<weightset_t_of<Aut2>, b>::value),
                          bool>
   {
-    return (is_useless(difference(a1, a2))
-            && is_useless(difference(a2, a1)));
+    const auto& l = realtime(a1);
+    const auto& r = realtime(a2);
+    return (is_useless(difference(l, r))
+            && is_useless(difference(r, l)));
   }
 
 
@@ -45,10 +46,12 @@ namespace vcsn
                  true))
   {
     const auto& ws2 = *a2->weightset();
-    // d = a1 U -a2.
-    auto d = union_a(a1,
+    const auto& l = realtime(a1);
+    const auto& r = realtime(a2);
+    // d = l + -r.
+    auto d = union_a(l,
                      left_mult(ws2.sub(ws2.zero(), ws2.one()),
-                               a2));
+                               r));
     return is_empty(reduce(d));
   }
 
