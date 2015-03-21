@@ -3,13 +3,16 @@
 import vcsn
 from test import *
 
+def std(ctx, exp):
+    return vcsn.context(ctx).expression(exp).standard()
+
 ctxbr = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>')
 ctxz = vcsn.context('lal_char(b), z')
 ctxq = vcsn.context('lal_char(c), q')
 ctxr = vcsn.context('lal_char(d), r')
 
-ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
+ab = std('lal_char(ab), b', '(a+b)*')
+bc = std('lal_char(bc), b', '(b+c)*')
 result = '''digraph
 {
   vcsn_context = "letterset<char_letters(abc)>, b"
@@ -131,8 +134,8 @@ result = '''digraph
 CHECK_EQ(result, a.sum(b))
 
 # Check join of contexts.
-a = vcsn.context('lal_char(a), expressionset<lal_char(x), b>').expression('<x>a*').standard()
-b = vcsn.context('lal_char(b), q').expression('<1/2>b*').standard()
+a = std('lal_char(a), expressionset<lal_char(x), b>', '<x>a*')
+b = std('lal_char(b), q', '<1/2>b*')
 
 result = r'''digraph
 {
@@ -164,16 +167,6 @@ result = r'''digraph
 CHECK_EQ(result, a.sum(b))
 
 
-## ------------------------- ##
-## polynomial + polynomial.  ##
-## ------------------------- ##
-
-br = ctxbr.polynomial('<u>a')
-z = ctxz.polynomial('<2>b')
-q = ctxq.polynomial('<1/3>c')
-r = ctxr.polynomial('<.4>d')
-CHECK_EQ('<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
-
 
 ## ------------------------- ##
 ## expression + expression.  ##
@@ -184,6 +177,17 @@ z = ctxz.expression('<2>b')
 q = ctxq.expression('<1/3>c')
 r = ctxr.expression('<.4>d')
 CHECK_EQ('<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br + z + q + r))
+
+
+## ------------------------- ##
+## polynomial + polynomial.  ##
+## ------------------------- ##
+
+br = ctxbr.polynomial('<u>a')
+z = ctxz.polynomial('<2>b')
+q = ctxq.polynomial('<1/3>c')
+r = ctxr.polynomial('<.4>d')
+CHECK_EQ('<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
 
 
 ## ----------------- ##

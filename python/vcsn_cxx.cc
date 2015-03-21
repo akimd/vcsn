@@ -1198,5 +1198,4 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("multiply", &weight::multiply)
     .def("sum", &weight::sum)
    ;
-
 }

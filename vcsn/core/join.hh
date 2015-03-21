@@ -1,7 +1,6 @@
-#ifndef VCSN_CORE_JOIN_HH
-# define VCSN_CORE_JOIN_HH
+#pragma once
 
-# include <vcsn/misc/type_traits.hh>
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -75,6 +74,3 @@ namespace vcsn
       return {};                                \
     }                                           \
   }
-
-
-#endif // !VCSN_CORE_JOIN_HH

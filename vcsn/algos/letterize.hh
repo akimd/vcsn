@@ -230,7 +230,7 @@ namespace vcsn
 
     template <typename Aut>
     vcsn::enable_if_t<!letterized_ls<Aut>::should_run, bool>
-    is_letterized(const Aut& aut)
+    is_letterized(const Aut&)
     {
       return true;
     }
