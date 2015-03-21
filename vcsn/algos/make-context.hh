@@ -79,6 +79,25 @@ namespace vcsn
   }
 
 
+  /*--------.
+  | join.   |
+  `--------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Ctx1, typename Ctx2>
+      context
+      join(const context& c1, const context& c2)
+      {
+        return dyn::make_context(join(c1->as<Ctx1>(), c2->as<Ctx2>()));
+      }
+    }
+  }
+
+
 
   /*----------------------.
   | make_expressionset.   |

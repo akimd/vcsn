@@ -351,6 +351,9 @@ namespace vcsn
     /// sub-expressions are starrable).
     bool is_valid(const expression& e);
 
+    /// The join between two contexts, i.e., their lowest common supertype.
+    context join(const context& lhs, const context& rhs);
+
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 

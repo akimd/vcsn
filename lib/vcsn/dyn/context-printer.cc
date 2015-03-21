@@ -59,6 +59,7 @@ namespace vcsn
       ALGO("is-synchronized-by", "synchronizing-word");
       ALGO("is-trim", "accessible");
       ALGO("is-useless", "accessible");
+      ALGO("join", "make-context");
       ALGO("ldiv", "divide");
       ALGO("lgcd", "divide");
       ALGO("list", "print");

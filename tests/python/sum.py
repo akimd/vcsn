@@ -167,6 +167,13 @@ result = r'''digraph
 CHECK_EQ(result, a.sum(b))
 
 
+# lan x lal + lal x lan = lan x lan.
+a = std('lat<lan_char, lal_char>, b', "'\e,x'")
+b = std('lat<lal_char, lan_char>, b', "'a,\e'")
+c = std('lat<lan_char, lan_char>, b', "'\e,x'+'a,\e'")
+# Not the same states numbers, so not CHECK_EQ.
+CHECK_ISOMORPHIC(c, a + b)
+
 
 ## ------------------------- ##
 ## expression + expression.  ##

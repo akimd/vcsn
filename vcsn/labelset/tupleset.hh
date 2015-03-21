@@ -127,13 +127,6 @@ namespace vcsn
       return res;
     }
 
-    /// The join with another tupleset.
-    tupleset
-    join(const tupleset& rhs) const
-    {
-      return this->join_(rhs, indices);
-    }
-
     /// The componants valuesets, as a tuple.
     const valuesets_t& sets() const
     {
@@ -765,14 +758,6 @@ namespace vcsn
       return tupleset{meet(set<I>(), rhs.set<I>())...};
     }
 
-    /// The join with another tupleset.
-    template <std::size_t... I>
-    tupleset
-    join_(const tupleset& rhs, seq<I...>) const
-    {
-      return tupleset{vcsn::join(set<I>(), rhs.set<I>())...};
-    }
-
     /// The meet with another tupleset.
     friend
     tupleset
@@ -908,13 +893,29 @@ namespace vcsn
       }
     };
 
+    /// Join between two tuplesets, of the same size.
     template <typename... VS1, typename... VS2>
     struct join_impl<tupleset<VS1...>, tupleset<VS2...>>
     {
+      static_assert(sizeof...(VS1) == sizeof...(VS2),
+                    "join: tuplesets must have the same sizes");
+      using vs1_t = tupleset<VS1...>;
+      using vs2_t = tupleset<VS2...>;
+      /// The resulting type.
       using type = tupleset<join_t<VS1, VS2>...>;
-      static type join(const tupleset<VS1...>& lhs, const tupleset<VS2...>& rhs)
+
+      template <std::size_t... I>
+      static type join(const vs1_t lhs, const vs2_t& rhs,
+                       detail::index_sequence<I...>)
       {
-        return lhs.join(rhs);
+        return {::vcsn::join(lhs.template set<I>(), rhs.template set<I>())...};
+      }
+
+      /// The resulting valueset.
+      static type join(const vs1_t& lhs, const vs2_t& rhs)
+      {
+        return join(lhs, rhs,
+                    detail::make_index_sequence<sizeof...(VS1)>{});
       }
     };
   }

@@ -75,6 +75,11 @@ struct context
     return os.str();
   }
 
+  context join(const context& rhs) const
+  {
+    return vcsn::dyn::join(val_, rhs.val_);
+  }
+
   automaton ladybird(unsigned n) const;
 
   automaton random(unsigned num_states, float density = 0.1,
@@ -1120,6 +1125,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("divkbaseb", &context::divkbaseb)
     .def("double_ring", &context::double_ring)
     .def("format", &context::format)
+    .def("join", &context::join)
     .def("ladybird", &context::ladybird)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
