@@ -42,9 +42,9 @@ namespace vcsn
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
-        o << "tuple_automaton<";
+        o << "tuple_automaton";
         print_set_(o, format);
-        return o << '>';
+        return o;
       }
 
       /// The type of context of the result.
@@ -199,7 +199,7 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(state_name_t state)
+      state_t state(const state_name_t& state)
       {
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
@@ -221,8 +221,9 @@ namespace vcsn
                         const std::string& format,
                         seq<I...>) const
       {
-        auto i = origins().find(s);
-        if (i == std::end(origins()))
+        const auto& origs = origins();
+        auto i = origs.find(s);
+        if (i == std::end(origs))
           this->print_state(s, o);
         else
           {

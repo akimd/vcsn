@@ -27,40 +27,37 @@ namespace vcsn
     /// Build the (accessible part of the) product.
     template <typename Aut, typename... Auts>
     class product_automaton_impl
-      : public tuple_automaton_impl<Aut, Auts...>
+      : public automaton_decorator<tuple_automaton<Aut, Auts...>>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "product: requires letterized labels");
 
       /// The type of the resulting automaton.
       using automaton_t = Aut;
-      using super_t = tuple_automaton_impl<automaton_t, Auts...>;
+      using tuple_automaton_t = tuple_automaton<automaton_t, Auts...>;
+      using self_t = product_automaton_impl;
+      using super_t = automaton_decorator<tuple_automaton_t>;
 
     public:
-      using typename super_t::state_name_t;
-      using typename super_t::state_t;
+      using state_name_t
+        = typename tuple_automaton_t::element_type::state_name_t;
+      using state_t
+        = typename tuple_automaton_t::element_type::state_t;
       template <size_t... I>
-      using seq = typename super_t::template seq<I...>;
-
-      using super_t::auts_;
-      using super_t::indices;
-      using super_t::pmap_;
-      using super_t::post_;
-      using super_t::pre_;
-      using super_t::todo_;
-
-      using super_t::state;
+      using seq
+        = typename tuple_automaton_t::element_type::template seq<I...>;
 
       static symbol sname()
       {
-        static symbol res("product_automaton" + super_t::sname_());
+        static symbol res("product_automaton"
+                          + tuple_automaton_t::element_type::sname_());
         return res;
       }
 
       std::ostream& print_set(std::ostream& o, const std::string& format) const
       {
         o << "product_automaton";
-        return super_t::print_set_(o, format);
+        return aut_->print_set_(o, format);
       }
 
       /// The context of the result.
@@ -86,7 +83,7 @@ namespace vcsn
       /// \param aut   the automaton to build.
       /// \param auts  the input automata.
       product_automaton_impl(Aut aut, const Auts&... auts)
-        : super_t(aut, auts...)
+        : super_t{make_tuple_automaton(aut, auts...)}
         , transition_maps_{{auts, ws_}...}
       {}
 
@@ -95,11 +92,11 @@ namespace vcsn
       {
         initialize_product();
 
-        while (!todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            state_name_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
+            state_name_t psrc = aut_->todo_.front();
+            aut_->todo_.pop_front();
+            state_t src = aut_->pmap_[psrc];
 
             add_product_transitions(src, psrc);
           }
@@ -110,11 +107,11 @@ namespace vcsn
       {
         initialize_shuffle();
 
-        while (!todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            state_name_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
+            state_name_t psrc = aut_->todo_.front();
+            aut_->todo_.pop_front();
+            state_t src = aut_->pmap_[psrc];
 
             add_shuffle_transitions<false>(src, psrc);
           }
@@ -149,11 +146,11 @@ namespace vcsn
         // initial states for product:
         initialize_shuffle();
 
-        while (!todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            state_name_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
+            state_name_t psrc = aut_->todo_.front();
+            aut_->todo_.pop_front();
+            state_t src = aut_->pmap_[psrc];
 
             // Infiltrate is a mix of product and shuffle operations.
             //
@@ -170,7 +167,7 @@ namespace vcsn
       /// needed for the product algorithm.
       void initialize_product()
       {
-        todo_.emplace_back(pre_());
+        aut_->todo_.emplace_back(aut_->pre_());
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -179,7 +176,14 @@ namespace vcsn
       {
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
-        add_product_transitions(aut_->pre(), pre_());
+        add_product_transitions(aut_->pre(), aut_->pre_());
+      }
+
+      /// Conversion from state name to state number.
+      template <typename... Args>
+      state_t state(Args&&... args)
+      {
+        return aut_->state(std::forward<Args>(args)...);
       }
 
       /// The type of our transition maps: convert the weight to weightset_t,
@@ -191,7 +195,7 @@ namespace vcsn
       std::tuple<typename transition_map_t<Auts>::map_t&...>
       out_(const state_name_t& ss)
       {
-        return out_(ss, indices);
+        return out_(ss, aut_->indices);
       }
 
       template <size_t... I>
@@ -201,10 +205,10 @@ namespace vcsn
         return std::tie(std::get<I>(transition_maps_)[std::get<I>(ss)]...);
       }
 
-      /// Add transitions to the given result automaton, starting from
-      /// the given result input state, which must correspond to the
-      /// given pair of input state automata.  Update the worklist with
-      /// the needed source-state pairs.
+      /// Add transitions to the result automaton, starting from the
+      /// given result input state, which must correspond to the given
+      /// pair of input state automata.  Update the worklist with the
+      /// needed source-state pairs.
       void add_product_transitions(const state_t src,
                                    const state_name_t& psrc)
       {
@@ -215,14 +219,15 @@ namespace vcsn
           // and so is (right destination, label).
           if (!aut_->labelset()->is_one(t.first))
             detail::cross_tuple
-              ([&] (const typename transition_map_t<Auts>::transition&... ts)
+              ([this,src,&t]
+               (const typename transition_map_t<Auts>::transition&... ts)
                {
-                 aut_->new_transition(src, state(ts.dst...),
+                 this->new_transition(src, state(ts.dst...),
                                       t.first,
                                       ws_.mul(ts.weight()...));
                },
                t.second);
-        add_one_transitions_(src, psrc, indices);
+        add_one_transitions_(src, psrc, aut_->indices);
       }
 
       /// Add the spontaneous transitions leaving state \a src, if it
@@ -235,7 +240,7 @@ namespace vcsn
         using swallow = int[];
         (void) swallow
         {
-          (maybe_add_one_transitions_<I>(*(std::get<I>(auts_)->labelset()),
+          (maybe_add_one_transitions_<I>(*(std::get<I>(aut_->auts_)->labelset()),
                                          src, psrc), 0)...
         };
       }
@@ -253,8 +258,8 @@ namespace vcsn
       maybe_add_one_transitions_(const L& ls, const state_t src,
                                  const state_name_t& psrc)
       {
-        if (!has_one_in(psrc, I + 1, indices)
-            && !has_only_one_out(psrc, I, indices))
+        if (!has_one_in(psrc, I + 1, aut_->indices)
+            && !has_only_one_out(psrc, I, aut_->indices))
           {
             // one is guaranteed to be first.
             const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
@@ -263,7 +268,7 @@ namespace vcsn
                 {
                   auto pdst = psrc;
                   std::get<I>(pdst) = t.dst;
-                  aut_->new_transition(src, state(pdst), ls.one(), t.weight());
+                  this->new_transition(src, state(pdst), ls.one(), t.weight());
                 }
           }
       }
@@ -274,7 +279,7 @@ namespace vcsn
       bool has_one_in(const state_name_t& psrc, std::size_t i,
                       seq<I...>) const
       {
-        bool has_ones[] = { has_only_ones_in(std::get<I>(auts_),
+        bool has_ones[] = { has_only_ones_in(std::get<I>(aut_->auts_),
                                              std::get<I>(psrc))... };
         for (; i < sizeof...(Auts); ++i)
           if (has_ones[i])
@@ -347,7 +352,7 @@ namespace vcsn
         else if (2 <= s)
           return false;
         else
-          return std::get<I>(auts_)->labelset()->is_one(tmap.begin()->first);
+          return std::get<I>(aut_->auts_)->labelset()->is_one(tmap.begin()->first);
       }
 
       /// Add transitions to the given result automaton, starting from
@@ -359,7 +364,7 @@ namespace vcsn
                                    const state_name_t& psrc)
       {
         weight_t final
-          = add_shuffle_transitions_<Infiltration>(src, psrc, indices);
+          = add_shuffle_transitions_<Infiltration>(src, psrc, aut_->indices);
         aut_->set_final(src, final);
       }
 
@@ -403,7 +408,7 @@ namespace vcsn
 
         auto& ts = std::get<I>(transition_maps_)[std::get<I>(psrc)];
         for (auto t: ts)
-          if (std::get<I>(auts_)->labelset()->is_special(t.first))
+          if (std::get<I>(aut_->auts_)->labelset()->is_special(t.first))
             res = t.second.front().weight();
           else
             // The src state is visited for the first time, so all
@@ -422,9 +427,9 @@ namespace vcsn
                 std::get<I>(pdst) = d.dst;
                 if (Infiltration
                     || std::get<I>(psrc) == d.dst)
-                  aut_->add_transition(src, state(pdst), t.first, d.weight());
+                  this->add_transition(src, state(pdst), t.first, d.weight());
                 else
-                  aut_->new_transition(src, state(pdst), t.first, d.weight());
+                  this->new_transition(src, state(pdst), t.first, d.weight());
               }
         return res;
       }
@@ -462,13 +467,13 @@ namespace vcsn
   inline
   auto
   product(const Auts&... as)
-    -> product_automaton<decltype(meet_automata(as...)),
-                         Auts...>
+    -> tuple_automaton<decltype(meet_automata(as...)),
+                       Auts...>
   {
     auto res = make_product_automaton(meet_automata(as...),
                                       as...);
     res->product();
-    return res;
+    return res->strip();
   }
 
   namespace dyn
@@ -528,12 +533,12 @@ namespace vcsn
   inline
   auto
   shuffle(const Auts&... as)
-    -> product_automaton<decltype(join_automata(as...)),
-                         Auts...>
+    -> tuple_automaton<decltype(join_automata(as...)),
+                       Auts...>
   {
     auto res = make_product_automaton(join_automata(as...), as...);
     res->shuffle();
-    return res;
+    return res->strip();
   }
 
   namespace dyn
@@ -616,12 +621,12 @@ namespace vcsn
   inline
   auto
   infiltration(const A1& a1, const A2& a2)
-    -> product_automaton<decltype(join_automata(a1, a2)),
-                         A1, A2>
+    -> tuple_automaton<decltype(join_automata(a1, a2)),
+                       A1, A2>
   {
     auto res = make_product_automaton(join_automata(a1, a2), a1, a2);
     res->infiltration();
-    return res;
+    return res->strip();
   }
 
   /// The (accessible part of the) infiltration product.
