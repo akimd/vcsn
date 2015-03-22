@@ -65,7 +65,9 @@ def process_file(fn):
 
 # Generate the header.
 def header():
-    res = r'''#pragma once
+    res = r'''// Generated, do not edit by hand.
+
+#pragma once
 
 #include <vector>
 
@@ -99,7 +101,9 @@ namespace vcsn { namespace dyn { namespace detail {
 
 # Generate the implementation file.
 def output():
-    res = r'''#include <lib/vcsn/algos/registry.hh>
+    res = r'''// Generated, do not edit by hand.
+
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
@@ -127,9 +131,43 @@ namespace vcsn { namespace dyn {
     return res
 
 
+# Generate a function which, given an bridge name, returns the header
+# that defined it.
+def bridge():
+    res = r'''// Generated, do not edit by hand.
+
+#include <unordered_map>
+
+#include <vcsn/dyn/context-printer.hh>
+
+namespace vcsn { namespace ast {
+
+  void context_printer::header_algo(const std::string& algo)
+  {
+    static auto headers
+      = std::unordered_map<std::string, std::string>
+        {
+'''
+    for f in sorted(bridges):
+        res += '          {{ "{reg}", "{file}" }},\n'.format(**bridges[f])
+
+    res += '''\
+        };
+    headers_late_.insert("vcsn/algos/" + headers.at(algo));
+  }
+}}'''
+
+    return res
+
+
+
+
 parser = argparse.ArgumentParser(description='Generate registers file.')
 parser.add_argument('file', nargs='+', type=str, default=None,
                     help='Headers to process')
+parser.add_argument('--bridge',
+                    type=argparse.FileType('w'), default = '-',
+                    help='bridge header finder file to generate')
 parser.add_argument('--header',
                     type=argparse.FileType('w'), default = '-',
                     help='header file to generate')
@@ -146,3 +184,4 @@ for fn in args.file:
 
 print(header(), file=args.header)
 print(output(), file=args.output)
+print(bridge(), file=args.bridge)

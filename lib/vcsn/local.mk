@@ -32,7 +32,9 @@ lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN	\
   $(BOOST_FLYWEIGHT_CPPFLAGS) $(BOOST_FILESYSTEM_CPPFLAGS)	\
   $(BOOST_SYSTEM_CPPFLAGS) $(BOOST_REGEX_CPPFLAGS)
 nodist_lib_libvcsn_la_SOURCES =                 \
-  %D%/algos/algos.cc
+  %D%/algos/algos.cc                            \
+  %D%/dyn/context-printer-header-algo.cc
+
 lib_libvcsn_la_SOURCES =                        \
   %D%/algos/edit-automaton.cc                   \
   %D%/algos/efsm.cc                             \

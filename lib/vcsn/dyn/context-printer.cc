@@ -1,7 +1,5 @@
 #include <vcsn/dyn/context-printer.hh>
 
-#include <boost/algorithm/string.hpp>
-
 #include <vcsn/dyn/type-ast.hh>
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
@@ -11,82 +9,6 @@ namespace vcsn
 {
   namespace ast
   {
-
-    void context_printer::header_algo(const std::string& algo)
-    {
-      // We use '-' instead of '_' in header file names.
-      auto h = boost::replace_all_copy(algo, "_", "-");
-      // We don't use any suffix in the file names.
-      for (auto s: {"-automaton",
-                    "-ctx",
-                    "-expansion", "-label", "-polynomial",
-                    "-expression", "-vector", "-weight"})
-        if (boost::ends_with(h, s) && h != "to-expression")
-          boost::erase_tail(h, strlen(s));
-      // Open code some mismatches between algo name, and header name.
-      //
-      // FIXME: algorithms should register this themselves.
-      if (false) {}
-#define ALGO(In, Out)                           \
-      else if (h == In)                         \
-        h = Out
-      ALGO("ambiguous-word", "is-ambiguous");
-      ALGO("chain", "concatenate");
-      ALGO("coaccessible", "accessible");
-      ALGO("codeterminize", "determinize");
-      ALGO("cominimize", "minimize");
-      ALGO("component", "scc");
-      ALGO("condense", "scc");
-      ALGO("conjunction", "product");
-      ALGO("context-of", "make-context");
-      ALGO("copy-convert", "copy");
-      ALGO("costandard", "standard");
-      ALGO("difference", "are-equivalent");
-      ALGO("eliminate-state", "to-expression");
-      ALGO("factor", "prefix");
-      ALGO("infiltration", "product");
-      ALGO("is-accessible", "accessible");
-      ALGO("is-coaccessible", "accessible");
-      ALGO("is-codeterministic", "is-deterministic");
-      ALGO("is-costandard", "standard");
-      ALGO("is-cycle-ambiguous", "is-ambiguous");
-      ALGO("is-empty", "accessible");
-      ALGO("is-letterized", "letterize");
-      ALGO("is-normalized", "normalize");
-      ALGO("is-out-sorted", "sort");
-      ALGO("is-realtime", "letterize");
-      ALGO("is-standard", "standard");
-      ALGO("is-synchronized-by", "synchronizing-word");
-      ALGO("is-trim", "accessible");
-      ALGO("is-useless", "accessible");
-      ALGO("join", "make-context");
-      ALGO("ldiv", "divide");
-      ALGO("lgcd", "divide");
-      ALGO("list", "print");
-      ALGO("make-expressionset", "make-context");
-      ALGO("make-word-context", "make-context");
-      ALGO("multiply", "concatenate");
-      ALGO("num-components", "scc");
-      ALGO("pair", "synchronizing-word");
-      ALGO("power", "product");
-      ALGO("rdiv", "divide");
-      ALGO("realtime", "letterize");
-      ALGO("right-mult", "left-mult");
-      ALGO("shortest", "enumerate");
-      ALGO("shuffle", "product");
-      ALGO("subword", "prefix");
-      ALGO("suffix", "prefix");
-      ALGO("trim", "accessible");
-      ALGO("union-a", "union");
-#undef ALGO
-      // Exceptions.
-      if (algo == "is_valid_expression")
-        h = "is-valid-expression";
-
-      h = "vcsn/algos/" + h + ".hh";
-      headers_late_.insert(h);
-    }
-
     void context_printer::header(const std::string& h)
     {
       headers_.insert(h);
