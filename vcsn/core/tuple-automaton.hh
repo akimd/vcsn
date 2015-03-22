@@ -1,16 +1,15 @@
-#ifndef VCSN_CORE_TUPLE_AUTOMATON_HH
-# define VCSN_CORE_TUPLE_AUTOMATON_HH
+#pragma once
 
-# include <deque>
-# include <iostream>
-# include <map>
-# include <utility>
+#include <deque>
+#include <iostream>
+#include <map>
+#include <utility>
 
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/misc/map.hh> // has
-# include <vcsn/misc/tuple.hh>
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/map.hh> // has
+#include <vcsn/misc/tuple.hh>
 
 namespace vcsn
 {
@@ -255,7 +254,7 @@ namespace vcsn
     };
   }
 
-  /// A product automaton as a shared pointer.
+  /// A tuple automaton as a shared pointer.
   template <typename... Auts>
   using tuple_automaton
     = std::shared_ptr<detail::tuple_automaton_impl<Auts...>>;
@@ -270,5 +269,3 @@ namespace vcsn
     return make_shared_ptr<res_t>(auts...);
   }
 }
-
-#endif // !VCSN_CORE_TUPLE_AUTOMATON_HH

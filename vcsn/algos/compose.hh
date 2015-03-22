@@ -7,10 +7,10 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/labelset/tupleset.hh>
-#include <vcsn/misc/vector.hh> // cross_tuple
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/tuple.hh> // make_index_sequence
-#include <vcsn/misc/zip-maps.hh> // make_index_sequence
+#include <vcsn/misc/vector.hh> // cross_tuple
+#include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
@@ -296,7 +296,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
@@ -308,5 +307,4 @@ namespace vcsn
       }
     }
   }
-
 }
