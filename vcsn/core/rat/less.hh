@@ -12,7 +12,7 @@ namespace vcsn
   namespace rat
   {
 
-    template <class ExpSet>
+    template <typename ExpSet>
     class less
       : public ExpSet::const_visitor
     {

@@ -195,7 +195,7 @@ namespace vcsn
   | info(automaton, stream).  |
   `--------------------------*/
 
-  template <class A>
+  template <typename A>
   std::ostream&
   info(const A& aut, std::ostream& out, bool detailed = false)
   {
@@ -260,7 +260,7 @@ namespace vcsn
   | info(expression, stream).   |
   `----------------------------*/
 
-  template <class ExpSet>
+  template <typename ExpSet>
   void
   info(const ExpSet& rs, const typename ExpSet::value_t& e,
        std::ostream& o)

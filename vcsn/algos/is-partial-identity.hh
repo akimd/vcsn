@@ -76,7 +76,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <class Aut>
+      template <typename Aut>
       bool is_partial_identity(const automaton& aut)
       {
         return is_partial_identity(aut->as<Aut>());

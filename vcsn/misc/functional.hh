@@ -59,7 +59,7 @@ namespace vcsn
   /// Following the naming convention of Boost.
   ///
   /// Use SFINAE to avoid being too eager.
-  template <class T>
+  template <typename T>
   inline auto hash_value(const T& v)
     -> decltype(std::hash<T>{}(v))
   {

@@ -11,7 +11,7 @@
 
 namespace vcsn
 {
-  template <class Context>
+  template <typename Context>
   mutable_automaton<Context>
   ladybird(const Context& ctx, unsigned n)
   {

@@ -6,7 +6,7 @@
 #include <tests/unit/test.hh>
 #include <tests/unit/weight.hh>
 
-template <class T>
+template <typename T>
 static
 bool
 check_conv_fail(T& ps, const std::string& str)
@@ -110,7 +110,7 @@ check_conv(const PolynomialSet& ps)
 }
 
 
-template <class PolynomialSet>
+template <typename PolynomialSet>
 static
 bool
 check_star_fail(const PolynomialSet& ps, const std::string& str)

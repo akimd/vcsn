@@ -13,7 +13,7 @@ namespace vcsn
     `-------------------------*/
 
     /// \tparam ExpSet  the expression set.
-    template <class ExpSet>
+    template <typename ExpSet>
     class transposer
       : public ExpSet::const_visitor
     {
@@ -152,7 +152,7 @@ namespace vcsn
   ///
   /// Works deeply, contrary to transposition() that merely applies
   /// the `{T}` operator.
-  template <class ExpSet>
+  template <typename ExpSet>
   typename ExpSet::value_t
   transpose(const ExpSet& rs, const typename ExpSet::value_t& v)
   {

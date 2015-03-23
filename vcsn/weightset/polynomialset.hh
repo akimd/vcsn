@@ -70,7 +70,7 @@ namespace vcsn
 
   /// Linear combination of labels: map labels to weights.
   /// \tparam Context  the LabelSet and WeightSet types.
-  template <class Context>
+  template <typename Context>
   class polynomialset
   {
   public:

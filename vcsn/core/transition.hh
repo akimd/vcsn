@@ -12,7 +12,7 @@ namespace vcsn
   | possibly_labeled_transition_tuple.  |
   `------------------------------------*/
 
-  template<class State, class Label>
+  template <typename State, class Label>
   struct possibly_labeled_transition_tuple
   {
     State src;
@@ -26,7 +26,7 @@ namespace vcsn
     Label label;
   };
 
-  template<class State>
+  template <typename State>
   struct possibly_labeled_transition_tuple<State, empty_t>
   {
     State src;
@@ -42,7 +42,7 @@ namespace vcsn
   | transition_tuple.  |
   `-------------------*/
 
-  template<class State, class Label, class Weight>
+  template <typename State, class Label, class Weight>
   struct transition_tuple
     : possibly_labeled_transition_tuple<State, Label>
   {
@@ -58,7 +58,7 @@ namespace vcsn
   // always true.  This is correct for weight in the Boolean ring, as
   // well as for those in the F₂ (a.k.a. ℤ/2ℤ) field, both encoded
   // using the bool type.
-  template<class State, class Label>
+  template <typename State, class Label>
   struct transition_tuple<State, Label, bool>
     : possibly_labeled_transition_tuple<State, Label>
   {

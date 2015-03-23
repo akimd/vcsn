@@ -33,7 +33,7 @@ namespace vcsn
   }
 
   // polynomialset.hh.
-  template <class Context>
+  template <typename Context>
   class polynomialset;
 
   // weightset.hh.

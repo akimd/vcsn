@@ -69,7 +69,7 @@ namespace vcsn
     template <typename ForwardRange>
       self_type& push_back(const ForwardRange& r, const char* sep);
 
-    template <class Iterable>
+    template <typename Iterable>
       self_type& push_back(const std::string& user_path,
                            const Iterable& default_path,
                            const char* sep);

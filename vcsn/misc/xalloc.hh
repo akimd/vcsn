@@ -35,7 +35,7 @@ namespace vcsn
    ** The idea is to build the right inner class with set, get or
    ** swap methods, then use this class as a parameter of operator<<.
    */
-  template <class StoredType>
+  template <typename StoredType>
   class xalloc
   {
   private:

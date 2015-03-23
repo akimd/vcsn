@@ -82,6 +82,9 @@ namespace vcsn
 
       using super_t::aut_;
 
+      /// Build a product automaton.
+      /// \param aut   the automaton to build.
+      /// \param auts  the input automata.
       product_automaton_impl(Aut aut, const Auts&... auts)
         : super_t(aut, auts...)
         , transition_maps_{{auts, ws_}...}
@@ -738,8 +741,8 @@ namespace vcsn
   inline
   typename ExpSet::value_t
   conjunction(const ExpSet& rs,
-               const typename ExpSet::value_t& lhs,
-               const typename ExpSet::value_t& rhs)
+              const typename ExpSet::value_t& lhs,
+              const typename ExpSet::value_t& rhs)
   {
     return rs.conjunction(lhs, rhs);
   }

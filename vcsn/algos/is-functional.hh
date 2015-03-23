@@ -29,7 +29,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <class Aut>
+      template <typename Aut>
       bool is_functional(const automaton& aut)
       {
         return is_functional(aut->as<Aut>());

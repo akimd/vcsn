@@ -25,13 +25,13 @@ namespace vcsn
     template<std::size_t...> struct index_sequence
     { using type = index_sequence; };
 
-    template<class S1, class S2> struct concat;
+    template <typename S1, class S2> struct concat;
 
     template<std::size_t... I1, std::size_t... I2>
     struct concat<index_sequence<I1...>, index_sequence<I2...>>
       : index_sequence<I1..., (sizeof...(I1)+I2)...>{};
 
-    template<class S1, class S2>
+    template <typename S1, class S2>
     using Concat = typename concat<S1, S2>::type;
 
     template<std::size_t N> struct make_index_sequence;
@@ -73,7 +73,7 @@ namespace vcsn
     // The index sequence generated is always <0>
     // Bug report:
     // http://llvm.org/bugs/show_bug.cgi?id=14858
-    //template<class... T>
+    //template <typename... T>
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
 
@@ -209,7 +209,7 @@ namespace vcsn
     | print(tuple, ostream).  |
     `------------------------*/
 
-    template<class Tuple, std::size_t N>
+    template <typename Tuple, std::size_t N>
     struct tuple_printer
     {
       static void print(const Tuple& t, std::ostream& o)
@@ -219,7 +219,7 @@ namespace vcsn
       }
     };
 
-    template<class Tuple>
+    template <typename Tuple>
     struct tuple_printer<Tuple, 1>
     {
       static void print(const Tuple& t, std::ostream& o)
@@ -245,40 +245,40 @@ namespace vcsn
     template<bool c, class T1, class T2>
     struct if_c { typedef T1 type; };
 
-    template<class T1, class T2>
+    template <typename T1, class T2>
     struct if_c<false, T1, T2> { typedef T2 type; };
 
-    template<class C, class T1, class T2>
+    template <typename C, class T1, class T2>
     struct if_ : if_c<C::value, T1, T2> {};
 
     // Test if (c) then F1 else F2 and get the value
     template<bool c, class F1, class F2>
     struct eval_if_c : if_c<c, F1, F2>::type {};
 
-    template<class C, class F1, class F2>
+    template <typename C, class F1, class F2>
     struct eval_if : if_<C, F1, F2>::type {};
 
     // And condition on several classes
-    template<class... F>
+    template <typename... F>
     struct and_;
 
-    template<class F1, class... F>
+    template <typename F1, class... F>
     struct and_<F1, F...> : eval_if<F1, and_<F...>, std::false_type>::type {};
 
-    template<class F1>
+    template <typename F1>
     struct and_<F1> : eval_if<F1, std::true_type, std::false_type>::type {};
 
     template<>
     struct and_<> : std::true_type::type {};
 
     // Or condition on several classes
-    template<class... F>
+    template <typename... F>
     struct or_;
 
-    template<class F1, class... F>
+    template <typename F1, class... F>
     struct or_<F1, F...> : eval_if<F1, std::true_type, or_<F...>>::type { };
 
-    template<class F1>
+    template <typename F1>
     struct or_<F1> : eval_if<F1, std::true_type, std::false_type>::type { };
 
     template<>

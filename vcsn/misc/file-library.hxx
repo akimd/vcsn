@@ -43,7 +43,7 @@ namespace vcsn
     return *this;
   }
 
-  template <class Iterable>
+  template <typename Iterable>
   file_library&
   file_library::push_back(const std::string& user_path,
                           const Iterable& default_path,

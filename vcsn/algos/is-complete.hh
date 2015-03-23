@@ -46,7 +46,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <class Aut>
+      template <typename Aut>
       bool is_complete(const automaton& aut)
       {
         return is_complete(aut->as<Aut>());
