@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <iostream>
 
 #include <vcsn/dyn/translate.hh> // compile
@@ -53,12 +54,18 @@ namespace vcsn
       /// A message about a failed signature compilation.
       std::string signatures(const signature& sig) const
       {
+        auto sigs = std::vector<std::string>();
+        sigs.reserve(map_.size());
+        for (auto p: map_)
+          sigs.emplace_back(p.first.to_string());
+        std::sort(begin(sigs), end(sigs));
+
         std::string res;
         res += "  failed signature:\n";
         res += "    " + sig.to_string() + "\n";
         res += "  available versions:\n";
-        for (auto p: map_)
-          res += "    " + p.first.to_string() + "\n";
+        for (auto s: sigs)
+          res += "    " + s + "\n";
         return res;
       }
 
