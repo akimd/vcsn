@@ -299,33 +299,47 @@ namespace vcsn
           jit(base);
         }
 
-        /// Compile, and load, a DSO which instantiates \a algo for \a sig.
-        void compile(const std::string& name, const signature& sig)
+        /// Compile, and load, a DSO which instantiates \a algos.
+        void compile(const std::set<std::pair<std::string, signature>>& algos)
         {
           printer_.header("vcsn/misc/name.hh"); // ssignature
           printer_.header("vcsn/dyn/registers.hh");
-          printer_.header_algo(name);
-          std::string base =
-            plugindir() + "algos/" + name + "/" + split(sig.to_string());
-          int count = 0;
-          std::string types;
-          for (const auto& s: sig)
+          for (const auto& algo: algos)
+            printer_.header_algo(algo.first);
+
+          unsigned count = 0;
+          for (const auto& algo: algos)
             {
-              os << iendl;
-              std::string t = "t" + std::to_string(count) + "_t";
-              os << "using " << t << " =" << incendl;
-              print_type(s);
-              os << ';' << decendl;
-              types += (count ? ", " : "") + t;
-              ++count;
+              os << iendl
+                 << "// " << algo.first << '.';
+              std::string types;
+              bool first = true;
+              for (const auto& s: algo.second)
+                {
+                  os << iendl;
+                  std::string t = "t" + std::to_string(count) + "_t";
+                  os << "using " << t << " =" << incendl;
+                  print_type(s);
+                  os << ';' << decendl;
+                  types += (first ? "" : ", ") + t;
+                  ++count;
+                  first = false;
+                }
+              os <<
+                "\n"
+                "static bool " << algo.first << " =" << incendl
+                 << "vcsn::dyn::detail::" << algo.first << "_register(" << incendl
+                 << "vcsn::ssignature<" << types << ">()," << iendl
+                 << "vcsn::dyn::detail::" << algo.first << "<" << types << ">" << decendl
+                 << ");" << decendl;
             }
-          os <<
-            "\n"
-            "static bool f =" << incendl
-             << "vcsn::dyn::detail::" << name << "_register(" << incendl
-             << "vcsn::ssignature<" << types << ">()," << iendl
-             << "vcsn::dyn::detail::" << name << "<" << types << ">" << decendl
-             << ");" << decendl;
+
+          // The first algo is the once that gives its name to the
+          // file to compile.
+          std::string base = (plugindir()
+                              + "algos/"
+                              + begin(algos)->first + "/"
+                              + split(begin(algos)->second.to_string()));
           print(base);
           jit(base);
         }
@@ -348,8 +362,16 @@ namespace vcsn
     void compile(const std::string& algo, const signature& sig)
     {
       translation translate;
-      translate.compile(algo, sig);
+      std::set<std::pair<std::string, signature>> algos{{algo, sig}};
+      if (algo == "dot")
+        {
+          // Luckily, they have the same signature!
+          algos.emplace("dot", sig);
+          algos.emplace("info", sig);
+          // We need to be able to compute new signatures, there
+          // cannot be just one.
+        }
+      translate.compile(algos);
     }
-
   } // namespace dyn
 } // namespace vcsn
