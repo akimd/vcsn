@@ -84,6 +84,7 @@ algo_headers =                                  \
   %D%/algos/star.hh                             \
   %D%/algos/strip.hh                            \
   %D%/algos/sum.hh                              \
+  %D%/algos/synchronize.hh                      \
   %D%/algos/synchronizing-word.hh               \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
