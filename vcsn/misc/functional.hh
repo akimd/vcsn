@@ -80,3 +80,22 @@ namespace vcsn
     }
   };
 } // namespace vcsn
+
+namespace std
+{
+  template <typename Value, size_t Size>
+  class hash<std::array<Value, Size>>
+  {
+  public:
+    using value_t = std::array<Value, Size>;
+
+    size_t operator()(const value_t& v) const
+    {
+      std::hash<Value> h;
+      size_t res = h(v[0]);
+      for (size_t i = 1; i < Size; i++)
+        vcsn::hash_combine(res, v[i]);
+      return res;
+    }
+  };
+};
