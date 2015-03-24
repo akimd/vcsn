@@ -58,4 +58,16 @@ namespace vcsn
   template <typename Aut>
   using transpose_automaton
     = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
+
+  // vcsn/algos/synchronize.hh
+  namespace detail
+  {
+    template <typename Aut>
+    class synchronized_automaton_impl;
+  }
+
+  /// An automaton wrapper that presents the synchronized automaton.
+  template <typename Aut>
+  using synchronized_automaton
+    = std::shared_ptr<detail::synchronized_automaton_impl<Aut>>;
 }

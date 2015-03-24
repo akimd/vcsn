@@ -42,17 +42,18 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::any_()
     {
       std::string w = word_();
-      if (w == "focus_automaton"
-          || w == "determinized_automaton"
+      if (w == "determinized_automaton"
           || w == "detweighted_automaton"
           || w == "expression_automaton"
           || w == "filter_automaton"
+          || w == "focus_automaton"
           || w == "mutable_automaton"
           || w == "pair_automaton"
           || w == "partition_automaton"
           || w == "permutation_automaton"
           || w == "product_automaton"
           || w == "scc_automaton"
+          || w == "synchronized_automaton"
           || w == "transpose_automaton"
           || w == "tuple_automaton")
         return automaton_(w);
@@ -286,6 +287,7 @@ namespace vcsn
                || prefix == "partition_automaton"
                || prefix == "permutation_automaton"
                || prefix == "scc_automaton"
+               || prefix == "synchronized_automaton"
                || prefix == "transpose_automaton")
         {
           eat(is_, '<');

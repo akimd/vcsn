@@ -633,6 +633,9 @@ namespace vcsn
     /// Sum of two weights.
     weight sum(const weight& lhs, const weight& rhs);
 
+    /// Create a synchronized transducer from \a aut.
+    automaton synchronize(const automaton& aut);
+
     /// A synchronizing word, or raise if there is none.
     label synchronizing_word(const automaton& aut,
                              const std::string& algo = "greedy");
