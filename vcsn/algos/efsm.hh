@@ -122,7 +122,11 @@ namespace vcsn
 
       void output_transition_(const transition_t t)
       {
-        aut_->print_state(aut_->src_of(t), os_);
+        // Don't output "pre", but an integer.
+        if (aut_->src_of(t) == aut_->pre())
+          os_ << aut_->pre() - 2;
+        else
+          aut_->print_state(aut_->src_of(t), os_);
         if (aut_->dst_of(t) != aut_->post())
           {
             os_ << '\t';

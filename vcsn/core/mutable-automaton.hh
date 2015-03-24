@@ -343,7 +343,13 @@ namespace vcsn
     std::ostream&
     print_state(state_t s, std::ostream& o) const
     {
-      return o << s - 2;
+      if (s == pre())
+        o << "pre";
+      else if (s == post())
+        o << "post";
+      else
+        o << s - 2;
+      return o;
     }
 
     std::ostream&
