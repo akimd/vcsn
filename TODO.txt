@@ -395,14 +395,46 @@ This would avoid the completion of the rhs, which might add many many
 transitions.
 
 ** evaluate
-Vectors of weights indexed by states are bad structures to iterate upon.  We
-don't need to work on states that are not part of the computation.  This
+Vectors of weights indexed by states are bad structures to iterate upon.
+For one thing, it iterates on *all* the states, even those that are not yet
+activated.
+
+We don't need to work on states that are not part of the computation.  This
 shows in the "if (!ws_.is_zero(v1[s]))" in the code.  On the other hand, it
-is extremely efficient when the number of (concurrently) visited states is
+is probably efficient when the number of (concurrently) visited states is
 "dense", which is the case of the bench case used in score.
 
 So maybe we should change this bench case and rather focus on the more
 common case where the number of "active" states is "sparse".
+
+We should also consider using transition_maps instead of iterating over
+all_out(s, l), which is known to be slow.
+
+Alternatively, we might just keep a polynomial of the currently activated
+states.  Then each new letter would actually correspond to building a new
+polynomial by multiplying each source state by its transition function.
+
+Consider for instance a modified de Bruijn with 3 states, and the word aaa.
+
+     a, b
+     / \
+     \ /  <2>a     a, b
+  --> 0 ------> 1 ------> 2 -->
+
+We would start with <1>0, and the outgoing polynomial of 0 for a is <1>0 +
+<2>1, so a gives "<1>0 + <2>1".
+
+Now with the next 'a', we compute the outgoing polynomial for 1: <1>2,
+hence the result is <1>0 ==> <1>0 + <2>1
+                  + <2>1 ==> <1>2
+                  = <1>0 + <2>1 + <1>2
+
+etc.
+
+This would also make trivial to stop before the end when the current
+polynomial is null.  It should also benefit from a careful implementation of
+polynomials, especially for Booleans.  In fact, for some case the Booleans
+should even be dynamic_bitsets, giving probably maximum speed.
 
 ** power
 There are better means to compute the power in some cases, see

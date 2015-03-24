@@ -38,18 +38,20 @@ namespace vcsn
       {
         // Initialization.
         const weight_t zero = ws_.zero();
-        // FIXME: a perfect job for a sparse array: most of the states
-        // will be not visited, nevertheless, because we iterate on
-        // all the states, they are costly at each iteration.
 
-        /// An array indexed by state numbers.
-        size_t last_state = detail::back(a_->all_states());
+        // An array indexed by state numbers.
+        //
         // Do not use braces (v1{size, zero}): the type of zero might
         // result in the compiler believing we are building a vector
-        // with two values: a_->num_all_states() and zero.
-        weights_t v1(last_state + 1, zero);
+        // with two values: size and zero.
+        //
+        // We start with just two states numbered 0 and 1: pre() and
+        // post().
+        weights_t v1(2, zero);
+        v1.reserve(detail::back(a_->all_states()) + 1);
         v1[a_->pre()] = ws_.one();
         weights_t v2{v1};
+        v2.reserve(detail::back(a_->all_states()) + 1);
 
         // Computation.
         auto ls = *a_->labelset();
@@ -59,12 +61,28 @@ namespace vcsn
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
                 for (auto t : a_->out(s, l))
-                  // Introducing a reference to v2[a_->dst_of(tr)] is
-                  // tempting, but won't work for std::vector<bool>.
-                  // FIXME: Specialize for Boolean?
-                  v2[a_->dst_of(t)] =
-                    ws_.add(v2[a_->dst_of(t)],
-                            ws_.mul(v1[s], a_->weight_of(t)));
+                  {
+                    // Make sure the vectors are large enough for dst.
+                    // Exponential growth on the capacity, but keep
+                    // the actual size as small as possible.
+                    auto dst = a_->dst_of(t);
+                    if (v2.size() <= dst)
+                      {
+                        auto capacity = v2.capacity();
+                        while (capacity <= dst)
+                          capacity *= 2;
+                        v1.reserve(capacity);
+                        v2.reserve(capacity);
+                        v1.resize(dst + 1, zero);
+                        v2.resize(dst + 1, zero);
+                      }
+                    // Introducing a reference to v2[a_->dst_of(tr)] is
+                    // tempting, but won't work for std::vector<bool>.
+                    // FIXME: Specialize for Boolean?
+                    v2[dst] =
+                      ws_.add(v2[dst],
+                              ws_.mul(v1[s], a_->weight_of(t)));
+                  }
             std::swap(v1, v2);
           }
         return v1[a_->post()];
