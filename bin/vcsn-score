@@ -161,8 +161,13 @@ bench('r.thompson()',
                '''r = vcsn.context('lan_char(a-z), z').expression(e)'''],
       number = 10)
 
-# determinize.  These are the well known worst cases.  21 is too long,
-# slowly moving to use 18 as reference.
+
+## ------------- ##
+## Determinize.  ##
+## ------------- ##
+
+# These are the well known worst cases.  21 is too long, slowly moving
+# to use 18 as reference.
 for n in [18, 21]:
     bench('a.determinize()',
           'a = ladybird({})'.format(n),
@@ -206,14 +211,31 @@ bench('a.determinize("weighted")',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context('lal_char(a-zA-Z0-9), b').expression(r).standard()'''])
 
-# eval.
+
+
+## ------ ##
+## eval.  ##
+## ------ ##
+
 n = 150
+# Many many states active concurrently.
 # too slow: a = b.expression('(a+b)*a(a+b){{{n}}}).derived_term()
 bench('''a.eval("a"*{})'''.format(n+1),
       '''a = de_bruijn({})'''.format(n),
       setup = ['n = {}'.format(n),
-               '''a = b.de_bruijn(n)'''],
+               'a = b.de_bruijn(n)'],
       number = 1000)
+# Something less wide.
+ctx = 'lal_char(a-z), z'
+n = 25
+r = '[a-z]*'
+bench('''a.eval("abcxyz"*{})'''.format(n),
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup = ['''c = vcsn.context('{}')'''.format(ctx),
+               '''r = c.expression('{}')'''.format(r),
+               '''a = r.standard()'''],
+      number = 1000)
+
 
 # shortest.
 n = 9
