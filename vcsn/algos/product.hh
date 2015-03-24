@@ -87,6 +87,83 @@ namespace vcsn
         , transition_maps_{{auts, ws_}...}
       {}
 
+      /// A map from result state to tuple of original states.
+      auto origins() const
+        -> decltype(aut_->origins())
+      {
+        return aut_->origins();
+      }
+
+      std::set<state_t> done;
+
+      /// Compute the accessible states.
+      using super_t::all_out;
+      auto all_out(state_t s)
+        -> decltype(aut_->all_out(s))
+      {
+        if (!has(done, s))
+          {
+            const auto& orig = origins();
+            state_name_t sn = orig.at(s);
+            add_product_transitions(s, sn);
+            done.insert(s);
+          }
+        return aut_->all_out(s);
+      }
+
+      template <typename Pred>
+      auto all_out(state_t s, Pred pred)
+        -> decltype(aut_->all_out(s, pred))
+      {
+        if (!has(done, s))
+          {
+            const auto& orig = origins();
+            state_name_t sn = orig.at(s);
+            add_product_transitions(s, sn);
+            done.insert(s);
+          }
+        return aut_->all_out(s, pred);
+      }
+
+      // FIXME: clang workaround.
+      struct label_equal_p
+      {
+        bool operator()(transition_t_of<self_t> t) const
+        {
+          return aut_.labelset()->equal(aut_.label_of(t), label_);
+        }
+        const self_t& aut_;
+        // Capture by copy: in the case of the transpose_automaton, the
+        // labels are transposed, so they are temporaries.
+        label_t_of<self_t> label_;
+      };
+
+      // FIXME: clang workaround.
+      struct not_to_post_p
+      {
+        bool operator()(transition_t_of<self_t> t) const
+        {
+          return aut_.dst_of(t) != aut_.post();
+        }
+        const self_t& aut_;
+      };
+
+      /// Indexes of visible transitions leaving state \a s.
+      /// Invalidated by del_transition() and del_state().
+      auto out(state_t s)
+        -> decltype(this->all_out(s, not_to_post_p{*this}))
+      {
+        return all_out(s, not_to_post_p{*this});
+      }
+
+      /// Indexes of all transitions leaving state \a s on label \a l.
+      /// Invalidated by del_transition() and del_state().
+      auto out(state_t s, label_t_of<self_t> l)
+        -> decltype(this->all_out(s, label_equal_p{*this, l}))
+      {
+        return all_out(s, label_equal_p{*this, l});
+      }
+
       /// Compute the (accessible part of the) product.
       void product()
       {
@@ -100,6 +177,11 @@ namespace vcsn
 
             add_product_transitions(src, psrc);
           }
+      }
+
+      void product_lazy()
+      {
+        initialize_product();
       }
 
       /// Compute the (accessible part of the) shuffle product.
@@ -466,6 +548,20 @@ namespace vcsn
   template <typename... Auts>
   inline
   auto
+  product_lazy(const Auts&... as)
+    -> product_automaton<decltype(meet_automata(as...)),
+                         Auts...>
+  {
+    auto res = make_product_automaton(meet_automata(as...),
+                                      as...);
+    res->product_lazy();
+    return res;
+  }
+
+  /// Build the (accessible part of the) product.
+  template <typename... Auts>
+  inline
+  auto
   product(const Auts&... as)
     -> tuple_automaton<decltype(meet_automata(as...)),
                        Auts...>
@@ -502,6 +598,14 @@ namespace vcsn
         return make_automaton(vcsn::product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
 
+      template <typename... Auts, size_t... I>
+      automaton
+      product_lazy_(const std::vector<automaton>& as,
+                    vcsn::detail::index_sequence<I...>)
+      {
+        return make_automaton(vcsn::product_lazy(do_insplit<I, Auts>(as[I]->as<Auts>())...));
+      }
+
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
@@ -519,6 +623,15 @@ namespace vcsn
       {
         auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
         return product_<Auts...>(as, indices);
+      }
+
+      /// Bridge.
+      template <typename... Auts>
+      automaton
+      product_lazy_vector(const std::vector<automaton>& as)
+      {
+        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+        return product_lazy_<Auts...>(as, indices);
       }
     }
   }

@@ -433,6 +433,11 @@ struct automaton
     return vcsn::dyn::product(automata_(auts));
   }
 
+  static automaton product_lazy_(const boost::python::list& auts)
+  {
+    return vcsn::dyn::product_lazy(automata_(auts));
+  }
+
   automaton proper(bool prune = true, bool backward = true) const
   {
     return vcsn::dyn::proper(val_,
@@ -1092,6 +1097,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
+    .def("_product_lazy", &automaton::product_lazy_)
+        .staticmethod("_product_lazy")
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)

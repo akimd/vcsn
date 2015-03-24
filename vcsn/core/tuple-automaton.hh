@@ -111,9 +111,9 @@ namespace vcsn
       /// A map from result state to tuple of original states.
       const origins_t& origins() const
       {
-        if (origins_.empty())
-          for (const auto& p: pmap_)
-            origins_.emplace(p.second, p.first);
+        origins_.clear();
+        for (const auto& p: pmap_)
+          origins_.emplace(p.second, p.first);
         return origins_;
       }
 

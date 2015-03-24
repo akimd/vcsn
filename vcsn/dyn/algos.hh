@@ -462,6 +462,8 @@ namespace vcsn
     /// Performs the meet of the contexts.
     automaton product(const std::vector<automaton>& as);
 
+    automaton product_lazy(const std::vector<automaton>& as);
+
     /// An equivalent automaton without spontaneous transitions.
     ///
     /// \param aut    the automaton in which to remove them
