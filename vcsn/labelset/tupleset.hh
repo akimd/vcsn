@@ -104,6 +104,12 @@ namespace vcsn
       return sizeof...(ValueSets);
     }
 
+    /// Get the max of the sizes of the tapes
+    static size_t size(const value_t& v)
+    {
+      return size_(v, indices);
+    }
+
     static constexpr bool
     is_commutative()
     {
@@ -458,6 +464,12 @@ namespace vcsn
       (void) swallow { set<I>().open(o)... };
       std::swap(o, open__);
       return o;
+    }
+
+    template <std::size_t... I>
+    static size_t size_(const value_t& v, seq<I...>)
+    {
+      return std::max({(valueset_t<I>::size(std::get<I>(v)))...});
     }
 
     template <typename... Args, std::size_t... I>
