@@ -7,7 +7,7 @@
 #include <vcsn/algos/derived-term.hh>
 #include <vcsn/algos/left-mult.hh>
 #include <vcsn/algos/letterize.hh> // rea
-#include <vcsn/algos/product.hh>
+#include <vcsn/algos/product.hh> // conjunction
 #include <vcsn/algos/reduce.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/union.hh>
@@ -127,7 +127,7 @@ namespace vcsn
       r = complete(strip(determinize(r)));
     else if (!is_complete(r))
       r = complete(r);
-    return strip(product(lhs, complement(r)));
+    return strip(conjunction(lhs, complement(r)));
   }
 
   namespace dyn

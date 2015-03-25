@@ -272,12 +272,12 @@ bench('a.expression()',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context('lal_char(a-d), b').expression(r).standard()'''])
 
-# Other product and power testcases, with more outgoing transitions
-# per state.  This stresses much better the new product algorithm.
+# Other conjunction and power testcases, with more outgoing transitions
+# per state.  This stresses much better the new conjunction algorithm.
 r = "[a-e]?{50}"
-bench('a._product([a,a])',
+bench('a._conjunction([a,a])',
       'a = std({})'.format(r),
-      'a.product(a)',
+      'a.conjunction(a)',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context("lal_char(a-e), z").expression(r).standard()'''])
 
@@ -293,11 +293,11 @@ bench('a.infiltration(a)',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context("lal_char(a-e), z").expression(r).standard()'''])
 
-# Product with spontaneous transitions.
+# Conjunction with spontaneous transitions.
 r = "[a-e]?{80}"
-bench('a._product([a,a])',
+bench('a._conjunction([a,a])',
       'a = thompson({})'.format(r),
-      'a.product(a)',
+      'a.conjunction(a)',
       setup = ['r = "{}"'.format(r),
                '''a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'''])
 

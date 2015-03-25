@@ -172,9 +172,9 @@ def check_conjunction(*expressions, **kwargs):
         else:
             rat &= exp
         auts += [exp.derived_term("expansion")]
-    # Product of automata.
-    a1 = vcsn.automaton._product(auts)
-    # Automaton of product.
+    # Conjunction of automata.
+    a1 = vcsn.automaton._conjunction(auts)
+    # Automaton of conjunction.
     a2 = rat.derived_term("expansion")
     if 'equiv' in kwargs:
         CHECK_EQUIV(a1, a2)

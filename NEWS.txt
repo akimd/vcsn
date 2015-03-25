@@ -5,6 +5,42 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-03-25
+### product is renamed conjunction
+After many hesitations, we finally decided to rename the synchronized
+product form `product` to `conjunction`.  There are several reasons in
+favor of this change.
+
+First "product" is not adequate:
+
+- we have several "products": the Cauchy product (concatenation), the
+  Hadamard product (synchronized product), the shuffle product, the
+  infiltration product, and there are certainly more.
+
+- "product" is already used in the case of words and rational
+  expressions to denote the concatenation, so, to be consistent,
+  "product" will denote the concatenation of automata too.
+
+- "*" is naturally associated to "concatenation" for words and
+  rational expressions, it was associated to "product" for automata.
+  It is more consistent to use "concatenate" in each case.
+
+Second "conjunction" is a reasonable choice:
+
+- "intersection" is acceptable for Boolean automata, but it is not
+  satisfying in the case of weighted automata.
+
+- "synchronized_product" is too long, likewise for "hadamard_product",
+  etc.
+
+- "hadamard" is a proper name, which we try to avoid.
+
+- the etymology of "conjunction" is a perfect match with the semantics
+  of the operation.
+
+- computer scientists are used to the correspondance between
+  "conjuction" and "&".
+
 ## 2015-03-21
 ### are-equivalent: now uses realtime
 One may, finally, compare LAL, LAN, and LAW automata.

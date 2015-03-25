@@ -190,6 +190,7 @@ namespace vcsn
         REGISTER(cerny, ctx_t, unsigned);
         REGISTER(complete, aut_t);
         REGISTER(concatenate_polynomial, wps_t, wps_t);
+        REGISTER(conjunction, aut_t, aut_t);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
         REGISTER(difference_expression, rs_t, b_rs_t);
@@ -208,7 +209,6 @@ namespace vcsn
         REGISTER(pair, aut_t, bool);
         REGISTER(power, aut_t, unsigned);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
-        REGISTER(product, aut_t, aut_t);
         REGISTER(random_automaton_deterministic, ctx_t, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);

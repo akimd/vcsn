@@ -3,7 +3,7 @@ from vcsn_cxx import automaton
 class Conjunction(object):
     '''A proxy class that delays calls to the & operator in order
     to turn a & b & c into a variadic evaluation of
-    automaton._product(a, b, c).
+    automaton._conjunction(a, b, c).
 
     Based on
     http://code.activestate.com/recipes/496741-object-proxying
@@ -26,7 +26,7 @@ class Conjunction(object):
             if len(aut) == 1:
                 aut = aut[0]
             else:
-                aut = automaton._product(aut)
+                aut = automaton._conjunction(aut)
             object.__setattr__(self, "auts", aut)
         return aut
     def __getattribute__(self, name):

@@ -80,6 +80,8 @@ def normalize(k):
                r'\1, c = [a-k] -> B',
                k)
 
+    k = k.replace('product', 'conjunction')
+
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 

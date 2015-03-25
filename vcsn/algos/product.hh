@@ -105,7 +105,7 @@ namespace vcsn
           {
             const auto& orig = origins();
             state_name_t sn = orig.at(s);
-            add_product_transitions(s, sn);
+            add_conjunction_transitions(s, sn);
             done.insert(s);
           }
         return aut_->all_out(s);
@@ -119,7 +119,7 @@ namespace vcsn
           {
             const auto& orig = origins();
             state_name_t sn = orig.at(s);
-            add_product_transitions(s, sn);
+            add_conjunction_transitions(s, sn);
             done.insert(s);
           }
         return aut_->all_out(s, pred);
@@ -164,10 +164,10 @@ namespace vcsn
         return all_out(s, label_equal_p{*this, l});
       }
 
-      /// Compute the (accessible part of the) product.
-      void product()
+      /// Compute the (accessible part of the) conjunction.
+      void conjunction()
       {
-        initialize_product();
+        initialize_conjunction();
 
         while (!aut_->todo_.empty())
           {
@@ -175,13 +175,13 @@ namespace vcsn
             aut_->todo_.pop_front();
             state_t src = aut_->pmap_[psrc];
 
-            add_product_transitions(src, psrc);
+            add_conjunction_transitions(src, psrc);
           }
       }
 
-      void product_lazy()
+      void conjunction_lazy()
       {
-        initialize_product();
+        initialize_conjunction();
       }
 
       /// Compute the (accessible part of the) shuffle product.
@@ -203,7 +203,7 @@ namespace vcsn
       void infiltration()
       {
         // Variadic infiltration is not trivial to implement, it's not
-        // just product and shuffle in series.  For instance, consider
+        // just conjunction and shuffle in series.  For instance, consider
         // three automata:
         //
         //          <x>a
@@ -211,21 +211,21 @@ namespace vcsn
         //
         // and likewise for y and z.  Let's use # to denote infiltration.
         // In (x # y) there is a transition ((0,0), <xy>a, (1,1)) coming
-        // from the product-like transitions.
+        // from the conjunction-like transitions.
         //
         // Therefore in (x # y) # z there is a transition
         // ((0,0),0), <xy>a, (1,1), 0) by virtue of the shuffle-like
         // transitions.
         //
-        // This kind of transition that mixes product and shuffle would
-        // never appear in a naive implementation with only product
+        // This kind of transition that mixes conjunction and shuffle would
+        // never appear in a naive implementation with only conjunction
         // and shuffle transitions, but no combinations.
         require(sizeof...(Auts) == 2,
                 "infiltration: variadic product does not work");
 
-        // Infiltrate is a mix of product and shuffle operations, and
+        // Infiltrate is a mix of conjunction and shuffle operations, and
         // the initial states for shuffle are a superset of the
-        // initial states for product:
+        // initial states for conjunction:
         initialize_shuffle();
 
         while (!aut_->todo_.empty())
@@ -234,20 +234,20 @@ namespace vcsn
             aut_->todo_.pop_front();
             state_t src = aut_->pmap_[psrc];
 
-            // Infiltrate is a mix of product and shuffle operations.
+            // Infiltrate is a mix of conjunction and shuffle operations.
             //
-            // Product transitions must be added before shuffle ones:
-            // this way "product" can use "new_transition" only, which
+            // Conjunction transitions must be added before shuffle ones:
+            // this way "conjunction" can use "new_transition" only, which
             // is faster than "add_transition".
-            add_product_transitions(src, psrc);
+            add_conjunction_transitions(src, psrc);
             add_shuffle_transitions<true>(src, psrc);
           }
       }
 
     private:
       /// Fill the worklist with the initial source-state pairs, as
-      /// needed for the product algorithm.
-      void initialize_product()
+      /// needed for the conjunction algorithm.
+      void initialize_conjunction()
       {
         aut_->todo_.emplace_back(aut_->pre_());
       }
@@ -257,8 +257,8 @@ namespace vcsn
       void initialize_shuffle()
       {
         // Make the result automaton initial states: same as the
-        // (synchronized) product of pre: synchronized transitions on $.
-        add_product_transitions(aut_->pre(), aut_->pre_());
+        // conjunction of pre: synchronized transitions on $.
+        add_conjunction_transitions(aut_->pre(), aut_->pre_());
       }
 
       /// Conversion from state name to state number.
@@ -291,7 +291,7 @@ namespace vcsn
       /// given result input state, which must correspond to the given
       /// pair of input state automata.  Update the worklist with the
       /// needed source-state pairs.
-      void add_product_transitions(const state_t src,
+      void add_conjunction_transitions(const state_t src,
                                    const state_name_t& psrc)
       {
         for (auto t: zip_map_tuple(out_(psrc)))
@@ -477,7 +477,7 @@ namespace vcsn
       /// weight (zero otherwise).
       ///
       /// \tparam Infiltration
-      ///    whether we are called after add_product_transitions.
+      ///    whether we are called after add_conjunction_transitions.
       /// \tparam I
       ///    the tape on which to perform a transition.
       template <bool Infiltration, size_t I>
@@ -497,7 +497,7 @@ namespace vcsn
             // these transitions are new.  *Except* in the case where
             // we have a loop on some tapes.
             //
-            // If add_product_transitions was called before (in the
+            // If add_conjunction_transitions was called before (in the
             // case of infiltration), there may even exist such a
             // transition in the first loop.
             //
@@ -541,34 +541,34 @@ namespace vcsn
 
 
   /*------------------------.
-  | product(automaton...).  |
+  | conjunction(automaton...).  |
   `------------------------*/
 
-  /// Build the (accessible part of the) product.
+  /// Build the (accessible part of the) conjunction.
   template <typename... Auts>
   inline
   auto
-  product_lazy(const Auts&... as)
+  conjunction_lazy(const Auts&... as)
     -> product_automaton<decltype(meet_automata(as...)),
                          Auts...>
   {
     auto res = make_product_automaton(meet_automata(as...),
                                       as...);
-    res->product_lazy();
+    res->conjunction_lazy();
     return res;
   }
 
-  /// Build the (accessible part of the) product.
+  /// Build the (accessible part of the) conjunction.
   template <typename... Auts>
   inline
   auto
-  product(const Auts&... as)
+  conjunction(const Auts&... as)
     -> tuple_automaton<decltype(meet_automata(as...)),
                        Auts...>
   {
     auto res = make_product_automaton(meet_automata(as...),
                                       as...);
-    res->product();
+    res->conjunction();
     return res->strip();
   }
 
@@ -592,46 +592,46 @@ namespace vcsn
 
       template <typename... Auts, size_t... I>
       automaton
-      product_(const std::vector<automaton>& as,
+      conjunction_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(vcsn::product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
+        return make_automaton(vcsn::conjunction(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
 
       template <typename... Auts, size_t... I>
       automaton
-      product_lazy_(const std::vector<automaton>& as,
+      conjunction_lazy_(const std::vector<automaton>& as,
                     vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(vcsn::product_lazy(do_insplit<I, Auts>(as[I]->as<Auts>())...));
+        return make_automaton(vcsn::conjunction_lazy(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
 
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
-      product(const automaton& lhs, const automaton& rhs)
+      conjunction(const automaton& lhs, const automaton& rhs)
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::product(l, r));
+        return make_automaton(::vcsn::conjunction(l, r));
       }
 
       /// Bridge.
       template <typename... Auts>
       automaton
-      product_vector(const std::vector<automaton>& as)
+      conjunction_vector(const std::vector<automaton>& as)
       {
         auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-        return product_<Auts...>(as, indices);
+        return conjunction_<Auts...>(as, indices);
       }
 
       /// Bridge.
       template <typename... Auts>
       automaton
-      product_lazy_vector(const std::vector<automaton>& as)
+      conjunction_lazy_vector(const std::vector<automaton>& as)
       {
         auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-        return product_lazy_<Auts...>(as, indices);
+        return conjunction_lazy_<Auts...>(as, indices);
       }
     }
   }
@@ -814,18 +814,18 @@ namespace vcsn
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
           for (size_t i = 0; i < n; ++i)
-            res = strip(product(res, aut));
+            res = strip(conjunction(res, aut));
         else
           {
             auto power = strip(aut);
             while (true)
               {
                 if (n % 2)
-                  res = strip(product(res, power));
+                  res = strip(conjunction(res, power));
                 n /= 2;
                 if (!n)
                   break;
-                power = strip(product(power, power));
+                power = strip(conjunction(power, power));
               }
           }
       }

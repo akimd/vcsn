@@ -163,7 +163,7 @@ def _automaton_fst_files(cmd, *aut):
     return automaton(res.decode('utf-8'), 'efsm')
 
 automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
-automaton.fstintersect   = lambda a, b: _automaton_fst_files("fstintersect", a, b)
+automaton.fstconjunction = lambda a, b: _automaton_fst_files("fstintersect", a, b)
 automaton.fstminimize    = lambda self: _automaton_fst("fstminimize", self)
 automaton.fstproper      = lambda self: _automaton_fst("fstrmepsilon", self)
 automaton.fstsynchronize = lambda self: _automaton_fst("fstsynchronize", self)

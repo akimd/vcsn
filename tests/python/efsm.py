@@ -94,7 +94,7 @@ if have_ofst:
   c2_vcsn = c1 & 2
 
   # c1 & c1 by OpenFST.
-  c2_ofst = c1.fstintersect(c1)
+  c2_ofst = c1.fstconjunction(c1)
 
   CHECK_EQ(c2_vcsn, c2_ofst)
   # Let OpenFST compare them.

@@ -105,6 +105,17 @@ namespace vcsn
     /// connected component.
     automaton condense(const automaton& aut);
 
+    /// The conjunction (aka synchronized product) of automata.
+    /// Performs the meet of the contexts.
+    automaton conjunction(const automaton& lhs, const automaton& rhs);
+
+    /// The conjunction (aka synchronized product) of automata.
+    /// Performs the meet of the contexts.
+    automaton conjunction(const std::vector<automaton>& as);
+
+    /// One-the-fly implementation of the conjunction.
+    automaton conjunction_lazy(const std::vector<automaton>& as);
+
     /// The Hadamard product of expressions \a lhs and \a rhs.
     expression conjunction(const expression& lhs, const expression& rhs);
 
@@ -417,7 +428,7 @@ namespace vcsn
     /// Create a prefix automaton from \a aut.
     automaton prefix(const automaton& aut);
 
-    /// Repeated product of \a aut with itself.
+    /// Repeated conjunction of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);
 
     /// Print automaton \a a on \a o using format \a format.
@@ -453,16 +464,6 @@ namespace vcsn
 
     /// Get the output format for \a o.
     std::string get_format(std::ostream& o);
-
-    /// The product of automata \a lhs and \a rhs.
-    /// Performs the meet of the contexts.
-    automaton product(const automaton& lhs, const automaton& rhs);
-
-    /// The product of automata.
-    /// Performs the meet of the contexts.
-    automaton product(const std::vector<automaton>& as);
-
-    automaton product_lazy(const std::vector<automaton>& as);
 
     /// An equivalent automaton without spontaneous transitions.
     ///

@@ -302,6 +302,28 @@ struct cat: vcsn_function
   }
 };
 
+struct conjunction: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    /* Input. */
+    std::vector<automaton> as;
+    as.emplace_back(read_automaton(opts));
+    for (unsigned i = 0; i < opts.argv.size(); ++i)
+      {
+        options opts2 = opts;
+        opts2.input = opts.argv[i];
+        as.emplace_back(read_automaton(opts2));
+      }
+    auto res = vcsn::dyn::conjunction(as);
+
+    /* Output. */
+    opts.print(res);
+    return 0;
+  }
+};
+
 struct derivation: vcsn_function
 {
   int work_exp(const options& opts) const
@@ -442,28 +464,6 @@ struct minimize: vcsn_function
     auto res = vcsn::dyn::minimize(aut, algo);
 
     // Output.
-    opts.print(res);
-    return 0;
-  }
-};
-
-struct product: vcsn_function
-{
-  int work_aut(const options& opts) const
-  {
-    using namespace vcsn::dyn;
-    /* Input. */
-    std::vector<automaton> as;
-    as.emplace_back(read_automaton(opts));
-    for (unsigned i = 0; i < opts.argv.size(); ++i)
-      {
-        options opts2 = opts;
-        opts2.input = opts.argv[i];
-        as.emplace_back(read_automaton(opts2));
-      }
-    auto res = vcsn::dyn::product(as);
-
-    /* Output. */
     opts.print(res);
     return 0;
   }
@@ -658,6 +658,7 @@ try
       ALGO(complete);
       ALGO(compose);
       ALGO(concatenate);
+      ALGO(conjunction);
       ALGO(constant_term);
       ALGO(derivation);
       ALGO(derived_term);
@@ -682,7 +683,6 @@ try
       ALGO(lift);
       ALGO(minimize);
       ALGO(power);
-      ALGO(product);
       ALGO(proper);
       ALGO(shortest);
       ALGO(shuffle);

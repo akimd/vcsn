@@ -4,7 +4,7 @@
 
 #include <vcsn/algos/accessible.hh> // vcsn::trim
 #include <vcsn/algos/is-ambiguous.hh> // is_cycle_ambiguous
-#include <vcsn/algos/product.hh>
+#include <vcsn/algos/product.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -146,7 +146,7 @@ namespace vcsn
     auto trim = ::vcsn::trim(aut);
     create_states_and_trans_(trim, naut1, naut2);
 
-    auto a = product(naut1, naut2);
+    auto a = conjunction(naut1, naut2);
 
     // Find all components of automate a.
     auto cs = strong_components(a, scc_algo_t::tarjan_iterative);

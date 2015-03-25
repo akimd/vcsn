@@ -75,13 +75,12 @@ namespace vcsn
           "EOFSM\n"
           "\n"
 
-          // Some OpenFST tools seem to really require an
-          // output-symbol list, even for acceptors.  While
-          // fstrmepsilon perfectly works with just the isymbols,
-          // fstintersect (equivalent to our vcsn-product: the
-          // Hadamard product) for instance, seems to require the
-          // osymbols; this seems to be due to the fact that Open FST
-          // bases its implementation of intersect on its (transducer)
+          // Some OpenFST tools seem to require an output-symbol list,
+          // even for acceptors.  While fstrmepsilon perfectly works
+          // with just the isymbols, fstintersect (equivalent to our
+          // conjunction) for instance, seems to require the osymbols;
+          // this seems to be due to the fact that Open FST bases its
+          // implementation of intersect on its (transducer)
           // composition.
           "fstcompile" << (is_transducer ? "" : " --acceptor") << " \\\n"
           "  --keep_isymbols --isymbols=" << isymbols_ << " \\\n"

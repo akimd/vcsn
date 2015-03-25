@@ -9,7 +9,7 @@ b = vcsn.context('lal_char(abcd), b')
 ## Existing transitions.  ##
 ## ---------------------- ##
 
-# See the actual code of product to understand the point of this test
+# See the actual code of conjunction to understand the point of this test
 # (which is new_transition vs. add_transition).
 a1 = b.expression('a*a').derived_term()
 a2 = a1 & a1
@@ -191,30 +191,30 @@ CHECK_EQ(exp, str(lhs & rhs))
 # check OPERATION RES AUT...
 # --------------------------
 def check(operation, exp, *args):
-    CHECK_EQ(exp, str(vcsn.automaton._product(list(args)).expression()))
+    CHECK_EQ(exp, str(vcsn.automaton._conjunction(list(args)).expression()))
 
 # RatE and B, in both directions.
 a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
-check('product', '<u>a+<u>a<u>a(<u>a)*', a1, a2)
-check('product', '<u>a+<u>a<u>a(<u>a)*', a2, a1)
+check('conjunction', '<u>a+<u>a<u>a(<u>a)*', a1, a2)
+check('conjunction', '<u>a+<u>a<u>a(<u>a)*', a2, a1)
 
 # Z, Q, R.
 z = vcsn.context('lal_char(ab), z').expression('(<2>a+<3>b)*')    .derived_term()
 q = vcsn.context('lal_char(ab), q').expression('(<1/2>a+<1/3>b)*').derived_term()
 r = vcsn.context('lal_char(ab), r').expression('(<.2>a+<.3>b)*')  .derived_term()
 
-check('product', '(a+b)*', z, q)
-check('product', '(a+b)*', q, z)
-check('product', '(<2>a+<3>b)*', z, q, z)
-check('product', '(<1/2>a+<1/3>b)*', z, q, q)
+check('conjunction', '(a+b)*', z, q)
+check('conjunction', '(a+b)*', q, z)
+check('conjunction', '(<2>a+<3>b)*', z, q, z)
+check('conjunction', '(<1/2>a+<1/3>b)*', z, q, q)
 
-check('product', '(<0.4>a+<0.9>b)*', z, r)
-check('product', '(<0.4>a+<0.9>b)*', r, z)
+check('conjunction', '(<0.4>a+<0.9>b)*', z, r)
+check('conjunction', '(<0.4>a+<0.9>b)*', r, z)
 
-check('product', '(<0.1>a+<0.1>b)*', q, r)
-check('product', '(<0.1>a+<0.1>b)*', r, q)
+check('conjunction', '(<0.1>a+<0.1>b)*', q, r)
+check('conjunction', '(<0.1>a+<0.1>b)*', r, q)
 
 
 ## ----------------- ##
@@ -258,7 +258,7 @@ CHECK_EQ('''digraph
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]
   1 -> 2 [label = "a", color = DimGray]
-}''', str(vcsn.automaton._product([vcsn.automaton('''
+}''', str(vcsn.automaton._conjunction([vcsn.automaton('''
 digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
@@ -682,7 +682,7 @@ res = r'''digraph
   4 -> F4
 }'''
 
-CHECK_EQ(res, str(vcsn.automaton._product([a1, a2])))
+CHECK_EQ(res, str(vcsn.automaton._conjunction([a1, a2])))
 
 ## ------------- ##
 ## Conjunction.  ##

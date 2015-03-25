@@ -428,14 +428,14 @@ struct automaton
     return vcsn::dyn::power(val_, n);
   }
 
-  static automaton product_(const boost::python::list& auts)
+  static automaton conjunction_(const boost::python::list& auts)
   {
-    return vcsn::dyn::product(automata_(auts));
+    return vcsn::dyn::conjunction(automata_(auts));
   }
 
-  static automaton product_lazy_(const boost::python::list& auts)
+  static automaton conjunction_lazy_(const boost::python::list& auts)
   {
-    return vcsn::dyn::product_lazy(automata_(auts));
+    return vcsn::dyn::conjunction_lazy(automata_(auts));
   }
 
   automaton proper(bool prune = true, bool backward = true) const
@@ -1096,9 +1096,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)
-    .def("_product", &automaton::product_).staticmethod("_product")
-    .def("_product_lazy", &automaton::product_lazy_)
-        .staticmethod("_product_lazy")
+    .def("_conjunction", &automaton::conjunction_).staticmethod("_conjunction")
+    .def("_conjunction_lazy", &automaton::conjunction_lazy_)
+        .staticmethod("_conjunction_lazy")
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true))
     .def("push_weights", &automaton::push_weights)

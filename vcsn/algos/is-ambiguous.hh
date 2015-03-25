@@ -2,7 +2,7 @@
 
 #include <vcsn/algos/accessible.hh>
 #include <vcsn/algos/distance.hh>
-#include <vcsn/algos/product.hh>
+#include <vcsn/algos/product.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/fwd.hh>
 
@@ -22,9 +22,9 @@ namespace vcsn
   bool is_ambiguous(const Aut& aut,
                     std::tuple<state_t_of<Aut>, state_t_of<Aut>>& witness)
   {
-    auto prod = product(aut, aut);
+    auto prod = conjunction(aut, aut);
     // Check if there useful states outside of the diagonal.  Since
-    // the product is accessible, check only for coaccessibles states.
+    // the conjunction is accessible, check only for coaccessibles states.
     auto coaccessible = coaccessible_states(prod);
     for (const auto& o: prod->origins())
       if (std::get<0>(o.second) != std::get<1>(o.second)
@@ -141,7 +141,7 @@ namespace vcsn
   template <typename Aut>
   bool is_cycle_ambiguous_scc(const Aut& aut)
   {
-    auto prod = product(aut, aut);
+    auto prod = conjunction(aut, aut);
     const auto& coms = strong_components(prod,
                                          scc_algo_t::tarjan_iterative);
     const auto& origins = prod->origins();

@@ -67,7 +67,7 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   using automaton_t = vcsn::mutable_automaton<Ctx>;
   automaton_t l = vcsn::read_automaton<automaton_t>(lhs);
   automaton_t r = vcsn::read_automaton<automaton_t>(rhs);
-  automaton_t prod = vcsn::product<automaton_t, automaton_t>(l, r)->strip();
+  automaton_t prod = vcsn::conjunction<automaton_t, automaton_t>(l, r)->strip();
   vcsn::word_t_of<Ctx> input = vcsn::read_word<Ctx>(prod->context(), word);
   vcsn::weight_t_of<Ctx> w = vcsn::eval<automaton_t>(prod, input);
   prod->context().weightset()->print(w, std::cout);
@@ -80,7 +80,7 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
   using namespace vcsn::dyn;
   automaton l = read_automaton(lhs);
   automaton r = read_automaton(rhs);
-  automaton prod = product(l, r);
+  automaton prod = conjunction(l, r);
   vcsn::dyn::label input = read_word(context_of(prod), word);
   weight w = eval(prod, input);
   print(w, std::cout, "text");
