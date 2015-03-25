@@ -18,6 +18,7 @@ dist_notebooks_DATA =                           \
   %D%/Contexts.ipynb                            \
   %D%/D3_IPython_widget.ipynb                   \
   %D%/Editing-Automata.ipynb                    \
+  %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
   %D%/References.ipynb                          \
   %D%/Transducers.ipynb                         \
