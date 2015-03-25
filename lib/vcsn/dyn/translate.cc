@@ -363,13 +363,16 @@ namespace vcsn
     {
       translation translate;
       std::set<std::pair<std::string, signature>> algos{{algo, sig}};
-      if (algo == "dot")
+      if (algo == "dot"
+          // || algo == "efsm" Need to add a bool argument.
+          || algo == "info" && sig.size() == 3)
         {
-          // Luckily, they have the same signature!
+          // Aut, Ostrean, Bool.
           algos.emplace("dot", sig);
           algos.emplace("info", sig);
-          // We need to be able to compute new signatures, there
-          // cannot be just one.
+          // Aut, Ostream.
+          signature sig2{sig[0], sig[1]};
+          algos.emplace("efsm", sig2);
         }
       translate.compile(algos);
     }

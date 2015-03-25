@@ -46,6 +46,21 @@ namespace vcsn LIBVCSN_API
       return std::end(sig);
     }
 
+    symbol& operator[](const size_t n)
+    {
+      return sig[n];
+    }
+
+    const symbol operator[](const size_t n) const
+    {
+      return sig.at(n);
+    }
+
+    size_t size() const
+    {
+      return sig.size();
+    }
+
     sig_t sig;
   };
 
