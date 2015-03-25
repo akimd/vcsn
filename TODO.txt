@@ -68,6 +68,10 @@ break too much") rather that something like expand.  What are the expected
 features of the right definition?
 
 * Bugs
+** focus and info
+See the notebook for automaton.is_functional: we have an error message
+because info() does not work on a focus_automaton.  Fix.
+
 ** expression::copy
 The implementation by-passes the expressionset when building the new
 expression; for instance in the case of sum, the list of operands is copied
