@@ -37,5 +37,5 @@ def _expression_info(self, key = None, detailed = False):
     return res[key] if key else res
 expression.info = _expression_info
 
-expression.shortest = lambda self, num = 1: self.standard().shortest(num)
+expression.shortest = lambda self, num = 1: self.derived_term().strip().shortest(num)
 expression.star = lambda self: self.chain(-1)
