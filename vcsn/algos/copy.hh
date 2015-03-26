@@ -170,7 +170,7 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state.
   template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t,
+            typename AutOut = automaton_nocv_t_of<AutIn>,
             typename Pred>
   inline
   AutOut
@@ -186,7 +186,7 @@ namespace vcsn
 
   /// A copy of \a input.
   template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
+            typename AutOut = automaton_nocv_t_of<AutIn>>
   inline
   AutOut
   copy(const AutIn& input)
@@ -198,7 +198,7 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are members of
   /// std::set \a keep.
   template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
+            typename AutOut = automaton_nocv_t_of<AutIn>>
   inline
   AutOut
   copy(const AutIn& input, const std::set<state_t_of<AutIn>>& keep)
@@ -211,7 +211,7 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are members of
   /// std::unordered_set \a keep.
   template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
+            typename AutOut = automaton_nocv_t_of<AutIn>>
   inline
   AutOut
   copy(const AutIn& input, const std::unordered_set<state_t_of<AutIn>>& keep)

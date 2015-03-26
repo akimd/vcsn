@@ -194,8 +194,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = typename context_t::weightset_t;
-      using output_automaton_t
-        = typename automaton_t::element_type::automaton_nocv_t;
+      using output_automaton_t = automaton_nocv_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using output_state_t = state_t_of<output_automaton_t>;

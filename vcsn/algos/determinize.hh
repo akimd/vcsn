@@ -34,7 +34,7 @@ namespace vcsn
     /// \pre weightset is Boolean.
     template <typename Aut>
     class determinized_automaton_impl
-      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
+      : public automaton_decorator<automaton_nocv_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: boolean: requires free labelset");
@@ -43,7 +43,7 @@ namespace vcsn
 
     public:
       using automaton_t = Aut;
-      using automaton_nocv_t = typename Aut::element_type::automaton_nocv_t;
+      using automaton_nocv_t = automaton_nocv_t_of<Aut>;
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
@@ -274,14 +274,14 @@ namespace vcsn
     /// \pre labelset is free.
     template <typename Aut>
     class detweighted_automaton_impl
-      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
+      : public automaton_decorator<automaton_nocv_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: weighted: requires free labelset");
 
     public:
       using automaton_t = Aut;
-      using automaton_nocv_t = typename Aut::element_type::automaton_nocv_t;
+      using automaton_nocv_t = automaton_nocv_t_of<Aut>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
       using label_t = label_t_of<automaton_t>;

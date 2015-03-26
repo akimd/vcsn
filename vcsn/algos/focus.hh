@@ -65,7 +65,7 @@ namespace vcsn
       /// const.
       using automaton_nocv_t
         = focus_automaton<Tape,
-                          typename automaton_t::element_type::automaton_nocv_t>;
+                          automaton_nocv_t_of<automaton_t>>;
 
       /// This automaton's state and transition types are those of the
       /// wrapped automaton.

@@ -85,7 +85,7 @@ namespace vcsn
   }
 
   template <typename AutIn,
-            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
+            typename AutOut = automaton_nocv_t_of<AutIn>>
   inline
   AutOut
   left_mult(const weight_t_of<AutOut>& w, const AutIn& aut)
@@ -201,7 +201,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename Aut::element_type::automaton_nocv_t
+  automaton_nocv_t_of<Aut>
   right_mult(const Aut& aut, const weight_t_of<Aut>& w)
   {
     auto res = copy(aut);

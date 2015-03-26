@@ -118,7 +118,7 @@ namespace vcsn
 
   /// An automaton that computes weights of \a lhs, but not by \a rhs.
   template <typename Lhs, typename Rhs>
-  typename Lhs::element_type::automaton_nocv_t
+  automaton_nocv_t_of<Lhs>
   difference(const Lhs& lhs, const Rhs& rhs)
   {
     // Meet complement()'s requirements.

@@ -24,7 +24,7 @@ namespace vcsn
     /// Copy of \a aut, with absolute values.
     /// Templated to avoid useless instantiations.
     template <typename Aut>
-    typename Aut::element_type::automaton_nocv_t
+    automaton_nocv_t_of<Aut>
     absval(const Aut& aut)
     {
       auto res = copy(aut);

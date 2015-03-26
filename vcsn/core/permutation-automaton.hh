@@ -1,12 +1,11 @@
-#ifndef VCSN_CORE_PERMUTATION_DECORATOR_HH
-# define VCSN_CORE_PERMUTATION_DECORATOR_HH
+#pragma once
 
-# include <map>
-# include <queue>
-# include <unordered_map>
+#include <map>
+#include <queue>
+#include <unordered_map>
 
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/fwd.hh> // permutation_automaton
+#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/fwd.hh> // permutation_automaton
 
 namespace vcsn
 {
@@ -17,14 +16,13 @@ namespace vcsn
     /// \tparam Aut the type of the wrapped input automaton.
     template <typename Aut>
     class permutation_automaton_impl
-      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
+      : public automaton_decorator<automaton_nocv_t_of<Aut>>
     {
     public:
       /// Input automaton type.
       using automaton_t = Aut;
       /// Generated automaton type.
-      using automaton_nocv_t
-        = typename automaton_t::element_type::automaton_nocv_t;
+      using automaton_nocv_t = automaton_nocv_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
       /// Symbolic state name: input automaton state type.
@@ -114,5 +112,3 @@ namespace vcsn
     }; // class
   } // namespace detail
 } // namespace vcsn
-
-#endif // ! VCSN_CORE_PERMUTATION_DECORATOR_HH

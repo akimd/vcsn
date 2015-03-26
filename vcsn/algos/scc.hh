@@ -422,10 +422,10 @@ namespace vcsn
   /// Generate a subautomaton corresponding to an SCC.
   template <typename Aut>
   inline
-  typename Aut::element_type::automaton_nocv_t
+  automaton_nocv_t_of<Aut>
   aut_of_component(const detail::component_t<Aut>& com, const Aut& aut)
   {
-    using res_t = typename Aut::element_type::automaton_nocv_t;
+    using res_t = automaton_nocv_t_of<Aut>;
     res_t res = make_shared_ptr<res_t>(aut->context());
     std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
     auto s0 = *com.begin();
