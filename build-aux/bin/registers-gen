@@ -47,14 +47,17 @@ def process_file(fn):
             bridge = m.groupdict()
             bridge['file'] = os.path.basename(fn)
             reg = bridge['reg']
-            bridge['fun'] = re.sub('_(automaton|ctx|expansion|expression|label|polynomial|vector|weight)$',
+            bridge['fun'] = re.sub('_(automaton|context|expansion|expression|label|polynomial|vector|weight)$',
                                    '', reg)
             # to_expression etc. are not to be reduce to "to".
             # Likewise for random_automaton, and read_polynomial.
             if bridge['fun'] in ['random', 'read', 'to']:
                 bridge['fun'] = reg
-            if reg == "copy_convert":
+            if reg == 'copy_convert':
                 bridge['fun'] = 'copy'
+            elif reg == 'make_word_context':
+                bridge['fun'] = reg
+            bridge['formals'] = re.sub('\s+', ' ', bridge['formals'])
             bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',
                                               r'\1',
                                               bridge['formals']).split(','))

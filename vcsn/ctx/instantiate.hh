@@ -338,7 +338,7 @@ namespace vcsn
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply_weight, ws_t, ws_t);
-        REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
+        REGISTER(print_context, ctx_t, std::ostream, const std::string);
         REGISTER(print_expansion, es_t, std::ostream, const std::string);
         REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);

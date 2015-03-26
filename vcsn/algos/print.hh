@@ -25,8 +25,8 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Context, typename Ostream, typename String>
-      std::ostream& print_ctx(const context& ctx, std::ostream& o,
-                              const std::string& format)
+      std::ostream& print_context(const context& ctx, std::ostream& o,
+                                  const std::string& format)
       {
         const auto& c = ctx->as<Context>();
         return c.print_set(o, format);
@@ -139,9 +139,9 @@ namespace vcsn
   }
 
 
-  /*------------------------.
-  | print(expression, stream).  |
-  `------------------------*/
+  /*-----------------------------.
+  | print(expression, stream).   |
+  `-----------------------------*/
 
 #if 0
   /// See PolynomialSet.
