@@ -34,7 +34,12 @@ namespace vcsn
     states.reserve(num_states);
 
     for (unsigned i = 0; i < num_states; ++i)
-      states.push_back(res->new_state());
+      {
+        state_t s = res->new_state();
+        res->set_initial(s);
+        res->set_final(s);
+        states.push_back(s);
+      }
 
     for (unsigned i = 0; i < num_states; ++i)
       {
@@ -47,9 +52,6 @@ namespace vcsn
             la = false;
           }
       }
-
-    res->set_initial(states[0]);
-    res->set_final(states[0]);
 
     return res;
   }
