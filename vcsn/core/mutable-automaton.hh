@@ -1014,6 +1014,26 @@ namespace vcsn
     {
       return all_in(post());
     }
+
+    /// Indexes of states to visible initial states.
+    std::vector<state_t> initial_states() const
+    {
+      auto ts = initial_transitions();
+      std::vector<state_t> res(ts.size());
+      std::transform(ts.begin(), ts.end(), res.begin(),
+                     [this](transition_t t) { return this->dst_of(t); });
+      return res;
+    }
+
+    /// Indexes of states to visible initial states.
+    std::vector<state_t> final_states() const
+    {
+      auto ts = final_transitions();
+      std::vector<state_t> res(ts.size());
+      std::transform(ts.begin(), ts.end(), res.begin(),
+                     [this](transition_t t) { return this->src_of(t); });
+      return res;
+    }
   };
   }
 
