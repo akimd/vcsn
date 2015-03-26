@@ -194,7 +194,6 @@ nobase_include_HEADERS =                        \
   %D%/misc/cross.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
-  %D%/misc/echo.hh                              \
   %D%/misc/escape.hh                            \
   %D%/misc/export.hh                            \
   %D%/misc/file-library.hh                      \
@@ -217,6 +216,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/regex.hh                             \
   %D%/misc/set.hh                               \
   %D%/misc/set.hxx                              \
+  %D%/misc/show.hh                              \
   %D%/misc/signature.hh                         \
   %D%/misc/star_status.hh                       \
   %D%/misc/stream.hh                            \

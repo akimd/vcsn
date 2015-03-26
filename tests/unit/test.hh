@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <vcsn/misc/echo.hh>
+#include <vcsn/misc/show.hh>
 
 #define ASSERT_EQ(Lhs, Rhs)                             \
   do {                                                  \
