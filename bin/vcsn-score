@@ -394,7 +394,7 @@ bench('a.accessible()',
 
 # scc.
 r = "(abc)*{1000}"
-for algo in ["kosaraju", "tarjan_iterative", "tarjan_recursive"]:
+for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
     bench('a.scc("{}")'.format(algo),
           'a = std({})'.format(r),
           setup = ['r = "{}"'.format(r),

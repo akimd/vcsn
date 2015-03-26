@@ -2,6 +2,7 @@
 
 #include <iterator> // std::rbegin
 #include <limits>
+#include <stack>
 
 #include <boost/range/rbegin.hpp>
 #include <boost/range/rend.hpp>
@@ -101,6 +102,92 @@ namespace vcsn
 
   namespace detail
   {
+    /*----------------.
+    | scc_dijkstra.   |
+    `----------------*/
+
+    /// Compute the strongly connected components using Dijkstra's
+    /// algorithm.
+    ///
+    /// https://en.wikipedia.org/wiki/Path-based_strong_component_algorithm
+    template <typename Aut>
+    class scc_dijkstra_impl
+    {
+    public:
+      using state_t = state_t_of<Aut>;
+      using component_t = detail::component_t<Aut>;
+      using components_t = detail::components_t<Aut>;
+
+      scc_dijkstra_impl(const Aut& aut)
+        : aut_{aut}
+      {}
+
+      const components_t& components()
+      {
+        for (auto s : aut_->states())
+          if (!has(component_, s))
+            dfs(s);
+        return components_;
+      }
+
+    private:
+      void dfs(state_t s)
+      {
+        preorder_[s] = count_;
+        ++count_;
+        unassigned_.push(s);
+        uncertain_.push(s);
+        for (auto t: aut_->out(s))
+          {
+            state_t dst = aut_->dst_of(t);
+            if (!has(preorder_, dst))
+              dfs(dst);
+            else if (!has(component_, dst))
+              {
+                size_t dstpo = preorder_[dst];
+                while (dstpo < preorder_[uncertain_.top()])
+                  uncertain_.pop();
+              }
+          }
+        if (s == uncertain_.top())
+          {
+            uncertain_.pop();
+            auto scc_num = components_.size();
+            components_.emplace_back();
+            component_t& scc = components_.back();
+            for (state_t r = unassigned_.top();
+                 !unassigned_.empty();
+                 unassigned_.pop(), r = unassigned_.top())
+              {
+                component_[r] = scc_num;
+                scc.insert(r);
+                if (r == s)
+                  break;
+              }
+          }
+      }
+
+      /// Input automaton.
+      Aut aut_;
+      /// Stack S contains all the vertices that have not yet been
+      /// assigned to a strongly connected component, in the order in
+      /// which the depth-first search reaches the vertices.
+      std::stack<state_t> unassigned_;
+      /// Stack P contains vertices that have not yet been determined
+      /// to belong to different strongly connected components from
+      /// each other.
+      std::stack<state_t> uncertain_;
+      /// Current state number (not it's id, but its count).
+      std::size_t count_ = 0;
+
+      /// For each state, its component number.
+      std::unordered_map<state_t, size_t> component_;
+
+      std::unordered_map<state_t, size_t> preorder_;
+      /// All the components.
+      components_t components_;
+    };
+
     /*----------------.
     | scc_kosaraju.   |
     `----------------*/
@@ -375,6 +462,7 @@ namespace vcsn
 
   enum class scc_algo_t
   {
+    dijkstra,
     tarjan_iterative,
     tarjan_recursive,
     kosaraju
@@ -383,7 +471,9 @@ namespace vcsn
   inline scc_algo_t scc_algo(const std::string& algo)
   {
     scc_algo_t res;
-    if (algo == "auto" || algo == "tarjan_iterative")
+    if (algo == "dijkstra")
+      res = scc_algo_t::dijkstra;
+    else if (algo == "auto" || algo == "tarjan_iterative")
       res = scc_algo_t::tarjan_iterative;
     else if (algo == "tarjan_recursive")
       res = scc_algo_t::tarjan_recursive;
@@ -403,6 +493,8 @@ namespace vcsn
   {
     switch (algo)
       {
+      case scc_algo_t::dijkstra:
+        return detail::scc_dijkstra_impl<Aut>{aut}.components();
       case scc_algo_t::kosaraju:
         return detail::scc_kosaraju_impl<Aut>{aut}.components();
       case scc_algo_t::tarjan_recursive:

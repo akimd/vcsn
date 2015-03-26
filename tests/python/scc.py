@@ -4,11 +4,11 @@ import vcsn
 from test import *
 
 def check(num_sccs, a):
-    for algo in ["tarjan_iterative", "tarjan_recursive", "kosaraju"]:
+    for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
         scc = a.scc(algo)
         CHECK(scc.is_isomorphic(a))
         CHECK_EQ(num_sccs, scc.num_components())
-        CHECK_EQ(num_sccs, scc.condense().info()["number of states"])
+        CHECK_EQ(num_sccs, scc.condense().info()['number of states'])
 
 a = vcsn.automaton('''digraph {
   vcsn_context = "lal_char(abc), b"
@@ -61,29 +61,29 @@ check(1, a)
 
 a = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abcd), zmin"
+  vcsn_context = "lal_char(abcd), b"
   I0 -> 0
-  0 -> 1 [label = "<2>a"]
-  0 -> 2 [label = "<3>a"]
-  1 -> 3 [label = "<3>b"]
-  1 -> 4 [label = "<2>c"]
-  2 -> 4 [label = "<5>d"]
-  2 -> 5 [label = "<3>b"]
-  3 -> 6 [label = "<6>c"]
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  1 -> 3 [label = "b"]
+  1 -> 4 [label = "c"]
+  2 -> 4 [label = "d"]
+  2 -> 5 [label = "b"]
+  3 -> 6 [label = "c"]
   4 -> F4
-  5 -> 7 [label = "<6>c"]
-  6 -> 1 [label = "<9>d"]
-  7 -> 2 [label = "<13>d"]
+  5 -> 7 [label = "c"]
+  6 -> 1 [label = "d"]
+  7 -> 2 [label = "d"]
 }''')
 check(4, a)
 
-ctx = vcsn.context("lal_char(abc), z")
-a = ctx.expression("(abc)*{5}").standard()
+ctx = vcsn.context('lal_char(abc), b')
+a = ctx.expression('(abc)*{5}').standard()
 check(6, a)
 
 # component
-a = ctx.expression("(ab)*(bc)*").standard()
-scc = a.scc("tarjan_iterative")
+a = ctx.expression('(ab)*(bc)*').standard()
+scc = a.scc('tarjan_iterative')
 CHECK_EQ(scc.component(0), scc.filter([0]))
 CHECK_EQ(scc.component(1), scc.filter([1, 3]))
 CHECK_EQ(scc.component(2), scc.filter([4, 6]))
