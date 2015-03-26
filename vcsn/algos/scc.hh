@@ -3,14 +3,12 @@
 #include <iterator> // std::rbegin
 #include <limits>
 
-#include <boost/range/irange.hpp>
 #include <boost/range/rbegin.hpp>
 #include <boost/range/rend.hpp>
 
 #include <vcsn/algos/copy.hh> // real_context
 #include <vcsn/algos/filter.hh>
 #include <vcsn/algos/transpose.hh>
-#include <vcsn/misc/crange.hh>
 #include <vcsn/core/partition-automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -42,6 +40,128 @@ namespace vcsn
     template <typename Aut>
     using components_t = std::vector<component_t<Aut>>;
 
+
+    /*---------------------.
+    | reverse_postorder.   |
+    `---------------------*/
+
+    /// Get all states in reverse postorder using depth first search.
+    template <typename Aut>
+    class reverse_postorder_impl
+    {
+    public:
+      using state_t = state_t_of<Aut>;
+
+      reverse_postorder_impl(const Aut& aut)
+        : aut_{aut}
+      {
+        rvp_.reserve(aut->num_all_states());
+        for (auto s : aut->states())
+          if (!has(marked_, s))
+            dfs(s);
+      }
+
+      std::vector<state_t>& reverse_post()
+      {
+        return rvp_;
+      }
+
+    private:
+      void dfs(state_t s)
+      {
+        marked_.emplace(s);
+        for (auto t : aut_->out(s))
+          {
+            auto dst = aut_->dst_of(t);
+            if (!has(marked_, dst))
+              dfs(dst);
+          }
+        rvp_.emplace_back(s);
+      }
+
+      /// Input automaton.
+      Aut aut_;
+      /// Revert postorder of dfs.
+      std::vector<state_t> rvp_;
+      /// Store the visited states.
+      std::set<state_t> marked_;
+    };
+  }
+
+  /// Get all states in reverse postorder.
+  template <typename Aut>
+  inline
+  std::vector<state_t_of<Aut>>
+  reverse_postorder(const Aut& aut)
+  {
+    detail::reverse_postorder_impl<Aut> dv(aut);
+    return dv.reverse_post();
+  }
+
+
+  namespace detail
+  {
+    /*----------------.
+    | scc_kosaraju.   |
+    `----------------*/
+
+    /// Compute the strongly connected components using Kosaraju's
+    /// algorithm.
+    template <typename Aut>
+    class scc_kosaraju_impl
+    {
+    public:
+      using state_t = state_t_of<Aut>;
+      using component_t = detail::component_t<Aut>;
+      using components_t = detail::components_t<Aut>;
+
+      scc_kosaraju_impl(const Aut& aut)
+        : aut_{aut}
+      {
+        auto trans = ::vcsn::transpose(aut);
+        auto todo = ::vcsn::reverse_postorder(trans);
+        while (!todo.empty())
+          {
+            auto s = todo.back();
+            todo.pop_back();
+            if (!has(marked_, s))
+              {
+                dfs(s);
+                ++num_;
+              }
+          }
+      }
+
+      const components_t& components() const
+      {
+        return components_;
+      }
+
+    private:
+      void dfs(state_t s)
+      {
+        marked_.emplace(s);
+        if (num_ == components_.size())
+          components_.emplace_back(component_t{s});
+        else
+          components_[num_].emplace(s);
+
+        for (auto t : aut_->out(s))
+          {
+            auto dst = aut_->dst_of(t);
+            if (!has(marked_, dst))
+              dfs(dst);
+          }
+      }
+
+      /// Input automaton.
+      Aut aut_;
+      /// The current component number.
+      std::size_t num_ = 0;
+      /// All components.
+      components_t components_;
+      std::unordered_set<state_t> marked_;
+    };
 
 
     /*--------------------.
@@ -79,7 +199,7 @@ namespace vcsn
     private:
       void dfs(state_t s)
       {
-        number_[s] = low_[s] = curr_vertex_num_++;
+        number_[s] = low_[s] = curr_state_num_++;
         dfs_stack_.emplace_back(s, aut_->out(s).begin(), aut_->out(s).end());
         stack_.push_back(s);
         while (!dfs_stack_.empty())
@@ -92,7 +212,7 @@ namespace vcsn
                 ++st.pos;
                 if (!has(number_, dst))
                   {
-                    number_[dst] = low_[dst] = curr_vertex_num_++;
+                    number_[dst] = low_[dst] = curr_state_num_++;
                     const auto& out = aut_->out(dst);
                     dfs_stack_.emplace_back(dst, out.begin(), out.end());
                     stack_.push_back(dst);
@@ -104,7 +224,7 @@ namespace vcsn
               {
                 if (low_[src] == number_[src])
                   {
-                    components_.emplace_back(component_t{});
+                    components_.emplace_back();
                     auto& com = components_.back();
                     state_t w;
                     do
@@ -134,16 +254,16 @@ namespace vcsn
       struct step_t;
       std::vector<step_t> dfs_stack_;
 
-      /// The current visited vertex.
-      std::size_t curr_vertex_num_ = 0;
+      /// The current visited state.
+      std::size_t curr_state_num_ = 0;
       /// Store the visit order of each state.
       std::unordered_map<state_t, std::size_t> number_;
-      /// low_[s] is minimum of vertex that it can go.
+      /// low_[s] is minimum of state that it can go.
       std::unordered_map<state_t, std::size_t> low_;
       /// the maximum possible of a value in low_.
       std::size_t low_max_ = std::numeric_limits<unsigned int>::max();
 
-      /// Contains list vertices same the component.
+      /// List of states in the same the component.
       std::vector<state_t> stack_;
       /// All components.
       components_t components_;
@@ -197,7 +317,7 @@ namespace vcsn
     private:
       void dfs(state_t s)
       {
-        std::size_t min = curr_vertex_num_++;
+        std::size_t min = curr_state_num_++;
         low_.emplace(s, min);
         marked_.emplace(s);
         stack_.push_back(s);
@@ -216,7 +336,7 @@ namespace vcsn
             return;
           }
 
-        components_.emplace_back(component_t{});
+        components_.emplace_back();
         auto& com = components_.back();
         state_t w;
         do
@@ -224,7 +344,7 @@ namespace vcsn
             w = stack_.back();
             stack_.pop_back();
             com.emplace(w);
-            // This vertex belong only one component
+            // This state belong only one component
             // so remove it by update low value to max size.
             low_[w] = std::numeric_limits<size_t>::max();
           }
@@ -233,143 +353,25 @@ namespace vcsn
 
       /// Input automaton.
       Aut aut_;
-      /// The current visited vertex.
+      /// The current visited state.
       /// It used to preorder number counter.
-      std::size_t curr_vertex_num_ = 0;
+      std::size_t curr_state_num_ = 0;
       /// All components.
       components_t components_;
-      /// Visited vertices.
+      /// Visited states.
       std::unordered_set<state_t> marked_;
       /// low_[s] is minimum of low_{X},
       /// with X is all states on output transitions of s.
       std::unordered_map<state_t, std::size_t> low_;
-      /// Contains list vertices same the component.
+      /// List of states in the same the component.
       std::vector<state_t> stack_;
     };
-
-
-    /*---------------------.
-    | reverse_postorder.   |
-    `---------------------*/
-
-    /// Get all vertices in reverse postorder
-    /// by using depth first search.
-    template <typename Aut>
-    class reverse_postorder_impl
-    {
-    public:
-      using state_t = state_t_of<Aut>;
-
-      reverse_postorder_impl(const Aut& aut)
-        : aut_{aut}
-      {
-        for (auto s : aut->states())
-          if (!has(marked_, s))
-            dfs(s);
-      }
-
-      std::vector<state_t>& reverse_post()
-      {
-        return rvp_;
-      }
-
-    private:
-      void dfs(state_t s)
-      {
-        marked_.emplace(s);
-        for (auto t : aut_->out(s))
-          {
-            auto dst = aut_->dst_of(t);
-            if (!has(marked_, dst))
-              dfs(dst);
-          }
-        rvp_.push_back(s);
-      }
-
-      /// Input automaton.
-      Aut aut_;
-      /// Revert postorder of dfs.
-      std::vector<state_t> rvp_;
-      /// Store the visited states.
-      std::set<state_t> marked_;
-    };
-  }
-
-  /// Get all vertices in reverse postorder.
-  template <typename Aut>
-  inline
-  std::vector<state_t_of<Aut>>
-  reverse_postorder(const Aut& aut)
-  {
-    detail::reverse_postorder_impl<Aut> dv(aut);
-    return dv.reverse_post();
   }
 
 
-  /*---------------.
-  | scc_kosaraju.  |
-  `---------------*/
-
-  namespace detail
-  {
-    /// Use Kosajaju algorithm for finding all of strongly
-    /// connected components.
-    template <typename Aut>
-    class scc_kosaraju_impl
-    {
-    public:
-      using state_t = state_t_of<Aut>;
-      using component_t = detail::component_t<Aut>;
-      using components_t = detail::components_t<Aut>;
-
-      scc_kosaraju_impl(const Aut& aut)
-        : aut_{aut}
-      {
-        auto trans = ::vcsn::transpose(aut);
-        auto todo = ::vcsn::reverse_postorder(trans);
-        while (!todo.empty())
-          {
-            auto s = todo.back();
-            todo.pop_back();
-            if (!has(marked_, s))
-              {
-                dfs(s);
-                ++num_;
-              }
-          }
-      }
-
-      const components_t& components() const
-      {
-        return components_;
-      }
-
-    private:
-      void dfs(state_t s)
-      {
-        marked_.emplace(s);
-        if (num_ == components_.size())
-          components_.emplace_back(component_t{s});
-        else
-          components_[num_].emplace(s);
-
-        for (auto t : aut_->out(s))
-          {
-            auto dst = aut_->dst_of(t);
-            if (!has(marked_, dst))
-              dfs(dst);
-          }
-      }
-
-      /// Input automaton.
-      Aut aut_;
-      /// The current component number.
-      std::size_t num_ = 0;
-      // All components.
-      components_t components_;
-      std::unordered_set<state_t> marked_;
-    };
-  }
+  /*-------.
+  | scc.   |
+  `-------*/
 
   enum class scc_algo_t
   {
@@ -401,21 +403,12 @@ namespace vcsn
   {
     switch (algo)
       {
-      case scc_algo_t::tarjan_recursive:
-        {
-          detail::scc_tarjan_recursive_impl<Aut> scc{aut};
-          return scc.components();
-        }
-      case scc_algo_t::tarjan_iterative:
-        {
-          detail::scc_tarjan_iterative_impl<Aut> scc{aut};
-          return scc.components();
-        }
       case scc_algo_t::kosaraju:
-        {
-          detail::scc_kosaraju_impl<Aut> scc{aut};
-          return scc.components();
-        }
+        return detail::scc_kosaraju_impl<Aut>{aut}.components();
+      case scc_algo_t::tarjan_recursive:
+        return detail::scc_tarjan_recursive_impl<Aut>{aut}.components();
+      case scc_algo_t::tarjan_iterative:
+        return detail::scc_tarjan_iterative_impl<Aut>{aut}.components();
       }
     BUILTIN_UNREACHABLE();
   }
@@ -531,9 +524,10 @@ namespace vcsn
       {
         return components_.size();
       }
+
     private:
       using super_t::aut_;
-      /// Store the component number of a state.
+      /// For each state, its component number.
       std::map<state_t, size_t> component_;
       components_t components_;
     };
@@ -605,7 +599,9 @@ namespace vcsn
   | component. |
   `-----------*/
 
-  /// Get a sub automaton who is a strongly connected component.
+  /// An SCC as a subautomaton.
+  /// \param aut  the input automaton.
+  /// \param num  the number of the scc.
   template <typename Aut>
   inline
   filter_automaton<scc_automaton<Aut>>
@@ -618,7 +614,8 @@ namespace vcsn
   }
 
   template <typename Aut>
-  filter_automaton<scc_automaton<Aut>>
+  inline
+  void
   component(const Aut&, unsigned)
   {
     raise("component: requires an scc_automaton");
