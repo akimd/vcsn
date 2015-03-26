@@ -70,7 +70,17 @@ features of the right definition?
 * Bugs
 ** focus and info
 See the notebook for automaton.is_functional: we have an error message
-because info() does not work on a focus_automaton.  Fix.
+because info() does not work on a focus_automaton.
+
+This is fixed by calling
+
+    using res_t = automaton_nocv_t_of<Aut>;
+    // If we started with a focus_automaton as input, creating a new
+    // one requires the full (multitape) context.
+    res_t res = make_shared_ptr<res_t>(detail::real_context(aut));
+
+This is too complex: we should provide a means to create a fresh nocv
+automaton from any automaton, that would factor the hassle.
 
 ** expression::copy
 The implementation by-passes the expressionset when building the new

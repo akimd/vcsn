@@ -7,6 +7,7 @@
 #include <boost/range/rbegin.hpp>
 #include <boost/range/rend.hpp>
 
+#include <vcsn/algos/copy.hh> // real_context
 #include <vcsn/algos/filter.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/misc/crange.hh>
@@ -426,7 +427,9 @@ namespace vcsn
   aut_of_component(const detail::component_t<Aut>& com, const Aut& aut)
   {
     using res_t = automaton_nocv_t_of<Aut>;
-    res_t res = make_shared_ptr<res_t>(aut->context());
+    // If we started with a focus_automaton as input, creating a new
+    // one requires the full (multitape) context.
+    res_t res = make_shared_ptr<res_t>(detail::real_context(aut));
     std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
     auto s0 = *com.begin();
     map[s0] = res->new_state();
