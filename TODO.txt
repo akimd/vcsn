@@ -137,6 +137,9 @@ B-automaton does not support -1 * aut.  However we must perform these
 operations on the joined weightset, so adjust that.  This should also solve
 non-commutativity: as is, (a, b) can work, but not (b, a).
 
+But anyway: does it really mean something to compare a B-automaton with a Z
+one?
+
 ** eliminate-state
 Support several arguments.
 
@@ -458,8 +461,8 @@ accessible too often (on products, which are accessible, of course).
 
 ** shortest, enumerate
 Check that the data structures are really the best possible.  map guarantees
-that if there are no deletions, references and iterator remain valid.  So we
-should store references or iterators in the working queue, instead of
+that if there are no deletions, references and iterators remain valid.  So
+we should store references or iterators in the working queue, instead of
 duplicating the monomials.
 
 ** standard
@@ -515,7 +518,8 @@ we should get a minimal set of routine compiled.
 Do we really need both determinized_automaton and partition_automaton?  I
 think both should actually be "subset_automaton", with the possibility of
 being weighted_subset_automaton.  Of course, a lazy determinized_automaton
-would exist, but as a derived class from weighted_subset_automaton.
+would exist, but as a derived class from weighted_subset_automaton.  Very
+much like we already have between tuple_automaton and product_automaton.
 
 Having fewer decorated types will cause fewer compilations.
 
@@ -527,11 +531,6 @@ optimizations could even be experimented.
 ** static_cast
 Check what we get if we replace the dynamic_cast in the dyn::wrappers by a
 static_cast in the case of optimized implementation (say, NDEBUG).
-
-** registry
-We use a map of signatures, which is nice as it gives sorted error messages.
-What speed up do we get with an unordered_map?  For the error message, it
-would be nice to keep the alphabetical order of the signature.
 
 * I/O
 ** fado

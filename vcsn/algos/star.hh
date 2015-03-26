@@ -1,11 +1,10 @@
-#ifndef VCSN_ALGOS_STAR_HH
-# define VCSN_ALGOS_STAR_HH
+#pragma once
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/standard.hh> // is_standard
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/misc/raise.hh> // require
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/standard.hh> // is_standard
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
 {
@@ -13,7 +12,7 @@ namespace vcsn
   | star  |
   `------*/
 
-  /// In place star of a standard automaton.
+  /// In-place star of a standard automaton.
   ///
   /// See standard_visitor::visit(star).
   template <typename Aut>
@@ -80,5 +79,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_STAR_HH

@@ -1,7 +1,6 @@
-#ifndef VCSN_ALGOS_STRIP_HH
-# define VCSN_ALGOS_STRIP_HH
+#pragma once
 
-# include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -56,7 +55,4 @@ namespace vcsn
       }
     }
   }
-
 } // vcsn::
-
-#endif // !VCSN_ALGOS_STRIP_HH

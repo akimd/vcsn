@@ -1,7 +1,6 @@
-#ifndef VCSN_ALGOS_STAR_HEIGHT_HH
-# define VCSN_ALGOS_STAR_HEIGHT_HH
+#pragma once
 
-# include <vcsn/core/rat/visitor.hh>
+#include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {
@@ -36,7 +35,7 @@ namespace vcsn
 
     private:
 
-# define DEFINE(Type)                                           \
+#define DEFINE(Type)                                         \
       using Type ## _t = typename super_t::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
@@ -54,7 +53,7 @@ namespace vcsn
       DEFINE(transposition){ v.sub()->accept(*this); }
       DEFINE(zero)         { (void) v; }
 
-# undef DEFINE
+#undef DEFINE
 
       /// Traverse variadic node.
       template <rat::type_t Type>
@@ -103,7 +102,4 @@ namespace vcsn
       }
     }
   }
-
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_STAR_HEIGHT_HH

@@ -1,20 +1,13 @@
-#ifndef VCSN_ALGOS_IDENTITIES_HH
-# define VCSN_ALGOS_IDENTITIES_HH
+#pragma once
 
-# include <map>
-
-# include <vcsn/algos/product.hh> // join_automata
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/expression.hh> // dyn::make_expression
-# include <vcsn/misc/raise.hh> // require
+#include <vcsn/dyn/expression.hh> // dyn::make_expression
 
 namespace vcsn
 {
 
-  /*---------------------.
-  | identities(expression).  |
-  `---------------------*/
+  /*--------------------------.
+  | identities(expression).   |
+  `--------------------------*/
 
   namespace dyn
   {
@@ -30,8 +23,5 @@ namespace vcsn
         return rs.identities();
       }
     }
-
   }
 }
-
-#endif // !VCSN_ALGOS_IDENTITIES_HH

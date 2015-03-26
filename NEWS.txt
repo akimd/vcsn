@@ -38,8 +38,11 @@ Second "conjunction" is a reasonable choice:
 - the etymology of "conjunction" is a perfect match with the semantics
   of the operation.
 
-- computer scientists are used to the correspondance between
-  "conjuction" and "&".
+- computer scientists are used to the correspondence between
+  "conjunction" and "&".
+
+The preference for verbs as algorithm names leads naturally to
+"conjoin".  However "conjunction" still seems more natural.
 
 ## 2015-03-21
 ### are-equivalent: now uses realtime
@@ -49,7 +52,7 @@ One may, finally, compare LAL, LAN, and LAW automata.
 The "join" of tuplesets now works properly, so one may, for instance,
 add automata on A? x B and A x B? to get an automata on A? x B?.
 
-In order to facilitate the experimentations with `join`, it is now
+In order to facilitate the experiments with `join`, it is now
 provided as an algorithm.  In Python, it is also available as the
 infix `or` operator.
 
@@ -145,7 +148,7 @@ when set to "compact", enables a variant, more compact, construction.
 ### letterize: new algorithm
 Create the equivalent automaton, but with only single-letter transitions.
 Basically, do the conversion from law to lan. It also works recursively with
-multi-tape transducers.
+multitape transducers.
 
     In [2]: c = vcsn.context('lat<law_char, lal_char>, z')
 
@@ -167,7 +170,7 @@ multi-tape transducers.
 
 ## 2015-02-10
 ### Multitape expressions
-When typing multi-tape transducers, it is now no longer necessary to
+When typing multitape transducers, it is now no longer necessary to
 explicit the parenthesis inside (multi-)letters.
 
     In [1]: import vcsn
@@ -3778,5 +3781,7 @@ LocalWords:  templated polynomialset del abcd Metadata sed weightsets laz
 LocalWords:  xyw determinizing ctx libchar conv kratexps zrr dcba bcd dcb
 LocalWords:  cba wz sl gensets mul GenSet typedef abab eval determinization
 LocalWords:  al Associativity ptr nb semiring ingoing pprat's src dst utf
-LocalWords:  entryset subdirectory ispell american
+LocalWords:  entryset subdirectory ispell american hadamard realtime
+LocalWords:  tuplesets Optimizations variadic cominimization runtime
+LocalWords:  letterized zpc letterize
 -->

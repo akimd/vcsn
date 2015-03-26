@@ -1,16 +1,15 @@
-#ifndef VCSN_ALGOS_IS_VALID_EXPRESSION_HH
-# define VCSN_ALGOS_IS_VALID_EXPRESSION_HH
+#pragma once
 
-# include <stdexcept>
+#include <stdexcept>
 
-# include <vcsn/algos/constant-term.hh>
+#include <vcsn/algos/constant-term.hh>
 
 namespace vcsn
 {
 
-  /*-------------------.
-  | is_valid(expression).  |
-  `-------------------*/
+  /*------------------------.
+  | is_valid(expression).   |
+  `------------------------*/
 
   /// Whether \a e has only computable stars.
   template <typename ExpSet>
@@ -43,5 +42,3 @@ namespace vcsn
     }
   }
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_IS_VALID_EXPRESSION_HH

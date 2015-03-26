@@ -1,14 +1,13 @@
-#ifndef VCSN_ALGOS_LEFT_MULT_HH
-# define VCSN_ALGOS_LEFT_MULT_HH
+#pragma once
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/standard.hh>
-# include <vcsn/core/rat/expressionset.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/dyn/weight.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/standard.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -122,9 +121,9 @@ namespace vcsn
   }
 
 
-  /*--------------------.
-  | left-mult(expression).  |
-  `--------------------*/
+  /*-------------------------.
+  | left-mult(expression).   |
+  `-------------------------*/
 
   template <typename ExpSet>
   inline
@@ -181,7 +180,7 @@ namespace vcsn
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
         return make_expression(rs,
-                           ::vcsn::left_mult(rs, w2, r2));
+                               ::vcsn::left_mult(rs, w2, r2));
       }
 
     }
@@ -231,9 +230,9 @@ namespace vcsn
     }
   }
 
-  /*---------------------.
-  | right-mult(expression).  |
-  `---------------------*/
+  /*--------------------------.
+  | right-mult(expression).   |
+  `--------------------------*/
 
   template <typename ExpSet>
   inline
@@ -260,11 +259,8 @@ namespace vcsn
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
         return make_expression(rs,
-                           ::vcsn::right_mult(rs, r2, w2));
+                               ::vcsn::right_mult(rs, r2, w2));
       }
-
     }
   }
 }
-
-#endif // !VCSN_ALGOS_LEFT_MULT_HH

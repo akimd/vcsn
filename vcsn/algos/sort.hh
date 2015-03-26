@@ -1,20 +1,15 @@
-#ifndef VCSN_ALGOS_SORT_HH
-# define VCSN_ALGOS_SORT_HH
+#pragma once
 
-# include <map>
-# include <queue>
-# include <vector>
+#include <vector>
 
-# include <vcsn/core/permutation-automaton.hh>
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/algorithm.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/unordered_map.hh>
+#include <vcsn/core/permutation-automaton.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/algorithm.hh>
 
-# include <vcsn/algos/copy.hh> // real_context
-# include <vcsn/ctx/traits.hh> // base_t
+#include <vcsn/algos/copy.hh> // real_context
+#include <vcsn/ctx/traits.hh> // base_t
 
 namespace vcsn
 {
@@ -34,7 +29,7 @@ namespace vcsn
     auto less = [&a] (transition_t l, transition_t r)
       {
         return a->labelset()->less(a->label_of(l),
-                                        a->label_of(r));
+                                   a->label_of(r));
       };
     for (auto s: a->states())
       if (!detail::is_sorted_forward(a->out(s), less))
@@ -202,5 +197,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_SORT_HH

@@ -1,13 +1,11 @@
-#ifndef VCSN_ALGOS_INSPLIT_HH
-# define VCSN_ALGOS_INSPLIT_HH
+#pragma once
 
-# include <unordered_map>
+#include <unordered_map>
 
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/misc/pair.hh>
-# include <vcsn/misc/attributes.hh>
+#include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/algos/copy.hh> // real_context
+#include <vcsn/algos/fwd.hh>
+#include <vcsn/misc/pair.hh>
 
 namespace vcsn
 {
@@ -21,7 +19,7 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
-      using pair_t = typename std::pair<state_t, bool>;
+      using pair_t = std::pair<state_t, bool>;
 
       // Associate a state with itself and (possibly) the new one from the split
       // false: Original state
@@ -137,5 +135,3 @@ namespace vcsn
   }
 
 } // namespace vcsn
-
-#endif // !VCSN_ALGOS_INSPLIT_HH

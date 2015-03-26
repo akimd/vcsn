@@ -1,13 +1,12 @@
-#ifndef VCSN_ALGOS_COMPLEMENT_HH
-# define VCSN_ALGOS_COMPLEMENT_HH
+#pragma once
 
-# include <set>
+#include <set>
 
-# include <vcsn/algos/copy.hh>
-# include <vcsn/algos/is-complete.hh>
-# include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/algos/copy.hh>
+#include <vcsn/algos/is-complete.hh>
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -72,9 +71,9 @@ namespace vcsn
     }
   }
 
-  /*---------------------.
-  | complement(expression).  |
-  `---------------------*/
+  /*--------------------------.
+  | complement(expression).   |
+  `--------------------------*/
 
   namespace dyn
   {
@@ -88,11 +87,9 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
 
         return make_expression(e.expressionset(),
-                           e.expressionset().complement(e.expression()));
+                               e.expressionset().complement(e.expression()));
       }
     }
   }
 
 }
-
-#endif // !VCSN_ALGOS_COMPLEMENT_HH

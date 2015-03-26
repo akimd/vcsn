@@ -1,9 +1,8 @@
-#ifndef VCSN_ALGOS_NORMALIZE_HH
-# define VCSN_ALGOS_NORMALIZE_HH
+#pragma once
 
-# include <vcsn/algos/standard.hh>
-# include <vcsn/dyn/algos.hh>
-# include <vcsn/dyn/automaton.hh>
+#include <vcsn/algos/standard.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -47,5 +46,3 @@ namespace vcsn
     }
   }
 } // vcsn::
-
-#endif // !VCSN_ALGOS_NORMALIZE_HH

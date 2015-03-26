@@ -1,11 +1,9 @@
-#ifndef VCSN_ALGOS_IS_COMPLETE_HH
-# define VCSN_ALGOS_IS_COMPLETE_HH
+#pragma once
 
-# include <queue>
-# include <set>
+#include <set>
 
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {
@@ -54,5 +52,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // !VCSN_ALGOS_IS_COMPLETE_HH
