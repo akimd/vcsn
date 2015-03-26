@@ -71,7 +71,12 @@ namespace vcsn
         auto ws = ctx.weightset();
 
         for (auto s : input_->states())
-          pair_states_.emplace(std::make_pair(s, s), this->new_state());
+          {
+            state_t ns = this->new_state();
+            pair_states_.emplace(std::make_pair(s, s), ns);
+            if (input_->is_final(s))
+              this->set_final(s);
+          }
 
         // States are "ordered": (s1, s2) is defined only for s1 < s2.
         {
@@ -84,9 +89,13 @@ namespace vcsn
               // https://svn.boost.org/trac/boost/ticket/9984
               auto i2 = i1;
               for (++i2; i2 != end; ++i2)
-                // s1 < s2, no need for make_ordered_pair.
-                pair_states_.emplace(std::make_pair(*i1, *i2),
-                                     this->new_state());
+                {
+                  state_t ns = this->new_state();
+                  // s1 < s2, no need for make_ordered_pair.
+                  pair_states_.emplace(std::make_pair(*i1, *i2), ns);
+                  if (input_->is_initial(*i1) && input_->is_initial(*i2))
+                    this->set_initial(ns);
+                }
             }
         }
 
@@ -149,7 +158,8 @@ namespace vcsn
       const pair_t get_origin(state_t s) const
       {
         auto i = origins().find(s);
-        require(i != std::end(origins()), "state not found in origins");
+        require(i != std::end(origins()),
+                "state ", s, " not found in origins");
         return i->second;
       }
 

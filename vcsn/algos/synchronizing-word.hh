@@ -116,7 +116,7 @@ namespace vcsn
       void init_pair()
       {
         pair_ = pair(aut_);
-        paths_ = paths_ibfs(pair_, pair_->singletons());
+        paths_ = paths_ibfs(pair_, pair_->final_states());
 
         detail::erase_if(paths_,
                          [this](const path_t& p)
@@ -128,9 +128,7 @@ namespace vcsn
       void init_synchro()
       {
         init_pair();
-        require(pair_->states().size()
-                == paths_.size() + pair_->singletons().size(),
-                "automaton is not synchronizing");
+        require(is_synchronizing(), "automaton is not synchronizing");
 
         for (auto s : pair_->states())
           if (!pair_->is_singleton(s))
@@ -231,10 +229,12 @@ namespace vcsn
         init_synchro();
         while (!todo_.empty())
           {
+            std::puts("loop todo\n");
             int min = std::numeric_limits<int>::max();
             state_t s_min = 0;
             for (auto s : todo_)
               {
+                std::puts("  loop states\n");
                 int d = (this->*(heuristic))(s);
                 if (d < min)
                   {
@@ -243,8 +243,10 @@ namespace vcsn
                   }
               }
 
+            std::puts("apply_path\n");
             apply_path(recompose_path(s_min));
           }
+        std::puts("end\n");
         return res_;
       }
 
