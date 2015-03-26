@@ -40,7 +40,7 @@ namespace vcsn
 
     std::unordered_set<state_t> todo;
 
-    for (auto s : aut->states())
+    for (auto s : aut->initial_states())
       todo.insert(s);
 
     for (auto l : aut->labelset()->letters_of(w))
@@ -59,7 +59,7 @@ namespace vcsn
         todo = std::move(new_todo);
       }
 
-    return todo.size() == 1;
+    return todo.size() == 1 && aut->is_final(*todo.begin());
   }
 
   namespace dyn
