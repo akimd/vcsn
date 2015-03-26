@@ -599,7 +599,7 @@ namespace vcsn
         return o;
       }
 
-      const component_t component(unsigned num) const
+      const component_t& component(unsigned num) const
       {
         require(num < components_.size(),
                 "component: invalid component number: ",
@@ -607,7 +607,7 @@ namespace vcsn
         return components_[num];
       }
 
-      const components_t components() const
+      const components_t& components() const
       {
         return components_;
       }
@@ -699,10 +699,7 @@ namespace vcsn
   filter_automaton<scc_automaton<Aut>>
   component(const scc_automaton<Aut>& aut, unsigned num)
   {
-    std::unordered_set<state_t_of<Aut>> ss;
-    for (auto s : aut->component(num))
-      ss.emplace(s);
-    return vcsn::filter(aut, ss);
+    return vcsn::filter(aut, aut->component(num));
   }
 
   template <typename Aut>
