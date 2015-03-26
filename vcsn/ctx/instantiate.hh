@@ -198,7 +198,7 @@ namespace vcsn
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(multiply_polynomial, wps_t, wps_t);
-        REGISTER(pair, aut_t, bool);
+        REGISTER(pair, aut_t);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(random_automaton_deterministic, ctx_t, unsigned);
         REGISTER(shortest, aut_t, boost::optional<unsigned>, boost::optional<unsigned>);

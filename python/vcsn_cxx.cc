@@ -540,9 +540,9 @@ struct automaton
     return vcsn::dyn::num_components(val_);
   }
 
-  automaton pair(bool keep_initials = false) const
+  automaton pair() const
   {
-    return vcsn::dyn::pair(val_, keep_initials);
+    return vcsn::dyn::pair(val_);
   }
 
   automaton partial_identity() const
@@ -1370,7 +1370,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          multiply_repeated())
     .def("normalize", &automaton::normalize)
     .def("num_components", &automaton::num_components)
-    .def("pair", &automaton::pair, (arg("keep_initials") = false))
+    .def("pair", &automaton::pair)
     .def("prefix", &automaton::prefix)
     .def("partial_identity", &automaton::partial_identity)
     .def("project", &automaton::project)

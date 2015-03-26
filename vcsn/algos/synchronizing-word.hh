@@ -113,22 +113,21 @@ namespace vcsn
       {}
 
     private:
-      void init_pair(bool keep_initials = false)
+      void init_pair()
       {
-        pair_ = pair(aut_, keep_initials);
+        pair_ = pair(aut_);
         paths_ = paths_ibfs(pair_, pair_->singletons());
 
-        if (keep_initials)
-          detail::erase_if(paths_,
-                           [this](const path_t& p)
-                           {
-                             return pair_->is_singleton(p.first);
-                           });
+        detail::erase_if(paths_,
+                         [this](const path_t& p)
+                         {
+                           return pair_->is_singleton(p.first);
+                         });
       }
 
-      void init_synchro(bool keep_initials = false)
+      void init_synchro()
       {
-        init_pair(keep_initials);
+        init_pair();
         require(pair_->states().size()
                 == paths_.size() + pair_->singletons().size(),
                 "automaton is not synchronizing");
@@ -188,9 +187,9 @@ namespace vcsn
 
     public:
 
-      // We just perform an inverse BFS from q0 and put all the accessible
+      // We just perform an inverse BFS from the singletons and put all the accessible
       // states in 'paths'. If the size of paths is the same than the number
-      // of states of pa (minus q0), then for each pair of states (p, q),
+      // of states of pa, then for each pair of states (p, q),
       // there is a word w such that d(p, w) = d(q, w), thus the automaton is
       // synchronizing.
       bool is_synchronizing()
@@ -251,7 +250,7 @@ namespace vcsn
 
       word_t cycle_()
       {
-        init_synchro(true);
+        init_synchro();
         bool first = true;
         state_t previous = 0;
         while (!todo_.empty())
@@ -287,7 +286,7 @@ namespace vcsn
         init_synchro();
 
         // The drawback of this algorithm is that it does not guarantee us to
-        // converge, so we this to counter prevent potential infinite loops.
+        // converge, so we use this counter to prevent potential infinite loops.
         unsigned count = 0;
         while (!todo_.empty())
           {

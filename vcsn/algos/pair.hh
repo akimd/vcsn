@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/transition-map.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -61,24 +62,16 @@ namespace vcsn
       using origins_t = std::map<state_t, pair_t>;
 
     public:
-      pair_automaton_impl(const automaton_t& aut, bool keep_initials = false)
+      pair_automaton_impl(const automaton_t& aut)
         : super_t(aut->context())
         , input_(aut)
         , transition_map_(aut)
-        , keep_initials_(keep_initials)
       {
         auto ctx = input_->context();
         auto ws = ctx.weightset();
 
-        if (keep_initials_)
-          for (auto s : input_->states())
-            pair_states_.emplace(std::make_pair(s, s), this->new_state());
-        else
-          {
-            q0_ = this->new_state(); // q0 special state
-            for (auto l : input_->labelset()->genset())
-              this->add_transition(q0_, q0_, l, ws->one());
-          }
+        for (auto s : input_->states())
+          pair_states_.emplace(std::make_pair(s, s), this->new_state());
 
         // States are "ordered": (s1, s2) is defined only for s1 < s2.
         {
@@ -113,11 +106,8 @@ namespace vcsn
         for (const auto& p: pair_states_)
           origins_.emplace(p.second, p.first);
 
-        if (keep_initials_)
-          for (auto s : input_->states())
-            singletons_.push_back(state_(s, s));
-        else
-          singletons_.push_back(q0_);
+        for (auto s : input_->states())
+          singletons_.push_back(state_(s, s));
       }
 
       static symbol sname()
@@ -134,22 +124,10 @@ namespace vcsn
         return o << '>';
       }
 
-      state_t get_q0() const
-      {
-        require(!keep_initials_,
-                "can't get_q0() on a pairer that keeps origins");
-        return q0_;
-      }
-
       bool is_singleton(state_t s) const
       {
-        if (keep_initials_)
-          {
-            pair_t p = get_origin(s);
-            return p.first == p.second;
-          }
-        else
-          return s == q0_;
+        pair_t p = get_origin(s);
+        return p.first == p.second;
       }
 
       const std::vector<state_t>& singletons() const
@@ -209,13 +187,7 @@ namespace vcsn
       /// s2).  Allocate it if needed.
       state_t state_(state_t s1, state_t s2)
       {
-        // Benches show it is slightly faster to handle this case
-        // especially rather that mapping these "diagonal states" to
-        // q0_ in pair_states_.
-        if (s1 == s2 && !keep_initials_)
-          return q0_;
-        else
-          return pair_states_[make_ordered_pair(s1, s2)];
+        return pair_states_[make_ordered_pair(s1, s2)];
       }
 
       /// Input automaton.
@@ -226,8 +198,6 @@ namespace vcsn
       std::unordered_map<pair_t, state_t> pair_states_;
       origins_t origins_;
       std::vector<state_t> singletons_;
-      state_t q0_ = this->null_state();
-      bool keep_initials_ = false;
     };
   }
 
@@ -240,7 +210,7 @@ namespace vcsn
   `------------------*/
 
   template <typename Aut>
-  pair_automaton<Aut> pair(const Aut& aut, bool keep_initials = false)
+  pair_automaton<Aut> pair(const Aut& aut)
   {
     return make_shared_ptr<pair_automaton<Aut>>(aut, keep_initials);
   }
@@ -250,12 +220,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename>
+      template <typename Aut>
       automaton
-      pair(const automaton& aut, bool keep_initials)
+      pair(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::pair(a, keep_initials));
+        return make_automaton(::vcsn::pair(a));
       }
     }
   }
