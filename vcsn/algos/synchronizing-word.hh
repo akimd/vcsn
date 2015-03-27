@@ -128,18 +128,17 @@ namespace vcsn
       void init_synchro()
       {
         init_pair();
-        require(is_synchronizing(), "automaton is not synchronizing");
+        //require(is_synchronizing(), "automaton is not synchronizing");
 
-        for (auto s : pair_->states())
-          if (!pair_->is_singleton(s))
-            todo_.insert(s);
+        for (auto s : pair_->initial_states())
+          todo_.insert(s);
       }
 
       std::vector<transition_t> recompose_path(state_t from) const
       {
         std::vector<transition_t> res;
         state_t bt_curr = from;
-        while (!pair_->is_singleton(bt_curr))
+        while (!pair_->is_final(bt_curr))
           {
             transition_t t = paths_.find(bt_curr)->second.second;
             res.push_back(t);
@@ -150,7 +149,7 @@ namespace vcsn
 
       int dist(state_t s) const
       {
-        return pair_->is_singleton(s) ? 0 : paths_.find(s)->second.first;
+        return pair_->is_final(s) ? 0 : paths_.find(s)->second.first;
       }
 
       state_t dest_state(state_t s, const label_t& l) const
@@ -169,7 +168,7 @@ namespace vcsn
         for (auto s : todo_)
           {
             auto new_state = dest_state(s, label);
-            if (!pair_->is_singleton(new_state))
+            if (!pair_->is_final(new_state))
               new_todo.insert(new_state);
           }
         todo_ = std::move(new_todo);
@@ -229,12 +228,10 @@ namespace vcsn
         init_synchro();
         while (!todo_.empty())
           {
-            std::puts("loop todo\n");
             int min = std::numeric_limits<int>::max();
             state_t s_min = 0;
             for (auto s : todo_)
               {
-                std::puts("  loop states\n");
                 int d = (this->*(heuristic))(s);
                 if (d < min)
                   {
@@ -243,10 +240,8 @@ namespace vcsn
                   }
               }
 
-            std::puts("apply_path\n");
             apply_path(recompose_path(s_min));
           }
-        std::puts("end\n");
         return res_;
       }
 
