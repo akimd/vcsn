@@ -56,7 +56,7 @@ namespace vcsn
 
   /// Star of a standard automaton.
   template <typename Aut>
-  automaton_nocv_t_of<Aut>
+  fresh_automaton_t_of<Aut>
   star(const Aut& aut)
   {
     auto res = copy(aut);

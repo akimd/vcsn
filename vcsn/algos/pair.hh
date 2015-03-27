@@ -26,13 +26,14 @@ namespace vcsn
     {
     public:
       using automaton_t =  Aut;
-      using automaton_nocv_t = mutable_automaton<context_t_of<Aut>>;
+      // FIXME: cannot use fresh_automaton_t_of<Aut>.
+      using fresh_automaton_t = mutable_automaton<context_t_of<Aut>>;
+      using super_t = automaton_decorator<fresh_automaton_t>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
-      using super_t = automaton_decorator<automaton_nocv_t>;
 
     private:
       /// The semantics of the result states: ordered pair of input

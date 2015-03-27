@@ -795,10 +795,9 @@ namespace vcsn
   template <typename Aut>
   auto
   power(const Aut& aut, unsigned n)
-    -> automaton_nocv_t_of<Aut>
+    -> fresh_automaton_t_of<Aut>
   {
-    using res_t = automaton_nocv_t_of<Aut>;
-    auto res = make_shared_ptr<res_t>(aut->context());
+    auto res = make_fresh_automaton(aut);
     {
       // automatonset::one().
       auto s = res->new_state();

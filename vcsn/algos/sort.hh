@@ -3,13 +3,10 @@
 #include <vector>
 
 #include <vcsn/core/permutation-automaton.hh>
-#include <vcsn/ctx/traits.hh>
+#include <vcsn/ctx/traits.hh> // base_t
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/algorithm.hh>
-
-#include <vcsn/algos/copy.hh> // real_context
-#include <vcsn/ctx/traits.hh> // base_t
 
 namespace vcsn
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/copy.hh> // make_fresh_automaton
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/weightset/fwd.hh> // b
@@ -60,7 +61,7 @@ namespace vcsn
         pstate_t univers_states(intersection_closure(transp_states));
 
         // The universal automaton.
-        automaton_t res = make_shared_ptr<automaton_t>(aut->context());
+        automaton_t res = make_fresh_automaton(aut);
 
         // The final states of aut.
         std::set<state_t> automaton_finals;

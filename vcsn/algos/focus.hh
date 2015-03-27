@@ -63,9 +63,9 @@ namespace vcsn
       /// mutable_automaton<Ctx>> should yield a
       /// focus_automaton<mutable_automaton<Ctx>>, without the "inner"
       /// const.
-      using automaton_nocv_t
+      using fresh_automaton_t
         = focus_automaton<Tape,
-                          automaton_nocv_t_of<automaton_t>>;
+                          fresh_automaton_t_of<automaton_t>>;
 
       /// This automaton's state and transition types are those of the
       /// wrapped automaton.

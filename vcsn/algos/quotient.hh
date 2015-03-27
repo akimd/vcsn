@@ -20,9 +20,9 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using quotient_t = partition_automaton_t<automaton_t>;
-      using automaton_nocv_t = automaton_nocv_t_of<automaton_t>;
+      using fresh_automaton_t = fresh_automaton_t_of<automaton_t>;
       using origins_t
-        = typename partition_automaton<automaton_nocv_t>::element_type::origins_t;
+        = typename partition_automaton<fresh_automaton_t>::element_type::origins_t;
 
       using class_t = unsigned;
       using state_t = state_t_of<automaton_t>;
@@ -75,7 +75,7 @@ namespace vcsn
             state_to_class[s] = c;
 
         auto origins = origins_t{};
-        auto res = make_shared_ptr<automaton_nocv_t>(aut->context());
+        auto res = make_fresh_automaton(aut);
         auto class_to_res_state = class_to_state_t(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {

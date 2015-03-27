@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_map>
 
+#include <vcsn/algos/copy.hh> // make_fresh_automaton
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/fwd.hh> // permutation_automaton
 
@@ -16,23 +17,23 @@ namespace vcsn
     /// \tparam Aut the type of the wrapped input automaton.
     template <typename Aut>
     class permutation_automaton_impl
-      : public automaton_decorator<automaton_nocv_t_of<Aut>>
+      : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
     public:
       /// Input automaton type.
       using automaton_t = Aut;
       /// Generated automaton type.
-      using automaton_nocv_t = automaton_nocv_t_of<automaton_t>;
-      using super_t = automaton_decorator<automaton_nocv_t>;
+      using fresh_automaton_t = fresh_automaton_t_of<automaton_t>;
+      using super_t = automaton_decorator<fresh_automaton_t>;
 
       /// Symbolic state name: input automaton state type.
       using state_name_t = state_t_of<automaton_t>;
       /// Sorted automaton state type.
-      using state_t = state_t_of<automaton_nocv_t>;
+      using state_t = state_t_of<fresh_automaton_t>;
 
     public:
       permutation_automaton_impl(const automaton_t& input)
-        : super_t(make_shared_ptr<automaton_nocv_t>(real_context(input)))
+        : super_t(make_fresh_automaton(input))
         , input_(input)
       {
         map_[input_->pre()] = super_t::pre();

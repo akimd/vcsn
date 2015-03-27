@@ -18,16 +18,16 @@ namespace vcsn
     /// \tparam Aut the type of the wrapped input automaton.
     template <typename Aut>
     class partition_automaton_impl
-      : public automaton_decorator<automaton_nocv_t_of<Aut>>
+      : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
     public:
       /// Input automaton type.
       using automaton_t = Aut;
       /// Generated automaton type.
-      using automaton_nocv_t = automaton_nocv_t_of<automaton_t>;
+      using fresh_automaton_t = fresh_automaton_t_of<automaton_t>;
       using context_t = context_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
-      using super_t = automaton_decorator<automaton_nocv_t>;
+      using super_t = automaton_decorator<fresh_automaton_t>;
 
       /// The underlying state type.
       using state_t = state_t_of<automaton_t>;
@@ -46,7 +46,7 @@ namespace vcsn
         origins_[super_t::post()] = {input_->post()};
       }
 
-      partition_automaton_impl(const automaton_nocv_t& res,
+      partition_automaton_impl(const fresh_automaton_t& res,
                                const automaton_t& input,
                                const origins_t& origins)
         : super_t(res)
@@ -178,7 +178,7 @@ namespace vcsn
   /// \param origins map each state of res to its states in input
   template <typename Aut>
   auto
-  make_partition_automaton(const automaton_nocv_t_of<Aut>& res,
+  make_partition_automaton(const fresh_automaton_t_of<Aut>& res,
                            const Aut& input,
                            const typename detail::partition_automaton_impl<Aut>::origins_t origins)
     -> partition_automaton_t<Aut>
@@ -194,7 +194,7 @@ namespace vcsn
   /// \param origins map each state of res to its states in input
   template <typename Aut>
   auto
-  make_partition_automaton(const automaton_nocv_t_of<Aut>& res,
+  make_partition_automaton(const fresh_automaton_t_of<Aut>& res,
                            const partition_automaton<Aut>& input,
                            const typename detail::partition_automaton_impl<Aut>::origins_t origins)
     -> partition_automaton_t<Aut>
@@ -220,7 +220,7 @@ namespace vcsn
   /// \param origins map each state of res to its states in input
   template <typename Aut>
   auto
-  make_partition_automaton(const automaton_nocv_t_of<transpose_automaton<Aut>>& res,
+  make_partition_automaton(const fresh_automaton_t_of<transpose_automaton<Aut>>& res,
                            const transpose_automaton<Aut>& input,
                            const typename detail::partition_automaton_impl<Aut>::origins_t origins)
     -> transpose_automaton<partition_automaton_t<Aut>>

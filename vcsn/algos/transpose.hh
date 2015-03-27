@@ -19,7 +19,8 @@ namespace vcsn
   {
     /// Read-write on an automaton, that transposes everything.
     template <typename Aut>
-    class transpose_automaton_impl : public automaton_decorator<Aut>
+    class transpose_automaton_impl
+      : public automaton_decorator<Aut>
     {
     public:
       /// The type of automaton to wrap.
@@ -28,11 +29,10 @@ namespace vcsn
       /// The type to use to build an automaton of the same type:
       /// remove the inner const-volatile qualifiers, but still build
       /// a transpose_automaton.
-      using automaton_nocv_t
-        = transpose_automaton<typename
-                              automaton_t::element_type::automaton_nocv_t>;
+      using fresh_automaton_t
+        = transpose_automaton<fresh_automaton_t_of<automaton_t>>;
 
-      using super_t = automaton_decorator<Aut>;
+      using super_t = automaton_decorator<automaton_t>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;

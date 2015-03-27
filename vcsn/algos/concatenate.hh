@@ -129,8 +129,7 @@ namespace vcsn
   Aut
   chain(const Aut& aut, int min, int max)
   {
-    Aut res =
-      make_shared_ptr<Aut>(aut->context());
+    Aut res = make_fresh_automaton(aut);
     if (max == -1)
       {
         res = star(aut);
@@ -157,7 +156,7 @@ namespace vcsn
         if (min < max)
           {
             // Aut sum = automatonset.one();
-            Aut sum = make_shared_ptr<Aut>(aut->context());
+            Aut sum = make_fresh_automaton(aut);
             {
               auto s = sum->new_state();
               sum->set_initial(s);
@@ -224,9 +223,9 @@ namespace vcsn
   }
 
 
-  /*--------------------------.
-  | chain(expression, min, max).  |
-  `--------------------------*/
+  /*-------------------------------.
+  | chain(expression, min, max).   |
+  `-------------------------------*/
 
   template <typename ExpSet>
   typename ExpSet::value_t
@@ -274,7 +273,9 @@ namespace vcsn
       {
         const auto& r = re->as<ExpSet>();
         return make_expression(r.expressionset(),
-                           ::vcsn::chain(r.expressionset(), r.expression(), min, max));
+                               ::vcsn::chain(r.expressionset(),
+                                             r.expression(),
+                                             min, max));
       }
     }
   }

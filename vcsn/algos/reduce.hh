@@ -194,7 +194,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = typename context_t::weightset_t;
-      using output_automaton_t = automaton_nocv_t_of<automaton_t>;
+      using output_automaton_t = fresh_automaton_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using output_state_t = state_t_of<output_automaton_t>;
@@ -206,7 +206,7 @@ namespace vcsn
     public:
       left_reductioner(const automaton_t& input)
         : input_(input)
-        , res_(make_shared_ptr<output_automaton_t>(input_->context()))
+        , res_(make_fresh_automaton(input))
       {}
 
       /// Create the linear representation of the input

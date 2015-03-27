@@ -167,26 +167,42 @@ namespace vcsn
     }
   }
 
+  /// Create an empty, mutable, automaton, based on another one.
+  ///
+  /// To this end, each automaton type provides a fresh_automaton_t.
+  /// In the case of mutable_automaton, it's simply mutable_automaton.
+  /// In the case of a transpose_automaton<Aut>, it's
+  /// transpose_automaton (of the fresh_automaton of Aut) so that we
+  /// also create a transposed automaton.  In the case of decorator,
+  /// it's the base type, as we don't copy decorations.
+  template <typename AutIn,
+            typename AutOut = fresh_automaton_t_of<AutIn>>
+  inline AutOut
+  make_fresh_automaton(const AutIn& model)
+  {
+    // FIXME: here, we need a means to convert the given input context
+    // (e.g. letter -> B) into the destination one (e.g., letter ->
+    // Q).  The automaton constructor wants the exact context type.
+    return make_shared_ptr<AutOut>(detail::real_context(model));
+  }
+
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state.
   template <typename AutIn,
-            typename AutOut = automaton_nocv_t_of<AutIn>,
+            typename AutOut = fresh_automaton_t_of<AutIn>,
             typename Pred>
   inline
   AutOut
   copy(const AutIn& input, Pred keep_state)
   {
-    // FIXME: here, we need a means to convert the given input context
-    // (e.g. letter -> B) into the destination one (e.g., letter ->
-    // Q).  The automaton constructor wants the exact context type.
-    auto res = make_shared_ptr<AutOut>(detail::real_context(input));
+    auto res = make_fresh_automaton<AutIn, AutOut>(input);
     ::vcsn::copy_into(input, res, keep_state);
     return res;
   }
 
   /// A copy of \a input.
   template <typename AutIn,
-            typename AutOut = automaton_nocv_t_of<AutIn>>
+            typename AutOut = fresh_automaton_t_of<AutIn>>
   inline
   AutOut
   copy(const AutIn& input)
@@ -198,7 +214,7 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are members of
   /// std::set \a keep.
   template <typename AutIn,
-            typename AutOut = automaton_nocv_t_of<AutIn>>
+            typename AutOut = fresh_automaton_t_of<AutIn>>
   inline
   AutOut
   copy(const AutIn& input, const std::set<state_t_of<AutIn>>& keep)
@@ -211,7 +227,7 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are members of
   /// std::unordered_set \a keep.
   template <typename AutIn,
-            typename AutOut = automaton_nocv_t_of<AutIn>>
+            typename AutOut = fresh_automaton_t_of<AutIn>>
   inline
   AutOut
   copy(const AutIn& input, const std::unordered_set<state_t_of<AutIn>>& keep)

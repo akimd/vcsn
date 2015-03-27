@@ -26,7 +26,7 @@ namespace vcsn
 
       /// The (shared pointer) type to use it we have to create an
       /// automaton of the same (underlying) type.
-      using automaton_nocv_t = typename element_type::automaton_nocv_t;
+      using fresh_automaton_t = typename element_type::fresh_automaton_t;
 
       using context_t = Context;
       using kind_t = typename context_t::kind_t;

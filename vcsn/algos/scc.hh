@@ -7,7 +7,7 @@
 #include <boost/range/rbegin.hpp>
 #include <boost/range/rend.hpp>
 
-#include <vcsn/algos/copy.hh> // real_context
+#include <vcsn/algos/copy.hh> // make_fresh_automaton
 #include <vcsn/algos/filter.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/partition-automaton.hh>
@@ -508,13 +508,11 @@ namespace vcsn
   /// Generate a subautomaton corresponding to an SCC.
   template <typename Aut>
   inline
-  automaton_nocv_t_of<Aut>
+  fresh_automaton_t_of<Aut>
   aut_of_component(const detail::component_t<Aut>& com, const Aut& aut)
   {
-    using res_t = automaton_nocv_t_of<Aut>;
-    // If we started with a focus_automaton as input, creating a new
-    // one requires the full (multitape) context.
-    res_t res = make_shared_ptr<res_t>(detail::real_context(aut));
+    auto res = make_fresh_automaton(aut);
+    using res_t = decltype(res);
     std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
     auto s0 = *com.begin();
     map[s0] = res->new_state();

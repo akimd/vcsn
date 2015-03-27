@@ -63,7 +63,7 @@ namespace vcsn
       static automaton_t&
       zero_here(automaton_t& res)
       {
-        automaton_t a = make_shared_ptr<automaton_t>(res->context());
+        automaton_t a = make_fresh_automaton(res);
         a->set_initial(a->new_state());
         res = std::move(a);
         return res;
@@ -84,7 +84,7 @@ namespace vcsn
   }
 
   template <typename AutIn,
-            typename AutOut = automaton_nocv_t_of<AutIn>>
+            typename AutOut = fresh_automaton_t_of<AutIn>>
   inline
   AutOut
   left_mult(const weight_t_of<AutOut>& w, const AutIn& aut)
@@ -200,7 +200,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  automaton_nocv_t_of<Aut>
+  fresh_automaton_t_of<Aut>
   right_mult(const Aut& aut, const weight_t_of<Aut>& w)
   {
     auto res = copy(aut);

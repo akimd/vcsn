@@ -68,19 +68,12 @@ break too much") rather that something like expand.  What are the expected
 features of the right definition?
 
 * Bugs
-** focus and info
-See the notebook for automaton.is_functional: we have an error message
-because info() does not work on a focus_automaton.
+** make_fresh_automaton
+There are many places where we build mutable_automaton's either via
+make_mutable_automaton, or via make_shared_ptr.  This is probably wrong
+everywhere, and should rather be make_fresh_automaton.
 
-This is fixed by calling
-
-    using res_t = automaton_nocv_t_of<Aut>;
-    // If we started with a focus_automaton as input, creating a new
-    // one requires the full (multitape) context.
-    res_t res = make_shared_ptr<res_t>(detail::real_context(aut));
-
-This is too complex: we should provide a means to create a fresh nocv
-automaton from any automaton, that would factor the hassle.
+Audit everywhere, and see what we can do to avoid that kind of error.
 
 ** expression::copy
 The implementation by-passes the expressionset when building the new

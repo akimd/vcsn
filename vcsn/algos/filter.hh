@@ -288,7 +288,7 @@ namespace vcsn
         return all_in(s, label_equal_p{*this, l});
       }
 
-      automaton_nocv_t_of<automaton_t>
+      fresh_automaton_t_of<automaton_t>
       strip() const
       {
         return ::vcsn::copy(aut_, ss_);
