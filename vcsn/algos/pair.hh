@@ -165,16 +165,24 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
-                       const std::string& format = "text") const
+                       const std::string& format = "text",
+                       bool delimit = false) const
       {
         auto i = origins().find(ss);
         if (i == std::end(origins()))
           this->print_state(ss, o);
         else
           {
+            if (delimit)
+              o << '{';
             input_->print_state_name(i->second.first, o, format);
-            o << ", ";
-            input_->print_state_name(i->second.second, o, format);
+            if (!is_singleton(ss))
+              {
+                o << ", ";
+                input_->print_state_name(i->second.second, o, format);
+              }
+            if (delimit)
+              o << '}';
           }
         return o;
       }
