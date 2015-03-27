@@ -50,15 +50,15 @@ namespace vcsn
         auto ctx = input_->context();
         auto ws = ctx.weightset();
 
-        if (!keep_initials_)
+        if (keep_initials_)
+          for (auto s : input_->states())
+            pair_states_.emplace(std::make_pair(s, s), this->new_state());
+        else
           {
             q0_ = this->new_state(); // q0 special state
             for (auto l : input_->labelset()->genset())
               this->add_transition(q0_, q0_, l, ws->one());
           }
-        else
-          for (auto s : input_->states())
-            pair_states_.emplace(std::make_pair(s, s), this->new_state());
 
         // States are "ordered": (s1, s2) is defined only for s1 < s2.
         {
@@ -85,9 +85,9 @@ namespace vcsn
             for (const auto& p : zip_maps(transition_map_[pstates.first],
                                           transition_map_[pstates.second]))
               this->add_transition(cstate,
-                                  state_(std::get<0>(p.second).dst,
-                                         std::get<1>(p.second).dst),
-                                  p.first, ws->one());
+                                   state_(std::get<0>(p.second).dst,
+                                          std::get<1>(p.second).dst),
+                                   p.first, ws->one());
           }
 
         for (const auto& p: pair_states_)
@@ -98,6 +98,20 @@ namespace vcsn
             singletons_.push_back(state_(s, s));
         else
           singletons_.push_back(q0_);
+      }
+
+      static symbol sname()
+      {
+        static symbol res("pair_automaton<"
+                          + automaton_t::element_type::sname() + '>');
+        return res;
+      }
+
+      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      {
+        o << "pair_automaton<";
+        input_->print_set(o, format);
+        return o << '>';
       }
 
       state_t get_q0() const
@@ -118,23 +132,9 @@ namespace vcsn
           return s == q0_;
       }
 
-      const std::vector<state_t>& singletons()
+      const std::vector<state_t>& singletons() const
       {
         return singletons_;
-      }
-
-      static symbol sname()
-      {
-        static symbol res("pair_automaton<"
-                          + automaton_t::element_type::sname() + '>');
-        return res;
-      }
-
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
-      {
-        o << "pair_automaton<";
-        input_->print_set(o, format);
-        return o << '>';
       }
 
       const std::unordered_map<pair_t, state_t>& get_map_pair() const
@@ -195,13 +195,12 @@ namespace vcsn
       /// Input automaton.
       automaton_t input_;
       /// Fast maps label -> (weight, label).
-      using transition_map_t
-        = transition_map<automaton_t, weightset_t_of<automaton_t>, true>;
+      using transition_map_t = transition_map<automaton_t, weightset_t, true>;
       transition_map_t transition_map_;
       std::unordered_map<pair_t, state_t> pair_states_;
       origins_t origins_;
       std::vector<state_t> singletons_;
-      state_t q0_;
+      state_t q0_ = this->null_state();
       bool keep_initials_ = false;
     };
   }
@@ -217,8 +216,7 @@ namespace vcsn
   template <typename Aut>
   pair_automaton<Aut> pair(const Aut& aut, bool keep_initials = false)
   {
-    auto res = make_shared_ptr<pair_automaton<Aut>>(aut, keep_initials);
-    return res;
+    return make_shared_ptr<pair_automaton<Aut>>(aut, keep_initials);
   }
 
   namespace dyn
