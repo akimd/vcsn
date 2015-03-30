@@ -58,7 +58,7 @@ namespace vcsn
       {
         expression_t res = rs_.zero();
         for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(m.second, m.first));
+          res = rs_.add(res, rs_.lmul(weight_of(m), label_of(m)));
          return res;
       }
 
@@ -169,13 +169,13 @@ namespace vcsn
                 typename node_t::values_t expressions;
                 for (unsigned j = 0; j < e.size(); ++j)
                   if (i == j)
-                    expressions.emplace_back(m.first);
+                    expressions.emplace_back(label_of(m));
                   else
                     expressions.emplace_back(e[j]);
                 // FIXME: we need better n-ary constructors.
                 ps_.add_here(res,
                              std::make_shared<shuffle_t>(expressions),
-                             m.second);
+                             weight_of(m));
               }
           }
         res_ = std::move(res);
@@ -254,7 +254,8 @@ namespace vcsn
     polynomial_t res;
     for (const auto& m: p)
       res = ps.add(res,
-                   ps.lmul(m.second, derivation(rs, m.first, a, breaking)));
+                   ps.lmul(weight_of(m),
+                           derivation(rs, label_of(m), a, breaking)));
     return res;
   }
 

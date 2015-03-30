@@ -161,7 +161,7 @@ namespace vcsn
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_here(res, ps_.lmul(m.second, product(m.first, r)));
+          ps_.add_here(res, ps_.lmul(weight_of(m), product(label_of(m), r)));
         return res;
       }
 
@@ -190,7 +190,7 @@ namespace vcsn
         // res = proper(B(l))&r.
         polynomial_t res;
         for (const auto& e: l_split)
-          ps_.add_here(res, rs_.conjunction(e.first, r), e.second);
+          ps_.add_here(res, rs_.conjunction(label_of(e), r), weight_of(e));
         // res += constant-term(B(l))B(r)
         ps_.add_here(res,
                        ps_.lmul(l_split_const, split(r)));
@@ -204,7 +204,7 @@ namespace vcsn
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_here(res, ps_.lmul(m.second, conjunction(m.first, r)));
+          ps_.add_here(res, ps_.lmul(weight_of(m), conjunction(label_of(m), r)));
         return res;
       }
 
@@ -289,7 +289,7 @@ namespace vcsn
     const auto& rs = *ps.labelset();
     polynomial_t res;
     for (const auto& m: p)
-      res = ps.add(res, ps.lmul(m.second, split(rs, m.first)));
+      res = ps.add(res, ps.lmul(weight_of(m), split(rs, label_of(m))));
     return res;
   }
 

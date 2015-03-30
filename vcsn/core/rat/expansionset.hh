@@ -98,7 +98,7 @@ namespace vcsn
             auto j = i->second.find(rs_.one());
             if (j != std::end(i->second))
               {
-                res.constant = ws_.add(res.constant, j->second);
+                res.constant = ws_.add(res.constant, weight_of(*j));
                 i->second.erase(j);
                 if (i->second.empty())
                   res.polynomials.erase(i);
@@ -185,7 +185,7 @@ namespace vcsn
         for (auto& p: lhs.polynomials)
           for (const auto& m: p.second)
             ps_.add_here(res.polynomials[p.first],
-                         rs_.rmul(m.first, w), m.second);
+                         rs_.rmul(label_of(m), w), weight_of(m));
         return res;
       }
 
@@ -202,8 +202,8 @@ namespace vcsn
       {
         res.constant = ws_.ldiv(w, res.constant);
         for (auto& p: res.polynomials)
-          for (auto& m: p.second)
-            m.second = ws_.ldiv(w, m.second);
+          for (auto&& m: p.second)
+            weight_set(m, ws_.ldiv(w, weight_of(m)));
         return normalize(res);
       }
 
@@ -286,7 +286,7 @@ namespace vcsn
       {
         expression_t res = rs_.zero();
         for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(m.second, m.first));
+          res = rs_.add(res, rs_.lmul(weight_of(m), label_of(m)));
          return res;
       }
 

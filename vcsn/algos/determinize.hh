@@ -344,13 +344,13 @@ namespace vcsn
       {
         // Pre.
         state_name_t n;
-        n.emplace(input_->pre(), ws_.one());
+        n.set(input_->pre(), ws_.one());
         map_[n] = super_t::pre();
         todo_.push(n);
 
         // Post.
         n.clear();
-        n.emplace(input_->post(), ws_.one());
+        n.set(input_->post(), ws_.one());
         map_[n] = super_t::post();
       }
 
@@ -384,8 +384,8 @@ namespace vcsn
             dests.clear();
             for (const auto& p : ss)
               {
-                auto s = p.first;
-                auto v = p.second;
+                auto s = label_of(p);
+                auto v = weight_of(p);
                 for (auto t : input_->all_out(s))
                   {
                     auto l = input_->label_of(t);

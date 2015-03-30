@@ -38,8 +38,7 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using word_t = word_t_of<automaton_t>;
 
-      /// Same as polynomial_t::value_type.
-      using monomial_t = std::pair<word_t, weight_t>;
+      using monomial_t = typename polynomialset_t::monomial_t;
       using queue_t = std::queue<std::pair<state_t, monomial_t>>;
 
       enumerater(const automaton_t& aut)
@@ -64,7 +63,7 @@ namespace vcsn
         // special characters for the words.
         polynomial_t res;
         for (const auto& m: past_[aut_->post()])
-          ps_.add_here(res, ls_.undelimit(m.first), m.second);
+          ps_.add_here(res, ls_.undelimit(label_of(m)), weight_of(m));
         return res;
       }
 
@@ -83,7 +82,7 @@ namespace vcsn
         polynomial_t res;
         for (const auto& m: past_[aut_->post()])
           {
-            ps_.add_here(res, ls_.undelimit(m.first), m.second);
+            ps_.add_here(res, ls_.undelimit(label_of(m)), weight_of(m));
             if (--num == 0)
               break;
           }
@@ -98,15 +97,15 @@ namespace vcsn
         queue_t q2;
         while (!q1.empty())
           {
-            state_t s;
-            monomial_t m;
-            tie(s, m) = std::move(q1.front());
+            auto sm = std::move(q1.front());
+            state_t s = sm.first;
+            monomial_t m = sm.second;
             q1.pop();
             for (const auto t: aut_->all_out(s))
               {
                 // FIXME: monomial mul.
-                monomial_t n(ls_.mul(m.first, aut_->label_of(t)),
-                             ws_.mul(m.second, aut_->weight_of(t)));
+                monomial_t n(ls_.mul(label_of(m), aut_->label_of(t)),
+                             ws_.mul(weight_of(m), aut_->weight_of(t)));
                 ps_.add_here(past_[aut_->dst_of(t)], n);
                 q2.emplace(aut_->dst_of(t), n);
               }

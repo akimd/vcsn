@@ -86,7 +86,7 @@ namespace vcsn
             res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
               for (const auto& m: derivation(rs_, src, l, breaking_))
-                res_->new_transition(s, m.first, l, m.second);
+                res_->new_transition(s, label_of(m), l, weight_of(m));
           }
         return res_;
       }
@@ -107,12 +107,12 @@ namespace vcsn
             for (const auto& p: expansion.polynomials)
               if (breaking_)
                 for (const auto& m1: p.second)
-                  for (const auto& m2: split(rs_, m1.first))
-                    res_->new_transition(s, m2.first, p.first,
-                                         ws_.mul(m1.second, m2.second));
+                  for (const auto& m2: split(rs_, label_of(m1)))
+                    res_->new_transition(s, label_of(m2), p.first,
+                                         ws_.mul(weight_of(m1), weight_of(m2)));
               else
                 for (const auto& m: p.second)
-                  res_->new_transition(s, m.first, p.first, m.second);
+                  res_->new_transition(s, label_of(m), p.first, weight_of(m));
           }
         return res_;
       }
@@ -122,7 +122,7 @@ namespace vcsn
       {
         if (breaking_)
           for (const auto& p: split(rs_, expression))
-            res_->set_initial(p.first, p.second);
+            res_->set_initial(label_of(p), weight_of(p));
         else
           res_->set_initial(expression, ws_.one());
       }

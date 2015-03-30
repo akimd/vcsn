@@ -51,7 +51,7 @@ namespace vcsn
       {
         expression_t res = rs_.zero();
         for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(m.second, m.first));
+          res = rs_.add(res, rs_.lmul(weight_of(m), label_of(m)));
          return res;
       }
 
@@ -94,8 +94,8 @@ namespace vcsn
             for (const auto& l: res)
               for (const auto& r: expand(c))
                 ps_.add_here(sum,
-                             rs_.conjunction(l.first, r.first),
-                             ws_.mul(l.second, r.second));
+                             rs_.conjunction(label_of(l), label_of(r)),
+                             ws_.mul(weight_of(l), weight_of(r)));
             res = sum;
           }
         res_ = std::move(res);

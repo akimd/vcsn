@@ -7,19 +7,17 @@
 #include <vector>
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
-#include <vcsn/weightset/fwd.hh>
-
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/labelset/wordset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh>
-#include <vcsn/misc/map.hh>
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star_status.hh>
 #include <vcsn/misc/stream.hh>
+#include <vcsn/misc/wet.hh>
 #include <vcsn/misc/zip-maps.hh>
-
-#include <vcsn/labelset/wordset.hh>
+#include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/z.hh>
 
 namespace vcsn
@@ -86,7 +84,7 @@ namespace vcsn
     using label_t = typename labelset_t::value_t;
     using weight_t = weight_t_of<context_t>;
 
-    using value_t = std::map<label_t, weight_t, vcsn::less<labelset_t>>;
+    using value_t = wet<label_t, weight_t, vcsn::less<labelset_t>>;
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 
@@ -119,13 +117,20 @@ namespace vcsn
 
     /// Set the monomial of \a l in \a v to weight \a k.
     value_t&
+    new_weight(value_t& v, const label_t& l, const weight_t k) const
+    {
+      v.set(l, k);
+      return v;
+    }
+
+    /// Set the monomial of \a l in \a v to weight \a k.
+    value_t&
     set_weight(value_t& v, const label_t& l, const weight_t k) const
     {
       if (weightset()->is_zero(k))
-        del_weight(v, l);
+        return del_weight(v, l);
       else
-        v[l] = k;
-      return v;
+        return new_weight(v, l, k);
     }
 
     /// `v += p`.
@@ -139,9 +144,9 @@ namespace vcsn
 
     /// `v += m`.
     value_t&
-    add_here(value_t& v, const monomial_t& p) const
+    add_here(value_t& v, const monomial_t& m) const
     {
-      return add_here(v, p.first, p.second);
+      return add_here(v, label_of(m), weight_of(m));
     }
 
     /// `v += <k>l`.
@@ -157,39 +162,39 @@ namespace vcsn
             }
           else
             {
-              // Do not use set_weight() because it would lookup w
+              // Do not use set_weight() because it would lookup l
               // again and we already have the right iterator.
-              auto w2 = weightset()->add(i->second, k);
+              auto w2 = weightset()->add(weight_of(*i), k);
               if (weightset()->is_zero(w2))
                 v.erase(i);
               else
-                i->second = w2;
+                v.set(i, w2);
             }
         }
       return v;
     }
 
-    /// `v -= <k>l`.
+    /// `v -= m`.
     value_t&
-    sub_here(value_t& v, const monomial_t& r) const
+    sub_here(value_t& v, const monomial_t& m) const
     {
-      if (!label_is_zero(*labelset(), &r.first))
+      if (!label_is_zero(*labelset(), &label_of(m)))
         {
-          auto i = v.find(r.first);
+          auto i = v.find(label_of(m));
           if (i == v.end())
             {
               raise(sname(), ": sub_here: invalid arguments: ",
-                    to_string(*this, v), ", ", to_string(*this, r));
+                    to_string(*this, v), ", ", to_string(*this, m));
             }
           else
             {
               // Do not use set_weight() because it would lookup w
               // again and we already have the right iterator.
-              auto w2 = weightset()->sub(i->second, r.second);
+              auto w2 = weightset()->sub(weight_of(*i), weight_of(m));
               if (weightset()->is_zero(w2))
                 v.erase(i);
               else
-                i->second = w2;
+                weight_set(*i, w2);
             }
         }
       return v;
@@ -202,7 +207,7 @@ namespace vcsn
       if (i == v.end())
         return weightset()->zero();
       else
-        return i->second;
+        return weight_of(*i);
     }
 
     /// The sum of polynomials \a l and \a r.
@@ -228,8 +233,8 @@ namespace vcsn
     monomial_t
     mul(const monomial_t& l, const monomial_t& r) const
     {
-      return {labelset()->mul(l.first, r.first),
-              weightset()->mul(l.second, r.second)};
+      return {labelset()->mul(label_of(l), label_of(r)),
+              weightset()->mul(weight_of(l), weight_of(r))};
     }
 
     /// The product of polynomials \a l and \a r.
@@ -240,8 +245,8 @@ namespace vcsn
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
-                   labelset()->mul(lm.first, rm.first),
-                   weightset()->mul(lm.second, rm.second));
+                   labelset()->mul(label_of(lm), label_of(rm)),
+                   weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
 
@@ -254,8 +259,8 @@ namespace vcsn
       for (auto i: l)
         for (auto j: r)
           add_here(res,
-                   labelset()->conjunction(i.first, j.first),
-                   weightset()->mul(i.second, j.second));
+                   labelset()->conjunction(label_of(i), label_of(j)),
+                   weightset()->mul(weight_of(i), weight_of(j)));
       return res;
     }
 
@@ -264,10 +269,10 @@ namespace vcsn
     scalar_product(const value_t& l, const value_t& r) const
     {
       weight_t res = weightset()->zero();
-      for (auto i: zip_maps<vcsn::as_tuple>(l, r))
+      for (auto p: zip_maps<vcsn::as_tuple>(l, r))
         res = weightset()->add(res,
-                               weightset()->mul(std::get<0>(i).second,
-                                                std::get<1>(i).second));
+                               weightset()->mul(weight_of(std::get<0>(p)),
+                                                weight_of(std::get<1>(p))));
       return res;
     }
 
@@ -296,7 +301,7 @@ namespace vcsn
       value_t res;
       if (!weightset()->is_zero(w))
         for (const auto& m: v)
-          add_here(res, m.first, weightset()->mul(w, m.second));
+          add_here(res, label_of(m), weightset()->mul(w, weight_of(m)));
       return res;
     }
 
@@ -307,8 +312,8 @@ namespace vcsn
       value_t res;
       for (const auto& m: v)
         add_here(res,
-                 labelset()->mul(lhs, m.first),
-                 m.second);
+                 labelset()->mul(lhs, label_of(m)),
+                 weight_of(m));
       return res;
     }
 
@@ -319,8 +324,8 @@ namespace vcsn
       value_t res;
       for (const auto& m: v)
         add_here(res,
-                 labelset()->mul(lhs.first, m.first),
-                 weightset()->mul(lhs.second, m.second));
+                 labelset()->mul(label_of(lhs), label_of(m)),
+                 weightset()->mul(weight_of(lhs), weight_of(m)));
       return res;
     }
 
@@ -338,7 +343,7 @@ namespace vcsn
       value_t res;
       if (!weightset()->is_zero(w))
         for (const auto& m: v)
-          add_here(res, labelset()->rmul(m.first, w), m.second);
+          add_here(res, labelset()->rmul(label_of(m), w), weight_of(m));
       return res;
     }
 
@@ -349,8 +354,8 @@ namespace vcsn
       value_t res;
       for (auto i: v)
         add_here(res,
-                 labelset()->mul(i.first, rhs),
-                 i.second);
+                 labelset()->mul(label_of(i), rhs),
+                 weight_of(i));
       return res;
     }
 
@@ -361,8 +366,8 @@ namespace vcsn
       value_t res;
       for (const auto& lhs: l)
         add_here(res,
-                 labelset()->mul(lhs.first, rhs.first),
-                 weightset()->mul(lhs.second, rhs.second));
+                 labelset()->mul(label_of(lhs), label_of(rhs)),
+                 weightset()->mul(weight_of(lhs), weight_of(rhs)));
       return res;
     }
 
@@ -376,8 +381,8 @@ namespace vcsn
     monomial_t
     ldiv(const monomial_t& l, const monomial_t& r) const
     {
-      return {labelset()->ldiv(l.first, r.first),
-              weightset()->ldiv(l.second, r.second)};
+      return {labelset()->ldiv(label_of(l), label_of(r)),
+              weightset()->ldiv(weight_of(l), weight_of(r))};
     }
 
     /// Left division by a monomial.
@@ -406,6 +411,7 @@ namespace vcsn
 #endif
           while (!is_zero(remainder))
             {
+              using std::begin;
               auto factor = ldiv(*begin(l), *begin(remainder));
 #if DEBUG
               std::cerr << "factor = "; print(factor, std::cerr) << "\n";
@@ -439,8 +445,8 @@ namespace vcsn
     ldiv_here(const weight_t& w, value_t& v) const
     {
       if (!weightset()->is_one(w))
-        for (auto& m: v)
-          m.second = weightset()->ldiv(w, m.second);
+        for (auto&& m: v)
+          weight_set(m, weightset()->ldiv(w, weight_of(m)));
       return v;
     }
 
@@ -450,7 +456,7 @@ namespace vcsn
     {
       if (!weightset()->is_one(w))
         for (auto& m: v)
-          m.second = weightset()->rdiv(m.second, w);
+          weight_set(m, weightset()->rdiv(weight_of(m), w));
       return v;
     }
 
@@ -460,7 +466,8 @@ namespace vcsn
     {
       typename WeightSet::value_t operator()(const value_t& v) const
       {
-        return begin(v)->second;
+        using std::begin;
+        return weight_of(*begin(v));
       }
       const WeightSet& ws_;
     };
@@ -471,10 +478,11 @@ namespace vcsn
     {
       typename z::value_t operator()(const value_t& v) const
       {
-        int sign = 0 < begin(v)->second ? 1 : -1;
-        auto res = abs(begin(v)->second);
+        using std::begin;
+        int sign = 0 < weight_of(*begin(v)) ? 1 : -1;
+        auto res = abs(weight_of(*begin(v)));
         for (const auto& m: v)
-          res = z_.lgcd(res, abs(m.second));
+          res = z_.lgcd(res, abs(weight_of(m)));
         res *= sign;
         return res;
       }
@@ -483,6 +491,8 @@ namespace vcsn
 
     value_t lgcd(const value_t& lhs, const value_t& rhs) const
     {
+      using std::begin;
+      using std::end;
       value_t res;
       // For each monomial, look for the matching GCD of the weight.
       auto i = begin(lhs), i_end = end(lhs);
@@ -491,7 +501,7 @@ namespace vcsn
            i != i_end && j != j_end
              && labelset()->equal(i->first, j->first);
            ++i, ++j)
-        res[i->first] = weightset()->lgcd(i->second, j->second);
+        res.set(i->first, weightset()->lgcd(i->second, j->second));
       // If the sets of labels are different, the polynomials
       // cannot be "colinear", and the GCD is just 1.
       if (i != i_end || j != j_end)
@@ -507,9 +517,10 @@ namespace vcsn
 
       typename ps_t::value_t operator()(const value_t& v) const
       {
-        typename ps_t::value_t res = begin(v)->second;
+        using std::begin;
+        typename ps_t::value_t res = weight_of(*begin(v));
         for (const auto& p: v)
-          res = ps_.lgcd(res, p.second);
+          res = ps_.lgcd(res, weight_of(p));
         return res;
       }
       const ps_t& ps_;
@@ -542,11 +553,12 @@ namespace vcsn
     {
       label_t operator()(value_t& v)
       {
-        label_t res = begin(v)->first;
+        using std::begin;
+        label_t res = label_of(*begin(v));
         for (const auto& m: v)
-          res = ps_.labelset()->lgcd(res, m.first);
+          res = ps_.labelset()->lgcd(res, label_of(m));
         for (auto& m: v)
-          m.first = ps_.labelset()->ldiv(res, m.first);
+          label_of(m) = ps_.labelset()->ldiv(res, label_of(m));
         return res;
       }
       const polynomialset& ps_;
@@ -564,15 +576,17 @@ namespace vcsn
     static bool monomial_equal(const monomial_t& lhs,
                                 const monomial_t& rhs)
     {
-      return (labelset_t::equal(lhs.first, rhs.first)
-              && weightset_t::equal(lhs.second, rhs.second));
+      return (labelset_t::equal(label_of(lhs), label_of(rhs))
+              && weightset_t::equal(weight_of(lhs), weight_of(rhs)));
     }
 
     static bool
     equal(const value_t& l, const value_t& r) ATTRIBUTE_PURE
     {
+      using std::begin;
+      using std::end;
       return l.size() == r.size()
-        && std::equal(l.begin(), l.end(), r.begin(),
+        && std::equal(begin(l), end(l), begin(r),
                       monomial_equal);
     }
 
@@ -649,7 +663,7 @@ namespace vcsn
       labelset_t tls = * labelset();
       weightset_t tws = * weightset();
       for (const auto& m: v)
-        add_here(res, tls.conv(sls, m.first), tws.conv(sws, m.second));
+        add_here(res, tls.conv(sls, label_of(m)), tws.conv(sws, weight_of(m)));
       return res;
     }
 
@@ -658,19 +672,21 @@ namespace vcsn
     static bool monomial_less(const monomial_t& lhs,
                                    const monomial_t& rhs)
     {
-      if (labelset_t::less(lhs.first, rhs.first))
+      if (labelset_t::less(label_of(lhs), label_of(rhs)))
         return true;
-      else if (labelset_t::less(rhs.first, lhs.first))
+      else if (labelset_t::less(label_of(rhs), label_of(lhs)))
         return false;
       else
-        return weightset_t::less(lhs.second, rhs.second);
+        return weightset_t::less(weight_of(lhs), weight_of(rhs));
     }
 
     static bool less(const value_t& lhs,
                           const value_t& rhs)
     {
-      return std::lexicographical_compare(lhs.begin(), lhs.end(),
-                                          rhs.begin(), rhs.end(),
+      using std::begin;
+      using std::end;
+      return std::lexicographical_compare(begin(lhs), end(lhs),
+                                          begin(rhs), end(rhs),
                                           monomial_less);
     }
 
@@ -679,7 +695,7 @@ namespace vcsn
     {
       value_t res;
       for (const auto& i: v)
-        res[labelset()->transpose(i.first)] = weightset()->transpose(i.second);
+        res[labelset()->transpose(label_of(i))] = weightset()->transpose(weight_of(i));
       return res;
     }
 
@@ -687,8 +703,8 @@ namespace vcsn
     static size_t hash(const monomial_t& m)
     {
       size_t res = 0;
-      hash_combine(res, labelset_t::hash(m.first));
-      hash_combine(res, weightset_t::hash(m.second));
+      hash_combine(res, labelset_t::hash(label_of(m)));
+      hash_combine(res, weightset_t::hash(weight_of(m)));
       return res;
     }
 
@@ -698,8 +714,8 @@ namespace vcsn
       size_t res = 0;
       for (const auto& m: v)
         {
-          hash_combine(res, labelset_t::hash(m.first));
-          hash_combine(res, weightset_t::hash(m.second));
+          hash_combine(res, labelset_t::hash(label_of(m)));
+          hash_combine(res, weightset_t::hash(weight_of(m)));
         }
       return res;
     }
@@ -841,10 +857,10 @@ namespace vcsn
           const std::string& format = "text") const
     {
       static bool parens = getenv("VCSN_PARENS");
-      print_weight_(m.second, out, format);
+      print_weight_(weight_of(m), out, format);
       if (parens)
         out << (format == "latex" ? "\\left(" : "(");
-      labelset()->print(m.first, out, format);
+      labelset()->print(label_of(m), out, format);
       if (parens)
         out << (format == "latex" ? "\\right)" : ")");
       return out;
@@ -921,13 +937,13 @@ namespace vcsn
         = std::find_if(begin(v), end(v),
                        [this](const monomial_t& m)
                        {
-                         return !labelset()->is_one(m.first);
+                         return !labelset()->is_one(label_of(m));
                        });
       if (std::adjacent_find
           (first_letter, end(v),
            [this](const monomial_t& l, const monomial_t& r)
            {
-             return !weightset()->equal(l.second, r.second);
+             return !weightset()->equal(weight_of(l), weight_of(r));
            }) != end(v))
         return print_without_classes_(v, out, format, sep);
 
@@ -940,15 +956,15 @@ namespace vcsn
         }
 
       // The weight.
-      print_weight_(first_letter->second, out, format);
+      print_weight_(weight_of(*first_letter), out, format);
 
       // Gather the letters.  We can use a vector, as we know that the
       // labels are already sorted, and random access iteration will
       // be handy below.
       std::vector<label_t> letters;
       for (const auto& m: v)
-        if (!labelset()->is_one(m.first))
-          letters.push_back(m.first);
+        if (!labelset()->is_one(label_of(m)))
+          letters.push_back(label_of(m));
 
       // Print the character class.  'letters' are sorted, since
       // polynomials are shortlex-sorted on the labels.
@@ -1020,13 +1036,14 @@ namespace vcsn
     using automaton_t = Aut;
     using context_t = context_t_of<automaton_t>;
     using polynomialset_t = polynomialset<context_t>;
+    auto ps = polynomialset_t{aut->context()};
     using polynomial_t = typename polynomialset_t::value_t;
 
     polynomial_t res;
     for (auto t : aut->outin(s, d))
-      // Bypass set_weight(), because we know that the weight is
+      // Bypass weight_of(set), because we know that the weight is
       // nonzero, and that there is only one weight per letter.
-      res[aut->label_of(t)] = aut->weight_of(t);
+      ps.new_weight(res, aut->label_of(t), aut->weight_of(t));
     return res;
   }
 

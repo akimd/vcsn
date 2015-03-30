@@ -267,12 +267,12 @@ namespace vcsn
               // directly in res_.
               if (transposed_)
                 ps_.add_here(res_.polynomials[one],
-                             rs_.transposition(rs_.ldiv(lm.first, rm.first)),
-                             ws_.transpose(ws_.ldiv(lm.second, rm.second)));
+                             rs_.transposition(rs_.ldiv(label_of(lm), label_of(rm))),
+                             ws_.transpose(ws_.ldiv(weight_of(lm), weight_of(rm))));
               else
                 ps_.add_here(res_.polynomials[one],
-                             rs_.ldiv(lm.first, rm.first),
-                             ws_.ldiv(lm.second, rm.second));
+                             rs_.ldiv(label_of(lm), label_of(rm)),
+                             ws_.ldiv(weight_of(lm), weight_of(rm)));
         es_.normalize(res_);
       }
 
@@ -303,13 +303,13 @@ namespace vcsn
             // current result by the current child (rhs).
             for (const auto& p: lhs.polynomials)
               for (const auto& m: p.second)
-                res.polynomials[p.first].emplace(rs_.shuffle(m.first, rhs),
-                                                 m.second);
+                res.polynomials[p.first].set(rs_.shuffle(label_of(m), rhs),
+                                             weight_of(m));
             // (ii) prev:fo(rhs)
             for (const auto& p: r.polynomials)
               for (const auto& m: p.second)
                 ps_.add_here(res.polynomials[p.first],
-                               rs_.shuffle(prev, m.first), m.second);
+                             rs_.shuffle(prev, label_of(m)), weight_of(m));
 
             prev = rs_.shuffle(prev, rhs);
           }
@@ -366,9 +366,9 @@ namespace vcsn
           }
 
         for (const auto& p: res.polynomials)
-          res_.polynomials[p.first]
+          res_.polynomials[label_of(p)]
             = ps_.lmul(res_.constant,
-                       ps_.rmul_label(p.second, f));
+                       ps_.rmul_label(weight_of(p), f));
       }
 
       VCSN_RAT_VISIT(lweight, e)
