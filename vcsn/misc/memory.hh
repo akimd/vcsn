@@ -1,9 +1,8 @@
-#ifndef VCSN_MISC_MEMORY_HH
-# define VCSN_MISC_MEMORY_HH
+#pragma once
 
-# include <map>
-# include <memory>
-# include <utility> // std::forward
+#include <map>
+#include <memory>
+#include <utility> // std::forward
 
 namespace vcsn
 {
@@ -43,5 +42,3 @@ namespace vcsn
     return address(&t);
   }
 }
-
-#endif // !VCSN_MISC_MEMORY_HH

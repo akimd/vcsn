@@ -1,10 +1,10 @@
 #pragma once
 
-# include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 
-# include <vcsn/misc/raise.hh> // pass
-# include <vcsn/misc/tuple.hh>
-# include <vcsn/misc/type_traits.hh> // vcsn::enable_if_t
+#include <vcsn/misc/raise.hh> // pass
+#include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/type_traits.hh> // vcsn::enable_if_t
 
 namespace vcsn
 {
@@ -27,7 +27,7 @@ namespace vcsn
 
     /// The type of the underlying sequences, without reference.
     template <typename Seq>
-      using seq_t = typename std::remove_reference<Seq>::type;
+    using seq_t = typename std::remove_reference<Seq>::type;
 
     /// The type of the members.
     using value_type
@@ -239,6 +239,12 @@ namespace vcsn
     sequences_t sequences_;
   };
 
+
+
+  /*------------------------.
+  | zip_sequences_padded.   |
+  `------------------------*/
+
   template <typename ZipSequences>
   struct zip_sequences_padded
   {
@@ -267,7 +273,8 @@ namespace vcsn
     using padding_t = value_type;
 
     template <typename... S>
-    zip_sequences_padded(const value_type& pad, const std::tuple<S...>& sequences)
+    zip_sequences_padded(const value_type& pad,
+                         const std::tuple<S...>& sequences)
       : sequences_{sequences}, paddings_{pad}
     {}
 
@@ -281,22 +288,23 @@ namespace vcsn
       : public zip_sequences_t::template zip_iterator<ValueType, IteratorsType>
     {
 
-      using parent_t =
-        typename zip_sequences_t::template zip_iterator<ValueType, IteratorsType>;
+      using super_t =
+        typename zip_sequences_t::template zip_iterator<ValueType,
+                                                        IteratorsType>;
 
       /// Underlying iterators.
       using iterators_type = IteratorsType;
 
       zip_iterator(const iterators_type& is, const iterators_type& ends,
                    const padding_t& pad)
-        : parent_t(is, ends)
+        : super_t(is, ends)
         , pad_(pad)
       {}
 
       template <typename OtherValue, typename OtherIterators>
       zip_iterator(zip_iterator<OtherValue, OtherIterators> const& that,
                    const padding_t& pad)
-        : parent_t(that.is_, that.ends_)
+        : super_t(that.is_, that.ends_)
         , pad_(pad)
       {}
       value_type operator*() const
@@ -343,7 +351,9 @@ namespace vcsn
       template <std::size_t... I>
       value_type dereference_(seq<I...>) const
       {
-        return value_type{(std::get<I>(this->is_) == std::get<I>(this->ends_) ? std::get<I>(pad_) : *std::get<I>(this->is_))...};
+        return value_type{(std::get<I>(this->is_) == std::get<I>(this->ends_)
+                           ? std::get<I>(pad_)
+                           : *std::get<I>(this->is_))...};
       }
 
       padding_t pad_;
@@ -440,8 +450,9 @@ namespace vcsn
 
   template <typename... Sequences>
   zip_sequences_padded<zip_sequences<Sequences...>>
-  zip_with_padding(const std::tuple<typename Sequences::value_type...>& paddings, const Sequences&... seq)
+  zip_with_padding(const std::tuple<typename Sequences::value_type...>& pad,
+                   const Sequences&... seq)
   {
-    return {paddings, std::make_tuple(seq...)};
+    return {pad, std::make_tuple(seq...)};
   }
 }

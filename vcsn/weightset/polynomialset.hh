@@ -862,7 +862,7 @@ namespace vcsn
           const std::string& sep = " + ") const
     {
       bool latex = format == "latex";
-      if (v.empty())
+      if (is_zero(v))
         out << (latex ? "\\emptyset" : "\\z");
       else
         print_<context_t>(v, out, format,

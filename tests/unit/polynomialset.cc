@@ -44,7 +44,7 @@ check_assoc(const PolynomialSet& ps)
   typename ps_t::value_t v;
   ps.set_weight(v, "ab", 24);
   ps.set_weight(v, "", 2);
-  assert(u == v);
+  assert(ps.equal(u, v));
 
   u = ps.mul(u, u);
   ASSERT_EQ(to_string(ps, u), "<4>\\e + <96>ab + <576>abab");
@@ -52,7 +52,7 @@ check_assoc(const PolynomialSet& ps)
   ps.add_here(v, "ab", 96 - 24);
   ps.set_weight(v, "", 4);
   ps.set_weight(v, "abab", 576);
-  assert(u == v);
+  assert(ps.equal(u, v));
 
   return nerrs;
 }
@@ -72,8 +72,9 @@ check_conv(const PolynomialSet& ps)
       std::cerr << "check_conv: In: " << In;            \
     ASSERT_EQ(to_string(ps, conv(ps, In)), Out);        \
   } while (false)
+
 #define CHECK_FAIL(In)                          \
-  ASSERT_EQ(check_conv_fail(ps, In), true);
+  ASSERT_EQ(check_conv_fail(ps, In), true)
 
   CHECK("\\e", "\\e");
   CHECK("\\z", "\\z");

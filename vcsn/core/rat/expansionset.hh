@@ -1,8 +1,7 @@
-#ifndef VCSN_CORE_RAT_EXPANSIONSET_HH
-# define VCSN_CORE_RAT_EXPANSIONSET_HH
+#pragma once
 
-# include <vcsn/algos/split.hh> // expression_polynomialset_t.
-# include <vcsn/misc/map.hh>
+#include <vcsn/algos/split.hh> // expression_polynomialset_t.
+#include <vcsn/misc/map.hh>
 
 namespace vcsn
 {
@@ -301,5 +300,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_CORE_RAT_EXPANSIONSET_HH

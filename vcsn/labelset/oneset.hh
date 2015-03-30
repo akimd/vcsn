@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 #include <vcsn/core/kind.hh>
-#include <vcsn/empty.hh>
+#include <vcsn/misc/empty.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>

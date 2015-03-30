@@ -1,7 +1,6 @@
-#ifndef VCSN_EMPTY_HH
-# define VCSN_EMPTY_HH
+#pragma once
 
-# include <functional> // std::hash
+#include <functional> // std::hash
 
 namespace vcsn
 {
@@ -37,5 +36,3 @@ namespace std
     }
   };
 }
-
-#endif // !VCSN_EMPTY_HH

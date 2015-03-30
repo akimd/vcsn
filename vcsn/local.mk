@@ -175,7 +175,6 @@ nobase_include_HEADERS =                        \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \
   %D%/dyn/weight.hh                             \
-  %D%/empty.hh                                  \
   %D%/fwd.hh                                    \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
@@ -194,6 +193,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/cross.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
+  %D%/misc/empty.hh                             \
   %D%/misc/escape.hh                            \
   %D%/misc/export.hh                            \
   %D%/misc/file-library.hh                      \

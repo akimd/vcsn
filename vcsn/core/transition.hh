@@ -1,9 +1,8 @@
-#ifndef VCSN_CORE_TRANSITION_HH
-# define VCSN_CORE_TRANSITION_HH
+#pragma once
 
-# include <vcsn/empty.hh>
+#include <vcsn/misc/empty.hh>
 
-# include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -68,5 +67,3 @@ namespace vcsn
   };
 
 }
-
-#endif // !VCSN_CORE_TRANSITION_HH
