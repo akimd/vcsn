@@ -212,7 +212,7 @@ namespace vcsn
     template <typename LabelSet_>
     value_t
     conv(const nullableset<LabelSet_>& ls,
-         typename nullableset<LabelSet_>::value_t& v) const
+         const typename nullableset<LabelSet_>::value_t& v) const
     {
       if (ls.is_one(v))
         return one();
