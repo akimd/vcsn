@@ -23,13 +23,17 @@ namespace vcsn
   namespace detail
   {
 
+    /**
+     * Recursively replace every part of the label that is associated with
+     * special by one (empty word).
+     */
     template <typename Labelset>
     struct special_remover
     {
       using labelset_t = Labelset;
       using label_t = typename labelset_t::value_t;
 
-      static label_t remove(label_t l)
+      static label_t remove(const label_t& l)
       {
         return labelset_t::is_special(l)
                ? labelset_t::one()
@@ -43,7 +47,7 @@ namespace vcsn
       using labelset_t = nullableset<Labelset>;
       using label_t = typename labelset_t::value_t;
 
-      static label_t remove(label_t l)
+      static label_t remove(const label_t& l)
       {
         return labelset_t::is_special(l)
                ? labelset_t::one()
@@ -51,6 +55,7 @@ namespace vcsn
       }
     };
 
+    // Remove every special letter.
     template <typename GenSet>
     struct special_remover<wordset<GenSet>>
     {
@@ -58,7 +63,7 @@ namespace vcsn
       using label_t = typename labelset_t::value_t;
       using letterset_t = letterset<GenSet>;
 
-      static label_t remove(label_t label)
+      static label_t remove(const label_t& label)
       {
         label_t res;
         for (auto l : label)
@@ -68,6 +73,7 @@ namespace vcsn
       }
     };
 
+    // Recursively remove special in every tape.
     template <typename... Labelsets>
     struct special_remover<tupleset<Labelsets...>>
     {
@@ -82,13 +88,13 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
       using index_t = detail::make_index_sequence<labelset_t::size()>;
 
-      static label_t remove(label_t l)
+      static label_t remove(const label_t& l)
       {
         return remove_(l, index_t{});
       }
 
       template <size_t... I>
-      static label_t remove_(label_t l, seq<I...>)
+      static label_t remove_(const label_t& l, seq<I...>)
       {
         return label_t{(tape_labelset_t<I>::is_special(std::get<I>(l))
                        ? tape_labelset_t<I>::one()
@@ -104,6 +110,12 @@ namespace vcsn
         return special_remover<LabelSet>::remove(l);
     }
 
+    /**
+     * This struct is used to get the type of a tranducer with each tape
+     * "worded", i.e. that accepts words as labels.
+     *
+     * E.g. lat<lan, law, lat<lal, law>> -> lat<law, law, lat<law, law>>
+     */
     template <typename Aut>
     struct worded_automaton
     {
@@ -247,18 +259,19 @@ namespace vcsn
 
       void
       new_transition(const state_name_t& src, const state_name_t& dst,
-                     const label_t& l, const weight_t& w)
+                     const label_t& l, const weight_t& w, bool split)
       {
-        if (0 < std::get<1>(src.second) && 0 < std::get<0>(dst.second))
+        if (split && 0 < std::get<1>(src.second) && 0 < std::get<0>(dst.second))
         {
+          // if split, stop the transition at delay = 0 with a new state
           auto ls = super_t::labelset();
           state_t inter = super_t::new_state();
           auto pre_suf = get_prefix_tape<0>(std::get<1>(src.second), l);
           super_t::new_transition(map_[src], inter, pre_suf.first, w);
-          new_transition_(inter, dst, pre_suf.second, weightset_t::one());
+          new_transition_(inter, dst, pre_suf.second, weightset_t::one(), split);
         }
         else
-          new_transition_(map_[src], dst, l, w);
+          new_transition_(map_[src], dst, l, w, split);
       }
 
       // Replace the Jth tape of label with the Jth tape of repl
@@ -313,22 +326,33 @@ namespace vcsn
             : std::get<I>(ls->sets()).genset().one_letter())...};
       }
 
+      /*
+       * Create transition from state src to valued state dst.
+       * If split, create artifical states to allow for synchronization later
+       * on.
+       */
       void
       new_transition_(const state_t& src, const state_name_t& dst,
-                      label_t l, const weight_t& w)
+                      const label_t& l, const weight_t& w, bool split)
       {
-        if (dst.first == super_t::post() && dst.second != delay_t{})
+        if (dst.first == aut_->post() && dst.second != delay_t{})
         {
-          auto ls = super_t::labelset();
-          state_t inter = super_t::new_state();
-          label_t padding = labelset_t::one();
-          auto max = std::max_element(begin(dst.second), end(dst.second));
-          int index_max = max - begin(dst.second);
-          auto letter = create_fake_special(index_max, indices);
-          for (size_t i = 0; i < *max; ++i)
-            padding = ls->mul(padding, letter);
-          super_t::new_transition(src, inter, padding, w);
-          super_t::set_final(inter, weightset_t::one());
+          if (!split)
+            super_t::new_transition(src, state({dst.first, delay_t{}}), l, w);
+          else
+          {
+            // if split, create a state with delay = 0 before post
+            auto ls = super_t::labelset();
+            state_t inter = super_t::new_state();
+            label_t padding = labelset_t::one();
+            auto max = std::max_element(begin(dst.second), end(dst.second));
+            int index_max = max - begin(dst.second);
+            auto letter = create_fake_special(index_max, indices);
+            for (size_t i = 0; i < *max; ++i)
+              padding = ls->mul(padding, letter);
+            super_t::new_transition(src, inter, padding, w);
+            super_t::set_final(inter, weightset_t::one());
+          }
         }
         else
           super_t::new_transition(src, state(dst), l, w);
@@ -482,7 +506,7 @@ namespace vcsn
       return_automaton_t synchronize()
       {
         // tag the states with the delays
-        value_automaton();
+        value_automaton(true);
         // synchronize
         synchronize_(out_aut_->indices);
         // Remove the special
@@ -502,9 +526,46 @@ namespace vcsn
         return out_aut_->strip();
       }
 
+      /**
+       * Whether the transducer is synchronized.
+       *
+       * In a synchronized transducer, every state has delay 0, except for some
+       * series of states leading to a final state with ever-increasing
+       * (strictly except for one-transitions) delay.
+       */
+      bool is_synchronized()
+      {
+        // tag the states with the delays
+        value_automaton(false);
+        for (auto s : out_aut_->states())
+        {
+          delay_t d = out_aut_->delay_of(s);
+          if (d != delay_t{})
+            for (auto tr : out_aut_->out(s))
+            {
+              if (out_aut_->labelset()->is_one(out_aut_->label_of(tr)))
+                continue;
+              auto dst = out_aut_->dst_of(tr);
+              if (out_aut_->post() == dst)
+                continue;
+              delay_t dst_d = out_aut_->delay_of(dst);
+              for (size_t i = 0; i < out_aut_->number_of_tapes; i++) {
+                if (d[i] && dst_d[i] <= d[i])
+                  return false;
+              }
+            }
+        }
+        return true;
+      }
+
     private:
 
-      void value_automaton()
+      /*
+       * Compute the automaton with states tagged with their delays.
+       *
+       * If split, create the artificial states required for synchronizing.
+       */
+      void value_automaton(bool split)
       {
         out_aut_->todo_.emplace(in_aut_->pre(), delay_t{});
 
@@ -523,7 +584,7 @@ namespace vcsn
             out_aut_->new_transition(val_state,
                                      new_state,
                                      out_aut_->labelset()->conv(*(in_aut_->labelset()), l),
-                                     in_aut_->weight_of(t));
+                                     in_aut_->weight_of(t), split);
           }
         }
       }
@@ -615,6 +676,13 @@ namespace vcsn
       return s.synchronize();
     }
 
+    template <typename Aut>
+    bool is_synchronized(const Aut& aut)
+    {
+      synchronizer<Aut> s(aut);
+      return s.is_synchronized();
+    }
+
   }
 
   /*--------------.
@@ -642,6 +710,34 @@ namespace vcsn
       automaton synchronize(const automaton& aut)
       {
         return make_automaton(::vcsn::synchronize(aut->as<Aut>()));
+      }
+    }
+  }
+
+  /*------------------.
+  | is_synchronized.  |
+  `------------------*/
+
+  /// Check whether the transducer is synchronized
+  ///
+  /// \param[in] aut        the transducer
+  /// \returns              whether it is synchronized
+  template <typename Aut>
+  bool
+  is_synchronized(const Aut& aut)
+  {
+    return detail::is_synchronized(aut);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      bool is_synchronized(const automaton& aut)
+      {
+        return vcsn::is_synchronized(aut->as<Aut>());
       }
     }
   }

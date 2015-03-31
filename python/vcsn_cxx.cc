@@ -364,6 +364,11 @@ struct automaton
     return vcsn::dyn::is_standard(val_);
   }
 
+  bool is_synchronized() const
+  {
+    return vcsn::dyn::is_synchronized(val_);
+  }
+
   bool is_synchronized_by(const label& word) const;
 
   bool is_synchronizing() const
@@ -1087,6 +1092,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_out_sorted", &automaton::is_out_sorted)
     .def("is_realtime", &automaton::is_realtime)
     .def("is_standard", &automaton::is_standard)
+    .def("is_synchronized", &automaton::is_synchronized)
     .def("_is_synchronized_by", &automaton::is_synchronized_by)
     .def("is_synchronizing", &automaton::is_synchronizing)
     .def("is_trim", &automaton::is_trim)

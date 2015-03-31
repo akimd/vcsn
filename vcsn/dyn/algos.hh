@@ -343,6 +343,9 @@ namespace vcsn
     /// incoming transition).
     bool is_standard(const automaton& aut);
 
+    /// Whether is synchronized (transducer).
+    bool is_synchronized(const automaton& aut);
+
     /// Whether the word synchronizes aut.
     bool is_synchronized_by(const automaton& aut, const label& word);
 
