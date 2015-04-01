@@ -785,7 +785,7 @@ namespace vcsn
             {
               // The label is not \z.
               int peek = i.peek();
-              // Handle ranges
+              // Handle classes
               if (peek == '[')
                 for (auto c : labelset()->convs(i))
                   add_here(res, c, w);
@@ -886,11 +886,11 @@ namespace vcsn
       return out;
     }
 
-    /// Print a polynomial value without ranges.
+    /// Print a polynomial value without classes.
     std::ostream&
-    print_without_ranges_(const value_t& v, std::ostream& out,
-                          const std::string& format = "text",
-                          const std::string& sep = " + ") const
+    print_without_classes_(const value_t& v, std::ostream& out,
+                           const std::string& format = "text",
+                           const std::string& sep = " + ") const
     {
       bool first = true;
       for (const auto& m: v)
@@ -903,45 +903,54 @@ namespace vcsn
       return out;
     }
 
-    /// Print a polynomial value with ranges.
+    /// Print a polynomial value with classes.
     std::ostream&
-    print_with_ranges_(const value_t& v, std::ostream& out,
-                       const std::string& format = "text",
-                       const std::string& sep = " + ") const
+    print_with_classes_(const value_t& v, std::ostream& out,
+                        const std::string& format = "text",
+                        const std::string& sep = " + ") const
     {
+      using std::begin;
+      using std::end;
+
+      // No classes if not at least 3 elements.
       if (sep == " + " || v.size() <= 2)
-        return print_without_ranges_(v, out, format, sep);
+        return print_without_classes_(v, out, format, sep);
 
-      // No ranges if the weights of the letters aren't all the same.
-      //
-      // While at it, gather the letters.  We can use a vector, as we
-      // know that the labels are already sorted, and random access
-      // iteration will be handy below.
-      std::vector<label_t> letters;
-      weight_t first_w = weightset()->zero();
-      for (const auto& m: v)
-        if (!labelset()->is_one(m.first))
-          {
-            if (weightset()->is_zero(first_w))
-              first_w = m.second;
-            else if (!weightset()->equal(m.second, first_w))
-              return print_without_ranges_(v, out, format, sep);
+      // No classes if the weights of the letters aren't all the same.
+      auto first_letter
+        = std::find_if(begin(v), end(v),
+                       [this](const monomial_t& m)
+                       {
+                         return !labelset()->is_one(m.first);
+                       });
+      if (std::adjacent_find
+          (first_letter, end(v),
+           [this](const monomial_t& l, const monomial_t& r)
+           {
+             return !weightset()->equal(l.second, r.second);
+           }) != end(v))
+        return print_without_classes_(v, out, format, sep);
 
-            letters.push_back(m.first);
-          }
-
-      // Print with ranges.  First, the constant-term.
-      if (labelset()->is_one(std::begin(v)->first))
+      // Print with classes.  First, the constant-term.
+      if (first_letter != begin(v))
         {
-          print(*std::begin(v), out, format);
+          print(*begin(v), out, format);
           if (1 < v.size())
             out << sep;
         }
 
       // The weight.
-      print_weight_(first_w, out, format);
+      print_weight_(first_letter->second, out, format);
 
-      // Print the character class.  letters are sorted, since
+      // Gather the letters.  We can use a vector, as we know that the
+      // labels are already sorted, and random access iteration will
+      // be handy below.
+      std::vector<label_t> letters;
+      for (const auto& m: v)
+        if (!labelset()->is_one(m.first))
+          letters.push_back(m.first);
+
+      // Print the character class.  'letters' are sorted, since
       // polynomials are shortlex-sorted on the labels.
       out << '[';
       std::vector<label_t> alphabet;
@@ -955,7 +964,7 @@ namespace vcsn
                             std::find(std::begin(alphabet), std::end(alphabet),
                                       *it)).first;
           labelset()->print(*it, out, format);
-          // No ranges for two letters or less.
+          // No range for two letters or less.
           auto width = std::distance(it, end);
           if (2 < width)
             {
@@ -977,7 +986,7 @@ namespace vcsn
            const std::string& format = "text",
            const std::string& sep = " + ") const
     {
-      return print_without_ranges_(v, out, format, sep);
+      return print_without_classes_(v, out, format, sep);
     }
 
     /// Print a non-null value for a letterized labelset (e.g., letterset
@@ -989,7 +998,7 @@ namespace vcsn
            const std::string& format = "text",
            const std::string& sep = " + ") const
     {
-      return print_with_ranges_(v, out, format, sep);
+      return print_with_classes_(v, out, format, sep);
     }
 
 
