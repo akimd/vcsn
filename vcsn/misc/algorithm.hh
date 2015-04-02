@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator> // next
 
 namespace vcsn
 {
@@ -13,19 +14,28 @@ namespace vcsn
     typename Container::value_type
     back(const Container& container)
     {
-      auto i = std::begin(container);
-      auto end = std::end(container);
-      assert(i != end);
-      if (i != end)
-        {
-          auto res = *i;
-          for (++i; i != end; ++i)
-            res = *i;
-          return res;
-        }
-      abort();
+      using std::begin;
+      using std::end;
+      auto i = begin(container);
+      auto iend = end(container);
+      assert(i != iend);
+      auto res = *i;
+      for (++i; i != iend; ++i)
+        res = *i;
+      return res;
     }
 
+    /// The first member of this Container.
+    template <typename Container>
+    typename Container::value_type
+    front(const Container& container)
+    {
+      using std::begin;
+      using std::end;
+      auto i = begin(container);
+      assert(i != end(container));
+      return *i;
+    }
 
     /// Same as std::is_sorted, but works with an input iterator, not
     /// just a forward iterator.

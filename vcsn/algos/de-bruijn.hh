@@ -8,6 +8,7 @@
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/misc/algorithm.hh> // vcsn::front
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -31,7 +32,7 @@ namespace vcsn
       res->new_transition(init, init, ls.value(l));
 
     auto prev = res->new_state();
-    res->new_transition(init, prev, ls.value(*std::begin(gens)));
+    res->new_transition(init, prev, ls.value(detail::front(gens)));
 
     while (n--)
       {

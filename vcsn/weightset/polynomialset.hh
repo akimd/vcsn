@@ -9,6 +9,7 @@
 #include <vcsn/ctx/context.hh> // We need context to define join.
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/labelset/wordset.hh>
+#include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/math.hh>
@@ -411,8 +412,7 @@ namespace vcsn
 #endif
           while (!is_zero(remainder))
             {
-              using std::begin;
-              auto factor = ldiv(*begin(l), *begin(remainder));
+              auto factor = ldiv(detail::front(l), detail::front(remainder));
 #if DEBUG
               std::cerr << "factor = "; print(factor, std::cerr) << "\n";
 #endif
@@ -466,8 +466,7 @@ namespace vcsn
     {
       typename WeightSet::value_t operator()(const value_t& v) const
       {
-        using std::begin;
-        return weight_of(*begin(v));
+        return weight_of(front(v));
       }
       const WeightSet& ws_;
     };
@@ -478,9 +477,8 @@ namespace vcsn
     {
       typename z::value_t operator()(const value_t& v) const
       {
-        using std::begin;
-        int sign = 0 < weight_of(*begin(v)) ? 1 : -1;
-        auto res = abs(weight_of(*begin(v)));
+        int sign = 0 < weight_of(detail::front(v)) ? 1 : -1;
+        auto res = abs(weight_of(detail::front(v)));
         for (const auto& m: v)
           res = z_.lgcd(res, abs(weight_of(m)));
         res *= sign;
@@ -517,8 +515,7 @@ namespace vcsn
 
       typename ps_t::value_t operator()(const value_t& v) const
       {
-        using std::begin;
-        typename ps_t::value_t res = weight_of(*begin(v));
+        typename ps_t::value_t res = weight_of(detail::front(v));
         for (const auto& p: v)
           res = ps_.lgcd(res, weight_of(p));
         return res;
@@ -553,8 +550,7 @@ namespace vcsn
     {
       label_t operator()(value_t& v)
       {
-        using std::begin;
-        label_t res = label_of(*begin(v));
+        label_t res = label_of(detail::front(v));
         for (const auto& m: v)
           res = ps_.labelset()->lgcd(res, label_of(m));
         for (auto& m: v)
@@ -950,7 +946,7 @@ namespace vcsn
       // Print with classes.  First, the constant-term.
       if (first_letter != begin(v))
         {
-          print(*begin(v), out, format);
+          print(detail::front(v), out, format);
           if (1 < v.size())
             out << sep;
         }
