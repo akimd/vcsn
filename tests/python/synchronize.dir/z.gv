@@ -1,0 +1,34 @@
+digraph
+{
+  vcsn_context = "lat<wordset<char_letters(afgilo)>, wordset<char_letters(ehjkm)>>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F5
+    F7
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    3
+    4
+    5
+    6
+    7
+    8
+  }
+  I0 -> 0
+  0 -> 1 [label = "(a,e)"]
+  1 -> 3 [label = "(g,h)"]
+  1 -> 6 [label = "(f,m)"]
+  3 -> 3 [label = "(i,j)"]
+  3 -> 4 [label = "(o,k)"]
+  4 -> 5 [label = "(l,m)"]
+  5 -> F5
+  6 -> 8 [label = "(l,\\e)"]
+  7 -> F7
+  8 -> 7 [label = "(\\e,\\e)"]
+}
