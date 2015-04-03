@@ -161,6 +161,13 @@ namespace vcsn
     m.second = w;
   }
 
+  enum wet_kind
+    {
+      map,
+      set,
+      bitset
+    };
+
 
   namespace detail
   {
@@ -178,6 +185,7 @@ namespace vcsn
       map_t map_;
 
     public:
+      static constexpr wet_kind kind = wet_kind::map;
       using self_t = wet_impl;
       using key_t = Key;
       using value_t = Value;
@@ -256,6 +264,7 @@ namespace vcsn
       set_t set_;
 
     public:
+      static constexpr wet_kind kind = wet_kind::set;
       using self_t = wet_impl;
       using key_t = Key;
       using value_t = bool;
@@ -403,7 +412,9 @@ namespace vcsn
     private:
       using set_t = boost::dynamic_bitset<>;
       set_t set_{256};
+
     public:
+      static constexpr wet_kind kind = wet_kind::bitset;
       using self_t = wet_impl;
       using key_t = char;
       using value_t = bool;

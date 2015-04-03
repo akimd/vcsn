@@ -570,20 +570,41 @@ namespace vcsn
 
     ATTRIBUTE_PURE
     static bool monomial_equal(const monomial_t& lhs,
-                                const monomial_t& rhs)
+                               const monomial_t& rhs)
     {
       return (labelset_t::equal(label_of(lhs), label_of(rhs))
               && weightset_t::equal(weight_of(lhs), weight_of(rhs)));
     }
 
-    static bool
-    equal(const value_t& l, const value_t& r) ATTRIBUTE_PURE
+    template <wet_kind WetType>
+    ATTRIBUTE_PURE
+    static auto
+    equal_impl(const value_t& l, const value_t& r)
+      -> enable_if_t<WetType != wet_kind::bitset,
+                     bool>
     {
       using std::begin;
       using std::end;
       return l.size() == r.size()
         && std::equal(begin(l), end(l), begin(r),
                       monomial_equal);
+    }
+
+    template <wet_kind WetType>
+    ATTRIBUTE_PURE
+    static auto
+    equal_impl(const value_t& l, const value_t& r)
+      -> enable_if_t<WetType == wet_kind::bitset,
+                     bool>
+    {
+      return l.set() == r.set();
+    }
+
+    ATTRIBUTE_PURE
+    static bool
+    equal(const value_t& l, const value_t& r)
+    {
+      return equal_impl<value_t::kind>(l, r);
     }
 
     const value_t&
@@ -664,9 +685,12 @@ namespace vcsn
     }
 
 
+    /*--------------.
+    | less(l, r).   |
+    `--------------*/
+
     ATTRIBUTE_PURE
-    static bool monomial_less(const monomial_t& lhs,
-                                   const monomial_t& rhs)
+    static bool monomial_less(const monomial_t& lhs, const monomial_t& rhs)
     {
       if (labelset_t::less(label_of(lhs), label_of(rhs)))
         return true;
@@ -676,45 +700,89 @@ namespace vcsn
         return weightset_t::less(weight_of(lhs), weight_of(rhs));
     }
 
-    static bool less(const value_t& lhs,
-                          const value_t& rhs)
+    template <wet_kind WetType>
+    ATTRIBUTE_PURE
+    static auto
+    less_impl(const value_t& l, const value_t& r)
+      -> enable_if_t<WetType != wet_kind::bitset,
+                     bool>
     {
       using std::begin;
       using std::end;
-      return std::lexicographical_compare(begin(lhs), end(lhs),
-                                          begin(rhs), end(rhs),
+      return std::lexicographical_compare(begin(l), end(l),
+                                          begin(r), end(r),
                                           monomial_less);
     }
+
+    template <wet_kind WetType>
+    ATTRIBUTE_PURE
+    static auto
+    less_impl(const value_t& l, const value_t& r)
+      -> enable_if_t<WetType == wet_kind::bitset,
+                     bool>
+    {
+      return l.set() < r.set();
+    }
+
+    ATTRIBUTE_PURE
+    static bool
+    less(const value_t& l, const value_t& r)
+    {
+      return less_impl<value_t::kind>(l, r);
+    }
+
 
     value_t
     transpose(const value_t& v) const
     {
       value_t res;
       for (const auto& i: v)
-        res[labelset()->transpose(label_of(i))] = weightset()->transpose(weight_of(i));
+        res.set(labelset()->transpose(label_of(i)),
+                weightset()->transpose(weight_of(i)));
       return res;
     }
 
+
+    /*--------.
+    | hash.   |
+    `--------*/
     ATTRIBUTE_PURE
-    static size_t hash(const monomial_t& m)
+    static size_t hash(const monomial_t& m, size_t res = 0)
     {
-      size_t res = 0;
       hash_combine(res, labelset_t::hash(label_of(m)));
       hash_combine(res, weightset_t::hash(weight_of(m)));
       return res;
     }
 
+    template <wet_kind WetType>
+    ATTRIBUTE_PURE
+    static auto
+    hash_impl(const value_t& p)
+      -> enable_if_t<WetType != wet_kind::bitset,
+                     size_t>
+    {
+      size_t res = 0;
+      for (const auto& m: p)
+        res = hash(m, res);
+      return res;
+    }
+
+    template <wet_kind WetType>
+    ATTRIBUTE_PURE
+    static auto
+    hash_impl(const value_t& p)
+      -> enable_if_t<WetType == wet_kind::bitset,
+                     size_t>
+    {
+      return hash_value(p.set());
+    }
+
     ATTRIBUTE_PURE
     static size_t hash(const value_t& v)
     {
-      size_t res = 0;
-      for (const auto& m: v)
-        {
-          hash_combine(res, labelset_t::hash(label_of(m)));
-          hash_combine(res, weightset_t::hash(weight_of(m)));
-        }
-      return res;
+      return hash_impl<value_t::kind>(v);
     }
+
 
     /// Build from the description in \a is.
     static self_type make(std::istream& is)

@@ -1,5 +1,17 @@
 #pragma once
 
+// The placement of these attributes is a bit painful.
+//
+//    template <wet_kind WetType>
+//    ATTRIBUTE_PURE
+//    static auto
+//    equal_impl(const value_t& l, const value_t& r)
+//      -> enable_if_t<WetType == value_t::bitset,
+//                     bool>
+//    {
+//      return l == r;
+//    }
+
 #if defined __clang__
 
 # define ATTRIBUTE_ALWAYS_INLINE __attribute__((always_inline))
