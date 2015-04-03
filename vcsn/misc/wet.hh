@@ -6,9 +6,7 @@
 #include <type_traits>
 
 #include <boost/iterator/iterator_facade.hpp>
-#if 0
 #include <boost/dynamic_bitset.hpp>
-#endif
 
 #include <vcsn/misc/empty.hh>
 
@@ -395,10 +393,9 @@ namespace vcsn
     };
 
 
-#if 0
-    /*------------------------.
-    | wet_impl<char, bool>.   |
-    `------------------------*/
+    /*---------------------------------.
+    | wet_impl<char, bool>: bitsets.   |
+    `---------------------------------*/
 
     template <typename Compare>
     class wet_impl<char, bool, Compare>
@@ -413,7 +410,15 @@ namespace vcsn
       using welement_t = welement<key_t, value_t>;
       using value_type = welement_t;
 
-      wet_impl() = default;
+      // A plain "wet_impl() = default;" fails with GCC 4.8 or 4.9.0:
+      // error: converting to 'const boost::dynamic_bitset<>'
+      // from initializer list would use explicit constructor
+      // 'boost::dynamic_bitset<Block, Allocator>::dynamic_bitset([...])
+      //
+      //        wet_impl() = default;
+      //        ^
+      wet_impl() {}
+
       wet_impl(const std::initializer_list<value_type>& p)
       {
         for (const auto& m: p)
@@ -452,6 +457,13 @@ namespace vcsn
           , it_(set.find_first())
         {}
 
+        iterator_impl& operator=(const iterator_impl& that)
+        {
+          assert(&set_ == &that.set_);
+          it_ = that.it_;
+          return *this;
+        }
+
         const set_t& set() const
         {
           return set_;
@@ -464,7 +476,7 @@ namespace vcsn
 
         welement_t operator*() const
         {
-          return {it_, true};
+          return {key_t(it_), true};
         }
 
       private:
@@ -515,23 +527,33 @@ namespace vcsn
         assert(v); (void) v;
       }
 
+      auto erase(const_iterator pos)
+        -> void
+      {
+        set_.reset(pos.iterator());
+      }
+
       void erase(const key_t& k)
       {
         set_.reset((unsigned) k);
       }
 
-      template <typename... Args>
-      auto find(Args&&... args) const
+      auto find(const key_t& k) const
         -> const_iterator
       {
-        return find(std::forward<Args>(args)...);
+        if (set_[(unsigned char)k])
+          return {set_, (unsigned char)k};
+        else
+          return end();
       }
 
-      template <typename... Args>
-      auto find(Args&&... args)
+      auto find(const key_t& k)
         -> iterator
       {
-        return find(std::forward<Args>(args)...);
+        if (set_[(unsigned char)k])
+          return {set_, (unsigned char)k};
+        else
+          return end();
       }
 
       size_t size() const
@@ -544,7 +566,6 @@ namespace vcsn
         return set_.none();
       }
     };
-#endif
   }
 
   template <typename Key, typename Value,
