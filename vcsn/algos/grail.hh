@@ -4,6 +4,7 @@
 #include <map>
 
 #include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/sort.hh> // transition_less.
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/weightset/fwd.hh> // b
@@ -82,20 +83,9 @@ namespace vcsn
       {
         std::vector<transition_t> ts;
         for (auto t : aut_->out(s))
-          ts.push_back(t);
-        std::sort
-          (begin(ts), end(ts),
-           [this](transition_t l, transition_t r)
-           {
-             const auto& llab = aut_->label_of(l);
-             const auto& rlab = aut_->label_of(r);
-             if (aut_->labelset()->less(llab, rlab))
-               return true;
-             else if (aut_->labelset()->less(rlab, llab))
-               return false;
-             else
-               return aut_->dst_of(l) < aut_->dst_of(r);
-           });
+          ts.emplace_back(t);
+        std::sort(ts.begin(), ts.end(),
+                  detail::transition_less<Aut>{aut_});
         for (auto t : ts)
           {
             os_ << '\n';

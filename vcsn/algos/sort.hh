@@ -11,6 +11,41 @@
 namespace vcsn
 {
 
+  namespace detail
+  {
+    /// Compare transitions of an automaton.
+    ///
+    /// Sort by label, and then by destination state.
+    /// To be applied to outgoing transitions of a state.
+    template <typename Aut>
+    struct transition_less
+    {
+      using automaton_t = Aut;
+      using transition_t = transition_t_of<automaton_t>;
+
+      transition_less(const automaton_t& a)
+        : aut_(a)
+      {}
+
+      ATTRIBUTE_PURE
+      bool operator()(const transition_t l,
+                      const transition_t r) const
+      {
+        const auto& llab = aut_->label_of(l);
+        const auto& rlab = aut_->label_of(r);
+        if (aut_->labelset()->less(llab, rlab))
+          return true;
+        else if (aut_->labelset()->less(rlab, llab))
+          return false;
+        else
+          return aut_->dst_of(l) < aut_->dst_of(r);
+      }
+
+    private:
+      const Aut& aut_;
+    };
+  }
+
   /*------------------.
   | is_label_sorted.  |
   `------------------*/
@@ -22,12 +57,7 @@ namespace vcsn
   bool
   is_out_sorted(const Aut& a)
   {
-    using transition_t = transition_t_of<Aut>;
-    auto less = [&a] (transition_t l, transition_t r)
-      {
-        return a->labelset()->less(a->label_of(l),
-                                   a->label_of(r));
-      };
+    auto less = detail::transition_less<Aut>{a};
     for (auto s: a->states())
       if (!detail::is_sorted_forward(a->out(s), less))
         return false;
@@ -103,26 +133,8 @@ namespace vcsn
         for (auto t: res_->input_->all_out(s))
           ts.emplace_back(t);
 
-        // There is a difference in performance between using lambdas
-        // or std::bind.  See
-        // http://www.gockelhut.com/c++/articles/lambda_vs_bind and
-        // especially the bench program
-        // http://www.gockelhut.com/c++/files/lambda_vs_bind.cpp.
-        //
-        // It gives, with -O3
-        //
-        //                       Clang 3.5    GCC 4.9
-        //  lambda                    1001        7000
-        //  bind                3716166405  2530142000
-        //  bound lambda        2438421993  1700834000
-        //  boost bind          2925777511  2529615000
-        //  boost bound lambda  2420710412  1683458000
         std::sort(ts.begin(), ts.end(),
-                  [&](const input_transition_t t1,
-                      const input_transition_t t2) -> bool
-                  {
-                    return transition_less_(t1, t2);
-                  });
+                  detail::transition_less<Aut>{res_->input_});
 
         for (auto t: ts)
           res_->new_transition_copy(res_s, res_->state(res_->input_->dst_of(t)),
@@ -135,30 +147,6 @@ namespace vcsn
         // would work.
         for (auto s: res_->input_->all_states())
           res_->state(s);
-      }
-
-      bool transition_less_(const input_transition_t t1,
-                                 const input_transition_t t2) const
-        ATTRIBUTE_PURE
-      {
-        // We intentionally ignore source states: they should always
-        // be identical when we call this.
-        auto& aut = res_->input_;
-        assert(aut->src_of(t1) == aut->src_of(t2));
-        if (ls_.less(aut->label_of(t1), aut->label_of(t2)))
-          return true;
-        else if (ls_.less(aut->label_of(t2), aut->label_of(t1)))
-          return false;
-        else if (ws_.less(aut->weight_of(t1), aut->weight_of(t2)))
-          return true;
-        else if (ws_.less(aut->weight_of(t2), aut->weight_of(t1)))
-          return false;
-        else if (aut->dst_of(t1) < aut->dst_of(t2))
-          return true;
-        else if (aut->dst_of(t2) < aut->dst_of(t1))
-          return false;
-        else
-          return false;
       }
 
       /// Sorted automaton.
