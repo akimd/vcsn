@@ -45,6 +45,8 @@ namespace vcsn
       using transition_t = transition_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
+      using polynomialset_t = polynomialset<context_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
 
       /// A list of states.
       using states_t = std::vector<state_t>;
@@ -140,7 +142,7 @@ namespace vcsn
       /// Short-hand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
       /// Short-hand to the polynomialset used to print the entries.
-      const polynomialset<context_t_of<automaton_t>> ps_{aut_->context()};
+      const polynomialset_t ps_{aut_->context()};
     };
 
   }

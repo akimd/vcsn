@@ -31,6 +31,7 @@ namespace vcsn
       using super_t = outputter<Aut>;
       using typename super_t::automaton_t;
       using typename super_t::state_t;
+      using typename super_t::polynomial_t;
       using typename super_t::transition_t;
       using typename super_t::weightset_t;
       using typename super_t::weight_t;
@@ -40,6 +41,7 @@ namespace vcsn
       using super_t::print_entry_;
       using super_t::initials_;
       using super_t::os_;
+      using super_t::ps_;
       using super_t::ws_;
 
       using super_t::super_t;
@@ -266,7 +268,8 @@ namespace vcsn
       }
 
       /// Print the transitions between state \a src and state \a dst.
-      void print_transitions_(state_t src, state_t dst)
+      void print_transitions_(const state_t src, const state_t dst,
+                              const polynomial_t& entry)
       {
         bos_ << "  ";
         if (src == aut_->pre())
@@ -289,21 +292,16 @@ namespace vcsn
             bos_ << " -> ";
             aut_->print_state(dst, bos_);
           }
-
-        std::ostringstream o;
-        // FIXME: inefficient, we should gather the entries while we
-        // iterate on the all_out.
-        print_entry_(src, dst, o,
-                     dot2tex_ ? "latex" : "text");
+        auto e = to_string(ps_, entry, dot2tex_ ? "latex" : "text", ", ");
         bool useless = !has(useful_, src) || !has(useful_, dst);
-        if (!o.str().empty() || useless)
+        if (!e.empty() || useless)
           {
             bos_ << " [";
             const char* sep = "";
-            if (!o.str().empty())
+            if (!e.empty())
               {
                 enable_();
-                bos_ << "label = \"" << o.str() << "\"";
+                bos_ << "label = \"" << e << "\"";
                 disable_();
                 sep = ", ";
               }
@@ -318,16 +316,17 @@ namespace vcsn
       void print_transitions_()
       {
         // For each src state, the destinations, sorted.
-        std::set<state_t> dsts;
+        std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->all_states())
           if (!dot2tex_ || src != aut_->pre())
             {
               dsts.clear();
               for (auto t: aut_->all_out(src))
                 if (!dot2tex_ || aut_->dst_of(t) != aut_->post())
-                  dsts.insert(aut_->dst_of(t));
-              for (auto dst: dsts)
-                print_transitions_(src, dst);
+                  ps_.add_here(dsts[aut_->dst_of(t)],
+                               aut_->label_of(t), aut_->weight_of(t));
+              for (auto p: dsts)
+                print_transitions_(src, p.first, p.second);
             }
       }
 
