@@ -73,6 +73,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/star-normal-form.py                       \
   %D%/star.py                                   \
   %D%/sum.py                                    \
+  %D%/synchronize.py                            \
   %D%/synchronizing-word.py                     \
   %D%/thompson.py                               \
   %D%/to-expansion.py                           \
@@ -219,6 +220,10 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/x.gv                          \
   %D%/product.dir/xa.gv                         \
   %D%/product.dir/xy.gv                         \
+  %D%/synchronize.dir/bool.gv                   \
+  %D%/synchronize.dir/bool_min.gv               \
+  %D%/synchronize.dir/z.gv                      \
+  %D%/synchronize.dir/z_min.gv                  \
   %D%/product.dir/xyz.gv                        \
   %D%/to-expression.dir/a.gv                    \
   %D%/union.dir/abc.gv
