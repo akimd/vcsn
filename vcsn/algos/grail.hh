@@ -53,14 +53,14 @@ namespace vcsn
 
       /// Convert a label to its representation.
       virtual std::string
-      label_(const label_t& l)
+      label_(const label_t& l) const
       {
         return ls_.is_one(l) ? "@epsilon" : to_string(ls_, l);
       }
 
       /// Output the transition \a t.  Do not insert eol.
       /// "Src Label Dst".
-      virtual void output_transition_(transition_t t)
+      virtual void output_transition_(transition_t t) const
       {
         aut_->print_state(aut_->src_of(t), os_);
         os_ << ' ' << label_(aut_->label_of(t)) << ' ';

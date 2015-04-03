@@ -95,7 +95,7 @@ namespace vcsn
 
     private:
       template <typename LS>
-      void output_label_(const LS& ls, const typename LS::value_t& l)
+      void output_label_(const LS& ls, const typename LS::value_t& l) const
       {
         if (ls.is_special(l))
           os_ << "\\e";
@@ -105,21 +105,21 @@ namespace vcsn
 
       /// Acceptor.
       template <typename Label>
-      void output_label_(const Label& l, std::false_type)
+      void output_label_(const Label& l, std::false_type) const
       {
         output_label_(ls_, l);
       }
 
       /// Two-tape automaton.
       template <typename Label>
-      void output_label_(const Label& l, std::true_type)
+      void output_label_(const Label& l, std::true_type) const
       {
         output_label_(ls_.template set<0>(), std::get<0>(l));
         os_ << '\t';
         output_label_(ls_.template set<1>(), std::get<1>(l));
       }
 
-      void output_transition_(const transition_t t)
+      void output_transition_(const transition_t t) const override
       {
         // Don't output "pre", but an integer.
         if (aut_->src_of(t) == aut_->pre())
