@@ -175,6 +175,19 @@ namespace vcsn
       return v;
     }
 
+    /// The sum of polynomials \a l and \a r.
+    value_t add(const value_t& l, const value_t& r) const
+    {
+      value_t res = l;
+      add_here(res, r);
+      return res;
+    }
+
+
+    /*-------.
+    | sub.   |
+    `-------*/
+
     /// `v -= m`.
     value_t&
     sub_here(value_t& v, const monomial_t& m) const
@@ -209,15 +222,6 @@ namespace vcsn
         return weightset()->zero();
       else
         return weight_of(*i);
-    }
-
-    /// The sum of polynomials \a l and \a r.
-    value_t
-    add(const value_t& l, const value_t& r) const
-    {
-      value_t res = l;
-      add_here(res, r);
-      return res;
     }
 
     /// The subtraction of polynomials \a l and \a r.
@@ -266,6 +270,7 @@ namespace vcsn
     }
 
     /// The sum of the weights of the common labels.
+    /// FIXME: Should probably be a special case of conjunction.
     weight_t
     scalar_product(const value_t& l, const value_t& r) const
     {
@@ -460,6 +465,10 @@ namespace vcsn
       return v;
     }
 
+    /*--------.
+    | norm.   |
+    `--------*/
+
     /// In the general case, normalize by the first (non null) weight.
     template <typename WeightSet, typename Dummy = void>
     struct norm_
@@ -529,6 +538,11 @@ namespace vcsn
       return norm_<weightset_t>{*weightset()}(v);
     }
 
+
+    /*-------------.
+    | normalize.   |
+    `-------------*/
+
     /// Normalization: general case: just divide by the GCD of the
     /// weights.
     template <typename LabelSet>
@@ -567,6 +581,11 @@ namespace vcsn
       auto n = normalize_here_<labelset_t>{*this};
       return n(v);
     }
+
+
+    /*---------------.
+    | equal(l, r).   |
+    `---------------*/
 
     ATTRIBUTE_PURE
     static bool monomial_equal(const monomial_t& lhs,
