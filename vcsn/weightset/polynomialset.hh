@@ -134,21 +134,21 @@ namespace vcsn
         return new_weight(v, l, k);
     }
 
-    /// `v += p`.
-    value_t&
-    add_here(value_t& v, const value_t& p) const
+    const weight_t
+    get_weight(const value_t& v, const label_t& l) const ATTRIBUTE_PURE
     {
-      for (const auto& m: p)
-        add_here(v, m);
-      return v;
+      auto i = v.find(l);
+      if (i == v.end())
+        return weightset()->zero();
+      else
+        return weight_of(*i);
     }
 
-    /// `v += m`.
-    value_t&
-    add_here(value_t& v, const monomial_t& m) const
-    {
-      return add_here(v, label_of(m), weight_of(m));
-    }
+
+
+    /*-------.
+    | add.   |
+    `-------*/
 
     /// `v += <k>l`.
     value_t&
@@ -173,6 +173,44 @@ namespace vcsn
             }
         }
       return v;
+    }
+
+    /// `v += m`.
+    value_t&
+    add_here(value_t& v, const monomial_t& m) const
+    {
+      return add_here(v, label_of(m), weight_of(m));
+    }
+
+    /// `v += p`, default case.
+    template <wet_kind WetType>
+    auto
+    add_here_impl(value_t& l, const value_t& r) const
+      -> enable_if_t<!(WetType == wet_kind::bitset
+                       && std::is_same<weightset_t, b>::value),
+                     value_t&>
+    {
+      for (const auto& m: r)
+        add_here(l, m);
+      return l;
+    }
+
+    /// `v += p`, B and bitsets.
+    template <wet_kind WetType>
+    auto
+    add_here_impl(value_t& l, const value_t& r) const
+      -> enable_if_t<WetType == wet_kind::bitset
+                     && std::is_same<weightset_t, b>::value,
+                     value_t&>
+    {
+      l.set() += r.set();
+      return l;
+    }
+
+    value_t&
+    add_here(value_t& l, const value_t& r) const
+    {
+      return add_here_impl<value_t::kind>(l, r);
     }
 
     /// The sum of polynomials \a l and \a r.
@@ -212,16 +250,6 @@ namespace vcsn
             }
         }
       return v;
-    }
-
-    const weight_t
-    get_weight(const value_t& v, const label_t& l) const ATTRIBUTE_PURE
-    {
-      auto i = v.find(l);
-      if (i == v.end())
-        return weightset()->zero();
-      else
-        return weight_of(*i);
     }
 
     /// The subtraction of polynomials \a l and \a r.
