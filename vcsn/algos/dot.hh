@@ -38,7 +38,6 @@ namespace vcsn
 
       using super_t::aut_;
       using super_t::finals_;
-      using super_t::print_entry_;
       using super_t::initials_;
       using super_t::os_;
       using super_t::ps_;
@@ -323,9 +322,11 @@ namespace vcsn
               dsts.clear();
               for (auto t: aut_->all_out(src))
                 if (!dot2tex_ || aut_->dst_of(t) != aut_->post())
-                  ps_.add_here(dsts[aut_->dst_of(t)],
-                               aut_->label_of(t), aut_->weight_of(t));
-              for (auto p: dsts)
+                  // Bypass weight_of(set), because we know that the weight is
+                  // nonzero, and that there is only one weight per letter.
+                  ps_.new_weight(dsts[aut_->dst_of(t)],
+                                 aut_->label_of(t), aut_->weight_of(t));
+              for (const auto& p: dsts)
                 print_transitions_(src, p.first, p.second);
             }
       }

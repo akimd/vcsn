@@ -1138,26 +1138,6 @@ namespace vcsn
     constexpr static char rangle = '>';
   };
 
-  /// The entry between two states of an automaton.
-  template <typename Aut>
-  typename polynomialset<context_t_of<Aut>>::value_t
-  get_entry(const Aut& aut,
-            state_t_of<Aut> s, state_t_of<Aut> d)
-  {
-    using automaton_t = Aut;
-    using context_t = context_t_of<automaton_t>;
-    using polynomialset_t = polynomialset<context_t>;
-    auto ps = polynomialset_t{aut->context()};
-    using polynomial_t = typename polynomialset_t::value_t;
-
-    polynomial_t res;
-    for (auto t : aut->outin(s, d))
-      // Bypass weight_of(set), because we know that the weight is
-      // nonzero, and that there is only one weight per letter.
-      ps.new_weight(res, aut->label_of(t), aut->weight_of(t));
-    return res;
-  }
-
   namespace detail
   {
     template <typename Ctx1, typename Ctx2>

@@ -67,19 +67,6 @@ namespace vcsn
         aut_->print_state(aut_->dst_of(t), os_);
       }
 
-      /// The labels and weights of transitions from \a src to \a dst.
-      ///
-      /// The main advantage of using polynomials instead of directly
-      /// iterating over aut_->outin(src, dst) is to get a result which
-      /// is sorted (hence more deterministic).
-      std::ostream& print_entry_(state_t src, state_t dst,
-                                 std::ostream& os,
-                                 const std::string& format = "text")
-      {
-        auto entry = get_entry(aut_, src, dst);
-        return ps_.print(entry, os, format, ", ");
-      }
-
       /// Output transitions, sorted lexicographically on (Label, Dest).
       void output_state_(const state_t s)
       {

@@ -29,12 +29,13 @@ namespace vcsn
       using super_t = outputter<Aut>;
       using typename super_t::automaton_t;
       using typename super_t::state_t;
+      using typename super_t::polynomial_t;
       using typename super_t::transition_t;
       using typename super_t::weight_t;
 
       using super_t::aut_;
-      using super_t::print_entry_;
       using super_t::os_;
+      using super_t::ps_;
       using super_t::ws_;
 
       using super_t::super_t;
@@ -42,7 +43,7 @@ namespace vcsn
       /// Format an initial/final weight.
       /// \param kind  the weight name (e.g., "initial").
       /// \param w     the weight
-      void print_finitial_(const std::string& kind, const weight_t& w)
+      void print_finitial_(const std::string& kind, const weight_t& w) const
       {
         if (!ws_.is_zero(w))
           {
@@ -70,6 +71,18 @@ namespace vcsn
           "\\begin{tikzpicture}[automaton, auto]\n"
           ;
 
+        print_states_();
+        print_transitions_();
+
+        os_ <<
+          "\\end{tikzpicture}\n"
+          "\\end{document}";
+      }
+
+    private:
+      /// Pretty-print states.
+      void print_states_() const
+      {
         state_t prev = aut_->null_state();
         for (auto s : aut_->states())
           {
@@ -92,29 +105,40 @@ namespace vcsn
             os_ << "$};\n";
             prev = s;
         }
+      }
 
+      /// Print the transitions between state \a src and state \a dst.
+      void print_transitions_(const state_t src, const state_t dst,
+                              const polynomial_t& entry) const
+      {
+        os_ << "  \\path[->] (";
+        aut_->print_state(src, os_);
+        os_ << ") edge"
+            << (src == dst ? "[loop above]" : "")
+            << " node"
+            << " {$";
+        ps_.print(entry, os_, "latex", ", ");
+        os_ << "$} (";
+        aut_->print_state(dst, os_);
+        os_ << ");\n";
+      }
+
+      /// Print all the transitions, sorted by src state, then dst state.
+      void print_transitions_()
+      {
+        // For each src state, the destinations, sorted.
+        std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->states())
           {
-            std::set<state_t> ds;
+            dsts.clear();
             for (auto t: aut_->out(src))
-              ds.insert(aut_->dst_of(t));
-            for (auto dst: ds)
-              {
-                os_ << "  \\path[->] (";
-                aut_->print_state(src, os_);
-                os_ << ") edge"
-                    << (src == dst ? "[loop above]" : "")
-                    << " node"
-                    << " {$";
-                print_entry_(src, dst, os_, "latex");
-                os_ << "$} (";
-                aut_->print_state(dst, os_);
-                os_ << ");\n";
-              }
+              // Bypass weight_of(set), because we know that the weight is
+              // nonzero, and that there is only one weight per letter.
+              ps_.new_weight(dsts[aut_->dst_of(t)],
+                             aut_->label_of(t), aut_->weight_of(t));
+            for (const auto& p: dsts)
+              print_transitions_(src, p.first, p.second);
           }
-        os_ <<
-          "\\end{tikzpicture}\n"
-          "\\end{document}";
       }
     };
   }
