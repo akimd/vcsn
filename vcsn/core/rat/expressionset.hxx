@@ -3,6 +3,8 @@
 #include <stdexcept>
 
 #include <boost/range/algorithm/find.hpp>
+#include <boost/range/algorithm/lower_bound.hpp>
+
 #include <vcsn/algos/fwd.hh> // is-valid
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less.hh>
@@ -211,7 +213,7 @@ namespace vcsn
       {
         return less_ignoring_weight_(l, r);
       };
-    const auto i = std::lower_bound(copy.begin(), copy.end(), rn, closure);
+    const auto i = boost::lower_bound(copy, rn, closure);
     if (i != copy.end()
         && equal(unwrap_possible_lweight_(*i), rn))
       {
