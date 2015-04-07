@@ -4,6 +4,7 @@
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/algorithm.hh> // any_of
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/b.hh>
 
@@ -103,11 +104,12 @@ namespace vcsn
       /// Handling of a product by the box operator.
       void box_of(const prod_t& v)
       {
-        if (std::any_of(std::begin(v), std::end(v),
-                        [this](const expression_t& n)
-                        {
-                          return ws_.is_zero(constant_term(rs_, n));
-                        }))
+        using detail::any_of;
+        if (any_of(v,
+                   [this](const expression_t& n)
+                   {
+                     return ws_.is_zero(constant_term(rs_, n));
+                   }))
           {
             // Some factor has a null constant-term.
             operation_ = dot;

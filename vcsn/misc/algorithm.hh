@@ -7,6 +7,14 @@ namespace vcsn
 {
   namespace detail
   {
+    template <typename Range, typename Predicate>
+    bool any_of(const Range &r, Predicate p)
+    {
+      using std::begin;
+      using std::end;
+      return std::any_of(begin(r), end(r), p);
+    }
+
     /// The last member of this Container.
     ///
     /// Should specialized with containers with random access.
