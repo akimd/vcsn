@@ -85,7 +85,7 @@ namespace vcsn
     using label_t = typename labelset_t::value_t;
     using weight_t = weight_t_of<context_t>;
 
-    using value_t = wet<label_t, weight_t, vcsn::less<labelset_t>>;
+    using value_t = wet_of<context_t>;
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 

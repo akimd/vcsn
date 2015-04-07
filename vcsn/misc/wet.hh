@@ -4,11 +4,13 @@
 #include <map>
 #include <set>
 #include <type_traits>
+#include <unordered_map>
 
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/dynamic_bitset.hpp>
 
 #include <vcsn/misc/empty.hh>
+#include <vcsn/misc/functional.hh> // vcsn::equal_to
 
 namespace vcsn
 {
@@ -171,13 +173,16 @@ namespace vcsn
 
   namespace detail
   {
+#if 1
     /*-------------------------.
     | wset_impl<Key, Value>.   |
     `-------------------------*/
 
     /// General case.
     template <typename Key, typename Value,
-              typename Compare = std::less<>>
+              typename Compare = std::less<>,
+              typename Hash = std::hash<Key>,
+              typename KeyEqual = std::equal_to<Key>>
     class wet_impl
     {
     private:
@@ -250,14 +255,98 @@ namespace vcsn
 #undef DEFINE
     };
 
+#else
 
+    /*-------------------------.
+    | wset_impl<Key, Value>.   |
+    `-------------------------*/
+
+    /// General case.
+    template <typename Key, typename Value,
+              typename Compare = std::less<>,
+              typename Hash = std::hash<Key>,
+              typename KeyEqual = std::equal_to<Key>>
+    class wet_impl
+    {
+    private:
+      using map_t = std::unordered_map<Key, Value, Hash, KeyEqual>;
+      map_t map_;
+
+    public:
+      static constexpr wet_kind kind = wet_kind::map;
+      using self_t = wet_impl;
+      using key_t = Key;
+      using value_t = Value;
+      using welement_t = welement<key_t, value_t>;
+      using value_type = typename map_t::value_type;
+      using iterator = typename map_t::iterator;
+      using const_iterator = typename map_t::const_iterator;
+
+      wet_impl() = default;
+
+      wet_impl(const std::initializer_list<value_type>& l)
+        : map_{l}
+      {}
+
+      static const key_t& key_of(const value_type& p)
+      {
+        return p.first;
+      }
+
+      static const value_t& value_of(const value_type& p)
+      {
+        return p.second;
+      }
+
+      void set(const key_t& k, const value_t& v)
+      {
+        map_[k] = v;
+      }
+
+      void set(const iterator& i, const value_t& v)
+      {
+        i->second = v;
+      }
+
+      template <typename Fun>
+      void for_each(Fun f) const
+      {
+        std::for_each(begin(map_), end(map_),
+                      f);
+      }
+
+#define DEFINE(Name, Const)                                     \
+      template <typename... Args>                               \
+      auto                                                      \
+      Name(Args&&... args) Const                                \
+        -> decltype(map_.Name(std::forward<Args>(args)...))     \
+      {                                                         \
+        return map_.Name(std::forward<Args>(args)...);          \
+      }
+
+      DEFINE(emplace,);
+      DEFINE(clear,);
+      DEFINE(begin,const);
+      DEFINE(find,const);
+      DEFINE(find,);
+      DEFINE(erase,);
+      DEFINE(end,  const);
+      DEFINE(begin,);
+      DEFINE(end,);
+      DEFINE(empty,const);
+      DEFINE(size, const);
+#undef DEFINE
+    };
+
+#endif
 
     /*-----------------------.
     | wet_impl<Key, bool>.   |
     `-----------------------*/
 
-    template <typename Key, typename Compare>
-    class wet_impl<Key, bool, Compare>
+
+    template <typename Key, typename Compare, typename Hash, typename KeyEqual>
+    class wet_impl<Key, bool, Compare, Hash, KeyEqual>
     {
     private:
       using set_t = std::set<Key, Compare>;
@@ -406,8 +495,8 @@ namespace vcsn
     | wet_impl<char, bool>: bitsets.   |
     `---------------------------------*/
 
-    template <typename Compare>
-    class wet_impl<char, bool, Compare>
+    template <typename Compare, typename Hash, typename KeyEqual>
+    class wet_impl<char, bool, Compare, Hash, KeyEqual>
     {
     private:
       using set_t = boost::dynamic_bitset<>;
@@ -580,6 +669,16 @@ namespace vcsn
   }
 
   template <typename Key, typename Value,
-            typename Compare = std::less<>>
-  using wet = detail::wet_impl<Key, Value, Compare>;
+            typename Compare = std::less<>,
+            typename Hash = std::hash<Key>,
+            typename KeyEqual = std::equal_to<Key>>
+  using wet = detail::wet_impl<Key, Value, Compare, Hash, KeyEqual>;
+
+  /// The corresponding wet for a LabelSet -> WeightSet context.
+  template <typename Context>
+  using wet_of = wet<label_t_of<Context>,
+                     weight_t_of<Context>,
+                     vcsn::less<labelset_t_of<Context>>,
+                     vcsn::hash<labelset_t_of<Context>>,
+                     vcsn::equal_to<labelset_t_of<Context>>>;
 }
