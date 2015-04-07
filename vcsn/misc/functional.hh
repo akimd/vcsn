@@ -84,7 +84,7 @@ namespace vcsn
 namespace std
 {
   template <typename Value, size_t Size>
-  class hash<std::array<Value, Size>>
+  struct hash<std::array<Value, Size>>
   {
   public:
     using value_t = std::array<Value, Size>;
