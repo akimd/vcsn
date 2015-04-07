@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/lexicographical_compare.hpp>
@@ -634,11 +635,7 @@ namespace vcsn
       -> enable_if_t<WetType != wet_kind::bitset,
                      bool>
     {
-      using std::begin;
-      using std::end;
-      return l.size() == r.size()
-        && std::equal(begin(l), end(l), begin(r),
-                      monomial_equal);
+      return boost::equal(l, r, monomial_equal);
     }
 
     template <wet_kind WetType>
