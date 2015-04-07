@@ -20,7 +20,7 @@ namespace vcsn
   {
     const auto& ls = *ctx.labelset();
     const auto& gens = ls.genset();
-    size_t sz = std::distance(std::begin(gens), std::end(gens));
+    size_t sz = boost::distance(gens);
     require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
     using context_t = Context;
     using automaton_t = mutable_automaton<context_t>;
