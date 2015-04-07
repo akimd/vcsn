@@ -3,6 +3,7 @@
 #include <algorithm> // min_element.
 #include <unordered_map>
 
+#include <boost/range/algorithm/min_element.hpp>
 #include <boost/range/algorithm/sort.hpp>
 
 #include <vcsn/core/partition-automaton.hh>
@@ -56,8 +57,7 @@ namespace vcsn
         // to fully sort.
         for (unsigned c = 0; c < num_classes_; ++c)
             std::swap(class_to_set_[c][0],
-                      *std::min_element(begin(class_to_set_[c]),
-                                        end(class_to_set_[c])));
+                      *boost::min_element(class_to_set_[c]));
 
         // Sort class numbers by smallest state number.
         boost::sort(class_to_set_,
