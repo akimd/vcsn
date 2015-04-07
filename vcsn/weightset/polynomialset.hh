@@ -8,6 +8,7 @@
 
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm/lexicographical_compare.hpp>
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
 #include <vcsn/ctx/traits.hh>
@@ -757,11 +758,7 @@ namespace vcsn
       -> enable_if_t<WetType != wet_kind::bitset,
                      bool>
     {
-      using std::begin;
-      using std::end;
-      return std::lexicographical_compare(begin(l), end(l),
-                                          begin(r), end(r),
-                                          monomial_less);
+      return boost::lexicographical_compare(l, r, monomial_less);
     }
 
     template <wet_kind WetType>
