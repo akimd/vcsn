@@ -66,9 +66,15 @@ namespace vcsn
     return d;
   }
 
+  /// Find the shortest paths from some states to all the states.
+  ///
+  /// \param aut    the automaton to traverse.
+  /// \param start  the states from which we reach the order states.
+  /// \returns a map that, for each state, gives a pair: the shortest distance
+  ///          to its parent, and the transition id that allows to reach it.
   template<typename Aut>
   std::unordered_map<state_t_of<Aut>,
-                     std::pair<state_t_of<Aut>,
+                     std::pair<unsigned,
                                transition_t_of<Aut>>>
   paths_ibfs(const Aut& aut, const std::vector<state_t_of<Aut>>& start)
   {
@@ -79,7 +85,7 @@ namespace vcsn
 
     std::queue<state_t> todo;
     std::unordered_set<state_t> marked;
-    std::unordered_map<state_t, std::pair<state_t, transition_t>> parent;
+    std::unordered_map<state_t, std::pair<unsigned, transition_t>> parent;
 
     for (auto s : start)
       todo.push(s);
