@@ -33,6 +33,21 @@ namespace vcsn
       return res;
     }
 
+    template< typename Container, typename Predicate>
+    void erase_if(Container& c, const Predicate& p)
+    {
+      using std::begin;
+      using std::end;
+      for (auto i = begin(c); i != end(c); /* nothing. */)
+        {
+          if (p(*i))
+            i = c.erase(i);
+          else
+            ++i;
+        }
+    }
+
+
     /// The first member of this Container.
     template <typename Container>
     typename Container::value_type

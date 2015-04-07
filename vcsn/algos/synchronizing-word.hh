@@ -18,6 +18,7 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/label.hh>
 #include <vcsn/labelset/labelset.hh> // make_wordset
+#include <vcsn/misc/algorithm.hh> // erase_if
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/pair.hh>
 #include <vcsn/misc/raise.hh>
@@ -118,13 +119,11 @@ namespace vcsn
         paths_ = paths_ibfs(pair_, pair_->singletons());
 
         if (keep_initials)
-          for (auto it = paths_.begin(); it != paths_.end(); /* nothing */)
-            {
-              if (pair_->is_singleton(it->first))
-                paths_.erase(it++);
-              else
-                ++it;
-            }
+          detail::erase_if(paths_,
+                           [this](const path_t& p)
+                           {
+                             return pair_->is_singleton(p.first);
+                           });
       }
 
       void init_synchro(bool keep_initials = false)
