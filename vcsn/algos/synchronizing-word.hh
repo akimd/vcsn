@@ -97,10 +97,12 @@ namespace vcsn
     private:
       using pair_t = std::pair<state_t, state_t>;
       using dist_transition_t = std::pair<unsigned, transition_t>;
+      using paths_t = std::unordered_map<state_t, dist_transition_t>;
+      using path_t = typename paths_t::value_type;
 
       automaton_t aut_;
       pair_automaton<Aut> pair_;
-      std::unordered_map<state_t, dist_transition_t> paths_;
+      paths_t paths_;
       std::unordered_set<state_t> todo_;
       word_t res_;
 
@@ -137,7 +139,7 @@ namespace vcsn
             todo_.insert(s);
       }
 
-      std::vector<transition_t> recompose_path(state_t from)
+      std::vector<transition_t> recompose_path(state_t from) const
       {
         std::vector<transition_t> res;
         state_t bt_curr = from;
@@ -150,14 +152,12 @@ namespace vcsn
         return res;
       }
 
-      int dist(state_t s)
+      int dist(state_t s) const
       {
-        if (pair_->is_singleton(s))
-          return 0;
-        return paths_.find(s)->second.first;
+        return pair_->is_singleton(s) ? 0 : paths_.find(s)->second.first;
       }
 
-      state_t dest_state(state_t s, const label_t& l)
+      state_t dest_state(state_t s, const label_t& l) const
       {
         auto ntf = pair_->out(s, l);
         auto size = ntf.size();
@@ -226,7 +226,7 @@ namespace vcsn
       }
 
     private:
-      using heuristic_t = auto (word_synchronizer::*)(state_t) -> int;
+      using heuristic_t = auto (word_synchronizer::*)(state_t) const -> int;
 
       word_t synchro(heuristic_t heuristic)
       {
@@ -334,7 +334,7 @@ namespace vcsn
       }
 
       /// Compute dist(d(s, w)) - dist(s).
-      int delta(state_t p, const std::vector<transition_t>& w)
+      int delta(state_t p, const std::vector<transition_t>& w) const
       {
         state_t np = p;
         for (auto t : w)
@@ -345,7 +345,7 @@ namespace vcsn
       /// Heuristic used for SynchroP.
       /// phi_1(p) = Sum delta(s, w) for all s in the active states, with
       /// s != p. w is the shortest word that syncs the pair p.
-      int phi_1(state_t p)
+      int phi_1(state_t p) const
       {
         int res = 0;
         auto w = recompose_path(p);
@@ -357,14 +357,14 @@ namespace vcsn
 
       /// Heuristic used for SynchroPL.
       /// phi2(p) = phi_1(p).
-      int phi_2(state_t p)
+      int phi_2(state_t p) const
       {
         return phi_1(p) + dist(p);
       }
 
       /// Heuristic used for FastSynchro.
       /// phi3(l) = Sum dist(d(s, l)) - dist(s) forall s in the active states.
-      int phi_3(const label_t& l)
+      int phi_3(const label_t& l) const
       {
         int res = 0;
         for (auto s: todo_)
