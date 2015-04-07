@@ -3,6 +3,7 @@
 #include <memory>
 #include <set>
 
+#include <boost/range/algorithm/mismatch.hpp>
 #include <boost/algorithm/string/predicate.hpp> // starts_with
 
 #include <vcsn/core/kind.hh>
@@ -10,7 +11,6 @@
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/misc/attributes.hh>
-#include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -274,9 +274,7 @@ namespace vcsn
     /// The longest common prefix.
     static value_t lgcd(const value_t& w1, const value_t& w2)
     {
-      return {w1.begin(),
-              detail::mismatch(w1.begin(), w1.end(),
-                               w2.begin(), w2.end()).first};
+      return {w1.begin(), boost::mismatch(w1, w2).first};
     }
 
     /// Compute w1 \ w2 = w1^{-1}w2.
