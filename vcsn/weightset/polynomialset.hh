@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
@@ -1090,8 +1091,7 @@ namespace vcsn
         {
           auto end
             = std::mismatch(it, letters_end,
-                            std::find(std::begin(alphabet), std::end(alphabet),
-                                      *it)).first;
+                            boost::range::find(alphabet, *it)).first;
           labelset()->print(*it, out, format);
           // No range for two letters or less.
           auto width = std::distance(it, end);

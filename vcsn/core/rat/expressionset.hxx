@@ -2,6 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 
+#include <boost/range/algorithm/find.hpp>
 #include <vcsn/algos/fwd.hh> // is-valid
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less.hh>
@@ -832,6 +833,7 @@ namespace vcsn
      std::false_type) const
     -> value_t
   {
+    using boost::range::find;
     value_t res = zero();
     auto gens = labelset()->genset();
     // FIXME: This piece of code screams for factoring.  Yet, I want
@@ -842,7 +844,7 @@ namespace vcsn
     if (accept)
       for (const auto& cc: ccs)
         {
-          auto i = std::find(std::begin(gens), std::end(gens), cc.first);
+          auto i = find(gens, cc.first);
           auto end = std::find(i, std::end(gens), cc.second);
           require(end != std::end(gens),
                   "invalid letter interval: ",
@@ -863,7 +865,7 @@ namespace vcsn
         std::set<typename LabelSet_::letter_t> accepted;
         for (const auto& cc: ccs)
           {
-            auto i = std::find(std::begin(gens), std::end(gens), cc.first);
+            auto i = find(gens, cc.first);
             auto end = std::find(i, std::end(gens), cc.second);
             require(end != std::end(gens),
                     "invalid letter interval: ",

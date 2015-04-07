@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 
+#include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/irange.hpp>
 
@@ -287,7 +288,7 @@ namespace vcsn
     {
       stored_transition_t& st = transitions_[t];
       auto& succ = states_[st.src].succ;
-      auto tsucc = std::find(succ.begin(), succ.end(), t);
+      auto tsucc = boost::range::find(succ, t);
       assert(tsucc != succ.end());
       *tsucc = std::move(succ.back());
       succ.pop_back();
@@ -299,7 +300,7 @@ namespace vcsn
     {
       stored_transition_t& st = transitions_[t];
       auto& pred = states_[st.dst].pred;
-      auto tpred = std::find(pred.begin(), pred.end(), t);
+      auto tpred = boost::range::find(pred, t);
       assert(tpred != pred.end());
       *tpred = std::move(pred.back());
       pred.pop_back();
