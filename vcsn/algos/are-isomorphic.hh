@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <boost/range/algorithm/permutation.hpp>
 #include <boost/range/algorithm/sort.hpp>
 
 #include <vcsn/algos/accessible.hh>
@@ -498,8 +499,7 @@ namespace vcsn
       const int rightmost = int(state_classes_.size()) - 1;
 
       // Permute the rightmost class.
-      if (std::next_permutation(state_classes_[rightmost].second.begin(),
-                                state_classes_[rightmost].second.end()))
+      if (boost::next_permutation(state_classes_[rightmost].second))
         {
           // Easy case: no carry.
           ++ class_permutation_generated_[rightmost];
@@ -523,16 +523,14 @@ namespace vcsn
              && class_permutation_generated_[i] == class_permutation_max_[i];
            -- i)
         {
-          std::next_permutation(state_classes_[i].second.begin(),
-                                state_classes_[i].second.end());
+          boost::next_permutation(state_classes_[i].second);
           class_permutation_generated_[i] = 0;
         }
       if (i == -1)
         return false; // Carry overflow.
 
       // Permute in order to propagate the carry to its final place.
-      std::next_permutation(state_classes_[i].second.begin(),
-                            state_classes_[i].second.end());
+      boost::next_permutation(state_classes_[i].second);
       ++ class_permutation_generated_[i];
       return true;
     }
