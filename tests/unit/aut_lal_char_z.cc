@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/misc/vector.hh> // make_vector
 #include <vcsn/ctx/lal_char_z.hh>
 
 using context_t = vcsn::ctx::lal_char_z;
@@ -103,15 +104,14 @@ check_del_transition(const context_t& ctx)
   size_t nerrs = 0;
   automaton_t aut = clique<automaton_t>(ctx, 3);
   ASSERT_EQ(aut->num_transitions(), 3 * 3 * 4u); // 4 letters.
-  const auto& ss = aut->states();
-  std::vector<vcsn::state_t_of<automaton_t>> s{std::begin(ss), std::end(ss)};
+  auto ss = vcsn::detail::make_vector(aut->states());
 
-  aut->del_transition(s[0], s[1]);
+  aut->del_transition(ss[0], ss[1]);
   ASSERT_EQ(aut->num_transitions(), (3 * 3 - 1) * 4u);
-  aut->del_transition(s[0], s[1]);
+  aut->del_transition(ss[0], ss[1]);
   ASSERT_EQ(aut->num_transitions(), (3 * 3 - 1) * 4u);
 
-  aut->del_transition(s[2], s[2]);
+  aut->del_transition(ss[2], ss[2]);
   ASSERT_EQ(aut->num_transitions(), (3 * 3 - 2) * 4u);
 
   return nerrs;

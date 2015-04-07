@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <vector>
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/standard.hh>
@@ -13,6 +12,7 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh> // require
+#include <vcsn/misc/vector.hh> // make_vector
 
 namespace vcsn
 {
@@ -31,17 +31,14 @@ namespace vcsn
     require(is_standard(res), __func__, ": lhs must be standard");
     require(is_standard(b), __func__, ": rhs must be standard");
 
-    using automaton_t = A;
     const auto& ls = *res->labelset();
     const auto& bls = *b->labelset();
     const auto& ws = *res->weightset();
     const auto& bws = *b->weightset();
 
     // The set of the current (left-hand side) final transitions.
-    auto ftr_ = res->final_transitions();
     // Store these transitions by copy.
-    using transs_t = std::vector<transition_t_of<automaton_t>>;
-    transs_t ftr{ begin(ftr_), end(ftr_) };
+    auto ftr = detail::make_vector(res->final_transitions());
 
     state_t_of<B> b_initial = b->dst_of(b->initial_transitions().front());
     // State in B -> state in Res.

@@ -15,11 +15,8 @@ namespace vcsn
   mutable_automaton<Context>
   ladybird(const Context& ctx, unsigned n)
   {
-    using context_t = Context;
     const auto& ls = *ctx.labelset();
-    const auto& gens = ls.genset();
-    std::vector<letter_t_of<context_t>> letters
-      {std::begin(gens), std::end(gens)};
+    auto letters = detail::make_vector(ls.genset());
     require(3 <= letters.size(),
             "ladybird: the alphabet needs at least 3 letters");
     auto a = ls.value(letters[0]);

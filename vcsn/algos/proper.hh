@@ -20,6 +20,7 @@
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/vector.hh> // make_vector
 
 #define STATS
 
@@ -52,7 +53,6 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
-      using transitions_t = std::vector<transition_t>;
 
     public:
       /// Get ready to eliminate spontaneous transitions.
@@ -293,10 +293,9 @@ namespace vcsn
       /// is moved higher, before the state_profile definition.
       void in_situ_remover_(state_t s)
       {
-        const auto& tr = aut_->in(s, empty_word_);
         // Iterate on a copy, as we remove these transitions in the
         // loop.
-        transitions_t transitions{tr.begin(), tr.end()};
+        auto transitions = make_vector(aut_->in(s, empty_word_));
         // The star of the weight of the loop on 's' (1 if no loop).
         weight_t star = ws_.one();
         using state_weight_t = std::pair<state_t, weight_t>;

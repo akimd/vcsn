@@ -9,6 +9,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/vector.hh>
 
 namespace vcsn
 {
@@ -19,9 +20,7 @@ namespace vcsn
   {
     using context_t = Context;
     const auto& ls = *ctx.labelset();
-    const auto& gens = ls.genset();
-    std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(gens), std::end(gens)};
+    auto letters = detail::make_vector(ls.genset());
     require(2 <= letters.size(),
             "double_ring: the alphabet needs at least 2 letters");
     auto a = ls.value(letters[0]);

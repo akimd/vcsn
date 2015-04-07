@@ -12,6 +12,7 @@
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/memory.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/vector.hh> // make_vector
 
 namespace vcsn
 {
@@ -268,10 +269,7 @@ namespace vcsn
         for (auto c: e.tail())
           {
             // The set of the current (left-hand side) final transitions.
-            auto ftr_ = res_->final_transitions();
-            // Store transitions by copy.
-            using transs_t = std::vector<transition_t_of<automaton_t>>;
-            transs_t ftr{ begin(ftr_), end(ftr_) };
+            auto ftr = make_vector(res_->final_transitions());
 
             // Visit the next member of the product.
             c->accept(*this);

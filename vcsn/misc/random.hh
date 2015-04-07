@@ -1,10 +1,9 @@
-#ifndef VCSN_MISC_RANDOM_HH
-# define VCSN_MISC_RANDOM_HH
+#pragma once
 
-# include <random>
-# include <iterator>
+#include <random>
+#include <iterator>
 
-# include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -68,5 +67,3 @@ namespace vcsn
   }
 
 } // !vcsn
-
-#endif // !VCSN_MISC_RANDOM_HH

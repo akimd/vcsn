@@ -1,10 +1,9 @@
-#ifndef VCSN_MISC_CROSS_HH
-# define VCSN_MISC_CROSS_HH
+#pragma once
 
-# include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 
-# include <vcsn/misc/raise.hh> // pass
-# include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/raise.hh> // pass
+#include <vcsn/misc/tuple.hh>
 
 namespace vcsn
 {
@@ -257,5 +256,3 @@ namespace vcsn
     return {seqs};
   }
 }
-
-#endif // !VCSN_MISC_CROSS_HH

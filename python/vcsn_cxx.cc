@@ -29,7 +29,7 @@ struct weight;
 /// Convert a Python list to a C++ vector.
 template <typename T>
 std::vector<T>
-to_vector(const boost::python::list& list)
+make_vector(const boost::python::list& list)
 {
   std::vector<T> res;
   for (int i = 0; i < boost::python::len(list); ++i)
@@ -234,7 +234,7 @@ struct automaton
 
   automaton filter(const boost::python::list& states) const
   {
-    return vcsn::dyn::filter(val_, to_vector<unsigned>(states));
+    return vcsn::dyn::filter(val_, make_vector<unsigned>(states));
   }
 
   std::string format(const std::string& format = "dot") const
@@ -966,7 +966,7 @@ automaton context::divkbaseb(unsigned divisor, unsigned base) const
 automaton context::double_ring(unsigned n,
                                const boost::python::list& finals) const
 {
-  return vcsn::dyn::double_ring(val_, n, to_vector<unsigned>(finals));
+  return vcsn::dyn::double_ring(val_, n, make_vector<unsigned>(finals));
 }
 
 automaton context::ladybird(unsigned n) const

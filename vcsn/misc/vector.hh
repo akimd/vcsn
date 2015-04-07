@@ -53,7 +53,7 @@ namespace vcsn
     /// Return the content of \a cont as a vector.
     template <typename Cont>
     std::vector<typename Cont::value_type>
-    to_vector(const Cont& cont)
+    make_vector(const Cont& cont)
     {
       return {std::begin(cont), std::end(cont)};
     }
