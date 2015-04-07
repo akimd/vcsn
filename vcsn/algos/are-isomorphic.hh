@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <boost/range/algorithm/sort.hpp>
+
 #include <vcsn/algos/accessible.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -278,7 +280,7 @@ namespace vcsn
             tt.emplace_back(transition_t{a->weight_of(t), a->label_of(t)}); \
             endpoint_states.emplace(a->endpoint_getter(t));             \
           }                                                             \
-        std::sort(tt.begin(), tt.end(), less);                          \
+        boost::sort(tt, less);                                          \
         for (const auto& t: tt)                                         \
           {                                                             \
             hash_combine(res, ws.hash(t.first));                        \
@@ -314,21 +316,21 @@ namespace vcsn
       state_classes_t res;
       for (const auto& c: table)
         res.emplace_back(std::move(c.second.first), std::move(c.second.second));
-      std::sort(res.begin(), res.end(),
-                [](const class_pair_t& c1, const class_pair_t& c2)
-                {
-                  return c1.first.size() > c2.first.size();
-                });
+      boost::sort(res,
+                  [](const class_pair_t& c1, const class_pair_t& c2)
+                  {
+                    return c1.first.size() > c2.first.size();
+                  });
 
       for (auto& c: res)
         {
           // This is mostly to make debugging easier.
-          std::sort(c.first.begin(), c.first.end());
+          boost::sort(c.first);
 
           // This call is needed for correctness: we have to start
           // with all classes in their "smallest" configuration in
           // lexicographic order.
-          std::sort(c.second.begin(), c.second.end());
+          boost::sort(c.second);
         }
 
       //print_class_stats(res);

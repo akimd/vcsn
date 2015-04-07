@@ -206,7 +206,7 @@ namespace vcsn
             state_output_t& state_output = state_to_state_output_[s];
             for (auto& l_ss : label_to_states)
               {
-                std::sort(l_ss.second.begin(), l_ss.second.end());
+                boost::sort(l_ss.second);
                 state_output.emplace_back(state_output_for_label_t{l_ss.first,
                       std::move(l_ss.second)});
               }

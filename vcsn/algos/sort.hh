@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <boost/range/algorithm/sort.hpp>
+
 #include <vcsn/core/permutation-automaton.hh>
 #include <vcsn/ctx/traits.hh> // base_t
 #include <vcsn/dyn/automaton.hh>
@@ -133,8 +135,7 @@ namespace vcsn
         for (auto t: res_->input_->all_out(s))
           ts.emplace_back(t);
 
-        std::sort(ts.begin(), ts.end(),
-                  detail::transition_less<Aut>{res_->input_});
+        boost::sort(ts, detail::transition_less<Aut>{res_->input_});
 
         for (auto t: ts)
           res_->new_transition_copy(res_s, res_->state(res_->input_->dst_of(t)),

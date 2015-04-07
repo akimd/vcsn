@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include <boost/range/algorithm/sort.hpp>
+
 #include <vcsn/algos/grail.hh> // outputter
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/labelset/fwd.hh>
@@ -165,12 +167,12 @@ namespace vcsn
         {
           std::vector<state_t> states(std::begin(aut_->states()),
                                       std::end(aut_->states()));
-          std::sort(begin(states), end(states),
-                    [this](state_t l, state_t r)
-                    {
-                      return (std::forward_as_tuple(!aut_->is_initial(l), l)
-                              < std::forward_as_tuple(!aut_->is_initial(r), r));
-                    });
+          boost::sort(states,
+                      [this](state_t l, state_t r)
+                      {
+                        return (std::forward_as_tuple(!aut_->is_initial(l), l)
+                                < std::forward_as_tuple(!aut_->is_initial(r), r));
+                      });
           for (auto s: states)
             this->output_state_(s);
         }

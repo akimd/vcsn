@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include <boost/range/algorithm/sort.hpp>
+
 #include <vcsn/dyn/translate.hh> // compile
 #include <vcsn/misc/name.hh>
 #include <vcsn/misc/raise.hh>
@@ -58,7 +60,7 @@ namespace vcsn
         sigs.reserve(map_.size());
         for (auto p: map_)
           sigs.emplace_back(p.first.to_string());
-        std::sort(begin(sigs), end(sigs));
+        boost::sort(sigs);
 
         std::string res;
         res += "  failed signature:\n";

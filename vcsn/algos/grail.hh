@@ -1,7 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <map>
+
+#include <boost/range/algorithm/sort.hpp>
 
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/sort.hh> // transition_less.
@@ -73,8 +74,7 @@ namespace vcsn
         std::vector<transition_t> ts;
         for (auto t : aut_->out(s))
           ts.emplace_back(t);
-        std::sort(ts.begin(), ts.end(),
-                  detail::transition_less<Aut>{aut_});
+        boost::sort(ts, detail::transition_less<Aut>{aut_});
         for (auto t : ts)
           {
             os_ << '\n';
@@ -106,7 +106,7 @@ namespace vcsn
         states_t res;
         for (auto t: aut_->initial_transitions())
           res.emplace_back(aut_->dst_of(t));
-        std::sort(begin(res), end(res));
+        boost::sort(res);
         return res;
       }
 
@@ -116,7 +116,7 @@ namespace vcsn
         states_t res;
         for (auto t: aut_->final_transitions())
           res.emplace_back(aut_->src_of(t));
-        std::sort(begin(res), end(res));
+        boost::sort(res);
         return res;
       }
 
