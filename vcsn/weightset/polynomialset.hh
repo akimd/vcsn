@@ -267,6 +267,11 @@ namespace vcsn
       return res;
     }
 
+
+    /*-------.
+    | mul.   |
+    `-------*/
+
     /// The product of monomials \a l and \a r.
     monomial_t
     mul(const monomial_t& l, const monomial_t& r) const
@@ -276,8 +281,12 @@ namespace vcsn
     }
 
     /// The product of polynomials \a l and \a r.
-    value_t
-    mul(const value_t& l, const value_t& r) const
+    /// General case.
+    template <wet_kind WetType>
+    auto
+    mul_impl(const value_t& l, const value_t& r) const
+      -> enable_if_t<WetType != wet_kind::bitset,
+                     value_t>
     {
       value_t res;
       for (const auto& lm: l)
@@ -287,6 +296,30 @@ namespace vcsn
                    weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
+
+    /// The product of polynomials \a l and \a r.
+    /// Case of bitsets.
+    template <wet_kind WetType>
+    auto
+    mul_impl(const value_t& l, const value_t& r) const
+      -> enable_if_t<WetType == wet_kind::bitset,
+                     value_t>
+    {
+      return l.set() & r.set();
+    }
+
+    /// The product of polynomials \a l and \a r.
+    auto
+    mul(const value_t& l, const value_t& r) const
+      -> value_t
+    {
+      return mul_impl<value_t::kind>(l, r);
+    }
+
+
+    /*---------------.
+    | conjunction.   |
+    `---------------*/
 
     /// The conjunction of polynomials \a l and \a r.
     /// Not valid for all the labelsets.
@@ -1158,6 +1191,5 @@ namespace vcsn
         return {*ps2.labelset(), vcsn::join(ws1, *ps2.weightset())};
       }
     };
-
   }
 }

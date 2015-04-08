@@ -525,6 +525,10 @@ namespace vcsn
           set(label_of(m), weight_of(m));
       }
 
+      wet_impl(set_t&& set)
+        : set_{std::move(set)}
+      {}
+
       static constexpr size_t npos = set_t::npos;
 
       /// Iterator.
