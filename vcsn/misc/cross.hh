@@ -56,6 +56,7 @@ namespace vcsn
            cross_iterator<ValueType, IteratorsType>
          , ValueType
          , boost::forward_traversal_tag
+         , ValueType // Reference.
         >
     {
       /// Underlying iterators.
@@ -82,19 +83,18 @@ namespace vcsn
       iterators_type ends_;
 
       /// Advance to next position.
-      cross_iterator& operator++()
+      void increment()
       {
-        if (next_() == -1)
+        if (increment_() == -1)
           done_();
-        return *this;
       }
 
-      bool operator!=(const cross_iterator& that) const
+      bool equal(const cross_iterator& that) const
       {
-        return not_equal_(that, indices_t{});
+        return equal_(that, indices_t{});
       }
 
-      value_type operator*() const
+      value_type dereference() const
       {
         return dereference_(indices_t{});
       }
@@ -110,9 +110,9 @@ namespace vcsn
 
       /// Move to the next position.  Return the index of the lastest
       /// iterator that could move, -1 if we reached the end.
-      int next_()
+      int increment_()
       {
-        auto res = next_(indices_t{});
+        auto res = increment_(indices_t{});
         // Reset all the iterators that are before the first one that could
         // advance.
         if (res != -1)
@@ -121,7 +121,7 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      int next_(seq<I...>)
+      int increment_(seq<I...>)
       {
         int res = -1;
         using swallow = int[];
@@ -129,8 +129,8 @@ namespace vcsn
           {
             (res == -1
              && std::get<size-1-I>(is_) != std::get<size-1-I>(ends_)
-             && std::next(std::get<size-1-I>(is_)) != std::get<size-1-I>(ends_))
-              ? ++std::get<size-1-I>(is_), res = size-1-I
+             && ++std::get<size-1-I>(is_) != std::get<size-1-I>(ends_))
+              ? res = size-1-I
               : 0
             ...
           };
@@ -155,12 +155,12 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      bool not_equal_(const cross_iterator& that, seq<I...>) const
+      bool equal_(const cross_iterator& that, seq<I...>) const
       {
-        for (auto n: {(std::get<I>(is_) != std::get<I>(that.is_))...})
-          if (n)
-            return true;
-        return false;
+        for (auto n: {(std::get<I>(is_) == std::get<I>(that.is_))...})
+          if (!n)
+            return false;
+        return true;
       }
 
       /// Tuple of values.

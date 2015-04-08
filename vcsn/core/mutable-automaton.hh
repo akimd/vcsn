@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 
+#include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/irange.hpp>
 
 #include <vcsn/misc/crange.hh>
@@ -222,24 +223,24 @@ namespace vcsn
       if (succ.size() <= pred.size())
         {
           auto i =
-            std::find_if(begin(succ), end(succ),
-                         [this,l,ls,dst] (transition_t t)
-                         {
-                           return (dst_of(t) == dst
-                                   && ls.equal(label_of(t), l));
-                         });
+            boost::find_if(succ,
+                           [this,l,ls,dst] (transition_t t)
+                           {
+                             return (dst_of(t) == dst
+                                     && ls.equal(label_of(t), l));
+                           });
           if (i != end(succ))
             return *i;
         }
       else
         {
           auto i =
-            std::find_if(begin(pred), end(pred),
-                         [this,l,ls,src] (transition_t t)
-                         {
-                           return (src_of(t) == src
-                                   && ls.equal(label_of(t), l));
-                         });
+            boost::find_if(pred,
+                           [this,l,ls,src] (transition_t t)
+                           {
+                             return (src_of(t) == src
+                                     && ls.equal(label_of(t), l));
+                           });
           if (i != end(pred))
             return *i;
         }

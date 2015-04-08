@@ -849,7 +849,7 @@ namespace vcsn
                   to_string(*labelset(), labelset()->value(std::get<0>(cc))),
                   '-',
                   to_string(*labelset(), labelset()->value(std::get<1>(cc))));
-          for (end = std::next(end); i != end; ++i)
+          for (++end; i != end; ++i)
             res = add(res, atom(labelset()->value(*i)));
         }
     // [^].
@@ -870,7 +870,7 @@ namespace vcsn
                     to_string(*labelset(), labelset()->value(std::get<0>(cc))),
                     '-',
                     to_string(*labelset(), labelset()->value(std::get<1>(cc))));
-            for (end = std::next(end); i != end; ++i)
+            for (++end; i != end; ++i)
               accepted.emplace(*i);
           }
         for (auto c: gens)

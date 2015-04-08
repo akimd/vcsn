@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <vector>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <vcsn/ctx/context.hh> // We need context to define join.
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/labelset/wordset.hh>
@@ -1045,11 +1047,11 @@ namespace vcsn
 
       // No classes if the weights of the letters aren't all the same.
       auto first_letter
-        = std::find_if(begin(v), end(v),
-                       [this](const monomial_t& m)
-                       {
-                         return !labelset()->is_one(label_of(m));
-                       });
+        = boost::find_if(v,
+                         [this](const monomial_t& m)
+                         {
+                           return !labelset()->is_one(label_of(m));
+                         });
       if (std::adjacent_find
           (first_letter, end(v),
            [this](const monomial_t& l, const monomial_t& r)

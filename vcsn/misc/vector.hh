@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <vector>
 
+#include <boost/range/algorithm/find.hpp>
+
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh> // hash_combine
 #include <vcsn/misc/tuple.hh> // make_index_sequence.
@@ -50,7 +52,7 @@ namespace vcsn
       cross(f, std::get<I>(ts)...);
     }
 
-    /// Return the content of \a cont as a vector.
+    /// The content of \a cont as a vector.
     template <typename Cont>
     std::vector<typename Cont::value_type>
     make_vector(const Cont& cont)
