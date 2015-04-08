@@ -294,11 +294,11 @@ namespace vcsn
     conjunction(const value_t& l, const value_t& r) const
     {
       value_t res;
-      for (auto i: l)
-        for (auto j: r)
+      for (const auto& lm: l)
+        for (const auto& rm: r)
           add_here(res,
-                   labelset()->conjunction(label_of(i), label_of(j)),
-                   weightset()->mul(weight_of(i), weight_of(j)));
+                   labelset()->conjunction(label_of(lm), label_of(rm)),
+                   weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
 
@@ -308,7 +308,7 @@ namespace vcsn
     scalar_product(const value_t& l, const value_t& r) const
     {
       weight_t res = weightset()->zero();
-      for (auto p: zip_maps<vcsn::as_tuple>(l, r))
+      for (const auto& p: zip_maps<vcsn::as_tuple>(l, r))
         res = weightset()->add(res,
                                weightset()->mul(weight_of(std::get<0>(p)),
                                                 weight_of(std::get<1>(p))));
@@ -391,10 +391,10 @@ namespace vcsn
     rmul_label(const value_t& v, const label_t& rhs) const
     {
       value_t res;
-      for (auto i: v)
+      for (const auto& lhs: v)
         add_here(res,
-                 labelset()->mul(label_of(i), rhs),
-                 weight_of(i));
+                 labelset()->mul(label_of(lhs), rhs),
+                 weight_of(lhs));
       return res;
     }
 
