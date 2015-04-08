@@ -504,7 +504,7 @@ namespace vcsn
     equal_(const value_t& l, const value_t& r, seq<I...>)
     {
       for (auto n: {valueset_t<I>::equal(std::get<I>(l),
-                                          std::get<I>(r))...})
+                                         std::get<I>(r))...})
         if (!n)
           return false;
       return true;
@@ -515,9 +515,9 @@ namespace vcsn
     less_(const value_t& l, const value_t& r, seq<I...>)
     {
       for (auto n: {std::make_pair(valueset_t<I>::less(std::get<I>(l),
-                                                            std::get<I>(r)),
+                                                       std::get<I>(r)),
                                    valueset_t<I>::less(std::get<I>(r),
-                                                            std::get<I>(l)))...})
+                                                       std::get<I>(l)))...})
         if (n.first)
           return true;
         else if (n.second)
