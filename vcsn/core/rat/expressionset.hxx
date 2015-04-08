@@ -826,7 +826,7 @@ namespace vcsn
               accepted.emplace(*i);
           }
         for (auto c: gens)
-          if (!has(accepted, c))
+          if (!(c % accepted))
             res = add(res, atom(labelset()->value(c)));
       }
     require(!is_zero(res),

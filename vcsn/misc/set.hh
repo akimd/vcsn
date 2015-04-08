@@ -31,9 +31,18 @@ namespace vcsn
 {
   /// Whether \a e is member of \a s.
   template <typename T, typename Compare, typename Alloc>
+  ATTRIBUTE_PURE
   bool
-  has(const std::set<T, Compare, Alloc>& s, const T& e)
-    ATTRIBUTE_PURE;
+  has(const std::set<T, Compare, Alloc>& s, const T& e);
+
+  /// Whether \a e is member of \a s.
+  template <typename T, typename Compare, typename Alloc>
+  ATTRIBUTE_PURE
+  bool
+  operator%(const T& e, const std::set<T, Compare, Alloc>& s)
+  {
+    return has(s, e);
+  }
 
   /// The intersection of two sets.
   template <typename T, typename Compare, typename Alloc>

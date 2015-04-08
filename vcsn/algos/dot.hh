@@ -192,7 +192,7 @@ namespace vcsn
                 bos_ << "\", shape = box";
               }
           }
-        if (!has(useful_, s))
+        if (!(s % useful_))
           {
             if (has_attributes)
               bos_ << ", ";
@@ -292,7 +292,7 @@ namespace vcsn
             aut_->print_state(dst, bos_);
           }
         auto e = to_string(ps_, entry, dot2tex_ ? "latex" : "text", ", ");
-        bool useless = !has(useful_, src) || !has(useful_, dst);
+        bool useless = !(src % useful_) || !(dst % useful_);
         if (!e.empty() || useless)
           {
             bos_ << " [";

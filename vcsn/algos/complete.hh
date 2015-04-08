@@ -39,7 +39,7 @@ namespace vcsn
             labels_met.insert(aut->label_of(tr));
 
           for (auto letter : ls.genset())
-            if (!has(labels_met, letter))
+            if (!(letter % labels_met))
               {
                 if (sink == aut->null_state())
                   sink = aut->new_state();

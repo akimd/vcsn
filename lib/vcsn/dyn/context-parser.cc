@@ -58,7 +58,7 @@ namespace vcsn
           || w == "transpose_automaton"
           || w == "tuple_automaton")
         return automaton_(w);
-      else if (has(labelsets_, w)
+      else if (w % labelsets_
                || w == "expressionset"
                || w == "seriesset")
         {
@@ -74,7 +74,7 @@ namespace vcsn
             return context_(res);
           return res;
         }
-      else if (has(weightsets_, w))
+      else if (w % weightsets_)
         return weightset_(w);
       else if (w == "polynomialset")
         {
@@ -121,9 +121,9 @@ namespace vcsn
         return expressionset_();
       else if (w == "seriesset")
         return expressionset_series_();
-      else if (has(labelsets_, w))
+      else if (w % labelsets_)
         return labelset_(w);
-      else if (has(weightsets_, w))
+      else if (w % weightsets_)
         return weightset_(w);
       else
         raise("invalid weightset or labelset name: " + w);
@@ -251,7 +251,7 @@ namespace vcsn
     std::shared_ptr<ast_node>
     context_parser::weightset_(const std::string& ws)
     {
-      if (has(weightsets_, ws))
+      if (ws % weightsets_)
         return std::make_shared<weightset>(ws);
       else if (ws == "expressionset")
         return expressionset_();

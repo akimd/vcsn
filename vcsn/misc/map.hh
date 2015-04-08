@@ -38,6 +38,15 @@ namespace vcsn
     return s.find(e) != std::end(s);
   }
 
+  /// Whether \a e is in \a s.
+  template <typename Key, typename Value, typename Compare, typename Alloc>
+  inline
+  bool
+  operator%(const Key& e, const std::map<Key, Value, Compare, Alloc>& s)
+  {
+    return has(s, e);
+  }
+
   /// The set of values of a map.
   template <typename Key, typename Value, typename Comp, typename Alloc>
   std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>

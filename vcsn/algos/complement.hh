@@ -5,6 +5,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/misc/algorithm.hh> // operator%
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/fwd.hh> // b
 
@@ -40,10 +41,10 @@ namespace vcsn
 
     // Complement.
     for (auto s: aut->states())
-      if (!has(finals, s))
-        aut->set_final(s);
-      else
+      if (s % finals)
         aut->unset_final(s);
+      else
+        aut->set_final(s);
   }
 
   template <typename Aut>

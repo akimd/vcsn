@@ -30,13 +30,20 @@ namespace std
 
 namespace vcsn
 {
-
-  /// Whether \a e is member of \a s.
+  /// Whether \a k is member of \a s.
   template <typename Key, typename Hash, typename KeyEqual, typename Alloc>
   bool
   has(const std::unordered_set<Key, Hash, KeyEqual, Alloc>& s, const Key& k)
   {
     return s.find(k) != std::end(s);
+  }
+
+  /// Whether \a k is member of \a s.
+  template <typename Key, typename Hash, typename KeyEqual, typename Alloc>
+  bool operator%(const Key& k,
+                 const std::unordered_set<Key, Hash, KeyEqual, Alloc>& s)
+  {
+    return has(s, k);
   }
 
   /// Intersection of \a s1 and \a s2.

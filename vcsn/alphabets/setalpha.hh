@@ -6,11 +6,12 @@
 
 #include <boost/optional.hpp>
 
-#include <vcsn/misc/type_traits.hh>
+#include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/stream.hh> // eat.
 #include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -175,7 +176,7 @@ namespace vcsn
           return true;
         }
       else
-        return ::vcsn::has(alphabet_, l);
+        return l % alphabet_;
     }
 
     /// Extract and return the next word from \a i.

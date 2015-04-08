@@ -392,7 +392,7 @@ namespace vcsn
 
                     // For each letter, update destination state, and
                     // sum of weights.
-                    if (!has(dests, l))
+                    if (!(l % dests))
                       dests.emplace(l, ns_.zero());
                     auto& d = dests[l];
                     ns_.add_here(d, dst, w);

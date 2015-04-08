@@ -28,7 +28,7 @@ namespace vcsn
     auto coaccessible = coaccessible_states(prod);
     for (const auto& o: prod->origins())
       if (std::get<0>(o.second) != std::get<1>(o.second)
-          && has(coaccessible, o.first))
+          && o.first % coaccessible)
         {
           witness = o.second;
           return true;

@@ -101,7 +101,7 @@ namespace vcsn
       auto all_out(state_t s)
         -> decltype(aut_->all_out(s))
       {
-        if (!has(done, s))
+        if (!(s % done))
           {
             const auto& orig = origins();
             state_name_t sn = orig.at(s);
@@ -115,7 +115,7 @@ namespace vcsn
       auto all_out(state_t s, Pred pred)
         -> decltype(aut_->all_out(s, pred))
       {
-        if (!has(done, s))
+        if (!(s % done))
           {
             const auto& orig = origins();
             state_name_t sn = orig.at(s);

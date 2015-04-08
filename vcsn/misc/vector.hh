@@ -69,6 +69,15 @@ namespace vcsn
   {
     return boost::find(s, e) != std::end(s);
   }
+
+  /// Whether \a e is member of \a s.
+  template <typename T, typename Alloc>
+  ATTRIBUTE_PURE
+  bool
+  operator%(const T& e, const std::vector<T, Alloc>& s)
+  {
+    return has(s, e);
+  }
 }
 
 namespace std

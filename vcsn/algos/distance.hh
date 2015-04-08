@@ -54,7 +54,7 @@ namespace vcsn
               {
                 d[dst] = w;
                 r[dst] = ws.add(r[dst], w1);
-                if (!has(marked, dst))
+                if (!(dst % marked))
                   {
                     todos.emplace(dst);
                     marked.emplace(dst);

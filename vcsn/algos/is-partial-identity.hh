@@ -50,13 +50,13 @@ namespace vcsn
         for (auto t : aut->all_out(s))
           {
             auto dst = aut->dst_of(t);
-            if (has(coaccessibles, dst))
+            if (dst % coaccessibles)
               {
                 // Compute the new residue.
                 auto r = ls.mul(rs[s], aut->label_of(t));
                 // Eliminate longest common prefix.
                 ls.lnormalize_here(r);
-                if (!has(rs, dst))
+                if (!(dst % rs))
                   {
                     rs.emplace(dst, r);
                     todo.emplace(dst);

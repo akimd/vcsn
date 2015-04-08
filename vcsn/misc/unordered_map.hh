@@ -4,7 +4,6 @@
 
 namespace vcsn
 {
-
   /// Sum of bucket sizes.
   template <typename Key, typename T,
             typename Hash, typename KeyEqual, typename Alloc>
@@ -18,7 +17,7 @@ namespace vcsn
     return res;
   }
 
-  /// Whether \a e is member of \a m.
+  /// Whether \a k is member of \a m.
   template <typename Key, typename T,
             typename Hash, typename KeyEqual, typename Alloc>
   inline
@@ -27,5 +26,16 @@ namespace vcsn
       const Key& k)
   {
     return m.find(k) != std::end(m);
+  }
+
+  /// Whether \a k is member of \a m.
+  template <typename Key, typename T,
+            typename Hash, typename KeyEqual, typename Alloc>
+  inline
+  bool
+  operator%(const Key& k,
+            const std::unordered_map<Key, T, Hash, KeyEqual, Alloc>& m)
+  {
+    return has(m, k);
   }
 }

@@ -78,7 +78,7 @@ namespace vcsn
               state_t new_s = res->new_state();
               subset_label[new_s] = s;
               // J = { X | i in X }
-              if (has(s, i))
+              if (i % s)
                 res->set_initial(new_s);
               // U = { X | X \subset T }
               if (subset(s, automaton_finals))

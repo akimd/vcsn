@@ -221,7 +221,7 @@ namespace vcsn
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
-       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
+       [&keep](state_t_of<AutIn> s) { return s % keep; });
   }
 
   /// A copy of \a input keeping only its states that are members of
@@ -234,7 +234,7 @@ namespace vcsn
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
-       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
+       [&keep](state_t_of<AutIn> s) { return s % keep; });
   }
 
   namespace dyn

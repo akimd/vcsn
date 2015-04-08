@@ -277,7 +277,7 @@ namespace vcsn
             // Branch all the previously added final transitions to
             // the successors of the new initial state.
             for (auto t1: ftr)
-              if (!has(other_finals, res_->src_of(t1)))
+              if (!(res_->src_of(t1) % other_finals))
                 {
                   // Remove the previous final transition first, as we
                   // might add a final transition for the same state
@@ -319,7 +319,7 @@ namespace vcsn
             res_->lmul_weight(ti, w);
             for (auto tf: res_->final_transitions())
               if (res_->src_of(tf) != initial_
-                  && !has(other_finals, res_->src_of(tf)))
+                  && !(res_->src_of(tf) % other_finals))
                 // Note that the weight of ti has already been
                 // multiplied, on the left, by w.
                 //

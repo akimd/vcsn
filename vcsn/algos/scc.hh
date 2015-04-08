@@ -58,7 +58,7 @@ namespace vcsn
       {
         rvp_.reserve(aut->num_all_states());
         for (auto s : aut->states())
-          if (!has(marked_, s))
+          if (!(s % marked_))
             dfs(s);
       }
 
@@ -74,7 +74,7 @@ namespace vcsn
         for (auto t : aut_->out(s))
           {
             auto dst = aut_->dst_of(t);
-            if (!has(marked_, dst))
+            if (!(dst % marked_))
               dfs(dst);
           }
         rvp_.emplace_back(s);
@@ -125,7 +125,7 @@ namespace vcsn
       const components_t& components()
       {
         for (auto s : aut_->states())
-          if (!has(component_, s))
+          if (!(s % component_))
             dfs(s);
         return components_;
       }
@@ -140,9 +140,9 @@ namespace vcsn
         for (auto t: aut_->out(s))
           {
             state_t dst = aut_->dst_of(t);
-            if (!has(preorder_, dst))
+            if (!(dst % preorder_))
               dfs(dst);
-            else if (!has(component_, dst))
+            else if (!(dst % component_))
               {
                 size_t dstpo = preorder_[dst];
                 while (dstpo < preorder_[uncertain_.top()])
@@ -211,7 +211,7 @@ namespace vcsn
           {
             auto s = todo.back();
             todo.pop_back();
-            if (!has(marked_, s))
+            if (!(s % marked_))
               {
                 dfs(s);
                 ++num_;
@@ -236,7 +236,7 @@ namespace vcsn
         for (auto t : aut_->out(s))
           {
             auto dst = aut_->dst_of(t);
-            if (!has(marked_, dst))
+            if (!(dst % marked_))
               dfs(dst);
           }
       }
@@ -274,7 +274,7 @@ namespace vcsn
         : aut_{aut}
       {
         for (auto s : aut_->states())
-          if (!has(number_, s))
+          if (!(s % number_))
             dfs(s);
       }
 
@@ -297,7 +297,7 @@ namespace vcsn
               {
                 auto dst = aut_->dst_of(*st.pos);
                 ++st.pos;
-                if (!has(number_, dst))
+                if (!(dst % number_))
                   {
                     number_[dst] = low_[dst] = curr_state_num_++;
                     const auto& out = aut_->out(dst);
@@ -392,7 +392,7 @@ namespace vcsn
         : aut_{aut}
       {
         for (auto s : aut_->states())
-          if (!has(marked_, s))
+          if (!(s % marked_))
             dfs(s);
       }
 
@@ -412,7 +412,7 @@ namespace vcsn
         for (auto t : aut_->out(s))
           {
             auto dst = aut_->dst_of(t);
-            if (!has(marked_, dst))
+            if (!(dst % marked_))
               dfs(dst);
             if (low_[dst] < min)
               min = low_[dst];
@@ -519,14 +519,14 @@ namespace vcsn
     res->set_initial(map[s0]);
     for (auto s : com)
       {
-        if (!has(map, s))
+        if (!(s % map))
           map[s] = res->new_state();
         for (auto t : aut->out(s))
           {
             auto dst = aut->dst_of(t);
-            if (!has(com, dst))
+            if (!(dst % com))
               continue;
-            if (!has(map, dst))
+            if (!(dst % map))
               map[dst] = res->new_state();
             res->new_transition(map[s], map[dst], aut->label_of(t));
           }

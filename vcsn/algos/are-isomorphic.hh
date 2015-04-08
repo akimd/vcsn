@@ -425,7 +425,7 @@ namespace vcsn
               const auto& l1 = a1_->label_of(t1);
               const auto& d2s = nout2_.at(s2).at(l1).at(w1);
               auto d2 = fr_.s1tos2_.at(d1); // according to the isomorphism
-              if (!has(d2s, d2))
+              if (!(d2 % d2s))
                 return false;
               worklist.push({d1, d2});
               ++ t1n;
@@ -437,7 +437,7 @@ namespace vcsn
               const auto& l2 = a2_->label_of(t2);
               const auto& d1s = nout1_.at(s1).at(l2).at(w2);
               auto d1 = fr_.s2tos1_.at(d2); // according to the isomorphism
-              if (!has(d1s, d1))
+              if (!(d1 % d1s))
                 return false;
               worklist.push({d1, d2});
               ++ t2n;

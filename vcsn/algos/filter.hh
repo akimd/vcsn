@@ -62,20 +62,20 @@ namespace vcsn
 
       bool state_has_name(state_t s) const
       {
-        assert(has(ss_, s));
+        assert(s % ss_);
         return aut_->state_has_name(s);
       }
 
       bool has_state(state_t s) const
       {
-        return has(ss_, s) && aut_->has_state(s);
+        return s % ss_ && aut_->has_state(s);
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
                                      const std::string& format = "text",
                                      bool delimit = false) const
       {
-        assert(has(ss_, s));
+        assert(s % ss_);
         return aut_->print_state_name(s, o, format, delimit);
       }
 
@@ -95,7 +95,7 @@ namespace vcsn
       {
         bool operator()(state_t s) const
         {
-          return pred(s) && has(aut_.ss_, s);
+          return pred(s) && s % aut_.ss_;
         }
         const filter_automaton_impl& aut_;
         Pred pred;

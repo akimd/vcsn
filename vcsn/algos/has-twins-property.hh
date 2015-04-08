@@ -58,10 +58,10 @@ namespace vcsn
             for (auto t : aut->all_out(s))
               {
                 auto dst = aut->dst_of(t);
-                if (has(component, dst))
+                if (dst % component)
                   {
                     auto w = ws.mul(wm[s], aut->weight_of(t));
-                    if (!has(wm, dst))
+                    if (!(dst % wm))
                       {
                         todo.push(dst);
                         wm.emplace(dst, w);

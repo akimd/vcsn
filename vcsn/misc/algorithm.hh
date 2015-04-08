@@ -3,12 +3,14 @@
 #include <algorithm>
 #include <iterator> // next
 
+#include <boost/range/algorithm/find.hpp>
+
 namespace vcsn
 {
   namespace detail
   {
     template <typename Range, typename Predicate>
-    bool any_of(const Range &r, Predicate p)
+    bool any_of(const Range& r, Predicate p)
     {
       using std::begin;
       using std::end;
