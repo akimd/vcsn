@@ -227,7 +227,7 @@ a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
          .expression('<x>a<y>b').standard()
 
 def check_enumerate(exp, aut):
-    CHECK_EQ(exp, str(aut.strip().enumerate(4)))
+    CHECK_EQ(exp, str(aut.strip().shortest(len = 4)))
 
 check_enumerate('<uxvy>ab', a1 & a2)
 check_enumerate('\z', a1.transpose() & a2)

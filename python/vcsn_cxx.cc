@@ -223,8 +223,6 @@ struct automaton
     return vcsn::dyn::eliminate_state(val_, s);
   }
 
-  polynomial enumerate(unsigned max) const;
-
   weight eval(const label& l) const;
 
   automaton factor() const
@@ -469,7 +467,7 @@ struct automaton
     return vcsn::dyn::scc(val_, algo);
   }
 
-  polynomial shortest(unsigned max) const;
+  polynomial shortest(unsigned num, unsigned len) const;
 
   static automaton shuffle_(const boost::python::list& auts)
   {
@@ -904,11 +902,6 @@ label automaton::ambiguous_word() const
   return vcsn::dyn::ambiguous_word(val_);
 }
 
-polynomial automaton::enumerate(unsigned max) const
-{
-  return vcsn::dyn::enumerate(val_, max);
-}
-
 weight automaton::eval(const label& l) const
 {
   return vcsn::dyn::eval(val_, l.val_);
@@ -929,9 +922,9 @@ automaton automaton::right_mult(const weight& w) const
   return vcsn::dyn::right_mult(val_, w.val_);
 }
 
-polynomial automaton::shortest(unsigned max) const
+polynomial automaton::shortest(unsigned num, unsigned len) const
 {
-  return vcsn::dyn::shortest(val_, max);
+  return vcsn::dyn::shortest(val_, num, len);
 }
 
 label automaton::synchronizing_word(const std::string& algo) const
@@ -1053,7 +1046,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("determinize", &automaton::determinize, (arg("algo") = "auto"))
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)
-    .def("enumerate", &automaton::enumerate)
     .def("_eval", &automaton::eval)
     .def("factor", &automaton::factor)
     .def("filter", &automaton::filter)
@@ -1107,7 +1099,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
     .def("scc", &automaton::scc, (arg("algo") = "auto"))
-    .def("shortest", &automaton::shortest)
+    .def("shortest", &automaton::shortest,
+         (arg("num") = 0, arg("len") = 0))
     .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")
     .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)

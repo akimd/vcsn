@@ -71,47 +71,6 @@
     }                                                           \
   }
 
-#define DEFINE_ENUMERATION_FUNCTION(Name)                               \
-  struct Name: vcsn_function                                            \
-  {                                                                     \
-    int work_aut(const options& opts) const                             \
-    {                                                                   \
-      using namespace vcsn::dyn;                                        \
-      if (opts.output_format == "default"                               \
-          || opts.output_format == "")                                  \
-        vcsn::dyn::set_format(*opts.out, "list");                       \
-                                                                        \
-      auto aut = read_automaton(opts);                                  \
-      unsigned max = (0 < opts.argv.size()                              \
-                      ? boost::lexical_cast<unsigned>(opts.argv[0])     \
-                      : 1);                                             \
-                                                                        \
-      auto res = vcsn::dyn::Name(aut, max);                             \
-                                                                        \
-      if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")  \
-        opts.print(res);                                                \
-      return 0;                                                         \
-    }                                                                   \
-                                                                        \
-    int work_exp(const options& opts) const                             \
-    {                                                                   \
-      using namespace vcsn::dyn;                                        \
-      if (opts.output_format == "default"                               \
-          || opts.output_format == "")                                  \
-        vcsn::dyn::set_format(*opts.out, "list");                       \
-                                                                        \
-      auto exp = read_expression(opts);                                     \
-      unsigned max = (0 < opts.argv.size()                              \
-                      ? boost::lexical_cast<unsigned>(opts.argv[0])     \
-                      : 1);                                             \
-                                                                        \
-      auto res = vcsn::dyn::Name(vcsn::dyn::standard(exp), max);        \
-                                                                        \
-      if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")  \
-        opts.print(res);                                                \
-      return 0;                                                         \
-    }                                                                   \
-  }
 
 #define DEFINE_RATEXP_FUNCTION(Name)            \
   struct Name: vcsn_function                    \
@@ -166,7 +125,6 @@ DEFINE_AUT_VARIADIC_FUNCTION(compose);
 DEFINE_AUT_VARIADIC_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
 DEFINE_AUT_VARIADIC_FUNCTION(difference);
-DEFINE_ENUMERATION_FUNCTION(enumerate);
 DEFINE_RATEXP_FUNCTION(expand);
 DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
 DEFINE_AUT_FUNCTION(is_ambiguous);
@@ -183,7 +141,6 @@ DEFINE_AUT__RATEXP_FUNCTION(is_valid);
 DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_FUNCTION(proper);
-DEFINE_ENUMERATION_FUNCTION(shortest);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
 DEFINE_RATEXP_FUNCTION(split);
 DEFINE_AUT__RATEXP_FUNCTION(standard);
@@ -493,6 +450,54 @@ struct right_mult: vcsn_function
   }
 };
 
+struct shortest: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    if (opts.output_format == "default"
+        || opts.output_format == "")
+      vcsn::dyn::set_format(*opts.out, "list");
+
+    auto aut = read_automaton(opts);
+    unsigned num = (0 < opts.argv.size()
+                    ? boost::lexical_cast<unsigned>(opts.argv[0])
+                    : 1);
+    unsigned len = (1 < opts.argv.size()
+                    ? boost::lexical_cast<unsigned>(opts.argv[0])
+                    : -1U);
+
+    auto res = vcsn::dyn::shortest(aut, num, len);
+
+    if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
+      opts.print(res);
+    return 0;
+  }
+
+  int work_exp(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    if (opts.output_format == "default"
+        || opts.output_format == "")
+      vcsn::dyn::set_format(*opts.out, "list");
+
+    auto exp = read_expression(opts);
+    unsigned num = (0 < opts.argv.size()
+                    ? boost::lexical_cast<unsigned>(opts.argv[0])
+                    : 1);
+    unsigned len = (1 < opts.argv.size()
+                    ? boost::lexical_cast<unsigned>(opts.argv[0])
+                    : -1U);
+
+    auto res = vcsn::dyn::shortest(vcsn::dyn::standard(exp), num, len);
+
+    if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
+      opts.print(res);
+    return 0;
+  }
+};
+
+
 /*-------------------.
 | "Main" functions.  |
 `-------------------*/
@@ -665,7 +670,6 @@ try
       ALGO(determinize);
       ALGO(difference);
       ALGO(eliminate_state);
-      ALGO(enumerate);
       ALGO(evaluate);
       ALGO(expand);
       ALGO(infiltration);

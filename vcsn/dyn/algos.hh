@@ -214,9 +214,6 @@ namespace vcsn
     /// Output in Extended FSM format.
     std::ostream& efsm(const automaton& aut, std::ostream& out);
 
-    /// All the accepted words of at most \a max letters.
-    polynomial enumerate(const automaton& aut, unsigned max);
-
     /// Evaluate \a l on \a aut.
     weight eval(const automaton& aut, const label& l);
 
@@ -562,8 +559,12 @@ namespace vcsn
     /// \param algo   the specific algorithm to use.
     automaton scc(const automaton& aut, const std::string& algo = "auto");
 
-    /// The at-most \a max first accepted words.
-    polynomial shortest(const automaton& aut, unsigned max = 1);
+    /// The approximated behavior of the automaton.
+    /// \param num   number of words looked for.
+    /// \param len   maximum length of words looked for.
+    polynomial shortest(const automaton& aut,
+                        unsigned num = 1,
+                        unsigned len = -1);
 
     /// The shuffle product of automata \a lhs and \a rhs.
     /// Performs the join of their type.

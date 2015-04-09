@@ -45,34 +45,27 @@ namespace vcsn
         : aut_(aut)
       {}
 
-      /// The weighted accepted word with length at most \a max.
-      polynomial_t enumerate(unsigned max)
+      /// The approximated behavior of the automaton.
+      /// \param num   number of words looked for.
+      /// \param len   maximum length of words looked for.
+      polynomial_t operator()(size_t num, size_t len)
       {
-        queue_t queue;
-        queue.emplace(aut_->pre(), ps_.monomial_one());
+        if (num == 0)
+          num = len == 0 ? 1 : std::numeric_limits<unsigned>::max();
+        if (len == 0)
+          len = std::numeric_limits<unsigned>::max();
 
         // We match words that include the initial and final special
         // characters.
-        max += 2;
-        for (size_t i = 0; i < max && !queue.empty(); ++i)
-          propagate_(queue);
+        if (len != std::numeric_limits<unsigned>::max())
+          len += 2;
 
-        // Return the past of post(), but remove the initial and final
-        // special characters for the words.
-        polynomial_t res;
-        for (const auto& m: output_)
-          ps_.add_here(res, ls_.undelimit(label_of(m)), weight_of(m));
-        return res;
-      }
-
-      /// The shortest accepted weighted words, or throw an exception.
-      // FIXME: code duplication.
-      polynomial_t shortest(unsigned num)
-      {
         queue_t queue;
         queue.emplace(aut_->pre(), ps_.monomial_one());
 
-        while (output_.size() < num && !queue.empty())
+        for (size_t i = 0;
+             !queue.empty() && i < len && output_.size() < num;
+             ++i)
           propagate_(queue);
 
         // Return the past of post(), but remove the initial and final
@@ -122,22 +115,27 @@ namespace vcsn
     };
   }
 
+  /// The approximated behavior of the automaton.
+  /// \param num   number of words looked for.
+  /// \param len   maximum length of words looked for.
   template <typename Automaton>
   inline
   typename detail::enumerater<Automaton>::polynomial_t
-  enumerate(const Automaton& aut, unsigned max)
+  shortest(const Automaton& aut, unsigned num = 1, unsigned len = 0)
   {
     detail::enumerater<Automaton> enumerater(aut);
-    return enumerater.enumerate(max);
+    return enumerater(num, len);
   }
 
+
+  /// The approximated behavior of the automaton.
+  /// \param len   maximum length of words looked for.
   template <typename Automaton>
   inline
   typename detail::enumerater<Automaton>::polynomial_t
-  shortest(const Automaton& aut, unsigned num)
+  enumerate(const Automaton& aut, unsigned len)
   {
-    detail::enumerater<Automaton> enumerater(aut);
-    return enumerater.shortest(num);
+    return shortest(aut, 0, len);
   }
 
 
@@ -145,25 +143,14 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
-      template <typename Aut, typename Unsigned>
+      template <typename Aut, typename Num, typename Len>
       polynomial
-      enumerate(const automaton& aut, unsigned max)
+      shortest(const automaton& aut, unsigned num, unsigned len)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());
-        return make_polynomial(ps, enumerate(a, max));
-      }
-
-      /// Bridge.
-      template <typename Aut, typename Unsigned>
-      polynomial
-      shortest(const automaton& aut, unsigned num)
-      {
-        const auto& a = aut->as<Aut>();
-        auto ps = vcsn::detail::make_word_polynomialset(a->context());
-        return make_polynomial(ps, shortest(a, num));
+        return make_polynomial(ps, shortest(a, num, len));
       }
     }
   }

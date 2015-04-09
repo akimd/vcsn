@@ -196,7 +196,6 @@ namespace vcsn
         REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
-        REGISTER(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t, wls_t);
         REGISTER(infiltration, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
@@ -210,7 +209,7 @@ namespace vcsn
         REGISTER(power, aut_t, unsigned);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(random_automaton_deterministic, ctx_t, unsigned);
-        REGISTER(shortest, aut_t, unsigned);
+        REGISTER(shortest, aut_t, unsigned, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
         REGISTER(synchronizing_word, aut_t, const std::string);
         REGISTER(u, ctx_t, unsigned);

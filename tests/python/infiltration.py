@@ -182,7 +182,7 @@ uavb = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
 xayb = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
     .expression('<x>a<y>b').standard()
 CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
-         str(uavb.infiltration(xayb).enumerate(4)))
+         str(uavb.infiltration(xayb).shortest(len = 4)))
 
 
 ## ---------- ##
@@ -200,5 +200,5 @@ CHECK_EQ('''<abcd>x
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
          a['a'].infiltration(a['b'], a['c'], a['d'])
          .strip()
-         .enumerate(10)
+         .shortest(len = 10)
          .format('list'))

@@ -184,7 +184,7 @@ AabBC
 aABCb
 aABbC
 aAbBC
-abABC''', ABCab.enumerate(10).format('list'))
+abABC''', ABCab.shortest(len = 10).format('list'))
 
 
 ## --------------------- ##
@@ -210,7 +210,7 @@ a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
 a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
          .expression('<x>a<y>b').standard()
 CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
-<uvxy+xyuv>abab''', a1.shuffle(a2).enumerate(4).format('list'))
+<uvxy+xyuv>abab''', a1.shuffle(a2).shortest(len = 4).format('list'))
 
 
 ## ---------- ##
@@ -225,5 +225,5 @@ for l in ['a', 'b', 'c', 'd']:
 CHECK_EQ('<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx',
          a['a'].shuffle(a['b'], a['c'], a['d'])
          .strip()
-         .enumerate(10)
+         .shortest(len = 10)
          .format('list'))
