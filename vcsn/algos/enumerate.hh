@@ -43,9 +43,7 @@ namespace vcsn
 
       enumerater(const automaton_t& aut)
         : aut_(aut)
-      {
-        past_[aut_->pre()] = ps_.one();
-      }
+      {}
 
       /// The weighted accepted word with length at most \a max.
       polynomial_t enumerate(unsigned max)
@@ -62,7 +60,7 @@ namespace vcsn
         // Return the past of post(), but remove the initial and final
         // special characters for the words.
         polynomial_t res;
-        for (const auto& m: past_[aut_->post()])
+        for (const auto& m: output_)
           ps_.add_here(res, ls_.undelimit(label_of(m)), weight_of(m));
         return res;
       }
@@ -74,13 +72,13 @@ namespace vcsn
         queue_t queue;
         queue.emplace(aut_->pre(), ps_.monomial_one());
 
-        while (past_[aut_->post()].size() < num && !queue.empty())
+        while (output_.size() < num && !queue.empty())
           propagate_(queue);
 
         // Return the past of post(), but remove the initial and final
         // special characters for the words.
         polynomial_t res;
-        for (const auto& m: past_[aut_->post()])
+        for (const auto& m: output_)
           {
             ps_.add_here(res, ls_.undelimit(label_of(m)), weight_of(m));
             if (--num == 0)
@@ -99,26 +97,28 @@ namespace vcsn
           {
             auto sm = std::move(q1.front());
             state_t s = sm.first;
-            monomial_t m = sm.second;
+            const monomial_t& m = sm.second;
             q1.pop();
             for (const auto t: aut_->all_out(s))
               {
                 // FIXME: monomial mul.
                 monomial_t n(ls_.mul(label_of(m), aut_->label_of(t)),
                              ws_.mul(weight_of(m), aut_->weight_of(t)));
-                ps_.add_here(past_[aut_->dst_of(t)], n);
+                if (aut_->dst_of(t) == aut_->post())
+                  ps_.add_here(output_, n);
                 q2.emplace(aut_->dst_of(t), n);
               }
           }
         q1.swap(q2);
       }
 
+      /// The automaton whose behavior to approximate.
       const automaton_t& aut_;
       const weightset_t& ws_ = *aut_->weightset();
       const polynomialset_t ps_ = make_word_polynomialset(aut_->context());
       const labelset_t_of<polynomialset_t>& ls_ = *ps_.labelset();
-      /// For each state, the first orders of its past.
-      std::map<state_t, polynomial_t> past_;
+      /// The approximated behavior: the first orders to post's past.
+      polynomial_t output_;
     };
   }
 

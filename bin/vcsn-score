@@ -243,7 +243,8 @@ n = 9
 bench('a.shortest(5)',
       'a = de_bruijn({})'.format(n),
       setup = ['n = {}'.format(n),
-               'a = b.de_bruijn(n)'])
+               'a = b.de_bruijn(n)'],
+      number = 10)
 
 r = "[a-e]?{600}"
 bench('a.shortest(5)',
