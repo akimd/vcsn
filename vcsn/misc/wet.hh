@@ -93,8 +93,8 @@ namespace vcsn
     using label_t = typename welement_label_t::label_t;
     using weight_t = typename welement_weight_t::weight_t;
 
-    using value_t = welement<std::remove_reference_t<label_t>,
-                             std::remove_reference_t<weight_t>>;
+    using value_t = welement<typename std::remove_reference<label_t>::type,
+                             typename std::remove_reference<weight_t>::type>;
 
     welement(const label_t& l, const weight_t& w)
       : welement_label_t(l)
@@ -180,7 +180,7 @@ namespace vcsn
 
     /// General case.
     template <typename Key, typename Value,
-              typename Compare = std::less<>,
+              typename Compare = std::less<Key>,
               typename Hash = std::hash<Key>,
               typename KeyEqual = std::equal_to<Key>>
     class wet_impl
@@ -263,7 +263,7 @@ namespace vcsn
 
     /// General case.
     template <typename Key, typename Value,
-              typename Compare = std::less<>,
+              typename Compare = std::less<Key>,
               typename Hash = std::hash<Key>,
               typename KeyEqual = std::equal_to<Key>>
     class wet_impl
@@ -673,7 +673,7 @@ namespace vcsn
   }
 
   template <typename Key, typename Value,
-            typename Compare = std::less<>,
+            typename Compare = std::less<Key>,
             typename Hash = std::hash<Key>,
             typename KeyEqual = std::equal_to<Key>>
   using wet = detail::wet_impl<Key, Value, Compare, Hash, KeyEqual>;
