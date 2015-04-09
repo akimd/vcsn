@@ -50,9 +50,9 @@ def _automaton_convert(self, mode, engine = "dot"):
     elif mode == "dot2tex":
         return SVG(self.as_svg(mode, engine))
     elif mode == "info":
-        return self.info(False)
+        return self.info(detailed = False)
     elif mode == "info,detailed":
-        return self.info(True)
+        return self.info(detailed = True)
     elif mode == "type":
         return repr(self)
     else:
@@ -184,6 +184,6 @@ automaton.is_synchronized_by = _automaton_is_synchronized_by
 
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 
-automaton.state_number = lambda self: self.info(False)['number of states']
+automaton.state_number = lambda self: self.info('number of states')
 
 automaton.type = lambda self: self.info('type')
