@@ -37,7 +37,7 @@ ctx = vcsn.context('lal_char(ab), b')
 
 check('\z', 3, '\z')
 check('\e', 3, '\e')
-check('(a+b)', 2, 'a + b')
+check('a+b', 2, 'a + b')
 check('ababab', 10, 'ababab')
 
 check_enumerate('(a+b)*', 2, '\e + a + b + aa + ab + ba + bb')

@@ -122,21 +122,23 @@ namespace vcsn
     }
 
     /// Set the monomial of \a l in \a v to weight \a k.
+    /// \pre  w is not null
     value_t&
-    new_weight(value_t& v, const label_t& l, const weight_t k) const
+    new_weight(value_t& v, const label_t& l, const weight_t w) const
     {
-      v.set(l, k);
+      assert(!weightset()->is_zero(w));
+      v.set(l, w);
       return v;
     }
 
-    /// Set the monomial of \a l in \a v to weight \a k.
+    /// Set the monomial of \a l in \a v to weight \a w.
     value_t&
-    set_weight(value_t& v, const label_t& l, const weight_t k) const
+    set_weight(value_t& v, const label_t& l, const weight_t w) const
     {
-      if (weightset()->is_zero(k))
+      if (weightset()->is_zero(w))
         return del_weight(v, l);
       else
-        return new_weight(v, l, k);
+        return new_weight(v, l, w);
     }
 
     const weight_t
@@ -314,6 +316,19 @@ namespace vcsn
       -> value_t
     {
       return mul_impl<value_t::kind>(l, r);
+    }
+
+    /// The product of polynomials \a l and \a r.
+    auto
+    mul(const value_t& p, const label_t& l, const weight_t& w) const
+      -> value_t
+    {
+      value_t res;
+      for (const auto& m: p)
+        add_here(res,
+                 labelset()->mul(label_of(m), l),
+                 weightset()->mul(weight_of(m), w));
+      return res;
     }
 
 
