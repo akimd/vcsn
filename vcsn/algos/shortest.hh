@@ -39,7 +39,7 @@ namespace vcsn
       using word_t = word_t_of<automaton_t>;
 
       using monomial_t = typename polynomialset_t::monomial_t;
-      using queue_t = std::queue<std::pair<state_t, monomial_t>>;
+      using queue_t = std::deque<std::pair<state_t, monomial_t>>;
 
       enumerater(const automaton_t& aut)
         : aut_(aut)
@@ -61,7 +61,7 @@ namespace vcsn
           len += 2;
 
         queue_t queue;
-        queue.emplace(aut_->pre(), ps_.monomial_one());
+        queue.emplace_back(aut_->pre(), ps_.monomial_one());
 
         for (size_t i = 0;
              !queue.empty() && i < len && output_.size() < num;
@@ -86,12 +86,10 @@ namespace vcsn
       void propagate_(queue_t& q1)
       {
         queue_t q2;
-        while (!q1.empty())
+        for (const auto& sm: q1)
           {
-            auto sm = std::move(q1.front());
             state_t s = sm.first;
             const monomial_t& m = sm.second;
-            q1.pop();
             for (const auto t: aut_->all_out(s))
               {
                 // FIXME: monomial mul.
@@ -99,7 +97,7 @@ namespace vcsn
                              ws_.mul(weight_of(m), aut_->weight_of(t)));
                 if (aut_->dst_of(t) == aut_->post())
                   ps_.add_here(output_, n);
-                q2.emplace(aut_->dst_of(t), n);
+                q2.emplace_back(aut_->dst_of(t), n);
               }
           }
         q1.swap(q2);
