@@ -16,7 +16,6 @@
 #include <vcsn/algos/double-ring.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/algos/efsm.hh>
-#include <vcsn/algos/enumerate.hh>
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities.hh>
@@ -25,7 +24,6 @@
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/is-eps-acyclic.hh>
-#include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
@@ -34,12 +32,14 @@
 #include <vcsn/algos/lift.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
+#include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/print.hh>
 #include <vcsn/algos/product.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/push-weights.hh>
 #include <vcsn/algos/random.hh>
 #include <vcsn/algos/read.hh>
+#include <vcsn/algos/shortest.hh>
 #include <vcsn/algos/sort.hh>
 #include <vcsn/algos/split.hh>
 #include <vcsn/algos/standard.hh>

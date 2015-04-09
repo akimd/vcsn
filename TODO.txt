@@ -89,15 +89,15 @@ also need routines to convert automata, expressions, etc. to other contexts.
 ** shortest
 Loops forever:
 
-  $ VCSN_ORIGINS=1 vcsn standard -C 'lal_char(a), z' -Ee 'a*+<-1>a*)' \
-     | vcsn shortest -f-  1
+  $ a = vcsn.Z.expression('a*+<-1>a*').standard()
+  $ a.shortest()
 
 We can check that we reach the same state, but can we have periodic
 behaviors?
 
 It also loops when we have a sink state:
 
-  vcsn.context('lal_char, b').expression('a').standard().complete().shortest(2)
+  $ vcsn.B.expression('a').standard().complete().shortest(2)
 
 ** is-valid(automaton)
 In the case of RW, check that the expression is valid.

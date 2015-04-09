@@ -33,7 +33,6 @@ algo_headers =                                  \
   %D%/algos/double-ring.hh                      \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
-  %D%/algos/enumerate.hh                        \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
   %D%/algos/filter.hh                           \
@@ -76,6 +75,7 @@ algo_headers =                                  \
   %D%/algos/read.hh                             \
   %D%/algos/reduce.hh                           \
   %D%/algos/scc.hh                              \
+  %D%/algos/shortest.hh                         \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \

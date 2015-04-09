@@ -18,7 +18,6 @@ PY_LOG_COMPILER = $(PYTHON)
 %C%_TESTS =                                     \
   %D%/accessible.py                             \
   %D%/automaton.py                              \
-  %D%/focus.py                                  \
   %D%/chain.py                                  \
   %D%/complement.py                             \
   %D%/complete.py                               \
@@ -32,11 +31,12 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/divide.py                                 \
   %D%/efsm.py                                   \
   %D%/eliminate-state.py                        \
-  %D%/enumerate.py                              \
   %D%/evaluate.py                               \
   %D%/expand.py                                 \
+  %D%/expression.py                             \
   %D%/factory.py                                \
   %D%/filter.py                                 \
+  %D%/focus.py                                  \
   %D%/has-bounded-lag.py                        \
   %D%/has-twins-property.py                     \
   %D%/infiltration.py                           \
@@ -62,9 +62,9 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/product.py                                \
   %D%/proper.py                                 \
   %D%/push-weights.py                           \
-  %D%/expression.py                             \
   %D%/reduce.py                                 \
   %D%/scc.py                                    \
+  %D%/shortest.py                               \
   %D%/shuffle.py                                \
   %D%/sort.py                                   \
   %D%/split.py                                  \
