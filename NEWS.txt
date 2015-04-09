@@ -5,6 +5,29 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-04-09
+### shortest now subsumes enumerate
+One can now specify both a maximum number of words, and a maximum
+size.  It is also significantly faster.  The Python binding
+automaton.enumerate was removed.
+
+    In [4]: a = vcsn.Z.expression('[01]*1(<2>[01])*').standard()
+
+    In [5]: a.shortest()
+    Out[5]: 1
+
+    In [6]: a.shortest(3)
+    Out[6]: 1 + 01 + <2>10
+
+    In [7]: a.shortest(len = 3)
+    Out[7]: 1 + 01 + <2>10 + <3>11 + 001 + <2>010 + <3>011 + <4>100 + <5>101 + <6>110 + <7>111
+
+    In [8]: a.shortest(len = 3, num = 5)
+    Out[8]: 1 + 01 + <2>10 + <3>11 + 001
+
+    In [9]: a.shortest(len = 30, num = 5)
+    Out[9]: 1 + 01 + <2>10 + <3>11 + 001
+
 ## 2015-03-25
 ### product is renamed conjunction
 After many hesitations, we finally decided to rename the synchronized

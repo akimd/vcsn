@@ -57,6 +57,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.push_weights.ipynb              \
   %D%/automaton.reduce.ipynb                    \
   %D%/automaton.scc.ipynb                       \
+  %D%/automaton.shortest.ipynb                  \
   %D%/automaton.shuffle.ipynb                   \
   %D%/automaton.standard.ipynb                  \
   %D%/automaton.synchronizing_word.ipynb        \
