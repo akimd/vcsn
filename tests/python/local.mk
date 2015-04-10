@@ -221,9 +221,13 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xa.gv                         \
   %D%/product.dir/xy.gv                         \
   %D%/synchronize.dir/bool.gv                   \
+  %D%/synchronize.dir/bool_delay.gv             \
   %D%/synchronize.dir/bool_min.gv               \
+  %D%/synchronize.dir/bool_min_delay.gv         \
   %D%/synchronize.dir/z.gv                      \
+  %D%/synchronize.dir/z_delay.gv                \
   %D%/synchronize.dir/z_min.gv                  \
+  %D%/synchronize.dir/z_min_delay.gv            \
   %D%/product.dir/xyz.gv                        \
   %D%/to-expression.dir/a.gv                    \
   %D%/union.dir/abc.gv

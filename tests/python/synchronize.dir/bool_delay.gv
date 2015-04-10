@@ -1,0 +1,35 @@
+digraph
+{
+  vcsn_context = "lat<wordset<char_letters(abcfgil)>, wordset<char_letters(dehjkmn)>>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F6
+    F7
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0:(0,0)", shape = box]
+    1 [label = "1:(1,0)", shape = box]
+    2 [label = "3:(2,0)", shape = box]
+    3 [label = "5:(1,0)", shape = box]
+    4 [label = "7:(1,0)", shape = box]
+    5 [label = "8:(0,0)", shape = box]
+    6 [label = "4:(0,1)", shape = box]
+    7 [label = "4:(1,0)", shape = box]
+  }
+  I0 -> 0
+  0 -> 1 [label = "(abc,de)"]
+  1 -> 2 [label = "(f,\\e)"]
+  1 -> 3 [label = "(g,h)"]
+  2 -> 7 [label = "(l,mn)"]
+  3 -> 4 [label = "(i,j)"]
+  3 -> 5 [label = "(\\e,k)"]
+  4 -> 4 [label = "(i,j)"]
+  4 -> 5 [label = "(\\e,k)"]
+  5 -> 6 [label = "(l,mn)"]
+  6 -> F6
+  7 -> F7
+}
