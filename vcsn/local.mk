@@ -51,6 +51,7 @@ algo_headers =                                  \
   %D%/algos/is-functional.hh                    \
   %D%/algos/is-partial-identity.hh              \
   %D%/algos/is-proper.hh                        \
+  %D%/algos/is-synchronized.hh                  \
   %D%/algos/is-valid-expression.hh              \
   %D%/algos/is-valid.hh                         \
   %D%/algos/ladybird.hh                         \
