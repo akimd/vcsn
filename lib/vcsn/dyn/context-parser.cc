@@ -42,7 +42,8 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::any_()
     {
       std::string w = word_();
-      if (w == "determinized_automaton"
+      if (w == "delay_automaton"
+          || w == "determinized_automaton"
           || w == "detweighted_automaton"
           || w == "expression_automaton"
           || w == "filter_automaton"
@@ -279,7 +280,8 @@ namespace vcsn
           eat(is_, '>');
         }
       // xxx_automaton<Aut>.
-      else if (prefix == "determinized_automaton"
+      else if (prefix == "delay_automaton"
+               || prefix == "determinized_automaton"
                || prefix == "detweighted_automaton"
                || prefix == "expression_automaton"
                || prefix == "filter_automaton"

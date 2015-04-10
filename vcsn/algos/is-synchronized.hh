@@ -169,9 +169,6 @@ namespace vcsn
     };
 
     template <typename Aut>
-    using delay_automaton = std::shared_ptr<delay_automaton_impl<Aut>>;
-
-    template <typename Aut>
     class synchronize_checker
     {
       static_assert(context_t_of<Aut>::is_lat,
@@ -230,6 +227,13 @@ namespace vcsn
         return true;
       }
 
+      out_automaton_t
+      make_delay_automaton()
+      {
+        value_automaton();
+        return out_aut_;
+      }
+
     private:
 
       /*
@@ -282,6 +286,14 @@ namespace vcsn
       return s.is_synchronized();
     }
 
+    template <typename Aut>
+    delay_automaton<Aut>
+    make_delay_automaton(const Aut& aut)
+    {
+      synchronize_checker<Aut> s(aut);
+      return s.make_delay_automaton();
+    }
+
   }
 
   /*------------------.
@@ -308,6 +320,35 @@ namespace vcsn
       bool is_synchronized(const automaton& aut)
       {
         return vcsn::is_synchronized(aut->as<Aut>());
+      }
+    }
+  }
+
+  /*------------------.
+  | delay_automaton.  |
+  `------------------*/
+
+  /// Check whether the transducer is synchronized
+  ///
+  /// \param[in] aut        the transducer
+  /// \returns              whether it is synchronized
+  template <typename Aut>
+  auto
+  make_delay_automaton(const Aut& aut)
+    -> decltype(detail::make_delay_automaton(aut))
+  {
+    return detail::make_delay_automaton(aut);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      automaton delay_automaton(const automaton& aut)
+      {
+        return make_automaton(vcsn::make_delay_automaton(aut->as<Aut>()));
       }
     }
   }

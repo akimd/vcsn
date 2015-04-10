@@ -145,6 +145,9 @@ namespace vcsn
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
+    /// The automaton with the delay of each state.
+    automaton delay_automaton(const automaton& a);
+
     /// Derive \a exp with respect to \a s.
     ///
     /// \param exp       the input expression

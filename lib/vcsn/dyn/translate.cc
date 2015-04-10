@@ -375,6 +375,12 @@ namespace vcsn
           signature sig2{sig[0], sig[1]};
           algos.emplace("efsm", sig2);
         }
+      else if (algo == "is_synchronized"
+               || algo == "delay_automaton")
+      {
+        algos.emplace("is_synchronized", sig);
+        algos.emplace("delay_automaton", sig);
+      }
       translate.compile(algos);
     }
   } // namespace dyn

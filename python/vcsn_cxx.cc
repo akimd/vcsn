@@ -266,6 +266,11 @@ struct automaton
     return vcsn::dyn::costandard(val_);
   }
 
+  automaton delay_automaton() const
+  {
+    return vcsn::dyn::delay_automaton(val_);
+  }
+
   automaton determinize(const std::string& algo = "auto") const
   {
     return vcsn::dyn::determinize(val_, algo);
@@ -1115,6 +1120,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("condense", &automaton::condense)
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
+    .def("delay_automaton", &automaton::delay_automaton)
     .def("determinize", &automaton::determinize, (arg("algo") = "auto"))
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)

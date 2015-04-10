@@ -55,7 +55,7 @@ def process_file(fn):
                 bridge['fun'] = reg
             if reg == 'copy_convert':
                 bridge['fun'] = 'copy'
-            elif reg == 'make_word_context':
+            elif reg in ['delay_automaton', 'make_word_context']:
                 bridge['fun'] = reg
             bridge['formals'] = re.sub('\s+', ' ', bridge['formals'])
             bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',

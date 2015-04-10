@@ -47,17 +47,18 @@ namespace vcsn
     num_eps_transitions(const Aut&);
   }
 
-  // vcsn/algos/transpose.hh
+
+  // vcsn/algos/delay.hh
   namespace detail
   {
     template <typename Aut>
-    class transpose_automaton_impl;
+    class delay_automaton_impl;
   }
 
-  /// An automaton wrapper that presents the transposed automaton.
+  /// An automaton wrapper that presents the delay automaton.
   template <typename Aut>
-  using transpose_automaton
-    = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
+  using delay_automaton
+    = std::shared_ptr<detail::delay_automaton_impl<Aut>>;
 
   // vcsn/algos/synchronize.hh
   namespace detail
@@ -70,4 +71,16 @@ namespace vcsn
   template <typename Aut>
   using synchronized_automaton
     = std::shared_ptr<detail::synchronized_automaton_impl<Aut>>;
+
+  // vcsn/algos/transpose.hh
+  namespace detail
+  {
+    template <typename Aut>
+    class transpose_automaton_impl;
+  }
+
+  /// An automaton wrapper that presents the transposed automaton.
+  template <typename Aut>
+  using transpose_automaton
+    = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
 }

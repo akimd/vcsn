@@ -50,7 +50,9 @@ namespace vcsn
     DEFINE(automaton)
     {
       auto type = t.get_type();
-      if (type == "determinized_automaton")
+      if (type == "delay_automaton")
+        header("vcsn/algos/is-synchronized.hh");
+      else if (type == "determinized_automaton")
         header("vcsn/algos/determinize.hh");
       else if (type == "detweighted_automaton")
         header("vcsn/algos/determinize.hh");
