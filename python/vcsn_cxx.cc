@@ -1,7 +1,11 @@
 #if defined __clang__
 # if 3 <= __clang_major__ && 6 <= __clang_minor__
-// python/vcsn_cxx.cc: In constructor 'minimize::minimize(const boost::python::detail::keywords<nkeywords>&, const char*)':
-// python/vcsn_cxx.cc:445:1531: warning: typedef 'assertion' locally defined but not used [-Wunused-local-typedefs]
+// python/vcsn_cxx.cc: In constructor
+//   'minimize::minimize(const boost::python::detail::keywords<nkeywords>&,
+//                       const char*)':
+// python/vcsn_cxx.cc:445:1531: warning: typedef 'assertion'
+//   locally defined but not used [-Wunused-local-typedefs]
+//
 // BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 # pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 # endif
@@ -18,13 +22,6 @@
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 
-struct automaton;
-struct context;
-struct expansion;
-struct label;
-struct polynomial;
-struct expression;
-struct weight;
 
 /// Convert a Python list to a C++ vector.
 template <typename T>
@@ -36,6 +33,16 @@ make_vector(const boost::python::list& list)
     res.emplace_back(boost::python::extract<T>(list[i]));
   return res;
 }
+
+
+struct automaton;
+struct context;
+struct expansion;
+struct label;
+struct polynomial;
+struct expression;
+struct weight;
+
 
 /*----------.
 | context.  |
