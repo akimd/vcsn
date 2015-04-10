@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/algos/fwd.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/ctx/fwd.hh>
@@ -563,8 +565,8 @@ namespace vcsn
     /// \param num   number of words looked for.
     /// \param len   maximum length of words looked for.
     polynomial shortest(const automaton& aut,
-                        unsigned num = 1,
-                        unsigned len = -1);
+                        boost::optional<unsigned> num = {},
+                        boost::optional<unsigned> len = {});
 
     /// The shuffle product of automata \a lhs and \a rhs.
     /// Performs the join of their type.

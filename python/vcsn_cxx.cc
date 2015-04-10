@@ -22,6 +22,57 @@
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 
+/// See http://stackoverflow.com/a/6794523/1353549.
+///
+/// Invoke `python_optional<type_t>()` from the module initialization
+/// for all the needed `type_t`s.
+template <typename T>
+struct python_optional
+  : private boost::noncopyable
+{
+  struct conversion
+    : public boost::python::converter::expected_from_python_type<T>
+  {
+    static PyObject* convert(boost::optional<T> const& value)
+    {
+      using namespace boost::python;
+      return incref((value ? object(*value) : object()).ptr());
+    }
+  };
+
+  static void* convertible(PyObject* obj)
+  {
+    using namespace boost::python;
+    return obj == Py_None || extract<T>(obj).check() ? obj : nullptr;
+  }
+
+  static void
+  constructor(PyObject *obj,
+              boost::python::converter::rvalue_from_python_stage1_data *data)
+  {
+    using namespace boost::python;
+    using data_t = converter::rvalue_from_python_storage<boost::optional<T>>;
+    void *const storage =reinterpret_cast<data_t*>(data)->storage.bytes;
+    if (obj == Py_None)
+      new (storage) boost::optional<T>();
+    else
+      new (storage) boost::optional<T>(extract<T>(obj));
+    data->convertible = storage;
+  }
+
+  explicit python_optional()
+  {
+    using namespace boost::python;
+    if (!extract<boost::optional<T>>(object()).check())
+      {
+        to_python_converter<boost::optional<T>, conversion, true>();
+        converter::registry::push_back(&convertible,
+                                       &constructor,
+                                       type_id<boost::optional<T> >(),
+                                       &conversion::get_pytype);
+      }
+  }
+};
 
 /// Convert a Python list to a C++ vector.
 template <typename T>
@@ -474,7 +525,8 @@ struct automaton
     return vcsn::dyn::scc(val_, algo);
   }
 
-  polynomial shortest(unsigned num, unsigned len) const;
+  polynomial shortest(boost::optional<unsigned> num,
+                      boost::optional<unsigned> len) const;
 
   static automaton shuffle_(const boost::python::list& auts)
   {
@@ -929,7 +981,8 @@ automaton automaton::right_mult(const weight& w) const
   return vcsn::dyn::right_mult(val_, w.val_);
 }
 
-polynomial automaton::shortest(unsigned num, unsigned len) const
+polynomial automaton::shortest(boost::optional<unsigned> num,
+                               boost::optional<unsigned> len) const
 {
   return vcsn::dyn::shortest(val_, num, len);
 }
@@ -1029,6 +1082,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   namespace bp = boost::python;
   using bp::arg;
 
+  python_optional<unsigned>();
+
   bp::class_<automaton>
     ("automaton",
      bp::init<const expression&>())
@@ -1107,7 +1162,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("right_mult", &automaton::right_mult)
     .def("scc", &automaton::scc, (arg("algo") = "auto"))
     .def("shortest", &automaton::shortest,
-         (arg("num") = 0, arg("len") = 0))
+         (arg("num") = boost::optional<unsigned>(),
+          arg("len") = boost::optional<unsigned>()))
     .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")
     .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)

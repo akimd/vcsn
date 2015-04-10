@@ -4,6 +4,8 @@
 #include <map>
 #include <queue>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -48,21 +50,21 @@ namespace vcsn
       /// The approximated behavior of the automaton.
       /// \param num   number of words looked for.
       /// \param len   maximum length of words looked for.
-      polynomial_t operator()(size_t num, size_t len)
+      polynomial_t operator()(boost::optional<unsigned> num,
+                              boost::optional<unsigned> len)
       {
-        if (num == 0)
-          num = len == 0 ? 1 : std::numeric_limits<unsigned>::max();
-        if (len == 0)
+        if (!num)
+          num = !len ? 1 : std::numeric_limits<unsigned>::max();
+        if (!len)
           len = std::numeric_limits<unsigned>::max();
-
         // Each step of propagation contributes a letter.  We need to
         // take the initial and final special characters into account.
-        if (len != std::numeric_limits<unsigned>::max())
-          len += 2;
+        if (*len != std::numeric_limits<unsigned>::max())
+          *len += 2;
 
         auto queue = queue_t{{aut_->pre(), ps_.monomial_one()}};
-        for (size_t i = 0;
-             !queue.empty() && i < len && output_.size() < num;
+        for (unsigned i = 0;
+             !queue.empty() && i < *len && output_.size() < *num;
              ++i)
           propagate_(queue);
 
@@ -70,7 +72,7 @@ namespace vcsn
         for (const auto& m: output_)
           {
             ps_.add_here(res, m);
-            if (--num == 0)
+            if (--*num == 0)
               break;
           }
         return res;
@@ -118,7 +120,9 @@ namespace vcsn
   template <typename Automaton>
   inline
   typename detail::enumerater<Automaton>::polynomial_t
-  shortest(const Automaton& aut, unsigned num = 1, unsigned len = 0)
+  shortest(const Automaton& aut,
+           boost::optional<unsigned> num = {},
+           boost::optional<unsigned> len = {})
   {
     detail::enumerater<Automaton> enumerater(aut);
     return enumerater(num, len);
@@ -132,7 +136,7 @@ namespace vcsn
   typename detail::enumerater<Automaton>::polynomial_t
   enumerate(const Automaton& aut, unsigned len)
   {
-    return shortest(aut, 0, len);
+    return shortest(aut, boost::none, len);
   }
 
 
@@ -143,7 +147,9 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Num, typename Len>
       polynomial
-      shortest(const automaton& aut, unsigned num, unsigned len)
+      shortest(const automaton& aut,
+               boost::optional<unsigned> num,
+               boost::optional<unsigned> len)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());

@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/signature.hh>
@@ -107,6 +109,8 @@ namespace vcsn
   DEFINE(const std::string);
   DEFINE(const std::vector<unsigned>);
   DEFINE(std::ostream);
+
+  DEFINE(boost::optional<unsigned>);
 
   DEFINE(vcsn::rat::identities);
   DEFINE(vcsn::direction);

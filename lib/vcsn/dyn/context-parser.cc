@@ -91,8 +91,9 @@ namespace vcsn
           w += eat(is_, '>');
           return std::make_shared<other>(w);
         }
-      // std::vector<unsigned>.
-      else if (w == "const std::vector")
+      // boost::optional<unsigned>, std::vector<unsigned>.
+      else if (w == "boost::optional"
+               || w == "const std::vector")
         {
           w += eat(is_, '<');
           w += word_();
