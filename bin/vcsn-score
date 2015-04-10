@@ -237,7 +237,11 @@ bench('a.eval("abcxyz"*{})'.format(n),
       number = 1000)
 
 
-# shortest.
+
+## ---------- ##
+## shortest.  ##
+## ---------- ##
+
 n = 9
 # too slow: a = b.expression('(a+b)*a(a+b){{{n}}}).derived_term()
 bench('a.shortest(5)',
@@ -252,11 +256,13 @@ bench('a.shortest(5000)',
                'a = b.de_bruijn(n)'],
       number = 10)
 
+ctx = 'lal_char(a-e), z'
 r = "[a-e]?{600}"
 bench('a.shortest(5)',
-      'a = std({})'.format(r),
-      setup = ['n = {}'.format(n),
-               'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup = ['c = vcsn.context(ctx)',
+               'a = c.expression(r).standard()'])
+
 
 # sort.
 r = "[a-e]?{700}"

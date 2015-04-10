@@ -55,25 +55,21 @@ namespace vcsn
         if (len == 0)
           len = std::numeric_limits<unsigned>::max();
 
-        // We match words that include the initial and final special
-        // characters.
+        // Each step of propagation contributes a letter.  We need to
+        // take the initial and final special characters into account.
         if (len != std::numeric_limits<unsigned>::max())
           len += 2;
 
-        queue_t queue;
-        queue.emplace_back(aut_->pre(), ps_.monomial_one());
-
+        auto queue = queue_t{{aut_->pre(), ps_.monomial_one()}};
         for (size_t i = 0;
              !queue.empty() && i < len && output_.size() < num;
              ++i)
           propagate_(queue);
 
-        // Return the past of post(), but remove the initial and final
-        // special characters for the words.
         polynomial_t res;
         for (const auto& m: output_)
           {
-            ps_.add_here(res, ls_.undelimit(label_of(m)), weight_of(m));
+            ps_.add_here(res, m);
             if (--num == 0)
               break;
           }
@@ -95,8 +91,11 @@ namespace vcsn
                 // FIXME: monomial mul.
                 monomial_t n(ls_.mul(label_of(m), aut_->label_of(t)),
                              ws_.mul(weight_of(m), aut_->weight_of(t)));
+                // The past of post(), without the initial and final
+                // special characters.
                 if (aut_->dst_of(t) == aut_->post())
-                  ps_.add_here(output_, n);
+                  ps_.add_here(output_,
+                               ls_.undelimit(label_of(n)), weight_of(n));
                 q2.emplace_back(aut_->dst_of(t), n);
               }
           }

@@ -71,6 +71,10 @@ def normalize(k):
     # were actually running "a.shortest(5)".
     k = re.sub(r'a.sort\(\) (# a = std\(\[a-e\]\?\{600\}\))',
                r'a.shortest(5) \1', k)
+    # and we were not reporting the context, although it's not B.
+    k = re.sub(r'(a\.shortest\(5\) # a = std\(\[a-e\]\?\{600\}\))',
+               r'\1, c = [a-e] -> Z',
+               k)
 
     # The syntax of contexts has changed.
     k = re.sub(r'lal_char\(abc\)(_|, )b', '[abc] -> B', k)
