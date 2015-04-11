@@ -30,12 +30,10 @@ def _expression_derivation(self, w, *args):
     return self._derivation(w, *args)
 expression.derivation = _expression_derivation
 
-expression.enumerate = lambda self, num = 1: self.standard().enumerate(num)
-
 def _expression_info(self, key = None, detailed = False):
     res = _info_to_dict(self.format('info'))
     return res[key] if key else res
 expression.info = _expression_info
 
-expression.shortest = lambda self, num = 1: self.derived_term().strip().shortest(num)
+expression.shortest = lambda self, *a, **kw: self.derived_term().strip().shortest(*a, **kw)
 expression.star = lambda self: self.chain(-1)

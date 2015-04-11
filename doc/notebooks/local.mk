@@ -72,6 +72,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.expansion.ipynb                \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
+  %D%/expression.shortest.ipynb                 \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
   %D%/expression.thompson.ipynb                 \

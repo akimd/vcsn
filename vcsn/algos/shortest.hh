@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <map>
 #include <queue>
 
 #include <boost/optional.hpp>
