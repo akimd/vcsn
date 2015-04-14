@@ -152,6 +152,16 @@ namespace vcsn
     }
 
 
+    /*---------.
+    | clear.   |
+    `---------*/
+
+    /// Set to zero.
+    void clear(value_t& v)
+    {
+      v.clear();
+    }
+
 
     /*-------.
     | add.   |

@@ -529,6 +529,21 @@ namespace vcsn
         : set_{std::move(set)}
       {}
 
+      void clear()
+      {
+        set_.reset();
+      }
+
+      bool empty() const
+      {
+        return set_.none();
+      }
+
+      size_t size() const
+      {
+        return set_.count();
+      }
+
       static constexpr size_t npos = set_t::npos;
 
       /// Iterator.
@@ -658,16 +673,6 @@ namespace vcsn
           return {set_, (unsigned char)k};
         else
           return end();
-      }
-
-      size_t size() const
-      {
-        return set_.count();
-      }
-
-      size_t empty() const
-      {
-        return set_.none();
       }
     };
   }
