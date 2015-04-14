@@ -61,11 +61,34 @@ namespace vcsn
         if (*len != std::numeric_limits<unsigned>::max())
           *len += 2;
 
-        auto queue = queue_t{{aut_->pre(), ps_.monomial_one()}};
+        auto q1 = queue_t{{aut_->pre(), ps_.monomial_one()}};
+        auto q2 = queue_t{};
         for (unsigned i = 0;
-             !queue.empty() && i < *len && output_.size() < *num;
+             !q1.empty() && i < *len && output_.size() < *num;
              ++i)
-          propagate_(queue);
+          {
+            // Process once all the states of \a q1.
+            // Save into q1 the new states to visit.
+            q2.clear();
+            for (const auto& sm: q1)
+              {
+                state_t s = sm.first;
+                const monomial_t& m = sm.second;
+                for (const auto t: aut_->all_out(s))
+                  {
+                    // FIXME: monomial mul.
+                    monomial_t n(ls_.mul(label_of(m), aut_->label_of(t)),
+                                 ws_.mul(weight_of(m), aut_->weight_of(t)));
+                    // The past of post(), without the initial and final
+                    // special characters.
+                    if (aut_->dst_of(t) == aut_->post())
+                      ps_.add_here(output_,
+                                   ls_.undelimit(label_of(n)), weight_of(n));
+                    q2.emplace_back(aut_->dst_of(t), n);
+                  }
+              }
+            q1.swap(q2);
+          }
 
         polynomial_t res;
         for (const auto& m: output_)
@@ -78,31 +101,6 @@ namespace vcsn
       }
 
     private:
-      /// Process once all the states of \a q1.
-      /// Save into q1 the new states to visit.
-      void propagate_(queue_t& q1)
-      {
-        queue_t q2;
-        for (const auto& sm: q1)
-          {
-            state_t s = sm.first;
-            const monomial_t& m = sm.second;
-            for (const auto t: aut_->all_out(s))
-              {
-                // FIXME: monomial mul.
-                monomial_t n(ls_.mul(label_of(m), aut_->label_of(t)),
-                             ws_.mul(weight_of(m), aut_->weight_of(t)));
-                // The past of post(), without the initial and final
-                // special characters.
-                if (aut_->dst_of(t) == aut_->post())
-                  ps_.add_here(output_,
-                               ls_.undelimit(label_of(n)), weight_of(n));
-                q2.emplace_back(aut_->dst_of(t), n);
-              }
-          }
-        q1.swap(q2);
-      }
-
       /// The automaton whose behavior to approximate.
       const automaton_t& aut_;
       const weightset_t& ws_ = *aut_->weightset();
