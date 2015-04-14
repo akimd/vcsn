@@ -40,7 +40,7 @@ namespace vcsn
       using word_t = word_t_of<automaton_t>;
 
       using monomial_t = typename polynomialset_t::monomial_t;
-      using queue_t = std::deque<std::pair<state_t, monomial_t>>;
+      using queue_t = std::vector<std::pair<state_t, monomial_t>>;
 
       enumerater(const automaton_t& aut)
         : aut_(aut)
@@ -63,6 +63,8 @@ namespace vcsn
 
         auto q1 = queue_t{{aut_->pre(), ps_.monomial_one()}};
         auto q2 = queue_t{};
+        q1.reserve(4096);
+        q2.reserve(4096);
         for (unsigned i = 0;
              !q1.empty() && i < *len && output_.size() < *num;
              ++i)
