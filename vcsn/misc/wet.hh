@@ -163,7 +163,7 @@ namespace vcsn
     m.second = w;
   }
 
-  enum wet_kind
+  enum class wet_kind_t
     {
       map,
       set,
@@ -190,8 +190,8 @@ namespace vcsn
       map_t map_;
 
     public:
-      static constexpr wet_kind kind = wet_kind::map;
       using self_t = wet_impl;
+      static constexpr wet_kind_t kind = wet_kind_t::map;
       using key_t = Key;
       using value_t = Value;
       using welement_t = welement<key_t, value_t>;
@@ -273,8 +273,8 @@ namespace vcsn
       map_t map_;
 
     public:
-      static constexpr wet_kind kind = wet_kind::map;
       using self_t = wet_impl;
+      static constexpr wet_kind_t kind = wet_kind_t::unordered_map;
       using key_t = Key;
       using value_t = Value;
       using welement_t = welement<key_t, value_t>;
@@ -353,8 +353,8 @@ namespace vcsn
       set_t set_;
 
     public:
-      static constexpr wet_kind kind = wet_kind::set;
       using self_t = wet_impl;
+      static constexpr wet_kind_t kind = wet_kind_t::set;
       using key_t = Key;
       using value_t = bool;
       using welement_t = welement<key_t, value_t>;
@@ -503,8 +503,8 @@ namespace vcsn
       set_t set_{256};
 
     public:
-      static constexpr wet_kind kind = wet_kind::bitset;
       using self_t = wet_impl;
+      static constexpr wet_kind_t kind = wet_kind_t::bitset;
       using key_t = char;
       using value_t = bool;
       using welement_t = welement<key_t, value_t>;

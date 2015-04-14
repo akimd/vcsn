@@ -200,10 +200,10 @@ namespace vcsn
     }
 
     /// `v += p`, default case.
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     auto
     add_here_impl(value_t& l, const value_t& r) const
-      -> enable_if_t<!(WetType == wet_kind::bitset
+      -> enable_if_t<!(WetType == wet_kind_t::bitset
                        && std::is_same<weightset_t, b>::value),
                      value_t&>
     {
@@ -213,10 +213,10 @@ namespace vcsn
     }
 
     /// `v += p`, B and bitsets.
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     auto
     add_here_impl(value_t& l, const value_t& r) const
-      -> enable_if_t<WetType == wet_kind::bitset
+      -> enable_if_t<WetType == wet_kind_t::bitset
                      && std::is_same<weightset_t, b>::value,
                      value_t&>
     {
@@ -294,10 +294,10 @@ namespace vcsn
 
     /// The product of polynomials \a l and \a r.
     /// General case.
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     auto
     mul_impl(const value_t& l, const value_t& r) const
-      -> enable_if_t<WetType != wet_kind::bitset,
+      -> enable_if_t<WetType != wet_kind_t::bitset,
                      value_t>
     {
       value_t res;
@@ -311,10 +311,10 @@ namespace vcsn
 
     /// The product of polynomials \a l and \a r.
     /// Case of bitsets.
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     auto
     mul_impl(const value_t& l, const value_t& r) const
-      -> enable_if_t<WetType == wet_kind::bitset,
+      -> enable_if_t<WetType == wet_kind_t::bitset,
                      value_t>
     {
       return l.set() & r.set();
@@ -686,21 +686,21 @@ namespace vcsn
               && weightset_t::equal(weight_of(lhs), weight_of(rhs)));
     }
 
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
     equal_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType != wet_kind::bitset,
+      -> enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
       return boost::equal(l, r, monomial_equal);
     }
 
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
     equal_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType == wet_kind::bitset,
+      -> enable_if_t<WetType == wet_kind_t::bitset,
                      bool>
     {
       return l.set() == r.set();
@@ -806,21 +806,21 @@ namespace vcsn
         return weightset_t::less(weight_of(lhs), weight_of(rhs));
     }
 
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
     less_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType != wet_kind::bitset,
+      -> enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
       return boost::lexicographical_compare(l, r, monomial_less);
     }
 
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
     less_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType == wet_kind::bitset,
+      -> enable_if_t<WetType == wet_kind_t::bitset,
                      bool>
     {
       return l.set() < r.set();
@@ -856,11 +856,11 @@ namespace vcsn
       return res;
     }
 
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
     hash_impl(const value_t& p)
-      -> enable_if_t<WetType != wet_kind::bitset,
+      -> enable_if_t<WetType != wet_kind_t::bitset,
                      size_t>
     {
       size_t res = 0;
@@ -869,11 +869,11 @@ namespace vcsn
       return res;
     }
 
-    template <wet_kind WetType>
+    template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
     hash_impl(const value_t& p)
-      -> enable_if_t<WetType == wet_kind::bitset,
+      -> enable_if_t<WetType == wet_kind_t::bitset,
                      size_t>
     {
       return hash_value(p.set());
