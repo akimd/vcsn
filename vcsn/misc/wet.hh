@@ -11,6 +11,7 @@
 
 #include <vcsn/misc/empty.hh>
 #include <vcsn/misc/functional.hh> // vcsn::equal_to
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -181,9 +182,7 @@ namespace vcsn
 
     /// General case.
     template <typename Key, typename Value,
-              typename Compare = std::less<Key>,
-              typename Hash = std::hash<Key>,
-              typename KeyEqual = std::equal_to<Key>>
+              typename Compare>
     class wet_map
     {
     private:
@@ -263,9 +262,7 @@ namespace vcsn
 
     /// General case.
     template <typename Key, typename Value,
-              typename Compare = std::less<Key>,
-              typename Hash = std::hash<Key>,
-              typename KeyEqual = std::equal_to<Key>>
+              typename Hash, typename KeyEqual>
     class wet_unordered_map
     {
     private:
@@ -344,7 +341,7 @@ namespace vcsn
     `----------------------*/
 
 
-    template <typename Key, typename Compare, typename Hash, typename KeyEqual>
+    template <typename Key, typename Compare>
     class wet_set
     {
     private:
@@ -758,39 +755,17 @@ namespace vcsn
     template <wet_kind_t Kind,
               typename Key, typename Value,
               typename Compare, typename Hash, typename KeyEqual>
-    class wet_impl;
+    using wet_impl
+      = conditional_t<Kind == wet_kind_t::bitset,
+                      wet_bitset,
+        conditional_t<Kind == wet_kind_t::set,
+                      wet_set<Key, Compare>,
+        conditional_t<Kind == wet_kind_t::map,
+                      wet_map<Key, Value, Compare>,
+        conditional_t<Kind == wet_kind_t::unordered_map,
+                      wet_unordered_map<Key, Value, Hash, KeyEqual>,
+        void> > > >;
 
-    template <typename Key, typename Value,
-              typename Compare, typename Hash, typename KeyEqual>
-    class wet_impl<wet_kind_t::map,
-                   Key, Value, Compare, Hash, KeyEqual>
-      : public wet_map<Key, Value, Compare, Hash, KeyEqual>
-    {
-      using super = wet_map<Key, Value, Compare, Hash, KeyEqual>;
-      using super::super;
-    };
-
-    // wet_impl<Key, bool>: set.
-    template <typename Key,
-              typename Compare, typename Hash, typename KeyEqual>
-    class wet_impl<wet_kind_t::set,
-                   Key, bool, Compare, Hash, KeyEqual>
-      : public wet_set<Key, Compare, Hash, KeyEqual>
-    {
-      using super = wet_set<Key, Compare, Hash, KeyEqual>;
-      using super::super;
-    };
-
-    // wet_impl<Key, bool>: bitsets.
-    template <typename Key,
-              typename Compare, typename Hash, typename KeyEqual>
-    class wet_impl<wet_kind_t::bitset,
-                   Key, bool, Compare, Hash, KeyEqual>
-      : public wet_bitset
-    {
-      using super = wet_bitset;
-      using super::super;
-    };
   }
 
   template <typename Key, typename Value,
