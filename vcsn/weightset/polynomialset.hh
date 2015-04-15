@@ -66,19 +66,21 @@ namespace vcsn
       : std::false_type
     {};
 
-    template <typename Context>
-    struct is_division_ring<polynomialset<Context>>
+    template <typename Context, wet_kind_t Kind>
+    struct is_division_ring<polynomialset<Context, Kind>>
       : std::false_type
     {};
   }
 
   /// Linear combination of labels: map labels to weights.
   /// \tparam Context  the LabelSet and WeightSet types.
-  template <typename Context>
+  template <typename Context,
+            wet_kind_t Kind = detail::wet_kind<labelset_t_of<Context>,
+                                               weightset_t_of<Context>>()>
   class polynomialset
   {
   public:
-    using self_type = polynomialset<Context>;
+    using self_type = polynomialset<Context, Kind>;
     using context_t = Context;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
@@ -90,7 +92,7 @@ namespace vcsn
     using label_t = typename labelset_t::value_t;
     using weight_t = weight_t_of<context_t>;
 
-    using value_t = wet_of<context_t>;
+    using value_t = wet_of<context_t, Kind>;
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 

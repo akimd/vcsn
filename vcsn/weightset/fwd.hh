@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcsn/misc/fwd.hh> // wet_kind_t
+
 namespace vcsn
 {
   namespace detail
@@ -33,7 +35,7 @@ namespace vcsn
   }
 
   // polynomialset.hh.
-  template <typename Context>
+  template <typename Context, wet_kind_t Kind>
   class polynomialset;
 
   // weightset.hh.

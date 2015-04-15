@@ -165,32 +165,33 @@ namespace vcsn
 
   enum class wet_kind_t
     {
+      bitset,
       map,
       set,
-      bitset
+      unordered_map,
     };
 
 
   namespace detail
   {
-#if 1
-    /*-------------------------.
-    | wset_impl<Key, Value>.   |
-    `-------------------------*/
+
+    /*-----------------------.
+    | wet_map<Key, Value>.   |
+    `-----------------------*/
 
     /// General case.
     template <typename Key, typename Value,
               typename Compare = std::less<Key>,
               typename Hash = std::hash<Key>,
               typename KeyEqual = std::equal_to<Key>>
-    class wet_impl
+    class wet_map
     {
     private:
       using map_t = std::map<Key, Value, Compare>;
       map_t map_;
 
     public:
-      using self_t = wet_impl;
+      using self_t = wet_map;
       static constexpr wet_kind_t kind = wet_kind_t::map;
       using key_t = Key;
       using value_t = Value;
@@ -199,9 +200,9 @@ namespace vcsn
       using iterator = typename map_t::iterator;
       using const_iterator = typename map_t::const_iterator;
 
-      wet_impl() = default;
+      wet_map() = default;
 
-      wet_impl(const std::initializer_list<value_type>& l)
+      wet_map(const std::initializer_list<value_type>& l)
         : map_{l}
       {}
 
@@ -255,25 +256,24 @@ namespace vcsn
 #undef DEFINE
     };
 
-#else
 
-    /*-------------------------.
-    | wset_impl<Key, Value>.   |
-    `-------------------------*/
+    /*---------------------------------.
+    | wet_unordered_map<Key, Value>.   |
+    `---------------------------------*/
 
     /// General case.
     template <typename Key, typename Value,
               typename Compare = std::less<Key>,
               typename Hash = std::hash<Key>,
               typename KeyEqual = std::equal_to<Key>>
-    class wet_impl
+    class wet_unordered_map
     {
     private:
       using map_t = std::unordered_map<Key, Value, Hash, KeyEqual>;
       map_t map_;
 
     public:
-      using self_t = wet_impl;
+      using self_t = wet_unordered_map;
       static constexpr wet_kind_t kind = wet_kind_t::unordered_map;
       using key_t = Key;
       using value_t = Value;
@@ -282,9 +282,9 @@ namespace vcsn
       using iterator = typename map_t::iterator;
       using const_iterator = typename map_t::const_iterator;
 
-      wet_impl() = default;
+      wet_unordered_map() = default;
 
-      wet_impl(const std::initializer_list<value_type>& l)
+      wet_unordered_map(const std::initializer_list<value_type>& l)
         : map_{l}
       {}
 
@@ -338,30 +338,29 @@ namespace vcsn
 #undef DEFINE
     };
 
-#endif
 
-    /*-----------------------.
-    | wet_impl<Key, bool>.   |
-    `-----------------------*/
+    /*----------------------.
+    | wet_set<Key, bool>.   |
+    `----------------------*/
 
 
     template <typename Key, typename Compare, typename Hash, typename KeyEqual>
-    class wet_impl<Key, bool, Compare, Hash, KeyEqual>
+    class wet_set
     {
     private:
       using set_t = std::set<Key, Compare>;
       set_t set_;
 
     public:
-      using self_t = wet_impl;
+      using self_t = wet_set;
       static constexpr wet_kind_t kind = wet_kind_t::set;
       using key_t = Key;
       using value_t = bool;
       using welement_t = welement<key_t, value_t>;
       using value_type = welement_t;
 
-      wet_impl() = default;
-      wet_impl(const std::initializer_list<value_type>& p)
+      wet_set() = default;
+      wet_set(const std::initializer_list<value_type>& p)
       {
         for (const auto& m: p)
           set(label_of(m), weight_of(m));
@@ -491,43 +490,57 @@ namespace vcsn
     };
 
 
-    /*---------------------------------.
-    | wet_impl<char, bool>: bitsets.   |
-    `---------------------------------*/
+    /*---------------------------------------.
+    | wet_bitset<unsigned, bool>: bitsets.   |
+    `---------------------------------------*/
 
-    template <typename Compare, typename Hash, typename KeyEqual>
-    class wet_impl<char, bool, Compare, Hash, KeyEqual>
+    class wet_bitset
     {
     private:
       using set_t = boost::dynamic_bitset<>;
-      set_t set_{256};
+      set_t set_;
 
     public:
-      using self_t = wet_impl;
+      using self_t = wet_bitset;
       static constexpr wet_kind_t kind = wet_kind_t::bitset;
-      using key_t = char;
+      using key_t = unsigned;
       using value_t = bool;
       using welement_t = welement<key_t, value_t>;
       using value_type = welement_t;
 
-      // A plain "wet_impl() = default;" fails with GCC 4.8 or 4.9.0:
+      // A plain "wet_bitset() = default;" fails with GCC 4.8 or 4.9.0:
       // error: converting to 'const boost::dynamic_bitset<>'
       // from initializer list would use explicit constructor
       // 'boost::dynamic_bitset<Block, Allocator>::dynamic_bitset([...])
       //
-      //        wet_impl() = default;
+      //        wet_bitset() = default;
       //        ^
-      wet_impl() {}
+      wet_bitset() {}
 
-      wet_impl(const std::initializer_list<value_type>& p)
+      wet_bitset(size_t size)
+        : set_{size}
+      {}
+
+      wet_bitset(const std::initializer_list<value_type>& p)
       {
         for (const auto& m: p)
           set(label_of(m), weight_of(m));
       }
 
-      wet_impl(set_t&& set)
+      wet_bitset(set_t&& set)
         : set_{std::move(set)}
       {}
+
+      const set_t& set() const
+      {
+        return set_;
+      }
+
+      /// FIXME: Avoid this by exposing more interfaces.
+      set_t& set()
+      {
+        return set_;
+      }
 
       void clear()
       {
@@ -634,14 +647,25 @@ namespace vcsn
       auto begin()  const -> const_iterator { return cbegin(); }
       auto end()    const -> const_iterator { return cend(); }
 
-      void set(const key_t& k, const value_t& v)
+      /// Special for char: map -1 to 255 (MAX_UCHAR), not MAX_INT.
+      static key_t key(char k)
+      {
+        return static_cast<unsigned char>(k);
+      }
+
+      void set(const key_t k, value_t v = true)
       {
         assert(v); (void) v;
-        set_.set((unsigned char)k);
+        set_.set(k);
+      }
+
+      void set(const char k, value_t v = true)
+      {
+        set(key(k), v);
       }
 
       // When called, the key is already defined.
-      void set(const iterator&, const value_t& v)
+      void set(const iterator&, const value_t v = true)
       {
         assert(v); (void) v;
       }
@@ -652,41 +676,138 @@ namespace vcsn
         set_.reset(pos.iterator());
       }
 
-      void erase(const key_t& k)
+      void erase(key_t k)
       {
-        set_.reset((unsigned) k);
+        set_.reset(k);
       }
 
-      auto find(const key_t& k) const
+      void erase(char k)
+      {
+        erase(key(k));
+      }
+
+      auto find(key_t k) const
         -> const_iterator
       {
-        if (set_[(unsigned char)k])
-          return {set_, (unsigned char)k};
+        if (set_[k])
+          return {set_, k};
         else
           return end();
       }
 
-      auto find(const key_t& k)
+      auto find(key_t k)
         -> iterator
       {
-        if (set_[(unsigned char)k])
-          return {set_, (unsigned char)k};
+        if (set_[k])
+          return {set_, k};
         else
           return end();
       }
+
+      auto find(char k) const
+        -> const_iterator
+      {
+        return find(key(k));
+      }
+
+      auto find(char k)
+        -> iterator
+      {
+        return find(key(k));
+      }
+    };
+
+
+    /*------------------------.
+    | wet_kind<Key, Value>.   |
+    `------------------------*/
+
+    // wet_impl<Key, Value>: map.
+    template <typename Key, typename Value>
+    struct wet_kind_impl
+    {
+      static constexpr wet_kind_t kind = wet_kind_t::map;
+    };
+
+    // wet_impl<Key, bool>: set.
+    template <typename Key>
+    struct wet_kind_impl<Key, bool>
+    {
+      static constexpr wet_kind_t kind = wet_kind_t::set;
+    };
+
+    // wet_impl<char, bool>: bitsets.
+    template <>
+    struct wet_kind_impl<char, bool>
+    {
+      static constexpr wet_kind_t kind = wet_kind_t::bitset;
+    };
+
+    template <typename Key, typename Value>
+    constexpr wet_kind_t wet_kind()
+    {
+      return wet_kind_impl<Key, Value>::kind;
+    }
+
+
+    /*------------------------.
+    | wet_impl<Key, Value>.   |
+    `------------------------*/
+
+    // wet_impl<Key, Value>: map.
+    template <wet_kind_t Kind,
+              typename Key, typename Value,
+              typename Compare, typename Hash, typename KeyEqual>
+    class wet_impl;
+
+    template <typename Key, typename Value,
+              typename Compare, typename Hash, typename KeyEqual>
+    class wet_impl<wet_kind_t::map,
+                   Key, Value, Compare, Hash, KeyEqual>
+      : public wet_map<Key, Value, Compare, Hash, KeyEqual>
+    {
+      using super = wet_map<Key, Value, Compare, Hash, KeyEqual>;
+      using super::super;
+    };
+
+    // wet_impl<Key, bool>: set.
+    template <typename Key,
+              typename Compare, typename Hash, typename KeyEqual>
+    class wet_impl<wet_kind_t::set,
+                   Key, bool, Compare, Hash, KeyEqual>
+      : public wet_set<Key, Compare, Hash, KeyEqual>
+    {
+      using super = wet_set<Key, Compare, Hash, KeyEqual>;
+      using super::super;
+    };
+
+    // wet_impl<Key, bool>: bitsets.
+    template <typename Key,
+              typename Compare, typename Hash, typename KeyEqual>
+    class wet_impl<wet_kind_t::bitset,
+                   Key, bool, Compare, Hash, KeyEqual>
+      : public wet_bitset
+    {
+      using super = wet_bitset;
+      using super::super;
     };
   }
 
   template <typename Key, typename Value,
+            wet_kind_t Kind = detail::wet_kind<Key, Value>(),
             typename Compare = std::less<Key>,
             typename Hash = std::hash<Key>,
             typename KeyEqual = std::equal_to<Key>>
-  using wet = detail::wet_impl<Key, Value, Compare, Hash, KeyEqual>;
+  using wet = detail::wet_impl<Kind,
+                               Key, Value, Compare, Hash, KeyEqual>;
 
   /// The corresponding wet for a LabelSet -> WeightSet context.
-  template <typename Context>
+  template <typename Context,
+            wet_kind_t Kind = detail::wet_kind<labelset_t_of<Context>,
+                                               weightset_t_of<Context>>()>
   using wet_of = wet<label_t_of<Context>,
                      weight_t_of<Context>,
+                     Kind,
                      vcsn::less<labelset_t_of<Context>>,
                      vcsn::hash<labelset_t_of<Context>>,
                      vcsn::equal_to<labelset_t_of<Context>>>;
