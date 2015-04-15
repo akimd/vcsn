@@ -1,32 +1,34 @@
 #! /usr/bin/env python
 
-from __future__ import print_function
-
 import vcsn
 from test import *
 
 def load(file):
     return open(medir + "/" + file + ".gv").read().strip()
 
-## -------------------- ##
-## de bruijn/ladybird.  ##
-## -------------------- ##
-
-# check AUT EXP DETERMINISTIC = False
-# -----------------------------------
+# check AUT EXP ALGO = "auto" DETERMINISTIC = False
+# -------------------------------------------------
 def check(aut, expfile, algo = "auto", deterministic = False):
     print("check:", expfile)
     CHECK_EQ(deterministic, aut.is_deterministic())
+    CHECK_EQ(deterministic, aut.transpose().strip().is_codeterministic())
+
     det = aut.determinize()
     exp = load(expfile)
     CHECK_EQ(exp, det)
     CHECK(det.is_deterministic())
+    # Idempotence.
     CHECK_EQ(det, det.determinize(algo))
 
     # Codeterminization.
-    CHECK_EQ(aut.codeterminize(), aut.transpose().determinize().transpose())
-    CHECK(aut.transpose().codeterminize().transpose().is_deterministic())
-    CHECK(aut.codeterminize().transpose().is_deterministic())
+    codet = aut.transpose().strip().determinize().transpose().strip()
+    CHECK_EQ(aut.codeterminize(), codet)
+    CHECK(codet.is_codeterministic())
+
+
+## -------------------- ##
+## de bruijn/ladybird.  ##
+## -------------------- ##
 
 ctx = vcsn.context('lal_char(ab), b')
 check(ctx.de_bruijn(3), 'de-bruijn-3-det')
@@ -50,6 +52,6 @@ for name in ['deterministic', 'empty', 'epsilon']:
 ## -------------------------------------- ##
 ## Determinization of weighted automata.  ##
 ## -------------------------------------- ##
-for name in ['b', 'q', 'z', 'zmin']:
+for name in ['b', 'f2', 'q', 'z', 'zmin']:
     aut = vcsn.automaton(load(name))
     check(aut, name + '-det')

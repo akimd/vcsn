@@ -142,6 +142,8 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/empty.gv                  \
   %D%/determinize.dir/epsilon-det.gv            \
   %D%/determinize.dir/epsilon.gv                \
+  %D%/determinize.dir/f2-det.gv                 \
+  %D%/determinize.dir/f2.gv                     \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/determinize.dir/q-det.gv                  \

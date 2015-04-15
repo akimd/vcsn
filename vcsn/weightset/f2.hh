@@ -9,6 +9,7 @@
 #include <vcsn/misc/star_status.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/fwd.hh> // f2
 #include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
