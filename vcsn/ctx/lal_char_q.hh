@@ -1,9 +1,8 @@
-#ifndef VCSN_CTX_LAL_CHAR_Q_HH
-# define VCSN_CTX_LAL_CHAR_Q_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/lal_char.hh>
-# include <vcsn/weightset/q.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/lal_char.hh>
+#include <vcsn/weightset/q.hh>
 
 namespace vcsn
 {
@@ -13,11 +12,9 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
+#include <vcsn/ctx/instantiate.hh>
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lal_char_q);
 }
-
-#endif // !VCSN_CTX_LAL_CHAR_Q_HH

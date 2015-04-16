@@ -1,9 +1,8 @@
-#ifndef VCSN_CTX_LAN_CHAR_B_HH
-# define VCSN_CTX_LAN_CHAR_B_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/lan_char.hh>
-# include <vcsn/weightset/b.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/lan_char.hh>
+#include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -13,13 +12,13 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
-# include <vcsn/algos/grail.hh>
+#include <vcsn/ctx/instantiate.hh>
+#include <vcsn/algos/grail.hh>
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lan_char_b);
-# if 0
+#if 0
   /* fado. */
   MAYBE_EXTERN template
   std::ostream& fado<mutable_automaton<ctx::lan_char_b>>
@@ -41,9 +40,9 @@ namespace vcsn
   grail<vcsn::detail::transpose_automaton<mutable_automaton<ctx::lan_char_b>>>
   (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lan_char_b>>& aut,
    std::ostream& out);
-# endif
+#endif
 
-# if VCSN_INSTANTIATION
+#if VCSN_INSTANTIATION
   namespace
   {
     namespace detail
@@ -55,7 +54,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-#define REGISTER(Algo, ...)                                             \
+# define REGISTER(Algo, ...)                                            \
         Algo ## _register(ssignature<__VA_ARGS__>(), Algo<__VA_ARGS__>)
 
         REGISTER(fado, aut_t, std::ostream);
@@ -70,5 +69,3 @@ namespace vcsn
   }
 #endif
 }
-
-#endif // !VCSN_CTX_LAN_CHAR_B_HH

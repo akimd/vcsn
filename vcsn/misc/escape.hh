@@ -1,10 +1,9 @@
-#ifndef VCSN_MISC_ESCAPE_HH
-# define VCSN_MISC_ESCAPE_HH
+#pragma once
 
-# include <iosfwd>
-# include <string>
+#include <iosfwd>
+#include <string>
 
-# include <vcsn/misc/export.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -21,5 +20,3 @@ namespace vcsn LIBVCSN_API
   /// Likewise, but produces a string.
   std::string str_escape(int c);
 }
-
-#endif // !VCSN_MISC_ESCAPE_HH

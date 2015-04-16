@@ -1,9 +1,8 @@
-#ifndef VCSN_CTX_LAL_CHAR_BR_HH
-# define VCSN_CTX_LAL_CHAR_BR_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/lal_char.hh>
-# include <vcsn/weightset/b.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/lal_char.hh>
+#include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -14,15 +13,13 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
+#include <vcsn/ctx/instantiate.hh>
 
-# ifndef MAYBE_EXTERN
-#  define MAYBE_EXTERN extern
-# endif
+#ifndef MAYBE_EXTERN
+# define MAYBE_EXTERN extern
+#endif
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lal_char_br);
 }
-
-#endif // !VCSN_CTX_LAL_CHAR_BR_HH

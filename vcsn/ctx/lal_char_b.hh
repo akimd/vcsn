@@ -12,14 +12,15 @@ namespace vcsn
   }
 }
 
-#include <vcsn/misc/name.hh>
-#include <vcsn/ctx/instantiate.hh>
 #include <vcsn/algos/are-equivalent.hh>
 #include <vcsn/algos/complement.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/grail.hh>
 #include <vcsn/algos/star-normal-form.hh>
 #include <vcsn/algos/universal.hh>
+#include <vcsn/ctx/instantiate.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/name.hh>
 
 namespace vcsn
 {
