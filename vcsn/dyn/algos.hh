@@ -561,7 +561,9 @@ namespace vcsn
     /// \param algo   the specific algorithm to use.
     automaton scc(const automaton& aut, const std::string& algo = "auto");
 
-    /// The approximated behavior of the automaton.
+    /// The approximated behavior of an automaton.
+    ///
+    /// \param aut   the automaton whose behavior to approximate
     /// \param num   number of words looked for.
     /// \param len   maximum length of words looked for.
     polynomial shortest(const automaton& aut,

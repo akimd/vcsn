@@ -42,6 +42,9 @@ namespace vcsn
       using monomial_t = typename polynomialset_t::monomial_t;
       using queue_t = std::deque<std::pair<state_t, monomial_t>>;
 
+      /// Prepare to compute an approximation of the behavior.
+      ///
+      /// \param aut   the automaton to approximate
       enumerater(const automaton_t& aut)
         : aut_(aut)
       {}
@@ -113,7 +116,9 @@ namespace vcsn
     };
   }
 
-  /// The approximated behavior of the automaton.
+  /// The approximated behavior of an automaton.
+  ///
+  /// \param aut   the automaton whose behavior to approximate
   /// \param num   number of words looked for.
   /// \param len   maximum length of words looked for.
   template <typename Automaton>
@@ -128,7 +133,9 @@ namespace vcsn
   }
 
 
-  /// The approximated behavior of the automaton.
+  /// The approximated behavior of an automaton.
+  ///
+  /// \param aut   the automaton whose behavior to approximate
   /// \param len   maximum length of words looked for.
   template <typename Automaton>
   inline

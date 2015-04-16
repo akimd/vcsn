@@ -64,7 +64,8 @@ namespace vcsn
         return true;
       }
 
-      static bool register_lan_char_b = register_functions<ctx::lan_char_b>();
+      static bool register_lan_char_b ATTRIBUTE_USED
+        = register_functions<ctx::lan_char_b>();
     }
   }
 #endif

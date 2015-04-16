@@ -62,6 +62,7 @@
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/name.hh>
 
 /* The purpose of this file is manyfold:
@@ -381,13 +382,14 @@ namespace vcsn
 #undef REGISTER
 
 #if VCSN_INSTANTIATION
-# define VCSN_CTX_INSTANTIATE_2(Ctx)                            \
-  namespace ctx                                                 \
-  {                                                             \
-    namespace detail                                            \
-    {                                                           \
-      static bool registered = register_functions<Ctx>();       \
-    }                                                           \
+# define VCSN_CTX_INSTANTIATE_2(Ctx)            \
+  namespace ctx                                 \
+  {                                             \
+    namespace detail                            \
+    {                                           \
+      static bool registered ATTRIBUTE_USED     \
+        = register_functions<Ctx>();            \
+    }                                           \
   }
 #else
 # define VCSN_CTX_INSTANTIATE_2(Ctx)

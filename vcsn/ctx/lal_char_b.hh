@@ -81,7 +81,8 @@ namespace vcsn
         return true;
       }
 
-      static bool register_lal_char_b = register_b_functions<ctx::lal_char_b>();
+      static bool register_lal_char_b ATTRIBUTE_USED
+        = register_b_functions<ctx::lal_char_b>();
     }
   }
 #endif // ! VCSN_INSTANTIATION

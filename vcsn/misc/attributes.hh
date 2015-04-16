@@ -21,6 +21,7 @@
 # define ATTRIBUTE_HOT           __attribute__((hot))
 # define ATTRIBUTE_NORETURN      [[noreturn]]
 # define ATTRIBUTE_PURE          __attribute__((pure))
+# define ATTRIBUTE_USED          __attribute__((used))
 
 #elif defined __GNUC__
 
@@ -31,6 +32,7 @@
 # define ATTRIBUTE_HOT           __attribute__((hot))
 # define ATTRIBUTE_NORETURN      __attribute__((noreturn))
 # define ATTRIBUTE_PURE          __attribute__((pure))
+# define ATTRIBUTE_USED          __attribute__((used))
 
 #elif defined _MSC_VER
 
@@ -41,5 +43,6 @@
 # define ATTRIBUTE_HOT
 # define ATTRIBUTE_NORETURN      [[noreturn]]
 # define ATTRIBUTE_PURE
+# define ATTRIBUTE_USED
 
 #endif

@@ -302,6 +302,7 @@ namespace vcsn
         /// Compile, and load, a DSO which instantiates \a algos.
         void compile(const std::set<std::pair<std::string, signature>>& algos)
         {
+          printer_.header("vcsn/misc/attributes.hh"); // ATTRIBUTE_USED
           printer_.header("vcsn/misc/name.hh"); // ssignature
           printer_.header("vcsn/dyn/registers.hh");
           for (const auto& algo: algos)
@@ -327,7 +328,7 @@ namespace vcsn
                 }
               os <<
                 "\n"
-                "static bool " << algo.first << " =" << incendl
+                "static bool " << algo.first << " ATTRIBUTE_USED =" << incendl
                  << "vcsn::dyn::detail::" << algo.first << "_register(" << incendl
                  << "vcsn::ssignature<" << types << ">()," << iendl
                  << "vcsn::dyn::detail::" << algo.first << "<" << types << ">" << decendl
