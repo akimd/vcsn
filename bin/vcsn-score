@@ -34,7 +34,7 @@ def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
     if title is None:
         title = stmt
 
-    if args.only.search(title):
+    if args.only.search(title + " # " + comment):
 
         # The default context, which we use extensively.
         b = vcsn.context('lal_char(abc), b')
@@ -327,24 +327,28 @@ r = "['(a,a)'-'(i,z)']{4}"
 bench('a.compose(a)',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
-               'a = vcsn.context("lat<lal_char(a-z), lal_char(a-z)>, b").expression(r).standard()'])
+               'c = vcsn.context("lat<lal_char(a-z), lal_char(a-z)>, b")',
+               'a = c.expression(r).standard()'])
 
 bench('a.compose(a)',
       'a = thompson({})'.format(r),
       setup = ['r = "{}"'.format(r),
-               'a = vcsn.context("lat<lan_char(a-z), lan_char(a-z)>, b").expression(r).thompson()'])
+               'c = vcsn.context("lat<lan_char(a-z), lan_char(a-z)>, b")',
+               'a = c.expression(r).thompson()'])
 
 # has_bounded_lag
 r = "(['(a,x)'-'(b,y)']{1000})*"
 bench('a.has_bounded_lag()',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
-               'a = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b").expression(r).standard()'])
+               'c = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b")',
+               'a = c.expression(r).standard()'])
 r = "(['(a,x)'-'(b,y)']*){600}"
 bench('a.has_bounded_lag()',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
-               'a = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b").expression(r).standard()'])
+               'c = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b")',
+               'a = c.expression(r).standard()'])
 
 
 def bench_minimize(ctx, r, algo):
@@ -411,5 +415,6 @@ for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
     bench('a.scc("{}")'.format(algo),
           'a = std({})'.format(r),
           setup = ['r = "{}"'.format(r),
-                   'a = vcsn.context("lal_char(abc), b").expression(r).standard()'],
+                   'c = vcsn.context("lal_char(abc), b")',
+                   'a = c.expression(r).standard()'],
           number = 20)
