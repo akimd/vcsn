@@ -1,14 +1,13 @@
-#ifndef VCSN_BIN_PARSE_ARGS_HH_
-# define VCSN_BIN_PARSE_ARGS_HH_
+#pragma once
 
-# include <iostream>
-# include <memory>
-# include <stdexcept>
-# include <string>
-# include <vector>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/file-library.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/file-library.hh>
 
 enum class type
   {
@@ -38,7 +37,7 @@ struct options
   std::string input_format = "default";
 
   /// Context.
-  std::string context = "lal_char(abcd), b";
+  std::string context = "lal_char, b";
 
   /// Output file name ("-" for stdout).
   std::string output = "-";
@@ -102,5 +101,3 @@ struct vcsn_function
 /// \param t       the default input type
 int vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
               type t = type::automaton);
-
-#endif // !VCSN_BIN_PARSE_ARGS_HH_
