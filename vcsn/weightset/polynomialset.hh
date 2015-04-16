@@ -813,7 +813,7 @@ namespace vcsn
       -> enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
-      return boost::lexicographical_compare(l, r, monomial_less);
+      return boost::range::lexicographical_compare(l, r, monomial_less);
     }
 
     template <wet_kind_t WetType>
