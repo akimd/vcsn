@@ -182,35 +182,40 @@ namespace vcsn
     word_t
     get_word(std::istream& i) const
     {
-      word_t res;
       require(!i.bad(),
               "conv: invalid stream");
       // Either an empty word: "\e", or a sequence of non-separators.
       if (i.good() && i.peek() == '\\')
         {
           i.ignore();
-          int c = i.get();
-          require(c == 'e',
-                  "invalid label: unexpected \\", str_escape(c));
-        }
-      else
-        {
-          // Stop as soon as it might be a special character (such as
-          // delimiters in polynomials).
-          int c;
-          while (i.good()
-                 && (c = i.peek()) != EOF
-                 && !isspace(c)
-                 && c != '+'
-                 && c != ','
-                 && c != '('
-                 && c != ')')
+          int c = i.peek();
+          if (c == 'e')
             {
-              letter_t l = L::get_letter(i);
-              require(has(l),
-                      sname(), ": invalid letter: ", str_escape(l));
-              res = this->mul(res, l);
+              i.ignore();
+              return {};
             }
+          else
+            i.putback('\\');
+        }
+
+      // Stop as soon as it might be a special character (such as
+      // delimiters in polynomials).
+      word_t res;
+      int c;
+      while (i.good()
+             && (c = i.peek()) != EOF
+             && !isspace(c)
+             && c != '+'
+             && c != ','
+             && c != '('
+             && c != ')')
+        {
+          letter_t l = L::get_letter(i);
+          require(has(l),
+                  sname(), ": invalid letter: ", str_escape(l));
+          // FIXME: in-place mul or temporary vector to build the
+          // string.
+          res = this->mul(res, l);
         }
       return res;
     }

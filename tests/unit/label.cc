@@ -1,6 +1,9 @@
 #include <vcsn/config.hh>
 
+#include <iomanip> // setw
 #include <iostream>
+
+#include <boost/algorithm/string/replace.hpp>
 
 #include <tests/unit/test.hh>
 
@@ -19,6 +22,8 @@ set_name(const ValueSet& vs, const std::string& format = "text")
   vs.print_set(o, format);
   return o.str();
 }
+
+
 
 static unsigned
 check_letterset()
@@ -51,6 +56,69 @@ check_letterset()
     std::istringstream is(n);
     ASSERT_EQ(all, set_name(labelset_t::make(is)));
   }
+
+  return nerrs;
+}
+
+
+
+template <typename LabelSet>
+static unsigned
+check_wordset_make(const std::string& range)
+{
+  auto nerrs = 0U;
+
+  // Skip the empty word (\x00), and the special letter (\xff).
+  std::string n = "wordset<char_letters(" + range + ")>";
+  std::istringstream is{n};
+  auto ls = LabelSet::make(is);
+
+  /// All the (supported) characters.
+  std::string all;
+  for (int i = 1; i < 255; ++i)
+    all += char(i);
+
+  // Check the labelset name: '\\' is the only escaped character.
+  {
+    ASSERT_EQ("wordset<char_letters("
+              + boost::algorithm::replace_all_copy(all, "\\", "\\\\")
+              + ")>",
+              set_name(ls));
+  }
+
+  // Make sure we reach all the characters.  All the characters are
+  // escaped.
+  {
+    std::ostringstream o;
+    for (int i = 1; i < 255; ++i)
+      o << "\\x" << std::hex << std::setw(2) << std::setfill('0') << i;
+    std::cerr << "Test: " << o.str() << '\n';
+    ASSERT_EQ(vcsn::str_escape(all), to_string(ls, conv(ls, o.str())));
+  }
+
+  return nerrs;
+}
+
+static unsigned
+check_wordset()
+{
+  unsigned nerrs = 0;
+  using labelset_t = vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
+  using genset_t = labelset_t::genset_t;
+  genset_t gs{'a', 'b', 'c'};
+  labelset_t ls{gs};
+
+  ASSERT_EQ(ls.is_valid(conv(ls, "a")), true);
+  ASSERT_EQ(ls.is_one(conv(ls, "a")), false);
+  ASSERT_EQ(ls.is_special(conv(ls, "a")), false);
+
+  ASSERT_EQ(ls.is_valid("x"), false);
+
+  ASSERT_EQ(to_string(ls, conv(ls, "a")), "a");
+  ASSERT_EQ(to_string(ls, ls.transpose(conv(ls, "a"))), "a");
+
+  nerrs += check_wordset_make<labelset_t>("\x01-\xfe");
+  nerrs += check_wordset_make<labelset_t>("\\x01-\\xfe");
 
   return nerrs;
 }
@@ -96,7 +164,9 @@ check_tupleset()
   //  what():  unexpected: (: expected ,
   //
   // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
-  // But really, you should no longer see such errors: tupleset has workarounds.
+  //
+  // But you should no longer see such errors: tupleset has
+  // workarounds.
   {
     std::string n
       = "lat<wordset<char_letters(ABC)>, wordset<char_letters(XYZ)>>";
@@ -196,6 +266,7 @@ int main()
 {
   size_t nerrs = 0;
   nerrs += check_letterset();
+  nerrs += check_wordset();
   nerrs += check_tupleset();
   return !!nerrs;
 }

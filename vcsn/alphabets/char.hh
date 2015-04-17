@@ -172,7 +172,26 @@ namespace vcsn
           // \(, \) and \- are used in setalpha::make, e.g.,
           // char_letters(\(\-\)), so strip the backslash.  Otherwise,
           // return the backslash itself.
-          if (strchr("\"\\()-", c))
+          if (c == 'x')
+            {
+              i.ignore();
+              // Handle hexadecimal escape.
+              int c1 = i.get();
+              require(c1 != EOF,
+                      "conv: invalid label: unexpected end-of-file"
+                      " after: \\x");
+              require(isxdigit(c1),
+                      "conv: invalid label: invalid escape: \\x", char(c1));
+              int c2 = i.get();
+              require(c2 != EOF,
+                      "conv: invalid label: unexpected end-of-file"
+                      " after: \\x", char(c1));
+              require(isxdigit(c2),
+                      "conv: invalid label: invalid escape: \\x",
+                      char(c1), char(c2));
+              res = std::stoi(std::string{char(c1), char(c2)}, nullptr, 16);
+            }
+          else if (strchr("\"\\()-", c))
             res = i.get();
         }
       require(res != EOF,
