@@ -17,7 +17,7 @@ namespace vcsn
   class oneset
   {
   public:
-    using self_type = oneset;
+    using self_t = oneset;
     using value_t = vcsn::empty_t;
 
     using kind_t = labels_are_one;
@@ -143,7 +143,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_type, value_t v)
+    conv(self_t, value_t v)
     {
       return v;
     }

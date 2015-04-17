@@ -20,7 +20,7 @@ namespace vcsn
   class log_impl
   {
   public:
-    using self_type = log;
+    using self_t = log;
     using value_t = double;
 
     static symbol sname()

@@ -29,7 +29,7 @@ namespace vcsn
   class expressionset_impl
   {
   public:
-    using self_type = expressionset<Context>;
+    using self_t = expressionset<Context>;
     using context_t = Context;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
@@ -77,14 +77,14 @@ namespace vcsn
     template <type_t Type>
     using variadic_t = variadic<Type, context_t>;
 
-    using word_t = self_type;
-    using letter_t = self_type;
+    using word_t = self_t;
+    using letter_t = self_t;
 
   public:
     /// Static description key.
     static symbol sname();
     /// Build from the description in \a is.
-    static self_type make(std::istream& is);
+    static self_t make(std::istream& is);
 
     /// Constructor.
     /// \param ctx        the generator set for the labels, and the weight set.
@@ -245,7 +245,7 @@ namespace vcsn
     value_t conv(std::istream& is) const;
 
     /// Converting from ourself: identity.
-    value_t conv(self_type, value_t v) const;
+    value_t conv(self_t, value_t v) const;
 
     /// Read a range of expressions.
     std::set<value_t> convs(std::istream&) const

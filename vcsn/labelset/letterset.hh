@@ -22,7 +22,7 @@ namespace vcsn
   public:
     using genset_t = GenSet;
     using super_t = detail::genset_labelset<genset_t>;
-    using self_type = letterset;
+    using self_t = letterset;
     using genset_ptr = std::shared_ptr<const genset_t>;
 
     using letter_t = typename genset_t::letter_t;
@@ -187,7 +187,7 @@ namespace vcsn
     }
 
     value_t
-    conv(self_type, value_t v) const
+    conv(self_t, value_t v) const
     {
       require(is_special(v) || is_valid(v),
               sname(), ": conv: invalid label: ", str_escape(v));

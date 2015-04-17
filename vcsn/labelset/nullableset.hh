@@ -154,7 +154,7 @@ namespace vcsn
   public:
     using labelset_t = LabelSet;
     using labelset_ptr = std::shared_ptr<const labelset_t>;
-    using self_type = nullableset;
+    using self_t = nullableset;
     using helper_t = detail::nullable_helper<labelset_t>;
     using kind_t = labels_are_nullable;
 
@@ -254,7 +254,7 @@ namespace vcsn
     }
 
     value_t
-    conv(self_type, value_t v) const
+    conv(self_t, value_t v) const
     {
       return v;
     }

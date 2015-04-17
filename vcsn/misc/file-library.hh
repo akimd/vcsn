@@ -22,7 +22,7 @@ namespace vcsn
   class LIBVCSN_API file_library
   {
   public:
-    using self_type = file_library;
+    using self_t = file_library;
 
     /// Broken on Mac OS X (https://trac.macports.org/ticket/41588).
     // using path = boost::filesystem::path;
@@ -56,9 +56,9 @@ namespace vcsn
 
     /// \name Managing inclusion paths.
     /// \{
-    self_type& push_back(const path& p);
+    self_t& push_back(const path& p);
     /// Split \a library on \a separator and put at the end of path list.
-    self_type& push_back(const std::string& library, const char* separator);
+    self_t& push_back(const std::string& library, const char* separator);
 
     /// Handle a list of search-paths.
     /// \param r  the collection of search-paths.
@@ -67,22 +67,22 @@ namespace vcsn
     ///           If there is none, the remaining components are ignored.
     /// \param sep  the separator to split search-paths (typically colon).
     template <typename ForwardRange>
-      self_type& push_back(const ForwardRange& r, const char* sep);
+      self_t& push_back(const ForwardRange& r, const char* sep);
 
     template <typename Iterable>
-      self_type& push_back(const std::string& user_path,
+      self_t& push_back(const std::string& user_path,
                            const Iterable& default_path,
                            const char* sep);
 
-    self_type& append(const path& p);
+    self_t& append(const path& p);
 
-    self_type& push_front(const path& p);
+    self_t& push_front(const path& p);
 
     /// Split \a library on \a separator and put at the beginning of path list.
     /// \warning "a:b:c" will end with "c" first, then "b", then "a",
     /// then what was already here.
-    self_type& push_front(const std::string& library, const char* separator);
-    self_type& prepend(const path& p);
+    self_t& push_front(const std::string& library, const char* separator);
+    self_t& prepend(const path& p);
     /// \}
 
     /// \name current directory.

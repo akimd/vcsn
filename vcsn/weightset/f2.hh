@@ -19,7 +19,7 @@ namespace vcsn
   class f2_impl
   {
   public:
-    using self_type = f2;
+    using self_t = f2;
 
     static symbol sname()
     {
@@ -135,7 +135,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_type, value_t v)
+    conv(self_t, value_t v)
     {
       return v;
     }

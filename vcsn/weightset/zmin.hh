@@ -17,7 +17,7 @@ namespace vcsn
     {
     public:
       using super_t = min_plus_impl<int>;
-      using self_type = zmin;
+      using self_t = zmin;
       using value_t = typename super_t::value_t;
 
       static symbol sname()
@@ -35,7 +35,7 @@ namespace vcsn
 
       using super_t::conv;
       static value_t
-      conv(self_type, value_t v)
+      conv(self_t, value_t v)
       {
         return v;
       }

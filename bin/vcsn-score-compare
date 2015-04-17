@@ -160,7 +160,7 @@ def text(keys):
         avg = sum(bfs) / len(bfs)
         for b in bs:
             if b == "N/A":
-                print("{:5}".format(b), end = ' ')
+                print("{:>5}".format(b), end = ' ')
             else:
                 color = ''
                 score = float(b)

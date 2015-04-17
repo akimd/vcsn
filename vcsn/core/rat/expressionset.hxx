@@ -726,7 +726,7 @@ namespace vcsn
     return hasher(v);
   }
 
-  DEFINE::conv(self_type rs, value_t v) const
+  DEFINE::conv(self_t rs, value_t v) const
     -> value_t
   {
     if (identities() == rs.identities())

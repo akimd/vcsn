@@ -68,7 +68,7 @@ namespace vcsn
     using valueset_t = typename std::tuple_element<I, valuesets_t>::type;
 
   public:
-    using self_type = tupleset;
+    using self_t = tupleset;
 
     /// A tuple of values.
     using value_t = std::tuple<typename ValueSets::value_t...>;
@@ -354,7 +354,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_type, value_t v)
+    conv(self_t, value_t v)
     {
       return v;
     }

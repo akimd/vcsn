@@ -23,7 +23,7 @@ namespace vcsn
   public:
     using genset_t = GenSet;
     using super_t = detail::genset_labelset<genset_t>;
-    using self_type = wordset;
+    using self_t = wordset;
     using genset_ptr = std::shared_ptr<const genset_t>;
 
     using letter_t = typename genset_t::letter_t;
@@ -188,7 +188,7 @@ namespace vcsn
     }
 
     value_t
-    conv(self_type, const value_t& v) const
+    conv(self_t, const value_t& v) const
     {
       return v;
     }

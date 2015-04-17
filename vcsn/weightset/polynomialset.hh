@@ -80,7 +80,7 @@ namespace vcsn
   class polynomialset
   {
   public:
-    using self_type = polynomialset<Context, Kind>;
+    using self_t = polynomialset<Context, Kind>;
     using context_t = Context;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
@@ -761,7 +761,7 @@ namespace vcsn
 
     /// Conversion from (this and) other weightsets.
     static value_t
-    conv(self_type, value_t v)
+    conv(self_t, value_t v)
     {
       return v;
     }
@@ -889,7 +889,7 @@ namespace vcsn
 
 
     /// Build from the description in \a is.
-    static self_type make(std::istream& is)
+    static self_t make(std::istream& is)
     {
       // name is, for instance, "polynomialset<lal_char(abcd), z>".
       eat(is, "polynomialset<");

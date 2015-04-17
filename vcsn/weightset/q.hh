@@ -22,7 +22,7 @@ namespace vcsn
   class q_impl
   {
   public:
-    using self_type = q;
+    using self_t = q;
 
     static symbol sname()
     {
@@ -169,7 +169,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_type, const value_t v)
+    conv(self_t, const value_t v)
     {
       return v;
     }
