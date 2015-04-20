@@ -185,7 +185,7 @@ bench('a.determinize()',
                'a = c.ladybird(n)'])
 
 # See how boolean vs. weighted determinization goes.
-for n in [13, 14, 16]:
+for n, number in [(13, 10), (14, 10), (16, 2)]:
     for algo in ['', '"weighted"']:
         for ws in ['b', 'f2']:
             ctx = 'lal_char(abc), ' + ws
@@ -193,7 +193,8 @@ for n in [13, 14, 16]:
                   'a = de_bruijn({}), c = {}'.format(n, ctx_signature(ctx)),
                   setup = ['c = vcsn.context("{}")'.format(ctx),
                            'n = {}'.format(n),
-                           'a = c.de_bruijn(n)'])
+                           'a = c.de_bruijn(n)'],
+                  number = number)
 
 # Something more realistic: the previous automata explode in an
 # exponential number of states, and half of them end up being final.
@@ -210,7 +211,8 @@ for algo in ['', '"weighted"']:
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup= ['r = "{}"'.format(r),
                   'c = vcsn.context("{}")'.format(ctx),
-                  'a = c.expression(r).standard()'])
+                  'a = c.expression(r).standard()'],
+          number = 2)
 
 
 ## ------ ##
