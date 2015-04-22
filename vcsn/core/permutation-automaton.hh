@@ -56,9 +56,9 @@ namespace vcsn
         return o << '>';
       }
 
-      bool state_has_name(state_t s) const
+      bool state_has_name(state_t) const
       {
-        return s != super_t::pre() && s != super_t::post();
+        return true;
       }
 
       std::ostream&

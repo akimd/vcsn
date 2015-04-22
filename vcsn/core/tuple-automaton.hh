@@ -82,9 +82,7 @@ namespace vcsn
 
       bool state_has_name(typename super_t::state_t s) const
       {
-        return (s != super_t::pre()
-                && s != super_t::post()
-                && has(origins(), s));
+        return has(origins(), s);
       }
 
       std::ostream&
