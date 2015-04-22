@@ -24,7 +24,7 @@ namespace vcsn LIBVCSN_API
 
   /// Parse str via vs.conv.
   template <typename ValueSet, typename... Args>
-  auto
+  inline auto
   conv(const ValueSet& vs, const std::string& str, Args&&... args)
     -> decltype(vs.conv(std::declval<std::istream&>(),
                         std::forward<Args>(args)...))
@@ -76,7 +76,7 @@ namespace vcsn LIBVCSN_API
   /// Format v via vs.print.
   template <typename ValueSet, typename Value = typename ValueSet::value_t,
             typename... Args>
-  auto
+  inline auto
   to_string(const ValueSet& vs, const Value& v, Args&&... args)
     -> std::string
   {
