@@ -267,8 +267,10 @@ namespace vcsn
               // directly in res_.
               if (transposed_)
                 ps_.add_here(res_.polynomials[one],
-                             rs_.transposition(rs_.ldiv(label_of(lm), label_of(rm))),
-                             ws_.transpose(ws_.ldiv(weight_of(lm), weight_of(rm))));
+                             rs_.transposition(rs_.ldiv(label_of(lm),
+                                                        label_of(rm))),
+                             ws_.transpose(ws_.ldiv(weight_of(lm),
+                                                    weight_of(rm))));
               else
                 ps_.add_here(res_.polynomials[one],
                              rs_.ldiv(label_of(lm), label_of(rm)),
@@ -283,7 +285,7 @@ namespace vcsn
           res_ = es_.conjunction(res_, to_expansion(r));
       }
 
-      // FO(E:F) = FO(E):F + E:FO(F)
+      // d(E:F) = d(E):F + E:d(F)
       VCSN_RAT_VISIT(shuffle, e)
       {
         expansion_t res = es_.one();
@@ -299,13 +301,13 @@ namespace vcsn
             expansion_t r = to_expansion(rhs);
             res.constant = ws_.mul(lhs.constant, r.constant);
 
-            // (i) fo(lhs) -> fo(lhs):r, that is, shuffle-multiply the
+            // (i) d(lhs) -> d(lhs):r, that is, shuffle-multiply the
             // current result by the current child (rhs).
             for (const auto& p: lhs.polynomials)
               for (const auto& m: p.second)
                 res.polynomials[p.first].set(rs_.shuffle(label_of(m), rhs),
                                              weight_of(m));
-            // (ii) prev:fo(rhs)
+            // (ii) prev:d(rhs)
             for (const auto& p: r.polynomials)
               for (const auto& m: p.second)
                 ps_.add_here(res.polynomials[p.first],
@@ -313,7 +315,7 @@ namespace vcsn
 
             prev = rs_.shuffle(prev, rhs);
           }
-        res_ = res;
+        res_ = std::move(res);
       }
 
       VCSN_RAT_VISIT(complement, e)
