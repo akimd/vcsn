@@ -32,6 +32,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.compose.ipynb                   \
   %D%/automaton.conjunction.ipynb               \
   %D%/automaton.costandard.ipynb                \
+  %D%/automaton.delay_automaton.ipynb           \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
@@ -48,6 +49,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_isomorphic.ipynb             \
   %D%/automaton.is_partial_identity.ipynb       \
   %D%/automaton.is_standard.ipynb               \
+  %D%/automaton.is_synchronized.ipynb           \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.letterize.ipynb                 \
@@ -60,6 +62,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.shortest.ipynb                  \
   %D%/automaton.shuffle.ipynb                   \
   %D%/automaton.standard.ipynb                  \
+  %D%/automaton.synchronize.ipynb               \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
