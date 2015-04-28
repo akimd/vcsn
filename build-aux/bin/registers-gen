@@ -98,8 +98,7 @@ namespace vcsn { namespace dyn { namespace detail {
 
     res += '''
 #undef REGISTER_DECLARE
-}}}
-'''
+}}}'''
     return res
 
 # Generate the implementation file.

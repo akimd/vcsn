@@ -18,6 +18,7 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
+#include <vcsn/misc/initializer_list.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/signature.hh>
@@ -364,23 +365,49 @@ namespace vcsn
     {
       translation translate;
       std::set<std::pair<std::string, signature>> algos{{algo, sig}};
+
+      // Automata: core routines.
       if (algo == "dot"
-          // || algo == "efsm" Need to add a bool argument.
-          || algo == "info" && sig.size() == 3)
+          || algo == "efsm"
+          || algo == "info" && sig.size() == 3 // not "info" for expressions.
+          || algo == "strip"
+          )
         {
-          // Aut, Ostrean, Bool.
-          algos.emplace("dot", sig);
-          algos.emplace("info", sig);
+          // Aut, Ostream, Bool.
+          {
+            auto s = signature{sig[0], symbol{"std::ostream"}, symbol{"bool"}};
+            algos.emplace("dot", s);
+            algos.emplace("info", s);
+          }
           // Aut, Ostream.
-          signature sig2{sig[0], sig[1]};
-          algos.emplace("efsm", sig2);
+          {
+            auto s = signature{sig[0], symbol{"std::ostream"}};
+            algos.emplace("efsm", s);
+          }
+          // Aut.
+          {
+            auto s = signature{sig[0]};
+            algos.emplace("strip", s);
+          }
         }
-      else if (algo == "is_synchronized"
-               || algo == "delay_automaton")
+
+      // Automata: synchronization.
       {
-        algos.emplace("is_synchronized", sig);
-        algos.emplace("delay_automaton", sig);
+        auto l = { "delay_automaton", "is_synchronized", "synchronize" };
+        if (has(l, algo))
+          for (auto a: l)
+            algos.emplace(a, sig);
       }
+
+      // Automata: accessibility.
+      {
+        auto l = { "accessible", "coaccessible", "is_accessible",
+                   "is_coaccessible", "is_trim", "trim" };
+        if (has(l, algo))
+          for (auto a: l)
+            algos.emplace(a, sig);
+      }
+
       translate.compile(algos);
     }
   } // namespace dyn

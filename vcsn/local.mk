@@ -204,6 +204,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/functional.hh                        \
   %D%/misc/fwd.hh                               \
   %D%/misc/indent.hh                            \
+  %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \
   %D%/misc/map.hh                               \
   %D%/misc/math.hh                              \
