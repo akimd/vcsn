@@ -24,6 +24,7 @@
 #include <vcsn/misc/wet.hh>
 #include <vcsn/misc/zip-maps.hh>
 #include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/f2.hh>
 #include <vcsn/weightset/z.hh>
 
 namespace vcsn
@@ -214,12 +215,11 @@ namespace vcsn
     }
 
     /// `v += p`, default case.
-    template <wet_kind_t WetType>
+    template <wet_kind_t WetType, typename WS>
     auto
     add_here_impl(value_t& l, const value_t& r) const
-      -> std::enable_if_t<!(WetType == wet_kind_t::bitset
-                       && std::is_same<weightset_t, b>::value),
-                     value_t&>
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
+                          value_t&>
     {
       for (const auto& m: r)
         add_here(l, m);
@@ -227,21 +227,33 @@ namespace vcsn
     }
 
     /// `v += p`, B and bitsets.
-    template <wet_kind_t WetType>
+    template <wet_kind_t WetType, typename WS>
     auto
     add_here_impl(value_t& l, const value_t& r) const
-      -> std::enable_if_t<WetType == wet_kind_t::bitset
-                     && std::is_same<weightset_t, b>::value,
+      -> std::enable_if_t<(WetType == wet_kind_t::bitset
+                           && std::is_same<WS, b>::value),
                      value_t&>
     {
       l.set() |= r.set();
       return l;
     }
 
+    /// `v += p`, F2 and bitsets.
+    template <wet_kind_t WetType, typename WS>
+    auto
+    add_here_impl(value_t& l, const value_t& r) const
+      -> std::enable_if_t<(WetType == wet_kind_t::bitset
+                           && std::is_same<WS, f2>::value),
+                          value_t&>
+    {
+      l.set() ^= r.set();
+      return l;
+    }
+
     value_t&
     add_here(value_t& l, const value_t& r) const
     {
-      return add_here_impl<value_t::kind>(l, r);
+      return add_here_impl<value_t::kind, weightset_t>(l, r);
     }
 
     /// The sum of polynomials \a l and \a r.
@@ -411,16 +423,43 @@ namespace vcsn
     }
 
     /// The sum of the weights of the common labels.
-    /// FIXME: Should probably be a special case of conjunction.
-    weight_t
+    /// Default case.
+    template <wet_kind_t WetType = value_t::kind>
+    auto
     scalar_product(const value_t& l, const value_t& r) const
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
+                          weight_t>
     {
-      weight_t res = weightset()->zero();
+      auto res = weightset()->zero();
       for (const auto& p: zip_maps<vcsn::as_tuple>(l, r))
         res = weightset()->add(res,
                                weightset()->mul(weight_of(std::get<0>(p)),
                                                 weight_of(std::get<1>(p))));
       return res;
+    }
+
+    /// The sum of the weights of the common labels.
+    /// B and bitsets.
+    template <wet_kind_t WetType = value_t::kind, typename WS = weightset_t>
+    auto
+    scalar_product(const value_t& l, const value_t& r) const
+      -> std::enable_if_t<(WetType == wet_kind_t::bitset
+                           && std::is_same<WS, b>::value),
+                     weight_t>
+    {
+      return l.set().intersects(r.set());
+    }
+
+    /// The sum of the weights of the common labels.
+    /// F2 and bitsets.
+    template <wet_kind_t WetType = value_t::kind, typename WS = weightset_t>
+    auto
+    scalar_product(const value_t& l, const value_t& r) const
+      -> std::enable_if_t<(WetType == wet_kind_t::bitset
+                           && std::is_same<WS, f2>::value),
+                          weight_t>
+    {
+      return (l.set() & r.set()).count() % 2;
     }
 
     /// The star of polynomial \a v.

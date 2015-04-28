@@ -33,7 +33,7 @@ namespace vcsn
     /// The best tag depending on the type of Aut.
     template <Automaton Aut>
     using determinization_tag
-      = std::conditional_t<std::is_same<weightset_t_of<Aut>, b>::value,
+      = std::conditional_t<std::is_same<weight_t_of<Aut>, bool>::value,
                            boolean_tag,
                            weighted_tag>;
   }
@@ -49,13 +49,15 @@ namespace vcsn
     /// \tparam Aut the input automaton type.
     ///
     /// \pre labelset is free.
-    /// \pre weightset is Boolean.
+    /// \pre weightset is B or F2.
     template <Automaton Aut>
     class determinized_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
+      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+                    "determinize: boolean: requires B or F2 weights");
 
     public:
       using automaton_t = Aut;
@@ -210,17 +212,15 @@ namespace vcsn
     private:
       /// The state for set of states \a ss.
       /// If this is a new state, schedule it for visit.
-      state_t state_(const state_name_t& ss)
+      state_t state_(const state_name_t& n)
       {
         state_t res;
-        auto i = map_.find(ss);
+        auto i = map_.find(n);
         if (i == std::end(map_))
           {
             res = this->new_state();
-            todo_.push(map_.emplace(ss, res).first);
-
-            if (ss.set().intersects(finals_.set()))
-              this->set_final(res);
+            todo_.push(map_.emplace(n, res).first);
+            this->set_final(res, ns_.scalar_product(n, finals_));
           }
         else
           res = i->second;
@@ -282,8 +282,8 @@ namespace vcsn
     //   -> std::enable_if_t<false_condition, determinized_automaton<Aut>>
     static_assert(labelset_t_of<Aut>::is_free(),
                   "determinize: requires free labelset");
-    static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                  "determinize: boolean: requires Boolean weights");
+    static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+                  "determinize: boolean: requires B or F2 weights");
 
     auto res = make_shared_ptr<determinized_automaton<Aut>>(a);
     // Determinize.
@@ -443,14 +443,14 @@ namespace vcsn
     private:
       /// The state for set of states \a ss.
       /// If this is a new state, schedule it for visit.
-      state_t state_(const state_name_t& name)
+      state_t state_(const state_name_t& n)
       {
         state_t res;
-        auto i = map_.find(name);
+        auto i = map_.find(n);
         if (i == std::end(map_))
           {
             res = this->new_state();
-            todo_.push(map_.emplace(name, res).first);
+            todo_.push(map_.emplace(n, res).first);
           }
         else
           res = i->second;
@@ -513,15 +513,15 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Enable if Aut is Boolean.
+      /// Enable if Aut is over Booleans.
       template <Automaton Aut, typename Type = void>
       using enable_if_boolean_t
-        = std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value, Type>;
+        = std::enable_if_t<std::is_same<weight_t_of<Aut>, bool>::value, Type>;
 
-      /// Enable if Aut is not Boolean.
+      /// Enable if Aut is not over Booleans.
       template <Automaton Aut, typename Type = void>
       using enable_if_not_boolean_t
-        = std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
+        = std::enable_if_t<!std::is_same<weight_t_of<Aut>, bool>::value, Type>;
 
 
       template <Automaton Aut, typename Tag>

@@ -3,13 +3,14 @@
 import vcsn
 from test import *
 
+
 def load(file):
     return open(medir + "/" + file + ".gv").read().strip()
 
 # check AUT EXP ALGO = "auto" DETERMINISTIC = False
 # -------------------------------------------------
-def check(aut, expfile, algo = "auto", deterministic = False):
-    print("check:", expfile)
+def check(aut, expfile, algo="auto", deterministic=False):
+    print("check: {}, algo={}".format(expfile, algo))
     CHECK_EQ(deterministic, aut.is_deterministic())
     CHECK_EQ(deterministic, aut.transpose().strip().is_codeterministic())
 
@@ -45,13 +46,24 @@ check(ctx.ladybird(8), 'ladybird-8-det')
 
 for name in ['deterministic', 'empty', 'epsilon']:
     aut = vcsn.automaton(load(name))
-    check(aut, name + "-det", deterministic = True)
-    check(aut, name + "-det", deterministic = True, algo = "weighted")
+    check(aut, name + "-det", deterministic=True)
+    check(aut, name + "-det", deterministic=True, algo='weighted')
 
 
-## -------------------------------------- ##
-## Determinization of weighted automata.  ##
-## -------------------------------------- ##
-for name in ['b', 'f2', 'q', 'z', 'zmin']:
+## ------------------- ##
+## Weighted automata.  ##
+## ------------------- ##
+
+for name in ['q', 'z', 'zmin']:
     aut = vcsn.automaton(load(name))
     check(aut, name + '-det')
+
+
+## ----------------------------- ##
+## Boolean automata (B and F2).  ##
+## ----------------------------- ##
+
+for name in ['b', 'f2']:
+    for algo in ['auto', 'boolean', 'weighted']:
+        aut = vcsn.automaton(load(name))
+        check(aut, name + '-det', algo=algo)

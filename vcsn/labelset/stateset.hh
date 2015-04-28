@@ -45,8 +45,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print(state_t s, std::ostream& out,
-        format fmt = {}) const
+    print(state_t s, std::ostream& out, format fmt = {}) const
     {
       return aut_->print_state_name(s, out, fmt);
     }
