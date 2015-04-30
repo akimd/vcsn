@@ -332,63 +332,6 @@ namespace vcsn
     return res;
   }
 
-    DEFINE::is_unweighted_nonsum_(value_t v) const
-    -> bool
-    {
-      assert(v->type() != type_t::lweight);
-      // Of course we can assume v's subterms to be well-formed according
-      // to our invariants: for example zero won't occur within a product.
-      switch (v->type())
-        {
-        case type_t::sum:
-          return false;
-        default:
-          return true;
-        }
-    }
-
-  DEFINE::is_nonsum_(value_t v) const
-    -> bool
-  {
-    return is_unweighted_nonsum_(unwrap_possible_lweight_(v));
-  }
-
-  DEFINE::mul_unweighted_nontrivial_products_(value_t a, value_t b) const
-    -> value_t
-  {
-    assert(! is_zero(a));
-    assert(! is_zero(b));
-    assert(! is_one(a));
-    assert(! is_one(b));
-    assert(! std::dynamic_pointer_cast<const lweight_t>(a));
-    assert(! std::dynamic_pointer_cast<const lweight_t>(b));
-
-    // The result is a product holding a's factors followed by b's
-    // factors, with one exception: if the last factors of a can be
-    // combined with the first factor of b then the two have to be
-    // merged in the result.
-    return concat(a, b);
-  }
-
-  DEFINE::mul_products_(value_t a, value_t b) const
-    -> value_t
-  {
-    assert(! is_zero(a));
-    assert(! is_zero(b));
-    value_t na = unwrap_possible_lweight_(a), nb = unwrap_possible_lweight_(b);
-
-    if (na->type() == type_t::one)
-      return lmul(possibly_implicit_lweight_(a), b);
-    else if (nb->type() == type_t::one)
-      return lmul(weightset()->mul(possibly_implicit_lweight_(a),
-                                   possibly_implicit_lweight_(b)),
-                  na);
-    else
-      return lmul(weightset()->mul(possibly_implicit_lweight_(a),
-                                   possibly_implicit_lweight_(b)),
-                  mul_unweighted_nontrivial_products_(na, nb));
-  }
-
   DEFINE::nontrivial_mul_expressions_(value_t l, value_t r) const
     -> value_t
   {
@@ -398,33 +341,37 @@ namespace vcsn
   DEFINE::nontrivial_mul_series_(value_t l, value_t r) const
     -> value_t
   {
+    assert(!is_zero(l));
+    assert(!is_zero(r));
+    assert(type_ignoring_lweight_(l) != type_t::one);
+    assert(type_ignoring_lweight_(r) != type_t::one);
+
     // Compute the result by distributing product over sum.  We have
     // to use add rather than just build a vector in order, since the
     // addend order in the result will not follow the order in l.
-    const auto& lt = type_ignoring_lweight_(l), rt = type_ignoring_lweight_(r);
     value_t res = zero();
-    if (lt == type_t::sum)
+    if (type_ignoring_lweight_(l) == type_t::sum)
       // l is a sum, and r might be as well.
       for (const auto& la: *down_pointer_cast<const sum_t>(l))
         res = add(res, mul(la, r));
-    else if (rt == type_t::sum)
+    else if (type_ignoring_lweight_(r) == type_t::sum)
       // r is a sum, l is not.
       for (const auto& ra: *down_pointer_cast<const sum_t>(r))
         res = add(res, mul(l, ra));
     // Neither l nor r is a sum.
-    else if (is_nonsum_(l) && is_nonsum_(r))
-      return mul_products_(l, r);
     else
       {
-        weight_t lw = possibly_implicit_lweight_(l)
-          , rw = possibly_implicit_lweight_(r);
-        value_t nl = unwrap_possible_lweight_(l)
-          , nr = unwrap_possible_lweight_(r);
-        return lmul(weightset()->mul(lw, rw),
-                    std::make_shared<prod_t>(gather_<type_t::prod>(nl, nr)));
+        weight_t
+          lw = possibly_implicit_lweight_(l),
+          rw = possibly_implicit_lweight_(r);
+        value_t
+          nl = unwrap_possible_lweight_(l),
+          nr = unwrap_possible_lweight_(r);
+        res = lmul(weightset()->mul(lw, rw),
+                   concat(nl, nr));
       }
-     return res;
-   }
+    return res;
+  }
 
   DEFINE::conjunction(value_t l, value_t r) const
     -> value_t

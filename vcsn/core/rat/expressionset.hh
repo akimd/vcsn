@@ -309,14 +309,22 @@ namespace vcsn
     type_t type_ignoring_lweight_(value_t e) const;
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
-    value_t mul_expressions_(value_t l, value_t r) const;
-    value_t mul_series_(value_t l, value_t r) const;
+
+    /// The product of l and r, using expression-identities.
     value_t mul_(value_t l, value_t r, bool series) const;
-    bool is_unweighted_nonsum_(value_t v) const;
-    bool is_nonsum_(value_t v) const;
-    value_t mul_unweighted_nontrivial_products_(value_t a, value_t b) const;
-    value_t mul_products_(value_t a, value_t b) const;
+
+    /// The product of l and r, using expression-identities.
+    value_t mul_expressions_(value_t l, value_t r) const;
+
+    /// The product of l and r, using series-identities.
+    value_t mul_series_(value_t l, value_t r) const;
+
+    /// The product of l and r, using expression-identities.
+    /// \pre l and r are non-trivial.
     value_t nontrivial_mul_expressions_(value_t l, value_t r) const;
+
+    /// The product of l and r, using series-identities.
+    /// \pre l and r are non-trivial.
     value_t nontrivial_mul_series_(value_t l, value_t r) const;
 
     /// Push \a v in \a res, applying associativity if possible.
