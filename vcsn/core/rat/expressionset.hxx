@@ -32,15 +32,9 @@ namespace vcsn
     : ctx_(ctx)
     , identities_(identities)
   {
-    require_weightset_commutativity();
-  }
-
-  template <typename Context>
-  void expressionset_impl<Context>::require_weightset_commutativity() const
-  {
     require(identities_ != identities_t::series
             || weightset_t_of<Context>::is_commutative(),
-            "series (currently) depend on weightset commutativity");
+            "series (currently) requires a commutative weightset product");
   }
 
 #define DEFINE                                  \
@@ -171,12 +165,6 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::less_ignoring_weight_(value_t l, value_t r) const
-    -> bool
-  {
-    return less(unwrap_possible_lweight_(l), unwrap_possible_lweight_(r));
-  }
-
   DEFINE::remove_from_sum_series_(values_t addends,
                                   typename values_t::iterator i) const
     -> value_t
@@ -202,18 +190,19 @@ namespace vcsn
     // We have to clone the addends (actually, their shared_ptr's)
     // into something we can modify.
     values_t copy = addends.subs();
-    assert(copy.size() > 0);
+    assert(!copy.empty());
 
     // Find the right spot where to insert r.
     const auto& ws = weightset();
     auto rw = possibly_implicit_lweight_(r);
     auto rn = unwrap_possible_lweight_(r);
-    auto closure =
+    auto less_than =
       [this] (value_t l, value_t r)
       {
-        return less_ignoring_weight_(l, r);
+        return less(unwrap_possible_lweight_(l),
+                    unwrap_possible_lweight_(r));
       };
-    const auto i = boost::lower_bound(copy, rn, closure);
+    const auto i = boost::lower_bound(copy, rn, less_than);
     if (i != copy.end()
         && equal(unwrap_possible_lweight_(*i), rn))
       {
@@ -243,7 +232,8 @@ namespace vcsn
   DEFINE::add_nonzero_series_(value_t l, value_t r) const
     -> value_t
   {
-    assert(! is_zero(r));
+    assert(!is_zero(l));
+    assert(!is_zero(r));
     if (l->type() == type_t::sum)
       {
         const auto ls = down_pointer_cast<const sum_t>(l);
@@ -645,7 +635,7 @@ namespace vcsn
   DEFINE::less(value_t lhs, value_t rhs)
     -> bool
   {
-    size<expressionset_impl> sizer;
+    auto sizer = size<self_t>{};
     size_t l = sizer(lhs), r = sizer(rhs);
 
     if (l < r)
@@ -654,8 +644,7 @@ namespace vcsn
       return false;
     else
       {
-        using less_t = rat::less<expressionset_impl>;
-        less_t lt;
+        auto lt = rat::less<self_t>{};
         return lt(lhs, rhs);
       }
   }
@@ -669,7 +658,7 @@ namespace vcsn
   DEFINE::hash(const value_t& v)
     -> size_t
   {
-    rat::hash<expressionset_impl> hasher;
+    auto hasher = rat::hash<self_t>{};
     return hasher(v);
   }
 
@@ -679,7 +668,7 @@ namespace vcsn
     if (identities() == rs.identities())
       return v;
     else
-      return copy(rs, *this, v);
+      return vcsn::rat::copy(rs, self(), v);
   }
 
   template <typename Context>
@@ -727,19 +716,22 @@ namespace vcsn
   template <typename Ctx2>
   inline
   auto
-  expressionset_impl<Context>::conv
-  (const expressionset_impl<Ctx2>& rs,
-   typename expressionset_impl<Ctx2>::value_t r) const
+  expressionset_impl<Context>::conv(const expressionset<Ctx2>& rs,
+                                    typename expressionset<Ctx2>::value_t r)
+    const
     -> value_t
   {
-    return copy(rs, *this, r);
+    return vcsn::rat::copy(rs, self(), r);
   }
 
   DEFINE::conv(std::istream& is) const
     -> value_t
   {
-    auto dynres = dyn::read_expression(dyn::make_expressionset(*this), is);
-    const auto& res = dynres->template as<expressionset_impl>();
+    // Our expression parser is written in dyn::.  So we have to build
+    // the dyn::expressionset, and use it to parse the expression, and
+    // then downcast it.
+    auto dynres = dyn::read_expression(dyn::make_expressionset(self()), is);
+    const auto& res = dynres->template as<self_t>();
     return res.expression();
   }
 
@@ -747,8 +739,7 @@ namespace vcsn
                 const std::string& format) const
     -> std::ostream&
   {
-    using printer_t = printer<expressionset_impl>;
-    printer_t print(*this, o);
+    auto print = printer<self_t>{self(), o};
     print.format(format);
     return print(v);
   }
@@ -756,7 +747,7 @@ namespace vcsn
   DEFINE::transpose(const value_t v) const
     -> value_t
   {
-    detail::transposer<expressionset_impl> tr{*this};
+    auto tr = detail::transposer<self_t>{self()};
     return tr(v);
   }
 

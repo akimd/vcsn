@@ -89,9 +89,9 @@ namespace vcsn
     /// Constructor.
     /// \param ctx        the generator set for the labels, and the weight set.
     /// \param identities the identities to guarantee
+    ///                    FIXME: make this optional again?
     expressionset_impl(const context_t& ctx,
-                       identities_t identities); // FIXME: make this
-                                                 // optional again?
+                       identities_t identities);
 
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept unknown letters
@@ -193,8 +193,8 @@ namespace vcsn
     value_t conv(const r& ws, typename r::value_t v) const;
     value_t conv(const zmin& ws, typename zmin::value_t v) const;
     template <typename Ctx2>
-    value_t conv(const expressionset_impl<Ctx2>& ws,
-                 typename expressionset_impl<Ctx2>::value_t v) const;
+    value_t conv(const expressionset<Ctx2>& ws,
+                 typename expressionset<Ctx2>::value_t v) const;
 
     /// Whether \a l < \a r.
     static bool less(value_t l, value_t r);
@@ -241,10 +241,10 @@ namespace vcsn
     template <typename... Args>
     value_t letter_class(Args&&... chars) const;
 
-    /// Parsing an expression in a stream.
+    /// The next expression in a stream.
     value_t conv(std::istream& is) const;
 
-    /// Converting from ourself: identity.
+    /// Convert from ourself: identity.
     value_t conv(const self_t&, value_t v) const;
 
     /// Read a range of expressions.
@@ -299,13 +299,28 @@ namespace vcsn
     }
 
   private:
-    void require_weightset_commutativity() const;
-    bool less_ignoring_weight_(value_t l, value_t r) const;
+    /// Ourself, but after the application of variadic_mul_mixin.
+    ///
+    /// FIXME: this is ugly.  It is due to the fact that instead of the
+    /// CRTP, we used a mixin approach to add features to expressionset
+    /// as opposed to expressionset_impl.  Except that here, we have an
+    /// expression_impl, and we need the expression.  So after all,
+    /// maybe the CRTP is a better approach.
+    ///
+    /// Cannot be a reference member, as we do support assignments,
+    /// in which case the copied self would point to the original this.
+    const self_t& self() const { return static_cast<const self_t&>(*this); }
+
     value_t remove_from_sum_series_(values_t addends,
                                     typename values_t::iterator i) const;
     value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;
     value_t merge_sum_series_(const sum_t& addends1, value_t aa2) const;
+
+    /// The sum of two non-zero series.
+    /// \pre  !is_zero(l)
+    /// \pre  !is_zero(r)
     value_t add_nonzero_series_(value_t l, value_t r) const;
+
     type_t type_ignoring_lweight_(value_t e) const;
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
