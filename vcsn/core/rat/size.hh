@@ -1,9 +1,8 @@
-#ifndef VCSN_CORE_RAT_SIZE_HH
-# define VCSN_CORE_RAT_SIZE_HH
+#pragma once
 
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/cast.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/cast.hh>
 
 namespace vcsn
 {
@@ -44,8 +43,8 @@ namespace vcsn
 
     private:
 
-# define DEFINE(Type)                                           \
-      using Type ## _t = typename super_t::Type ## _t;       \
+#define DEFINE(Type)                                    \
+      using Type ## _t = typename super_t::Type ## _t;  \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom);
@@ -62,7 +61,7 @@ namespace vcsn
       DEFINE(transposition){ visit_unary(v); }
       DEFINE(zero);
 
-# undef DEFINE
+#undef DEFINE
 
       /// Traverse unary node.
       template <rat::exp::type_t Type>
@@ -77,6 +76,4 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-# include <vcsn/core/rat/size.hxx>
-
-#endif // !VCSN_CORE_RAT_SIZE_HH
+#include <vcsn/core/rat/size.hxx>

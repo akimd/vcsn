@@ -726,7 +726,7 @@ namespace vcsn
     return hasher(v);
   }
 
-  DEFINE::conv(self_t rs, value_t v) const
+  DEFINE::conv(const self_t& rs, value_t v) const
     -> value_t
   {
     if (identities() == rs.identities())
@@ -891,7 +891,7 @@ namespace vcsn
   inline
   auto
   expressionset_impl<Context>::letter_class_(const Args&&...,
-                                       std::true_type) const
+                                             std::true_type) const
     -> value_t
   {
     return one();

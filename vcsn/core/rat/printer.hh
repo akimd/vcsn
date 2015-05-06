@@ -1,13 +1,12 @@
-#ifndef VCSN_CORE_RAT_PRINTER_HH
-# define VCSN_CORE_RAT_PRINTER_HH
+#pragma once
 
-# include <iostream>
+#include <iostream>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/core/rat/identities.hh>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/cast.hh>
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/cast.hh>
 
 namespace vcsn
 {
@@ -168,6 +167,4 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-# include <vcsn/core/rat/printer.hxx>
-
-#endif // !VCSN_CORE_RAT_PRINTER_HH
+#include <vcsn/core/rat/printer.hxx>

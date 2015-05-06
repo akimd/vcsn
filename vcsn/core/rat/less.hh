@@ -1,10 +1,9 @@
-#ifndef VCSN_CORE_RAT_LESS_HH
-# define VCSN_CORE_RAT_LESS_HH
+#pragma once
 
-# include <vcsn/misc/cast.hh>
+#include <vcsn/misc/cast.hh>
 
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/core/rat/size.hh>
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/core/rat/size.hh>
 
 namespace vcsn
 {
@@ -62,11 +61,11 @@ namespace vcsn
       `-----------------------------------------------------------*/
 
 #define VISIT(Type)                                                     \
-      using Type ## _t = typename super_t::Type ## _t;               \
+      using Type ## _t = typename super_t::Type ## _t;                  \
       virtual void                                                      \
       visit(const Type ## _t& lhs)                                      \
       {                                                                 \
-        res_ = less_(lhs, *down_pointer_cast<const Type ## _t>(rhs_)); \
+        res_ = less_(lhs, *down_pointer_cast<const Type ## _t>(rhs_));  \
       }
 
       VISIT(atom);
@@ -145,5 +144,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_CORE_RAT_LESS_HH

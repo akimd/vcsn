@@ -1,8 +1,7 @@
-#ifndef VCSN_CORE_RAT_VISITOR_HH
-# define VCSN_CORE_RAT_VISITOR_HH
+#pragma once
 
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -24,7 +23,7 @@ namespace vcsn
       template <type_t Type>
       using weight_node_t = rat::weight_node<Type, context_t>;
 
-# define DEFINE(Type)                           \
+#define DEFINE(Type)                            \
       using Type ## _t = Type<context_t>;       \
       virtual void visit(const Type ## _t& v)
 
@@ -41,22 +40,20 @@ namespace vcsn
       DEFINE(sum);
       DEFINE(transposition);
       DEFINE(zero);
-# undef DEFINE
+#undef DEFINE
     };
 
   } // namespace rat
 } // namespace vcsn
 
-# define VCSN_RAT_VISIT(Type, Val)                      \
+#define VCSN_RAT_VISIT(Type, Val)                       \
   using Type ## _t = typename super_t::Type ## _t;      \
   virtual void visit(const Type ## _t& Val)
 
-# define VCSN_RAT_UNSUPPORTED(Type)                     \
+#define VCSN_RAT_UNSUPPORTED(Type)                      \
   VCSN_RAT_VISIT(Type,)                                 \
   {                                                     \
     raise(me(), ": " #Type " is not supported");        \
   }
 
-# include <vcsn/core/rat/visitor.hxx>
-
-#endif // !VCSN_CORE_RAT_VISITOR_HH
+#include <vcsn/core/rat/visitor.hxx>

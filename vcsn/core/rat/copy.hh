@@ -1,10 +1,9 @@
-#ifndef VCSN_CORE_RAT_COPY_HH
-# define VCSN_CORE_RAT_COPY_HH
+#pragma once
 
-# include <iostream>
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/cast.hh>
+#include <iostream>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/cast.hh>
 
 namespace vcsn
 {
@@ -70,8 +69,8 @@ namespace vcsn
         return res_;
       }
 
-# define DEFINE(Type)                                           \
-      using Type ## _t = typename super_t::Type ## _t;       \
+#define DEFINE(Type)                                    \
+      using Type ## _t = typename super_t::Type ## _t;  \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(conjunction)  { copy_variadic(v); }
@@ -117,7 +116,7 @@ namespace vcsn
       }
 
 
-# undef DEFINE
+#undef DEFINE
       /// expressionset to decode the input value.
       const in_expressionset_t& in_rs_;
       /// expressionset to build the output value.
@@ -137,5 +136,3 @@ namespace vcsn
 
   } // namespace rat
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_COPY_HH

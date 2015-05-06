@@ -1,10 +1,7 @@
-#ifndef VCSN_CORE_RAT_PRINTER_HXX
-# define VCSN_CORE_RAT_PRINTER_HXX
-
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/indent.hh>
-# include <vcsn/misc/memory.hh> // address
-# include <vcsn/misc/raise.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/indent.hh>
+#include <vcsn/misc/memory.hh> // address
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -17,7 +14,7 @@ namespace vcsn
     {
       switch (t)
         {
-# define CASE(T) case type_t::T: o << #T; break
+#define CASE(T) case type_t::T: o << #T; break
           CASE(zero);
           CASE(one);
           CASE(atom);
@@ -31,7 +28,7 @@ namespace vcsn
           CASE(lweight);
           CASE(rweight);
           CASE(complement);
-# undef CASE
+#undef CASE
         }
       return o;
     }
@@ -48,8 +45,8 @@ namespace vcsn
     {}
 
 
-# define DEFINE                                 \
-    template <typename ExpSet>               \
+#define DEFINE                                  \
+    template <typename ExpSet>                  \
     inline                                      \
     auto                                        \
     printer<ExpSet>
@@ -131,9 +128,9 @@ namespace vcsn
       else
         switch (v.type())
           {
-# define CASE(Type)                             \
+#define CASE(Type)                              \
             case exp::type_t::Type:             \
-              return precedence_t::Type;
+              return precedence_t::Type
             CASE(atom);
             CASE(complement);
             CASE(conjunction);
@@ -147,13 +144,13 @@ namespace vcsn
             CASE(sum);
             CASE(transposition);
             CASE(zero);
-# undef CASE
+#undef CASE
           }
       abort(); // Unreachable.
     }
 
-# define VISIT(Type)                          \
-    DEFINE::visit(const Type ## _t& v)        \
+#define VISIT(Type)                             \
+    DEFINE::visit(const Type ## _t& v)          \
       -> void
 
     VISIT(lweight)
@@ -237,10 +234,8 @@ namespace vcsn
         }
     }
 
-# undef VISIT
-# undef DEFINE
+#undef VISIT
+#undef DEFINE
 
   } // namespace rat
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_PRINTER_HXX

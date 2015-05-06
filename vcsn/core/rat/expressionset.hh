@@ -49,10 +49,10 @@ namespace vcsn
     using Type ## _t = vcsn::rat::Type<context_t>
     DEFINE(atom);
     DEFINE(complement);
-    DEFINE(inner);
     DEFINE(conjunction);
-    DEFINE(leaf);
+    DEFINE(inner);
     DEFINE(ldiv);
+    DEFINE(leaf);
     DEFINE(lweight);
     DEFINE(node);
     DEFINE(one);
@@ -245,7 +245,7 @@ namespace vcsn
     value_t conv(std::istream& is) const;
 
     /// Converting from ourself: identity.
-    value_t conv(self_t, value_t v) const;
+    value_t conv(const self_t&, value_t v) const;
 
     /// Read a range of expressions.
     std::set<value_t> convs(std::istream&) const
