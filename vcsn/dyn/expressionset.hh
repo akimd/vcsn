@@ -58,6 +58,9 @@ namespace detail
     virtual value_t conjunction(value_t l, value_t r) const = 0;
     virtual value_t shuffle(value_t l, value_t r) const = 0;
 
+    /// Power operator.
+    virtual value_t power(value_t e, unsigned n) const = 0;
+
     /// Left division: l \ r.
     virtual value_t ldiv(value_t l, value_t r) const = 0;
     /// Right division: l / r.
@@ -154,6 +157,8 @@ namespace detail
     virtual value_t conjunction(value_t l, value_t r) const override;
 
     virtual value_t shuffle(value_t l, value_t r) const override;
+
+    virtual value_t power(value_t e, unsigned n) const override;
 
     virtual value_t ldiv(value_t l, value_t r) const override;
     virtual value_t rdiv(value_t l, value_t r) const override;

@@ -450,6 +450,16 @@ namespace vcsn
     return res;
   }
 
+  DEFINE::power(value_t e, unsigned n) const
+    -> value_t
+  {
+    // The enhanced version of power for expressionset.
+    // FIXME: This method has to replace the general one provided by
+    // variadic_mul_mixin wrapper.
+    (void)n;
+    return e;
+  }
+
   DEFINE::concat(value_t l, value_t r) const
     -> value_t
   {

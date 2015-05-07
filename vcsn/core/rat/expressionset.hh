@@ -217,6 +217,7 @@ namespace vcsn
     value_t concat(value_t l, value_t r) const;
     value_t conjunction(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
+    value_t power(value_t e, unsigned n) const;
     value_t ldiv(value_t l, value_t r) const;
     value_t rdiv(value_t l, value_t r) const;
     value_t star(value_t e) const;

@@ -251,29 +251,27 @@ namespace vcsn
     power(const dyn::expressionset& es, exp_t e, int min, int max)
     {
       exp_t res;
+
+      // E{min,}
       if (max == -1)
         {
           res = es->star(e);
           if (min != -1)
-            res = es->mul(power(es, e, min, min), res);
+            res = es->mul(es->power(e, min), res);
         }
       else
         {
+          // E{,max} => E{0,max}
           if (min == -1)
             min = 0;
-          if (min == 0)
-            res = es->one();
-          else
-            {
-              res = e;
-              for (int n = 1; n < min; ++n)
-                res = es->mul(res, e);
-            }
+
+          res = es->power(e, min);
+
           if (min < max)
             {
               exp_t sum = es->one();
               for (int n = 1; n <= max - min; ++n)
-                sum = es->add(sum, power(es, e, n, n));
+                sum = es->add(sum, es->power(e, n));
               res = es->mul(res, sum);
             }
         }

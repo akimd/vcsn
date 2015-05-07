@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory> // std::make_shared
 
 // It is much simpler and saner in C++ to put types and functions on
 // these types in the same namespace.  Since "using q =
@@ -25,9 +26,10 @@ namespace vcsn
     /// Inherit the constructors.
     using super_t::super_t;
 
-    /// Provide a variadic mul.
+    /// Import mul overloads.
     using super_t::mul;
 
+    /// A variadic multiplication.
     template <typename... Ts>
     value_t mul(const Ts&... ts) const
     {
@@ -38,6 +40,16 @@ namespace vcsn
         {
           ((res = super_t::mul(res, ts)), 0)...
         };
+      return res;
+    }
+
+    /// Repeated multiplication.
+    value_t power(value_t e, unsigned n) const
+    {
+      value_t res = super_t::one();
+      if (!super_t::is_one(e))
+        while (n-- > 0)
+          res = mul(res, e);
       return res;
     }
   };

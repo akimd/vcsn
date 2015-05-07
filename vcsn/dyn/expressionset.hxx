@@ -87,6 +87,11 @@ namespace dyn
       return rs_.shuffle(down(l), down(r));
     }
 
+    DEFINE::power(value_t e, unsigned n) const -> value_t
+    {
+      return rs_.power(down(e), n);
+    }
+
     DEFINE::ldiv(value_t l, value_t r) const -> value_t
     {
       return rs_.ldiv(down(l), down(r));
