@@ -455,7 +455,7 @@ namespace vcsn
   {
     // The enhanced version of power for expressionset.
     // FIXME: This method has to replace the general one provided by
-    // variadic_mul_mixin wrapper.
+    // weightset_mixin wrapper.
     (void)n;
     return e;
   }

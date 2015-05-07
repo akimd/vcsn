@@ -40,16 +40,16 @@ namespace vcsn
 
   // weightset.hh.
   template <typename WeightSet>
-  struct variadic_mul_mixin;
+  struct weightset_mixin;
 
-  using b    = variadic_mul_mixin<detail::b_impl>;
-  using f2   = variadic_mul_mixin<detail::f2_impl>;
-  using log  = variadic_mul_mixin<detail::log_impl>;
-  using q    = variadic_mul_mixin<detail::q_impl>;
-  using qmp  = variadic_mul_mixin<detail::qmp_impl>;
-  using r    = variadic_mul_mixin<detail::r_impl>;
-  using rmin = variadic_mul_mixin<detail::rmin_impl>;
-  using z    = variadic_mul_mixin<detail::z_impl>;
-  using zmin = variadic_mul_mixin<detail::zmin_impl>;
+  using b    = weightset_mixin<detail::b_impl>;
+  using f2   = weightset_mixin<detail::f2_impl>;
+  using log  = weightset_mixin<detail::log_impl>;
+  using q    = weightset_mixin<detail::q_impl>;
+  using qmp  = weightset_mixin<detail::qmp_impl>;
+  using r    = weightset_mixin<detail::r_impl>;
+  using rmin = weightset_mixin<detail::rmin_impl>;
+  using z    = weightset_mixin<detail::z_impl>;
+  using zmin = weightset_mixin<detail::zmin_impl>;
 
 } // namespace vcsn

@@ -300,7 +300,7 @@ namespace vcsn
     }
 
   private:
-    /// Ourself, but after the application of variadic_mul_mixin.
+    /// Ourself, but after the application of weightset_mixin.
     ///
     /// FIXME: this is ugly.  It is due to the fact that instead of the
     /// CRTP, we used a mixin approach to add features to expressionset

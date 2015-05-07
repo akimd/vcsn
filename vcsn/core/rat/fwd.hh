@@ -162,6 +162,6 @@ namespace vcsn
   } // namespace rat
 
   template <typename Context>
-  using expressionset = variadic_mul_mixin<rat::expressionset_impl<Context>>;
+  using expressionset = weightset_mixin<rat::expressionset_impl<Context>>;
 
 } // namespace vcsn

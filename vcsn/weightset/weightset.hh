@@ -5,7 +5,7 @@
 
 // It is much simpler and saner in C++ to put types and functions on
 // these types in the same namespace.  Since "using q =
-// detail::variadic_mul_mixin<q_impl>" would just create an alias of
+// detail::weightset_mixin<q_impl>" would just create an alias of
 // q, its original namespace, detail::, would still be the namespace
 // used in ADL.
 //
@@ -18,7 +18,7 @@ namespace vcsn
 {
   /// Provide a variadic mul on top of a binary mul(), and one().
   template <typename WeightSet>
-  struct variadic_mul_mixin : WeightSet
+  struct weightset_mixin : WeightSet
   {
     using super_t = WeightSet;
     using typename super_t::value_t;
