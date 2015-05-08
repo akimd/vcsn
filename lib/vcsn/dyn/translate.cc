@@ -301,7 +301,7 @@ namespace vcsn
         }
 
         /// Compile, and load, a DSO which instantiates \a algos.
-        void compile(const std::set<std::pair<std::string, signature>>& algos)
+        void compile(const std::map<std::string, signature>& algos)
         {
           printer_.header("vcsn/misc/attributes.hh"); // ATTRIBUTE_USED
           printer_.header("vcsn/misc/name.hh"); // ssignature
@@ -364,14 +364,10 @@ namespace vcsn
     void compile(const std::string& algo, const signature& sig)
     {
       translation translate;
-      std::set<std::pair<std::string, signature>> algos{{algo, sig}};
+      auto algos = std::map<std::string, signature>{{algo, sig}};
 
       // Automata: core routines.
-      if (algo == "dot"
-          || algo == "efsm"
-          || algo == "info" && sig.size() == 3 // not "info" for expressions.
-          || algo == "strip"
-          )
+      if (in(algo, {"dot", "efsm", "info", "strip"}))
         {
           // Aut, Ostream, Bool.
           {
@@ -391,23 +387,57 @@ namespace vcsn
           }
         }
 
-      // Automata: synchronization.
-      {
-        auto l = { "delay_automaton", "is_synchronized", "synchronize" };
-        if (has(l, algo))
-          for (auto a: l)
-            algos.emplace(a, sig);
-      }
-
       // Automata: accessibility.
       {
         auto l = { "accessible", "coaccessible", "is_accessible",
                    "is_coaccessible", "is_trim", "trim" };
-        if (has(l, algo))
+        if (in(algo, l))
           for (auto a: l)
             algos.emplace(a, sig);
       }
 
+      // Automata: synchronization.
+      {
+        auto l = { "delay_automaton", "is_synchronized", "synchronize" };
+        if (algo % l)
+          for (auto a: l)
+            algos.emplace(a, sig);
+      }
+
+      // Expressions: basic operations.
+      {
+        auto unary
+          = { "transpose_expression",
+              "transposition_expression" };
+        auto binary
+          = { "concatenate_expression",
+              "conjunction_expression",
+              "difference_expression",
+              "sum_expression" };
+        if (in(algo, unary) || in(algo, binary))
+          {
+            auto aut1 = sig[0];
+            auto aut2 = in(algo, binary) ? sig[1] : aut1;
+            // Aut1.
+            for (auto a: unary)
+              algos.emplace(a, signature{aut1});
+            // Aut1, Aut2.
+            for (auto a: binary)
+              algos.emplace(a, signature{aut1, aut2});
+          }
+      }
+
+      // Expressions: basic operations.
+      if (in(algo, {"left_mult_expression",
+              "right_mult_expression"}))
+        {
+          // FIXME: how about using weightset_t_of?
+          auto other
+            = algo == "left_mult_expression"
+            ? "right_mult_expression"
+            : "left_mult_expression";
+          algos.emplace(other, signature{sig[1], sig[0]});
+        }
       translate.compile(algos);
     }
   } // namespace dyn

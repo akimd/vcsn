@@ -182,10 +182,6 @@ namespace vcsn
         // Word polynomialset.
         using wps_t = vcsn::detail::word_polynomialset_t<ctx_t>;
 
-        // Same labelset, but over Booleans.
-        using b_ctx_t = context<labelset_t_of<Ctx>, b>;
-        using b_rs_t = expressionset<b_ctx_t>;
-
         using namespace dyn::detail;
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(cerny, ctx_t, unsigned);
@@ -194,7 +190,6 @@ namespace vcsn
         REGISTER(conjunction, aut_t, aut_t);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
-        REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(eval, aut_t, wls_t);
@@ -308,8 +303,6 @@ namespace vcsn
         REGISTER(coaccessible, aut_t);
         REGISTER(complement_expression, rs_t);
         REGISTER(concatenate, aut_t, aut_t);
-        REGISTER(concatenate_expression, rs_t, rs_t);
-        REGISTER(conjunction_expression, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
         REGISTER(context_of_expression, rs_t);
@@ -328,7 +321,6 @@ namespace vcsn
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_expression, rs_t);
         REGISTER(left_mult, ws_t, aut_t);
-        REGISTER(left_mult_expression, ws_t, rs_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_expression, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
@@ -351,7 +343,6 @@ namespace vcsn
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
-        REGISTER(right_mult_expression, rs_t, ws_t);
         REGISTER(sort, aut_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
@@ -359,14 +350,11 @@ namespace vcsn
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
         REGISTER(sum, aut_t, aut_t);
-        REGISTER(sum_expression, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(thompson, rs_t);
         REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, const std::string);
         REGISTER(transpose, aut_t);
-        REGISTER(transpose_expression, rs_t);
-        REGISTER(transposition_expression, rs_t);
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 
