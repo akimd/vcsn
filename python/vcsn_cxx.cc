@@ -723,6 +723,11 @@ struct polynomial
     return vcsn::dyn::sum(val_, rhs.val_);
   }
 
+  automaton trie() const
+  {
+    return vcsn::dyn::trie(val_);
+  }
+
   vcsn::dyn::polynomial val_;
 };
 
@@ -1276,6 +1281,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lgcd", &polynomial::lgcd)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
+    .def("trie", &polynomial::trie)
    ;
 
   bp::class_<weight>

@@ -670,7 +670,10 @@ namespace vcsn
     /// Add the transposition operator to \a r.
     expression transposition(const expression& r);
 
-    /// The useful subautomaton of \a aut.
+    /// A trie-like automaton to accept \a p.
+    automaton trie(const polynomial& p);
+
+    /// The trim subautomaton of \a aut.
     automaton trim(const automaton& aut);
 
     /// The Brzozowski universal witness.

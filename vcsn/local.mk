@@ -92,6 +92,7 @@ algo_headers =                                  \
   %D%/algos/to-expansion.hh                     \
   %D%/algos/to-expression.hh                    \
   %D%/algos/transpose.hh                        \
+  %D%/algos/trie.hh                             \
   %D%/algos/u.hh                                \
   %D%/algos/union.hh                            \
   %D%/algos/universal.hh                        \

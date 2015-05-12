@@ -1,5 +1,5 @@
 ## Vaucanson 2, a generic library for finite state machines.
-## Copyright (C) 2013, 2014 Vaucanson Group.
+## Copyright (C) 2013-2015 Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -79,6 +79,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/to-expansion.py                           \
   %D%/to-expression.py                          \
   %D%/transpose.py                              \
+  %D%/trie.py                                   \
   %D%/tuples.py                                 \
   %D%/union.py                                  \
   %D%/universal.py                              \
