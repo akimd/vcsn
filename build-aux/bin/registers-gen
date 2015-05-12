@@ -64,6 +64,8 @@ def process_file(fn):
             # If the bridge if "foo_vector", it's actually for a
             # variadic call.
             bridge['call'] = 'call_variadic' if reg.endswith('_vector') else 'call'
+            if reg in bridges:
+                raise RuntimeError("bridge multiply defined: " + reg)
             bridges[reg] = bridge
 
 # Generate the header.
@@ -98,8 +100,7 @@ namespace vcsn { namespace dyn { namespace detail {
 
     res += '''
 #undef REGISTER_DECLARE
-}}}
-'''
+}}}'''
     return res
 
 # Generate the implementation file.
