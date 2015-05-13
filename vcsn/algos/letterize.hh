@@ -23,7 +23,7 @@ namespace vcsn
     template <typename LabelSet>
     struct letterized_labelset
     {
-      static constexpr bool should_run = false;
+      static constexpr bool is_letterized = true;
 
       using labelset_t = LabelSet;
       static std::shared_ptr<labelset_t>
@@ -36,7 +36,7 @@ namespace vcsn
     template <typename GenSet>
     struct letterized_labelset<letterset<GenSet>>
     {
-      static constexpr bool should_run = false;
+      static constexpr bool is_letterized = true;
 
       using labelset_t = nullableset<letterset<GenSet>>;
 
@@ -51,7 +51,7 @@ namespace vcsn
     struct letterized_labelset<nullableset<LabelSet>>
     {
       using letterized_ls = letterized_labelset<LabelSet>;
-      static constexpr bool should_run = letterized_ls::should_run;
+      static constexpr bool is_letterized = letterized_ls::is_letterized;
 
       using labelset_t = typename letterized_ls::labelset_t;
 
@@ -65,7 +65,7 @@ namespace vcsn
     template <typename GenSet>
     struct letterized_labelset<wordset<GenSet>>
     {
-      static constexpr bool should_run = true;
+      static constexpr bool is_letterized = false;
 
       using labelset_t = nullableset<letterset<GenSet>>;
 
@@ -88,11 +88,11 @@ namespace vcsn
       using letterized_labelset_t =
           letterized_labelset<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
       template <std::size_t... I>
-      static constexpr bool should_run_(seq<I...>)
+      static constexpr bool is_letterized_(seq<I...>)
       {
-        return any_<letterized_labelset_t<I>::should_run...>();
+        return all_<letterized_labelset_t<I>::is_letterized...>();
       }
-      static constexpr bool should_run = should_run_(indices_t{});
+      static constexpr bool is_letterized = is_letterized_(indices_t{});
 
       using labelset_t =
           tupleset<typename letterized_labelset<LabelSets>::labelset_t...>;
@@ -233,7 +233,7 @@ namespace vcsn
 
     /// Letterize an automaton whose type is not letterized already.
     template <typename Aut>
-    vcsn::enable_if_t<letterized_ls<Aut>::should_run,
+    vcsn::enable_if_t<!letterized_ls<Aut>::is_letterized,
             mutable_automaton<context<typename letterized_ls<Aut>::labelset_t,
                                       weightset_t_of<Aut>>>>
     letterize(const Aut& aut)
@@ -247,7 +247,7 @@ namespace vcsn
 
     /// Letterize an automaton whose type is letterized: do nothing.
     template <typename Aut>
-    vcsn::enable_if_t<!letterized_ls<Aut>::should_run,
+    vcsn::enable_if_t<letterized_ls<Aut>::is_letterized,
                       const Aut&>
     letterize(const Aut& aut)
     {
@@ -291,7 +291,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    vcsn::enable_if_t<letterized_ls<Aut>::should_run, bool>
+    vcsn::enable_if_t<!letterized_ls<Aut>::is_letterized, bool>
     is_letterized(const Aut& aut)
     {
       auto ls = aut->labelset();
@@ -308,7 +308,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    vcsn::enable_if_t<!letterized_ls<Aut>::should_run, bool>
+    vcsn::enable_if_t<letterized_ls<Aut>::is_letterized, bool>
     is_letterized(const Aut&)
     {
       return true;
