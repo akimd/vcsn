@@ -101,7 +101,8 @@ bench('b.format("text")',
 e = '[ab]{20000}'
 bench('b.expression(e)',
       'e = {}'.format(e),
-       setup = 'e = "{}"'.format(e))
+       setup = 'e = "{}"'.format(e),
+       number = 1000)
 
 bench('b.expression(e)',
       'e = "(\e+a)" * 500',

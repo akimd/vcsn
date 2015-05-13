@@ -450,14 +450,40 @@ namespace vcsn
     return res;
   }
 
+  /*-------.
+  | power. |
+  `-------*/
+
   DEFINE::power(value_t e, unsigned n) const
     -> value_t
   {
-    // The enhanced version of power for expressionset.
-    // FIXME: This method has to replace the general one provided by
-    // weightset_mixin wrapper.
-    (void)n;
-    return e;
+    value_t res = e;
+
+    // Here are match each possible cases:
+    // Given E the expression s.t. E{n} = (<k>a){n},
+
+    // Case: E{0}
+    if (n == 0)
+        return one();
+
+    // Case: E{1}
+    if (n == 1)
+        return res;
+
+    // Case: a == \z or <0>a
+    if (e->type() == type_t::zero
+        || type_ignoring_lweight_(e) == type_t::zero)
+        return zero();
+
+    // Case: a == \e
+    if (type_ignoring_lweight_(e) == type_t::one)
+      {
+        weight_t w = possibly_implicit_lweight_(e);
+        return std::make_shared<lweight_t>(weightset()->power(w, n), one());
+      }
+
+    // Default case: E{n}
+    return std::make_shared<prod_t>(values_t(n, e));
   }
 
   DEFINE::concat(value_t l, value_t r) const

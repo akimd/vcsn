@@ -43,14 +43,54 @@ namespace vcsn
       return res;
     }
 
-    /// Repeated multiplication.
-    value_t power(value_t e, unsigned n) const
+  private:
+    // Is it possible to write a C++ template to check for a
+    // function's existence? See vcsn/misc/military-order.hh.
+    template <typename>
+    struct sfinae_true : std::true_type {};
+
+    template <typename T>
+    static auto test_power(int)
+      -> sfinae_true<decltype(std::declval<T>()
+                              .power(std::declval<typename T::value_t>(),
+                                     0))>;
+
+    template <typename>
+    static auto test_power(long) -> std::false_type;
+
+    template <typename T>
+    struct has_power_member_function
+      : decltype(test_power<T>(0))
+    {};
+
+    /// Case where the weightset T features a power(value_t, unsigned)
+    /// member function.
+    template <typename WS>
+    auto power_(value_t e, unsigned n) const
+      -> vcsn::enable_if_t<has_power_member_function<WS>{}, value_t>
+    {
+      return super_t::power(e, n);
+    }
+
+    /// Case where the weightset T does not feature a
+    /// power(value_t, unsigned) member function.
+    template <typename WS>
+    auto power_(value_t e, unsigned n) const
+      -> vcsn::enable_if_t<!has_power_member_function<WS>{}, value_t>
     {
       value_t res = super_t::one();
       if (!super_t::is_one(e))
         while (n-- > 0)
           res = mul(res, e);
       return res;
+    }
+
+  public:
+
+    /// Repeated multiplication.
+    value_t power(value_t e, unsigned n) const
+    {
+      return power_<WeightSet>(e, n);
     }
   };
 }
