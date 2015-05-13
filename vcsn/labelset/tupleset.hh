@@ -21,54 +21,54 @@ namespace vcsn
 {
   namespace detail
   {
-    /// A traits so that tupleset may define types that may exist.
-    ///
-    /// The types genset_t, letter_t, and word_t, exists only for
-    /// tuples of labelsets, characterized as featuring a word_t type.
-    template <typename Enable = void, typename... ValueSets>
-    struct labelset_types
-    {
-      using genset_t = void;
-      using letter_t = void;
-      /// Same as value_t.
-      using word_t = std::tuple<typename ValueSets::value_t...>;
-    };
 
-    /// Specialization for tuples of labelsets.
-    template <typename... ValueSets>
-    struct labelset_types<decltype(pass{typename ValueSets::word_t()...}, void()),
-                          ValueSets...>
-    {
-      using genset_t
-        = cross_sequences<decltype(std::declval<ValueSets>().genset())...>;
-      using letter_t = std::tuple<typename ValueSets::letter_t...>;
-      using word_t = std::tuple<typename ValueSets::word_t...>;
-    };
-  }
+  /// A traits so that tupleset may define types that may exist.
+  ///
+  /// The types genset_t, letter_t, and word_t, exists only for
+  /// tuples of labelsets, characterized as featuring a word_t type.
+  template <typename Enable = void, typename... ValueSets>
+  struct labelset_types_impl
+  {
+    using genset_t = void;
+    using letter_t = void;
+    /// Same as value_t.
+    using word_t = std::tuple<typename ValueSets::value_t...>;
+  };
+
+  /// Specialization for tuples of labelsets.
+  template <typename... ValueSets>
+  struct labelset_types_impl<decltype(pass{typename ValueSets::word_t()...}, void()),
+                             ValueSets...>
+  {
+    using genset_t
+      = cross_sequences<decltype(std::declval<ValueSets>().genset())...>;
+    using letter_t = std::tuple<typename ValueSets::letter_t...>;
+    using word_t = std::tuple<typename ValueSets::word_t...>;
+  };
 
   template <typename... ValueSets>
-  using labelset_types = detail::labelset_types<void, ValueSets...>;
+  using labelset_types = labelset_types_impl<void, ValueSets...>;
 
   /// A ValueSet which is a Cartesian product of ValueSets.
   ///
   /// Exposes a LabelSet interface for products of LabelSets, and similarly
   /// for WeightSets.
   template <typename... ValueSets>
-  class tupleset
+  class tupleset_impl
   {
   public:
     using valuesets_t = std::tuple<ValueSets...>;
-    using indices_t = vcsn::detail::make_index_sequence<sizeof...(ValueSets)>;
+    using indices_t = make_index_sequence<sizeof...(ValueSets)>;
     static constexpr indices_t indices{};
     template <std::size_t... I>
-    using seq = vcsn::detail::index_sequence<I...>;
+    using seq = index_sequence<I...>;
 
     /// The Ith valueset type.
     template <std::size_t I>
     using valueset_t = typename std::tuple_element<I, valuesets_t>::type;
 
   public:
-    using self_t = tupleset;
+    using self_t = tupleset<ValueSets...>;
 
     /// A tuple of values.
     using value_t = std::tuple<typename ValueSets::value_t...>;
@@ -85,11 +85,11 @@ namespace vcsn
 
     using kind_t = labels_are_tuples;
 
-    tupleset(valuesets_t vs)
+    tupleset_impl(valuesets_t vs)
       : sets_(vs)
     {}
 
-    tupleset(ValueSets... ls)
+    tupleset_impl(ValueSets... ls)
       : sets_(ls...)
     {}
 
@@ -123,7 +123,7 @@ namespace vcsn
     }
 
     /// Build from the description in \a is.
-    static tupleset make(std::istream& is)
+    static self_t make(std::istream& is)
     {
       // name: lat<law_char(abc), law_char(xyz)>
       kind_t::make(is);
@@ -318,8 +318,8 @@ namespace vcsn
     /// Add the special character first and last.
     ///
     /// Templated by Value so that we work for both word_t and label_t.
-    /// Besides, avoids the problem of instantiation with weighset that
-    /// do not provide a word_t type.
+    /// Besides, avoids the problem of instantiation with weightsets
+    /// that do not provide a word_t type.
     template <typename Value>
     Value
     delimit(const Value& l) const
@@ -445,11 +445,11 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    static tupleset make_(std::istream& i, seq<I...>)
+    static self_t make_(std::istream& i, seq<I...>)
     {
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return tupleset{(eat_separator_<I>(i, ','),
-                       valueset_t<I>::make(i))...};
+      return self_t{(eat_separator_<I>(i, ','),
+                     valueset_t<I>::make(i))...};
 #else
       return make_gcc_tuple
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, ','),
@@ -764,32 +764,32 @@ namespace vcsn
 
     /// The intersection with another tupleset.
     template <std::size_t... I>
-    tupleset
-    meet_(const tupleset& rhs, seq<I...>) const
+    self_t
+    meet_(const self_t& rhs, seq<I...>) const
     {
-      return tupleset{meet(set<I>(), rhs.set<I>())...};
+      return self_t{meet(set<I>(), rhs.template set<I>())...};
     }
 
     /// The meet with another tupleset.
     friend
-    tupleset
-    meet(const tupleset& lhs, const tupleset& rhs)
+    self_t
+    meet(const self_t& lhs, const self_t& rhs)
     {
       return lhs.meet_(rhs, indices);
     }
 
     /// The meet with the B weightset.
     friend
-    tupleset
-    meet(const tupleset& lhs, const b&)
+    self_t
+    meet(const self_t& lhs, const b&)
     {
       return lhs;
     }
 
     /// The meet with the B weightset.
     friend
-    tupleset
-    meet(const b&, const tupleset& rhs)
+    self_t
+    meet(const b&, const self_t& rhs)
     {
       return rhs;
     }
@@ -848,123 +848,127 @@ namespace vcsn
 
   };
 
-  namespace detail
+  template <typename T1, typename T2>
+  struct concat_tupleset;
+
+  // Sure, we'd like to use tuple<> instead of
+  // weightset_mixin<tupleset_impl<>>, however then we hit a Clang
+  // 3.5.0 bug.
+  //
+  // https://llvm.org/bugs/show_bug.cgi?id=19372
+  template <typename... T1, typename... T2>
+  struct concat_tupleset<weightset_mixin<tupleset_impl<T1...>>,
+                         weightset_mixin<tupleset_impl<T2...>>>
   {
-    template <typename T1, typename T2>
-    struct concat_tupleset;
+    using type = weightset_mixin<tupleset_impl<T1..., T2...>>;
+  };
 
-    template <typename... T1, typename... T2>
-    struct concat_tupleset<tupleset<T1...>, tupleset<T2...>>
+  /// Conversion to letterized.
+  template <typename... LabelSets>
+  struct letterized_traits<tupleset<LabelSets...>>
+  {
+    using indices_t = make_index_sequence<sizeof...(LabelSets)>;
+
+    template <std::size_t... I>
+    using seq = index_sequence<I...>;
+
+    template <size_t I>
+    using letterized_traits_t =
+        letterized_traits<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
+    template <std::size_t... I>
+    static constexpr bool is_letterized_(seq<I...>)
     {
-      using type = tupleset<T1..., T2...>;
-    };
+      return all_<letterized_traits_t<I>::is_letterized...>();
+    }
+    static constexpr bool is_letterized = is_letterized_(indices_t{});
 
-    /// Conversion to letterized.
-    template <typename... LabelSets>
-    struct letterized_traits<tupleset<LabelSets...>>
+    using labelset_t =
+        tupleset<typename letterized_traits<LabelSets>::labelset_t...>;
+
+    static labelset_t labelset(const tupleset<LabelSets...>& ls)
     {
-      using indices_t = make_index_sequence<sizeof...(LabelSets)>;
+      return labelset_(ls, indices_t{});
+    }
 
-      template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
-
-      template <size_t I>
-      using letterized_traits_t =
-          letterized_traits<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
-      template <std::size_t... I>
-      static constexpr bool is_letterized_(seq<I...>)
-      {
-        return all_<letterized_traits_t<I>::is_letterized...>();
-      }
-      static constexpr bool is_letterized = is_letterized_(indices_t{});
-
-      using labelset_t =
-          tupleset<typename letterized_traits<LabelSets>::labelset_t...>;
-
-      static labelset_t labelset(const tupleset<LabelSets...>& ls)
-      {
-        return labelset_(ls, indices_t{});
-      }
-
-      template <std::size_t... I>
-      static labelset_t labelset_(const tupleset<LabelSets...>& ls,
-                                  seq<I...>)
-      {
-        return {make_letterized(std::get<I>(ls.sets()))...};
-      }
-    };
-
-    /// Conversion to a nullableset: all the labelsets support one.
-    template <typename... LabelSets>
-    struct nullableset_traits<tupleset<LabelSets...>,
-                              enable_if_t<tupleset<LabelSets...>::has_one()>>
+    template <std::size_t... I>
+    static labelset_t labelset_(const tupleset<LabelSets...>& ls,
+                                seq<I...>)
     {
-      using labelset_t = tupleset<LabelSets...>;
-      using type = labelset_t;
-      static type value(const labelset_t& ls)
-      {
-        return ls;
-      }
-    };
+      return {make_letterized(std::get<I>(ls.sets()))...};
+    }
+  };
 
-    /// Conversion to a nullableset: not all the labelsets support one.
-    template <typename... LabelSets>
-    struct nullableset_traits<tupleset<LabelSets...>,
-                              enable_if_t<!tupleset<LabelSets...>::has_one()>>
+  /// Conversion to a nullableset: all the labelsets support one.
+  template <typename... LabelSets>
+  struct nullableset_traits<tupleset<LabelSets...>,
+                            enable_if_t<tupleset<LabelSets...>::has_one()>>
+  {
+    using labelset_t = tupleset<LabelSets...>;
+    using type = labelset_t;
+    static type value(const labelset_t& ls)
     {
-      using labelset_t = tupleset<LabelSets...>;
-      using type = nullableset<labelset_t>;
+      return ls;
+    }
+  };
 
-      static type value(const labelset_t& ls)
-      {
-        return ls;
-      }
-    };
+  /// Conversion to a nullableset: not all the labelsets support one.
+  template <typename... LabelSets>
+  struct nullableset_traits<tupleset<LabelSets...>,
+                            enable_if_t<!tupleset<LabelSets...>::has_one()>>
+  {
+    using labelset_t = tupleset<LabelSets...>;
+    using type = nullableset<labelset_t>;
 
-    /// Conversion to wordset.
-    template <typename... LabelSets>
-    struct law_traits<tupleset<LabelSets...>>
+    static type value(const labelset_t& ls)
     {
-      using labelset_t = tupleset<LabelSets...>;
-      using type = tupleset<law_t<LabelSets>...>;
+      return ls;
+    }
+  };
 
-      template <std::size_t... I>
-      static type value(const labelset_t& ls, detail::index_sequence<I...>)
-      {
-        return {make_wordset(ls.template set<I>())...};
-      }
+  /// Conversion to wordset.
+  template <typename... LabelSets>
+  struct law_traits<tupleset<LabelSets...>>
+  {
+    using labelset_t = tupleset<LabelSets...>;
+    using type = tupleset<law_t<LabelSets>...>;
 
-      static type value(const labelset_t& ls)
-      {
-        return value(ls, detail::make_index_sequence<sizeof...(LabelSets)>{});
-      }
-    };
-
-    /// Join between two tuplesets, of the same size.
-    template <typename... VS1, typename... VS2>
-    struct join_impl<tupleset<VS1...>, tupleset<VS2...>>
+    template <std::size_t... I>
+    static type value(const labelset_t& ls, index_sequence<I...>)
     {
-      static_assert(sizeof...(VS1) == sizeof...(VS2),
-                    "join: tuplesets must have the same sizes");
-      using vs1_t = tupleset<VS1...>;
-      using vs2_t = tupleset<VS2...>;
-      /// The resulting type.
-      using type = tupleset<join_t<VS1, VS2>...>;
+      return {make_wordset(ls.template set<I>())...};
+    }
 
-      template <std::size_t... I>
-      static type join(const vs1_t lhs, const vs2_t& rhs,
-                       detail::index_sequence<I...>)
-      {
-        return {::vcsn::join(lhs.template set<I>(), rhs.template set<I>())...};
-      }
+    static type value(const labelset_t& ls)
+    {
+      return value(ls, make_index_sequence<sizeof...(LabelSets)>{});
+    }
+  };
 
-      /// The resulting valueset.
-      static type join(const vs1_t& lhs, const vs2_t& rhs)
-      {
-        return join(lhs, rhs,
-                    detail::make_index_sequence<sizeof...(VS1)>{});
-      }
-    };
-  }
+  /// Join between two tuplesets, of the same size.
+  template <typename... VS1, typename... VS2>
+  struct join_impl<tupleset<VS1...>, tupleset<VS2...>>
+  {
+    static_assert(sizeof...(VS1) == sizeof...(VS2),
+                  "join: tuplesets must have the same sizes");
+    using vs1_t = tupleset<VS1...>;
+    using vs2_t = tupleset<VS2...>;
+    /// The resulting type.
+    using type = tupleset<join_t<VS1, VS2>...>;
 
-}
+    template <std::size_t... I>
+    static type join(const vs1_t lhs, const vs2_t& rhs,
+                     index_sequence<I...>)
+    {
+      return {::vcsn::join(lhs.template set<I>(), rhs.template set<I>())...};
+    }
+
+    /// The resulting valueset.
+    static type join(const vs1_t& lhs, const vs2_t& rhs)
+    {
+      return join(lhs, rhs,
+                  make_index_sequence<sizeof...(VS1)>{});
+    }
+  };
+
+  }// detail::
+}// vcsn::

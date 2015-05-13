@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcsn/weightset/weightset.hh>
+
 namespace vcsn
 {
 
@@ -15,8 +17,14 @@ namespace vcsn
   class oneset;
 
   // tupleset.hh.
+  namespace detail
+  {
+    template <typename... LabelSets>
+    class tupleset_impl;
+  }
+
   template <typename... LabelSets>
-  class tupleset;
+  using tupleset = weightset_mixin<detail::tupleset_impl<LabelSets...>>;
 
   // wordset.hh.
   template <typename GenSet>
