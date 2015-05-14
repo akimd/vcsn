@@ -29,6 +29,10 @@ namespace vcsn
       typename letterized_traits<LabelSet>::labelset_t;
 
     template <typename LabelSet>
+    using is_letterized_t =
+      std::integral_constant<bool, letterized_traits<LabelSet>::is_letterized>;
+
+    template <typename LabelSet>
     letterized_t<LabelSet>
     make_letterized(const LabelSet& ls)
     {
