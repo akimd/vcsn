@@ -861,7 +861,7 @@ namespace vcsn
 
     /// Conversion to letterized.
     template <typename... LabelSets>
-    struct letterized_labelset<tupleset<LabelSets...>>
+    struct letterized_traits<tupleset<LabelSets...>>
     {
       using indices_t = make_index_sequence<sizeof...(LabelSets)>;
 
@@ -869,31 +869,28 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
 
       template <size_t I>
-      using letterized_labelset_t =
-          letterized_labelset<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
+      using letterized_traits_t =
+          letterized_traits<typename std::tuple_element<I, std::tuple<LabelSets...>>::type>;
       template <std::size_t... I>
       static constexpr bool is_letterized_(seq<I...>)
       {
-        return all_<letterized_labelset_t<I>::is_letterized...>();
+        return all_<letterized_traits_t<I>::is_letterized...>();
       }
       static constexpr bool is_letterized = is_letterized_(indices_t{});
 
       using labelset_t =
-          tupleset<typename letterized_labelset<LabelSets>::labelset_t...>;
+          tupleset<typename letterized_traits<LabelSets>::labelset_t...>;
 
-      static std::shared_ptr<labelset_t>
-      labelset(const tupleset<LabelSets...>& ls)
+      static labelset_t labelset(const tupleset<LabelSets...>& ls)
       {
         return labelset_(ls, indices_t{});
       }
 
       template <std::size_t... I>
-      static std::shared_ptr<labelset_t>
-      labelset_(const tupleset<LabelSets...>& ls,
-                seq<I...>)
+      static labelset_t labelset_(const tupleset<LabelSets...>& ls,
+                                  seq<I...>)
       {
-        return std::make_shared<labelset_t>
-          (*letterized_labelset_t<I>::labelset(std::get<I>(ls.sets()))...);
+        return {make_letterized(std::get<I>(ls.sets()))...};
       }
     };
 

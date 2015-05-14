@@ -295,7 +295,7 @@ namespace vcsn
         size_t i = 0;
         for (auto letter :
              ls->letters_of_padded(l,
-                        letterized_labelset<labelset_t>::labelset_t::one()))
+                        letterized_traits<labelset_t>::labelset_t::one()))
         {
           if (i < length)
           {

@@ -6,10 +6,6 @@
 #include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/weightset/polynomialset.hh>
 
-// FIXME: we should not need these two.
-#include <vcsn/labelset/letterset.hh>
-#include <vcsn/labelset/nullableset.hh>
-
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/polynomial.hh>
 
@@ -103,7 +99,7 @@ namespace vcsn
   trie(const PolynomialSet& ps, const typename PolynomialSet::value_t& p)
   {
     using context_t = detail::letterized_context<context_t_of<PolynomialSet>>;
-    auto ctx = letterize_context(ps.context());
+    auto ctx = make_letterized_context(ps.context());
     auto t = detail::trie_builder<context_t>{ctx};
     t.add(p);
     return t.result();

@@ -9,6 +9,7 @@
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/labelset/labelset.hh>
+#include <vcsn/labelset/letterset.hh> // for letterized_traits
 #include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh>
@@ -300,16 +301,15 @@ namespace vcsn
   {
     /// Conversion to letterized.
     template <typename GenSet>
-    struct letterized_labelset<wordset<GenSet>>
+    struct letterized_traits<wordset<GenSet>>
     {
       static constexpr bool is_letterized = false;
 
       using labelset_t = nullableset<letterset<GenSet>>;
 
-      static std::shared_ptr<labelset_t>
-      labelset(const wordset<GenSet>& ls)
+      static labelset_t labelset(const wordset<GenSet>& ls)
       {
-        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+        return {ls.genset()};
       }
     };
 

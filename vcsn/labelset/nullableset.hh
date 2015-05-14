@@ -458,17 +458,16 @@ namespace vcsn
   {
     /// Conversion to letterized.
     template <typename LabelSet>
-    struct letterized_labelset<nullableset<LabelSet>>
+    struct letterized_traits<nullableset<LabelSet>>
     {
-      using letterized_ls = letterized_labelset<LabelSet>;
+      using letterized_ls = letterized_traits<LabelSet>;
       static constexpr bool is_letterized = letterized_ls::is_letterized;
 
       using labelset_t = typename letterized_ls::labelset_t;
 
-      static std::shared_ptr<labelset_t>
-      labelset(const nullableset<LabelSet>& ls)
+      static labelset_t labelset(const nullableset<LabelSet>& ls)
       {
-        return letterized_ls::labelset(*ls.labelset());
+        return make_letterized(*ls.labelset());
       }
     };
 

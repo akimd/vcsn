@@ -252,16 +252,15 @@ namespace vcsn
   {
     /// Conversion to letterized.
     template <typename GenSet>
-    struct letterized_labelset<letterset<GenSet>>
+    struct letterized_traits<letterset<GenSet>>
     {
       static constexpr bool is_letterized = true;
 
       using labelset_t = nullableset<letterset<GenSet>>;
 
-      static std::shared_ptr<labelset_t>
-      labelset(const letterset<GenSet>& ls)
+      static labelset_t labelset(const letterset<GenSet>& ls)
       {
-        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+        return {ls.genset()};
       }
     };
 

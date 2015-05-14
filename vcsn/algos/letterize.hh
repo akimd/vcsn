@@ -7,7 +7,7 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh> // context_t_of
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/labelset/labelset.hh> // detail::letterize_labelset
+#include <vcsn/labelset/labelset.hh> // detail::make_letterized
 #include <vcsn/misc/algorithm.hh> // detail::back
 
 namespace vcsn
@@ -98,7 +98,7 @@ namespace vcsn
 
 
     template <typename Aut>
-    using letterized_ls = letterized_labelset<labelset_t_of<Aut>>;
+    using letterized_ls = letterized_traits<labelset_t_of<Aut>>;
 
     /// Letterize an automaton whose type is not letterized already.
     template <typename Aut>
@@ -110,7 +110,7 @@ namespace vcsn
       using labelset_t = typename letterized_ls<Aut>::labelset_t;
       using res_t = mutable_automaton<context<labelset_t, weightset_t_of<Aut>>>;
       auto lt = letterizer<Aut, res_t>{aut,
-                                       letterize_labelset(*aut->labelset())};
+                                       make_letterized(*aut->labelset())};
       return lt.letterize();
     }
 
