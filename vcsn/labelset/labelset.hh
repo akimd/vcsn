@@ -112,7 +112,7 @@ namespace vcsn
     /// also forbids `(a, \e)` and `(\e, x)` which should be kept
     /// legitimate.
     template <typename LabelSet>
-    struct proper_labelset
+    struct proper_traits
     {
       using type = LabelSet;
       static type value(const LabelSet& ls)
@@ -121,17 +121,35 @@ namespace vcsn
       }
     };
 
+    /// The type of the corresponding proper LabelSet.
+    template <typename LabelSet>
+    using proper_t = typename proper_traits<LabelSet>::type;
+
+    /// The corresponding proper LabelSet.
+    template <typename LabelSet>
+    proper_t<LabelSet>
+    make_proper(const LabelSet& ls)
+    {
+      return proper_traits<LabelSet>::value(ls);
+    }
+
+
+    /*-----------------------.
+    | make_proper_context.   |
+    `-----------------------*/
+
+    template <typename Context>
+    using proper_context =
+      context<proper_t<labelset_t_of<Context>>,
+              weightset_t_of<Context>>;
+
     /// From a context, its non-nullable context.
     template <typename LabelSet, typename WeightSet>
     auto
-    proper_context(const context<LabelSet, WeightSet>& ctx)
-      -> context<typename proper_labelset<LabelSet>::type, WeightSet>
+    make_proper_context(const context<LabelSet, WeightSet>& ctx)
+      -> proper_context<context<LabelSet, WeightSet>>
     {
-      using proper_labelset = proper_labelset<LabelSet>;
-      const typename proper_labelset::type& ls
-        = proper_labelset::value(*ctx.labelset());
-      const WeightSet& ws = *ctx.weightset();
-      return {ls, ws};
+      return {make_proper(*ctx.labelset()), *ctx.weightset()};
     }
 
 

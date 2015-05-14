@@ -483,7 +483,7 @@ namespace vcsn
     };
 
     template <typename LabelSet>
-    struct proper_labelset<nullableset<LabelSet>>
+    struct proper_traits<nullableset<LabelSet>>
     {
       using type = LabelSet;
       static type value(const nullableset<LabelSet>& ls)

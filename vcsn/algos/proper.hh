@@ -17,7 +17,7 @@
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/core/kind.hh>
-#include <vcsn/labelset/labelset.hh> // proper_context
+#include <vcsn/labelset/labelset.hh> // make_proper_context
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/star_status.hh>
@@ -591,13 +591,13 @@ namespace vcsn
   auto
   proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true)
-    -> mutable_automaton<decltype(proper_context(copy(aut)->context()))>
+    -> mutable_automaton<detail::proper_context<context_t_of<Aut>>>
   {
     // FIXME: We could avoid copying if the automaton is already
     // proper.
     auto a = copy(aut);
     proper_here(a, dir, prune);
-    auto ctx = proper_context(a->context());
+    auto ctx = make_proper_context(a->context());
     auto res = make_mutable_automaton(ctx);
     copy_into(a, res);
     return res;
