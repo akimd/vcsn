@@ -101,6 +101,41 @@ namespace vcsn
 
 
     /*---------------.
+    | make_proper.   |
+    `---------------*/
+
+    /// From a labelset, its non-nullable labelset.
+    ///
+    /// Unfortunately cannot be always done.  For instance,
+    /// `tupleset<nullableset<letterset>, nullableset<letterset>>`
+    /// cannot be turned in `tupleset<letterset, letterset>`, as it
+    /// also forbids `(a, \e)` and `(\e, x)` which should be kept
+    /// legitimate.
+    template <typename LabelSet>
+    struct proper_labelset
+    {
+      using type = LabelSet;
+      static type value(const LabelSet& ls)
+      {
+        return ls;
+      }
+    };
+
+    /// From a context, its non-nullable context.
+    template <typename LabelSet, typename WeightSet>
+    auto
+    proper_context(const context<LabelSet, WeightSet>& ctx)
+      -> context<typename proper_labelset<LabelSet>::type, WeightSet>
+    {
+      using proper_labelset = proper_labelset<LabelSet>;
+      const typename proper_labelset::type& ls
+        = proper_labelset::value(*ctx.labelset());
+      const WeightSet& ws = *ctx.weightset();
+      return {ls, ws};
+    }
+
+
+    /*---------------.
     | make_wordset.  |
     `---------------*/
 

@@ -17,6 +17,7 @@
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/core/kind.hh>
+#include <vcsn/labelset/labelset.hh> // proper_context
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/star_status.hh>
@@ -578,48 +579,6 @@ namespace vcsn
         detail::properer<tr_aut_t>::proper_here(tr_aut, prune);
         return;
       }
-  }
-
-
-  /// From a labelset, its non-nullable labelset.
-  ///
-  /// Unfortunately cannot be always done.  For instance,
-  /// `tupleset<nullableset<letterset>, nullableset<letterset>>` cannot
-  /// be turned in `tupleset<letterset, letterset>`, as it also forbids
-  /// `(a, \e)` and `(\e, x)` which should be kept legitimate.
-  template <typename LabelSet>
-  struct proper_labelset
-  {
-    using type = LabelSet;
-    static std::shared_ptr<const type>
-    value(const std::shared_ptr<const LabelSet>& ls)
-    {
-      return ls;
-    }
-  };
-
-  template <typename LabelSet>
-  struct proper_labelset<nullableset<LabelSet>>
-  {
-    using type = LabelSet;
-    static std::shared_ptr<const type>
-    value(const std::shared_ptr<const nullableset<LabelSet>>& ls)
-    {
-      return ls->labelset();
-    }
-  };
-
-  /// From a context, its non-nullable context.
-  template <typename LabelSet, typename WeightSet>
-  auto
-  proper_context(const context<LabelSet, WeightSet>& ctx)
-    -> context<typename proper_labelset<LabelSet>::type, WeightSet>
-  {
-    using proper_labelset = proper_labelset<LabelSet>;
-    std::shared_ptr<const typename proper_labelset::type> ls
-      = proper_labelset::value(ctx.labelset());
-    std::shared_ptr<const WeightSet> ws = ctx.weightset();
-    return {ls, ws};
   }
 
   /// Eliminate spontaneous transitions.  Raise if the input automaton
