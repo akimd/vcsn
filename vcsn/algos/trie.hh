@@ -95,11 +95,11 @@ namespace vcsn
   }
 
   template <typename PolynomialSet>
-  mutable_automaton<detail::letterized_context<context_t_of<PolynomialSet>>>
+  mutable_automaton<detail::free_context<context_t_of<PolynomialSet>>>
   trie(const PolynomialSet& ps, const typename PolynomialSet::value_t& p)
   {
-    using context_t = detail::letterized_context<context_t_of<PolynomialSet>>;
-    auto ctx = make_letterized_context(ps.context());
+    using context_t = detail::free_context<context_t_of<PolynomialSet>>;
+    auto ctx = make_free_context(ps.context());
     auto t = detail::trie_builder<context_t>{ctx};
     t.add(p);
     return t.result();

@@ -8,7 +8,7 @@ p = c.polynomial('<2>\e+<3>a+<4>b+<5>abc+<6>abcd+<7>abdc')
 a = p.trie()
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, z"
+  vcsn_context = "letterset<char_letters(abcd)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

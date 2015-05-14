@@ -5,6 +5,22 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-05-14
+### trie: new algorithm
+From a finite language/series represented as a polynomial (of words),
+build an automaton that has the shape of a trie (a prefix tree).
+
+    In [2]: series = '<2>\e+<3>a+<4>b+<5>abc+<6>abcd+<7>abdc'
+
+    In [3]: p = vcsn.context('law_char, z').polynomial(series); p
+    Out[3]: <2>\e + <3>a + <4>b + <5>abc + <6>abcd + <7>abdc
+
+    In [4]: a = p.trie(); a
+    Out[4]: mutable_automaton<letterset<char_letters(abcd)>, z>
+
+    In [5]: a.shortest(100)
+    Out[5]: <2>\e + <3>a + <4>b + <5>abc + <6>abcd + <7>abdc
+
 ## 2015-04-09
 ### shortest now subsumes enumerate
 One can now specify both a maximum number of words, and a maximum

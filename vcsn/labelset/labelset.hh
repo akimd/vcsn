@@ -153,6 +153,24 @@ namespace vcsn
     }
 
 
+    /*---------------------.
+    | make_free_context.   |
+    `---------------------*/
+
+    template <typename Context>
+    using free_context =
+      context<proper_t<letterized_t<labelset_t_of<Context>>>,
+              weightset_t_of<Context>>;
+
+    /// The free context for c.
+    template <typename LabelSet, typename WeightSet>
+    free_context<context<LabelSet, WeightSet>>
+    make_free_context(const context<LabelSet, WeightSet>& c)
+    {
+      return {make_proper(make_letterized(*c.labelset())), *c.weightset()};
+    }
+
+
     /*---------------.
     | make_wordset.  |
     `---------------*/
