@@ -7,6 +7,54 @@ namespace vcsn
 {
   namespace detail
   {
+
+    /*-----------------------.
+    | letterize(labelset).   |
+    `-----------------------*/
+
+    template <typename LabelSet>
+    struct letterized_labelset
+    {
+      static constexpr bool is_letterized = true;
+
+      using labelset_t = LabelSet;
+      static std::shared_ptr<labelset_t>
+      labelset(const labelset_t& ls)
+      {
+        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+      }
+    };
+
+    template <typename LabelSet>
+    using letterized_labelset_t =
+      typename letterized_labelset<LabelSet>::labelset_t;
+
+    template <typename LabelSet>
+    letterized_labelset_t<LabelSet>
+    letterize_labelset(const LabelSet& ls)
+    {
+      return *letterized_labelset<LabelSet>::labelset(ls);
+    }
+
+
+    /*----------------------.
+    | letterize(context).   |
+    `----------------------*/
+
+    template <typename Context>
+    using letterized_context =
+      context<letterized_labelset_t<labelset_t_of<Context>>,
+              weightset_t_of<Context>>;
+
+    /// The letterized context for c.
+    template <typename LabelSet, typename WeightSet>
+    letterized_context<context<LabelSet, WeightSet>>
+    letterize_context(const context<LabelSet, WeightSet>& c)
+    {
+      return {letterize_labelset(*c.labelset()), *c.weightset()};
+    }
+
+
     /*--------------------.
     | make_nullableset.   |
     `--------------------*/

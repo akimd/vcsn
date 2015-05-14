@@ -198,6 +198,11 @@ this is because the core of sort is a loop calling new_transition_copy,
 which before did not check that the letter was in the alphabet, and now it
 does.  In this case, it is guaranteed to be, so it is uselessly costly.
 
+** trie
+We want to be able to load directly from a file.  Are there any possible
+optimization when the input is (mostly) sorted?  Actually, when the input is
+a polynomial we are sure it is properly sorted according to our own order.
+
 * Cleanup
 ** automaton_t members in decorators
 In most cases it's reasonable to use const shared_pointer (which is to say

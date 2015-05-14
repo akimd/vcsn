@@ -298,6 +298,21 @@ namespace vcsn
 
   namespace detail
   {
+    /// Conversion to letterized.
+    template <typename GenSet>
+    struct letterized_labelset<wordset<GenSet>>
+    {
+      static constexpr bool is_letterized = false;
+
+      using labelset_t = nullableset<letterset<GenSet>>;
+
+      static std::shared_ptr<labelset_t>
+      labelset(const wordset<GenSet>& ls)
+      {
+        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+      }
+    };
+
     /// wordset is already a nullableset.
     template <typename GenSet>
     struct nullableset_traits<wordset<GenSet>>

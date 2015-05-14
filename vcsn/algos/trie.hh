@@ -1,10 +1,14 @@
 #pragma once
 
-#include <vcsn/algos/letterize.hh>
 #include <vcsn/core/mutable-automaton.hh>
-#include <vcsn/misc/algorithm.hh> // front
+#include <vcsn/labelset/labelset.hh> // detail::letterized_context
 #include <vcsn/labelset/word-polynomialset.hh>
+#include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/weightset/polynomialset.hh>
+
+// FIXME: we should not need these two.
+#include <vcsn/labelset/letterset.hh>
+#include <vcsn/labelset/nullableset.hh>
 
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/polynomial.hh>
@@ -95,10 +99,10 @@ namespace vcsn
   }
 
   template <typename PolynomialSet>
-  mutable_automaton<letterized_context<context_t_of<PolynomialSet>>>
+  mutable_automaton<detail::letterized_context<context_t_of<PolynomialSet>>>
   trie(const PolynomialSet& ps, const typename PolynomialSet::value_t& p)
   {
-    using context_t = letterized_context<context_t_of<PolynomialSet>>;
+    using context_t = detail::letterized_context<context_t_of<PolynomialSet>>;
     auto ctx = letterize_context(ps.context());
     auto t = detail::trie_builder<context_t>{ctx};
     t.add(p);
