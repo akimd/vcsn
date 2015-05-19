@@ -1,8 +1,7 @@
-#ifndef VCSN_MISC_DIRECTION_HH
-# define VCSN_MISC_DIRECTION_HH
+#pragma once
 
-# include <iosfwd>
-# include <string>
+#include <iosfwd>
+#include <string>
 
 namespace vcsn
 {
@@ -24,5 +23,3 @@ namespace vcsn
   /// Pretty-printing.
   std::ostream& operator<<(std::ostream& os, direction d);
 };
-
-#endif // !VCSN_MISC_DIRECTION_HH

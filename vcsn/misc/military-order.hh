@@ -1,8 +1,7 @@
-#ifndef VCSN_MISC_MILITARY_ORDER_HH
-# define VCSN_MISC_MILITARY_ORDER_HH
+#pragma once
 
-# include <tuple>
-# include <type_traits>
+#include <tuple>
+#include <type_traits>
 
 namespace vcsn
 {
@@ -61,7 +60,4 @@ namespace vcsn
       return x < y;
     }
   };
-
 }
-
-#endif // !VCSN_MISC_MILITARY_ORDER_HH

@@ -1,14 +1,13 @@
-#ifndef VCSN_MISC_MATH_HH
-# define VCSN_MISC_MATH_HH
+#pragma once
 
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/raise.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
   namespace detail
   {
-    // Greatest common divisor.
+    /// Greatest common divisor.
     ATTRIBUTE_PURE
     inline
     unsigned int gcd(unsigned int a, unsigned int b)
@@ -23,7 +22,7 @@ namespace vcsn
       return a;
     }
 
-    // Lowest common multiple
+    /// Lowest common multiple
     ATTRIBUTE_PURE
     inline
     unsigned int lcm(unsigned int a, unsigned int b)
@@ -32,5 +31,3 @@ namespace vcsn
     }
   }
 }
-
-#endif // VCSN_MISC_MATH_HH

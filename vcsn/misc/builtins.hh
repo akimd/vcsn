@@ -1,22 +1,19 @@
-#ifndef VCSN_MISC_BUILTINS_HH
-# define VCSN_MISC_BUILTINS_HH
+#pragma once
 
-# if defined __clang__ || defined __GNUC__
+#if defined __clang__ || defined __GNUC__
 
-#  define BUILTIN_UNREACHABLE() __builtin_unreachable()
+# define BUILTIN_UNREACHABLE() __builtin_unreachable()
 
-# elif defined _MSC_VER
+#elif defined _MSC_VER
 
-#  define BUILTIN_UNREACHABLE() __assume(0)
+# define BUILTIN_UNREACHABLE() __assume(0)
 
-# else
+#else
 
-#  define BUILTIN_UNREACHABLE()                 \
+# define BUILTIN_UNREACHABLE()                  \
   do {                                          \
     assert(!"unreachable code");                \
     abort();                                    \
   } while (false)
 
-# endif
-
-#endif // !VCSN_MISC_BUILTINS_HH
+#endif

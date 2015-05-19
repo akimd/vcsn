@@ -1,11 +1,10 @@
-#ifndef VCSN_MISC_RAISE_HH
-# define VCSN_MISC_RAISE_HH
+#pragma once
 
-# include <stdexcept>
-# include <sstream>
-# include <utility>
+#include <stdexcept>
+#include <sstream>
+#include <utility>
 
-# include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -42,5 +41,3 @@ namespace vcsn
       raise(std::forward<Args>(args)...);
   }
 };
-
-#endif // !VCSN_MISC_RAISE_HH

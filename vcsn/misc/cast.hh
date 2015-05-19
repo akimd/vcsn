@@ -1,12 +1,11 @@
-#ifndef VCSN_MISC_CAST_HH
-# define VCSN_MISC_CAST_HH
+#pragma once
 
-# include <iostream>
+#include <iostream>
 
-# ifdef NDEBUG
-#  define down_cast         static_cast
-#  define down_pointer_cast std::static_pointer_cast
-# else
+#ifdef NDEBUG
+# define down_cast         static_cast
+# define down_pointer_cast std::static_pointer_cast
+#else
 
 // We want to support the "down_cast<FOO>(BAR)" syntax (with a pair of
 // <> and of ()).  So expand "down_cast" into a templated function.
@@ -70,5 +69,3 @@ namespace vcsn
   }
 }
 #endif
-
-#endif // !VCSN_MISC_CAST_HH

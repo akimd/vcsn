@@ -1,5 +1,4 @@
-#ifndef VCSN_MISC_CASSERT_HH_
-# define VCSN_MISC_CASSERT_HH_
+#pragma once
 
 /*-------------------.
 | likely, unlikely.  |
@@ -13,7 +12,5 @@
 //   // normal running process.
 // }
 
-# define likely(Exp)   __builtin_expect(!!(Exp), 1)
-# define unlikely(Exp) __builtin_expect(!!(Exp), 0)
-
-#endif /* !VCSN_MISC_CASSERT_HH_ */
+#define likely(Exp)   __builtin_expect(!!(Exp), 1)
+#define unlikely(Exp) __builtin_expect(!!(Exp), 0)

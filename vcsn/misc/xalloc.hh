@@ -3,13 +3,12 @@
  ** \brief Declaration of vcsn::xalloc.
  **/
 
-#ifndef VCSN_MISC_XALLOC_HH
-# define VCSN_MISC_XALLOC_HH
+#pragma once
 
-# include <iostream>
-# include <functional>
+#include <iostream>
+#include <functional>
 
-# include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -121,6 +120,4 @@ namespace vcsn
 
 }
 
-# include <vcsn/misc/xalloc.hxx>
-
-#endif // !VCSN_MISC_XALLOC_HH
+#include <vcsn/misc/xalloc.hxx>

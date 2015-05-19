@@ -1,20 +1,17 @@
-#ifndef VCSN_MISC_REGEX_HH
-# define VCSN_MISC_REGEX_HH
+#pragma once
 
-# include <vcsn/config.hh>
+#include <vcsn/config.hh>
 
-# if VCSN_STD_REGEX_WORKS
+#if VCSN_STD_REGEX_WORKS
 
-#  include <regex>
+# include <regex>
 
-# else
+#else
 
-#  include <boost/tr1/regex.hpp>
+# include <boost/tr1/regex.hpp>
 namespace std
 {
   using namespace std::tr1;
 }
 
-# endif // !VCSN_STD_REGEX_WORKS
-
-#endif // !VCSN_MISC_REGEX_HH
+#endif // !VCSN_STD_REGEX_WORKS

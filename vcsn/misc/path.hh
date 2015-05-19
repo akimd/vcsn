@@ -3,14 +3,13 @@
  ** \brief Declaration of vcsn::path.
  */
 
-#ifndef VCSN_MISC_PATH_HH
-# define VCSN_MISC_PATH_HH
+#pragma once
 
-# include <string>
-# include <list>
+#include <string>
+#include <list>
 
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/export.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -110,6 +109,4 @@ namespace vcsn
   std::ostream& operator<<(std::ostream& o, const path& p);
 }
 
-# include <vcsn/misc/path.hxx>
-
-#endif // !VCSN_MISC_PATH_HH
+#include <vcsn/misc/path.hxx>

@@ -3,11 +3,10 @@
  ** \brief Indentation relative functions.
  **/
 
-#ifndef VCSN_MISC_INDENT_HH
-# define VCSN_MISC_INDENT_HH
+#pragma once
 
-# include <iosfwd>
-# include <vcsn/misc/export.hh>
+#include <iosfwd>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -32,5 +31,3 @@ namespace vcsn LIBVCSN_API
   /// Decrement the indentation, print an end of line, and set the indentation.
   std::ostream& decendl(std::ostream& o);
 }
-
-#endif // !VCSN_MISC_INDENT_HH
