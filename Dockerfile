@@ -11,6 +11,7 @@ RUN apt-get update                              \
         libboost-all-dev                        \
         libgmp-dev                              \
         libmagickcore-extra                     \
+        locales                                 \
         pdf2svg                                 \
         python-matplotlib                       \
         python3-dev                             \
