@@ -420,3 +420,11 @@ for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
                    'c = vcsn.context("lal_char(abc), b")',
                    'a = c.expression(r).standard()'],
           number = 20)
+
+# polynomial.trie.
+r = '[a-j]{6}'
+bench('p.trie()',
+      'p = [a-j]{6}',
+      setup = ['c = vcsn.context("law_char(a-j), b")',
+               'm = c.polynomial("[a-j]")',
+               'p = m ** 6'])
