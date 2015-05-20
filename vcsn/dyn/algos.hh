@@ -673,6 +673,11 @@ namespace vcsn
     /// A trie-like automaton to accept \a p.
     automaton trie(const polynomial& p);
 
+    /// A trie-like automaton to accept the series contained in \a is.
+    /// \param ctx  the (word-based) context used to read the words.
+    /// \param is   the input stream.
+    automaton trie(const context& ctx, std::istream& is);
+
     /// The trim subautomaton of \a aut.
     automaton trim(const automaton& aut);
 

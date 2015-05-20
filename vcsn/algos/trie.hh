@@ -7,6 +7,7 @@
 #include <vcsn/weightset/polynomialset.hh>
 
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/polynomial.hh>
 
 namespace vcsn
@@ -92,15 +93,24 @@ namespace vcsn
       /// The automaton being built.
       automaton_t res_;
     };
+
+
+    /// Instantiate a trie-builder for this type of polynomialset.
+    template <typename PolynomialSet>
+    trie_builder<free_context<context_t_of<PolynomialSet>>>
+    make_trie_builder(const PolynomialSet& ps)
+    {
+      using context_t = detail::free_context<context_t_of<PolynomialSet>>;
+      auto ctx = make_free_context(ps.context());
+      return {ctx};
+    }
   }
 
   template <typename PolynomialSet>
   mutable_automaton<detail::free_context<context_t_of<PolynomialSet>>>
   trie(const PolynomialSet& ps, const typename PolynomialSet::value_t& p)
   {
-    using context_t = detail::free_context<context_t_of<PolynomialSet>>;
-    auto ctx = make_free_context(ps.context());
-    auto t = detail::trie_builder<context_t>{ctx};
+    auto t = detail::make_trie_builder(ps);
     t.add(p);
     return t.result();
   }
@@ -116,6 +126,43 @@ namespace vcsn
       {
         const auto& p = poly->as<PolynomialSet>();
         return make_automaton(trie(p.polynomialset(), p.polynomial()));
+      }
+    }
+  }
+
+  /*--------------.
+  | trie(file).   |
+  `--------------*/
+
+  template <typename PolynomialSet>
+  mutable_automaton<detail::free_context<context_t_of<PolynomialSet>>>
+  trie(const PolynomialSet& ps, std::istream& is)
+  {
+    auto t = detail::make_trie_builder(ps);
+    try
+      {
+        while (is.good())
+          t.add(ps.conv_monomial(is));
+      }
+    catch (const std::runtime_error&)
+      {
+        // We reached EOF.
+      }
+    return t.result();
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (trie).
+      template <typename Context, typename Istream>
+      automaton
+      trie_stream(const context& ctx, std::istream& is)
+      {
+        const auto& c = ctx->as<Context>();
+        auto ps = make_word_polynomialset(c);
+        return make_automaton(trie(ps, is));
       }
     }
   }

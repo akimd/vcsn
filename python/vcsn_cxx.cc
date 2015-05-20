@@ -146,6 +146,8 @@ struct context
 
   expression series(const std::string& s) const;
 
+  automaton trie(const std::string& filename) const;
+
   automaton u(unsigned num_states) const;
 
   label word(const std::string& s) const;
@@ -1060,6 +1062,15 @@ automaton context::random_deterministic(unsigned num_states) const
   return vcsn::dyn::random_automaton_deterministic(val_, num_states);
 }
 
+automaton context::trie(const std::string& filename) const
+{
+  auto is = vcsn::open_input_file(filename);
+  auto res = vcsn::dyn::trie(val_, *is);
+  if (is->peek() != -1)
+    vcsn::fail_reading(*is, "unexpected trailing characters");
+  return res;
+}
+
 automaton context::u(unsigned num_states) const
 {
   return vcsn::dyn::u(val_, num_states);
@@ -1218,6 +1229,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
           arg("num_initial") = 1, arg("num_final") = 1))
     .def("random_deterministic", &context::random_deterministic)
     .def("series", &context::series)
+    .def("trie", &context::trie)
     .def("u", &context::u)
     .def("word", &context::word)
    ;
