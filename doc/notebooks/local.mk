@@ -54,6 +54,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.letterize.ipynb                 \
   %D%/automaton.minimize.ipynb                  \
+  %D%/automaton.operators.ipynb                 \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
@@ -76,6 +77,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.expansion.ipynb                \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
+  %D%/expression.operators.ipynb                \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
@@ -83,9 +85,12 @@ dist_notebooks_DATA =                           \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
   %D%/expression.zpc.ipynb                      \
+  %D%/index.ipynb                               \
+  %D%/label.operators.ipynb                     \
   %D%/polynomial.concatenate.ipynb              \
+  %D%/polynomial.operators.ipynb                \
   %D%/polynomial.trie.ipynb                     \
-  %D%/index.ipynb
+  %D%/weight.operators.ipynb
 
 if HAVE_NBCONVERT
 nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html)
