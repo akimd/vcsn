@@ -59,6 +59,10 @@ def normalize(s):
             r'\1<\2>',
             s)
 
+    s = sub(r'vcsn::weightset_mixin<vcsn::detail::(tupleset)_impl<({params})>\s*>',
+            r'\1<\2>',
+            s)
+
     # Contexts.
     s = sub(r'vcsn::(context)<({params})>',
             r'\1<\2>',

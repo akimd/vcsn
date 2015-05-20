@@ -19,25 +19,26 @@ namespace vcsn
     template <typename Aut, std::size_t... I>
     struct hidden_label_type<Aut, index_sequence<I...>>
     {
-      template <std::size_t J>
-      using elem = typename std::tuple_element<J,
-            typename labelset_t_of<Aut>::valuesets_t>::type;
-
-      using type = tupleset<elem<I>...>;
+      using ls_t = labelset_t_of<Aut>;
+      using type = tupleset<typename ls_t::template valueset_t<I>...>;
     };
 
 
+    /// The type of the resulting apparent context when keeping only tape Tape.
+    template <size_t Tape, typename Context>
+    using focus_context
+      = context<typename labelset_t_of<Context>::template valueset_t<Tape>,
+                weightset_t_of<Context>>;
+
+    /// The resulting apparent context when keeping only tape Tape.
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
-    auto focus_context(const context<LabelSet, WeightSet>& ctx)
-      -> context<typename LabelSet::template valueset_t<Tape>, WeightSet>
+    auto make_focus_context(const context<LabelSet, WeightSet>& ctx)
+      -> focus_context<Tape, context<LabelSet, WeightSet>>
     {
       return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
     }
 
-    template <typename Context, size_t Tape>
-    using focus_context_t
-      = decltype(focus_context<Tape>(std::declval<Context>()));
 
     /*------------------.
     | focus_automaton.  |
@@ -47,7 +48,7 @@ namespace vcsn
     template <std::size_t Tape, typename Aut>
     class focus_automaton_impl
       : public automaton_decorator<Aut,
-                                   focus_context_t<context_t_of<Aut>, Tape>>
+                                   focus_context<Tape, context_t_of<Aut>>>
     {
     public:
       /// The type of the wrapped automaton.
@@ -57,15 +58,6 @@ namespace vcsn
                     "focus: requires labels_are_tuples");
       static_assert(Tape < labelset_t_of<Aut>::size(),
                     "focus: invalid tape number");
-
-      /// The type of automata to produce this kind of automata.  For
-      /// instance, insplitting on a focus_automaton<const
-      /// mutable_automaton<Ctx>> should yield a
-      /// focus_automaton<mutable_automaton<Ctx>>, without the "inner"
-      /// const.
-      using fresh_automaton_t
-        = focus_automaton<Tape,
-                          fresh_automaton_t_of<automaton_t>>;
 
       /// This automaton's state and transition types are those of the
       /// wrapped automaton.
@@ -80,7 +72,7 @@ namespace vcsn
       using full_label_t = typename full_labelset_t::value_t;
 
       /// Exposed context.
-      using context_t = focus_context_t<full_context_t, Tape>;
+      using context_t = focus_context<Tape, full_context_t>;
 
       /// Exposed labelset.
       using labelset_t = typename context_t::labelset_t;
@@ -91,6 +83,15 @@ namespace vcsn
       using weightset_t = typename context_t::weightset_t;
       using weightset_ptr = typename context_t::weightset_ptr;
       using weight_t = typename weightset_t::value_t;
+
+      /// The type of automata to produce this kind of automata.  For
+      /// instance, insplitting on a focus_automaton<const
+      /// mutable_automaton<Ctx>> should yield a
+      /// focus_automaton<mutable_automaton<Ctx>>, without the "inner"
+      /// const.
+      using fresh_automaton_t
+        = focus_automaton<Tape,
+                          fresh_automaton_t_of<automaton_t>>;
 
       /// Indices of the remaining tapes.
       using hidden_indices_t
@@ -329,7 +330,7 @@ namespace vcsn
       /// benches show that in some cases, intensive (and admittedly
       /// wrong: they should have been cached on the caller side)
       /// calls to context() ruins the performances.
-      context_t context_ = focus_context<Tape>(full_context());
+      context_t context_ = make_focus_context<Tape>(full_context());
     };
   }
 
