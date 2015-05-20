@@ -69,6 +69,7 @@ dist_notebooks_DATA =                           \
   %D%/context.cerny.ipynb                       \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.ladybird.ipynb                    \
+  %D%/expression.concatenate.ipynb              \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
@@ -82,6 +83,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
   %D%/expression.zpc.ipynb                      \
+  %D%/polynomial.concatenate.ipynb              \
   %D%/polynomial.trie.ipynb                     \
   %D%/index.ipynb
 
