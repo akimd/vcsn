@@ -1,10 +1,9 @@
-#ifndef VCSN_DYN_CONTEXT_PRINTER_HH
-# define VCSN_DYN_CONTEXT_PRINTER_HH
+#pragma once
 
-# include <set>
-# include <sstream>
+#include <set>
+#include <sstream>
 
-# include <vcsn/dyn/context-visitor.hh>
+#include <vcsn/dyn/context-visitor.hh>
 
 namespace vcsn
 {
@@ -91,5 +90,3 @@ namespace vcsn
     };
   }
 }
-
-#endif // !VCSN_DYN_CONTEXT_PRINTER_HH

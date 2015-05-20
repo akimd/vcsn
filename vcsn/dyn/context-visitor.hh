@@ -1,7 +1,6 @@
-#ifndef VCSN_DYN_CONTEXT_VISITOR_HH
-# define VCSN_DYN_CONTEXT_VISITOR_HH
+#pragma once
 
-# include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {
@@ -11,7 +10,7 @@ namespace vcsn
     class context_visitor
     {
     public:
-# define DEFINE(Type)                   \
+#define DEFINE(Type)                            \
       virtual void visit(const Type& t) = 0
 
       DEFINE(automaton);
@@ -26,9 +25,7 @@ namespace vcsn
       DEFINE(tupleset);
       DEFINE(weightset);
       DEFINE(wordset);
-# undef DEFINE
+#undef DEFINE
     };
   }
 }
-
-#endif // !VCSN_DYN_CONTEXT_VISITOR_HH

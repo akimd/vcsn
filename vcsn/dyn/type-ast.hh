@@ -1,14 +1,13 @@
-#ifndef VCSN_DYN_TYPE_AST_HH
-# define VCSN_DYN_TYPE_AST_HH
+#pragma once
 
-# include <iostream>
-# include <memory>
-# include <vector>
+#include <iostream>
+#include <memory>
+#include <vector>
 
-# include <vcsn/core/rat/identities.hh>
+#include <vcsn/core/rat/identities.hh>
 
-# include <vcsn/dyn/context-visitor.hh>
-# include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/context-visitor.hh>
+#include <vcsn/dyn/fwd.hh>
 
 
 namespace vcsn
@@ -16,7 +15,7 @@ namespace vcsn
   namespace ast
   {
 
-# define ACCEPT()                                   \
+#define ACCEPT()                                    \
       virtual void accept(context_visitor &v) const \
       {                                             \
         v.visit(*this);                             \
@@ -300,10 +299,6 @@ namespace vcsn
     private:
         std::shared_ptr<ast_node> child_;
     };
-# undef ACCEPT
+#undef ACCEPT
   }
 }
-
-
-
-#endif // !VCSN_DYN_TYPE_AST_HH

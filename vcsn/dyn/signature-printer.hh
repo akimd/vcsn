@@ -1,9 +1,8 @@
-#ifndef VCSN_DYN_SIGNATURE_PRINTER_HH
-# define VCSN_DYN_SIGNATURE_PRINTER_HH
+#pragma once
 
-# include <ostream>
+#include <ostream>
 
-# include <vcsn/dyn/type-ast.hh>
+#include <vcsn/dyn/type-ast.hh>
 
 namespace vcsn
 {
@@ -16,7 +15,7 @@ namespace vcsn
         : os_(os), full_(full)
       {}
 
-# define DEFINE(Type)                   \
+#define DEFINE(Type)                            \
       virtual void visit(const Type& t)
 
       DEFINE(automaton);
@@ -32,7 +31,7 @@ namespace vcsn
       DEFINE(weightset);
       DEFINE(wordset);
 
-# undef DEFINE
+#undef DEFINE
 
     private:
       std::ostream& os_;
@@ -51,5 +50,3 @@ namespace vcsn
 
   }
 }
-
-#endif // !VCSN_DYN_SIGNATURE_PRINTER_HH

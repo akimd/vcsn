@@ -1,13 +1,12 @@
-#ifndef VCSN_DYN_CONTEXT_HH
-# define VCSN_DYN_CONTEXT_HH
+#pragma once
 
-# include <memory>
-# include <string>
+#include <memory>
+#include <string>
 
-# include <vcsn/ctx/fwd.hh> // vcsn::context
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/export.hh>
-# include <vcsn/misc/symbol.hh>
+#include <vcsn/ctx/fwd.hh> // vcsn::context
+#include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/export.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -66,8 +65,7 @@ namespace vcsn
 
     } // namespace detail
 
-    using context = std::shared_ptr<const detail::context_base>;
-
+    /// Build a dyn::context from a static one.
     template <typename LabelSet, typename WeightSet>
     inline
     context
@@ -76,9 +74,5 @@ namespace vcsn
       using context_t = vcsn::context<LabelSet, WeightSet>;
       return std::make_shared<detail::context_wrapper<context_t>>(ctx);
     }
-
   }
-
 }
-
-#endif // !VCSN_DYN_CONTEXT_HH
