@@ -97,11 +97,11 @@ namespace vcsn
     /// Concatenate two standard automata.
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
-    /// Concatenate two polynomials.
-    polynomial concatenate(const polynomial& lhs, const polynomial& rhs);
-
     /// Concatenate two expressions.
     expression concatenate(const expression& lhs, const expression& rhs);
+
+    /// Concatenate two polynomials.
+    polynomial concatenate(const polynomial& lhs, const polynomial& rhs);
 
     /// The condensation of \a aut such that each state is a strongly
     /// connected component.
@@ -448,16 +448,16 @@ namespace vcsn
     std::ostream& print(const expansion& e, std::ostream& o,
                         const std::string& format = "default");
 
+    /// Print expression \a e on \a o using format \a format.
+    std::ostream& print(const expression& e, std::ostream& o,
+                        const std::string& format = "default");
+
     /// Print label \a l on \a o using format \a format.
     std::ostream& print(const label& l, std::ostream& o,
                         const std::string& format = "default");
 
     /// Print polynomial \a p on \a o using format \a format.
     std::ostream& print(const polynomial& p, std::ostream& o,
-                        const std::string& format = "default");
-
-    /// Print expression \a e on \a o using format \a format.
-    std::ostream& print(const expression& e, std::ostream& o,
                         const std::string& format = "default");
 
     /// Print weight \a w on \a o using format \a format.
@@ -591,11 +591,11 @@ namespace vcsn
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
 
-    /// Break all the expressions in \a p.
-    polynomial split(const polynomial& p);
-
     /// Break \a exp.
     polynomial split(const expression& exp);
+
+    /// Break all the expressions in \a p.
+    polynomial split(const polynomial& p);
 
     /// A standardized \a a.
     automaton standard(const automaton& a);
@@ -630,11 +630,11 @@ namespace vcsn
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 
-    /// Sum of two polynomials.
-    polynomial sum(const polynomial& lhs, const polynomial& rhs);
-
     /// Sum of two expressions.
     expression sum(const expression& lhs, const expression& rhs);
+
+    /// Sum of two polynomials.
+    polynomial sum(const polynomial& lhs, const polynomial& rhs);
 
     /// Sum of two weights.
     weight sum(const weight& lhs, const weight& rhs);
