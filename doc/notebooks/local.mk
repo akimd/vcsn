@@ -70,6 +70,7 @@ dist_notebooks_DATA =                           \
   %D%/context.cerny.ipynb                       \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.ladybird.ipynb                    \
+  %D%/context.trie.ipynb                        \
   %D%/expression.concatenate.ipynb              \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.derivation.ipynb               \

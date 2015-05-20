@@ -5,6 +5,38 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-05-20
+### trie: read directly from a file
+Building a polynomial from a dictionary stored on disk, and then
+building the trie is a waste of time.  It is now possible to build it
+directly from a file.
+
+  In [2]: t = vcsn.B.trie('/usr/share/dict/words')
+
+  In [3]: t.info()
+  Out[3]: {'is codeterministic': False,
+           'is complete': True,
+           'is deterministic': True,
+           'is empty': False,
+           'is eps-acyclic': True,
+           'is normalized': False,
+           'is proper': True,
+           'is standard': True,
+           'is trim': True,
+           'is useless': False,
+           'is valid': True,
+           'number of accessible states': 792777,
+           'number of coaccessible states': 792777,
+           'number of codeterministic states': 792777,
+           'number of deterministic states': 792777,
+           'number of eps transitions': 0,
+           'number of final states': 235886,
+           'number of initial states': 1,
+           'number of states': 792777,
+           'number of transitions': 792776,
+           'number of useful states': 792777,
+           'type': 'mutable_automaton<letterset<char_letters()>, b>'}
+
 ## 2015-05-14
 ### trie: new algorithm
 From a finite language/series represented as a polynomial (of words),

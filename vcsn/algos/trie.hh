@@ -25,6 +25,7 @@ namespace vcsn
     public:
       using context_t = Context;
       using automaton_t = mutable_automaton<context_t>;
+      using labelset_t = labelset_t_of<context_t>;
       using letter_t = letter_t_of<context_t>;
       using word_t = word_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
@@ -46,7 +47,7 @@ namespace vcsn
         const auto& ls = *ctx_.labelset();
         state_t s = res_->pre();
         s = next_(s, ls.special());
-        for (auto l: ls.letters_of(lbl))
+        for (auto l: ls.letters_of_padded(lbl, padding_))
           s = next_(s, l);
         // The final transition, where we add the weight.
         res_->add_transition(s, res_->post(), ls.special(), wgt);
@@ -92,6 +93,9 @@ namespace vcsn
       context_t ctx_;
       /// The automaton being built.
       automaton_t res_;
+      /// Padding, in case it is needed.
+      typename letterized_t<labelset_t>::value_t padding_
+        = letterized_t<labelset_t>::one();
     };
 
 
