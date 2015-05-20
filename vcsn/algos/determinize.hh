@@ -43,10 +43,12 @@ namespace vcsn
 
     public:
       using automaton_t = Aut;
-      using fresh_automaton_t = fresh_automaton_t_of<Aut>;
+      using context_t = context_t_of<automaton_t>;
+      template <typename Ctx = context_t>
+      using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
-      using super_t = automaton_decorator<fresh_automaton_t>;
+      using super_t = automaton_decorator<fresh_automaton_t<>>;
 
       /// The name: set of (input) states.
       using state_name_t = dynamic_bitset;
@@ -279,8 +281,10 @@ namespace vcsn
 
     public:
       using automaton_t = Aut;
-      using fresh_automaton_t = fresh_automaton_t_of<Aut>;
-      using super_t = automaton_decorator<fresh_automaton_t>;
+      using context_t = context_t_of<automaton_t>;
+      template <typename Ctx = context_t>
+      using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
+      using super_t = automaton_decorator<fresh_automaton_t<>>;
 
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;

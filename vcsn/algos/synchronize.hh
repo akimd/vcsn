@@ -68,7 +68,8 @@ namespace vcsn
     };
 
     template <typename Aut>
-    using fresh_worded_automaton_t = fresh_automaton_t_of<typename worded_automaton<Aut>::automaton_t>;
+    using fresh_worded_automaton_t
+      = fresh_automaton_t_of<typename worded_automaton<Aut>::automaton_t>;
 
     /**
      * An automaton whose states may be qualified by delays and/or prefixes.
@@ -98,7 +99,8 @@ namespace vcsn
       using tape_labelset_t = typename labelset_t::template valueset_t<I>;
 
       synchronized_automaton_impl(const automaton_t& aut)
-        : super_t(context_t{worded_automaton<Aut>::labelset(*aut->labelset()), *aut->weightset()})
+        : super_t(context_t{worded_automaton<Aut>::labelset(*aut->labelset()),
+                            *aut->weightset()})
         , aut_(aut)
       {
         todo_.emplace(aut->pre(), labelset_t::one());
@@ -107,7 +109,9 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("synchronized_automaton<" + automaton_t::element_type::sname() + '>');
+        static symbol res("synchronized_automaton<"
+                          + automaton_t::element_type::sname()
+                          + '>');
         return res;
       }
 
@@ -202,7 +206,8 @@ namespace vcsn
     };
 
     template <typename Aut>
-    using synchronized_automaton = std::shared_ptr<synchronized_automaton_impl<Aut>>;
+    using synchronized_automaton
+      = std::shared_ptr<synchronized_automaton_impl<Aut>>;
 
     template <typename Aut>
     class synchronizer
@@ -251,7 +256,8 @@ namespace vcsn
             else
             {
               state_name_t f = {s, labelset_t::one()};
-              out_aut_->state(f, false); // create the state, don't add it to the todo list
+              // Create the state, don't add it to the todo list.
+              out_aut_->state(f, false);
               out_aut_->new_transition(st, f, out, weightset_t::one());
               out_aut_->set_final(f);
             }
@@ -364,4 +370,3 @@ namespace vcsn
     }
   }
 }
-

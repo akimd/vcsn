@@ -23,11 +23,12 @@ namespace vcsn
     public:
       /// Input automaton type.
       using automaton_t = Aut;
-      /// Generated automaton type.
-      using fresh_automaton_t = fresh_automaton_t_of<automaton_t>;
       using context_t = context_t_of<automaton_t>;
+      /// Generated automaton type.
+      template <typename Ctx = context_t>
+      using fresh_automaton_t = fresh_automaton_t_of<automaton_t, Ctx>;
       using label_t = label_t_of<automaton_t>;
-      using super_t = automaton_decorator<fresh_automaton_t>;
+      using super_t = automaton_decorator<fresh_automaton_t<>>;
 
       /// The underlying state type.
       using state_t = state_t_of<automaton_t>;
@@ -46,7 +47,7 @@ namespace vcsn
         origins_[super_t::post()] = {input_->post()};
       }
 
-      partition_automaton_impl(const fresh_automaton_t& res,
+      partition_automaton_impl(const fresh_automaton_t<>& res,
                                const automaton_t& input,
                                const origins_t& origins)
         : super_t(res)

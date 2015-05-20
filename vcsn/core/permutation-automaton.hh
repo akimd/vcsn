@@ -22,14 +22,16 @@ namespace vcsn
     public:
       /// Input automaton type.
       using automaton_t = Aut;
+      using context_t = context_t_of<automaton_t>;
       /// Generated automaton type.
-      using fresh_automaton_t = fresh_automaton_t_of<automaton_t>;
-      using super_t = automaton_decorator<fresh_automaton_t>;
+      template <typename Ctx = context_t>
+      using fresh_automaton_t = fresh_automaton_t_of<automaton_t, Ctx>;
+      using super_t = automaton_decorator<fresh_automaton_t<>>;
 
       /// Symbolic state name: input automaton state type.
       using state_name_t = state_t_of<automaton_t>;
       /// Sorted automaton state type.
-      using state_t = state_t_of<fresh_automaton_t>;
+      using state_t = state_t_of<fresh_automaton_t<>>;
 
     public:
       permutation_automaton_impl(const automaton_t& input)

@@ -89,9 +89,22 @@ namespace vcsn
       /// mutable_automaton<Ctx>> should yield a
       /// focus_automaton<mutable_automaton<Ctx>>, without the "inner"
       /// const.
+      ///
+      /// Note that we discard the demanded Context.  This will
+      /// probably raise some problems at some point, but the reason
+      /// is that when we "make_fresh_automaton" from a
+      /// focus_automaton, we must build a focus_automaton, which
+      /// requires the full context!  Typical example is focusing on
+      /// tape 0 for a "LAL x LAL" is a "LAL" automaton, but making
+      /// this is focus_automaton<0, LAL> is obviously wrong.
+      ///
+      /// Unfortunately the compilers tend to issue error messages
+      /// that make this hard to understand, even though we have some
+      /// static assertions.
+      template <typename>
       using fresh_automaton_t
         = focus_automaton<Tape,
-                          fresh_automaton_t_of<automaton_t>>;
+                          fresh_automaton_t_of<automaton_t, full_context_t>>;
 
       /// Indices of the remaining tapes.
       using hidden_indices_t

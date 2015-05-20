@@ -22,14 +22,31 @@ namespace vcsn
     /// synchronizing words.
     template <typename Aut>
     class pair_automaton_impl
+#if 0
+    // See comments below.
+      : public automaton_decorator<fresh_automaton_t_of<Aut>>
+#else
       : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
+#endif
     {
     public:
       using automaton_t =  Aut;
-      // FIXME: cannot use fresh_automaton_t_of<Aut>.
-      using fresh_automaton_t = mutable_automaton<context_t_of<Aut>>;
-      using super_t = automaton_decorator<fresh_automaton_t>;
       using context_t = context_t_of<automaton_t>;
+      // FIXME: cannot use fresh_automaton_t_of<Aut>.  To see why, run
+      // the tests/python/focus.py test.  We should probably stop
+      // having make_free_context behave a special way with
+      // focus_automaton, rather we should call a special function to
+      // duplicate a focus_automaton.
+#if 0
+      /// When creating a copy of this automaton type.
+      template <typename Ctx = context_t>
+      using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
+#else
+      /// When creating a copy of this automaton type.
+      template <typename Ctx = context_t>
+      using fresh_automaton_t = mutable_automaton<Ctx>;
+#endif
+      using super_t = automaton_decorator<fresh_automaton_t<>>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;

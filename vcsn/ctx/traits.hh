@@ -52,9 +52,9 @@ namespace vcsn
 
 #undef DEFINE
 
-  template <typename Aut>
+  template <typename Aut, typename Context = context_t_of<Aut>>
   using fresh_automaton_t_of
-    = typename Aut::element_type::fresh_automaton_t;
+    = typename Aut::element_type::template fresh_automaton_t<Context>;
 
   template <typename ValueSet>
   using letter_t_of

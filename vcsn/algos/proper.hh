@@ -591,14 +591,16 @@ namespace vcsn
   auto
   proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true)
-    -> mutable_automaton<detail::proper_context<context_t_of<Aut>>>
+    -> fresh_automaton_t_of<Aut,
+                            detail::proper_context<context_t_of<Aut>>>
   {
     // FIXME: We could avoid copying if the automaton is already
     // proper.
     auto a = copy(aut);
     proper_here(a, dir, prune);
     auto ctx = make_proper_context(a->context());
-    auto res = make_mutable_automaton(ctx);
+    using res_t = fresh_automaton_t_of<Aut, decltype(ctx)>;
+    auto res = make_shared_ptr<res_t>(ctx);
     copy_into(a, res);
     return res;
   }

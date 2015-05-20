@@ -29,8 +29,9 @@ namespace vcsn
       /// The type to use to build an automaton of the same type:
       /// remove the inner const-volatile qualifiers, but still build
       /// a transpose_automaton.
+      template <typename Ctx>
       using fresh_automaton_t
-        = transpose_automaton<fresh_automaton_t_of<automaton_t>>;
+        = transpose_automaton<fresh_automaton_t_of<automaton_t, Ctx>>;
 
       using super_t = automaton_decorator<automaton_t>;
       using context_t = context_t_of<automaton_t>;
