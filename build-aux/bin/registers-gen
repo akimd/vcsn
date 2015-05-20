@@ -1,5 +1,29 @@
 #! /usr/bin/env python
 
+# This tool reads the algorithms header files looking for entries as
+# follows:
+#
+#   /// Bridge (trie).
+#   template <typename Context, typename Istream>
+#   automaton
+#   trie_stream(const context& ctx, std::istream& is)
+#   {
+#     const auto& c = ctx->as<Context>();
+#     auto ps = make_word_polynomialset(c);
+#     return make_automaton(trie(ps, is));
+#   }
+#
+# it does not care about the part in braces: only the comment and the
+# signature are read.
+#
+# Be sure to respect the comment:
+#
+#   /// Bridge (<ALGO>).
+# or
+#   /// Bridge.
+#
+# in the common case where the register name is the same as the
+# function name, as exposed in dyn:: to the user.
 from __future__ import print_function
 import argparse
 import os
@@ -12,12 +36,12 @@ import re
 # call: 'call' or 'call_variadic'.
 # file: the vcsn/algos header that provides the bridge.
 # formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
-# fun: function name (e.g., concatenate).
+# algo: function name (e.g., concatenate).
 # reg: register name (e.g., concatenate_polynomial).
 # return: return type.
 bridges = {}
 
-bridge_pattern = re.compile(r'''///\ Bridge.
+bridge_pattern = re.compile(r'''///\ Bridge(?:\s+\((?P<algo>\w+)\))?.
 \s*template\s*<.*?>
 (?:\s*inline)?
 \s*(?P<return>[\w:&*]+)\s+(?P<reg>\w+)\s*\((?P<formals>.*?)\)''',
@@ -33,7 +57,7 @@ implementation = '''
   // {reg} ({file}).
   REGISTER_DEFINE({reg});
   {return}
-  {fun}({formals})
+  {algo}({formals})
   {{
     return detail::{reg}_registry().{call}({args});
   }}
@@ -47,16 +71,19 @@ def process_file(fn):
             bridge = m.groupdict()
             bridge['file'] = os.path.basename(fn)
             reg = bridge['reg']
-            bridge['fun'] = re.sub('_(automaton|context|expansion|expression|label|polynomial|vector|weight)$',
-                                   '', reg)
-            # to_expression etc. are not to be reduce to "to".
-            # Likewise for random_automaton, and read_polynomial.
-            if bridge['fun'] in ['random', 'read', 'to']:
-                bridge['fun'] = reg
-            if reg == 'copy_convert':
-                bridge['fun'] = 'copy'
-            elif reg in ['delay_automaton', 'make_word_context']:
-                bridge['fun'] = reg
+            # Compute the algo name.
+            if bridge['algo'] == None:
+                algo = re.sub('_(automaton|context|expansion|expression|label|polynomial|vector|weight)$',
+                              '', reg)
+                # to_expression etc. are not to be reduce to "to".
+                # Likewise for random_automaton, and read_polynomial.
+                if algo in ['random', 'read', 'to']:
+                    algo = reg
+                if reg == 'copy_convert':
+                    algo = 'copy'
+                elif reg in ['delay_automaton', 'make_word_context']:
+                    algo = reg
+                bridge['algo'] = algo
             bridge['formals'] = re.sub('\s+', ' ', bridge['formals'])
             bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',
                                               r'\1',
