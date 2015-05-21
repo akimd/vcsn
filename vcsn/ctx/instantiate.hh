@@ -29,7 +29,6 @@
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/ladybird.hh>
 #include <vcsn/algos/left-mult.hh>
-#include <vcsn/algos/lift.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
 #include <vcsn/algos/normalize.hh>
@@ -106,11 +105,6 @@ namespace vcsn
                                                                         \
   /* efsm. */                                                           \
   VCSN_CTX_INSTANTIATE_PRINT(efsm, mutable_automaton<Ctx>);             \
-                                                                        \
-  /* lift. */                                                           \
-  MAYBE_EXTERN template                                                 \
-  detail::lifted_automaton_t<mutable_automaton<Ctx>>                    \
-  lift<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);      \
                                                                         \
   /* print. */                                                          \
   MAYBE_EXTERN template                                                 \
@@ -329,8 +323,6 @@ namespace vcsn
         REGISTER(is_valid_expression, rs_t);
         REGISTER(left_mult, ws_t, aut_t);
         REGISTER(left_mult_expression, ws_t, rs_t);
-        REGISTER(lift_automaton, aut_t);
-        REGISTER(lift_expression, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);
