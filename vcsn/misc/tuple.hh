@@ -76,6 +76,47 @@ namespace vcsn
     //template <typename... T>
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
+    /**
+     * Get the list containing all the elements of I1 (contiguous sequence from
+     * 0 to N) not present in I2 (arbitrary sequence, sorted).
+     */
+    template<typename S1, typename S2>
+    struct index_sequence_difference;
+
+    template<std::size_t I1_1, std::size_t... I1, std::size_t... I2>
+    struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<I1_1, I2...>>
+    {
+      using type =
+       typename index_sequence_difference<index_sequence<I1...>,
+                                          index_sequence<I2...>>::type;
+    };
+
+    template<std::size_t I1_1, std::size_t I2_1, std::size_t... I1, std::size_t... I2>
+    struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<I2_1, I2...>>
+    {
+      using type =
+        typename concat_index_sequence<index_sequence<I1_1>,
+                typename index_sequence_difference<index_sequence<I1...>,
+                                          index_sequence<I2_1, I2...>>::type>::type;
+    };
+
+    template<std::size_t I1_1, std::size_t... I1>
+    struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<>>
+    {
+      using type =
+        typename concat_index_sequence<index_sequence<I1_1>,
+                typename index_sequence_difference<index_sequence<I1...>,
+                                          index_sequence<>>::type>::type;
+    };
+
+    template<>
+    struct index_sequence_difference<index_sequence<>, index_sequence<>>
+    {
+      using type = typename index_sequence<>::type;
+    };
+
+    template <typename S1, typename S2>
+    using sequence_difference = typename index_sequence_difference<typename S1::type, typename S2::type>::type;
 
     template <typename Fun, typename... Ts>
     inline void
