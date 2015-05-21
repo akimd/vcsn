@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <boost/optional.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
@@ -920,7 +921,101 @@ namespace vcsn
       return o;
     }
 
-    /// Construct from a string.
+    /// Read a label, if there is one.
+    ///
+    /// Does not handle \z, nor letter classes.
+    ///
+    /// \returns  none if there is no label.
+    boost::optional<label_t>
+    conv_label(std::istream& i, bool weighted, const char sep = '+') const
+    {
+      int peek = i.peek();
+      assert(peek != '[');
+      if (peek == '\\')
+        {
+          i.ignore();
+          if (i.peek() == 'z')
+            {
+              i.ignore();
+              return boost::none;
+            }
+          else
+            i.unget();
+        }
+
+      // The label is not \z.
+      // Check if there is a label that comes.  Or rather, check if
+      // there is something else than EOF or the separator, in which
+      // case it must be a label.
+      label_t res;
+      if (peek == EOF || peek == sep || isspace(peek))
+        {
+          // There is no label.  This counts as '$', the special
+          // label.
+          //
+          // Indeed, that's how we represent the initial and final
+          // transitions: '$ -> 0 "<2>"'.  Using the one label is
+          // tempting, but it does not exist for lal_char for
+          // instance.  And it would be wrong to have '\e' when we
+          // can, and '$' otherwise...
+          //
+          // However, we must have at least a weight: a completely
+          // empty mononial ($ -> 0 "<2>,") is invalid.
+          require(weighted,
+                  sname(), ": conv: invalid monomial: ",
+                  str_escape(peek),
+                  " (did you mean \\e or \\z?)");
+          res = labelset()->special();
+        }
+      else
+        res = labelset()->conv(i);
+      return res;
+    }
+
+    /// Read a weight, if there is one, bracketed.
+    weight_t
+    conv_weight(std::istream& i) const
+    {
+      if (i.peek() == langle)
+        // FIXME: convert to use conv(std::istream).
+        //
+        // The problem is when we have a rational expression as a
+        // weight: in that case, conv expect to parse up to EOF, not
+        // up to '>'.  We first need to fix the parsing of expression
+        // to work on a flow, to be able to use weightset()->conv
+        // here.  Which means to get back the stream from a Flex
+        // scanner.  It might not be easy.
+        return ::vcsn::conv(*weightset(), bracketed(i, langle, rangle));
+      else
+        return weightset()->one();
+    }
+
+    /// Read a monomial from a stream.
+    ///
+    /// \param i    the stream to parse
+    /// \param sep  the separator between monomials.
+    monomial_t
+    conv_monomial(std::istream& i, const char sep = '+') const
+    {
+#define SKIP_SPACES()                           \
+      while (isspace(i.peek()))                 \
+        i.ignore()
+
+      // Possibly a weight in braces.
+      SKIP_SPACES();
+      bool weighted = i.peek() == langle;
+      weight_t w = conv_weight(i);
+
+      // Possibly, a label.
+      SKIP_SPACES();
+      auto l = conv_label(i, weighted, sep);
+      require(l != boost::none,
+              "\\z is invalid for monomials");
+      return {l.get(), w};
+#undef SKIP_SPACES
+    }
+
+    /// Read a polynomial from a stream.
     ///
     /// Somewhat more general than a mere reversal of "format",
     /// in particular "a+a" is properly understood as "<2>a" in
@@ -940,71 +1035,17 @@ namespace vcsn
         {
           // Possibly a weight in braces.
           SKIP_SPACES();
-          weight_t w = weightset()->one();
-          bool default_w = true;
-          if (i.peek() == langle)
-            {
-              // FIXME: convert to use conv(std::istream).
-              w = ::vcsn::conv(*weightset(), bracketed(i, langle, rangle));
-              default_w = false;
-            }
+          bool weighted = i.peek() == langle;
+          weight_t w = conv_weight(i);
 
-          // Possibly, a label.
           SKIP_SPACES();
-          // Whether the label is \z.
-          bool is_zero = false;
-          if (i.peek() == '\\')
-            {
-              i.ignore();
-              if (i.peek() == 'z')
-                {
-                  is_zero = true;
-                  i.ignore();
-                }
-              else
-                i.unget();
-            }
-
-          if (!is_zero)
-            {
-              // The label is not \z.
-              int peek = i.peek();
-              // Handle classes
-              if (peek == '[')
-                for (auto c : labelset()->convs(i))
-                  add_here(res, c, w);
-              else
-                {
-                  // Check if there is a label that comes.  Or rather,
-                  // check if there is something else than EOF or the
-                  // separator, in which case it must be a label.
-                  label_t label;
-                  if (peek == EOF || peek == sep || isspace(peek))
-                    {
-                      // There is no label.  This counts as '$', the
-                      // special label.
-                      //
-                      // Indeed, that how we represent the initial and
-                      // final transitions: '$ -> 0 "<2>"'.  Using the
-                      // one label is tempting, but it does not exist
-                      // for lal_char for instance.  And it would be
-                      // wrong to have '\e' when we can, and '$'
-                      // otherwise...
-                      //
-                      // However, we must have at least a weight: a
-                      // completely empty mononial ($ -> 0 "<2>,") is
-                      // invalid.
-                      require(!default_w,
-                              sname(), ": conv: invalid monomial: ",
-                              str_escape(peek),
-                              " (did you mean \\e or \\z?)");
-                      label = labelset()->special();
-                    }
-                  else
-                    label = labelset()->conv(i);
-                  add_here(res, label, w);
-                }
-            }
+          // Possibly, a label.
+          // Handle label classes.
+          if (i.peek() == '[')
+            for (auto l : labelset()->convs(i))
+              add_here(res, l, w);
+          else if (auto l = conv_label(i, weighted, sep))
+            add_here(res, l.get(), w);
 
           // sep (e.g., '+'), or stop parsing.
           SKIP_SPACES();

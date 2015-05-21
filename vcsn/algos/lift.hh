@@ -113,7 +113,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (lift).
       template <typename Aut>
       automaton
       lift_automaton(const automaton& aut)

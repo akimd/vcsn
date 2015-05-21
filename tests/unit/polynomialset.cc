@@ -1,6 +1,7 @@
 #undef NDEBUG
 #include <cassert>
 #include <vcsn/ctx/law_char_z.hh>
+#include <vcsn/ctx/lao_z.hh>
 #include <vcsn/weightset/zmin.hh>
 #include <vcsn/weightset/polynomialset.hh>
 #include <tests/unit/test.hh>
@@ -156,25 +157,53 @@ check_star(const PolynomialSet& ps)
   return nerrs;
 }
 
+static
+unsigned
+check_lao_z()
+{
+  auto nerrs = 0U;
+
+  using context_t = vcsn::ctx::lao_z;
+  auto ctx = context_t{};
+  using ps_t = vcsn::polynomialset<context_t>;
+  auto ps = ps_t{ctx};
+
+#define CHECK(In, Out)                                  \
+  do {                                                  \
+    if (getenv("VERBOSE"))                              \
+      std::cerr << "check_conv: In: " << In;            \
+    ASSERT_EQ(to_string(ps, conv(ps, In)), Out);        \
+  } while (false)
+
+  CHECK("<2>", "<2>");
+  CHECK("<2>\\e", "<2>");
+#undef CHECK
+
+  return nerrs;
+}
+
 int main()
 {
   size_t errs = 0;
 
+  errs += check_lao_z();
+
   {
     using context_t = vcsn::ctx::law_char_z;
-    context_t ctx {{'a', 'b', 'c', 'd'}};
+    auto ctx = context_t{{'a', 'b', 'c', 'd'}};
     using ps_t = vcsn::polynomialset<context_t>;
-    ps_t ps{ctx};
+    auto ps = ps_t{ctx};
 
     errs += check_common(ps);
     errs += check_assoc(ps);
     errs += check_conv(ps);
   }
+
   {
     using context_t = vcsn::context<vcsn::ctx::law_char, vcsn::zmin>;
-    context_t ctx {{'a', 'b'}};
+    auto ctx = context_t{{'a', 'b'}};
     using ps_t = vcsn::polynomialset<context_t>;
-    ps_t ps{ctx};
+    auto ps = ps_t{ctx};
 
     errs += check_common(ps);
     errs += check_star(ps);
