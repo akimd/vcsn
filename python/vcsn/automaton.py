@@ -182,6 +182,15 @@ def _automaton_is_synchronized_by(self, w):
     return self._is_synchronized_by(w)
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
+def _automaton_lift(self, *arg):
+    if len(arg) == 0:
+        return self._lift()
+    elif len(arg) == 1 and isinstance(arg[0], list):
+        return self._lift(arg[0])
+    else:
+        return self._lift(list(arg))
+automaton.lift = _automaton_lift
+
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 
 automaton.state_number = lambda self: self.info('number of states')
