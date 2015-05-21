@@ -23,7 +23,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (print).
       template <typename Context, typename Ostream, typename String>
       std::ostream& print_context(const context& ctx, std::ostream& o,
                                   const std::string& format)
@@ -53,7 +53,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (print).
       template <typename ExpansionSet, typename Ostream, typename String>
       std::ostream& print_expansion(const expansion& expansion, std::ostream& o,
                                     const std::string& format)
@@ -72,7 +72,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (print).
       template <typename LabelSet, typename Ostream, typename String>
       std::ostream& print_label(const label& label, std::ostream& o,
                                 const std::string& format)
@@ -108,7 +108,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (list).
       template <typename PolynomialSet, typename Ostream>
       std::ostream& list_polynomial(const polynomial& polynomial,
                                     std::ostream& o)
@@ -127,7 +127,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (print).
       template <typename PolynomialSet, typename Ostream, typename String>
       std::ostream& print_polynomial(const polynomial& polynomial,
                                      std::ostream& o, const std::string& format)
@@ -159,7 +159,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (print).
       template <typename ExpSet, typename Ostream, typename String>
       std::ostream& print_expression(const expression& exp, std::ostream& o,
                                      const std::string& format)
@@ -190,7 +190,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (print).
       template <typename WeightSet, typename Ostream, typename String>
       std::ostream& print_weight(const weight& weight, std::ostream& o,
                                  const std::string& format)

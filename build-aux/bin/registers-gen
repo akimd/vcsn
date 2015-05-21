@@ -73,17 +73,7 @@ def process_file(fn):
             reg = bridge['reg']
             # Compute the algo name.
             if bridge['algo'] == None:
-                algo = re.sub('_(automaton|context|expansion|expression|label|polynomial|vector|weight)$',
-                              '', reg)
-                # to_expression etc. are not to be reduce to "to".
-                # Likewise for random_automaton, and read_polynomial.
-                if algo in ['random', 'read', 'to']:
-                    algo = reg
-                if reg == 'copy_convert':
-                    algo = 'copy'
-                elif reg in ['delay_automaton', 'make_word_context']:
-                    algo = reg
-                bridge['algo'] = algo
+                bridge['algo'] = reg
             bridge['formals'] = re.sub('\s+', ' ', bridge['formals'])
             bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',
                                               r'\1',

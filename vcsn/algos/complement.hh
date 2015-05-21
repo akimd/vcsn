@@ -79,7 +79,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (complement).
       template <typename ExpSet>
       expression
       complement_expression(const expression& exp)

@@ -67,7 +67,7 @@ namespace vcsn
         return dyn::make_context(a->context());
       }
 
-      /// Bridge.
+      /// Bridge (context_of).
       template <typename ExpSet>
       context
       context_of_expression(const expression& exp)

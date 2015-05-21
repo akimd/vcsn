@@ -379,7 +379,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (standard).
       template <typename ExpSet>
       automaton
       standard_expression(const expression& exp)

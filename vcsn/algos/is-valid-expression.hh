@@ -31,7 +31,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (is_valid).
       template <typename ExpSet>
       bool
       is_valid_expression(const expression& exp)

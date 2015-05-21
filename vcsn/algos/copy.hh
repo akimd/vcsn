@@ -241,7 +241,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (copy).
       template <typename Aut, typename Ctx>
       inline
       automaton
@@ -274,7 +274,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (copy).
       template <typename InExpSet, typename OutExpSet = InExpSet>
       inline
       expression

@@ -150,7 +150,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (lift).
       template <typename ExpSet>
       expression
       lift_expression(const expression& exp)

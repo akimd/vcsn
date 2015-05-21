@@ -306,7 +306,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (split).
       template <typename PolynomialSet>
       polynomial
       split_polynomial(const polynomial& poly)

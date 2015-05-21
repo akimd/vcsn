@@ -109,7 +109,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (sum).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
       sum_polynomial(const polynomial& lhs, const polynomial& rhs)
@@ -133,7 +133,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (sum).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       sum_expression(const expression& lhs, const expression& rhs)
@@ -157,7 +157,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (sum).
       template <typename WeightSetLhs, typename WeightSetRhs>
       weight
       sum_weight(const weight& lhs, const weight& rhs)

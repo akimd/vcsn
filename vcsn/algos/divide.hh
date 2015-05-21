@@ -25,7 +25,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (ldiv).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
       ldiv_polynomial(const polynomial& lhs, const polynomial& rhs)
@@ -60,7 +60,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (lgcd).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
       lgcd_polynomial(const polynomial& lhs, const polynomial& rhs)

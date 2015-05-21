@@ -267,7 +267,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (transpose).
       template <typename ExpSet>
       expression
       transpose_expression(const expression& exp)
@@ -288,7 +288,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (transposition).
       template <typename ExpSet>
       expression
       transposition_expression(const expression& exp)

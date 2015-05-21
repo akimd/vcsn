@@ -204,7 +204,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (concatenate).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       concatenate_expression(const expression& lhs, const expression& rhs)
@@ -263,7 +263,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (chain).
       template <typename ExpSet, typename Int1, typename Int2>
       expression
       chain_expression(const expression& re, int min, int max)
@@ -286,7 +286,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (concatenate).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
       concatenate_polynomial(const polynomial& lhs, const polynomial& rhs)
@@ -320,7 +320,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (multiply).
       template <typename WeightSetLhs, typename WeightSetRhs>
       weight
       multiply_weight(const weight& lhs, const weight& rhs)

@@ -98,7 +98,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (are_equivalent).
       template <typename ExpSet1, typename ExpSet2>
       bool
       are_equivalent_expression(const expression& r1, const expression& r2)
@@ -165,7 +165,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (difference).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       difference_expression(const expression& lhs, const expression& rhs)

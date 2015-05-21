@@ -616,7 +616,7 @@ namespace vcsn
         return make_automaton(::vcsn::conjunction(l, r));
       }
 
-      /// Bridge.
+      /// Bridge (conjunction).
       template <typename... Auts>
       automaton
       conjunction_vector(const std::vector<automaton>& as)
@@ -625,7 +625,7 @@ namespace vcsn
         return conjunction_<Auts...>(as, indices);
       }
 
-      /// Bridge.
+      /// Bridge (conjunction_lazy).
       template <typename... Auts>
       automaton
       conjunction_lazy_vector(const std::vector<automaton>& as)
@@ -678,7 +678,7 @@ namespace vcsn
         return make_automaton(res);
       }
 
-      /// Bridge.
+      /// Bridge (shuffle).
       template <typename... Auts>
       automaton
       shuffle_vector(const std::vector<automaton>& as)
@@ -709,7 +709,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (shuffle).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       shuffle_expression(const expression& lhs, const expression& rhs)
@@ -777,7 +777,7 @@ namespace vcsn
         return make_automaton(res);
       }
 
-      /// Bridge.
+      /// Bridge (infiltration).
       template <typename... Auts>
       automaton
       infiltration_vector(const std::vector<automaton>& as)
@@ -868,7 +868,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (conjunction).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
       conjunction_expression(const expression& lhs, const expression& rhs)

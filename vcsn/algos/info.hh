@@ -294,7 +294,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (info).
       template <typename ExpSet, typename Ostream>
       std::ostream& info_expression(const expression& exp, std::ostream& o)
       {

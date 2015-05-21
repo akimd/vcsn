@@ -169,7 +169,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (left_mult).
       template <typename WeightSet, typename ExpSet>
       expression
       left_mult_expression(const weight& weight, const expression& exp)
@@ -248,7 +248,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (right_mult).
       template <typename ExpSet, typename WeightSet>
       expression
       right_mult_expression(const expression& exp, const weight& weight)
