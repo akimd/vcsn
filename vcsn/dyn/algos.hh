@@ -393,6 +393,9 @@ namespace vcsn
     /// The lifted LAO automaton from \a aut.
     automaton lift(const automaton& aut);
 
+    /// Lift some tapes of the transducer
+    automaton lift(const automaton& aut, const std::vector<unsigned>& tapes);
+
     /// The lifted LAO rational expression from \a e.
     expression lift(const expression& e);
 

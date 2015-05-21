@@ -139,7 +139,8 @@ def output():
 namespace vcsn { namespace dyn {
 '''
     for f in sorted(bridges):
-        if f not in ['focus', 'read_polynomial', 'read_context',
+        if f not in ['focus', 'lift_automaton', 'lift_automaton_tape',
+                     'read_polynomial', 'read_context',
                      'read_weight', 'read_label', 'read_automaton',
                      'read_expression', 'make_context', 'list_polynomial',
                      'print_polynomial', 'print_expansion', 'print_expression',

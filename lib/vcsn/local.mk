@@ -41,6 +41,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/fado.cc                             \
   %D%/algos/focus.cc                            \
   %D%/algos/fwd.hh                              \
+  %D%/algos/lift.cc                             \
   %D%/algos/make-context.cc                     \
   %D%/algos/print.cc                            \
   %D%/algos/read.cc                             \

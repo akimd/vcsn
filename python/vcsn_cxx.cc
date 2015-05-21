@@ -501,6 +501,15 @@ struct automaton
     return vcsn::dyn::conjunction(automata_(auts));
   }
 
+  automaton lift(const boost::python::list& tapes) const
+  {
+    //TODO: switch to variadic arguments, i.e. lift(1, 2, 4)
+    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes));
+  }
+
+  /// The type of the previous function.
+  using vect_lift_t = automaton (automaton::*)(const boost::python::list& tapes) const;
+
   static automaton conjunction_lazy_(const boost::python::list& auts)
   {
     return vcsn::dyn::conjunction_lazy(automata_(auts));
@@ -1107,6 +1116,7 @@ expression expression::right_mult(const weight& w) const
 `-----------*/
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift, lift, 0, 1);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -1176,7 +1186,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("letterize", &automaton::letterize)
-    .def("lift", &automaton::lift)
+    .def("lift", static_cast<automaton::vect_lift_t>(&automaton::lift), lift())
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("normalize", &automaton::normalize)
     .def("num_components", &automaton::num_components)
