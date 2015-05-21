@@ -1,14 +1,13 @@
-#ifndef LIB_VCSN_RAT_DRIVER_HH
-# define LIB_VCSN_RAT_DRIVER_HH
+#pragma once
 
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/dyn/expression.hh>
-# include <vcsn/dyn/expressionset.hh>
-# include <lib/vcsn/rat/location.hh>
-# include <vcsn/misc/export.hh>
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/expressionset.hh>
+#include <lib/vcsn/rat/location.hh>
+#include <vcsn/misc/export.hh>
 
-# include <lib/vcsn/rat/fwd.hh>
-# include <lib/vcsn/rat/parse.hh>
+#include <lib/vcsn/rat/fwd.hh>
+#include <lib/vcsn/rat/parse.hh>
 
 namespace vcsn
 {
@@ -49,4 +48,3 @@ namespace vcsn
 
   }
 }
-#endif // !LIB_VCSN_RAT_DRIVER_HH

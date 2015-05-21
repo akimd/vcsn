@@ -1,5 +1,4 @@
-#ifndef LIB_VCSN_RAT_FWD_HH
-# define LIB_VCSN_RAT_FWD_HH
+#pragma once
 
 namespace vcsn
 {
@@ -17,5 +16,3 @@ namespace vcsn
 
   }
 }
-
-#endif // !LIB_VCSN_RAT_FWD_HH

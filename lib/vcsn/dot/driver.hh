@@ -1,13 +1,12 @@
-#ifndef LIB_VCSN_DOT_DRIVER_HH
-# define LIB_VCSN_DOT_DRIVER_HH
+#pragma once
 
-# include <vcsn/core/fwd.hh>
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/algos/edit-automaton.hh>
-# include <vcsn/misc/export.hh>
+#include <vcsn/core/fwd.hh>
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/algos/edit-automaton.hh>
+#include <vcsn/misc/export.hh>
 
-# include <lib/vcsn/dot/fwd.hh>
-# include <lib/vcsn/rat/location.hh>
+#include <lib/vcsn/dot/fwd.hh>
+#include <lib/vcsn/rat/location.hh>
 
 namespace vcsn
 {
@@ -52,4 +51,3 @@ namespace vcsn
     }
   }
 }
-#endif // !LIB_VCSN_DOT_DRIVER_HH

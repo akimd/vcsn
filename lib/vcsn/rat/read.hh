@@ -1,9 +1,8 @@
-#ifndef LIB_VCSN_RAT_READ_HH
-# define LIB_VCSN_RAT_READ_HH
+#pragma once
 
-# include <vcsn/dyn/fwd.hh>
-# include <lib/vcsn/rat/location.hh>
-# include <vcsn/misc/export.hh>
+#include <vcsn/dyn/fwd.hh>
+#include <lib/vcsn/rat/location.hh>
+#include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -15,5 +14,3 @@ namespace vcsn
          const location& l = location{});
   }
 }
-
-#endif // !LIB_VCSN_RAT_READ_HH
