@@ -18,21 +18,6 @@ namespace vcsn
     | lift(types).  |
     `--------------*/
 
-    template <typename ValueSet>
-    struct context_of
-    {
-      using type = typename ValueSet::context_t;
-    };
-
-    template <typename Context>
-    struct context_of<vcsn::mutable_automaton<Context>>
-    {
-      using type = Context;
-    };
-
-    template <typename ValueSet>
-    using context_of_t = typename context_of<ValueSet>::type;
-
     template <typename Context>
     using lifted_context_t =
       context<oneset, expressionset<Context>>;
