@@ -20,19 +20,19 @@ bool check_common(const WeightSet& ws)
   ASSERT_EQ(ws.equal(o, o), true);
 
   // add, zero, one.
-  ASSERT_EQ(ws.equal(ws.add(z, z), z), true);
-  ASSERT_EQ(ws.equal(ws.add(z, o), o), true);
-  ASSERT_EQ(ws.equal(ws.add(o, z), o), true);
+  ASSERT_VS_EQ(ws, ws.add(z, z), z);
+  ASSERT_VS_EQ(ws, ws.add(z, o), o);
+  ASSERT_VS_EQ(ws, ws.add(o, z), o);
 
   // mul, zero, one.
-  ASSERT_EQ(ws.equal(ws.mul(z, z), z), true);
-  ASSERT_EQ(ws.equal(ws.mul(z, o), z), true);
-  ASSERT_EQ(ws.equal(ws.mul(o, z), z), true);
-  ASSERT_EQ(ws.equal(ws.mul(o, o), o), true);
+  ASSERT_VS_EQ(ws, ws.mul(z, z), z);
+  ASSERT_VS_EQ(ws, ws.mul(z, o), z);
+  ASSERT_VS_EQ(ws, ws.mul(o, z), z);
+  ASSERT_VS_EQ(ws, ws.mul(o, o), o);
 
   // conv, format.
-  ASSERT_EQ(ws.equal(conv(ws, to_string(ws, z)), z), true);
-  ASSERT_EQ(ws.equal(conv(ws, to_string(ws, o)), o), true);
+  ASSERT_VS_EQ(ws, conv(ws, to_string(ws, z)), z);
+  ASSERT_VS_EQ(ws, conv(ws, to_string(ws, o)), o);
 
   return nerrs;
 }

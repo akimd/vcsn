@@ -205,8 +205,7 @@ check_tupleset()
 #undef CHECK
 
   // special, is_special.
-  ASSERT_EQ(wwset.equal(wwset.special(), ww_t{ls1.special(),ls2.special()}),
-            true);
+  ASSERT_VS_EQ(wwset, wwset.special(), ww_t(ls1.special(), ls2.special()));
   ASSERT_EQ(to_string(wwset, ww_t{ls1.special(),ls2.special()}), "");
   ASSERT_EQ(to_string(wwset, wwset.special()), "");
   ASSERT_EQ(wwset.is_special(wwset.special()), true);
@@ -227,17 +226,18 @@ check_tupleset()
 
   // conv.
   // Exposed to the same bugs as make, see above.
-  ASSERT_EQ(wwset.equal(conv(wwset, "(abc,xyz)"), ww_t{"abc", "xyz"}), true);
-  ASSERT_EQ(wwset.equal(conv(wwset, "(abc,\\e)"), ww_t{"abc", ""}), true);
-  ASSERT_EQ(wwset.equal(conv(wwset, "(\\e,x)"),   ww_t{"", "x"}), true);
-  ASSERT_EQ(wwset.equal(conv(wwset, "(\\e,\\e)"), ww_t{"", ""}), true);
+  ASSERT_VS_EQ(wwset, conv(wwset, "(abc,xyz)"), ww_t("abc", "xyz"));
+  ASSERT_VS_EQ(wwset, conv(wwset, "(abc,\\e)"), ww_t("abc", ""));
+  ASSERT_VS_EQ(wwset, conv(wwset, "(\\e,x)"),   ww_t("", "x"));
+  ASSERT_VS_EQ(wwset, conv(wwset, "(\\e,\\e)"), ww_t("", ""));
 
-  ASSERT_EQ(wlset.equal(conv(wlset, "(abc,x)"),   wl_t{"abc", 'x'}), true);
+  ASSERT_VS_EQ(wlset, conv(wlset, "(abc,x)"),   wl_t("abc", 'x'));
 
   // mul.
 #define CHECK(L1, R1, L2, R2)                                   \
-  ASSERT_EQ(wwset.equal(wwset.mul(ww_t{L1, R1}, ww_t{L2, R2}),  \
-                        ww_t{L1 L2, R1 R2}), true)
+  ASSERT_VS_EQ(wwset,                                           \
+               wwset.mul(ww_t(L1, R1), ww_t(L2, R2)),           \
+               ww_t(L1 L2, R1 R2))
   CHECK("a",  "x",    "b",   "y");
   CHECK("aa", "xx",   "bb",  "yy");
   CHECK("",   "xx",   "bb",  "yy");
