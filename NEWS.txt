@@ -53,6 +53,28 @@ build an automaton that has the shape of a trie (a prefix tree).
     In [5]: a.shortest(100)
     Out[5]: <2>\e + <3>a + <4>b + <5>abc + <6>abcd + <7>abdc
 
+## 2015-05-01
+### delay_automaton: new automaton type
+This algorithm transforms the automaton into an equivalent one, but
+where each state has been split depending on the delay between the tape,
+i.e. the difference of input length for each of the tapes.
+
+### is-synchronized: new algorithm
+This algorithm checks whether a transducer is sychronized, i.e. that the
+input is read on every tape at the same rate for as long as possible.
+
+### synchronize: new algorithm
+This new algorithm allows to synchronize the tapes of a k-tape
+transducer, i.e. "push" the letters towards the beginning of the
+transducer so that the input is read along every tape at the same rate
+for as long as possible.
+
+### has-bounded-lag: new algorithm
+This algorithm checks whether a k-tape transducer has a bounded lag,
+i.e. if there exists a constant D such that the length of the input for
+each tape differs by at most D; or the output of the evaluation of a
+word through the transducer differs in length by at most D.
+
 ## 2015-04-09
 ### shortest now subsumes enumerate
 One can now specify both a maximum number of words, and a maximum
