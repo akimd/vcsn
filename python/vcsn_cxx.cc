@@ -248,11 +248,6 @@ struct automaton
     return vcsn::dyn::compose(val_, rhs.val_);
   }
 
-  automaton concatenate(const automaton& rhs) const
-  {
-    return vcsn::dyn::concatenate(val_, rhs.val_);
-  }
-
   automaton condense() const
   {
     return vcsn::dyn::condense(val_);
@@ -471,6 +466,11 @@ struct automaton
     return vcsn::dyn::minimize(val_, algo);
   }
 
+  automaton multiply(const automaton& rhs) const
+  {
+    return vcsn::dyn::multiply(val_, rhs.val_);
+  }
+
   automaton normalize() const
   {
     return vcsn::dyn::normalize(val_);
@@ -680,6 +680,11 @@ struct label
     return os.str();
   }
 
+  label multiply(const label& rhs) const
+  {
+    return vcsn::dyn::multiply(val_, rhs.val_);
+  }
+
   vcsn::dyn::label val_;
 };
 
@@ -701,11 +706,6 @@ struct polynomial
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
-  polynomial concatenate(const polynomial& rhs) const
-  {
-    return vcsn::dyn::concatenate(val_, rhs.val_);
-  }
-
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -721,6 +721,11 @@ struct polynomial
   polynomial lgcd(const polynomial& rhs) const
   {
     return vcsn::dyn::lgcd(val_, rhs.val_);
+  }
+
+  polynomial multiply(const polynomial& rhs) const
+  {
+    return vcsn::dyn::multiply(val_, rhs.val_);
   }
 
   polynomial split() const
@@ -808,11 +813,6 @@ struct expression
     return vcsn::dyn::complement(val_);
   }
 
-  expression concatenate(const expression& rhs) const
-  {
-    return vcsn::dyn::concatenate(val_, rhs.val_);
-  }
-
   expression conjunction(const expression& rhs) const
   {
     return vcsn::dyn::conjunction(val_, rhs.val_);
@@ -877,6 +877,11 @@ struct expression
   expression lift() const
   {
     return vcsn::dyn::lift(val_);
+  }
+
+  expression multiply(const expression& rhs) const
+  {
+    return vcsn::dyn::multiply(val_, rhs.val_);
   }
 
   expression right_mult(const weight& w) const;
@@ -1141,7 +1146,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("complete", &automaton::complete)
     .def("component", &automaton::component)
     .def("compose", &automaton::compose)
-    .def("concatenate", &automaton::concatenate)
     .def("condense", &automaton::condense)
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
@@ -1187,6 +1191,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("letterize", &automaton::letterize)
     .def("_lift", static_cast<automaton::vect_lift_t>(&automaton::lift), lift())
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
+    .def("multiply", &automaton::multiply)
     .def("normalize", &automaton::normalize)
     .def("num_components", &automaton::num_components)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
@@ -1255,7 +1260,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
          chain())
     .def("complement", &expression::complement)
-    .def("concatenate", &expression::concatenate)
     .def("conjunction", &expression::conjunction)
     .def("constant_term", &expression::constant_term)
     .def("context", &expression::context)
@@ -1265,14 +1269,15 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("difference", &expression::difference)
     .def("expand", &expression::expand)
     .def("expansion", &expression::to_expansion)
+    .def("expression", &expression::as_expression,
+         (arg("context") = context()))
     .def("format", &expression::format)
     .def("is_equivalent", &expression::is_equivalent)
     .def("is_series", &expression::is_series)
     .def("is_valid", &expression::is_valid)
     .def("left_mult", &expression::left_mult)
     .def("lift", &expression::lift)
-    .def("expression", &expression::as_expression,
-         (arg("context") = context()))
+    .def("multiply", &expression::multiply)
     .def("right_mult", &expression::right_mult)
     .def("series", &expression::as_series, (arg("context") = context()))
     .def("shuffle", &expression::shuffle)
@@ -1291,15 +1296,16 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     ("label",
      bp::init<const context&, const std::string&>())
     .def("format", &label::format)
+    .def("multiply", &label::multiply)
    ;
 
   bp::class_<polynomial>
     ("polynomial",
      bp::init<const context&, const std::string&>())
-    .def("concatenate", &polynomial::concatenate)
     .def("format", &polynomial::format)
     .def("ldiv", &polynomial::ldiv)
     .def("lgcd", &polynomial::lgcd)
+    .def("multiply", &polynomial::multiply)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
     .def("trie", &polynomial::trie)

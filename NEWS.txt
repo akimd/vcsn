@@ -5,6 +5,15 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-05-21
+### multiply: new name for 'concatenate'
+In static, dyn:: and Python, 'concatenate' is renamed 'multiply'.
+
+The "concatenation" of automata or rational expressions would never be
+called the concatenation in the case of series or polynomials etc.  If
+we were build automata weighted by automata, the weightset product
+would be this multiply.
+
 ## 2015-05-20
 ### trie: read directly from a file
 Building a polynomial from a dictionary stored on disk, and then

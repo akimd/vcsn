@@ -9,6 +9,7 @@
 #include <vcsn/core/join.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh> // require
@@ -16,9 +17,9 @@
 
 namespace vcsn
 {
-  /*------------------------------------.
-  | concatenate(automaton, automaton).  |
-  `------------------------------------*/
+  /*----------------------------------.
+  | multiply(automaton, automaton).   |
+  `----------------------------------*/
 
   /// Append automaton \a b to \a res.
   ///
@@ -26,7 +27,7 @@ namespace vcsn
   /// \pre both are standard.
   template <typename A, typename B>
   A&
-  concatenate_here(A& res, const B& b)
+  multiply_here(A& res, const B& b)
   {
     require(is_standard(res), __func__, ": lhs must be standard");
     require(is_standard(b), __func__, ": rhs must be standard");
@@ -91,14 +92,14 @@ namespace vcsn
   template <typename A, typename B>
   inline
   auto
-  concatenate(const A& lhs, const B& rhs)
+  multiply(const A& lhs, const B& rhs)
     -> decltype(join_automata(lhs, rhs))
   {
     require(is_standard(lhs), __func__, ": lhs must be standard");
     require(is_standard(rhs), __func__, ": rhs must be standard");
     auto res = join_automata(lhs, rhs);
     ::vcsn::copy_into(lhs, res);
-    concatenate_here(res, rhs);
+    multiply_here(res, rhs);
     return res;
   }
 
@@ -109,11 +110,11 @@ namespace vcsn
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
-      concatenate(const automaton& lhs, const automaton& rhs)
+      multiply(const automaton& lhs, const automaton& rhs)
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::concatenate(l, r));
+        return make_automaton(::vcsn::multiply(l, r));
       }
     }
   }
@@ -131,7 +132,7 @@ namespace vcsn
       {
         res = star(aut);
         if (min != -1)
-          res = concatenate(chain(aut, min, min), res);
+          res = multiply(chain(aut, min, min), res);
       }
     else
       {
@@ -148,7 +149,7 @@ namespace vcsn
           {
             res = vcsn::copy(aut);
             for (int n = 1; n < min; ++n)
-              res = concatenate(res, aut);
+              res = multiply(res, aut);
           }
         if (min < max)
           {
@@ -161,7 +162,7 @@ namespace vcsn
             }
             for (int n = 1; n <= max - min; ++n)
               sum = vcsn::sum(sum, chain(aut, n, n));
-            res = vcsn::concatenate(res, sum);
+            res = vcsn::multiply(res, sum);
           }
       }
     return res;
@@ -185,17 +186,17 @@ namespace vcsn
   }
 
 
-  /*---------------------------------------.
-  | concatenate(expression, expression).   |
-  `---------------------------------------*/
+  /*------------------------------------.
+  | multiply(expression, expression).   |
+  `------------------------------------*/
 
-  /// Concatenation/product of polynomials/expressions.
+  /// Product (concatenation) of expressions/labels/polynomials/weights.
   template <typename ValueSet>
   inline
   typename ValueSet::value_t
-  concatenate(const ValueSet& vs,
-              const typename ValueSet::value_t& lhs,
-              const typename ValueSet::value_t& rhs)
+  multiply(const ValueSet& vs,
+           const typename ValueSet::value_t& lhs,
+           const typename ValueSet::value_t& rhs)
   {
     return vs.mul(lhs, rhs);
   }
@@ -204,17 +205,17 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (concatenate).
+      /// Bridge (multiply).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
-      concatenate_expression(const expression& lhs, const expression& rhs)
+      multiply_expression(const expression& lhs, const expression& rhs)
       {
         const auto& l = lhs->as<ExpSetLhs>();
         const auto& r = rhs->as<ExpSetRhs>();
         auto rs = vcsn::join(l.expressionset(), r.expressionset());
         auto lr = rs.conv(l.expressionset(), l.expression());
         auto rr = rs.conv(r.expressionset(), r.expression());
-        return make_expression(rs, ::vcsn::concatenate(rs, lr, rr));
+        return make_expression(rs, ::vcsn::multiply(rs, lr, rr));
       }
     }
   }
@@ -278,43 +279,56 @@ namespace vcsn
   }
 
 
-  /*------------------------------.
-  | mul(polynomial, polynomial).  |
-  `------------------------------*/
+  /*--------------------------.
+  | multiply(label, label).   |
+  `--------------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (concatenate).
+      /// Bridge (multiply).
+      template <typename LabelSetLhs, typename LabelSetRhs>
+      label
+      multiply_label(const label& lhs, const label& rhs)
+      {
+        const auto& l = lhs->as<LabelSetLhs>();
+        const auto& r = rhs->as<LabelSetRhs>();
+        auto rs = join(l.labelset(), r.labelset());
+        auto lr = rs.conv(l.labelset(), l.label());
+        auto rr = rs.conv(r.labelset(), r.label());
+        return make_label(rs, multiply(rs, lr, rr));
+      }
+    }
+  }
+
+
+  /*------------------------------------.
+  | multiply(polynomial, polynomial).   |
+  `------------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (multiply).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
-      concatenate_polynomial(const polynomial& lhs, const polynomial& rhs)
+      multiply_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
         const auto& l = lhs->as<PolynomialSetLhs>();
         const auto& r = rhs->as<PolynomialSetRhs>();
         auto rs = join(l.polynomialset(), r.polynomialset());
         auto lr = rs.conv(l.polynomialset(), l.polynomial());
         auto rr = rs.conv(r.polynomialset(), r.polynomial());
-        return make_polynomial(rs, concatenate(rs, lr, rr));
+        return make_polynomial(rs, multiply(rs, lr, rr));
       }
     }
   }
 
-  /*----------------------.
-  | mul(weight, weight).  |
-  `----------------------*/
-
-  /// Product of weights.
-  template <typename ValueSet>
-  inline
-  typename ValueSet::value_t
-  multiply(const ValueSet& vs,
-           const typename ValueSet::value_t& lhs,
-           const typename ValueSet::value_t& rhs)
-  {
-    return vs.mul(lhs, rhs);
-  }
+  /*----------------------------.
+  | multiply(weight, weight).   |
+  `----------------------------*/
 
   namespace dyn
   {

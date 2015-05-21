@@ -94,15 +94,6 @@ namespace vcsn
     /// The composition of transducers \a lhs and \a rhs.
     automaton compose(automaton& lhs, automaton& rhs);
 
-    /// Concatenate two standard automata.
-    automaton concatenate(const automaton& lhs, const automaton& rhs);
-
-    /// Concatenate two expressions.
-    expression concatenate(const expression& lhs, const expression& rhs);
-
-    /// Concatenate two polynomials.
-    polynomial concatenate(const polynomial& lhs, const polynomial& rhs);
-
     /// The condensation of \a aut such that each state is a strongly
     /// connected component.
     automaton condense(const automaton& aut);
@@ -411,6 +402,18 @@ namespace vcsn
 
     /// The context for words.
     context make_word_context(const context& ctx);
+
+    /// Multiply (concatenate) two standard automata.
+    automaton multiply(const automaton& lhs, const automaton& rhs);
+
+    /// Multiply (concatenate) two expressions.
+    expression multiply(const expression& lhs, const expression& rhs);
+
+    /// Multiply (concatenate) two labels.
+    label multiply(const label& lhs, const label& rhs);
+
+    /// Multiply two polynomials.
+    polynomial multiply(const polynomial& lhs, const polynomial& rhs);
 
     /// Multiply two weights.
     weight multiply(const weight& lhs, const weight& rhs);

@@ -22,7 +22,6 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/complement.py                             \
   %D%/complete.py                               \
   %D%/compose.py                                \
-  %D%/concatenate.py                            \
   %D%/constant-term.py                          \
   %D%/context.py                                \
   %D%/derivation.py                             \
@@ -55,6 +54,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/letterize.py                              \
   %D%/lift.py                                   \
   %D%/minimize.py                               \
+  %D%/multiply.py                               \
   %D%/normalize.py                              \
   %D%/polynomial.py                             \
   %D%/power.py                                  \

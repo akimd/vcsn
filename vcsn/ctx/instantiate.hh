@@ -5,7 +5,6 @@
 #include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/cerny.hh>
 #include <vcsn/algos/complete.hh>
-#include <vcsn/algos/concatenate.hh>
 #include <vcsn/algos/constant-term.hh>
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/de-bruijn.hh>
@@ -31,6 +30,7 @@
 #include <vcsn/algos/left-mult.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
+#include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/print.hh>
 #include <vcsn/algos/product.hh>
@@ -184,7 +184,6 @@ namespace vcsn
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(cerny, ctx_t, unsigned);
         REGISTER(complete, aut_t);
-        REGISTER(concatenate_polynomial, wps_t, wps_t);
         REGISTER(conjunction, aut_t, aut_t);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
@@ -200,6 +199,7 @@ namespace vcsn
         REGISTER(is_synchronizing, aut_t);
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
+        REGISTER(multiply_polynomial, wps_t, wps_t);
         REGISTER(pair, aut_t, bool);
         REGISTER(power, aut_t, unsigned);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
@@ -301,8 +301,6 @@ namespace vcsn
         REGISTER(chain_expression, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
         REGISTER(complement_expression, rs_t);
-        REGISTER(concatenate, aut_t, aut_t);
-        REGISTER(concatenate_expression, rs_t, rs_t);
         REGISTER(conjunction_expression, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
@@ -329,13 +327,15 @@ namespace vcsn
         REGISTER(make_expressionset, ctx_t, rat::identities);
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
+        REGISTER(multiply, aut_t, aut_t);
+        REGISTER(multiply_expression, rs_t, rs_t);
         REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(print_context, ctx_t, std::ostream, const std::string);
         REGISTER(print_expansion, es_t, std::ostream, const std::string);
+        REGISTER(print_expression, rs_t, std::ostream, const std::string);
         REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
-        REGISTER(print_expression, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(push_weights, aut_t);
         REGISTER(random_automaton, ctx_t, unsigned, float, unsigned, unsigned);

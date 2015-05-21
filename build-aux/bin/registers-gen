@@ -36,8 +36,8 @@ import re
 # call: 'call' or 'call_variadic'.
 # file: the vcsn/algos header that provides the bridge.
 # formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
-# algo: function name (e.g., concatenate).
-# reg: register name (e.g., concatenate_polynomial).
+# algo: function name (e.g., multiply).
+# reg: register name (e.g., multiply_polynomial).
 # return: return type.
 bridges = {}
 

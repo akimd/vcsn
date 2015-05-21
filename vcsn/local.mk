@@ -19,7 +19,6 @@ algo_headers =                                  \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
   %D%/algos/compose.hh                          \
-  %D%/algos/concatenate.hh                      \
   %D%/algos/constant-term.hh                    \
   %D%/algos/copy.hh                             \
   %D%/algos/de-bruijn.hh                        \
@@ -64,6 +63,7 @@ algo_headers =                                  \
   %D%/algos/minimize-signature.hh               \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
+  %D%/algos/multiply.hh                         \
   %D%/algos/normalize.hh                        \
   %D%/algos/pair.hh                             \
   %D%/algos/prefix.hh                           \

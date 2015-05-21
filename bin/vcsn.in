@@ -29,14 +29,14 @@ If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:
 
   accessible are-equivalent are-isomorphic cat coaccessible complement
-  complete compose concatenate constant-term conjunction derivation
-  derived-term de-bruijn derivation divkbaseb term determinize
-  difference divkbaseb double-ring eliminate-state enumerate evaluate
-  expand infiltration is-ambiguous is-complete is-deterministic
-  is-empty is-eps-acyclic is-normalized is-proper is-standard is-trim
-  is-useless is-valid ladybird left-mult lift minimize power proper
-  right-mult shortest shuffle split standard star star-normal-form sum
-  thompson to-expression transpose trim u union universal
+  complete compose constant-term conjunction derivation derived-term
+  de-bruijn derivation divkbaseb term determinize difference divkbaseb
+  double-ring eliminate-state enumerate evaluate expand infiltration
+  is-ambiguous is-complete is-deterministic is-empty is-eps-acyclic
+  is-normalized is-proper is-standard is-trim is-useless is-valid
+  ladybird left-mult lift minimize multiply power proper right-mult
+  shortest shuffle split standard star star-normal-form sum thompson
+  to-expression transpose trim u union universal
 
 For more information, run:
 
@@ -80,7 +80,7 @@ case $1 in
 
   (accessible|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
-      |compose|concatenate|conjunction \
+      |compose|multiply|conjunction \
       |de-bruijn \
       |derivation|derived-term|determinize \
       |difference|divkbaseb \

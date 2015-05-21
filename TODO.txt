@@ -53,8 +53,8 @@ standard(exp).  We should use fewer contexts, to speed up our development.
 Unfortunately we then have a problem: are-equivalent no longer applies, so
 it's not so clear what should be done.
 
-** operations on polynomials
-Check + and *.
+** operations on polynomials and weights
+Check +.
 
 ** proper
 Check the case where we do not want to eliminate states.  Actually check

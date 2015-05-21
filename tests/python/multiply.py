@@ -51,7 +51,7 @@ digraph
   4 -> 4 [label = "c"]
 }
 ''')
-CHECK_EQ(result, ab.standard().concatenate(bc.standard()))
+CHECK_EQ(result, ab.standard().multiply(bc.standard()))
 
 CHECK_EQ(vcsn.context('lal_char(abc), b').expression('[ab]*[bc]*'), ab * bc)
 
@@ -106,7 +106,7 @@ digraph
   4 -> F4 [label = "<2>"]
   4 -> 4 [label = "a, b"]
 }
-'''), a.concatenate(a))
+'''), a.multiply(a))
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
@@ -140,9 +140,9 @@ check('<0.4>c<2>a', r*z)
 check('<0.333333>b<0.4>c', q*r)
 check('<0.4>c<0.333333>b', r*q)
 
-## ----------------- ##
+## ------------------------- ##
 ## expression * expression.  ##
-## ----------------- ##
+## ------------------------- ##
 
 br = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
          .expression('<u>a')
@@ -150,3 +150,29 @@ z = vcsn.context('lal_char(b), z').expression('<2>b')
 q = vcsn.context('lal_char(c), q').expression('<1/3>c')
 r = vcsn.context('lal_char(d), r').expression('<.4>d')
 CHECK_EQ('<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
+
+## --------------- ##
+## label * label.  ##
+## --------------- ##
+
+c = vcsn.context('law_char, b')
+CHECK_EQ(c.label('abc'),
+         c.label('ab') * c.label('\e') * c.label('c'))
+
+
+## ------------------------- ##
+## polynomial * polynomial.  ##
+## ------------------------- ##
+
+c = vcsn.context('law_char, z')
+CHECK_EQ(c.polynomial('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
+         c.polynomial('\e + <2>a + <3>b') * c.polynomial('\e') * c.polynomial('c + <5>d'))
+
+
+## ----------------- ##
+## weight * weight.  ##
+## ----------------- ##
+
+c = vcsn.context('lal_char, seriesset<lal_char, z>')
+CHECK_EQ(c.weight('<4>aa+<6>ab+<6>ba+<9>bb'),
+         c.weight('<2>a+<3>b') * c.weight('<2>a+<3>b'))

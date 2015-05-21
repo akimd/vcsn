@@ -65,7 +65,7 @@ namespace vcsn
   }
 
   /*-----------------------.
-  | print(stream, label).  |
+  | print(label, stream).  |
   `-----------------------*/
 
   namespace dyn

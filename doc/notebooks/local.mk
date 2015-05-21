@@ -71,13 +71,13 @@ dist_notebooks_DATA =                           \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.ladybird.ipynb                    \
   %D%/context.trie.ipynb                        \
-  %D%/expression.concatenate.ipynb              \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
   %D%/expression.expansion.ipynb                \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
+  %D%/expression.multiply.ipynb                 \
   %D%/expression.operators.ipynb                \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.standard.ipynb                 \
@@ -88,7 +88,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.zpc.ipynb                      \
   %D%/index.ipynb                               \
   %D%/label.operators.ipynb                     \
-  %D%/polynomial.concatenate.ipynb              \
+  %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.trie.ipynb                     \
   %D%/weight.operators.ipynb

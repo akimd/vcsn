@@ -51,7 +51,7 @@ def _right_mult(self, rhs):
     '''Support both "aut * aut" and "aut * weight".  Also serves for
     expressions.'''
     if isinstance(rhs, type(self)):
-        return self.concatenate(rhs)
+        return self.multiply(rhs)
     elif isinstance(rhs, weight):
         return self.right_mult(rhs)
     else:
