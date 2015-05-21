@@ -40,10 +40,10 @@ def normalize(s):
             s)
 
     # Labesets.
-    s = sub(r'vcsn::letterset<vcsn::set_alphabet<vcsn::(\w+)_letters>\s*>',
+    s = sub(r'(?:vcsn::)?letterset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters>\s*>',
             r'lal_\1',
             s)
-    s = sub(r'vcsn::wordset<vcsn::set_alphabet<vcsn::(\w+)_letters>\s*>',
+    s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters>\s*>',
             r'law_\1',
             s)
     s = sub(r'vcsn::(nullableset|tupleset)<({params})>',
@@ -51,15 +51,15 @@ def normalize(s):
             s)
 
     # Weightsets.
-    s = sub(r'vcsn::weightset_mixin<vcsn::detail::([bq]|[zr](?:min)?)_impl>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?([bq]|[zr](?:min)?)_impl>',
             r'\1',
             s)
 
-    s = sub(r'vcsn::weightset_mixin<vcsn::rat::(expressionset)_impl<({params})>\s*>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::rat::)?(expressionset)_impl<({params})>\s*>',
             r'\1<\2>',
             s)
 
-    s = sub(r'vcsn::weightset_mixin<vcsn::detail::(tupleset)_impl<({params})>\s*>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(tupleset)_impl<({params})>\s*>',
             r'\1<\2>',
             s)
 
