@@ -21,9 +21,15 @@ namespace vcsn
       using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using identities_t = typename expressionset_t::identities_t;
-      using weight_t = typename context_t::weightset_t::value_t;
+      using labelset_t = labelset_t_of<context_t>;
+      using label_t = label_t_of<context_t>;
+      using weight_t = weight_t_of<context_t>;
+
       using super_t = typename expressionset_t::const_visitor;
+      /// Actual node, without indirection.
       using node_t = typename super_t::node_t;
+      /// A shared_ptr to node_t.
+      using value_t = typename node_t::value_t;
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;
@@ -73,7 +79,7 @@ namespace vcsn
       /// Whether \a v is an atom whose label is not a letter.
       bool is_word_(const node_t& v) const
       {
-        const atom_t* atom = dynamic_cast<const atom_t*>(&v);
+        auto atom = dynamic_cast<const atom_t*>(&v);
         return atom && ! context_t::is_lat
                     && ! ctx_.labelset()->is_letter(atom->value());
       }

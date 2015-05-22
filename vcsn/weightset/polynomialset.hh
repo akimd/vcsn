@@ -1099,7 +1099,7 @@ namespace vcsn
     /// Print a weight.
     std::ostream&
     print_weight_(const weight_t& w, std::ostream& out,
-                  const std::string& format = "text") const
+                  const std::string& format) const
     {
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(w))
@@ -1114,8 +1114,8 @@ namespace vcsn
     /// Print a polynomial value without classes.
     std::ostream&
     print_without_classes_(const value_t& v, std::ostream& out,
-                           const std::string& format = "text",
-                           const std::string& sep = " + ") const
+                           const std::string& format,
+                           const std::string& sep) const
     {
       bool first = true;
       for (const auto& m: v)
@@ -1131,8 +1131,8 @@ namespace vcsn
     /// Print a polynomial value with classes.
     std::ostream&
     print_with_classes_(const value_t& v, std::ostream& out,
-                        const std::string& format = "text",
-                        const std::string& sep = " + ") const
+                        const std::string& format,
+                        const std::string& sep) const
     {
       using std::begin;
       using std::end;
