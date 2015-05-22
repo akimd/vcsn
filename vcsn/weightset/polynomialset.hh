@@ -1146,12 +1146,12 @@ namespace vcsn
                          {
                            return !labelset()->is_one(label_of(m));
                          });
-      if (std::adjacent_find
-          (first_letter, end(v),
-           [this](const monomial_t& l, const monomial_t& r)
-           {
-             return !weightset()->equal(weight_of(l), weight_of(r));
-           }) != end(v))
+      auto w = weight_of(*first_letter);
+      if (!std::all_of(std::next(first_letter), end(v),
+                       [this, w](const monomial_t& m)
+                       {
+                         return weightset()->equal(weight_of(m), w);
+                       }))
         return print_without_classes_(v, out, format, sep);
 
       // Print with classes.  First, the constant-term.
@@ -1163,7 +1163,7 @@ namespace vcsn
         }
 
       // The weight.
-      print_weight_(weight_of(*first_letter), out, format);
+      print_weight_(w, out, format);
 
       // Gather the letters.  We can use a vector, as we know that the
       // labels are already sorted, and random access iteration will
