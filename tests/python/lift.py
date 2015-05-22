@@ -39,6 +39,29 @@ CHECK_EQ('''digraph
 }''',
          l4.lift())
 
+a = vcsn.context('lat<lal_char(abc), lan_char(def), law_char(ghi)>, q').expression("'a,d,gh'<2>").standard()
+aref = '''digraph
+{
+  vcsn_context = "lat<letterset<char_letters(abc)>>, expressionset<lat<nullableset<letterset<char_letters(def)>>, wordset<char_letters(ghi)>>, q>"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> 1 [label = "<<2>(d,gh)>(a)"]
+  1 -> F1
+}'''
+CHECK_EQ(aref, a.lift(1, 2))
+CHECK_EQ(aref, a.lift([1, 2]))
+
 ## ------------- ##
 ## Expressions.  ##
 ## ------------- ##
