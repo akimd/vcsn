@@ -123,8 +123,8 @@ result = '''digraph
     3
   }
   I0 -> 0
-  0 -> 1 [label = "[a-c]"]
-  0 -> 3 [label = "[a-c]"]
+  0 -> 1 [label = "[^]"]
+  0 -> 3 [label = "[^]"]
   1 -> 2 [label = "b"]
   2 -> F2
   2 -> 2 [label = "a, b"]

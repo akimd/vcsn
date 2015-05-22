@@ -2,9 +2,12 @@
 
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm_ext/is_sorted.hpp>
 
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh> // labelset_t_of
+#include <vcsn/misc/algorithm.hh> // none_of
+#include <vcsn/misc/functional.hh> // less
 
 namespace vcsn
 {
@@ -241,6 +244,38 @@ namespace vcsn
     | print_label_class.   |
     `---------------------*/
 
+    /// Print a set of labels with ranges.
+    ///
+    /// The order of the letters is respected; depending on the use
+    /// case, you might want to call sort and unique before.
+    template <typename LabelSet>
+    std::ostream&
+    print_label_ranges_(const LabelSet& ls,
+                        const std::vector<typename LabelSet::value_t>& letters,
+                        const std::vector<typename LabelSet::value_t>& alphabet,
+                        std::ostream& out,
+                        const std::string& format)
+    {
+      for (auto it = std::begin(letters), letters_end = std::end(letters);
+           it != letters_end; ++it)
+        {
+          auto end
+            = std::mismatch(it, letters_end,
+                            boost::range::find(alphabet, *it),
+                            alphabet.end()).first;
+          ls.print(*it, out, format);
+          // No range for two letters or less.
+          auto width = std::distance(it, end);
+          if (2 < width)
+            {
+              it += width - 1;
+              out << '-';
+              ls.print(*it, out, format);
+            }
+        }
+      return out;
+    }
+
     /// Print a set of labels (letterized) with classes.
     ///
     /// The order of the letters is respected; depending on the use
@@ -252,28 +287,31 @@ namespace vcsn
                       std::ostream& out,
                       const std::string& format)
     {
+      using letters_t = std::vector<typename LabelSet::value_t>;
       // In alphabetical order.
-      auto alphabet = std::vector<typename LabelSet::value_t>{};
+      auto alphabet = letters_t{};
       for (auto l : ls.genset())
         alphabet.emplace_back(ls.value(l));
 
       out << '[';
-      for (auto it = std::begin(letters), letters_end = std::end(letters);
-           it != letters_end; ++it)
+      // If the letters are strictly increasing (hence using
+      // less_equal, not just less), and are many compared to the
+      // alphabet (say, at least two thirds), then we should probably
+      // use negated classes instead.
+      if (boost::is_sorted(letters, vcsn::less_equal<LabelSet>{})
+          && 2 * boost::distance(alphabet) < 3 * boost::distance(letters))
         {
-          auto end
-            = std::mismatch(it, letters_end,
-                            boost::range::find(alphabet, *it)).first;
-          ls.print(*it, out, format);
-          // No range for two letters or less.
-          auto width = std::distance(it, end);
-          if (2 < width)
-            {
-              it += width - 1;
-              out << '-';
-              ls.print(*it, out, format);
-            }
+          // FIXME: we can certainly do better and avoid the
+          // construction of this vector.
+          auto negated = letters_t{};
+          for (auto l: alphabet)
+            if (none_of_equal(letters, l))
+              negated.emplace_back(l);
+          out << (format == "latex" ? "\\hat{}" : "^");
+          print_label_ranges_(ls, negated, alphabet, out, format);
         }
+      else
+        print_label_ranges_(ls, letters, alphabet, out, format);
       out << ']';
 
       return out;

@@ -9,6 +9,7 @@ namespace vcsn
 {
   namespace detail
   {
+    // Not in Boost 1.49.
     template <typename Range, typename Predicate>
     bool any_of(const Range &r, Predicate p)
     {
@@ -141,6 +142,21 @@ namespace vcsn
       return std::make_pair(first1, first2);
     }
 
+    // Boost 1.49 does not have boost/algorithm/cxx11/none_of.hpp and the like.
+    template <typename Range, typename Predicate>
+    bool none_of(const Range &r, Predicate p)
+    {
+      using std::begin;
+      using std::end;
+      return std::none_of(begin(r), end(r), p);
+    }
+
+    // Not in Boost 1.49.
+    template <typename Range, typename Value>
+    bool none_of_equal(const Range &r, const Value& value)
+    {
+      return none_of(r, [&value](const Value& v) { return v == value; });
+    }
   }
 
   /// Check that two associative containers have the same keys.

@@ -79,6 +79,19 @@ namespace vcsn
       return valueset_t::less(lhs, rhs);
     }
   };
+
+  /// Functor to compare Values of ValueSets.
+  template <typename ValueSet, typename Value = typename ValueSet::value_t>
+  struct less_equal
+  {
+    using valueset_t = ValueSet;
+    using value_t = Value;
+
+    bool operator()(const value_t& lhs, const value_t& rhs) const
+    {
+      return valueset_t::less(lhs, rhs) || valueset_t::equal(lhs, rhs);
+    }
+  };
 } // namespace vcsn
 
 namespace std

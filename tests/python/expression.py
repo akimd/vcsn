@@ -147,29 +147,41 @@ def check_format(ctx, r, text, latex):
     CHECK_EQ(latex, ctx.expression(r).format('latex'))
 
 check_format('lal_char(abcd), b',
-            "abcd",
-            "abcd",
-            "a \\, b \\, c \\, d")
+             'abcd',
+             'abcd',
+             'a \\, b \\, c \\, d')
+
+# Check classes.  A bit redundant with check-rat, except that we check
+# LaTeX output here.
+check_format('lal_char(abcdef), b',
+             '[abcdef]',
+             '[^]', r'[\hat{}]')
+check_format('lal_char(abcdef), b',
+             '[abcde]',
+             '[^f]', r'[\hat{}f]')
+check_format('lal_char(a-z), b',
+             '[abcd]',
+             '[a-d]', '[a-d]')
 
 check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), z>>',
-             "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
-             "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
+             '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
+             '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
              r' \left\langle  \left\langle  \left\langle 42 \right\rangle \,x \right\rangle \,d \right\rangle \,a +  \left\langle  \left\langle  \left\langle 51 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Words are in \mathit to get correct inter-letter spacing.
 check_format('law_char(abc), z',
-             "(abc)a(bc)",
-             "(abc)a(bc)",
+             '(abc)a(bc)',
+             '(abc)a(bc)',
              r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
 
 # Check that we do support digits as letters.
 check_format('lal_char(0123), b',
-             "0123",
-             "0123",
-             "0 \\, 1 \\, 2 \\, 3")
+             '0123',
+             '0123',
+             '0 \\, 1 \\, 2 \\, 3')
 check_format('lal_char(0123), z',
-             "<0123>0123",
-             "<123>0123",
+             '<0123>0123',
+             '<123>0123',
              r' \left\langle 123 \right\rangle \,0 \, 1 \, 2 \, 3')
 
 ## -------- ##
@@ -179,7 +191,7 @@ def check(ctx, s1, exp):
     eff = ctx.series(s1)
     CHECK_EQ(exp, eff.format('text'))
 
-ctx = vcsn.context("lal_char(abcd), z")
+ctx = vcsn.context('lal_char(abcd), z')
 check(ctx, 'a+b', 'a+b')
 check(ctx, '(a+a)*', '(<2>a)*')
 
@@ -189,7 +201,7 @@ check(ctx, '(<5>a)(b)(c*)', '<5>(abc*)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 
-ctx = vcsn.context("law_char(abcd), z")
+ctx = vcsn.context('law_char(abcd), z')
 
 check(ctx, '(a<5>)b', '<5>(ab)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')

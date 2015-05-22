@@ -15,8 +15,10 @@
 [b-a] ! invalid letter interval: b-a
 []    ! invalid empty letter class
 
-[^] => [a-h]
-[^a] => [b-h]
+[^] => [^]
+[^] == [a-h]
+[^a] == [^a]
+[^a] == [b-h]
 [^a-bgh] => [c-f]
 [^a-cgh] => d+e+f
 [^a-bd-h] => c
@@ -26,3 +28,13 @@
 # Check classes in output.
 a+a+a => a+a+a
 a+a+a+a => a+a+a+a
+a+a+a+a+[b-h] => a+a+a+[^]
+[a-h]* => [^]*
+[^a] => [^a]
+[^ab] => [^ab]
+[^abc] => [d-h]
+[^abcd] => [e-h]
+# Only if the letters are sorted, strictly.
+[bcdefg]+h => [^a]
+[bcdefg]+h+h => [^a]+h
+h+[bcdefg] => h+[^ah]

@@ -13,18 +13,35 @@ expressions never used classes, which may seriously hinder their
 readability.  For instance, to compute an expression describe all
 words on {a,..., z} except 'hehe', we had:
 
-    In [2]: vcsn.context('lal_char(a-z), b').expression('(hehe){c}').derived_term().expression()
+    In [2]: c = vcsn.context('lal_char(a-z), b')
+            c.expression('(hehe){c}').derived_term().expression()
     Out[2]: \e+h(\e+e(\e+h))+(a+b+c+d+e+f+g+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+h(a+b+c+d+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+e(a+b+c+d+e+f+g+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+h(a+b+c+d+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+e(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z)))))(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z)*
 
-Now expressions also support label classes in output:
+Now expressions also support letter classes in output:
 
-    Out[2]: \e+h(\e+e(\e+h))+([a-gi-z]+h([a-df-z]+e([a-gi-z]+h([a-df-z]+e[a-z]))))[a-z]*
+    Out[2]: \e+h(\e+e(\e+h))+([^h]+h([^e]+e([^h]+h([^e]+e[^]))))[^]*
 
-Classes are used only on ranges of (unweighted) letters, with at least
-four letters:
+Classes are used only on ranges of at least four (unweighted) letters
+in strictly increasing order:
 
-    In [8]: vcsn.context('law_char, z').expression('aaa+a+a+a+<2>b+<2>b+<2>b+<2>b+x+x+x+x')
-    Out[8]: aaa+a+a+a+<2>b+<2>b+<2>b+<2>b+[xxxx]
+    In [3]: c.expression('a+a+b+c+d+e+f+x+y+z+w')
+    Out[3]: a+[a-fx-z]+w
+
+Negated classes are issued only if the letters are in strictly
+increasing alphabetical order, and are more than two thirds of the
+whole alphabet (otherwise a regular class is prefered).
+
+    In [4]: c.expression('[a-q]')
+    Out[4]: [a-q]
+
+    In [5]: c.expression('[a-q]+r')
+    Out[5]: [^s-z]
+
+    In [6]: c.expression('r+[a-q]')
+    Out[6]: r + [a-q]
+
+    In [7]: c.expression('[a-q]+r+r')
+    Out[7]: [^s-z] + r
 
 ## 2015-05-21
 ### multiply: new name for 'concatenate'
@@ -32,8 +49,8 @@ In static, dyn:: and Python, 'concatenate' is renamed 'multiply'.
 
 The "concatenation" of automata or rational expressions would never be
 called the concatenation in the case of series or polynomials etc.  If
-we were build automata weighted by automata, the weightset product
-would be this multiply.
+we were to support automata weighted by automata, the weightset
+product would be this multiply.
 
 ## 2015-05-20
 ### trie: read directly from a file
