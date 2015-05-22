@@ -2,14 +2,14 @@
 %include: common-weights.rat
 
 # Check the alphabets.
-<<<2>x>e>a => <<<2>x>e>a
-<<<l>x>e>a ! 1.1-10: 1.1-7: 1.1-4: z: invalid value: l
-<<<3>l>e>a ! 1.1-10: 1.1-7: 1.4: char_letters: invalid letter: l
-<<<4>x>l>a ! 1.1-10: 1.7: char_letters: invalid letter: l
-<<<5>x>e>l ! 1.10: char_letters: invalid letter: l
+<<<2>x>i>a => <<<2>x>i>a
+<<<l>x>i>a ! 1.1-10: 1.1-7: 1.1-4: z: invalid value: l
+<<<3>l>i>a ! 1.1-10: 1.1-7: 1.4: char_letters: invalid letter: l
+<<<4>x>L>a ! 1.1-10: 1.7: char_letters: invalid letter: L
+<<<5>x>i>l ! 1.10: char_letters: invalid letter: l
 
 # Check weight products.
-<<<1>\e>e>a => <e>a
-<<<0>x>e>a  => \z
-<<<2><3>x>e>a => <<<6>x>e>a
-<<<2><3>x>e>a<<<4><5>\e>\e> => <<<120>x>e>a
+<<<1>\e>i>a => <i>a
+<<<0>x>i>a  => \z
+<<<2><3>x>i>a => <<<6>x>i>a
+<<<2><3>x>i>a<<<4><5>\e>\e> => <<<120>x>i>a

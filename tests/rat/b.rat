@@ -1,10 +1,11 @@
 %context: b
 %include: common-weights.rat
 
-# Check character classes.
+# Check letters classes in input.
 [a] => a
 [ac] => a+c
 [abcd] => [a-d]
+[dcba] => [a-d]
 [abcdabcd] => [a-d]
 [badcabcd] => [a-d]
 [a-a] => a
@@ -14,9 +15,13 @@
 [b-a] ! invalid letter interval: b-a
 []    ! invalid empty letter class
 
-[^] => [a-d]
-[^a] => b+c+d
-[^a-b] => c+d
-[^a-bd] => c
+[^] => [a-h]
+[^a] => [b-h]
+[^a-bgh] => [c-f]
+[^a-cgh] => d+e+f
+[^a-bd-h] => c
 [^b-a] ! invalid letter interval: b-a
-[^a-d] ! invalid empty letter class
+[^a-h] ! invalid empty letter class
+
+# Check classes in output.
+a+a+a => a+a+a

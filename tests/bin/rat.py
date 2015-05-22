@@ -12,11 +12,11 @@ ctx = vcsn.context(context)
 
 # Compute the name of the context.
 contexts = {
-  'b'  : "law_char(abcd), b",
-  'br' : "law_char(abcd), expressionset<law_char(efgh), b>",
-  'z'  : "law_char(abcd), z",
-  'zr' : "law_char(abcd), expressionset<law_char(efgh), z>",
-  'zrr': "law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), z>>"
+  'b'  : "law_char(a-h), b",
+  'br' : "law_char(a-h), expressionset<law_char(i-n), b>",
+  'z'  : "law_char(a-h), z",
+  'zr' : "law_char(a-h), expressionset<law_char(i-n), z>",
+  'zrr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), z>>"
 }
 
 def context_update():
