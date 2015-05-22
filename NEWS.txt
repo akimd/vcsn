@@ -18,7 +18,7 @@ words on {a,..., z} except 'hehe', we had:
 
 Now expressions also support label classes in output:
 
-    Out[2]: \e+h(\e+e(\e+h))+([a-gi-z]+h([a-df-z]+e([a-gi-z]+h([a-df-z]+e([a-z])))))([a-z])*
+    Out[2]: \e+h(\e+e(\e+h))+([a-gi-z]+h([a-df-z]+e([a-gi-z]+h([a-df-z]+e[a-z]))))[a-z]*
 
 Classes are used only on ranges of (unweighted) letters, with at least
 four letters:

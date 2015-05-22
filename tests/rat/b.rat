@@ -25,3 +25,4 @@
 
 # Check classes in output.
 a+a+a => a+a+a
+a+a+a+a => a+a+a+a

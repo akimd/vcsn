@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/range/iterator_range_core.hpp>
+
 #include <algorithm>
 #include <iterator> // next
 
@@ -60,6 +62,26 @@ namespace vcsn
       return *i;
     }
 
+    /// The return the longest initial range of elements matching the
+    /// predicate.
+    template <typename Iterator, typename Pred, typename Less>
+    boost::iterator_range<Iterator>
+    initial_sorted_range(Iterator begin, Iterator end,
+                         Pred pred, Less less)
+    {
+      if (pred(*begin))
+        for (auto i = begin;; ++i)
+          {
+            auto next = std::next(i);
+            if (next == end
+                || !pred(*next)
+                || less(*next, *i))
+              return {begin, next};
+          }
+      else
+        return {end, end};
+    }
+
     /// Same as std::is_sorted, but works with an input iterator, not
     /// just a forward iterator.
     ///
@@ -118,6 +140,7 @@ namespace vcsn
         }
       return std::make_pair(first1, first2);
     }
+
   }
 
   /// Check that two associative containers have the same keys.

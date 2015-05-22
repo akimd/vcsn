@@ -6,6 +6,7 @@
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/labelset/labelset.hh> // has_genset_member_function
+#include <vcsn/misc/algorithm.hh> // initial_range
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
 
@@ -92,6 +93,22 @@ namespace vcsn
                     && ! ctx_.labelset()->is_letter(atom->value());
       }
 
+      /// Whether is naturally braced.
+      ///
+      /// This is the case of sums of letters printed as range: we
+      /// want to print `[a-z]*`, not `([a-z])*`.
+      bool is_braced_(const node_t& v) const
+      {
+        if (auto s = dynamic_cast<const sum_t*>(&v))
+          {
+            auto range = letter_range(s->begin(), s->end());
+            return (end(range) == s->end()
+                    && 3 < boost::distance(range));
+          }
+        else
+          return false;
+      }
+
       /// The possible node precedence levels, increasing.
       ///
       /// When printing a word (i.e., a label with several letters),
@@ -138,14 +155,32 @@ namespace vcsn
         return n.type() == rat::type_t::lweight;
       }
 
+      /// Return the longest range of expressions that are letters, in
+      /// strictly increasing order.
+      template <typename Iterator>
+      auto letter_range(Iterator i, Iterator end) const
+        -> boost::iterator_range<Iterator>
+      {
+        return detail::initial_sorted_range
+          (i, end,
+           [this](const value_t& c) { return is_letter_(*c); },
+           [this](const value_t& lhs, const value_t& rhs)
+           {
+             auto l = std::dynamic_pointer_cast<const atom_t>(lhs)->value();
+             auto r = std::dynamic_pointer_cast<const atom_t>(rhs)->value();
+             const auto& ws = *ctx_.labelset();
+             // Require strictly increasing order.
+             return ws.less(l, r) || ws.equal(l, r);
+           });
+      }
+
       /// Print a sum, when the labelset has a genset() function.
       template <typename LS = labelset_t>
       auto print_sum_(const sum_t& v)
         -> enable_if_t<detail::has_genset_member_function<LS>{}, void>
       {
         bool first = true;
-        // Make some efforts in the case of a simple sum of letters,
-        // possibly with empty word.
+        // Use classes for sums of letters.
         for (auto i = std::begin(v), end = std::end(v);
              i != end;
              /* nothing. */)
@@ -153,30 +188,25 @@ namespace vcsn
             if (! first)
               out_ << sum_;
             first = false;
-            // If in front of a row of letters, issue a class.
-            if (is_letter_(**i))
+            // If in front of a row of letters, in strictly increasing
+            // order, issue a class.
+            auto r = letter_range(i, end);
+            if (3 < distance(r))
               {
-                auto j = std::find_if_not(i, end,
-                                          [this](const value_t& c)
-                                          {
-                                            return is_letter_(*c);
-                                          });
-                if (3 < std::distance(i, j))
-                  {
-                    // Gather the letters.
-                    auto letters = std::vector<label_t>{};
-                    for (/* nothing. */; i != j; ++i)
-                      letters
-                        .emplace_back(down_pointer_cast<const atom_t>(*i)->value());
-                    vcsn::detail::print_label_class(*ctx_.labelset(), letters,
-                                                    out_, format_);
-                    continue;
-                  }
+                // Gather the letters.
+                auto letters = std::vector<label_t>{};
+                for (/* nothing. */; i != r.end(); ++i)
+                  letters
+                    .emplace_back(down_pointer_cast<const atom_t>(*i)->value());
+                vcsn::detail::print_label_class(*ctx_.labelset(), letters,
+                                                out_, format_);
               }
-
-            // Otherwise, just print the child.
-            print_child_(**i, v);
-            ++i;
+            else
+              {
+                // Otherwise, just print the child.
+                print_child_(**i, v);
+                ++i;
+              }
           }
       }
 

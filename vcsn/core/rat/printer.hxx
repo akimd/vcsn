@@ -194,7 +194,8 @@ namespace vcsn
       bool needs_parens =
         (force
          || (parent_has_precedence
-             && ! (parent.is_unary() && child.is_unary())));
+             && ! (parent.is_unary() && child.is_unary())
+             && ! is_braced_(child)));
       if (needs_parens)
         out_ << lparen_;
       else if (parent.is_unary())
