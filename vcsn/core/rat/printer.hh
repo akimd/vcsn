@@ -5,6 +5,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/visitor.hh>
+#include <vcsn/labelset/labelset.hh> // has_genset_member_function
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
 
@@ -70,11 +71,18 @@ namespace vcsn
       DEFINE(rweight);
       DEFINE(shuffle)       { print_(v, shuffle_); }
       DEFINE(star)          { print_(v, star_); }
-      DEFINE(sum)           { print_(v, sum_); }
+      DEFINE(sum)           { print_sum_(v); }
       DEFINE(transposition) { print_(v, transposition_); }
       DEFINE(zero);
 
 # undef DEFINE
+
+      /// Whether \a v is an atom whose label is a letter.
+      bool is_letter_(const node_t& v) const
+      {
+        auto atom = dynamic_cast<const atom_t*>(&v);
+        return atom && ctx_.labelset()->is_letter(atom->value());
+      }
 
       /// Whether \a v is an atom whose label is not a letter.
       bool is_word_(const node_t& v) const
@@ -128,6 +136,56 @@ namespace vcsn
       bool shows_left_weight_(const node_t& n)
       {
         return n.type() == rat::type_t::lweight;
+      }
+
+      /// Print a sum, when the labelset has a genset() function.
+      template <typename LS = labelset_t>
+      auto print_sum_(const sum_t& v)
+        -> enable_if_t<detail::has_genset_member_function<LS>{}, void>
+      {
+        bool first = true;
+        // Make some efforts in the case of a simple sum of letters,
+        // possibly with empty word.
+        for (auto i = std::begin(v), end = std::end(v);
+             i != end;
+             /* nothing. */)
+          {
+            if (! first)
+              out_ << sum_;
+            first = false;
+            // If in front of a row of letters, issue a class.
+            if (is_letter_(**i))
+              {
+                auto j = std::find_if_not(i, end,
+                                          [this](const value_t& c)
+                                          {
+                                            return is_letter_(*c);
+                                          });
+                if (3 < std::distance(i, j))
+                  {
+                    // Gather the letters.
+                    auto letters = std::vector<label_t>{};
+                    for (/* nothing. */; i != j; ++i)
+                      letters
+                        .emplace_back(down_pointer_cast<const atom_t>(*i)->value());
+                    vcsn::detail::print_label_class(*ctx_.labelset(), letters,
+                                                    out_, format_);
+                    continue;
+                  }
+              }
+
+            // Otherwise, just print the child.
+            print_child_(**i, v);
+            ++i;
+          }
+      }
+
+      /// Print a sum, when the labelset does not have a genset() function.
+      template <typename LS = labelset_t>
+      auto print_sum_(const sum_t& v)
+        -> enable_if_t<!detail::has_genset_member_function<LS>{}, void>
+      {
+        print_(v, sum_);
       }
 
       /// Output stream.

@@ -4,17 +4,17 @@
 # Check character classes.
 [a] => a
 [ac] => a+c
-[abcd] => a+b+c+d
-[abcdabcd] => a+b+c+d
-[badcabcd] => a+b+c+d
+[abcd] => [a-d]
+[abcdabcd] => [a-d]
+[badcabcd] => [a-d]
 [a-a] => a
 [a-b] => a+b
-[a-bc-d] => a+b+c+d
+[a-bc-d] => [a-d]
 
 [b-a] ! invalid letter interval: b-a
 []    ! invalid empty letter class
 
-[^] => a+b+c+d
+[^] => [a-d]
 [^a] => b+c+d
 [^a-b] => c+d
 [^a-bd] => c

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <boost/range/algorithm/find.hpp>
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh> // labelset_t_of
 
@@ -7,6 +10,25 @@ namespace vcsn
 {
   namespace detail
   {
+
+    // Is it possible to write a C++ template to check for a function's
+    // existence?  http://stackoverflow.com/questions/257288
+    template <typename>
+    struct has_genset_sfinae_true : std::true_type {};
+
+    template <typename T>
+    static auto test_genset(int)
+      -> has_genset_sfinae_true<decltype(std::declval<T>().genset())>;
+
+    template <typename>
+    static auto test_genset(long)
+      -> std::false_type;
+
+    /// Whether LabelSet features a genset() function.
+    template <typename LabelSet>
+    struct has_genset_member_function
+      : decltype(detail::test_genset<LabelSet>(0))
+    {};
 
     /*-------------------.
     | make_letterized.   |
@@ -212,6 +234,49 @@ namespace vcsn
     make_word_context(const context<LabelSet, WeightSet>& ctx)
     {
       return {make_wordset(*ctx.labelset()), *ctx.weightset()};
+    }
+
+
+    /*---------------------.
+    | print_label_class.   |
+    `---------------------*/
+
+    /// Print a set of labels (letterized) with classes.
+    ///
+    /// The order of the letters is respected; depending on the use
+    /// case, you might want to call sort and unique before.
+    template <typename LabelSet>
+    std::ostream&
+    print_label_class(const LabelSet& ls,
+                      const std::vector<typename LabelSet::value_t>& letters,
+                      std::ostream& out,
+                      const std::string& format)
+    {
+      // In alphabetical order.
+      auto alphabet = std::vector<typename LabelSet::value_t>{};
+      for (auto l : ls.genset())
+        alphabet.emplace_back(ls.value(l));
+
+      out << '[';
+      for (auto it = std::begin(letters), letters_end = std::end(letters);
+           it != letters_end; ++it)
+        {
+          auto end
+            = std::mismatch(it, letters_end,
+                            boost::range::find(alphabet, *it)).first;
+          ls.print(*it, out, format);
+          // No range for two letters or less.
+          auto width = std::distance(it, end);
+          if (2 < width)
+            {
+              it += width - 1;
+              out << '-';
+              ls.print(*it, out, format);
+            }
+        }
+      out << ']';
+
+      return out;
     }
   }
 }

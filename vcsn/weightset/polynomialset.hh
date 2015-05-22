@@ -8,8 +8,6 @@
 
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/lexicographical_compare.hpp>
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
@@ -1177,28 +1175,7 @@ namespace vcsn
 
       // Print the character class.  'letters' are sorted, since
       // polynomials are shortlex-sorted on the labels.
-      out << '[';
-      std::vector<label_t> alphabet;
-      for (auto l : labelset()->genset())
-        alphabet.emplace_back(labelset()->value(l));
-      for (auto it = std::begin(letters), letters_end = std::end(letters);
-           it != letters_end; ++it)
-        {
-          auto end
-            = std::mismatch(it, letters_end,
-                            boost::range::find(alphabet, *it)).first;
-          labelset()->print(*it, out, format);
-          // No range for two letters or less.
-          auto width = std::distance(it, end);
-          if (2 < width)
-            {
-              it += width - 1;
-              out << '-';
-              labelset()->print(*it, out, format);
-            }
-        }
-      out << ']';
-
+      print_label_class(*labelset(), letters, out, format);
       return out;
     }
 
