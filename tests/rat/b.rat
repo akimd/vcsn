@@ -1,4 +1,4 @@
-%weight: b
+%context: b
 %include: common-weights.rat
 
 # Check character classes.

@@ -1,4 +1,4 @@
-%weight: zrr
+%context: zrr
 %include: common-weights.rat
 
 # Check the alphabets.

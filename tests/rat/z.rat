@@ -1,4 +1,4 @@
-%weight: z
+%context: z
 %include: common-weights.rat
 
 <2>a == (<2>a)

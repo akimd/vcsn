@@ -5,13 +5,10 @@ from __future__ import print_function
 import os, re, sys, vcsn
 from test import *
 
-# The current atom kind (argument for -a).
-labels = 'letters'
-# The current weightset (argument for -w).
-ws = 'b';
+# The name of the current context.
+context = 'lal_char(abcd), b'
 # The current context.
-name = 'lal_char(abcd), b'
-ctx = vcsn.context(name)
+ctx = vcsn.context(context)
 
 # Compute the name of the context.
 contexts = {
@@ -23,15 +20,11 @@ contexts = {
 }
 
 def context_update():
-  if ws not in contexts:
-    print("invalid weightset abbreviation:", ws)
-  global name
-  name = contexts[ws]
-  if labels == 'letters':
-    name = name.replace('law', 'lal')
-  global ctx
-  ctx = vcsn.context(name)
-  print("#", ctx, "(", labels, ",", ws, "->", name, ")")
+  global context, ctx
+  if context in contexts:
+    context = contexts[context]
+  ctx = vcsn.context(context)
+  print("# context: {} ({})".format(context, ctx))
 
 
 def pp(re):
@@ -45,7 +38,7 @@ def pp(re):
 def check_rat_exp(fname):
   file = open(fname, 'r')
   lineno = 0
-  global ws, labels
+  global context
   for line in file:
     lineno += 1
     loc = fname + ':' + str(lineno)
@@ -54,17 +47,31 @@ def check_rat_exp(fname):
     if m is not None:
       continue
 
-    m = re.match('%labels: (.*)$', line)
+    m = re.match('%labels?: (.*)$', line)
     if m is not None:
       labels = m.group(1)
-      print("# label: ", labels)
+      print('# %labels:', labels)
+      if labels == "letters":
+        context = context.replace('word', 'letter').replace('law', 'lal')
+      elif labels == "words":
+        context = context.replace('letter', 'word').replace('lal', 'law')
+      else:
+        context = labels + ", " + context.split(',', 2)[1]
       context_update()
       continue
 
-    m = re.match('%weight: (.*)$', line)
+    m = re.match('%weights?: (.*)$', line)
     if m is not None:
-      ws = m.group(1)
-      print("# ws: ", ws)
+      weights = m.group(1)
+      print('# %weights:', weights)
+      context = context.split(',', 2)[0] + ", " + weights
+      context_update()
+      continue
+
+    m = re.match('%context: (.*)$', line)
+    if m is not None:
+      context = m.group(1)
+      print('# %context:', context)
       context_update()
       continue
 
