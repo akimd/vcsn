@@ -227,19 +227,16 @@ namespace vcsn
       return this->genset().get_word(i);
     }
 
-    /// Read a range of labels.
+    /// Process a range of labels.
     ///
     /// Stream \a i is right on a '['.  Read up to the closing ']',
-    /// and return the list of the matching labels.
+    /// and process the labels.
     ///
     /// For instance "[a-d0-9_]".
-    std::set<value_t>
-    convs(std::istream& i) const
+    template <typename Fun>
+    void convs(std::istream& i, Fun fun) const
     {
-      std::set<value_t> res;
-      for (auto r : this->convs_(i))
-        res.insert(value_t{r});
-      return res;
+      this->convs_(i, [this,fun](letter_t l) { fun(value(l)); });
     }
 
     std::ostream&

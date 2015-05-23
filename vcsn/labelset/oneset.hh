@@ -161,7 +161,8 @@ namespace vcsn
       return {};
     }
 
-    static std::set<value_t> convs(std::istream&)
+    template <typename Fun>
+    static void convs(std::istream&, Fun)
     {
       raise("oneset: ranges not implemented");
     }

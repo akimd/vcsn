@@ -27,10 +27,10 @@ namespace vcsn
 
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using letters_t = typename genset_t::letters_t;
+    using letters_t = std::set<letter_t, vcsn::less<self_t, letter_t>>;
 
     using value_t = letter_t;
-    using values_t = letters_t;
+    using values_t = std::set<value_t, vcsn::less<self_t>>;
 
     using kind_t = labels_are_letters;
 
@@ -215,13 +215,16 @@ namespace vcsn
       return value_t{l};
     }
 
-    values_t
-    convs(std::istream& i) const
+    /// Read a range of labels.
+    ///
+    /// Stream \a i is right on a '['.  Read up to the closing ']',
+    /// and return the list of the matching labels.
+    ///
+    /// For instance "[a-d0-9_]".
+    template <typename Fun>
+    void convs(std::istream& i, Fun fun) const
     {
-      values_t res;
-      for (auto r : this->convs_(i))
-        res.insert(value_t{r});
-      return res;
+      this->convs_(i, fun);
     }
 
     std::ostream&

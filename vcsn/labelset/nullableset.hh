@@ -380,14 +380,10 @@ namespace vcsn
       return res;
     }
 
-    std::set<value_t>
-    convs(std::istream& i) const
+    template <typename Fun>
+    void convs(std::istream& i, Fun fun) const
     {
-      auto l = ls_->convs(i);
-      std::set<value_t> res;
-      for (auto v : l)
-        res.emplace(value(v));
-      return res;
+      ls_->convs(i, fun);
     }
 
     std::ostream&

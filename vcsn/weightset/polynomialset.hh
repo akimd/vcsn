@@ -1040,8 +1040,10 @@ namespace vcsn
           // Possibly, a label.
           // Handle label classes.
           if (i.peek() == '[')
-            for (auto l : labelset()->convs(i))
-              add_here(res, l, w);
+            labelset()->convs(i, [this, &res, &w](const label_t& l)
+                              {
+                                add_here(res, l, w);
+                              });
           else if (auto l = conv_label(i, weighted, sep))
             add_here(res, l.get(), w);
 

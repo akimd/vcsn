@@ -149,9 +149,9 @@ namespace vcsn
     {
       for (/* empty */; L::less(l1, l2); ++l1)
         add_letter(l1);
-      // Also add the last letter.  Do not do this in the loop, we
-      // might overflow the capacity of char.  Do check equality
-      // though, so that 'z-a' is empty.
+      // The last letter.  Do not do this in the loop, we might
+      // overflow the capacity of char.  Check validity, so that 'z-a'
+      // is empty.
       if (L::equal(l1, l2))
         add_letter(l1);
       return *this;

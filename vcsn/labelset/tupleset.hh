@@ -396,7 +396,8 @@ namespace vcsn
       return res;
     }
 
-    std::set<value_t> convs(std::istream&) const
+    template <typename Fun>
+    static void convs(std::istream&, Fun)
     {
       raise("tupleset: ranges not implemented");
     }

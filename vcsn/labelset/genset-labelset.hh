@@ -4,6 +4,7 @@
 #include <set>
 
 #include <boost/optional.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 
 #include <vcsn/core/kind.hh>
 #include <vcsn/misc/raise.hh>
@@ -43,58 +44,101 @@ namespace vcsn
         return res;
       }
 
-      /// Read a range of letters.
+      /// Read and process a class of letters.
       ///
-      /// Stream \a i is right on a '['.  Read up to the closing ']',
-      /// and return the list of the matching labels.
+      /// Stream \a i is after the '[', read up to the closing ']',
+      /// excluded.  Apply \a fun to all the letters.  Take negation
+      /// into account.  Classes can never be empty.
       ///
-      /// For instance "[a-d0-9_]".
+      /// For instance "[a-d0-9_]", or "[^a-fz], or "[^]", but not
+      /// "[]".
+      ///
+      /// \pre  i does not start with ']'.
+      template <typename Fun>
+      void
+      convs_classes_(std::istream& i, Fun fun) const
+      {
+        if (i.peek() == '^')
+          {
+            i.ignore();
+            auto alphabet = letters_t{};
+            for (auto l : this->genset())
+              alphabet.insert(l);
+            boost::for_each(set_difference(alphabet, convs_classes_(i)),
+                            fun);
+          }
+        else
+          {
+            // The last letter we read, for intervals.
+            boost::optional<letter_t> previous;
+            while (i.peek() != EOF && i.peek() != ']')
+              if (i.peek() == '-')
+                {
+                  require(previous != boost::none,
+                          "bracket cannot begin with '-'");
+                  i.ignore();
+                  // Handle ranges.
+                  if (i.peek() == ']')
+                    // [abc-] does not denote an interval.
+                    fun(letter_t{'-'});
+                  else
+                    {
+                      // [prev - l2].
+                      letter_t l2 = genset_t::get_letter(i);
+                      require(this->has(l2),
+                              "invalid label: unexpected ", str_escape(l2));
+                      // Skip prev, which was already processed.
+                      for (auto i = std::next(this->genset().find(previous.get()));
+                           i != this->genset().end() && *i < l2;
+                           ++i)
+                        fun(*i);
+                      // The last letter.  Do not do this in the loop,
+                      // we might overflow the capacity of char.
+                      // Check validity, so that 'z-a' is empty.
+                      if (previous.get() < l2)
+                        fun(l2);
+
+                      previous = boost::none;
+                    }
+                }
+              else
+                {
+                  letter_t l = genset_t::get_letter(i);
+                  require(this->has(l),
+                          "invalid label: unexpected ", str_escape(l));
+                  fun(l);
+                  previous = l;
+                }
+          }
+      }
+
+      /// Read a set of letters.
       letters_t
-      convs_(std::istream& i) const
+      convs_classes_(std::istream& i) const
+      {
+        letters_t res;
+        convs_classes_(i, [&res](letter_t l){ res.insert(l); });
+        return res;
+      }
+
+      /// Read and process a class of letters.  Letters are sorted,
+      /// and uniqued.
+      ///
+      /// Stream \a i is on the '[', read up to the closing ']',
+      /// included.  Apply \a fun to all the letters.  Take negation
+      /// into account.  Classes can never be empty.
+      ///
+      /// For instance "[a-d0-9_]", or "[^a-fz], or "[^]", but not
+      /// "[]".
+      ///
+      /// \pre  i does not start with ']'.
+      template <typename Fun>
+      void
+      convs_(std::istream& i, Fun fun) const
       {
         eat(i, '[');
-        // The last letter we read, for intervals.
-        boost::optional<letter_t> previous;
-        letters_t res;
-        while (i.peek() != EOF && i.peek() != ']')
-          {
-            if (i.peek() == '-')
-              {
-                require(previous != boost::none,
-                        "bracket cannot begin with '-'");
-                i.ignore();
-                // Handle ranges.
-                if (i.peek() == ']')
-                  // [abc-] does not denote an interval.
-                  res.insert(letter_t{'-'});
-                else
-                  {
-                    // [prev - l2].
-                    letter_t l2 = genset_t::get_letter(i);
-                    require(this->has(l2),
-                            "invalid label: unexpected ", str_escape(l2));
-                    for (auto i = this->genset().find(previous.get());
-                         i != this->genset().end();
-                         ++i)
-                      {
-                        res.insert(*i);
-                        if (*i == l2)
-                          break;
-                      }
-                    previous = boost::none;
-                  }
-              }
-            else
-              {
-                letter_t l = genset_t::get_letter(i);
-                require(this->has(l),
-                        "invalid label: unexpected ", str_escape(l));
-                res.insert(l);
-                previous = l;
-              }
-          }
+        boost::for_each(convs_classes_(i), fun);
         eat(i, ']');
-        return res;
       }
 
       /// Use the implementation from genset.

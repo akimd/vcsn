@@ -250,7 +250,8 @@ namespace vcsn
     value_t conv(const self_t&, value_t v) const;
 
     /// Read a range of expressions.
-    std::set<value_t> convs(std::istream&) const
+    template <typename Fun>
+    static void convs(std::istream&, Fun)
     {
       raise(sname(), ": ranges not implemented");
     }
