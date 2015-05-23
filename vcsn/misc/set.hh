@@ -29,6 +29,21 @@ namespace std
 
 namespace vcsn
 {
+  /// The set of members of \a set1 that are not members of set2.
+  template <typename T, typename Compare, typename Alloc>
+  std::set<T, Compare, Alloc>
+  set_difference(const std::set<T, Compare, Alloc>& set1,
+                 const std::set<T, Compare, Alloc>& set2)
+  {
+    using set_t = std::set<T, Compare, Alloc>;
+    set_t res;
+    std::insert_iterator<set_t> i{res, begin(res)};
+    std::set_difference(begin(set1), end(set1),
+                        begin(set2), end(set2),
+                        i);
+    return res;
+  }
+
   /// Whether \a e is member of \a s.
   template <typename T, typename Compare, typename Alloc>
   bool
@@ -58,8 +73,8 @@ namespace vcsn
   print(const std::set<T, Compare, Alloc>& set, std::ostream& o);
 
   /// Whether \a set1 ⊆ \a set2.
-  template <typename Container1, typename Container2>
-  bool subset(const Container1& set1, const Container2& set2)
+  template <typename Container>
+  bool subset(const Container& set1, const Container& set2)
   ATTRIBUTE_PURE;
 }
 
