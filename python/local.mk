@@ -1,5 +1,5 @@
 ## Vaucanson 2, a generic library for finite state machines.
-## Copyright (C) 2013-2014 Vaucanson Group.
+## Copyright (C) 2013-2015 Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -11,8 +11,8 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-nodist_python_PYTHON = %D%/vcsn_version.py
-DISTCLEANFILES += %D%/vcsn_version.pyc
+nodist_python_PYTHON = %D%/vcsn_config.py
+DISTCLEANFILES += %D%/vcsn_config.pyc
 
 vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \

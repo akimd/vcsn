@@ -236,8 +236,14 @@ case $ac_cv_GLIBCXX_DEBUG:$vcsn_cv_cxx_is_clang in (yes:no)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
+# We add $CCACHE when calling the compiler, don't stack it twice.
+CXX_NO_CCACHE=$(echo "$CXX" | sed -e "s/^ccache //;s,^$CCACHE ,,")
+
 # We look for our data files at runtime, including to compile.
 AC_SUBST([pkglibdir],  ['${libdir}/${PACKAGE}'])
+AC_SUBST([CCACHE])
+AC_SUBST([CPPFLAGS])
+AC_SUBST([CXX_NO_CCACHE])
 AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$datadir/$PACKAGE])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
@@ -250,8 +256,6 @@ AC_DEFINE_UNQUOTED([CCACHE], ["$CCACHE"],
                    [Define to the ccache program name.])
 AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR $BOOST_CPPFLAGS"],
                    [Define to the preprocessor flags.])
-# We add $CCACHE when calling the compiler, don't stack it twice.
-CXX_NO_CCACHE=$(echo "$CXX" | sed -e "s/^ccache //;s,^$CCACHE ,,")
 AC_DEFINE_UNQUOTED([CXX], ["$CXX_NO_CCACHE"],
                    [Define to the C++ compiler (without ccache).])
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
@@ -318,6 +322,6 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
-AC_CONFIG_FILES([python/vcsn_version.py:python/vcsn_version.py.in])
+AC_CONFIG_FILES([python/vcsn_config.py:python/vcsn_config.in.py])
 
 AC_OUTPUT

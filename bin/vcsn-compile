@@ -1,0 +1,38 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import subprocess
+import sys
+import vcsn_config
+
+import argparse
+
+parser = argparse.ArgumentParser(description = 'Compile.')
+parser.add_argument('input', help='source file to compile')
+parser.add_argument('-shared', help='create a shared lib instead of an executable',
+                    action='store_true')
+parser.add_argument('-v', '--verbose', help='Be verbose',
+                    action='store_true')
+
+args = parser.parse_args()
+# Strip extension.
+args.base = args.input[:-3]
+
+def run(cmd):
+    cmd = cmd.format(base = args.base, **vcsn_config.config)
+    if args.verbose:
+        print("run:", cmd)
+    try:
+        retcode = subprocess.call(cmd, shell=True)
+        if retcode < 0:
+            print("Child was terminated by signal", -retcode, file=sys.stderr)
+        else:
+            print("Child returned", retcode, file=sys.stderr)
+    except OSError as e:
+        print("Execution failed:", e, file=sys.stderr)
+
+if args.shared:
+    run('{ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o {base}.o {base}.cc')
+    run('{cxx} {cxxflags} {ldflags} -fPIC -lvcsn {base}.o -shared -o {base}.so', base)
+else:
+    run('{ccache} {cxx} {cppflags} {cxxflags} {ldflags} -lvcsn -o {base} {base}.cc')

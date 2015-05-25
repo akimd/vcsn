@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import functools
 import os
 import sys
@@ -7,7 +5,9 @@ import sys
 from subprocess import Popen, check_call
 
 from vcsn_cxx import *
-from vcsn_version import *
+from vcsn_config import *
+datadir = config['datadir']
+version = config['version']
 
 def _info_to_dict(info):
     '''Convert a "key: value" list of lines into a dictionary.
