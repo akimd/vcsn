@@ -260,9 +260,10 @@ namespace vcsn
            it != letters_end; ++it)
         {
           auto end
-            = std::mismatch(it, letters_end,
-                            boost::range::find(alphabet, *it),
-                            alphabet.end()).first;
+            // not std::mismatch, to please G++ 4.8.
+            = vcsn::detail::mismatch(it, letters_end,
+                                     boost::range::find(alphabet, *it),
+                                     alphabet.end()).first;
           ls.print(*it, out, format);
           // No range for two letters or less.
           auto width = std::distance(it, end);
