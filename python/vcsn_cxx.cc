@@ -120,6 +120,8 @@ struct context
 
   automaton cerny(unsigned n) const;
 
+  automaton cotrie(const std::string& filename) const;
+
   automaton de_bruijn(unsigned n) const;
 
   automaton divkbaseb(unsigned divisor, unsigned base) const;
@@ -706,6 +708,11 @@ struct polynomial
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
+  automaton cotrie() const
+  {
+    return vcsn::dyn::cotrie(val_);
+  }
+
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -1041,6 +1048,15 @@ automaton context::cerny(unsigned n) const
   return vcsn::dyn::cerny(val_, n);
 }
 
+automaton context::cotrie(const std::string& filename) const
+{
+  auto is = vcsn::open_input_file(filename);
+  auto res = vcsn::dyn::cotrie(val_, *is);
+  if (is->peek() != -1)
+    vcsn::fail_reading(*is, "unexpected trailing characters");
+  return res;
+}
+
 automaton context::de_bruijn(unsigned n) const
 {
   return vcsn::dyn::de_bruijn(val_, n);
@@ -1232,6 +1248,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     ("context",
      bp::init<const std::string&>())
     .def("cerny", &context::cerny)
+    .def("cotrie", &context::cotrie)
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
     .def("double_ring", &context::double_ring)
@@ -1302,6 +1319,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<polynomial>
     ("polynomial",
      bp::init<const context&, const std::string&>())
+    .def("cotrie", &polynomial::cotrie)
     .def("format", &polynomial::format)
     .def("ldiv", &polynomial::ldiv)
     .def("lgcd", &polynomial::lgcd)

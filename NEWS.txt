@@ -5,6 +5,26 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-05-26
+### cotrie: new algorithm
+In additional to `trie`, which builds a deterministic tree-like
+automaton (single initial state, multiple final states), vcsn now
+supports `cotrie` which builds a "reversed trie": a codeterministic
+reversed tree-like automaton (single final state, multiple initial
+states).
+
+The main feature of `cotrie` is that its result is codeterministic, so
+it only takes a determinization to minimize it.  It turns out that in
+Vcsn determinization is more effecient than minimization:
+
+    In [13]: %timeit c.trie('/usr/share/dict/words').minimize()
+             1 loops, best of 3: 18.8 s per loop
+
+    In [14]: %timeit c.cotrie('/usr/share/dict/words').determinize()
+             1 loops, best of 3: 7.54 s per loop
+
+These automata are isomorphic.
+
 ## 2015-05-22
 ### expressions: output may use label classes
 Rational expressions have long supported label classes in input, e.g.,

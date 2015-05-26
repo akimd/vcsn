@@ -133,6 +133,20 @@ namespace vcsn
     /// A standardized transpositive \a a.
     automaton costandard(const automaton& a);
 
+    /// A reversed trie-like automaton (multiple initial states,
+    /// single final state) automaton to accept \a p.
+    ///
+    /// \param p    the polynomial that describes the (finite) series
+    automaton cotrie(const polynomial& p);
+
+    /// A reversed trie-like automaton (multiple initial states,
+    /// single final state) automaton to accept the series contained
+    /// in \a is.
+    ///
+    /// \param ctx  the (word-based) context used to read the words.
+    /// \param is   the input stream.
+    automaton cotrie(const context& ctx, std::istream& is);
+
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
@@ -676,10 +690,15 @@ namespace vcsn
     /// Add the transposition operator to \a r.
     expression transposition(const expression& r);
 
-    /// A trie-like automaton to accept \a p.
+    /// A trie-like automaton (single initial state, multiple final
+    /// states) to accept \a p.
+    ///
+    /// \param p    the polynomial that describes the (finite) series
     automaton trie(const polynomial& p);
 
-    /// A trie-like automaton to accept the series contained in \a is.
+    /// A trie-like automaton (single initial state, multiple final
+    /// states) to accept the series contained in \a is.
+    ///
     /// \param ctx  the (word-based) context used to read the words.
     /// \param is   the input stream.
     automaton trie(const context& ctx, std::istream& is);

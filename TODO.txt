@@ -68,6 +68,28 @@ break too much") rather that something like expand.  What are the expected
 features of the right definition?
 
 * Bugs
+** Incorrect context
+When trie(istream) adds words to the trie, the context used to parse the
+stream is not the one of the automaton we are buildding.  As a result, we
+have a stupid context:
+
+In [1]: import vcsn
+        c = vcsn.context('law_char, b')
+        a = c.trie('/usr/share/dict/words')
+
+In [2]: print(a.context())
+        letterset<char_letters()>, b
+
+In [3]: print(c)
+        wordset<char_letters(-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz)>, b
+
+We _need_ the built automaton to have a correct context.
+
+One question is whether c and a.context() should share the same basic
+set_alphabet object (via shared_ptr).  In which case we need to redesign all
+the proper_labelset() functions to work on shared_ptr rather than working on
+labelset&.
+
 ** make_fresh_automaton
 There are many places where we build mutable_automaton's either via
 make_mutable_automaton, or via make_shared_ptr.  This is probably wrong

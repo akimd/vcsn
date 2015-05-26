@@ -992,7 +992,9 @@ namespace vcsn
     ///
     /// \param i    the stream to parse
     /// \param sep  the separator between monomials.
-    monomial_t
+    ///
+    /// \returns boost::none on EOF
+    boost::optional<monomial_t>
     conv_monomial(std::istream& i, const char sep = '+') const
     {
 #define SKIP_SPACES()                           \
@@ -1001,6 +1003,9 @@ namespace vcsn
 
       // Possibly a weight in braces.
       SKIP_SPACES();
+      if (i.peek() == -1)
+        return boost::none;
+
       bool weighted = i.peek() == langle;
       weight_t w = conv_weight(i);
 
@@ -1009,7 +1014,7 @@ namespace vcsn
       auto l = conv_label(i, weighted, sep);
       require(l != boost::none,
               "\\z is invalid for monomials");
-      return {l.get(), w};
+      return monomial_t{l.get(), w};
 #undef SKIP_SPACES
     }
 
