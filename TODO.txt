@@ -83,6 +83,8 @@ In [2]: print(a.context())
 In [3]: print(c)
         wordset<char_letters(-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz)>, b
 
+See tests/python/trie.py.
+
 We _need_ the built automaton to have a correct context.
 
 One question is whether c and a.context() should share the same basic

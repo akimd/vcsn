@@ -1,49 +1,104 @@
 #! /usr/bin/env python
 
+import os
 import vcsn
 from test import *
 
 c = vcsn.context('law_char, z')
 p = c.polynomial('<2>\e+<3>a+<4>b+<5>abc+<6>abcd+<7>abdc')
+
 a = p.trie()
-CHECK_EQ(r'''digraph
-{
-  vcsn_context = "letterset<char_letters(abcd)>, z"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F0
-    F1
-    F2
-    F4
-    F5
-    F7
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-  }
-  I0 -> 0
-  0 -> F0 [label = "<2>"]
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> F1 [label = "<3>"]
-  1 -> 3 [label = "b"]
-  2 -> F2 [label = "<4>"]
-  3 -> 4 [label = "c"]
-  3 -> 6 [label = "d"]
-  4 -> F4 [label = "<5>"]
-  4 -> 5 [label = "d"]
-  5 -> F5 [label = "<6>"]
-  6 -> 7 [label = "c"]
-  7 -> F7 [label = "<7>"]
-}''', a)
+CHECK_EQ(r'''context = "letterset<char_letters(abcd)>, z"
+$ -> 0
+0 -> $ <2>
+0 -> 1 a
+0 -> 2 b
+1 -> $ <3>
+1 -> 3 b
+2 -> $ <4>
+3 -> 4 c
+3 -> 6 d
+4 -> $ <5>
+4 -> 5 d
+5 -> $ <6>
+6 -> 7 c
+7 -> $ <7>''', a.format('daut'))
+CHECK(a.is_deterministic())
+CHECK_EQ(p, a.shortest(100))
+
+# Likewise, but via a file.
+with open("series.txt", "w") as file:
+    print(p.format("list"), file=file)
+
+
+c = vcsn.context('law_char, z')
+a = c.trie('series.txt')
+# FIXME: the context is wrong (empty).
+CHECK_EQ(r'''context = "letterset<char_letters()>, z"
+$ -> 0
+0 -> $ <2>
+0 -> 1 a
+0 -> 2 b
+1 -> $ <3>
+1 -> 3 b
+2 -> $ <4>
+3 -> 4 c
+3 -> 6 d
+4 -> $ <5>
+4 -> 5 d
+5 -> $ <6>
+6 -> 7 c
+7 -> $ <7>''', a.format('daut'))
+CHECK(a.is_deterministic())
+CHECK_EQ(p, a.shortest(100))
+
+
+
+c = vcsn.context('law_char, z')
+p = c.polynomial('<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba')
+a = p.cotrie()
+CHECK_EQ(r'''context = "letterset<char_letters(abcd)>, z"
+$ -> 0 <2>
+$ -> 1 <3>
+$ -> 2 <4>
+$ -> 4 <5>
+$ -> 6 <7>
+$ -> 7 <6>
+0 -> $
+1 -> 0 a
+2 -> 0 b
+3 -> 1 b
+4 -> 3 c
+5 -> 3 d
+6 -> 5 c
+7 -> 4 d''', a.format('daut'))
+CHECK(a.is_codeterministic())
+CHECK_EQ(p, a.shortest(100))
+
+# Likewise, but via a file.
+with open("series.txt", "w") as file:
+    print(p.format("list"), file=file)
+
+
+c = vcsn.context('law_char, z')
+# FIXME: the context is wrong (empty).
+a = c.cotrie('series.txt')
+CHECK_EQ(r'''context = "letterset<char_letters()>, z"
+$ -> 0 <2>
+$ -> 1 <3>
+$ -> 2 <4>
+$ -> 4 <5>
+$ -> 6 <7>
+$ -> 7 <6>
+0 -> $
+1 -> 0 a
+2 -> 0 b
+3 -> 1 b
+4 -> 3 c
+5 -> 3 d
+6 -> 5 c
+7 -> 4 d''', a.format('daut'))
+CHECK(a.is_codeterministic())
+CHECK_EQ(p, a.shortest(100))
+
+os.remove('series.txt')
