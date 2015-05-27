@@ -5,19 +5,26 @@ from __future__ import print_function
 import vcsn
 from test import *
 
-# check INPUT EXP
-# ---------------
-def check(i, o):
+# check INPUT EXP ALGORITHM
+# -------------------------
+def check(i, o, algo):
   i = vcsn.automaton(i)
-  CHECK_EQ(o, i.proper())
+  o = vcsn.automaton(o)
+
+  print("using algorithm: ", algo)
+  print("checking proper")
+
+  # We call sort().strip() everywhere to avoid seeing differences caused by the
+  # different numbering of the states between the algorithms
+  CHECK_EQ(o.sort().strip(), i.proper(algo=algo).sort().strip())
 
   # Since we remove only states that _become_ inaccessible,
   # i.proper(prune = False).accessible() is not the same as
   # i.proper(): in the former case we also removed the non-accessible
   # states.
   print("checking proper(prune = False)")
-  CHECK_EQ(vcsn.automaton(o).accessible(),
-           i.proper(prune = False).accessible())
+  CHECK_EQ(o.accessible(),
+           i.proper(prune=False, algo=algo).accessible())
 
   # FIXME: Because proper uses copy, state numbers are changed.
   #
@@ -25,26 +32,28 @@ def check(i, o):
   # have unreachable states, which is considered invalid by
   # is_isomorphic.
   print("checking idempotence")
-  if i.proper().is_accessible():
-    CHECK_ISOMORPHIC(i.proper(), i.proper().proper())
+  if i.proper(algo=algo).is_accessible():
+    CHECK_ISOMORPHIC(i.proper(algo=algo), i.proper(algo=algo).proper(algo=algo))
   else:
-    CHECK_EQ(i.proper().sort().strip(),
-             i.proper().proper().sort().strip())
+    CHECK_EQ(i.proper(algo=algo).sort().strip(),
+             i.proper(algo=algo).proper(algo=algo).sort().strip())
 
-def check_fail(aut):
+def check_fail(aut, algo):
   a = vcsn.automaton(aut)
   try:
-    a.proper()
+    a.proper(algo=algo)
     FAIL(r"invalid \\e-cycle not detected")
   except RuntimeError:
     PASS()
 
 
-## -------------------------------------------- ##
-## law_char, r: check the computation of star.  ##
-## -------------------------------------------- ##
+for algo in ('inplace', 'separate'):
 
-check(r'''digraph
+    ## -------------------------------------------- ##
+    ## law_char, r: check the computation of star.  ##
+    ## -------------------------------------------- ##
+
+    check(r'''digraph
 {
   vcsn_context = "law_char(ab), r"
   I -> 0 -> F
@@ -65,15 +74,15 @@ check(r'''digraph
   }
   I0 -> 0
   0 -> F0 [label = "<2>"]
-}''')
+}''', algo)
 
 
 
-## ------------ ##
-## law_char_b.  ##
-## ------------ ##
+    ## ------------ ##
+    ## law_char_b.  ##
+    ## ------------ ##
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "law_char(ab), b"
   rankdir = LR
@@ -128,14 +137,14 @@ check(r'''digraph
   2 -> 0 [label = "a"]
   2 -> 1 [label = "a"]
   2 -> 2 [label = "a"]
-}''')
+}''', algo)
 
 
-## ------------------------------------------------ ##
-## law_char_z: invalid \e-cycle (weight is not 0).  ##
-## ------------------------------------------------ ##
+    ## ------------------------------------------------ ##
+    ## law_char_z: invalid \e-cycle (weight is not 0).  ##
+    ## ------------------------------------------------ ##
 
-check_fail(r'''digraph
+    check_fail(r'''digraph
 {
   vcsn_context = "law_char(ab), z"
   rankdir = LR
@@ -160,14 +169,14 @@ check_fail(r'''digraph
   2 -> 1 [label = "<-1>\\e"]
   2 -> 3 [label = "<2>a"]
   3 -> 0 [label = "<2>a"]
-}''')
+}''', algo)
 
 
-## ------------ ##
-## law_char_z.  ##
-## ------------ ##
+    ## ------------ ##
+    ## law_char_z.  ##
+    ## ------------ ##
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "law_char(ab), z"
   rankdir = LR
@@ -221,15 +230,15 @@ check(r'''digraph
   2 -> 2 [label = "<-1>a"]
   2 -> 3 [label = "<2>a"]
   3 -> 0 [label = "<2>a"]
-}''')
+}''', algo)
 
 
 
-## --------------------------------- ##
-## law_char_zmin: invalid \e-cycle.  ##
-## --------------------------------- ##
+    ## --------------------------------- ##
+    ## law_char_zmin: invalid \e-cycle.  ##
+    ## --------------------------------- ##
 
-check_fail(r'''digraph
+    check_fail(r'''digraph
 {
   vcsn_context = "law_char(ab), zmin"
   rankdir = LR
@@ -253,14 +262,14 @@ check_fail(r'''digraph
   1 -> 2 [label = "<2>a"]
   2 -> 0 [label = "<2>a"]
   2 -> 1 [label = "<-1>\\e"]
-}''')
+}''', algo)
 
 
-## --------------------------- ##
-## lan_char_zr: a long cycle.  ##
-## --------------------------- ##
+    ## --------------------------- ##
+    ## lan_char_zr: a long cycle.  ##
+    ## --------------------------- ##
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "lan_char(z), expressionset<lal_char(abcd), z>"
   rankdir = LR
@@ -278,7 +287,7 @@ check(r'''digraph
   3 -> 0 [label = "<d>\\e"]
   0 -> 4 [label = "z"]
   4 -> F
-}''', '''digraph
+}''', r'''digraph
 {
   vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcd)>, z>"
   rankdir = LR
@@ -296,19 +305,19 @@ check(r'''digraph
   I0 -> 0
   0 -> 1 [label = "<(abcd)*>z"]
   1 -> F1
-}''')
+}''', algo)
 
 
 
-## ---------------------------------------- ##
-## lan_char_zr: remove now-useless states.  ##
-## ---------------------------------------- ##
+    ## ---------------------------------------- ##
+    ## lan_char_zr: remove now-useless states.  ##
+    ## ---------------------------------------- ##
 
-# Check that we remove states that _end_ without incoming transitions,
-# but leave states that were inaccessible before the elimination of
-# the spontaneous transitions.
+    # Check that we remove states that _end_ without incoming transitions,
+    # but leave states that were inaccessible before the elimination of
+    # the spontaneous transitions.
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), z>"
   rankdir = LR
@@ -353,14 +362,14 @@ check(r'''digraph
   I0 -> 0
   0 -> F0 [label = "<beg>"]
   2 -> F2 [label = "<fh>", color = DimGray]
-}''')
+}''', algo)
 
 
-## ------------ ##
-## lan_char_b.  ##
-## ------------ ##
+    ## ------------ ##
+    ## lan_char_b.  ##
+    ## ------------ ##
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "lan_char(ab), b"
   I -> 0
@@ -386,13 +395,13 @@ check(r'''digraph
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
-}''')
+}''', algo)
 
-## ---------------------------- ##
-## lat<lan_char, lan_char>, b.  ##
-## ---------------------------- ##
+    ## ---------------------------- ##
+    ## lat<lan_char, lan_char>, b.  ##
+    ## ---------------------------- ##
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "lat<lan_char(ab),lan_char(xy)>, b"
   I0 -> 0
@@ -427,14 +436,14 @@ check(r'''digraph
   1 -> F1
   1 -> 2 [label = "(\\e,y)"]
   2 -> F2
-}''')
+}''', algo)
 
 
-## ---------------------------- ##
-## lat<lan_char, lal_char>, b.  ##
-## ---------------------------- ##
+    ## ---------------------------- ##
+    ## lat<lan_char, lal_char>, b.  ##
+    ## ---------------------------- ##
 
-check(r'''digraph
+    check(r'''digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
   I0 -> 0
@@ -466,15 +475,15 @@ check(r'''digraph
   1 -> F1
   1 -> 2 [label = "(\\e,y)"]
   2 -> F2
-}''')
+}''', algo)
 
 
-## ---------------------- ##
-## Forward vs. backward.  ##
-## ---------------------- ##
+    ## ---------------------- ##
+    ## Forward vs. backward.  ##
+    ## ---------------------- ##
 
-a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
-CHECK_EQ(r'''digraph
+    a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
+    CHECK_EQ(vcsn.automaton(r'''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
@@ -495,10 +504,9 @@ CHECK_EQ(r'''digraph
   0 -> 0 [label = "a"]
   1 -> F1
   1 -> 0 [label = "a"]
-}''',
-         a.proper(backward = True))
+}''').sort().strip(), a.proper(backward=True, algo=algo).sort().strip())
 
-CHECK_EQ(r'''digraph
+    CHECK_EQ(vcsn.automaton(r'''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
@@ -519,5 +527,4 @@ CHECK_EQ(r'''digraph
   0 -> 0 [label = "a"]
   0 -> 1 [label = "a"]
   1 -> F1
-}''',
-         a.proper(backward = False))
+}''').sort().strip(), a.proper(backward=False, algo=algo).sort().strip())

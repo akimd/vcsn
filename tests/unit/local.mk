@@ -38,7 +38,8 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_dyn_LDADD            = $(liblal_char_b) $(unit_ldadd)
 %C%_label_LDADD          = $(liblal_char_b) $(unit_ldadd)
 %C%_polynomialset_LDADD  = $(liblaw_char_z) $(liblao_z) $(unit_ldadd)
-%C%_proper_LDADD         = $(all_libctx) $(unit_ldadd)
+%C%_proper_LDADD         = $(liblal_char_b) $(liblal_char_z) $(liblaw_char_b) \
+                           $(liblaw_char_z) $(unit_ldadd)
 %C%_transpose_LDADD      = $(liblal_char_b) $(unit_ldadd)
 %C%_weight_LDADD         = $(unit_ldadd)
 
