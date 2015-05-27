@@ -15,7 +15,7 @@ from vcsn.dot import _dot_to_svg, _dot_pretty, daut_to_dot
 from vcsn import d3Widget
 
 # The class MUST call this class decorator at creation time
-class ContextTextWidget:
+class ContextText:
     def __init__(self, ipython, name=None):
         self.ipython = ipython
         self.name = name
@@ -31,28 +31,24 @@ class ContextTextWidget:
         else:
             ctx = ctx = vcsn.context('lal_char, b')
         text = format(ctx)
-        self.text = widgets.TextareaWidget(description='Context: ', value = text)
-        self.text.set_css({
-            'width': '250px',
-            'height': '25px',
-        })
-        self.text.set_css({'lines': '500'})
+        self.text = widgets.Textarea(description='Context: ', value = text)
+        self.width = '250px';
+        self.height = '25px';
+        self.text.lines = '500';
         self.text.on_trait_change(lambda: self.update())
-        self.error = widgets.HTMLWidget(value = ' ')
-        self.svg = widgets.LatexWidget(value = ctx._repr_latex_())
+        self.error = widgets.HTML(value = ' ')
+        self.svg = widgets.Latex(value = ctx._repr_latex_())
         # Display the widget if it is not use into the d3 widget
         if type(self.name) == str:
 
-            wc1 = widgets.ContainerWidget()
+            wc1 = widgets.VBox()
             wc1.children = [self.text]
 
-            wc2 = widgets.ContainerWidget()
+            wc2 = widgets.HBox()
             wc2.children = [wc1, self.svg]
-            wc3 = widgets.ContainerWidget()
+            wc3 = widgets.VBox()
             wc3.children = [wc2, self.error]
             display(wc3)
-            wc2.remove_class('vbox')
-            wc2.add_class('hbox')
 
     def update(self):
         try:
@@ -79,7 +75,7 @@ class EditContext(Magics):
 ip = get_ipython()
 ip.register_magics(EditContext)
 
-class AutomatonTextWidget:
+class AutomatonText:
     def __init__(self, ipython, name, format, mode):
         self.ipython = ipython
         self.name = name
@@ -93,34 +89,29 @@ class AutomatonTextWidget:
             self.ipython.shell.user_ns[self.name] = aut
 
         text = aut.format(self.format)
-        self.text = widgets.TextareaWidget(value = text)
+        self.text = widgets.Textarea(value = text)
         height = self.text.value.count('\n')
-        self.text.set_css({'lines': '500'})
+        self.text.lines = '500';
         self.text.on_trait_change(lambda: self.update())
-        self.error = widgets.HTMLWidget(value = '')
-        self.svg = widgets.HTMLWidget(value = aut._repr_svg_())
+        self.error = widgets.HTML(value = '')
+        self.svg = widgets.HTML(value = aut._repr_svg_())
         if mode == "h":
-            wc1 = widgets.ContainerWidget()
+            wc1 = widgets.Box()
             wc1.children = [self.text]
-
-            wc2 = widgets.ContainerWidget()
+            wc2 = widgets.HBox()
             wc2.children = [wc1, self.svg]
-            wc3 = widgets.ContainerWidget()
+            wc3 = widgets.Box()
             wc3.children = [wc2, self.error]
             display(wc3)
-            wc2.remove_class('vbox')
-            wc2.add_class('hbox')
         elif mode == "v":
-            wc = widgets.ContainerWidget()
-            wc.remove_class('vbox')
-            wc.add_class('hbox')
+            wc = widgets.HBox()
             wc.children = [self.svg, self.error, self.text]
             display(wc)
 
     def update(self):
         try:
             self.error.value = ''
-            txt = self.text.value.encode('utf-8')
+            txt = self.text.value
             a = vcsn.automaton(txt, self.format)
             self.ipython.shell.user_ns[self.name] = a
             dot = daut_to_dot(txt) if self.format == "daut" else a.format('dot')
@@ -146,7 +137,7 @@ class EditAutomaton(Magics):
                 a = d3Widget.VcsnD3DataFrame(self, args.var)
                 a.show()
             else:
-                AutomatonTextWidget(self, args.var, args.format, args.mode)
+                AutomatonText(self, args.var, args.format, args.mode)
         else:
             a =  vcsn.automaton(cell, args.format)
             self.shell.user_ns[args.var] = a
@@ -163,8 +154,6 @@ def interact_h(_interact_f, *args, **kwargs):
     f.widget = w
     # Weirdly enough, be sure to display before changing the class.
     display(w)
-    w.remove_class('vbox')
-    w.add_class('hbox')
     return f
 
 
