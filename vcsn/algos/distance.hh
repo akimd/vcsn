@@ -15,11 +15,11 @@
 namespace vcsn
 {
   /// Single source shortest distance.
-  /// Find shortest path from state \a s0
+  /// Find shortest (weighted) path from state \a s0
   /// to all states of automaton \a aut.
   template <typename Aut>
   std::unordered_map<state_t_of<Aut>, weight_t_of<Aut>>
-  ss_shortest_distance(Aut aut, state_t_of<Aut> s0)
+  ss_shortest_distance(const Aut& aut, state_t_of<Aut> s0)
   {
     using weight_t = weight_t_of<Aut>;
     using state_t = state_t_of<Aut>;
