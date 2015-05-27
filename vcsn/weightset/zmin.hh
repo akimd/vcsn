@@ -1,12 +1,11 @@
-#ifndef VCSN_WEIGHTSET_ZMIN_HH
-# define VCSN_WEIGHTSET_ZMIN_HH
+#pragma once
 
-# include <vcsn/core/join.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/stream.hh> // eat
-# include <vcsn/weightset/fwd.hh>
-# include <vcsn/weightset/min-plus.hh>
-# include <vcsn/weightset/weightset.hh>
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh> // eat
+#include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/min-plus.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
@@ -57,5 +56,3 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(zmin, zmin);
   }
 }
-
-#endif // !VCSN_WEIGHTSET_ZMIN_HH
