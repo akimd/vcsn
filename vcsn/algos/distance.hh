@@ -11,6 +11,7 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/label.hh>
 #include <vcsn/misc/pair.hh>
+#include <vcsn/weightset/nmin.hh>
 
 namespace vcsn
 {
@@ -65,6 +66,124 @@ namespace vcsn
     d[s0] = ws.one();
     return d;
   }
+
+  /// Wrapper struct to provide the state distance function.
+  template <typename Aut, typename WeightSet>
+  struct state_distancer
+  {
+    state_distancer(const Aut& aut)
+      : aut_(aut)
+    {}
+
+    using automaton_t = Aut;
+    using weight_t = weight_t_of<automaton_t>;
+    using state_t = state_t_of<automaton_t>;
+    using pair_t = std::pair<state_t, weight_t>;
+
+    /// State distance
+    /// Find weighted distance between state \a s0 and state \a s1
+    /// using a dfs.
+    /// Assumes the subgraph accessible from \a s0 does not have cycles with a
+    /// weight of 0.
+    weight_t
+    operator() (state_t s0, state_t s1) const
+    {
+      auto& ws = *aut_->weightset();
+
+      // States to visit.
+      auto stack = std::vector<pair_t>{{s0, ws.one()}};
+
+      // Result weight
+      weight_t res = ws.zero();
+
+      while (!stack.empty())
+      {
+        pair_t p = stack.back();
+        stack.pop_back();
+        state_t src = p.first;
+        weight_t w = p.second;
+
+        // dfs
+        for (auto t : aut_->all_out(src))
+        {
+          state_t dst = aut_->dst_of(t);
+          weight_t new_weight(ws.mul(w, aut_->weight_of(t)));
+          if (dst == s1)
+            // Found a path, add it
+            res = ws.add(res, new_weight);
+          else
+          {
+            pair_t np(dst, new_weight);
+            stack.emplace_back(dst, new_weight);
+          }
+        }
+      }
+      return res;
+    }
+
+  private:
+    const automaton_t& aut_;
+  };
+
+  /// Struct specialization for nmin.
+  template <typename Aut>
+  struct state_distancer<Aut, nmin>
+  {
+    state_distancer(const Aut& aut)
+      : aut_(aut)
+    {}
+
+    using automaton_t = Aut;
+    using weight_t = weight_t_of<automaton_t>;
+    using state_t = state_t_of<automaton_t>;
+    using pair_t = std::pair<state_t, weight_t>;
+
+
+    /// State distance on nmin
+    /// Find weighted distance between state \a s0 and state \a s1
+    /// using a dfs.
+    /// The distance becomes a shortest path with only positive weights.
+    weight_t
+    operator() (state_t s0, state_t s1) const
+    {
+      auto& ws = *aut_->weightset();
+      // stack of the states to visit
+      auto stack = std::vector<pair_t>{{s0, ws.one()}};
+
+      // map of the minimum distance found to get to the node
+      // Initially, +inf for everyone
+      auto min_weight
+        = std::vector<weight_t>(detail::back(aut_->all_states()) + 1, ws.zero());
+
+      while (!stack.empty())
+      {
+        pair_t p = stack.back();
+        stack.pop_back();
+        state_t src = p.first;
+        weight_t w = p.second;
+
+        // The state was not already seen with a smaller weight
+        if (w < min_weight[src])
+        {
+          min_weight[src] = w;
+          if (src != s1)
+            for (auto t : aut_->all_out(src))
+            {
+              state_t dst = aut_->dst_of(t);
+              weight_t new_weight(ws.mul(w, aut_->weight_of(t)));
+              // Otherwise, useless since we have already seen a shorter path
+              if (new_weight < min_weight[dst] &&
+                  new_weight < min_weight[s1])
+                stack.emplace_back(dst, new_weight);
+            }
+        }
+      }
+      return min_weight[s1];
+    }
+
+  private:
+    const automaton_t& aut_;
+  };
 
   /// Find the shortest paths from some states to all the states.
   ///
