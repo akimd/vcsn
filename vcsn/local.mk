@@ -200,6 +200,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/dynamic_bitset.hh                    \
   %D%/misc/debug-level.hh                       \
   %D%/misc/empty.hh                             \
+  %D%/misc/epsilon-profile.hh                   \
   %D%/misc/escape.hh                            \
   %D%/misc/export.hh                            \
   %D%/misc/file-library.hh                      \

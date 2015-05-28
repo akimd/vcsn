@@ -20,6 +20,7 @@
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/debug-level.hh>
 #include <vcsn/misc/direction.hh>
+#include <vcsn/misc/epsilon-profile.hh>
 #include <vcsn/misc/vector.hh> // make_vector
 
 #define STATS
@@ -103,76 +104,6 @@ namespace vcsn
       */
 
     private:
-      /// Data needed to compare the elimination order between states.
-      ///
-      /// Code profiling shows that we spend too much time iterating
-      /// on outgoing and inconing transitions of states to compute
-      /// the order of elimination.  This structure caches what needs
-      /// to be compared, and provides the comparison operator.
-      struct state_profile
-      {
-        /// From the heap's top, recover state to eliminate.
-        state_t state;
-        /// Number of incoming spontaneous transitions.
-        size_t in_sp;
-        /// Number of incoming non-spontaneous transitions.
-        size_t in_nsp;
-        /// Number of outgoing spontaneous transitions.
-        size_t out_sp;
-        /// Number of outgoing non-spontaneous transitions.
-        size_t out_nsp;
-
-        /// \brief Generate a state profile.
-        ///
-        /// \param s  state handle
-        /// \param insp  number of incoming spontaneous transitions to \a s
-        /// \param in    number of incoming transitions to \a a
-        /// \param outsp number of outgoing spontaneous transitions from \a s
-        /// \param out   number of outgoing transitions from \a s
-        state_profile(state_t s,
-                      size_t insp, size_t in,
-                      size_t outsp, size_t out)
-          : state(s)
-          , in_sp(insp), in_nsp(in - insp)
-          , out_sp(outsp), out_nsp(out - outsp)
-        {}
-
-        void update(size_t insp, size_t in,
-                    size_t outsp, size_t out)
-        {
-          in_sp = insp;
-          in_nsp = in - insp;
-          out_sp = outsp;
-          out_nsp = out - outsp;
-        }
-
-        /// Whether l < r for the max-heap.
-        ///
-        /// Compare priorities: return true if \a r should be
-        /// treated before \a l.  Must be strict.
-        bool operator<(const state_profile& r) const
-        {
-          // (i) First, work on those with fewer outgoing spontaneous
-          // transitions.
-          // (ii) Prefer fewer outgoing transitions.
-          // (iii) Prefer fewer incoming spontaneous transitions.
-          // (iv) Then, ensure total order using state handle.
-          //
-          // Note the inversions between lhs and rhs.
-          return (std::tie  (r.out_sp, r.out_nsp, r.in_sp, state)
-                  < std::tie(out_sp,   out_nsp,   in_sp,   r.state));
-        }
-
-        friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
-        {
-          return o << p.state
-                   << 'o' << p.out_sp
-                   << 'O' << p.out_nsp
-                   << 'i' << p.in_sp
-                   << 'I' << p.in_nsp;
-        }
-      };
-
       /// Update the profile of \a s.
       void update_profile_(state_t s)
       {
@@ -195,7 +126,7 @@ namespace vcsn
               auto in = aut_->in(s).size();
               auto out_sp = aut_->out(s, empty_word_).size();
               auto out = aut_->all_out(s).size();
-              auto h = todo_.emplace(state_profile
+              auto h = todo_.emplace(epsilon_profile<state_t>
                                      {s, in_sp, in, out_sp, out});
               handles_.emplace(s, h);
           }
@@ -238,7 +169,7 @@ namespace vcsn
       unsigned removed_ = 0;
 #endif
 
-      state_profile*
+      epsilon_profile<state_t>*
       profile(state_t s)
       {
         auto i = handles_.find(s);
@@ -258,7 +189,7 @@ namespace vcsn
       /// relation with the profiles and the heap.
       ///
       /// For some reason, we get poorer performances if this function
-      /// is moved higher, before the state_profile definition.
+      /// is moved higher, before the epsilon_profile definition.
       void in_situ_remover_(state_t s)
       {
         // Iterate on a copy, as we remove these transitions in the
@@ -435,7 +366,7 @@ namespace vcsn
       label_t empty_word_;
 
       /// Max-heap to decide the order of state-elimination.
-      using heap_t = boost::heap::fibonacci_heap<state_profile>;
+      using heap_t = boost::heap::fibonacci_heap<epsilon_profile<state_t>>;
       heap_t todo_;
       /// Map: state -> heap-handle.
       std::unordered_map<state_t, typename heap_t::handle_type> handles_;
