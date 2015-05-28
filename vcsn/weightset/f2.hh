@@ -6,7 +6,7 @@
 #include <vcsn/core/join.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
 #include <vcsn/weightset/fwd.hh> // f2

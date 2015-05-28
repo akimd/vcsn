@@ -9,7 +9,7 @@
 #include <vcsn/core/join.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/stream.hh> // eat
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/fwd.hh>

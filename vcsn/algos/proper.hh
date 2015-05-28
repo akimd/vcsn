@@ -20,7 +20,7 @@
 #include <vcsn/labelset/labelset.hh> // make_proper_context
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/direction.hh>
-#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/vector.hh> // make_vector
 
 #include <vcsn/algos/epsilon-remover-separate.hh>

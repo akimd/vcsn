@@ -7,7 +7,7 @@
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/core/kind.hh>
-#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/direction.hh>
 
 #include <vcsn/algos/epsilon-remover.hh>

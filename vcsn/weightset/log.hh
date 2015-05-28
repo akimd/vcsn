@@ -8,7 +8,7 @@
 #include <vcsn/misc/functional.hh> // hash_value
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/stream.hh> // eat
 #include <vcsn/misc/symbol.hh>
 #include <vcsn/weightset/weightset.hh>

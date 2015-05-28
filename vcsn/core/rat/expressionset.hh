@@ -12,7 +12,7 @@
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/oneset.hh>
 # include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
+# include <vcsn/misc/star-status.hh>
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/q.hh>
 # include <vcsn/weightset/r.hh>

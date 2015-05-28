@@ -225,7 +225,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/set.hxx                              \
   %D%/misc/show.hh                              \
   %D%/misc/signature.hh                         \
-  %D%/misc/star_status.hh                       \
+  %D%/misc/star-status.hh                       \
   %D%/misc/stream.hh                            \
   %D%/misc/symbol.hh                            \
   %D%/misc/tuple.hh                             \
