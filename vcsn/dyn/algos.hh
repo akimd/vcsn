@@ -497,7 +497,7 @@ namespace vcsn
     /// \param prune  whether to delete states that become inaccessible
     automaton proper(const automaton& aut,
                      direction dir = direction::backward,
-                     bool prune = true);
+                     bool prune = true, const std::string& algo = "inplace");
 
     /// The weight pushing automaton of \a aut.
     automaton push_weights(const automaton& aut);

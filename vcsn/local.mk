@@ -32,6 +32,8 @@ algo_headers =                                  \
   %D%/algos/double-ring.hh                      \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
+  %D%/algos/epsilon-remover.hh                  \
+  %D%/algos/epsilon-remover-separate.hh         \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
   %D%/algos/filter.hh                           \
@@ -196,6 +198,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/cross.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
+  %D%/misc/debug-level.hh                       \
   %D%/misc/empty.hh                             \
   %D%/misc/escape.hh                            \
   %D%/misc/export.hh                            \

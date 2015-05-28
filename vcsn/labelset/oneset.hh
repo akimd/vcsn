@@ -148,6 +148,18 @@ namespace vcsn
       return v;
     }
 
+    /// Convert from labelset to oneset.
+    template <typename LabelSet>
+    value_t
+    conv(const LabelSet& ls,
+         typename LabelSet::value_t v) const
+    {
+      require(ls.is_one(v),
+              sname(), ": conv: invalid label: ", to_string(ls, v));
+      return {};
+    }
+
+
     static value_t conv(std::istream& i)
     {
       if (i.peek() == '\\')

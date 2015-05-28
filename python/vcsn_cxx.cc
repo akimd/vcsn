@@ -516,13 +516,14 @@ struct automaton
     return vcsn::dyn::conjunction_lazy(automata_(auts));
   }
 
-  automaton proper(bool prune = true, bool backward = true) const
+  automaton proper(bool prune = true, bool backward = true,
+                   const std::string algo = "auto") const
   {
     return vcsn::dyn::proper(val_,
                              backward
                              ? vcsn::direction::backward
                              : vcsn::direction::forward,
-                             prune);
+                             prune, algo);
   }
 
   automaton push_weights() const
@@ -1217,7 +1218,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_conjunction_lazy", &automaton::conjunction_lazy_)
         .staticmethod("_conjunction_lazy")
     .def("proper", &automaton::proper,
-         (arg("prune") = true, arg("backward") = true))
+         (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)
     .def("realtime", &automaton::realtime)
     .def("expression", &automaton::to_expression, (arg("algo") = "auto"))

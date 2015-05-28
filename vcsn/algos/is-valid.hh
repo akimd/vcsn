@@ -5,11 +5,12 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/is-eps-acyclic.hh>
 #include <vcsn/algos/is-proper.hh>
-#include <vcsn/algos/proper.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/misc/star_status.hh>
 #include <vcsn/misc/direction.hh>
+
+#include <vcsn/algos/epsilon-remover.hh>
 
 namespace vcsn
 {
@@ -40,7 +41,16 @@ namespace vcsn
     template <typename Aut>
     bool is_properable(Aut&& aut)
     {
-      return in_situ_remover(aut);
+      try
+        {
+          detail::epsilon_remover<Aut> remover(aut, true);
+          remover();
+          return true;
+        }
+      catch (const std::runtime_error&)
+        {
+          return false;
+        }
     }
 
 

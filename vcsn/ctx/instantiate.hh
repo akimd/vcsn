@@ -150,7 +150,7 @@ namespace vcsn
         REGISTER(dot, aut_t, std::ostream, bool);
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(info, aut_t, std::ostream, bool);
-        REGISTER(proper, aut_t, direction, bool);
+        REGISTER(proper, aut_t, direction, bool, const std::string);
         REGISTER(tikz, aut_t, std::ostream);
         return true;
       }
