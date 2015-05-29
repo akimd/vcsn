@@ -98,6 +98,7 @@ algo_headers =                                  \
   %D%/algos/u.hh                                \
   %D%/algos/union.hh                            \
   %D%/algos/universal.hh                        \
+  %D%/algos/weight-series.hh                    \
   %D%/algos/zpc.hh
 
 nobase_include_HEADERS =                        \

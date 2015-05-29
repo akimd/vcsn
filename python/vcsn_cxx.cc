@@ -620,6 +620,8 @@ struct automaton
     return vcsn::dyn::universal(val_);
   }
 
+  weight weight_series() const;
+
   /// Convert to a vector of automata.
   using automata_t = std::vector<vcsn::dyn::automaton>;
   static automata_t automata_(const boost::python::list& auts)
@@ -1039,6 +1041,11 @@ expression automaton::to_expression(const std::string& algo) const
 {
   return vcsn::dyn::to_expression(val_, algo);
 }
+
+weight automaton::weight_series() const
+{
+  return vcsn::dyn::weight_series(val_);
+}
 
 /*-------------------------.
 | context implementation.  |
@@ -1243,6 +1250,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("trim", &automaton::trim)
     .def("union", &automaton::union_a)
     .def("universal", &automaton::universal)
+    .def("weight_series", &automaton::weight_series)
     ;
 
   bp::class_<context>

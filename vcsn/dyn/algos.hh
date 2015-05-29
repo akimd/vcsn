@@ -716,6 +716,9 @@ namespace vcsn
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
 
+    /// Compute weight of the series
+    weight weight_series(const automaton& aut);
+
     /// The ZPC automaton of \a exp.
     ///
     /// \param exp    the expression to build the automaton from.
