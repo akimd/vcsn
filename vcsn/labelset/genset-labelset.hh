@@ -70,11 +70,11 @@ namespace vcsn
         else
           {
             // The last letter we read, for intervals.
-            boost::optional<letter_t> previous;
+            boost::optional<letter_t> prev;
             while (i.peek() != EOF && i.peek() != ']')
               if (i.peek() == '-')
                 {
-                  require(previous != boost::none,
+                  require(prev != boost::none,
                           "bracket cannot begin with '-'");
                   i.ignore();
                   // Handle ranges.
@@ -88,17 +88,17 @@ namespace vcsn
                       require(this->has(l2),
                               "invalid label: unexpected ", str_escape(l2));
                       // Skip prev, which was already processed.
-                      for (auto i = std::next(this->genset().find(previous.get()));
+                      for (auto i = std::next(this->genset().find(prev.get()));
                            i != this->genset().end() && *i < l2;
                            ++i)
                         fun(*i);
                       // The last letter.  Do not do this in the loop,
                       // we might overflow the capacity of char.
                       // Check validity, so that 'z-a' is empty.
-                      if (previous.get() < l2)
+                      if (prev.get() < l2)
                         fun(l2);
 
-                      previous = boost::none;
+                      prev = boost::none;
                     }
                 }
               else
@@ -107,7 +107,7 @@ namespace vcsn
                   require(this->has(l),
                           "invalid label: unexpected ", str_escape(l));
                   fun(l);
-                  previous = l;
+                  prev = l;
                 }
           }
       }

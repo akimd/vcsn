@@ -83,7 +83,7 @@ check-html recheck-html:
 
 # The build-check environment is set up via this shell script, be sure
 # to have it up to date before running tests.  Actually, this script
-# is so useful with non-installed Vaucanson, that it should really be
+# is so useful with non-installed Vcsn, that it should really be
 # always up-to-date.
 BUILT_SOURCES += %D%/bin/vcsn
 $(TEST_LOGS): %D%/bin/vcsn

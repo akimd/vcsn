@@ -28,11 +28,11 @@ namespace vcsn
 
     // Reachable states.
     const auto& a = *aptr;
-    states_t<Aut> res{a.pre()};
+    auto res = states_t<Aut>{a.pre()};
 
     // States work list.
     using worklist_t = std::queue<state_t>;
-    worklist_t todo;
+    auto todo = worklist_t{};
     todo.emplace(a.pre());
 
     while (!todo.empty())

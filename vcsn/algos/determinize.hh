@@ -29,7 +29,8 @@ namespace vcsn
   {
     /// \brief The subset construction automaton from another.
     ///
-    /// \tparam Aut an automaton type.
+    /// \tparam Aut the input automaton type.
+    ///
     /// \pre labelset is free.
     /// \pre weightset is Boolean.
     template <typename Aut>
@@ -115,14 +116,16 @@ namespace vcsn
       /// Determinize all accessible states.
       void operator()()
       {
-        std::map<label_t, state_name_t, vcsn::less<labelset_t_of<Aut>>> ml;
+        using dests_t
+          = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
+        auto dests = dests_t{};
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.top());
             state_t src = state(ss);
             todo_.pop();
 
-            ml.clear();
+            dests.clear();
             for (auto s = ss.find_first(); s != ss.npos;
                  s = ss.find_next(s))
               {
@@ -141,20 +144,20 @@ namespace vcsn
                       }
                   }
 
-                // Store in ml the possible destination per label.
+                // Store in dests the possible destinations per label.
                 for (const auto& p : i->second)
                   {
-                    auto j = ml.find(p.first);
-                    if (j == ml.end())
-                      ml[p.first] = p.second;
+                    auto j = dests.find(p.first);
+                    if (j == dests.end())
+                      dests[p.first] = p.second;
                     else
                       j->second |= p.second;
                   }
               }
 
             // Outgoing transitions from the current (result) state.
-            for (const auto& e : ml)
-              this->new_transition(src, state(e.second), e.first);
+            for (const auto& d : dests)
+              this->new_transition(src, state(d.second), d.first);
           }
       }
 
@@ -270,7 +273,8 @@ namespace vcsn
   {
     /// \brief The weighted determinization of weighted automaton.
     ///
-    /// \tparam Aut an weighted automaton type.
+    /// \tparam Aut the input weighted automaton type.
+    ///
     /// \pre labelset is free.
     template <typename Aut>
     class detweighted_automaton_impl
@@ -370,13 +374,13 @@ namespace vcsn
         return o << '>';
       }
 
-      /// The determinization of weighted automaton
-      /// with the idea based on Mohri's algorithm.
+      /// The determinization of weighted automaton.
       void operator()()
       {
         // label -> <destination, sum of weights>.
-        std::map<label_t, state_name_t,
-                 vcsn::less<labelset_t_of<automaton_t>>> dests;
+        using dests_t
+          = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
+        auto dests = dests_t{};
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.front());

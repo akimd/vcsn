@@ -79,12 +79,12 @@ namespace vcsn
         return aut_->print_state_name(s, o, format, delimit);
       }
 
-      size_t num_states()
+      size_t num_states() const
       {
         return states().size();
       }
 
-      size_t num_all_states()
+      size_t num_all_states() const
       {
         return all_states().size();
       }
@@ -341,7 +341,7 @@ namespace vcsn
       filter(const automaton& aut, const std::vector<unsigned>& states)
       {
         const auto& a = aut->as<Aut>();
-        std::unordered_set<state_t_of<Aut>> ss;
+        auto ss = std::unordered_set<state_t_of<Aut>>{};
         // FIXME: this is wrong, of course.
         for (auto s: states)
           ss.emplace(s + 2);

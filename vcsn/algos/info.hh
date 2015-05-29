@@ -217,7 +217,7 @@ namespace vcsn
     ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));
     if (detailed)
       ECHO("number of strongly connected components",
-           num_components(scc(aut, "tarjan_iterative")));
+           num_components(scc(aut)));
     if (detailed)
       ECHO("is ambiguous", detail_info::is_ambiguous(aut));
     ECHO("is complete", detail_info::is_complete(aut));
