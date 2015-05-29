@@ -450,61 +450,34 @@ namespace vcsn
       }
     };
 
-    // Z.
-    template <typename Context>
-    struct join_impl<z, expressionset<Context>>
-    {
-      using context_t = context<labelset_t_of<Context>,
-                                join_t<z, weightset_t_of<Context>>>;
-      using type = expressionset<context_t>;
-      static type join(const z& ws, const expressionset<Context>& rs)
-      {
-        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                rs.identities()};
-      }
-    };
+    template <typename W1, typename W2>
+    struct join_impl_simple;
 
-    // Q.
-    template <typename Context>
-    struct join_impl<q, expressionset<Context>>
+    template <typename WeightSet, typename Context>
+    struct join_impl_simple<WeightSet, expressionset<Context>>
     {
       using context_t = context<labelset_t_of<Context>,
-                                join_t<q, weightset_t_of<Context>>>;
+                                join_t<WeightSet, weightset_t_of<Context>>>;
       using type = expressionset<context_t>;
-      static type join(const q& ws, const expressionset<Context>& rs)
+      static type join(const WeightSet& ws, const expressionset<Context>& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
                 rs.identities()};
       }
     };
+#define JOIN_IMPL_SIMPLE(WS)                                    \
+    template <typename Context>                                 \
+    struct join_impl<WS, expressionset<Context>>                \
+      : public join_impl_simple<WS, expressionset<Context>>     \
+    {};
 
-    // R.
-    template <typename Context>
-    struct join_impl<r, expressionset<Context>>
-    {
-      using context_t = context<labelset_t_of<Context>,
-                                join_t<r, weightset_t_of<Context>>>;
-      using type = expressionset<context_t>;
-      static type join(const r& ws, const expressionset<Context>& rs)
-      {
-        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                rs.identities()};
-      }
-    };
 
-    // Zmin.
-    template <typename Context>
-    struct join_impl<zmin, expressionset<Context>>
-    {
-      using context_t = context<labelset_t_of<Context>,
-                                join_t<zmin, weightset_t_of<Context>>>;
-      using type = expressionset<context_t>;
-      static type join(const zmin& ws, const expressionset<Context>& rs)
-      {
-        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
-                rs.identities()};
-      }
-    };
+    JOIN_IMPL_SIMPLE(z);
+    JOIN_IMPL_SIMPLE(q);
+    JOIN_IMPL_SIMPLE(r);
+    JOIN_IMPL_SIMPLE(zmin);
+
+#undef JOIN_IMPL_SIMPLE
 
   }
 
