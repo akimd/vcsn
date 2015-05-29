@@ -14,6 +14,7 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star-status.hh>
 # include <vcsn/weightset/b.hh>
+# include <vcsn/weightset/nmin.hh>
 # include <vcsn/weightset/q.hh>
 # include <vcsn/weightset/r.hh>
 # include <vcsn/weightset/z.hh>
@@ -191,6 +192,7 @@ namespace vcsn
     value_t conv(const z& ws, typename z::value_t v) const;
     value_t conv(const q& ws, typename q::value_t v) const;
     value_t conv(const r& ws, typename r::value_t v) const;
+    value_t conv(const nmin& ws, typename nmin::value_t v) const;
     value_t conv(const zmin& ws, typename zmin::value_t v) const;
     template <typename Ctx2>
     value_t conv(const expressionset<Ctx2>& ws,

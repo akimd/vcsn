@@ -75,6 +75,7 @@ namespace vcsn
           "b",
           "f2",
           "log",
+          "nmin",
           "q",
           "qmp",
           "r",

@@ -5,6 +5,13 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-05-29
+### nmin: new weightset
+The new tropical semi-ring <N, +, min> has been introduced. Compared to
+zmin, some optimizations can be done, for example in evaluation or in
+node distance where the absence of negative weights allows to trim some
+branches.
+
 ## 2015-05-26
 ### cotrie: new algorithm
 In additional to `trie`, which builds a deterministic tree-like

@@ -15,6 +15,9 @@ namespace vcsn
     // log.hh
     class log_impl;
 
+    // nmin.hh.
+    class nmin_impl;
+
     // q.hh.
     class q_impl;
 
@@ -45,6 +48,7 @@ namespace vcsn
   using b    = weightset_mixin<detail::b_impl>;
   using f2   = weightset_mixin<detail::f2_impl>;
   using log  = weightset_mixin<detail::log_impl>;
+  using nmin = weightset_mixin<detail::nmin_impl>;
   using q    = weightset_mixin<detail::q_impl>;
   using qmp  = weightset_mixin<detail::qmp_impl>;
   using r    = weightset_mixin<detail::r_impl>;

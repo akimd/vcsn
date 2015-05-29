@@ -1,0 +1,66 @@
+#pragma once
+
+#include <vcsn/core/join.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh> // eat
+#include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/min-plus.hh>
+#include <vcsn/weightset/weightset.hh>
+
+namespace vcsn
+{
+  namespace detail
+  {
+    class nmin_impl
+      : public min_plus_impl<unsigned int>
+    {
+    public:
+      using super_t = min_plus_impl<unsigned int>;
+      using self_t = nmin;
+      using value_t = typename super_t::value_t;
+
+      static symbol sname()
+      {
+        static symbol res("nmin");
+        return res;
+      }
+
+      /// Build from the description in \a is.
+      static nmin make(std::istream& is)
+      {
+        eat(is, sname());
+        return {};
+      }
+
+      using super_t::conv;
+      static value_t
+      conv(self_t, value_t v)
+      {
+        return v;
+      }
+
+      static value_t
+      conv(std::istream& is)
+      {
+        if (is.peek() == '-')
+          fail_reading(is, sname(), ": negative values are invalid");
+        return super_t::conv(is);
+      }
+
+      std::ostream&
+      print_set(std::ostream& o, const std::string& format = "text") const
+      {
+        if (format == "latex")
+          o << "\\mathbb{N}_{\\text{min}}";
+        else if (format == "text")
+          o << sname();
+        else
+          raise("invalid format: ", format);
+        return o;
+      }
+    };
+
+    VCSN_JOIN_SIMPLE(b, nmin);
+    VCSN_JOIN_SIMPLE(nmin, nmin);
+  }
+}
