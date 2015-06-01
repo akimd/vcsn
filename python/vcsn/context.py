@@ -10,7 +10,7 @@ context.__or__ = context.join
 context.__repr__ = lambda self: self.format('text')
 context._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
-context.expression = lambda self, v: expression(self, v)
-context.label =      lambda self, v: label(self, v)
-context.polynomial = lambda self, v: polynomial(self, v)
-context.weight =     lambda self, v: weight(self, v)
+context.expression = lambda *a, **kw: expression(*a, **kw)
+context.label =      lambda *a, **kw: label(*a, **kw)
+context.polynomial = lambda *a, **kw: polynomial(*a, **kw)
+context.weight =     lambda *a, **kw: weight(*a, **kw)

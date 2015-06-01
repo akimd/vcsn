@@ -167,6 +167,7 @@ struct automaton
     : val_(a)
   {}
 
+  /// Derived-term automaton from r.
   automaton(const expression& r);
 
   automaton(const std::string& data = "",
@@ -1151,11 +1152,14 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   namespace bp = boost::python;
   using bp::arg;
 
+  // Activate support for boost::optional.
   python_optional<unsigned>();
 
-  bp::class_<automaton>
-    ("automaton",
-     bp::init<const expression&>())
+  // We use bp::no_init to disable the use of the default ctor from
+  // our classes, and prefer to use "def(init<...>)" to define our
+  // ctors.  It's easier this way to provide default arguments.
+
+  bp::class_<automaton>("automaton", bp::no_init)
     .def(bp::init<const std::string&, const std::string&, const std::string&>
          ((arg("data") = "", arg("format") = "default", arg("filename") = "")))
     .def("accessible", &automaton::accessible)
@@ -1253,9 +1257,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("weight_series", &automaton::weight_series)
     ;
 
-  bp::class_<context>
-    ("context",
-     bp::init<const std::string&>())
+  bp::class_<context>("context", bp::no_init)
+    .def(bp::init<const std::string&>())
     .def("cerny", &context::cerny)
     .def("cotrie", &context::cotrie)
     .def("de_bruijn", &context::de_bruijn)
@@ -1274,9 +1277,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("word", &context::word)
    ;
 
-  bp::class_<expansion>
-    ("expansion",
-     bp::init<const std::string&>())
+  bp::class_<expansion>("expansion", bp::no_init)
+    .def(bp::init<const std::string&>())
     .def("format", &expansion::format)
    ;
 
@@ -1318,16 +1320,14 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("zpc", &expression::zpc, (arg("algo") = "auto"))
     ;
 
-  bp::class_<label>
-    ("label",
-     bp::init<const context&, const std::string&>())
+  bp::class_<label>("label", bp::no_init)
+    .def(bp::init<const context&, const std::string&>())
     .def("format", &label::format)
     .def("multiply", &label::multiply)
    ;
 
-  bp::class_<polynomial>
-    ("polynomial",
-     bp::init<const context&, const std::string&>())
+  bp::class_<polynomial>("polynomial", bp::no_init)
+    .def(bp::init<const context&, const std::string&>())
     .def("cotrie", &polynomial::cotrie)
     .def("format", &polynomial::format)
     .def("ldiv", &polynomial::ldiv)
@@ -1338,9 +1338,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("trie", &polynomial::trie)
    ;
 
-  bp::class_<weight>
-    ("weight",
-     bp::init<const context&, const std::string&>())
+  bp::class_<weight>("weight", bp::no_init)
+    .def(bp::init<const context&, const std::string&>())
     .def("format", &weight::format)
     .def("multiply", &weight::multiply)
     .def("sum", &weight::sum)
