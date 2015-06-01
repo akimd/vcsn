@@ -85,6 +85,18 @@ make_vector(const boost::python::list& list)
   return res;
 }
 
+// Conversion to identities.
+vcsn::rat::identities identities(const std::string& s)
+{
+  std::istringstream is{s};
+  vcsn::rat::identities res;
+  is >> res;
+  if (!is || is.peek() != -1)
+    vcsn::fail_reading(is, "unexpected trailing characters");
+  return res;
+}
+
+
 
 struct automaton;
 struct context;
@@ -777,10 +789,12 @@ struct expression
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
-  expression(const context& ctx, const std::string& r)
-    : expression(ctx, r, vcsn::rat::identities::trivial)
+  expression(const context& ctx, const std::string& r,
+             const std::string& ids = "trivial")
+    : expression{ctx, r, identities(ids)}
   {}
 
+  /// Parse as a series.
   static expression series(const context& ctx, const std::string& r)
   {
     return expression(ctx, r, vcsn::rat::identities::series);
@@ -1282,9 +1296,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &expansion::format)
    ;
 
-  bp::class_<expression>
-    ("expression",
-     bp::init<const context&, const std::string&>())
+  bp::class_<expression>("expression", bp::no_init)
+    .def(bp::init<const context&, const std::string&, const std::string&>
+         ((arg("context"), arg("data"), arg("identities") = "trivial")))
     .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
          chain())
     .def("complement", &expression::complement)
