@@ -104,6 +104,7 @@ namespace vcsn
 
     /// Accessor to the identities set.
     identities_t identities() const;
+    /// Whether series identities are enabled.
     bool is_series() const;
 
     /// Accessor to the labelset.
@@ -216,7 +217,18 @@ namespace vcsn
     static value_t one();
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
+
+    /// Similar to mul, but in the case of LAW, merge the labels.
+    ///
+    ///   Mul(word(a),word(b)) -> prod(word(a), word(b))
+    ///
+    /// but
+    ///
+    ///   Concat(word(a),word(b)) -> word(ab)
+    ///
+    /// In other case, synonym for mul.
     value_t concat(value_t l, value_t r) const;
+
     value_t conjunction(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
     /// Add a power operator.
@@ -352,14 +364,14 @@ namespace vcsn
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of expressions on which to apply associativity.
-    ///               Must be sum, conjunction, shuffle, or prod.
+    ///               Must be one of the variadic types.
     template <type_t Type>
     void gather_(values_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \tparam Type  the kind of expressions on which to apply associativity.
-    ///               Must be SUM or PROD.
+    ///               Must be one of the variadic types.
     template <type_t Type>
     values_t gather_(value_t l, value_t r) const;
 

@@ -1,3 +1,4 @@
+#include <cctype>
 #include <stdexcept>
 
 #include <vcsn/core/rat/identities.hh>
@@ -27,30 +28,23 @@ namespace vcsn
       return os << to_string(i);
     }
 
-    std::istream& operator>>(std::istream& is, identities& i)
+    std::istream& operator>>(std::istream& is, identities& ids)
     {
-      switch (is.peek())
-        {
-        case 't':
-          eat(is, "trivial");
-          i = identities::trivial;
-          break;
-        case 's':
-          eat(is, "series");
-          i = identities::series;
-          break;
-        default:
-          fail_reading(is, "ill-formed identities");
-        }
+      std::string buf;
+      while (is && isalnum(is.peek()))
+        buf += is.get();
+      if (buf == "trivial")
+        ids = identities::trivial;
+      else if (buf == "series")
+        ids = identities::series;
+      else
+        fail_reading(is, "invalid identities: ", buf);
       return is;
     }
 
     identities meet(identities i1, identities i2)
     {
-      if (i1 == identities::trivial || i2 == identities::trivial)
-        return identities::trivial;
-      else
-        return identities::series;
+      return std::max(i1, i2);
     }
 
   } // namespace rat

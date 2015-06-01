@@ -22,8 +22,13 @@ namespace vcsn LIBVCSN_API
       series,
     };
 
+    /// Wrapper around operator<<.
     std::string to_string(identities i);
+
+    /// Read from string form.
     std::istream& operator>>(std::istream& is, identities& i);
+
+    /// Output in string form.
     std::ostream& operator<<(std::ostream& os, identities i);
 
     identities meet(identities i1, identities i2);

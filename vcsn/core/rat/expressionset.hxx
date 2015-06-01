@@ -340,10 +340,14 @@ namespace vcsn
     // to use add rather than just build a vector in order, since the
     // addend order in the result will not follow the order in l.
     value_t res = zero();
+    // FIXME: this piece of code is wrong: it checks for lweight of a
+    // sum, but cast to sum only.  It turns out that lweight of sum is
+    // impossible: it's always turned into a sum of lweights.
     if (type_ignoring_lweight_(l) == type_t::sum)
       // l is a sum, and r might be as well.
       for (const auto& la: *down_pointer_cast<const sum_t>(l))
         res = add(res, mul(la, r));
+    // FIXME: same error (see above).
     else if (type_ignoring_lweight_(r) == type_t::sum)
       // r is a sum, l is not.
       for (const auto& ra: *down_pointer_cast<const sum_t>(r))
@@ -457,33 +461,31 @@ namespace vcsn
   DEFINE::power(value_t e, unsigned n) const
     -> value_t
   {
-    value_t res = e;
-
     // Here are match each possible cases:
     // Given E the expression s.t. E{n} = (<k>a){n},
 
     // Case: E{0}
     if (n == 0)
-        return one();
+      return one();
 
     // Case: E{1}
-    if (n == 1)
-        return res;
+    else if (n == 1)
+      return e;
 
-    // Case: a == \z or <0>a
-    if (e->type() == type_t::zero
-        || type_ignoring_lweight_(e) == type_t::zero)
-        return zero();
+    // Case: a == \z.
+    else if (e->type() == type_t::zero)
+      return zero();
 
     // Case: a == \e
-    if (type_ignoring_lweight_(e) == type_t::one)
+    else if (type_ignoring_lweight_(e) == type_t::one)
       {
         weight_t w = possibly_implicit_lweight_(e);
         return std::make_shared<lweight_t>(weightset()->power(w, n), one());
       }
 
-    // Default case: E{n}
-    return std::make_shared<prod_t>(values_t(n, e));
+    // Default case: E{n} = E...E.
+    else
+      return std::make_shared<prod_t>(values_t(n, e));
   }
 
   DEFINE::concat(value_t l, value_t r) const
@@ -609,7 +611,7 @@ namespace vcsn
         // We can build the result faster by emplace_back'ing addends without
         // passing thru add; the order will be the same as in *ss.
         values_t addends;
-        for (auto& a: *s)
+        for (const auto& a: *s)
           addends.emplace_back(lmul(w, a));
         return std::make_shared<sum_t>(std::move(addends));
       }
