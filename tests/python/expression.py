@@ -205,4 +205,4 @@ ctx = vcsn.context('law_char(abcd), z')
 
 check(ctx, '(a<5>)b', '<5>(ab)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
-check(ctx, 'a*+b(c+<2>d)', 'bc+<2>(bd)+a*')
+check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')

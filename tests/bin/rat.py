@@ -9,6 +9,8 @@ from test import *
 context = 'lal_char(abcd), b'
 # The current context.
 ctx = vcsn.context(context)
+# Whether expressions or series.
+identities = "trivial"
 
 # Compute the name of the context.
 contexts = {
@@ -31,14 +33,15 @@ def pp(re):
   '''Parse and pretty-print.  If it fails, prepend "! " to the error
   message and return it as result.  Strip the "try -h" line.'''
   try:
-    return str(ctx.expression(re))
+    print(re, identities)
+    return str(ctx.expression(re, identities))
   except RuntimeError:
     return "! " + str(sys.exc_info()[1])
 
 def check_rat_exp(fname):
   file = open(fname, 'r')
   lineno = 0
-  global context
+  global context, identities
   for line in file:
     lineno += 1
     loc = fname + ':' + str(lineno)
@@ -73,6 +76,12 @@ def check_rat_exp(fname):
       context = m.group(1)
       print('# %context:', context)
       context_update()
+      continue
+
+    m = re.match('%identities: (.*)$', line)
+    if m is not None:
+      identities = m.group(1)
+      print('# %identities:', identities)
       continue
 
     m = re.match('%include: (.*)$', line)

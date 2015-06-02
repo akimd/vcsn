@@ -362,7 +362,7 @@ namespace vcsn
           nl = unwrap_possible_lweight_(l),
           nr = unwrap_possible_lweight_(r);
         res = lmul(weightset()->mul(lw, rw),
-                   concat(nl, nr));
+                   nontrivial_mul_expressions_(nl, nr));
       }
     return res;
   }

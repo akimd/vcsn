@@ -40,3 +40,15 @@ a<2><3>   => <6>a
 <1>\z => \z
 
 a<2> => <2>a
+
+# Check series
+%identities: series
+a+a => <2>a
+b+a => a+b
+a+b+a+b => <2>a+<2>b
+<2>[abc] => <2>a+<2>b+<2>c
+
+%labels: words
+# Be sure that we get a product of two labels, not a single word,
+(<2>a)(<2>a) => <4>(aa)
+(<2>a)(<2>a) == <4>((a)(a))
