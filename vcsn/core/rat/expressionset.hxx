@@ -461,31 +461,43 @@ namespace vcsn
   DEFINE::power(value_t e, unsigned n) const
     -> value_t
   {
-    // Here are match each possible cases:
-    // Given E the expression s.t. E{n} = (<k>a){n},
+    value_t res = nullptr;
+    // Given E the expression s.t. E{n} = (<k>a){n}.
 
-    // Case: E{0}
+    // Case: E{0}.
     if (n == 0)
-      return one();
+      res = one();
 
-    // Case: E{1}
+    // Case: E{1}.
     else if (n == 1)
-      return e;
+      res = e;
 
     // Case: a == \z.
     else if (e->type() == type_t::zero)
-      return zero();
+      res = zero();
 
-    // Case: a == \e
+    // Case: a == <w>\e.
     else if (type_ignoring_lweight_(e) == type_t::one)
       {
         weight_t w = possibly_implicit_lweight_(e);
-        return std::make_shared<lweight_t>(weightset()->power(w, n), one());
+        res = lmul(weightset()->power(w, n), one());
       }
 
-    // Default case: E{n} = E...E.
+    // Sums in series: we have to distribute ([ab]{2} = aa+ab+ba+bb,
+    // (<2>a){2} => <4>(aa)).
+    else if (is_series()
+             && (e->type() == type_t::sum
+                 || e->type() == type_t::lweight))
+      {
+        // FIXME: code duplication with weightset_mixin::power_.
+        res = e;
+        for (unsigned i = 1; i < n; ++i)
+          res = mul(res, e);
+      }
     else
-      return std::make_shared<prod_t>(values_t(n, e));
+      // Default case: E{n} = E...E.
+      res = std::make_shared<prod_t>(values_t(n, e));
+    return res;
   }
 
   DEFINE::concat(value_t l, value_t r) const
