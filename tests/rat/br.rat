@@ -30,6 +30,11 @@ a<x> ! 1.2-5: 1.1: char_letters: invalid letter: x
 (<i>a){+} => <i>a(<i>a)*
 
 # Check the "{min, max}" quantifier.
+\z{0} => \e
+\z{2} => \z
+\e{0} => \e
+\e{2} => \e
+
 (<i>a){0} => \e
 (<i>a){1} => <i>a
 (<i>a){2} => <i>a<i>a

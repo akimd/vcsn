@@ -104,6 +104,10 @@ namespace vcsn
 
     /// Accessor to the identities set.
     identities_t identities() const;
+
+    /// Whether traditional identities are enabled.
+    bool traditional_identities() const;
+
     /// Whether series identities are enabled.
     bool is_series() const;
 

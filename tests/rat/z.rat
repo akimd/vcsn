@@ -41,12 +41,18 @@ a<2><3>   => <6>a
 
 a<2> => <2>a
 
-# Check series
-%identities: series
+# Check "traditional": ACI
+%identities: traditional
 a+a => <2>a
 b+a => a+b
 a+b+a+b => <2>a+<2>b
+
+# Check series: add distributivity.
+%identities: series
+a(c+b)(f+e) => abe+abf+ace+acf
 <2>[abc] => <2>a+<2>b+<2>c
+[ab]{2} => aa+ab+ba+bb
+(<2>a){2} => <4>(aa)
 
 %labels: words
 # Be sure that we get a product of two labels, not a single word,

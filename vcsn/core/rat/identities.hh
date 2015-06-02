@@ -18,7 +18,11 @@ namespace vcsn LIBVCSN_API
       /// Trivial identities only.
       trivial,
 
-      /// Trivial identities plus series identities.
+      /// Trivial, plus associativity, commutatitivity, and
+      /// "idempotence" for sum.
+      traditional,
+
+      /// Traditional plus series identities (distributes).
       series,
     };
 

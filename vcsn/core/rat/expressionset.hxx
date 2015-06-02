@@ -83,6 +83,11 @@ namespace vcsn
     return identities_;
   }
 
+  DEFINE::traditional_identities() const -> bool
+  {
+    return identities_t::traditional <= identities_;
+  }
+
   DEFINE::is_series() const -> bool
   {
     return identities_ == identities_t::series;
@@ -158,7 +163,7 @@ namespace vcsn
     else if (r->type() == type_t::zero)
       res = l;
     // END: Trivial Identity
-    else if (is_series())
+    else if (traditional_identities())
       res = add_nonzero_series_(l, r);
     else
       res = std::make_shared<sum_t>(gather_<type_t::sum>(l, r));

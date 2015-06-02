@@ -17,6 +17,8 @@ namespace vcsn
         {
         case identities::trivial:
           return "trivial";
+        case identities::traditional:
+          return "traditional";
         case identities::series:
           return "series";
         }
@@ -35,6 +37,8 @@ namespace vcsn
         buf += is.get();
       if (buf == "trivial")
         ids = identities::trivial;
+      else if (buf == "traditional")
+        ids = identities::traditional;
       else if (buf == "series")
         ids = identities::series;
       else
