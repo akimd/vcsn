@@ -34,6 +34,7 @@ algo_headers =                                  \
   %D%/algos/efsm.hh                             \
   %D%/algos/epsilon-remover.hh                  \
   %D%/algos/epsilon-remover-separate.hh         \
+  %D%/algos/epsilon-remover-distance.hh         \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
   %D%/algos/filter.hh                           \

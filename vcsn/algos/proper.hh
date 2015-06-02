@@ -23,8 +23,9 @@
 #include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/vector.hh> // make_vector
 
-#include <vcsn/algos/epsilon-remover-separate.hh>
 #include <vcsn/algos/epsilon-remover.hh>
+#include <vcsn/algos/epsilon-remover-separate.hh>
+#include <vcsn/algos/epsilon-remover-distance.hh>
 
 namespace vcsn
 {
@@ -79,6 +80,11 @@ namespace vcsn
         else if (algo_ == "separate")
           {
             detail::epsilon_remover_separate<automaton_t> r(aut_, prune_);
+            return r();
+          }
+        else if (algo_ == "distance")
+          {
+            detail::epsilon_remover_distance<automaton_t> r(aut_, prune_);
             return r();
           }
         else
