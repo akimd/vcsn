@@ -41,18 +41,7 @@ namespace vcsn
       else if (t == "fado")
         return read_fado(is);
       else
-        raise(t + ": unknown format");
-    }
-
-    /*-------------.
-    | read_label.  |
-    `-------------*/
-
-    REGISTER_DEFINE(read_label);
-    label
-    read_label(const dyn::context& ctx, std::istream& is)
-    {
-      return detail::read_label_registry().call(ctx, is);
+        raise("invalid automaton input format:", t);
     }
 
     /*-------------------.
@@ -66,9 +55,20 @@ namespace vcsn
       if (t == "text" || t == "default" || t == "")
         return rat::read(rs, is);
       else
-        raise("invalid input format for expression: ", t);
+        raise("invalid expression input format: ", t);
     }
 
+
+    /*-------------.
+    | read_label.  |
+    `-------------*/
+
+    REGISTER_DEFINE(read_label);
+    label
+    read_label(const dyn::context& ctx, std::istream& is)
+    {
+      return detail::read_label_registry().call(ctx, is);
+    }
 
     /*------------------.
     | read_polynomial.  |

@@ -411,6 +411,9 @@ namespace vcsn
     automaton_editor* make_automaton_editor(const context& ctx);
 
     /// Build an expressionset from its context.
+    ///
+    /// \param ctx  the context
+    /// \param is   the identities to apply
     expressionset make_expressionset(const context& ctx,
                                      ::vcsn::rat::identities is);
 
@@ -739,14 +742,14 @@ namespace std LIBVCSN_API
   /// Output expansion \a e on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expansion& e);
 
+  /// Output expression \a e on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expression& e);
+
   /// Output label \a l on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::label& l);
 
   /// Output polynomial \a p on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::polynomial& p);
-
-  /// Output expression \a e on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expression& e);
 
   /// Output weight \a w on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);
