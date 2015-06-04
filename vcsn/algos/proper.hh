@@ -19,6 +19,7 @@
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/labelset.hh> // make_proper_context
 #include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/vector.hh> // make_vector
@@ -162,16 +163,12 @@ namespace vcsn
     switch (dir)
       {
       case direction::backward:
-        {
-          auto p = detail::make_properer(aut, prune, algo);
-          return p();
-        }
+        return detail::make_properer(aut, prune, algo)();
       case direction::forward:
-        {
-          auto p = detail::make_properer(transpose(aut), prune, algo);
-          return transpose(p());
-        }
+        return transpose(proper(transpose(aut),
+                                direction::backward, prune, algo));
       }
+    BUILTIN_UNREACHABLE();
   }
 
   namespace dyn
@@ -187,7 +184,5 @@ namespace vcsn
         return make_automaton(::vcsn::proper(a, dir, prune, algo));
       }
     }
-
   }
-
 } // namespace vcsn
