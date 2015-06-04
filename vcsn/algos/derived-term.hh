@@ -23,15 +23,16 @@ namespace vcsn
   {
     /// Compute the derived-term automaton from an expression.
     ///
-    /// Supports derivation/expansion as its core computation,
-    /// with breaking/non breaking flavors for both.
+    /// Supports derivation/expansion as its core computation, with
+    /// breaking/non breaking flavors for both.
     ///
     /// The handling of initial and final states can be simplified by
     /// working on a delimited rational expression (`$r$` with `$`
-    /// being the special label), and mapping `$r$` to `pre()`, and `\e`
-    /// to `post()`.  Then, there is no special treatment needed to
-    /// handle the initial split in the case of a breaking derivation,
-    /// and there is no special need to handle the final transitions.
+    /// being the special label), and mapping `$r$` to `pre()`, and
+    /// `\e` to `post()`.  Then, there is no special treatment needed
+    /// to handle the initial split in the case of a breaking
+    /// derivation, and there is no special need to handle the final
+    /// transitions.
     ///
     /// However there are two problems.
     ///
@@ -45,10 +46,10 @@ namespace vcsn
     /// However it means that the states are no longer labeled by the
     /// expressions as the user would expect them: there is always the
     /// terminating $.  Not showing it does not address the issue,
-    /// which is that we'd rather not have it at all.
+    /// which is why we'd rather not have it at all.
     ///
     /// So, after experimentation, as of 2014-10, I prefer not to use
-    /// the pre/post based construct in neither case.
+    /// the pre/post based construct in either case.
     template <typename ExpSet>
     struct derived_termer
     {
@@ -96,7 +97,7 @@ namespace vcsn
       {
         init_(expression);
 
-        rat::to_expansion_visitor<expressionset_t> expand{rs_};
+        auto expand = rat::to_expansion_visitor<expressionset_t>{rs_};
         while (!res_->todo_.empty())
           {
             expression_t src = res_->todo_.top();

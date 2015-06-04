@@ -132,7 +132,7 @@ namespace vcsn
       static typename kept_tapes_t::value_t
       kept_label_(const in_label_t& l, seq<I...>)
       {
-        return typename kept_tapes_t::value_t{(std::get<I>(l))...};
+        return typename kept_tapes_t::value_t{std::get<I>(l)...};
       }
 
       static typename weight_tapes_t::value_t
@@ -145,7 +145,7 @@ namespace vcsn
       static typename weight_tapes_t::value_t
       weight_label_(const in_label_t& l, seq<I...>)
       {
-        return typename weight_tapes_t::value_t{(std::get<I>(l))...};
+        return typename weight_tapes_t::value_t{std::get<I>(l)...};
       }
     };
 
