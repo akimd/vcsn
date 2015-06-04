@@ -269,47 +269,9 @@ namespace vcsn
     std::ostream& print(const value_t v, std::ostream& o,
                         const std::string& format = "text") const;
 
-    std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
-    {
-      if (format == "latex")
-        {
-          o << "\\mathsf{";
-          switch (identities().ids())
-            {
-            case identities_t::trivial:
-              o << "RatE";
-              break;
-            case identities_t::series:
-              o << "Series";
-              break;
-            default:
-              assert(false);
-            };
-          o << "}[";
-          context().print_set(o, format);
-          o << ']';
-        }
-      else if (format == "text")
-        {
-          switch (identities().ids())
-            {
-            case identities_t::trivial:
-              o <<  "expressionset<";
-              break;
-            case identities_t::series:
-              o << "seriesset<";
-              break;
-            default:
-              assert(false);
-            }
-          context().print_set(o, format);
-          o << '>';
-        }
-      else
-        raise("invalid format: ", format);
-      return o;
-    }
+    /// Format the description of this expressionset.
+    std::ostream& print_set(std::ostream& o,
+                            const std::string& format = "text") const;
 
   private:
     /// Ourself, but after the application of weightset_mixin.

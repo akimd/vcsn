@@ -72,9 +72,6 @@ istream: is
 The print functions take the printee first, then the stream.
 
 * Environment variables
-** VCSN_BINARY
-Force expressionset to build AST variadic nodes with only two children.
-
 ** VCSN_DEBUG
 Don't remove temporary files (which is especially useful to keep debug
 symbols in plugins).

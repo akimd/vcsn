@@ -790,7 +790,7 @@ struct expression
   }
 
   expression(const context& ctx, const std::string& r,
-             const std::string& ids = "trivial")
+             const std::string& ids)
     : expression{ctx, r, identities(ids)}
   {}
 
@@ -1298,7 +1298,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<expression>("expression", bp::no_init)
     .def(bp::init<const context&, const std::string&, const std::string&>
-         ((arg("context"), arg("data"), arg("identities") = "trivial")))
+         ((arg("context"), arg("data"), arg("identities") = "associative")))
     .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
          chain())
     .def("complement", &expression::complement)

@@ -28,25 +28,30 @@ namespace vcsn LIBVCSN_API
           /// Trivial identities only.
           trivial,
 
-          /// Trivial, plus associativity, commutatitivity, and
-          /// "idempotence" for sum.
+          /// Trivial, plus associativity of sum and product.
+          associative,
+
+          /// Associative plus commutativity, and "idempotence" for
+          /// sum.
           traditional,
 
           /// Traditional plus series identities (distributes).
           series,
         };
 
-      identities(ids_t id)
+      identities(ids_t id = associative)
         : ids_{id}
-      {}
-
-      identities()
-        : identities{trivial}
       {}
 
       ids_t ids() const
       {
         return ids_;
+      }
+
+      /// Whether associative.
+      bool is_associative() const
+      {
+        return associative <= ids_;
       }
 
       /// Whether traditional.

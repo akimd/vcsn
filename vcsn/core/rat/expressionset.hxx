@@ -67,6 +67,49 @@ namespace vcsn
     return {ctx, ids};
   }
 
+  DEFINE::print_set(std::ostream& o, const std::string& format) const
+    -> std::ostream&
+  {
+    if (format == "latex")
+      {
+        o << "\\mathsf{";
+        switch (identities().ids())
+          {
+          case identities_t::trivial:
+            o << "RatE";
+            break;
+          case identities_t::series:
+            o << "Series";
+            break;
+          default:
+            assert(false);
+          };
+        o << "}[";
+        context().print_set(o, format);
+        o << ']';
+      }
+    else if (format == "text")
+      {
+        if (identities().ids() == vcsn::rat::identities::series)
+          {
+            o << "seriesset<";
+            context().print_set(o, format);
+            o << '>';
+          }
+        else
+          {
+            o << "expressionset<";
+            context().print_set(o, format);
+            o << '>';
+            if (identities() != vcsn::rat::identities{})
+              o << '(' << identities() << ')';
+          }
+      }
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
   DEFINE::open(bool o) const
     -> bool
   {
@@ -121,9 +164,8 @@ namespace vcsn
   expressionset_impl<Context>::gather_(values_t& res, value_t v) const
     -> void
   {
-    static bool binary = !! getenv("VCSN_BINARY");
     auto variadic = std::dynamic_pointer_cast<const variadic_t<Type>>(v);
-    if (variadic && ! binary)
+    if (variadic && ids_.is_associative())
       res.insert(std::end(res), std::begin(*variadic), std::end(*variadic));
     else
       res.push_back(v);
