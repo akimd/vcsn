@@ -15,9 +15,9 @@ notebooksdir = $(htmldir)/notebooks
 
 dist_notebooks_DATA =                           \
   %D%/Algorithms.ipynb                          \
+  %D%/Automata.ipynb                            \
   %D%/Contexts.ipynb                            \
   %D%/D3_IPython_widget.ipynb                   \
-  %D%/Editing-Automata.ipynb                    \
   %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
