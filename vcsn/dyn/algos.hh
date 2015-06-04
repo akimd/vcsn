@@ -413,9 +413,9 @@ namespace vcsn
     /// Build an expressionset from its context.
     ///
     /// \param ctx  the context
-    /// \param is   the identities to apply
+    /// \param ids  the identities to apply
     expressionset make_expressionset(const context& ctx,
-                                     ::vcsn::rat::identities is);
+                                     ::vcsn::rat::identities ids = {});
 
     /// The context for words.
     context make_word_context(const context& ctx);

@@ -14,8 +14,7 @@ check_mutable_automaton()
 
   // labels_are_letters (w, x, y, z) for weights.
   auto ctx_b = vcsn::ctx::lal_char_b{{'w', 'x', 'y', 'z'}};
-  auto ids = vcsn::rat::identities::trivial;
-  auto ks_b = vcsn::expressionset<vcsn::ctx::lal_char_b>(ctx_b, ids);
+  auto ks_b = vcsn::expressionset<vcsn::ctx::lal_char_b>(ctx_b);
   // At some point, because of improper implementation of conv, we
   // used to fail a cast here.
   conv(ks_b, "wxyz");

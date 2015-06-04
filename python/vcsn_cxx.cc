@@ -801,7 +801,7 @@ struct expression
   }
 
   /// Convert \a this to \a ctx, using \a ids.
-  expression as_(const ::context& ctx, vcsn::rat::identities ids)
+  expression as_(const ::context& ctx, vcsn::rat::identities ids = {})
   {
     // The destination expressionset.
     auto rs = vcsn::dyn::make_expressionset((ctx ? ctx : context()).val_, ids);
@@ -812,7 +812,7 @@ struct expression
   /// identities.
   expression as_expression(const ::context& ctx = {})
   {
-    return as_(ctx, vcsn::rat::identities::trivial);
+    return as_(ctx);
   }
 
   /// Same expression/series, but in context \a ctx, with series identities.

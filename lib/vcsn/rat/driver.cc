@@ -28,8 +28,7 @@ namespace vcsn
 
     void driver::context(const std::string& ctx)
     {
-      rat::identities ids = rat::identities::trivial;
-      expressionset(dyn::make_expressionset(dyn::make_context(ctx), ids));
+      expressionset(dyn::make_expressionset(dyn::make_context(ctx)));
     }
 
     void

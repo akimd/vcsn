@@ -13,7 +13,7 @@ namespace vcsn
 
     std::string to_string(identities i)
     {
-      switch (i)
+      switch (i.ids())
         {
         case identities::trivial:
           return "trivial";
@@ -35,14 +35,18 @@ namespace vcsn
       std::string buf;
       while (is && isalnum(is.peek()))
         buf += is.get();
+
+      identities::ids_t id;
       if (buf == "trivial")
-        ids = identities::trivial;
+        id = identities::trivial;
       else if (buf == "traditional")
-        ids = identities::traditional;
+        id = identities::traditional;
       else if (buf == "series")
-        ids = identities::series;
+        id = identities::series;
       else
         fail_reading(is, "invalid identities: ", buf);
+
+      ids = identities{id};
       return is;
     }
 

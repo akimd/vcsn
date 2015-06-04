@@ -36,9 +36,7 @@ namespace vcsn
     lifted_context_t<context<LabelSet, WeightSet>>
     lift_context(const context<LabelSet, WeightSet>& ctx)
     {
-      auto rs_in
-        = expressionset<context<LabelSet, WeightSet>>(ctx,
-                                                  rat::identities::trivial);
+      auto rs_in = expressionset<context<LabelSet, WeightSet>>{ctx};
       return {oneset{}, rs_in};
     }
 
@@ -114,12 +112,10 @@ namespace vcsn
       template <size_t... KeptTapes>
       static context_t value_(const in_context_t& ctx, seq<KeptTapes...>)
       {
-        expr_t rs
-          (inner_context_t(
-                     weight_tapes_t{(ctx.labelset()->template set<Tapes>())...},
-                     *(ctx.weightset())),
-                 rat::identities::trivial);
-        return {kept_tapes_t{(ctx.labelset()->template set<KeptTapes>())...}, rs};
+        auto rs =
+          expr_t{inner_context_t{weight_tapes_t{ctx.labelset()->template set<Tapes>()...},
+                                 *ctx.weightset()}};
+        return {kept_tapes_t{ctx.labelset()->template set<KeptTapes>()...}, rs};
       }
 
       static typename kept_tapes_t::value_t
@@ -158,10 +154,10 @@ namespace vcsn
     lifted_context_tape_t<context<LabelSet, WeightSet>, Tapes...>
     lift_context_tape(const context<LabelSet, WeightSet>& ctx)
     {
-      using ctx_t = lifted_context_tape_t<context<LabelSet, WeightSet>, Tapes...>;
-      auto rs_in
-        = expressionset<context<typename ctx_t::weight_tapes_t, WeightSet>>
-                (ctx, rat::identities::trivial);
+      using ctx_t =
+        lifted_context_tape_t<context<LabelSet, WeightSet>, Tapes...>;
+      auto rs_in =
+        expressionset<context<typename ctx_t::weight_tapes_t, WeightSet>>{ctx};
       return {oneset{}, rs_in};
     }
 
@@ -182,13 +178,13 @@ namespace vcsn
 
     // Produce expressions of the same context as the original automaton.
     using rs_in_t = expressionset<ctx_in_t>;
-    rs_in_t rs_in{a->context(), rs_in_t::identities_t::trivial};
+    auto rs_in = rs_in_t{a->context()};
 
     auto ctx_out = detail::lift_context(a->context());
     using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
     using state_out_t = state_t_of<auto_out_t>;
     auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
-    std::map<state_in_t, state_out_t> map;
+    auto map = std::map<state_in_t, state_out_t>{};
     map[a->pre()] = res->pre();
     map[a->post()] = res->post();
     for (auto s: a->states())
@@ -229,7 +225,7 @@ namespace vcsn
       using auto_out_t = detail::lifted_automaton_tape_t<auto_in_t, Tapes...>;
       using state_out_t = state_t_of<auto_out_t>;
       auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
-      std::map<state_in_t, state_out_t> map;
+      auto map = std::map<state_in_t, state_out_t>{};
       map[a->pre()] = res->pre();
       map[a->post()] = res->post();
       for (auto s: a->states())

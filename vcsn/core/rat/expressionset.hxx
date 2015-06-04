@@ -28,11 +28,11 @@ namespace vcsn
 
   template <typename Context>
   expressionset_impl<Context>::expressionset_impl(const context_t& ctx,
-                                                  identities_t identities)
+                                                  identities_t ids)
     : ctx_(ctx)
-    , identities_(identities)
+    , ids_(ids)
   {
-    require(identities_ != identities_t::series
+    require(!ids_.is_series()
             || weightset_t_of<Context>::is_commutative(),
             "series (currently) requires a commutative weightset product");
   }
@@ -57,7 +57,7 @@ namespace vcsn
     eat(is, "expressionset<");
     auto ctx = Context::make(is);
     eat(is, '>');
-    identities_t ids = rat::identities::trivial;
+    auto ids = identities_t{};
     if (is.peek() == '(')
       {
         eat(is, '(');
@@ -80,17 +80,7 @@ namespace vcsn
 
   DEFINE::identities() const -> identities_t
   {
-    return identities_;
-  }
-
-  DEFINE::traditional_identities() const -> bool
-  {
-    return identities_t::traditional <= identities_;
-  }
-
-  DEFINE::is_series() const -> bool
-  {
-    return identities_ == identities_t::series;
+    return ids_;
   }
 
   DEFINE::labelset() const -> const labelset_ptr&
@@ -163,7 +153,7 @@ namespace vcsn
     else if (r->type() == type_t::zero)
       res = l;
     // END: Trivial Identity
-    else if (traditional_identities())
+    else if (ids_.is_traditional())
       res = add_nonzero_series_(l, r);
     else
       res = std::make_shared<sum_t>(gather_<type_t::sum>(l, r));
@@ -285,7 +275,7 @@ namespace vcsn
   DEFINE::mul(value_t l, value_t r) const
     -> value_t
   {
-    if (is_series())
+    if (ids_.is_series())
       return mul_series_(l, r);
     else
       return mul_expressions_(l, r);
@@ -320,7 +310,7 @@ namespace vcsn
     else if (type_ignoring_lweight_(l) == type_t::one)
       res = lmul(possibly_implicit_lweight_(l), r);
     // END: Trivial Identity
-    else if (series) // Different from is_series().
+    else if (series) // Different from ids_.is_series().
       res = nontrivial_mul_series_(l, r);
     else
       res = nontrivial_mul_expressions_(l, r);
@@ -490,7 +480,7 @@ namespace vcsn
 
     // Sums in series: we have to distribute ([ab]{2} = aa+ab+ba+bb,
     // (<2>a){2} => <4>(aa)).
-    else if (is_series()
+    else if (ids_.is_series()
              && (e->type() == type_t::sum
                  || e->type() == type_t::lweight))
       {
@@ -566,7 +556,7 @@ namespace vcsn
     else
       {
         value_t res = std::make_shared<star_t>(e);
-        require(!is_series() || is_valid(*this, res),
+        require(!ids_.is_series() || is_valid(*this, res),
                 "star argument ", e, " not starrable");
         return res;
       }
@@ -622,7 +612,7 @@ namespace vcsn
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
       return lmul(weightset()->mul(w, lw->weight()), lw->sub());
     // General case: <k>E.
-    else if (is_series() && e->type() == type_t::sum)
+    else if (ids_.is_series() && e->type() == type_t::sum)
       {
         const auto& s = down_pointer_cast<const sum_t>(e);
         // We can build the result faster by emplace_back'ing addends without
@@ -655,7 +645,7 @@ namespace vcsn
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
       return rmul(rw->sub(), weightset()->mul(rw->weight(), w));
     // Series: distribute rmul on sums.
-    else if (is_series() && e->type() == type_t::sum)
+    else if (ids_.is_series() && e->type() == type_t::sum)
       {
         const auto& s = down_pointer_cast<const sum_t>(e);
         // Differently from the lmul case here the order of addends in
@@ -720,7 +710,7 @@ namespace vcsn
   DEFINE::conv(const self_t& rs, value_t v) const
     -> value_t
   {
-    if (identities() == rs.identities())
+    if (ids_ == rs.ids_)
       return v;
     else
       return vcsn::rat::copy(rs, self(), v);

@@ -88,11 +88,9 @@ namespace vcsn
     static self_t make(std::istream& is);
 
     /// Constructor.
-    /// \param ctx        the generator set for the labels, and the weight set.
-    /// \param identities the identities to guarantee
-    ///                    FIXME: make this optional again?
-    expressionset_impl(const context_t& ctx,
-                       identities_t identities);
+    /// \param ctx  the generator set for the labels, and the weight set.
+    /// \param ids  the identities to guarantee
+    expressionset_impl(const context_t& ctx, identities_t ids = {});
 
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept unknown letters
@@ -104,12 +102,6 @@ namespace vcsn
 
     /// Accessor to the identities set.
     identities_t identities() const;
-
-    /// Whether traditional identities are enabled.
-    bool traditional_identities() const;
-
-    /// Whether series identities are enabled.
-    bool is_series() const;
 
     /// Accessor to the labelset.
     const labelset_ptr& labelset() const;
@@ -283,7 +275,7 @@ namespace vcsn
       if (format == "latex")
         {
           o << "\\mathsf{";
-          switch (identities())
+          switch (identities().ids())
             {
             case identities_t::trivial:
               o << "RatE";
@@ -300,7 +292,7 @@ namespace vcsn
         }
       else if (format == "text")
         {
-          switch (identities_)
+          switch (identities().ids())
             {
             case identities_t::trivial:
               o <<  "expressionset<";
@@ -398,7 +390,7 @@ namespace vcsn
 
   private:
     context_t ctx_;
-    const identities_t identities_;
+    const identities_t ids_;
   };
   } // rat::
 
@@ -502,7 +494,7 @@ namespace vcsn
   /// Shorthand to expressionset constructor.
   template <typename Context>
   expressionset<Context>
-  make_expressionset(const Context& ctx, rat::identities identities)
+  make_expressionset(const Context& ctx, rat::identities identities = {})
   {
     return {ctx, identities};
   }

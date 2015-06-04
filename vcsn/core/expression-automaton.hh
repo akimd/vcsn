@@ -43,7 +43,8 @@ namespace vcsn
 
       expression_automaton_impl(const context_t& ctx)
         : super_t(ctx)
-        , rs_(ctx, rat::identities::trivial)
+        // FIXME: identities!
+        , rs_(ctx)
       {}
 
       /// Static name.

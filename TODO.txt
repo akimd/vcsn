@@ -68,6 +68,13 @@ break too much") rather that something like expand.  What are the expected
 features of the right definition?
 
 * Bugs
+** Incorrect expressionset
+The expression_automaton builds its own expressionset, so it loses the one
+from the caller, which is the one which knows the identities to use!
+
+As a matter of fact, we need to revise the propagation of the identities
+everywhere.
+
 ** Incorrect context
 When trie(istream) adds words to the trie, the context used to parse the
 stream is not the one of the automaton we are buildding.  As a result, we

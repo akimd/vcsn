@@ -11,19 +11,73 @@ namespace vcsn LIBVCSN_API
   namespace rat
   {
 
-    /// An expressionset can implement several different sets of identities on
-    /// expressions.  This type represents one of those sets.
-    enum class identities
+    /// An expressionset can implement several different sets of
+    /// identities on expressions.  This type represents one of those
+    /// sets.
+    ///
+    /// Could have been a simple enum class, but having a constructor
+    /// is helping to select the default identities other than the
+    /// first one.
+    class identities
     {
-      /// Trivial identities only.
-      trivial,
+    public:
+      using self_t = identities;
 
-      /// Trivial, plus associativity, commutatitivity, and
-      /// "idempotence" for sum.
-      traditional,
+      enum ids_t
+        {
+          /// Trivial identities only.
+          trivial,
 
-      /// Traditional plus series identities (distributes).
-      series,
+          /// Trivial, plus associativity, commutatitivity, and
+          /// "idempotence" for sum.
+          traditional,
+
+          /// Traditional plus series identities (distributes).
+          series,
+        };
+
+      identities(ids_t id)
+        : ids_{id}
+      {}
+
+      identities()
+        : identities{trivial}
+      {}
+
+      ids_t ids() const
+      {
+        return ids_;
+      }
+
+      /// Whether traditional.
+      bool is_traditional() const
+      {
+        return traditional <= ids_;
+      }
+
+      /// Whether series.
+      bool is_series() const
+      {
+        return series <= ids_;
+      }
+
+      bool operator<(self_t that) const
+      {
+        return ids_ < that.ids_;
+      }
+
+      bool operator==(self_t that) const
+      {
+        return ids_ == that.ids_;
+      }
+
+      bool operator!=(self_t that) const
+      {
+        return !operator==(that);
+      }
+
+    private:
+      ids_t ids_;
     };
 
     /// Wrapper around operator<<.

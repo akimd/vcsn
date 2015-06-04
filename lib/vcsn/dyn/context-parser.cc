@@ -345,14 +345,14 @@ namespace vcsn
       eat(is_, '<');
       auto context = context_();
       eat(is_, '>');
-      rat::identities identities = rat::identities::trivial;
+      auto ids = rat::identities{};
       if (is_.peek() == '(')
         {
           eat(is_, '(');
-          is_ >> identities;
+          is_ >> ids;
           eat(is_, ')');
         }
-      return std::make_shared<expressionset>(context, identities);
+      return std::make_shared<expressionset>(context, ids);
     }
 
     std::shared_ptr<expressionset>

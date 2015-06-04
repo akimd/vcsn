@@ -103,7 +103,7 @@ vcsn::dyn::expression
 read_expression(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
-  auto rs = vcsn::dyn::make_expressionset(ctx, vcsn::rat::identities::trivial);
+  auto rs = vcsn::dyn::make_expressionset(ctx);
   auto is = input(opts);
   auto res = vcsn::dyn::read_expression(rs, *is, opts.input_format);
   check_eof(*is);
