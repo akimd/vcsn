@@ -14,7 +14,7 @@ medir = srcdir + '/tests/python/product.dir'
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
 a1 = z.expression('a*a').derived_term().strip()
-CHECK_EQ('(<3>a)*(a+<2>aa*a+<2>aa*a)', str(a1.infiltration(a1).expression()))
+CHECK_EQ('(<3>a)*(a+<2>(<2>aa*a))', str(a1.infiltration(a1).expression()))
 
 ## -------------------- ##
 ## Hand crafted tests.  ##

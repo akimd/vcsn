@@ -39,7 +39,7 @@ namespace vcsn LIBVCSN_API
           series,
         };
 
-      identities(ids_t id = associative)
+      identities(ids_t id = traditional)
         : ids_{id}
       {}
 

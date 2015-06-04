@@ -10,7 +10,7 @@ context = 'lal_char(abcd), b'
 # The current context.
 ctx = vcsn.context(context)
 # Whether expressions or series.
-identities = "associative"
+identities = "traditional"
 
 # Compute the name of the context.
 contexts = {

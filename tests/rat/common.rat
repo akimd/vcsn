@@ -19,12 +19,11 @@ ab* == a(b*)
 aa* == a(a*)
 a** => a**
 (a+b)c+b == (a+b).c+b
-(a+\e)*+b => (a+\e)*+b
+(a+\e)*+b => b+(\e+a)*
 \e+a => \e+a
 (a) => a
 (a+b)+c => a+b+c
-(a+\e) => a+\e
-(\e+\e) => \e+\e
+(a+\e) => \e+a
 (a+b)+(c+d) => [a-d]
 
 # Trivial identities, called T in TAF-Kit's documentation.

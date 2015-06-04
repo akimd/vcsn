@@ -42,10 +42,14 @@ def check(re, s, exp, breaking = False):
 ##########################
 
 # Check that by default, derivation is non-breaking.  The difference
-# is thin: we expect a polynomial with a single expression "b+a", not a
+# is thin: we expect a polynomial with a single expression "a+b", not a
 # polynomial of two expressions: "a + b".
+CHECK_EQ('a+b',
+         ctx.expression('a(a+b)').derivation('a'))
+
+# While at it, check that trivial identities are properly handled.
 CHECK_EQ('b+a',
-         ctx.expression('a(b+a)').derivation('a'))
+         ctx.expression('a(b+a)', 'trivial').derivation('a'))
 
 
 ## ---------------------------- ##

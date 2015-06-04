@@ -167,12 +167,12 @@ q = vcsn.context('lal_char(b), q').expression('<1/3>b').derived_term()
 r = vcsn.context('lal_char(c), r').expression('<.4>c') .derived_term()
 
 check('<2>a+<1/3>b', z|q)
-check('<1/3>b+<2>a', q|z)
-check('<2>a+<1/3>b+<2>a', z|q|z)
-check('<2>a+<1/3>b+<1/3>b', z|q|q)
+check('<2>a+<1/3>b', q|z)
+check('<4>a+<1/3>b', z|q|z)
+check('<2>a+<2/3>b', z|q|q)
 
 check('<2>a+<0.4>c', z|r)
-check('<0.4>c+<2>a', r|z)
+check('<2>a+<0.4>c', r|z)
 
 check('<0.333333>b+<0.4>c', q|r)
-check('<0.4>c+<0.333333>b', r|q)
+check('<0.333333>b+<0.4>c', r|q)

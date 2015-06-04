@@ -72,7 +72,7 @@ check(a, 'abs.efsm')
 # Using law_char(a-z), b is tempting, but when reading back, we take
 # the smallest possible alphabet.
 a = vcsn.context('law_char(acdeghilnprt), b')\
-      .expression('(grand)*(parent+child)').thompson().sort().strip()
+      .expression('(grand)*(child+parent)').thompson().sort().strip()
 check(a, 'str.efsm')
 
 # A transducer that looks like an acceptor when looking at the symbol

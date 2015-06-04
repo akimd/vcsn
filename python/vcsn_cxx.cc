@@ -1298,7 +1298,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<expression>("expression", bp::no_init)
     .def(bp::init<const context&, const std::string&, const std::string&>
-         ((arg("context"), arg("data"), arg("identities") = "associative")))
+         ((arg("context"), arg("data"), arg("identities") = "traditional")))
     .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
          chain())
     .def("complement", &expression::complement)

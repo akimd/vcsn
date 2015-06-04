@@ -68,15 +68,15 @@ $ -> 0
 4 -> 5 \e
 5 -> $''')
 
-# Z: "a+\e"
-check('a+\e',
+# Z: "\e+a"
+check('\e+a',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
 0 -> 1 \e
 0 -> 3 \e
-1 -> 2 a
 2 -> 5 \e
+3 -> 4 a
 4 -> 5 \e
 5 -> $''')
 
@@ -181,38 +181,38 @@ $ -> 0
 ## Z: sum and prod ##
 ## --------------- ##
 
-#Z: (a?b?+c?)
+# Z: (a?b?+c?)
 check('(a?b?+c?)',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $ <<2>\e>
 0 -> 1 \e
-0 -> 15 \e
-0 -> 17 \e
-1 -> 2 \e
-1 -> 8 \e
-2 -> 3 \e
-2 -> 5 \e
-4 -> 7 \e
-5 -> 6 a
+0 -> 3 \e
+0 -> 5 \e
+2 -> 19 \e
+3 -> 4 c
+4 -> 19 \e
+5 -> 6 \e
+5 -> 12 \e
 6 -> 7 \e
-7 -> 8 \e
-7 -> 14 \e
-8 -> 9 \e
+6 -> 9 \e
 8 -> 11 \e
-10 -> 13 \e
-11 -> 12 b
+9 -> 10 a
+10 -> 11 \e
+11 -> 12 \e
+11 -> 18 \e
 12 -> 13 \e
-13 -> 14 \e
-14 -> 19 \e
-16 -> 19 \e
-17 -> 18 c
+12 -> 15 \e
+14 -> 17 \e
+15 -> 16 b
+16 -> 17 \e
+17 -> 18 \e
 18 -> 19 \e
 19 -> $''')
 
-## ----------- ##
-## ZPC compact ##
-## ----------- ##
+## ------------- ##
+## ZPC compact.  ##
+## ------------- ##
 
 ## ------- ##
 ## Z: sum. ##
@@ -229,20 +229,20 @@ $ -> 0
 3 -> $''',
 'compact')
 
-# Z: "a+\e"
-check('a+\e',
+# Z: "\e+a"
+check('\e+a',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
 $ -> 0
 0 -> $
-0 -> 1 a
 0 -> 2 \e
 1 -> 3 \e
+2 -> 3 a
 3 -> $''',
 'compact')
 
-## ------- ##
-## Z: mul. ##
-## ------- ##
+## -------- ##
+## Z: mul.  ##
+## -------- ##
 
 # Z: "ab"
 check('ab',
@@ -273,5 +273,3 @@ $ -> 0
 10 -> 11 b
 11 -> $''',
 'compact')
-
-

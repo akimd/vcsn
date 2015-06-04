@@ -80,7 +80,7 @@ check('weighted',   a, exp)
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
 a = vcsn.context('lal_char(a), b') \
-        .expression('a{2}*+a{2}*') \
+        .expression('a{2}*+a{2}*', 'trivial') \
         .standard()
 exp = file_to_string("small-nfa.exp.gv")
 check('brzozowski', a, vcsn.automaton(exp))

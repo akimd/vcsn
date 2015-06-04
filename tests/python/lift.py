@@ -34,12 +34,18 @@ CHECK_EQ('''digraph
   2 -> 0 [label = "<c>"]
   2 -> 2 [label = "<b+c>"]
   2 -> 3 [label = "<a>"]
-  3 -> 0 [label = "<c+a>"]
+  3 -> 0 [label = "<a+c>"]
   3 -> 3 [label = "<b+c>"]
 }''',
          l4.lift())
 
-a = vcsn.context('lat<lal_char(abc), lan_char(def), law_char(ghi)>, q').expression("'a,d,gh'<2>").standard()
+
+## ------------ ##
+## Lift(tape).  ##
+## ------------ ##
+
+c = vcsn.context('lat<lal_char(abc), lan_char(def), law_char(ghi)>, q')
+a = c.expression("'a,d,gh'<2>").standard()
 aref = '''digraph
 {
   vcsn_context = "lat<letterset<char_letters(abc)>>, expressionset<lat<nullableset<letterset<char_letters(def)>>, wordset<char_letters(ghi)>>, q>"
@@ -62,9 +68,9 @@ aref = '''digraph
 CHECK_EQ(aref, a.lift(1, 2))
 CHECK_EQ(aref, a.lift([1, 2]))
 
-## ------------- ##
-## Expressions.  ##
-## ------------- ##
+## ------------------ ##
+## lift(expression).  ##
+## ------------------ ##
 
 CHECK_EQ('''<abc>\e''',
          vcsn.context('lal_char(abc), b').expression('abc').lift())

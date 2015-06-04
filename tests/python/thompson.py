@@ -96,20 +96,15 @@ r'''digraph
     3
     4
     5
-    6
-    7
   }
   I0 -> 0
   0 -> 2 [label = "\\e"]
   0 -> 4 [label = "\\e"]
-  0 -> 6 [label = "\\e"]
   1 -> F1
-  2 -> 3 [label = "\\e"]
+  2 -> 3 [label = "<2>\\e"]
   3 -> 1 [label = "\\e"]
   4 -> 5 [label = "a"]
   5 -> 1 [label = "\\e"]
-  6 -> 7 [label = "\\e"]
-  7 -> 1 [label = "\\e"]
 }''')
 
 # Z: "<12>\e+<23>a+<34>b".
@@ -149,7 +144,7 @@ r'''digraph
 }''')
 
 # left weight.
-check('(?@lan_char(ab), z)<12>(\e+a+<10>b+<10>\e)',
+check('(?@lan_char(ab), z)<10>(<2>\e+<3>a+<5>b)',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -170,27 +165,22 @@ r'''digraph
     5
     6
     7
-    8
-    9
   }
   I0 -> 0
-  0 -> 2 [label = "<12>\\e"]
-  0 -> 4 [label = "<12>\\e"]
-  0 -> 6 [label = "<12>\\e"]
-  0 -> 8 [label = "<12>\\e"]
+  0 -> 2 [label = "<10>\\e"]
+  0 -> 4 [label = "<10>\\e"]
+  0 -> 6 [label = "<10>\\e"]
   1 -> F1
-  2 -> 3 [label = "\\e"]
+  2 -> 3 [label = "<2>\\e"]
   3 -> 1 [label = "\\e"]
-  4 -> 5 [label = "a"]
+  4 -> 5 [label = "<3>a"]
   5 -> 1 [label = "\\e"]
-  6 -> 7 [label = "<10>b"]
+  6 -> 7 [label = "<5>b"]
   7 -> 1 [label = "\\e"]
-  8 -> 9 [label = "<10>\\e"]
-  9 -> 1 [label = "\\e"]
 }''')
 
 # right weight.
-check('(?@lan_char(ab), z)(\e+a+<2>b+<3>\e)<10>',
+check('(?@lan_char(ab), z)(<2>\e+<3>a+<5>b)<10>',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -211,23 +201,18 @@ r'''digraph
     5
     6
     7
-    8
-    9
   }
   I0 -> 0
   0 -> 2 [label = "\\e"]
   0 -> 4 [label = "\\e"]
   0 -> 6 [label = "\\e"]
-  0 -> 8 [label = "\\e"]
   1 -> F1
-  2 -> 3 [label = "\\e"]
+  2 -> 3 [label = "<2>\\e"]
   3 -> 1 [label = "<10>\\e"]
-  4 -> 5 [label = "a"]
+  4 -> 5 [label = "<3>a"]
   5 -> 1 [label = "<10>\\e"]
-  6 -> 7 [label = "<2>b"]
+  6 -> 7 [label = "<5>b"]
   7 -> 1 [label = "<10>\\e"]
-  8 -> 9 [label = "<3>\\e"]
-  9 -> 1 [label = "<10>\\e"]
 }''')
 
 ## ------------ ##

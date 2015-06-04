@@ -165,8 +165,8 @@ check_format('lal_char(a-z), b',
 
 check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), z>>',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
-             '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
-             r' \left\langle  \left\langle  \left\langle 42 \right\rangle \,x \right\rangle \,d \right\rangle \,a +  \left\langle  \left\langle  \left\langle 51 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
+             '<<<93>x>d>a+(<<<42>y>e>b)*',
+             r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Words are in \mathit to get correct inter-letter spacing.
 check_format('law_char(abc), z',

@@ -5,6 +5,49 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-06-04
+### expressions: new identities sets
+Rational expressions in Vcsn are "normalized" according to a set of
+identities (such that `<0>E => \z` whatever the expression E is).
+
+Vcsn now supports four different sets of identities:
+
+"trivial"
+:  a minimum set of transformations are applied.
+
+"associative"
+:  sum and product are made associative, so `a+(b+c)` and `(a+b)+c` are
+   equal.
+
+"traditional"
+:  sum is made commutative, and weights are factored, so `a+b+a` is equal
+   to `a+b` in B, and to `<2>a+b` in Z.
+
+"series"
+:  product and exterior/scalar products are distributed over sum, so
+   `[ab]a` is equal to `aa+ba`, and `<2>[ab]` is equal to `<2>a+<2>b`.
+
+Previously the default identities were "associative".  They are now
+"traditional", to match most users' expectations.
+
+So, for instance we used to report:
+
+    In [2]: c = vcsn.context('lal_char(a-z), z')
+
+    In [3]: c.expression('r+[a-q]')
+    Out[3]: r + [a-q]
+
+    In [4]: c.expression('[a-q]+r+r')
+    Out[4]: [^s-z] + r
+
+we now report:
+
+    In [3]: c.expression('r+[a-q]')
+    Out[3]: [^s-z]
+
+    In [4]: c.expression('[a-q]+r+r')
+    Out[4]: [a-q] + <2>r
+
 ## 2015-05-29
 ### nmin: new weightset
 The new tropical semi-ring <N, +, min> has been introduced. Compared to
@@ -41,12 +84,12 @@ readability.  For instance, to compute an expression describe all
 words on {a,..., z} except 'hehe', we had:
 
     In [2]: c = vcsn.context('lal_char(a-z), b')
-            c.expression('(hehe){c}').derived_term().expression()
-    Out[2]: \e+h(\e+e(\e+h))+(a+b+c+d+e+f+g+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+h(a+b+c+d+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+e(a+b+c+d+e+f+g+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+h(a+b+c+d+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+e(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z)))))(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z)*
+            c.expression('(abcd){c}').derived_term().expression()
+    Out[2]: \e+a(\e+b(\e+c))+(b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+a(a+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+b(a+b+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+c(a+b+c+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z+d(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z)))))(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z)*
 
 Now expressions also support letter classes in output:
 
-    Out[2]: \e+h(\e+e(\e+h))+([^h]+h([^e]+e([^h]+h([^e]+e[^]))))[^]*
+    Out[2]: \e+a(\e+b(\e+c))+([^a]+a([^b]+b([^c]+c([^d]+d[^]))))[^]*
 
 Classes are used only on ranges of at least four (unweighted) letters
 in strictly increasing order:

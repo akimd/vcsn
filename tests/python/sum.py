@@ -156,7 +156,7 @@ result = r'''digraph
     2
   }
   I0 -> 0
-  0 -> F0 [label = "<x+<1/2>\\e>"]
+  0 -> F0 [label = "<<1/2>\\e+x>"]
   0 -> 1 [label = "<x>a"]
   0 -> 2 [label = "<<1/2>\\e>b"]
   1 -> F1
@@ -206,4 +206,4 @@ z = ctxz.weight('2')
 q = ctxq.weight('1/3')
 r = ctxr.weight('.4')
 CHECK_EQ('2.73333', str(z + q + r))
-CHECK_EQ('u+<2>\e+<0.333333>\e+<0.4>\e', str(br + z + q + r))
+CHECK_EQ('<2.73333>\e+u', str(br + z + q + r))
