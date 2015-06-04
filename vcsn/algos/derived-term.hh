@@ -69,7 +69,7 @@ namespace vcsn
       derived_termer(const expressionset_t& rs, bool breaking = false)
         : rs_(rs)
         , breaking_(breaking)
-        , res_{make_shared_ptr<automaton_t>(rs_.context())}
+        , res_{make_shared_ptr<automaton_t>(rs_)}
       {}
 
       /// Compute the derived-term automaton via derivation.

@@ -41,10 +41,9 @@ namespace vcsn
       using label_t = label_t_of<super_t>;
       using weight_t = weight_t_of<super_t>;
 
-      expression_automaton_impl(const context_t& ctx)
-        : super_t(ctx)
-        // FIXME: identities!
-        , rs_(ctx)
+      expression_automaton_impl(const expressionset_t& rs)
+        : super_t(rs.context())
+        , rs_(rs)
       {}
 
       /// Static name.
