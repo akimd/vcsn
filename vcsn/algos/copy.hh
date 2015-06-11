@@ -30,71 +30,66 @@ namespace vcsn
     /// \tparam AutOut
     ///    The type of the resulting automaton.
     /// \pre AutIn <: AutOut.
-    template <typename AutIn, typename AutOut>
+    template <typename AutIn, typename AutOut = AutIn>
     struct copier
     {
       using in_state_t = state_t_of<AutIn>;
       using out_state_t = state_t_of<AutOut>;
+      /// input state -> output state.
+      using state_map_t = std::unordered_map<in_state_t, out_state_t>;
 
       copier(const AutIn& in, AutOut& out)
         : in_(in)
         , out_(out)
+        , out_state_{{in_->pre(),  out_->pre()},
+                     {in_->post(), out_->post()}}
       {}
 
+      /// Copy some states, and some transitions.
+      ///
+      /// \param keep_state   a predicate to recognize states to keep
+      /// \param keep_trans   a predicate to recognize transitions to keep
       template <typename KeepState, typename KeepTrans>
       void operator()(KeepState keep_state, KeepTrans keep_trans)
       {
         // Copy the states.  We cannot iterate on the transitions
-        // only, as we would lose the states without transitions.
-        out_state[in_->pre()] = out_->pre();
-        out_state[in_->post()] = out_->post();
+        // only, as we would lose the states without transitions.  And
+        // this way, we keep the states in the same order.
         for (auto s: in_->states())
           if (keep_state(s))
-            out_state[s] = out_->new_state();
+            out_state_[s] = out_->new_state();
 
         for (auto t : in_->all_transitions())
           if (keep_trans(t))
             {
-              auto src = out_state.find(in_->src_of(t));
-              auto dst = out_state.find(in_->dst_of(t));
-              if (src != out_state.end() && dst != out_state.end())
+              auto src = out_state_.find(in_->src_of(t));
+              auto dst = out_state_.find(in_->dst_of(t));
+              if (src != out_state_.end() && dst != out_state_.end())
                 out_->new_transition_copy(src->second, dst->second,
                                           in_, t);
             }
       }
 
-      /// A map from result state to original state.
-      using origins_t = std::map<out_state_t, in_state_t>;
-      origins_t
-      origins() const
+      /// Copy all the states, and all the transitions.
+      void operator()()
       {
-        origins_t res;
-        for (const auto& p: out_state)
-          res[p.second] = p.first;
-        return res;
+        operator()([](state_t_of<AutIn>) { return true; },
+                   [](transition_t_of<AutIn>) { return true; });
       }
 
-      /// Print the origins.
-      static
-      std::ostream&
-      print(const origins_t& orig, std::ostream& o)
+      /// A map from original state to result state.
+      const state_map_t& state_map() const
       {
-        o << "/* Origins.\n"
-          << "    node [shape = box, style = rounded]\n";
-        for (auto p : orig)
-          if (2 <= p.first)
-            o << "    " << p.first - 2
-              << " [label = \"" << p.second - 2 << "\"]\n";
-        o << "*/\n";
-        return o;
+        return out_state_;
       }
 
+    private:
       /// Input automaton.
       const AutIn& in_;
       /// Output automaton.
       AutOut& out_;
       /// input state -> output state.
-      std::unordered_map<in_state_t, out_state_t> out_state;
+      state_map_t out_state_;
     };
   }
 
@@ -106,7 +101,7 @@ namespace vcsn
   copy_into(const AutIn& in, AutOut& out,
             KeepState keep_state, KeepTrans keep_trans)
   {
-    detail::copier<AutIn, AutOut> copy(in, out);
+    auto copy = detail::copier<AutIn, AutOut>{in, out};
     return copy(keep_state, keep_trans);
   }
 

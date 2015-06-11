@@ -65,8 +65,8 @@ namespace vcsn
                 }
         );
 
-        const auto& dorigins = dcopier.out_state;
-        const auto& porigins = pcopier.out_state;
+        const auto& dorigins = dcopier.state_map();
+        const auto& porigins = pcopier.state_map();
         for (const auto& dp : dorigins)
           {
             auto pp = porigins.find(dp.first);
