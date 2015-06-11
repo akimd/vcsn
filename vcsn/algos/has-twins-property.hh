@@ -4,7 +4,7 @@
 
 #include <vcsn/algos/accessible.hh> // vcsn::trim
 #include <vcsn/algos/is-ambiguous.hh> // is_cycle_ambiguous
-#include <vcsn/algos/product.hh> // conjunction
+#include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>

@@ -322,7 +322,7 @@ The current implementation has too many short coming.
 - join should code variadicity once for all
 
 - join is spread all over the place
-  There are common bits in context.hh and others in algos/product.hh.
+  There are common bits in context.hh and others in algos/conjunction.hh.
 
 
 See vcsn/experiments.git/join, there is something there which could be a

@@ -7,7 +7,7 @@
 #include <vcsn/algos/derived-term.hh>
 #include <vcsn/algos/left-mult.hh>
 #include <vcsn/algos/letterize.hh> // rea
-#include <vcsn/algos/product.hh> // conjunction
+#include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/reduce.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/union.hh>

@@ -5,7 +5,7 @@ from test import *
 
 z = vcsn.context('lal_char(abcd), z')
 
-medir = srcdir + '/tests/python/product.dir'
+medir = srcdir + '/tests/python/conjunction.dir'
 
 ## ---------------------- ##
 ## Existing transitions.  ##

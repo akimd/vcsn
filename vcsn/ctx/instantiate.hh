@@ -33,7 +33,7 @@
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/print.hh>
-#include <vcsn/algos/product.hh>
+#include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/push-weights.hh>
 #include <vcsn/algos/random.hh>

@@ -69,7 +69,7 @@ namespace vcsn
       else if (type == "partition_automaton")
         header("vcsn/core/partition-automaton.hh");
       else if (type == "product_automaton")
-        header("vcsn/algos/product.hh");
+        header("vcsn/algos/conjunction.hh");
       else if (type == "permutation_automaton")
         header("vcsn/core/permutation-automaton.hh");
       else if (type == "scc_automaton")

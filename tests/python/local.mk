@@ -22,6 +22,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/complement.py                             \
   %D%/complete.py                               \
   %D%/compose.py                                \
+  %D%/conjunction.py                            \
   %D%/constant-term.py                          \
   %D%/context.py                                \
   %D%/derivation.py                             \
@@ -59,7 +60,6 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/polynomial.py                             \
   %D%/power.py                                  \
   %D%/prefix.py                                 \
-  %D%/product.py                                \
   %D%/proper.py                                 \
   %D%/push-weights.py                           \
   %D%/reduce.py                                 \
@@ -128,6 +128,14 @@ EXTRA_DIST +=                                   \
   %D%/compose.dir/left.gv                       \
   %D%/compose.dir/result.gv                     \
   %D%/compose.dir/right.gv                      \
+  %D%/conjunction.dir/a.gv                      \
+  %D%/conjunction.dir/ab.gv                     \
+  %D%/conjunction.dir/abc.gv                    \
+  %D%/conjunction.dir/ax.gv                     \
+  %D%/conjunction.dir/x.gv                      \
+  %D%/conjunction.dir/xa.gv                     \
+  %D%/conjunction.dir/xy.gv                     \
+  %D%/conjunction.dir/xyz.gv                    \
   %D%/derivation.dir/e1-dt.gv                   \
   %D%/derivation.dir/e2-dt-breaking.gv          \
   %D%/derivation.dir/e2-dt.gv                   \
@@ -218,13 +226,6 @@ EXTRA_DIST +=                                   \
   %D%/prefix.dir/aut4-subword.gv                \
   %D%/prefix.dir/aut4-suffix.gv                 \
   %D%/prefix.dir/aut4.gv                        \
-  %D%/product.dir/a.gv                          \
-  %D%/product.dir/ab.gv                         \
-  %D%/product.dir/abc.gv                        \
-  %D%/product.dir/ax.gv                         \
-  %D%/product.dir/x.gv                          \
-  %D%/product.dir/xa.gv                         \
-  %D%/product.dir/xy.gv                         \
   %D%/synchronize.dir/bool.gv                   \
   %D%/synchronize.dir/bool_delay.gv             \
   %D%/synchronize.dir/bool_min.gv               \
@@ -233,22 +234,21 @@ EXTRA_DIST +=                                   \
   %D%/synchronize.dir/z_delay.gv                \
   %D%/synchronize.dir/z_min.gv                  \
   %D%/synchronize.dir/z_min_delay.gv            \
-  %D%/product.dir/xyz.gv                        \
   %D%/to-expression.dir/a.gv                    \
   %D%/union.dir/abc.gv
 
 %D%/automaton.log:       $(wildcard $(srcdir)/%D%/automaton.dir/*)
 %D%/compose.log:         $(wildcard $(srcdir)/%D%/compose.dir/*)
+%D%/conjunction.log:     $(wildcard $(srcdir)/%D%/conjunction.dir/*)
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
-%D%/infiltration.log:    $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/infiltration.log:    $(wildcard $(srcdir)/%D%/conjunction.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
-%D%/product.log:         $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)
 

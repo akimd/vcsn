@@ -2,7 +2,7 @@
 
 #include <vcsn/algos/accessible.hh>
 #include <vcsn/algos/distance.hh>
-#include <vcsn/algos/product.hh> // conjunction
+#include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/fwd.hh>
 

@@ -540,9 +540,9 @@ namespace vcsn
   }
 
 
-  /*------------------------.
-  | conjunction(automaton...).  |
-  `------------------------*/
+  /*-----------------------------.
+  | conjunction(automaton...).   |
+  `-----------------------------*/
 
   /// Build the (accessible part of the) conjunction.
   template <typename... Auts>
@@ -601,7 +601,7 @@ namespace vcsn
       template <typename... Auts, size_t... I>
       automaton
       conjunction_lazy_(const std::vector<automaton>& as,
-                    vcsn::detail::index_sequence<I...>)
+                        vcsn::detail::index_sequence<I...>)
       {
         return make_automaton(vcsn::conjunction_lazy(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
