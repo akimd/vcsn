@@ -5,6 +5,17 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-06-11
+### eliminate_state: fixes
+Sometimes their was a mismatch between the state numbers as displayed,
+and as expected by eliminate_state.  This is fixed.
+
+The rendering was non-sensical when all the states were removed.  This
+is now fixed.
+
+Finally, passing -1 as argument, or no argument at all, delegates the
+choice of the state to eliminate to a heuristic.
+
 ## 2015-06-04
 ### expressions: new identities sets
 Rational expressions in Vcsn are "normalized" according to a set of
@@ -23,7 +34,7 @@ Vcsn now supports four different sets of identities:
 :  sum is made commutative, and weights are factored, so `a+b+a` is equal
    to `a+b` in B, and to `<2>a+b` in Z.
 
-"series"
+"distributive" (or "series")
 :  product and exterior/scalar products are distributed over sum, so
    `[ab]a` is equal to `aa+ba`, and `<2>[ab]` is equal to `<2>a+<2>b`.
 
