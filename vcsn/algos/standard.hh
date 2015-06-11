@@ -269,7 +269,7 @@ namespace vcsn
         for (auto c: e.tail())
           {
             // The set of the current (left-hand side) final transitions.
-            auto ftr = make_vector(res_->final_transitions());
+            auto ftr = detail::make_vector(res_->final_transitions());
 
             // Visit the next member of the product.
             c->accept(*this);

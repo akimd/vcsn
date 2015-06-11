@@ -95,13 +95,13 @@ def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
     p1 = _popen([engine] + list(args),
-               stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    p2 = _popen(['gvpr', '-c', 'E[head.name == "F*"]{lp=pos=""}'],
-               stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
-               universal_newlines=True)
+                stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    p2 = _popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
+                stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
+                universal_newlines=True)
     p3 = _popen(['neato', '-n2', '-Tsvg'],
-               stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
-               universal_newlines=True)
+                stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
+                universal_newlines=True)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
     p1.stdin.write(dot)
@@ -110,7 +110,7 @@ def _dot_to_svg(dot, engine="dot", *args):
     if p1.wait():
         raise RuntimeError(engine + " failed: " + p1.stderr.read())
     if p2.wait():
-        raise RuntimeError("gprv failed: " + p2.stderr.read())
+        raise RuntimeError("gvpr failed: " + p2.stderr.read())
     if p3.wait():
         raise RuntimeError("neato failed: " + err)
     if isinstance(out, bytes):

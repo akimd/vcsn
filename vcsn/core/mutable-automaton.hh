@@ -957,19 +957,24 @@ namespace vcsn
     }
 
     /// Indexes of transitions to visible initial states.
+    ///
+    /// Also include the weird case of transitions between pre and
+    /// post.  This is used when calling eliminate_state repeatedly.
     auto initial_transitions() const
-      -> decltype(this->out(pre()))
+      -> decltype(this->all_out(pre()))
     {
-      return out(pre());
+      return all_out(pre());
     }
 
     /// Indexes of transitions from visible final states.
+    ///
+    /// Also include the weird case of transitions between pre and
+    /// post.  This is used when calling eliminate_state repeatedly.
     auto final_transitions() const
-      -> decltype(this->in(post()))
+      -> decltype(this->all_in(post()))
     {
-      return in(post());
+      return all_in(post());
     }
-
   };
   }
 

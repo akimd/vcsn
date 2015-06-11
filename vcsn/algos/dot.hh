@@ -275,22 +275,18 @@ namespace vcsn
           {
             bos_ << 'I';
             aut_->print_state(dst, bos_);
-            bos_ << " -> ";
-            aut_->print_state(dst, bos_);
           }
-        else if (dst == aut_->post())
+        else
+          aut_->print_state(src, bos_);
+        bos_ << " -> ";
+        if (dst == aut_->post())
           {
-            aut_->print_state(src, bos_);
-            bos_ << " -> ";
             bos_ << 'F';
             aut_->print_state(src, bos_);
           }
         else
-          {
-            aut_->print_state(src, bos_);
-            bos_ << " -> ";
-            aut_->print_state(dst, bos_);
-          }
+          aut_->print_state(dst, bos_);
+
         auto e = to_string(ps_, entry, dot2tex_ ? "latex" : "text", ", ");
         bool useless = !has(useful_, src) || !has(useful_, dst);
         if (!e.empty() || useless)
