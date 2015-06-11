@@ -76,8 +76,8 @@ namespace vcsn
                 }
         );
         dcopier([&aut](state_t s) {
-                  return (0 < aut->in(s, aut->labelset()->one()).size()) ||
-                         (0 < aut->out(s, aut->labelset()->one()).size());
+                  return (!aut->in(s, aut->labelset()->one()).empty()
+                          || !aut->out(s, aut->labelset()->one()).empty());
                 },
                 [&aut](transition_t t) {
                   return aut->labelset()->is_one(aut->label_of(t));
@@ -258,8 +258,8 @@ namespace vcsn
               }
           }
 #ifdef STATS
-        unsigned added = (aut_proper_->all_out(proper_s).size() +
-                          aut_dirty_->out(dirty_s).size()) * closure.size();
+        unsigned added = (aut_proper_->all_out(proper_s).size()
+                          + aut_dirty_->out(dirty_s).size()) * closure.size();
         unsigned removed = transitions.size();
 #endif
         if (prune_ &&
@@ -267,8 +267,8 @@ namespace vcsn
             aut_proper_->all_in(proper_s).empty())
           {
 #ifdef STATS
-            removed += aut_proper_->all_out(proper_s).size() +
-                       aut_dirty_->out(dirty_s).size();
+            removed += (aut_proper_->all_out(proper_s).size()
+                        + aut_dirty_->out(dirty_s).size());
 #endif
             aut_proper_->del_state(proper_s);
             aut_dirty_->del_state(dirty_s);
@@ -357,8 +357,8 @@ namespace vcsn
             if (1 < debug_)
               std::cerr << " #tr: "
                         << aut_dirty_->transitions().size()
-                        << "/" << (aut_dirty_->transitions().size() +
-                                   aut_proper_->transitions().size())
+                        << "/" << (aut_dirty_->transitions().size()
+                                   + aut_proper_->transitions().size())
                         << std::endl;
             if (2 < debug_)
               {
