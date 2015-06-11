@@ -196,7 +196,8 @@ exp:
 | exp "&" exp                 { $$ = MAKE(conjunction, $1.exp, $3.exp); }
 | exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
 | exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
-| exp "<+" exp                { $$ = prefer(driver_.expressionset_, $1.exp, $3.exp); }
+| exp "<+" exp                { $$ = prefer(driver_.expressionset_,
+                                            $1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = MAKE(rdiv, $1.exp, $3.exp); }
 | exp "%" exp                 { $$ = MAKE(conjunction,
@@ -209,7 +210,8 @@ exp:
     if (!$1.rparen && !$2.lparen
         // This is very ugly, but lets us parse "<2>abcd" as <2>(abcd)
         // rather than (<2>a)(bcd).
-        && driver_.expressionset_->identities() != rat::identities::series)
+        && (driver_.expressionset_->identities()
+            != rat::identities::distributive))
       $$ = MAKE(concat, $1.exp, $2.exp);
     else
       {

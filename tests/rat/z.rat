@@ -42,8 +42,8 @@ a<2><3>   => <6>a
 
 a<2> => <2>a
 
-# Check "traditional": ACI
-%identities: traditional
+# Check "linear": ACI
+%identities: linear
 a+a => <2>a
 b+a => a+b
 a+b+a+b => <2>a+<2>b

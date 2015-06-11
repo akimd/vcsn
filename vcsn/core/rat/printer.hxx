@@ -59,7 +59,7 @@ namespace vcsn
       if (print)
         out_ << '<' << v.type() << "@0x" << address(v) << '>' << vcsn::incendl;
       if (debug && format_ == "latex")
-        out_ << (identities_ == identities_t::series
+        out_ << (identities_ == identities_t::distributive
                  ? "{\\color{red}{" : "{\\color{blue}{");
       v.accept(*this);
       if (debug && format_ == "latex")
@@ -87,7 +87,7 @@ namespace vcsn
           conjunction_   = " \\& ";
           shuffle_       = " \\between ";
           product_       = " \\, ";
-          sum_           = (identities_ == identities_t::series
+          sum_           = (identities_ == identities_t::distributive
                             ? " \\oplus " : " + ");
           zero_          = "\\emptyset";
           one_           = "\\varepsilon";

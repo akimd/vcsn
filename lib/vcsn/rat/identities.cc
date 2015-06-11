@@ -1,8 +1,13 @@
 #include <cctype>
 #include <stdexcept>
 
+#include <boost/range/adaptor/map.hpp>
+#include <boost/range/algorithm/copy.hpp>
+
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/misc/builtins.hh>
+#include <vcsn/misc/initializer_list.hh>
+#include <vcsn/misc/map.hh>
 #include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -19,10 +24,10 @@ namespace vcsn
           return "trivial";
         case identities::associative:
           return "associative";
-        case identities::traditional:
-          return "traditional";
-        case identities::series:
-          return "series";
+        case identities::linear:
+          return "linear";
+        case identities::distributive:
+          return "distributive";
         }
       BUILTIN_UNREACHABLE();
     }
@@ -38,17 +43,29 @@ namespace vcsn
       while (is && isalnum(is.peek()))
         buf += is.get();
 
-      if (buf == "trivial" || buf == "binary")
-        ids = identities::trivial;
-      else if (buf == "associative")
-        ids = identities::associative;
-      else if (buf == "traditional")
-        ids = identities::traditional;
-      else if (buf == "series")
-        ids = identities::series;
+      static const auto map = std::map<std::string, identities::ids_t>
+        {
+          {"associative",  identities::associative},
+          {"auto",         identities::deflt},
+          {"binary",       identities::trivial},
+          {"default",      identities::deflt},
+          {"distributive", identities::distributive},
+          {"linear",       identities::linear},
+          {"series",       identities::distributive},
+          {"trivial",      identities::trivial},
+        };
+      auto i = map.find(buf);
+      if (i == end(map))
+        {
+          std::ostringstream o;
+          // Retrieve all keys
+          boost::copy(map | boost::adaptors::map_keys,
+                      std::ostream_iterator<std::string>(o, " "));
+          fail_reading(is, "invalid identities: ", buf,
+                       ", expected: ", o.str());
+        }
       else
-        fail_reading(is, "invalid identities: ", buf);
-
+        ids = i->second;
       return is;
     }
 

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <map>
+#include <set>
+
 #include <vcsn/misc/functional.hh>
 
 namespace std

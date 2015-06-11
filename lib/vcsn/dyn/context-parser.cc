@@ -120,7 +120,7 @@ namespace vcsn
       else if (w == "expressionset")
         return expressionset_();
       else if (w == "seriesset")
-        return expressionset_series_();
+        return seriesset_();
       else if (has(labelsets_, w))
         return labelset_(w);
       else if (has(weightsets_, w))
@@ -239,7 +239,7 @@ namespace vcsn
       else if (ls == "expressionset")
         return expressionset_();
       else if (ls == "seriesset")
-        return expressionset_series_();
+        return seriesset_();
       raise("invalid labelset name: ", str_escape(ls));
     }
 
@@ -256,7 +256,7 @@ namespace vcsn
       else if (ws == "expressionset")
         return expressionset_();
       else if (ws == "seriesset")
-        return expressionset_series_();
+        return seriesset_();
       else if (ws == "polynomialset")
         return polynomialset_();
       else if (ws == "lat")
@@ -356,12 +356,13 @@ namespace vcsn
     }
 
     std::shared_ptr<expressionset>
-    context_parser::expressionset_series_()
+    context_parser::seriesset_()
     {
       eat(is_, '<');
       auto context = context_();
       eat(is_, '>');
-      return std::make_shared<expressionset>(context, rat::identities::series);
+      return std::make_shared<expressionset>(context,
+                                             rat::identities::distributive);
     }
 
     std::shared_ptr<polynomialset> context_parser::polynomialset_()

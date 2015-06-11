@@ -58,7 +58,7 @@ namespace vcsn
       /// `"expressionset" "<" <Context> ">"`.
       std::shared_ptr<expressionset> expressionset_();
       /// No optional parameter.
-      std::shared_ptr<expressionset> expressionset_series_();
+      std::shared_ptr<expressionset> seriesset_();
 
       /// `"polynomialset" "<" <Context> ">"`.
       std::shared_ptr<polynomialset> polynomialset_();

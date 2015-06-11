@@ -797,7 +797,7 @@ struct expression
   /// Parse as a series.
   static expression series(const context& ctx, const std::string& r)
   {
-    return expression(ctx, r, vcsn::rat::identities::series);
+    return expression(ctx, r, vcsn::rat::identities::distributive);
   }
 
   /// Convert \a this to \a ctx, using \a ids.
@@ -818,7 +818,7 @@ struct expression
   /// Same expression/series, but in context \a ctx, with series identities.
   expression as_series(const ::context& ctx = {})
   {
-    return as_(ctx, vcsn::rat::identities::series);
+    return as_(ctx, vcsn::rat::identities::distributive);
   }
 
   expression chain(int min, int max) const
@@ -889,7 +889,7 @@ struct expression
 
   bool is_series() const
   {
-    return vcsn::dyn::identities(val_) == vcsn::rat::identities::series;
+    return vcsn::dyn::identities(val_) == vcsn::rat::identities::distributive;
   }
 
   bool is_valid() const
@@ -1298,7 +1298,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<expression>("expression", bp::no_init)
     .def(bp::init<const context&, const std::string&, const std::string&>
-         ((arg("context"), arg("data"), arg("identities") = "traditional")))
+         ((arg("context"), arg("data"), arg("identities") = "default")))
     .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
          chain())
     .def("complement", &expression::complement)

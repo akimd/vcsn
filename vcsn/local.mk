@@ -32,9 +32,9 @@ algo_headers =                                  \
   %D%/algos/double-ring.hh                      \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
-  %D%/algos/epsilon-remover.hh                  \
-  %D%/algos/epsilon-remover-separate.hh         \
   %D%/algos/epsilon-remover-distance.hh         \
+  %D%/algos/epsilon-remover-separate.hh         \
+  %D%/algos/epsilon-remover.hh                  \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
   %D%/algos/filter.hh                           \
@@ -198,9 +198,9 @@ nobase_include_HEADERS =                        \
   %D%/misc/cast.hh                              \
   %D%/misc/crange.hh                            \
   %D%/misc/cross.hh                             \
+  %D%/misc/debug-level.hh                       \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
-  %D%/misc/debug-level.hh                       \
   %D%/misc/empty.hh                             \
   %D%/misc/epsilon-profile.hh                   \
   %D%/misc/escape.hh                            \
@@ -211,6 +211,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/functional.hh                        \
   %D%/misc/fwd.hh                               \
   %D%/misc/indent.hh                            \
+  %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \
   %D%/misc/map.hh                               \
   %D%/misc/math.hh                              \
@@ -235,9 +236,9 @@ nobase_include_HEADERS =                        \
   %D%/misc/unordered_map.hh                     \
   %D%/misc/unordered_set.hh                     \
   %D%/misc/vector.hh                            \
+  %D%/misc/wet.hh                               \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
-  %D%/misc/wet.hh                               \
   %D%/misc/zip-maps.hh                          \
   %D%/misc/zip.hh                               \
   %D%/weightset/b.hh                            \

@@ -19,7 +19,7 @@ Vcsn now supports four different sets of identities:
 :  sum and product are made associative, so `a+(b+c)` and `(a+b)+c` are
    equal.
 
-"traditional"
+"linear"
 :  sum is made commutative, and weights are factored, so `a+b+a` is equal
    to `a+b` in B, and to `<2>a+b` in Z.
 
@@ -28,7 +28,7 @@ Vcsn now supports four different sets of identities:
    `[ab]a` is equal to `aa+ba`, and `<2>[ab]` is equal to `<2>a+<2>b`.
 
 Previously the default identities were "associative".  They are now
-"traditional", to match most users' expectations.
+"linear", to match most users' expectations.
 
 So, for instance we used to report:
 

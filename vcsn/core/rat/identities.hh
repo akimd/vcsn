@@ -33,13 +33,16 @@ namespace vcsn LIBVCSN_API
 
           /// Associative plus commutativity, and "idempotence" for
           /// sum.
-          traditional,
+          linear,
 
-          /// Traditional plus series identities (distributes).
-          series,
+          /// Traditional plus distribution.  Used for series identities.
+          distributive,
+
+          /// The default value.
+          deflt = linear
         };
 
-      identities(ids_t id = traditional)
+      identities(ids_t id = deflt)
         : ids_{id}
       {}
 
@@ -54,16 +57,16 @@ namespace vcsn LIBVCSN_API
         return associative <= ids_;
       }
 
-      /// Whether traditional.
-      bool is_traditional() const
+      /// Whether linear.
+      bool is_linear() const
       {
-        return traditional <= ids_;
+        return linear <= ids_;
       }
 
-      /// Whether series.
-      bool is_series() const
+      /// Whether distributive.
+      bool is_distributive() const
       {
-        return series <= ids_;
+        return distributive <= ids_;
       }
 
       bool operator<(self_t that) const
