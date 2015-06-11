@@ -30,8 +30,8 @@ namespace vcsn
     template<typename Fun, typename H, typename... Ts>
     inline void
     cross_impl_(Fun f,
-		std::vector<H> const& h,
-		std::vector<Ts> const&... ts)
+                std::vector<H> const& h,
+                std::vector<Ts> const&... ts)
     {
       for (H const& he: h)
         cross_impl_([&](Ts const&... ts) { f(he, ts...); }, ts...);

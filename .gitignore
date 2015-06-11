@@ -36,7 +36,7 @@
 /config.status
 /configure
 /doc/notebooks/numbers
-/doc/notebooks/translate
+/doc/notebooks/translator
 /doc/notebooks/words
 /libtool
 /tests/unit/aut_lal_char_z
