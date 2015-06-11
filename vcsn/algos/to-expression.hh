@@ -27,9 +27,12 @@ namespace vcsn
   state_t_of<Aut>
   next_naive(const Aut& a)
   {
-    state_t_of<Aut> best = 0;
-    bool best_has_loop = false;
-    size_t best_degree = std::numeric_limits<size_t>::max();
+    require(!a->states().empty(),
+            "state-chooser: empty automaton");
+
+    auto best = a->null_state();
+    auto best_has_loop = false;
+    auto best_degree = std::numeric_limits<size_t>::max();
     for (auto s: a->states())
       {
         size_t out = 0;
@@ -52,7 +55,7 @@ namespace vcsn
             best_has_loop = has_loop;
           }
       }
-    assert(best);
+    assert(best != a->null_state());
     return best;
   }
 
@@ -83,6 +86,8 @@ namespace vcsn
       /// Eliminate state s.
       void operator()(state_t s)
       {
+        if (s == aut_->null_state())
+          s = next_naive(aut_);
         require(aut_->has_state(s), "not a valid state: ", s);
 
         // The loop's weight.
@@ -204,13 +209,12 @@ namespace vcsn
   }
 
 
-  /// Remove state \a s from automaton \a res.
+  /// In place removal of state \a s from automaton \a res.
   template <typename Aut>
   Aut&
-  eliminate_state_here(Aut& res, state_t_of<Aut> s)
+  eliminate_state_here(Aut& res,
+                       state_t_of<Aut> s = Aut::element_type::null_state())
   {
-    if (s == res->null_state())
-      s = next_naive(res);
     auto eliminate_state = detail::make_state_eliminator(res);
     eliminate_state(s);
     return res;
@@ -219,12 +223,19 @@ namespace vcsn
   /// A copy of automaton \a res without the state \a s.
   template <typename Aut>
   Aut
-  eliminate_state(const Aut& aut, state_t_of<Aut> s)
+  eliminate_state(const Aut& aut,
+                  state_t_of<Aut> s = Aut::element_type::null_state())
   {
-    // FIXME: this is soooo wrong: we eliminate a state in a copy,
-    // whose state numbers might be completely different.  We _need_
-    // the state names.
-    auto res = vcsn::copy(aut);
+    // Get a copy, but be sure to keep the correspondance bw original
+    // state numbers and the new ones.
+    auto res = make_fresh_automaton<Aut>(aut);
+    auto copy = detail::copier<Aut>{aut, res};
+    copy();
+    if (s != aut->null_state())
+      {
+        require(aut->has_state(s), "not a valid state: ", s);
+        s = copy.state_map().at(s);
+      }
     return eliminate_state_here(res, s);
   }
 
@@ -243,10 +254,7 @@ namespace vcsn
       eliminate_state(const automaton& aut, int state)
       {
         const auto& a = aut->as<Aut>();
-        auto s = a->null_state();
-        // FIXME: weak.
-        if (state != -1)
-          s = state + 2;
+        auto s = 0 <= state ? state + 2 : a->null_state();
         return make_automaton(vcsn::eliminate_state(a, s));
       }
     }

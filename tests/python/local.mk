@@ -165,6 +165,10 @@ EXTRA_DIST +=                                   \
   %D%/efsm.dir/lat-z.gv                         \
   %D%/efsm.dir/one.efsm                         \
   %D%/efsm.dir/str.efsm                         \
+  %D%/eliminate-state.dir/abc-elim-0.gv         \
+  %D%/eliminate-state.dir/abc-elim-1.gv         \
+  %D%/eliminate-state.dir/abc-elim-2.gv         \
+  %D%/eliminate-state.dir/abc-elim-3.gv         \
   %D%/eliminate-state.dir/lao-elim-0.gv         \
   %D%/eliminate-state.dir/lao-elim-1.gv         \
   %D%/eliminate-state.dir/lao-elim-2.gv         \

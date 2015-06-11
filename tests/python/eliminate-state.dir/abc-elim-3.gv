@@ -1,0 +1,12 @@
+digraph
+{
+  vcsn_context = "lao, expressionset<letterset<char_letters(abc)>, b>"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    Ipost
+    Fpre
+  }
+  Ipost -> Fpre [label = "<ac+abb*c>"]
+}
