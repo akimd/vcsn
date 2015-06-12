@@ -542,6 +542,8 @@ namespace vcsn
   DEFINE::concat(value_t l, value_t r) const
     -> value_t
   {
+    // A static dispatch is needed, as the product of labels is not
+    // available if not LAW.
     return concat_(l, r, typename is_law<Context>::type{});
   }
 
@@ -549,7 +551,7 @@ namespace vcsn
   DEFINE::concat_(value_t l, value_t r, std::false_type) const
     -> value_t
   {
-    return mul_expressions_(l, r);
+    return mul(l, r);
   }
 
   // Concatenation when LAW.
@@ -587,7 +589,7 @@ namespace vcsn
       }
     else
       // Handle all the trivial identities.
-      return mul_expressions_(l, r);
+      return mul(l, r);
   }
 
   DEFINE::star(value_t e) const

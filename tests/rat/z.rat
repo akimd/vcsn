@@ -24,6 +24,8 @@ a<1><2>b == a(<1>(<2>b))
 <2>ab<3>* => <2>a(<3>b)*
 %labels: words
 <3>ab => <3>ab
+<3>abc => <3>a(bc)
+<3>abc == (<3>a)bc
 <3>(ab) => <3>(ab)
 <2><3>ab => <6>ab
 <2>ab<3>* => <2>a(<3>b)*
@@ -59,3 +61,5 @@ a(c+b)(f+e) => abe+abf+ace+acf
 # Be sure that we get a product of two labels, not a single word,
 (<2>a)(<2>a) => <4>(aa)
 (<2>a)(<2>a) == <4>((a)(a))
+<3>abcd == (<3>a)(bcd)
+<3>(abcd) => <3>(abcd)

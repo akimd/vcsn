@@ -88,6 +88,15 @@ See what the check on identities really means this in our expression parser.
             != rat::identities::distributive))
       $$ = MAKE(concat, $1.exp, $2.exp);
 
+Well, I have removed it, but it is true that in consequence we get
+unexpected results:
+
+<2>abcd => <2>a(bcd)
+<2>a(bcd) => <2>(a(bcd))
+
+so it sucks.  The reason is rather that we apply <k>E<h>F => <kh>(EF) with
+the distributive identities.  I think we should also add the concatenation
+of words: (ab)(cd) => (abcd).
 
 ** Incorrect context
 When trie(istream) adds words to the trie, the context used to parse the
