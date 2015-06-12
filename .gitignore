@@ -39,6 +39,9 @@
 /doc/notebooks/translator
 /doc/notebooks/words
 /libtool
+/share/vcsn/notebook_profile/history.sqlite
+/share/vcsn/notebook_profile/security/
+/share/vcsn/notebook_profile/startup/
 /tests/unit/aut_lal_char_z
 /tests/unit/aut_lao_char_z
 /tests/unit/aut_law_char_z

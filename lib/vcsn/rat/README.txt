@@ -24,7 +24,7 @@ correctly:
 
         <b><b>aa<c><d>aa<b><b>
 
-as
+as (warning: this is no longer how we parse this, see "lmul and mul" below):
 
         (<bb>(aa).<cc>(aa))<bb>
 
@@ -93,6 +93,17 @@ and teach "concat(prod(<exp>, <word1>), <word2>)" to return "prod(<exp>,
 Most probably several of these complications can be avoided thanks to GLR.
 Unfortunately it is far from being usable in C++, especially because our
 semantic values are objects (shared_ptr).
+
+* lmul and mul
+At the origin, we were trying to read "<2>abc" as "<2>(abc)".  We stopped
+that, because it was actually complex to parse and pretty-print the same
+way.  Actually, at some point, I also realized that "<2>abc" when converted
+into an automaton becomes clearly "(<2>a)(b)(c)".  So, to improve
+consistency between expressions and automaton, I moved to "<2>abc" is
+actually "(<2>a)(b)(c)" in LAL.  So in LAW, it's read as "(<2>a)(bc)".
+
+It is somewhat surprising, agreed, but since anyway words should be grouped
+in parens, "<2>(abc)" is actually what you should write.
 
 --
 

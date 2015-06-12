@@ -392,6 +392,8 @@ namespace vcsn
     // Neither l nor r is a sum.
     else
       {
+        // This is where we need commutativity of the product of weights:
+        // (<k>E)(<h>F) => <kh>(EF).
         weight_t
           lw = possibly_implicit_lweight_(l),
           rw = possibly_implicit_lweight_(r);
@@ -653,7 +655,7 @@ namespace vcsn
     // Trivial identity: <k>(<h>E) => <kh>E.
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
       return lmul(weightset()->mul(w, lw->weight()), lw->sub());
-    // General case: <k>E.
+    // Distributive: <k>(E+F) => <k>E + <k>F.
     else if (ids_.is_distributive() && e->type() == type_t::sum)
       {
         const auto& s = down_pointer_cast<const sum_t>(e);
@@ -664,6 +666,7 @@ namespace vcsn
           addends.emplace_back(lmul(w, a));
         return std::make_shared<sum_t>(std::move(addends));
       }
+    // General case: <k>E.
     else
       return std::make_shared<lweight_t>(w, e);
   }
@@ -686,7 +689,7 @@ namespace vcsn
     // Trivial identity: (E<k>)<h> => E<kh>.
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
       return rmul(rw->sub(), weightset()->mul(rw->weight(), w));
-    // Series: distribute rmul on sums.
+    // Distributive: (E+F)<k> => E<k> + F<k>.
     else if (ids_.is_distributive() && e->type() == type_t::sum)
       {
         const auto& s = down_pointer_cast<const sum_t>(e);
