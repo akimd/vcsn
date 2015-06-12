@@ -37,6 +37,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.delay_automaton.ipynb           \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.eliminate_state.ipynb           \
+  %D%/automaton.expression.ipynb                \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_twins_property.ipynb        \
