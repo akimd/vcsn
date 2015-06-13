@@ -75,29 +75,6 @@ from the caller, which is the one which knows the identities to use!
 As a matter of fact, we need to revise the propagation of the identities
 everywhere.
 
-** Suspicious parser
-See what the check on identities really means this in our expression parser.
-
-  exp: exp exp %prec CONCAT
-  {
-    // See README.txt.
-    if (!$1.rparen && !$2.lparen
-        // This is very ugly, but lets us parse "<2>abcd" as <2>(abcd)
-        // rather than (<2>a)(bcd).
-        && (driver_.expressionset_->identities()
-            != rat::identities::distributive))
-      $$ = MAKE(concat, $1.exp, $2.exp);
-
-Well, I have removed it, but it is true that in consequence we get
-unexpected results:
-
-<2>abcd => <2>a(bcd)
-<2>a(bcd) => <2>(a(bcd))
-
-so it sucks.  The reason is rather that we apply <k>E<h>F => <kh>(EF) with
-the distributive identities.  I think we should also add the concatenation
-of words: (ab)(cd) => (abcd).
-
 ** Incorrect context
 When trie(istream) adds words to the trie, the context used to parse the
 stream is not the one of the automaton we are buildding.  As a result, we

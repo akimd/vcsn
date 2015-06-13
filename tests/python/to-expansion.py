@@ -220,7 +220,7 @@ check('\e{T}', '<\e>')
 check('a{T}', 'a.[\e]')
 check('(abc){T}', 'cba.[\e]')
 check('(abc+aabbcc){T}', 'cba.[\e] + ccbbaa.[\e]')
-check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>ab){T}]')
+check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>(ab)){T}]')
 check('((foo)(bar)(baz)){T}', 'zab.[((foo)(bar)){T}]')
 check('(ab)*{T}', '<\e> + ba.[(ab)*{T}]')
 check('(<xy>((abc)(abc))<yz>)*{T}',

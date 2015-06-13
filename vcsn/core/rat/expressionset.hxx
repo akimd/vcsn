@@ -558,11 +558,11 @@ namespace vcsn
   DEFINE::concat_(value_t l, value_t r, std::true_type) const
     -> value_t
   {
-    // concat((ab).c, d.(ef)) = (ab).(cd).(ef).
+    // concat((ab).<2>c, d.(ef)) = (ab).<2>(cd).(ef).
     //
-    // Store (ab) in expression, then concat(c, d) if c and d are atoms,
-    // otherwise c then d, then (ef).
-    if ((l->type() == type_t::atom || l->type() == type_t::prod)
+    // Store (ab) in expression, then concat(<2>c, d) if c and d are
+    // atoms, otherwise <2>c then d, then (ef).
+    if ((type_ignoring_lweight_(l) == type_t::atom || l->type() == type_t::prod)
         && (r->type() == type_t::atom || r->type() == type_t::prod))
       {
         // Left-hand sides.
@@ -572,12 +572,21 @@ namespace vcsn
         values_t rs;
         gather_<type_t::prod>(rs, r);
 
-        if (ls.back()->type() == type_t::atom
+        // FIXME: we should perform that "if" with the one above, and
+        // enter this section only if we really are going to concat.
+        // This would avoid the "else" clause.
+        if (type_ignoring_lweight_(ls.back()) == type_t::atom
             && rs.front()->type() == type_t::atom)
           {
-            auto lhs = std::dynamic_pointer_cast<const atom_t>(ls.back());
+            // Fetch weight and atom of the last lhs.
+            auto w = possibly_implicit_lweight_(ls.back());
+            auto lhs
+              = std::dynamic_pointer_cast<const atom_t>
+              (unwrap_possible_lweight_(ls.back()));
+            // Fetch atom of the first rhs.
             auto rhs = std::dynamic_pointer_cast<const atom_t>(rs.front());
-            ls.back() = atom(labelset()->mul(lhs->value(), rhs->value()));
+            ls.back() = lmul(w,
+                             atom(labelset()->mul(lhs->value(), rhs->value())));
             ls.insert(ls.end(), rs.begin() + 1, rs.end());
           }
         else

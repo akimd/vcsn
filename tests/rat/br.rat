@@ -18,8 +18,8 @@ a<x> ! 1.2-5: 1.1: char_letters: invalid letter: x
 <i>b.b<j>d.d<i> => <i>bb<j>d<i>d
 (<i>ab*<j>ab*)<k> => (<i>ab*<j>ab*)<k>
 %labels: words
-(<i>bb<j>dd)<i> => (<i>bb<j>dd)<i>
-<i>bb<j>dd<i> => <i>bb<j>d<i>d
+(<i>bb<j>dd)<i> => (<i>(bb)<j>(dd))<i>
+<i>bb<j>dd<i> => <i>(bb)<j>d<i>d
 %labels: letters
 
 # Check the ?, *, and + quantifiers.
