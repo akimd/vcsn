@@ -593,7 +593,7 @@ namespace vcsn
       template <typename... Auts, size_t... I>
       automaton
       conjunction_(const std::vector<automaton>& as,
-               vcsn::detail::index_sequence<I...>)
+                   vcsn::detail::index_sequence<I...>)
       {
         return make_automaton(vcsn::conjunction(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }

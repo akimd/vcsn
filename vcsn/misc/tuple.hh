@@ -22,47 +22,56 @@ namespace vcsn
     // See O(log N) implementation of integer sequence
     // <http://stackoverflow.com/questions/17424477>
 
-    template<std::size_t...> struct index_sequence
+    template <std::size_t...> struct index_sequence
     { using type = index_sequence; };
 
     template <typename S1, class S2> struct concat;
 
-    template<std::size_t... I1, std::size_t... I2>
+    template <std::size_t... I1, std::size_t... I2>
     struct concat<index_sequence<I1...>, index_sequence<I2...>>
       : index_sequence<I1..., (sizeof...(I1)+I2)...>{};
 
     template <typename S1, class S2>
     using Concat = typename concat<S1, S2>::type;
 
-    template<std::size_t N> struct make_index_sequence;
-    template<std::size_t N> using GenSeq =
+    template <std::size_t N> struct make_index_sequence;
+    template <std::size_t N> using GenSeq =
       typename make_index_sequence<N>::type;
 
-    template<std::size_t N>
+    template <std::size_t N>
     struct make_index_sequence : Concat<GenSeq<N/2>, GenSeq<N - N/2>>{};
 
-    template<> struct make_index_sequence<0> : index_sequence<>{};
-    template<> struct make_index_sequence<1> : index_sequence<0>{};
+    template <> struct make_index_sequence<0> : index_sequence<>{};
+    template <> struct make_index_sequence<1> : index_sequence<0>{};
 
-    template<std::size_t off, class S2> struct int_range;
+    template <std::size_t off, class S2> struct int_range;
 
-    template<std::size_t off, std::size_t... I>
+    template <std::size_t off, std::size_t... I>
     struct int_range<off, index_sequence<I...>>
       : index_sequence<I + off...>{};
 
-    template<std::size_t S, std::size_t L>
-    struct make_index_range
-      : int_range<S, typename make_index_sequence<L>::type>{};
 
-    template<std::size_t S>
+    /*--------------------.
+    | make_index_range.   |
+    `--------------------*/
+
+    template <std::size_t S, std::size_t L>
+    struct make_index_range
+      : int_range<S, typename make_index_sequence<L>::type>
+    {};
+
+    template <std::size_t S>
     struct make_index_range<S, 0> : index_sequence<>{};
-    template<std::size_t S>
+    template <std::size_t S>
     struct make_index_range<S, -1U> : index_sequence<>{};
 
-    template<typename S1, typename S2>
+    template <std::size_t S, std::size_t L>
+    using make_index_range_t = typename make_index_range<S, L>::type;
+
+    template <typename S1, typename S2>
     struct concat_index_sequence;
 
-    template<std::size_t... I1, std::size_t... I2>
+    template <std::size_t... I1, std::size_t... I2>
     struct concat_index_sequence<index_sequence<I1...>, index_sequence<I2...>>
       : index_sequence<I1..., I2...>{};
 
@@ -80,10 +89,10 @@ namespace vcsn
      * Get the list containing all the elements of I1 (contiguous sequence from
      * 0 to N) not present in I2 (arbitrary sequence, sorted).
      */
-    template<typename S1, typename S2>
+    template <typename S1, typename S2>
     struct index_sequence_difference;
 
-    template<std::size_t I1_1, std::size_t... I1, std::size_t... I2>
+    template <std::size_t I1_1, std::size_t... I1, std::size_t... I2>
     struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<I1_1, I2...>>
     {
       using type =
@@ -91,8 +100,10 @@ namespace vcsn
                                           index_sequence<I2...>>::type;
     };
 
-    template<std::size_t I1_1, std::size_t I2_1, std::size_t... I1, std::size_t... I2>
-    struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<I2_1, I2...>>
+    template <std::size_t I1_1, std::size_t I2_1,
+              std::size_t... I1, std::size_t... I2>
+    struct index_sequence_difference<index_sequence<I1_1, I1...>,
+                                     index_sequence<I2_1, I2...>>
     {
       using type =
         typename concat_index_sequence<index_sequence<I1_1>,
@@ -116,7 +127,9 @@ namespace vcsn
     };
 
     template <typename S1, typename S2>
-    using sequence_difference = typename index_sequence_difference<typename S1::type, typename S2::type>::type;
+    using sequence_difference
+      = typename index_sequence_difference<typename S1::type,
+                                           typename S2::type>::type;
 
     template <typename Fun, typename... Ts>
     inline void

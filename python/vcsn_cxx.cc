@@ -522,7 +522,8 @@ struct automaton
   }
 
   /// The type of the previous function.
-  using vect_lift_t = automaton (automaton::*)(const boost::python::list& tapes) const;
+  using vect_lift_t
+    = automaton (automaton::*)(const boost::python::list& tapes) const;
 
   static automaton conjunction_lazy_(const boost::python::list& auts)
   {

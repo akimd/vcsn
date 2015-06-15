@@ -109,9 +109,9 @@ namespace vcsn
       /// Indices of the remaining tapes.
       using hidden_indices_t
         = concat_sequence
-          <typename make_index_range<0, Tape>::type,
-           typename make_index_range<Tape + 1,
-                                     std::tuple_size<full_label_t>::value - Tape - 1>::type>;
+          <make_index_range_t<0, Tape>,
+           make_index_range_t<Tape + 1,
+                              std::tuple_size<full_label_t>::value - Tape - 1>>;
 
       // All tapes except the exposed one.
       using res_labelset_t

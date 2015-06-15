@@ -341,10 +341,10 @@ namespace vcsn
       {
         const auto& l = lhs->as<WeightSetLhs>();
         const auto& r = rhs->as<WeightSetRhs>();
-        auto rs = join(l.weightset(), r.weightset());
-        auto lr = rs.conv(l.weightset(), l.weight());
-        auto rr = rs.conv(r.weightset(), r.weight());
-        return make_weight(rs, multiply(rs, lr, rr));
+        auto ws = join(l.weightset(), r.weightset());
+        auto lw = ws.conv(l.weightset(), l.weight());
+        auto rw = ws.conv(r.weightset(), r.weight());
+        return make_weight(ws, ::vcsn::multiply(ws, lw, rw));
       }
     }
   }

@@ -79,7 +79,7 @@
     {                                           \
       using namespace vcsn::dyn;                \
       /* Input. */                              \
-      auto exp = read_expression(opts);             \
+      auto exp = read_expression(opts);         \
                                                 \
       /* Process. */                            \
       auto res = vcsn::dyn::Name(exp);          \
@@ -107,7 +107,7 @@
     int work_exp(const options& opts) const     \
     {                                           \
       using namespace vcsn::dyn;                \
-      expression exp = read_expression(opts);           \
+      expression exp = read_expression(opts);   \
                                                 \
       auto res = vcsn::dyn::Name(exp);          \
                                                 \
