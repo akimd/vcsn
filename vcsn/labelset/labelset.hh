@@ -8,30 +8,18 @@
 #include <vcsn/ctx/traits.hh> // labelset_t_of
 #include <vcsn/misc/algorithm.hh> // none_of
 #include <vcsn/misc/functional.hh> // less
+#include <vcsn/misc/type_traits.hh> // detect
 
 namespace vcsn
 {
   namespace detail
   {
-
-    // Is it possible to write a C++ template to check for a function's
-    // existence?  http://stackoverflow.com/questions/257288
-    template <typename>
-    struct has_genset_sfinae_true : std::true_type {};
-
-    template <typename T>
-    static auto test_genset(int)
-      -> has_genset_sfinae_true<decltype(std::declval<T>().genset())>;
-
-    template <typename>
-    static auto test_genset(long)
-      -> std::false_type;
-
-    /// Whether LabelSet features a genset() function.
     template <typename LabelSet>
-    struct has_genset_member_function
-      : decltype(detail::test_genset<LabelSet>(0))
-    {};
+    using genset_t = decltype(std::declval<LabelSet>().genset());
+
+    template <typename LabelSet>
+    using has_genset_mem_fn = detect<LabelSet, genset_t>;
+
 
     /*-------------------.
     | make_letterized.   |

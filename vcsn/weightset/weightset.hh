@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory> // std::make_shared
 
+#include <vcsn/misc/type_traits.hh> // detect
+
 // It is much simpler and saner in C++ to put types and functions on
 // these types in the same namespace.  Since "using q =
 // detail::weightset_mixin<q_impl>" would just create an alias of
@@ -44,30 +46,18 @@ namespace vcsn
     }
 
   private:
-    // Is it possible to write a C++ template to check for a
-    // function's existence? See vcsn/misc/military-order.hh.
-    template <typename>
-    struct sfinae_true : std::true_type {};
+    template <typename T>
+    using power_t = decltype(std::declval<T>()
+                             .power(std::declval<typename T::value_t>(), 0));
 
     template <typename T>
-    static auto test_power(int)
-      -> sfinae_true<decltype(std::declval<T>()
-                              .power(std::declval<typename T::value_t>(),
-                                     0))>;
-
-    template <typename>
-    static auto test_power(long) -> std::false_type;
-
-    template <typename T>
-    struct has_power_member_function
-      : decltype(test_power<T>(0))
-    {};
+    using has_power_mem_fn = detail::detect<T, power_t>;
 
     /// Case where the weightset T features a power(value_t, unsigned)
     /// member function.
     template <typename WS>
     auto power_(value_t e, unsigned n) const
-      -> vcsn::enable_if_t<has_power_member_function<WS>{}, value_t>
+      -> vcsn::enable_if_t<has_power_mem_fn<WS>{}, value_t>
     {
       return super_t::power(e, n);
     }
@@ -76,7 +66,7 @@ namespace vcsn
     /// power(value_t, unsigned) member function.
     template <typename WS>
     auto power_(value_t e, unsigned n) const
-      -> vcsn::enable_if_t<!has_power_member_function<WS>{}, value_t>
+      -> vcsn::enable_if_t<!has_power_mem_fn<WS>{}, value_t>
     {
       value_t res = super_t::one();
       if (!super_t::is_one(e))

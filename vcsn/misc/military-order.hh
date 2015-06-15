@@ -1,31 +1,22 @@
 #pragma once
 
 #include <tuple>
-#include <type_traits>
+
+#include <vcsn/misc/type_traits.hh> // detect
 
 namespace vcsn
 {
 
-  // Is it possible to write a C++ template to check for a function's
-  // existence?  http://stackoverflow.com/questions/257288
   namespace detail
   {
-    template <typename>
-    struct sfinae_true : std::true_type {};
-
     template <typename T>
-    static auto test_size(int)
-      -> sfinae_true<decltype(std::declval<T>().size())>;
+    using test_t = decltype(std::declval<T>().size());
 
-    template <typename>
-    static auto test_size(long) -> std::false_type;
+    /// Whether T features a size() function.
+    template <typename T>
+    using has_size_mem_fn = detect<T, test_t>;
   }
 
-  /// Whether T features a size() function.
-  template <typename T>
-  struct has_size_member_function
-    : decltype(detail::test_size<T>(0))
-  {};
 
   /// Military strict order predicate.
   ///
@@ -46,7 +37,7 @@ namespace vcsn
     /// Case where T features a size() member function.
     template <typename T2>
     auto lt_(const T2& x, const T2& y) const
-      -> vcsn::enable_if_t<has_size_member_function<T2>::value, bool>
+      -> vcsn::enable_if_t<detail::has_size_mem_fn<T2>::value, bool>
     {
       return
         std::forward_as_tuple(x.size(), x) < std::forward_as_tuple(y.size(), y);
@@ -55,7 +46,7 @@ namespace vcsn
     /// Case where T does not feature a size() member function.
     template <typename T2>
     auto lt_(const T2& x, const T2& y) const
-      -> vcsn::enable_if_t<!has_size_member_function<T2>::value, bool>
+      -> vcsn::enable_if_t<!detail::has_size_mem_fn<T2>::value, bool>
     {
       return x < y;
     }
