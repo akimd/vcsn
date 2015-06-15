@@ -788,13 +788,13 @@ namespace vcsn
     }
   }
 
-  /*----------------------.
-  | power(automaton, n).  |
-  `----------------------*/
+  /*-----------------------------.
+  | conjunction(automaton, n).   |
+  `-----------------------------*/
 
   template <typename Aut>
   auto
-  power(const Aut& aut, unsigned n)
+  conjunction(const Aut& aut, unsigned n)
     -> fresh_automaton_t_of<Aut>
   {
     auto res = make_fresh_automaton(aut);
@@ -837,13 +837,13 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (conjunction).
       template <typename Aut, typename Unsigned>
       automaton
-      power(const automaton& aut, unsigned n)
+      conjunction_repeated(const automaton& aut, unsigned n)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::power(a, n));
+        return make_automaton(::vcsn::conjunction(a, n));
       }
     }
   }

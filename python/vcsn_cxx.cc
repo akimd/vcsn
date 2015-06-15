@@ -273,6 +273,16 @@ struct automaton
     return vcsn::dyn::context_of(val_);
   }
 
+  automaton conjunction(unsigned n) const
+  {
+    return vcsn::dyn::conjunction(val_, n);
+  }
+
+  static automaton conjunction_(const boost::python::list& auts)
+  {
+    return vcsn::dyn::conjunction(automata_(auts));
+  }
+
   automaton costandard() const
   {
     return vcsn::dyn::costandard(val_);
@@ -504,16 +514,6 @@ struct automaton
   automaton prefix() const
   {
     return vcsn::dyn::prefix(val_);
-  }
-
-  automaton power(unsigned n) const
-  {
-    return vcsn::dyn::power(val_, n);
-  }
-
-  static automaton conjunction_(const boost::python::list& auts)
-  {
-    return vcsn::dyn::conjunction(automata_(auts));
   }
 
   automaton lift(const boost::python::list& tapes) const
@@ -1190,6 +1190,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("component", &automaton::component)
     .def("compose", &automaton::compose)
     .def("condense", &automaton::condense)
+    .def("conjunction", &automaton::conjunction)
+    .def("_conjunction", &automaton::conjunction_).staticmethod("_conjunction")
+    .def("_conjunction_lazy", &automaton::conjunction_lazy_)
+        .staticmethod("_conjunction_lazy")
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
     .def("delay_automaton", &automaton::delay_automaton)
@@ -1239,10 +1243,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("num_components", &automaton::num_components)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
-    .def("power", &automaton::power)
-    .def("_conjunction", &automaton::conjunction_).staticmethod("_conjunction")
-    .def("_conjunction_lazy", &automaton::conjunction_lazy_)
-        .staticmethod("_conjunction_lazy")
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)

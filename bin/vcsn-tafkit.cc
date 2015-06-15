@@ -51,27 +51,6 @@
     }                                                   \
   }
 
-#define DEFINE_AUT_SIZE_FUNCTION(Name)                          \
-  struct Name: vcsn_function                                    \
-  {                                                             \
-    int work_aut(const options& opts) const                     \
-    {                                                           \
-      using namespace vcsn::dyn;                                \
-      /* Input. */                                              \
-      automaton aut = read_automaton(opts);                     \
-      assert(1 <= opts.argv.size());                            \
-      size_t n = boost::lexical_cast<size_t>(opts.argv[0]);     \
-                                                                \
-      /* Process. */                                            \
-      auto res = vcsn::dyn::Name(aut, n);                       \
-                                                                \
-      /* Output. */                                             \
-      opts.print(res);                                          \
-      return 0;                                                 \
-    }                                                           \
-  }
-
-
 #define DEFINE_RATEXP_FUNCTION(Name)            \
   struct Name: vcsn_function                    \
   {                                             \
@@ -139,7 +118,6 @@ DEFINE_AUT_FUNCTION(is_useless);
 DEFINE_AUT__RATEXP_FUNCTION(is_valid);
 DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_VARIADIC_FUNCTION(multiply);
-DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_FUNCTION(proper);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
 DEFINE_RATEXP_FUNCTION(split);
@@ -686,7 +664,6 @@ try
       ALGO(lift);
       ALGO(minimize);
       ALGO(multiply);
-      ALGO(power);
       ALGO(proper);
       ALGO(shortest);
       ALGO(shuffle);

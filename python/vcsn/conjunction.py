@@ -16,7 +16,7 @@ class Conjunction(object):
     def __and__(self, arg):
         if isinstance(arg, int):
             object.__getattribute__(self, "auts")[-1] =  \
-               object.__getattribute__(self, "auts")[-1].power(arg)
+               object.__getattribute__(self, "auts")[-1].conjunction(arg)
         else:
             object.__getattribute__(self, "auts").append(arg)
         return self

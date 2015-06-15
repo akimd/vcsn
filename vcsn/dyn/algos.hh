@@ -102,6 +102,9 @@ namespace vcsn
     /// Performs the meet of the contexts.
     automaton conjunction(const automaton& lhs, const automaton& rhs);
 
+    /// Repeated conjunction of \a aut with itself.
+    automaton conjunction(const automaton& aut, unsigned n);
+
     /// The conjunction (aka synchronized product) of automata.
     /// Performs the meet of the contexts.
     automaton conjunction(const std::vector<automaton>& as);
@@ -456,9 +459,6 @@ namespace vcsn
 
     /// Create a prefix automaton from \a aut.
     automaton prefix(const automaton& aut);
-
-    /// Repeated conjunction of \a aut with itself.
-    automaton power(const automaton& aut, unsigned n);
 
     /// Print automaton \a a on \a o using format \a format.
     std::ostream& print(const automaton& a, std::ostream& o,

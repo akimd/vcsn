@@ -34,8 +34,8 @@ TAF-Kit program:
   double-ring eliminate-state enumerate evaluate expand infiltration
   is-ambiguous is-complete is-deterministic is-empty is-eps-acyclic
   is-normalized is-proper is-standard is-trim is-useless is-valid
-  ladybird left-mult lift minimize multiply power proper right-mult
-  shortest shuffle split standard star star-normal-form sum thompson
+  ladybird left-mult lift minimize multiply proper right-mult shortest
+  shuffle split standard star star-normal-form sum thompson
   to-expression transpose trim u union universal
 
 For more information, run:
@@ -80,7 +80,7 @@ case $1 in
 
   (accessible|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
-      |compose|multiply|conjunction \
+      |compose|conjunction \
       |de-bruijn \
       |derivation|derived-term|determinize \
       |difference|divkbaseb \
@@ -92,7 +92,8 @@ case $1 in
       |is-standard|is-trim|is-useless|is-valid \
       |ladybird|left-mult|lift \
       |minimize \
-      |power|proper \
+      |multiply \
+      |proper \
       |random|right-mult \
       |shuffle|shortest|split|standard|star|star-normal-form|sum \
       |thompson \
