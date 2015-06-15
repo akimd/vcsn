@@ -101,7 +101,7 @@ namespace vcsn
       /// Unfortunately the compilers tend to issue error messages
       /// that make this hard to understand, even though we have some
       /// static assertions.
-      template <typename>
+      template <typename = void>
       using fresh_automaton_t
         = focus_automaton<Tape,
                           fresh_automaton_t_of<automaton_t, full_context_t>>;

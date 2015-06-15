@@ -27,7 +27,7 @@ namespace vcsn
     using context_t = Context;
     /// The (shared pointer) type to use if we have to create an
     /// automaton of the same (underlying) type.
-    template <typename Ctx>
+    template <typename Ctx = Context>
     using fresh_automaton_t = mutable_automaton<Ctx>;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;

@@ -21,16 +21,17 @@ namespace vcsn
       /// The type of automaton to wrap.
       using automaton_t = Aut;
 
+      using context_t = Context;
+
       /// The automaton type, without shared_ptr.
       using element_type = typename automaton_t::element_type;
 
       /// The (shared pointer) type to use it we have to create an
       /// automaton of the same (underlying) type.
-      template <typename Ctx>
+      template <typename Ctx = context_t>
       using fresh_automaton_t
         = typename element_type::template fresh_automaton_t<Ctx>;
 
-      using context_t = Context;
       using kind_t = typename context_t::kind_t;
 
       using labelset_t = typename context_t::labelset_t;

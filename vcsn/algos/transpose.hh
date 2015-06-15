@@ -26,15 +26,16 @@ namespace vcsn
       /// The type of automaton to wrap.
       using automaton_t = Aut;
 
+      using super_t = automaton_decorator<automaton_t>;
+      using context_t = context_t_of<automaton_t>;
+
       /// The type to use to build an automaton of the same type:
       /// remove the inner const-volatile qualifiers, but still build
       /// a transpose_automaton.
-      template <typename Ctx>
+      template <typename Ctx = context_t>
       using fresh_automaton_t
         = transpose_automaton<fresh_automaton_t_of<automaton_t, Ctx>>;
 
-      using super_t = automaton_decorator<automaton_t>;
-      using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
