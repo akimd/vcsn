@@ -21,9 +21,6 @@ We should have a means to open the documentation page of a given function.
 Something similar to IPython's "?" shortcut.
 
 * Naming issues
-** Wrong names
-power for expression denotes {n,m} which is related to concat, not to mul.
-
 ** left_mult and right_mult should be lmul and rmul
 
 ** sum should be add

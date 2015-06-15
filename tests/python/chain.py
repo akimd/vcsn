@@ -3,58 +3,25 @@
 import vcsn
 from test import *
 
-a = vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(a), b"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I
-    F1
-  }
-  {
-    node [shape = circle]
-    0
-    1
-  }
-  I -> 0
-  0 -> 1 [label = "a"]
-  1 -> F1
-}
-''')
+# Check both syntaxes: `aut.multiply(n)` and `aut ** n`.
+def check(aut, n, exp):
+    CHECK_EQ(exp, aut ** n)
+    CHECK_EQ(exp, aut.multiply(n))
 
-CHECK_EQ(a.chain(0), vcsn.automaton('''
-digraph
+a = vcsn.B.expression('a').standard()
+check(a, 0, vcsn.B.expression('\e').standard())
+check(a, 5, '''digraph
 {
-  vcsn_context = "lal_char(a), b"
+  vcsn_context = "letterset<char_letters(a)>, b"
   rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    F0
-  }
-  {
-    node [shape = circle]
-    0
-  }
-  I0 -> 0
-  0 -> F0
-}
-'''))
-
-CHECK_EQ(a.chain(5), vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(a), b"
-  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F5
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -69,15 +36,15 @@ digraph
   3 -> 4 [label = "a"]
   4 -> 5 [label = "a"]
   5 -> F5
-}
-'''))
+}''')
 
 
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I
@@ -85,7 +52,7 @@ digraph
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -98,11 +65,11 @@ digraph
 }
 ''')
 
-CHECK_EQ(a.chain(3), vcsn.automaton('''
-digraph
+check(a, 3, '''digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -110,7 +77,7 @@ digraph
     F6
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -132,24 +99,24 @@ digraph
   4 -> 6 [label = "b"]
   5 -> F5
   6 -> F6
-}'''))
+}''')
 
 
-## --------------------------------- ##
-## chain on expressions vs on automata.  ##
-## --------------------------------- ##
+## ------------------------------------------------- ##
+## Repeated multiply on expressions vs on automata.  ##
+## ------------------------------------------------- ##
 
 ctx = vcsn.context('lal_char(ab), z')
-def check(r, *args):
-    "Check that standard and chain commute."
-    r = ctx.expression(r)
-    a = r.standard()
-    CHECK_ISOMORPHIC(a.chain(*args), (r ** args).standard())
+r = ctx.expression('a')
+a = r.standard()
+def check(*args):
+    "Check that standard and multiply commute."
+    CHECK_ISOMORPHIC(a ** args, (r ** args).standard())
 
-check('a', 0, 0)
-check('a', 0, 1)
-check('a', 1, 1)
-check('a', 3, 3)
-check('a', 0, 3)
-check('a', 3, -1)
-check('a', -1, -1)
+check(0)
+check(0, 1)
+check(1)
+check(3)
+check(0, 3)
+check(3, -1)
+check(-1)

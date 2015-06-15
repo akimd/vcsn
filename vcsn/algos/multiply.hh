@@ -119,25 +119,38 @@ namespace vcsn
     }
   }
 
-  /*-----------------------------.
-  | chain(automaton, min, max).  |
-  `-----------------------------*/
+  /*---------------------------------.
+  | multiply(automaton, min, max).   |
+  `---------------------------------*/
 
+  /// Repeated concatenation of an automaton.
+  ///
+  /// The return type, via SFINAE, makes the difference with another
+  /// overload, <ValueSet>(ValueSet, value, value), which coincides in
+  /// the case ValueSet = Z, hence value = int.
+  ///
+  /// Unfortunately, fresh_automaton_t_of, which uses
+  /// context_t_of<Aut>, is not SFINAE transparent: it causes a hard
+  /// failure instead of being ignored.
+  ///
+  /// FIXME: if you know how to use fresh_automaton_t_of instead, let
+  /// me know.
   template <typename Aut>
-  Aut
-  chain(const Aut& aut, int min, int max)
+  auto
+  multiply(const Aut& aut, int min, int max)
+    -> typename Aut::element_type::template fresh_automaton_t<>
   {
     Aut res = make_fresh_automaton(aut);
+    if (min == -1)
+      min = 0;
     if (max == -1)
       {
         res = star(aut);
-        if (min != -1)
-          res = multiply(chain(aut, min, min), res);
+        if (min)
+          res = multiply(multiply(aut, min, min), res);
       }
     else
       {
-        if (min == -1)
-          min = 0;
         if (min == 0)
           {
             // automatonset::one().
@@ -161,7 +174,7 @@ namespace vcsn
               sum->set_final(s);
             }
             for (int n = 1; n <= max - min; ++n)
-              sum = vcsn::sum(sum, chain(aut, n, n));
+              sum = vcsn::sum(sum, multiply(aut, n, n));
             res = vcsn::multiply(res, sum);
           }
       }
@@ -174,13 +187,13 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
+      /// Bridge (multiply).
       template <typename Aut, typename Int1, typename Int2>
       automaton
-      chain(const automaton& a, int min, int max)
+      multiply_repeated(const automaton& a, int min, int max)
       {
         const auto& aut = a->as<Aut>();
-        return make_automaton(::vcsn::chain(aut, min, max));
+        return make_automaton(::vcsn::multiply(aut, min, max));
       }
     }
   }
@@ -221,26 +234,26 @@ namespace vcsn
   }
 
 
-  /*-------------------------------.
-  | chain(expression, min, max).   |
-  `-------------------------------*/
+  /*----------------------------------.
+  | multiply(expression, min, max).   |
+  `----------------------------------*/
 
   template <typename ExpSet>
   typename ExpSet::value_t
-  chain(const ExpSet& rs, const typename ExpSet::value_t& r,
-        int min, int max)
+  multiply(const ExpSet& rs, const typename ExpSet::value_t& r,
+           int min, int max)
   {
     typename ExpSet::value_t res;
+    if (min == -1)
+      min = 0;
     if (max == -1)
       {
         res = rs.star(r);
-        if (min != -1)
-          res = rs.mul(chain(rs, r, min, min), res);
+        if (min)
+          res = rs.mul(multiply(rs, r, min, min), res);
       }
     else
       {
-        if (min == -1)
-          min = 0;
         if (min == 0)
           res = rs.one();
         else
@@ -253,7 +266,7 @@ namespace vcsn
           {
             typename ExpSet::value_t sum = rs.one();
             for (int n = 1; n <= max - min; ++n)
-              sum = rs.add(sum, chain(rs, r, n, n));
+              sum = rs.add(sum, multiply(rs, r, n, n));
             res = rs.mul(res, sum);
           }
       }
@@ -264,16 +277,16 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (chain).
+      /// Bridge (multiply).
       template <typename ExpSet, typename Int1, typename Int2>
       expression
-      chain_expression(const expression& re, int min, int max)
+      multiply_expression_repeated(const expression& re, int min, int max)
       {
         const auto& r = re->as<ExpSet>();
         return make_expression(r.expressionset(),
-                               ::vcsn::chain(r.expressionset(),
-                                             r.expression(),
-                                             min, max));
+                               ::vcsn::multiply(r.expressionset(),
+                                                r.expression(),
+                                                min, max));
       }
     }
   }

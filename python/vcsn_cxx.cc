@@ -216,18 +216,6 @@ struct automaton
     return vcsn::dyn::copy(val_, ctx.val_);
   }
 
-  automaton chain(int min, int max) const
-  {
-    return vcsn::dyn::chain(val_, min, max);
-  }
-  /// The type of the previous function.
-  using bin_chain_t = automaton (automaton::*)(int min, int max) const;
-
-  automaton chain(int min) const
-  {
-    return chain(min, min);
-  }
-
   automaton coaccessible() const
   {
     return vcsn::dyn::coaccessible(val_);
@@ -494,6 +482,22 @@ struct automaton
   automaton multiply(const automaton& rhs) const
   {
     return vcsn::dyn::multiply(val_, rhs.val_);
+  }
+  /// The type of the previous function.
+  using multiply_t =
+    auto (automaton::*)(const automaton&) const -> automaton;
+
+  automaton multiply(int min, int max) const
+  {
+    return vcsn::dyn::multiply(val_, min, max);
+  }
+  /// The type of the previous function.
+  using multiply_repeated_t =
+    auto (automaton::*)(int min, int max) const -> automaton;
+
+  automaton multiply(int min) const
+  {
+    return multiply(min, min);
   }
 
   automaton normalize() const
@@ -822,18 +826,6 @@ struct expression
     return as_(ctx, vcsn::rat::identities::distributive);
   }
 
-  expression chain(int min, int max) const
-  {
-    return vcsn::dyn::chain(val_, min, max);
-  }
-  /// The type of the previous function.
-  using bin_chain_t = expression (expression::*)(int min, int max) const;
-
-  expression chain(int min) const
-  {
-    return chain(min, min);
-  }
-
   expression complement() const
   {
     return vcsn::dyn::complement(val_);
@@ -908,6 +900,22 @@ struct expression
   expression multiply(const expression& rhs) const
   {
     return vcsn::dyn::multiply(val_, rhs.val_);
+  }
+  /// The type of the previous function.
+  using multiply_t
+    = auto (expression::*)(const expression&) const -> expression;
+
+  expression multiply(int min, int max) const
+  {
+    return vcsn::dyn::multiply(val_, min, max);
+  }
+  /// The type of the previous function.
+  using multiply_repeated_t
+    = auto (expression::*)(int min, int max) const -> expression;
+
+  expression multiply(int min) const
+  {
+    return multiply(min, min);
   }
 
   expression right_mult(const weight& w) const;
@@ -1159,8 +1167,9 @@ expression expression::right_mult(const weight& w) const
 | vcsn_cxx.  |
 `-----------*/
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift, lift, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(multiply_repeated,
+                                       multiply, 1, 2);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -1181,7 +1190,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("ambiguous_word", &automaton::ambiguous_word)
     .def("automaton", &automaton::as)
     .def("focus", &automaton::focus)
-    .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
     .def("codeterminize", &automaton::codeterminize, (arg("algo") = "auto"))
     .def("cominimize", &automaton::cominimize, (arg("algo") = "auto"))
@@ -1238,7 +1246,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("letterize", &automaton::letterize)
     .def("_lift", static_cast<automaton::vect_lift_t>(&automaton::lift), lift())
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
-    .def("multiply", &automaton::multiply)
+    .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply))
+    .def("multiply",
+         static_cast<automaton::multiply_repeated_t>(&automaton::multiply),
+         multiply_repeated())
     .def("normalize", &automaton::normalize)
     .def("num_components", &automaton::num_components)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
@@ -1300,8 +1311,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<expression>("expression", bp::no_init)
     .def(bp::init<const context&, const std::string&, const std::string&>
          ((arg("context"), arg("data"), arg("identities") = "default")))
-    .def("chain", static_cast<expression::bin_chain_t>(&expression::chain),
-         chain())
     .def("complement", &expression::complement)
     .def("conjunction", &expression::conjunction)
     .def("constant_term", &expression::constant_term)
@@ -1320,7 +1329,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &expression::is_valid)
     .def("left_mult", &expression::left_mult)
     .def("lift", &expression::lift)
-    .def("multiply", &expression::multiply)
+    .def("multiply", static_cast<expression::multiply_t>(&expression::multiply))
+    .def("multiply",
+         static_cast<expression::multiply_repeated_t>(&expression::multiply),
+         multiply_repeated())
     .def("right_mult", &expression::right_mult)
     .def("series", &expression::as_series, (arg("context") = context()))
     .def("shuffle", &expression::shuffle)

@@ -15,6 +15,14 @@ from vcsn_cxx import automaton, label, weight
 from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file, _popen
 from vcsn.dot import _dot_pretty, _dot_to_boxart, _dot_to_svg, _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot
 
+_automaton_multiply_orig = automaton.multiply
+def _automaton_multiply(self, exp):
+    if isinstance(exp, tuple):
+        return _automaton_multiply_orig(self, *exp)
+    else:
+        return _automaton_multiply_orig(self, exp)
+automaton.multiply = _automaton_multiply
+
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: Conjunction(l, r)
 automaton.__eq__ = lambda self, other: str(self.strip()) == str(other.strip())
@@ -22,7 +30,7 @@ automaton.__invert__ = automaton.complement
 automaton.__mod__ = automaton.difference
 automaton.__mul__ = _right_mult
 automaton.__or__ = automaton.union
-automaton.__pow__ = automaton.conjunction
+automaton.__pow__ = automaton.multiply
 automaton.__repr__ = lambda self: self.type()
 automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')

@@ -5,18 +5,20 @@
 from vcsn_cxx import label, expression
 from vcsn import _is_equal, _info_to_dict, _left_mult, _right_mult
 
-def _expression_power(self, exp):
+_expression_multiply_orig = expression.multiply
+def _expression_multiply(self, exp):
     if isinstance(exp, tuple):
-        return self.chain(*exp)
+        return _expression_multiply_orig(self, *exp)
     else:
-        return self.chain(exp)
+        return _expression_multiply_orig(self, exp)
+expression.multiply = _expression_multiply
 
 expression.__add__ = expression.sum
 expression.__and__ = expression.conjunction
 expression.__eq__ = _is_equal
 expression.__mod__ = expression.difference
 expression.__mul__ = _right_mult
-expression.__pow__ = _expression_power
+expression.__pow__ = _expression_multiply
 expression.__repr__ = lambda self: self.format('text')
 expression.__rmul__ = _left_mult
 expression.__str__ = lambda self: self.format('text')

@@ -297,8 +297,6 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
-        REGISTER(chain, aut_t, int, int);
-        REGISTER(chain_expression, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
         REGISTER(complement_expression, rs_t);
         REGISTER(conjunction_expression, rs_t, rs_t);
@@ -329,6 +327,8 @@ namespace vcsn
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply, aut_t, aut_t);
         REGISTER(multiply_expression, rs_t, rs_t);
+        REGISTER(multiply_expression_repeated, rs_t, int, int);
+        REGISTER(multiply_repeated, aut_t, int, int);
         REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(print_context, ctx_t, std::ostream, const std::string);
         REGISTER(print_expansion, es_t, std::ostream, const std::string);

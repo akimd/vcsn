@@ -40,12 +40,6 @@ namespace vcsn
     /// Produce a Černý automaton of \a num_states states.
     automaton cerny(const context& ctx, unsigned num_states);
 
-    /// Repeated concatenation of \a aut with itself.
-    automaton chain(const automaton& aut, int min, int max);
-
-    /// Repeated concatenation of \a e with itself.
-    expression chain(const expression& e, int min, int max);
-
     /// The coaccessible subautomaton of \a aut.
     automaton coaccessible(const automaton& aut);
 
@@ -427,8 +421,22 @@ namespace vcsn
     /// Multiply (concatenate) two standard automata.
     automaton multiply(const automaton& lhs, const automaton& rhs);
 
+    /// Repeated multiplication (concatenation) of an automaton with itself.
+    ///
+    /// \param aut  the automaton.
+    /// \param min  the minimum number.  If -1, denotes 0.
+    /// \param max  the maximum number.  If -1, denotes infinity, using star.
+    automaton multiply(const automaton& aut, int min, int max);
+
     /// Multiply (concatenate) two expressions.
     expression multiply(const expression& lhs, const expression& rhs);
+
+    /// Repeated multiplication (concatenation) of an expression with itself.
+    ///
+    /// \param e    the expression.
+    /// \param min  the minimum number.  If -1, denotes 0.
+    /// \param max  the maximum number.  If -1, denotes infinity, using star.
+    expression multiply(const expression& e, int min, int max);
 
     /// Multiply (concatenate) two labels.
     label multiply(const label& lhs, const label& rhs);

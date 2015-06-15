@@ -5,6 +5,34 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-06-15
+### power, chain have been renamed
+Before, "chain" denoted the repeated concatenation for automata and
+expressions, and "power" meant repeated conjunction for automata and
+expressions.  However, while `aut ** 2` meant `aut & aut`
+(conjunction), `exp ** 2` meant `exp * exp` (concatenation).
+
+Clearly, from the Python point of view, `**` is repeated `*`, which is
+what most people would understand as "power".
+
+So, to enforce consistency, and to avoid bad surprises, these
+functions were renamed.
+
+    +----------+---------------------+------------------------------------+
+    |Python    |dyn::                |Comment                             |
+    +----------+---------------------+------------------------------------+
+    |`a * b`   |`multiply(a, b)`     |Multiplication for automata and     |
+    |          |                     |expressions (concatenation),        |
+    |          |                     |polynomials, weights, labels etc.   |
+    +----------+---------------------+------------------------------------+
+    |`a ** n`  |`multiply(a, n)`     |Repeated multiplication.            |
+    +----------+---------------------+------------------------------------+
+    |`a & b`   |`conjunction(a, b)`  |Conjunction for automata and        |
+    |          |                     |expressions.                        |
+    +----------+---------------------+------------------------------------+
+    |`a & n`   |`conjunction(a, n)`  |Repeated conjunction.               |
+    +----------+---------------------+------------------------------------+
+
 ## 2015-06-11
 ### eliminate_state: fixes
 Sometimes their was a mismatch between the state numbers as displayed,
