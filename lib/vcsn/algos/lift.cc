@@ -14,9 +14,9 @@ namespace vcsn
 
     REGISTER_DEFINE(lift_automaton);
     automaton
-    lift(const automaton& aut)
+    lift(const automaton& aut, vcsn::rat::identities ids)
     {
-      return detail::lift_automaton_registry().call(aut);
+      return detail::lift_automaton_registry().call(aut, ids);
     }
 
     /*-------------------------.

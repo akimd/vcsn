@@ -474,10 +474,22 @@ struct automaton
     return vcsn::dyn::letterize(val_);
   }
 
-  automaton lift() const
+  automaton lift(const std::string& ids = "default") const
   {
-    return vcsn::dyn::lift(val_);
+    return vcsn::dyn::lift(val_, identities(ids));
   }
+  /// The type of the previous function.
+  using lift_t
+    = auto (automaton::*)(const std::string& ids) const -> automaton;
+
+  automaton lift(const boost::python::list& tapes) const
+  {
+    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes));
+  }
+
+  /// The type of the previous function.
+  using lift_tapes_t
+    = auto (automaton::*)(const boost::python::list& tapes) const -> automaton;
 
   automaton minimize(const std::string& algo = "auto") const
   {
@@ -524,15 +536,6 @@ struct automaton
   {
     return vcsn::dyn::prefix(val_);
   }
-
-  automaton lift(const boost::python::list& tapes) const
-  {
-    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes));
-  }
-
-  /// The type of the previous function.
-  using vect_lift_t
-    = automaton (automaton::*)(const boost::python::list& tapes) const;
 
   automaton proper(bool prune = true, bool backward = true,
                    const std::string algo = "auto") const
@@ -1167,7 +1170,8 @@ expression expression::right_mult(const weight& w) const
 | vcsn_cxx.  |
 `-----------*/
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift, lift, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift_tapes,
+                                       lift, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(multiply_repeated,
                                        multiply, 1, 2);
 
@@ -1244,7 +1248,12 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("letterize", &automaton::letterize)
-    .def("_lift", static_cast<automaton::vect_lift_t>(&automaton::lift), lift())
+    .def("_lift",
+         static_cast<automaton::lift_t>(&automaton::lift),
+         (arg("identities") = "default"))
+    .def("_lift",
+         static_cast<automaton::lift_tapes_t>(&automaton::lift),
+         lift_tapes())
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply))
     .def("multiply",

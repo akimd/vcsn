@@ -243,7 +243,7 @@ namespace vcsn
     if (i != copy.end()
         && equal(unwrap_possible_lweight_(*i), rn))
       {
-        // An addend alraedy exists whose un-left-weighted value is rn.
+        // An addend already exists whose un-left-weighted value is rn.
         const weight_t& iw = possibly_implicit_lweight_(*i);
         const weight_t w = ws->add(rw, iw);
         if (ws->is_zero(w))

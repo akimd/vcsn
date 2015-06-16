@@ -190,9 +190,9 @@ def _automaton_is_synchronized_by(self, w):
     return self._is_synchronized_by(w)
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
-def _automaton_lift(self, *arg):
+def _automaton_lift(self, *arg, identities = "default"):
     if len(arg) == 0:
-        return self._lift()
+        return self._lift(identities = identities)
     elif len(arg) == 1 and isinstance(arg[0], list):
         return self._lift(arg[0])
     else:

@@ -2,6 +2,8 @@
 
 #include <map>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/ctx/context.hh>
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -34,24 +36,90 @@ namespace vcsn
     /// lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet>
     lifted_context_t<context<LabelSet, WeightSet>>
-    lift_context(const context<LabelSet, WeightSet>& ctx)
+    lift_context(const context<LabelSet, WeightSet>& ctx,
+                 vcsn::rat::identities ids = {})
     {
-      auto rs_in = expressionset<context<LabelSet, WeightSet>>{ctx};
+      auto rs_in = expressionset<context<LabelSet, WeightSet>>{ctx, ids};
       return {oneset{}, rs_in};
     }
 
     /// lift(expressionset) -> expressionset
     template <typename Context>
     lifted_expressionset_t<expressionset<Context>>
-    lift_expressionset(const expressionset<Context>& rs)
+    lift_expressionset(const expressionset<Context>& rs,
+                       boost::optional<vcsn::rat::identities> ids = {})
     {
-      return {lift_context(rs.context()), rs.identities()};
+      // FIXME: Boost 1.56 deprecates get_value_or in favor of value_or.
+      return {lift_context(rs.context()), ids.get_value_or(rs.identities())};
     }
+  }
+
+  /*------------------.
+  | lift(automaton).  |
+  `------------------*/
+
+  /// Turn an automaton into a spontaneous automaton.
+  ///
+  /// Each <k>l transition is mapped to a <<k>l>\e transition.
+  ///
+  /// \param a    the input automaton
+  /// \param ids  the identities of the expression
+  template <typename Aut>
+  inline
+  detail::lifted_automaton_t<Aut>
+  lift(const Aut& a, vcsn::rat::identities ids = {})
+  {
+    using auto_in_t = typename Aut::element_type;
+    using ctx_in_t = context_t_of<auto_in_t>;
+    using state_in_t = state_t_of<auto_in_t>;
+
+    // Produce expressions of the same context as the original automaton.
+    using rs_in_t = expressionset<ctx_in_t>;
+    auto rs_in = rs_in_t{a->context()};
+
+    auto ctx_out = detail::lift_context(a->context(), ids);
+    using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
+    using state_out_t = state_t_of<auto_out_t>;
+    auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
+    auto map = std::map<state_in_t, state_out_t>{};
+    map[a->pre()] = res->pre();
+    map[a->post()] = res->post();
+    for (auto s: a->states())
+      map[s] = res->new_state();
+
+    for (auto t: a->all_transitions())
+      if (a->src_of(t) == a->pre())
+        res->add_initial(map[a->dst_of(t)],
+                        rs_in.lmul(a->weight_of(t), rs_in.one()));
+      else if (a->dst_of(t) == a->post())
+        res->add_final(map[a->src_of(t)],
+                      rs_in.lmul(a->weight_of(t), rs_in.one()));
+      else
+        res->add_transition
+          (map[a->src_of(t)], map[a->dst_of(t)],
+           {},
+           rs_in.lmul(a->weight_of(t), rs_in.atom(a->label_of(t))));
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (lift).
+      template <typename Aut, typename Identities>
+      automaton
+      lift_automaton(const automaton& aut, vcsn::rat::identities ids)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(::vcsn::lift(a, ids));
+      }
+    }
+  }
 
 
-
-
-
+  namespace detail
+  {
     // Helper structure for a lift of several tapes
     template<typename Context, size_t... Tapes>
     struct lifted_context_tape_t;
@@ -161,52 +229,6 @@ namespace vcsn
       return {oneset{}, rs_in};
     }
 
-  }
-
-  /*------------------.
-  | lift(automaton).  |
-  `------------------*/
-
-  template <typename Aut>
-  inline
-  detail::lifted_automaton_t<Aut>
-  lift(const Aut& a)
-  {
-    using auto_in_t = typename Aut::element_type;
-    using ctx_in_t = context_t_of<auto_in_t>;
-    using state_in_t = state_t_of<auto_in_t>;
-
-    // Produce expressions of the same context as the original automaton.
-    using rs_in_t = expressionset<ctx_in_t>;
-    auto rs_in = rs_in_t{a->context()};
-
-    auto ctx_out = detail::lift_context(a->context());
-    using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
-    using state_out_t = state_t_of<auto_out_t>;
-    auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
-    auto map = std::map<state_in_t, state_out_t>{};
-    map[a->pre()] = res->pre();
-    map[a->post()] = res->post();
-    for (auto s: a->states())
-      map[s] = res->new_state();
-
-    for (auto t: a->all_transitions())
-      if (a->src_of(t) == a->pre())
-        res->add_initial(map[a->dst_of(t)],
-                        rs_in.lmul(a->weight_of(t), rs_in.one()));
-      else if (a->dst_of(t) == a->post())
-        res->add_final(map[a->src_of(t)],
-                      rs_in.lmul(a->weight_of(t), rs_in.one()));
-      else
-        res->add_transition
-          (map[a->src_of(t)], map[a->dst_of(t)],
-           {},
-           rs_in.lmul(a->weight_of(t), rs_in.atom(a->label_of(t))));
-    return res;
-  }
-
-  namespace detail
-  {
     // Lift only certain tapes of the transducer
     template <typename Aut, size_t... Tapes>
     inline
@@ -268,21 +290,6 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::lift<Aut, Tapes::value...>(a));
-      }
-    }
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (lift).
-      template <typename Aut>
-      automaton
-      lift_automaton(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::lift(a));
       }
     }
   }

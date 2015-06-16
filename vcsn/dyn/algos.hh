@@ -393,8 +393,14 @@ namespace vcsn
     /// The automaton with letter transitions instead of words.
     automaton letterize(const automaton& aut);
 
-    /// The lifted LAO automaton from \a aut.
-    automaton lift(const automaton& aut);
+    /// Turn an automaton into a spontaneous automaton.
+    ///
+    /// Each <k>l transition is mapped to a <<k>l>\e transition.
+    ///
+    /// \param aut  the input automaton
+    /// \param ids  the identities of the expression
+    automaton lift(const automaton& aut,
+                   ::vcsn::rat::identities ids = {});
 
     /// Lift some tapes of the transducer
     automaton lift(const automaton& aut, const std::vector<unsigned>& tapes);

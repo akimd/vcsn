@@ -57,6 +57,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.letterize.ipynb                 \
+  %D%/automaton.lift.ipynb                      \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.operators.ipynb                 \
   %D%/automaton.pair.ipynb                      \
