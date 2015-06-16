@@ -82,9 +82,9 @@ namespace vcsn
 
       aut_proper_t operator()()
       {
-        for (auto proper_p : aut_proper_->states())
+        for (auto dirty_p : aut_dirty_->states())
           {
-            state_t dirty_p = p2d_[proper_p];
+            state_t proper_p = d2p_[dirty_p];
             for (state_t dirty_q = 0; dirty_q < de_[dirty_p].size(); dirty_q++)
               {
                 weight_t dist_pq = de_[dirty_p][dirty_q];
