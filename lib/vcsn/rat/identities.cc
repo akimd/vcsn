@@ -1,11 +1,9 @@
 #include <cctype>
-#include <stdexcept>
-
-#include <boost/range/adaptor/map.hpp>
-#include <boost/range/algorithm/copy.hpp>
+#include <map>
 
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/misc/builtins.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/initializer_list.hh>
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/stream.hh>
@@ -39,10 +37,6 @@ namespace vcsn
 
     static std::istream& operator>>(std::istream& is, identities::ids_t& ids)
     {
-      std::string buf;
-      while (is && isalnum(is.peek()))
-        buf += is.get();
-
       static const auto map = std::map<std::string, identities::ids_t>
         {
           {"associative",  identities::associative},
@@ -54,18 +48,12 @@ namespace vcsn
           {"series",       identities::distributive},
           {"trivial",      identities::trivial},
         };
-      auto i = map.find(buf);
-      if (i == end(map))
-        {
-          std::ostringstream o;
-          // Retrieve all keys
-          boost::copy(map | boost::adaptors::map_keys,
-                      std::ostream_iterator<std::string>(o, " "));
-          fail_reading(is, "invalid identities: ", buf,
-                       ", expected: ", o.str());
-        }
-      else
-        ids = i->second;
+
+      std::string buf;
+      while (is && isalnum(is.peek()))
+        buf += is.get();
+
+      ids = getargs("identities", map, buf);
       return is;
     }
 

@@ -210,6 +210,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/flex-lexer.hh                        \
   %D%/misc/functional.hh                        \
   %D%/misc/fwd.hh                               \
+  %D%/misc/getargs.hh                           \
   %D%/misc/indent.hh                            \
   %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \

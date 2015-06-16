@@ -13,13 +13,13 @@
 
 #include <vcsn/misc/export.hh>
 
-namespace vcsn
+namespace vcsn LIBVCSN_API
 {
   /** \brief Manage search paths.
 
       Store a search path and all informations used for handling
       paths when processing import directives. */
-  class LIBVCSN_API file_library
+  class file_library
   {
   public:
     using self_t = file_library;
