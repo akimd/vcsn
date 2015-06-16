@@ -31,7 +31,7 @@ namespace vcsn
     using lifted_expressionset_t =
       expressionset<lifted_context_t<context_t_of<ExpSet>>>;
 
-    // lift(ctx) -> ctx
+    /// lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet>
     lifted_context_t<context<LabelSet, WeightSet>>
     lift_context(const context<LabelSet, WeightSet>& ctx)
@@ -40,7 +40,7 @@ namespace vcsn
       return {oneset{}, rs_in};
     }
 
-    // lift(expressionset) -> expressionset
+    /// lift(expressionset) -> expressionset
     template <typename Context>
     lifted_expressionset_t<expressionset<Context>>
     lift_expressionset(const expressionset<Context>& rs)

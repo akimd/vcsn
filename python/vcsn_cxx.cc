@@ -271,6 +271,11 @@ struct automaton
     return vcsn::dyn::conjunction(automata_(auts));
   }
 
+  static automaton conjunction_lazy_(const boost::python::list& auts)
+  {
+    return vcsn::dyn::conjunction_lazy(automata_(auts));
+  }
+
   automaton costandard() const
   {
     return vcsn::dyn::costandard(val_);
@@ -528,11 +533,6 @@ struct automaton
   /// The type of the previous function.
   using vect_lift_t
     = automaton (automaton::*)(const boost::python::list& tapes) const;
-
-  static automaton conjunction_lazy_(const boost::python::list& auts)
-  {
-    return vcsn::dyn::conjunction_lazy(automata_(auts));
-  }
 
   automaton proper(bool prune = true, bool backward = true,
                    const std::string algo = "auto") const

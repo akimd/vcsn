@@ -38,16 +38,18 @@ check_aut(load('lal_char_zmin/slowgrow.gv'),
 
 ctx = vcsn.context("lal_char(abc), b")
 
-# check_exp RAT EXP-OUT
-# ---------------------
+# check_exp RAT [EXP-OUT = RAT]
+# -----------------------------
 # Check that to-expression(standard(RAT)) = EXP-OUT.
-def check_exp(rat, exp):
+def check_exp(rat, exp = None):
+    if exp == None:
+        exp = rat
     check_aut(ctx.expression(rat).standard(), exp)
 
-check_exp('a',                            'a')
-check_exp('ab',                           'ab')
-check_exp('a*',                           '\e+aa*')
-check_exp('a+b',                          'a+b')
+check_exp('a')
+check_exp('ab')
+check_exp('a*', '\e+aa*')
+check_exp('a+b')
 check_exp('(?@lal_char(ab), z)<2>(ab)<3>', '(<2>ab)<3>')
 check_exp('(?@law_char(ab), z)<2>(ab)<3>', '<6>(ab)')
 
