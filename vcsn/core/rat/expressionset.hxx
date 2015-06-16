@@ -257,13 +257,53 @@ namespace vcsn
     return std::make_shared<sum_t>(std::move(copy));
   }
 
-  DEFINE::merge_sum_series_(const sum_t& addends1, value_t aa2) const
+  DEFINE::merge_sum_series_(const sum_t& s1,
+                            const sum_t& s2) const
     -> value_t
   {
-    value_t res = aa2;
-    for (const auto& e: addends1)
-      res = add_nonzero_series_(res, e);
-    return res;
+    auto res = values_t{};
+    res.reserve(s1.size() + s2.size());
+    // Merge two increasing lists.  Add weights of equal labels.
+    using std::begin;
+    using std::end;
+    auto i1 = begin(s1), end1 = end(s1);
+    auto i2 = begin(s2), end2 = end(s2);
+    auto less_than =
+      [this] (value_t l, value_t r)
+      {
+        return less(unwrap_possible_lweight_(l),
+                    unwrap_possible_lweight_(r));
+      };
+    while (true)
+      {
+        if (i1 == end1)
+          {
+            res.insert(res.end(), i2, end2);
+            break;
+          }
+        else if (i2 == end2)
+          {
+            res.insert(res.end(), i1, end1);
+            break;
+          }
+        else if (less_than(*i1, *i2))
+          res.emplace_back(*i1++);
+        else if (less_than(*i2, *i1))
+          res.emplace_back(*i2++);
+        else
+          {
+            auto w = weightset()->add(possibly_implicit_lweight_(*i1),
+                                      possibly_implicit_lweight_(*i2));
+            if (!weightset()->is_zero(w))
+              {
+                auto l = unwrap_possible_lweight_(*i1);
+                res.emplace_back(lmul(w, l));
+              }
+            ++i1;
+            ++i2;
+          }
+      }
+    return std::make_shared<sum_t>(std::move(res));
   }
 
   DEFINE::add_nonzero_series_(value_t l, value_t r) const
@@ -271,12 +311,10 @@ namespace vcsn
   {
     assert(!is_zero(l));
     assert(!is_zero(r));
-    if (l->type() == type_t::sum)
+    if (auto ls = std::dynamic_pointer_cast<const sum_t>(l))
       {
-        const auto ls = down_pointer_cast<const sum_t>(l);
-
-        if (r->type() == type_t::sum)
-          return merge_sum_series_(*ls, r);
+        if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
+          return merge_sum_series_(*ls, *rs);
         else
           return insert_in_sum_series_(*ls, r);
       }
