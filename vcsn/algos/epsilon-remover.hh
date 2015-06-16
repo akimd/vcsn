@@ -65,11 +65,16 @@ namespace vcsn
         auto proper_ctx = make_proper_context(aut_->context());
         auto res = make_shared_ptr<aut_proper_t>(proper_ctx);
 
-        if (!is_proper(aut_))
-          in_situ_remover_();
+        in_situ_remover();
 
         copy_into(aut_, res);
         return res;
+      }
+
+      void in_situ_remover()
+      {
+        if (!is_proper(aut_))
+          in_situ_remover_();
       }
 
       /**
@@ -390,10 +395,16 @@ namespace vcsn
         : aut_(aut)
       {}
 
+      /// Just a copy of the automata in the proper context, since there aren't
+      /// any transitions to remove.
       aut_proper_t operator()()
       {
         return copy(aut_);
       }
+
+      /// Nothing to do to remove the transitions in place.
+      void in_situ_remover() {}
+
 
     private:
       automaton_t aut_;
