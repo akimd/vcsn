@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-06-16
+### automaton.expression, automaton.lift
+They now accept an optional argument to specify the desired identities
+for the expressions.
+
 ## 2015-06-15
 ### power, chain have been renamed
 Before, "chain" denoted the repeated concatenation for automata and

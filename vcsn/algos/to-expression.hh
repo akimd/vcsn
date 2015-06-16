@@ -3,6 +3,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/core/rat/expression.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/vector.hh>
 
 namespace vcsn
@@ -268,11 +269,11 @@ namespace vcsn
   template <typename Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression(const Aut& a,
+  to_expression(const Aut& a, vcsn::rat::identities ids,
                 const state_chooser_t<Aut>& next_state)
   {
     // State elimination is performed on the lifted automaton.
-    auto aut = lift(a);
+    auto aut = lift(a, ids);
     auto eliminate_states = detail::make_state_eliminator(aut);
     eliminate_states(next_state);
     return aut->get_initial_weight(aut->post());
@@ -282,10 +283,10 @@ namespace vcsn
   template <typename Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression_naive(const Aut& a)
+    to_expression_naive(const Aut& a, vcsn::rat::identities ids)
   {
     state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
-    return to_expression(a, next);
+    return to_expression(a, ids, next);
   }
 
   /*----------------------.
@@ -297,24 +298,26 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <typename Aut, typename Identities, typename String>
       expression
-      to_expression(const automaton& aut, const std::string& algo)
+      to_expression(const automaton& aut, vcsn::rat::identities ids,
+                    const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         // FIXME: So far, there is a single implementation of expressions,
         // but we should actually be parameterized by its type too.
         using context_t = context_t_of<Aut>;
         using expressionset_t = vcsn::expressionset<context_t>;
-        // FIXME: identities!
-        auto rs = expressionset_t{a->context()};
-        if (algo == "auto" || algo == "naive")
-          return make_expression(rs, ::vcsn::to_expression_naive(a));
-        else
-          raise("to-expression: invalid algorithm: ", str_escape(algo),
-                ": expected \"auto\", or \"naive\"");
+        auto rs = expressionset_t{a->context(), ids};
+        static const auto map = std::map<std::string, bool>
+          {
+            {"auto",  true},
+            {"naive", true},
+          };
+        // Merely just a validation so far.
+        getargs("algorithm", map, algo);
+        return make_expression(rs, ::vcsn::to_expression_naive(a, ids));
       }
     }
   }
-
 } // vcsn::

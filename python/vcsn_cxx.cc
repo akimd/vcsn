@@ -619,7 +619,8 @@ struct automaton
 
   label synchronizing_word(const std::string& algo = "greedy") const;
 
-  expression to_expression(const std::string& algo = "auto") const;
+  expression to_expression(const std::string& ids = "default",
+                           const std::string& algo = "auto") const;
 
   automaton transpose()
   {
@@ -1064,9 +1065,10 @@ label automaton::synchronizing_word(const std::string& algo) const
   return vcsn::dyn::synchronizing_word(val_, algo);
 }
 
-expression automaton::to_expression(const std::string& algo) const
+expression automaton::to_expression(const std::string& ids,
+                                    const std::string& algo) const
 {
-  return vcsn::dyn::to_expression(val_, algo);
+  return vcsn::dyn::to_expression(val_, identities(ids), algo);
 }
 
 weight automaton::weight_series() const
@@ -1267,7 +1269,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)
     .def("realtime", &automaton::realtime)
-    .def("expression", &automaton::to_expression, (arg("algo") = "auto"))
+    .def("expression", &automaton::to_expression,
+         (arg("identities") = "default", arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
     .def("scc", &automaton::scc, (arg("algo") = "auto"))

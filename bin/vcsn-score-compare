@@ -104,6 +104,8 @@ def normalize(k):
 
     k = k.replace('product', 'conjunction')
 
+    k = k.replace('a.expression()', 'a.expression("associative")')
+
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 

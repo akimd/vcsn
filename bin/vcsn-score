@@ -282,8 +282,14 @@ bench('a.proper()',
                'a = vcsn.context("lan_char(a), b").expression(r).thompson()'])
 
 # to-expression.
+r = '[a-d]?{9}'
+bench('a.expression("linear")',
+      'a = std({})'.format(r),
+      setup = ['r = "{}"'.format(r),
+               'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
+
 r = '[a-d]?{100}'
-bench('a.expression()',
+bench('a.expression("associative")',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
                'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])

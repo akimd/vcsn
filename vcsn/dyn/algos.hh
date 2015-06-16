@@ -696,7 +696,12 @@ namespace vcsn
     expansion to_expansion(const expression& exp);
 
     /// An expression denoting the language of \a aut.
+    ///
+    /// \param aut   the input automaton
+    /// \param ids   the identities to use for the expression
+    /// \param algo  the state selection strategy
     expression to_expression(const automaton& aut,
+                             ::vcsn::rat::identities ids = {},
                              const std::string& algo = "auto");
 
     /// Transpose \a aut.

@@ -355,7 +355,7 @@ namespace vcsn
         REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(thompson, rs_t);
         REGISTER(to_expansion, rs_t);
-        REGISTER(to_expression, aut_t, const std::string);
+        REGISTER(to_expression, aut_t, rat::identities, const std::string);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_expression, rs_t);
         REGISTER(transposition_expression, rs_t);
