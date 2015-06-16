@@ -866,11 +866,6 @@ struct expression
     return vcsn::dyn::expand(val_);
   }
 
-  expansion to_expansion() const
-  {
-    return vcsn::dyn::to_expansion(val_);
-  }
-
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -966,6 +961,11 @@ struct expression
   expression transposition() const
   {
     return vcsn::dyn::transposition(val_);
+  }
+
+  expansion to_expansion() const
+  {
+    return vcsn::dyn::to_expansion(val_);
   }
 
   automaton zpc(const std::string& algo = "auto") const

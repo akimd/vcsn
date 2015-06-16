@@ -118,14 +118,19 @@ namespace vcsn
   }
 
 
+  /*------------------------.
+  | lift_tape(automaton).   |
+  `------------------------*/
+
   namespace detail
   {
-    // Helper structure for a lift of several tapes
+    /// Helper structure for a lift of several tapes.
     template<typename Context, size_t... Tapes>
     struct lifted_context_tape_t;
 
     template <typename... LabelSets, typename WeightSet, size_t... Tapes>
-    struct lifted_context_tape_t<context<tupleset<LabelSets...>, WeightSet>, Tapes...>
+    struct lifted_context_tape_t<context<tupleset<LabelSets...>, WeightSet>,
+                                 Tapes...>
     {
       using labelset_t = tupleset<LabelSets...>;
       using in_context_t = context<tupleset<LabelSets...>, WeightSet>;
@@ -229,7 +234,9 @@ namespace vcsn
       return {oneset{}, rs_in};
     }
 
-    // Lift only certain tapes of the transducer
+    /// Lift only certain tapes of the transducer.
+    ///
+    /// \param a  the input automaton
     template <typename Aut, size_t... Tapes>
     inline
     detail::lifted_automaton_tape_t<Aut, Tapes...>
