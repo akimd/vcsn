@@ -56,7 +56,7 @@ namespace vcsn
          @param prune   Whether to remove states that become inaccessible.
          @throw runtime_error if the input is not valid
       */
-      properer(const automaton_t& aut,
+      properer(automaton_t aut,
                bool prune = true,
                const std::string& algo = "auto")
         : aut_(aut)
@@ -64,13 +64,23 @@ namespace vcsn
         , algo_(algo)
       {}
 
-      aut_proper_t operator()()
+      aut_proper_t operator()() const
       {
         return proper_star<weightset_t::star_status()>();
       }
 
+      void here()
+      {
+        proper_star_here<weightset_t::star_status()>();
+      }
+
     private:
-      aut_proper_t remover_()
+
+      /*-----------------.
+      | Separate proper. |
+      `-----------------*/
+
+      aut_proper_t remover_() const
       {
         if (algo_ == "auto" || algo_ == "default" || algo_ == "inplace")
           {
@@ -94,7 +104,7 @@ namespace vcsn
 
       template <star_status_t Status>
       vcsn::enable_if_t<Status == star_status_t::TOPS, aut_proper_t>
-      proper_star()
+      proper_star() const
       {
         try
           {
@@ -108,7 +118,7 @@ namespace vcsn
 
       template <star_status_t Status>
       vcsn::enable_if_t<Status == star_status_t::ABSVAL, aut_proper_t>
-      proper_star()
+      proper_star() const
       {
         require(is_valid(aut_), "proper: invalid automaton");
         return remover_();
@@ -116,17 +126,72 @@ namespace vcsn
 
       template <star_status_t Status>
       vcsn::enable_if_t<Status == star_status_t::STARRABLE, aut_proper_t>
-      proper_star()
+      proper_star() const
       {
         return remover_();
       }
 
       template <star_status_t Status>
       vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE, aut_proper_t>
-      proper_star()
+      proper_star() const
       {
         require(is_valid(aut_), "proper: invalid automaton");
         return remover_();
+      }
+
+
+      /*-----------------.
+      | In place proper. |
+      `-----------------*/
+
+      void remover_here_()
+      {
+        if (algo_ == "auto" || algo_ == "default" || algo_ == "inplace")
+          {
+            detail::epsilon_remover<automaton_t> r(aut_, prune_);
+            r.in_situ_remover();
+          }
+        else if (algo_ == "separate" || algo_ == "distance")
+          raise("proper: algorithm ", algo_, " cannot be used in place");
+        else
+          raise("proper: invalid algorithm: ", algo_);
+      }
+
+      template <star_status_t Status>
+      vcsn::enable_if_t<Status == star_status_t::TOPS>
+      proper_star_here()
+      {
+        try
+          {
+            remover_here_();
+          }
+        catch (const std::runtime_error&)
+          {
+            raise("proper: invalid automaton");
+          }
+      }
+
+      template <star_status_t Status>
+      vcsn::enable_if_t<Status == star_status_t::ABSVAL>
+      proper_star_here()
+      {
+        require(is_valid(aut_), "proper: invalid automaton");
+        remover_here_();
+      }
+
+      template <star_status_t Status>
+      vcsn::enable_if_t<Status == star_status_t::STARRABLE>
+      proper_star_here()
+      {
+        remover_here_();
+      }
+
+      template <star_status_t Status>
+      vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE>
+      proper_star_here()
+      {
+        require(is_valid(aut_), "proper: invalid automaton");
+        remover_here_();
       }
 
       automaton_t aut_;
@@ -176,6 +241,29 @@ namespace vcsn
                                 direction::backward, prune, algo));
       }
     BUILTIN_UNREACHABLE();
+  }
+
+  /// Eliminate spontaneous transitions in place.  Raise if the
+  /// automaton was not valid.
+  ///
+  /// \param aut   the input automaton
+  /// \param dir   whether backward or forward elimination
+  /// \param prune whether to suppress states becoming inaccessible
+  template <typename Aut>
+  inline
+  void proper_here(Aut& aut, direction dir = direction::backward,
+                   bool prune = true, const std::string& algo = "auto")
+  {
+    switch (dir)
+      {
+      case direction::backward:
+        detail::make_properer(aut, prune, algo).here();
+        return;
+      case direction::forward:
+        auto tr_aut = transpose(aut);
+        detail::make_properer(tr_aut, prune, algo).here();
+        return;
+      }
   }
 
   namespace dyn

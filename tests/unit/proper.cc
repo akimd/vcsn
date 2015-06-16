@@ -44,6 +44,9 @@ static void check_lal_b()
   std::cout << "forward_proper:" << std::endl;
   automaton_t pro2 = proper(res, direction::forward);
   print(pro2);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
+  print(res);
 }
 
 /// Test des law booléens
@@ -73,6 +76,9 @@ static void check_law_char_b()
   std::cout << "forward_proper:" << std::endl;
   automaton_t pro2 = proper(res, direction::forward);
   print(pro2);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
+  print(res);
 }
 
 // Test des lal-char-z
@@ -96,6 +102,9 @@ static void check_lal_char_z()
   std::cout << "proper:" << std::endl;
   automaton_t pro = proper(res);
   print(pro);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
+  print(res);
 }
 
 /// Test des law Z
@@ -138,6 +147,9 @@ static void check_law_char_z()
   automaton_t pro2 = proper(res, direction::forward);
   print(pro2);
   //dot(pro2,std::cerr);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
+  print(res);
 }
 
 /// Test des law Zmin
@@ -180,6 +192,9 @@ static void check_law_char_zmin()
   automaton_t pro2 = proper(res, direction::forward);
   print(pro2);
   dot(pro2, std::cout) << std::endl;
+  std::cout << "proper_here:" << std::endl;
+  proper_here(res);
+  print(res);
 }
 
 

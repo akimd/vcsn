@@ -73,6 +73,30 @@ is standard: 0
 is trim: 1
 is useless: 0
 is valid: 1
+proper_here:
+type: mutable_automaton<letterset<char_letters(ab)>, b>
+number of states: 3
+number of lazy states: 0
+number of initial states: 1
+number of final states: 1
+number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
+number of codeterministic states: 3
+number of deterministic states: 3
+number of transitions: 3
+number of spontaneous transitions: 0
+is complete: 0
+is deterministic: 1
+is codeterministic: 1
+is empty: 0
+is eps-acyclic: 1
+is normalized: 0
+is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
+is valid: 1
 ***LAW***
 type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
@@ -145,6 +169,30 @@ is standard: 0
 is trim: 1
 is useless: 0
 is valid: 1
+proper_here:
+type: mutable_automaton<wordset<char_letters(ab)>, b>
+number of states: 3
+number of lazy states: 0
+number of initial states: 1
+number of final states: 3
+number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
+number of codeterministic states: N/A
+number of deterministic states: N/A
+number of transitions: 9
+number of spontaneous transitions: 0
+is complete: N/A
+is deterministic: N/A
+is codeterministic: N/A
+is empty: 0
+is eps-acyclic: 1
+is normalized: 0
+is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
+is valid: 1
 ***LAL Z***
 type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
@@ -170,6 +218,30 @@ is trim: 1
 is useless: 0
 is valid: 1
 proper:
+type: mutable_automaton<letterset<char_letters(ab)>, z>
+number of states: 3
+number of lazy states: 0
+number of initial states: 1
+number of final states: 1
+number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
+number of codeterministic states: 3
+number of deterministic states: 3
+number of transitions: 3
+number of spontaneous transitions: 0
+is complete: 0
+is deterministic: 1
+is codeterministic: 1
+is empty: 0
+is eps-acyclic: 1
+is normalized: 0
+is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
+is valid: 1
+proper_here:
 type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
 number of lazy states: 0
@@ -273,6 +345,30 @@ number of states: 3
 number of lazy states: 0
 number of initial states: 3
 number of final states: 1
+number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
+number of codeterministic states: N/A
+number of deterministic states: N/A
+number of transitions: 6
+number of spontaneous transitions: 0
+is complete: N/A
+is deterministic: N/A
+is codeterministic: N/A
+is empty: 0
+is eps-acyclic: 1
+is normalized: 0
+is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
+is valid: 1
+proper_here:
+type: mutable_automaton<wordset<char_letters(ab)>, z>
+number of states: 3
+number of lazy states: 0
+number of initial states: 1
+number of final states: 3
 number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
@@ -421,4 +517,28 @@ digraph
   2 -> 1 [label = "<0>a"]
   2 -> 2 [label = "<1>a"]
 }
+proper_here:
+type: mutable_automaton<wordset<char_letters(ab)>, zmin>
+number of states: 3
+number of lazy states: 0
+number of initial states: 1
+number of final states: 3
+number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
+number of codeterministic states: N/A
+number of deterministic states: N/A
+number of transitions: 9
+number of spontaneous transitions: 0
+is complete: N/A
+is deterministic: N/A
+is codeterministic: N/A
+is empty: 0
+is eps-acyclic: 1
+is normalized: 0
+is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
+is valid: 1
 EOF
