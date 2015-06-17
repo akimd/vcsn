@@ -198,6 +198,12 @@ namespace vcsn
     /// Whether \a l < \a r.
     static bool less(value_t l, value_t r);
 
+    /// Whether \a l < \a r, ignoring lweight.
+    ///
+    /// Typically used for linear identities, where <2>a and <3>a are
+    /// "equal" and should be merged into <5>a.
+    static bool less_linear(value_t l, value_t r);
+
     /// Whether \a l == \a r.
     static bool equal(value_t l, value_t r);
 
@@ -295,11 +301,11 @@ namespace vcsn
     value_t add_nonzero_series_(value_t l, value_t r) const;
 
     /// If e is an lweight, then its child, otherwise e.
-    value_t unwrap_possible_lweight_(value_t e) const;
+    static value_t unwrap_possible_lweight_(value_t e);
     /// The type of e, or the type of its child if e is a lweight.
-    type_t type_ignoring_lweight_(value_t e) const;
+    static type_t type_ignoring_lweight_(value_t e);
     /// The weight of e if it's an lweight, otherwise the weight one().
-    weight_t possibly_implicit_lweight_(value_t e) const;
+    static weight_t possibly_implicit_lweight_(value_t e);
 
     /// The product of l and r, using expression-identities.
     value_t mul_(value_t l, value_t r, bool series) const;

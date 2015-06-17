@@ -208,22 +208,15 @@ namespace vcsn
     auto res = values_t{};
     res.reserve(s.size() + 1);
 
-    auto less_than =
-      [this] (value_t l, value_t r)
-      {
-        return less(unwrap_possible_lweight_(l),
-                    unwrap_possible_lweight_(r));
-      };
-
     // Copy the strictly smaller part.
-    auto i = boost::lower_bound(s, r, less_than);
+    auto i = boost::lower_bound(s, r, less_linear);
     res.insert(end(res), begin(s), i);
 
     if (i == end(s))
       res.emplace_back(r);
     else
       {
-        if (less_than(r, *i))
+        if (less_linear(r, *i))
           res.emplace_back(r);
         else
           {
@@ -258,12 +251,6 @@ namespace vcsn
     using std::end;
     auto i1 = begin(s1), end1 = end(s1);
     auto i2 = begin(s2), end2 = end(s2);
-    auto less_than =
-      [this] (value_t l, value_t r)
-      {
-        return less(unwrap_possible_lweight_(l),
-                    unwrap_possible_lweight_(r));
-      };
     while (true)
       {
         if (i1 == end1)
@@ -276,9 +263,9 @@ namespace vcsn
             res.insert(res.end(), i1, end1);
             break;
           }
-        else if (less_than(*i1, *i2))
+        else if (less_linear(*i1, *i2))
           res.emplace_back(*i1++);
-        else if (less_than(*i2, *i1))
+        else if (less_linear(*i2, *i1))
           res.emplace_back(*i2++);
         else
           {
@@ -318,22 +305,22 @@ namespace vcsn
       }
   }
 
-  DEFINE::type_ignoring_lweight_(value_t e) const
+  DEFINE::type_ignoring_lweight_(value_t e)
     -> type_t
   {
     return unwrap_possible_lweight_(e)->type();
   }
 
-  DEFINE::possibly_implicit_lweight_(value_t e) const
+  DEFINE::possibly_implicit_lweight_(value_t e)
     -> weight_t
   {
     if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
       return lw->weight();
     else
-      return weightset()->one();
+      return weightset_t::one();
   }
 
-  DEFINE::unwrap_possible_lweight_(value_t e) const
+  DEFINE::unwrap_possible_lweight_(value_t e)
     -> value_t
   {
     if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
@@ -776,6 +763,13 @@ namespace vcsn
         auto lt = rat::less<self_t>{};
         return lt(lhs, rhs);
       }
+  }
+
+  DEFINE::less_linear(value_t lhs, value_t rhs)
+    -> bool
+  {
+    return less(unwrap_possible_lweight_(lhs),
+                unwrap_possible_lweight_(rhs));
   }
 
   DEFINE::equal(value_t lhs, value_t rhs)
