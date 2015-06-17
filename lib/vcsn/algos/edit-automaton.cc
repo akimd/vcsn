@@ -95,6 +95,14 @@ namespace vcsn
     return o;
   }
 
+  void
+  lazy_automaton_editor::reset()
+  {
+    transitions_.clear();
+    final_states_.clear();
+    initial_states_.clear();
+  }
+
   /// Create ctx and return the built automaton.
   dyn::automaton lazy_automaton_editor::result()
   {
@@ -123,13 +131,5 @@ namespace vcsn
     for (auto p: final_states_)
       edit->add_final(p.first, p.second);
     return edit->result();
-  }
-
-  void
-  lazy_automaton_editor::reset()
-  {
-    transitions_.clear();
-    final_states_.clear();
-    initial_states_.clear();
   }
 }

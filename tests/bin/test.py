@@ -174,8 +174,8 @@ def CHECK_EQUIV(a1, a2):
         PASS()
     else:
         FAIL("not equivalent")
-        rst_file("Left", a1)
-        rst_file("Right", a2)
+        rst_file("Left", format(a1))
+        rst_file("Right", format(a2))
         s1 = a1.shortest(num).format('list')
         s2 = a2.shortest(num).format('list')
         rst_file("Left shortest", s1)

@@ -1,4 +1,4 @@
-// Z-automaton minblocka.
+// Zmin-automaton minblocka.
 digraph
 {
   vcsn_context = "lal_char(ab), zmin"
