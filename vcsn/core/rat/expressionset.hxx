@@ -196,13 +196,13 @@ namespace vcsn
       res = l;
     // END: Trivial Identity
     else if (ids_.is_linear())
-      res = add_nonzero_series_(l, r);
+      res = add_linear_(l, r);
     else
       res = std::make_shared<sum_t>(gather_<type_t::sum>(l, r));
     return res;
   }
 
-  DEFINE::insert_in_sum_series_(const sum_t& s, value_t r) const
+  DEFINE::add_linear_(const sum_t& s, value_t r) const
     -> value_t
   {
     auto res = values_t{};
@@ -246,8 +246,7 @@ namespace vcsn
       return std::make_shared<sum_t>(std::move(vs));
   }
 
-  DEFINE::merge_sum_series_(const sum_t& s1,
-                            const sum_t& s2) const
+  DEFINE::add_linear_(const sum_t& s1, const sum_t& s2) const
     -> value_t
   {
     auto res = values_t{};
@@ -289,26 +288,28 @@ namespace vcsn
     return add_(std::move(res));
   }
 
-  DEFINE::add_nonzero_series_(value_t l, value_t r) const
+  DEFINE::add_linear_(value_t l, value_t r) const
     -> value_t
   {
     assert(!is_zero(l));
     assert(!is_zero(r));
+    value_t res = nullptr;
     if (auto ls = std::dynamic_pointer_cast<const sum_t>(l))
       {
         if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
-          return merge_sum_series_(*ls, *rs);
+          res = add_linear_(*ls, *rs);
         else
-          return insert_in_sum_series_(*ls, r);
+          res = add_linear_(*ls, r);
       }
-    else if (r->type() == type_t::sum)
-      return add_nonzero_series_(r, l);
+    else if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
+      res = add_linear_(*rs, l);
     else
       {
         // Neither argument is a sum.
         auto ls = std::make_shared<sum_t>(values_t{l}); // Not in normal form.
-        return insert_in_sum_series_(*ls, r);
+        res = add_linear_(*ls, r);
       }
+    return res;
   }
 
   DEFINE::type_ignoring_lweight_(value_t e)

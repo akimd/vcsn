@@ -296,13 +296,13 @@ namespace vcsn
     /// and singleton cases.
     value_t add_(values_t&& vs) const;
 
-    value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;
-    value_t merge_sum_series_(const sum_t& s1, const sum_t& s2) const;
+    value_t add_linear_(const sum_t& addends, value_t r) const;
+    value_t add_linear_(const sum_t& s1, const sum_t& s2) const;
 
     /// The sum of two non-zero series.
     /// \pre  !is_zero(l)
     /// \pre  !is_zero(r)
-    value_t add_nonzero_series_(value_t l, value_t r) const;
+    value_t add_linear_(value_t l, value_t r) const;
 
     /// If e is an lweight, then its child, otherwise e.
     static value_t unwrap_possible_lweight_(value_t e);
