@@ -390,9 +390,9 @@ bench('a.reduce()',
 # twins property.
 r = "[a-c]{200}*+[a-c]{200}*"
 bench('a.has_twins_property()',
-      'a = std({}), c = [abc] -> Q'.format(r),
+      'a = std({}, "associative"), c = [abc] -> Q'.format(r),
       setup = ['r = "{}"'.format(r),
-               'a = vcsn.context("lal_char(a-c), zmin").expression(r).standard()'],
+               'a = vcsn.context("lal_char(a-c), zmin").expression(r, "associative").standard()'],
       number = 20)
 
 # cycle ambiguous.
