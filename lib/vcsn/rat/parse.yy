@@ -162,11 +162,10 @@
 %left "{/}"
 %right "{\\}"
 %left "."
-%precedence "(" "\\z" "\\e" "["
 %precedence CONCAT // exp exp . "(": reduce
 %right "weight" // Match longest series of "weight".
 %precedence RWEIGHT
-%precedence "letter" // RWEIGHT < LETTER: a <x> . b => shift
+%precedence "letter" "\\z" "\\e" "[" "(" // RWEIGHT < LETTER: a <x> . b => shift
 %precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
 %precedence "*" "{c}" "{T}"
 

@@ -81,7 +81,7 @@ a<i><j> => <ij>a
 
 # Trivial identities: U_K in TAF-Kit's documentation.
 \e<i> => <i>\e
-ab(<i>\e) => (ab)<i>
+ab(<i>\e) => a<i>b
 (<i>\e)(ab) => <i>(ab)
 
 # Trivial identities: C_{at} in TAF-Kit's documentation.
