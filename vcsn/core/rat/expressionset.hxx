@@ -303,11 +303,15 @@ namespace vcsn
       }
     else if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
       res = add_linear_(*rs, l);
+    else if (less_linear(l, r))
+      res = std::make_shared<sum_t>(values_t{l, r});
+    else if (less_linear(r, l))
+      res = std::make_shared<sum_t>(values_t{r, l});
     else
       {
-        // Neither argument is a sum.
-        auto ls = std::make_shared<sum_t>(values_t{l}); // Not in normal form.
-        res = add_linear_(*ls, r);
+        auto w = weightset()->add(possibly_implicit_lweight_(l),
+                                  possibly_implicit_lweight_(r));
+        res = lmul(w, unwrap_possible_lweight_(l));
       }
     return res;
   }
