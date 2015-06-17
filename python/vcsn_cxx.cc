@@ -891,6 +891,11 @@ struct expression
 
   expression left_mult(const weight& w) const;
 
+  bool less_than(const expression& rhs) const
+  {
+    return vcsn::dyn::less_than(val_, rhs.val_);
+  }
+
   expression lift() const
   {
     return vcsn::dyn::lift(val_);
@@ -1340,6 +1345,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_series", &expression::is_series)
     .def("is_valid", &expression::is_valid)
     .def("left_mult", &expression::left_mult)
+    .def("less_than", &expression::less_than)
     .def("lift", &expression::lift)
     .def("multiply", static_cast<expression::multiply_t>(&expression::multiply))
     .def("multiply",

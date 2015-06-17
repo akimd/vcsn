@@ -60,6 +60,7 @@ algo_headers =                                  \
   %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
   %D%/algos/letterize.hh                        \
+  %D%/algos/less-than.hh                        \
   %D%/algos/lift.hh                             \
   %D%/algos/make-context.hh                     \
   %D%/algos/minimize-brzozowski.hh              \

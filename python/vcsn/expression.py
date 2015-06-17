@@ -15,7 +15,12 @@ expression.multiply = _expression_multiply
 
 expression.__add__ = expression.sum
 expression.__and__ = expression.conjunction
-expression.__eq__ = _is_equal
+expression.__lt__ = expression.less_than
+expression.__le__ = lambda l, r: not r < l
+expression.__ge__ = lambda l, r: not l < r
+expression.__gt__ = lambda l, r: r < l
+expression.__eq__ = lambda l, r: not l < r and not r < l
+expression.__ne__ = lambda l, r: l < r or r < l
 expression.__mod__ = expression.difference
 expression.__mul__ = _right_mult
 expression.__pow__ = _expression_multiply

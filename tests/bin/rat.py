@@ -29,14 +29,19 @@ def context_update():
   print("# context: {} ({})".format(context, ctx))
 
 
-def pp(re):
-  '''Parse and pretty-print.  If it fails, prepend "! " to the error
+def expr(re):
+  '''Parse.  If it fails, prepend "! " to the error
   message and return it as result.  Strip the "try -h" line.'''
   try:
     print(re, identities)
-    return str(ctx.expression(re, identities))
+    return ctx.expression(re, identities)
   except RuntimeError:
     return "! " + str(sys.exc_info()[1])
+
+def pp(re):
+  '''Parse and pretty-print.  If it fails, prepend "! " to the error
+  message and return it as result.  Strip the "try -h" line.'''
+  return str(expr(re))
 
 def check_rat_exp(fname):
   file = open(fname, 'r')
@@ -96,12 +101,10 @@ def check_rat_exp(fname):
       l = m.group(1)
       op = m.group(2)
       r = m.group(3)
-      L = pp(l)
       if op == '==':
-        R = pp(r)
+        CHECK_EQ(expr(l), expr(r), loc)
       else:
-        R = r
-      CHECK_EQ(R, L, loc)
+        CHECK_EQ(pp(l), pp(r), loc)
       continue
 
     # !: Look for syntax errors.
