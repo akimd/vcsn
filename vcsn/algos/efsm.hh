@@ -183,18 +183,32 @@ namespace vcsn
           }
       }
 
+      /// Fill \a labels with the gensets of \a ls.
+      ///
+      /// Case where `genset` is supported.
+      ///
+      /// \param ls
+      ///    the labelset from which to pull the gensets
+      /// \param labels
+      ///    the set of labels to fill
+      /// \param get_label
+      ///     a projection to extract the label from a genset.  For instance
+      ///     the genset might be pairs of labels, and get_label could select
+      ///     first or second.
       template <typename LabelSet, typename Labels, typename GetLabel>
-      auto add_alphabet(const LabelSet& ls, Labels& labels,
-                        GetLabel get_label, int)
-      -> decltype(ls.genset(), void())
+      auto add_alphabet_(const LabelSet& ls, Labels& labels, GetLabel get_label)
+        -> enable_if_t<has_genset_mem_fn<LabelSet>{}>
       {
         for (auto l : ls.genset())
           labels.insert(get_label(ls.value(l)));
       }
 
+      /// Fill \a ls with the letters.
+      ///
+      /// Case where `genset` is not supported: do nothing.
       template <typename LabelSet, typename Labels, typename GetLabel>
-      void add_alphabet(const LabelSet&, Labels&,
-                        GetLabel, long)
+      auto add_alphabet_(const LabelSet&, Labels&, GetLabel)
+        -> enable_if_t<!has_genset_mem_fn<LabelSet>{}>
       {}
 
       /// Output the mapping from label name, to label number.
@@ -218,7 +232,9 @@ namespace vcsn
       /// \param ls
       ///    The LabelSet to use to print the labels.
       /// \param get_label
-      ///    A projection from exact labels to the one we output.
+      ///    A projection from exact labels to the ones we output.
+      ///    E.g., projections similar to "first" or "second" for
+      ///    two-tape automata.
       template <typename LabelSet, typename GetLabel>
       void output_symbols_(const std::string& name,
                            const LabelSet& ls,
@@ -229,7 +245,7 @@ namespace vcsn
         using label_t = typename labelset_t::value_t;
 
         std::set<label_t, vcsn::less<labelset_t>> labels;
-        add_alphabet(*aut_->labelset(), labels, get_label, 0);
+        add_alphabet_(*aut_->labelset(), labels, get_label);
         for (auto t : aut_->transitions())
           labels.insert(get_label(aut_->label_of(t)));
 
