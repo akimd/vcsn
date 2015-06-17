@@ -96,6 +96,8 @@ namespace vcsn
 
       vcsn::lazy_automaton_editor edit;
       edit.open(true);
+      // By default, Open FST uses a tropical semiring.
+      edit.weightset(lazy_automaton_editor::weightset_type::tropical);
 
       // The first transition also provides the initial state.
       bool first = true;

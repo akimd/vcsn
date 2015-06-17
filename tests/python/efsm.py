@@ -15,7 +15,7 @@ def check(aut, fefsm):
   'Check the conversion to and from FSM.'
   print(here() + ": check:", fefsm)
 
-  # Text in efsm format.
+  # The reference: text in efsm format.
   efsm = open(medir + "/" + fefsm).read().strip()
 
   # Check output to EFSM.
@@ -40,20 +40,20 @@ def check(aut, fefsm):
 
   # Check that OpenFST accepts and reproduces our EFSM files.
   if have_ofst:
-    aut3 = _automaton_fst('cat', aut)
     if aut.is_standard():
-      CHECK_EQ(aut, aut3)
+      CHECK_EQ(aut, aut.fstcat())
     else:
-      CHECK_EQUIV(aut, normalize(aut3))
+      CHECK_EQUIV(aut, normalize(aut.fstcat()))
   else:
     SKIP('OpenFST is missing')
 
 a = load('lal_char_b/a1.gv')
 check(a, 'a1.efsm')
-a = load('lal_char_z/binary.gv')
-check(a, 'binary.efsm')
 
-for f in ["lal-char-z", "lat-z"]:
+a = load('lal_char_zmin/slowgrow.gv')
+check(a, 'slowgrow.efsm')
+
+for f in ["lal-char-zmin", "lat-zmin"]:
   print("f:", f)
   a = vcsn.automaton(filename = medir + "/" + f + '.gv')
   check(a, f + '.efsm')
@@ -87,17 +87,21 @@ a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
 check(a, 'a2xyz.efsm')
 
 if have_ofst:
-  # Check that Open FST and V2 understand the weights the same way.
-  #
-  # c1 & 2 by v2.
-  c1 = load('lal_char_z/c1.gv')
-  c2_vcsn = c1 & 2
+  for f in ['minblocka', 'slowgrow']:
+    print("Checking:", f)
+    # Check that Open FST and V2 understand the weights the same way.
+    # At least for the tropical weightset (aka "standard" in OpenFST
+    # parlance).
+    #
+    # a & 2 by Vcsn.
+    a = load('lal_char_zmin/{}.gv'.format(f))
+    a2_vcsn = a & 2
 
-  # c1 & c1 by OpenFST.
-  c2_ofst = c1.fstconjunction(c1)
+    # c1 & c1 by OpenFST.
+    a2_ofst = a.fstconjunction(a)
 
-  CHECK_EQ(c2_vcsn, c2_ofst)
-  # Let OpenFST compare them.
-  # fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
+    CHECK_EQ(a2_vcsn, a2_ofst)
+    # Let OpenFST compare them.
+    # fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
 else:
   SKIP('OpenFST is missing')

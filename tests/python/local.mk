@@ -166,12 +166,12 @@ EXTRA_DIST +=                                   \
   %D%/efsm.dir/a2x.efsm                         \
   %D%/efsm.dir/a2xyz.efsm                       \
   %D%/efsm.dir/abs.efsm                         \
-  %D%/efsm.dir/binary.efsm                      \
-  %D%/efsm.dir/lal-char-z.efsm                  \
-  %D%/efsm.dir/lal-char-z.gv                    \
-  %D%/efsm.dir/lat-z.efsm                       \
-  %D%/efsm.dir/lat-z.gv                         \
+  %D%/efsm.dir/lal-char-zmin.efsm               \
+  %D%/efsm.dir/lal-char-zmin.gv                 \
+  %D%/efsm.dir/lat-zmin.efsm                    \
+  %D%/efsm.dir/lat-zmin.gv                      \
   %D%/efsm.dir/one.efsm                         \
+  %D%/efsm.dir/slowgrow.efsm                    \
   %D%/efsm.dir/str.efsm                         \
   %D%/eliminate-state.dir/abc-elim-0.gv         \
   %D%/eliminate-state.dir/abc-elim-1.gv         \

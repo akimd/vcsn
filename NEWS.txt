@@ -5,6 +5,23 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-06-17
+### EFSM format is safer
+We now correctly ensure the correspondance between our weightsets and
+OpenFST's arc-type, and input and output.
+
+As a consequence, we no longer support exchange of "traditional
+numerical" weightsets (such as "Z", "R", etc.), since, as far as we
+know, they don't feature a vis-à-vis in OpenFST.  It used to be
+accepted, but was meaningless.
+
+Boolean weights are mapped to "standard", OpenFST's tropical semiring.
+
+When reading EFSM files, we still try to use the smallest
+corresponding weightset.  For instance, if the arc type is "standard"
+and and the weights are integral we use "zmin", otherwise, we use
+"rmin".
+
 ## 2015-06-16
 ### automaton.expression, automaton.lift
 They now accept an optional argument to specify the desired identities

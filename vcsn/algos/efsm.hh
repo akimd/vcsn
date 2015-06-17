@@ -9,6 +9,7 @@
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/getargs.hh>
 
 namespace vcsn
 {
@@ -65,6 +66,10 @@ namespace vcsn
           "medir=$(mktemp -d \"/tmp/$me.XXXXXX\") || exit 1\n"
           "\n";
 
+        os_ <<
+          "arc_type=" << arc_type_() << "\n"
+          "\n";
+
           // Provide the symbols first, as when reading EFSM, knowing
           // how \e is represented will help reading the transitions.
         output_symbols_();
@@ -85,6 +90,7 @@ namespace vcsn
           // implementation of intersect on its (transducer)
           // composition.
           "fstcompile" << (is_transducer ? "" : " --acceptor") << " \\\n"
+          "  --arc_type=$arc_type \\\n"
           "  --keep_isymbols --isymbols=" << isymbols_ << " \\\n"
           "  --keep_osymbols --osymbols=" << osymbols_ << " \\\n"
           "  $medir/transitions.fsm \"$@\"\n"
@@ -96,6 +102,20 @@ namespace vcsn
       }
 
     private:
+      /// The OpenFST name that corresponds to our weightset.
+      std::string arc_type_() const
+      {
+        auto map = std::map<std::string, std::string>
+          {
+            {"b",    "standard"},
+            {"zmin", "standard"},
+            {"rmin", "standard"},
+            {"nmin", "standard"},
+            {"log",  "log64"},
+          };
+        return getargs("weightset", map, ws_.sname());
+      }
+
       template <typename LS>
       void output_label_(const LS& ls, const typename LS::value_t& l) const
       {

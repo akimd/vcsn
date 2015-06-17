@@ -274,6 +274,9 @@ namespace vcsn
     /// Labelset types, increasing generality.
     enum class labelset_type { empty, lal, lan, law };
 
+    /// Weightset types.
+    enum class weightset_type { logarithmic, numerical, tropical };
+
     /// Add \a s as an initial state.
     void add_initial(string_t s, string_t w = string_t{});
 
@@ -302,6 +305,9 @@ namespace vcsn
     /// Get ready to build another automaton.
     void reset();
 
+    /// Specify the weightset type.
+    void weightset(weightset_type t) { weightset_type_ = t; };
+
   private:
     /// The collected transitions: (Source, Destination, Label, Weight).
     using transition_t = std::tuple<string_t, string_t, string_t, string_t>;
@@ -320,6 +326,8 @@ namespace vcsn
     bool real_ = false;
     /// Whether the labelset is open.
     bool open_ = false;
+    /// The weightset scale.
+    weightset_type weightset_type_ = weightset_type::numerical;
   };
 
   namespace dyn

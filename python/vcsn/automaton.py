@@ -170,11 +170,14 @@ def _automaton_fst_files(cmd, *aut):
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
 
-automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
-automaton.fstconjunction = lambda a, b: _automaton_fst_files("fstintersect", a, b)
-automaton.fstminimize    = lambda self: _automaton_fst("fstminimize", self)
-automaton.fstproper      = lambda self: _automaton_fst("fstrmepsilon", self)
-automaton.fstsynchronize = lambda self: _automaton_fst("fstsynchronize", self)
+automaton.fstcat           = lambda self: _automaton_fst("cat", self)
+automaton.fstcompose       = lambda a, b: _automaton_fst_files("fstcompose", a, b)
+automaton.fstconjunction   = lambda a, b: _automaton_fst_files("fstintersect", a, b)
+automaton.fstdeterminize   = lambda self: _automaton_fst("fstdeterminize", self)
+automaton.fstis_equivalent = lambda self: _automaton_fst("cat", self)
+automaton.fstminimize      = lambda self: _automaton_fst("fstminimize", self)
+automaton.fstproper        = lambda self: _automaton_fst("fstrmepsilon", self)
+automaton.fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
 
 automaton.infiltration = lambda *auts: automaton._infiltration(list(auts))
 

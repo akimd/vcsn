@@ -114,9 +114,23 @@ namespace vcsn
     if (output_type_ != labelset_type::empty)
       ctx = "lat<" + ctx + "," + to_string(output_type_) + '>';
     ctx += ", ";
-    ctx += (real_ ? "r"
-            : weighted_ ? "z"
-            : "b");
+    switch (weightset_type_)
+      {
+      case weightset_type::logarithmic:
+        ctx += "log";
+        break;
+      case weightset_type::numerical:
+        ctx += (real_ ? "r"
+                : weighted_ ? "z"
+                : "b");
+        break;
+      case weightset_type::tropical:
+        ctx += (real_ ? "rmin"
+                : weighted_ ? "zmin"
+                : "b");
+        break;
+      }
+
     auto c = vcsn::dyn::make_context(ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
     edit->open(open_);

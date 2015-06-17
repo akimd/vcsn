@@ -72,6 +72,9 @@ else
   acceptor=false
 fi
 
+# Extract the weightset.
+arc_type=$(fstinfo $input | sed -n '/^arc type[\t ]*/{s///;p;q;}')
+
 # Use $(sort...) to sort symbols by number, not by value.
 if $acceptor; then
   cat <<EOF
@@ -79,6 +82,8 @@ if $acceptor; then
 
 me=\$(basename "\$0")
 medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
+
+arc_type=$arc_type
 
 cat >\$medir/symbols.txt <<\EOFSM
 $(sort -n -k2 $isyms)
@@ -89,6 +94,7 @@ $(cat $trans)
 EOFSM
 
 fstcompile --acceptor \\
+  --arc_type=\$arc_type \\
   --keep_isymbols --isymbols=\$medir/symbols.txt \\
   --keep_osymbols --osymbols=\$medir/symbols.txt \\
   \$medir/transitions.fsm "\$@"
@@ -104,6 +110,8 @@ else
 me=\$(basename "\$0")
 medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
 
+arc_type=$arc_type
+
 cat >\$medir/isymbols.txt <<\EOFSM
 $(sort -n -k2 $isyms)
 EOFSM
@@ -117,6 +125,7 @@ $(cat $trans)
 EOFSM
 
 fstcompile \\
+  --arc_type=\$arc_type \\
   --keep_isymbols --isymbols=\$medir/isymbols.txt \\
   --keep_osymbols --osymbols=\$medir/osymbols.txt \\
   \$medir/transitions.fsm "\$@"

@@ -3,6 +3,8 @@
 me=$(basename "$0")
 medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
+arc_type=standard
+
 cat >$medir/symbols.txt <<\EOFSM
 \e	0
 a	1
@@ -39,6 +41,7 @@ cat >$medir/transitions.fsm <<\EOFSM
 EOFSM
 
 fstcompile --acceptor \
+  --arc_type=$arc_type \
   --keep_isymbols --isymbols=$medir/symbols.txt \
   --keep_osymbols --osymbols=$medir/symbols.txt \
   $medir/transitions.fsm "$@"
