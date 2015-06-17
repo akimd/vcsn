@@ -286,8 +286,6 @@ namespace vcsn
     /// in which case the copied self would point to the original this.
     const self_t& self() const { return static_cast<const self_t&>(*this); }
 
-    value_t remove_from_sum_series_(values_t addends,
-                                    typename values_t::iterator i) const;
     value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;
     value_t merge_sum_series_(const sum_t& s1, const sum_t& s2) const;
 

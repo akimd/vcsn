@@ -46,8 +46,16 @@ a<2> => <2>a
 # Check "linear": ACI
 %identities: linear
 a+a => <2>a
+a+<-1>a => \z
+a+a == <2>a
 b+a => a+b
 a+b+a+b => <2>a+<2>b
+
+# Make sure we don't create sums of one element only.  If we did, we
+# would get 'a(<2>b)' since the "sum" <2>b has lower precedence than
+# the product.
+a(b+b) => a<2>b
+a(b+b) == a<2>b
 
 # Check series: add distributivity.
 %identities: series

@@ -202,59 +202,49 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::remove_from_sum_series_(values_t addends,
-                                  typename values_t::iterator i) const
+  DEFINE::insert_in_sum_series_(const sum_t& s, value_t r) const
     -> value_t
   {
-    switch (addends.size())
-      {
-      case 0:
-        assert(false); // Sum node with zero addends.
-      case 1:
-        return zero();
-      case 2:
-        addends.erase(i);
-        return addends[0];
-      default:
-        addends.erase(i);
-        return std::make_shared<sum_t>(std::move(addends));
-      };
-  }
+    auto res = values_t{};
+    res.reserve(s.size() + 1);
 
-  DEFINE::insert_in_sum_series_(const sum_t& addends, value_t r) const
-    -> value_t
-  {
-    // We have to clone the addends (actually, their shared_ptr's)
-    // into something we can modify.
-    values_t copy = addends.subs();
-    assert(!copy.empty());
-
-    // Find the right spot where to insert r.
-    const auto& ws = weightset();
-    auto rw = possibly_implicit_lweight_(r);
-    auto rn = unwrap_possible_lweight_(r);
     auto less_than =
       [this] (value_t l, value_t r)
       {
         return less(unwrap_possible_lweight_(l),
                     unwrap_possible_lweight_(r));
       };
-    const auto i = boost::lower_bound(copy, rn, less_than);
-    if (i != copy.end()
-        && equal(unwrap_possible_lweight_(*i), rn))
-      {
-        // An addend already exists whose un-left-weighted value is rn.
-        const weight_t& iw = possibly_implicit_lweight_(*i);
-        const weight_t w = ws->add(rw, iw);
-        if (ws->is_zero(w))
-          return remove_from_sum_series_(std::move(copy), i);
-        else
-          *i = lmul(w, rn);
-      }
-    else
-      copy.insert(i, r);
 
-    return std::make_shared<sum_t>(std::move(copy));
+    // Copy the strictly smaller part.
+    auto i = boost::lower_bound(s, r, less_than);
+    res.insert(end(res), begin(s), i);
+
+    if (i == end(s))
+      res.emplace_back(r);
+    else
+      {
+        if (less_than(r, *i))
+          res.emplace_back(r);
+        else
+          {
+            auto w = weightset()->add(possibly_implicit_lweight_(*i),
+                                      possibly_implicit_lweight_(r));
+            if (!weightset()->is_zero(w))
+              {
+                auto l = unwrap_possible_lweight_(*i);
+                res.emplace_back(lmul(w, l));
+              }
+            ++i;
+          }
+        res.insert(end(res), i, end(s));
+      }
+
+    if (res.size() == 0)
+      return zero();
+    else if (res.size() == 1)
+      return res[0];
+    else
+      return std::make_shared<sum_t>(std::move(res));
   }
 
   DEFINE::merge_sum_series_(const sum_t& s1,

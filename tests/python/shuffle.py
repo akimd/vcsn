@@ -12,7 +12,7 @@ b = vcsn.context('lal_char(abcd), b')
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
 a1 = vcsn.Z.expression('a*b').derived_term()
-CHECK_EQ('(<2>a)*(<2>(ba*b))', str(a1.shuffle(a1).expression()))
+CHECK_EQ('(<2>a)*<2>(ba*b)', str(a1.shuffle(a1).expression()))
 
 
 ## ------------------------ ##
