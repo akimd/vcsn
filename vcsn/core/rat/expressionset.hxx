@@ -232,12 +232,18 @@ namespace vcsn
         res.insert(end(res), i, end(s));
       }
 
-    if (res.size() == 0)
+    return add_(std::move(res));
+  }
+
+  DEFINE::add_(values_t&& vs) const
+    -> value_t
+  {
+    if (vs.size() == 0)
       return zero();
-    else if (res.size() == 1)
-      return res[0];
+    else if (vs.size() == 1)
+      return vs[0];
     else
-      return std::make_shared<sum_t>(std::move(res));
+      return std::make_shared<sum_t>(std::move(vs));
   }
 
   DEFINE::merge_sum_series_(const sum_t& s1,
@@ -280,7 +286,7 @@ namespace vcsn
             ++i2;
           }
       }
-    return std::make_shared<sum_t>(std::move(res));
+    return add_(std::move(res));
   }
 
   DEFINE::add_nonzero_series_(value_t l, value_t r) const
