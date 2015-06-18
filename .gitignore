@@ -35,6 +35,10 @@
 /config.log
 /config.status
 /configure
+/doc/notebooks/a.efsm
+/doc/notebooks/a.fst
+/doc/notebooks/d.efsm
+/doc/notebooks/d.fst
 /doc/notebooks/numbers
 /doc/notebooks/translator
 /doc/notebooks/words
