@@ -11,6 +11,7 @@
 #include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/stream.hh> // eat
 #include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
@@ -36,11 +37,6 @@ namespace vcsn
       return {};
     }
 
-    static value_t abs(value_t a)
-    {
-      return a < 0 ? -a : a;
-    }
-
     /// The zero for the log semiring is +oo
     static value_t zero()
     {
@@ -55,12 +51,12 @@ namespace vcsn
 
     static value_t add(const value_t l, const value_t r)
     {
-      return  - std::log(std::exp(-l) + std::exp(-r));
+      return - std::log(std::exp(-l) + std::exp(-r));
     }
 
     static value_t sub(const value_t l, const value_t r)
     {
-      return add(l, -r);
+      return - std::log(std::exp(-l) - std::exp(-r));
     }
 
     static value_t mul(const value_t l, const value_t r)
@@ -138,14 +134,20 @@ namespace vcsn
     }
 
     static value_t
+    conv(self_t, const value_t v)
+    {
+      return v;
+    }
+
+    static value_t
     conv(std::istream& i)
     {
       value_t res;
       if (i.peek() == 'o')
-      {
-        eat(i, "oo");
-        res = zero();
-      }
+        {
+          eat(i, "oo");
+          res = zero();
+        }
       else if (! (i >> res))
         vcsn::fail_reading(i, sname(), ", invalid value");
       return res;
@@ -161,6 +163,17 @@ namespace vcsn
         return o << v;
     }
 
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format = "text") const
+    {
+      if (format == "latex")
+        o << "\\mathrm{Log}";
+      else if (format == "text")
+        o << sname();
+      else
+        raise("invalid format: ", format);
+      return o;
+    }
   };
     /*-------.
     | join.  |

@@ -30,7 +30,7 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
   ASSERT_EQ(conv(ws, "1"), 1);
 
   // add: "or" or "xor".
-  ASSERT_EQ(ws.add(1, 1), one_plus_one);
+  ASSERT_VS_EQ(ws, ws.add(1, 1), one_plus_one);
 
   return nerrs;
 }
@@ -184,14 +184,14 @@ static size_t check_r()
   ASSERT_EQ(to_string(ws, conv(ws, "0.1")), "0.1");
 
   // add.
-  ASSERT_EQ(ws.add(3.2, 2.3), 5.5);
-  ASSERT_EQ(ws.add(ws.zero(), 8.2), 8.2);
-  ASSERT_EQ(ws.add(ws.one(), 8.2), 9.2);
+  ASSERT_VS_EQ(ws, ws.add(3.2, 2.3), 5.5);
+  ASSERT_VS_EQ(ws, ws.add(ws.zero(), 8.2), 8.2);
+  ASSERT_VS_EQ(ws, ws.add(ws.one(), 8.2), 9.2);
 
   // mul.
-  ASSERT_EQ(ws.mul(ws.zero(), 8.2), 0);
-  ASSERT_EQ(ws.mul(ws.one(), 8.3), 8.3);
-  ASSERT_EQ(ws.mul(.5, 4), 2);
+  ASSERT_VS_EQ(ws, ws.mul(ws.zero(), 8.2), 0);
+  ASSERT_VS_EQ(ws, ws.mul(ws.one(), 8.3), 8.3);
+  ASSERT_VS_EQ(ws, ws.mul(.5, 4), 2);
 
   // equal
 #define CHECK(Lhs, Rhs, Out)                            \
@@ -219,25 +219,25 @@ static size_t check_zmin()
   ASSERT_EQ(to_string(ws, conv(ws, "42")), "42");
 
   // add: min.
-  ASSERT_EQ(ws.add(23, 42), 23);
-  ASSERT_EQ(ws.add(42, 23), 23);
-  ASSERT_EQ(ws.add(ws.zero(), 12), 12);
-  ASSERT_EQ(ws.add(-12, ws.zero()), -12);
+  ASSERT_VS_EQ(ws, ws.add(23, 42), 23);
+  ASSERT_VS_EQ(ws, ws.add(42, 23), 23);
+  ASSERT_VS_EQ(ws, ws.add(ws.zero(), 12), 12);
+  ASSERT_VS_EQ(ws, ws.add(-12, ws.zero()), -12);
 
   // mul: add.
-  ASSERT_EQ(ws.mul(23, 42), 23+42);
-  ASSERT_EQ(ws.mul(42, 23), 42+23);
-  ASSERT_EQ(ws.mul(ws.zero(), 12), ws.zero());
-  ASSERT_EQ(ws.mul(-12, ws.zero()), ws.zero());
-  ASSERT_EQ(ws.mul(ws.one(), 12), 12);
-  ASSERT_EQ(ws.mul(-12, ws.one()), -12);
+  ASSERT_VS_EQ(ws, ws.mul(23, 42), 23+42);
+  ASSERT_VS_EQ(ws, ws.mul(42, 23), 42+23);
+  ASSERT_VS_EQ(ws, ws.mul(ws.zero(), 12), ws.zero());
+  ASSERT_VS_EQ(ws, ws.mul(-12, ws.zero()), ws.zero());
+  ASSERT_VS_EQ(ws, ws.mul(ws.one(), 12), 12);
+  ASSERT_VS_EQ(ws, ws.mul(-12, ws.one()), -12);
 
   // div: sub.
-  ASSERT_EQ(ws.rdiv(23, 42), 23-42);
-  ASSERT_EQ(ws.rdiv(42, 23), 42-23);
-  ASSERT_EQ(ws.rdiv(ws.zero(), 12), ws.zero());
-  ASSERT_EQ(ws.rdiv(ws.one(), 12), -12);
-  ASSERT_EQ(ws.rdiv(-12, ws.one()), -12);
+  ASSERT_VS_EQ(ws, ws.rdiv(23, 42), 23-42);
+  ASSERT_VS_EQ(ws, ws.rdiv(42, 23), 42-23);
+  ASSERT_VS_EQ(ws, ws.rdiv(ws.zero(), 12), ws.zero());
+  ASSERT_VS_EQ(ws, ws.rdiv(ws.one(), 12), -12);
+  ASSERT_VS_EQ(ws, ws.rdiv(-12, ws.one()), -12);
 
 
   // equal
@@ -266,25 +266,30 @@ static size_t check_log()
   ASSERT_EQ(to_string(ws, conv(ws, "42")), "42");
 
   // add: +log
-  ASSERT_EQ(ws.add(23, 42), -log(exp(-23) + exp(-42)));
-  ASSERT_EQ(ws.add(42, 23), -log(exp(-23) + exp(-42)));
-  ASSERT_EQ(ws.add(ws.zero(), 12), 12);
-  ASSERT_EQ(ws.add(-12, ws.zero()), -12);
+  ASSERT_VS_EQ(ws, ws.add(23, 42), -log(exp(-23) + exp(-42)));
+  ASSERT_VS_EQ(ws, ws.add(42, 23), -log(exp(-23) + exp(-42)));
+  ASSERT_VS_EQ(ws, ws.add(ws.zero(), 12), 12);
+  ASSERT_VS_EQ(ws, ws.add(-12, ws.zero()), -12);
+
+  // sub.
+  ASSERT_VS_EQ(ws, ws.sub(ws.add(23, 42), 42), 23);
+  // FIXME: NAN. ASSERT_VS_EQ(ws, ws.sub(ws.zero(), ws.sub(ws.zero(), 12)), 12);
+  ASSERT_VS_EQ(ws, ws.sub(12, ws.zero()), 12);
 
   // mul: add.
-  ASSERT_EQ(ws.mul(23, 42), 23+42);
-  ASSERT_EQ(ws.mul(42, 23), 42+23);
-  ASSERT_EQ(ws.mul(ws.zero(), 12), ws.zero());
-  ASSERT_EQ(ws.mul(-12, ws.zero()), ws.zero());
-  ASSERT_EQ(ws.mul(ws.one(), 12), 12);
-  ASSERT_EQ(ws.mul(-12, ws.one()), -12);
+  ASSERT_VS_EQ(ws, ws.mul(23, 42), 23+42);
+  ASSERT_VS_EQ(ws, ws.mul(42, 23), 42+23);
+  ASSERT_VS_EQ(ws, ws.mul(ws.zero(), 12), ws.zero());
+  ASSERT_VS_EQ(ws, ws.mul(-12, ws.zero()), ws.zero());
+  ASSERT_VS_EQ(ws, ws.mul(ws.one(), 12), 12);
+  ASSERT_VS_EQ(ws, ws.mul(-12, ws.one()), -12);
 
   // div: sub.
-  ASSERT_EQ(ws.rdiv(23, 42), 23-42);
-  ASSERT_EQ(ws.rdiv(42, 23), 42-23);
-  ASSERT_EQ(ws.rdiv(ws.zero(), 12), ws.zero());
-  ASSERT_EQ(ws.rdiv(ws.one(), 12), -12);
-  ASSERT_EQ(ws.rdiv(-12, ws.one()), -12);
+  ASSERT_VS_EQ(ws, ws.rdiv(23, 42), 23-42);
+  ASSERT_VS_EQ(ws, ws.rdiv(42, 23), 42-23);
+  ASSERT_VS_EQ(ws, ws.rdiv(ws.zero(), 12), ws.zero());
+  ASSERT_VS_EQ(ws, ws.rdiv(ws.one(), 12), -12);
+  ASSERT_VS_EQ(ws, ws.rdiv(-12, ws.one()), -12);
 
 
   // equal
