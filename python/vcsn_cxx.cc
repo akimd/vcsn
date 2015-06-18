@@ -154,6 +154,8 @@ struct context
 
   automaton ladybird(unsigned n) const;
 
+  automaton levenshtein() const;
+
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1) const;
   automaton random_deterministic(unsigned num_states) const;
@@ -1148,6 +1150,12 @@ automaton context::ladybird(unsigned n) const
   return vcsn::dyn::ladybird(val_, n);
 }
 
+automaton context::levenshtein() const
+{
+  return vcsn::dyn::levenshtein(val_);
+}
+
+
 automaton context::random(unsigned num_states, float density,
                           unsigned num_initial, unsigned num_final) const
 {
@@ -1338,6 +1346,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &context::format)
     .def("join", &context::join)
     .def("ladybird", &context::ladybird)
+    .def("levenshtein", &context::levenshtein)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1))

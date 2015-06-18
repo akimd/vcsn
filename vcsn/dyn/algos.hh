@@ -414,6 +414,9 @@ namespace vcsn
     /// The automaton with letter transitions instead of words.
     automaton letterize(const automaton& aut);
 
+    /// The transducer representing the Levenshtein distance.
+    automaton levenshtein(const context& ls);
+
     /// Turn an automaton into a spontaneous automaton.
     ///
     /// Each <k>l transition is mapped to a <<k>l>\e transition.
