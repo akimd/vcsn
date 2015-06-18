@@ -103,5 +103,15 @@ if have_ofst:
     CHECK_EQ(a2_vcsn, a2_ofst)
     # Let OpenFST compare them.
     # fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
+
+  # Make sure we agree our determinization.  This automaton,
+  # determinized, has weights on the final states only, which
+  # exercises a bug we once had.
+  zmin = vcsn.context('lal_char(ab), zmin')
+  a = zmin.expression('[ab]*a(<2>[ab])').derived_term().strip()
+  d_vcsn = a.determinize().strip()
+  d_ofst = a.fstdeterminize()
+  CHECK_EQ(d_vcsn, d_ofst)
+
 else:
   SKIP('OpenFST is missing')

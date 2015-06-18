@@ -309,6 +309,10 @@ namespace vcsn
     void weightset(weightset_type t) { weightset_type_ = t; };
 
   private:
+    /// Record that this weight was seen.  Examine it to see if it's a
+    /// float etc.
+    void register_weight_(string_t w);
+
     /// The collected transitions: (Source, Destination, Label, Weight).
     using transition_t = std::tuple<string_t, string_t, string_t, string_t>;
     std::vector<transition_t> transitions_;

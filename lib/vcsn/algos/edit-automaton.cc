@@ -13,15 +13,29 @@ namespace vcsn
   `------------------------*/
 
   void
+  lazy_automaton_editor::register_weight_(string_t w)
+  {
+    if (!w.get().empty())
+      {
+        weighted_ = true;
+        if (!real_
+            && w.get().find('.') != std::string::npos)
+          real_ = true;
+      }
+  }
+
+  void
   lazy_automaton_editor::add_initial(string_t s, string_t w)
   {
     initial_states_.emplace_back(s, w);
+    register_weight_(w);
   }
 
   void
   lazy_automaton_editor::add_final(string_t s, string_t w)
   {
     final_states_.emplace_back(s, w);
+    register_weight_(w);
   }
 
   namespace
@@ -69,13 +83,7 @@ namespace vcsn
       }
     transitions_.emplace_back(src, dst, lbl1, weight);
 
-    if (!weight.get().empty())
-      {
-        weighted_ = true;
-        if (!real_
-            && weight.get().find('.') != std::string::npos)
-          real_ = true;
-      }
+    register_weight_(weight);
   }
 
   /// Add transitions from \a src to \a dst, labeled by \a entry.
