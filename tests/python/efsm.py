@@ -87,22 +87,21 @@ a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
 check(a, 'a2xyz.efsm')
 
 if have_ofst:
-  for f in ['minblocka', 'slowgrow']:
+  # Conjunction: check that Open FST and Vcsn understand the weights the
+  # same way.
+  for f in [vcsn.datadir + '/lal_char_zmin/minblocka.gv',
+            vcsn.datadir + '/lal_char_zmin/slowgrow.gv',
+            medir + '/lal-char-log.gv']:
     print("Checking:", f)
-    # Check that Open FST and V2 understand the weights the same way.
-    # At least for the tropical weightset (aka "standard" in OpenFST
-    # parlance).
     #
     # a & 2 by Vcsn.
-    a = load('lal_char_zmin/{}.gv'.format(f))
+    a = vcsn.automaton(filename = f)
     a2_vcsn = a & 2
 
     # c1 & c1 by OpenFST.
     a2_ofst = a.fstconjunction(a)
 
     CHECK_EQ(a2_vcsn, a2_ofst)
-    # Let OpenFST compare them.
-    # fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
 
   # Make sure we agree our determinization.  This automaton,
   # determinized, has weights on the final states only, which

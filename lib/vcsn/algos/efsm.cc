@@ -2,12 +2,15 @@
 #include <set>
 #include <string>
 
+#include <boost/algorithm/string/erase.hpp>
+
 #include <lib/vcsn/algos/fwd.hh>
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/registers.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/symbol.hh>
 #include <vcsn/misc/regex.hh>
 
@@ -32,7 +35,7 @@ namespace vcsn
             if (std::regex_match(line, res, re))
               return res[1];
           }
-        raise("invalid file: missing \"cat\" symbol");
+        raise("invalid efsm file: missing \"cat\" symbol");
       }
 
       /// Swallow a symbol table (i.e., eat up to the next EOFSM) and
@@ -53,7 +56,7 @@ namespace vcsn
               continue;
             ss >> val;
             if (ss.fail())
-              raise("invalid file");
+              raise("invalid efsm file");
             if (val == "0" || res == "EOFSM")
               break;
           }
@@ -62,7 +65,7 @@ namespace vcsn
             std::getline(is, line, '\n');
 
         require(line == "EOFSM",
-                "invalid file: missing closing EOFSM");
+                "invalid efsm file: missing closing EOFSM");
         return res;
       }
     }
@@ -77,6 +80,29 @@ namespace vcsn
       // Whether has both isysmbols and osymbols.
       bool is_transducer = false;
 
+      // Look for the arc type, which describes the weightset.
+      using weightset_type = lazy_automaton_editor::weightset_type;
+      weightset_type weightset = [&is]
+        {
+          std::string line;
+          while (is.good())
+            {
+              std::getline(is, line, '\n');
+              if (boost::starts_with(line, "arc_type="))
+                {
+                  boost::algorithm::erase_first(line, "arc_type=");
+                  static auto map = std::map<std::string, weightset_type>
+                  {
+                    {"log",      weightset_type::logarithmic},
+                    {"log64",    weightset_type::logarithmic},
+                    {"standard", weightset_type::tropical},
+                  };
+                  return getargs("arc type", map, line);
+                }
+            }
+          raise("invalid efsm file: missing \"arc_type=\"");
+        }();
+
       // Look for the symbol table.
       auto isyms = next_here_doc(is);
       // The single piece of information we need from the symbol
@@ -90,20 +116,19 @@ namespace vcsn
         is_transducer = true;
         auto osyms = next_here_doc(is);
         require(osyms == "osymbols",
-                "invalid file: expected osymbols: ", osyms);
+                "invalid efsm file: expected osymbols: ", osyms);
         oone = swallow_symbol_table(is);
       }
 
       vcsn::lazy_automaton_editor edit;
       edit.open(true);
-      // By default, Open FST uses a tropical semiring.
-      edit.weightset(lazy_automaton_editor::weightset_type::tropical);
+      edit.weightset(weightset);
 
       // The first transition also provides the initial state.
       bool first = true;
       auto trans = next_here_doc(is);
       require(trans == "transitions",
-              "invalid file: expected transitions: ", trans);
+              "invalid efsm file: expected transitions: ", trans);
       // Line: Source Dest ILabel [OLabel] [Weight].
       // Line: FinalState [Weight].
       std::string line;
