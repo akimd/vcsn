@@ -970,6 +970,17 @@ namespace vcsn
     }
   };
 
+  /// Transform a tupleset of one element to a tupleset of the proper version
+  template <typename LabelSet>
+  struct proper_traits<tupleset<LabelSet>>
+  {
+    using type = tupleset<typename proper_traits<LabelSet>::type>;
+    static type value(const tupleset<LabelSet>& ls)
+    {
+      return {proper_traits<LabelSet>::value(*std::get<0>(ls.sets()).labelset())};
+    }
+  };
+
   /// Conversion to wordset.
   template <typename... LabelSets>
   struct law_traits<tupleset<LabelSets...>>
