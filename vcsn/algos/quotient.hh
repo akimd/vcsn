@@ -89,8 +89,7 @@ namespace vcsn
               = s == aut->pre()  ? res->pre()
               : s == aut->post() ? res->post()
               : res->new_state();
-            origins[class_to_res_state[c]].
-              insert(begin(set), end(set));
+            origins[class_to_res_state[c]].insert(begin(set), end(set));
           }
         for (unsigned c = 0; c < num_classes_; ++c)
           {

@@ -205,11 +205,6 @@ struct automaton
 
   label ambiguous_word() const;
 
-  automaton focus(unsigned tape)
-  {
-    return vcsn::dyn::focus(val_, tape);
-  }
-
   /// Convert \a this to \a ctx, using \a ids.
   automaton as(const ::context& ctx) const
   {
@@ -311,6 +306,11 @@ struct automaton
   automaton filter(const boost::python::list& states) const
   {
     return vcsn::dyn::filter(val_, make_vector<unsigned>(states));
+  }
+
+  automaton focus(unsigned tape)
+  {
+    return vcsn::dyn::focus(val_, tape);
   }
 
   std::string format(const std::string& format = "dot") const
