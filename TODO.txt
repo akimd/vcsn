@@ -113,11 +113,6 @@ expression; for instance in the case of sum, the list of operands is copied
 by hand instead of using the expressionset.  As a result, an expression
 "a+b+a", when "converted" to a series, gives "a+b+a" instead of "a+b".
 
-** efst
-We really need something safer to read automata.  For instance when we
-determinize ladybird in Zmin, we read it back as a Boolean automaton.  The
-also need routines to convert automata, expressions, etc. to other contexts.
-
 ** shortest
 Loops forever:
 

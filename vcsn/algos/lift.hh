@@ -90,10 +90,10 @@ namespace vcsn
     for (auto t: a->all_transitions())
       if (a->src_of(t) == a->pre())
         res->add_initial(map[a->dst_of(t)],
-                        rs_in.lmul(a->weight_of(t), rs_in.one()));
+                         rs_in.lmul(a->weight_of(t), rs_in.one()));
       else if (a->dst_of(t) == a->post())
         res->add_final(map[a->src_of(t)],
-                      rs_in.lmul(a->weight_of(t), rs_in.one()));
+                       rs_in.lmul(a->weight_of(t), rs_in.one()));
       else
         res->add_transition
           (map[a->src_of(t)], map[a->dst_of(t)],
@@ -263,10 +263,10 @@ namespace vcsn
       for (auto t: a->all_transitions())
         if (a->src_of(t) == a->pre())
           res->add_initial(map[a->dst_of(t)],
-                          rs_in.lmul(a->weight_of(t), rs_in.one()));
+                           rs_in.lmul(a->weight_of(t), rs_in.one()));
         else if (a->dst_of(t) == a->post())
           res->add_final(map[a->src_of(t)],
-                        rs_in.lmul(a->weight_of(t), rs_in.one()));
+                         rs_in.lmul(a->weight_of(t), rs_in.one()));
         else
           res->add_transition
             (map[a->src_of(t)], map[a->dst_of(t)],

@@ -80,8 +80,7 @@ namespace vcsn
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
 
       state_eliminator(automaton_t& aut)
-        : debug_(0)
-        , aut_(aut)
+        : aut_(aut)
       {}
 
       /// Eliminate state s.
@@ -122,8 +121,6 @@ namespace vcsn
       }
 
     private:
-      /// Debug level.  The higher, the more details are reported.
-      int debug_;
       /// The automaton we work on.
       automaton_t& aut_;
       /// Shorthand to the weightset.
@@ -135,14 +132,14 @@ namespace vcsn
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_expressions>
     {
-      // FIXME: expressionset<lal_char(a-c), z>_q for instance cannot work,
-      // because we need to move the q weights inside the
-      // lal_char(a-c), z expressions, which obviously not possible.  So we
-      // need to require that there is a subtype relationship between
-      // the weightset and the weightset of the expression.
+      // FIXME: expressionset<lal_char(a-c), z>, q for instance cannot
+      // work, because we need to move the q weights inside the
+      // lal_char(a-c), z expressions, which obviously not possible.
+      // So we need to require that there is a subtype relationship
+      // between the weightset and the weightset of the expression.
       //
       // Yet as of 2014-07, there is no means to check that subtype
-      // relationship in Vaucanson.
+      // relationship in Vcsn.
 
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
@@ -152,13 +149,14 @@ namespace vcsn
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
 
       state_eliminator(automaton_t& aut)
-        : debug_(0)
-        , aut_(aut)
+        : aut_(aut)
       {}
 
       /// Eliminate state s.
       void operator()(state_t s)
       {
+        if (s == aut_->null_state())
+          s = next_naive(aut_);
         require(aut_->has_state(s), "not a valid state: ", s);
 
         // The loops' expression.
@@ -191,8 +189,6 @@ namespace vcsn
       }
 
     private:
-      /// Debug level.  The higher, the more details are reported.
-      int debug_;
       /// The automaton we work on.
       automaton_t& aut_;
       /// Shorthand to the labelset, which is an expressionset.
