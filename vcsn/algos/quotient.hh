@@ -27,7 +27,7 @@ namespace vcsn
       template <typename Ctx = context_t_of<Aut>>
       using fresh_automaton_t = fresh_automaton_t_of<automaton_t, Ctx>;
 
-      using origins_t = typename quotient_t::element_type::origins_t;
+      using origins_t = origins_t_of<quotient_t>;
 
       using class_t = unsigned;
       using state_t = state_t_of<automaton_t>;

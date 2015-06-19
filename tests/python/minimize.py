@@ -16,8 +16,16 @@ def check(algo, aut, exp):
     # automaton.  We don't want to get partition_automaton of
     # partition_automaton: one "layer" suffices.
     CHECK_EQ(exp, aut.minimize(algo).minimize(algo))
-    # Cominimize
-    CHECK_EQ(aut.minimize(algo), aut.transpose().cominimize(algo).transpose())
+
+    # Cominimize.
+    #
+    # Do not work just on the transpose_automaton, to make sure it
+    # works as expected for "forward" automata (which did have one
+    # such bug!).  So copy the transposed automaton.
+    t = aut.transpose().automaton(aut.context())
+    if isinstance(exp, str):
+        exp = vcsn.automaton(exp)
+    CHECK_ISOMORPHIC(exp.transpose(), t.cominimize(algo))
 
 def xfail(algo, aut):
     res = ''
@@ -28,9 +36,9 @@ def xfail(algo, aut):
     else:
         FAIL('did not raise an exception', str(res))
 
-## Simple minimization test.  The example comes from the "Theorie des
-## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
-## as of revision a0761d6.
+## Simple minimization test.  The example comes from the "Théorie des
+## langages" lecture notes by François Yvon & Akim Demaille.
+## Automaton 4.23 at page 59, as of revision a0761d6.
 a = aut("redundant.gv")
 exp = file_to_string('redundant.exp.gv')
 check('brzozowski', a, vcsn.automaton(exp))

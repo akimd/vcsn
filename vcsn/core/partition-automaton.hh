@@ -143,10 +143,37 @@ namespace vcsn
 
   namespace detail
   {
+    /// From an (input) automaton type, compute its origin_t type.
+    template <typename Aut>
+    struct origins_t_of_impl;
+
+    /// The type of the origins map for a partition automaton, or a
+    /// transposed one.
+    template <typename Aut>
+    using origins_t_of = typename origins_t_of_impl<Aut>::type;
+
+    template <typename Aut>
+    struct origins_t_of_impl<partition_automaton<Aut>>
+    {
+      using type = typename partition_automaton<Aut>::element_type::origins_t;
+    };
+
+    template <typename Aut>
+    struct origins_t_of_impl<transpose_automaton<Aut>>
+    {
+      using type = origins_t_of<Aut>;
+    };
+
+
+
     /// From an (input) automaton type, compute the right decorator
     /// for its partition_automaton.  For instance,
     /// partition_automaton<partition_automaton<Aut>> =>
     /// partition_automaton<Aut>.
+    ///
+    /// we don't want to stack partition_automaton, so that we can
+    /// minimize (and cominimize) repeatedly without changing the type
+    /// of the automaton).
     template <typename Aut>
     struct partition_automaton_t_impl
     {
