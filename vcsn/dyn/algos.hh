@@ -417,16 +417,15 @@ namespace vcsn
     /// The transducer representing the Levenshtein distance.
     automaton levenshtein(const context& ls);
 
-    /// Turn an automaton into a spontaneous automaton.
+    /// Lift some tapes of the transducer, or turn an automaton into a
+    /// spontaneous autmaton.
     ///
     /// Each <k>l transition is mapped to a <<k>l>\e transition.
     ///
-    /// \param aut  the input automaton
-    /// \param ids  the identities of the expression
-    automaton lift(const automaton& aut, rat::identities ids = {});
-
-    /// Lift some tapes of the transducer
-    automaton lift(const automaton& aut, const std::vector<unsigned>& tapes);
+    /// \param aut    the input automaton
+    /// \param tapes  the tapes to lift to weights
+    /// \param ids    the identities of the expression
+    automaton lift(const automaton& aut, const std::vector<unsigned>& tapes = {}, ::vcsn::rat::identities ids = {});
 
     /// The lifted LAO rational expression from \a e.
     expression lift(const expression& e);

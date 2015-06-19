@@ -54,90 +54,80 @@ namespace vcsn
     }
   }
 
-  /*------------------.
-  | lift(automaton).  |
-  `------------------*/
-
-  /// Turn an automaton into a spontaneous automaton.
-  ///
-  /// Each `<k>l` transition is mapped to a `<<k>l>\e` transition.
-  ///
-  /// \param a    the input automaton
-  /// \param ids  the identities of the expression
-  template <typename Aut>
-  inline
-  detail::lifted_automaton_t<Aut>
-  lift(const Aut& a, vcsn::rat::identities ids = {})
-  {
-    using auto_in_t = Aut;
-    using ctx_in_t = context_t_of<auto_in_t>;
-    using state_in_t = state_t_of<auto_in_t>;
-
-    // Produce expressions of the same context as the original automaton.
-    using rs_in_t = expressionset<ctx_in_t>;
-    auto rs_in = rs_in_t{a->context()};
-
-    auto ctx_out = detail::lift_context(a->context(), ids);
-    using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
-    using state_out_t = state_t_of<auto_out_t>;
-    auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
-    auto map = std::map<state_in_t, state_out_t>{};
-    map[a->pre()] = res->pre();
-    map[a->post()] = res->post();
-    for (auto s: a->states())
-      map[s] = res->new_state();
-
-    for (auto t: a->all_transitions())
-      if (a->src_of(t) == a->pre())
-        res->add_initial(map[a->dst_of(t)],
-                         rs_in.lmul(a->weight_of(t), rs_in.one()));
-      else if (a->dst_of(t) == a->post())
-        res->add_final(map[a->src_of(t)],
-                       rs_in.lmul(a->weight_of(t), rs_in.one()));
-      else
-        res->add_transition
-          (map[a->src_of(t)], map[a->dst_of(t)],
-           {},
-           rs_in.lmul(a->weight_of(t), rs_in.atom(a->label_of(t))));
-    return res;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (lift).
-      template <typename Aut, typename Identities>
-      automaton
-      lift_automaton(const automaton& aut, vcsn::rat::identities ids)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::lift(a, ids));
-      }
-    }
-  }
-
-
   /*------------------------.
   | lift_tape(automaton).   |
   `------------------------*/
 
   namespace detail
   {
+
+    template <std::size_t... I>
+    using seq = vcsn::detail::index_sequence<I...>;
+
+    /// Set of tapes
+    template <typename S, typename L>
+    struct tape_set;
+
+    // Set of no tape is oneset
+    template <typename LabelSet>
+    struct tape_set<seq<>, LabelSet>
+    {
+      using type = oneset;
+    };
+
+    template <size_t... I, typename LabelSet>
+    struct tape_set<seq<I...>, LabelSet>
+    {
+      using type = tupleset<typename LabelSet::template valueset_t<I>...>;
+    };
+
     /// Helper structure for a lift of several tapes.
     template<typename Context, size_t... Tapes>
     struct lifted_context_tape_t;
 
-    template <typename... LabelSets, typename WeightSet, size_t... Tapes>
-    struct lifted_context_tape_t<context<tupleset<LabelSets...>, WeightSet>,
-                                 Tapes...>
+    /// Lift everything
+    template <typename Context>
+    struct lifted_context_tape_t<Context>
     {
+      // Result context
+      using context_t = lifted_context_t<Context>;
+      using in_label_t = label_t_of<Context>;
+      using label_t = label_t_of<context_t>;
+
+      // conversion
+      static context_t value(const Context& ctx, vcsn::rat::identities ids)
+      {
+        return lift_context(ctx, ids);
+      }
+
+      // label in the output
+      static oneset::value_t
+      kept_label(const in_label_t&)
+      {
+        return oneset::one();
+      }
+
+      // weight in the output
+      static in_label_t
+      weight_label(const in_label_t& l)
+      {
+        return l;
+      }
+    };
+
+    template <typename... LabelSets, typename WeightSet, size_t FirstTape, size_t... Tapes>
+    struct lifted_context_tape_t<context<tupleset<LabelSets...>, WeightSet>,
+                                 FirstTape, Tapes...>
+    {
+      /// Input labelset
       using labelset_t = tupleset<LabelSets...>;
       using in_context_t = context<tupleset<LabelSets...>, WeightSet>;
       /// A static list of integers.
       template <std::size_t... I>
       using seq = vcsn::detail::index_sequence<I...>;
-      using index_t = detail::make_index_sequence<labelset_t::size()>;
+
+      /// Index of all tapes
+      using index_t = typename detail::make_index_sequence<labelset_t::size()>::type;
 
       using in_label_t = typename labelset_t::value_t;
 
@@ -146,27 +136,18 @@ namespace vcsn
       template <size_t I>
       using tape_labelset_t = typename labelset_t::template valueset_t<I>;
 
-      // List of indexes of tapes to be lifted
-      using weight_index_t = seq<Tapes...>;
-
       // Complement the list of indexes of tapes to be lifted, to get the list
       // of tapes to be kept
-      using kept_index_t = sequence_difference<index_t, seq<Tapes...>>;
-
-      template <typename S>
-      struct kept_taper {};
-
-      template <size_t... I>
-      struct kept_taper<seq<I...>>
-      {
-        using type = tupleset<tape_labelset_t<I>...>;
-      };
+      using kept_index_t = sequence_difference<index_t, seq<FirstTape, Tapes...>>;
 
       // Labelset of tapes to be kept
-      using kept_tapes_t = typename kept_taper<kept_index_t>::type;
+      using kept_tapes_t = typename tape_set<kept_index_t, labelset_t>::type;
+
+      // List of indexes of tapes to be lifted
+      using weight_index_t = seq<FirstTape, Tapes...>;
 
       // Labelset of tapes to be lifted
-      using weight_tapes_t = tupleset<tape_labelset_t<Tapes>...>;
+      using weight_tapes_t = typename tape_set<weight_index_t, labelset_t>::type;
 
       using inner_context_t = context<weight_tapes_t, WeightSet>;
 
@@ -177,20 +158,22 @@ namespace vcsn
       using context_t = context<kept_tapes_t, expr_t>;
 
       // conversion
-      static context_t value(const in_context_t& ctx)
+      static context_t value(const in_context_t& ctx, vcsn::rat::identities ids)
       {
-        return value_(ctx, kept_index_t{});
+        return value_(ctx, weight_index_t{}, kept_index_t{}, ids);
       }
 
-      template <size_t... KeptTapes>
-      static context_t value_(const in_context_t& ctx, seq<KeptTapes...>)
+      template <size_t... WeightTapes, size_t... KeptTapes>
+      static context_t value_(const in_context_t& ctx, seq<WeightTapes...>,
+                              seq<KeptTapes...>, vcsn::rat::identities ids)
       {
         auto rs =
-          expr_t{inner_context_t{weight_tapes_t{ctx.labelset()->template set<Tapes>()...},
-                                 *ctx.weightset()}};
+          expr_t{inner_context_t{weight_tapes_t{ctx.labelset()->template set<WeightTapes>()...},
+                                 *ctx.weightset()}, ids};
         return {kept_tapes_t{ctx.labelset()->template set<KeptTapes>()...}, rs};
       }
 
+      // label in the output
       static typename kept_tapes_t::value_t
       kept_label(const in_label_t& l)
       {
@@ -204,6 +187,7 @@ namespace vcsn
         return typename kept_tapes_t::value_t{std::get<I>(l)...};
       }
 
+      // weight in the output
       static typename weight_tapes_t::value_t
       weight_label(const in_label_t& l)
       {
@@ -241,13 +225,13 @@ namespace vcsn
     template <typename Aut, size_t... Tapes>
     inline
     detail::lifted_automaton_tape_t<Aut, Tapes...>
-    lift_tape(const Aut& a)
+    lift_tape(const Aut& a, vcsn::rat::identities ids = {})
     {
       using auto_in_t = Aut;
       using state_in_t = state_t_of<auto_in_t>;
 
       using lifter = detail::lifted_context_tape_t<context_t_of<Aut>, Tapes...>;
-      auto ctx_out = lifter::value(a->context());
+      auto ctx_out = lifter::value(a->context(), ids);
 
       // ExpressionSet
       const auto& rs_in = *ctx_out.weightset();
@@ -278,30 +262,28 @@ namespace vcsn
     }
   }
 
-  template <typename Aut, size_t FirstTape, size_t... Tapes>
+  template <typename Aut, size_t... Tapes>
   inline
-  detail::lifted_automaton_tape_t<Aut, FirstTape, Tapes...>
-  lift(const Aut& a)
+  detail::lifted_automaton_tape_t<Aut, Tapes...>
+  lift(const Aut& a, vcsn::rat::identities ids = {})
   {
-    return detail::lift_tape<Aut, FirstTape, Tapes...>(a);
+    return detail::lift_tape<Aut, Tapes...>(a, ids);
   }
-
 
   namespace dyn
   {
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename... Tapes>
+      template <typename Aut, typename Ids, typename... Tapes>
       automaton
-      lift_automaton_tape(const automaton& aut, integral_constant)
+      lift_automaton(const automaton& aut, vcsn::rat::identities ids, integral_constant)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::lift<Aut, Tapes::value...>(a));
+        return make_automaton(::vcsn::lift<Aut, Tapes::value...>(a, ids));
       }
     }
   }
-
 
   /*--------------------.
   | lift(expression).   |

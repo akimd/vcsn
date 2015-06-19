@@ -195,11 +195,11 @@ automaton.is_synchronized_by = _automaton_is_synchronized_by
 
 def _automaton_lift(self, *arg, identities = "default"):
     if len(arg) == 0:
-        return self._lift(identities = identities)
+        return self._lift([], identities)
     elif len(arg) == 1 and isinstance(arg[0], list):
-        return self._lift(arg[0])
+        return self._lift(arg[0], identities)
     else:
-        return self._lift(list(arg))
+        return self._lift(list(arg), identities)
 automaton.lift = _automaton_lift
 
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))

@@ -476,22 +476,14 @@ struct automaton
     return vcsn::dyn::letterize(val_);
   }
 
-  automaton lift(const std::string& ids = "default") const
+  automaton lift(const boost::python::list& tapes, const std::string& ids = "default") const
   {
-    return vcsn::dyn::lift(val_, identities(ids));
-  }
-  /// The type of the previous function.
-  using lift_t
-    = auto (automaton::*)(const std::string& ids) const -> automaton;
-
-  automaton lift(const boost::python::list& tapes) const
-  {
-    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes));
+    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes), identities(ids));
   }
 
   /// The type of the previous function.
   using lift_tapes_t
-    = auto (automaton::*)(const boost::python::list& tapes) const -> automaton;
+    = auto (automaton::*)(const boost::python::list& tapes, const std::string& ids) const -> automaton;
 
   automaton minimize(const std::string& algo = "auto") const
   {
@@ -1218,8 +1210,8 @@ expression expression::right_mult(const weight& w) const
 | vcsn_cxx.  |
 `-----------*/
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift_tapes,
-                                       lift, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift,
+                                       lift, 0, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(multiply_repeated,
                                        multiply, 1, 2);
 
@@ -1296,12 +1288,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("letterize", &automaton::letterize)
-    .def("_lift",
-         static_cast<automaton::lift_t>(&automaton::lift),
-         (arg("identities") = "default"))
-    .def("_lift",
-         static_cast<automaton::lift_tapes_t>(&automaton::lift),
-         lift_tapes())
+    .def("_lift", &automaton::lift)
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply))
     .def("multiply",
