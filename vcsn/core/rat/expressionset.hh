@@ -311,23 +311,6 @@ namespace vcsn
     /// The weight of e if it's an lweight, otherwise the weight one().
     static weight_t possibly_implicit_lweight_(value_t e);
 
-    /// The product of l and r, using expression-identities.
-    value_t mul_(value_t l, value_t r, bool series) const;
-
-    /// The product of l and r, using expression-identities.
-    value_t mul_expressions_(value_t l, value_t r) const;
-
-    /// The product of l and r, using series-identities.
-    value_t mul_series_(value_t l, value_t r) const;
-
-    /// The product of l and r, using expression-identities.
-    /// \pre l and r are non-trivial.
-    value_t nontrivial_mul_expressions_(value_t l, value_t r) const;
-
-    /// The product of l and r, using series-identities.
-    /// \pre l and r are non-trivial.
-    value_t nontrivial_mul_series_(value_t l, value_t r) const;
-
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of expressions on which to apply associativity.
     ///               Must be one of the variadic types.

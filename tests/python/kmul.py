@@ -12,7 +12,7 @@ ctx = vcsn.context('lal_char(ab), expressionset<lal_char(xyz), b>')
 # Standard automata.
 q = vcsn.context('lal_char(ab), q')
 # This automaton is standard.
-r = q.expression('\e+[ab]b[ab]*')
+r = q.expression('\e+[ab]b[ab]*', 'associative')
 
 # Derived-term commutes with kmul.
 CHECK_EQ(('3/4' * r).derived_term().strip(),

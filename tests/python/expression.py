@@ -143,8 +143,9 @@ xfail('a<2')
 
 def check_format(ctx, r, text, latex):
     ctx = vcsn.context(ctx)
-    CHECK_EQ(text, ctx.expression(r).format('text'))
-    CHECK_EQ(latex, ctx.expression(r).format('latex'))
+    e = ctx.expression(r)
+    CHECK_EQ(text, e.format('text'))
+    CHECK_EQ(latex, e.format('latex'))
 
 check_format('lal_char(abcd), b',
              'abcd',
@@ -181,8 +182,8 @@ check_format('lal_char(0123), b',
              '0 \\, 1 \\, 2 \\, 3')
 check_format('lal_char(0123), z',
              '<0123>0123',
-             '<123>0123',
-             r' \left\langle 123 \right\rangle \,0 \, 1 \, 2 \, 3')
+             '<123>(0123)',
+             r' \left\langle 123 \right\rangle \,\left(0 \, 1 \, 2 \, 3\right)')
 
 ## -------- ##
 ## Series.  ##

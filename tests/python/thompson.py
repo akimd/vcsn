@@ -9,7 +9,9 @@ def check(re, exp):
     # We compare automata as strings, since when parsing the expected
     # automaton we drop the hole in the state numbers created by
     # standard.
-    a = ctx.expression(re).thompson()
+    if isinstance(re, str):
+        re = ctx.expression(re)
+    a = re.thompson()
     CHECK_EQ(exp, a)
     CHECK(a.is_normalized())
 
@@ -180,7 +182,8 @@ r'''digraph
 }''')
 
 # right weight.
-check('(?@lan_char(ab), z)(<2>\e+<3>a+<5>b)<10>',
+check(vcsn.context('lan_char(ab), z')
+      .expression('(<2>\e+<3>a+<5>b)<10>', 'associative'),
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -220,7 +223,7 @@ r'''digraph
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check('(?@lal_char(ab), z)<12>(ab)<23>',
+check(vcsn.Z.expression('<12>(ab)<23>', 'associative'),
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -324,7 +327,7 @@ r'''digraph
   3 -> F3
 }''')
 
-check('(?@lan_char(ab), z)<2>a*<3>',
+check(vcsn.context('lan_char(ab), z').expression('<2>a*<3>', 'associative'),
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -387,7 +390,8 @@ r'''digraph
   7 -> F7
 }''')
 
-check('(?@lan_char(ab), z)<2>(<3>a+<5>b)*<7>',
+check(vcsn.context('lan_char(ab), z')
+      .expression('<2>(<3>a+<5>b)*<7>', 'associative'),
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -423,7 +427,8 @@ r'''digraph
   7 -> F7
 }''')
 
-check('(?@lan_char(ab), z)<2>(<3>(ab)<5>)*<7>',
+check(vcsn.context('lan_char(ab), z')
+      .expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"

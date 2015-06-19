@@ -158,8 +158,8 @@ check(z.expression('<2>a<3>'),
        'lweight': 1,
        'rweight': 0})
 
-check(z.expression('a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
-      {'type': 'expressionset<letterset<char_letters(abc)>, z>',
+check(z.expression('a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}', 'associative'),
+      {'type': 'expressionset<letterset<char_letters(abc)>, z>(associative)',
        'size': 18,
        'sum': 1,
        'shuffle': 1,

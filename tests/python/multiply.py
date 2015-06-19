@@ -115,7 +115,7 @@ digraph
 # check RES AUT
 # -------------
 def check(exp, eff):
-    CHECK_EQ(exp, str(eff.expression()))
+    CHECK_EQ(exp, str(eff.expression('associative')))
 
 # RatE and B, in both directions.
 a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \

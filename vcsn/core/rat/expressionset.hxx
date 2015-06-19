@@ -32,8 +32,7 @@ namespace vcsn
     : ctx_(ctx)
     , ids_(ids)
   {
-    require(!ids_.is_distributive()
-            || weightset_t_of<Context>::is_commutative(),
+    require(!ids_.is_distributive() || weightset()->is_commutative(),
             "series (currently) requires a commutative weightset product");
   }
 
@@ -179,8 +178,16 @@ namespace vcsn
     -> values_t
   {
     values_t res;
-    gather_<Type>(res, l);
-    gather_<Type>(res, r);
+    if (ids_.is_associative())
+      {
+        gather_<Type>(res, l);
+        gather_<Type>(res, r);
+      }
+    else
+      {
+        res.emplace_back(l);
+        res.emplace_back(r);
+      }
     return res;
   }
 
@@ -343,27 +350,6 @@ namespace vcsn
   DEFINE::mul(value_t l, value_t r) const
     -> value_t
   {
-    if (ids_.is_distributive())
-      return mul_series_(l, r);
-    else
-      return mul_expressions_(l, r);
-  }
-
-  DEFINE::mul_expressions_(value_t l, value_t r) const
-    -> value_t
-  {
-    return mul_(l, r, false);
-  }
-
-  DEFINE::mul_series_(value_t l, value_t r) const
-    -> value_t
-  {
-    return mul_(l, r, true);
-  }
-
-  DEFINE::mul_(value_t l, value_t r, bool distributive) const
-    -> value_t
-  {
     value_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0.
@@ -377,49 +363,11 @@ namespace vcsn
     // U_K: (<k>1).E ⇒ <k>E, subsuming T: 1.E = E.
     else if (type_ignoring_lweight_(l) == type_t::one)
       res = lmul(possibly_implicit_lweight_(l), r);
-    // END: Trivial Identity
-    else if (distributive) // Different from ids_.is_distributive().
-      res = nontrivial_mul_series_(l, r);
-    else
-      res = nontrivial_mul_expressions_(l, r);
-    return res;
-  }
-
-  DEFINE::nontrivial_mul_expressions_(value_t l, value_t r) const
-    -> value_t
-  {
-    return std::make_shared<prod_t>(gather_<type_t::prod>(l, r));
-  }
-
-  DEFINE::nontrivial_mul_series_(value_t l, value_t r) const
-    -> value_t
-  {
-    assert(!is_zero(l));
-    assert(!is_zero(r));
-    assert(type_ignoring_lweight_(l) != type_t::one);
-    assert(type_ignoring_lweight_(r) != type_t::one);
-
-    // Compute the result by distributing product over sum.  We have
-    // to use add rather than just build a vector in order, since the
-    // addend order in the result will not follow the order in l.
-    value_t res = zero();
-    // FIXME: this piece of code is wrong: it checks for lweight of a
-    // sum, but cast to sum only.  It turns out that lweight of sum is
-    // impossible: it's always turned into a sum of lweights.
-    if (type_ignoring_lweight_(l) == type_t::sum)
-      // l is a sum, and r might be as well.
-      for (const auto& la: *down_pointer_cast<const sum_t>(l))
-        res = add(res, mul(la, r));
-    // FIXME: same error (see above).
-    else if (type_ignoring_lweight_(r) == type_t::sum)
-      // r is a sum, l is not.
-      for (const auto& ra: *down_pointer_cast<const sum_t>(r))
-        res = add(res, mul(l, ra));
-    // Neither l nor r is a sum.
-    else
+    // (<k>E)(<h>F) => <kh>(EF).
+    else if (ids_.is_linear() && weightset()->is_commutative()
+             && (l->type() == type_t::lweight
+                 || r->type() == type_t::lweight))
       {
-        // This is where we need commutativity of the product of weights:
-        // (<k>E)(<h>F) => <kh>(EF).
         weight_t
           lw = possibly_implicit_lweight_(l),
           rw = possibly_implicit_lweight_(r);
@@ -427,8 +375,26 @@ namespace vcsn
           nl = unwrap_possible_lweight_(l),
           nr = unwrap_possible_lweight_(r);
         res = lmul(weightset()->mul(lw, rw),
-                   nontrivial_mul_expressions_(nl, nr));
+                   mul(nl, nr));
       }
+    // (E+F)G => EG + FG.
+    else if (ids_.is_distributive() && l->type() == type_t::sum)
+      {
+        res = zero();
+        // l is a sum, and r might be as well.
+        for (const auto& la: *down_pointer_cast<const sum_t>(l))
+          res = add(res, mul(la, r));
+      }
+    // E(F+G) => EF + EG.
+    else if (ids_.is_distributive() && r->type() == type_t::sum)
+      {
+        res = zero();
+        // r is a sum, l is not.
+        for (const auto& ra: *down_pointer_cast<const sum_t>(r))
+          res = add(res, mul(l, ra));
+      }
+    else
+      res = std::make_shared<prod_t>(gather_<type_t::prod>(l, r));
     return res;
   }
 
@@ -541,24 +507,32 @@ namespace vcsn
     else if (e->type() == type_t::zero)
       res = zero();
 
-    // Case: a == <w>\e.
+    // Case: a == \e or a == <w>\e.
     else if (type_ignoring_lweight_(e) == type_t::one)
       {
         weight_t w = possibly_implicit_lweight_(e);
         res = lmul(weightset()->power(w, n), one());
       }
 
-    // Sums in series: we have to distribute ([ab]{2} = aa+ab+ba+bb,
-    // (<2>a){2} => <4>(aa)).
-    else if (ids_.is_distributive()
-             && (e->type() == type_t::sum
-                 || e->type() == type_t::lweight))
+    // Lweight in linear commutative: (<k>E){n} => <k{n}>(E{n}).
+    else if (ids_.is_linear()
+             && weightset()->is_commutative()
+             && e->type() == type_t::lweight)
+      {
+        const auto& lw = down_pointer_cast<const lweight_t>(e);
+        res = lmul(weightset()->power(lw->weight(), n),
+                   power(lw->sub(), n));
+      }
+
+    // Sums in series: we have to distribute ([ab]{2} = aa+ab+ba+bb).
+    else if (ids_.is_distributive() && e->type() == type_t::sum)
       {
         // FIXME: code duplication with weightset_mixin::power_.
         res = e;
         for (unsigned i = 1; i < n; ++i)
           res = mul(res, e);
       }
+
     else
       // Default case: E{n} = E...E.
       res = std::make_shared<prod_t>(values_t(n, e));
@@ -711,8 +685,11 @@ namespace vcsn
   DEFINE::rmul(value_t e, const weight_t& w) const
     -> value_t
   {
+    // Linear identity: E<k> => <k>E.
+    if (ids_.is_linear() && weightset()->is_commutative())
+      return lmul(w, e);
     // Trivial identity: E<0> => 0.
-    if (weightset()->is_zero(w))
+    else if (weightset()->is_zero(w))
       return zero();
     // Trivial identity: E<1> => E.
     else if (weightset()->is_one(w))
@@ -726,18 +703,6 @@ namespace vcsn
     // Trivial identity: (E<k>)<h> => E<kh>.
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
       return rmul(rw->sub(), weightset()->mul(rw->weight(), w));
-    // Distributive: (E+F)<k> => E<k> + F<k>.
-    else if (ids_.is_distributive() && e->type() == type_t::sum)
-      {
-        const auto& s = down_pointer_cast<const sum_t>(e);
-        // Differently from the lmul case here the order of addends in
-        // the result may be different from the order in *ss, so we
-        // have to use add.
-        value_t res = zero();
-        for (auto& a: *s)
-          res = add(res, rmul(a, w));
-        return res;
-      }
     // General case: E<k>.
     else
       return std::make_shared<rweight_t>(w, e);

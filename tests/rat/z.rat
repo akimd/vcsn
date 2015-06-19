@@ -1,6 +1,7 @@
 %context: z
 %include: common-weights.rat
 
+%identities: associative
 <2>a == (<2>a)
 a<2> == (a<2>)
 <2>a<3> == (<2>a)<3>
@@ -17,6 +18,8 @@ a<1><2>b == a(<1>(<2>b))
 <1>a == a<1>
 <1>a == a
 <2>(a)<3>(b) == (<2>a)(<3>b)
+<2>(a)<3>(b) => <2>a<3>b
+a*<2> => a*<2>
 
 %labels: letters
 <3>(ab) => <3>(ab)
@@ -30,6 +33,9 @@ a<1><2>b == a(<1>(<2>b))
 <2><3>ab => <6>(ab)
 <2>ab<3>* => <2>a(<3>b)*
 
+%labels: letters
+# Check "linear": ACI
+%identities: linear
 # Check computations on Z.
 \e+\e     => <2>\e
 <2><3>a   => <6>a
@@ -43,9 +49,10 @@ a<2><3>   => <6>a
 <1>\z => \z
 
 a<2> => <2>a
+a*<2> => <2>a*
+a*<2> => <2>a*
+<2>a<3>b => <6>(ab)
 
-# Check "linear": ACI
-%identities: linear
 a+a => <2>a
 a+<-1>a => \z
 a+a == <2>a
@@ -57,15 +64,20 @@ a+b+a+b => <2>a+<2>b
 # Make sure we don't create sums of one element only.  If we did, we
 # would get 'a(<2>b)' since the "sum" <2>b has lower precedence than
 # the product.
-a(b+b) => a<2>b
-a(b+b) == a<2>b
+a(b+b) => <2>(ab)
+a(b+b) == <2>ab
+(a+a)b => <2>(ab)
+(a+a)b == <2>ab
+(a+a)(b+b) == <4>ab
 
 # Check series: add distributivity.
-%identities: series
+%identities: distributive
 a(c+b)(f+e) => abe+abf+ace+acf
 <2>[abc] => <2>a+<2>b+<2>c
 [ab]{2} => aa+ab+ba+bb
 (<2>a){2} => <4>(aa)
+(ab)<2> => <2>(ab)
+<2>(ab+<3>ab+<2>aa)<5> => <20>(aa)+<40>(ab)
 
 %labels: words
 # Be sure that we get a product of two labels, not a single word,

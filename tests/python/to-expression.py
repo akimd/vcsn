@@ -29,7 +29,7 @@ check_aut(load('lal_char_z/d1.gv'), '(a+b)*(a+<-1>b)(a+b)*')
 check_aut(load('lal_char_zmin/minab.gv'), '(a+<1>b)*+(<1>a+b)*')
 check_aut(load('lal_char_zmin/minblocka.gv'), '(a+b)*b(<1>a)*b(a+b)*')
 check_aut(load('lal_char_zmin/slowgrow.gv'),
-          '(a+b)*b(<1>a)*b(a+<1>a(<1>a)*b)*')
+          '(a+b)*b(<1>a)*b(a+<1>(a(<1>a)*b))*')
 
 
 ## ------------------------------------ ##
@@ -50,13 +50,13 @@ check_exp('a')
 check_exp('ab')
 check_exp('a*', '\e+aa*')
 check_exp('a+b')
-check_exp('(?@lal_char(ab), z)<2>(ab)<3>', '(<2>ab)<3>')
+check_exp('(?@lal_char(ab), z)<2>(ab)<3>', '<6>(ab)')
 check_exp('(?@law_char(ab), z)<2>(ab)<3>', '<6>(ab)')
 
 
 check_exp('(?@lal_char(abc), z)(<2>(<3>a+<5>b)<7>c)<11>', \
-      '(<6>a<7>c+<10>b<7>c)<11>')
+          '<462>(ac)+<770>(bc)')
 
 # Likewise, but check the order of the products.
 check_exp('(?@lal_char(abc), expressionset<lal_char(vwxyz), b>)(<v>(<w>a+<x>b)<y>c)<z>', \
-      '(<vw>a<y>c+<vx>b<y>c)<z>')
+          '(<vw>a<y>c+<vx>b<y>c)<z>')

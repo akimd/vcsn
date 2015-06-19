@@ -10,7 +10,7 @@ context = 'lal_char(abcd), b'
 # The current context.
 ctx = vcsn.context(context)
 # Whether expressions or series.
-identities = "linear"
+identities = "associative"
 
 # Compute the name of the context.
 contexts = {
@@ -104,7 +104,7 @@ def check_rat_exp(fname):
       if op == '==':
         CHECK_EQ(expr(l), expr(r), loc)
       else:
-        CHECK_EQ(pp(l), pp(r), loc)
+        CHECK_EQ(pp(l), r, loc)
       continue
 
     # !: Look for syntax errors.

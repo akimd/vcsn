@@ -120,7 +120,9 @@ def check(re, exp):
     # We compare automata as strings, since when parsing the expected
     # automaton we drop the hole in the state numbers created by
     # standard.
-    a = ctx.expression(re).standard()
+    if isinstance(re, str):
+        re = ctx.expression(re)
+    a = re.standard()
     CHECK_EQ(exp, str(a))
     CHECK(a.is_standard())
 
@@ -640,7 +642,7 @@ check('(?@lal_char(ab), z)<12>(\e+a+<10>b+<10>\e)',
 }''')
 
 # right weight.
-check('(?@lal_char(ab), z)(\e+a+<2>b+<3>\e)<10>',
+check(vcsn.Z.expression('(\e+a+<2>b+<3>\e)<10>', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, z"
@@ -672,7 +674,7 @@ check('(?@lal_char(ab), z)(\e+a+<2>b+<3>\e)<10>',
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check('(?@lal_char(ab), z)<12>(ab)<23>',
+check(vcsn.Z.expression('<12>(ab)<23>', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, z"
@@ -744,7 +746,7 @@ check('(?@lal_char(ab), z)(<2>a)*',
   1 -> 1 [label = "<2>a"]
 }''')
 
-check('(?@lal_char(ab), z)<2>a*<3>',
+check(vcsn.Z.expression('<2>a*<3>', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, z"
@@ -768,7 +770,7 @@ check('(?@lal_char(ab), z)<2>a*<3>',
   1 -> 1 [label = "a"]
 }''')
 
-check('(?@lal_char(ab), z)(<2>a+<3>b)*',
+check(vcsn.Z.expression('(<2>a+<3>b)*', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, z"
@@ -799,7 +801,7 @@ check('(?@lal_char(ab), z)(<2>a+<3>b)*',
   3 -> 3 [label = "<3>b"]
 }''')
 
-check('(?@lal_char(ab), z)<2>(<3>a+<5>b)*<7>',
+check(vcsn.Z.expression('<2>(<3>a+<5>b)*<7>', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, z"
@@ -830,7 +832,7 @@ check('(?@lal_char(ab), z)<2>(<3>a+<5>b)*<7>',
   3 -> 3 [label = "<5>b"]
 }''')
 
-check('(?@lal_char(ab), z)<2>(<3>(ab)<5>)*<7>',
+check(vcsn.Z.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, z"

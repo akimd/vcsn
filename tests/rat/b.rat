@@ -25,7 +25,22 @@
 [^b-a] ! invalid letter interval: b-a
 [^a-h] ! invalid empty letter class
 
+%identities: associative
+a+a+a => a+a+a
+a+a+a+a => a+a+a+a
+a+a+a+a+[b-h] => a+a+a+[^]
+[a-h]* => [^]*
+[^a] => [^a]
+[^ab] => [^ab]
+[^abc] => [d-h]
+[^abcd] => [e-h]
+# Only if the letters are sorted, strictly.
+[bcdefg]+h => [^a]
+[bcdefg]+h+h => [^a]+h
+h+[bcdefg] => h+[^ah]
+
 # Computations in B.
+%identities: linear
 \e+\e     => \e
 
 # Check classes in output.
@@ -40,17 +55,3 @@ a+a+a+a+[b-h] => [^]
 [bcdefg]+h => [^a]
 [bcdefg]+h+h => [^a]
 h+[bcdefg] => [^a]
-
-%identities: associative
-a+a+a => a+a+a
-a+a+a+a => a+a+a+a
-a+a+a+a+[b-h] => a+a+a+[^]
-[a-h]* => [^]*
-[^a] => [^a]
-[^ab] => [^ab]
-[^abc] => [d-h]
-[^abcd] => [e-h]
-# Only if the letters are sorted, strictly.
-[bcdefg]+h => [^a]
-[bcdefg]+h+h => [^a]+h
-h+[bcdefg] => h+[^ah]
