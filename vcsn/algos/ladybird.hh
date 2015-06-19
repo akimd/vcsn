@@ -23,23 +23,22 @@ namespace vcsn
     auto b = ls.value(letters[1]);
     auto c = ls.value(letters[2]);
 
-    using automaton_t = mutable_automaton<Context>;
-    automaton_t res = make_shared_ptr<automaton_t>(ctx);
+    auto res = make_mutable_automaton(ctx);
 
-    auto p = res->new_state();
-    res->set_initial(p);
-    res->set_final(p);
-    auto x = p;
+    auto s = res->new_state();
+    res->set_initial(s);
+    res->set_final(s);
+    auto x = s;
     for (unsigned i = 1; i < n; ++i)
       {
         auto y = res->new_state();
         res->new_transition(x, y, a);
         res->new_transition(y, y, b);
         res->new_transition(y, y, c);
-        res->new_transition(y, p, c);
+        res->new_transition(y, s, c);
         x = y;
       }
-    res->new_transition(x, p, a);
+    res->new_transition(x, s, a);
     return res;
   }
 
