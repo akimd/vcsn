@@ -487,6 +487,9 @@ namespace vcsn
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut, bool keep_initials = false);
 
+    /// Create a partial identity transducer from \a aut.
+    automaton partial_identity(const automaton& aut);
+
     /// Create a prefix automaton from \a aut.
     automaton prefix(const automaton& aut);
 

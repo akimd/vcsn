@@ -534,6 +534,11 @@ struct automaton
     return vcsn::dyn::pair(val_, keep_initials);
   }
 
+  automaton partial_identity() const
+  {
+    return vcsn::dyn::partial_identity(val_);
+  }
+
   automaton prefix() const
   {
     return vcsn::dyn::prefix(val_);
@@ -1306,6 +1311,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("num_components", &automaton::num_components)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
+    .def("partial_identity", &automaton::partial_identity)
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)

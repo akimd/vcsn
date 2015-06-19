@@ -73,6 +73,7 @@ algo_headers =                                  \
   %D%/algos/multiply.hh                         \
   %D%/algos/normalize.hh                        \
   %D%/algos/pair.hh                             \
+  %D%/algos/partial-identity.hh                 \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/proper.hh                           \
