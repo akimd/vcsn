@@ -4,7 +4,8 @@
 #include <type_traits>
 
 #include <vcsn/misc/raise.hh> // pass
-#include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/tuple.hh> // tuple_element_t
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -36,27 +37,31 @@ namespace vcsn
     /// Composite iterator.
     struct iterator
     {
-      using iterators_t
-        = std::tuple<typename std::remove_reference<Maps>::type::const_iterator...>;
-      using values_t
-        = std::tuple<typename std::remove_reference<Maps>::type::value_type...>;
+      template <typename T>
+      using iterator_t = typename remove_reference_t<T>::const_iterator;
+      using iterators_t = std::tuple<iterator_t<Maps>...>;
+
+      template <typename T>
+      using value_t = typename remove_reference_t<T>::value_type;
+      using values_t = std::tuple<value_t<Maps>...>;
+
       // FIXME: we should be using ::reference, but I can't get it to
       // work with const.
-      using references_t
-        = std::tuple<const typename std::remove_reference<Maps>::type::value_type&...>;
-      using ranges_t
-        = std::tuple<std::pair<typename std::remove_reference<Maps>::type::const_iterator,
-                               typename std::remove_reference<Maps>::type::const_iterator>...>;
+      using references_t = std::tuple<const value_t<Maps>&...>;
+
+      template <typename T>
+      using range_t = std::pair<iterator_t<T>, iterator_t<T>>;
+      using ranges_t = std::tuple<range_t<Maps>...>;
+
       /// Common key type.
       using key_t
-        = typename std::remove_const<typename std::tuple_element<0, values_t>::type::first_type>::type;
+        = remove_const_t<typename tuple_element_t<0, values_t>::first_type>;
       /// Tuple of mapped types.
       using mapped_t
-        = std::tuple<const typename std::remove_reference<Maps>::type::mapped_type&...>;
+        = std::tuple<const typename remove_reference_t<Maps>::mapped_type&...>;
 
       iterator(zipped_maps& zip,
-               typename std::remove_reference<Maps>::type::const_iterator... is,
-               typename std::remove_reference<Maps>::type::const_iterator... ends)
+               iterator_t<Maps>... is, iterator_t<Maps>... ends)
         : zip_(zip)
         , is_(is...)
         , ends_(ends...)

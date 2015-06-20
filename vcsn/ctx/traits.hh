@@ -1,15 +1,15 @@
 #pragma once
 
 #include <memory>
-#include <type_traits>
+
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
 
   /// T without reference or const/volatile qualifiers.
   template <typename T>
-  using base_t
-    = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+  using base_t = remove_cv_t<remove_reference_t<T>>;
 
   /*------------------.
   | Computing types.  |

@@ -15,6 +15,15 @@ namespace vcsn
   template <typename T, typename U>
   using is_same_t = typename std::is_same<T, U>::type;
 
+  template <typename T>
+  using remove_const_t = typename std::remove_const<T>::type;
+
+  template <typename T>
+  using remove_cv_t = typename std::remove_cv<T>::type;
+
+  template <typename T>
+  using remove_reference_t = typename std::remove_reference<T>::type;
+
   namespace detail
   {
     // See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4502.pdf.

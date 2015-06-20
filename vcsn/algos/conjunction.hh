@@ -13,6 +13,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/expression.hh> // dyn::make_expression
+#include <vcsn/misc/tuple.hh> // tuple_element_t
 #include <vcsn/misc/vector.hh> // cross_tuple
 #include <vcsn/misc/zip-maps.hh>
 
@@ -74,8 +75,7 @@ namespace vcsn
 
       /// The type of the Ith input automaton, unqualified.
       template <size_t I>
-      using input_automaton_t
-        = base_t<typename std::tuple_element<I, automata_t>::type>;
+      using input_automaton_t = base_t<tuple_element_t<I, automata_t>>;
 
       using super_t::aut_;
 
