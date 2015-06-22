@@ -88,7 +88,7 @@ namespace vcsn
 
       void increment()
       {
-        (*this)++;
+        ++(*this);
       }
 
       void advance(std::size_t n)
