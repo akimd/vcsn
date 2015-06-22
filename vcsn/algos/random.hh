@@ -198,7 +198,7 @@ namespace vcsn
                                random_label(*ctx.labelset(), gen));
           }
       }
-    return std::move(res);
+    return res;
   }
 
   namespace dyn
