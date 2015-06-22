@@ -43,7 +43,7 @@ namespace vcsn
 
     template <typename LabelSet>
     using is_letterized_t =
-      std::integral_constant<bool, letterized_traits<LabelSet>::is_letterized>;
+      bool_constant<letterized_traits<LabelSet>::is_letterized>;
 
     template <typename LabelSet>
     letterized_t<LabelSet>

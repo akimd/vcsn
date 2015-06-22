@@ -4,8 +4,11 @@
 
 namespace vcsn
 {
-  // Wait for C++14.  GCC 4.8 does not yet have std::enable_if_t and
-  // the like.
+  /*---------.
+  | C++14.   |
+  `---------*/
+
+  // GCC 4.8 does not yet have std::enable_if_t and the like.
   template <bool B, typename T, typename U>
   using conditional_t = typename std::conditional<B, T, U>::type;
 
@@ -23,6 +26,13 @@ namespace vcsn
 
   template <typename T>
   using remove_reference_t = typename std::remove_reference<T>::type;
+
+  /*----------.
+  | C++ 17.   |
+  `----------*/
+
+  template <bool B>
+  using bool_constant = std::integral_constant<bool, B>;
 
   namespace detail
   {

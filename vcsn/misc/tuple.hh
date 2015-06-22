@@ -4,6 +4,7 @@
 #include <tuple>
 
 #include <vcsn/misc/functional.hh>
+#include <vcsn/misc/type_traits.hh> // bool_constant
 
 namespace vcsn
 {
@@ -347,14 +348,14 @@ namespace vcsn
   template<bool... B>
   constexpr bool any_()
   {
-    return detail::or_<std::integral_constant<bool, B>...>::value;
+    return detail::or_<bool_constant<B>...>::value;
   }
 
   // Static evaluation of the 'and' of the template parameters
   template<bool... B>
   constexpr bool all_()
   {
-    return detail::and_<std::integral_constant<bool, B>...>::value;
+    return detail::and_<bool_constant<B>...>::value;
   }
 
 

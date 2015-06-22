@@ -114,7 +114,7 @@ namespace vcsn
 
       value_t& normalize(value_t& res) const
       {
-        auto has_one = std::integral_constant<bool, context_t::has_one()>();
+        auto has_one = bool_constant<context_t::has_one()>();
         return normalize_(res, has_one);
       }
 
@@ -139,7 +139,7 @@ namespace vcsn
 
       value_t& denormalize(value_t& res) const
       {
-        auto has_one = std::integral_constant<bool, context_t::has_one()>();
+        auto has_one = bool_constant<context_t::has_one()>();
         return denormalize_(res, has_one);
       }
 
@@ -255,7 +255,7 @@ namespace vcsn
           res.polynomials[p.first]
             = ps_.conjunction(std::get<0>(p.second), std::get<1>(p.second));
 
-        auto has_one = std::integral_constant<bool, context_t::has_one()>();
+        auto has_one = bool_constant<context_t::has_one()>();
         conjunctions_with_one_(res, l, r, has_one);
         return res;
       }

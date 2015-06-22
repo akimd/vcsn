@@ -259,7 +259,7 @@ namespace vcsn
             else
               es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
           }
-        auto one = one_(std::integral_constant<bool, context_t::has_one()>());
+        auto one = one_(bool_constant<context_t::has_one()>());
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
           for (const auto& lm: std::get<0>(p.second))
             for (const auto& rm: std::get<1>(p.second))

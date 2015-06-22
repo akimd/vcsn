@@ -135,10 +135,9 @@ namespace dyn
     DEFINE::letter_class(const letter_class_t& cs, bool accept) const -> value_t
     {
       using labelset_t = labelset_t_of<expressionset_t>;
-      return letter_class_<labelset_t>(cs, accept,
-                                       std::is_same<labelset_t, vcsn::oneset>{},
-                                       std::integral_constant<bool,
-                                       labelset_t::is_expressionset()>{});
+      using is_one_t = std::is_same<labelset_t, vcsn::oneset>;
+      using is_expset_t = bool_constant<labelset_t::is_expressionset()>;
+      return letter_class_<labelset_t>(cs, accept, is_one_t{}, is_expset_t{});
     }
 
     template <typename ExpSet>
@@ -151,7 +150,7 @@ namespace dyn
                                                  std::true_type) const
       -> value_t
     {
-      raise("not implemented");
+      raise("letter_class: not implemented (is_expressionset)");
     }
 
     template <typename ExpSet>
@@ -171,7 +170,7 @@ namespace dyn
       using label_t = typename labelset_t::value_t;
       using letter_t = typename labelset_t::letter_t;
 
-      std::set<std::pair<letter_t, letter_t>> ccs;
+      auto ccs = std::set<std::pair<letter_t, letter_t>>{};
       for (auto cc: chars)
         {
           // Yes, this is ugly: to convert an std::string into a

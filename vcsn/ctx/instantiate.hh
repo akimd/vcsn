@@ -364,8 +364,7 @@ namespace vcsn
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 
-        using is_free_t
-          = std::integral_constant<bool, ctx_t::labelset_t::is_free()>;
+        using is_free_t = bool_constant<ctx_t::labelset_t::is_free()>;
         register_functions_is_free<ctx_t>(is_free_t());
 
         return register_kind_functions<ctx_t>(typename ctx_t::kind_t());
