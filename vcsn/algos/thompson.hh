@@ -35,6 +35,7 @@ namespace vcsn
       static_assert(labelset_t_of<Aut>::has_one(),
                     "thompson: requires nullable labels");
 
+      /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "thompson"; }
 
       /// Build an automaton of context \a ctx.

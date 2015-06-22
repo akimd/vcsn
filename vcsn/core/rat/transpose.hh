@@ -12,6 +12,8 @@ namespace vcsn
     | transpose(expression).   |
     `-------------------------*/
 
+    /// A visitor to create a transposed expression,
+    ///
     /// \tparam ExpSet  the expression set.
     template <typename ExpSet>
     class transposer
@@ -21,6 +23,9 @@ namespace vcsn
       using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
       using super_t = typename expressionset_t::const_visitor;
+
+      /// Name of this algorithm, for error messages.
+      constexpr static const char* me() { return "transpose"; }
 
       transposer(const expressionset_t& rs)
         : rs_{rs}
@@ -44,6 +49,7 @@ namespace vcsn
         return res;
       }
 
+    private:
       VCSN_RAT_VISIT(zero,)
       {
         res_ = rs_.zero();

@@ -40,6 +40,7 @@ namespace vcsn
 
       using super_t = typename ExpSet::const_visitor;
 
+      /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "star_normal_form"; }
 
       /// The type of the operator.

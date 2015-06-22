@@ -8,7 +8,6 @@ namespace vcsn
   {
 #define VISIT(Type, Name)                                       \
     template <typename Context>                                 \
-    inline                                                      \
     void                                                        \
     const_visitor<Context>::visit(const Type ## _t& Name)
 
@@ -67,13 +66,13 @@ namespace vcsn
       v.sub()->accept(*this);
     }
 
-    VISIT(one, )
+    VISIT(one,)
     {}
 
-    VISIT(zero, )
+    VISIT(zero,)
     {}
 
-    VISIT(atom, )
+    VISIT(atom,)
     {}
 
 #undef VISIT

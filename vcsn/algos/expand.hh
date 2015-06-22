@@ -55,6 +55,7 @@ namespace vcsn
          return res;
       }
 
+    private:
       /// Syntactic sugar: recursive call to this visitor.
       polynomial_t expand(const expression_t& e)
       {

@@ -41,74 +41,61 @@ namespace vcsn
       }
 
     private:
+      /// Easy recursion.
+      out_value_t copy(const in_value_t& v)
+      {
+        v->accept(*this);
+        return res_;
+      }
+
       /// Factor the copy of n-ary operations.
       template <exp::type_t Type>
       void
-      copy_unary(const unary_t<Type>& v)
+      copy_(const unary_t<Type>& v)
       {
-        using out_unary_t = typename out_expressionset_t::template unary_t<Type>;
+        using out_unary_t
+          = typename out_expressionset_t::template unary_t<Type>;
         res_ = std::make_shared<out_unary_t>(copy(v.sub()));
       }
 
       /// Factor the copy of n-ary operations.
       template <exp::type_t Type>
       void
-      copy_variadic(const variadic_t<Type>& v)
+      copy_(const variadic_t<Type>& v)
       {
-        using out_variadic_t = typename out_expressionset_t::template variadic_t<Type>;
+        using out_variadic_t
+          = typename out_expressionset_t::template variadic_t<Type>;
         typename out_expressionset_t::values_t sub;
         for (auto s: v)
           sub.emplace_back(copy(s));
         res_ = std::make_shared<out_variadic_t>(sub);
       }
 
-      out_value_t
-      copy(const in_value_t& v)
-      {
-        v->accept(*this);
-        return res_;
-      }
+      VCSN_RAT_VISIT(complement, v)   { copy_(v); }
+      VCSN_RAT_VISIT(conjunction, v)  { copy_(v); }
+      VCSN_RAT_VISIT(ldiv, v)         { copy_(v); }
+      VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
+      VCSN_RAT_VISIT(prod, v)         { copy_(v); }
+      VCSN_RAT_VISIT(shuffle, v)      { copy_(v); }
+      VCSN_RAT_VISIT(star, v)         { copy_(v); }
+      VCSN_RAT_VISIT(sum, v)          { copy_(v); }
+      VCSN_RAT_VISIT(transposition, v){ copy_(v); }
+      VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 
-#define DEFINE(Type)                                    \
-      using Type ## _t = typename super_t::Type ## _t;  \
-      virtual void visit(const Type ## _t& v)
-
-      DEFINE(conjunction)  { copy_variadic(v); }
-      DEFINE(ldiv)         { copy_variadic(v); }
-      DEFINE(prod)         { copy_variadic(v); }
-      DEFINE(shuffle)      { copy_variadic(v); }
-      DEFINE(sum)          { copy_variadic(v); }
-
-      DEFINE(complement)   { copy_unary(v); }
-      DEFINE(star)         { copy_unary(v); }
-      DEFINE(transposition){ copy_unary(v); }
-
-      DEFINE(one)
-      {
-        (void) v;
-        res_ = out_rs_.one();
-      }
-
-      DEFINE(zero)
-      {
-        (void) v;
-        res_ = out_rs_.zero();
-      }
-
-      DEFINE(atom)
+      VCSN_RAT_VISIT(atom, v)
       {
         res_ = out_rs_.atom(out_rs_.labelset()->conv(*in_rs_.labelset(),
                                                      v.value()));
       }
 
-      DEFINE(lweight)
+      VCSN_RAT_VISIT(lweight, v)
       {
         res_ = out_rs_.lmul(out_rs_.weightset()->conv(*in_rs_.weightset(),
                                                       v.weight()),
                             copy(v.sub()));
       }
 
-      DEFINE(rweight)
+      VCSN_RAT_VISIT(rweight, v)
       {
         res_ = out_rs_.rmul(copy(v.sub()),
                             out_rs_.weightset()->conv(*in_rs_.weightset(),
@@ -116,7 +103,6 @@ namespace vcsn
       }
 
 
-#undef DEFINE
       /// expressionset to decode the input value.
       const in_expressionset_t& in_rs_;
       /// expressionset to build the output value.

@@ -34,59 +34,6 @@ namespace vcsn
     DEFINE::visit(const Type ## _t& v)         \
     -> void
 
-    VISIT(sum)
-    {
-      ++sum;
-      for (const auto& c: v)
-        c->accept(*this);
-    }
-
-    VISIT(prod)
-    {
-      ++prod;
-      for (const auto& c: v)
-        c->accept(*this);
-    }
-
-    VISIT(conjunction)
-    {
-      ++conjunction;
-      for (const auto& c: v)
-        c->accept(*this);
-    }
-
-    VISIT(shuffle)
-    {
-      ++shuffle;
-      for (const auto& c: v)
-        c->accept(*this);
-    }
-
-
-    VISIT(ldiv)
-    {
-      ++ldiv;
-      for (const auto& c: v)
-        c->accept(*this);
-    }
-
-    VISIT(star)
-    {
-      ++star;
-      v.sub()->accept(*this);
-    }
-
-    VISIT(complement)
-    {
-      ++complement;
-      v.sub()->accept(*this);
-    }
-
-    VISIT(transposition)
-    {
-      ++transposition;
-      v.sub()->accept(*this);
-    }
 
     VISIT(zero)
     {

@@ -181,6 +181,7 @@ namespace vcsn
 
       using super_t = typename expressionset_t::const_visitor;
 
+      /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "standard"; }
 
       standard_visitor(const expressionset_t& rs)
@@ -196,6 +197,7 @@ namespace vcsn
         return res_;
       }
 
+    private:
       VCSN_RAT_UNSUPPORTED(complement)
       VCSN_RAT_UNSUPPORTED(conjunction)
       VCSN_RAT_UNSUPPORTED(ldiv)

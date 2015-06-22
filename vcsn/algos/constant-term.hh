@@ -30,6 +30,7 @@ namespace vcsn
 
       using super_t = typename expressionset_t::const_visitor;
 
+      /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "constant_term"; }
 
       constant_term_visitor(const expressionset_t& rs)

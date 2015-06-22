@@ -25,6 +25,9 @@ namespace vcsn
       using weight_node_t = typename super_t::template weight_node_t<Type>;
       using leaf_t = typename super_t::leaf_t;
 
+      /// Name of this algorithm, for error messages.
+      constexpr static const char* me() { return "hash"; }
+
       /// Entry point: return the hash of \a v.
       size_t
       operator()(const node_t& v)
@@ -43,25 +46,20 @@ namespace vcsn
 
     private:
 
-#define DEFINE(Type)                                    \
-      using Type ## _t = typename super_t::Type ## _t;  \
-      virtual void visit(const Type ## _t& v)
+      VCSN_RAT_VISIT(atom, v);
+      VCSN_RAT_VISIT(complement, v)   { visit_unary(v); }
+      VCSN_RAT_VISIT(conjunction, v)  { visit_variadic(v); }
+      VCSN_RAT_VISIT(ldiv, v)         { visit_variadic(v); }
+      VCSN_RAT_VISIT(lweight, v);
+      VCSN_RAT_VISIT(one, v)          { visit_nullary(v); }
+      VCSN_RAT_VISIT(prod, v)         { visit_variadic(v); }
+      VCSN_RAT_VISIT(rweight, v);
+      VCSN_RAT_VISIT(shuffle, v)      { visit_variadic(v); }
+      VCSN_RAT_VISIT(star, v)         { visit_unary(v); }
+      VCSN_RAT_VISIT(sum, v)          { visit_variadic(v); }
+      VCSN_RAT_VISIT(transposition, v){ visit_unary(v); }
+      VCSN_RAT_VISIT(zero, v)         { visit_nullary(v); }
 
-      DEFINE(atom);
-      DEFINE(complement)   { visit_unary(v); }
-      DEFINE(conjunction)  { visit_variadic(v); }
-      DEFINE(ldiv)         { visit_variadic(v); }
-      DEFINE(lweight);
-      DEFINE(one)          { visit_nullary(v); }
-      DEFINE(prod)         { visit_variadic(v); }
-      DEFINE(rweight);
-      DEFINE(shuffle)      { visit_variadic(v); }
-      DEFINE(star)         { visit_unary(v); }
-      DEFINE(sum)          { visit_variadic(v); }
-      DEFINE(transposition){ visit_unary(v); }
-      DEFINE(zero)         { visit_nullary(v); }
-
-#undef DEFINE
 
       /// Update res_ by hashing the node type; this is needed for any node.
       void combine_type(const node_t& node);

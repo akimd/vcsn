@@ -62,6 +62,7 @@ namespace vcsn
          return res;
       }
 
+    private:
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(transposition)
 

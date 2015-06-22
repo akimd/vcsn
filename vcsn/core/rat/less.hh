@@ -1,9 +1,12 @@
 #pragma once
 
-#include <vcsn/misc/cast.hh>
+#include <boost/range/algorithm/lexicographical_compare.hpp>
 
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/core/rat/size.hh>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/misc/cast.hh>
+#include <vcsn/misc/functional.hh> // vcsn::less
 
 namespace vcsn
 {
@@ -56,32 +59,31 @@ namespace vcsn
           }
       }
 
+    private:
       /*-----------------------------------------------------------.
       | Unary visit functions than bounces to their binary peers.  |
       `-----------------------------------------------------------*/
 
-#define VISIT(Type)                                                     \
-      using Type ## _t = typename super_t::Type ## _t;                  \
-      virtual void                                                      \
-      visit(const Type ## _t& lhs)                                      \
+#define DEFINE(Type)                                                    \
+      VCSN_RAT_VISIT(Type, lhs)                                         \
       {                                                                 \
         res_ = less_(lhs, *down_pointer_cast<const Type ## _t>(rhs_));  \
       }
 
-      VISIT(atom);
-      VISIT(complement);
-      VISIT(conjunction);
-      VISIT(ldiv);
-      VISIT(lweight);
-      VISIT(one);
-      VISIT(prod);
-      VISIT(rweight);
-      VISIT(shuffle);
-      VISIT(star);
-      VISIT(sum);
-      VISIT(transposition);
-      VISIT(zero);
-#undef VISIT
+      DEFINE(atom);
+      DEFINE(complement);
+      DEFINE(conjunction);
+      DEFINE(ldiv);
+      DEFINE(lweight);
+      DEFINE(one);
+      DEFINE(prod);
+      DEFINE(rweight);
+      DEFINE(shuffle);
+      DEFINE(star);
+      DEFINE(sum);
+      DEFINE(transposition);
+      DEFINE(zero);
+#undef DEFINE
 
       /*-------------------------------------------------------.
       | Binary functions that compare two nodes of same type.  |
@@ -105,6 +107,7 @@ namespace vcsn
       template <rat::exp::type_t Type>
       bool less_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
       {
+        using boost::range::lexicographical_compare;
         auto ls = lhs.size();
         auto rs = rhs.size();
         if (ls < rs)
@@ -112,12 +115,8 @@ namespace vcsn
         else if (rs < ls)
           return false;
         else
-          for (size_t i = 0; i < ls; ++i)
-            if (expressionset_t::less(lhs[i], rhs[i]))
-              return true;
-            else if (expressionset_t::less(rhs[i], lhs[i]))
-              return false;
-        return false;
+          return lexicographical_compare(lhs, rhs,
+                                         vcsn::less<expressionset_t>{});
       }
 
       template <rat::exp::type_t Type>

@@ -39,6 +39,9 @@ namespace vcsn
       using variadic_t = typename super_t::template variadic_t<Type>;
       using leaf_t = typename super_t::leaf_t;
 
+      /// Name of this algorithm, for error messages.
+      constexpr static const char* me() { return "print"; }
+
       printer(const expressionset_t& rs,
               std::ostream& out,
               const bool debug = !!getenv("VCSN_PARENS"));
@@ -57,26 +60,21 @@ namespace vcsn
       }
 
     private:
+      VCSN_RAT_VISIT(atom, v);
+      VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
+      VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
+      VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
+      VCSN_RAT_VISIT(lweight, v);
+      VCSN_RAT_VISIT(one, v);
+      VCSN_RAT_VISIT(prod, v)          { print_(v, product_); }
+      VCSN_RAT_VISIT(rweight, v);
+      VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
+      VCSN_RAT_VISIT(star, v)          { print_(v, star_); }
+      VCSN_RAT_VISIT(sum, v)           { print_sum_(v); }
+      VCSN_RAT_VISIT(transposition, v) { print_(v, transposition_); }
+      VCSN_RAT_VISIT(zero, v);
 
-# define DEFINE(Type)                                        \
-      using Type ## _t = typename super_t::Type ## _t;       \
-      virtual void visit(const Type ## _t& v)
 
-      DEFINE(atom);
-      DEFINE(complement)    { print_(v, complement_); }
-      DEFINE(conjunction)   { print_(v, conjunction_); }
-      DEFINE(ldiv)          { print_(v, ldiv_); }
-      DEFINE(lweight);
-      DEFINE(one);
-      DEFINE(prod)          { print_(v, product_); }
-      DEFINE(rweight);
-      DEFINE(shuffle)       { print_(v, shuffle_); }
-      DEFINE(star)          { print_(v, star_); }
-      DEFINE(sum)           { print_sum_(v); }
-      DEFINE(transposition) { print_(v, transposition_); }
-      DEFINE(zero);
-
-# undef DEFINE
 
       /// Whether \a v is an atom whose label is a letter.
       bool is_letter_(const node_t& v) const
