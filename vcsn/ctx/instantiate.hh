@@ -6,10 +6,12 @@
 #include <vcsn/algos/cerny.hh>
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/constant-term.hh>
+#include <vcsn/algos/constant.hh>
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/de-bruijn.hh>
 #include <vcsn/algos/derivation.hh>
 #include <vcsn/algos/derived-term.hh>
+#include <vcsn/algos/divide.hh>
 #include <vcsn/algos/divkbaseb.hh>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/double-ring.hh>
@@ -300,12 +302,16 @@ namespace vcsn
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(coaccessible, aut_t);
         REGISTER(complement_expression, rs_t);
+        REGISTER(concatenate_expression, rs_t, rs_t);
         REGISTER(conjunction_expression, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
         REGISTER(context_of_expression, rs_t);
+        REGISTER(context_of_expressionset, rs_t);
         REGISTER(derived_term, rs_t, const std::string);
         REGISTER(expand, rs_t);
+        REGISTER(expression_one, ctx_t, rat::identities);
+        REGISTER(expression_zero, ctx_t, rat::identities);
         REGISTER(identities, rs_t);
         REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
@@ -318,6 +324,7 @@ namespace vcsn
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_expression, rs_t);
+        REGISTER(ldiv_expression, rs_t, rs_t);
         REGISTER(left_mult, ws_t, aut_t);
         REGISTER(left_mult_expression, ws_t, rs_t);
         REGISTER(less_than_expression, rs_t, rs_t);
@@ -341,11 +348,13 @@ namespace vcsn
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(push_weights, aut_t);
         REGISTER(random_automaton, ctx_t, unsigned, float, unsigned, unsigned);
+        REGISTER(rdiv_expression, rs_t, rs_t);
         REGISTER(read_label, ctx_t, std::istream);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
         REGISTER(right_mult_expression, rs_t, ws_t);
+        REGISTER(shuffle_expression, rs_t, rs_t);
         REGISTER(sort, aut_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);

@@ -21,6 +21,7 @@ algo_headers =                                  \
   %D%/algos/compose.hh                          \
   %D%/algos/conjunction.hh                      \
   %D%/algos/constant-term.hh                    \
+  %D%/algos/constant.hh                         \
   %D%/algos/copy.hh                             \
   %D%/algos/de-bruijn.hh                        \
   %D%/algos/derivation.hh                       \

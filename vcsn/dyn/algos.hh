@@ -88,6 +88,11 @@ namespace vcsn
     /// The composition of transducers \a lhs and \a rhs.
     automaton compose(automaton& lhs, automaton& rhs);
 
+    /// Concatenate two expressions.
+    ///
+    /// Do not use this routine, see multiply instead.
+    expression concatenate(const expression& lhs, const expression& rhs);
+
     /// The condensation of \a aut such that each state is a strongly
     /// connected component.
     automaton condense(const automaton& aut);
@@ -117,6 +122,9 @@ namespace vcsn
 
     /// The context of this expression.
     context context_of(const expression& r);
+
+    /// The context of this expressionset.
+    context context_of(const expressionset& rs);
 
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
@@ -228,6 +236,12 @@ namespace vcsn
     /// Distribute product over addition recursively under the starred
     /// subexpressions and group the equal monomials.
     expression expand(const expression& e);
+
+    /// The expression for `\e`.
+    expression expression_one(const context& c, rat::identities ids);
+
+    /// The expression for `\z`.
+    expression expression_zero(const context& c, rat::identities ids);
 
     /// Create a factor automaton from \a aut.
     automaton factor(const automaton& aut);
@@ -379,6 +393,9 @@ namespace vcsn
     /// Left-division of two polynomials (lhs \ rhs).
     polynomial ldiv(const polynomial& lhs, const polynomial& rhs);
 
+    /// Left-division of two expressions (lhs \ rhs).
+    expression ldiv(const expression& lhs, const expression& rhs);
+
     /// Left greatest common divisor of two polynomials (lhs \ rhs).
     polynomial lgcd(const polynomial& lhs, const polynomial& rhs);
 
@@ -388,7 +405,7 @@ namespace vcsn
     automaton left_mult(const weight& w, const automaton& aut);
 
     /// The left-multiplication of an expression with \a w as weight.
-    expression left_mult(const weight& w, const expression& aut);
+    expression left_mult(const weight& w, const expression& exp);
 
     /// Ordering between expressions.
     bool less_than(const expression& lhs, const expression& rhs);
@@ -555,6 +572,9 @@ namespace vcsn
     ///    The number of states wanted in the automata (>0).
     automaton random_automaton_deterministic(const context& ctx,
                                              unsigned num_states);
+
+    /// Right-division of two expressions (lhs \ rhs).
+    expression rdiv(const expression& lhs, const expression& rhs);
 
     /// Read an automaton from a stream.
     /// \param is      the input stream.

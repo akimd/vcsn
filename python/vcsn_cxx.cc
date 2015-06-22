@@ -889,6 +889,11 @@ struct expression
     return vcsn::dyn::is_valid(val_);
   }
 
+  expression ldiv(const expression& rhs) const
+  {
+    return vcsn::dyn::ldiv(val_, rhs.val_);
+  }
+
   expression left_mult(const weight& w) const;
 
   bool less_than(const expression& rhs) const
@@ -920,6 +925,11 @@ struct expression
   expression multiply(int min) const
   {
     return multiply(min, min);
+  }
+
+  expression rdiv(const expression& rhs) const
+  {
+    return vcsn::dyn::rdiv(val_, rhs.val_);
   }
 
   expression right_mult(const weight& w) const;

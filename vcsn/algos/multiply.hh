@@ -233,6 +233,26 @@ namespace vcsn
     }
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (concatenate).
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      expression
+      concatenate_expression(const expression& lhs, const expression& rhs)
+      {
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
+        auto rs = vcsn::join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        auto res = rs.concat(lr, rr);
+        return make_expression(rs, res);
+      }
+    }
+  }
+
 
   /*----------------------------------.
   | multiply(expression, min, max).   |

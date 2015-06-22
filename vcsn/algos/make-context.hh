@@ -75,6 +75,15 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>().expressionset();
         return dyn::make_context(e.context());
       }
+
+      /// Bridge (context_of).
+      template <typename ExpSet>
+      context
+      context_of_expressionset(const expressionset& rs)
+      {
+        const auto& es = rs->as<ExpSet>();
+        return dyn::make_context(es.expressionset().context());
+      }
     }
   }
 
@@ -113,7 +122,7 @@ namespace vcsn
       make_expressionset(const context& ctx, ::vcsn::rat::identities ids)
       {
         const auto& c = ctx->as<Ctx>();
-        return ::vcsn::dyn::make_expressionset(::vcsn::expressionset<Ctx>(c, ids));
+        return ::vcsn::dyn::make_expressionset(::vcsn::make_expressionset(c, ids));
       }
     }
   }
