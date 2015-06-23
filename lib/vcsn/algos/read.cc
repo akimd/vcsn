@@ -3,6 +3,7 @@
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/rat/read.hh> // rat::read
 #include <vcsn/algos/read.hh>
+#include <vcsn/core/rat/expressionset.hh> // make_expressionset
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/registers.hh>
@@ -47,13 +48,13 @@ namespace vcsn
     `-------------------*/
 
     expression
-    read_expression(const expressionset& rs, std::istream& is,
-                    const std::string& t)
+    read_expression(const context& ctx, rat::identities ids,
+                    std::istream& is, const std::string& f)
     {
-      if (t == "text" || t == "default" || t == "")
-        return rat::read(rs, is);
+      if (f == "text" || f == "default" || f == "")
+        return rat::read(ctx, ids, is);
       else
-        raise("invalid expression input format: ", t);
+        raise("invalid expression input format: ", f);
     }
 
 

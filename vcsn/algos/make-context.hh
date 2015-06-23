@@ -6,7 +6,6 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/expressionset.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -75,15 +74,6 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>().expressionset();
         return dyn::make_context(e.context());
       }
-
-      /// Bridge (context_of).
-      template <typename ExpSet>
-      context
-      context_of_expressionset(const expressionset& rs)
-      {
-        const auto& es = rs->as<ExpSet>();
-        return dyn::make_context(es.expressionset().context());
-      }
     }
   }
 
@@ -107,25 +97,6 @@ namespace vcsn
   }
 
 
-
-  /*----------------------.
-  | make_expressionset.   |
-  `----------------------*/
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Ctx, typename Identities>
-      expressionset
-      make_expressionset(const context& ctx, ::vcsn::rat::identities ids)
-      {
-        const auto& c = ctx->as<Ctx>();
-        return ::vcsn::dyn::make_expressionset(::vcsn::make_expressionset(c, ids));
-      }
-    }
-  }
 
   /*--------------------.
   | make_word_context.  |

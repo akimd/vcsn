@@ -123,17 +123,15 @@ namespace vcsn
     /// The context of this expression.
     context context_of(const expression& r);
 
-    /// The context of this expressionset.
-    context context_of(const expressionset& rs);
-
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
 
     /// A copy of \a aut converted to context \a ctx.
     automaton copy(const automaton& aut, const context& ctx);
 
-    /// Copy of \a exp, but built with \a rs.
-    expression copy(const expression& exp, const expressionset& rs);
+    /// Copy of \a exp, but built with \a ctx.
+    expression copy(const expression& exp,
+                    const context& ctx, rat::identities ids);
 
     /// A standardized transpositive \a a.
     automaton costandard(const automaton& a);
@@ -433,13 +431,6 @@ namespace vcsn
     /// Build an automatonset from its context.
     automaton_editor* make_automaton_editor(const context& ctx);
 
-    /// Build an expressionset from its context.
-    ///
-    /// \param ctx  the context
-    /// \param ids  the identities to apply
-    expressionset make_expressionset(const context& ctx,
-                                     rat::identities ids = {});
-
     /// The context for words.
     context make_word_context(const context& ctx);
 
@@ -583,10 +574,12 @@ namespace vcsn
 
     /// Read an expression from a stream.
     ///
-    /// \param rs      the expressionset.
+    /// \param ctx     the context.
+    /// \param ids     the identities to apply.
     /// \param is      the input stream.
     /// \param format  the expression's format.
-    expression read_expression(const expressionset& rs, std::istream& is,
+    expression read_expression(const context& ctx, rat::identities ids,
+                               std::istream& is,
                                const std::string& format = "default");
 
     /// Read a label from a stream.
@@ -802,9 +795,6 @@ namespace std LIBVCSN_API
 
   /// Output expansion \a e on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expansion& e);
-
-  /// Output expression \a e on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expression& e);
 
   /// Output label \a l on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::label& l);

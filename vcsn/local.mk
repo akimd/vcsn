@@ -175,8 +175,6 @@ nobase_include_HEADERS =                        \
   %D%/dyn/context.hh                            \
   %D%/dyn/expansion.hh                          \
   %D%/dyn/expression.hh                         \
-  %D%/dyn/expressionset.hh                      \
-  %D%/dyn/expressionset.hxx                     \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/label.hh                              \
   %D%/dyn/polynomial.hh                         \

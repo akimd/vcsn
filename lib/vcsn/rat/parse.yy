@@ -60,10 +60,10 @@
 
 %code
 {
-  #include <vcsn/dyn/expressionset.hh>
-  #include <vcsn/dyn/algos.hh>
   #include <lib/vcsn/rat/driver.hh>
   #include <lib/vcsn/rat/scan.hh>
+  #include <vcsn/dyn/algos.hh>
+  #include <vcsn/misc/stream.hh>
 
   namespace vcsn
   {
@@ -83,7 +83,7 @@
       /// Get the identities of the driver.
       identities ids(const driver& d)
       {
-        return d.expressionset()->identities();
+        return d.identities();
       }
 
       /// From a string, generate an expression.

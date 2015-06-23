@@ -13,8 +13,8 @@
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/algos.hh> // dyn::read_expression
+#include <vcsn/dyn/context.hh> // dyn::make_context
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/expressionset.hh> // dyn::make_expressionset
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
@@ -826,10 +826,11 @@ namespace vcsn
   DEFINE::conv(std::istream& is) const
     -> value_t
   {
-    // Our expression parser is written in dyn::.  So we have to build
-    // the dyn::expressionset, and use it to parse the expression, and
-    // then downcast it.
-    auto dynres = dyn::read_expression(dyn::make_expressionset(self()), is);
+    // Our expression parser is written in dyn::, so we get a
+    // dyn::expression that we down_cast.
+    auto dynres
+      = dyn::read_expression(dyn::make_context(context()), identities(),
+                             is);
     const auto& res = dynres->template as<self_t>();
     return res.expression();
   }

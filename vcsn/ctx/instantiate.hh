@@ -307,7 +307,6 @@ namespace vcsn
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
         REGISTER(context_of_expression, rs_t);
-        REGISTER(context_of_expressionset, rs_t);
         REGISTER(derived_term, rs_t, const std::string);
         REGISTER(expand, rs_t);
         REGISTER(expression_one, ctx_t, rat::identities);
@@ -331,7 +330,6 @@ namespace vcsn
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);
-        REGISTER(make_expressionset, ctx_t, rat::identities);
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply, aut_t, aut_t);

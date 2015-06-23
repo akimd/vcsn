@@ -1,44 +1,38 @@
 #include <cstring> // strerror
 #include <sstream>
 
-#include <vcsn/dyn/algos.hh> // make_expressionset.
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
-
 #include <lib/vcsn/rat/scan.hh>
+#include <vcsn/dyn/algos.hh> // make_context
 
 namespace vcsn
 {
   namespace rat
   {
 
-    driver::driver(const dyn::expressionset& rs)
+    driver::driver(const dyn::context& ctx, rat::identities ids)
       : scanner_(new yyFlexLexer)
-    {
-      expressionset(rs);
-    }
+      , ctx_(ctx)
+      , ids_(ids)
+    {}
 
     driver::~driver()
     {}
 
-    dyn::expressionset driver::expressionset() const
-    {
-      return expressionset_;
-    }
-
-    void driver::expressionset(const dyn::expressionset& rs)
-    {
-      expressionset_ = rs;
-    }
-
     dyn::context driver::context() const
     {
-      return dyn::context_of(expressionset_);
+      return ctx_;
     }
 
     void driver::context(const std::string& ctx)
     {
-      expressionset(dyn::make_expressionset(dyn::make_context(ctx)));
+      ctx_ = dyn::make_context(ctx);
+    }
+
+    rat::identities driver::identities() const
+    {
+      return ids_;
     }
 
     void driver::error(const location& l, const std::string& m)

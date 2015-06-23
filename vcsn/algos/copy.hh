@@ -9,7 +9,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/expression.hh>
-#include <vcsn/dyn/expressionset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/unordered_set.hh>
@@ -303,17 +302,19 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (copy).
-      template <typename InExpSet, typename OutExpSet = InExpSet>
+      template <typename ExpSet, typename Context, typename Identities>
       inline
       expression
-      copy_expression(const expression& exp, const expressionset& out_rs)
+      copy_expression(const expression& exp,
+                      const context& ctx, rat::identities ids)
       {
-        const auto& r = exp->as<InExpSet>();
-        const auto& ors = out_rs->as<OutExpSet>().expressionset();
+        const auto& r = exp->as<ExpSet>();
+        const auto& c = ctx->as<Context>();
+        const auto& rs = make_expressionset(c, ids);
 
-        return make_expression(ors,
-                           ::vcsn::rat::copy(r.expressionset(), ors,
-                                             r.expression()));
+        return make_expression(rs,
+                               ::vcsn::rat::copy(r.expressionset(), rs,
+                                                 r.expression()));
       }
     }
   }

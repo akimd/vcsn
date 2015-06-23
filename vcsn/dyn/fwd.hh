@@ -76,15 +76,6 @@ namespace vcsn
     }
     using expression = std::shared_ptr<detail::expression_base>;
 
-    // vcsn/dyn/expressionset.hh
-    namespace detail
-    {
-      class expressionset_base;
-      template <typename ExpSet>
-      class expressionset_wrapper;
-    }
-    using expressionset = std::shared_ptr<const detail::expressionset_base>;
-
     // vcsn/dyn/weight.hh.
     namespace detail
     {

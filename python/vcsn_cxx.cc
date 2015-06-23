@@ -789,11 +789,10 @@ struct expression
   {}
 
   expression(const context& ctx, const std::string& r,
-             vcsn::rat::identities i)
+             vcsn::rat::identities ids)
   {
     std::istringstream is(r);
-    auto rs = vcsn::dyn::make_expressionset(ctx.val_, i);
-    val_ = vcsn::dyn::read_expression(rs, is);
+    val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -813,8 +812,7 @@ struct expression
   expression as_(const ::context& ctx, vcsn::rat::identities ids = {})
   {
     // The destination expressionset.
-    auto rs = vcsn::dyn::make_expressionset((ctx ? ctx : context()).val_, ids);
-    return vcsn::dyn::copy(val_, rs);
+    return vcsn::dyn::copy(val_, (ctx ? ctx : context()).val_, ids);
   }
 
   /// Same expression/series, but in context \a ctx, with expression
