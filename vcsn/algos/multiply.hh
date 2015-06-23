@@ -270,23 +270,16 @@ namespace vcsn
       {
         res = rs.star(r);
         if (min)
-          res = rs.mul(multiply(rs, r, min, min), res);
+          res = rs.mul(rs.power(r, min), res);
       }
     else
       {
-        if (min == 0)
-          res = rs.one();
-        else
-          {
-            res = r;
-            for (int n = 1; n < min; ++n)
-              res = rs.mul(res, r);
-          }
+        res = rs.power(r, min);
         if (min < max)
           {
             typename ExpSet::value_t sum = rs.one();
             for (int n = 1; n <= max - min; ++n)
-              sum = rs.add(sum, multiply(rs, r, n, n));
+              sum = rs.add(sum, rs.power(r, n));
             res = rs.mul(res, sum);
           }
       }
