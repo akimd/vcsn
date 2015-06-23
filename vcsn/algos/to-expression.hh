@@ -3,6 +3,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/core/rat/expression.hh>
+#include <vcsn/dyn/label.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/vector.hh>
 
@@ -313,6 +314,18 @@ namespace vcsn
         // Merely just a validation so far.
         getargs("algorithm", map, algo);
         return make_expression(rs, ::vcsn::to_expression_naive(a, ids));
+      }
+
+      /// Bridge (to_expression).
+      template <typename Context, typename Identities, typename Label>
+      expression
+      to_expression_label(const context& ctx, rat::identities ids,
+                          const label& lbl)
+      {
+        const auto& c = ctx->as<Context>();
+        const auto& l = lbl->as<Label>();
+        auto rs = vcsn::make_expressionset(c, ids);
+        return make_expression(rs, rs.atom(l.label()));
       }
     }
   }

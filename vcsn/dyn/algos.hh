@@ -727,6 +727,10 @@ namespace vcsn
                              ::vcsn::rat::identities ids = {},
                              const std::string& algo = "auto");
 
+    /// An expression denoting the label of \a l.
+    expression to_expression(const context& ctx, rat::identities ids,
+                             const label& l);
+
     /// Transpose \a aut.
     automaton transpose(automaton& aut);
 
