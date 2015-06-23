@@ -1,12 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <set>
 
-// Beware that this file is dangerous, as it prevents automatic
-// instantiation of these algos.  It exists only to solve mutual
-// dependencies (e.g.: proper uses is-valid which uses proper).
+// This file is dangerous, it prevents automatic instantiation of
+// these algos.  It exists only to solve mutual dependencies (e.g.:
+// proper uses is-valid which uses proper).
 //
-// FIXME: We should resolve these issues in some other way.
+// FIXME: Solve these issues in some other way.
 
 namespace vcsn
 {
@@ -83,4 +84,7 @@ namespace vcsn
   template <typename Aut>
   using transpose_automaton
     = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
+
+  /// A set of letter ranges.
+  using letter_class_t = std::set<std::pair<std::string, std::string>>;
 }

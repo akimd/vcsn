@@ -367,6 +367,7 @@ namespace vcsn
         REGISTER(thompson, rs_t);
         REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, rat::identities, const std::string);
+        REGISTER(to_expression_class, ctx_t, rat::identities, const letter_class_t, bool);
         REGISTER(to_expression_label, ctx_t, rat::identities, ls_t);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_expression, rs_t);

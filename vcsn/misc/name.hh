@@ -3,6 +3,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -78,23 +79,23 @@ namespace vcsn
   struct snamer<std::shared_ptr<T>>: snamer<T>
   {};
 
-#define DEFINE(Type)                            \
+#define DEFINE(...)                             \
   template <>                                   \
-  struct snamer<Type>                           \
+  struct snamer<__VA_ARGS__>                    \
   {                                             \
     symbol operator()()                         \
     {                                           \
-      symbol res(#Type);                        \
+      symbol res(#__VA_ARGS__);                 \
       return res;                               \
     }                                           \
   };                                            \
                                                 \
   template <>                                   \
-  struct vnamer<Type>                           \
+  struct vnamer<__VA_ARGS__>                    \
   {                                             \
-    symbol operator()(Type&)                    \
+    symbol operator()(__VA_ARGS__&)             \
     {                                           \
-      symbol res(#Type);                        \
+      symbol res(#__VA_ARGS__);                 \
       return res;                               \
     }                                           \
   };
@@ -108,6 +109,7 @@ namespace vcsn
   DEFINE(std::istream);
   DEFINE(const std::string);
   DEFINE(const std::vector<unsigned>);
+  DEFINE(const std::set<std::pair<std::string, std::string>>);
   DEFINE(std::ostream);
 
   DEFINE(boost::optional<unsigned>);

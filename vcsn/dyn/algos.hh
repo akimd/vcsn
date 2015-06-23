@@ -419,8 +419,7 @@ namespace vcsn
     ///
     /// \param aut  the input automaton
     /// \param ids  the identities of the expression
-    automaton lift(const automaton& aut,
-                   ::vcsn::rat::identities ids = {});
+    automaton lift(const automaton& aut, rat::identities ids = {});
 
     /// Lift some tapes of the transducer
     automaton lift(const automaton& aut, const std::vector<unsigned>& tapes);
@@ -439,7 +438,7 @@ namespace vcsn
     /// \param ctx  the context
     /// \param ids  the identities to apply
     expressionset make_expressionset(const context& ctx,
-                                     ::vcsn::rat::identities ids = {});
+                                     rat::identities ids = {});
 
     /// The context for words.
     context make_word_context(const context& ctx);
@@ -724,12 +723,27 @@ namespace vcsn
     /// \param ids   the identities to use for the expression
     /// \param algo  the state selection strategy
     expression to_expression(const automaton& aut,
-                             ::vcsn::rat::identities ids = {},
+                             rat::identities ids = {},
                              const std::string& algo = "auto");
 
     /// An expression denoting the label of \a l.
     expression to_expression(const context& ctx, rat::identities ids,
                              const label& l);
+
+    /// An expression matching one letter in a letter class.
+    ///
+    /// \param ctx
+    ///   The context to use.
+    /// \param ids
+    ///   The identities to use for the expression
+    /// \param letters
+    ///   The letter class as a set of ranges.
+    /// \param accept
+    ///   Whether to accept these characters ([abc]) as opposed
+    ///   to refusing them ([^abc]).
+    expression to_expression(const context& ctx, rat::identities ids,
+                             const letter_class_t& letters,
+                             bool accept = true);
 
     /// Transpose \a aut.
     automaton transpose(automaton& aut);

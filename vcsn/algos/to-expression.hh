@@ -259,9 +259,9 @@ namespace vcsn
   }
 
 
-  /*-----------------.
-  | to_expression.   |
-  `-----------------*/
+  /*----------------------------.
+  | to_expression(automaton).   |
+  `----------------------------*/
 
   template <typename Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
@@ -280,7 +280,7 @@ namespace vcsn
   template <typename Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-    to_expression_naive(const Aut& a, vcsn::rat::identities ids)
+  to_expression_naive(const Aut& a, vcsn::rat::identities ids)
   {
     state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
     return to_expression(a, ids, next);
@@ -326,6 +326,101 @@ namespace vcsn
         const auto& l = lbl->as<Label>();
         auto rs = vcsn::make_expressionset(c, ids);
         return make_expression(rs, rs.atom(l.label()));
+      }
+    }
+  }
+
+  /*-------------------------------.
+  | to_expression(letter_class).   |
+  `-------------------------------*/
+
+  namespace detail
+  {
+    template <typename ExpSet>
+    auto letter_class_impl(const ExpSet&,
+                           const letter_class_t&, bool,
+                           std::false_type, std::true_type)
+      -> typename ExpSet::value_t
+    {
+      raise("letter_class: not implemented (is_expressionset)");
+    }
+
+    template <typename ExpSet>
+    auto letter_class_impl(const ExpSet& rs,
+                           const letter_class_t& chars, bool accept,
+                           std::false_type, std::false_type)
+      -> typename ExpSet::value_t
+    {
+      auto ls = *rs.labelset();
+
+      using labelset_t = decltype(ls);
+      using word_t = typename labelset_t::word_t;
+      using label_t = typename labelset_t::value_t;
+      using letter_t = typename labelset_t::letter_t;
+
+      auto ccs = std::set<std::pair<letter_t, letter_t>>{};
+      for (auto cc: chars)
+        {
+          // Yes, this is ugly: to convert an std::string into a
+          // letter_t, we (i) parse the string into a label, (ii)
+          // convert it into a word_t, (iii) from which we extract its
+          // first letter.
+          label_t lbl1 = ::vcsn::conv(ls, cc.first);
+          label_t lbl2 = ::vcsn::conv(ls, cc.second);
+          word_t w1 = ls.word(lbl1);
+          word_t w2 = ls.word(lbl2);
+          letter_t l1 = *std::begin(ls.letters_of(w1));
+          letter_t l2 = *std::begin(ls.letters_of(w2));
+          ccs.emplace(l1, l2);
+        }
+      return rs.letter_class(ccs, accept);
+    }
+
+    template <typename ExpSet>
+    auto letter_class_impl(const ExpSet& rs,
+                           const letter_class_t&, bool,
+                           std::true_type, std::false_type)
+      -> typename ExpSet::value_t
+    {
+      return rs.one();
+    }
+  }
+
+  /// An expression matching one letter in a letter class.
+  ///
+  /// \param rs
+  ///   The expressionset to use.
+  /// \param letters
+  ///   The letter class as a set of ranges.
+  /// \param accept
+  ///   Whether to accept these characters ([abc]) as opposed
+  ///   to refusing them ([^abc]).
+  template <typename ExpressionSet>
+  typename ExpressionSet::value_t
+  to_expression(const ExpressionSet& rs, const letter_class_t& letters,
+                bool accept = true)
+  {
+    using labelset_t = labelset_t_of<ExpressionSet>;
+    using is_one_t = std::is_same<labelset_t, vcsn::oneset>;
+    using is_expset_t = bool_constant<labelset_t::is_expressionset()>;
+    return detail::letter_class_impl(rs, letters, accept,
+                                     is_one_t{}, is_expset_t{});
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (to_expression).
+      template <typename Context, typename Identities,
+                typename Letters, typename Bool>
+      expression
+      to_expression_class(const context& ctx, rat::identities ids,
+                          const letter_class_t& letters, bool accept)
+      {
+        const auto& c = ctx->as<Context>();
+        auto rs = vcsn::make_expressionset(c, ids);
+        return make_expression(rs, to_expression(rs, letters, accept));
       }
     }
   }

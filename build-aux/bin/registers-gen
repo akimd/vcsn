@@ -93,6 +93,7 @@ def header():
 
 #include <vector>
 
+#include <vcsn/algos/fwd.hh> // letter_class_t
 #include <vcsn/core/rat/identities.hh> // rat::identities
 #include <vcsn/dyn/fwd.hh> // dyn::automaton, etc.
 #include <vcsn/misc/export.hh> // LIBVCSN_API
