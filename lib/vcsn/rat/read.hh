@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vcsn/dyn/fwd.hh>
 #include <lib/vcsn/rat/location.hh>
+#include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/export.hh>
 
 namespace vcsn

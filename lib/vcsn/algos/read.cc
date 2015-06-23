@@ -1,9 +1,7 @@
-#include <stdexcept>
-
 #include <lib/vcsn/algos/fwd.hh>
 #include <lib/vcsn/algos/registry.hh>
 #include <lib/vcsn/dot/driver.hh>
-#include <lib/vcsn/rat/read.hh>
+#include <lib/vcsn/rat/read.hh> // rat::read
 #include <vcsn/algos/read.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
@@ -32,16 +30,16 @@ namespace vcsn
     }
 
     automaton
-    read_automaton(std::istream& is, const std::string& t)
+    read_automaton(std::istream& is, const std::string& f)
     {
-      if (t == "dot" || t == "default" || t == "")
+      if (f == "dot" || f == "default" || f == "")
         return read_dot(is);
-      else if (t == "efsm")
+      else if (f == "efsm")
         return read_efsm(is);
-      else if (t == "fado")
+      else if (f == "fado")
         return read_fado(is);
       else
-        raise("invalid automaton input format:", t);
+        raise("invalid automaton input format:", f);
     }
 
     /*-------------------.

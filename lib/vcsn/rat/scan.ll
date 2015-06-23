@@ -225,13 +225,12 @@ namespace
   irange_type
   quantifier(driver& d, const location& loc, const std::string& s)
   {
-    std::regex arity_re{"([0-9]*)(,?)([0-9]*)",
-        std::regex::extended};
+    auto arity_re = std::regex{"([0-9]*)(,?)([0-9]*)", std::regex::extended};
     std::smatch minmax;
     if (!std::regex_match(s, minmax, arity_re))
       throw std::runtime_error("cannot match arity: " + s);
-    irange_type res{arity(d, loc, minmax[1].str()),
-        arity(d, loc, minmax[3].str())};
+    auto res = irange_type{arity(d, loc, minmax[1].str()),
+                           arity(d, loc, minmax[3].str())};
     if (minmax[2].str().empty())
       // No comma: single argument.
       std::get<1>(res) = std::get<0>(res);

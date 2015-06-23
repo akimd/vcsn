@@ -7,10 +7,10 @@
 
 #include <vcsn/algos/fwd.hh> // is-valid
 #include <vcsn/core/rat/copy.hh>
-#include <vcsn/core/rat/less.hh>
 #include <vcsn/core/rat/expression.hh>
-#include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/hash.hh>
+#include <vcsn/core/rat/less.hh>
+#include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/algos.hh> // dyn::read_expression
 #include <vcsn/dyn/fwd.hh>

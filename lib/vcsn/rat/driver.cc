@@ -31,8 +31,7 @@ namespace vcsn
       expressionset(dyn::make_expressionset(dyn::make_context(ctx)));
     }
 
-    void
-    driver::error(const location& l, const std::string& m)
+    void driver::error(const location& l, const std::string& m)
     {
       std::ostringstream er;
       er  << l << ": " << m;
@@ -41,8 +40,7 @@ namespace vcsn
       errors += (errors.empty() ? "" : "\n") + er.str();
     }
 
-    void
-    driver::invalid(const location& l, const std::string& s)
+    void driver::invalid(const location& l, const std::string& s)
     {
       error(l, "invalid input: " + s);
     }
@@ -72,7 +70,7 @@ namespace vcsn
       parser p(*this);
       // If the number of nested parser invocations is less than
       // $YYDEBUG, be verbose.  Recursive parsings are used for
-      // weights; for instance "{{a}b}c" uses three (nested) parsers.
+      // weights; for instance "<<a>b>c" uses three (nested) parsers.
       static int debug_level = debug_level_();
       static int nesting = 0;
       p.set_debug_level(debug_level && nesting < debug_level);

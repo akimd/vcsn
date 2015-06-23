@@ -70,7 +70,7 @@ namespace vcsn
     {
       value_t res = super_t::one();
       if (!super_t::is_one(e))
-        while (n-- > 0)
+        while (n--)
           res = mul(res, e);
       return res;
     }
