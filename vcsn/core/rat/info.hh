@@ -20,10 +20,26 @@ namespace vcsn
       using super_t = typename expressionset_t::const_visitor;
 
       /// For each node type, count its number of occurrences.
-      void operator()(const node_t& v);
+      void operator()(const node_t& v)
+      {
+        atom = 0;
+        complement = 0;
+        conjunction = 0;
+        lweight = 0;
+        ldiv = 0;
+        one = 0;
+        prod = 0;
+        rweight = 0;
+        shuffle = 0;
+        star = 0;
+        sum = 0;
+        transposition = 0;
+        zero = 0;
+        v.accept(*this);
+      }
 
       /// Name of this algorithm, for error messages.
-      constexpr static const char* me() { return "split"; }
+      constexpr static const char* me() { return "info"; }
 
 #define DEFINE(Type)                                    \
     public:                                             \
@@ -31,19 +47,19 @@ namespace vcsn
     private:                                            \
       VCSN_RAT_VISIT(Type, v)
 
-      DEFINE(atom);
-      DEFINE(complement)  { ++complement;  visit_(v); }
-      DEFINE(conjunction) { ++conjunction; visit_(v); }
-      DEFINE(ldiv)        { ++ldiv;        visit_(v); }
-      DEFINE(lweight);
-      DEFINE(one);
-      DEFINE(prod)        { ++prod;        visit_(v);}
-      DEFINE(rweight);
-      DEFINE(shuffle)     { ++shuffle;     visit_(v); }
-      DEFINE(star)        { ++star;        visit_(v); }
-      DEFINE(sum)         { ++sum;         visit_(v);  }
-      DEFINE(transposition){ ++transposition; visit_(v);  }
-      DEFINE(zero);
+      DEFINE(atom)         { ++atom; (void) v;         }
+      DEFINE(complement)   { ++complement;  visit_(v); }
+      DEFINE(conjunction)  { ++conjunction; visit_(v); }
+      DEFINE(ldiv)         { ++ldiv;        visit_(v); }
+      DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); }
+      DEFINE(one)          { ++one; (void) v;         }
+      DEFINE(prod)         { ++prod;        visit_(v);}
+      DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); }
+      DEFINE(shuffle)      { ++shuffle;     visit_(v); }
+      DEFINE(star)         { ++star;        visit_(v); }
+      DEFINE(sum)          { ++sum;         visit_(v);  }
+      DEFINE(transposition){ ++transposition; visit_(v); }
+      DEFINE(zero)         { ++zero; (void) v;         }
 #undef DEFINE
 
     private:
@@ -71,5 +87,3 @@ namespace vcsn
 
   } // namespace rat
 } // namespace vcsn
-
-#include <vcsn/core/rat/info.hxx>
