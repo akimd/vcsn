@@ -21,9 +21,19 @@ namespace vcsn
     driver::~driver()
     {}
 
+    dyn::expressionset driver::expressionset() const
+    {
+      return expressionset_;
+    }
+
     void driver::expressionset(const dyn::expressionset& rs)
     {
       expressionset_ = rs;
+    }
+
+    dyn::context driver::context() const
+    {
+      return dyn::context_of(expressionset_);
     }
 
     void driver::context(const std::string& ctx)
@@ -80,13 +90,7 @@ namespace vcsn
       scanner_->scan_close_();
       --nesting;
 
-      dyn::expression res = nullptr;
-      if (result_)
-        {
-          res = expressionset_->make_expression(result_);
-          result_ = nullptr;
-        }
-      return res;
+      return std::move(result_);
     }
   }
 }

@@ -20,8 +20,14 @@ namespace vcsn
     public:
       driver(const dyn::expressionset& rs);
       ~driver();
+
+      /// Get the expressionset.
+      dyn::expressionset expressionset() const;
       /// Set the expressionset to use.
       void expressionset(const dyn::expressionset& rs);
+
+      /// Get the context.
+      dyn::context context() const;
       /// Set the expressionset to use from its context name.
       void context(const std::string& ctx);
 
@@ -42,7 +48,7 @@ namespace vcsn
       /// The inital location.
       location location_;
       dyn::expressionset expressionset_;
-      vcsn::rat::exp_t result_;
+      dyn::expression result_;
       friend class parser;
     };
 

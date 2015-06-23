@@ -20,21 +20,26 @@
   #include <tuple>
   #include "location.hh"
   #include <vcsn/core/rat/expression.hh>
+  #include <vcsn/dyn/expression.hh>
   #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn
   {
     namespace rat
     {
+      /// An expression that "remembers" whether it was in
+      /// parentheses.
+      ///
+      /// Use to distinguish "(a)(b)" from "ab".
       struct braced_expression
       {
         /// The expression parsed so far.
-        exp_t exp;
+        dyn::expression exp;
         /// Whether there was a left-paren.
         bool lparen = false;
         /// Whether there was a right-paren.
         bool rparen = false;
-        braced_expression& operator=(exp_t e)
+        braced_expression& operator=(dyn::expression e)
         {
           exp = e;
           return *this;
@@ -56,6 +61,7 @@
 %code
 {
   #include <vcsn/dyn/expressionset.hh>
+  #include <vcsn/dyn/algos.hh>
   #include <lib/vcsn/rat/driver.hh>
   #include <lib/vcsn/rat/scan.hh>
 
@@ -63,13 +69,54 @@
   {
     namespace rat
     {
-      /// Generate an expression for "e{range.first, range.second}".
-      static
-      exp_t power(const dyn::expressionset& rs, exp_t e, std::tuple<int, int> range);
-
       /// Generate an expression for "e <+ f = e % f + f".
       static
-      exp_t prefer(const dyn::expressionset& rs, exp_t e, exp_t f);
+      dyn::expression prefer(const dyn::expression& e,
+                             const dyn::expression& f);
+
+      /// Get the context of the driver.
+      dyn::context ctx(const driver& d)
+      {
+        return d.context();
+      }
+
+      /// Get the identities of the driver.
+      identities ids(const driver& d)
+      {
+        return d.expressionset()->identities();
+      }
+
+      /// From a string, generate an expression.
+      static
+      dyn::label make_label(driver& d, const std::string& s)
+      {
+        std::istringstream is{s};
+        auto ctx = d.context();
+        auto res = dyn::read_label(ctx, is);
+        if (is.peek() != -1)
+          vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+        return res;
+      }
+
+      /// From a string, generate an expression.
+      static
+      dyn::expression make_atom(driver& d, const std::string& s)
+      {
+        auto ctx = d.context();
+        return dyn::to_expression(ctx, ids(d), make_label(d, s));
+      }
+
+      /// From a string, generate an expression.
+      static
+      dyn::weight make_weight(driver& d, const std::string& s)
+      {
+        std::istringstream is{s};
+        auto ctx = d.context();
+        auto res = dyn::read_weight(ctx, is);
+        if (is.peek() != -1)
+          vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+        return res;
+      }
 
       /// Use our local scanner object.
       static
@@ -121,7 +168,7 @@
 %printer { yyo << '<' << $$ << '>'; } "weight";
 %printer
 {
-  driver_.expressionset_->print($$.exp, yyo);
+  dyn::print($$.exp, yyo);
   yyo << ($$.lparen ? " (lpar, " : " (no lpar, ");
   yyo << ($$.rparen ? "rpar)" : "no rpar)");
 } <braced_expression>;
@@ -150,8 +197,8 @@
 ;
 
 %token <irange_type> STAR "*";
-%token <std::string> LETTER  "letter";
-%token <std::string> WEIGHT  "weight";
+%token <std::string> LETTER "letter";
+%token <std::string> WEIGHT "weight";
 
 %type <braced_expression> exp input weights;
 %type <std::set<std::pair<std::string,std::string>>> class;
@@ -191,44 +238,49 @@ terminator:
 ;
 
 exp:
-  exp "." exp                 { $$ = MAKE(mul, $1.exp, $3.exp); }
-| exp "&" exp                 { $$ = MAKE(conjunction, $1.exp, $3.exp); }
-| exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
-| exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
-| exp "<+" exp                { $$ = prefer(driver_.expressionset_,
-                                            $1.exp, $3.exp); }
-| exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
-| exp "{/}" exp               { $$ = MAKE(rdiv, $1.exp, $3.exp); }
-| exp "%" exp                 { $$ = MAKE(conjunction,
-                                          $1.exp, MAKE(complement, $3.exp)); }
-| weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }
-| exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }
+  exp "." exp                 { $$ = dyn::multiply($1.exp, $3.exp); }
+| exp "&" exp                 { $$ = dyn::conjunction($1.exp, $3.exp); }
+| exp ":" exp                 { $$ = dyn::shuffle($1.exp, $3.exp); }
+| exp "+" exp                 { $$ = dyn::sum($1.exp, $3.exp); }
+| exp "<+" exp                { $$ = prefer($1.exp, $3.exp); }
+| exp "{\\}" exp              { $$ = dyn::ldiv($1.exp, $3.exp); }
+| exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
+| exp "%" exp                 { $$ = dyn::conjunction($1.exp,
+                                                      dyn::complement($3.exp)); }
+| weights exp %prec LWEIGHT   { $$ = dyn::multiply($1.exp, $2.exp); }
+| exp weights %prec RWEIGHT   { $$ = dyn::multiply($1.exp, $2.exp); }
 | exp exp %prec CONCAT
   {
     // See README.txt.
     if (!$1.rparen && !$2.lparen)
-      $$ = MAKE(concat, $1.exp, $2.exp);
+      $$ = dyn::concatenate($1.exp, $2.exp);
     else
       {
-        $$.exp = MAKE(mul, $1.exp, $2.exp);
+        $$.exp = dyn::multiply($1.exp, $2.exp);
         $$.lparen = $1.lparen;
         $$.rparen = $2.rparen;
       }
   }
-| exp "*"           { $$ = power(driver_.expressionset_, $1.exp, $2); }
-| exp "{c}"         { $$ = MAKE(complement, $1.exp); }
-| exp "{T}"         { $$ = MAKE(transposition, $1.exp); }
-| "\\z"             { $$ = MAKE(zero); }
-| "\\e"             { $$ = MAKE(one); }
-| LETTER            { TRY(@$, $$ = MAKE(atom, $1)); }
-| "[" class "]"     { $$ = MAKE(letter_class, $2, true); }
-| "[" "^" class "]" { $$ = MAKE(letter_class, $3, false); }
+| exp "*"           { $$ = dyn::multiply($1.exp,
+                                         std::get<0>($2), std::get<1>($2)); }
+| exp "{c}"         { $$ = dyn::complement($1.exp); }
+| exp "{T}"         { $$ = dyn::transposition($1.exp); }
+| "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
+| "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
+| LETTER            { TRY(@$, $$ = make_atom(driver_, $1)); }
+| "[" class "]"     { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
+                                              $2, true); }
+| "[" "^" class "]" { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
+                                              $3, false); }
 | "(" exp ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
 ;
 
-weights:
-  "weight"         { TRY(@$ + 1, $$ = MAKE(lmul, $1, MAKE(one))); }
-| "weight" weights { TRY(@$ + 1, $$ = MAKE(lmul, $1, $2.exp)); }
+weights: // FIXME: use dyn::weight instead?
+  "weight"         { auto one = dyn::expression_one(ctx(driver_), ids(driver_));
+                     auto w = make_weight(driver_, $1);
+                     TRY(@$ + 1, $$ = dyn::left_mult(w, one)); }
+| "weight" weights { auto w = make_weight(driver_, $1);
+                     TRY(@$ + 1, $$ = dyn::left_mult(w, $2.exp)); }
 ;
 
 class:
@@ -243,50 +295,11 @@ namespace vcsn
 {
   namespace rat
   {
-    static
-    exp_t
-    power(const dyn::expressionset& es, exp_t e, int min, int max)
-    {
-      exp_t res;
-
-      // E{min,}
-      if (max == -1)
-        {
-          res = es->star(e);
-          if (min != -1)
-            res = es->mul(es->power(e, min), res);
-        }
-      else
-        {
-          // E{,max} => E{0,max}
-          if (min == -1)
-            min = 0;
-
-          res = es->power(e, min);
-
-          if (min < max)
-            {
-              exp_t sum = es->one();
-              for (int n = 1; n <= max - min; ++n)
-                sum = es->add(sum, es->power(e, n));
-              res = es->mul(res, sum);
-            }
-        }
-      return res;
-    }
-
-    static
-    exp_t
-    power(const dyn::expressionset& es, exp_t e, std::tuple<int, int> range)
-    {
-      return power(es, e, std::get<0>(range), std::get<1>(range));
-    }
-
     // "e <+ f = e + (f % e) = e + e{c} & f".
     static
-    exp_t prefer(const dyn::expressionset& rs, exp_t e, exp_t f)
+    dyn::expression prefer(const dyn::expression& e, const dyn::expression& f)
     {
-      return rs->add(e, rs->conjunction(rs->complement(e), f));
+      return dyn::sum(e, dyn::conjunction(dyn::complement(e), f));
     }
 
     void
