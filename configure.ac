@@ -317,6 +317,11 @@ VCSN_PROG_NBCONVERT([$srcdir/doc/notebooks/Algorithms.ipynb])
 AC_CONFIG_HEADERS([lib/config.h:vcsn/config.in.h])
 AX_PREFIX_CONFIG_H([vcsn/config.hh], [vcsn], [lib/config.h])
 
+AC_SUBST([GITPATCH], [$(if (git rev-parse) >/dev/null 2>&1; then
+ echo ".$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD \
+ --count)"
+fi)])
+
 AC_CONFIG_FILES([Makefile])
 
 AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])

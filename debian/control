@@ -1,0 +1,17 @@
+Source: vcsn
+Section: science
+Priority: optional
+Maintainer: Clément Démoulins <demoulins@lrde.epita.fr>
+Build-Depends: debhelper (>= 9), autotools-dev, bison, flex, libboost-all-dev, graphviz, doxygen, ccache, g++ (>= 4.9), dh-python, python3-all-dev, python3.4-dev
+Standards-Version: 3.9.6
+X-Python3-Version: >= 3.4
+Homepage: https://vcsn.lrde.epita.fr/
+
+Package: vcsn
+Architecture: any
+Suggests: ipython3, ipython3-notebook
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, ccache, g++ (>= 4.9)
+Description: Vcsn is finite state machines processing library.
+ It is a platform dedicated to the computation of, and with, finite
+ state machines. It provides an efficent C++ library, a Python interface, and a
+ graphical user interface on top of IPython.

@@ -37,6 +37,28 @@ EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt  \
 coverage:
 	CXX='$(CXX)' $(top_srcdir)/build-aux/bin/coverage
 
+# Documentation.
 PANDOC = pandoc
 README.html: README.txt
 	$(PANDOC)  -s --toc --from rst --to html5 -o $@ $<
+
+
+## -------- ##
+## Debian.  ##
+## -------- ##
+
+EXTRA_DIST += debian/changelog debian/compat	\
+  debian/control debian/rules debian/copyright
+
+debian/changelog: configure.ac
+	$(top_builddir)/config.status --file debian/changelog
+
+# Build Debian packages.
+# Run it with:  make DEBUILDFLAGS=-j8 deb -j8
+deb: dist
+	rm -rf vcsn-$(VERSION) vcsn-$(VERSION)$(GITPATCH)
+	tar Jxvf vcsn-$(VERSION).tar.xz
+	mv vcsn-$(VERSION) vcsn-$(VERSION)$(GITPATCH)
+	tar Jcvf vcsn_$(VERSION)$(GITPATCH).orig.tar.xz \
+	         vcsn-$(VERSION)$(GITPATCH)
+	cd vcsn-$(VERSION)$(GITPATCH) && debuild $(DEBUILDFLAGS) -us -uc
