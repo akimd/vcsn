@@ -785,6 +785,9 @@ namespace vcsn
   }
 }
 
+// dyn::automaton and the like are actually type aliases for
+// std::shared_ptr, so for ADL to work properly, we need these
+// operators to be defined in std.
 namespace std LIBVCSN_API
 {
   /// Output automaton \a a on \a o.
@@ -795,6 +798,9 @@ namespace std LIBVCSN_API
 
   /// Output expansion \a e on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expansion& e);
+
+  /// Output expression \a r on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expression& r);
 
   /// Output label \a l on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::label& l);

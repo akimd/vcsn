@@ -232,6 +232,12 @@ namespace std
   }
 
   std::ostream&
+  operator<<(std::ostream& o, const vcsn::dyn::expression& r)
+  {
+    return vcsn::dyn::print(r, o, vcsn::dyn::get_format(o));
+  }
+
+  std::ostream&
   operator<<(std::ostream& o, const vcsn::dyn::label& l)
   {
     return vcsn::dyn::print(l, o, vcsn::dyn::get_format(o));
@@ -241,12 +247,6 @@ namespace std
   operator<<(std::ostream& o, const vcsn::dyn::polynomial& p)
   {
     return vcsn::dyn::print(p, o, vcsn::dyn::get_format(o));
-  }
-
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::expression& r)
-  {
-    return vcsn::dyn::print(r, o, vcsn::dyn::get_format(o));
   }
 
   std::ostream&
