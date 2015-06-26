@@ -18,12 +18,12 @@
   \node[state,accepting] (9) [right=of 8] {$9$};
   \path[->] (0) edge node {$\varepsilon$} (1);
   \path[->] (1) edge node {$\left\langle 2\right\rangle \varepsilon$} (2);
-  \path[->] (2) edge node {$[a-di-lz]$} (3);
-  \path[->] (3) edge node {$\left\langle 2\right\rangle [a-di-lz]$} (4);
+  \path[->] (2) edge node {$[a\textrm{-}di\textrm{-}lz]$} (3);
+  \path[->] (3) edge node {$\left\langle 2\right\rangle [a\textrm{-}di\textrm{-}lz]$} (4);
   \path[->] (4) edge node {$\left\langle 2\right\rangle a, \left\langle 2\right\rangle b, \left\langle 2\right\rangle c, \left\langle 2\right\rangle d, e, \left\langle 2\right\rangle i, \left\langle 2\right\rangle j, \left\langle 2\right\rangle k, \left\langle 2\right\rangle l, \left\langle 2\right\rangle z$} (5);
-  \path[->] (5) edge node {$\varepsilon, [a-di-lz]$} (6);
-  \path[->] (6) edge node {$\left\langle 2\right\rangle \varepsilon, \left\langle 2\right\rangle [a-di-lz]$} (7);
-  \path[->] (7) edge node {$\left\langle 2\right\rangle \varepsilon, \left\langle 3\right\rangle [a-di-lz]$} (8);
+  \path[->] (5) edge node {$\varepsilon, [a\textrm{-}di\textrm{-}lz]$} (6);
+  \path[->] (6) edge node {$\left\langle 2\right\rangle \varepsilon, \left\langle 2\right\rangle [a\textrm{-}di\textrm{-}lz]$} (7);
+  \path[->] (7) edge node {$\left\langle 2\right\rangle \varepsilon, \left\langle 3\right\rangle [a\textrm{-}di\textrm{-}lz]$} (8);
   \path[->] (8) edge node {$\left\langle 2\right\rangle \varepsilon, \left\langle 3\right\rangle a, \left\langle 3\right\rangle b, \left\langle 3\right\rangle c, \left\langle 3\right\rangle d, e, \left\langle 3\right\rangle i, \left\langle 3\right\rangle j, \left\langle 3\right\rangle k, \left\langle 3\right\rangle l, \left\langle 3\right\rangle z$} (9);
 \end{tikzpicture}
 \end{document}

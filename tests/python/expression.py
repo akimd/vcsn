@@ -162,7 +162,7 @@ check_format('lal_char(abcdef), b',
              '[^f]', r'[\hat{}f]')
 check_format('lal_char(a-z), b',
              '[abcd]',
-             '[a-d]', '[a-d]')
+             '[a-d]', r'[a\textrm{-}d]')
 
 check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), z>>',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',

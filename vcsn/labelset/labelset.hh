@@ -258,7 +258,10 @@ namespace vcsn
           if (2 < width)
             {
               it += width - 1;
-              out << '-';
+              // Using `-` in LaTeX math mode means minus (wow, 4
+              // m-words in a row), which results in a long dash, and
+              // too much space around it.
+              out << (format == "latex" ? "\\textrm{-}" : "-");
               ls.print(*it, out, format);
             }
         }
