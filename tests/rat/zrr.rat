@@ -3,9 +3,9 @@
 
 # Check the alphabets.
 <<<2>x>i>a => <<<2>x>i>a
-<<<l>x>i>a ! z: invalid value: l
-<<<3>l>i>a ! 1.4: char_letters: invalid letter: l
-<<<4>x>L>a ! 1.7: char_letters: invalid letter: L
+<<<l>x>i>a ! 1.1-9: 1.1-6: 1.1-3: z: invalid value: l
+<<<3>l>i>a ! 1.1-9: 1.1-6: 1.4: char_letters: invalid letter: l
+<<<4>x>L>a ! 1.1-9: 1.7: char_letters: invalid letter: L
 <<<5>x>i>l ! 1.10: char_letters: invalid letter: l
 
 # Check weight products.
