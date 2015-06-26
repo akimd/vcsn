@@ -30,7 +30,9 @@
       /// An expression that "remembers" whether it was in
       /// parentheses.
       ///
-      /// Use to distinguish "(a)(b)" from "ab".
+      /// Used in LAW to distinguish "(a)(b)", "(a)b", "a(b)" from
+      /// "ab": only in the last case the letters must be concatenated
+      /// into a word.
       struct braced_expression
       {
         /// The expression parsed so far.
@@ -86,7 +88,7 @@
         return d.identities();
       }
 
-      /// From a string, generate an expression.
+      /// From a string, generate a label.
       static
       dyn::label make_label(driver& d, const std::string& s)
       {
@@ -106,7 +108,7 @@
         return dyn::to_expression(ctx, ids(d), make_label(d, s));
       }
 
-      /// From a string, generate an expression.
+      /// From a string, generate a weight.
       static
       dyn::weight make_weight(driver& d, const std::string& s)
       {
@@ -135,10 +137,6 @@
 %code top
 {
   #include <cassert>
-
-  /// Call the factory to make a Kind.
-#define MAKE(Kind, ...)                         \
-  driver_.expressionset_->Kind(__VA_ARGS__)
 
   /// Run Stm, and bounces exceptions into parse errors at Loc.
 #define TRY(Loc, Stm)                           \
@@ -172,6 +170,7 @@
   yyo << ($$.lparen ? " (lpar, " : " (no lpar, ");
   yyo << ($$.rparen ? "rpar)" : "no rpar)");
 } <braced_expression>;
+%printer { dyn::print($$, yyo); } <dyn::weight>;
 
 %token
   AMPERSAND  "&"
@@ -200,7 +199,8 @@
 %token <std::string> LETTER "letter";
 %token <std::string> WEIGHT "weight";
 
-%type <braced_expression> exp input weights;
+%type <braced_expression> exp input;
+%type <dyn::weight> weights;
 %type <std::set<std::pair<std::string,std::string>>> class;
 
 %left "+" "<+"
@@ -247,8 +247,8 @@ exp:
 | exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
 | exp "%" exp                 { $$ = dyn::conjunction($1.exp,
                                                       dyn::complement($3.exp)); }
-| weights exp %prec LWEIGHT   { $$ = dyn::multiply($1.exp, $2.exp); }
-| exp weights %prec RWEIGHT   { $$ = dyn::multiply($1.exp, $2.exp); }
+| weights exp %prec LWEIGHT   { $$ = dyn::left_mult($1, $2.exp); }
+| exp weights %prec RWEIGHT   { $$ = dyn::right_mult($1.exp, $2); }
 | exp exp %prec CONCAT
   {
     // See README.txt.
@@ -275,12 +275,9 @@ exp:
 | "(" exp ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
 ;
 
-weights: // FIXME: use dyn::weight instead?
-  "weight"         { auto one = dyn::expression_one(ctx(driver_), ids(driver_));
-                     auto w = make_weight(driver_, $1);
-                     TRY(@$ + 1, $$ = dyn::left_mult(w, one)); }
-| "weight" weights { auto w = make_weight(driver_, $1);
-                     TRY(@$ + 1, $$ = dyn::left_mult(w, $2.exp)); }
+weights:
+  "weight"         { $$ = make_weight(driver_, $1); }
+| "weight" weights { $$ = dyn::multiply(make_weight(driver_, $1), $2); }
 ;
 
 class:

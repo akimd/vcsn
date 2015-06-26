@@ -387,10 +387,6 @@ conjunction:
 here, res _can_ be \z, in which case we build a polynomial (\z -> 1), which
 is forbidden (this should be the empty polynomial).
 
-** Dyn weights
-Now that we have dynamic weights, they could be used in lib/vcsn/rat
-parsing, instead of a simple string that is converted by the weightset.
-
 ** REGISTER namespace
 In vcsn/ctx/instantiate.hh, we shouldn't need to say
 "using namespace dyn::detail". Add it in REGISTER?
