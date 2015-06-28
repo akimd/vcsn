@@ -44,6 +44,7 @@ namespace vcsn
         return std::move(res_);
       }
 
+    private:
       /// Easy recursion.
       weight_t constant_term(const expression_t& v)
       {
@@ -74,34 +75,23 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(prod, v)
+      /// Visit a variadic node whose constant-term is the product of
+      /// the constant-terms of its children.
+      template <typename Node>
+      void visit_product(const Node& v)
       {
         weight_t res = ws_.one();
         for (auto c: v)
           res = ws_.mul(res, constant_term(c));
         res_ = std::move(res);
       }
+
+      VCSN_RAT_VISIT(conjunction, v) { visit_product(v); }
+      VCSN_RAT_VISIT(prod, v)        { visit_product(v); }
+      VCSN_RAT_VISIT(shuffle, v)     { visit_product(v); }
 
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(transposition)
-
-      VCSN_RAT_VISIT(conjunction, v)
-      {
-        // FIXME: Code duplication with prod_t.
-        weight_t res = ws_.one();
-        for (auto c: v)
-          res = ws_.mul(res, constant_term(c));
-        res_ = std::move(res);
-      }
-
-      VCSN_RAT_VISIT(shuffle, v)
-      {
-        // FIXME: Code duplication with prod_t.
-        weight_t res = ws_.one();
-        for (auto c: v)
-          res = ws_.mul(res, constant_term(c));
-        res_ = std::move(res);
-      }
 
       VCSN_RAT_VISIT(star, v)
       {
@@ -110,13 +100,11 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, v)
       {
-        v.sub()->accept(*this);
         res_ = ws_.mul(v.weight(), constant_term(v.sub()));
       }
 
       VCSN_RAT_VISIT(rweight, v)
       {
-        v.sub()->accept(*this);
         res_ = ws_.mul(constant_term(v.sub()), v.weight());
       }
 
