@@ -3,9 +3,10 @@
 #include <unordered_map>
 
 #include <vcsn/algos/fwd.hh> // focus_automaton.
+#include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/fwd.hh>
-#include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/rat/copy.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/expression.hh>
@@ -129,9 +130,15 @@ namespace vcsn
 
   namespace detail
   {
+    /// When we copy a focus automaton, create another focus
+    /// automaton.  So we need a means to recognize focus automata,
+    /// and extract their true context, not just their visible
+    /// context.
     template <typename Aut>
     struct real_context_impl;
 
+    /// For a focus automaton, its genuine context (not the visible
+    /// one), and for all the other automata, their context.
     template <typename Aut>
     auto
     real_context(const Aut& aut)
@@ -157,10 +164,14 @@ namespace vcsn
       }
     };
 
+    /// Be recursive on automaton wrappers.
+    //
+    // FIXME: try to recurse on all automaton decorator types without
+    // listing them.
     template <typename Aut>
-    struct real_context_impl<permutation_automaton<Aut>>
+    struct real_context_impl<automaton_decorator<Aut>>
     {
-      static auto context(const permutation_automaton<Aut>& aut)
+      static auto context(const automaton_decorator<Aut>& aut)
         -> decltype(real_context(aut->strip()))
       {
         return real_context(aut->strip());
