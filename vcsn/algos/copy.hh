@@ -83,6 +83,12 @@ namespace vcsn
         return out_state_;
       }
 
+      /// A map from original state to result state.
+      state_map_t& state_map()
+      {
+        return out_state_;
+      }
+
     private:
       /// Input automaton.
       const AutIn& in_;
@@ -93,6 +99,14 @@ namespace vcsn
     };
   }
 
+  /// Build an automaton copier.
+  template <typename AutIn, typename AutOut>
+  detail::copier<AutIn, AutOut>
+  make_copier(const AutIn& in, AutOut& out)
+  {
+    return {in, out};
+  }
+
   /// Copy selected states and transitions of an automaton.
   /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut,
@@ -101,7 +115,7 @@ namespace vcsn
   copy_into(const AutIn& in, AutOut& out,
             KeepState keep_state, KeepTrans keep_trans)
   {
-    auto copy = detail::copier<AutIn, AutOut>{in, out};
+    auto copy = make_copier(in, out);
     return copy(keep_state, keep_trans);
   }
 

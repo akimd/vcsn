@@ -67,8 +67,8 @@ namespace vcsn
         aut_dirty_ = make_shared_ptr<aut_dirty_t>(dirty_ctx);
         aut_proper_ = make_shared_ptr<aut_proper_t>(proper_ctx);
 
-        detail::copier<automaton_t, aut_proper_t> pcopier(aut, aut_proper_);
-        detail::copier<automaton_t, aut_dirty_t> dcopier(aut, aut_dirty_);
+        auto pcopier = make_copier(aut, aut_proper_);
+        auto dcopier = make_copier(aut, aut_dirty_);
 
         pcopier([](state_t) { return true; },
                 [&aut](transition_t t) {

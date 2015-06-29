@@ -227,7 +227,7 @@ namespace vcsn
     // Get a copy, but be sure to keep the correspondance bw original
     // state numbers and the new ones.
     auto res = make_fresh_automaton<Aut>(aut);
-    auto copy = detail::copier<Aut>{aut, res};
+    auto copy = make_copier(aut, res);
     copy();
     if (s != aut->null_state())
       {

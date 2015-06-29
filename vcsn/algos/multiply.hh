@@ -42,24 +42,14 @@ namespace vcsn
     auto ftr = detail::make_vector(res->final_transitions());
 
     state_t_of<B> b_initial = b->dst_of(b->initial_transitions().front());
-    // State in B -> state in Res.
-    // The initial state of b is not copied.
-    std::unordered_map<state_t_of<B>, state_t_of<A>> m;
-    m.emplace(b->post(), res->post());
-    for (auto s: b->states())
-      if (!b->is_initial(s))
-        m.emplace(s, res->new_state());
 
-    // Import all the B transitions, except the initial ones
-    // and those from its (genuine) initial state.
-    //
-    // FIXME: provide generalized copy() that returns the map of
-    // states orig -> copy.
-    for (auto t: b->all_transitions())
-      if (b->src_of(t) != b->pre() && b->src_of(t) != b_initial)
-        res->new_transition(m[b->src_of(t)], m[b->dst_of(t)],
-                           ls.conv(bls, b->label_of(t)),
-                           ws.conv(bws, b->weight_of(t)));
+    auto copy = make_copier(b, res);
+    copy(// The initial state of b is not copied.
+         [b_initial](state_t_of<B> s) { return s != b_initial; },
+         // Import all the B transitions, except the initial ones (and
+         // those from its (genuine) initial state).
+         [b] (transition_t_of<B> t) { return b->src_of(t) != b->pre(); });
+    const auto& map = copy.state_map();
 
     // Branch all the final transitions of res to the successors of
     // b's initial state.
@@ -80,10 +70,10 @@ namespace vcsn
         res->del_transition(t1);
         for (auto t2: b->all_out(b_initial))
           res->set_transition(s1,
-                             m[b->dst_of(t2)],
-                             ls.conv(bls, b->label_of(t2)),
-                             ws.mul(w1,
-                                    ws.conv(bws, b->weight_of(t2))));
+                              map.at(b->dst_of(t2)),
+                              ls.conv(bls, b->label_of(t2)),
+                              ws.mul(w1,
+                                     ws.conv(bws, b->weight_of(t2))));
       }
     return res;
   }
