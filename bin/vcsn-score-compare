@@ -108,7 +108,7 @@ def normalize(k):
 
     # has_twins_property is benched on an expression using the
     # associative identities.
-    k = re.sub(r'(a.has_twins_property.* # a = std\(.*?)\)',
+    k = re.sub(r'(a.has_twins_property.* # a = std\([^,]*?)\)',
                r'\1, "associative")', k)
 
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
