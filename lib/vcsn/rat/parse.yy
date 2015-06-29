@@ -101,23 +101,6 @@
 
 %param { driver& driver_ }
 
-%code top
-{
-  #include <cassert>
-
-  /// Run Stm, and bounces exceptions into parse errors at Loc.
-#define TRY(Loc, Stm)                           \
-  try                                           \
-    {                                           \
-      Stm;                                      \
-    }                                           \
-  catch (std::exception& e)                     \
-    {                                           \
-      error(Loc, e.what());                     \
-      YYERROR;                                  \
-    }
-}
-
 %initial-action
 {
   @$ = driver_.location_;
