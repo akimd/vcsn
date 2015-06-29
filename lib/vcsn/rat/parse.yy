@@ -65,7 +65,6 @@
   #include <lib/vcsn/rat/driver.hh>
   #include <lib/vcsn/rat/scan.hh>
   #include <vcsn/dyn/algos.hh>
-  #include <vcsn/misc/stream.hh>
 
   namespace vcsn
   {
@@ -86,58 +85,6 @@
       identities ids(const driver& d)
       {
         return d.identities();
-      }
-
-      /// From a string, generate a label.
-      static
-      dyn::label make_label(driver& d,
-                            const parser::location_type& loc,
-                            const std::string& s)
-      {
-        try
-          {
-            std::istringstream is{s};
-            auto ctx = d.context();
-            auto res = dyn::read_label(ctx, is);
-            if (is.peek() != -1)
-              vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
-            return res;
-          }
-        catch (const std::exception& e)
-          {
-            throw parser::syntax_error(loc, e.what());
-          }
-      }
-
-      /// From a string, generate an expression.
-      static
-      dyn::expression make_atom(driver& d,
-                                const parser::location_type& loc,
-                                const std::string& s)
-      {
-        auto ctx = d.context();
-        return dyn::to_expression(ctx, ids(d), make_label(d, loc, s));
-      }
-
-      /// From a string, generate a weight.
-      static
-      dyn::weight make_weight(driver& d,
-                              const parser::location_type& loc,
-                              const std::string& s)
-      {
-        try
-          {
-            std::istringstream is{s};
-            auto ctx = d.context();
-            auto res = dyn::read_weight(ctx, is);
-            if (is.peek() != -1)
-              vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
-            return res;
-          }
-        catch (const std::exception& e)
-          {
-            throw parser::syntax_error(loc, e.what());
-          }
       }
 
       /// Use our local scanner object.
@@ -287,7 +234,7 @@ exp:
 | exp "{T}"         { $$ = dyn::transposition($1.exp); }
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
-| LETTER            { $$ = make_atom(driver_, @1, $1); }
+| LETTER            { $$ = driver_.make_atom(@1, $1); }
 | "[" class "]"     { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
                                               $2, true); }
 | "[" "^" class "]" { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
@@ -296,8 +243,8 @@ exp:
 ;
 
 weights:
-  "weight"         { $$ = make_weight(driver_, @1, $1); }
-| "weight" weights { $$ = dyn::multiply(make_weight(driver_, @1, $1), $2); }
+  "weight"         { $$ = driver_.make_weight(@1, $1); }
+| "weight" weights { $$ = dyn::multiply(driver_.make_weight(@1, $1), $2); }
 ;
 
 class:

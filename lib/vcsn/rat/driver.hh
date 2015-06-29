@@ -41,14 +41,26 @@ namespace vcsn
       /// The scanner.
       std::unique_ptr<yyFlexLexer> scanner_;
 
+      /// From a string, generate a label.
+      dyn::label make_label(const location& loc, const std::string& s);
+
+      /// From a string, generate an expression.
+      dyn::expression make_atom(const location& loc, const std::string& s);
+
+      /// From a string, generate a weight.
+      dyn::weight make_weight(const location& loc, const std::string& s);
+
     private:
+      friend class parser;
+
       /// The inital location.
       location location_;
+      /// The context used to read the expression.
       dyn::context ctx_;
+      /// The identities to apply.
       rat::identities ids_;
+      /// The parsed expression.
       dyn::expression result_;
-      friend class parser;
     };
-
   }
 }

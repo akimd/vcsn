@@ -1,10 +1,10 @@
-#include <cstring> // strerror
 #include <sstream>
 
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 #include <lib/vcsn/rat/scan.hh>
 #include <vcsn/dyn/algos.hh> // make_context
+#include <vcsn/misc/stream.hh> // fail_reading
 
 namespace vcsn
 {
@@ -85,6 +85,46 @@ namespace vcsn
       --nesting;
 
       return std::move(result_);
+    }
+
+    dyn::label
+    driver::make_label(const location& loc, const std::string& s)
+    {
+      try
+        {
+          std::istringstream is{s};
+          auto res = dyn::read_label(ctx_, is);
+          if (is.peek() != -1)
+            vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+          return res;
+        }
+      catch (const std::exception& e)
+        {
+          throw parser::syntax_error(loc, e.what());
+        }
+    }
+
+    dyn::expression
+    driver::make_atom(const location& loc, const std::string& s)
+    {
+      return dyn::to_expression(ctx_, ids_, make_label(loc, s));
+    }
+
+    dyn::weight
+    driver::make_weight(const location& loc, const std::string& s)
+    {
+      try
+        {
+          std::istringstream is{s};
+          auto res = dyn::read_weight(ctx_, is);
+          if (is.peek() != -1)
+            vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+          return res;
+        }
+      catch (const std::exception& e)
+        {
+          throw parser::syntax_error(loc, e.what());
+        }
     }
   }
 }
