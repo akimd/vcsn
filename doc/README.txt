@@ -71,59 +71,6 @@ istream: is
 
 The print functions take the printee first, then the stream.
 
-* Environment variables
-** VCSN_DEBUG
-Don't remove temporary files (which is especially useful to keep debug
-symbols in plugins).
-
-Augment output with debugging information.
-*** dot
-display in parens the real state numbers.
-*** is_ambigious
-display the couple of states which is outside the diagonal.
-*** proper
-Read VCSN_DEBUG as an integer specifying the level of details to dump.
-
-** VCSN_DYN
-Display information about registration and query about dyn algorithms.
-
-** VCSN_HOME [~/.vcsn]
-Where data is stored at runtime.  See VCSN_PLUGINDIR
-
-** VCSN_ITERATIVE
-Specify that "power" should perform the naive iterative multiplicative
-approach, instead of the squaring one.
-
-** VCSN_PARENS
-Force the display of useless parentheses.
-
-** VCSN_PLUGINDIR [$VCSN_HOME/plugins]
-Where the runtime context instantiation are generated and compiled.
-
-** VCSN_PRINT
-Force a more verbose display of expression (XML like), where one can
-actually see the nesting of the structures.
-
-** VCSN_SEED
-Disable the generation of a random seed, stick to the compile-time
-default seed.
-
-** VCSN_TMPDIR [/tmp]
-Path to the folder in which compiled contexts should be stored.
-
-** VCSN_VERBOSE
-When reporting compilation error, include the full compiler error
-message.
-
-** VERBOSE
-Make the test suite more verbose.
-
-** YYDEBUG, YYSCAN
-Set to enable Bison parser/ Flex scanner tracing.  Can be an integer
-to denote nesting (which is useful for instance for dot parsing which
-can fire expression parsing: specify how many layers you want to make
-verbose).
-
 Local Variables:
 mode: outline
 End:
