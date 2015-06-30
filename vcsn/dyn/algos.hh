@@ -250,8 +250,11 @@ namespace vcsn
     /// The subautomaton based on \a aut, with only states in \a ss visible.
     automaton filter(const automaton& aut, const std::vector<unsigned>& ss);
 
+    /// Focus on a specific tape of a tupleset context.
+    context focus(const context& ctx, unsigned tape);
+
     /// Focus on a specific tape of a tupleset automaton.
-    automaton focus(automaton& aut, unsigned tape);
+    automaton focus(const automaton& aut, unsigned tape);
 
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);

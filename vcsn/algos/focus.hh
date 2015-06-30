@@ -5,12 +5,74 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/name.hh> // integral_constant
 #include <vcsn/misc/tuple.hh> // make_index_range
 
 namespace vcsn
 {
+
+  /*-----------------.
+  | focus_context.   |
+  `-----------------*/
+
+  namespace detail
+  {
+    /// The type of the resulting apparent context when keeping only tape Tape.
+    template <size_t Tape, typename Context>
+    using focus_context
+      = context<typename labelset_t_of<Context>::template valueset_t<Tape>,
+                weightset_t_of<Context>>;
+
+    /// The resulting apparent context when keeping only tape Tape.
+    template <size_t Tape,
+              typename LabelSet, typename WeightSet>
+    auto make_focus_context(const context<LabelSet, WeightSet>& ctx)
+      -> enable_if_t<context<LabelSet, WeightSet>::is_lat,
+                     focus_context<Tape, context<LabelSet, WeightSet>>>
+    {
+      static_assert(Tape < LabelSet::size(),
+                    "focus: tape index out of bounds");
+      return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
+    }
+
+    /// When the labelset is not a tupleset, require the tape to be 0,
+    /// and return it.
+    template <size_t Tape,
+              typename LabelSet, typename WeightSet>
+    auto make_focus_context(const context<LabelSet, WeightSet>& ctx)
+      -> enable_if_t<!context<LabelSet, WeightSet>::is_lat,
+                     context<LabelSet, WeightSet>>
+    {
+      static_assert(Tape == 0,
+                    "focus: cannot extract non-0 tape from a non tupleset"
+                    " labelset");
+      return ctx;
+    }
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (focus).
+      template <typename Context, typename Tape>
+      context
+      focus_context(const context& ctx, integral_constant)
+      {
+        auto& c = ctx->as<Context>();
+        return make_context(vcsn::detail::make_focus_context<Tape::value>(c));
+      }
+    }
+  }
+
+
+
+  /*-------------------.
+  | focus_automaton.   |
+  `-------------------*/
+
   namespace detail
   {
     template <typename A, typename I>
@@ -23,26 +85,6 @@ namespace vcsn
       using type = tupleset<typename ls_t::template valueset_t<I>...>;
     };
 
-
-    /// The type of the resulting apparent context when keeping only tape Tape.
-    template <size_t Tape, typename Context>
-    using focus_context
-      = context<typename labelset_t_of<Context>::template valueset_t<Tape>,
-                weightset_t_of<Context>>;
-
-    /// The resulting apparent context when keeping only tape Tape.
-    template <size_t Tape,
-              typename LabelSet, typename WeightSet>
-    auto make_focus_context(const context<LabelSet, WeightSet>& ctx)
-      -> focus_context<Tape, context<LabelSet, WeightSet>>
-    {
-      return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
-    }
-
-
-    /*------------------.
-    | focus_automaton.  |
-    `------------------*/
 
     /// Read-write on an automaton, that hides all tapes but one.
     template <std::size_t Tape, typename Aut>
@@ -363,7 +405,7 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Tape>
       automaton
-      focus(automaton& aut, integral_constant)
+      focus(const automaton& aut, integral_constant)
       {
         auto& a = aut->as<Aut>();
         return make_automaton(vcsn::focus<Tape::value>(a));
