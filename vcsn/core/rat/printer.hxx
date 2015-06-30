@@ -39,8 +39,7 @@ namespace vcsn
                                 std::ostream& out,
                                 const bool debug)
       : out_(out)
-      , ctx_(rs.context())
-      , identities_(rs.identities())
+      , rs_(rs)
       , debug_(debug)
     {}
 
@@ -59,7 +58,7 @@ namespace vcsn
       if (print)
         out_ << '<' << v.type() << "@0x" << address(v) << '>' << vcsn::incendl;
       if (debug && format_ == "latex")
-        out_ << (identities_ == identities_t::distributive
+        out_ << (rs_.identities().is_distributive()
                  ? "{\\color{red}{" : "{\\color{blue}{");
       v.accept(*this);
       if (debug && format_ == "latex")
@@ -87,8 +86,8 @@ namespace vcsn
           conjunction_   = " \\& ";
           shuffle_       = " \\between ";
           product_       = " \\, ";
-          sum_           = (identities_ == identities_t::distributive
-                            ? " \\oplus " : " + ");
+          sum_           = (rs_.identities().is_distributive() ? " \\oplus "
+                            : " + ");
           zero_          = "\\emptyset";
           one_           = "\\varepsilon";
           lmul_          = "\\,";
@@ -156,7 +155,7 @@ namespace vcsn
     VISIT(lweight)
     {
       out_ << langle_;
-      ctx_.weightset()->print(v.weight(), out_, format_);
+      rs_.weightset()->print(v.weight(), out_, format_);
       out_ << rangle_ << lmul_;
       print_child_(*v.sub(), v);
     }
@@ -165,7 +164,7 @@ namespace vcsn
     {
       print_child_(*v.sub(), v);
       out_ << rmul_ << langle_;
-      ctx_.weightset()->print(v.weight(), out_, format_);
+      rs_.weightset()->print(v.weight(), out_, format_);
       out_ << rangle_;
     }
 
@@ -183,7 +182,7 @@ namespace vcsn
 
     VISIT(atom)
     {
-      ctx_.labelset()->print(v.value(), out_, format_);
+      rs_.labelset()->print(v.value(), out_, format_);
     }
 
     DEFINE::print_child_(const node_t& child, const node_t& parent)

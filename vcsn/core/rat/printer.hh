@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include <vcsn/ctx/traits.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/labelset/labelset.hh> // has_genset_mem_fn
 #include <vcsn/misc/algorithm.hh> // initial_range
 #include <vcsn/misc/attributes.hh>
@@ -80,7 +80,7 @@ namespace vcsn
       bool is_letter_(const node_t& v) const
       {
         auto atom = dynamic_cast<const atom_t*>(&v);
-        return atom && ctx_.labelset()->is_letter(atom->value());
+        return atom && rs_.labelset()->is_letter(atom->value());
       }
 
       /// Whether \a v is an atom whose label is not a letter.
@@ -88,7 +88,7 @@ namespace vcsn
       {
         auto atom = dynamic_cast<const atom_t*>(&v);
         return atom && ! context_t::is_lat
-                    && ! ctx_.labelset()->is_letter(atom->value());
+                    && ! rs_.labelset()->is_letter(atom->value());
       }
 
       /// Whether is naturally braced.
@@ -166,9 +166,9 @@ namespace vcsn
            {
              auto l = std::dynamic_pointer_cast<const atom_t>(lhs)->value();
              auto r = std::dynamic_pointer_cast<const atom_t>(rhs)->value();
-             const auto& ws = *ctx_.labelset();
+             const auto& ls = *rs_.labelset();
              // Require strictly increasing order.
-             return ws.less(l, r) || ws.equal(l, r);
+             return ls.less(l, r) || ls.equal(l, r);
            });
       }
 
@@ -196,7 +196,7 @@ namespace vcsn
                 for (/* nothing. */; i != r.end(); ++i)
                   letters
                     .emplace_back(down_pointer_cast<const atom_t>(*i)->value());
-                vcsn::detail::print_label_class(*ctx_.labelset(), letters,
+                vcsn::detail::print_label_class(*rs_.labelset(), letters,
                                                 out_, format_);
               }
             else
@@ -220,9 +220,8 @@ namespace vcsn
       std::ostream& out_;
       /// Output format.
       std::string format_;
-      /// Context to decode labels and weights.
-      const context_t& ctx_;
-      const identities_t identities_;
+      /// The expressionset.
+      const expressionset_t& rs_;
       /// Whether to be overly verbose.
       const bool debug_;
 
