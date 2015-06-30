@@ -60,7 +60,7 @@ namespace vcsn
 
   /// Turn an automaton into a spontaneous automaton.
   ///
-  /// Each <k>l transition is mapped to a <<k>l>\e transition.
+  /// Each `<k>l` transition is mapped to a `<<k>l>\e` transition.
   ///
   /// \param a    the input automaton
   /// \param ids  the identities of the expression

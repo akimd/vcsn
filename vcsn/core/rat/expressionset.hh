@@ -41,6 +41,7 @@ namespace vcsn
     using weight_t = typename weightset_t::value_t;
     using identities_t = rat::identities;
     using const_visitor = rat::const_visitor<context_t>;
+
     /// Type of expressions.
     //
     // See http://stackoverflow.com/questions/15537023 to know why we

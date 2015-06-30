@@ -116,7 +116,7 @@ namespace vcsn
                                           index_sequence<I2_1, I2...>>::type>::type;
     };
 
-    template<std::size_t I1_1, std::size_t... I1>
+    template <std::size_t I1_1, std::size_t... I1>
     struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<>>
     {
       using type =
@@ -125,7 +125,7 @@ namespace vcsn
                                           index_sequence<>>::type>::type;
     };
 
-    template<>
+    template <>
     struct index_sequence_difference<index_sequence<>, index_sequence<>>
     {
       using type = typename index_sequence<>::type;
@@ -172,7 +172,7 @@ namespace vcsn
       return map_variadic_(f, std::get<I>(ts)...);
     }
 
-    template<typename Fun>
+    template <typename Fun>
     inline auto
     map_variadic_(Fun)
       -> decltype(std::make_tuple())
@@ -301,7 +301,7 @@ namespace vcsn
     // http://stillmoreperfect.blogspot.fr/2010/03/template-metaprogramming-compile-time.html
 
     // Test if (c) then T1 else T2
-    template<bool c, class T1, class T2>
+    template <bool c, class T1, class T2>
     struct if_c { typedef T1 type; };
 
     template <typename T1, class T2>
@@ -311,7 +311,7 @@ namespace vcsn
     struct if_ : if_c<C::value, T1, T2> {};
 
     // Test if (c) then F1 else F2 and get the value
-    template<bool c, class F1, class F2>
+    template <bool c, class F1, class F2>
     struct eval_if_c : if_c<c, F1, F2>::type {};
 
     template <typename C, class F1, class F2>
@@ -327,7 +327,7 @@ namespace vcsn
     template <typename F1>
     struct and_<F1> : eval_if<F1, std::true_type, std::false_type>::type {};
 
-    template<>
+    template <>
     struct and_<> : std::true_type::type {};
 
     // Or condition on several classes
@@ -340,19 +340,19 @@ namespace vcsn
     template <typename F1>
     struct or_<F1> : eval_if<F1, std::true_type, std::false_type>::type { };
 
-    template<>
+    template <>
     struct or_<> : std::true_type::type {};
   }
 
   /// Static evaluation of the 'or' of the template parameters
-  template<bool... B>
+  template <bool... B>
   constexpr bool any_()
   {
     return detail::or_<bool_constant<B>...>::value;
   }
 
   // Static evaluation of the 'and' of the template parameters
-  template<bool... B>
+  template <bool... B>
   constexpr bool all_()
   {
     return detail::and_<bool_constant<B>...>::value;

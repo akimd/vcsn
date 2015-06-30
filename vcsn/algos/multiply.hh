@@ -116,7 +116,7 @@ namespace vcsn
   /// Repeated concatenation of an automaton.
   ///
   /// The return type, via SFINAE, makes the difference with another
-  /// overload, <ValueSet>(ValueSet, value, value), which coincides in
+  /// overload, `<ValueSet>(ValueSet, value, value)`, which coincides in
   /// the case ValueSet = Z, hence value = int.
   ///
   /// Unfortunately, fresh_automaton_t_of, which uses

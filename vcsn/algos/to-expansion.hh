@@ -61,6 +61,7 @@ namespace vcsn
         : rs_(rs)
       {}
 
+      /// From an expression, build its expansion.
       expansion_t operator()(const expression_t& v)
       {
         res_ = es_.zero();
@@ -68,12 +69,13 @@ namespace vcsn
         return res_;
       }
 
+    private:
 #if CACHE
       std::unordered_map<expression_t, expansion_t,
                          vcsn::hash<expressionset_t>,
                          vcsn::equal_to<expressionset_t>> cache_;
 #endif
-
+      /// Facilitate recursion.
       expansion_t to_expansion(const expression_t& e)
       {
 #if CACHE
@@ -109,12 +111,6 @@ namespace vcsn
                  );
         return res;
 #endif
-      }
-
-      polynomial_t to_expansion_as_polynomial(const expression_t& e)
-      {
-        operator()(e);
-        return es_.as_polynomial(res_);
       }
 
       /// Print an expansion.
@@ -409,17 +405,15 @@ namespace vcsn
       /// The result.
       expansion_t res_;
     };
-
   } // rat::
 
   /// First order expansion.
   template <typename ExpSet>
-  inline
   typename rat::expansionset<ExpSet>::value_t
   to_expansion(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::to_expansion_visitor<ExpSet> to_expansion{rs};
-    return to_expansion.to_expansion(e);
+    auto to_expansion = rat::to_expansion_visitor<ExpSet>{rs};
+    return to_expansion(e);
   }
 
   namespace dyn
