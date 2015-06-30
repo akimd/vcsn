@@ -727,8 +727,7 @@ namespace vcsn
   DEFINE::less(value_t lhs, value_t rhs)
     -> bool
   {
-    auto sizer = size<self_t>{};
-    size_t l = sizer(lhs), r = sizer(rhs);
+    size_t l = size<self_t>(lhs), r = size<self_t>(rhs);
 
     if (l < r)
       return true;

@@ -265,13 +265,12 @@ namespace vcsn
   info(const ExpSet& rs, const typename ExpSet::value_t& e,
        std::ostream& o)
   {
-    rat::size<ExpSet> sizer;
     vcsn::rat::info<ExpSet> nfo;
     nfo(*e);
 
     o << "type: ";
     rs.print_set(o, "text");
-    o << "\nsize: " << sizer(e);
+    o << "\nsize: " << rat::size<ExpSet>(e);
 #define ECHO(Type)                            \
     o << "\n" #Type ": " << nfo.Type;
     ECHO(sum);

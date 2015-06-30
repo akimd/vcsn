@@ -39,9 +39,8 @@ namespace vcsn
       bool
       operator()(expression_t lhs, expression_t rhs)
       {
-        rat::size<ExpSet> sizer;
-        size_t lhss = sizer(lhs);
-        size_t rhss = sizer(rhs);
+        size_t lhss = size<ExpSet>(lhs);
+        size_t rhss = size<ExpSet>(rhs);
 
         if (lhss < rhss)
           return true;

@@ -9,7 +9,7 @@ namespace vcsn
   namespace rat
   {
     template <typename ExpSet>
-    class size
+    class sizer
       : public ExpSet::const_visitor
     {
     public:
@@ -46,32 +46,48 @@ namespace vcsn
 
     private:
 
-      VCSN_RAT_VISIT(atom, v);
+      VCSN_RAT_VISIT(atom,)           { ++size_; }
       VCSN_RAT_VISIT(complement, v)   { visit_unary(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_variadic(v); }
       VCSN_RAT_VISIT(ldiv, v)         { visit_variadic(v); }
-      VCSN_RAT_VISIT(lweight, v);
-      VCSN_RAT_VISIT(one, v);
+      VCSN_RAT_VISIT(lweight, v)      { ++size_; v.sub()->accept(*this); }
+      VCSN_RAT_VISIT(one,)            { ++size_; }
       VCSN_RAT_VISIT(prod, v)         { visit_variadic(v); };
-      VCSN_RAT_VISIT(rweight, v);
+      VCSN_RAT_VISIT(rweight, v)      { ++size_; v.sub()->accept(*this); }
       VCSN_RAT_VISIT(shuffle, v)      { visit_variadic(v); };
       VCSN_RAT_VISIT(star, v)         { visit_unary(v); }
       VCSN_RAT_VISIT(sum, v)          { visit_variadic(v); };
       VCSN_RAT_VISIT(transposition, v){ visit_unary(v); }
-      VCSN_RAT_VISIT(zero, v);
+      VCSN_RAT_VISIT(zero,)           { ++size_; }
 
 
       /// Traverse unary node.
       template <rat::exp::type_t Type>
-      void visit_unary(const unary_t<Type>& n);
+      void visit_unary(const unary_t<Type>& v)
+      {
+        ++size_;
+        v.sub()->accept(*this);
+      }
 
       /// Traverse variadic node.
       template <rat::exp::type_t Type>
-      void visit_variadic(const variadic_t<Type>& n);
+      void visit_variadic(const variadic_t<Type>& v)
+      {
+        // One operator bw each argument.
+        size_ += v.size() - 1;
+        for (auto child : v)
+          child->accept(*this);
+      }
 
       size_t size_;
     };
+
+    template <typename ExpSet>
+    size_t size(const typename ExpSet::value_t& r)
+    {
+      auto s = sizer<ExpSet>{};
+      return s(r);
+    }
+
   } // namespace rat
 } // namespace vcsn
-
-#include <vcsn/core/rat/size.hxx>

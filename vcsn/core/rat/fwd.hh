@@ -159,6 +159,10 @@ namespace vcsn
     template <typename Context>
     class expressionset_impl;
 
+    // size.hh.
+    template <typename ExpSet>
+    size_t size(const ExpSet& rs, const typename ExpSet::value_t& r);
+
   } // namespace rat
 
   template <typename Context>
