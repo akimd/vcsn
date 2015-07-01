@@ -99,12 +99,13 @@ namespace vcsn
       return res;
     }
 
+    /// Number of tapes.
     static constexpr std::size_t size()
     {
       return sizeof...(ValueSets);
     }
 
-    /// Get the max of the sizes of the tapes
+    /// Get the max of the sizes of the tapes.
     static size_t size(const value_t& v)
     {
       return size_(v, indices);
@@ -410,9 +411,12 @@ namespace vcsn
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
-          const std::string& format = "text") const
+          const std::string& format = "text",
+          const char* pre = "(",
+          const char* sep = ",",
+          const char* post = ")") const
     {
-      return this->print_(l, o, format, indices);
+      return this->print_(l, o, format, pre, sep, post, indices);
     }
 
   private:
@@ -713,18 +717,22 @@ namespace vcsn
     template <std::size_t... I>
     std::ostream&
     print_(value_t const& l, std::ostream& o,
-           const std::string& format, seq<I...>) const
+           const std::string& format,
+           const char* pre,
+           const char* sep,
+           const char* post,
+           seq<I...>) const
     {
       if (!is_special(l))
         {
           using swallow = int[];
           (void) swallow
             {
-              (o << (I == 0 ? '(' : ','),
+              (o << (I == 0 ? pre : sep),
                set<I>().print(std::get<I>(l), o, format),
                0)...
             };
-          o << ')';
+          o << post;
         }
       return o;
     }
