@@ -71,29 +71,29 @@
     namespace rat
     {
       /// Generate an expression for "e <+ f = e % f + f".
-      static
+      static inline
       dyn::expression prefer(const dyn::expression& e,
                              const dyn::expression& f);
 
       /// Get the context of the driver.
+      static inline
       dyn::context ctx(const driver& d)
       {
         return d.context();
       }
 
       /// Get the identities of the driver.
+      static inline
       identities ids(const driver& d)
       {
         return d.identities();
       }
 
       /// Use our local scanner object.
-      static
-      inline
-      parser::symbol_type
-      yylex(driver& driver_)
+      static inline
+      parser::symbol_type yylex(driver& d)
       {
-        return driver_.scanner_->lex(driver_);
+        return d.scanner_->lex(d);
       }
     }
   }
