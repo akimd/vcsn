@@ -162,6 +162,13 @@ namespace vcsn
       return this->value_(args, indices);
     }
 
+    /// Construct a value.
+    template <typename... Args>
+    value_t tuple(Args&&... args) const
+    {
+      return value_t{args...};
+    }
+
     /// The generators.  Meaningful for labelsets only.
     genset_t
     genset() const
@@ -855,6 +862,13 @@ namespace vcsn
       return letters_of_padded_(v, def, indices);
     }
   };
+
+  template <typename... ValueSets>
+  tupleset<ValueSets...>
+  make_tupleset(const ValueSets&... vss)
+  {
+    return {vss...};
+  }
 
   template <typename T1, typename T2>
   struct concat_tupleset;

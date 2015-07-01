@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/core/rat/fwd.hh>
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -22,6 +23,19 @@ namespace vcsn
       using variadic_t = rat::variadic<Type, context_t>;
       template <type_t Type>
       using weight_node_t = rat::weight_node<Type, context_t>;
+
+      void visit(const tuple<context_t>& v)
+      {
+        visit(v, is_two_tapes_t<context_t>{});
+      }
+
+      using tuple_t = tuple<context_t>;
+      virtual void visit(const tuple_t& v, std::true_type) = 0;
+
+      virtual void visit(const tuple<context_t>&, std::false_type)
+      {
+        BUILTIN_UNREACHABLE();
+      }
 
 #define DEFINE(Type)                            \
       using Type ## _t = Type<context_t>;       \

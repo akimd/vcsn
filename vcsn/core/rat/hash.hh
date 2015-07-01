@@ -60,6 +60,33 @@ namespace vcsn
       VCSN_RAT_VISIT(transposition, v){ visit_unary(v); }
       VCSN_RAT_VISIT(zero, v)         { visit_nullary(v); }
 
+      using tuple_t = typename super_t::tuple_t;
+
+      template <bool = is_two_tapes_t<context_t>{},
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        size_t operator()(const tuple_t& v)
+        {
+          return tuple_t::valueset_t::hash(v.sub());
+        }
+        const hash& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        size_t operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        const hash& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        res_ = visit_tuple<>{*this}(v);
+      }
 
       /// Update res_ by hashing the node type; this is needed for any node.
       void combine_type(const node_t& node);

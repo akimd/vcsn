@@ -69,6 +69,7 @@ namespace
   "{\\}"  return TOK(BACKSLASH);
   "{/}"   return TOK(SLASH);
   ","     return TOK(COMMA);
+  "|"     return TOK(PIPE);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);
 

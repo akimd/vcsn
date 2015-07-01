@@ -86,6 +86,13 @@ namespace vcsn
         height_ = max;
       }
 
+      using tuple_t = typename super_t::tuple_t;
+      virtual void visit(const tuple_t&, std::true_type) override
+      {
+        raise(me(), ": tuple is not supported");
+      }
+
+      /// The current star height.
       unsigned height_;
     };
   } // namespace detail

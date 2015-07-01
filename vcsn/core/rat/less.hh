@@ -83,6 +83,40 @@ namespace vcsn
       DEFINE(zero);
 #undef DEFINE
 
+      using tuple_t = typename super_t::tuple_t;
+
+      template <bool = is_two_tapes_t<context_t>{},
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        bool operator()(const tuple_t& lhs)
+        {
+          return operator()(lhs,
+                            *down_pointer_cast<const tuple_t>(visitor_.rhs_));
+        }
+        bool operator()(const tuple_t& lhs, const tuple_t& rhs)
+        {
+          return tuple_t::valueset_t::less(lhs.sub(), rhs.sub());
+        }
+
+        const less& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        bool operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        less& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        res_ = visit_tuple<>{*this}(v);
+      }
+
       /*-------------------------------------------------------.
       | Binary functions that compare two nodes of same type.  |
       `-------------------------------------------------------*/

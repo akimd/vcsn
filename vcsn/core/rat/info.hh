@@ -83,6 +83,31 @@ namespace vcsn
         for (auto c: v)
           c->accept(*this);
       }
+
+      using tuple_t = typename super_t::tuple_t;
+      template <bool = is_two_tapes_t<context_t>{},
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        void operator()(const tuple_t&)
+        {
+          std::cerr << "FIXME: do something\n";
+        }
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        void operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        visit_tuple<>{}(v);
+      }
     };
 
   } // namespace rat

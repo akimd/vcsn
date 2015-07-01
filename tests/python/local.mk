@@ -78,6 +78,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/thompson.py                               \
   %D%/to-expansion.py                           \
   %D%/to-expression.py                          \
+  %D%/transducer.py                             \
   %D%/transpose.py                              \
   %D%/trie.py                                   \
   %D%/tuples.py                                 \

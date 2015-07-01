@@ -20,10 +20,12 @@ namespace vcsn
       driver(const dyn::context& ctx, rat::identities ids);
       ~driver();
 
-      /// Get the context.
-      dyn::context context() const;
       /// Set the expressionset to use from its context name.
       void context(const std::string& ctx);
+
+      /// Get the current context.
+      /// Depends on the current tape.
+      dyn::context context() const;
 
       /// Get the identities.
       rat::identities identities() const;
@@ -61,6 +63,8 @@ namespace vcsn
       rat::identities ids_;
       /// The parsed expression.
       dyn::expression result_;
+      /// The current tape number.
+      unsigned tape_ = 0;
     };
   }
 }

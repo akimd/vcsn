@@ -60,6 +60,38 @@ namespace vcsn
       VCSN_RAT_VISIT(transposition, v){ visit_unary(v); }
       VCSN_RAT_VISIT(zero,)           { ++size_; }
 
+      using tuple_t = typename super_t::tuple_t;
+      template <bool = is_two_tapes_t<context_t>{},
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        size_t operator()(const tuple_t& v)
+        {
+          auto res = size_t{0};
+          using ctx0_t = detail::focus_context<0, context_t>;
+          using rs0_t = expressionset<ctx0_t>;
+          res += size<rs0_t>(std::get<0>(v.sub()));
+
+          using ctx1_t = detail::focus_context<1, context_t>;
+          using rs1_t = expressionset<ctx1_t>;
+          res += size<rs1_t>(std::get<1>(v.sub()));
+          return res;
+        }
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        size_t operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        visit_tuple<>{}(v);
+      }
 
       /// Traverse unary node.
       template <rat::exp::type_t Type>

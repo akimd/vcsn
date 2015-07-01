@@ -99,6 +99,11 @@
   }
 }
 
+%code top
+{
+  unsigned tape = 0;
+}
+
 %param { driver& driver_ }
 
 %initial-action
@@ -137,6 +142,7 @@
   LT_PLUS    "<+"
   ONE        "\\e"
   PERCENT    "%"
+  PIPE       "|"
   PLUS       "+"
   RBRACKET   "]"
   RPAREN     ")"
@@ -153,6 +159,7 @@
 %type <dyn::weight> weights;
 %type <std::set<std::pair<std::string,std::string>>> class;
 
+%left "|"
 %left "+" "<+"
 %left "%"
 %left "&" ":"
@@ -197,6 +204,7 @@ exp:
 | exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
 | exp "%" exp                 { $$ = dyn::conjunction($1.exp,
                                                       dyn::complement($3.exp)); }
+| exp "|" { ++driver_.tape_; } exp { $$ = dyn::tuple($1.exp, $4.exp); }
 | weights exp %prec LWEIGHT   { $$ = dyn::left_mult($1, $2.exp); }
 | exp weights %prec RWEIGHT   { $$ = dyn::right_mult($1.exp, $2); }
 | exp exp %prec CONCAT
@@ -222,7 +230,12 @@ exp:
                                               $2, true); }
 | "[" "^" class "]" { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
                                               $3, false); }
-| "(" exp ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
+| "(" { tape = driver_.tape_; } exp ")"
+                    {
+                      driver_.tape_ = tape;
+                      $$.exp = $3.exp;
+                      $$.lparen = $$.rparen = true;
+                    }
 ;
 
 weights:

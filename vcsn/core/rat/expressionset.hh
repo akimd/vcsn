@@ -63,6 +63,7 @@ namespace vcsn
     DEFINE(shuffle);
     DEFINE(star);
     DEFINE(sum);
+    DEFINE(tuple);
     DEFINE(transposition);
     DEFINE(zero);
 # undef DEFINE
@@ -234,6 +235,8 @@ namespace vcsn
 
     value_t conjunction(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
+    template <typename... Value>
+    value_t tuple(Value&&... v) const;
     /// Add a power operator.
     value_t power(value_t e, unsigned n) const;
     value_t ldiv(value_t l, value_t r) const;
@@ -279,6 +282,22 @@ namespace vcsn
     /// Format the description of this expressionset.
     std::ostream& print_set(std::ostream& o,
                             const std::string& format = "text") const;
+
+    /// The type of the expressionset for the Tape-th tape.
+    template <unsigned Tape, typename Ctx>
+    using focus_t
+      = expressionset<vcsn::context<detail::focus_labelset<Tape, labelset_t_of<Ctx>>,
+                                    weightset_t_of<Ctx>>>;
+
+
+    /// If we are multitape, ourself as a tupleset.
+    template <typename Ctx = context_t>
+    auto as_tupleset() const
+      -> enable_if_t<Ctx::is_lat && Ctx::labelset_t::size() == 2,
+                     tupleset<focus_t<0, Ctx>, focus_t<1, Ctx>>>
+    {
+      return {detail::make_focus<0>(self()), detail::make_focus<1>(self())};
+    }
 
   private:
     /// Ourself, but after the application of weightset_mixin.

@@ -967,6 +967,11 @@ struct expression
     return vcsn::dyn::thompson(val_);
   }
 
+  expansion to_expansion() const
+  {
+    return vcsn::dyn::to_expansion(val_);
+  }
+
   expression transpose() const
   {
     return vcsn::dyn::transpose(val_);
@@ -977,9 +982,9 @@ struct expression
     return vcsn::dyn::transposition(val_);
   }
 
-  expansion to_expansion() const
+  expression tuple(const expression& rhs) const
   {
-    return vcsn::dyn::to_expansion(val_);
+    return vcsn::dyn::tuple(val_, rhs.val_);
   }
 
   automaton zpc(const std::string& algo = "auto") const
@@ -1370,6 +1375,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("thompson", &expression::thompson)
     .def("transpose", &expression::transpose)
     .def("transposition", &expression::transposition)
+    .def("tuple", &expression::tuple)
     .def("zpc", &expression::zpc, (arg("algo") = "auto"))
     ;
 

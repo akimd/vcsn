@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <vcsn/core/rat/identities.hh>
+#include <vcsn/misc/type_traits.hh> // detect
 #include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
@@ -42,6 +43,7 @@ namespace vcsn
       lweight,
       rweight,
       complement,
+      tuple,
     };
 
     /// Whether is a constant (`\z` or `\e`).
@@ -135,6 +137,37 @@ namespace vcsn
 
     template <typename Context>
     using sum = variadic<type_t::sum, Context>;
+
+
+
+    /*---------.
+    | tuple.   |
+    `---------*/
+
+    /// The signature of the size() member function.
+    template <typename LabelSet>
+    using size_mem_fn_t = decltype(bool_constant<LabelSet::size() == 0>{});
+
+    /// Whether LabelSet features the size() member function.
+    template <typename LabelSet>
+    using has_size_mem_fn = detail::detect<LabelSet, size_mem_fn_t>;
+
+    /// Whether LabelSet is two-tape.
+    template <typename LabelSet,
+              bool Enable = has_size_mem_fn<LabelSet>{}>
+    struct is_two_tapes_impl : bool_constant<LabelSet::size() == 2> {};
+
+    template <typename LabelSet>
+    struct is_two_tapes_impl<LabelSet, false> : std::false_type {};
+
+    template <typename Context>
+    using is_two_tapes_t = is_two_tapes_impl<typename Context::labelset_t>;
+
+    /// Implementation of nodes of tuple of rational expressions.
+    template <typename Context,
+              bool Enable = is_two_tapes_t<Context>{}>
+    class tuple;
+
 
     /*--------------.
     | weight_node.  |

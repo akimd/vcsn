@@ -1,5 +1,7 @@
 #include <sstream>
 
+#include <boost/algorithm/string/predicate.hpp> // boost::algorithm::contains
+
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 #include <lib/vcsn/rat/scan.hh>
@@ -22,7 +24,7 @@ namespace vcsn
 
     dyn::context driver::context() const
     {
-      return ctx_;
+      return dyn::focus(ctx_, tape_);
     }
 
     void driver::context(const std::string& ctx)
@@ -93,7 +95,7 @@ namespace vcsn
       try
         {
           std::istringstream is{s};
-          auto res = dyn::read_label(ctx_, is);
+          auto res = dyn::read_label(context(), is);
           if (is.peek() != -1)
             vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
           return res;
@@ -107,7 +109,27 @@ namespace vcsn
     dyn::expression
     driver::make_atom(const location& loc, const std::string& s)
     {
-      return dyn::to_expression(ctx_, ids_, make_label(loc, s));
+      // If there are commas in the label, then have it read as a full
+      // label, not a one-tape label.
+      //
+      // FIXME: Remove once the tuple approach works perfectly.
+      if (boost::algorithm::contains(s, ","))
+        {
+          try
+            {
+              std::istringstream is{s};
+              auto res = dyn::read_label(ctx_, is);
+              if (is.peek() != -1)
+                vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+              return dyn::to_expression(ctx_, ids_, res);
+            }
+          catch (const std::exception& e)
+            {
+              throw parser::syntax_error(loc, e.what());
+            }
+        }
+      else
+        return dyn::to_expression(context(), ids_, make_label(loc, s));
     }
 
     dyn::weight

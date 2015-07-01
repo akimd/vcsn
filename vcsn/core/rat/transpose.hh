@@ -147,6 +147,12 @@ namespace vcsn
                         transpose(e.sub()));
       }
 
+      using tuple_t = typename super_t::tuple_t;
+      virtual void visit(const tuple_t&, std::true_type) override
+      {
+        raise(me(), ": tuple is not supported");
+      }
+
 
     private:
       expressionset_t rs_;

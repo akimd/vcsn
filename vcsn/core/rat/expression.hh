@@ -6,7 +6,9 @@
 
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/core/rat/visitor.hh>
+#include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/labelset/tupleset.hh>
 
 namespace vcsn
 {
@@ -165,6 +167,57 @@ namespace vcsn
     private:
       values_t sub_;
     };
+
+    /*---------.
+    | tuple.   |
+    `---------*/
+
+    template <typename Context, bool Enable>
+    class tuple
+      : public inner<Context>
+    {
+    public:
+      static_assert(Context::is_lat,
+                    "tuple: requires a tupleset labelset");
+      static_assert(Context::labelset_t::size() == 2,
+                    "tuple: requires a two-tape labelset");
+      using super_t = inner<Context>;
+      using value_t = typename super_t::value_t;
+
+      using ls_t = typename Context::labelset_t;
+      using ws_t = typename Context::weightset_t;
+      using ls0_t = typename ls_t::template valueset_t<0>;
+      using ls1_t = typename ls_t::template valueset_t<1>;
+      using ctx0_t = context<ls0_t, ws_t>;
+      using ctx1_t = context<ls1_t, ws_t>;
+      using rs0_t = expressionset<ctx0_t>;
+      using rs1_t = expressionset<ctx1_t>;
+      using r0_t = typename rs0_t::value_t;
+      using r1_t = typename rs1_t::value_t;
+      using valueset_t = tupleset<rs0_t, rs1_t>;
+      using values_t = typename valueset_t::value_t;
+
+      template <typename... Args>
+      tuple(Args&&... args)
+        : sub_{std::forward<Args>(args)...}
+      {};
+      virtual type_t type() const { return type_t::tuple; };
+
+      virtual void accept(typename super_t::const_visitor& v) const
+      {
+        v.visit(*this);
+      }
+
+      const values_t sub() const { return sub_; }
+
+    private:
+      values_t sub_;
+    };
+
+    template <typename Context>
+    class tuple<Context, false>
+      : public inner<Context>
+    {};
 
     /*--------.
     | unary.  |

@@ -10,6 +10,8 @@
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/lexicographical_compare.hpp>
 
+#include <vcsn/algos/focus.hh> // FIXME: Move elsewhere than algos.
+
 #include <vcsn/ctx/context.hh> // We need context to define join.
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/labelset/wordset.hh>
@@ -674,6 +676,29 @@ namespace vcsn
       return n(v);
     }
 
+
+
+    /*---------------.
+    | tuple(l, r).   |
+    `---------------*/
+
+    template <unsigned Tape, typename Ctx = context_t>
+    using focus_t
+      = typename polynomialset<detail::focus_context<Tape, Ctx>>::value_t;
+
+    template <typename Ctx = context_t>
+    auto
+    tuple(const focus_t<0, Ctx>& v0, const focus_t<1, Ctx>& v1) const
+      -> value_t
+    {
+      auto res = value_t{};
+      for (const auto& m0: v0)
+        for (const auto& m1: v1)
+          add_here(res,
+                   labelset()->tuple(m0.first, m1.first),
+                   weightset()->mul(m0.second, m1.second));
+      return res;
+    }
 
     /*---------------.
     | equal(l, r).   |

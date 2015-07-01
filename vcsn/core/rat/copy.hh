@@ -102,6 +102,11 @@ namespace vcsn
                                                       v.weight()));
       }
 
+      using tuple_t = typename super_t::tuple_t;
+      virtual void visit(const tuple_t&, std::true_type) override
+      {
+        abort();
+      }
 
       /// expressionset to decode the input value.
       const in_expressionset_t& in_rs_;

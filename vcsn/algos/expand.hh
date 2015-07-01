@@ -107,6 +107,12 @@ namespace vcsn
       VCSN_RAT_UNSUPPORTED(shuffle)
       VCSN_RAT_UNSUPPORTED(transposition)
 
+      using tuple_t = typename super_t::tuple_t;
+      virtual void visit(const tuple_t&, std::true_type) override
+      {
+        raise(me(), ": tuple is not supported");
+      }
+
       VCSN_RAT_VISIT(prod, v)
       {
         polynomial_t res = ps_.one();

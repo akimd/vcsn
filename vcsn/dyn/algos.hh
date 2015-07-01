@@ -766,6 +766,9 @@ namespace vcsn
     /// The trim subautomaton of \a aut.
     automaton trim(const automaton& aut);
 
+    /// Build a two-tape expression from two expressions.
+    expression tuple(const expression& lhs, const expression& rhs);
+
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
 

@@ -464,6 +464,21 @@ namespace vcsn
     return transposition(ldiv(transposition(r), transposition(l)));
   }
 
+  template <typename Context>
+  template <typename... Value>
+  auto expressionset_impl<Context>::tuple(Value&&... v) const
+    -> value_t
+  {
+    auto ts = as_tupleset();
+    auto t = ts.tuple(v...);
+    if (ts.is_one(t))
+      return one();
+    else
+      // FIXME: when all letters, make it a (multitape) letter:
+      // a|x -> 'a,x'.
+      return std::make_shared<tuple_t>(std::forward<Value>(v)...);
+  }
+
   DEFINE::shuffle(value_t l, value_t r) const
     -> value_t
   {

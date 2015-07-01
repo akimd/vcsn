@@ -28,6 +28,7 @@ namespace vcsn
           CASE(lweight);
           CASE(rweight);
           CASE(complement);
+          CASE(tuple);
 #undef CASE
         }
       return o;
@@ -142,6 +143,7 @@ namespace vcsn
             CASE(star);
             CASE(sum);
             CASE(transposition);
+            CASE(tuple);
             CASE(zero);
 #undef CASE
           }

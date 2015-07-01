@@ -2,12 +2,14 @@
 
 #include <iostream>
 
+#include <vcsn/algos/focus.hh> // bad layering: should not be in algos.
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/labelset/labelset.hh> // has_genset_mem_fn
 #include <vcsn/misc/algorithm.hh> // initial_range
 #include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/cast.hh>
 
 namespace vcsn
@@ -74,6 +76,35 @@ namespace vcsn
       VCSN_RAT_VISIT(transposition, v) { print_(v, transposition_); }
       VCSN_RAT_VISIT(zero, v);
 
+      using tuple_t = typename super_t::tuple_t;
+
+      template <bool = is_two_tapes_t<context_t>{},
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        void operator()(const tuple_t& v)
+        {
+          auto ts = visitor_.rs_.as_tupleset();
+          ts.print(v.sub(), visitor_.out_, visitor_.format_,
+                   "", " | ", "");
+        }
+        const printer& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        void operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        const printer& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        visit_tuple<>{*this}(v);
+      }
 
 
       /// Whether \a v is an atom whose label is a letter.
@@ -116,6 +147,7 @@ namespace vcsn
       /// star.  This is the role of 'word' below.
       enum class precedence_t
       {
+        tuple,
         sum,
         shuffle,
         conjunction,
