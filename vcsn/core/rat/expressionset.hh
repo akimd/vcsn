@@ -79,8 +79,8 @@ namespace vcsn
     template <type_t Type>
     using variadic_t = variadic<Type, context_t>;
 
-    using word_t = self_t;
-    using letter_t = self_t;
+    using word_t = value_t;
+    using letter_t = value_t;
 
   public:
     /// Static description key.

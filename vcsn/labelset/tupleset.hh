@@ -37,7 +37,7 @@ namespace vcsn
 
   /// Specialization for tuples of labelsets.
   template <typename... ValueSets>
-  struct labelset_types_impl<decltype(pass{typename ValueSets::word_t()...}, void()),
+  struct labelset_types_impl<decltype(pass{std::declval<ValueSets>().genset()...}, void()),
                              ValueSets...>
   {
     using genset_t
