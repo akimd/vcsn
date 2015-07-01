@@ -4,12 +4,12 @@
 
 #include <boost/optional.hpp>
 
-#include <vcsn/ctx/context.hh>
-#include <vcsn/labelset/oneset.hh>
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/core/mutable-automaton.hh>
-#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/core/mutable-automaton.hh> // fresh_automaton_t_of
 #include <vcsn/core/rat/expression.hh>
+#include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/name.hh>
 
 namespace vcsn
@@ -69,7 +69,7 @@ namespace vcsn
   detail::lifted_automaton_t<Aut>
   lift(const Aut& a, vcsn::rat::identities ids = {})
   {
-    using auto_in_t = typename Aut::element_type;
+    using auto_in_t = Aut;
     using ctx_in_t = context_t_of<auto_in_t>;
     using state_in_t = state_t_of<auto_in_t>;
 
@@ -220,7 +220,8 @@ namespace vcsn
 
     template <typename Aut, size_t... Tapes>
     using lifted_automaton_tape_t =
-      mutable_automaton<typename lifted_context_tape_t<context_t_of<Aut>, Tapes...>::context_t>;
+      mutable_automaton<typename lifted_context_tape_t<context_t_of<Aut>,
+                                                       Tapes...>::context_t>;
 
     // lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet, size_t... Tapes>
@@ -242,7 +243,7 @@ namespace vcsn
     detail::lifted_automaton_tape_t<Aut, Tapes...>
     lift_tape(const Aut& a)
     {
-      using auto_in_t = typename Aut::element_type;
+      using auto_in_t = Aut;
       using state_in_t = state_t_of<auto_in_t>;
 
       using lifter = detail::lifted_context_tape_t<context_t_of<Aut>, Tapes...>;
