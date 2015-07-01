@@ -31,6 +31,11 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/score.py                             \
   %D%/vcsn/weight.py
 
+vcsn_python_demodir = $(vcsn_pythondir)/demo    \
+  %D%/vcsn/demo/__init__.py                     \
+  %D%/vcsn/demo/eliminate_state.py              \
+  %D%/vcsn/demo/utils.py
+
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
 %C%_vcsn_cxx_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)
 %C%_vcsn_cxx_la_LDFLAGS = -avoid-version -module $(BOOST_PYTHON_LDFLAGS)

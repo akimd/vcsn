@@ -13,6 +13,8 @@ import vcsn
 from vcsn.dot import _dot_to_svg, _dot_pretty, daut_to_dot
 from vcsn import d3Widget
 
+import vcsn.demo as demo
+
 # The class MUST call this class decorator at creation time.
 class ContextText:
     def __init__(self, ipython, name=None):
@@ -149,8 +151,42 @@ class EditAutomaton(Magics):
             self.shell.user_ns[args.var] = a
             display(a)
 
+@magics_class
+class DemoAutomaton(Magics):
+    ''' Usage: %demo variable algorithm
+
+        variable     either an expression or an automaton.
+        algorithm    one that is valid for the variable.
+
+        Type %demo help to display this message.
+
+        >>> e = vcsn.B.expression('(ab?){2}')
+        >>> a = e.standard().lift()
+        >>> %demo a eliminate_state
+        '''
+    @line_cell_magic
+    def demo(self, line, cell=None):
+        args = line.split(' ')
+        var = args[0]
+        algo = args[1] if len(args) > 1 else ''
+
+        # The help message.
+        if var == 'help':
+            print(self.__doc__)
+            return
+
+        if algo == 'eliminate_state':
+            if (var in self.shell.user_ns):
+                a = demo.EliminateState(self.shell.user_ns[var])
+
+        try:
+            a.show()
+        except Exception as e:
+            print(self.__doc__)
+
 ip = get_ipython()
 ip.register_magics(EditAutomaton)
+ip.register_magics(DemoAutomaton)
 
 def interact_h(_interact_f, *args, **kwargs):
     '''Similar to IPython's interact function, but with widgets
