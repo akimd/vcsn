@@ -15,9 +15,9 @@ XFAIL(lambda: vcsn.context("lal_char(a)_UNKNOWN"))
 # Invalid context: trailing garbage.
 XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 
-## ----------- ##
-## letterset.  ##
-## ----------- ##
+## --------------------- ##
+## LabelSet: letterset.  ##
+## --------------------- ##
 
 # An open context is not printed as open in text.
 check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
@@ -48,18 +48,18 @@ CHECK_EQ(r'''\x01 + \x02 + \x03 + \x04 + \x05 + \x06 + \x07 + \x08 + \x09 + \n +
 check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
 
 
-## --------------- ##
-## expressionset.  ##
-## --------------- ##
+## ------------------------- ##
+## LabelSet: expressionset.  ##
+## ------------------------- ##
 
 check('expressionset<lal_char(ab), b>, b', 'expressionset<letterset<char_letters(ab)>, b>, b')
 # expressions weighted by expressions.
 check('expressionset<letterset<char_letters(ab)>, expressionset<letterset<char_letters(xy)>, z>>, b')
 
 
-## ---------- ##
-## tupleset.  ##
-## ---------- ##
+## -------------------- ##
+## LabelSet: tupleset.  ##
+## -------------------- ##
 
 # Arguably useless, but stresses our tupleset implementation.
 check('lat<lat<lal_char(a)>>, b',

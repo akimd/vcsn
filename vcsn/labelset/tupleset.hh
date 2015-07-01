@@ -854,7 +854,6 @@ namespace vcsn
     {
       return letters_of_padded_(v, def, indices);
     }
-
   };
 
   template <typename T1, typename T2>

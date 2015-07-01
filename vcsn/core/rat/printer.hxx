@@ -36,8 +36,8 @@ namespace vcsn
     template <typename ExpSet>
     inline
     printer<ExpSet>::printer(const expressionset_t& rs,
-                                std::ostream& out,
-                                const bool debug)
+                             std::ostream& out,
+                             const bool debug)
       : out_(out)
       , rs_(rs)
       , debug_(debug)

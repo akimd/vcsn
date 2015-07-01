@@ -3,6 +3,8 @@
 #include <memory>
 #include <set>
 
+#include <vcsn/core/rat/fwd.hh>
+
 // This file is dangerous, it prevents automatic instantiation of
 // these algos.  It exists only to solve mutual dependencies (e.g.:
 // proper uses is-valid which uses proper).
@@ -72,6 +74,11 @@ namespace vcsn
   template <typename Aut>
   using synchronized_automaton
     = std::shared_ptr<detail::synchronized_automaton_impl<Aut>>;
+
+  // vcsn/algos/to-expansion.hh.
+  template <typename ExpSet>
+  typename rat::expansionset<ExpSet>::value_t
+  to_expansion(const ExpSet& rs, const typename ExpSet::value_t& e);
 
   // vcsn/algos/transpose.hh
   namespace detail

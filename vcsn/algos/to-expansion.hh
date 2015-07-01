@@ -198,14 +198,21 @@ namespace vcsn
           return std::make_shared<prod_t>(expressions_t{begin, end});
       }
 
-      label_t one_(std::true_type)
+      /// This LabelSet's one(), if supported.
+      template <typename LabelSet>
+      static auto label_one_(const LabelSet& ls)
+        -> enable_if_t<LabelSet::has_one(),
+                       typename LabelSet::value_t>
       {
-        return rs_.labelset()->one();
+        return ls.one();
       }
 
-      label_t one_(std::false_type)
+      template <typename LabelSet>
+      static auto label_one_(const LabelSet&)
+        -> enable_if_t<!LabelSet::has_one(),
+                       typename LabelSet::value_t>
       {
-        raise(me(), ": quotient requires a labelset with a neutral");
+        raise(me(), ": the labelset does not feature a neutral");
       }
 
       /// If r is e*, return e.
@@ -255,7 +262,7 @@ namespace vcsn
             else
               es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
           }
-        auto one = one_(bool_constant<context_t::has_one()>());
+        auto one = label_one_(ls_);
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
           for (const auto& lm: std::get<0>(p.second))
             for (const auto& rm: std::get<1>(p.second))

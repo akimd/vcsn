@@ -40,10 +40,10 @@ namespace vcsn
 
     // Complement.
     for (auto s: aut->states())
-      if (!has(finals, s))
-        aut->set_final(s);
-      else
+      if (has(finals, s))
         aut->unset_final(s);
+      else
+        aut->set_final(s);
   }
 
   template <typename Aut>

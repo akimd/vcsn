@@ -155,6 +155,10 @@ namespace vcsn
     using expression = std::shared_ptr<const node<Context>>;
 
 
+    // expansionset.hh.
+    template <typename ExpSet>
+    struct expansionset;
+
     // expressionset.hh.
     template <typename Context>
     class expressionset_impl;

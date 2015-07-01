@@ -134,14 +134,14 @@
   END 0      "end"
   LBRACKET   "["
   LPAREN     "("
+  LT_PLUS    "<+"
   ONE        "\\e"
   PERCENT    "%"
   PLUS       "+"
-  LT_PLUS    "<+"
   RBRACKET   "]"
   RPAREN     ")"
-  TRANSPOSITION "{T}"
   SLASH      "{/}"
+  TRANSPOSITION "{T}"
   ZERO       "\\z"
 ;
 

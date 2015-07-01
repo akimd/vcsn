@@ -109,9 +109,9 @@ check_transposition('\z')
 check_transposition('ab')
 
 
-## ----------------- ##
+## --------------------- ##
 ## Invalid expressions.  ##
-## ----------------- ##
+## --------------------- ##
 
 # Check invalid input.
 def xfail(r):

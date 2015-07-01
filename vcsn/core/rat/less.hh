@@ -36,8 +36,7 @@ namespace vcsn
       using weight_node_t = typename super_t::template weight_node_t<Type>;
 
       /// Whether \a lhs < \a rhs.
-      bool
-      operator()(expression_t lhs, expression_t rhs)
+      bool operator()(expression_t lhs, expression_t rhs)
       {
         size_t lhss = size<ExpSet>(lhs);
         size_t rhss = size<ExpSet>(rhs);
@@ -137,7 +136,10 @@ namespace vcsn
       }
 
    private:
+      /// The right-hand side expression with which the current node
+      /// is compared.  Updated by the recursion.
       expression_t rhs_;
+      /// The current result.
       bool res_;
     };
   }
