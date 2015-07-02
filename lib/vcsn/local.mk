@@ -46,6 +46,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/print.cc                            \
   %D%/algos/read.cc                             \
   %D%/algos/registry.hh                         \
+  %D%/algos/to-automaton.cc                     \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \

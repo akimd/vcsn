@@ -967,6 +967,11 @@ struct expression
     return vcsn::dyn::thompson(val_);
   }
 
+  automaton to_automaton(const std::string& algo = "auto") const
+  {
+    return vcsn::dyn::to_automaton(val_, algo);
+  }
+
   expansion to_expansion() const
   {
     return vcsn::dyn::to_expansion(val_);
@@ -1383,6 +1388,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("star_normal_form", &expression::star_normal_form)
     .def("sum", &expression::sum)
     .def("thompson", &expression::thompson)
+    .def("automaton", &expression::to_automaton, (arg("algo") = "auto"))
     .def("transpose", &expression::transpose)
     .def("transposition", &expression::transposition)
     .def("_tuple", &expression::tuple_).staticmethod("_tuple")

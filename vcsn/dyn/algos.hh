@@ -708,6 +708,9 @@ namespace vcsn
     /// Output \a aut in LaTeX's TikZ format.
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
+    /// An automaton denoting the language of \a exp.
+    automaton to_automaton(const expression& exp, const std::string& algo = "auto");
+
     /// First order development of a \a exp.
     ///
     /// \param exp              the input expression
