@@ -33,6 +33,7 @@ vcsn_python_PYTHON =                            \
 
 vcsn_python_demodir = $(vcsn_pythondir)/demo    \
   %D%/vcsn/demo/__init__.py                     \
+  %D%/vcsn/demo/automaton.py                    \
   %D%/vcsn/demo/eliminate_state.py              \
   %D%/vcsn/demo/utils.py
 

@@ -156,13 +156,16 @@ class DemoAutomaton(Magics):
     ''' Usage: %demo variable algorithm
 
         variable     either an expression or an automaton.
-        algorithm    one that is valid for the variable.
+        algorithm    one that is valid for the variable: [eliminate_state,
+        automaton]
 
         Type %demo help to display this message.
 
-        >>> e = vcsn.B.expression('(ab?){2}')
-        >>> a = e.standard().lift()
-        >>> %demo a eliminate_state
+        Example:
+
+        e = vcsn.B.expression('(ab?){2}')
+        a = e.standard().lift()
+        %demo a eliminate_state
         '''
     @line_cell_magic
     def demo(self, line, cell=None):
@@ -175,9 +178,11 @@ class DemoAutomaton(Magics):
             print(self.__doc__)
             return
 
-        if algo == 'eliminate_state':
-            if (var in self.shell.user_ns):
-                a = demo.EliminateState(self.shell.user_ns[var])
+        if (var in self.shell.user_ns):
+            if algo == 'eliminate_state':
+                    a = demo.EliminateState(self.shell.user_ns[var])
+            elif algo == 'automaton':
+                    a = demo.Automaton(self.shell.user_ns[var])
 
         try:
             a.show()
