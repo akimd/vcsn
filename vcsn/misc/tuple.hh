@@ -98,7 +98,8 @@ namespace vcsn
     struct index_sequence_difference;
 
     template <std::size_t I1_1, std::size_t... I1, std::size_t... I2>
-    struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<I1_1, I2...>>
+    struct index_sequence_difference<index_sequence<I1_1, I1...>,
+                                     index_sequence<I1_1, I2...>>
     {
       using type =
        typename index_sequence_difference<index_sequence<I1...>,
@@ -183,7 +184,8 @@ namespace vcsn
     template <typename Fun, typename T, typename... Ts>
     inline auto
     map_variadic_(Fun f, T t, Ts&&... ts)
-      -> decltype(std::tuple_cat(std::make_tuple(f(t)), map_variadic_(f, ts...)))
+      -> decltype(std::tuple_cat(std::make_tuple(f(t)),
+                                 map_variadic_(f, ts...)))
     {
       // Enforce evaluation order from left to right.
       auto r = f(t);

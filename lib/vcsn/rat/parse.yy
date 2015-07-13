@@ -223,7 +223,7 @@ exp:
 | exp "{T}"         { $$ = dyn::transposition($1.exp); }
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
-| LETTER            { $$ = driver_.make_atom(@1, $1); }
+| "letter"          { $$ = driver_.make_atom(@1, $1); }
 | "[" class "]"     { $$ = driver_.make_expression($2, true); }
 | "[" "^" class "]" { $$ = driver_.make_expression($3, false); }
 | "(" { tape = driver_.tape_; } exp ")"
@@ -240,9 +240,9 @@ weights:
 ;
 
 class:
-  %empty                    {}
-| class LETTER              { $$ = $1; $$.emplace($2, $2); }
-| class LETTER "-" LETTER   { $$ = $1; $$.emplace($2, $4); }
+  %empty                      {}
+| class "letter"              { $$ = $1; $$.emplace($2, $2); }
+| class "letter" "-" "letter" { $$ = $1; $$.emplace($2, $4); }
 ;
 
 %%

@@ -85,7 +85,7 @@ make_vector(const boost::python::list& list)
   return res;
 }
 
-// Conversion to identities.
+/// Convert to identities.
 vcsn::rat::identities identities(const std::string& s)
 {
   std::istringstream is{s};
@@ -644,11 +644,11 @@ struct automaton
 
   weight weight_series() const;
 
-  /// Convert to a vector of automata.
+  /// Convert to a vector of dyn:: automata.
   using automata_t = std::vector<vcsn::dyn::automaton>;
   static automata_t automata_(const boost::python::list& auts)
   {
-    automata_t res;
+    auto res = automata_t{};
     for (int i = 0; i < boost::python::len(auts); ++i)
       res.emplace_back(boost::python::extract<automaton>(auts[i])().val_);
     return res;

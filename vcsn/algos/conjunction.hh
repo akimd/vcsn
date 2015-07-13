@@ -292,7 +292,7 @@ namespace vcsn
       /// pair of input state automata.  Update the worklist with the
       /// needed source-state pairs.
       void add_conjunction_transitions(const state_t src,
-                                   const state_name_t& psrc)
+                                       const state_name_t& psrc)
       {
         for (auto t: zip_map_tuple(out_(psrc)))
           // These are always new transitions: first because the

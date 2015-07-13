@@ -82,7 +82,7 @@ namespace std
   {
     size_t operator()(const std::vector<T, Alloc>& vs) const
     {
-      size_t res = 0;
+      auto res = size_t{0};
       for (const auto& v: vs)
         vcsn::hash_combine(res, v);
       return res;

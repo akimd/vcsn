@@ -122,9 +122,9 @@ namespace vcsn
       /// associated to one.
       value_t& denormalize_(value_t& res, std::true_type) const
       {
-        auto one = rs_.labelset()->one();
         if (!ws_.is_zero(res.constant))
           {
+            auto one = rs_.labelset()->one();
             ps_.add_here(res.polynomials[one],
                          polynomial_t{{rs_.one(), res.constant}});
             res.constant = ws_.zero();
