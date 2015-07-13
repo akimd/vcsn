@@ -44,4 +44,4 @@ def _expression_info(self, key = None, detailed = False):
 expression.info = _expression_info
 
 expression.shortest = lambda self, *a, **kw: self.derived_term().strip().shortest(*a, **kw)
-expression.star = lambda self: self.chain(-1)
+expression.star = lambda self: self.multiply(-1)
