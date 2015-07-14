@@ -198,23 +198,6 @@ namespace vcsn
           return std::make_shared<prod_t>(expressions_t{begin, end});
       }
 
-      /// This LabelSet's one(), if supported.
-      template <typename LabelSet>
-      static auto label_one_(const LabelSet& ls)
-        -> enable_if_t<LabelSet::has_one(),
-                       typename LabelSet::value_t>
-      {
-        return ls.one();
-      }
-
-      template <typename LabelSet>
-      static auto label_one_(const LabelSet&)
-        -> enable_if_t<!LabelSet::has_one(),
-                       typename LabelSet::value_t>
-      {
-        raise(me(), ": the labelset does not feature a neutral");
-      }
-
       /// If r is e*, return e.
       /// If r is e*{T}, return e{T}.
       /// Otherwise return nullptr.
@@ -262,7 +245,7 @@ namespace vcsn
             else
               es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
           }
-        auto one = label_one_(ls_);
+        auto one = detail::label_one(ls_);
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
           for (const auto& lm: std::get<0>(p.second))
             for (const auto& rm: std::get<1>(p.second))
@@ -424,7 +407,7 @@ namespace vcsn
               auto p0 = p0_t{{rs0.one(), e0.constant}};
               for (const auto& p1: e1.polynomials)
                 {
-                  auto l = label_t{label_one_(*rs0.labelset()), p1.first};
+                  auto l = label_t{label_one(*rs0.labelset()), p1.first};
                   visitor_.ps_.add_here(res.polynomials[l],
                                         visitor_.ps_.tuple(p0, p1.second));
                 }
@@ -435,7 +418,7 @@ namespace vcsn
               auto p1 = p1_t{{rs1.one(), e1.constant}};
               for (const auto& p0: e0.polynomials)
               {
-                auto l = label_t{p0.first, label_one_(*rs1.labelset())};
+                auto l = label_t{p0.first, label_one(*rs1.labelset())};
                 visitor_.ps_.add_here(res.polynomials[l],
                                       visitor_.ps_.tuple(p0.second, p1));
               }

@@ -21,6 +21,27 @@ namespace vcsn
     using has_genset_mem_fn = detect<LabelSet, genset_t>;
 
 
+    /*-------------.
+    | label_one.   |
+    `-------------*/
+
+    /// This LabelSet's one(), if supported.
+    template <typename LabelSet>
+    auto label_one(const LabelSet& ls)
+      -> enable_if_t<LabelSet::has_one(),
+                     typename LabelSet::value_t>
+    {
+      return ls.one();
+    }
+
+    template <typename LabelSet>
+    auto label_one(const LabelSet&)
+      -> enable_if_t<!LabelSet::has_one(),
+                     typename LabelSet::value_t>
+    {
+      raise("the labelset does not feature a neutral");
+    }
+
     /*-------------------.
     | make_letterized.   |
     `-------------------*/
