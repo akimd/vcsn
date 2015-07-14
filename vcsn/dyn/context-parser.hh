@@ -53,12 +53,17 @@ namespace vcsn
 
       /// `<Automaton> "<" <Context> ">"`.
       std::shared_ptr<automaton> automaton_(std::string prefix);
+
+      /// `"<" (<LabelSet> | <WeightSet> ",")+ ">".
       std::shared_ptr<tupleset> tupleset_();
 
-      /// `"expressionset" "<" <Context> ">"`.
+      /// `"expressionset" "<" <Context> ">"`, possibly followed by identities.
       std::shared_ptr<expressionset> expressionset_();
-      /// No optional parameter.
+      /// No optional argument.
       std::shared_ptr<expressionset> seriesset_();
+
+      /// `"expansionset" "<" <Expressionset> ">"`.
+      std::shared_ptr<expansionset> expansionset_();
 
       /// `"polynomialset" "<" <Context> ">"`.
       std::shared_ptr<polynomialset> polynomialset_();

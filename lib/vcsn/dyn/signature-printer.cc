@@ -85,6 +85,13 @@ namespace vcsn
       os_ << '>';
     }
 
+    DEFINE(expansionset)
+    {
+      os_ << "expansionset<";
+      t.get_expressionset()->accept(*this);
+      os_ << '>';
+    }
+
     DEFINE(expressionset)
     {
       os_ << "expressionset<";

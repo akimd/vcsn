@@ -20,13 +20,14 @@ namespace vcsn
 
       DEFINE(automaton);
       DEFINE(context);
+      DEFINE(expansionset);
+      DEFINE(expressionset);
       DEFINE(genset);
       DEFINE(letterset);
       DEFINE(nullableset);
       DEFINE(oneset);
       DEFINE(other);
       DEFINE(polynomialset);
-      DEFINE(expressionset);
       DEFINE(tupleset);
       DEFINE(weightset);
       DEFINE(wordset);

@@ -1,6 +1,9 @@
 #include <vcsn/dyn/context-printer.hh>
 
+#include <map>
+
 #include <vcsn/dyn/type-ast.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -49,40 +52,26 @@ namespace vcsn
 
     DEFINE(automaton)
     {
+      static auto map = std::map<std::string, std::string>
+        {
+          {"delay_automaton"        , "vcsn/algos/is-synchronized.hh"},
+          {"determinized_automaton" , "vcsn/algos/determinize.hh"},
+          {"detweighted_automaton"  , "vcsn/algos/determinize.hh"},
+          {"expression_automaton"   , "vcsn/core/expression-automaton.hh"},
+          {"filter_automaton"       , "vcsn/algos/filter.hh"},
+          {"focus_automaton"        , "vcsn/algos/focus.hh"},
+          {"mutable_automaton"      , "vcsn/core/mutable-automaton.hh"},
+          {"pair_automaton"         , "vcsn/algos/synchronizing-word.hh"},
+          {"partition_automaton"    , "vcsn/core/partition-automaton.hh"},
+          {"permutation_automaton"  , "vcsn/core/permutation-automaton.hh"},
+          {"product_automaton"      , "vcsn/algos/conjunction.hh"},
+          {"scc_automaton"          , "vcsn/algos/scc.hh"},
+          {"synchronized_automaton" , "vcsn/algos/synchronize.hh"},
+          {"transpose_automaton"    , "vcsn/algos/transpose.hh"},
+          {"tuple_automaton"        , "vcsn/core/tuple-automaton.hh"},
+        };
       auto type = t.get_type();
-      if (type == "delay_automaton")
-        header("vcsn/algos/is-synchronized.hh");
-      else if (type == "determinized_automaton")
-        header("vcsn/algos/determinize.hh");
-      else if (type == "detweighted_automaton")
-        header("vcsn/algos/determinize.hh");
-      else if (type == "expression_automaton")
-        header("vcsn/core/expression-automaton.hh");
-      else if (type == "filter_automaton")
-        header("vcsn/algos/filter.hh");
-      else if (type == "focus_automaton")
-        header("vcsn/algos/focus.hh");
-      else if (type == "mutable_automaton")
-        header("vcsn/core/mutable-automaton.hh");
-      else if (type == "pair_automaton")
-        header("vcsn/algos/synchronizing-word.hh");
-      else if (type == "partition_automaton")
-        header("vcsn/core/partition-automaton.hh");
-      else if (type == "product_automaton")
-        header("vcsn/algos/conjunction.hh");
-      else if (type == "permutation_automaton")
-        header("vcsn/core/permutation-automaton.hh");
-      else if (type == "scc_automaton")
-        header("vcsn/algos/scc.hh");
-      else if (type == "synchronized_automaton")
-        header("vcsn/algos/synchronize.hh");
-      else if (type == "transpose_automaton")
-        header("vcsn/algos/transpose.hh");
-      else if (type == "tuple_automaton")
-        header("vcsn/core/tuple-automaton.hh");
-      else
-        raise("unsupported automaton type: ", type);
-
+      header(getargs("automaton type", map, type));
       os_ << "vcsn::" << type << '<' << incendl;
       bool first = true;
       for (auto c: t.get_content())
@@ -158,6 +147,14 @@ namespace vcsn
       t.get_context()->accept(*this);
       os_ << decendl << '>';
       header("vcsn/core/rat/expressionset.hh");
+    }
+
+    DEFINE(expansionset)
+    {
+      os_ << "vcsn::rat::expansionset<" << incendl;
+      t.get_expressionset()->accept(*this);
+      os_ << decendl << '>';
+      header("vcsn/core/rat/expansionset.hh");
     }
 
     DEFINE(weightset)

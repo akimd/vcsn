@@ -42,6 +42,7 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::any_()
     {
       std::string w = word_();
+      auto res = std::shared_ptr<ast_node>{};
       if (w == "delay_automaton"
           || w == "determinized_automaton"
           || w == "detweighted_automaton"
@@ -57,32 +58,27 @@ namespace vcsn
           || w == "synchronized_automaton"
           || w == "transpose_automaton"
           || w == "tuple_automaton")
-        return automaton_(w);
+        res = automaton_(w);
       else if (has(labelsets_, w)
                || w == "expressionset"
                || w == "seriesset")
         {
-          std::shared_ptr<ast_node> res = labelset_(w);
+          res = labelset_(w);
           if (is_.peek() == ',')
-            return context_(res);
-          return res;
+            res = context_(res);
         }
       else if (w == "lat")
         {
-          std::shared_ptr<tupleset> res = tupleset_();
+          res = tupleset_();
           if (is_.peek() == ',')
-            return context_(res);
-          return res;
+            res = context_(res);
         }
       else if (has(weightsets_, w))
-        return weightset_(w);
+        res = weightset_(w);
+      else if (w == "expansionset")
+        res = expansionset_();
       else if (w == "polynomialset")
-        {
-          eat(is_, '<');
-          auto res = std::make_shared<polynomialset>(context_());
-          eat(is_, '>');
-          return res;
-        }
+        res = polynomialset_();
       // std::integral_constant<unsigned, 2>.
       else if (w == "std::integral_constant")
         {
@@ -91,7 +87,7 @@ namespace vcsn
           w += eat(is_, ',');
           w += word_();
           w += eat(is_, '>');
-          return std::make_shared<other>(w);
+          res = std::make_shared<other>(w);
         }
       // boost::optional<unsigned>, std::vector<unsigned>.
       else if (w == "boost::optional"
@@ -100,10 +96,11 @@ namespace vcsn
           w += eat(is_, '<');
           w += word_();
           w += eat(is_, '>');
-          return std::make_shared<other>(w);
+          res = std::make_shared<other>(w);
         }
       else
-        return std::make_shared<other>(w);
+        res = std::make_shared<other>(w);
+      return res;
     }
 
     std::shared_ptr<ast_node>
@@ -363,6 +360,15 @@ namespace vcsn
       eat(is_, '>');
       return std::make_shared<expressionset>(context,
                                              rat::identities::distributive);
+    }
+
+    std::shared_ptr<expansionset> context_parser::expansionset_()
+    {
+      eat(is_, '<');
+      eat(is_, "expressionset");
+      auto res = std::make_shared<expansionset>(expressionset_());
+      eat(is_, '>');
+      return res;
     }
 
     std::shared_ptr<polynomialset> context_parser::polynomialset_()

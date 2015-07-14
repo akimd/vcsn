@@ -86,11 +86,13 @@ namespace vcsn
     using weight = std::shared_ptr<const detail::weight_base>;
   }
 
+  // vcsn/dyn/type-ast.hh.
   namespace ast
   {
     class ast_node;
     class automaton;
     class context;
+    class expansionset;
     class expressionset;
     class genset;
     class letterset;

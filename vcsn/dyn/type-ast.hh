@@ -211,6 +211,25 @@ namespace vcsn
       rat::identities identities_;
     };
 
+    class expansionset: public ast_node
+    {
+    public:
+      expansionset(std::shared_ptr<expressionset> rs)
+        : rs_(rs)
+      {}
+
+      const std::shared_ptr<expressionset> get_expressionset() const
+      {
+        return rs_;
+      }
+
+      ACCEPT()
+      virtual bool has_one() const { return true; }
+
+    private:
+      std::shared_ptr<expressionset> rs_;
+    };
+
     class weightset: public ast_node
     {
     public:
