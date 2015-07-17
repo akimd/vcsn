@@ -14,46 +14,6 @@ namespace vcsn
 
   namespace detail
   {
-
-    /// Variadic Cartesian product of vectors.
-    ///
-    /// http://stackoverflow.com/questions/13813007/
-    ///
-    /// Beware of name conflicts with vcsn/misc/cross.
-    template <typename Fun>
-    inline void
-    cross_impl_(Fun f)
-    {
-      f();
-    }
-
-    template<typename Fun, typename H, typename... Ts>
-    inline void
-    cross_impl_(Fun f,
-                std::vector<H> const& h,
-                std::vector<Ts> const&... ts)
-    {
-      for (H const& he: h)
-        cross_impl_([&](Ts const&... ts) { f(he, ts...); }, ts...);
-    }
-
-    template<typename Fun, typename... Ts>
-    inline void
-    cross_tuple(Fun f,
-                const std::tuple<Ts...>& ts)
-    {
-      cross_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>());
-    }
-
-    template<typename Fun, typename... Ts, size_t... I>
-    inline void
-    cross_tuple_(Fun f,
-                 const std::tuple<Ts...>& ts,
-                 index_sequence<I...>)
-    {
-      cross_impl_(f, std::get<I>(ts)...);
-    }
-
     /// The content of \a cont as a vector.
     template <typename Cont>
     std::vector<typename Cont::value_type>

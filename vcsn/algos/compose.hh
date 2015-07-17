@@ -8,8 +8,7 @@
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/tuple.hh> // make_index_sequence
-#include <vcsn/misc/vector.hh> // cross_tuple
+#include <vcsn/misc/tuple.hh> // make_index_sequence, cross_tuple
 #include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn

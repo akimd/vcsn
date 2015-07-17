@@ -193,6 +193,52 @@ namespace vcsn
     }
 
 
+    /*--------------------------------------------.
+    | Variadic Cartesian product of containers.   |
+    `--------------------------------------------*/
+
+    /// Variadic Cartesian product of containers.
+    ///
+    /// Based on http://stackoverflow.com/questions/13813007/
+    ///
+    /// Beware of name conflicts with vcsn/misc/cross.
+    template <typename Fun>
+    inline void
+    cross(Fun f)
+    {
+      f();
+    }
+
+    template <typename Fun,
+              typename Cont, typename... Conts>
+    inline void
+    cross(Fun f,
+          const Cont& head, const Conts&... tails)
+    {
+      for (const typename Cont::value_type& h: head)
+        cross([&](const typename Conts::value_type&... tails)
+              { f(h, tails...); },
+              tails...);
+    }
+
+    template<typename Fun, typename... Ts, size_t... I>
+    inline void
+    cross_tuple_(Fun f,
+                 const std::tuple<Ts...>& ts,
+                 index_sequence<I...>)
+    {
+      cross(f, std::get<I>(ts)...);
+    }
+
+    template<typename Fun, typename... Ts>
+    inline void
+    cross_tuple(Fun f,
+                const std::tuple<Ts...>& ts)
+    {
+      cross_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>());
+    }
+
+
 
 #if 0
 

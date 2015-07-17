@@ -494,7 +494,7 @@ namespace vcsn
     genset_t
     genset_(seq<I...>) const
     {
-      return cross(set<I>().genset()...);
+      return ::vcsn::cross(set<I>().genset()...);
     }
 
     template <std::size_t... I>
