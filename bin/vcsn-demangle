@@ -27,7 +27,7 @@ def sub(pattern, repl, string, *args, **kwargs):
 
 def normalize(s):
     # C++.
-    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|less|pair|set|shared_ptr|string|tuple)',
+    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|less|map|pair|set|shared_ptr|string|tuple)',
             r'std::\1',
             s)
     s = sub(r'std::basic_string<char(?:,\s*(?:std::)?char_traits<char>,\s*(?:std::)?allocator<char>\s*)?>',
@@ -66,6 +66,11 @@ def normalize(s):
     # Contexts.
     s = sub(r'vcsn::(context)<({params})>',
             r'\1<\2>',
+            s)
+
+    # Polynomials.
+    s = sub(r'(vcsn::detail::wet_map<std::shared_ptr<const\s*vcsn::rat::node<({params})\s*>\s*>,\s*bool),\s*vcsn::less<expressionset<\2\s*>,\s*std::shared_ptr<const\s*vcsn::rat::node<\2\s*>\s*>\s*>\s*>',
+            r'\1>',
             s)
 
     # Typedef.
