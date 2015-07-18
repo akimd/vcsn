@@ -992,5 +992,49 @@ namespace vcsn
     }
   };
 
+
+
+  /*------------------.
+  | focus_labelset.   |
+  `------------------*/
+
+  /// The type of the resulting apparent LabelSet when keeping only
+  /// tape Tape.
+  template <size_t Tape, typename LabelSet>
+  struct focus_labelset_impl;
+
+  /// The type of the resulting apparent LabelSet when keeping only
+  /// tape Tape.  Undefined when not applicable.
+  template <size_t Tape, typename LabelSet>
+  using focus_labelset = typename focus_labelset_impl<Tape, LabelSet>::type;
+
+  /// Case of tuplesets.
+  template <size_t Tape, typename... LabelSets>
+  struct focus_labelset_impl<Tape, tupleset<LabelSets...>>
+  {
+    using labelset_t = tupleset<LabelSets...>;
+    using type = typename labelset_t::template valueset_t<Tape>;
+  };
+
+  /// Case of multitape expressionsets.
+  template <size_t Tape, typename Context>
+  struct focus_labelset_impl<Tape, expressionset<Context>>
+  {
+    using ctx_t = context<focus_labelset<Tape, labelset_t_of<Context>>,
+                          weightset_t_of<Context>>;
+    using type = expressionset<ctx_t>;
+  };
+
+
+  /*-----------------.
+  | focus_context.   |
+  `-----------------*/
+
+  /// The type of the resulting apparent context when keeping only tape Tape.
+  template <size_t Tape, typename Context>
+  using focus_context
+    = context<focus_labelset<Tape, labelset_t_of<Context>>,
+              weightset_t_of<Context>>;
+
   }// detail::
 }// vcsn::
