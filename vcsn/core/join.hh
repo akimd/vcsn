@@ -37,6 +37,7 @@ namespace vcsn
   }
 
   /// The join of a single valueset.
+  ///
   /// Useful for variadic operator on a single argument.
   template <typename ValueSet>
   auto
@@ -46,13 +47,31 @@ namespace vcsn
     return vs;
   }
 
-  /// The join of two (or more) valuesets.
-  template <typename ValueSet1, typename ValueSet2, typename... VSs>
+  /// The join of two valuesets.
+  template <typename ValueSet1, typename ValueSet2>
   auto
-  join(const ValueSet1& vs1, const ValueSet2& vs2, const VSs&... vs)
-    -> decltype(join(detail::join_(vs1, vs2, 0), vs...))
+  join(ValueSet1 vs1, ValueSet2 vs2)
+    -> decltype(detail::join_(vs1, vs2, 0))
   {
-    return join(detail::join_(vs1, vs2, 0), vs...);
+    return detail::join_(vs1, vs2, 0);
+  }
+
+  /// The join of three (or more) valuesets.
+  ///
+  /// We once had a single case for two-and-more arguments (instead of
+  /// one join for two and one join for three-and-more), but the
+  /// decltype() used in the return type failed to find the
+  /// appropriate 'recursive' call to join in the case of three
+  /// rat::identities.  It turns out that removing the return type
+  /// (and leaving its computation to the C++14 compiler) suffices to
+  /// force the instantiation of the function, and to fix the problem.
+  template <typename ValueSet1, typename ValueSet2, typename ValueSet3,
+            typename... VSs>
+  auto
+  join(ValueSet1 vs1, ValueSet2 vs2, ValueSet3 vs3, VSs&&... vs)
+    -> decltype(join(join(vs1, vs2), vs3, std::forward<VSs>(vs)...))
+  {
+    return join(join(vs1, vs2), vs3, std::forward<VSs>(vs)...);
   }
 
   /// The type of the join of the \a ValueSets.
