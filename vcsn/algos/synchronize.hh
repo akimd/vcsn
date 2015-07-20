@@ -158,9 +158,9 @@ namespace vcsn
 
       using super_t::set_final;
 
-      void set_final(const state_name_t& st)
+      void set_final(const state_name_t& st, const weight_t& w)
       {
-        super_t::set_final(map_[st]);
+        super_t::set_final(map_[st], w);
       }
 
       bool state_has_name(state_t s) const
@@ -251,15 +251,15 @@ namespace vcsn
           state_t s = st.first;
           label_t out = st.second;
           if (in_aut_->is_final(s))
-            if (out == labelset_t::one())
-              out_aut_->set_final(st);
+            if (labelset_t::is_one(out))
+              out_aut_->set_final(st, in_aut_->get_final_weight(s));
             else
             {
               state_name_t f = {s, labelset_t::one()};
               // Create the state, don't add it to the todo list.
               out_aut_->state(f, false);
-              out_aut_->new_transition(st, f, out, weightset_t::one());
-              out_aut_->set_final(f);
+              out_aut_->new_transition(st, f, out, in_aut_->get_final_weight(s));
+              out_aut_->set_final(f, weightset_t::one());
             }
 
           for (auto tr : in_aut_->out(s))

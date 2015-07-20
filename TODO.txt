@@ -53,16 +53,26 @@ it's not so clear what should be done.
 ** operations on polynomials and weights
 Check +.
 
-** proper
-Check the case where we do not want to eliminate states.  Actually check
-that "a.proper(False).accessible() == a.proper()".
-
 ** conjunction
 Check standard, thompson.  Check the trivial identities.  What should be the
 definition of the B (breaking/splitting) operator?  I have taken a
 definition which is modeled after the one of concatenation (on order "not to
 break too much") rather that something like expand.  What are the expected
 features of the right definition?
+
+** proper
+Check the case where we do not want to eliminate states.  Actually check
+that "a.proper(False).accessible() == a.proper()".
+
+** synchronize
+We need more tests.  In particular something that checks:
+
+    Author: Valentin Tolmer <valentin.tolmer@gmail.com>
+    Date:   Mon Jul 20 12:20:30 2015 +0200
+
+    synchronize: fix final weight
+
+    * vcsn/algos/synchronize.hh: Here.
 
 * Bugs
 ** Incorrect expressionset
