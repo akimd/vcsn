@@ -89,14 +89,18 @@ namespace vcsn
                 typename Dummy = void>
       struct visit_tuple
       {
+        using tupleset_t = typename expressionset_t::template as_tupleset_t<>;
+        /// Entry point: down_cast rhs_ and bounce to binary operator().
         bool operator()(const tuple_t& lhs)
         {
           return operator()(lhs,
                             *down_pointer_cast<const tuple_t>(visitor_.rhs_));
         }
+
+        /// Binary operator().
         bool operator()(const tuple_t& lhs, const tuple_t& rhs)
         {
-          return tuple_t::valueset_t::less(lhs.sub(), rhs.sub());
+          return tupleset_t::less(lhs.sub(), rhs.sub());
         }
 
         const less& visitor_;

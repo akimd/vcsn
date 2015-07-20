@@ -284,19 +284,37 @@ namespace vcsn
                             const std::string& format = "text") const;
 
     /// The type of the expressionset for the Tape-th tape.
-    template <unsigned Tape, typename Ctx>
+    template <unsigned Tape, typename Ctx = context_t>
     using focus_t
-      = expressionset<vcsn::context<detail::focus_labelset<Tape, labelset_t_of<Ctx>>,
-                                    weightset_t_of<Ctx>>>;
+      = expressionset<detail::focus_context<Tape, Ctx>>;
 
+
+    template <typename Sequence>
+    struct as_tupleset_impl;
+
+    template <size_t... I>
+    struct as_tupleset_impl<detail::index_sequence<I...>>
+    {
+      /// If we are multitape, our type as a tupleset.
+      using type = tupleset<focus_t<I, context_t>...>;
+
+      static type value(const self_t& self)
+      {
+        return {detail::make_focus<I>(self)...};
+      }
+    };
+
+    /// If we are multitape, our type as a tupleset.
+    template <typename Ctx = context_t>
+    using as_tupleset_t
+      = typename as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t::type>::type;
 
     /// If we are multitape, ourself as a tupleset.
     template <typename Ctx = context_t>
     auto as_tupleset() const
-      -> enable_if_t<Ctx::is_lat && Ctx::labelset_t::size() == 2,
-                     tupleset<focus_t<0, Ctx>, focus_t<1, Ctx>>>
+      -> enable_if_t<is_two_tapes_t<Ctx>{}, as_tupleset_t<Ctx>>
     {
-      return {detail::make_focus<0>(self()), detail::make_focus<1>(self())};
+      return as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t::type>::value(self());
     }
 
   private:

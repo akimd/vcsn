@@ -66,11 +66,11 @@ namespace vcsn
                 typename Dummy = void>
       struct visit_tuple
       {
+        using tupleset_t = typename expressionset_t::template as_tupleset_t<>;
         size_t operator()(const tuple_t& v)
         {
-          return tuple_t::valueset_t::hash(v.sub());
+          return tupleset_t::hash(v.sub());
         }
-        const hash& visitor_;
       };
 
       template <typename Dummy>
@@ -80,12 +80,11 @@ namespace vcsn
         {
           BUILTIN_UNREACHABLE();
         }
-        const hash& visitor_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        res_ = visit_tuple<>{*this}(v);
+        res_ = visit_tuple<>{}(v);
       }
 
       /// Update res_ by hashing the node type; this is needed for any node.

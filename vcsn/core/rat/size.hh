@@ -65,17 +65,32 @@ namespace vcsn
                 typename Dummy = void>
       struct visit_tuple
       {
-        size_t operator()(const tuple_t& v)
+        /// Size for one tape.
+        template <size_t I>
+        size_t size_(const tuple_t& v)
+        {
+          using rs_t = typename expressionset_t::template focus_t<I>;
+          return size<rs_t>(std::get<I>(v.sub()));
+        }
+
+        /// Sum of sizes for all tapes.
+        template <size_t... I>
+        size_t size_(const tuple_t& v, detail::index_sequence<I...>)
         {
           auto res = size_t{0};
-          using ctx0_t = detail::focus_context<0, context_t>;
-          using rs0_t = expressionset<ctx0_t>;
-          res += size<rs0_t>(std::get<0>(v.sub()));
-
-          using ctx1_t = detail::focus_context<1, context_t>;
-          using rs1_t = expressionset<ctx1_t>;
-          res += size<rs1_t>(std::get<1>(v.sub()));
+          using swallow = int[];
+          (void) swallow
+          {
+            (res += size_<I>(v),
+             0)...
+          };
           return res;
+        }
+
+        /// Entry point.
+        size_t operator()(const tuple_t& v)
+        {
+          return size_(v, labelset_t_of<context_t>::indices);
         }
       };
 
@@ -90,7 +105,7 @@ namespace vcsn
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        visit_tuple<>{}(v);
+        size_ += visit_tuple<>{}(v);
       }
 
       /// Traverse unary node.
