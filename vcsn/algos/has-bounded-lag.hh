@@ -106,13 +106,11 @@ namespace vcsn
                 if (src != dst)
                   {
                     transition_t t = p_[src];
-                    state_t f = src;
                     // Go back through the transitions we followed until we
                     // loop
                     while (aut_->src_of(t) != dst)
                       {
                         add_delay(d, t);
-                        f = aut_->src_of(t);
                         t = p_[aut_->src_of(t)];
                       }
                     add_delay(d, t);
