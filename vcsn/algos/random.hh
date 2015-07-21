@@ -73,12 +73,13 @@ namespace vcsn
   random_label(const nullableset<LabelSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    std::uniform_int_distribution<> dis(0, 1);
+    std::bernoulli_distribution dis(0.5);
     if (dis(gen))
       return ls.one();
     else
       return ls.value(random_label(*ls.labelset(), gen));
   };
+
 
   template <typename Context,
             typename RandomGenerator = std::default_random_engine>
