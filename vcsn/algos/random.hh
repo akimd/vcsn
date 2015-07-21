@@ -84,10 +84,13 @@ namespace vcsn
   mutable_automaton<Ctx>
   random_automaton(const Ctx& ctx,
                    unsigned num_states, float density = 0.1,
-                   unsigned num_initial = 1, unsigned num_final = 1)
+                   unsigned num_initial = 1, unsigned num_final = 1,
+                   float loop_chance = 0.0)
   {
     require(0 <= density && density <= 1,
             "random: density must be in [0,1]");
+    require(0 <= loop_chance && loop_chance <= 1,
+            "random: loop chance must be in [0,1]");
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = state_t_of<automaton_t>;
     automaton_t res = make_shared_ptr<automaton_t>(ctx);
@@ -198,6 +201,17 @@ namespace vcsn
                                random_label(*ctx.labelset(), gen));
           }
       }
+
+
+    // Add loops
+    if (loop_chance > 0)
+    {
+      std::bernoulli_distribution bern(0.5);
+      for (auto s : res->states())
+        if (bern(gen))
+          res->add_transition(s, s, random_label(*ctx.labelset(), gen));
+    }
+
     return res;
   }
 
@@ -206,15 +220,17 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Ctx, typename, typename, typename, typename>
+      template <typename Ctx, typename, typename, typename, typename, typename>
       automaton
       random_automaton(const context& ctx,
                        unsigned num_states, float density,
-                       unsigned num_initial, unsigned num_final)
+                       unsigned num_initial, unsigned num_final,
+                       float loop_chance)
       {
         const auto& c = ctx->as<Ctx>();
         return make_automaton(vcsn::random_automaton(c, num_states, density,
-                                                     num_initial, num_final));
+                                                     num_initial, num_final,
+                                                     loop_chance));
       }
     }
   }
