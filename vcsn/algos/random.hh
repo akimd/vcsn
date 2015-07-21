@@ -42,6 +42,19 @@ namespace vcsn
     return ls.value(std::make_tuple(random_label(ls.template set<I>(), gen)...));
   };
 
+  template <typename GenSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename wordset<GenSet>::value_t
+  random_label(const wordset<GenSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    std::uniform_int_distribution<> dis(0, 5);
+    auto res_label = ls.one();
+    auto pick = make_random_selector(gen);
+    for (auto i = 0; i < dis(gen); ++i)
+      res_label = ls.mul(res_label, ls.value(pick(ls.genset())));
+    return res_label;
+  };
 
   template <typename LabelSet,
             typename RandomGenerator = std::default_random_engine>
