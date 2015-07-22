@@ -179,23 +179,25 @@ namespace vcsn
     public:
       static_assert(Context::is_lat,
                     "tuple: requires a tupleset labelset");
-      static_assert(Context::labelset_t::size() == 2,
-                    "tuple: requires a two-tape labelset");
       using super_t = inner<Context>;
+      using context_t = Context;
       using value_t = typename super_t::value_t;
 
-      using ls_t = typename Context::labelset_t;
-      using ws_t = typename Context::weightset_t;
-      using ls0_t = typename ls_t::template valueset_t<0>;
-      using ls1_t = typename ls_t::template valueset_t<1>;
-      using ctx0_t = context<ls0_t, ws_t>;
-      using ctx1_t = context<ls1_t, ws_t>;
-      using rs0_t = expressionset<ctx0_t>;
-      using rs1_t = expressionset<ctx1_t>;
-      using r0_t = typename rs0_t::value_t;
-      using r1_t = typename rs1_t::value_t;
-      using valueset_t = tupleset<rs0_t, rs1_t>;
-      using values_t = typename valueset_t::value_t;
+      /// Given a tape, its corresponding expression type.
+      template <unsigned Tape>
+      using value_t_of
+        = std::shared_ptr<const rat::node<detail::focus_context<Tape, context_t>>>;
+
+      template <typename Sequence>
+      struct values_t_impl;
+
+      template <size_t... I>
+      struct values_t_impl<detail::index_sequence<I...>>
+      {
+        using type = std::tuple<value_t_of<I>...>;
+      };
+      using indices_t = typename labelset_t_of<context_t>::indices_t;
+      using values_t = typename values_t_impl<typename indices_t::type>::type;
 
       template <typename... Args>
       tuple(Args&&... args)

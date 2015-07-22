@@ -381,50 +381,20 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = is_two_tapes_t<context_t>{},
+      template <bool = context_t::is_lat,
                 typename Dummy = void>
       struct visit_tuple
       {
+        template <size_t... I>
+        expansion_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          return visitor_.es_.tuple(vcsn::to_expansion(detail::make_focus<I>(visitor_.rs_),
+                                                       std::get<I>(v.sub()))...);
+        }
+
         expansion_t operator()(const tuple_t& v)
         {
-          auto rs0 = detail::make_focus<0>(visitor_.rs_);
-          auto e0 = vcsn::to_expansion(rs0, std::get<0>(v.sub()));
-          auto rs1 = detail::make_focus<1>(visitor_.rs_);
-          auto e1 = vcsn::to_expansion(rs1, std::get<1>(v.sub()));
-
-          auto res = expansion_t{};
-          res.constant = visitor_.ws_.mul(e0.constant, e1.constant);
-          for (const auto& p0: e0.polynomials)
-            for (const auto& p1: e1.polynomials)
-              {
-                auto l = label_t{p0.first, p1.first};
-                visitor_.ps_.add_here(res.polynomials[l],
-                                      visitor_.ps_.tuple(p0.second, p1.second));
-              }
-          if (!visitor_.ws_.is_zero(e0.constant))
-            {
-              using p0_t = typename polynomialset_t::template focus_t<0>;
-              auto p0 = p0_t{{rs0.one(), e0.constant}};
-              for (const auto& p1: e1.polynomials)
-                {
-                  auto l = label_t{label_one(*rs0.labelset()), p1.first};
-                  visitor_.ps_.add_here(res.polynomials[l],
-                                        visitor_.ps_.tuple(p0, p1.second));
-                }
-            }
-          if (!visitor_.ws_.is_zero(e1.constant))
-            {
-              using p1_t = typename polynomialset_t::template focus_t<1>;
-              auto p1 = p1_t{{rs1.one(), e1.constant}};
-              for (const auto& p0: e0.polynomials)
-              {
-                auto l = label_t{p0.first, label_one(*rs1.labelset())};
-                visitor_.ps_.add_here(res.polynomials[l],
-                                      visitor_.ps_.tuple(p0.second, p1));
-              }
-            }
-
-          return res;
+          return work_(v, labelset_t_of<context_t>::indices);
         }
         const to_expansion_visitor& visitor_;
       };

@@ -26,7 +26,7 @@ namespace vcsn
 
       void visit(const tuple<context_t>& v)
       {
-        visit(v, is_two_tapes_t<context_t>{});
+        visit(v, bool_constant<context_t::is_lat>{});
       }
 
       using tuple_t = tuple<context_t>;

@@ -260,6 +260,126 @@ namespace vcsn
         return res;
       }
 
+      /*---------------.
+      | tuple(v...).   |
+      `---------------*/
+
+      /// The type of the expansionsset for tape #Tape.
+      template <unsigned Tape>
+      using focus_t
+        = expansionset<typename expressionset_t::template focus_t<Tape>>;
+
+      /// The expansionsset for tape #Tape.
+      template <unsigned Tape>
+      auto focus() const
+        -> focus_t<Tape>
+      {
+        return {detail::make_focus<Tape>(rs_)};
+      }
+
+      /// Denormalize a pack of one-tape expansions.
+      template <typename... Expansions>
+      struct tuple_impl
+      {
+        template <size_t Tape>
+        void denormalize_tape(typename focus_t<Tape>::value_t& e)
+        {
+          eset_.template focus<Tape>().denormalize(e);
+        }
+
+        template <size_t... Tape>
+        void denormalize(std::tuple<Expansions&...>& es,
+                         detail::index_sequence<Tape...>)
+        {
+          using swallow = int[];
+          (void) swallow
+            {
+              (denormalize_tape<Tape>(std::get<Tape>(es)), 0)...
+            };
+        }
+
+        void denormalize(Expansions&... es)
+        {
+          auto t = std::tuple<Expansions&...>{es...};
+          denormalize(t,
+                      detail::make_index_sequence<sizeof...(Expansions)>{});
+        }
+
+        const expansionset& eset_;
+      };
+
+      /// The tuplization of single-tape expansions into a multitape
+      /// expansion.
+      ///
+      /// Another implementation is possible, based on the following
+      /// two-tape example taking e0 and e1, two single-tape expansions:
+      ///
+      /// auto res = value_t{};
+      /// res.constant = ws_.mul(e0.constant, e1.constant);
+      /// for (const auto& p0: e0.polynomials)
+      ///     for (const auto& p1: e1.polynomials)
+      ///       {
+      ///         auto l = label_t{p0.first, p1.first};
+      ///         ps_.add_here(res.polynomials[l],
+      ///                      ps_.tuple(p0.second, p1.second));
+      ///       }
+      /// if (!ws_.is_zero(e0.constant))
+      ///   {
+      ///     auto rs0 = detail::make_focus<0>(rs_);
+      ///     using p0_t = typename polynomialset_t::template focus_t<0>;
+      ///     auto p0 = p0_t{{rs0.one(), e0.constant}};
+      ///     for (const auto& p1: e1.polynomials)
+      ///       {
+      ///         auto l = label_t{detail::label_one(*rs0.labelset()),
+      ///                          p1.first};
+      ///         ps_.add_here(res.polynomials[l],
+      ///                      ps_.tuple(p0, p1.second));
+      ///       }
+      ///   }
+      /// if (!ws_.is_zero(e1.constant))
+      ///   {
+      ///     auto rs1 = detail::make_focus<1>(rs_);
+      ///     using p1_t = typename polynomialset_t::template focus_t<1>;
+      ///     auto p1 = p1_t{{rs1.one(), e1.constant}};
+      ///     for (const auto& p0: e0.polynomials)
+      ///       {
+      ///         auto l = label_t{p0.first,
+      ///                          detail::label_one(*rs1.labelset())};
+      ///         ps_.add_here(res.polynomials[l],
+      ///                      ps_.tuple(p0.second, p1));
+      ///       }
+      ///   }
+      /// return res;
+      ///
+      /// The first part, the two nested for-loops that deal with the
+      /// polynomial part of the expansions, is easy to scale to
+      /// variadic tuples (that's a Cartesian product). The second
+      /// part, the two if's and loop that deal with the constant
+      /// terms, is more tricky.
+      ///
+      /// Rather than making the code more complex, since the constant
+      /// part of the expansions is just the weight of the unit
+      /// polynomial for the unit label, let's denormalize the
+      /// expansions, let the general laws apply, and then normalize
+      /// the result.
+      template <typename... Expansions>
+      auto
+      tuple(Expansions&&... es) const
+        -> value_t
+      {
+        auto res = value_t{};
+        tuple_impl<Expansions...>{*this}.denormalize(es...);
+        detail::cross([&res, this](const auto&... ps)
+                      {
+                        auto l = label_t{ps.first...};
+                        ps_.add_here(res.polynomials[l],
+                                     ps_.tuple(ps.second...));
+                      },
+                      es.polynomials...);
+        normalize(res);
+        return res;
+      }
+
       /// Convert an expansion to a polynomial.
       polynomial_t as_polynomial(const value_t& v) const
       {

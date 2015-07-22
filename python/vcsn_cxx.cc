@@ -982,14 +982,24 @@ struct expression
     return vcsn::dyn::transposition(val_);
   }
 
-  expression tuple(const expression& rhs) const
+  static expression tuple_(const boost::python::list& es)
   {
-    return vcsn::dyn::tuple(val_, rhs.val_);
+    return vcsn::dyn::tuple(expressions_(es));
   }
 
   automaton zpc(const std::string& algo = "auto") const
   {
     return vcsn::dyn::zpc(val_, algo);
+  }
+
+  /// Convert to a vector of dyn:: expressions.
+  using expressions_t = std::vector<vcsn::dyn::expression>;
+  static expressions_t expressions_(const boost::python::list& es)
+  {
+    auto res = expressions_t{};
+    for (int i = 0; i < boost::python::len(es); ++i)
+      res.emplace_back(boost::python::extract<expression>(es[i])().val_);
+    return res;
   }
 
   vcsn::dyn::expression val_;
@@ -1375,7 +1385,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("thompson", &expression::thompson)
     .def("transpose", &expression::transpose)
     .def("transposition", &expression::transposition)
-    .def("tuple", &expression::tuple)
+    .def("_tuple", &expression::tuple_).staticmethod("_tuple")
     .def("zpc", &expression::zpc, (arg("algo") = "auto"))
     ;
 

@@ -2,49 +2,46 @@
 
 namespace vcsn
 {
-  /*---------------------------.
-  | tuple(context, context).   |
-  `---------------------------*/
+  /*-----------------------------.
+  | tuple_context(context...).   |
+  `-----------------------------*/
 
-  template <typename LhsLabelSet, typename LhsWeightSet,
-            typename RhsLabelSet, typename RhsWeightSet>
+  template <typename... Ctx>
   auto
-  tuple(const context<LhsLabelSet, LhsWeightSet>& lhs,
-        const context<RhsLabelSet, RhsWeightSet>& rhs)
-    -> context<tupleset<LhsLabelSet, RhsLabelSet>,
-               join_t<LhsWeightSet, RhsWeightSet>>
+  tuple_context(Ctx&&... ctx)
+    -> context<tupleset<labelset_t_of<Ctx>...>,
+               join_t<weightset_t_of<Ctx>...>>
   {
-    auto ls = make_tupleset(*lhs.labelset(), *rhs.labelset());
-    auto ws = vcsn::join(*lhs.weightset(), *rhs.weightset());
+    auto ls = make_tupleset(*ctx.labelset()...);
+    auto ws = join(*ctx.weightset()...);
     return {ls, ws};
   }
 
 
-  /*---------------------------------.
-  | tuple(expression, expression).   |
-  `---------------------------------*/
+  /*------------------------.
+  | tuple(expression...).   |
+  `------------------------*/
 
-  template <typename ValueSet, typename LhsValueSet, typename RhsValueSet>
+  template <typename ValueSet, typename... ValueSets>
   inline
   typename ValueSet::value_t
   tuple(const ValueSet& vs,
-        const LhsValueSet&, const typename LhsValueSet::value_t& lv,
-        const RhsValueSet&, const typename RhsValueSet::value_t& rv)
+        const typename ValueSets::value_t&... v)
   {
-    return vs.tuple(lv, rv);
+    return vs.tuple(v...);
   }
 
-  /*---------------------------------------.
-  | tuple(expressionset, expressionset).   |
-  `---------------------------------------*/
+  /*-----------------------------------------.
+  | tuple_expressionset(expressionset...).   |
+  `-----------------------------------------*/
 
-  template <typename LhsExpSet, typename RhsExpSet>
+  template <typename... ExpSets>
   auto
-  tuple(const LhsExpSet& lhs, const RhsExpSet& rhs)
-    -> expressionset<decltype(tuple(lhs.context(), rhs.context()))>
+  tuple_expressionset(const ExpSets&... rss)
+    -> expressionset<decltype(tuple_context(rss.context()...))>
   {
-    auto ctx = tuple(lhs.context(), rhs.context());
-    auto ids = join(lhs.identities(), rhs.identities());
+    auto ctx = tuple_context(rss.context()...);
+    auto ids = join(rss.identities()...);
     return {ctx, ids};
   }
 
@@ -61,11 +58,47 @@ namespace vcsn
         const auto& r = rhs->as<ExpSetRhs>();
         const auto& lrs = l.expressionset();
         const auto& rrs = r.expressionset();
-        auto rs = vcsn::tuple(lrs, rrs);
+        auto rs = vcsn::tuple_expressionset(lrs, rrs);
         return make_expression(rs,
-                               ::vcsn::tuple(rs,
-                                             lrs, l.expression(),
-                                             rrs, r.expression()));
+                               ::vcsn::tuple<decltype(rs),
+                               ExpSetLhs, ExpSetRhs>(rs,
+                                                     l.expression(),
+                                                     r.expression()));
+      }
+    }
+  }
+
+  /*------------------------.
+  | tuple(expression...).   |
+  `------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename... ExpSets, size_t... I>
+      expression
+      tuple_(const std::vector<expression>& es,
+             vcsn::detail::index_sequence<I...>)
+      {
+        auto rs = vcsn::tuple_expressionset(es[I]
+                                            ->template as<ExpSets>()
+                                            .expressionset()...);
+        return make_expression(rs,
+                               vcsn::tuple<decltype(rs), ExpSets...>
+                               (rs,
+                                es[I]
+                                ->template as<ExpSets>()
+                                .expression()...));
+      }
+
+      /// Bridge (tuple).
+      template <typename... ExpSets>
+      expression
+      tuple_vector(const std::vector<expression>& es)
+      {
+        auto indices = vcsn::detail::make_index_sequence<sizeof...(ExpSets)>{};
+        return tuple_<ExpSets...>(es, indices);
       }
     }
   }

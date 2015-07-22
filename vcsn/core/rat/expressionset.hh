@@ -312,7 +312,7 @@ namespace vcsn
     /// If we are multitape, ourself as a tupleset.
     template <typename Ctx = context_t>
     auto as_tupleset() const
-      -> enable_if_t<is_two_tapes_t<Ctx>{}, as_tupleset_t<Ctx>>
+      -> enable_if_t<Ctx::is_lat, as_tupleset_t<Ctx>>
     {
       return as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t::type>::value(self());
     }

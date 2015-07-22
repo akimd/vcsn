@@ -61,7 +61,7 @@ namespace vcsn
       VCSN_RAT_VISIT(zero,)           { ++size_; }
 
       using tuple_t = typename super_t::tuple_t;
-      template <bool = is_two_tapes_t<context_t>{},
+      template <bool = context_t::is_lat,
                 typename Dummy = void>
       struct visit_tuple
       {

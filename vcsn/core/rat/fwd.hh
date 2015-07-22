@@ -148,28 +148,9 @@ namespace vcsn
     | tuple.   |
     `---------*/
 
-    /// The signature of the size() member function.
-    template <typename LabelSet>
-    using size_mem_fn_t = decltype(bool_constant<LabelSet::size() == 0>{});
-
-    /// Whether LabelSet features the size() member function.
-    template <typename LabelSet>
-    using has_size_mem_fn = detail::detect<LabelSet, size_mem_fn_t>;
-
-    /// Whether LabelSet is two-tape.
-    template <typename LabelSet,
-              bool Enable = has_size_mem_fn<LabelSet>{}>
-    struct is_two_tapes_impl : bool_constant<LabelSet::size() == 2> {};
-
-    template <typename LabelSet>
-    struct is_two_tapes_impl<LabelSet, false> : std::false_type {};
-
-    template <typename Context>
-    using is_two_tapes_t = is_two_tapes_impl<typename Context::labelset_t>;
-
     /// Implementation of nodes of tuple of rational expressions.
     template <typename Context,
-              bool Enable = is_two_tapes_t<Context>{}>
+              bool Enable = Context::is_lat>
     class tuple;
 
 

@@ -679,26 +679,28 @@ namespace vcsn
 
 
     /*---------------.
-    | tuple(l, r).   |
+    | tuple(v...).   |
     `---------------*/
 
-    template <unsigned Tape, typename Ctx = context_t>
-    using focus_t
-      = typename polynomialset<detail::focus_context<Tape, Ctx>>::value_t;
-
-    template <typename Ctx = context_t>
+    /// Build a tuple of polynomials: (e.E+f.F)|(g.G+h.H)
+    /// => eg.(E|G) + eh.(E|H) + fg.(F|G) + fh.(F|H).
+    template <typename... Polys>
     auto
-    tuple(const focus_t<0, Ctx>& v0, const focus_t<1, Ctx>& v1) const
+    tuple(Polys&&... vs) const
       -> value_t
     {
       auto res = value_t{};
-      for (const auto& m0: v0)
-        for (const auto& m1: v1)
-          add_here(res,
-                   labelset()->tuple(m0.first, m1.first),
-                   weightset()->mul(m0.second, m1.second));
+      detail::cross([&res, this](auto... ms)
+                    {
+                      this->add_here(res,
+                                     this->labelset()->tuple(ms.first...),
+                                     this->weightset()->mul(ms.second...));
+                    },
+                    std::forward<Polys>(vs)...);
       return res;
     }
+
+
 
     /*---------------.
     | equal(l, r).   |

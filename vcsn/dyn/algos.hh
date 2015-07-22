@@ -769,6 +769,9 @@ namespace vcsn
     /// Build a two-tape expression from two expressions.
     expression tuple(const expression& lhs, const expression& rhs);
 
+    /// Build a k-tape expression from k expressions.
+    expression tuple(const std::vector<expression>& rs);
+
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
 
