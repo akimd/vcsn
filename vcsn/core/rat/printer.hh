@@ -17,6 +17,39 @@ namespace vcsn
   namespace rat
   {
 
+    /// The possible node precedence levels, increasing.
+    ///
+    /// When printing a word (i.e., a label with several letters),
+    /// beware that it may require parens.  Think of star(atom(ab)):
+    /// if we print it as 'ab*', it actually means 'a(b*)'.  Then give
+    /// words a precedence lower than that of star.  This is the role
+    /// of 'word' below.
+    ///
+    /// Was part of printer<ExpSet>, but it resulted in different
+    /// incompatible types between, for instance,
+    /// printer<lat<lal_char, lal_char>> and printer<lal_char>, which
+    /// is a problem when the former calls print_child of the latter,
+    /// passing an argument of type precedence_t.
+    enum class precedence_t
+    {
+      tuple,
+      sum,
+      shuffle,
+      conjunction,
+      ldiv,
+      prod,
+      word = prod, // Multi-letter atoms.
+      lweight,
+      rweight,
+      unary, // All the unary (postfix) operators.
+      star = unary,
+      complement = unary,
+      transposition = unary,
+      zero,
+      one,
+      atom,
+    };
+
     template <typename ExpSet>
     class printer
       : public ExpSet::const_visitor
@@ -59,6 +92,9 @@ namespace vcsn
       {
         return operator()(*v);
       }
+
+      /// Print the given child node, also knowing its parent's precedence.
+      void print_child(const node_t& child, precedence_t parent);
 
     private:
       VCSN_RAT_VISIT(atom, v);
@@ -136,32 +172,6 @@ namespace vcsn
         else
           return false;
       }
-
-      /// The possible node precedence levels, increasing.
-      ///
-      /// When printing a word (i.e., a label with several letters),
-      /// beware that it may require parens.  Think of
-      /// star(atom(ab)): if we print it as 'ab*', it actually means
-      /// 'a(b*)'.  Then give words a precedence lower than that of
-      /// star.  This is the role of 'word' below.
-      enum class precedence_t
-      {
-        tuple,
-        sum,
-        shuffle,
-        conjunction,
-        ldiv,
-        prod,
-        word = prod, // Multi-letter atoms.
-        lweight,
-        rweight,
-        star,
-        complement,
-        transposition,
-        zero,
-        one,
-        atom,
-      };
 
       /// The precedence of \a v (to decide when to print parens).
       precedence_t precedence_(const node_t& v) const;
