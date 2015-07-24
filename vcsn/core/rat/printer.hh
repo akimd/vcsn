@@ -44,9 +44,8 @@ namespace vcsn
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "print"; }
 
-      printer(const expressionset_t& rs,
-              std::ostream& out,
-              const bool debug = !!getenv("VCSN_PARENS"));
+      /// A printer.
+      printer(const expressionset_t& rs, std::ostream& out);
 
       /// Set output format.
       void format(const std::string& format);
@@ -255,7 +254,7 @@ namespace vcsn
       /// The expressionset.
       const expressionset_t& rs_;
       /// Whether to be overly verbose.
-      const bool debug_;
+      const bool debug_ = !!getenv("VCSN_PARENS");
 
       /// Left and right boundaries (typically braces for LaTeX).
       ///
@@ -287,6 +286,12 @@ namespace vcsn
       const char* one_ = nullptr;
     };
 
+    template <typename ExpSet>
+    printer<ExpSet>
+    make_printer(const ExpSet& rs, std::ostream& out)
+    {
+      return {rs, out};
+    }
   } // namespace rat
 } // namespace vcsn
 

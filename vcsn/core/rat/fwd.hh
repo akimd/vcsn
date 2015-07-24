@@ -23,6 +23,10 @@ namespace vcsn
     template <typename Context>
     class printer;
 
+    template <typename ExpSet>
+    printer<ExpSet>
+    make_printer(const ExpSet& rs, std::ostream& out);
+
     /// The possible types of expressions.
     ///
     /// They also code the order in which they are sorted by

@@ -37,11 +37,9 @@ namespace vcsn
     template <typename ExpSet>
     inline
     printer<ExpSet>::printer(const expressionset_t& rs,
-                             std::ostream& out,
-                             const bool debug)
+                             std::ostream& out)
       : out_(out)
       , rs_(rs)
-      , debug_(debug)
     {}
 
 
@@ -55,14 +53,13 @@ namespace vcsn
       -> std::ostream&
     {
       static bool print = !! getenv("VCSN_PRINT");
-      static bool debug = !! getenv("VCSN_DEBUG");
       if (print)
         out_ << '<' << v.type() << "@0x" << address(v) << '>' << vcsn::incendl;
-      if (debug && format_ == "latex")
+      if (debug_ && format_ == "latex")
         out_ << (rs_.identities().is_distributive()
                  ? "{\\color{red}{" : "{\\color{blue}{");
       v.accept(*this);
-      if (debug && format_ == "latex")
+      if (debug_ && format_ == "latex")
         out_ << "}}";
       if (print)
         out_ << vcsn::decendl << "</" << v.type() << '>';

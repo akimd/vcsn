@@ -853,7 +853,7 @@ namespace vcsn
                 const std::string& format) const
     -> std::ostream&
   {
-    auto print = printer<self_t>{self(), o};
+    auto print = make_printer(self(), o);
     print.format(format);
     return print(v);
   }
