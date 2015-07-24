@@ -91,6 +91,7 @@ namespace vcsn
           lmul_          = "\\,";
           rmul_          = "\\,";
           ldiv_          = " \\backslash ";
+          tuple_         = "|";
         }
       else if (format_ == "text")
         {
@@ -112,6 +113,7 @@ namespace vcsn
           lmul_          = "";
           rmul_          = "";
           ldiv_          = "{\\}";
+          tuple_         = "|";
         }
       else
         raise("invalid output format for expression: ", str_escape(format));

@@ -32,8 +32,8 @@ namespace vcsn
     /// passing an argument of type precedence_t.
     enum class precedence_t
     {
-      tuple,
       sum,
+      tuple,
       shuffle,
       conjunction,
       ldiv,
@@ -117,11 +117,34 @@ namespace vcsn
                 typename Dummy = void>
       struct visit_tuple
       {
+        /// Print one tape.
+        template <size_t I>
+        void print_(const tuple_t& v)
+        {
+          if (I)
+            visitor_.out_ << visitor_.tuple_;
+          auto rs = detail::make_focus<I>(visitor_.rs_);
+          auto print = make_printer(rs, visitor_.out_);
+          print.format(visitor_.format_);
+          print.print_child(*std::get<I>(v.sub()), precedence_t::tuple);
+        }
+
+        /// Print all the tapes.
+        template <size_t... I>
+        void print_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          using swallow = int[];
+          (void) swallow
+          {
+            (print_<I>(v),
+             0)...
+          };
+        }
+
+        /// Entry point.
         void operator()(const tuple_t& v)
         {
-          auto ts = visitor_.rs_.as_tupleset();
-          ts.print(v.sub(), visitor_.out_, visitor_.format_,
-                   "", " | ", "");
+          return print_(v, labelset_t_of<context_t>::indices);
         }
         const printer& visitor_;
       };
@@ -291,6 +314,7 @@ namespace vcsn
       const char* shuffle_ = nullptr;
       const char* product_ = nullptr;
       const char* sum_ = nullptr;
+      const char* tuple_ = nullptr;
       /// The constants.
       const char* zero_ = nullptr;
       const char* one_ = nullptr;
