@@ -34,6 +34,7 @@ def contents(file):
 
 def diff_to_re(match):
   '''Convert a portion of patch into a regex substitution to perform.
+  No longer used, we now use the expected/effective parts.
   '''
   frm = []
   to  = []
@@ -57,8 +58,8 @@ def diff_to_re(match):
 def exp_eff_to_re(match):
   fr = ''
   to  = ''
-  # For some reason, with python-2.7 on OS X, I raise a
-  # exceptions.TypeError when I use (keepends = True) instead of
+  # For some reason, with python-2.7 on OS X, I raise an
+  # exception.TypeError when I use (keepends = True) instead of
   # (True)!!!
   for l in match.group(1).splitlines(True):
     fr += l[1:]
@@ -72,11 +73,12 @@ def exp_eff_to_re(match):
   if args.verbose:
     print("SUBST: {} -> {}".format(fr, to))
 
-def update(test, log):
+def update(test, logfile):
+  logfile = args.builddir + '/' + logfile
   try:
+    log = contents(logfile)
     if args.verbose:
-      print("LOG: ", args.builddir + '/' + log)
-    log = contents(args.builddir + '/' + log)
+      print("LOG: ", logfile)
     global subst
     subst = dict()
     re.sub(r'Expected out.*?::\n\n((?:^\t.*\n)+)\n'
@@ -87,6 +89,8 @@ def update(test, log):
     if subst != dict():
       # Turn "subst{frm} -> to" into a large RE.
       frm = '|'.join(map(re.escape, subst.keys()))
+      if args.verbose:
+        print("FROM:", frm)
       test = re.sub("(" + frm + ")",
                     lambda m: subst[m.group(1)],
                     test, flags = re.MULTILINE)
