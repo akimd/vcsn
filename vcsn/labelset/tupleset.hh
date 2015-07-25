@@ -870,6 +870,29 @@ namespace vcsn
     return {vss...};
   }
 
+
+  /*----------------.
+  | is_multitape.   |
+  `----------------*/
+
+  /// Whether a ValueSet, or a context, is multitape.
+  template <typename ValueSet>
+  struct is_multitape
+    : std::false_type
+  {};
+
+  template <typename... ValueSet>
+  struct is_multitape<tupleset<ValueSet...>>
+    : std::true_type
+  {};
+
+  template <typename LabelSet, typename WeightSet>
+  struct is_multitape<context<LabelSet, WeightSet>>
+    : is_multitape<LabelSet>
+  {};
+
+
+
   template <typename T1, typename T2>
   struct concat_tupleset;
 
@@ -992,6 +1015,15 @@ namespace vcsn
     }
   };
 
+  /// Join between a tupleset, and a non tuple.
+  template <typename... VS1, typename VS2>
+  struct join_impl<tupleset<VS1...>, VS2>
+  {
+    // Cannot just leave "false" as condition: the assertion is then
+    // always checked, even if the template is not instantiated.
+    static_assert(is_multitape<VS2>{},
+                  "join: cannot mix tuplesets and non tuplesets");
+  };
 
 
   /*------------------.

@@ -529,12 +529,12 @@ namespace vcsn
 
     /// The join with another labelset.
     template <typename LS1, typename LS2>
-    struct join_impl<LS1, nullableset<LS2>>
+    struct join_impl<nullableset<LS1>, LS2>
     {
       using type = nullableset<join_t<LS1, LS2>>;
-      static type join(const LS1& ls1, const nullableset<LS2>& ls2)
+      static type join(const nullableset<LS1>& ls1, const LS2& ls2)
       {
-        return {::vcsn::join(ls1, *ls2.labelset())};
+        return {::vcsn::join(*ls1.labelset(), ls2)};
       }
     };
 
