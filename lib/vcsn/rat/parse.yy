@@ -46,6 +46,7 @@
         }
       };
 
+      /// An integer range, for quantifiers/exponents.
       using irange_type = std::tuple<int, int>;
     }
   }
@@ -157,8 +158,8 @@
 %type <dyn::weight> weights;
 %type <class_t> class;
 
-%left "|"
 %left "+" "<+"
+%left "|"
 %left "%"
 %left "&" ":"
 %left "{/}"
@@ -196,7 +197,7 @@ exp:
   exp "." exp                 { $$ = dyn::multiply($1.exp, $3.exp); }
 | exp "&" exp                 { $$ = dyn::conjunction($1.exp, $3.exp); }
 | exp ":" exp                 { $$ = dyn::shuffle($1.exp, $3.exp); }
-| exp "+" exp                 { $$ = dyn::sum($1.exp, $3.exp); }
+| exp "+" {driver_.tape_ = tape;} exp { $$ = dyn::sum($1.exp, $4.exp); }
 | exp "<+" exp                { $$ = prefer($1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = dyn::ldiv($1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
