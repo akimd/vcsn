@@ -83,10 +83,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "determinized_automaton<";
-        input_->print_set(o, format);
+        input_->print_set(o, fmt);
         return o << '>';
       }
 
@@ -168,7 +168,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& format = "text",
+                       format fmt = {},
                        bool delimit = false) const
       {
         auto i = origins().find(s);
@@ -182,7 +182,7 @@ namespace vcsn
             for (auto s: i->second)
               {
                 o << sep;
-                input_->print_state_name(s, o, format, true);
+                input_->print_state_name(s, o, fmt, true);
                 sep = ", ";
               }
             if (delimit)
@@ -331,9 +331,9 @@ namespace vcsn
 
         std::ostream&
         print(state_t s, std::ostream& out,
-              const std::string& format = "text") const
+              format fmt = {}) const
         {
-          return aut_->print_state_name(s, out, format);
+          return aut_->print_state_name(s, out, fmt);
         }
 
         automaton_t aut_;
@@ -367,10 +367,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "detweighted_automaton<";
-        input_->print_set(o, format);
+        input_->print_set(o, fmt);
         return o << '>';
       }
 
@@ -424,13 +424,13 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
-                       const std::string& format = "text") const
+                       format fmt = {}) const
       {
         auto i = origins().find(ss);
         if (i == origins().end())
           this->print_state(ss, o);
         else
-          ns_.print(i->second, o, format, ", ");
+          ns_.print(i->second, o, fmt, ", ");
         return o;
       }
 

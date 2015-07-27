@@ -66,10 +66,10 @@ namespace vcsn
     return {ctx, ids};
   }
 
-  DEFINE::print_set(std::ostream& o, const std::string& format) const
+  DEFINE::print_set(std::ostream& o, format fmt) const
     -> std::ostream&
   {
-    if (format == "latex")
+    if (fmt == format::latex)
       {
         o << "\\mathsf{";
         switch (identities().ids())
@@ -84,28 +84,28 @@ namespace vcsn
             assert(false);
           };
         o << "}[";
-        context().print_set(o, format);
+        context().print_set(o, fmt);
         o << ']';
       }
-    else if (format == "text")
+    else if (fmt == format::text)
       {
         if (identities().ids() == vcsn::rat::identities::distributive)
           {
             o << "seriesset<";
-            context().print_set(o, format);
+            context().print_set(o, fmt);
             o << '>';
           }
         else
           {
             o << "expressionset<";
-            context().print_set(o, format);
+            context().print_set(o, fmt);
             o << '>';
             if (identities() != vcsn::rat::identities{})
               o << '(' << identities() << ')';
           }
       }
     else
-      raise("invalid format: ", format);
+      raise("invalid format: ", fmt);
     return o;
   }
 
@@ -850,11 +850,11 @@ namespace vcsn
   }
 
   DEFINE::print(const value_t v, std::ostream& o,
-                const std::string& format) const
+                format fmt) const
     -> std::ostream&
   {
     auto print = make_printer(self(), o);
-    print.format(format);
+    print.format(fmt);
     return print(v);
   }
 

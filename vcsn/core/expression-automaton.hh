@@ -54,10 +54,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "expression_automaton<";
-        super_t::print_set(o, format);
+        super_t::print_set(o, fmt);
         return o << '>';
       }
 
@@ -119,14 +119,14 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& format = "text",
+                       format fmt = {},
                        bool = false) const
       {
         auto i = origins().find(s);
         if (i == std::end(origins()))
           this->print_state(s, o);
         else
-          rs_.print(i->second, o, format);
+          rs_.print(i->second, o, fmt);
         return o;
       }
 

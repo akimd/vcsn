@@ -388,12 +388,12 @@ namespace vcsn
 
     std::ostream&
     print(value_t l, std::ostream& o,
-          const std::string& format = "text") const
+          format fmt = {}) const
     {
       if (is_one(l))
-        o << (format == "latex" ? "\\varepsilon" : "\\e");
+        o << (fmt == format::latex ? "\\varepsilon" : "\\e");
       else
-        labelset()->print(get_value(l), o, format);
+        labelset()->print(get_value(l), o, fmt);
       return o;
     }
 
@@ -422,22 +422,22 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         {
           o << "(";
-          labelset()->print_set(o, format);
+          labelset()->print_set(o, fmt);
           o << ")^?";
         }
-      else if (format == "text")
+      else if (fmt == format::text)
         {
           o <<  "nullableset<";
-          labelset()->print_set(o, format);
+          labelset()->print_set(o, fmt);
           o << '>';
         }
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       return o;
     }
 

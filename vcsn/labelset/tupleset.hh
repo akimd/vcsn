@@ -411,19 +411,19 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      return this->print_set_(o, format, indices);
+      return this->print_set_(o, fmt, indices);
     }
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
-          const std::string& format = "text",
+          format fmt = {},
           const char* pre = "(",
           const char* sep = ",",
           const char* post = ")") const
     {
-      return this->print_(l, o, format, pre, sep, post, indices);
+      return this->print_(l, o, fmt, pre, sep, post, indices);
     }
 
   private:
@@ -724,7 +724,7 @@ namespace vcsn
     template <std::size_t... I>
     std::ostream&
     print_(value_t const& l, std::ostream& o,
-           const std::string& format,
+           format fmt,
            const char* pre,
            const char* sep,
            const char* post,
@@ -736,7 +736,7 @@ namespace vcsn
           (void) swallow
             {
               (o << (I == 0 ? pre : sep),
-               set<I>().print(std::get<I>(l), o, format),
+               set<I>().print(std::get<I>(l), o, fmt),
                0)...
             };
           o << post;
@@ -746,27 +746,27 @@ namespace vcsn
 
     template <std::size_t... I>
     std::ostream&
-    print_set_(std::ostream& o, const std::string& format,
+    print_set_(std::ostream& o, format fmt,
                seq<I...>) const
     {
       const char *sep = "";
-      if (format == "latex")
+      if (fmt == format::latex)
         sep = " \\times ";
-      else if (format == "text")
+      else if (fmt == format::text)
         {
           o << "lat<";
           sep = ", ";
         }
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       using swallow = int[];
       (void) swallow
         {
           (o << (I == 0 ? "" : sep),
-           set<I>().print_set(o, format),
+           set<I>().print_set(o, fmt),
            0)...
         };
-      if (format == "text")
+      if (fmt == format::text)
         o << '>';
       return o;
     }

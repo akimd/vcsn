@@ -40,10 +40,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "tuple_automaton";
-        print_set_(o, format);
+        print_set_(o, fmt);
         return o;
       }
 
@@ -86,12 +86,12 @@ namespace vcsn
 
       std::ostream&
       print_state_name(typename super_t::state_t s, std::ostream& o,
-                       const std::string& format = "text", bool delimit = false)
+                       format fmt = {}, bool delimit = false)
                       const
       {
         if (delimit)
           o << '(';
-        print_state_name_(s, o, format, indices);
+        print_state_name_(s, o, fmt, indices);
         if (delimit)
           o << ')';
         return o;
@@ -138,24 +138,24 @@ namespace vcsn
       }
 
       /// The setname of the sub automata.
-      std::ostream& print_set_(std::ostream& o, const std::string& format) const
+      std::ostream& print_set_(std::ostream& o, format fmt) const
       {
-        return print_set_(o, format, indices);
+        return print_set_(o, fmt, indices);
       }
 
       template <size_t... I>
-      std::ostream& print_set_(std::ostream& o, const std::string& format,
+      std::ostream& print_set_(std::ostream& o, format fmt,
                                seq<I...>) const
       {
         o << '<';
-        aut_->print_set(o, format);
+        aut_->print_set(o, fmt);
         o << ", ";
         const char* sep = "";
         using swallow = int[];
         (void) swallow
           {
             (o << sep,
-             std::get<I>(auts_)->print_set(o, format),
+             std::get<I>(auts_)->print_set(o, fmt),
              sep = ", ",
              0)...
           };
@@ -215,7 +215,7 @@ namespace vcsn
       template <size_t... I>
       std::ostream&
       print_state_name_(typename super_t::state_t s, std::ostream& o,
-                        const std::string& format,
+                        format fmt,
                         seq<I...>) const
       {
         const auto& origs = origins();
@@ -230,7 +230,7 @@ namespace vcsn
               {
                 (o << sep,
                  std::get<I>(auts_)->print_state_name(std::get<I>(i->second),
-                                                      o, format, true),
+                                                      o, fmt, true),
                  sep = ", ",
                  0)...
                };

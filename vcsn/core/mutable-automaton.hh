@@ -13,6 +13,7 @@
 #include <vcsn/core/transition.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/memory.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -118,10 +119,10 @@ namespace vcsn
       return res;
     }
 
-    std::ostream& print_set(std::ostream& o, const std::string& format) const
+    std::ostream& print_set(std::ostream& o, format fmt) const
     {
       o << "mutable_automaton<";
-      context().print_set(o, format);
+      context().print_set(o, fmt);
       return o << '>';
     }
 
@@ -357,7 +358,7 @@ namespace vcsn
 
     std::ostream&
     print_state_name(state_t s, std::ostream& o,
-                     const std::string& = "text",
+                     format = {},
                      bool = true) const
     {
       return print_state(s, o);

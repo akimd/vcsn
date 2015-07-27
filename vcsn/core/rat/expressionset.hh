@@ -277,11 +277,11 @@ namespace vcsn
     }
 
     std::ostream& print(const value_t v, std::ostream& o,
-                        const std::string& format = "text") const;
+                        format fmt = {}) const;
 
     /// Format the description of this expressionset.
     std::ostream& print_set(std::ostream& o,
-                            const std::string& format = "text") const;
+                            format fmt = {}) const;
 
     /// The type of the expressionset for the Tape-th tape.
     template <unsigned Tape, typename Ctx = context_t>

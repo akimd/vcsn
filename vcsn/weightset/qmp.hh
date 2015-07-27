@@ -7,6 +7,7 @@
 #include <gmpxx.h>
 
 #include <vcsn/core/join.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star-status.hh>
@@ -168,9 +169,9 @@ namespace vcsn
 
     static std::ostream&
     print(const value_t v, std::ostream& o,
-          const std::string& format = "text")
+          format fmt = {})
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         {
           if (v.get_den() == 1)
             o << v.get_num();
@@ -183,14 +184,14 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         o << "\\mathbb{Q}_{\\text{mp}}";
-      else if (format == "text")
+      else if (fmt == format::text)
         o << sname();
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       return o;
     }
   };

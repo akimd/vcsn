@@ -54,10 +54,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "product_automaton";
-        return aut_->print_set_(o, format);
+        return aut_->print_set_(o, fmt);
       }
 
       /// The context of the result.

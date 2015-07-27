@@ -127,7 +127,7 @@ namespace vcsn
     }
 
     static std::ostream& print(empty_t, std::ostream& o,
-                               const std::string& = "text")
+                               format = {})
     {
       return o;
     }
@@ -180,14 +180,14 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         o << "1";
-      else if (format == "text")
+      else if (fmt == format::text)
         o << sname();
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       return o;
     }
   };

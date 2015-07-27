@@ -229,24 +229,24 @@ namespace vcsn
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
-          const std::string& = "text") const
+          format = {}) const
     {
       return this->genset().print(l, o);
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
-        this->genset().print_set(o, format);
-      else if (format == "text")
+      if (fmt == format::latex)
+        this->genset().print_set(o, fmt);
+      else if (fmt == format::text)
         {
           o << "letterset<";
-          this->genset().print_set(o, format);
+          this->genset().print_set(o, fmt);
           o << '>';
         }
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       return o;
     }
   };

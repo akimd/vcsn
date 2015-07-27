@@ -125,10 +125,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "pair_automaton<";
-        input_->print_set(o, format);
+        input_->print_set(o, fmt);
         return o << '>';
       }
 
@@ -180,7 +180,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
-                       const std::string& format = "text",
+                       format fmt = {},
                        bool delimit = false) const
       {
         auto i = origins().find(ss);
@@ -190,11 +190,11 @@ namespace vcsn
           {
             if (delimit)
               o << '{';
-            input_->print_state_name(i->second.first, o, format);
+            input_->print_state_name(i->second.first, o, fmt);
             if (!is_singleton(ss))
               {
                 o << ", ";
-                input_->print_state_name(i->second.second, o, format);
+                input_->print_state_name(i->second.second, o, fmt);
               }
             if (delimit)
               o << '}';

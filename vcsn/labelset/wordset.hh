@@ -241,31 +241,31 @@ namespace vcsn
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
-          const std::string& format = "text") const
+          format fmt = {}) const
     {
       if (is_one(l))
-        o << (format == "latex" ? "\\varepsilon" : "\\e");
+        o << (fmt == format::latex ? "\\varepsilon" : "\\e");
       else if (!is_special(l))
-        this->genset().print(l, o, format);
+        this->genset().print(l, o, fmt);
       return o;
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         {
-          this->genset().print_set(o, format);
+          this->genset().print_set(o, fmt);
           o << "^*";
         }
-      else if (format == "text")
+      else if (fmt == format::text)
         {
           o << "wordset<";
-          this->genset().print_set(o, format);
+          this->genset().print_set(o, fmt);
           o << '>';
         }
       else
-        raise(sname(), ": print_set: invalid format: ", format);
+        raise(sname(), ": print_set: invalid format: ", fmt);
       return o;
     }
 

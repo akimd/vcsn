@@ -55,10 +55,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "transpose_automaton<";
-        aut_->print_set(o, format);
+        aut_->print_set(o, fmt);
         return o << '>';
       }
 

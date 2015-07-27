@@ -11,6 +11,7 @@
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/cast.hh>
+#include <vcsn/misc/format.hh>
 
 namespace vcsn
 {
@@ -81,7 +82,7 @@ namespace vcsn
       printer(const expressionset_t& rs, std::ostream& out);
 
       /// Set output format.
-      void format(const std::string& format);
+      void format(format fmt);
 
       /// Entry point: print \a v.
       std::ostream& operator()(const node_t& v);
@@ -125,7 +126,7 @@ namespace vcsn
             visitor_.out_ << visitor_.tuple_;
           auto rs = detail::make_focus<I>(visitor_.rs_);
           auto print = make_printer(rs, visitor_.out_);
-          print.format(visitor_.format_);
+          print.format(visitor_.fmt_);
           print.print_child(*std::get<I>(v.sub()), precedence_t::tuple);
         }
 
@@ -261,7 +262,7 @@ namespace vcsn
                   letters
                     .emplace_back(down_pointer_cast<const atom_t>(*i)->value());
                 vcsn::detail::print_label_class(*rs_.labelset(), letters,
-                                                out_, format_);
+                                                out_, fmt_);
               }
             else
               {
@@ -283,7 +284,7 @@ namespace vcsn
       /// Output stream.
       std::ostream& out_;
       /// Output format.
-      std::string format_;
+      class format fmt_;
       /// The expressionset.
       const expressionset_t& rs_;
       /// Whether to be overly verbose.

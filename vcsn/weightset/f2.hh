@@ -5,6 +5,7 @@
 
 #include <vcsn/core/join.hh>
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/stream.hh>
@@ -152,20 +153,20 @@ namespace vcsn
 
     static std::ostream&
     print(const value_t v, std::ostream& o,
-          const std::string& = "text")
+          format = {})
     {
       return o << (v ? '1' : '0');
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         o << "\\mathbb{F}_2";
-      else if (format == "text")
+      else if (fmt == format::text)
         o << sname();
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       return o;
     }
   };

@@ -86,7 +86,7 @@ namespace vcsn
           "digraph\n"
           "{\n"
           "  vcsn_context = \"";
-        aut_->context().print_set(bos_, "text");
+        aut_->context().print_set(bos_, format::text);
         bos_ << "\"\n"
           "  rankdir = LR\n"
           "  edge ["
@@ -156,7 +156,7 @@ namespace vcsn
               {
                 bos_ << "label = \"";
                 enable_();
-                aut_->print_state_name(s, bos_, "latex");
+                aut_->print_state_name(s, bos_, format::latex);
                 disable_();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
@@ -184,7 +184,7 @@ namespace vcsn
                 has_attributes = true;
                 bos_ << " [label = \"";
                 enable_();
-                aut_->print_state_name(s, bos_, "text");
+                aut_->print_state_name(s, bos_, format::text);
                 disable_();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
@@ -287,7 +287,9 @@ namespace vcsn
         else
           aut_->print_state(dst, bos_);
 
-        auto e = to_string(ps_, entry, dot2tex_ ? "latex" : "text", ", ");
+        auto e = to_string(ps_, entry,
+                           dot2tex_ ? format::latex : format::text,
+                           ", ");
         bool useless = !has(useful_, src) || !has(useful_, dst);
         if (!e.empty() || useless)
           {

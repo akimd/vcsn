@@ -7,6 +7,7 @@
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/ctx/fwd.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -97,14 +98,14 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      labelset()->print_set(o, format);
-      if (format == "latex")
+      labelset()->print_set(o, fmt);
+      if (fmt == format::latex)
         o << "\\rightarrow";
       else
         o << ", ";
-      return weightset()->print_set(o, format);
+      return weightset()->print_set(o, fmt);
     }
 
     static constexpr bool

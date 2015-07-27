@@ -10,6 +10,7 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -26,10 +27,10 @@ namespace vcsn
       /// Bridge (print).
       template <typename Context, typename Ostream, typename String>
       std::ostream& print_context(const context& ctx, std::ostream& o,
-                                  const std::string& format)
+                                  const std::string& fmt)
       {
         const auto& c = ctx->as<Context>();
-        return c.print_set(o, format);
+        return c.print_set(o, format(fmt));
       }
     }
   }
@@ -44,9 +45,9 @@ namespace vcsn
   inline
   std::ostream&
   print(const ValueSet& vs, const typename ValueSet::value_t& v,
-        std::ostream& o, const std::string& format)
+        std::ostream& o, format fmt)
   {
-    return vs.print(v, o, format);
+    return vs.print(v, o, format(fmt));
   }
 
   namespace dyn
@@ -56,10 +57,10 @@ namespace vcsn
       /// Bridge (print).
       template <typename ExpansionSet, typename Ostream, typename String>
       std::ostream& print_expansion(const expansion& expansion, std::ostream& o,
-                                    const std::string& format)
+                                    const std::string& fmt)
       {
         const auto& e = expansion->as<ExpansionSet>();
-        return vcsn::print(e.expansionset(), e.expansion(), o, format);
+        return vcsn::print(e.expansionset(), e.expansion(), o, format(fmt));
       }
     }
   }
@@ -75,10 +76,10 @@ namespace vcsn
       /// Bridge (print).
       template <typename LabelSet, typename Ostream, typename String>
       std::ostream& print_label(const label& label, std::ostream& o,
-                                const std::string& format)
+                                const std::string& fmt)
       {
         const auto& l = label->as<LabelSet>();
-        return vcsn::print(l.labelset(), l.label(), o, format);
+        return vcsn::print(l.labelset(), l.label(), o, format(fmt));
       }
     }
   }
@@ -130,10 +131,10 @@ namespace vcsn
       /// Bridge (print).
       template <typename PolynomialSet, typename Ostream, typename String>
       std::ostream& print_polynomial(const polynomial& polynomial,
-                                     std::ostream& o, const std::string& format)
+                                     std::ostream& o, const std::string& fmt)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::print(p.polynomialset(), p.polynomial(), o, format);
+        return vcsn::print(p.polynomialset(), p.polynomial(), o, format(fmt));
       }
     }
   }
@@ -149,9 +150,9 @@ namespace vcsn
   inline
   std::ostream&
   print(const ExpSet& rs, const typename ExpSet::value_t& e,
-        std::ostream& o, const std::string& format)
+        std::ostream& o, format fmt)
   {
-    return rs.print(e, o, format);
+    return rs.print(e, o, format(fmt));
   }
 #endif
 
@@ -162,10 +163,10 @@ namespace vcsn
       /// Bridge (print).
       template <typename ExpSet, typename Ostream, typename String>
       std::ostream& print_expression(const expression& exp, std::ostream& o,
-                                     const std::string& format)
+                                     const std::string& fmt)
       {
         const auto& e = exp->as<ExpSet>();
-        return vcsn::print(e.expressionset(), e.expression(), o, format);
+        return vcsn::print(e.expressionset(), e.expression(), o, format(fmt));
       }
     }
   }
@@ -193,10 +194,10 @@ namespace vcsn
       /// Bridge (print).
       template <typename WeightSet, typename Ostream, typename String>
       std::ostream& print_weight(const weight& weight, std::ostream& o,
-                                 const std::string& format)
+                                 const std::string& fmt)
       {
         const auto& w = weight->as<WeightSet>();
-        return vcsn::print(w.weightset(), w.weight(), o, format);
+        return vcsn::print(w.weightset(), w.weight(), o, format(fmt));
       }
     }
   }

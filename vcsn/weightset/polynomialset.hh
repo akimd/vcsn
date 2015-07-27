@@ -925,22 +925,22 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         {
           o << "\\mathsf{Poly}[";
-          labelset()->print_set(o, format);
+          labelset()->print_set(o, fmt);
           o << " \\to ";
-          weightset()->print_set(o, format);
+          weightset()->print_set(o, fmt);
           o << "]";
         }
       else
         {
           o << "polynomialset<";
-          labelset()->print_set(o, format);
+          labelset()->print_set(o, fmt);
           o << "_";
-          weightset()->print_set(o, format);
+          weightset()->print_set(o, fmt);
           o << ">";
         }
       return o;
@@ -1095,15 +1095,15 @@ namespace vcsn
     /// Print a monomial.
     std::ostream&
     print(const monomial_t& m, std::ostream& out,
-          const std::string& format = "text") const
+          format fmt = {}) const
     {
       static bool parens = getenv("VCSN_PARENS");
-      print_weight_(weight_of(m), out, format);
+      print_weight_(weight_of(m), out, fmt);
       if (parens)
-        out << (format == "latex" ? "\\left(" : "(");
-      labelset()->print(label_of(m), out, format);
+        out << (fmt == format::latex ? "\\left(" : "(");
+      labelset()->print(label_of(m), out, fmt);
       if (parens)
-        out << (format == "latex" ? "\\right)" : ")");
+        out << (fmt == format::latex ? "\\right)" : ")");
       return out;
     }
 
@@ -1115,14 +1115,14 @@ namespace vcsn
     /// \param sep     the separator between monomials
     std::ostream&
     print(const value_t& v, std::ostream& out,
-          const std::string& format = "text",
+          format fmt = {},
           const std::string& sep = " + ") const
     {
-      bool latex = format == "latex";
+      bool latex = fmt == format::latex;
       if (is_zero(v))
         out << (latex ? "\\emptyset" : "\\z");
       else
-        print_<context_t>(v, out, format,
+        print_<context_t>(v, out, fmt,
                           latex && sep == " + " ? " \\oplus " : sep);
       return out;
     }
@@ -1131,14 +1131,14 @@ namespace vcsn
     /// Print a weight.
     std::ostream&
     print_weight_(const weight_t& w, std::ostream& out,
-                  const std::string& format) const
+                  format fmt) const
     {
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(w))
         {
-          out << (format == "latex" ? "\\left\\langle " : std::string{langle});
-          weightset()->print(w, out, format);
-          out << (format == "latex" ? "\\right\\rangle " : std::string{rangle});
+          out << (fmt == format::latex ? "\\left\\langle " : std::string{langle});
+          weightset()->print(w, out, fmt);
+          out << (fmt == format::latex ? "\\right\\rangle " : std::string{rangle});
         }
       return out;
     }
@@ -1146,7 +1146,7 @@ namespace vcsn
     /// Print a polynomial value without classes.
     std::ostream&
     print_without_classes_(const value_t& v, std::ostream& out,
-                           const std::string& format,
+                           format fmt,
                            const std::string& sep) const
     {
       bool first = true;
@@ -1155,7 +1155,7 @@ namespace vcsn
           if (!first)
             out << sep;
           first = false;
-          print(m, out, format);
+          print(m, out, fmt);
         }
       return out;
     }
@@ -1163,7 +1163,7 @@ namespace vcsn
     /// Print a polynomial value with classes.
     std::ostream&
     print_with_classes_(const value_t& v, std::ostream& out,
-                        const std::string& format,
+                        format fmt,
                         const std::string& sep) const
     {
       using std::begin;
@@ -1171,7 +1171,7 @@ namespace vcsn
 
       // No classes if not at least 3 elements.
       if (sep == " + " || v.size() <= 2)
-        return print_without_classes_(v, out, format, sep);
+        return print_without_classes_(v, out, fmt, sep);
 
       // No classes if the weights of the letters aren't all the same.
       auto first_letter
@@ -1186,18 +1186,18 @@ namespace vcsn
                        {
                          return weightset()->equal(weight_of(m), w);
                        }))
-        return print_without_classes_(v, out, format, sep);
+        return print_without_classes_(v, out, fmt, sep);
 
       // Print with classes.  First, the constant-term.
       if (first_letter != begin(v))
         {
-          print(detail::front(v), out, format);
+          print(detail::front(v), out, fmt);
           if (1 < v.size())
             out << sep;
         }
 
       // The weight.
-      print_weight_(w, out, format);
+      print_weight_(w, out, fmt);
 
       // Gather the letters.  We can use a vector, as we know that the
       // labels are already sorted, and random access iteration will
@@ -1209,7 +1209,7 @@ namespace vcsn
 
       // Print the character class.  'letters' are sorted, since
       // polynomials are shortlex-sorted on the labels.
-      print_label_class(*labelset(), letters, out, format);
+      print_label_class(*labelset(), letters, out, fmt);
       return out;
     }
 
@@ -1218,10 +1218,10 @@ namespace vcsn
     vcsn::enable_if_t<!labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>
     print_(const value_t& v, std::ostream& out,
-           const std::string& format = "text",
+           format fmt = {},
            const std::string& sep = " + ") const
     {
-      return print_without_classes_(v, out, format, sep);
+      return print_without_classes_(v, out, fmt, sep);
     }
 
     /// Print a non-null value for a letterized labelset (e.g., letterset
@@ -1230,10 +1230,10 @@ namespace vcsn
     vcsn::enable_if_t<labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>
     print_(const value_t& v, std::ostream& out,
-           const std::string& format = "text",
+           format fmt = {},
            const std::string& sep = " + ") const
     {
-      return print_with_classes_(v, out, format, sep);
+      return print_with_classes_(v, out, fmt, sep);
     }
 
 

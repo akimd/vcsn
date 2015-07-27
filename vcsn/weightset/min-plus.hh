@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/functional.hh> // hash_value
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star-status.hh>
@@ -142,10 +143,10 @@ namespace vcsn
 
       static std::ostream&
       print(const value_t v, std::ostream& o,
-            const std::string& format = "text")
+            format fmt = {})
       {
         if (is_zero(v))
-          return o << (format == "latex" ? "\\infty" : "oo");
+          return o << (fmt == format::latex ? "\\infty" : "oo");
         else
           return o << v;
       }

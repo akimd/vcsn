@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -209,11 +210,10 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const letter_t l, std::ostream& o,
-          const std::string& format = "text") const
+    print(const letter_t l, std::ostream& o, format fmt = {}) const
     {
       if (l == '\\')
-        o << (format == "latex" ? "\\backslash{}" : "\\\\");
+        o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
       else if (l != one_letter() && l != special_letter())
         o << l;
       return o;
@@ -221,7 +221,7 @@ namespace vcsn
 
     std::ostream&
     print(const word_t& w, std::ostream& o,
-          const std::string& format = "text") const
+          format fmt = {}) const
     {
       size_t s = w.size();
 
@@ -232,10 +232,10 @@ namespace vcsn
         o << '$';
       else
         {
-          if (format == "latex")
+          if (fmt == format::latex)
             o << "\\mathit{";
           o << str_escape(w);
-          if (format == "latex")
+          if (fmt == format::latex)
             o << '}';
         }
       return o;

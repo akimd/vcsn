@@ -6,11 +6,12 @@
 
 #include <boost/optional.hpp>
 
-#include <vcsn/misc/type_traits.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/stream.hh> // eat.
 #include <vcsn/misc/symbol.hh>
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -249,9 +250,9 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         {
           o << "\\{";
           const char *sep = "";
@@ -260,7 +261,7 @@ namespace vcsn
               o << sep;
               if (! this->is_letter(l))
                 o << "\\mathit{";
-              this->print(l, o, format);
+              this->print(l, o, fmt);
               if (! this->is_letter(l))
                 o << '}';
               sep = ", ";
@@ -269,18 +270,18 @@ namespace vcsn
             o << sep << "\\ldots";
           o << "\\}";
         }
-      else if (format == "text")
+      else if (fmt == format::text)
         {
           o << sname() << '(';
           for (letter_t l: alphabet_)
             // FIXME: escape ')' and '-'.
-            this->print(l, o, format);
+            this->print(l, o, fmt);
           // Don't display openness here, as our "make()" parser is
           // not ready for it.
           o << ')';
         }
       else
-        raise(sname(), ": print_set: invalid format: ", format);
+        raise(sname(), ": print_set: invalid format: ", fmt);
       return o;
     }
 

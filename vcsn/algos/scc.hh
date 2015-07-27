@@ -576,10 +576,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "scc_automaton<";
-        aut_->print_set(o, format);
+        aut_->print_set(o, fmt);
         return o << '>';
       }
 
@@ -589,11 +589,11 @@ namespace vcsn
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
-                                     const std::string& format = "text",
+                                     format fmt = {},
                                      bool = false) const
       {
         o << component_.at(s) << '.';
-        aut_->print_state_name(s, o, format, true);
+        aut_->print_state_name(s, o, fmt, true);
         return o;
       }
 

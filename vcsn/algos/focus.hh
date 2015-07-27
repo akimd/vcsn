@@ -189,10 +189,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "focus_automaton<" << std::to_string(Tape) << ", ";
-        aut_->print_set(o, format);
+        aut_->print_set(o, fmt);
         return o << '>';
       }
 

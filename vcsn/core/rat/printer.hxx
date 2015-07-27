@@ -55,22 +55,22 @@ namespace vcsn
       static bool print = !! getenv("VCSN_PRINT");
       if (print)
         out_ << '<' << v.type() << "@0x" << address(v) << '>' << vcsn::incendl;
-      if (debug_ && format_ == "latex")
+      if (debug_ && fmt_ == format::latex)
         out_ << (rs_.identities().is_distributive()
                  ? "{\\color{red}{" : "{\\color{blue}{");
       v.accept(*this);
-      if (debug_ && format_ == "latex")
+      if (debug_ && fmt_ == format::latex)
         out_ << "}}";
       if (print)
         out_ << vcsn::decendl << "</" << v.type() << '>';
       return out_;
     }
 
-    DEFINE::format(const std::string& format)
+    DEFINE::format(class format fmt)
       -> void
     {
-      format_ = format;
-      if (format_ == "latex")
+      fmt_ = fmt;
+      if (fmt_ == format::latex)
         {
           lgroup_        = "{";
           rgroup_        = "}";
@@ -93,7 +93,7 @@ namespace vcsn
           ldiv_          = " \\backslash ";
           tuple_         = "|";
         }
-      else if (format_ == "text")
+      else if (fmt_ == format::text)
         {
           lgroup_        = "";
           rgroup_        = "";
@@ -115,8 +115,6 @@ namespace vcsn
           ldiv_          = "{\\}";
           tuple_         = "|";
         }
-      else
-        raise("invalid output format for expression: ", str_escape(format));
     }
 
     DEFINE::precedence_(const node_t& v) const
@@ -156,7 +154,7 @@ namespace vcsn
     VISIT(lweight)
     {
       out_ << langle_;
-      rs_.weightset()->print(v.weight(), out_, format_);
+      rs_.weightset()->print(v.weight(), out_, fmt_);
       out_ << rangle_ << lmul_;
       print_child_(*v.sub(), v);
     }
@@ -165,7 +163,7 @@ namespace vcsn
     {
       print_child_(*v.sub(), v);
       out_ << rmul_ << langle_;
-      rs_.weightset()->print(v.weight(), out_, format_);
+      rs_.weightset()->print(v.weight(), out_, fmt_);
       out_ << rangle_;
     }
 
@@ -183,7 +181,7 @@ namespace vcsn
 
     VISIT(atom)
     {
-      rs_.labelset()->print(v.value(), out_, format_);
+      rs_.labelset()->print(v.value(), out_, fmt_);
     }
 
     DEFINE::print_child(const node_t& child, precedence_t parent)

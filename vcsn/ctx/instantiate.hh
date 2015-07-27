@@ -114,7 +114,7 @@ namespace vcsn
   std::ostream&                                                         \
   print<expressionset<Ctx>>(const expressionset<Ctx>& rs,               \
                             const Ctx::expression_t& e, std::ostream& o, \
-                            const std::string& format);                 \
+                            format fmt);                 \
                                                                         \
   /* standard. */                                                       \
   MAYBE_EXTERN template                                                 \

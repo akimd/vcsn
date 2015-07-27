@@ -72,10 +72,10 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "delay_automaton<";
-        super_t::print_set(o, format);
+        super_t::print_set(o, fmt);
         return o << '>';
       }
 
@@ -119,13 +119,13 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& format = "text",
+                       format fmt = {},
                        bool delimit = false) const
       {
         auto ns = origins().at(s);
         if (delimit)
           o << '(';
-        aut_->print_state_name(ns.first, o, format, true);
+        aut_->print_state_name(ns.first, o, fmt, true);
         o << ":(";
         auto a = ns.second;
         for (int i = 0; i < a.size() - 1; i++)

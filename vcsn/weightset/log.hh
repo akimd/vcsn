@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include <vcsn/core/join.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/functional.hh> // hash_value
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
@@ -155,23 +156,23 @@ namespace vcsn
 
     static std::ostream&
     print(const value_t v, std::ostream& o,
-          const std::string& format = "text")
+          format fmt = {})
     {
       if (is_zero(v))
-        return o << (format == "latex" ? "\\infty" : "oo");
+        return o << (fmt == format::latex ? "\\infty" : "oo");
       else
         return o << v;
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format = "text") const
+    print_set(std::ostream& o, format fmt = {}) const
     {
-      if (format == "latex")
+      if (fmt == format::latex)
         o << "\\mathrm{Log}";
-      else if (format == "text")
+      else if (fmt == format::text)
         o << sname();
       else
-        raise("invalid format: ", format);
+        raise("invalid format: ", fmt);
       return o;
     }
   };

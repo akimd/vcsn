@@ -54,34 +54,34 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, const std::string& format) const
+      std::ostream& print_set(std::ostream& o, format fmt) const
       {
         o << "expansionset<";
-        rs_.print(o, format);
+        rs_.print(o, fmt);
         return o << '>';
       }
 
       /// Print a first order development.
       std::ostream& print(const value_t& v, std::ostream& o,
-                          const std::string& format = "text") const
+                          format fmt = {}) const
       {
         bool first = true;
         if (!ws_.is_zero(v.constant) || v.polynomials.empty())
           {
-            o << (format == "latex" ? "\\left\\langle " : "<");
-            ws_.print(v.constant, o, format);
-            o << (format == "latex" ? "\\right\\rangle " : ">");
+            o << (fmt == format::latex ? "\\left\\langle " : "<");
+            ws_.print(v.constant, o, fmt);
+            o << (fmt == format::latex ? "\\right\\rangle " : ">");
             first = false;
           }
         for (const auto& p: v.polynomials)
           {
             if (!first)
-              o << (format == "latex" ? " \\oplus " : " + ");
+              o << (fmt == format::latex ? " \\oplus " : " + ");
             first = false;
-            rs_.labelset()->print(p.first, o, format);
-            o << (format == "latex" ? " \\odot \\left[" : ".[");;
-            ps_.print(p.second, o, format);
-            o << (format == "latex" ? "\\right]" : "]");;
+            rs_.labelset()->print(p.first, o, fmt);
+            o << (fmt == format::latex ? " \\odot \\left[" : ".[");;
+            ps_.print(p.second, o, fmt);
+            o << (fmt == format::latex ? "\\right]" : "]");;
           }
         return o;
       }

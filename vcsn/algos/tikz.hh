@@ -51,7 +51,7 @@ namespace vcsn
             if (ws_.show_one() || !ws_.is_one(w))
               {
                 os_ << ',' << kind << " text=$\\left\\langle ";
-                ws_.print(w, os_, "latex") << "\\right\\rangle$";
+                ws_.print(w, os_, format::latex) << "\\right\\rangle$";
               }
           }
       }
@@ -101,7 +101,7 @@ namespace vcsn
                 os_ << ']';
               }
             os_ << " {$";
-            aut_->print_state_name(s, os_, "latex");
+            aut_->print_state_name(s, os_, format::latex);
             os_ << "$};\n";
             prev = s;
         }
@@ -117,7 +117,7 @@ namespace vcsn
             << (src == dst ? "[loop above]" : "")
             << " node"
             << " {$";
-        ps_.print(entry, os_, "latex", ", ");
+        ps_.print(entry, os_, format::latex, ", ");
         os_ << "$} (";
         aut_->print_state(dst, os_);
         os_ << ");\n";

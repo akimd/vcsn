@@ -263,7 +263,7 @@ namespace vcsn
                         const std::vector<typename LabelSet::value_t>& letters,
                         const std::vector<typename LabelSet::value_t>& alphabet,
                         std::ostream& out,
-                        const std::string& format)
+                        format fmt)
     {
       for (auto it = std::begin(letters), letters_end = std::end(letters);
            it != letters_end; ++it)
@@ -273,7 +273,7 @@ namespace vcsn
             = vcsn::detail::mismatch(it, letters_end,
                                      boost::range::find(alphabet, *it),
                                      alphabet.end()).first;
-          ls.print(*it, out, format);
+          ls.print(*it, out, fmt);
           // No range for two letters or less.
           auto width = std::distance(it, end);
           if (2 < width)
@@ -282,8 +282,8 @@ namespace vcsn
               // Using `-` in LaTeX math mode means minus (wow, 4
               // m-words in a row), which results in a long dash, and
               // too much space around it.
-              out << (format == "latex" ? "\\textrm{-}" : "-");
-              ls.print(*it, out, format);
+              out << (fmt == format::latex ? "\\textrm{-}" : "-");
+              ls.print(*it, out, fmt);
             }
         }
       return out;
@@ -298,7 +298,7 @@ namespace vcsn
     print_label_class(const LabelSet& ls,
                       const std::vector<typename LabelSet::value_t>& letters,
                       std::ostream& out,
-                      const std::string& format)
+                      format fmt)
     {
       using letters_t = std::vector<typename LabelSet::value_t>;
       // In alphabetical order.
@@ -320,11 +320,11 @@ namespace vcsn
           for (auto l: alphabet)
             if (none_of_equal(letters, l))
               negated.emplace_back(l);
-          out << (format == "latex" ? "\\hat{}" : "^");
-          print_label_ranges_(ls, negated, alphabet, out, format);
+          out << (fmt == format::latex ? "\\hat{}" : "^");
+          print_label_ranges_(ls, negated, alphabet, out, fmt);
         }
       else
-        print_label_ranges_(ls, letters, alphabet, out, format);
+        print_label_ranges_(ls, letters, alphabet, out, fmt);
       out << ']';
 
       return out;
