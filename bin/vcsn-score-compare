@@ -127,7 +127,8 @@ def read(fn):
         for line in f:
             v, k = map(str.strip, line.split(':', 1))
             # Get rid of "s", we know the unit.
-            v = v[:-1]
+            if v[-1] == 's':
+                v = v[:-1]
             # Fix errors in algo descriptions.
             k = normalize(k)
             if k not in bench:
@@ -162,11 +163,11 @@ def text(keys):
         if not args.all and len(set(bs)) == 1:
             continue
         # All the benches as floats.
-        bfs = [float(b) for b in bs if b != "N/A"]
+        bfs = [float(b) for b in bs if b not in ["N/A", "FAIL"]]
         # Compute average of benchs.
         avg = sum(bfs) / len(bfs)
         for b in bs:
-            if b == "N/A":
+            if b in ["FAIL", "N/A"]:
                 print("{:>5}".format(b), end = ' ')
             else:
                 color = ''

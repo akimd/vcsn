@@ -36,31 +36,36 @@ def bench (stmt, comment, title = None, setup = ['pass'], number = 1):
 
     if args.only.search(title + " # " + comment):
 
+        if 1 < number:
+            comment += ', {}x'.format(number)
+
         # The default context, which we use extensively.
         b = vcsn.context('lal_char(abc), b')
 
-        # Run the set up if it is not the last one we ran.
-        if not isinstance(setup, list):
-            setup = [setup]
-        global last_setup
-        if setup != last_setup:
-            for s in setup:
-                if args.verbose:
-                    print("run:", s)
-                exec(s)
-            last_setup = setup
+        try:
+            # Run the set up if it is not the last one we ran.
+            if not isinstance(setup, list):
+                setup = [setup]
+            global last_setup
+            if setup != last_setup:
+                for s in setup:
+                    if args.verbose:
+                        print("run:", s)
+                    exec(s)
+                last_setup = setup
 
-        # Inject the result into `builtins`, so that the stmt run by
-        # timeit finds them.  See
-        # http://stackoverflow.com/a/5390326/4065671.
-        builtins.__dict__.update(locals())
-        builtins.__dict__.update({'vcsn': vcsn})
-        if args.verbose:
-            print("run:", stmt)
-        t = round(min(timeit.repeat(stmt, number = number)), 2)
-        if 1 < number:
-            comment += ', {}x'.format(number)
-        print("{:5.2f}s: {:20s} # {}".format(t, title, comment))
+            # Inject the result into `builtins`, so that the stmt run by
+            # timeit finds them.  See
+            # http://stackoverflow.com/a/5390326/4065671.
+            builtins.__dict__.update(locals())
+            builtins.__dict__.update({'vcsn': vcsn})
+            if args.verbose:
+                print("run:", stmt)
+            t = round(min(timeit.repeat(stmt, number = number)), 2)
+            t = "{:5.2f}s".format(t)
+        except RuntimeError:
+            t = "FAIL"
+        print("{:7s}: {:20s} # {}".format(t, title, comment))
         sys.stdout.flush()
 
 # Check the cost of dyn calls.
