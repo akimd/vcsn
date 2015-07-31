@@ -15,8 +15,6 @@
 %code requires
 {
   #include <iostream>
-  #include <set>
-  #include <string>
   #include <tuple>
   #include "location.hh"
   #include <vcsn/core/rat/expression.hh>
@@ -117,7 +115,7 @@
   yyo << '[';
   for (auto c: $$) yyo << c.first << "-" << c.second;
   yyo << ']';
-} <std::set<std::pair<std::string,std::string>>>;
+} <class_t>;
 %printer { yyo << '<' << $$ << '>'; } "weight";
 %printer
 {
@@ -157,7 +155,7 @@
 
 %type <braced_expression> exp input;
 %type <dyn::weight> weights;
-%type <std::set<std::pair<std::string,std::string>>> class;
+%type <class_t> class;
 
 %left "|"
 %left "+" "<+"
@@ -226,10 +224,8 @@ exp:
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
 | LETTER            { $$ = driver_.make_atom(@1, $1); }
-| "[" class "]"     { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
-                                              $2, true); }
-| "[" "^" class "]" { $$ = dyn::to_expression(ctx(driver_), ids(driver_),
-                                              $3, false); }
+| "[" class "]"     { $$ = driver_.make_expression($2, true); }
+| "[" "^" class "]" { $$ = driver_.make_expression($3, false); }
 | "(" { tape = driver_.tape_; } exp ")"
                     {
                       driver_.tape_ = tape;

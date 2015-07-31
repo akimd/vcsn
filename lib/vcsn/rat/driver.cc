@@ -90,12 +90,13 @@ namespace vcsn
     }
 
     dyn::label
-    driver::make_label(const location& loc, const std::string& s)
+    driver::make_label(const location& loc, const std::string& s,
+                       const dyn::context& ctx)
     {
       try
         {
           std::istringstream is{s};
-          auto res = dyn::read_label(context(), is);
+          auto res = dyn::read_label(ctx, is);
           if (is.peek() != -1)
             vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
           return res;
@@ -112,24 +113,29 @@ namespace vcsn
       // If there are commas in the label, then have it read as a full
       // label, not a one-tape label.
       //
-      // FIXME: Remove once the tuple approach works perfectly.
+      // FIXME: Remove once the tuple approach works perfectly.  And
+      // simplify make_label accordingly (no dyn::context argument
+      // needed).
       if (boost::algorithm::contains(s, ","))
-        {
-          try
-            {
-              std::istringstream is{s};
-              auto res = dyn::read_label(ctx_, is);
-              if (is.peek() != -1)
-                vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
-              return dyn::to_expression(ctx_, ids_, res);
-            }
-          catch (const std::exception& e)
-            {
-              throw parser::syntax_error(loc, e.what());
-            }
-        }
+        return dyn::to_expression(ctx_, ids_,
+                                  make_label(loc, s, ctx_));
       else
-        return dyn::to_expression(context(), ids_, make_label(loc, s));
+        return dyn::to_expression(context(), ids_,
+                                  make_label(loc, s, context()));
+    }
+
+    dyn::expression
+    driver::make_expression(const class_t& c, bool accept = true)
+    {
+      // If there are commas in the labels, then have it read as a full
+      // label, not a one-tape label.
+      //
+      // FIXME: Remove once the tuple approach works perfectly.
+      if (!c.empty()
+          && boost::algorithm::contains(detail::front(c).first, ","))
+        return dyn::to_expression(ctx_, ids_, c, accept);
+      else
+        return dyn::to_expression(context(), ids_, c, accept);
     }
 
     dyn::weight

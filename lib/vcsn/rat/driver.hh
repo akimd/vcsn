@@ -44,10 +44,14 @@ namespace vcsn
       std::unique_ptr<yyFlexLexer> scanner_;
 
       /// From a string, generate a label.
-      dyn::label make_label(const location& loc, const std::string& s);
+      dyn::label make_label(const location& loc, const std::string& s,
+                            const dyn::context& ctx);
 
       /// From a string, generate an expression.
       dyn::expression make_atom(const location& loc, const std::string& s);
+
+      /// From a label class, generate an expression.
+      dyn::expression make_expression(const class_t& c, bool accept);
 
       /// From a string, generate a weight.
       dyn::weight make_weight(const location& loc, const std::string& s);
