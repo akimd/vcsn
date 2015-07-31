@@ -6,14 +6,17 @@ from test import *
 def check(ctx, exp):
     c = vcsn.context(ctx)
     try:
-        c.expression(exp)
+        r = c.expression(exp)
     except RuntimeError:
         FAIL("error parsing " + exp)
     finally:
-        PASS()
+        CHECK_EQ(exp, r)
 
-check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>', 'a')
-check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>', '<(2/3, x, -3)>a')
-check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>', '<(2/3, x*+y, -3)>a')
+check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
+      'a')
+check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
+      '<(2/3,x,-3)>a')
+check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
+      '<(2/3,x+y*,-3)>a')
 check('lal_char(ab), lat<expressionset<lal_char(xyz), lat<q, q>>, lat<q, q>>',
-      '<(<(1, 2)>x+<(2, 1/3)>y*, (2, 3))>a')
+      '<(<(1,2)>x+<(2,1/3)>y*,(2,3))>a')
