@@ -1101,7 +1101,7 @@ namespace vcsn
       print_weight_(weight_of(m), out, fmt);
       if (parens)
         out << (fmt == format::latex ? "\\left(" : "(");
-      labelset()->print(label_of(m), out, fmt);
+      labelset()->print(label_of(m), out, fmt.for_labels());
       if (parens)
         out << (fmt == format::latex ? "\\right)" : ")");
       return out;
@@ -1137,7 +1137,7 @@ namespace vcsn
       if (parens || weightset()->show_one() || !weightset()->is_one(w))
         {
           out << (fmt == format::latex ? "\\left\\langle " : std::string{langle});
-          weightset()->print(w, out, fmt);
+          weightset()->print(w, out, fmt.for_weights());
           out << (fmt == format::latex ? "\\right\\rangle " : std::string{rangle});
         }
       return out;
@@ -1209,7 +1209,7 @@ namespace vcsn
 
       // Print the character class.  'letters' are sorted, since
       // polynomials are shortlex-sorted on the labels.
-      print_label_class(*labelset(), letters, out, fmt);
+      print_label_class(*labelset(), letters, out, fmt.for_labels());
       return out;
     }
 

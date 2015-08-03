@@ -4,11 +4,16 @@
 
 namespace vcsn LIBVCSN_API
 {
+
+  /// An input/output format.
+  ///
+  /// For instance, whether text or latex, and other syntactic issues.
   class format
   {
   public:
     using self_t = format;
 
+    /// Type of format.
     enum format_t
       {
         text,
@@ -21,6 +26,34 @@ namespace vcsn LIBVCSN_API
     {}
 
     format(const std::string& f);
+
+    /// A copy of this format, but to print labels.
+    format for_labels() const
+    {
+      format res = *this;
+      res.label_ = true;
+      return res;
+    }
+
+    /// A copy of this format, but to print weights.
+    format for_weights() const
+    {
+      format res = *this;
+      res.label_ = false;
+      return res;
+    }
+
+    /// Whether to use the syntax for labels (e.g., "a|x").
+    bool is_for_labels() const
+    {
+      return label_;
+    }
+
+    /// Whether to use the syntax for weights (e.g., "(1, 1/2)").
+    bool is_for_weights() const
+    {
+      return !label_;
+    }
 
     format_t kind() const
     {
@@ -44,6 +77,9 @@ namespace vcsn LIBVCSN_API
 
   private:
     format_t format_;
+    /// Whether printed as a label (e.g., "a|x"), or as a weight
+    /// (e.g., "(1, 1/2)").
+    bool label_ = false;
   };
 
   /// Wrapper around operator<<.

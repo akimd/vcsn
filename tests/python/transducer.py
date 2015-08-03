@@ -27,7 +27,7 @@ CHECK_EQ(r'''digraph
     1 [label = "\\e", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "(a,x), (b,x)"]
+  0 -> 1 [label = "a|x, b|x"]
   1 -> F1
 }''',
          e.derived_term())
@@ -68,30 +68,30 @@ CHECK_EQ(r'''digraph
   }
   I0 -> 0
   0 -> F0
-  0 -> 0 [label = "<30>(a,b,c)"]
-  0 -> 1 [label = "<5>(\\e,\\e,c)"]
-  0 -> 2 [label = "<3>(\\e,b,\\e)"]
-  0 -> 3 [label = "<15>(\\e,b,c)"]
-  0 -> 4 [label = "<2>(a,\\e,\\e)"]
-  0 -> 5 [label = "<10>(a,\\e,c)"]
-  0 -> 6 [label = "<6>(a,b,\\e)"]
+  0 -> 0 [label = "<30>a|b|c"]
+  0 -> 1 [label = "<5>\\e|\\e|c"]
+  0 -> 2 [label = "<3>\\e|b|\\e"]
+  0 -> 3 [label = "<15>\\e|b|c"]
+  0 -> 4 [label = "<2>a|\\e|\\e"]
+  0 -> 5 [label = "<10>a|\\e|c"]
+  0 -> 6 [label = "<6>a|b|\\e"]
   1 -> F1
-  1 -> 1 [label = "<5>(\\e,\\e,c)"]
+  1 -> 1 [label = "<5>\\e|\\e|c"]
   2 -> F2
-  2 -> 2 [label = "<3>(\\e,b,\\e)"]
+  2 -> 2 [label = "<3>\\e|b|\\e"]
   3 -> F3
-  3 -> 1 [label = "<5>(\\e,\\e,c)"]
-  3 -> 2 [label = "<3>(\\e,b,\\e)"]
-  3 -> 3 [label = "<15>(\\e,b,c)"]
+  3 -> 1 [label = "<5>\\e|\\e|c"]
+  3 -> 2 [label = "<3>\\e|b|\\e"]
+  3 -> 3 [label = "<15>\\e|b|c"]
   4 -> F4
-  4 -> 4 [label = "<2>(a,\\e,\\e)"]
+  4 -> 4 [label = "<2>a|\\e|\\e"]
   5 -> F5
-  5 -> 1 [label = "<5>(\\e,\\e,c)"]
-  5 -> 4 [label = "<2>(a,\\e,\\e)"]
-  5 -> 5 [label = "<10>(a,\\e,c)"]
+  5 -> 1 [label = "<5>\\e|\\e|c"]
+  5 -> 4 [label = "<2>a|\\e|\\e"]
+  5 -> 5 [label = "<10>a|\\e|c"]
   6 -> F6
-  6 -> 2 [label = "<3>(\\e,b,\\e)"]
-  6 -> 4 [label = "<2>(a,\\e,\\e)"]
-  6 -> 6 [label = "<6>(a,b,\\e)"]
+  6 -> 2 [label = "<3>\\e|b|\\e"]
+  6 -> 4 [label = "<2>a|\\e|\\e"]
+  6 -> 6 [label = "<6>a|b|\\e"]
 }''',
          e.derived_term())

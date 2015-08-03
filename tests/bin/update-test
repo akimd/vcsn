@@ -15,7 +15,7 @@ parser.add_argument('tests', metavar='test', nargs='+',
                     type=str, default=None,
                     help='a test file to update')
 parser.add_argument('--builddir', metavar='DIR',
-                    type=str, default=None,
+                    type=str, default='.',
                     help='look for the logs in DIR')
 parser.add_argument('--log', metavar='FILE', nargs="+",
                     type=str, default=[],

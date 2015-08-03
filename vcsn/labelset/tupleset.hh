@@ -418,12 +418,13 @@ namespace vcsn
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
-          format fmt = {},
-          const char* pre = "(",
-          const char* sep = ",",
-          const char* post = ")") const
+          format fmt = {}) const
     {
-      return this->print_(l, o, fmt, pre, sep, post, indices);
+      if (fmt.is_for_labels())
+        this->print_(l, o, fmt, "", "|", "", indices);
+      else
+        this->print_(l, o, fmt, "(", ",", ")", indices);
+      return o;
     }
 
   private:
@@ -460,11 +461,11 @@ namespace vcsn
     static self_t make_(std::istream& i, seq<I...>)
     {
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return self_t{(eat_separator_<I>(i, ','),
+      return self_t{(eat_separator_<I>(i),
                      valueset_t<I>::make(i))...};
 #else
       return make_gcc_tuple
-        ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, ','),
+        ((eat_separator_<sizeof...(ValueSets)-1 -I>(i),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
 #endif
     }
@@ -697,25 +698,26 @@ namespace vcsn
     conv_(std::istream& i, seq<I...>) const
     {
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return value_t{(eat_separator_<I>(i, ','),
+      return value_t{(eat_separator_<I>(i),
                       set<I>().conv(i))...};
 #else
       constexpr auto S = sizeof...(ValueSets)-1;
       return
-        detail::make_gcc_tuple((eat_separator_<S - I>(i, ','),
+        detail::make_gcc_tuple((eat_separator_<S - I>(i),
                                 std::get<S - I>(sets_).conv(i))...);
 #endif
     }
 
-    /// Read the separator from the input stream \a i.
-    /// If \a I is 0, then the separator is '(',
-    /// otherwise it is ',' (possibly followed by spaces).
+    /// Read the separator from the input stream \a i if I is not 0.
+    ///
+    /// The separator is '|' (for labels), but ',' is accepted too
+    /// (for weights).
     template <std::size_t I>
     static void
-    eat_separator_(std::istream& i, char sep)
+    eat_separator_(std::istream& i)
     {
       if (I)
-        eat(i, sep);
+        eat(i, i.peek() == ',' ? ',' : '|');
       while (isspace(i.peek()))
         i.ignore();
     }

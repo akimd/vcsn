@@ -62,7 +62,7 @@ aref = '''digraph
     1
   }
   I0 -> 0
-  0 -> 1 [label = "<<2>(d,gh)>(a)"]
+  0 -> 1 [label = "<<2>(d,gh)>a"]
   1 -> F1
 }'''
 CHECK_EQ(aref, a.lift(1, 2))

@@ -19,13 +19,13 @@ digraph
     6 [label = "3:[(l,\\e)]", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "(a,e)"]
-  1 -> 2 [label = "(\\e,\\e)"]
-  1 -> 3 [label = "(g,h)"]
-  2 -> 6 [label = "(f,n)"]
-  3 -> 3 [label = "(i,j)"]
-  3 -> 4 [label = "(o,k)"]
-  4 -> 5 [label = "(l,n)"]
+  0 -> 1 [label = "a|e"]
+  1 -> 2 [label = "\\e|\\e"]
+  1 -> 3 [label = "g|h"]
+  2 -> 6 [label = "f|n"]
+  3 -> 3 [label = "i|j"]
+  3 -> 4 [label = "o|k"]
+  4 -> 5 [label = "l|n"]
   5 -> F5
-  6 -> 5 [label = "(l,\\e)"]
+  6 -> 5 [label = "l|\\e"]
 }

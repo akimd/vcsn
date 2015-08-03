@@ -33,7 +33,7 @@ check(c1.expression("'(a, x)'").standard(),
     1 [label = "1, 1", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "(a,d)"]
+  0 -> 1 [label = "a|d"]
   1 -> F1
 }''')
 
@@ -55,9 +55,9 @@ a = '''digraph
   }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "(a,d)"]
+  0 -> 1 [label = "a|d"]
   1 -> F1
-  1 -> 1 [label = "(a,d)"]
+  1 -> 1 [label = "a|d"]
 }'''
 check(c1.expression("'(a, x)'*").standard(),
       c2.expression("'(x, d)'*").standard(),
@@ -116,7 +116,7 @@ check(c_ratb.expression("<o>'(a, x)'").standard(),
     1 [label = "1, 1", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "<<3/2>o>(a,d)"]
+  0 -> 1 [label = "<<3/2>o>a|d"]
   1 -> F1
 }''')
 
@@ -164,10 +164,10 @@ res = r'''digraph
     4 [label = "1, 2", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "(y,\\e)", color = DimGray]
-  0 -> 2 [label = "(\\e,d)"]
-  1 -> 3 [label = "(\\e,d)", color = DimGray]
-  2 -> 4 [label = "(x,e)"]
+  0 -> 1 [label = "y|\\e", color = DimGray]
+  0 -> 2 [label = "\\e|d"]
+  1 -> 3 [label = "\\e|d", color = DimGray]
+  2 -> 4 [label = "x|e"]
   4 -> F4
 }'''
 
@@ -193,7 +193,7 @@ check(c_r.expression("<3.1>'(a, x)'").standard(),
     1 [label = "1, 1", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "<3.1>(a,d)"]
+  0 -> 1 [label = "<3.1>a|d"]
   1 -> F1
 }''')
 

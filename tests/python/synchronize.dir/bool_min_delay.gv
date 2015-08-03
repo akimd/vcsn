@@ -20,13 +20,13 @@ digraph
     6 [label = "3:(1,0)", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "(abc,de)"]
-  1 -> 2 [label = "(f,\\e)"]
-  1 -> 3 [label = "(g,h)"]
-  2 -> 6 [label = "(l,mn)"]
-  3 -> 3 [label = "(i,j)"]
-  3 -> 4 [label = "(\\e,k)"]
-  4 -> 5 [label = "(l,mn)"]
+  0 -> 1 [label = "abc|de"]
+  1 -> 2 [label = "f|\\e"]
+  1 -> 3 [label = "g|h"]
+  2 -> 6 [label = "l|mn"]
+  3 -> 3 [label = "i|j"]
+  3 -> 4 [label = "\\e|k"]
+  4 -> 5 [label = "l|mn"]
   5 -> F5
   6 -> F6
 }
