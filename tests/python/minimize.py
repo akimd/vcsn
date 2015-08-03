@@ -126,7 +126,7 @@ check("weighted",  a, exp)
 ## It remained associated to its old class identifier in
 ## state_to_class, which in the mean time would come to identify some
 ## subset of its old value.
-a = vcsn.context('lal_char(ab), b').expression("a+ba").derived_term().strip()
+a = vcsn.context('lal_char(ab), b').expression("a+ba").automaton()
 check('brzozowski', a, a)
 CHECK_ISOMORPHIC(a.minimize('moore'), a)
 CHECK_ISOMORPHIC(a.minimize('signature'), a)

@@ -76,6 +76,7 @@ dist_notebooks_DATA =                           \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.ladybird.ipynb                    \
   %D%/context.trie.ipynb                        \
+  %D%/expression.automaton.ipynb                \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \

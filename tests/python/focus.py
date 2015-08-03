@@ -4,7 +4,7 @@ import vcsn
 from test import *
 
 c = vcsn.context('lat<lal_char(abc),lal_char(efg),lal_char(xyz)>, b')
-t = c.expression("('(a,e,x)':'(b,f,y)':'(c,g,z)')").derived_term().strip()
+t = c.expression("('(a,e,x)':'(b,f,y)':'(c,g,z)')").automaton()
 
 CHECK_EQ('(ab+ba)c+(ac+ca)b+(bc+cb)a',
          t.focus(0).expression())

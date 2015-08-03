@@ -107,7 +107,7 @@ if have_ofst:
   # determinized, has weights on the final states only, which
   # exercises a bug we once had.
   zmin = vcsn.context('lal_char(ab), zmin')
-  a = zmin.expression('[ab]*a(<2>[ab])').derived_term().strip()
+  a = zmin.expression('[ab]*a(<2>[ab])').automaton()
   d_vcsn = a.determinize().strip()
   d_ofst = a.fstdeterminize()
   CHECK_EQ(d_vcsn, d_ofst)

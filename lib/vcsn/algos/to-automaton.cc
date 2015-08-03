@@ -11,7 +11,7 @@ namespace vcsn
     automaton
     to_automaton(const expression& exp, const std::string& algo)
     {
-      if (algo == "auto" || algo == "derived_term")
+      if (algo == "auto" || algo == "derived_term" || algo == "derived-term")
         return strip(derived_term(exp));
       else if (algo == "standard")
         return standard(exp);
@@ -19,11 +19,12 @@ namespace vcsn
         return thompson(exp);
       else if (algo == "zpc")
         return zpc(exp);
-      else if (algo == "zpc_compact")
+      else if (algo == "zpc_compact" || "zpc-compact" || "zpc,compact")
         return zpc(exp, "compact");
       else
-        raise("to_automaton: the argument is either \"auto\", \"derived_term\",\
-\"standard\", \"thompson\", \"zpc\", \"zpc_compact\" or nothing.");
+        raise("to_automaton: invalid argument: ", algo, ", expected \"auto\", "
+              "\"derived_term\", \"standard\", \"thompson\", \"zpc\", "
+              "\"zpc_compact\" or nothing.");
     }
   }
 }

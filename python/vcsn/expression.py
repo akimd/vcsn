@@ -43,5 +43,5 @@ def _expression_info(self, key = None, detailed = False):
     return res[key] if key else res
 expression.info = _expression_info
 
-expression.shortest = lambda self, *a, **kw: self.derived_term().strip().shortest(*a, **kw)
+expression.shortest = lambda self, *a, **kw: self.automaton().shortest(*a, **kw)
 expression.star = lambda self: self.multiply(-1)

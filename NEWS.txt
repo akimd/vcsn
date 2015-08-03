@@ -5,6 +5,22 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-08-03
+### to_automaton: conversion from expression to automaton
+
+Vcsn offers several means to build an automaton from an expression:
+thompson, zpc, standard and derived-term.  The latter even builds a
+decorated automaton, which, often, is not desidered.
+
+In C++ dyn::to_automaton and in Python expression.automaton() allow to
+build a simple automaton from an expression is simple way.  It accepts
+an optional string argument to select the conversion algorithm.  It
+defaults to "auto", which currently means the stripped
+derived-automaton, but eventually, it will pick either "standard" for
+basic expressions (as it's the fastest algorithm), or "derived-term"
+for extended expressions (as "standard" does not support these
+additional operators).
+
 ## 2015-06-18
 ### I/O in EFSM format are safer
 We now correctly ensure the correspondance between our weightsets and
