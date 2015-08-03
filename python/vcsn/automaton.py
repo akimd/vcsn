@@ -193,13 +193,12 @@ def _automaton_is_synchronized_by(self, w):
     return self._is_synchronized_by(w)
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
-def _automaton_lift(self, *arg, identities = "default"):
-    if len(arg) == 0:
-        return self._lift([], identities)
-    elif len(arg) == 1 and isinstance(arg[0], list):
-        return self._lift(arg[0], identities)
+def _automaton_lift(self, *tapes, identities = "default"):
+    if len(tapes) == 1 and isinstance(tapes[0], list):
+        tapes = tapes[0]
     else:
-        return self._lift(list(arg), identities)
+        tapes = list(tapes)
+    return self._lift(tapes, identities)
 automaton.lift = _automaton_lift
 
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))

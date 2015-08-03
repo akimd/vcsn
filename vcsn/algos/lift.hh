@@ -115,7 +115,9 @@ namespace vcsn
       }
     };
 
-    template <typename... LabelSets, typename WeightSet, size_t FirstTape, size_t... Tapes>
+    /// Specialization: lift only some tapes.
+    template <typename... LabelSets, typename WeightSet,
+              size_t FirstTape, size_t... Tapes>
     struct lifted_context_tape_t<context<tupleset<LabelSets...>, WeightSet>,
                                  FirstTape, Tapes...>
     {
@@ -127,7 +129,8 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
 
       /// Index of all tapes
-      using index_t = typename detail::make_index_sequence<labelset_t::size()>::type;
+      using index_t
+        = typename detail::make_index_sequence<labelset_t::size()>::type;
 
       using in_label_t = typename labelset_t::value_t;
 
@@ -136,44 +139,55 @@ namespace vcsn
       template <size_t I>
       using tape_labelset_t = typename labelset_t::template valueset_t<I>;
 
-      // Complement the list of indexes of tapes to be lifted, to get the list
-      // of tapes to be kept
-      using kept_index_t = sequence_difference<index_t, seq<FirstTape, Tapes...>>;
+      /// Complement the list of indexes of tapes to be lifted, to get
+      /// the list of tapes to be kept.
+      using kept_index_t
+        = sequence_difference<index_t, seq<FirstTape, Tapes...>>;
 
-      // Labelset of tapes to be kept
+      /// Labelset of tapes to be kept.
       using kept_tapes_t = typename tape_set<kept_index_t, labelset_t>::type;
 
-      // List of indexes of tapes to be lifted
+      /// List of indexes of tapes to be lifted.
       using weight_index_t = seq<FirstTape, Tapes...>;
 
-      // Labelset of tapes to be lifted
-      using weight_tapes_t = typename tape_set<weight_index_t, labelset_t>::type;
+      /// Labelset of tapes to be lifted.
+      using weight_tapes_t
+        = typename tape_set<weight_index_t, labelset_t>::type;
 
       using inner_context_t = context<weight_tapes_t, WeightSet>;
 
-      // Weightset of the result : lifted tapes plus former weightset
+      /// Weightset of the result: lifted tapes plus former weightset.
       using expr_t = expressionset<inner_context_t>;
 
-      // Result context
+      /// Result context.
       using context_t = context<kept_tapes_t, expr_t>;
 
-      // conversion
-      static context_t value(const in_context_t& ctx, vcsn::rat::identities ids)
+      /// Conversion.
+      static context_t value(const in_context_t& ctx,
+                             vcsn::rat::identities ids)
       {
-        return value_(ctx, weight_index_t{}, kept_index_t{}, ids);
+        return value_(ctx, ids, weight_index_t{}, kept_index_t{});
       }
 
       template <size_t... WeightTapes, size_t... KeptTapes>
-      static context_t value_(const in_context_t& ctx, seq<WeightTapes...>,
-                              seq<KeptTapes...>, vcsn::rat::identities ids)
+      static context_t value_(const in_context_t& ctx,
+                              vcsn::rat::identities ids,
+                              seq<WeightTapes...>,
+                              seq<KeptTapes...>)
       {
-        auto rs =
-          expr_t{inner_context_t{weight_tapes_t{ctx.labelset()->template set<WeightTapes>()...},
-                                 *ctx.weightset()}, ids};
-        return {kept_tapes_t{ctx.labelset()->template set<KeptTapes>()...}, rs};
+        // The labelset.
+        auto ls = kept_tapes_t{ctx.labelset()->template set<KeptTapes>()...};
+
+        // The weightset.
+        auto weight_tapes
+          = weight_tapes_t{ctx.labelset()->template set<WeightTapes>()...};
+        auto ictx = inner_context_t{weight_tapes, *ctx.weightset()};
+        auto rs = expr_t{ictx, ids};
+
+        return {ls, rs};
       }
 
-      // label in the output
+      /// Label in the output.
       static typename kept_tapes_t::value_t
       kept_label(const in_label_t& l)
       {
@@ -187,7 +201,7 @@ namespace vcsn
         return typename kept_tapes_t::value_t{std::get<I>(l)...};
       }
 
-      // weight in the output
+      /// Weight in the output.
       static typename weight_tapes_t::value_t
       weight_label(const in_label_t& l)
       {
@@ -207,7 +221,7 @@ namespace vcsn
       mutable_automaton<typename lifted_context_tape_t<context_t_of<Aut>,
                                                        Tapes...>::context_t>;
 
-    // lift(ctx) -> ctx
+    /// lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet, size_t... Tapes>
     lifted_context_tape_t<context<LabelSet, WeightSet>, Tapes...>
     lift_context_tape(const context<LabelSet, WeightSet>& ctx)
@@ -219,9 +233,10 @@ namespace vcsn
       return {oneset{}, rs_in};
     }
 
-    /// Lift only certain tapes of the transducer.
+    /// Lift some tapes of the transducer.
     ///
-    /// \param a  the input automaton
+    /// \param a    the input automaton
+    /// \param ids  the identities to use for the generated expressions
     template <typename Aut, size_t... Tapes>
     inline
     detail::lifted_automaton_tape_t<Aut, Tapes...>
@@ -262,6 +277,7 @@ namespace vcsn
     }
   }
 
+  /// Lift some label tapes to the weights.
   template <typename Aut, size_t... Tapes>
   inline
   detail::lifted_automaton_tape_t<Aut, Tapes...>
@@ -277,7 +293,8 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Ids, typename... Tapes>
       automaton
-      lift_automaton(const automaton& aut, vcsn::rat::identities ids, integral_constant)
+      lift_automaton(const automaton& aut,
+                     vcsn::rat::identities ids, integral_constant)
       {
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::lift<Aut, Tapes::value...>(a, ids));
