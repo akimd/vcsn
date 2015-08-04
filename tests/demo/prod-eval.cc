@@ -26,8 +26,8 @@ namespace vcsn
     {
       std::istringstream is{w};
       auto res = read_label(make_word_context(ctx), is);
-      if (is.peek() != -1)
-        vcsn::fail_reading(is, "unexpected trailing characters");
+      vcsn::require(is.peek() == EOF,
+                    "unexpected trailing characters: ", is);
       return res;
     }
   }
@@ -53,8 +53,8 @@ namespace vcsn
     auto c = make_word_context(ctx);
     std::istringstream is{w};
     auto res = read_label(make_word_context(ctx), is);
-    if (is.peek() != -1)
-      vcsn::fail_reading(is, "unexpected trailing characters");
+    vcsn::require(is.peek() == EOF,
+                  "unexpected trailing characters: ", is);
     return res;
   }
 }

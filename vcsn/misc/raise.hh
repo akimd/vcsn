@@ -5,6 +5,7 @@
 #include <utility>
 
 #include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
@@ -24,6 +25,26 @@ namespace vcsn
     void print_(std::ostream& o, const T& arg, long)
     {
       o << arg;
+    }
+
+    /// When printing an istream, consider that we are trying to help
+    /// the user by showing what's wrong with the input.  So report
+    /// some of the upcoming bytes.
+    inline void print_(std::ostream& o, std::istream& is, long)
+    {
+      is.clear();
+      std::string buf;
+      std::getline(is, buf, '\n');
+      if (!is.good())
+        // This shouldn't really happen; however it's best to fail cleanly.
+        is.clear();
+      o << str_escape(buf);
+    }
+
+    /// Disambiguation: both 'istream&' and 'const T&' are elligible.
+    inline void print_(std::ostream& o, std::istringstream& is, long)
+    {
+      print_(o, static_cast<std::istream&>(is), 0);
     }
 
     /// Serialize arg, which supports print_set, into o.

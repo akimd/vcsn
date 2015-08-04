@@ -97,8 +97,8 @@ namespace vcsn
         {
           std::istringstream is{s};
           auto res = dyn::read_label(ctx, is);
-          if (is.peek() != -1)
-            vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+          require(is.peek() == -1,
+                  "unexpected trailing characters in: ", s, ": ", is);
           return res;
         }
       catch (const std::exception& e)
@@ -145,8 +145,8 @@ namespace vcsn
         {
           std::istringstream is{s};
           auto res = dyn::read_weight(ctx_, is);
-          if (is.peek() != -1)
-            vcsn::fail_reading(is, "unexpected trailing characters in: ", s);
+          require(is.peek() == -1,
+                  "unexpected trailing characters in: ", s, ": ", is);
           return res;
         }
       catch (const std::exception& e)

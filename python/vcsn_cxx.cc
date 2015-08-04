@@ -91,8 +91,7 @@ vcsn::rat::identities identities(const std::string& s)
   std::istringstream is{s};
   vcsn::rat::identities res;
   is >> res;
-  if (!is || is.peek() != -1)
-    vcsn::fail_reading(is, "unexpected trailing characters");
+  vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   return res;
 }
 
@@ -189,15 +188,16 @@ struct automaton
             const std::string& filename = "")
   {
     std::shared_ptr<std::istream> is;
+    vcsn::require(!data.empty() || !filename.empty(),
+                  "cannot provide both data and filename");
     if (!data.empty())
       is = std::make_shared<std::istringstream>(data);
     else if (!filename.empty())
       is = vcsn::open_input_file(filename);
     else
-      throw "cannot provide both data and filename";
+      vcsn::raise("must provide either data or filename");
     val_ = vcsn::dyn::read_automaton(*is, format);
-    if (is->peek() != -1)
-      vcsn::fail_reading(*is, "unexpected trailing characters");
+    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   }
 
   automaton accessible() const
@@ -695,8 +695,7 @@ struct label
   {
     std::istringstream is(s);
     val_ = vcsn::dyn::read_label(ctx.val_, is);
-    if (is.peek() != -1)
-      vcsn::fail_reading(is, "unexpected trailing characters");
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
   std::string format(const std::string& format = "text") const
@@ -728,8 +727,7 @@ struct polynomial
   {
     std::istringstream is(s);
     val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
-    if (is.peek() != -1)
-      vcsn::fail_reading(is, "unexpected trailing characters");
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
   automaton cotrie() const
@@ -792,8 +790,7 @@ struct expression
   {
     std::istringstream is(r);
     val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
-    if (is.peek() != -1)
-      vcsn::fail_reading(is, "unexpected trailing characters");
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
   expression(const context& ctx, const std::string& r,
@@ -1028,8 +1025,7 @@ struct weight
   {
     std::istringstream is(s);
     val_ = vcsn::dyn::read_weight(ctx.val_, is);
-    if (is.peek() != -1)
-      vcsn::fail_reading(is, "unexpected trailing characters");
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
   std::string format(const std::string& format = "text") const
@@ -1121,8 +1117,7 @@ automaton context::cotrie(const std::string& filename) const
 {
   auto is = vcsn::open_input_file(filename);
   auto res = vcsn::dyn::cotrie(val_, *is);
-  if (is->peek() != -1)
-    vcsn::fail_reading(*is, "unexpected trailing characters");
+  vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   return res;
 }
 
@@ -1170,8 +1165,7 @@ automaton context::trie(const std::string& filename) const
 {
   auto is = vcsn::open_input_file(filename);
   auto res = vcsn::dyn::trie(val_, *is);
-  if (is->peek() != -1)
-    vcsn::fail_reading(*is, "unexpected trailing characters");
+  vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   return res;
 }
 
