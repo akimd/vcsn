@@ -213,7 +213,7 @@ namespace vcsn
         {
           letter_t l = L::get_letter(i);
           require(has(l),
-                  sname(), ": invalid letter: ", str_escape(l));
+                  *this, ": invalid letter: ", str_escape(l));
           // FIXME: in-place mul or temporary vector to build the
           // string.
           res = this->mul(res, l);

@@ -205,7 +205,7 @@ namespace vcsn
         {
           auto res = value(v);
           require(is_valid(res),
-                  sname(), ": conv: invalid label: ", str_escape(v));
+                  *this, ": conv: invalid label: ", str_escape(v));
           return res;
         }
     }
@@ -265,7 +265,7 @@ namespace vcsn
           o << '>';
         }
       else
-        raise(sname(), ": print_set: invalid format: ", fmt);
+        raise(*this, ": print_set: invalid format: ", fmt);
       return o;
     }
 

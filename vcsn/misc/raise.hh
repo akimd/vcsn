@@ -17,6 +17,22 @@ namespace vcsn
     {
       template<typename ...T> pass(T...) {}
     };
+
+
+    /// Serialize arg into o.
+    template <typename T>
+    void print_(std::ostream& o, const T& arg, long)
+    {
+      o << arg;
+    }
+
+    /// Serialize arg, which supports print_set, into o.
+    template <typename T>
+    auto print_(std::ostream& o, const T& arg, int)
+      -> decltype(arg.print_set(o), void())
+    {
+      arg.print_set(o);
+    }
   }
 
   /// Raise a runtime_error with the concatenation of \a args as message.
@@ -28,7 +44,7 @@ namespace vcsn
     using swallow = int[];
     (void) swallow
       {
-        (o << args, 0)...
+        (detail::print_(o, args, 0), 0)...
       };
     throw std::runtime_error{o.str()};
   }

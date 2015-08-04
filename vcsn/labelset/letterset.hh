@@ -190,7 +190,7 @@ namespace vcsn
     conv(self_t, value_t v) const
     {
       require(is_special(v) || is_valid(v),
-              sname(), ": conv: invalid label: ", str_escape(v));
+              *this, ": conv: invalid label: ", str_escape(v));
       return v;
     }
 
@@ -201,7 +201,7 @@ namespace vcsn
          typename nullableset<LabelSet_>::value_t v) const
     {
       require(!ls.is_one(v),
-              sname(), ": conv: invalid label: \\e");
+              *this, ": conv: invalid label: \\e");
       return conv(*ls.labelset(), ls.get_value(v));
     }
 
@@ -211,7 +211,7 @@ namespace vcsn
     {
       letter_t l = this->genset().get_letter(i);
       require(this->has(l),
-              sname(), ": conv: invalid label: unexpected ", str_escape(l));
+              *this, ": conv: invalid label: unexpected ", str_escape(l));
       return value_t{l};
     }
 
