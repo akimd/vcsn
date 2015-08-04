@@ -251,6 +251,7 @@ EXTRA_DIST +=                                   \
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
+%D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)
 

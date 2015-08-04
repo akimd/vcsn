@@ -68,7 +68,8 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("delay_automaton<" + automaton_t::element_type::sname() + '>');
+        static symbol res("delay_automaton<"
+                          + automaton_t::element_type::sname() + '>');
         return res;
       }
 
@@ -120,11 +121,9 @@ namespace vcsn
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
                        format fmt = {},
-                       bool delimit = false) const
+                       bool = false) const
       {
         auto ns = origins().at(s);
-        if (delimit)
-          o << '(';
         aut_->print_state_name(ns.first, o, fmt, true);
         o << ":(";
         auto a = ns.second;
@@ -133,8 +132,6 @@ namespace vcsn
         if (a.size())
           o << a[a.size() - 1];
         o << ')';
-        if (delimit)
-          o << ')';
         return o;
       }
 
@@ -270,7 +267,8 @@ namespace vcsn
       delay_t
       add_delay_(delay_t d, const label_t& l, seq<I...>) const
       {
-        delay_t del = {(std::get<I>(d) + tape_labelset_t<I>::size(std::get<I>(l)))...};
+        delay_t del
+          = {(std::get<I>(d) + tape_labelset_t<I>::size(std::get<I>(l)))...};
         size_t min = *std::min_element(begin(del), end(del));
         return {(std::get<I>(del) - min)...};
       }
@@ -353,4 +351,3 @@ namespace vcsn
     }
   }
 }
-

@@ -171,16 +171,12 @@ namespace vcsn
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
                        format fmt = {},
-                       bool delimit = false) const
+                       bool = false) const
       {
         auto name = origins().at(s);
-        if (delimit)
-          o << '(';
         aut_->print_state_name(name.first, o, fmt, true);
-        o << ":[";
-        this->labelset()->print(name.second, o) << ']';
-        if (delimit)
-          o << ')';
+        o << ':';
+        this->labelset()->print(name.second, o, fmt.for_labels());
         return o;
       }
 

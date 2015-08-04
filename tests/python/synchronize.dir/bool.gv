@@ -10,15 +10,15 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0:[(\\e,\\e)]", shape = box]
-    1 [label = "1:[(c,\\e)]", shape = box]
-    2 [label = "3:[(cf,\\e)]", shape = box]
-    3 [label = "5:[(g,\\e)]", shape = box]
-    4 [label = "7:[(i,\\e)]", shape = box]
-    5 [label = "8:[(\\e,\\e)]", shape = box]
-    6 [label = "4:[(\\e,n)]", shape = box]
-    7 [label = "4:[(\\e,\\e)]", shape = box]
-    8 [label = "4:[(l,\\e)]", shape = box]
+    0 [label = "0:\\e|\\e", shape = box]
+    1 [label = "1:c|\\e", shape = box]
+    2 [label = "3:cf|\\e", shape = box]
+    3 [label = "5:g|\\e", shape = box]
+    4 [label = "7:i|\\e", shape = box]
+    5 [label = "8:\\e|\\e", shape = box]
+    6 [label = "4:\\e|n", shape = box]
+    7 [label = "4:\\e|\\e", shape = box]
+    8 [label = "4:l|\\e", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "ab|de"]
