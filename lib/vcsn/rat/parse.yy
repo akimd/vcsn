@@ -176,21 +176,19 @@
 %%
 
 input:
-  // Provide a value for $$ only for sake of traces: shows the result.
-  exp               {
-                      driver_.result_ = $1.exp;
-                      $$.exp = $1.exp;
-                    }
-| exp terminator    {
-                      driver_.result_ = $1.exp;
-                      $$.exp = $1.exp;
-                      YYACCEPT;
-                    }
+  exp terminator.opt
+  {
+    // Provide a value for $$ only for sake of traces: shows the result.
+    $$ = $1;
+    driver_.result_ = $$.exp;
+    YYACCEPT;
+  }
 ;
 
-terminator:
-  ","               { driver_.scanner_->yyin->putback(','); }
-| ")"               { driver_.scanner_->yyin->putback(')'); }
+terminator.opt:
+  %empty     {}
+| ","        { driver_.scanner_->yyin->putback(','); }
+| ")"        { driver_.scanner_->yyin->putback(')'); }
 ;
 
 exp:
