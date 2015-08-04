@@ -200,7 +200,7 @@ namespace vcsn
         }
 
       // Stop as soon as it might be a special character (such as
-      // delimiters in polynomials).
+      // delimiters in polynomials, or tuple separators).
       word_t res;
       int c;
       while (i.good()
@@ -208,6 +208,7 @@ namespace vcsn
              && !isspace(c)
              && c != '+'
              && c != ','
+             && c != '|'
              && c != '('
              && c != ')')
         {

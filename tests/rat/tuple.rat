@@ -1,0 +1,19 @@
+# We add useless letters (0-9) so that when printing [abcd], we
+# display [a-d], not [^].
+%context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, z
+
+a|e|i                => a|e|i
+a*|e*|i*             => a*|e*|i*
+(a|e|i)*             => (a|e|i)*
+a|e|i+b|f|j          => a|e|i+b|f|j
+(a+b)|(e+f)|(i+j)    => (a+b)|(e+f)|(i+j)
+[abcd]|[efgh]|[ijkl] => [a-d]|[e-h]|[i-l]
+abcd|efgh|ijkl       => abcd|efgh|ijkl
+
+
+%identities: linear
+b|f|j+a|e|i          => a|e|i+b|f|j
+(b+a)|(f+e)|(j+i)    => (a+b)|(e+f)|(i+j)
+
+%context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, z
+abcd|efgh|ijkl       => abcd|efgh|ijkl
