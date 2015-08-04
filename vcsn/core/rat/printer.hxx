@@ -154,7 +154,7 @@ namespace vcsn
     VISIT(lweight)
     {
       out_ << langle_;
-      rs_.weightset()->print(v.weight(), out_, fmt_);
+      rs_.weightset()->print(v.weight(), out_, fmt_.for_weights());
       out_ << rangle_ << lmul_;
       print_child_(*v.sub(), v);
     }
@@ -163,7 +163,7 @@ namespace vcsn
     {
       print_child_(*v.sub(), v);
       out_ << rmul_ << langle_;
-      rs_.weightset()->print(v.weight(), out_, fmt_);
+      rs_.weightset()->print(v.weight(), out_, fmt_.for_weights());
       out_ << rangle_;
     }
 
@@ -181,7 +181,7 @@ namespace vcsn
 
     VISIT(atom)
     {
-      rs_.labelset()->print(v.value(), out_, fmt_);
+      rs_.labelset()->print(v.value(), out_, fmt_.for_labels());
     }
 
     DEFINE::print_child(const node_t& child, precedence_t parent)

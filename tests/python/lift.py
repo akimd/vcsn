@@ -40,12 +40,58 @@ CHECK_EQ('''digraph
          l4.lift())
 
 
-## ------------ ##
-## Lift(tape).  ##
-## ------------ ##
+## --------------- ##
+## Lift(tape...).  ##
+## --------------- ##
 
 c = vcsn.context('lat<lal_char(abc), lan_char(def), law_char(ghi)>, q')
 a = c.expression("'a,d,gh'<2>").standard()
+
+# lift(0).
+aref = '''digraph
+{
+  vcsn_context = "lat<nullableset<letterset<char_letters(def)>>, wordset<char_letters(ghi)>>, expressionset<lat<letterset<char_letters(abc)>>, q>"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> 1 [label = "<<2>a>d|gh"]
+  1 -> F1
+}'''
+CHECK_EQ(aref, a.lift(0))
+
+# lift(1).
+aref = '''digraph
+{
+  vcsn_context = "lat<letterset<char_letters(abc)>, wordset<char_letters(ghi)>>, expressionset<lat<nullableset<letterset<char_letters(def)>>>, q>"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> 1 [label = "<<2>d>a|gh"]
+  1 -> F1
+}'''
+CHECK_EQ(aref, a.lift(1))
+
+# lift(1, 2).
 aref = '''digraph
 {
   vcsn_context = "lat<letterset<char_letters(abc)>>, expressionset<lat<nullableset<letterset<char_letters(def)>>, wordset<char_letters(ghi)>>, q>"
@@ -62,7 +108,7 @@ aref = '''digraph
     1
   }
   I0 -> 0
-  0 -> 1 [label = "<<2>(d,gh)>a"]
+  0 -> 1 [label = "<<2>d|gh>a"]
   1 -> F1
 }'''
 CHECK_EQ(aref, a.lift(1, 2))
