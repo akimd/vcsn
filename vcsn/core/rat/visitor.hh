@@ -32,7 +32,7 @@ namespace vcsn
       using tuple_t = tuple<context_t>;
       virtual void visit(const tuple_t& v, std::true_type) = 0;
 
-      virtual void visit(const tuple<context_t>&, std::false_type)
+      void visit(const tuple<context_t>&, std::false_type)
       {
         BUILTIN_UNREACHABLE();
       }

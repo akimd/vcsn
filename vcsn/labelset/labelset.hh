@@ -35,6 +35,7 @@ namespace vcsn
     }
 
     template <typename LabelSet>
+    ATTRIBUTE_NORETURN
     auto label_one(const LabelSet&)
       -> enable_if_t<!LabelSet::has_one(),
                      typename LabelSet::value_t>
