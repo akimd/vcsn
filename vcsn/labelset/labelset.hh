@@ -27,20 +27,28 @@ namespace vcsn
 
     /// This LabelSet's one(), if supported.
     template <typename LabelSet>
-    auto label_one(const LabelSet& ls)
+    auto label_one()
       -> enable_if_t<LabelSet::has_one(),
                      typename LabelSet::value_t>
     {
-      return ls.one();
+      return LabelSet::one();
     }
 
     template <typename LabelSet>
     ATTRIBUTE_NORETURN
-    auto label_one(const LabelSet&)
+    auto label_one()
       -> enable_if_t<!LabelSet::has_one(),
                      typename LabelSet::value_t>
     {
       raise("the labelset does not feature a neutral");
+    }
+
+    /// Enjoy type inference.
+    template <typename LabelSet>
+    auto label_one(const LabelSet&)
+      -> typename LabelSet::value_t
+    {
+      return label_one<LabelSet>();
     }
 
     /*-------------------.

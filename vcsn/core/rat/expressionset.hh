@@ -399,7 +399,9 @@ namespace vcsn
       template <size_t... I>
       static bool is_label_(const tuple_t& v, detail::index_sequence<I...>)
       {
-        for (auto b: {(std::get<I>(v.sub())->type() == type_t::atom)...})
+        for (auto b: {(std::get<I>(v.sub())->type() == type_t::atom
+                       || (std::get<I>(v.sub())->type() == type_t::one
+                           && labelset_t::template valueset_t<I>::has_one()))...})
           if (!b)
             return false;
         return true;
@@ -408,10 +410,17 @@ namespace vcsn
       template <size_t... I>
       static label_t as_label_(const tuple_t& v, detail::index_sequence<I...>)
       {
-        return
-          label_t{std::dynamic_pointer_cast<const typename focus_t<I>::atom_t>
-                  (std::get<I>(v.sub()))
-                   ->value()...};
+        return label_t{as_label_<I>(v)...};
+      }
+
+      template <size_t I>
+      static typename focus_t<I>::label_t as_label_(const tuple_t& v)
+      {
+        if (std::get<I>(v.sub())->type() == type_t::one)
+          return detail::label_one<typename labelset_t::template valueset_t<I>>();
+        else
+          return std::dynamic_pointer_cast<const typename focus_t<I>::atom_t>
+                 (std::get<I>(v.sub()))->value();
       }
     };
 

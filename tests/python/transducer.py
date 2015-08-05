@@ -14,6 +14,10 @@ c = vcsn.context("lat<lan_char(abc), lan_char(xyz)>, z")
 e = c.expression('a|x')
 CHECK_EQ(e.standard(), e.derived_term().strip())
 
+# Likewise with a|\e.
+e = c.expression('a|\e')
+CHECK_EQ(e.standard(), e.derived_term().strip())
+
 e = c.expression('[ab]|x')
 CHECK_EQ('(a+b)|x', e)
 CHECK_EQ('''(a,x).[\e] + (b,x).[\e]''', e.expansion())
