@@ -420,12 +420,14 @@ namespace vcsn
     /// Lift some tapes of the transducer, or turn an automaton into a
     /// spontaneous autmaton.
     ///
-    /// Each <k>l transition is mapped to a <<k>l>\e transition.
+    /// Each `<k>l` transition is mapped to a `<<k>l>\e` transition.
     ///
     /// \param aut    the input automaton
     /// \param tapes  the tapes to lift to weights
     /// \param ids    the identities of the expression
-    automaton lift(const automaton& aut, const std::vector<unsigned>& tapes = {}, ::vcsn::rat::identities ids = {});
+    automaton lift(const automaton& aut,
+                   const std::vector<unsigned>& tapes = {},
+                   rat::identities ids = {});
 
     /// The lifted LAO rational expression from \a e.
     expression lift(const expression& e);
@@ -531,9 +533,16 @@ namespace vcsn
     /// \param aut    the automaton in which to remove them
     /// \param dir    the direction of the closure
     /// \param prune  whether to delete states that become inaccessible
+    /// \param algo   how elimination is performed
+    ///     "auto"       same as "inplace"
+    ///     "default"    same as "inplace"
+    ///     "inplace"    eliminate in place
+    ///     "separate"   first separate the automaton into spontaneous and
+    ///                  proper parts
+    ///     "distance"   compute all-pairs distances
     automaton proper(const automaton& aut,
                      direction dir = direction::backward,
-                     bool prune = true, const std::string& algo = "inplace");
+                     bool prune = true, const std::string& algo = "auto");
 
     /// The weight pushing automaton of \a aut.
     automaton push_weights(const automaton& aut);
@@ -714,7 +723,8 @@ namespace vcsn
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
     /// An automaton denoting the language of \a exp.
-    automaton to_automaton(const expression& exp, const std::string& algo = "auto");
+    automaton to_automaton(const expression& exp,
+                           const std::string& algo = "auto");
 
     /// First order development of a \a exp.
     ///

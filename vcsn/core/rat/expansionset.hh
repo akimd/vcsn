@@ -264,12 +264,12 @@ namespace vcsn
       | tuple(v...).   |
       `---------------*/
 
-      /// The type of the expansionsset for tape #Tape.
+      /// The type of the expansionsset for tape Tape.
       template <unsigned Tape>
       using focus_t
         = expansionset<typename expressionset_t::template focus_t<Tape>>;
 
-      /// The expansionsset for tape #Tape.
+      /// The expansionsset for tape Tape.
       template <unsigned Tape>
       auto focus() const
         -> focus_t<Tape>

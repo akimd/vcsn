@@ -1111,7 +1111,7 @@ namespace vcsn
     ///
     /// \param v       the polynomial
     /// \param out     the output stream
-    /// \param format  the format: "text" or "latex"
+    /// \param fmt     the format: "text" or "latex"
     /// \param sep     the separator between monomials
     std::ostream&
     print(const value_t& v, std::ostream& out,

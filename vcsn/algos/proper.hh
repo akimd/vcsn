@@ -153,6 +153,13 @@ namespace vcsn
   /// \param aut   the input automaton
   /// \param dir   whether backward or forward elimination
   /// \param prune whether to suppress states becoming inaccessible
+  /// \param algo   how elimination is performed
+  ///     "auto"       same as "inplace"
+  ///     "default"    same as "inplace"
+  ///     "inplace"    eliminate in place
+  ///     "separate"   first separate the automaton into spontaneous and
+  ///                  proper parts
+  ///     "distance"   compute all-pairs distances
   template <typename Aut>
   auto
   proper(const Aut& aut, direction dir = direction::backward,
