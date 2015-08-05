@@ -379,8 +379,46 @@ namespace vcsn
                   bool accept,
                   std::false_type) const;
 
+    /// Turn a tuple of expressions that are labels into a multi-tape label.
+    template <typename Dummy = void>
+    struct tuple_of_label
+    {
+      /// Are all the components labels?
+      static bool is_label(const tuple_t& v)
+      {
+        return is_label_(v, labelset_t::indices);
+      }
+
+      /// All the components are (single-tape) labels: make this a
+      /// multitape label.
+      static label_t as_label(const tuple_t& v)
+      {
+        return as_label_(v, labelset_t::indices);
+      }
+
+      template <size_t... I>
+      static bool is_label_(const tuple_t& v, detail::index_sequence<I...>)
+      {
+        for (auto b: {(std::get<I>(v.sub())->type() == type_t::atom)...})
+          if (!b)
+            return false;
+        return true;
+      }
+
+      template <size_t... I>
+      static label_t as_label_(const tuple_t& v, detail::index_sequence<I...>)
+      {
+        return
+          label_t{std::dynamic_pointer_cast<const typename focus_t<I>::atom_t>
+                  (std::get<I>(v.sub()))
+                   ->value()...};
+      }
+    };
+
   private:
+    /// The context of the expressions.
     context_t ctx_;
+    /// The set of rewriting rules to apply.
     const identities_t ids_;
   };
   } // rat::

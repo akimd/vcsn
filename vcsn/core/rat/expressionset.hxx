@@ -473,6 +473,8 @@ namespace vcsn
     auto t = ts.tuple(v...);
     if (ts.is_one(t))
       return one();
+    else if (tuple_of_label<>::is_label(t))
+      return atom(tuple_of_label<>::as_label(t));
     else
       // FIXME: when all letters, make it a (multitape) letter:
       // a|x -> 'a,x'.

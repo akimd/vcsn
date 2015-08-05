@@ -64,7 +64,7 @@ aref = '''digraph
     1
   }
   I0 -> 0
-  0 -> 1 [label = "<<2>a>d|gh"]
+  0 -> 1 [label = "<<2>(a)>d|gh"]
   1 -> F1
 }'''
 CHECK_EQ(aref, a.lift(0))
@@ -86,7 +86,7 @@ aref = '''digraph
     1
   }
   I0 -> 0
-  0 -> 1 [label = "<<2>d>a|gh"]
+  0 -> 1 [label = "<<2>(d)>a|gh"]
   1 -> F1
 }'''
 CHECK_EQ(aref, a.lift(1))
@@ -108,7 +108,7 @@ aref = '''digraph
     1
   }
   I0 -> 0
-  0 -> 1 [label = "<<2>d|gh>a"]
+  0 -> 1 [label = "<<2>(d|gh)>a"]
   1 -> F1
 }'''
 CHECK_EQ(aref, a.lift(1, 2))

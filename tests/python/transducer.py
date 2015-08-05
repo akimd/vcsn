@@ -8,7 +8,13 @@ from test import *
 ## ---------------- ##
 c = vcsn.context("lat<lan_char(abc), lan_char(xyz)>, z")
 
-e = c.expression('([ab]|x)')
+# Check that a|x is understood as a single two-tape label, not as a
+# two-tuple of single-tape labels.  Since standard does not support
+# the tuple operator, that suffices.
+e = c.expression('a|x')
+CHECK_EQ(e.standard(), e.derived_term().strip())
+
+e = c.expression('[ab]|x')
 CHECK_EQ('(a+b)|x', e)
 CHECK_EQ('''(a,x).[\e] + (b,x).[\e]''', e.expansion())
 CHECK_EQ(r'''digraph
@@ -36,8 +42,15 @@ CHECK_EQ(r'''digraph
 ## LAN x LAN x LAN -> Z.  ##
 ## ---------------------- ##
 
+# Using expression._tuple.
 exp = lambda e: vcsn.context("lan_char, z").expression(e)
-e = vcsn.expression._tuple([exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*')])
+f = vcsn.expression._tuple([exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*')])
+CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
+
+# Using the operator |.
+c = vcsn.context("lat<lan_char(a), lan_char(b), lan_char(c)>, z")
+e = c.expression('(<2>a)*|(<3>b)*|(<5>c)*')
+CHECK_EQ(f, e)
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', e)
 CHECK_EQ('''<1> + (\e,\e,c).[<5>\e|\e|(<5>c)*] + (\e,b,\e).[<3>\e|(<3>b)*|\e] + (\e,b,c).[<15>\e|(<3>b)*|(<5>c)*] + (a,\e,\e).[<2>(<2>a)*|\e|\e] + (a,\e,c).[<10>(<2>a)*|\e|(<5>c)*] + (a,b,\e).[<6>(<2>a)*|(<3>b)*|\e] + (a,b,c).[<30>(<2>a)*|(<3>b)*|(<5>c)*]''', e.expansion())
 CHECK_EQ(r'''digraph
