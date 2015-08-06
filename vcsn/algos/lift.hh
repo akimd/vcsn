@@ -85,29 +85,29 @@ namespace vcsn
     template<typename Context, size_t... Tapes>
     struct lifted_context_tape_t;
 
-    /// Lift everything
+    /// Lift all the label tapes to the weights.
     template <typename Context>
     struct lifted_context_tape_t<Context>
     {
-      // Result context
+      /// Result context.
       using context_t = lifted_context_t<Context>;
       using in_label_t = label_t_of<Context>;
       using label_t = label_t_of<context_t>;
 
-      // conversion
+      /// Conversion.
       static context_t value(const Context& ctx, vcsn::rat::identities ids)
       {
         return lift_context(ctx, ids);
       }
 
-      // label in the output
+      /// Label in the output.
       static oneset::value_t
       kept_label(const in_label_t&)
       {
         return oneset::one();
       }
 
-      // weight in the output
+      /// Weight in the output.
       static in_label_t
       weight_label(const in_label_t& l)
       {

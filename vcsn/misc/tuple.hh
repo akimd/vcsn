@@ -30,13 +30,13 @@ namespace vcsn
     template <std::size_t...> struct index_sequence
     { using type = index_sequence; };
 
-    template <typename S1, class S2> struct concat;
+    template <typename S1, typename S2> struct concat;
 
     template <std::size_t... I1, std::size_t... I2>
     struct concat<index_sequence<I1...>, index_sequence<I2...>>
       : index_sequence<I1..., (sizeof...(I1)+I2)...>{};
 
-    template <typename S1, class S2>
+    template <typename S1, typename S2>
     using Concat = typename concat<S1, S2>::type;
 
     template <std::size_t N> struct make_index_sequence;
@@ -49,7 +49,7 @@ namespace vcsn
     template <> struct make_index_sequence<0> : index_sequence<>{};
     template <> struct make_index_sequence<1> : index_sequence<0>{};
 
-    template <std::size_t off, class S2> struct int_range;
+    template <std::size_t off, typename S2> struct int_range;
 
     template <std::size_t off, std::size_t... I>
     struct int_range<off, index_sequence<I...>>
@@ -349,27 +349,27 @@ namespace vcsn
     // http://stillmoreperfect.blogspot.fr/2010/03/template-metaprogramming-compile-time.html
 
     // Test if (c) then T1 else T2
-    template <bool c, class T1, class T2>
+    template <bool c, typename T1, typename T2>
     struct if_c { typedef T1 type; };
 
-    template <typename T1, class T2>
+    template <typename T1, typename T2>
     struct if_c<false, T1, T2> { typedef T2 type; };
 
-    template <typename C, class T1, class T2>
+    template <typename C, typename T1, typename T2>
     struct if_ : if_c<C::value, T1, T2> {};
 
-    // Test if (c) then F1 else F2 and get the value
-    template <bool c, class F1, class F2>
+    /// Test if (c) then F1 else F2 and get the value.
+    template <bool c, typename F1, typename F2>
     struct eval_if_c : if_c<c, F1, F2>::type {};
 
-    template <typename C, class F1, class F2>
+    template <typename C, typename F1, typename F2>
     struct eval_if : if_<C, F1, F2>::type {};
 
-    // And condition on several classes
+    /// And condition on several typenames.
     template <typename... F>
     struct and_;
 
-    template <typename F1, class... F>
+    template <typename F1, typename... F>
     struct and_<F1, F...> : eval_if<F1, and_<F...>, std::false_type>::type {};
 
     template <typename F1>
@@ -378,11 +378,11 @@ namespace vcsn
     template <>
     struct and_<> : std::true_type::type {};
 
-    // Or condition on several classes
+    /// Or condition on several typenames.
     template <typename... F>
     struct or_;
 
-    template <typename F1, class... F>
+    template <typename F1, typename... F>
     struct or_<F1, F...> : eval_if<F1, std::true_type, or_<F...>>::type { };
 
     template <typename F1>
