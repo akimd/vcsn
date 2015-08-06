@@ -52,14 +52,6 @@ namespace vcsn
       // FIXME: Boost 1.56 deprecates get_value_or in favor of value_or.
       return {lift_context(rs.context()), ids.get_value_or(rs.identities())};
     }
-  }
-
-  /*------------------------.
-  | lift_tape(automaton).   |
-  `------------------------*/
-
-  namespace detail
-  {
 
     template <std::size_t... I>
     using seq = vcsn::detail::index_sequence<I...>;
@@ -237,58 +229,53 @@ namespace vcsn
         expressionset<context<typename ctx_t::weight_tapes_t, WeightSet>>{ctx};
       return {oneset{}, rs_in};
     }
-
-    /// Lift some tapes of the transducer.
-    ///
-    /// \param a    the input automaton
-    /// \param ids  the identities to use for the generated expressions
-    template <typename Aut, size_t... Tapes>
-    inline
-    detail::lifted_automaton_tape_t<Aut, Tapes...>
-    lift_tape(const Aut& a, vcsn::rat::identities ids = {})
-    {
-      using auto_in_t = Aut;
-      using state_in_t = state_t_of<auto_in_t>;
-
-      using lifter = detail::lifted_context_tape_t<context_t_of<Aut>, Tapes...>;
-      auto ctx_out = lifter::value(a->context(), ids);
-
-      // ExpressionSet
-      const auto& rs_in = *ctx_out.weightset();
-
-      using auto_out_t = detail::lifted_automaton_tape_t<auto_in_t, Tapes...>;
-      using state_out_t = state_t_of<auto_out_t>;
-      auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
-      auto map = std::map<state_in_t, state_out_t>{};
-      map[a->pre()] = res->pre();
-      map[a->post()] = res->post();
-      for (auto s: a->states())
-        map[s] = res->new_state();
-
-      for (auto t: a->all_transitions())
-        if (a->src_of(t) == a->pre())
-          res->add_initial(map[a->dst_of(t)],
-                           rs_in.lmul(a->weight_of(t), rs_in.one()));
-        else if (a->dst_of(t) == a->post())
-          res->add_final(map[a->src_of(t)],
-                         rs_in.lmul(a->weight_of(t), rs_in.one()));
-        else
-          res->add_transition
-            (map[a->src_of(t)], map[a->dst_of(t)],
-             lifter::kept_label(a->label_of(t)),
-             rs_in.lmul(a->weight_of(t),
-                        rs_in.atom(lifter::weight_label(a->label_of(t)))));
-      return res;
-    }
   }
 
-  /// Lift some label tapes to the weights.
+  /*-------------------.
+  | lift(automaton).   |
+  `-------------------*/
+
+  /// Lift some tapes of the transducer.
+  ///
+  /// \param a    the input automaton
+  /// \param ids  the identities to use for the generated expressions
   template <typename Aut, size_t... Tapes>
   inline
   detail::lifted_automaton_tape_t<Aut, Tapes...>
   lift(const Aut& a, vcsn::rat::identities ids = {})
   {
-    return detail::lift_tape<Aut, Tapes...>(a, ids);
+    using auto_in_t = Aut;
+    using state_in_t = state_t_of<auto_in_t>;
+
+    using lifter = detail::lifted_context_tape_t<context_t_of<Aut>, Tapes...>;
+    auto ctx_out = lifter::value(a->context(), ids);
+
+    // ExpressionSet
+    const auto& rs_in = *ctx_out.weightset();
+
+    using auto_out_t = detail::lifted_automaton_tape_t<auto_in_t, Tapes...>;
+    using state_out_t = state_t_of<auto_out_t>;
+    auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
+    auto map = std::map<state_in_t, state_out_t>{};
+    map[a->pre()] = res->pre();
+    map[a->post()] = res->post();
+    for (auto s: a->states())
+      map[s] = res->new_state();
+
+    for (auto t: a->all_transitions())
+      if (a->src_of(t) == a->pre())
+        res->add_initial(map[a->dst_of(t)],
+                         rs_in.lmul(a->weight_of(t), rs_in.one()));
+      else if (a->dst_of(t) == a->post())
+        res->add_final(map[a->src_of(t)],
+                       rs_in.lmul(a->weight_of(t), rs_in.one()));
+      else
+        res->add_transition
+          (map[a->src_of(t)], map[a->dst_of(t)],
+           lifter::kept_label(a->label_of(t)),
+           rs_in.lmul(a->weight_of(t),
+                      rs_in.atom(lifter::weight_label(a->label_of(t)))));
+    return res;
   }
 
   namespace dyn
