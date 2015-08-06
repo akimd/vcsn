@@ -103,7 +103,7 @@ namespace vcsn
       if (-1 < v && v < 1)
         return 1/(1-v);
       else
-        raise(sname(), ": star: invalid value: ", to_string(*this, v));
+        raise(sname(), ": star: invalid value: ", v);
     }
 
     constexpr static bool is_special(const value_t)
@@ -189,7 +189,7 @@ namespace vcsn
       if (i >> res)
         return res;
       else
-        vcsn::fail_reading(i, sname(), ", invalid value");
+        raise(sname(), ": invalid value: ", i);
     }
 
     static std::ostream&

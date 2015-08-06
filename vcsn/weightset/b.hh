@@ -164,14 +164,12 @@ namespace vcsn
       int i;
       if (is >> i)
         {
-          if (i == 0 || i == 1)
-            return i;
-          else
-            fail_reading(is,
-                         sname(), ": invalid value: ", std::to_string(i));
+          require(i == 0 || i == 1,
+                  sname(), ": invalid value: ", i);
+          return i;
         }
       else
-        fail_reading(is, sname(), ": invalid value");
+        raise(sname(), ": invalid value: ", is);
     }
 
     static std::ostream&

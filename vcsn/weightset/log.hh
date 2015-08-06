@@ -150,7 +150,7 @@ namespace vcsn
           res = zero();
         }
       else if (! (i >> res))
-        vcsn::fail_reading(i, sname(), ", invalid value");
+        raise(sname(), ": invalid value: ", i);
       return res;
     }
 

@@ -191,34 +191,33 @@ namespace vcsn
     conv(std::istream& i)
     {
       int num;
-      if (! (i >> num))
-        vcsn::fail_reading(i, sname(), ", invalid numerator");
+      if (!(i >> num))
+        raise(sname(), ": invalid numerator: ", i);
 
       // If we have a slash after the numerator then we have a
       // denominator as well.
-      char maybe_slash;
-      if ((maybe_slash = i.peek()) != '/')
-        return value_t{num, 1};
-      vcsn::eat(i, '/');
-
-      // operator>> with an istream and an unsigned int silently
-      // mangles a negative number into its two's complement
-      // representation as a positive number.
-      if (i.peek() == '-')
+      if (i.peek() == '/')
         {
-          num = - num;
-          vcsn::eat(i, '-');
-        }
+          eat(i, '/');
 
-      unsigned int den;
-      if (i >> den)
-        {
+          // operator>> with an istream and an unsigned int silently
+          // mangles a negative number into its two's complement
+          // representation as a positive number.
+          if (i.peek() == '-')
+            {
+              num = - num;
+              eat(i, '-');
+            }
+
+          unsigned int den;
+          if (!(i >> den))
+            raise(sname(), ": invalid denominator: ", i);
           // Make sure our rational respects our constraints.
-          require(den, sname(),  ": zero denominator");
+          require(den, sname(), ": null denominator");
           return value_t{num, den}.reduce();
         }
       else
-        vcsn::fail_reading(i, sname(), ", invalid denominator");
+        return value_t{num, 1};
     }
 
     static std::ostream&
