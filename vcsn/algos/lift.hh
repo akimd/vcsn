@@ -17,37 +17,21 @@ namespace vcsn
 
   namespace detail
   {
-    /*--------------.
-    | lift(types).  |
-    `--------------*/
-
-    template <std::size_t... I>
-    using seq = vcsn::detail::index_sequence<I...>;
-
-    /// Set of tapes
-    template <typename S, typename L>
-    struct tape_set;
-
-    // Set of no tape is oneset
-    template <typename LabelSet>
-    struct tape_set<seq<>, LabelSet>
-    {
-      using type = oneset;
-    };
-
-    template <size_t... I, typename LabelSet>
-    struct tape_set<seq<I...>, LabelSet>
-    {
-      using type = tupleset<typename LabelSet::template valueset_t<I>...>;
-    };
+    /*---------.
+    | lifter.  |
+    `---------*/
 
     /// Helper structure for a lift of several tapes.
+    ///
+    /// \tparam Context  the context to lift.
+    /// \tparam Tapes    an index_sequence of tape numbers.
+    /// \tparam Enable   used to enable/disable specializations using enable_if.
     template <typename Context, typename Tapes, typename Enable = void>
-    struct lifted_context_tape_impl;
+    struct lifter_impl;
 
     /// Lift all the label tapes to the weights.
     template <typename Context>
-    struct lifted_context_tape_impl<Context, vcsn::detail::index_sequence<>>
+    struct lifter_impl<Context, vcsn::detail::index_sequence<>>
     {
       /// Input context.
       using in_context_t = Context;
@@ -82,9 +66,9 @@ namespace vcsn
     /// Specialization: lift only some tapes.
     template <typename... LabelSets, typename WeightSet,
               size_t... Tapes>
-    struct lifted_context_tape_impl<context<tupleset<LabelSets...>, WeightSet>,
-                                    vcsn::detail::index_sequence<Tapes...>,
-                                    vcsn::enable_if_t<(0 < sizeof...(Tapes))>>
+    struct lifter_impl<context<tupleset<LabelSets...>, WeightSet>,
+                       vcsn::detail::index_sequence<Tapes...>,
+                       vcsn::enable_if_t<(0 < sizeof...(Tapes))>>
     {
       /// Input labelset.
       using in_labelset_t = tupleset<LabelSets...>;
@@ -93,7 +77,24 @@ namespace vcsn
 
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
+      using seq = detail::index_sequence<I...>;
+
+      /// Set of tapes
+      template <typename S, typename L>
+        struct tape_set;
+
+      // Set of no tape is oneset
+      template <typename LabelSet>
+        struct tape_set<seq<>, LabelSet>
+      {
+        using type = oneset;
+      };
+
+      template <size_t... I, typename LabelSet>
+        struct tape_set<seq<I...>, LabelSet>
+      {
+        using type = tupleset<typename LabelSet::template valueset_t<I>...>;
+      };
 
       /// Index of all input tapes.
       using index_t
@@ -181,21 +182,21 @@ namespace vcsn
       }
     };
 
-    template <typename Aut, size_t... Tapes>
-    using lifted_context_tape_t =
-      lifted_context_tape_impl<Aut, seq<Tapes...>>;
+    /// A traits to lift the Tapes of the labels to the weights.
+    template <typename Ctx, size_t... Tapes>
+    using lifter_t = lifter_impl<Ctx, detail::index_sequence<Tapes...>>;
 
     template <typename Aut, size_t... Tapes>
-    using lifted_automaton_tape_t =
-      mutable_automaton<typename lifted_context_tape_t<context_t_of<Aut>,
-                                                       Tapes...>::context_t>;
+    using lifted_automaton_t =
+      mutable_automaton<typename lifter_t<context_t_of<Aut>,
+                                          Tapes...>::context_t>;
 
     /// lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet, size_t... Tapes>
-    typename lifted_context_tape_t<context<LabelSet, WeightSet>, Tapes...>::context_t
-    lift_context_tape(const context<LabelSet, WeightSet>& ctx)
+    typename lifter_t<context<LabelSet, WeightSet>, Tapes...>::context_t
+    lift_context(const context<LabelSet, WeightSet>& ctx)
     {
-      return (lifted_context_tape_t<context<LabelSet, WeightSet>, Tapes...>
+      return (lifter_t<context<LabelSet, WeightSet>, Tapes...>
               ::value(ctx, {}));
     }
   }
@@ -210,19 +211,19 @@ namespace vcsn
   /// \param ids  the identities to use for the generated expressions
   template <typename Aut, size_t... Tapes>
   inline
-  detail::lifted_automaton_tape_t<Aut, Tapes...>
+  detail::lifted_automaton_t<Aut, Tapes...>
   lift(const Aut& a, vcsn::rat::identities ids = {})
   {
     using auto_in_t = Aut;
     using state_in_t = state_t_of<auto_in_t>;
 
-    using lifter = detail::lifted_context_tape_t<context_t_of<Aut>, Tapes...>;
+    using lifter = detail::lifter_t<context_t_of<Aut>, Tapes...>;
     auto ctx_out = lifter::value(a->context(), ids);
 
     // ExpressionSet
     const auto& rs_in = *ctx_out.weightset();
 
-    using auto_out_t = detail::lifted_automaton_tape_t<auto_in_t, Tapes...>;
+    using auto_out_t = detail::lifted_automaton_t<auto_in_t, Tapes...>;
     using state_out_t = state_t_of<auto_out_t>;
     auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
 
@@ -273,7 +274,7 @@ namespace vcsn
   {
     template <typename ExpSet>
     using lifted_expressionset_t =
-      expressionset<typename lifted_context_tape_t<context_t_of<ExpSet>>::context_t>;
+      expressionset<typename lifter_t<context_t_of<ExpSet>>::context_t>;
 
     /// lift(expressionset) -> expressionset
     template <typename Context>
@@ -282,7 +283,7 @@ namespace vcsn
                        boost::optional<vcsn::rat::identities> ids = {})
     {
       // FIXME: Boost 1.56 deprecates get_value_or in favor of value_or.
-      return {lift_context_tape(rs.context()), ids.get_value_or(rs.identities())};
+      return {lift_context(rs.context()), ids.get_value_or(rs.identities())};
     }
   }
 

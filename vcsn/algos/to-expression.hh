@@ -16,7 +16,7 @@ namespace vcsn
 
   /// A state (inner) from an automaton.
   template <typename Aut,
-            typename Lifted = detail::lifted_automaton_tape_t<Aut>>
+            typename Lifted = detail::lifted_automaton_t<Aut>>
   using state_chooser_t =
     std::function<state_t_of<Lifted>(const Lifted&)>;
 
@@ -282,8 +282,7 @@ namespace vcsn
   typename ExpSet::value_t
   to_expression_naive(const Aut& a, vcsn::rat::identities ids)
   {
-    state_chooser_t<Aut> next
-      = next_naive<detail::lifted_automaton_tape_t<Aut>>;
+    state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
     return to_expression(a, ids, next);
   }
 

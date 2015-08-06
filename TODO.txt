@@ -75,6 +75,19 @@ We need more tests.  In particular something that checks:
     * vcsn/algos/synchronize.hh: Here.
 
 * Bugs
+** lift
+When we lift a single tape from a lat<lal, lal>, we produce a single-tape
+labelset and a single-tape weightset.  This is uselessly heavy on the system.
+That's why we have weird parens in the result:
+
+    0 -> 1 [label = "<<2>(d)>a|gh"]
+
+since d is written (d) because it's actually a one-tuple!
+
+When we lift all the tapes from a tupleset, it should be exactly the same
+code as the default lift with no arguments.  For instance we should get a
+lao.
+
 ** Incorrect expressionset
 The expression_automaton builds its own expressionset, so it loses the one
 from the caller, which is the one which knows the identities to use!
