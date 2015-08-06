@@ -82,12 +82,12 @@ namespace vcsn
     };
 
     /// Helper structure for a lift of several tapes.
-    template<typename Context, size_t... Tapes>
-    struct lifted_context_tape_t;
+    template <typename Context, typename Tapes, typename Enable = void>
+    struct lifted_context_tape_impl;
 
     /// Lift all the label tapes to the weights.
     template <typename Context>
-    struct lifted_context_tape_t<Context>
+    struct lifted_context_tape_impl<Context, vcsn::detail::index_sequence<>>
     {
       /// Result context.
       using context_t = lifted_context_t<Context>;
@@ -117,9 +117,10 @@ namespace vcsn
 
     /// Specialization: lift only some tapes.
     template <typename... LabelSets, typename WeightSet,
-              size_t FirstTape, size_t... Tapes>
-    struct lifted_context_tape_t<context<tupleset<LabelSets...>, WeightSet>,
-                                 FirstTape, Tapes...>
+              size_t... Tapes>
+    struct lifted_context_tape_impl<context<tupleset<LabelSets...>, WeightSet>,
+                                    vcsn::detail::index_sequence<Tapes...>,
+                                    vcsn::enable_if_t<(0 < sizeof...(Tapes))>>
     {
       /// Input labelset
       using labelset_t = tupleset<LabelSets...>;
@@ -142,13 +143,13 @@ namespace vcsn
       /// Complement the list of indexes of tapes to be lifted, to get
       /// the list of tapes to be kept.
       using kept_index_t
-        = sequence_difference<index_t, seq<FirstTape, Tapes...>>;
+        = sequence_difference<index_t, seq<Tapes...>>;
 
       /// Labelset of tapes to be kept.
       using kept_tapes_t = typename tape_set<kept_index_t, labelset_t>::type;
 
       /// List of indexes of tapes to be lifted.
-      using weight_index_t = seq<FirstTape, Tapes...>;
+      using weight_index_t = seq<Tapes...>;
 
       /// Labelset of tapes to be lifted.
       using weight_tapes_t
@@ -215,6 +216,10 @@ namespace vcsn
         return typename weight_tapes_t::value_t{std::get<I>(l)...};
       }
     };
+
+    template <typename Aut, size_t... Tapes>
+    using lifted_context_tape_t =
+      lifted_context_tape_impl<Aut, seq<Tapes...>>;
 
     template <typename Aut, size_t... Tapes>
     using lifted_automaton_tape_t =
