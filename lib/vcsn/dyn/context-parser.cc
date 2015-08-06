@@ -79,27 +79,18 @@ namespace vcsn
         res = expansionset_();
       else if (w == "polynomialset")
         res = polynomialset_();
-      // std::integral_constant<unsigned, 2>.
-      else if (w == "std::integral_constant")
-        {
-          w += eat(is_, '<');
-          w += word_();
-          w += eat(is_, ',');
-          w += word_();
-          w += eat(is_, '>');
-          res = std::make_shared<other>(w);
-        }
-      // boost::optional<unsigned>, std::vector<unsigned>.
-      else if (w == "boost::optional"
-               || w == "const std::vector")
-        {
-          w += eat(is_, '<');
-          w += word_();
-          w += eat(is_, '>');
-          res = std::make_shared<other>(w);
-        }
       else
-        res = std::make_shared<other>(w);
+        // int,
+        // std::integral_constant<unsigned, 2>,
+        // boost::optional<unsigned>,
+        // std::vector<unsigned>,
+        // const std::set<std::pair<std::string, std::string>>,
+        // etc.
+        {
+          if (is_.peek() == '<')
+            w += parameters_();
+          res = std::make_shared<other>(w);
+        }
       return res;
     }
 
@@ -140,6 +131,25 @@ namespace vcsn
           }
         else
           res += c;
+      return res;
+    }
+
+    std::string context_parser::parameters_()
+    {
+      std::string res;
+      res += eat(is_, '<');
+      auto nesting = 1;
+      int c;
+      while ((c = is_.peek()) != EOF)
+        {
+          if (c == '<')
+            ++nesting;
+          else if (c == '>' && --nesting == 0)
+            break;
+          res += c;
+          is_.ignore();
+        }
+      res += eat(is_, '>');
       return res;
     }
 

@@ -29,9 +29,13 @@ namespace vcsn
       /// Accept anything.
       std::shared_ptr<ast_node> any_();
 
-      /// Return the next word in the stream.  Does not consider that
+      /// The next word in the stream.  Does not consider that
       /// underscore is word-constituent.
       std::string word_();
+
+      /// The next parameters in the stream.  Must be right before the
+      /// opening '<'.  Will return up to the matching '>'.
+      std::string parameters_();
 
       /// A generator set (e.g., "char(abc)" or "char").
       std::shared_ptr<const genset> genset_();
