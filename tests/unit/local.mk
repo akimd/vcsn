@@ -32,17 +32,16 @@ unit_ldadd = $(libvcsn) $(RT_LIBS)
 
 noinst_HEADERS = %D%/test.hh %D%/weight.hh
 
-%C%_aut_lao_z_LDADD      = $(liblao_z) $(unit_ldadd)
-%C%_aut_lal_char_z_LDADD = $(liblal_char_z) $(unit_ldadd)
-%C%_aut_law_char_z_LDADD = $(liblaw_char_z) $(unit_ldadd)
-%C%_concat_LDADD         = $(liblaw_char_z) $(unit_ldadd)
-%C%_dyn_LDADD            = $(liblal_char_b) $(unit_ldadd)
-%C%_distance_LDADD       = $(liblal_char_z) $(unit_ldadd)
-%C%_label_LDADD          = $(liblal_char_b) $(unit_ldadd)
-%C%_polynomialset_LDADD  = $(liblaw_char_z) $(liblao_z) $(unit_ldadd)
-%C%_proper_LDADD         = $(liblal_char_b) $(liblal_char_z) $(liblaw_char_b) \
-                           $(liblaw_char_z) $(unit_ldadd)
-%C%_transpose_LDADD      = $(liblal_char_b) $(unit_ldadd)
+%C%_aut_lao_z_LDADD      = $(unit_ldadd)
+%C%_aut_lal_char_z_LDADD = $(unit_ldadd)
+%C%_aut_law_char_z_LDADD = $(unit_ldadd)
+%C%_concat_LDADD         = $(unit_ldadd)
+%C%_dyn_LDADD            = $(unit_ldadd)
+%C%_distance_LDADD       = $(unit_ldadd)
+%C%_label_LDADD          = $(unit_ldadd)
+%C%_polynomialset_LDADD  = $(unit_ldadd)
+%C%_proper_LDADD         = $(unit_ldadd)
+%C%_transpose_LDADD      = $(unit_ldadd)
 %C%_weight_LDADD         = $(unit_ldadd)
 
 %C%_TESTS =                                     \
@@ -66,19 +65,19 @@ dist_TESTS += $(%C%_TESTS)
 # the dependencies, so that the test suite does not make useless
 # compilations.
 %D%/aut_lal_char_z.log: %D%/aut_lal_char_z
-%D%/aut_lao_z.log: %D%/aut_lao_z
+%D%/aut_lao_z.log:      %D%/aut_lao_z
 %D%/aut_law_char_z.log: %D%/aut_law_char_z
-%D%/concat.log: %D%/concat
-%D%/cross.log: %D%/cross
-%D%/distance.log: %D%/distance
-%D%/dyn.log: %D%/dyn
-%D%/label.log: %D%/label
-%D%/polynomialset.log: %D%/polynomialset
-%D%/proper.log: %D%/proper
-%D%/transpose.log: %D%/transpose
-%D%/weight.log: %D%/weight
-%D%/zip-maps.log: %D%/zip-maps
-%D%/zip.log: %D%/zip
+%D%/concat.log:         %D%/concat
+%D%/cross.log:          %D%/cross
+%D%/distance.log:       %D%/distance
+%D%/dyn.log:            %D%/dyn
+%D%/label.log:          %D%/label
+%D%/polynomialset.log:  %D%/polynomialset
+%D%/proper.log:         %D%/proper
+%D%/transpose.log:      %D%/transpose
+%D%/weight.log:         %D%/weight
+%D%/zip-maps.log:       %D%/zip-maps
+%D%/zip.log:            %D%/zip
 
 .PHONY: check-unit
 check-unit:
