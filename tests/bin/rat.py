@@ -16,9 +16,13 @@ identities = "associative"
 contexts = {
   'b'  : "law_char(a-h), b",
   'br' : "law_char(a-h), expressionset<law_char(i-n), b>",
+  'brr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), b>>",
+  'q'  : "law_char(a-h), q",
+  'qr' : "law_char(a-h), expressionset<law_char(i-n), q>",
+  'qrr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), q>>",
   'z'  : "law_char(a-h), z",
   'zr' : "law_char(a-h), expressionset<law_char(i-n), z>",
-  'zrr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), z>>"
+  'zrr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), z>>",
 }
 
 def context_update():

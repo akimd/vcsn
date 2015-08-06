@@ -533,15 +533,15 @@ check('(?@lal_char(a), expressionset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
 
 
 ## --- ##
-## Z.  ##
+## Q.  ##
 ## --- ##
 
 
-# Z: "<12>\e".
-check('(?@lal_char(ab), z)<12>\e',
+# Q: "<12>\e".
+check('(?@lal_char(ab), q)<12>\e',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -562,10 +562,10 @@ check('(?@lal_char(ab), z)<12>\e',
 ## -------- ##
 
 # Z: "\e+a+\e"
-check('(?@lal_char(ab), z)\e+a+\e',
+check('(?@lal_char(ab), q)\e+a+\e',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -586,10 +586,10 @@ check('(?@lal_char(ab), z)\e+a+\e',
 }''')
 
 # Z: "<12>\e+<23>a+<34>b".
-check('(?@lal_char(ab), z)<12>\e+<23>a+<34>b',
+check('(?@lal_char(ab), q)<12>\e+<23>a+<34>b',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -614,10 +614,10 @@ check('(?@lal_char(ab), z)<12>\e+<23>a+<34>b',
 }''')
 
 # left weight.
-check('(?@lal_char(ab), z)<12>(\e+a+<10>b+<10>\e)',
+check('(?@lal_char(ab), q)<12>(\e+a+<10>b+<10>\e)',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -642,10 +642,10 @@ check('(?@lal_char(ab), z)<12>(\e+a+<10>b+<10>\e)',
 }''')
 
 # right weight.
-check(vcsn.Z.expression('(\e+a+<2>b+<3>\e)<10>', 'associative'),
+check(vcsn.Q.expression('(\e+a+<2>b+<3>\e)<10>', 'associative'),
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -674,10 +674,10 @@ check(vcsn.Z.expression('(\e+a+<2>b+<3>\e)<10>', 'associative'),
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check(vcsn.Z.expression('<12>(ab)<23>', 'associative'),
+check(vcsn.Q.expression('<12>(ab)<23>', 'associative'),
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -701,10 +701,10 @@ check(vcsn.Z.expression('<12>(ab)<23>', 'associative'),
 ## Z: star.  ##
 ## --------- ##
 
-check('(?@lal_char(ab), z)\z*',
+check('(?@lal_char(ab), q)\z*',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -720,12 +720,12 @@ check('(?@lal_char(ab), z)\z*',
   0 -> F0
 }''')
 
-xfail('(?@lal_char(ab), z)\e*')
+xfail('(?@lal_char(ab), q)\e*')
 
-check('(?@lal_char(ab), z)(<2>a)*',
+check('(?@lal_char(ab), q)(<2>a)*',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -746,10 +746,10 @@ check('(?@lal_char(ab), z)(<2>a)*',
   1 -> 1 [label = "<2>a"]
 }''')
 
-check(vcsn.Z.expression('<2>a*<3>', 'associative'),
+check(vcsn.Q.expression('<2>a*<3>', 'associative'),
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -770,10 +770,10 @@ check(vcsn.Z.expression('<2>a*<3>', 'associative'),
   1 -> 1 [label = "a"]
 }''')
 
-check(vcsn.Z.expression('(<2>a+<3>b)*', 'associative'),
+check(vcsn.Q.expression('(<2>a+<3>b)*', 'associative'),
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -801,10 +801,10 @@ check(vcsn.Z.expression('(<2>a+<3>b)*', 'associative'),
   3 -> 3 [label = "<3>b"]
 }''')
 
-check(vcsn.Z.expression('<2>(<3>a+<5>b)*<7>', 'associative'),
+check(vcsn.Q.expression('<2>(<3>a+<5>b)*<7>', 'associative'),
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -832,10 +832,10 @@ check(vcsn.Z.expression('<2>(<3>a+<5>b)*<7>', 'associative'),
   3 -> 3 [label = "<5>b"]
 }''')
 
-check(vcsn.Z.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
+check(vcsn.Q.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "letterset<char_letters(ab)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -858,16 +858,16 @@ check(vcsn.Z.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
   3 -> 1 [label = "<15>a"]
 }''')
 
-xfail('(?@lal_char(ab), z)a**')
+xfail('(?@lal_char(ab), q)a**')
 
 ## ---------- ##
 ## ZR: star.  ##
 ## ---------- ##
 
-check('(?@lal_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+abc)*',
+check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -892,10 +892,10 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+abc)*',
   5 -> 2 [label = "<e*>a"]
 }''')
 
-check('(?@lal_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+(ab)<f>)*',
+check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
 '''digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
