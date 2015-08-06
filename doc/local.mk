@@ -31,7 +31,7 @@ CLEANFILES += %D%/vcsn.dox
 
 # We cannot simply use html_DATA here, since Automake does not
 # support installing directories.
-html_DIR += %D%/vcsn.htmldir
+LAZY_html_DIR += %D%/vcsn.htmldir
 
 
 ## ------------ ##
