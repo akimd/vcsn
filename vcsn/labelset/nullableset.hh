@@ -67,9 +67,13 @@ namespace vcsn
         return is_one_<labelset_t>(l);
       }
 
-      static value_t
-      transpose(const labelset_t& ls, value_t l)
+      template <typename Value>
+      static Value
+      transpose(const labelset_t& ls, Value l)
       {
+        // This is not robust enough: Value is word_t, then it's not
+        // valid to call is_one on it.  Since I'm unsure of the future
+        // of nullableset, let's not waste time on this now.
         if (is_one(l))
           return l;
         else
@@ -125,10 +129,11 @@ namespace vcsn
         return l == one();
       }
 
-      static value_t
-      transpose(const labelset_t&, value_t l)
+      template <typename Value>
+      static Value
+      transpose(const labelset_t& ls, const Value& l)
       {
-        return l;
+        return ls.transpose(l);
       }
 
       template <typename... Args>
@@ -415,8 +420,9 @@ namespace vcsn
       return !is_one(v) && labelset()->is_letter(get_value(v));
     }
 
-    value_t
-    transpose(const value_t& l) const
+    template <typename Value>
+    Value
+    transpose(const Value& l) const
     {
       return helper_t::transpose(*ls_, l);
     }

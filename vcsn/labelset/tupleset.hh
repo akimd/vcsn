@@ -349,8 +349,10 @@ namespace vcsn
       return star_status_t::STARRABLE;
     }
 
-    value_t
-    transpose(const value_t& l) const
+    /// Transpose a word_t or a value_t.
+    template <typename Value>
+    Value
+    transpose(const Value& l) const
     {
       return this->transpose_(l, indices);
     }
@@ -665,21 +667,21 @@ namespace vcsn
 
     template <std::size_t... I>
     value_t
-    star_(value_t const& l, seq<I...>) const
+    star_(const value_t& l, seq<I...>) const
     {
       return value_t{set<I>().star(std::get<I>(l))...};
     }
 
     template <typename Value, std::size_t... I>
     Value
-    delimit_(Value const& l, seq<I...>) const
+    delimit_(const Value& l, seq<I...>) const
     {
       return Value{set<I>().delimit(std::get<I>(l))...};
     }
 
     template <typename Value, std::size_t... I>
     Value
-    undelimit_(Value const& l, seq<I...>) const
+    undelimit_(const Value& l, seq<I...>) const
     {
       return Value{set<I>().undelimit(std::get<I>(l))...};
     }
@@ -725,7 +727,7 @@ namespace vcsn
 
     template <std::size_t... I>
     std::ostream&
-    print_(value_t const& l, std::ostream& o,
+    print_(const value_t& l, std::ostream& o,
            format fmt,
            const char* pre,
            const char* sep,
@@ -773,11 +775,11 @@ namespace vcsn
       return o;
     }
 
-    template <std::size_t... I>
-    value_t
-    transpose_(value_t const& l, seq<I...>) const
+    template <typename Value, std::size_t... I>
+    Value
+    transpose_(const Value& l, seq<I...>) const
     {
-      return value_t{(set<I>().transpose(std::get<I>(l)))...};
+      return Value{set<I>().transpose(std::get<I>(l))...};
     }
 
     /// The intersection with another tupleset.
