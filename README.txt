@@ -1,13 +1,13 @@
-===========================
- Introduction to Vaucanson
-===========================
+=====================
+ Introduction to Vcsn
+=====================
 
-Vaucanson_, a C++ generic library for weighted finite state machines.
+Vcsn_, a C++ generic library for weighted finite state machines.
 
-.. _Vaucanson: http://vaucanson.lrde.epita.fr
+.. _Vcsn: http://vcsn.lrde.epita.fr
 
-Vaucanson 2, a generic library for finite state machines.
-Copyright (C) 2012-2014 The Vaucanson Group.
+Vcsn 2, a generic library for finite state machines.
+Copyright (C) 2012-2015 The Vaucanson Group.
 
 .. contents::
 
@@ -15,8 +15,8 @@ Copyright (C) 2012-2014 The Vaucanson Group.
 Overview
 ========
 
-Initiated by Jacques Sakarovitch in 2000, Vaucanson is a project developed
-by the `Télécom ParisTech`__ and the `EPITA Research and Development
+Vcsn is the result of a collaboration initiated by Jacques Sakarovitch in
+2000 between `Télécom ParisTech`__ and the `EPITA Research and Development
 Laboratory (LRDE)`__.
 
 __ http://www.telecom-paristech.fr
@@ -29,24 +29,24 @@ write algorithms working on every automaton with weights in any semiring and
 with words from any free monoids.  And on the other hand, a particular
 algorithm can be specialized for a particular data structure.
 
-Yet, Vaucanson is an ongoing development project.  Therefore algorithms,
-data structures and the general architecture are not totally stable and well
+Vcsn is an ongoing development project.  Therefore algorithms, data
+structures and the general architecture are not totally stable and well
 tested.
 
 Please send any question or comments to vaucanson@lrde.epita.fr, and report
-bugs to either our issue tracker http://vaucanson.lrde.epita.fr/, or to
+bugs to either our issue tracker http://vcsn.lrde.epita.fr/, or to
 vaucanson-bugs@lrde.epita.fr.
 
 
-Using Vaucanson
-===============
+Using Vcsn
+==========
 
-Vaucanson 2.0 lacks a serious documentation, this is definitely a weakness.
-However:
+Vcsn's documentation is not complete.  However:
 
-- the directory share/vcsn/notebooks contains some (sparse) documentation,
-  also available on line.  The `online notebooks`_ will be frequently
-  updated, so please be sure to check there.
+- the directory doc/notebooks contains some documentation, also available on
+  line.  The `online notebooks`_ will be frequently updated, so please be
+  sure to check there.  In particular, please read the `introduction to
+  Vcsn`_.
 
 - the file ``NEWS.txt`` includes many examples of how to run commands and
   algorithms.
@@ -58,18 +58,22 @@ However:
 
 - the `dyn::` C++ interface is documented in ``vcsn/dyn/algos.hh``.
 
-.. _`on line notebooks`: https://www.lrde.epita.fr/dload/vaucanson/2.0/notebooks/
+.. _`online notebooks`: http://vcsn-sandbox.lrde.epita.fr/tree/Documentation
+.. _`introduction to Vcsn`: http://vcsn-sandbox.lrde.epita.fr/notebooks/Documentation/index.ipynb
 
 
 Installation
 ============
 
-To install Vaucanson on your system, type in the classical sequence at the
+To install Vcsn on your system, type in the classical sequence at the
 command prompt::
 
         ./configure
         make
         make install (as root)
+
+Do not hesitate to run ``make -j3`` if, for instance, your CPU features 4
+threads.
 
 Note that an installation is specific to the compiler used to install
 it. Indeed, the call to ``./configure`` enables some workarounds and,
@@ -80,14 +84,15 @@ Between ``make`` and ``make install``, you may also want to run::
 
         make check
 
-It run the test suite to check the whole platform.
+It run the test suite to check the whole platform.  Beware that checking
+Vcsn is a very long process, also consider ``-j3''.
 
 
 Build Requirements
 ------------------
 
-Vaucanson was tested with the `GNU Compiler Collection (GCC)`_ versions 4.8,
-4.9 and `Clang`_ 3.4, and 3.5.
+Vcsn was tested with the `GNU Compiler Collection (GCC)`_ versions 4.9 and
+`Clang`_ 3.5, 3.6.
 
 .. _GNU Compiler Collection (GCC): http://gcc.gnu.org
 .. _Clang: http://clang.llvm.org
@@ -95,8 +100,8 @@ Vaucanson was tested with the `GNU Compiler Collection (GCC)`_ versions 4.8,
 `Boost`_ is a C++ library which provides many useful objects, including hash
 tables. Currently, Boost is used in algorithms only, but its use shall be
 extended to automata structures and other portions of code. You must install
-this library on your system.  Vaucanson should support any version after
-1.49.  The following Boost components are used:
+this library on your system.  Vcsn should support any version after 1.49.
+The following Boost components are used:
 
 - Boost.Algorithm
 - Boost.DynamicBitset
@@ -110,20 +115,18 @@ this library on your system.  Vaucanson should support any version after
 
 .. _Boost: http://www.boost.org
 
-`Ccache`_ is not strictly needed, but we strongly suggest that you install
-it, as it will avoid repeated useless compilations.
+`Ccache`_ saves the user from repeated compilations.
 
 .. _Ccache: http://ccache.samba.org
 
-To load plugins, Vaucanson relies on libltdl, which is a component of the
-`GNU Libtool`_ project.  Depending on your distribution/packaging system,
-you may have to install `libltdl-dev` (e.g., Debian) or `libtool` (Mac
-Ports).
+To load plugins, Vcsn relies on libltdl, which is a component of the `GNU
+Libtool`_ project.  Depending on your distribution/packaging system, you may
+have to install `libltdl-dev` (e.g., Debian) or `libtool` (Mac Ports).
 
 .. _`GNU Libtool` http://www.gnu.org/software/libtool/
 
-Vaucanson uses the Dot format to save automaton in a human readable file.
-You should install Graphviz_ to visualize these ``.gv`` files.
+Vcsn uses the Dot format to save automaton in a human readable file.  You
+should install Graphviz_ to visualize these ``.gv`` files.
 
 .. _Graphviz: http://www.research.att.com/sw/tools/graphviz
 
@@ -144,41 +147,43 @@ For instance if you installed Boost in ``/opt/boost/`` you should run
 
         ./configure CPPFLAGS="-I/opt/boost" LDFLAGS="-L/opt/boost"
 
-
 Layout of the tarball
 ---------------------
 
-The Vaucanson project directory layout is as follows:
+The project directory layout is as follows:
 
 build-aux
    Auxiliary tools used by the GNU Build System during ``configure``
    and ``make`` stages.
 
+doc
+   Doxygen documentation, and IPython notebooks.
+
 share
-   Data files to be installed on your system.  They include
-   example automata and notebooks.
+   Data files to be installed on your system.
 
 lib
    Various libraries, including instantiation of some contexts.
 
 vcsn
-   The Vaucanson C++ Library headers.
+   The Vcsn C++ Library headers.
 
 python
    The Python binding.
 
 bin
-   TAF-Kit sources.
+   Various programs to install.
 
 tests
    The test suites.
 
 
+
 Starting from the repository
 ============================
 
-To contribute to Vaucanson 2, or to build it from its Git repository, you
-need more tools:
+To contribute to Vcsn, or to build it from its Git repository, you need more
+tools:
 
 - Automake 1.14 or newer
 - Autoconf 2.69 or newer
@@ -190,6 +195,8 @@ Before the configuration steps, run::
         ./bootstrap
 
 to set up the GNU Build system.
+
+
 
 Licence
 =======
@@ -211,6 +218,16 @@ Contacts
 The team can be reached by mail at vaucanson@lrde.epita.fr.  Snail mail
 addresses follow.
 
+* Vcsn - LRDE
+
+  | Akim Demaille & Alexandre Duret-Lutz
+  | Laboratoire de Recherche et Développement de l'EPITA
+  | 14-16 rue Voltaire
+  | 94276 Le Kremlin-Bicêtre CEDEX
+  | France
+
+Members of the former Vaucanson effort can be reached as follows.
+
 * Vaucanson - Télécom Paristech
 
   | Jacques Sakarovitch
@@ -227,15 +244,15 @@ addresses follow.
   | 33405 Talence Cedex
   | France
 
-* Vaucanson - LRDE
-
-  | Akim Demaille & Alexandre Duret-Lutz
-  | Laboratoire de Recherche et Développement de l'EPITA
-  | 14-16 rue Voltaire
-  | 94276 Le Kremlin-Bicêtre CEDEX
-  | France
-
 .. Local Variables:
 .. mode: rst
 .. fill-column: 76
 .. End:
+..
+.. LocalWords:  Vcsn Vaucanson Sakarovitch Télécom ParisTech EPITA LRDE automata
+.. LocalWords:  semiring monoids Vcsn's txt vcsn algos hh dyn GCC DynamicBitset
+.. LocalWords:  Regex Tokenizer Ccache libltdl Libtool dev libtool Graphviz gv de
+.. LocalWords:  Doxygen CPPFLAGS LDFLAGS preprocessor IPython instantiation Akim
+.. LocalWords:  Automake Autoconf Demaille Alexandre Duret Lutz Laboratoire et
+.. LocalWords:  Développement l'EPITA Bicêtre CEDEX Paristech Barrault LaBRI rst
+.. LocalWords:  Sylvain Bordelais Informatique cours Libération Talence Cedex

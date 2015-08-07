@@ -7,37 +7,34 @@ the internal API may also be documented.
 
 ## 2015-08-03
 ### to_automaton: conversion from expression to automaton
-
 Vcsn offers several means to build an automaton from an expression:
 thompson, zpc, standard and derived-term.  The latter even builds a
-decorated automaton, which, often, is not desidered.
+decorated automaton, which, often, is not desired.
 
-In C++ dyn::to_automaton and in Python expression.automaton() allow to
-build a simple automaton from an expression is simple way.  It accepts
-an optional string argument to select the conversion algorithm.  It
-defaults to "auto", which currently means the stripped
-derived-automaton, but eventually, it will pick either "standard" for
-basic expressions (as it's the fastest algorithm), or "derived-term"
-for extended expressions (as "standard" does not support these
-additional operators).
+In C++ dyn::to_automaton and in Python expression.automaton() allow to build
+a simple automaton from an expression.  It accepts an optional string
+argument to select the conversion algorithm.  It defaults to "auto", which
+currently means the stripped derived-automaton, but eventually, it will pick
+either "standard" for basic expressions (as it's the fastest algorithm), or
+"derived-term" for extended expressions (as "standard" does not support
+these additional operators).
 
 ## 2015-06-18
 ### I/O in EFSM format are safer
-We now correctly ensure the correspondance between our weightsets and
+We now correctly ensure the correspondence between our weightsets and
 OpenFST's arc-type, and input and output.
 
-As a consequence, we no longer support exchange of "traditional
-numerical" weightsets (such as "Z", "R", etc.), since, as far as we
-know, they don't feature a vis-à-vis in OpenFST.  It used to be
-accepted, but was meaningless.
+As a consequence, we no longer support exchange of "traditional numerical"
+weightsets (such as "Z", "R", etc.), since, as far as we know, they don't
+feature a vis-à-vis in OpenFST.  It used to be accepted, but was
+meaningless.
 
 Boolean weights are mapped to "standard", OpenFST's tropical semiring.
 
-When reading EFSM files, we still try to use the smallest
-corresponding weightset.  For instance, if the arc type is "standard"
-and and the weights are integral we use "zmin", otherwise, we use
-"rmin".  Errors on reading the weight of final states have also been
-fixed.
+When reading EFSM files, we still try to use the smallest corresponding
+weightset.  For instance, if the arc type is "standard" and and the weights
+are integral we use "zmin", otherwise, we use "rmin".  Errors on reading the
+weight of final states have also been fixed.
 
 ## 2015-06-16
 ### automaton.expression, automaton.lift
@@ -48,14 +45,14 @@ for the expressions.
 ### power, chain have been renamed
 Before, "chain" denoted the repeated concatenation for automata and
 expressions, and "power" meant repeated conjunction for automata and
-expressions.  However, while `aut ** 2` meant `aut & aut`
-(conjunction), `exp ** 2` meant `exp * exp` (concatenation).
+expressions.  However, while `aut ** 2` meant `aut & aut` (conjunction),
+`exp ** 2` meant `exp * exp` (concatenation).
 
-Clearly, from the Python point of view, `**` is repeated `*`, which is
-what most people would understand as "power".
+Clearly, from the Python point of view, `**` is repeated `*`, which is what
+most people would understand as "power".
 
-So, to enforce consistency, and to avoid bad surprises, these
-functions were renamed.
+So, to enforce consistency, and to avoid bad surprises, these functions were
+renamed.
 
     +----------+---------------------+------------------------------------+
     |Python    |dyn::                |Comment                             |
@@ -74,14 +71,14 @@ functions were renamed.
 
 ## 2015-06-11
 ### eliminate_state: fixes
-Sometimes their was a mismatch between the state numbers as displayed,
-and as expected by eliminate_state.  This is fixed.
+Sometimes there was a mismatch between the state numbers as displayed, and
+as expected by `eliminate_state`.  This is fixed.
 
-The rendering was non-sensical when all the states were removed.  This
-is now fixed.
+The rendering was nonsensical when all the states were removed.  This is now
+fixed.
 
-Finally, passing -1 as argument, or no argument at all, delegates the
-choice of the state to eliminate to a heuristic.
+Finally, passing -1 as argument, or no argument at all, delegates the choice
+of the state to eliminate to a heuristic.
 
 ## 2015-06-04
 ### expressions: new identities sets
@@ -129,21 +126,19 @@ we now report:
 ## 2015-05-29
 ### nmin: new weightset
 The new tropical semi-ring <N, +, min> has been introduced. Compared to
-zmin, some optimizations can be done, for example in evaluation or in
-node distance where the absence of negative weights allows to trim some
-branches.
+zmin, some optimizations can be done, for example in evaluation or in node
+distance where the absence of negative weights allows to trim some branches.
 
 ## 2015-05-26
 ### cotrie: new algorithm
-In additional to `trie`, which builds a deterministic tree-like
-automaton (single initial state, multiple final states), vcsn now
-supports `cotrie` which builds a "reversed trie": a codeterministic
-reversed tree-like automaton (single final state, multiple initial
-states).
+In additional to `trie`, which builds a deterministic tree-like automaton
+(single initial state, multiple final states), vcsn now supports `cotrie`
+which builds a "reversed trie": a codeterministic reversed tree-like
+automaton (single final state, multiple initial states).
 
-The main feature of `cotrie` is that its result is codeterministic, so
-it only takes a determinization to minimize it.  It turns out that in
-Vcsn determinization is more effecient than minimization:
+The main feature of `cotrie` is that its result is codeterministic, so it
+only takes a determinization to minimize it.  It turns out that in Vcsn
+determinization is more efficient than minimization:
 
     In [13]: %timeit c.trie('/usr/share/dict/words').minimize()
              1 loops, best of 3: 18.8 s per loop
@@ -156,10 +151,10 @@ These automata are isomorphic.
 ## 2015-05-22
 ### expressions: output may use label classes
 Rational expressions have long supported label classes in input, e.g.,
-[abc0-9].  Polynomials also support them in output.  However
-expressions never used classes, which may seriously hinder their
-readability.  For instance, to compute an expression describe all
-words on {a,..., z} except 'hehe', we had:
+[abc0-9].  Polynomials also support them in output.  However expressions
+never used classes, which may seriously hinder their readability.  For
+instance, to compute an expression describe all words on {a,..., z} except
+'hehe', we had:
 
     In [2]: c = vcsn.context('lal_char(a-z), b')
             c.expression('(abcd){c}').derived_term().expression()
@@ -169,15 +164,15 @@ Now expressions also support letter classes in output:
 
     Out[2]: \e+a(\e+b(\e+c))+([^a]+a([^b]+b([^c]+c([^d]+d[^]))))[^]*
 
-Classes are used only on ranges of at least four (unweighted) letters
-in strictly increasing order:
+Classes are used only on ranges of at least four (unweighted) letters in
+strictly increasing order:
 
     In [3]: c.expression('a+a+b+c+d+e+f+x+y+z+w')
     Out[3]: a+[a-fx-z]+w
 
-Negated classes are issued only if the letters are in strictly
-increasing alphabetical order, and are more than two thirds of the
-whole alphabet (otherwise a regular class is prefered).
+Negated classes are issued only if the letters are in strictly increasing
+alphabetical order, and are more than two thirds of the whole alphabet
+(otherwise a regular class is preferred).
 
     In [4]: c.expression('[a-q]')
     Out[4]: [a-q]
@@ -196,15 +191,15 @@ whole alphabet (otherwise a regular class is prefered).
 In static, dyn:: and Python, 'concatenate' is renamed 'multiply'.
 
 The "concatenation" of automata or rational expressions would never be
-called the concatenation in the case of series or polynomials etc.  If
-we were to support automata weighted by automata, the weightset
-product would be this multiply.
+called the concatenation in the case of series or polynomials etc.  If we
+were to support automata weighted by automata, the weightset product would
+be this multiply.
 
 ## 2015-05-20
 ### trie: read directly from a file
-Building a polynomial from a dictionary stored on disk, and then
-building the trie is a waste of time.  It is now possible to build it
-directly from a file.
+Building a polynomial from a dictionary stored on disk, and then building
+the trie is a waste of time.  It is now possible to build it directly from a
+file.
 
     In [2]: t = vcsn.B.trie('/usr/share/dict/words')
 
@@ -234,8 +229,8 @@ directly from a file.
 
 ## 2015-05-14
 ### trie: new algorithm
-From a finite language/series represented as a polynomial (of words),
-build an automaton that has the shape of a trie (a prefix tree).
+From a finite language/series represented as a polynomial (of words), build
+an automaton that has the shape of a trie (a prefix tree).
 
     In [2]: series = '<2>\e+<3>a+<4>b+<5>abc+<6>abcd+<7>abdc'
 
@@ -250,31 +245,30 @@ build an automaton that has the shape of a trie (a prefix tree).
 
 ## 2015-05-01
 ### delay_automaton: new automaton type
-This algorithm transforms the automaton into an equivalent one, but
-where each state has been split depending on the delay between the tape,
-i.e. the difference of input length for each of the tapes.
+This algorithm transforms the automaton into an equivalent one, but where
+each state has been split depending on the delay between the tape, i.e. the
+difference of input length for each of the tapes.
 
 ### is-synchronized: new algorithm
-This algorithm checks whether a transducer is sychronized, i.e. that the
+This algorithm checks whether a transducer is synchronized, i.e. that the
 input is read on every tape at the same rate for as long as possible.
 
 ### synchronize: new algorithm
-This new algorithm allows to synchronize the tapes of a k-tape
-transducer, i.e. "push" the letters towards the beginning of the
-transducer so that the input is read along every tape at the same rate
-for as long as possible.
+This new algorithm allows to synchronize the tapes of a k-tape transducer,
+i.e. "push" the letters towards the beginning of the transducer so that the
+input is read along every tape at the same rate for as long as possible.
 
 ### has-bounded-lag: new algorithm
-This algorithm checks whether a k-tape transducer has a bounded lag,
-i.e. if there exists a constant D such that the length of the input for
-each tape differs by at most D; or the output of the evaluation of a
-word through the transducer differs in length by at most D.
+This algorithm checks whether a k-tape transducer has a bounded lag, i.e. if
+there exists a constant D such that the length of the input for each tape
+differs by at most D; or the output of the evaluation of a word through the
+transducer differs in length by at most D.
 
 ## 2015-04-09
 ### shortest now subsumes enumerate
-One can now specify both a maximum number of words, and a maximum
-size.  It is also significantly faster.  The Python binding
-automaton.enumerate was removed.
+One can now specify both a maximum number of words, and a maximum size.  It
+is also significantly faster.  The Python binding automaton.enumerate was
+removed.
 
     In [4]: a = vcsn.Z.expression('[01]*1(<2>[01])*').standard()
 
@@ -296,41 +290,40 @@ automaton.enumerate was removed.
 ## 2015-03-25
 ### product is renamed conjunction
 After many hesitations, we finally decided to rename the synchronized
-product form `product` to `conjunction`.  There are several reasons in
-favor of this change.
+product form `product` to `conjunction`.  There are several reasons in favor
+of this change.
 
-First "product" is not adequate:
+First `product` is not adequate:
 
-- we have several "products": the Cauchy product (concatenation), the
+- we have several `products`: the Cauchy product (concatenation), the
   Hadamard product (synchronized product), the shuffle product, the
   infiltration product, and there are certainly more.
 
-- "product" is already used in the case of words and rational
-  expressions to denote the concatenation, so, to be consistent,
-  "product" will denote the concatenation of automata too.
+- `product` is already used in the case of words and rational expressions to
+  denote the concatenation, so, to be consistent, `product` will denote the
+  concatenation of automata too.
 
-- "*" is naturally associated to "concatenation" for words and
-  rational expressions, it was associated to "product" for automata.
-  It is more consistent to use "concatenate" in each case.
+- `*` is naturally associated to `concatenation` for words and rational
+  expressions, it was associated to `product` for automata.  It is more
+  consistent to use `concatenate` in each case.
 
-Second "conjunction" is a reasonable choice:
+Second `conjunction` is a reasonable choice:
 
-- "intersection" is acceptable for Boolean automata, but it is not
+- `intersection` is acceptable for Boolean automata, but it is not
   satisfying in the case of weighted automata.
 
-- "synchronized_product" is too long, likewise for "hadamard_product",
-  etc.
+- `synchronized_product` is too long, likewise for `hadamard_product`, etc.
 
-- "hadamard" is a proper name, which we try to avoid.
+- `hadamard` is a proper name, which we try to avoid.
 
-- the etymology of "conjunction" is a perfect match with the semantics
-  of the operation.
+- the etymology of `conjunction` is a perfect match with the semantics of
+  the operation.
 
-- computer scientists are used to the correspondence between
-  "conjunction" and "&".
+- computer scientists are used to the correspondence between `conjunction`
+  and `&`.
 
-The preference for verbs as algorithm names leads naturally to
-"conjoin".  However "conjunction" still seems more natural.
+The preference for verbs as algorithm names leads naturally to `conjoin`.
+However `conjunction` still seems more natural.
 
 ## 2015-03-21
 ### are-equivalent: now uses realtime
@@ -340,9 +333,8 @@ One may, finally, compare LAL, LAN, and LAW automata.
 The "join" of tuplesets now works properly, so one may, for instance,
 add automata on A? x B and A x B? to get an automata on A? x B?.
 
-In order to facilitate the experiments with `join`, it is now
-provided as an algorithm.  In Python, it is also available as the
-infix `or` operator.
+In order to facilitate the experiments with `join`, it is now provided as an
+algorithm.  In Python, it is also available as the infix `or` operator.
 
     In [2]: c1 = vcsn.context('lat<lal_char(a), lan_char(x)>, z'); c1
     Out[2]: {a} × ({x})? → ℤ
@@ -357,47 +349,44 @@ infix `or` operator.
 ### infiltration: fix long standing bugs
 Optimizations in the computation of the shuffle-product broke the
 infiltration-product.  This is fixed.  However, the performances of
-infiltration are then degraded (about 2.5x).  Conjunction
-(synchronized product) and shuffle are unaffected.
+infiltration are then degraded (about 2.5x).  Conjunction (synchronized
+product) and shuffle are unaffected.
 
 Besides, the support for variadic infiltration products was naive, and
-produced incorrect results.  This is fixed by simply repeating the
-binary infiltration.
+produced incorrect results.  This is fixed by simply repeating the binary
+infiltration.
 
 ## 2015-03-17
 ### is_functional: new algorithm
-Whether a transducer is functional, i.e., whether each input words
-maps to (at most) a single word.
+Whether a transducer is functional, i.e., whether each input words maps to
+(at most) a single word.
 
-Actually, was implemented in September 2014, but was not registered
-here.
+Actually, was implemented in September 2014, but was not registered here.
 
 ## 2015-03-16
 ### Python 3 is now required
 We have tried hard to remain compatible with Python 2, but support for
 Unicode is just too hard to get to work properly with both Python 2 and
-Python 3.  Since there were constantly problems arising in one whose
-fixes break the other, we decided to drop support for Python 2.  Given
-that all major platforms ship Python 3, we don't expect this to be a
-real problem.
+Python 3.  Since there were constantly problems arising in one whose fixes
+break the other, we decided to drop support for Python 2.  Given that all
+major platforms ship Python 3, we don't expect this to be a real problem.
 
 ## 2015-03-15
 ### Repeated minimization
-Now, minimization and cominimization return automata of the same type
---- cominimization used to return an automaton whose type reveals the
-double transposition.  In actually, calling several times the
-minimization and/or cominimization no longer generates decorators of
-decorators of etc.: the result is always a single layer decorator.
-Not only is this, in general, the desired result, it's also more
-'economic' as it uses fewer automaton types (hence less runtime
-compilations).
+Now, minimization and cominimization return automata of the same type ---
+cominimization used to return an automaton whose type reveals the double
+transposition.  In actually, calling several times the minimization and/or
+cominimization no longer generates decorators of decorators of etc.: the
+result is always a single layer decorator.  Not only is this, in general,
+the desired result, it's also more 'economic' as it uses fewer automaton
+types (hence less runtime compilations).
 
 ## 2015-03-03
 ### realtime: new algorithm
-Compute the letterized, proper equivalent of an automaton. The result automaton
-will have only letter transitions (no words, no spontaneous transitions).
-It comes with the is_realtime algorithm, to check if an automaton is realtime
-or not.
+Compute the letterized, proper equivalent of an automaton. The result
+automaton will have only letter transitions (no words, no spontaneous
+transitions).  It comes with the is_realtime algorithm, to check if an
+automaton is realtime or not.
 
 ### is_letterized: new algorithm
 This algorithm checks whether an automaton is letterized, i.e. whether each
@@ -413,11 +402,11 @@ transition's label is a single letter (in the sense of the labelset).
 
 ## 2015-03-02
 ### zpc: new algorithm
-This algorithm generates the ZPC automaton from an expression.  It has
-a single initial state (whose final weight is the constant term of the
-expression), a unique distinct final state (which cannot be reached
-from the initial state via spontaneous transitions), and no cycles of
-spontaneous transitions.
+This algorithm generates the ZPC automaton from an expression.  It has a
+single initial state (whose final weight is the constant term of the
+expression), a unique distinct final state (which cannot be reached from the
+initial state via spontaneous transitions), and no cycles of spontaneous
+transitions.
 
 The `expression.zpc` function features an optional argument, which,
 when set to "compact", enables a variant, more compact, construction.
@@ -458,8 +447,8 @@ multitape transducers.
 
 ## 2015-02-10
 ### Multitape expressions
-When typing multitape transducers, it is now no longer necessary to
-explicit the parenthesis inside (multi-)letters.
+When typing multitape transducers, it is now no longer necessary to explicit
+the parenthesis inside (multi-)letters.
 
     In [1]: import vcsn
 
@@ -468,9 +457,9 @@ explicit the parenthesis inside (multi-)letters.
     In [3]: r = c.expression(r"'a,\e'+'(b,c)'+'d,f'")
 
 ### has_bounded_lag: new algorithm
-This algorithm checks if a transducer has a bounded lag, i.e. if there
-is a maximum difference of length between the input words and their
-corresponding outputs.
+This algorithm checks if a transducer has a bounded lag, i.e. if there is a
+maximum difference of length between the input words and their corresponding
+outputs.
 
     In [1]: import vcsn
 
@@ -484,40 +473,37 @@ corresponding outputs.
 
 ## 2014-11-18
 ### Flex
-The Flex program (a scanner generator) should no longer be required
-for builds from a tarball.
+The Flex program (a scanner generator) should no longer be required for
+builds from a tarball.
 
 ### blind -> focus
-The `blind` algorithm (and the `blind_automaton` structure) has been
-renamed `focus` (and `focus_automaton`) as it is much clearer on its
-purpose.
+The `blind` algorithm (and the `blind_automaton` structure) has been renamed
+`focus` (and `focus_automaton`) as it is much clearer on its purpose.
 
 ## 2014-11-14
 ### scc: new algorithm
-Create an automaton whose states correspond with a strongly connnected
+Create an automaton whose states correspond with a strongly connected
 component of the input automaton.
 
 ## 2014-11-13
 ### ratexp -> expression
-The name "ratexp" is an unattractive jargon, and since Vcsn will not
-feature other kinds of "expressions", it is hardly justified: it is
-the only abbreviation we use (automaton, context, expansion,
-polynomial, etc.).
+The name "ratexp" is an unattractive jargon, and since Vcsn will not feature
+other kinds of "expressions", it is hardly justified: it is the only
+abbreviation we use (automaton, context, expansion, polynomial, etc.).
 
 So _everywhere_ (static, dyn::, Python) "ratexp" was replaced by
-"expression" (including "make_ratexpset" -> "make_expressionset",
-etc.).
+"expression" (including "make_ratexpset" -> "make_expressionset", etc.).
 
 ## 2014-11-07
 ### thompson: the labelset no longer needs to feature a "one"
 The Thompson automata count many spontaneous transitions, so require a
 labelset which supports `\e` (e.g., `lan`, `law`).  This is annoying,
-especially when teaching about Automata Theory: one does not want to
-dive into the arcane details of contexts.
+especially when teaching about Automata Theory: one does not want to dive
+into the arcane details of contexts.
 
-So now, if the context of the input expression does not support `\e`,
-the Thompson automaton will be built with a generalized context which
-does support it:
+So now, if the context of the input expression does not support `\e`, the
+Thompson automaton will be built with a generalized context which does
+support it:
 
     In [1]: import vcsn
 
@@ -532,16 +518,15 @@ does support it:
 
 ## 2014-10-30
 ### filter: new algorithm
-Hide states of another automaton, revealing only selected ones.  This
-does not copy the original automaton.
+Hide states of another automaton, revealing only selected ones.  This does
+not copy the original automaton.
 
 ## 2014-10-29
 ### New project name: Vcsn
-The Vaucanson 2 project, which was funded by a (French) program (ANR),
-is now "closed".  Of course, it will continue to exist, but now there
-will be two Vaucansa!  One will be led by Sylvain Lombardy and Jacques
-Sakarovitch, and the other by Alexandre Duret-Lutz and Akim Demaille
-from EPITA.
+The Vaucanson 2 project, which was funded by a (French) program (ANR), is
+now "closed".  Of course, it will continue to exist, but now there will be
+two Vaucansa!  One will be led by Sylvain Lombardy and Jacques Sakarovitch,
+and the other by Alexandre Duret-Lutz and Akim Demaille from EPITA.
 
 This file is about the latter, named "Vcsn".
 
@@ -563,25 +548,24 @@ So for instance:
  -> law_char(a-z), ratexpset<law_char(A-Z), b>
 
 This syntax is not (and has never been) the intended one, it should be
-considered as the "internal" syntax.  However, since the intended
-syntax is still not implemented, one, unfortunately, still has to deal
-with this inner syntax.
+considered as the "internal" syntax.  However, since the intended syntax is
+still not implemented, one, unfortunately, still has to deal with this inner
+syntax.
 
 ## 2014-10-23
 ### proper: strip nullableset from labelsets
+Our (current) implementation of `proper` is in-place, and as a consequence,
+the result features the same context as the input automaton, with a nullable
+labelset.
 
-Our (current) implementation of `proper` is in-place, and as a
-consequence, the result features the same context as the input
-automaton, with a nullable labelset.
-
-Now, `proper` copies the result in a context with a de-nullabled
-labelset.  So for instance:
+Now, `proper` copies the result in a context with a de-nullabled labelset.
+So for instance:
 
     In [2]: vcsn.context('lan_char(ab)_b').ratexp('(ab)*').thompson().proper()
     Out[2]: mutable_automaton<lal_char(ab)_b>
 
-There is no measurable performance regression.  However state numbers
-are now unrelated to the input automaton.
+There is no measurable performance regression.  However state numbers are
+now unrelated to the input automaton.
 
 ## 2014-10-20
 ### Python: loading automata from files
@@ -592,9 +576,9 @@ to load an automaton from a file.
     vcsn.automaton(filename = 'a.efsm', format = 'efsm')
 
 ### minimize: default algorithm is "auto"
-Now minimize and cominimize both support the "auto" algorithm, which is
-the default value.  It uses the "signature" algorithm for the Boolean
-automata, otherwise the "weighted" algorithm.
+Now minimize and cominimize both support the "auto" algorithm, which is the
+default value.  It uses the "signature" algorithm for the Boolean automata,
+otherwise the "weighted" algorithm.
 
 ### proper: forward closure available in dyn:: and Python
 It is now possible to require a forward elimination of spontaneous
@@ -603,13 +587,13 @@ transitions.  Calling `a.proper()` is equivalent to calling
 
 ## 2014-10-07
 ### to-expression
-The static and dyn:: algorithm that was named `aut_to_exp` is now
-named `to_expression`.  In Python it is still `automaton.ratexp()`.
+The static and dyn:: algorithm that was named `aut_to_exp` is now named
+`to_expression`.  In Python it is still `automaton.ratexp()`.
 
 ### costandard, is_costandard: new algorithms
 Calling `aut.costandard()` is equivalent to calling
-`aut.transpose().standard().transpose()`, and `aut.is_costandard()` is
-the same with `aut.transpose().is_standard()`.
+`aut.transpose().standard().transpose()`, and `aut.is_costandard()` is the
+same with `aut.transpose().is_standard()`.
 
 ### normalize: new algorithm
 Composes standard and costandard on an automaton.
@@ -617,22 +601,21 @@ Composes standard and costandard on an automaton.
 ## 2014-10-02
 ### Strip vs. transpose
 Up to now, stripping a transposed automaton returned the non-transposed
-automaton, without even stripping it.  This has finally been
-addressed, and `a.determinize().transpose().strip()` is now strictly
-equivalent to `a.determinize().strip().transpose()`.
+automaton, without even stripping it.  This has finally been addressed, and
+`a.determinize().transpose().strip()` is now strictly equivalent to
+`a.determinize().strip().transpose()`.
 
 ### codeterminize, cominimize, is_codeterministic: new algorithms.
 Calling `aut.cominimize()` is equivalent to calling
-`aut.transpose().minimize().transpose()`, and likewise for
-`codeterminize`.
+`aut.transpose().minimize().transpose()`, and likewise for `codeterminize`.
 
 Available in dyn and Python.
 
 ## 2014-10-01
 ### split: now works on polynomials
-In addition to splitting (aka, breaking) a ratexp, it is now possible
-to split a polynomial.  This, for instance, provides another way to
-compute the breaking derivation of a ratexp:
+In addition to splitting (aka, breaking) a ratexp, it is now possible to
+split a polynomial.  This, for instance, provides another way to compute the
+breaking derivation of a ratexp:
 
     In [1]: r = vcsn.context('lal_char_z').ratexp('a(b+a)+a(a+b)')
 
@@ -646,34 +629,31 @@ compute the breaking derivation of a ratexp:
     Out[4]: <2>a + <2>b
 
 ### derivation: fix a Python bug
-`ratexp.derivation` features a `breaking` optional argument, which
-defaulted to `True` instead of `False`.
+`ratexp.derivation` features a `breaking` optional argument, which defaulted
+to `True` instead of `False`.
 
 ### transpose: fix the number of final and initial states
-Because `num_initials` and `num_finals` were not "transposed", on
-occasions `automaton.is_standard` could crash (when it thinks there is
-one initial state while there is none, but it still wants to check
-that its initial weight is one).
+Because `num_initials` and `num_finals` were not "transposed", on occasions
+`automaton.is_standard` could crash (when it thinks there is one initial
+state while there is none, but it still wants to check that its initial
+weight is one).
 
 ## 2014-09-25
 ### Automaton conjunction
-On occasions, in Python, expressions such as `(a & b)('a')` failed to
-behave properly.  It does now, and does correspond to the evaluation
-of the word "a" on the conjunction (synchronized product) of automata
-a and b.
+On occasions, in Python, expressions such as `(a & b)('a')` failed to behave
+properly.  It does now, and does correspond to the evaluation of the word
+"a" on the conjunction (synchronized product) of automata a and b.
 
 ### TikZ: state names
-Conversion of automata into the TikZ format now includes the state
-"names" (e.g., derived-term automata now show the states' rational
-expressions).
+Conversion of automata into the TikZ format now includes the state "names"
+(e.g., derived-term automata now show the states' rational expressions).
 
 ## 2014-09-21
 ### determinize: Empty-In, Empty-Out
-Now when given an empty automaton (no states), determinize returns an
-empty automaton, whereas it used to return an automaton with one
-state, initial.  This is more consistent (e.g., when given a
-deterministic automaton, determinize now consistently returns the
-accessible part of its input).
+Now when given an empty automaton (no states), determinize returns an empty
+automaton, whereas it used to return an automaton with one state, initial.
+This is more consistent (e.g., when given a deterministic automaton,
+determinize now consistently returns the accessible part of its input).
 
 ## 2014-09-17
 ### is_cycle_ambiguous: new algorithm
@@ -685,26 +665,26 @@ Portability issues with Mac OS X's own version of Flex are fixed.
 
 Fixed runtime compilations failing to find Boost headers in some cases.
 
-Fixed nasty shared-library issues at runtime on Ubuntu due to their
-use of `-Wl,--as-needed`.
+Fixed nasty shared-library issues at runtime on Ubuntu due to their use of
+`-Wl,--as-needed`.
 
 ## 2014-09-04
 ### Fixes
-I/O with OpenFST now properly supports initial weights and multiple
-initial states.
+I/O with OpenFST now properly supports initial weights and multiple initial
+states.
 
 Dot I/O of multiple-tape automata with initial weights is fixed.
 
 Dot parse errors now provide locations.
 
-The preconditions of reduce have been relaxed from labels-are-letters
-to labelset-is-free.
+The preconditions of reduce have been relaxed from labels-are-letters to
+labelset-is-free.
 
 ## 2014-09-03
 ### determinize provides a better support for Z
-The normalization of states now uses the GCD of the weights, which
-means that now all the Z-automata that are determinizable can be
-determinized in Z, without having to convert them as Q-automata.
+The normalization of states now uses the GCD of the weights, which means
+that now all the Z-automata that are determinizable can be determinized in
+Z, without having to convert them as Q-automata.
 
 ### New weightset: qmp
 Initial support for multiprecision rational numbers.
@@ -721,17 +701,17 @@ Some changes in Boost require adjustments.
 
 ## 2014-08-02
 ### ambiguous_word: new algorithm
-Returns an ambiguous word of an automaton, or raises if the automaton
-is unambiguous.
+Returns an ambiguous word of an automaton, or raises if the automaton is
+unambiguous.
 
 ## 2014-07-30
 ### Several fixes
-The reduce algorithm applied only to not-decorated automata.  Support
-for F2 was broken.
+The reduce algorithm applied only to not-decorated automata.  Support for F2
+was broken.
 
 ### Improvements
-Error messages about failed algorithm instantiations are much clearer:
-they display failed preconditions.
+Error messages about failed algorithm instantiations are much clearer: they
+display failed preconditions.
 
 Blind is no longer limited to tape 0 or tape 1.
 
@@ -910,7 +890,7 @@ Use `automaton.strip()` to remove state names.
 ## 2014-05-30
 ### dot2tex format
 Automata now support for "dot2tex" format, meant to be used with the dot2tex
-program.  It allows to combine TikZ's nice rendering of automat, LaTeX's
+program.  It allows to combine TikZ's nice rendering of automata, LaTeX's
 math mode to render state and transition labels, with dot automatic layout.
 
 ### IPython: an interactive display
@@ -956,11 +936,10 @@ This, however, resulted in too many constraints, especially when one wants
 to embed automata in other structures (which is for instance the case of
 transpose_automaton which wraps an automaton).
 
-To address these issues, types such as `vcsn::mutable_automaton<Ctx>`
-are now `std::shared_ptr`.  This does change the programming style,
-both when instantiating an automaton (typically now using
-`make_mutable_automaton`), and when using it (with `->` instead of
-`.`):
+To address these issues, types such as `vcsn::mutable_automaton<Ctx>` are
+now `std::shared_ptr`.  This does change the programming style, both when
+instantiating an automaton (typically now using `make_mutable_automaton`),
+and when using it (with `->` instead of `.`):
 
 Instead of:
 
@@ -1083,7 +1062,7 @@ or edit your .git/config file to update the URL.
 You may also visit <http://gitlab.lrde.epita.fr/vcsn/vaucanson>.
 
 ### dyn::label is born
-The familly of dynamic object (which includes dyn::automaton, dyn::weight,
+The family of dynamic object (which includes dyn::automaton, dyn::weight,
 dyn::polynomial, dyn::ratexp, and others) now features a dyn::label.
 Several algorithms dealing with labels used the "std::string" C++ type to
 this end.  This was inadequate, and the corresponding signatures have been
@@ -1137,7 +1116,7 @@ access to the the origins (a map from resulting states to origin states).
 
 ### Variadic product of automata
 The synchronized product of automata is now variadic: the product of
-n-automata directly builds an automaton labelled with n-uples of original
+n-automata directly builds an automaton labelled with n-tuples of original
 states.  The Python operator, &, is modified to pretend it is variadic
 (rather than binary): it delays the computation until the result is needed.
 The ".value()" method allows to force the evaluation.
@@ -1153,7 +1132,7 @@ The ".value()" method allows to force the evaluation.
     0.5792131423950195
 
 Be aware that if the result is not needed, then it is simply not computed at
-all (hence, appears to be blazzingly fast):
+all (hence, appears to be blazingly fast):
 
     >>> timeit.timeit(lambda: a1 & a1 & a1 & a, number=1000)
     0.0039250850677490234
@@ -1202,28 +1181,28 @@ You may also visit <http://gitlab.lrde.epita.fr/vcsn/vaucanson1>.
 
 ## 2014-04-05
 ### conjunctions of ratexps
-The "intersection" operation on ratexps is renamed as "conjunction".
+The `intersection` operation on ratexps is renamed as `conjunction`.
 
 ## 2014-03-28
 ### Improve treatment of nullable labelsets
-As introduced earlier, nullablesets are now written "lan<...>", for instance
-"lan<lal_char(ab)>_b".  The former syntax, e.g., "lan_char(ab)_b", is kept
+As introduced earlier, nullablesets are now written `lan<...>`, for instance
+`lan<lal_char(ab)>_b`.  The former syntax, e.g., `lan_char(ab)_b`, is kept
 for backward compatibility and ease of use.
 
-Up to now, "lan<>" would only work on lal and labelsets with already a "one"
-provided, making the improvement quite useless.  Now "lan<...>" will
-manufacture a "one" for the labelsets that don't have one, so it can be
+Up to now, `lan<>` would only work on lal and labelsets with already a `one`
+provided, making the improvement quite useless.  Now `lan<...>` will
+manufacture a `one` for the labelsets that don't have one, so it can be
 wrapped around anything.
 
 In addition to that, simplifications are applied; for instance
-"lan<lan<lan_char(ab)>>_b" actually builds "lan<lal_char(ab)>_b".
-Similarly, "lan<lat<lan_char(ab), law_char(ab), ratexpset<lal_char(ab)_b>>>_b"
-generates "lat<lan<lal_char(ab)>, law_char(ab), ratexpset<lal_char(ab)_b>>_b",
-since the tuple wrapped in the outer lan already has a "one", given that all
+`lan<lan<lan_char(ab)>>_b` actually builds `lan<lal_char(ab)>_b`.
+Similarly, `lan<lat<lan_char(ab), law_char(ab), ratexpset<lal_char(ab)_b>>>_b`
+generates `lat<lan<lal_char(ab)>, law_char(ab), ratexpset<lal_char(ab)_b>>_b`,
+since the tuple wrapped in the outer lan already has a `one`, given that all
 of its components have one.
 
 ## 2014-03-26
-### concatenation and conjunction of ratexps accept more heterogenous arguments
+### concatenation and conjunction of ratexps accept more heterogeneous arguments
 Conversions of both labels and weights are performed if needed.
 
     >>> a = vcsn.context('ratexpset<lal_char(xy)_b>_z').ratexp("<2>'x*'")
@@ -1257,7 +1236,7 @@ sugar.
     <12>(ab)<23>
 
 ## 2014-03-08
-### sum of rational expressions accepts more heterogenous arguments
+### sum of rational expressions accepts more heterogeneous arguments
 Conversions of both labels and weights are performed if needed.
 
     >>> a = vcsn.context('ratexpset<lal_char(xy)_b>_z').ratexp("<2>'x*'")
@@ -1265,8 +1244,8 @@ Conversions of both labels and weights are performed if needed.
     >>> a + b
     <2>x*+<1/3>b
 
-### concatenation accepts more heterogenous arguments
-As for products and union, it is now possible to compute the concatentation
+### concatenation accepts more heterogeneous arguments
+As for products and union, it is now possible to compute the concatenation
 of automata with different types:
 
     >>> z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
@@ -1294,7 +1273,7 @@ Transition labels with equal weights are displayed this way.  For instance
 '<2>[abc]', but 'a, b' stays in this form.
 
 ## 2014-02-20
-### union accepts more heterogenous arguments
+### union accepts more heterogeneous arguments
 As for products (Hadamard, shuffle, infiltration), it is now possible to
 compute the union of automata with different types:
 
@@ -1315,13 +1294,13 @@ Score changes on Luca's workstation (before/after):
     4.17s  2.96s: a**12                # a = std([a-e]*b(<2>[a-e])*)
 
 ## 2014-02-18
-### state renumbering is not automatic any longer.
+### state renumbering is not automatic any longer
 In view of several forthcoming in-place algorithms on automata including
 edit, we changed the automaton output code not to automatically renumber
 states at the static, dyn and Python levels.  A new "sort" algorithm is
 available to renumber states (breadth-first and then by outgoing transition
 label) and reorder transitions (by label) in a predictable way, when
-explicitly requested.  Tafkit output is automatically sorted.
+explicitly requested.  TAF-Kit output is automatically sorted.
 
 Having a predictable numbering will enable future optimizations on automaton
 product and other algorithms accessing all the transition from a given state
@@ -1333,7 +1312,7 @@ Returns a double ring automaton.
 
 ## 2014-02-11
 ### ratexpset can be used for LabelSet
-Contexts such as 'ratexpset<lal_char(ab)_b>_b' are now valid.  The
+Contexts such as `ratexpset<lal_char(ab)_b>_b` are now valid.  The
 eliminate_state algorithm works properly on automata of such type.
 
 ## 2014-02-10
@@ -1341,7 +1320,7 @@ eliminate_state algorithm works properly on automata of such type.
 Like automaton.info, returns a dictionary of properties of the ratexp.
 
 ## 2014-02-07
-### are-isomorphic/is-isomorphic: new algorithm (static, dyn, tafkit, Python)
+### are-isomorphic/is-isomorphic: new algorithm (static, dyn, TAF-Kit, Python)
 Given two automata, check whether they are isomorphic to one another.
 Currently implemented in the deterministic case only, for lal contexts.
 
@@ -1354,11 +1333,11 @@ A third implementation of the minimization algorithm named "weighted" is now
 available, supporting any lal context.
 
 The new variant is a more widely applicable generalization of the
-"signature" implementation.  The new variant is the default for
-non-boolean weightsets; it requires a trim automaton but does not rely
-on determinism or other properties.  Preliminary measures show
-performance to be close to "signature", or even clearly superior in
-the case of sparse automata such as dictionaries.
+"signature" implementation.  The new variant is the default for non-boolean
+weightsets; it requires a trim automaton but does not rely on determinism or
+other properties.  Preliminary measures show performance to be close to
+"signature", or even clearly superior in the case of sparse automata such as
+dictionaries.
 
 # Vaucanson 2b.3
 
@@ -1370,7 +1349,7 @@ See <https://www.lrde.epita.fr/wiki/Vaucanson/Vaucanson2b3>.
 
 ### A Virtual Machine for easy experiments
 Installing Vaucanson 2 on some platforms can be tedious.  Clément Démoulins
-contibuted a Virtual Machine that makes it easy to experiment with Vaucanson
+contributed a Virtual Machine that makes it easy to experiment with Vaucanson
 2 without having to compile it.  He also contributed a Vagrantfile to make
 it even easier to deploy.
 
@@ -1395,7 +1374,7 @@ To install a Vaucanson virtual machine, please follow this procedure:
        $ cd ~/src/vcsn2
        $ vagrant up
 
-       Vaucanson is runnning!
+       Vaucanson is running!
 
     5. Open http://localhost:8888 in your favorite browser.
 
@@ -1544,9 +1523,9 @@ Trivial identities are enforced, and, for instance, no tree for 'a k' exist:
 it is converted to 'k a'.
 
 ## 2013-12-19
-Many of these listed features were actually developped over the last month.
+Many of these listed features were actually developed over the last month.
 
-### products accept more heterogenous arguments
+### products accept more heterogeneous arguments
 It is already possible to compute the (regular, infiltration and shuffle)
 products of automata with different types of "basic" weightsets (e.g. B, Z,
 Q, R).
@@ -1622,7 +1601,7 @@ Documentation is forthcoming, but for instance:
     >>>
 
 ## 2013-12-03
-### products accept heterogenous arguments
+### products accept heterogeneous arguments
 It is now possible to compute the (regular, infiltration and shuffle)
 products of a (B, Z, Q, R) automaton with a (B, Z, Q, R) automaton.
 
@@ -1649,7 +1628,7 @@ products of a (B, Z, Q, R) automaton with a (B, Z, Q, R) automaton.
 ### TikZ output now uses standalone
 The TikZ output can now both be compiled as a standalone document, and be
 used inlined (as LaTeX source) in another document.  Read the document of
-the "standalone" package (e.g., run 'texdox standalone').
+the "standalone" package (e.g., run 'texdoc standalone').
 
 ### Data library path
 TAF-Kit is now able to find installed files.  Control the search path via
@@ -1690,7 +1669,7 @@ required by breaking derivation, and broken derived terms.  Not named
 "break", as this is a C++ keyword.
 
 ## 2013-11-20
-### products accept heterogenous arguments
+### products accept heterogeneous arguments
 It is now possible to compute the (regular, infiltration and shuffle)
 products of a B-automaton with any other kind of automaton.
 
@@ -1723,7 +1702,7 @@ only):
     $ vcsn difference -f rhs.gv rhs.gv | vcsn aut-to-exp
     \z
 
-### product accepts heterogenous arguments
+### product accepts heterogeneous arguments
 It is now possible to compute the product of (for instance) a Z-automaton
 with a B-automaton.
 
@@ -1783,7 +1762,7 @@ After:
     0.68s: standard -Ee 'a?{500}' -O tikz >a500.tikz
 
 ## 2013-11-04
-### boolean weight parsing bugix
+### boolean weight parsing bug fix
 The weight parser used to ignore all characters after the first one, so that
 for example "1-q" was considered valid and equivalent to "1".
 
@@ -1950,7 +1929,7 @@ LAL rational expressions.
       2 -> 2 [label = "<5/3>b"]
     }
 
-### vcsn elimininate-state
+### vcsn eliminate-state
 This tool allows one to eliminate states one after the other.
 
     $ vcsn eliminate-state -f lao.gv 2
@@ -2083,7 +2062,7 @@ significantly speeds up the compilation of the package.  The test-suite now
 uses the Test Anything Protocol, which results in more verbose results.
 
 Beware that because of subtle issues (in the generated Makefile snippets
-that track dependencies), you are higly recommend to "make clean" after
+that track dependencies), you are highly recommend to "make clean" after
 upgrading from the Git repository, and then "make" as usual.
 
 ## 2013-09-20
@@ -3282,19 +3261,19 @@ context).
 ## 2012-10-09
 ### automata provide a vname
 To dispatch algorithms such as dotty, we not only need to know the context
-type name, but also the automaton type name, as mutable_automaton and
-transpose_automaton are two different types for instance.
+type name, but also the automaton type name, as `mutable_automaton` and
+`transpose_automaton` are two different types for instance.
 
 ## 2012-10-08
 ### dot-parser
-Because it uses only algorithms made abstract (make_context,
-make_automaton_editor, and dotty), the dot parser now works for any of the
+Because it uses only algorithms made abstract (`make_context`,
+`make_automaton_editor`, and `dotty`), the dot parser now works for any of the
 precompiled contexts!
 
 ## 2012-09-26
 ### add_entry
 In addition to the add_entry method of mutable_automaton, there is now an
-add_entry _algorithm_, which is templated by the automaton type.  This
+`add_entry` _algorithm_, which is templated by the automaton type.  This
 algorithm provides an abstract interface to an unknown type of automaton.
 
 ## 2012-09-24
@@ -3303,7 +3282,7 @@ For consistency, polynomials is renamed polynomialset.
 
 ### mutable_automaton::add_entry and del_entry
 The first of these new functions allows to add directly a list of transition
-between two states by passing the corresponding entry_t (this is most useful
+between two states by passing the corresponding `entry_t` (this is most useful
 when reading an automaton with entries, such as with the Dot parser).  The
 second one removes every existing transition between two states.
 
@@ -3362,7 +3341,7 @@ Accordingly, pprat -l (lift) now displays:
 ### dot-parser
 It is now possible to load an automaton from its dotty output.  Actually, it
 is possible to write simpler automata.  This is no yet fully generic: it
-works properly only for char_b_lal.
+works properly only for `char_b_lal`.
 
 The test program unit/parse-dot gives access to it.  When fed with the
 following input file:
@@ -3482,8 +3461,8 @@ Consistently with Vaucanson 1.4.
 ## 2012-07-10
 ### transposition
 Transposition on automaton is a read/write view: operations such as
-del_state, add_transition, etc. on a transposed automaton actually modify
-the wrapped automaton: set_final calls set_initial and so forth.
+`del_state`, `add_transition`, etc. on a transposed automaton actually modify
+the wrapped automaton: `set_final` calls `set_initial` and so forth.
 
 As an extreme example, the following snippet:
 
@@ -3494,13 +3473,13 @@ As an extreme example, the following snippet:
     auto ks = ctx.make_kratexpset();
     auto aut = vcsn::standard_of<tr_automaton_t>(ctx, ks.conv("a+a+a+a"));
 
-applies the standard-of algorithm to a transposed mutable_automaton.  In
+applies the standard-of algorithm to a transposed `mutable_automaton`.  In
 other words,
 
     aut.strip();
 
 is the transposition of a standard automaton, except that it is a
-mutable_automaton, not a transpose_automaton<mutable_automaton>.
+`mutable_automaton`, not a `transpose_automaton<mutable_automaton>`.
 
 ## 2012-07-09
 ### transposition
@@ -3539,9 +3518,9 @@ and on (standard) automata (option -T):
 
 ## 2012-06-19
 ### aut_to_exp
-An initial version of aut_to_exp is available.  The new pprat option -a
-provides an access to this algorithm: apply aut_to_exp to the standard_of an
-expression.
+An initial version of `aut_to_exp` is available.  The new pprat option -a
+provides an access to this algorithm: apply `aut_to_exp` to the
+`standard_of` an expression.
 
     pprat      -a 'a*'     => \e+(a.(a*))
     pprat      -a '(a+b)c' => (a.c)+(b.c)
@@ -3567,10 +3546,10 @@ kratexpset, i.e. the object that provides operation on kratexps (with
 specified Gen and Weight), used to derive from abstract_kratexp (which is
 "opaque": it does not know the precise type that is used underneath).
 
-Now, from abstract_kratexp we derive a concrete_abstract_kratexpset
-which *aggregates* a kratexpset.  This means that kratexpset no longer
-derives from a weakly-typed ancestor, and can provide simple and
-strongly-typed routines.
+Now, from abstract_kratexp we derive a concrete_abstract_kratexpset which
+*aggregates* a kratexpset.  This means that kratexpset no longer derives
+from a weakly-typed ancestor, and can provide simple and strongly-typed
+routines.
 
 ### kratexpset/kratexp
 For consistency with weightset/weight, genset/gen, kratexps (note the s) is
@@ -3728,9 +3707,9 @@ Defined in vcsn/algos/determinize.hh as vcsn::determinize.
 
 ## 2012-05-25
 ### RatExp: changes in the display
-Fixed the output of "atoms are words" expressions.  For instance
-"(ab)*" used to be displayed as "ab*" (which is wrong as it is parsed
-as "a(b*)").  It is now properly displayed as "(ab)*".
+Fixed the output of "atoms are words" expressions.  For instance "(ab)*"
+used to be displayed as "ab*" (which is wrong as it is parsed as "a(b*)").
+It is now properly displayed as "(ab)*".
 
 ### RatExp: slight changes in the grammar
 A star is now valid after a weight:
@@ -3777,16 +3756,15 @@ we now produce
 
 ## 2012-05-10
 ### RatExp: support for the kind of atoms
-As a major overhaul, the rational expressions (vcsn::rat::node) are
-now parameterized by Atom, which denotes the atom value.  The kratexps
-structure is now parameterized by the Kind, from which it is deduced,
-from the GenSet parameter, whether we should use word_t or letter_t
-atoms.
+As a major overhaul, the rational expressions (vcsn::rat::node) are now
+parameterized by Atom, which denotes the atom value.  The kratexps structure
+is now parameterized by the Kind, from which it is deduced, from the GenSet
+parameter, whether we should use word_t or letter_t atoms.
 
 ### pprat: an option -a
-To provide user-access to these feature, pprat now supports an option
--a, which accepts "letters" or "words" as argument, with obvious
-meaning.  For instance:
+To provide user-access to these feature, pprat now supports an option -a,
+which accepts "letters" or "words" as argument, with obvious meaning.  For
+instance:
 
     pprat -a letters 'abc' => a.b.c
     pprat -a letters 'abc.abc' => a.b.c.a.b.c
@@ -3836,14 +3814,13 @@ versus:
 
 ## 2012-05-07
 ### RatExp: in some case the weights could be lost
-"Associativity" was applied too eagerly, which would result in loss of
-some weights.  E.g. {a}bb{c}dd resulted in b.b.d.d, not it evaluates
-to {a}(b.b).{c}(d.d).
+"Associativity" was applied too eagerly, which would result in loss of some
+weights.  E.g. {a}bb{c}dd resulted in b.b.d.d, not it evaluates to
+{a}(b.b).{c}(d.d).
 
 ## 2012-05-03
 ### RatExp: improved pretty-printing
-The outermost pair of parentheses is removed if useless.  For
-instance:
+The outermost pair of parentheses is removed if useless.  For instance:
 
      (a.b) => a.b
      (a+b+c) => a+b+c
@@ -3876,8 +3853,8 @@ weights.
 ### RatExp::head and tail
 
 ### dotty
-In order to improve the readability of its output, it no longer
-"defines" the reachable states.  See the following diff:
+In order to improve the readability of its output, it no longer "defines"
+the reachable states.  See the following diff:
 
      digraph A {
        rankdir=LR
@@ -3900,15 +3877,13 @@ In order to improve the readability of its output, it no longer
 
 
 ### standard-of: many fixes in the handling of the weights
-An expression such as "{12}\e" used to leave the weight in the initial
-transition; it is now on the final transition.  More generally the
-initial transition always has unit as weight.
+An expression such as `{12}\e` used to leave the weight in the initial
+transition; it is now on the final transition.  More generally the initial
+transition always has unit as weight.
 
-The product and sum of expressions now handle the left and right
-weights.
+The product and sum of expressions now handle the left and right weights.
 
-Accepting initial states in expressions such as "\e+a" are no longer
-lost.
+Accepting initial states in expressions such as "\e+a" are no longer lost.
 
 ## 2012-04-11
 ### Many renamings
@@ -4012,8 +3987,8 @@ There is a check target for each subdirectory of tests/.
 
 ## 2012-04-02
 ### Alphabets are checked
-pprat is hard-coded to use a, b, c, d for all the alphabets
-(including for inner rational expressions):
+pprat is hard-coded to use a, b, c, d for all the alphabets (including for
+inner rational expressions):
 
     $ pprat -w b -e 'y'
     1.1: invalid word: y: invalid letter: y
@@ -4037,39 +4012,54 @@ We use constructs that are not supported by 4.6 (e.g., constructor
 delegation).
 
 ### zrr
-As a demonstration that rational expressions can be weights of
-rational expressions, pprat supports '-w zrr' (Rat<Rat<Z>>):
+As a demonstration that rational expressions can be weights of rational
+expressions, pprat supports '-w zrr' (Rat<Rat<Z>>):
 
      $ pprat -w zr -e '{{{2}{3}a}u}x{{{4}{5}\e}\e}'
      {{{120}a}u}x
 
 <!--
 
+LocalWords:  TAF LAL automata vcsn EOF lal determinize ratexpset gv xy mult vis
+LocalWords:  rankdir invis labelset weightset circo taf dyn thompson lan Ee fx
+LocalWords:  RatExp EFSM OpenFST efsm efstcompile fstdeterminize abc eps dl len
+LocalWords:  efstdecompile coaccessible acyclic pre fsm EOFSM isymbols txt rmin
+LocalWords:  fstcompile acceptor FAdo fado nfa readFromFile dfa toDFA wxyz nmin
+LocalWords:  Vaucanson evena oddb zmin minab minblocka slowgrow aabbba aut trie
+LocalWords:  stdin Brzozowski's divkbaseb nul bb WeightSet aaabbbb aaab TAK scc
+LocalWords:  adhoc fstinfo LAU WeightSets ba num typename const aa Graphviz ANR
+LocalWords:  Refactoring initializations tikz LaTeX LabelSet nullableset Af Wl
+LocalWords:  nullable Determinization de bruijn Onull sys API renamings xyz GCD
+LocalWords:  LetterSet UnitSet WordSet letterset unitset wordset postfix Ef qmp
+LocalWords:  FSM's wc parameterized lao br zr lau pprat Wz Lw ratexp xml cd GMP
+LocalWords:  genset RatExps krat kratexp kratexpset lae vname precompiled hehe
+LocalWords:  templated polynomialset del abcd Metadata sed weightsets laz abdc
+LocalWords:  xyw determinizing ctx libchar conv kratexps zrr dcba bcd dcb daut
+LocalWords:  cba wz sl gensets mul GenSet typedef abab eval determinization Luu
+LocalWords:  al Associativity ptr nb semiring ingoing pprat's src dst utf multi
+LocalWords:  entryset subdirectory ispell american hadamard realtime OpenFST's
+LocalWords:  tuplesets Optimizations variadic cominimization runtime cotrie zA
+LocalWords:  letterized zpc letterize optimizations codeterministic timeit Lutz
+LocalWords:  unweighted multitape expressionset Vaucansa Sylvain Sakarovitch xz
+LocalWords:  Alexandre Duret Akim Demaille EPITA resyntaxed labelsets filename
+LocalWords:  nullabled cominimize costandard codeterminize TikZ determinizable
+LocalWords:  determinized multiprecision instantiations Szmidt Pietri Canh tex
+LocalWords:  Luca Saiu Tolmer Ratexpsets ratexps commutativity distributivity
+LocalWords:  seriesset algo boolean Schützenberger erebus DNDEBUG subword ijk
+LocalWords:  superset Magnus brzozowski TikZ's LaTeX's IPython isomorphism yx
+LocalWords:  Polynomialsets RuntimeError insplit vaucanson url config bool GCC
+LocalWords:  RatExpSet ratexp's duplications tuples blazingly nullablesets bxy
+LocalWords:  tuple bc ky dfg Luca's tafkit MacPorts Clément Démoulins distro
+LocalWords:  Vagrantfile VirtualBox mkdir wget VM cb Shortlex kE Ek RatE moore
+LocalWords:  tmp darwin inlined texdoc Moore's uv lhs rhs semirings aabb aab
+LocalWords:  abb MacBook subexpressions monomials Antimirov aaaa monomial aaa
+LocalWords:  Automake Makefile versa
+
 Local Variables:
-mode: markdown
 coding: utf-8
 ispell-dictionary: "american"
 fill-column: 76
+mode: markdown
 End:
 
-LocalWords:  TAF LAL automata vcsn EOF lal determinize ratexpset gv xy mult
-LocalWords:  rankdir invis labelset weightset circo taf dyn thompson lan Ee
-LocalWords:  RatExp EFSM OpenFST efsm efstcompile fstdeterminize abc eps dl
-LocalWords:  efstdecompile coaccessible acyclic pre fsm EOFSM isymbols txt
-LocalWords:  fstcompile acceptor FAdo fado nfa readFromFile dfa toDFA wxyz
-LocalWords:  Vaucanson evena oddb zmin minab minblocka slowgrow aabbba aut
-LocalWords:  stdin Brzozowski's divkbaseb nul bb WeightSet aaabbbb aaab TAK
-LocalWords:  adhoc fstinfo LAU WeightSets ba num typename const aa Graphviz
-LocalWords:  Refactoring initializations tikz LaTeX LabelSet nullableset Af
-LocalWords:  nullable Determinization de bruijn Onull sys API renamings xyz
-LocalWords:  LetterSet UnitSet WordSet letterset unitset wordset postfix Ef
-LocalWords:  FSM's wc parameterized lao br zr lau pprat Wz Lw ratexp xml cd
-LocalWords:  genset RatExps krat kratexp kratexpset lae vname precompiled
-LocalWords:  templated polynomialset del abcd Metadata sed weightsets laz
-LocalWords:  xyw determinizing ctx libchar conv kratexps zrr dcba bcd dcb
-LocalWords:  cba wz sl gensets mul GenSet typedef abab eval determinization
-LocalWords:  al Associativity ptr nb semiring ingoing pprat's src dst utf
-LocalWords:  entryset subdirectory ispell american hadamard realtime
-LocalWords:  tuplesets Optimizations variadic cominimization runtime
-LocalWords:  letterized zpc letterize
 -->
