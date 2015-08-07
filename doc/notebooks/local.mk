@@ -73,6 +73,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
   %D%/context.cerny.ipynb                       \
+  %D%/context.cotrie.ipynb                      \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.ladybird.ipynb                    \
   %D%/context.trie.ipynb                        \
