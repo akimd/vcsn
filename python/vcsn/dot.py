@@ -7,9 +7,12 @@ from subprocess import PIPE
 
 from vcsn import _tmp_file, _popen, _check_call
 
-# Style of states in dot.
+## Style of states in dot.
+# Default style for real states as issued by vcsn::dot.
 state_style = 'node [shape = circle, style = rounded, width = 0.5]'
+# IPython style for real states.
 state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]'
+# Style for pre and post states, or when rendering transitions only.
 state_point = 'node [shape = point, width = 0]'
 
 # Style of transitions in dot.
@@ -267,13 +270,14 @@ class Daut:
   rankdir = LR
   {edge_style}
   {{
-    node [shape = point, width = 0]
+    {state_point}
     {hidden}
   }}
   {state_style}
   {transitions}
 }}'''.format(context = self.context,
              transitions = s,
+             state_point = state_point,
              state_style = state_style,
              edge_style = edge_style,
              hidden=" ".join(self.hidden))
