@@ -114,6 +114,10 @@ s{include \"(position.hh|location.hh)\"}
  {include <$location_prefix\$1>}g
   if $location_prefix ne "";
 
+# Something fishy that needs more examination in GNU Bison itself.
+s{yystack_\[yylen - 1\]\.location}
+ {yystack_[yylen].location};
+
 # Kill trailing blanks.
 s/[ \t]+$//;
 '  "$file"

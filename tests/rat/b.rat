@@ -12,8 +12,8 @@
 [a-b] => a+b
 [a-bc-d] => [a-d]
 
-[b-a] ! invalid letter interval: b-a
-[]    ! invalid empty letter class
+[b-a] ! 1.1-5: invalid letter interval: b-a
+[]    ! 1.1-2: invalid empty letter class
 
 [^] => [^]
 [^] == [a-h]
@@ -22,8 +22,8 @@
 [^a-bgh] => [c-f]
 [^a-cgh] => d+e+f
 [^a-bd-h] => c
-[^b-a] ! invalid letter interval: b-a
-[^a-h] ! invalid empty letter class
+[^b-a] ! 1.1-6: invalid letter interval: b-a
+[^a-h] ! 1.1-6: invalid empty letter class
 
 %identities: associative
 a+a+a => a+a+a

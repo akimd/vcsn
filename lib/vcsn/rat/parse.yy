@@ -247,8 +247,8 @@ exp:
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
 | "letter"          { $$ = driver_.make_atom(@1, $1); }
-| "[" class "]"     { $$ = driver_.make_expression($2, true); }
-| "[" "^" class "]" { $$ = driver_.make_expression($3, false); }
+| "[" class "]"     { $$ = driver_.make_expression(@$, $2, true); }
+| "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
 | "(" { tape = driver_.tape_; } sum ")"
                     {
                       driver_.tape_ = tape;

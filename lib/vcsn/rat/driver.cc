@@ -125,17 +125,25 @@ namespace vcsn
     }
 
     dyn::expression
-    driver::make_expression(const class_t& c, bool accept = true)
+    driver::make_expression(const location& loc,
+                            const class_t& c, bool accept = true)
     {
-      // If there are commas in the labels, then have it read as a full
-      // label, not a one-tape label.
-      //
-      // FIXME: Remove once the tuple approach works perfectly.
-      if (!c.empty()
-          && boost::algorithm::contains(detail::front(c).first, ","))
-        return dyn::to_expression(ctx_, ids_, c, accept);
-      else
-        return dyn::to_expression(context(), ids_, c, accept);
+      try
+        {
+          // If there are commas in the labels, then have it read as a full
+          // label, not a one-tape label.
+          //
+          // FIXME: Remove once the tuple approach works perfectly.
+          if (!c.empty()
+              && boost::algorithm::contains(detail::front(c).first, ","))
+            return dyn::to_expression(ctx_, ids_, c, accept);
+          else
+            return dyn::to_expression(context(), ids_, c, accept);
+        }
+      catch (const std::exception& e)
+        {
+          throw parser::syntax_error(loc, e.what());
+        }
     }
 
     dyn::weight

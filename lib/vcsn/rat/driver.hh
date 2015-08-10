@@ -51,7 +51,8 @@ namespace vcsn
       dyn::expression make_atom(const location& loc, const std::string& s);
 
       /// From a label class, generate an expression.
-      dyn::expression make_expression(const class_t& c, bool accept);
+      dyn::expression make_expression(const location& loc,
+                                      const class_t& c, bool accept);
 
       /// From a string, generate a weight.
       dyn::weight make_weight(const location& loc, const std::string& s);
