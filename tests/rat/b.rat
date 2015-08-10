@@ -14,6 +14,7 @@
 
 [b-a] ! 1.1-5: invalid letter interval: b-a
 []    ! 1.1-2: invalid empty letter class
+a|x   ! 1.2: too many tapes
 
 [^] => [^]
 [^] == [a-h]

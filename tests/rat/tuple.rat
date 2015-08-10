@@ -10,6 +10,7 @@ a|e|i+b|f|j          => a|e|i+b|f|j
 [abcd]|[efgh]|[ijkl] => [a-d]|[e-h]|[i-l]
 abcd|efgh|ijkl       => abcd|efgh|ijkl
 
+a|e|i|z ! 1.6: too many tapes
 
 %identities: linear
 b|f|j+a|e|i          => a|e|i+b|f|j

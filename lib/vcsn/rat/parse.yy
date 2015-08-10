@@ -98,18 +98,6 @@
   }
 }
 
-%code top
-{
-  // FIXME: this is really really wrong.  We maintain state accross
-  // all our parsers.  It should be at least part of the driver.
-  //
-  // But anyway the concept of tape number does not suffice.  For
-  // instance, it cannot deal with '(a|b)|(x|y)' which is a
-  // 'lat<lat<lan, lan>, lat<lan, lan>>'.  Not that it really matters
-  // as of today...
-  unsigned tape = 0;
-}
-
 %param { driver& driver_ }
 
 %initial-action
@@ -189,8 +177,6 @@ input:
     // Provide a value for $$ only for sake of traces: shows the result.
     $$ = $1;
     driver_.result_ = $$.exp;
-    // Restore the state.
-    tape = 0;
     YYACCEPT;
   }
 ;
@@ -202,19 +188,30 @@ terminator.opt:
 ;
 
 sum:
-  tuple                                 { $$ = $1; }
-| sum "+" {driver_.tape_ = tape;} sum   { $$ = dyn::sum($1.exp, $4.exp); }
+  tuple           { $$ = $1; }
+| sum "+" sum     { $$ = dyn::sum($1.exp, $3.exp); }
 ;
 
 // Deal with `|`: a* | (b+c) | \e.
 // Store in a vector and group the tuple into a single tuple.
 tuple:
-  tuple.1    { $$ = $1.size() == 1 ? $1.back() : vcsn::dyn::tuple($1); }
+  { driver_.tape_push(); } tuple.1
+  {
+    driver_.tape_pop();
+    $$ = $2.size() == 1 ? $2.back() : vcsn::dyn::tuple($2);
+  }
 ;
 
 tuple.1:
-  exp                                   { $$.emplace_back($1.exp); }
-| tuple.1 "|" { ++driver_.tape_; } exp  { $$ = $1; $$.emplace_back($4.exp); }
+  exp
+  {
+    $$.emplace_back($1.exp);
+  }
+| tuple.1 "|" { driver_.tape_inc(@2); } exp
+  {
+    $$ = $1;
+    $$.emplace_back($4.exp);
+  }
 ;
 
 exp:
@@ -249,12 +246,7 @@ exp:
 | "letter"          { $$ = driver_.make_atom(@1, $1); }
 | "[" class "]"     { $$ = driver_.make_expression(@$, $2, true); }
 | "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
-| "(" { tape = driver_.tape_; } sum ")"
-                    {
-                      driver_.tape_ = tape;
-                      $$.exp = $3.exp;
-                      $$.lparen = $$.rparen = true;
-                    }
+| "(" sum ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
 ;
 
 weights:

@@ -20,6 +20,9 @@ namespace vcsn
       driver(const dyn::context& ctx, rat::identities ids);
       ~driver();
 
+      /// Set the expressionset to use from this context.
+      void context(const dyn::context& ctx);
+
       /// Set the expressionset to use from its context name.
       void context(const std::string& ctx);
 
@@ -29,6 +32,15 @@ namespace vcsn
 
       /// Get the identities.
       rat::identities identities() const;
+
+      /// Push a new tape number on the stack.
+      void tape_push();
+
+      /// Pop the tape stack.
+      void tape_pop();
+
+      /// Increment the top most tape.
+      void tape_inc(const location& l);
 
       /// Parse this stream.
       dyn::expression parse(std::istream& is, const location& l = location{});
@@ -68,8 +80,15 @@ namespace vcsn
       rat::identities ids_;
       /// The parsed expression.
       dyn::expression result_;
-      /// The current tape number.
-      unsigned tape_ = 0;
+      /// The stack of tape numbers.
+      ///
+      /// The concept of tape number does not suffice.  For instance,
+      /// it cannot deal with `(a|b)|(x|y)` which is a `lat<lat<lan,
+      /// lan>, lat<lan, lan>>`.  Not that it really matters as of
+      /// today...
+      std::vector<unsigned> tapes_ = {0};
+      /// The context for each tape.  If single-tape, [0] is ctx_.
+      std::vector<dyn::context> tape_ctx_ = {};
     };
   }
 }

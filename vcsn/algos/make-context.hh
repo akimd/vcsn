@@ -116,4 +116,41 @@ namespace vcsn
       }
     }
   }
+
+
+  /*-------------.
+  | num_tapes.   |
+  `-------------*/
+
+  template <typename Ctx>
+  constexpr auto
+  num_tapes(const Ctx&)
+    -> enable_if_t<Ctx::is_lat, size_t>
+  {
+    return Ctx::labelset_t::size();
+  }
+
+  template <typename Ctx>
+  constexpr auto
+  num_tapes(const Ctx&)
+    -> enable_if_t<!Ctx::is_lat, size_t>
+  {
+    return 0;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Ctx>
+      size_t
+      num_tapes(const context& ctx)
+      {
+        return vcsn::num_tapes(ctx->as<Ctx>());
+      }
+    }
+  }
+
+
 } // vcsn::

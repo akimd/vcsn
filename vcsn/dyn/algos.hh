@@ -485,6 +485,10 @@ namespace vcsn
     /// The number of strongly connected components.
     std::size_t num_components(const automaton& aut);
 
+    /// The number of input tapes.
+    /// \returns 0 if the context is not tupleset.
+    std::size_t num_tapes(const context& ctx);
+
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut, bool keep_initials = false);
 

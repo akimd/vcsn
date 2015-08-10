@@ -15,26 +15,57 @@ namespace vcsn
 
     driver::driver(const dyn::context& ctx, rat::identities ids)
       : scanner_(new yyFlexLexer)
-      , ctx_(ctx)
       , ids_(ids)
-    {}
+    {
+      context(ctx);
+    }
 
     driver::~driver()
     {}
 
     dyn::context driver::context() const
     {
-      return dyn::focus(ctx_, tape_);
+      return tape_ctx_[tapes_.back()];
+    }
+
+    void driver::context(const dyn::context& ctx)
+    {
+      ctx_ = ctx;
+      tape_ctx_.clear();
+      auto n = dyn::num_tapes(ctx_);
+      if (n)
+        for (size_t t = 0; t < n; ++t)
+          tape_ctx_.emplace_back(dyn::focus(ctx_, t));
+      else
+        tape_ctx_.emplace_back(ctx_);
     }
 
     void driver::context(const std::string& ctx)
     {
-      ctx_ = dyn::make_context(ctx);
+      context(dyn::make_context(ctx));
     }
 
     rat::identities driver::identities() const
     {
       return ids_;
+    }
+
+    void driver::tape_push()
+    {
+      tapes_.push_back(tapes_.back());
+    }
+
+    void driver::tape_pop()
+    {
+      tapes_.pop_back();
+    }
+
+    void driver::tape_inc(const location& l)
+    {
+      if (tapes_.back() + 1 < tape_ctx_.size())
+        ++tapes_.back();
+      else
+        throw parser::syntax_error(l, "too many tapes");
     }
 
     void driver::error(const location& l, const std::string& m)
