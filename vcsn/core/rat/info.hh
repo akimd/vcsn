@@ -22,11 +22,17 @@ namespace vcsn
       /// For each node type, count its number of occurrences.
       void operator()(const node_t& v)
       {
+        clear();
+        v.accept(*this);
+      }
+
+      void clear()
+      {
         atom = 0;
         complement = 0;
         conjunction = 0;
-        lweight = 0;
         ldiv = 0;
+        lweight = 0;
         one = 0;
         prod = 0;
         rweight = 0;
@@ -34,8 +40,29 @@ namespace vcsn
         star = 0;
         sum = 0;
         transposition = 0;
+        tuple = 0;
         zero = 0;
-        v.accept(*this);
+      }
+
+      /// Add the result from another info operator.
+      template <typename OtherExpSet>
+      info& operator+=(const info<OtherExpSet>& other)
+      {
+        atom += other.atom;
+        complement += other.complement;
+        conjunction += other.conjunction;
+        ldiv += other.ldiv;
+        lweight += other.lweight;
+        one += other.one;
+        prod += other.prod;
+        rweight += other.rweight;
+        shuffle += other.shuffle;
+        star += other.star;
+        sum += other.sum;
+        transposition += other.transposition;
+        tuple += other.tuple;
+        zero += other.zero;
+        return *this;
       }
 
       /// Name of this algorithm, for error messages.
@@ -84,15 +111,48 @@ namespace vcsn
           c->accept(*this);
       }
 
+      /*---------.
+      | tuple.   |
+      `---------*/
+
+    public:
+      /// Number of tuple operators.
+      size_t tuple = 0;
       using tuple_t = typename super_t::tuple_t;
+
+    private:
       template <bool = context_t::is_lat,
                 typename Dummy = void>
       struct visit_tuple
       {
-        void operator()(const tuple_t&)
+        /// Info about tape I.
+        template <size_t I>
+        void info_(const tuple_t& v)
         {
-          std::cerr << "FIXME: do something\n";
+          auto nfo = info<typename expressionset_t::template focus_t<I>>{};
+          nfo(*std::get<I>(v.sub()));
+          visitor_ += nfo;
         }
+
+        /// Info all the tapes.
+        template <size_t... I>
+        void info_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          using swallow = int[];
+          (void) swallow
+          {
+            (info_<I>(v),
+             0)...
+          };
+        }
+
+        /// Entry point.
+        void operator()(const tuple_t& v)
+        {
+          ++visitor_.tuple;
+          return info_(v, labelset_t_of<context_t>::indices);
+        }
+        info& visitor_;
       };
 
       template <typename Dummy>
@@ -102,13 +162,13 @@ namespace vcsn
         {
           BUILTIN_UNREACHABLE();
         }
+        info& visitor_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        visit_tuple<>{}(v);
+        visit_tuple<>{*this}(v);
       }
     };
-
   } // namespace rat
 } // namespace vcsn

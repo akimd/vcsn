@@ -265,26 +265,28 @@ namespace vcsn
   info(const ExpSet& rs, const typename ExpSet::value_t& e,
        std::ostream& o)
   {
-    vcsn::rat::info<ExpSet> nfo;
-    nfo(*e);
-
     o << "type: ";
     rs.print_set(o, format::text);
+
     o << "\nsize: " << rat::size<ExpSet>(e);
-#define ECHO(Type)                            \
-    o << "\n" #Type ": " << nfo.Type;
-    ECHO(sum);
-    ECHO(shuffle);
-    ECHO(conjunction);
-    ECHO(prod);
-    ECHO(star);
-    ECHO(complement);
-    ECHO(ldiv);
-    ECHO(zero);
-    ECHO(one);
+
+    auto nfo = vcsn::rat::info<ExpSet>{};
+    nfo(*e);
+#define ECHO(Type)                              \
+    o << "\n" #Type ": " << nfo.Type
     ECHO(atom);
+    ECHO(complement);
+    ECHO(conjunction);
+    ECHO(ldiv);
     ECHO(lweight);
+    ECHO(one);
+    ECHO(prod);
     ECHO(rweight);
+    ECHO(shuffle);
+    ECHO(star);
+    ECHO(sum);
+    ECHO(tuple);
+    ECHO(zero);
 #undef ECHO
   }
 
@@ -298,7 +300,7 @@ namespace vcsn
       std::ostream& info_expression(const expression& exp, std::ostream& o)
       {
         const auto& e = exp->as<ExpSet>();
-        vcsn::info<ExpSet>(e.expressionset(), e.expression(), o);
+        vcsn::info(e.expressionset(), e.expression(), o);
         return o;
       }
     }
