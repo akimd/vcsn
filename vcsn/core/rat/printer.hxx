@@ -91,7 +91,9 @@ namespace vcsn
           lmul_          = "\\,";
           rmul_          = "\\,";
           ldiv_          = " \\backslash ";
-          tuple_         = "|";
+          // Use `\mid` between expressions (e.g., `a|(x+y)`), but
+          // still `|` beween labels, i.e., in tupleset.
+          tuple_         = " \\mid ";
         }
       else if (fmt_ == format::text)
         {
