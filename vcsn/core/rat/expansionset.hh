@@ -69,7 +69,7 @@ namespace vcsn
         if (!ws_.is_zero(v.constant) || v.polynomials.empty())
           {
             o << (fmt == format::latex ? "\\left\\langle " : "<");
-            ws_.print(v.constant, o, fmt);
+            ws_.print(v.constant, o, fmt.for_weights());
             o << (fmt == format::latex ? "\\right\\rangle " : ">");
             first = false;
           }
@@ -78,7 +78,7 @@ namespace vcsn
             if (!first)
               o << (fmt == format::latex ? " \\oplus " : " + ");
             first = false;
-            rs_.labelset()->print(p.first, o, fmt);
+            rs_.labelset()->print(p.first, o, fmt.for_labels());
             o << (fmt == format::latex ? " \\odot \\left[" : ".[");;
             ps_.print(p.second, o, fmt);
             o << (fmt == format::latex ? "\\right]" : "]");;

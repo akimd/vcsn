@@ -20,7 +20,7 @@ CHECK_EQ(e.standard(), e.derived_term().strip())
 
 e = c.expression('[ab]|x')
 CHECK_EQ('(a+b)|x', e)
-CHECK_EQ('''(a,x).[\e] + (b,x).[\e]''', e.expansion())
+CHECK_EQ('''a|x.[\e] + b|x.[\e]''', e.expansion())
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(xyz)>>>, z"
@@ -56,7 +56,7 @@ c = vcsn.context("lat<lan_char(a), lan_char(b), lan_char(c)>, z")
 e = c.expression('(<2>a)*|(<3>b)*|(<5>c)*')
 CHECK_EQ(f, e)
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', e)
-CHECK_EQ('''<1> + (\e,\e,c).[<5>\e|\e|(<5>c)*] + (\e,b,\e).[<3>\e|(<3>b)*|\e] + (\e,b,c).[<15>\e|(<3>b)*|(<5>c)*] + (a,\e,\e).[<2>(<2>a)*|\e|\e] + (a,\e,c).[<10>(<2>a)*|\e|(<5>c)*] + (a,b,\e).[<6>(<2>a)*|(<3>b)*|\e] + (a,b,c).[<30>(<2>a)*|(<3>b)*|(<5>c)*]''', e.expansion())
+CHECK_EQ(r'''<1> + \e|\e|c.[<5>\e|\e|(<5>c)*] + \e|b|\e.[<3>\e|(<3>b)*|\e] + \e|b|c.[<15>\e|(<3>b)*|(<5>c)*] + a|\e|\e.[<2>(<2>a)*|\e|\e] + a|\e|c.[<10>(<2>a)*|\e|(<5>c)*] + a|b|\e.[<6>(<2>a)*|(<3>b)*|\e] + a|b|c.[<30>(<2>a)*|(<3>b)*|(<5>c)*]''', e.expansion())
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(a)>>, nullableset<letterset<char_letters(b)>>, nullableset<letterset<char_letters(c)>>>, z"
