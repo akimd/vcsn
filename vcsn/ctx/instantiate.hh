@@ -184,7 +184,6 @@ namespace vcsn
         using b_rs_t = expressionset<b_ctx_t>;
 
         using namespace dyn::detail;
-        REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(cerny, ctx_t, unsigned);
         REGISTER(complete, aut_t);
         REGISTER(conjunction, aut_t, aut_t);
