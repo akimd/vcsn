@@ -1,9 +1,6 @@
 #! /usr/bin/env python
 
-from __future__ import print_function
-
 import vcsn
-
 from test import *
 
 # check OBJ EXPECTED
@@ -18,7 +15,7 @@ def check(obj, exp):
 
 # Check that ':', which is used as a separator by info, is also
 # properly treated as a letter.
-check(vcsn.context('lal_char(:a-z), z').expression("a+a':'").standard(),
+check(vcsn.context('lal_char(:a-z), q').expression("a+a':'").standard(),
       {'is ambiguous': False,
        'is codeterministic': False,
        'is complete': False,
@@ -44,9 +41,9 @@ check(vcsn.context('lal_char(:a-z), z').expression("a+a':'").standard(),
        'number of strongly connected components': 4,
        'number of transitions': 3,
        'number of useful states': 4,
-       'type': 'mutable_automaton<letterset<char_letters(:abcdefghijklmnopqrstuvwxyz)>, z>'})
+       'type': 'mutable_automaton<letterset<char_letters(:abcdefghijklmnopqrstuvwxyz)>, q>'})
 
-check(vcsn.context('lal_char(a-z), z').expression("<1>a+(<2>b<3>*<4>)<5>").standard(),
+check(vcsn.context('lal_char(a-z), q').expression("<1>a+(<2>b<3>*<4>)<5>").standard(),
       {'is ambiguous': False,
        'is codeterministic': False,
        'is complete': False,
@@ -72,7 +69,7 @@ check(vcsn.context('lal_char(a-z), z').expression("<1>a+(<2>b<3>*<4>)<5>").stand
        'number of strongly connected components': 3,
        'number of transitions': 3,
        'number of useful states': 3,
-       'type': 'mutable_automaton<letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>, z>'})
+       'type': 'mutable_automaton<letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>, q>'})
 
 # Test what happens with "N/A".
 check(vcsn.context('law_char(ab), b').expression('a(a+b)*').standard(),
@@ -143,9 +140,9 @@ check(b.expression('\e+bc*'),
        'lweight': 0,
        'rweight': 0})
 
-z = vcsn.context('lal_char(abc), z')
-check(z.expression('<2>a<3>'),
-      {'type': 'expressionset<letterset<char_letters(abc)>, z>',
+q = vcsn.context('lal_char(abc), q')
+check(q.expression('<2>a<3>'),
+      {'type': 'expressionset<letterset<char_letters(abc)>, q>',
        'size': 2,
        'sum': 0,
        'tuple': 0,
@@ -161,8 +158,8 @@ check(z.expression('<2>a<3>'),
        'lweight': 1,
        'rweight': 0})
 
-check(z.expression('a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}', 'associative'),
-      {'type': 'expressionset<letterset<char_letters(abc)>, z>(associative)',
+check(q.expression('a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}', 'associative'),
+      {'type': 'expressionset<letterset<char_letters(abc)>, q>(associative)',
        'size': 18,
        'sum': 1,
        'tuple': 0,
@@ -178,8 +175,8 @@ check(z.expression('a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}', 'associative'),
        'lweight': 1,
        'rweight': 1})
 
-check(z.expression('(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
-      {'type': 'expressionset<letterset<char_letters(abc)>, z>',
+check(q.expression('(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
+      {'type': 'expressionset<letterset<char_letters(abc)>, q>',
        'size': 1,
        'sum': 0,
        'tuple': 0,
