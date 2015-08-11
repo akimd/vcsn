@@ -31,7 +31,8 @@ check(law, '(ab+cd)*de', lan)
 # transducers might need padding.
 #
 # FIXME: Currently our expression parser is unable to parse such a
-# context, because it does see it as multitape.  So it rejects "|".
+# context, because it does not see it as multitape (it sees it as lan,
+# not lat).  So it rejects "|".
 latw = vcsn.context("lan<lat<law_char, lal_char>>, z")
 latn = vcsn.context("lat<lan_char, lan_char>, z")
 

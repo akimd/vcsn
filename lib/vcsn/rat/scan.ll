@@ -114,7 +114,9 @@ namespace
 
 
 <INITIAL,SC_CLASS>{ /* Labels.  */
-  "'"[^\']+"'"  return parser::make_LETTER({yytext+1, size_t(yyleng-2)}, loc);
+  "'"([^\']|\\.)+"'"  {
+    return parser::make_LETTER({yytext+1, size_t(yyleng-2)}, loc);
+  }
 
   \\[0-7]{3}         {
     long c = strtol(yytext + 1, 0, 8);

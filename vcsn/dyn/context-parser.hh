@@ -34,12 +34,12 @@ namespace vcsn
       std::string word_();
 
       /// The next parameters in the stream.  Must be right before the
-      /// opening '<'.  Will return up to the matching '>'.
+      /// opening `<`.  Will return up to the matching `>`.
       std::string parameters_();
 
-      /// A generator set (e.g., "char(abc)" or "char").
+      /// A generator set (e.g., `char_letters(abc)` or `char`).
       std::shared_ptr<const genset> genset_();
-      std::shared_ptr<const genset> genset_(const std::string& letter_type);
+      std::shared_ptr<const genset> genset_(std::string letter_type);
 
       /// `<LabelSet>, <WeightSet>`.
       std::shared_ptr<context> context_();
@@ -96,10 +96,12 @@ namespace vcsn
       /// The set of weightset names.
       std::set<std::string> labelsets_ =
         {
+          "lal",
           "lal_char",
           "lan",
           "lan_char",
           "lao",
+          "law",
           "law_char",
           "letterset",
           "nullableset",

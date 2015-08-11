@@ -154,8 +154,10 @@ namespace vcsn
     }
 
     std::shared_ptr<const genset>
-    context_parser::genset_(const std::string& letter_type)
+    context_parser::genset_(std::string letter_type)
     {
+      if (letter_type == "char" || letter_type == "string")
+        letter_type += "_letters";
       std::string gens;
       if (is_.peek() == '(')
         {
@@ -229,14 +231,14 @@ namespace vcsn
         return tupleset_();
       else if (ls == "law_char")
         return std::make_shared<wordset>(genset_("char_letters"));
-      else if (ls == "letterset")
+      else if (ls == "lal" || ls == "letterset")
         {
           eat(is_, '<');
           auto gs = genset_();
           eat(is_, '>');
           return std::make_shared<letterset>(gs);
         }
-      else if (ls == "wordset")
+      else if (ls == "law" || ls == "wordset")
         {
           eat(is_, '<');
           auto gs = genset_();

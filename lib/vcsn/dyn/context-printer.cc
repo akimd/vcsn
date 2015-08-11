@@ -130,6 +130,8 @@ namespace vcsn
       header("vcsn/alphabets/setalpha.hh"); // set_alphabet
       if (t.letter_type() == "char_letters")
         header("vcsn/alphabets/char.hh");
+      else if (t.letter_type() == "string_letters")
+        header("vcsn/alphabets/string.hh");
       os_ << "vcsn::set_alphabet<vcsn::" << t.letter_type() << '>';
     }
 
