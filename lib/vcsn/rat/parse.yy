@@ -119,6 +119,17 @@
   yyo << ($$.lparen ? " (lpar, " : " (no lpar, ");
   yyo << ($$.rparen ? "rpar)" : "no rpar)");
 } <braced_expression>;
+%printer
+{
+  const char* sep = "[[";
+  for (auto e: $$)
+    {
+      yyo << sep << e;
+      sep = " || ";
+    }
+  yyo << "]]";
+} <std::vector<vcsn::dyn::expression>>;
+
 %printer { dyn::print($$, yyo); } <dyn::weight>;
 
 %token
@@ -198,7 +209,12 @@ tuple:
   { driver_.tape_push(); } tuple.1
   {
     driver_.tape_pop();
-    $$ = $2.size() == 1 ? $2.back() : vcsn::dyn::tuple($2);
+    if ($2.size() == 1)
+      $$ = $2.back();
+    else if ($2.size() == driver_.tape_ctx_.size())
+      $$ = vcsn::dyn::tuple($2);
+    else
+      throw parser::syntax_error(@$, "not enough tapes");
   }
 ;
 

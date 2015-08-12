@@ -11,6 +11,7 @@ a|e|i+b|f|j          => a|e|i+b|f|j
 abcd|efgh|ijkl       => abcd|efgh|ijkl
 
 a|e|i|z ! 1.6: too many tapes
+a|e ! 1.1-3: not enough tapes
 
 %identities: linear
 b|f|j+a|e|i          => a|e|i+b|f|j
