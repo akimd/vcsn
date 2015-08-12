@@ -1,5 +1,6 @@
 #include <vcsn/dyn/translate.hh>
 
+#include <chrono>
 #include <fstream>
 #include <memory>
 #include <set>
@@ -142,6 +143,44 @@ namespace vcsn
           ast->accept(printer_);
         }
 
+        /// Parse compiler errors and throw.
+        /// \param cmd  the command that failed.
+        /// \param err  the file name of the file containing the compiler log.
+        void throw_compiler_errors(std::string cmd,
+                                   const std::string& err)
+        {
+          // Try to find assertion failures in the error log.
+          //
+          // $ g++-mp-4.9 -std=c++11 main.cc
+          // main.cc: In function 'int main()':
+          // main.cc:3:3: error: static assertion failed: foo
+          //    static_assert(0, "foo");
+          //    ^
+          // $ clang++-mp-3.5 -std=c++11 main.cc
+          // main.cc:3:3: error: static_assert failed "foo"
+          //   static_assert(0, "foo");
+          //   ^             ~
+          // 1 error generated.
+          auto is = open_input_file(err);
+          static std::regex r1("error: static assertion failed: (.*)$",
+                               std::regex::extended);
+          static std::regex r2("error: static_assert failed \"(.*)\"$",
+                               std::regex::extended);
+          std::string line;
+          std::smatch smatch;
+          std::string assertions;
+          while (std::getline(*is, line))
+            if (std::regex_search(line, smatch, r1)
+                || std::regex_search(line, smatch, r2))
+              assertions += std::string(smatch[1]) + '\n';
+          if (getenv("VCSN_VERBOSE"))
+            {
+              cmd += "\n  compiler error messages:\n";
+              cmd += get_file_contents(err);
+            }
+          throw jit_error(assertions, "  failed command:\n    " + cmd);
+        }
+
         /// Run C++ compiler.
         ///
         /// \param cmd  the compiler arguments
@@ -149,45 +188,10 @@ namespace vcsn
         void cxx(std::string cmd, const std::string& tmp)
         {
           auto err = tmp + ".err";
-          // We try to read the error message via a regexp below.  So
-          // avoid translation (we once had "erreur" instead of "error").
-          cmd = "LC_ALL=C " + cmd;
-
           if (getenv("VCSN_DEBUG"))
             std::cerr << "run: " << cmd << std::endl;
-          std::string assertions;
           if (system((cmd + " 2>'" + err + "'").c_str()))
-            {
-              // Try to find assertion failures in the error log.
-              //
-              // $ g++-mp-4.9 -std=c++11 main.cc
-              // main.cc: In function 'int main()':
-              // main.cc:3:3: error: static assertion failed: foo
-              //    static_assert(0, "foo");
-              //    ^
-              // $ clang++-mp-3.5 -std=c++11 main.cc
-              // main.cc:3:3: error: static_assert failed "foo"
-              //   static_assert(0, "foo");
-              //   ^             ~
-              // 1 error generated.
-              auto is = open_input_file(err);
-              static std::regex r1("error: static assertion failed: (.*)$",
-                                   std::regex::extended);
-              static std::regex r2("error: static_assert failed \"(.*)\"$",
-                                   std::regex::extended);
-              std::string line;
-              std::smatch smatch;
-              while (std::getline(*is, line))
-                if (std::regex_search(line, smatch, r1)
-                    || std::regex_search(line, smatch, r2))
-                  assertions += std::string(smatch[1]) + '\n';
-              if (getenv("VCSN_VERBOSE"))
-                {
-                  cmd += "\n  compiler error messages:\n";
-                  cmd += get_file_contents(err);
-                }
-              throw jit_error(assertions, "  failed command:\n    " + cmd);
-            }
+            throw_compiler_errors(cmd, err);
           else if (!getenv("VCSN_DEBUG"))
             boost::filesystem::remove(err);
         }
@@ -198,7 +202,10 @@ namespace vcsn
         void cxx_compile(const std::string& base)
         {
           auto tmp = tmpname(base);
-          auto cmd = (XGETENV(VCSN_CCACHE)
+          // We try to read the error message via a regexp below.  So
+          // avoid translation (we once had "erreur" instead of "error").
+          auto cmd = (std::string{"LC_ALL=C"}
+                      + " " + XGETENV(VCSN_CCACHE)
                       + " " + XGETENV(VCSN_CXX)
                       + " " + XGETENV(VCSN_CXXFLAGS)
                       + " " + XGETENV(VCSN_CPPFLAGS)
@@ -213,7 +220,8 @@ namespace vcsn
         void cxx_link(const std::string& base)
         {
           auto tmp = tmpname(base);
-          auto cmd = (XGETENV(VCSN_CXX)
+          auto cmd = (std::string{"LC_ALL=C"}
+                      + " " + XGETENV(VCSN_CXX)
                       + " " + XGETENV(VCSN_CXXFLAGS)
                       + " " + XGETENV(VCSN_LDFLAGS)
                       + " -fPIC -lvcsn '" + tmp + ".o' -shared"
@@ -256,10 +264,37 @@ namespace vcsn
         /// compilation-and-linking in a single run.
         void jit(const std::string& base)
         {
-          cxx_compile(base);
-          cxx_link(base);
           auto tmp = tmpname(base);
-          boost::filesystem::rename(tmp + ".so", base + ".so");
+          {
+            namespace chr = std::chrono;
+            using clock = chr::steady_clock;
+            auto start = clock::now();
+            static bool no_python = !!getenv("VCSN_NO_PYTHON");
+            if (no_python)
+              {
+                cxx_compile(base);
+                cxx_link(base);
+                boost::filesystem::rename(tmp + ".so", base + ".so");
+              }
+            else
+              {
+                auto linkflags = printer_.linkflags();
+                if (!linkflags.empty())
+                  linkflags = " --extra-ldflags='" + linkflags + "'";
+                cxx("vcsn compile -shared '" + base + ".cc'" + linkflags,
+                    tmp);
+              }
+            auto d
+              = chr::duration_cast<chr::milliseconds>(clock::now() - start);
+            std::ofstream{"/tmp/vcsn-compile.log",
+                          std::ofstream::out | std::ofstream::app}
+            << d.count() << ", "
+            << (no_python ? "C++, " : "Py,  ")
+            << '\'' << base.substr(plugindir().size()) << '\''
+            << '\n';
+            if (getenv("VCSN_TIME"))
+              std::cerr << d.count() << "ms: " << base << '\n';
+          }
           static bool first = true;
           if (first)
             {
