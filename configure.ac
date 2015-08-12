@@ -223,6 +223,8 @@ esac
 LIBS=$save_LIBS
 AM_PATH_PYTHON([3.0])
 BOOST_PYTHON
+AC_DEFINE_UNQUOTED([PYTHON], ["$PYTHON"],
+                   [Define to a path to Python 3.])
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
 VCSN_REGEX

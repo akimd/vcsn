@@ -1,16 +1,19 @@
 #! /bin/sh
 
-: ${pyexecdir='@PYEXECDIR@'}
-: ${VCSN_DATADIR='@DATADIR@'}
-export VCSN_DATADIR
+: ${PYTHON='@PYTHON@'}
+export PYTHON
 
 # _Append_ pyexecdir, not prepend, so that the user can still override
 # this path via $PYTHONPATH.  Note in particular that the
 # builddir-tests need to override $PYTHONPATH to use non-installed
 # modules, which would them be overriden here and installed files
 # would be used instead.
+: ${pyexecdir='@PYEXECDIR@'}
 PYTHONPATH=$PYTHONPATH:$pyexecdir
 export PYTHONPATH
+
+: ${VCSN_DATADIR='@DATADIR@'}
+export VCSN_DATADIR
 
 help ()
 {
@@ -76,6 +79,12 @@ case $1 in
   (-h|--help) help;;
   (-v|--version) version;;
 
+  (compile|demangle|score|score-compare)
+      prog=$(which "vcsn-$1")
+      shift
+      exec "$PYTHON" "$prog" "$@";;
+
+  (python) shift; exec "$PYTHON" "$@";;
   (efstcompile|efstdecompile|python*|ipython*) exec "$@";;
 
   (accessible|are-equivalent|are-isomorphic \
