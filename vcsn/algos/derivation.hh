@@ -120,7 +120,7 @@ namespace vcsn
       /// Build a product for these expressions.  Pay attention to not
       /// building products with 0 or 1 expression.
       ///
-      /// FIXME: Code duplication with expansion.
+      /// FIXME: Code duplication with to_expansion.
       expression_t
       prod_(typename prod_t::iterator begin,
             typename prod_t::iterator end) const

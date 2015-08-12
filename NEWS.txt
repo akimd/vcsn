@@ -356,7 +356,7 @@ removed.
 ## 2015-03-25
 ### product is renamed conjunction
 After many hesitations, we finally decided to rename the synchronized
-product form `product` to `conjunction`.  There are several reasons in favor
+product from `product` to `conjunction`.  There are several reasons in favor
 of this change.
 
 First `product` is not adequate:

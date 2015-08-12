@@ -44,6 +44,9 @@ For some reason, Libtool strips this flag when linking python/vcsn-cxx.so.
 To force it (which is needed), use -Wc,-fsanitize=address when linking it.
 
 * Tests
+** check-rat
+Check the precedences, for instance between the products.
+
 ** operations on automata
 Use expressions as weights to check multiplication order.  As in checks for
 standard(exp).  We should use fewer contexts, to speed up our development.
@@ -64,6 +67,16 @@ features of the right definition?
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
+** proper: accessible part
+This fails:
+
+import vcsn
+c = vcsn.context('lan_char, seriesset<lal_char, q>')
+a = c.expression('<x>a*&<y>b*').derived_term()
+a.proper()
+
+because we create spontaneous loops.  But there are not co-accessible!
+
 ** synchronize
 We need more tests.  In particular something that checks:
 
@@ -75,6 +88,11 @@ We need more tests.  In particular something that checks:
     * vcsn/algos/synchronize.hh: Here.
 
 * Bugs
+** subprograms
+We don't kill our children when we are killed.  For instance, if the user
+asked for the graphical rendering of a huge automaton, and decides to kill
+vcsn realizing her error, the dot process will continue to waste cpu.
+
 ** lift
 When we lift a single tape from a lat<lal, lal>, we produce a single-tape
 labelset and a single-tape weightset.  This is uselessly heavy on the system.
@@ -183,8 +201,26 @@ non-commutativity: as is, (a, b) can work, but not (b, a).
 But anyway: does it really mean something to compare a B-automaton with a Z
 one?
 
+** dot
+Let's try a means to improve our rendering of decorated automaton (typically
+derived-term) with MathJax rendering.  Stackoverflow has hints on how we can
+do that for SVG, but so far, I failed to adjust the output of dot.
+
 ** eliminate-state
 Support several arguments.
+
+** expression
+On occasions I would have liked to be able to see the AST draw as a Dot
+tree.  I'd like two different output: as a tree (semantical), or as a DAG: a
+physical reprensentation including the shared parts of an expression.
+
+** info
+The size of the expression is badly defined.  For instance 'a{10}' says it
+has a single prod.  By the way, it should be call multiplication, not prod.
+But it is also useful to know that there is a single node.  So it would be
+useful to have two informations: the number of AST nodes, and the
+theoretical size.  Both should be displayed and computed in a single
+traversal.
 
 ** minimize: moore
 I have extremely weird performances regressions:
@@ -214,6 +250,52 @@ Those two should really be the same algorithm, it's the signatures that
 change.  And rather than having two implementations, we should have a single
 implementation of the algorithm, but better data structures for signatures.
 
+** multiply
+The repeated multiplication of automata does not check that min <= max.
+
+** normalize
+I'm a bit lost in polynomialset::normalize: how come in
+
+import vcsn
+e = vcsn.context('lal_char, polynomialset<law_char, q>').expression('((<<2>x>a)*+(<<4>xx>aa)*){c}')
+e
+for i in range(10):
+    print(e.derivation("a" * (i+1)))
+
+it manages to factor out the '<2>x' bits?  Reading the code, I fail to see
+where the common 'xx' are removed.
+
+** rat: parse
+
+v score-compare --only 'b.expression\(e\)' +scores/36s/v2.0-0931-gd70d722       \
+  +scores/36s/v2.0-0935-g9a73853 +scores/36s/v2.0-0936-g2ff169c                 \
+  +scores/36s/v2.0-0937-g8c95f56 +scores/36s/v2.0-0938-ga3bd7e0                 \
+  +scores/36s/v2.0-0939-g2e248c7 +scores/36s/v2.0-0941-gcd42b27                 \
+  +scores/36s/v2.0-0997-g3c33417 +scores/36s/v2.0-1038-g5be85cb
+
+ 0.60  1.04  1.06  0.98  0.97  1.04  1.02  1.30  1.13 b.expression(e)      # e = "(\e+a)" * 500, 100x
+
+So we have a large performance regression between v2.0-0931-gd70d722 and
++scores/36s/v2.0-0935-g9a73853, which is known:
+82ea6c309694f982d340ae71b2322e35b3347fdd moves to using dyn:: to assemble
+the expression.  The only means I see to avoid this is having a real LL
+parser which, this time, would not be on top of dyn::, but on static directly.
+
+The other regression (1.30) is due to the introduction of | and dyn::focus
+being called repeatedly.  The last one, 1.13, shows that we recovered, at
+least partially, from this.  Can't we do better?
+
+** rat: associativity
+It is quite by accident that (with trivial identities) abc is read
+right-associative.  I believe this is the right choice, as it makes a huge
+difference on derived-term, though most other algorithms don't care.
+
+But then we have two inconsistencies: power generates something which is
+left-associative, and a.b.c is left-associative too.
+
+Fix this.  Ask other members of the project what they think about that
+(left- vs. right- associativity).
+
 ** products: lazyness
 We need a lazy implementation of product.
 
@@ -222,6 +304,13 @@ We don't need to insplit in the case of idempotent semirings.
 
 ** product: lazy insplit
 Explore the possibility to apply insplitting lazily.
+
+** products: a function on top of all the products?
+See tests/python/to-expansion.py:prod.  Maybe this function could be useful
+in our API.
+
+Also, it would be nice to have variadic versions of these products for
+expressions, just as we have it for automata.
 
 ** scc
 Dijkstra is often more efficient than Tarjan, so we should have an
@@ -460,6 +549,13 @@ subexpression, which will be recomputed uselessly by derived-term based on
 derivation.  Yet, the whole point of expansion is to address issues such as
 this one.
 
+** derivation
+We could provide a faster implementation of derivation wrt to a word by
+implementing a recursion directly on the word, rather than repeating the
+derivation by a letter and performing the recursion on the letters.  See
+proposition 3 in "Derivatives of rational expressions with multiplicity" JS
++ SL.
+
 ** difference
 We don't need the rhs to be complete, it suffices to adjust product to
 generate a pseudo sink state each time we exit the RHS.  And of course to
@@ -549,9 +645,6 @@ the latter, and 17'480 for the former.  The ratio, 355, is still smaller
 than that of timings: 2750.
 
 * to-expression
-** More heuristics
-See what V1 did.
-
 ** Incremental
 Transform the current implementation of the "naive" heuristics into
 something incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
