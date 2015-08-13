@@ -5,6 +5,23 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-08-14
+### to_expression: more heuristics
+There are three new heuristics:
+
+"delgado"
+:  select a state whose removal would contribute a small
+   expression (number of symbols, including `+`, etc.).
+
+"delgado_label"
+:  likewise, but count only the number of labels in the
+   expression.
+
+"best"
+:   run all the heuristics, and return the shortest result.
+
+The default algorithm remains "auto", which now denotes "best".
+
 ## 2015-08-03
 ### to_automaton: conversion from expression to automaton
 Vcsn offers several means to build an automaton from an expression:

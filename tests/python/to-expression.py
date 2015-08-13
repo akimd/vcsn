@@ -10,8 +10,8 @@ from test import *
 # check_aut AUTOMATON EXP-OUT
 # ---------------------------
 # Check that to-expression(AUTOMATON) = EXP-OUT.
-def check_aut(aut, exp):
-    CHECK_EQ(exp, str(aut.expression()))
+def check_aut(aut, exp, algo = "auto"):
+    CHECK_EQ(exp, aut.expression(algo = algo))
 
 # Check the associativity of the product.
 check_aut(vcsn.automaton(filename = medir + "/a.gv"), '<x>a(<y>b)*<z>c')
@@ -29,7 +29,10 @@ check_aut(load('lal_char_z/d1.gv'), '(a+b)*(a+<-1>b)(a+b)*')
 check_aut(load('lal_char_zmin/minab.gv'), '(a+<1>b)*+(<1>a+b)*')
 check_aut(load('lal_char_zmin/minblocka.gv'), '(a+b)*b(<1>a)*b(a+b)*')
 check_aut(load('lal_char_zmin/slowgrow.gv'),
-          '(a+b)*b(<1>a)*b(a+<1>(a(<1>a)*b))*')
+          '(a+b)*b(<1>a+<1>(ba*a))*ba*')
+check_aut(load('lal_char_zmin/slowgrow.gv'),
+          '(a+b)*b(<1>a)*b(a+<1>(a(<1>a)*b))*',
+          'naive')
 
 
 ## ------------------------------------ ##

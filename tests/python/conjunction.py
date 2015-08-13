@@ -198,8 +198,8 @@ def check(exp, aut):
 a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
-check('<u>a+<u>a<u>a(<u>a)*', a1 & a2)
-check('<u>a+<u>a<u>a(<u>a)*', a2 & a1)
+check('<u>a(\e+<u>a(<u>a)*)', a1 & a2)
+check('<u>a(\e+<u>a(<u>a)*)', a2 & a1)
 
 # Z, Q, R.
 z = dt('lal_char(ab), z', '(<2>a+<3>b)*')

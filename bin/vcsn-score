@@ -288,13 +288,19 @@ bench('a.proper()',
 
 # to-expression.
 r = '[a-d]?{9}'
-bench('a.expression("linear")',
+bench('a.expression("linear", "naive")',
+      'a = std({})'.format(r),
+      setup = ['r = "{}"'.format(r),
+               'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
+
+r = '[a-d]?{15}'
+bench('a.expression("linear", "delgado")',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
                'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
 
 r = '[a-d]?{100}'
-bench('a.expression("associative")',
+bench('a.expression("associative", "naive")',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
                'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])

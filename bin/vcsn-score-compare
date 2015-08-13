@@ -105,6 +105,9 @@ def normalize(k):
     k = k.replace('product', 'conjunction')
 
     k = k.replace('a.expression()', 'a.expression("associative")')
+    k = re.sub(r'(a\.expression\("\w+")\)',
+               r'\1, "naive")',
+               k)
 
     # has_twins_property is benched on an expression using the
     # associative identities.

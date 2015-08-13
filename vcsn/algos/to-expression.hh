@@ -3,7 +3,10 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/core/rat/expression.hh>
+#include <vcsn/core/rat/info.hh>
+#include <vcsn/core/rat/size.hh>
 #include <vcsn/dyn/label.hh>
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/vector.hh>
 
@@ -21,9 +24,9 @@ namespace vcsn
     std::function<state_t_of<Lifted>(const Lifted&)>;
 
 
-  /*--------------------------.
-  | Naive heuristics degree.  |
-  `--------------------------*/
+  /*--------------------.
+  | Naive heuristics.   |
+  `--------------------*/
 
   template <typename Aut>
   state_t_of<Aut>
@@ -59,6 +62,116 @@ namespace vcsn
       }
     assert(best != a->null_state());
     return best;
+  }
+
+  /*----------------------.
+  | Delgado heuristics.   |
+  `----------------------*/
+  namespace detail
+  {
+    template <typename Aut>
+    struct next_delgado_impl
+    {
+      using automaton_t = Aut;
+      using state_t = state_t_of<automaton_t>;
+      using transition_t = transition_t_of<automaton_t>;
+
+      /// FIXME: C++14 make this ctors useless (GCC 5+).
+      next_delgado_impl(const automaton_t& aut, bool count_labels = false)
+        : aut_(aut)
+        , count_labels_(count_labels)
+      {}
+
+      /// The "weight" of a transition.
+      ///
+      /// That is to say, the size of its expression.
+      size_t size_of_transition(transition_t t) const
+      {
+        using expset_t = weightset_t_of<automaton_t>;
+        if (count_labels_)
+          return rat::make_info<expset_t>(aut_->weight_of(t)).atom;
+        else
+          return rat::size<expset_t>(aut_->weight_of(t));
+      }
+
+      /// The "weight" of a state, as defined by Degaldo/Morais.
+      ///
+      /// We use the word "size" instead, since "weight" has already a
+      /// strong meaning in Vcsn...
+      size_t size_of_state(state_t s) const
+      {
+        // The cumulated size of the incoming transitions excluding loops.
+        size_t size_in = 0;
+        // The number of incoming transitions excluding loops.
+        size_t ins = 0;
+        // The size of the loop, if there is one.
+        size_t size_loop = 0;
+        for (auto t: aut_->all_in(s))
+          if (aut_->src_of(t) == s)
+            size_loop += size_of_transition(t);
+          else
+            {
+              ++ins;
+              size_in += size_of_transition(t);
+            }
+
+        // The cumulated size of the outgoing transitions excluding loops.
+        size_t size_out = 0;
+        // The number of outgoing transitions excluding loops.
+        size_t outs = 0;
+        for (auto t: aut_->all_out(s))
+          if (aut_->dst_of(t) != s)
+            {
+              ++outs;
+              size_out += size_of_transition(t);
+            }
+
+        return (size_in * (outs - 1)
+                + size_out * (ins - 1)
+                + size_loop * (ins * outs - 1));
+      }
+
+      state_t operator()() const
+      {
+        require(!aut_->states().empty(),
+                "state-chooser: empty automaton");
+        auto best = aut_->null_state();
+        auto best_size = std::numeric_limits<size_t>::max();
+        for (auto s: aut_->states())
+          {
+            auto size = size_of_state(s);
+            if (size < best_size)
+              {
+                best = s;
+                best_size = size;
+              }
+          }
+        assert(best != aut_->null_state());
+        return best;
+      }
+
+      /// The automaton we work on.
+      const automaton_t& aut_;
+      /// Whether the size of an expression is the number of label
+      /// nodes, or the number of nodes.
+      bool count_labels_ = false;
+    };
+  }
+
+  template <typename Aut>
+  state_t_of<Aut>
+  next_delgado(const Aut& a)
+  {
+    auto n = detail::next_delgado_impl<Aut>{a};
+    return n();
+  }
+
+  template <typename Aut>
+  state_t_of<Aut>
+  next_delgado_label(const Aut& a)
+  {
+    auto n = detail::next_delgado_impl<Aut>{a, true};
+    return n();
   }
 
   /*------------------.
@@ -276,19 +389,86 @@ namespace vcsn
     return aut->get_initial_weight(aut->post());
   }
 
+  enum class to_expression_heuristic_t
+    {
+      best,
+      delgado,
+      delgado_label,
+      naive,
+    };
+
+  template <typename Aut>
+  state_chooser_t<Aut>
+  to_expression_heuristic(to_expression_heuristic_t algo)
+  {
+    switch (algo)
+    {
+    case to_expression_heuristic_t::best:
+      raise("next_state: invalid algorithm: best");
+
+    case to_expression_heuristic_t::delgado:
+      return next_delgado<detail::lifted_automaton_t<Aut>>;
+
+    case to_expression_heuristic_t::delgado_label:
+      return next_delgado_label<detail::lifted_automaton_t<Aut>>;
+
+    case to_expression_heuristic_t::naive:
+      return next_naive<detail::lifted_automaton_t<Aut>>;
+    }
+    BUILTIN_UNREACHABLE();
+  }
 
   template <typename Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression_naive(const Aut& a, vcsn::rat::identities ids)
+  to_expression(const Aut& aut, vcsn::rat::identities ids,
+                to_expression_heuristic_t algo)
   {
-    state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
-    return to_expression(a, ids, next);
+    if (algo == to_expression_heuristic_t::best)
+      {
+        typename ExpSet::value_t best;
+        auto best_size = std::numeric_limits<size_t>::max();
+        for (auto a: {to_expression_heuristic_t::delgado,
+                      to_expression_heuristic_t::delgado_label,
+                      to_expression_heuristic_t::naive})
+          {
+            auto r = to_expression<Aut, ExpSet>(aut, ids, a);
+            auto s = rat::size<ExpSet>(r);
+            if (s < best_size)
+              {
+                best = r;
+                best_size = s;
+              }
+          }
+        return best;
+      }
+    else
+      {
+        auto next = to_expression_heuristic<Aut>(algo);
+        return to_expression<Aut, ExpSet>(aut, ids, next);
+      }
   }
 
-  /*----------------------.
-  | dyn::to_expression.   |
-  `----------------------*/
+  template <typename Aut,
+            typename ExpSet = expressionset<context_t_of<Aut>>>
+  typename ExpSet::value_t
+  to_expression(const Aut& a, vcsn::rat::identities ids,
+                const std::string& algo)
+  {
+    static const auto map = std::map<std::string, to_expression_heuristic_t>
+      {
+        {"auto",          to_expression_heuristic_t::best},
+        {"best",          to_expression_heuristic_t::best},
+        {"delgado",       to_expression_heuristic_t::delgado},
+        {"delgado_label", to_expression_heuristic_t::delgado_label},
+        {"naive",         to_expression_heuristic_t::naive},
+      };
+    return to_expression<Aut, ExpSet>(a, ids, getargs("algorithm", map, algo));
+  }
+
+  /*----------------------------.
+  | to_expression(automaton).   |
+  `----------------------------*/
 
   namespace dyn
   {
@@ -301,21 +481,23 @@ namespace vcsn
                     const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        // FIXME: So far, there is a single implementation of expressions,
-        // but we should actually be parameterized by its type too.
         using context_t = context_t_of<Aut>;
         using expressionset_t = vcsn::expressionset<context_t>;
         auto rs = expressionset_t{a->context(), ids};
-        static const auto map = std::map<std::string, bool>
-          {
-            {"auto",  true},
-            {"naive", true},
-          };
-        // Merely just a validation so far.
-        getargs("algorithm", map, algo);
-        return make_expression(rs, ::vcsn::to_expression_naive(a, ids));
+        auto res = ::vcsn::to_expression(a, ids, algo);
+        return make_expression(rs, res);
       }
+    }
+  }
 
+  /*------------------------.
+  | to_expression(label).   |
+  `------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
       /// Bridge (to_expression).
       template <typename Context, typename Identities, typename Label>
       expression
@@ -329,6 +511,7 @@ namespace vcsn
       }
     }
   }
+
 
   /*-------------------------------.
   | to_expression(letter_class).   |

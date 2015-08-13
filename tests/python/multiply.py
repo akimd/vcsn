@@ -121,7 +121,8 @@ def check(exp, eff):
 a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
          .expression('<u>a').derived_term()
 a2 = vcsn.context('lal_char(b), b').expression('b*').standard()
-check('<u>a+<u>abb*', a1*a2)
+check('<u>a(\e+bb*)', a1*a2)
+# FIXME: Why don't we get (\e+bb*)<u>a?
 check('<u>a+bb*<u>a', a2*a1)
 
 # Z, Q, R.
