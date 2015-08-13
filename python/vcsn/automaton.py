@@ -144,21 +144,26 @@ def _automaton_fst(cmd, aut):
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
 
+def _automaton_as_fst(self):
+    '''Return an OpenFST binary file for `self`.  When the result is
+    discarded, the file might be removed, so to keep the file alive,
+    keep the result alive, not just the result's name.
+    '''
+    fst = _tmp_file(suffix='fst')
+    proc = _popen(['efstcompile'],
+                 stdin=PIPE, stdout=fst, stderr=PIPE)
+    proc.stdin.write(self.format('efsm').encode('utf-8'))
+    out, err = proc.communicate()
+    if proc.wait():
+        raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
+    return fst
+automaton.as_fst = _automaton_as_fst
+
 def _automaton_fst_files(cmd, *aut):
     '''Run the command `cmd` on the automata `aut` coded in OpenFST
     format, via files.
     '''
-    files = []
-    for a in aut:
-        fst = _tmp_file(suffix='fst')
-        proc = _popen(['efstcompile'],
-                     stdin=PIPE, stdout=fst, stderr=PIPE)
-        proc.stdin.write(a.format('efsm').encode('utf-8'))
-        out, err = proc.communicate()
-        if proc.wait():
-            raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
-        files.append(fst)
-
+    files = [a.as_fst() for a in aut]
     proc = _popen([cmd] + [f.name for f in files],
                  stdin=PIPE, stdout=PIPE, stderr=PIPE)
     decode = _popen(['efstdecompile'],
@@ -174,10 +179,12 @@ automaton.fstcat           = lambda self: _automaton_fst("cat", self)
 automaton.fstcompose       = lambda a, b: _automaton_fst_files("fstcompose", a, b)
 automaton.fstconjunction   = lambda a, b: _automaton_fst_files("fstintersect", a, b)
 automaton.fstdeterminize   = lambda self: _automaton_fst("fstdeterminize", self)
-automaton.fstis_equivalent = lambda self: _automaton_fst("cat", self)
+automaton.fstis_equal      = lambda a, b: _automaton_fst("fstequal", a, b)
+automaton.fstis_equivalent = lambda a, b: _automaton_fst("fstequivalent", a, b)
 automaton.fstminimize      = lambda self: _automaton_fst("fstminimize", self)
 automaton.fstproper        = lambda self: _automaton_fst("fstrmepsilon", self)
 automaton.fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
+automaton.fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
 
 automaton.infiltration = lambda *auts: automaton._infiltration(list(auts))
 

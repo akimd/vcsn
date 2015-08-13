@@ -87,8 +87,8 @@ a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
 check(a, 'a2xyz.efsm')
 
 if have_ofst:
-  # Conjunction: check that Open FST and Vcsn understand the weights the
-  # same way.
+  # Conjunction: check that OpenFST and Vcsn understand the weights
+  # the same way.  We have zmin and log in common.
   for f in [vcsn.datadir + '/lal_char_zmin/minblocka.gv',
             vcsn.datadir + '/lal_char_zmin/slowgrow.gv',
             medir + '/lal-char-log.gv']:
@@ -103,9 +103,9 @@ if have_ofst:
 
     CHECK_EQ(a2_vcsn, a2_ofst)
 
-  # Make sure we agree our determinization.  This automaton,
-  # determinized, has weights on the final states only, which
-  # exercises a bug we once had.
+  # Make sure determinizations agree.  This automaton, determinized,
+  # has weights on the final states only, which exercises a bug we
+  # once had.
   zmin = vcsn.context('lal_char(ab), zmin')
   a = zmin.expression('[ab]*a(<2>[ab])').automaton()
   d_vcsn = a.determinize().strip()
