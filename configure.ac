@@ -238,35 +238,32 @@ case $ac_cv_GLIBCXX_DEBUG:$vcsn_cv_cxx_is_clang in (yes:no)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
-# We add $CCACHE when calling the compiler, don't stack it twice.
-CXX_NO_CCACHE=$(echo "$CXX" | sed -e "s/^ccache //;s,^$CCACHE ,,")
-
 # We look for our data files at runtime, including to compile.
 AC_SUBST([pkglibdir],  ['${libdir}/${PACKAGE}'])
-AC_SUBST([CCACHE])
-AC_SUBST([CPPFLAGS])
-AC_SUBST([CXX_NO_CCACHE])
 AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$datadir/$PACKAGE])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
 AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
 
+# We add $CCACHE when calling CXX, don't stack it twice.
+AC_SUBST([CCACHE])
+AC_SUBST([VCSN_CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR $BOOST_CPPFLAGS"])
+AC_SUBST([VCSN_CXX], [$(echo "$CXX" | sed -e "s/^ccache //;s,^$CCACHE ,,")])
+AC_SUBST([VCSN_LDFLAGS], ["$LDFLAGS -L$LIBDIR"])
 
 # We compile C++ at runtime.
 VCSN_PROG_CCACHE
 AC_DEFINE_UNQUOTED([CCACHE], ["$CCACHE"],
                    [Define to the ccache program name.])
-AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR $BOOST_CPPFLAGS"],
+AC_DEFINE_UNQUOTED([CPPFLAGS], ["$VCSN_CPPFLAGS"],
                    [Define to the preprocessor flags.])
-AC_DEFINE_UNQUOTED([CXX], ["$CXX_NO_CCACHE"],
+AC_DEFINE_UNQUOTED([CXX], ["$VCSN_CXX"],
                    [Define to the C++ compiler (without ccache).])
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
                    [Define to the C++ compiler flags.])
 AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
                    [Define to the location of the data files.])
-AC_DEFINE_UNQUOTED([INCLUDEDIR], ["INCLUDEDIR"],
-                   [Define to the location of the headers.])
-AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS -L$LIBDIR"],
+AC_DEFINE_UNQUOTED([LDFLAGS], ["$VCSN_LDFLAGS"],
                    [Define to the linker flags.])
 AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
                    [Define to the location of the libraries.])
