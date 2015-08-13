@@ -78,12 +78,12 @@ check(a, 'str.efsm')
 # A transducer that looks like an acceptor when looking at the symbol
 # numbers.
 a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>, b')\
-      .expression("('(a,x)'+'(b,y)'+'(c,z)')*").standard().sort().strip()
+      .expression("(a|x+b|y+c|z)*").standard().sort().strip()
 check(a, 'a2x.efsm')
 
 # A transducer that cannot be seen as an acceptor.
 a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
-      .expression("('(a,x)'+'(a,y)'+'(a,z)')*").standard().sort().strip()
+      .expression("(a|x+a|y+a|z)*").standard().sort().strip()
 check(a, 'a2xyz.efsm')
 
 if have_ofst:

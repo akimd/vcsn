@@ -45,7 +45,7 @@ CHECK_EQ('''digraph
 ## --------------- ##
 
 c = vcsn.context('lat<lal_char(abc), lan_char(def), law_char(ghi)>, q')
-a = c.expression("'a,d,gh'<2>").standard()
+a = c.expression("(a|d|gh)<2>").standard()
 
 # lift(0).
 aref = '''digraph

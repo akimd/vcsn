@@ -15,8 +15,8 @@ def check(a1, a2, exp):
 c1 = vcsn.context("lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>, b")
 c2 = vcsn.context("lat<lan<lal_char(xyz)>,lan<lal_char(def)>>, b")
 
-check(c1.expression("'(a, x)'").standard(),
-      c2.expression("'(x, d)'").standard(),
+check(c1.expression("a|x").standard(),
+      c2.expression("x|d").standard(),
       '''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
@@ -59,21 +59,21 @@ a = '''digraph
   1 -> F1
   1 -> 1 [label = "a|d"]
 }'''
-check(c1.expression("'(a, x)'*").standard(),
-      c2.expression("'(x, d)'*").standard(),
+check(c1.expression("(a|x)*").standard(),
+      c2.expression("(x|d)*").standard(),
       a)
 
 ###############################
 ## Spontaneous transitions.  ##
 ###############################
 
-t1 = c1.expression("'(a, x)'*").thompson()
-t2 = c2.expression("'(x, d)'*").thompson()
+t1 = c1.expression("(a|x)*").thompson()
+t2 = c2.expression("(x|d)*").thompson()
 CHECK_EQ(vcsn.automaton(a),
          t1.compose(t2).trim().proper())
 
-check(c1.expression("'(a, x)'*").standard(),
-      c2.expression("'(y, d)'*").standard(),
+check(c1.expression("(a|x)*").standard(),
+      c2.expression("(y|d)*").standard(),
       '''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
@@ -98,8 +98,8 @@ check(c1.expression("'(a, x)'*").standard(),
 
 c_ratb = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, expressionset<lal_char(mno), b>")
 c_q = vcsn.context("lat<lan_char(xyz),lan_char(def)>, q")
-check(c_ratb.expression("<o>'(a, x)'").standard(),
-      c_q.expression("<3/2>'(x, d)'").standard(),
+check(c_ratb.expression("<o>(a|x)").standard(),
+      c_q.expression("<3/2>(x|d)").standard(),
       '''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, expressionset<letterset<char_letters(mno)>, q>"
@@ -175,8 +175,8 @@ check(a1, a2, res)
 
 
 c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, r")
-check(c_r.expression("<3.1>'(a, x)'").standard(),
-      c2.expression("'(x, d)'").standard(),
+check(c_r.expression("<3.1>(a|x)").standard(),
+      c2.expression("x|d").standard(),
       '''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, r"

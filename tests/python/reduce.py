@@ -102,7 +102,7 @@ for ws in ['z', 'q', 'r']:
     check_reduce(a, exp(ws))
 
 a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>, z') \
-    .expression("<2>(<3>'(a,x)'+<5>'(b,y)'+<7>'(a,x)')*<11>", 'associative') \
+    .expression("<2>(<3>(a|x)+<5>(b|y)+<7>(a|x))*<11>", 'associative') \
     .standard()
 check_reduce(a, '''digraph
 {

@@ -15,7 +15,8 @@ def check(obj, exp):
 
 # Check that ':', which is used as a separator by info, is also
 # properly treated as a letter.
-check(vcsn.context('lal_char(:a-z), q').expression("a+a':'").standard(),
+check(vcsn.context('lal_char(:a-z), q')
+      .expression("a+a':'").standard(),
       {'is ambiguous': False,
        'is codeterministic': False,
        'is complete': False,
@@ -43,7 +44,8 @@ check(vcsn.context('lal_char(:a-z), q').expression("a+a':'").standard(),
        'number of useful states': 4,
        'type': 'mutable_automaton<letterset<char_letters(:abcdefghijklmnopqrstuvwxyz)>, q>'})
 
-check(vcsn.context('lal_char(a-z), q').expression("<1>a+(<2>b<3>*<4>)<5>").standard(),
+check(vcsn.context('lal_char(a-z), q')
+      .expression("<1>a+(<2>b<3>*<4>)<5>").standard(),
       {'is ambiguous': False,
        'is codeterministic': False,
        'is complete': False,
@@ -72,7 +74,8 @@ check(vcsn.context('lal_char(a-z), q').expression("<1>a+(<2>b<3>*<4>)<5>").stand
        'type': 'mutable_automaton<letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>, q>'})
 
 # Test what happens with "N/A".
-check(vcsn.context('law_char(ab), b').expression('a(a+b)*').standard(),
+check(vcsn.context('law_char(ab), b')
+      .expression('a(a+b)*').standard(),
       {'is ambiguous': 'N/A',
        'is codeterministic': 'N/A',
        'is complete': 'N/A',
