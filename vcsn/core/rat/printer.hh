@@ -123,7 +123,7 @@ namespace vcsn
         void print_(const tuple_t& v)
         {
           if (I)
-            visitor_.out_ << visitor_.tuple_;
+            visitor_.out_ << visitor_.tuple_middle;
           auto rs = detail::make_focus<I>(visitor_.rs_);
           auto print = make_printer(rs, visitor_.out_);
           print.format(visitor_.fmt_);
@@ -145,7 +145,9 @@ namespace vcsn
         /// Entry point.
         void operator()(const tuple_t& v)
         {
-          return print_(v, labelset_t_of<context_t>::indices);
+          visitor_.out_ << visitor_.tuple_left;
+          print_(v, labelset_t_of<context_t>::indices);
+          visitor_.out_ << visitor_.tuple_right;
         }
         const printer& visitor_;
       };
@@ -332,7 +334,14 @@ namespace vcsn
       const char* shuffle_ = nullptr;
       const char* product_ = nullptr;
       const char* sum_ = nullptr;
-      const char* tuple_ = nullptr;
+
+      /// Left tuple delimiter.
+      const char* tuple_left = nullptr;
+      /// Tuple tape separator.
+      const char* tuple_middle = nullptr;
+      /// Right tuple delimiter.
+      const char* tuple_right = nullptr;
+
       /// The constants.
       const char* zero_ = nullptr;
       const char* one_ = nullptr;

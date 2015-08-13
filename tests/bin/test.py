@@ -141,12 +141,9 @@ def CHECK_EQ(expected, effective, loc = None):
         exp = format(expected)
         eff = format(effective)
         msg = exp + " != " + eff
-        if msg.count("\n") == 0:
-            FAIL(msg, loc=loc)
-        else:
-            FAIL(loc=loc)
-            rst_file("Expected output", exp)
-            rst_file("Effective output", eff)
+        FAIL(loc=loc)
+        rst_file("Expected output", exp)
+        rst_file("Effective output", eff)
         rst_diff(exp, eff)
 
 def normalize(a):
