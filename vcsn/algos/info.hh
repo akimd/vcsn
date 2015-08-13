@@ -270,10 +270,9 @@ namespace vcsn
 
     o << "\nsize: " << rat::size<ExpSet>(e);
 
-    auto nfo = vcsn::rat::info<ExpSet>{};
-    nfo(*e);
+    auto info = rat::make_info<ExpSet>(e);
 #define ECHO(Type)                              \
-    o << "\n" #Type ": " << nfo.Type
+    o << "\n" #Type ": " << info.Type
     ECHO(atom);
     ECHO(complement);
     ECHO(conjunction);

@@ -16,11 +16,15 @@ namespace vcsn
     using exp_t = std::shared_ptr<const exp>;
 
     // info.hh
-    template <typename Context>
+    template <typename ExpSet>
     class info;
 
+    template <typename ExpSet>
+    info<ExpSet>
+    make_info(const typename ExpSet::value_t& r);
+
     // printer.hh.
-    template <typename Context>
+    template <typename ExpSet>
     class printer;
 
     template <typename ExpSet>

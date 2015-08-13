@@ -26,6 +26,12 @@ namespace vcsn
         v.accept(*this);
       }
 
+      /// Entry point: compute info about \a v.
+      void operator()(const std::shared_ptr<const node_t>& v)
+      {
+        operator()(*v);
+      }
+
       void clear()
       {
         atom = 0;
@@ -129,9 +135,8 @@ namespace vcsn
         template <size_t I>
         void info_(const tuple_t& v)
         {
-          auto nfo = info<typename expressionset_t::template focus_t<I>>{};
-          nfo(*std::get<I>(v.sub()));
-          visitor_ += nfo;
+          using expset_t = typename expressionset_t::template focus_t<I>;
+          visitor_ += make_info<expset_t>(std::get<I>(v.sub()));
         }
 
         /// Info all the tapes.
@@ -170,5 +175,13 @@ namespace vcsn
         visit_tuple<>{*this}(v);
       }
     };
+
+    template <typename ExpSet>
+    info<ExpSet> make_info(const typename ExpSet::value_t& r)
+    {
+      auto s = info<ExpSet>{};
+      s(r);
+      return s;
+    }
   } // namespace rat
 } // namespace vcsn
