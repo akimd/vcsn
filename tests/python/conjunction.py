@@ -3,7 +3,8 @@
 import vcsn
 from test import *
 
-b = vcsn.context('lal_char(abcd), b')
+def dt(ctx, exp):
+    return vcsn.context(ctx).expression(exp).derived_term()
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -11,9 +12,9 @@ b = vcsn.context('lal_char(abcd), b')
 
 # See the actual code of conjunction to understand the point of this test
 # (which is new_transition vs. add_transition).
-a1 = b.expression('a*a').derived_term()
+a1 = dt('lal_char(abcd), b', 'a*a')
 a2 = a1 & a1
-CHECK_EQ('a*a', str(a2.expression()))
+CHECK_EQ('a*a', a2.expression())
 
 ## ---------------------- ##
 ## (a+b)* & (b+c)* = b*.  ##
@@ -43,7 +44,7 @@ CHECK_EQ('''digraph
   1 -> F1
   1 -> 1 [label = "b"]
 }''',
-         str(lhs & rhs))
+         lhs & rhs)
 
 ## ------------- ##
 ## ab & cd = 0.  ##
@@ -65,7 +66,7 @@ CHECK_EQ('''digraph
     0 [label = "0, 0", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
-}''', str(lhs & rhs))
+}''', lhs & rhs)
 
 
 
@@ -92,7 +93,7 @@ CHECK_EQ('''digraph
   I0 -> 0
   0 -> F0
 }''',
-         str(lhs & rhs))
+         lhs & rhs)
 
 
 
@@ -182,39 +183,39 @@ exp = '''digraph
   3 -> 2 [label = "a", color = DimGray]
 }'''
 
-CHECK_EQ(exp, str(lhs & rhs))
+CHECK_EQ(exp, lhs & rhs)
 
 ## ------------------------------------ ##
 ## Heterogeneous (and variadic) input.  ##
 ## ------------------------------------ ##
 
-# check OPERATION RES AUT...
-# --------------------------
-def check(operation, exp, *args):
-    CHECK_EQ(exp, str(vcsn.automaton._conjunction(list(args)).expression()))
+# check RES AUT
+# -------------
+def check(exp, aut):
+    CHECK_EQ(exp, aut.expression())
 
 # RatE and B, in both directions.
 a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
-check('conjunction', '<u>a+<u>a<u>a(<u>a)*', a1, a2)
-check('conjunction', '<u>a+<u>a<u>a(<u>a)*', a2, a1)
+check('<u>a+<u>a<u>a(<u>a)*', a1 & a2)
+check('<u>a+<u>a<u>a(<u>a)*', a2 & a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(ab), z').expression('(<2>a+<3>b)*')    .derived_term()
-q = vcsn.context('lal_char(ab), q').expression('(<1/2>a+<1/3>b)*').derived_term()
-r = vcsn.context('lal_char(ab), r').expression('(<.2>a+<.3>b)*')  .derived_term()
+z = dt('lal_char(ab), z', '(<2>a+<3>b)*')
+q = dt('lal_char(ab), q', '(<1/2>a+<1/3>b)*')
+r = dt('lal_char(ab), r', '(<.2>a+<.3>b)*')
 
-check('conjunction', '(a+b)*', z, q)
-check('conjunction', '(a+b)*', q, z)
-check('conjunction', '(<2>a+<3>b)*', z, q, z)
-check('conjunction', '(<1/2>a+<1/3>b)*', z, q, q)
+check('(a+b)*', z & q)
+check('(a+b)*', q & z)
+check('(<2>a+<3>b)*', z & q & z)
+check('(<1/2>a+<1/3>b)*', z & q & q)
 
-check('conjunction', '(<0.4>a+<0.9>b)*', z, r)
-check('conjunction', '(<0.4>a+<0.9>b)*', r, z)
+check('(<0.4>a+<0.9>b)*', z & r)
+check('(<0.4>a+<0.9>b)*', r & z)
 
-check('conjunction', '(<0.1>a+<0.1>b)*', q, r)
-check('conjunction', '(<0.1>a+<0.1>b)*', r, q)
+check('(<0.1>a+<0.1>b)*', q & r)
+check('(<0.1>a+<0.1>b)*', r & q)
 
 
 ## ----------------- ##
@@ -227,7 +228,7 @@ a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
          .expression('<x>a<y>b').standard()
 
 def check_enumerate(exp, aut):
-    CHECK_EQ(exp, str(aut.strip().shortest(len = 4)))
+    CHECK_EQ(exp, aut.strip().shortest(len = 4))
 
 check_enumerate('<uxvy>ab', a1 & a2)
 check_enumerate('\z', a1.transpose() & a2)
@@ -258,27 +259,19 @@ CHECK_EQ('''digraph
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]
   1 -> 2 [label = "a", color = DimGray]
-}''', str(vcsn.automaton._conjunction([vcsn.automaton('''
+}''', vcsn.automaton._conjunction([vcsn.automaton('''
 digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0", shape = box, color = DimGray]
-    1 [label = "1", shape = box, color = DimGray]
-    2 [label = "2", shape = box, color = DimGray]
-  }
-  I0 -> 0 [color = DimGray]
-  0 -> 1 [label = "a", color = DimGray]
-  1 -> 2 [label = "a", color = DimGray]
+  I -> 0
+  0 -> 1 [label = "a"]
+  1 -> 2 [label = "a"]
+  3 -> 0 [label = "b"]
+  3 -> 1 [label = "b"]
+  3 -> 2 [label = "b"]
+  3 -> F
 }
-''')])))
+''')]))
 
 # Four arguments.
 ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
@@ -299,7 +292,7 @@ br = vcsn.context('lal_char(a), seriesset<lal_char(uv), z>') \
 z = vcsn.context('lal_char(b), z').expression('<2>b*')
 q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
 r = vcsn.context('lal_char(d), r').expression('<.4>d*')
-CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', str(br & z & q & r))
+CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', br & z & q & r)
 
 ## ----------------- ##
 ## nullable labels.  ##
@@ -380,7 +373,7 @@ res = r'''digraph
   25 -> 9 [label = "\\e"]
   25 -> 10 [label = "\\e", color = DimGray]
 }'''
-CHECK_EQ(res, str(lhs & rhs))
+CHECK_EQ(res, lhs & rhs)
 CHECK_EQUIV(vcsn.automaton(res),
             vcsn.context("lal_char(b), b").expression("b*").standard())
 
@@ -602,7 +595,7 @@ res = r'''digraph
   91 -> 39 [label = "\\e", color = DimGray]
   91 -> 40 [label = "\\e", color = DimGray]
 }'''
-CHECK_EQ(res, str(lhs & rhs & third))
+CHECK_EQ(res, lhs & rhs & third)
 CHECK_EQUIV(vcsn.automaton(res),
             vcsn.context("lal_char(b), b").expression("b*").standard())
 
@@ -682,16 +675,13 @@ res = r'''digraph
   4 -> F4
 }'''
 
-CHECK_EQ(res, str(vcsn.automaton._conjunction([a1, a2])))
+CHECK_EQ(res, a1 & a2)
 
 ## ------------- ##
 ## Conjunction.  ##
 ## ------------- ##
 
-#Show that Conjunction is callable trough wrapper
-#The call is perfectly transparent
-
-b = vcsn.context('lal_char(a), b')
-a = b.expression('a').standard()
+# Check that the conjunction structure is transparent: invoke it.
+a = vcsn.context('lal_char(a), b').expression('a').standard()
 a = a & a & a
-CHECK_EQ(str(a('a')), '1')
+CHECK_EQ('1', a('a'))

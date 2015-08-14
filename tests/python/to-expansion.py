@@ -3,14 +3,15 @@
 import vcsn
 from test import *
 
-c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
-
 def is_wordset(c):
     return str(c).startswith("law_")
 
+
+c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+
 def check(re, exp, use_spontaneous = False):
-    '''Check that fo(re) = exp.  Also check that both derived_term algorithms
-    (`derivation` and `expansion`) compute the same result.
+    '''Check that d(re) = exp.  Also check that both derived_term
+    algorithms (`derivation` and `expansion`) compute the same result.
     '''
     r = c.expression(re)
     eff = r.expansion()
