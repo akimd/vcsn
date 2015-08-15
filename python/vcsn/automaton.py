@@ -151,7 +151,7 @@ def _automaton_as_fst(self):
     '''
     fst = _tmp_file(suffix='fst')
     proc = _popen(['efstcompile'],
-                 stdin=PIPE, stdout=fst, stderr=PIPE)
+                  stdin=PIPE, stdout=fst, stderr=PIPE)
     proc.stdin.write(self.format('efsm').encode('utf-8'))
     out, err = proc.communicate()
     if proc.wait():
@@ -165,9 +165,9 @@ def _automaton_fst_files(cmd, *aut):
     '''
     files = [a.as_fst() for a in aut]
     proc = _popen([cmd] + [f.name for f in files],
-                 stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                  stdin=PIPE, stdout=PIPE, stderr=PIPE)
     decode = _popen(['efstdecompile'],
-                   stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
+                    stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
     res, err = decode.communicate()
     if proc.wait():
         raise RuntimeError(" ".join(cmd) + " failed: " + proc.stderr.read().decode('utf-8'))

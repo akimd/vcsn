@@ -129,8 +129,8 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
          _tmp_file('pdf') as pdf, \
          _tmp_file('svg') as svg:
         p1 = _popen(['dot2tex', '--prog', engine],
-                   stdin=PIPE, stdout=tex, stderr=PIPE,
-                   universal_newlines=True)
+                    stdin=PIPE, stdout=tex, stderr=PIPE,
+                    universal_newlines=True)
         out, err = p1.communicate(dot)
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err)

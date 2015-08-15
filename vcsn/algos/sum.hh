@@ -89,9 +89,9 @@ namespace vcsn
   }
 
 
-  /*------------------------------.
-  | sum(polynomial, polynomial).  |
-  `------------------------------*/
+  /*---------------------.
+  | sum(Value, Value).   |
+  `---------------------*/
 
   /// Sums of values.
   template <typename ValueSet>

@@ -47,9 +47,9 @@ namespace vcsn
     ///
     /// \param aut        the automaton to codeterminize
     /// \param algo
-    ///     "boolean"     use efficient bitsets
-    ///     "weighted"    accept non Boolean automata (might not terminate)
-    ///     "auto"        "boolean" if the automaton is Boolean,
+    ///   - "boolean"     use efficient bitsets
+    ///   - "weighted"    accept non Boolean automata (might not terminate)
+    ///   - "auto"        "boolean" if the automaton is Boolean,
     ///                   "weighted" otherwise.
     /// \pre  the labelset of \a aut must be free.
     automaton codeterminize(const automaton& aut,
@@ -169,11 +169,11 @@ namespace vcsn
     ///
     /// \param exp    the input expression
     /// \param algo   how the derived terms are computed:
-    ///    "auto"                  alias for "expansion"
-    ///    "derivation"            compute by derivation
-    ///    "breaking_derivation"   compute by breaking derivation
-    ///    "expansion"             compute by expansion
-    ///    "breaking_expansion"    compute by breaking expansion
+    ///    - "auto"                  alias for "expansion"
+    ///    - "derivation"            compute by derivation
+    ///    - "breaking_derivation"   compute by breaking derivation
+    ///    - "expansion"             compute by expansion
+    ///    - "breaking_expansion"    compute by breaking expansion
     automaton derived_term(const expression& exp,
                            const std::string& algo = "auto");
 
@@ -181,10 +181,10 @@ namespace vcsn
     ///
     /// \param aut        the automaton to determinize
     /// \param algo
-    ///     "boolean"     use efficient bitsets
-    ///     "weighted"    accept non Boolean automata (might not terminate)
-    ///     "auto"        "boolean" if the automaton is Boolean,
-    ///                   "weighted" otherwise.
+    ///     - "boolean"     use efficient bitsets
+    ///     - "weighted"    accept non Boolean automata (might not terminate)
+    ///     - "auto"        "boolean" if the automaton is Boolean,
+    ///                     "weighted" otherwise.
     /// \pre  the labelset of \a aut must be free.
     automaton determinize(const automaton& aut,
                           const std::string& algo = "auto");
@@ -538,12 +538,12 @@ namespace vcsn
     /// \param dir    the direction of the closure
     /// \param prune  whether to delete states that become inaccessible
     /// \param algo   how elimination is performed
-    ///     "auto"       same as "inplace"
-    ///     "default"    same as "inplace"
-    ///     "inplace"    eliminate in place
-    ///     "separate"   first separate the automaton into spontaneous and
-    ///                  proper parts
-    ///     "distance"   compute all-pairs distances
+    ///     - "auto"       same as "inplace"
+    ///     - "default"    same as "inplace"
+    ///     - "inplace"    eliminate in place
+    ///     - "separate"   first separate the automaton into spontaneous and
+    ///                    proper parts
+    ///     - "distance"   compute all-pairs distances
     automaton proper(const automaton& aut,
                      direction dir = direction::backward,
                      bool prune = true, const std::string& algo = "auto");
