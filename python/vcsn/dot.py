@@ -89,7 +89,7 @@ def _dot_to_boxart(dot):
     p.stdin.write(dot)
     out, err = p.communicate()
     if p.wait():
-        raise RuntimeError("graph-easy failed: " + p.stderr.read())
+        raise RuntimeError("graph-easy failed: " + err)
     if isinstance(out, bytes):
         out = out.decode('utf-8')
     return out

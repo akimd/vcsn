@@ -69,7 +69,7 @@ def run(cmd):
             sys.exit(retcode)
     except OSError as e:
         print(me + ": execution failed:", e, file=sys.stderr)
-        sys.exit(retcode)
+        sys.exit(1)
 
 if args.shared:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")
