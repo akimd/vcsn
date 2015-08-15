@@ -260,6 +260,28 @@ namespace vcsn
         return res;
       }
 
+      /// The shuffle product of \a l and \a r.
+      value_t shuffle(value_t lhs_xpn, expression_t lhs_xpr,
+                      value_t rhs_xpn, expression_t rhs_xpr) const
+      {
+        value_t res;
+        res.constant = ws_.mul(lhs_xpn.constant, rhs_xpn.constant);
+
+        // (i) lhs_xpn:rhs_xpr.
+        for (const auto& p: lhs_xpn.polynomials)
+          for (const auto& m: p.second)
+            res.polynomials[p.first].set(rs_.shuffle(label_of(m), rhs_xpr),
+                                         weight_of(m));
+        // (ii) lhs_xpr:rhs_xpn
+        for (const auto& p: rhs_xpn.polynomials)
+          for (const auto& m: p.second)
+            ps_.add_here(res.polynomials[p.first],
+                         rs_.shuffle(lhs_xpr, label_of(m)), weight_of(m));
+
+        return res;
+      }
+
+
       /*---------------.
       | tuple(v...).   |
       `---------------*/

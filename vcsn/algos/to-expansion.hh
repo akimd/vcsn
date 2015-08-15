@@ -264,6 +264,7 @@ namespace vcsn
         es_.normalize(res_);
       }
 
+      // d(E&F) = d(E)&d(F).
       VCSN_RAT_VISIT(conjunction, e)
       {
         res_ = to_expansion(e.head());
@@ -280,25 +281,8 @@ namespace vcsn
         expression_t prev = rs_.one();
         for (const auto& rhs: e)
           {
-            // Save current result in lhs, and compute the result in res.
-            expansion_t lhs; lhs.constant = ws_.zero();
-            std::swap(res, lhs);
-
-            expansion_t r = to_expansion(rhs);
-            res.constant = ws_.mul(lhs.constant, r.constant);
-
-            // (i) d(lhs) -> d(lhs):r, that is, shuffle-multiply the
-            // current result by the current child (rhs).
-            for (const auto& p: lhs.polynomials)
-              for (const auto& m: p.second)
-                res.polynomials[p.first].set(rs_.shuffle(label_of(m), rhs),
-                                             weight_of(m));
-            // (ii) prev:d(rhs)
-            for (const auto& p: r.polynomials)
-              for (const auto& m: p.second)
-                ps_.add_here(res.polynomials[p.first],
-                             rs_.shuffle(prev, label_of(m)), weight_of(m));
-
+            res = es_.shuffle(res, prev,
+                              to_expansion(rhs), rhs);
             prev = rs_.shuffle(prev, rhs);
           }
         res_ = std::move(res);
