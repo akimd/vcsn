@@ -481,6 +481,28 @@ namespace vcsn
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }
 
+  DEFINE::infiltration(value_t l, value_t r) const
+    -> value_t
+  {
+    value_t res = nullptr;
+    // Trivial Identity.
+    // E&:0 = 0&:E = 0.
+    if (l->type() == type_t::zero)
+      res = l;
+    else if (r->type() == type_t::zero)
+      res = r;
+    // E&:1 = 1&:E = E.
+    else if (l->type() == type_t::one)
+      res = r;
+    else if (r->type() == type_t::one)
+      res = l;
+    // END: Trivial Identity
+    else
+      res =
+        std::make_shared<infiltration_t>(gather_<type_t::infiltration>(l, r));
+    return res;
+  }
+
   DEFINE::shuffle(value_t l, value_t r) const
     -> value_t
   {

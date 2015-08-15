@@ -276,6 +276,7 @@ namespace vcsn
     ECHO(atom);
     ECHO(complement);
     ECHO(conjunction);
+    ECHO(infiltration);
     ECHO(ldiv);
     ECHO(lweight);
     ECHO(one);

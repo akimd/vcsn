@@ -15,20 +15,21 @@ namespace vcsn
       switch (t)
         {
 #define CASE(T) case type_t::T: o << #T; break
-          CASE(zero);
-          CASE(one);
           CASE(atom);
-          CASE(sum);
-          CASE(prod);
-          CASE(ldiv);
+          CASE(complement);
           CASE(conjunction);
+          CASE(infiltration);
+          CASE(ldiv);
+          CASE(lweight);
+          CASE(one);
+          CASE(prod);
+          CASE(rweight);
           CASE(shuffle);
           CASE(star);
+          CASE(sum);
           CASE(transposition);
-          CASE(lweight);
-          CASE(rweight);
-          CASE(complement);
           CASE(tuple);
+          CASE(zero);
 #undef CASE
         }
       return o;
@@ -82,6 +83,7 @@ namespace vcsn
           complement_    = "^{c}";
           transposition_ = "^{T}";
           conjunction_   = " \\& ";
+          infiltration_  = " \\uparrow ";
           shuffle_       = " \\between ";
           product_       = " \\, ";
           sum_           = (rs_.identities().is_distributive() ? " \\oplus "
@@ -107,6 +109,7 @@ namespace vcsn
           complement_    = "{c}";
           transposition_ = "{T}";
           conjunction_   = "&";
+          infiltration_  = "&:";
           shuffle_       = ":";
           product_       = "";
           sum_           = "+";
@@ -135,6 +138,7 @@ namespace vcsn
             CASE(atom);
             CASE(complement);
             CASE(conjunction);
+            CASE(infiltration);
             CASE(ldiv);
             CASE(lweight);
             CASE(one);

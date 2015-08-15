@@ -755,7 +755,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
@@ -786,6 +785,41 @@ namespace vcsn
       }
     }
   }
+
+  /*----------------------------------------.
+  | infiltration(expression, expression).   |
+  `----------------------------------------*/
+
+  /// Shuffle product of expressions.
+  template <typename ValueSet>
+  inline
+  typename ValueSet::value_t
+  infiltration(const ValueSet& vs,
+               const typename ValueSet::value_t& lhs,
+               const typename ValueSet::value_t& rhs)
+  {
+    return vs.infiltration(lhs, rhs);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (infiltration).
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      expression
+      infiltration_expression(const expression& lhs, const expression& rhs)
+      {
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
+        auto rs = join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        return make_expression(rs, ::vcsn::infiltration(rs, lr, rr));
+      }
+    }
+  }
+
 
   /*-----------------------------.
   | conjunction(automaton, n).   |

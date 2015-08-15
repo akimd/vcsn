@@ -23,6 +23,12 @@ namespace vcsn
         t->accept(*this);
     }
 
+    VISIT(infiltration, v)
+    {
+      for (auto t : v)
+        t->accept(*this);
+    }
+
     VISIT(shuffle, v)
     {
       for (auto t : v)

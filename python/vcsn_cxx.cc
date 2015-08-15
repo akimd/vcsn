@@ -868,6 +868,11 @@ struct expression
     return os.str();
   }
 
+  expression infiltration(const expression& rhs)
+  {
+    return vcsn::dyn::infiltration(val_, rhs.val_);
+  }
+
   bool is_equivalent(const expression& rhs) const
   {
     return vcsn::dyn::are_equivalent(val_, rhs.val_);
@@ -1365,6 +1370,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expression", &expression::as_expression,
          (arg("context") = context()))
     .def("format", &expression::format)
+    .def("infiltration", &expression::infiltration)
     .def("is_equivalent", &expression::is_equivalent)
     .def("is_series", &expression::is_series)
     .def("is_valid", &expression::is_valid)

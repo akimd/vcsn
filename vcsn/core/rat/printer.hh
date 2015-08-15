@@ -35,8 +35,10 @@ namespace vcsn
     {
       sum,
       tuple,
-      shuffle,
-      conjunction,
+      products,
+      shuffle = products,
+      conjunction = products,
+      infiltration = products,
       ldiv,
       prod,
       word = prod, // Multi-letter atoms.
@@ -101,6 +103,7 @@ namespace vcsn
       VCSN_RAT_VISIT(atom, v);
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
+      VCSN_RAT_VISIT(infiltration, v)  { print_(v, infiltration_); }
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v);
       VCSN_RAT_VISIT(one, v);
@@ -331,6 +334,7 @@ namespace vcsn
       const char* complement_ = nullptr;
       const char* transposition_ = nullptr;
       const char* conjunction_ = nullptr;
+      const char* infiltration_ = nullptr;
       const char* shuffle_ = nullptr;
       const char* product_ = nullptr;
       const char* sum_ = nullptr;

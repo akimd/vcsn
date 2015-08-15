@@ -37,6 +37,7 @@ namespace vcsn
         atom = 0;
         complement = 0;
         conjunction = 0;
+        infiltration = 0;
         ldiv = 0;
         lweight = 0;
         one = 0;
@@ -57,6 +58,7 @@ namespace vcsn
         atom += other.atom;
         complement += other.complement;
         conjunction += other.conjunction;
+        infiltration += other.infiltration;
         ldiv += other.ldiv;
         lweight += other.lweight;
         one += other.one;
@@ -81,16 +83,17 @@ namespace vcsn
       VCSN_RAT_VISIT(Type, v)
 
       DEFINE(atom)         { ++atom; (void) v;         }
-      DEFINE(complement)   { ++complement;  visit_(v); }
-      DEFINE(conjunction)  { ++conjunction; visit_(v); }
-      DEFINE(ldiv)         { ++ldiv;        visit_(v); }
+      DEFINE(complement)   { ++complement;   visit_(v); }
+      DEFINE(conjunction)  { ++conjunction;  visit_(v); }
+      DEFINE(infiltration) { ++infiltration; visit_(v); }
+      DEFINE(ldiv)         { ++ldiv;         visit_(v); }
       DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); }
       DEFINE(one)          { ++one; (void) v;         }
-      DEFINE(prod)         { ++prod;        visit_(v);}
+      DEFINE(prod)         { ++prod;         visit_(v);}
       DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); }
-      DEFINE(shuffle)      { ++shuffle;     visit_(v); }
-      DEFINE(star)         { ++star;        visit_(v); }
-      DEFINE(sum)          { ++sum;         visit_(v);  }
+      DEFINE(shuffle)      { ++shuffle;      visit_(v); }
+      DEFINE(star)         { ++star;         visit_(v); }
+      DEFINE(sum)          { ++sum;          visit_(v);  }
       DEFINE(transposition){ ++transposition; visit_(v); }
       DEFINE(zero)         { ++zero; (void) v;         }
 #undef DEFINE

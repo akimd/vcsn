@@ -52,6 +52,7 @@ namespace vcsn
     DEFINE(atom);
     DEFINE(complement);
     DEFINE(conjunction);
+    DEFINE(infiltration);
     DEFINE(inner);
     DEFINE(ldiv);
     DEFINE(leaf);
@@ -63,8 +64,8 @@ namespace vcsn
     DEFINE(shuffle);
     DEFINE(star);
     DEFINE(sum);
-    DEFINE(tuple);
     DEFINE(transposition);
+    DEFINE(tuple);
     DEFINE(zero);
 # undef DEFINE
 
@@ -234,6 +235,7 @@ namespace vcsn
     value_t concat(value_t l, value_t r) const;
 
     value_t conjunction(value_t l, value_t r) const;
+    value_t infiltration(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
     template <typename... Value>
     value_t tuple(Value&&... v) const;

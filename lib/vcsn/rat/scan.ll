@@ -62,6 +62,7 @@ namespace
 
   "&"     return TOK(AMPERSAND);
   ":"     return TOK(COLON);
+  "&:"    return TOK(AMPERSAND_COLON);
   "%"     return TOK(PERCENT);
   "+"     return TOK(PLUS);
   "<+"    return TOK(LT_PLUS);

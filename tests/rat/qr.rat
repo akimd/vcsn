@@ -100,6 +100,20 @@ a<i> => <i>a
 <i>a&<j>\e => \z
 <i>a&<j>a => <ij>a
 
+# Trivial identities: infiltration.
+\z&:<j>\e => \z
+<j>\e&:\z => \z
+
+\z&:<j>a => \z
+<j>a&:\z => \z
+
+\e&:<j>a => <j>a
+<j>a&:\e => <j>a
+<i>\e&:<j>\e => <i>\e&:<j>\e
+<i>\e&:<j>a => <i>\e&:<j>a
+<i>a&:<j>\e => <i>a&:<j>\e
+<i>a&:<j>a => <i>a&:<j>a
+
 # Trivial identities: shuffle.
 \z:<j>\e => \z
 <j>\e:\z => \z

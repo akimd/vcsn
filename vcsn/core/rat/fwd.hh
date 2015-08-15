@@ -46,6 +46,7 @@ namespace vcsn
       ldiv,
       conjunction,
       shuffle,
+      infiltration,
       star,
       transposition,
       lweight,
@@ -73,6 +74,7 @@ namespace vcsn
     inline constexpr bool is_variadic(type_t t)
     {
       return (t == type_t::conjunction
+              || t == type_t::infiltration
               || t == type_t::ldiv
               || t == type_t::prod
               || t == type_t::shuffle
@@ -136,6 +138,9 @@ namespace vcsn
 
     template <typename Context>
     using conjunction = variadic<type_t::conjunction, Context>;
+
+    template <typename Context>
+    using infiltration = variadic<type_t::infiltration, Context>;
 
     template <typename Context>
     using ldiv = variadic<type_t::ldiv, Context>;

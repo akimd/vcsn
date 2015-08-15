@@ -79,6 +79,14 @@ namespace vcsn
           res_ = rs_.conjunction(res_, transpose(v));
       }
 
+      VCSN_RAT_VISIT(infiltration, e)
+      {
+        // FIXME: that should be easy to factor.
+        res_= transpose(e.head());
+        for (auto v: e.tail())
+          res_ = rs_.infiltration(res_, transpose(v));
+      }
+
       VCSN_RAT_VISIT(shuffle, e)
       {
         // FIXME: that should be easy to factor.

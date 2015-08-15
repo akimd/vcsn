@@ -133,27 +133,28 @@
 %printer { dyn::print($$, yyo); } <dyn::weight>;
 
 %token
-  AMPERSAND  "&"
-  BACKSLASH  "{\\}"
-  CARET      "^"
-  COLON      ":"
-  COMMA      ","
-  COMPLEMENT "{c}"
-  DASH       "-"
-  DOT        "."
-  END 0      "end"
-  LBRACKET   "["
-  LPAREN     "("
-  LT_PLUS    "<+"
-  ONE        "\\e"
-  PERCENT    "%"
-  PIPE       "|"
-  PLUS       "+"
-  RBRACKET   "]"
-  RPAREN     ")"
-  SLASH      "{/}"
-  TRANSPOSITION "{T}"
-  ZERO       "\\z"
+  AMPERSAND       "&"
+  AMPERSAND_COLON "&:"
+  BACKSLASH       "{\\}"
+  CARET           "^"
+  COLON           ":"
+  COMMA           ","
+  COMPLEMENT      "{c}"
+  DASH            "-"
+  DOT             "."
+  END 0           "end"
+  LBRACKET        "["
+  LPAREN          "("
+  LT_PLUS         "<+"
+  ONE             "\\e"
+  PERCENT         "%"
+  PIPE            "|"
+  PLUS            "+"
+  RBRACKET        "]"
+  RPAREN          ")"
+  SLASH           "{/}"
+  TRANSPOSITION   "{T}"
+  ZERO            "\\z"
 ;
 
 %token <irange_type> STAR "*";
@@ -168,7 +169,7 @@
 %left "+" "<+"
  //%left "|"
 %left "%"
-%left "&" ":"
+%left "&" ":" "&:"
 %left "{/}"
 %right "{\\}"
 %left "."
@@ -234,6 +235,7 @@ exp:
   exp "." exp                 { $$ = dyn::multiply($1.exp, $3.exp); }
 | exp "&" exp                 { $$ = dyn::conjunction($1.exp, $3.exp); }
 | exp ":" exp                 { $$ = dyn::shuffle($1.exp, $3.exp); }
+| exp "&:" exp                { $$ = dyn::infiltration($1.exp, $3.exp); }
 | exp "<+" exp                { $$ = prefer($1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = dyn::ldiv($1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
