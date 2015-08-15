@@ -1,4 +1,8 @@
-import regex as re
+try:
+    import regex as re
+    has_regex = True
+except ImportError:
+    has_regex = False
 import sys
 
 parameters = r'''
@@ -20,7 +24,7 @@ def sub(pattern, repl, string, *args, **kwargs):
 #        print(string, num)
     return string
 
-def demangle(s):
+def demangle_regex(s):
     # C++.
     s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|less|map|pair|set|shared_ptr|string|tuple)',
             r'std::\1',
@@ -46,7 +50,7 @@ def demangle(s):
             s)
 
     # Weightsets.
-    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?([bq]|[zr](?:min)?)_impl>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::)?(?:detail::)?([bq]|[zr](?:min)?)_impl>',
             r'\1',
             s)
 
@@ -87,3 +91,8 @@ def demangle(s):
             s)
 
     return s
+
+def demangle_re(s):
+    return s
+
+demangle = demangle_regex if has_regex else demangle_re

@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 from vcsn_config import config
+from vcsn.demangle import demangle
 
 me = sys.argv[0]
 
@@ -58,14 +59,24 @@ def fmt(s):
 def run(cmd):
     cmd = fmt(cmd)
     if args.verbose:
-        print("run:", cmd, file=sys.stderr)
+        print(me + ": run:", cmd, file=sys.stderr)
     try:
-        retcode = subprocess.call(cmd, shell=True)
+        p = subprocess.Popen(cmd, shell=True,
+                             stdin=subprocess.DEVNULL,
+                             stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        retcode = p.wait()
+        if out:
+            out = out.decode('utf-8')
+            print(out)
         if retcode:
             if retcode < 0:
                 print(me + ": child was terminated by signal", -retcode, file=sys.stderr)
             else:
                 print(me + ": child returned", retcode, file=sys.stderr)
+            err = err.decode('utf-8')
+            err = demangle(err)
+            print(err, file=sys.stderr)
             sys.exit(retcode)
     except OSError as e:
         print(me + ": execution failed:", e, file=sys.stderr)
