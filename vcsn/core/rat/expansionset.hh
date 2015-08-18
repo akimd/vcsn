@@ -311,6 +311,29 @@ namespace vcsn
                         });
       }
 
+      /// The infiltration product of \a l and \a r.
+      value_t infiltration(value_t lhs_xpn, expression_t lhs_xpr,
+                           value_t rhs_xpn, expression_t rhs_xpr) const
+      {
+        // Conjunction part: lhs_xpn&:rhs_xpn.
+        value_t res =
+          conjunction_(lhs_xpn, rhs_xpn,
+                       [this](const polynomial_t& l, const polynomial_t& r)
+                       {
+                         return ps_.infiltration(l, r);
+                       });
+
+        // Shuffle part: lhs_xpn&:rhs_xpr + lhs_xpr&:rhs_xpn.
+        shuffle_(res,
+                 lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
+                 [this](expression_t l, expression_t r)
+                 {
+                   return rs_.infiltration(l, r);
+                 });
+        return res;
+      }
+
+
       /*---------------.
       | tuple(v...).   |
       `---------------*/

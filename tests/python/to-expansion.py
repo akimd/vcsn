@@ -160,45 +160,84 @@ check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 ## Conjunction and derived-term commute.  ##
 ############################################
 
-# check_conjunction RE1 RE2...
-# -----------------------------
-# Check derived-term(conjunction) = conjunction(derived-term).
-def check_conjunction(*expressions, **kwargs):
-    rat = None
-    auts = []
-    for r in expressions:
-        exp = ctx.expression(r)
-        if rat is None:
-            rat = exp
-        else:
-            rat &= exp
-        auts += [exp.derived_term("expansion")]
-    # Conjunction of automata.
-    a1 = vcsn.automaton._conjunction(auts)
-    # Automaton of conjunction.
-    a2 = rat.derived_term("expansion")
-    if 'equiv' in kwargs:
-        CHECK_EQUIV(a1, a2)
+def prod(kind, args):
+    '''The product of `kind` (`conjunction`, `infiltration`, or `shuffle`)
+    of `*args`.'''
+    if isinstance(args[0], vcsn.automaton):
+        if kind == 'conjunction':
+            res = vcsn.automaton._conjunction(list(args))
+        elif kind == 'infiltration':
+            res = vcsn.automaton._infiltration(list(args))
+        elif kind == 'shuffle':
+            res = vcsn.automaton._shuffle(list(args))
     else:
-        CHECK_ISOMORPHIC(a1, a2)
+        res = args[0]
+        for e in args[1:]:
+            if kind == 'conjunction':
+                res = res.conjunction(e)
+            elif kind == 'infiltration':
+                res = res.infiltration(e)
+            elif kind == 'shuffle':
+                res = res.shuffle(e)
+    return res
+
+# check_prod RE1 RE2...
+# ---------------------
+# Check derived-term(prod) = prod(derived-term) for the three products.
+def check_prod(*exps, **kwargs):
+    exps = [ctx.expression(r) for r in exps]
+    auts = [r.automaton("expansion") for r in exps]
+    for p in ['conjunction', 'infiltration', 'shuffle']:
+        print("Product:", p)
+        # Product of automata.
+        a1 = prod(p, auts).strip()
+        # Automaton of product.
+        a2 = prod(p, exps).automaton("expansion")
+        if 'equiv' in kwargs:
+            # FIXME: So far the infiltration product does not work
+            # when there are one as labels.  Which is also when
+            # "equiv" is passed.
+            if p == 'infiltration':
+                SKIP('infiltration does not work with \e as label')
+            else:
+                CHECK_EQUIV(a1, a2)
+        else:
+            CHECK_ISOMORPHIC(a1, a2)
 
 ctx = vcsn.context('lal_char(abc), q')
-check_conjunction('(<1/6>a*+<1/3>b*)*', 'a*')
-check_conjunction('(<1/6>a*+<1/3>b*)*', 'b*')
-check_conjunction('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
+
+check_prod('(<1/6>a*+<1/3>b*)*', 'a*')
+check_prod('(<1/6>a*+<1/3>b*)*', 'b*')
+check_prod('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
 
 ctx = vcsn.context('lal_char(abc), expressionset<lal_char(xyz), b>')
-check_conjunction('(a+b+c)*<x>a(a+b+c)*',
-                  '(a+b+c)*<y>b(a+b+c)*',
-                  '(a+b+c)*<z>c(a+b+c)*')
+check_prod('<x>\e', '<y>\e')
+
+
+check_prod('<x>a', '<y>a')
+check_prod('<x>a', '<y>b')
+check_prod('<x>a', '<y>a', '<z>a')
+check_prod('<x>a', '<y>b', '<z>c')
+
+check_prod('(a+b+c)*<x>a(a+b+c)*',
+           '(a+b+c)*<y>b(a+b+c)*',
+           '(a+b+c)*<z>c(a+b+c)*')
 
 # Use ab{\}ab to introduce expansions with the empty word as label.
-ctx = vcsn.context('lan_char(abc), q')
-check_conjunction(r'(ab{\}ab)a', r'a(ab{\}ab)', equiv = True)
-check_conjunction(r'(ab{\}ab)[ab]', r'a(ab{\}ab+b)', equiv = True)
-check_conjunction(r'(ab{\}ab)[ab]', r'a(ab{\}ab+b)', equiv = True)
-check_conjunction(r'<1/10>(ab{\}<1/2>ab+c)<2>', '<1/20>(ab{\}<1/3>ab+c)<3>',
-                  equiv = True)
+ctx = vcsn.context('lan_char(abcd), q')
+check_prod(r'(cd{\}cd)',  r'(cd{\}cd)', equiv = True)
+check_prod(r'a(cd{\}cd)', r'a(cd{\}cd)', equiv = True)
+check_prod(r'(cd{\}cd)a', r'(cd{\}cd)a', equiv = True)
+check_prod(r'a(cd{\}cd)', r'(cd{\}cd)a', equiv = True)
+
+check_prod(r'a(cd{\}cd)', r'b(cd{\}cd)', equiv = True)
+check_prod(r'(cd{\}cd)a', r'(cd{\}cd)b', equiv = True)
+check_prod(r'a(cd{\}cd)', r'(cd{\}cd)b', equiv = True)
+
+check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv = True)
+check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv = True)
+check_prod(r'<1/10>(cd{\}<1/2>cd+a)<2>', '<1/20>(cd{\}<1/3>cd+a)<3>',
+           equiv = True)
 
 ## ----------------- ##
 ## LaTeX rendering.  ##
