@@ -160,12 +160,16 @@ def normalize(a):
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.  Also works for
     expressions.'''
+    num = 10
     # Cannot compute equivalence on Zmin, approximate with shortest.
-    if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
-        num = 10
-        res = a1.shortest(num) == a2.shortest(num)
-    else:
-        res = a1.is_equivalent(a2)
+    try:
+        if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
+            res = a1.proper().shortest(num) == a2.proper().shortest(num)
+        else:
+            res = a1.is_equivalent(a2)
+    except RuntimeError as e:
+        FAIL("cannot check equivalence: " + str(e))
+        res = False
 
     if res:
         PASS()
@@ -173,11 +177,15 @@ def CHECK_EQUIV(a1, a2):
         FAIL("not equivalent")
         rst_file("Left", format(a1))
         rst_file("Right", format(a2))
-        s1 = a1.shortest(num).format('list')
-        s2 = a2.shortest(num).format('list')
-        rst_file("Left shortest", s1)
-        rst_file("Right shortest", s2)
-        rst_diff(s1, s2)
+        try:
+            s1 = a1.proper().shortest(num).format('list')
+            s2 = a2.proper().shortest(num).format('list')
+            rst_file("Left shortest", s1)
+            rst_file("Right shortest", s2)
+            rst_diff(s1, s2)
+        except RuntimeError as e:
+            FAIL("cannot run shortest: " + str(e))
+
 
 
 def CHECK_ISOMORPHIC(a1, a2):
