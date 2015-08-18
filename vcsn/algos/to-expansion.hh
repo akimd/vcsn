@@ -275,17 +275,16 @@ namespace vcsn
       // d(E:F) = d(E):F + E:d(F)
       VCSN_RAT_VISIT(shuffle, e)
       {
-        expansion_t res = es_.one();
-        // The shuffle-product of the previously traversed siblings.
-        // Initially the neutral element: \e.
-        expression_t prev = rs_.one();
-        for (const auto& rhs: e)
+        // The shuffle-product of the previously traversed siblings,
+        // to compute the "E:d(F)" part, E being all the previous lhs.
+        auto prev = e.head();
+        res_ = to_expansion(prev);
+        for (const auto& r: e.tail())
           {
-            res = es_.shuffle(res, prev,
-                              to_expansion(rhs), rhs);
-            prev = rs_.shuffle(prev, rhs);
+            res_ = es_.shuffle(res_, prev,
+                               to_expansion(r), r);
+            prev = rs_.shuffle(prev, r);
           }
-        res_ = std::move(res);
       }
 
       VCSN_RAT_VISIT(complement, e)

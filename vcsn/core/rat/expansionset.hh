@@ -207,16 +207,20 @@ namespace vcsn
         return normalize(res);
       }
 
+      template <typename Conjunction>
       void
       conjunctions_with_one_(value_t&,
                              const value_t&, const value_t&,
-                             std::false_type) const
+                             std::false_type,
+                             Conjunction) const
       {}
 
+      template <typename Conjunction>
       void
       conjunctions_with_one_(value_t& res,
                              const value_t& l, const value_t& r,
-                             std::true_type) const
+                             std::true_type,
+                             Conjunction conjunction) const
       {
         // Spontaneous transitions from the lhs.
         auto one = rs_.labelset()->one();
@@ -226,9 +230,9 @@ namespace vcsn
             for (const auto& rhs: r.polynomials)
               if (!rs_.labelset()->is_one(rhs.first))
                 ps_.add_here(res.polynomials[one],
-                             ps_.conjunction(i->second,
-                                             ps_.lmul_label(rs_.atom(rhs.first),
-                                                            rhs.second)));
+                             conjunction(i->second,
+                                         ps_.lmul_label(rs_.atom(rhs.first),
+                                                        rhs.second)));
         }
         // Spontaneous transitions from the rhs.
         {
@@ -237,15 +241,16 @@ namespace vcsn
             for (const auto& lhs: l.polynomials)
               if (!rs_.labelset()->is_one(lhs.first))
                 ps_.add_here(res.polynomials[one],
-                             ps_.conjunction(ps_.lmul_label(rs_.atom(lhs.first),
-                                                            lhs.second),
-                                             i->second));
+                             conjunction(ps_.lmul_label(rs_.atom(lhs.first),
+                                                        lhs.second),
+                                         i->second));
         }
-        normalize(res);
       }
 
       /// The conjunction of \a l and \a r.
-      value_t conjunction(value_t l, value_t r) const
+      template <typename Conjunction>
+      value_t conjunction_(value_t l, value_t r,
+                           Conjunction conjunction) const
       {
         value_t res = zero();
         denormalize(l);
@@ -253,10 +258,42 @@ namespace vcsn
         res.constant = ws_.mul(l.constant, r.constant);
         for (const auto& p: zip_maps(l.polynomials, r.polynomials))
           res.polynomials[p.first]
-            = ps_.conjunction(std::get<0>(p.second), std::get<1>(p.second));
+            = conjunction(std::get<0>(p.second), std::get<1>(p.second));
 
         auto has_one = bool_constant<context_t::has_one()>();
-        conjunctions_with_one_(res, l, r, has_one);
+        conjunctions_with_one_(res, l, r, has_one, conjunction);
+        normalize(res);
+        return res;
+      }
+
+      /// The conjunction of \a l and \a r.
+      value_t conjunction(value_t l, value_t r) const
+      {
+        return conjunction_(l, r,
+                            [this](const polynomial_t& l, const polynomial_t& r)
+                            {
+                              return ps_.conjunction(l, r);
+                            });
+      }
+
+      /// The shuffle product of \a l and \a r.
+      template <typename Shuffle>
+      value_t& shuffle_(value_t& res,
+                        value_t lhs_xpn, expression_t lhs_xpr,
+                        value_t rhs_xpn, expression_t rhs_xpr,
+                        Shuffle shuffle) const
+      {
+        // (i) lhs_xpn:rhs_xpr.
+        for (const auto& p: lhs_xpn.polynomials)
+          for (const auto& m: p.second)
+            ps_.add_here(res.polynomials[p.first],
+                         shuffle(label_of(m), rhs_xpr), weight_of(m));
+        // (ii) lhs_xpr:rhs_xpn
+        for (const auto& p: rhs_xpn.polynomials)
+          for (const auto& m: p.second)
+            ps_.add_here(res.polynomials[p.first],
+                         shuffle(lhs_xpr, label_of(m)), weight_of(m));
+
         return res;
       }
 
@@ -266,21 +303,13 @@ namespace vcsn
       {
         value_t res;
         res.constant = ws_.mul(lhs_xpn.constant, rhs_xpn.constant);
-
-        // (i) lhs_xpn:rhs_xpr.
-        for (const auto& p: lhs_xpn.polynomials)
-          for (const auto& m: p.second)
-            res.polynomials[p.first].set(rs_.shuffle(label_of(m), rhs_xpr),
-                                         weight_of(m));
-        // (ii) lhs_xpr:rhs_xpn
-        for (const auto& p: rhs_xpn.polynomials)
-          for (const auto& m: p.second)
-            ps_.add_here(res.polynomials[p.first],
-                         rs_.shuffle(lhs_xpr, label_of(m)), weight_of(m));
-
-        return res;
+        return shuffle_(res,
+                        lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
+                        [this](expression_t l, expression_t r)
+                        {
+                          return rs_.shuffle(l, r);
+                        });
       }
-
 
       /*---------------.
       | tuple(v...).   |
