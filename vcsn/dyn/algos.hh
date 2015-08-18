@@ -727,6 +727,19 @@ namespace vcsn
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
     /// An automaton denoting the language of \a exp.
+    /// \param exp   the expression defining the series.
+    /// \param algo  the conversion algorithm.
+    ///   - "auto": currently equivalent to "expansion", eventually should
+    ///      mix "standard" for basic expressions (faster) and "expansion"
+    ///      otherwise (more general).
+    ///   - "derivation": use derivation-based expression.derived_term,
+    ///      stripped.
+    ///   - "derived_term": same as "expansion"
+    ///   - "expansion": use expansion-based expression.derived_term, stripped.
+    ///   - "standard": use expression.standard.
+    ///   - "thompson": use expression.thompson.
+    ///   - "zpc": use expression.zpc.
+    ///   - "zpc_compact": use expression.zpc, "compact" version.
     automaton to_automaton(const expression& exp,
                            const std::string& algo = "auto");
 

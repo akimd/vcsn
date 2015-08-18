@@ -3,6 +3,7 @@
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/thompson.hh>
 #include <vcsn/algos/zpc.hh>
+#include <vcsn/misc/getargs.hh>
 
 namespace vcsn
 {
@@ -11,20 +12,42 @@ namespace vcsn
     automaton
     to_automaton(const expression& exp, const std::string& algo)
     {
-      if (algo == "auto" || algo == "derived_term" || algo == "derived-term")
-        return strip(derived_term(exp));
-      else if (algo == "standard")
-        return standard(exp);
-      else if (algo == "thompson")
-        return thompson(exp);
-      else if (algo == "zpc")
-        return zpc(exp);
-      else if (algo == "zpc_compact" || "zpc-compact" || "zpc,compact")
-        return zpc(exp, "compact");
-      else
-        raise("to_automaton: invalid argument: ", algo, ", expected \"auto\", "
-              "\"derived_term\", \"standard\", \"thompson\", \"zpc\", "
-              "\"zpc_compact\" or nothing.");
+      enum class algo_t
+      {
+        derivation,
+        expansion,
+        standard,
+        thompson,
+        zpc,
+        zpc_compact,
+       };
+      static const auto map = std::map<std::string, algo_t>
+        {
+          {"derivation",   algo_t::derivation},
+          {"expansion",    algo_t::expansion},
+          {"derived_term", algo_t::expansion},
+          {"auto",         algo_t::expansion},
+          {"standard",     algo_t::standard},
+          {"thompson",     algo_t::thompson},
+          {"zpc",          algo_t::zpc},
+          {"zpc_compact",  algo_t::zpc_compact},
+        };
+      switch (getargs("to_automaton: algorithm", map, algo))
+        {
+        case algo_t::expansion:
+          return strip(derived_term(exp));
+        case algo_t::derivation:
+          return strip(derived_term(exp, "derivation"));
+        case algo_t::standard:
+          return standard(exp);
+        case algo_t::thompson:
+          return thompson(exp);
+        case algo_t::zpc:
+          return zpc(exp);
+        case algo_t::zpc_compact:
+          return zpc(exp, "compact");
+        }
+      BUILTIN_UNREACHABLE();
     }
   }
 }

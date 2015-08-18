@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-08-18
+### to_automaton: more algorithms
+One can chose between both implementation of derived_term (stripped), using
+"derivation" or "expansion".
+
 ## 2015-08-14
 ### to_expression: more heuristics
 There are three new heuristics:
