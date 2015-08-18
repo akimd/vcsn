@@ -880,7 +880,7 @@ struct expression
 
   bool is_series() const
   {
-    return vcsn::dyn::identities(val_) == vcsn::rat::identities::distributive;
+    return vcsn::dyn::identities(val_).is_distributive();
   }
 
   bool is_valid() const

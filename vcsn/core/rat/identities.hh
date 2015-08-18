@@ -25,6 +25,9 @@ namespace vcsn LIBVCSN_API
 
       enum ids_t
         {
+          /// Strictly obey to the syntax.
+          none,
+
           /// Trivial identities only.
           trivial,
 
@@ -57,16 +60,22 @@ namespace vcsn LIBVCSN_API
         return associative <= ids_;
       }
 
+      /// Whether distributive.
+      bool is_distributive() const
+      {
+        return distributive <= ids_;
+      }
+
       /// Whether linear.
       bool is_linear() const
       {
         return linear <= ids_;
       }
 
-      /// Whether distributive.
-      bool is_distributive() const
+      /// Whether not none.
+      operator bool() const
       {
-        return distributive <= ids_;
+        return ids_ != none;
       }
 
       bool operator<(self_t that) const

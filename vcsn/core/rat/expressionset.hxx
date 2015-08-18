@@ -194,16 +194,20 @@ namespace vcsn
   DEFINE::add(value_t l, value_t r) const
     -> value_t
   {
-    // Trivial Identity
-    // E+0 = 0+E = E
     value_t res = nullptr;
-    if (l->type() == type_t::zero)
+
+    // 0+E => E.
+    if (ids_ && l->type() == type_t::zero)
       res = r;
-    else if (r->type() == type_t::zero)
+
+    // E+0 => E.
+    else if (ids_ && r->type() == type_t::zero)
       res = l;
-    // END: Trivial Identity
+
+    // E+E => <2>E.
     else if (ids_.is_linear())
       res = add_linear_(l, r);
+
     else
       res = std::make_shared<sum_t>(gather_<type_t::sum>(l, r));
     return res;
@@ -353,15 +357,15 @@ namespace vcsn
     value_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0.
-    if (l->type() == type_t::zero)
+    if (ids_ && l->type() == type_t::zero)
       res = l;
-    else if (r->type() == type_t::zero)
+    else if (ids_ && r->type() == type_t::zero)
       res = r;
     // U_K: E.(<k>1) ⇒ E<k>, subsuming T: E.1 = E.
-    else if (type_ignoring_lweight_(r) == type_t::one)
+    else if (ids_ && type_ignoring_lweight_(r) == type_t::one)
       res = rmul(l, possibly_implicit_lweight_(r));
     // U_K: (<k>1).E ⇒ <k>E, subsuming T: 1.E = E.
-    else if (type_ignoring_lweight_(l) == type_t::one)
+    else if (ids_ && type_ignoring_lweight_(l) == type_t::one)
       res = lmul(possibly_implicit_lweight_(l), r);
     // (<k>E)(<h>F) => <kh>(EF).
     else if (ids_.is_linear() && weightset()->is_commutative()
@@ -402,20 +406,26 @@ namespace vcsn
     -> value_t
   {
     value_t res = nullptr;
-    // Trivial Identity: 0&E = 0.
-    if (l->type() == type_t::zero)
+
+    // 0&E => 0.
+    if (ids_ && l->type() == type_t::zero)
       res = l;
-    // Trivial Identity: E&0 = 0.
-    else if (r->type() == type_t::zero)
+
+    // E&0 => 0.
+    else if (ids_ && r->type() == type_t::zero)
       res = r;
-    // <k>1&<h>1 = <kh>1.
-    else if (type_ignoring_lweight_(l) == type_t::one
+
+    // <k>1&<h>1 => <kh>1.
+    else if (ids_
+             && type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
       res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
                                   possibly_implicit_lweight_(r)),
                  one());
+
     // <k>a&<h>a = <kh>a.  <k>a&<h>b = 0.
-    else if (type_ignoring_lweight_(l) == type_t::atom
+    else if (ids_
+             && type_ignoring_lweight_(l) == type_t::atom
              && type_ignoring_lweight_(r) == type_t::atom)
       {
         auto lhs =
@@ -427,13 +437,15 @@ namespace vcsn
         else
           res = zero();
       }
+
     // <k>1&<h>a = 0, <k>a&<h>1 = 0.
-    else if (   (type_ignoring_lweight_(l) == type_t::one
-                 && type_ignoring_lweight_(r) == type_t::atom)
-             || (type_ignoring_lweight_(l) == type_t::atom
-                 && type_ignoring_lweight_(r) == type_t::one))
+    else if (ids_
+             && ((type_ignoring_lweight_(l) == type_t::one
+                  && type_ignoring_lweight_(r) == type_t::atom)
+                 || (type_ignoring_lweight_(l) == type_t::atom
+                     && type_ignoring_lweight_(r) == type_t::one)))
       res = zero();
-    // END: Trivial Identity
+
     else
       res = std::make_shared<conjunction_t>(gather_<type_t::conjunction>(l, r));
     return res;
@@ -444,13 +456,13 @@ namespace vcsn
   {
     value_t res = nullptr;
     // 0\E = 0{c}.
-    if (l->type() == type_t::zero)
+    if (ids_ && l->type() == type_t::zero)
       res = complement(zero());
     // 1\E = E.
-    else if (l->type() == type_t::one)
+    else if (ids_ && l->type() == type_t::one)
       res = r;
     // E\0 = 0.
-    else if (r->type() == type_t::zero)
+    else if (ids_ && r->type() == type_t::zero)
       res = r;
     else
       res = std::make_shared<ldiv_t>(values_t{l, r});
@@ -487,14 +499,14 @@ namespace vcsn
     value_t res = nullptr;
     // Trivial Identity.
     // E&:0 = 0&:E = 0.
-    if (l->type() == type_t::zero)
+    if (ids_ && l->type() == type_t::zero)
       res = l;
-    else if (r->type() == type_t::zero)
+    else if (ids_ && r->type() == type_t::zero)
       res = r;
     // E&:1 = 1&:E = E.
-    else if (l->type() == type_t::one)
+    else if (ids_ && l->type() == type_t::one)
       res = r;
-    else if (r->type() == type_t::one)
+    else if (ids_ && r->type() == type_t::one)
       res = l;
     // END: Trivial Identity
     else
@@ -507,18 +519,23 @@ namespace vcsn
     -> value_t
   {
     value_t res = nullptr;
-    // Trivial Identity.
-    // E:0 = 0:E = 0.
-    if (l->type() == type_t::zero)
+
+    // 0:E => 0.
+    if (ids_ && l->type() == type_t::zero)
       res = l;
-    else if (r->type() == type_t::zero)
+
+    // E:0 => 0.
+    else if (ids_ && r->type() == type_t::zero)
       res = r;
-    // E:1 = 1:E = E.
-    else if (l->type() == type_t::one)
+
+    // 1:E => E.
+    else if (ids_ && l->type() == type_t::one)
       res = r;
-    else if (r->type() == type_t::one)
+
+    // E:1 => E.
+    else if (ids_ && r->type() == type_t::one)
       res = l;
-    // END: Trivial Identity
+
     else
       res = std::make_shared<shuffle_t>(gather_<type_t::shuffle>(l, r));
     return res;
@@ -654,7 +671,7 @@ namespace vcsn
   DEFINE::star(value_t e) const
     -> value_t
   {
-    if (e->type() == type_t::zero)
+    if (ids_ && e->type() == type_t::zero)
       // Trivial one
       // (0)* == 1
       return one();
@@ -686,10 +703,10 @@ namespace vcsn
     value_t res = nullptr;
     // Trivial Identity.
     // 0{T} = 0.
-    if (e->type() == type_t::zero)
+    if (ids_ && e->type() == type_t::zero)
       res = e;
     // 1{T} = 1.
-    else if (e->type() == type_t::one)
+    else if (ids_ && e->type() == type_t::one)
       res = e;
     // a{T} = a, (abc){T} = cba.
     else if (auto l = std::dynamic_pointer_cast<const atom_t>(e))

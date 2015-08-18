@@ -18,14 +18,16 @@ namespace vcsn
     {
       switch (i.ids())
         {
-        case identities::trivial:
-          return "trivial";
         case identities::associative:
           return "associative";
         case identities::linear:
           return "linear";
         case identities::distributive:
           return "distributive";
+        case identities::trivial:
+          return "trivial";
+        case identities::none:
+          return "none";
         }
       BUILTIN_UNREACHABLE();
     }
@@ -45,6 +47,7 @@ namespace vcsn
           {"default",      identities::deflt},
           {"distributive", identities::distributive},
           {"linear",       identities::linear},
+          {"none",         identities::none},
           {"series",       identities::distributive},
           {"trivial",      identities::trivial},
         };
