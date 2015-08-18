@@ -7,7 +7,7 @@ def is_wordset(c):
     return str(c).startswith("law_")
 
 
-c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
 
 def check(re, exp, use_spontaneous = False):
     '''Check that d(re) = exp.  Also check that both derived_term
@@ -21,11 +21,11 @@ def check(re, exp, use_spontaneous = False):
     # automaton.
     if not use_spontaneous and not is_wordset(c):
         try:
-            dt = r.derived_term("derivation")
+            dt = r.automaton("derivation")
         except:
             pass
         else:
-            CHECK_ISOMORPHIC(dt, r.derived_term("expansion"))
+            CHECK_ISOMORPHIC(dt, r.automaton("expansion"))
 
 ##########################
 ## Regular derivation.  ##
@@ -98,7 +98,7 @@ check('(<xy>(abc)<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 ## With spontaneous transitions.  ##
 ## ------------------------------ ##
 
-c = vcsn.context("lan_char(abcd), expressionset<lal_char(xyz), z>")
+c = vcsn.context("lan_char(abcd), expressionset<lal_char(xyz), q>")
 
 # Lquotient with spontaneous transitions.
 check('\e{\}\z', '<\z>')
@@ -212,7 +212,7 @@ CHECK_EQ(r'a \odot \left[a \oplus \left\langle x\right\rangle b \, c\right] \opl
 ## On wordset.  ##
 ## ------------ ##
 
-c = vcsn.context("law_char(a-z), expressionset<lal_char(xyz), z>")
+c = vcsn.context("law_char(a-z), expressionset<lal_char(xyz), q>")
 
 # Transposition is the most risky one, as we must not forget to
 # transpose the labels in the expansion.

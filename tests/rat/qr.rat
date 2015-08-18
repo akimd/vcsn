@@ -1,6 +1,6 @@
 # -*- shell-script -*-
 
-%context: br
+%context: qr
 %include: common-weights.rat
 
 # Check the alphabets.
