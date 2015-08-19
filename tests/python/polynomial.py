@@ -34,7 +34,7 @@ check('law_char(a), b', r'\e+\e', r'\e')
 check('law_char(ab), z', r'ba+ab+bb+aa+a+b+\e+bb+aa',
       r'\e + a + b + <2>aa + ab + ba + <2>bb')
 
-check('lal_char(abc), expressionset<lal_char(xyz), z>',
+check('lal_char(abc), expressionset<lal_char(xyz), q>',
       r'a + a + <x>b + <y>b', r'<<2>\e>a + <x+y>b')
 
 # Be sure to have proper ordering on tuples with LAN.
@@ -53,6 +53,6 @@ XFAIL(lambda: vcsn.context('lal_char(ab), z').polynomial('<123>a*'))
 ## LaTeX rendering.  ##
 ## ----------------- ##
 
-c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
 CHECK_EQ(r'\left\langle  \left\langle 2 \right\rangle \,\varepsilon\right\rangle a \oplus \left\langle x + y\right\rangle b',
          c.polynomial(r'a + a + <x>b + <y>b').format("latex"))

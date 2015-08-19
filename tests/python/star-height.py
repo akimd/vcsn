@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+ctx = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
 
 def check(expression, height):
     res = ctx.expression(expression).star_height()

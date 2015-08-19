@@ -54,7 +54,7 @@ check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
 
 check('expressionset<lal_char(ab), b>, b', 'expressionset<letterset<char_letters(ab)>, b>, b')
 # expressions weighted by expressions.
-check('expressionset<letterset<char_letters(ab)>, expressionset<letterset<char_letters(xy)>, z>>, b')
+check('expressionset<letterset<char_letters(ab)>, expressionset<letterset<char_letters(xy)>, q>>, b')
 
 
 ## -------------------- ##
@@ -73,8 +73,8 @@ check('lal_char(ab), lat<b, z>', 'letterset<char_letters(ab)>, lat<b, z>')
 check('lat<lal_char(ba),lan<lal_char(vu)>, law_char(x-z)>, lat<expressionset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>',
       'lat<letterset<char_letters(ab)>, nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>')
 
-check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<expressionset<nullableset<lat<lan_char(fe),lan_char(hg)>>, lat<r, q>>, lat<b, z>>',
-      'nullableset<lat<letterset<char_letters(ab)>, lat<nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>>>, lat<expressionset<lat<nullableset<letterset<char_letters(ef)>>, nullableset<letterset<char_letters(gh)>>>, lat<r, q>>, lat<b, z>>')
+check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>, lat<expressionset<nullableset<lat<lan_char(fe),lan_char(hg)>>, lat<r, q>>, lat<b, q>>',
+      'nullableset<lat<letterset<char_letters(ab)>, lat<nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>>>, lat<expressionset<lat<nullableset<letterset<char_letters(ef)>>, nullableset<letterset<char_letters(gh)>>>, lat<r, q>>, lat<b, q>>')
 
 
 ## ------- ##

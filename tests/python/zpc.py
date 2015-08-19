@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx_string = 'nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>'
+ctx_string = 'nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>'
 
 ctx = vcsn.context(ctx_string)
 
@@ -35,30 +35,30 @@ xfail(r'a{c}')
 xfail(r'a{\}b')
 xfail(r'(ab){T}')
 
-## --- ##
-## Z.  ##
-## --- ##
+## -------------- ##
+## ZPC: regular.  ##
+## -------------- ##
 
-# Z: "\z".
+# "\z".
 check('\z',
-'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 1 -> $''')
 
-# Z: "\e".
+# "\e".
 check('\e',
-'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $
 1 -> $''')
 
-## ------- ##
-## Z: sum. ##
-## ------- ##
+## ----- ##
+## sum.  ##
+## ----- ##
 
-# Z: "a+b"
+# "a+b"
 check('a+b',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> 1 \e
 0 -> 3 \e
@@ -68,9 +68,9 @@ $ -> 0
 4 -> 5 \e
 5 -> $''')
 
-# Z: "\e+a"
+# "\e+a"
 check('\e+a',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $
 0 -> 1 \e
@@ -80,13 +80,13 @@ $ -> 0
 4 -> 5 \e
 5 -> $''')
 
-## ------- ##
-## Z: mul. ##
-## ------- ##
+## ----- ##
+## mul.  ##
+## ----- ##
 
-# Z: "ab"
+# "ab"
 check('ab',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> 1 \e
 1 -> 2 a
@@ -95,9 +95,9 @@ $ -> 0
 4 -> 5 \e
 5 -> $''')
 
-# Z: "a?bb"
+# "a?bb"
 check('a?bb',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> 1 \e
 1 -> 2 \e
@@ -115,13 +115,13 @@ $ -> 0
 12 -> 13 \e
 13 -> $''')
 
-## -------- ##
-## Z: star. ##
-## -------- ##
+## ------ ##
+## star.  ##
+## ------ ##
 
-# Z: "a*"
+# "a*"
 check('a*',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $
 0 -> 1 \e
@@ -130,13 +130,13 @@ $ -> 0
 2 -> 3 \e
 3 -> $''')
 
-## ----------- ##
-## Z: lweight. ##
-## ----------- ##
+## --------- ##
+## lweight.  ##
+## --------- ##
 
-# Z: <x>a*
+# <x>a*
 check('<x>a*',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $ <x>
 0 -> 1 <x>\e
@@ -145,13 +145,13 @@ $ -> 0
 2 -> 3 \e
 3 -> $''')
 
-## ----------- ##
-## Z: rweight. ##
-## ----------- ##
+## --------- ##
+## rweight.  ##
+## --------- ##
 
-# Z: (a?)<y>
+# (a?)<y>
 check('(a?)<y>',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $ <y>
 0 -> 1 \e
@@ -161,13 +161,13 @@ $ -> 0
 4 -> 5 \e
 5 -> $ <y>''')
 
-## ---------------------- ##
-## Z: lweight and rweight ##
-## ---------------------- ##
+## ------------------- ##
+## lweight and rweight ##
+## ------------------- ##
 
-# Z: (<x>a?)<y>
+# (<x>a?)<y>
 check('(<x>a?)<y>',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $ <xy>
 0 -> 1 <x>\e
@@ -177,13 +177,13 @@ $ -> 0
 4 -> 5 \e
 5 -> $ <y>''')
 
-## --------------- ##
-## Z: sum and prod ##
-## --------------- ##
+## ------------ ##
+## sum and prod ##
+## ------------ ##
 
-# Z: (a?b?+c?)
+# (a?b?+c?)
 check('(a?b?+c?)',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $ <<2>\e>
 0 -> 1 \e
@@ -214,13 +214,13 @@ $ -> 0
 ## ZPC compact.  ##
 ## ------------- ##
 
-## ------- ##
-## Z: sum. ##
-## ------- ##
+## ----- ##
+## sum.  ##
+## ----- ##
 
-# Z: "a+b"
+# "a+b"
 check('a+b',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> 1 a
 0 -> 2 \e
@@ -229,9 +229,9 @@ $ -> 0
 3 -> $''',
 'compact')
 
-# Z: "\e+a"
+# "\e+a"
 check('\e+a',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $
 0 -> 2 \e
@@ -240,13 +240,13 @@ $ -> 0
 3 -> $''',
 'compact')
 
-## -------- ##
-## Z: mul.  ##
-## -------- ##
+## ----- ##
+## mul.  ##
+## ----- ##
 
-# Z: "ab"
+# "ab"
 check('ab',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> 1 a
 1 -> 2 \e
@@ -254,9 +254,9 @@ $ -> 0
 3 -> $''',
 'compact')
 
-# Z: "a(a?b?)b"
+# "a(a?b?)b"
 check('a(a?b?)b',
-r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, z>"
+r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> 1 a
 1 -> 2 \e

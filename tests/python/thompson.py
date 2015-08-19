@@ -496,10 +496,10 @@ r'''digraph
 ## ZR: star.  ##
 ## ---------- ##
 
-check('(?@lan_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+abc)*',
+check('(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -540,10 +540,10 @@ r'''digraph
   11 -> F11
 }''')
 
-check('(?@lan_char(abcd), expressionset<lal_char(efgh), z>)(<e>\e+ab<f>)*',
+check('(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+ab<f>)*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, z>"
+  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -582,10 +582,10 @@ r'''digraph
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check('(?@lan_char(a), expressionset<lal_char(xyz), z>)<x>a(<y>\e+<z>a)',
+check('(?@lan_char(a), expressionset<lal_char(xyz), q>)<x>a(<y>\e+<z>a)',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(a)>>, expressionset<letterset<char_letters(xyz)>, z>"
+  vcsn_context = "nullableset<letterset<char_letters(a)>>, expressionset<letterset<char_letters(xyz)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

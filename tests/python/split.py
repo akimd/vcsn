@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(abc), expressionset<lal_char(wxyz), z>')
+ctx = vcsn.context('lal_char(abc), expressionset<lal_char(wxyz), q>')
 
 # check INPUT [RESULT = INPUT]
 # ----------------------------

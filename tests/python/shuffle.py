@@ -192,7 +192,7 @@ abABC''', ABCab.shortest(len = 10).format('list'))
 ## --------------------- ##
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a').standard()
 CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
@@ -205,9 +205,9 @@ CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
          .expression('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
+a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), q>') \
          .expression('<x>a<y>b').standard()
 CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 <uvxy+xyuv>abab''', a1.shuffle(a2).shortest(len = 4).format('list'))
@@ -217,7 +217,7 @@ CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 ## Variadic.  ##
 ## ---------- ##
 
-ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()

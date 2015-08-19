@@ -174,6 +174,6 @@ CHECK_EQ(c.polynomial('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
 ## weight * weight.  ##
 ## ----------------- ##
 
-c = vcsn.context('lal_char, seriesset<lal_char, z>')
+c = vcsn.context('lal_char, seriesset<lal_char, q>')
 CHECK_EQ(c.weight('<4>aa+<6>ab+<6>ba+<9>bb'),
          c.weight('<2>a+<3>b') * c.weight('<2>a+<3>b'))

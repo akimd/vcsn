@@ -9,11 +9,11 @@ from test import *
 ## transpose(automaton).  ##
 ## ---------------------- ##
 
-c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
 a = c.expression("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, expressionset<letterset<char_letters(xyz)>, z>"
+  vcsn_context = "letterset<char_letters(abc)>, expressionset<letterset<char_letters(xyz)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -109,6 +109,6 @@ check('abc+aba', 'cba+aba')
 check('(ab)*&(ab)*', '(ba)*&(ba)*')
 check('(ab)*', '(ba)*')
 
-ctx = vcsn.context('law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), z>>')
+ctx = vcsn.context('law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), q>>')
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')

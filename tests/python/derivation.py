@@ -5,7 +5,7 @@ from __future__ import print_function
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 
 def check_derived_term(r, exp, algo):
     CHECK_EQ(open(medir + '/' + exp + '.gv').read().strip(),

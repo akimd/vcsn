@@ -164,7 +164,7 @@ check_format('lal_char(a-z), b',
              '[abcd]',
              '[a-d]', r'[a\textrm{-}d]')
 
-check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), z>>',
+check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), q>>',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
              '<<<93>x>d>a+(<<<42>y>e>b)*',
              r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')

@@ -271,7 +271,7 @@ for algo in ('inplace', 'separate'):
 
     check(r'''digraph
 {
-  vcsn_context = "lan_char(z), expressionset<lal_char(abcd), z>"
+  vcsn_context = "lan_char(z), expressionset<lal_char(abcd), q>"
   rankdir = LR
   node [shape = circle]
   {
@@ -289,7 +289,7 @@ for algo in ('inplace', 'separate'):
   4 -> F
 }''', r'''digraph
 {
-  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcd)>, z>"
+  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcd)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -319,7 +319,7 @@ for algo in ('inplace', 'separate'):
 
     check(r'''digraph
 {
-  vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), z>"
+  vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), q>"
   rankdir = LR
   node [shape = circle]
   {
@@ -344,7 +344,7 @@ for algo in ('inplace', 'separate'):
   9 -> F
 }''', '''digraph
 {
-  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcdefgh)>, z>"
+  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcdefgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

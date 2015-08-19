@@ -195,7 +195,7 @@ def check(exp, aut):
     CHECK_EQ(exp, aut.expression())
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
          .expression('(<u>a+<v>b)*').standard()
 a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
 check('<u>a(\e+<u>a(<u>a)*)', a1 & a2)
@@ -222,9 +222,9 @@ check('(<0.1>a+<0.1>b)*', r & q)
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), z>') \
+a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
          .expression('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), z>') \
+a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), q>') \
          .expression('<x>a<y>b').standard()
 
 def check_enumerate(exp, aut):
@@ -274,7 +274,7 @@ digraph
 ''')]))
 
 # Four arguments.
-ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), z>')
+ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()
@@ -287,12 +287,12 @@ check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 
 # Add stars (<u>a*, not <u>a) to avoid that the trivial identities
 # (a&b -> \z) fire and yield a global \z.
-br = vcsn.context('lal_char(a), seriesset<lal_char(uv), z>') \
+qr = vcsn.context('lal_char(a), seriesset<lal_char(uv), q>') \
          .expression('<u>a*')
 z = vcsn.context('lal_char(b), z').expression('<2>b*')
 q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
 r = vcsn.context('lal_char(d), r').expression('<.4>d*')
-CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', br & z & q & r)
+CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', qr & z & q & r)
 
 ## ----------------- ##
 ## nullable labels.  ##

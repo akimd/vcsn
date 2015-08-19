@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), z>")
+ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 
 # check WEIGHT RAT-EXP
 # --------------------
@@ -15,7 +15,7 @@ def check(weight, exp):
     w = ctx.weight(weight)
     re = ctx.expression(exp)
     CHECK_EQ(w, re.constant_term())
-    CHECK_EQ(w, re.derived_term().eval(''))
+    CHECK_EQ(w, re.automaton('expansion').eval(''))
 
 check('\z', 'a')
 check('\e', 'a*')
