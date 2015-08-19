@@ -30,6 +30,7 @@ def xfail(re, err = None):
 
 # We don't support extended expressions.
 xfail(r'a*&b*')
+xfail(r'a&:b')
 xfail(r'a:b')
 xfail(r'a{c}')
 xfail(r'a{\}b')

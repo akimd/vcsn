@@ -38,8 +38,20 @@ check('xy', '<x>a*<y>b*')
 check('\z', '<x>a&<y>b')
 check('xy', '<x>a*&<y>b*')
 
+# Test shuffle.
+check('\z', '<x>a:<y>b')
+check('xy', '<x>a*:<y>b*')
+
+# Test infiltration.
+check('\z', '<x>a&:<y>b')
+check('xy', '<x>a*&:<y>b*')
+
 # Test star.
 check('\e', '(<x>a)*')
+check('x*', '(<x>\e)*')
+
+# Test complement.
+check('\e', '(<x>a){c}')
 check('x*', '(<x>\e)*')
 
 # Test left and right weight.

@@ -219,6 +219,7 @@ namespace vcsn
       }
 
       VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(infiltration)
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(shuffle)
       VCSN_RAT_UNSUPPORTED(transposition)
