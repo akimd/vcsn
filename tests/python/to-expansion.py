@@ -13,19 +13,22 @@ def check(re, exp, use_spontaneous = False):
     '''Check that d(re) = exp.  Also check that both derived_term
     algorithms (`derivation` and `expansion`) compute the same result.
     '''
-    r = c.expression(re)
-    eff = r.expansion()
-    print("d: {} => {}".format(r, eff));
+    if not isinstance(re, vcsn.expression):
+        re = c.expression(re)
+    eff = re.expansion()
+    print("d: {} => {}".format(re, eff));
     CHECK_EQ(exp, str(eff))
-    # Check that if derived_term can do it, them it's the same
+    # Make sure we terminate.
+    aut = re.automaton("expansion")
+    # Check that if derived_term can do it, then it's the same
     # automaton.
-    if not use_spontaneous and not is_wordset(c):
+    if not use_spontaneous and not is_wordset(re.context()):
         try:
-            dt = r.automaton("derivation")
-        except:
-            pass
+            dt = re.automaton("derivation")
+        except RuntimeError as e:
+            SKIP(e)
         else:
-            CHECK_ISOMORPHIC(dt, r.automaton("expansion"))
+            CHECK_ISOMORPHIC(dt, aut)
 
 ##########################
 ## Regular derivation.  ##
@@ -80,6 +83,14 @@ check('(a:b){c}', '<\e> + a.[b{c}] + b.[a{c}] + c.[\z{c}]')
 check('(a*&a*){c}', 'a.[(a*&a*){c}] + b.[\z{c}] + c.[\z{c}]')
 check('(<x>(<y>a)*<z>){c}', 'a.[(<y>a)*{c}] + b.[\z{c}] + c.[\z{c}]')
 check('a{c}{c}', 'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
+# A case where it would be easy not to terminate.
+# The real value of this check is ensuring the termination of derived-term.
+e = vcsn.context('lal_char(a), q').expression('((<2>a)*+(<4>aa)*){c}')
+check(e, 'a.[((<2>a)*+<2>(a(<4>(aa))*)){c}]')
+# About the same, but this time using polynomials as weights.
+ctx = vcsn.context('lal_char(a), polynomialset<law_char(x), q>')
+check(ctx.expression('((<x>a)*+(<xx>aa)*){c}'),       'a.[(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}]')
+check(ctx.expression('((<<2>x>a)*+(<<4>xx>aa)*){c}'), 'a.[(<<2>x>(<<2>x>a)*+<<4>xx>(a(<<4>xx>aa)*)){c}]')
 
 # Transposition
 check('\z{T}', '<\z>')

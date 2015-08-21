@@ -92,6 +92,21 @@ namespace vcsn
       return value_t{l.num * r.num, l.den * r.den}.reduce();
     }
 
+    /// GCD: arbitrarily the first argument.
+    static value_t
+    lgcd(const value_t l, const value_t r)
+    {
+      require(!is_zero(l), sname(), ": lgcd: invalid lhs: zero");
+      require(!is_zero(r), sname(), ": lgcd: invalid rhs: zero");
+      return l;
+    }
+
+    static value_t
+    rgcd(const value_t l, const value_t r)
+    {
+      return lgcd(l, r);
+    }
+
     static value_t
     rdiv(const value_t l, const value_t r)
     {

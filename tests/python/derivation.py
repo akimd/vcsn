@@ -134,10 +134,13 @@ check('a{c}{c}', 'a', '\e{c}{c}')
 check('a{c}{c}', 'b', '\z{c}{c}')
 
 # We could easily generate an infinite derived-term automaton here.
-check('((<x>a)*+(<xx>aa)*){c}', 'a',    '(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}')
-check('((<x>a)*+(<xx>aa)*){c}', 'aa',   '(<xx>(<x>a)*+<xx>(<xx>aa)*){c}')
-check('((<x>a)*+(<xx>aa)*){c}', 'aaa',  '(<xxx>(<x>a)*+<xxxx>(a(<xx>aa)*)){c}')
-check('((<x>a)*+(<xx>aa)*){c}', 'aaaa', '(<xxxx>(<x>a)*+<xxxx>(<xx>aa)*){c}')
+# However, currently we don't support a powerful enough normalization
+# of polynomials of expressions, so use a simple type of weights.
+e = vcsn.context('lal_char(a), q').expression('((<2>a)*+(<4>aa)*){c}')
+check(e, 'a',    '((<2>a)*+<2>(a(<4>(aa))*)){c}')
+check(e, 'aa',   '((<2>a)*+(<4>(aa))*){c}')
+check(e, 'aaa',  '((<2>a)*+<2>(a(<4>(aa))*)){c}')
+check(e, 'aaaa', '((<2>a)*+(<4>(aa))*){c}')
 
 
 ## ------------------------------- ##

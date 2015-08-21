@@ -658,7 +658,10 @@ namespace vcsn
     auto norm(const value_t& v) const
       -> weight_t
     {
-      return norm_<weightset_t>{*weightset()}(v);
+      if (is_zero(v))
+        return weightset()->zero();
+      else
+        return norm_<weightset_t>{*weightset()}(v);
     }
 
 
@@ -670,8 +673,17 @@ namespace vcsn
     /// the monomials with that factor, and return the factor.
     weight_t normalize_here(value_t& v) const
     {
+      // Zero is in normal form, don't try to divide by zero.
       auto res = norm(v);
-      ldiv_here(res, v);
+      if (!weightset()->is_zero(res))
+        ldiv_here(res, v);
+      return res;
+    }
+
+    /// Normalized v.
+    value_t normalize(value_t res) const
+    {
+      normalize_here(res);
       return res;
     }
 
@@ -718,7 +730,8 @@ namespace vcsn
     /// Requires a rather powerful labelset, typically expressionset.
     value_t complement(const value_t& v) const
     {
-      return {{labelset()->complement(to_label(v)), weightset()->one()}};
+      return {{labelset()->complement(to_label(normalize(v))),
+               weightset()->one()}};
     }
 
     /*---------------.
