@@ -367,9 +367,8 @@ namespace vcsn
         for (auto l: rs_.labelset()->genset())
           {
             auto i = v.polynomials.find(l);
-            auto r =
-              i == end(v.polynomials) ? rs_.zero() : as_expression(i->second);
-            res.polynomials[l] = polynomial_t{{rs_.complement(r), ws_.one()}};
+            res.polynomials[l] =
+              ps_.complement(i == end(v.polynomials) ? ps_.zero() : i->second);
           }
         return res;
       }
@@ -493,36 +492,6 @@ namespace vcsn
                       es.polynomials...);
         normalize(res);
         return res;
-      }
-
-      /// Convert an expansion to a polynomial.
-      polynomial_t as_polynomial(const value_t& v) const
-      {
-        // FIXME: polynomial_t{{rs_.one(), constant}} is wrong,
-        // because the (default) ctor will not eliminate the monomial
-        // when constant is zero.
-        polynomial_t res;
-        ps_.add_here(res, rs_.one(), v.constant);
-        for (const auto& p: v.polynomials)
-          // We may add a label on our maps, and later map it to 0.
-          // In this case polynomialset builds '\z -> 1', i.e., it
-          // does insert \z as a label in the polynomial.  Avoid this.
-          //
-          // FIXME: shouldn't polynomialset do that itself?
-          if (!ps_.is_zero(p.second))
-            ps_.add_here(res,
-                         rs_.mul(rs_.atom(p.first), as_expression(p.second)),
-                         ws_.one());
-        return res;
-      }
-
-      // FIXME: duplicate with expand.
-      expression_t as_expression(const polynomial_t& p) const
-      {
-        expression_t res = rs_.zero();
-        for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(weight_of(m), label_of(m)));
-         return res;
       }
 
     private:

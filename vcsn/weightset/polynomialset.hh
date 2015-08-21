@@ -720,7 +720,27 @@ namespace vcsn
       return res;
     }
 
+    /// Convert into a label.
+    ///
+    /// Requires a rather powerful labelset, typically expressionset.
+    /// Typical usage is therefore to "project" a polynomial of
+    /// expressions into an expression (say for complement for
+    /// instance).
+    label_t to_label(const value_t& v) const
+    {
+      label_t res = labelset()->zero();
+      for (const auto& m: v)
+        res = labelset()->add(res, labelset()->lmul(weight_of(m), label_of(m)));
+      return res;
+    }
 
+    /// Complement this polynomial.
+    ///
+    /// Requires a rather powerful labelset, typically expressionset.
+    value_t complement(const value_t& v) const
+    {
+      return {{labelset()->complement(to_label(v)), weightset()->one()}};
+    }
 
     /*---------------.
     | equal(l, r).   |

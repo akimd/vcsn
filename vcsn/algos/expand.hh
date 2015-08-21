@@ -43,16 +43,7 @@ namespace vcsn
       operator()(const expression_t& v)
       {
         v->accept(*this);
-        return expression(res_);
-      }
-
-      expression_t
-      expression(const polynomial_t p)
-      {
-        expression_t res = rs_.zero();
-        for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(weight_of(m), label_of(m)));
-         return res;
+        return ps_.to_label(res_);
       }
 
     private:
@@ -126,7 +117,7 @@ namespace vcsn
       {
         // Recurse, but make it a star.
         v.sub()->accept(*this);
-        res_ = polynomial_t{{rs_.star(expression(res_)), ws_.one()}};
+        res_ = polynomial_t{{rs_.star(ps_.to_label(res_)), ws_.one()}};
       }
 
       VCSN_RAT_VISIT(lweight, v)
@@ -175,7 +166,8 @@ namespace vcsn
       {
         const auto& e = exp->as<ExpSet>();
         return make_expression(e.expressionset(),
-                           ::vcsn::expand(e.expressionset(), e.expression()));
+                               ::vcsn::expand(e.expressionset(),
+                                              e.expression()));
       }
     }
   }

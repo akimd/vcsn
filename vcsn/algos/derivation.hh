@@ -52,16 +52,6 @@ namespace vcsn
         return std::move(res_);
       }
 
-      // FIXME: duplicate with expand.
-      expression_t
-      expression(const polynomial_t p)
-      {
-        expression_t res = rs_.zero();
-        for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(weight_of(m), label_of(m)));
-         return res;
-      }
-
     private:
       VCSN_RAT_UNSUPPORTED(infiltration)
       VCSN_RAT_UNSUPPORTED(ldiv)
@@ -193,8 +183,7 @@ namespace vcsn
       VCSN_RAT_VISIT(complement, e)
       {
         e.sub()->accept(*this);
-        // Turn the polynomial into an expression, and complement it.
-        res_ = polynomial_t{{rs_.complement(expression(res_)), ws_.one()}};
+        res_ = ps_.complement(res_);
       }
 
       VCSN_RAT_VISIT(star, e)
