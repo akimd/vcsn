@@ -14,7 +14,6 @@
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
 #include <vcsn/ctx/traits.hh>
-#include <vcsn/labelset/wordset.hh>
 #include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh>
@@ -654,8 +653,10 @@ namespace vcsn
       const ps_t& ps_;
     };
 
+    /// The norm: the weight with which we should divide a polynomial
+    /// to normalize it.
     auto norm(const value_t& v) const
-      -> decltype(norm_<weightset_t>{*this->weightset()}(v))
+      -> weight_t
     {
       return norm_<weightset_t>{*weightset()}(v);
     }
@@ -665,43 +666,13 @@ namespace vcsn
     | normalize.   |
     `-------------*/
 
-    /// Normalization: general case: just divide by the GCD of the
-    /// weights.
-    template <typename LabelSet>
-    struct normalize_here_
+    /// Normalize v in place: compute the LGCD of the weights, ldiv
+    /// the monomials with that factor, and return the factor.
+    weight_t normalize_here(value_t& v) const
     {
-      weight_t operator()(value_t& v)
-      {
-        auto res = ps_.norm(v);
-        ps_.ldiv_here(res, v);
-        return res;
-      }
-      const self_t& ps_;
-    };
-
-    /// Normalization: when labels are words: left-factor the longest
-    /// common prefix.
-    template <typename GenSet>
-    struct normalize_here_<wordset<GenSet>>
-    {
-      label_t operator()(value_t& v)
-      {
-        label_t res = label_of(detail::front(v));
-        for (const auto& m: v)
-          res = ps_.labelset()->lgcd(res, label_of(m));
-        for (auto& m: v)
-          label_of(m) = ps_.labelset()->ldiv(res, label_of(m));
-        return res;
-      }
-      const self_t& ps_;
-    };
-
-    /// Normalize v in place, and return the factor which was divided.
-    auto normalize_here(value_t& v) const
-      -> decltype(normalize_here_<labelset_t>{self()}(v))
-    {
-      auto n = normalize_here_<labelset_t>{self()};
-      return n(v);
+      auto res = norm(v);
+      ldiv_here(res, v);
+      return res;
     }
 
 

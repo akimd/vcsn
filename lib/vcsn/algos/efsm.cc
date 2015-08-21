@@ -3,6 +3,7 @@
 #include <string>
 
 #include <boost/algorithm/string/erase.hpp>
+#include <boost/algorithm/string/predicate.hpp> // starts_with
 
 #include <lib/vcsn/algos/fwd.hh>
 #include <lib/vcsn/algos/registry.hh>
