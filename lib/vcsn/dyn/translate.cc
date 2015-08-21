@@ -192,8 +192,13 @@ namespace vcsn
             std::cerr << "run: " << cmd << std::endl;
           if (system((cmd + " 2>'" + err + "'").c_str()))
             throw_compiler_errors(cmd, err);
-          else if (!getenv("VCSN_DEBUG"))
-            boost::filesystem::remove(err);
+          else
+            {
+              // At least we should see the warnings.
+              std::ifstream log{err};
+              std::cerr << log.rdbuf();
+              boost::filesystem::remove(err);
+            }
         }
 
         /// Run C++ compiler to compile.
