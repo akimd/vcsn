@@ -7,8 +7,9 @@
 #include <unordered_map>
 
 #include <boost/iterator/iterator_facade.hpp>
-#include <boost/dynamic_bitset.hpp>
 
+#include <vcsn/ctx/traits.hh> // labelset_t_of
+#include <vcsn/misc/dynamic_bitset.hh>
 #include <vcsn/misc/empty.hh>
 #include <vcsn/misc/functional.hh> // vcsn::equal_to
 #include <vcsn/misc/type_traits.hh>

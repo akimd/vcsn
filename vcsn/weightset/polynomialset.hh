@@ -71,21 +71,17 @@ namespace vcsn
     struct is_division_ring<polynomialset<Context, Kind>>
       : std::false_type
     {};
-  }
 
   /// Linear combination of labels: map labels to weights.
   /// \tparam Context  the LabelSet and WeightSet types.
-  template <typename Context,
-            wet_kind_t Kind = detail::wet_kind<labelset_t_of<Context>,
-                                               weightset_t_of<Context>>()>
-  class polynomialset
+  template <typename Context, wet_kind_t Kind>
+  class polynomialset_impl
   {
   public:
     using self_t = polynomialset<Context, Kind>;
     using context_t = Context;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
-    using polynomialset_t = polynomialset<context_t>;
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
@@ -97,11 +93,23 @@ namespace vcsn
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 
-    polynomialset() = delete;
-    polynomialset(const polynomialset&) = default;
-    polynomialset(const context_t& ctx)
+    polynomialset_impl() = delete;
+    polynomialset_impl(const polynomialset_impl&) = default;
+    polynomialset_impl(const context_t& ctx)
       : ctx_{ctx}
     {}
+
+    /// Ourself, but after the application of weightset_mixin.
+    ///
+    /// FIXME: this is ugly.  It is due to the fact that instead of the
+    /// CRTP, we used a mixin approach to add features to expressionset
+    /// as opposed to expressionset_impl.  Except that here, we have an
+    /// expression_impl, and we need the expression.  So after all,
+    /// maybe the CRTP is a better approach.
+    ///
+    /// Cannot be a reference member, as we do support assignments,
+    /// in which case the copied self would point to the original this.
+    const self_t& self() const { return static_cast<const self_t&>(*this); }
 
     /// The static name.
     static symbol sname()
@@ -631,10 +639,10 @@ namespace vcsn
     };
 
     /// Compute the left GCD of weights which are polynomials.
-    template <typename Ctx, typename Dummy>
-    struct norm_<polynomialset<Ctx>, Dummy>
+    template <typename Ctx, wet_kind_t Knd, typename Dummy>
+    struct norm_<polynomialset<Ctx, Knd>, Dummy>
     {
-      using ps_t = polynomialset<Ctx>;
+      using ps_t = polynomialset<Ctx, Knd>;
 
       typename ps_t::value_t operator()(const value_t& v) const
       {
@@ -668,7 +676,7 @@ namespace vcsn
         ps_.ldiv_here(res, v);
         return res;
       }
-      const polynomialset& ps_;
+      const self_t& ps_;
     };
 
     /// Normalization: when labels are words: left-factor the longest
@@ -685,14 +693,14 @@ namespace vcsn
           label_of(m) = ps_.labelset()->ldiv(res, label_of(m));
         return res;
       }
-      const polynomialset& ps_;
+      const self_t& ps_;
     };
 
     /// Normalize v in place, and return the factor which was divided.
     auto normalize_here(value_t& v) const
-      -> decltype(normalize_here_<labelset_t>{*this}(v))
+      -> decltype(normalize_here_<labelset_t>{self()}(v))
     {
-      auto n = normalize_here_<labelset_t>{*this};
+      auto n = normalize_here_<labelset_t>{self()};
       return n(v);
     }
 
@@ -781,29 +789,29 @@ namespace vcsn
       return equal_impl<value_t::kind>(l, r);
     }
 
-    const value_t&
-    one() const
+    /// The unit polynomial.
+    static const value_t& one()
     {
       static value_t res{monomial_one()};
       return res;
     }
 
-    const monomial_t&
-    monomial_one() const
+    /// The unit monomial.
+    static const monomial_t& monomial_one()
     {
-      static monomial_t res{labelset()->one(), weightset()->one()};
+      static monomial_t res{labelset_t::one(), weightset_t::one()};
       return res;
     }
 
-    bool
-    is_one(const value_t& v) const ATTRIBUTE_PURE
+    /// Whether is the unit polynomial.
+    static bool is_one(const value_t& v) ATTRIBUTE_PURE
     {
       if (v.size() != 1)
         return false;
-      auto i = v.find(labelset()->one());
+      auto i = v.find(labelset_t::one());
       if (i == v.end())
         return false;
-      return weightset()->is_one(i->second);
+      return weightset_t::is_one(i->second);
     }
 
     const value_t&
@@ -843,16 +851,16 @@ namespace vcsn
     }
 
     /// Convert from another polynomialset to type_t.
-    template <typename C>
+    template <typename C, wet_kind_t K>
     value_t
-    conv(const polynomialset<C>& sps,
-         const typename polynomialset<C>::value_t& v) const
+    conv(const polynomialset<C, K>& sps,
+         const typename polynomialset<C, K>::value_t& v) const
     {
+      const typename C::labelset_t&  sls = *sps.labelset();
+      const typename C::weightset_t& sws = *sps.weightset();
+      const labelset_t&  tls = *labelset();
+      const weightset_t& tws = *weightset();
       value_t res;
-      typename C::labelset_t sls = * sps.labelset();
-      typename C::weightset_t sws = * sps.weightset();
-      labelset_t tls = * labelset();
-      weightset_t tws = * weightset();
       for (const auto& m: v)
         add_here(res, tls.conv(sls, label_of(m)), tws.conv(sws, weight_of(m)));
       return res;
@@ -1286,28 +1294,31 @@ namespace vcsn
     constexpr static char rangle = '>';
   };
 
-  namespace detail
-  {
-    template <typename Ctx1, typename Ctx2>
-    struct join_impl<polynomialset<Ctx1>, polynomialset<Ctx2>>
+
+    template <typename Ctx1, wet_kind_t Kind1,
+              typename Ctx2, wet_kind_t Kind2>
+    struct join_impl<polynomialset<Ctx1, Kind1>,
+                     polynomialset<Ctx2, Kind2>>
     {
+      // Use the default kind.
       using type = polynomialset<join_t<Ctx1, Ctx2>>;
-      static type join(const polynomialset<Ctx1>& ps1,
-                       const polynomialset<Ctx2>& ps2)
+      static type join(const polynomialset<Ctx1, Kind1>& ps1,
+                       const polynomialset<Ctx2, Kind2>& ps2)
       {
         return {vcsn::join(ps1.context(), ps2.context())};
       }
     };
 
-    template <typename WS1, typename Ctx2>
-    struct join_impl<WS1, polynomialset<Ctx2>>
+    template <typename Ctx1, wet_kind_t Kind1,
+              typename WS2>
+    struct join_impl<polynomialset<Ctx1, Kind1>, WS2>
     {
       using type
-        = polynomialset<context<typename Ctx2::labelset_t,
-                                join_t<WS1, typename Ctx2::weightset_t>>>;
-      static type join(const WS1& ws1, const polynomialset<Ctx2>& ps2)
+        = polynomialset<context<typename Ctx1::labelset_t,
+                                join_t<WS2, typename Ctx1::weightset_t>>>;
+      static type join(const polynomialset<Ctx1, Kind1>& ps1, const WS2& ws2)
       {
-        return {*ps2.labelset(), vcsn::join(ws1, *ps2.weightset())};
+        return {*ps1.labelset(), vcsn::join(*ps1.weightset(), ws2)};
       }
     };
   }

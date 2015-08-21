@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/misc/fwd.hh> // wet_kind_t
+#include <vcsn/misc/wet.hh> // wet_kind
 
 namespace vcsn
 {
@@ -35,11 +35,11 @@ namespace vcsn
 
     // zmin.hh.
     class zmin_impl;
-  }
 
-  // polynomialset.hh.
-  template <typename Context, wet_kind_t Kind>
-  class polynomialset;
+    // polynomialset.hh.
+    template <typename Context, wet_kind_t Kind>
+    class polynomialset_impl;
+  }
 
   // weightset.hh.
   template <typename WeightSet>
@@ -56,4 +56,9 @@ namespace vcsn
   using z    = weightset_mixin<detail::z_impl>;
   using zmin = weightset_mixin<detail::zmin_impl>;
 
+  template <typename Context,
+            wet_kind_t Kind = detail::wet_kind<labelset_t_of<Context>,
+                                               weightset_t_of<Context>>()>
+  using polynomialset
+    = weightset_mixin<detail::polynomialset_impl<Context, Kind>>;
 } // namespace vcsn
