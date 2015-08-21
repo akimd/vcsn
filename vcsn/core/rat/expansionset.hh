@@ -207,6 +207,7 @@ namespace vcsn
         return normalize(res);
       }
 
+    private:
       template <typename Conjunction>
       void
       conjunctions_with_one_(value_t&,
@@ -266,21 +267,11 @@ namespace vcsn
         return res;
       }
 
-      /// The conjunction of \a l and \a r.
-      value_t conjunction(value_t l, value_t r) const
-      {
-        return conjunction_(l, r,
-                            [this](const polynomial_t& l, const polynomial_t& r)
-                            {
-                              return ps_.conjunction(l, r);
-                            });
-      }
-
       /// The shuffle product of \a l and \a r.
       template <typename Shuffle>
       value_t& shuffle_(value_t& res,
-                        value_t lhs_xpn, expression_t lhs_xpr,
-                        value_t rhs_xpn, expression_t rhs_xpr,
+                        const value_t& lhs_xpn, expression_t lhs_xpr,
+                        const value_t& rhs_xpn, expression_t rhs_xpr,
                         Shuffle shuffle) const
       {
         // (i) lhs_xpn:rhs_xpr.
@@ -297,9 +288,20 @@ namespace vcsn
         return res;
       }
 
+    public:
+      /// The conjunction of \a l and \a r.
+      value_t conjunction(value_t l, value_t r) const
+      {
+        return conjunction_(l, r,
+                            [this](const polynomial_t& l, const polynomial_t& r)
+                            {
+                              return ps_.conjunction(l, r);
+                            });
+      }
+
       /// The shuffle product of \a l and \a r.
-      value_t shuffle(value_t lhs_xpn, expression_t lhs_xpr,
-                      value_t rhs_xpn, expression_t rhs_xpr) const
+      value_t shuffle(const value_t& lhs_xpn, expression_t lhs_xpr,
+                      const value_t& rhs_xpn, expression_t rhs_xpr) const
       {
         value_t res;
         res.constant = ws_.mul(lhs_xpn.constant, rhs_xpn.constant);
@@ -312,8 +314,8 @@ namespace vcsn
       }
 
       /// The infiltration product of \a l and \a r.
-      value_t infiltration(value_t lhs_xpn, expression_t lhs_xpr,
-                           value_t rhs_xpn, expression_t rhs_xpr) const
+      value_t infiltration(const value_t& lhs_xpn, expression_t lhs_xpr,
+                           const value_t& rhs_xpn, expression_t rhs_xpr) const
       {
         // Conjunction part: lhs_xpn&:rhs_xpn.
         value_t res =

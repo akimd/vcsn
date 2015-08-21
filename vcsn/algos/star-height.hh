@@ -36,13 +36,10 @@ namespace vcsn
 
     private:
 
-#define DEFINE(Type)                                         \
-      using Type ## _t = typename super_t::Type ## _t;       \
-      virtual void visit(const Type ## _t& v)
-
       VCSN_RAT_VISIT(atom,)           {}
       VCSN_RAT_VISIT(complement, v)   { visit_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
+      VCSN_RAT_VISIT(infiltration, v) { visit_(v); }
       VCSN_RAT_VISIT(ldiv, v)         { visit_(v); }
       VCSN_RAT_VISIT(lweight, v)      { v.sub()->accept(*this); }
       VCSN_RAT_VISIT(one,)            {}
@@ -53,8 +50,6 @@ namespace vcsn
       VCSN_RAT_VISIT(sum, v)          { visit_(v); }
       VCSN_RAT_VISIT(transposition, v){ visit_(v); }
       VCSN_RAT_VISIT(zero,)           {}
-
-#undef DEFINE
 
       template <rat::type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;

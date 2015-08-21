@@ -345,10 +345,13 @@ namespace vcsn
     value_t add_linear_(value_t l, value_t r) const;
 
     /// If e is an lweight, then its child, otherwise e.
+    /// static because used by less.
     static value_t unwrap_possible_lweight_(value_t e);
     /// The type of e, or the type of its child if e is a lweight.
+    /// static because used by less.
     static type_t type_ignoring_lweight_(value_t e);
     /// The weight of e if it's an lweight, otherwise the weight one().
+    /// static because used by less.
     static weight_t possibly_implicit_lweight_(value_t e);
 
     /// Push \a v in \a res, applying associativity if possible.

@@ -573,6 +573,32 @@ namespace vcsn
       return v;
     }
 
+    /// LGCD between two polynomials.
+    ///
+    /// Based only on weights.
+    /// For instance <2>a+<4>b, <3>a+<6>b => <1>a+<2>b.
+    /// And ab, a => 1.
+    /// We could try to have ab, a => a in the future.
+    value_t lgcd(const value_t& lhs, const value_t& rhs) const
+    {
+      using std::begin;
+      using std::end;
+      value_t res;
+      // For each monomial, look for the matching GCD of the weight.
+      auto i = begin(lhs), i_end = end(lhs);
+      auto j = begin(rhs), j_end = end(rhs);
+      for (;
+           i != i_end && j != j_end
+             && labelset()->equal(i->first, j->first);
+           ++i, ++j)
+        res.set(i->first, weightset()->lgcd(i->second, j->second));
+      // If the sets of labels are different, the polynomials
+      // cannot be "colinear", and the GCD is just 1.
+      if (i != i_end || j != j_end)
+        res = one();
+      return res;
+    }
+
     /*--------.
     | norm.   |
     `--------*/
@@ -603,26 +629,6 @@ namespace vcsn
       }
       const z& z_;
     };
-
-    value_t lgcd(const value_t& lhs, const value_t& rhs) const
-    {
-      using std::begin;
-      using std::end;
-      value_t res;
-      // For each monomial, look for the matching GCD of the weight.
-      auto i = begin(lhs), i_end = end(lhs);
-      auto j = begin(rhs), j_end = end(rhs);
-      for (;
-           i != i_end && j != j_end
-             && labelset()->equal(i->first, j->first);
-           ++i, ++j)
-        res.set(i->first, weightset()->lgcd(i->second, j->second));
-      // If the sets of labels are different, the polynomials
-      // cannot be "colinear", and the GCD is just 1.
-      if (i != i_end || j != j_end)
-        res = one();
-      return res;
-    }
 
     /// Compute the left GCD of weights which are polynomials.
     template <typename Ctx, typename Dummy>
