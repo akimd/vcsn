@@ -305,32 +305,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(complement, e)
       {
-        // Complement requires a free labelset.
-        visit_complement<context_t::labelset_t::is_free()>(e);
-      }
-
-      /// Cannot complement on a non-free labelset.
-      template <bool IsFree>
-      vcsn::enable_if_t<!IsFree, void>
-      visit_complement(const complement_t&)
-      {
-        raise(me(), ": cannot handle complement without generators");
-      }
-
-      /// Complement on a free labelset.
-      template <bool IsFree>
-      vcsn::enable_if_t<IsFree, void>
-      visit_complement(const complement_t& e)
-      {
-        expansion_t res = to_expansion(e.sub());
-        res_.constant = ws_.is_zero(res.constant) ? ws_.one() : ws_.zero();
-
-        // Turn the polynomials into an expression, and complement it.
-        for (auto l: rs_.labelset()->genset())
-          ps_.add_here
-            (res_.polynomials[l],
-             polynomial_t{{rs_.complement(es_.as_expression(res.polynomials[l])),
-                           ws_.one()}});
+        res_ = es_.complement(to_expansion(e.sub()));
       }
 
 

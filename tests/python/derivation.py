@@ -133,6 +133,12 @@ check('(<x>(<y>a)*<z>){c}', 'b', '\z{c}')
 check('a{c}{c}', 'a', '\e{c}{c}')
 check('a{c}{c}', 'b', '\z{c}{c}')
 
+# We could easily generate an infinite derived-term automaton here.
+check('((<x>a)*+(<xx>aa)*){c}', 'a',    '(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}')
+check('((<x>a)*+(<xx>aa)*){c}', 'aa',   '(<xx>(<x>a)*+<xx>(<xx>aa)*){c}')
+check('((<x>a)*+(<xx>aa)*){c}', 'aaa',  '(<xxx>(<x>a)*+<xxxx>(a(<xx>aa)*)){c}')
+check('((<x>a)*+(<xx>aa)*){c}', 'aaaa', '(<xxxx>(<x>a)*+<xxxx>(<xx>aa)*){c}')
+
 
 ## ------------------------------- ##
 ## Derive wrt to several letters.  ##

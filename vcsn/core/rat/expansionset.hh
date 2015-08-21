@@ -335,11 +335,50 @@ namespace vcsn
         return res;
       }
 
+      /*--------------.
+      | complement.   |
+      `--------------*/
+
+      /// The complement of v.
+      value_t complement(const value_t& v) const
+      {
+        // Complement requires a free labelset.
+        return complement_<labelset_t::is_free()>(v);
+      }
+
+    private:
+      /// Cannot complement on a non-free labelset.
+      template <bool IsFree>
+      vcsn::enable_if_t<!IsFree, value_t>
+      complement_(const value_t&) const
+      {
+        raise(me(), ": cannot handle complement without generators");
+      }
+
+      /// Complement on a free labelset.
+      template <bool IsFree>
+      vcsn::enable_if_t<IsFree, value_t>
+      complement_(const value_t& v) const
+      {
+        value_t res;
+        res.constant = ws_.is_zero(v.constant) ? ws_.one() : ws_.zero();
+
+        // Turn the polynomials into expressions, and complement them.
+        for (auto l: rs_.labelset()->genset())
+          {
+            auto i = v.polynomials.find(l);
+            auto r =
+              i == end(v.polynomials) ? rs_.zero() : as_expression(i->second);
+            res.polynomials[l] = polynomial_t{{rs_.complement(r), ws_.one()}};
+          }
+        return res;
+      }
 
       /*---------------.
       | tuple(v...).   |
       `---------------*/
 
+    public:
       /// The type of the expansionsset for tape Tape.
       template <unsigned Tape>
       using focus_t
