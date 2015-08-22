@@ -264,6 +264,8 @@ namespace vcsn
       }
     else
       {
+        require(min <= max,
+                "multiply: invalid exponent: ", min, ", ", max);
         res = rs.power(r, min);
         if (min < max)
           {

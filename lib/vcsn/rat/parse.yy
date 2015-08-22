@@ -65,6 +65,17 @@
   #include <lib/vcsn/rat/scan.hh>
   #include <vcsn/dyn/algos.hh>
 
+#define TRY(Loc, Stm)                           \
+  try                                           \
+    {                                           \
+      Stm;                                      \
+    }                                           \
+  catch (std::exception& e)                     \
+    {                                           \
+      error(Loc, e.what());                     \
+      YYERROR;                                  \
+    }
+
   namespace vcsn
   {
     namespace rat
@@ -255,8 +266,10 @@ exp:
         $$.rparen = $2.rparen;
       }
   }
-| exp "*"           { $$ = dyn::multiply($1.exp,
-                                         std::get<0>($2), std::get<1>($2)); }
+| exp "*"           { TRY(@$,
+                          $$ =
+                          dyn::multiply($1.exp,
+                                        std::get<0>($2), std::get<1>($2))); }
 | exp "{c}"         { $$ = dyn::complement($1.exp); }
 | exp "{T}"         { $$ = dyn::transposition($1.exp); }
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
