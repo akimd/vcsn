@@ -364,6 +364,18 @@ namespace vcsn
         auto rw = ws.conv(r.weightset(), r.weight());
         return make_weight(ws, ::vcsn::multiply(ws, lw, rw));
       }
+
+      /// Bridge (multiply).
+      template <typename WeightSet, typename Int1, typename Int2>
+      weight
+      multiply_weight_repeated(const weight& wgt, int min, int max)
+      {
+        const auto& w = wgt->as<WeightSet>();
+        return make_weight(w.weightset(),
+                           ::vcsn::multiply(w.weightset(),
+                                            w.weight(),
+                                            min, max));
+      }
     }
   }
 }

@@ -24,7 +24,21 @@ check('lal_char(x), expressionset<lal_char(abc), q>', 'a*<23>bc', '<23>(a*bc)')
 # Check that we don't ignore trailing characters.
 XFAIL(lambda: vcsn.context('lal_char(ab), z').weight('123a*'))
 
+
+c = vcsn.context('lal_char(x), q')
+w = lambda s: c.weight(s)
 # Check +.
-c = vcsn.context('lal_char(x), seriesset<lal_char(abc), q>')
-CHECK_EQ(c.weight('<5>a+<5>b'),
-         c.weight('<2>a+<3>b') + c.weight('<3>a+<2>b'))
+CHECK_EQ(w('5'), w('2') + w('3'))
+
+# Check *.
+CHECK_EQ(w('6'), w('2') * w('3'))
+
+# Check **.
+CHECK_EQ(w('1'),      w('1/2') ** 0)
+CHECK_EQ(w('1/2'),    w('1/2') ** 1)
+CHECK_EQ(w('1/4'),    w('1/2') ** 2)
+CHECK_EQ(w('1/1024'), w('1/2') ** 10)
+CHECK_EQ(w('7/16'),   w('1/2') ** (2, 4))
+
+CHECK_EQ(w('2'),      w('1/2') ** -1)
+CHECK_EQ(w('1/2'),    w('1/2') ** (2, -1))

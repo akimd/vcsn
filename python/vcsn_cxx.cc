@@ -1044,6 +1044,22 @@ struct weight
   {
     return vcsn::dyn::multiply(val_, rhs.val_);
   }
+  /// The type of the previous function.
+  using multiply_t
+    = auto (weight::*)(const weight&) const -> weight;
+
+  weight multiply(int min, int max) const
+  {
+    return vcsn::dyn::multiply(val_, min, max);
+  }
+  /// The type of the previous function.
+  using multiply_repeated_t =
+    auto (weight::*)(int min, int max) const -> weight;
+
+  weight multiply(int min) const
+  {
+    return multiply(min, min);
+  }
 
   weight sum(const weight& rhs) const
   {
@@ -1418,7 +1434,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<weight>("weight", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
     .def("format", &weight::format)
-    .def("multiply", &weight::multiply)
+    .def("multiply", static_cast<weight::multiply_t>(&weight::multiply))
+    .def("multiply",
+         static_cast<weight::multiply_repeated_t>(&weight::multiply),
+         multiply_repeated())
     .def("sum", &weight::sum)
    ;
 }

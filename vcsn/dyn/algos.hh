@@ -474,6 +474,13 @@ namespace vcsn
     /// Multiply two weights.
     weight multiply(const weight& lhs, const weight& rhs);
 
+    /// Repeated multiplication of a weight with itself.
+    ///
+    /// \param e    the weight.
+    /// \param min  the minimum number.  If -1, denotes 0.
+    /// \param max  the maximum number.  If -1, denotes infinity, using star.
+    weight multiply(const weight& e, int min, int max);
+
     /// The minimized automaton.
     ///
     /// \param aut       the automaton to minimize
