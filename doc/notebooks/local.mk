@@ -90,6 +90,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
+  %D%/expression.sum.ipynb                      \
   %D%/expression.thompson.ipynb                 \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
