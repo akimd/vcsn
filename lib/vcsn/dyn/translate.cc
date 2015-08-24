@@ -83,23 +83,6 @@ namespace vcsn
 
       struct translation
       {
-        /// Return the next word from \a is.
-        /// Stop at any of "<,_>", and leave this separator in the stream.
-        std::string word()
-        {
-          std::string res;
-          int c;
-          while ((c = is.get()) != EOF)
-            if (c == '<' || c == ',' || c == '_' || c == '>')
-              {
-                is.unget();
-                break;
-              }
-            else
-              res += c;
-          return res;
-        }
-
         translation()
           : parser_(is), printer_(os)
         {}
@@ -280,6 +263,12 @@ namespace vcsn
                 cxx_compile(base);
                 cxx_link(base);
                 boost::filesystem::rename(tmp + ".so", base + ".so");
+                // Upon success, remove the .o file, it is large (10x
+                // compared to the *.so on erebus using clang) and not
+                // required.  However the debug symbols are in there, so
+                // when debugging, leave them!
+                if (!getenv("VCSN_DEBUG"))
+                  boost::filesystem::remove(tmp + ".o");
               }
             else
               {
@@ -291,14 +280,17 @@ namespace vcsn
               }
             auto d
               = chr::duration_cast<chr::milliseconds>(clock::now() - start);
-            std::ofstream{"/tmp/vcsn-compile.log",
-                          std::ofstream::out | std::ofstream::app}
-            << d.count() << ", "
-            << (no_python ? "C++, " : "Py,  ")
-            << '\'' << base.substr(plugindir().size()) << '\''
-            << '\n';
             if (getenv("VCSN_TIME"))
-              std::cerr << d.count() << "ms: " << base << '\n';
+              {
+                std::ofstream{"/tmp/vcsn-compile.log",
+                    std::ofstream::out | std::ofstream::app}
+                << d.count() << ", "
+                << (no_python ? "C++, " : "Py,  ")
+                << '\'' << base.substr(plugindir().size()) << '\''
+                << '\n';
+                if (getenv("VCSN_TIME2"))
+                  std::cerr << d.count() << "ms: " << base << '\n';
+              }
           }
           static bool first = true;
           if (first)
@@ -308,15 +300,6 @@ namespace vcsn
             }
           lt_dlhandle lib = lt_dlopen((base + ".so").c_str());
           require(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
-          // Upon success, remove the .o file, it is large (10x
-          // compared to the *.so on erebus using clang) and not
-          // required.  However the debug symbols are in there, so
-          // when debugging, leave them!
-          if (!getenv("VCSN_DEBUG"))
-            {
-              boost::filesystem::remove(tmp + ".cc");
-              boost::filesystem::remove(tmp + ".o");
-            }
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.

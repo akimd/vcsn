@@ -86,5 +86,11 @@ if args.shared:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn '{tmp}.o' -shared -o '{tmp}.so'")
     os.rename(fmt('{tmp}.so'), fmt('{base}.so'))
+    # Upon success, remove the .o file, it is large (10x compared to
+    # the *.so on erebus using clang) and not required.  However the
+    # debug symbols are in there, so when debugging, leave them!
+    if "VCSN_DEBUG" in os.environ:
+        os.remove(fmt('{tmp}.o'))
 else:
-    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} {ldflags} -lvcsn -o '{base}' '{base}.cc'")
+    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{base}.cc'")
+    os.rename(fmt('{tmp}'), fmt('{base}'))
