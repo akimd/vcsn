@@ -1,5 +1,6 @@
 #! /bin/sh
 
-ps auxww |
+ps uxww |
   grep -v perl |
+  grep "vcsn compile" |
   perl -ne "s{^.*'.*?/lib/plugins/(.*?)\.cc'.*$}{\$1}g && print \$_"
