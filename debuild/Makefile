@@ -6,6 +6,7 @@ build-image: Dockerfile
 	docker build -t $(DOCKER_TAG) .
 
 build: build-image
+	mkdir ../_package
 	cd .. && docker run -v $$PWD:/build/vcsn $(DOCKER_TAG) /build/build.sh
 
 push:
