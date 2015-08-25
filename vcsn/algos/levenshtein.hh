@@ -40,12 +40,12 @@ namespace vcsn
     res->set_initial(s);
     res->set_final(s);
     for (auto l : letters)
-    {
       res->new_transition(s, s, label_t{l, ls2.one()}, 1);
+    for (auto l : letters2)
       res->new_transition(s, s, label_t{ls1.one(), l}, 1);
+    for (auto l : letters)
       for (auto l2 : letters2)
-        res->new_transition(s, s, label_t{l, l2}, l != l2);
-    }
+        res->new_transition(s, s, label_t{l, l2}, !ls1.equal(l, l2));
     return res;
   }
 
