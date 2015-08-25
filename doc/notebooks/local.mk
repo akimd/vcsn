@@ -64,6 +64,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.lift.ipynb                      \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.operators.ipynb                 \
+  %D%/automaton.partial_identity.ipynb          \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \

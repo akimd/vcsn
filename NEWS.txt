@@ -23,6 +23,11 @@ distance between two alphabets. This transducer can then be composed with two
 languages to obtain the edit-distance algorithm, containing much information on
 the distance of the languages and their words.
 
+### partial-identity: new algorithm
+The partial identity turns an automaton into a transducer realizing a partial
+identity. I.e., for each accepted input, the output will be the same as the
+input (plus the origin weight from the input automaton).
+
 ## 2015-08-18
 ### to_automaton: more algorithms
 One can chose between both implementation of derived_term (stripped), using

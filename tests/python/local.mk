@@ -57,6 +57,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/minimize.py                               \
   %D%/multiply.py                               \
   %D%/normalize.py                              \
+  %D%/partial-identity.py                       \
   %D%/polynomial.py                             \
   %D%/power.py                                  \
   %D%/prefix.py                                 \
