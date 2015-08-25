@@ -83,6 +83,15 @@ exp = vcsn.automaton(filename = medir + '/ladybird-2-zmin.gv')
 CHECK_EQ(exp,
          vcsn.context('lal_char(abc), zmin').ladybird(2))
 
+## ------------ ##
+## levenshein.  ##
+## ------------ ##
+
+nmin = vcsn.context('lat<lan_char(abc), lan_char(bcd)>, nmin')
+
+exp = vcsn.automaton(filename = medir + '/levenshtein.gv')
+
+CHECK_EQ(exp, nmin.levenshtein())
 
 ## -------- ##
 ## random.  ##

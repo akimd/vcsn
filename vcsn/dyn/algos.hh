@@ -422,7 +422,7 @@ namespace vcsn
     automaton levenshtein(const context& ls);
 
     /// Lift some tapes of the transducer, or turn an automaton into a
-    /// spontaneous autmaton.
+    /// spontaneous automaton.
     ///
     /// Each `<k>l` transition is mapped to a `<<k>l>\e` transition.
     ///

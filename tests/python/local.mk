@@ -191,6 +191,7 @@ EXTRA_DIST +=                                   \
   %D%/factory.dir/double-ring-4-2-3.gv          \
   %D%/factory.dir/ladybird-2-zmin.gv            \
   %D%/factory.dir/ladybird-2.gv                 \
+  %D%/factory.dir/levenshtein.gv                \
   %D%/factory.dir/u-5.gv                        \
   %D%/minimize.dir/incomplete-non-trim.gv       \
   %D%/minimize.dir/incomplete-non-trim.moore.gv \

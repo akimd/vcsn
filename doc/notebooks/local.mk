@@ -81,6 +81,7 @@ dist_notebooks_DATA =                           \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.divkbaseb.ipynb                   \
   %D%/context.ladybird.ipynb                    \
+  %D%/context.levenshtein.ipynb                 \
   %D%/context.trie.ipynb                        \
   %D%/expression.automaton.ipynb                \
   %D%/expression.conjunction.ipynb              \

@@ -16,6 +16,13 @@ tree) is now included.
 The vcsn.automaton function now accepts "auto" as format, which means "try
 to guess from the content".
 
+## 2015-08-25
+### levenshtein: new algorithm
+The levenshtein algorithm allows to build a transducer encoding the Levenshtein
+distance between two alphabets. This transducer can then be composed with two
+languages to obtain the edit-distance algorithm, containing much information on
+the distance of the languages and their words.
+
 ## 2015-08-18
 ### to_automaton: more algorithms
 One can chose between both implementation of derived_term (stripped), using
