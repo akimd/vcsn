@@ -14,7 +14,7 @@ import vcsn
 from vcsn.dot import _dot_to_svg, _dot_pretty, daut_to_dot
 from vcsn import d3Widget
 
-# The class MUST call this class decorator at creation time
+# The class MUST call this class decorator at creation time.
 class ContextText:
     def __init__(self, ipython, name=None):
         self.ipython = ipython
@@ -123,9 +123,9 @@ class AutomatonText:
 class EditAutomaton(Magics):
     @magic_arguments()
     @argument('var', type=str, help='The name of the variable to edit.')
-    @argument('format', type=str, nargs ='?', default = 'daut',
+    @argument('format', type=str, nargs ='?', default = 'auto',
               help='''The name of the format to edit the automaton in
-              (dot, daut, efsm...).  Default: daut.''')
+              (auto, daut, dot, efsm, fado, grail).  Default: auto.''')
     @argument('mode', type=str, nargs ='?', default = 'h',
               help='''The name of the visual mode to display the automaton
               (h for horizontal and v for vertical).  Default: h.''')
@@ -133,12 +133,16 @@ class EditAutomaton(Magics):
     def automaton(self, line, cell=None):
         args = parse_argstring(self.automaton, line)
         if cell is None:
-            if(args.format == 'gui'):
+            # Line magic.
+            if args.format == 'auto':
+                args.format = 'daut'
+            if args.format == 'gui':
                 a = d3Widget.VcsnD3DataFrame(self, args.var)
                 a.show()
             else:
                 AutomatonText(self, args.var, args.format, args.mode)
         else:
+            # Cell magic.
             a =  vcsn.automaton(cell, args.format)
             self.shell.user_ns[args.var] = a
             display(a)

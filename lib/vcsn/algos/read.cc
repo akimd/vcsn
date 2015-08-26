@@ -7,6 +7,8 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/registers.hh>
+#include <vcsn/misc/builtins.hh>
+#include <vcsn/misc/getargs.hh>
 
 namespace vcsn
 {
@@ -33,14 +35,29 @@ namespace vcsn
     automaton
     read_automaton(std::istream& is, const std::string& f)
     {
-      if (f == "dot" || f == "default" || f == "")
-        return read_dot(is);
-      else if (f == "efsm")
-        return read_efsm(is);
-      else if (f == "fado")
-        return read_fado(is);
-      else
-        raise("invalid automaton input format:", f);
+      enum fmt
+      {
+        dot,
+        efsm,
+        fado,
+      };
+      static const auto map = std::map<std::string, fmt>
+        {
+          {"default", dot},
+          {"dot",     dot},
+          {"efsm",    efsm},
+          {"fado",    fado},
+        };
+      switch (getargs("automaton input format", map, f))
+        {
+        case dot:
+          return read_dot(is);
+        case efsm:
+          return read_efsm(is);
+        case fado:
+          return read_fado(is);
+        }
+      BUILTIN_UNREACHABLE();
     }
 
     /*-------------------.

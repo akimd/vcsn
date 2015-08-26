@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-08-26
+### vcsn.automaton can guess the format
+The vcsn.automaton function now accepts "auto" as format, which means "try
+to guess from the content".
+
 ## 2015-08-18
 ### to_automaton: more algorithms
 One can chose between both implementation of derived_term (stripped), using

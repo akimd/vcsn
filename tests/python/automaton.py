@@ -430,6 +430,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(exp, daut)
 
     # Check input.
+    CHECK_EQ(a, vcsn.automaton(daut, 'auto'))
     CHECK_EQ(a, vcsn.automaton(daut, 'daut'))
 
 
@@ -457,14 +458,14 @@ def check_fado(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.fado')):
-    a = vcsn.automaton(filename = fn, format = 'fado')
     exp = vcsn.automaton(filename = fn.replace('.fado', '.gv'))
     # Check that we can read FAdo.
-    CHECK_EQ(exp, a)
+    CHECK_EQ(exp, vcsn.automaton(filename = fn, format = 'fado'))
+    CHECK_EQ(exp, vcsn.automaton(filename = fn, format = 'auto'))
 
     # Check that we can print FAdo.
     fado   = open(fn).read().strip()
-    CHECK_EQ(fado, a.format('fado'))
+    CHECK_EQ(fado, exp.format('fado'))
     check_fado(a)
 
 ## --------------- ##

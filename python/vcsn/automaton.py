@@ -71,12 +71,30 @@ def _automaton_display(self, mode, engine = "dot"):
     from IPython.display import display
     display(_automaton_convert(self, mode, engine))
 
+
+def _guess_format(data = '', filename = ''):
+    '''Try to find out what is the format used to encode this automaton.'''
+    for line in open(filename) if filename else data.splitlines():
+        if line.startswith('digraph'):
+            return 'dot'
+        elif re.match('context *=|^\s*(\$|\d+)\s*->\s*(\$|\d+)', line):
+            return 'daut'
+        elif line.startswith('#! /bin/sh'):
+            return 'efsm'
+        elif line.startswith('(START)'):
+            return 'grail'
+        elif re.match('^@[DN]FA ', line):
+            return 'fado'
+    raise RuntimeError('cannot guess automaton format')
+
 # automaton.__init__
 # The point is to add support for the "daut" format.  So we save
 # the original, C++ based, implementation of __init__ as _init,
 # and then provide a new __init__.
 automaton._init = automaton.__init__
-def _automaton_init(self, data = '', format = '', filename = ''):
+def _automaton_init(self, data = '', format = 'auto', filename = ''):
+    if format == "auto":
+        format = _guess_format(data, filename)
     if format == "daut":
         if filename:
             data = open(filename).read()
