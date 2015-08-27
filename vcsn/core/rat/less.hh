@@ -14,6 +14,8 @@ namespace vcsn
   namespace rat
   {
 
+    /// A functor to check whether one rational expression is
+    /// (strictly) less than another one.
     template <typename ExpSet>
     class less
       : public ExpSet::const_visitor
@@ -36,24 +38,34 @@ namespace vcsn
       using weight_node_t = typename super_t::template weight_node_t<Type>;
 
       /// Whether \a lhs < \a rhs.
+      ///
+      /// Not just the entry point, it's also called at each recursion
+      /// level.  In particular, that's where size and node types are
+      /// considered, routines below handle the case of nodes of same
+      /// sizes and same type.
       bool operator()(expression_t lhs, expression_t rhs)
       {
-        size_t lhss = size<ExpSet>(lhs);
-        size_t rhss = size<ExpSet>(rhs);
-
-        if (lhss < rhss)
-          return true;
-        else if (lhss > rhss)
-          return false;
-        else if (lhs->type() < rhs->type())
-          return true;
-        else if (lhs->type() > rhs->type())
+        if (lhs == rhs)
           return false;
         else
           {
-            rhs_ = rhs;
-            lhs->accept(*this);
-            return res_;
+            size_t lhss = size<ExpSet>(lhs);
+            size_t rhss = size<ExpSet>(rhs);
+
+            if (lhss < rhss)
+              return true;
+            else if (lhss > rhss)
+              return false;
+            else if (lhs->type() < rhs->type())
+              return true;
+            else if (lhs->type() > rhs->type())
+              return false;
+            else
+              {
+                rhs_ = rhs;
+                lhs->accept(*this);
+                return res_;
+              }
           }
       }
 
