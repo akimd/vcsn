@@ -43,7 +43,9 @@ dist_notebooks_DATA =                           \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.infiltration.ipynb              \
+  %D%/automaton.is_accessible.ipynb             \
   %D%/automaton.is_ambiguous.ipynb              \
+  %D%/automaton.is_coaccessible.ipynb           \
   %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
   %D%/automaton.is_cycle_ambiguous.ipynb        \
@@ -55,6 +57,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_partial_identity.ipynb       \
   %D%/automaton.is_standard.ipynb               \
   %D%/automaton.is_synchronized.ipynb           \
+  %D%/automaton.is_trim.ipynb                   \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.letterize.ipynb                 \
@@ -75,8 +78,8 @@ dist_notebooks_DATA =                           \
   %D%/automaton.trim.ipynb                      \
   %D%/context.cerny.ipynb                       \
   %D%/context.cotrie.ipynb                      \
-  %D%/context.divkbaseb.ipynb                   \
   %D%/context.de_bruijn.ipynb                   \
+  %D%/context.divkbaseb.ipynb                   \
   %D%/context.ladybird.ipynb                    \
   %D%/context.trie.ipynb                        \
   %D%/expression.automaton.ipynb                \
