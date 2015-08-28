@@ -117,7 +117,7 @@ MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/
 %.html: %.ipynb
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 # nbconvert appends ".html" to the argument of --output.
-	$(AM_V_at)$(NBCONVERT) $(if $(V:0=),,--quiet) --output="$*.tmp" "$<"
+	$(AM_V_at)$(NBCONVERT) $(if $(V:0=),,--log-level=CRITICAL) --output="$*.tmp" "$<"
 # The generated HTML files still point to ipynb files, which is ok for
 # nbviewer, but not for us.  So s/ipynb/html/.
 	$(AM_V_at)$(PERL) -pi					\

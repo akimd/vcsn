@@ -2,7 +2,10 @@ import re
 
 from IPython.core.magic import (Magics, magics_class, line_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
-from IPython.html.widgets import interact
+try:
+    import ipywidgets as widgets
+except ImportError:
+    from IPython.html import widgets
 from IPython.display import display
 from pylab import *
 import matplotlib.pyplot as plt
@@ -46,7 +49,7 @@ class Benchmarks(Magics):
             _display(algos, True)
         else:
             algos = list(df.columns.values)
-            interact(lambda algo: _display(algo, False), algo = algos)
+            widget.interact(lambda algo: _display(algo, False), algo = algos)
 
 ip = get_ipython()
 ip.register_magics(Benchmarks)

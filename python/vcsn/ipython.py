@@ -3,9 +3,10 @@ import re
 from IPython.core.magic import (Magics, magics_class, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
 from IPython.display import display, HTML, Latex, SVG
-from IPython.html import widgets
-from IPython.html.widgets import interactive
-from IPython.utils.warn import info, error
+try:
+    import ipywidgets as widgets
+except ImportError:
+    from IPython.html import widgets
 import cgi
 import vcsn
 
@@ -18,7 +19,7 @@ class ContextText:
         self.ipython = ipython
         self.name = name
         if self.name:
-            #Here the way to differenciate the use into the d3 widget
+            # Here the way to differenciate the use into the d3 widget.
             if type(self.name) != str:
                 ctx = name
             elif self.name in self.ipython.shell.user_ns:
@@ -152,7 +153,7 @@ def interact_h(_interact_f, *args, **kwargs):
     '''Similar to IPython's interact function, but with widgets
     packed horizontally.'''
     f = _interact_f
-    w = interactive(f, *args, **kwargs)
+    w = widgets.interactive(f, *args, **kwargs)
     f.widget = w
     # Weirdly enough, be sure to display before changing the class.
     display(w)

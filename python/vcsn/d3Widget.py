@@ -1,7 +1,17 @@
 from IPython.display import display, Javascript
-from IPython.html import widgets, nbextensions
+try:
+    import ipywidgets as widgets
+except ImportError:
+    from IPython.html import widgets
+try:
+    from notebook import nbextensions
+except ImportError:
+    from IPython.html import nbextensions
 #from IPython.html.nbextensions import install_nbextension
-from IPython.utils import traitlets
+try:
+    import traitlets
+except ImportError:
+    from IPython.utils import traitlets
 from vcsn.dot import daut_to_transitions
 
 import cgi
