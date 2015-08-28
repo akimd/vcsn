@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import re
 
 from IPython.core.magic import (Magics, magics_class, line_magic)

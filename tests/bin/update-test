@@ -7,7 +7,6 @@
 # usage:
 #   update-test --builddir=_build tests/python/*.py tests/python/determinize.dir/*
 
-from __future__ import print_function
 import argparse, os, re, sys
 
 parser = argparse.ArgumentParser(description='Update test cases.')

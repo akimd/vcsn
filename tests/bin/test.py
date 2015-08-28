@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from difflib import unified_diff as diff
 import inspect
 import os

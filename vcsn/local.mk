@@ -284,7 +284,7 @@ move_if_change = $(srcdir)/build-aux/bin/move-if-change --color --verbose
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
-	$(AM_V_at)$(srcdir)/$(registers_gen)				\
+	$(AM_V_at)$(PYTHON) $(srcdir)/$(registers_gen)			\
 	  --bridge lib/vcsn/dyn/context-printer-header-algo.cc.tmp	\
 	  --output lib/vcsn/algos/algos.cc.tmp				\
 	  --header %D%/dyn/registers.hh.tmp				\

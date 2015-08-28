@@ -24,7 +24,6 @@
 #
 # in the common case where the register name is the same as the
 # function name, as exposed in dyn:: to the user.
-from __future__ import print_function
 import argparse
 import os
 import re

@@ -1,5 +1,3 @@
-from __future__ import print_function, absolute_import
-
 from IPython.display import display, Javascript
 from IPython.html import widgets, nbextensions
 #from IPython.html.nbextensions import install_nbextension

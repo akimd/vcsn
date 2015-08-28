@@ -71,8 +71,6 @@
 ##  7  0.03  0.09  0.32  1.30  5.23  22.40  95.73
 ##
 
-from __future__ import division, print_function
-
 import vcsn
 import timeit
 
