@@ -196,6 +196,7 @@ namespace vcsn
       using key_t = Key;
       using value_t = Value;
       using welement_t = welement<key_t, value_t>;
+      using mapped_type = typename map_t::mapped_type;
       using value_type = typename map_t::value_type;
       using iterator = typename map_t::iterator;
       using const_iterator = typename map_t::const_iterator;
@@ -242,6 +243,7 @@ namespace vcsn
         return map_.Name(std::forward<Args>(args)...);          \
       }
 
+      DEFINE(key_comp, const);
       DEFINE(emplace,);
       DEFINE(clear,);
       DEFINE(begin,const);

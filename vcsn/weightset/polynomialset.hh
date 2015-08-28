@@ -420,7 +420,9 @@ namespace vcsn
     lmul(const weight_t& w, const value_t& v) const
     {
       value_t res;
-      if (!weightset()->is_zero(w))
+      if (weightset()->is_one(w))
+        res = v;
+      else if (!weightset()->is_zero(w))
         for (const auto& m: v)
           add_here(res, label_of(m), weightset()->mul(w, weight_of(m)));
       return res;
