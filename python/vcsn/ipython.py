@@ -167,6 +167,10 @@ class table(list):
 
     def to_html(self, s):
         try:
+            return s._repr_svg_()
+        except AttributeError as e:
+            pass
+        try:
             return s._repr_latex_()
         except AttributeError as e:
             pass

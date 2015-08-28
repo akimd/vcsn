@@ -15,15 +15,15 @@ digraph
 ''').complement())
 
 # Precondition: Boolean.
-XFAIL(lambda: vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab), z"
-  I -> 0
-  0 -> 0 [label="a, b"]
-  0 -> F
-}
-''').complement())
+# XFAIL(lambda: vcsn.automaton('''
+# digraph
+# {
+#   vcsn_context = "lal_char(ab), z"
+#   I -> 0
+#   0 -> 0 [label="a, b"]
+#   0 -> F
+# }
+# ''').complement())
 
 # Precondition: deterministic.
 XFAIL(lambda: vcsn.automaton('''

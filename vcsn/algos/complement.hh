@@ -19,13 +19,9 @@ namespace vcsn
   void
   complement_here(Aut& aut)
   {
-    static_assert(labelset_t_of<Aut>::is_free(),
-                  "complement: requires free labelset");
-    static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                  "complement: requires Boolean weights");
-
     using automaton_t = Aut;
-
+    static_assert(labelset_t_of<automaton_t>::is_free(),
+                  "complement: requires free labelset");
     require(is_deterministic(aut),
             "complement: requires a deterministic automaton");
     require(is_complete(aut),

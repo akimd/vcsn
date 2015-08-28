@@ -124,7 +124,7 @@ namespace vcsn
     // Meet complement()'s requirements.
     auto r = strip(rhs);
     if (!is_deterministic(r))
-      r = complete(strip(determinize(r)));
+      r = complete(strip(determinize_weighted(r)));
     else if (!is_complete(r))
       r = complete(r);
     return strip(conjunction(lhs, complement(r)));

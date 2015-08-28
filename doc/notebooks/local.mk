@@ -36,6 +36,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.delay_automaton.ipynb           \
   %D%/automaton.determinize.ipynb               \
+  %D%/automaton.difference.ipynb                \
   %D%/automaton.eliminate_state.ipynb           \
   %D%/automaton.expression.ipynb                \
   %D%/automaton.filter.ipynb                    \
@@ -82,6 +83,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
+  %D%/expression.difference.ipynb               \
   %D%/expression.expansion.ipynb                \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
