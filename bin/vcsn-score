@@ -139,14 +139,19 @@ for fmt in ['dot', 'efsm', 'fado']:
 ## -------------- ##
 ## derived_term.  ##
 ## -------------- ##
-def bench_dt(alphabet, size, algo, number = 1):
-    e = "(a+b)*b(<2>a+<2>b){{{}}}".format(size)
+def bench_derived_term(alphabet, exp, algo, number = 1):
     bench('r.derived_term("{}")'.format(algo),
-          'r = {}, c = [{}] -> Z'.format(e, alphabet),
-          setup = ['e = "{}"'.format(e),
+          'r = {}, c = [{}] -> Z'.format(exp, alphabet),
+          setup = ['e = "{}"'.format(exp),
                    'c = vcsn.context("lal_char({}), z")'.format(alphabet),
                    'r = c.expression(e)'],
           number = number)
+
+def bench_dt(alphabet, size, algo, number = 1):
+    bench_derived_term(alphabet,
+                       "(a+b)*b(<2>a+<2>b){{{}}}".format(size),
+                       algo,
+                       number = number)
 
 bench_dt('ab',  150, 'derivation')
 bench_dt('a-z', 150, 'derivation')
@@ -154,6 +159,9 @@ bench_dt('a-z', 150, 'expansion')
 bench_dt('ab',  300, 'derivation')
 bench_dt('a-z', 300, 'derivation')
 bench_dt('a-z', 300, 'expansion', number = 10)
+
+bench_derived_term('a', 'a?{100}', 'derivation')
+bench_derived_term('a', 'a?{100}', 'expansion')
 
 # standard
 e = "(a+b)*b(<2>a+<2>b){20000}"
