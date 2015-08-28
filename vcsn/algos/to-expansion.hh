@@ -76,6 +76,8 @@ namespace vcsn
                          vcsn::equal_to<expressionset_t>> cache_;
 #endif
       /// Facilitate recursion.
+      ///
+      /// Saves and restore res_.
       expansion_t to_expansion(const expression_t& e)
       {
 #if CACHE
@@ -151,36 +153,32 @@ namespace vcsn
       {
         res_ = es_.one();
         for (size_t i = 0, size = e.size(); i < size; ++i)
-          if (ws_.is_zero(res_.constant))
-            {
-              // Finish the product with all the remaining rhs and
-              // break.  This optimization (as opposed to performing
-              // all the remaining iterations and repeatedly calling
-              // ps.mul) improves the score for
-              // derived-term([ab]*a[ab]{150}) from 0.32s to 0.23s on
-              // erebus, clang++ 3.4.
-              expression_t rhss
-                = transposed_
-                ? rs_.transposition(prod_(e.begin(),
-                                          std::next(e.begin(), size-i)))
-                : prod_(std::next(e.begin(), i), std::end(e));
-              es_.rmul_here(res_, rhss);
+          {
+            auto r = e[transposed_ ? size-1 - i : i];
+            expansion_t rhs = to_expansion(r);
+            if (transposed_)
+              r = rs_.transposition(r);
+
+            // Instead of performing successive binary multiplication,
+            // we immediately multiply the current expansion by all
+            // the remaining operands on its right hand side.  This
+            // will also allow us to break the iterations as soon as
+            // an expansion has a null constant term.
+            expression_t rhss
+              = transposed_
+              ? rs_.transposition(prod_(e.begin(),
+                                        std::next(e.begin(), size-(i+1))))
+              : prod_(std::next(e.begin(), i + 1), std::end(e));
+            es_.rmul_here(rhs, rhss);
+
+            for (const auto& p: rhs.polynomials)
+              ps_.add_here(res_.polynomials[p.first],
+                           ps_.lmul(res_.constant, p.second));
+            res_.constant = ws_.mul(res_.constant, rhs.constant);
+            // Nothing else will be added.
+            if (ws_.is_zero(res_.constant))
               break;
-            }
-          else
-            {
-              auto r = e[transposed_ ? size-1 - i : i];
-              expansion_t rhs = to_expansion(r);
-              if (transposed_)
-                r = rs_.transposition(r);
-
-              es_.rmul_here(res_, r);
-
-              for (const auto& p: rhs.polynomials)
-                ps_.add_here(res_.polynomials[p.first],
-                             ps_.lmul(res_.constant, p.second));
-              res_.constant = ws_.mul(res_.constant, rhs.constant);
-            }
+          }
       }
 
       /// Build a product for these expressions.  Pay attention to not
