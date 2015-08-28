@@ -101,27 +101,16 @@ namespace vcsn
         // previous factors.
         weight_t constant = ws_.one();
         for (unsigned i = 0, n = e.size(); i < n; ++i)
-          if (ws_.is_zero(constant))
-            {
-              // Finish the product with all the remaining rhs and
-              // break.  This optimization (as opposed to performing
-              // all the remaining iterations and repeatedly calling
-              // ps.mul) improves the score for
-              // derived-term([ab]*a[ab]{150}) from 0.32s to 0.23s on
-              // erebus, clang++ 3.4.
-              expression_t rhss = prod_(std::next(e.begin(), i), std::end(e));
-              res_ = ps_.rmul_label(res_, rhss);
+          {
+            const auto& v = e[i];
+            v->accept(*this);
+            for (unsigned j = i + 1; j < n; ++j)
+              res_ = ps_.rmul_label(res_, e[j]);
+            ps_.add_here(res, ps_.lmul(constant, res_));
+            constant = ws_.mul(constant, constant_term(rs_, v));
+            if (ws_.is_zero(constant))
               break;
-            }
-          else
-            {
-              const auto& v = e[i];
-              v->accept(*this);
-              for (unsigned j = i + 1; j < n; ++j)
-                res_ = ps_.rmul_label(res_, e[j]);
-              ps_.add_here(res, ps_.lmul(constant, res_));
-              constant = ws_.mul(constant, constant_term(rs_, v));
-            }
+          }
         res_ = std::move(res);
       }
 
