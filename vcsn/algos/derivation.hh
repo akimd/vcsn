@@ -104,8 +104,9 @@ namespace vcsn
           {
             const auto& v = e[i];
             v->accept(*this);
-            for (unsigned j = i + 1; j < n; ++j)
-              res_ = ps_.rmul_label(res_, e[j]);
+            res_
+              = ps_.rmul_label(res_,
+                               prod_(std::next(e.begin(), i+1), std::end(e)));
             ps_.add_here(res, ps_.lmul(constant, res_));
             constant = ws_.mul(constant, constant_term(rs_, v));
             if (ws_.is_zero(constant))
