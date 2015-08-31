@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-08-31
+### expression.info: more information
+Now `atom` (the number of occurrences of letters) is also reported as
+`width`, and the `depth` (also known as the `height`: the height of the
+tree) is now included.
+
 ## 2015-08-26
 ### vcsn.automaton can guess the format
 The vcsn.automaton function now accepts "auto" as format, which means "try

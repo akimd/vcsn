@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm> // std::max
 #include <iostream>
+
 #include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
@@ -37,6 +39,7 @@ namespace vcsn
         atom = 0;
         complement = 0;
         conjunction = 0;
+        depth = 0;
         infiltration = 0;
         ldiv = 0;
         lweight = 0;
@@ -58,6 +61,7 @@ namespace vcsn
         atom += other.atom;
         complement += other.complement;
         conjunction += other.conjunction;
+        depth = std::max(depth, other.depth);
         infiltration += other.infiltration;
         ldiv += other.ldiv;
         lweight += other.lweight;
@@ -76,26 +80,29 @@ namespace vcsn
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "info"; }
 
+      /// Depth of the tree.
+      size_t depth = 0;
+
 #define DEFINE(Type)                                    \
     public:                                             \
       size_t Type = 0;                                  \
     private:                                            \
       VCSN_RAT_VISIT(Type, v)
 
-      DEFINE(atom)         { ++atom; (void) v;         }
+      DEFINE(atom)         { ++atom; (void) v; depth = 0; }
       DEFINE(complement)   { ++complement;   visit_(v); }
       DEFINE(conjunction)  { ++conjunction;  visit_(v); }
       DEFINE(infiltration) { ++infiltration; visit_(v); }
       DEFINE(ldiv)         { ++ldiv;         visit_(v); }
-      DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); }
-      DEFINE(one)          { ++one; (void) v;         }
+      DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); ++depth; }
+      DEFINE(one)          { ++one; (void) v; depth = 0; }
       DEFINE(prod)         { ++prod;         visit_(v);}
-      DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); }
+      DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); ++depth; }
       DEFINE(shuffle)      { ++shuffle;      visit_(v); }
       DEFINE(star)         { ++star;         visit_(v); }
       DEFINE(sum)          { ++sum;          visit_(v);  }
       DEFINE(transposition){ ++transposition; visit_(v); }
-      DEFINE(zero)         { ++zero; (void) v;         }
+      DEFINE(zero)         { ++zero; (void) v; depth = 0; }
 #undef DEFINE
 
     private:
@@ -107,6 +114,7 @@ namespace vcsn
       void visit_(const unary_t<Type>& v)
       {
         v.sub()->accept(*this);
+        ++depth;
       }
 
       template <type_t Type>
@@ -116,8 +124,13 @@ namespace vcsn
       template <exp::type_t Type>
       void visit_(const variadic_t<Type>& v)
       {
+        size_t d = 0;
         for (auto c: v)
-          c->accept(*this);
+          {
+            c->accept(*this);
+            d = std::max(d, depth);
+          }
+        depth = d + 1;
       }
 
       /*---------.
@@ -157,8 +170,9 @@ namespace vcsn
         /// Entry point.
         void operator()(const tuple_t& v)
         {
+          info_(v, labelset_t_of<context_t>::indices);
           ++visitor_.tuple;
-          return info_(v, labelset_t_of<context_t>::indices);
+          ++visitor_.depth;
         }
         info& visitor_;
       };

@@ -271,11 +271,13 @@ namespace vcsn
     o << "\nsize: " << rat::size<ExpSet>(e);
 
     auto info = rat::make_info<ExpSet>(e);
+    o << "\nwidth: " << info.atom;
 #define ECHO(Type)                              \
     o << "\n" #Type ": " << info.Type
     ECHO(atom);
     ECHO(complement);
     ECHO(conjunction);
+    ECHO(depth);
     ECHO(infiltration);
     ECHO(ldiv);
     ECHO(lweight);
