@@ -794,17 +794,8 @@ namespace vcsn
   DEFINE::less(value_t lhs, value_t rhs)
     -> bool
   {
-    size_t l = size<self_t>(lhs), r = size<self_t>(rhs);
-
-    if (l < r)
-      return true;
-    else if (l > r)
-      return false;
-    else
-      {
-        auto lt = rat::less<self_t>{};
-        return lt(lhs, rhs);
-      }
+    auto lt = rat::less<self_t>{};
+    return lt(lhs, rhs);
   }
 
   DEFINE::less_linear(value_t lhs, value_t rhs)

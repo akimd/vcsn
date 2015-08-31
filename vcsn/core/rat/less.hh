@@ -15,7 +15,8 @@ namespace vcsn
   {
 
     /// A functor to check whether one rational expression is
-    /// (strictly) less than another one.
+    /// (strictly) less than another one.  Implements the shortlex
+    /// order.
     template <typename ExpSet>
     class less
       : public ExpSet::const_visitor
