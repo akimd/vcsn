@@ -104,9 +104,16 @@ def check_rat_exp(fname):
       op = m.group(2)
       r = m.group(3)
       if op == '==':
-        CHECK_EQ(expr(l), expr(r), loc)
+        # If we failed to convert l, then expr(l) is a string.  Don't
+        # check a string against an expression.  This is needed for
+        # xfail3.
+        l = expr(l)
+        r = expr(r)
+        if isinstance(l, str):
+          r = str(r)
+        CHECK_EQ(r, l, loc)
       else:
-        CHECK_EQ(pp(l), r, loc)
+        CHECK_EQ(r, pp(l), loc)
       continue
 
     # !: Look for syntax errors.
