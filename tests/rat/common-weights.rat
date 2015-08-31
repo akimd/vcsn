@@ -5,13 +5,27 @@
 %identities: trivial
 # Base cases.
 ab => ab
+
+# Well, this was not really wanted, but it is nice that abc is
+# right-associative: that's much better for derived-terms.  However, I
+# believe most people expect left-associativity, so having `.`
+# left-associative is probably OK.
+abc => a(bc)
+a.b.c => (ab)c
+
+(ab)c => (ab)c
+a(bc) => a(bc)
+a{4} => ((aa)a)a
 # Error cases.
 x ! 1.1: letterset<char_letters(abcdefgh)>: conv: invalid label: unexpected x
+
+
 
 # Precedence and associativity.
 %identities: associative
 (ab)* => (ab)*
 abc => abc
+a{4} => aaaa
 a(bc) == a.b.c
 (abc).(cba) => abccba
 

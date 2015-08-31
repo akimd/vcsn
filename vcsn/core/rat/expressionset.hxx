@@ -572,9 +572,20 @@ namespace vcsn
           res = mul(res, e);
       }
 
-    else
-      // Default case: E{n} = E...E.
+    // When associative, instead of repeated multiplication,
+    // immediately create n copies of E.
+    else if (ids_.is_associative())
       res = std::make_shared<prod_t>(values_t(n, e));
+
+    // Default case: E{n} = ((..(EE)...)E.
+    else
+      {
+        // FIXME: code duplication with weightset_mixin::power_.
+        res = e;
+        for (unsigned i = 1; i < n; ++i)
+          res = mul(res, e);
+      }
+
     return res;
   }
 
