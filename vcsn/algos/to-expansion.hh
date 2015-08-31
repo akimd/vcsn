@@ -159,11 +159,23 @@ namespace vcsn
             if (transposed_)
               r = rs_.transposition(r);
 
-            // Instead of performing successive binary multiplication,
-            // we immediately multiply the current expansion by all
-            // the remaining operands on its right hand side.  This
-            // will also allow us to break the iterations as soon as
-            // an expansion has a null constant term.
+            // Instead of performing successive binary
+            // multiplications, we immediately multiply the current
+            // expansion by all the remaining operands on its right
+            // hand side.  This will also allow us to break the
+            // iterations as soon as an expansion has a null constant
+            // term.
+            //
+            // In essence, it allows us to treat the product as if it
+            // were right-associative: in `E.(FG)`, if `c(E) != 0`, we
+            // don't need to traverse `FG`, just append it to
+            // `d_p(E)`.
+            //
+            // Also, using prod_ saves from a useless application of
+            // the identities with repeated multiplications, which
+            // have already been applied.  Large performance impact.
+            //
+            // The gain is very effective.
             expression_t rhss
               = transposed_
               ? rs_.transposition(prod_(e.begin(),

@@ -104,6 +104,8 @@ namespace vcsn
           {
             const auto& v = e[i];
             v->accept(*this);
+            // See to-expansion.hh, case of prod, for an explanation
+            // of the following line.
             res_
               = ps_.rmul_label(res_,
                                prod_(std::next(e.begin(), i+1), std::end(e)));

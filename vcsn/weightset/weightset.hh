@@ -46,16 +46,18 @@ namespace vcsn
     }
 
   private:
+    /// The signature of power.
     template <typename T>
     using power_t = decltype(std::declval<T>()
                              .power(std::declval<typename T::value_t>(), 0));
 
+    /// Whether T features a power member function.
     template <typename T>
     using has_power_mem_fn = detail::detect<T, power_t>;
 
     /// Case where the weightset T features a power(value_t, unsigned)
     /// member function.
-    template <typename WS>
+    template <typename WS = super_t>
     auto power_(value_t e, unsigned n) const
       -> vcsn::enable_if_t<has_power_mem_fn<WS>{}, value_t>
     {
@@ -64,7 +66,7 @@ namespace vcsn
 
     /// Case where the weightset T does not feature a
     /// power(value_t, unsigned) member function.
-    template <typename WS>
+    template <typename WS = super_t>
     auto power_(value_t e, unsigned n) const
       -> vcsn::enable_if_t<!has_power_mem_fn<WS>{}, value_t>
     {
