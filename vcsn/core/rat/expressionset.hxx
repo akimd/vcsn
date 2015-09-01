@@ -693,7 +693,7 @@ namespace vcsn
         if (ls.size() == 1)
           return ls.front();
         else
-          return std::make_shared<prod_t>(ls);
+          return std::make_shared<prod_t>(std::move(ls));
       }
     else
       // Handle all the trivial identities.

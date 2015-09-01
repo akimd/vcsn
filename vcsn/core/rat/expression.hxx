@@ -59,8 +59,8 @@ namespace vcsn
     | variadic.  |
     `-----------*/
 
-    DEFINE_CTOR(variadic)(const values_t& ns)
-      : sub_(ns)
+    DEFINE_CTOR(variadic)(values_t ns)
+      : sub_(std::move(ns))
     {}
 
 

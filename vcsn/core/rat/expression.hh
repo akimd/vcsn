@@ -153,7 +153,7 @@ namespace vcsn
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
-      variadic(const values_t& ns = values_t());
+      variadic(values_t ns = values_t());
 
       template <typename... Vs>
       variadic(Vs&&... vs)
