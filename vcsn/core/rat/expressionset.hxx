@@ -196,12 +196,15 @@ namespace vcsn
   {
     value_t res = nullptr;
 
+    if (!ids_)
+      res = std::make_shared<sum_t>(l, r);
+
     // 0+E => E.
-    if (ids_ && l->type() == type_t::zero)
+    else if (l->type() == type_t::zero)
       res = r;
 
     // E+0 => E.
-    else if (ids_ && r->type() == type_t::zero)
+    else if (r->type() == type_t::zero)
       res = l;
 
     // E+E => <2>E.
@@ -315,9 +318,9 @@ namespace vcsn
     else if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
       res = add_linear_(*rs, l);
     else if (less_linear(l, r))
-      res = std::make_shared<sum_t>(values_t{l, r});
+      res = std::make_shared<sum_t>(l, r);
     else if (less_linear(r, l))
-      res = std::make_shared<sum_t>(values_t{r, l});
+      res = std::make_shared<sum_t>(r, l);
     else
       {
         auto w = weightset()->add(possibly_implicit_lweight_(l),
@@ -355,18 +358,26 @@ namespace vcsn
     -> value_t
   {
     value_t res = nullptr;
-    // Trivial Identity: T in TAF-Kit doc.
-    // E.0 = 0.E = 0.
-    if (ids_ && l->type() == type_t::zero)
+
+    if (!ids_)
+      res = std::make_shared<prod_t>(l, r);
+
+    // 0.E => 0.
+    else if (l->type() == type_t::zero)
       res = l;
-    else if (ids_ && r->type() == type_t::zero)
+
+    // E.0 => 0.
+    else if (r->type() == type_t::zero)
       res = r;
+
     // U_K: E.(<k>1) ⇒ E<k>, subsuming T: E.1 = E.
-    else if (ids_ && type_ignoring_lweight_(r) == type_t::one)
+    else if (type_ignoring_lweight_(r) == type_t::one)
       res = rmul(l, possibly_implicit_lweight_(r));
+
     // U_K: (<k>1).E ⇒ <k>E, subsuming T: 1.E = E.
-    else if (ids_ && type_ignoring_lweight_(l) == type_t::one)
+    else if (type_ignoring_lweight_(l) == type_t::one)
       res = lmul(possibly_implicit_lweight_(l), r);
+
     // (<k>E)(<h>F) => <kh>(EF).
     else if (ids_.is_linear() && weightset()->is_commutative()
              && (l->type() == type_t::lweight
@@ -381,6 +392,7 @@ namespace vcsn
         res = lmul(weightset()->mul(lw, rw),
                    mul(nl, nr));
       }
+
     // (E+F)G => EG + FG.
     else if (ids_.is_distributive() && l->type() == type_t::sum)
       {
@@ -389,6 +401,7 @@ namespace vcsn
         for (const auto& la: *down_pointer_cast<const sum_t>(l))
           res = add(res, mul(la, r));
       }
+
     // E(F+G) => EF + EG.
     else if (ids_.is_distributive() && r->type() == type_t::sum)
       {
@@ -397,6 +410,7 @@ namespace vcsn
         for (const auto& ra: *down_pointer_cast<const sum_t>(r))
           res = add(res, mul(l, ra));
       }
+
     else
       res = std::make_shared<prod_t>(gather_<type_t::prod>(l, r));
     return res;
@@ -407,25 +421,26 @@ namespace vcsn
   {
     value_t res = nullptr;
 
+    if (!ids_)
+      res = std::make_shared<conjunction_t>(l, r);
+
     // 0&E => 0.
-    if (ids_ && l->type() == type_t::zero)
+    else if (l->type() == type_t::zero)
       res = l;
 
     // E&0 => 0.
-    else if (ids_ && r->type() == type_t::zero)
+    else if (r->type() == type_t::zero)
       res = r;
 
     // <k>1&<h>1 => <kh>1.
-    else if (ids_
-             && type_ignoring_lweight_(l) == type_t::one
+    else if (type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
       res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
                                   possibly_implicit_lweight_(r)),
                  one());
 
     // <k>a&<h>a = <kh>a.  <k>a&<h>b = 0.
-    else if (ids_
-             && type_ignoring_lweight_(l) == type_t::atom
+    else if (type_ignoring_lweight_(l) == type_t::atom
              && type_ignoring_lweight_(r) == type_t::atom)
       {
         auto lhs =
@@ -439,11 +454,10 @@ namespace vcsn
       }
 
     // <k>1&<h>a = 0, <k>a&<h>1 = 0.
-    else if (ids_
-             && ((type_ignoring_lweight_(l) == type_t::one
-                  && type_ignoring_lweight_(r) == type_t::atom)
-                 || (type_ignoring_lweight_(l) == type_t::atom
-                     && type_ignoring_lweight_(r) == type_t::one)))
+    else if ((type_ignoring_lweight_(l) == type_t::one
+              && type_ignoring_lweight_(r) == type_t::atom)
+             || (type_ignoring_lweight_(l) == type_t::atom
+                 && type_ignoring_lweight_(r) == type_t::one))
       res = zero();
 
     else
@@ -455,17 +469,24 @@ namespace vcsn
     -> value_t
   {
     value_t res = nullptr;
+
+    if (!ids_)
+      res = std::make_shared<ldiv_t>(l, r);
+
     // 0\E = 0{c}.
-    if (ids_ && l->type() == type_t::zero)
+    else if (ids_ && l->type() == type_t::zero)
       res = complement(zero());
+
     // 1\E = E.
     else if (ids_ && l->type() == type_t::one)
       res = r;
+
     // E\0 = 0.
     else if (ids_ && r->type() == type_t::zero)
       res = r;
+
     else
-      res = std::make_shared<ldiv_t>(values_t{l, r});
+      res = std::make_shared<ldiv_t>(l, r);
     return res;
   }
 
@@ -497,18 +518,26 @@ namespace vcsn
     -> value_t
   {
     value_t res = nullptr;
-    // Trivial Identity.
-    // E&:0 = 0&:E = 0.
-    if (ids_ && l->type() == type_t::zero)
+
+    if (!ids_)
+      res = std::make_shared<infiltration_t>(l, r);
+
+    // 0&:E => 0.
+    else if (ids_ && l->type() == type_t::zero)
       res = l;
+
+    // E&:0 => 0.
     else if (ids_ && r->type() == type_t::zero)
       res = r;
-    // E&:1 = 1&:E = E.
+
+    // 1&:E => E.
     else if (ids_ && l->type() == type_t::one)
       res = r;
+
+    // E&:1 => E.
     else if (ids_ && r->type() == type_t::one)
       res = l;
-    // END: Trivial Identity
+
     else
       res =
         std::make_shared<infiltration_t>(gather_<type_t::infiltration>(l, r));
@@ -520,8 +549,11 @@ namespace vcsn
   {
     value_t res = nullptr;
 
+    if (!ids_)
+      res = std::make_shared<shuffle_t>(l, r);
+
     // 0:E => 0.
-    if (ids_ && l->type() == type_t::zero)
+    else if (ids_ && l->type() == type_t::zero)
       res = l;
 
     // E:0 => 0.
@@ -551,20 +583,20 @@ namespace vcsn
     value_t res = nullptr;
     // Given E the expression s.t. E{n} = (<k>a){n}.
 
-    // Case: E{0}.
+    // E{0} => 1.
     if (n == 0)
       res = one();
 
-    // Case: E{1}.
+    // E{1} => E.
     else if (n == 1)
       res = e;
 
-    // Case: a == \z.
-    else if (e->type() == type_t::zero)
-      res = zero();
+    // \z{n} => \z.
+    else if (ids_ && e->type() == type_t::zero)
+      res = e;
 
     // Case: a == \e or a == <w>\e.
-    else if (type_ignoring_lweight_(e) == type_t::one)
+    else if (ids_ && type_ignoring_lweight_(e) == type_t::one)
       {
         weight_t w = possibly_implicit_lweight_(e);
         res = lmul(weightset()->power(w, n), one());
@@ -592,7 +624,7 @@ namespace vcsn
     // When associative, instead of repeated multiplication,
     // immediately create n copies of E.
     else if (ids_.is_associative())
-      res = std::make_shared<prod_t>(values_t(n, e));
+      res = std::make_shared<prod_t>(n, e);
 
     // Default case: E{n} = ((..(EE)...)E.
     else
@@ -671,47 +703,65 @@ namespace vcsn
   DEFINE::star(value_t e) const
     -> value_t
   {
+    value_t res = nullptr;
+
+    // \z* => 1.
     if (ids_ && e->type() == type_t::zero)
-      // Trivial one
-      // (0)* == 1
-      return one();
+      res = one();
+
     else
       {
-        value_t res = std::make_shared<star_t>(e);
+        res = std::make_shared<star_t>(e);
         require(!ids_.is_distributive() || is_valid(*this, res),
                 "star argument ", e, " not starrable");
-        return res;
       }
+
+    return res;
   }
 
   DEFINE::complement(value_t e) const
     -> value_t
   {
-    // Trivial identity: (k.E){c} => E{c}, (E.k){c} => E{c}.
-    // Without it, derived-term (<2>a)*{c} fails to terminate.
-    if (auto w = std::dynamic_pointer_cast<const lweight_t>(e))
-      return complement(w->sub());
+    value_t res = nullptr;
+
+    if (!ids_)
+      res = std::make_shared<complement_t>(e);
+
+    // The following identities make derived-term (<2>a)*{c} terminate.
+    // (<k>E){c} => E{c}
+    else if (auto w = std::dynamic_pointer_cast<const lweight_t>(e))
+      res = complement(w->sub());
+
+    // (E<k>){c} => E{c}.
     else if (auto w = std::dynamic_pointer_cast<const rweight_t>(e))
-      return complement(w->sub());
+      res = complement(w->sub());
+
     else
-      return std::make_shared<complement_t>(e);
+      res = std::make_shared<complement_t>(e);
+
+    return res;
   }
 
   DEFINE::transposition(value_t e) const
     -> value_t
   {
     value_t res = nullptr;
-    // Trivial Identity.
-    // 0{T} = 0.
-    if (ids_ && e->type() == type_t::zero)
+
+    if (!ids_)
+      res = std::make_shared<transposition_t>(e);
+
+    // 0{T} => 0.
+    else if (e->type() == type_t::zero)
       res = e;
-    // 1{T} = 1.
-    else if (ids_ && e->type() == type_t::one)
+
+    // 1{T} => 1.
+    else if (e->type() == type_t::one)
       res = e;
-    // a{T} = a, (abc){T} = cba.
+
+    // a{T} => a, (abc){T} => cba.
     else if (auto l = std::dynamic_pointer_cast<const atom_t>(e))
       res = atom(labelset()->transpose(l->value()));
-    // END: Trivial Identity
+
     else
       res = std::make_shared<transposition_t>(e);
     return res;
@@ -724,15 +774,23 @@ namespace vcsn
   DEFINE::lmul(const weight_t& w, value_t e) const
     -> value_t
   {
-    // Trivial identities <k>0 => 0, <1>E => E.
-    if (e->type() == type_t::zero || weightset()->is_one(w))
-      return e;
-    // Trivial identity: <0>E => 0.
+    value_t res = nullptr;
+
+    if (!ids_)
+      res = std::make_shared<lweight_t>(w, e);
+
+    // <k>0 => 0, <1>E => E.
+    else if (e->type() == type_t::zero || weightset()->is_one(w))
+      res = e;
+
+    // <0>E => 0.
     else if (weightset()->is_zero(w))
-      return zero();
-    // Trivial identity: <k>(<h>E) => <kh>E.
+      res = zero();
+
+    // <k>(<h>E) => <kh>E.
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
-      return lmul(weightset()->mul(w, lw->weight()), lw->sub());
+      res = lmul(weightset()->mul(w, lw->weight()), lw->sub());
+
     // Distributive: <k>(E+F) => <k>E + <k>F.
     else if (ids_.is_distributive() && e->type() == type_t::sum)
       {
@@ -742,37 +800,53 @@ namespace vcsn
         values_t addends;
         for (const auto& a: *s)
           addends.emplace_back(lmul(w, a));
-        return std::make_shared<sum_t>(std::move(addends));
+        res = std::make_shared<sum_t>(std::move(addends));
       }
+
     // General case: <k>E.
     else
-      return std::make_shared<lweight_t>(w, e);
+      res = std::make_shared<lweight_t>(w, e);
+
+    return res;
   }
 
   DEFINE::rmul(value_t e, const weight_t& w) const
     -> value_t
   {
+    value_t res = nullptr;
+
+    if (!ids_)
+      res = std::make_shared<rweight_t>(w, e);
+
     // Linear identity: E<k> => <k>E.
-    if (ids_.is_linear() && weightset()->is_commutative())
-      return lmul(w, e);
+    else if (ids_.is_linear() && weightset()->is_commutative())
+      res = lmul(w, e);
+
     // Trivial identity: E<0> => 0.
     else if (weightset()->is_zero(w))
-      return zero();
+      res = zero();
+
     // Trivial identity: E<1> => E.
     else if (weightset()->is_one(w))
-      return e;
+      res = e;
+
     else if (e->is_leaf())
       // Can only have left weights and lmul takes care of normalization.
-      return lmul(w, e);
+      res = lmul(w, e);
+
     // Trivial identity: (<k>E)<h> => <k>(E<h>).
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
-      return lmul(lw->weight(), rmul(lw->sub(), w));
+      res = lmul(lw->weight(), rmul(lw->sub(), w));
+
     // Trivial identity: (E<k>)<h> => E<kh>.
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
-      return rmul(rw->sub(), weightset()->mul(rw->weight(), w));
+      res = rmul(rw->sub(), weightset()->mul(rw->weight(), w));
+
     // General case: E<k>.
     else
-      return std::make_shared<rweight_t>(w, e);
+      res = std::make_shared<rweight_t>(w, e);
+
+    return res;
   }
 
   /*--------------------------------------.

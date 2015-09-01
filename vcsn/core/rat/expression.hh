@@ -154,6 +154,12 @@ namespace vcsn
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
       variadic(const values_t& ns = values_t());
+
+      template <typename... Vs>
+      variadic(Vs&&... vs)
+        : sub_{std::forward<Vs>(vs)...}
+      {}
+
       variadic(const variadic& that)
         : super_t(that)
         , sub_(that.sub_)
