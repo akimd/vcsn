@@ -40,7 +40,7 @@ namespace vcsn
       -> enable_if_t<!LabelSet::has_one(),
                      typename LabelSet::value_t>
     {
-      raise("the labelset does not feature a neutral");
+      raise(LabelSet::sname(), ": does not feature a neutral");
     }
 
     /// Enjoy type inference.

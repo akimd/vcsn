@@ -713,7 +713,7 @@ namespace vcsn
       {
         res = std::make_shared<star_t>(e);
         require(!ids_.is_distributive() || is_valid(*this, res),
-                "star argument ", e, " not starrable");
+                "star: not starrable: ", to_string(self(), e));
       }
 
     return res;
