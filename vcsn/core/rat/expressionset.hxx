@@ -439,7 +439,7 @@ namespace vcsn
                                   possibly_implicit_lweight_(r)),
                  one());
 
-    // <k>a&<h>a = <kh>a.  <k>a&<h>b = 0.
+    // <k>a&<h>a => <kh>a.  <k>a&<h>b => 0.
     else if (type_ignoring_lweight_(l) == type_t::atom
              && type_ignoring_lweight_(r) == type_t::atom)
       {
@@ -453,7 +453,7 @@ namespace vcsn
           res = zero();
       }
 
-    // <k>1&<h>a = 0, <k>a&<h>1 = 0.
+    // <k>1&<h>a => 0, <k>a&<h>1 => 0.
     else if ((type_ignoring_lweight_(l) == type_t::one
               && type_ignoring_lweight_(r) == type_t::atom)
              || (type_ignoring_lweight_(l) == type_t::atom
@@ -473,15 +473,15 @@ namespace vcsn
     if (!ids_)
       res = std::make_shared<ldiv_t>(l, r);
 
-    // 0\E = 0{c}.
+    // 0\E => 0{c}.
     else if (ids_ && l->type() == type_t::zero)
       res = complement(zero());
 
-    // 1\E = E.
+    // 1\E => E.
     else if (ids_ && l->type() == type_t::one)
       res = r;
 
-    // E\0 = 0.
+    // E\0 => 0.
     else if (ids_ && r->type() == type_t::zero)
       res = r;
 
@@ -728,7 +728,7 @@ namespace vcsn
       res = std::make_shared<complement_t>(e);
 
     // The following identities make derived-term (<2>a)*{c} terminate.
-    // (<k>E){c} => E{c}
+    // (<k>E){c} => E{c}.
     else if (auto w = std::dynamic_pointer_cast<const lweight_t>(e))
       res = complement(w->sub());
 

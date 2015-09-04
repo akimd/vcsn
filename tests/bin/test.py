@@ -107,7 +107,7 @@ def PASS(*msg, **kwargs):
     sys.stdout.flush()
 
 def SKIP(*msg):
-    PASS('SKIP', *msg)
+    PASS('# SKIP', *msg)
 
 def XFAIL(fun, exp = None):
     try:

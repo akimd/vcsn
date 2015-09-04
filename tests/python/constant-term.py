@@ -15,44 +15,44 @@ def check(weight, exp):
     w = ctx.weight(weight)
     re = ctx.expression(exp)
     CHECK_EQ(w, re.constant_term())
-    CHECK_EQ(w, re.automaton('expansion').eval(''))
+    CHECK_EQ(w, re.automaton().eval(''))
 
-check('\z', 'a')
-check('\e', 'a*')
-check('x', '<x>a*')
-
-# Test zero.
+# zero.
 check('\z', '<x>\z')
 
-# Test one.
+# one.
 check('x', '<x>\e')
 
-# Test add.
+# label.
+check('\z', 'a')
+
+# add.
 check('x+y', '<x>a*+<y>b*')
 check('x(y+y)z', '<x>(<y>a*+<y>b*)<z>')
 
-# Test mul.
+# left and right weight.
+check('xy*z', '<x>(<y>\e)*<z>')
+
+# mul.
 check('xy', '<x>a*<y>b*')
 
-# Test conjunction.
+# conjunction.
 check('\z', '<x>a&<y>b')
 check('xy', '<x>a*&<y>b*')
 
-# Test shuffle.
+# shuffle.
 check('\z', '<x>a:<y>b')
 check('xy', '<x>a*:<y>b*')
 
-# Test infiltration.
+# infiltration.
 check('\z', '<x>a&:<y>b')
 check('xy', '<x>a*&:<y>b*')
 
-# Test star.
+# star.
 check('\e', '(<x>a)*')
 check('x*', '(<x>\e)*')
 
-# Test complement.
+# complement.
 check('\e', '(<x>a){c}')
 check('x*', '(<x>\e)*')
 
-# Test left and right weight.
-check('xy*z', '<x>(<y>\e)*<z>')

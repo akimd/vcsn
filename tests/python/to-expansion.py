@@ -3,13 +3,9 @@
 import vcsn
 from test import *
 
-def is_wordset(c):
-    return str(c).startswith("law_")
-
-
 c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
 
-def check(re, exp, use_spontaneous = False):
+def check(re, exp):
     '''Check that d(re) = exp.  Also check that both derived_term
     algorithms (`derivation` and `expansion`) compute the same result.
     '''
@@ -22,13 +18,12 @@ def check(re, exp, use_spontaneous = False):
     aut = re.automaton("expansion")
     # Check that if derived_term can do it, then it's the same
     # automaton.
-    if not use_spontaneous and not is_wordset(re.context()):
-        try:
-            dt = re.automaton("derivation")
-        except RuntimeError as e:
-            SKIP(e)
-        else:
-            CHECK_ISOMORPHIC(dt, aut)
+    try:
+        dt = re.automaton("derivation")
+    except RuntimeError as e:
+        SKIP(e)
+    else:
+        CHECK_ISOMORPHIC(dt, aut)
 
 ##########################
 ## Regular derivation.  ##
@@ -92,7 +87,7 @@ ctx = vcsn.context('lal_char(a), polynomialset<law_char(x), q>')
 check(ctx.expression('((<x>a)*+(<xx>aa)*){c}'),       'a.[(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}]')
 check(ctx.expression('((<<2>x>a)*+(<<4>xx>aa)*){c}'), 'a.[(<<2>x>(<<2>x>a)*+<<4>xx>(a(<<4>xx>aa)*)){c}]')
 
-# Transposition
+# Transposition.
 check('\z{T}', '<\z>')
 check('\e{T}', '<\e>')
 check('a{T}', 'a.[\e]')
