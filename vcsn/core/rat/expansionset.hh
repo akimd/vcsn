@@ -249,9 +249,13 @@ namespace vcsn
       }
 
       /// The conjunction of \a l and \a r.
-      template <typename Conjunction>
-      value_t conjunction_(value_t l, value_t r,
-                           Conjunction conjunction) const
+      ///
+      /// When not a wordset.  Should rather be about freedom?
+      template <typename LabelSet = labelset_t, typename Conjunction>
+      auto conjunction_(value_t l, value_t r,
+                        Conjunction conjunction) const
+        -> enable_if_t<!is_law<LabelSet>{},
+                       value_t>
       {
         value_t res = zero();
         denormalize(l);
@@ -264,6 +268,34 @@ namespace vcsn
         auto has_one = bool_constant<context_t::has_one()>();
         conjunctions_with_one_(res, l, r, has_one, conjunction);
         normalize(res);
+        return res;
+      }
+
+      /// The conjunction of \a l and \a r.
+      ///
+      /// When a wordset.
+      template <typename LabelSet = labelset_t, typename Conjunction>
+      auto conjunction_(value_t lhs, value_t rhs,
+                        Conjunction conjunction) const
+        -> enable_if_t<is_law<LabelSet>{},
+                       value_t>
+      {
+        value_t res = zero();
+        res.constant = ws_.mul(lhs.constant, rhs.constant);
+        for (const auto& l: lhs.polynomials)
+          for (const auto& r: rhs.polynomials)
+            {
+              // The longest common prefix.
+              auto lcp = ls_.lgcd(l.first, r.first);
+              if (!ls_.is_one(lcp))
+                {
+                  auto left  = rs_.atom(ls_.ldiv(lcp, l.first));
+                  auto right = rs_.atom(ls_.ldiv(lcp, r.first));
+                  ps_.add_here(res.polynomials[lcp],
+                               conjunction(ps_.lmul_label(left,  l.second),
+                                           ps_.lmul_label(right, r.second)));
+                }
+            }
         return res;
       }
 

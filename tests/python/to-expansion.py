@@ -271,3 +271,5 @@ check('((foo)(bar)(baz)){T}', 'zab.[((foo)(bar)){T}]')
 check('(ab)*{T}', '<\e> + ba.[(ab)*{T}]')
 check('(<xy>((abc)(abc))<yz>)*{T}',
       '<\e> + cba.[<zy><yx>(cba)(<xy>((abc)(abc))<yz>)*{T}]')
+check('(a*b*)&((ab)*)',
+      '<\e> + a.[a*b*&b(ab)*]')
