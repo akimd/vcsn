@@ -91,8 +91,14 @@ namespace vcsn
       VCSN_RAT_VISIT(prod, v)        { visit_product(v); }
       VCSN_RAT_VISIT(shuffle, v)     { visit_product(v); }
 
-      VCSN_RAT_UNSUPPORTED(ldiv)
-      VCSN_RAT_UNSUPPORTED(transposition)
+      /// Cannot compute the constant-term easily here: c(<x>a{\}<y>a)
+      /// = x{\}y, yet both operands have a null constant-term.
+      VCSN_RAT_UNSUPPORTED(ldiv);
+
+      VCSN_RAT_VISIT(transposition, v)
+      {
+        res_ = ws_.transpose(constant_term(v.sub()));
+      }
 
       using tuple_t = typename super_t::tuple_t;
       virtual void visit(const tuple_t&, std::true_type) override

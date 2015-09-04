@@ -56,3 +56,9 @@ check('x*', '(<x>\e)*')
 check('\e', '(<x>a){c}')
 check('x*', '(<x>\e)*')
 
+# transposition.
+check('zyx', '(<xyz>\e){T}')
+
+# ldiv
+e = ctx.expression('<x>a{\}<x>a')
+XFAIL(lambda: e.constant_term())

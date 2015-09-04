@@ -115,6 +115,7 @@ check('a{\}b', '<\z>')
 
 check('a{\}<x>a', '<x>')
 check('<x>a{\}<y>a', '<x{\}y>')
+check('<x>a{\}<x>a', '<x{\}x>')
 check('a{\}(<x>a)*', '\e.[<x>(<x>a)*]')
 check('a*{\}a', '\e.[a*{\}\e] + a.[\e]')
 check('a*{\}a*', '<\e> + \e.[a*{\}a*] + a.[a*]')
