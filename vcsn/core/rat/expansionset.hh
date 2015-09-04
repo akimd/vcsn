@@ -78,7 +78,7 @@ namespace vcsn
             if (!first)
               o << (fmt == format::latex ? " \\oplus " : " + ");
             first = false;
-            rs_.labelset()->print(p.first, o, fmt.for_labels());
+            ls_.print(p.first, o, fmt.for_labels());
             o << (fmt == format::latex ? " \\odot \\left[" : ".[");;
             ps_.print(p.second, o, fmt);
             o << (fmt == format::latex ? "\\right]" : "]");;
@@ -91,7 +91,7 @@ namespace vcsn
       /// put it with the constant term of the expansion.
       value_t& normalize_(value_t& res, std::true_type) const
       {
-        auto one = rs_.labelset()->one();
+        auto one = ls_.one();
         auto i = res.polynomials.find(one);
         if (i != std::end(res.polynomials))
           {
@@ -124,7 +124,7 @@ namespace vcsn
       {
         if (!ws_.is_zero(res.constant))
           {
-            auto one = rs_.labelset()->one();
+            auto one = ls_.one();
             ps_.add_here(res.polynomials[one],
                          polynomial_t{{rs_.one(), res.constant}});
             res.constant = ws_.zero();
@@ -224,12 +224,12 @@ namespace vcsn
                              Conjunction conjunction) const
       {
         // Spontaneous transitions from the lhs.
-        auto one = rs_.labelset()->one();
+        auto one = ls_.one();
         {
           auto i = l.polynomials.find(one);
           if (i != std::end(l.polynomials))
             for (const auto& rhs: r.polynomials)
-              if (!rs_.labelset()->is_one(rhs.first))
+              if (!ls_.is_one(rhs.first))
                 ps_.add_here(res.polynomials[one],
                              conjunction(i->second,
                                          ps_.lmul_label(rs_.atom(rhs.first),
@@ -240,7 +240,7 @@ namespace vcsn
           auto i = r.polynomials.find(one);
           if (i != std::end(r.polynomials))
             for (const auto& lhs: l.polynomials)
-              if (!rs_.labelset()->is_one(lhs.first))
+              if (!ls_.is_one(lhs.first))
                 ps_.add_here(res.polynomials[one],
                              conjunction(ps_.lmul_label(rs_.atom(lhs.first),
                                                         lhs.second),
@@ -293,7 +293,8 @@ namespace vcsn
       value_t conjunction(value_t l, value_t r) const
       {
         return conjunction_(l, r,
-                            [this](const polynomial_t& l, const polynomial_t& r)
+                            [this](const polynomial_t& l,
+                                   const polynomial_t& r)
                             {
                               return ps_.conjunction(l, r);
                             });
@@ -364,7 +365,7 @@ namespace vcsn
         res.constant = ws_.is_zero(v.constant) ? ws_.one() : ws_.zero();
 
         // Turn the polynomials into expressions, and complement them.
-        for (auto l: rs_.labelset()->genset())
+        for (auto l: ls_.genset())
           {
             auto i = v.polynomials.find(l);
             res.polynomials[l] =
@@ -496,9 +497,11 @@ namespace vcsn
 
     private:
       /// The expressionset used for the expressions.
-      expressionset_t rs_;
+      const expressionset_t& rs_;
+      /// Shorthand to the labelset.
+      const labelset_t& ls_ = *rs_.labelset();
       /// Shorthand to the weightset.
-      weightset_t ws_ = *rs_.weightset();
+      const weightset_t& ws_ = *rs_.weightset();
       /// The polynomialset for the polynomials.
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
     };
