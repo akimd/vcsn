@@ -341,7 +341,33 @@ namespace vcsn
         return false;
       else if (is_one(l))
         return true;
-      return labelset_t::less(get_value(l), get_value(r));
+      else
+        return labelset_t::less(get_value(l), get_value(r));
+    }
+
+    /// The longest common prefix.
+    value_t lgcd(value_t l, value_t r) const
+    {
+      if (equal(l, r))
+        return l;
+      else if (is_one(l) || is_one(r))
+        return one();
+      else
+        return value(ls_->lgcd(get_value(l), get_value(r)));
+    }
+
+    /// Compute l \ r = l^{-1}r.
+    value_t ldiv(value_t l, value_t r) const
+    {
+      if (equal(l, r))
+        return one();
+      else if (is_one(l))
+        return r;
+      else if (is_one(r))
+        raise(*this, ": ldiv: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
+      else
+        return value(ls_->ldiv(get_value(l), get_value(r)));
     }
 
     static value_t

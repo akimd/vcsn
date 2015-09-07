@@ -250,11 +250,11 @@ namespace vcsn
 
       /// The conjunction of \a l and \a r.
       ///
-      /// When not a wordset.  Should rather be about freedom?
+      /// When labelset is letterized.
       template <typename LabelSet = labelset_t, typename Conjunction>
       auto conjunction_(value_t l, value_t r,
                         Conjunction conjunction) const
-        -> enable_if_t<!is_law<LabelSet>{},
+        -> enable_if_t<detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
         value_t res = zero();
@@ -273,11 +273,11 @@ namespace vcsn
 
       /// The conjunction of \a l and \a r.
       ///
-      /// When a wordset.
+      /// When labelset is not letterized.
       template <typename LabelSet = labelset_t, typename Conjunction>
       auto conjunction_(value_t lhs, value_t rhs,
                         Conjunction conjunction) const
-        -> enable_if_t<is_law<LabelSet>{},
+        -> enable_if_t<!detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
         value_t res = zero();
@@ -472,7 +472,7 @@ namespace vcsn
       /// Another implementation is possible, based on the following
       /// two-tape example taking e0 and e1, two single-tape expansions:
       ///
-      /// auto res = value_t{};
+      /// auto res = zero();
       /// res.constant = ws_.mul(e0.constant, e1.constant);
       /// for (const auto& p0: e0.polynomials)
       ///     for (const auto& p1: e1.polynomials)
@@ -525,7 +525,7 @@ namespace vcsn
       tuple(Expansions&&... es) const
         -> value_t
       {
-        auto res = value_t{};
+        auto res = zero();
         tuple_impl<Expansions...>{*this}.denormalize(es...);
         detail::cross([&res, this](const auto&... ps)
                       {

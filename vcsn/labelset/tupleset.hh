@@ -281,6 +281,7 @@ namespace vcsn
       return false;
     }
 
+    /// Pointwise addition.
     value_t
     add(const value_t& l, const value_t& r) const
     {
@@ -299,18 +300,30 @@ namespace vcsn
       return this->mul_(l, r, indices);
     }
 
+    /// The pointwise LGCD.
+    value_t
+    lgcd(const value_t& l, const value_t& r) const
+    {
+      return this->lgcd_(l, r, indices);
+    }
+
+    /// Pointwise right division (l / r).
     value_t
     rdiv(const value_t& l, const value_t& r) const
     {
       return this->rdiv_(l, r, indices);
     }
 
+    /// Pointwise left division (l \ r).
     value_t
     ldiv(const value_t& l, const value_t& r) const
     {
       return this->ldiv_(l, r, indices);
     }
 
+    /// Eliminate the LGCD between all the tapes.  E.g., `(abc, abd)
+    /// => `(c, d)`.
+    ///
     /// This tupleset must be homegeneous.
     typename valueset_t<0>::value_t
     lnormalize_here(value_t& v) const
@@ -638,6 +651,13 @@ namespace vcsn
     add_(const value_t& l, const value_t& r, seq<I...>) const
     {
       return value_t{set<I>().add(std::get<I>(l), std::get<I>(r))...};
+    }
+
+    template <std::size_t... I>
+    value_t
+    lgcd_(const value_t& l, const value_t& r, seq<I...>) const
+    {
+      return value_t{set<I>().lgcd(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>

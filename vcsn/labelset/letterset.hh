@@ -224,6 +224,33 @@ namespace vcsn
       this->convs_(i, fun);
     }
 
+    /// The longest common prefix.
+    ///
+    /// It would be better not to define it and to adjust
+    /// tupleset::ldiv to be SNIFAE compliant, so that we get a
+    /// compile time error instead of a runtime one when we try to
+    /// using lgcd/ldiv on labelsets that don't support it.  However,
+    /// I feel it is not nice not to get tupleset::ldiv fail to
+    /// compile without a clear explanation of why, and it is quite
+    /// some work to write code that supports this possible missing
+    /// ldiv/lgcd (see the case of conjunction in expansionset, case
+    /// of non free labelsets).
+    ///
+    /// Since I'm not convinced that letterset is the right
+    /// abstraction (I, Akim, now tend to think that we should only
+    /// support nullableset<letterset>), let's not fight this fight
+    /// now.
+    static value_t lgcd(value_t, value_t)
+    {
+      raise(sname(), ": lgcd: impossible operation");
+    }
+
+    /// Compute w1 \ w2 = w1^{-1}w2.
+    static value_t ldiv(value_t, value_t)
+    {
+      raise(sname(), ": ldiv: impossible operation");
+    }
+
     std::ostream&
     print(const value_t& l, std::ostream& o,
           format = {}) const
