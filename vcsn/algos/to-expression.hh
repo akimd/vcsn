@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/heap/fibonacci_heap.hpp>
+
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/core/rat/expression.hh>
@@ -17,88 +19,89 @@ namespace vcsn
   | state_chooser.  |
   `----------------*/
 
-  /// A state (inner) from an automaton.
-  template <typename Aut,
-            typename Lifted = detail::lifted_automaton_t<Aut>>
-  using state_chooser_t =
-    std::function<state_t_of<Lifted>(const Lifted&)>;
-
-
-  /*--------------------.
-  | Naive heuristics.   |
-  `--------------------*/
-
-  template <typename Aut>
-  state_t_of<Aut>
-  next_naive(const Aut& a)
-  {
-    require(!a->states().empty(),
-            "state-chooser: empty automaton");
-
-    auto best = a->null_state();
-    auto best_has_loop = false;
-    auto best_degree = std::numeric_limits<size_t>::max();
-    for (auto s: a->states())
-      {
-        size_t out = 0;
-        // Since we are in LAO, there can be at most one such loop.
-        bool has_loop = false;
-        // Don't count the loops as out-degree.
-        for (auto t: a->all_out(s))
-          if (a->dst_of(t) != s)
-            ++out;
-          else
-            has_loop = true;
-        size_t in = a->all_in(s).size();
-        size_t degree = in * out;
-        // We prefer to delete a state that has no loop transition.
-        if (degree < best_degree
-            || (degree == best_degree && has_loop < best_has_loop))
-          {
-            best = s;
-            best_degree = degree;
-            best_has_loop = has_loop;
-          }
-      }
-    assert(best != a->null_state());
-    return best;
-  }
-
-  /*----------------------.
-  | Delgado heuristics.   |
-  `----------------------*/
   namespace detail
   {
+    /*---------------.
+    | Naive profile  |
+    `---------------*/
+
     template <typename Aut>
-    struct next_delgado_impl
+    struct naive_profile
     {
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
-      /// FIXME: C++14 make this ctors useless (GCC 5+).
-      next_delgado_impl(const automaton_t& aut, bool count_labels = false)
-        : aut_(aut)
+      naive_profile(state_t state)
+        : state_(state)
+      {}
+
+      void update(const Aut& a)
+      {
+        size_t out = 0;
+        // Since we are in LAO, there can be at most one such loop.
+        // Don't count the loops as out-degree.
+        for (auto t: a->all_out(state_))
+          if (a->dst_of(t) != state_)
+            ++out;
+          else
+            has_loop_ = true;
+        size_t in = a->all_in(state_).size();
+        size_ = in * out;
+      }
+
+      bool operator<(const naive_profile& rhs) const
+      {
+        return std::make_tuple(rhs.size_, rhs.has_loop_, rhs.state_)
+               < std::make_tuple(size_, has_loop_, state_);
+      }
+
+      friend std::ostream& operator<<(std::ostream& o, const naive_profile<Aut>& p)
+      {
+        return o << p.state_
+                 << 's' << p.size_
+                 << 'l' << p.has_loop_;
+      }
+
+      size_t  size_;
+      state_t state_;
+      bool    has_loop_ = false;
+    };
+
+  /*-------------------.
+  | Delgado profile.   |
+  `-------------------*/
+
+    template <typename Aut>
+    struct delgado_profile // FIXME Call label version
+    {
+      using automaton_t = Aut;
+      using state_t = state_t_of<automaton_t>;
+      using transition_t = transition_t_of<automaton_t>;
+
+      delgado_profile(state_t state, bool count_labels = false)
+        : state_(state)
         , count_labels_(count_labels)
       {}
 
       /// The "weight" of a transition.
       ///
       /// That is to say, the size of its expression.
-      size_t size_of_transition(transition_t t) const
+      size_t size_of_transition(transition_t t, const Aut& a) const
       {
         using expset_t = weightset_t_of<automaton_t>;
         if (count_labels_)
-          return rat::make_info<expset_t>(aut_->weight_of(t)).atom;
+          return rat::make_info<expset_t>(a->weight_of(t)).atom;
         else
-          return rat::size<expset_t>(aut_->weight_of(t));
+          return rat::size<expset_t>(a->weight_of(t));
       }
+
 
       /// The "weight" of a state, as defined by Degaldo/Morais.
       ///
       /// We use the word "size" instead, since "weight" has already a
       /// strong meaning in Vcsn...
-      size_t size_of_state(state_t s) const
+      void update(const Aut& a)
       {
         // The cumulated size of the incoming transitions excluding loops.
         size_t size_in = 0;
@@ -106,72 +109,48 @@ namespace vcsn
         size_t ins = 0;
         // The size of the loop, if there is one.
         size_t size_loop = 0;
-        for (auto t: aut_->all_in(s))
-          if (aut_->src_of(t) == s)
-            size_loop += size_of_transition(t);
+        for (auto t: a->all_in(state_))
+          if (a->src_of(t) == state_)
+            size_loop += size_of_transition(t, a);
           else
             {
               ++ins;
-              size_in += size_of_transition(t);
+              size_in += size_of_transition(t, a);
             }
 
         // The cumulated size of the outgoing transitions excluding loops.
         size_t size_out = 0;
         // The number of outgoing transitions excluding loops.
         size_t outs = 0;
-        for (auto t: aut_->all_out(s))
-          if (aut_->dst_of(t) != s)
+        for (auto t: a->all_out(state_))
+          if (a->dst_of(t) != state_)
             {
               ++outs;
-              size_out += size_of_transition(t);
+              size_out += size_of_transition(t, a);
             }
 
-        return (size_in * (outs - 1)
-                + size_out * (ins - 1)
-                + size_loop * (ins * outs - 1));
+        size_ = (size_in * (outs - 1)
+                 + size_out * (ins - 1)
+                 + size_loop * (ins * outs - 1));
       }
 
-      state_t operator()() const
+      bool operator<(const delgado_profile& rhs) const
       {
-        require(!aut_->states().empty(),
-                "state-chooser: empty automaton");
-        auto best = aut_->null_state();
-        auto best_size = std::numeric_limits<size_t>::max();
-        for (auto s: aut_->states())
-          {
-            auto size = size_of_state(s);
-            if (size < best_size)
-              {
-                best = s;
-                best_size = size;
-              }
-          }
-        assert(best != aut_->null_state());
-        return best;
+        return std::make_tuple(rhs.size_, rhs.state_)
+               < std::make_tuple(size_, state_);
       }
 
-      /// The automaton we work on.
-      const automaton_t& aut_;
-      /// Whether the size of an expression is the number of label
-      /// nodes, or the number of nodes.
-      bool count_labels_ = false;
+      friend std::ostream& operator<<(std::ostream& o, const delgado_profile<Aut>& p)
+      {
+        return o << p.state_
+                 << 's' << p.size_;
+      }
+
+
+      size_t  size_;
+      state_t state_;
+      bool    count_labels_;
     };
-  }
-
-  template <typename Aut>
-  state_t_of<Aut>
-  next_delgado(const Aut& a)
-  {
-    auto n = detail::next_delgado_impl<Aut>{a};
-    return n();
-  }
-
-  template <typename Aut>
-  state_t_of<Aut>
-  next_delgado_label(const Aut& a)
-  {
-    auto n = detail::next_delgado_impl<Aut>{a, true};
-    return n();
   }
 
   /*------------------.
@@ -180,31 +159,97 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut, typename Kind = typename context_t_of<Aut>::kind_t>
+    template <typename Aut, typename Profile,
+             typename Kind = typename context_t_of<Aut>::kind_t>
     struct state_eliminator;
 
     /// Eliminate states in an automaton whose labelset is oneset.
-    template <typename Aut>
-    struct state_eliminator<Aut, labels_are_one>
+    template <typename Aut, typename Profile>
+    struct state_eliminator<Aut, Profile, labels_are_one>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
+      using profile_t = Profile;
 
       state_eliminator(automaton_t& aut)
         : aut_(aut)
       {}
 
+      /// Build the profiles and the heap
+      void build_heap_()
+      {
+        for (auto s: aut_->states())
+          {
+            auto p = profile_t(s);
+            p.update(aut_);
+            auto h = todo_.emplace(p);
+            handles_.emplace(s, h);
+          }
+      }
+
+      /// Update the profile of \a s.
+      void update_profile_(state_t s)
+      {
+        if (auto p = profile(s))
+          p->update(aut_);
+      }
+
+      /// Update the heap for \a s.
+      /// \pre  its profile is updated.
+      void update_heap_(state_t s)
+      {
+#ifdef DEBUG_UPDATE
+        std::cerr << "update heap (" << s << " : ";
+        show_heap_();
+#endif
+        auto i = handles_.find(s);
+        if (i != handles_.end())
+          todo_.update(i->second);
+#ifdef DEBUG_UPDATE
+        std::cerr << ") => ";
+        show_heap_();
+        std::cerr << std::endl;
+#endif
+      }
+
+      profile_t*
+      profile(state_t s)
+      {
+        auto i = handles_.find(s);
+        if (i == handles_.end())
+          return nullptr;
+        else
+          return &*i->second;
+      }
+
+      /// Show the heap, for debugging.
+      void show_heap_() const
+      {
+        const char* sep = "";
+        for (auto i = todo_.ordered_begin(), end = todo_.ordered_end();
+             i != end; ++i)
+          {
+            std::cerr << sep << *i;
+            sep = " > ";
+          }
+      }
+
       /// Eliminate state s.
       void operator()(state_t s)
       {
         if (s == aut_->null_state())
-          s = next_naive(aut_);
+          {
+            build_heap_();
+            require(!todo_.empty(), "not a valid state: ", s);
+            auto p = todo_.top();
+            todo_.pop();
+            s = p.state_;
+          }
         require(aut_->has_state(s), "not a valid state: ", s);
-
-        // The loop's weight.
+       // The loop's weight.
         auto loop = ws_.zero();
         assert(aut_->outin(s, s).size() <= 1);
         // There is a single possible loop labeled by \e, but it's
@@ -224,14 +269,54 @@ namespace vcsn
               (aut_->src_of(in), aut_->dst_of(out),
                aut_->label_of(in),
                ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
+
         aut_->del_state(s);
       }
 
       /// Eliminate all the states, in the order specified by \a next_state.
-      void operator()(const state_chooser_t& next_state)
+      void operator()()
       {
-        while (aut_->num_states())
-          operator()(next_state(aut_));
+        build_heap_();
+        while (!todo_.empty())
+          {
+#ifdef DEBUG_LOOP
+            std::cerr << "Before: ";
+            show_heap_();
+            std::cerr << std::endl;
+#endif
+
+            auto p = todo_.top();
+            todo_.pop();
+
+#ifdef DEBUG_LOOP
+            std::cerr << "Remove: " << p;
+            std::cerr << std::endl;
+#endif
+            auto s = p.state_;
+            handles_.erase(s);
+
+            neighbors_.clear();
+
+            for (auto t: aut_->in(s))
+              {
+                state_t n = aut_->src_of(t);
+                if (n != s)
+                  neighbors_.emplace(n);
+              }
+            for (auto t: aut_->out(s))
+              {
+                state_t n = aut_->dst_of(t);
+                if (n != s)
+                  neighbors_.emplace(n);
+              }
+
+            operator()(s);
+
+            for (auto n: neighbors_)
+              update_profile_(n);
+            for (auto n: neighbors_)
+              update_heap_(n);
+          }
       }
 
     private:
@@ -239,12 +324,20 @@ namespace vcsn
       automaton_t& aut_;
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
+
+      /// Max-heap to decide the order of state-elimination.
+      using heap_t = boost::heap::fibonacci_heap<profile_t>;
+      heap_t todo_;
+      /// Map: state -> heap-handle.
+      std::unordered_map<state_t, typename heap_t::handle_type> handles_;
+
+      std::unordered_set<state_t> neighbors_;
     };
 
 
     /// Eliminate states in an automaton whose labelset is an expressionset.
-    template <typename Aut>
-    struct state_eliminator<Aut, labels_are_expressions>
+    template <typename Aut, typename Profile>
+    struct state_eliminator<Aut, Profile, labels_are_expressions>
     {
       // FIXME: expressionset<lal_char(a-c), z>, q for instance cannot
       // work, because we need to move the q weights inside the
@@ -261,18 +354,62 @@ namespace vcsn
       using weightset_t = weightset_t_of<automaton_t>;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
+      using profile_t = Profile;
 
       state_eliminator(automaton_t& aut)
         : aut_(aut)
       {}
 
+      /// Build the profiles and the heap
+      void build_heap_()
+      {
+        for (auto s: aut_->states())
+          {
+            auto p = profile_t(s);
+            p.update(aut_);
+            auto h = todo_.emplace(p);
+            handles_.emplace(s, h);
+          }
+      }
+
+      /// Update the profile of \a s.
+      void update_profile_(state_t s)
+      {
+        if (auto p = profile(s))
+          p->update(aut_);
+      }
+
+      /// Update the heap for \a s.
+      /// \pre  its profile is updated.
+      void update_heap_(state_t s)
+      {
+        auto i = handles_.find(s);
+        if (i != handles_.end())
+          todo_.update(i->second);
+      }
+
+      profile_t*
+      profile(state_t s)
+      {
+        auto i = handles_.find(s);
+        if (i == handles_.end())
+          return nullptr;
+        else
+          return &*i->second;
+      }
+
       /// Eliminate state s.
       void operator()(state_t s)
       {
         if (s == aut_->null_state())
-          s = next_naive(aut_);
+          {
+            build_heap_();
+            require(!todo_.empty(), "not a valid state: ", s);
+            auto p = todo_.top();
+            todo_.pop();
+            s = p.state_;
+          }
         require(aut_->has_state(s), "not a valid state: ", s);
-
         // The loops' expression.
         auto loop = rs_.zero();
         for (auto t: make_vector(aut_->outin(s, s)))
@@ -289,17 +426,44 @@ namespace vcsn
           for (auto out: outs)
             aut_->add_transition
               (aut_->src_of(in), aut_->dst_of(out),
-               rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
+              rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
                        loop,
                        rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
+
         aut_->del_state(s);
       }
 
       /// Eliminate all the states, in the order specified by \a next_state.
-      void operator()(const state_chooser_t& next_state)
+      void operator()()
       {
-        while (aut_->num_states())
-          operator()(next_state(aut_));
+        build_heap_();
+        while (!todo_.empty())
+          {
+            auto p = todo_.top();
+            todo_.pop();
+            auto s = p.state_;
+            handles_.erase(s);
+
+            for (auto t: aut_->in(s))
+              {
+                state_t n = aut_->src_of(t);
+                if (n != s)
+                  neighbors_.emplace(n);
+              }
+            for (auto t: aut_->out(s))
+              {
+                state_t n = aut_->dst_of(t);
+                if (n != s)
+                  neighbors_.emplace(n);
+              }
+
+            operator()(s);
+
+            for (auto n: neighbors_)
+              update_profile_(n);
+            for (auto n: neighbors_)
+              update_heap_(n);
+          }
       }
 
     private:
@@ -309,10 +473,18 @@ namespace vcsn
       const expressionset_t& rs_ = *aut_->labelset();
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
+
+      /// Max-heap to decide the order of state-elimination.
+      using heap_t = boost::heap::fibonacci_heap<profile_t>;
+      heap_t todo_;
+      /// Map: state -> heap-handle.
+      std::unordered_map<state_t, typename heap_t::handle_type> handles_;
+
+      std::unordered_set<state_t> neighbors_;
     };
 
-    template <typename Aut>
-    state_eliminator<Aut>
+    template <typename Aut, typename Profile>
+    state_eliminator<Aut, Profile>
     make_state_eliminator(Aut& a)
     {
       return a;
@@ -326,7 +498,8 @@ namespace vcsn
   eliminate_state_here(Aut& res,
                        state_t_of<Aut> s = Aut::element_type::null_state())
   {
-    auto eliminate_state = detail::make_state_eliminator(res);
+    auto eliminate_state
+      = detail::make_state_eliminator<Aut, detail::naive_profile<Aut>>(res);
     eliminate_state(s);
     return res;
   }
@@ -378,16 +551,14 @@ namespace vcsn
   `----------------------------*/
 
   template <typename Aut,
+            typename Profile,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression(const Aut& a, vcsn::rat::identities ids,
-                const state_chooser_t<Aut>& next_state)
+  to_expression(Aut& a)
   {
-    // State elimination is performed on the lifted automaton.
-    auto aut = lift(a, ids);
-    auto eliminate_states = detail::make_state_eliminator(aut);
-    eliminate_states(next_state);
-    return aut->get_initial_weight(aut->post());
+    auto eliminate_states = detail::make_state_eliminator<Aut, Profile>(a);
+    eliminate_states();
+    return a->get_initial_weight(a->post());
   }
 
   enum class to_expression_heuristic_t
@@ -398,23 +569,33 @@ namespace vcsn
       naive,
     };
 
-  template <typename Aut>
-  state_chooser_t<Aut>
-  to_expression_heuristic(to_expression_heuristic_t algo)
+  template <typename Aut,
+            typename ExpSet = expressionset<context_t_of<Aut>>>
+  typename ExpSet::value_t
+  to_expression_heuristic(const Aut& a, vcsn::rat::identities ids,
+                          to_expression_heuristic_t algo)
   {
+    // State elimination is performed on the lifted automaton.
+    auto aut = lift(a, ids);
     switch (algo)
     {
     case to_expression_heuristic_t::best:
       raise("next_state: invalid algorithm: best");
 
     case to_expression_heuristic_t::delgado:
-      return next_delgado<detail::lifted_automaton_t<Aut>>;
+      return to_expression<decltype(aut),
+                           detail::delgado_profile<decltype(aut)>,
+                           ExpSet>(aut);
 
     case to_expression_heuristic_t::delgado_label:
-      return next_delgado_label<detail::lifted_automaton_t<Aut>>;
+      return to_expression<decltype(aut),
+                           detail::delgado_profile<decltype(aut)>,
+                           ExpSet>(aut);
+      // FIXME Delgado Label
 
     case to_expression_heuristic_t::naive:
-      return next_naive<detail::lifted_automaton_t<Aut>>;
+      return to_expression<decltype(aut),
+                           detail::naive_profile<decltype(aut)>, ExpSet>(aut);
     }
     BUILTIN_UNREACHABLE();
   }
@@ -433,7 +614,7 @@ namespace vcsn
                       to_expression_heuristic_t::delgado_label,
                       to_expression_heuristic_t::naive})
           {
-            auto r = to_expression<Aut, ExpSet>(aut, ids, a);
+            auto r = to_expression_heuristic<Aut, ExpSet>(aut, ids, a);
             auto s = rat::size<ExpSet>(r);
             if (s < best_size)
               {
@@ -445,8 +626,7 @@ namespace vcsn
       }
     else
       {
-        auto next = to_expression_heuristic<Aut>(algo);
-        return to_expression<Aut, ExpSet>(aut, ids, next);
+        return to_expression_heuristic<Aut, ExpSet>(aut, ids, algo);
       }
   }
 
