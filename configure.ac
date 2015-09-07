@@ -29,11 +29,6 @@ AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AM_SILENT_RULES([yes])
 
-# Shared libs.
-LT_PREREQ([2.2.6])
-LT_INIT([pic-only shared disable-static])
-AC_SUBST([LIBTOOL_DEPS])
-
 # C++ compiler.
 AC_PROG_CXX
 AC_LANG([C++])
@@ -206,8 +201,13 @@ if test x"$VISIBILITY_CXXFLAGS" != x; then
             [Define to 1 if we use ELF hidden visibility by default.])
 fi
 
-
+# This may change CXX, which is used by Libtool.  So call _before_ libtool.
 VCSN_LDFLAGS_AS_NEEDED
+
+# Shared libs.
+LT_PREREQ([2.2.6])
+LT_INIT([pic-only shared disable-static])
+AC_SUBST([LIBTOOL_DEPS])
 
 BOOST_REQUIRE([1.49])
 BOOST_FILESYSTEM

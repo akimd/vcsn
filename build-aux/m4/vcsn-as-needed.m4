@@ -50,12 +50,18 @@ CXX=$CXX_save
 LDFLAGS=$LDFLAGS_save
 ])
 
-
+# Unfortunately when one passes -Wl,--no-as-needed to libtool, it
+# moves the flag around, and actually _last_, even _after_ that the
+# libraries were listed.  So, although -Wl,--no-as-needed is passed,
+# since it's last, it's useless.
+#
+# The workaround, taken from the Libtool FAQ, is to pass these flags
+# directly in the compiler name.
 AC_DEFUN([VCSN_LDFLAGS_AS_NEEDED],
 [AC_CACHE_CHECK([whether -Wl,--no-as-needed is needed],
                 [vcsn_cv_no_as_needed_needed],
                 [_VCSN_LDFLAGS_AS_NEEDED([vcsn_cv_no_as_needed_needed])])
 case $vcsn_cv_no_as_needed_needed in
-  (yes) LDFLAGS="$LDFLAGS -Wl,--no-as-needed" ;;
+  (yes) CXX="$CXX -Wl,--no-as-needed" ;;
 esac
 ])
