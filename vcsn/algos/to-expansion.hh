@@ -208,29 +208,12 @@ namespace vcsn
           return std::make_shared<prod_t>(expressions_t{begin, end});
       }
 
-      /// If r is e*, return e.
-      /// If r is e*{T}, return e{T}.
-      /// Otherwise return nullptr.
-      ///
-      /// FIXME: What about complement?
-      expression_t star_child(const expression_t r)
-      {
-        if (auto c = std::dynamic_pointer_cast<const transposition_t>(r))
-          {
-            if (auto s = std::dynamic_pointer_cast<const star_t>(c->sub()))
-              return rs_.transposition(s->sub());
-          }
-        else if (auto s = std::dynamic_pointer_cast<const star_t>(r))
-          return s->sub();
-        return nullptr;
-      }
-
       VCSN_RAT_VISIT(ldiv, e)
       {
         assert(e.size() == 2);
         DEBUG_IF(
                  std::cerr << "Start: ";
-                 rs_.print(e.shared_from_this, std::cerr()) << " =>\n";
+                 rs_.print(e.shared_from_this(), std::cerr) << " =>\n";
                  );
 
         bool transposed = transposed_;
@@ -372,8 +355,11 @@ namespace vcsn
         template <size_t... I>
         expansion_t work_(const tuple_t& v, detail::index_sequence<I...>)
         {
-          return visitor_.es_.tuple(vcsn::to_expansion(detail::make_focus<I>(visitor_.rs_),
-                                                       std::get<I>(v.sub()))...);
+          return
+            visitor_
+            .es_
+            .tuple(vcsn::to_expansion(detail::make_focus<I>(visitor_.rs_),
+                                      std::get<I>(v.sub()))...);
         }
 
         expansion_t operator()(const tuple_t& v)
