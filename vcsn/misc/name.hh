@@ -85,7 +85,7 @@ namespace vcsn
   {                                             \
     symbol operator()()                         \
     {                                           \
-      symbol res(#__VA_ARGS__);                 \
+      auto res = symbol{#__VA_ARGS__};          \
       return res;                               \
     }                                           \
   };                                            \
@@ -95,7 +95,7 @@ namespace vcsn
   {                                             \
     symbol operator()(__VA_ARGS__&)             \
     {                                           \
-      symbol res(#__VA_ARGS__);                 \
+      auto res = symbol{#__VA_ARGS__};          \
       return res;                               \
     }                                           \
   };

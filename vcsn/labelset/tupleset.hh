@@ -277,6 +277,7 @@ namespace vcsn
     bool
     is_letter(const value_t&) const
     {
+      // FIXME: why???  Is this for the printer of expressions?
       return false;
     }
 
@@ -830,13 +831,15 @@ namespace vcsn
     /// Must be declared before, as we use its result in decltype.
     template <typename Value, typename... Defaults, std::size_t... I>
     auto
-    letters_of_padded_(const Value& v, const std::tuple<Defaults...>& def, seq<I...>) const
-      -> decltype(zip_with_padding(def, std::get<I>(this->sets_).letters_of_padded(std::get<I>(v),
-                                                                                   std::get<I>(def))...))
+    letters_of_padded_(const Value& v,
+                       const std::tuple<Defaults...>& def, seq<I...>) const
+      -> decltype(zip_with_padding(def,
+                                   this->set<I>().letters_of_padded(std::get<I>(v),
+                                                                    std::get<I>(def))...))
     {
       return zip_with_padding(def,
-                              std::get<I>(sets_).letters_of_padded(std::get<I>(v),
-                                                                   std::get<I>(def))...);
+                              set<I>().letters_of_padded(std::get<I>(v),
+                                                         std::get<I>(def))...);
     }
 
   public:

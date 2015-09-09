@@ -990,7 +990,7 @@ namespace vcsn
     -> value_t
   {
     return letter_class_<labelset_t>(std::forward<Args>(args)...,
-                                   std::is_same<labelset_t, vcsn::oneset>{});
+                                     std::is_same<labelset_t, vcsn::oneset>{});
   }
 
   template <typename Context>
@@ -1018,7 +1018,7 @@ namespace vcsn
           auto i = find(gens, cc.first);
           auto end = std::find(i, std::end(gens), cc.second);
           require(end != std::end(gens),
-                  "invalid letter interval: ",
+                  self(), ": invalid letter interval: ",
                   to_string(*labelset(), labelset()->value(std::get<0>(cc))),
                   '-',
                   to_string(*labelset(), labelset()->value(std::get<1>(cc))));

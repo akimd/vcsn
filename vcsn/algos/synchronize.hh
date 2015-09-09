@@ -247,15 +247,17 @@ namespace vcsn
           state_t s = st.first;
           label_t out = st.second;
           if (in_aut_->is_final(s))
-            if (labelset_t::is_one(out))
-              out_aut_->set_final(st, in_aut_->get_final_weight(s));
-            else
             {
-              state_name_t f = {s, labelset_t::one()};
-              // Create the state, don't add it to the todo list.
-              out_aut_->state(f, false);
-              out_aut_->new_transition(st, f, out, in_aut_->get_final_weight(s));
-              out_aut_->set_final(f, weightset_t::one());
+              if (labelset_t::is_one(out))
+                out_aut_->set_final(st, in_aut_->get_final_weight(s));
+              else
+                {
+                  state_name_t f = {s, labelset_t::one()};
+                  // Create the state, don't add it to the todo list.
+                  out_aut_->state(f, false);
+                  out_aut_->new_transition(st, f, out, in_aut_->get_final_weight(s));
+                  out_aut_->set_final(f, weightset_t::one());
+                }
             }
 
           for (auto tr : in_aut_->out(s))

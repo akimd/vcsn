@@ -52,16 +52,4 @@ namespace vcsn
       bool enabled_ = false;
     };
   }
-
-#if 0
-  /// An ostream that backslashes backslashes.
-  detail::io::filtering_ostream
-  backslashify(std::ostream& os)
-  {
-    detail::io::filtering_ostream res;
-    res.push(detail::backslashify_output_filter());
-    res.push(os);
-    return std::move(res);
-  }
-#endif
 }

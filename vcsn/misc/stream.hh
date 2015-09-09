@@ -20,7 +20,7 @@ namespace vcsn LIBVCSN_API
   /// Extract the string which is here between lbracket and rbracket.
   /// Support nested lbracket/rbracket.
   std::string
-  bracketed(std::istream& i, const char lbracket, const char rbracket);
+  bracketed(std::istream& i, char lbracket, char rbracket);
 
   /// Parse str via vs.conv.
   template <typename ValueSet, typename... Args>
