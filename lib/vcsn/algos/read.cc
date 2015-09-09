@@ -12,7 +12,6 @@
 
 namespace vcsn
 {
-
   namespace dyn
   {
 
@@ -68,12 +67,22 @@ namespace vcsn
     read_expression(const context& ctx, rat::identities ids,
                     std::istream& is, const std::string& f)
     {
-      if (f == "text" || f == "default" || f == "")
-        return rat::read(ctx, ids, is);
-      else
-        raise("invalid expression input format: ", f);
+      enum fmt
+      {
+        text,
+      };
+      static const auto map = std::map<std::string, fmt>
+        {
+          {"default", text},
+          {"text",    text},
+        };
+      switch (getargs("expression input format", map, f))
+        {
+        case text:
+          return rat::read(ctx, ids, is);
+        }
+      BUILTIN_UNREACHABLE();
     }
-
 
     /*-------------.
     | read_label.  |
@@ -85,29 +94,5 @@ namespace vcsn
     {
       return detail::read_label_registry().call(ctx, is);
     }
-
-    /*------------------.
-    | read_polynomial.  |
-    `------------------*/
-
-    REGISTER_DEFINE(read_polynomial);
-    polynomial
-    read_polynomial(const dyn::context& ctx, std::istream& is)
-    {
-      return detail::read_polynomial_registry().call(ctx, is);
-    }
-
-    /*--------------.
-    | read_weight.  |
-    `--------------*/
-
-    REGISTER_DEFINE(read_weight);
-    weight
-    read_weight(const dyn::context& ctx, std::istream& is)
-    {
-      return detail::read_weight_registry().call(ctx, is);
-    }
-
   }
-
 } // vcsn::
