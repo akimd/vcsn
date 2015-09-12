@@ -537,23 +537,15 @@ namespace vcsn
       auto ls = *rs.labelset();
 
       using labelset_t = decltype(ls);
-      using word_t = typename labelset_t::word_t;
-      using label_t = typename labelset_t::value_t;
       using letter_t = typename labelset_t::letter_t;
 
       auto ccs = std::set<std::pair<letter_t, letter_t>>{};
-      for (auto cc: chars)
+      for (const auto& cc: chars)
         {
-          // Yes, this is ugly: to convert an std::string into a
-          // letter_t, we (i) parse the string into a label, (ii)
-          // convert it into a word_t, (iii) from which we extract its
-          // first letter.
-          label_t lbl1 = ::vcsn::conv(ls, cc.first);
-          label_t lbl2 = ::vcsn::conv(ls, cc.second);
-          word_t w1 = ls.word(lbl1);
-          word_t w2 = ls.word(lbl2);
-          letter_t l1 = *std::begin(ls.letters_of(w1));
-          letter_t l2 = *std::begin(ls.letters_of(w2));
+          std::istringstream i1{cc.first};
+          std::istringstream i2{cc.second};
+          letter_t l1 = ls.get_letter(i1, false);
+          letter_t l2 = ls.get_letter(i2, false);
           ccs.emplace(l1, l2);
         }
       return rs.letter_class(ccs, accept);

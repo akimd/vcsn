@@ -84,9 +84,7 @@ namespace vcsn
                   else
                     {
                       // [prev - l2].
-                      letter_t l2 = genset_t::get_letter(i);
-                      require(this->has(l2),
-                              "invalid label: unexpected ", str_escape(l2));
+                      letter_t l2 = get_letter(i);
                       // Skip prev, which was already processed.
                       for (auto i = std::next(this->genset().find(prev.get()));
                            i != this->genset().end() && *i < l2;
@@ -103,9 +101,7 @@ namespace vcsn
                 }
               else
                 {
-                  letter_t l = genset_t::get_letter(i);
-                  require(this->has(l),
-                          "invalid label: unexpected ", str_escape(l));
+                  letter_t l = get_letter(i);
                   fun(l);
                   prev = l;
                 }
@@ -139,6 +135,16 @@ namespace vcsn
         eat(i, '[');
         boost::for_each(convs_classes_(i), fun);
         eat(i, ']');
+      }
+
+      /// Read one letter from i.
+      letter_t
+      get_letter(std::istream& i, bool quoted = true) const
+      {
+        letter_t res = this->genset().get_letter(i, quoted);
+        require(this->has(res),
+                "invalid label: unexpected ", str_escape(res));
+        return res;
       }
 
       /// Use the implementation from genset.

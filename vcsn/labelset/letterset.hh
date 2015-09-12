@@ -209,10 +209,7 @@ namespace vcsn
     value_t
     conv(std::istream& i) const
     {
-      letter_t l = this->genset().get_letter(i);
-      require(this->has(l),
-              *this, ": conv: invalid label: unexpected ", str_escape(l));
-      return value_t{l};
+      return this->get_letter(i);
     }
 
     /// Read a range of labels.

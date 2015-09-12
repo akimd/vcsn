@@ -368,6 +368,12 @@ namespace vcsn
       return is_one(v) ? 0 : labelset_t::hash(get_value(v));
     }
 
+    letter_t
+    get_letter(std::istream& i, bool quoted = true) const
+    {
+      return ls_->get_letter(i, quoted);
+    }
+
     value_t
     conv(std::istream& i) const
     {

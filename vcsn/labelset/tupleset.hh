@@ -820,6 +820,23 @@ namespace vcsn
 
   private:
     /// Must be declared before, as we use its result in decltype.
+    template <std::size_t... I>
+    auto
+    get_letter_(std::istream& i, bool quoted, seq<I...>) const
+      -> letter_t
+    {
+#if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+      return letter_t{(eat_separator_<I>(i),
+                      set<I>().get_letter(i, quoted))...};
+#else
+      constexpr auto S = sizeof...(ValueSets)-1;
+      return
+        detail::make_gcc_tuple((eat_separator_<S - I>(i),
+                                set<S - I>().get_letter(i, quoted))...);
+#endif
+    }
+
+    /// Must be declared before, as we use its result in decltype.
     template <typename Value, std::size_t... I>
     static auto
     letters_of_(const Value& v, seq<I...>)
@@ -843,6 +860,20 @@ namespace vcsn
     }
 
   public:
+    template <std::size_t... I>
+    auto
+    get_letter(std::istream& i, bool quoted = true) const
+      -> decltype(get_letter_(i, quoted, indices))
+    {
+      bool par = i.peek() == '(';
+      if (par)
+        eat(i, '(');
+      auto res = get_letter_(i, quoted, indices);
+      if (par)
+        eat(i, ')');
+      return res;
+    }
+
     /// Iterate over the letters of v.
     ///
     /// Templated by Value so that we work for both word_t and
