@@ -125,7 +125,7 @@ namespace vcsn
       }
 
       static value_t
-      conv(std::istream& is)
+      conv(std::istream& is, bool = true)
       {
         value_t res;
         if (is.peek() == 'o')

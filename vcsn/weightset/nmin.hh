@@ -40,7 +40,7 @@ namespace vcsn
       }
 
       static value_t
-      conv(std::istream& is)
+      conv(std::istream& is, bool = true)
       {
         if (is.peek() == '-')
           fail_reading(is, sname(), ": negative values are invalid");

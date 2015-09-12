@@ -207,9 +207,9 @@ namespace vcsn
 
     /// Read one letter from i, return the corresponding label.
     value_t
-    conv(std::istream& i) const
+    conv(std::istream& i, bool quoted = true) const
     {
-      return this->get_letter(i);
+      return this->get_letter(i, quoted);
     }
 
     /// Read a range of labels.

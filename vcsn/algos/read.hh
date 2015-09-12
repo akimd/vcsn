@@ -17,10 +17,11 @@ namespace vcsn
   template <typename Context>
   inline
   auto
-  read_label(const Context& ctx, std::istream& is)
+  read_label(const Context& ctx, std::istream& is,
+             bool quoted = false)
     -> label_t_of<Context>
   {
-    return ctx.labelset()->conv(is);
+    return ctx.labelset()->conv(is, quoted);
   }
 
   namespace dyn
@@ -28,12 +29,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Context, typename Istream>
+      template <typename Context, typename Istream, typename Bool>
       label
-      read_label(const context& ctx, std::istream& is)
+      read_label(const context& ctx, std::istream& is, bool quoted)
       {
         const auto& c = ctx->as<Context>();
-        auto res = ::vcsn::read_label(c, is);
+        auto res = ::vcsn::read_label(c, is, quoted);
         return make_label(*c.labelset(), res);
       }
     }

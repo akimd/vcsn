@@ -396,12 +396,12 @@ namespace vcsn
 
     /// Read one label from i, return the corresponding value.
     value_t
-    conv(std::istream& i) const
+    conv(std::istream& i, bool quoted = true) const
     {
       bool par = i.peek() == '(';
       if (par)
         eat(i, '(');
-      value_t res = conv_(i, indices);
+      value_t res = conv_(i, quoted, indices);
       if (par)
         eat(i, ')');
       return res;
@@ -698,16 +698,16 @@ namespace vcsn
 
     template <std::size_t... I>
     value_t
-    conv_(std::istream& i, seq<I...>) const
+    conv_(std::istream& i, bool quoted, seq<I...>) const
     {
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
       return value_t{(eat_separator_<I>(i),
-                      set<I>().conv(i))...};
+                      set<I>().conv(i, quoted))...};
 #else
       constexpr auto S = sizeof...(ValueSets)-1;
       return
         detail::make_gcc_tuple((eat_separator_<S - I>(i),
-                                std::get<S - I>(sets_).conv(i))...);
+                                set<S - I>().conv(i, quoted))...);
 #endif
     }
 

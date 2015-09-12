@@ -127,7 +127,7 @@ namespace vcsn
       try
         {
           std::istringstream is{s};
-          auto res = dyn::read_label(ctx, is);
+          auto res = dyn::read_label(ctx, is, "text");
           require(is.peek() == -1,
                   "unexpected trailing characters in: ", s, ": ", is);
           return res;

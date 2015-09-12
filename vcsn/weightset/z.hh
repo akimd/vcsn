@@ -165,13 +165,13 @@ namespace vcsn
     }
 
     static value_t
-    conv(std::istream& stream)
+    conv(std::istream& is, bool = true)
     {
       int res;
-      if (stream >> res)
+      if (is >> res)
         return res;
       else
-        vcsn::fail_reading(stream, sname(), ": invalid value");
+        vcsn::fail_reading(is, sname(), ": invalid value");
      }
 
     static std::ostream&

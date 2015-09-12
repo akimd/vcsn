@@ -266,7 +266,7 @@ namespace vcsn
     value_t letter_class(Args&&... chars) const;
 
     /// The next expression in a stream.
-    value_t conv(std::istream& is) const;
+    value_t conv(std::istream& is, bool = true) const;
 
     /// Convert from ourself: identity.
     value_t conv(const self_t&, value_t v) const;

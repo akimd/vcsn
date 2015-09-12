@@ -222,7 +222,7 @@ namespace vcsn
     }
 
     value_t
-    conv(std::istream& i) const
+    conv(std::istream& i, bool = true) const
     {
       return this->genset().get_word(i);
     }

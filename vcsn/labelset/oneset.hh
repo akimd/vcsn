@@ -160,7 +160,7 @@ namespace vcsn
     }
 
 
-    static value_t conv(std::istream& i)
+    static value_t conv(std::istream& i, bool = true)
     {
       if (i.peek() == '\\')
         {

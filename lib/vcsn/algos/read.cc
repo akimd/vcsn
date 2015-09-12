@@ -90,9 +90,23 @@ namespace vcsn
 
     REGISTER_DEFINE(read_label);
     label
-    read_label(const dyn::context& ctx, std::istream& is)
+    read_label(const dyn::context& ctx, std::istream& is,
+               const std::string& f)
     {
-      return detail::read_label_registry().call(ctx, is);
+      enum fmt
+      {
+        text,
+        quoted
+      };
+      static const auto map = std::map<std::string, fmt>
+        {
+          {"default", text},
+          {"text",    text},
+          {"quoted",  quoted},
+        };
+      auto format = getargs("label input format", map, f);
+      bool is_quoted = format == quoted;
+      return detail::read_label_registry().call(ctx, is, is_quoted);
     }
   }
 } // vcsn::

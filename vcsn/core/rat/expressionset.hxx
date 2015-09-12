@@ -954,7 +954,7 @@ namespace vcsn
     return vcsn::rat::copy(rs, self(), r);
   }
 
-  DEFINE::conv(std::istream& is) const
+  DEFINE::conv(std::istream& is, bool) const
     -> value_t
   {
     // Our expression parser is written in dyn::, so we get a

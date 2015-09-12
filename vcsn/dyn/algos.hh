@@ -619,9 +619,11 @@ namespace vcsn
 
     /// Read a label from a stream.
     ///
-    /// \param ctx   the context.
-    /// \param is    the input stream.
-    label read_label(const context& ctx, std::istream& is);
+    /// \param ctx     the context.
+    /// \param is      the input stream.
+    /// \param format  the label's format.
+    label read_label(const context& ctx, std::istream& is,
+                     const std::string& format = "default");
 
     /// Read a polynomial from a stream
     ///

@@ -375,7 +375,7 @@ namespace vcsn
     }
 
     value_t
-    conv(std::istream& i) const
+    conv(std::istream& i, bool quoted = true) const
     {
       value_t res;
       int c = i.peek();
@@ -387,7 +387,7 @@ namespace vcsn
           res = one();
         }
       else
-        res = value(ls_->conv(i));
+        res = value(ls_->conv(i, quoted));
       return res;
     }
 

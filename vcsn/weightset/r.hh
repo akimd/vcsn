@@ -183,7 +183,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(std::istream& i)
+    conv(std::istream& i, bool = true)
     {
       value_t res;
       if (i >> res)
