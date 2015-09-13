@@ -75,7 +75,7 @@ CHECK(a.is_functional())
 ## ----- ##
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>, b"
+  vcsn_context = "lat<lan_char(abc),lan_char(xyz)>, b"
   I0 -> 0
   0 -> 1 [label = "(a, \\e)"]
   0 -> 2 [label = "(a, x)"]

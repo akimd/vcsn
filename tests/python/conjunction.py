@@ -606,7 +606,7 @@ CHECK_EQUIV(vcsn.automaton(res),
 
 a1 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lan<lal_char(abc)>, b"
+  vcsn_context = "lan_char(abc), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -630,7 +630,7 @@ a1 = vcsn.automaton(r'''digraph
 
 a2 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lan<lal_char(abc)>, b"
+  vcsn_context = "lan_char(abc), b"
   rankdir = LR
   {
     node [shape = point, width = 0]

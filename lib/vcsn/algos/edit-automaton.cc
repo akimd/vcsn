@@ -60,7 +60,7 @@ namespace vcsn
         {
         case labelset_type::empty: return {};
         case labelset_type::lal: return "lal_char()";
-        case labelset_type::lan: return "lan<lal_char()>";
+        case labelset_type::lan: return "lan_char()";
         case labelset_type::law: return "law_char()";
         }
       BUILTIN_UNREACHABLE();

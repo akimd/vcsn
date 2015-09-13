@@ -12,8 +12,8 @@ def check(a1, a2, exp):
 ## Composition ##
 #################
 
-c1 = vcsn.context("lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>, b")
-c2 = vcsn.context("lat<lan<lal_char(xyz)>,lan<lal_char(def)>>, b")
+c1 = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, b")
+c2 = vcsn.context("lat<lan_char(xyz),lan_char(def)>, b")
 
 check(c1.expression("a|x").standard(),
       c2.expression("x|d").standard(),
@@ -127,7 +127,7 @@ check(c_ratb.expression("<o>(a|x)").standard(),
 
 a1 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(xyz)>, lan<lal_char(abc)>>, b"
+  vcsn_context = "lat<lan_char(xyz), lan_char(abc)>, b"
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   1 -> F1
@@ -138,7 +138,7 @@ a1 = vcsn.automaton(r'''digraph
 
 a2 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lan<lal_char(abc)>, lan<lal_char(def)>>, b"
+  vcsn_context = "lat<lan_char(abc), lan_char(def)>, b"
   I0 -> 0
   0 -> 1 [label = "(\\e, d)"]
   1 -> 2 [label = "(a, e)"]

@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-c = vcsn.context("lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>,b")
+c = vcsn.context("lat<lan_char(abc),lan_char(xyz)>,b")
 
 def check(a, res):
     aut = c.expression(a).standard()
