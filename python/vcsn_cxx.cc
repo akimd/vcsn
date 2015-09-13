@@ -184,9 +184,11 @@ struct automaton
   /// Derived-term automaton from r.
   automaton(const expression& r);
 
+  /// Create an automaton from a file, or from a string.
   automaton(const std::string& data = "",
             const std::string& format = "default",
-            const std::string& filename = "")
+            const std::string& filename = "",
+            bool strip = true)
   {
     std::shared_ptr<std::istream> is;
     vcsn::require(!data.empty() || !filename.empty(),
@@ -197,7 +199,7 @@ struct automaton
       is = vcsn::open_input_file(filename);
     else
       vcsn::raise("must provide either data or filename");
-    val_ = vcsn::dyn::read_automaton(*is, format);
+    val_ = vcsn::dyn::read_automaton(*is, format, strip);
     vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   }
 
@@ -1245,8 +1247,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   // ctors.  It's easier this way to provide default arguments.
 
   bp::class_<automaton>("automaton", bp::no_init)
-    .def(bp::init<const std::string&, const std::string&, const std::string&>
-         ((arg("data") = "", arg("format") = "default", arg("filename") = "")))
+    .def(bp::init<const std::string&, const std::string&,
+         const std::string&, bool>
+         ((arg("data") = "", arg("format") = "default",
+           arg("filename") = "", arg("strip") = true)))
     .def("accessible", &automaton::accessible)
     .def("ambiguous_word", &automaton::ambiguous_word)
     .def("automaton", &automaton::as)
@@ -1360,7 +1364,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1),
-         arg("loop_chance") = 0)
+          arg("loop_chance") = 0)
     .def("random_deterministic", &context::random_deterministic)
     .def("series", &context::series)
     .def("trie", &context::trie)

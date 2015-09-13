@@ -61,6 +61,7 @@ namespace vcsn
           {"filter_automaton"       , "vcsn/algos/filter.hh"},
           {"focus_automaton"        , "vcsn/algos/focus.hh"},
           {"mutable_automaton"      , "vcsn/core/mutable-automaton.hh"},
+          {"name_automaton"         , "vcsn/core/name-automaton.hh"},
           {"pair_automaton"         , "vcsn/algos/synchronizing-word.hh"},
           {"partition_automaton"    , "vcsn/core/partition-automaton.hh"},
           {"permutation_automaton"  , "vcsn/core/permutation-automaton.hh"},

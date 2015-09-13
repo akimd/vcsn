@@ -32,7 +32,8 @@ namespace vcsn
     }
 
     automaton
-    read_automaton(std::istream& is, const std::string& f)
+    read_automaton(std::istream& is, const std::string& f,
+                   bool strip_p)
     {
       enum fmt
       {
@@ -40,23 +41,17 @@ namespace vcsn
         efsm,
         fado,
       };
-      static const auto map = std::map<std::string, fmt>
+      static const auto map
+        = std::map<std::string, std::function<automaton(std::istream&)>>
         {
-          {"default", dot},
-          {"dot",     dot},
-          {"efsm",    efsm},
-          {"fado",    fado},
+          {"default", read_dot},
+          {"dot",     read_dot},
+          {"efsm",    read_efsm},
+          {"fado",    read_fado},
         };
-      switch (getargs("automaton input format", map, f))
-        {
-        case dot:
-          return read_dot(is);
-        case efsm:
-          return read_efsm(is);
-        case fado:
-          return read_fado(is);
-        }
-      BUILTIN_UNREACHABLE();
+      auto read = getargs("automaton input format", map, f);
+      auto res = read(is);
+      return strip_p ? strip(res) : res;
     }
 
     /*-------------------.

@@ -581,7 +581,8 @@ namespace vcsn
     /// \param num_final
     ///    The number of final states wanted (0 <= num_final <= num_states)
     /// \param loop_chance
-    ///    The probability (between 0.0 and 1.0) for each state that it has a loop.
+    ///    The probability (between 0.0 and 1.0) for each state to have
+    ///    a loop.
     automaton random_automaton(const context& ctx,
                                unsigned num_states,
                                float density = 0.1,
@@ -604,8 +605,11 @@ namespace vcsn
     /// Read an automaton from a stream.
     /// \param is      the input stream.
     /// \param format  its format.
+    /// \param strip   whether to return a stripped automaton,
+    ///                or a named automaton.
     automaton read_automaton(std::istream& is,
-                             const std::string& format = "default");
+                             const std::string& format = "default",
+                             bool strip = true);
 
     /// Read an expression from a stream.
     ///

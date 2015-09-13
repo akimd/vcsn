@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
@@ -82,7 +82,7 @@ namespace vcsn
   {
   public:
     using super_t = automaton_editor;
-    using automaton_t = Aut;
+    using automaton_t = name_automaton<Aut>;
     using string_t = super_t::string_t;
 
   private:
@@ -116,14 +116,14 @@ namespace vcsn
     virtual void
     add_pre(string_t s) override final
     {
-      smap_.emplace(s, res_->pre());
+      res_->state(s, res_->pre());
     }
 
     /// Register that state named \a s is postfinal.
     virtual void
     add_post(string_t s) override final
     {
-      smap_.emplace(s, res_->post());
+      res_->state(s, res_->post());
     }
 
     virtual void
@@ -235,10 +235,7 @@ namespace vcsn
     state_t
     state_(string_t k)
     {
-      auto p = smap_.emplace(k, Aut::element_type::null_state());
-      if (p.second)
-        p.first->second = res_->new_state();
-      return p.first->second;
+      return res_->state(k);
     }
 
     /// The automaton under construction.
@@ -246,9 +243,6 @@ namespace vcsn
     /// Entries handler.
     polynomialset<context_t> ps_;
 
-    /// State name -> state handle.
-    using state_map = std::unordered_map<string_t, state_t>;
-    state_map smap_;
     /// Memoize entry conversion.
     using entry_map = std::unordered_map<string_t, entry_t>;
     entry_map emap_;

@@ -111,7 +111,7 @@ class AutomatonText:
         try:
             self.error.value = ''
             txt = self.text.value
-            a = vcsn.automaton(txt, self.format)
+            a = vcsn.automaton(txt, self.format, strip = False)
             self.ipython.shell.user_ns[self.name] = a
             dot = daut_to_dot(txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
@@ -121,6 +121,9 @@ class AutomatonText:
 @magics_class
 class EditAutomaton(Magics):
     @magic_arguments()
+    @argument('-s', '--strip', action='store_true', default = False,
+              help='''Whether to strip the result (i.e., discard user names
+              and use the "real" state numbers).''')
     @argument('var', type=str, help='The name of the variable to edit.')
     @argument('format', type=str, nargs ='?', default = 'auto',
               help='''The name of the format to edit the automaton in
@@ -142,7 +145,7 @@ class EditAutomaton(Magics):
                 AutomatonText(self, args.var, args.format, args.mode)
         else:
             # Cell magic.
-            a =  vcsn.automaton(cell, args.format)
+            a =  vcsn.automaton(cell, format = args.format, strip = args.strip)
             self.shell.user_ns[args.var] = a
             display(a)
 

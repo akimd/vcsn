@@ -143,6 +143,7 @@ namespace vcsn
       DEFINE(num_transitions);
       DEFINE(out);
       DEFINE(outin);
+      DEFINE(prepost_label);
       DEFINE(print_set);
       DEFINE(print_state);
       DEFINE(print_state_name);

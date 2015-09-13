@@ -5,6 +5,17 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-09-15
+### Named automata
+It is (finally) possible to keep user state names thanks to
+name_automaton<Aut>.  Now dyn::read_automaton and (in Python) vcsn.automaton
+accept an additional `strip` argument (defaulting to true): if set, the user
+names will be stripped once the automaton is loaded.  This applies to all
+the supported formats: Daut, Dot, Efsm, and FAdo.
+
+However using %%automaton names are kept by default.  Pass `-s`/`--strip` to
+strip it.
+
 ## 2015-09-07
 ### Build fixes
 Fixed (again) nasty shared-library issues at runtime on Ubuntu due to their

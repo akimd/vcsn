@@ -119,6 +119,7 @@ nobase_include_HEADERS =                        \
   %D%/core/join.hh                              \
   %D%/core/kind.hh                              \
   %D%/core/mutable-automaton.hh                 \
+  %D%/core/name-automaton.hh                    \
   %D%/core/partition-automaton.hh               \
   %D%/core/permutation-automaton.hh             \
   %D%/core/rat/copy.hh                          \

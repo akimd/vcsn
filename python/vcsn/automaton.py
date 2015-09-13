@@ -75,7 +75,7 @@ def _guess_format(data = '', filename = ''):
     for line in open(filename) if filename else data.splitlines():
         if line.startswith('digraph'):
             return 'dot'
-        elif re.match('context *=|^\s*(\$|\d+)\s*->\s*(\$|\d+)', line):
+        elif re.match('context *=|^\s*(\$|\w+)\s*->\s*(\$|\w+)', line):
             return 'daut'
         elif line.startswith('#! /bin/sh'):
             return 'efsm'
@@ -90,16 +90,18 @@ def _guess_format(data = '', filename = ''):
 # the original, C++ based, implementation of __init__ as _init,
 # and then provide a new __init__.
 automaton._init = automaton.__init__
-def _automaton_init(self, data = '', format = 'auto', filename = ''):
+def _automaton_init(self, data = '', format = 'auto', filename = '',
+                    strip = True):
     if format == "auto":
         format = _guess_format(data, filename)
     if format == "daut":
         if filename:
             data = open(filename).read()
+            filename = ''
         data = daut_to_dot(data)
-        self._init(data = data, format = 'dot')
-    else:
-        self._init(data = data, format = format, filename = filename)
+        format = 'dot'
+    self._init(data = data, format = format, filename = filename,
+               strip = strip)
 automaton.__init__ = _automaton_init
 
 def _automaton_interact(self):
