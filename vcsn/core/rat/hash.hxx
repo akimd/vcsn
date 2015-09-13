@@ -76,7 +76,7 @@ namespace vcsn
     hash<ExpSet>::visit_variadic(const variadic_t<Type>& n)
     {
       combine_type(n);
-      for (auto child : n)
+      for (const auto& child : n)
         child->accept(*this);
     }
 #undef VISIT

@@ -13,37 +13,37 @@ namespace vcsn
 
     VISIT(prod, v)
     {
-      for (auto t : v)
+      for (const auto& t : v)
         t->accept(*this);
     }
 
     VISIT(conjunction, v)
     {
-      for (auto t : v)
+      for (const auto& t : v)
         t->accept(*this);
     }
 
     VISIT(infiltration, v)
     {
-      for (auto t : v)
+      for (const auto& t : v)
         t->accept(*this);
     }
 
     VISIT(shuffle, v)
     {
-      for (auto t : v)
+      for (const auto& t : v)
         t->accept(*this);
     }
 
     VISIT(ldiv, v)
     {
-      for (auto t : v)
+      for (const auto& t : v)
         t->accept(*this);
     }
 
     VISIT(sum, v)
     {
-      for (auto t : v)
+      for (const auto& t : v)
         t->accept(*this);
     }
 

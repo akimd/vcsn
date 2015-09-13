@@ -123,7 +123,7 @@ namespace vcsn
       {
         // One operator bw each argument.
         size_ += v.size() - 1;
-        for (auto child : v)
+        for (const auto& child : v)
           child->accept(*this);
       }
 

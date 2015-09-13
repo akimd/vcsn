@@ -125,7 +125,7 @@ namespace vcsn
       void visit_(const variadic_t<Type>& v)
       {
         size_t d = 0;
-        for (auto c: v)
+        for (const auto& c: v)
           {
             c->accept(*this);
             d = std::max(d, depth);

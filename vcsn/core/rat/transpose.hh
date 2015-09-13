@@ -68,14 +68,14 @@ namespace vcsn
       VCSN_RAT_VISIT(sum, e)
       {
         res_ = rs_.zero();
-        for (auto v: e)
+        for (const auto& v: e)
           res_ = rs_.add(res_, transpose(v));
       }
 
       VCSN_RAT_VISIT(conjunction, e)
       {
         res_ = transpose(e.head());
-        for (auto v: e.tail())
+        for (const auto& v: e.tail())
           res_ = rs_.conjunction(res_, transpose(v));
       }
 
@@ -83,7 +83,7 @@ namespace vcsn
       {
         // FIXME: that should be easy to factor.
         res_= transpose(e.head());
-        for (auto v: e.tail())
+        for (const auto& v: e.tail())
           res_ = rs_.infiltration(res_, transpose(v));
       }
 
@@ -91,14 +91,14 @@ namespace vcsn
       {
         // FIXME: that should be easy to factor.
         res_= transpose(e.head());
-        for (auto v: e.tail())
+        for (const auto& v: e.tail())
           res_ = rs_.shuffle(res_, transpose(v));
       }
 
       VCSN_RAT_VISIT(prod, e)
       {
         res_ = rs_.one();
-        for (auto v: e)
+        for (const auto& v: e)
           res_ = rs_.mul(transpose(v), res_);
       }
 

@@ -66,7 +66,7 @@ namespace vcsn
         using out_variadic_t
           = typename out_expressionset_t::template variadic_t<Type>;
         typename out_expressionset_t::values_t sub;
-        for (auto s: v)
+        for (const auto& s: v)
           sub.emplace_back(copy(s));
         res_ = std::make_shared<out_variadic_t>(sub);
       }

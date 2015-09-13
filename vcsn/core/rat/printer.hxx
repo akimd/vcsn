@@ -238,7 +238,7 @@ namespace vcsn
       -> void
     {
       bool first = true;
-      for (auto i: n)
+      for (const auto& i: n)
         {
           if (! first)
             out_ << op;
