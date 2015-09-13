@@ -4,6 +4,7 @@
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/standard.hh>
+#include <vcsn/algos/star.hh>
 #include <vcsn/algos/sum.hh>
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/core/join.hh>
@@ -130,7 +131,7 @@ namespace vcsn
   multiply(const Aut& aut, int min, int max)
     -> typename Aut::element_type::template fresh_automaton_t<>
   {
-    Aut res = make_fresh_automaton(aut);
+    auto res = make_fresh_automaton(aut);
     if (min == -1)
       min = 0;
     if (max == -1)
@@ -157,7 +158,7 @@ namespace vcsn
         if (min < max)
           {
             // Aut sum = automatonset.one();
-            Aut sum = make_fresh_automaton(aut);
+            auto sum = make_fresh_automaton(aut);
             {
               auto s = sum->new_state();
               sum->set_initial(s);

@@ -333,9 +333,10 @@ namespace vcsn
 
   /// A copy of automaton \a res without the state \a s.
   template <typename Aut>
-  Aut
+  auto
   eliminate_state(const Aut& aut,
                   state_t_of<Aut> s = Aut::element_type::null_state())
+    -> fresh_automaton_t_of<Aut>
   {
     // Get a copy, but be sure to keep the correspondance bw original
     // state numbers and the new ones.
