@@ -21,87 +21,133 @@ namespace vcsn
 
   namespace detail
   {
-    /*---------------.
-    | Naive profile  |
-    `---------------*/
+    /*----------------.
+    | Naive profiler. |
+    `----------------*/
 
     template <typename Aut>
-    struct naive_profile
+    struct naive_profiler
     {
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
-      naive_profile(state_t state)
-        : state_(state)
+      naive_profiler(const automaton_t& aut)
+        : aut_(aut)
       {}
 
-      void update(const Aut& a)
+      struct state_profile
+      {
+        state_profile(state_t state)
+          : state_(state)
+        {}
+
+        bool operator<(const state_profile& rhs) const
+        {
+          return std::make_tuple(rhs.size_, rhs.has_loop_, rhs.state_)
+                 < std::make_tuple(size_, has_loop_, state_);
+        }
+
+        friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
+        {
+          return o << p.state_
+                   << 's' << p.size_
+                   << 'l' << p.has_loop_;
+        }
+
+        size_t  size_;
+        state_t state_;
+        bool    has_loop_ = false;
+      };
+
+      state_profile
+      make_state_profile(state_t state)
+      {
+        state_profile p = state_profile(state);
+        update(p);
+        return p;
+      }
+
+      void update(state_profile& p)
       {
         size_t out = 0;
         // Since we are in LAO, there can be at most one such loop.
         // Don't count the loops as out-degree.
-        for (auto t: a->all_out(state_))
-          if (a->dst_of(t) != state_)
+        for (auto t: aut_->all_out(p.state_))
+          if (aut_->dst_of(t) != p.state_)
             ++out;
           else
-            has_loop_ = true;
-        size_t in = a->all_in(state_).size();
-        size_ = in * out;
+            p.has_loop_ = true;
+        size_t in = aut_->all_in(p.state_).size();
+        p.size_ = in * out;
       }
 
-      bool operator<(const naive_profile& rhs) const
-      {
-        return std::make_tuple(rhs.size_, rhs.has_loop_, rhs.state_)
-               < std::make_tuple(size_, has_loop_, state_);
-      }
-
-      friend std::ostream& operator<<(std::ostream& o, const naive_profile<Aut>& p)
-      {
-        return o << p.state_
-                 << 's' << p.size_
-                 << 'l' << p.has_loop_;
-      }
-
-      size_t  size_;
-      state_t state_;
-      bool    has_loop_ = false;
+      const automaton_t& aut_;
     };
 
-  /*-------------------.
-  | Delgado profile.   |
-  `-------------------*/
+    /*-------------------.
+    | Delgado profiler.  |
+    `-------------------*/
 
     template <typename Aut>
-    struct delgado_profile // FIXME Call label version
+    struct delgado_profiler
     {
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
-      delgado_profile(state_t state, bool count_labels = false)
-        : state_(state)
+      delgado_profiler(const automaton_t& aut, bool count_labels = false)
+        : aut_(aut)
         , count_labels_(count_labels)
       {}
+
+      struct state_profile
+      {
+        state_profile(state_t state)
+          : state_(state)
+        {}
+
+        bool operator<(const state_profile& rhs) const
+        {
+          return std::make_tuple(rhs.size_, rhs.state_)
+                 < std::make_tuple(size_, state_);
+        }
+
+        friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
+        {
+          return o << p.state_
+                   << 's' << p.size_;
+        }
+
+        size_t  size_;
+        state_t state_;
+      };
+
+      state_profile
+      make_state_profile(state_t state)
+      {
+        state_profile p = state_profile(state);
+        update(p);
+        return p;
+      }
 
       /// The "weight" of a transition.
       ///
       /// That is to say, the size of its expression.
-      size_t size_of_transition(transition_t t, const Aut& a) const
+      size_t size_of_transition(transition_t t) const
       {
         using expset_t = weightset_t_of<automaton_t>;
         if (count_labels_)
-          return rat::make_info<expset_t>(a->weight_of(t)).atom;
+          return rat::make_info<expset_t>(aut_->weight_of(t)).atom;
         else
-          return rat::size<expset_t>(a->weight_of(t));
+          return rat::size<expset_t>(aut_->weight_of(t));
       }
-
 
       /// The "weight" of a state, as defined by Degaldo/Morais.
       ///
       /// We use the word "size" instead, since "weight" has already a
       /// strong meaning in Vcsn...
-      void update(const Aut& a)
+      void update(state_profile& p)
       {
         // The cumulated size of the incoming transitions excluding loops.
         size_t size_in = 0;
@@ -109,47 +155,33 @@ namespace vcsn
         size_t ins = 0;
         // The size of the loop, if there is one.
         size_t size_loop = 0;
-        for (auto t: a->all_in(state_))
-          if (a->src_of(t) == state_)
-            size_loop += size_of_transition(t, a);
+        for (auto t: aut_->all_in(p.state_))
+          if (aut_->src_of(t) == p.state_)
+            size_loop += size_of_transition(t);
           else
             {
               ++ins;
-              size_in += size_of_transition(t, a);
+              size_in += size_of_transition(t);
             }
 
         // The cumulated size of the outgoing transitions excluding loops.
         size_t size_out = 0;
         // The number of outgoing transitions excluding loops.
         size_t outs = 0;
-        for (auto t: a->all_out(state_))
-          if (a->dst_of(t) != state_)
+        for (auto t: aut_->all_out(p.state_))
+          if (aut_->dst_of(t) != p.state_)
             {
               ++outs;
-              size_out += size_of_transition(t, a);
+              size_out += size_of_transition(t);
             }
 
-        size_ = (size_in * (outs - 1)
-                 + size_out * (ins - 1)
-                 + size_loop * (ins * outs - 1));
+        p.size_ = (size_in * (outs - 1)
+                   + size_out * (ins - 1)
+                   + size_loop * (ins * outs - 1));
       }
 
-      bool operator<(const delgado_profile& rhs) const
-      {
-        return std::make_tuple(rhs.size_, rhs.state_)
-               < std::make_tuple(size_, state_);
-      }
-
-      friend std::ostream& operator<<(std::ostream& o, const delgado_profile<Aut>& p)
-      {
-        return o << p.state_
-                 << 's' << p.size_;
-      }
-
-
-      size_t  size_;
-      state_t state_;
-      bool    count_labels_;
+      const automaton_t& aut_;
+      bool count_labels_;
     };
   }
 
@@ -159,23 +191,23 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut, typename Profile,
+    template <typename Aut, typename Profiler,
              typename Kind = typename context_t_of<Aut>::kind_t>
     struct state_eliminator;
 
     /// Eliminate states in an automaton whose labelset is oneset.
-    template <typename Aut, typename Profile>
-    struct state_eliminator<Aut, Profile, labels_are_one>
+    template <typename Aut, typename Profiler>
+    struct state_eliminator<Aut, Profiler, labels_are_one>
     {
+      using profiler_t = Profiler;
+      using profile_t = typename profiler_t::state_profile;
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
-      /// State selector type.
-      using state_chooser_t = std::function<state_t(const automaton_t&)>;
-      using profile_t = Profile;
 
-      state_eliminator(automaton_t& aut)
+      state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
+        , profiler_(profiler)
       {}
 
       /// Build the profiles and the heap
@@ -183,9 +215,7 @@ namespace vcsn
       {
         for (auto s: aut_->states())
           {
-            auto p = profile_t(s);
-            p.update(aut_);
-            auto h = todo_.emplace(p);
+            auto h = todo_.emplace(profiler_.make_state_profile(s));
             handles_.emplace(s, h);
           }
       }
@@ -194,7 +224,7 @@ namespace vcsn
       void update_profile_(state_t s)
       {
         if (auto p = profile(s))
-          p->update(aut_);
+          profiler_.update(*p);
       }
 
       /// Update the heap for \a s.
@@ -322,6 +352,8 @@ namespace vcsn
     private:
       /// The automaton we work on.
       automaton_t& aut_;
+      /// The profiler we work with. Corresponding to a specific heuristic.
+      profiler_t& profiler_;
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
 
@@ -334,10 +366,9 @@ namespace vcsn
       std::unordered_set<state_t> neighbors_;
     };
 
-
     /// Eliminate states in an automaton whose labelset is an expressionset.
-    template <typename Aut, typename Profile>
-    struct state_eliminator<Aut, Profile, labels_are_expressions>
+    template <typename Aut, typename Profiler>
+    struct state_eliminator<Aut, Profiler, labels_are_expressions>
     {
       // FIXME: expressionset<lal_char(a-c), z>, q for instance cannot
       // work, because we need to move the q weights inside the
@@ -348,16 +379,16 @@ namespace vcsn
       // Yet as of 2014-07, there is no means to check that subtype
       // relationship in Vcsn.
 
+      using profiler_t = Profiler;
+      using profile_t = typename profiler_t::state_profile;
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
       using expressionset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
-      /// State selector type.
-      using state_chooser_t = std::function<state_t(const automaton_t&)>;
-      using profile_t = Profile;
 
-      state_eliminator(automaton_t& aut)
+      state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
+        , profiler_(profiler)
       {}
 
       /// Build the profiles and the heap
@@ -365,9 +396,7 @@ namespace vcsn
       {
         for (auto s: aut_->states())
           {
-            auto p = profile_t(s);
-            p.update(aut_);
-            auto h = todo_.emplace(p);
+            auto h = todo_.emplace(profiler_.make_state_profile(s));
             handles_.emplace(s, h);
           }
       }
@@ -376,7 +405,7 @@ namespace vcsn
       void update_profile_(state_t s)
       {
         if (auto p = profile(s))
-          p->update(aut_);
+          profiler_.update(*p);
       }
 
       /// Update the heap for \a s.
@@ -469,6 +498,8 @@ namespace vcsn
     private:
       /// The automaton we work on.
       automaton_t& aut_;
+      /// The profiler we work with. Corresponding to a specific heuristic.
+      profiler_t& profiler_;
       /// Shorthand to the labelset, which is an expressionset.
       const expressionset_t& rs_ = *aut_->labelset();
       /// Shorthand to the weightset.
@@ -483,11 +514,11 @@ namespace vcsn
       std::unordered_set<state_t> neighbors_;
     };
 
-    template <typename Aut, typename Profile>
-    state_eliminator<Aut, Profile>
-    make_state_eliminator(Aut& a)
+    template <typename Aut, typename Profiler>
+    state_eliminator<Aut, Profiler>
+    make_state_eliminator(Aut& a, Profiler& profiler)
     {
-      return a;
+      return state_eliminator<Aut, Profiler>(a, profiler);
     }
   }
 
@@ -498,8 +529,8 @@ namespace vcsn
   eliminate_state_here(Aut& res,
                        state_t_of<Aut> s = Aut::element_type::null_state())
   {
-    auto eliminate_state
-      = detail::make_state_eliminator<Aut, detail::naive_profile<Aut>>(res);
+    auto profiler = detail::naive_profiler<Aut>(res);
+    auto eliminate_state = detail::make_state_eliminator(res, profiler);
     eliminate_state(s);
     return res;
   }
@@ -551,12 +582,12 @@ namespace vcsn
   `----------------------------*/
 
   template <typename Aut,
-            typename Profile,
+            typename Profiler,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression(Aut& a)
+  to_expression(Aut& a, Profiler& profiler)
   {
-    auto eliminate_states = detail::make_state_eliminator<Aut, Profile>(a);
+    auto eliminate_states = detail::make_state_eliminator(a, profiler);
     eliminate_states();
     return a->get_initial_weight(a->post());
   }
@@ -572,30 +603,35 @@ namespace vcsn
   template <typename Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression_heuristic(const Aut& a, vcsn::rat::identities ids,
+  to_expression_heuristic(const Aut& aut, vcsn::rat::identities ids,
                           to_expression_heuristic_t algo)
   {
     // State elimination is performed on the lifted automaton.
-    auto aut = lift(a, ids);
+    auto a = lift(aut, ids);
+    using delgado_t = detail::delgado_profiler<decltype(a)>;
+    using naive_t = detail::naive_profiler<decltype(a)>;
     switch (algo)
     {
     case to_expression_heuristic_t::best:
       raise("next_state: invalid algorithm: best");
 
     case to_expression_heuristic_t::delgado:
-      return to_expression<decltype(aut),
-                           detail::delgado_profile<decltype(aut)>,
-                           ExpSet>(aut);
+      {
+        auto profiler = delgado_t(a);
+        return to_expression<decltype(a), delgado_t, ExpSet>(a, profiler);
+      }
 
     case to_expression_heuristic_t::delgado_label:
-      return to_expression<decltype(aut),
-                           detail::delgado_profile<decltype(aut)>,
-                           ExpSet>(aut);
-      // FIXME Delgado Label
+      {
+        auto profiler = delgado_t(a, true);
+        return to_expression<decltype(a), delgado_t, ExpSet>(a, profiler);
+      }
 
     case to_expression_heuristic_t::naive:
-      return to_expression<decltype(aut),
-                           detail::naive_profile<decltype(aut)>, ExpSet>(aut);
+      {
+        auto profiler = naive_t(a);
+        return to_expression<decltype(a), naive_t, ExpSet>(a, profiler);
+      }
     }
     BUILTIN_UNREACHABLE();
   }
