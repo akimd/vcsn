@@ -298,11 +298,19 @@ bench('a.proper()',
                'a = vcsn.context("lan_char(a), b").expression(r).thompson()'])
 
 # to-expression.
-r = '[a-d]?{9}'
-bench('a.expression("linear", "naive")',
+bench('a.expression("associative", "delgado")',
+      'a = ladybird(2000)',
+      setup = ['a = vcsn.context("lal_char(a-c), b").ladybird(2000)'])
+
+r = '[a-d]?{100}'
+bench('a.expression("associative", "naive")',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
                'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
+
+bench('a.expression("associative", "naive")',
+      'a = ladybird(8000)',
+      setup = ['a = vcsn.context("lal_char(a-c), b").ladybird(8000)'])
 
 r = '[a-d]?{15}'
 bench('a.expression("linear", "delgado")',
@@ -310,11 +318,20 @@ bench('a.expression("linear", "delgado")',
       setup = ['r = "{}"'.format(r),
                'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
 
-r = '[a-d]?{100}'
-bench('a.expression("associative", "naive")',
+bench('a.expression("linear", "delgado")',
+      'a = ladybird(2000)',
+      setup = ['a = vcsn.context("lal_char(a-c), b").ladybird(2000)'])
+
+r = '[a-d]?{9}'
+bench('a.expression("linear", "naive")',
       'a = std({})'.format(r),
       setup = ['r = "{}"'.format(r),
                'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
+
+
+bench('a.expression("linear", "naive")',
+      'a = ladybird(4000)',
+      setup = ['a = vcsn.context("lal_char(a-c), b").ladybird(4000)'])
 
 # Other conjunction and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new conjunction algorithm.
