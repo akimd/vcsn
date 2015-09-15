@@ -6,7 +6,6 @@ import tempfile
 import os
 import re
 import subprocess
-from functools import lru_cache
 from subprocess import PIPE
 
 from vcsn.conjunction import Conjunction
@@ -38,7 +37,6 @@ automaton._repr_svg_ = lambda self: self.as_svg()
 
 automaton.as_boxart = lambda self: _dot_to_boxart(self.dot())
 
-@lru_cache(maxsize = 32)
 def _automaton_as_svg(self, format = "dot", engine = "dot"):
     if format == "dot":
         return _dot_to_svg(self.dot(), engine)

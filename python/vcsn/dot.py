@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+
+from functools import lru_cache
 import locale
 import re
-import sys
-
 from subprocess import PIPE
+import sys
 
 from vcsn import _tmp_file, _popen, _check_call
 
@@ -80,6 +81,7 @@ def _dot_pretty(s, mode = "dot"):
     s = re.sub('^(.*)(\[.*\])$', _dot_gray_node, s, flags = re.MULTILINE);
     return s
 
+@lru_cache(maxsize = 32)
 def _dot_to_boxart(dot):
     dot = dot.replace('digraph', 'digraph a')
     p = _popen(["/opt/local/libexec/perl5.16/sitebin/graph-easy",
@@ -94,6 +96,7 @@ def _dot_to_boxart(dot):
         out = out.decode('utf-8')
     return out
 
+@lru_cache(maxsize = 32)
 def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
@@ -120,6 +123,7 @@ def _dot_to_svg(dot, engine="dot", *args):
         out = out.decode('utf-8')
     return out
 
+@lru_cache(maxsize = 32)
 def _dot_to_svg_dot2tex(dot, engine="dot", *args):
     '''The conversion of a Dot source into SVG by dot2tex.
 
