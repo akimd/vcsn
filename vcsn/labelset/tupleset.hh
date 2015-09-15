@@ -863,7 +863,7 @@ namespace vcsn
     template <std::size_t... I>
     auto
     get_letter(std::istream& i, bool quoted = true) const
-      -> decltype(get_letter_(i, quoted, indices))
+      -> decltype(this->get_letter_(i, quoted, indices))
     {
       bool par = i.peek() == '(';
       if (par)
