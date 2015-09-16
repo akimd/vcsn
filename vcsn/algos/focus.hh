@@ -362,7 +362,7 @@ namespace vcsn
 
       /// Copy the full wrapped transition.
       template <typename A>
-      weight_t
+      transition_t
       add_transition_copy(state_t src, state_t dst,
                           const A& aut,
                           typename A::element_type::transition_t t,
@@ -379,9 +379,9 @@ namespace vcsn
       }
 
       DEFINE(add_transition,
-             (state_t, state_t, label_t, weight_t) -> weight_t);
+             (state_t, state_t, label_t, weight_t) -> transition_t);
       DEFINE(add_transition,
-             (state_t, state_t, label_t) -> weight_t);
+             (state_t, state_t, label_t) -> transition_t);
       DEFINE(new_transition,
              (state_t, state_t, label_t, weight_t) -> transition_t);
       DEFINE(new_transition,

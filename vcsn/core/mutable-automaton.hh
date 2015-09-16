@@ -425,7 +425,7 @@ namespace vcsn
       set_initial(s, weightset()->one());
     }
 
-    weight_t
+    transition_t
     add_initial(state_t s, weight_t w)
     {
       return add_transition(pre(), s, prepost_label_, w);
@@ -449,7 +449,7 @@ namespace vcsn
       set_final(s, weightset()->one());
     }
 
-    weight_t
+    transition_t
     add_final(state_t s, weight_t w)
     {
       return add_transition(s, post(), prepost_label_, w);
@@ -631,22 +631,22 @@ namespace vcsn
     ///
     /// \pre the label is _not checked_, for efficiency.  Letters out
     /// of the alphabet will be accepted.
-    weight_t
+    transition_t
     add_transition(state_t src, state_t dst, label_t l, weight_t w)
     {
       transition_t t = get_transition(src, dst, l);
       if (t == null_transition())
-        new_transition(src, dst, l, w);
+        t = new_transition(src, dst, l, w);
       else
         {
           w = weightset()->add(weight_of(t), w);
-          set_weight(t, w);
+          t = set_weight(t, w);
         }
-      return w;
+      return t;
     }
 
     /// Same as above, with weight one.
-    weight_t
+    transition_t
     add_transition(state_t src, state_t dst, label_t l)
     {
       return add_transition(src, dst, l, weightset()->one());
@@ -661,7 +661,7 @@ namespace vcsn
     /// \param t    transition of \a aut whose label and weight are to copy
     /// \param transpose   whether label and weight should be transposed
     template <typename A>
-    weight_t
+    transition_t
     add_transition_copy(state_t src, state_t dst,
                         const A& aut, typename A::element_type::transition_t t,
                         bool transpose = false)
@@ -696,32 +696,35 @@ namespace vcsn
       return o.str();
     }
 
-    weight_t
+    transition_t
     set_weight(transition_t t, weight_t w)
     {
       if (weightset()->is_zero(w))
-        del_transition(t);
+        {
+          del_transition(t);
+          return null_transition();
+        }
       else
         transitions_[t].set_weight(w);
-      return w;
+      return t;
     }
 
     weight_t
     add_weight(transition_t t, weight_t w)
     {
-      return set_weight(t, weightset()->add(weight_of(t), w));
+      return weight_of(set_weight(t, weightset()->add(weight_of(t), w)));
     }
 
     weight_t
     lmul_weight(transition_t t, weight_t w)
     {
-      return set_weight(t, weightset()->mul(w, weight_of(t)));
+      return weight_of(set_weight(t, weightset()->mul(w, weight_of(t))));
     }
 
     weight_t
     rmul_weight(transition_t t, weight_t w)
     {
-      return set_weight(t, weightset()->mul(weight_of(t), w));
+      return weight_of(set_weight(t, weightset()->mul(weight_of(t), w)));
     }
 
 
