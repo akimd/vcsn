@@ -10,6 +10,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/polynomial.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
@@ -97,13 +98,13 @@ namespace vcsn
       {
         init_(expression);
 
-        auto expand = rat::to_expansion_visitor<expressionset_t>{rs_};
+        auto to_expansion = rat::to_expansion_visitor<expressionset_t>{rs_};
         while (!res_->todo_.empty())
           {
             expression_t src = res_->todo_.top();
             auto s = res_->state(src);
             res_->todo_.pop();
-            auto expansion = expand(src);
+            auto expansion = to_expansion(src);
             res_->set_final(s, expansion.constant);
             for (const auto& p: expansion.polynomials)
               if (breaking_)
@@ -140,34 +141,39 @@ namespace vcsn
   }
 
 
-  enum class derived_term_algo_t
-    {
-      derivation,
-      derivation_breaking,
-      expansion,
-      expansion_breaking,
-    };
-
-  /// From algo name to algo enum.
-  inline derived_term_algo_t derived_term_algo(std::string algo)
+  struct derived_term_algo
   {
-    // Normalize the name.
-    if (algo == "auto")
-      algo = "expansion";
-    else if (algo == "breaking_derivation")
-      algo = "derivation_breaking";
-    else if (algo == "breaking_expansion")
-      algo = "expansion_breaking";
+    enum algo_t
+      {
+        derivation,
+        expansion,
+      };
 
-#define CASE(Name)                                      \
-    if (algo == #Name) return derived_term_algo_t::Name;
-    CASE(derivation);
-    CASE(derivation_breaking);
-    CASE(expansion);
-    CASE(expansion_breaking);
-#undef CASE
-    raise("derived_term: invalid algorithm: ", algo);
-  }
+    derived_term_algo(algo_t a, bool b)
+      : algo(a)
+      , breaking(b)
+    {}
+
+    /// From algo name to algo.
+    derived_term_algo(const std::string& algo)
+    {
+      static const auto map = std::map<std::string, derived_term_algo>
+        {
+          //                          { algo, breaking }.
+          {"auto",                    {expansion, false}},
+          {"breaking_derivation",     {derivation, true}},
+          {"breaking_expansion",      {expansion, true}},
+          {"derivation",              {derivation, false}},
+          {"derivation_breaking",     {derivation, true}},
+          {"expansion",               {expansion, false}},
+          {"expansion_breaking",      {expansion, true}},
+        };
+      *this = getargs("derived-term algorithm", map, algo);
+    }
+
+    algo_t algo;
+    bool breaking = false;
+  };
 
   /// The derived-term automaton, for free labelsets.
   ///
@@ -183,12 +189,10 @@ namespace vcsn
                const std::string& algo = "auto")
   {
     auto a = derived_term_algo(algo);
-    bool breaking = (a == derived_term_algo_t::derivation_breaking
-                     || a == derived_term_algo_t::expansion_breaking);
-    detail::derived_termer<ExpSet> dt{rs, breaking};
-    bool expansion = (a == derived_term_algo_t::expansion
-                      || a == derived_term_algo_t::expansion_breaking);
-    return expansion ? dt.via_expansion(r) : dt.via_derivation(r);
+    detail::derived_termer<ExpSet> dt{rs, a.breaking};
+    return (a.algo == derived_term_algo::expansion
+            ? dt.via_expansion(r)
+            : dt.via_derivation(r));
   }
 
   /// The derived-term automaton, for non free labelsets.
@@ -205,12 +209,9 @@ namespace vcsn
                const std::string& algo = "auto")
   {
     auto a = derived_term_algo(algo);
-    bool breaking = (a == derived_term_algo_t::derivation_breaking
-                     || a == derived_term_algo_t::expansion_breaking);
-    detail::derived_termer<ExpSet> dt{rs, breaking};
-    require(a == derived_term_algo_t::expansion
-            || a == derived_term_algo_t::expansion_breaking,
+    require(a.algo == derived_term_algo::expansion,
             "derived_term: cannot use derivation on non-free labelsets");
+    detail::derived_termer<ExpSet> dt{rs, a.breaking};
     return dt.via_expansion(r);
   }
 
