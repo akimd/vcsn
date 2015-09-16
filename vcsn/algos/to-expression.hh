@@ -14,11 +14,6 @@
 
 namespace vcsn
 {
-
-  /*----------------.
-  | state_chooser.  |
-  `----------------*/
-
   namespace detail
   {
     /*----------------.
@@ -68,6 +63,9 @@ namespace vcsn
         return p;
       }
 
+      void invalidate_cache(transition_t)
+      {}
+
       void update(state_profile& p)
       {
         size_t out = 0;
@@ -99,6 +97,7 @@ namespace vcsn
       delgado_profiler(const automaton_t& aut, bool count_labels = false)
         : aut_(aut)
         , count_labels_(count_labels)
+        , transition_cache_(aut_->all_transitions().back() + 1, 0)
       {}
 
       struct state_profile
@@ -134,16 +133,32 @@ namespace vcsn
       /// The "weight" of a transition.
       ///
       /// That is to say, the size of its expression.
-      size_t size_of_transition(transition_t t) const
+      size_t size_of_transition(transition_t t)
       {
-        using expset_t = weightset_t_of<automaton_t>;
-        if (count_labels_)
-          return rat::make_info<expset_t>(aut_->weight_of(t)).atom;
-        else
-          return rat::size<expset_t>(aut_->weight_of(t));
+        auto& res = transition_cache_[t];
+        if (res == 0)
+          {
+            using expset_t = weightset_t_of<automaton_t>;
+            if (count_labels_)
+              res = rat::make_info<expset_t>(aut_->weight_of(t)).atom;
+            else
+              res = rat::size<expset_t>(aut_->weight_of(t));
+          }
+        return res;
       }
 
-      /// The "weight" of a state, as defined by Degaldo/Morais.
+      /// Updating transitions' size in the cache during the profiler's
+      /// construction would be clearer but appear to be less efficient.
+      /// Invalidate Update
+      /// 0.29s      0.37s : a.expression(linear, delgado) # a = std([a-d]?{15})
+      void invalidate_cache(transition_t t)
+      {
+        if (transition_cache_.size() <= t)
+          transition_cache_.resize(t + 1, 0);
+        transition_cache_[t] = 0;
+      }
+
+      /// The "weight" of a state, as defined by Delgado/Morais.
       ///
       /// We use the word "size" instead, since "weight" has already a
       /// strong meaning in Vcsn...
@@ -182,6 +197,7 @@ namespace vcsn
 
       const automaton_t& aut_;
       bool count_labels_;
+      std::vector<size_t> transition_cache_;
     };
   }
 
@@ -279,7 +295,7 @@ namespace vcsn
             s = p.state_;
           }
         require(aut_->has_state(s), "not a valid state: ", s);
-       // The loop's weight.
+        // The loop's weight.
         auto loop = ws_.zero();
         assert(aut_->outin(s, s).size() <= 1);
         // There is a single possible loop labeled by \e, but it's
@@ -295,10 +311,13 @@ namespace vcsn
         auto outs = aut_->all_out(s);
         for (auto in: aut_->all_in(s))
           for (auto out: outs)
-            aut_->add_transition
-              (aut_->src_of(in), aut_->dst_of(out),
-               aut_->label_of(in),
-               ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
+            {
+              auto t = aut_->add_transition
+                (aut_->src_of(in), aut_->dst_of(out),
+                 aut_->label_of(in),
+                 ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
+              profiler_.invalidate_cache(t);
+            }
 
         aut_->del_state(s);
       }
@@ -529,6 +548,7 @@ namespace vcsn
   eliminate_state_here(Aut& res,
                        state_t_of<Aut> s = Aut::element_type::null_state())
   {
+    /// Delgado profiler not fit for lao with non expression weightset.
     auto profiler = detail::naive_profiler<Aut>(res);
     auto eliminate_state = detail::make_state_eliminator(res, profiler);
     eliminate_state(s);
