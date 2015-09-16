@@ -67,9 +67,11 @@ namespace vcsn
       using polynomialset_t = rat::expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      derived_termer(const expressionset_t& rs, bool breaking = false)
+      derived_termer(const expressionset_t& rs,
+                     bool breaking = false, bool determinize = false)
         : rs_(rs)
         , breaking_(breaking)
+        , determinize_(determinize)
         , res_{make_shared_ptr<automaton_t>(rs_)}
       {}
 
@@ -106,6 +108,11 @@ namespace vcsn
             res_->todo_.pop();
             auto expansion = to_expansion(src);
             res_->set_final(s, expansion.constant);
+            if (determinize_)
+              {
+                auto es = rat::expansionset<expressionset_t>{rs_};
+                expansion = es.determinize(expansion);
+              }
             for (const auto& p: expansion.polynomials)
               if (breaking_)
                 for (const auto& m1: p.second)
@@ -135,23 +142,27 @@ namespace vcsn
       weightset_t ws_ = *rs_.weightset();
       /// Whether to break the polynomials.
       bool breaking_ = false;
+      /// Whether to determinize the result, when using expansions.
+      bool determinize_ = false;
       /// The resulting automaton.
       automaton_t res_;
     };
   }
 
-
+  /// Specify a variety of derived-term construction.
   struct derived_term_algo
   {
+    /// Core algorithms.
     enum algo_t
       {
         derivation,
         expansion,
       };
 
-    derived_term_algo(algo_t a, bool b)
+    derived_term_algo(algo_t a, bool b, bool d)
       : algo(a)
       , breaking(b)
+      , determinize(d)
     {}
 
     /// From algo name to algo.
@@ -159,20 +170,27 @@ namespace vcsn
     {
       static const auto map = std::map<std::string, derived_term_algo>
         {
-          //                          { algo, breaking }.
-          {"auto",                    {expansion, false}},
-          {"breaking_derivation",     {derivation, true}},
-          {"breaking_expansion",      {expansion, true}},
-          {"derivation",              {derivation, false}},
-          {"derivation_breaking",     {derivation, true}},
-          {"expansion",               {expansion, false}},
-          {"expansion_breaking",      {expansion, true}},
+          //                          { algo, breaking, deterministic }.
+          {"auto",                    {expansion,  false, false}},
+          {"breaking_derivation",     {derivation, true,  false}},
+          {"breaking_expansion",      {expansion,  true,  false}},
+          {"derivation",              {derivation, false, false}},
+          {"derivation_breaking",     {derivation, true,  false}},
+          {"expansion",               {expansion,  false, false}},
+          {"expansion_breaking",      {expansion,  true,  false}},
+          {"expansion,deterministic", {expansion,  false, true}},
         };
       *this = getargs("derived-term algorithm", map, algo);
     }
 
+    /// Core algorithm.
     algo_t algo;
+    /// Whether to break sums.
     bool breaking = false;
+    /// Whether to determinize the expansions and produce a
+    /// deterministic automaton, at the expense of possibly not
+    /// terminating.
+    bool determinize = false;
   };
 
   /// The derived-term automaton, for free labelsets.
@@ -189,7 +207,7 @@ namespace vcsn
                const std::string& algo = "auto")
   {
     auto a = derived_term_algo(algo);
-    detail::derived_termer<ExpSet> dt{rs, a.breaking};
+    detail::derived_termer<ExpSet> dt{rs, a.breaking, a.determinize};
     return (a.algo == derived_term_algo::expansion
             ? dt.via_expansion(r)
             : dt.via_derivation(r));
@@ -211,7 +229,7 @@ namespace vcsn
     auto a = derived_term_algo(algo);
     require(a.algo == derived_term_algo::expansion,
             "derived_term: cannot use derivation on non-free labelsets");
-    detail::derived_termer<ExpSet> dt{rs, a.breaking};
+    detail::derived_termer<ExpSet> dt{rs, a.breaking, a.determinize};
     return dt.via_expansion(r);
   }
 

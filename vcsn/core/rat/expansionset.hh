@@ -406,11 +406,27 @@ namespace vcsn
         return res;
       }
 
+    public:
+      value_t
+      determinize(const value_t& v) const
+      {
+        value_t res;
+        res.constant = v.constant;
+
+        // Turn the polynomials into expressions, and normalize them.
+        for (const auto& lp: v.polynomials)
+          {
+            polynomial_t p = lp.second;
+            weight_t w = ps_.normalize_here(p);
+            res.polynomials[lp.first] = {{ps_.to_label(p), w}};
+          }
+        return res;
+      }
+
       /*---------------.
       | tuple(v...).   |
       `---------------*/
 
-    public:
       /// The type of the expansionsset for tape Tape.
       template <unsigned Tape>
       using focus_t
