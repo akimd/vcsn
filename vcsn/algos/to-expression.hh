@@ -63,8 +63,9 @@ namespace vcsn
         return p;
       }
 
-      void invalidate_cache(transition_t)
-      {}
+      void update_cache(transition_t, size_t)
+      {
+      }
 
       void update(state_profile& p)
       {
@@ -98,7 +99,10 @@ namespace vcsn
         : aut_(aut)
         , count_labels_(count_labels)
         , transition_cache_(aut_->all_transitions().back() + 1, 0)
-      {}
+      {
+        for (auto t: aut_->all_transitions())
+          set_cache(t);
+      }
 
       struct state_profile
       {
@@ -135,27 +139,27 @@ namespace vcsn
       /// That is to say, the size of its expression.
       size_t size_of_transition(transition_t t)
       {
-        auto& res = transition_cache_[t];
-        if (res == 0)
-          {
-            using expset_t = weightset_t_of<automaton_t>;
-            if (count_labels_)
-              res = rat::make_info<expset_t>(aut_->weight_of(t)).atom;
-            else
-              res = rat::size<expset_t>(aut_->weight_of(t));
-          }
-        return res;
+        return transition_cache_[t];
       }
 
       /// Updating transitions' size in the cache during the profiler's
       /// construction would be clearer but appear to be less efficient.
       /// Invalidate Update
       /// 0.29s      0.37s : a.expression(linear, delgado) # a = std([a-d]?{15})
-      void invalidate_cache(transition_t t)
+      void set_cache(transition_t t)
+      {
+        using expset_t = weightset_t_of<automaton_t>;
+        if (count_labels_)
+          transition_cache_[t] = rat::make_info<expset_t>(aut_->weight_of(t)).atom;
+        else
+          transition_cache_[t] = rat::size<expset_t>(aut_->weight_of(t));
+      }
+
+      void update_cache(transition_t t, size_t size)
       {
         if (transition_cache_.size() <= t)
-          transition_cache_.resize(t + 1, 0);
-        transition_cache_[t] = 0;
+          transition_cache_.resize(t + size, 0);
+        set_cache(t);
       }
 
       /// The "weight" of a state, as defined by Delgado/Morais.
@@ -308,15 +312,16 @@ namespace vcsn
         loop = ws_.star(loop);
 
         // Get all the predecessors, and successors, except itself.
+        auto ins = aut_->all_in(s);
         auto outs = aut_->all_out(s);
-        for (auto in: aut_->all_in(s))
+        for (auto in: ins)
           for (auto out: outs)
             {
               auto t = aut_->add_transition
                 (aut_->src_of(in), aut_->dst_of(out),
                  aut_->label_of(in),
                  ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
-              profiler_.invalidate_cache(t);
+              profiler_.update_cache(t, ins.size() * outs.size());
             }
 
         aut_->del_state(s);
@@ -474,7 +479,7 @@ namespace vcsn
           for (auto out: outs)
             aut_->add_transition
               (aut_->src_of(in), aut_->dst_of(out),
-              rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
+               rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
                        loop,
                        rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
 
