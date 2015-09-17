@@ -233,7 +233,7 @@ namespace vcsn
               return letter_t{res};
             }
           else
-            return letter_t{c};
+            return letter_t{1, c};
         }
       else
         return letter_t{std::string{std::istreambuf_iterator<char>(i), {}}};
