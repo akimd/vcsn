@@ -26,7 +26,7 @@ def sub(pattern, repl, string, *args, **kwargs):
 
 def demangle_regex(s):
     # C++.
-    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|less|map|pair|set|shared_ptr|string|tuple)',
+    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|forward|less|make_shared|map|pair|set|shared_ptr|string|tuple)',
             r'std::\1',
             s)
     s = sub(r'std::basic_string<char(?:,\s*(?:std::)?char_traits<char>,\s*(?:std::)?allocator<char>\s*)?>',
