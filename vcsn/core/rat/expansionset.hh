@@ -407,19 +407,14 @@ namespace vcsn
       }
 
     public:
+      /// Turn the polynomials into (normalized) monomials.
       value_t
       determinize(const value_t& v) const
       {
         value_t res;
         res.constant = v.constant;
-
-        // Turn the polynomials into expressions, and normalize them.
         for (const auto& lp: v.polynomials)
-          {
-            polynomial_t p = lp.second;
-            weight_t w = ps_.normalize_here(p);
-            res.polynomials[lp.first] = {{ps_.to_label(p), w}};
-          }
+          res.polynomials[lp.first] = {ps_.determinize(lp.second)};
         return res;
       }
 

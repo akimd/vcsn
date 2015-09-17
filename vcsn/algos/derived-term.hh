@@ -44,10 +44,13 @@ namespace vcsn
             {"breaking_derivation",     {derivation, true,  false}},
             {"breaking_expansion",      {expansion,  true,  false}},
             {"derivation",              {derivation, false, false}},
+            {"derivation,breaking",     {derivation, true,  false}},
+            {"derivation,deterministic",{derivation, false,  true}},
             {"derivation_breaking",     {derivation, true,  false}},
             {"expansion",               {expansion,  false, false}},
-            {"expansion_breaking",      {expansion,  true,  false}},
+            {"expansion,breaking",      {expansion,  true,  false}},
             {"expansion,deterministic", {expansion,  false, true}},
+            {"expansion_breaking",      {expansion,  true,  false}},
           };
         *this = getargs("derived-term algorithm", map, algo);
       }
@@ -107,10 +110,6 @@ namespace vcsn
       using automaton_t = expression_automaton<mutable_automaton<context_t>>;
       using state_t = state_t_of<automaton_t>;
 
-      /// Symbolic states: the derived terms are polynomials of expressions.
-      using polynomialset_t = rat::expression_polynomialset_t<expressionset_t>;
-      using polynomial_t = typename polynomialset_t::value_t;
-
       derived_termer(const expressionset_t& rs, derived_term_algo algo)
         : rs_(rs)
         , algo_(algo)
@@ -140,8 +139,17 @@ namespace vcsn
             res_->todo_.pop();
             res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
-              for (const auto& m: derivation(rs_, src, l, algo_.breaking))
-                res_->new_transition(s, label_of(m), l, weight_of(m));
+              {
+                auto p = derivation(rs_, src, l, algo_.breaking);
+                if (algo_.determinize)
+                  {
+                    auto m = ps_.determinize(p);
+                    res_->new_transition(s, label_of(m), l, weight_of(m));
+                  }
+                else
+                  for (const auto& m: p)
+                    res_->new_transition(s, label_of(m), l, weight_of(m));
+              }
           }
         return res_;
       }
@@ -170,6 +178,11 @@ namespace vcsn
                   for (const auto& m2: split(rs_, label_of(m1)))
                     res_->new_transition(s, label_of(m2), p.first,
                                          ws_.mul(weight_of(m1), weight_of(m2)));
+              else if (algo_.determinize)
+                {
+                  auto m = ps_.determinize(p.second);
+                  res_->new_transition(s, label_of(m), p.first, weight_of(m));
+                }
               else
                 for (const auto& m: p.second)
                   res_->new_transition(s, label_of(m), p.first, weight_of(m));
@@ -191,6 +204,9 @@ namespace vcsn
       expressionset_t rs_;
       /// Its weightset.
       weightset_t ws_ = *rs_.weightset();
+      /// The polynomialset for expressions.
+      using polynomialset_t = rat::expression_polynomialset_t<expressionset_t>;
+      polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// How derived terms are computed.
       derived_term_algo algo_;
       /// The resulting automaton.

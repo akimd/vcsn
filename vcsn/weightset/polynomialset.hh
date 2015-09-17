@@ -727,6 +727,15 @@ namespace vcsn
       return res;
     }
 
+    /// "Determinize" this polynomial: turn into a monomial.
+    ///
+    /// Requires a rather powerful labelset, typically expressionset.
+    monomial_t determinize(value_t v) const
+    {
+      weight_t w = normalize_here(v);
+      return {to_label(v), w};
+    }
+
     /// Complement this polynomial.
     ///
     /// Requires a rather powerful labelset, typically expressionset.

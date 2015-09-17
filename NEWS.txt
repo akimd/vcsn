@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-09-17
+### derived-term: deterministic automata
+One can now require the construction of a deterministic automaton; there are
+two new algorithms: `expansion,deterministic` and `derivation,deterministic`.
+
 ## 2015-09-15
 ### Named automata
 It is (finally) possible to keep user state names thanks to
