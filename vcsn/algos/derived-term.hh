@@ -16,12 +16,56 @@
 
 namespace vcsn
 {
-  /*----------------------------.
-  | derived_term(expression).   |
-  `----------------------------*/
-
   namespace detail
   {
+    /// Specify a variety of derived-term construction.
+    struct derived_term_algo
+    {
+      /// Core algorithms.
+      enum algo_t
+        {
+          derivation,
+          expansion,
+        };
+
+      derived_term_algo(algo_t a, bool b, bool d)
+        : algo(a)
+        , breaking(b)
+        , determinize(d)
+      {}
+
+      /// From algo name to algo.
+      derived_term_algo(const std::string& algo)
+      {
+        static const auto map = std::map<std::string, derived_term_algo>
+          {
+            //                          { algo, breaking, deterministic }.
+            {"auto",                    {expansion,  false, false}},
+            {"breaking_derivation",     {derivation, true,  false}},
+            {"breaking_expansion",      {expansion,  true,  false}},
+            {"derivation",              {derivation, false, false}},
+            {"derivation_breaking",     {derivation, true,  false}},
+            {"expansion",               {expansion,  false, false}},
+            {"expansion_breaking",      {expansion,  true,  false}},
+            {"expansion,deterministic", {expansion,  false, true}},
+          };
+        *this = getargs("derived-term algorithm", map, algo);
+      }
+
+      /// Core algorithm.
+      algo_t algo;
+      /// Whether to break sums.
+      bool breaking = false;
+      /// Whether to determinize the expansions and produce a
+      /// deterministic automaton, at the expense of possibly not
+      /// terminating.
+      bool determinize = false;
+    };
+
+    /*----------------------------.
+    | derived_term(expression).   |
+    `----------------------------*/
+
     /// Compute the derived-term automaton from an expression.
     ///
     /// Supports derivation/expansion as its core computation, with
@@ -67,13 +111,20 @@ namespace vcsn
       using polynomialset_t = rat::expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      derived_termer(const expressionset_t& rs,
-                     bool breaking = false, bool determinize = false)
+      derived_termer(const expressionset_t& rs, derived_term_algo algo)
         : rs_(rs)
-        , breaking_(breaking)
-        , determinize_(determinize)
+        , algo_(algo)
         , res_{make_shared_ptr<automaton_t>(rs_)}
       {}
+
+      /// Compute the derived-term automaton.
+      automaton_t operator()(const expression_t& expression)
+      {
+        if (algo_.algo == derived_term_algo::derivation)
+          return via_derivation(expression);
+        else
+          return via_expansion(expression);
+      }
 
       /// Compute the derived-term automaton via derivation.
       automaton_t via_derivation(const expression_t& expression)
@@ -89,7 +140,7 @@ namespace vcsn
             res_->todo_.pop();
             res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
-              for (const auto& m: derivation(rs_, src, l, breaking_))
+              for (const auto& m: derivation(rs_, src, l, algo_.breaking))
                 res_->new_transition(s, label_of(m), l, weight_of(m));
           }
         return res_;
@@ -99,22 +150,22 @@ namespace vcsn
       automaton_t via_expansion(const expression_t& expression)
       {
         init_(expression);
+        // Might be needed to determinize.
+        auto es = rat::expansionset<expressionset_t>{rs_};
 
         auto to_expansion = rat::to_expansion_visitor<expressionset_t>{rs_};
         while (!res_->todo_.empty())
           {
             expression_t src = res_->todo_.top();
-            auto s = res_->state(src);
             res_->todo_.pop();
+            auto s = res_->state(src);
             auto expansion = to_expansion(src);
+            if (algo_.determinize)
+              expansion = es.determinize(expansion);
+
             res_->set_final(s, expansion.constant);
-            if (determinize_)
-              {
-                auto es = rat::expansionset<expressionset_t>{rs_};
-                expansion = es.determinize(expansion);
-              }
             for (const auto& p: expansion.polynomials)
-              if (breaking_)
+              if (algo_.breaking)
                 for (const auto& m1: p.second)
                   for (const auto& m2: split(rs_, label_of(m1)))
                     res_->new_transition(s, label_of(m2), p.first,
@@ -129,7 +180,7 @@ namespace vcsn
     private:
       void init_(const expression_t& expression)
       {
-        if (breaking_)
+        if (algo_.breaking)
           for (const auto& p: split(rs_, expression))
             res_->set_initial(label_of(p), weight_of(p));
         else
@@ -140,58 +191,12 @@ namespace vcsn
       expressionset_t rs_;
       /// Its weightset.
       weightset_t ws_ = *rs_.weightset();
-      /// Whether to break the polynomials.
-      bool breaking_ = false;
-      /// Whether to determinize the result, when using expansions.
-      bool determinize_ = false;
+      /// How derived terms are computed.
+      derived_term_algo algo_;
       /// The resulting automaton.
       automaton_t res_;
     };
   }
-
-  /// Specify a variety of derived-term construction.
-  struct derived_term_algo
-  {
-    /// Core algorithms.
-    enum algo_t
-      {
-        derivation,
-        expansion,
-      };
-
-    derived_term_algo(algo_t a, bool b, bool d)
-      : algo(a)
-      , breaking(b)
-      , determinize(d)
-    {}
-
-    /// From algo name to algo.
-    derived_term_algo(const std::string& algo)
-    {
-      static const auto map = std::map<std::string, derived_term_algo>
-        {
-          //                          { algo, breaking, deterministic }.
-          {"auto",                    {expansion,  false, false}},
-          {"breaking_derivation",     {derivation, true,  false}},
-          {"breaking_expansion",      {expansion,  true,  false}},
-          {"derivation",              {derivation, false, false}},
-          {"derivation_breaking",     {derivation, true,  false}},
-          {"expansion",               {expansion,  false, false}},
-          {"expansion_breaking",      {expansion,  true,  false}},
-          {"expansion,deterministic", {expansion,  false, true}},
-        };
-      *this = getargs("derived-term algorithm", map, algo);
-    }
-
-    /// Core algorithm.
-    algo_t algo;
-    /// Whether to break sums.
-    bool breaking = false;
-    /// Whether to determinize the expansions and produce a
-    /// deterministic automaton, at the expense of possibly not
-    /// terminating.
-    bool determinize = false;
-  };
 
   /// The derived-term automaton, for free labelsets.
   ///
@@ -206,11 +211,9 @@ namespace vcsn
                const typename ExpSet::value_t& r,
                const std::string& algo = "auto")
   {
-    auto a = derived_term_algo(algo);
-    detail::derived_termer<ExpSet> dt{rs, a.breaking, a.determinize};
-    return (a.algo == derived_term_algo::expansion
-            ? dt.via_expansion(r)
-            : dt.via_derivation(r));
+    auto a = detail::derived_term_algo(algo);
+    auto dt = detail::derived_termer<ExpSet>{rs, a};
+    return dt(r);
   }
 
   /// The derived-term automaton, for non free labelsets.
@@ -226,10 +229,13 @@ namespace vcsn
                const typename ExpSet::value_t& r,
                const std::string& algo = "auto")
   {
-    auto a = derived_term_algo(algo);
-    require(a.algo == derived_term_algo::expansion,
+    auto a = detail::derived_term_algo(algo);
+    require(a.algo == detail::derived_term_algo::expansion,
             "derived_term: cannot use derivation on non-free labelsets");
-    detail::derived_termer<ExpSet> dt{rs, a.breaking, a.determinize};
+    // Do not call the operator(), this would trigger the compilation
+    // of via_derivation, which does not compile (on purpose) for non
+    // free labelsets.
+    auto dt = detail::derived_termer<ExpSet>{rs, a};
     return dt.via_expansion(r);
   }
 
@@ -249,5 +255,4 @@ namespace vcsn
       }
     }
   }
-
 } // vcsn::
