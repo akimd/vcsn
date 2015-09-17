@@ -62,9 +62,12 @@ def bench(stmt, comment, title = None, setup = ['pass'], number = 1):
                 print("run:", stmt)
             t = round(min(timeit.repeat(stmt, number = number)), 2)
             t = "{:5.2f}s".format(t)
-        except RuntimeError:
-            t = "FAIL"
+            err = None
+        except RuntimeError as err:
+            t = " FAIL"
         print("{:7s}: {:20s} # {}".format(t, title, comment))
+        if err:
+            print(err, file=sys.stderr)
         sys.stdout.flush()
 
 # Check the cost of dyn calls.
