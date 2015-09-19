@@ -204,7 +204,7 @@ namespace vcsn
     /// \returns   the previous status.
     bool open(bool o) const
     {
-      return this->labelset()->open(o);
+      return this->ls_->open(o);
     }
 
     static constexpr bool
@@ -247,7 +247,7 @@ namespace vcsn
     bool
     is_valid(value_t v) const
     {
-      return is_one(v) || labelset()->is_valid(get_value(v));
+      return is_one(v) || ls_->is_valid(get_value(v));
     }
 
     /// The generators.  Meaningful for labelsets only.
@@ -277,7 +277,7 @@ namespace vcsn
     value_t
     conv(const LabelSet_& ls, typename LabelSet_::value_t v) const
     {
-      return value(labelset()->conv(ls, v));
+      return value(ls_->conv(ls, v));
     }
 
     const labelset_ptr labelset() const
@@ -298,7 +298,7 @@ namespace vcsn
       if (is_one(l))
         return make_wordset(*labelset()).one();
       else
-        return labelset()->word(get_value(l));
+        return ls_->word(get_value(l));
     }
 
     /// Prepare to iterate over the letters of v.
@@ -404,26 +404,26 @@ namespace vcsn
       if (is_one(l))
         o << (fmt == format::latex ? "\\varepsilon" : "\\e");
       else
-        labelset()->print(get_value(l), o, fmt);
+        ls_->print(get_value(l), o, fmt);
       return o;
     }
 
     value_t
     zero() const
     {
-      return value(labelset()->zero());
+      return value(ls_->zero());
     }
 
     bool
     is_zero(const value_t& v) const
     {
-      return !is_one(v) && labelset()->is_zero(get_value(v));
+      return !is_one(v) && ls_->is_zero(get_value(v));
     }
 
     bool
     is_letter(const value_t& v) const
     {
-      return !is_one(v) && labelset()->is_letter(get_value(v));
+      return !is_one(v) && ls_->is_letter(get_value(v));
     }
 
     template <typename Value>
@@ -439,13 +439,13 @@ namespace vcsn
       if (fmt == format::latex)
         {
           o << "(";
-          labelset()->print_set(o, fmt);
+          ls_->print_set(o, fmt);
           o << ")^?";
         }
       else if (fmt == format::text)
         {
           o <<  "nullableset<";
-          labelset()->print_set(o, fmt);
+          ls_->print_set(o, fmt);
           o << '>';
         }
       else
