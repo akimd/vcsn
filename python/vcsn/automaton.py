@@ -47,6 +47,17 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
 
 automaton.as_svg = _automaton_as_svg
 
+# conjunction.
+_automaton_conjunction_orig = automaton.conjunction
+def _automaton_conjunction(*args, lazy = False):
+    if len(args) == 2 and isinstance(args[1], int):
+        return _automaton_conjunction_orig(*args)
+    elif lazy:
+        return automaton._conjunction_lazy(list(args))
+    else:
+        return _automaton_conjunction_orig(list(args))
+automaton.conjunction = _automaton_conjunction
+
 def _automaton_convert(self, mode, engine = "dot"):
     '''Display automaton `self` in `mode` with Graphviz `engine`.'''
     from IPython.display import SVG

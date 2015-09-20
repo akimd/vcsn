@@ -265,11 +265,17 @@ struct automaton
   {
     return vcsn::dyn::conjunction(val_, n);
   }
+  /// The type of the previous function.
+  using conjunction_repeated_t
+    = auto (automaton::*)(unsigned n) const -> automaton;
 
-  static automaton conjunction_(const boost::python::list& auts)
+  static automaton conjunction(const boost::python::list& auts)
   {
     return vcsn::dyn::conjunction(automata_(auts));
   }
+  /// The type of the previous function.
+  using conjunction_variadic_t
+    = auto (*)(const boost::python::list& auts) -> automaton;
 
   static automaton conjunction_lazy_(const boost::python::list& auts)
   {
@@ -479,14 +485,16 @@ struct automaton
     return vcsn::dyn::letterize(val_);
   }
 
-  automaton lift(const boost::python::list& tapes, const std::string& ids = "default") const
+  automaton lift(const boost::python::list& tapes,
+                 const std::string& ids = "default") const
   {
     return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes), identities(ids));
   }
 
   /// The type of the previous function.
   using lift_tapes_t
-    = auto (automaton::*)(const boost::python::list& tapes, const std::string& ids) const -> automaton;
+    = auto (automaton::*)(const boost::python::list& tapes,
+                          const std::string& ids) const -> automaton;
 
   automaton minimize(const std::string& algo = "auto") const
   {
@@ -1263,8 +1271,11 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("component", &automaton::component)
     .def("compose", &automaton::compose)
     .def("condense", &automaton::condense)
-    .def("conjunction", &automaton::conjunction)
-    .def("_conjunction", &automaton::conjunction_).staticmethod("_conjunction")
+    .def("conjunction",
+         static_cast<automaton::conjunction_repeated_t>(&automaton::conjunction))
+    .def("conjunction",
+         static_cast<automaton::conjunction_variadic_t>(&automaton::conjunction))
+        .staticmethod("conjunction")
     .def("_conjunction_lazy", &automaton::conjunction_lazy_)
         .staticmethod("_conjunction_lazy")
     .def("context", &automaton::context)

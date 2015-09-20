@@ -259,7 +259,7 @@ CHECK_EQ('''digraph
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]
   1 -> 2 [label = "a", color = DimGray]
-}''', vcsn.automaton._conjunction([vcsn.automaton('''
+}''', vcsn.automaton('''
 digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
@@ -271,7 +271,7 @@ digraph
   3 -> 2 [label = "b"]
   3 -> F
 }
-''')]))
+''').conjunction())
 
 # Four arguments.
 ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), q>')

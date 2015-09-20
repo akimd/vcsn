@@ -172,7 +172,7 @@ def prod(kind, args):
     of `*args`.'''
     if isinstance(args[0], vcsn.automaton):
         if kind == 'conjunction':
-            res = vcsn.automaton._conjunction(list(args))
+            res = vcsn.automaton.conjunction(*args)
         elif kind == 'infiltration':
             res = vcsn.automaton._infiltration(list(args))
         elif kind == 'shuffle':
