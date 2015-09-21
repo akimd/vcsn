@@ -32,7 +32,6 @@ import re
 # Bridges are dictionaries providing the following keys:
 #
 # args: the effective arguments (e.g., "aut, i").
-# call: 'call' or 'call_variadic'.
 # file: the vcsn/algos header that provides the bridge.
 # formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
 # algo: function name (e.g., multiply).
@@ -58,7 +57,7 @@ implementation = '''
   {return}
   {algo}({formals})
   {{
-    return detail::{reg}_registry().{call}({args});
+    return detail::{reg}_registry().call({args});
   }}
 
 '''
@@ -77,9 +76,6 @@ def process_file(fn):
             bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',
                                               r'\1',
                                               bridge['formals']).split(','))
-            # If the bridge if "foo_vector", it's actually for a
-            # variadic call.
-            bridge['call'] = 'call_variadic' if reg.endswith('_vector') else 'call'
             if reg in bridges:
                 raise RuntimeError("bridge multiply defined: " + reg)
             bridges[reg] = bridge
@@ -138,8 +134,7 @@ def output():
 namespace vcsn { namespace dyn {
 '''
     for f in sorted(bridges):
-        if f not in ['conjunction_vector',
-                     'focus',
+        if f not in ['focus',
                      'focus_context',
                      'lift_automaton',
                      'lift_automaton_tape',

@@ -53,29 +53,35 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename... ExpSets, size_t... I>
+      /// Bridge helper.
+      template <typename ExpSets, size_t... I>
       expression
       tuple_(const std::vector<expression>& es,
              vcsn::detail::index_sequence<I...>)
       {
-        auto rs = vcsn::tuple_expressionset(es[I]
-                                            ->template as<ExpSets>()
-                                            .expressionset()...);
-        return make_expression(rs,
-                               vcsn::tuple<decltype(rs), ExpSets...>
-                               (rs,
-                                es[I]
-                                ->template as<ExpSets>()
-                                .expression()...));
+        auto rs
+          = vcsn::tuple_expressionset
+          (es[I]
+           ->template as<std::tuple_element_t<I, ExpSets>>()
+           .expressionset()...);
+        return
+          make_expression
+          (rs,
+           vcsn::tuple<decltype(rs), std::tuple_element_t<I, ExpSets>...>
+           (rs,
+            es[I]
+            ->template as<std::tuple_element_t<I, ExpSets>>()
+            .expression()...));
       }
 
       /// Bridge (tuple).
-      template <typename... ExpSets>
+      template <typename ExpSets>
       expression
-      tuple_vector(const std::vector<expression>& es)
+      tuple_expression(const std::vector<expression>& es)
       {
-        auto indices = vcsn::detail::make_index_sequence<sizeof...(ExpSets)>{};
-        return tuple_<ExpSets...>(es, indices);
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<ExpSets>{}>{};
+        return tuple_<ExpSets>(es, indices);
       }
     }
   }

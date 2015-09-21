@@ -13,6 +13,7 @@
 // FIXME: I don't like that misc depends on dyn.  Actually, it is
 // misc/name.hh which should be elsewhere.
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/symbol.hh>
@@ -216,6 +217,25 @@ namespace vcsn
   /// The vname of a vector of dyn::automata is the tuple of their
   /// vnames.  This is used to dispatch variadic calls on vectors of
   /// automata to tuples of vcsn:: automata.
+  template <>
+  struct vnamer<const std::vector<dyn::expression>>
+  {
+    using type = const std::vector<dyn::expression>;
+    static symbol name(const type& t)
+    {
+      std::string names;
+      for (const auto& a: t)
+        {
+          if (!names.empty())
+            names += ", ";
+          names += vname(a);
+        }
+      return symbol{"std::tuple<" + names + '>'};
+    }
+  };
+
+  /// Likewise, for expressions.
+  // FIXME: Code duplication.
   template <>
   struct vnamer<const std::vector<dyn::automaton>>
   {

@@ -120,17 +120,6 @@ namespace vcsn
                     std::forward<Args>(args)...);
       }
 
-      template <typename T>
-      auto
-      call_variadic(const std::vector<T>& ts)
-        -> decltype(std::declval<Fun>()(ts))
-      {
-        signature sig;
-        for (const auto& t: ts)
-          sig.sig.emplace_back(vname(t));
-        return call(sig, ts);
-      }
-
     private:
       /// Function name (e.g., "determinize").
       std::string name_;

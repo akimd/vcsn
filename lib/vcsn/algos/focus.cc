@@ -13,13 +13,6 @@ namespace vcsn
     | conjunction.   |
     `---------------*/
 
-    REGISTER_DEFINE(conjunction_vector);
-    automaton
-    conjunction(const std::vector<automaton>& as, bool lazy)
-    {
-      return detail::conjunction_vector_registry().call(as, lazy);
-    }
-
     // Implement the binary case on top of the variadic one, to avoid
     // compiling it twice.
     automaton

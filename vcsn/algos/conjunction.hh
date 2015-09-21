@@ -612,8 +612,8 @@ namespace vcsn
       /// Bridge (conjunction).
       template <typename Auts, typename Bool>
       automaton
-      conjunction_vector(const std::vector<automaton>& as,
-                         bool lazy)
+      conjunction(const std::vector<automaton>& as,
+                  bool lazy)
       {
         auto indices
           = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
@@ -647,22 +647,23 @@ namespace vcsn
     namespace detail
     {
       /// Variadic bridge helper.
-      template <typename... Auts, size_t... I>
+      template <typename Auts, size_t... I>
       automaton
       shuffle_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        auto res = vcsn::shuffle(as[I]->as<Auts>()...);
+        auto res = vcsn::shuffle(as[I]->as<std::tuple_element_t<I, Auts>>()...);
         return make_automaton(res);
       }
 
       /// Bridge (shuffle).
-      template <typename... Auts>
+      template <typename Auts>
       automaton
-      shuffle_vector(const std::vector<automaton>& as)
+      shuffle(const std::vector<automaton>& as)
       {
-        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-        return shuffle_<Auts...>(as, indices);
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+        return shuffle_<Auts>(as, indices);
       }
     }
   }
@@ -735,22 +736,24 @@ namespace vcsn
     namespace detail
     {
       /// Variadic bridge helper.
-      template <typename... Auts, size_t... I>
+      template <typename Auts, size_t... I>
       automaton
       infiltration_(const std::vector<automaton>& as,
                     vcsn::detail::index_sequence<I...>)
       {
-        auto res = vcsn::infiltration(as[I]->as<Auts>()...);
+        auto res
+          = vcsn::infiltration(as[I]->as<std::tuple_element_t<I, Auts>>()...);
         return make_automaton(res);
       }
 
       /// Bridge (infiltration).
-      template <typename... Auts>
+      template <typename Auts>
       automaton
-      infiltration_vector(const std::vector<automaton>& as)
+      infiltration(const std::vector<automaton>& as)
       {
-        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-        return infiltration_<Auts...>(as, indices);
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+        return infiltration_<Auts>(as, indices);
       }
     }
   }
