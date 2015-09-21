@@ -93,34 +93,37 @@ namespace vcsn
         return aut_->origins();
       }
 
-      std::set<state_t> done;
+      /// When performing the lazy construction, list of states that
+      /// have been completed (i.e., their outgoing transitions have
+      /// been computed).
+      std::set<state_t> done_;
 
-      /// Compute the accessible states.
+      /// Complete a state: find its outgoing transitions.
+      void complete_(state_t s)
+      {
+        const auto& orig = origins();
+        state_name_t sn = orig.at(s);
+        add_conjunction_transitions(s, sn);
+        done_.insert(s);
+      }
+
+      /// All the outgoing transitions.
       using super_t::all_out;
       auto all_out(state_t s)
         -> decltype(aut_->all_out(s))
       {
-        if (!has(done, s))
-          {
-            const auto& orig = origins();
-            state_name_t sn = orig.at(s);
-            add_conjunction_transitions(s, sn);
-            done.insert(s);
-          }
+        if (!has(done_, s))
+          complete_(s);
         return aut_->all_out(s);
       }
 
+      /// All the outgoing transitions satisfying the predicate.
       template <typename Pred>
       auto all_out(state_t s, Pred pred)
         -> decltype(aut_->all_out(s, pred))
       {
-        if (!has(done, s))
-          {
-            const auto& orig = origins();
-            state_name_t sn = orig.at(s);
-            add_conjunction_transitions(s, sn);
-            done.insert(s);
-          }
+        if (!has(done_, s))
+          complete_(s);
         return aut_->all_out(s, pred);
       }
 
@@ -178,6 +181,8 @@ namespace vcsn
           }
       }
 
+      /// Start the lazy computation of the (accessible part of the)
+      /// conjunction.
       void conjunction_lazy()
       {
         initialize_conjunction();
@@ -205,20 +210,19 @@ namespace vcsn
         // just conjunction and shuffle in series.  For instance, consider
         // three automata:
         //
-        //          <x>a
-        // x = -> 0 -----> 1 ->
+        //           <x>a
+        // x = -> 0 ------> 1 ->
         //
-        // and likewise for y and z.  Let's use # to denote infiltration.
-        // In (x # y) there is a transition ((0,0), <xy>a, (1,1)) coming
-        // from the conjunction-like transitions.
+        // and likewise for y and z.  Let's use `&:` to denote
+        // infiltration.  In (x &: y) there is a transition ((0,0),
+        // <xy>a, (1,1)) coming from the conjunction-like transitions.
         //
-        // Therefore in (x # y) # z there is a transition
-        // ((0,0),0), <xy>a, (1,1), 0) by virtue of the shuffle-like
-        // transitions.
+        // Therefore in (x &: y) &: z there is a transition ((0,0),0),
+        // <xy>a, (1,1), 0) by virtue of the shuffle-like transitions.
         //
-        // This kind of transition that mixes conjunction and shuffle would
-        // never appear in a naive implementation with only conjunction
-        // and shuffle transitions, but no combinations.
+        // This kind of transition that mixes conjunction and shuffle
+        // would never appear in a naive implementation with only
+        // conjunction and shuffle transitions, but no combinations.
         require(sizeof...(Auts) == 2,
                 "infiltration: variadic product does not work");
 
