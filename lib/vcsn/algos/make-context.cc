@@ -20,8 +20,8 @@ namespace vcsn
     context
     make_context(const std::string& n)
     {
-      symbol sname{ast::normalize(n, false)};
-      std::string full_name = ast::normalize(n, true);
+      symbol sname{ast::normalize_context(n, false)};
+      std::string full_name = ast::normalize_context(n, true);
       if (!detail::make_context_registry().get0({sname}))
         vcsn::dyn::compile(sname);
       return detail::make_context_registry().call({sname}, full_name);

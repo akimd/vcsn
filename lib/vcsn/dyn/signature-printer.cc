@@ -9,14 +9,14 @@ namespace vcsn
   namespace ast
   {
 
-    std::string normalize(const std::string& sig, bool full)
+    std::string normalize_context(const std::string& ctx, bool full)
     {
       std::ostringstream os;
       ast::signature_printer printer(os, full);
       std::istringstream is;
       ast::context_parser parser(is);
-      is.str(sig);
-      auto ast = parser.parse();
+      is.str(ctx);
+      auto ast = parser.parse_context();
       ast->accept(printer);
       return os.str();
     }
@@ -124,6 +124,5 @@ namespace vcsn
       t.get_content()->accept(*this);
       os_ << '>';
     }
-
   }
 }
