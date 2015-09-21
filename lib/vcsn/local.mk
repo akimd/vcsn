@@ -39,14 +39,11 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/edit-automaton.cc                   \
   %D%/algos/efsm.cc                             \
   %D%/algos/fado.cc                             \
-  %D%/algos/focus.cc                            \
   %D%/algos/fwd.hh                              \
-  %D%/algos/lift.cc                             \
-  %D%/algos/make-context.cc                     \
+  %D%/algos/others.cc                           \
   %D%/algos/print.cc                            \
   %D%/algos/read.cc                             \
   %D%/algos/registry.hh                         \
-  %D%/algos/to-automaton.cc                     \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \
