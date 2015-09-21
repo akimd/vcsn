@@ -45,6 +45,19 @@ namespace vcsn
       t.get_weightset()->accept(*this);
     }
 
+    DEFINE(tuple)
+    {
+      os_ << "std::tuple<";
+      auto v = t.get_sets();
+      for (unsigned int i = 0; i < v.size() - 1; ++i)
+      {
+        v[i]->accept(*this);
+        os_ << ", ";
+      }
+      v[v.size() - 1]->accept(*this);
+      os_ << '>';
+    }
+
     DEFINE(tupleset)
     {
       os_ << "lat<";

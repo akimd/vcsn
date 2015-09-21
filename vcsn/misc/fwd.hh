@@ -2,8 +2,9 @@
 
 namespace vcsn
 {
+  // misc/name.hh.
   struct signature;
 
-  // wet.hh
+  // misc/wet.hh
   enum class wet_kind_t;
 }

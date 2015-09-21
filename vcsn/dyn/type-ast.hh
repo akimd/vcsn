@@ -82,6 +82,33 @@ namespace vcsn
       value_t sets_;
     };
 
+    class tuple: public ast_node
+    {
+    public:
+      using value_t = std::vector<std::shared_ptr<ast_node>>;
+
+      tuple(const value_t& sets)
+        : sets_(sets)
+      {}
+
+      const value_t get_sets() const
+      {
+        return sets_;
+      }
+
+      ACCEPT()
+      virtual bool has_one() const
+      {
+        for (auto s : get_sets())
+          if (!s->has_one())
+            return false;
+        return true;
+      }
+
+    private:
+      value_t sets_;
+    };
+
     class nullableset : public ast_node
     {
     public:

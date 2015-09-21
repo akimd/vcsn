@@ -80,6 +80,12 @@ namespace vcsn
         res = expansionset_();
       else if (w == "polynomialset")
         res = polynomialset_();
+      else if (w == "std::tuple")
+        {
+          res = tuple_();
+          if (is_.peek() == ',')
+            res = context_(res);
+        }
       else
         // int,
         // std::integral_constant<unsigned, 2>,
@@ -342,6 +348,21 @@ namespace vcsn
       else
         raise("invalid automaton name: ", str_escape(prefix));
       return res;
+    }
+
+    std::shared_ptr<tuple>
+    context_parser::tuple_()
+    {
+      eat(is_, '<');
+      typename tuple::value_t res;
+      res.emplace_back(any_());
+      while (is_.peek() == ',')
+      {
+        eat(is_, ',');
+        res.emplace_back(any_());
+      }
+      eat(is_, '>');
+      return std::make_shared<tuple>(res);
     }
 
     std::shared_ptr<tupleset>

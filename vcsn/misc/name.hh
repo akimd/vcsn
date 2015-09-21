@@ -10,6 +10,9 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/core/rat/identities.hh>
+// FIXME: I don't like that misc depends on dyn.  Actually, it is
+// misc/name.hh which should be elsewhere.
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/symbol.hh>
@@ -173,6 +176,49 @@ namespace vcsn
     symbol operator()(integral_constant t)
     {
       return t.name;
+    }
+  };
+
+
+  /*--------------.
+  | std::tuple.   |
+  `--------------*/
+
+  template <typename... Args>
+  struct snamer<std::tuple<Args...>>
+  {
+    template <typename T1>
+    static std::string name()
+    {
+      return sname<T1>();
+    }
+
+    template <typename T1, typename T2, typename... Ts>
+    static std::string name()
+    {
+      return sname<T1>() + ", " + name<T2, Ts...>();
+    }
+
+    symbol operator()() const
+    {
+      return symbol{"std::tuple<" + name<Args...>() + '>'};
+    }
+  };
+
+  template <>
+  struct vnamer<const std::vector<dyn::automaton>>
+  {
+    using type = const std::vector<dyn::automaton>;
+    symbol operator()(const type& t) const
+    {
+      std::string names;
+      for (const auto& a: t)
+        {
+          if (!names.empty())
+            names += ", ";
+          names += vname(a);
+        }
+      return symbol{"std::tuple<" + names + '>'};
     }
   };
 

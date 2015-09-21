@@ -106,10 +106,11 @@ namespace vcsn
 
     /// The conjunction (aka synchronized product) of automata.
     /// Performs the meet of the contexts.
-    automaton conjunction(const std::vector<automaton>& as);
-
-    /// One-the-fly implementation of the conjunction.
-    automaton conjunction_lazy(const std::vector<automaton>& as);
+    ///
+    /// \param as    the automata
+    /// \param lazy  whether to perform the computations on demand.
+    automaton conjunction(const std::vector<automaton>& as,
+                          bool lazy = false);
 
     /// The Hadamard product of expressions \a lhs and \a rhs.
     expression conjunction(const expression& lhs, const expression& rhs);

@@ -58,6 +58,9 @@ namespace vcsn
       /// `<Automaton> "<" <Context> ">"`.
       std::shared_ptr<automaton> automaton_(std::string prefix);
 
+      /// `"<" (<Any> ",")* ">"`.
+      std::shared_ptr<tuple> tuple_();
+
       /// `"<" (<LabelSet> | <WeightSet> ",")+ ">"`.
       std::shared_ptr<tupleset> tupleset_();
 

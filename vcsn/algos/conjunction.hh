@@ -593,20 +593,20 @@ namespace vcsn
         return aut;
       }
 
-      template <typename... Auts, size_t... I>
+      template <typename Auts, size_t... I>
       automaton
       conjunction_(const std::vector<automaton>& as,
                    vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(vcsn::conjunction(do_insplit<I, Auts>(as[I]->as<Auts>())...));
+        return make_automaton(vcsn::conjunction(do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
       }
 
-      template <typename... Auts, size_t... I>
+      template <typename Auts, size_t... I>
       automaton
       conjunction_lazy_(const std::vector<automaton>& as,
                         vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(vcsn::conjunction_lazy(do_insplit<I, Auts>(as[I]->as<Auts>())...));
+        return make_automaton(vcsn::conjunction_lazy(do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
       }
 
       /// Bridge.
@@ -620,21 +620,16 @@ namespace vcsn
       }
 
       /// Bridge (conjunction).
-      template <typename... Auts>
+      template <typename Auts, typename Bool>
       automaton
-      conjunction_vector(const std::vector<automaton>& as)
+      conjunction_vector(const std::vector<automaton>& as,
+                         bool lazy)
       {
-        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-        return conjunction_<Auts...>(as, indices);
-      }
-
-      /// Bridge (conjunction_lazy).
-      template <typename... Auts>
-      automaton
-      conjunction_lazy_vector(const std::vector<automaton>& as)
-      {
-        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-        return conjunction_lazy_<Auts...>(as, indices);
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+        return (lazy
+                ? conjunction_lazy_<Auts>(as, indices)
+                : conjunction_<Auts>(as, indices));
       }
     }
   }

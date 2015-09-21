@@ -138,7 +138,8 @@ def output():
 namespace vcsn { namespace dyn {
 '''
     for f in sorted(bridges):
-        if f not in ['focus',
+        if f not in ['conjunction_vector',
+                     'focus',
                      'focus_context',
                      'lift_automaton',
                      'lift_automaton_tape',

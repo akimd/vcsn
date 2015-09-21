@@ -28,6 +28,7 @@ namespace vcsn
       DEFINE(oneset);
       DEFINE(other);
       DEFINE(polynomialset);
+      DEFINE(tuple);
       DEFINE(tupleset);
       DEFINE(weightset);
       DEFINE(wordset);

@@ -50,12 +50,12 @@ automaton.as_svg = _automaton_as_svg
 # conjunction.
 _automaton_conjunction_orig = automaton.conjunction
 def _automaton_conjunction(*args, lazy = False):
+    '''Compute the conjunction of automata, possibly lazy, or the repeated
+    conjunction of an automaton.'''
     if len(args) == 2 and isinstance(args[1], int):
         return _automaton_conjunction_orig(*args)
-    elif lazy:
-        return automaton._conjunction_lazy(list(args))
     else:
-        return _automaton_conjunction_orig(list(args))
+        return _automaton_conjunction_orig(list(args), lazy)
 automaton.conjunction = _automaton_conjunction
 
 def _automaton_convert(self, mode, engine = "dot"):

@@ -8,6 +8,22 @@ namespace vcsn
 {
   namespace dyn
   {
+
+    /*---------------.
+    | conjunction.   |
+    `---------------*/
+
+    REGISTER_DEFINE(conjunction_vector);
+    automaton
+    conjunction(const std::vector<automaton>& as, bool lazy)
+    {
+      return detail::conjunction_vector_registry().call(as, lazy);
+    }
+
+    /*---------.
+    | focus.   |
+    `---------*/
+
     static
     integral_constant to_integral_constant(unsigned tape)
     {

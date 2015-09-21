@@ -95,6 +95,21 @@ namespace vcsn
       os_ << decendl << '>';
     }
 
+    DEFINE(tuple)
+    {
+      header("tuple");
+      os_ << "std::tuple<" << incendl;
+      bool first = true;
+      for (auto v: t.get_sets())
+      {
+        if (!first)
+          os_ << ',' << iendl;
+        first = false;
+        v->accept(*this);
+      }
+      os_ << decendl << '>';
+    }
+
     DEFINE(tupleset)
     {
       headers_late_.insert("vcsn/labelset/tupleset.hh");
@@ -109,7 +124,6 @@ namespace vcsn
       }
       os_ << decendl << '>';
     }
-
 
     DEFINE(nullableset)
     {

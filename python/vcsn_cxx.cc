@@ -269,18 +269,14 @@ struct automaton
   using conjunction_repeated_t
     = auto (automaton::*)(unsigned n) const -> automaton;
 
-  static automaton conjunction(const boost::python::list& auts)
+  static automaton conjunction(const boost::python::list& auts,
+                               bool lazy = false)
   {
-    return vcsn::dyn::conjunction(automata_(auts));
+    return vcsn::dyn::conjunction(automata_(auts), lazy);
   }
   /// The type of the previous function.
   using conjunction_variadic_t
-    = auto (*)(const boost::python::list& auts) -> automaton;
-
-  static automaton conjunction_lazy_(const boost::python::list& auts)
-  {
-    return vcsn::dyn::conjunction_lazy(automata_(auts));
-  }
+    = auto (*)(const boost::python::list& auts, bool lazy) -> automaton;
 
   automaton costandard() const
   {
@@ -1274,10 +1270,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("conjunction",
          static_cast<automaton::conjunction_repeated_t>(&automaton::conjunction))
     .def("conjunction",
-         static_cast<automaton::conjunction_variadic_t>(&automaton::conjunction))
+         static_cast<automaton::conjunction_variadic_t>(&automaton::conjunction),
+         (arg("lazy") = false))
         .staticmethod("conjunction")
-    .def("_conjunction_lazy", &automaton::conjunction_lazy_)
-        .staticmethod("_conjunction_lazy")
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
     .def("delay_automaton", &automaton::delay_automaton)
