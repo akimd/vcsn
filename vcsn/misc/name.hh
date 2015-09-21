@@ -19,6 +19,35 @@
 
 namespace vcsn
 {
+  // This file provides the basic blocks needed by the implementation
+  // of dyn:: bridges.
+  //
+  // We need two types of signatures.
+  //
+  // The runtime signatures (vname and vsignature) are obtained during
+  // a call to a dyn:: routine: all its arguments are queried to get
+  // their runtime type name (e.g., `mutable_automaton<lal_char, b>`).
+  // These vnames are assembled into vsignatures, which are used to
+  // query the registry corresponding to the algorithm.
+  //
+  // The compile-time signatures (sname and ssignature) are built
+  // explicitly when registering an algorithm.  This happens in
+  // vcsn/ctx/instantiate.hh, but also in the generated plugins.  For
+  // instance:
+  //
+  // static bool conjunction_vector ATTRIBUTE_USED =
+  //   vcsn::dyn::detail::conjunction_vector_register(
+  //     vcsn::ssignature<t0_t, t1_t>(),     // <============ Here.
+  //     vcsn::dyn::detail::conjunction_vector<t0_t, t1_t>
+  //   );
+  //
+  // So:
+  //
+  // - sname (built from types) is used at register time, it should
+  //   be the precise type at hand,
+  //
+  // - vname (built from values) is used at dyn:: call time.  It should
+  //   return what sname will return.
 
   /*---------------.
   | Static names.  |
@@ -27,7 +56,7 @@ namespace vcsn
   template <typename T>
   struct snamer
   {
-    symbol operator()()
+    static symbol name()
     {
       return T::sname();
     }
@@ -36,7 +65,7 @@ namespace vcsn
   template <typename T>
   symbol sname()
   {
-    return snamer<T>()();
+    return snamer<T>::name();
   }
 
   template <typename T>
@@ -61,7 +90,7 @@ namespace vcsn
   template <typename T>
   struct vnamer
   {
-    symbol operator()(T& t)
+    static symbol name(T& t)
     {
       return t->vname();
     }
@@ -70,7 +99,7 @@ namespace vcsn
   template <typename T>
   symbol vname(T& t)
   {
-    return vnamer<T>()(t);
+    return vnamer<T>::name(t);
   }
 
   /*------------------.
@@ -86,7 +115,7 @@ namespace vcsn
   template <>                                   \
   struct snamer<__VA_ARGS__>                    \
   {                                             \
-    symbol operator()()                         \
+    static symbol name()                        \
     {                                           \
       auto res = symbol{#__VA_ARGS__};          \
       return res;                               \
@@ -96,7 +125,7 @@ namespace vcsn
   template <>                                   \
   struct vnamer<__VA_ARGS__>                    \
   {                                             \
-    symbol operator()(__VA_ARGS__&)             \
+    static symbol name(__VA_ARGS__&)            \
     {                                           \
       auto res = symbol{#__VA_ARGS__};          \
       return res;                               \
@@ -130,7 +159,7 @@ namespace vcsn
   template <typename T, T Value>
   struct snamer<std::integral_constant<T, Value>>
   {
-    symbol operator()()
+    static symbol name()
     {
       symbol res("std::integral_constant<unsigned, "
                  + std::to_string(Value) + '>');
@@ -142,7 +171,7 @@ namespace vcsn
   struct vnamer<std::integral_constant<T, Value>>
   {
     using type = std::integral_constant<T, Value>;
-    symbol operator()(type)
+    static symbol name(type)
     {
       return sname<type>();
     }
@@ -173,7 +202,7 @@ namespace vcsn
   template <>
   struct vnamer<integral_constant>
   {
-    symbol operator()(integral_constant t)
+    static symbol name(integral_constant t)
     {
       return t.name;
     }
@@ -184,6 +213,27 @@ namespace vcsn
   | std::tuple.   |
   `--------------*/
 
+  /// The vname of a vector of dyn::automata is the tuple of their
+  /// vnames.  This is used to dispatch variadic calls on vectors of
+  /// automata to tuples of vcsn:: automata.
+  template <>
+  struct vnamer<const std::vector<dyn::automaton>>
+  {
+    using type = const std::vector<dyn::automaton>;
+    static symbol name(const type& t)
+    {
+      std::string names;
+      for (const auto& a: t)
+        {
+          if (!names.empty())
+            names += ", ";
+          names += vname(a);
+        }
+      return symbol{"std::tuple<" + names + '>'};
+    }
+  };
+
+  /// The sname of a tuple is the tuple of the snames.
   template <typename... Args>
   struct snamer<std::tuple<Args...>>
   {
@@ -199,26 +249,9 @@ namespace vcsn
       return sname<T1>() + ", " + name<T2, Ts...>();
     }
 
-    symbol operator()() const
+    static symbol name()
     {
       return symbol{"std::tuple<" + name<Args...>() + '>'};
-    }
-  };
-
-  template <>
-  struct vnamer<const std::vector<dyn::automaton>>
-  {
-    using type = const std::vector<dyn::automaton>;
-    symbol operator()(const type& t) const
-    {
-      std::string names;
-      for (const auto& a: t)
-        {
-          if (!names.empty())
-            names += ", ";
-          names += vname(a);
-        }
-      return symbol{"std::tuple<" + names + '>'};
     }
   };
 
