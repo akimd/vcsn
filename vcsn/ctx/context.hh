@@ -71,19 +71,24 @@ namespace vcsn
     /// E.g., "lal_char, b", "law_char, zmin".
     static symbol sname()
     {
-      static symbol res(labelset_t::sname()
-                        + ", " + weightset_t::sname());
+      static auto res = symbol{"context<"
+                               + labelset_t::sname()
+                               + ", "
+                               + weightset_t::sname()
+                               + '>'};
       return res;
     }
 
     /// Build from the description in \a is.
     static context make(std::istream& is)
     {
+      eat(is, "context<");
       auto ls = labelset_t::make(is);
       eat(is, ',');
       while (isspace(is.peek()))
         is.ignore();
       auto ws = weightset_t::make(is);
+      eat(is, '>');
       return {ls, ws};
     }
 

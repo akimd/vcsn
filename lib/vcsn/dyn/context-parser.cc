@@ -60,32 +60,24 @@ namespace vcsn
           || w == "transpose_automaton"
           || w == "tuple_automaton")
         res = automaton_(w);
-      else if (has(labelsets_, w)
-               || w == "expressionset"
-               || w == "seriesset")
-        {
-          res = labelset_(w);
-          if (is_.peek() == ',')
-            res = context_(res);
-        }
-      else if (w == "lat")
-        {
-          res = tupleset_();
-          if (is_.peek() == ',')
-            res = context_(res);
-        }
-      else if (has(weightsets_, w))
-        res = weightset_(w);
+      else if (w == "context")
+        res = context_(w);
       else if (w == "expansionset")
         res = expansionset_();
+      else if (w == "expressionset")
+        res = expressionset_();
+      else if (has(labelsets_, w))
+        res = labelset_(w);
+      else if (w == "lat")
+        res = tupleset_();
       else if (w == "polynomialset")
         res = polynomialset_();
+      else if (w == "seriesset")
+        res = seriesset_();
       else if (w == "std::tuple")
-        {
-          res = tuple_();
-          if (is_.peek() == ',')
-            res = context_(res);
-        }
+        res = tuple_();
+      else if (has(weightsets_, w))
+        res = weightset_(w);
       else
         // int,
         // std::integral_constant<unsigned, 2>,
@@ -196,18 +188,23 @@ namespace vcsn
     }
 
     std::shared_ptr<context>
-    context_parser::context_(const std::shared_ptr<ast_node>& ls)
+    context_parser::context_(std::string w)
     {
+      bool close = false;
+      if (w == "context")
+        {
+          eat(is_, '<');
+          close = true;
+          w = word_();
+        }
+      auto ls = labelset_(w);
       eat(is_, ',');
       while (isspace(is_.peek()))
         is_.ignore();
-      return std::make_shared<context>(ls, weightset_());
-    }
-
-    std::shared_ptr<context>
-    context_parser::context_(const std::string& word)
-    {
-      return context_(labelset_(word));
+      auto ws = weightset_();
+      if (close)
+        eat(is_, '>');
+      return std::make_shared<context>(ls, ws);
     }
 
     std::shared_ptr<ast_node> context_parser::labelset_()

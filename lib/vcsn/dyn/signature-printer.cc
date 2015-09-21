@@ -40,9 +40,11 @@ namespace vcsn
 
     DEFINE(context)
     {
+      os_ << "context<";
       t.get_labelset()->accept(*this);
       os_ << ", ";
       t.get_weightset()->accept(*this);
+      os_ << ">";
     }
 
     DEFINE(tuple)

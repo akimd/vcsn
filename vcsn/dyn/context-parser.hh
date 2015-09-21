@@ -43,9 +43,7 @@ namespace vcsn
 
       /// `<LabelSet>, <WeightSet>`.
       std::shared_ptr<context> context_();
-      std::shared_ptr<context> context_(const std::string& word);
-      /// When the labelset was already parsed.
-      std::shared_ptr<context> context_(const std::shared_ptr<ast_node>& ls);
+      std::shared_ptr<context> context_(std::string word);
 
       /// `<LabelSet>`.
       std::shared_ptr<ast_node> labelset_();
