@@ -609,16 +609,6 @@ namespace vcsn
         return make_automaton(vcsn::conjunction_lazy(do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
       }
 
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      conjunction(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::conjunction(l, r));
-      }
-
       /// Bridge (conjunction).
       template <typename Auts, typename Bool>
       automaton
@@ -656,16 +646,6 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      shuffle(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::shuffle(l, r));
-      }
-
       /// Variadic bridge helper.
       template <typename... Auts, size_t... I>
       automaton
@@ -754,16 +734,6 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      infiltration(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::infiltration(l, r));
-      }
-
       /// Variadic bridge helper.
       template <typename... Auts, size_t... I>
       automaton
@@ -789,7 +759,7 @@ namespace vcsn
   | infiltration(expression, expression).   |
   `----------------------------------------*/
 
-  /// Shuffle product of expressions.
+  /// Infiltration product of expressions.
   template <typename ValueSet>
   inline
   typename ValueSet::value_t

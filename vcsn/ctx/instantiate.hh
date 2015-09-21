@@ -186,7 +186,7 @@ namespace vcsn
         using namespace dyn::detail;
         REGISTER(cerny, ctx_t, unsigned);
         REGISTER(complete, aut_t);
-        REGISTER(conjunction, aut_t, aut_t);
+        REGISTER(conjunction_vector, std::tuple<aut_t, aut_t>, bool);
         REGISTER(conjunction_repeated, aut_t, unsigned);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
@@ -194,7 +194,7 @@ namespace vcsn
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(eval, aut_t, wls_t);
-        REGISTER(infiltration, aut_t, aut_t);
+        REGISTER(infiltration_vector, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
@@ -207,7 +207,7 @@ namespace vcsn
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(random_automaton_deterministic, ctx_t, unsigned);
         REGISTER(shortest, aut_t, boost::optional<unsigned>, boost::optional<unsigned>);
-        REGISTER(shuffle, aut_t, aut_t);
+        REGISTER(shuffle_vector, aut_t, aut_t);
         REGISTER(synchronizing_word, aut_t, const std::string);
         REGISTER(u, ctx_t, unsigned);
 

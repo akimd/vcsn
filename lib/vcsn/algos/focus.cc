@@ -20,6 +20,16 @@ namespace vcsn
       return detail::conjunction_vector_registry().call(as, lazy);
     }
 
+    // Implement the binary case on top of the variadic one, to avoid
+    // compiling it twice.
+    automaton
+    conjunction(const automaton& lhs, const automaton& rhs, bool lazy)
+    {
+      auto auts = std::vector<dyn::automaton>{lhs, rhs};
+      return conjunction(auts, lazy);
+    }
+
+
     /*---------.
     | focus.   |
     `---------*/
@@ -45,6 +55,30 @@ namespace vcsn
     {
       auto t = to_integral_constant(tape);
       return detail::focus_registry().call(aut, t);
+    }
+
+
+    /*----------------.
+    | infiltration.   |
+    `----------------*/
+
+    automaton
+    infiltration(const automaton& lhs, const automaton& rhs)
+    {
+      auto auts = std::vector<dyn::automaton>{lhs, rhs};
+      return infiltration(auts);
+    }
+
+
+    /*-----------.
+    | shuffle.   |
+    `-----------*/
+
+    automaton
+    shuffle(const automaton& lhs, const automaton& rhs)
+    {
+      auto auts = std::vector<dyn::automaton>{lhs, rhs};
+      return shuffle(auts);
     }
   }
 }
