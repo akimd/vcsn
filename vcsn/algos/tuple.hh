@@ -45,29 +45,6 @@ namespace vcsn
     return {ctx, ids};
   }
 
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (tuple).
-      template <typename ExpSetLhs, typename ExpSetRhs>
-      expression
-      tuple_expression(const expression& lhs, const expression& rhs)
-      {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        const auto& lrs = l.expressionset();
-        const auto& rrs = r.expressionset();
-        auto rs = vcsn::tuple_expressionset(lrs, rrs);
-        return make_expression(rs,
-                               ::vcsn::tuple<decltype(rs),
-                               ExpSetLhs, ExpSetRhs>(rs,
-                                                     l.expression(),
-                                                     r.expression()));
-      }
-    }
-  }
-
   /*------------------------.
   | tuple(expression...).   |
   `------------------------*/

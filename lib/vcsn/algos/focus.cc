@@ -80,5 +80,17 @@ namespace vcsn
       auto auts = std::vector<dyn::automaton>{lhs, rhs};
       return shuffle(auts);
     }
+
+
+    /*---------.
+    | tuple.   |
+    `---------*/
+
+    expression
+    tuple(const expression& lhs, const expression& rhs)
+    {
+      auto auts = std::vector<dyn::expression>{lhs, rhs};
+      return tuple(auts);
+    }
   }
 }
