@@ -161,43 +161,36 @@ namespace vcsn
       return "N/A";
     }
 
-    /*----------------------.
-    | num_eps_transitions.  |
-    `----------------------*/
+    /*-------------------------------.
+    | num_spontaneous_transitions.   |
+    `-------------------------------*/
+
     template <typename Aut>
     ATTRIBUTE_CONST
     vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), size_t>
-    num_eps_transitions_(const Aut&)
+    num_spontaneous_transitions(const Aut&)
     {
       return 0;
     }
 
     template <typename Aut>
     vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), size_t>
-    num_eps_transitions_(const Aut& aut)
+    num_spontaneous_transitions(const Aut& aut)
     {
       size_t res = 0;
       for (auto t : aut->transitions())
         res += aut->labelset()->is_one(aut->label_of(t));
       return res;
     }
-
-    template <typename Aut>
-    size_t
-    num_eps_transitions(const Aut& aut)
-    {
-      return num_eps_transitions_(aut);
-    }
-
   }
 
   /*--------------------------.
   | info(automaton, stream).  |
   `--------------------------*/
 
-  template <typename A>
+  template <typename Aut>
   std::ostream&
-  info(const A& aut, std::ostream& out, bool detailed = false)
+  info(const Aut& aut, std::ostream& out, bool detailed = false)
   {
     out << "type: ";
     aut->print_set(out, format::text) << '\n';
@@ -209,12 +202,13 @@ namespace vcsn
     ECHO("number of accessible states", num_accessible_states(aut));
     ECHO("number of coaccessible states", num_coaccessible_states(aut));
     ECHO("number of useful states", num_useful_states(aut));
-    ECHO("number of transitions", aut->num_transitions());
     ECHO("number of codeterministic states",
          detail_info::num_codeterministic_states(aut));
     ECHO("number of deterministic states",
          detail_info::num_deterministic_states(aut));
-    ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));
+    ECHO("number of transitions", aut->num_transitions());
+    ECHO("number of spontaneous transitions",
+         detail_info::num_spontaneous_transitions(aut));
     if (detailed)
       ECHO("number of strongly connected components",
            num_components(scc(aut)));

@@ -44,11 +44,11 @@ def _nodes_as_points(s):
 
 def _dot_gray_node(m):
     '''Replace gray node contours by gray nodes.'''
-    if ' -> ' in m.group(1):
-        return m.group(1) + m.group(2)
-    else:
-        return m.group(1) + m.group(2).replace('color = DimGray',
-                                               'fillcolor = lightgray')
+    node = m.group(1)
+    attr = m.group(2)
+    if ' -> ' not in node:
+        attr = attr.replace('color = DimGray', 'fillcolor = lightgray')
+    return node + attr
 
 def _dot_pretty(s, mode = "dot"):
     '''
