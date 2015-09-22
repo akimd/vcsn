@@ -167,25 +167,19 @@ namespace vcsn
       }
 
       /// Compute the (accessible part of the) conjunction.
-      void conjunction()
+      void conjunction(bool lazy = false)
       {
         initialize_conjunction();
 
-        while (!aut_->todo_.empty())
-          {
-            state_name_t psrc = aut_->todo_.front();
-            aut_->todo_.pop_front();
-            state_t src = aut_->pmap_[psrc];
+        if (!lazy)
+          while (!aut_->todo_.empty())
+            {
+              state_name_t psrc = aut_->todo_.front();
+              aut_->todo_.pop_front();
+              state_t src = aut_->pmap_[psrc];
 
-            add_conjunction_transitions(src, psrc);
-          }
-      }
-
-      /// Start the lazy computation of the (accessible part of the)
-      /// conjunction.
-      void conjunction_lazy()
-      {
-        initialize_conjunction();
+              add_conjunction_transitions(src, psrc);
+            }
       }
 
       /// Compute the (accessible part of the) shuffle product.
@@ -551,20 +545,6 @@ namespace vcsn
   template <typename... Auts>
   inline
   auto
-  conjunction_lazy(const Auts&... as)
-    -> product_automaton<decltype(meet_automata(as...)),
-                         Auts...>
-  {
-    auto res = make_product_automaton(meet_automata(as...),
-                                      as...);
-    res->conjunction_lazy();
-    return res;
-  }
-
-  /// Build the (accessible part of the) conjunction.
-  template <typename... Auts>
-  inline
-  auto
   conjunction(const Auts&... as)
     -> tuple_automaton<decltype(meet_automata(as...)),
                        Auts...>
@@ -573,6 +553,20 @@ namespace vcsn
                                       as...);
     res->conjunction();
     return res->strip();
+  }
+
+  /// Build the (accessible part of the) conjunction.
+  template <typename... Auts>
+  inline
+  auto
+  conjunction_lazy(const Auts&... as)
+    -> product_automaton<decltype(meet_automata(as...)),
+                         Auts...>
+  {
+    auto res = make_product_automaton(meet_automata(as...),
+                                      as...);
+    res->conjunction(true);
+    return res;
   }
 
   namespace dyn
@@ -593,20 +587,21 @@ namespace vcsn
         return aut;
       }
 
+      /// Bridge helper.
       template <typename Auts, size_t... I>
       automaton
       conjunction_(const std::vector<automaton>& as,
+                   bool lazy,
                    vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(vcsn::conjunction(do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
-      }
-
-      template <typename Auts, size_t... I>
-      automaton
-      conjunction_lazy_(const std::vector<automaton>& as,
-                        vcsn::detail::index_sequence<I...>)
-      {
-        return make_automaton(vcsn::conjunction_lazy(do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
+        if (lazy)
+          return make_automaton
+            (vcsn::conjunction_lazy
+             (do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
+        else
+          return make_automaton
+            (vcsn::conjunction
+             (do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
       }
 
       /// Bridge (conjunction).
@@ -617,9 +612,7 @@ namespace vcsn
       {
         auto indices
           = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
-        return (lazy
-                ? conjunction_lazy_<Auts>(as, indices)
-                : conjunction_<Auts>(as, indices));
+        return conjunction_<Auts>(as, lazy, indices);
       }
     }
   }
