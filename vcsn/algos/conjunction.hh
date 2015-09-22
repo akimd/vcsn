@@ -93,36 +93,38 @@ namespace vcsn
         return aut_->origins();
       }
 
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      std::set<state_t> done_;
+      /// Whether a given state's outgoing transitions have been
+      /// computed.
+      bool state_is_strict(state_t s) const
+      {
+        return has(done_, s);
+      }
 
       /// Complete a state: find its outgoing transitions.
-      void complete_(state_t s)
+      void complete_(state_t s) const
       {
         const auto& orig = origins();
         state_name_t sn = orig.at(s);
-        add_conjunction_transitions(s, sn);
+        const_cast<self_t&>(*this).add_conjunction_transitions(s, sn);
         done_.insert(s);
       }
 
       /// All the outgoing transitions.
       using super_t::all_out;
-      auto all_out(state_t s)
+      auto all_out(state_t s) const
         -> decltype(aut_->all_out(s))
       {
-        if (!has(done_, s))
+        if (!state_is_strict(s))
           complete_(s);
         return aut_->all_out(s);
       }
 
       /// All the outgoing transitions satisfying the predicate.
       template <typename Pred>
-      auto all_out(state_t s, Pred pred)
+      auto all_out(state_t s, Pred pred) const
         -> decltype(aut_->all_out(s, pred))
       {
-        if (!has(done_, s))
+        if (!state_is_strict(s))
           complete_(s);
         return aut_->all_out(s, pred);
       }
@@ -518,6 +520,11 @@ namespace vcsn
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
+
+      /// When performing the lazy construction, list of states that
+      /// have been completed (i.e., their outgoing transitions have
+      /// been computed).
+      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 
