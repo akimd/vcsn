@@ -61,7 +61,9 @@ namespace vcsn
     /// Data stored for each state.
     struct stored_state_t
     {
+      /// Outgoing transitions.
       tr_cont_t succ;
+      /// Incoming transitions.
       tr_cont_t pred;
     };
 
@@ -110,8 +112,10 @@ namespace vcsn
       return *this;
     }
 
-    // Related sets
-    ///////////////
+
+    /*----------------.
+    | Related sets.   |
+    `----------------*/
 
     static symbol sname()
     {
@@ -130,8 +134,10 @@ namespace vcsn
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
 
-    // Special states and transitions
-    /////////////////////////////////
+
+    /*----------------------------------.
+    | Special states and transitions.   |
+    `----------------------------------*/
 
     // pseudo-initial and final states.
     // The code below assumes that pre() and post() are the first
@@ -144,13 +150,16 @@ namespace vcsn
     /// Invalid transition.
     static constexpr transition_t null_transition() { return -1U; }
 
+    /// Label for preinitial and postfinal transitions.
     label_t prepost_label() const
     {
       return prepost_label_;
     }
 
-    // Statistics
-    /////////////
+
+    /*--------------.
+    | Statistics.   |
+    `--------------*/
 
     size_t num_all_states() const { return states_.size() - states_fs_.size(); }
     size_t num_states() const { return num_all_states() - 2; }
@@ -162,9 +171,12 @@ namespace vcsn
               - transitions_fs_.size() - num_initials() - num_finals());
     }
 
-    // Queries on states
-    ////////////////////
 
+    /*---------------------.
+    | Queries on states.   |
+    `---------------------*/
+
+    /// Whether state s belongs to the automaton.
     bool
     has_state(state_t s) const
     {
@@ -178,18 +190,21 @@ namespace vcsn
       return ss.succ.empty() || ss.succ.front() != null_transition();
     }
 
+    /// Whether s is initial.
     bool
     is_initial(state_t s) const
     {
       return has_transition(pre(), s, prepost_label_);
     }
 
+    /// Whether s is final.
     bool
     is_final(state_t s) const
     {
       return has_transition(s, post(), prepost_label_);
     }
 
+    /// Initial weight of s.
     ATTRIBUTE_PURE
     weight_t
     get_initial_weight(state_t s) const
@@ -201,6 +216,7 @@ namespace vcsn
         return weight_of(t);
     }
 
+    /// Final weight of s.
     ATTRIBUTE_PURE
     weight_t
     get_final_weight(state_t s) const
@@ -212,8 +228,10 @@ namespace vcsn
         return weight_of(t);
     }
 
-    // Queries on transitions
-    /////////////////////////
+
+    /*--------------------------.
+    | Queries on transitions.   |
+    `--------------------------*/
 
     transition_t
     get_transition(state_t src, state_t dst, label_t l) const
@@ -280,8 +298,10 @@ namespace vcsn
       return transitions_[t].get_weight();
     }
 
-    // Edition of states
-    ////////////////////
+
+    /*---------------------.
+    | Edition of states.   |
+    `---------------------*/
 
   protected:
     /// Remove t from the outgoing transitions of the source state.
@@ -324,6 +344,7 @@ namespace vcsn
     }
 
   public:
+    /// Create a new state and return its id.
     state_t
     new_state()
     {
@@ -430,8 +451,10 @@ namespace vcsn
       set_final(s, weightset()->zero());
     }
 
-    // Edition of transitions
-    /////////////////////////
+
+    /*--------------------------.
+    | Edition of transitions.   |
+    `--------------------------*/
 
     void
     del_transition(transition_t t)
@@ -691,8 +714,10 @@ namespace vcsn
       return set_weight(t, weightset()->mul(weight_of(t), w));
     }
 
-    // Iteration on states and transitions
-    //////////////////////////////////////
+
+    /*---------------------------------------.
+    | Iteration on states and transitions.   |
+    `---------------------------------------*/
 
     template <typename Pred>
     using states_output_t

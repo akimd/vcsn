@@ -11,6 +11,7 @@ namespace vcsn
   | possibly_labeled_transition_tuple.  |
   `------------------------------------*/
 
+  /// Transition on non-empty label.
   template <typename State, class Label>
   struct possibly_labeled_transition_tuple
   {
@@ -25,6 +26,7 @@ namespace vcsn
     Label label;
   };
 
+  /// Transition on empty label.
   template <typename State>
   struct possibly_labeled_transition_tuple<State, empty_t>
   {
@@ -41,6 +43,7 @@ namespace vcsn
   | transition_tuple.  |
   `-------------------*/
 
+  /// Transition with label and non Boolean weight.
   template <typename State, class Label, class Weight>
   struct transition_tuple
     : possibly_labeled_transition_tuple<State, Label>
@@ -53,10 +56,12 @@ namespace vcsn
     weight_t weight;
   };
 
-  // We do not store the Boolean weights, which are assumed to be
-  // always true.  This is correct for weight in the Boolean ring, as
-  // well as for those in the F₂ (a.k.a. ℤ/2ℤ) field, both encoded
-  // using the bool type.
+  /// Transition with label and Boolean weight.
+  ///
+  /// We do not store the Boolean weights, which are assumed to be
+  /// always true.  This is correct for weight in the Boolean ring, as
+  /// well as for those in the F₂ (a.k.a. ℤ/2ℤ) field, both encoded
+  /// using the bool type.
   template <typename State, class Label>
   struct transition_tuple<State, Label, bool>
     : possibly_labeled_transition_tuple<State, Label>
