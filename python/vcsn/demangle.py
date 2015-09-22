@@ -34,7 +34,7 @@ def demangle_regex(s):
             s)
 
     # Misc.
-    s = sub(r'boost::flyweights::flyweight<std::string,\s*boost::flyweights::no_tracking,\s*boost::flyweights::intermodule_holder,\s*boost::parameter::void_,\s*boost::parameter::void_,\s*boost::parameter::void_>',
+    s = sub(r'boost::flyweights::flyweight<std::string,\s*boost::flyweights::no_tracking,\s*boost::flyweights::intermodule_holder(?:,\s*boost::parameter::void_)*>',
             r'vcsn::symbol',
             s)
 
