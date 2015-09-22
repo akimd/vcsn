@@ -25,67 +25,68 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
-      std::unordered_map<state_t, char> tag;
-      /*
-         tag gives the status of the state s;
-         if s is not in the map, the state has not been reached yet;
-         if tag[s]='u', the status is unknown, the graph reachable from s is
-           under exploration
-         if tag[s]='o', the status is "ok": there is no eps-circuit accessible
-           from s
-         if tag[s]='c', there is an eps-circuit accessible from s
-         */
 
-      const automaton_t& aut_;
-      label_t empty_word;
+      epsilon_acyclic(const automaton_t& aut)
+        : aut_(aut)
+      {}
+
+      bool is_eps_acyclic()
+      {
+        for (auto s : aut_->states())
+          if (has_spontaneous_circuit(s))
+            return false;
+        return true;
+      }
 
       // Return true if an epsilon-circuit is accessible from s by
       // epsilon-transitions.
-      bool has_epsilon_circuit(state_t s)
+      bool has_spontaneous_circuit(state_t s)
       {
         auto it = tag.find(s);
         if (it == tag.end())
         {
-          tag[s] = 'u';
-          for (auto t : aut_->out(s, empty_word))
-            if (has_epsilon_circuit(aut_->dst_of(t)))
+          tag[s] = unknown;
+          for (auto t : aut_->out(s, one))
+            if (has_spontaneous_circuit(aut_->dst_of(t)))
             {
-              tag[s] = 'c';
+              tag[s] = circuit;
               return true;
             }
-          tag[s] = 'o';
+          tag[s] = ok;
           return false;
         }
 
         // Switch with respect to tag[s].
         switch (it->second)
         {
-          case 'u':
+          case unknown:
             // s is reached while we are exploring successors of s:
             // there is a circuit.
-            tag[s] = 'c';
+            tag[s] = circuit;
             return true;
+          case ok:
             // Otherwise the graph reachable from s has already been explored.
-          case 'o':
             return false;
-          default: //'c'
+          case circuit:
             return true;
         }
       }
 
-      epsilon_acyclic(const automaton_t& aut)
-        : aut_(aut)
-        , empty_word(aut->labelset()->one())
-      {
-      }
+      enum status
+        {
+          /// The graph reachable from s is under exploration.
+          unknown,
+          /// There is no eps-circuit accessible from s.
+          ok,
+          /// There is an eps-circuit accessible from s.
+          circuit,
+        };
 
-      bool is_eps_acyclic()
-      {
-        for (auto s : aut_->states())
-          if (has_epsilon_circuit(s))
-            return false;
-        return true;
-      }
+      // States not in the map have not been reached yet.
+      std::unordered_map<state_t, status> tag;
+
+      const automaton_t& aut_;
+      label_t one = aut_->labelset()->one();
     };
 
     template <typename Aut>
