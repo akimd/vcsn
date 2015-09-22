@@ -15,10 +15,14 @@ namespace vcsn
   template <typename State, class Label>
   struct possibly_labeled_transition_tuple
   {
+    using label_t = Label;
+    possibly_labeled_transition_tuple(State s, State d, label_t l)
+      : src{s}, dst{d}, label{l}
+    {}
+
     State src;
     State dst;
 
-    using label_t = Label;
     label_t get_label() const { return label; }
     void set_label(label_t& l) { label = l; }
 
@@ -30,10 +34,14 @@ namespace vcsn
   template <typename State>
   struct possibly_labeled_transition_tuple<State, empty_t>
   {
+    using label_t = empty_t;
+    possibly_labeled_transition_tuple(State s, State d, label_t)
+      : src{s}, dst{d}
+    {}
+
     State src;
     State dst;
 
-    using label_t = empty_t;
     label_t get_label() const { return {}; }
     void set_label(label_t) {}
   };
@@ -48,7 +56,13 @@ namespace vcsn
   struct transition_tuple
     : possibly_labeled_transition_tuple<State, Label>
   {
+    using super_t = possibly_labeled_transition_tuple<State, Label>;
     using weight_t = Weight;
+    transition_tuple(State s, State d, Label l, weight_t w)
+      : super_t{s, d, l}
+      , weight{w}
+    {}
+
     weight_t get_weight() const { return weight; }
     void set_weight(weight_t& k) { weight = k; }
 
@@ -66,7 +80,11 @@ namespace vcsn
   struct transition_tuple<State, Label, bool>
     : possibly_labeled_transition_tuple<State, Label>
   {
+    using super_t = possibly_labeled_transition_tuple<State, Label>;
     using weight_t = bool;
+    transition_tuple(State s, State d, Label l, weight_t)
+      : super_t{s, d, l}
+    {}
     weight_t get_weight() const { return true; }
     void set_weight(weight_t& k) ATTRIBUTE_PURE { (void) k; assert(k == true); }
   };

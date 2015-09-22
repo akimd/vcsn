@@ -182,12 +182,14 @@ namespace vcsn
     {
       // Any number outside our container is not a state.
       // (This includes "null_state()".)
-      if (s >= states_.size())
+      if (states_.size() <= s)
         return false;
-      const stored_state_t& ss = states_[s];
-
-      // Erased states have 'invalid' as their first successor.
-      return ss.succ.empty() || ss.succ.front() != null_transition();
+      else
+        {
+          const stored_state_t& ss = states_[s];
+          // Erased states have 'invalid' as their first successor.
+          return ss.succ.empty() || ss.succ.front() != null_transition();
+        }
     }
 
     /// Whether s is initial.
@@ -348,21 +350,21 @@ namespace vcsn
     state_t
     new_state()
     {
-      state_t s;
+      state_t res;
       if (states_fs_.empty())
         {
-          s = states_.size();
-          states_.resize(s + 1);
+          res = states_.size();
+          states_.emplace_back();
         }
       else
         {
-          s = states_fs_.back();
+          res = states_fs_.back();
           states_fs_.pop_back();
+          stored_state_t& ss = states_[res];
+          // De-invalidate this state: remove the invalid transition.
+          ss.succ.clear();
         }
-      stored_state_t& ss = states_[s];
-      // De-invalidate this state: remove the invalid transition.
-      ss.succ.clear();
-      return s;
+      return res;
     }
 
     std::ostream&
@@ -506,23 +508,23 @@ namespace vcsn
         return null_transition();
       else
         {
+          // FIXME: When src == pre() || dst == post(), label must be empty.
           transition_t t;
           if (transitions_fs_.empty())
             {
               t = transitions_.size();
-              transitions_.resize(t + 1);
+              transitions_.emplace_back(src, dst, l, w);
             }
           else
             {
               t = transitions_fs_.back();
               transitions_fs_.pop_back();
+              stored_transition_t& st = transitions_[t];
+              st.src = src;
+              st.dst = dst;
+              st.set_label(l);
+              st.set_weight(w);
             }
-          stored_transition_t& st = transitions_[t];
-          st.src = src;
-          st.dst = dst;
-          // FIXME: When src == pre() || dst == post(), label must be empty.
-          st.set_label(l);
-          st.set_weight(w);
           states_[src].succ.emplace_back(t);
           states_[dst].pred.emplace_back(t);
           return t;
