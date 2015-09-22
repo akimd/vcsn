@@ -63,8 +63,9 @@ def bench(stmt, comment, title = None, setup = ['pass'], number = 1):
             t = round(min(timeit.repeat(stmt, number = number)), 2)
             t = "{:5.2f}s".format(t)
             err = None
-        except RuntimeError as err:
+        except RuntimeError as exc:
             t = " FAIL"
+            err = exc
         print("{:7s}: {:20s} # {}".format(t, title, comment))
         if err:
             print(err, file=sys.stderr)
