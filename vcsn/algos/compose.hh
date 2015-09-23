@@ -84,9 +84,9 @@ namespace vcsn
 
         while (!res_->todo_.empty())
           {
-            auto p = res_->todo_.front();
-            res_->todo_.pop_front();
+            const auto& p = res_->todo_.front();
             add_compose_transitions(std::get<1>(p), std::get<0>(p));
+            res_->todo_.pop_front();
           }
         return std::move(res_);
       }

@@ -176,9 +176,9 @@ namespace vcsn
         if (!lazy)
           while (!aut_->todo_.empty())
             {
-              auto p = aut_->todo_.front();
-              aut_->todo_.pop_front();
+              const auto& p = aut_->todo_.front();
               add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
+              aut_->todo_.pop_front();
             }
       }
 
@@ -189,9 +189,9 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            auto p = aut_->todo_.front();
-            aut_->todo_.pop_front();
+            const auto& p = aut_->todo_.front();
             add_shuffle_transitions<false>(std::get<1>(p), std::get<0>(p));
+            aut_->todo_.pop_front();
           }
       }
 
@@ -225,9 +225,7 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            auto p = aut_->todo_.front();
-            aut_->todo_.pop_front();
-
+            const auto& p = aut_->todo_.front();
             // Infiltrate is a mix of conjunction and shuffle operations.
             //
             // Conjunction transitions must be added before shuffle ones:
@@ -235,6 +233,8 @@ namespace vcsn
             // is faster than "add_transition".
             add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
             add_shuffle_transitions<true>(std::get<1>(p), std::get<0>(p));
+
+            aut_->todo_.pop_front();
           }
       }
 
