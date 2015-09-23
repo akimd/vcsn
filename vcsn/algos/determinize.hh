@@ -424,13 +424,19 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
-                       format fmt = {}) const
+                       format fmt = {}, bool delimit = false) const
       {
         auto i = origins().find(ss);
         if (i == origins().end())
           this->print_state(ss, o);
         else
-          ns_.print(i->second, o, fmt, ", ");
+          {
+            if (delimit)
+              o << '{';
+            ns_.print(i->second, o, fmt, ", ");
+            if (delimit)
+              o << '}';
+          }
         return o;
       }
 

@@ -390,7 +390,7 @@ namespace vcsn
     std::ostream&
     print_state_name(state_t s, std::ostream& o,
                      format = {},
-                     bool = true) const
+                     bool = false) const
     {
       return print_state(s, o);
     }
