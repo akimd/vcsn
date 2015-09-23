@@ -359,8 +359,8 @@ namespace vcsn
       detail::io::filtering_ostream bos_;
       /// Whether to format for dot2tex.
       bool dot2tex_ = false;
-      /// Useful states.
-      std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_);
+      /// Useful states, without evaluating the lazy states.
+      std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_, false);
     };
   }
 

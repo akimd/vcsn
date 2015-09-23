@@ -18,55 +18,64 @@ namespace vcsn
   template <typename Aut>
   using states_t = std::unordered_set<state_t_of<Aut>>;
 
-  // The set of accessible states, including pre(), and possibly post().
+  /// The set of accessible states, including pre(), and possibly post().
+  ///
+  /// \param aut     the automaton.
+  /// \param strict  whether to evaluate lazy states.
   template <typename Aut>
   states_t<Aut>
-  accessible_states(const Aut& aptr)
+  accessible_states(const Aut& aut, bool strict = true)
   {
     using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
 
     // Reachable states.
-    const auto& a = *aptr;
-    auto res = states_t<Aut>{a.pre()};
+    auto res = states_t<Aut>{aut->pre()};
 
     // States work list.
     using worklist_t = std::queue<state_t>;
     auto todo = worklist_t{};
-    todo.emplace(a.pre());
+    todo.emplace(aut->pre());
 
     while (!todo.empty())
       {
         const state_t src = todo.front();
         todo.pop();
 
-        for (auto tr : a.all_out(src))
-          {
-            state_t dst = a.dst_of(tr);
-            // If we have not seen it already, explore its successors.
-            if (res.emplace(dst).second)
-              todo.emplace(dst);
-          }
+        if (strict || aut->state_is_strict(src))
+          for (auto tr : aut->all_out(src))
+            {
+              state_t dst = aut->dst_of(tr);
+              // If we have not seen it already, explore its successors.
+              if (res.emplace(dst).second)
+                todo.emplace(dst);
+            }
       }
 
     return res;
   }
 
-  // The set of coaccessible states, including post(), and possibly pre().
+  /// The set of coaccessible states, including post(), and possibly pre().
+  ///
+  /// \param a       the automaton.
+  /// \param strict  whether to evaluate lazy states.
   template <typename Aut>
   states_t<Aut>
-  coaccessible_states(const Aut& a)
+  coaccessible_states(const Aut& a, bool strict = true)
   {
-    return accessible_states(transpose(a));
+    return accessible_states(transpose(a), strict);
   }
 
-  // The set of coaccessible states, including post(), and possibly pre().
+  /// The set of useful states, including possibly pre() and post().
+  ///
+  /// \param a       the automaton.
+  /// \param strict  whether to evaluate lazy states.
   template <typename Aut>
   states_t<Aut>
-  useful_states(const Aut& a)
+  useful_states(const Aut& a, bool strict = true)
   {
-    auto accessible = accessible_states(a);
-    auto coaccessible = coaccessible_states(a);
+    auto accessible = accessible_states(a, strict);
+    auto coaccessible = coaccessible_states(a, strict);
     return intersection(accessible, coaccessible);
   }
 
