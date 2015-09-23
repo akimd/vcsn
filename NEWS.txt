@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-09-23
+### expressions: spaces are now ignored
+In an attempt to look like regexps, spaces were considered so far as
+characters.
+
 ## 2015-09-17
 ### derived-term: deterministic automata
 One can now require the construction of a deterministic automaton; there are

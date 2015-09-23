@@ -88,7 +88,7 @@ namespace
   "{T}"   return TOK(TRANSPOSITION);
 
   /* Special constructs.  */
-  "(?@"   context.clear(); yy_push_state(SC_CONTEXT);
+  "(?@"          context.clear(); yy_push_state(SC_CONTEXT);
   "(?#"[^)]*")"  continue;
 
   /* Weights. */
@@ -96,6 +96,9 @@ namespace
 
   /* Character classes.  */
   "["     yy_push_state(SC_CLASS); return parser::make_LBRACKET(loc);
+
+  /* White spaces. */
+  [ \t\n]+   loc.step(); continue;
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
@@ -185,6 +188,7 @@ namespace
         return parser::make_WEIGHT(s, loc);
       }
   }
+
   [^<>]+       s += yytext;
 
   <<EOF>> {
