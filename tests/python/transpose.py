@@ -60,6 +60,7 @@ CHECK_EQ({
            'number of deterministic states': 3,
            'number of final states': 1,
            'number of initial states': 2,
+           'number of lazy states': 0,
            'number of spontaneous transitions': 0,
            'number of states': 3,
            'number of transitions': 2,

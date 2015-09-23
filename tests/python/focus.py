@@ -44,6 +44,7 @@ CHECK_EQ({
            'number of strongly connected components': 8,
            'number of transitions': 12,
            'number of useful states': 8,
+           'number of lazy states': 0,
            'type': 'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, b>>',
          },
          t.focus(0).info(detailed = True))

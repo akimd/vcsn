@@ -4,6 +4,7 @@ run 0 - tests/unit/proper <<\EOF
 ***LAL***
 type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -27,6 +28,7 @@ is valid: 1
 proper:
 type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -50,6 +52,7 @@ is valid: 1
 forward_proper:
 type: mutable_automaton<letterset<char_letters(ab)>, b>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -73,6 +76,7 @@ is valid: 1
 ***LAW***
 type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -96,6 +100,7 @@ is valid: 1
 proper:
 type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
@@ -119,6 +124,7 @@ is valid: 1
 forward_proper:
 type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
+number of lazy states: 0
 number of initial states: 3
 number of final states: 1
 number of accessible states: 3
@@ -142,6 +148,7 @@ is valid: 1
 ***LAL Z***
 type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -165,6 +172,7 @@ is valid: 1
 proper:
 type: mutable_automaton<letterset<char_letters(ab)>, z>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -189,6 +197,7 @@ is valid: 1
 * Circuit of eps-transition
 type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -213,6 +222,7 @@ Exception: proper: invalid automaton
 * No circuit of eps-transition
 type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -236,6 +246,7 @@ is valid: 1
 proper:
 type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
@@ -259,6 +270,7 @@ is valid: 1
 forward_proper:
 type: mutable_automaton<wordset<char_letters(ab)>, z>
 number of states: 3
+number of lazy states: 0
 number of initial states: 3
 number of final states: 1
 number of accessible states: 3
@@ -283,6 +295,7 @@ is valid: 1
 * Circuit of eps-transition
 type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -307,6 +320,7 @@ Exception: proper: invalid automaton
 * No negative circuit
 type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
@@ -330,6 +344,7 @@ is valid: 1
 proper:
 type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
+number of lazy states: 0
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
@@ -353,6 +368,7 @@ is valid: 1
 forward_proper:
 type: mutable_automaton<wordset<char_letters(ab)>, zmin>
 number of states: 3
+number of lazy states: 0
 number of initial states: 3
 number of final states: 1
 number of accessible states: 3

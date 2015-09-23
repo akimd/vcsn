@@ -42,6 +42,7 @@ check(vcsn.context('lal_char(:a-z), q')
        'number of strongly connected components': 4,
        'number of transitions': 3,
        'number of useful states': 4,
+       'number of lazy states': 0,
        'type': 'mutable_automaton<letterset<char_letters(:abcdefghijklmnopqrstuvwxyz)>, q>'})
 
 check(vcsn.context('lal_char(a-z), q')
@@ -71,6 +72,7 @@ check(vcsn.context('lal_char(a-z), q')
        'number of strongly connected components': 3,
        'number of transitions': 3,
        'number of useful states': 3,
+       'number of lazy states': 0,
        'type': 'mutable_automaton<letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>, q>'})
 
 # Test what happens with "N/A".
@@ -101,6 +103,7 @@ check(vcsn.context('law_char(ab), b')
        'number of strongly connected components': 3,
        'number of transitions': 7,
        'number of useful states': 4,
+       'number of lazy states': 0,
        'type': 'mutable_automaton<wordset<char_letters(ab)>, b>'})
 
 

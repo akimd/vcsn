@@ -149,6 +149,7 @@ namespace vcsn
       DEFINE(print_state_name);
       DEFINE(src_of);
       DEFINE(state_has_name);
+      DEFINE(state_is_strict);
       DEFINE(states);
       DEFINE(transitions);
       DEFINE(weight_of);

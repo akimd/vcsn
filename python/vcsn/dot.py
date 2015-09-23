@@ -43,11 +43,15 @@ def _nodes_as_points(s):
     return s
 
 def _dot_gray_node(m):
-    '''Replace gray node contours by gray nodes.'''
+    '''Replace gray node contours by gray nodes, and apply style to
+    nodes with their own style.'''
     node = m.group(1)
     attr = m.group(2)
     if ' -> ' not in node:
         attr = attr.replace('color = DimGray', 'fillcolor = lightgray')
+        attr = re.sub(r'style = "?([\w,]+)"?', r'style = "\1,filled,rounded"', attr)
+        # This is really ugly...  We should definitely use gvpr.
+        attr = attr.replace(r'filled,rounded,filled,rounded', 'filled,rounded')
     return node + attr
 
 def _dot_pretty(s, mode = "dot"):
@@ -78,7 +82,7 @@ def _dot_pretty(s, mode = "dot"):
     # Useless states should be filled in gray, instead of having a
     # gray contour.  Fill with a lighter gray.  But don't change the
     # color of the arrows.
-    s = re.sub('^(.*)(\[.*\])$', _dot_gray_node, s, flags = re.MULTILINE);
+    s = re.sub('^(.*)(\[.*?\])$', _dot_gray_node, s, flags = re.MULTILINE);
     return s
 
 @lru_cache(maxsize = 32)

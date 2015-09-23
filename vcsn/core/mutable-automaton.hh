@@ -192,6 +192,14 @@ namespace vcsn
         }
     }
 
+    /// Whether state s belongs to the automaton.
+    bool
+    state_is_strict(state_t s) const
+    {
+      assert(has_state(s)); (void) s;
+      return true;
+    }
+
     /// Whether s is initial.
     bool
     is_initial(state_t s) const

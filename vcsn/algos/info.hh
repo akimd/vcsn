@@ -182,6 +182,20 @@ namespace vcsn
         res += aut->labelset()->is_one(aut->label_of(t));
       return res;
     }
+
+    /*-------------------.
+    | num_lazy_states.   |
+    `-------------------*/
+
+    template <typename Aut>
+    size_t
+    num_lazy_states(const Aut& a)
+    {
+      size_t res = 0;
+      for (auto s: a->all_states())
+        res += !a->state_is_strict(s);
+      return res;
+    }
   }
 
   /*--------------------------.
@@ -197,6 +211,7 @@ namespace vcsn
 #define ECHO(Name, Value)                               \
     out << Name ": " << Value << '\n'
     ECHO("number of states", aut->num_states());
+    ECHO("number of lazy states", detail_info::num_lazy_states(aut));
     ECHO("number of initial states", aut->num_initials());
     ECHO("number of final states", aut->num_finals());
     ECHO("number of accessible states", num_accessible_states(aut));

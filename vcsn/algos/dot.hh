@@ -191,6 +191,17 @@ namespace vcsn
                   bos_ << " (" << s << ')';
                 bos_ << "\", shape = box";
               }
+            if (!aut_->state_is_strict(s))
+              {
+                if (has_attributes)
+                  bos_ << ", ";
+                else
+                  {
+                    bos_ << " [";
+                    has_attributes = true;
+                  }
+                bos_ << "style = dashed";
+              }
           }
         if (!has(useful_, s))
           {
@@ -315,7 +326,8 @@ namespace vcsn
         // For each src state, the destinations, sorted.
         std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->all_states())
-          if (!dot2tex_ || src != aut_->pre())
+          if (aut_->state_is_strict(src)
+              && (!dot2tex_ || src != aut_->pre()))
             {
               dsts.clear();
               for (auto t: aut_->all_out(src))
