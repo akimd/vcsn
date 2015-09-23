@@ -638,6 +638,11 @@ struct automaton
     return vcsn::dyn::trim(val_);
   }
 
+  std::string type() const
+  {
+    return vcsn::dyn::type(val_);
+  }
+
   automaton union_a(const automaton& rhs) const
   {
     return vcsn::dyn::union_a(val_, rhs.val_);
@@ -1351,6 +1356,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          &automaton::synchronizing_word, (arg("algo") = "greedy"))
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
+    .def("type", &automaton::type)
     .def("union", &automaton::union_a)
     .def("universal", &automaton::universal)
     .def("weight_series", &automaton::weight_series)

@@ -240,5 +240,3 @@ automaton.lift = _automaton_lift
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 
 automaton.state_number = lambda self: self.info('number of states')
-
-automaton.type = lambda self: self.info('type')

@@ -180,5 +180,10 @@ namespace vcsn
       auto auts = std::vector<dyn::expression>{lhs, rhs};
       return tuple(auts);
     }
+
+    std::string type(const automaton& a)
+    {
+      return a->vname();
+    }
   }
 }

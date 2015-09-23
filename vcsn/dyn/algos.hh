@@ -829,6 +829,9 @@ namespace vcsn
     /// Build a k-tape expression from k expressions.
     expression tuple(const std::vector<expression>& rs);
 
+    /// The implementation type of a.
+    std::string type(const automaton& a);
+
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
 
