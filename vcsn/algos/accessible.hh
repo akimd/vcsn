@@ -119,6 +119,7 @@ namespace vcsn
   | accessible, coaccessible, useful subautomata.  |
   `-----------------------------------------------*/
 
+  /// Accessible part of an automaton.
   template <typename Aut>
   filter_automaton<Aut>
   accessible(const Aut& a)
@@ -126,6 +127,7 @@ namespace vcsn
     return vcsn::filter(a, accessible_states(a));
   }
 
+  /// Coaccessible part of an automaton.
   template <typename Aut>
   filter_automaton<Aut>
   coaccessible(const Aut& a)
@@ -133,6 +135,7 @@ namespace vcsn
     return vcsn::filter(a, coaccessible_states(a));
   }
 
+  /// Useful part of an automaton.
   template <typename Aut>
   filter_automaton<Aut>
   trim(const Aut& a)
@@ -144,24 +147,28 @@ namespace vcsn
   | is_trim, is_accessible, is_coaccessible, is_empty, is_useless.  |
   `----------------------------------------------------------------*/
 
+  /// Whether all its states are useful.
   template <typename Aut>
   bool is_trim(const Aut& a)
   {
     return num_useful_states(a) == a->num_states();
   }
 
+  /// Whether all no state is useful.
   template <typename Aut>
   bool is_useless(const Aut& a)
   {
     return num_useful_states(a) == 0;
   }
 
+  /// Whether all its states are accessible.
   template <typename Aut>
   bool is_accessible(const Aut& a)
   {
     return num_accessible_states(a) == a->num_states();
   }
 
+  /// Whether all its states are coaccessible.
   template <typename Aut>
   bool is_coaccessible(const Aut& a)
   {
@@ -171,6 +178,7 @@ namespace vcsn
   template <typename Aut>
   bool is_empty(const Aut& a) ATTRIBUTE_PURE;
 
+  /// Whether has no states.
   template <typename Aut>
   bool is_empty(const Aut& a)
   {
@@ -183,7 +191,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
       template <typename Aut>
       automaton
