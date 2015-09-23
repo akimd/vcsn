@@ -176,11 +176,9 @@ namespace vcsn
         if (!lazy)
           while (!aut_->todo_.empty())
             {
-              state_name_t psrc = aut_->todo_.front();
+              auto p = aut_->todo_.front();
               aut_->todo_.pop_front();
-              state_t src = aut_->pmap_[psrc];
-
-              add_conjunction_transitions(src, psrc);
+              add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
             }
       }
 
@@ -191,11 +189,9 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            state_name_t psrc = aut_->todo_.front();
+            auto p = aut_->todo_.front();
             aut_->todo_.pop_front();
-            state_t src = aut_->pmap_[psrc];
-
-            add_shuffle_transitions<false>(src, psrc);
+            add_shuffle_transitions<false>(std::get<1>(p), std::get<0>(p));
           }
       }
 
@@ -229,17 +225,16 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            state_name_t psrc = aut_->todo_.front();
+            auto p = aut_->todo_.front();
             aut_->todo_.pop_front();
-            state_t src = aut_->pmap_[psrc];
 
             // Infiltrate is a mix of conjunction and shuffle operations.
             //
             // Conjunction transitions must be added before shuffle ones:
             // this way "conjunction" can use "new_transition" only, which
             // is faster than "add_transition".
-            add_conjunction_transitions(src, psrc);
-            add_shuffle_transitions<true>(src, psrc);
+            add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
+            add_shuffle_transitions<true>(std::get<1>(p), std::get<0>(p));
           }
       }
 
@@ -248,7 +243,7 @@ namespace vcsn
       /// needed for the conjunction algorithm.
       void initialize_conjunction()
       {
-        aut_->todo_.emplace_back(aut_->pre_());
+        aut_->todo_.emplace_back(aut_->pre_(), aut_->pre());
       }
 
       /// Fill the worklist with the initial source-state pairs, as

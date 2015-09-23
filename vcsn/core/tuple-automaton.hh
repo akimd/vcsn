@@ -201,8 +201,9 @@ namespace vcsn
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
-            lb = pmap_.emplace_hint(lb, state, aut_->new_state());
-            todo_.emplace_back(state);
+            state_t s = aut_->new_state();
+            lb = pmap_.emplace_hint(lb, state, s);
+            todo_.emplace_back(state, s);
           }
         return lb->second;
       }
@@ -246,7 +247,7 @@ namespace vcsn
       map pmap_;
 
       /// Worklist of state tuples.
-      std::deque<state_name_t> todo_;
+      std::deque<std::pair<state_name_t, state_t>> todo_;
 
       mutable origins_t origins_;
     };

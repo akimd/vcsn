@@ -84,11 +84,9 @@ namespace vcsn
 
         while (!res_->todo_.empty())
           {
-            state_name_t psrc = res_->todo_.front();
+            auto p = res_->todo_.front();
             res_->todo_.pop_front();
-            state_t src = res_->pmap_[psrc];
-
-            add_compose_transitions(src, psrc);
+            add_compose_transitions(std::get<1>(p), std::get<0>(p));
           }
         return std::move(res_);
       }
@@ -131,7 +129,7 @@ namespace vcsn
       /// needed for the product algorithm.
       void initialize_compose()
       {
-        res_->todo_.emplace_back(res_->pre_());
+        res_->todo_.emplace_back(res_->pre_(), res_->pre());
       }
 
       res_label_t join_label(const hidden_l_label_t& ll,
