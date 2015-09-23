@@ -77,30 +77,6 @@ namespace vcsn
                            {rhs, *res_->weightset()}}
       {}
 
-      static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
-                                       const hidden_r_labelset_t& rl)
-      {
-        return make_labelset_(ll, make_index_sequence<hidden_l_labelset_t::size()>{},
-                              rl, make_index_sequence<hidden_r_labelset_t::size()>{});
-      }
-
-      template <std::size_t... I1, std::size_t... I2>
-      static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
-                                       seq<I1...>,
-                                       const hidden_r_labelset_t& rl,
-                                       seq<I2...>)
-      {
-        return labelset_t{std::get<I1>(ll.sets())...,
-                          std::get<I2>(rl.sets())...};
-      }
-
-      static context_t
-      make_context_(const Lhs& lhs, const Rhs& rhs)
-      {
-        return {make_labelset_(lhs->res_labelset(), rhs->res_labelset()),
-                join(*lhs->weightset(), *rhs->weightset())};
-      }
-
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
       automaton_t operator()()
       {
@@ -127,6 +103,30 @@ namespace vcsn
       using transition_map_t
         = transition_map<A, weightset_t, false, true, true>;
 
+      static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
+                                       const hidden_r_labelset_t& rl)
+      {
+        return make_labelset_(ll, make_index_sequence<hidden_l_labelset_t::size()>{},
+                              rl, make_index_sequence<hidden_r_labelset_t::size()>{});
+      }
+
+      template <std::size_t... I1, std::size_t... I2>
+      static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
+                                       seq<I1...>,
+                                       const hidden_r_labelset_t& rl,
+                                       seq<I2...>)
+      {
+        return labelset_t{std::get<I1>(ll.sets())...,
+                          std::get<I2>(rl.sets())...};
+      }
+
+      static context_t
+      make_context_(const Lhs& lhs, const Rhs& rhs)
+      {
+        return {make_labelset_(lhs->res_labelset(), rhs->res_labelset()),
+                join(*lhs->weightset(), *rhs->weightset())};
+      }
+
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
       void initialize_compose()
@@ -134,7 +134,8 @@ namespace vcsn
         res_->todo_.emplace_back(res_->pre_());
       }
 
-      res_label_t join_label(hidden_l_label_t ll, hidden_r_label_t rl)
+      res_label_t join_label(const hidden_l_label_t& ll,
+                             const hidden_r_label_t& rl)
       {
         return std::tuple_cat(ll, rl);
       }
@@ -185,15 +186,15 @@ namespace vcsn
                                    t.weight());
           }
 
-        // If lhs did not issue spontaneous transitions but has
-        // non-spontaneous transitions, issue follow all the rhs
-        // spontaneous-transitions.
-        const bool lhs_has_non_sp_trans =
+        // If lhs did not issue spontaneous transitions but has proper
+        // transitions, issue follow all the rhs spontaneous
+        // transitions.
+        const bool lhs_has_proper_trans =
           !ltm.empty()
           && (!lhs->labelset()->is_one(ltm.begin()->first)
               || 2 <= ltm.size());
 
-        if ((!has_eps_out || lhs_has_non_sp_trans)
+        if ((!has_eps_out || lhs_has_proper_trans)
             && !rtm.empty()
             && rhs->labelset()->is_one(rtm.begin()->first))
           for (auto t: rtm.begin()->second)
