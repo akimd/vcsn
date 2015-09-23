@@ -25,7 +25,7 @@ RUN apt-get update                                              \
         texlive-pictures                                        \
   && apt-get autoremove                                         \
   && apt-get clean                                              \
-  && pip3 install "ipython[notebook]==3.2.1"
+  && pip3 install "ipython[notebook]"
 
 # Set the locale
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
