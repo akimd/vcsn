@@ -92,15 +92,14 @@ namespace vcsn
             const monomial_t& m = sm.second;
             for (const auto t: aut_->all_out(s))
               {
-                // FIXME: monomial mul.
-                monomial_t n(ls_.mul(label_of(m), aut_->label_of(t)),
-                             ws_.mul(weight_of(m), aut_->weight_of(t)));
+                auto l = ls_.mul(label_of(m), aut_->label_of(t));
+                auto w = ws_.mul(weight_of(m), aut_->weight_of(t));
                 // The past of post(), without the initial and final
                 // special characters.
                 if (aut_->dst_of(t) == aut_->post())
                   ps_.add_here(output_,
-                               ls_.undelimit(label_of(n)), weight_of(n));
-                q2.emplace_back(aut_->dst_of(t), n);
+                               ls_.undelimit(l), w);
+                q2.emplace_back(aut_->dst_of(t), monomial_t{l, w});
               }
           }
         q1.swap(q2);
