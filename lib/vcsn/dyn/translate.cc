@@ -387,23 +387,12 @@ namespace vcsn
     {
       translation translate;
       std::set<std::pair<std::string, signature>> algos{{algo, sig}};
-      if (algo == "dot"
-          // || algo == "efsm" Need to add a bool argument.
-          || algo == "info" && sig.size() == 3)
+      if (algo == "delay_automaton"
+          || algo == "is_synchronized")
         {
-          // Aut, Ostrean, Bool.
-          algos.emplace("dot", sig);
-          algos.emplace("info", sig);
-          // Aut, Ostream.
-          signature sig2{sig[0], sig[1]};
-          algos.emplace("efsm", sig2);
+          algos.emplace("delay_automaton", sig);
+          algos.emplace("is_synchronized", sig);
         }
-      else if (algo == "is_synchronized"
-               || algo == "delay_automaton")
-      {
-        algos.emplace("is_synchronized", sig);
-        algos.emplace("delay_automaton", sig);
-      }
       translate.compile(algos);
     }
   } // namespace dyn
