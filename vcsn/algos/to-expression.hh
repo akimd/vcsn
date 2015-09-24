@@ -50,9 +50,9 @@ namespace vcsn
                    << 'l' << p.has_loop_;
         }
 
-        size_t  size_;
+        size_t size_;
         state_t state_;
-        bool    has_loop_ = false;
+        bool has_loop_ = false;
       };
 
       state_profile
@@ -72,10 +72,10 @@ namespace vcsn
         // Since we are in LAO, there can be at most one such loop.
         // Don't count the loops as out-degree.
         for (auto t: aut_->all_out(p.state_))
-          if (aut_->dst_of(t) != p.state_)
-            ++out;
-          else
+          if (aut_->dst_of(t) == p.state_)
             p.has_loop_ = true;
+          else
+            ++out;
         size_t in = aut_->all_in(p.state_).size();
         p.size_ = in * out;
       }
@@ -118,7 +118,7 @@ namespace vcsn
                    << 's' << p.size_;
         }
 
-        size_t  size_;
+        size_t size_;
         state_t state_;
       };
 
