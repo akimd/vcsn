@@ -230,38 +230,6 @@ namespace vcsn
           handles_[s] = todo_.emplace(profiler_.make_state_profile(s));
       }
 
-      void update_heap_()
-      {
-#ifdef DEBUG_UPDATE
-        std::cerr << "update heap: (";
-        show_heap_();
-#endif
-        for (auto s: neighbors_)
-          if (s != aut_->pre() && s != aut_->post())
-            {
-              auto& h = handles_[s];
-              profiler_.update(*h);
-              todo_.update(h);
-            }
-#ifdef DEBUG_UPDATE
-        std::cerr << ") => ";
-        show_heap_();
-        std::cerr << std::endl;
-#endif
-      }
-
-      /// Show the heap, for debugging.
-      void show_heap_() const
-      {
-        const char* sep = "";
-        for (auto i = todo_.ordered_begin(), end = todo_.ordered_end();
-             i != end; ++i)
-          {
-            std::cerr << sep << *i;
-            sep = " > ";
-          }
-      }
-
       /// Eliminate state s.
       void operator()(state_t s)
       {
@@ -309,18 +277,11 @@ namespace vcsn
       {
         while (!todo_.empty())
           {
-#ifdef DEBUG_LOOP
-            std::cerr << "Before: ";
-            show_heap_();
-            std::cerr << std::endl;
-#endif
-
             auto p = todo_.top();
             todo_.pop();
 
 #ifdef DEBUG_LOOP
-            std::cerr << "Remove: " << p;
-            std::cerr << std::endl;
+            std::cerr << "Remove: " << p << std::endl;
 #endif
             auto s = p.state_;
 
@@ -331,6 +292,38 @@ namespace vcsn
       }
 
     private:
+      void update_heap_()
+      {
+#ifdef DEBUG_UPDATE
+        std::cerr << "update heap: (";
+        show_heap_();
+#endif
+        for (auto s: neighbors_)
+          if (s != aut_->pre() && s != aut_->post())
+            {
+              auto& h = handles_[s];
+              profiler_.update(*h);
+              todo_.update(h);
+            }
+#ifdef DEBUG_UPDATE
+        std::cerr << ") => ";
+        show_heap_();
+        std::cerr << std::endl;
+#endif
+      }
+
+      /// Show the heap, for debugging.
+      void show_heap_() const
+      {
+        const char* sep = "";
+        for (auto i = todo_.ordered_begin(), end = todo_.ordered_end();
+             i != end; ++i)
+          {
+            std::cerr << sep << *i;
+            sep = " > ";
+          }
+      }
+
       /// The automaton we work on.
       automaton_t& aut_;
       /// The profiler we work with. Corresponding to a specific heuristic.
@@ -373,26 +366,6 @@ namespace vcsn
       {
         for (auto s: aut_->states())
           handles_[s] = todo_.emplace(profiler_.make_state_profile(s));
-      }
-
-      void update_heap_()
-      {
-#ifdef DEBUG_UPDATE
-        std::cerr << "update heap: (";
-        show_heap_();
-#endif
-        for (auto s: neighbors_)
-          if (s != aut_->pre() && s != aut_->post())
-            {
-              auto& h = handles_[s];
-              profiler_.update(*h);
-              todo_.update(h);
-            }
-#ifdef DEBUG_UPDATE
-        std::cerr << ") => ";
-        show_heap_();
-        std::cerr << std::endl;
-#endif
       }
 
       /// Eliminate state s.
@@ -442,6 +415,9 @@ namespace vcsn
           {
             auto p = todo_.top();
             todo_.pop();
+#ifdef DEBUG_LOOP
+            std::cerr << "Remove: " << p << std::endl;
+#endif
             auto s = p.state_;
 
             neighbors_.clear();
@@ -451,6 +427,38 @@ namespace vcsn
       }
 
     private:
+      void update_heap_()
+      {
+#ifdef DEBUG_UPDATE
+        std::cerr << "update heap: (";
+        show_heap_();
+#endif
+        for (auto s: neighbors_)
+          if (s != aut_->pre() && s != aut_->post())
+            {
+              auto& h = handles_[s];
+              profiler_.update(*h);
+              todo_.update(h);
+            }
+#ifdef DEBUG_UPDATE
+        std::cerr << ") => ";
+        show_heap_();
+        std::cerr << std::endl;
+#endif
+      }
+
+      /// Show the heap, for debugging.
+      void show_heap_() const
+      {
+        const char* sep = "";
+        for (auto i = todo_.ordered_begin(), end = todo_.ordered_end();
+             i != end; ++i)
+          {
+            std::cerr << sep << *i;
+            sep = " > ";
+          }
+      }
+
       /// The automaton we work on.
       automaton_t& aut_;
       /// The profiler we work with. Corresponding to a specific heuristic.
