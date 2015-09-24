@@ -239,8 +239,7 @@ namespace vcsn
       /// Update the profile of \a s.
       void update_profile_(state_t s)
       {
-        if (auto p = profile(s))
-          profiler_.update(*p);
+        profiler_.update(*handles_.find(s)->second);
       }
 
       /// Update the heap for \a s.
@@ -251,24 +250,12 @@ namespace vcsn
         std::cerr << "update heap (" << s << " : ";
         show_heap_();
 #endif
-        auto i = handles_.find(s);
-        if (i != handles_.end())
-          todo_.update(i->second);
+        todo_.update(handles_.find(s)->second);
 #ifdef DEBUG_UPDATE
         std::cerr << ") => ";
         show_heap_();
         std::cerr << std::endl;
 #endif
-      }
-
-      profile_t*
-      profile(state_t s)
-      {
-        auto i = handles_.find(s);
-        if (i == handles_.end())
-          return nullptr;
-        else
-          return &*i->second;
       }
 
       /// Show the heap, for debugging.
@@ -403,7 +390,6 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
       using expressionset_t = labelset_t_of<automaton_t>;
-      using weightset_t = weightset_t_of<automaton_t>;
 
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
@@ -423,27 +409,14 @@ namespace vcsn
       /// Update the profile of \a s.
       void update_profile_(state_t s)
       {
-        if (auto p = profile(s))
-          profiler_.update(*p);
+        profiler_.update(*handles_.find(s)->second);
       }
 
       /// Update the heap for \a s.
       /// \pre  its profile is updated.
       void update_heap_(state_t s)
       {
-        auto i = handles_.find(s);
-        if (i != handles_.end())
-          todo_.update(i->second);
-      }
-
-      profile_t*
-      profile(state_t s)
-      {
-        auto i = handles_.find(s);
-        if (i == handles_.end())
-          return nullptr;
-        else
-          return &*i->second;
+        todo_.update(handles_.find(s)->second);
       }
 
       /// Eliminate state s.
@@ -521,8 +494,6 @@ namespace vcsn
       profiler_t& profiler_;
       /// Shorthand to the labelset, which is an expressionset.
       const expressionset_t& rs_ = *aut_->labelset();
-      /// Shorthand to the weightset.
-      const weightset_t& ws_ = *aut_->weightset();
 
       /// Max-heap to decide the order of state-elimination.
       using heap_t = boost::heap::fibonacci_heap<profile_t>;
