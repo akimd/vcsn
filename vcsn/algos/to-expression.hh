@@ -240,36 +240,9 @@ namespace vcsn
             todo_.pop();
             s = p.state_;
           }
-        require(aut_->has_state(s), "not a valid state: ", s);
-        // The loop's weight.
-        auto loop = ws_.zero();
-        assert(aut_->outin(s, s).size() <= 1);
-        // There is a single possible loop labeled by \e, but it's
-        // easier and symmetrical with LAR to use a for-loop.
-        for (auto t: make_vector(aut_->outin(s, s)))
-          {
-            loop = ws_.add(loop, aut_->weight_of(t));
-            aut_->del_transition(t);
-          }
-        loop = ws_.star(loop);
-
-        // Get all the predecessors, and successors, except itself.
-        auto outs = aut_->all_out(s);
-        for (auto in: aut_->all_in(s))
-          for (auto out: outs)
-            {
-              auto src = aut_->src_of(in);
-              auto dst = aut_->dst_of(out);
-              auto t = aut_->add_transition
-                (src, dst,
-                 aut_->label_of(in),
-                 ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
-              profiler_.invalidate_cache(t);
-              neighbors_.emplace(src);
-              neighbors_.emplace(dst);
-            }
-
-        aut_->del_state(s);
+        else
+          require(aut_->has_state(s), "not a valid state: ", s);
+        eliminate_state_(s);
       }
 
       /// Eliminate all the states, in the order specified by \a next_state.
@@ -283,11 +256,7 @@ namespace vcsn
 #ifdef DEBUG_LOOP
             std::cerr << "Remove: " << p << std::endl;
 #endif
-            auto s = p.state_;
-
-            neighbors_.clear();
-            operator()(s);
-            update_heap_();
+            eliminate_state_(p.state_);
           }
       }
 
@@ -322,6 +291,42 @@ namespace vcsn
             std::cerr << sep << *i;
             sep = " > ";
           }
+      }
+
+      void eliminate_state_(state_t s)
+      {
+        neighbors_.clear();
+
+        // The loop's weight.
+        auto loop = ws_.zero();
+        assert(aut_->outin(s, s).size() <= 1);
+        // There is a single possible loop labeled by \e, but it's
+        // easier and symmetrical with LAR to use a for-loop.
+        for (auto t: make_vector(aut_->outin(s, s)))
+          {
+            loop = ws_.add(loop, aut_->weight_of(t));
+            aut_->del_transition(t);
+          }
+        loop = ws_.star(loop);
+
+        // Get all the predecessors, and successors, except itself.
+        auto outs = aut_->all_out(s);
+        for (auto in: aut_->all_in(s))
+          for (auto out: outs)
+            {
+              auto src = aut_->src_of(in);
+              auto dst = aut_->dst_of(out);
+              auto t = aut_->add_transition
+                (src, dst,
+                 aut_->label_of(in),
+                 ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
+              profiler_.invalidate_cache(t);
+              neighbors_.emplace(src);
+              neighbors_.emplace(dst);
+            }
+
+        aut_->del_state(s);
+        update_heap_();
       }
 
       /// The automaton we work on.
@@ -378,34 +383,9 @@ namespace vcsn
             todo_.pop();
             s = p.state_;
           }
-        require(aut_->has_state(s), "not a valid state: ", s);
-        // The loops' expression.
-        auto loop = rs_.zero();
-        for (auto t: make_vector(aut_->outin(s, s)))
-          {
-            loop = rs_.add(loop,
-                           rs_.lmul(aut_->weight_of(t), aut_->label_of(t)));
-            aut_->del_transition(t);
-          }
-        loop = rs_.star(loop);
-
-        // Get all the predecessors, and successors, except itself.
-        auto outs = aut_->all_out(s);
-        for (auto in: aut_->all_in(s))
-          for (auto out: outs)
-            {
-              auto src = aut_->src_of(in);
-              auto dst = aut_->dst_of(out);
-              aut_->add_transition
-                (src, dst,
-                 rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
-                         loop,
-                         rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
-              neighbors_.emplace(src);
-              neighbors_.emplace(dst);
-            }
-
-        aut_->del_state(s);
+        else
+          require(aut_->has_state(s), "not a valid state: ", s);
+        eliminate_state_(s);
       }
 
       /// Eliminate all the states, in the order specified by \a next_state.
@@ -418,11 +398,7 @@ namespace vcsn
 #ifdef DEBUG_LOOP
             std::cerr << "Remove: " << p << std::endl;
 #endif
-            auto s = p.state_;
-
-            neighbors_.clear();
-            operator()(s);
-            update_heap_();
+            eliminate_state_(p.state_);
           }
       }
 
@@ -457,6 +433,41 @@ namespace vcsn
             std::cerr << sep << *i;
             sep = " > ";
           }
+      }
+
+      void eliminate_state_(state_t s)
+      {
+        neighbors_.clear();
+
+        // The loops' expression.
+        auto loop = rs_.zero();
+        for (auto t: make_vector(aut_->outin(s, s)))
+          {
+            loop = rs_.add(loop,
+                           rs_.lmul(aut_->weight_of(t), aut_->label_of(t)));
+            aut_->del_transition(t);
+          }
+        loop = rs_.star(loop);
+
+        // Get all the predecessors, and successors, except itself.
+        auto outs = aut_->all_out(s);
+        for (auto in: aut_->all_in(s))
+          for (auto out: outs)
+            {
+              auto src = aut_->src_of(in);
+              auto dst = aut_->dst_of(out);
+              auto t = aut_->add_transition
+                (src, dst,
+                 rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
+                         loop,
+                         rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
+              profiler_.invalidate_cache(t);
+              neighbors_.emplace(src);
+              neighbors_.emplace(dst);
+            }
+
+        aut_->del_state(s);
+        update_heap_();
       }
 
       /// The automaton we work on.
