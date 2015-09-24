@@ -206,19 +206,6 @@ namespace vcsn
     /// base b iff k|n.
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
-    /// Output \a aut in GraphViz' Dot format.
-    ///
-    /// \param aut  the automaton to format
-    /// \param out  the output stream where to print the dot file
-    /// \param dot2tex
-    ///    whether to generate LaTeX escapes in the dot file for
-    ///    use with dot2tex.
-    std::ostream& dot(const automaton& aut, std::ostream& out,
-                      bool dot2tex = false);
-
-    /// A string representing \a aut in GraphViz' Dot format.
-    std::string dot(const automaton& aut);
-
     /// The double_ring automaton with \a n states and \a f the list of finals.
     automaton double_ring(const context& ctx, unsigned n,
                           const std::vector<unsigned>& f);
@@ -226,9 +213,6 @@ namespace vcsn
     /// The LAO automaton \a aut with state \a s removed.
     automaton eliminate_state(const automaton& aut,
                               int s = -1);
-
-    /// Output in Extended FSM format.
-    std::ostream& efsm(const automaton& aut, std::ostream& out);
 
     /// Evaluate \a l on \a aut.
     weight eval(const automaton& aut, const label& l);
@@ -246,9 +230,6 @@ namespace vcsn
     /// Create a factor automaton from \a aut.
     automaton factor(const automaton& aut);
 
-    /// Output in FAdo format.
-    std::ostream& fado(const automaton& aut, std::ostream& out);
-
     /// The subautomaton based on \a aut, with only states in \a ss visible.
     automaton filter(const automaton& aut, const std::vector<unsigned>& ss);
 
@@ -257,9 +238,6 @@ namespace vcsn
 
     /// Focus on a specific tape of a tupleset automaton.
     automaton focus(const automaton& aut, unsigned tape);
-
-    /// Output in Grail format.
-    std::ostream& grail(const automaton& aut, std::ostream& out);
 
     /// Whether the automaton has the twins property.
     bool has_twins_property(const automaton& aut);
@@ -512,7 +490,18 @@ namespace vcsn
     automaton prefix(const automaton& aut);
 
     /// Print automaton \a a on \a o using format \a format.
-    std::ostream& print(const automaton& a, std::ostream& o,
+    ///
+    /// \param aut  the automaton to format
+    /// \param out  the output stream where to print the dot file
+    /// \param format  the output format.
+    ///    - "dot"      GraphViz' Dot format.
+    ///    - "dot2tex"  Likewise, but generate LaTeX escapes for
+    ///                 use with dot2tex.
+    ///    - "efsm"     Extended FSM.
+    ///    - "fado"     FAdo format.
+    ///    - "grail"    Grail format.
+    ///    - "tikz"     LaTeX's TikZ format.
+    std::ostream& print(const automaton& aut, std::ostream& out,
                         const std::string& format = "default");
 
     /// Print context \a c on \a o using format \a format.
@@ -744,9 +733,6 @@ namespace vcsn
 
     /// The Thompson automaton of \a e.
     automaton thompson(const expression& e);
-
-    /// Output \a aut in LaTeX's TikZ format.
-    std::ostream& tikz(const automaton& aut, std::ostream& out);
 
     /// An automaton denoting the language of \a exp.
     /// \param exp   the expression defining the series.

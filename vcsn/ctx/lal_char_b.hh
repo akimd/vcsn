@@ -15,7 +15,6 @@ namespace vcsn
 #include <vcsn/algos/are-equivalent.hh>
 #include <vcsn/algos/complement.hh>
 #include <vcsn/algos/determinize.hh>
-#include <vcsn/algos/grail.hh>
 #include <vcsn/algos/star-normal-form.hh>
 #include <vcsn/algos/universal.hh>
 #include <vcsn/ctx/instantiate.hh>
@@ -73,8 +72,6 @@ namespace vcsn
         REGISTER(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);
         REGISTER(determinize, aut_t, const std::string);
-        REGISTER(fado, aut_t, std::ostream);
-        REGISTER(grail, aut_t, std::ostream);
         REGISTER(star_normal_form, rs_t);
         REGISTER(universal, aut_t);
 # undef REGISTER

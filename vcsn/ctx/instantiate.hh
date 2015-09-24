@@ -13,10 +13,8 @@
 #include <vcsn/algos/derived-term.hh>
 #include <vcsn/algos/divide.hh>
 #include <vcsn/algos/divkbaseb.hh>
-#include <vcsn/algos/dot.hh>
 #include <vcsn/algos/double-ring.hh>
 #include <vcsn/algos/edit-automaton.hh>
-#include <vcsn/algos/efsm.hh>
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities.hh>
@@ -50,7 +48,6 @@
 #include <vcsn/algos/sum.hh>
 #include <vcsn/algos/synchronizing-word.hh>
 #include <vcsn/algos/thompson.hh>
-#include <vcsn/algos/tikz.hh>
 #include <vcsn/algos/to-expansion.hh>
 #include <vcsn/algos/to-expression.hh>
 #include <vcsn/algos/transpose.hh>
@@ -150,11 +147,9 @@ namespace vcsn
         using aut_t = Aut;
         using namespace dyn::detail;
         REGISTER(copy, aut_t);
-        REGISTER(dot, aut_t, std::ostream, bool);
-        REGISTER(efsm, aut_t, std::ostream);
+        REGISTER(print, aut_t, std::ostream, const std::string);
         REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(proper, aut_t, direction, bool, const std::string);
-        REGISTER(tikz, aut_t, std::ostream);
         return true;
       }
 

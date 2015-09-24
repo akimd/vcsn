@@ -2,6 +2,11 @@
 
 #include <iosfwd>
 
+#include <vcsn/algos/dot.hh>
+#include <vcsn/algos/efsm.hh>
+#include <vcsn/algos/grail.hh>
+#include <vcsn/algos/info.hh>
+#include <vcsn/algos/tikz.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/expansion.hh>
@@ -15,6 +20,92 @@
 
 namespace vcsn
 {
+  /*----------------------------.
+  | print(automaton, stream).   |
+  `----------------------------*/
+
+  namespace detail
+  {
+    // FIXME: C++14 and templated variables.
+    template <typename Aut>
+    using has_fado_t
+    = std::integral_constant<bool,
+                             ((context_t_of<Aut>::is_lal
+                               || context_t_of<Aut>::is_lan)
+                              && std::is_same<weightset_t_of<Aut>, b>::value)>;
+
+    template <typename Aut>
+    auto
+    fado_impl_(const Aut& aut, std::ostream& out)
+      -> enable_if_t<has_fado_t<Aut>{}, void>
+    {
+      fado(aut, out);
+    }
+
+    template <typename Aut>
+    auto
+    fado_impl_(const Aut&, std::ostream&)
+      -> enable_if_t<!has_fado_t<Aut>{}, void>
+    {
+      raise("print: FAdo requires letter or nullable labels,"
+            " and Boolean weights");
+    }
+
+    template <typename Aut>
+    auto
+    grail_impl_(const Aut& aut, std::ostream& out)
+      -> enable_if_t<has_fado_t<Aut>{}, void>
+    {
+      grail(aut, out);
+    }
+
+    template <typename Aut>
+    auto
+    grail_impl_(const Aut&, std::ostream&)
+      -> enable_if_t<!has_fado_t<Aut>{}, void>
+    {
+      raise("print: Grail requires letter or nullable labels,"
+            " and Boolean weights");
+    }
+  }
+
+  template <typename Aut>
+  std::ostream&
+  print(const Aut& aut, std::ostream& out, const std::string& format)
+  {
+    static const auto map
+      = std::map<std::string, std::function<void(const Aut&, std::ostream&)>>
+      {
+        {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
+        {"default",      [](const Aut& a, std::ostream& o){ dot(a, o); }},
+        {"dot2tex",      [](const Aut& a, std::ostream& o){ dot(a, o, true); }},
+        {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},
+        {"fado",         detail::fado_impl_<Aut>},
+        {"grail",        detail::grail_impl_<Aut>},
+        {"info",         [](const Aut& a, std::ostream& o){ info(a, o); }},
+        {"info,detailed",[](const Aut& a, std::ostream& o){ info(a, o, true); }},
+        {"null",         [](const Aut&, std::ostream&){}},
+        {"tikz",         [](const Aut& a, std::ostream& o){ tikz(a, o); }},
+      };
+    auto fun = getargs("automaton output format", map, format);
+    fun(aut, out);
+    return out;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut, typename Ostream, typename String>
+      std::ostream& print(const automaton& aut, std::ostream& o,
+                          const std::string& fmt)
+      {
+        const auto& a = aut->as<Aut>();
+        return print(a, o, fmt);
+      }
+    }
+  }
 
   /*-------------------------.
   | print(context, stream).  |

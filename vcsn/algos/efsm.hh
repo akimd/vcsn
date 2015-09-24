@@ -343,17 +343,4 @@ namespace vcsn
     efsm();
     return out;
   }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut, typename Ostream>
-      std::ostream& efsm(const automaton& aut, std::ostream& out)
-      {
-        return efsm(aut->as<Aut>(), out);
-      }
-    }
-  }
 }

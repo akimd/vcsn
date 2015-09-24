@@ -18,37 +18,6 @@ namespace vcsn
   {
 
     /*---------------------------.
-    | print(automaton, stream).  |
-    `---------------------------*/
-
-    std::ostream&
-    print(const dyn::automaton& aut, std::ostream& out,
-          const std::string& format)
-    {
-      if (format == "dot" || format == "default" || format == "")
-        dot(aut, out, false);
-      else if (format == "dot2tex")
-        dot(aut, out, true);
-      else if (format == "efsm")
-        efsm(aut, out);
-      else if (format == "fado")
-        fado(aut, out);
-      else if (format == "grail")
-        grail(aut, out);
-      else if (format == "info")
-        info(aut, out);
-      else if (format == "info,detailed")
-        info(aut, out, true);
-      else if (format == "null")
-        {}
-      else if (format == "tikz")
-        tikz(aut, out);
-      else
-        raise("invalid output format for automaton: ", str_escape(format));
-      return out;
-    }
-
-    /*---------------------------.
     | print(expansion, stream).  |
     `---------------------------*/
 

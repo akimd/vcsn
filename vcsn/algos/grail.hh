@@ -203,24 +203,11 @@ namespace vcsn
   std::ostream&
   fado(const Aut& aut, std::ostream& out)
   {
-    detail::fadoer<Aut> fado{aut, out};
+    auto fado = detail::fadoer<Aut>{aut, out};
     fado();
     return out;
   }
 
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut, typename Ostream>
-      std::ostream& fado(const automaton& aut, std::ostream& out)
-      {
-        return fado(aut->as<Aut>(), out);
-      }
-    }
-  }
 
 
   /*----------.
@@ -240,7 +227,7 @@ namespace vcsn
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "grail: requires letter or nullable labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "grail:requires Boolean weights");
+                    "grail: requires Boolean weights");
 
       using super_t = outputter<Aut>;
 
@@ -284,21 +271,8 @@ namespace vcsn
   std::ostream&
   grail(const Aut& aut, std::ostream& out)
   {
-    detail::grailer<Aut> grail{aut, out};
+    auto grail = detail::grailer<Aut>{aut, out};
     grail();
     return out;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut, typename Ostream>
-      std::ostream& grail(const automaton& aut, std::ostream& out)
-      {
-        return grail(aut->as<Aut>(), out);
-      }
-    }
   }
 }

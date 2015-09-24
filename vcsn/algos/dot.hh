@@ -371,18 +371,4 @@ namespace vcsn
     detail::dotter<Aut> dot(aut, out, dot2tex);
     return dot();
   }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut, typename Ostream, typename Bool>
-      std::ostream& dot(const automaton& aut, std::ostream& out,
-                        bool dot2tex)
-      {
-        return dot(aut->as<Aut>(), out, dot2tex);
-      }
-    }
-  }
 }

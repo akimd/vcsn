@@ -154,17 +154,4 @@ namespace vcsn
     t();
     return out;
   }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut, typename Ostream>
-      std::ostream& tikz(const automaton& aut, std::ostream& out)
-      {
-        return tikz(aut->as<Aut>(), out);
-      }
-    }
-  }
 }
