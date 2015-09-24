@@ -219,7 +219,6 @@ namespace vcsn
       using profile_t = typename profiler_t::state_profile;
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
-      using weightset_t = weightset_t_of<automaton_t>;
 
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
@@ -296,6 +295,9 @@ namespace vcsn
       void eliminate_state_(state_t s)
       {
         neighbors_.clear();
+
+        // Shorthand to the weightset.
+        const auto& ws_ = *aut_->weightset();
 
         // The loop's weight.
         auto loop = ws_.zero();
@@ -333,8 +335,6 @@ namespace vcsn
       automaton_t& aut_;
       /// The profiler we work with. Corresponding to a specific heuristic.
       profiler_t& profiler_;
-      /// Shorthand to the weightset.
-      const weightset_t& ws_ = *aut_->weightset();
 
       /// Max-heap to decide the order of state-elimination.
       using heap_t = boost::heap::fibonacci_heap<profile_t>;
@@ -362,7 +362,6 @@ namespace vcsn
       using profile_t = typename profiler_t::state_profile;
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
-      using expressionset_t = labelset_t_of<automaton_t>;
 
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
@@ -439,6 +438,9 @@ namespace vcsn
       {
         neighbors_.clear();
 
+        // Shorthand to the labelset, which is an expressionset.
+        const auto& rs_ = *aut_->labelset();
+
         // The loops' expression.
         auto loop = rs_.zero();
         for (auto t: make_vector(aut_->outin(s, s)))
@@ -474,8 +476,6 @@ namespace vcsn
       automaton_t& aut_;
       /// The profiler we work with. Corresponding to a specific heuristic.
       profiler_t& profiler_;
-      /// Shorthand to the labelset, which is an expressionset.
-      const expressionset_t& rs_ = *aut_->labelset();
 
       /// Max-heap to decide the order of state-elimination.
       using heap_t = boost::heap::fibonacci_heap<profile_t>;
