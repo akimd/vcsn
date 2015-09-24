@@ -224,6 +224,7 @@ namespace vcsn
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
         , profiler_(profiler)
+        , handles_(aut_->all_states().back() + 1)
       {}
 
       /// Build the profiles and the heap
@@ -232,7 +233,7 @@ namespace vcsn
         for (auto s: aut_->states())
           {
             auto h = todo_.emplace(profiler_.make_state_profile(s));
-            handles_.emplace(s, h);
+            handles_[s] = h;
           }
       }
 
@@ -243,7 +244,7 @@ namespace vcsn
         std::cerr << "update heap (" << s << " : ";
         show_heap_();
 #endif
-        auto& h = handles_.find(s)->second;
+        auto& h = handles_[s];
         profiler_.update(*h);
         todo_.update(h);
 #ifdef DEBUG_UPDATE
@@ -328,7 +329,6 @@ namespace vcsn
             std::cerr << std::endl;
 #endif
             auto s = p.state_;
-            handles_.erase(s);
 
             neighbors_.clear();
             operator()(s);
@@ -351,7 +351,7 @@ namespace vcsn
       using heap_t = boost::heap::fibonacci_heap<profile_t>;
       heap_t todo_;
       /// Map: state -> heap-handle.
-      std::unordered_map<state_t, typename heap_t::handle_type> handles_;
+      std::vector<typename heap_t::handle_type> handles_;
 
       std::unordered_set<state_t> neighbors_;
     };
@@ -378,6 +378,7 @@ namespace vcsn
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
         , profiler_(profiler)
+        , handles_(aut_->all_states().back() + 1)
       {}
 
       /// Build the profiles and the heap
@@ -386,7 +387,7 @@ namespace vcsn
         for (auto s: aut_->states())
           {
             auto h = todo_.emplace(profiler_.make_state_profile(s));
-            handles_.emplace(s, h);
+            handles_[s] = h;
           }
       }
 
@@ -397,7 +398,7 @@ namespace vcsn
         std::cerr << "update heap (" << s << " : ";
         show_heap_();
 #endif
-        auto& h = handles_.find(s)->second;
+        auto& h = handles_[s];
         profiler_.update(*h);
         todo_.update(h);
 #ifdef DEBUG_UPDATE
@@ -457,7 +458,6 @@ namespace vcsn
             auto p = todo_.top();
             todo_.pop();
             auto s = p.state_;
-            handles_.erase(s);
 
             neighbors_.clear();
             operator()(s);
@@ -480,7 +480,7 @@ namespace vcsn
       using heap_t = boost::heap::fibonacci_heap<profile_t>;
       heap_t todo_;
       /// Map: state -> heap-handle.
-      std::unordered_map<state_t, typename heap_t::handle_type> handles_;
+      std::vector<typename heap_t::handle_type> handles_;
 
       std::unordered_set<state_t> neighbors_;
     };
