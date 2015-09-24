@@ -299,11 +299,15 @@ namespace vcsn
         for (auto in: aut_->all_in(s))
           for (auto out: outs)
             {
+              auto src = aut_->src_of(in);
+              auto dst = aut_->dst_of(out);
               auto t = aut_->add_transition
-                (aut_->src_of(in), aut_->dst_of(out),
+                (src, dst,
                  aut_->label_of(in),
                  ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
               profiler_.invalidate_cache(t);
+              neighbors_.emplace(src);
+              neighbors_.emplace(dst);
             }
 
         aut_->del_state(s);
@@ -332,26 +336,14 @@ namespace vcsn
             handles_.erase(s);
 
             neighbors_.clear();
-
-            for (auto t: aut_->in(s))
-              {
-                state_t n = aut_->src_of(t);
-                if (n != s)
-                  neighbors_.emplace(n);
-              }
-            for (auto t: aut_->out(s))
-              {
-                state_t n = aut_->dst_of(t);
-                if (n != s)
-                  neighbors_.emplace(n);
-              }
-
             operator()(s);
 
             for (auto n: neighbors_)
-              update_profile_(n);
+              if (n != aut_->pre() && n != aut_->post())
+                update_profile_(n);
             for (auto n: neighbors_)
-              update_heap_(n);
+              if (n != aut_->pre() && n != aut_->post())
+                update_heap_(n);
           }
       }
 
@@ -445,11 +437,17 @@ namespace vcsn
         auto outs = aut_->all_out(s);
         for (auto in: aut_->all_in(s))
           for (auto out: outs)
-            aut_->add_transition
-              (aut_->src_of(in), aut_->dst_of(out),
-              rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
-                       loop,
-                       rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
+            {
+              auto src = aut_->src_of(in);
+              auto dst = aut_->dst_of(out);
+              aut_->add_transition
+                (src, dst,
+                 rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
+                         loop,
+                         rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
+              neighbors_.emplace(src);
+              neighbors_.emplace(dst);
+            }
 
         aut_->del_state(s);
       }
@@ -465,25 +463,15 @@ namespace vcsn
             auto s = p.state_;
             handles_.erase(s);
 
-            for (auto t: aut_->in(s))
-              {
-                state_t n = aut_->src_of(t);
-                if (n != s)
-                  neighbors_.emplace(n);
-              }
-            for (auto t: aut_->out(s))
-              {
-                state_t n = aut_->dst_of(t);
-                if (n != s)
-                  neighbors_.emplace(n);
-              }
-
+            neighbors_.clear();
             operator()(s);
 
             for (auto n: neighbors_)
-              update_profile_(n);
+              if (n != aut_->pre() && n != aut_->post())
+                update_profile_(n);
             for (auto n: neighbors_)
-              update_heap_(n);
+              if (n != aut_->pre() && n != aut_->post())
+                update_heap_(n);
           }
       }
 
