@@ -225,28 +225,24 @@ namespace vcsn
         : aut_(aut)
         , profiler_(profiler)
         , handles_(aut_->all_states().back() + 1)
-      {}
-
-      /// Build the profiles and the heap
-      void build_heap_()
       {
         for (auto s: aut_->states())
-          {
-            auto h = todo_.emplace(profiler_.make_state_profile(s));
-            handles_[s] = h;
-          }
+          handles_[s] = todo_.emplace(profiler_.make_state_profile(s));
       }
 
-      /// Update the profile of \a s.
-      void update_profile_(state_t s)
+      void update_heap_()
       {
 #ifdef DEBUG_UPDATE
-        std::cerr << "update heap (" << s << " : ";
+        std::cerr << "update heap: (";
         show_heap_();
 #endif
-        auto& h = handles_[s];
-        profiler_.update(*h);
-        todo_.update(h);
+        for (auto s: neighbors_)
+          if (s != aut_->pre() && s != aut_->post())
+            {
+              auto& h = handles_[s];
+              profiler_.update(*h);
+              todo_.update(h);
+            }
 #ifdef DEBUG_UPDATE
         std::cerr << ") => ";
         show_heap_();
@@ -271,7 +267,6 @@ namespace vcsn
       {
         if (s == aut_->null_state())
           {
-            build_heap_();
             require(!todo_.empty(), "not a valid state: ", s);
             auto p = todo_.top();
             todo_.pop();
@@ -312,7 +307,6 @@ namespace vcsn
       /// Eliminate all the states, in the order specified by \a next_state.
       void operator()()
       {
-        build_heap_();
         while (!todo_.empty())
           {
 #ifdef DEBUG_LOOP
@@ -332,10 +326,7 @@ namespace vcsn
 
             neighbors_.clear();
             operator()(s);
-
-            for (auto n: neighbors_)
-              if (n != aut_->pre() && n != aut_->post())
-                update_profile_(n);
+            update_heap_();
           }
       }
 
@@ -379,28 +370,24 @@ namespace vcsn
         : aut_(aut)
         , profiler_(profiler)
         , handles_(aut_->all_states().back() + 1)
-      {}
-
-      /// Build the profiles and the heap
-      void build_heap_()
       {
         for (auto s: aut_->states())
-          {
-            auto h = todo_.emplace(profiler_.make_state_profile(s));
-            handles_[s] = h;
-          }
+          handles_[s] = todo_.emplace(profiler_.make_state_profile(s));
       }
 
-      /// Update the profile of \a s.
-      void update_profile_(state_t s)
+      void update_heap_()
       {
 #ifdef DEBUG_UPDATE
-        std::cerr << "update heap (" << s << " : ";
+        std::cerr << "update heap: (";
         show_heap_();
 #endif
-        auto& h = handles_[s];
-        profiler_.update(*h);
-        todo_.update(h);
+        for (auto s: neighbors_)
+          if (s != aut_->pre() && s != aut_->post())
+            {
+              auto& h = handles_[s];
+              profiler_.update(*h);
+              todo_.update(h);
+            }
 #ifdef DEBUG_UPDATE
         std::cerr << ") => ";
         show_heap_();
@@ -413,7 +400,6 @@ namespace vcsn
       {
         if (s == aut_->null_state())
           {
-            build_heap_();
             require(!todo_.empty(), "not a valid state: ", s);
             auto p = todo_.top();
             todo_.pop();
@@ -452,7 +438,6 @@ namespace vcsn
       /// Eliminate all the states, in the order specified by \a next_state.
       void operator()()
       {
-        build_heap_();
         while (!todo_.empty())
           {
             auto p = todo_.top();
@@ -461,10 +446,7 @@ namespace vcsn
 
             neighbors_.clear();
             operator()(s);
-
-            for (auto n: neighbors_)
-              if (n != aut_->pre() && n != aut_->post())
-                update_profile_(n);
+            update_heap_();
           }
       }
 
