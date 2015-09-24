@@ -239,18 +239,13 @@ namespace vcsn
       /// Update the profile of \a s.
       void update_profile_(state_t s)
       {
-        profiler_.update(*handles_.find(s)->second);
-      }
-
-      /// Update the heap for \a s.
-      /// \pre  its profile is updated.
-      void update_heap_(state_t s)
-      {
 #ifdef DEBUG_UPDATE
         std::cerr << "update heap (" << s << " : ";
         show_heap_();
 #endif
-        todo_.update(handles_.find(s)->second);
+        auto& h = handles_.find(s)->second;
+        profiler_.update(*h);
+        todo_.update(h);
 #ifdef DEBUG_UPDATE
         std::cerr << ") => ";
         show_heap_();
@@ -341,9 +336,6 @@ namespace vcsn
             for (auto n: neighbors_)
               if (n != aut_->pre() && n != aut_->post())
                 update_profile_(n);
-            for (auto n: neighbors_)
-              if (n != aut_->pre() && n != aut_->post())
-                update_heap_(n);
           }
       }
 
@@ -401,14 +393,18 @@ namespace vcsn
       /// Update the profile of \a s.
       void update_profile_(state_t s)
       {
-        profiler_.update(*handles_.find(s)->second);
-      }
-
-      /// Update the heap for \a s.
-      /// \pre  its profile is updated.
-      void update_heap_(state_t s)
-      {
-        todo_.update(handles_.find(s)->second);
+#ifdef DEBUG_UPDATE
+        std::cerr << "update heap (" << s << " : ";
+        show_heap_();
+#endif
+        auto& h = handles_.find(s)->second;
+        profiler_.update(*h);
+        todo_.update(h);
+#ifdef DEBUG_UPDATE
+        std::cerr << ") => ";
+        show_heap_();
+        std::cerr << std::endl;
+#endif
       }
 
       /// Eliminate state s.
@@ -469,9 +465,6 @@ namespace vcsn
             for (auto n: neighbors_)
               if (n != aut_->pre() && n != aut_->post())
                 update_profile_(n);
-            for (auto n: neighbors_)
-              if (n != aut_->pre() && n != aut_->post())
-                update_heap_(n);
           }
       }
 
