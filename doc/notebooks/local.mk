@@ -33,6 +33,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.complete.ipynb                  \
   %D%/automaton.compose.ipynb                   \
   %D%/automaton.conjunction.ipynb               \
+  %D%/automaton.context.ipynb                   \
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.delay_automaton.ipynb           \
   %D%/automaton.determinize.ipynb               \
@@ -43,6 +44,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.infiltration.ipynb              \
+  %D%/automaton.info.ipynb                      \
   %D%/automaton.is_accessible.ipynb             \
   %D%/automaton.is_ambiguous.ipynb              \
   %D%/automaton.is_coaccessible.ipynb           \
@@ -64,8 +66,8 @@ dist_notebooks_DATA =                           \
   %D%/automaton.lift.ipynb                      \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.operators.ipynb                 \
-  %D%/automaton.partial_identity.ipynb          \
   %D%/automaton.pair.ipynb                      \
+  %D%/automaton.partial_identity.ipynb          \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
   %D%/automaton.reduce.ipynb                    \
@@ -77,6 +79,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
+  %D%/automaton.type.ipynb                      \
   %D%/context.cerny.ipynb                       \
   %D%/context.cotrie.ipynb                      \
   %D%/context.de_bruijn.ipynb                   \
