@@ -207,13 +207,9 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut, typename Profiler,
-             typename Kind = typename context_t_of<Aut>::kind_t>
-    struct state_eliminator;
-
     /// Eliminate states in an automaton whose labelset is oneset.
     template <typename Aut, typename Profiler>
-    struct state_eliminator<Aut, Profiler, labels_are_one>
+    struct state_eliminator
     {
       using profiler_t = Profiler;
       using profile_t = typename profiler_t::state_profile;
@@ -292,7 +288,11 @@ namespace vcsn
           }
       }
 
-      void eliminate_state_(state_t s)
+      /// Eliminate state s in the case of labels are one.
+      template <typename Kind = typename context_t_of<automaton_t>::kind_t>
+      auto eliminate_state_(state_t s)
+        -> enable_if_t<std::is_same<Kind, labels_are_one>::value,
+                       void>
       {
         neighbors_.clear();
 
@@ -331,24 +331,8 @@ namespace vcsn
         update_heap_();
       }
 
-      /// The automaton we work on.
-      automaton_t& aut_;
-      /// The profiler we work with. Corresponding to a specific heuristic.
-      profiler_t& profiler_;
-
-      /// Max-heap to decide the order of state-elimination.
-      using heap_t = boost::heap::fibonacci_heap<profile_t>;
-      heap_t todo_;
-      /// Map: state -> heap-handle.
-      std::vector<typename heap_t::handle_type> handles_;
-
-      std::unordered_set<state_t> neighbors_;
-    };
-
-    /// Eliminate states in an automaton whose labelset is an expressionset.
-    template <typename Aut, typename Profiler>
-    struct state_eliminator<Aut, Profiler, labels_are_expressions>
-    {
+      /// Eliminate state s in the case of labels are expressions.
+      //
       // FIXME: expressionset<lal_char(a-c), z>, q for instance cannot
       // work, because we need to move the q weights inside the
       // lal_char(a-c), z expressions, which obviously not possible.
@@ -357,84 +341,10 @@ namespace vcsn
       //
       // Yet as of 2014-07, there is no means to check that subtype
       // relationship in Vcsn.
-
-      using profiler_t = Profiler;
-      using profile_t = typename profiler_t::state_profile;
-      using automaton_t = typename std::remove_cv<Aut>::type;
-      using state_t = state_t_of<automaton_t>;
-
-      state_eliminator(automaton_t& aut, profiler_t& profiler)
-        : aut_(aut)
-        , profiler_(profiler)
-        , handles_(aut_->all_states().back() + 1)
-      {
-        for (auto s: aut_->states())
-          handles_[s] = todo_.emplace(profiler_.make_state_profile(s));
-      }
-
-      /// Eliminate state s.
-      void operator()(state_t s)
-      {
-        if (s == aut_->null_state())
-          {
-            require(!todo_.empty(), "not a valid state: ", s);
-            auto p = todo_.top();
-            todo_.pop();
-            s = p.state_;
-          }
-        else
-          require(aut_->has_state(s), "not a valid state: ", s);
-        eliminate_state_(s);
-      }
-
-      /// Eliminate all the states, in the order specified by \a next_state.
-      void operator()()
-      {
-        while (!todo_.empty())
-          {
-            auto p = todo_.top();
-            todo_.pop();
-#ifdef DEBUG_LOOP
-            std::cerr << "Remove: " << p << std::endl;
-#endif
-            eliminate_state_(p.state_);
-          }
-      }
-
-    private:
-      void update_heap_()
-      {
-#ifdef DEBUG_UPDATE
-        std::cerr << "update heap: (";
-        show_heap_();
-#endif
-        for (auto s: neighbors_)
-          if (s != aut_->pre() && s != aut_->post())
-            {
-              auto& h = handles_[s];
-              profiler_.update(*h);
-              todo_.update(h);
-            }
-#ifdef DEBUG_UPDATE
-        std::cerr << ") => ";
-        show_heap_();
-        std::cerr << std::endl;
-#endif
-      }
-
-      /// Show the heap, for debugging.
-      void show_heap_() const
-      {
-        const char* sep = "";
-        for (auto i = todo_.ordered_begin(), end = todo_.ordered_end();
-             i != end; ++i)
-          {
-            std::cerr << sep << *i;
-            sep = " > ";
-          }
-      }
-
-      void eliminate_state_(state_t s)
+      template <typename Kind>
+      auto eliminate_state_impl_(state_t s)
+        -> enable_if_t<std::is_same<Kind, labels_are_expressions>::value,
+                       void>
       {
         neighbors_.clear();
 
