@@ -118,7 +118,7 @@ namespace vcsn
     }
 
     /// When used as a LabelSet.
-    static bool is_special(value_t v)
+    static bool is_special(const value_t& v)
     {
       return equal(special(), v);
     }
@@ -130,10 +130,10 @@ namespace vcsn
     }
 
     /// When used as WeightSet.
-    bool is_zero(value_t v) const ATTRIBUTE_PURE;
+    bool is_zero(const value_t& v) const ATTRIBUTE_PURE;
 
     /// When used as WeightSet.
-    static bool is_one(value_t v) ATTRIBUTE_PURE;
+    static bool is_one(const value_t& v) ATTRIBUTE_PURE;
 
     /// When used as a labelset.
     static constexpr bool is_letterized()
@@ -199,19 +199,19 @@ namespace vcsn
                  typename expressionset<Ctx2>::value_t v) const;
 
     /// Whether \a l < \a r.
-    static bool less(value_t l, value_t r);
+    static bool less(const value_t& l, const value_t& r);
 
     /// Whether \a l < \a r, ignoring lweight.
     ///
     /// Typically used for linear identities, where <2>a and <3>a are
     /// "equal" and should be merged into <5>a.
-    static bool less_linear(value_t l, value_t r);
+    static bool less_linear(const value_t& l, const value_t& r);
 
     /// Whether \a l == \a r.
-    static bool equal(value_t l, value_t r);
+    static bool equal(const value_t& l, const value_t& r);
 
-    /// Hash \a l.
-    static size_t hash(const value_t& l);
+    /// Hash \a v.
+    static size_t hash(const value_t& v);
 
     /// Build a label.
     static auto atom(const label_t& v)
@@ -220,8 +220,8 @@ namespace vcsn
     // Concrete type implementation.
     value_t zero() const;
     static value_t one();
-    value_t add(value_t l, value_t r) const;
-    value_t mul(value_t l, value_t r) const;
+    value_t add(const value_t& l, const value_t& r) const;
+    value_t mul(const value_t& l, const value_t& r) const;
 
     /// Similar to mul, but in the case of LAW, merge the labels.
     ///
@@ -232,28 +232,28 @@ namespace vcsn
     ///   Concat(word(a),word(b)) -> word(ab)
     ///
     /// In other case, synonym for mul.
-    value_t concat(value_t l, value_t r) const;
+    value_t concat(const value_t& l, const value_t& r) const;
 
-    value_t conjunction(value_t l, value_t r) const;
-    value_t infiltration(value_t l, value_t r) const;
-    value_t shuffle(value_t l, value_t r) const;
+    value_t conjunction(const value_t& l, const value_t& r) const;
+    value_t infiltration(const value_t& l, const value_t& r) const;
+    value_t shuffle(const value_t& l, const value_t& r) const;
     template <typename... Value>
     value_t tuple(Value&&... v) const;
     /// Add a power operator.
-    value_t power(value_t e, unsigned n) const;
-    value_t ldiv(value_t l, value_t r) const;
-    value_t rdiv(value_t l, value_t r) const;
-    value_t star(value_t e) const;
+    value_t power(const value_t& e, unsigned n) const;
+    value_t ldiv(const value_t& l, const value_t& r) const;
+    value_t rdiv(const value_t& l, const value_t& r) const;
+    value_t star(const value_t& e) const;
     /// Add a complement operator.
-    value_t complement(value_t e) const;
+    value_t complement(const value_t& e) const;
     /// Add a transposition operator.
-    value_t transposition(value_t e) const;
+    value_t transposition(const value_t& e) const;
     /// Right-multiplication by a weight.
-    value_t rmul(value_t e, const weight_t& w) const;
+    value_t rmul(const value_t& e, const weight_t& w) const;
     /// Left-multiplication by a weight.
-    value_t lmul(const weight_t& w, value_t e) const;
+    value_t lmul(const weight_t& w, const value_t& e) const;
     /// The transposed of this rational expression.
-    value_t transpose(value_t e) const;
+    value_t transpose(const value_t& e) const;
 
     /// Make a `word' out of an expression
     word_t word(label_t l) const
@@ -269,7 +269,7 @@ namespace vcsn
     value_t conv(std::istream& is, bool = true) const;
 
     /// Convert from ourself: identity.
-    value_t conv(const self_t&, value_t v) const;
+    value_t conv(const self_t&, const value_t& v) const;
 
     /// Read a range of expressions.
     template <typename Fun>
@@ -278,7 +278,7 @@ namespace vcsn
       raise(sname(), ": ranges not implemented");
     }
 
-    std::ostream& print(const value_t v, std::ostream& o,
+    std::ostream& print(const value_t& v, std::ostream& o,
                         format fmt = {}) const;
 
     /// Format the description of this expressionset.
@@ -336,41 +336,41 @@ namespace vcsn
     /// and singleton cases.
     value_t add_(values_t&& vs) const;
 
-    value_t add_linear_(const sum_t& addends, value_t r) const;
+    value_t add_linear_(const sum_t& addends, const value_t& r) const;
     value_t add_linear_(const sum_t& s1, const sum_t& s2) const;
 
     /// The sum of two non-zero series.
     /// \pre  !is_zero(l)
     /// \pre  !is_zero(r)
-    value_t add_linear_(value_t l, value_t r) const;
+    value_t add_linear_(const value_t& l, const value_t& r) const;
 
     /// If e is an lweight, then its child, otherwise e.
     /// static because used by less.
-    static value_t unwrap_possible_lweight_(value_t e);
+    static value_t unwrap_possible_lweight_(const value_t& e);
     /// The type of e, or the type of its child if e is a lweight.
     /// static because used by less.
-    static type_t type_ignoring_lweight_(value_t e);
+    static type_t type_ignoring_lweight_(const value_t& e);
     /// The weight of e if it's an lweight, otherwise the weight one().
     /// static because used by less.
-    static weight_t possibly_implicit_lweight_(value_t e);
+    static weight_t possibly_implicit_lweight_(const value_t& e);
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of expressions on which to apply associativity.
     ///               Must be one of the variadic types.
     template <type_t Type>
-    void gather_(values_t& res, value_t v) const;
+    void gather_(values_t& res, const value_t& v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \tparam Type  the kind of expressions on which to apply associativity.
     ///               Must be one of the variadic types.
     template <type_t Type>
-    values_t gather_(value_t l, value_t r) const;
+    values_t gather_(const value_t& l, const value_t& r) const;
 
     /// If labelset is wordset.
-    value_t concat_(value_t l, value_t r, std::true_type) const;
+    value_t concat_(const value_t& l, const value_t& r, std::true_type) const;
     /// If labelset is not wordset.
-    value_t concat_(value_t l, value_t r, std::false_type) const;
+    value_t concat_(const value_t& l, const value_t& r, std::false_type) const;
 
     /// If labelset is oneset.
     template <typename LabelSet_, typename... Args>

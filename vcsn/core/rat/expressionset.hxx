@@ -160,7 +160,7 @@ namespace vcsn
   template <typename expressionset_impl<Context>::type_t Type>
   inline
   auto
-  expressionset_impl<Context>::gather_(values_t& res, value_t v) const
+  expressionset_impl<Context>::gather_(values_t& res, const value_t& v) const
     -> void
   {
     auto variadic = std::dynamic_pointer_cast<const variadic_t<Type>>(v);
@@ -174,7 +174,7 @@ namespace vcsn
   template <typename expressionset_impl<Context>::type_t Type>
   inline
   auto
-  expressionset_impl<Context>::gather_(value_t l, value_t r) const
+  expressionset_impl<Context>::gather_(const value_t& l, const value_t& r) const
     -> values_t
   {
     values_t res;
@@ -191,7 +191,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::add(value_t l, value_t r) const
+  DEFINE::add(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -216,7 +216,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::add_linear_(const sum_t& s, value_t r) const
+  DEFINE::add_linear_(const sum_t& s, const value_t& r) const
     -> value_t
   {
     auto res = values_t{};
@@ -302,7 +302,7 @@ namespace vcsn
     return add_(std::move(res));
   }
 
-  DEFINE::add_linear_(value_t l, value_t r) const
+  DEFINE::add_linear_(const value_t& l, const value_t& r) const
     -> value_t
   {
     assert(!is_zero(l));
@@ -330,13 +330,13 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::type_ignoring_lweight_(value_t e)
+  DEFINE::type_ignoring_lweight_(const value_t& e)
     -> type_t
   {
     return unwrap_possible_lweight_(e)->type();
   }
 
-  DEFINE::possibly_implicit_lweight_(value_t e)
+  DEFINE::possibly_implicit_lweight_(const value_t& e)
     -> weight_t
   {
     if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
@@ -345,7 +345,7 @@ namespace vcsn
       return weightset_t::one();
   }
 
-  DEFINE::unwrap_possible_lweight_(value_t e)
+  DEFINE::unwrap_possible_lweight_(const value_t& e)
     -> value_t
   {
     if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
@@ -354,7 +354,7 @@ namespace vcsn
       return e;
   }
 
-  DEFINE::mul(value_t l, value_t r) const
+  DEFINE::mul(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -416,7 +416,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::conjunction(value_t l, value_t r) const
+  DEFINE::conjunction(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -465,7 +465,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::ldiv(value_t l, value_t r) const
+  DEFINE::ldiv(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -490,7 +490,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::rdiv(value_t l, value_t r) const
+  DEFINE::rdiv(const value_t& l, const value_t& r) const
     -> value_t
   {
     // l/r = (r{T} {\} l{T}){T}.
@@ -514,7 +514,7 @@ namespace vcsn
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }
 
-  DEFINE::infiltration(value_t l, value_t r) const
+  DEFINE::infiltration(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -544,7 +544,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::shuffle(value_t l, value_t r) const
+  DEFINE::shuffle(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -577,7 +577,7 @@ namespace vcsn
   | power. |
   `-------*/
 
-  DEFINE::power(value_t e, unsigned n) const
+  DEFINE::power(const value_t& e, unsigned n) const
     -> value_t
   {
     value_t res = nullptr;
@@ -638,7 +638,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(value_t l, value_t r) const
+  DEFINE::concat(const value_t& l, const value_t& r) const
     -> value_t
   {
     // A static dispatch is needed, as the product of labels is not
@@ -647,14 +647,14 @@ namespace vcsn
   }
 
   // Concatenation when not LAW.
-  DEFINE::concat_(value_t l, value_t r, std::false_type) const
+  DEFINE::concat_(const value_t& l, const value_t& r, std::false_type) const
     -> value_t
   {
     return mul(l, r);
   }
 
   // Concatenation when LAW.
-  DEFINE::concat_(value_t l, value_t r, std::true_type) const
+  DEFINE::concat_(const value_t& l, const value_t& r, std::true_type) const
     -> value_t
   {
     // concat((ab).<2>c, d.(ef)) = (ab).<2>(cd).(ef).
@@ -700,7 +700,7 @@ namespace vcsn
       return mul(l, r);
   }
 
-  DEFINE::star(value_t e) const
+  DEFINE::star(const value_t& e) const
     -> value_t
   {
     value_t res = nullptr;
@@ -719,7 +719,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::complement(value_t e) const
+  DEFINE::complement(const value_t& e) const
     -> value_t
   {
     value_t res = nullptr;
@@ -742,7 +742,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::transposition(value_t e) const
+  DEFINE::transposition(const value_t& e) const
     -> value_t
   {
     value_t res = nullptr;
@@ -771,7 +771,7 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  DEFINE::lmul(const weight_t& w, value_t e) const
+  DEFINE::lmul(const weight_t& w, const value_t& e) const
     -> value_t
   {
     value_t res = nullptr;
@@ -810,7 +810,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::rmul(value_t e, const weight_t& w) const
+  DEFINE::rmul(const value_t& e, const weight_t& w) const
     -> value_t
   {
     value_t res = nullptr;
@@ -853,33 +853,33 @@ namespace vcsn
   | expressionset as a WeightSet itself.  |
   `--------------------------------------*/
 
-  DEFINE::is_zero(value_t v) const
+  DEFINE::is_zero(const value_t& v) const
     -> bool
   {
     return v->type() == type_t::zero;
   }
 
-  DEFINE::is_one(value_t v)
+  DEFINE::is_one(const value_t& v)
     -> bool
   {
     return (v->type() == type_t::one);
   }
 
-  DEFINE::less(value_t lhs, value_t rhs)
+  DEFINE::less(const value_t& lhs, const value_t& rhs)
     -> bool
   {
     auto lt = rat::less<self_t>{};
     return lt(lhs, rhs);
   }
 
-  DEFINE::less_linear(value_t lhs, value_t rhs)
+  DEFINE::less_linear(const value_t& lhs, const value_t& rhs)
     -> bool
   {
     return less(unwrap_possible_lweight_(lhs),
                 unwrap_possible_lweight_(rhs));
   }
 
-  DEFINE::equal(value_t lhs, value_t rhs)
+  DEFINE::equal(const value_t& lhs, const value_t& rhs)
     -> bool
   {
     return ! less(lhs, rhs) && ! less(rhs, lhs);
@@ -892,7 +892,7 @@ namespace vcsn
     return hasher(v);
   }
 
-  DEFINE::conv(const self_t& rs, value_t v) const
+  DEFINE::conv(const self_t& rs, const value_t& v) const
     -> value_t
   {
     if (ids_ == rs.ids_)
@@ -966,7 +966,7 @@ namespace vcsn
     return res.expression();
   }
 
-  DEFINE::print(const value_t v, std::ostream& o,
+  DEFINE::print(const value_t& v, std::ostream& o,
                 format fmt) const
     -> std::ostream&
   {
@@ -975,7 +975,7 @@ namespace vcsn
     return print(v);
   }
 
-  DEFINE::transpose(const value_t v) const
+  DEFINE::transpose(const value_t& v) const
     -> value_t
   {
     auto tr = detail::transposer<self_t>{self()};
