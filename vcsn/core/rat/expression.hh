@@ -277,9 +277,9 @@ namespace vcsn
 
       const value_t sub() const;
       const weight_t& weight() const;
-      void set_weight(const weight_t& w);
+      void set_weight(weight_t w);
 
-      weight_node(const weight_t& w, value_t exp);
+      weight_node(weight_t w, value_t exp);
       weight_node(const weight_node& that)
         : sub_(that.sub_)
         , weight_(that.weight_)

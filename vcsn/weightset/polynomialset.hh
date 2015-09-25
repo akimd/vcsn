@@ -340,7 +340,7 @@ namespace vcsn
 
     /// The product of polynomials \a l and \a r.
     auto
-    mul(const value_t& p, const label_t& l, const weight_t& w) const
+    mul(const value_t& p, const label_t& l, const weight_t w) const
       -> value_t
     {
       value_t res;
@@ -417,7 +417,7 @@ namespace vcsn
 
     /// Left exterior product.
     value_t
-    lmul(const weight_t& w, const value_t& v) const
+    lmul(const weight_t w, const value_t& v) const
     {
       value_t res;
       if (weightset()->is_one(w))
@@ -461,7 +461,7 @@ namespace vcsn
     /// an rmul between weights, we will need additional properties to
     /// allow it.
     value_t
-    rmul(const value_t& v, const weight_t& w) const
+    rmul(const value_t& v, const weight_t w) const
     {
       value_t res;
       if (!weightset()->is_zero(w))
@@ -564,7 +564,7 @@ namespace vcsn
 
     /// Left exterior division.
     value_t&
-    ldiv_here(const weight_t& w, value_t& v) const
+    ldiv_here(const weight_t w, value_t& v) const
     {
       if (!weightset()->is_one(w))
         for (auto&& m: v)
@@ -574,7 +574,7 @@ namespace vcsn
 
     /// Right exterior division.
     value_t&
-    rdiv_here(value_t& v, const weight_t& w) const
+    rdiv_here(value_t& v, const weight_t w) const
     {
       if (!weightset()->is_one(w))
         for (auto& m: v)
@@ -830,7 +830,7 @@ namespace vcsn
 
     /// Conversion from (this and) other weightsets.
     static value_t
-    conv(self_t, value_t v)
+    conv(self_t, const value_t& v)
     {
       return v;
     }
@@ -1173,7 +1173,7 @@ namespace vcsn
   private:
     /// Print a weight.
     std::ostream&
-    print_weight_(const weight_t& w, std::ostream& out,
+    print_weight_(const weight_t w, std::ostream& out,
                   format fmt) const
     {
       static bool parens = getenv("VCSN_PARENS");

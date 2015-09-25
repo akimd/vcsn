@@ -41,7 +41,6 @@ namespace vcsn
       using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
-      using label_t = label_t_of<context_t>;
       using expression_t = typename expressionset_t::value_t;
       using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = typename weightset_t::value_t;
@@ -395,7 +394,7 @@ namespace vcsn
       /// Manipulate the polynomials of expressions.
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// Manipulate the expansions.
-      expansionset_t es_ = expansionset_t(rs_);
+      expansionset_t es_ = {rs_};
 
       /// Whether to work transposed.
       bool transposed_ = false;

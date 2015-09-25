@@ -134,8 +134,8 @@ namespace vcsn
     | weight.  |
     `---------*/
 
-    DEFINE_CTOR(weight_node)(const weight_t& weight, value_t sub)
-      : sub_(sub)
+    DEFINE_CTOR(weight_node)(weight_t weight, value_t sub)
+      : sub_(std::move(sub))
       , weight_(weight)
     {}
 
@@ -151,7 +151,7 @@ namespace vcsn
       return weight_;
     }
 
-    DEFINE(weight_node)::set_weight(const weight_t& w)
+    DEFINE(weight_node)::set_weight(weight_t w)
       -> void
     {
       weight_ = w;

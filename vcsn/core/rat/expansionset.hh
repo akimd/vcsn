@@ -302,8 +302,8 @@ namespace vcsn
       /// The shuffle product of \a l and \a r.
       template <typename Shuffle>
       value_t& shuffle_(value_t& res,
-                        const value_t& lhs_xpn, expression_t lhs_xpr,
-                        const value_t& rhs_xpn, expression_t rhs_xpr,
+                        const value_t& lhs_xpn, const expression_t& lhs_xpr,
+                        const value_t& rhs_xpn, const expression_t& rhs_xpr,
                         Shuffle shuffle) const
       {
         // (i) lhs_xpn:rhs_xpr.
@@ -333,22 +333,22 @@ namespace vcsn
       }
 
       /// The shuffle product of \a l and \a r.
-      value_t shuffle(const value_t& lhs_xpn, expression_t lhs_xpr,
-                      const value_t& rhs_xpn, expression_t rhs_xpr) const
+      value_t shuffle(const value_t& lhs_xpn, const expression_t& lhs_xpr,
+                      const value_t& rhs_xpn, const expression_t& rhs_xpr) const
       {
         value_t res;
         res.constant = ws_.mul(lhs_xpn.constant, rhs_xpn.constant);
         return shuffle_(res,
                         lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
-                        [this](expression_t l, expression_t r)
+                        [this](const expression_t& l, const expression_t& r)
                         {
                           return rs_.shuffle(l, r);
                         });
       }
 
       /// The infiltration product of \a l and \a r.
-      value_t infiltration(const value_t& lhs_xpn, expression_t lhs_xpr,
-                           const value_t& rhs_xpn, expression_t rhs_xpr) const
+      value_t infiltration(const value_t& lhs_xpn, const expression_t& lhs_xpr,
+                           const value_t& rhs_xpn, const expression_t& rhs_xpr) const
       {
         // Conjunction part: lhs_xpn&:rhs_xpn.
         value_t res =
@@ -361,7 +361,7 @@ namespace vcsn
         // Shuffle part: lhs_xpn&:rhs_xpr + lhs_xpr&:rhs_xpn.
         shuffle_(res,
                  lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
-                 [this](expression_t l, expression_t r)
+                 [this](const expression_t& l, const expression_t& r)
                  {
                    return rs_.infiltration(l, r);
                  });
