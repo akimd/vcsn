@@ -136,6 +136,5 @@ namespace vcsn
       auto s = sizer<ExpSet>{};
       return s(r);
     }
-
   } // namespace rat
 } // namespace vcsn

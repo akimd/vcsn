@@ -211,7 +211,14 @@ namespace vcsn
     static bool
     less(const value_t& l, const value_t& r)
     {
-      return less_(l, r, indices);
+      auto sl = size(l);
+      auto sr = size(r);
+      if (sl < sr)
+        return true;
+      else if (sr < sl)
+        return false;
+      else
+        return less_(l, r, indices);
     }
 
     static value_t
@@ -495,10 +502,28 @@ namespace vcsn
       return o;
     }
 
+    /// The size of the Ith element, if its valueset features a size()
+    /// function.
+    template <std::size_t I>
+    static auto size_(const value_t& v, int)
+      -> decltype(valueset_t<I>::size(std::get<I>(v)))
+    {
+      return valueset_t<I>::size(std::get<I>(v));
+    }
+
+    /// The size of the Ith element, if its valueset does not feature
+    /// a size() function.
+    template <std::size_t I>
+    static constexpr auto size_(const value_t&, ...)
+      -> size_t
+    {
+      return 0;
+    }
+
     template <std::size_t... I>
     static size_t size_(const value_t& v, seq<I...>)
     {
-      return std::max({(valueset_t<I>::size(std::get<I>(v)))...});
+      return std::max({size_<I>(v, 0)...});
     }
 
     template <typename... Args, std::size_t... I>

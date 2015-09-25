@@ -198,6 +198,9 @@ namespace vcsn
     value_t conv(const expressionset<Ctx2>& ws,
                  typename expressionset<Ctx2>::value_t v) const;
 
+    /// The size of v
+    static size_t size(const value_t& v);
+
     /// Whether \a l < \a r.
     static bool less(const value_t& l, const value_t& r);
 

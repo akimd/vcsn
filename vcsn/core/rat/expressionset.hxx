@@ -865,6 +865,12 @@ namespace vcsn
     return (v->type() == type_t::one);
   }
 
+  DEFINE::size(const value_t& v)
+    -> size_t
+  {
+    return rat::size<self_t>(v);
+  }
+
   DEFINE::less(const value_t& lhs, const value_t& rhs)
     -> bool
   {
