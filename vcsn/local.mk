@@ -202,6 +202,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/crange.hh                            \
   %D%/misc/cross.hh                             \
   %D%/misc/debug-level.hh                       \
+  %D%/misc/deque.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
   %D%/misc/empty.hh                             \

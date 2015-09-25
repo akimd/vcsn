@@ -6,6 +6,7 @@ from test import *
 def check(i, o):
   i1 = i.push_weights()
   CHECK_EQ(o, i1)
+  # Make sure the expected result is consistant.
   CHECK_EQUIV(o, i1)
 
 # q
@@ -96,4 +97,36 @@ o = vcsn.automaton('''digraph {
   2 -> 3 [label = "<4>c"]
   3 -> F3 [label = "<0>"]
 }''')
+check(i, o)
+
+# Exercize a bug because of which once a node had a distance, no
+# better distance would ever be considered.  This resulted in an
+# incorrect weight_pushing.
+#
+# This automaton has two routes from 0 to 4: a single-transition
+# costing 10, and a four-transition one costing 0.  Yet we use the
+# long one.
+i = vcsn.automaton('''
+context = "lal_char(a), zmin"
+$ -> 0
+0 -> 1 <0>a
+1 -> 2 <0>a
+2 -> 3 <0>a
+3 -> 4 <0>a
+4 -> 5 <2>a
+0 -> 4 <10>a
+5 -> $
+''')
+
+o = vcsn.automaton('''
+context = "lal_char(a), zmin"
+$ -> 0 <2>
+0 -> 1 <0>a
+1 -> 2 <0>a
+2 -> 3 <0>a
+3 -> 4 <0>a
+4 -> 5 <0>a
+5 -> $ <0>
+0 -> 4 <10>a
+''')
 check(i, o)

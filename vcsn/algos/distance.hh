@@ -14,6 +14,7 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/label.hh>
 #include <vcsn/misc/algorithm.hh> // detail::back
+#include <vcsn/misc/deque.hh>
 #include <vcsn/misc/pair.hh>
 #include <vcsn/weightset/nmin.hh>
 
@@ -23,31 +24,22 @@ namespace vcsn
   /// Find shortest (weighted) path from state \a s0
   /// to all states of automaton \a aut.
   template <typename Aut>
-  std::unordered_map<state_t_of<Aut>, weight_t_of<Aut>>
+  std::vector<weight_t_of<Aut>>
   ss_shortest_distance(const Aut& aut, state_t_of<Aut> s0)
   {
     using weight_t = weight_t_of<Aut>;
     using state_t = state_t_of<Aut>;
 
-    std::unordered_map<state_t, weight_t> d;
-    std::unordered_map<state_t, weight_t> r;
     auto ws = *aut->weightset();
-    for (auto s : aut->all_states())
-      {
-        d.emplace(s, ws.zero());
-        r.emplace(s, ws.zero());
-      }
-
-    std::queue<state_t> todos;
-    std::unordered_set<state_t> marked;
+    auto d = std::vector<weight_t>(aut->all_states().back() + 1, ws.zero());
     d[s0] = ws.one();
-    r[s0] = ws.one();
-    todos.emplace(s0);
-    marked.emplace(s0);
-    while (!todos.empty())
+    auto r = d;
+
+    auto todo = std::deque<state_t>{s0};
+    while (!todo.empty())
       {
-        auto s = todos.front();
-        todos.pop();
+        auto s = todo.front();
+        todo.pop_front();
         auto r1 = r[s];
         r[s] = ws.zero();
         for (auto t : aut->all_out(s))
@@ -59,15 +51,11 @@ namespace vcsn
               {
                 d[dst] = w;
                 r[dst] = ws.add(r[dst], w1);
-                if (!has(marked, dst))
-                  {
-                    todos.emplace(dst);
-                    marked.emplace(dst);
-                  }
+                if (!has(todo, dst))
+                  todo.emplace_back(dst);
               }
           }
     }
-    d[s0] = ws.one();
     return d;
   }
 
