@@ -177,7 +177,7 @@ namespace vcsn
       : ls_{ls}
     {}
 
-    nullableset(const labelset_t& ls)
+    nullableset(const labelset_t& ls = {})
       : nullableset{std::make_shared<const labelset_t>(ls)}
     {}
 
