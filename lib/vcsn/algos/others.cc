@@ -112,6 +112,19 @@ namespace vcsn
     }
 
 
+    /*---------.
+    | project. |
+    `---------*/
+
+    REGISTER_DEFINE(project);
+    automaton
+    project(const automaton& aut, unsigned tape)
+    {
+      auto t = to_integral_constant(tape);
+      return detail::project_registry().call(aut, t);
+    }
+
+
     /*-----------.
     | shuffle.   |
     `-----------*/

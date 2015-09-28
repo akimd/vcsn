@@ -50,7 +50,8 @@ namespace vcsn
       /// \param keep_state   a predicate to recognize states to keep
       /// \param keep_trans   a predicate to recognize transitions to keep
       template <typename KeepState, typename KeepTrans>
-      void operator()(KeepState keep_state, KeepTrans keep_trans)
+      void operator()(KeepState keep_state, KeepTrans keep_trans,
+                      bool safe = true)
       {
         // Copy the states.  We cannot iterate on the transitions
         // only, as we would lose the states without transitions.  And
@@ -65,16 +66,23 @@ namespace vcsn
               auto src = out_state_.find(in_->src_of(t));
               auto dst = out_state_.find(in_->dst_of(t));
               if (src != out_state_.end() && dst != out_state_.end())
-                out_->new_transition_copy(src->second, dst->second,
-                                          in_, t);
+                {
+                  if (safe)
+                    out_->new_transition_copy(src->second, dst->second,
+                                              in_, t);
+                  else
+                    out_->add_transition_copy(src->second, dst->second,
+                                              in_, t);
+                }
             }
       }
 
       /// Copy all the states, and all the transitions.
-      void operator()()
+      void operator()(bool safe = true)
       {
         operator()([](state_t_of<AutIn>) { return true; },
-                   [](transition_t_of<AutIn>) { return true; });
+                   [](transition_t_of<AutIn>) { return true; },
+                   safe);
       }
 
       /// A map from original state to result state.
@@ -140,6 +148,19 @@ namespace vcsn
     return copy_into(in, out,
                      [](state_t_of<AutIn>) { return true; },
                      [](transition_t_of<AutIn>) { return true; });
+  }
+
+  /// Copy an automaton.
+  /// \pre AutIn <: AutOut.
+  template <typename AutIn, typename AutOut>
+  inline
+  void
+  copy_into(const AutIn& in, AutOut& out, bool safe)
+  {
+    auto copy = make_copier(in, out);
+    return copy([](state_t_of<AutIn>) { return true; },
+                [](transition_t_of<AutIn>) { return true; },
+                safe);
   }
 
   namespace detail

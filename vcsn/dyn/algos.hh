@@ -534,6 +534,9 @@ namespace vcsn
     /// Get the output format for \a o.
     std::string get_format(std::ostream& o);
 
+    /// Keep a single tape from a multiple-tape automaton.
+    automaton project(const automaton& aut, unsigned tape);
+
     /// An equivalent automaton without spontaneous transitions.
     ///
     /// \param aut    the automaton in which to remove them

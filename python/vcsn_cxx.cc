@@ -543,6 +543,11 @@ struct automaton
     return vcsn::dyn::prefix(val_);
   }
 
+  automaton project(unsigned tape)
+  {
+    return vcsn::dyn::project(val_, tape);
+  }
+
   automaton proper(bool prune = true, bool backward = true,
                    const std::string algo = "auto") const
   {
@@ -1331,6 +1336,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))
     .def("prefix", &automaton::prefix)
     .def("partial_identity", &automaton::partial_identity)
+    .def("project", &automaton::project)
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)

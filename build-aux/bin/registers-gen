@@ -145,6 +145,7 @@ namespace vcsn { namespace dyn {
                      'print_label',
                      'print_polynomial',
                      'print_weight',
+                     'project',
                      'read_automaton',
                      'read_context',
                      'read_expression',
