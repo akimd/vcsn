@@ -294,14 +294,14 @@ namespace vcsn
         auto j = aut->dst_of(t);
         res[i][j] = ws->add(res[i][j], aut->weight_of(t));
       }
-    for (auto k : aut->all_states())
+    for (auto k : aut->states())
       {
         for (auto i : aut->all_states())
           for (auto j : aut->all_states())
             if (i != k && j != k)
               res[i][j] = ws->add(
                 res[i][j],
-                ws->mul(ws->mul(res[i][k], ws->star(res[k][k])), res[k][j])
+                ws->mul(res[i][k], ws->star(res[k][k]), res[k][j])
               );
         for (auto i : aut->all_states())
           if (i != k)

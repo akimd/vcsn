@@ -87,14 +87,19 @@ namespace vcsn
             state_t proper_p = d2p_[dirty_p];
             for (state_t dirty_q = 0; dirty_q < de_[dirty_p].size(); dirty_q++)
               {
+                if (dirty_q == aut_dirty_->post() ||
+                    dirty_q == aut_dirty_->pre())
+                  continue;
                 weight_t dist_pq = de_[dirty_p][dirty_q];
+                if (ws_.is_zero(dist_pq))
+                  continue;
                 state_t proper_q = d2p_[dirty_q];
                 for (auto t : aut_proper_->all_out(proper_q))
                   {
                     state_t proper_r = aut_proper_->dst_of(t);
                     label_proper_t l = aut_proper_->label_of(t);
                     weight_t w = aut_proper_->weight_of(t);
-                    aut_proper_->add_transition(proper_p, proper_r, l,
+                    aut_proper_->set_transition(proper_p, proper_r, l,
                                                 ws_.mul(w, dist_pq));
                   }
               }
