@@ -54,7 +54,7 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, format fmt) const
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "expression_automaton<";
         super_t::print_set(o, fmt);

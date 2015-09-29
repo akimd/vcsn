@@ -54,14 +54,15 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, format fmt) const
+      /// Print this valueset.
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "expansionset<";
-        rs_.print(o, fmt);
+        rs_.print_set(o, fmt);
         return o << '>';
       }
 
-      /// Print a first order development.
+      /// Print this expansion.
       std::ostream& print(const value_t& v, std::ostream& o,
                           format fmt = {}) const
       {

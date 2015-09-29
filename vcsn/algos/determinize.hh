@@ -83,7 +83,7 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, format fmt) const
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "determinized_automaton<";
         input_->print_set(o, fmt);
@@ -367,7 +367,7 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, format fmt) const
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "detweighted_automaton<";
         input_->print_set(o, fmt);

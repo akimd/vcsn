@@ -51,7 +51,7 @@ namespace vcsn
         return res;
       }
 
-      std::ostream& print_set(std::ostream& o, format fmt) const
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "permutation_automaton<";
         input_->print_set(o, fmt);
