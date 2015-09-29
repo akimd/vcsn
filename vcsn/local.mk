@@ -64,6 +64,7 @@ algo_headers =                                  \
   %D%/algos/less-than.hh                        \
   %D%/algos/levenshtein.hh                      \
   %D%/algos/lift.hh                             \
+  %D%/algos/lightest.hh                         \
   %D%/algos/make-context.hh                     \
   %D%/algos/minimize-brzozowski.hh              \
   %D%/algos/minimize-moore.hh                   \

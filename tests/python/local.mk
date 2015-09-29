@@ -54,6 +54,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/label.py                                  \
   %D%/letterize.py                              \
   %D%/lift.py                                   \
+  %D%/lightest.py                               \
   %D%/minimize.py                               \
   %D%/multiply.py                               \
   %D%/normalize.py                              \

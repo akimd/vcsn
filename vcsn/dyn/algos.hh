@@ -413,6 +413,13 @@ namespace vcsn
     /// The lifted LAO rational expression from \a e.
     expression lift(const expression& e);
 
+    /// The approximated behavior of an automaton with smallest weights.
+    ///
+    /// \param aut   the automaton whose behavior to approximate
+    /// \param num   number of words looked for.
+    polynomial lightest(const automaton& aut,
+                        boost::optional<unsigned> num = {});
+
     /// Build a context from its name.
     context make_context(const std::string& name);
 
