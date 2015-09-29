@@ -54,6 +54,12 @@ namespace vcsn
         return res;
       }
 
+      /// The expressionset.
+      const expressionset_t& expressionset() const
+      {
+        return rs_;
+      }
+
       /// Print this valueset.
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
@@ -448,7 +454,11 @@ namespace vcsn
         template <size_t Tape>
         void denormalize_tape(typename focus_t<Tape>::value_t& e)
         {
-          eset_.template focus<Tape>().denormalize(e);
+          auto es = eset_.template focus<Tape>();
+          es.denormalize(e);
+          require(es.expressionset().weightset()->is_zero(e.constant),
+                  es, ": to-expansion: cannot denormalize ", to_string(es, e),
+                  ", need support for label one (the empty label)");
         }
 
         /// Denormalize on all these tapes.
@@ -548,7 +558,7 @@ namespace vcsn
 
     private:
       /// The expressionset used for the expressions.
-      const expressionset_t& rs_;
+      expressionset_t rs_;
       /// Shorthand to the labelset.
       const labelset_t& ls_ = *rs_.labelset();
       /// Shorthand to the weightset.

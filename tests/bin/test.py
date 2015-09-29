@@ -110,6 +110,8 @@ def SKIP(*msg):
     PASS('# SKIP', *msg)
 
 def XFAIL(fun, exp = None):
+    '''Run `fun`: it should fail.  If `exp` is given, check that the
+    exception includes it.'''
     try:
         fun()
     except RuntimeError as e:

@@ -287,3 +287,19 @@ check('(abc|xyz) & (a|xy)*(bc|z)*',
       'a|xy.[bc|z&(a|xy)*(bc|z)*]')
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
       'a|xy.[<XY>bc|z&(<Y>a|xy)*(<Z>(bc)|z)*]')
+
+c = vcsn.context("lat<lan_char(abc), lan_char(xyz)>, q")
+check('\e|\e',
+      '<1>')
+check('a|x',
+      'a|x.[\e]')
+check('a*|x*',
+      '<1> + \e|x.[\e|x*] + a|\e.[a*|\e] + a|x.[a*|x*]')
+
+c = vcsn.context("lat<lal_char(abc), lal_char(xyz)>, q")
+check('\e|\e',
+      '<1>')
+check('a|x',
+      'a|x.[\e]')
+XFAIL(lambda: c.expression('a*|x*').expansion(),
+      'to-expansion: cannot denormalize')
