@@ -8,9 +8,8 @@
 
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/lexicographical_compare.hpp>
-
-#include <vcsn/algos/focus.hh> // FIXME: Move elsewhere than algos.
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
 #include <vcsn/ctx/traits.hh>

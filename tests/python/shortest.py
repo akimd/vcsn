@@ -8,23 +8,21 @@ from test import *
 ## --------------------------
 ## Check that EXP accepts EXP has shortest words up to size MAX.
 def check_enumerate(re, len, *exp):
-  r = ctx.expression(re)
-  p = r.standard().shortest(len = len)
   # It would be nicer to build a polynomial, but currently we don't
   # have a means to build the right context, with LAW, not LAL etc.
   exp = " + ".join(exp)
-  CHECK_EQ(exp, p)
-  CHECK_EQ(r.shortest(len = len), p)
+  re = ctx.expression(re)
+  CHECK_EQ(exp, re.standard().shortest(len = len))
+  CHECK_EQ(exp, re.shortest(len = len))
 
 ## check_shortest RE NUM EXP
 ## --------------------------
 ## Check that EXP accepts EXP has shortest word, or throws if empty.
 def check_shortest(re, num, *exp):
-  r = ctx.expression(re)
-  p = r.standard().shortest(num = num)
   exp = " + ".join(exp)
-  CHECK_EQ(exp, p)
-  CHECK_EQ(r.shortest(num = num), p)
+  re = ctx.expression(re)
+  CHECK_EQ(exp, re.standard().shortest(num = num))
+  CHECK_EQ(exp, re.shortest(num = num))
 
 
 ## check RE MAX WORD...

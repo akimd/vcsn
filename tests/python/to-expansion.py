@@ -272,18 +272,18 @@ check('((foo)(bar)(baz)){T}', 'zab.[((foo)(bar)){T}]')
 check('(ab)*{T}', '<\e> + ba.[(ab)*{T}]')
 check('(<xy>((abc)(abc))<yz>)*{T}',
       '<\e> + cba.[<zy><yx>(cba)(<xy>((abc)(abc))<yz>)*{T}]')
-check('(a*b*)&((ab)*)',
+check('a*b* & (ab)*',
       '<\e> + a.[a*b*&b(ab)*]')
-check('((<x>a)*(<y>b)*)&((<z>ab)*)',
+check('(<x>a)*(<y>b)* & (<z>ab)*',
       '<\e> + a.[<xz>(<x>a)*(<y>b)*&b(<z>(ab))*]')
 
 
-## ---------------------------- ##
-## tupleset<wordset, wordset>.  ##
-## ---------------------------- ##
+## ---------- ##
+## tupleset.  ##
+## ---------- ##
 
 c = vcsn.context("lat<law_char(abc), law_char(xyz)>, expressionset<lal_char(XYZ), q>")
-check('(abc|xyz)&(a|xy)*(bc|z)*',
+check('(abc|xyz) & (a|xy)*(bc|z)*',
       'a|xy.[bc|z&(a|xy)*(bc|z)*]')
-check('(<X>abc|xyz)&(<Y>a|xy)*(<Z>bc|z)*',
+check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
       'a|xy.[<XY>bc|z&(<Y>a|xy)*(<Z>(bc)|z)*]')

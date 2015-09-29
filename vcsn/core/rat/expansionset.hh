@@ -86,6 +86,13 @@ namespace vcsn
         return o;
       }
 
+      /// Normalize: move the constant term to the label one.
+      value_t& normalize(value_t& res) const
+      {
+        auto has_one = bool_constant<context_t::has_one()>();
+        return normalize_(res, has_one);
+      }
+
       /// Normalize \a res:
       /// There must not remain a constant-term associated to one:
       /// put it with the constant term of the expansion.
@@ -107,15 +114,17 @@ namespace vcsn
         return res;
       }
 
+      /// Normalize when there is no label one: identity.
       value_t& normalize_(value_t& res, std::false_type) const
       {
         return res;
       }
 
-      value_t& normalize(value_t& res) const
+      /// Move the constant to the polynomial associated to one.
+      value_t& denormalize(value_t& res) const
       {
         auto has_one = bool_constant<context_t::has_one()>();
-        return normalize_(res, has_one);
+        return denormalize_(res, has_one);
       }
 
       /// Denormalize \a res move the constant to the polynomial
@@ -132,15 +141,10 @@ namespace vcsn
         return res;
       }
 
+      /// Denormalize when there is no label one: identity.
       value_t& denormalize_(value_t& res, std::false_type) const
       {
         return res;
-      }
-
-      value_t& denormalize(value_t& res) const
-      {
-        auto has_one = bool_constant<context_t::has_one()>();
-        return denormalize_(res, has_one);
       }
 
       /// The zero.
@@ -439,12 +443,14 @@ namespace vcsn
       template <typename... Expansions>
       struct tuple_impl
       {
+        /// Denormalize on this tape.
         template <size_t Tape>
         void denormalize_tape(typename focus_t<Tape>::value_t& e)
         {
           eset_.template focus<Tape>().denormalize(e);
         }
 
+        /// Denormalize on all these tapes.
         template <size_t... Tape>
         void denormalize(std::tuple<Expansions&...>& es,
                          detail::index_sequence<Tape...>)
@@ -456,6 +462,7 @@ namespace vcsn
             };
         }
 
+        /// Entry point: Denormalize all these expansions.
         void denormalize(Expansions&... es)
         {
           auto t = std::tuple<Expansions&...>{es...};
