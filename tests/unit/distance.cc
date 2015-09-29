@@ -77,10 +77,29 @@ static unsigned check_zmin()
   return 0;
 }
 
+static unsigned check_r_loop()
+{
+  using lal_char_r = context<vcsn::ctx::lal_char, vcsn::r>;
+  using automaton_t = mutable_automaton<lal_char_r>;
+  using state_t = state_t_of<automaton_t>;
+
+  std::cout << "** CHECK_R_LOOP **" << std::endl;
+
+  lal_char_r c{set_alphabet<char_letters>{'a'}};
+  automaton_t aut = make_shared_ptr<automaton_t>(c);
+  state_t s = aut->new_state();
+  aut->set_transition(s, s, 'a', 0.5);
+
+  auto fw = all_distances(aut);
+  print_fw<automaton_t>(fw);
+  return 0;
+}
+
 int main()
 {
   unsigned nb_errors = 0;
   nb_errors += check_basic();
   nb_errors += check_zmin();
+  nb_errors += check_r_loop();
   return !!nb_errors;
 }

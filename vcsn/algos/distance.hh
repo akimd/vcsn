@@ -289,11 +289,28 @@ namespace vcsn
       n, std::vector<weight_t>(n, ws->zero()));
 
     for (auto t : aut->all_transitions())
-      res[aut->src_of(t)][aut->dst_of(t)] = aut->weight_of(t);
-    for (auto k : aut->all_states())
-      for (auto i : aut->all_states())
-        for (auto j : aut->all_states())
-          res[i][j] = ws->add(res[i][j], ws->mul(res[i][k], res[k][j]));
+      {
+        auto i = aut->src_of(t);
+        auto j = aut->dst_of(t);
+        res[i][j] = ws->add(res[i][j], aut->weight_of(t));
+      }
+    for (auto k : aut->states())
+      {
+        auto reskk = res[k][k] = ws->star(res[k][k]);
+        for (auto i : aut->all_states())
+          for (auto j : aut->all_states())
+            if (i != k && j != k)
+              res[i][j] = ws->add(
+                res[i][j],
+                ws->mul(res[i][k], reskk, res[k][j])
+              );
+        for (auto i : aut->all_states())
+          if (i != k)
+            {
+              res[k][i] = ws->mul(reskk, res[k][i]);
+              res[i][k] = ws->mul(res[i][k], reskk);
+            }
+      }
     return res;
   }
 }
