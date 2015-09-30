@@ -3,6 +3,7 @@
 #include <vcsn/algos/accessible.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/labelset/labelset.hh>
 
 namespace vcsn
 {
@@ -145,7 +146,7 @@ namespace vcsn
   {
     const auto one = aut->labelset()->one();
 
-    std::vector<transition_t_of<Aut>> ts;
+    auto ts = std::vector<transition_t_of<Aut>>{};
     for (auto s : aut->states())
       {
         ts.clear();
@@ -163,9 +164,14 @@ namespace vcsn
   template <typename Aut>
   auto
   subword(const Aut& aut)
-    ->decltype(::vcsn::copy(aut))
+    -> fresh_automaton_t_of<Aut,
+                            detail::nullableset_context_t<context_t_of<Aut>>>
   {
-    auto res = ::vcsn::copy(aut);
+    using res_t
+      = fresh_automaton_t_of<Aut,
+                             detail::nullableset_context_t<context_t_of<Aut>>>;
+    auto res = make_shared_ptr<res_t>(make_nullableset_context(aut->context()));
+    copy_into(aut, res);
     subword_here(res);
     return res;
   }

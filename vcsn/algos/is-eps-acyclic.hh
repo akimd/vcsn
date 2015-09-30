@@ -4,6 +4,7 @@
 
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/core/fwd.hh>
 
@@ -70,6 +71,7 @@ namespace vcsn
           case circuit:
             return true;
         }
+        BUILTIN_UNREACHABLE();
       }
 
       enum status

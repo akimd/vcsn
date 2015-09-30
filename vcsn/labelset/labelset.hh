@@ -130,9 +130,9 @@ namespace vcsn
       return nullableset_traits<LabelSet>::value(ls);
     };
 
-    /*-------------------------.
-    | make_nullable_context.   |
-    `-------------------------*/
+    /*----------------------------.
+    | make_nullableset_context.   |
+    `----------------------------*/
 
     template <typename Ctx>
     using nullableset_context_t

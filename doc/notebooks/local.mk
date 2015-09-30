@@ -40,6 +40,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.difference.ipynb                \
   %D%/automaton.eliminate_state.ipynb           \
   %D%/automaton.expression.ipynb                \
+  %D%/automaton.factor.ipynb                    \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_twins_property.ipynb        \
@@ -68,6 +69,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.operators.ipynb                 \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.partial_identity.ipynb          \
+  %D%/automaton.prefix.ipynb                    \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
   %D%/automaton.reduce.ipynb                    \
@@ -75,6 +77,8 @@ dist_notebooks_DATA =                           \
   %D%/automaton.shortest.ipynb                  \
   %D%/automaton.shuffle.ipynb                   \
   %D%/automaton.standard.ipynb                  \
+  %D%/automaton.subword.ipynb                   \
+  %D%/automaton.suffix.ipynb                    \
   %D%/automaton.synchronize.ipynb               \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \

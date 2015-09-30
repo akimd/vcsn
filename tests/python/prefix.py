@@ -3,11 +3,9 @@
 import vcsn
 from test import *
 
-def load_automaton_from(file, nullable = False):
+def load_automaton_from(file):
   path = medir + "/" + file + ".gv"
   res = open(path).read().strip()
-  if nullable:
-    res = res.replace("lal_char(", "lan_char(")
   return res
 
 def suffix_check(i, o):
@@ -39,6 +37,4 @@ for i in range(1, 5):
   suffix_check(aut, aut_name + "-suffix")
   prefix_check(aut, aut_name + "-prefix")
   factor_check(aut, aut_name + "-factor")
-  # Subword requires a nullable labelset.
-  aut = vcsn.automaton(load_automaton_from(aut_name, True))
   subword_check(aut, aut_name + "-subword")
