@@ -23,7 +23,7 @@ namespace vcsn
     automaton
     conjunction(const automaton& lhs, const automaton& rhs, bool lazy)
     {
-      auto auts = std::vector<dyn::automaton>{lhs, rhs};
+      auto auts = std::vector<automaton>{lhs, rhs};
       return conjunction(auts, lazy);
     }
 
@@ -63,7 +63,7 @@ namespace vcsn
     automaton
     infiltration(const automaton& lhs, const automaton& rhs)
     {
-      auto auts = std::vector<dyn::automaton>{lhs, rhs};
+      auto auts = std::vector<automaton>{lhs, rhs};
       return infiltration(auts);
     }
 
@@ -107,7 +107,7 @@ namespace vcsn
       symbol sname{ast::normalize_context(n, false)};
       std::string full_name = ast::normalize_context(n, true);
       if (!detail::make_context_registry().get0({sname}))
-        vcsn::dyn::compile(sname);
+        compile(sname);
       return detail::make_context_registry().call({sname}, full_name);
     }
 
@@ -119,7 +119,7 @@ namespace vcsn
     automaton
     shuffle(const automaton& lhs, const automaton& rhs)
     {
-      auto auts = std::vector<dyn::automaton>{lhs, rhs};
+      auto auts = std::vector<automaton>{lhs, rhs};
       return shuffle(auts);
     }
 
@@ -177,7 +177,7 @@ namespace vcsn
     expression
     tuple(const expression& lhs, const expression& rhs)
     {
-      auto auts = std::vector<dyn::expression>{lhs, rhs};
+      auto auts = std::vector<expression>{lhs, rhs};
       return tuple(auts);
     }
 
