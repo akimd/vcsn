@@ -88,6 +88,7 @@ dist_notebooks_DATA =                           \
   %D%/context.levenshtein.ipynb                 \
   %D%/context.trie.ipynb                        \
   %D%/expression.automaton.ipynb                \
+  %D%/expression.complement.ipynb               \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
