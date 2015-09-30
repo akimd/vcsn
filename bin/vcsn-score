@@ -24,9 +24,22 @@ last_setup = ['pass']
 
 def ctx_signature(ctx):
     'A short, nice looking, description of a context.'
-    m = re.match('^lal_char\((.*?)\), *(.*?)$', ctx)
-    return "[{}] -> {}".format(m.group(1), m.group(2).upper())
-
+    ctx = re.sub(r'lal_char\((.*?)\)',
+                 r'[\1]',
+                 ctx)
+    ctx = re.sub(r'lan_char\((.*?)\)',
+                 r'[\1]?',
+                 ctx)
+    ctx = re.sub(r'law_char\((.*?)\)',
+                 r'[\1]*',
+                 ctx)
+    ctx = re.sub(r'lat<(.*?)>',
+                 lambda m: 'x'.join([x.strip() for x in m.group(1).split(',')]),
+                 ctx)
+    ctx = re.sub(r'^(.*), *(.*)$',
+                 lambda m: '{} -> {}'.format(m.group(1), m.group(2).upper()),
+                 ctx)
+    return ctx
 
 def bench(stmt, comment, title = None, setup = ['pass'], number = 1):
     "Report the best timing of three batches of number runs of cmd."
@@ -286,6 +299,13 @@ bench('a.shortest(5)',
       setup = ['c = vcsn.context(ctx)',
                'a = c.expression(r).standard()'])
 
+ctx = 'lat<lan_char(a), lan_char(x)>, q'
+r = "(\e|x + a|\e)*"
+bench('a.shortest(5000)',
+      'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup = ['c = vcsn.context(ctx)',
+               'a = c.expression(r).derived_term().strip()'],
+      number = 10)
 
 # sort.
 r = "[a-e]?{700}"

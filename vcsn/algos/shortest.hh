@@ -4,6 +4,7 @@
 #include <deque>
 #include <fstream>
 
+#include <boost/heap/binomial_heap.hpp>
 #include <boost/optional.hpp>
 
 #include <vcsn/ctx/context.hh>
@@ -140,7 +141,89 @@ namespace vcsn
         return res;
       }
 
+      /// Case of non free labelsets (e.g., law, lan x lan).
+      ///
+      /// We use a unique queue composed of (state, word, weight),
+      /// shortest words first.
+      template <typename LabelSet = labelset_t_of<context_t>>
+      auto shortest_(unsigned num, unsigned len)
+        -> enable_if_t<!LabelSet::is_free(), polynomial_t>
+      {
+        // Benched as better than Fibonacci, Pairing and Skew Heaps.
+        // D-ary heaps and Priority Queue fail to compile.
+        using queue_t =
+          boost::heap::binomial_heap<datum_t,
+                                     boost::heap::compare<datum_less>>;
+
+        auto queue = queue_t{};
+        queue.emplace(aut_->pre(), ls_.one(), ws_.one());
+
+        // The approximated behavior: the first orders to post's past.
+        polynomial_t res;
+        while (!queue.empty())
+          {
+            state_t s; word_t l; weight_t w;
+            std::tie(s, l, w) = queue.top();
+
+            // Take all the top of the queue if they have the same
+            // label and state: sum the weights.
+            queue.pop();
+
+            while (!queue.empty()
+                   && std::get<0>(queue.top()) == s
+                   && ls_.equal(std::get<1>(queue.top()), l))
+              {
+                w = ws_.add(w, std::get<2>(queue.top()));
+                queue.pop();
+              }
+
+            for (const auto t: aut_->all_out(s))
+              {
+                auto dst = aut_->dst_of(t);
+                auto nw = ws_.mul(w, aut_->weight_of(t));
+                if (aut_->src_of(t) == aut_->pre())
+                  queue.emplace(dst, l, std::move(nw));
+                else if (dst == aut_->post())
+                  ps_.add_here(res, l, std::move(nw));
+                else
+                  {
+                    auto nl = ls_.mul(l, aut_->label_of(t));
+                    // Discard candidates that are too long.
+                    if (ls_.size(nl) <= len)
+                      queue.emplace(dst, std::move(nl), std::move(nw));
+                  }
+              }
+
+            // If we found enough words *and* we have completely
+            // treated the current word (there are no other copies in
+            // other states), we're done.
+            if (queue.empty()
+                || (num == res.size()
+                    && !ls_.equal(std::get<1>(queue.top()), l)))
+              break;
+          }
+
+        return res;
+      }
+
     private:
+      /// Show the heap, for debugging.
+      template <typename Queue>
+      void show_heap_(const Queue& q, std::ostream& os = std::cerr) const
+      {
+        const char* sep = "";
+        for (auto i = q.ordered_begin(), end = q.ordered_end();
+             i != end; ++i)
+          {
+            os << sep;
+            sep = ", ";
+            aut_->print_state_name(std::get<0>(*i), os) << ":<";
+            ws_.print(std::get<2>(*i), os) << '>';
+            ls_.print(std::get<1>(*i), os);
+          }
+        os << '\n';
+      }
+
       /// The automaton whose behavior to approximate.
       const automaton_t& aut_;
       const weightset_t& ws_ = *aut_->weightset();
