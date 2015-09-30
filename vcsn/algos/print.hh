@@ -15,6 +15,7 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/weight.hh>
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -43,6 +44,7 @@ namespace vcsn
     }
 
     template <typename Aut>
+    ATTRIBUTE_NORETURN
     auto
     fado_impl_(const Aut&, std::ostream&)
       -> enable_if_t<!has_fado_t<Aut>{}, void>
@@ -60,6 +62,7 @@ namespace vcsn
     }
 
     template <typename Aut>
+    ATTRIBUTE_NORETURN
     auto
     grail_impl_(const Aut&, std::ostream&)
       -> enable_if_t<!has_fado_t<Aut>{}, void>
