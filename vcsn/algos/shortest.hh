@@ -79,15 +79,15 @@ namespace vcsn
       }
 
     private:
-      /// Case of free labelsets (e.g., lal or lal x lal).
+      /// Case of free labelsets (e.g., `lal` or `lal x lal`).
       ///
-      /// We maintain a list of current pairs of (state, monomial).
+      /// We maintain a list of current tuples of (state, label, weight).
       /// During one round we pass them all through outgoing
-      /// transitions, which gives the next list of (state, monomial).
+      /// transitions, which gives the next list of (state, label, weight).
       ///
-      /// Each round contributes one letter to all the monomials, so
-      /// once we ran len rounds, we have all the words shorter than
-      /// len letters.
+      /// Each round contributes one letter to all the labels, so
+      /// once we ran `len` rounds, we have all the words shorter than
+      /// `len` letters.
       template <typename LabelSet = labelset_t_of<context_t>>
       auto shortest_(unsigned num, unsigned len)
         -> enable_if_t<LabelSet::is_free(), polynomial_t>
@@ -97,10 +97,9 @@ namespace vcsn
         if (len != std::numeric_limits<unsigned>::max())
           len += 2;
 
-        using monomial_t = typename polynomialset_t::monomial_t;
-        using queue_t = std::deque<std::pair<state_t, monomial_t>>;
+        using queue_t = std::deque<datum_t>;
+        auto queue = queue_t{datum_t{aut_->pre(), ls_.one(), ws_.one()}};
 
-        auto queue = queue_t{{aut_->pre(), ps_.monomial_one()}};
         // The approximated behavior: the first orders to post's past.
         polynomial_t output;
         for (unsigned i = 0;
@@ -110,22 +109,20 @@ namespace vcsn
             queue_t q2;
             for (const auto& sm: queue)
               {
-                state_t s = sm.first;
-                const monomial_t& m = sm.second;
+                state_t s; word_t l; weight_t w;
+                std::tie(s, l, w) = sm;
                 for (const auto t: aut_->all_out(s))
                   {
                     auto dst = aut_->dst_of(t);
-                    auto nw = ws_.mul(weight_of(m), aut_->weight_of(t));
+                    auto nw = ws_.mul(w, aut_->weight_of(t));
                     if (aut_->src_of(t) == aut_->pre())
-                      q2.emplace_back(dst,
-                                      monomial_t{label_of(m), std::move(nw)});
+                      q2.emplace_back(dst, l, std::move(nw));
                     else if (dst == aut_->post())
-                      ps_.add_here(output, label_of(m), std::move(nw));
+                      ps_.add_here(output, l, std::move(nw));
                     else
                       q2.emplace_back(dst,
-                                      monomial_t{ls_.mul(label_of(m),
-                                                         aut_->label_of(t)),
-                                                 std::move(nw)});
+                                      ls_.mul(l, aut_->label_of(t)),
+                                      std::move(nw));
                   }
               }
             queue.swap(q2);
@@ -141,7 +138,7 @@ namespace vcsn
         return res;
       }
 
-      /// Case of non free labelsets (e.g., law, lan x lan).
+      /// Case of non free labelsets (e.g., `law`, `lan x lan`).
       ///
       /// We use a unique queue composed of (state, word, weight),
       /// shortest words first.
