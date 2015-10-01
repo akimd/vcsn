@@ -8,7 +8,7 @@
 #
 # This is bad for Vaucanson which uses the libraries' initialization
 # to register their content to the main executable.  In other words,
-# because we perform the "linking" ourselves (via our registers), the
+# because we perform the "linking" ourselves (via our registries), the
 # linker does not see that we need these libraries.
 #
 # So find if this compiler set up actually discards the "useless"

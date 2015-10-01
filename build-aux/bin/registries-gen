@@ -22,14 +22,14 @@ bridge_pattern = re.compile(r'''///\ Bridge(?:\s+\((?P<algo>\w+)\))?.
                     flags=re.VERBOSE | re.DOTALL)
 
 register = '''  // {reg} ({file}).
-  REGISTER_DECLARE({reg},
+  REGISTRY_DECLARE({reg},
     ({formals}) -> {return});
 
 '''
 
 implementation = '''
   // {reg} ({file}).
-  REGISTER_DEFINE({reg});
+  REGISTRY_DEFINE({reg});
   {return}
   {algo}({formals})
   {{
@@ -59,7 +59,7 @@ def process_header(fn):
 def process_implem(fn):
     '''Find the registries already dealt with in the implementation file `fn`.'''
     with open(fn, 'r') as f:
-        for m in re.finditer('REGISTER_DEFINE\((.*?)\);', f.read()):
+        for m in re.finditer('REGISTRY_DEFINE\((.*?)\);', f.read()):
             bridges[m.group(1)]['by hand'] = True
 
 # Generate the header.
@@ -84,7 +84,7 @@ namespace vcsn
 
 namespace vcsn { namespace dyn { namespace detail {
 
-#define REGISTER_DECLARE(Name, Signature)                       \
+#define REGISTRY_DECLARE(Name, Signature)                       \
   using Name ## _t = auto Signature;                            \
   LIBVCSN_API                                                   \
   bool Name ## _register(const signature& sig, Name ## _t fn)
@@ -94,7 +94,7 @@ namespace vcsn { namespace dyn { namespace detail {
         res += register.format(**bridges[f])
 
     res += '''
-#undef REGISTER_DECLARE
+#undef REGISTRY_DECLARE
 }}}'''
     return res
 
@@ -111,7 +111,7 @@ def output():
 #include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/weight.hh>
-#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/registries.hh>
 
 namespace vcsn { namespace dyn {
 '''
@@ -156,7 +156,7 @@ namespace vcsn { namespace ast {
 
 
 
-parser = argparse.ArgumentParser(description='Generate registers file.',
+parser = argparse.ArgumentParser(description='Generate registries file.',
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog = \
 '''
@@ -188,7 +188,7 @@ name, as exposed in dyn:: to the user.
 It also looks in the implementations done by hand by looking for lines
 such as:
 
-    REGISTER_DEFINE(focus_context);
+    REGISTRY_DEFINE(focus_context);
 
 in the implementation files (such as lib/vcsn/algos/others.cc).
 ''')
@@ -209,7 +209,7 @@ parser.add_argument('--headers', nargs='+', type=str, default=None,
                     `/// Bridge.` lines).''')
 parser.add_argument('--implems', nargs='+', type=str, default=None,
                     help='''Implementation files to process (should contain
-                    REGISTER_DEFINE uses).''')
+                    REGISTRY_DEFINE uses).''')
 args = parser.parse_args()
 args.srcdir += '/'
 

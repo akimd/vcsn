@@ -6,7 +6,7 @@
 #include <vcsn/core/rat/expressionset.hh> // make_expressionset
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/registries.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 
@@ -83,7 +83,7 @@ namespace vcsn
     | read_label.  |
     `-------------*/
 
-    REGISTER_DEFINE(read_label);
+    REGISTRY_DEFINE(read_label);
     label
     read_label(const dyn::context& ctx, std::istream& is,
                const std::string& f)

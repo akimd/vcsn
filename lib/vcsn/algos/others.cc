@@ -3,7 +3,7 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/signature-printer.hh>
 #include <vcsn/dyn/translate.hh>
 #include <vcsn/misc/builtins.hh>
@@ -39,7 +39,7 @@ namespace vcsn
                                       + std::to_string(tape) + '>')};
     }
 
-    REGISTER_DEFINE(focus_context);
+    REGISTRY_DEFINE(focus_context);
     context
     focus(const context& ctx, unsigned tape)
     {
@@ -47,7 +47,7 @@ namespace vcsn
       return detail::focus_context_registry().call(ctx, t);
     }
 
-    REGISTER_DEFINE(focus);
+    REGISTRY_DEFINE(focus);
     automaton
     focus(const automaton& aut, unsigned tape)
     {
@@ -72,7 +72,7 @@ namespace vcsn
     | lift(automaton, tapes).  |
     `-------------------------*/
 
-    REGISTER_DEFINE(lift_automaton);
+    REGISTRY_DEFINE(lift_automaton);
     automaton
     lift(const automaton& aut,
          const std::vector<unsigned>& tapes, vcsn::rat::identities ids)
@@ -100,7 +100,7 @@ namespace vcsn
     | make_context.  |
     `---------------*/
 
-    REGISTER_DEFINE(make_context);
+    REGISTRY_DEFINE(make_context);
     context
     make_context(const std::string& n)
     {
@@ -116,7 +116,7 @@ namespace vcsn
     | project. |
     `---------*/
 
-    REGISTER_DEFINE(project);
+    REGISTRY_DEFINE(project);
     automaton
     project(const automaton& aut, unsigned tape)
     {

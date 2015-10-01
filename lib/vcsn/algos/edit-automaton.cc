@@ -2,7 +2,7 @@
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/registries.hh>
 #include <vcsn/misc/builtins.hh>
 
 namespace vcsn

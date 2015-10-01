@@ -6,7 +6,7 @@
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/polynomial.hh>
-#include <vcsn/dyn/registers.hh>
+#include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
@@ -21,7 +21,7 @@ namespace vcsn
     | print(expansion, stream).  |
     `---------------------------*/
 
-    REGISTER_DEFINE(print_expansion);
+    REGISTRY_DEFINE(print_expansion);
 
     std::ostream&
     print(const dyn::expansion& w, std::ostream& out, const std::string& format)
@@ -47,7 +47,7 @@ namespace vcsn
     | print(label, stream).  |
     `-----------------------*/
 
-    REGISTER_DEFINE(print_label);
+    REGISTRY_DEFINE(print_label);
 
     std::ostream&
     print(const dyn::label& w, std::ostream& out, const std::string& format)
@@ -73,8 +73,8 @@ namespace vcsn
     | print(polynomial, stream).  |
     `----------------------------*/
 
-    REGISTER_DEFINE(list_polynomial);
-    REGISTER_DEFINE(print_polynomial);
+    REGISTRY_DEFINE(list_polynomial);
+    REGISTRY_DEFINE(print_polynomial);
 
     std::ostream&
     print(const polynomial& p, std::ostream& out, const std::string& format)
@@ -103,7 +103,7 @@ namespace vcsn
     | print(expression, stream).   |
     `-----------------------------*/
 
-    REGISTER_DEFINE(print_expression);
+    REGISTRY_DEFINE(print_expression);
 
     std::ostream&
     print(const expression& exp, std::ostream& out, const std::string& format)
@@ -132,7 +132,7 @@ namespace vcsn
     | print(weight, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE(print_weight);
+    REGISTRY_DEFINE(print_weight);
 
     std::ostream&
     print(const dyn::weight& w, std::ostream& out, const std::string& format)

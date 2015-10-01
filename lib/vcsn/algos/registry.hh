@@ -132,7 +132,7 @@ namespace vcsn
 }
 
 /// Implement a registry named Name, with unary dispatch.
-#define REGISTER_DEFINE(Name)                                   \
+#define REGISTRY_DEFINE(Name)                                   \
   namespace detail                                              \
   {                                                             \
     static                                                      \

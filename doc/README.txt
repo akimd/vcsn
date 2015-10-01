@@ -1,6 +1,8 @@
 * To add a new algorithm "foo" in the three layers
 ** vcsn/algos/foo.hh
-Implement the algorithm, but also its dyn/static bridge.
+Implement the algorithm, but also its dyn/static bridge.  Be sure to
+use the right syntax so that the registries-gen tool works as expected.
+
 Add it to the repo.
 
 ** vcsn/local.mk
@@ -8,19 +10,18 @@ Ship the file.
 Respect/improve the alphabetical order.
 
 ** vcsn/ctx/instantiate.hh
-Place the instantiation of your algorithm where it belongs.
+Place the instantiation of your algorithm where it belongs if you
+think it should be created by default.
 
 ** vcsn/dyn/algos.hh
 Declare the existence of dyn::foo with the proper interface (the one
-specified in vcsn/algos/foo.hh via REGISTER_DECLARE).
+specified in vcsn/algos/foo.hh via REGISTRY_DECLARE).
 Respect/improve the alphabetical order.
 
-** lib/vcsn/algos/foo.cc
-Implement the registry.  It might be sensible to use an existing file
-instead of create a bazillion of such small files.  For instance
-is_accessible, is_coaccessible etc. live in the same file.
-
-Add it to the repo.
+** lib/vcsn/algos/others.cc
+Algorithms with a simple signature, doing nothing fancy, will be taken
+care of automatically.  If you need something specific, do in
+lib/vcsn/algos/others.cc.  Take inspiration from the other algorithms.
 
 ** lib/vcsn/local.mk
 If you created lib/vcsn/algos/foo.cc, declare it here.
