@@ -35,7 +35,8 @@ nodist_lib_libvcsn_la_SOURCES =                 \
   %D%/algos/algos.cc                            \
   %D%/dyn/context-printer-header-algo.cc
 
-lib_libvcsn_la_SOURCES =                        \
+# Used in vcsn/local.mk to generate the registries.
+algo_implems =                                  \
   %D%/algos/edit-automaton.cc                   \
   %D%/algos/efsm.cc                             \
   %D%/algos/fado.cc                             \
@@ -43,7 +44,10 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/others.cc                           \
   %D%/algos/print.cc                            \
   %D%/algos/read.cc                             \
-  %D%/algos/registry.hh                         \
+  %D%/algos/registry.hh
+
+lib_libvcsn_la_SOURCES =                        \
+  $(algo_implems)                               \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \

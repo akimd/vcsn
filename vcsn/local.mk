@@ -284,7 +284,7 @@ from_registers_gen =				\
   lib/vcsn/dyn/context-printer-header-algo.cc
 CLEANFILES += %D%/dyn/registers.stamp $(from_registers_gen)
 move_if_change = $(srcdir)/build-aux/bin/move-if-change --color --verbose
-%D%/dyn/registers.stamp: $(registers_gen) $(algo_headers)
+%D%/dyn/registers.stamp: $(registers_gen) $(algo_headers) $(algo_implems)
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
@@ -292,8 +292,9 @@ move_if_change = $(srcdir)/build-aux/bin/move-if-change --color --verbose
 	  --bridge lib/vcsn/dyn/context-printer-header-algo.cc.tmp	\
 	  --output lib/vcsn/algos/algos.cc.tmp				\
 	  --header %D%/dyn/registers.hh.tmp				\
-	  -s $(srcdir)							\
-	  $(algo_headers)
+	  --srcdir $(srcdir)						\
+	  --headers $(algo_headers)					\
+	  --implems $(algo_implems)
 	$(AM_V_at)for f in $(from_registers_gen);	\
 	do						\
 	  $(move_if_change) $$f.tmp $$f || exit 1;	\

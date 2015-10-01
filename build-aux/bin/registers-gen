@@ -1,29 +1,5 @@
 #! /usr/bin/env python
 
-# This tool reads the algorithms header files looking for entries as
-# follows:
-#
-#   /// Bridge (trie).
-#   template <typename Context, typename Istream>
-#   automaton
-#   trie_stream(const context& ctx, std::istream& is)
-#   {
-#     const auto& c = ctx->as<Context>();
-#     auto ps = make_word_polynomialset(c);
-#     return make_automaton(trie(ps, is));
-#   }
-#
-# it does not care about the part in braces: only the comment and the
-# signature are read.
-#
-# Be sure to respect the comment:
-#
-#   /// Bridge (<ALGO>).
-# or
-#   /// Bridge.
-#
-# in the common case where the register name is the same as the
-# function name, as exposed in dyn:: to the user.
 import argparse
 import os
 import re
@@ -62,8 +38,8 @@ implementation = '''
 
 '''
 
-def process_file(fn):
-    '''Store in bridges the signatures from header fn.'''
+def process_header(fn):
+    '''Store in bridges the signatures from header `fn`.'''
     with open(fn, 'r') as f:
         for m in bridge_pattern.finditer(f.read()):
             bridge = m.groupdict()
@@ -79,6 +55,12 @@ def process_file(fn):
             if reg in bridges:
                 raise RuntimeError("bridge multiply defined: " + reg)
             bridges[reg] = bridge
+
+def process_implem(fn):
+    '''Find the registries already dealt with in the implementation file `fn`.'''
+    with open(fn, 'r') as f:
+        for m in re.finditer('REGISTER_DEFINE\((.*?)\);', f.read()):
+            bridges[m.group(1)]['by hand'] = True
 
 # Generate the header.
 def header():
@@ -134,23 +116,7 @@ def output():
 namespace vcsn { namespace dyn {
 '''
     for f in sorted(bridges):
-        if f not in ['focus',
-                     'focus_context',
-                     'lift_automaton',
-                     'lift_automaton_tape',
-                     'list_polynomial',
-                     'make_context',
-                     'print_expansion',
-                     'print_expression',
-                     'print_label',
-                     'print_polynomial',
-                     'print_weight',
-                     'project',
-                     'read_automaton',
-                     'read_context',
-                     'read_expression',
-                     'read_label',
-                     ]:
+        if 'by hand' not in bridges[f]:
             res += implementation.format(**bridges[f])
 
     res += '''
@@ -190,9 +156,43 @@ namespace vcsn { namespace ast {
 
 
 
-parser = argparse.ArgumentParser(description='Generate registers file.')
-parser.add_argument('file', nargs='+', type=str, default=None,
-                    help='Headers to process')
+parser = argparse.ArgumentParser(description='Generate registers file.',
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 epilog = \
+'''
+This tool reads the algorithm header files, looking for entries such as:
+
+  /// Bridge (trie).
+  template <typename Context, typename Istream>
+  automaton
+  trie_stream(const context& ctx, std::istream& is)
+  {
+    const auto& c = ctx->as<Context>();
+    auto ps = make_word_polynomialset(c);
+    return make_automaton(trie(ps, is));
+  }
+
+It does not care about the part in braces: only the comment and the
+signature are read.
+
+Be sure to respect the format of the comment:
+
+  /// Bridge (<ALGO>).
+or
+  /// Bridge.
+
+in the common case where the register name is the same as the function
+name, as exposed in dyn:: to the user.
+
+
+It also looks in the implementations done by hand by looking for lines
+such as:
+
+    REGISTER_DEFINE(focus_context);
+
+in the implementation files (such as lib/vcsn/algos/others.cc).
+''')
+
 parser.add_argument('--bridge',
                     type=argparse.FileType('w'), default = '-',
                     help='bridge header finder file to generate')
@@ -202,13 +202,22 @@ parser.add_argument('--header',
 parser.add_argument('--output',
                     type=argparse.FileType('w'), default = '-',
                     help='implementation file to generate')
-parser.add_argument('-s', '--srcdir', type=str, default='.',
+parser.add_argument('--srcdir', type=str, default='.',
                     help='Path the the source tree')
+parser.add_argument('--headers', nargs='+', type=str, default=None,
+                    help='''Headers to process (should contain the
+                    `/// Bridge.` lines).''')
+parser.add_argument('--implems', nargs='+', type=str, default=None,
+                    help='''Implementation files to process (should contain
+                    REGISTER_DEFINE uses).''')
 args = parser.parse_args()
 args.srcdir += '/'
 
-for fn in args.file:
-    process_file(args.srcdir + fn)
+for fn in args.headers:
+    process_header(args.srcdir + fn)
+
+for fn in args.implems:
+    process_implem(args.srcdir + fn)
 
 print(header(), file=args.header)
 print(output(), file=args.output)
