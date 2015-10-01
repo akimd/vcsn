@@ -164,6 +164,12 @@ namespace vcsn
 
             // Take all the top of the queue if they have the same
             // label and state: sum the weights.
+            //
+            // Benches show that this is way more efficient than
+            // trying to update matching datum_t in the queue, even if
+            // we try to take advantage of the ordering in the heap.
+            // Here, we benefit from the fact that the queue provides
+            // matching datum_t in a row.
             queue.pop();
 
             while (!queue.empty()
