@@ -27,7 +27,7 @@ echo ";;; Building VCSN..."
 (
     vcsndir=/opt/vaucanson
     if [ ! -d $vcsndir ]; then
-	git clone https://gitlab.lrde.epita.fr/vcsn/vaucanson.git $vcsndir
+	git clone https://gitlab.lrde.epita.fr/vcsn/vcsn.git $vcsndir
     else
 	cd $vcsndir
 	git pull

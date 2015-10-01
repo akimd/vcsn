@@ -5,6 +5,65 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+# Vcsn 2.1
+
+## 2015-10-05
+
+About 10,000 hours (on the calendar, not of work!) after its first public
+release, the Vcsn team is very happy to announce the release of Vcsn 2!
+
+It is quite hard to cherry-pick a few new features that have been added in
+Vcsn 2.1, as shown by the 4k+ lines of messages below since 2.0.  However,
+here are a few headlines:
+
+- Many pages of documentation and examples have been written (see
+  http://www.lrde.epita.fr/dload/vcsn/2.1/notebooks).
+
+- Now http://vcsn-sandbox.lrde.epita.fr/ provides a live demo.
+
+- Transducers are much better supported, with improved syntax and several
+  algorithms (e.g., letterize, synchronize, partial_identity, is_functional,
+  etc.)
+
+- Expressions now offer several sets of identities specifying how they
+  should be normalized.  More generally, input/output of expressions have
+  been improved to match most users' expectations.  New operators are
+  accepted: `&` for conjunction, `:` for shuffle, `&:` for infiltration,
+  `{c}` (postfix) for complement, and `<+` for deterministic choice.
+
+- When entering an automaton (e.g., with %%automaton in IPython) user state
+  names are preserved.
+
+- Of course, many bugs were fixed, many algorithms were sped up, and
+  internal details have been cleaned up.
+
+- As Easter eggs, many features have also been added, but not advertised,
+  until we are sure of how we want them to look like.
+
+People who worked on this release:
+
+- Akim Demaille
+- Antoine Pietri
+- Canh Luu
+- Clément Démoulins
+- Lucien Boilod
+- Nicolas Barray
+- Sébastien Piat
+- Sylvain Lombardy
+- Valentin Tolmer
+- Yann Bourgeois--Copigny
+
+People who influenced this release:
+
+- Alexandre Duret-Lutz
+- Jacques Sakarovitch
+- Luca Saiu
+
+### Vcsn 2's repository has moved
+To update your existing repository, run a command similar to:
+
+    $ git remote set-url origin git@gitlab.lrde.epita.fr:vcsn/vcsn
+
 ## 2015-09-30
 ### shortest: applies to any automaton
 The restriction to free-labelsets is lifted: shortests applies to automata
@@ -58,7 +117,7 @@ distance between two alphabets. This transducer can then be composed with two
 languages to obtain the edit-distance algorithm, containing much information on
 the distance of the languages and their words.
 
-### partial-identity: new algorithm
+### partial_identity: new algorithm
 The partial identity turns an automaton into a transducer realizing a partial
 identity. I.e., for each accepted input, the output will be the same as the
 input (plus the origin weight from the input automaton).
@@ -800,7 +859,7 @@ Blind is no longer limited to tape 0 or tape 1.
 ## 2014-07-25
 
 More than two years after the initial commit in our repository, the
-Vaucanson team is happy the announce the first release of Vaucanson 2!
+Vaucanson team is happy to announce the first release of Vaucanson 2!
 
 People who worked on this release:
 

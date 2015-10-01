@@ -2,12 +2,14 @@
  Introduction to Vcsn
 =====================
 
-Vcsn_, a C++ generic library for weighted finite state machines.
+Vcsn_ is a platform for weighted automata and rational expressions.  It
+consists of a C++ generic library, Python bindings, and a graphical
+interactive environment on top of IPython.
+
+Copyright (C) 2012-2015 The Vaucanson Group.
 
 .. _Vcsn: http://vcsn.lrde.epita.fr
 
-Vcsn 2, a generic library for finite state machines.
-Copyright (C) 2012-2015 The Vaucanson Group.
 
 .. contents::
 
@@ -58,8 +60,8 @@ Vcsn's documentation is not complete.  However:
 
 - the `dyn::` C++ interface is documented in ``vcsn/dyn/algos.hh``.
 
-.. _`online notebooks`: http://vcsn-sandbox.lrde.epita.fr/tree/Documentation
-.. _`introduction to Vcsn`: http://vcsn-sandbox.lrde.epita.fr/notebooks/Documentation/index.ipynb
+.. _`online notebooks`: http://vcsn-sandbox.lrde.epita.fr/tree/Doc
+.. _`introduction to Vcsn`: http://vcsn-sandbox.lrde.epita.fr/notebooks/Doc/index.ipynb
 
 
 Installation
@@ -91,8 +93,8 @@ Vcsn is a very long process, also consider ``-j3''.
 Build Requirements
 ------------------
 
-Vcsn was tested with the `GNU Compiler Collection (GCC)`_ versions 4.9 and
-`Clang`_ 3.5, 3.6.
+Vcsn was tested with the `GNU Compiler Collection (GCC)`_ versions 4.9, 5.0
+and `Clang`_ 3.5, 3.6, 3.7.
 
 .. _GNU Compiler Collection (GCC): http://gcc.gnu.org
 .. _Clang: http://clang.llvm.org
@@ -129,6 +131,11 @@ Vcsn uses the Dot format to save automaton in a human readable file.  You
 should install Graphviz_ to visualize these ``.gv`` files.
 
 .. _Graphviz: http://www.research.att.com/sw/tools/graphviz
+
+To provide safe support for ℚ, Vcsn relies on `The GNU Multiple Precision
+Arithmetic Library`_.
+
+.. _`The GNU Multiple Precision Arithmetic Library` https://gmplib.org
 
 Doxygen_ is used to generate the C++ reference documentation.
 
@@ -172,7 +179,8 @@ python
    The Python binding.
 
 bin
-   Various programs to install.
+   Various programs to install.  In particular the program `vcsn`, which
+   provides access to all the other programs.  See `vcsn --help`.
 
 tests
    The test suites.
