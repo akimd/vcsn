@@ -599,11 +599,11 @@ namespace vcsn
         if (lazy)
           return make_automaton
             (vcsn::conjunction_lazy
-             (do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
+             (do_insplit<I, tuple_element_t<I, Auts>>(as[I]->as<tuple_element_t<I, Auts>>())...));
         else
           return make_automaton
             (vcsn::conjunction
-             (do_insplit<I, std::tuple_element_t<I, Auts>>(as[I]->as<std::tuple_element_t<I, Auts>>())...));
+             (do_insplit<I, tuple_element_t<I, Auts>>(as[I]->as<tuple_element_t<I, Auts>>())...));
       }
 
       /// Bridge (conjunction).
@@ -647,7 +647,7 @@ namespace vcsn
       shuffle_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        auto res = vcsn::shuffle(as[I]->as<std::tuple_element_t<I, Auts>>()...);
+        auto res = vcsn::shuffle(as[I]->as<tuple_element_t<I, Auts>>()...);
         return make_automaton(res);
       }
 
@@ -737,7 +737,7 @@ namespace vcsn
                     vcsn::detail::index_sequence<I...>)
       {
         auto res
-          = vcsn::infiltration(as[I]->as<std::tuple_element_t<I, Auts>>()...);
+          = vcsn::infiltration(as[I]->as<tuple_element_t<I, Auts>>()...);
         return make_automaton(res);
       }
 

@@ -62,15 +62,15 @@ namespace vcsn
         auto rs
           = vcsn::tuple_expressionset
           (es[I]
-           ->template as<std::tuple_element_t<I, ExpSets>>()
+           ->template as<tuple_element_t<I, ExpSets>>()
            .expressionset()...);
         return
           make_expression
           (rs,
-           vcsn::tuple<decltype(rs), std::tuple_element_t<I, ExpSets>...>
+           vcsn::tuple<decltype(rs), tuple_element_t<I, ExpSets>...>
            (rs,
             es[I]
-            ->template as<std::tuple_element_t<I, ExpSets>>()
+            ->template as<tuple_element_t<I, ExpSets>>()
             .expression()...));
       }
 
