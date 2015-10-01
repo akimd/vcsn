@@ -192,7 +192,7 @@ namespace vcsn
       /// Given a tape, its corresponding expression type.
       template <unsigned Tape>
       using value_t_of
-        = std::shared_ptr<const rat::node<detail::focus_context<Tape, context_t>>>;
+        = std::shared_ptr<const rat::node<detail::project_context<Tape, context_t>>>;
 
       template <typename Sequence>
       struct values_t_impl;

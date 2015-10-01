@@ -291,7 +291,7 @@ namespace vcsn
     /// The type of the expressionset for the Tape-th tape.
     template <unsigned Tape, typename Ctx = context_t>
     using focus_t
-      = expressionset<detail::focus_context<Tape, Ctx>>;
+      = expressionset<detail::project_context<Tape, Ctx>>;
 
 
     template <typename Sequence>
@@ -305,7 +305,7 @@ namespace vcsn
 
       static type value(const self_t& self)
       {
-        return {detail::make_focus<I>(self)...};
+        return {detail::make_project<I>(self)...};
       }
     };
 

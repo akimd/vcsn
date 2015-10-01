@@ -35,7 +35,7 @@ namespace vcsn
       auto n = dyn::num_tapes(ctx_);
       if (n)
         for (size_t t = 0; t < n; ++t)
-          tape_ctx_.emplace_back(dyn::focus(ctx_, t));
+          tape_ctx_.emplace_back(dyn::project(ctx_, t));
       else
         tape_ctx_.emplace_back(ctx_);
     }

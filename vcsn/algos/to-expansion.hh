@@ -359,7 +359,7 @@ namespace vcsn
           return
             visitor_
             .es_
-            .tuple(vcsn::to_expansion(detail::make_focus<I>(visitor_.rs_),
+            .tuple(vcsn::to_expansion(detail::make_project<I>(visitor_.rs_),
                                       std::get<I>(v.sub()))...);
         }
 

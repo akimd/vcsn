@@ -508,12 +508,6 @@ In vcsn/ctx/instantiate.hh, we shouldn't need to say
 "using namespace dyn::detail". Add it in REGISTER?
 
 * Optimizations
-** make_focus
-The parser of expression is making many calls to make_focus so that when
-parsing a lat<lan, law>, it gets the lan expressionset and then the law
-expressionset.  This is ok.  However we should not continuously compute new
-expressionsets each time.  The parser should rather "cache" them.
-
 ** Simplify contexts
 Remove useless stacks of lat, lan, etc.
 

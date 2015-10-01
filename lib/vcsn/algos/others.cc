@@ -39,14 +39,6 @@ namespace vcsn
                                       + std::to_string(tape) + '>')};
     }
 
-    REGISTRY_DEFINE(focus_context);
-    context
-    focus(const context& ctx, unsigned tape)
-    {
-      auto t = to_integral_constant(tape);
-      return detail::focus_context_registry().call(ctx, t);
-    }
-
     REGISTRY_DEFINE(focus);
     automaton
     focus(const automaton& aut, unsigned tape)
@@ -122,6 +114,14 @@ namespace vcsn
     {
       auto t = to_integral_constant(tape);
       return detail::project_registry().call(aut, t);
+    }
+
+    REGISTRY_DEFINE(project_context);
+    context
+    project(const context& ctx, unsigned tape)
+    {
+      auto t = to_integral_constant(tape);
+      return detail::project_context_registry().call(ctx, t);
     }
 
 

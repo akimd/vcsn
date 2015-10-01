@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/fwd.hh>
+#include <vcsn/algos/project.hh> // make_project_context
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/ctx/context.hh>
@@ -13,71 +14,6 @@
 
 namespace vcsn
 {
-
-  /*-----------------.
-  | focus_context.   |
-  `-----------------*/
-
-  namespace detail
-  {
-    /// The resulting apparent context when keeping only tape Tape.
-    template <size_t Tape,
-              typename LabelSet, typename WeightSet>
-    auto make_focus_context(const context<LabelSet, WeightSet>& ctx)
-      -> enable_if_t<context<LabelSet, WeightSet>::is_lat,
-                     focus_context<Tape, context<LabelSet, WeightSet>>>
-    {
-      static_assert(Tape < LabelSet::size(),
-                    "focus: tape index out of bounds");
-      return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
-    }
-
-    /// When the labelset is not a tupleset, require the tape to be 0,
-    /// and return it.
-    template <size_t Tape,
-              typename LabelSet, typename WeightSet>
-    auto make_focus_context(const context<LabelSet, WeightSet>& ctx)
-      -> enable_if_t<!context<LabelSet, WeightSet>::is_lat,
-                     context<LabelSet, WeightSet>>
-    {
-      static_assert(Tape == 0,
-                    "focus: cannot extract non-0 tape from a non tupleset"
-                    " labelset");
-      return ctx;
-    }
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (focus).
-      template <typename Context, typename Tape>
-      context
-      focus_context(const context& ctx, integral_constant)
-      {
-        auto& c = ctx->as<Context>();
-        return make_context(vcsn::detail::make_focus_context<Tape::value>(c));
-      }
-    }
-  }
-
-
-  /*------------------------.
-  | focus(expressionset).   |
-  `------------------------*/
-
-  namespace detail
-  {
-    template <size_t Tape, typename Context>
-    auto make_focus(const expressionset<Context>& rs)
-      -> expressionset<decltype(make_focus_context<Tape>(rs.context()))>
-    {
-      return {make_focus_context<Tape>(rs.context()),
-              rs.identities()};
-    }
-  }
-
 
   /*-------------------.
   | focus_automaton.   |
@@ -100,7 +36,7 @@ namespace vcsn
     template <std::size_t Tape, typename Aut>
     class focus_automaton_impl
       : public automaton_decorator<Aut,
-                                   focus_context<Tape, context_t_of<Aut>>>
+                                   project_context<Tape, context_t_of<Aut>>>
     {
     public:
       /// The type of the wrapped automaton.
@@ -124,7 +60,7 @@ namespace vcsn
       using full_label_t = typename full_labelset_t::value_t;
 
       /// Exposed context.
-      using context_t = focus_context<Tape, full_context_t>;
+      using context_t = project_context<Tape, full_context_t>;
 
       /// Exposed labelset.
       using labelset_t = typename context_t::labelset_t;
@@ -395,7 +331,7 @@ namespace vcsn
       /// benches show that in some cases, intensive (and admittedly
       /// wrong: they should have been cached on the caller side)
       /// calls to context() ruins the performances.
-      context_t context_ = make_focus_context<Tape>(full_context());
+      context_t context_ = make_project_context<Tape>(full_context());
     };
   }
 

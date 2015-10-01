@@ -233,9 +233,6 @@ namespace vcsn
     /// The subautomaton based on \a aut, with only states in \a ss visible.
     automaton filter(const automaton& aut, const std::vector<unsigned>& ss);
 
-    /// Focus on a specific tape of a tupleset context.
-    context focus(const context& ctx, unsigned tape);
-
     /// Focus on a specific tape of a tupleset automaton.
     automaton focus(const automaton& aut, unsigned tape);
 
@@ -536,6 +533,9 @@ namespace vcsn
 
     /// Keep a single tape from a multiple-tape automaton.
     automaton project(const automaton& aut, unsigned tape);
+
+    /// Keep a single tape from a multiple-tape context.
+    context project(const context& ctx, unsigned tape);
 
     /// An equivalent automaton without spontaneous transitions.
     ///

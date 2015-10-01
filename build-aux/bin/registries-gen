@@ -188,7 +188,7 @@ name, as exposed in dyn:: to the user.
 It also looks in the implementations done by hand by looking for lines
 such as:
 
-    REGISTRY_DEFINE(focus_context);
+    REGISTRY_DEFINE(project_context);
 
 in the implementation files (such as lib/vcsn/algos/others.cc).
 ''')

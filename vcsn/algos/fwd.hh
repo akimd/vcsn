@@ -25,6 +25,9 @@ namespace vcsn
   using focus_automaton
     = std::shared_ptr<detail::focus_automaton_impl<Tape, Aut>>;
 
+  template <unsigned Tape, typename Aut>
+  focus_automaton<Tape, Aut> focus(Aut aut);
+
   // vcsn/algos/edit-automaton.hh.
   class automaton_editor;
 
