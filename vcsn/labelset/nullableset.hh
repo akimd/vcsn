@@ -400,6 +400,7 @@ namespace vcsn
       return ls_->get_letter(i, quoted);
     }
 
+    /// Read a label from a stream.
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
@@ -423,6 +424,7 @@ namespace vcsn
       ls_->convs(i, fun);
     }
 
+    /// Print label to stream.
     std::ostream&
     print(value_t l, std::ostream& o,
           format fmt = {}) const
@@ -452,6 +454,7 @@ namespace vcsn
       return !is_one(v) && ls_->is_letter(get_value(v));
     }
 
+    /// Mirror label.
     template <typename Value>
     Value
     transpose(const Value& l) const
@@ -459,27 +462,29 @@ namespace vcsn
       return helper_t::transpose(*ls_, l);
     }
 
+    /// Print labelset description.
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      if (fmt == format::latex)
+      switch (fmt.kind())
         {
+        case format::latex:
           o << "(";
           ls_->print_set(o, fmt);
           o << ")^?";
-        }
-      else if (fmt == format::text)
-        {
+          break;
+
+        case format::text:
           o <<  "nullableset<";
           ls_->print_set(o, fmt);
           o << '>';
+          break;
         }
-      else
-        raise("invalid format: ", fmt);
+
       return o;
     }
 
-    /// Return the value when it's not one.
+    /// The (inner) value when it (the outer value) is not one.
     static typename labelset_t::value_t
     get_value(const value_t& v)
     {

@@ -12,6 +12,7 @@
 
 namespace vcsn
 {
+  /// Represent alphabets whose "letters" are plain chars.
   class char_letters
   {
   public:
@@ -24,18 +25,21 @@ namespace vcsn
       return res;
     }
 
+    /// Convert to word.
     word_t
     to_word(const letter_t l) const
     {
       return {l};
     }
 
+    /// Convert to word.
     const word_t&
     to_word(const word_t& l) const
     {
       return l;
     }
 
+    /// Concatenation.
     word_t
     mul(const letter_t l, const letter_t r) const
     {
@@ -52,18 +56,21 @@ namespace vcsn
         return {l, r};
     }
 
+    /// Concatenation.
     word_t
     mul(const word_t& l, const letter_t r) const
     {
       return r == one_letter() ? l : l + r;
     }
 
+    /// Concatenation.
     word_t
     mul(const letter_t l, const word_t& r) const
     {
       return l == one_letter() ? r : l + r;
     }
 
+    /// Concatenation.
     word_t
     mul(const word_t& l, const word_t& r) const
     {
@@ -86,18 +93,21 @@ namespace vcsn
       return w.substr(1, s-2);
     }
 
+    /// One.
     static word_t
     empty_word()
     {
       return {};
     }
 
+    /// Whether is one.
     static bool
     is_empty_word(const word_t& w)
     {
       return w.empty();
     }
 
+    /// Mirror label.
     word_t
     transpose(const word_t& w) const
     {
@@ -105,6 +115,7 @@ namespace vcsn
       return {w.rbegin(), w.rend()};
     }
 
+    /// Mirror label.
     letter_t
     transpose(letter_t l) const
     {
@@ -137,11 +148,13 @@ namespace vcsn
       return l < r;
     }
 
+    /// Whether is a letter.
     bool is_letter(const letter_t) const
     {
       return true;
     }
 
+    /// Whether is a single-letter word.
     bool is_letter(const word_t& w) const
     {
       return w.size() == 1;
@@ -209,6 +222,7 @@ namespace vcsn
       return get_char(i);
     }
 
+    /// Print a letter.
     std::ostream&
     print(const letter_t l, std::ostream& o, format fmt = {}) const
     {
@@ -219,6 +233,7 @@ namespace vcsn
       return o;
     }
 
+    /// Print a word.
     std::ostream&
     print(const word_t& w, std::ostream& o,
           format fmt = {}) const
