@@ -38,6 +38,10 @@ parser.add_argument('--ldflags', help='Linker flags',
                     default=config['ldflags'])
 parser.add_argument('--extra-ldflags', help='Additional linker flags',
                     action=AppendStringAction, dest='ldflags')
+parser.add_argument('-c', '--color', dest='color', action='store',
+                    default="auto",
+                    choices=['auto', 'always', 'never'],
+                    help='Whether to use colors in the output')
 
 # Parse the arguments, and complete the 'args' object with the value
 # from the configuration (cxx, cxxflags, etc.).
@@ -75,7 +79,7 @@ def run(cmd):
             else:
                 print(me + ": child returned", retcode, file=sys.stderr)
             err = err.decode('utf-8')
-            err = demangle(err)
+            err = demangle(err, color=args.color)
             print(err, file=sys.stderr)
             sys.exit(retcode)
     except OSError as e:

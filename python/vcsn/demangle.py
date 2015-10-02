@@ -5,6 +5,21 @@ except ImportError:
     has_regex = False
 import sys
 
+try:
+    from colorama import Fore, Style
+    green   = Fore.GREEN   + Style.BRIGHT
+    red     = Fore.RED     + Style.BRIGHT
+    yellow  = Fore.YELLOW  + Style.BRIGHT
+    blue    = Fore.BLUE    + Style.BRIGHT
+    magenta = Fore.MAGENTA + Style.BRIGHT
+    cyan    = Fore.CYAN    + Style.BRIGHT
+    white   = Fore.WHITE   + Style.BRIGHT
+    std     = Style.RESET_ALL
+    color_cycle = [ red, blue, yellow, green, magenta, cyan ]
+    colors_enabled = True
+except:
+    colors_enabled = False
+
 parameters = r'''
 (?<rec>    # capturing group rec
  (?:       # non-capturing group
@@ -13,6 +28,86 @@ parameters = r'''
   <(?&rec)>  # recursive substitute of group rec
  )*
 )'''
+
+def has_color(color):
+    color_dict = {
+            "always" : True,
+            "never" : False,
+            "auto" : sys.stdout.isatty()
+            }
+
+    return color_dict[color]
+
+delimiters_open = [ '<', '[', '(' ]
+delimiters_close = {
+        '>' : '<',
+        ']' : '[',
+        ')' : '('
+        }
+
+if colors_enabled:
+    color_patterns = [
+        [ "In file included from", green ],
+        [ "In instantiation of", magenta ],
+        [ "required from here", magenta ],
+        [ " required from", magenta ], #space is voluntary
+        [ "recursively required by substitution of", magenta ],
+        [ "required by substitution of ", magenta ], #space is voluntary
+        [ "error:", red ],
+        [ "could not convert", red ],
+        [ "' from '", red ],
+        [ "' to '", red ],
+        [ "no type named ", red ],
+        [ "was not declared in this scope", red ],
+        [ "' in '", red ],
+        [ "in expansion of macro", white ],
+        [ "with ", white ],
+        ]
+
+def colorize_pattern(line):
+    for p in color_patterns:
+        line = line.replace(p[0], p[1] + p[0] + std)
+    return line
+
+
+def colorize_line(line):
+    res = ""
+    delim_stack = []
+
+    for c in line:
+        if c in delimiters_open:
+            res += color_cycle[len(delim_stack) % len(color_cycle)]
+            res += c
+            res += std
+            delim_stack.append(c)
+        elif c in delimiters_close.keys():
+            if delim_stack == [] or delimiters_close[c] != delim_stack[-1]:
+                return line #error, don't color anything
+            delim_stack.pop()
+            res += color_cycle[len(delim_stack) % len(color_cycle)]
+            res += c
+            res += std
+        else:
+            res += c
+
+
+    if res != "" and res[0] == '/':
+        colon = res.find(':')
+        if colon != -1:
+            res = white + res[:colon] + std + res[colon:]
+    return res + '\n'
+
+def colorize(line):
+    if not colors_enabled:
+        return line
+    lines = line.split('\n')
+
+    res = ""
+    for line in lines:
+        res += colorize_line(line)
+    return colorize_pattern(res)
+
+
 
 def sub(pattern, repl, string, *args, **kwargs):
     '''Beware that in pattern the spaces are ignored: use \s.'''
@@ -24,7 +119,8 @@ def sub(pattern, repl, string, *args, **kwargs):
 #        print(string, num)
     return string
 
-def demangle_regex(s):
+def demangle_regex(s, color="auto"):
+    color = has_color(color)
     # C++.
     s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|forward|less|make_shared|map|pair|set|shared_ptr|string|tuple)',
             r'std::\1',
@@ -92,9 +188,12 @@ def demangle_regex(s):
             r'dyn::\1<\2>',
             s)
 
+    if color:
+        s = colorize(s)
+
     return s
 
-def demangle_re(s):
+def demangle_re(s, color="auto"):
     return s
 
 demangle = demangle_regex if has_regex else demangle_re
