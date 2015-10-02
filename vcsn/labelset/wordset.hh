@@ -180,7 +180,9 @@ namespace vcsn
 
     static size_t size(const value_t& v)
     {
-      return v.length();
+      // Not v.length(), because word_t can actually be a vector
+      // (e.g., with string_letters).
+      return v.size();
     }
 
     static size_t hash(const value_t& v)
