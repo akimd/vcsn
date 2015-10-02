@@ -81,7 +81,9 @@ def demangle_regex(s):
     #
     # The optional 'std::' is surprising, granted, but I do have seen
     # it (with clang 3.6).
-    s = sub(r'(?:std::)?shared_ptr<(?:vcsn::)?(?:detail::)?(\w+_automaton)_impl<({params})>\s*>',
+    #
+    # The optional parameter of shared_ptr is the memory lock policy (g++)
+    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:vcsn::)?(?:detail::)?(\w+_automaton)_impl<({params})>\s*(?:, [^>]+)?>',
             r'\1<\2>',
             s)
 
