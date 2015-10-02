@@ -32,6 +32,24 @@ int main()
   os << "cross(cross(ints), cross(floats, strings))\n";
   for (auto i: cross(cross(ints), cross(floats, strings)))
     os << i << '\n';
+  os << "\n\n";
+
+  {
+    auto empty = std::vector<int>{};
+    os << "cross(ints, empty)\n";
+    for (auto i: cross(ints, empty))
+      os << i << '\n';
+    os << "\n\n";
+
+    os << "cross(empty, ints)\n";
+    for (auto i: cross(empty, ints))
+      os << i << '\n';
+    os << "\n\n";
+
+    os << "cross(int, empty, ints)\n";
+    for (auto i: cross(ints, empty, ints))
+      os << i << '\n';
+  }
 
   // Make sure iterator and const_iterators are compatible.
   auto c = cross(ints, cross(floats, strings));

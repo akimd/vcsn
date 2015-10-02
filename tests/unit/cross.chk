@@ -133,4 +133,13 @@ cross(cross(ints), cross(floats, strings))
 ((40), (4.4, deux))
 ((40), (4.4, three))
 ((40), (4.4, four))
+
+
+cross(ints, empty)
+
+
+cross(empty, ints)
+
+
+cross(int, empty, ints)
 EOF

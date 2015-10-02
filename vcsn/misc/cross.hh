@@ -71,6 +71,9 @@ namespace vcsn
         , begins_{begins}
         , ends_{ends}
       {
+        // If one of the ranges is empty, we are done already.
+        if (empty())
+          done_();
       }
 
       cross_iterator(const iterators_type& is, const iterators_type& ends)
@@ -88,6 +91,12 @@ namespace vcsn
       iterators_type begins_;
       /// The ends.
       iterators_type ends_;
+
+      /// Whether some of the range is empty.
+      bool empty() const
+      {
+        return empty_(indices_t{});
+      }
 
       /// Advance to next position.
       void increment()
@@ -108,6 +117,15 @@ namespace vcsn
 
     private:
       friend class boost::iterator_core_access;
+
+      template <std::size_t... I>
+      bool empty_(seq<I...>) const
+      {
+        for (auto n: {(std::get<I>(begins_) == std::get<I>(ends_))...})
+          if (n)
+            return true;
+        return false;
+      }
 
       /// We have reached the end, move all the cursors to this end.
       void done_()
