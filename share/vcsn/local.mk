@@ -15,6 +15,13 @@ jsdir = $(datadir)/vcsn/js
 dist_js_DATA =                                         \
   %D%/js/AutomatonD3Widget.js
 
+jupyter_profiledir = $(datadir)/vcsn/jupyter_profile
+dist_jupyter_profile_DATA =			\
+  %D%/jupyter_profile/custom/custom.css	\
+  %D%/jupyter_profile/custom/custom.js	\
+  %D%/jupyter_profile/custom/logo.png
+
+
 notebook_profiledir = $(datadir)/vcsn/notebook_profile
 dist_notebook_profile_DATA =			\
   %D%/notebook_profile/static/custom/custom.css	\

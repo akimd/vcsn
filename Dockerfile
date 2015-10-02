@@ -39,8 +39,8 @@ RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/' >/etc/apt/sources
     && apt-get update                                                                                   \
     && apt-get install -y --force-yes --no-install-recommends vcsn                                      \
     && useradd -d /vcsn -m -r vcsn                                                                      \
-    && mkdir /vcsn/.ipython                                                                             \
-    && chown vcsn:vcsn /vcsn/.ipython                                                                   \
+    && mkdir /vcsn/.jupyter                                                                             \
+    && chown vcsn:vcsn /vcsn/.jupyter                                                                   \
     && su vcsn -s /bin/bash -c 'cp -r /usr/share/doc/vcsn/notebooks /vcsn/Doc'                          \
     && ln -s /usr/share/doc/vcsn/notebooks '/vcsn/Doc (read only)'                                      \
     && touch "/vcsn/Please read the index.ipynb file in Doc"
@@ -48,6 +48,6 @@ RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/' >/etc/apt/sources
 EXPOSE 8888
 
 WORKDIR /vcsn
-ENV VCSN_DATADIR /vcsn/.ipython
+ENV VCSN_DATADIR /vcsn/.jupyter
 
 CMD su vcsn -s /bin/bash -c 'IPYTHON=ipython3 vcsn notebook --ip=* --port 8888'

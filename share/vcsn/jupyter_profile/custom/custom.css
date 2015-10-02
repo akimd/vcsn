@@ -1,0 +1,36 @@
+/*
+Placeholder for custom user CSS
+
+mainly to be overridden in profile/custom/custom.css
+
+This will always be an empty file in IPython
+*/
+
+/* #ipython_notebook::before{content:"Vcsn";} */
+/* #ipython_notebook{ background-image:url(Vcsn.png); */
+/*                    background-size: contain;} */
+
+#ipython_notebook img {
+    display:block;
+    background: url(/custom/logo.png) no-repeat;
+    width: 233px;
+    height: 33px;
+    padding-left: 233px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+div.navbar-inner.navbar-nobg {
+    border: 0px;
+}
+
+ul.dropdown-menu {
+    overflow: visible;
+    position: absolute;
+}
+
+div#notebook_panel {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+}

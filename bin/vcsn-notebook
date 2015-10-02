@@ -3,14 +3,18 @@
 : ${IPYTHON=ipython}
 
 if ($IPYTHON --version) >/dev/null 2>&1; then
-  help=$($IPYTHON --version)
-  case $help in
-    (*--profile-dir*)
+  version=$($IPYTHON --version)
+  case $version in
+    (4.*)
+      export JUPYTER_CONFIG_DIR=$VCSN_DATADIR/jupyter_profile
+      exec $IPYTHON notebook "$@"
+      ;;
+    (*)
       # Supported by IPython 3, but not IPython 4.
       ipythonflags="--profile-dir=$VCSN_DATADIR/notebook_profile"
+      exec $IPYTHON notebook $ipythonflags "$@"
       ;;
   esac
-  exec $IPYTHON notebook $ipythonflags "$@"
 else
   cat >&2 <<EOF
 $0: error: cannot find $IPYTHON
@@ -36,7 +40,7 @@ $0: error: cannot find $IPYTHON
   Now it should work:
 
   \$ ipython --version
-  3.0.0
+  4.0.0
 EOF
   exit 1
 fi
