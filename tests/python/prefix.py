@@ -32,9 +32,10 @@ def subword_check(i, o):
 
 # Test suffix, prefix, factor, and subword on five automata.
 for i in range(1, 5):
-  aut_name = "aut{}".format(i)
-  aut = vcsn.automaton(load_automaton_from(aut_name))
-  suffix_check(aut, aut_name + "-suffix")
-  prefix_check(aut, aut_name + "-prefix")
-  factor_check(aut, aut_name + "-factor")
-  subword_check(aut, aut_name + "-subword")
+  base = "aut{}".format(i)
+  print("Working on {}".format(base))
+  aut = vcsn.automaton(load_automaton_from(base))
+  suffix_check(aut, base + "-suffix")
+  prefix_check(aut, base + "-prefix")
+  factor_check(aut, base + "-factor")
+  subword_check(aut, base + "-subword")

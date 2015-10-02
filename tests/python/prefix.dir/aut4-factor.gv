@@ -10,13 +10,16 @@ digraph
     I2
     I3
     I4
+    I5
     I6
+    I7
     F0
     F1
     F2
     F3
     F4
     F6
+    F8
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
@@ -35,7 +38,9 @@ digraph
   I2 -> 2
   I3 -> 3
   I4 -> 4
+  I5 -> 5 [color = DimGray]
   I6 -> 6
+  I7 -> 7 [color = DimGray]
   0 -> F0
   0 -> 1 [label = "<3>a"]
   0 -> 2 [label = "b"]
@@ -52,5 +57,6 @@ digraph
   4 -> 5 [label = "<9>b", color = DimGray]
   6 -> F6 [label = "<16>"]
   6 -> 7 [label = "a", color = DimGray]
+  8 -> F8 [color = DimGray]
   8 -> 0 [label = "c", color = DimGray]
 }

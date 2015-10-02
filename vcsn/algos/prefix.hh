@@ -98,15 +98,7 @@ namespace vcsn
   Aut&
   factor_here(Aut& aut)
   {
-    for (auto s : useful_states(aut))
-      if (s != aut->pre() && s != aut->post())
-        {
-          if (!aut->is_initial(s))
-            aut->set_initial(s);
-          if (!aut->is_final(s))
-            aut->set_final(s);
-        }
-    return aut;
+    return suffix_here(prefix_here(aut));
   }
 
   template <typename Aut>
