@@ -168,6 +168,8 @@ EXTRA_DIST +=                                   \
   %D%/efsm.dir/a2x.efsm                         \
   %D%/efsm.dir/a2xyz.efsm                       \
   %D%/efsm.dir/abs.efsm                         \
+  %D%/efsm.dir/ascii-to-one.efsm                \
+  %D%/efsm.dir/ascii-to-one.gv                  \
   %D%/efsm.dir/lal-char-log.gv                  \
   %D%/efsm.dir/lal-char-zmin.efsm               \
   %D%/efsm.dir/lal-char-zmin.gv                 \

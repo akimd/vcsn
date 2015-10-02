@@ -1,0 +1,21 @@
+digraph
+{
+  vcsn_context = "lat<wordset<char_letters(!\"#$%&\\'\\(\\)*+,-./:;\\<=\\>?@\\[\\\\\\]^_`aceps{\\|}~)>, nullableset<letterset<char_letters()>>>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "\\e|\\e, !|\\e, \\\"|\\e, #|\\e, $|\\e, %|\\e, &|\\e, \\'|\\e, \\(|\\e, \\)|\\e, *|\\e, \\+|\\e, \\,|\\e, -|\\e, .|\\e, /|\\e, :|\\e, ;|\\e, \\<|\\e, =|\\e, \\>|\\e, ?|\\e, @|\\e, \\[|\\e, \\\\|\\e, \\]|\\e, ^|\\e, _|\\e, `|\\e, {|\\e, \\||\\e, }|\\e, ~|\\e, \\<space\\>|\\e"]
+  1 -> F1
+}

@@ -1,0 +1,96 @@
+#! /bin/sh
+
+me=$(basename "$0")
+medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
+
+arc_type=standard
+
+cat >$medir/isymbols.txt <<\EOFSM
+\e	0
+!	1
+"	2
+#	3
+$	4
+%	5
+&	6
+'	7
+(	8
+)	9
+*	10
++	11
+,	12
+-	13
+.	14
+/	15
+:	16
+;	17
+<	18
+=	19
+>	20
+?	21
+@	22
+[	23
+\	24
+]	25
+^	26
+_	27
+`	28
+{	29
+|	30
+}	31
+~	32
+<space>	33
+EOFSM
+
+cat >$medir/osymbols.txt <<\EOFSM
+\e	0
+EOFSM
+
+cat >$medir/transitions.fsm <<\EOFSM
+0	1	\e	\e
+0	1	!	\e
+0	1	"	\e
+0	1	#	\e
+0	1	$	\e
+0	1	%	\e
+0	1	&	\e
+0	1	'	\e
+0	1	(	\e
+0	1	)	\e
+0	1	*	\e
+0	1	+	\e
+0	1	,	\e
+0	1	-	\e
+0	1	.	\e
+0	1	/	\e
+0	1	:	\e
+0	1	;	\e
+0	1	<	\e
+0	1	=	\e
+0	1	>	\e
+0	1	?	\e
+0	1	@	\e
+0	1	[	\e
+0	1	\	\e
+0	1	]	\e
+0	1	^	\e
+0	1	_	\e
+0	1	`	\e
+0	1	{	\e
+0	1	|	\e
+0	1	}	\e
+0	1	~	\e
+0	1	<space>	\e
+0
+1
+EOFSM
+
+fstcompile \
+  --arc_type=$arc_type \
+  --keep_isymbols --isymbols=$medir/isymbols.txt \
+  --keep_osymbols --osymbols=$medir/osymbols.txt \
+  $medir/transitions.fsm "$@"
+sta=$?
+
+rm -rf $medir
+exit $sta

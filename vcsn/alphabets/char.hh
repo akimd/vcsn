@@ -8,6 +8,7 @@
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
 
 namespace vcsn
@@ -205,7 +206,9 @@ namespace vcsn
                       char(c1), char(c2));
               res = std::stoi(std::string{char(c1), char(c2)}, nullptr, 16);
             }
-          else if (strchr("\"\\()-", c))
+          else if (std::isalnum(c))
+            raise("conv: invalid escape: \\", char(c), " in \\", i);
+          else
             res = i.get();
         }
       require(res != EOF,
@@ -217,26 +220,42 @@ namespace vcsn
     /// Read one letter from i.
     ///
     /// Either a single char, or a "letter" enclosed in single-quotes.
-    static letter_t get_letter(std::istream& i, bool = true)
+    static letter_t get_letter(std::istream& i, bool quoted = true)
     {
-      return get_char(i);
+      letter_t res = i.peek();
+      if (quoted && res == '\'')
+        {
+          eat(i, '\'');
+          res = get_char(i);
+          eat(i, '\'');
+        }
+      else
+        res = get_char(i);
+      return res;
     }
 
     /// Print a letter.
     std::ostream&
     print(const letter_t l, std::ostream& o, format fmt = {}) const
     {
-      if (l == '\\')
+      if (l == one_letter() || l == special_letter())
+        {}
+      else if (fmt == format::raw)
+        o << l;
+      else if (l == '\\')
         o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
-      else if (l != one_letter() && l != special_letter())
+      else if (l == '|' || l == '\'' || l == ','
+               || l == '[' || l == ']'
+               || l == '<' || l == '>')
+        o << '\\' << l;
+      else
         o << l;
       return o;
     }
 
     /// Print a word.
     std::ostream&
-    print(const word_t& w, std::ostream& o,
-          format fmt = {}) const
+    print(const word_t& w, std::ostream& o, format fmt = {}) const
     {
       size_t s = w.size();
 
@@ -245,6 +264,8 @@ namespace vcsn
         o << "\\e";
       else if (s == 1 && w[0] == special_letter())
         o << '$';
+      else if (fmt == format::raw)
+        o << w;
       else
         {
           if (fmt == format::latex)

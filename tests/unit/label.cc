@@ -23,7 +23,23 @@ set_name(const ValueSet& vs, vcsn::format fmt = vcsn::format::text)
   return o.str();
 }
 
-
+std::string
+all_escaped()
+{
+  auto res = std::string{};
+  for (int i = 1; i < 255; ++i)
+    {
+      if (i == '\\'
+          || i == '\''
+          || i == '|'
+          || i == '[' || i == ']'
+          || i == '<' || i == '>'
+          || i == ',')
+        res += '\\';
+      res += char(i);
+    }
+  return res;
+}
 
 static unsigned
 check_letterset()
@@ -45,14 +61,8 @@ check_letterset()
 
   {
     // Skip the empty word (\x00), and the special letter (\xff).
-    std::string n = "letterset<char_letters(\x01-\xfe)>";
-    std::string all = "letterset<char_letters(";
-    for (int i = 1; i < 255; ++i)
-      if (char(i) == '\\')
-        all += "\\\\";
-      else
-        all += char(i);
-    all += ")>";
+    auto n = std::string{"letterset<char_letters(\x01-\xfe)>"};
+    auto all = "letterset<char_letters(" + all_escaped() + ")>";
     std::istringstream is(n);
     ASSERT_EQ(all, set_name(labelset_t::make(is)));
   }
@@ -80,9 +90,7 @@ check_wordset_make(const std::string& range)
 
   // Check the labelset name: '\\' is the only escaped character.
   {
-    ASSERT_EQ("wordset<char_letters("
-              + boost::algorithm::replace_all_copy(all, "\\", "\\\\")
-              + ")>",
+    ASSERT_EQ("wordset<char_letters(" + all_escaped() + ")>",
               set_name(ls));
   }
 

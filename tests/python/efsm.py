@@ -52,7 +52,7 @@ check(a, 'a1.efsm')
 a = load('lal_char_zmin/slowgrow.gv')
 check(a, 'slowgrow.efsm')
 
-for f in ["lal-char-zmin", "lat-zmin"]:
+for f in ["lal-char-zmin", "lat-zmin", "ascii-to-one"]:
   print("f:", f)
   a = vcsn.automaton(filename = medir + "/" + f + '.gv')
   check(a, f + '.efsm')

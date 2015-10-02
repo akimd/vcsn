@@ -17,6 +17,7 @@ namespace vcsn
         {"auto",    deflt},
         {"default", deflt},
         {"latex",   latex},
+        {"raw",     raw},
         {"text",    text},
       };
     format_ = getargs("format", map, f);
@@ -28,6 +29,8 @@ namespace vcsn
       {
       case format::latex:
         return "latex";
+      case format::raw:
+        return "raw";
       case format::text:
         return "text";
       }

@@ -404,18 +404,19 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
-      value_t res;
       int c = i.peek();
+      // Check for '\e', otherwise pass it to the inner labelset.
       if (c == '\\')
         {
           i.ignore();
           c = i.get();
-          require(c == 'e', "invalid label: unexpected \\", str_escape(c));
-          res = one();
+          if (c == 'e')
+            return one();
+          else
+            i.putback('\\');
         }
-      else
-        res = value(ls_->conv(i, quoted));
-      return res;
+
+      return value(ls_->conv(i, quoted));
     }
 
     template <typename Fun>
@@ -478,6 +479,10 @@ namespace vcsn
           o <<  "nullableset<";
           ls_->print_set(o, fmt);
           o << '>';
+          break;
+
+        case format::raw:
+          assert(0);
           break;
         }
 

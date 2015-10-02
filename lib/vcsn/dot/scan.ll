@@ -81,7 +81,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
     return parser::make_ID(string_t{s}, loc);
   }
 
-  \\.       s.push_back(yytext[1]);
+  "\\".     s.push_back(yytext[1]);
   [^\\""]+  s.append(yytext, yyleng);
 
   <<EOF>> {

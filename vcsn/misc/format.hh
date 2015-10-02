@@ -18,7 +18,10 @@ namespace vcsn LIBVCSN_API
       {
         text,
         latex,
-        deflt = text
+        /// Print as is.  For instance, don't try to escape labels.
+        raw,
+        /// By default, print for text.
+        deflt = text,
       };
 
     format(format_t f = deflt)

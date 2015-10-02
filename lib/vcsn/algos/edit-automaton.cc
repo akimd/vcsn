@@ -1,3 +1,6 @@
+#include <cctype>
+#include <regex>
+
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
@@ -65,6 +68,22 @@ namespace vcsn
         }
       BUILTIN_UNREACHABLE();
     }
+
+    /// Turn a label into a parsable label: escape special characters.
+    std::string quote(lazy_automaton_editor::string_t s)
+    {
+      if (s == "\\e"
+          || s.get().size() == 1 && std::isalnum(s.get()[0]))
+        return s;
+      else
+        {
+          // Backslash backslashes and quotes.
+          static auto re = std::regex{"['\\\\]"};
+          return ("'"
+                  + std::regex_replace(s.get(), re, "\\$&")
+                  + "'");
+        }
+    }
   }
 
   /// Add transitions from \a src to \a dst, labeled by \a entry.
@@ -76,10 +95,14 @@ namespace vcsn
                                         string_t weight)
   {
     input_type_ = std::max(input_type_, type(lbl1));
-    if (!lbl2.get().empty())
+
+    if (lbl2.get().empty())
+      lbl1 = quote(lbl1);
+    else
       {
+        // Turn into a multiple-tape label.
         output_type_ = std::max(output_type_, type(lbl2));
-        lbl1 = "(" + lbl1.get() + "," + lbl2.get() + ")";
+        lbl1 = quote(lbl1) + "|" + quote(lbl2);
       }
     transitions_.emplace_back(src, dst, lbl1, weight);
 

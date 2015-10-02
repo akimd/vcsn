@@ -122,7 +122,7 @@ namespace vcsn
         if (ls.is_special(l))
           os_ << "\\e";
         else
-          ls.print(l, os_);
+          ls.print(l, os_, format::raw);
       }
 
       /// Acceptor.
@@ -264,8 +264,11 @@ namespace vcsn
         using labelset_t = LabelSet;
         using label_t = typename labelset_t::value_t;
 
-        std::set<label_t, vcsn::less<labelset_t>> labels;
+        auto labels = std::set<label_t, vcsn::less<labelset_t>>{};
+        // If there is an alphabet, include it, to preserve the
+        // context in round trips.
         add_alphabet_(*aut_->labelset(), labels, get_label);
+        // In any case, insert all our labels.
         for (auto t : aut_->transitions())
           labels.insert(get_label(aut_->label_of(t)));
 
@@ -278,7 +281,7 @@ namespace vcsn
         for (const auto& l: labels)
           if (!ls.is_one(l))
             {
-              ls.print(l, os_);
+              ls.print(l, os_, format::raw);
               os_ << '\t' << ++num << '\n';
             }
         os_ <<
