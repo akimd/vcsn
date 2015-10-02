@@ -47,7 +47,7 @@ namespace vcsn
       template <typename Ls>
       ATTRIBUTE_PURE
       static vcsn::enable_if_t<Ls::has_one(), bool>
-      is_one_(value_t l)
+      is_one_(const value_t& l)
       {
         return std::get<1>(l) || Ls::is_one(get_value(l));
       }
@@ -55,14 +55,14 @@ namespace vcsn
       template <typename Ls>
       ATTRIBUTE_PURE
       static vcsn::enable_if_t<!Ls::has_one(), bool>
-      is_one_(value_t l)
+      is_one_(const value_t& l)
       {
         return std::get<1>(l);
       }
 
       ATTRIBUTE_PURE
       static bool
-      is_one(value_t l)
+      is_one(const value_t& l)
       {
         return is_one_<labelset_t>(l);
       }
@@ -346,7 +346,7 @@ namespace vcsn
     }
 
     /// The longest common prefix.
-    value_t lgcd(value_t l, value_t r) const
+    value_t lgcd(const value_t& l, const value_t& r) const
     {
       if (equal(l, r))
         return l;
@@ -357,7 +357,7 @@ namespace vcsn
     }
 
     /// Compute l \ r = l^{-1}r.
-    value_t ldiv(value_t l, value_t r) const
+    value_t ldiv(const value_t& l, const value_t& r) const
     {
       if (equal(l, r))
         return one();
@@ -426,7 +426,7 @@ namespace vcsn
 
     /// Print label to stream.
     std::ostream&
-    print(value_t l, std::ostream& o,
+    print(const value_t& l, std::ostream& o,
           format fmt = {}) const
     {
       if (is_one(l))

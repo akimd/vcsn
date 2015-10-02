@@ -17,19 +17,21 @@ namespace std
 
 int main()
 {
-  std::vector<int> ints
-    = { 1, 20, 30, 40 };
-  std::list<double> floats
-    = { 1.1, 2.22, 3.3, 4.4 };
-  std::vector<std::string> strings
-    = { "one", "deux", "three", "four" };
+  std::ostream& os = std::cout;
+
+  auto ints = std::vector<int>           { 1,     20,      30,      40 };
+  auto floats = std::list<double>        { 1.1,   2.22,    3.3,     4.4 };
+  auto strings = std::vector<std::string>{ "one", "deux", "three", "four" };
 
   using vcsn::cross;
+  os << "cross(ints, floats, strings)\n";
   for (auto i: cross(ints, floats, strings))
-    std::cout << i << std::endl;
+    os << i << '\n';
+  os << "\n\n";
 
+  os << "cross(cross(ints), cross(floats, strings))\n";
   for (auto i: cross(cross(ints), cross(floats, strings)))
-    std::cout << i << std::endl;
+    os << i << '\n';
 
   // Make sure iterator and const_iterators are compatible.
   auto c = cross(ints, cross(floats, strings));

@@ -7,7 +7,10 @@
 
 namespace vcsn
 {
-
+  /// Provide a range that allows to iterate over the cross product of
+  /// the provided ranges.
+  ///
+  /// E.g., {a,b,c} x {1,2} -> {(a,1), (a,2), (b,1), (b,2), (c,1), (c,2)}.
   template <typename... Sequences>
   struct cross_sequences
   {
@@ -32,8 +35,8 @@ namespace vcsn
     using value_type
       = std::tuple<typename seq_t<Sequences>::value_type...>;
 
-    cross_sequences(const sequences_t& sequences)
-      : sequences_(sequences)
+    cross_sequences(sequences_t sequences)
+      : sequences_(std::move(sequences))
     {}
 
     cross_sequences(Sequences... sequences)
@@ -62,17 +65,21 @@ namespace vcsn
       /// Underlying iterators.
       using iterators_type = IteratorsType;
 
-      cross_iterator(const iterators_type& is, const iterators_type& ends)
+      cross_iterator(const iterators_type& is,
+                     const iterators_type& begins, const iterators_type& ends)
         : is_{is}
-        , begins_{is}
+        , begins_{begins}
         , ends_{ends}
+      {
+      }
+
+      cross_iterator(const iterators_type& is, const iterators_type& ends)
+        : cross_iterator{is, is, ends}
       {}
 
       template <typename OtherValue, typename OtherIterators>
       cross_iterator(cross_iterator<OtherValue, OtherIterators> const& that)
-        : is_{that.is_}
-        , begins_{that.begins_}
-        , ends_{that.ends_}
+        : cross_iterator{that.is_, that.begins_, that.ends_}
       {}
 
       /// The current position.

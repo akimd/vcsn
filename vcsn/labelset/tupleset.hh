@@ -86,7 +86,7 @@ namespace vcsn
     using kind_t = labels_are_tuples;
 
     tupleset_impl(valuesets_t vs)
-      : sets_(vs)
+      : sets_(std::move(vs))
     {}
 
     tupleset_impl(ValueSets... ls)
@@ -860,7 +860,9 @@ namespace vcsn
       return rhs;
     }
 
+    /// The tupled valuesets.
     valuesets_t sets_;
+    /// Whether this valueset is open.
     mutable bool open__ = false;
 
   private:

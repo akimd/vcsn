@@ -32,12 +32,12 @@ unit_ldadd = $(libvcsn) $(RT_LIBS)
 
 noinst_HEADERS = %D%/test.hh %D%/weight.hh
 
-%C%_aut_lao_z_LDADD      = $(unit_ldadd)
 %C%_aut_lal_char_z_LDADD = $(unit_ldadd)
+%C%_aut_lao_z_LDADD      = $(unit_ldadd)
 %C%_aut_law_char_z_LDADD = $(unit_ldadd)
 %C%_concat_LDADD         = $(unit_ldadd)
-%C%_dyn_LDADD            = $(unit_ldadd)
 %C%_distance_LDADD       = $(unit_ldadd)
+%C%_dyn_LDADD            = $(unit_ldadd)
 %C%_label_LDADD          = $(unit_ldadd)
 %C%_polynomialset_LDADD  = $(unit_ldadd)
 %C%_proper_LDADD         = $(unit_ldadd)
