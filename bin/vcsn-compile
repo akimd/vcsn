@@ -88,7 +88,7 @@ def run(cmd):
 
 if args.shared:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn '{tmp}.o' -shared -o '{tmp}.so'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so' '{tmp}.o'")
     os.rename(fmt('{tmp}.so'), fmt('{base}.so'))
     # Upon success, remove the .o file, it is large (10x compared to
     # the *.so on erebus using clang) and not required.  However the
@@ -96,5 +96,9 @@ if args.shared:
     if "VCSN_DEBUG" not in os.environ:
         os.remove(fmt('{tmp}.o'))
 else:
-    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{base}.cc'")
+    # Exploit ccache: use separate compilation.
+    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o' '{base}.cc'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{base}.o'")
     os.rename(fmt('{tmp}'), fmt('{base}'))
+    if "VCSN_DEBUG" not in os.environ:
+        os.remove(fmt('{tmp}.o'))
