@@ -1093,7 +1093,7 @@ namespace vcsn
     /// in particular "a+a" is properly understood as "<2>a" in
     /// char_z.
     ///
-    /// \param i    the stream to parse
+    /// \param i    the stream to parse.
     /// \param sep  the separator between monomials.
     value_t
     conv(std::istream& i, const char sep = '+') const

@@ -196,7 +196,7 @@ namespace vcsn
               return {};
             }
           else
-            i.putback('\\');
+            i.unget();
         }
 
       // Stop as soon as it might be a special character (such as

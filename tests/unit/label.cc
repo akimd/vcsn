@@ -3,8 +3,6 @@
 #include <iomanip> // setw
 #include <iostream>
 
-#include <boost/algorithm/string/replace.hpp>
-
 #include <tests/unit/test.hh>
 
 #include <vcsn/alphabets/char.hh>

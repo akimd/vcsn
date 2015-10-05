@@ -52,6 +52,9 @@ namespace vcsn
                                 string_t label,
                                 string_t weight = string_t{}) = 0;
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept
+    /// \returns   the previous status.
     virtual bool open(bool o) = 0;
 
     /// The final result.
@@ -99,6 +102,9 @@ namespace vcsn
       , ps_(ctx)
     {}
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept
+    /// \returns   the previous status.
     virtual bool
     open(bool o) override final
     {
@@ -342,5 +348,4 @@ namespace vcsn
       }
     }
   }
-
 } // vcsn::

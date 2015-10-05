@@ -126,7 +126,7 @@ namespace vcsn
         return o;
       }
 
-      /// Ordered map: state -> its derived term.
+      /// Ordered map: state -> its name.
       using origins_t = std::map<state_t, state_name_t>;
       mutable origins_t origins_;
       const origins_t&
