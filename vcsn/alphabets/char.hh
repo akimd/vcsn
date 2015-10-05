@@ -176,47 +176,6 @@ namespace vcsn
     static constexpr letter_t special_letter() { return -1; }
 
   public:
-    /// Read a single char, with possible \-escape support.
-    /// EOF is an error.
-    static char get_char(std::istream& i)
-    {
-      int res = i.get();
-      if (res == '\\')
-        {
-          int c = i.peek();
-          // \(, \) and \- are used in setalpha::make, e.g.,
-          // char_letters(\(\-\)), so strip the backslash.  Otherwise,
-          // return the backslash itself.
-          if (c == 'x')
-            {
-              i.ignore();
-              // Handle hexadecimal escape.
-              int c1 = i.get();
-              require(c1 != EOF,
-                      "conv: invalid label: unexpected end-of-file"
-                      " after: \\x");
-              require(isxdigit(c1),
-                      "conv: invalid label: invalid escape: \\x", char(c1));
-              int c2 = i.get();
-              require(c2 != EOF,
-                      "conv: invalid label: unexpected end-of-file"
-                      " after: \\x", char(c1));
-              require(isxdigit(c2),
-                      "conv: invalid label: invalid escape: \\x",
-                      char(c1), char(c2));
-              res = std::stoi(std::string{char(c1), char(c2)}, nullptr, 16);
-            }
-          else if (std::isalnum(c))
-            raise("conv: invalid escape: \\", char(c), " in \\", i);
-          else
-            res = i.get();
-        }
-      require(res != EOF,
-              sname(), ": conv: invalid label: unexpected end-of-file");
-      return res;
-    }
-
-
     /// Read one letter from i.
     ///
     /// Either a single char, or a "letter" enclosed in single-quotes.

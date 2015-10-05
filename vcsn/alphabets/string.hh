@@ -193,23 +193,6 @@ namespace vcsn
     static letter_t special_letter() { return letter_t{"#"}; }
 
   public:
-    /// FIXME: code duplication with char.hh.  Move to misc?
-
-    /// Read a single char, with possible \-escape support.
-    /// EOF is an error.
-    static char get_char(std::istream& i)
-    {
-      int res = i.get();
-      require(res != EOF, "invalid label: unexpected end-of-file");
-      if (res == '\\')
-        {
-          res = i.get();
-          require(res != EOF, "invalid label: unexpected end-of-file");
-        }
-      return res;
-    }
-
-
     /// Read one letter from i.
     ///
     /// Either a single char, or a "letter" enclosed in single-quotes.
