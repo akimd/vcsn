@@ -39,7 +39,6 @@ _	27
 |	30
 }	31
 ~	32
-<space>	33
 EOFSM
 
 cat >$medir/osymbols.txt <<\EOFSM
@@ -80,7 +79,6 @@ cat >$medir/transitions.fsm <<\EOFSM
 0	1	|	\e
 0	1	}	\e
 0	1	~	\e
-0	1	<space>	\e
 0
 1
 EOFSM

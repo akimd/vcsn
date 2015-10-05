@@ -294,8 +294,13 @@ namespace vcsn
                         string_t lbl1, string_t lbl2,
                         string_t w);
 
+    /// Return the context that was inferred.
+    std::string result_context() const;
+
     /// Return the built automaton.
-    dyn::automaton result();
+    /// \param ctx  the context to load this automaton.
+    ///    Defaults to the `result_context()`.
+    dyn::automaton result(const std::string& ctx = {});
 
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept

@@ -206,6 +206,10 @@ Let's try a means to improve our rendering of decorated automaton (typically
 derived-term) with MathJax rendering.  Stackoverflow has hints on how we can
 do that for SVG, but so far, I failed to adjust the output of dot.
 
+** efsm
+When passing a LAW, maybe we should letterize it transparently?  Currently,
+we treat it as if it were lan<string> instead of law<char>.
+
 ** eliminate-state
 Support several arguments.
 

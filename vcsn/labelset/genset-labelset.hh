@@ -76,11 +76,14 @@ namespace vcsn
                 {
                   require(prev != boost::none,
                           "bracket cannot begin with '-'");
-                  i.ignore();
+                  // With string_letter's letter_t, letter_t{'-'} may
+                  // fail depending on the version of Boost and of
+                  // libstdc++.  So rather, keep this dash.
+                  auto dash = this->genset().get_letter(i);
                   // Handle ranges.
                   if (i.peek() == ']')
                     // [abc-] does not denote an interval.
-                    fun(letter_t{'-'});
+                    fun(dash);
                   else
                     {
                       // [prev - l2].

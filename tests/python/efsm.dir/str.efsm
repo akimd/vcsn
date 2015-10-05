@@ -7,21 +7,9 @@ arc_type=standard
 
 cat >$medir/symbols.txt <<\EOFSM
 \e	0
-a	1
-c	2
-d	3
-e	4
-g	5
-h	6
-i	7
-l	8
-n	9
-p	10
-r	11
-t	12
-child	13
-grand	14
-parent	15
+child	1
+grand	2
+parent	3
 EOFSM
 
 cat >$medir/transitions.fsm <<\EOFSM

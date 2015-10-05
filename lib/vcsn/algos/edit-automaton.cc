@@ -62,9 +62,9 @@ namespace vcsn
       switch (l)
         {
         case labelset_type::empty: return {};
-        case labelset_type::lal: return "lal_char()";
-        case labelset_type::lan: return "lan_char()";
-        case labelset_type::law: return "law_char()";
+        case labelset_type::lal: return "lal<char>";
+        case labelset_type::lan: return "lan<char>";
+        case labelset_type::law: return "law<char>";
         }
       BUILTIN_UNREACHABLE();
     }
@@ -134,35 +134,39 @@ namespace vcsn
     initial_states_.clear();
   }
 
-  /// Create ctx and return the built automaton.
-  dyn::automaton lazy_automaton_editor::result()
+  std::string lazy_automaton_editor::result_context() const
   {
     // If there are no transitions (e.g., standard("\e")), consider
     // the labelset is a plain lal.
-    if (input_type_ == labelset_type::empty)
-      input_type_ = labelset_type::lal;
-    auto ctx = to_string(input_type_);
+    auto res
+      = to_string(input_type_ == labelset_type::empty
+                  ? labelset_type::lal
+                  : input_type_);
     if (output_type_ != labelset_type::empty)
-      ctx = "lat<" + ctx + "," + to_string(output_type_) + '>';
-    ctx += ", ";
+      res = "lat<" + res + "," + to_string(output_type_) + '>';
+    res += ", ";
     switch (weightset_type_)
       {
       case weightset_type::logarithmic:
-        ctx += "log";
+        res += "log";
         break;
       case weightset_type::numerical:
-        ctx += (real_ ? "r"
+        res += (real_ ? "r"
                 : weighted_ ? "z"
                 : "b");
         break;
       case weightset_type::tropical:
-        ctx += (real_ ? "rmin"
+        res += (real_ ? "rmin"
                 : weighted_ ? "zmin"
                 : "b");
         break;
       }
+    return res;
+  }
 
-    auto c = vcsn::dyn::make_context(ctx);
+  dyn::automaton lazy_automaton_editor::result(const std::string& ctx)
+  {
+    auto c = vcsn::dyn::make_context(ctx.empty() ? result_context() : ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
     edit->open(open_);
 

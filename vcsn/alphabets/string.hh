@@ -190,7 +190,7 @@ namespace vcsn
     /// final transitions.
     ///
     /// Use the public special() interface.
-    static letter_t special_letter() { return letter_t{"#"}; }
+    static letter_t special_letter() { return letter_t{std::string{char(0)}}; }
 
   public:
     /// Read one letter from i.
@@ -199,36 +199,46 @@ namespace vcsn
     static letter_t get_letter(std::istream& i,
                                bool quoted = true)
     {
+      std::string res;
       if (quoted)
         {
-          char c = get_char(i);
+          int c = i.peek();
           if (c == '\'')
             {
-              std::string res;
+              i.ignore();
               while (true)
                 {
-                  c = get_char(i);
-                  if (c == '\'')
-                    break;
+                  c = i.peek();
+                  if (c == EOF)
+                    raise(sname(), ": get_letter: invalid end-of-file");
+                  else if (c == '\'')
+                    {
+                      i.ignore();
+                      break;
+                    }
                   else
-                    res += c;
+                    res += get_char(i);
                 }
-              return letter_t{res};
             }
           else
-            return letter_t{1, c};
+            res = std::string{get_char(i)};
         }
       else
-        return letter_t{std::string{std::istreambuf_iterator<char>(i), {}}};
-      }
+        res = std::string{std::istreambuf_iterator<char>(i), {}};
+      return letter_t{res};
+    }
 
     std::ostream&
     print(const letter_t l, std::ostream& o, const format& fmt = {}) const
     {
-      if (l != special_letter() && l != one_letter())
-        o << (fmt == format::latex ? "`\\mathit{" : "'")
-          << l
-          << (fmt == format::latex ? "}\\textrm{'}" : "'");
+      if (l == one_letter() || l == special_letter())
+        {}
+      else if (fmt == format::latex)
+        o << "`\\mathit{" << l << "}\\textrm{'}";
+      else if (fmt == format::text)
+        o << '\'' << l << '\'';
+      else if (fmt == format::raw)
+        o << l;
       return o;
     }
 

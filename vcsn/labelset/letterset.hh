@@ -253,9 +253,9 @@ namespace vcsn
 
     std::ostream&
     print(const value_t& l, std::ostream& o,
-          format = {}) const
+          format fmt = {}) const
     {
-      return this->genset().print(l, o);
+      return this->genset().print(l, o, fmt);
     }
 
     std::ostream&

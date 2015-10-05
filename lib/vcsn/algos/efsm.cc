@@ -4,6 +4,7 @@
 
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/algorithm/string/predicate.hpp> // starts_with
+#include <boost/algorithm/string/replace.hpp> // replace_all_copy
 
 #include <lib/vcsn/algos/fwd.hh>
 #include <lib/vcsn/algos/registry.hh>
@@ -170,7 +171,14 @@ namespace vcsn
       // Flush till EOF.
       while (is.get() != EOF)
         continue;
-      return edit.result();
+
+      // We don't want to read it as a `law<char>` automaton, as for
+      // OpenFST, these "words" are insecable.  The proper
+      // interpretation is lal<string> (or lan<string>).
+      using boost::algorithm::replace_all_copy;
+      auto ctx = replace_all_copy(edit.result_context(),
+                                  "law<char>", "lan<string>");
+      return edit.result(ctx);
     }
   }
 }

@@ -68,10 +68,9 @@ check(a, 'one.efsm')
 a = vcsn.context('lan_char(ab), b').expression('ab*').thompson().sort().strip()
 check(a, 'abs.efsm')
 
-# Using law_char(a-z), b is tempting, but when reading back, we take
-# the smallest possible alphabet.
-a = vcsn.context('law_char(acdeghilnprt), b')\
-      .expression('(grand)*(child+parent)').thompson().sort().strip()
+# Don't try law<char>, it does not make any sense for OpenFST.
+a = vcsn.context('lal<string>, b')\
+      .expression("'grand'*('child'+'parent')").thompson().sort().strip()
 check(a, 'str.efsm')
 
 # A transducer that looks like an acceptor when looking at the symbol

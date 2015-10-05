@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<wordset<char_letters(!\"#$%&\\'\\(\\)*+,-./:;\\<=\\>?@\\[\\\\\\]^_`aceps{\\|}~)>, nullableset<letterset<char_letters()>>>, b"
+  vcsn_context = "lat<nullableset<letterset<char_letters(!\"#$%&\\'\\(\\)*+\,-./:;\\<=\\>?@\\[\\\\\\]^_`{\\|}~)>>, nullableset<letterset<char_letters()>>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -16,6 +16,6 @@ digraph
   }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "\\e|\\e, !|\\e, \\\"|\\e, #|\\e, $|\\e, %|\\e, &|\\e, \\'|\\e, \\(|\\e, \\)|\\e, *|\\e, \\+|\\e, \\,|\\e, -|\\e, .|\\e, /|\\e, :|\\e, ;|\\e, \\<|\\e, =|\\e, \\>|\\e, ?|\\e, @|\\e, \\[|\\e, \\\\|\\e, \\]|\\e, ^|\\e, _|\\e, `|\\e, {|\\e, \\||\\e, }|\\e, ~|\\e, \\<space\\>|\\e"]
+  0 -> 1 [label = "\\e|\\e, !|\\e, \\\"|\\e, #|\\e, $|\\e, %|\\e, &|\\e, \\'|\\e, \\(|\\e, \\)|\\e, *|\\e, \\+|\\e, \\,|\\e, -|\\e, .|\\e, /|\\e, :|\\e, ;|\\e, \\<|\\e, =|\\e, \\>|\\e, ?|\\e, @|\\e, \\[|\\e, \\\\|\\e, \\]|\\e, ^|\\e, _|\\e, `|\\e, {|\\e, \\||\\e, }|\\e, ~|\\e"]
   1 -> F1
 }
