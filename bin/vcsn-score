@@ -10,7 +10,14 @@ import argparse
 import re
 import sys
 import timeit
+import warnings
+
 import vcsn
+
+if '-DNDEBUG' not in vcsn.config['cppflags']:
+    warnings.warn('not compiled with -DNEBUG, benches are irrelevant')
+if '-O3' not in vcsn.config['cxxflags']:
+    warnings.warn('not compiled with -O3, benches are irrelevant')
 
 parser = argparse.ArgumentParser(description = 'Bench some algorithms.')
 parser.add_argument('--only', metavar = 'RE',
