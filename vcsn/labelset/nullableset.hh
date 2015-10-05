@@ -404,18 +404,19 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
-      int c = i.peek();
       // Check for '\e', otherwise pass it to the inner labelset.
-      if (c == '\\')
+      if (i.good() && i.peek() == '\\')
         {
           i.ignore();
-          c = i.get();
+          int c = i.peek();
           if (c == 'e')
-            return one();
+            {
+              i.ignore();
+              return {};
+            }
           else
-            i.putback('\\');
+            i.unget();
         }
-
       return value(ls_->conv(i, quoted));
     }
 
