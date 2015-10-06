@@ -21,7 +21,7 @@ set_name(const ValueSet& vs, vcsn::format fmt = vcsn::format::text)
   return o.str();
 }
 
-std::string
+static std::string
 all_escaped()
 {
   auto res = std::string{};

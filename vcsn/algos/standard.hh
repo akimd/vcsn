@@ -165,7 +165,7 @@ namespace vcsn
   {
     /// Build a standard automaton from an expression.
     ///
-    /// \tparam Aut        relative the generated automaton
+    /// \tparam Aut     relative the generated automaton
     /// \tparam ExpSet  relative to the expression.
     template <typename Aut,
               typename ExpSet>

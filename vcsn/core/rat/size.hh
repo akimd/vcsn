@@ -8,15 +8,19 @@ namespace vcsn
 {
   namespace rat
   {
+    /// Functor to compute the size of a rational expression.
+    ///
+    /// \tparam ExpSet  the expressionset type.
     template <typename ExpSet>
     class sizer
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
+      using super_t = typename expressionset_t::const_visitor;
+
       using context_t = context_t_of<expressionset_t>;
       using weight_t = typename context_t::weightset_t::value_t;
-      using super_t = typename expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
       using inner_t = typename super_t::inner_t;
       template <type_t Type>

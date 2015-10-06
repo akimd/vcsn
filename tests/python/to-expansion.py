@@ -288,7 +288,7 @@ check('(abc|xyz) & (a|xy)*(bc|z)*',
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
       'a|xy.[<XY>bc|z&(<Y>a|xy)*(<Z>(bc)|z)*]')
 
-c = vcsn.context("lat<lan_char(abc), lan_char(xyz)>, q")
+c = vcsn.context("lat<lan<char(abc)>, lan<char(xyz)>>, q")
 check('\e|\e',
       '<1>')
 check('a|x',
@@ -296,7 +296,7 @@ check('a|x',
 check('a*|x*',
       '<1> + \e|x.[\e|x*] + a|\e.[a*|\e] + a|x.[a*|x*]')
 
-c = vcsn.context("lat<lal_char(abc), lal_char(xyz)>, q")
+c = vcsn.context("lat<lal<char(abc)>, lal<char(xyz)>>, q")
 check('\e|\e',
       '<1>')
 check('a|x',

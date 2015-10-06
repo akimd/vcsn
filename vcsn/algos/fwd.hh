@@ -13,6 +13,21 @@
 
 namespace vcsn
 {
+  // vcsn/algos/delay.hh
+  namespace detail
+  {
+    template <typename Aut>
+    class delay_automaton_impl;
+  }
+
+  /// An automaton wrapper that presents the delay automaton.
+  template <typename Aut>
+  using delay_automaton
+    = std::shared_ptr<detail::delay_automaton_impl<Aut>>;
+
+  // vcsn/algos/edit-automaton.hh.
+  class automaton_editor;
+
   // vcsn/algos/focus.hh
   namespace detail
   {
@@ -28,24 +43,11 @@ namespace vcsn
   template <unsigned Tape, typename Aut>
   focus_automaton<Tape, Aut> focus(Aut aut);
 
-  // vcsn/algos/edit-automaton.hh.
-  class automaton_editor;
-
+  // vcsn/algos/epsilon-remover.hh.
   template <typename Aut>
   bool in_situ_remover(Aut& aut, bool prune = true);
 
-  template <typename Aut>
-  bool is_ambiguous(const Aut& aut);
-
-  template <typename Aut>
-  bool is_proper(const Aut& aut);
-
-  template <typename Aut>
-  bool is_valid(const Aut& aut);
-
-  template <typename ExpSet>
-  bool is_valid(const ExpSet&, const typename ExpSet::value_t&);
-
+  // vcsn/algos/info.hh.
   namespace detail_info
   {
     template <typename Aut>
@@ -53,18 +55,20 @@ namespace vcsn
     num_eps_transitions(const Aut&);
   }
 
-
-  // vcsn/algos/delay.hh
-  namespace detail
-  {
-    template <typename Aut>
-    class delay_automaton_impl;
-  }
-
-  /// An automaton wrapper that presents the delay automaton.
+  // vcsn/algos/is-ambiguous.hh.
   template <typename Aut>
-  using delay_automaton
-    = std::shared_ptr<detail::delay_automaton_impl<Aut>>;
+  bool is_ambiguous(const Aut& aut);
+
+  // vcsn/algos/is-proper.hh.
+  template <typename Aut>
+  bool is_proper(const Aut& aut);
+
+  // vcsn/algos/is-value.hh.
+  template <typename Aut>
+  bool is_valid(const Aut& aut);
+
+  template <typename ExpSet>
+  bool is_valid(const ExpSet&, const typename ExpSet::value_t&);
 
   // vcsn/algos/synchronize.hh
   namespace detail

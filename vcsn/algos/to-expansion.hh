@@ -33,12 +33,18 @@ namespace vcsn
     | to_expansion_visitor.   |
     `------------------------*/
 
+    /// Functor to compute the expansion of an expression.
+    ///
+    /// \tparam ExpSet  the expressionset type.
     template <typename ExpSet>
     class to_expansion_visitor
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
+      using super_t = typename expressionset_t::const_visitor;
+      using self_t = to_expansion_visitor;
+
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using expression_t = typename expressionset_t::value_t;
@@ -48,8 +54,6 @@ namespace vcsn
 
       using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
-
-      using super_t = typename expressionset_t::const_visitor;
 
       constexpr static const char* me() { return "to_expansion"; }
 
@@ -367,7 +371,7 @@ namespace vcsn
         {
           return work_(v, labelset_t_of<context_t>::indices);
         }
-        const to_expansion_visitor& visitor_;
+        const self_t& visitor_;
       };
 
       template <typename Dummy>
@@ -377,7 +381,7 @@ namespace vcsn
         {
           BUILTIN_UNREACHABLE();
         }
-        const to_expansion_visitor& visitor_;
+        const self_t& visitor_;
       };
 
       void visit(const tuple_t& v, std::true_type) override

@@ -11,15 +11,19 @@ namespace vcsn
   {
 
     /// Gather information of the number of the different node types.
+    ///
+    /// \tparam ExpSet  the expressionset type.
     template <typename ExpSet>
     class info
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
+      using super_t = typename expressionset_t::const_visitor;
+      using self_t = info;
+
       using context_t = context_t_of<expressionset_t>;
       using node_t = typename expressionset_t::node_t;
-      using super_t = typename expressionset_t::const_visitor;
 
       /// For each node type, count its number of occurrences.
       void operator()(const node_t& v)
@@ -174,7 +178,7 @@ namespace vcsn
           ++visitor_.tuple;
           ++visitor_.depth;
         }
-        info& visitor_;
+        self_t& visitor_;
       };
 
       template <typename Dummy>

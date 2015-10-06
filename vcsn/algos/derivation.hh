@@ -19,6 +19,9 @@ namespace vcsn
 
   namespace rat
   {
+    /// Functor to compute the derivation of an expression.
+    ///
+    /// \tparam ExpSet  the expressionset type.
     template <typename ExpSet>
     class derivation_visitor
       : public ExpSet::const_visitor

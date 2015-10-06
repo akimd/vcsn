@@ -16,19 +16,22 @@ namespace vcsn
     | constant_term(expression).   |
     `-----------------------------*/
 
-    /// \tparam ExpSet  the expression set type.
+    /// A functor to compute the constant term of an expression.
+    ///
+    /// \tparam ExpSet  the expressionset type.
     template <typename ExpSet>
     class constant_term_visitor
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
+      using super_t = typename expressionset_t::const_visitor;
+      using self_t = constant_term_visitor;
+
       using context_t = context_t_of<expressionset_t>;
       using expression_t = typename expressionset_t::value_t;
       using weight_t = weight_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<expressionset_t>;
-
-      using super_t = typename expressionset_t::const_visitor;
 
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "constant_term"; }
@@ -136,11 +139,12 @@ namespace vcsn
 
   } // rat::
 
+  /// The constant term of \a e.
   template <typename ExpSet>
   weight_t_of<ExpSet>
   constant_term(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::constant_term_visitor<ExpSet> constant_term{rs};
+    auto constant_term = rat::constant_term_visitor<ExpSet>{rs};
     return constant_term(e);
   }
 
