@@ -84,6 +84,11 @@ a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
       .expression("(a|x+a|y+a|z)*").standard().sort().strip()
 check(a, 'a2xyz.efsm')
 
+# A transducer that mixes char and string.
+a = vcsn.context('lat<lal<char>,lan<string>>, b')\
+      .expression("(c|'child'+p|'parent')*").standard().sort().strip()
+check(a, 'char-string.efsm')
+
 if have_ofst:
   # Conjunction: check that OpenFST and Vcsn understand the weights
   # the same way.  We have zmin and log in common.

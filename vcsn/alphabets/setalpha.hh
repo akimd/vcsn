@@ -304,17 +304,15 @@ namespace vcsn
     }
 
     /// Compute the intersection with another alphabet.
-    template <typename L2>
-    friend set_alphabet<L2>
-    intersection(const set_alphabet<L2>& lhs, const set_alphabet<L2>& rhs)
+    friend set_alphabet
+    intersection(const set_alphabet& lhs, const set_alphabet& rhs)
     {
       return {intersection(lhs.alphabet_, rhs.alphabet_)};
     }
 
     /// Compute the union with another alphabet.
-    template <typename L2>
-    friend set_alphabet<L2>
-    get_union(const set_alphabet<L2>& lhs, const set_alphabet<L2>& rhs)
+    friend set_alphabet
+    get_union(const set_alphabet& lhs, const set_alphabet& rhs)
     {
       return {get_union(lhs.alphabet_, rhs.alphabet_)};
     }

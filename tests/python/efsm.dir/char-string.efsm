@@ -1,0 +1,40 @@
+#! /bin/sh
+
+me=$(basename "$0")
+medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
+
+arc_type=standard
+
+cat >$medir/isymbols.txt <<\EOFSM
+\e	0
+c	1
+p	2
+EOFSM
+
+cat >$medir/osymbols.txt <<\EOFSM
+\e	0
+child	1
+parent	2
+EOFSM
+
+cat >$medir/transitions.fsm <<\EOFSM
+0	1	c	child
+0	2	p	parent
+1	1	c	child
+1	2	p	parent
+2	1	c	child
+2	2	p	parent
+0
+1
+2
+EOFSM
+
+fstcompile \
+  --arc_type=$arc_type \
+  --keep_isymbols --isymbols=$medir/isymbols.txt \
+  --keep_osymbols --osymbols=$medir/osymbols.txt \
+  $medir/transitions.fsm "$@"
+sta=$?
+
+rm -rf $medir
+exit $sta
