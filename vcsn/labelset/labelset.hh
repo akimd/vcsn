@@ -21,6 +21,17 @@ namespace vcsn
     using has_genset_mem_fn = detect<LabelSet, genset_t>;
 
 
+    /*-----------.
+    | has_one.   |
+    `-----------*/
+
+    template <typename LabelSet>
+    using one_t = decltype(std::declval<LabelSet>().one());
+
+    template <typename LabelSet>
+    using has_one_mem_fn = detect<LabelSet, one_t>;
+
+
     /*-------------.
     | label_one.   |
     `-------------*/

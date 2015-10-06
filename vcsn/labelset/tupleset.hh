@@ -263,10 +263,23 @@ namespace vcsn
       return is_letterized_(indices);
     }
 
-    static value_t
-    one()
+  private:
+    template <std::size_t... I>
+    static auto one_(seq<I...>)
+      -> decltype(value_t{valueset_t<I>::one()...})
     {
-      return one_(indices);
+      return value_t{valueset_t<I>::one()...};
+    }
+
+  public:
+    /// A tuple of ones.
+    ///
+    /// Template + decltype so that this is not defined when not all
+    /// the valuesets support one().
+    template <typename Indices = indices_t>
+    static auto one() -> decltype(one_(Indices{}))
+    {
+      return one_(Indices{});
     }
 
     static bool
@@ -418,13 +431,7 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
-      bool par = i.peek() == '(';
-      if (par)
-        eat(i, '(');
-      value_t res = conv_(i, quoted, indices);
-      if (par)
-        eat(i, ')');
-      return res;
+      return conv_(i, quoted, has_one_mem_fn<self_t>{});
     }
 
     template <typename Fun>
@@ -645,13 +652,6 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    static value_t
-    one_(seq<I...>)
-    {
-      return value_t{valueset_t<I>::one()...};
-    }
-
-    template <std::size_t... I>
     static bool
     is_one_(const value_t& l, seq<I...>)
     {
@@ -730,6 +730,33 @@ namespace vcsn
     undelimit_(const Value& l, seq<I...>) const
     {
       return Value{set<I>().undelimit(std::get<I>(l))...};
+    }
+
+    /// When the valueset supports one, accept the empty string to
+    /// denote one.
+    ///
+    /// This means that we accept the empty string to denote (1, 1)
+    /// for instance on Q x Q.  That's not nice.  Maybe the valuesets
+    /// should declare whether they are labelsets or weightsets.
+    value_t
+    conv_(std::istream& i, bool quoted, std::true_type) const
+    {
+      if (i.peek() == EOF)
+        return one();
+      else
+        return conv_(i, quoted, std::false_type{});
+    }
+
+    value_t
+    conv_(std::istream& i, bool quoted, std::false_type) const
+    {
+      bool par = i.peek() == '(';
+      if (par)
+        eat(i, '(');
+      value_t res = conv_(i, quoted, indices);
+      if (par)
+        eat(i, ')');
+      return res;
     }
 
     template <typename... VS, std::size_t... I>
@@ -1062,7 +1089,7 @@ namespace vcsn
     using type = tupleset<typename proper_traits<LabelSet>::type>;
     static type value(const tupleset<LabelSet>& ls)
     {
-      return {proper_traits<LabelSet>::value(*std::get<0>(ls.sets()).labelset())};
+      return {proper_traits<LabelSet>::value(ls.template set<0>())};
     }
   };
 
