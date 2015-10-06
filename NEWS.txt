@@ -7,7 +7,7 @@ the internal API may also be documented.
 
 # Vcsn 2.1
 
-## 2015-10-05
+## 2015-10-06
 
 About 10,000 hours (on the calendar, not of work!) after its first public
 release, the Vcsn team is very happy to announce the release of Vcsn 2!
@@ -31,8 +31,8 @@ here are a few headlines:
   accepted: `&` for conjunction, `:` for shuffle, `&:` for infiltration,
   `{c}` (postfix) for complement, and `<+` for deterministic choice.
 
-- When entering an automaton (e.g., with %%automaton in IPython) user state
-  names are preserved.
+- When entering an automaton (e.g., with `%%automaton` in IPython) user
+  state names are preserved.
 
 - Of course, many bugs were fixed, many algorithms were sped up, and
   internal details have been cleaned up.
@@ -66,8 +66,8 @@ To update your existing repository, run a command similar to:
 
 ## 2015-09-30
 ### shortest: applies to any automaton
-The restriction to free-labelsets is lifted: shortests applies to automata
-labeled with words, tranducers, etc.
+The restriction to free-labelsets is lifted: shortest applies to automata
+labeled with words, to transducers, etc.
 
 ## 2015-09-28
 ### project: new algorithm
@@ -86,13 +86,13 @@ two new algorithms: `expansion,deterministic` and `derivation,deterministic`.
 ## 2015-09-15
 ### Named automata
 It is (finally) possible to keep user state names thanks to
-name_automaton<Aut>.  Now dyn::read_automaton and (in Python) vcsn.automaton
-accept an additional `strip` argument (defaulting to true): if set, the user
-names will be stripped once the automaton is loaded.  This applies to all
-the supported formats: Daut, Dot, Efsm, and FAdo.
+`name_automaton<Aut>`.  Now `dyn::read_automaton` and (in Python)
+`vcsn.automaton` accept an additional `strip` argument (defaulting to true):
+if set, the user names will be stripped once the automaton is loaded.  This
+applies to all the supported formats: Daut, Dot, Efsm, and FAdo.
 
-However using %%automaton names are kept by default.  Pass `-s`/`--strip` to
-strip it.
+However using `%%automaton` names are kept by default.  Pass `-s`/`--strip`
+to strip it.
 
 ## 2015-09-07
 ### Build fixes
@@ -112,10 +112,11 @@ to guess from the content".
 
 ## 2015-08-25
 ### levenshtein: new algorithm
-The levenshtein algorithm allows to build a transducer encoding the Levenshtein
-distance between two alphabets. This transducer can then be composed with two
-languages to obtain the edit-distance algorithm, containing much information on
-the distance of the languages and their words.
+The `levenshtein` algorithm allows to build a transducer encoding the
+Levenshtein distance between two alphabets. This transducer can then be
+composed with two languages to obtain the edit-distance algorithm,
+containing much information on the distance of the languages and their
+words.
 
 ### partial_identity: new algorithm
 The partial identity turns an automaton into a transducer realizing a partial
@@ -132,12 +133,12 @@ One can chose between both implementation of derived_term (stripped), using
 There are three new heuristics:
 
 "delgado"
-:  select a state whose removal would contribute a small
-   expression (number of symbols, including `+`, etc.).
+:   select a state whose removal would contribute a small
+    expression (number of symbols, including `+`, etc.).
 
 "delgado_label"
-:  likewise, but count only the number of labels in the
-   expression.
+:   likewise, but count only the number of labels in the
+    expression.
 
 "best"
 :   run all the heuristics, and return the shortest result.
@@ -150,8 +151,8 @@ Vcsn offers several means to build an automaton from an expression:
 thompson, zpc, standard and derived-term.  The latter even builds a
 decorated automaton, which, often, is not desired.
 
-In C++ dyn::to_automaton and in Python expression.automaton() allow to build
-a simple automaton from an expression.  It accepts an optional string
+In C++ `dyn::to_automaton` and in Python `expression.automaton()` allow to
+build a simple automaton from an expression.  It accepts an optional string
 argument to select the conversion algorithm.  It defaults to "auto", which
 currently means the stripped derived-automaton, but eventually, it will pick
 either "standard" for basic expressions (as it's the fastest algorithm), or
@@ -193,20 +194,20 @@ most people would understand as "power".
 So, to enforce consistency, and to avoid bad surprises, these functions were
 renamed.
 
-    +----------+---------------------+------------------------------------+
-    |Python    |dyn::                |Comment                             |
-    +----------+---------------------+------------------------------------+
-    |`a * b`   |`multiply(a, b)`     |Multiplication for automata and     |
-    |          |                     |expressions (concatenation),        |
-    |          |                     |polynomials, weights, labels etc.   |
-    +----------+---------------------+------------------------------------+
-    |`a ** n`  |`multiply(a, n)`     |Repeated multiplication.            |
-    +----------+---------------------+------------------------------------+
-    |`a & b`   |`conjunction(a, b)`  |Conjunction for automata and        |
-    |          |                     |expressions.                        |
-    +----------+---------------------+------------------------------------+
-    |`a & n`   |`conjunction(a, n)`  |Repeated conjunction.               |
-    +----------+---------------------+------------------------------------+
++----------+---------------------+------------------------------------+
+|Python    |dyn::                |Comment                             |
++==========+=====================+====================================+
+|`a * b`   |`multiply(a, b)`     |Multiplication for automata and     |
+|          |                     |expressions (concatenation),        |
+|          |                     |polynomials, weights, labels etc.   |
++----------+---------------------+------------------------------------+
+|`a ** n`  |`multiply(a, n)`     |Repeated multiplication.            |
++----------+---------------------+------------------------------------+
+|`a & b`   |`conjunction(a, b)`  |Conjunction for automata and        |
+|          |                     |expressions.                        |
++----------+---------------------+------------------------------------+
+|`a & n`   |`conjunction(a, n)`  |Repeated conjunction.               |
++----------+---------------------+------------------------------------+
 
 ## 2015-06-11
 ### eliminate_state: fixes
@@ -227,19 +228,19 @@ identities (such that `<0>E => \z` whatever the expression E is).
 Vcsn now supports four different sets of identities:
 
 "trivial"
-:  a minimum set of transformations are applied.
+:   a minimum set of transformations are applied.
 
 "associative"
-:  sum and product are made associative, so `a+(b+c)` and `(a+b)+c` are
-   equal.
+:   sum and product are made associative, so `a+(b+c)` and `(a+b)+c` are
+    equal.
 
 "linear"
-:  sum is made commutative, and weights are factored, so `a+b+a` is equal
-   to `a+b` in B, and to `<2>a+b` in Z.
+:   sum is made commutative, and weights are factored, so `a+b+a` is equal
+    to `a+b` in B, and to `<2>a+b` in Z.
 
 "distributive" (or "series")
-:  product and exterior/scalar products are distributed over sum, so
-   `[ab]a` is equal to `aa+ba`, and `<2>[ab]` is equal to `<2>a+<2>b`.
+:   product and exterior/scalar products are distributed over sum, so
+    `[ab]a` is equal to `aa+ba`, and `<2>[ab]` is equal to `<2>a+<2>b`.
 
 Previously the default identities were "associative".  They are now
 "linear", to match most users' expectations.
@@ -264,8 +265,8 @@ we now report:
 
 ## 2015-05-29
 ### nmin: new weightset
-The new tropical semi-ring <N, +, min> has been introduced. Compared to
-zmin, some optimizations can be done, for example in evaluation or in node
+The new tropical semiring ⟨ℕ, +, min⟩ has been introduced. Compared to zmin,
+some optimizations can be done, for example in evaluation or in node
 distance where the absence of negative weights allows to trim some branches.
 
 ## 2015-05-26
@@ -524,7 +525,7 @@ types (hence less runtime compilations).
 ### realtime: new algorithm
 Compute the letterized, proper equivalent of an automaton. The result
 automaton will have only letter transitions (no words, no spontaneous
-transitions).  It comes with the is_realtime algorithm, to check if an
+transitions).  It comes with the `is_realtime` algorithm, to check if an
 automaton is realtime or not.
 
 ### is_letterized: new algorithm
@@ -1255,7 +1256,7 @@ access to the the origins (a map from resulting states to origin states).
 
 ### Variadic product of automata
 The synchronized product of automata is now variadic: the product of
-n-automata directly builds an automaton labelled with n-tuples of original
+n-automata directly builds an automaton labeled with n-tuples of original
 states.  The Python operator, &, is modified to pretend it is variadic
 (rather than binary): it delays the computation until the result is needed.
 The ".value()" method allows to force the evaluation.
@@ -4192,7 +4193,8 @@ LocalWords:  tuple bc ky dfg Luca's tafkit MacPorts Clément Démoulins distro
 LocalWords:  Vagrantfile VirtualBox mkdir wget VM cb Shortlex kE Ek RatE moore
 LocalWords:  tmp darwin inlined texdoc Moore's uv lhs rhs semirings aabb aab
 LocalWords:  abb MacBook subexpressions monomials Antimirov aaaa monomial aaa
-LocalWords:  Automake Makefile versa
+LocalWords:  Automake Makefile versa Boilod Barray Sébastien Piat Yann
+LocalWords:  Copigny levenshtein delgado
 
 Local Variables:
 coding: utf-8
