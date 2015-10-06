@@ -203,39 +203,22 @@ namespace vcsn
       // delimiters in polynomials, or tuple separators).
       word_t res;
       int c = i.peek();
-      if (c == '\'')
+      while (i.good()
+             && (c = i.peek()) != EOF
+             && !isspace(c)
+             && c != '+'
+             && c != ','
+             && c != '|'
+             && c != '('
+             && c != ')')
         {
-          eat(i, '\'');
-          while (i.good()
-                 && (c = i.peek()) != EOF
-                 && c != '\'')
-            {
-              letter_t l = L::get_letter(i, false);
-              require(has(l),
-                      *this, ": invalid letter: ", str_escape(l));
-              // FIXME: in-place mul or temporary vector to build the
-              // string.
-              res = this->mul(res, l);
-            }
-          eat(i, '\'');
+          letter_t l = L::get_letter(i, true);
+          require(has(l),
+                  *this, ": invalid letter: ", str_escape(l));
+          // FIXME: in-place mul or temporary vector to build the
+          // string.
+          res = this->mul(res, l);
         }
-      else
-        while (i.good()
-               && (c = i.peek()) != EOF
-               && !isspace(c)
-               && c != '+'
-               && c != ','
-               && c != '|'
-               && c != '('
-               && c != ')')
-          {
-            letter_t l = L::get_letter(i, false);
-            require(has(l),
-                    *this, ": invalid letter: ", str_escape(l));
-            // FIXME: in-place mul or temporary vector to build the
-            // string.
-            res = this->mul(res, l);
-          }
       return res;
     }
 
