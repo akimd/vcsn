@@ -6,8 +6,9 @@
 
 #include <vcsn/algos/insplit.hh>
 #include <vcsn/algos/strip.hh>
+#include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/join-automata.hh>
-#include <vcsn/core/transition-map.hh>
+#include <vcsn/core/lazy-tuple-automaton.hh>
 #include <vcsn/core/tuple-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
@@ -28,7 +29,7 @@ namespace vcsn
     /// Build the (accessible part of the) product.
     template <Automaton Aut, Automaton... Auts>
     class product_automaton_impl
-      : public automaton_decorator<tuple_automaton<Aut, Auts...>>
+      : public lazy_tuple_automaton<product_automaton_impl<Aut, Auts...>, false, Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "product: requires letterized labels");
@@ -37,21 +38,26 @@ namespace vcsn
       using automaton_t = Aut;
       using tuple_automaton_t = tuple_automaton<automaton_t, Auts...>;
       using self_t = product_automaton_impl;
-      using super_t = automaton_decorator<tuple_automaton_t>;
+      using super_t = lazy_tuple_automaton<self_t, false, Aut, Auts...>;
 
     public:
-      using state_name_t
-        = typename tuple_automaton_t::element_type::state_name_t;
-      using state_t
-        = typename tuple_automaton_t::element_type::state_t;
+      using state_name_t = typename super_t::state_name_t;
+      using state_t = typename super_t::state_t;
+
+      template <Automaton A>
+      using transition_map_t = typename super_t::template transition_map_t<A>;
+
       template <size_t... I>
       using seq
         = typename tuple_automaton_t::element_type::template seq<I...>;
 
+      using super_t::ws_;
+      using super_t::transition_maps_;
+
       static symbol sname()
       {
-        static auto res = symbol{"product_automaton"
-                          + tuple_automaton_t::element_type::sname_()};
+        static symbol res("product_automaton"
+                          + super_t::sname_());
         return res;
       }
 
@@ -82,40 +88,8 @@ namespace vcsn
       /// \param aut   the automaton to build.
       /// \param auts  the input automata.
       product_automaton_impl(Aut aut, const Auts&... auts)
-        : super_t{make_tuple_automaton(aut, auts...)}
-        , transition_maps_{{auts, ws_}...}
+        : super_t{aut, auts...}
       {}
-
-      /// A map from result state to tuple of original states.
-      auto origins() const
-        -> decltype(aut_->origins())
-      {
-        return aut_->origins();
-      }
-
-      /// Whether a given state's outgoing transitions have been
-      /// computed.
-      bool is_lazy(state_t s) const
-      {
-        return has(done_, s);
-      }
-
-      /// Complete a state: find its outgoing transitions.
-      void complete_(state_t s) const
-      {
-        const auto& orig = origins();
-        const_cast<self_t&>(*this).add_conjunction_transitions(s, orig.at(s));
-        done_.insert(s);
-      }
-
-      /// All the outgoing transitions.
-      auto all_out(state_t s) const
-        -> decltype(all_out(aut_, s))
-      {
-        if (is_lazy(s))
-          complete_(s);
-        return vcsn::detail::all_out(aut_, s);
-      }
 
       /// Compute the (accessible part of the) conjunction.
       void conjunction(bool lazy = false)
@@ -126,7 +100,7 @@ namespace vcsn
           while (!aut_->todo_.empty())
             {
               const auto& p = aut_->todo_.front();
-              add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
+              this->complete_(std::get<1>(p));
               aut_->todo_.pop_front();
             }
       }
@@ -187,6 +161,13 @@ namespace vcsn
           }
       }
 
+      /// Tell lazy_tuple_automaton how to add the transitions to a state
+      void add_transitions(const state_t src,
+                           const state_name_t& psrc)
+      {
+        add_conjunction_transitions(src, psrc);
+      }
+
     private:
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the conjunction algorithm.
@@ -204,32 +185,9 @@ namespace vcsn
         add_conjunction_transitions(aut_->pre(), aut_->pre_());
       }
 
-      /// Conversion from state name to state number.
-      template <typename... Args>
-      state_t state(Args&&... args)
-      {
-        return aut_->state(std::forward<Args>(args)...);
-      }
 
-      /// The type of our transition maps: convert the weight to weightset_t,
-      /// non deterministic, and including transitions to post().
-      template <Automaton A>
-      using transition_map_t = transition_map<A, weightset_t, false, true>;
-
-      /// The outgoing tuple of transitions from state tuple \a ss.
-      std::tuple<typename transition_map_t<Auts>::map_t&...>
-      out_(const state_name_t& ss)
-      {
-        return out_(ss, aut_->indices);
-      }
-
-      template <size_t... I>
-      std::tuple<typename transition_map_t<Auts>::map_t&...>
-      out_(const state_name_t& ss, seq<I...>)
-      {
-        return std::tie(std::get<I>(transition_maps_)[std::get<I>(ss)]...);
-      }
-
+      using super_t::out_;
+      using super_t::state;
       /// Add transitions to the result automaton, starting from the
       /// given result input state, which must correspond to the given
       /// pair of input state automata.  Update the worklist with the
@@ -288,7 +246,7 @@ namespace vcsn
           {
             // one is guaranteed to be first.
             const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
-            if (ls.is_one(tmap.begin()->first))
+            if (!tmap.empty() && ls.is_one(tmap.begin()->first))
               for (auto t : tmap.begin()->second)
                 {
                   auto pdst = psrc;
@@ -461,17 +419,6 @@ namespace vcsn
               }
         return res;
       }
-
-      /// The resulting weightset.
-      const weightset_t& ws_ = *aut_->weightset();
-
-      /// Transition caches.
-      std::tuple<transition_map_t<Auts>...> transition_maps_;
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 
