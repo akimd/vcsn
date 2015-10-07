@@ -165,7 +165,7 @@ namespace vcsn
       /// The cache.
       maps_t maps_;
       /// The automaton whose transitions are cached.
-      const Aut& aut_;
+      Aut aut_;
       /// The result weightset.
       const weightset_t& ws_;
     };

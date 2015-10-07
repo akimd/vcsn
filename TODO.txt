@@ -173,6 +173,10 @@ In the case of RW, check that the expression is valid.
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 
+** check dubious const& members
+Having a member of type automaton_t (or similarly, a shared_ptr) as a const& is
+suspicious, and it should be checked in every class.
+
 * Improvements
 ** are-equivalent
 V1 was calling letterize and proper, so it was more general than we are now.
