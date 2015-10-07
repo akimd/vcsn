@@ -17,10 +17,6 @@ include $(top_srcdir)/build-aux/make/html-dir.mk
 
 include %D%/notebooks/local.mk
 
-EXTRA_DIST +=					\
-  %D%/figs/vcsn.png				\
-  %D%/figs/vcsn.mini.png
-
 ## --------- ##
 ## Doyxgen.  ##
 ## --------- ##

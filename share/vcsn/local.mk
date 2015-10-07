@@ -1,5 +1,5 @@
 ## Vaucanson 2, a generic library for finite state machines.
-## Copyright (C) 2013-2014 Vaucanson Group.
+## Copyright (C) 2013-2015 Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -12,21 +12,25 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 jsdir = $(datadir)/vcsn/js
-dist_js_DATA =                                         \
+dist_js_DATA =					\
   %D%/js/AutomatonD3Widget.js
 
 jupyter_profiledir = $(datadir)/vcsn/jupyter_profile
 dist_jupyter_profile_DATA =			\
-  %D%/jupyter_profile/custom/custom.css	\
-  %D%/jupyter_profile/custom/custom.js	\
+  %D%/jupyter_profile/custom/custom.css		\
+  %D%/jupyter_profile/custom/custom.js		\
   %D%/jupyter_profile/custom/logo.png
-
 
 notebook_profiledir = $(datadir)/vcsn/notebook_profile
 dist_notebook_profile_DATA =			\
   %D%/notebook_profile/static/custom/custom.css	\
   %D%/notebook_profile/static/custom/custom.js	\
   %D%/notebook_profile/static/custom/logo.png
+
+figsdir = $(datadir)/vcsn/figs
+dist_figs_DATA =				\
+  %D%/figs/vcsn.png				\
+  %D%/figs/vcsn.mini.png
 
 lal_char_bdir = $(datadir)/vcsn/lal_char_b
 dist_lal_char_b_DATA =				\
