@@ -254,3 +254,11 @@ check_bdt(E2t, 'e2-dt-breaking')
 fig3 = vcsn.context('lal_char(abcd), b').expression('a(b+c+d)')
 check_dt(fig3, 'h3-dt')
 check_bdt(fig3, 'h3-dt-breaking')
+
+
+## -------- ##
+## Tuples.  ##
+## -------- ##
+
+ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
+check('ab|xy', 'a|x', 'b|y')

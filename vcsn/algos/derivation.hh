@@ -17,7 +17,15 @@ namespace vcsn
   | derivation(expression).   |
   `--------------------------*/
 
-  namespace rat
+  template <typename ExpSet>
+  inline
+  rat::expression_polynomial_t<ExpSet>
+  derivation(const ExpSet& rs,
+             const typename ExpSet::value_t& e,
+             label_t_of<ExpSet> a,
+             bool breaking = false);
+
+    namespace rat
   {
     /// Functor to compute the derivation of an expression.
     ///
@@ -28,6 +36,9 @@ namespace vcsn
     {
     public:
       using expressionset_t = ExpSet;
+      using super_t = typename expressionset_t::const_visitor;
+      using self_t = derivation_visitor;
+
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
@@ -38,7 +49,6 @@ namespace vcsn
       using polynomialset_t = expression_polynomialset_t<expressionset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      using super_t = typename expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
 
       constexpr static const char* me() { return "derivation"; }
@@ -59,13 +69,6 @@ namespace vcsn
       VCSN_RAT_UNSUPPORTED(infiltration)
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(transposition)
-
-      using tuple_t = typename super_t::tuple_t;
-      virtual void visit(const tuple_t&, std::true_type) override
-      {
-        raise(me(), ": tuple is not supported");
-      }
-
 
       VCSN_RAT_VISIT(zero,)
       {
@@ -201,6 +204,51 @@ namespace vcsn
         res_ = ps_.rmul(res_, e.weight());
       }
 
+      /*---------.
+      | tuple.   |
+      `---------*/
+
+      using tuple_t = typename super_t::tuple_t;
+      template <bool = context_t::is_lat,
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        /// Tuple of derivations of all the tapes.
+        template <size_t... I>
+        polynomial_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          return
+            visitor_
+            .ps_
+            .tuple(vcsn::derivation(detail::make_project<I>(visitor_.rs_),
+                                    std::get<I>(v.sub()),
+                                    std::get<I>(visitor_.variable_))...);
+        }
+
+        /// Entry point.
+        polynomial_t operator()(const tuple_t& v)
+        {
+          return work_(v, labelset_t_of<context_t>::indices);
+        }
+
+        const self_t& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        polynomial_t operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        const self_t& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        res_ = visit_tuple<>{*this}(v);
+      }
+
     private:
       expressionset_t rs_;
       /// Shorthand to the weightset.
@@ -221,7 +269,7 @@ namespace vcsn
   derivation(const ExpSet& rs,
              const typename ExpSet::value_t& e,
              label_t_of<ExpSet> a,
-             bool breaking = false)
+             bool breaking)
   {
     static_assert(ExpSet::context_t::labelset_t::is_free(),
                   "derivation: requires free labelset");

@@ -11,11 +11,11 @@ ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 # this is indeed the evaluation of the empty word on derived-term(RAT-EXP).
 #
 # Use a context with expression weights to check the order of products.
-def check(weight, exp):
+def check(weight, exp, algo = 'expansion'):
     w = ctx.weight(weight)
     re = ctx.expression(exp)
     CHECK_EQ(w, re.constant_term())
-    CHECK_EQ(w, re.automaton().eval(''))
+    CHECK_EQ(w, re.automaton(algo).eval(''))
 
 # zero.
 check('\z', '<x>\z')
@@ -62,3 +62,14 @@ check('zyx', '(<xyz>\e){T}')
 # ldiv
 e = ctx.expression('<x>a{\}<x>a')
 XFAIL(lambda: e.constant_term())
+
+# tuple.
+#
+# We have to request for construction based on the derivation, not the
+# expansion, becase expansion wants the label one, i.e., it requires
+# the labelsets to be lan, not lal.
+ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
+check('0', ' (<2>a)|(<3>x)',  'derivation')
+check('0', ' (<2>a)|(<3>\e)', 'derivation')
+check('0', '(<2>\e)|(<3>x)',  'derivation')
+check('6', '(<2>\e)|(<3>\e)', 'derivation')
