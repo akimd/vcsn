@@ -98,7 +98,7 @@ if args.shared:
 else:
     # Exploit ccache: use separate compilation.
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o' '{base}.cc'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{base}.o'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
     os.rename(fmt('{tmp}'), fmt('{base}'))
     if "VCSN_DEBUG" not in os.environ:
         os.remove(fmt('{tmp}.o'))
