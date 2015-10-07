@@ -431,7 +431,11 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
-      return conv_(i, quoted, has_one_mem_fn<self_t>{});
+      // To know whether we have a tupleset of labelsets, we check if
+      // genset_t is not void.  See labelset_types_impl above.
+      constexpr auto has_label_one
+        = !std::is_same<genset_t, void>::value && has_one_mem_fn<self_t>{};
+      return conv_(i, quoted, bool_constant<has_label_one>{});
     }
 
     template <typename Fun>
@@ -732,21 +736,28 @@ namespace vcsn
       return Value{set<I>().undelimit(std::get<I>(l))...};
     }
 
-    /// When the valueset supports one, accept the empty string to
-    /// denote one.
-    ///
-    /// This means that we accept the empty string to denote (1, 1)
-    /// for instance on Q x Q.  That's not nice.  Maybe the valuesets
-    /// should declare whether they are labelsets or weightsets.
+    template <typename... VS, std::size_t... I>
+    value_t
+    conv_(const tupleset<VS...>& vs,
+          const typename tupleset<VS...>::value_t& v,
+          seq<I...>) const
+    {
+      return value_t{set<I>().conv(vs.template set<I>(), std::get<I>(v))...};
+    }
+
+    /// When the valuesets are labelsets and support one, accept the
+    /// empty string to denote one.
     value_t
     conv_(std::istream& i, bool quoted, std::true_type) const
     {
       if (i.peek() == EOF)
         return one();
       else
+        // This is not the empty string, bounce to the regular case.
         return conv_(i, quoted, std::false_type{});
     }
 
+    /// Read a tuple in the stream, possibly parenthesized.
     value_t
     conv_(std::istream& i, bool quoted, std::false_type) const
     {
@@ -757,15 +768,6 @@ namespace vcsn
       if (par)
         eat(i, ')');
       return res;
-    }
-
-    template <typename... VS, std::size_t... I>
-    value_t
-    conv_(const tupleset<VS...>& vs,
-          const typename tupleset<VS...>::value_t& v,
-          seq<I...>) const
-    {
-      return value_t{set<I>().conv(vs.template set<I>(), std::get<I>(v))...};
     }
 
     template <std::size_t... I>
