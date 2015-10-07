@@ -239,8 +239,9 @@ case $ac_cv_GLIBCXX_DEBUG:$vcsn_cv_cxx_is_clang in (yes:no)
 esac
 
 # We look for our data files at runtime, including to compile.
+AC_SUBST([pkgdatadir], ['${datadir}/${PACKAGE}'])
 AC_SUBST([pkglibdir],  ['${libdir}/${PACKAGE}'])
-AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$datadir/$PACKAGE])`])
+AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$pkgdatadir])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
 AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])

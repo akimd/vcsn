@@ -11,42 +11,42 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-jsdir = $(datadir)/vcsn/js
+jsdir = $(pkgdatadir)/js
 dist_js_DATA =					\
   %D%/js/AutomatonD3Widget.js
 
-jupyter_profiledir = $(datadir)/vcsn/jupyter_profile
+jupyter_profiledir = $(pkgdatadir)/jupyter_profile
 dist_jupyter_profile_DATA =			\
   %D%/jupyter_profile/custom/custom.css		\
   %D%/jupyter_profile/custom/custom.js		\
   %D%/jupyter_profile/custom/logo.png
 
-notebook_profiledir = $(datadir)/vcsn/notebook_profile
+notebook_profiledir = $(pkgdatadir)/notebook_profile
 dist_notebook_profile_DATA =			\
   %D%/notebook_profile/static/custom/custom.css	\
   %D%/notebook_profile/static/custom/custom.js	\
   %D%/notebook_profile/static/custom/logo.png
 
-figsdir = $(datadir)/vcsn/figs
+figsdir = $(pkgdatadir)/figs
 dist_figs_DATA =				\
   %D%/figs/vcsn.png				\
   %D%/figs/vcsn.mini.png
 
-lal_char_bdir = $(datadir)/vcsn/lal_char_b
+lal_char_bdir = $(pkgdatadir)/lal_char_b
 dist_lal_char_b_DATA =				\
   %D%/lal_char_b/a1.gv				\
   %D%/lal_char_b/b1.gv				\
   %D%/lal_char_b/evena.gv			\
   %D%/lal_char_b/oddb.gv
 
-lal_char_zdir = $(datadir)/vcsn/lal_char_z
+lal_char_zdir = $(pkgdatadir)/lal_char_z
 dist_lal_char_z_DATA =				\
   %D%/lal_char_z/b1.gv				\
   %D%/lal_char_z/binary.gv			\
   %D%/lal_char_z/c1.gv				\
   %D%/lal_char_z/d1.gv
 
-lal_char_zmindir = $(datadir)/vcsn/lal_char_zmin
+lal_char_zmindir = $(pkgdatadir)/lal_char_zmin
 dist_lal_char_zmin_DATA =			\
   %D%/lal_char_zmin/minab.gv			\
   %D%/lal_char_zmin/minblocka.gv		\
