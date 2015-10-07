@@ -18,14 +18,13 @@ namespace vcsn
   `--------------------------*/
 
   template <typename ExpSet>
-  inline
   rat::expression_polynomial_t<ExpSet>
   derivation(const ExpSet& rs,
              const typename ExpSet::value_t& e,
              label_t_of<ExpSet> a,
              bool breaking = false);
 
-    namespace rat
+  namespace rat
   {
     /// Functor to compute the derivation of an expression.
     ///
@@ -264,7 +263,6 @@ namespace vcsn
 
   /// Derive an expression wrt to a letter.
   template <typename ExpSet>
-  inline
   rat::expression_polynomial_t<ExpSet>
   derivation(const ExpSet& rs,
              const typename ExpSet::value_t& e,
@@ -273,7 +271,7 @@ namespace vcsn
   {
     static_assert(ExpSet::context_t::labelset_t::is_free(),
                   "derivation: requires free labelset");
-    rat::derivation_visitor<ExpSet> derivation{rs};
+    auto derivation = rat::derivation_visitor<ExpSet>{rs};
     auto res = derivation(e, a);
     if (breaking)
       res = split(rs, res);
@@ -283,7 +281,6 @@ namespace vcsn
 
   /// Derive a polynomial of expressions wrt to a letter.
   template <typename ExpSet>
-  inline
   rat::expression_polynomial_t<ExpSet>
   derivation(const ExpSet& rs,
              const rat::expression_polynomial_t<ExpSet>& p,
@@ -292,7 +289,7 @@ namespace vcsn
   {
     auto ps = rat::make_expression_polynomialset(rs);
     using polynomial_t = rat::expression_polynomial_t<ExpSet>;
-    polynomial_t res;
+    auto res = polynomial_t{};
     for (const auto& m: p)
       res = ps.add(res,
                    ps.lmul(weight_of(m),
@@ -313,7 +310,6 @@ namespace vcsn
             typename = vcsn::enable_if_t<!std::is_same<word_t_of<ExpSet>,
                                                        label_t_of<ExpSet>>
                                          ::value>>
-  inline
   rat::expression_polynomial_t<ExpSet>
   derivation(const ExpSet& rs,
              const typename ExpSet::value_t& e,
@@ -337,7 +333,6 @@ namespace vcsn
     {
       /// Bridge.
       template <typename ExpSet, typename Label, typename Bool>
-      inline
       polynomial
       derivation(const expression& exp, const label& lbl, bool breaking)
       {

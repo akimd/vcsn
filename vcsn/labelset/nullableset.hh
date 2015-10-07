@@ -505,10 +505,10 @@ namespace vcsn
     template <typename LabelSet>
     struct letterized_traits<nullableset<LabelSet>>
     {
-      using letterized_ls = letterized_traits<LabelSet>;
-      static constexpr bool is_letterized = letterized_ls::is_letterized;
+      using traits = letterized_traits<LabelSet>;
+      static constexpr bool is_letterized = traits::is_letterized;
 
-      using labelset_t = typename letterized_ls::labelset_t;
+      using labelset_t = typename traits::labelset_t;
 
       static labelset_t labelset(const nullableset<LabelSet>& ls)
       {
