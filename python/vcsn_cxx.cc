@@ -261,9 +261,9 @@ struct automaton
     return vcsn::dyn::component(val_, com_num);
   }
 
-  automaton compose(automaton& rhs)
+  automaton compose(automaton& rhs, bool lazy = false)
   {
-    return vcsn::dyn::compose(val_, rhs.val_);
+    return vcsn::dyn::compose(val_, rhs.val_, lazy);
   }
 
   automaton condense() const
@@ -1389,7 +1389,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
     .def("component", &automaton::component)
-    .def("compose", &automaton::compose)
+    .def("compose", &automaton::compose, (arg("lazy") = false))
     .def("condense", &automaton::condense)
     .def("conjunction",
          static_cast<automaton::conjunction_repeated_t>(&automaton::conjunction))

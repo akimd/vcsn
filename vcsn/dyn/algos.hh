@@ -89,7 +89,7 @@ namespace vcsn
     automaton component(const automaton& aut, unsigned num);
 
     /// The composition of transducers \a lhs and \a rhs.
-    automaton compose(automaton& lhs, automaton& rhs);
+    automaton compose(automaton& lhs, automaton& rhs, bool lazy = false);
 
     /// Concatenate two expressions.
     ///

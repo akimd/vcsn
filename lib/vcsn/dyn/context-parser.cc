@@ -359,7 +359,8 @@ namespace vcsn
           eat_('>');
         }
       // xxx_automaton<Aut...>.
-      else if (prefix == "product_automaton"
+      else if (prefix == "compose_automaton"
+               || prefix == "product_automaton"
                || prefix == "tuple_automaton")
         {
           eat_('<');

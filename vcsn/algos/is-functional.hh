@@ -17,10 +17,8 @@ namespace vcsn
   bool is_functional(const Aut& aut)
   {
     // Compose aut and its invert.
-    auto l = focus<0>(aut);
-    auto r = insplit(l);
-    auto compose = detail::make_composer(l, r);
-    auto c = compose();
+    auto c = make_compose_automaton<Aut, Aut, 0, 0>(aut, aut);
+    c->compose();
     return is_partial_identity(c);
   }
 

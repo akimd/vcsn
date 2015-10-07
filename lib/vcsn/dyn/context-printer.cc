@@ -58,6 +58,7 @@ namespace vcsn
         {
           "automaton type",
           {
+            {"compose_automaton"      , "vcsn/algos/compose.hh"},
             {"delay_automaton"        , "vcsn/algos/is-synchronized.hh"},
             {"derived_term_automaton" , "vcsn/algos/derived-term.hh"},
             {"determinized_automaton" , "vcsn/algos/determinize.hh"},
