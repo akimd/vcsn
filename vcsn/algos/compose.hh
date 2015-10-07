@@ -2,6 +2,7 @@
 
 #include <vcsn/algos/focus.hh>
 #include <vcsn/algos/insplit.hh>
+#include <vcsn/core/lazy-tuple-automaton.hh>
 #include <vcsn/core/transition-map.hh>
 #include <vcsn/core/tuple-automaton.hh>
 #include <vcsn/ctx/context.hh>
@@ -15,7 +16,6 @@ namespace vcsn
 {
   namespace detail
   {
-
 #define DEFINE(Type)                                                      \
     template <Automaton Aut>                                              \
     struct Type ## _of_impl                                               \
@@ -61,9 +61,11 @@ namespace vcsn
       using res_label_t = typename labelset_t::value_t;
       using context_t = ::vcsn::context<labelset_t, weightset_t>;
 
-      /// The type of the resulting automaton.
-      using automaton_t = tuple_automaton<mutable_automaton<context_t>,
-                                          Lhs, Rhs>;
+      using out_t = mutable_automaton<context_t>;
+
+       /// The type of the resulting automaton.
+       using automaton_t = tuple_automaton<mutable_automaton<context_t>,
+                                           Lhs, Rhs>;
     };
 
 
@@ -74,7 +76,10 @@ namespace vcsn
     /// Build the (accessible part of the) composition.
     template <Automaton Lhs, Automaton Rhs>
     class compose_automaton_impl
-      : public automaton_decorator<typename composed_type<Lhs, Rhs>::automaton_t>
+      : public lazy_tuple_automaton<compose_automaton_impl<Lhs, Rhs>,
+                              true,
+                              typename composed_type<Lhs, Rhs>::out_t,
+                              Lhs, Rhs>
     {
       static_assert(full_context_t_of<Lhs>::is_lat,
                     "compose: lhs labelset must be a tupleset");
@@ -90,14 +95,10 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
 
     public:
-      using tuple_automaton_t = typename composed_type<Lhs, Rhs>::automaton_t;
-      using super_t = automaton_decorator<tuple_automaton_t>;
 
       using self_t = compose_automaton_impl;
 
-      using clhs_t = Lhs;
-      using crhs_t = Rhs;
-      using type_helper_t = composed_type<clhs_t, crhs_t>;
+      using type_helper_t = composed_type<Lhs, Rhs>;
       using hidden_l_labelset_t = typename type_helper_t::hidden_l_labelset_t;
       using hidden_r_labelset_t = typename type_helper_t::hidden_r_labelset_t;
       using hidden_l_label_t = typename type_helper_t::hidden_l_label_t;
@@ -111,13 +112,12 @@ namespace vcsn
       using res_label_t = typename type_helper_t::res_label_t;
       using context_t = typename type_helper_t::context_t;
 
-      /// The type of the resulting automaton.
-      using automaton_t = typename type_helper_t::automaton_t;
-
+      using out_t = typename type_helper_t::out_t;
+      using super_t = lazy_tuple_automaton<self_t, true, out_t, Lhs, Rhs>;
       /// Result state type.
-      using state_t = state_t_of<automaton_t>;
+      using state_t = typename super_t::state_t;
       /// Tuple of states of input automata.
-      using state_name_t = typename automaton_t::element_type::state_name_t;
+      using state_name_t = typename super_t::state_name_t;
 
       using super_t::aut_;
 
@@ -137,17 +137,8 @@ namespace vcsn
       }
 
       compose_automaton_impl(const Lhs& lhs, const Rhs& rhs)
-        : super_t{make_tuple_automaton(make_mutable_automaton(make_context_(lhs, rhs)), lhs, rhs)}
-        , transition_maps_{{lhs, ws_},
-                           {rhs, ws_}}
+        : super_t{make_mutable_automaton(make_context_(lhs, rhs)), lhs, rhs}
       {}
-
-      /// A map from result state to tuple of original states.
-      auto origins() const
-        -> decltype(aut_->origins())
-      {
-        return aut_->origins();
-      }
 
       /// The (accessible part of the) composition of \a lhs_ and \a rhs_.
       void compose(bool lazy = false)
@@ -163,30 +154,11 @@ namespace vcsn
             }
       }
 
-      /// Whether a given state's outgoing transitions have been
-      /// computed.
-      bool state_is_strict(state_t s) const
-      {
-        return has(done_, s);
-      }
 
-      /// Complete a state: find its outgoing transitions.
-      void complete_(state_t s) const
+      void add_transitions(const state_t src,
+                           const state_name_t& psrc)
       {
-        const auto& orig = origins();
-        state_name_t sn = orig.at(s);
-        const_cast<self_t&>(*this).add_compose_transitions(s, sn);
-        done_.insert(s);
-      }
-
-      /// All the outgoing transitions.
-      using super_t::all_out;
-      auto all_out(state_t s) const
-        -> decltype(aut_->all_out(s))
-      {
-        if (!state_is_strict(s))
-          complete_(s);
-        return aut_->all_out(s);
+        add_compose_transitions(src, psrc);
       }
 
       using label_t = typename labelset_t::value_t;
@@ -260,7 +232,7 @@ namespace vcsn
       template <Automaton Aut>
       std::enable_if_t<labelset_t_of<Aut>::has_one(),
                         res_label_t_of<Aut>>
-      get_hidden_one(const insplit_automaton<Aut>& aut)
+      get_hidden_one(const insplit_automaton<Aut>& aut) const
       {
         return real_aut(aut)->hidden_one();
       }
@@ -274,6 +246,7 @@ namespace vcsn
         raise("should not get here");
       }
 
+      using super_t::transition_maps_;
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
@@ -296,11 +269,12 @@ namespace vcsn
             && lhs->labelset()->is_one(ltm.begin()->first))
           {
             has_eps_out = true;
+            // for each spontaneous transitions leaving the state
             for (auto t: ltm.begin()->second)
               aut_->add_transition(src,
                                    aut_->state(t.dst, std::get<1>(psrc)),
                                    join_label(lhs->hidden_label_of(t.transition),
-                                              get_hidden_one(rhs)),
+                                              get_hidden_one(rhs->aut_out())),
                                    t.weight());
           }
 
@@ -381,17 +355,6 @@ namespace vcsn
         auto rtr = rin.begin();
         return rtr != rin.end() && is_one(rhs, *rtr);
       }
-
-      /// The resulting weightset.
-      const weightset_t& ws_ = *aut_->weightset();
-
-      /// Transition caches.
-      std::tuple<transition_map_t<Lhs>, transition_map_t<Rhs>> transition_maps_;
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 
@@ -400,8 +363,8 @@ namespace vcsn
   using compose_automaton
     = std::shared_ptr<detail::compose_automaton_impl<Lhs, Rhs>>;
 
-  template <Automaton Lhs, Automaton Rhs,
-            std::size_t OutTape = 1, std::size_t InTape = 0>
+  template <std::size_t OutTape, std::size_t InTape,
+            Automaton Lhs, Automaton Rhs>
   auto
   make_compose_automaton(const Lhs& lhs, const Rhs& rhs)
   {
@@ -422,7 +385,7 @@ namespace vcsn
   auto
   compose(Lhs& lhs, Rhs& rhs)
   {
-    auto res = make_compose_automaton(lhs, rhs);
+    auto res = make_compose_automaton<OutTape, InTape>(lhs, rhs);
     res->compose();
     return res->strip();
   }
@@ -433,7 +396,7 @@ namespace vcsn
   auto
   compose_lazy(Lhs& lhs, Rhs& rhs)
   {
-    auto res = make_compose_automaton(lhs, rhs);
+    auto res = make_compose_automaton<OutTape, InTape>(lhs, rhs);
     res->compose(true);
     return res;
   }
