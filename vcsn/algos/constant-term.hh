@@ -36,8 +36,12 @@ namespace vcsn
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "constant_term"; }
 
+      constant_term_visitor(const weightset_t& ws)
+        : ws_(ws)
+      {}
+
       constant_term_visitor(const expressionset_t& rs)
-        : ws_(*rs.weightset())
+        : constant_term_visitor(*rs.weightset())
       {}
 
       weight_t
@@ -103,12 +107,6 @@ namespace vcsn
         res_ = ws_.transpose(constant_term(v.sub()));
       }
 
-      using tuple_t = typename super_t::tuple_t;
-      virtual void visit(const tuple_t&, std::true_type) override
-      {
-        raise(me(), ": tuple is not supported");
-      }
-
       VCSN_RAT_VISIT(star, v)
       {
         res_ = ws_.star(constant_term(v.sub()));
@@ -130,6 +128,54 @@ namespace vcsn
           = ws_.is_zero(constant_term(v.sub()))
           ? ws_.one()
           : ws_.zero();
+      }
+
+      /*---------.
+      | tuple.   |
+      `---------*/
+
+      using tuple_t = typename super_t::tuple_t;
+      template <bool = context_t::is_lat,
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        /// Constant term for one tape.
+        template <size_t I>
+        weight_t work_(const tuple_t& v)
+        {
+          using rs_t = typename expressionset_t::template focus_t<I>;
+          auto constant_term = constant_term_visitor<rs_t>{visitor_.ws_};
+          return constant_term(std::get<I>(v.sub()));
+        }
+
+        /// Product of the constant-terms of all tapes.
+        template <size_t... I>
+        weight_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          return visitor_.ws_.mul(work_<I>(v)...);
+        }
+
+        /// Entry point.
+        weight_t operator()(const tuple_t& v)
+        {
+          return work_(v, labelset_t_of<context_t>::indices);
+        }
+        const self_t& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        weight_t operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        const self_t& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        res_ = visit_tuple<>{*this}(v);
       }
 
     private:
