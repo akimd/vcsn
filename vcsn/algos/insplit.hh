@@ -14,6 +14,7 @@ namespace vcsn
     template <typename Aut>
     class insplitter
     {
+      static_assert(labelset_t_of<Aut>::has_one(), "insplit: the labelset must have a one label");
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
@@ -33,8 +34,6 @@ namespace vcsn
 
       automaton_t operator()(const Aut& aut)
       {
-        if (!labelset_t_of<Aut>::has_one())
-            return aut;
 
         states_assoc[pair_t(aut->pre(), false)] = res_->pre();
         states_assoc[pair_t(aut->post(), false)] = res_->post();
@@ -46,7 +45,7 @@ namespace vcsn
 
           for (auto tr : aut->all_in(st))
           {
-            if (is_one(aut, tr))
+            if (is_spontaneous(aut, tr))
               epsilon_in = true;
             else
               letter_in = true;
@@ -65,7 +64,7 @@ namespace vcsn
               for (auto t : aut->all_out(st))
                 res_->add_transition_copy(states_assoc[pair_t(st, epsilon)],
                                           states_assoc[pair_t(aut->dst_of(t),
-                                                              is_one(aut, t))],
+                                                              is_spontaneous(aut, t))],
                                           aut, t);
 
         return std::move(res_);
@@ -77,18 +76,10 @@ namespace vcsn
         return states_assoc.find(pair_t(st, epsilon)) != states_assoc.end();
       }
 
-      template <typename A>
-      vcsn::enable_if_t<labelset_t_of<A>::has_one(), bool>
-      is_one(const A& aut, transition_t tr)
+      bool
+      is_spontaneous(const Aut& aut, transition_t tr)
       {
         return aut->labelset()->is_one(aut->label_of(tr));
-      }
-
-      template <typename A>
-      vcsn::enable_if_t<!labelset_t_of<A>::has_one(), bool>
-      is_one(const A&, transition_t)
-      {
-        raise("lal should not reach this point!");
       }
 
       automaton_t res_;
