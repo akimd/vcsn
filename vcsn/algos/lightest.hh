@@ -7,6 +7,7 @@
 #include <boost/heap/binomial_heap.hpp>
 #include <boost/optional.hpp>
 
+#include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -55,6 +56,15 @@ namespace vcsn
       struct datum_less
       {
         /// Whether l < r (as this is a max heap).
+        ///
+        /// Compare values in this order:
+        ///   - weight,
+        ///   - label,
+        ///   - whether one of them is post (post should be treated last),
+        ///   - state number.
+        /// Post is treated last in order to be sure that all the equivalent
+        /// cases are treated before returning. When we finally reach post
+        /// we know for sure that no smaller evaluation exists.
         bool operator()(const datum_t& r, const datum_t& l) const
         {
           if (weightset_t::less(std::get<2>(l), std::get<2>(r)))
@@ -65,8 +75,11 @@ namespace vcsn
             return true;
           else if (labelset_t::less(std::get<1>(r), std::get<1>(l)))
             return false;
+          else if (std::get<0>(r) == automaton_t::element_type::post())
+            return true;
           else
-            return std::get<0>(l) < std::get<0>(r);
+            return std::get<0>(l) != automaton_t::element_type::post()
+                   && (std::get<0>(l) < std::get<0>(r));
         }
       };
       using queue_t =
@@ -98,35 +111,45 @@ namespace vcsn
 
         // The approximated behavior: the first orders to post's past.
         polynomial_t res;
-        while (!queue.empty())
+        while (!queue.empty() && num != res.size())
           {
             state_t s; word_t l; weight_t w;
             std::tie(s, l, w) = queue.top();
 
             queue.pop();
 
+            /// Fuse equivalent cases, which might increase the first element's
+            /// weight. Hence, restart loop with sorted queue.
+            if (!queue.empty()
+                && std::get<0>(queue.top()) == s
+                && ls_.equal(std::get<1>(queue.top()), l))
+              {
+                while (!queue.empty()
+                       && std::get<0>(queue.top()) == s
+                       && ls_.equal(std::get<1>(queue.top()), l))
+                  {
+                    w = ws_.add(w, std::get<2>(queue.top()));
+                    queue.pop();
+                  }
+                queue.emplace(s, l, w);
+                continue;
+              }
+
+            if (s == aut_->post())
+              ps_.add_here(res, std::move(l), std::move(w));
+
             for (const auto t: aut_->all_out(s))
               {
                 auto dst = aut_->dst_of(t);
                 auto nw = ws_.mul(w, aut_->weight_of(t));
-                if (aut_->src_of(t) == aut_->pre())
+                if (aut_->src_of(t) == aut_->pre() || dst == aut_->post())
                   queue.emplace(dst, l, std::move(nw));
-                else if (dst == aut_->post())
-                  ps_.add_here(res, l, std::move(nw));
                 else
                   {
                     auto nl = ls_.mul(l, aut_->label_of(t));
                     queue.emplace(dst, std::move(nl), std::move(nw));
                   }
               }
-
-            // If we found enough words *and* we have completely
-            // treated the current word (there are no other copies in
-            // other states), we're done.
-            if (queue.empty()
-                || (num == res.size()
-                    && !ls_.equal(std::get<1>(queue.top()), l)))
-              break;
           }
 
         return res;

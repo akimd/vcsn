@@ -18,7 +18,7 @@ check('(<1>a+<1>b)*', 7, '<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb')
 check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c')
 
 ctx = vcsn.context('lal_char(abcd), z')
-check('[a-d]?{5}', 5, '\e + <5>a + <5>b + <5>c + <5>d')
+check('[a-d]?{5}', 5, '\e + aa + ab + ac + ad')
 check('<4>a+(ab)+c+<2>d', 2, 'c + ab')
 check('a+<-1>a', 2, '\z')
 
