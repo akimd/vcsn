@@ -11,9 +11,13 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_bin_SCRIPTS +=                             \
-  %D%/efstcompile                               \
-  %D%/efstdecompile
+dist_pkglibexec_SCRIPTS =                       \
+  %D%/vcsn-compile                              \
+  %D%/vcsn-notebook                             \
+  %D%/vcsn-ps                                   \
+  %D%/vcsn-score                                \
+  %D%/vcsn-score-compare
 
-nodist_bin_SCRIPTS +=                           \
-  %D%/vcsn
+pkglibexec_PROGRAMS = %D%/vcsn-tafkit
+%C%_vcsn_tafkit_SOURCES = %D%/vcsn-tafkit.cc %D%/parse-args.hh %D%/parse-args.cc
+%C%_vcsn_tafkit_LDADD = $(all_libctx) $(libvcsn)

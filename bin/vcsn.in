@@ -12,8 +12,18 @@ export PYTHON
 PYTHONPATH=$PYTHONPATH:$pyexecdir
 export PYTHONPATH
 
+# Used by commands such as vcsn-notebook.  Avoids the need for a
+# vcsn-notebook.in.
 : ${VCSN_DATADIR='@DATADIR@'}
 export VCSN_DATADIR
+
+# Where our auxiliary executables are.
+: ${VCSN_LIBEXECDIR='@LIBEXECDIR@'}
+export VCSN_LIBEXECDIR
+
+# Find our auxiliary executables.
+PATH=$VCSN_LIBEXECDIR:$PATH
+export PATH
 
 help ()
 {
@@ -84,8 +94,11 @@ case $1 in
       shift
       exec "$PYTHON" "$prog" "$@";;
 
+  (efstcompile|efstdecompile)
+      exec "$@";;
+
   (python) shift; exec "$PYTHON" "$@";;
-  (efstcompile|efstdecompile|python*|ipython*) exec "$@";;
+  (python*|ipython*) exec "$@";;
 
   (accessible|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
@@ -111,10 +124,10 @@ case $1 in
       |u|union|universal)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
-     exec "vcsn-tafkit" "$cmd" "$@";;
+     exec vcsn-tafkit "$cmd" "$@";;
 
   (*)
-     prog="vcsn-$1"; shift; exec "$prog" "$@";;
+     prog=vcsn-$1; shift; exec "$prog" "$@";;
 esac
 
 # Local Variables:

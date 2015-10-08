@@ -23,6 +23,7 @@ AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir) $(BOOST_CPPFLAGS)
 include bin/local.mk
 include doc/local.mk
 include lib/local.mk
+include libexec/local.mk
 include python/local.mk
 include share/local.mk
 include tests/local.mk

@@ -239,11 +239,14 @@ case $ac_cv_GLIBCXX_DEBUG:$vcsn_cv_cxx_is_clang in (yes:no)
 esac
 
 # We look for our data files at runtime, including to compile.
-AC_SUBST([pkgdatadir], ['${datadir}/${PACKAGE}'])
-AC_SUBST([pkglibdir],  ['${libdir}/${PACKAGE}'])
+AC_SUBST([pkgdatadir],    ['${datadir}/${PACKAGE}'])
+AC_SUBST([pkglibdir],     ['${libdir}/${PACKAGE}'])
+AC_SUBST([pkglibexecdir], ['${libexecdir}/${PACKAGE}'])
+
 AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$pkgdatadir])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
+AC_SUBST([LIBEXECDIR], [`URBI_RESOLVE_DIR([$pkglibexecdir])`])
 AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
 
 # We add $CCACHE when calling CXX, don't stack it twice.
@@ -268,6 +271,8 @@ AC_DEFINE_UNQUOTED([LDFLAGS], ["$VCSN_LDFLAGS"],
                    [Define to the linker flags.])
 AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
                    [Define to the location of the libraries.])
+AC_DEFINE_UNQUOTED([LIBEXECDIR], ["$LIBEXECDIR"],
+                   [Define to the location of the auxiliary executables.])
 
 
 ## ---------- ##
