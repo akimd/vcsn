@@ -1,6 +1,5 @@
 #! /bin/sh
 
 ps uxww |
-  grep -v perl |
-  grep "vcsn compile" |
-  perl -ne "s{^.*'.*?/lib/plugins/(.*?)\.cc'.*$}{\$1}g && print \$_"
+  # Skip the perl process itself.
+  perl -ne "!/perl -ne/ && s{^.*vcsn.compile.*'.*?/plugins/(.*?)\.cc'.*$}{\$1}g && print \$_"
