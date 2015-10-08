@@ -3,7 +3,7 @@
 ## ------------ ##
 
 from vcsn_cxx import polynomial
-from vcsn import _is_equal, _right_mult
+from vcsn.tools import _is_equal, _right_mult
 
 polynomial.__eq__ = _is_equal
 polynomial.__add__ = polynomial.sum

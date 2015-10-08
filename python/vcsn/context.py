@@ -3,7 +3,8 @@
 ## --------- ##
 
 from vcsn_cxx import context
-from vcsn import _is_equal, label, polynomial, expression, weight
+from vcsn import label, polynomial, expression, weight
+from vcsn.tools import _is_equal
 
 context.__eq__ = _is_equal
 context.__or__ = context.join

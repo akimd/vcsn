@@ -3,7 +3,8 @@
 ## -------- ##
 
 from vcsn_cxx import weight
-from vcsn import automaton, _is_equal, expression
+from vcsn import automaton, expression
+from vcsn.tools import _is_equal
 
 def _weight_pow(self, exp):
     if isinstance(exp, tuple):

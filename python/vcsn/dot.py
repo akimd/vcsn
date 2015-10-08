@@ -6,7 +6,7 @@ import re
 from subprocess import PIPE, Popen, check_call
 import sys
 
-from vcsn import _tmp_file
+from vcsn.tools import _tmp_file
 
 ## Style of states in dot.
 # Default style for real states as issued by vcsn::dot.

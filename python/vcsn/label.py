@@ -3,7 +3,7 @@
 ## ------- ##
 
 from vcsn_cxx import label
-from vcsn import _is_equal
+from vcsn.tools import _is_equal
 
 label.__eq__ = _is_equal
 label.__mul__ = label.multiply

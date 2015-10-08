@@ -29,6 +29,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
   %D%/vcsn/score.py                             \
+  %D%/vcsn/tools.py                             \
   %D%/vcsn/weight.py
 
 vcsn_python_demodir = $(vcsn_pythondir)/demo    \

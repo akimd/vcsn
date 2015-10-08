@@ -10,8 +10,9 @@ from subprocess import Popen, PIPE
 
 from vcsn.conjunction import Conjunction
 from vcsn_cxx import automaton, label, weight
-from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file
-from vcsn.dot import _dot_pretty, _dot_to_boxart, _dot_to_svg, _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot
+from vcsn.tools import _info_to_dict, _left_mult, _right_mult, _tmp_file
+from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
+                      _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
 
 _automaton_multiply_orig = automaton.multiply
 def _automaton_multiply(self, exp):
