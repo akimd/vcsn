@@ -63,22 +63,6 @@ def _tmp_file(suffix, **kwargs):
                                        suffix='.' + suffix,
                                        **kwargs)
 
-# In today's edition of "Python 2 sucks", Python 2 does not display the name of
-# the file that was not found during the execution, and the FormatterWarning of
-# IPython hides the traceback.
-# We wrap the subprocess functions to get an explicit error message.
-def wrap_subprocess_func(f):
-    @functools.wraps(Popen)
-    def wrapped_f(l, *args, **kwargs):
-        try:
-            return f(l, *args, **kwargs)
-        except OSError as e:
-            raise OSError('Error while executing: "{}": {}'.format(l[0], e))
-    return wrapped_f
-
-_popen = wrap_subprocess_func(Popen)
-_check_call = wrap_subprocess_func(check_call)
-
 from vcsn.automaton  import *
 from vcsn.context    import *
 from vcsn.expansion  import *

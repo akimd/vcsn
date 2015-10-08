@@ -6,11 +6,11 @@ import tempfile
 import os
 import re
 import subprocess
-from subprocess import PIPE
+from subprocess import Popen, PIPE
 
 from vcsn.conjunction import Conjunction
 from vcsn_cxx import automaton, label, weight
-from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file, _popen
+from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file
 from vcsn.dot import _dot_pretty, _dot_to_boxart, _dot_to_svg, _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot
 
 _automaton_multiply_orig = automaton.multiply
@@ -157,9 +157,9 @@ def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
     format via pipes.
     '''
-    p1 = _popen(['efstcompile'],   stdin=PIPE,      stdout=PIPE, stderr=PIPE)
-    p2 = _popen(cmd,               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
-    p3 = _popen(['efstdecompile'], stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
+    p1 = Popen(['efstcompile'],   stdin=PIPE,      stdout=PIPE, stderr=PIPE)
+    p2 = Popen(cmd,               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
+    p3 = Popen(['efstdecompile'], stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
     p1.stdin.write(aut.format('efsm').encode('utf-8'))
@@ -179,7 +179,7 @@ def _automaton_as_fst(self):
     keep the result alive, not just the result's name.
     '''
     fst = _tmp_file(suffix='fst')
-    proc = _popen(['efstcompile'],
+    proc = Popen(['efstcompile'],
                   stdin=PIPE, stdout=fst, stderr=PIPE)
     proc.stdin.write(self.format('efsm').encode('utf-8'))
     out, err = proc.communicate()
@@ -193,9 +193,9 @@ def _automaton_fst_files(cmd, *aut):
     format, via files.
     '''
     files = [a.as_fst() for a in aut]
-    proc = _popen([cmd] + [f.name for f in files],
+    proc = Popen([cmd] + [f.name for f in files],
                   stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    decode = _popen(['efstdecompile'],
+    decode = Popen(['efstdecompile'],
                     stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
     res, err = decode.communicate()
     if proc.wait():

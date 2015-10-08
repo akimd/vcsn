@@ -3,10 +3,10 @@
 from functools import lru_cache
 import locale
 import re
-from subprocess import PIPE
+from subprocess import PIPE, Popen, check_call
 import sys
 
-from vcsn import _tmp_file, _popen, _check_call
+from vcsn import _tmp_file
 
 ## Style of states in dot.
 # Default style for real states as issued by vcsn::dot.
@@ -88,7 +88,7 @@ def _dot_pretty(s, mode = "dot"):
 @lru_cache(maxsize = 32)
 def _dot_to_boxart(dot):
     dot = dot.replace('digraph', 'digraph a')
-    p = _popen(["/opt/local/libexec/perl5.16/sitebin/graph-easy",
+    p = Popen(["/opt/local/libexec/perl5.16/sitebin/graph-easy",
                 "--from=graphviz", "--as=boxart"],
                stdin=PIPE, stdout=PIPE, stderr=PIPE,
                universal_newlines=True)
@@ -104,12 +104,12 @@ def _dot_to_boxart(dot):
 def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
-    p1 = _popen([engine] + list(args),
+    p1 = Popen([engine] + list(args),
                 stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    p2 = _popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
+    p2 = Popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
                 stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
                 universal_newlines=True)
-    p3 = _popen(['neato', '-n2', '-Tsvg'],
+    p3 = Popen(['neato', '-n2', '-Tsvg'],
                 stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
                 universal_newlines=True)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
@@ -136,15 +136,15 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
     with _tmp_file('tex') as tex, \
          _tmp_file('pdf') as pdf, \
          _tmp_file('svg') as svg:
-        p1 = _popen(['dot2tex', '--prog', engine],
+        p1 = Popen(['dot2tex', '--prog', engine],
                     stdin=PIPE, stdout=tex, stderr=PIPE,
                     universal_newlines=True)
         out, err = p1.communicate(dot)
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err)
-        _check_call(["texi2pdf", "--batch", "--clean", "--quiet",
+        check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                     "--output", pdf.name, tex.name])
-        _check_call(["pdf2svg", pdf.name, svg.name])
+        check_call(["pdf2svg", pdf.name, svg.name])
         res = open(svg.name).read()
         if isinstance(res, bytes):
             res = res.decode('utf-8')
