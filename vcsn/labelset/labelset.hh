@@ -54,6 +54,13 @@ namespace vcsn
       raise(LabelSet::sname(), ": does not feature a neutral");
     }
 
+#if defined __GNUC__ && !defined __clang__
+ // GCC can't figure out that this one does return, because of the template
+ // instanciation, where one of them doesn't return.
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
+#endif
+
     /// Enjoy type inference.
     template <typename LabelSet>
     auto label_one(const LabelSet&)
@@ -61,6 +68,10 @@ namespace vcsn
     {
       return label_one<LabelSet>();
     }
+
+#if defined __GNUC__ && !defined __clang__
+# pragma GCC diagnostic pop
+#endif
 
     /*-------------------.
     | make_letterized.   |
