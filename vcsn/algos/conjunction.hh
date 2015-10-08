@@ -355,7 +355,7 @@ namespace vcsn
       bool has_one_in(const state_name_t& psrc, std::size_t i,
                       seq<I...>) const
       {
-        bool has_ones[] = { has_only_ones_in(std::get<I>(aut_->auts_),
+        bool has_ones[] = { is_spontaneous_in(std::get<I>(aut_->auts_),
                                              std::get<I>(psrc))... };
         for (; i < sizeof...(Auts); ++i)
           if (has_ones[i])
@@ -399,20 +399,23 @@ namespace vcsn
       /// it's always false.
       template <typename Aut_>
       constexpr vcsn::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
-      has_only_ones_in(const Aut_&,
+      is_spontaneous_in(const Aut_&,
                        state_t_of<Aut_>) const
       {
         return false;
       }
 
       /// Whether the state has only incoming spontaneous transitions.
+      /// The automaton has been insplit, so either all incoming transitions
+      /// are proper, or all transitions are spontaneous (including the first
+      /// one).
       template <typename Aut_>
       vcsn::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
-      has_only_ones_in(const Aut_& rhs, state_t_of<Aut_> rst) const
+      is_spontaneous_in(const Aut_& rhs, state_t_of<Aut_> rst) const
       {
         auto rin = rhs->all_in(rst);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
+        return rtr != rin.end() && is_one(rhs, *rtr);
       }
 
       /// Whether the Ith state of \a psrc in the Ith input automaton

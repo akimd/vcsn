@@ -169,7 +169,7 @@ namespace vcsn
         const auto& rtm = std::get<1>(transition_maps_)[std::get<1>(psrc)];
 
         bool has_eps_out = false;
-        if (!has_only_ones_in(rhs, std::get<1>(psrc))
+        if (!is_spontaneous_in(rhs, std::get<1>(psrc))
             // "Loop" only on the spontaneous transitions.  "One" is
             // guaranteed to be first in the transition maps.
             && !ltm.empty()
@@ -240,21 +240,28 @@ namespace vcsn
         return false;
       }
 
+      /// Check if the state has only incoming spontaneous
+      /// transitions.  As it is in the case of the one-free labelset,
+      /// it's always false.
       template <typename Aut>
       constexpr
       vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
-      has_only_ones_in(const Aut&, state_t_of<Aut>) const
+      is_spontaneous_in(const Aut&, state_t_of<Aut>) const
       {
         return false;
       }
 
+      /// Whether the state has only incoming spontaneous transitions.
+      /// The automaton has been insplit, so either all incoming transitions
+      /// are proper, or all transitions are spontaneous (including the first
+      /// one).
       template <typename Aut>
       vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
-      has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
+      is_spontaneous_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
         auto rin = rhs->all_in(rst);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
+        return rtr != rin.end() && is_one(rhs, *rtr);
       }
 
       /// The computed product.
