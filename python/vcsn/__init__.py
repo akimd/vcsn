@@ -2,20 +2,19 @@ import functools
 import os
 import sys
 
-from subprocess import Popen, check_call
-
-from vcsn_cxx import *
-from vcsn_config import *
+from vcsn_cxx import (automaton, context, expansion, expression, label,
+                      polynomial, weight)
+from vcsn_config import config
 datadir = config['datadir']
 version = config['version']
 
-from vcsn.automaton  import *
-from vcsn.context    import *
-from vcsn.expansion  import *
-from vcsn.expression import *
-from vcsn.label      import *
-from vcsn.polynomial import *
-from vcsn.weight     import *
+from vcsn.automaton  import automaton
+from vcsn.context    import context
+from vcsn.expansion  import expansion
+from vcsn.expression import expression
+from vcsn.label      import label
+from vcsn.polynomial import polynomial
+from vcsn.weight     import weight
 
 # Load IPython specific support if we can.
 try:
