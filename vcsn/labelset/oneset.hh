@@ -45,7 +45,7 @@ namespace vcsn
 
     static constexpr bool is_free()
     {
-      // This is debatable.  However, in Vaucanson, if a labelset
+      // This is debatable.  However, in Vcsn, if a labelset
       // is_free, then we expect to be able to iterate on its genset,
       // and I don't plan to provide a genset here.
       return false;

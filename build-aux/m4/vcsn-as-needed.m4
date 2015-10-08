@@ -6,7 +6,7 @@
 # therefore they are not loaded, and their initialization section is
 # not executed either.
 #
-# This is bad for Vaucanson which uses the libraries' initialization
+# This is bad for Vcsn which uses the libraries' initialization
 # to register their content to the main executable.  In other words,
 # because we perform the "linking" ourselves (via our registries), the
 # linker does not see that we need these libraries.
@@ -27,7 +27,7 @@ static bool registered = reg ();
       [AC_MSG_ERROR([cannot compile simple C++ code])])
 if $CXX -shared -o libreg.so $CXXFLAGS $CPPFLAGS $LDFLAGS reg.$OBJEXT $LIBS >&AS_MESSAGE_LOG_FD; then
   # Use -rpath to avoid the need for setting LD_LIBRARY_PATH.  This is
-  # very compiler dependent, but currently, for Vaucanson, we don't
+  # very compiler dependent, but currently, for Vcsn, we don't
   # care much about this: GCC and Clang accept this perfectly.
   #
   # Changing LD_LIBRARY_PATH would require rewriting AC_RUN_IFELSE,

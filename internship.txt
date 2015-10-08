@@ -13,7 +13,7 @@ To connect to the laboratory with ssh you simply need to type:
     $ ssh node7 -Y
 The -Y option enables the graphical mode.
 
-Vaucanson installation:
+Vcsn installation:
     $ssh-keygen
 This will create an ssh key.
 Send your id_rsa.pub to admin@lrde.epita.fr. He will then add your key to the
@@ -76,7 +76,7 @@ is composed of different states. The initial and final states can have a
 weight. Every states can be linked by a transition that contains a weight
 and a label.
 
-Vaucanson:
+Vcsn:
 Contexts:
 A context is what gives you a precise definition of an automaton. It gives
 you:

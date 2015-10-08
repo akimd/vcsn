@@ -50,7 +50,7 @@ def _right_mult(self, rhs):
         return self.right_mult(self.context().weight(str(rhs)))
 
 def _tmp_file(suffix, **kwargs):
-    '''A NamedTemporaryFile suitable for Vaucanson.'''
+    '''A NamedTemporaryFile suitable for Vcsn.'''
     return tempfile.NamedTemporaryFile(prefix='vcsn-',
                                        suffix=('.' + suffix),
                                        **kwargs)

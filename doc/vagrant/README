@@ -1,7 +1,7 @@
 The VCSN virtual machine				-*- outline -*-
 
 The following directory contains the infrastructure for creating
-vritual machines capable of compiling Vaucanson; and running the
+vritual machines capable of compiling Vcsn; and running the
 Notebook.  The following are strict requirements to successfully
 create a virtual machine:
 
