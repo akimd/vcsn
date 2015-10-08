@@ -403,6 +403,14 @@ bench('a & {}'.format(n),
               'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
 # compose.
+r = "([a-z]|[a-z])?{20}"
+bench('a.compose(a2)',
+      'a2 = std({}); a = std(a|a)'.format(r),
+      setup = ['r = "{}"'.format(r),
+               'c = vcsn.context("lat<lan<char(a-z)>, lan<char(a-z)>>, b")',
+               'a = c.expression("a|a").standard()',
+               'a2 = c.expression(r).automaton()'])
+
 r = "['(a,a)'-'(i,z)']{4}"
 bench('a.compose(a)',
       'a = std({})'.format(r),

@@ -62,7 +62,7 @@ namespace vcsn
           for (bool epsilon : { false, true })
             if (exists(st, epsilon))
               for (auto t : aut->all_out(st))
-                res_->add_transition_copy(states_assoc[pair_t(st, epsilon)],
+                res_->new_transition_copy(states_assoc[pair_t(st, epsilon)],
                                           states_assoc[pair_t(aut->dst_of(t),
                                                               is_spontaneous(aut, t))],
                                           aut, t);
