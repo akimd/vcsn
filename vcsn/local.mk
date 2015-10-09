@@ -78,6 +78,7 @@ algo_headers =                                  \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/project.hh                          \
+  %D%/algos/project-automaton.hh                \
   %D%/algos/proper.hh                           \
   %D%/algos/push-weights.hh                     \
   %D%/algos/quotient.hh                         \
