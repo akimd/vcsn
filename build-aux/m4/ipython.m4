@@ -18,12 +18,15 @@ $1 >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD
 AC_DEFUN([_VCSN_PROG_NBCONVERT],
 [test -f "$2" ||
   AC_MSG_ERROR([cannot read the nbconvert test file: $2])
-_vcsn_try([$IPYTHON nbconvert --output=conftest "$2"])
-if test -f conftest.html; then
-  $1='$(IPYTHON) nbconvert'
-else
-  $1='no'
-fi
+$1='no'
+for ac_nb_convert in ${NBCONVERT-'$(IPYTHON) nbconvert'}
+do
+  _vcsn_try([$ac_nb_convert --output=conftest "$2"])
+  if test -f conftest.html; then
+    $1=$ac_nb_convert
+    break
+  fi
+done
 ])
 
 # VCSN_PROG_NBCONVERT(NB-FILE)
