@@ -10,6 +10,10 @@ namespace vcsn
   namespace rat
   {
 
+    /// Functor to copy/convert a rational expression.
+    ///
+    /// \tparam InExpSet   the input expressionset type.
+    /// \tparam OutExpSet  the output expressionset type.
     template <typename InExpSet, typename OutExpSet = InExpSet>
     class copier
       : public InExpSet::const_visitor
@@ -122,7 +126,7 @@ namespace vcsn
     copy(const InExpSet& in_rs, const OutExpSet& out_rs,
          const typename InExpSet::value_t& v)
     {
-      copier<InExpSet, OutExpSet> copy(in_rs, out_rs);
+      auto copy = copier<InExpSet, OutExpSet>{in_rs, out_rs};
       return copy(v);
     }
 

@@ -188,7 +188,7 @@ namespace vcsn
         {
           BUILTIN_UNREACHABLE();
         }
-        info& visitor_;
+        self_t& visitor_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
