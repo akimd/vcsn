@@ -1,0 +1,2 @@
+ 0.12s: a.is_proper()        # a = "", 200000x
+ 0.27s: b.format("text")     # b = [abc] -> B, 100000x

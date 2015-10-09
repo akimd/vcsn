@@ -1,0 +1,2 @@
+ 0.12[0m   N/A a.is_proper()        # a = "", 200000x
+[31m[1m 0.27[0m [32m[1m 0.16[0m b.format("text")     # b = [abc] -> B, 100000x

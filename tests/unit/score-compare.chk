@@ -1,0 +1,11 @@
+#! /bin/sh
+
+category()
+{
+  run 0 "$(cat $medir/$1.out)" -vcsn score-compare $medir/basic.in $medir/$1.in
+}
+
+category basic
+category absent
+category more
+category different
