@@ -5,10 +5,21 @@
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
 
+#include <vcsn/algos/project.hh> // make_project.
+
 namespace vcsn
 {
   namespace rat
   {
+
+    /// Copy/convert a rational expression.
+    ///
+    /// \tparam InExpSet   the input expressionset type.
+    /// \tparam OutExpSet  the output expressionset type.
+    template <typename InExpSet, typename OutExpSet = InExpSet>
+    typename OutExpSet::value_t
+    copy(const InExpSet& in_rs, const OutExpSet& out_rs,
+         const typename InExpSet::value_t& v);
 
     /// Functor to copy/convert a rational expression.
     ///
@@ -21,9 +32,12 @@ namespace vcsn
     public:
       using in_expressionset_t = InExpSet;
       using out_expressionset_t = OutExpSet;
+      using super_t = typename in_expressionset_t::const_visitor;
+      using self_t = copier;
+
+      using in_context_t = context_t_of<in_expressionset_t>;
       using in_value_t = typename in_expressionset_t::value_t;
       using out_value_t = typename out_expressionset_t::value_t;
-      using super_t = typename in_expressionset_t::const_visitor;
       using node_t = typename super_t::node_t;
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
@@ -107,10 +121,53 @@ namespace vcsn
                                                       v.weight()));
       }
 
+      /*---------.
+      | tuple.   |
+      `---------*/
+
       using tuple_t = typename super_t::tuple_t;
-      virtual void visit(const tuple_t&, std::true_type) override
+
+      template <bool = in_context_t::is_lat,
+                typename Dummy = void>
+      struct visit_tuple
       {
-        abort();
+        /// Copy one tape.
+        template <size_t I>
+        auto work_(const tuple_t& v)
+        {
+          return rat::copy(detail::make_project<I>(visitor_.in_rs_),
+                           detail::make_project<I>(visitor_.out_rs_),
+                           std::get<I>(v.sub()));
+        }
+
+        /// Copy all the tapes.
+        template <size_t... I>
+        out_value_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          return visitor_.out_rs_.tuple(work_<I>(v)...);
+        }
+
+        /// Entry point.
+        out_value_t operator()(const tuple_t& v)
+        {
+          return work_(v, labelset_t_of<in_context_t>::indices);
+        }
+        self_t& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        out_value_t operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        self_t& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        res_ = visit_tuple<>{*this}(v);
       }
 
       /// expressionset to decode the input value.
@@ -121,7 +178,7 @@ namespace vcsn
       out_value_t res_;
     };
 
-    template <typename InExpSet, typename OutExpSet = InExpSet>
+    template <typename InExpSet, typename OutExpSet>
     typename OutExpSet::value_t
     copy(const InExpSet& in_rs, const OutExpSet& out_rs,
          const typename InExpSet::value_t& v)
