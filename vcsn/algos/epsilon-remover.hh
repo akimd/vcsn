@@ -359,7 +359,7 @@ namespace vcsn
       /// Debug level.  The higher, the more details are reported.
       int debug_;
       /// The automaton we work on.
-      automaton_t& aut_;
+      automaton_t aut_;
       /// Shorthand to the weightset.
       const weightset_t& ws_;
       /// Shorthand to the empty word.
@@ -396,7 +396,7 @@ namespace vcsn
       }
 
     private:
-      const automaton_t& aut_;
+      automaton_t aut_;
     };
   }
 }

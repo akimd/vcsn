@@ -139,7 +139,7 @@ namespace vcsn
       }
 
     private:
-      const automaton_t& aut_;
+      automaton_t aut_;
     };
   }
 } // namespace vcsn

@@ -129,7 +129,7 @@ namespace vcsn
       }
 
     private:
-      const automaton_t& aut_;
+      automaton_t aut_;
       visited_t v_;
       parent_state_t p_;
     };

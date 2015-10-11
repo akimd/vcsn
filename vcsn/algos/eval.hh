@@ -30,8 +30,7 @@ namespace vcsn
 
     public:
       evaluator(const automaton_t& a)
-        : a_(a)
-        , ws_(*a_->weightset())
+        : aut_(a)
       {}
 
       weight_t operator()(const word_t& word) const
@@ -48,24 +47,24 @@ namespace vcsn
         // We start with just two states numbered 0 and 1: pre() and
         // post().
         weights_t v1(2, zero);
-        v1.reserve(detail::back(a_->all_states()) + 1);
-        v1[a_->pre()] = ws_.one();
+        v1.reserve(detail::back(aut_->all_states()) + 1);
+        v1[aut_->pre()] = ws_.one();
         weights_t v2{v1};
-        v2.reserve(detail::back(a_->all_states()) + 1);
+        v2.reserve(detail::back(aut_->all_states()) + 1);
 
         // Computation.
-        auto ls = *a_->labelset();
+        auto ls = *aut_->labelset();
         for (auto l : ls.letters_of(ls.delimit(word)))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
-                for (auto t : a_->out(s, l))
+                for (auto t : aut_->out(s, l))
                   {
                     // Make sure the vectors are large enough for dst.
                     // Exponential growth on the capacity, but keep
                     // the actual size as small as possible.
-                    auto dst = a_->dst_of(t);
+                    auto dst = aut_->dst_of(t);
                     if (v2.size() <= dst)
                       {
                         auto capacity = v2.capacity();
@@ -76,20 +75,20 @@ namespace vcsn
                         v1.resize(dst + 1, zero);
                         v2.resize(dst + 1, zero);
                       }
-                    // Introducing a reference to v2[a_->dst_of(tr)] is
+                    // Introducing a reference to v2[aut_->dst_of(tr)] is
                     // tempting, but won't work for std::vector<bool>.
                     // FIXME: Specialize for Boolean?
                     v2[dst] =
                       ws_.add(v2[dst],
-                              ws_.mul(v1[s], a_->weight_of(t)));
+                              ws_.mul(v1[s], aut_->weight_of(t)));
                   }
             std::swap(v1, v2);
           }
-        return v1[a_->post()];
+        return v1[aut_->post()];
       }
     private:
-      const automaton_t& a_;
-      const weightset_t& ws_;
+      automaton_t aut_;
+      const weightset_t& ws_ = *aut_->weightset();
     };
 
   } // namespace detail

@@ -197,8 +197,8 @@ namespace vcsn
       std::stack<state_name_t, std::vector<state_name_t>> todo_;
       /// delayed_state -> state.
       smap map_;
-      /// The original automaton
-      const automaton_t& aut_;
+      /// The original automaton.
+      automaton_t aut_;
     };
 
     template <typename Aut>
@@ -325,7 +325,7 @@ namespace vcsn
       {
         return std::min({tape_labelset_t<I>::size(std::get<I>(l))...});
       }
-      const automaton_t& in_aut_;
+      automaton_t in_aut_;
       out_automaton_t out_aut_;
     };
 

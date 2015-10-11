@@ -57,8 +57,8 @@ namespace vcsn
 
     using states_t = std::pair<state1_t, state2_t>;
 
-    const Aut1& a1_;
-    const Aut2& a2_;
+    automaton1_t a1_;
+    automaton2_t a2_;
 
     /// See the comment for out_ in minimize.hh.
     template<typename Automaton>

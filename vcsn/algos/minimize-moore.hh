@@ -29,7 +29,7 @@ namespace vcsn
       using automaton_t = Aut;
 
       /// Input automaton, supplied at construction time.
-      const automaton_t& a_;
+      automaton_t a_;
 
       /// The generators.
       const typename labelset_t_of<Aut>::genset_t gs_;

@@ -33,12 +33,15 @@ namespace vcsn
     template <typename AutIn, typename AutOut = AutIn>
     struct copier
     {
-      using in_state_t = state_t_of<AutIn>;
-      using out_state_t = state_t_of<AutOut>;
+      using in_automaton_t = AutIn;
+      using out_automaton_t = AutOut;
+
+      using in_state_t = state_t_of<in_automaton_t>;
+      using out_state_t = state_t_of<out_automaton_t>;
       /// input state -> output state.
       using state_map_t = std::unordered_map<in_state_t, out_state_t>;
 
-      copier(const AutIn& in, AutOut& out)
+      copier(const in_automaton_t& in, out_automaton_t& out)
         : in_(in)
         , out_(out)
         , out_state_{{in_->pre(),  out_->pre()},
@@ -80,8 +83,8 @@ namespace vcsn
       /// Copy all the states, and all the transitions.
       void operator()(bool safe = true)
       {
-        operator()([](state_t_of<AutIn>) { return true; },
-                   [](transition_t_of<AutIn>) { return true; },
+        operator()([](state_t_of<in_automaton_t>) { return true; },
+                   [](transition_t_of<in_automaton_t>) { return true; },
                    safe);
       }
 
@@ -99,9 +102,9 @@ namespace vcsn
 
     private:
       /// Input automaton.
-      const AutIn& in_;
+      in_automaton_t in_;
       /// Output automaton.
-      AutOut& out_;
+      out_automaton_t out_;
       /// input state -> output state.
       state_map_t out_state_;
     };

@@ -91,7 +91,7 @@ namespace vcsn
       }
 
     protected:
-      const in_automaton_t& in_aut_;
+      in_automaton_t in_aut_;
       out_automaton_t out_aut_;
       map_t state_map_;
     };

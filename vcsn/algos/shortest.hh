@@ -228,7 +228,7 @@ namespace vcsn
       }
 
       /// The automaton whose behavior to approximate.
-      const automaton_t& aut_;
+      automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
       const polynomialset_t ps_ = make_word_polynomialset(aut_->context());
       const labelset_t& ls_ = *ps_.labelset();

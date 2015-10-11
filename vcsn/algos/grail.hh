@@ -121,7 +121,7 @@ namespace vcsn
       }
 
       /// The automaton we have to output.
-      const automaton_t& aut_;
+      automaton_t aut_;
       /// Output stream.
       std::ostream& os_;
       /// Short-hand to the labelset.

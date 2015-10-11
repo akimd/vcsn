@@ -28,7 +28,7 @@ namespace vcsn
       using automaton_t = Aut;
 
       /// Input automaton, supplied at construction time.
-      const automaton_t &a_;
+      automaton_t a_;
 
       using labelset_t = labelset_t_of<automaton_t>;
       const labelset_t& ls_;

@@ -87,7 +87,7 @@ namespace vcsn
       // States not in the map have not been reached yet.
       std::unordered_map<state_t, status> tag;
 
-      const automaton_t& aut_;
+      automaton_t aut_;
       label_t one = aut_->labelset()->one();
     };
 

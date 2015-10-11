@@ -80,7 +80,7 @@ namespace vcsn
         p.size_ = in * out;
       }
 
-      const automaton_t& aut_;
+      automaton_t aut_;
     };
 
     /*-------------------.
@@ -195,7 +195,7 @@ namespace vcsn
                    + size_loop * (ins * outs - 1));
       }
 
-      const automaton_t& aut_;
+      automaton_t aut_;
       bool count_labels_;
       std::vector<size_t> transition_cache_;
     };
@@ -383,7 +383,7 @@ namespace vcsn
       }
 
       /// The automaton we work on.
-      automaton_t& aut_;
+      automaton_t aut_;
       /// The profiler we work with. Corresponding to a specific heuristic.
       profiler_t& profiler_;
 

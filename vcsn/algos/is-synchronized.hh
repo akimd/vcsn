@@ -162,7 +162,7 @@ namespace vcsn
       /// delayed_state -> state.
       smap map_;
       /// The original automaton
-      const automaton_t& aut_;
+      automaton_t aut_;
     };
 
     template <typename Aut>
@@ -262,7 +262,7 @@ namespace vcsn
         }
       }
 
-      // Add the delay of label l to d
+      /// Add the delay of label l to d.
       template <size_t... I>
       delay_t
       add_delay_(delay_t d, const label_t& l, seq<I...>) const
@@ -273,7 +273,7 @@ namespace vcsn
         return {(std::get<I>(del) - min)...};
       }
 
-      const automaton_t& in_aut_;
+      automaton_t in_aut_;
       out_automaton_t out_aut_;
     };
 

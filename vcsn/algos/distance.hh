@@ -114,7 +114,7 @@ namespace vcsn
     }
 
   private:
-    const automaton_t& aut_;
+    automaton_t aut_;
   };
 
   /// Struct specialization for nmin.
@@ -174,7 +174,7 @@ namespace vcsn
     }
 
   private:
-    const automaton_t& aut_;
+    automaton_t aut_;
   };
 
   /// Find the shortest paths from some states to all the states.

@@ -44,7 +44,7 @@ namespace vcsn
       }
 
     private:
-      const Aut& aut_;
+      automaton_t aut_;
     };
   }
 
