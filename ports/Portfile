@@ -4,43 +4,42 @@
 PortSystem          1.0
 PortGroup           compiler_blacklist_versions 1.0
 
-name                vaucanson
-version             2.0
+name                vcsn
+version             2.1
 categories          devel
 platforms           darwin
 maintainers         lrde.epita.fr:akim
 license             GPL-3+
 
-description         C++ generic automata/transducers platform
+description         C++ generic automata/transducers and rational expression platform
 
-long_description    Vaucanson is a finite state machine manipulation platform, \
+long_description    Vcsn is a finite state machine manipulation platform, \
                     consisting of a library on top of which are provided \
                     Python bindings, shell tools, and an IPython-based GUI.
 
-homepage            http://vaucanson.lrde.epita.fr
-master_sites        http://www.lrde.epita.fr/dload/vaucanson/${version}/
+homepage            http://vcsn.lrde.epita.fr
+master_sites        http://www.lrde.epita.fr/dload/vcsn/${version}/
 use_xz              yes
 
-checksums           rmd160  90d6d5eb5b8e664a527238c9a8b4df4834d5d9b9 \
-                    sha256  01cee2ae49388f92e3b47b932830b49f84089b345337c4ea7b128ae3c616ac60
+checksums           rmd160  9460c5357abcd91dacb87078aecfb11883ce951c \
+                    sha256  a6df0057e02ef910883c37c316474bcab7e318a41ce9579e8170ef235fc30f8b
 
 depends_build       port:doxygen lib:libltdl:libport
 
 depends_lib         port:boost
 
-depends_run         path:bin/dot:graphviz
+depends_run         path:bin/dot:graphviz port:ccache
 
-configure.optflags  -O3
+configure.optflags  -O3 -DNDEBUG
 
 test.run            yes
 test.target         check
 
-# We need C++11 support, provided by G++ 4.8+ and Clang++ 3.3+.
+# We need C++11/14 support, Clang++ 3.6+.  We need Boost, which is
+# compiled with Clang++, so it is (currently) incompatible with GCC.
 compiler.blacklist  cc \
                     *dragonegg* \
                     {clang < 500} \
                     *clang-2.* \
-                    {*clang-3.[012]} \
-                    *gcc \
-                    *gcc-3.* \
-                    {*gcc-4.[0-7]}
+                    {*clang-3.[0-5]} \
+                    *gcc*
