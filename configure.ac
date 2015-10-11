@@ -1,5 +1,5 @@
 # Vcsn 2, a generic library for finite state machines.
-# Copyright (C) 2012-2014 Vaucanson Group.
+# Copyright (C) 2012-2015 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,7 +15,7 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.69])
 
-AC_INIT([Vcsn], [2.0a],
+AC_INIT([Vcsn], [2.1],
         [vcsn-bugs@lrde.epita.fr], [],
         [http://vcsn.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])

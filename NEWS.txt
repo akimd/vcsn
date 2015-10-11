@@ -7,10 +7,10 @@ the internal API may also be documented.
 
 # Vcsn 2.1
 
-## 2015-10-06
+## 2015-10-11
 
 About 10,000 hours (on the calendar, not of work!) after its first public
-release, the Vcsn team is very happy to announce the release of Vcsn 2!
+release, the Vcsn team is very happy to announce the release of Vcsn 2.1!
 
 It is quite hard to cherry-pick a few new features that have been added in
 Vcsn 2.1, as shown by the 4k+ lines of messages below since 2.0.  However,
@@ -53,7 +53,7 @@ People who worked on this release:
 - Valentin Tolmer
 - Yann Bourgeois--Copigny
 
-People who influenced this release:
+People who have influenced this release:
 
 - Alexandre Duret-Lutz
 - Jacques Sakarovitch

@@ -88,7 +88,7 @@ We need more tests.  In particular something that checks:
     * vcsn/algos/synchronize.hh: Here.
 
 * Bugs
-** subprograms
+** subprograms (AP)
 We don't kill our children when we are killed.  For instance, if the user
 asked for the graphical rendering of a huge automaton, and decides to kill
 vcsn realizing her error, the dot process will continue to waste cpu.
@@ -113,7 +113,7 @@ from the caller, which is the one which knows the identities to use!
 As a matter of fact, we need to revise the propagation of the identities
 everywhere.
 
-** Incorrect context
+** Incorrect context (SP)
 When trie(istream) adds words to the trie, the context used to parse the
 stream is not the one of the automaton we are buildding.  As a result, we
 have a stupid context:
@@ -173,10 +173,6 @@ In the case of RW, check that the expression is valid.
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 
-** check dubious const& members
-Having a member of type automaton_t (or similarly, a shared_ptr) as a const& is
-suspicious, and it should be checked in every class.
-
 * Improvements
 ** are-equivalent
 V1 was calling letterize and proper, so it was more general than we are now.
@@ -205,12 +201,45 @@ non-commutativity: as is, (a, b) can work, but not (b, a).
 But anyway: does it really mean something to compare a B-automaton with a Z
 one?
 
-** dot
+** dot (SP)
 Let's try a means to improve our rendering of decorated automaton (typically
 derived-term) with MathJax rendering.  Stackoverflow has hints on how we can
 do that for SVG, but so far, I failed to adjust the output of dot.
 
-** efsm
+** dot
+At least under IPython we would like to have cuter automata.  I don't like
+the fact that the size of the states depends on the number of digits for
+instance.  Larger than 999 hardly makes sense, so let's try to fix it for 1
+or 2 digits.
+
+Here was an attempt:
+
+diff --git a/python/vcsn/dot.py b/python/vcsn/dot.py
+index 72fddc2..055f85b 100644
+--- a/python/vcsn/dot.py
++++ b/python/vcsn/dot.py
+@@ -11,7 +11,7 @@ from vcsn import _tmp_file, _popen, _check_call
+ # Default style for real states as issued by vcsn::dot.
+ state_style = 'node [shape = circle, style = rounded, width = 0.5]'
+ # IPython style for real states.
+-state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]'
++state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4]'
+ # Style for pre and post states, or when rendering transitions only.
+ state_point = 'node [shape = point, width = 0]'
+
+** efsm: single-pass reading (SP)
+Currently when we load an EFSM file, we use the lazy-automaton-editor, which
+stores transitions as a list of strings, checks these strings to see what
+kind of labels and weights are used, and then reads the transition list to
+really create the automaton.
+
+We should rather improve efstdecompile so that it inserts in the EFSM file a
+context string, and we should directly load the automaton in a single pass,
+using automaton_editor, not lazy_automaton_editor.
+
+It sounds reasonable to rewrite efstdecompile into Python.
+
+** efsm (SP)
 When passing a LAW, maybe we should letterize it transparently?  Currently,
 we treat it as if it were lan<string> instead of law<char>.
 
@@ -258,8 +287,10 @@ Those two should really be the same algorithm, it's the signatures that
 change.  And rather than having two implementations, we should have a single
 implementation of the algorithm, but better data structures for signatures.
 
-** multiply
-The repeated multiplication of automata does not check that min <= max.
+** multiply (SP)
+The repeated multiplication of automata does not check that min <= max.  See
+if there are other such errors.  This is probably checked in the case of
+expressions.
 
 ** normalize
 I'm a bit lost in polynomialset::normalize: how come in
@@ -272,6 +303,43 @@ for i in range(10):
 
 it manages to factor out the '<2>x' bits?  Reading the code, I fail to see
 where the common 'xx' are removed.
+
+** Extending classes in Python (AD, AP, SP)
+In Python, we augment the classes built by Boost.Python, but Python is messy
+to do that: we have to create a function, and then to bind it as a method.
+Yet the function stays there, it's ugly.
+
+See the following commit (currently in their branch `next`) in Spot:
+
+commit e8ce08a98958d30ed15c443d960fa226650ddfb3
+Author: Alexandre Duret-Lutz <adl@lrde.epita.fr>
+Date:   Wed Oct 7 19:42:51 2015 +0200
+
+    python: better way to extend existing classes
+
+    * wrap/python/spot.py: Use a decorator to extend classes.
+    * wrap/python/tests/formulas.ipynb: Adjust expected help text.
+
++def _extend(*classes):
++    """
++    Decorator that extends all the given classes with the contents
++    of the class currently being defined.
++    """
++    def wrap(this):
++        for cls in classes:
++            for (name, val) in this.__dict__.items():
++                if name not in ('__dict__', '__weakref__') \
++                   and not (name == '__doc__' and val is None):
++                    setattr(cls, name, val)
++        return classes[0]
++    return wrap
++
+
+And use it to extend our classes in Python.
+
+** Python: __format__ (AD, AP, SP)
+I just discovered that Python feature, which is nicely used in Spot, and I
+think we should have something like it.  See the s
 
 ** rat: parse
 
@@ -307,10 +375,11 @@ Fix this.  Ask other members of the project what they think about that
 ** products: lazyness
 We need a lazy implementation of product.
 
-** product: is_idempotent
-We don't need to insplit in the case of idempotent semirings.
+** product: is_idempotent (VT)
+We don't need to insplit in the case of idempotent semirings, not just in
+the case of B.
 
-** product: lazy insplit
+** product: lazy insplit (VT)
 Explore the possibility to apply insplitting lazily.
 
 ** products: a function on top of all the products?
@@ -319,6 +388,15 @@ in our API.
 
 Also, it would be nice to have variadic versions of these products for
 expressions, just as we have it for automata.
+
+** ps (SP)
+vcsn-ps is currently written in sh + perl.  Rewrite in Python, using the
+psutil to gain portability.  Display the duration in a first column, then
+use something equivalent to what vcsn-compile does with the sugar function
+to improve the display of what is being compiled.
+
+Of course there should be no code duplication: ask Antoine where the common
+code should be put.
 
 ** scc
 Dijkstra is often more efficient than Tarjan, so we should have an
@@ -391,7 +469,7 @@ Boost.Optional 1.56 moves from opt.get_value_or to opt.value_or.  However,
 moving to C++17 should suffice: use std::optional.
 
 ** Copy
-There are numerous opportunities for an improve copy.  For instance when
+There are numerous opportunities for an improved copy.  For instance when
 computing the square automaton (see has_twins_property), we would like to
 call copy with a lambda that transforms the weights: \w.w -> (w, 1) and
 likewise for the other tape.  If we can do that on-the-fly, then the
@@ -408,7 +486,7 @@ because sometimes we need to escape the output (e.g., label = "\\langle 1
 \\rangle" in dot), and sometimes not (e.g., "\langle 1 \rangle" in TikZ).
 Find something more elegant to address this issue.  See what was done in tc?
 
-** Beware of our use of subprocess
+** Beware of our use of subprocess (AP)
 I think my code is really wrong.
 http://stackoverflow.com/questions/6341451/piping-together-several-subprocesses
 
@@ -529,11 +607,11 @@ the accessible parts.
 
 ** ambiguous_word
 We are clearly traversing the automaton too many times: once to find a pair
-of "ambiguous states", then another time to compute am ambiguous word.  If
+of "ambiguous states", then another time to compute an ambiguous word.  If
 speed were an issue, we should do it another way.
 
 In particular, it might be a good idea to use a distance map to ensure that
-we good (one of the) shortest ambiguous word.
+we found (one of) the shortest ambiguous word.
 
 ** bool is true
 In automata, false never appears for both b and f2.  mutable_automaton takes
@@ -645,11 +723,6 @@ I have tried several things to speed it up, but none of them really works.
 The core issue is really that we build a monster: 6'119'750 transitions for
 the latter, and 17'480 for the former.  The ratio, 355, is still smaller
 than that of timings: 2750.
-
-* to-expression
-** Incremental
-Transform the current implementation of the "naive" heuristics into
-something incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
 * dyn::
 ** Implement implicit conversions
