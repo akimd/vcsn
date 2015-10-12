@@ -308,9 +308,11 @@ namespace vcsn
             const char* sep = "";
             if (!e.empty())
               {
+                bos_ << "label = \"";
                 enable_();
-                bos_ << "label = \"" << e << "\"";
+                bos_ << e;
                 disable_();
+                bos_ << "\"";
                 sep = ", ";
               }
             if (useless)

@@ -39,7 +39,8 @@ namespace vcsn
         for (z = 0; z < n; ++z)
           {
             char c = s[z];
-            if (enabled_ && c == '\\')
+            if (enabled_
+                && (c == '\\' || c == '"'))
               if (!io::put(dest, '\\'))
                 // FIXME: probably lost a char here.
                 break;

@@ -201,6 +201,18 @@ vcsn.automaton(r'''digraph "a graph
   0:port:nw [a1 = a1, a2 = a2; a3 = a3 a4 = a4]
 }'''))
 
+# A context string with ".
+CHECK_EQ(vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lal_char(\"\\'), b"
+  0 -> 0 [label="\", \\'"]
+}'''),
+vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lal_char, b"
+  0 -> 0 [label="\", \\'"]
+}'''))
+
 
 ## ------------- ##
 ## dot: pretty.  ##
