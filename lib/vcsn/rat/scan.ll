@@ -92,7 +92,7 @@ namespace
   "(?#"[^)]*")"  continue;
 
   /* Weights. */
-  "<"     yy_push_state(SC_WEIGHT);
+  "<"|"⟨"     yy_push_state(SC_WEIGHT);
 
   /* Character classes.  */
   "["     yy_push_state(SC_CLASS); return parser::make_LBRACKET(loc);
@@ -173,12 +173,12 @@ namespace
 }
 
 <SC_WEIGHT>{ /* Weight.  */
-  "<"                           {
+  "<"|"⟨"                       {
     ++nesting;
     s.append(yytext, yyleng);
   }
 
-  ">"                           {
+  ">"|"⟩"                       {
     if (nesting)
       {
         --nesting;
@@ -191,7 +191,8 @@ namespace
       }
   }
 
-  [^<>]+       s += yytext;
+  /* "⟨" is e2 9f a8, and "⟩" is e2 9f a9. */
+  [^<>\xe2]+|"\xe2"      s.append(yytext, yyleng);
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a weight");

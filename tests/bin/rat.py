@@ -46,7 +46,7 @@ def pp(re):
   return str(expr(re))
 
 def check_rat_exp(fname):
-  file = open(fname, 'r')
+  file = open(fname, 'r', encoding='utf-8')
   lineno = 0
   global context, identities
   for line in file:
