@@ -4,8 +4,8 @@
 
 Vcsn_ is a platform for weighted automata and rational expressions.
 
-It consists of an efficient C++ generic library, Python bindings, and a
-graphical interactive environment on top of IPython.
+It consists of an efficient C++ generic library, shell tools, Python
+bindings, and a graphical interactive environment on top of IPython.
 
 Copyright (C) 2012-2015 The Vaucanson Group.
 

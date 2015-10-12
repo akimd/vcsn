@@ -6,11 +6,11 @@ Build-Depends: debhelper (>= 9), autotools-dev, bison, flex, libboost-all-dev, g
 Standards-Version: 3.9.6
 X-Python3-Version: >= 3.4
 Homepage: https://vcsn.lrde.epita.fr/
-
+@
 Package: vcsn
 Architecture: any
 Suggests: ipython3, ipython3-notebook
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, ccache, g++ (>= 4.9)
 Description: Vcsn is a platform for weighted automata and rational expressions.
-  It consists of an efficient C++ generic library, Python bindings, and a
-  graphical interactive environment on top of IPython.
+  It consists of an efficient C++ generic library, shell tools, Python
+  bindings, and a graphical interactive environment on top of IPython.

@@ -13,9 +13,9 @@ license             GPL-3+
 
 description         C++ generic automata/transducers and rational expression platform
 
-long_description    Vcsn is a finite state machine manipulation platform, \
-                    consisting of a library on top of which are provided \
-                    Python bindings, shell tools, and an IPython-based GUI.
+long_description    Vcsn is a platform for weighted automata and rational expressions.
+                    It consists of an efficient C++ generic library, shell tools, Python
+                    bindings, and a graphical interactive environment on top of IPython.
 
 homepage            http://vcsn.lrde.epita.fr
 master_sites        http://www.lrde.epita.fr/dload/vcsn/${version}/
