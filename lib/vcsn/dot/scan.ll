@@ -59,19 +59,19 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
   ","        return TOK(COMMA);
   ";"        return TOK(SEMI);
 
-  "//".*     continue;
+  "//".*     loc.step(); continue;
   "/*"       BEGIN SC_COMMENT;
   "\""       BEGIN SC_STRING;
   {ID}|{NUM} return parser::make_ID(string_t{std::string{yytext, size_t(yyleng)}}, loc);
-  [ \t]+     continue;
-  \n+        LINE(yyleng);
+  [ \t]+     loc.step(); continue;
+  \n+        LINE(yyleng); loc.step(); continue;
   .          driver_.error(loc, std::string{"invalid character: "}+yytext);
 }
 
 <SC_COMMENT>{
-  [^*\n]*        continue;
-  "*"+[^*/\n]*   continue;
-  "\n"+          LINE(yyleng);
+  [^*\n]*        loc.step(); continue;
+  "*"+[^*/\n]*   loc.step(); continue;
+  "\n"+          LINE(yyleng); loc.step(); continue;
   "*"+"/"        BEGIN(INITIAL);
 }
 
@@ -81,8 +81,9 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
     return parser::make_ID(string_t{s}, loc);
   }
 
-  "\\".     s.push_back(yytext[1]);
-  [^\\""]+  s.append(yytext, yyleng);
+  "\\".       s.push_back(yytext[1]);
+  [^\\""\n]+  s.append(yytext, yyleng);
+  "\n"+       LINE(yyleng); s.append(yytext, yyleng);
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a string");

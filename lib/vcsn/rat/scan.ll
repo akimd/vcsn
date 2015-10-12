@@ -25,7 +25,7 @@
 #include <lib/vcsn/rat/parse.hh>
 
 #define LINE(Line)                              \
-  do{                                           \
+  do {                                          \
     loc.end.column = 1;                         \
     loc.lines(Line);                            \
  } while (false)
@@ -98,7 +98,8 @@ namespace
   "["     yy_push_state(SC_CLASS); return parser::make_LBRACKET(loc);
 
   /* White spaces. */
-  [ \t\n]+   loc.step(); continue;
+  [ \t]+   loc.step(); continue;
+  "\n"+    LINE(yyleng); loc.step(); continue;
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
@@ -147,13 +148,13 @@ namespace
 <SC_CONTEXT>{ /* Context embedded in a $(?@...) directive.  */
   "("   {
     ++nesting;
-    context += yytext;
+    context.append(yytext, yyleng);
   }
   ")"   {
     if (nesting)
       {
         --nesting;
-        context += yytext;
+        context.append(yytext, yyleng);
       }
     else
       {
@@ -162,7 +163,8 @@ namespace
         context.clear();
       }
   }
-  [^()]+   context += yytext;
+  [^()\n]+   context.append(yytext, yyleng);
+  \n+        LINE(yyleng); context.append(yytext, yyleng);
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a context comment");
@@ -173,14 +175,14 @@ namespace
 <SC_WEIGHT>{ /* Weight.  */
   "<"                           {
     ++nesting;
-    s += yytext;
+    s.append(yytext, yyleng);
   }
 
   ">"                           {
     if (nesting)
       {
         --nesting;
-        s += yytext;
+        s.append(yytext, yyleng);
       }
     else
       {
