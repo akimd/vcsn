@@ -496,11 +496,15 @@ namespace vcsn
     auto t = ts.tuple(v...);
     if (ts.is_one(t))
       return one();
+    // If this is a tuple of labels, make it a (multitape) label.
+    // That allows algorithms such as standard, thompson, etc. to work
+    // on lal x lal.
+    //
+    // Note that `\e|a` remains a tuple of expression on lal x lal,
+    // but it is turned into a (multitape) label on lan x lan.
     else if (tuple_of_label<>::is_label(t))
       return atom(tuple_of_label<>::as_label(t));
     else
-      // FIXME: when all letters, make it a (multitape) letter:
-      // a|x -> 'a,x'.
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }
 

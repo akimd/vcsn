@@ -17,7 +17,7 @@ Vcsn 2.1, as shown by the 4k+ lines of messages below since 2.0.  However,
 here are a few headlines:
 
 - Many pages of documentation and examples have been written (see
-  http://www.lrde.epita.fr/dload/vcsn/2.1/notebooks).
+  http://vcsn.lrde.epita.fr/dload/2.1/notebooks).
 
 - Now http://vcsn-sandbox.lrde.epita.fr/ provides a live demo.
 

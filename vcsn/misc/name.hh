@@ -218,9 +218,9 @@ namespace vcsn
   /// vnames.  This is used to dispatch variadic calls on vectors of
   /// automata to tuples of vcsn:: automata.
   template <>
-  struct vnamer<const std::vector<dyn::expression>>
+  struct vnamer<const std::vector<dyn::automaton>>
   {
-    using type = const std::vector<dyn::expression>;
+    using type = const std::vector<dyn::automaton>;
     static symbol name(const type& t)
     {
       std::string names;
@@ -237,9 +237,9 @@ namespace vcsn
   /// Likewise, for expressions.
   // FIXME: Code duplication.
   template <>
-  struct vnamer<const std::vector<dyn::automaton>>
+  struct vnamer<const std::vector<dyn::expression>>
   {
-    using type = const std::vector<dyn::automaton>;
+    using type = const std::vector<dyn::expression>;
     static symbol name(const type& t)
     {
       std::string names;
