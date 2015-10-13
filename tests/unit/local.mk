@@ -54,12 +54,24 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/label.chk                                 \
   %D%/polynomialset.chk                         \
   %D%/proper.chk                                \
+  %D%/score-compare.chk                         \
   %D%/transpose.chk                             \
   %D%/weight.chk                                \
   %D%/zip-maps.chk                              \
   %D%/zip.chk
 
 dist_TESTS += $(%C%_TESTS)
+
+EXTRA_DIST +=					\
+  %D%/score-compare.dir/absent.in		\
+  %D%/score-compare.dir/absent.out		\
+  %D%/score-compare.dir/basic.in		\
+  %D%/score-compare.dir/basic.out		\
+  %D%/score-compare.dir/different.in		\
+  %D%/score-compare.dir/different.out		\
+  %D%/score-compare.dir/more.in			\
+  %D%/score-compare.dir/more.out
+
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
@@ -74,6 +86,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/label.log:          %D%/label
 %D%/polynomialset.log:  %D%/polynomialset
 %D%/proper.log:         %D%/proper
+%D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*)
 %D%/transpose.log:      %D%/transpose
 %D%/weight.log:         %D%/weight
 %D%/zip-maps.log:       %D%/zip-maps
