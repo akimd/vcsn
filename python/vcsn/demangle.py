@@ -1,6 +1,24 @@
+import re
+
 try:
     import regex as re
     has_regex = True
+    param1 = r'''
+(?<rec1>    # capturing group rec1
+ (?:        # non-capturing group
+  [^<>]++   # anything but angle brackets one or more times without backtracking
+  |         # or
+  <(?&rec1)>  # recursive substitute of group rec1
+ )*
+)'''
+    param2 = r'''
+(?<rec2>    # capturing group rec2
+ (?:        # non-capturing group
+  [^<>]++   # anything but angle brackets one or more times without backtracking
+  |         # or
+  <(?&rec2)>  # recursive substitute of group rec2
+ )*
+)'''
 except ImportError:
     has_regex = False
 import sys
@@ -28,6 +46,48 @@ parameters = r'''
   <(?&rec)>  # recursive substitute of group rec
  )*
 )'''
+
+
+def sugar(s):
+    '''Perform some transformations that aim at displaying a cuter version
+    of a Vcsn type string.'''
+    # Long specs are split into subdirs.  Remove the subdirs.
+    s = s.replace('/', '')
+    s = re.sub(r'(char|string)_letter', r'\1', s)
+    s = re.sub(r'(\w+)_automaton', r'\1', s)
+    if has_regex:
+        s = re.sub(r'nullableset<{param1}>'.format(param1=param1),
+                                   r'(\1)?',
+                                   s,
+                                   flags=re.VERBOSE)
+        s = re.sub(r'letterset<{param1}>'.format(param1=param1),
+                                   r'\1',
+                                   s,
+                                   flags=re.VERBOSE)
+        s = re.sub(r'wordset<{param1}>'.format(param1=param1),
+                                   r'(\1)*',
+                                   s,
+                                   flags=re.VERBOSE)
+        s = re.sub(r'context<{param1},\ +{param2}>'.format(param1=param1,
+                                                           param2=param2),
+                   r'\1 → \2',
+                   s,
+                   flags=re.VERBOSE)
+    else:
+        s = re.sub(r'^context<(.*)>$', r'\1', s)
+    return s
+
+def pretty_plugin(filename):
+    '''Split compilation type with its arguments and add sugar to the message.'''
+    # what = algos|contexts, specs = argument specifications.
+    what, specs = re.match(r'.*/plugins/([^/]+)/(.*)', filename).group(1, 2)
+    if what == 'algos':
+        title, message = specs.split('/', 1)
+        message = sugar(message)
+    else:
+        title = 'context'
+        message = sugar(specs)
+    return title, message
 
 def has_color(color):
     color_dict = {
