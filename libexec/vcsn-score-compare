@@ -41,7 +41,15 @@ if args.color:
         pass
 
 bench = dict()
+# bench-id => number of iterations (e.g., `20` for 20x).
+number = {}
 benc_csv = dict()
+
+def lcm(numbers):
+    res = 1
+    for num in numbers:
+        res = (num * res) // gcd(num, res)
+    return res
 
 def normalize(k):
     '''Fix a bench fix, i.e., fix errors, update APIs etc.
@@ -118,8 +126,8 @@ def normalize(k):
     k = "{:20s} # {}".format(*map(str.strip, k.split('#', 2)))
     return k
 
-def read(fn):
-    '''Read a `vcsn score` generated file named `fn`.  Store in `bench`.
+def read_file(fn):
+    '''Read one `vcsn score` generated file named `fn`.  Store in `bench`.
 
     Each line looks like:
 
@@ -130,18 +138,35 @@ def read(fn):
     with open(fn) as f:
         for line in f:
             v, k = map(str.strip, line.split(':', 1))
-            # Get rid of "s", we know the unit.
+            # Get rid of "s", we know the unit.  And make it a float.
             if v[-1] == 's':
-                v = v[:-1]
+                v = float(v[:-1])
             # Fix errors in algo descriptions.
             k = normalize(k)
-            # Number of iterations on the test.
+            # Number of iterations of the test.
             num = re.search(', ([0-9]+)x', k)
             num = int(num.group(1)) if num else 1
             k = re.sub(', ([0-9]+)x', '', k)
             if k not in bench:
                 bench[k] = dict()
             bench[k][fn] = {'value' : v, 'num' : num}
+
+def read_files(files):
+    # Read the score files.
+    for fn in files:
+        read_file(fn)
+    # Normalize the number of iterations: if some test was run 2x
+    # and then 5x, display both results in 10x.
+    for k in bench:
+        # For each bench, the number of times it was run.
+        nums = [bench[k][f]['num']
+                for f in bench[k] if bench[k][f]['value'] not in ["N/A", "FAIL"]]
+        number[k] = lcm(nums)
+        # Normalize each bench.
+        for f in bench[k]:
+            if bench[k][f]['value'] not in ["N/A", "FAIL"]:
+                bench[k][f]['value'] *= number[k] // bench[k][f]['num']
+                bench[k][f]['num'] = number[k]
 
 def csv(keys, fn):
     '''Save the benches about `keys` in CSV format in file named `fn`.'''
@@ -164,25 +189,21 @@ def csv(keys, fn):
         fl.write('\n')
 
 
-
-def lcm(numbers):
-    res = 1
-    for num in numbers:
-        res = (num * res) / gcd(num, res)
-    return res
-
 def text(keys):
+    # For each bench-case, compare all the recorded scores.
     for k in keys:
-        # All the benches as strings.
-        bs = [bench[k][f] if f in bench[k] else {'value' : "N/A", 'num' : 0} for f in args.file]
-        if not args.all and len(bs) == 1:
+        # All the benches.
+        bs = [bench[k][f] if f in bench[k] else {'value' : "N/A", 'num' : 0}
+              for f in args.file]
+        # All the valid benches.
+        bfs = [b['value']
+               for b in bs if b['value'] not in ["N/A", "FAIL"]]
+
+        # If all the same (not even N/A or FAIL), there is nothing to
+        # say.
+        if not args.all and len(set(bfs)) == 1:
             continue
-        # If all the same, there is nothing to say.
-        # All the benches as floats.
-        bfs = [float(b['value']) for b in bs if b['value'] not in ["N/A", "FAIL"]]
-        nums = [float(b['num']) for b in bs if b['value'] not in ["N/A", "FAIL"]]
-        number = lcm(nums)
-        bfs = [b * (number / num) for b, num in zip(bfs, nums)]
+
         # Compute average of benchs.
         avg = sum(bfs) / len(bfs)
         for b in bs:
@@ -190,20 +211,20 @@ def text(keys):
                 print("{:>5}".format(b['value']), end = ' ')
             else:
                 color = ''
-                score = float(b['value']) * (number / float(b['num']))
+                score = b['value']
                 if score <= avg - args.threshold * avg:
                     color = green
                 elif args.threshold * avg + avg <= score:
                     color = red
                 print(color + "{:5.2f}".format(score) + std, end = ' ')
-        if number != 1:
-            k += ', ' + str(int(number)) + 'x'
+        if number[k] != 1:
+            k += ', {}x'.format(number[k])
         print(k)
 
-# Read the score files.
-for fn in args.file:
-    read(fn)
 
+# Main.
+
+read_files(args.file)
 # The keys we are interested in.
 keys = [k for k in sorted(bench.keys()) if args.only.search(k)]
 

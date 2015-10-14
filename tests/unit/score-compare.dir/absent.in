@@ -1,1 +1,0 @@
- 0.16s: b.format("text")     # b = lal_char(abc)_b, 100000x

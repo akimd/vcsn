@@ -1,0 +1,39 @@
+ 0.16s: b.format("text")     # b = lal_char(abc)_b, 100000x
+ 0.58s: b.ratexp(e)          # e = "(\e+a)" * 500, 100x
+ 0.22s: r.format("text")     # r = b.ratexp("(\e+a)" * 500), 1000x
+ 0.35s: a.format("dot")      # a = std(a?{500})
+ 0.08s: a.format("efsm")     # a = std(a?{500})
+ 0.09s: a.format("fado")     # a = std(a?{500})
+ 0.09s: a.format("grail")    # a = std(a?{500})
+ 0.31s: a.format("tikz")     # a = std(a?{500})
+ 1.02s: read(s)              # s = dot(std(a?{500}))
+ 0.27s: read(s)              # s = efsm(std(a?{500}))
+ 0.16s: read(s)              # s = fado(std(a?{500}))
+ 3.03s: r.derived_term()     # r = (a+b)*b(<2>a+<2>b){150}, c = [ab] -> Z
+ 3.38s: r.derived_term()     # r = (a+b)*b(<2>a+<2>b){150}, c = [a-z] -> Z
+ 0.22s: r.linear()           # r = (a+b)*b(<2>a+<2>b){150}, c = [a-z] -> Z
+ 0.03s: r.standard()         # r = (a+b)*b(<2>a+<2>b){20000}, c = [a-z] -> Z
+ 0.04s: r.thompson()         # r = (a+b)*b(<2>a+<2>b){20000}, c = [a-z]? -> Z
+ 7.43s: a.determinize()      # a = ladybird(21)
+ 0.84s: a.determinize()      # a = ladybird(18)
+ 0.84s: a.determinize()      # a = ladybird(18), c = [a-zA-Z0-9] -> B
+ 0.04s: a.determinize()      # a = de_bruijn(13)
+ 0.18s: a.determinize("weighted") # a = de_bruijn(13)
+ 0.08s: a.determinize()      # a = de_bruijn(14)
+ 0.43s: a.determinize("weighted") # a = de_bruijn(14)
+ 0.54s: a.eval("a"*151)      # a = de_bruijn(150), 1000x
+ 2.27s: a.shortest(5)        # a = de_bruijn(9)
+ 1.26s: a.sort()             # a = std([a-e]?{600})
+ 2.36s: a.proper()           # a = thompson(a?{1200})
+ 0.75s: a.ratexp()           # a = std([a-d]?{100})
+ 3.92s: a.product(a)         # a = std([a-e]?{50})
+ 3.03s: a.shuffle(a)         # a = std([a-e]?{50})
+ 3.24s: a.infiltration(a)    # a = std([a-e]?{30})
+ 4.15s: a & 12               # a = std([a-e]*b(<2>[a-e])*)
+ 1.22s: a.compose(a)         # a = std(['(a,a)'-'(i,z)']{4})
+ 0.48s: a.compose(a)         # a = thompson(['(a,a)'-'(i,z)']{4})
+ 4.40s: a.minimize("signature") # a = std([a-g]{800})
+ 3.29s: a.minimize("moore")  # a = std([a-k]{2000})
+ 1.18s: a.synchronizing_word() # a = de_bruijn(6)
+ 1.26s: a.reduce()           # a = std([a-g]{300}), c = [a-k] -> Z
+ 1.89s: a.reduce()           # a = std([a-g]{300}), c = [a-k] -> Q

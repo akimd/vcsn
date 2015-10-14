@@ -63,15 +63,13 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=					\
-  %D%/score-compare.dir/absent.in		\
-  %D%/score-compare.dir/absent.out		\
-  %D%/score-compare.dir/basic.in		\
-  %D%/score-compare.dir/basic.out		\
-  %D%/score-compare.dir/different.in		\
-  %D%/score-compare.dir/different.out		\
-  %D%/score-compare.dir/more.in			\
-  %D%/score-compare.dir/more.out
-
+  %D%/score-compare.dir/all.out			\
+  %D%/score-compare.dir/default.out		\
+  %D%/score-compare.dir/shortest.out		\
+  %D%/score-compare.dir/v2.0-0001-g6bfe026	\
+  %D%/score-compare.dir/v2.0-0423-g841c067	\
+  %D%/score-compare.dir/v2.0-1255-gafaf339	\
+  %D%/score-compare.dir/v2.1-0010-gd55ef26
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
@@ -86,7 +84,7 @@ EXTRA_DIST +=					\
 %D%/label.log:          %D%/label
 %D%/polynomialset.log:  %D%/polynomialset
 %D%/proper.log:         %D%/proper
-%D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*)
+%D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
 %D%/transpose.log:      %D%/transpose
 %D%/weight.log:         %D%/weight
 %D%/zip-maps.log:       %D%/zip-maps

@@ -1,0 +1,53 @@
+ 0.12s: a.is_proper()        # a = "", 200000x
+ 0.27s: b.format("text")     # b = [abc] -> B, 100000x
+ 0.62s: b.expression(e)      # e = "(\e+a)" * 500, 100x
+ 0.13s: r.format("text")     # r = b.expression("(\e+a)" * 500), 1000x
+ 0.25s: a.format("dot")      # a = std(a?{500})
+ 0.07s: a.format("efsm")     # a = std(a?{500})
+ 0.08s: a.format("fado")     # a = std(a?{500})
+ 0.08s: a.format("grail")    # a = std(a?{500})
+ 0.16s: a.format("tikz")     # a = std(a?{500})
+ 0.87s: read(s)              # s = dot(std(a?{500}))
+ 0.21s: read(s)              # s = efsm(std(a?{500}))
+ 0.13s: read(s)              # s = fado(std(a?{500}))
+ 2.90s: r.derived_term("derivation") # r = (a+b)*b(<2>a+<2>b){150}, c = [ab] -> Z
+ 3.27s: r.derived_term("derivation") # r = (a+b)*b(<2>a+<2>b){150}, c = [a-z] -> Z
+ 0.22s: r.derived_term("expansion") # r = (a+b)*b(<2>a+<2>b){150}, c = [a-z] -> Z
+ 0.03s: r.standard()         # r = (a+b)*b(<2>a+<2>b){20000}, c = [a-z] -> Z
+ 0.04s: r.thompson()         # r = (a+b)*b(<2>a+<2>b){20000}, c = [a-z]? -> Z
+ 0.80s: a.determinize()      # a = ladybird(18)
+ 7.20s: a.determinize()      # a = ladybird(21)
+ 0.81s: a.determinize()      # a = ladybird(18), c = [a-zA-Z0-9] -> B
+ 0.03s: a.determinize()      # a = de_bruijn(13)
+ 0.14s: a.determinize("weighted") # a = de_bruijn(13)
+ 0.08s: a.determinize()      # a = de_bruijn(14)
+ 0.30s: a.determinize("weighted") # a = de_bruijn(14)
+ 0.37s: a.determinize()      # a = de_bruijn(16)
+ 1.36s: a.determinize("weighted") # a = de_bruijn(16)
+ 0.69s: a.determinize()      # a = std(([^]+a){100}), c = [a-zA-Z0-9] -> B
+ 0.13s: a.determinize("weighted") # a = std(([^]+a){100}), c = [a-zA-Z0-9] -> B
+ 0.16s: a.eval("a"*151)      # a = de_bruijn(150), 1000x
+ 2.87s: a.shortest(5)        # a = de_bruijn(9)
+ 0.93s: a.shortest(5)        # a = std([a-e]?{600})
+ 0.89s: a.sort()             # a = std([a-e]?{700})
+ 2.39s: a.proper()           # a = thompson(a?{1200})
+ 0.73s: a.expression()       # a = std([a-d]?{100})
+ 3.75s: a.product(a)         # a = std([a-e]?{50})
+ 2.92s: a.shuffle(a)         # a = std([a-e]?{50})
+ 3.28s: a.infiltration(a)    # a = std([a-e]?{30})
+ 0.83s: a.product(a)         # a = thompson([a-e]?{80})
+ 4.13s: a & 12               # a = std([a-e]*b(<2>[a-e])*)
+ 1.22s: a.compose(a)         # a = std(['(a,a)'-'(i,z)']{4})
+ 0.47s: a.compose(a)         # a = thompson(['(a,a)'-'(i,z)']{4})
+ 4.44s: a.minimize("signature") # a = std([a-g]{800})
+ 3.17s: a.minimize("moore")  # a = std([a-k]{2000})
+ 0.85s: a.synchronizing_word() # a = de_bruijn(6)
+ 1.29s: a.reduce()           # a = std([a-g]{300}), c = [a-k] -> Z
+ 1.87s: a.reduce()           # a = std([a-g]{300}), c = [a-k] -> Q
+ 0.34s: a.has_twins_property() # a = std([a-c]{200}*+[a-c]{200}*), c = [abc] -> Q, 20x
+ 0.88s: a.is_cycle_ambiguous() # a = std([a-c]{2000}(<2>ab+a<3>b)), c = [abc] -> B, 20x
+ 0.56s: a.is_functional()    # a = std('(a, x)'{2000}'(b, y)'), 100x
+ 0.30s: a.accessible         # a = thompson([a-m]{20000}).proper(False)
+ 0.65s: a.scc("kosaraju")    # a = std((abc)*{1000}), 20x
+ 0.71s: a.scc("tarjan_iterative") # a = std((abc)*{1000}), 20x
+ 0.56s: a.scc("tarjan_recursive") # a = std((abc)*{1000}), 20x
