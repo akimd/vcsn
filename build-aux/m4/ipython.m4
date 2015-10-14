@@ -19,9 +19,12 @@ AC_DEFUN([_VCSN_PROG_NBCONVERT],
 [test -f "$2" ||
   AC_MSG_ERROR([cannot read the nbconvert test file: $2])
 $1='no'
-for ac_nb_convert in ${NBCONVERT-'$(IPYTHON) nbconvert'}
+for ac_nb_convert in ${NBCONVERT-'${IPYTHON} nbconvert'}
 do
-  _vcsn_try([$ac_nb_convert --output=conftest "$2"])
+  # Expand possible shell variables, such as ${IPYTHON}, in
+  # ac_nb_convert.
+  eval ac_nb_conv="\"$ac_nb_convert\""
+  _vcsn_try([$ac_nb_conv --output=conftest "$2"])
   if test -f conftest.html; then
     $1=$ac_nb_convert
     break
