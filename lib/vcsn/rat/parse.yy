@@ -64,6 +64,8 @@
   #include <lib/vcsn/rat/driver.hh>
   #include <lib/vcsn/rat/scan.hh>
   #include <vcsn/dyn/algos.hh>
+  #include <vcsn/misc/stream.hh>
+  #include <vcsn/dyn/context.hh>
 
 #define TRY(Loc, Stm)                           \
   try                                           \
@@ -197,6 +199,15 @@
 input:
   sum terminator.opt
   {
+    auto dim_exp = dyn::num_tapes(dyn::context_of($1.exp));
+    auto dim_ctx = dyn::num_tapes(driver_.ctx_);
+    if (dim_exp != dim_ctx)
+      // num_tapes returns 0 on non lat.  In this case, 1 is clearer.
+      throw syntax_error(@$,
+                         "not enough tapes: "
+                         + std::to_string(std::max(size_t{1}, dim_exp))
+                         + " expected "
+                         + std::to_string(std::max(size_t{1}, dim_ctx)));
     // Provide a value for $$ only for sake of traces: shows the result.
     $$ = $1;
     driver_.result_ = $$.exp;
@@ -226,7 +237,11 @@ tuple:
     else if ($2.size() == driver_.tape_ctx_.size())
       $$ = vcsn::dyn::tuple($2);
     else
-      throw parser::syntax_error(@$, "not enough tapes");
+      throw syntax_error(@$,
+                         "not enough tapes: "
+                         + std::to_string($2.size())
+                         + " expected "
+                         + std::to_string(driver_.tape_ctx_.size()));
   }
 ;
 
