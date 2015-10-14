@@ -165,7 +165,7 @@ namespace vcsn
     set_format(std::ostream& o, const std::string& format)
     {
       if (!format_flag(o))
-        format_flag(o) = new std::string;
+        format_flag(o) = new std::string{"default"};
       *format_flag(o) = format;
     }
 
@@ -173,7 +173,7 @@ namespace vcsn
     get_format(std::ostream& o)
     {
       if (!format_flag(o))
-        format_flag(o) = new std::string;
+        format_flag(o) = new std::string{"default"};
       return *format_flag(o);
     }
 
