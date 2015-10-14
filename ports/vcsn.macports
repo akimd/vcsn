@@ -2,7 +2,7 @@
 # $Id: Portfile 122640 2014-07-25 16:42:13Z ryandesign@macports.org $
 
 PortSystem          1.0
-PortGroup           compiler_blacklist_versions 1.0
+PortGroup           cxx11 1.0
 
 name                vcsn
 version             2.1
@@ -24,22 +24,13 @@ use_xz              yes
 checksums           rmd160  9460c5357abcd91dacb87078aecfb11883ce951c \
                     sha256  a6df0057e02ef910883c37c316474bcab7e318a41ce9579e8170ef235fc30f8b
 
-depends_build       port:doxygen lib:libltdl:libport
+depends_build       port:doxygen port:libport
 
 depends_lib         port:boost
 
-depends_run         path:bin/dot:graphviz port:ccache
+depends_run         path:bin/dot:graphviz path:bin/ccache:ccache port:py-ipython
 
 configure.optflags  -O3 -DNDEBUG
 
 test.run            yes
 test.target         check
-
-# We need C++11/14 support, Clang++ 3.6+.  We need Boost, which is
-# compiled with Clang++, so it is (currently) incompatible with GCC.
-compiler.blacklist  cc \
-                    *dragonegg* \
-                    {clang < 500} \
-                    *clang-2.* \
-                    {*clang-3.[0-5]} \
-                    *gcc*
