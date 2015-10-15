@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 9), autotools-dev, bison, flex, libboost-all-dev, g
 Standards-Version: 3.9.6
 X-Python3-Version: >= 3.4
 Homepage: https://vcsn.lrde.epita.fr/
-@
+
 Package: vcsn
 Architecture: any
 Suggests: ipython3, ipython3-notebook
