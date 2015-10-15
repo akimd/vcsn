@@ -454,11 +454,14 @@ namespace vcsn
     print(const value_t& l, std::ostream& o,
           format fmt = {}) const
     {
-      if (fmt.is_for_labels())
-        this->print_(l, o, fmt, "", "|", "", indices);
-      else
-        this->print_(l, o, fmt, "(", ",", ")", indices);
-      return o;
+      return this->print_(l, o,
+                          // 1, (2, 3) is different from 1, 2, 3:
+                          // delimit components.
+                          fmt.delimit(true),
+                          fmt.delimit() ? "(" : "",
+                          fmt.is_for_labels() ? "|" : ",",
+                          fmt.delimit() ? ")" : "",
+                          indices);
     }
 
   private:

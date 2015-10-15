@@ -227,8 +227,8 @@ check_tupleset()
   ASSERT_EQ(wlset_t::has_one(), false);
 
   // format, transpose.
-  ASSERT_EQ(to_string(wwset, ww_t{"abc", "xyz"}), "(abc,xyz)");
-  ASSERT_EQ(to_string(wwset, wwset.transpose(ww_t{"abc","xyz"})), "(cba,zyx)");
+  ASSERT_EQ(to_string(wwset, ww_t{"abc", "xyz"}), "abc,xyz");
+  ASSERT_EQ(to_string(wwset, wwset.transpose(ww_t{"abc","xyz"})), "cba,zyx");
 
   // conv.
   // Exposed to the same bugs as make, see above.

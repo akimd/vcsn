@@ -46,6 +46,20 @@ namespace vcsn LIBVCSN_API
       return res;
     }
 
+    /// Whether we should delimit: `(1, 2)` instead of `1, 2`.
+    bool delimit() const
+    {
+      return delimit_;
+    }
+
+    /// Set whether we should delimit: `(1, 2)` instead of `1, 2`.
+    format delimit(bool d) const
+    {
+      format res = *this;
+      res.delimit_ = d;
+      return res;
+    }
+
     /// Whether to use the syntax for labels (e.g., "a|x").
     bool is_for_labels() const
     {
@@ -80,9 +94,11 @@ namespace vcsn LIBVCSN_API
 
   private:
     format_t format_;
-    /// Whether printed as a label (e.g., "a|x"), or as a weight
-    /// (e.g., "(1, 1/2)").
+    /// Whether printed as a label (e.g., `a|x`), or as a weight
+    /// (e.g., `(1, 1/2)`).
     bool label_ = false;
+    /// Whether we should delimit.  E.g., `1, 2` or `(1, 2)`.
+    bool delimit_ = false;
   };
 
   /// Wrapper around operator<<.
