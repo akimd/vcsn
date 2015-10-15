@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vcsn/core/rat/fwd.hh>
+#include <vcsn/dyn/expansion.hh>
+
 namespace vcsn
 {
   /*-----------------------------.
@@ -17,6 +20,18 @@ namespace vcsn
     return {ls, ws};
   }
 
+
+  /*---------------------------------------.
+  | tuple_expansionset(expansionset...).   |
+  `---------------------------------------*/
+
+  template <typename... ExpansionSets>
+  auto
+  tuple_expansionset(const ExpansionSets&... ess)
+    -> rat::expansionset<decltype(tuple_expressionset(ess.expressionset()...))>
+  {
+    return {tuple_expressionset(ess.expressionset()...)};
+  }
 
   /*------------------------.
   | tuple(expression...).   |
@@ -43,6 +58,47 @@ namespace vcsn
     auto ctx = tuple_context(rss.context()...);
     auto ids = join(rss.identities()...);
     return {ctx, ids};
+  }
+
+  /*-----------------------.
+  | tuple(expansion...).   |
+  `-----------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge helper.
+      template <typename ExpansionSets, size_t... I>
+      expansion
+      tuple_(const std::vector<expansion>& es,
+             vcsn::detail::index_sequence<I...>)
+      {
+        auto xs
+          = vcsn::tuple_expansionset
+          (es[I]
+           ->template as<tuple_element_t<I, ExpansionSets>>()
+           .expansionset()...);
+        return
+          make_expansion
+          (xs,
+           vcsn::tuple<decltype(xs), tuple_element_t<I, ExpansionSets>...>
+           (xs,
+            es[I]
+            ->template as<tuple_element_t<I, ExpansionSets>>()
+            .expansion()...));
+      }
+
+      /// Bridge (tuple).
+      template <typename ExpansionSets>
+      expansion
+      tuple_expansion(const std::vector<expansion>& es)
+      {
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<ExpansionSets>{}>{};
+        return tuple_<ExpansionSets>(es, indices);
+      }
+    }
   }
 
   /*------------------------.

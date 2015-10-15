@@ -242,6 +242,12 @@ namespace vcsn
     : dyn_vector_vnamer<dyn::automaton>
   {};
 
+  /// vector<dyn::expansion> -> std::tuple<expansion_t, ...>.
+  template <>
+  struct vnamer<const std::vector<dyn::expansion>>
+    : dyn_vector_vnamer<dyn::expansion>
+  {};
+
   /// vector<dyn::expression> -> std::tuple<expression_t, ...>.
   template <>
   struct vnamer<const std::vector<dyn::expression>>

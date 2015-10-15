@@ -826,6 +826,9 @@ namespace vcsn
     /// The trim subautomaton of \a aut.
     automaton trim(const automaton& aut);
 
+    /// Build a k-tape expansion from k expansions.
+    expansion tuple(const std::vector<expansion>& rs);
+
     /// Build a two-tape expression from two expressions.
     expression tuple(const expression& lhs, const expression& rhs);
 

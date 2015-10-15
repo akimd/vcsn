@@ -707,6 +707,21 @@ struct expansion
     return os.str();
   }
 
+  static expansion tuple_(const boost::python::list& es)
+  {
+    return vcsn::dyn::tuple(expansions_(es));
+  }
+
+  /// Convert to a vector of dyn:: expansions.
+  using expansions_t = std::vector<vcsn::dyn::expansion>;
+  static expansions_t expansions_(const boost::python::list& es)
+  {
+    auto res = expansions_t{};
+    for (int i = 0; i < boost::python::len(es); ++i)
+      res.emplace_back(boost::python::extract<expansion>(es[i])().val_);
+    return res;
+  }
+
   vcsn::dyn::expansion val_;
 };
 
@@ -1415,6 +1430,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<expansion>("expansion", bp::no_init)
     .def(bp::init<const std::string&>())
     .def("format", &expansion::format)
+    .def("_tuple", &expansion::tuple_).staticmethod("_tuple")
    ;
 
   bp::class_<expression>("expression", bp::no_init)

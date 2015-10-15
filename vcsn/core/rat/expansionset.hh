@@ -1,6 +1,7 @@
 #pragma once
 
-#include <vcsn/algos/split.hh> // expression_polynomialset_t.
+#include <vcsn/algos/project.hh> // make_project
+#include <vcsn/algos/split.hh> // expression_polynomialset_t
 #include <vcsn/misc/map.hh>
 
 namespace vcsn
@@ -450,36 +451,57 @@ namespace vcsn
       template <typename... Expansions>
       struct tuple_impl
       {
-        /// Denormalize on this tape.
+        /// Denormalize on this tape: from expansion to pure
+        /// polynomial.
         template <size_t Tape>
-        void denormalize_tape(typename focus_t<Tape>::value_t& e)
+        auto denormalize_tape(const typename focus_t<Tape>::value_t& e) const
+          -> typename focus_t<Tape>::polys_t
         {
           auto es = eset_.template focus<Tape>();
-          es.denormalize(e);
-          require(es.expressionset().weightset()->is_zero(e.constant),
-                  es, ": to-expansion: cannot denormalize ", to_string(es, e),
+          auto res = e;
+          es.denormalize(res);
+          require(es.expressionset().weightset()->is_zero(res.constant),
+                  es, ": to-expansion: cannot denormalize ", to_string(es, res),
                   ", need support for label one (the empty label)");
+          return res.polynomials;
         }
 
         /// Denormalize on all these tapes.
         template <size_t... Tape>
-        void denormalize(std::tuple<Expansions&...>& es,
-                         detail::index_sequence<Tape...>)
+        auto denormalize(std::tuple<const Expansions&...>& es,
+                         detail::index_sequence<Tape...>) const
+          -> std::tuple<typename focus_t<Tape>::polys_t...>
         {
-          using swallow = int[];
-          (void) swallow
-            {
-              (denormalize_tape<Tape>(std::get<Tape>(es)), 0)...
-            };
+          using res_t = std::tuple<typename focus_t<Tape>::polys_t...>;
+          return res_t{denormalize_tape<Tape>(std::get<Tape>(es))...};
         }
 
         /// Entry point: Denormalize all these expansions.
-        void denormalize(Expansions&... es)
+        auto denormalize(const Expansions&... es) const
         {
-          auto t = std::tuple<Expansions&...>{es...};
-          denormalize(t,
-                      detail::make_index_sequence<sizeof...(Expansions)>{});
+          auto t = std::tuple<const Expansions&...>{es...};
+          constexpr auto indices
+            = detail::make_index_sequence<sizeof...(Expansions)>{};
+          return denormalize(t, indices);
         }
+
+        auto
+        tuple(Expansions&&... es) const
+          -> value_t
+        {
+          auto res = eset_.zero();
+          auto polys = denormalize(std::forward<Expansions>(es)...);
+          detail::cross_tuple
+            ([&res, this](const auto&... ps)
+             {
+               auto l = label_t{ps.first...};
+               eset_.ps_.add_here(res.polynomials[l],
+                                  eset_.ps_.tuple(ps.second...));
+             },
+             polys);
+        eset_.normalize(res);
+        return res;
+      }
 
         const expansionset& eset_;
       };
@@ -543,17 +565,8 @@ namespace vcsn
       tuple(Expansions&&... es) const
         -> value_t
       {
-        auto res = zero();
-        tuple_impl<Expansions...>{*this}.denormalize(es...);
-        detail::cross([&res, this](const auto&... ps)
-                      {
-                        auto l = label_t{ps.first...};
-                        ps_.add_here(res.polynomials[l],
-                                     ps_.tuple(ps.second...));
-                      },
-                      es.polynomials...);
-        normalize(res);
-        return res;
+        auto t = tuple_impl<Expansions...>{*this};
+        return t.tuple(std::forward<Expansions>(es)...);
       }
 
     private:
