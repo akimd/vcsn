@@ -25,6 +25,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/conjunction.py                            \
   %D%/constant-term.py                          \
   %D%/context.py                                \
+  %D%/demangle.py                               \
   %D%/derivation.py                             \
   %D%/determinize.py                            \
   %D%/difference.py                             \

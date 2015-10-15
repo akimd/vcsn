@@ -1,26 +1,24 @@
-import re
-
 try:
     import regex as re
     has_regex = True
-    param1 = r'''
-(?<rec1>    # capturing group rec1
- (?:        # non-capturing group
-  [^<>]++   # anything but angle brackets one or more times without backtracking
-  |         # or
-  <(?&rec1)>  # recursive substitute of group rec1
- )*
-)'''
-    param2 = r'''
-(?<rec2>    # capturing group rec2
- (?:        # non-capturing group
-  [^<>]++   # anything but angle brackets one or more times without backtracking
-  |         # or
-  <(?&rec2)>  # recursive substitute of group rec2
+    # Here, we use a backtracking group, which is *much* slower, but
+    # it allows to write patterns such as `context<{param}, {param}>`,
+    # where, were the [^<>]+ be possessive, the first one would eat
+    # everything (both labelset and weightset).
+    #
+    # FIXME: maybe we need something in between.
+    param = r'''
+(             # capturing group
+ (?:          # non-capturing group
+  [^<>]+      # anything but angle brackets one or more times with backtracking
+  |           # or
+  <(?R)>      # recursive substitute of group
  )*
 )'''
 except ImportError:
     has_regex = False
+    import re
+
 import sys
 
 try:
@@ -38,43 +36,34 @@ try:
 except:
     colors_enabled = False
 
-parameters = r'''
-(?<rec>    # capturing group rec
- (?:       # non-capturing group
-  [^<>]++  # anything but angle brackets one or more times without backtracking
-  |        # or
-  <(?&rec)>  # recursive substitute of group rec
- )*
-)'''
+def sub(pattern, repl, string, *args, **kwargs):
+    '''Apply `s/pattern/repl/g` as many times as possible in string.
 
+    Beware that in `pattern` the spaces are ignored: use \s.'''
+    if '{param}' in pattern:
+        if has_regex:
+            pattern = pattern.format(param=param)
+        else:
+            return string
+    num = 1
+    while num:
+        (string, num) = re.subn(pattern, repl, string, *args,
+                                flags=re.VERBOSE, **kwargs)
+#        print(string, num)
+    return string
 
 def sugar(s):
     '''Perform some transformations that aim at displaying a cuter version
     of a Vcsn type string.'''
     # Long specs are split into subdirs.  Remove the subdirs.
     s = s.replace('/', '')
-    s = re.sub(r'(char|string)_letter', r'\1', s)
-    s = re.sub(r'(\w+)_automaton', r'\1', s)
-    if has_regex:
-        s = re.sub(r'nullableset<{param1}>'.format(param1=param1),
-                                   r'(\1)?',
-                                   s,
-                                   flags=re.VERBOSE)
-        s = re.sub(r'letterset<{param1}>'.format(param1=param1),
-                                   r'\1',
-                                   s,
-                                   flags=re.VERBOSE)
-        s = re.sub(r'wordset<{param1}>'.format(param1=param1),
-                                   r'(\1)*',
-                                   s,
-                                   flags=re.VERBOSE)
-        s = re.sub(r'context<{param1},\ +{param2}>'.format(param1=param1,
-                                                           param2=param2),
-                   r'\1 → \2',
-                   s,
-                   flags=re.VERBOSE)
-    else:
-        s = re.sub(r'^context<(.*)>$', r'\1', s)
+    s = sub(r'(char|string)_letter', r'\1', s)
+    s = sub(r'(\w+)_automaton', r'\1', s)
+    s = sub(r'nullableset<{param}>', r'(\1)?', s)
+    s = sub(r'letterset<{param}>', r'\1', s)
+    s = sub(r'wordset<{param}>', r'(\1)*', s)
+    s = sub(r'context<{param},\s*{param}>', r'\1 → \2', s)
+    s = sub(r'^context<(.*)>$', r'\1', s)
     return s
 
 def pretty_plugin(filename):
@@ -168,18 +157,7 @@ def colorize(line):
     return colorize_pattern(res)
 
 
-
-def sub(pattern, repl, string, *args, **kwargs):
-    '''Beware that in pattern the spaces are ignored: use \s.'''
-    pattern = pattern.format(params = parameters)
-    num = 1
-    while num:
-        (string, num) = re.subn(pattern, repl, string, *args,
-                                flags=re.VERBOSE, **kwargs)
-#        print(string, num)
-    return string
-
-def demangle_regex(s, color="auto"):
+def demangle(s, color="auto"):
     color = has_color(color)
     # C++.
     s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|forward|less|make_shared|map|pair|set|shared_ptr|string|tuple)',
@@ -201,7 +179,7 @@ def demangle_regex(s, color="auto"):
     s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters>\s*>',
             r'law_\1',
             s)
-    s = sub(r'vcsn::(nullableset|tupleset)<({params})>',
+    s = sub(r'vcsn::(nullableset|tupleset)<({param})>',
             r'\1<\2>',
             s)
 
@@ -210,21 +188,21 @@ def demangle_regex(s, color="auto"):
             r'\1',
             s)
 
-    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::rat::)?(expressionset)_impl<({params})>\s*>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::rat::)?(expressionset)_impl<({param})>\s*>',
             r'\1<\2>',
             s)
 
-    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(tupleset)_impl<({params})>\s*>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(tupleset)_impl<({param})>\s*>',
             r'\1<\2>',
             s)
 
     # Contexts.
-    s = sub(r'vcsn::(context)<({params})>',
+    s = sub(r'vcsn::(context)<({param})>',
             r'\1<\2>',
             s)
 
     # Polynomials.
-    s = sub(r'(vcsn::detail::wet_map<std::shared_ptr<const\s*vcsn::rat::node<({params})\s*>\s*>,\s*bool),\s*vcsn::less<expressionset<\2\s*>,\s*std::shared_ptr<const\s*vcsn::rat::node<\2\s*>\s*>\s*>\s*>',
+    s = sub(r'(vcsn::detail::wet_map<std::shared_ptr<const\s*vcsn::rat::node<({param})\s*>\s*>,\s*bool),\s*vcsn::less<expressionset<\2\s*>,\s*std::shared_ptr<const\s*vcsn::rat::node<\2\s*>\s*>\s*>\s*>',
             r'\1>',
             s)
 
@@ -239,12 +217,12 @@ def demangle_regex(s, color="auto"):
     # it (with clang 3.6).
     #
     # The optional parameter of shared_ptr is the memory lock policy (g++)
-    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:vcsn::)?(?:detail::)?(\w+_automaton)_impl<({params})>\s*(?:, [^>]+)?>',
+    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:vcsn::)?(?:detail::)?(\w+_automaton)_impl<({param})>\s*(?:, [^>]+)?>',
             r'\1<\2>',
             s)
 
     # Dyn::.
-    s = sub(r'vcsn::dyn::detail::(automaton|expression(?:set)?)_wrapper<\1<({params})>\s*>',
+    s = sub(r'vcsn::dyn::detail::(automaton|expression(?:set)?)_wrapper<\1<({param})>\s*>',
             r'dyn::\1<\2>',
             s)
 
@@ -252,8 +230,3 @@ def demangle_regex(s, color="auto"):
         s = colorize(s)
 
     return s
-
-def demangle_re(s, color="auto"):
-    return s
-
-demangle = demangle_regex if has_regex else demangle_re
