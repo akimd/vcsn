@@ -121,6 +121,7 @@ if colors_enabled:
         [ "' in '", red ],
         [ "in expansion of macro", white ],
         [ "with ", white ],
+        [ "aka ", green ],
         ]
 
 def colorize_pattern(line):
