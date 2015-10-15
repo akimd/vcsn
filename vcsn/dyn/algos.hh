@@ -288,7 +288,7 @@ namespace vcsn
     /// or non-epsilon ones.
     ///
     /// \pre aut is lal or lan
-    automaton insplit(const automaton& aut);
+    automaton insplit(const automaton& aut, bool lazy = false);
 
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);

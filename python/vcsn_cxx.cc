@@ -362,9 +362,9 @@ struct automaton
     return vcsn::dyn::infiltration(automata_(auts));
   }
 
-  automaton insplit() const
+  automaton insplit(bool lazy = false) const
   {
-    return vcsn::dyn::insplit(val_);
+    return vcsn::dyn::insplit(val_, lazy);
   }
 
   bool is_accessible() const
@@ -1411,7 +1411,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("has_lightening_cycle", &automaton::has_lightening_cycle)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
-    .def("insplit", &automaton::insplit)
+    .def("insplit", &automaton::insplit, (arg("lazy") = false))
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_coaccessible", &automaton::is_coaccessible)

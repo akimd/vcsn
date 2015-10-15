@@ -525,8 +525,10 @@ namespace vcsn
     namespace detail
     {
       template <std::size_t I, Automaton Aut>
-      std::enable_if_t<labelset_t_of<Aut>::has_one() && I != 0, Aut>
+      auto
       do_insplit(Aut& aut)
+        -> std::enable_if_t<labelset_t_of<Aut>::has_one() && I != 0,
+                             decltype(insplit(aut))>
       {
         return insplit(aut);
       }

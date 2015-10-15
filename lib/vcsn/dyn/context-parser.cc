@@ -319,6 +319,7 @@ namespace vcsn
       else if (prefix == "delay_automaton"
                || prefix == "expression_automaton"
                || prefix == "filter_automaton"
+               || prefix == "insplit_automaton"
                || prefix == "lazy_proper_automaton"
                || prefix == "name_automaton"
                || prefix == "pair_automaton"

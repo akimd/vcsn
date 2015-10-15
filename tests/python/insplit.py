@@ -7,7 +7,7 @@ def check(i, exp):
   i = vcsn.automaton(i)
   CHECK_EQ(exp, i.insplit())
   # Idempotence.
-  CHECK_EQ(exp, i.insplit().insplit())
+  CHECK_ISOMORPHIC(vcsn.automaton(exp), i.insplit().insplit())
 
 
 check('''
@@ -67,10 +67,10 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
+    0 [label = "0, !\\e", shape = box]
+    1 [label = "1, !\\e", shape = box]
+    2 [label = "2, \\e", shape = box]
+    3 [label = "2, !\\e", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -103,10 +103,10 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
+    0 [label = "0, !\\e", shape = box]
+    1 [label = "1, \\e", shape = box]
+    2 [label = "2, \\e", shape = box]
+    3 [label = "2, !\\e", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "\\e"]

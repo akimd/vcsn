@@ -19,13 +19,35 @@ namespace vcsn
     | composer<automaton, automaton>.  |
     `---------------------------------*/
 
+#define DEFINE(Type)                                                      \
+    template <Automaton Aut>                                              \
+    struct Type ## _of_impl                                               \
+    {                                                                     \
+      using type = typename Aut::element_type::Type;                      \
+    };                                                                    \
+                                                                          \
+    template <Automaton Aut>                                              \
+    struct Type ## _of_impl<insplit_automaton<Aut>>                       \
+      : Type ## _of_impl<Aut>                                             \
+    {};                                                                   \
+                                                                          \
+    template <Automaton Aut>                                              \
+    using Type ## _of                                                     \
+      = typename Type ## _of_impl<Aut>::type
+
+    DEFINE(res_labelset_t);
+    DEFINE(res_label_t);
+    DEFINE(full_context_t);
+
+#undef DEFINE
+
     /// Build the (accessible part of the) composition.
     template <Automaton Lhs, Automaton Rhs>
     class composer
     {
-      static_assert(Lhs::element_type::full_context_t::is_lat,
+      static_assert(full_context_t_of<Lhs>::is_lat,
                     "compose: lhs labelset must be a tupleset");
-      static_assert(Rhs::element_type::full_context_t::is_lat,
+      static_assert(full_context_t_of<Rhs>::is_lat,
                     "compose: rhs labelset must be a tupleset");
 
       /// A static list of integers.
@@ -37,8 +59,8 @@ namespace vcsn
       using crhs_t = Rhs;
       // clhs_t and crhs_t are permutation automata, yet we need to
       // read the res_label_t from their wrapped automaton type.
-      using hidden_l_labelset_t = typename clhs_t::element_type::res_labelset_t;
-      using hidden_r_labelset_t = typename crhs_t::element_type::res_labelset_t;
+      using hidden_l_labelset_t = res_labelset_t_of<clhs_t>;
+      using hidden_r_labelset_t = res_labelset_t_of<crhs_t>;
       using hidden_l_label_t = typename hidden_l_labelset_t::value_t;
       using hidden_r_label_t = typename hidden_r_labelset_t::value_t;
 
@@ -95,6 +117,18 @@ namespace vcsn
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
 
+      template <Automaton A>
+      static auto real_aut(const A& aut)
+      {
+        return aut;
+      }
+
+      template <Automaton A>
+      static auto real_aut(const insplit_automaton<A>& aut)
+      {
+        return aut->aut_out();
+      }
+
       /// The type of our transition maps: convert the weight to weightset_t,
       /// non deterministic, and including transitions to post().
       template <Automaton A>
@@ -121,7 +155,8 @@ namespace vcsn
       static context_t
       make_context_(const Lhs& lhs, const Rhs& rhs)
       {
-        return {make_labelset_(lhs->res_labelset(), rhs->res_labelset()),
+        return {make_labelset_(lhs->res_labelset(),
+                               real_aut(rhs)->res_labelset()),
                 join(*lhs->weightset(), *rhs->weightset())};
       }
 
@@ -140,15 +175,24 @@ namespace vcsn
 
       template <Automaton Aut>
       std::enable_if_t<labelset_t_of<Aut>::has_one(),
-                       typename Aut::element_type::res_label_t>
+                       res_label_t_of<Aut>>
       get_hidden_one(const Aut& aut) const
       {
         return aut->hidden_one();
       }
 
       template <Automaton Aut>
+      std::enable_if_t<labelset_t_of<Aut>::has_one(),
+                        res_label_t_of<Aut>>
+      get_hidden_one(const insplit_automaton<Aut>& aut)
+      {
+        return real_aut(aut)->hidden_one();
+      }
+
+      template <Automaton Aut>
+      ATTRIBUTE_NORETURN
       std::enable_if_t<!labelset_t_of<Aut>::has_one(),
-                       typename Aut::element_type::res_label_t>
+                       res_label_t_of<Aut>>
       get_hidden_one(const Aut&) const
       {
         raise("should not get here");
@@ -199,7 +243,7 @@ namespace vcsn
             res_->add_transition(src,
                                  res_->state(std::get<0>(psrc), t.dst),
                                  join_label(get_hidden_one(lhs),
-                                            rhs->hidden_label_of(t.transition)),
+                                            real_aut(rhs)->hidden_label_of(t.transition)),
                                  t.weight());
 
         for (auto t: zip_maps(ltm, rtm))
@@ -217,7 +261,7 @@ namespace vcsn
                    (src,
                     res_->state(lts.dst, rts.dst),
                     join_label(lhs->hidden_label_of(lts.transition),
-                               rhs->hidden_label_of(rts.transition)),
+                               real_aut(rhs)->hidden_label_of(rts.transition)),
                     res_->weightset()->mul(lts.weight(), rts.weight()));
                },
                t.second);
@@ -286,11 +330,9 @@ namespace vcsn
             std::size_t OutTape = 1, std::size_t InTape = 0>
   auto
   compose(Lhs& lhs, Rhs& rhs)
-    -> typename detail::composer<focus_automaton<OutTape, Lhs>,
-                                 focus_automaton<InTape, Rhs>>::automaton_t
   {
     auto l = focus<OutTape>(lhs);
-    auto r = insplit(focus<InTape>(rhs));
+    auto r = insplit_lazy(focus<InTape>(rhs));
     auto compose = detail::make_composer(l, r);
     return compose();
   }

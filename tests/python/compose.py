@@ -17,7 +17,7 @@ c2 = vcsn.context("lat<lan_char(xyz),lan_char(def)>, b")
 
 check(c1.expression("a|x").standard(),
       c2.expression("x|d").standard(),
-      '''digraph
+      r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
@@ -29,15 +29,15 @@ check(c1.expression("a|x").standard(),
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "1, 1", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "1, (1, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a|d"]
   1 -> F1
 }''')
 
-a = '''digraph
+a = r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
@@ -50,8 +50,8 @@ a = '''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "1, 1", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "1, (1, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -99,7 +99,7 @@ CHECK_EQ(vcsn.automaton(a),
 
 check(c1.expression("(a|x)*").standard(),
       c2.expression("(y|d)*").standard(),
-      '''digraph
+      r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
   rankdir = LR
@@ -111,7 +111,7 @@ check(c1.expression("(a|x)*").standard(),
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -125,7 +125,7 @@ c_ratb = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, expressionset<lal_char(
 c_q = vcsn.context("lat<lan_char(xyz),lan_char(def)>, q")
 check(c_ratb.expression("<o>(a|x)").standard(),
       c_q.expression("<3/2>(x|d)").standard(),
-      '''digraph
+      r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, expressionset<letterset<char_letters(mno)>, q>"
   rankdir = LR
@@ -137,8 +137,8 @@ check(c_ratb.expression("<o>(a|x)").standard(),
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "1, 1", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "1, (1, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "<<3/2>o>a|d"]
@@ -182,11 +182,11 @@ res = r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "2, 0", shape = box, color = DimGray]
-    2 [label = "0, 1", shape = box]
-    3 [label = "2, 1", shape = box, color = DimGray]
-    4 [label = "1, 2", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "2, (0, !\\e)", shape = box, color = DimGray]
+    2 [label = "0, (1, \\e)", shape = box]
+    3 [label = "2, (1, \\e)", shape = box, color = DimGray]
+    4 [label = "1, (2, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "y|\\e", color = DimGray]
@@ -202,7 +202,7 @@ check(a1, a2, res)
 c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, r")
 check(c_r.expression("<3.1>(a|x)").standard(),
       c2.expression("x|d").standard(),
-      '''digraph
+      r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, r"
   rankdir = LR
@@ -214,8 +214,8 @@ check(c_r.expression("<3.1>(a|x)").standard(),
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "1, 1", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "1, (1, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "<3.1>a|d"]
