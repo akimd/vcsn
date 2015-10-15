@@ -296,20 +296,20 @@ namespace vcsn
       }
     for (auto k : aut->states())
       {
+        res[k][k] = ws->star(res[k][k]);
         for (auto i : aut->all_states())
           for (auto j : aut->all_states())
             if (i != k && j != k)
               res[i][j] = ws->add(
                 res[i][j],
-                ws->mul(res[i][k], ws->star(res[k][k]), res[k][j])
+                ws->mul(res[i][k], res[k][k], res[k][j])
               );
         for (auto i : aut->all_states())
           if (i != k)
             {
-              res[k][i] = ws->mul(ws->star(res[k][k]), res[k][i]);
-              res[i][k] = ws->mul(res[i][k], ws->star(res[k][k]));
+              res[k][i] = ws->mul(res[k][k], res[k][i]);
+              res[i][k] = ws->mul(res[i][k], res[k][k]);
             }
-        res[k][k] = ws->star(res[k][k]);
       }
     return res;
   }
