@@ -71,25 +71,15 @@ namespace vcsn
   {
     if (fmt == format::latex)
       {
-        o << "\\mathsf{";
-        switch (identities().ids())
-          {
-          case identities_t::trivial:
-            o << "RatE";
-            break;
-          case identities_t::distributive:
-            o << "Series";
-            break;
-          default:
-            assert(false);
-          };
-        o << "}[";
+        o << "\\mathsf{"
+          << (identities().is_distributive() ? "Series" : "RatE")
+          << "}[";
         context().print_set(o, fmt);
         o << ']';
       }
     else if (fmt == format::text)
       {
-        if (identities().ids() == vcsn::rat::identities::distributive)
+        if (identities().is_distributive())
           {
             o << "seriesset<";
             context().print_set(o, fmt);
