@@ -100,7 +100,7 @@ namespace vcsn
                     label_proper_t l = aut_proper_->label_of(t);
                     weight_t w = aut_proper_->weight_of(t);
                     aut_proper_->set_transition(proper_p, proper_r, l,
-                                                ws_.mul(w, dist_pq));
+                                                ws_.mul(dist_pq, w));
                   }
               }
           }
