@@ -76,7 +76,7 @@ import timeit
 
 repetitions = 1
 
-val = range(4, 8)
+val = range(1, 8)
 
 r = "[a-e]*b(<2>[a-e])*"
 aut = vcsn.context("lal_char(a-e), z").expression(r).standard()
@@ -84,12 +84,12 @@ a = dict()
 time = dict()
 # print('{}, {}, {}, {}'.format('n', 'vcsn', 'ofst', 'ratio'))
 for i in val:
-    a[i] = aut**i
+    a[i] = aut.conjunction(i)
     time[i] = dict()
 
 for i in val:
     for j in val:
-        t = min(timeit.repeat(lambda: vcsn.automaton._product((a[i], a[j])),
+        t = min(timeit.repeat(lambda: a[i].conjunction(a[j]),
                               number=1, repeat=repetitions))
         time[i][j] = t
         print('a[{:2}] & a[{:2}], {:.2f}'.format(i, j, t))
