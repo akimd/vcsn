@@ -214,13 +214,15 @@ namespace vcsn
   | std::tuple.   |
   `--------------*/
 
-  /// The vname of a vector of dyn::automata is the tuple of their
-  /// vnames.  This is used to dispatch variadic calls on vectors of
-  /// automata to tuples of vcsn:: automata.
-  template <>
-  struct vnamer<const std::vector<dyn::automaton>>
+  /// The vname of a vector of dyn:: objects (e.g., automaton,
+  /// expression, ...) is the *tuple* of their vnames.
+  ///
+  /// This is used to dispatch variadic calls on vectors of automata
+  /// to tuples of vcsn:: automata.
+  template <typename Dyn>
+  struct dyn_vector_vnamer
   {
-    using type = const std::vector<dyn::automaton>;
+    using type = const std::vector<Dyn>;
     static symbol name(const type& t)
     {
       std::string names;
@@ -234,24 +236,17 @@ namespace vcsn
     }
   };
 
-  /// Likewise, for expressions.
-  // FIXME: Code duplication.
+  /// vector<dyn::automata> -> std::tuple<automaton_t, ...>.
+  template <>
+  struct vnamer<const std::vector<dyn::automaton>>
+    : dyn_vector_vnamer<dyn::automaton>
+  {};
+
+  /// vector<dyn::expression> -> std::tuple<expression_t, ...>.
   template <>
   struct vnamer<const std::vector<dyn::expression>>
-  {
-    using type = const std::vector<dyn::expression>;
-    static symbol name(const type& t)
-    {
-      std::string names;
-      for (const auto& a: t)
-        {
-          if (!names.empty())
-            names += ", ";
-          names += vname(a);
-        }
-      return symbol{"std::tuple<" + names + '>'};
-    }
-  };
+    : dyn_vector_vnamer<dyn::expression>
+  {};
 
   /// The sname of a tuple is the tuple of the snames.
   template <typename... Args>
