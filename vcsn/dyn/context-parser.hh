@@ -26,16 +26,33 @@ namespace vcsn
       std::shared_ptr<ast_node> parse_context();
 
     private:
-      /// Accept anything.
-      std::shared_ptr<ast_node> any_();
+      /// Skip white spaces.
+      void skip_space_();
+
+      /// The next character, possibly preceded by spaces.
+      int peek_();
+
+      /// Accept this character, possibly preceded by spaces.
+      char eat_(char c);
+
+      /// Accept this string, possibly preceded by spaces.
+      const std::string& eat_(const std::string& s);
+
+      /// We managed to read \a res in \a is, check that `is_` is
+      /// finished.
+      void check_eof_(std::shared_ptr<ast_node> res);
 
       /// The next word in the stream.  Does not consider that
-      /// underscore is word-constituent.
+      /// underscore is word-constituent.  Skips spaces.
       std::string word_();
 
       /// The next parameters in the stream.  Must be right before the
-      /// opening `<`.  Will return up to the matching `>`.
+      /// opening `<`.  Will return up to the matching `>`.  Skips
+      /// spaces.
       std::string parameters_();
+
+      /// Accept anything.
+      std::shared_ptr<ast_node> any_();
 
       /// A generator set (e.g., `char_letters(abc)` or `char`).
       std::shared_ptr<const genset> genset_();

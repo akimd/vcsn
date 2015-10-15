@@ -1,3 +1,5 @@
+#include <boost/algorithm/string/trim.hpp>
+
 #include <vcsn/dyn/context-parser.hh>
 #include <vcsn/dyn/signature-printer.hh>
 
@@ -9,33 +11,91 @@ namespace vcsn
 {
   namespace ast
   {
-
-    /// We managed to read \a res in \a is, check that \a is is
-    /// finished.
-    static void check_eof(std::istream& is, std::shared_ptr<ast_node> res)
+    void context_parser::skip_space_()
     {
-      if (is.peek() != EOF)
+      while (isspace(is_.peek()))
+        is_.ignore();
+    }
+
+    int context_parser::peek_()
+    {
+      skip_space_();
+      return is_.peek();
+    }
+
+    char context_parser::eat_(char c)
+    {
+      skip_space_();
+      return eat(is_, c);
+    }
+
+    const std::string& context_parser::eat_(const std::string& s)
+    {
+      skip_space_();
+      return eat(is_, s);
+    }
+
+    void context_parser::check_eof_(std::shared_ptr<ast_node> res)
+    {
+      if (peek_() != EOF)
         {
           std::ostringstream o;
           signature_printer printer(o, true);
           res->accept(printer);
-          vcsn::fail_reading(is,
+          vcsn::fail_reading(is_,
                              "unexpected trailing characters after '",
                              o.str(), "'");
         }
     }
 
+    std::string context_parser::word_()
+    {
+      skip_space_();
+      std::string res;
+      int c;
+      while ((c = is_.peek()) != EOF)
+        if (c == '<' || c == ',' || c == '>' || c == '(')
+          break;
+        else
+          {
+            res += c;
+            is_.ignore();
+          }
+      // Keep inner spaces, but not trailing spaces.
+      boost::algorithm::trim_right(res);
+      return res;
+    }
+
+    std::string context_parser::parameters_()
+    {
+      std::string res;
+      res += eat_('<');
+      auto nesting = 1;
+      int c;
+      while ((c = peek_()) != EOF)
+        {
+          if (c == '<')
+            ++nesting;
+          else if (c == '>' && --nesting == 0)
+            break;
+          res += c;
+          is_.ignore();
+        }
+      res += eat_('>');
+      return res;
+    }
+
     std::shared_ptr<ast_node> context_parser::parse()
     {
       auto res = any_();
-      check_eof(is_, res);
+      check_eof_(res);
       return res;
     }
 
     std::shared_ptr<ast_node> context_parser::parse_context()
     {
       auto res = context_();
-      check_eof(is_, res);
+      check_eof_(res);
       return res;
     }
 
@@ -86,7 +146,7 @@ namespace vcsn
         // const std::set<std::pair<std::string, std::string>>,
         // etc.
         {
-          if (is_.peek() == '<')
+          if (peek_() == '<')
             w += parameters_();
           res = std::make_shared<other>(w);
         }
@@ -116,49 +176,13 @@ namespace vcsn
         raise("invalid weightset or labelset name: " + w);
     }
 
-    std::string context_parser::word_()
-    {
-      std::string res;
-      int c;
-      while (is_.peek() == ' ')
-        is_.get();
-      while ((c = is_.get()) != EOF)
-        if (c == '<' || c == ',' || c == '>' || c == '(')
-          {
-            is_.unget();
-            break;
-          }
-        else
-          res += c;
-      return res;
-    }
-
-    std::string context_parser::parameters_()
-    {
-      std::string res;
-      res += eat(is_, '<');
-      auto nesting = 1;
-      int c;
-      while ((c = is_.peek()) != EOF)
-        {
-          if (c == '<')
-            ++nesting;
-          else if (c == '>' && --nesting == 0)
-            break;
-          res += c;
-          is_.ignore();
-        }
-      res += eat(is_, '>');
-      return res;
-    }
-
     std::shared_ptr<const genset>
     context_parser::genset_(std::string letter_type)
     {
       if (letter_type == "char" || letter_type == "string")
         letter_type += "_letters";
       std::string gens;
-      if (is_.peek() == '(')
+      if (peek_() == '(')
         {
           gens += '(';
           int c = is_.get();
@@ -193,17 +217,15 @@ namespace vcsn
       bool close = false;
       if (w == "context")
         {
-          eat(is_, '<');
+          eat_('<');
           close = true;
           w = word_();
         }
       auto ls = labelset_(w);
-      eat(is_, ',');
-      while (isspace(is_.peek()))
-        is_.ignore();
+      eat_(',');
       auto ws = weightset_();
       if (close)
-        eat(is_, '>');
+        eat_('>');
       return std::make_shared<context>(ls, ws);
     }
 
@@ -220,9 +242,9 @@ namespace vcsn
       else if (ls == "lan")
         {
           // lan<GENSET> => nullableset<letterset<GENSET>>.
-          eat(is_, '<');
+          eat_('<');
           auto gs = genset_();
-          eat(is_, '>');
+          eat_('>');
           return
             std::make_shared<nullableset>(std::make_shared<letterset>(gs));
         }
@@ -237,23 +259,23 @@ namespace vcsn
         return std::make_shared<wordset>(genset_("char_letters"));
       else if (ls == "lal" || ls == "letterset")
         {
-          eat(is_, '<');
+          eat_('<');
           auto gs = genset_();
-          eat(is_, '>');
+          eat_('>');
           return std::make_shared<letterset>(gs);
         }
       else if (ls == "law" || ls == "wordset")
         {
-          eat(is_, '<');
+          eat_('<');
           auto gs = genset_();
-          eat(is_, '>');
+          eat_('>');
           return std::make_shared<wordset>(gs);
         }
       else if (ls == "nullableset")
         {
-          eat(is_, '<');
+          eat_('<');
           auto res = labelset_();
-          eat(is_, '>');
+          eat_('>');
           if (!res->has_one())
             res = std::make_shared<nullableset>(res);
           return res;
@@ -294,12 +316,12 @@ namespace vcsn
       // focus_automaton<TapeNum, Aut>.
       if (prefix == "focus_automaton")
         {
-          eat(is_, '<');
+          eat_('<');
           res = std::make_shared<automaton>(prefix,
                                             std::make_shared<other>(word_()));
-          eat(is_, ',');
+          eat_(',');
           res->get_content().emplace_back(automaton_(word_()));
-          eat(is_, '>');
+          eat_('>');
         }
       // xxx_automaton<Aut>.
       else if (prefix == "delay_automaton"
@@ -315,32 +337,32 @@ namespace vcsn
                || prefix == "synchronized_automaton"
                || prefix == "transpose_automaton")
         {
-          eat(is_, '<');
+          eat_('<');
           res = std::make_shared<automaton>(prefix,
                                             automaton_(word_()));
-          eat(is_, '>');
+          eat_('>');
         }
       // mutable_automaton<Context>.
       else if (prefix == "mutable_automaton")
         {
-          eat(is_, '<');
+          eat_('<');
           res = std::make_shared<automaton>(prefix,
                                             context_());
-          eat(is_, '>');
+          eat_('>');
         }
       // xxx_automaton<Aut...>.
       else if (prefix == "product_automaton"
                || prefix == "tuple_automaton")
         {
-          eat(is_, '<');
+          eat_('<');
           res = std::make_shared<automaton>(prefix,
                                             automaton_(word_()));
-          while (is_.peek() == ',')
+          while (peek_() == ',')
             {
-              eat(is_, ',');
+              eat_(',');
               res->get_content().emplace_back(automaton_(word_()));
             }
-          eat(is_, '>');
+          eat_('>');
         }
       else
         raise("invalid automaton name: ", str_escape(prefix));
@@ -350,45 +372,45 @@ namespace vcsn
     std::shared_ptr<tuple>
     context_parser::tuple_()
     {
-      eat(is_, '<');
+      eat_('<');
       typename tuple::value_t res;
       res.emplace_back(any_());
-      while (is_.peek() == ',')
+      while (peek_() == ',')
       {
-        eat(is_, ',');
+        eat_(',');
         res.emplace_back(any_());
       }
-      eat(is_, '>');
+      eat_('>');
       return std::make_shared<tuple>(res);
     }
 
     std::shared_ptr<tupleset>
     context_parser::tupleset_()
     {
-      eat(is_, '<');
+      eat_('<');
       typename tupleset::value_t res;
       res.emplace_back(labelset_or_weightset_());
-      while (is_.peek() == ',')
+      while (peek_() == ',')
       {
-        eat(is_, ',');
+        eat_(',');
         res.emplace_back(labelset_or_weightset_());
       }
-      eat(is_, '>');
+      eat_('>');
       return std::make_shared<tupleset>(res);
     }
 
     std::shared_ptr<expressionset>
     context_parser::expressionset_()
     {
-      eat(is_, '<');
+      eat_('<');
       auto context = context_();
-      eat(is_, '>');
+      eat_('>');
       auto ids = rat::identities{};
-      if (is_.peek() == '(')
+      if (peek_() == '(')
         {
-          eat(is_, '(');
+          eat_('(');
           is_ >> ids;
-          eat(is_, ')');
+          eat_(')');
         }
       return std::make_shared<expressionset>(context, ids);
     }
@@ -396,27 +418,27 @@ namespace vcsn
     std::shared_ptr<expressionset>
     context_parser::seriesset_()
     {
-      eat(is_, '<');
+      eat_('<');
       auto context = context_();
-      eat(is_, '>');
+      eat_('>');
       return std::make_shared<expressionset>(context,
                                              rat::identities::distributive);
     }
 
     std::shared_ptr<expansionset> context_parser::expansionset_()
     {
-      eat(is_, '<');
-      eat(is_, "expressionset");
+      eat_('<');
+      eat_("expressionset");
       auto res = std::make_shared<expansionset>(expressionset_());
-      eat(is_, '>');
+      eat_('>');
       return res;
     }
 
     std::shared_ptr<polynomialset> context_parser::polynomialset_()
     {
-      eat(is_, '<');
+      eat_('<');
       auto res = std::make_shared<polynomialset>(context_());
-      eat(is_, '>');
+      eat_('>');
       return res;
     }
   }
