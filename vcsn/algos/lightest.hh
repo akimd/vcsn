@@ -7,6 +7,7 @@
 #include <boost/heap/binomial_heap.hpp>
 #include <boost/optional.hpp>
 
+#include <vcsn/algos/has-negative-cycle.hh>
 #include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -189,6 +190,8 @@ namespace vcsn
   typename detail::weighter<Automaton>::polynomial_t
   lightest(const Automaton& aut, boost::optional<unsigned> num = {})
   {
+    require(!has_negative_cycle(aut),
+            "lightest: require automaton without negative cycles");
     detail::weighter<Automaton> weighter(aut);
     return weighter(num);
   }
