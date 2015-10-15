@@ -5,6 +5,16 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-10-15
+### Minor bug fixes and improvements
+- Spaces are now ignored in context names (e.g., ` lal < char (ab) >, b `).
+
+- Expressions that have a single tape but several were expected are now
+  properly rejected.
+
+- Tuples now display parentheses only when needed.  For instance with
+  weights in ℤ ⨉ ℤ, instead of `<(1, 2)>a`, we display `<1, 2>a`.
+
 # Vcsn 2.1
 
 ## 2015-10-11
