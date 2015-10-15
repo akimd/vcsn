@@ -12,13 +12,13 @@ def user_proc(proc):
         if cmd:
             title, message = pretty_plugin(cmd.group(1))
             delta = datetime.now() - datetime.fromtimestamp(proc.create_time())
-            print('{}:{:0>2}: {:<10}: {}'.format(int(delta.seconds / 60),
-                                                 delta.seconds % 60,
-                                                 title, message))
+            print('{}:{:0>2}: {:<10} {}'.format(int(delta.seconds / 60),
+                                                delta.seconds % 60,
+                                                title + ':', message))
 
 for proc in psutil.process_iter():
     try:
         if proc.username() == getuser():
             user_proc(proc)
-    except psutil.NoSuchProcess:
+    except (psutil.AccessDenied, psutil.NoSuchProcess):
         pass
