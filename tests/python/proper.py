@@ -45,7 +45,7 @@ def check_fail(aut, algo):
     PASS()
 
 
-for algo in ('inplace', 'separate'):
+for algo in ('distance', 'inplace', 'separate'):
 
     ## -------------------------------------------- ##
     ## law_char, r: check the computation of star.  ##
@@ -267,7 +267,8 @@ for algo in ('inplace', 'separate'):
     ## lan_char_zr: a long cycle.  ##
     ## --------------------------- ##
 
-    check(r'''digraph
+    if algo != 'distance':  # FIXME(ap): weights are equivalent but not the same
+        check(r'''digraph
 {
   vcsn_context = "lan_char(z), expressionset<lal_char(abcd), q>"
   rankdir = LR
@@ -315,7 +316,8 @@ for algo in ('inplace', 'separate'):
     # but leave states that were inaccessible before the elimination of
     # the spontaneous transitions.
 
-    check(r'''digraph
+    if algo != 'distance':  # FIXME(ap): inaccessible states get pruned
+        check(r'''digraph
 {
   vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), q>"
   rankdir = LR
