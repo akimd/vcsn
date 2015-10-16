@@ -73,7 +73,10 @@ def notify():
     '''Notify the user that a compilation was finished.'''
     sound = 'Glass' # or 'Basso'
     title, message = pretty_plugin(args.base)
-    cmd = '(terminal-notifier -title "{title}" -message "{message}" -appIcon "{datadir}/figs/vcsn.png") 2>/dev/null'
+    # For some reason, the some first characters (such as open paren
+    # or bracket) must be escaped.  Fortunately, a leading backlash
+    # suffices.
+    cmd = '(terminal-notifier -title "\\{title}" -message "\\{message}" -appIcon "{datadir}/figs/vcsn.png") 2>/dev/null'
     os.system(fmt(cmd, title = title, message = message))
 
 def run(cmd):
