@@ -161,8 +161,8 @@ namespace vcsn
       void add_compose_transitions(const state_t src,
                                    const state_name_t& psrc)
       {
-        auto& lhs = std::get<0>(res_->auts_);
-        auto& rhs = std::get<1>(res_->auts_);
+        const auto& lhs = std::get<0>(res_->auts_);
+        const auto& rhs = std::get<1>(res_->auts_);
 
         // Outgoing transition cache.
         const auto& ltm = std::get<0>(transition_maps_)[std::get<0>(psrc)];
