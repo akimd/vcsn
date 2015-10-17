@@ -2,9 +2,13 @@
 
 #include <unordered_map>
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/unordered_set_of.hpp>
+
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/algos/copy.hh> // real_context
 #include <vcsn/algos/fwd.hh>
+#include <vcsn/misc/bimap.hh>
 #include <vcsn/misc/pair.hh>
 #include <vcsn/misc/memory.hh>
 
@@ -36,8 +40,11 @@ namespace vcsn
 
       using super_t::aut_;
 
-      /// A map from result state to tuple of original states.
-      using origins_t = std::map<state_t, state_name_t>;
+      using bimap_t = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>,
+                                   boost::bimaps::unordered_set_of<state_t>>;
+      using map_t = typename bimap_t::left_map;
+      using origins_t = typename bimap_t::right_map;
+
 
 
       static symbol sname()
@@ -112,16 +119,6 @@ namespace vcsn
 
       // Lazy
 
-      /// A map from result state to original state and status (spontaneous or
-      /// proper state).
-      const origins_t& origins() const
-      {
-        origins_.clear();
-        for (const auto& p: pmap_)
-          origins_.emplace(p.second, p.first);
-        return origins_;
-      }
-
       /// Whether a given state's outgoing transitions have been
       /// computed.
       bool is_lazy(state_t s) const
@@ -160,6 +157,15 @@ namespace vcsn
         return aut_;
       }
 
+      /// A map from result state to original state and status (spontaneous or
+      /// proper state).
+      const origins_t&
+      origins() const
+      {
+        return bimap_.right;
+      }
+
+
     private:
 
       const automaton_t& aut_in() const
@@ -169,8 +175,8 @@ namespace vcsn
 
       void initialize_insplit()
       {
-        pmap_[state_name_t(aut_in()->pre(), false)] = aut_out()->pre();
-        pmap_[state_name_t(aut_in()->post(), false)] = aut_out()->post();
+        pmap_().insert({state_name_t(aut_in()->pre(), false), aut_out()->pre()});
+        pmap_().insert({state_name_t(aut_in()->post(), false), aut_out()->post()});
         todo_.emplace_back(pre_(), aut_->pre());
       }
 
@@ -191,7 +197,7 @@ namespace vcsn
 
       inline bool exists(state_t st, bool epsilon)
       {
-        return pmap_.find(state_name_t(st, epsilon)) != pmap_.end();
+        return pmap_().find(state_name_t(st, epsilon)) != pmap_().end();
       }
 
       bool
@@ -208,14 +214,22 @@ namespace vcsn
       /// updating the map; in any case return.
       state_t state(const state_name_t& state)
       {
-        auto lb = pmap_.lower_bound(state);
-        if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
+        auto lb = pmap_().find(state);
+        if (lb == pmap_().end())
           {
             state_t s = aut_->new_state();
-            lb = pmap_.emplace_hint(lb, state, s);
+            lb = pmap_().insert(lb, {state, s});
             todo_.emplace_back(state, s);
           }
         return lb->second;
+      }
+
+      /// A map from original state and status (spontaneous or proper state)
+      /// to result state.
+      map_t&
+      pmap_()
+      {
+        return bimap_.left;
       }
 
       /// The input automaton
@@ -225,17 +239,14 @@ namespace vcsn
       const weightset_t& ws_ = *aut_->weightset();
 
       /// Map input-state, status -> result-state.
-      /// false: proper state
-      /// true: spontaneous state
-      using map = std::map<state_name_t, state_t>;
-      map pmap_;
+      /// status == false: no spontaneous incoming transition
+      /// status == true: only spontaneous incoming transitions
+      mutable bimap_t bimap_;
 
       /// When performing the lazy construction, list of states that
       /// have been completed (i.e., their outgoing transitions have
       /// been computed).
       mutable std::set<state_t> done_ = {aut_->post()};
-
-      mutable origins_t origins_;
 
       /// Worklist of state tuples.
       std::deque<std::pair<state_name_t, state_t>> todo_;
