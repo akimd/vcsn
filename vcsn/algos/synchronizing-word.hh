@@ -294,7 +294,7 @@ namespace vcsn
             // compute lmin = arg min { phi_3(l) } forall l in labelset
             label_t lmin;
             int min = std::numeric_limits<int>::max();
-            for (const auto& l : pair_->labelset()->genset())
+            for (const auto& l : pair_->labelset()->generators())
               {
                 int cur_min = phi_3(l);
                 if (cur_min < min)

@@ -52,7 +52,7 @@ namespace vcsn
     auto res_label = ls.one();
     auto pick = make_random_selector(gen);
     for (auto i = 0; i < dis(gen); ++i)
-      res_label = ls.mul(res_label, ls.value(pick(ls.genset())));
+      res_label = ls.mul(res_label, ls.value(pick(ls.generators())));
     return res_label;
   };
 
@@ -64,7 +64,7 @@ namespace vcsn
   {
     // Pick a member of a container following a uniform distribution.
     auto pick = make_random_selector(gen);
-    return ls.value(pick(ls.genset()));
+    return ls.value(pick(ls.generators()));
   };
 
   template <typename LabelSet,
@@ -278,7 +278,7 @@ namespace vcsn
       states.push_back(res->new_state());
 
     for (unsigned i = 0; i < num_states; ++i)
-      for (auto l : ctx.labelset()->genset())
+      for (auto l : ctx.labelset()->generators())
         res->add_transition(states[i], states[distrib(gen)], l,
                            ctx.weightset()->one());
 

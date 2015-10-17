@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <boost/iterator/iterator_facade.hpp>
 
 #include <vcsn/misc/raise.hh> // pass
@@ -29,7 +30,7 @@ namespace vcsn
 
     /// The type of the underlying sequences, without reference.
     template <typename Seq>
-      using seq_t = typename std::remove_reference<Seq>::type;
+    using seq_t = remove_reference_t<Seq>;
 
     /// The type of the members.
     using value_type

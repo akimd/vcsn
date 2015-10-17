@@ -21,7 +21,7 @@ namespace vcsn
     using automaton_t = mutable_automaton<context_t>;
     using state_t = state_t_of<automaton_t>;
     const auto& ls = *ctx.labelset();
-    const auto& gens = ls.genset();
+    const auto& gens = ls.generators();
     std::vector<label_t_of<context_t>> letters;
     for (auto l: gens)
       letters.emplace_back(ls.value(l));

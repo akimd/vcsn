@@ -15,10 +15,10 @@ namespace vcsn
   namespace detail
   {
     template <typename LabelSet>
-    using genset_t = decltype(std::declval<LabelSet>().genset());
+    using generators_t = decltype(std::declval<LabelSet>().generators());
 
     template <typename LabelSet>
-    using has_genset_mem_fn = detect<LabelSet, genset_t>;
+    using has_generators_mem_fn = detect<LabelSet, generators_t>;
 
 
     /*-----------.
@@ -334,7 +334,7 @@ namespace vcsn
       using letters_t = std::vector<typename LabelSet::value_t>;
       // In alphabetical order.
       auto alphabet = letters_t{};
-      for (auto l : ls.genset())
+      for (auto l : ls.generators())
         alphabet.emplace_back(ls.value(l));
 
       out << '[';

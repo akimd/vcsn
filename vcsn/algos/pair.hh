@@ -76,7 +76,7 @@ namespace vcsn
         else
           {
             q0_ = this->new_state(); // q0 special state
-            for (auto l : input_->labelset()->genset())
+            for (auto l : input_->labelset()->generators())
               this->add_transition(q0_, q0_, l, ws->one());
           }
 

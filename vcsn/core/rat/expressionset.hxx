@@ -1006,7 +1006,7 @@ namespace vcsn
   {
     using boost::range::find;
     value_t res = zero();
-    auto gens = labelset()->genset();
+    auto gens = labelset()->generators();
     // FIXME: This piece of code screams for factoring.  Yet, I want
     // to avoid useless costs such as building a empty/full set of
     // letters for [^].

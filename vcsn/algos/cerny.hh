@@ -39,7 +39,7 @@ namespace vcsn
     for (unsigned i = 0; i < num_states; ++i)
       {
         bool la = true;
-        for (auto l : ctx.labelset()->genset())
+        for (auto l : ctx.labelset()->generators())
           {
             auto dest = (la || i == num_states - 1) ? (i + 1) % num_states : i;
             res->add_transition(states[i], states[dest], l,

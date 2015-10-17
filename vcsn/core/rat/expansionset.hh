@@ -461,7 +461,7 @@ namespace vcsn
         res.constant = ws_.is_zero(v.constant) ? ws_.one() : ws_.zero();
 
         // Turn the polynomials into expressions, and complement them.
-        for (auto l: ls_.genset())
+        for (auto l: ls_.generators())
           {
             auto i = v.polynomials.find(l);
             res.polynomials[l] =

@@ -36,7 +36,7 @@ with open("series.txt", "w") as file:
 c = vcsn.context('law_char, q')
 a = c.trie('series.txt')
 # FIXME: the context is wrong (empty alphabet).
-CHECK_EQ(exp.replace('(abcd)', '()'), a.format('daut'))
+CHECK_EQ(exp, a.format('daut'))
 
 
 
@@ -69,7 +69,7 @@ with open("series.txt", "w") as file:
 c = vcsn.context('law_char, q')
 # FIXME: the context is wrong (empty alphabet).
 a = c.cotrie('series.txt')
-CHECK_EQ(exp.replace('(abcd)', '()'), a.format('daut'))
+CHECK_EQ(exp, a.format('daut'))
 CHECK(a.is_codeterministic())
 CHECK_EQ(p, a.shortest(100))
 

@@ -173,6 +173,10 @@ namespace vcsn
     labelset_ptr ls_;
 
   public:
+    using genset_ptr = decltype(ls_->genset());
+    using genset_t = decltype(ls_->generators());
+
+  public:
     nullableset(const labelset_ptr& ls)
       : ls_{ls}
     {}
@@ -250,12 +254,17 @@ namespace vcsn
       return is_one(v) || ls_->is_valid(get_value(v));
     }
 
-    /// The generators.  Meaningful for labelsets only.
-    auto
+    genset_ptr
     genset() const
-      -> decltype(this->ls_->genset())
     {
       return ls_->genset();
+    }
+
+    /// The generators.  Meaningful for labelsets only.
+    genset_t
+    generators() const
+    {
+      return ls_->generators();
     }
 
     value_t
@@ -612,7 +621,7 @@ namespace vcsn
   Res                                                         \
   meet(const Lhs& lhs, const Rhs& rhs)                        \
   {                                                           \
-    return {intersection(lhs.genset(), rhs.genset())};        \
+    return {intersection(*lhs.genset(), *rhs.genset())};      \
   }
 
   /// Compute the meet with another labelset.

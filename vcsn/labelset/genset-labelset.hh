@@ -33,7 +33,12 @@ namespace vcsn
         : genset_labelset{std::make_shared<const genset_t>(gs)}
       {}
 
-      const genset_t& genset() const
+      genset_ptr genset() const
+      {
+        return gs_;
+      }
+
+      const genset_t& generators() const
       {
         return *gs_;
       }
@@ -62,7 +67,7 @@ namespace vcsn
           {
             i.ignore();
             auto alphabet = letters_t{};
-            for (auto l : this->genset())
+            for (auto l : this->generators())
               alphabet.insert(l);
             boost::for_each(set_difference(alphabet, convs_classes_(i)),
                             fun);
@@ -79,7 +84,7 @@ namespace vcsn
                   // With string_letter's letter_t, letter_t{'-'} may
                   // fail depending on the version of Boost and of
                   // libstdc++.  So rather, keep this dash.
-                  auto dash = this->genset().get_letter(i);
+                  auto dash = this->genset()->get_letter(i);
                   // Handle ranges.
                   if (i.peek() == ']')
                     // [abc-] does not denote an interval.
@@ -89,8 +94,8 @@ namespace vcsn
                       // [prev - l2].
                       letter_t l2 = get_letter(i);
                       // Skip prev, which was already processed.
-                      for (auto i = std::next(this->genset().find(prev.get()));
-                           i != this->genset().end() && *i < l2;
+                      for (auto i = std::next(this->genset()->find(prev.get()));
+                           i != this->genset()->end() && *i < l2;
                            ++i)
                         fun(*i);
                       // The last letter.  Do not do this in the loop,
@@ -144,7 +149,7 @@ namespace vcsn
       letter_t
       get_letter(std::istream& i, bool quoted = true) const
       {
-        letter_t res = this->genset().get_letter(i, quoted);
+        letter_t res = this->genset()->get_letter(i, quoted);
         require(this->has(res),
                 "invalid label: unexpected ", str_escape(res));
         return res;
@@ -156,9 +161,9 @@ namespace vcsn
       Attribute                                                         \
       auto                                                              \
       Name(Args&&... args) const                                        \
-        -> decltype(this->genset().Name(std::forward<Args>(args)...))   \
+        -> decltype(this->genset()->Name(std::forward<Args>(args)...))  \
       {                                                                 \
-        return this->genset().Name(std::forward<Args>(args)...);        \
+        return this->genset()->Name(std::forward<Args>(args)...);       \
       }
 
       DEFINE(begin,);

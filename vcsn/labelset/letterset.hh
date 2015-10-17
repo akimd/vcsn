@@ -69,7 +69,7 @@ namespace vcsn
     /// \returns   the previous status.
     bool open(bool o) const
     {
-      return this->genset().open(o);
+      return this->genset()->open(o);
     }
 
     static constexpr bool is_free()
@@ -255,18 +255,18 @@ namespace vcsn
     print(const value_t& l, std::ostream& o,
           format fmt = {}) const
     {
-      return this->genset().print(l, o, fmt);
+      return this->genset()->print(l, o, fmt);
     }
 
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
       if (fmt == format::latex)
-        this->genset().print_set(o, fmt);
+        this->genset()->print_set(o, fmt);
       else if (fmt == format::text)
         {
           o << "letterset<";
-          this->genset().print_set(o, fmt);
+          this->genset()->print_set(o, fmt);
           o << '>';
         }
       else
@@ -324,7 +324,7 @@ namespace vcsn
       static type join(const letterset<GenSet>& lhs,
                        const letterset<GenSet>& rhs)
       {
-        return {get_union(lhs.genset(), rhs.genset())};
+        return {get_union(*lhs.genset(), *rhs.genset())};
       }
     };
   }
@@ -334,6 +334,6 @@ namespace vcsn
   letterset<GenSet>
   meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
   {
-    return {intersection(lhs.genset(), rhs.genset())};
+    return {intersection(*lhs.genset(), *rhs.genset())};
   }
 }

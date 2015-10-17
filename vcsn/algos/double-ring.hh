@@ -20,7 +20,7 @@ namespace vcsn
   {
     using context_t = Context;
     const auto& ls = *ctx.labelset();
-    auto letters = detail::make_vector(ls.genset());
+    auto letters = detail::make_vector(ls.generators());
     require(2 <= letters.size(),
             "double_ring: the alphabet needs at least 2 letters");
     auto a = ls.value(letters[0]);

@@ -19,7 +19,7 @@ namespace vcsn
   de_bruijn(const Context& ctx, unsigned n)
   {
     const auto& ls = *ctx.labelset();
-    const auto& gens = ls.genset();
+    const auto& gens = ls.generators();
     size_t sz = boost::distance(gens);
     require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
     using context_t = Context;

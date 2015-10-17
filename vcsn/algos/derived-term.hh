@@ -131,7 +131,7 @@ namespace vcsn
         init_(expression);
 
         // The alphabet.
-        const auto& ls = rs_.labelset()->genset();
+        const auto& ls = rs_.labelset()->generators();
         while (!res_->todo_.empty())
           {
             expression_t src = res_->todo_.top();

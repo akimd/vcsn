@@ -38,7 +38,7 @@ namespace vcsn
           for (auto tr : aut->out(st))
             labels_met.insert(aut->label_of(tr));
 
-          for (auto letter : ls.genset())
+          for (auto letter : ls.generators())
             if (!has(labels_met, letter))
               {
                 if (sink == aut->null_state())
@@ -50,7 +50,7 @@ namespace vcsn
     // Sink is created in two different cases, be careful if you want
     // to factor.
     if (sink != aut->null_state())
-      for (auto letter : ls.genset())
+      for (auto letter : ls.generators())
         aut->new_transition(sink, sink, letter);
 
     return aut;

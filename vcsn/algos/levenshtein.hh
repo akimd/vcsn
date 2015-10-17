@@ -30,8 +30,8 @@ namespace vcsn
     const auto& ls1 = ls.template set<0>();
     const auto& ls2 = ls.template set<1>();
     const auto& ws = *ctx.weightset();
-    auto letters = detail::make_vector(ls1.genset());
-    auto letters2 = detail::make_vector(ls2.genset());
+    auto letters = detail::make_vector(ls1.generators());
+    auto letters2 = detail::make_vector(ls2.generators());
 
     using automaton_t = mutable_automaton<Context>;
     automaton_t res = make_mutable_automaton(ctx);

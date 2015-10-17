@@ -16,7 +16,7 @@ namespace vcsn
   ladybird(const Context& ctx, unsigned n)
   {
     const auto& ls = *ctx.labelset();
-    auto letters = detail::make_vector(ls.genset());
+    auto letters = detail::make_vector(ls.generators());
     require(3 <= letters.size(),
             "ladybird: the alphabet needs at least 3 letters");
     auto a = ls.value(letters[0]);

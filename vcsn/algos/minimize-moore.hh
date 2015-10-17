@@ -108,7 +108,7 @@ namespace vcsn
       /// Build the minimizer.  Computes the classes.
       minimizer(const Aut& a)
         : a_(a)
-        , gs_(a_->labelset()->genset())
+        , gs_(a_->labelset()->generators())
         , transition_map_(a)
       {
         // We _really_ need determinism here.  See for instance

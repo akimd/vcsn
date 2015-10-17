@@ -6,7 +6,7 @@
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/traits.hh>
-#include <vcsn/labelset/labelset.hh> // has_genset_mem_fn
+#include <vcsn/labelset/labelset.hh> // has_generators_mem_fn
 #include <vcsn/misc/algorithm.hh> // initial_range
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/builtins.hh>
@@ -262,7 +262,7 @@ namespace vcsn
       /// Print a sum, when the labelset has a genset() function.
       template <typename LS = labelset_t>
       auto print_sum_(const sum_t& v)
-        -> enable_if_t<detail::has_genset_mem_fn<LS>{}, void>
+        -> enable_if_t<detail::has_generators_mem_fn<LS>{}, void>
       {
         bool first = true;
         // Use classes for sums of letters.
@@ -298,7 +298,7 @@ namespace vcsn
       /// Print a sum, when the labelset does not have a genset() function.
       template <typename LS = labelset_t>
       auto print_sum_(const sum_t& v)
-        -> enable_if_t<!detail::has_genset_mem_fn<LS>{}, void>
+        -> enable_if_t<!detail::has_generators_mem_fn<LS>{}, void>
       {
         print_(v, sum_);
       }

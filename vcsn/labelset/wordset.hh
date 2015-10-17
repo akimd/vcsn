@@ -70,7 +70,7 @@ namespace vcsn
     /// \returns   the previous status.
     bool open(bool o) const
     {
-      return this->genset().open(o);
+      return this->genset()->open(o);
     }
 
     static constexpr bool is_free()
@@ -226,7 +226,7 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool = true) const
     {
-      return this->genset().get_word(i);
+      return this->genset()->get_word(i);
     }
 
     /// Process a range of labels.
@@ -248,7 +248,7 @@ namespace vcsn
       if (is_one(l))
         o << (fmt == format::latex ? "\\varepsilon" : "\\e");
       else if (!is_special(l))
-        this->genset().print(l, o, fmt);
+        this->genset()->print(l, o, fmt);
       return o;
     }
 
@@ -257,13 +257,13 @@ namespace vcsn
     {
       if (fmt == format::latex)
         {
-          this->genset().print_set(o, fmt);
+          this->genset()->print_set(o, fmt);
           o << "^*";
         }
       else if (fmt == format::text)
         {
           o << "wordset<";
-          this->genset().print_set(o, fmt);
+          this->genset()->print_set(o, fmt);
           o << '>';
         }
       else
@@ -338,15 +338,15 @@ namespace vcsn
     `-------*/
 
     /// Declare that Lhs v Rhs => Rhs (on the union of alphabets).
-#define DEFINE(Lhs, Rhs)                                \
-    template <typename GenSet>                          \
-    struct join_impl<Lhs, Rhs>                          \
-    {                                                   \
-      using type = Rhs;                                 \
-      static type join(const Lhs& lhs, const Rhs& rhs)  \
-      {                                                 \
-        return {get_union(lhs.genset(), rhs.genset())}; \
-      }                                                 \
+#define DEFINE(Lhs, Rhs)                                  \
+    template <typename GenSet>                            \
+    struct join_impl<Lhs, Rhs>                            \
+    {                                                     \
+      using type = Rhs;                                   \
+      static type join(const Lhs& lhs, const Rhs& rhs)    \
+      {                                                   \
+        return {get_union(*lhs.genset(), *rhs.genset())}; \
+      }                                                   \
     }
 
     /// The join with another labelset.
@@ -362,6 +362,6 @@ namespace vcsn
   wordset<GenSet>
   meet(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
   {
-    return {intersection(lhs.genset(), rhs.genset())};
+    return {intersection(*lhs.genset(), *rhs.genset())};
   }
 }

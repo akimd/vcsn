@@ -30,6 +30,7 @@ namespace vcsn
   struct labelset_types_impl
   {
     using genset_t = void;
+    using genset_ptr = void;
     using letter_t = void;
     /// Same as value_t.
     using word_t = std::tuple<typename ValueSets::value_t...>;
@@ -37,11 +38,13 @@ namespace vcsn
 
   /// Specialization for tuples of labelsets.
   template <typename... ValueSets>
-  struct labelset_types_impl<decltype(pass{std::declval<ValueSets>().genset()...}, void()),
+  struct labelset_types_impl<decltype(pass{std::declval<ValueSets>().genset()...},
+                                      void()),
                              ValueSets...>
   {
     using genset_t
-      = cross_sequences<decltype(std::declval<ValueSets>().genset())...>;
+      = cross_sequences<decltype(std::declval<ValueSets>().generators())...>;
+    using genset_ptr = std::tuple<typename ValueSets::genset_ptr...>;
     using letter_t = std::tuple<typename ValueSets::letter_t...>;
     using word_t = std::tuple<typename ValueSets::word_t...>;
   };
@@ -75,8 +78,9 @@ namespace vcsn
 
     /// A tuple of letters if meaningful, void otherwise.
     using letter_t = typename labelset_types<ValueSets...>::letter_t;
-    /// A tuple of gensets if meaningful, void otherwise.
+    /// A tuple of generators if meaningful, void otherwise.
     using genset_t = typename labelset_types<ValueSets...>::genset_t;
+    using genset_ptr = typename labelset_types<ValueSets...>::genset_ptr;
     /// A tuple of words if meaningful, void otherwise.
     using word_t = typename labelset_types<ValueSets...>::word_t;
 
@@ -169,11 +173,17 @@ namespace vcsn
       return value_t{args...};
     }
 
-    /// The generators.  Meaningful for labelsets only.
-    genset_t
+    genset_ptr
     genset() const
     {
       return this->genset_(indices);
+    }
+
+    /// The generators.  Meaningful for labelsets only.
+    genset_t
+    generators() const
+    {
+      return this->generators_(indices);
     }
 
     static constexpr bool is_free()
@@ -568,10 +578,17 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    genset_t
+    genset_ptr
     genset_(seq<I...>) const
     {
-      return ::vcsn::cross(set<I>().genset()...);
+      return genset_ptr{set<I>().genset()...};
+    }
+
+    template <std::size_t... I>
+    genset_t
+    generators_(seq<I...>) const
+    {
+      return ::vcsn::cross(set<I>().generators()...);
     }
 
     template <std::size_t... I>
