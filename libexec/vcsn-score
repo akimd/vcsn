@@ -435,7 +435,8 @@ bench('a.compose(a2)',
       setup = ['r = "{}"'.format(r),
                'c = vcsn.context("lat<lan<char(a-z)>, lan<char(a-z)>>, b")',
                'a = c.expression("a|a").standard()',
-               'a2 = c.expression(r).automaton()'])
+               'a2 = c.expression(r).automaton()'],
+      number = 10)
 
 r = "['(a,a)'-'(i,z)']{4}"
 bench('a.compose(a)',
