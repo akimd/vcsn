@@ -213,6 +213,7 @@ nobase_include_HEADERS =                        \
   %D%/labelset/wordset.hh                       \
   %D%/misc/algorithm.hh                         \
   %D%/misc/attributes.hh                        \
+  %D%/misc/bimap.hh                             \
   %D%/misc/builtins.hh                          \
   %D%/misc/cast.hh                              \
   %D%/misc/crange.hh                            \

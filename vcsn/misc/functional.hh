@@ -29,7 +29,7 @@ namespace vcsn
 
   // http://stackoverflow.com/questions/2590677
   template <typename T>
-  inline void hash_combine(std::size_t& seed, const T& v)
+  void hash_combine(std::size_t& seed, const T& v)
   {
     std::hash<T> hasher;
     hash_combine_hash(seed, hasher(v));
@@ -60,7 +60,7 @@ namespace vcsn
   ///
   /// Use SFINAE to avoid being too eager.
   template <typename T>
-  inline auto hash_value(const T& v)
+  auto hash_value(const T& v)
     -> decltype(std::hash<T>{}(v))
   {
     std::hash<T> hasher;
