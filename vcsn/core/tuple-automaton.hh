@@ -5,9 +5,13 @@
 #include <map>
 #include <utility>
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/unordered_set_of.hpp>
+
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/bimap.hh> // has
 #include <vcsn/misc/map.hh> // has
 #include <vcsn/misc/tuple.hh>
 
@@ -75,8 +79,8 @@ namespace vcsn
         : super_t(aut)
         , auts_(auts...)
       {
-        pmap_[pre_()] = aut_->pre();
-        pmap_[post_()] = aut_->post();
+        pmap_().insert({pre_(), aut_->pre()});
+        pmap_().insert({post_(), aut_->post()});
       }
 
       bool state_has_name(typename super_t::state_t s) const
@@ -102,16 +106,16 @@ namespace vcsn
       /// State names: Tuple of states of input automata.
       using state_name_t = std::tuple<state_t_of<Auts>...>;
 
-      /// A map from result state to tuple of original states.
-      using origins_t = std::map<state_t, state_name_t>;
+      using bimap_t = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>, boost::bimaps::unordered_set_of<state_t>>;
+      using map_t = typename bimap_t::left_map;
+      using origins_t = typename bimap_t::right_map;
+
 
       /// A map from result state to tuple of original states.
-      const origins_t& origins() const
+      const origins_t&
+      origins() const
       {
-        origins_.clear();
-        for (const auto& p: pmap_)
-          origins_.emplace(p.second, p.first);
-        return origins_;
+        return bimap_.right;
       }
 
       // FIXME: protected:
@@ -204,11 +208,11 @@ namespace vcsn
       /// updating the map; in any case return.
       state_t state(const state_name_t& state)
       {
-        auto lb = pmap_.lower_bound(state);
-        if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
+        auto lb = pmap_().find(state);
+        if (lb == pmap_().end())
           {
             state_t s = aut_->new_state();
-            lb = pmap_.emplace_hint(lb, state, s);
+            lb = pmap_().insert(lb, {state, s});
             todo_.emplace_back(state, s);
           }
         return lb->second;
@@ -245,17 +249,22 @@ namespace vcsn
         return o;
       }
 
+      /// A map from original state and status (spontaneous or proper state)
+      /// to result state.
+      map_t&
+      pmap_()
+      {
+        return bimap_.left;
+      }
+
       /// Input automata, supplied at construction time.
       automata_t auts_;
 
-      /// Map state-tuple -> result-state.
-      using map = std::map<state_name_t, state_t>;
-      map pmap_;
+      /// Bijective map state_name_t -> state_t
+      mutable bimap_t bimap_;
 
       /// Worklist of state tuples.
       std::deque<std::pair<state_name_t, state_t>> todo_;
-
-      mutable origins_t origins_;
     };
   }
 
