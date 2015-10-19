@@ -541,3 +541,19 @@ bench('p.trie()',
       setup = ['c = vcsn.context("law_char(a-j), b")',
                'm = c.polynomial("[a-j]")',
                'p = m ** 6'])
+
+# synchronize
+r = r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn){2000}"""
+bench('a.synchronize()',
+      'a = std({})'.format(r),
+      setup = ['r = "{}"'.format(r),
+               'c = vcsn.context("lat<law_char, law_char>, b")',
+               'a = c.expression(r).standard()'])
+
+# is_synchronized
+r = r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn){500000}"""
+bench('a.is_synchronized()',
+      'a = std({})'.format(r),
+      setup = ['r = "{}"'.format(r),
+               'c = vcsn.context("lat<law_char, law_char>, b")',
+               'a = c.expression(r).standard()'])
