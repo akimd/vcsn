@@ -4,11 +4,15 @@
 #include <vector>
 #include <unordered_map>
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/unordered_set_of.hpp>
+
 #include <vcsn/algos/fwd.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+#include <vcsn/misc/bimap.hh>
 #include <vcsn/misc/pair.hh> // hash
 #include <vcsn/misc/tuple.hh> // index_sequence
 #include <vcsn/misc/unordered_map.hh> // has
@@ -53,6 +57,10 @@ namespace vcsn
       /// State + delay
       using state_name_t = std::pair<state_t, delay_t>;
 
+      /// Symbolic states to state handlers.
+      using bimap_t = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>, boost::bimaps::unordered_set_of<state_t>>;
+      using map_t = typename bimap_t::left_map;
+      using origins_t = typename bimap_t::right_map;
 
       template <size_t I>
       using tape_labelset_t = typename labelset_t::template valueset_t<I>;
@@ -61,8 +69,8 @@ namespace vcsn
         : super_t(aut->context())
         , aut_(aut)
       {
-        map_[state_name_t(this->pre(), delay_t{})] = aut->pre();
-        map_[state_name_t(this->post(), delay_t{})] = aut->post();
+        map_().insert({{this->pre(), delay_t{}}, aut->pre()});
+        map_().insert({{this->post(), delay_t{}}, aut->post()});
       }
 
       /// Static name.
@@ -80,23 +88,19 @@ namespace vcsn
         return o << '>';
       }
 
-      /// Symbolic states to state handlers.
-      using smap = std::unordered_map<state_name_t, state_t>;
-
       /// The state for delay \a r.
       /// If this is a new state, schedule it for visit.
       state_t state(const state_name_t& r)
       {
-        // Benches show that the map_.emplace technique is slower, and
-        // then that operator[] is faster than emplace.
         if (r.first == aut_->post())
           return this->post();
         state_t res;
-        auto i = map_.find(r);
-        if (i == std::end(map_))
+        auto i = map_().find(r);
+        if (i == std::end(map_()))
           {
             res = super_t::new_state();
-            map_[r] = res;
+            // Emplace is not available because of the internals of bimap
+            map_().insert({r, res});
             todo_.push(r);
           }
         else
@@ -144,23 +148,22 @@ namespace vcsn
           return i->second.second;
       }
 
-      /// Ordered map: state -> its delayed state.
-      using origins_t = std::unordered_map<state_t, state_name_t>;
-      mutable origins_t origins_;
-
       const origins_t&
       origins() const
       {
-        if (origins_.empty())
-          for (const auto& p: map_)
-            origins_[p.second] = p.first;
-        return origins_;
+        return bimap_.right;
+      }
+
+      map_t&
+      map_()
+      {
+        return bimap_.left;
       }
 
       /// States to visit.
       std::stack<state_name_t, std::vector<state_name_t>> todo_;
       /// delayed_state -> state.
-      smap map_;
+      bimap_t bimap_;
       /// The original automaton
       automaton_t aut_;
     };
