@@ -42,7 +42,6 @@ namespace vcsn
       using state_to_class_t = std::unordered_map<state_t, class_t>;
       using target_class_to_states_t = std::unordered_map<class_t, set_t>;
       using class_to_set_t = std::vector<set_t>;
-      using class_to_state_t = std::vector<state_t>;
 
       constexpr static const char* me() { return "minimize-moore"; }
 
@@ -53,7 +52,6 @@ namespace vcsn
       // First two classes are reserved, and are empty.
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
-      class_to_state_t class_to_res_state_;
 
       /// An auxiliary data structure enabling fast access to
       /// transitions from a given state and label, in random order.
@@ -69,7 +67,6 @@ namespace vcsn
         class_to_set_.clear();
         state_to_class_.clear();
         num_classes_ = 0;
-        class_to_res_state_.clear();
         transition_map_.clear();
       }
 
