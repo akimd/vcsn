@@ -2,6 +2,7 @@
 
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/minimize-brzozowski.hh>
+#include <vcsn/algos/minimize-hopcroft.hh>
 #include <vcsn/algos/minimize-moore.hh>
 #include <vcsn/algos/minimize-signature.hh>
 #include <vcsn/algos/minimize-weighted.hh>
@@ -29,7 +30,9 @@ namespace vcsn
                     quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo = "auto")
   {
-    if (algo == "moore")
+    if (algo == "hopcroft")
+      return minimize_hopcroft(a);
+    else if (algo == "moore")
       return minimize_moore(a);
     else if (algo == "auto" || algo == "signature")
       return minimize_signature(a);

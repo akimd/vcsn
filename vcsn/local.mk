@@ -72,6 +72,7 @@ algo_headers =                                  \
   %D%/algos/lightest-automaton.hh               \
   %D%/algos/make-context.hh                     \
   %D%/algos/minimize-brzozowski.hh              \
+  %D%/algos/minimize-hopcroft.hh                \
   %D%/algos/minimize-moore.hh                   \
   %D%/algos/minimize-signature.hh               \
   %D%/algos/minimize-weighted.hh                \

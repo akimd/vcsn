@@ -4,6 +4,8 @@ import vcsn
 
 from test import *
 
+algos = ['hopcroft', 'moore', 'signature', 'weighted']
+
 def aut(file):
     return vcsn.automaton(filename = medir + "/" + file)
 
@@ -11,21 +13,26 @@ def file_to_string(file):
     return open(medir + "/" + file, "r").read().strip()
 
 def check(algo, aut, exp):
-    CHECK_EQ(exp, aut.minimize(algo))
-    # Check that repeated minimization still gives the same type of
-    # automaton.  We don't want to get partition_automaton of
-    # partition_automaton: one "layer" suffices.
-    CHECK_EQ(exp, aut.minimize(algo).minimize(algo))
+    if isinstance(algo, list):
+        for a in algo:
+            check(a, aut, exp)
+    else:
+        print("checking minimize with algorithm ", algo)
+        CHECK_EQ(exp, aut.minimize(algo))
+        # Check that repeated minimization still gives the same type of
+        # automaton.  We don't want to get partition_automaton of
+        # partition_automaton: one "layer" suffices.
+        CHECK_EQ(exp, aut.minimize(algo).minimize(algo))
 
-    # Cominimize.
-    #
-    # Do not work just on the transpose_automaton, to make sure it
-    # works as expected for "forward" automata (which did have one
-    # such bug!).  So copy the transposed automaton.
-    t = aut.transpose().automaton(aut.context())
-    if isinstance(exp, str):
-        exp = vcsn.automaton(exp)
-    CHECK_ISOMORPHIC(exp.transpose(), t.cominimize(algo))
+        # Cominimize.
+        #
+        # Do not work just on the transpose_automaton, to make sure it
+        # works as expected for "forward" automata (which did have one
+        # such bug!).  So copy the transposed automaton.
+        t = aut.transpose().automaton(aut.context())
+        if isinstance(exp, str):
+            exp = vcsn.automaton(exp)
+        CHECK_ISOMORPHIC(exp.transpose(), t.cominimize(algo))
 
 def xfail(algo, aut):
     res = ''
@@ -42,9 +49,7 @@ def xfail(algo, aut):
 a = aut("redundant.gv")
 exp = file_to_string('redundant.exp.gv')
 check('brzozowski', a, vcsn.automaton(exp))
-check('moore',      a, exp)
-check('signature',  a, exp)
-check('weighted',   a, exp)
+check(algos, a, exp)
 
 ## An automaton equal to redundant.exp, with one transition removed.
 a = aut('incomplete-non-trim.gv')
@@ -81,9 +86,7 @@ a = vcsn.context('lal_char(a-k), b') \
         .standard()
 exp = file_to_string("intricate.exp.gv")
 check('brzozowski', a, vcsn.automaton(exp))
-check('moore',      a, exp)
-check('signature',  a, exp)
-check('weighted',   a, exp)
+check(algos, a, exp)
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
