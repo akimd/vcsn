@@ -331,6 +331,14 @@ bench('a.lightest(5000)',
                'a = c.expression(r).derived_term().strip()'],
       number = 10)
 
+# lightest-automaton
+ctx = 'lal_char(a-e), zmin'
+r = "[a-e]?{150}"
+bench('a.lightest_automaton()',
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup = ['c = vcsn.context(ctx)',
+               'a = c.expression(r).standard()'])
+
 # sort.
 r = "[a-e]?{700}"
 bench('a.sort()',

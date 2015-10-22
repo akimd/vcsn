@@ -15,6 +15,7 @@ algo_headers =                                  \
   %D%/algos/accessible.hh                       \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
+  %D%/algos/bellman-ford.hh                     \
   %D%/algos/cerny.hh                            \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
@@ -66,6 +67,7 @@ algo_headers =                                  \
   %D%/algos/levenshtein.hh                      \
   %D%/algos/lift.hh                             \
   %D%/algos/lightest.hh                         \
+  %D%/algos/lightest-automaton.hh               \
   %D%/algos/make-context.hh                     \
   %D%/algos/minimize-brzozowski.hh              \
   %D%/algos/minimize-moore.hh                   \

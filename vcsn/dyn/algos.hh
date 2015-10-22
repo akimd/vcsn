@@ -423,6 +423,10 @@ namespace vcsn
     polynomial lightest(const automaton& aut,
                         boost::optional<unsigned> num = {});
 
+    /// The shortest path automaton using the given algorithm.
+    automaton lightest_automaton(const automaton& aut,
+                                 const std::string& algo = "auto");
+
     /// Build a context from its name.
     context make_context(const std::string& name);
 
