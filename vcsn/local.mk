@@ -28,6 +28,7 @@ algo_headers =                                  \
   %D%/algos/derivation.hh                       \
   %D%/algos/derived-term.hh                     \
   %D%/algos/determinize.hh                      \
+  %D%/algos/dijkstra.hh                         \
   %D%/algos/distance.hh                         \
   %D%/algos/divide.hh                           \
   %D%/algos/divkbaseb.hh                        \

@@ -334,10 +334,12 @@ bench('a.lightest(5000)',
 # lightest-automaton
 ctx = 'lal_char(a-e), zmin'
 r = "[a-e]?{150}"
-bench('a.lightest_automaton()',
-      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup = ['c = vcsn.context(ctx)',
-               'a = c.expression(r).standard()'])
+for algo in ['bellman-ford', 'dijkstra']:
+    bench('a.lightest_automaton("{}")'.format(algo),
+          'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+          setup = ['c = vcsn.context(ctx)',
+                   'a = c.expression(r).standard()'],
+          number = 1 if algo == 'bellman-ford' else 10)
 
 # sort.
 r = "[a-e]?{700}"
