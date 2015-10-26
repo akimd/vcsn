@@ -3,6 +3,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/bellman-ford.hh>
 #include <vcsn/algos/dijkstra.hh>
+#include <vcsn/algos/a-star.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/getargs.hh>
@@ -17,12 +18,14 @@ namespace vcsn
     {
       bellmanford_t,
       dijkstra_t,
+      astar_t,
     };
     static const auto map = std::map<std::string, algorithm>
     {
       {"auto",          bellmanford_t},
       {"bellman-ford",  bellmanford_t},
       {"dijkstra",      dijkstra_t},
+      {"a-star",        astar_t},
     };
     switch (getargs("algorithm", map, algo))
     {
@@ -30,6 +33,8 @@ namespace vcsn
         return bellman_ford(aut);
       case dijkstra_t:
         return dijkstra(aut);
+      case astar_t:
+        return a_star(aut);
     }
   }
 

@@ -12,6 +12,7 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 algo_headers =                                  \
+  %D%/algos/a-star.hh                           \
   %D%/algos/accessible.hh                       \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \

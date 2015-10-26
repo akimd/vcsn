@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-algos = ['bellman-ford', 'dijkstra']
+algos = ['a-star', 'bellman-ford', 'dijkstra']
 
 def check(re, exp):
   r = ctx.expression(re)
