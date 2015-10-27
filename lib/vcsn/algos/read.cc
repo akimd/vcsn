@@ -35,12 +35,6 @@ namespace vcsn
     read_automaton(std::istream& is, const std::string& f,
                    bool strip_p)
     {
-      enum fmt
-      {
-        dot,
-        efsm,
-        fado,
-      };
       static const auto map
         = std::map<std::string, std::function<automaton(std::istream&)>>
         {
