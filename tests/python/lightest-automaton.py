@@ -15,3 +15,7 @@ check('\z', '\z')
 check('\e', '<0>\e')
 check('a+<2>b', '<0>a')
 check('aaa+<2>b', '<0>aaa')
+
+ctx = vcsn.context('lal_char, q')
+for algo in ['a-star', 'bellman-ford', 'dijkstra']:
+    XFAIL(lambda: ctx.expression('\z').standard().lightest_automaton(algo))

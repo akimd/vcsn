@@ -63,4 +63,8 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(b, nmin);
     VCSN_JOIN_SIMPLE(nmin, nmin);
   }
+
+  template <>
+  struct is_tropical<nmin> : std::true_type
+  {};
 }

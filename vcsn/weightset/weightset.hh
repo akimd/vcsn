@@ -85,4 +85,10 @@ namespace vcsn
       return power_<WeightSet>(e, n);
     }
   };
+
+  // FIXME: find generic implementation for min-plus.
+  template <typename T>
+  struct is_tropical : std::false_type
+  {};
+
 }

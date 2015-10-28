@@ -32,6 +32,8 @@ namespace vcsn
   Aut
   lightest_automaton(const Aut& aut, const std::string& algo)
   {
+    require(is_tropical<weightset_t_of<Aut>>(),
+            "lightest-automaton: require tropical weightset");
     using state_t = state_t_of<Aut>;
     auto pred = lightest_algo(aut, algo);
     auto res = std::set<state_t>{aut->post()};
