@@ -7,6 +7,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/getargs.hh>
+#include <vcsn/misc/set.hh>
 
 namespace vcsn
 {
@@ -38,6 +39,14 @@ namespace vcsn
     }
   }
 
+  /// Lightest Automaton
+  ///
+  /// Return an automaton composed only of the states included in the
+  /// lightest path from pre to post. Using the shortest path algorithm
+  /// given as parameter to compute the lightest 'in' transition of each
+  /// state. Then, reconstruct the path keeping the states and transitions
+  /// we met. Now that we have the sets of elements to keep we can construct
+  /// a new automaton using these states/transitions.
   template <typename Aut>
   Aut
   lightest_automaton(const Aut& aut, const std::string& algo)
@@ -45,18 +54,19 @@ namespace vcsn
     require(is_tropical<weightset_t_of<Aut>>(),
             "lightest-automaton: require tropical weightset");
     using state_t = state_t_of<Aut>;
+    using transition_t = transition_t_of<Aut>;
     auto pred = lightest_algo(aut, algo);
-    auto res = std::set<state_t>{aut->post()};
-    for (state_t s = pred[aut->post()]; s != aut->pre(); s = pred[s])
+    if (pred[aut->post()] == aut->null_transition())
+      return make_fresh_automaton(aut);
+    else
       {
-        if (s == aut->null_state())
-          {
-            res.clear();
-            break;
-          }
-        res.insert(s);
+        auto keep_tr = std::set<transition_t>{aut->pre()};
+        for (transition_t t = pred[aut->post()];
+             aut->src_of(t) != aut->pre();
+             t = pred[aut->src_of(t)])
+          keep_tr.insert(t);
+        return copy_path(aut, keep_tr);
       }
-    return copy(aut, res);
   }
 
   namespace dyn

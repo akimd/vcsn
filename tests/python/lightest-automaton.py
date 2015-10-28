@@ -5,18 +5,23 @@ from test import *
 
 algos = ['a-star', 'bellman-ford', 'dijkstra']
 
-def check(re, exp):
-  r = ctx.expression(re)
-  p = r.standard()
+def check(re, weight, exp):
+  wexp = '<{w}>{e}'.format(w=weight, e=exp) if exp != '\z' else '\z'
+  aut = ctx.expression(re).automaton()
+  ref = ctx.expression(wexp).standard().trim().strip()
   for algo in algos:
-      res = p.lightest_automaton(algo)
-      CHECK_EQ(exp, res.lightest())
+      res = aut.lightest_automaton(algo)
+      CHECK_ISOMORPHIC(ref, res)
+      CHECK_EQ(weight, res.weight_series())
 
 ctx = vcsn.context('lal_char, nmin')
-check('\z', '\z')
-check('\e', '<0>\e')
-check('a+<2>b', '<0>a')
-check('aaa+<2>b', '<0>aaa')
+check('\z', 'oo', '\z')
+check('\e', '0', '\e')
+check('<1>a+<2>b', '1', 'a')
+check('<1>b+<1>a', '1', 'a')
+check('aaa+<2>b', '0', 'aaa')
+check('a(<1>b)*', '0', 'a')
+check('[ab]', '0', 'a')
 
 ctx = vcsn.context('lal_char, q')
 for algo in algos:

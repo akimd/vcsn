@@ -13,15 +13,19 @@ namespace vcsn
 
   namespace detail
   {
+    /// Bellman-Ford implementation of lightest automaton.
+    ///
+    /// Function applying Bellman-Ford algorithm to the automaton
+    /// given as parameter. Return the array of lightest 'in'
+    /// transition of each state.
     template <typename Aut>
-    boost::optional<std::vector<state_t_of<Aut>>>
+    boost::optional<std::vector<transition_t_of<Aut>>>
     bellman_ford_impl(const Aut& aut)
     {
-      using weight_t = weight_t_of<Aut>;
-      using state_t = state_t_of<Aut>;
+      using transition_t = transition_t_of<Aut>;
       auto size = aut->all_states().back() + 1;
-      auto dist = std::vector<weight_t>(size);
-      auto res = std::vector<state_t>(size, aut->null_state());
+      auto dist = std::vector<weight_t_of<Aut>>(size);
+      auto res = std::vector<transition_t>(size, aut->null_transition());
       auto ws = *aut->weightset();
 
       dist[aut->pre()] = ws.one();
@@ -32,14 +36,15 @@ namespace vcsn
           {
             auto src = aut->src_of(t);
 
-            if (res[src] != aut->null_state() || src == aut->pre())
+            if (res[src] != aut->null_transition() || src == aut->pre())
               {
                 auto dst = aut->dst_of(t);
                 auto nw = ws.mul(dist[src], aut->weight_of(t));
-                if (res[dst] == aut->null_state() || ws.less(nw, dist[dst]))
+                if (res[dst] == aut->null_transition()
+                    || ws.less(nw, dist[dst]))
                   {
                     dist[dst] = nw;
-                    res[dst] = src;
+                    res[dst] = t;
                   }
               }
           }
@@ -49,8 +54,8 @@ namespace vcsn
         {
           auto src = aut->src_of(t);
           auto dst = aut->dst_of(t);
-          if (res[src] != aut->null_state()
-              && (res[dst] == aut->null_state()
+          if (res[src] != aut->null_transition()
+              && (res[dst] == aut->null_transition()
                  || ws.less(ws.mul(dist[src], aut->weight_of(t)), dist[dst])))
             return boost::none;
         }
@@ -60,7 +65,7 @@ namespace vcsn
   }
 
   template <typename Aut>
-  std::vector<state_t_of<Aut>>
+  std::vector<transition_t_of<Aut>>
   bellman_ford(const Aut& aut)
   {
     auto bf = bellman_ford_impl(aut);

@@ -12,15 +12,22 @@ namespace vcsn
 
   namespace detail
   {
+    /// Dijkstra implementation of lightest automaton.
+    ///
+    /// Functor taking an automaton as parameter and applying
+    /// dijkstra algorithm to compute the lightest 'in' transition
+    /// of each state.
     template <typename Aut>
     struct dijkstra_impl
     {
       using automaton_t = Aut;
       using self_t = dijkstra_impl;
       using state_t = state_t_of<automaton_t>;
+      using transition_t = transition_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using distance_t = std::vector<weight_t>;
+      using path_t = std::vector<transition_t>;
 
       dijkstra_impl(const Aut& aut)
         : aut_(aut)
@@ -38,9 +45,9 @@ namespace vcsn
         bool operator<(const profile& rhs) const
         {
           auto ws = *dijkstra_.aut_->weightset();
-          if (dijkstra_.res_[state_] == dijkstra_.aut_->null_state())
+          if (dijkstra_.res_[state_] == dijkstra_.aut_->null_transition())
             return true;
-          else if (dijkstra_.res_[rhs.state_] == dijkstra_.aut_->null_state())
+          else if (dijkstra_.res_[rhs.state_] == dijkstra_.aut_->null_transition())
             return false;
           else
             return ws.less(dijkstra_.dist_[rhs.state_], dijkstra_.dist_[state_]);
@@ -51,7 +58,7 @@ namespace vcsn
           auto d = p.dijkstra_;
           auto ws = *d.aut_->weightset();
           d.aut_->print_state_name(p.state_, o) << ':';
-          if (d.res_[p.state_] != d.aut_->null_state())
+          if (d.res_[p.state_] != d.aut_->null_transition())
             return ws.print(d.dist_[p.state_], o);
           else
             return o << "null";
@@ -63,7 +70,7 @@ namespace vcsn
 
       using heap_t = boost::heap::fibonacci_heap<profile>;
 
-      std::vector<state_t>
+      path_t
       operator()()
       {
         auto size = aut_->all_states().back() + 1;
@@ -86,18 +93,18 @@ namespace vcsn
                 {
                   auto dst = aut_->dst_of(t);
                   auto nw = ws.mul(dist_[s], aut_->weight_of(t));
-                  if (res_[dst] == aut_->null_state())
+                  if (res_[dst] == aut_->null_transition())
                     {
                       // First visit.
                       dist_[dst] = nw;
-                      res_[dst] = s;
+                      res_[dst] = t;
                       handles[dst] = todo.emplace(dst, *this);
                     }
                   else if (ws.less(nw, dist_[dst]))
                     {
                       // Lighter path.
                       dist_[dst] = nw;
-                      res_[dst] = s;
+                      res_[dst] = t;
                       todo.update(handles[dst]);
                     }
                 }
@@ -121,13 +128,13 @@ namespace vcsn
 
     public:
       const automaton_t& aut_;
-      std::vector<state_t> res_;
+      path_t res_;
       distance_t dist_;
     };
   }
 
   template <typename Aut>
-  std::vector<state_t_of<Aut>>
+  std::vector<transition_t_of<Aut>>
   dijkstra(const Aut& aut)
   {
     return detail::dijkstra_impl<Aut>(aut)();
