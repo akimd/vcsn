@@ -20,11 +20,11 @@ namespace vcsn
       using weight_t = weight_t_of<Aut>;
       using state_t = state_t_of<Aut>;
       auto size = aut->all_states().back() + 1;
-      auto l = std::vector<boost::optional<weight_t>>(size);
-      auto res = std::vector<state_t>(size);
+      auto dist = std::vector<weight_t>(size);
+      auto res = std::vector<state_t>(size, aut->null_state());
       auto ws = *aut->weightset();
 
-      l[aut->pre()] = ws.one();
+      dist[aut->pre()] = ws.one();
 
       // Iterate one time for each state over each transitions.
       for (auto _: aut->all_states())
@@ -32,13 +32,13 @@ namespace vcsn
           {
             auto src = aut->src_of(t);
 
-            if (l[src])
+            if (res[src] != aut->null_state() || src == aut->pre())
               {
                 auto dst = aut->dst_of(t);
-                auto nw = ws.mul(*l[src], aut->weight_of(t));
-                if (!l[dst] || ws.less(nw, *l[dst]))
+                auto nw = ws.mul(dist[src], aut->weight_of(t));
+                if (res[dst] == aut->null_state() || ws.less(nw, dist[dst]))
                   {
-                    l[dst] = nw;
+                    dist[dst] = nw;
                     res[dst] = src;
                   }
               }
@@ -49,9 +49,9 @@ namespace vcsn
         {
           auto src = aut->src_of(t);
           auto dst = aut->dst_of(t);
-          if (l[src]
-              && (!l[dst]
-                 || ws.less(ws.mul(*l[src], aut->weight_of(t)), *l[dst])))
+          if (res[src] != aut->null_state()
+              && (res[dst] == aut->null_state()
+                 || ws.less(ws.mul(dist[src], aut->weight_of(t)), dist[dst])))
             return boost::none;
         }
 
