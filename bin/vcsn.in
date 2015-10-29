@@ -89,7 +89,7 @@ case $1 in
   (-h|--help) help;;
   (-v|--version) version;;
 
-  (compile|demangle|score|score-compare)
+  (compile|demangle|ps|score|score-compare)
       prog=$(which "vcsn-$1")
       shift
       exec "$PYTHON" "$prog" "$@";;
