@@ -327,6 +327,49 @@ namespace vcsn
        [&trans](transition_t_of<AutIn> t) { return has(trans, t); });
   }
 
+
+  /// A copy of \a input keeping only its transitions satisfying
+  /// \a trans predicate, and the states on which these transitions depend.
+  template <typename AutIn,
+            typename AutOut = fresh_automaton_t_of<AutIn>,
+            typename Trans>
+  inline
+  auto
+  copy_path(const AutIn& input, Trans trans)
+    -> decltype(trans(input->null_transition()),
+                make_fresh_automaton<AutIn, AutOut>(input))
+  {
+    auto states = std::set<state_t_of<AutIn>>{};
+    for (auto t: input->all_transitions(trans))
+      {
+        states.insert(input->src_of(t));
+        states.insert(input->dst_of(t));
+      }
+    return ::vcsn::copy<AutIn, AutOut>
+      (input, [&states](state_t_of<AutIn> s) { return has(states, s); }, trans);
+  }
+
+  /// A copy of \a input keeping only its transitions that are
+  /// members of container \a trans, and the states on which these
+  /// transitions depend.
+  template <typename AutIn,
+            typename AutOut = fresh_automaton_t_of<AutIn>,
+            typename Trans>
+  inline
+  auto
+  copy_path(const AutIn& input, Trans trans)
+    -> decltype(has(trans, input->null_transition()),
+                make_fresh_automaton<AutIn, AutOut>(input))
+  {
+    auto states = std::set<state_t_of<AutIn>>{};
+    for (auto t: trans)
+      {
+        states.insert(input->src_of(t));
+        states.insert(input->dst_of(t));
+      }
+    return ::vcsn::copy<AutIn, AutOut>(input, states, trans);
+  }
+
   namespace dyn
   {
     namespace detail
