@@ -250,8 +250,11 @@ namespace vcsn
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState, typename KeepTrans>
   inline
-  AutOut
+  auto
   copy(const AutIn& input, KeepState keep_state, KeepTrans keep_trans)
+    -> decltype(keep_state(input->null_state()),
+                keep_trans(input->null_transition()),
+                make_fresh_automaton<AutIn, AutOut>(input))
   {
     auto res = make_fresh_automaton<AutIn, AutOut>(input);
     ::vcsn::copy_into(input, res, keep_state, keep_trans);
@@ -263,8 +266,10 @@ namespace vcsn
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState>
   inline
-  AutOut
+  auto
   copy(const AutIn& input, KeepState keep_state)
+    -> decltype(keep_state(input->null_state()),
+                make_fresh_automaton<AutIn, AutOut>(input))
   {
     return ::vcsn::copy<AutIn, AutOut>(
              input,
@@ -290,27 +295,36 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are members of
   /// std::set \a keep.
   template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>>
+            typename AutOut = fresh_automaton_t_of<AutIn>,
+            typename States>
   inline
-  AutOut
-  copy(const AutIn& input, const std::set<state_t_of<AutIn>>& keep)
+  auto
+  copy(const AutIn& input, States states)
+    -> decltype(has(states, input->null_state()),
+                make_fresh_automaton<AutIn, AutOut>(input))
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
-       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
+       [&states](state_t_of<AutIn> s) { return has(states, s); });
   }
 
   /// A copy of \a input keeping only its states that are members of
-  /// std::unordered_set \a keep.
+  /// container \a states, and transitions that are members of
+  /// container \a trans.
   template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>>
+            typename AutOut = fresh_automaton_t_of<AutIn>,
+            typename States, typename Trans>
   inline
-  AutOut
-  copy(const AutIn& input, const std::unordered_set<state_t_of<AutIn>>& keep)
+  auto
+  copy(const AutIn& input, States states, Trans trans)
+    -> decltype(has(states, input->null_state()),
+                has(trans, input->null_transition()),
+                make_fresh_automaton<AutIn, AutOut>(input))
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
-       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
+       [&states](state_t_of<AutIn> s) { return has(states, s); },
+       [&trans](transition_t_of<AutIn> t) { return has(trans, t); });
   }
 
   namespace dyn
