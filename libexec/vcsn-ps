@@ -1,10 +1,17 @@
 #! /usr/bin/env python
 
-import psutil
+try:
+    import psutil
+    has_psutil = True
+except ImportError:
+    import os
+    has_psutil = False
+
 from getpass import getuser
 from datetime import datetime
 from re import search
 from vcsn.demangle import pretty_plugin
+
 
 def user_proc(proc):
     for elt in proc.cmdline():
@@ -16,9 +23,17 @@ def user_proc(proc):
                                                 delta.seconds % 60,
                                                 title + ':', message))
 
-for proc in psutil.process_iter():
-    try:
-        if proc.username() == getuser():
-            user_proc(proc)
-    except (psutil.AccessDenied, psutil.NoSuchProcess):
-        pass
+if has_psutil:
+    for proc in psutil.process_iter():
+        try:
+            if proc.username() == getuser():
+                user_proc(proc)
+        except (psutil.AccessDenied, psutil.NoSuchProcess):
+            pass
+else:
+    cmd = \
+    '''ps uxww |
+        grep -v perl |
+        grep "vcsn compile" |
+        perl -ne "s{^.*'.*?/lib/plugins/(.*?)\.cc'.*$}{\$1}g && print \$_"'''
+    os.system(cmd)
