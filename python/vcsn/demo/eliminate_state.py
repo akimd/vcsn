@@ -3,7 +3,10 @@ try:
     import ipywidgets as widgets
 except ImportError:
     from IPython.html import widgets
-import traitlets
+try:
+    import traitlets
+except ImportError:
+    from IPython.utils import traitlets
 
 from .utils import _interact_h
 
