@@ -67,7 +67,7 @@ features of the right definition?
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
-** proper: accessible part
+** proper: accessible part (AP)
 This fails:
 
 import vcsn
@@ -76,6 +76,18 @@ a = c.expression('<x>a*&<y>b*').derived_term()
 a.proper()
 
 because we create spontaneous loops.  But there are not co-accessible!
+
+A simpler test case:
+
+  %%automaton a
+  context = "lan_char, q"
+  1 -> 1 \e
+
+  a.proper()
+
+Maybe this is not a bug, but something that should be clarified in the
+documentation.  And expression.automaton() should probably trim the result
+to avoid this pitfall.
 
 ** synchronize
 We need more tests.  In particular something that checks:
