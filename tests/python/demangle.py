@@ -22,6 +22,10 @@ def check(input, exp_regex, exp_re):
     exp = exp_regex if has_regex else exp_re
     CHECK_EQ(exp, sugar(input))
 
+check('context<nullableset<letterset<char_letters>>, b>',
+      '(chars)? → b',
+      'nullableset<letterset<chars>>, b')
+
 check('context<letterset<char_letters>, expressionset<context<letterset<char_letters>, b>>>',
       'chars → expressionset<chars → b>',
       'letterset<chars>, expressionset<context<letterset<chars>, b>>')

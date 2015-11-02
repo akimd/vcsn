@@ -1,20 +1,6 @@
 try:
     import regex as re
     has_regex = True
-    # Here, we use a backtracking group, which is *much* slower, but
-    # it allows to write patterns such as `context<{param}, {param}>`,
-    # where, were the [^<>]+ be possessive, the first one would eat
-    # everything (both labelset and weightset).
-    #
-    # FIXME: maybe we need something in between.
-    param = r'''
-(             # capturing group
- (?:          # non-capturing group
-  [^<>]+      # anything but angle brackets one or more times with backtracking
-  |           # or
-  <(?R)>      # recursive substitute of group
- )*
-)'''
 except ImportError:
     has_regex = False
     import re
@@ -36,21 +22,45 @@ try:
 except:
     colors_enabled = False
 
+
+param_num = 0
+def param(name = None):
+    if name is None:
+        global param_num
+        name = param_num
+        param_num += 1
+    # Here, we use a backtracking group, which is *much* slower, but
+    # it allows to write patterns such as `context<{param}, {param}>`,
+    # where, were the [^<>]+ be possessive, the first one would eat
+    # everything (both labelset and weightset).
+    #
+    # FIXME: maybe we need something in between.
+    return r'''
+(?<g{name}>     # capturing group
+ (?:            # non-capturing group
+  [^<>]+        # anything but angle brackets one or more times with backtracking
+  |             # or
+  <(?&g{name})> # recursive substitute of group
+ )*
+)'''.format(name=name)
+
+
 def sub(pattern, repl, string, *args, **kwargs):
-    '''Apply `s/pattern/repl/g` as many times as possible in string.
+    '''Apply `s/pattern/repl/g` as many times as possible in `string`.
 
     Beware that in `pattern` the spaces are ignored: use \s.'''
     if '{param}' in pattern:
         if has_regex:
-            pattern = pattern.format(param=param)
+            pattern = re.sub(r'\{param\}', lambda _: param(), pattern)
         else:
             return string
     num = 1
     while num:
         (string, num) = re.subn(pattern, repl, string, *args,
                                 flags=re.VERBOSE, **kwargs)
-#        print(string, num)
+        #print(string, num)
     return string
+
 
 def sugar(s):
     '''Perform some transformations that aim at displaying a cuter version
