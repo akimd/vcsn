@@ -38,6 +38,7 @@ algo_headers =                                  \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
   %D%/algos/epsilon-remover-distance.hh         \
+  %D%/algos/epsilon-remover-lazy.hh             \
   %D%/algos/epsilon-remover-separate.hh         \
   %D%/algos/epsilon-remover.hh                  \
   %D%/algos/eval.hh                             \

@@ -60,6 +60,7 @@ namespace vcsn
           {"expression_automaton"   , "vcsn/core/expression-automaton.hh"},
           {"filter_automaton"       , "vcsn/algos/filter.hh"},
           {"focus_automaton"        , "vcsn/algos/focus.hh"},
+          {"lazy_proper_automaton"  , "vcsn/algos/epsilon-remover-lazy.hh"},
           {"mutable_automaton"      , "vcsn/core/mutable-automaton.hh"},
           {"name_automaton"         , "vcsn/core/name-automaton.hh"},
           {"pair_automaton"         , "vcsn/algos/synchronizing-word.hh"},

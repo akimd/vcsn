@@ -198,9 +198,7 @@ namespace vcsn
       ///
       /// For some reason, we get poorer performances if this function
       /// is moved higher, before the epsilon_profile definition.
-      ///
-      /// The state s corresponds to a *dirty* state id.
-      void remover_on(state_dirty_t dirty_s, state_proper_t proper_s)
+      void remover_on(state_proper_t proper_s, state_dirty_t dirty_s)
       {
         // The star of the weight of the loop on 's' (1 if no loop).
         weight_t star = ws_.one();
@@ -295,6 +293,23 @@ namespace vcsn
       }
 
     public:
+      /// Whether the given state has incoming spontaneous transitions.
+      bool state_has_spontaneous_in(state_proper_t proper_s) const
+      {
+        state_dirty_t dirty_s = p2d_[proper_s];
+        if (dirty_s == aut_dirty_->null_state())
+          return false;
+        else
+          return !aut_dirty_->in(dirty_s).empty();
+      }
+
+      /// Wrapper around remover_on() which does a lookup of the dirty state.
+      void remover_on(state_proper_t proper_s)
+      {
+        state_dirty_t dirty_s = p2d_[proper_s];
+        if (dirty_s != aut_dirty_->null_state())
+          remover_on(proper_s, dirty_s);
+      }
 
       /// Remove all the states with incoming spontaneous transitions.
       ///
@@ -360,7 +375,7 @@ namespace vcsn
                   if ((n = aut_dirty_->dst_of(t)) != dirty_s)
                     neighbors.emplace(d2p_[n]);
 
-                remover_on(dirty_s, proper_s);
+                remover_on(proper_s, dirty_s);
               }
 
             // Update all neighbors and then the heap.
@@ -394,6 +409,12 @@ namespace vcsn
                     << "+" << added_ << std::endl;
 #endif
 
+        return aut_proper_;
+      }
+
+      /// Return the proper part. Needed by lazy algorithm.
+      aut_proper_t get_proper()
+      {
         return aut_proper_;
       }
 
@@ -438,6 +459,11 @@ namespace vcsn
       aut_proper_t operator()()
       {
         return copy(aut_);
+      }
+
+      aut_proper_t get_proper()
+      {
+        return aut_;
       }
 
     private:

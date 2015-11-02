@@ -25,8 +25,9 @@
 #include <vcsn/misc/vector.hh> // make_vector
 
 #include <vcsn/algos/epsilon-remover.hh>
-#include <vcsn/algos/epsilon-remover-separate.hh>
 #include <vcsn/algos/epsilon-remover-distance.hh>
+#include <vcsn/algos/epsilon-remover-lazy.hh>
+#include <vcsn/algos/epsilon-remover-separate.hh>
 
 namespace vcsn
 {
@@ -231,8 +232,7 @@ namespace vcsn
   auto
   proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true, const std::string& algo = "auto")
-    -> fresh_automaton_t_of<Aut,
-                            detail::proper_context<context_t_of<Aut>>>
+    -> fresh_automaton_t_of<Aut, detail::proper_context<context_t_of<Aut>>>
   {
     switch (dir)
       {
@@ -243,6 +243,17 @@ namespace vcsn
                                 direction::backward, prune, algo));
       }
     BUILTIN_UNREACHABLE();
+  }
+
+  template <typename Aut>
+  auto
+  proper_lazy(const Aut& aut, direction dir = direction::backward,
+              bool prune = true)
+    -> lazy_proper_automaton<Aut>
+  {
+    require(dir == direction::backward,
+            "backward direction for lazy proper is not implemented");
+    return make_shared_ptr<lazy_proper_automaton<Aut>>(aut, prune);
   }
 
   /// Eliminate spontaneous transitions in place.  Raise if the
@@ -278,7 +289,10 @@ namespace vcsn
                        const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::proper(a, dir, prune, algo));
+        if (algo == "lazy")
+          return make_automaton(proper_lazy(a, dir, prune));
+        else
+          return make_automaton(::vcsn::proper(a, dir, prune, algo));
       }
     }
   }
