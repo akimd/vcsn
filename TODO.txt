@@ -287,11 +287,6 @@ Those two should really be the same algorithm, it's the signatures that
 change.  And rather than having two implementations, we should have a single
 implementation of the algorithm, but better data structures for signatures.
 
-** multiply (SP)
-The repeated multiplication of automata does not check that min <= max.  See
-if there are other such errors.  This is probably checked in the case of
-expressions.
-
 ** normalize
 I'm a bit lost in polynomialset::normalize: how come in
 
