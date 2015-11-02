@@ -305,7 +305,11 @@ namespace vcsn
     value_t
     add(const value_t& l, const value_t& r) const
     {
-      return this->add_(l, r, indices);
+      return map_(l, r,
+                  [](const auto& vs, const auto& l, const auto& r)
+                  {
+                    return vs.add(l, r);
+                  });
     }
 
     /// The product (possibly concatenation) of \a l and \a r.
@@ -320,25 +324,37 @@ namespace vcsn
       return this->mul_(l, r, indices);
     }
 
-    /// The pointwise LGCD.
+    /// Pointwise left GCD.
     value_t
     lgcd(const value_t& l, const value_t& r) const
     {
-      return this->lgcd_(l, r, indices);
+      return map_(l, r,
+                  [](const auto& vs, const auto& l, const auto& r)
+                  {
+                    return vs.lgcd(l, r);
+                  });
     }
 
     /// Pointwise right division (l / r).
     value_t
     rdiv(const value_t& l, const value_t& r) const
     {
-      return this->rdiv_(l, r, indices);
+      return map_(l, r,
+                  [](const auto& vs, const auto& l, const auto& r)
+                  {
+                    return vs.rdiv(l, r);
+                  });
     }
 
     /// Pointwise left division (l \ r).
     value_t
     ldiv(const value_t& l, const value_t& r) const
     {
-      return this->ldiv_(l, r, indices);
+      return map_(l, r,
+                  [](const auto& vs, const auto& l, const auto& r)
+                  {
+                    return vs.ldiv(l, r);
+                  });
     }
 
     /// Eliminate the LGCD between all the tapes.  E.g., `(abc, abd)
@@ -351,10 +367,15 @@ namespace vcsn
       return this->lnormalize_here_(v, indices);
     }
 
+    /// Pointwise star.
     value_t
-    star(const value_t& l) const
+    star(const value_t& v) const
     {
-      return this->star_(l, indices);
+      return map_(v,
+                  [](const auto& vs, const auto& v)
+                  {
+                    return vs.star(v);
+                  });
     }
 
     /// Add the special character first and last.
@@ -678,32 +699,34 @@ namespace vcsn
       return false;
     }
 
-    template <std::size_t... I>
+    /// Apply a unary function pointwise, and return the tuple of results.
+    template <typename Fun>
     value_t
-    add_(const value_t& l, const value_t& r, seq<I...>) const
+    map_(const value_t& v, Fun&& fun) const
     {
-      return value_t{set<I>().add(std::get<I>(l), std::get<I>(r))...};
+      return map_impl_(v, std::forward<Fun>(fun), indices);
     }
 
-    template <std::size_t... I>
+    template <typename Fun, std::size_t... I>
     value_t
-    lgcd_(const value_t& l, const value_t& r, seq<I...>) const
+    map_impl_(const value_t& v, Fun&& fun, seq<I...>) const
     {
-      return value_t{set<I>().lgcd(std::get<I>(l), std::get<I>(r))...};
+      return value_t{fun(set<I>(), std::get<I>(v))...};
     }
 
-    template <std::size_t... I>
+    /// Apply a binary function pointwise, and return the tuple of results.
+    template <typename Fun>
     value_t
-    rdiv_(const value_t& l, const value_t& r, seq<I...>) const
+    map_(const value_t& l, const value_t& r, Fun&& fun) const
     {
-      return value_t{set<I>().rdiv(std::get<I>(l), std::get<I>(r))...};
+      return map_impl_(l, r, std::forward<Fun>(fun), indices);
     }
 
-    template <std::size_t... I>
+    template <typename Fun, std::size_t... I>
     value_t
-    ldiv_(const value_t& l, const value_t& r, seq<I...>) const
+    map_impl_(const value_t& l, const value_t& r, Fun&& fun, seq<I...>) const
     {
-      return value_t{set<I>().ldiv(std::get<I>(l), std::get<I>(r))...};
+      return value_t{fun(set<I>(), std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
@@ -716,13 +739,6 @@ namespace vcsn
       using swallow = int[];
       (void) swallow { (set<0>().ldiv_here(res, std::get<I>(vs)), 0)... };
       return res;
-    }
-
-    template <std::size_t... I>
-    value_t
-    star_(const value_t& l, seq<I...>) const
-    {
-      return value_t{set<I>().star(std::get<I>(l))...};
     }
 
     template <typename Value, std::size_t... I>
