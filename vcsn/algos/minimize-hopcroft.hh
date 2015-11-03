@@ -46,10 +46,9 @@ namespace vcsn
         for (const auto l: generators)
           {
             auto x = set_t(size);
-            for (auto s = 0U; s < size; s++)
-              if (sub_w.test(s))
-                for (auto in: a->in(s, l))
-                  x.set(a->src_of(in));
+            for (auto s = sub_w.find_first(); s != set_t::npos; s = sub_w.find_next(s))
+              for (auto in: a->in(s, l))
+                x.set(a->src_of(in));
             auto cpy = partition_t(p);
             for (auto y: cpy)
               {
@@ -74,13 +73,12 @@ namespace vcsn
       }
     auto res = std::vector<std::vector<state_t>>();
     std::transform(begin(p), end(p), std::back_inserter(res),
-        [size](const set_t& s)
+        [](const set_t& set)
         {
           auto tab = std::vector<state_t>();
-          tab.reserve(s.count());
-          for (auto i = 0U; i < size; i++)
-            if (s.test(i))
-              tab.push_back(i);
+          tab.reserve(set.count());
+          for (auto s = set.find_first(); s != set_t::npos; s = set.find_next(s))
+            tab.push_back(s);
           return tab;
         });
     return quotient(a, res);
