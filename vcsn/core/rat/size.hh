@@ -74,7 +74,7 @@ namespace vcsn
         template <size_t I>
         size_t size_(const tuple_t& v)
         {
-          using rs_t = typename expressionset_t::template focus_t<I>;
+          using rs_t = typename expressionset_t::template project_t<I>;
           return size<rs_t>(std::get<I>(v.sub()));
         }
 

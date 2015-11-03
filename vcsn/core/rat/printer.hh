@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <vcsn/algos/focus.hh> // bad layering: should not be in algos.
+#include <vcsn/algos/project.hh> // bad layering: should not be in algos.
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/traits.hh>

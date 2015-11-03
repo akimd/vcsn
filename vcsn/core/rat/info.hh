@@ -155,7 +155,7 @@ namespace vcsn
         template <size_t I>
         void info_(const tuple_t& v)
         {
-          using expset_t = typename expressionset_t::template focus_t<I>;
+          using expset_t = typename expressionset_t::template project_t<I>;
           visitor_ += make_info<expset_t>(std::get<I>(v.sub()));
         }
 

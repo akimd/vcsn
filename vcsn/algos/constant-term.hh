@@ -143,7 +143,7 @@ namespace vcsn
         template <size_t I>
         weight_t work_(const tuple_t& v)
         {
-          using rs_t = typename expressionset_t::template focus_t<I>;
+          using rs_t = typename expressionset_t::template project_t<I>;
           auto constant_term = constant_term_visitor<rs_t>{visitor_.ws_};
           return constant_term(std::get<I>(v.sub()));
         }

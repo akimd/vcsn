@@ -289,7 +289,7 @@ namespace vcsn
 
     /// The type of the expressionset for the Tape-th tape.
     template <unsigned Tape, typename Ctx = context_t>
-    using focus_t
+    using project_t
       = expressionset<detail::project_context<Tape, Ctx>>;
 
 
@@ -300,7 +300,7 @@ namespace vcsn
     struct as_tupleset_impl<detail::index_sequence<I...>>
     {
       /// If we are multitape, our type as a tupleset.
-      using type = tupleset<focus_t<I, context_t>...>;
+      using type = tupleset<project_t<I, context_t>...>;
 
       static type value(const self_t& self)
       {
@@ -421,12 +421,12 @@ namespace vcsn
       }
 
       template <size_t I>
-      static typename focus_t<I>::label_t as_label_(const tuple_t& v)
+      static typename project_t<I>::label_t as_label_(const tuple_t& v)
       {
         if (std::get<I>(v.sub())->type() == type_t::one)
           return detail::label_one<typename labelset_t::template valueset_t<I>>();
         else
-          return std::dynamic_pointer_cast<const typename focus_t<I>::atom_t>
+          return std::dynamic_pointer_cast<const typename project_t<I>::atom_t>
                  (std::get<I>(v.sub()))->value();
       }
     };

@@ -488,13 +488,13 @@ namespace vcsn
 
       /// The type of the expansionsset for tape Tape.
       template <unsigned Tape>
-      using focus_t
-        = expansionset<typename expressionset_t::template focus_t<Tape>>;
+      using project_t
+        = expansionset<typename expressionset_t::template project_t<Tape>>;
 
       /// The expansionsset for tape Tape.
       template <unsigned Tape>
-      auto focus() const
-        -> focus_t<Tape>
+      auto project() const
+        -> project_t<Tape>
       {
         return {detail::make_project<Tape>(rs_)};
       }
@@ -506,14 +506,15 @@ namespace vcsn
         /// Denormalize on this tape: from expansion to pure
         /// polynomial.
         template <size_t Tape>
-        auto denormalize_tape(const typename focus_t<Tape>::value_t& e) const
-          -> typename focus_t<Tape>::polys_t
+        auto denormalize_tape(const typename project_t<Tape>::value_t& e) const
+          -> typename project_t<Tape>::polys_t
         {
-          auto es = eset_.template focus<Tape>();
+          auto es = eset_.template project<Tape>();
           auto res = e;
           es.denormalize(res);
           require(es.expressionset().weightset()->is_zero(res.constant),
-                  es, ": to-expansion: cannot denormalize ", to_string(es, res),
+                  es, ": to-expansion: cannot denormalize ",
+                  to_string(es, res),
                   ", need support for label one (the empty label)");
           return res.polynomials;
         }
@@ -522,9 +523,9 @@ namespace vcsn
         template <size_t... Tape>
         auto denormalize(std::tuple<const Expansions&...>& es,
                          detail::index_sequence<Tape...>) const
-          -> std::tuple<typename focus_t<Tape>::polys_t...>
+          -> std::tuple<typename project_t<Tape>::polys_t...>
         {
-          using res_t = std::tuple<typename focus_t<Tape>::polys_t...>;
+          using res_t = std::tuple<typename project_t<Tape>::polys_t...>;
           return res_t{denormalize_tape<Tape>(std::get<Tape>(es))...};
         }
 
@@ -576,7 +577,7 @@ namespace vcsn
       /// if (!ws_.is_zero(e0.constant))
       ///   {
       ///     auto rs0 = detail::make_project<0>(rs_);
-      ///     using p0_t = typename polynomialset_t::template focus_t<0>;
+      ///     using p0_t = typename polynomialset_t::template project_t<0>;
       ///     auto p0 = p0_t{{rs0.one(), e0.constant}};
       ///     for (const auto& p1: e1.polynomials)
       ///       {
@@ -589,7 +590,7 @@ namespace vcsn
       /// if (!ws_.is_zero(e1.constant))
       ///   {
       ///     auto rs1 = detail::make_project<1>(rs_);
-      ///     using p1_t = typename polynomialset_t::template focus_t<1>;
+      ///     using p1_t = typename polynomialset_t::template project_t<1>;
       ///     auto p1 = p1_t{{rs1.one(), e1.constant}};
       ///     for (const auto& p0: e0.polynomials)
       ///       {
