@@ -1,8 +1,7 @@
-#ifndef VCSN_CORE_AUTOMATONSET_HH
-# define VCSN_CORE_AUTOMATONSET_HH
+#pragma once
 
-# include <vcsn/core/mutable-automaton.hh>
-# include <vcsn/ctx/context.hh>
+#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/ctx/context.hh>
 
 namespace vcsn
 {
@@ -33,5 +32,3 @@ namespace vcsn
     context_t ctx_;
   };
 }
-
-#endif // !VCSN_CORE_AUTOMATONSET_HH

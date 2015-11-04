@@ -1,9 +1,8 @@
-#ifndef VCSN_CTX_LAW_CHAR_B_HH
-# define VCSN_CTX_LAW_CHAR_B_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/law_char.hh>
-# include <vcsn/weightset/b.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/law_char.hh>
+#include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -13,11 +12,9 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
+#include <vcsn/ctx/instantiate.hh>
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::law_char_b);
 };
-
-#endif // !VCSN_CTX_LAW_CHAR_B_HH

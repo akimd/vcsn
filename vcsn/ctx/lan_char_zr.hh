@@ -1,10 +1,9 @@
-#ifndef VCSN_CTX_LAN_CHAR_ZR_HH
-# define VCSN_CTX_LAN_CHAR_ZR_HH
+#pragma once
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/ctx/lal_char.hh>
-# include <vcsn/ctx/lan_char.hh>
-# include <vcsn/weightset/z.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/ctx/lal_char.hh>
+#include <vcsn/ctx/lan_char.hh>
+#include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -15,11 +14,9 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
+#include <vcsn/ctx/instantiate.hh>
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lan_char_zr);
 };
-
-#endif // !VCSN_CTX_LAN_CHAR_ZR_HH

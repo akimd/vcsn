@@ -1,24 +1,23 @@
-#ifndef VCSN_CORE_RAT_EXPRESSIONSET_HH
-# define VCSN_CORE_RAT_EXPRESSIONSET_HH
+#pragma once
 
-# include <set>
-# include <string>
+#include <set>
+#include <string>
 
-# include <vcsn/core/rat/identities.hh>
-# include <vcsn/core/rat/printer.hh>
-# include <vcsn/core/rat/expression.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/labelset/labelset.hh>
-# include <vcsn/labelset/letterset.hh>
-# include <vcsn/labelset/oneset.hh>
-# include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star-status.hh>
-# include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/nmin.hh>
-# include <vcsn/weightset/q.hh>
-# include <vcsn/weightset/r.hh>
-# include <vcsn/weightset/z.hh>
-# include <vcsn/weightset/zmin.hh>
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/core/rat/printer.hh>
+#include <vcsn/core/rat/expression.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/labelset/labelset.hh>
+#include <vcsn/labelset/letterset.hh>
+#include <vcsn/labelset/oneset.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/star-status.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/nmin.hh>
+#include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/r.hh>
+#include <vcsn/weightset/z.hh>
+#include <vcsn/weightset/zmin.hh>
 
 namespace vcsn
 {
@@ -47,7 +46,7 @@ namespace vcsn
     // See http://stackoverflow.com/questions/15537023 to know why we
     // add the vcsn::rat:: part: GCC wants it, Clang does not care,
     // both are right.
-# define DEFINE(Type)                                           \
+#define DEFINE(Type)                                           \
     using Type ## _t = vcsn::rat::Type<context_t>
     DEFINE(atom);
     DEFINE(complement);
@@ -67,7 +66,7 @@ namespace vcsn
     DEFINE(transposition);
     DEFINE(tuple);
     DEFINE(zero);
-# undef DEFINE
+#undef DEFINE
 
     /// An expression (a shared pointer to a tree).
     using value_t = typename node_t::value_t;
@@ -558,9 +557,7 @@ namespace vcsn
 
 } // namespace vcsn
 
-# include <vcsn/core/rat/expressionset.hxx>
-
-#endif // !VCSN_CORE_RAT_EXPRESSIONSET_HH
+#include <vcsn/core/rat/expressionset.hxx>
 
 // This is ugly, yet I don't know how to address this circular
 // dependency another way: expressionset.hxx uses is-valid-expression.hh,

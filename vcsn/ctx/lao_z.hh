@@ -1,9 +1,8 @@
-#ifndef VCSN_CTX_LAO_Z_HH
-# define VCSN_CTX_LAO_Z_HH
+#pragma once
 
-# include <vcsn/labelset/oneset.hh>
-# include <vcsn/ctx/context.hh>
-# include <vcsn/weightset/z.hh>
+#include <vcsn/labelset/oneset.hh>
+#include <vcsn/ctx/context.hh>
+#include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -13,11 +12,9 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
+#include <vcsn/ctx/instantiate.hh>
 
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lao_z);
 };
-
-#endif // !VCSN_CTX_LAO_Z_HH
