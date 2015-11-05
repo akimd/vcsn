@@ -268,19 +268,46 @@ namespace vcsn
     }
   }
 
-  /*--------------------------.
-  | right-mult(expression).   |
-  `--------------------------*/
+  /*------------------------.
+  | right-mult(valueset).   |
+  `------------------------*/
 
-  template <typename ExpSet>
+  template <typename ValueSet>
   inline
-  typename ExpSet::value_t
-  right_mult(const ExpSet& rs,
-             const typename ExpSet::value_t& r,
-             const weight_t_of<ExpSet>& w)
+  typename ValueSet::value_t
+  right_mult(const ValueSet& rs,
+             const typename ValueSet::value_t& r,
+             const weight_t_of<ValueSet>& w)
   {
     return rs.rmul(r, w);
   }
+
+  /*-------------------------.
+  | right-mult(expansion).   |
+  `-------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (right_mult).
+      template <typename ExpansionSet, typename WeightSet>
+      expansion
+      right_mult_expansion(const expansion& exp, const weight& weight)
+      {
+        const auto& w1 = weight->as<WeightSet>();
+        const auto& r1 = exp->as<ExpansionSet>();
+        auto rs = join_weightset_expansionset(w1.weightset(), r1.expansionset());
+        auto w2 = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
+        auto r2 = rs.conv(r1.expansionset(), r1.expansion());
+        return make_expansion(rs, ::vcsn::right_mult(rs, r2, w2));
+      }
+    }
+  }
+
+  /*--------------------------.
+  | right-mult(expression).   |
+  `--------------------------*/
 
   namespace dyn
   {

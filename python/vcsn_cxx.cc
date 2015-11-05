@@ -719,6 +719,8 @@ struct expansion
 
   expansion left_mult(const weight& w) const;
 
+  expansion right_mult(const weight& w) const;
+
   static expansion tuple_(const boost::python::list& es)
   {
     return vcsn::dyn::tuple(expansions_(es));
@@ -1271,6 +1273,11 @@ expansion expansion::left_mult(const weight& w) const
   return vcsn::dyn::left_mult(w.val_, val_);
 }
 
+expansion expansion::right_mult(const weight& w) const
+{
+  return vcsn::dyn::right_mult(val_, w.val_);
+}
+
 /*-----------------------------.
 | expression implementation.   |
 `-----------------------------*/
@@ -1452,6 +1459,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("context", &expansion::context)
     .def("format", &expansion::format)
     .def("left_mult", &expansion::left_mult)
+    .def("right_mult", &expansion::right_mult)
     .def("sum", &expansion::sum)
     .def("_tuple", &expansion::tuple_).staticmethod("_tuple")
    ;

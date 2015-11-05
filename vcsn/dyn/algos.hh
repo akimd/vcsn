@@ -665,6 +665,9 @@ namespace vcsn
     /// \pre aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
 
+    /// The right-multiplication of an expansion with \a w as weight.
+    expansion right_mult(const expansion& aut, const weight& w);
+
     /// The right-multiplication of an expression with \a w as weight.
     expression right_mult(const expression& aut, const weight& w);
 
