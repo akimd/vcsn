@@ -19,6 +19,7 @@ namespace vcsn
     {
     public:
       using expressionset_t = ExpSet;
+      using self_t = expansionset;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
@@ -59,6 +60,12 @@ namespace vcsn
       const expressionset_t& expressionset() const
       {
         return rs_;
+      }
+
+      /// The polynomialset.
+      const polynomialset_t& polynomialset() const
+      {
+        return ps_;
       }
 
       /// Print this valueset.
@@ -153,6 +160,29 @@ namespace vcsn
       value_t& denormalize_(value_t& res, std::false_type) const
       {
         return res;
+      }
+
+      /*--------.
+      | Conv.   |
+      `--------*/
+
+      /// Conversion from (this and) other weightsets.
+      static value_t
+      conv(self_t, const value_t& v)
+      {
+        return v;
+      }
+
+      /// Convert from another expansionset to self.
+      template <typename OtherExpSet>
+      value_t
+      conv(const expansionset<OtherExpSet>& other,
+           const typename expansionset<OtherExpSet>::value_t& v) const
+      {
+        const auto& other_ws = other.expressionset().weightset();
+        const auto& other_ps = other.polynomialset();
+        return {ws_.conv(other_ws, v.constant),
+                ps_.conv(other_ps, v.polynomials)};
       }
 
       /// The zero.
