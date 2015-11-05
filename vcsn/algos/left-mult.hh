@@ -3,9 +3,11 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/core/rat/expressionset.hh>
+#include <vcsn/core/rat/expansionset.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -120,20 +122,56 @@ namespace vcsn
     }
   }
 
+  /*-----------------------.
+  | left-mult(valueset).   |
+  `-----------------------*/
+
+  template <typename ValueSet>
+  inline
+  typename ValueSet::value_t
+  left_mult(const ValueSet& rs,
+            const weight_t_of<ValueSet>& w,
+            const typename ValueSet::value_t& r)
+  {
+    return rs.lmul(w, r);
+  }
+
+  /*------------------------.
+  | left-mult(expansion).   |
+  `------------------------*/
+
+  template <typename WeightSet, typename ExpSet>
+  expansionset<expressionset<context<labelset_t_of<ExpSet>,
+                                     join_t<WeightSet, weightset_t_of<ExpSet>>>>>
+  join_weightset_expansionset(const WeightSet& ws, const expansionset<ExpSet>& rs)
+  {
+    return make_expansionset(join_weightset_expressionset(ws,
+                                                          rs.expressionset()));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (left_mult).
+      template <typename WeightSet, typename ExpansionSet>
+      expansion
+      left_mult_expansion(const weight& weight, const expansion& exp)
+      {
+        const auto& w1 = weight->as<WeightSet>();
+        const auto& r1 = exp->as<ExpansionSet>();
+        auto rs = join_weightset_expansionset(w1.weightset(), r1.expansionset());
+        auto w2 = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
+        auto r2 = rs.conv(r1.expansionset(), r1.expansion());
+        return make_expansion(rs, ::vcsn::left_mult(rs, w2, r2));
+      }
+
+    }
+  }
 
   /*-------------------------.
   | left-mult(expression).   |
   `-------------------------*/
-
-  template <typename ExpSet>
-  inline
-  typename ExpSet::value_t
-  left_mult(const ExpSet& rs,
-            const weight_t_of<ExpSet>& w,
-            const typename ExpSet::value_t& r)
-  {
-    return rs.lmul(w, r);
-  }
 
   /// Join between an expressionset and a weightset.
   ///

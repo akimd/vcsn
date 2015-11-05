@@ -36,7 +36,7 @@ def _is_equal(lhs, rhs):
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
 def _left_mult(self, lhs):
-    '''Support "aut * weight".  Also serves for expressions.'''
+    '''Support "aut * weight".  Also serves for expressions and expansions.'''
     return self.left_mult(self.context().weight(str(lhs)))
 
 def _right_mult(self, rhs):

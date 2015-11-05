@@ -392,6 +392,9 @@ namespace vcsn
     /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);
 
+    /// The left-multiplication of an expansion with \a w as weight.
+    expansion left_mult(const weight& w, const expansion& exp);
+
     /// The left-multiplication of an expression with \a w as weight.
     expression left_mult(const weight& w, const expression& exp);
 

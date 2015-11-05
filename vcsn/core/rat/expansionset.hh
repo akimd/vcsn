@@ -225,6 +225,14 @@ namespace vcsn
         return res;
       }
 
+      /// Left-multiplication by \a w of \a rhs.
+      value_t lmul(const weight_t& w, const value_t& rhs) const
+      {
+        value_t res = rhs;
+        lmul_here(w, res);
+        return res;
+      }
+
       /// Inplace left-multiplication by \a w of \a res.
       value_t& lmul_here(const weight_t& w, value_t& res) const
       {
