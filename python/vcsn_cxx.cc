@@ -707,6 +707,11 @@ struct expansion
     return os.str();
   }
 
+  expansion sum(const expansion& rhs) const
+  {
+    return vcsn::dyn::sum(val_, rhs.val_);
+  }
+
   static expansion tuple_(const boost::python::list& es)
   {
     return vcsn::dyn::tuple(expansions_(es));
@@ -1430,6 +1435,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<expansion>("expansion", bp::no_init)
     .def(bp::init<const std::string&>())
     .def("format", &expansion::format)
+    .def("sum", &expansion::sum)
     .def("_tuple", &expansion::tuple_).staticmethod("_tuple")
    ;
 

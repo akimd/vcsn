@@ -735,6 +735,9 @@ namespace vcsn
     /// Sum of two expressions.
     expression sum(const expression& lhs, const expression& rhs);
 
+    /// Sum of two expansions.
+    expansion sum(const expansion& lhs, const expansion& rhs);
+
     /// Sum of two polynomials.
     polynomial sum(const polynomial& lhs, const polynomial& rhs);
 

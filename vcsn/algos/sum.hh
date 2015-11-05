@@ -7,6 +7,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/expression.hh> // dyn::make_expression
+#include <vcsn/dyn/expansion.hh> // dyn::make_expansion
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh> // require
@@ -125,6 +126,29 @@ namespace vcsn
   }
 
 
+  /*-----------------------------.
+  | sum(expansion, expansion).   |
+  `-----------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (sum).
+      template <typename ExpansionSetLhs, typename ExpansionSetRhs>
+      expansion
+      sum_expansion(const expansion& lhs, const expansion& rhs)
+      {
+        const auto& l = lhs->as<ExpansionSetLhs>();
+        const auto& r = rhs->as<ExpansionSetRhs>();
+        auto rs = join(l.expansionset(), r.expansionset());
+        auto lr = rs.conv(l.expansionset(), l.expansion());
+        auto rr = rs.conv(r.expansionset(), r.expansion());
+        return make_expansion(rs, ::vcsn::sum(rs, lr, rr));
+      }
+    }
+  }
+
   /*-------------------------------.
   | sum(expression, expression).   |
   `-------------------------------*/
@@ -171,4 +195,5 @@ namespace vcsn
       }
     }
   }
+
 }

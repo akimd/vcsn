@@ -211,6 +211,14 @@ namespace vcsn
           ps_.add_here(lhs.polynomials[p.first], p.second);
       }
 
+      /// Addition.
+      value_t add(const value_t& lhs, const value_t& rhs) const
+      {
+        value_t res = lhs;
+        add_here(res, rhs);
+        return res;
+      }
+
       /// Inplace left-multiplication by \a w of \a res.
       value_t& lmul_here(const weight_t& w, value_t& res) const
       {
