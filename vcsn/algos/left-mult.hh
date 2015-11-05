@@ -157,9 +157,9 @@ namespace vcsn
   /// weightsets by hand, and leave the labelset alone.
   template <typename WeightSet, typename ExpSet>
   expressionset<context<labelset_t_of<ExpSet>,
-                    join_t<WeightSet, weightset_t_of<ExpSet>>>>
+                        join_t<WeightSet, weightset_t_of<ExpSet>>>>
   join_weightset_expressionset(const WeightSet& ws,
-                           const ExpSet& rs)
+                               const ExpSet& rs)
   {
     auto ctx = make_context(*rs.labelset(), join(ws, *rs.weightset()));
     return make_expressionset(ctx, rs.identities());
