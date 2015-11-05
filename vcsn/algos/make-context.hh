@@ -6,6 +6,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expansion.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -72,6 +73,15 @@ namespace vcsn
       context_of_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>().expressionset();
+        return dyn::make_context(e.context());
+      }
+
+      /// Bridge (context_of).
+      template <typename ExpansionSet>
+      context
+      context_of_expansion(const expansion& exp)
+      {
+        const auto& e = exp->as<ExpansionSet>().expansionset();
         return dyn::make_context(e.context());
       }
     }

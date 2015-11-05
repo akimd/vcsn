@@ -122,6 +122,9 @@ namespace vcsn
     /// The context of this automaton.
     context context_of(const automaton& a);
 
+    /// The context of this expansion.
+    context context_of(const expansion& r);
+
     /// The context of this expression.
     context context_of(const expression& r);
 

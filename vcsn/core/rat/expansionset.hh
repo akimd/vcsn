@@ -68,6 +68,12 @@ namespace vcsn
         return ps_;
       }
 
+      /// The context.
+      const context_t& context() const
+      {
+        return rs_.context();
+      }
+
       /// Print this valueset.
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
@@ -617,6 +623,13 @@ namespace vcsn
       /// The polynomialset for the polynomials.
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
     };
+  }
+
+  template <typename ExpSet>
+  expansionset<ExpSet>
+  make_expansionset(const ExpSet& expset)
+  {
+    return {expset};
   }
 
   namespace detail

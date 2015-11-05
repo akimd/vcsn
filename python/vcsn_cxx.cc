@@ -700,6 +700,11 @@ struct expansion
     vcsn::raise("not implemented");
   }
 
+  ::context context() const
+  {
+    return vcsn::dyn::context_of(val_);
+  }
+
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -1434,6 +1439,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<expansion>("expansion", bp::no_init)
     .def(bp::init<const std::string&>())
+    .def("context", &expansion::context)
     .def("format", &expansion::format)
     .def("sum", &expansion::sum)
     .def("_tuple", &expansion::tuple_).staticmethod("_tuple")
