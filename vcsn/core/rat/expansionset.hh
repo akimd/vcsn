@@ -580,4 +580,21 @@ namespace vcsn
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
     };
   }
+
+  namespace detail
+  {
+    /// The join of two expansionsets.
+    template <typename Ctx1, typename Ctx2>
+    struct join_impl<expansionset<expressionset<Ctx1>>,
+                     expansionset<expressionset<Ctx2>>>
+    {
+      using type = expansionset<expressionset<join_t<Ctx1, Ctx2>>>;
+
+      static type join(const expansionset<expressionset<Ctx1>>& lhs,
+                       const expansionset<expressionset<Ctx2>>& rhs)
+      {
+        return type(vcsn::join(lhs.expressionset(), rhs.expressionset()));
+      }
+    };
+  }
 }

@@ -199,4 +199,7 @@ namespace vcsn
   template <typename Context>
   using expressionset = weightset_mixin<rat::expressionset_impl<Context>>;
 
+  template <typename ExpSet>
+  using expansionset = rat::expansionset<ExpSet>;
+
 } // namespace vcsn
