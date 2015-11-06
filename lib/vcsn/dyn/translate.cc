@@ -232,7 +232,7 @@ namespace vcsn
         std::string split(const std::string& s) const
         {
           std::string res;
-          const size_t size = 200;
+          const size_t size = 150;
           for (unsigned i = 0; i < s.length(); i += size)
             {
               if (i)
