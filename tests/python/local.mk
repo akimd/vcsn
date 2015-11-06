@@ -34,6 +34,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/eliminate-state.py                        \
   %D%/evaluate.py                               \
   %D%/expand.py                                 \
+  %D%/expansion.py                              \
   %D%/expression.py                             \
   %D%/factory.py                                \
   %D%/filter.py                                 \
