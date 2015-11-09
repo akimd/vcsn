@@ -4,8 +4,11 @@
 
 #include <vcsn/misc/dynamic_bitset.hh>
 
+#include <vcsn/misc/wet.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/vector.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -20,7 +23,13 @@ namespace vcsn
   minimize_hopcroft(const Aut& a)
   {
     using state_t = state_t_of<Aut>;
-    using set_t = dynamic_bitset;
+    using stateset_t = stateset<Aut>;
+    require(std::is_same<weightset_t_of<Aut>, b>::value,
+            "hopcroft: require boolean weightset");
+    auto ctx = make_context(stateset_t(a), *a->weightset());
+    auto ps = detail::make_polynomialset<decltype(ctx),
+                                         wet_kind_t::bitset>(ctx);
+    using set_t = typename decltype(ps)::value_t;
     using partition_t = std::set<set_t>;
 
     unsigned size = a->all_states().back() + 1;
@@ -46,15 +55,15 @@ namespace vcsn
         for (const auto l: generators)
           {
             auto x = set_t(size);
-            for (auto s = sub_w.find_first(); s != set_t::npos; s = sub_w.find_next(s))
-              for (auto in: a->in(s, l))
+            for (auto s: sub_w)
+              for (auto in: a->in(label_of(s), l))
                 x.set(a->src_of(in));
             auto cpy = partition_t(p);
             for (auto y: cpy)
               {
                 auto xny = x & y;
                 auto x_y = y - x;
-                if (xny.any() && x_y.any())
+                if (!xny.empty() && !x_y.empty())
                   {
                     p.erase(y);
                     p.insert(xny);
@@ -66,7 +75,7 @@ namespace vcsn
                         w.insert(x_y);
                       }
                     else
-                      w.insert(xny.count() <= x_y.count() ? xny : x_y);
+                      w.insert(xny.size() <= x_y.size() ? xny : x_y);
                   }
               }
           }
@@ -75,11 +84,11 @@ namespace vcsn
     std::transform(begin(p), end(p), std::back_inserter(res),
         [](const set_t& set)
         {
-          auto tab = std::vector<state_t>();
-          tab.reserve(set.count());
-          for (auto s = set.find_first(); s != set_t::npos; s = set.find_next(s))
-            tab.push_back(s);
-          return tab;
+          auto res = std::vector<state_t>();
+          res.reserve(set.size());
+          for (auto s: set)
+            res.push_back(label_of(s));
+          return res;
         });
     return quotient(a, res);
   }
