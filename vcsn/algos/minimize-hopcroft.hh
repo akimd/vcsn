@@ -40,8 +40,9 @@ namespace vcsn
     auto q = set_t(size);
     for (auto s: a->all_states())
       q.set(s);
+    q.erase(a->post());
 
-    auto p = partition_t{f, q - f};
+    auto p = partition_t{f, q};
     auto w = partition_t{f};
 
     const auto& ls = *a->labelset();
@@ -50,32 +51,33 @@ namespace vcsn
 
     while (!w.empty())
       {
-        auto sub_w = *begin(w);
-        w.erase(sub_w);
+        auto sub_w = std::move(*begin(w));
+        w.erase(begin(w));
         for (const auto l: generators)
           {
             auto x = set_t(size);
             for (auto s: sub_w)
               for (auto in: a->in(label_of(s), l))
                 x.set(a->src_of(in));
-            auto cpy = partition_t(p);
-            for (auto y: cpy)
+            auto p2 = partition_t(p);
+            for (auto y: p2)
               {
                 auto xny = x & y;
                 auto x_y = y - x;
                 if (!xny.empty() && !x_y.empty())
                   {
-                    p.erase(y);
-                    p.insert(xny);
-                    p.insert(x_y);
-                    if (has(w, y))
+                    auto it = w.find(y);
+                    if (it != end(w))
                       {
-                        w.erase(y);
+                        w.erase(it);
                         w.insert(xny);
                         w.insert(x_y);
                       }
                     else
                       w.insert(xny.size() <= x_y.size() ? xny : x_y);
+                    p.erase(y);
+                    p.insert(std::move(xny));
+                    p.insert(std::move(x_y));
                   }
               }
           }
