@@ -1288,6 +1288,12 @@ namespace vcsn
     constexpr static char rangle = '>';
   };
 
+    template <typename Context, wet_kind_t Kind>
+    polynomialset<Context, Kind>
+    make_polynomialset(const Context& context)
+    {
+      return {context};
+    }
 
     template <typename Ctx1, wet_kind_t Kind1,
               typename Ctx2, wet_kind_t Kind2>

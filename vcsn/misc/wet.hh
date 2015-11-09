@@ -715,8 +715,24 @@ namespace vcsn
       {
         return find(key(k));
       }
-    };
 
+      /// Operators for when wet_bitset is used as a bitset.
+      self_t operator-(const self_t& rhs) const
+      {
+        return {set_ - rhs.set_};
+      }
+
+      self_t operator&(const self_t& rhs) const
+      {
+        return {set_ & rhs.set_};
+      }
+
+      /// Allow wet_bitset to be used in containers.
+      friend bool operator<(const self_t& lhs, const self_t& rhs)
+      {
+        return lhs.set_ < rhs.set_;
+      }
+    };
 
     /*------------------------.
     | wet_kind<Key, Value>.   |
