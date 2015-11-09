@@ -200,6 +200,7 @@ nobase_include_HEADERS =                        \
   %D%/labelset/letterset.hh                     \
   %D%/labelset/nullableset.hh                   \
   %D%/labelset/oneset.hh                        \
+  %D%/labelset/stateset.hh                      \
   %D%/labelset/tupleset.hh                      \
   %D%/labelset/word-polynomialset.hh            \
   %D%/labelset/wordset.hh                       \

@@ -16,6 +16,10 @@ namespace vcsn
   // oneset.hh.
   class oneset;
 
+  // stateset.hh.
+  template <typename Aut>
+  class stateset;
+
   // tupleset.hh.
   namespace detail
   {

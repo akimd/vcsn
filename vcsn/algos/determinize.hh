@@ -18,6 +18,7 @@
 #include <vcsn/misc/unordered_map.hh> // vcsn::has
 #include <vcsn/weightset/fwd.hh> // b
 #include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/labelset/stateset.hh>
 
 namespace vcsn
 {
@@ -297,49 +298,8 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
 
-      /// An output state is a list of weighted input states.
-      struct stateset
-      {
-        stateset(const automaton_t& aut)
-          : aut_(aut)
-        {}
-
-        using value_t = state_t;
-
-        // So that we don't try to print ranges of states.
-        static constexpr bool
-        is_letterized()
-        {
-          return false;
-        }
-
-        using kind_t = void;
-        static bool equal(state_t l, state_t r)
-        {
-          return l == r;
-        }
-
-        static bool less(state_t l, state_t r)
-        {
-          return l < r;
-        }
-
-        static size_t hash(state_t s)
-        {
-          return hash_value(s);
-        }
-
-        std::ostream&
-        print(state_t s, std::ostream& out,
-              format fmt = {}) const
-        {
-          return aut_->print_state_name(s, out, fmt);
-        }
-
-        automaton_t aut_;
-      };
-
-      using state_nameset_t = polynomialset<context<stateset, weightset_t>>;
+      using stateset_t = stateset<automaton_t>;
+      using state_nameset_t = polynomialset<context<stateset_t, weightset_t>>;
       using state_name_t = typename state_nameset_t::value_t;
 
       /// Build the weighted determinizer.
@@ -485,7 +445,7 @@ namespace vcsn
       weightset_t ws_ = *input_->weightset();
 
       /// (Nameset) The polynomialset that stores weighted states.
-      state_nameset_t ns_ = {{stateset(input_), ws_}};
+      state_nameset_t ns_ = {{stateset_t(input_), ws_}};
 
       /// The sets of (input) states waiting to be processed.
       using queue = std::queue<state_name_t>;
