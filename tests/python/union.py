@@ -5,7 +5,7 @@ from test import *
 
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
-CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab | bc)
+CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab.sum(bc, "general"))
 
 ## ------------ ##
 ## lal_char_z.  ##
@@ -104,7 +104,7 @@ digraph
   4 -> 3 [label = "<3>b"]
 }
 ''')
-CHECK_EQ(exp, a | b)
+CHECK_EQ(exp, a + b)
 
 # Check union of contexts.
 a1 = vcsn.context('lal_char(a), expressionset<lal_char(x), b>').expression('<x>a*').standard()
@@ -143,7 +143,7 @@ digraph
 }
 ''')
 
-CHECK_EQ(exp, a1 | a2)
+CHECK_EQ(exp, a1.sum(a2, "general"))
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
@@ -158,21 +158,21 @@ def check(exp, eff):
 a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
          .expression('<u>a').derived_term()
 a2 = vcsn.context('lal_char(b), b').expression('b*').derived_term()
-check('<u>a+b*', a1|a2)
-check('<u>a+b*', a2|a1)
+check('<u>a+b*', a1 + a2)
+check('<u>a+b*', a2 + a1)
 
 # Z, Q, R.
 z = vcsn.context('lal_char(a), z').expression('<2>a')  .derived_term()
 q = vcsn.context('lal_char(b), q').expression('<1/3>b').derived_term()
 r = vcsn.context('lal_char(c), r').expression('<.4>c') .derived_term()
 
-check('<2>a+<1/3>b', z|q)
-check('<2>a+<1/3>b', q|z)
-check('<4>a+<1/3>b', z|q|z)
-check('<2>a+<2/3>b', z|q|q)
+check('<2>a+<1/3>b', z + q)
+check('<2>a+<1/3>b', q + z)
+check('<4>a+<1/3>b', z + q + z)
+check('<2>a+<2/3>b', z + q + q)
 
-check('<2>a+<0.4>c', z|r)
-check('<2>a+<0.4>c', r|z)
+check('<2>a+<0.4>c', z + r)
+check('<2>a+<0.4>c', r + z)
 
-check('<0.333333>b+<0.4>c', q|r)
-check('<0.333333>b+<0.4>c', r|q)
+check('<0.333333>b+<0.4>c', q + r)
+check('<0.333333>b+<0.4>c', r + q)

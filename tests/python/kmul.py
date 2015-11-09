@@ -30,7 +30,7 @@ CHECK_ISOMORPHIC((r * '3/4').standard(),
                  r.standard() * '3/4')
 
 # Non-standard automata.  This time, it does not commute.
-a = q.expression('ab').derived_term() | q.expression('ab').derived_term()
+a = q.expression('ab').derived_term() + q.expression('ab').derived_term()
 CHECK_EQUIV(q.expression('<3/4>ab+<3/4>ab').derived_term(),
             '3/4' * a)
 CHECK_EQUIV(q.expression('(ab)<3/4>+(ab)<3/4>').derived_term(),

@@ -28,7 +28,6 @@ automaton.__eq__ = lambda self, other: str(self.strip()) == str(other.strip())
 automaton.__invert__ = automaton.complement
 automaton.__mod__ = automaton.difference
 automaton.__mul__ = _right_mult
-automaton.__or__ = automaton.union
 automaton.__pow__ = automaton.multiply
 automaton.__repr__ = lambda self: self.type()
 automaton.__rmul__ = _left_mult
