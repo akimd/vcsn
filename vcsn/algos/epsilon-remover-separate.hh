@@ -20,6 +20,7 @@
 #include <vcsn/misc/debug-level.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/epsilon-profile.hh>
+#include <vcsn/misc/vector.hh> // make_vector
 
 #define STATS
 
@@ -36,12 +37,9 @@ namespace vcsn
     class epsilon_remover_separate
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
       using labelset_t = labelset_t_of<automaton_t>;
-      using transition_t = transition_t_of<automaton_t>;
-      using transitions_t = std::vector<transition_t>;
 
       /// Context for spontaneous automaton (only spontaneous
       /// transitions of the input automaton).
@@ -78,6 +76,8 @@ namespace vcsn
         auto pcopier = make_copier(aut, aut_proper_);
         auto dcopier = make_copier(aut, aut_dirty_);
 
+        using state_t = state_t_of<automaton_t>;
+        using transition_t = transition_t_of<automaton_t>;
         pcopier([](state_t) { return true; },
                 [&aut](transition_t t) {
                   return !aut->labelset()->is_one(aut->label_of(t));
@@ -202,15 +202,17 @@ namespace vcsn
       /// The state s corresponds to a *dirty* state id.
       void remover_on(state_dirty_t dirty_s, state_proper_t proper_s)
       {
-        const auto& tr = aut_dirty_->in(dirty_s);
-        // Iterate on a copy, as we remove these transitions in the
-        // loop.
-        transitions_t transitions{tr.begin(), tr.end()};
         // The star of the weight of the loop on 's' (1 if no loop).
         weight_t star = ws_.one();
         using state_weight_t = std::pair<state_dirty_t, weight_t>;
         auto closure = std::vector<state_weight_t>{};
-        for (auto t : transitions)
+
+#ifdef STATS
+        // Number of transitions that will be removed.
+        auto removed = aut_dirty_->in(dirty_s).size();
+#endif
+        // Iterate on a copy: we remove these transitions in the loop.
+        for (auto t : make_vector(aut_dirty_->in(dirty_s)))
           {
             weight_t weight = aut_dirty_->weight_of(t);
             auto src = aut_dirty_->src_of(t);
@@ -268,13 +270,13 @@ namespace vcsn
               }
           }
 #ifdef STATS
-        unsigned added = (aut_proper_->all_out(proper_s).size()
-                          + aut_dirty_->out(dirty_s).size()) * closure.size();
-        unsigned removed = transitions.size();
+        // Number of transition that have been added.
+        auto added = (aut_proper_->all_out(proper_s).size()
+                      + aut_dirty_->out(dirty_s).size()) * closure.size();
 #endif
-        if (prune_ &&
-            aut_dirty_->in(dirty_s).empty() &&
-            aut_proper_->all_in(proper_s).empty())
+        if (prune_
+            && aut_dirty_->in(dirty_s).empty()
+            && aut_proper_->all_in(proper_s).empty())
           {
 #ifdef STATS
             removed += (aut_proper_->all_out(proper_s).size()
