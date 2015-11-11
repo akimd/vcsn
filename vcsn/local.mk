@@ -225,6 +225,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/fwd.hh                               \
   %D%/misc/getargs.hh                           \
   %D%/misc/indent.hh                            \
+  %D%/misc/index.hh                             \
   %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \
   %D%/misc/map.hh                               \

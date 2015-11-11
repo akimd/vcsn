@@ -8,12 +8,13 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/irange.hpp>
 
-#include <vcsn/misc/crange.hh>
 #include <vcsn/core/fwd.hh>
 #include <vcsn/core/transition.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/crange.hh>
 #include <vcsn/misc/format.hh>
+#include <vcsn/misc/index.hh>
 #include <vcsn/misc/memory.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -21,23 +22,6 @@ namespace vcsn
 {
   namespace detail
   {
-  /// Lightweight state handle (or index).
-  template <typename Aut>
-  struct state_t_impl
-  {
-    state_t_impl(unsigned i)
-      : s{i}
-    {}
-    /// Default ctor to please containers.
-    state_t_impl() = default;
-    operator unsigned() const { return s; }
-    /// Be compliant with Boost integer ranges.
-    state_t_impl& operator++() { ++s; return *this; }
-    /// Be compliant with Boost integer ranges.
-    state_t_impl& operator--() { --s; return *this; }
-    unsigned s;
-  };
-
   /// Bidirectional automata.
   template <typename Context>
   class mutable_automaton_impl
@@ -57,9 +41,11 @@ namespace vcsn
     using weightset_ptr = typename context_t::weightset_ptr;
 
     /// Lightweight state handle (or index).
-    using state_t = state_t_impl<self_t>;
+    struct state_tag {};
+    using state_t = index_t_impl<state_tag>;
     /// Lightweight transition handle (or index).
-    using transition_t = unsigned;
+    struct transition_tag {};
+    using transition_t = index_t_impl<transition_tag>;
     /// Transition label.
     using label_t = typename labelset_t::value_t;
     /// Transition weight.
@@ -1042,18 +1028,4 @@ namespace vcsn
   {
     return make_shared_ptr<mutable_automaton<Context>>(ctx);
   }
-}
-
-namespace std
-{
-  /// Hash state indexes.
-  template <typename Aut>
-  struct hash<vcsn::detail::state_t_impl<Aut>>
-  {
-    using state_t = vcsn::detail::state_t_impl<Aut>;
-    size_t operator()(state_t s) const noexcept
-    {
-      return static_cast<size_t>(static_cast<unsigned>(s));
-    }
-  };
 }
