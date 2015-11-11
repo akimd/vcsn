@@ -156,13 +156,9 @@ namespace vcsn
   template <typename Aut>
   auto
   subword(const Aut& aut)
-    -> fresh_automaton_t_of<Aut,
-                            detail::nullableset_context_t<context_t_of<Aut>>>
+    -> decltype(make_nullable_automaton(aut->context()))
   {
-    using res_t
-      = fresh_automaton_t_of<Aut,
-                             detail::nullableset_context_t<context_t_of<Aut>>>;
-    auto res = make_shared_ptr<res_t>(make_nullableset_context(aut->context()));
+    auto res = make_nullable_automaton(aut->context());
     copy_into(aut, res);
     subword_here(res);
     return res;
