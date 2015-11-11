@@ -103,7 +103,7 @@ namespace vcsn
                                 OutAut& naut1, OutAut& naut2)
   {
     using state_t = state_t_of<InAut>;
-    std::unordered_map<state_t, state_t> ms;
+    std::unordered_map<state_t, state_t_of<OutAut>> ms;
 
     ms[aut->pre()] = naut1->pre();
     ms[aut->post()] = naut1->post();
