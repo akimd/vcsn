@@ -3,6 +3,15 @@
 import vcsn
 from test import *
 
+a = vcsn.automaton('''
+context = "lal_char, q"
+$ -> 0
+1 -> 0 b
+0 -> 1 a
+1 -> $
+''')
+XFAIL(lambda: a.sum(a, "standard"))
+
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*')
 bc = vcsn.context('lal_char(bc), b').expression('(b+c)*')
 result = vcsn.automaton('''

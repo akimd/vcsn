@@ -71,7 +71,6 @@ namespace vcsn
   A&
   multiply_here(A& res, const B& b, standard_tag)
   {
-    require(is_standard(res), __func__, ": lhs must be standard");
     require(is_standard(b), __func__, ": rhs must be standard");
 
     const auto& ls = *res->labelset();
@@ -160,7 +159,7 @@ namespace vcsn
         const auto& r = rhs->as<Rhs>();
         if (algo == "auto")
           {
-            if (is_standard(l) && is_standard(r))
+            if (is_standard(r))
               return make_automaton(::vcsn::multiply(l, r, standard_tag{}));
             else
               return make_automaton(::vcsn::multiply(l, r, general_tag{}));
