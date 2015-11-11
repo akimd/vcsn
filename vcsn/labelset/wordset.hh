@@ -117,8 +117,8 @@ namespace vcsn
     static bool less(const value_t& l, const value_t& r)
     {
       // Be sure to use genset::less().
-      auto s1 = l.size();
-      auto s2 = r.size();
+      auto s1 = size(l);
+      auto s2 = size(r);
       if (s1 < s2)
         return true;
       else if (s2 < s1)
@@ -285,7 +285,7 @@ namespace vcsn
       require(starts_with(w2, w1),
               sname(), ": ldiv: invalid arguments: ", str_escape(w1),
               ", ", str_escape(w2));
-      return w2.substr(size(w1));
+      return {begin(w2) + size(w1), end(w2)};
     }
 
     /// w2 := w1 \ w2.

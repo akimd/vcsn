@@ -50,6 +50,12 @@ CHECK_EQ(r'''\x01 + \x02 + \x03 + \x04 + \x05 + \x06 + \x07 + \x08 + \x09 + \n +
 check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
 
 
+## ------------------- ##
+## LabelSet: wordset.  ##
+## ------------------- ##
+
+check('wordset<string_letters>, b', 'wordset<string_letters()>, b')
+
 ## ------------------------- ##
 ## LabelSet: expressionset.  ##
 ## ------------------------- ##

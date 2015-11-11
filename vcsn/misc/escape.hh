@@ -1,7 +1,9 @@
 #pragma once
 
 #include <iosfwd>
+#include <sstream>
 #include <string>
+#include <vector>
 
 #include <vcsn/misc/export.hh>
 
@@ -12,6 +14,16 @@ namespace vcsn LIBVCSN_API
 
   /// Likewise, but produces a string.
   std::string str_escape(const std::string& c);
+
+  /// A container of letters.
+  template <typename T>
+  std::string str_escape(const std::vector<T>& s)
+  {
+    std::ostringstream o;
+    for (const auto& c: s)
+      str_escape(o, c);
+    return o.str();
+  }
 
   /// Output a character, escaping special characters.
   /// -1 denotes end-of-file.
