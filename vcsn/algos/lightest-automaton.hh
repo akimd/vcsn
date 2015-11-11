@@ -53,20 +53,13 @@ namespace vcsn
   {
     require(is_tropical<weightset_t_of<Aut>>(),
             "lightest-automaton: require tropical weightset");
-    using state_t = state_t_of<Aut>;
-    using transition_t = transition_t_of<Aut>;
     auto pred = lightest_algo(aut, algo);
-    if (pred[aut->post()] == aut->null_transition())
-      return make_fresh_automaton(aut);
-    else
-      {
-        auto keep_tr = std::set<transition_t>{aut->pre()};
-        for (transition_t t = pred[aut->post()];
-             aut->src_of(t) != aut->pre();
-             t = pred[aut->src_of(t)])
-          keep_tr.insert(t);
-        return copy_path(aut, keep_tr);
-      }
+    auto keep_tr = std::vector<transition_t_of<Aut>>{};
+    for (auto t = pred[aut->post()];
+         t != aut->null_transition();
+         t = pred[aut->src_of(t)])
+      keep_tr.emplace_back(t);
+    return copy_path(aut, keep_tr);
   }
 
   namespace dyn

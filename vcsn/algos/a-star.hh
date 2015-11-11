@@ -30,11 +30,10 @@ namespace vcsn
       using weight_t = weight_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using distance_t = std::vector<weight_t>;
-      using path_t = std::vector<transition_t>;
 
       a_star_impl(const Aut& aut)
         : aut_(aut)
-        , res_(aut_->all_states().back() + 1, aut_->null_state())
+        , res_(aut_->all_states().back() + 1, aut_->null_transition())
         , heuristic_dist_(aut_->all_states().back() + 1)
       {};
 
@@ -75,7 +74,7 @@ namespace vcsn
       using heap_t = boost::heap::fibonacci_heap<profile>;
 
       template <typename Heuristic>
-      path_t
+      std::vector<transition_t>
       operator()(Heuristic heuristic)
       {
         auto pre = aut_->pre();
@@ -120,7 +119,7 @@ namespace vcsn
               }
           }
 
-        return path_t(size, aut_->null_transition());
+        return std::vector<transition_t>(size, aut_->null_transition());
       }
 
     private:
@@ -138,7 +137,8 @@ namespace vcsn
 
     public:
       const automaton_t& aut_;
-      path_t res_;
+      /// For each state, its predecessor.
+      std::vector<transition_t> res_;
       distance_t heuristic_dist_;
     };
   }
