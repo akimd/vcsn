@@ -38,8 +38,8 @@ namespace vcsn
       /// \param outsp number of outgoing spontaneous transitions from \a s
       /// \param out   number of outgoing transitions from \a s
       epsilon_profile(state_t s,
-                    size_t insp, size_t in,
-                    size_t outsp, size_t out)
+                      size_t insp, size_t in,
+                      size_t outsp, size_t out)
         : state(s)
         , in_sp(insp), in_nsp(in - insp)
         , out_sp(outsp), out_nsp(out - outsp)
