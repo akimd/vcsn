@@ -43,12 +43,18 @@ namespace vcsn
       using transition_t = transition_t_of<automaton_t>;
       using transitions_t = std::vector<transition_t>;
 
-      using proper_ctx_t = detail::proper_context<context_t_of<Aut>>;
+      /// Context for spontaneous automaton (only spontaneous
+      /// transitions of the input automaton).
       using dirty_ctx_t = context<vcsn::oneset, weightset_t>;
-
+      /// Spontaneous automaton.
       using aut_dirty_t = mutable_automaton<dirty_ctx_t>;
-      using aut_proper_t = fresh_automaton_t_of<Aut, proper_ctx_t>;
+      using state_dirty_t = state_t_of<aut_dirty_t>;
 
+      /// Context for proper automaton (only proper transitions).
+      using proper_ctx_t = detail::proper_context<context_t_of<Aut>>;
+      /// Proper automaton.
+      using aut_proper_t = fresh_automaton_t_of<Aut, proper_ctx_t>;
+      using state_proper_t = state_t_of<aut_proper_t>;
       using label_proper_t = label_t_of<aut_proper_t>;
 
     public:
@@ -59,8 +65,10 @@ namespace vcsn
         : debug_(debug_level())
         , ws_(*aut->weightset())
         , prune_(prune)
-        , d2p_(aut->all_states().back() + 1, aut->null_state())
-        , p2d_(aut->all_states().back() + 1, aut->null_state())
+        , d2p_(aut->all_states().back() + 1,
+               aut_proper_t::element_type::null_state())
+        , p2d_(aut->all_states().back() + 1,
+               aut_dirty_t::element_type::null_state())
       {
         auto dirty_ctx = dirty_ctx_t{{}, ws_};
         auto proper_ctx = make_proper_context(aut->context());
@@ -96,12 +104,14 @@ namespace vcsn
       }
 
     private:
+      /// Data used to compute the order of state processing.
+      using profile_t = epsilon_profile<state_proper_t>;
 
       /// Update the profile of \a s.
-      void update_profile_(state_t proper_s)
+      void update_profile_(state_proper_t proper_s)
       {
-        state_t dirty_s = p2d_[proper_s];
-        if (auto p = profile(proper_s))
+        auto dirty_s = p2d_[proper_s];
+        if (auto p = profile_(proper_s))
           {
             auto in_dirty = aut_dirty_->in(dirty_s).size();
             auto in_proper = aut_proper_->in(proper_s).size();
@@ -123,8 +133,7 @@ namespace vcsn
           if (aut_dirty_->in(s).size())
             {
               auto proper_s = d2p_[s];
-              auto h = todo_.emplace(epsilon_profile<state_t>
-                                     {proper_s, 0, 0, 0, 0});
+              auto h = todo_.emplace(profile_t{proper_s, 0, 0, 0, 0});
               handles_.emplace(proper_s, h);
               update_profile_(proper_s);
             }
@@ -144,7 +153,7 @@ namespace vcsn
 
       /// Update the heap for \a s.
       /// \pre  its profile is updated.
-      void update_heap_(state_t s)
+      void update_heap_(state_proper_t s)
       {
         if (3 < debug_)
           {
@@ -167,8 +176,9 @@ namespace vcsn
       unsigned removed_ = 0;
 #endif
 
-      epsilon_profile<state_t>*
-      profile(state_t s)
+      /// The profile of state s, or nullptr if it is not to be
+      /// processed.
+      profile_t* profile_(state_proper_t s) const
       {
         auto i = handles_.find(s);
         if (i == handles_.end())
@@ -190,7 +200,7 @@ namespace vcsn
       /// is moved higher, before the epsilon_profile definition.
       ///
       /// The state s corresponds to a *dirty* state id.
-      void remover_on(state_t dirty_s, state_t proper_s)
+      void remover_on(state_dirty_t dirty_s, state_proper_t proper_s)
       {
         const auto& tr = aut_dirty_->in(dirty_s);
         // Iterate on a copy, as we remove these transitions in the
@@ -198,12 +208,12 @@ namespace vcsn
         transitions_t transitions{tr.begin(), tr.end()};
         // The star of the weight of the loop on 's' (1 if no loop).
         weight_t star = ws_.one();
-        using state_weight_t = std::pair<state_t, weight_t>;
-        std::vector<state_weight_t> closure;
+        using state_weight_t = std::pair<state_dirty_t, weight_t>;
+        auto closure = std::vector<state_weight_t>{};
         for (auto t : transitions)
           {
             weight_t weight = aut_dirty_->weight_of(t);
-            state_t src = aut_dirty_->src_of(t);
+            auto src = aut_dirty_->src_of(t);
             if (src == dirty_s)  //loop
               star = ws_.star(weight);
             else
@@ -234,10 +244,10 @@ namespace vcsn
             weight_t blow = ws_.mul(star, aut_dirty_->weight_of(t));
             aut_dirty_->set_weight(t, blow);
 
-            state_t dst = aut_dirty_->dst_of(t);
+            auto dst = aut_dirty_->dst_of(t);
             for (auto pair: closure)
               {
-                state_t src = pair.first;
+                auto src = pair.first;
                 weight_t w = ws_.mul(pair.second, blow);
                 aut_dirty_->add_transition(src, dst, {}, w);
               }
@@ -249,10 +259,10 @@ namespace vcsn
             aut_proper_->set_weight(t, blow);
 
             label_proper_t label = aut_proper_->label_of(t);
-            state_t dst = aut_proper_->dst_of(t);
+            auto dst = aut_proper_->dst_of(t);
             for (auto pair: closure)
               {
-                state_t src = pair.first;
+                auto src = pair.first;
                 weight_t w = ws_.mul(pair.second, blow);
                 aut_proper_->add_transition(d2p_[src], dst, label, w);
               }
@@ -311,7 +321,7 @@ namespace vcsn
 
         // The neighbors of s: their profiles need to be updated after
         // s was processed.
-        std::unordered_set<state_t> neighbors;
+        auto neighbors = std::unordered_set<state_proper_t>{};
         while (!todo_.empty())
           {
             if (2 < debug_)
@@ -325,26 +335,28 @@ namespace vcsn
             if (1 < debug_)
               std::cerr << "Remove: " << p;
 
-            auto proper_s = p.state;
+            state_proper_t proper_s = p.state;
             auto dirty_s = p2d_[proper_s];
             handles_.erase(proper_s);
+
+            // Adjacent states.
             neighbors.clear();
-            state_t n;
             for (auto t: aut_proper_->in(proper_s))
-                if ((n = aut_proper_->src_of(t)) != proper_s)
-                  neighbors.emplace(n);
+              if (aut_proper_->src_of(t) != proper_s)
+                neighbors.emplace(aut_proper_->src_of(t));
             for (auto t: aut_proper_->out(proper_s))
-                if ((n = aut_proper_->dst_of(t)) != proper_s)
-                  neighbors.emplace(n);
+              if (aut_proper_->dst_of(t) != proper_s)
+                neighbors.emplace(aut_proper_->dst_of(t));
 
             if (dirty_s != aut_dirty_->null_state())
               {
+                state_dirty_t n;
                 for (auto t: aut_dirty_->in(dirty_s))
-                    if ((n = aut_dirty_->src_of(t)) != dirty_s)
-                      neighbors.emplace(d2p_[n]);
+                  if ((n = aut_dirty_->src_of(t)) != dirty_s)
+                    neighbors.emplace(d2p_[n]);
                 for (auto t: aut_dirty_->out(dirty_s))
-                    if ((n = aut_dirty_->dst_of(t)) != dirty_s)
-                      neighbors.emplace(d2p_[n]);
+                  if ((n = aut_dirty_->dst_of(t)) != dirty_s)
+                    neighbors.emplace(d2p_[n]);
 
                 remover_on(dirty_s, proper_s);
               }
@@ -387,24 +399,28 @@ namespace vcsn
       /// Debug level.  The higher, the more details are reported.
       int debug_;
 
-      /// The automata we work on.
+      /// The proper part.  Initialized to the proper part of the
+      /// input automaton.  At the end, the result.
       aut_proper_t aut_proper_;
+
+      /// The sponteanous part.  Initialized to the spontaneous part
+      /// of the input automaton.  At the end, empty.
       aut_dirty_t aut_dirty_;
 
       /// Shorthand to the weightset.
       const weightset_t& ws_;
 
       /// Max-heap to decide the order of state-elimination.
-      using heap_t = boost::heap::fibonacci_heap<epsilon_profile<state_t>>;
+      using heap_t = boost::heap::fibonacci_heap<profile_t>;
       heap_t todo_;
       /// Map: state -> heap-handle.
-      std::unordered_map<state_t, typename heap_t::handle_type> handles_;
+      std::unordered_map<state_proper_t, typename heap_t::handle_type> handles_;
 
       /// Whether to prune states that become inaccessible.
       bool prune_;
 
-      std::vector<state_t> d2p_; // dirty states -> proper states
-      std::vector<state_t> p2d_; // proper states -> dirty states
+      std::vector<state_proper_t> d2p_; // dirty states -> proper states
+      std::vector<state_dirty_t> p2d_; // proper states -> dirty states
     };
 
     template <typename Aut>

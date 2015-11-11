@@ -26,22 +26,29 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
       using labelset_t = labelset_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
-      using transitions_t = std::vector<transition_t>;
 
-      using proper_ctx_t = detail::proper_context<context_t_of<Aut>>;
+      /// Context for spontaneous automaton (only spontaneous
+      /// transitions of the input automaton).
       using dirty_ctx_t = context<vcsn::oneset, weightset_t>;
-
+      /// Spontaneous automaton.
       using aut_dirty_t = mutable_automaton<dirty_ctx_t>;
-      using aut_proper_t = fresh_automaton_t_of<Aut, proper_ctx_t>;
+      using state_dirty_t = state_t_of<aut_dirty_t>;
 
+      /// Context for proper automaton (only proper transitions).
+      using proper_ctx_t = detail::proper_context<context_t_of<Aut>>;
+      /// Proper automaton.
+      using aut_proper_t = fresh_automaton_t_of<Aut, proper_ctx_t>;
+      using state_proper_t = state_t_of<aut_proper_t>;
       using label_proper_t = label_t_of<aut_proper_t>;
 
     public:
       epsilon_remover_distance(const automaton_t& aut, bool prune = true)
         : ws_(*aut->weightset())
         , prune_(prune)
-        , d2p_(aut->all_states().back() + 1, aut->null_state())
-        , p2d_(aut->all_states().back() + 1, aut->null_state())
+        , d2p_(aut->all_states().back() + 1,
+               aut_proper_t::element_type::null_state())
+        , p2d_(aut->all_states().back() + 1,
+               aut_dirty_t::element_type::null_state())
       {
         auto dirty_ctx = dirty_ctx_t{{}, ws_};
         auto proper_ctx = make_proper_context(aut->context());
@@ -88,11 +95,11 @@ namespace vcsn
               weight_t dist_pq = de_[dirty_p][dirty_q];
               if (!ws_.is_zero(dist_pq))
                 {
-                  state_t proper_q = d2p_[dirty_q];
+                  auto proper_q = d2p_[dirty_q];
                   for (auto t : aut_proper_->all_out(proper_q))
                     {
-                      state_t proper_p = d2p_[dirty_p];
-                      state_t proper_r = aut_proper_->dst_of(t);
+                      auto proper_p = d2p_[dirty_p];
+                      auto proper_r = aut_proper_->dst_of(t);
                       label_proper_t l = aut_proper_->label_of(t);
                       weight_t w = aut_proper_->weight_of(t);
                       aut_proper_->set_transition(proper_p, proper_r, l,
@@ -118,8 +125,8 @@ namespace vcsn
       /// Whether to prune states that become inaccessible.
       bool prune_;
 
-      std::vector<state_t> d2p_; // dirty states -> proper states
-      std::vector<state_t> p2d_; // proper states -> dirty states
+      std::vector<state_proper_t> d2p_; // dirty states -> proper states
+      std::vector<state_dirty_t> p2d_; // proper states -> dirty states
 
       std::vector<std::vector<weight_t>> de_;
     };
