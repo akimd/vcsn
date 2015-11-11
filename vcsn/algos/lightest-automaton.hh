@@ -12,7 +12,7 @@
 namespace vcsn
 {
   template <typename Aut>
-  std::vector<state_t_of<Aut>>
+  std::vector<transition_t_of<Aut>>
   lightest_algo(const Aut& aut, const std::string& algo)
   {
     enum algorithm

@@ -144,7 +144,7 @@ namespace vcsn
   }
 
   template <typename Aut>
-  std::vector<state_t_of<Aut>>
+  std::vector<transition_t_of<Aut>>
   a_star(const Aut& aut)
   {
     using state_t = state_t_of<Aut>;
