@@ -509,13 +509,16 @@ struct automaton
     return vcsn::dyn::minimize(val_, algo);
   }
 
-  automaton multiply(const automaton& rhs) const
+  automaton multiply(const automaton& rhs,
+                     const std::string& algo = "auto") const
   {
-    return vcsn::dyn::multiply(val_, rhs.val_);
+    return vcsn::dyn::multiply(val_, rhs.val_, algo);
   }
   /// The type of the previous function.
   using multiply_t =
-    auto (automaton::*)(const automaton&) const -> automaton;
+    auto
+    (automaton::*)(const automaton&, const std::string& algo) const
+      -> automaton;
 
   automaton multiply(int min, int max) const
   {
@@ -1391,7 +1394,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lightest_automaton",
          &automaton::lightest_automaton, (arg("algo") = "auto"))
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
-    .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply))
+    .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply),
+         (arg("algo") = "auto"))
     .def("multiply",
          static_cast<automaton::multiply_repeated_t>(&automaton::multiply),
          multiply_repeated())

@@ -443,7 +443,8 @@ namespace vcsn
     context make_word_context(const context& ctx);
 
     /// Multiply (concatenate) two standard automata.
-    automaton multiply(const automaton& lhs, const automaton& rhs);
+    automaton multiply(const automaton& lhs, const automaton& rhs,
+                       const std::string& algo = "auto");
 
     /// Repeated multiplication (concatenation) of an automaton with itself.
     ///

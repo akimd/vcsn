@@ -151,13 +151,26 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Lhs, typename Rhs>
+      template <typename Lhs, typename Rhs, typename String>
       automaton
-      multiply(const automaton& lhs, const automaton& rhs)
+      multiply(const automaton& lhs, const automaton& rhs,
+               const std::string& algo)
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::multiply(l, r, standard_tag{}));
+        if (algo == "auto")
+          {
+            if (is_standard(l) && is_standard(r))
+              return make_automaton(::vcsn::multiply(l, r, standard_tag{}));
+            else
+              return make_automaton(::vcsn::multiply(l, r, general_tag{}));
+          }
+        else if (algo == "standard")
+          return make_automaton(::vcsn::multiply(l, r, standard_tag{}));
+        else if (algo == "general")
+          return make_automaton(::vcsn::multiply(l, r, general_tag{}));
+        else
+          raise("multiply: invalid algorithm: ", str_escape(algo));
       }
     }
   }

@@ -326,7 +326,7 @@ namespace vcsn
         REGISTER(make_context, ctx_t);
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
-        REGISTER(multiply, aut_t, aut_t);
+        REGISTER(multiply, aut_t, aut_t, const std::string);
         REGISTER(multiply_expression, rs_t, rs_t);
         REGISTER(multiply_expression_repeated, rs_t, int, int);
         REGISTER(multiply_repeated, aut_t, int, int);

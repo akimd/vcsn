@@ -15,11 +15,13 @@ from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
                       _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
 
 _automaton_multiply_orig = automaton.multiply
-def _automaton_multiply(self, exp):
+def _automaton_multiply(self, exp, algo = "auto"):
     if isinstance(exp, tuple):
         return _automaton_multiply_orig(self, *exp)
-    else:
+    if isinstance(exp, int):
         return _automaton_multiply_orig(self, exp)
+    else:
+        return _automaton_multiply_orig(self, exp, algo)
 automaton.multiply = _automaton_multiply
 
 automaton.__add__ = automaton.sum
