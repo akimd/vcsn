@@ -26,6 +26,7 @@ namespace vcsn
   {
   public:
     using context_t = Context;
+    using self_t = mutable_automaton_impl;
     /// The (shared pointer) type to use if we have to create an
     /// automaton of the same (underlying) type.
     template <typename Ctx = Context>
@@ -749,7 +750,7 @@ namespace vcsn
                  || ss.succ.front() != aut_.null_transition())
                 && pred_(s));
       }
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
       Pred pred_;
     };
 
@@ -821,7 +822,7 @@ namespace vcsn
         return (aut_.src_of(t) != aut_.null_state()
                 && pred_(t));
       };
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
       Pred pred_;
     };
 
@@ -858,7 +859,7 @@ namespace vcsn
       {
         return aut_.src_of(t) != aut_.pre();
       }
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
     };
 
     // FIXME: clang workaround.
@@ -868,7 +869,7 @@ namespace vcsn
       {
         return aut_.dst_of(t) != aut_.post();
       }
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
     };
 
     // FIXME: clang workaround.
@@ -879,7 +880,7 @@ namespace vcsn
         return (aut_.src_of(t) != aut_.pre()
                 && aut_.dst_of(t) != aut_.post());
       }
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
     };
 
     /// All the transition indexes between visible states.
@@ -925,7 +926,7 @@ namespace vcsn
       {
         return aut_.labelset()->equal(aut_.label_of(t), label_);
       }
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
       // Capture by copy: in the case of the transpose_automaton, the
       // labels are transposed, so they are temporaries.
       label_t label_;
@@ -983,7 +984,7 @@ namespace vcsn
       {
         return aut_.dst_of(t) == dst;
       }
-      const mutable_automaton_impl& aut_;
+      const self_t& aut_;
       state_t dst;
     };
 

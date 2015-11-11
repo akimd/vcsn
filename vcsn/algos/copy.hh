@@ -50,8 +50,14 @@ namespace vcsn
 
       /// Copy some states, and some transitions.
       ///
-      /// \param keep_state   a predicate to recognize states to keep
-      /// \param keep_trans   a predicate to recognize transitions to keep
+      /// \param keep_state  a predicate to recognize states to keep
+      /// \param keep_trans  a predicate to recognize transitions to keep
+      /// \param safe        whether the input automaton is in normal form
+      ///                    and never has two transitions with same
+      ///                    (src, label, dst).
+      ///
+      /// Transitions are kept only if both criteria are satisfied:
+      /// the transition is kept, _and_ its source and destination too.
       template <typename KeepState, typename KeepTrans>
       void operator()(KeepState keep_state, KeepTrans keep_trans,
                       bool safe = true)
@@ -122,18 +128,17 @@ namespace vcsn
   /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut,
             typename KeepState, typename KeepTrans>
-  inline void
+  void
   copy_into(const AutIn& in, AutOut& out,
             KeepState keep_state, KeepTrans keep_trans)
   {
     auto copy = make_copier(in, out);
-    return copy(keep_state, keep_trans);
+    copy(keep_state, keep_trans);
   }
 
   /// Copy the selected states an automaton.
   /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut, typename KeepState>
-  inline
   void
   copy_into(const AutIn& in, AutOut& out, KeepState keep_state)
   {
@@ -144,7 +149,6 @@ namespace vcsn
   /// Copy an automaton.
   /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut>
-  inline
   void
   copy_into(const AutIn& in, AutOut& out)
   {
@@ -156,14 +160,13 @@ namespace vcsn
   /// Copy an automaton.
   /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut>
-  inline
   void
   copy_into(const AutIn& in, AutOut& out, bool safe)
   {
     auto copy = make_copier(in, out);
-    return copy([](state_t_of<AutIn>) { return true; },
-                [](transition_t_of<AutIn>) { return true; },
-                safe);
+    copy([](state_t_of<AutIn>) { return true; },
+         [](transition_t_of<AutIn>) { return true; },
+         safe);
   }
 
   namespace detail
@@ -235,7 +238,7 @@ namespace vcsn
   /// it's the base type, as we don't copy decorations.
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>>
-  inline AutOut
+  AutOut
   make_fresh_automaton(const AutIn& model)
   {
     // FIXME: here, we need a means to convert the given input context
@@ -249,7 +252,6 @@ namespace vcsn
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState, typename KeepTrans>
-  inline
   auto
   copy(const AutIn& input, KeepState keep_state, KeepTrans keep_trans)
     -> decltype(keep_state(input->null_state()),
@@ -265,7 +267,6 @@ namespace vcsn
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState>
-  inline
   auto
   copy(const AutIn& input, KeepState keep_state)
     -> decltype(keep_state(input->null_state()),
@@ -281,7 +282,6 @@ namespace vcsn
   /// A copy of \a input.
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>>
-  inline
   AutOut
   copy(const AutIn& input)
   {
@@ -297,7 +297,6 @@ namespace vcsn
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename States>
-  inline
   auto
   copy(const AutIn& input, States states)
     -> decltype(has(states, input->null_state()),
@@ -314,7 +313,6 @@ namespace vcsn
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename States, typename Trans>
-  inline
   auto
   copy(const AutIn& input, States states, Trans trans)
     -> decltype(has(states, input->null_state()),
@@ -376,7 +374,6 @@ namespace vcsn
     {
       /// Bridge (copy).
       template <typename Aut, typename Ctx>
-      inline
       automaton
       copy_convert(const automaton& aut, const context& ctx)
       {
@@ -389,7 +386,6 @@ namespace vcsn
 
       /// Bridge.
       template <typename Aut>
-      inline
       automaton
       copy(const automaton& aut)
       {
@@ -409,7 +405,6 @@ namespace vcsn
     {
       /// Bridge (copy).
       template <typename ExpSet, typename Context, typename Identities>
-      inline
       expression
       copy_expression(const expression& exp,
                       const context& ctx, rat::identities ids)
