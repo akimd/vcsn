@@ -16,6 +16,7 @@
 #include <vcsn/misc/algorithm.hh> // detail::back
 #include <vcsn/misc/deque.hh>
 #include <vcsn/misc/pair.hh>
+#include <vcsn/misc/queue.hh>
 #include <vcsn/weightset/nmin.hh>
 
 namespace vcsn
@@ -193,12 +194,10 @@ namespace vcsn
     using state_t = state_t_of<automaton_t>;
     using transition_t = transition_t_of<automaton_t>;
 
-    std::queue<state_t> todo;
-    std::unordered_set<state_t> marked;
-    std::unordered_map<state_t, std::pair<unsigned, transition_t>> parent;
-
-    for (auto s : start)
-      todo.push(s);
+    auto todo = detail::make_queue(start);
+    auto marked = std::unordered_set<state_t>{};
+    auto parent
+      = std::unordered_map<state_t, std::pair<unsigned, transition_t>>{};
 
     while (!todo.empty())
       {
