@@ -91,18 +91,25 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using word_t = word_t_of<automaton_t>;
-      using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
 
     private:
-      using pair_t = std::pair<state_t, state_t>;
-      using dist_transition_t = std::pair<unsigned, transition_t>;
-      using paths_t = std::unordered_map<state_t, dist_transition_t>;
+      using state_t = state_t_of<automaton_t>;
+
+      using pair_automaton_t = pair_automaton<automaton_t>;
+      using state_name_t = std::pair<state_t, state_t>;
+
+      using dist_transition_t
+        = std::pair<unsigned, transition_t_of<pair_automaton_t>>;
+      using paths_t
+        = std::unordered_map<state_t_of<pair_automaton_t>, dist_transition_t>;
       using path_t = typename paths_t::value_type;
 
+      /// Input automaton.
       automaton_t aut_;
-      pair_automaton<Aut> pair_;
+      /// Corresponding pair automaton.
+      pair_automaton_t pair_;
       paths_t paths_;
       std::unordered_set<state_t> todo_;
       word_t res_;
@@ -260,7 +267,7 @@ namespace vcsn
             state_t s_min = 0;
             for (auto s : todo_)
               {
-                pair_t o = pair_->get_origin(s);
+                state_name_t o = pair_->get_origin(s);
                 if (!first && o.first != previous && o.second != previous)
                   continue;
                 int d = dist(s);
@@ -272,8 +279,8 @@ namespace vcsn
               }
 
             const auto& path = recompose_path(s_min);
-            pair_t pair_end = pair_->get_origin(
-                    pair_->dst_of(path[path.size() - 1]));
+            state_name_t pair_end
+              = pair_->get_origin(pair_->dst_of(path[path.size() - 1]));
             assert(pair_end.first == pair_end.second);
             previous = pair_end.first;
             first = false;
