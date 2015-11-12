@@ -57,7 +57,7 @@ namespace vcsn
       using state_t = typename super_t::state_t;
 
     private:
-      /// The semantics of the result states: ordered pair of input
+      /// The semantics of the result states: unordered pair of input
       /// states.
       using state_name_t = std::pair<in_state_t, in_state_t>;
       /// State index -> pair of input automaton states.
@@ -83,7 +83,7 @@ namespace vcsn
               this->add_transition(q0_, q0_, l, ws->one());
           }
 
-        // States are "ordered": (s1, s2) is defined only for s1 < s2.
+        // States are unordered: (s1, s2) is defined only for s1 < s2.
         {
           auto states = input_->states();
           auto end = std::end(states);
@@ -94,7 +94,7 @@ namespace vcsn
               // https://svn.boost.org/trac/boost/ticket/9984
               auto i2 = i1;
               for (++i2; i2 != end; ++i2)
-                // s1 < s2, no need for make_ordered_pair.
+                // s1 < s2, no need for make_unordered_pair.
                 pair_states_.emplace(std::make_pair(*i1, *i2),
                                      this->new_state());
             }
@@ -221,7 +221,7 @@ namespace vcsn
         if (s1 == s2 && !keep_initials_)
           return q0_;
         else
-          return pair_states_[make_ordered_pair(s1, s2)];
+          return pair_states_[make_unordered_pair(s1, s2)];
       }
 
       /// Input automaton.
