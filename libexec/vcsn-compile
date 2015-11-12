@@ -44,6 +44,8 @@ parser.add_argument('-c', '--color', dest='color', action='store',
                     default="auto",
                     choices=['auto', 'always', 'never'],
                     help='Whether to use colors in the output')
+parser.add_argument('--plain', action='store_true',
+                    help='Disable all extra features (color and demangle)')
 
 # Parse the arguments, and complete the 'args' object with the value
 # from the configuration (cxx, cxxflags, etc.).
@@ -98,7 +100,8 @@ def run(cmd):
             else:
                 print(me + ": child returned", retcode, file=sys.stderr)
             err = err.decode('utf-8')
-            err = demangle(err, color=args.color)
+            if not args.plain:
+                err = demangle(err, color=args.color)
             print(err, file=sys.stderr)
             sys.exit(retcode)
     except OSError as e:

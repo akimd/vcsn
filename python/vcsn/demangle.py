@@ -54,11 +54,11 @@ def sub(pattern, repl, string, *args, **kwargs):
             pattern = re.sub(r'\{param\}', lambda _: param(), pattern)
         else:
             return string
-    num = 1
-    while num:
-        (string, num) = re.subn(pattern, repl, string, *args,
-                                flags=re.VERBOSE, **kwargs)
-        #print(string, num)
+    s = None
+    while s != string:
+        s = string
+        string = re.sub(pattern, repl, s, *args,
+                        flags=re.VERBOSE, **kwargs)
     return string
 
 
@@ -190,7 +190,7 @@ def demangle(s, color="auto"):
     s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters>\s*>',
             r'law_\1',
             s)
-    s = sub(r'vcsn::(nullableset|tupleset)<({param})>',
+    s = sub(r'(?:vcsn::)?(nullableset|tupleset)<({param})>',
             r'\1<\2>',
             s)
 
@@ -208,7 +208,7 @@ def demangle(s, color="auto"):
             s)
 
     # Contexts.
-    s = sub(r'vcsn::(context)<({param})>',
+    s = sub(r'(?:vcsn::)?(context)<({param})>',
             r'\1<\2>',
             s)
 
@@ -217,19 +217,23 @@ def demangle(s, color="auto"):
             r'\1>',
             s)
 
-    # Typedef.
-    s = sub(r'(vcsn::detail::partition_automaton_impl<Aut>)::(transition|state)_t',
-            r'\2_t_of<\1>',
-            s)
-
     # Automata.
     #
     # The optional 'std::' is surprising, granted, but I do have seen
     # it (with clang 3.6).
     #
     # The optional parameter of shared_ptr is the memory lock policy (g++)
-    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:vcsn::)?(?:detail::)?(\w+_automaton)_impl<({param})>\s*(?:, [^>]+)?>',
+    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:(?:vcsn::)?detail::)?(\w+_automaton)_impl<({param})>\s*(?:, [^>]+)?>',
             r'\1<\2>',
+            s)
+
+    s = sub(r'(?:(?:vcsn::)?detail::)?index_t_impl<{param}::(state|transition)_tag>',
+            r'\1::\2_t',
+            s)
+
+    # Typedef.  Beware that {param} introduces a group.
+    s = sub(r'(?:(?:vcsn::)?detail::)?(partition_automaton_impl<{param}>)::(transition|state)_t',
+            r'\3_t_of<\1>',
             s)
 
     # Dyn::.
