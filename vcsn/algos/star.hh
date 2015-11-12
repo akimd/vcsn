@@ -5,6 +5,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/misc/raise.hh> // require
+#include <vcsn/misc/vector.hh>
 
 namespace vcsn
 {
@@ -12,12 +13,34 @@ namespace vcsn
   | star  |
   `------*/
 
+  /// In-place star of an automaton.
+  template <typename Aut>
+  Aut&
+  star_here(Aut& res, general_tag = {})
+  {
+    const auto& ws = *res->weightset();
+    const auto& ls = *res->labelset();
+    // Branch all the final states (but initials) to initial states.
+    auto initial = res->new_state();
+    for (auto ti: detail::make_vector(res->initial_transitions()))
+      {
+        res->new_transition(initial, res->dst_of(ti), ls.one(), res->weight_of(ti));
+        res->del_transition(ti);
+      }
+    for (auto tf: res->final_transitions())
+      res->add_transition(res->src_of(tf), initial, ls.one(), res->weight_of(tf));
+    res->set_initial(initial, ws.one());
+    res->set_final(initial, ws.one());
+    return res;
+  }
+
+
   /// In-place star of a standard automaton.
   ///
   /// See standard_visitor::visit(star).
   template <typename Aut>
   Aut&
-  star_here(Aut& res)
+  star_here(Aut& res, standard_tag)
   {
     require(is_standard(res), __func__, ": input must be standard");
 
@@ -53,14 +76,25 @@ namespace vcsn
     return res;
   }
 
-
   /// Star of a standard automaton.
   template <typename Aut>
   fresh_automaton_t_of<Aut>
-  star(const Aut& aut)
+  star(const Aut& aut, standard_tag tag)
   {
     auto res = copy(aut);
-    star_here(res);
+    star_here(res, tag);
+    return res;
+  }
+
+  /// Star of a non standard automaton.
+  template <typename Aut>
+  auto
+  star(const Aut& aut, general_tag tag = {})
+    -> decltype(make_nullable_automaton(aut->context()))
+  {
+    auto res = make_nullable_automaton(aut->context());
+    ::vcsn::copy_into(aut, res);
+    star_here(res, tag);
     return res;
   }
 

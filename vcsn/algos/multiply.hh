@@ -200,7 +200,7 @@ namespace vcsn
       min = 0;
     if (max == -1)
     {
-      res = star(aut);
+      res = star(aut, standard_tag{});
       if (min)
         res = multiply(multiply(aut, min, min, standard_tag{}),
                        res, standard_tag{});
