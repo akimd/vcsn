@@ -453,7 +453,8 @@ namespace vcsn
       eliminate_state(const automaton& aut, int state)
       {
         const auto& a = aut->as<Aut>();
-        auto s = 0 <= state ? state + 2 : a->null_state();
+        using state_t = state_t_of<Aut>;
+        auto s = 0 <= state ? state_t(state + 2) : a->null_state();
         return make_automaton(vcsn::eliminate_state(a, s));
       }
     }
