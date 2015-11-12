@@ -33,6 +33,7 @@ namespace vcsn
     {
     public:
       using automaton_t =  Aut;
+      using self_t = pair_automaton_impl;
       using context_t = context_t_of<automaton_t>;
       // FIXME: cannot use fresh_automaton_t_of<Aut>.  To see why, run
       // the tests/python/focus.py test.  We should probably stop
@@ -49,16 +50,18 @@ namespace vcsn
       using fresh_automaton_t = mutable_automaton<Ctx>;
 #endif
       using super_t = automaton_decorator<fresh_automaton_t<>>;
-      using state_t = state_t_of<automaton_t>;
-      using transition_t = transition_t_of<automaton_t>;
+      using in_state_t = state_t_of<automaton_t>;
+      using in_transition_t = transition_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
+      using state_t = typename super_t::state_t;
 
     private:
       /// The semantics of the result states: ordered pair of input
       /// states.
-      using pair_t = std::pair<state_t, state_t>;
-      using origins_t = std::map<state_t, pair_t>;
+      using state_name_t = std::pair<in_state_t, in_state_t>;
+      /// State index -> pair of input automaton states.
+      using origins_t = std::map<state_t, state_name_t>;
 
     public:
       pair_automaton_impl(const automaton_t& aut, bool keep_initials = false)
@@ -97,7 +100,7 @@ namespace vcsn
             }
         }
 
-        for (auto ps : pair_states_)
+        for (const auto& ps : pair_states_)
           {
             auto pstates = ps.first; // pair of states
             auto cstate = ps.second; // current state
@@ -145,19 +148,22 @@ namespace vcsn
       {
         if (keep_initials_)
           {
-            pair_t p = get_origin(s);
+            state_name_t p = get_origin(s);
             return p.first == p.second;
           }
         else
           return s == q0_;
       }
 
-      const std::vector<state_t>& singletons() const
+      using singletons_t = std::vector<state_t>;
+      const singletons_t& singletons() const
       {
         return singletons_;
       }
 
-      const std::unordered_map<pair_t, state_t>& get_map_pair() const
+      using pair_states_t
+        = std::unordered_map<state_name_t, state_t>;
+      const pair_states_t& get_map_pair() const
       {
         return pair_states_;
       }
@@ -168,7 +174,7 @@ namespace vcsn
         return origins_;
       }
 
-      const pair_t get_origin(state_t s) const
+      const state_name_t& get_origin(state_t s) const
       {
         auto i = origins().find(s);
         require(i != std::end(origins()), "state not found in origins");
@@ -207,7 +213,7 @@ namespace vcsn
     private:
       /// The state in the result automaton that corresponds to (s1,
       /// s2).  Allocate it if needed.
-      state_t state_(state_t s1, state_t s2)
+      state_t state_(in_state_t s1, in_state_t s2)
       {
         // Benches show it is slightly faster to handle this case
         // especially rather that mapping these "diagonal states" to
@@ -223,9 +229,11 @@ namespace vcsn
       /// Fast maps label -> (weight, label).
       using transition_map_t = transition_map<automaton_t, weightset_t, true>;
       transition_map_t transition_map_;
-      std::unordered_map<pair_t, state_t> pair_states_;
+      /// From state name to state index.
+      pair_states_t pair_states_;
+      /// From state index to state name.
       origins_t origins_;
-      std::vector<state_t> singletons_;
+      singletons_t singletons_;
       state_t q0_ = this->null_state();
       bool keep_initials_ = false;
     };
