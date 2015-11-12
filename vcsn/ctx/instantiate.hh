@@ -329,7 +329,7 @@ namespace vcsn
         REGISTER(multiply, aut_t, aut_t, const std::string);
         REGISTER(multiply_expression, rs_t, rs_t);
         REGISTER(multiply_expression_repeated, rs_t, int, int);
-        REGISTER(multiply_repeated, aut_t, int, int);
+        REGISTER(multiply_repeated, aut_t, int, int, const std::string);
         REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(num_tapes, ctx_t);
         REGISTER(print_context, ctx_t, std::ostream, const std::string);

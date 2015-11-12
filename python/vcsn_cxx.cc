@@ -16,6 +16,7 @@
 #endif
 
 #include <boost/python.hpp>
+#include <boost/python/args.hpp>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh> // vname
@@ -520,18 +521,26 @@ struct automaton
     (automaton::*)(const automaton&, const std::string& algo) const
       -> automaton;
 
-  automaton multiply(int min, int max) const
+  automaton multiply(int min, int max, const std::string& algo = "auto") const
   {
-    return vcsn::dyn::multiply(val_, min, max);
+    return vcsn::dyn::multiply(val_, min, max, algo);
   }
   /// The type of the previous function.
   using multiply_repeated_t =
-    auto (automaton::*)(int min, int max) const -> automaton;
+    auto
+    (automaton::*)(int min, int max, const std::string& algo) const
+      -> automaton;
 
-  automaton multiply(int min) const
+  automaton multiply(int min, const std::string& algo = "auto") const
   {
-    return multiply(min, min);
+    return multiply(min, min, algo);
   }
+
+  /// The type of the previous function.
+  using multiply_min_t =
+    auto
+    (automaton::*)(int min, const std::string& algo) const
+      -> automaton;
 
   automaton normalize() const
   {
@@ -1309,6 +1318,8 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift,
                                        lift, 0, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(multiply_repeated,
                                        multiply, 1, 2);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(multiply_repeated_automaton,
+                                       multiply, 1, 3);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -1398,7 +1409,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          (arg("algo") = "auto"))
     .def("multiply",
          static_cast<automaton::multiply_repeated_t>(&automaton::multiply),
-         multiply_repeated())
+         multiply_repeated_automaton(bp::args("min", "max", "algo")))
+    .def("multiply",
+         static_cast<automaton::multiply_min_t>(&automaton::multiply),
+         multiply_repeated(bp::args("min", "algo")))
     .def("normalize", &automaton::normalize)
     .def("num_components", &automaton::num_components)
     .def("pair", &automaton::pair, (arg("keep_initials") = false))

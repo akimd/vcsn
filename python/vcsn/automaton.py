@@ -17,9 +17,7 @@ from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
 _automaton_multiply_orig = automaton.multiply
 def _automaton_multiply(self, exp, algo = "auto"):
     if isinstance(exp, tuple):
-        return _automaton_multiply_orig(self, *exp)
-    if isinstance(exp, int):
-        return _automaton_multiply_orig(self, exp)
+        return _automaton_multiply_orig(self, *exp, algo=algo)
     else:
         return _automaton_multiply_orig(self, exp, algo)
 automaton.multiply = _automaton_multiply

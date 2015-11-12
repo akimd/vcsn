@@ -451,7 +451,8 @@ namespace vcsn
     /// \param aut  the automaton.
     /// \param min  the minimum number.  If -1, denotes 0.
     /// \param max  the maximum number.  If -1, denotes infinity, using star.
-    automaton multiply(const automaton& aut, int min, int max);
+    automaton multiply(const automaton& aut, int min, int max,
+                       const std::string& algo = "auto");
 
     /// Multiply (concatenate) two expressions.
     expression multiply(const expression& lhs, const expression& rhs);

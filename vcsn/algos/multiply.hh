@@ -252,7 +252,7 @@ namespace vcsn
       {
         copy_into(aut, res);
         if (min)
-          res = standard_multiply(multiply(aut, min, min), star(res));
+          res = multiply(multiply(aut, min, min), star(res));
       }
     else
       {
@@ -271,7 +271,7 @@ namespace vcsn
             copy_into(aut, res);
             copy_into(aut, null_aut);
             for (int n = 1; n < min; ++n)
-              res = standard_multiply(res, null_aut);
+              res = multiply(res, null_aut);
           }
         if (min < max)
           {
@@ -284,7 +284,7 @@ namespace vcsn
             }
             for (int n = 1; n <= max - min; ++n)
               sum = vcsn::sum(sum, multiply(aut, n, n));
-            res = standard_multiply(res, sum);
+            res = multiply(res, sum);
           }
       }
     return res;
@@ -297,12 +297,25 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (multiply).
-      template <typename Aut, typename Int1, typename Int2>
+      template <typename Aut, typename Int1, typename Int2, typename String>
       automaton
-      multiply_repeated(const automaton& a, int min, int max)
+      multiply_repeated(const automaton& a, int min, int max,
+                        const std::string& algo)
       {
         const auto& aut = a->as<Aut>();
-        return make_automaton(::vcsn::multiply(aut, min, max, standard_tag{}));
+        if (algo == "auto")
+          {
+            if (is_standard(aut))
+              return make_automaton(::vcsn::multiply(aut, min, max, standard_tag{}));
+            else
+              return make_automaton(::vcsn::multiply(aut, min, max, general_tag{}));
+          }
+        else if (algo == "standard")
+          return make_automaton(::vcsn::multiply(aut, min, max, standard_tag{}));
+        else if (algo == "general")
+          return make_automaton(::vcsn::multiply(aut, min, max, general_tag{}));
+        else
+          raise("multiply-repeated: invalid algorithm: ", str_escape(algo));
       }
     }
   }
