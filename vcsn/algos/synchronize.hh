@@ -93,7 +93,7 @@ namespace vcsn
       using state_t = state_t_of<super_t>;
 
       /// State + delay
-      using state_name_t = std::pair<state_t, label_t>;
+      using state_name_t = std::pair<state_t_of<automaton_t>, label_t>;
 
       template <size_t I>
       using tape_labelset_t = typename labelset_t::template valueset_t<I>;
@@ -237,14 +237,13 @@ namespace vcsn
         : in_aut_(aut), out_aut_(make_shared_ptr<out_automaton_t>(aut))
       {}
 
-
       out_automaton_t synchronize()
       {
         while (!out_aut_->todo_.empty())
         {
-          state_name_t st = out_aut_->todo_.top();
+          state_name_t st = std::move(out_aut_->todo_.top());
           out_aut_->todo_.pop();
-          state_t s = st.first;
+          auto s = st.first;
           label_t out = st.second;
           if (in_aut_->is_final(s))
             {
@@ -252,7 +251,7 @@ namespace vcsn
                 out_aut_->set_final(st, in_aut_->get_final_weight(s));
               else
                 {
-                  state_name_t f = {s, labelset_t::one()};
+                  auto f = state_name_t{s, labelset_t::one()};
                   // Create the state, don't add it to the todo list.
                   out_aut_->state(f, false);
                   out_aut_->new_transition(st, f, out, in_aut_->get_final_weight(s));
