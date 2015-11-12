@@ -3,6 +3,7 @@
 #include <map>
 
 #include <vcsn/algos/standard.hh> // is_standard
+#include <vcsn/algos/union.hh>
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -25,7 +26,7 @@ namespace vcsn
   /// \pre res and b must be standard.
   template <typename A, typename B>
   A&
-  sum_here(A& res, const B& b)
+  sum_here(A& res, const B& b, standard_tag)
   {
     require(is_standard(res), __func__, ": lhs must be standard");
     require(is_standard(b), __func__, ": rhs must be standard");
@@ -62,15 +63,24 @@ namespace vcsn
   template <typename A, typename B>
   inline
   auto
-  sum(const A& lhs, const B& rhs)
+  sum(const A& lhs, const B& rhs, standard_tag)
     -> decltype(join_automata(lhs, rhs))
   {
     auto res = join_automata(lhs, rhs);
     // A standard automaton has a single initial state.
     res->set_initial(res->new_state());
-    sum_here(res, lhs);
-    sum_here(res, rhs);
+    sum_here(res, lhs, standard_tag{});
+    sum_here(res, rhs, standard_tag{});
     return res;
+  }
+
+  template <typename A, typename B>
+  inline
+  auto
+  sum(const A& lhs, const B& rhs, general_tag = {})
+    -> decltype(join_automata(lhs, rhs))
+  {
+    return union_a(lhs, rhs);
   }
 
   namespace dyn
@@ -78,13 +88,25 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Lhs, typename Rhs>
+      template <typename Lhs, typename Rhs, typename String>
       automaton
-      sum(const automaton& lhs, const automaton& rhs)
+      sum(const automaton& lhs, const automaton& rhs, const std::string& algo)
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::sum(l, r));
+        if (algo == "auto")
+          {
+            if (is_standard(l) && is_standard(r))
+              return make_automaton(::vcsn::sum(l, r, standard_tag{}));
+            else
+              return make_automaton(::vcsn::sum(l, r, general_tag{}));
+          }
+        if (algo == "standard")
+          return make_automaton(::vcsn::sum(l, r, standard_tag{}));
+        else if (algo == "general")
+          return make_automaton(::vcsn::sum(l, r, general_tag{}));
+        else
+          raise("sum: invalid algorithm: ", str_escape(algo));
       }
     }
   }

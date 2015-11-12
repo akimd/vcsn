@@ -630,9 +630,9 @@ struct automaton
     return vcsn::dyn::subword(val_);
   }
 
-  automaton sum(const automaton& rhs) const
+  automaton sum(const automaton& rhs, const std::string& algo = "auto") const
   {
-    return vcsn::dyn::sum(val_, rhs.val_);
+    return vcsn::dyn::sum(val_, rhs.val_, algo);
   }
 
   automaton synchronize() const
@@ -1420,7 +1420,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("strip", &automaton::strip)
     .def("suffix", &automaton::suffix)
     .def("subword", &automaton::subword)
-    .def("sum", &automaton::sum)
+    .def("sum", &automaton::sum, (arg("algo") = "auto"))
     .def("synchronize", &automaton::synchronize)
     .def("synchronizing_word",
          &automaton::synchronizing_word, (arg("algo") = "greedy"))

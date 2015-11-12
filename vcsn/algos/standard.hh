@@ -16,6 +16,18 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | standard tags.  |
+  `----------------*/
+
+  /// Tag for operations on standard automata.
+  struct standard_tag
+  {};
+
+  /// Tag for operations on all automata.
+  struct general_tag
+  {};
+
 
   /*-------------------------.
   | is_standard(automaton).  |

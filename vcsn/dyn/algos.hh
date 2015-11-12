@@ -739,7 +739,8 @@ namespace vcsn
     automaton subword(const automaton& aut);
 
     /// Sum of two standard automata.
-    automaton sum(const automaton& lhs, const automaton& rhs);
+    automaton sum(const automaton& lhs, const automaton& rhs,
+                  const std::string& algo = "auto");
 
     /// Sum of two expressions.
     expression sum(const expression& lhs, const expression& rhs);

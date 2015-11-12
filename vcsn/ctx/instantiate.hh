@@ -354,7 +354,7 @@ namespace vcsn
         REGISTER(standard_expression, rs_t);
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
-        REGISTER(sum, aut_t, aut_t);
+        REGISTER(sum, aut_t, aut_t, const std::string);
         REGISTER(sum_expression, rs_t, rs_t);
         REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(thompson, rs_t);

@@ -167,7 +167,7 @@ namespace vcsn
               sum->set_final(s);
             }
             for (int n = 1; n <= max - min; ++n)
-              sum = vcsn::sum(sum, multiply(aut, n, n));
+              sum = vcsn::sum(sum, multiply(aut, n, n), standard_tag{});
             res = vcsn::multiply(res, sum);
           }
       }
