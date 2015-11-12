@@ -189,8 +189,7 @@ namespace vcsn
                                transition_t_of<Aut>>>
   paths_ibfs(const Aut& aut, const std::vector<state_t_of<Aut>>& start)
   {
-    using context_t = context_t_of<Aut>;
-    using automaton_t =  mutable_automaton<context_t>;
+    using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
     using transition_t = transition_t_of<automaton_t>;
 
@@ -233,8 +232,7 @@ namespace vcsn
   path_bfs(const Aut& aut,
            state_t_of<Aut> start, state_t_of<Aut> end)
   {
-    using context_t = context_t_of<Aut>;
-    using automaton_t =  mutable_automaton<context_t>;
+    using automaton_t =  Aut;
     using state_t = state_t_of<automaton_t>;
     using transition_t = transition_t_of<automaton_t>;
 
