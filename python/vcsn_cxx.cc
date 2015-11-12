@@ -613,9 +613,9 @@ struct automaton
     return vcsn::dyn::standard(val_);
   }
 
-  automaton star() const
+  automaton star(const std::string& algo = "auto") const
   {
-    return vcsn::dyn::star(val_);
+    return vcsn::dyn::star(val_, algo);
   }
 
   automaton strip() const
@@ -1420,7 +1420,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")
     .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)
-    .def("star", &automaton::star)
+    .def("star", &automaton::star, (arg("algo") = "auto"))
     .def("strip", &automaton::strip)
     .def("suffix", &automaton::suffix)
     .def("subword", &automaton::subword)

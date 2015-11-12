@@ -352,7 +352,7 @@ namespace vcsn
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
         REGISTER(standard_expression, rs_t);
-        REGISTER(star, aut_t);
+        REGISTER(star, aut_t, const std::string);
         REGISTER(star_height, rs_t);
         REGISTER(sum, aut_t, aut_t, const std::string);
         REGISTER(sum_expression, rs_t, rs_t);

@@ -103,12 +103,24 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename String>
       automaton
-      star(const automaton& a)
+      star(const automaton& a, const std::string& algo)
       {
         const auto& aut = a->as<Aut>();
-        return make_automaton(::vcsn::star(aut));
+        if (algo == "auto")
+          {
+            if (is_standard(aut))
+              return make_automaton(::vcsn::star(aut, standard_tag{}));
+            else
+              return make_automaton(::vcsn::star(aut, general_tag{}));
+          }
+        else if (algo == "standard")
+          return make_automaton(::vcsn::star(aut, standard_tag{}));
+        else if (algo == "general")
+          return make_automaton(::vcsn::star(aut, general_tag{}));
+        else
+          raise("star: invalid algorithm: ", str_escape(algo));
       }
     }
   }

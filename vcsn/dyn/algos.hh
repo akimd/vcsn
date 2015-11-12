@@ -716,7 +716,7 @@ namespace vcsn
     automaton standard(const expression& e);
 
     /// Star of a standard automaton.
-    automaton star(const automaton& aut);
+    automaton star(const automaton& aut, const std::string& algo = "auto");
 
     /// Star height of an expression.
     unsigned star_height(const expression& rs);
