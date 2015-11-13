@@ -17,6 +17,85 @@
 namespace vcsn
 {
 
+  namespace detail
+  {
+    /// When we copy a focus automaton, create another focus
+    /// automaton.  So we need a means to recognize focus automata,
+    /// and extract their true context, not just their visible
+    /// context.
+    template <typename Aut>
+    struct real_context_impl;
+
+    /// For a focus automaton, its genuine context (not the visible
+    /// one), and for all the other automata, their context.
+    template <typename Aut>
+    auto
+    real_context(const Aut& aut)
+      -> decltype(real_context_impl<Aut>::context(aut));
+
+    template <typename Aut>
+    struct real_context_impl
+    {
+      static auto context(const Aut& aut)
+        -> decltype(aut->context())
+      {
+        return aut->context();
+      }
+    };
+
+    template <std::size_t Tape, typename Aut>
+    struct real_context_impl<focus_automaton<Tape, Aut>>
+    {
+      static auto context(const focus_automaton<Tape, Aut>& aut)
+        -> decltype(aut->full_context())
+      {
+        return aut->full_context();
+      }
+    };
+
+    /// Be recursive on automaton wrappers.
+    //
+    // FIXME: try to recurse on all automaton decorator types without
+    // listing them.
+    template <typename Aut>
+    struct real_context_impl<automaton_decorator<Aut>>
+    {
+      static auto context(const automaton_decorator<Aut>& aut)
+        -> decltype(real_context(aut->strip()))
+      {
+        return real_context(aut->strip());
+      }
+    };
+
+    template <typename Aut>
+    auto
+    real_context(const Aut& aut)
+      -> decltype(real_context_impl<Aut>::context(aut))
+    {
+      return real_context_impl<Aut>::context(aut);
+    }
+  }
+
+  /// Create an empty, mutable, automaton, based on another one.
+  ///
+  /// To this end, each automaton type provides a fresh_automaton_t.
+  /// In the case of mutable_automaton, it's simply mutable_automaton.
+  /// In the case of a transpose_automaton<Aut>, it's
+  /// transpose_automaton (of the fresh_automaton of Aut) so that we
+  /// also create a transposed automaton.  In the case of decorator,
+  /// it's the base type, as we don't copy decorations.
+  template <typename AutIn,
+            typename AutOut = fresh_automaton_t_of<AutIn>>
+  AutOut
+  make_fresh_automaton(const AutIn& model)
+  {
+    // FIXME: here, we need a means to convert the given input context
+    // (e.g. letter -> B) into the destination one (e.g., letter ->
+    // Q).  The automaton constructor wants the exact context type.
+    return make_shared_ptr<AutOut>(detail::real_context(model));
+  }
+
+
   /*------------------.
   | copy(automaton).  |
   `------------------*/
@@ -218,86 +297,9 @@ namespace vcsn
          [](transition_t_of<AutIn>) { return true; });
   }
 
-  namespace detail
-  {
-    /// When we copy a focus automaton, create another focus
-    /// automaton.  So we need a means to recognize focus automata,
-    /// and extract their true context, not just their visible
-    /// context.
-    template <typename Aut>
-    struct real_context_impl;
-
-    /// For a focus automaton, its genuine context (not the visible
-    /// one), and for all the other automata, their context.
-    template <typename Aut>
-    auto
-    real_context(const Aut& aut)
-      -> decltype(real_context_impl<Aut>::context(aut));
-
-    template <typename Aut>
-    struct real_context_impl
-    {
-      static auto context(const Aut& aut)
-        -> decltype(aut->context())
-      {
-        return aut->context();
-      }
-    };
-
-    template <std::size_t Tape, typename Aut>
-    struct real_context_impl<focus_automaton<Tape, Aut>>
-    {
-      static auto context(const focus_automaton<Tape, Aut>& aut)
-        -> decltype(aut->full_context())
-      {
-        return aut->full_context();
-      }
-    };
-
-    /// Be recursive on automaton wrappers.
-    //
-    // FIXME: try to recurse on all automaton decorator types without
-    // listing them.
-    template <typename Aut>
-    struct real_context_impl<automaton_decorator<Aut>>
-    {
-      static auto context(const automaton_decorator<Aut>& aut)
-        -> decltype(real_context(aut->strip()))
-      {
-        return real_context(aut->strip());
-      }
-    };
-
-    template <typename Aut>
-    auto
-    real_context(const Aut& aut)
-      -> decltype(real_context_impl<Aut>::context(aut))
-    {
-      return real_context_impl<Aut>::context(aut);
-    }
-  }
-
-  /// Create an empty, mutable, automaton, based on another one.
-  ///
-  /// To this end, each automaton type provides a fresh_automaton_t.
-  /// In the case of mutable_automaton, it's simply mutable_automaton.
-  /// In the case of a transpose_automaton<Aut>, it's
-  /// transpose_automaton (of the fresh_automaton of Aut) so that we
-  /// also create a transposed automaton.  In the case of decorator,
-  /// it's the base type, as we don't copy decorations.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>>
-  AutOut
-  make_fresh_automaton(const AutIn& model)
-  {
-    // FIXME: here, we need a means to convert the given input context
-    // (e.g. letter -> B) into the destination one (e.g., letter ->
-    // Q).  The automaton constructor wants the exact context type.
-    return make_shared_ptr<AutOut>(detail::real_context(model));
-  }
 
   /// A copy of \a input keeping only its states that are accepted by
-  /// \a keep_state.
+  /// \a keep_state, and transitions accepted by \a keep_trans.
   template <typename AutIn,
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState, typename KeepTrans>
