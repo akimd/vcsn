@@ -178,6 +178,25 @@ namespace vcsn
   | multiply(automaton, min, max).   |
   `---------------------------------*/
 
+  namespace detail
+  {
+    template <typename Aut>
+    auto
+    make_multiply_automaton(const Aut& aut, general_tag)
+      -> decltype(make_nullable_automaton(aut->context()))
+    {
+      return make_nullable_automaton(aut->context());
+    }
+
+    template <typename Aut>
+    auto
+    make_multiply_automaton(const Aut& aut, standard_tag)
+      -> typename Aut::element_type::template fresh_automaton_t<>
+    {
+      return make_fresh_automaton(aut);
+    }
+  }
+
   /// Repeated concatenation of an automaton.
   ///
   /// The return type, via SFINAE, makes the difference with another
@@ -190,20 +209,19 @@ namespace vcsn
   ///
   /// FIXME: if you know how to use fresh_automaton_t_of instead, let
   /// me know.
-  template <typename Aut>
+  template <typename Aut, typename Tag = general_tag>
   auto
-  multiply(const Aut& aut, int min, int max, standard_tag)
-    -> typename Aut::element_type::template fresh_automaton_t<>
+  multiply(const Aut& aut, int min, int max, Tag tag = {})
+    -> decltype(make_multiply_automaton(aut, tag))
   {
-    auto res = make_fresh_automaton(aut);
+    auto res = make_multiply_automaton(aut, tag);
     if (min == -1)
       min = 0;
     if (max == -1)
     {
-      res = star(aut, standard_tag{});
+      res = star(aut, tag);
       if (min)
-        res = multiply(multiply(aut, min, min, standard_tag{}),
-                       res, standard_tag{});
+        res = multiply(multiply(aut, min, min, tag), res, tag);
     }
     else
     {
@@ -218,79 +236,28 @@ namespace vcsn
       }
       else
       {
-        res = vcsn::copy(aut);
+        auto tag_aut = make_multiply_automaton(aut, tag);
+        copy_into(aut, res);
+        copy_into(aut, tag_aut);
         for (int n = 1; n < min; ++n)
-          res = multiply(res, aut, standard_tag{});
+          res = multiply(res, tag_aut, tag);
       }
       if (min < max)
       {
         // Aut sum = automatonset.one();
-        auto sum = make_fresh_automaton(aut);
+        auto sum = make_multiply_automaton(aut, tag);
         {
           auto s = sum->new_state();
           sum->set_initial(s);
           sum->set_final(s);
         }
         for (int n = 1; n <= max - min; ++n)
-          sum = vcsn::sum(sum, multiply(aut, n, n, standard_tag{}),
-                          standard_tag{});
-        res = vcsn::multiply(res, sum, standard_tag{});
+          sum = vcsn::sum(sum, multiply(aut, n, n, tag), tag);
+        res = vcsn::multiply(res, sum, tag);
       }
     }
     return res;
   }
-
-  template <typename Aut>
-  auto
-  multiply(const Aut& aut, int min, int max, general_tag = {})
-    -> decltype(make_nullable_automaton(aut->context()))
-  {
-    auto res = make_nullable_automaton(aut->context());
-    if (min == -1)
-      min = 0;
-    if (max == -1)
-      {
-        copy_into(aut, res);
-        if (min)
-          res = multiply(multiply(aut, min, min), star(res));
-      }
-    else
-      {
-        require(min <= max,
-                "multiply: invalid exponents: ", min, ", ", max);
-        if (min == 0)
-          {
-            // automatonset::one().
-            auto s = res->new_state();
-            res->set_initial(s);
-            res->set_final(s);
-          }
-        else
-          {
-            auto null_aut = make_nullable_automaton(aut->context());
-            copy_into(aut, res);
-            copy_into(aut, null_aut);
-            for (int n = 1; n < min; ++n)
-              res = multiply(res, null_aut);
-          }
-        if (min < max)
-          {
-            // Aut sum = automatonset.one();
-            auto sum = make_nullable_automaton(aut->context());
-            {
-              auto s = sum->new_state();
-              sum->set_initial(s);
-              sum->set_final(s);
-            }
-            for (int n = 1; n <= max - min; ++n)
-              sum = vcsn::sum(sum, multiply(aut, n, n));
-            res = multiply(res, sum);
-          }
-      }
-    return res;
-  }
-
-
 
   namespace dyn
   {
