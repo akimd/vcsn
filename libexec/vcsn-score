@@ -24,6 +24,10 @@ parser = argparse.ArgumentParser(description='Bench some algorithms.')
 parser.add_argument('--only', metavar='RE',
                     type=re.compile, default='.*',
                     help='run only benches whose title is matched by RE')
+parser.add_argument('--repeat', metavar='NUM',
+                    type=int, default='3',
+                    help='''number runs to perform, the best of which being kept.
+                    The higher, the more stable the results are expected to be.''')
 parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose')
 
 args = parser.parse_args()
@@ -81,7 +85,7 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
             builtins.__dict__.update({'vcsn': vcsn})
             if args.verbose:
                 print("run:", stmt)
-            t = round(min(timeit.repeat(stmt, number = number)), 2)
+            t = round(min(timeit.repeat(stmt, number=number, repeat=args.repeat)), 2)
             t = "{:5.2f}s".format(t)
             err = None
         except RuntimeError as exc:
