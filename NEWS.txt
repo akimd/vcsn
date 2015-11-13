@@ -5,7 +5,16 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-11-05
+### Expansions: more operations
+Usual operations (addition, multiplication, multiplication by a scalar) are
+now available on expansions.
+
 ## 2015-10-15
+### has_negative_cycles: new algorithm
+Use automaton.has_negative_cycle to check whether an automaton has cycles
+with negative weights.
+
 ### Minor bug fixes and improvements
 - Spaces are now ignored in context names (e.g., ` lal < char (ab) >, b `).
 
