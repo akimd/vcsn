@@ -13,6 +13,7 @@
 #include <vcsn/misc/memory.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/vector.hh> // make_vector
+#include <vcsn/misc/tuple.hh>
 
 namespace vcsn
 {
@@ -28,7 +29,25 @@ namespace vcsn
   struct general_tag
   {};
 
+  namespace detail
+  {
+    template <typename... Aut, typename Operation>
+    auto
+    dispatch_standard(std::string algo, Operation op, Aut&&... auts)
+    {
+      if (algo == "auto")
+        algo = all(is_standard(std::forward<Aut>(auts))...)
+               ? "standard"
+               : "general";
 
+      if (algo == "standard")
+        return op(standard_tag{});
+      else if (algo == "general")
+        return op(general_tag{});
+      else
+        raise("invalid algorithm: ", str_escape(algo));
+    }
+  }
   /*-------------------------.
   | is_standard(automaton).  |
   `-------------------------*/

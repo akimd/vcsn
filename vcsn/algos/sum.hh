@@ -94,19 +94,12 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        if (algo == "auto")
-          {
-            if (is_standard(l) && is_standard(r))
-              return make_automaton(::vcsn::sum(l, r, standard_tag{}));
-            else
-              return make_automaton(::vcsn::sum(l, r, general_tag{}));
-          }
-        if (algo == "standard")
-          return make_automaton(::vcsn::sum(l, r, standard_tag{}));
-        else if (algo == "general")
-          return make_automaton(::vcsn::sum(l, r, general_tag{}));
-        else
-          raise("sum: invalid algorithm: ", str_escape(algo));
+        return ::vcsn::detail::dispatch_standard(algo,
+            [l, r](auto tag)
+            {
+              return make_automaton(::vcsn::sum(l, r, tag));
+            },
+        l, r);
       }
     }
   }

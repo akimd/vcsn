@@ -108,19 +108,12 @@ namespace vcsn
       star(const automaton& a, const std::string& algo)
       {
         const auto& aut = a->as<Aut>();
-        if (algo == "auto")
-          {
-            if (is_standard(aut))
-              return make_automaton(::vcsn::star(aut, standard_tag{}));
-            else
-              return make_automaton(::vcsn::star(aut, general_tag{}));
-          }
-        else if (algo == "standard")
-          return make_automaton(::vcsn::star(aut, standard_tag{}));
-        else if (algo == "general")
-          return make_automaton(::vcsn::star(aut, general_tag{}));
-        else
-          raise("star: invalid algorithm: ", str_escape(algo));
+        return ::vcsn::detail::dispatch_standard(algo,
+            [aut](auto tag)
+            {
+              return make_automaton(::vcsn::star(aut, tag));
+            },
+        aut);
       }
     }
   }

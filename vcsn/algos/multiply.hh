@@ -157,19 +157,12 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        if (algo == "auto")
-          {
-            if (is_standard(r))
-              return make_automaton(::vcsn::multiply(l, r, standard_tag{}));
-            else
-              return make_automaton(::vcsn::multiply(l, r, general_tag{}));
-          }
-        else if (algo == "standard")
-          return make_automaton(::vcsn::multiply(l, r, standard_tag{}));
-        else if (algo == "general")
-          return make_automaton(::vcsn::multiply(l, r, general_tag{}));
-        else
-          raise("multiply: invalid algorithm: ", str_escape(algo));
+        return ::vcsn::detail::dispatch_standard(algo,
+            [l, r](auto tag)
+            {
+              return make_automaton(::vcsn::multiply(l, r, tag));
+            },
+        r);
       }
     }
   }
@@ -270,19 +263,12 @@ namespace vcsn
                         const std::string& algo)
       {
         const auto& aut = a->as<Aut>();
-        if (algo == "auto")
-          {
-            if (is_standard(aut))
-              return make_automaton(::vcsn::multiply(aut, min, max, standard_tag{}));
-            else
-              return make_automaton(::vcsn::multiply(aut, min, max, general_tag{}));
-          }
-        else if (algo == "standard")
-          return make_automaton(::vcsn::multiply(aut, min, max, standard_tag{}));
-        else if (algo == "general")
-          return make_automaton(::vcsn::multiply(aut, min, max, general_tag{}));
-        else
-          raise("multiply-repeated: invalid algorithm: ", str_escape(algo));
+        return ::vcsn::detail::dispatch_standard(algo,
+            [aut, min, max](auto tag)
+            {
+              return make_automaton(::vcsn::multiply(aut, min, max, tag));
+            },
+        aut);
       }
     }
   }

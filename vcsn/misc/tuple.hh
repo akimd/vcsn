@@ -406,6 +406,17 @@ namespace vcsn
     return detail::and_<bool_constant<B>...>::value;
   }
 
+  template <typename... Bool>
+  bool all(Bool&&... values)
+  {
+    bool res = true;
+    using swallow = int[];
+    (void) swallow
+    {
+      (res = res && values, 0)...
+    };
+    return res;
+  }
 
 }
 
