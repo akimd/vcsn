@@ -76,24 +76,14 @@ namespace vcsn
     return res;
   }
 
-  /// Star of a standard automaton.
-  template <typename Aut>
-  fresh_automaton_t_of<Aut>
-  star(const Aut& aut, standard_tag tag)
-  {
-    auto res = copy(aut);
-    star_here(res, tag);
-    return res;
-  }
-
-  /// Star of a non standard automaton.
-  template <typename Aut>
+  /// Star of an automaton.
+  template <typename Aut, typename Tag = general_tag>
   auto
-  star(const Aut& aut, general_tag tag = {})
-    -> decltype(make_nullable_automaton(aut->context()))
+  star(const Aut& aut, Tag tag = {})
+    -> decltype(make_tag_automaton(aut, tag))
   {
-    auto res = make_nullable_automaton(aut->context());
-    ::vcsn::copy_into(aut, res);
+    auto res = make_tag_automaton(aut, tag);
+    copy_into(aut, res);
     star_here(res, tag);
     return res;
   }

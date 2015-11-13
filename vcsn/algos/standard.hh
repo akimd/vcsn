@@ -48,6 +48,23 @@ namespace vcsn
         raise("invalid algorithm: ", str_escape(algo));
     }
   }
+
+  template <typename Aut>
+  auto
+  make_tag_automaton(const Aut& aut, general_tag)
+    -> decltype(make_nullable_automaton(aut->context()))
+  {
+    return make_nullable_automaton(aut->context());
+  }
+
+  template <typename Aut>
+  auto
+  make_tag_automaton(const Aut& aut, standard_tag)
+    -> decltype(make_fresh_automaton(aut))
+  {
+    return make_fresh_automaton(aut);
+  }
+
   /*-------------------------.
   | is_standard(automaton).  |
   `-------------------------*/

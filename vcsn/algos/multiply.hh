@@ -171,25 +171,6 @@ namespace vcsn
   | multiply(automaton, min, max).   |
   `---------------------------------*/
 
-  namespace detail
-  {
-    template <typename Aut>
-    auto
-    make_multiply_automaton(const Aut& aut, general_tag)
-      -> decltype(make_nullable_automaton(aut->context()))
-    {
-      return make_nullable_automaton(aut->context());
-    }
-
-    template <typename Aut>
-    auto
-    make_multiply_automaton(const Aut& aut, standard_tag)
-      -> typename Aut::element_type::template fresh_automaton_t<>
-    {
-      return make_fresh_automaton(aut);
-    }
-  }
-
   /// Repeated concatenation of an automaton.
   ///
   /// The return type, via SFINAE, makes the difference with another
@@ -205,9 +186,10 @@ namespace vcsn
   template <typename Aut, typename Tag = general_tag>
   auto
   multiply(const Aut& aut, int min, int max, Tag tag = {})
-    -> decltype(make_multiply_automaton(aut, tag))
+    -> decltype(aut->null_state(), // SFINAE against multiply(Z, int, int).
+                make_tag_automaton(aut, tag))
   {
-    auto res = make_multiply_automaton(aut, tag);
+    auto res = make_tag_automaton(aut, tag);
     if (min == -1)
       min = 0;
     if (max == -1)
@@ -229,7 +211,7 @@ namespace vcsn
       }
       else
       {
-        auto tag_aut = make_multiply_automaton(aut, tag);
+        auto tag_aut = make_tag_automaton(aut, tag);
         copy_into(aut, res);
         copy_into(aut, tag_aut);
         for (int n = 1; n < min; ++n)
@@ -238,7 +220,7 @@ namespace vcsn
       if (min < max)
       {
         // Aut sum = automatonset.one();
-        auto sum = make_multiply_automaton(aut, tag);
+        auto sum = make_tag_automaton(aut, tag);
         {
           auto s = sum->new_state();
           sum->set_initial(s);
