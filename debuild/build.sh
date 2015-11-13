@@ -16,6 +16,15 @@ cd "$outside_vcsn"
 test -d "$build_dir" || mkdir "$build_dir"
 cd "$inside_vcsn"
 ./configure CXXFLAGS='-O3' CPPFLAGS='-DNDEBUG' CC=gcc-4.9 CXX=g++-4.9
-make deb
+# Make sure the package is complete: run distcheck first.  Prefer
+# vcsn-distcheck which skips the build-check, but run the
+# install-check.
+pass=true
+# Run VERBOSE so that we display test-suite.log.
+make -j${NBPROC:-2} VERBOSE=1 vcsn-distcheck || pass=false
+find . -name '*.log'
+find . -name '*.log' -exec tar cvf - {} '+' | (cd "$package_dir" && tar xvf -)
+$pass
 
+make deb
 mv vcsn_* "$package_dir"

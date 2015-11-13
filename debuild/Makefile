@@ -7,8 +7,7 @@ build-image: Dockerfile
 
 build: build-image
 	mkdir ../_package
-	cd .. && docker run -v $$PWD:/build/vcsn $(DOCKER_TAG) /build/build.sh
+	cd .. && docker run -e NBPROC=$$NBPROC -v $$PWD:/build/vcsn $(DOCKER_TAG) /build/build.sh
 
 push:
 	docker push $(DOCKER_TAG)
-
