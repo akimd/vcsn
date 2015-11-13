@@ -31,8 +31,9 @@ namespace vcsn
     ///    The type of the resulting automaton.
     /// \pre AutIn <: AutOut.
     template <typename AutIn, typename AutOut = AutIn>
-    struct copier
+    class copier
     {
+    public:
       using in_automaton_t = AutIn;
       using out_automaton_t = AutOut;
 
@@ -41,6 +42,15 @@ namespace vcsn
       /// input state -> output state.
       using state_map_t = std::unordered_map<in_state_t, out_state_t>;
 
+    private:
+      /// Input automaton.
+      in_automaton_t in_;
+      /// Output automaton.
+      out_automaton_t out_;
+      /// input state -> output state.
+      state_map_t out_state_;
+
+    public:
       copier(const in_automaton_t& in, out_automaton_t& out)
         : in_(in)
         , out_(out)
@@ -86,24 +96,35 @@ namespace vcsn
             }
       }
 
-      /// Copy some transitions, and their corresponding state.
+      /// Copy some transitions, and their corresponding states.
       ///
       /// \param ts     the transitions to keep.
       /// \param safe   whether the input automaton is in normal form
       ///               and never has two transitions with same
       ///               (src, label, dst).
       template <typename Transitions>
-      void operator()(const Transitions& ts, bool safe = true)
+      auto operator()(const Transitions& ts, bool safe = true)
+        -> decltype(ts[0] == in_->null_transition(), void())
       {
         for (auto t : ts)
-          {
-            auto src = state(in_->src_of(t));
-            auto dst = state(in_->dst_of(t));
-            if (safe)
-              out_->new_transition_copy(src, dst, in_, t);
-            else
-              out_->add_transition_copy(src, dst, in_, t);
-          }
+          operator()(t, safe);
+      }
+
+      /// Copy one transition, and its corresponding states.
+      ///
+      /// \param t      the transition to copy.
+      /// \param safe   whether the input automaton is in normal form
+      ///               and never has two transitions with same
+      ///               (src, label, dst).
+      void operator()(const transition_t_of<in_automaton_t>& t,
+                      bool safe = true)
+      {
+        auto src = state(in_->src_of(t));
+        auto dst = state(in_->dst_of(t));
+        if (safe)
+          out_->new_transition_copy(src, dst, in_, t);
+        else
+          out_->add_transition_copy(src, dst, in_, t);
       }
 
       /// Copy all the states, and all the transitions.
@@ -139,13 +160,6 @@ namespace vcsn
           res = i->second;
         return res;
       }
-
-      /// Input automaton.
-      in_automaton_t in_;
-      /// Output automaton.
-      out_automaton_t out_;
-      /// input state -> output state.
-      state_map_t out_state_;
     };
   }
 
@@ -364,7 +378,7 @@ namespace vcsn
             typename AutOut = fresh_automaton_t_of<AutIn>,
             typename Transitions>
   auto
-  copy_path(const AutIn& input, const Transitions& ts)
+  copy(const AutIn& input, const Transitions& ts)
     -> decltype(has(ts, input->null_transition()),
                 make_fresh_automaton<AutIn, AutOut>(input))
   {

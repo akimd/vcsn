@@ -54,21 +54,23 @@ namespace vcsn
     require(is_tropical<weightset_t_of<Aut>>(),
             "lightest-automaton: require tropical weightset");
     auto pred = lightest_algo(aut, algo);
-    auto keep_tr = std::vector<transition_t_of<Aut>>{};
+    auto res = make_fresh_automaton(aut);
+    auto copy = make_copier(aut, res);
     for (auto t = pred[aut->post()];
          t != aut->null_transition();
          t = pred[aut->src_of(t)])
-      keep_tr.emplace_back(t);
-    return copy_path(aut, keep_tr);
+      copy(t);
+    return res;
   }
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge
+      /// Bridge.
       template <typename Aut, typename String>
-      automaton lightest_automaton(const automaton& aut, const std::string& algo)
+      automaton
+      lightest_automaton(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::lightest_automaton(a, algo));
