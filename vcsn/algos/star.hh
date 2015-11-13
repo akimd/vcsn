@@ -80,9 +80,9 @@ namespace vcsn
   template <typename Aut, typename Tag = general_tag>
   auto
   star(const Aut& aut, Tag tag = {})
-    -> decltype(make_tag_automaton(aut, tag))
+    -> decltype(detail::make_join_automaton(tag, aut))
   {
-    auto res = make_tag_automaton(aut, tag);
+    auto res = detail::make_join_automaton(tag, aut);
     copy_into(aut, res);
     star_here(res, tag);
     return res;

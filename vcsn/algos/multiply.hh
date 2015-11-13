@@ -6,7 +6,6 @@
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star.hh>
 #include <vcsn/algos/sum.hh>
-#include <vcsn/core/join-automata.hh>
 #include <vcsn/core/join.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -120,26 +119,13 @@ namespace vcsn
   }
 
   /// Concatenate two automata.
-  template <typename A, typename B>
+  template <typename A, typename B, typename Tag = general_tag>
   inline
   auto
-  multiply(const A& lhs, const B& rhs, general_tag tag = {})
-    -> decltype(nullable_join_automata(lhs, rhs))
+  multiply(const A& lhs, const B& rhs, Tag tag = {})
+    -> decltype(detail::make_join_automaton(tag, lhs, rhs))
   {
-    auto res = nullable_join_automata(lhs, rhs);
-    ::vcsn::copy_into(lhs, res);
-    multiply_here(res, rhs, tag);
-    return res;
-  }
-
-  /// Concatenate two standard automata.
-  template <typename A, typename B>
-  inline
-  auto
-  multiply(const A& lhs, const B& rhs, standard_tag tag)
-    -> decltype(join_automata(lhs, rhs))
-  {
-    auto res = join_automata(lhs, rhs);
+    auto res = detail::make_join_automaton(tag, lhs, rhs);
     ::vcsn::copy_into(lhs, res);
     multiply_here(res, rhs, tag);
     return res;
@@ -173,9 +159,10 @@ namespace vcsn
 
   /// Repeated concatenation of an automaton.
   ///
-  /// The return type, via SFINAE, makes the difference with another
-  /// overload, `<ValueSet>(ValueSet, value, value)`, which coincides in
-  /// the case ValueSet = Z, hence value = int.
+  /// The return type, via SFINAE on aut->null_state(), makes the
+  /// difference with another overload, `<ValueSet>(ValueSet, value,
+  /// value)`, which coincides in the case ValueSet = Z, hence value =
+  /// int.
   ///
   /// Unfortunately, fresh_automaton_t_of, which uses
   /// context_t_of<Aut>, is not SFINAE transparent: it causes a hard
@@ -186,10 +173,10 @@ namespace vcsn
   template <typename Aut, typename Tag = general_tag>
   auto
   multiply(const Aut& aut, int min, int max, Tag tag = {})
-    -> decltype(aut->null_state(), // SFINAE against multiply(Z, int, int).
-                make_tag_automaton(aut, tag))
+    -> decltype(aut->null_state(), // SFINAE.
+                detail::make_join_automaton(tag, aut))
   {
-    auto res = make_tag_automaton(aut, tag);
+    auto res = detail::make_join_automaton(tag, aut);
     if (min == -1)
       min = 0;
     if (max == -1)
@@ -211,7 +198,7 @@ namespace vcsn
       }
       else
       {
-        auto tag_aut = make_tag_automaton(aut, tag);
+        auto tag_aut = detail::make_join_automaton(tag, aut);
         copy_into(aut, res);
         copy_into(aut, tag_aut);
         for (int n = 1; n < min; ++n)
@@ -220,7 +207,7 @@ namespace vcsn
       if (min < max)
       {
         // Aut sum = automatonset.one();
-        auto sum = make_tag_automaton(aut, tag);
+        auto sum = detail::make_join_automaton(tag, aut);
         {
           auto s = sum->new_state();
           sum->set_initial(s);

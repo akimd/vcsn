@@ -4,6 +4,7 @@
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/transpose.hh>
+#include <vcsn/core/join-automata.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/fwd.hh>
@@ -31,6 +32,27 @@ namespace vcsn
 
   namespace detail
   {
+    /// Make an empty automaton which is a supertype of others, and
+    /// with a nullable labelset.
+    template <typename... Auts>
+    auto
+    make_join_automaton(general_tag, Auts&&... auts)
+      -> decltype(nullable_join_automata(std::forward<Auts>(auts)...))
+    {
+      return nullable_join_automata(std::forward<Auts>(auts)...);
+    }
+
+    /// Make an empty automaton which is a supertype of others.
+    template <typename... Auts>
+    auto
+    make_join_automaton(standard_tag, Auts&&... auts)
+      -> decltype(join_automata(std::forward<Auts>(auts)...))
+    {
+      return join_automata(std::forward<Auts>(auts)...);
+    }
+
+    /// Dispatch an operation between automata depending on whether
+    /// they are standard.
     template <typename... Aut, typename Operation>
     auto
     dispatch_standard(std::string algo, Operation op, Aut&&... auts)
@@ -49,21 +71,6 @@ namespace vcsn
     }
   }
 
-  template <typename Aut>
-  auto
-  make_tag_automaton(const Aut& aut, general_tag)
-    -> decltype(make_nullable_automaton(aut->context()))
-  {
-    return make_nullable_automaton(aut->context());
-  }
-
-  template <typename Aut>
-  auto
-  make_tag_automaton(const Aut& aut, standard_tag)
-    -> decltype(make_fresh_automaton(aut))
-  {
-    return make_fresh_automaton(aut);
-  }
 
   /*-------------------------.
   | is_standard(automaton).  |
