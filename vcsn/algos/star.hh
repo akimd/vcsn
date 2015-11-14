@@ -24,11 +24,13 @@ namespace vcsn
     auto initial = res->new_state();
     for (auto ti: detail::make_vector(res->initial_transitions()))
       {
-        res->new_transition(initial, res->dst_of(ti), ls.one(), res->weight_of(ti));
+        res->new_transition(initial, res->dst_of(ti),
+                            ls.one(), res->weight_of(ti));
         res->del_transition(ti);
       }
     for (auto tf: res->final_transitions())
-      res->add_transition(res->src_of(tf), initial, ls.one(), res->weight_of(tf));
+      res->add_transition(res->src_of(tf), initial,
+                          ls.one(), res->weight_of(tf));
     res->set_initial(initial, ws.one());
     res->set_final(initial, ws.one());
     return res;

@@ -153,9 +153,6 @@ namespace vcsn
       ///
       /// \param keep_state  a predicate to recognize states to keep
       /// \param keep_trans  a predicate to recognize transitions to keep
-      /// \param safe        whether the input automaton is in normal form
-      ///                    and never has two transitions with same
-      ///                    (src, label, dst).
       ///
       /// Transitions are kept only if both criteria are satisfied:
       /// the transition is kept, _and_ its source and destination too.

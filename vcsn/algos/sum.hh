@@ -32,30 +32,29 @@ namespace vcsn
     require(is_standard(b), __func__, ": rhs must be standard");
 
     // State in B -> state in Res.
-    std::map<state_t_of<B>, state_t_of<A>> m;
+    auto m = std::map<state_t_of<B>, state_t_of<A>>
+      {
+        {b->pre(), res->pre()},
+        {b->post(), res->post()},
+      };
     state_t_of<A> initial = res->dst_of(res->initial_transitions().front());
     for (auto s: b->states())
       m.emplace(s, b->is_initial(s) ? initial : res->new_state());
-    m.emplace(b->pre(), res->pre());
-    m.emplace(b->post(), res->post());
 
     // Add b.
     for (auto t: b->all_transitions())
+      if (b->dst_of(t) == b->post())
+        res->add_transition(m[b->src_of(t)], m[b->dst_of(t)],
+                            b->label_of(t),
+                            res->weightset()->conv(*b->weightset(),
+                                                   b->weight_of(t)));
       // Do not add initial transitions, the unique initial state is
       // already declared as such, and its weight must remain 1.
-      if (b->src_of(t) != b->pre())
-        {
-          if (b->dst_of(t) == b->post())
-            res->add_transition(m[b->src_of(t)], m[b->dst_of(t)],
-                                b->label_of(t),
-                                res->weightset()->conv(*b->weightset(),
-                                                       b->weight_of(t)));
-          else
-            res->new_transition(m[b->src_of(t)], m[b->dst_of(t)],
-                                b->label_of(t),
-                                res->weightset()->conv(*b->weightset(),
-                                                       b->weight_of(t)));
-        }
+      else if (b->src_of(t) != b->pre())
+        res->new_transition(m[b->src_of(t)], m[b->dst_of(t)],
+                            b->label_of(t),
+                            res->weightset()->conv(*b->weightset(),
+                                                   b->weight_of(t)));
     return res;
   }
 
