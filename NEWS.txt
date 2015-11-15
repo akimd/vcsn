@@ -5,6 +5,34 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-11-13
+### Automata: operations now works on all sorts of automata
+Usual operations (`sum`, `multiply` --which includes the case for repeated
+multiplication--, `star`) used to apply only to standard automata.  In
+addition to `sum` (for standard automata), there was `union`, which applied
+to any automata, but nothing for multiplication and star.
+
+Now `sum`, `star` and `multiply` accept an `algo` argument:
+
+"standard"
+:   requires standard input automata, builds a standard automaton
+
+"general"
+:   applies to any kind of automaton, does not guarantee a standard
+    automaton.  In the static API, might require a nullable labelset,
+    in the dyn:: API and Python, might turn the labelset into a nullable
+    one.
+
+"auto" (default)
+:   same as `"standard"` if input automata are standard, otherwise
+    same as `"general"`.
+
+In Python, the operators `+`, `*` and `**` use the `"auto"` strategy.
+
+The `union` algorithms are removed, and in Python `|` no longer denotes it.
+The left and right multiplication by a scalar were already implemented to
+adapt standard or non standard automata.
+
 ## 2015-11-05
 ### Expansions: more operations
 Usual operations (addition, multiplication, multiplication by a scalar) are
