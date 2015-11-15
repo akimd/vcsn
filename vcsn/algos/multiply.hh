@@ -188,7 +188,7 @@ namespace vcsn
     else
     {
       require(min <= max,
-          "multiply: invalid exponents: ", min, ", ", max);
+              "multiply: invalid exponents: ", min, ", ", max);
       if (min == 0)
       {
         //automatonset::one().

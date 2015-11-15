@@ -52,7 +52,6 @@
 #include <vcsn/algos/to-expression.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/algos/u.hh>
-#include <vcsn/algos/union.hh>
 
 #include <vcsn/core/rat/identities.hh>
 
@@ -366,7 +365,6 @@ namespace vcsn
         REGISTER(transpose_expression, rs_t);
         REGISTER(transposition_expression, rs_t);
         REGISTER(trim, aut_t);
-        REGISTER(union_a, aut_t, aut_t);
 
         using is_free_t = bool_constant<ctx_t::labelset_t::is_free()>;
         register_functions_is_free<ctx_t>(is_free_t());

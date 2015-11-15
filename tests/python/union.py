@@ -3,9 +3,15 @@
 import vcsn
 from test import *
 
+def union(*auts):
+    res = auts[0]
+    for a in auts[1:]:
+        res = res.sum(a, "general")
+    return res
+
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
-CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), ab.sum(bc, "general"))
+CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), union(ab, bc))
 
 ## ------------ ##
 ## lal_char_z.  ##
@@ -143,7 +149,7 @@ digraph
 }
 ''')
 
-CHECK_EQ(exp, a1.sum(a2, "general"))
+CHECK_EQ(exp, union(a1, a2))
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
@@ -151,28 +157,28 @@ CHECK_EQ(exp, a1.sum(a2, "general"))
 
 # check RES AUT
 # -------------
-def check(exp, eff):
-    CHECK_EQ(exp, str(eff.expression()))
+def check(exp, *auts):
+    CHECK_EQ(exp, str(union(*auts).expression()))
 
 # RatE and B, in both directions.
 a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
-         .expression('<u>a').derived_term()
-a2 = vcsn.context('lal_char(b), b').expression('b*').derived_term()
-check('<u>a+b*', a1 + a2)
-check('<u>a+b*', a2 + a1)
+         .expression('<u>a').derived_term().strip()
+a2 = vcsn.context('lal_char(b), b').expression('b*').derived_term().strip()
+check('<u>a+b*', a1, a2)
+check('<u>a+b*', a2, a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(a), z').expression('<2>a')  .derived_term()
-q = vcsn.context('lal_char(b), q').expression('<1/3>b').derived_term()
-r = vcsn.context('lal_char(c), r').expression('<.4>c') .derived_term()
+z = vcsn.context('lal_char(a), z').expression('<2>a')  .automaton()
+q = vcsn.context('lal_char(b), q').expression('<1/3>b').automaton()
+r = vcsn.context('lal_char(c), r').expression('<.4>c') .automaton()
 
-check('<2>a+<1/3>b', z + q)
-check('<2>a+<1/3>b', q + z)
-check('<4>a+<1/3>b', z + q + z)
-check('<2>a+<2/3>b', z + q + q)
+check('<2>a+<1/3>b', z, q)
+check('<2>a+<1/3>b', q, z)
+check('<4>a+<1/3>b', z, q, z)
+check('<2>a+<2/3>b', z, q, q)
 
-check('<2>a+<0.4>c', z + r)
-check('<2>a+<0.4>c', r + z)
+check('<2>a+<0.4>c', z, r)
+check('<2>a+<0.4>c', r, z)
 
-check('<0.333333>b+<0.4>c', q + r)
-check('<0.333333>b+<0.4>c', r + q)
+check('<0.333333>b+<0.4>c', q, r)
+check('<0.333333>b+<0.4>c', r, q)

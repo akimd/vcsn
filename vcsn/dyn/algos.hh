@@ -856,10 +856,6 @@ namespace vcsn
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
 
-    /// Union of two automata (plain graph union).
-    /// Performs the join of the contexts.
-    automaton union_a(const automaton& lhs, const automaton& rhs);
-
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
 

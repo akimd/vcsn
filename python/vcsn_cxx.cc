@@ -672,11 +672,6 @@ struct automaton
     return vcsn::dyn::type(val_);
   }
 
-  automaton union_a(const automaton& rhs) const
-  {
-    return vcsn::dyn::union_a(val_, rhs.val_);
-  }
-
   automaton universal() const
   {
     return vcsn::dyn::universal(val_);
@@ -1445,7 +1440,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
     .def("type", &automaton::type)
-    .def("union", &automaton::union_a)
     .def("universal", &automaton::universal)
     .def("weight_series", &automaton::weight_series)
     ;

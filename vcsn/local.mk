@@ -110,7 +110,6 @@ algo_headers =                                  \
   %D%/algos/trie.hh                             \
   %D%/algos/tuple.hh                            \
   %D%/algos/u.hh                                \
-  %D%/algos/union.hh                            \
   %D%/algos/universal.hh                        \
   %D%/algos/weight-series.hh                    \
   %D%/algos/zpc.hh

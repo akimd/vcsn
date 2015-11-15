@@ -10,7 +10,7 @@
 #include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/reduce.hh>
 #include <vcsn/algos/strip.hh>
-#include <vcsn/algos/union.hh>
+#include <vcsn/algos/sum.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/expression.hh>
 
@@ -49,9 +49,9 @@ namespace vcsn
     const auto& l = realtime(a1);
     const auto& r = realtime(a2);
     // d = l + -r.
-    auto d = union_a(l,
-                     left_mult(ws2.sub(ws2.zero(), ws2.one()),
-                               r));
+    auto d = sum(l,
+                 left_mult(ws2.sub(ws2.zero(), ws2.one()),
+                           r));
     return is_empty(reduce(d));
   }
 

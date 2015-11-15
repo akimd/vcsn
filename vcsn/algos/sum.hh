@@ -3,7 +3,6 @@
 #include <map>
 
 #include <vcsn/algos/standard.hh> // is_standard
-#include <vcsn/algos/union.hh>
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -58,28 +57,33 @@ namespace vcsn
     return res;
   }
 
-
+  /// Merge transitions of \a b into those of \a res.
+  ///
+  /// \pre AutIn <: AutOut.
   template <typename A, typename B>
   inline
-  auto
-  sum(const A& lhs, const B& rhs, standard_tag)
-    -> decltype(join_automata(lhs, rhs))
+  A&
+  sum_here(A& res, const B& b, general_tag)
   {
-    auto res = join_automata(lhs, rhs);
-    // A standard automaton has a single initial state.
-    res->set_initial(res->new_state());
-    sum_here(res, lhs, standard_tag{});
-    sum_here(res, rhs, standard_tag{});
+    copy_into(b, res);
     return res;
   }
 
-  template <typename A, typename B>
+  /// The sum of two automata.
+  ///
+  /// \param lhs  the first automaton.
+  /// \param rhs  the second automaton.
+  /// \param tag  whether to use constructs for standard automata.
+  template <typename A, typename B, typename Tag = general_tag>
   inline
   auto
-  sum(const A& lhs, const B& rhs, general_tag = {})
+  sum(const A& lhs, const B& rhs, Tag tag = {})
     -> decltype(join_automata(lhs, rhs))
   {
-    return union_a(lhs, rhs);
+    auto res = join_automata(lhs, rhs);
+    copy_into(lhs, res);
+    sum_here(res, rhs, tag);
+    return res;
   }
 
   namespace dyn

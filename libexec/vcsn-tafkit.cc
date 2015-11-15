@@ -129,7 +129,6 @@ DEFINE_RATEXP_FUNCTION(thompson);
 DEFINE_AUT_FUNCTION(to_expression);
 DEFINE_AUT__RATEXP_FUNCTION(transpose);
 DEFINE_AUT_FUNCTION(trim);
-DEFINE_AUT_VARIADIC_FUNCTION(union_a);
 DEFINE_AUT_FUNCTION(universal);
 
 struct are_equivalent: vcsn_function
@@ -627,7 +626,6 @@ try
   if (cmd == "u") return u(argc - 1, argv + 1);
   else
     {
-      if (cmd == "union") cmd = "union_a";
       std::unique_ptr<vcsn_function> f;
 #define ALGO(Name)                                                      \
       else if (cmd == #Name) f = std::unique_ptr<Name>(new Name{})
@@ -676,7 +674,6 @@ try
       ALGO(to_expression);
       ALGO(transpose);
       ALGO(trim);
-      ALGO(union_a);
       ALGO(universal);
       if (f)
         return vcsn_main(argc - 1, argv + 1, *f);

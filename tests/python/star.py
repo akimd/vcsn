@@ -12,7 +12,7 @@ def check(input, exp):
 
 # This used to trigger an assert.
 l_br = vcsn.context('lal_char(a), expressionset<lal_char(xy), b>')
-check(l_br.expression('<y>a(<x>a)*').derived_term(),
+check(l_br.expression('<y>a(<x>a)*').automaton('derived_term'),
 '''
 digraph
 {
