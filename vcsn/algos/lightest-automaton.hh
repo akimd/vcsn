@@ -23,7 +23,7 @@ namespace vcsn
     };
     static const auto map = std::map<std::string, algorithm>
     {
-      {"auto",          bellmanford_t},
+      {"auto",          dijkstra_t},
       {"bellman-ford",  bellmanford_t},
       {"dijkstra",      dijkstra_t},
       {"a-star",        astar_t},

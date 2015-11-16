@@ -7,6 +7,7 @@
 #include <boost/heap/binomial_heap.hpp>
 #include <boost/optional.hpp>
 
+#include <vcsn/algos/lightest-automaton.hh>
 #include <vcsn/algos/has-negative-cycle.hh>
 #include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
@@ -96,12 +97,26 @@ namespace vcsn
 
       /// The approximated behavior of the automaton.
       /// \param num   number of words looked for.
-      polynomial_t operator()(boost::optional<unsigned> num)
+      polynomial_t operator()(unsigned num)
       {
-        if (!num)
-          num = 1;
-
-        return lightest_(*num);
+        if (num == 1)
+          {
+            auto pred = lightest_algo(aut_, "auto");
+            auto w = ws_.one();
+            auto l = ls_.one();
+            for (auto t = pred[aut_->post()];
+                 t != aut_->null_transition();
+                 t = pred[aut_->src_of(t)])
+              {
+                w = ws_.mul(aut_->weight_of(t), w);
+                auto nl = aut_->label_of(t);
+                if (!aut_->labelset()->is_special(nl))
+                  l = ls_.mul(nl, l);
+              }
+            return {{l, w}};
+          }
+        else
+          return lightest_(num);
       }
 
     private:
@@ -188,12 +203,12 @@ namespace vcsn
   template <typename Automaton>
   inline
   typename detail::weighter<Automaton>::polynomial_t
-  lightest(const Automaton& aut, boost::optional<unsigned> num = {})
+  lightest(const Automaton& aut, boost::optional<unsigned> num)
   {
     require(!has_negative_cycle(aut),
             "lightest: require automaton without negative cycles");
     detail::weighter<Automaton> weighter(aut);
-    return weighter(num);
+    return weighter(num.get_value_or(1));
   }
 
 

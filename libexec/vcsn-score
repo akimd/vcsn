@@ -327,6 +327,12 @@ bench('a.lightest(5)',
       setup=['c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'])
 
+r = "[a-z]?{300}"
+bench('a.lightest()',
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['c = vcsn.context(ctx)',
+             'a = c.expression(r).standard()'])
+
 ctx = 'lat<lan_char(a), lan_char(x)>, q'
 r = "(\e|x + a|\e)*"
 bench('a.lightest(5000)',
