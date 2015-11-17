@@ -1,10 +1,11 @@
 #pragma once
 
 #include <vcsn/algos/accessible.hh>
-#include <vcsn/algos/distance.hh>
+#include <vcsn/algos/lightest-path.hh>
 #include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/label.hh>
 
 namespace vcsn
 {
@@ -68,22 +69,17 @@ namespace vcsn
     require(is_ambiguous(aut, witness),
             "automaton is unambiguous");
     const auto& ls = *aut->labelset();
-    word_t_of<Aut> res;
     // Find the shortest word from initial to the witness.
     auto s = std::get<0>(witness);
-    for (auto t: path_bfs(aut, aut->pre(), s))
-      {
-        auto l = aut->label_of(t);
-        if (!ls.is_special(l))
-          res = ls.mul(res, l);
-      }
-    for (auto t: path_bfs(aut, s, aut->post()))
-      {
-        auto l = aut->label_of(t);
-        if (!ls.is_special(l))
-          res = ls.mul(res, l);
-      }
-    return res;
+
+    auto pre_to_s = path_monomial(aut, lightest_path(aut, aut->pre(), s),
+                                  aut->pre(), s);
+    auto s_to_post = path_monomial(aut, lightest_path(aut, s, aut->post()),
+                                   s, aut->post());
+    require(pre_to_s, "ambiguous_word: did not find monomial");
+    require(s_to_post, "ambiguous_word: did not find monomial");
+
+    return ls.mul((*pre_to_s).first, (*s_to_post).first);
   }
 
 

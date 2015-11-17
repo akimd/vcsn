@@ -521,6 +521,14 @@ bench('a.is_cycle_ambiguous()',
              'a = vcsn.context("lal_char(abc), z").expression(r).standard()'],
       number=20)
 
+# ambiguous.
+r = "[a-c]{2000}(<2>ab+a<3>b)"
+bench('a.is_ambiguous()',
+      'a = std({}), c = [abc] -> B'.format(r),
+      setup=['r = "{}"'.format(r),
+             'a = vcsn.context("lal_char(abc), z").expression(r).standard()'],
+      number=20)
+
 # is_functional.
 r = "'(a, x)'{2000}'(b, y)'"
 bench('a.is_functional()',

@@ -34,6 +34,26 @@ CHECK(a.is_ambiguous())
 CHECK_EQ("a", a.ambiguous_word())
 CHECK(not a.is_deterministic())
 
+# Test ambiguous word on automata with two ambiguous parts. Hence,
+# test monomial_path with states different from pre and post.
+b = vcsn.automaton('''
+digraph
+{
+  vcsn_context="lal_char(ab), b"
+  I -> 0
+  I -> 1
+  0 -> 2 [label = "a"]
+  1 -> 2 [label = "a"]
+  2 -> F
+}
+''')
+CHECK(b.is_ambiguous())
+CHECK((b*a).is_ambiguous())
+CHECK((a*b).is_ambiguous())
+CHECK_EQ("a", b.ambiguous_word())
+CHECK_EQ("aa", (b*a).ambiguous_word())
+CHECK_EQ("aa", (a*b).proper().ambiguous_word())
+
 # Likewise, but with a non-commutative product.
 a = vcsn.automaton('''
 digraph
