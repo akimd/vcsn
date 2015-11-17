@@ -197,18 +197,6 @@ namespace vcsn
   }
 
 
-  /// The approximated behavior of an automaton.
-  ///
-  /// \param aut   the automaton whose behavior to approximate
-  template <typename Automaton>
-  inline
-  typename detail::weighter<Automaton>::polynomial_t
-  weigh(const Automaton& aut)
-  {
-    return lightest(aut, boost::none);
-  }
-
-
   namespace dyn
   {
     namespace detail
