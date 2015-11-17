@@ -101,7 +101,7 @@ namespace vcsn
       {
         if (num == 1)
           {
-            auto pred = lightest_path(aut_, "auto");
+            auto pred = lightest_path(aut_);
             auto w = ws_.one();
             auto l = ls_.one();
             for (auto t = pred[aut_->post()];

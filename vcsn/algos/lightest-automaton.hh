@@ -16,9 +16,9 @@ namespace vcsn
   /// state. Then, reconstruct the path keeping the states and transitions
   /// we met. Now that we have the sets of elements to keep we can construct
   /// a new automaton using these states/transitions.
-  template <typename Aut>
+  template <typename Aut, typename Algo = dijkstra_tag>
   Aut
-  lightest_automaton(const Aut& aut, const std::string& algo)
+  lightest_automaton(const Aut& aut, Algo algo = {})
   {
     require(is_tropical<weightset_t_of<Aut>>(),
             "lightest-automaton: require tropical weightset");
