@@ -221,58 +221,6 @@ namespace vcsn
     return parent;
   }
 
-  /// A shortest path between two states.
-  ///
-  /// \param aut    the automaton
-  /// \param start  the starting state
-  /// \param end    the target state
-  template<typename Aut>
-  std::vector<transition_t_of<Aut>>
-  path_bfs(const Aut& aut,
-           state_t_of<Aut> start, state_t_of<Aut> end)
-  {
-    using automaton_t =  Aut;
-    using state_t = state_t_of<automaton_t>;
-    using transition_t = transition_t_of<automaton_t>;
-
-    std::queue<state_t> todo;
-    std::unordered_set<state_t> marked;
-    std::unordered_map<state_t, std::pair<state_t, transition_t>> parent;
-
-    todo.push(start);
-    while (!todo.empty())
-      {
-        state_t p = todo.front();
-        todo.pop();
-        marked.insert(p);
-        if (p == end)
-          {
-            std::vector<transition_t> rpath;
-            state_t bt_curr = end;
-            while (bt_curr != start)
-              {
-                transition_t t;
-                std::tie(bt_curr, t) = parent.find(bt_curr)->second;
-                rpath.push_back(t);
-              }
-            std::reverse(rpath.begin(), rpath.end());
-            return rpath;
-          }
-        else
-          for (auto t : aut->all_out(p))
-            {
-              auto s = aut->dst_of(t);
-              if (marked.find(s) == marked.end())
-                {
-                  todo.push(s);
-                  parent[s] = {p, t};
-                }
-            }
-      }
-    // FIXME: why don't we raise here?
-    return std::vector<transition_t>();
-  }
-
   template <typename Aut>
   std::vector<std::vector<weight_t_of<Aut>>>
   all_distances(const Aut& aut)
