@@ -30,43 +30,63 @@ namespace vcsn
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, astar_tag)
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                astar_tag)
   {
-    return a_star(aut);
+    return a_star(aut, source, dest);
   }
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, bellmanford_tag)
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                bellmanford_tag)
   {
-    return bellman_ford(aut);
+    return bellman_ford(aut, source, dest);
   }
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, dijkstra_tag = {})
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                dijkstra_tag = {})
   {
-    return dijkstra(aut);
+    return dijkstra(aut, source, dest);
+  }
+
+  template <typename Aut, typename Tag = dijkstra_tag>
+  std::vector<transition_t_of<Aut>>
+  lightest_path(const Aut& aut, Tag tag = {})
+  {
+    return lightest_path(aut, aut->pre(), aut->post(), tag);
   }
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, const std::string& algo)
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                const std::string& algo)
   {
+    using state_t = state_t_of<Aut>;
     using path_t = std::vector<transition_t_of<Aut>>;
     static const auto map
-      = std::map<std::string, std::function<path_t(const Aut&)>>
+      = std::map<std::string, std::function<path_t(const Aut&, state_t, state_t)>>
     {
-      {"auto",
-       [](const Aut& a){ return lightest_path(a); }},
-      {"a-star",
-       [](const Aut& a){ return lightest_path(a, astar_tag{}); }},
-      {"bellman-ford",
-       [](const Aut& a){ return lightest_path(a, bellmanford_tag{}); }},
-      {"dijkstra",
-       [](const Aut& a){ return lightest_path(a, dijkstra_tag{}); }},
+      {"auto",         [](const Aut& a, state_t src, state_t dst)
+                       {
+                         return lightest_path(a, src, dst);
+                       }},
+      {"a-star",       [](const Aut& a, state_t src, state_t dst)
+                       {
+                         return lightest_path(a, src, dst, astar_tag{});
+                       }},
+      {"bellman-ford", [](const Aut& a, state_t src, state_t dst)
+                       {
+                         return lightest_path(a, src, dst, bellmanford_tag{});
+                       }},
+      {"dijkstra",     [](const Aut& a, state_t src, state_t dst)
+                       {
+                         return lightest_path(a, src, dst, dijkstra_tag{});
+                       }},
     };
     auto fun = getargs("algorithm", map, algo);
-    return fun(aut);
+    return fun(aut, source, dest);
   }
 }

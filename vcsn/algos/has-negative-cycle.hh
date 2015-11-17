@@ -14,7 +14,7 @@ namespace vcsn
   template <typename Aut>
   bool has_negative_cycle(const Aut& aut)
   {
-    return !detail::bellman_ford_impl(aut);
+    return !detail::bellman_ford_impl(aut, aut->pre());
   }
 
   namespace dyn

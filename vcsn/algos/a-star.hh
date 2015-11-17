@@ -75,10 +75,8 @@ namespace vcsn
 
       template <typename Heuristic>
       std::vector<transition_t>
-      operator()(Heuristic heuristic)
+      operator()(state_t source, state_t dest, Heuristic heuristic)
       {
-        auto pre = aut_->pre();
-        auto post = aut_->post();
         auto ws = *aut_->weightset();
         auto size = aut_->all_states().back() + 1;
 
@@ -89,15 +87,15 @@ namespace vcsn
 
         auto dist = distance_t(size);
 
-        dist[pre] = ws.one();
-        heuristic_dist_[pre] = ws.add(ws.one(), heuristic(pre, post));
-        handles[pre] = todo.emplace(pre, *this);
+        dist[source] = ws.one();
+        heuristic_dist_[source] = ws.add(ws.one(), heuristic(source, dest));
+        handles[source] = todo.emplace(source, *this);
 
         while (!todo.empty())
           {
             auto p = todo.top();
             state_t s = p.state_;
-            if (s == post)
+            if (s == dest)
               return std::move(res_);
             todo.pop();
             done.insert(s);
@@ -112,7 +110,7 @@ namespace vcsn
                       {
                         res_[dst] = t;
                         dist[dst] = nw;
-                        heuristic_dist_[dst] = ws.add(nw, heuristic(dst, post));
+                        heuristic_dist_[dst] = ws.add(nw, heuristic(dst, dest));
                       }
                     handles[dst] = todo.emplace(dst, *this);
                   }
@@ -145,10 +143,11 @@ namespace vcsn
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  a_star(const Aut& aut)
+  a_star(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest)
   {
     using state_t = state_t_of<Aut>;
-    return detail::a_star_impl<Aut>(aut)([aut](state_t, state_t)
+    return detail::a_star_impl<Aut>(aut)(source, dest,
+                                         [aut](state_t, state_t)
                                          {
                                            return aut->weightset()->zero();
                                          });

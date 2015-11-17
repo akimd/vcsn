@@ -70,22 +70,22 @@ namespace vcsn
       using heap_t = boost::heap::fibonacci_heap<profile>;
 
       std::vector<transition_t>
-      operator()()
+      operator()(state_t source, state_t dest)
       {
         auto size = aut_->all_states().back() + 1;
         auto handles = std::vector<typename heap_t::handle_type>(size);
         auto todo = heap_t();
         auto ws = *aut_->weightset();
 
-        dist_[aut_->pre()] = ws.one();
-        handles[aut_->pre()] = todo.emplace(aut_->pre(), *this);
+        dist_[source] = ws.one();
+        handles[source] = todo.emplace(source, *this);
 
         while (!todo.empty())
           {
             auto p = todo.top();
             todo.pop();
             state_t s = p.state_;
-            if (s == aut_->post())
+            if (s == dest)
               break;
             else
               for (auto t: aut_->all_out(s))
@@ -135,8 +135,8 @@ namespace vcsn
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  dijkstra(const Aut& aut)
+  dijkstra(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest)
   {
-    return detail::dijkstra_impl<Aut>(aut)();
+    return detail::dijkstra_impl<Aut>(aut)(source, dest);
   }
 }
