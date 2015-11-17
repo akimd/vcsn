@@ -70,6 +70,7 @@ algo_headers =                                  \
   %D%/algos/lift.hh                             \
   %D%/algos/lightest.hh                         \
   %D%/algos/lightest-automaton.hh               \
+  %D%/algos/lightest-path.hh                    \
   %D%/algos/make-context.hh                     \
   %D%/algos/minimize-brzozowski.hh              \
   %D%/algos/minimize-hopcroft.hh                \

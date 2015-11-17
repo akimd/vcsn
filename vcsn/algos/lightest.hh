@@ -7,7 +7,7 @@
 #include <boost/heap/binomial_heap.hpp>
 #include <boost/optional.hpp>
 
-#include <vcsn/algos/lightest-automaton.hh>
+#include <vcsn/algos/lightest-path.hh>
 #include <vcsn/algos/has-negative-cycle.hh>
 #include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
@@ -101,7 +101,7 @@ namespace vcsn
       {
         if (num == 1)
           {
-            auto pred = lightest_algo(aut_, "auto");
+            auto pred = lightest_path(aut_, "auto");
             auto w = ws_.one();
             auto l = ls_.one();
             for (auto t = pred[aut_->post()];
