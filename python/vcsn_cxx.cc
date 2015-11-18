@@ -75,10 +75,21 @@ struct python_optional
   }
 };
 
+/// Convert to identities.
+auto identities(const std::string& s)
+  -> vcsn::rat::identities
+{
+  std::istringstream is{s};
+  vcsn::rat::identities res;
+  is >> res;
+  vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+  return res;
+}
+
 /// Convert a Python list to a C++ vector.
 template <typename T>
-std::vector<T>
-make_vector(const boost::python::list& list)
+auto make_vector(const boost::python::list& list)
+  -> std::vector<T>
 {
   std::vector<T> res;
   for (int i = 0; i < boost::python::len(list); ++i)
@@ -86,14 +97,19 @@ make_vector(const boost::python::list& list)
   return res;
 }
 
-/// Convert to identities.
-vcsn::rat::identities identities(const std::string& s)
+/// Create an input stream from a file, or from a string.
+auto make_istream(const std::string& data = "",
+                  const std::string& filename = "")
+  -> std::shared_ptr<std::istream>
 {
-  std::istringstream is{s};
-  vcsn::rat::identities res;
-  is >> res;
-  vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-  return res;
+  vcsn::require(!data.empty() || !filename.empty(),
+                "cannot provide both data and filename");
+  if (!data.empty())
+    return std::make_shared<std::istringstream>(data);
+  else if (!filename.empty())
+    return vcsn::open_input_file(filename);
+  else
+    vcsn::raise("must provide either data or filename");
 }
 
 
@@ -191,15 +207,7 @@ struct automaton
             const std::string& filename = "",
             bool strip = true)
   {
-    std::shared_ptr<std::istream> is;
-    vcsn::require(!data.empty() || !filename.empty(),
-                  "cannot provide both data and filename");
-    if (!data.empty())
-      is = std::make_shared<std::istringstream>(data);
-    else if (!filename.empty())
-      is = vcsn::open_input_file(filename);
-    else
-      vcsn::raise("must provide either data or filename");
+    auto is = make_istream(data, filename);
     val_ = vcsn::dyn::read_automaton(*is, format, strip);
     vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   }

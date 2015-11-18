@@ -71,8 +71,8 @@ namespace vcsn
   }
 
   /// If \a b is not verified, raise an error with \a args as message.
-  template <typename... Args>
-  inline void require(bool b, Args&&... args)
+  template <typename Bool, typename... Args>
+  inline void require(Bool b, Args&&... args)
   {
     if (!b)
       raise(std::forward<Args>(args)...);

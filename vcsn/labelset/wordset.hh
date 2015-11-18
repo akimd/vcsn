@@ -223,6 +223,7 @@ namespace vcsn
         return conv(*ls.labelset(), ls.get_value(v));
     }
 
+    /// Read a word from this stream.
     value_t
     conv(std::istream& i, bool = true) const
     {

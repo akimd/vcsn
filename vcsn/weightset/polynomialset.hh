@@ -1070,19 +1070,19 @@ namespace vcsn
       while (isspace(i.peek()))                 \
         i.ignore()
 
-      // Possibly a weight in braces.
+      // Nothing to read: signal EOF as an empty result.
       SKIP_SPACES();
-      if (i.peek() == -1)
+      if (i.peek() == EOF)
         return boost::none;
 
+      // Possibly a weight in braces.
       bool weighted = i.peek() == langle;
       weight_t w = conv_weight(i);
 
       // Possibly, a label.
       SKIP_SPACES();
       auto l = conv_label(i, weighted, sep);
-      require(l != boost::none,
-              "\\z is invalid for monomials");
+      require(l, "\\z is invalid for monomials");
       return monomial_t{l.get(), w};
 #undef SKIP_SPACES
     }
@@ -1119,7 +1119,10 @@ namespace vcsn
                                 add_here(res, l, w);
                               });
           else if (auto l = conv_label(i, weighted, sep))
-            add_here(res, l.get(), w);
+            {
+              require(l, "\\z is invalid for monomials");
+              add_here(res, l.get(), w);
+            }
 
           // sep (e.g., '+'), or stop parsing.
           SKIP_SPACES();

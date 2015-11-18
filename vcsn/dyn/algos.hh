@@ -513,6 +513,7 @@ namespace vcsn
     /// \param aut  the automaton to format
     /// \param out  the output stream where to print the dot file
     /// \param format  the output format.
+    ///    - "default"  Same as "dot".
     ///    - "dot"      GraphViz' Dot format.
     ///    - "dot2tex"  Likewise, but generate LaTeX escapes for
     ///                 use with dot2tex.

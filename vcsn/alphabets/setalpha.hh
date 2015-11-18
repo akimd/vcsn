@@ -201,6 +201,10 @@ namespace vcsn
 
       // Stop as soon as it might be a special character (such as
       // delimiters in polynomials, or tuple separators).
+      //
+      // The empty word (i.e., an empty stream) is a valid
+      // representation of the mpty word.  We want to be able to call
+      // `aut.eval("")`, instead of mandating `aut.eval("\e")`.
       word_t res;
       int c = i.peek();
       while (i.good()

@@ -23,6 +23,8 @@ namespace vcsn
     /// Build a trie automaton (prefix-tree-like automaton).
     ///
     /// \tparam  Context  the context of the mutable_automaton to build.
+    ///                   It is typically a letterset, even though we feed
+    ///                   it with words.
     /// \tparam  Dir      if `forward` build a trie (single initial state)
     ///                   otherwise (`backward`) build a reversed trie
     ///                   (single final state, but many initial states).
@@ -38,11 +40,14 @@ namespace vcsn
         = conditional_t<Dir == direction::forward,
                         automaton_t,
                         transpose_automaton<automaton_t>>;
+      /// The input labelset, free/letterized or not.
       using labelset_t = labelset_t_of<context_t>;
       using letter_t = letter_t_of<context_t>;
       using word_t = word_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
       using state_t = state_t_of<automaton_t>;
+
+      /// Polynomialset for the input: weighted words.
       using polynomialset_t = word_polynomialset_t<context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using monomial_t = typename polynomialset_t::monomial_t;
@@ -138,9 +143,7 @@ namespace vcsn
     trie_builder<free_context<context_t_of<PolynomialSet>>, Dir>
     make_trie_builder(const PolynomialSet& ps)
     {
-      using context_t = detail::free_context<context_t_of<PolynomialSet>>;
-      auto ctx = make_free_context(ps.context());
-      return {ctx};
+      return {make_free_context(ps.context())};
     }
   }
 
