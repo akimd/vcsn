@@ -79,7 +79,7 @@ namespace vcsn
     /// Assumes the subgraph accessible from \a s0 does not have cycles with a
     /// weight of 0.
     weight_t
-    operator() (state_t s0, state_t s1) const
+    operator()(state_t s0, state_t s1) const
     {
       auto& ws = *aut_->weightset();
 
@@ -90,27 +90,27 @@ namespace vcsn
       weight_t res = ws.zero();
 
       while (!stack.empty())
-      {
-        pair_t p = stack.back();
-        stack.pop_back();
-        state_t src = p.first;
-        weight_t w = p.second;
-
-        // dfs
-        for (auto t : aut_->all_out(src))
         {
-          state_t dst = aut_->dst_of(t);
-          weight_t new_weight(ws.mul(w, aut_->weight_of(t)));
-          if (dst == s1)
-            // Found a path, add it
-            res = ws.add(res, new_weight);
-          else
-          {
-            pair_t np(dst, new_weight);
-            stack.emplace_back(dst, new_weight);
-          }
+          pair_t p = stack.back();
+          stack.pop_back();
+          state_t src = p.first;
+          weight_t w = p.second;
+
+          // dfs
+          for (auto t : aut_->all_out(src))
+            {
+              auto dst = aut_->dst_of(t);
+              auto new_weight = ws.mul(w, aut_->weight_of(t));
+              if (dst == s1)
+                // Found a path, add it
+                res = ws.add(res, new_weight);
+              else
+                {
+                  pair_t np(dst, new_weight);
+                  stack.emplace_back(dst, new_weight);
+                }
+            }
         }
-      }
       return res;
     }
 
@@ -137,7 +137,7 @@ namespace vcsn
     /// using a dfs.
     /// The distance becomes a shortest path with only positive weights.
     weight_t
-    operator() (state_t s0, state_t s1) const
+    operator()(state_t s0, state_t s1) const
     {
       auto& ws = *aut_->weightset();
       // stack of the states to visit
@@ -149,28 +149,28 @@ namespace vcsn
         = std::vector<weight_t>(detail::back(aut_->all_states()) + 1, ws.zero());
 
       while (!stack.empty())
-      {
-        pair_t p = stack.back();
-        stack.pop_back();
-        state_t src = p.first;
-        weight_t w = p.second;
-
-        // The state was not already seen with a smaller weight
-        if (w < min_weight[src])
         {
-          min_weight[src] = w;
-          if (src != s1)
-            for (auto t : aut_->all_out(src))
+          pair_t p = stack.back();
+          stack.pop_back();
+          state_t src = p.first;
+          weight_t w = p.second;
+
+          // The state was not already seen with a smaller weight
+          if (ws.less(w, min_weight[src]))
             {
-              state_t dst = aut_->dst_of(t);
-              weight_t new_weight(ws.mul(w, aut_->weight_of(t)));
-              // Otherwise, useless since we have already seen a shorter path
-              if (new_weight < min_weight[dst] &&
-                  new_weight < min_weight[s1])
-                stack.emplace_back(dst, new_weight);
+              min_weight[src] = w;
+              if (src != s1)
+                for (auto t : aut_->all_out(src))
+                  {
+                    state_t dst = aut_->dst_of(t);
+                    auto new_weight = ws.mul(w, aut_->weight_of(t));
+                    // Otherwise, useless since we have already seen a shorter path
+                    if (ws.less(new_weight, min_weight[dst])
+                        && ws.less(new_weight, min_weight[s1]))
+                      stack.emplace_back(dst, new_weight);
+                  }
             }
         }
-      }
       return min_weight[s1];
     }
 
