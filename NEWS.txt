@@ -13,6 +13,12 @@ words as a `data` string.  Use `format` to specify whether the lines are
  monomials or plain words --- for instance whether `<2>a` is the word `a`
 with weight 2, or a four-letter word.
 
+### Minimize: new algorithm: hopcroft
+There is now a new implementation of the minimization, based on the
+algorithm of Hopcroft.  It can only be used on Boolean automata with a free
+labelset.  On many examples, this algorithm shows better performances than
+"signature" but is still less efficient than "moore".
+
 ## 2015-11-13
 ### Automata: operations now works on all sorts of automata
 Usual operations (`sum`, `multiply` --which includes the case for repeated
