@@ -101,19 +101,10 @@ namespace vcsn
       {
         if (num == 1)
           {
-            auto pred = lightest_path(aut_);
-            auto w = ws_.one();
-            auto l = ls_.one();
-            for (auto t = pred[aut_->post()];
-                 t != aut_->null_transition();
-                 t = pred[aut_->src_of(t)])
-              {
-                w = ws_.mul(aut_->weight_of(t), w);
-                auto nl = aut_->label_of(t);
-                if (!aut_->labelset()->is_special(nl))
-                  l = ls_.mul(nl, l);
-              }
-            return {{l, w}};
+            auto res = path_monomial(aut_, lightest_path(aut_));
+            return (res != boost::none)
+                   ? polynomial_t{*res}
+                   : polynomial_t{};
           }
         else
           return lightest_(num);
