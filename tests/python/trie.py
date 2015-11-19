@@ -4,12 +4,42 @@ import os
 import vcsn
 from test import *
 
-# law -> Q.
-c = vcsn.context('law_char, q')
-p = c.polynomial('<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc')
+## ---------- ##
+## law -> Q.  ##
+## ---------- ##
 
-a = p.trie()
-exp = r'''context = "letterset<char_letters(abcd)>, q"
+def trie(algo, *args):
+    if algo == 'trie':
+        return args[0].trie(*args[1:])
+    elif algo == 'cotrie':
+        return args[0].cotrie(*args[1:])
+    else:
+        raise RuntimeError('invalid algo: ', algo)
+
+def check(algo, ctx, polynomial, exp):
+    c = vcsn.context(ctx)
+    p = c.polynomial(polynomial)
+    print(algo, c, p)
+    a = trie(algo, p)
+    CHECK_EQ(exp, a.format('daut'))
+    if ctx.startswith('lal'):
+        CHECK(a.is_deterministic() if algo == 'trie'  else a.is_codeterministic())
+    CHECK_EQ(p, a.shortest(100))
+
+    # Likewise, but via a file.
+    with open('series.txt', 'w') as file:
+        print(p.format('list'), file=file)
+    c = vcsn.context(ctx)
+    a = trie(algo, c, 'series.txt')
+    os.remove('series.txt')
+    CHECK_EQ(exp, a.format('daut'))
+
+
+
+check('trie',
+      'law_char, q',
+      '<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc',
+      r'''context = "letterset<char_letters(abcd)>, q"
 $ -> 0
 0 -> $ <2>
 0 -> 1 a
@@ -25,25 +55,13 @@ $ -> 0
 5 -> 6 d
 6 -> $ <7>
 7 -> 8 c
-8 -> $ <8>'''
-CHECK_EQ(exp, a.format('daut'))
-CHECK(a.is_deterministic())
-CHECK_EQ(p, a.shortest(100))
-
-# Likewise, but via a file.
-with open("series.txt", "w") as file:
-    print(p.format("list"), file=file)
-c = vcsn.context('law_char, q')
-a = c.trie('series.txt')
-# FIXME: the context is wrong (empty alphabet).
-CHECK_EQ(exp, a.format('daut'))
+8 -> $ <8>''')
 
 
-
-c = vcsn.context('law_char, q')
-p = c.polynomial('<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba')
-a = p.cotrie()
-exp = r'''context = "letterset<char_letters(abcd)>, q"
+check('cotrie',
+      'law_char, q',
+      '<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba',
+      r'''context = "letterset<char_letters(abcd)>, q"
 $ -> 0 <2>
 $ -> 1 <3>
 $ -> 2 <4>
@@ -57,30 +75,18 @@ $ -> 7 <6>
 4 -> 3 c
 5 -> 3 d
 6 -> 5 c
-7 -> 4 d'''
-CHECK_EQ(exp, a.format('daut'))
-CHECK(a.is_codeterministic())
-CHECK_EQ(p, a.shortest(100))
-
-# Likewise, but via a file.
-with open("series.txt", "w") as file:
-    print(p.format("list"), file=file)
-
-c = vcsn.context('law_char, q')
-# FIXME: the context is wrong (empty alphabet).
-a = c.cotrie('series.txt')
-CHECK_EQ(exp, a.format('daut'))
-CHECK(a.is_codeterministic())
-CHECK_EQ(p, a.shortest(100))
-
-os.remove('series.txt')
+7 -> 4 d''')
 
 
-# law x law -> Q.
-c = vcsn.context('lat<law_char, law_char>, q')
-p = c.polynomial('<1>one|un + <2>two|deux + <3>three|trois  + <4>four|quatre'
-                 + ' + <14>forteen|quatorze + <40>forty|quarante')
-CHECK_EQ(r'''context = "lat<nullableset<letterset<char_letters(efhnortuwy)>>, nullableset<letterset<char_letters(adeinoqrstuxz)>>>, q"
+## ---------------- ##
+## law x law -> Q.  ##
+## ---------------- ##
+
+check('trie',
+      'lat<law_char, law_char>, q',
+      '<1>one|un + <2>two|deux + <3>three|trois  + <4>four|quatre'
+      + ' + <14>forteen|quatorze + <40>forty|quarante',
+      r'''context = "lat<nullableset<letterset<char_letters(efhnortuwy)>>, nullableset<letterset<char_letters(adeinoqrstuxz)>>>, q"
 $ -> 0
 0 -> 1 o|u
 0 -> 4 t|d
@@ -116,5 +122,4 @@ $ -> 0
 26 -> 27 e|r
 27 -> 28 n|z
 28 -> 29 \e|e
-29 -> $ <14>''',
-         p.trie().format('daut'))
+29 -> $ <14>''')
