@@ -151,9 +151,11 @@ namespace vcsn
     /// single final state) automaton to accept the series contained
     /// in \a is.
     ///
-    /// \param ctx  the (word-based) context used to read the words.
-    /// \param is   the input stream.
-    automaton cotrie(const context& ctx, std::istream& is);
+    /// \param ctx     the (word-based) context used to read the words.
+    /// \param is      the input stream.
+    /// \param format  the format of the file: "words" or "monomials".
+    automaton cotrie(const context& ctx, std::istream& is,
+                     const std::string& format = "default");
 
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
@@ -835,9 +837,11 @@ namespace vcsn
     /// A trie-like automaton (single initial state, multiple final
     /// states) to accept the series contained in \a is.
     ///
-    /// \param ctx  the (word-based) context used to read the words.
-    /// \param is   the input stream.
-    automaton trie(const context& ctx, std::istream& is);
+    /// \param ctx     the (word-based) context used to read the words.
+    /// \param is      the input stream.
+    /// \param format  the format of the file: "words" or "monomials".
+    automaton trie(const context& ctx, std::istream& is,
+                   const std::string& format = "default");
 
     /// The trim subautomaton of \a aut.
     automaton trim(const automaton& aut);

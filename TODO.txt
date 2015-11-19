@@ -125,30 +125,6 @@ from the caller, which is the one which knows the identities to use!
 As a matter of fact, we need to revise the propagation of the identities
 everywhere.
 
-** Incorrect context (SP)
-When trie(istream) adds words to the trie, the context used to parse the
-stream is not the one of the automaton we are buildding.  As a result, we
-have a stupid context:
-
-In [1]: import vcsn
-        c = vcsn.context('law_char, b')
-        a = c.trie('/usr/share/dict/words')
-
-In [2]: print(a.context())
-        letterset<char_letters()>, b
-
-In [3]: print(c)
-        wordset<char_letters(-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz)>, b
-
-See tests/python/trie.py.
-
-We _need_ the built automaton to have a correct context.
-
-One question is whether c and a.context() should share the same basic
-set_alphabet object (via shared_ptr).  In which case we need to redesign all
-the proper_labelset() functions to work on shared_ptr rather than working on
-labelset&.
-
 ** expressions: insufficiently parenthetized in LAW
 We display (a)(b) exactly like (ab): no parens at all.  We can't tell the
 difference bw a word and a product of several one-letter labels.

@@ -6,6 +6,7 @@
 #include <vcsn/labelset/word-polynomialset.hh>
 #include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/misc/direction.hh>
+#include <vcsn/misc/regex.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
 #include <vcsn/dyn/automaton.hh>
@@ -14,6 +15,23 @@
 
 namespace vcsn
 {
+
+  namespace detail
+  {
+    /// Turn a label into a parsable label: escape special characters.
+    std::string quote(const std::string& s)
+    {
+      if (s == "\\e"
+          || (s.size() == 1 && std::isalnum(s[0])))
+        return s;
+      else
+        {
+          // Backslash backslashes and quotes.
+          static auto re = std::regex{"['\\\\ \\[\\]()+,|<>]"};
+          return std::regex_replace(s, re, "\\$&");
+        }
+    }
+}
 
   /*--------------------.
   | trie(polynomial).   |
@@ -44,6 +62,7 @@ namespace vcsn
       using labelset_t = labelset_t_of<context_t>;
       using letter_t = letter_t_of<context_t>;
       using word_t = word_t_of<context_t>;
+      using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
       using state_t = state_t_of<automaton_t>;
 
@@ -59,7 +78,7 @@ namespace vcsn
       /// Add a monomial.
       /// \param l   the word to add.
       /// \param w   its associated weight.
-      void add(const word_t& l, const weight_t& w)
+      void add(const word_t& l, const weight_t& w = weightset_t::one())
       {
         add_(l, w);
       }
@@ -75,6 +94,38 @@ namespace vcsn
       {
         for (const auto& m: p)
           add(m);
+      }
+
+      /// Add all the words (one per line) in this stream.
+      void add_words(std::istream& is)
+      {
+        auto ls = make_wordset(*ctx_.labelset());
+        ls.open(true);
+        std::string buf;
+        while (getline(is, buf))
+          {
+            auto w = conv(ls, quote(buf));
+            add(w);
+          }
+      }
+
+      /// Add all the monomials (one per line) in this stream.
+      void add_monomials(std::istream& is)
+      {
+        auto ps = make_word_polynomialset(ctx_);
+        while (auto m = ps.conv_monomial(is))
+          add(m.get());
+      }
+
+      /// Add all the monomials in this stream.
+      void add(std::istream& is, const std::string& format)
+      {
+        if (format == "words")
+          add_words(is);
+        else if  (format == "default" || format == "monomials")
+          add_monomials(is);
+        else
+          raise("trie: invalid format: ", format);
       }
 
       /// Get the result for the forward trie.
@@ -206,30 +257,32 @@ namespace vcsn
   /// Make a trie-like mutable_automaton for a finite series read from
   /// a stream.
   ///
-  /// \param  ps  the polynomialset
-  /// \param  is  the stream to read
+  /// \param ps      the polynomialset
+  /// \param is      the stream to read
+  /// \param format  the format of the file: "words" or "monomials"
   template <typename PolynomialSet>
   mutable_automaton<detail::free_context<context_t_of<PolynomialSet>>>
-  trie(const PolynomialSet& ps, std::istream& is)
+  trie(const PolynomialSet& ps, std::istream& is,
+       const std::string& format = "default")
   {
     auto t = detail::make_trie_builder<direction::forward>(ps);
-    while (auto m = ps.conv_monomial(is))
-      t.add(m.get());
+    t.add(is, format);
     return t.result();
   }
 
   /// Make a trie-like mutable_automaton for a finite series read from
   /// a stream.
   ///
-  /// \param  ps  the polynomialset
-  /// \param  is  the stream to read
+  /// \param ps      the polynomialset
+  /// \param is      the stream to read
+  /// \param format  the format of the file: "words" or "monomials"
   template <typename PolynomialSet>
   mutable_automaton<detail::free_context<context_t_of<PolynomialSet>>>
-  cotrie(const PolynomialSet& ps, std::istream& is)
+  cotrie(const PolynomialSet& ps, std::istream& is,
+         const std::string& format = "default")
   {
     auto t = detail::make_trie_builder<direction::backward>(ps);
-    while (auto m = ps.conv_monomial(is))
-      t.add(m.get());
+    t.add(is, format);
     return t.result();
   }
 
@@ -238,23 +291,25 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (trie).
-      template <typename Context, typename Istream>
+      template <typename Context, typename Istream, typename String>
       automaton
-      trie_stream(const context& ctx, std::istream& is)
+      trie_stream(const context& ctx, std::istream& is,
+                  const std::string& format)
       {
         const auto& c = ctx->as<Context>();
         auto ps = make_word_polynomialset(c);
-        return make_automaton(trie(ps, is));
+        return make_automaton(trie(ps, is, format));
       }
 
       /// Bridge (cotrie).
-      template <typename Context, typename Istream>
+      template <typename Context, typename Istream, typename String>
       automaton
-      cotrie_stream(const context& ctx, std::istream& is)
+      cotrie_stream(const context& ctx, std::istream& is,
+                    const std::string& format)
       {
         const auto& c = ctx->as<Context>();
         auto ps = make_word_polynomialset(c);
-        return make_automaton(cotrie(ps, is));
+        return make_automaton(cotrie(ps, is, format));
       }
     }
   }
