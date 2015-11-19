@@ -5,6 +5,14 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-11-19
+### trie and cotrie are enhanced
+Both context.trie and context.cotrie accept `data`, `format` and `filename`
+arguments.  In addition to `filename`, one can now pass directly a list of
+words as a `data` string.  Use `format` to specify whether the lines are
+ monomials or plain words --- for instance whether `<2>a` is the word `a`
+with weight 2, or a four-letter word.
+
 ## 2015-11-13
 ### Automata: operations now works on all sorts of automata
 Usual operations (`sum`, `multiply` --which includes the case for repeated
