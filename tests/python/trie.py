@@ -4,6 +4,18 @@ import os
 import vcsn
 from test import *
 
+# In law_char, when reading the monomial `a|b` (yes, `|` is not
+# escaped), we looped for ever: the `a` was read by
+# setalpha::get_word, which then returned, and then
+# polynomialset::conv_label repeatedly called get_word on `|b`, which
+# endlessly returned the empty word, refusing to pass the `|`.
+#
+# Make sure we catch this.
+with open('input.txt', 'w') as f:
+    print('a|b', file=f)
+XFAIL(lambda: vcsn.B.trie(filename='input.txt', format='monomials'))
+os.remove('input.txt')
+
 ## ---------- ##
 ## law -> Q.  ##
 ## ---------- ##
