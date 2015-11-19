@@ -142,3 +142,36 @@ $ -> 0
 27 -> 28 n|z
 28 -> 29 \e|e
 29 -> $ <14>''')
+
+
+# Check that weird input is properly accepted.
+t = vcsn.context('lal_char, q').trie('''
+he's
+<2>t
+{}
+()
+""
+''', format='words')
+exp = r'''context = "letterset<char_letters(\"\\'()2\\<\\>ehst{})>, q"
+$ -> 0
+0 -> $
+0 -> 1 h
+0 -> 5 \<
+0 -> 9 {
+0 -> 11 (
+0 -> 13 "
+1 -> 2 e
+2 -> 3 \'
+3 -> 4 s
+4 -> $
+5 -> 6 2
+6 -> 7 \>
+7 -> 8 t
+8 -> $
+9 -> 10 }
+10 -> $
+11 -> 12 )
+12 -> $
+13 -> 14 "
+14 -> $'''
+CHECK_EQ(exp, t.format('daut'))
