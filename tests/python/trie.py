@@ -20,29 +20,36 @@ os.remove('input.txt')
 ## law -> Q.  ##
 ## ---------- ##
 
-def trie(algo, *args):
+def trie(algo, *args, **kwargs):
     if algo == 'trie':
-        return args[0].trie(*args[1:])
+        return args[0].trie(*args[1:], **kwargs)
     elif algo == 'cotrie':
-        return args[0].cotrie(*args[1:])
+        return args[0].cotrie(*args[1:], **kwargs)
     else:
         raise RuntimeError('invalid algo: ', algo)
 
 def check(algo, ctx, polynomial, exp):
+    print(algo, ctx, polynomial)
+
+    # Starting from a polynomial.
     c = vcsn.context(ctx)
     p = c.polynomial(polynomial)
-    print(algo, c, p)
     a = trie(algo, p)
     CHECK_EQ(exp, a.format('daut'))
     if ctx.startswith('lal'):
-        CHECK(a.is_deterministic() if algo == 'trie'  else a.is_codeterministic())
+        CHECK(a.is_deterministic() if algo == 'trie' else a.is_codeterministic())
     CHECK_EQ(p, a.shortest(100))
+
+    # Likewise, but via a string.
+    c = vcsn.context(ctx)
+    a = trie(algo, c, data=p.format('list'))
+    CHECK_EQ(exp, a.format('daut'))
 
     # Likewise, but via a file.
     with open('series.txt', 'w') as file:
         print(p.format('list'), file=file)
     c = vcsn.context(ctx)
-    a = trie(algo, c, 'series.txt')
+    a = trie(algo, c, filename='series.txt')
     os.remove('series.txt')
     CHECK_EQ(exp, a.format('daut'))
 

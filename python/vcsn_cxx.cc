@@ -148,8 +148,9 @@ struct context
 
   automaton cerny(unsigned n) const;
 
-  automaton cotrie(const std::string& filename,
-                   const std::string& format) const;
+  automaton cotrie(const std::string& data = "",
+                   const std::string& format = "default",
+                   const std::string& filename = "") const;
 
   automaton de_bruijn(unsigned n) const;
 
@@ -180,8 +181,9 @@ struct context
 
   expression series(const std::string& s) const;
 
-  automaton trie(const std::string& filename,
-                 const std::string& format) const;
+  automaton trie(const std::string& data = "",
+                 const std::string& format = "default",
+                 const std::string& filename = "") const;
 
   automaton u(unsigned num_states) const;
 
@@ -1214,10 +1216,11 @@ automaton context::cerny(unsigned n) const
   return vcsn::dyn::cerny(val_, n);
 }
 
-automaton context::cotrie(const std::string& filename,
-                          const std::string& format) const
+automaton context::cotrie(const std::string& data,
+                          const std::string& format,
+                          const std::string& filename) const
 {
-  auto is = vcsn::open_input_file(filename);
+  auto is = make_istream(data, filename);
   auto res = vcsn::dyn::cotrie(val_, *is, format);
   vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   return res;
@@ -1264,10 +1267,11 @@ automaton context::random_deterministic(unsigned num_states) const
   return vcsn::dyn::random_automaton_deterministic(val_, num_states);
 }
 
-automaton context::trie(const std::string& filename,
-                        const std::string& format) const
+automaton context::trie(const std::string& data,
+                        const std::string& format,
+                        const std::string& filename) const
 {
-  auto is = vcsn::open_input_file(filename);
+  auto is = make_istream(data, filename);
   auto res = vcsn::dyn::trie(val_, *is, format);
   vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
   return res;
@@ -1460,7 +1464,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const std::string&>())
     .def("cerny", &context::cerny)
     .def("cotrie", &context::cotrie,
-         (arg("filename"), arg("format") = "monomials"))
+         ((arg("data") = "", arg("format") = "default",
+           arg("filename") = "")))
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
     .def("double_ring", &context::double_ring)
@@ -1475,7 +1480,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("random_deterministic", &context::random_deterministic)
     .def("series", &context::series)
     .def("trie", &context::trie,
-         (arg("filename"), arg("format") = "monomials"))
+         ((arg("data") = "", arg("format") = "default",
+           arg("filename") = "")))
     .def("u", &context::u)
     .def("word", &context::word)
    ;
