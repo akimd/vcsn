@@ -10,6 +10,7 @@
 #include <vcsn/labelset/letterset.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/labelset/wordset.hh>
+#include <vcsn/misc/escape.hh>
 
 /// The name of \a vs.
 template <typename ValueSet>
@@ -36,7 +37,7 @@ all_escaped()
         res += '\\';
       res += char(i);
     }
-  return res;
+  return vcsn::str_escape(res);
 }
 
 static unsigned

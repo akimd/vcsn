@@ -86,9 +86,8 @@ namespace vcsn
           "digraph\n"
           "{\n"
           "  vcsn_context = \"";
-        enable_();
+        // print_set takes care of escapes.
         aut_->context().print_set(bos_, format::text);
-        disable_();
         bos_ << "\"\n"
           "  rankdir = LR\n"
           "  edge ["

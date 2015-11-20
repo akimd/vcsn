@@ -8,6 +8,7 @@
 
 #include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/stream.hh> // eat.
 #include <vcsn/misc/symbol.hh>
@@ -278,12 +279,13 @@ namespace vcsn
       else if (fmt == format::text)
         {
           o << sname() << '(';
+          std::stringstream ss;
           for (letter_t l: alphabet_)
             // FIXME: escape ')' and '-'.
-            this->print(l, o, fmt);
+            this->print(l, ss, fmt);
           // Don't display openness here, as our "make()" parser is
           // not ready for it.
-          o << ')';
+          str_escape(o, ss.str()) << ')';
         }
       else
         raise(sname(), ": print_set: invalid format: ", fmt);

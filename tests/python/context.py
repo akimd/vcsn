@@ -35,7 +35,7 @@ check('lal_char(a-kv-z), b', 'letterset<char_letters(abcdefghijkvwxyz)>, b')
 check('lal_char(-0-9), b',   'letterset<char_letters(-0123456789)>, b')
 # FIXME: This is obviously wrong: we will not be able to re-read the
 # result, as neither the dash nor the paren is escaped.
-check(r'lal_char(\\\-\)), b',  r'letterset<char_letters()-\\)>, b')
+check(r'lal_char(\\\-\)), b',  r'letterset<char_letters()-\\\\)>, b')
 check(r'lal_char(\--\-), b',   r'letterset<char_letters(-)>, b')
 
 # Check that we cover all the possible chars.  Unfortunately as this
