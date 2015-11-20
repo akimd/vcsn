@@ -180,6 +180,10 @@ namespace vcsn
               // At least we should see the warnings.
               std::ifstream log{err};
               std::cerr << log.rdbuf();
+              // If the file is empty the previous instruction sets the state
+              // of cerr to bad. We clear the error state flag to be able to
+              // read from cerr afterwards.
+              std::cerr.clear();
               boost::filesystem::remove(err);
             }
         }
