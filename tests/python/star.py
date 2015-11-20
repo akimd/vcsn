@@ -3,12 +3,30 @@
 import vcsn
 from test import *
 
+def check_algo(input):
+  if isinstance(input, str):
+      input = ctx.expression(input, identities='none').standard()
+  gen = input.star("general")
+  std = input.star("standard")
+  CHECK_EQUIV(gen, std)
+
 def check(input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
   if isinstance(exp, str):
     exp = vcsn.automaton(exp)
   CHECK_EQ(exp, input.star())
+  check_algo(input)
+
+ctx = vcsn.context('lal_char, q')
+a = ctx.expression('a(ba)*').automaton('derived_term')
+XFAIL(lambda: a.star("standard"))
+
+check_algo('a')
+check_algo('ab')
+check_algo('a+b')
+check_algo('a<2>')
+
 
 # This used to trigger an assert.
 l_br = vcsn.context('lal_char(a), expressionset<lal_char(xy), b>')
