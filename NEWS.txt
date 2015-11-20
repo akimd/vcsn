@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-11-20
+### weight_series: new algorithm
+Compute the sum of all the weights of the accepted words (the sum of the
+image of the behavior of the automaton). This algorithm can be applied to any
+Nmin automaton, but requires acyclic automata for other weightsets.
+
 ## 2015-11-19
 ### trie and cotrie are enhanced
 Both context.trie and context.cotrie accept `data`, `format` and `filename`
