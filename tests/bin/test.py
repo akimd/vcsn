@@ -156,6 +156,10 @@ def normalize(a):
                 a.context().format('text'))
     return a.automaton(vcsn.context(to))
 
+def can_test_equivalence(a):
+    ctx = str(a.context())
+    expressionset_ws = re.match('.*expressionset<.*>', ctx) is None
+    return not(ctx.endswith('min')) and expressionset_ws
 
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.  Also works for
@@ -163,10 +167,10 @@ def CHECK_EQUIV(a1, a2):
     num = 10
     # Cannot compute equivalence on Zmin, approximate with shortest.
     try:
-        if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
-            res = a1.proper().shortest(num) == a2.proper().shortest(num)
-        else:
+        if can_test_equivalence(a1) and can_test_equivalence(a2):
             res = a1.is_equivalent(a2)
+        else:
+            res = a1.proper().shortest(num) == a2.proper().shortest(num)
     except RuntimeError as e:
         FAIL("cannot check equivalence: " + str(e))
         res = False
