@@ -43,6 +43,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.factor.ipynb                    \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
+  %D%/automaton.has_negative_cycle.ipynb        \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.infiltration.ipynb              \
   %D%/automaton.info.ipynb                      \
@@ -65,6 +66,8 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.letterize.ipynb                 \
   %D%/automaton.lift.ipynb                      \
+  %D%/automaton.lightest.ipynb                  \
+  %D%/automaton.lightest_automaton.ipynb        \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.multiply.ipynb                  \
   %D%/automaton.operators.ipynb                 \
@@ -78,13 +81,16 @@ dist_notebooks_DATA =                           \
   %D%/automaton.shortest.ipynb                  \
   %D%/automaton.shuffle.ipynb                   \
   %D%/automaton.standard.ipynb                  \
+  %D%/automaton.star.ipynb                      \
   %D%/automaton.subword.ipynb                   \
   %D%/automaton.suffix.ipynb                    \
+  %D%/automaton.sum.ipynb                       \
   %D%/automaton.synchronize.ipynb               \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
   %D%/automaton.type.ipynb                      \
+  %D%/automaton.weight_series.ipynb             \
   %D%/context.cerny.ipynb                       \
   %D%/context.cotrie.ipynb                      \
   %D%/context.de_bruijn.ipynb                   \
