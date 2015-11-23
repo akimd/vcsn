@@ -152,7 +152,7 @@ he's
 ()
 ""
 ''', format='words')
-exp = r'''context = "letterset<char_letters(\"'\\(\\)2<>ehst{})>, q"
+exp = r'''context = "letterset<char_letters(\"\\'\\(\\)2<>ehst{})>, q"
 $ -> 0
 0 -> $
 0 -> 1 h

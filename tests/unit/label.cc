@@ -28,7 +28,7 @@ all_escaped()
   auto res = std::string{};
   for (int i = 1; i < 255; ++i)
     res += char(i);
-  return vcsn::str_escape(res, "(-)");
+  return vcsn::str_escape(res, "(-)'\\");
 }
 
 static unsigned

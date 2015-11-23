@@ -433,16 +433,17 @@ CHECK_EQ(exp, a.format('tikz'))
 ## ----------- ##
 
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
-    a = vcsn.automaton(filename = fn)
+    a = vcsn.automaton(filename=fn)
 
     # Check output.
     daut = a.format('daut')
     exp = open(fn.replace('.in.gv', '.daut')).read().strip()
     CHECK_EQ(exp, daut)
 
-    # Check input.
-    CHECK_EQ(a, vcsn.automaton(daut, 'auto'))
-    CHECK_EQ(a, vcsn.automaton(daut, 'daut'))
+    # Check input: make sure we can read it.
+    CHECK_EQ(a, vcsn.automaton(exp, 'daut'))
+    CHECK_EQ(a, vcsn.automaton(exp, 'auto'))
+    CHECK_EQ(a, vcsn.automaton(exp))
 
 
 ## ----------- ##

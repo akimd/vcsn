@@ -204,7 +204,10 @@ namespace vcsn
         // Escape dash and parens, which are special when parsed
         // (actually, only the closing paren is special, but treating
         // them symmetrically is better looking).
-        str_escape(o, l, "(-)");
+        //
+        // Of course, escape single-quote and backslash, which are
+        // used to escape.
+        str_escape(o, l, "(-)\\'");
       else if (l == '\\')
         o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
       else if (l == '|' || l == '\'' || l == ','

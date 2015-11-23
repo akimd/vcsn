@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "letterset<char_letters(\"\\'\\(\\),<>[]abcdefghijklmnopqrstuvwxyz{|})>, b"
   rankdir = LR
   edge [texmode = math, lblstyle = auto]
   d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"
@@ -9,6 +9,18 @@ digraph
     node [texmode = math, style = state]
     0 [style = "state, initial"]
     1 [style = "state, accepting"]
+    2 [style = "state, accepting"]
+    3 [style = "state, accepting"]
+    4 [style = "state, accepting"]
+    5 [style = "state, accepting"]
+    6 [style = "state, accepting"]
+    7 [style = "state, accepting"]
   }
   0 -> 1 [label = "a"]
+  0 -> 2 [label = "\", \\'"]
+  0 -> 3 [label = "\\,, \\|"]
+  0 -> 4 [label = "(, )"]
+  0 -> 5 [label = "{, }"]
+  0 -> 6 [label = "\\<, \\>"]
+  0 -> 7 [label = "\\[, \\]"]
 }
