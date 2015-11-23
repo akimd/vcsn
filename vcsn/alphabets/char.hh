@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <cstring> // strchr
 #include <string>
 #include <iostream>
 
@@ -201,6 +200,11 @@ namespace vcsn
         {}
       else if (fmt == format::raw)
         o << l;
+      else if (fmt == format::generators)
+        // Escape dash and parens, which are special when parsed
+        // (actually, only the closing paren is special, but treating
+        // them symmetrically is better looking).
+        str_escape(o, l, "(-)");
       else if (l == '\\')
         o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
       else if (l == '|' || l == '\'' || l == ','

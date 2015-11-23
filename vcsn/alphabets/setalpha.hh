@@ -279,13 +279,11 @@ namespace vcsn
       else if (fmt == format::text)
         {
           o << sname() << '(';
-          std::stringstream ss;
           for (letter_t l: alphabet_)
-            // FIXME: escape ')' and '-'.
-            this->print(l, ss, fmt);
-          // Don't display openness here, as our "make()" parser is
-          // not ready for it.
-          str_escape(o, ss.str()) << ')';
+            this->print(l, o, format::generators);
+          // FIXME: Don't display openness here, as our "make()"
+          // parser is not ready for it.
+          o << ')';
         }
       else
         raise(sname(), ": print_set: invalid format: ", fmt);

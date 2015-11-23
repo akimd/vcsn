@@ -235,7 +235,7 @@ namespace vcsn
         {}
       else if (fmt == format::latex)
         o << "`\\mathit{" << l << "}\\textrm{'}";
-      else if (fmt == format::text)
+      else if (fmt == format::generators || fmt == format::text)
         o << '\'' << l << '\'';
       else if (fmt == format::raw)
         o << l;

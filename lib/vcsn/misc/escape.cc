@@ -1,6 +1,7 @@
 #include <vcsn/misc/escape.hh>
 
 #include <cctype>
+#include <cstring> // strchr
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -9,7 +10,7 @@ namespace vcsn
 {
   // Accept int to catch EOF too.
   std::ostream&
-  str_escape(std::ostream& os, const int c)
+  str_escape(std::ostream& os, const int c, const char* special)
   {
     std::ios_base::fmtflags flags = os.flags(std::ios_base::hex);
     char fill = os.fill('0');
@@ -17,13 +18,23 @@ namespace vcsn
       {
       case -1:   os << "<end-of-file>"; break;
       case '\\': os << "\\\\";          break;
-      case '"':  os << "\\\"";          break;
       case '\n': os << "\\n";           break;
       default:
         if (0 <= c && c <= 0177 && std::isprint(c))
-          os << char(c);
+          {
+            if (special && strchr(special, c))
+              os << '\\';
+            os << uint8_t(c);
+          }
         else
-          os << "\\x" << std::setw(2) << c;
+          // Turn into an unsigned, otherwise if c has its highest bit
+          // set, it will be interpreted as a negative char, which
+          // will be mapped to a negative int.  So for instance c =
+          // 255 is mapped to \xFFFFFFF instead of \xFF.
+          //
+          // This happens only when char is "signed char".  Which is
+          // common.
+          os << "\\x" << std::setw(2) << int(uint8_t(c));
         break;
       }
     os.fill(fill);
@@ -32,33 +43,26 @@ namespace vcsn
   }
 
   std::string
-  str_escape(const int c)
+  str_escape(const int c, const char* special)
   {
     std::ostringstream o;
-    str_escape(o, c);
+    str_escape(o, c, special);
     return o.str();
   }
 
   std::ostream&
-  str_escape(std::ostream& os, const std::string& str)
+  str_escape(std::ostream& o, const std::string& str, const char* special)
   {
     for (auto c: str)
-      // Turn into an unsigned, otherwise if c has its highest but
-      // set, will be interpreted as a negative char, which will be
-      // mapped to a negtive int.  So for instance c = 255 is mapped
-      // to \xFFFFFFF instead of 255.
-      //
-      // This happens only when char is "signed char".  Which is
-      // common.
-      str_escape(os, uint8_t(c));
-    return os;
+      str_escape(o, c, special);
+    return o;
   }
 
   std::string
-  str_escape(const std::string& s)
+  str_escape(const std::string& s, const char* special)
   {
     std::ostringstream o;
-    str_escape(o, s);
+    str_escape(o, s, special);
     return o.str();
   }
 }

@@ -17,6 +17,8 @@ namespace vcsn LIBVCSN_API
     enum format_t
       {
         text,
+        /// Print as a parsable list of letters.
+        generators,
         latex,
         /// Print as is.  For instance, don't try to escape labels.
         raw,

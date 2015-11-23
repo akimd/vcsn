@@ -491,6 +491,7 @@ namespace vcsn
           o << '>';
           break;
 
+        case format::generators:
         case format::raw:
           assert(0);
           break;

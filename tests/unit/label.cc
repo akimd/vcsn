@@ -27,17 +27,8 @@ all_escaped()
 {
   auto res = std::string{};
   for (int i = 1; i < 255; ++i)
-    {
-      if (i == '\\'
-          || i == '\''
-          || i == '|'
-          || i == '[' || i == ']'
-          || i == '<' || i == '>'
-          || i == ',')
-        res += '\\';
-      res += char(i);
-    }
-  return vcsn::str_escape(res);
+    res += char(i);
+  return vcsn::str_escape(res, "(-)");
 }
 
 static unsigned
@@ -82,20 +73,18 @@ check_wordset_make(const std::string& range)
   std::istringstream is{n};
   auto ls = LabelSet::make(is);
 
-  /// All the (supported) characters.
-  std::string all;
-  for (int i = 1; i < 255; ++i)
-    all += char(i);
-
   // Check the labelset name: '\\' is the only escaped character.
-  {
-    ASSERT_EQ("wordset<char_letters(" + all_escaped() + ")>",
-              set_name(ls));
-  }
+  ASSERT_EQ("wordset<char_letters(" + all_escaped() + ")>",
+            set_name(ls));
 
   // Make sure we reach all the characters.  All the characters are
   // escaped.
   {
+    // All the (supported) characters.
+    std::string all;
+    for (int i = 1; i < 255; ++i)
+      all += char(i);
+
     std::ostringstream o;
     for (int i = 1; i < 255; ++i)
       o << "\\x" << std::hex << std::setw(2) << std::setfill('0') << i;

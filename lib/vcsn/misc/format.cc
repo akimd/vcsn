@@ -14,11 +14,12 @@ namespace vcsn
   {
     static const auto map = std::map<std::string, format_t>
       {
-        {"auto",    deflt},
-        {"default", deflt},
-        {"latex",   latex},
-        {"raw",     raw},
-        {"text",    text},
+        {"auto",       deflt},
+        {"default",    deflt},
+        {"generators", generators},
+        {"latex",      latex},
+        {"raw",        raw},
+        {"text",       text},
       };
     format_ = getargs("format", map, f);
   }
@@ -27,6 +28,8 @@ namespace vcsn
   {
     switch (f.kind())
       {
+      case format::generators:
+        return "generators";
       case format::latex:
         return "latex";
       case format::raw:
