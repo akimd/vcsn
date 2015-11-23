@@ -3,14 +3,28 @@
 import vcsn
 from test import *
 
-a = vcsn.automaton('''
-context = "lal_char, q"
-$ -> 0
-1 -> 0 b
-0 -> 1 a
-1 -> $
-''')
-XFAIL(lambda: a.sum(a, "standard"))
+ctx = vcsn.context('lal_char, q')
+a = ctx.expression('a(ba)*').automaton('derived_term')
+XFAIL(lambda: ctx.expression('a').automaton().multiply(a, "standard"))
+
+def check_mult(lhs, rhs):
+    if isinstance(lhs, list):
+        for aut in lhs:
+            check_mult(aut, rhs)
+    elif isinstance(rhs, list):
+        for aut in rhs:
+            check_mult(lhs, aut)
+    else:
+        gen = lhs.multiply(rhs, "general")
+        std = lhs.multiply(rhs, "standard")
+        CHECK_EQUIV(gen, std)
+
+auts = [ctx.expression('a').standard(),
+        ctx.expression('ab').standard(),
+        ctx.expression('a+b').standard(),
+        ctx.expression('a<2>', identities='none').standard()]
+
+check_mult(auts, [1, 3, (-1, 5), (2, 4), (2, -1), auts])
 
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*')
 bc = vcsn.context('lal_char(bc), b').expression('(b+c)*')
