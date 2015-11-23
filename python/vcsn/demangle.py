@@ -17,14 +17,14 @@ try:
     cyan    = Fore.CYAN    + Style.BRIGHT
     white   = Fore.WHITE   + Style.BRIGHT
     std     = Style.RESET_ALL
-    color_cycle = [ red, blue, yellow, green, magenta, cyan ]
+    color_cycle = [red, blue, yellow, green, magenta, cyan]
     colors_enabled = True
 except:
     colors_enabled = False
 
 
 param_num = 0
-def param(name = None):
+def param(name=None):
     if name is None:
         global param_num
         name = param_num
@@ -76,6 +76,7 @@ def sugar(s):
     s = sub(r'^context<(.*)>$', r'\1', s)
     return s
 
+
 def pretty_plugin(filename):
     '''Split compilation type with its arguments and add sugar to the message.'''
     # what = algos|contexts, specs = argument specifications.
@@ -88,41 +89,43 @@ def pretty_plugin(filename):
         message = sugar(specs)
     return title, message
 
+
 def has_color(color):
     color_dict = {
-            "always" : True,
-            "never" : False,
-            "auto" : sys.stdout.isatty()
-            }
+        "always": True,
+        "never": False,
+        "auto": sys.stdout.isatty()
+    }
 
     return color_dict[color]
 
-delimiters_open = [ '<', '[', '(' ]
+delimiters_open = ['<', '[', '(']
 delimiters_close = {
-        '>' : '<',
-        ']' : '[',
-        ')' : '('
-        }
+    '>': '<',
+    ']': '[',
+    ')': '('
+}
 
 if colors_enabled:
     color_patterns = [
-        [ "In file included from", green ],
-        [ "In instantiation of", magenta ],
-        [ "required from here", magenta ],
-        [ " required from", magenta ], #space is voluntary
-        [ "recursively required by substitution of", magenta ],
-        [ "required by substitution of ", magenta ], #space is voluntary
-        [ "error:", red ],
-        [ "could not convert", red ],
-        [ "' from '", red ],
-        [ "' to '", red ],
-        [ "no type named ", red ],
-        [ "was not declared in this scope", red ],
-        [ "' in '", red ],
-        [ "in expansion of macro", white ],
-        [ "with ", white ],
-        [ "aka ", green ],
-        ]
+        ["In file included from", green],
+        ["In instantiation of", magenta],
+        ["required from here", magenta],
+        [" required from", magenta],  # space is voluntary
+        ["recursively required by substitution of", magenta],
+        ["required by substitution of ", magenta],  # space is voluntary
+        ["error:", red],
+        ["could not convert", red],
+        ["' from '", red],
+        ["' to '", red],
+        ["no type named ", red],
+        ["was not declared in this scope", red],
+        ["' in '", red],
+        ["in expansion of macro", white],
+        ["with ", white],
+        ["aka ", green],
+    ]
+
 
 def colorize_pattern(line):
     for p in color_patterns:
@@ -142,7 +145,7 @@ def colorize_line(line):
             delim_stack.append(c)
         elif c in delimiters_close.keys():
             if delim_stack == [] or delimiters_close[c] != delim_stack[-1]:
-                return line #error, don't color anything
+                return line  # error, don't color anything
             delim_stack.pop()
             res += color_cycle[len(delim_stack) % len(color_cycle)]
             res += c
@@ -150,12 +153,12 @@ def colorize_line(line):
         else:
             res += c
 
-
     if res != "" and res[0] == '/':
         colon = res.find(':')
         if colon != -1:
             res = white + res[:colon] + std + res[colon:]
     return res + '\n'
+
 
 def colorize(line):
     if not colors_enabled:

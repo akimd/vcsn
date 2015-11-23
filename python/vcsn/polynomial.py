@@ -11,6 +11,7 @@ polynomial.__mul__ = _right_mult
 polynomial.__repr__ = lambda self: self.format('text')
 polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
+
 def _polynomial_pow(p, k):
     # FIXME: cannot generate the unit polynomial with the current API.
     assert 0 < k

@@ -6,6 +6,8 @@ from vcsn_cxx import label, expression
 from vcsn.tools import _is_equal, _info_to_dict, _left_mult, _right_mult
 
 _expression_multiply_orig = expression.multiply
+
+
 def _expression_multiply(self, exp):
     if isinstance(exp, tuple):
         return _expression_multiply_orig(self, *exp)
@@ -30,6 +32,7 @@ expression.__rmul__ = _left_mult
 expression.__str__ = lambda self: self.format('text')
 expression._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
+
 def _expression_derivation(self, w, *args):
     "Derive wrt. w, but convert it into a label if needed."
     c = self.context()
@@ -38,7 +41,8 @@ def _expression_derivation(self, w, *args):
     return self._derivation(w, *args)
 expression.derivation = _expression_derivation
 
-def _expression_info(self, key = None, detailed = False):
+
+def _expression_info(self, key=None, detailed=False):
     res = _info_to_dict(self.format('info'))
     return res[key] if key else res
 expression.info = _expression_info

@@ -1,6 +1,7 @@
 import tempfile
 from vcsn_cxx import weight
 
+
 def _info_to_dict(info):
     '''Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers.
@@ -31,13 +32,17 @@ def _info_to_dict(info):
     return res
 
 # FIXME: Get rid of this.
+
+
 def _is_equal(lhs, rhs):
     "A stupid string-based comparison.  Must be eliminated once we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
+
 def _left_mult(self, lhs):
     '''Support "aut * weight".  Also serves for expressions and expansions.'''
     return self.left_mult(self.context().weight(str(lhs)))
+
 
 def _right_mult(self, rhs):
     '''Support both "aut * aut" and "aut * weight".  Also serves for
@@ -48,6 +53,7 @@ def _right_mult(self, rhs):
         return self.right_mult(rhs)
     else:
         return self.right_mult(self.context().weight(str(rhs)))
+
 
 def _tmp_file(suffix, **kwargs):
     '''A NamedTemporaryFile suitable for Vcsn.'''

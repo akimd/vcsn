@@ -15,7 +15,9 @@ from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
                       _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
 
 _automaton_multiply_orig = automaton.multiply
-def _automaton_multiply(self, exp, algo = "auto"):
+
+
+def _automaton_multiply(self, exp, algo="auto"):
     if isinstance(exp, tuple):
         return _automaton_multiply_orig(self, *exp, algo=algo)
     else:
@@ -37,7 +39,8 @@ automaton._repr_svg_ = lambda self: self.as_svg()
 
 automaton.as_boxart = lambda self: _dot_to_boxart(self.dot())
 
-def _automaton_as_svg(self, format = "dot", engine = "dot"):
+
+def _automaton_as_svg(self, format="dot", engine="dot"):
     if format == "dot":
         return _dot_to_svg(self.dot(), engine)
     elif format == "dot2tex":
@@ -49,7 +52,9 @@ automaton.as_svg = _automaton_as_svg
 
 # conjunction.
 _automaton_conjunction_orig = automaton.conjunction
-def _automaton_conjunction(*args, lazy = False):
+
+
+def _automaton_conjunction(*args, lazy=False):
     '''Compute the conjunction of automata, possibly lazy, or the repeated
     conjunction of an automaton.'''
     if len(args) == 2 and isinstance(args[1], int):
@@ -58,7 +63,8 @@ def _automaton_conjunction(*args, lazy = False):
         return _automaton_conjunction_orig(list(args), lazy)
 automaton.conjunction = _automaton_conjunction
 
-def _automaton_convert(self, mode, engine = "dot"):
+
+def _automaton_convert(self, mode, engine="dot"):
     '''Display automaton `self` in `mode` with Graphviz `engine`.'''
     from IPython.display import SVG
     if mode in ["dot", "tooltip", "transitions"]:
@@ -67,21 +73,22 @@ def _automaton_convert(self, mode, engine = "dot"):
     elif mode == "dot2tex":
         return SVG(self.as_svg(mode, engine))
     elif mode == "info":
-        return self.info(detailed = False)
+        return self.info(detailed=False)
     elif mode == "info,detailed":
-        return self.info(detailed = True)
+        return self.info(detailed=True)
     elif mode == "type":
         return repr(self)
     else:
         raise(ValueError("invalid display format: " + mode))
 
-def _automaton_display(self, mode, engine = "dot"):
+
+def _automaton_display(self, mode, engine="dot"):
     '''Display automaton `self` in `mode` with Graphviz `engine`.'''
     from IPython.display import display
     display(_automaton_convert(self, mode, engine))
 
 
-def _guess_format(data = '', filename = ''):
+def _guess_format(data='', filename=''):
     '''Try to find out what is the format used to encode this automaton.'''
     for line in open(filename) if filename else data.splitlines():
         if line.startswith('digraph'):
@@ -101,8 +108,10 @@ def _guess_format(data = '', filename = ''):
 # the original, C++ based, implementation of __init__ as _init,
 # and then provide a new __init__.
 automaton._init = automaton.__init__
-def _automaton_init(self, data = '', format = 'auto', filename = '',
-                    strip = True):
+
+
+def _automaton_init(self, data='', format='auto', filename='',
+                    strip=True):
     if format == "auto":
         format = _guess_format(data, filename)
     if format == "daut":
@@ -111,9 +120,10 @@ def _automaton_init(self, data = '', format = 'auto', filename = '',
             filename = ''
         data = daut_to_dot(data)
         format = 'dot'
-    self._init(data = data, format = format, filename = filename,
-               strip = strip)
+    self._init(data=data, format=format, filename=filename,
+               strip=strip)
 automaton.__init__ = _automaton_init
+
 
 def _automaton_interact(self):
     '''Display automaton `self` with a local menu to the select
@@ -128,12 +138,15 @@ def _automaton_interact(self):
     modes += ['info,detailed', 'tooltip', 'transitions', 'type', 'dot2tex']
     engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
     interact_h(lambda mode, engine: _automaton_display(self, mode, engine),
-               mode = modes, engine = engines)
+               mode=modes, engine=engines)
 automaton.display = _automaton_interact
 
-automaton.dot = lambda self, mode = "dot": _dot_pretty(self.format('dot'), mode)
+automaton.dot = lambda self, mode = "dot": _dot_pretty(
+    self.format('dot'), mode)
 
 # automaton.eval.
+
+
 def _automaton_eval(self, w):
     '''Evaluation of word `w` on `self`, with possible conversion from
     plain string to genuine label object.
@@ -146,12 +159,15 @@ automaton.__call__ = _automaton_eval
 automaton.eval = _automaton_eval
 
 # automaton.format
-def _automaton_format(self, fmt = "daut"):
+
+
+def _automaton_format(self, fmt="daut"):
     if fmt == "daut":
         return dot_to_daut(self._format('dot'))
     else:
         return self._format(fmt)
 automaton.format = _automaton_format
+
 
 def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
@@ -166,12 +182,15 @@ def _automaton_fst(cmd, aut):
     p1.stdin.close()
     res, err = p3.communicate()
     if p1.wait():
-        raise RuntimeError("efstcompile failed: " + p1.stderr.read().decode('utf-8'))
+        raise RuntimeError(
+            "efstcompile failed: " + p1.stderr.read().decode('utf-8'))
     if p2.wait():
-        raise RuntimeError(cmd + " failed: " + p2.stderr.read().decode('utf-8'))
+        raise RuntimeError(
+            cmd + " failed: " + p2.stderr.read().decode('utf-8'))
     if p3.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
+
 
 def _automaton_as_fst(self):
     '''Return an OpenFST binary file for `self`.  When the result is
@@ -180,7 +199,7 @@ def _automaton_as_fst(self):
     '''
     fst = _tmp_file(suffix='fst')
     proc = Popen(['efstcompile'],
-                  stdin=PIPE, stdout=fst, stderr=PIPE)
+                 stdin=PIPE, stdout=fst, stderr=PIPE)
     proc.stdin.write(self.format('efsm').encode('utf-8'))
     out, err = proc.communicate()
     if proc.wait():
@@ -188,18 +207,20 @@ def _automaton_as_fst(self):
     return fst
 automaton.as_fst = _automaton_as_fst
 
+
 def _automaton_fst_files(cmd, *aut):
     '''Run the command `cmd` on the automata `aut` coded in OpenFST
     format, via files.
     '''
     files = [a.as_fst() for a in aut]
     proc = Popen([cmd] + [f.name for f in files],
-                  stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                 stdin=PIPE, stdout=PIPE, stderr=PIPE)
     decode = Popen(['efstdecompile'],
-                    stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
+                   stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
     res, err = decode.communicate()
     if proc.wait():
-        raise RuntimeError(cmd + " failed: " + proc.stderr.read().decode('utf-8'))
+        raise RuntimeError(
+            cmd + " failed: " + proc.stderr.read().decode('utf-8'))
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
@@ -217,10 +238,12 @@ automaton.fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
 
 automaton.infiltration = lambda *auts: automaton._infiltration(list(auts))
 
-def _automaton_info(self, key = None, detailed = False):
+
+def _automaton_info(self, key=None, detailed=False):
     res = _info_to_dict(self.format('info,detailed' if detailed else 'info'))
     return res[key] if key else res
 automaton.info = _automaton_info
+
 
 def _automaton_is_synchronized_by(self, w):
     c = self.context()
@@ -229,7 +252,8 @@ def _automaton_is_synchronized_by(self, w):
     return self._is_synchronized_by(w)
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
-def _automaton_lift(self, *tapes, identities = "default"):
+
+def _automaton_lift(self, *tapes, identities="default"):
     if len(tapes) == 1 and isinstance(tapes[0], list):
         tapes = tapes[0]
     else:

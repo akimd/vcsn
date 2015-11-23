@@ -19,7 +19,9 @@ import os
 import vcsn
 import vcsn.ipython
 
+
 class VcsnD3DataFrame(object):
+
     def __init__(self, ip, name):
         # Here we call ipython ip to avoid conflict with the ipython file
         self.ip = ip
@@ -36,7 +38,7 @@ class VcsnD3DataFrame(object):
             self.context = vcsn.context('letterset<char_letters(b)>, b')
 
         aut = AutomatonD3Widget(states=states, transitions=transitions)#, context=self.context)
-        self.error = widgets.HTMLWidget(value = '')
+        self.error = widgets.HTMLWidget(value='')
 
         self._widget_ctx = ipython.ContextTextWidget(self, self.context)
         self._widget_ctx.text.on_trait_change(lambda: self._on_change())
@@ -47,16 +49,16 @@ class VcsnD3DataFrame(object):
     def _aut_of_d3(self):
         '''Conversion from d3 to an automaton, via "daut".'''
         self.error.value = ''
-        ctx = 'context = '+ '{}\n'.format(self.context)
+        ctx = 'context = {}\n'.format(self.context)
         trans = self._widget.transitions
         aut = ''
         for t in trans:
             src = float(t['source']['id'])
             dst = float(t['target']['id'])
             aut += "{src} -> {dst} {label}\n".format(
-                src = int(src) if src == int(src) else '$',
-                dst = int(dst) if dst == int(dst) else '$',
-                label = t['label']
+                src=int(src) if src == int(src) else '$',
+                dst=int(dst) if dst == int(dst) else '$',
+                label=t['label']
             )
         res = ctx + aut
         try:
@@ -97,13 +99,13 @@ class VcsnD3DataFrame(object):
         wc2 = widgets.ContainerWidget()
         self._widget_ctx.svg.set_css({
             'padding-left': '10px',
-            'padding-top' : '15px',})
+            'padding-top': '15px', })
         wc2.children = [wc1, self._widget_ctx.svg]
         wc3 = widgets.ContainerWidget()
         self.error.set_css({
             'padding-left': '20px',
             'padding-top': '15px',
-            'color': 'maroon',})
+            'color': 'maroon', })
         wc3.children = [wc2, self.error]
         display(wc3)
         wc2.remove_class('vbox')
@@ -112,14 +114,15 @@ class VcsnD3DataFrame(object):
         wc3.add_class('hbox')
         display(self._widget)
 
+
 class AutomatonD3Widget(widgets.DOMWidget):
     # Here the Javascript Code
     # Using D3, Jquery and Backbone
     # We load and display it from the js file we install in nb_extension
     # install_nbextension(os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'), verbose=0)
 
-    #FIXME: script = """IPython.load_extensions("AutomatonD3Widget")"""
-    #FIXME: display(Javascript(script));
+    # FIXME: script = """IPython.load_extensions("AutomatonD3Widget")"""
+    # FIXME: display(Javascript(script));
 
     _view_name = traitlets.Unicode('AutomatonView', sync=True)
     states = traitlets.List(sync=True)

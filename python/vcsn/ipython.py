@@ -16,7 +16,10 @@ from vcsn import d3Widget
 import vcsn.demo as demo
 
 # The class MUST call this class decorator at creation time.
+
+
 class ContextText:
+
     def __init__(self, ipython, name=None):
         self.ipython = ipython
         self.name = name
@@ -25,20 +28,21 @@ class ContextText:
             if type(self.name) != str:
                 ctx = name
             elif self.name in self.ipython.shell.user_ns:
-                ctx = vcsn.context(format(self.ipython.shell.user_ns[self.name]))
+                ctx = vcsn.context(
+                    format(self.ipython.shell.user_ns[self.name]))
             else:
                 ctx = vcsn.context('lal_char, b')
                 self.ipython.shell.user_ns[self.name] = ctx
         else:
             ctx = ctx = vcsn.context('lal_char, b')
         text = format(ctx)
-        self.text = widgets.Textarea(description='Context: ', value = text)
-        self.width = '250px';
-        self.height = '25px';
-        self.text.lines = '500';
+        self.text = widgets.Textarea(description='Context: ', value=text)
+        self.width = '250px'
+        self.height = '25px'
+        self.text.lines = '500'
         self.text.on_trait_change(lambda: self.update())
-        self.error = widgets.HTML(value = ' ')
-        self.svg = widgets.Latex(value = ctx._repr_latex_())
+        self.error = widgets.HTML(value=' ')
+        self.svg = widgets.Latex(value=ctx._repr_latex_())
         # Display the widget if it is not use into the d3 widget
         if type(self.name) == str:
 
@@ -62,8 +66,10 @@ class ContextText:
         except RuntimeError as e:
             self.error.value = cgi.escape(str(e))
 
+
 @magics_class
 class EditContext(Magics):
+
     @magic_arguments()
     @argument('var', type=str, nargs='?', default=None,
               help='The name of the context to edit')
@@ -76,7 +82,9 @@ class EditContext(Magics):
 ip = get_ipython()
 ip.register_magics(EditContext)
 
+
 class AutomatonText:
+
     def __init__(self, ipython, name, format, mode):
         self.ipython = ipython
         self.name = name
@@ -90,12 +98,12 @@ class AutomatonText:
             self.ipython.shell.user_ns[self.name] = aut
 
         text = aut.format(self.format)
-        self.text = widgets.Textarea(value = text)
+        self.text = widgets.Textarea(value=text)
         height = self.text.value.count('\n')
-        self.text.lines = '500';
+        self.text.lines = '500'
         self.text.on_trait_change(lambda: self.update())
-        self.error = widgets.HTML(value = '')
-        self.svg = widgets.HTML(value = aut._repr_svg_())
+        self.error = widgets.HTML(value='')
+        self.svg = widgets.HTML(value=aut._repr_svg_())
         if mode == "h":
             wc1 = widgets.Box()
             wc1.children = [self.text]
@@ -113,24 +121,27 @@ class AutomatonText:
         try:
             self.error.value = ''
             txt = self.text.value
-            a = vcsn.automaton(txt, self.format, strip = False)
+            a = vcsn.automaton(txt, self.format, strip=False)
             self.ipython.shell.user_ns[self.name] = a
-            dot = daut_to_dot(txt) if self.format == "daut" else a.format('dot')
+            dot = daut_to_dot(
+                txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
         except RuntimeError as e:
             self.error.value = cgi.escape(str(e))
 
+
 @magics_class
 class EditAutomaton(Magics):
+
     @magic_arguments()
-    @argument('-s', '--strip', action='store_true', default = False,
+    @argument('-s', '--strip', action='store_true', default=False,
               help='''Whether to strip the result (i.e., discard user names
               and use the "real" state numbers).''')
     @argument('var', type=str, help='The name of the variable to edit.')
-    @argument('format', type=str, nargs ='?', default = 'auto',
+    @argument('format', type=str, nargs='?', default='auto',
               help='''The name of the format to edit the automaton in
               (auto, daut, dot, efsm, fado, grail).  Default: auto.''')
-    @argument('mode', type=str, nargs ='?', default = 'h',
+    @argument('mode', type=str, nargs='?', default='h',
               help='''The name of the visual mode to display the automaton
               (h for horizontal and v for vertical).  Default: h.''')
     @line_cell_magic
@@ -147,12 +158,14 @@ class EditAutomaton(Magics):
                 AutomatonText(self, args.var, args.format, args.mode)
         else:
             # Cell magic.
-            a =  vcsn.automaton(cell, format = args.format, strip = args.strip)
+            a = vcsn.automaton(cell, format=args.format, strip=args.strip)
             self.shell.user_ns[args.var] = a
             display(a)
 
+
 @magics_class
 class DemoAutomaton(Magics):
+
     ''' Usage: %demo variable algorithm
 
         variable     either an expression or an automaton.
@@ -180,9 +193,9 @@ class DemoAutomaton(Magics):
 
         if (var in self.shell.user_ns):
             if algo == 'eliminate_state':
-                    a = demo.EliminateState(self.shell.user_ns[var])
+                a = demo.EliminateState(self.shell.user_ns[var])
             elif algo == 'automaton':
-                    a = demo.Automaton(self.shell.user_ns[var])
+                a = demo.Automaton(self.shell.user_ns[var])
 
         try:
             a.show()
@@ -192,6 +205,7 @@ class DemoAutomaton(Magics):
 ip = get_ipython()
 ip.register_magics(EditAutomaton)
 ip.register_magics(DemoAutomaton)
+
 
 def interact_h(_interact_f, *args, **kwargs):
     '''Similar to IPython's interact function, but with widgets
@@ -205,6 +219,7 @@ def interact_h(_interact_f, *args, **kwargs):
 
 
 class table(list):
+
     ''' Overridden list class which takes a 2-dimensional list of
         the form [[1,2,3],[4,5,6]], and renders an HTML Table in
         IPython Notebook. '''

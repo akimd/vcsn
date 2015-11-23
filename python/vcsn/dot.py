@@ -30,10 +30,12 @@ def _label_pretty(s):
             .replace(r'\\e', 'ε')
             .replace(r'\\z', '∅'))
 
+
 def _labels_as_tooltips(s):
     return re.sub(r'label = (".*?"), shape = box',
                   r'tooltip = \1',
                   s)
+
 
 def _nodes_as_points(s):
     '''Transform all the nodes into simple points, as to reveal only
@@ -42,6 +44,7 @@ def _nodes_as_points(s):
     s = s.replace(', shape = box', '')
     return s
 
+
 def _dot_gray_node(m):
     '''Replace gray node contours by gray nodes, and apply style to
     nodes with their own style.'''
@@ -49,12 +52,14 @@ def _dot_gray_node(m):
     attr = m.group(2)
     if ' -> ' not in node:
         attr = attr.replace('color = DimGray', 'fillcolor = lightgray')
-        attr = re.sub(r'style = "?([\w,]+)"?', r'style = "\1,filled,rounded"', attr)
+        attr = re.sub(
+            r'style = "?([\w,]+)"?', r'style = "\1,filled,rounded"', attr)
         # This is really ugly...  We should definitely use gvpr.
         attr = attr.replace(r'filled,rounded,filled,rounded', 'filled,rounded')
     return node + attr
 
-def _dot_pretty(s, mode = "dot"):
+
+def _dot_pretty(s, mode="dot"):
     '''
     Improve pretty-printing in a dot source.
 
@@ -82,16 +87,17 @@ def _dot_pretty(s, mode = "dot"):
     # Useless states should be filled in gray, instead of having a
     # gray contour.  Fill with a lighter gray.  But don't change the
     # color of the arrows.
-    s = re.sub('^(.*)(\[.*?\])$', _dot_gray_node, s, flags = re.MULTILINE);
+    s = re.sub('^(.*)(\[.*?\])$', _dot_gray_node, s, flags=re.MULTILINE)
     return s
 
-@lru_cache(maxsize = 32)
+
+@lru_cache(maxsize=32)
 def _dot_to_boxart(dot):
     dot = dot.replace('digraph', 'digraph a')
     p = Popen(["/opt/local/libexec/perl5.16/sitebin/graph-easy",
-                "--from=graphviz", "--as=boxart"],
-               stdin=PIPE, stdout=PIPE, stderr=PIPE,
-               universal_newlines=True)
+               "--from=graphviz", "--as=boxart"],
+              stdin=PIPE, stdout=PIPE, stderr=PIPE,
+              universal_newlines=True)
     p.stdin.write(dot)
     out, err = p.communicate()
     if p.wait():
@@ -100,18 +106,19 @@ def _dot_to_boxart(dot):
         out = out.decode('utf-8')
     return out
 
-@lru_cache(maxsize = 32)
+
+@lru_cache(maxsize=32)
 def _dot_to_svg(dot, engine="dot", *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
     p1 = Popen([engine] + list(args),
-                stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+               stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     p2 = Popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
-                stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
-                universal_newlines=True)
+               stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
+               universal_newlines=True)
     p3 = Popen(['neato', '-n2', '-Tsvg'],
-                stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
-                universal_newlines=True)
+               stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
+               universal_newlines=True)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
     p1.stdin.write(dot)
@@ -127,18 +134,19 @@ def _dot_to_svg(dot, engine="dot", *args):
         out = out.decode('utf-8')
     return out
 
-@lru_cache(maxsize = 32)
+
+@lru_cache(maxsize=32)
 def _dot_to_svg_dot2tex(dot, engine="dot", *args):
     '''The conversion of a Dot source into SVG by dot2tex.
 
     Requires dot2tex, texi2pdf and pdf2svg.
     '''
     with _tmp_file('tex') as tex, \
-         _tmp_file('pdf') as pdf, \
-         _tmp_file('svg') as svg:
+            _tmp_file('pdf') as pdf, \
+            _tmp_file('svg') as svg:
         p1 = Popen(['dot2tex', '--prog', engine],
-                    stdin=PIPE, stdout=tex, stderr=PIPE,
-                    universal_newlines=True)
+                   stdin=PIPE, stdout=tex, stderr=PIPE,
+                   universal_newlines=True)
         out, err = p1.communicate(dot)
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err)
@@ -174,13 +182,13 @@ class Daut:
     # Using split(',') is tempting, but will break strings
     # that contain commas --- e.g., [label = "a, b"].
     def attr_dot_split(self, s):
-        attr = r'{id}(?:\s*=\s*{id})?'.format(id = self.id)
+        attr = r'{id}(?:\s*=\s*{id})?'.format(id=self.id)
 
         scanner = re.Scanner([
             (",;", None),
             (attr, lambda scanner, tok: tok),
             (r"\s+", None),
-            ])
+        ])
         return scanner.scan(s)[0]
 
     def parse_attr_dot(self, s):
@@ -203,12 +211,12 @@ class Daut:
             attrs[0] = 'label = {}'.format(self.quote(attrs[0]))
         for i, a in enumerate(attrs):
             if a in ['blue', 'red', 'green']:
-                attrs[i] = "color={a}, fontcolor={a}".format(a = a)
+                attrs[i] = "color={a}, fontcolor={a}".format(a=a)
         # Join on ";" rather that ",".
         if attrs:
             return "[" + "; ".join(attrs) + "]"
         else:
-            return "";
+            return ""
 
     def parse_attr_daut(self, s):
         '''Return the list of attributes in Daut syntax.'''
@@ -268,10 +276,11 @@ class Daut:
         # The list of pre/post states.
         self.hidden = []
         s = re.sub('^ *(?:vcsn_)?(?:context|ctx) *= *"?(.*?)"?$',
-                   self.parse_context, s, flags = re.MULTILINE)
+                   self.parse_context, s, flags=re.MULTILINE)
         s = re.sub(self.re_daut_tr,
-                   lambda m: self.transition_dot(*self.parse_transition(m, "daut")),
-                   s, flags = re.MULTILINE)
+                   lambda m: self.transition_dot(
+                       *self.parse_transition(m, "daut")),
+                   s, flags=re.MULTILINE)
         return '''digraph
 {{
   vcsn_context = "{context}"
@@ -283,37 +292,41 @@ class Daut:
   }}
   {state_style}
   {transitions}
-}}'''.format(context = self.context,
-             transitions = s,
-             state_point = state_point,
-             state_style = state_style,
-             edge_style = edge_style,
+}}'''.format(context=self.context,
+             transitions=s,
+             state_point=state_point,
+             state_style=state_style,
+             edge_style=edge_style,
              hidden=" ".join(self.hidden))
 
     def daut_to_transitions(self, s):
         '''Extract the list of transitions (as triples) from Daut.'''
-        return re.findall(self.re_daut_tr, s, flags = re.MULTILINE)
+        return re.findall(self.re_daut_tr, s, flags=re.MULTILINE)
 
     def dot_to_daut(self, s):
         '''Convert from Dot syntax to Daut.'''
         res = []
         s = re.sub('^ *vcsn_context *= *"(.*?)"$',
                    lambda m: res.append('context = "{}"'.format(m.group(1))),
-                   s, flags = re.MULTILINE)
-        re.sub('^ *({id}?) *-> *({id}?) *(\[.*?\])?$'.format(id = self.id),
-               lambda m: res.append(self.transition_daut(*self.parse_transition(m, "dot"))),
-               s, flags = re.MULTILINE)
+                   s, flags=re.MULTILINE)
+        re.sub('^ *({id}?) *-> *({id}?) *(\[.*?\])?$'.format(id=self.id),
+               lambda m: res.append(
+                   self.transition_daut(*self.parse_transition(m, "dot"))),
+               s, flags=re.MULTILINE)
         return "\n".join(res)
+
 
 def daut_to_dot(s):
     '''Read a Daut input, translate to regular Dot.'''
     d = Daut()
     return d.daut_to_dot(s)
 
+
 def dot_to_daut(s):
     '''Read a Dot input, simplify it into Daut.'''
     d = Daut()
     return d.dot_to_daut(s)
+
 
 def daut_to_transitions(s):
     '''From a Daut, return the list of transitions as triples
