@@ -377,15 +377,6 @@ in our API.
 Also, it would be nice to have variadic versions of these products for
 expressions, just as we have it for automata.
 
-** ps (SP)
-vcsn-ps is currently written in sh + perl.  Rewrite in Python, using the
-psutil to gain portability.  Display the duration in a first column, then
-use something equivalent to what vcsn-compile does with the sugar function
-to improve the display of what is being compiled.
-
-Of course there should be no code duplication: ask Antoine where the common
-code should be put.
-
 ** scc
 Dijkstra is often more efficient than Tarjan, so we should have an
 implementation too.  See
