@@ -6,9 +6,9 @@
 
 #include <boost/optional.hpp>
 
+#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/format.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/stream.hh> // eat.
 #include <vcsn/misc/symbol.hh>

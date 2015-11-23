@@ -5,7 +5,7 @@
 namespace vcsn LIBVCSN_API
 {
 
-  /// An input/output format.
+  /// An input/output format for valuesets.
   ///
   /// For instance, whether text or latex, and other syntactic issues.
   class format
@@ -16,12 +16,14 @@ namespace vcsn LIBVCSN_API
     /// Type of format.
     enum format_t
       {
-        text,
         /// Print as a parsable list of letters.
         generators,
+        /// Print for LaTeX.
         latex,
         /// Print as is.  For instance, don't try to escape labels.
         raw,
+        /// Print as text, escaped.
+        text,
         /// By default, print for text.
         deflt = text,
       };
