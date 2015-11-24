@@ -56,9 +56,11 @@ DASH = -
 install$(DASH)pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
 # A simple means to express dependencies for Python tests.
-VCSN_PYTHON_DEPS =                              \
-  $(nodist_python_PYTHON)                       \
-  $(pyexec_LTLIBRARIES)                         \
+VCSN_PYTHON_DEPS =				\
+  $(HEADERS)					\
+  $(nodist_python_PYTHON)			\
+  $(pyexec_LTLIBRARIES)				\
+  $(top_srcdir)/libexec/vcsn-compile		\
   $(vcsn_python_PYTHON)
 
 # A short-hand to update all the python dependencies.
