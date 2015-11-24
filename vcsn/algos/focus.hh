@@ -161,10 +161,10 @@ namespace vcsn
       }
 
       /// Apparent labelset.
-      std::shared_ptr<labelset_t>
+      labelset_ptr
       labelset() const
       {
-        return std::make_shared<labelset_t>(aut_->labelset()->template set<Tape>());
+        return ls_;
       }
 
     private:
@@ -332,6 +332,12 @@ namespace vcsn
       /// wrong: they should have been cached on the caller side)
       /// calls to context() ruins the performances.
       context_t context_ = make_project_context<Tape>(full_context());
+      /// The apparent labelset. Caching it avoids difference in
+      /// behavior with other automata. This example would not be
+      /// working otherwise (with `focus` a focus automaton):
+      /// `const auto& ls = *focus->labelset();`
+      labelset_ptr ls_
+        = std::make_shared<labelset_t>(aut_->labelset()->template set<Tape>());
     };
   }
 
