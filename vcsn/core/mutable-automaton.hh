@@ -974,23 +974,14 @@ namespace vcsn
       return all_in(s, label_equal_p{*this, l});
     }
 
-    // FIXME: clang workaround.
-    struct dst_p
-    {
-      bool operator()(transition_t t) const
-      {
-        return aut_.dst_of(t) == dst;
-      }
-      const self_t& aut_;
-      state_t dst;
-    };
-
     /// Indexes of visible transitions from state \a s to state \a d.
     /// Invalidated by del_transition() and del_state().
     auto outin(state_t s, state_t d) const
-      -> decltype(this->all_out(s, dst_p{*this, d}))
     {
-      return all_out(s, dst_p{*this, d});
+      return all_out(s, [this, d](transition_t t)
+                     {
+                       return dst_of(t) == d;
+                     });
     }
 
     /// Indexes of transitions to visible initial states.

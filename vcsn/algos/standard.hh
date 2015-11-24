@@ -37,6 +37,7 @@ namespace vcsn
     template <typename... Auts>
     auto
     make_join_automaton(general_tag, Auts&&... auts)
+      // SFINAE
       -> decltype(nullable_join_automata(std::forward<Auts>(auts)...))
     {
       return nullable_join_automata(std::forward<Auts>(auts)...);
