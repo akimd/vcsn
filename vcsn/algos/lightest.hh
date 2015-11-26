@@ -203,12 +203,12 @@ namespace vcsn
   template <typename Automaton>
   inline
   typename detail::weighter<Automaton>::polynomial_t
-  lightest(const Automaton& aut, boost::optional<unsigned> num)
+  lightest(const Automaton& aut, unsigned num = 1)
   {
     require(!has_negative_cycle(aut),
             "lightest: require automaton without negative cycles");
     detail::weighter<Automaton> weighter(aut);
-    return weighter(num.get_value_or(1));
+    return weighter(num);
   }
 
 
@@ -219,7 +219,7 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Num>
       polynomial
-      lightest(const automaton& aut, boost::optional<unsigned> num)
+      lightest(const automaton& aut, unsigned num)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());
