@@ -193,6 +193,13 @@ non-commutativity: as is, (a, b) can work, but not (b, a).
 But anyway: does it really mean something to compare a B-automaton with a Z
 one?
 
+** determinize
+Currently we have two different functions: determinize_weighted and
+determinize.  This is painful: we'd like to have determinize dispatch on the
+right one depending, possibly, on some tag to make the difference bw
+weighted_tag, auto_tag, and boolean_tag.  Then, is_equivalent should be free
+to use the auto_tag version.
+
 ** dot (SP)
 Let's try a means to improve our rendering of decorated automaton (typically
 derived-term) with MathJax rendering.  Stackoverflow has hints on how we can

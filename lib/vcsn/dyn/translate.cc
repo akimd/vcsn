@@ -144,11 +144,15 @@ namespace vcsn
           //   static_assert(0, "foo");
           //   ^             ~
           // 1 error generated.
+          //
+          // We don't try to catch the "error:" part, because
+          // vcsn-compile loves to add colors, so "error:" is actually
+          // cluttered with ANSI escapes for colors.
           auto is = open_input_file(err);
-          static std::regex r1("error: static assertion failed: (.*)$",
-                               std::regex::extended);
-          static std::regex r2("error: static_assert failed \"(.*)\"$",
-                               std::regex::extended);
+          static auto r1 = std::regex{"static assertion failed: (.*)$",
+                                      std::regex::extended};
+          static auto r2 = std::regex{"static_assert failed \"(.*)\"$",
+                                      std::regex::extended};
           std::string line;
           std::smatch smatch;
           std::string assertions;

@@ -32,3 +32,10 @@ check(False, 'aa*', 'a*')
 ctx = vcsn.context('lal_char(ab), z')
 check(True, 'a+b+a', '<2>a+b')
 check(True, 'a*+b+a*', '<2>a*+b')
+
+ctx = vcsn.context('lat<lan_char, lan_char>,b')
+a = ctx.expression('a|x')
+# Don't expect more than the first error: clang produces more of them
+# but not GCC.
+XFAIL(lambda: a.is_equivalent(a),
+      'determinize: weighted: requires free labelset')
