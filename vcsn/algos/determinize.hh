@@ -23,9 +23,31 @@
 namespace vcsn
 {
 
+  namespace detail
+  {
+    /// Request the Boolean specialization for determinization (B and
+    /// F2).
+    struct boolean_tag {};
+
+    /// Request the general implementation of determinization for
+    /// weighted automata for.
+    struct weighted_tag {};
+
+    /// Request the most appropriate version of determinization.
+    struct auto_tag {};
+
+    /// The best tag depending on the type of Aut.
+    template <typename Aut>
+    using determinization_tag
+      = conditional_t<std::is_same<weightset_t_of<Aut>, b>::value,
+                      boolean_tag,
+                      weighted_tag>;
+  }
+
   /*----------------------.
   | subset construction.  |
   `----------------------*/
+
   namespace detail
   {
     /// \brief The subset construction automaton from another.
@@ -248,7 +270,7 @@ namespace vcsn
 
   template <typename Aut>
   auto
-  determinize(const Aut& a)
+  determinize(const Aut& a, detail::boolean_tag)
     -> determinized_automaton<Aut>
   {
     auto res = make_shared_ptr<determinized_automaton<Aut>>(a);
@@ -257,14 +279,6 @@ namespace vcsn
     return res;
   }
 
-  template <typename Aut>
-  inline
-  auto
-  codeterminize(const Aut& a)
-    -> decltype(transpose(determinize(transpose(a))))
-  {
-    return transpose(determinize(transpose(a)));
-  }
 
   /*---------------------------.
   | weighted determinization.  |
@@ -460,7 +474,7 @@ namespace vcsn
   /// Determinization: weighted, general case.
   template <typename Aut>
   auto
-  determinize_weighted(const Aut& a)
+  determinize(const Aut& a, detail::weighted_tag)
     -> detweighted_automaton<Aut>
   {
     auto res = make_shared_ptr<detweighted_automaton<Aut>>(a);
@@ -468,14 +482,16 @@ namespace vcsn
     return res;
   }
 
+
+  /// Determinization: automatic dispatch based on the automaton type.
   template <typename Aut>
-  inline
   auto
-  codeterminize_weighted(const Aut& aut)
-    -> decltype(transpose(determinize_weighted(transpose(aut))))
+  determinize(const Aut& a, detail::auto_tag = {})
   {
-    return transpose(determinize_weighted(transpose(aut)));
+    return determinize(a, detail::determinization_tag<Aut>{});
   }
+
+
 
   /*-------------------.
   | dyn::determinize.  |
@@ -503,9 +519,15 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "auto" || algo == "boolean")
-          return make_automaton(::vcsn::determinize(a));
+          {
+            using tag_t = vcsn::detail::boolean_tag;
+            return make_automaton(::vcsn::determinize(a, tag_t{}));
+          }
         else if (algo == "weighted")
-          return make_automaton(::vcsn::determinize_weighted(a));
+          {
+            using tag_t = vcsn::detail::weighted_tag;
+            return make_automaton(::vcsn::determinize(a, tag_t{}));
+          }
         else
           raise("determinize: invalid algorithm: ", str_escape(algo));
       }
@@ -520,7 +542,10 @@ namespace vcsn
         if (algo == "boolean")
           raise("determinize: cannot apply Boolean determinization");
         else if (algo == "auto" || algo == "weighted")
-          return make_automaton(::vcsn::determinize_weighted(a));
+          {
+            using tag_t = vcsn::detail::weighted_tag;
+            return make_automaton(::vcsn::determinize(a, tag_t{}));
+          }
         else
           raise("determinize: invalid algorithm: ", str_escape(algo));
       }
@@ -536,6 +561,17 @@ namespace vcsn
     }
   }
 
+
+  /*----------------.
+  | codeterminize.  |
+  `----------------*/
+
+  template <typename Aut, typename Tag = detail::auto_tag>
+  auto
+  codeterminize(const Aut& aut, Tag tag = {})
+  {
+    return transpose(determinize(transpose(aut), tag));
+  }
 
   /*---------------------.
   | dyn::codeterminize.  |
@@ -553,9 +589,15 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "auto" || algo == "boolean")
-          return make_automaton(::vcsn::codeterminize(a));
+          {
+            using tag_t = vcsn::detail::boolean_tag;
+            return make_automaton(::vcsn::codeterminize(a, tag_t{}));
+          }
         else if (algo == "weighted")
-          return make_automaton(::vcsn::codeterminize_weighted(a));
+          {
+            using tag_t = vcsn::detail::boolean_tag;
+            return make_automaton(::vcsn::codeterminize(a, tag_t{}));
+          }
         else
           raise("codeterminize: invalid algorithm: ", str_escape(algo));
       }
@@ -569,7 +611,7 @@ namespace vcsn
         if (algo == "boolean")
           raise("codeterminize: cannot apply Boolean determinization");
         else if (algo == "auto" || algo == "weighted")
-          return make_automaton(::vcsn::codeterminize_weighted(a));
+          return make_automaton(::vcsn::codeterminize(a));
         else
           raise("codeterminize: invalid algorithm: ", str_escape(algo));
       }
