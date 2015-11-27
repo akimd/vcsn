@@ -1162,7 +1162,7 @@ namespace vcsn
     using type = tupleset<join_t<VS1, VS2>...>;
 
     template <std::size_t... I>
-    static type join(const vs1_t lhs, const vs2_t& rhs,
+    static type join(const vs1_t& lhs, const vs2_t& rhs,
                      index_sequence<I...>)
     {
       return {::vcsn::join(lhs.template set<I>(), rhs.template set<I>())...};
