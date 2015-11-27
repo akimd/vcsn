@@ -247,7 +247,6 @@ namespace vcsn
     = std::shared_ptr<detail::determinized_automaton_impl<Aut>>;
 
   template <typename Aut>
-  inline
   auto
   determinize(const Aut& a)
     -> determinized_automaton<Aut>
@@ -458,8 +457,8 @@ namespace vcsn
   using detweighted_automaton
     = std::shared_ptr<detail::detweighted_automaton_impl<Aut>>;
 
+  /// Determinization: weighted, general case.
   template <typename Aut>
-  inline
   auto
   determinize_weighted(const Aut& a)
     -> detweighted_automaton<Aut>
@@ -486,19 +485,20 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut, typename Type>
-      using if_boolean_t
+      /// Enable if Aut is Boolean.
+      template <typename Aut, typename Type = void>
+      using enable_if_boolean_t
         = vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
-      template <typename Aut, typename Type>
-      using if_not_boolean_t
+      /// Enable if Aut is not Boolean.
+      template <typename Aut, typename Type = void>
+      using enable_if_not_boolean_t
         = vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
 
       /// Boolean Bridge.
       template <typename Aut, typename String>
-      inline
-      if_boolean_t<Aut, automaton>
+      enable_if_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -513,7 +513,7 @@ namespace vcsn
       /// Weighted Bridge.
       template <typename Aut, typename String>
       inline
-      if_not_boolean_t<Aut, automaton>
+      enable_if_not_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -548,8 +548,7 @@ namespace vcsn
     {
       /// Boolean Bridge.
       template <typename Aut, typename String>
-      inline
-      if_boolean_t<Aut, automaton>
+      enable_if_boolean_t<Aut, automaton>
       codeterminize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -563,8 +562,7 @@ namespace vcsn
 
       /// Weighted Bridge.
       template <typename Aut, typename String>
-      inline
-      if_not_boolean_t<Aut, automaton>
+      enable_if_not_boolean_t<Aut, automaton>
       codeterminize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -578,7 +576,6 @@ namespace vcsn
 
       /// Bridge.
       template <typename Aut, typename String>
-      inline
       automaton
       codeterminize(const automaton& aut, const std::string& algo)
       {

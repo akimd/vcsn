@@ -12,7 +12,6 @@ namespace vcsn
   `-------------------------------------------*/
 
   template <typename Aut>
-  inline
   auto
   minimize_brzozowski(const Aut& a)
     -> decltype(determinize(codeterminize(a)))
@@ -21,7 +20,6 @@ namespace vcsn
   }
 
   template <typename Aut>
-  inline
   auto
   cominimize_brzozowski(const Aut& a)
     -> decltype(transpose(minimize_brzozowski(transpose(a))))
