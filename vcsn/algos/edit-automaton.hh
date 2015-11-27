@@ -31,8 +31,8 @@ namespace vcsn
     using string_t = symbol;
 
     virtual ~automaton_editor() {}
-    virtual void add_initial(string_t s, string_t w) = 0;
-    virtual void add_final(string_t s, string_t w) = 0;
+    virtual void add_initial(string_t s, string_t w = string_t{}) = 0;
+    virtual void add_final(string_t s, string_t w = string_t{}) = 0;
 
     /// Register the existence of state named \a s.
     virtual void add_state(string_t s) = 0;
@@ -289,7 +289,7 @@ namespace vcsn
                         string_t lbl, string_t w = string_t{});
 
     /// Add a transducer transition from \a src to \a dst, labeled by
-    /// \a (lbl1, lbl2).
+    /// \a (lbl1|lbl2).
     void add_transition(string_t src, string_t dst,
                         string_t lbl1, string_t lbl2,
                         string_t w);

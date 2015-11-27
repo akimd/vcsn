@@ -4,6 +4,7 @@ me=$(basename "$0")
 medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
 arc_type=standard
+context='lal_char, b'
 
 cat >$medir/symbols.txt <<\EOFSM
 \e	0

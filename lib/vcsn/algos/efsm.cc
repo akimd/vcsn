@@ -22,6 +22,38 @@ namespace vcsn
   {
     namespace
     {
+      using string_t = lazy_automaton_editor::string_t;
+
+      /// Turn a label into a parsable label: escape special characters.
+      //
+      // FIXME: Code duplication with str_escape and
+      // edit-automaton.cc, and possibly other places.  Besides, using
+      // regex is really overkill, and properly way too costly.  We
+      // need a fully fleged str_escape that does not necessarily
+      // escapes non-printable.
+      std::string quote(string_t s)
+      {
+        if (s == "\\e"
+            || s.get().size() == 1 && std::isalnum(s.get()[0]))
+          return s;
+        else
+          {
+            // Backslash backslashes and quotes.
+            static auto re = std::regex{"['\\\\]"};
+            return ("'"
+                    + std::regex_replace(s.get(), re, "\\$&")
+                    + "'");
+          }
+      }
+
+      /// Join two labels into a two-tape label.
+      string_t tuple(string_t l0, string_t l1)
+      {
+        return string_t{l1.get().empty()
+                        ? quote(l0)
+                        : quote(l0) + "|" + quote(l1)};
+      }
+
       /// Look for the next "cat >$medir/FILE <<\EOFSM" file,
       /// and return FILE.
       std::string
@@ -105,6 +137,23 @@ namespace vcsn
           raise("invalid efsm file: missing \"arc_type=\"");
         }();
 
+      // Look for the context definition.
+      dyn::context context = [&is]
+        {
+          std::string line;
+          while (is.good())
+            {
+              std::getline(is, line, '\n');
+              if (boost::starts_with(line, "context='"))
+                {
+                  boost::algorithm::erase_first(line, "context='");
+                  boost::algorithm::erase_last(line, "'");
+                  return dyn::make_context(line);
+                }
+            }
+          raise("invalid efsm file: missing \"context=\"");
+        }();
+
       // Look for the symbol table.
       auto isyms = next_here_doc(is);
       // The single piece of information we need from the symbol
@@ -122,9 +171,9 @@ namespace vcsn
         oone = swallow_symbol_table(is);
       }
 
-      vcsn::lazy_automaton_editor edit;
-      edit.open(true);
-      edit.weightset(weightset);
+      auto edit = dyn::make_automaton_editor(context);
+      //      edit.open(true);
+      //      edit.weightset(weightset);
 
       // The first transition also provides the initial state.
       bool first = true;
@@ -143,10 +192,10 @@ namespace vcsn
           string_t s, d, l1, l2, w;
           ss >> s >> d >> l1 >> l2 >> w;
           if (first)
-            edit.add_initial(s);
+            edit->add_initial(s);
           if (l1.get().empty())
             // FinalState [Weight]
-            edit.add_final(s, d);
+            edit->add_final(s, d);
           else
             {
               if (l1 == ione)
@@ -155,12 +204,12 @@ namespace vcsn
                 {
                   if (l2 == oone)
                     l2 = "\\e";
-                  edit.add_transition(s, d, l1, l2, w);
+                  edit->add_transition(s, d, tuple(l1, l2), w);
                 }
               else
                 {
                   // l2 is actually the weight.
-                  edit.add_transition(s, d, l1, l2);
+                  edit->add_transition(s, d, string_t{quote(l1)}, l2);
                 }
             }
           first = false;
@@ -172,13 +221,7 @@ namespace vcsn
       while (is.get() != EOF)
         continue;
 
-      // We don't want to read it as a `law<char>` automaton, as for
-      // OpenFST, these "words" are insecable.  The proper
-      // interpretation is lal<string> (or lan<string>).
-      using boost::algorithm::replace_all_copy;
-      auto ctx = replace_all_copy(edit.result_context(),
-                                  "law<char>", "lan<string>");
-      return edit.result(ctx);
+      return edit->result();
     }
   }
 }
