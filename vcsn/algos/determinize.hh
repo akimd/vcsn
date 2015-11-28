@@ -39,7 +39,7 @@ namespace vcsn
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: boolean: requires free labelset");
+                    "determinize: requires free labelset");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "determinize: boolean: requires Boolean weights");
 
@@ -281,7 +281,7 @@ namespace vcsn
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: weighted: requires free labelset");
+                    "determinize: requires free labelset");
 
     public:
       using automaton_t = Aut;
