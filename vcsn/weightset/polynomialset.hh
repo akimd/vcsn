@@ -1228,10 +1228,6 @@ namespace vcsn
       using std::begin;
       using std::end;
 
-      // No classes if not at least 3 elements.
-      if (sep == " + " || v.size() <= 2)
-        return print_without_classes_(v, out, fmt, sep);
-
       // No classes if the weights of the letters aren't all the same.
       auto first_letter
         = boost::find_if(v,
@@ -1292,7 +1288,11 @@ namespace vcsn
            format fmt = {},
            const std::string& sep = " + ") const
     {
-      return print_with_classes_(v, out, fmt, sep);
+      // No classes if not at least 3 elements.
+      if (sep == " + " || v.size() <= 2)
+        return print_without_classes_(v, out, fmt, sep);
+      else
+        return print_with_classes_(v, out, fmt, sep);
     }
 
 
