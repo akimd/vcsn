@@ -22,9 +22,9 @@ digraph
   1 -> 2 [label = "\\left\\langle 2\\right\\rangle \\varepsilon"]
   2 -> 3 [label = "[a\\textrm{-}di\\textrm{-}lz]"]
   3 -> 4 [label = "\\left\\langle 2\\right\\rangle [a\\textrm{-}di\\textrm{-}lz]"]
-  4 -> 5 [label = "\\left\\langle 2\\right\\rangle a, \\left\\langle 2\\right\\rangle b, \\left\\langle 2\\right\\rangle c, \\left\\langle 2\\right\\rangle d, e, \\left\\langle 2\\right\\rangle i, \\left\\langle 2\\right\\rangle j, \\left\\langle 2\\right\\rangle k, \\left\\langle 2\\right\\rangle l, \\left\\langle 2\\right\\rangle z"]
+  4 -> 5 [label = "\\left\\langle 2\\right\\rangle [a\\textrm{-}di\\textrm{-}lz], e"]
   5 -> 6 [label = "\\varepsilon, [a\\textrm{-}di\\textrm{-}lz]"]
   6 -> 7 [label = "\\left\\langle 2\\right\\rangle \\varepsilon, \\left\\langle 2\\right\\rangle [a\\textrm{-}di\\textrm{-}lz]"]
   7 -> 8 [label = "\\left\\langle 2\\right\\rangle \\varepsilon, \\left\\langle 3\\right\\rangle [a\\textrm{-}di\\textrm{-}lz]"]
-  8 -> 9 [label = "\\left\\langle 2\\right\\rangle \\varepsilon, \\left\\langle 3\\right\\rangle a, \\left\\langle 3\\right\\rangle b, \\left\\langle 3\\right\\rangle c, \\left\\langle 3\\right\\rangle d, e, \\left\\langle 3\\right\\rangle i, \\left\\langle 3\\right\\rangle j, \\left\\langle 3\\right\\rangle k, \\left\\langle 3\\right\\rangle l, \\left\\langle 3\\right\\rangle z"]
+  8 -> 9 [label = "\\left\\langle 2\\right\\rangle \\varepsilon, \\left\\langle 3\\right\\rangle [a\\textrm{-}di\\textrm{-}lz], e"]
 }

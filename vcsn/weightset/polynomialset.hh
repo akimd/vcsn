@@ -1228,43 +1228,58 @@ namespace vcsn
       using std::begin;
       using std::end;
 
+      // We can use a vector, as we know that the labels are already
+      // sorted, and random access iteration will be handy below.
+      using labels_t = std::vector<label_t>;
+
+      // Cluster the letters per weight.
+      auto per_weight = std::map<weight_t, labels_t,
+                                 vcsn::less<weightset_t>>{};
       // No classes if the weights of the letters aren't all the same.
-      auto first_letter
-        = boost::find_if(v,
-                         [this](const monomial_t& m)
-                         {
-                           return !labelset()->is_one(label_of(m));
-                         });
-      auto w = weight_of(*first_letter);
-      if (!std::all_of(std::next(first_letter), end(v),
-                       [this, w](const monomial_t& m)
-                       {
-                         return weightset()->equal(weight_of(m), w);
-                       }))
-        return print_without_classes_(v, out, fmt, sep);
-
-      // Print with classes.  First, the constant-term.
-      if (first_letter != begin(v))
-        {
-          print(detail::front(v), out, fmt);
-          if (1 < v.size())
-            out << sep;
-        }
-
-      // The weight.
-      print_weight_(w, out, fmt);
-
-      // Gather the letters.  We can use a vector, as we know that the
-      // labels are already sorted, and random access iteration will
-      // be handy below.
-      std::vector<label_t> letters;
       for (const auto& m: v)
         if (!labelset()->is_one(label_of(m)))
-          letters.push_back(label_of(m));
+          per_weight[weight_of(m)].emplace_back(label_of(m));
 
-      // Print the character class.  'letters' are sorted, since
-      // polynomials are shortlex-sorted on the labels.
-      print_label_class(*labelset(), letters, out, fmt.for_labels());
+      // Sort the clusters per label.
+      auto per_label = std::map<label_t,
+                                std::pair<weight_t, labels_t>,
+                                vcsn::less<labelset_t>>{};
+      for (const auto& p: per_weight)
+        // Split classes which are too small.
+        if (p.second.size() < 3)
+          for (auto l: p.second)
+            per_label[l] = std::make_pair(p.first, labels_t{l});
+        else
+          per_label[detail::front(p.second)] = p;
+
+      // Whether we must not issue a separator.
+      bool first = true;
+
+      // Print with classes.  First, the constant-term.
+      if (labelset()->is_one(label_of(detail::front(v))))
+        {
+          print(detail::front(v), out, fmt);
+          first = false;
+        }
+
+      for (const auto& p: per_label)
+        {
+          if (!first)
+            out << sep;
+          first = false;
+
+          // The weight.
+          print_weight_(p.second.first, out, fmt);
+
+          if (1 < p.second.second.size())
+            // Print the character class.  'letters' are sorted, since
+            // polynomials are shortlex-sorted on the labels.
+            print_label_class(*labelset(), p.second.second,
+                              out, fmt.for_labels());
+          else
+            labelset()->print(detail::front(p.second.second),
+                              out, fmt.for_labels());
+        }
       return out;
     }
 
