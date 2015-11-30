@@ -233,12 +233,26 @@ namespace vcsn
     {
       if (l == one_letter() || l == special_letter())
         {}
-      else if (fmt == format::latex)
-        o << "`\\mathit{" << l << "}\\textrm{'}";
-      else if (fmt == format::generators || fmt == format::text)
-        o << '\'' << l << '\'';
-      else if (fmt == format::raw)
-        o << l;
+      else
+        switch (fmt.kind())
+          {
+          case format::latex:
+            o << "`\\mathit{" << l << "}\\textrm{'}";
+            break;
+
+          case format::generators:
+          case format::text:
+            if (l.get().size() == 1)
+              str_escape(o, l, "|',[-]<>");
+            else
+              o << '\'' << l << '\'';
+            break;
+
+          raw:
+          case format::raw:
+            o << l;
+            break;
+          }
       return o;
     }
 
