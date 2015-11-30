@@ -211,7 +211,7 @@ namespace vcsn
       else if (l == '\\')
         o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
       else if (l == '|' || l == '\'' || l == ','
-               || l == '[' || l == ']'
+               || l == '[' || l == ']' || l == '-'
                || l == '<' || l == '>')
         o << '\\' << l;
       else
