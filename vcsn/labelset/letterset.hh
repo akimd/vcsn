@@ -212,12 +212,15 @@ namespace vcsn
       return this->get_letter(i, quoted);
     }
 
-    /// Read a range of labels.
+    /// Process a label class.
     ///
-    /// Stream \a i is right on a '['.  Read up to the closing ']',
-    /// and return the list of the matching labels.
+    /// Stream \a i is right on a `[`.  Read up to the closing `]`,
+    /// and process the labels.
     ///
     /// For instance "[a-d0-9_]".
+    ///
+    /// \param i    the input stream.
+    /// \param fun  a (label_t) -> void function.
     template <typename Fun>
     void convs(std::istream& i, Fun fun) const
     {

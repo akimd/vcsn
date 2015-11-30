@@ -58,7 +58,7 @@ namespace vcsn
       state_profile
       make_state_profile(state_t state)
       {
-        state_profile p = state_profile(state);
+        auto p = state_profile{state};
         update(p);
         return p;
       }
@@ -125,7 +125,7 @@ namespace vcsn
       state_profile
       make_state_profile(state_t state)
       {
-        state_profile p = state_profile(state);
+        auto p = state_profile{state};
         update(p);
         return p;
       }

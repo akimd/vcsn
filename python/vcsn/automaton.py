@@ -70,16 +70,16 @@ def _automaton_convert(self, mode, engine="dot"):
     if mode in ["dot", "tooltip", "transitions"]:
         svg = _dot_to_svg(self.dot(mode), engine)
         return SVG(svg)
-    elif mode == "dot2tex":
+    elif mode == 'dot2tex':
         return SVG(self.as_svg(mode, engine))
-    elif mode == "info":
+    elif mode == 'info':
         return self.info(detailed=False)
-    elif mode == "info,detailed":
+    elif mode == 'info,detailed':
         return self.info(detailed=True)
-    elif mode == "type":
+    elif mode == 'type':
         return repr(self)
     else:
-        raise(ValueError("invalid display format: " + mode))
+        raise(ValueError('invalid display format: ' + mode))
 
 
 def _automaton_display(self, mode, engine="dot"):

@@ -40,9 +40,8 @@ def _labels_as_tooltips(s):
 def _nodes_as_points(s):
     '''Transform all the nodes into simple points, as to reveal only
     the transitions.'''
-    s = s.replace(state_style, state_point)
-    s = s.replace(', shape = box', '')
-    return s
+    return (s.replace(state_style, state_point)
+            .replace(', shape = box', ''))
 
 
 def _dot_gray_node(m):
@@ -66,7 +65,7 @@ def _dot_pretty(s, mode="dot"):
     Use some HTML entities instead of ugly ASCII sequences.
     Use nicer arrows.
 
-    If `mode` is tooltip, convert node labels to tooltips.
+    If `mode` is `tooltip`, convert node labels to tooltips.
     If it is `transitions`, then hide the states.
     '''
     s = re.sub(r'(label * = *)(".*?")',
