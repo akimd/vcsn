@@ -198,24 +198,30 @@ namespace vcsn
     {
       if (l == one_letter() || l == special_letter())
         {}
-      else if (fmt == format::raw)
-        o << l;
-      else if (fmt == format::generators)
-        // Escape dash and parens, which are special when parsed
-        // (actually, only the closing paren is special, but treating
-        // them symmetrically is better looking).
-        //
-        // Of course, escape single-quote and backslash, which are
-        // used to escape.
-        str_escape(o, l, "(-)\\'");
-      else if (l == '\\')
-        o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
-      else if (l == '|' || l == '\'' || l == ','
-               || l == '[' || l == ']' || l == '-'
-               || l == '<' || l == '>')
-        o << '\\' << l;
       else
-        o << l;
+        switch (fmt.kind())
+          {
+          case format::raw:
+            o << l;
+            break;
+
+          case format::generators:
+            // Escape dash and parens, which are special when parsed
+            // (actually, only the closing paren is special, but treating
+            // them symmetrically is better looking).
+            //
+            // Of course, escape single-quote and backslash, which are
+            // used to escape.
+            str_escape(o, l, "(-)\\'");
+            break;
+
+          case format::latex:
+          case format::text:
+            if (l == '\\')
+              o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
+            else
+              str_escape(o, l, "|',[-]<>");
+          }
       return o;
     }
 
