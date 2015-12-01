@@ -117,12 +117,4 @@ namespace vcsn
       }
     }
   }
-
-  template <typename Aut>
-  inline
-  auto
-  cominimize_hopcroft(const Aut& a)
-  {
-    return transpose(minimize_hopcroft(transpose(a)));
-  }
 } // namespace vcsn
