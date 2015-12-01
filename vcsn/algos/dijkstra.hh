@@ -10,6 +10,12 @@ namespace vcsn
   | Shortest path through Dijkstra algorithm.  |
   `-------------------------------------------*/
 
+  /// Dijkstra implementation (from vcsn/algos/dijkstra.hh).
+  ///
+  /// Uses fibonacci heap.
+  /// No preconditions.
+  struct dijkstra_tag {};
+
   namespace detail
   {
     /// Dijkstra implementation of lightest automaton.
@@ -135,7 +141,8 @@ namespace vcsn
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  dijkstra(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest)
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                dijkstra_tag = {})
   {
     return detail::dijkstra_impl<Aut>(aut)(source, dest);
   }

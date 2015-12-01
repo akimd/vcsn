@@ -9,51 +9,7 @@
 
 namespace vcsn
 {
-  /*--------------------------------.
-  | Shortest path algorithm tags.   |
-  `--------------------------------*/
-
-  /// A-Star implementation (from vcsn/algos/a-star.hh).
-  ///
-  /// Uses neutral heuristic.
-  /// No preconditions.
-  struct astar_tag {};
-
-  /// Bellman-Ford implementation (from vcsn/algos/bellman-ford.hh).
-  ///
-  /// Raise if the automaton contains a negative loop.
-  struct bellmanford_tag {};
-
-  /// Dijkstra implementation (from vcsn/algos/dijkstra.hh).
-  ///
-  /// Uses fibonacci heap.
-  /// No preconditions.
-  struct dijkstra_tag {};
-
-  template <typename Aut>
-  std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
-                astar_tag)
-  {
-    return a_star(aut, source, dest);
-  }
-
-  template <typename Aut>
-  std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
-                bellmanford_tag)
-  {
-    return bellman_ford(aut, source, dest);
-  }
-
-  template <typename Aut>
-  std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
-                dijkstra_tag = {})
-  {
-    return dijkstra(aut, source, dest);
-  }
-
+  /// Lightest path dispatch between algorithms with tags.
   template <typename Aut, typename Tag = dijkstra_tag>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, Tag tag = {})
@@ -61,6 +17,7 @@ namespace vcsn
     return lightest_path(aut, aut->pre(), aut->post(), tag);
   }
 
+  /// Lightest path dispatch between algorithms with string.
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,

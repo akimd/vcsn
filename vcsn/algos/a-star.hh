@@ -7,10 +7,15 @@
 
 namespace vcsn
 {
-
   /*-----------------------------------------.
   | Shortest path through A-Star algorithm.  |
   `-----------------------------------------*/
+
+  /// A-Star implementation (from vcsn/algos/a-star.hh).
+  ///
+  /// Uses neutral heuristic.
+  /// No preconditions.
+  struct astar_tag {};
 
   namespace detail
   {
@@ -143,7 +148,8 @@ namespace vcsn
 
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  a_star(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest)
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                astar_tag)
   {
     using state_t = state_t_of<Aut>;
     return detail::a_star_impl<Aut>(aut)(source, dest,

@@ -6,10 +6,14 @@
 
 namespace vcsn
 {
-
   /*-----------------------------------------------.
   | Shortest path through Bellman-Ford algorithm.  |
   `-----------------------------------------------*/
+
+  /// Bellman-Ford implementation (from vcsn/algos/bellman-ford.hh).
+  ///
+  /// Raise if the automaton contains a negative loop.
+  struct bellmanford_tag {};
 
   namespace detail
   {
@@ -68,7 +72,8 @@ namespace vcsn
   /// but when each iteration has been done.
   template <typename Aut>
   std::vector<transition_t_of<Aut>>
-  bellman_ford(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut>)
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut>,
+                bellmanford_tag)
   {
     auto bf = bellman_ford_impl(aut, source);
     require(bf != boost::none, "bellman-ford: automaton with negative cycle");
