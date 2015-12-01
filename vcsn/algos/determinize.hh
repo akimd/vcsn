@@ -27,10 +27,6 @@ namespace vcsn
   /// F2).
   struct boolean_tag {};
 
-  /// Request the general implementation of determinization for
-  /// weighted automata for.
-  struct weighted_tag {};
-
   namespace detail
   {
     /// The best tag depending on the type of Aut.

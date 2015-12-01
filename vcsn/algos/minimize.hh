@@ -11,7 +11,6 @@
 
 namespace vcsn
 {
-
   namespace detail
   {
     template <typename Aut>
@@ -31,13 +30,13 @@ namespace vcsn
   minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "hopcroft")
-      return minimize_hopcroft(a);
+      return minimize(a, hopcroft_tag{});
     else if (algo == "moore")
-      return minimize_moore(a);
+      return minimize(a, moore_tag{});
     else if (algo == "auto" || algo == "signature")
-      return minimize_signature(a);
+      return minimize(a, signature_tag{});
     else if (algo == "weighted")
-      return minimize_weighted(a);
+      return minimize(a, weighted_tag{});
     else
       raise("minimize: invalid algorithm (Boolean, free labelset): ",
             str_escape(algo));
@@ -51,9 +50,9 @@ namespace vcsn
   minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "auto" || algo == "signature")
-      return minimize_signature(a);
+      return minimize(a, signature_tag{});
     else if (algo == "weighted")
-      return minimize_weighted(a);
+      return minimize(a, weighted_tag{});
     else
       raise("minimize: invalid algorithm (Boolean, non-free labelset): ",
             str_escape(algo));
@@ -66,7 +65,7 @@ namespace vcsn
   minimize(const Aut& a, const std::string& algo = "auto")
   {
     if (algo == "auto" || algo == "weighted")
-      return minimize_weighted(a);
+      return minimize(a, weighted_tag{});
     else
       raise("minimize: invalid algorithm (non-Boolean): ", str_escape(algo));
   }
@@ -97,7 +96,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "brzozowski")
-          return make_automaton(::vcsn::minimize_brzozowski(a));
+          return make_automaton(::vcsn::minimize(a, brzozowski_tag{}));
         else
           return make_automaton(::vcsn::minimize(a, algo));
       }
@@ -138,7 +137,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "brzozowski")
-          return make_automaton(::vcsn::cominimize_brzozowski(a));
+          return make_automaton(::vcsn::cominimize(a, brzozowski_tag{}));
         else
           return make_automaton(::vcsn::cominimize(a, algo));
       }

@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include <vcsn/algos/tags.hh>
 #include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
@@ -15,6 +16,7 @@ namespace vcsn
   /*-------------------------------------------------------------------------.
   | minimization with signatures; general version working on any weightset.  |
   `-------------------------------------------------------------------------*/
+
   namespace detail_weighted
   {
     template <typename Aut>
@@ -243,7 +245,7 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  minimize_weighted(const Aut& a)
+  minimize(const Aut& a, weighted_tag)
     -> quotient_t<Aut>
   {
     auto minimize = detail_weighted::minimizer<Aut>{a};

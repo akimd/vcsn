@@ -17,6 +17,10 @@ namespace vcsn
   /*---------------------------------------------------------.
   | minimization with Moore's algorithm: signature variant.  |
   `---------------------------------------------------------*/
+
+  /// Request for Moore implementation of minimize (B).
+  struct signature_tag {};
+
   namespace detail_signature
   {
     template <typename Aut>
@@ -282,7 +286,7 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  minimize_signature(const Aut& a)
+  minimize(const Aut& a, signature_tag)
     -> quotient_t<Aut>
   {
     auto minimize = detail_signature::minimizer<Aut>{a};

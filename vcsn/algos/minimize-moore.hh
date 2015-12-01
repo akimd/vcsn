@@ -16,6 +16,10 @@ namespace vcsn
   /*--------------------------------------.
   | minimization with Moore's algorithm.  |
   `--------------------------------------*/
+
+  /// Request for Moore implementation of minimize (B and free).
+  struct moore_tag {};
+
   namespace detail_moore
   {
     template <typename Aut>
@@ -188,7 +192,7 @@ namespace vcsn
   /// Minimize automaton \a a using the Moore algorithm.
   template <typename Aut>
   inline auto
-  minimize_moore(const Aut& a)
+  minimize(const Aut& a, moore_tag)
     -> quotient_t<Aut>
   {
     auto minimize = detail_moore::minimizer<Aut>{a};

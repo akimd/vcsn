@@ -17,10 +17,13 @@ namespace vcsn
   | minimization with Hopcrofts's algorithm.  |
   `------------------------------------------*/
 
+  /// Request for Hopcroft implementation of minimize (B and free).
+  struct hopcroft_tag {};
+
   template <typename Aut>
   inline
   auto
-  minimize_hopcroft(const Aut& a)
+  minimize(const Aut& a, hopcroft_tag)
   {
     using state_t = state_t_of<Aut>;
     using stateset_t = stateset<Aut>;
