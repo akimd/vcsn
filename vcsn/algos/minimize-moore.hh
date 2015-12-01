@@ -191,12 +191,30 @@ namespace vcsn
 
   /// Minimize automaton \a a using the Moore algorithm.
   template <typename Aut>
-  inline auto
+  inline
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+                    && labelset_t_of<Aut>::is_free(),
+                    quotient_t<Aut>>
   minimize(const Aut& a, moore_tag)
-    -> quotient_t<Aut>
   {
     auto minimize = detail_moore::minimizer<Aut>{a};
     return quotient(a, minimize.classes());
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      inline
+      vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value
+                        || !labelset_t_of<Aut>::is_free(),
+                        quotient_t<Aut>>
+      minimize(const Aut&, moore_tag)
+      {
+        raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
+              "moore");
+      }
+    }
+  }
 } // namespace vcsn

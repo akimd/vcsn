@@ -9,6 +9,7 @@
 #include <vcsn/misc/vector.hh>
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/polynomialset.hh>
+#include <vcsn/algos/quotient.hh>
 
 namespace vcsn
 {
@@ -22,7 +23,9 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  auto
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+                    && labelset_t_of<Aut>::is_free(),
+                    quotient_t<Aut>>
   minimize(const Aut& a, hopcroft_tag)
   {
     using state_t = state_t_of<Aut>;
@@ -98,6 +101,23 @@ namespace vcsn
     return quotient(a, res);
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      inline
+      vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value
+                        || !labelset_t_of<Aut>::is_free(),
+                        quotient_t<Aut>>
+      minimize(const Aut&, hopcroft_tag)
+      {
+        raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
+              "hopcroft");
+      }
+    }
+  }
+
   template <typename Aut>
   inline
   auto
@@ -105,5 +125,4 @@ namespace vcsn
   {
     return transpose(minimize_hopcroft(transpose(a)));
   }
-
 } // namespace vcsn

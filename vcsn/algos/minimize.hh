@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcsn/misc/getargs.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/minimize-brzozowski.hh>
 #include <vcsn/algos/minimize-hopcroft.hh>
@@ -21,64 +23,86 @@ namespace vcsn
     }
   }
 
-  // FIXME: there must exist some nicer way to do this.
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
-                    && labelset_t_of<Aut>::is_free(),
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
-  minimize(const Aut& a, const std::string& algo = "auto")
+  minimize(const Aut& a, auto_tag = {})
   {
-    if (algo == "hopcroft")
-      return minimize(a, hopcroft_tag{});
-    else if (algo == "moore")
-      return minimize(a, moore_tag{});
-    else if (algo == "auto" || algo == "signature")
-      return minimize(a, signature_tag{});
-    else if (algo == "weighted")
-      return minimize(a, weighted_tag{});
-    else
-      raise("minimize: invalid algorithm (Boolean, free labelset): ",
-            str_escape(algo));
-  }
-
-  template <typename Aut>
-  inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
-                    && ! labelset_t_of<Aut>::is_free(),
-                    quotient_t<Aut>>
-  minimize(const Aut& a, const std::string& algo = "auto")
-  {
-    if (algo == "auto" || algo == "signature")
-      return minimize(a, signature_tag{});
-    else if (algo == "weighted")
-      return minimize(a, weighted_tag{});
-    else
-      raise("minimize: invalid algorithm (Boolean, non-free labelset): ",
-            str_escape(algo));
+    return minimize(a, signature_tag{});
   }
 
   template <typename Aut>
   inline
   vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
-  minimize(const Aut& a, const std::string& algo = "auto")
+  minimize(const Aut& a, auto_tag = {})
   {
-    if (algo == "auto" || algo == "weighted")
-      return minimize(a, weighted_tag{});
-    else
-      raise("minimize: invalid algorithm (non-Boolean): ", str_escape(algo));
+    return minimize(a, weighted_tag{});
   }
 
   template <typename Aut>
   inline
-  auto
-  cominimize(const Aut& a, const std::string& algo = "auto")
-    -> decltype(transpose(minimize(transpose(a), algo)))
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+                    && labelset_t_of<Aut>::is_free(),
+                    quotient_t<Aut>>
+  minimize(const Aut& a, const std::string& algo)
   {
-    return transpose(minimize(transpose(a), algo));
+    static const auto map
+      = std::map<std::string, std::function<quotient_t<Aut>(const Aut&)>>
+    {
+      {"auto",      [](const Aut& a){ return minimize(a, auto_tag{}); }},
+      {"hopcroft",  [](const Aut& a){ return minimize(a, hopcroft_tag{}); }},
+      {"moore",     [](const Aut& a){ return minimize(a, moore_tag{}); }},
+      {"signature", [](const Aut& a){ return minimize(a, signature_tag{}); }},
+      {"weighted",  [](const Aut& a){ return minimize(a, weighted_tag{}); }},
+    };
+    auto fun = getargs("algorithm", map, algo);
+    return fun(a);
   }
 
+  template <typename Aut>
+  inline
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+                    && !labelset_t_of<Aut>::is_free(),
+                    quotient_t<Aut>>
+  minimize(const Aut& a, const std::string& algo)
+  {
+    static const auto map
+      = std::map<std::string, std::function<quotient_t<Aut>(const Aut&)>>
+    {
+      {"auto",      [](const Aut& a){ return minimize(a, auto_tag{}); }},
+      {"signature", [](const Aut& a){ return minimize(a, signature_tag{}); }},
+      {"weighted",  [](const Aut& a){ return minimize(a, weighted_tag{}); }},
+    };
+    auto fun = getargs("algorithm", map, algo);
+    return fun(a);
+  }
+
+  template <typename Aut>
+  inline
+  vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+                    quotient_t<Aut>>
+  minimize(const Aut& a, const std::string& algo)
+  {
+    static const auto map
+      = std::map<std::string, std::function<quotient_t<Aut>(const Aut&)>>
+    {
+      {"auto",     [](const Aut& a){ return minimize(a, auto_tag{}); }},
+      {"weighted", [](const Aut& a){ return minimize(a, weighted_tag{}); }},
+    };
+    auto fun = getargs("algorithm", map, algo);
+    return fun(a);
+  }
+
+  template <typename Aut, typename Tag = auto_tag>
+  inline
+  auto
+  cominimize(const Aut& a, Tag tag = {})
+    -> decltype(transpose(minimize(transpose(a), tag)))
+  {
+    return transpose(minimize(transpose(a), tag));
+  }
 
   /*----------------.
   | dyn::minimize.  |
@@ -95,10 +119,37 @@ namespace vcsn
       minimize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        if (algo == "brzozowski")
-          return make_automaton(::vcsn::minimize(a, brzozowski_tag{}));
-        else
-          return make_automaton(::vcsn::minimize(a, algo));
+
+        static const auto map
+          = std::map<std::string, std::function<automaton(const Aut&)>>
+        {
+          {"auto",      [](const Aut& a)
+                        {
+                          return make_automaton(minimize(a, auto_tag{}));
+                        }},
+          {"brzozowski",[](const Aut& a)
+                        {
+                          return make_automaton(minimize(a, brzozowski_tag{}));
+                        }},
+          {"hopcroft",  [](const Aut& a)
+                        {
+                          return make_automaton(minimize(a, hopcroft_tag{}));
+                        }},
+          {"moore",     [](const Aut& a)
+                        {
+                          return make_automaton(minimize(a, moore_tag{}));
+                        }},
+          {"signature", [](const Aut& a)
+                        {
+                          return make_automaton(minimize(a, signature_tag{}));
+                        }},
+          {"weighted",  [](const Aut& a)
+                        {
+                          return make_automaton(minimize(a, weighted_tag{}));
+                        }},
+        };
+        auto fun = getargs("algorithm", map, algo);
+        return fun(a);
       }
 
       template <typename Aut, typename String>
@@ -136,10 +187,49 @@ namespace vcsn
       cominimize_(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        if (algo == "brzozowski")
-          return make_automaton(::vcsn::cominimize(a, brzozowski_tag{}));
-        else
-          return make_automaton(::vcsn::cominimize(a, algo));
+
+        static const auto map
+          = std::map<std::string, std::function<automaton(const Aut&)>>
+        {
+          {"auto",
+           [](const Aut& a)
+           {
+             return make_automaton(transpose(minimize(transpose(a),
+                                                      auto_tag{})));
+           }},
+          {"brzozowski",
+           [](const Aut& a)
+           {
+             return make_automaton(transpose(minimize(transpose(a),
+                                                      brzozowski_tag{})));
+           }},
+          {"hopcroft",
+           [](const Aut& a)
+           {
+             return make_automaton(transpose(minimize(transpose(a),
+                                                      hopcroft_tag{})));
+           }},
+          {"moore",
+           [](const Aut& a)
+           {
+             return make_automaton(transpose(minimize(transpose(a),
+                                                      moore_tag{})));
+           }},
+          {"signature",
+           [](const Aut& a)
+           {
+             return make_automaton(transpose(minimize(transpose(a),
+                                                      signature_tag{})));
+           }},
+          {"weighted",
+           [](const Aut& a)
+           {
+             return make_automaton(transpose(minimize(transpose(a),
+                                                      weighted_tag{})));
+           }},
+        };
+        auto fun = getargs("algorithm", map, algo);
+        return fun(a);
       }
 
       template <typename Aut, typename String>

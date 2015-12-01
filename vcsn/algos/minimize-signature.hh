@@ -285,12 +285,26 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  auto
+  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
+                    quotient_t<Aut>>
   minimize(const Aut& a, signature_tag)
-    -> quotient_t<Aut>
   {
     auto minimize = detail_signature::minimizer<Aut>{a};
     return quotient(a, minimize.classes());
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      inline
+      vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+                        quotient_t<Aut>>
+      minimize(const Aut&, signature_tag)
+      {
+        raise("minimize: invalid algorithm (non-Boolean): signature");
+      }
+    }
+  }
 } // namespace vcsn

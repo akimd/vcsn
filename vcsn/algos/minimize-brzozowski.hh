@@ -21,9 +21,28 @@ namespace vcsn
   template <typename Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
-    -> determinized_automaton<codeterminized_automaton<decltype(transpose(a))>>
+    -> vcsn::enable_if_t<labelset_t_of<Aut>::is_free()
+                         && std::is_same<weightset_t_of<Aut>, b>::value,
+                         determinized_automaton<codeterminized_automaton<decltype(transpose(a))>>>
   {
     return determinize(codeterminize(a));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      auto
+      minimize(const Aut&, brzozowski_tag)
+        -> vcsn::enable_if_t<!labelset_t_of<Aut>::is_free()
+                             || !std::is_same<weightset_t_of<Aut>, b>::value,
+                             Aut>
+      {
+        raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
+              "brzozowski");
+      }
+    }
   }
 
   template <typename Aut>
@@ -33,5 +52,4 @@ namespace vcsn
   {
     return transpose(minimize(transpose(a), brzozowski_tag{}));
   }
-
 } // namespace vcsn
