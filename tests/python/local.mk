@@ -103,6 +103,7 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/derived-term.tex            \
   %D%/automaton.dir/dfa.fado                    \
   %D%/automaton.dir/dfa.gv                      \
+  %D%/automaton.dir/drinks-simple.gv            \
   %D%/automaton.dir/enfa.fado                   \
   %D%/automaton.dir/enfa.gv                     \
   %D%/automaton.dir/lal_char_b.daut             \

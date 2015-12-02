@@ -1,0 +1,48 @@
+digraph
+{
+  vcsn_context = "letterset<string_letters('☕️''🍷''🍺''🍾')>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F8
+  }
+  {
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]
+    0 [label = "", tooltip = "0: 0"]
+    1 [label = "", tooltip = "1: 1"]
+    2 [label = "", tooltip = "2: 2"]
+    3 [label = "", tooltip = "3: 3"]
+    4 [label = "", tooltip = "4: 4"]
+    5 [label = "", tooltip = "5: 5"]
+    6 [label = "", tooltip = "6: 6"]
+    7 [label = "", tooltip = "7: 7, 10"]
+    8 [label = "", tooltip = "8: 8, 9"]
+    9 [label = "", tooltip = "9: 11"]
+    10 [label = "", tooltip = "10: 12"]
+    11 [label = "", tooltip = "11: 13"]
+    12 [label = "", tooltip = "12: 14"]
+  }
+  I0 -> 0
+  0 -> 1 [label = "'🍷'"]
+  0 -> 2 [label = "'🍺'"]
+  0 -> 3 [label = "'🍾'"]
+  1 -> 12 [label = "'🍺'"]
+  2 -> 5 [label = "'🍾'"]
+  2 -> 9 [label = "'☕️'"]
+  2 -> 10 [label = "'🍷'"]
+  3 -> 4 [label = "'🍷'"]
+  3 -> 5 [label = "'🍺'"]
+  4 -> 7 [label = "'🍺'"]
+  5 -> 6 [label = "'☕️'"]
+  5 -> 7 [label = "'🍷'"]
+  6 -> 8 [label = "'🍷'"]
+  7 -> 8 [label = "'☕️'"]
+  8 -> F8
+  9 -> 6 [label = "'🍾'"]
+  10 -> 11 [label = "'☕️'"]
+  11 -> 8 [label = "'🍾'"]
+  12 -> 7 [label = "'🍾'"]
+  12 -> 11 [label = "'☕️'"]
+}

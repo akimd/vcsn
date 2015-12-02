@@ -402,6 +402,16 @@ CHECK_EQ('''digraph
 }''',
          vcsn.context('lal_char, b').expression('\z{c}').derived_term().dot())
 
+## ------------- ##
+## dot: simple.  ##
+## ------------- ##
+
+ctx = vcsn.context('lal<string>, b')
+e = ctx.expression("'🍺':'🍾':'☕️':'🍷' & [^]*'🍺'[^]*'☕️'[^]* & ([^]*'🍷''🍾'[^]*){c}")
+CHECK_EQ(open(medir + '/drinks-simple.gv').read().strip(),
+         e.automaton().minimize().dot('simple'))
+
+
 ## ------------------------------- ##
 ## Output: dot, dot2tex and TikZ.  ##
 ## ------------------------------- ##
