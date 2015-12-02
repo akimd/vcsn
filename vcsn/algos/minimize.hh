@@ -13,16 +13,6 @@
 
 namespace vcsn
 {
-  namespace detail
-  {
-    template <typename Aut>
-    constexpr bool can_use_brzozowski()
-    {
-      return labelset_t_of<Aut>::is_free()
-        && std::is_same<weightset_t_of<Aut>, b>::value;
-    }
-  }
-
   template <typename Aut>
   inline
   vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
@@ -163,10 +153,11 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut, typename String>
       inline
-      vcsn::enable_if_t<::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      cominimize_(const automaton& aut, const std::string& algo)
+      automaton
+      cominimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
 
@@ -212,24 +203,6 @@ namespace vcsn
         };
         auto fun = getargs("algorithm", map, algo);
         return fun(a);
-      }
-
-      template <typename Aut, typename String>
-      inline
-      vcsn::enable_if_t<!::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      cominimize_(const automaton& aut, const std::string& algo)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::cominimize(a, algo));
-      }
-
-      /// Bridge.
-      template <typename Aut, typename String>
-      inline
-      automaton
-      cominimize(const automaton& aut, const std::string& algo)
-      {
-        return cominimize_<Aut, String>(aut, algo);
       }
     }
   }

@@ -44,12 +44,4 @@ namespace vcsn
       }
     }
   }
-
-  template <typename Aut>
-  auto
-  cominimize(const Aut& a, brzozowski_tag)
-    -> decltype(transpose(minimize(transpose(a), brzozowski_tag{})))
-  {
-    return transpose(minimize(transpose(a), brzozowski_tag{}));
-  }
 } // namespace vcsn
