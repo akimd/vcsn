@@ -57,11 +57,6 @@ namespace vcsn
     class determinized_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: requires free labelset");
-      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "determinize: boolean: requires Boolean weights");
-
     public:
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
@@ -270,6 +265,18 @@ namespace vcsn
   determinize(const Aut& a, boolean_tag)
     -> determinized_automaton<Aut>
   {
+    // Asserting here instead of inside the implementation to
+    // avoid static_assert to be raised in this kind of cases:
+    // auto func(const Aut& a)
+    //   -> vcsn::enable_if_t<false_condition, decltype(determinize(a))>
+    // We can then declare our function this way:
+    // auto func(const Aut& a)
+    //   -> vcsn::enable_if_t<false_condition, determinized_automaton<Aut>>
+    static_assert(labelset_t_of<Aut>::is_free(),
+                  "determinize: requires free labelset");
+    static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
+                  "determinize: boolean: requires Boolean weights");
+
     auto res = make_shared_ptr<determinized_automaton<Aut>>(a);
     // Determinize.
     res->operator()();
