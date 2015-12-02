@@ -11,6 +11,11 @@ namespace vcsn
       index_t_impl(unsigned i)
         : s{i}
       {}
+
+      // Disallow index1_t i{index2_t{42}};
+      template <typename T>
+      index_t_impl(index_t_impl<T> t) = delete;
+
       /// Default ctor to please containers.
       index_t_impl() = default;
       operator unsigned() const { return s; }
