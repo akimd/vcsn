@@ -1,0 +1,22 @@
+digraph
+{
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(xyz)>>>, q"
+  rankdir = LR
+  edge [texmode = math, lblstyle = auto]
+  d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"
+  d2tdocpreamble = "    \usepackage{amssymb}    \usetikzlibrary{arrows.meta, automata, bending}    \tikzstyle{automaton}=[shorten >=1pt, pos=.4, >={Stealth[bend,round]}, initial text=]    \tikzstyle{named}=[rectangle, rounded corners]    \tikzstyle{initial}=[initial by arrow]    \tikzstyle{accepting}=[accepting by arrow]  "
+  {
+    node [texmode = math, style = state]
+    0 [style = "state, initial, initial text={3}"]
+    1 []
+    2 []
+    3 []
+    4 []
+    5 [style = "state, accepting"]
+  }
+  0 -> 1 [label = "[\\hat{}]"]
+  1 -> 2 [label = "\\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z], \\left\\langle 3\\right\\rangle [b|x\\textrm{-}b|z], \\left\\langle 4\\right\\rangle [c|x\\textrm{-}c|z]"]
+  2 -> 3 [label = "\\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z], \\left\\langle 3\\right\\rangle b|x, \\left\\langle 3\\right\\rangle b|y, \\left\\langle 4\\right\\rangle c|z"]
+  3 -> 4 [label = "\\left\\langle 2\\right\\rangle [b|x\\textrm{-}c|xc|z]"]
+  4 -> 5 [label = "\\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z], \\left\\langle 3\\right\\rangle [b|x\\textrm{-}c|z]"]
+}

@@ -1,0 +1,27 @@
+digraph
+{
+  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(xyz)>>>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F5
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+    4
+    5
+  }
+  I0 -> 0 [label = "<3>"]
+  0 -> 1 [label = "[^]"]
+  1 -> 2 [label = "<2>[a|x-a|z], <3>[b|x-b|z], <4>[c|x-c|z]"]
+  2 -> 3 [label = "<2>[a|x-a|z], <3>b|x, <3>b|y, <4>c|z"]
+  3 -> 4 [label = "<2>[b|x-c|xc|z]"]
+  4 -> 5 [label = "<2>[a|x-a|z], <3>[b|x-c|z]"]
+  5 -> F5
+}

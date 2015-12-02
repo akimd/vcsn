@@ -1,0 +1,11 @@
+digraph
+{
+  vcsn_context = "lat<lan_char(abc), lan_char(xyz)>, q"
+  I -> 0 [label = "<3>"]
+  0 -> 1 [label = "[a|x-c|z]"]
+  1 -> 2 [label = "<2>[a|x-a|z], <3>[b|x-b|z], <4>[c|x-c|z]"]
+  2 -> 3 [label = "<2>[a|x-a|z], <3>[b|x-b|y], <4>[c|z-c|z]"]
+  3 -> 4 [label = "<2>[^a|x-a|zc|y]"]
+  4 -> 5 [label = "<2>[a|x-a|z], <3>[^a|x-a|z]"]
+  5 -> F
+}

@@ -169,7 +169,7 @@ vcsn.automaton(r'''digraph
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
   vcsn_context = "lat<lal_char,law_char>, b"
-  0 -> 0 [label="(a,x),(b,xyz),(c,\\e)"]
+  0 -> 0 [label="(a|x),(b|xyz),(c|\\e)"]
 }'''),
 vcsn.automaton(r'''digraph
 {

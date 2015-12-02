@@ -406,34 +406,32 @@ namespace vcsn
           while (i.peek() != EOF && i.peek() != ']')
             if (i.peek() == '-')
               {
+                i.ignore();
+                // Handle a range.
                 require(prev != boost::none,
                         "letter classes cannot begin with '-'");
-                // With string_letter's letter_t, letter_t{'-'} may
-                // fail depending on the version of Boost and of
-                // libstdc++.  So rather, keep this dash.
-                auto dash = ls.genset()->get_letter(i);
-                // Handle ranges.
-                if (i.peek() == ']')
-                  // [abc-] does not denote an interval.
-                  fun(dash);
-                else
-                  {
-                    // [prev - l2].
-                    letter_t l2 = ls.get_letter(i);
-                    // Skip prev, which was already processed.
-                    auto gens = ls.generators();
-                    for (auto i = std::next(gens.find(prev.get()));
-                         i != std::end(gens) && *i < l2;
-                         ++i)
-                      fun(*i);
-                    // The last letter.  Do not do this in the loop,
-                    // we might overflow the capacity of char.
-                    // Check validity, so that 'z-a' is empty.
-                    if (prev.get() < l2)
-                      fun(l2);
+                require(i.peek() != ']',
+                        "letter classes cannot finish with '-'");
 
-                    prev = boost::none;
-                  }
+                // [prev - l2].
+                letter_t l2 = ls.get_letter(i);
+                // Skip prev, which was already processed.
+                auto gens = ls.generators();
+                auto i = boost::range::find(gens, prev.get());
+                // FIXME: Cannot use std::next here, in the case of tuples.
+                if (i != std::end(gens))
+                  ++i;
+                for (;
+                     i != std::end(gens) && *i < l2;
+                     ++i)
+                  fun(*i);
+                // The last letter.  Do not do this in the loop,
+                // we might overflow the capacity of char.
+                // Check validity, so that 'z-a' is empty.
+                if (prev.get() < l2)
+                  fun(l2);
+
+                prev = boost::none;
               }
             else
               {

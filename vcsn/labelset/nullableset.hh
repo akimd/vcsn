@@ -439,9 +439,13 @@ namespace vcsn
     /// \param i    the input stream.
     /// \param fun  a (label_t) -> void function.
     template <typename Fun>
-    void convs(std::istream& i, Fun fun) const
+    void convs(std::istream& i, Fun&& fun) const
     {
-      ls_->convs(i, fun);
+      ls_->convs(i,
+                 [this,fun](const typename labelset_t::value_t& l)
+                 {
+                   fun(value(l));
+                 });
     }
 
     /// Print label to stream.

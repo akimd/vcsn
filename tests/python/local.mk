@@ -120,6 +120,11 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/lan_char_z.out.gv           \
   %D%/automaton.dir/lan_char_z.tex              \
   %D%/automaton.dir/lan_char_z.tex.gv           \
+  %D%/automaton.dir/lan_x_lan_q.daut            \
+  %D%/automaton.dir/lan_x_lan_q.in.gv           \
+  %D%/automaton.dir/lan_x_lan_q.out.gv          \
+  %D%/automaton.dir/lan_x_lan_q.tex             \
+  %D%/automaton.dir/lan_x_lan_q.tex.gv          \
   %D%/automaton.dir/lao_z.daut                  \
   %D%/automaton.dir/lao_z.in.gv                 \
   %D%/automaton.dir/lao_z.out.gv                \

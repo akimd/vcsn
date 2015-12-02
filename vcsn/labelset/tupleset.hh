@@ -32,6 +32,7 @@ namespace vcsn
     using genset_t = void;
     using genset_ptr = void;
     using letter_t = void;
+    using letters_t = void;
     /// Same as value_t.
     using word_t = std::tuple<typename ValueSets::value_t...>;
   };
@@ -46,6 +47,8 @@ namespace vcsn
       = cross_sequences<decltype(std::declval<ValueSets>().generators())...>;
     using genset_ptr = std::tuple<typename ValueSets::genset_ptr...>;
     using letter_t = std::tuple<typename ValueSets::letter_t...>;
+    using letters_t = std::set<letter_t,
+                               vcsn::less<tupleset<ValueSets...>, letter_t>>;
     using word_t = std::tuple<typename ValueSets::word_t...>;
   };
 
@@ -76,8 +79,10 @@ namespace vcsn
     /// A tuple of values.
     using value_t = std::tuple<typename ValueSets::value_t...>;
 
-    /// A tuple of letters if meaningful, void otherwise.
+    /// A tuple of base letters if meaningful, void otherwise.
     using letter_t = typename labelset_types<ValueSets...>::letter_t;
+    /// A set of letters if meaningful, void otherwise.
+    using letters_t = typename labelset_types<ValueSets...>::letters_t;
     /// A tuple of generators if meaningful, void otherwise.
     using genset_t = typename labelset_types<ValueSets...>::genset_t;
     using genset_ptr = typename labelset_types<ValueSets...>::genset_ptr;
@@ -462,10 +467,14 @@ namespace vcsn
       return conv_(i, quoted, bool_constant<has_label_one>{});
     }
 
+    /// Fun: (label_t) -> void.
     template <typename Fun>
-    static void convs(std::istream&, Fun)
+    void convs(std::istream& i, Fun&& fun) const
     {
-      raise("tupleset: ranges not implemented");
+      eat(i, '[');
+      conv_label_class_(*this, i,
+                        [this,fun](const letter_t& l) { fun(value(l)); });
+      eat(i, ']');
     }
 
     std::ostream&
