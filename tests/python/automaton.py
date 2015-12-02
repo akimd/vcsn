@@ -214,11 +214,10 @@ vcsn.automaton(r'''digraph
 }'''))
 
 
-## ------------- ##
-## dot: pretty.  ##
-## ------------- ##
+## --------------- ##
+## automaton.dot.  ##
+## --------------- ##
 
-from vcsn.dot import _dot_pretty
 # Make sure to check the rendering useful/useless named/nameless
 # states, weights, and spontaneous transitions.
 c = vcsn.context('lan_char(ab), z')
@@ -251,7 +250,7 @@ CHECK_EQ('''digraph
   4 -> 5 [label = "⟨2⟩b"]
   5 -> 1 [label = "ε"]
 }''',
-         _dot_pretty(a.dot()))
+         a.dot())
 
 # conjunction: state names, and useless states, etc.
 CHECK_EQ('''digraph
@@ -294,7 +293,7 @@ CHECK_EQ('''digraph
   10 -> 11 [label = "ε"]
   11 -> F11
 }''',
-         _dot_pretty((a&a).dot()))
+         (a&a).dot())
 
 # Tooltip.
 CHECK_EQ('''digraph
@@ -337,7 +336,7 @@ CHECK_EQ('''digraph
   10 -> 11 [label = "ε"]
   11 -> F11
 }''',
-         _dot_pretty((a&a).dot(), "tooltip"))
+         (a&a).dot("tooltip"))
 
 # Transitions.
 CHECK_EQ('''digraph
@@ -351,7 +350,7 @@ CHECK_EQ('''digraph
     F11
   }
   {
-    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    node [shape = point, width = 0]
     0 [label = "0, 0"]
     1 [label = "2, 0"]
     2 [label = "4, 0"]
@@ -380,7 +379,7 @@ CHECK_EQ('''digraph
   10 -> 11 [label = "ε"]
   11 -> F11
 }''',
-         _dot_pretty((a&a).dot(), "transitions"))
+         (a&a).dot("transitions"))
 
 
 # Empty set.
@@ -401,7 +400,7 @@ CHECK_EQ('''digraph
   I0 -> 0
   0 -> F0
 }''',
-         _dot_pretty(vcsn.context('lal_char, b').expression('\z{c}').derived_term().dot()))
+         vcsn.context('lal_char, b').expression('\z{c}').derived_term().dot())
 
 ## ------------------------------- ##
 ## Output: dot, dot2tex and TikZ.  ##
