@@ -12,7 +12,7 @@ from vcsn.tools import _tmp_file
 # Default style for real states as issued by vcsn::dot.
 state_style = 'node [shape = circle, style = rounded, width = 0.5]'
 # IPython style for real states.
-state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]'
+state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]'
 # Style for pre and post states, or when rendering transitions only.
 state_point = 'node [shape = point, width = 0]'
 
@@ -31,13 +31,26 @@ def _label_pretty(s):
             .replace(r'\\z', '∅'))
 
 
-def _labels_as_tooltips(s):
+def _states_as_tooltips(s):
     return re.sub(r'label = (".*?"), shape = box',
                   r'tooltip = \1',
                   s)
 
 
-def _nodes_as_points(s):
+def _states_as_simple(s):
+    'Make all the states simple circles, put its label in its tooltip.'
+    # A non-decorated state.
+    s = re.sub(r'^( *)([0-9]+)$',
+               r'\1\2 [label = "", tooltip = "\2"]',
+               s, flags=re.MULTILINE)
+    # A decorated state.
+    s = re.sub(r'^(\ *([0-9]+)\ *\[.*?label\ *=\ *)"(.*?)", shape = box',
+               r'\1"", tooltip = "\2: \3"',
+               s, flags=re.MULTILINE)
+    return s
+
+
+def _states_as_points(s):
     '''Transform all the nodes into simple points, as to reveal only
     the transitions.'''
     return (s.replace(state_style, state_point)
@@ -71,10 +84,12 @@ def _dot_pretty(s, mode="dot"):
     s = re.sub(r'(label * = *)(".*?")',
                lambda m: m.group(1) + _label_pretty(m.group(2)),
                s)
-    if mode == "tooltip":
-        s = _labels_as_tooltips(s)
+    if mode == "simple":
+        s = _states_as_simple(s)
+    elif mode == "tooltip":
+        s = _states_as_tooltips(s)
     elif mode == "transitions":
-        s = _nodes_as_points(s)
+        s = _states_as_points(s)
     # It looks like we could pass -E/-N option to dot to set defaults
     # at the last moment, unfortutately in that case, it takes
     # precedence on "edge" and "node" attributes defined in the file

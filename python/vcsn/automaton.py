@@ -67,7 +67,7 @@ automaton.conjunction = _automaton_conjunction
 def _automaton_convert(self, mode, engine="dot"):
     '''Display automaton `self` in `mode` with Graphviz `engine`.'''
     from IPython.display import SVG
-    if mode in ["dot", "tooltip", "transitions"]:
+    if mode in ['dot', 'simple', 'tooltip', 'transitions']:
         svg = _dot_to_svg(self.dot(mode), engine)
         return SVG(svg)
     elif mode == 'dot2tex':
@@ -132,9 +132,9 @@ def _automaton_interact(self):
     '''
     from vcsn.ipython import interact_h
     if 20 < self.state_number():
-        modes = ['info', 'dot']
+        modes = ['info', 'simple', 'dot']
     else:
-        modes = ['dot', 'info']
+        modes = ['simple', 'dot', 'info']
     modes += ['info,detailed', 'tooltip', 'transitions', 'type', 'dot2tex']
     engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
     interact_h(lambda mode, engine: _automaton_display(self, mode, engine),

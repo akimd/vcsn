@@ -233,7 +233,7 @@ CHECK_EQ('''digraph
     F1
   }
   {
-    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]
     0
     1
     2
@@ -264,7 +264,7 @@ CHECK_EQ('''digraph
     F11
   }
   {
-    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]
     0 [label = "0, 0", shape = box]
     1 [label = "2, 0", shape = box]
     2 [label = "4, 0", shape = box]
@@ -307,7 +307,7 @@ CHECK_EQ('''digraph
     F11
   }
   {
-    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]
     0 [tooltip = "0, 0"]
     1 [tooltip = "2, 0"]
     2 [tooltip = "4, 0"]
@@ -394,7 +394,7 @@ CHECK_EQ('''digraph
     F0
   }
   {
-    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]
     0 [label = "∅{c}", shape = box]
   }
   I0 -> 0
