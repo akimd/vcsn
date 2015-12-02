@@ -112,11 +112,11 @@ namespace vcsn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Aut, typename String>
       inline
-      vcsn::enable_if_t<::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      minimize_(const automaton& aut, const std::string& algo)
+      automaton
+      minimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
 
@@ -150,24 +150,6 @@ namespace vcsn
         };
         auto fun = getargs("algorithm", map, algo);
         return fun(a);
-      }
-
-      template <typename Aut, typename String>
-      inline
-      vcsn::enable_if_t<!::vcsn::detail::can_use_brzozowski<Aut>(), automaton>
-      minimize_(const automaton& aut, const std::string& algo)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::minimize(a, algo));
-      }
-
-      /// Bridge.
-      template <typename Aut, typename String>
-      inline
-      automaton
-      minimize(const automaton& aut, const std::string& algo)
-      {
-        return minimize_<Aut, String>(aut, algo);
       }
     }
   }
