@@ -125,6 +125,7 @@ namespace vcsn
       DEFINE(context);
       DEFINE(dst_of);
       DEFINE(final_transitions);
+      DEFINE(format_transition);
       DEFINE(get_final_weight);
       DEFINE(get_initial_weight);
       DEFINE(get_transition);
