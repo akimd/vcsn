@@ -110,7 +110,8 @@ namespace vcsn
     }
 
     /// Get the max of the sizes of the tapes.
-    static size_t size(const value_t& v)
+    template <typename Value>
+    static size_t size(const Value& v)
     {
       return size_(v, indices);
     }
@@ -191,16 +192,6 @@ namespace vcsn
       return is_free_(indices);
     }
 
-  private:
-    template <typename LhsValue, typename RhsValue, std::size_t... I>
-    auto
-    mul_(const LhsValue& l, const RhsValue& r, seq<I...>) const
-      -> word_t
-    {
-      return word_t{set<I>().mul(std::get<I>(l), std::get<I>(r))...};
-    }
-
-  public:
     /// Convert to a word.
     template <typename... Args>
     auto
@@ -218,8 +209,10 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool
-    less(const value_t& l, const value_t& r)
+    template <typename LhsValue, typename RhsValue>
+    static auto
+    less(const LhsValue& l, const RhsValue& r)
+      -> bool
     {
       auto sl = size(l);
       auto sr = size(r);
@@ -549,8 +542,8 @@ namespace vcsn
 
     /// The size of the Ith element, if its valueset features a size()
     /// function.
-    template <std::size_t I>
-    static auto size_(const value_t& v, int)
+    template <typename Value, std::size_t I>
+    static auto size_(const Value& v, int)
       -> decltype(valueset_t<I>::size(std::get<I>(v)))
     {
       return valueset_t<I>::size(std::get<I>(v));
@@ -558,17 +551,17 @@ namespace vcsn
 
     /// The size of the Ith element, if its valueset does not feature
     /// a size() function.
-    template <std::size_t I>
-    static constexpr auto size_(const value_t&, ...)
+    template <typename Value, std::size_t I>
+    static constexpr auto size_(const Value&, ...)
       -> size_t
     {
       return 0;
     }
 
-    template <std::size_t... I>
-    static size_t size_(const value_t& v, seq<I...>)
+    template <typename Value, std::size_t... I>
+    static size_t size_(const Value& v, seq<I...>)
     {
-      return std::max({size_<I>(v, 0)...});
+      return std::max({size_<Value, I>(v, 0)...});
     }
 
     template <typename... Args, std::size_t... I>
@@ -616,9 +609,10 @@ namespace vcsn
       return true;
     }
 
-    template <std::size_t... I>
-    static bool
-    less_(const value_t& l, const value_t& r, seq<I...>)
+    template <typename LhsValue, typename RhsValue, std::size_t... I>
+    static auto
+    less_(const LhsValue& l, const RhsValue& r, seq<I...>)
+      -> bool
     {
       for (auto n: {std::make_pair(valueset_t<I>::less(std::get<I>(l),
                                                        std::get<I>(r)),
@@ -744,6 +738,14 @@ namespace vcsn
     map_impl_(const value_t& l, const value_t& r, Fun&& fun, seq<I...>) const
     {
       return value_t{fun(set<I>(), std::get<I>(l), std::get<I>(r))...};
+    }
+
+    template <typename LhsValue, typename RhsValue, std::size_t... I>
+    auto
+    mul_(const LhsValue& l, const RhsValue& r, seq<I...>) const
+      -> word_t
+    {
+      return word_t{set<I>().mul(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
