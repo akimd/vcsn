@@ -196,8 +196,8 @@ def check_prod(*exps, **kwargs):
     auts = [r.automaton("expansion") for r in exps]
     for p in ['conjunction', 'infiltration', 'shuffle']:
         print("Product:", p)
-        # Product of automata.
-        a1 = prod(p, auts).strip()
+        # Product of automata, trimmed.
+        a1 = prod(p, auts).strip().trim().strip()
         # Automaton of product.
         a2 = prod(p, exps).automaton("expansion")
         if 'equiv' in kwargs:

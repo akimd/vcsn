@@ -167,17 +167,17 @@ namespace vcsn
       switch (getargs("to_automaton: algorithm", map, algo))
         {
         case algo_t::expansion:
-          return strip(derived_term(exp));
+          return strip(trim(strip(derived_term(exp))));
         case algo_t::derivation:
-          return strip(derived_term(exp, "derivation"));
+          return strip(trim(strip(derived_term(exp, "derivation"))));
         case algo_t::standard:
           return standard(exp);
         case algo_t::thompson:
           return thompson(exp);
         case algo_t::zpc:
-          return zpc(exp);
+          return strip(trim(zpc(exp)));
         case algo_t::zpc_compact:
-          return zpc(exp, "compact");
+          return strip(trim(zpc(exp, "compact")));
         }
       BUILTIN_UNREACHABLE();
     }
