@@ -49,82 +49,6 @@ namespace vcsn
         return res;
       }
 
-      /// Read and process a class of letters.
-      ///
-      /// Stream \a i is after the '[', read up to the closing ']',
-      /// excluded.  Apply \a fun to all the letters.  Take negation
-      /// into account.  Classes can never be empty.
-      ///
-      /// For instance "[a-d0-9_]", or "[^a-fz], or "[^]", but not
-      /// "[]".
-      ///
-      /// \pre  i does not start with ']'.
-      template <typename Fun>
-      void
-      convs_classes_(std::istream& i, Fun fun) const
-      {
-        if (i.peek() == '^')
-          {
-            i.ignore();
-            auto alphabet = letters_t{};
-            for (auto l : this->generators())
-              alphabet.insert(l);
-            boost::for_each(set_difference(alphabet, convs_classes_(i)),
-                            fun);
-          }
-        else
-          {
-            // The last letter we read, for intervals.
-            boost::optional<letter_t> prev;
-            while (i.peek() != EOF && i.peek() != ']')
-              if (i.peek() == '-')
-                {
-                  require(prev != boost::none,
-                          "bracket cannot begin with '-'");
-                  // With string_letter's letter_t, letter_t{'-'} may
-                  // fail depending on the version of Boost and of
-                  // libstdc++.  So rather, keep this dash.
-                  auto dash = this->genset()->get_letter(i);
-                  // Handle ranges.
-                  if (i.peek() == ']')
-                    // [abc-] does not denote an interval.
-                    fun(dash);
-                  else
-                    {
-                      // [prev - l2].
-                      letter_t l2 = get_letter(i);
-                      // Skip prev, which was already processed.
-                      for (auto i = std::next(this->genset()->find(prev.get()));
-                           i != this->genset()->end() && *i < l2;
-                           ++i)
-                        fun(*i);
-                      // The last letter.  Do not do this in the loop,
-                      // we might overflow the capacity of char.
-                      // Check validity, so that 'z-a' is empty.
-                      if (prev.get() < l2)
-                        fun(l2);
-
-                      prev = boost::none;
-                    }
-                }
-              else
-                {
-                  letter_t l = get_letter(i);
-                  fun(l);
-                  prev = l;
-                }
-          }
-      }
-
-      /// Read a set of letters.
-      letters_t
-      convs_classes_(std::istream& i) const
-      {
-        letters_t res;
-        convs_classes_(i, [&res](letter_t l){ res.insert(l); });
-        return res;
-      }
-
       /// Read and process a class of letters.  Letters are sorted,
       /// and uniqued.
       ///
@@ -141,7 +65,11 @@ namespace vcsn
       convs_(std::istream& i, Fun fun) const
       {
         eat(i, '[');
-        boost::for_each(convs_classes_(i), fun);
+        // Working via a set looks weird, instead of just calling
+        // `conv_label_class_(*this, i, fun)`, but it allows to ensure
+        // that letter classes never count letters several times.
+        // Otherwise [aa] would be <2>a, instead of a.
+        boost::for_each(conv_label_class_(*this, i), fun);
         eat(i, ']');
       }
 

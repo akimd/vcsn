@@ -1,7 +1,9 @@
 #pragma once
 
+#include <boost/optional.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/algorithm_ext/is_sorted.hpp>
 
 #include <vcsn/ctx/context.hh>
@@ -14,9 +16,11 @@ namespace vcsn
 {
   namespace detail
   {
+    /// A probe for the LabelSet::generators().
     template <typename LabelSet>
     using generators_t = decltype(std::declval<LabelSet>().generators());
 
+    /// Whether LabelSet features a generators() member function.
     template <typename LabelSet>
     using has_generators_mem_fn = detect<LabelSet, generators_t>;
 
@@ -359,6 +363,98 @@ namespace vcsn
       out << ']';
 
       return out;
+    }
+
+    template <typename LabelSet>
+    typename LabelSet::letters_t
+    conv_label_class_(const LabelSet& ls, std::istream& i);
+
+    /// Read and process a class of letters.
+    ///
+    /// Stream \a i is after the '[', read up to the closing ']',
+    /// excluded.  Apply \a fun to all the letters.  Take negation
+    /// into account.  Classes can never be empty.
+    //
+    /// For instance "[a-d0-9_]", or "[^a-fz], or "[^]", but not
+    /// "[]".
+    ///
+    /// Beware that symbols are processed as they are discovered, so
+    /// there is no guarantee that symbols will be processed only
+    /// once: `[aaa]` will process `a` three times.  If this is
+    /// undesirable, use the overload below that returns a set.
+    ///
+    /// \pre  i does not start with ']' or '-'.
+    template <typename LabelSet, typename Fun>
+    void
+    conv_label_class_(const LabelSet& ls, std::istream& i, Fun fun)
+    {
+      using letter_t = typename LabelSet::letter_t;
+      using letters_t = typename LabelSet::letters_t;
+      if (i.peek() == '^')
+        {
+          i.ignore();
+          auto alphabet = letters_t{};
+          for (auto l : ls.generators())
+            alphabet.insert(l);
+          boost::for_each(set_difference(alphabet, conv_label_class_(ls, i)),
+                          fun);
+        }
+      else
+        {
+          // The last letter we read, for intervals.
+          auto prev = boost::optional<letter_t>{};
+          while (i.peek() != EOF && i.peek() != ']')
+            if (i.peek() == '-')
+              {
+                require(prev != boost::none,
+                        "letter classes cannot begin with '-'");
+                // With string_letter's letter_t, letter_t{'-'} may
+                // fail depending on the version of Boost and of
+                // libstdc++.  So rather, keep this dash.
+                auto dash = ls.genset()->get_letter(i);
+                // Handle ranges.
+                if (i.peek() == ']')
+                  // [abc-] does not denote an interval.
+                  fun(dash);
+                else
+                  {
+                    // [prev - l2].
+                    letter_t l2 = ls.get_letter(i);
+                    // Skip prev, which was already processed.
+                    auto gens = ls.generators();
+                    for (auto i = std::next(gens.find(prev.get()));
+                         i != std::end(gens) && *i < l2;
+                         ++i)
+                      fun(*i);
+                    // The last letter.  Do not do this in the loop,
+                    // we might overflow the capacity of char.
+                    // Check validity, so that 'z-a' is empty.
+                    if (prev.get() < l2)
+                      fun(l2);
+
+                    prev = boost::none;
+                  }
+              }
+            else
+              {
+                letter_t l = ls.get_letter(i);
+                fun(l);
+                prev = l;
+              }
+        }
+    }
+
+    /// Read a set of letters (hence, guaranteed in order, and unique).
+    template <typename LabelSet>
+    typename LabelSet::letters_t
+    conv_label_class_(const LabelSet& ls, std::istream& i)
+    {
+      using letter_t = typename LabelSet::letter_t;
+      using letters_t = typename LabelSet::letters_t;
+
+      letters_t res;
+      conv_label_class_(ls, i, [&res](letter_t l){ res.insert(l); });
+      return res;
     }
   }
 }
