@@ -22,20 +22,28 @@ namespace vcsn
   ///
   /// labelset_t_of<mutable_automaton_impl> // a class
   /// labelset_t_of<mutable_automaton>      // a shared_ptr
+  ///
+  /// SFINAE compliant.
 
 #define DEFINE(Type)                                                    \
   namespace detail                                                      \
   {                                                                     \
+    template <typename ValueSet, typename = void_t<>>                   \
+    struct Type ## _of_impl;                                            \
+                                                                        \
     template <typename ValueSet>                                        \
-    struct Type ## _of_impl                                             \
+    struct Type ## _of_impl<ValueSet,                                   \
+                            void_t<typename ValueSet::Type>>            \
     {                                                                   \
       using type = typename ValueSet::Type;                             \
     };                                                                  \
                                                                         \
     template <typename ValueSet>                                        \
-    struct Type ## _of_impl<std::shared_ptr<ValueSet>>                  \
-      : Type ## _of_impl<base_t<ValueSet>>                              \
-    {};                                                                 \
+    struct Type ## _of_impl<std::shared_ptr<ValueSet>,                  \
+                            void_t<typename ValueSet::Type>>            \
+    {                                                                   \
+      using type = typename ValueSet::Type;                             \
+    };                                                                  \
   }                                                                     \
                                                                         \
   template <typename ValueSet>                                          \
