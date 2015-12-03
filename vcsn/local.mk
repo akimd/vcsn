@@ -104,6 +104,7 @@ algo_headers =                                  \
   %D%/algos/sum.hh                              \
   %D%/algos/synchronize.hh                      \
   %D%/algos/synchronizing-word.hh               \
+  %D%/algos/tags.hh                             \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
   %D%/algos/to-expansion.hh                     \

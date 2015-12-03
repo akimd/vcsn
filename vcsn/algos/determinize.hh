@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <queue>
 
+#include <vcsn/algos/tags.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/mutable-automaton.hh>
@@ -22,20 +23,16 @@
 
 namespace vcsn
 {
+  /// Request the Boolean specialization for determinization (B and
+  /// F2).
+  struct boolean_tag {};
+
+  /// Request the general implementation of determinization for
+  /// weighted automata for.
+  struct weighted_tag {};
 
   namespace detail
   {
-    /// Request the Boolean specialization for determinization (B and
-    /// F2).
-    struct boolean_tag {};
-
-    /// Request the general implementation of determinization for
-    /// weighted automata for.
-    struct weighted_tag {};
-
-    /// Request the most appropriate version of determinization.
-    struct auto_tag {};
-
     /// The best tag depending on the type of Aut.
     template <typename Aut>
     using determinization_tag
@@ -270,7 +267,7 @@ namespace vcsn
 
   template <typename Aut>
   auto
-  determinize(const Aut& a, detail::boolean_tag)
+  determinize(const Aut& a, boolean_tag)
     -> determinized_automaton<Aut>
   {
     auto res = make_shared_ptr<determinized_automaton<Aut>>(a);
@@ -474,7 +471,7 @@ namespace vcsn
   /// Determinization: weighted, general case.
   template <typename Aut>
   auto
-  determinize(const Aut& a, detail::weighted_tag)
+  determinize(const Aut& a, weighted_tag)
     -> detweighted_automaton<Aut>
   {
     auto res = make_shared_ptr<detweighted_automaton<Aut>>(a);
@@ -486,7 +483,7 @@ namespace vcsn
   /// Determinization: automatic dispatch based on the automaton type.
   template <typename Aut>
   auto
-  determinize(const Aut& a, detail::auto_tag = {})
+  determinize(const Aut& a, auto_tag = {})
   {
     return determinize(a, detail::determinization_tag<Aut>{});
   }
@@ -519,22 +516,15 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "auto" || algo == "boolean")
-          {
-            using tag_t = vcsn::detail::boolean_tag;
-            return make_automaton(::vcsn::determinize(a, tag_t{}));
-          }
+          return make_automaton(::vcsn::determinize(a, boolean_tag{}));
         else if (algo == "weighted")
-          {
-            using tag_t = vcsn::detail::weighted_tag;
-            return make_automaton(::vcsn::determinize(a, tag_t{}));
-          }
+          return make_automaton(::vcsn::determinize(a, weighted_tag{}));
         else
           raise("determinize: invalid algorithm: ", str_escape(algo));
       }
 
       /// Weighted Bridge.
       template <typename Aut, typename String>
-      inline
       enable_if_not_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
@@ -542,17 +532,13 @@ namespace vcsn
         if (algo == "boolean")
           raise("determinize: cannot apply Boolean determinization");
         else if (algo == "auto" || algo == "weighted")
-          {
-            using tag_t = vcsn::detail::weighted_tag;
-            return make_automaton(::vcsn::determinize(a, tag_t{}));
-          }
+          return make_automaton(::vcsn::determinize(a, weighted_tag{}));
         else
           raise("determinize: invalid algorithm: ", str_escape(algo));
       }
 
       /// Bridge.
       template <typename Aut, typename String>
-      inline
       automaton
       determinize(const automaton& aut, const std::string& algo)
       {
@@ -566,7 +552,7 @@ namespace vcsn
   | codeterminize.  |
   `----------------*/
 
-  template <typename Aut, typename Tag = detail::auto_tag>
+  template <typename Aut, typename Tag = auto_tag>
   auto
   codeterminize(const Aut& aut, Tag tag = {})
   {
@@ -589,15 +575,9 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "auto" || algo == "boolean")
-          {
-            using tag_t = vcsn::detail::boolean_tag;
-            return make_automaton(::vcsn::codeterminize(a, tag_t{}));
-          }
+          return make_automaton(::vcsn::codeterminize(a, boolean_tag{}));
         else if (algo == "weighted")
-          {
-            using tag_t = vcsn::detail::boolean_tag;
-            return make_automaton(::vcsn::codeterminize(a, tag_t{}));
-          }
+          return make_automaton(::vcsn::codeterminize(a, weighted_tag{}));
         else
           raise("codeterminize: invalid algorithm: ", str_escape(algo));
       }
