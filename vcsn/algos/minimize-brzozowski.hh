@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/transpose.hh>
@@ -21,8 +22,7 @@ namespace vcsn
   template <typename Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
-    -> vcsn::enable_if_t<labelset_t_of<Aut>::is_free()
-                         && std::is_same<weightset_t_of<Aut>, b>::value,
+    -> vcsn::enable_if_t<is_free_boolean<Aut>(),
                          determinized_automaton<codeterminized_automaton<decltype(transpose(a))>>>
   {
     return determinize(codeterminize(a));
@@ -33,11 +33,8 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
-      auto
+      vcsn::enable_if_t<!is_free_boolean<Aut>(), Aut>
       minimize(const Aut&, brzozowski_tag)
-        -> vcsn::enable_if_t<!labelset_t_of<Aut>::is_free()
-                             || !std::is_same<weightset_t_of<Aut>, b>::value,
-                             Aut>
       {
         raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
               "brzozowski");

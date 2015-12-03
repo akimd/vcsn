@@ -2,6 +2,7 @@
 
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/algos/tags.hh>
+#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/minimize-brzozowski.hh>
 #include <vcsn/algos/minimize-hopcroft.hh>
@@ -33,9 +34,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
-                    && labelset_t_of<Aut>::is_free(),
-                    quotient_t<Aut>>
+  vcsn::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {
     static const auto map

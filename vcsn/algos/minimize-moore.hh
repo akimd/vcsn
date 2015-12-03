@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/quotient.hh>
@@ -192,9 +193,7 @@ namespace vcsn
   /// Minimize automaton \a a using the Moore algorithm.
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
-                    && labelset_t_of<Aut>::is_free(),
-                    quotient_t<Aut>>
+  vcsn::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, moore_tag)
   {
     auto minimize = detail_moore::minimizer<Aut>{a};
@@ -207,9 +206,7 @@ namespace vcsn
     {
       template <typename Aut>
       inline
-      vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value
-                        || !labelset_t_of<Aut>::is_free(),
-                        quotient_t<Aut>>
+      vcsn::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, moore_tag)
       {
         raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",

@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
+#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
-
 #include <vcsn/misc/wet.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/vector.hh>
@@ -23,9 +23,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
-                    && labelset_t_of<Aut>::is_free(),
-                    quotient_t<Aut>>
+  vcsn::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, hopcroft_tag)
   {
     using state_t = state_t_of<Aut>;
@@ -107,9 +105,7 @@ namespace vcsn
     {
       template <typename Aut>
       inline
-      vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value
-                        || !labelset_t_of<Aut>::is_free(),
-                        quotient_t<Aut>>
+      vcsn::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, hopcroft_tag)
       {
         raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
