@@ -443,7 +443,17 @@ namespace vcsn
     /// The context for words.
     context make_word_context(const context& ctx);
 
-    /// Multiply (concatenate) two standard automata.
+    /// Multiply (concatenate) two automata.
+    ///
+    /// \param lhs   an automaton.
+    /// \param rhs   another one.
+    /// \param algo  how to compute the result
+    ///   - "standard"    both \a lhs and \b rhs are standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a lhs and and \a rhs,
+    ///                   but add spontaneous transitions.
+    ///   - "auto"        "standard" if both automata are standard,
+    ///                   "general" otherwise.
     automaton multiply(const automaton& lhs, const automaton& rhs,
                        const std::string& algo = "auto");
 
@@ -452,6 +462,13 @@ namespace vcsn
     /// \param aut  the automaton.
     /// \param min  the minimum number.  If -1, denotes 0.
     /// \param max  the maximum number.  If -1, denotes infinity, using star.
+    /// \param algo  how to compute the result
+    ///   - "standard"    \a aut is standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a aut,
+    ///                   but add spontaneous transitions.
+    ///   - "auto"        "standard" if \a aut is standard,
+    ///                   "general" otherwise.
     automaton multiply(const automaton& aut, int min, int max,
                        const std::string& algo = "auto");
 
@@ -718,7 +735,16 @@ namespace vcsn
     /// The standard automaton of \a e.
     automaton standard(const expression& e);
 
-    /// Star of a standard automaton.
+    /// Star of an automaton.
+    ///
+    /// \paran aut   the input automaton.
+    /// \param algo  how to compute the result.
+    ///   - "standard"    \a aut is standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a aut,
+    ///                   but add spontaneous transitions.
+    ///   - "auto"        "standard" if \a aut is standard,
+    ///                   "general" otherwise.
     automaton star(const automaton& aut, const std::string& algo = "auto");
 
     /// Star height of an expression.
@@ -742,7 +768,16 @@ namespace vcsn
     /// transition with same source, destination, and weight.
     automaton subword(const automaton& aut);
 
-    /// Sum of two standard automata.
+    /// Sum of two automata.
+    ///
+    /// \param lhs   an automaton.
+    /// \param rhs   another one.
+    /// \param algo  how to compute the result
+    ///   - "standard"    both \a lhs and \b rhs are standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a lhs and and \a rhs.
+    ///   - "auto"        "standard" if both automata are standard,
+    ///                   "general" otherwise.
     automaton sum(const automaton& lhs, const automaton& rhs,
                   const std::string& algo = "auto");
 
