@@ -317,7 +317,7 @@ namespace vcsn
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_expression, rs_t);
         REGISTER(ldiv_expression, rs_t, rs_t);
-        REGISTER(left_mult, ws_t, aut_t);
+        REGISTER(left_mult, ws_t, aut_t, const std::string);
         REGISTER(left_mult_expression, ws_t, rs_t);
         REGISTER(less_than_expression, rs_t, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
@@ -344,7 +344,7 @@ namespace vcsn
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
-        REGISTER(right_mult, aut_t, ws_t);
+        REGISTER(right_mult, aut_t, ws_t, const std::string);
         REGISTER(right_mult_expression, rs_t, ws_t);
         REGISTER(shuffle_expression, rs_t, rs_t);
         REGISTER(sort, aut_t);

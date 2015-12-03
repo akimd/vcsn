@@ -492,7 +492,8 @@ struct automaton
     return vcsn::dyn::is_valid(val_);
   }
 
-  automaton left_mult(const weight& w) const;
+  automaton left_mult(const weight& w,
+                      const std::string& algo = "auto") const;
 
   automaton letterize() const
   {
@@ -609,7 +610,8 @@ struct automaton
     return vcsn::dyn::reduce(val_);
   }
 
-  automaton right_mult(const weight& w) const;
+  automaton right_mult(const weight& w,
+                       const std::string& algo = "auto") const;
 
   automaton scc(const std::string& algo = "auto") const
   {
@@ -1170,9 +1172,10 @@ bool automaton::is_synchronized_by(const label& word) const
   return vcsn::dyn::is_synchronized_by(val_, word.val_);
 }
 
-automaton automaton::left_mult(const weight& w) const
+automaton automaton::left_mult(const weight& w,
+                               const std::string& algo) const
 {
-  return vcsn::dyn::left_mult(w.val_, val_);
+  return vcsn::dyn::left_mult(w.val_, val_, algo);
 }
 
 polynomial automaton::lightest(unsigned num) const
@@ -1180,9 +1183,10 @@ polynomial automaton::lightest(unsigned num) const
   return vcsn::dyn::lightest(val_, num);
 }
 
-automaton automaton::right_mult(const weight& w) const
+automaton automaton::right_mult(const weight& w,
+                                const std::string& algo) const
 {
-  return vcsn::dyn::right_mult(val_, w.val_);
+  return vcsn::dyn::right_mult(val_, w.val_, algo);
 }
 
 polynomial automaton::shortest(boost::optional<unsigned> num,
@@ -1408,7 +1412,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
-    .def("left_mult", &automaton::left_mult)
+    .def("left_mult", &automaton::left_mult,
+         (arg("weight"), arg("algo") = "auto"))
     .def("letterize", &automaton::letterize)
     .def("_lift", &automaton::lift)
     .def("lightest", &automaton::lightest, (arg("num") = 1))
@@ -1436,7 +1441,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expression", &automaton::to_expression,
          (arg("identities") = "default", arg("algo") = "auto"))
     .def("reduce", &automaton::reduce)
-    .def("right_mult", &automaton::right_mult)
+    .def("right_mult", &automaton::right_mult,
+         (arg("weight"), arg("algo") = "auto"))
     .def("scc", &automaton::scc, (arg("algo") = "auto"))
     .def("shortest", &automaton::shortest,
          (arg("num") = boost::optional<unsigned>(),

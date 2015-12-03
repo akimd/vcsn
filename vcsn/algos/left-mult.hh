@@ -2,6 +2,7 @@
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/standard.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/core/rat/expansionset.hh>
 #include <vcsn/ctx/traits.hh>
@@ -13,9 +14,10 @@
 
 namespace vcsn
 {
-
   namespace detail
   {
+    /// Implementation of left- and right- multiplication of an
+    /// automaton by a weight.
     template <typename Aut>
     struct standard_operations
     {
@@ -25,49 +27,84 @@ namespace vcsn
       using weightset_t = weightset_t_of<context_t>;
       using state_t = state_t_of<automaton_t>;
 
-      /// Left-multiplication by a weight.
+      /// Left-multiplication of any automaton by a weight.
       static automaton_t&
-      left_mult_here(const weight_t& w, automaton_t& res)
+      left_mult_here(const weight_t& w, automaton_t& res, general_tag tag)
       {
-        weightset_t ws(*res->context().weightset());
+        const auto& ws = *res->context().weightset();
         if (ws.is_zero(w))
-          zero_here(res);
-        else if (ws.is_one(w))
-          {}
-        else if (is_standard(res))
-          {
-            state_t initial = res->dst_of(res->initial_transitions().front());
-            for (auto t: res->all_out(initial))
-              res->lmul_weight(t, w);
-          }
-        else
+          zero_here(res, tag);
+        else if (!ws.is_one(w))
           for (auto t: res->initial_transitions())
             res->lmul_weight(t, w);
         return res;
       }
 
-      /// Right-multiplication by a weight.
+      /// Standard-preserving left-multiplication by a weight.
       static automaton_t&
-      right_mult_here(automaton_t& res, const weight_t& w)
+      left_mult_here(const weight_t& w, automaton_t& res, standard_tag tag)
       {
-        weightset_t ws(*res->context().weightset());
+        require(is_standard(res), __func__, ": automaton must be standard");
+        const auto& ws = *res->context().weightset();
         if (ws.is_zero(w))
-          zero_here(res);
-        else if (ws.is_one(w))
-          {}
+          zero_here(res, tag);
+        else if (!ws.is_one(w))
+          {
+            state_t initial = res->dst_of(res->initial_transitions().front());
+            for (auto t: res->all_out(initial))
+              res->lmul_weight(t, w);
+          }
+        return res;
+      }
+
+      /// Same as standard if res is standard, otherwise, general.
+      static automaton_t&
+      left_mult_here(const weight_t& w, automaton_t& res, auto_tag = {})
+      {
+        if (is_standard(res))
+          return left_mult_here(w, res, standard_tag{});
         else
+          return left_mult_here(w, res, general_tag{});
+      }
+
+      /// Right-multiplication of any automaton by a weight.
+      template <typename Tag = general_tag>
+      static automaton_t&
+      right_mult_here(automaton_t& res, const weight_t& w, Tag tag = {})
+      {
+        const auto& ws = *res->context().weightset();
+        if (ws.is_zero(w))
+          zero_here(res, tag);
+        else if (!ws.is_one(w))
           for (auto t: res->final_transitions())
             res->rmul_weight(t, w);
         return res;
       }
 
+      /// Same as standard if res is standard, otherwise, general.
+      static automaton_t&
+      right_mult_here(automaton_t& res, const weight_t& w, auto_tag = {})
+      {
+        if (is_standard(res))
+          return right_mult_here(res, w, standard_tag{});
+        else
+          return right_mult_here(res, w, general_tag{});
+      }
+
+      /// Transform \a res into the empty automaton.
+      static automaton_t&
+      zero_here(automaton_t& res, general_tag)
+      {
+        res = make_fresh_automaton(res);
+        return res;
+      }
+
       /// Transform \a res into the (standard) empty automaton.
       static automaton_t&
-      zero_here(automaton_t& res)
+      zero_here(automaton_t& res, standard_tag)
       {
-        automaton_t a = make_fresh_automaton(res);
-        a->set_initial(a->new_state());
-        res = std::move(a);
+        zero_here(res, general_tag{});
+        res->set_initial(res->new_state());
         return res;
       }
     };
@@ -77,22 +114,23 @@ namespace vcsn
   | left-mult(automaton).  |
   `-----------------------*/
 
-  template <typename Aut>
-  inline
+  /// In place left-multiplication of an automaton by a weight.
+  template <typename Aut, typename Tag = auto_tag>
   Aut&
-  left_mult_here(const weight_t_of<Aut>& w, Aut& res)
+  left_mult_here(const weight_t_of<Aut>& w, Aut& res, Tag tag = {})
   {
-    return detail::standard_operations<Aut>::left_mult_here(w, res);
+    return detail::standard_operations<Aut>::left_mult_here(w, res, tag);
   }
 
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>>
-  inline
-  AutOut
-  left_mult(const weight_t_of<AutOut>& w, const AutIn& aut)
+  /// Left-multiplication of an automaton by a weight.
+  template <typename Aut, typename Tag = auto_tag>
+  auto
+  left_mult(const weight_t_of<Aut>& w,
+            const Aut& aut, Tag tag = {})
+    -> fresh_automaton_t_of<Aut>
   {
-    auto res = copy<AutIn, AutOut>(aut);
-    left_mult_here(w, res);
+    auto res = copy(aut);
+    left_mult_here(w, res, tag);
     return res;
   }
 
@@ -101,9 +139,10 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename WeightSet, typename Aut>
+      template <typename WeightSet, typename Aut, typename String>
       automaton
-      left_mult(const weight& weight, const automaton& aut)
+      left_mult(const weight& weight, const automaton& aut,
+                const std::string& algo)
       {
         const auto& a1 = aut->as<Aut>();
         const auto& w1 = weight->as<WeightSet>();
@@ -116,9 +155,15 @@ namespace vcsn
         auto a2 = make_mutable_automaton(ctx);
         copy_into(a1, a2);
         auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
-        return make_automaton(::vcsn::left_mult_here(w2, a2));
+        if (algo == "auto")
+          return make_automaton(::vcsn::left_mult_here(w2, a2, auto_tag{}));
+        else if (algo == "general")
+          return make_automaton(::vcsn::left_mult_here(w2, a2, general_tag{}));
+        else if (algo == "standard")
+          return make_automaton(::vcsn::left_mult_here(w2, a2, standard_tag{}));
+        else
+          raise("left-multiply: invalid algorithm: ", algo);
       }
-
     }
   }
 
@@ -127,11 +172,11 @@ namespace vcsn
   `-----------------------*/
 
   template <typename ValueSet>
-  inline
-  typename ValueSet::value_t
+  auto
   left_mult(const ValueSet& rs,
             const weight_t_of<ValueSet>& w,
             const typename ValueSet::value_t& r)
+    -> decltype(rs.lmul(w, r)) // for SFINAE.
   {
     return rs.lmul(w, r);
   }
@@ -165,7 +210,6 @@ namespace vcsn
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
         return make_expansion(rs, ::vcsn::left_mult(rs, w2, r2));
       }
-
     }
   }
 
@@ -220,7 +264,6 @@ namespace vcsn
         return make_expression(rs,
                                ::vcsn::left_mult(rs, w2, r2));
       }
-
     }
   }
 
@@ -228,21 +271,21 @@ namespace vcsn
   | right-mult(automaton).  |
   `------------------------*/
 
-  template <typename Aut>
-  inline
+  /// In place right-multiplication of an automaton by a weight.
+  template <typename Aut, typename Tag = auto_tag>
   Aut&
-  right_mult_here(Aut& res, const weight_t_of<Aut>& w)
+  right_mult_here(Aut& res, const weight_t_of<Aut>& w, Tag tag = {})
   {
-    return detail::standard_operations<Aut>::right_mult_here(res, w);
+    return detail::standard_operations<Aut>::right_mult_here(res, w, tag);
   }
 
-  template <typename Aut>
-  inline
+  /// Right-multiplication of an automaton by a weight.
+  template <typename Aut, typename Tag = auto_tag>
   fresh_automaton_t_of<Aut>
-  right_mult(const Aut& aut, const weight_t_of<Aut>& w)
+  right_mult(const Aut& aut, const weight_t_of<Aut>& w, Tag tag = {})
   {
     auto res = copy(aut);
-    right_mult_here(res, w);
+    right_mult_here(res, w, tag);
     return res;
   }
 
@@ -251,9 +294,10 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename WeightSet>
+      template <typename Aut, typename WeightSet, typename String>
       automaton
-      right_mult(const automaton& aut, const weight& weight)
+      right_mult(const automaton& aut, const weight& weight,
+                 const std::string& algo)
       {
         const auto& a1 = aut->as<Aut>();
         const auto& w1 = weight->as<WeightSet>();
@@ -263,7 +307,15 @@ namespace vcsn
         auto a2 = make_mutable_automaton(ctx);
         copy_into(a1, a2);
         auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
-        return make_automaton(::vcsn::right_mult_here(a2, w2));
+        if (algo == "auto")
+          return make_automaton(::vcsn::right_mult_here(a2, w2, auto_tag{}));
+        else if (algo == "general")
+          return make_automaton(::vcsn::right_mult_here(a2, w2, general_tag{}));
+        else if (algo == "standard")
+          return make_automaton(::vcsn::right_mult_here(a2, w2,
+                                                        standard_tag{}));
+        else
+          raise("right-multiply: invalid algorithm: ", algo);
       }
     }
   }
@@ -273,7 +325,6 @@ namespace vcsn
   `------------------------*/
 
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   right_mult(const ValueSet& rs,
              const typename ValueSet::value_t& r,
@@ -323,8 +374,7 @@ namespace vcsn
         auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
-        return make_expression(rs,
-                               ::vcsn::right_mult(rs, r2, w2));
+        return make_expression(rs, ::vcsn::right_mult(rs, r2, w2));
       }
     }
   }

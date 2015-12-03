@@ -6,6 +6,11 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2015-12-02
+### left-mult and right-mult
+The scalar product now also accept an argument to select the exact
+algorithm: "standard", "general", "auto".  See 2015-11-13 for more details.
+
+## 2015-12-02
 ### to-automaton: trim automata
 Now `to_automaton` (or `expression.automaton` under Python) always produces
 a trim automaton.

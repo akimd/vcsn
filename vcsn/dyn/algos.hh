@@ -391,8 +391,17 @@ namespace vcsn
 
     /// The left-multiplication of an automaton with \a w as weight.
     ///
-    /// \pre aut is standard.
-    automaton left_mult(const weight& w, const automaton& aut);
+    /// \param w     the weight to left-multiply
+    /// \param aut   the input automaton.
+    /// \param algo  how to compute the result.
+    ///   - "standard"    \a aut is standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a aut,
+    ///                   but add spontaneous transitions.
+    ///   - "auto"        "standard" if \a aut is standard,
+    ///                   "general" otherwise.
+    automaton left_mult(const weight& w, const automaton& aut,
+                        const std::string& algo = "auto");
 
     /// The left-multiplication of an expansion with \a w as weight.
     expansion left_mult(const weight& w, const expansion& exp);
@@ -683,8 +692,24 @@ namespace vcsn
     automaton reduce(const automaton& aut);
 
     /// The right-mult automaton with \a w as weight.
-    /// \pre aut is standard.
-    automaton right_mult(const automaton& aut, const weight& w);
+    ///
+    /// \param aut   the input automaton.
+    /// \param w     the weight to right-multiply
+    /// \param algo  how to compute the result.
+    ///              In most cases, "standard" and "general" have
+    ///              equal results.  The only difference in when
+    ///              when \a w is null, in which case "general"
+    ///              produces an empty automaton, while "standard"
+    ///              produces an automaton with a single state, which
+    ///              is initial (and, of course, no final states).
+    ///   - "standard"    \a aut is standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a aut,
+    ///                   but add spontaneous transitions.
+    ///   - "auto"        "standard" if \a aut is standard,
+    ///                   "general" otherwise.
+    automaton right_mult(const automaton& aut, const weight& w,
+                         const std::string& algo = "auto");
 
     /// The right-multiplication of an expansion with \a w as weight.
     expansion right_mult(const expansion& aut, const weight& w);

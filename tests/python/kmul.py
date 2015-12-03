@@ -3,8 +3,6 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(ab), expressionset<lal_char(xyz), b>')
-
 ## ---------- ##
 ## automata.  ##
 ## ---------- ##
@@ -29,23 +27,33 @@ CHECK_ISOMORPHIC(('3/4' * r).standard(),
 CHECK_ISOMORPHIC((r * '3/4').standard(),
                  r.standard() * '3/4')
 
+# Check the case of multiplication by 0: generate the standard
+# automaton for the empty language.
+CHECK_EQ((0 * r).standard(),
+         0 * (r.standard()))
+
+CHECK_EQ((r * 0).standard(),
+         r.standard() * 0)
+
 # Non-standard automata.  This time, it does not commute.
-a = q.expression('ab').derived_term() + q.expression('ab').derived_term()
+ab = q.expression('ab').automaton()
+a = ab.sum(ab, "general")
 CHECK_EQUIV(q.expression('<3/4>ab+<3/4>ab').derived_term(),
             '3/4' * a)
 CHECK_EQUIV(q.expression('(ab)<3/4>+(ab)<3/4>').derived_term(),
             a * '3/4')
 
-# Check the case of multiplication by 0.
-CHECK_EQ(q.expression('\z').standard(),
+# Check the case of multiplication by 0: generate the empty automaton.
+CHECK_EQ(q.expression('\z').automaton(),
          0 * a)
-CHECK_EQ(q.expression('\z').standard(),
+CHECK_EQ(q.expression('\z').automaton(),
          a * 0)
 
-## -------- ##
+## ------------ ##
 ## expression.  ##
-## -------- ##
+## ------------ ##
 
+ctx = vcsn.context('lal_char(ab), expressionset<lal_char(xyz), q>')
 r = ctx.expression('<x>(<y>a)*<z>')
 CHECK_EQ(ctx.expression('<xx>(<y>a)*<z>'), 'x' * r)
 CHECK_EQ(ctx.expression('<x>(<y>a)*<zz>'), r * 'z')
