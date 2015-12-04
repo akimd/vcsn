@@ -577,3 +577,18 @@ bench('a.is_synchronized()',
       setup=['r = "{}"'.format(r),
              'c = vcsn.context("lat<law_char, law_char>, b")',
              'a = c.expression(r).standard()'])
+
+# weight_series
+r = "[a-z]{4000}"
+bench('a.weight_series()',
+      'a = std({}), c = [a-z] -> Nmin'.format(r),
+      setup=['r = "{}"'.format(r),
+             'a = vcsn.context("lal_char(a-z), nmin").expression(r).standard()'],
+      number=20)
+
+r = "[a-z]{200}"
+bench('a.weight_series()',
+      'a = std({}), c = [a-z] -> Z'.format(r),
+      setup=['r = "{}"'.format(r),
+             'a = vcsn.context("lal_char(a-z), z").expression(r).standard()'],
+      number=20)
