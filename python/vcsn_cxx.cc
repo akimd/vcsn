@@ -809,6 +809,11 @@ struct polynomial
     vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
+  polynomial conjunction(const polynomial& rhs) const
+  {
+    return vcsn::dyn::conjunction(val_, rhs.val_);
+  }
+
   automaton cotrie() const
   {
     return vcsn::dyn::cotrie(val_);
@@ -1554,6 +1559,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<polynomial>("polynomial", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
+    .def("conjunction", &polynomial::conjunction)
     .def("cotrie", &polynomial::cotrie)
     .def("format", &polynomial::format)
     .def("ldiv", &polynomial::ldiv)

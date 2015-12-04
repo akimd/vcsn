@@ -13,6 +13,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/expression.hh> // dyn::make_expression
+#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/misc/tuple.hh> // tuple_element_t, cross_tuple
 #include <vcsn/misc/zip-maps.hh>
 
@@ -851,21 +852,24 @@ namespace vcsn
     }
   }
 
+  /*-----------------------------.
+  | conjunction(value, value).   |
+  `-----------------------------*/
+
+  /// Intersection/Hadamard product of expressions/polynomials.
+  template <typename ValueSet>
+  inline
+  typename ValueSet::value_t
+  conjunction(const ValueSet& rs,
+              const typename ValueSet::value_t& lhs,
+              const typename ValueSet::value_t& rhs)
+  {
+    return rs.conjunction(lhs, rhs);
+  }
 
   /*---------------------------------------.
   | conjunction(expression, expression).   |
   `---------------------------------------*/
-
-  /// Intersection/Hadamard product of expressions.
-  template <typename ExpSet>
-  inline
-  typename ExpSet::value_t
-  conjunction(const ExpSet& rs,
-              const typename ExpSet::value_t& lhs,
-              const typename ExpSet::value_t& rhs)
-  {
-    return rs.conjunction(lhs, rhs);
-  }
 
   namespace dyn
   {
@@ -881,6 +885,29 @@ namespace vcsn
         auto rs = join(l.expressionset(), r.expressionset());
         auto lr = rs.conv(l.expressionset(), l.expression());
         auto rr = rs.conv(r.expressionset(), r.expression());
+        return make_expression(rs, ::vcsn::conjunction(rs, lr, rr));
+      }
+    }
+  }
+
+  /*---------------------------------------.
+  | conjunction(polynomial, polynomial).   |
+  `---------------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (conjunction).
+      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
+      polynomial
+      conjunction_polynomial(const polynomial& lhs, const polynomial& rhs)
+      {
+        const auto& l = lhs->as<PolynomialSetLhs>();
+        const auto& r = rhs->as<PolynomialSetRhs>();
+        auto rs = join(l.polynomialset(), r.polynomialset());
+        auto lr = rs.conv(l.polynomialset(), l.polynomial());
+        auto rr = rs.conv(r.polynomialset(), r.polynomial());
         return make_expression(rs, ::vcsn::conjunction(rs, lr, rr));
       }
     }
