@@ -44,7 +44,7 @@ parser.add_argument('-c', '--color', dest='color', action='store',
                     default="auto",
                     choices=['auto', 'always', 'never'],
                     help='Whether to use colors in the output')
-parser.add_argument('--plain', action='store_true',
+parser.add_argument('-p', '--plain', action='store_true',
                     help='Disable all extra features (color and demangle)')
 
 # Parse the arguments, and complete the 'args' object with the value

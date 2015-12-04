@@ -11,18 +11,19 @@ parser = argparse.ArgumentParser(
 parser.add_argument('file', nargs='+',
                     type=str, default=None,
                     help='Bench file (from vcsn score) to compare')
-parser.add_argument('--all', action='store_true',
+parser.add_argument('-a', '--all', action='store_true',
                     help='Report also benches with no differences')
-parser.add_argument('--no-color', dest='color', action='store_false',
-                    default=True,
-                    help='Do not use colors in the output')
+parser.add_argument('-c', '--color', dest='color', action='store',
+                    default="auto",
+                    choices=['auto', 'always', 'never'],
+                    help='Whether to use colors in the output')
 parser.add_argument('--only', metavar='RE',
                     type=re.compile, default='.*',
                     help='Report only benches whose title is matched by RE')
-parser.add_argument('--threshold', metavar='FLOAT',
-                    type=float, default=0.1,
-                    help='''Show good and bad scores with associated threshold.
-                    Defaults to 0.1.''')
+parser.add_argument('-t', '--threshold', metavar='PERCENT',
+                    type=float, default=10,
+                    help='''Highlight good and bad scores with associated
+                    threshold.  Defaults to 10%%.''')
 parser.add_argument('--csv', type=str,
                     help='Create a csv file')
 args = parser.parse_args()
@@ -31,7 +32,7 @@ args = parser.parse_args()
 green = ''
 red   = ''
 std   = ''
-if args.color:
+if args.color == 'always' or args.color == 'auto' and sys.stdout.isatty():
     try:
         from colorama import Fore, Style
         green = Fore.GREEN + Style.BRIGHT
@@ -212,9 +213,9 @@ def text(keys):
             else:
                 color = ''
                 score = b['value']
-                if score <= avg - args.threshold * avg:
+                if score <= avg - args.threshold / 100 * avg:
                     color = green
-                elif args.threshold * avg + avg <= score:
+                elif args.threshold / 100 * avg + avg <= score:
                     color = red
                 print(color + "{:5.2f}".format(score) + std, end = ' ')
         if number[k] != 1:

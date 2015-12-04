@@ -13,8 +13,8 @@ b=$medir/v2.0-0423-g841c067
 c=$medir/v2.0-1255-gafaf339
 d=$medir/v2.1-0010-gd55ef26
 
-check all.out --all --no-color $a $b $c $d
+check all.out --all -c never $a $b $c $d
 if (vcsn python -c 'import colorama') 2>/dev/null; then
-    check default.out $a $b $c $d
-    check shortest.out --only shortest --threshold 0.02 $a $b $c $d
+    check default.out  -c always $a $b $c $d
+    check shortest.out -c always --only shortest -t 2 $a $b $c $d
 fi
