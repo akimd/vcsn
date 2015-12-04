@@ -12,6 +12,12 @@ expressionsets, compute the conjuction of the expressions. Otherwise, keep the
 common labels common to the two polynomials and multiply their weights.
 
 ## 2015-12-04
+### weight_series: fix general case
+This algorithm can now be applied to any automaton. In case of ℕmin weightset
+the implementation does not change (shortest path). Otherwise, the result is
+computed by applying proper on the `labels_are_one` version of the automaton.
+
+## 2015-12-04
 ### New trivial identities
 Two new trivial identities have been added (at the "trivial" level):
 neutrality of the universal language for conjunction (\z{c} & E => E, E &
