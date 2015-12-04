@@ -60,68 +60,13 @@ namespace vcsn
     return d;
   }
 
-  /// Wrapper struct to provide the state distance function.
-  template <typename Aut, typename WeightSet>
+  /// State distancer for nmin.
+  template <typename Aut>
   struct state_distancer
   {
-    state_distancer(const Aut& aut)
-      : aut_(aut)
-    {}
+    static_assert(std::is_same<weightset_t_of<Aut>, nmin>::value,
+                  "state-distance: require Nmin weightset");
 
-    using automaton_t = Aut;
-    using weight_t = weight_t_of<automaton_t>;
-    using state_t = state_t_of<automaton_t>;
-    using pair_t = std::pair<state_t, weight_t>;
-
-    /// State distance
-    /// Find weighted distance between state \a s0 and state \a s1
-    /// using a dfs.
-    /// Assumes the subgraph accessible from \a s0 does not have cycles with a
-    /// weight of 0.
-    weight_t
-    operator()(state_t s0, state_t s1) const
-    {
-      auto& ws = *aut_->weightset();
-
-      // States to visit.
-      auto stack = std::vector<pair_t>{{s0, ws.one()}};
-
-      // Result weight
-      weight_t res = ws.zero();
-
-      while (!stack.empty())
-        {
-          pair_t p = stack.back();
-          stack.pop_back();
-          state_t src = p.first;
-          weight_t w = p.second;
-
-          // dfs
-          for (auto t : aut_->all_out(src))
-            {
-              auto dst = aut_->dst_of(t);
-              auto new_weight = ws.mul(w, aut_->weight_of(t));
-              if (dst == s1)
-                // Found a path, add it
-                res = ws.add(res, new_weight);
-              else
-                {
-                  pair_t np(dst, new_weight);
-                  stack.emplace_back(dst, new_weight);
-                }
-            }
-        }
-      return res;
-    }
-
-  private:
-    automaton_t aut_;
-  };
-
-  /// Struct specialization for nmin.
-  template <typename Aut>
-  struct state_distancer<Aut, nmin>
-  {
     state_distancer(const Aut& aut)
       : aut_(aut)
     {}
