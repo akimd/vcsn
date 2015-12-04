@@ -422,6 +422,14 @@ namespace vcsn
     else if (is_zero(r))
       res = r;
 
+    // E&0{c} => E.
+    else if (is_universal(r))
+      res = l;
+
+    // 0{c}&E => E.
+    else if (is_universal(l))
+      res = r;
+
     // <k>1&<h>1 => <kh>1.
     else if (type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
@@ -857,6 +865,13 @@ namespace vcsn
     -> bool
   {
     return v->type() == type_t::one;
+  }
+
+  DEFINE::is_universal(const value_t& v) const
+    -> bool
+  {
+    return (v->type() == type_t::complement
+            && is_zero(down_pointer_cast<const complement_t>(v)->sub()));
   }
 
   DEFINE::size(const value_t& v)

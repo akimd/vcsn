@@ -96,6 +96,9 @@ a<i> => <i>a
 \z&<i>a => \z
 <i>a&\z => \z
 
+\z{c} & <i>a => <i>a
+<i>a & \z{c} => <i>a
+
 <i>\e&<j>\e => <ij>\e
 <i>\e&<j>a => \z
 <i>a&<j>\e => \z

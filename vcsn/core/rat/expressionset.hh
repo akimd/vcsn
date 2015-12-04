@@ -138,6 +138,9 @@ namespace vcsn
     /// Used when used as WeightSet.
     static bool is_one(const value_t& v) ATTRIBUTE_PURE;
 
+    /// Whether \v is the 0{c}.
+    bool is_universal(const value_t& v) const ATTRIBUTE_PURE;
+
     /// When used as a labelset.
     static constexpr bool is_letterized()
     {
