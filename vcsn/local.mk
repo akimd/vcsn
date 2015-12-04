@@ -110,6 +110,7 @@ algo_headers =                                  \
   %D%/algos/tikz.hh                             \
   %D%/algos/to-expansion.hh                     \
   %D%/algos/to-expression.hh                    \
+  %D%/algos/to-spontaneous.hh                   \
   %D%/algos/transpose.hh                        \
   %D%/algos/trie.hh                             \
   %D%/algos/tuple.hh                            \
