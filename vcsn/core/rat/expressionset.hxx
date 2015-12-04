@@ -738,6 +738,13 @@ namespace vcsn
     else if (auto w = std::dynamic_pointer_cast<const rweight_t>(e))
       res = complement(w->sub());
 
+    // E{c}{c} => E if on B or F2.
+    //
+    // Indeed, (<2>a)*{c}{c} is actually denoting a*, not (<2>a)*.
+    else if (e->type() == type_t::complement
+             && std::is_same<weight_t, bool>{})
+      res = down_pointer_cast<const complement_t>(e)->sub();
+
     else
       res = std::make_shared<complement_t>(e);
 

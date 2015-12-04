@@ -1,3 +1,5 @@
+# -*- shell-script -*-
+
 %context: b
 %include: common-weights.rat
 
@@ -42,7 +44,9 @@ h+[bcdefg] => h+[^ah]
 
 # Computations in B.
 %identities: linear
-\e+\e     => \e
+\e+\e    => \e
+
+a{c}{c}  => a
 
 # Check classes in output.
 a+a+a => a

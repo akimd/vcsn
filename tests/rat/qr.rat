@@ -159,6 +159,7 @@ a{T} => a
 # "Trivial identities": complement.
 (<i>a){c} => a{c}
 (<i>(a+b)){c} => (a+b){c}
+(<i>a)*{c}{c} => (<i>a)*{c}{c}
 
 %labels: words
 \z&<j>ac => \z

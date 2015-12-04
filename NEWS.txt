@@ -5,6 +5,14 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-12-04
+### New trivial identities
+Two new trivial identities have been added (at the "trivial" level):
+neutrality of the universal language for conjunction (\z{c} & E => E, E &
+\z{c} => E), and involutivity of complement on 𝔹 and 𝔽₂ (E{c}{c} => E).
+It is not applied in the other case, since in ℤ (<2>a)*{c}{c} is actually
+a*, not (<2>a)*.
+
 ## 2015-12-02
 ### left-mult and right-mult
 The scalar product now also accept an argument to select the exact
