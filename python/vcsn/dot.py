@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+# FIXME: Many re.sub/string.replace should probably be replaced by
+# uses of gvpr.
+#
+# It looks like we could pass -E/-N option to dot to set defaults
+# at the last moment, unfortutately in that case, it takes
+# precedence on "edge" and "node" attributes defined in the file
+# itself, which would, for instance, discard the shape=circle
+# attribute.
+
 from functools import lru_cache
 import locale
 import re
@@ -12,7 +21,9 @@ from vcsn.tools import _tmp_file
 # Default style for real states as issued by vcsn::dot.
 state_style = 'node [shape = circle, style = rounded, width = 0.5]'
 # IPython style for real states.
-state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]'
+state_pretty = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]'
+# Style for state in `simple` mode.
+state_simple = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.3]'
 # Style for pre and post states, or when rendering transitions only.
 state_point = 'node [shape = point, width = 0]'
 
@@ -32,13 +43,13 @@ def _label_pretty(s):
 
 
 def _states_as_tooltips(s):
-    return re.sub(r'label = (".*?"), shape = box',
-                  r'tooltip = \1',
-                  s)
+    s = re.sub(r'label = (".*?"), shape = box', r'tooltip = \1', s)
+    return _states_as_pretty(s)
 
 
 def _states_as_simple(s):
     'Make all the states simple circles, put its label in its tooltip.'
+    s = s.replace(state_style, state_simple)
     # A non-decorated state.
     s = re.sub(r'^( *)([0-9]+)$',
                r'\1\2 [label = "", tooltip = "\2"]',
@@ -57,6 +68,12 @@ def _states_as_points(s):
             .replace(', shape = box', ''))
 
 
+def _states_as_pretty(s):
+    '''Transform all the nodes into colored points.'''
+    return (s.replace(state_style, state_pretty)
+            .replace('shape = box', 'shape = box, fixedsize = false'))
+
+
 def _dot_gray_node(m):
     '''Replace gray node contours by gray nodes, and apply style to
     nodes with their own style.'''
@@ -64,14 +81,16 @@ def _dot_gray_node(m):
     attr = m.group(2)
     if ' -> ' not in node:
         attr = attr.replace('color = DimGray', 'fillcolor = lightgray')
-        attr = re.sub(
-            r'style = "?([\w,]+)"?', r'style = "\1,filled,rounded"', attr)
+        attr = re.sub(r'style = (\w+)', r'style = "\1"', attr)
+        attr = re.sub(r'style = "(.+?)"',
+                      r'style = "\1,filled,rounded"', attr)
         # This is really ugly...  We should definitely use gvpr.
-        attr = attr.replace(r'filled,rounded,filled,rounded', 'filled,rounded')
+        attr = re.sub(r'(?:filled,)?rounded,filled,rounded',
+                      r'filled,rounded', attr)
     return node + attr
 
 
-def _dot_pretty(s, mode="dot"):
+def _dot_pretty(s, mode="pretty"):
     '''
     Improve pretty-printing in a dot source.
 
@@ -81,48 +100,43 @@ def _dot_pretty(s, mode="dot"):
     If `mode` is `tooltip`, convert node labels to tooltips.
     If it is `transitions`, then hide the states.
     '''
-    s = re.sub(r'(label * = *)(".*?")',
-               lambda m: m.group(1) + _label_pretty(m.group(2)),
-               s)
-    if mode == "simple":
-        s = _states_as_simple(s)
-    elif mode == "tooltip":
-        s = _states_as_tooltips(s)
-    elif mode == "transitions":
-        s = _states_as_points(s)
-    # It looks like we could pass -E/-N option to dot to set defaults
-    # at the last moment, unfortutately in that case, it takes
-    # precedence on "edge" and "node" attributes defined in the file
-    # itself, which would, for instance, discard the shape=circle
-    # attribute.
-    #
-    # FIXME: This 'replace' might also be replaced by a use of gvpr.
-    s = s.replace(state_style, state_colored)
-    # Useless states should be filled in gray, instead of having a
-    # gray contour.  Fill with a lighter gray.  But don't change the
-    # color of the arrows.
-    s = re.sub('^(.*)(\[.*?\])$', _dot_gray_node, s, flags=re.MULTILINE)
+    if mode != 'dot':
+        s = re.sub(r'(label * = *)(".*?")',
+                   lambda m: m.group(1) + _label_pretty(m.group(2)),
+                   s)
+        if mode == 'simple':
+            s = _states_as_simple(s)
+        elif mode == 'tooltip':
+            s = _states_as_tooltips(s)
+        elif mode == 'transitions':
+            s = _states_as_points(s)
+        else: # mode == 'pretty'
+            s = _states_as_pretty(s)
+        # Useless states should be filled in gray, instead of having a
+        # gray contour.  Fill with a lighter gray.  But don't change the
+        # color of the arrows.
+        s = re.sub('^(.*)(\[.*?\])$', _dot_gray_node, s, flags=re.MULTILINE)
     return s
 
 
 @lru_cache(maxsize=32)
 def _dot_to_boxart(dot):
     dot = dot.replace('digraph', 'digraph a')
-    p = Popen(["/opt/local/libexec/perl5.16/sitebin/graph-easy",
-               "--from=graphviz", "--as=boxart"],
+    p = Popen(['/opt/local/libexec/perl5.16/sitebin/graph-easy',
+               '--from=graphviz', '--as=boxart'],
               stdin=PIPE, stdout=PIPE, stderr=PIPE,
               universal_newlines=True)
     p.stdin.write(dot)
     out, err = p.communicate()
     if p.wait():
-        raise RuntimeError("graph-easy failed: " + err)
+        raise RuntimeError('graph-easy failed: ' + err)
     if isinstance(out, bytes):
         out = out.decode('utf-8')
     return out
 
 
 @lru_cache(maxsize=32)
-def _dot_to_svg(dot, engine="dot", *args):
+def _dot_to_svg(dot, engine='dot', *args):
     "The conversion of a Dot source into SVG by dot."
     # http://www.graphviz.org/content/rendering-automata
     p1 = Popen([engine] + list(args),

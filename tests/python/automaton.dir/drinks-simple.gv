@@ -9,7 +9,7 @@ digraph
     F8
   }
   {
-    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.3]
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.3]
     0 [label = "", tooltip = "0: 0"]
     1 [label = "", tooltip = "1: 1"]
     2 [label = "", tooltip = "2: 2"]
