@@ -193,50 +193,10 @@ non-commutativity: as is, (a, b) can work, but not (b, a).
 But anyway: does it really mean something to compare a B-automaton with a Z
 one?
 
-** determinize
-Currently we have two different functions: determinize_weighted and
-determinize.  This is painful: we'd like to have determinize dispatch on the
-right one depending, possibly, on some tag to make the difference bw
-weighted_tag, auto_tag, and boolean_tag.  Then, is_equivalent should be free
-to use the auto_tag version.
-
 ** dot (SP)
 Let's try a means to improve our rendering of decorated automaton (typically
 derived-term) with MathJax rendering.  Stackoverflow has hints on how we can
 do that for SVG, but so far, I failed to adjust the output of dot.
-
-** dot
-At least under IPython we would like to have cuter automata.  I don't like
-the fact that the size of the states depends on the number of digits for
-instance.  Larger than 999 hardly makes sense, so let's try to fix it for 1
-or 2 digits.
-
-Here was an attempt:
-
-diff --git a/python/vcsn/dot.py b/python/vcsn/dot.py
-index 72fddc2..055f85b 100644
---- a/python/vcsn/dot.py
-+++ b/python/vcsn/dot.py
-@@ -11,7 +11,7 @@ from vcsn import _tmp_file, _popen, _check_call
- # Default style for real states as issued by vcsn::dot.
- state_style = 'node [shape = circle, style = rounded, width = 0.5]'
- # IPython style for real states.
--state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]'
-+state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4]'
- # Style for pre and post states, or when rendering transitions only.
- state_point = 'node [shape = point, width = 0]'
-
-** efsm: single-pass reading (SP)
-Currently when we load an EFSM file, we use the lazy-automaton-editor, which
-stores transitions as a list of strings, checks these strings to see what
-kind of labels and weights are used, and then reads the transition list to
-really create the automaton.
-
-We should rather improve efstdecompile so that it inserts in the EFSM file a
-context string, and we should directly load the automaton in a single pass,
-using automaton_editor, not lazy_automaton_editor.
-
-It sounds reasonable to rewrite efstdecompile into Python.
 
 ** efsm (SP)
 When passing a LAW, maybe we should letterize it transparently?  Currently,
@@ -461,17 +421,6 @@ call copy with a lambda that transforms the weights: \w.w -> (w, 1) and
 likewise for the other tape.  If we can do that on-the-fly, then the
 remainder can benefit from it too.
 
-** Printers and escapes
-We have some ugly bits for the output, e.g., in dot.hh:
-
-  std::ostringstream o;
-  aut_->print_state_name(s, os_, "text");
-  os_ << str_escape(o.str());
-
-because sometimes we need to escape the output (e.g., label = "\\langle 1
-\\rangle" in dot), and sometimes not (e.g., "\langle 1 \rangle" in TikZ).
-Find something more elegant to address this issue.  See what was done in tc?
-
 ** Beware of our use of subprocess (AP)
 I think my code is really wrong.
 http://stackoverflow.com/questions/6341451/piping-together-several-subprocesses
@@ -504,7 +453,6 @@ See the hairy code and comment in
       template <typename WeightSet, typename Aut>
       automaton
       left_mult(const weight& weight, const automaton& aut)
-
 
 ** Use Boost.Format to support multiple formats
 We have loads of code that open-code the output format.  This is
