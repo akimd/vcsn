@@ -22,7 +22,6 @@
 
 namespace vcsn
 {
-
   namespace rat
   {
 
@@ -45,7 +44,8 @@ namespace vcsn
   DEFINE::sname()
     -> symbol
   {
-    return symbol("expressionset<" + context_t::sname() + '>');
+    static auto res = symbol{"expressionset<" + context_t::sname() + '>'};
+    return res;
   }
 
 
@@ -190,11 +190,11 @@ namespace vcsn
       res = std::make_shared<sum_t>(l, r);
 
     // 0+E => E.
-    else if (l->type() == type_t::zero)
+    else if (is_zero(l))
       res = r;
 
     // E+0 => E.
-    else if (r->type() == type_t::zero)
+    else if (is_zero(r))
       res = l;
 
     // E+E => <2>E.
@@ -353,11 +353,11 @@ namespace vcsn
       res = std::make_shared<prod_t>(l, r);
 
     // 0.E => 0.
-    else if (l->type() == type_t::zero)
+    else if (is_zero(l))
       res = l;
 
     // E.0 => 0.
-    else if (r->type() == type_t::zero)
+    else if (is_zero(r))
       res = r;
 
     // U_K: E.(<k>1) ⇒ E<k>, subsuming T: E.1 = E.
@@ -415,11 +415,11 @@ namespace vcsn
       res = std::make_shared<conjunction_t>(l, r);
 
     // 0&E => 0.
-    else if (l->type() == type_t::zero)
+    else if (is_zero(l))
       res = l;
 
     // E&0 => 0.
-    else if (r->type() == type_t::zero)
+    else if (is_zero(r))
       res = r;
 
     // <k>1&<h>1 => <kh>1.
@@ -464,15 +464,15 @@ namespace vcsn
       res = std::make_shared<ldiv_t>(l, r);
 
     // 0\E => 0{c}.
-    else if (ids_ && l->type() == type_t::zero)
+    else if (ids_ && is_zero(l))
       res = complement(zero());
 
     // 1\E => E.
-    else if (ids_ && l->type() == type_t::one)
+    else if (ids_ && is_one(l))
       res = r;
 
     // E\0 => 0.
-    else if (ids_ && r->type() == type_t::zero)
+    else if (ids_ && is_zero(r))
       res = r;
 
     else
@@ -517,19 +517,19 @@ namespace vcsn
       res = std::make_shared<infiltration_t>(l, r);
 
     // 0&:E => 0.
-    else if (ids_ && l->type() == type_t::zero)
+    else if (ids_ && is_zero(l))
       res = l;
 
     // E&:0 => 0.
-    else if (ids_ && r->type() == type_t::zero)
+    else if (ids_ && is_zero(r))
       res = r;
 
     // 1&:E => E.
-    else if (ids_ && l->type() == type_t::one)
+    else if (ids_ && is_one(l))
       res = r;
 
     // E&:1 => E.
-    else if (ids_ && r->type() == type_t::one)
+    else if (ids_ && is_one(r))
       res = l;
 
     else
@@ -547,19 +547,19 @@ namespace vcsn
       res = std::make_shared<shuffle_t>(l, r);
 
     // 0:E => 0.
-    else if (ids_ && l->type() == type_t::zero)
+    else if (ids_ && is_zero(l))
       res = l;
 
     // E:0 => 0.
-    else if (ids_ && r->type() == type_t::zero)
+    else if (ids_ && is_zero(r))
       res = r;
 
     // 1:E => E.
-    else if (ids_ && l->type() == type_t::one)
+    else if (ids_ && is_one(l))
       res = r;
 
     // E:1 => E.
-    else if (ids_ && r->type() == type_t::one)
+    else if (ids_ && is_one(r))
       res = l;
 
     else
@@ -586,7 +586,7 @@ namespace vcsn
       res = e;
 
     // \z{n} => \z.
-    else if (ids_ && e->type() == type_t::zero)
+    else if (ids_ && is_zero(e))
       res = e;
 
     // Case: a == \e or a == <w>\e.
@@ -700,7 +700,7 @@ namespace vcsn
     value_t res = nullptr;
 
     // \z* => 1.
-    if (ids_ && e->type() == type_t::zero)
+    if (ids_ && is_zero(e))
       res = one();
 
     else
@@ -745,11 +745,11 @@ namespace vcsn
       res = std::make_shared<transposition_t>(e);
 
     // 0{T} => 0.
-    else if (e->type() == type_t::zero)
+    else if (is_zero(e))
       res = e;
 
     // 1{T} => 1.
-    else if (e->type() == type_t::one)
+    else if (is_one(e))
       res = e;
 
     // a{T} => a, (abc){T} => cba.
@@ -774,7 +774,7 @@ namespace vcsn
       res = std::make_shared<lweight_t>(w, e);
 
     // <k>0 => 0, <1>E => E.
-    else if (e->type() == type_t::zero || weightset()->is_one(w))
+    else if (is_zero(e) || weightset()->is_one(w))
       res = e;
 
     // <0>E => 0.
@@ -856,7 +856,7 @@ namespace vcsn
   DEFINE::is_one(const value_t& v)
     -> bool
   {
-    return (v->type() == type_t::one);
+    return v->type() == type_t::one;
   }
 
   DEFINE::size(const value_t& v)

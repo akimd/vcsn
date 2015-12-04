@@ -128,10 +128,14 @@ namespace vcsn
       return false;
     }
 
-    /// When used as WeightSet.
+    /// Whether \v is the \z.
+    ///
+    /// Used when used as WeightSet.
     bool is_zero(const value_t& v) const ATTRIBUTE_PURE;
 
-    /// When used as WeightSet.
+    /// Whether \v is the \e.
+    ///
+    /// Used when used as WeightSet.
     static bool is_one(const value_t& v) ATTRIBUTE_PURE;
 
     /// When used as a labelset.
