@@ -47,6 +47,12 @@
 #ifndef VCSN_MISC_FLEX_LEXER_HH
 # define VCSN_MISC_FLEX_LEXER_HH
 
+# include <vcsn/config.hh>
+
+# ifndef FLEX_STD
+#  define FLEX_STD std::
+# endif
+
 struct yy_buffer_state;
 typedef int yy_state_type;
 
@@ -58,12 +64,16 @@ public:
   const char* YYText() const    { return yytext; }
   int YYLeng()  const   { return yyleng; }
 
-  virtual void
-  yy_switch_to_buffer( struct yy_buffer_state* new_buffer ) = 0;
-  virtual struct yy_buffer_state*
-  yy_create_buffer( std::istream* s, int size ) = 0;
-  virtual void yy_delete_buffer( struct yy_buffer_state* b ) = 0;
+  virtual void yy_switch_to_buffer( yy_buffer_state* new_buffer ) = 0;
+  virtual yy_buffer_state* yy_create_buffer( std::istream* s, int size ) = 0;
+  virtual void yy_delete_buffer( yy_buffer_state* b ) = 0;
   virtual void yyrestart( std::istream* s ) = 0;
+
+#if 2 <= VCSN_FLEX_MAJOR_VERSION && 6 <= VCSN_FLEX_MINOR_VERSION
+  virtual yy_buffer_state* yy_create_buffer( std::istream& s, int size ) = 0;
+  virtual void switch_streams(std::istream& new_in, std::ostream& new_out ) = 0;
+  virtual void yyrestart( std::istream& s ) = 0;
+#endif
 
   // Switch to new input/output streams.  A nil stream pointer
   // indicates "keep the current one".
@@ -77,7 +87,7 @@ public:
 protected:
   char* yytext;
   int yyleng;
-  int yylineno;                 // only maintained if you use %option yylineno
+  int yylineno;         // only maintained if you use %option yylineno
   int yy_flex_debug;    // only has effect with -d or "%option debug"
 };
 
@@ -92,16 +102,22 @@ class yyFlexLexer : public FlexLexer
 public:
   // arg_yyin and arg_yyout default to the cin and cout, but we
   // only make that assignment when initializing in yylex().
+  yyFlexLexer( std::istream& arg_yyin, std::ostream& arg_yyout );
   yyFlexLexer( std::istream* arg_yyin = nullptr, std::ostream* arg_yyout = nullptr );
+
+private:
+  void ctor_common();
+
+public:
 
   virtual ~yyFlexLexer();
 
-  void yy_switch_to_buffer( struct yy_buffer_state* new_buffer );
-  struct yy_buffer_state* yy_create_buffer( std::istream* s, int size );
-  void yy_delete_buffer( struct yy_buffer_state* b );
+  void yy_switch_to_buffer( yy_buffer_state* new_buffer );
+  yy_buffer_state* yy_create_buffer( std::istream* s, int size );
+  void yy_delete_buffer( yy_buffer_state* b );
   void yyrestart( std::istream* s );
 
-  void yypush_buffer_state( struct yy_buffer_state* new_buffer );
+  void yypush_buffer_state( yy_buffer_state* new_buffer );
   void yypop_buffer_state();
 
   // The signature of yylex.
@@ -117,7 +133,18 @@ public:
                               std::ostream* new_out = nullptr );
   virtual int yywrap();
 
-  std::istream* yyin;   // input source for default LexerInput
+#if 2 <= VCSN_FLEX_MAJOR_VERSION && 6 <= VCSN_FLEX_MINOR_VERSION
+  virtual yy_buffer_state* yy_create_buffer( std::istream& s, int size );
+  void yy_init_buffer( yy_buffer_state* b, std::istream& s );
+  virtual void switch_streams(std::istream& new_in, std::ostream& new_out );
+  virtual void yyrestart( std::istream& s );
+
+  std::istream yyin;   // input source for default LexerInput
+  void putback(char c) { yyin.putback(c); }
+#else
+  std::istream * yyin;   // input source for default LexerInput
+  void putback(char c) { yyin->putback(c); }
+#endif
 
 protected:
   virtual int LexerInput( char* buf, int max_size );
@@ -128,8 +155,8 @@ protected:
   int yyinput();
 
   void yy_load_buffer_state();
-  void yy_init_buffer( struct yy_buffer_state* b, std::istream* s );
-  void yy_flush_buffer( struct yy_buffer_state* b );
+  void yy_init_buffer( yy_buffer_state* b, std::istream* s );
+  void yy_flush_buffer( yy_buffer_state* b );
 
   int yy_start_stack_ptr;
   int yy_start_stack_depth;
@@ -143,7 +170,11 @@ protected:
   yy_state_type yy_try_NUL_trans( yy_state_type current_state );
   int yy_get_next_buffer();
 
-  std::ostream* yyout;  // output sink for default LexerOutput
+#if 2 <= VCSN_FLEX_MAJOR_VERSION && 6 <= VCSN_FLEX_MINOR_VERSION
+  std::ostream yyout;  // output sink for default LexerOutput
+#else
+  std::ostream * yyout;  // output sink for default LexerOutput
+#endif
 
   // yy_hold_char holds the character lost when yytext is formed.
   char yy_hold_char;
@@ -164,7 +195,7 @@ protected:
 
   size_t yy_buffer_stack_top; /**< index of top of stack. */
   size_t yy_buffer_stack_max; /**< capacity of stack. */
-  struct yy_buffer_state ** yy_buffer_stack; /**< Stack as an array. */
+  yy_buffer_state ** yy_buffer_stack; /**< Stack as an array. */
   void yyensure_buffer_stack(void);
 
   // The following are not always needed, but may be depending

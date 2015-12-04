@@ -219,8 +219,8 @@ input:
 
 terminator.opt:
   %empty     {}
-| ","        { driver_.scanner_->yyin->putback(','); }
-| ")"        { driver_.scanner_->yyin->putback(')'); }
+| ","        { driver_.scanner_->putback(','); }
+| ")"        { driver_.scanner_->putback(')'); }
 ;
 
 sum:
