@@ -156,6 +156,11 @@ a{T} => a
 <i>(a*).<j>(b*){c} => <i>a*<j>b*{c}
 (<i>(a*).<j>(b*)){c} => (<i>a*<j>b*){c}
 
+# Complement as a prefix operator.  Lower precedence that concatenation.
+!ab => (ab){c}
+!a+b => a{c}+b
+!a* => a*{c}
+
 # "Trivial identities": complement.
 (<i>a){c} => a{c}
 (<i>(a+b)){c} => (a+b){c}

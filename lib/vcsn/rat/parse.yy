@@ -149,6 +149,7 @@
   AMPERSAND       "&"
   AMPERSAND_COLON "&:"
   BACKSLASH       "{\\}"
+  BANG            "!"
   CARET           "^"
   COLON           ":"
   COMMA           ","
@@ -185,6 +186,7 @@
 %left "&" ":" "&:"
 %left "{/}"
 %right "{\\}"
+%left "!"
 %left "."
 %precedence CONCAT // exp exp . "(": reduce
 %right "weight" // Match longest series of "weight".
@@ -286,6 +288,7 @@ exp:
                           dyn::multiply($1.exp,
                                         std::get<0>($2), std::get<1>($2))); }
 | exp "{c}"         { $$ = dyn::complement($1.exp); }
+| "!" exp           { $$ = dyn::complement($2.exp); }
 | exp "{T}"         { $$ = dyn::transposition($1.exp); }
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }

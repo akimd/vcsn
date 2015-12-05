@@ -84,6 +84,7 @@ namespace
                              loc);
   }
 
+  "!"|"¬" return TOK(BANG);
   "{c}"   return TOK(COMPLEMENT);
   "{T}"   return TOK(TRANSPOSITION);
 
