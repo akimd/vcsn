@@ -145,9 +145,8 @@ automaton.display = _automaton_interact
 automaton.dot = lambda self, mode = "pretty": _dot_pretty(
     self.format('dot'), mode)
 
+
 # automaton.eval.
-
-
 def _automaton_eval(self, w):
     '''Evaluation of word `w` on `self`, with possible conversion from
     plain string to genuine label object.
@@ -159,9 +158,8 @@ def _automaton_eval(self, w):
 automaton.__call__ = _automaton_eval
 automaton.eval = _automaton_eval
 
+
 # automaton.format
-
-
 def _automaton_format(self, fmt="daut"):
     if fmt == "daut":
         return dot_to_daut(self._format('dot'))

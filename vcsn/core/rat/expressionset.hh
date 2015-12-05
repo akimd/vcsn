@@ -192,17 +192,17 @@ namespace vcsn
     }
 
     template <typename GenSet>
-    value_t conv(const letterset<GenSet>& ls,
-                 typename letterset<GenSet>::value_t v) const;
-    value_t conv(b, typename b::value_t v) const;
-    value_t conv(const z& ws, typename z::value_t v) const;
-    value_t conv(const q& ws, typename q::value_t v) const;
-    value_t conv(const r& ws, typename r::value_t v) const;
-    value_t conv(const nmin& ws, typename nmin::value_t v) const;
-    value_t conv(const zmin& ws, typename zmin::value_t v) const;
+    auto conv(const letterset<GenSet>& ls,
+                 typename letterset<GenSet>::value_t v) const -> value_t;
+    auto conv(b, typename b::value_t v) const -> value_t;
+    auto conv(const z& ws, typename z::value_t v) const -> value_t;
+    auto conv(const q& ws, typename q::value_t v) const -> value_t;
+    auto conv(const r& ws, typename r::value_t v) const -> value_t;
+    auto conv(const nmin& ws, typename nmin::value_t v) const -> value_t;
+    auto conv(const zmin& ws, typename zmin::value_t v) const -> value_t;
     template <typename Ctx2>
-    value_t conv(const expressionset<Ctx2>& ws,
-                 typename expressionset<Ctx2>::value_t v) const;
+    auto conv(const expressionset<Ctx2>& ws,
+                 typename expressionset<Ctx2>::value_t v) const -> value_t;
 
     /// The size of v
     static size_t size(const value_t& v);
@@ -227,10 +227,10 @@ namespace vcsn
       -> value_t;
 
     // Concrete type implementation.
-    value_t zero() const;
-    static value_t one();
-    value_t add(const value_t& l, const value_t& r) const;
-    value_t mul(const value_t& l, const value_t& r) const;
+    auto zero() const -> value_t;
+    static auto one() -> value_t;
+    auto add(const value_t& l, const value_t& r) const -> value_t;
+    auto mul(const value_t& l, const value_t& r) const -> value_t;
 
     /// Similar to mul, but in the case of LAW, merge the labels.
     ///
@@ -241,44 +241,44 @@ namespace vcsn
     ///   Concat(word(a),word(b)) -> word(ab)
     ///
     /// In other case, synonym for mul.
-    value_t concat(const value_t& l, const value_t& r) const;
+    auto concat(const value_t& l, const value_t& r) const -> value_t;
 
-    value_t conjunction(const value_t& l, const value_t& r) const;
-    value_t infiltration(const value_t& l, const value_t& r) const;
-    value_t shuffle(const value_t& l, const value_t& r) const;
+    auto conjunction(const value_t& l, const value_t& r) const -> value_t;
+    auto infiltration(const value_t& l, const value_t& r) const -> value_t;
+    auto shuffle(const value_t& l, const value_t& r) const -> value_t;
     template <typename... Value>
-    value_t tuple(Value&&... v) const;
+    auto tuple(Value&&... v) const -> value_t;
     /// Add a power operator.
-    value_t power(const value_t& e, unsigned n) const;
-    value_t ldiv(const value_t& l, const value_t& r) const;
-    value_t rdiv(const value_t& l, const value_t& r) const;
-    value_t star(const value_t& e) const;
+    auto power(const value_t& e, unsigned n) const -> value_t;
+    auto ldiv(const value_t& l, const value_t& r) const -> value_t;
+    auto rdiv(const value_t& l, const value_t& r) const -> value_t;
+    auto star(const value_t& e) const -> value_t;
     /// Add a complement operator.
-    value_t complement(const value_t& e) const;
+    auto complement(const value_t& e) const -> value_t;
     /// Add a transposition operator.
-    value_t transposition(const value_t& e) const;
+    auto transposition(const value_t& e) const -> value_t;
     /// Right-multiplication by a weight.
-    value_t rmul(const value_t& e, const weight_t& w) const;
+    auto rmul(const value_t& e, const weight_t& w) const -> value_t;
     /// Left-multiplication by a weight.
-    value_t lmul(const weight_t& w, const value_t& e) const;
+    auto lmul(const weight_t& w, const value_t& e) const -> value_t;
     /// The transposed of this rational expression.
-    value_t transpose(const value_t& e) const;
+    auto transpose(const value_t& e) const -> value_t;
 
     /// Make a `word' out of an expression
-    word_t word(label_t l) const
+    auto word(label_t l) const -> word_t
     {
       return l;
     }
 
     /// An expression matching one character amongst \a chars.
     template <typename... Args>
-    value_t letter_class(Args&&... chars) const;
+    auto letter_class(Args&&... chars) const -> value_t;
 
     /// The next expression in a stream.
-    value_t conv(std::istream& is, bool = true) const;
+    auto conv(std::istream& is, bool = true) const -> value_t;
 
     /// Convert from ourself: identity.
-    value_t conv(const self_t&, const value_t& v) const;
+    auto conv(const self_t&, const value_t& v) const -> value_t;
 
     /// Read a range of expressions.
     template <typename Fun>
@@ -287,12 +287,12 @@ namespace vcsn
       raise(sname(), ": ranges not implemented");
     }
 
-    std::ostream& print(const value_t& v, std::ostream& o,
-                        format fmt = {}) const;
+    auto print(const value_t& v, std::ostream& o, format fmt = {}) const
+      -> std::ostream&;
 
     /// Format the description of this expressionset.
-    std::ostream& print_set(std::ostream& o,
-                            format fmt = {}) const;
+    auto print_set(std::ostream& o, format fmt = {}) const
+      -> std::ostream&;
 
     /// The type of the expressionset for the Tape-th tape.
     template <unsigned Tape, typename Ctx = context_t>
@@ -343,19 +343,19 @@ namespace vcsn
 
     /// From a list of values, build a sum, taking care of the empty
     /// and singleton cases.
-    value_t add_(values_t&& vs) const;
+    auto add_(values_t&& vs) const -> value_t;
 
-    value_t add_linear_(const sum_t& addends, const value_t& r) const;
-    value_t add_linear_(const sum_t& s1, const sum_t& s2) const;
+    auto add_linear_(const sum_t& addends, const value_t& r) const -> value_t;
+    auto add_linear_(const sum_t& s1, const sum_t& s2) const -> value_t;
 
     /// The sum of two non-zero series.
     /// \pre  !is_zero(l)
     /// \pre  !is_zero(r)
-    value_t add_linear_(const value_t& l, const value_t& r) const;
+    auto add_linear_(const value_t& l, const value_t& r) const -> value_t;
 
     /// If e is an lweight, then its child, otherwise e.
     /// static because used by less.
-    static value_t unwrap_possible_lweight_(const value_t& e);
+    static auto unwrap_possible_lweight_(const value_t& e) -> value_t;
     /// The type of e, or the type of its child if e is a lweight.
     /// static because used by less.
     static type_t type_ignoring_lweight_(const value_t& e);
@@ -377,13 +377,13 @@ namespace vcsn
     values_t gather_(const value_t& l, const value_t& r) const;
 
     /// If labelset is wordset.
-    value_t concat_(const value_t& l, const value_t& r, std::true_type) const;
+    auto concat_(const value_t& l, const value_t& r, std::true_type) const -> value_t;
     /// If labelset is not wordset.
-    value_t concat_(const value_t& l, const value_t& r, std::false_type) const;
+    auto concat_(const value_t& l, const value_t& r, std::false_type) const -> value_t;
 
     /// If labelset is oneset.
     template <typename LabelSet_, typename... Args>
-    value_t letter_class_(const Args&&... chars, std::true_type) const;
+    auto letter_class_(const Args&&... chars, std::true_type) const -> value_t;
 
     /// If labelset is not oneset.
     template <typename LabelSet_>

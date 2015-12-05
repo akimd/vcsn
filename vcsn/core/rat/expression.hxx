@@ -130,6 +130,26 @@ namespace vcsn
       v.visit(*this);
     }
 
+    /*--------.
+    | unary.  |
+    `--------*/
+
+    DEFINE_CTOR(unary)(value_t sub)
+      : sub_(sub)
+    {}
+
+    DEFINE(unary)::sub() const
+      -> const value_t
+    {
+      return sub_;
+    }
+
+    DEFINE(unary)::accept(typename super_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
     /*---------.
     | weight.  |
     `---------*/
@@ -163,25 +183,6 @@ namespace vcsn
       v.visit(*this);
     }
 
-    /*--------.
-    | unary.  |
-    `--------*/
-
-    DEFINE_CTOR(unary)(value_t sub)
-      : sub_(sub)
-    {}
-
-    DEFINE(unary)::sub() const
-      -> const value_t
-    {
-      return sub_;
-    }
-
-    DEFINE(unary)::accept(typename super_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
 
     /*-----------.
     | constant.  |
