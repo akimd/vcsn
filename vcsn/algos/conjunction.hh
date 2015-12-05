@@ -49,8 +49,8 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("product_automaton"
-                          + tuple_automaton_t::element_type::sname_());
+        static auto res = symbol{"product_automaton"
+                          + tuple_automaton_t::element_type::sname_()};
         return res;
       }
 

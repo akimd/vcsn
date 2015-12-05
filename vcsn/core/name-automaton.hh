@@ -47,8 +47,8 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("name_automaton<"
-                          + automaton_t::element_type::sname() + '>');
+        static auto res = symbol{"name_automaton<"
+                          + automaton_t::element_type::sname() + '>'};
         return res;
       }
 

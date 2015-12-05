@@ -571,8 +571,8 @@ namespace vcsn
       /// Static name.
       static symbol sname()
       {
-        static symbol res("scc_automaton<"
-                          + automaton_t::element_type::sname() + '>');
+        static auto res = symbol{"scc_automaton<"
+                          + automaton_t::element_type::sname() + '>'};
         return res;
       }
 

@@ -45,7 +45,7 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res(genset_t::sname());
+        static auto res = symbol{genset_t::sname()};
         return res;
       }
 

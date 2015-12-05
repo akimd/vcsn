@@ -31,7 +31,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res(L::sname());
+      static auto res = L::sname();
       return res;
     }
 

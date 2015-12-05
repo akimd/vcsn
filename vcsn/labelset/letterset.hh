@@ -48,7 +48,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res("letterset<" + super_t::sname() + '>');
+      static auto res = symbol{"letterset<" + super_t::sname() + '>'};
       return res;
     }
 

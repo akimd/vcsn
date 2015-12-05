@@ -29,7 +29,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res("qmp");
+      static auto res = symbol{"qmp"};
       return res;
     }
 

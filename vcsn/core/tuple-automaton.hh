@@ -36,7 +36,7 @@ namespace vcsn
     public:
       static symbol sname()
       {
-        static symbol res("tuple_automaton" + sname_());
+        static auto res = symbol{"tuple_automaton" + sname_()};
         return res;
       }
 

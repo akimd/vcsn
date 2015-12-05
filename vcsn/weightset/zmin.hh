@@ -21,7 +21,7 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("zmin");
+        static auto res = symbol{"zmin"};
         return res;
       }
 

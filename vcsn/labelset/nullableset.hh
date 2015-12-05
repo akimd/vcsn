@@ -187,7 +187,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res("nullableset<" + labelset_t::sname() + '>');
+      static auto res = symbol{"nullableset<" + labelset_t::sname() + '>'};
       return res;
     }
 

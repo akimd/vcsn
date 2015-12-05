@@ -28,7 +28,7 @@ namespace vcsn
   {                                                                     \
     static symbol sname()                                               \
     {                                                                   \
-      static symbol res(#Abbrev);                                       \
+      static auto res = symbol{#Abbrev};                                \
       return res;                                                       \
     }                                                                   \
                                                                         \

@@ -124,7 +124,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res("mutable_automaton<" + context_t::sname() + '>');
+      static auto res = symbol{"mutable_automaton<" + context_t::sname() + '>'};
       return res;
     }
 
