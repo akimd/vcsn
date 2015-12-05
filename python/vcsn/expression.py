@@ -17,6 +17,8 @@ expression.multiply = _expression_multiply
 
 expression.__add__ = expression.sum
 expression.__and__ = expression.conjunction
+expression.__floordiv__ = expression.ldiv
+expression.__truediv__ = expression.rdiv
 expression.__lt__ = expression.less_than
 expression.__le__ = lambda l, r: not r < l
 expression.__ge__ = lambda l, r: not l < r

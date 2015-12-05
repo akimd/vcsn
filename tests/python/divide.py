@@ -3,22 +3,45 @@
 import vcsn
 from test import *
 
+# Working in Z, not Q, to check GCD.
 z = vcsn.context('law_char(abcd), z')
-zp = z.polynomial
+
+## ----------------------------- ##
+## div(expression, expression).  ##
+## ----------------------------- ##
+
+def check_div(l, r):
+    make = z.expression
+    CHECK_EQ(make('({}){{\}}({})'.format(l, r)), make(l) // make(r))
+    CHECK_EQ(make('({}){{\}}({})'.format(l, r)), make(l).ldiv(make(r)))
+
+    CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l) / make(r))
+    CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l).rdiv(make(r)))
+
+check_div(r'\e', 'a')
+check_div(r'\e', '<2>a')
+check_div(r'<2>\e', '<2>a')
+check_div(r'\e', 'a+b')
+check_div(r'\e', 'a+<2>b')
+check_div(r'c+d', 'ab')
+check_div(r'<2>c+<3>d', 'ab')
+check_div(r'<2>c+<3>d', '<2>ab')
 
 ## ------------------------------ ##
 ## ldiv(polynomial, polynomial).  ##
 ## ------------------------------ ##
 
 def check(exp, lhs, rhs):
-    exp = zp(exp)
-    lhs = zp(lhs)
-    rhs = zp(rhs)
+    make = z.polynomial
+    exp = make(exp)
+    lhs = make(lhs)
+    rhs = make(rhs)
     CHECK_EQ(exp, lhs.ldiv(rhs))
 
 def xfail(lhs, rhs):
-    lhs = zp(lhs)
-    rhs = zp(rhs)
+    make = z.polynomial
+    lhs = make(lhs)
+    rhs = make(rhs)
     XFAIL(lambda: lhs.ldiv(rhs))
 
 xfail('a', 'b')
@@ -45,9 +68,10 @@ xfail('a+aa', 'a')
 ## ------------------------------ ##
 
 def check(exp, lhs, rhs):
-    exp = zp(exp)
-    lhs = zp(lhs)
-    rhs = zp(rhs)
+    make = z.polynomial
+    exp = make(exp)
+    lhs = make(lhs)
+    rhs = make(rhs)
     CHECK_EQ(exp, lhs.lgcd(rhs))
 
 check('a', 'a', 'a')
