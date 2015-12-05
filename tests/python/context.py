@@ -5,7 +5,7 @@ import re
 import vcsn
 from test import *
 
-def check(ctx, exp = None, format = "text"):
+def check(ctx, exp = None, format = "sname"):
     c = vcsn.context(ctx)
     if exp is None:
         exp = ctx
@@ -25,8 +25,12 @@ XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
 check('lal_char, b',                'letterset<char_letters()>, b')
 # An open context is printed as open in LaTeX.
-check('letterset<char_letters>, b', r'\{\ldots\}\rightarrow\mathbb{B}', 'latex')
-check('lal_char, b',                r'\{\ldots\}\rightarrow\mathbb{B}', 'latex')
+check('lal_char, b',      r'\{\ldots\}\to\mathbb{B}', 'latex')
+check('lal_char, b',      r'{...} → 𝔹',               'text')
+check('lal_char(abc), b', r'\{a, b, c\}\to\mathbb{B}', 'latex')
+check('lal_char(abc), b', r'{abc} → 𝔹',          'text')
+check('lal_char(), b',    r'\{\}\to\mathbb{B}',  'latex')
+check('lal_char(), b',    r'{} → 𝔹',             'text')
 
 # letterset and different char_letters.
 check(r'lal_char(), b',       r'letterset<char_letters()>, b')
@@ -54,6 +58,7 @@ check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
 ## ------------------- ##
 
 check('wordset<string_letters>, b', 'wordset<string_letters()>, b')
+
 
 ## ------------------------- ##
 ## LabelSet: expressionset.  ##
@@ -104,12 +109,3 @@ exp = 'nullableset<lat<letterset<char_letters(ab)>, lat<nullableset<letterset<ch
 check(ctx, exp)
 ctx = re.sub(r'\s+', '', ctx)
 check(ctx, exp)
-
-
-## ------- ##
-## LaTeX.  ##
-## ------- ##
-check("lal_char(abc), b", r'\{a, b, c\}\rightarrow\mathbb{B}',
-      format = "latex")
-check("lal_char(), b", r'\{\}\rightarrow\mathbb{B}',
-      format = "latex")

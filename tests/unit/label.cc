@@ -15,7 +15,7 @@
 /// The name of \a vs.
 template <typename ValueSet>
 std::string
-set_name(const ValueSet& vs, vcsn::format fmt = vcsn::format::text)
+set_name(const ValueSet& vs, vcsn::format fmt = vcsn::format::sname)
 {
   std::ostringstream o;
   vs.print_set(o, fmt);
@@ -148,7 +148,7 @@ check_tupleset()
             "lat<wordset<char_letters>, wordset<char_letters>>");
 
   // print_set.
-  ASSERT_EQ(set_name(wwset, vcsn::format::text),
+  ASSERT_EQ(set_name(wwset, vcsn::format::sname),
             "lat<wordset<char_letters(abc)>, wordset<char_letters(xyz)>>");
   ASSERT_EQ(set_name(wwset, vcsn::format::latex),
             "\\{a, b, c\\}^* \\times \\{x, y, z\\}^*");

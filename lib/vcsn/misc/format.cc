@@ -16,9 +16,9 @@ namespace vcsn
       {
         {"auto",       deflt},
         {"default",    deflt},
-        {"generators", generators},
         {"latex",      latex},
         {"raw",        raw},
+        {"sname",      sname},
         {"text",       text},
       };
     format_ = getargs("format", map, f);
@@ -28,12 +28,12 @@ namespace vcsn
   {
     switch (f.kind())
       {
-      case format::generators:
-        return "generators";
       case format::latex:
         return "latex";
       case format::raw:
         return "raw";
+      case format::sname:
+        return "sname";
       case format::text:
         return "text";
       }

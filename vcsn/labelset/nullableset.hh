@@ -498,13 +498,17 @@ namespace vcsn
           o << ")^?";
           break;
 
-        case format::text:
-          o <<  "nullableset<";
+        case format::sname:
+          o << "nullableset<";
           ls_->print_set(o, fmt);
           o << '>';
           break;
 
-        case format::generators:
+        case format::text:
+          ls_->print_set(o, fmt);
+          o << '?';
+          break;
+
         case format::raw:
           assert(0);
           break;

@@ -186,12 +186,21 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      if (fmt == format::latex)
-        o << "\\mathbb{Q}_{\\text{mp}}";
-      else if (fmt == format::text)
-        o << sname();
-      else
-        raise("invalid format: ", fmt);
+      switch (fmt.kind())
+        {
+        case format::latex:
+          o << "\\mathbb{Q}_{\\text{mp}}";
+          break;
+        case format::sname:
+          o << sname();
+          break;
+        case format::text:
+          o << "ℚmp";
+          break;
+        case format::raw:
+          assert(0);
+          break;
+        }
       return o;
     }
   };

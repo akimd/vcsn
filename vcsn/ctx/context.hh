@@ -106,11 +106,23 @@ namespace vcsn
     print_set(std::ostream& o, format fmt = {}) const
     {
       labelset()->print_set(o, fmt);
-      if (fmt == format::latex)
-        o << "\\rightarrow";
-      else
-        o << ", ";
-      return weightset()->print_set(o, fmt);
+      switch (fmt.kind())
+        {
+        case format::latex:
+          o << "\\to";
+          break;
+        case format::sname:
+          o << ", ";
+          break;
+        case format::text:
+          o << " → ";
+          break;
+        case format::raw:
+          assert(0);
+          break;
+        }
+      weightset()->print_set(o, fmt);
+      return o;
     }
 
     static constexpr bool

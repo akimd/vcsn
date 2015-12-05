@@ -153,11 +153,11 @@ def normalize(a):
     # \e that remains, the following conversion _will_ reject it.
     to = re.sub(r'nullableset<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>',
                 r'\1',
-                a.context().format('text'))
+                a.context().format('sname'))
     return a.automaton(vcsn.context(to))
 
 def can_test_equivalence(a):
-    ctx = str(a.context())
+    ctx = a.context().format('sname')
     expressionset_ws = re.match('.*expressionset<.*>', ctx) is None
     return not(ctx.endswith('min')) and expressionset_ws
 

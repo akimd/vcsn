@@ -207,7 +207,7 @@ namespace vcsn
   info(const Aut& aut, std::ostream& out, bool detailed = false)
   {
     out << "type: ";
-    aut->print_set(out, format::text) << '\n';
+    aut->print_set(out, format::sname) << '\n';
 #define ECHO(Name, Value)                               \
     out << Name ": " << Value << '\n'
     ECHO("number of states", aut->num_states());
@@ -275,7 +275,7 @@ namespace vcsn
        std::ostream& o)
   {
     o << "type: ";
-    rs.print_set(o, format::text);
+    rs.print_set(o, format::sname);
 
     o << "\nsize: " << rat::size<ExpSet>(e);
 

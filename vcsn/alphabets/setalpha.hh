@@ -258,35 +258,50 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      if (fmt == format::latex)
+      switch (fmt.kind())
         {
-          o << "\\{";
-          const char *sep = "";
-          for (letter_t l: alphabet_)
-            {
-              o << sep;
-              if (! this->is_letter(l))
-                o << "\\mathit{";
-              this->print(l, o, fmt);
-              if (! this->is_letter(l))
-                o << '}';
-              sep = ", ";
-            }
-          if (open_)
-            o << sep << "\\ldots";
-          o << "\\}";
-        }
-      else if (fmt == format::text)
-        {
+        case format::latex:
+          {
+            o << "\\{";
+            const char *sep = "";
+            for (letter_t l: alphabet_)
+              {
+                o << sep;
+                if (! this->is_letter(l))
+                  o << "\\mathit{";
+                this->print(l, o, fmt);
+                if (! this->is_letter(l))
+                  o << '}';
+                sep = ", ";
+              }
+            if (open_)
+              o << sep << "\\ldots";
+            o << "\\}";
+          }
+          break;
+
+        case format::sname:
           o << sname() << '(';
           for (letter_t l: alphabet_)
-            this->print(l, o, format::generators);
+            this->print(l, o, format::sname);
           // FIXME: Don't display openness here, as our "make()"
           // parser is not ready for it.
           o << ')';
+          break;
+
+        case format::text:
+          o << '{';
+          for (letter_t l: alphabet_)
+            this->print(l, o, format::sname);
+          if (open_)
+            o << "...";
+          o << '}';
+          break;
+
+        case format::raw:
+          assert(0);
+          break;
         }
-      else
-        raise(sname(), ": print_set: invalid format: ", fmt);
       return o;
     }
 

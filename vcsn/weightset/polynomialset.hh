@@ -969,21 +969,26 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      if (fmt == format::latex)
+      switch (fmt.kind())
         {
+        case format::latex:
           o << "\\mathsf{Poly}[";
-          labelset()->print_set(o, fmt);
-          o << " \\to ";
-          weightset()->print_set(o, fmt);
-          o << "]";
-        }
-      else
-        {
+          context().print_set(o, fmt);
+          o << ']';
+          break;
+        case format::sname:
           o << "polynomialset<";
-          labelset()->print_set(o, fmt);
-          o << ", ";
-          weightset()->print_set(o, fmt);
-          o << ">";
+          context().print_set(o, fmt);
+          o << '>';
+          break;
+        case format::text:
+          o << "Poly[";
+          context().print_set(o, fmt);
+          o << ']';
+          break;
+        case format::raw:
+          assert(0);
+          break;
         }
       return o;
     }

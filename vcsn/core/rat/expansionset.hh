@@ -78,9 +78,28 @@ namespace vcsn
       /// Print this valueset.
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
-        o << "expansionset<";
-        rs_.print_set(o, fmt);
-        return o << '>';
+        switch (fmt.kind())
+          {
+          case format::latex:
+            o << "\\mathsf{Expansion}[";
+            rs_.print_set(o, fmt);
+            o << ']';
+            break;
+          case format::sname:
+            o << "expansionset<";
+            rs_.print_set(o, fmt);
+            o << ">";
+            break;
+          case format::text:
+            o << "Expansion[";
+            rs_.print_set(o, fmt);
+            o << ']';
+            break;
+          case format::raw:
+            assert(0);
+            break;
+          }
+        return o;
       }
 
       /// Print this expansion.

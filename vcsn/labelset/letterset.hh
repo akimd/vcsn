@@ -264,16 +264,23 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      if (fmt == format::latex)
-        this->genset()->print_set(o, fmt);
-      else if (fmt == format::text)
+      switch (fmt.kind())
         {
+        case format::latex:
+          this->genset()->print_set(o, fmt);
+          break;
+        case format::sname:
           o << "letterset<";
           this->genset()->print_set(o, fmt);
           o << '>';
+          break;
+        case format::text:
+          this->genset()->print_set(o, fmt);
+          break;
+        case format::raw:
+          assert(0);
+          break;
         }
-      else
-        raise("invalid format: ", fmt);
       return o;
     }
   };

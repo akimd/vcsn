@@ -50,6 +50,7 @@ def _automaton_as_svg(self, format="dot", engine="dot"):
 
 automaton.as_svg = _automaton_as_svg
 
+
 # conjunction.
 _automaton_conjunction_orig = automaton.conjunction
 

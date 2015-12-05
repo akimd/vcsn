@@ -36,8 +36,8 @@ a(bc) == a.b.c
 # Base cases.
 ab => ab
 # Error cases.
-x ! 1.1: char_letters(abcdefgh): invalid letter: x
-axb ! 1.2: char_letters(abcdefgh): invalid letter: x
+x ! 1.1: {abcdefgh}: invalid letter: x
+axb ! 1.2: {abcdefgh}: invalid letter: x
 
 # Precedence and associativity.
 %identities: associative

@@ -69,33 +69,43 @@ namespace vcsn
   DEFINE::print_set(std::ostream& o, format fmt) const
     -> std::ostream&
   {
-    if (fmt == format::latex)
-      {
-        o << "\\mathsf{"
-          << (identities().is_distributive() ? "Series" : "RatE")
-          << "}[";
-        context().print_set(o, fmt);
-        o << ']';
-      }
-    else if (fmt == format::text)
-      {
-        if (identities().is_distributive())
+        switch (fmt.kind())
           {
-            o << "seriesset<";
+          case format::latex:
+            o << "\\mathsf{"
+              << (identities().is_distributive() ? "Series" : "RatE")
+              << "}[";
             context().print_set(o, fmt);
-            o << '>';
-          }
-        else
-          {
-            o << "expressionset<";
+            o << ']';
+            break;
+          case format::sname:
+            if (identities().is_distributive())
+              {
+                o << "seriesset<";
+                context().print_set(o, fmt);
+                o << '>';
+              }
+            else
+              {
+                o << "expressionset<";
+                context().print_set(o, fmt);
+                o << '>';
+                if (identities() != vcsn::rat::identities{})
+                  o << '(' << identities() << ')';
+              }
+            break;
+          case format::text:
+            o << "RatE[";
             context().print_set(o, fmt);
-            o << '>';
+            o << ']';
             if (identities() != vcsn::rat::identities{})
               o << '(' << identities() << ')';
+            break;
+          case format::raw:
+            assert(0);
+            break;
           }
-      }
-    else
-      raise("invalid format: ", fmt);
+        return o;
     return o;
   }
 

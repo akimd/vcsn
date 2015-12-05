@@ -16,12 +16,12 @@ namespace vcsn LIBVCSN_API
     /// Type of format.
     enum format_t
       {
-        /// Print as a parsable list of letters.
-        generators,
         /// Print for LaTeX.
         latex,
         /// Print as is.  For instance, don't try to escape labels.
         raw,
+        /// Print as a parsable type string.
+        sname,
         /// Print as text, escaped.
         text,
         /// By default, print for text.

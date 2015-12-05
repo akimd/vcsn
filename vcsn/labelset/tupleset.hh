@@ -876,15 +876,24 @@ namespace vcsn
                seq<I...>) const
     {
       const char *sep = "";
-      if (fmt == format::latex)
-        sep = " \\times ";
-      else if (fmt == format::text)
+      const char *close = "";
+      switch (fmt.kind())
         {
+        case format::latex:
+          sep = " \\times ";
+          break;
+        case format::sname:
           o << "lat<";
           sep = ", ";
+          close = ">";
+          break;
+        case format::text:
+          sep = " x ";
+          break;
+        case format::raw:
+          assert(0);
+          break;
         }
-      else
-        raise("invalid format: ", fmt);
       using swallow = int[];
       (void) swallow
         {
@@ -892,8 +901,7 @@ namespace vcsn
            set<I>().print_set(o, fmt),
            0)...
         };
-      if (fmt == format::text)
-        o << '>';
+      o << close;
       return o;
     }
 

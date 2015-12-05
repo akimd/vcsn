@@ -201,11 +201,7 @@ namespace vcsn
       else
         switch (fmt.kind())
           {
-          case format::raw:
-            o << l;
-            break;
-
-          case format::generators:
+          case format::sname:
             // Escape dash and parens, which are special when parsed
             // (actually, only the closing paren is special, but treating
             // them symmetrically is better looking).
@@ -216,9 +212,19 @@ namespace vcsn
             break;
 
           case format::latex:
+            if (l == '\\')
+              o << "\\backslash{}";
+            else
+              str_escape(o, l, "|',[-]<>");
+            break;
+
+          case format::raw:
+            o << l;
+            break;
+
           case format::text:
             if (l == '\\')
-              o << (fmt == format::latex ? "\\backslash{}" : "\\\\");
+              o << "\\\\";
             else
               str_escape(o, l, "|',[-]<>");
           }

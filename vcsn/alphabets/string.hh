@@ -240,7 +240,7 @@ namespace vcsn
             o << "`\\mathit{" << l << "}\\textrm{'}";
             break;
 
-          case format::generators:
+          case format::sname:
           case format::text:
             if (l.get().size() == 1)
               str_escape(o, l, "|',[-]<>");

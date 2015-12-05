@@ -167,12 +167,21 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      if (fmt == format::latex)
-        o << "\\mathrm{Log}";
-      else if (fmt == format::text)
-        o << sname();
-      else
-        raise("invalid format: ", fmt);
+      switch (fmt.kind())
+        {
+        case format::latex:
+          o << "\\mathrm{Log}";
+          break;
+        case format::sname:
+          o << sname();
+          break;
+        case format::text:
+          o << "Log";
+          break;
+        case format::raw:
+          assert(0);
+          break;
+        }
       return o;
     }
   };
