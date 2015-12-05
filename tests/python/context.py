@@ -63,6 +63,13 @@ check('expressionset<lal_char(ab), b>, b', 'expressionset<letterset<char_letters
 # expressions weighted by expressions.
 check('expressionset<letterset<char_letters(ab)>, expressionset<letterset<char_letters(xy)>, q>>, b')
 
+## -------------------------- ##
+## WeightSet: polynomialset.  ##
+## -------------------------- ##
+
+check('lal_char(ab), polynomialset<law_char(xy), q>',
+      'letterset<char_letters(ab)>, polynomialset<wordset<char_letters(xy)>, q>')
+
 
 ## -------------------- ##
 ## LabelSet: tupleset.  ##

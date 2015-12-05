@@ -981,7 +981,7 @@ namespace vcsn
         {
           o << "polynomialset<";
           labelset()->print_set(o, fmt);
-          o << "_";
+          o << ", ";
           weightset()->print_set(o, fmt);
           o << ">";
         }
