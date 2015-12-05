@@ -39,7 +39,8 @@ def _label_pretty(s):
     return (s.replace('<', '⟨')
             .replace('>', '⟩')
             .replace(r'\\e', 'ε')
-            .replace(r'\\z', '∅'))
+            .replace(r'\\z', '∅')
+            .replace(r'{c}', 'ᶜ'))
 
 
 def _states_as_tooltips(s):

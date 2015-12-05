@@ -395,7 +395,7 @@ CHECK_EQ('''digraph
   }
   {
     node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]
-    0 [label = "∅{c}", shape = box, fixedsize = false]
+    0 [label = "∅ᶜ", shape = box, fixedsize = false]
   }
   I0 -> 0
   0 -> F0
