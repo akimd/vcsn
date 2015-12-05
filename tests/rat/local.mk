@@ -27,7 +27,8 @@ $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
   %D%/q.rat                                     \
   %D%/qr.rat                                    \
   %D%/qrr.rat                                   \
-  %D%/tuple.rat
+  %D%/tuple.rat                                 \
+  %D%/utf-8.rat
 
 dist_TESTS += $(%C%_TESTS)
 EXTRA_DIST +=                                   \

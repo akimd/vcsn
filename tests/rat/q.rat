@@ -5,11 +5,6 @@
 
 %identities: associative
 <2>a == (<2>a)
-
-# Check that we also support UTF-8.  It's handy with copy-pasting from
-# pretty-printed in UTF-8.
-⟨2⟩a == <2>a
-
 a<2> == (a<2>)
 <2>a<3> == (<2>a)<3>
 <1>a<2>b<3> => a<6>b

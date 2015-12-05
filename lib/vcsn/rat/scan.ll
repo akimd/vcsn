@@ -57,22 +57,22 @@ namespace
 
 <INITIAL>{ /* Vcsn Syntax */
 
-  "("     return TOK(LPAREN);
-  ")"     return TOK(RPAREN);
+  "("         return TOK(LPAREN);
+  ")"         return TOK(RPAREN);
 
-  "&"     return TOK(AMPERSAND);
-  ":"     return TOK(COLON);
-  "&:"    return TOK(AMPERSAND_COLON);
-  "%"     return TOK(PERCENT);
-  "+"     return TOK(PLUS);
-  "<+"    return TOK(LT_PLUS);
-  "."     return TOK(DOT);
-  "{\\}"  return TOK(BACKSLASH);
-  "{/}"   return TOK(SLASH);
-  ","     return TOK(COMMA);
-  "|"     return TOK(PIPE);
-  "\\e"   return TOK(ONE);
-  "\\z"   return TOK(ZERO);
+  "&"         return TOK(AMPERSAND);
+  ":"         return TOK(COLON);
+  "&:"        return TOK(AMPERSAND_COLON);
+  "%"         return TOK(PERCENT);
+  "+"         return TOK(PLUS);
+  "<+"        return TOK(LT_PLUS);
+  "."         return TOK(DOT);
+  "{\\}"      return TOK(BACKSLASH);
+  "{/}"       return TOK(SLASH);
+  ","         return TOK(COMMA);
+  "|"         return TOK(PIPE);
+  "\\z"|"∅"   return TOK(ZERO);
+  "\\e"|"ε"   return TOK(ONE);
 
   /* Quantifiers.  */
   "?"|"{?}"            return parser::make_STAR(std::make_tuple(0, 1), loc);
@@ -84,9 +84,9 @@ namespace
                              loc);
   }
 
-  "!"|"¬" return TOK(BANG);
-  "{c}"   return TOK(COMPLEMENT);
-  "{T}"   return TOK(TRANSPOSITION);
+  "!"|"¬"     return TOK(BANG);
+  "{c}"|"ᶜ"   return TOK(COMPLEMENT);
+  "{T}"|"ᵗ"   return TOK(TRANSPOSITION);
 
   /* Special constructs.  */
   "(?@"          context.clear(); yy_push_state(SC_CONTEXT);

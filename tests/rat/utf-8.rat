@@ -1,0 +1,13 @@
+# -*- shell-script, coding:utf-8 -*-
+
+%context: q
+
+# Check that we also support UTF-8.  It's handy with copy-pasting from
+# pretty-printed in UTF-8.
+∅  == \z
+ε  == \e
+⟨2⟩a == <2>a
+!a == a{c}
+¬a == a{c}
+aᶜ == a{c}
+aᵗ == a{T}
