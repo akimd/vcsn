@@ -51,6 +51,7 @@ namespace vcsn
       zero,
       one,
       atom,
+      name,
     };
 
     template <typename ExpSet>
@@ -106,6 +107,7 @@ namespace vcsn
       VCSN_RAT_VISIT(infiltration, v)  { print_(v, infiltration_); }
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v);
+      VCSN_RAT_VISIT(name, v);
       VCSN_RAT_VISIT(one, v);
       VCSN_RAT_VISIT(prod, v)          { print_(v, product_); }
       VCSN_RAT_VISIT(rweight, v);

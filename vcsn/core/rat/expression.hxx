@@ -39,6 +39,33 @@ namespace vcsn
       return value_;
     }
 
+    /*--------.
+    | name.   |
+    `--------*/
+
+    DEFINE_CTOR(name)(value_t sub, symbol name)
+      : sub_{std::move(sub)}
+      , name_{name}
+    {}
+
+    DEFINE(name)::sub() const
+      -> const value_t
+    {
+      return sub_;
+    }
+
+    DEFINE(name)::name_get() const
+      -> symbol
+    {
+      return name_;
+    }
+
+    DEFINE(name)::accept(typename super_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
 #undef DEFINE_CTOR
 #undef DEFINE
 

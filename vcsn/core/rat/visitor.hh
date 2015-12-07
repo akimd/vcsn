@@ -47,6 +47,7 @@ namespace vcsn
       DEFINE(infiltration);
       DEFINE(ldiv);
       DEFINE(lweight);
+      DEFINE(name) { v.sub()->accept(*this); }
       DEFINE(one);
       DEFINE(prod);
       DEFINE(rweight);

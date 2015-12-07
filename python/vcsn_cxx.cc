@@ -1005,6 +1005,11 @@ struct expression
     return multiply(min, min);
   }
 
+  expression name(const std::string& name) const
+  {
+    return vcsn::dyn::name(val_, name);
+  }
+
   expression rdiv(const expression& rhs) const
   {
     return vcsn::dyn::rdiv(val_, rhs.val_);
@@ -1530,6 +1535,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("multiply",
          static_cast<expression::multiply_repeated_t>(&expression::multiply),
          multiply_repeated())
+    .def("name", &expression::name)
     .def("rdiv", &expression::rdiv)
     .def("right_mult", &expression::right_mult)
     .def("series", &expression::as_series, (arg("context") = context()))

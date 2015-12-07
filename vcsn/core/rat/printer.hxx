@@ -21,6 +21,7 @@ namespace vcsn
           CASE(infiltration);
           CASE(ldiv);
           CASE(lweight);
+          CASE(name);
           CASE(one);
           CASE(prod);
           CASE(rweight);
@@ -141,6 +142,7 @@ namespace vcsn
             CASE(infiltration);
             CASE(ldiv);
             CASE(lweight);
+            CASE(name);
             CASE(one);
             CASE(prod);
             CASE(rweight);
@@ -190,6 +192,14 @@ namespace vcsn
     VISIT(atom)
     {
       rs_.labelset()->print(v.value(), out_, fmt_.for_labels());
+    }
+
+    VISIT(name)
+    {
+      if (fmt_ == format::latex)
+        out_ << "\\mathsf{" << v.name_get() << "}";
+      else
+        out_ << v.name_get();
     }
 
     DEFINE::print_child(const node_t& child, precedence_t parent)

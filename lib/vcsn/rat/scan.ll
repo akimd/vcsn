@@ -45,6 +45,9 @@ namespace
 
 %x SC_CLASS SC_CONTEXT SC_WEIGHT
 
+ /* Abbreviations. */
+id   [a-zA-Z][a-zA-Z_0-9]*
+
 %%
 %{
   // Count the number of opened braces in SC_WEIGHT, and parens in SC_CONTEXT.
@@ -57,7 +60,7 @@ namespace
 
 <INITIAL>{ /* Vcsn Syntax */
 
-  "("         return TOK(LPAREN);
+  "("         return parser::make_LPAREN({}, loc);
   ")"         return TOK(RPAREN);
 
   "&"         return TOK(AMPERSAND);
@@ -90,6 +93,10 @@ namespace
 
   /* Special constructs.  */
   "(?@"          context.clear(); yy_push_state(SC_CONTEXT);
+  "(?<"[^<>]+">"   {
+    return parser::make_LPAREN(symbol{yytext + 3, yyleng - 4},
+                               loc);
+  }
   "(?#"[^)]*")"  continue;
 
   /* Weights. */

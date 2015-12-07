@@ -9,6 +9,7 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/labelset/tupleset.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -290,6 +291,33 @@ namespace vcsn
     private:
       value_t sub_;
       weight_t weight_;
+    };
+
+
+    /*------.
+    | name. |
+    `------*/
+
+    /// An inner node to name the subexpression.
+    template <typename Context>
+    class name
+      : public inner<Context>
+    {
+    public:
+      using super_t = inner<Context>;
+      using value_t = typename super_t::value_t;
+
+      name(value_t exp, symbol name);
+
+      const value_t sub() const;
+      symbol name_get() const;
+
+      virtual type_t type() const { return type_t::name; };
+      virtual void accept(typename super_t::const_visitor& v) const;
+
+    private:
+      value_t sub_;
+      symbol name_;
     };
 
 

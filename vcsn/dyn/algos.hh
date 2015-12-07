@@ -516,6 +516,9 @@ namespace vcsn
     automaton minimize(const automaton& aut,
                        const std::string& algo = "auto");
 
+    /// Name an expression.
+    expression name(const expression& exp, const std::string& name);
+
     /// Normalize automaton \a aut.
     automaton normalize(const automaton& aut);
 
