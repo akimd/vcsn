@@ -178,12 +178,11 @@ namespace vcsn
       expression
       sum_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        return make_expression(rs, ::vcsn::sum(rs, lr, rr));
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return make_expression(std::get<0>(join_elts),
+                               ::vcsn::sum(std::get<0>(join_elts),
+                                           std::get<1>(join_elts),
+                                           std::get<2>(join_elts)));
       }
     }
   }

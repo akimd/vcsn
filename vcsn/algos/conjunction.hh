@@ -692,12 +692,11 @@ namespace vcsn
       expression
       shuffle_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        return make_expression(rs, ::vcsn::shuffle(rs, lr, rr));
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return make_expression(std::get<0>(join_elts),
+                               ::vcsn::shuffle(std::get<0>(join_elts),
+                                               std::get<1>(join_elts),
+                                               std::get<2>(join_elts)));
       }
     }
   }
@@ -781,12 +780,11 @@ namespace vcsn
       expression
       infiltration_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        return make_expression(rs, ::vcsn::infiltration(rs, lr, rr));
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return make_expression(std::get<0>(join_elts),
+                               ::vcsn::infiltration(std::get<0>(join_elts),
+                                                    std::get<1>(join_elts),
+                                                    std::get<2>(join_elts)));
       }
     }
   }
@@ -880,12 +878,11 @@ namespace vcsn
       expression
       conjunction_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        return make_expression(rs, ::vcsn::conjunction(rs, lr, rr));
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return make_expression(std::get<0>(join_elts),
+                               ::vcsn::conjunction(std::get<0>(join_elts),
+                                                   std::get<1>(join_elts),
+                                                   std::get<2>(join_elts)));
       }
     }
   }

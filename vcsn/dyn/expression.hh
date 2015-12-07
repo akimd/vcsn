@@ -73,6 +73,20 @@ namespace vcsn
         const expression_t expression_;
       };
 
+      /// Return the join of the expressionset of two expressions and their
+      /// values in this new expressionset.
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      auto
+      join(const expression& lhs, const expression& rhs)
+      {
+        const auto& l = lhs->as<ExpSetLhs>();
+        const auto& r = rhs->as<ExpSetRhs>();
+        auto rs = join(l.expressionset(), r.expressionset());
+        auto lr = rs.conv(l.expressionset(), l.expression());
+        auto rr = rs.conv(r.expressionset(), r.expression());
+        return std::make_tuple(rs, lr, rr);
+      }
+
     } // namespace detail
 
     using expression = std::shared_ptr<detail::expression_base>;

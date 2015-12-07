@@ -30,12 +30,10 @@ namespace vcsn
       bool
       less_than_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSet1>();
-        const auto& r = rhs->as<ExpSet2>();
-        auto rs = join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        return ::vcsn::less_than(rs, lr, rr);
+        auto join_elts = join<ExpSet1, ExpSet2>(lhs, rhs);
+        return ::vcsn::less_than(std::get<0>(join_elts),
+                                 std::get<1>(join_elts),
+                                 std::get<2>(join_elts));
       }
     }
   }

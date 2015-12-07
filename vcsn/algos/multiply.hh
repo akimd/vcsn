@@ -267,12 +267,11 @@ namespace vcsn
       expression
       multiply_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = vcsn::join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        return make_expression(rs, ::vcsn::multiply(rs, lr, rr));
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return make_expression(std::get<0>(join_elts),
+                               ::vcsn::multiply(std::get<0>(join_elts),
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts)));
       }
     }
   }
@@ -286,13 +285,10 @@ namespace vcsn
       expression
       concatenate_expression(const expression& lhs, const expression& rhs)
       {
-        const auto& l = lhs->as<ExpSetLhs>();
-        const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = vcsn::join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
-        auto res = rs.concat(lr, rr);
-        return make_expression(rs, res);
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        auto res = std::get<0>(join_elts).concat(std::get<1>(join_elts),
+                                                 std::get<2>(join_elts));
+        return make_expression(std::get<0>(join_elts), res);
       }
     }
   }
