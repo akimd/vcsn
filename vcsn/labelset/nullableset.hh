@@ -448,6 +448,16 @@ namespace vcsn
                  });
     }
 
+    value_t conjunction(const value_t& l, const value_t& r) const
+    {
+      if (is_one(l) && is_one(r))
+        return l;
+      else if (!is_one(l) && !is_one(r))
+        return ls_->conjunction(get_value(l), get_value(r));
+      else
+        raise("conjunction: invalid operation (lhs and rhs are not equal)");
+    }
+
     /// Print label to stream.
     std::ostream&
     print(const value_t& l, std::ostream& o,

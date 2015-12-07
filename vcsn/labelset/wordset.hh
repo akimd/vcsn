@@ -310,6 +310,14 @@ namespace vcsn
       w2 = ldiv(w1, w2);
       return w2;
     }
+
+    const value_t& conjunction(const value_t& l, const value_t& r) const
+    {
+      if (equal(l, r))
+        return l;
+      else
+        raise("conjunction: invalid operation (lhs and rhs are not equal)");
+    }
   };
 
   namespace detail

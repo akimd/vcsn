@@ -254,6 +254,14 @@ namespace vcsn
       raise(sname(), ": ldiv: impossible operation");
     }
 
+    value_t conjunction(const value_t& l, const value_t& r) const
+    {
+      if (equal(l, r))
+        return l;
+      else
+        raise("conjunction: invalid operation (lhs and rhs are not equal)");
+    }
+
     std::ostream&
     print(const value_t& l, std::ostream& o,
           format fmt = {}) const
