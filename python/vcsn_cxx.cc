@@ -545,6 +545,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("multiply",
          static_cast<multiply_repeated_t<expression>>(&expression::multiply),
          (arg("min"), arg("max") = -2))
+    .def("name", &expression::name)
     .def("partial_identity", &expression::partial_identity)
     .def("project", &expression::project)
     .def("rdivide", &expression::rdivide)

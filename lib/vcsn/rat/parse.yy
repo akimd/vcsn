@@ -118,7 +118,7 @@
   @$ = driver_.location_;
 }
 
-%printer { yyo << '"' << $$ << '"'; } <std::string>;
+%printer { yyo << '"' << $$ << '"'; } <std::string> <symbol>;
 %printer
 {
   yyo << '[';
@@ -159,7 +159,6 @@
   DOT             "."
   END 0           "end"
   LBRACKET        "["
-  LPAREN          "("
   LT_PLUS         "<+"
   ONE             "\\e"
   PERCENT         "%"
@@ -176,6 +175,7 @@
 %token <irange_type> STAR "*";
 %token <std::string> LETTER "letter";
 %token <std::string> WEIGHT "weight";
+%token <symbol>      LPAREN "(";
 
 %type <braced_expression> exp input add tuple;
 %type <std::vector<vcsn::dyn::expression>> tuple.1;
@@ -307,7 +307,13 @@ exp:
 | "letter"          { $$ = driver_.make_atom(@1, $1); }
 | "[" class "]"     { $$ = driver_.make_expression(@$, $2, true); }
 | "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
-| "(" add ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
+| "(" add ")"
+  {
+    $$.exp = $2.exp;
+    $$.lparen = $$.rparen = true;
+    if (!$1.get().empty())
+      $$ = dyn::name($$.exp, $1.get());
+  }
 ;
 
 weights:

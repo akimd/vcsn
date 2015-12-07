@@ -134,7 +134,32 @@ namespace vcsn
         return o;
       }
 
-    private:
+      /// Find if an expression is named.
+      expression_t me(expression_t res) const
+      {
+        while (true)
+          {
+            auto i = names_.find(res);
+            if (i == end(names_))
+              break;
+            else
+              res = i->second;
+          }
+         return res;
+      }
+
+
+      /// When we find that an expression is named, record `named ->
+      /// naming`, so that when we need `named`, we actually use
+      /// `naming`.  That's what the function `me` does.
+      VCSN_RAT_VISIT(name, e)
+      {
+        // Record that e.sub has a name.
+        auto i = names_.emplace(e.sub(), e.shared_from_this()).first;
+        super_t::visit(e);
+        names_.erase(i);
+      }
+
       VCSN_RAT_VISIT(zero,)
       {
         res_ = xs_.zero();
@@ -305,9 +330,10 @@ namespace vcsn
       {
         expansion_t res = to_expansion(e.sub());
         res_.constant = ws_.star(res.constant);
-        auto f = e.shared_from_this();
+        auto f = me(e.shared_from_this());
         if (transposed_)
           {
+            // FIXME: check the case of named expression.
             res_.constant = ws_.transpose(res_.constant);
             f = rs_.transposition(f);
           }
@@ -415,6 +441,8 @@ namespace vcsn
       bool transposed_ = false;
       /// The result.
       expansion_t res_ = xs_.zero();
+      /// A table from the expression to the naming expression.
+      std::map<expression_t, expression_t> names_;
     };
   } // rat::
 

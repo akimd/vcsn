@@ -58,6 +58,9 @@ namespace vcsn
       complement,
       tuple,
       compose,
+
+      /// Naming an expression.
+      name,
     };
 
     /// Whether is a constant (`\\z` or `\\e`).
@@ -97,6 +100,7 @@ namespace vcsn
     DEFINE(atom);
     DEFINE(inner);
     DEFINE(leaf);
+    DEFINE(name);
     DEFINE(node);
 
     DEFINE(const_visitor);

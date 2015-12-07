@@ -93,6 +93,7 @@ algo_headers =                                  \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
   %D%/algos/multiply.hh                         \
+  %D%/algos/name.hh                             \
   %D%/algos/normalize-expansion.hh              \
   %D%/algos/normalize.hh                        \
   %D%/algos/num-tapes.hh                        \

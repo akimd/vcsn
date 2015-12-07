@@ -23,6 +23,7 @@ namespace vcsn
           CASE(infiltrate);
           CASE(ldivide);
           CASE(lweight);
+          CASE(name);
           CASE(one);
           CASE(mul);
           CASE(rweight);
@@ -178,6 +179,7 @@ namespace vcsn
             CASE(infiltrate);
             CASE(ldivide);
             CASE(lweight);
+            CASE(name);
             CASE(one);
             CASE(mul);
             CASE(rweight);
@@ -275,6 +277,14 @@ namespace vcsn
               ++it;
             }
         }
+    }
+
+    VISIT(name)
+    {
+      if (fmt_ == format::latex)
+        out_ << "\\mathsf{" << v.name_get() << "}";
+      else
+        out_ << v.name_get();
     }
 
     DEFINE::print_child(const node_t& child, precedence_t parent)

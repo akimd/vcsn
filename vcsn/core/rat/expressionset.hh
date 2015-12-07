@@ -75,6 +75,7 @@ namespace vcsn
     DEFINE(ldivide);
     DEFINE(leaf);
     DEFINE(lweight);
+    DEFINE(name);
     DEFINE(node);
     DEFINE(one);
     DEFINE(mul);
@@ -250,6 +251,9 @@ namespace vcsn
 
     /// Build a label.
     static auto atom(const label_t& v) -> value_t;
+
+    /// Build a named expression.
+    auto name(const value_t& v, symbol name) const -> value_t;
 
     // Concrete type implementation.
     static auto zero() -> value_t;

@@ -74,8 +74,6 @@ def canonicalize(s):
     '''
     in_ = str(s)
     s = in_
-    # Normalize newline.
-    s = s.replace('\r\n', '\n')
 
     # Ignore trailing newlines (but not space).
     s = s.rstrip('\n')
@@ -172,8 +170,17 @@ def canonical_dict(dict):
             print(dict['text'])
             exit(0)
 
-        # Normalize newline.
-        dict['text'] = dict['text'].replace('\r\n', '\n')
+        # Normalize newline.  For some reason, out of our 400+ lines
+        # containing \r\n in its stdout, we have one line with two \r, on
+        # separate lines:
+        #
+        #  "  -D            input is an identity\r\n",
+        #  "  -E            input is a rational expression\r",
+        #  "\r\n",
+        #  "  -F            input is a float\r\n",
+        #  "  -L            input is a label (or a word)\r\n",
+        dict['text'] = re.sub(r'\r+\n', r'\n', dict['text'])
+
         # Tools path.
         dict['text'] = re.sub(r'usage: .*?vcsn-tools', 'usage: vcsn-tools',
                               dict['text'])

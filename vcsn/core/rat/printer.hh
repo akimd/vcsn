@@ -53,6 +53,7 @@ namespace vcsn
       zero,
       one,
       atom,
+      name,
     };
 
     /// Exponents in UTF-8.
@@ -126,6 +127,7 @@ namespace vcsn
       VCSN_RAT_VISIT(infiltrate, v)    { print_(v, infiltrate_); }
       VCSN_RAT_VISIT(ldivide, v)       { print_(v, ldivide_); }
       VCSN_RAT_VISIT(lweight, v);
+      VCSN_RAT_VISIT(name, v);
       VCSN_RAT_VISIT(one, v);
       VCSN_RAT_VISIT(mul, v);
       VCSN_RAT_VISIT(rweight, v);

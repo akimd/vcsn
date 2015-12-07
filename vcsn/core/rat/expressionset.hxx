@@ -145,6 +145,12 @@ namespace vcsn
       return std::make_shared<atom_t>(v);
   }
 
+  DEFINE::name(const value_t& v, symbol name) const
+    -> value_t
+  {
+    return std::make_shared<name_t>(v, name);
+  }
+
   DEFINE::zero()
     -> value_t
   {
