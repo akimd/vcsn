@@ -44,12 +44,10 @@ namespace vcsn
       polynomial
       ldiv_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        const auto& l = lhs->as<PolynomialSetLhs>();
-        const auto& r = rhs->as<PolynomialSetRhs>();
-        auto rs = join(l.polynomialset(), r.polynomialset());
-        auto lr = rs.conv(l.polynomialset(), l.polynomial());
-        auto rr = rs.conv(r.polynomialset(), r.polynomial());
-        return make_polynomial(rs, ldiv(rs, lr, rr));
+        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return make_polynomial(std::get<0>(join_elts), ldiv(std::get<0>(join_elts),
+                                                            std::get<1>(join_elts),
+                                                            std::get<2>(join_elts)));
       }
     }
   }
@@ -79,12 +77,10 @@ namespace vcsn
       polynomial
       lgcd_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        const auto& l = lhs->as<PolynomialSetLhs>();
-        const auto& r = rhs->as<PolynomialSetRhs>();
-        auto rs = join(l.polynomialset(), r.polynomialset());
-        auto lr = rs.conv(l.polynomialset(), l.polynomial());
-        auto rr = rs.conv(r.polynomialset(), r.polynomial());
-        return make_polynomial(rs, lgcd(rs, lr, rr));
+        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return make_polynomial(std::get<0>(join_elts), lgcd(std::get<0>(join_elts),
+                                                            std::get<1>(join_elts),
+                                                            std::get<2>(join_elts)));
       }
     }
   }

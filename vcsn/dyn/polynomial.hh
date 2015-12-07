@@ -5,6 +5,7 @@
 
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/symbol.hh>
+#include <vcsn/weightset/fwd.hh>
 
 namespace vcsn
 {
@@ -77,6 +78,20 @@ namespace vcsn
         /// The polynomial.
         const polynomial_t polynomial_;
       };
+
+      /// Return the join of the polynomialset of two polynomials and their
+      /// values in this new polynomialset.
+      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
+      auto
+      join(const polynomial& lhs, const polynomial& rhs)
+      {
+        const auto& l = lhs->as<PolynomialSetLhs>();
+        const auto& r = rhs->as<PolynomialSetRhs>();
+        auto rs = join(l.polynomialset(), r.polynomialset());
+        auto lr = rs.conv(l.polynomialset(), l.polynomial());
+        auto rr = rs.conv(r.polynomialset(), r.polynomial());
+        return std::make_tuple(rs, lr, rr);
+      }
 
     } // namespace detail
 
