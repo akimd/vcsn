@@ -5,6 +5,7 @@
 
 #include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/algos/quotient.hh>
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/map.hh> // vcsn::less
@@ -298,6 +299,7 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
+      ATTRIBUTE_NORETURN
       inline
       vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                         quotient_t<Aut>>

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
 #include <vcsn/misc/wet.hh>
@@ -104,6 +105,7 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
+      ATTRIBUTE_NORETURN
       inline
       vcsn::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, hopcroft_tag)

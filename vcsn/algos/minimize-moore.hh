@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/algos/is-deterministic.hh>
@@ -205,6 +206,7 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
+      ATTRIBUTE_NORETURN
       inline
       vcsn::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, moore_tag)
