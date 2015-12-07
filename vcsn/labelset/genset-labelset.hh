@@ -14,7 +14,7 @@ namespace vcsn
   namespace detail
   {
     /// This class has no modeling purpose, it only serves to factor
-    /// code common to letterset, nullableset and wordset.
+    /// code common to letterset and wordset.
     template <typename GenSet>
     struct genset_labelset
     {
