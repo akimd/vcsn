@@ -26,15 +26,15 @@ digraph
   1 -> 2 [label = "<3>", color = DimGray]
 }
 Leaving s1
-  2 -- <51> --> 3
-  2 -- <42> --> 2
-  2 -- <1> --> 4
-Entering s1
+  0 -- <51> --> 1
+  0 -- <42> --> 0
   0 -- <1> --> 2
-  3 -- <1> --> 2
-  2 -- <42> --> 2
+Entering s1
+  pre -- <1> --> 0
+  1 -- <1> --> 0
+  0 -- <42> --> 0
 Between s1 and s1
-  2 -- <42> --> 2
+  0 -- <42> --> 0
 digraph
 {
   vcsn_context = "lao, z"

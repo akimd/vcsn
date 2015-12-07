@@ -124,7 +124,8 @@ namespace vcsn
 
     static symbol sname()
     {
-      static auto res = symbol{"mutable_automaton<" + context_t::sname() + '>'};
+      static auto res
+        = symbol{"mutable_automaton<" + context_t::sname() + '>'};
       return res;
     }
 
@@ -683,22 +684,14 @@ namespace vcsn
                             weightset()->conv(*aut->weightset(), w));
     }
 
-    std::string
-    format_transition(transition_t t) const
+    /// Print a transition, for debugging.
+    std::ostream& print(transition_t t, std::ostream& o) const
     {
-      constexpr char langle = '<';
-      constexpr char rangle = '>';
-
-      std::ostringstream o;
-      o << src_of(t)
-        << " -- "
-        << langle;
-      weightset()->print(weight_of(t), o)
-        << rangle;
-      labelset()->print(label_of(t), o)
-        << " --> "
-        << dst_of(t);
-      return o.str();
+      print_state_name(src_of(t), o) << " -- <";
+      weightset()->print(weight_of(t), o) << '>';
+      labelset()->print(label_of(t), o) << " --> ";
+      print_state_name(dst_of(t), o);
+      return o;
     }
 
     transition_t

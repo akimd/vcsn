@@ -7,11 +7,8 @@
 
 int main()
 {
-  using context_t = vcsn::ctx::lao_z;
-  context_t ctx;
-
-  using automaton_t = vcsn::mutable_automaton<context_t>;
-  automaton_t aut = vcsn::make_shared_ptr<automaton_t>(ctx);
+  auto ctx = vcsn::ctx::lao_z{};
+  auto aut = vcsn::make_mutable_automaton(ctx);
 
   auto s1 = aut->new_state();
   auto s2 = aut->new_state();
@@ -28,14 +25,15 @@ int main()
   assert(aut->num_states() == 3);
   assert(aut->num_transitions() == 5);
 
-#define CHECK(Message, Transitions)                                     \
-  do {                                                                  \
-    std::cout << Message << std::endl;                                  \
-    for (auto i: Transitions)                                           \
-      {                                                                 \
-        std::cout << "  " << aut->format_transition(i) << std::endl;     \
-        assert(aut->has_transition(i));                                  \
-      }                                                                 \
+#define CHECK(Message, Transitions)             \
+  do {                                          \
+    std::cout << Message << '\n';               \
+    for (auto t: Transitions)                   \
+      {                                         \
+        assert(aut->has_transition(t));         \
+        std::cout << "  ";                      \
+        aut->print(t, std::cout) << '\n';       \
+      }                                         \
   } while (false)
 
   CHECK("Leaving s1", aut->out(s1, {}));
