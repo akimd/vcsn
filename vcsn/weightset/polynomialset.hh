@@ -356,9 +356,10 @@ namespace vcsn
     `---------------*/
 
     /// The conjunction of polynomials \a l and \a r.
-    /// Not valid for all the labelsets.
-    value_t
-    conjunction(const value_t& l, const value_t& r) const
+    /// Valid only for expressionsets.
+    template <typename Ctx>
+    vcsn::enable_if_t<Ctx::is_lar, value_t>
+    conjunction_impl(const value_t& l, const value_t& r) const
     {
       value_t res;
       for (const auto& lm: l)
@@ -367,6 +368,27 @@ namespace vcsn
                    labelset()->conjunction(label_of(lm), label_of(rm)),
                    weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
+    }
+
+    /// The conjunction of polynomials \a l and \a r.
+    /// Valid only for every other labelsets.
+    template <typename Ctx>
+    vcsn::enable_if_t<!Ctx::is_lar, value_t>
+    conjunction_impl(const value_t& l, const value_t& r) const
+    {
+      value_t res;
+      for (const auto& p: zip_maps<vcsn::as_tuple>(l, r))
+        add_here(res,
+                 label_of(std::get<0>(p)),
+                 weightset()->mul(weight_of(std::get<0>(p)),
+                                  weight_of(std::get<1>(p))));
+      return res;
+    }
+
+    value_t
+    conjunction(const value_t& l, const value_t& r) const
+    {
+      return conjunction_impl<context_t>(l, r);
     }
 
     /// The infiltration of polynomials \a l and \a r.
