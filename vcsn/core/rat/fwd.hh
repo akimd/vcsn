@@ -88,10 +88,10 @@ namespace vcsn
     template <typename Context>  \
     class Node
 
-    DEFINE(node);
-    DEFINE(leaf);
     DEFINE(atom);
     DEFINE(inner);
+    DEFINE(leaf);
+    DEFINE(node);
 
     DEFINE(const_visitor);
 

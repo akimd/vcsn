@@ -22,9 +22,9 @@ namespace vcsn
     ///
     /// When printing a word (i.e., a label with several letters),
     /// beware that it may require parens.  Think of star(atom(ab)):
-    /// if we print it as 'ab*', it actually means 'a(b*)'.  Then give
-    /// words a precedence lower than that of star.  This is the role
-    /// of 'word' below.
+    /// if we print it as 'ab*', it actually means 'a(b*)'.  So give
+    /// words a lower precedence than star.  This is the role of
+    /// 'word' below.
     ///
     /// Was part of printer<ExpSet>, but it resulted in different
     /// incompatible types between, for instance,

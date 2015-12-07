@@ -762,7 +762,7 @@ namespace vcsn
 
     /// Star of an automaton.
     ///
-    /// \paran aut   the input automaton.
+    /// \param aut   the input automaton.
     /// \param algo  how to compute the result.
     ///   - "standard"    \a aut is standard,
     ///                   build a standard automaton.
