@@ -42,8 +42,7 @@ namespace vcsn
     require(vname == Aut::element_type::sname(),
             f, ": invalid context: ", vname,
             ", expected: ", Aut::element_type::sname());
-    auto& r = res->as<Aut>();
-    return std::move(r);
+    return std::move(res->as<Aut>());
   }
 
   template <typename Ctx>
