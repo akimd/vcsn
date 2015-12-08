@@ -285,7 +285,7 @@ namespace vcsn
 
   /// Build the (accessible part of the) composition.
   template <typename Lhs, typename Rhs,
-            unsigned OutTape = 1, unsigned InTape = 0>
+            std::size_t OutTape = 1, std::size_t InTape = 0>
   auto
   compose(Lhs& lhs, Rhs& rhs)
     -> typename detail::composer<focus_automaton<OutTape, Lhs>,
