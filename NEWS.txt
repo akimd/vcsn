@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-12-08
+### polynomial: conjunction
+Conjunction of polynomial is now available in dyn. For polynomial of
+expressionsets, compute the conjuction of the expressions. Otherwise, keep the
+common labels common to the two polynomials and multiply their weights.
+
 ## 2015-12-04
 ### New trivial identities
 Two new trivial identities have been added (at the "trivial" level):
