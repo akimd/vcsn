@@ -47,6 +47,32 @@ and run the tests with $ASAN_SYMBOLIZER_PATH defined, something like
 For some reason, Libtool strips this flag when linking python/vcsn-cxx.so.
 To force it (which is needed), use -Wc,-fsanitize=address when linking it.
 
+Well, actually it works fine on OS X, but on GNU/Linux (ArchLinux), TAF-Kit
+works properly, but vcsn under Python fails at start:
+
+    [forge@prague 37d]$ ./tests/bin/vcsn python -c 'import vcsn'
+    Traceback (most recent call last):
+      File "<string>", line 1, in <module>
+      File "/home/forge/teamcity-agent/work/a0185dad9234e013/python/vcsn/__init__.py", line 5, in <module>
+        from vcsn_cxx import (automaton, context, expansion, expression, label,
+    ImportError: /home/forge/teamcity-agent/work/a0185dad9234e013/build/37d/lib/.libs/libvcsn.so.0: undefined symbol: __asan_option_detect_stack_use_after_return
+
+I tried many different ways to link vcsn-cxx.so, but it does not work.
+Maybe we cannot use asan just for a DSO?  Anyway, using LD_PRELOAD, I
+managed to get it work:
+
+    [forge@prague 37d]$ LD_PRELOAD=/usr/lib/clang/3.7.0/lib/linux/libclang_rt.asan-x86_64.so ./tests/bin/vcsn python -c 'import vcsn'
+
+but then there are tons of errors about leaks coming for instance from
+Boost.Python.  Let's forget about this and focus on hard errors:
+
+    [forge@prague 37d]$ ASAN_OPTIONS=detect_leaks=false LD_PRELOAD=/usr/lib/clang/3.7.0/lib/linux/libclang_rt.asan-x86_64.so ./tests/bin/vcsn python -c 'import vcsn; vcsn.B.expression("a").automaton()'
+    [forge@prague 37d]$
+
+Then it works, but it's extraordinarily slow (can subprocesses, such as the
+compiler, get ASAN'd too?).  So this should be reserved to some well-chosen
+nightly build.
+
 * Tests
 ** check-rat
 Check the precedences, for instance between the products.
@@ -298,10 +324,10 @@ think we should have something like it.  See formula.wrap in
 
 ** rat: parse
 
-v score-compare --only 'b.expression\(e\)' +scores/36s/v2.0-0931-gd70d722       \
-  +scores/36s/v2.0-0935-g9a73853 +scores/36s/v2.0-0936-g2ff169c                 \
-  +scores/36s/v2.0-0937-g8c95f56 +scores/36s/v2.0-0938-ga3bd7e0                 \
-  +scores/36s/v2.0-0939-g2e248c7 +scores/36s/v2.0-0941-gcd42b27                 \
+v score-compare --only 'b.expression\(e\)' +scores/36s/v2.0-0931-gd70d722  \
+  +scores/36s/v2.0-0935-g9a73853 +scores/36s/v2.0-0936-g2ff169c            \
+  +scores/36s/v2.0-0937-g8c95f56 +scores/36s/v2.0-0938-ga3bd7e0            \
+  +scores/36s/v2.0-0939-g2e248c7 +scores/36s/v2.0-0941-gcd42b27            \
   +scores/36s/v2.0-0997-g3c33417 +scores/36s/v2.0-1038-g5be85cb
 
  0.60  1.04  1.06  0.98  0.97  1.04  1.02  1.30  1.13 b.expression(e)      # e = "(\e+a)" * 500, 100x
