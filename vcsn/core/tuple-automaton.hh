@@ -124,14 +124,20 @@ namespace vcsn
       static constexpr indices_t indices{};
 
       /// The sname of the sub automata.
-      static std::string sname_()
+      template <typename... T>
+      static std::string sname_(const T&... t)
       {
-        std::string res = "<" + Aut::element_type::sname() + ", ";
-        const char* sep = "";
+        std::string res = "<" ;
         using swallow = int[];
+        const char* sep = "";
         (void) swallow
           {
-            (res += sep + Auts::element_type::sname(), sep = ", ", 0)...
+            (res += sep + t, sep = ", ", 0)...
+          };
+        res += sep + Aut::element_type::sname();
+        (void) swallow
+          {
+            (res += ", " + Auts::element_type::sname(), 0)...
           };
         res += ">";
         return res;

@@ -27,9 +27,9 @@ namespace vcsn
     `---------------------------------*/
 
     /// Build the (accessible part of the) product.
-    template <Automaton Aut, Automaton... Auts>
+    template <bool Lazy, Automaton Aut, Automaton... Auts>
     class product_automaton_impl
-      : public lazy_tuple_automaton<product_automaton_impl<Aut, Auts...>, false, Aut, Auts...>
+      : public lazy_tuple_automaton<product_automaton_impl<Lazy, Aut, Auts...>, false, Lazy, Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "product: requires letterized labels");
@@ -38,7 +38,7 @@ namespace vcsn
       using automaton_t = Aut;
       using tuple_automaton_t = tuple_automaton<automaton_t, Auts...>;
       using self_t = product_automaton_impl;
-      using super_t = lazy_tuple_automaton<self_t, false, Aut, Auts...>;
+      using super_t = lazy_tuple_automaton<self_t, false, Lazy, Aut, Auts...>;
 
     public:
       using state_name_t = typename super_t::state_name_t;
@@ -57,7 +57,7 @@ namespace vcsn
       static symbol sname()
       {
         static symbol res("product_automaton"
-                          + super_t::sname_());
+                          + super_t::sname_(std::string{Lazy ? "true" : "false"}));
         return res;
       }
 
@@ -92,11 +92,11 @@ namespace vcsn
       {}
 
       /// Compute the (accessible part of the) conjunction.
-      void conjunction(bool lazy = false)
+      void conjunction()
       {
         initialize_conjunction();
 
-        if (!lazy)
+        if (!Lazy)
           while (!aut_->todo_.empty())
             {
               const auto& p = aut_->todo_.front();
@@ -423,16 +423,17 @@ namespace vcsn
   }
 
   /// A product automaton as a shared pointer.
-  template <Automaton Aut, Automaton... Auts>
+  template <bool Lazy, Automaton Aut, Automaton... Auts>
   using product_automaton
-    = std::shared_ptr<detail::product_automaton_impl<Aut, Auts...>>;
+    = std::shared_ptr<detail::product_automaton_impl<Lazy, Aut, Auts...>>;
 
-  template <Automaton Aut, Automaton... Auts>
+  template <bool Lazy, Automaton Aut, Automaton... Auts>
+  inline
   auto
   make_product_automaton(Aut aut, const Auts&... auts)
-    -> product_automaton<Aut, Auts...>
+    -> product_automaton<Lazy, Aut, Auts...>
   {
-    using res_t = product_automaton<Aut, Auts...>;
+    using res_t = product_automaton<Lazy, Aut, Auts...>;
     return make_shared_ptr<res_t>(aut, auts...);
   }
 
@@ -448,7 +449,7 @@ namespace vcsn
     -> tuple_automaton<decltype(meet_automata(as...)),
                        Auts...>
   {
-    auto res = make_product_automaton(meet_automata(as...),
+    auto res = make_product_automaton<false>(meet_automata(as...),
                                       as...);
     res->conjunction();
     return res->strip();
@@ -458,12 +459,12 @@ namespace vcsn
   template <Automaton... Auts>
   auto
   conjunction_lazy(const Auts&... as)
-    -> product_automaton<decltype(meet_automata(as...)),
+    -> product_automaton<true, decltype(meet_automata(as...)),
                          Auts...>
   {
-    auto res = make_product_automaton(meet_automata(as...),
+    auto res = make_product_automaton<true>(meet_automata(as...),
                                       as...);
-    res->conjunction(true);
+    res->conjunction();
     return res;
   }
 
@@ -527,7 +528,7 @@ namespace vcsn
     -> tuple_automaton<decltype(join_automata(as...)),
                        Auts...>
   {
-    auto res = make_product_automaton(join_automata(as...), as...);
+    auto res = make_product_automaton<false>(join_automata(as...), as...);
     res->shuffle();
     return res->strip();
   }
@@ -603,7 +604,7 @@ namespace vcsn
     -> tuple_automaton<decltype(join_automata(a1, a2)),
                        A1, A2>
   {
-    auto res = make_product_automaton(join_automata(a1, a2), a1, a2);
+    auto res = make_product_automaton<false>(join_automata(a1, a2), a1, a2);
     res->infiltration();
     return res->strip();
   }

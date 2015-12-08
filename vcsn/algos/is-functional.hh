@@ -17,7 +17,7 @@ namespace vcsn
   bool is_functional(const Aut& aut)
   {
     // Compose aut and its invert.
-    auto c = make_compose_automaton<0, 0>(aut, aut);
+    auto c = make_compose_automaton<false, 0, 0>(aut, aut);
     c->compose();
     return is_partial_identity(c);
   }

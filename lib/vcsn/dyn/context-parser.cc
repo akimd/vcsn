@@ -364,7 +364,19 @@ namespace vcsn
                || prefix == "tuple_automaton")
         {
           eat_('<');
-          res = std::make_shared<automaton>(prefix, automaton_());
+          std::string w = "";
+          if (prefix != "tuple_automaton")
+          {
+            w = word_();
+            eat_(',');
+          }
+          res = std::make_shared<automaton>(prefix,
+                                            automaton_(word_()));
+          if (prefix != "tuple_automaton")
+          {
+            auto& c = res->get_content();
+            c.insert(c.begin(), std::make_shared<other>(w));
+          }
           while (peek_() == ',')
             {
               eat_(',');

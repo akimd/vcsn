@@ -74,10 +74,11 @@ namespace vcsn
     `------------------------------------------*/
 
     /// Build the (accessible part of the) composition.
-    template <Automaton Lhs, Automaton Rhs>
+    template <bool Lazy, Automaton Lhs, Automaton Rhs>
     class compose_automaton_impl
-      : public lazy_tuple_automaton<compose_automaton_impl<Lhs, Rhs>,
+      : public lazy_tuple_automaton<compose_automaton_impl<Lazy, Lhs, Rhs>,
                               true,
+                              Lazy,
                               typename composed_type<Lhs, Rhs>::out_t,
                               Lhs, Rhs>
     {
@@ -113,7 +114,7 @@ namespace vcsn
       using context_t = typename type_helper_t::context_t;
 
       using out_t = typename type_helper_t::out_t;
-      using super_t = lazy_tuple_automaton<self_t, true, out_t, Lhs, Rhs>;
+      using super_t = lazy_tuple_automaton<self_t, true, Lazy, out_t, Lhs, Rhs>;
       /// Result state type.
       using state_t = typename super_t::state_t;
       /// Tuple of states of input automata.
@@ -123,9 +124,10 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("compose_automaton<" +
-                          Lhs::element_type::sname() + ", " +
-                          Rhs::element_type::sname() + ">");
+        static symbol res(std::string{"compose_automaton<"}
+                          + (Lazy ? "true" : "false") + ", "
+                          + Lhs::element_type::sname() + ", "
+                          + Rhs::element_type::sname() + ">");
         return res;
       }
 
@@ -141,11 +143,11 @@ namespace vcsn
       {}
 
       /// The (accessible part of the) composition of \a lhs_ and \a rhs_.
-      void compose(bool lazy = false)
+      void compose()
       {
         initialize_compose();
 
-        if (!lazy)
+        if (!Lazy)
           while (!aut_->todo_.empty())
             {
               const auto& p = aut_->todo_.front();
@@ -359,18 +361,19 @@ namespace vcsn
   }
 
   /// A compose automaton as a shared pointer.
-  template <Automaton Lhs, Automaton Rhs>
+  template <bool Lazy, Automaton Lhs, Automaton Rhs>
   using compose_automaton
-    = std::shared_ptr<detail::compose_automaton_impl<Lhs, Rhs>>;
+    = std::shared_ptr<detail::compose_automaton_impl<Lazy, Lhs, Rhs>>;
 
-  template <std::size_t OutTape, std::size_t InTape,
+  template <bool Lazy, std::size_t OutTape, std::size_t InTape,
             Automaton Lhs, Automaton Rhs>
   auto
   make_compose_automaton(const Lhs& lhs, const Rhs& rhs)
   {
     auto l = focus<OutTape>(lhs);
     auto r = insplit_lazy(focus<InTape>(rhs));
-    using res_t = compose_automaton<focus_automaton<OutTape, Lhs>,
+    using res_t = compose_automaton<Lazy,
+                                    focus_automaton<OutTape, Lhs>,
                                     decltype(r)>;
     return make_shared_ptr<res_t>(l, r);
   }
@@ -385,7 +388,7 @@ namespace vcsn
   auto
   compose(Lhs& lhs, Rhs& rhs)
   {
-    auto res = make_compose_automaton<OutTape, InTape>(lhs, rhs);
+    auto res = make_compose_automaton<false, OutTape, InTape>(lhs, rhs);
     res->compose();
     return res->strip();
   }
@@ -396,8 +399,8 @@ namespace vcsn
   auto
   compose_lazy(Lhs& lhs, Rhs& rhs)
   {
-    auto res = make_compose_automaton<OutTape, InTape>(lhs, rhs);
-    res->compose(true);
+    auto res = make_compose_automaton<true, OutTape, InTape>(lhs, rhs);
+    res->compose();
     return res;
   }
 
