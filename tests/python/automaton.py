@@ -213,6 +213,16 @@ vcsn.automaton(r'''digraph
   0 -> 0 [label="\", \\'"]
 }'''))
 
+# A dot file which uses the HTML strings.  And a subgraph.
+CHECK_EQ(r'''context = "nullableset<letterset<char_letters(ab)>>, b"
+$ -> 0
+$ -> 3
+0 -> 1 a, b
+1 -> $
+2 -> 1 a
+3 -> 2 b''',
+         vcsn.automaton(filename=medir+'/html.gv').format('daut'))
+
 
 ## --------------- ##
 ## automaton.dot.  ##

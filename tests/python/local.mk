@@ -106,6 +106,7 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/drinks-simple.gv            \
   %D%/automaton.dir/enfa.fado                   \
   %D%/automaton.dir/enfa.gv                     \
+  %D%/automaton.dir/html.gv                     \
   %D%/automaton.dir/lal_char_b.daut             \
   %D%/automaton.dir/lal_char_b.in.gv            \
   %D%/automaton.dir/lal_char_b.out.gv           \

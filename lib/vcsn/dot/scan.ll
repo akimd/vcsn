@@ -30,17 +30,20 @@ YY_FLEX_NAMESPACE_BEGIN
 
 %}
 
-%x SC_COMMENT SC_STRING
+%x SC_COMMENT SC_STRING SC_XML
 
 alpha   [a-zA-Z\200-\377_]
 digit   [0-9]
 IDENT   {alpha}({alpha}|{digit})*
 NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 ID      {IDENT}|{NUM}
+
 %%
 %{
   // Growing string, for SC_STRING/SC_XML.
   auto s = std::string{};
+  // Level of nesting of "<"/">" for SC_XML.
+  int nesting = 0;
   loc.step();
 %}
 
@@ -50,6 +53,7 @@ ID      {IDENT}|{NUM}
   "edge"     return TOK(EDGE);
   "graph"    return TOK(GRAPH);
   "node"     return TOK(NODE);
+  "subgraph" return TOK(SUBGRAPH);
   "{"        return TOK(LBRACE);
   "}"        return TOK(RBRACE);
   "["        return TOK(LBRACKET);
@@ -63,6 +67,7 @@ ID      {IDENT}|{NUM}
   "//".*     loc.step(); continue;
   "/*"       BEGIN(SC_COMMENT);
   "\""       BEGIN(SC_STRING);
+  "<"        ++nesting; BEGIN(SC_XML);
   {ID}       {
                return parser::make_ID
                  (string_t{std::string{yytext, size_t(yyleng)}},
@@ -92,6 +97,28 @@ ID      {IDENT}|{NUM}
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a string");
+    BEGIN(INITIAL);
+    return parser::make_ID(string_t{s}, loc);
+  }
+}
+
+<SC_XML>{ /* Handling of the XML/HTML strings.  Initial < is eaten. */
+  ">" {
+    if (--nesting == 0)
+      {
+        BEGIN(INITIAL);
+        return parser::make_ID(string_t{s}, loc);
+      }
+    else
+      s.push_back('>');
+  }
+
+  "<"       ++nesting; s.push_back('>');
+  [^<>\n]+  s.append(yytext, yyleng);
+  "\n"+     LINE(yyleng); s.append(yytext, yyleng);
+
+  <<EOF>> {
+    driver_.error(loc, "unexpected end of file in a XML string");
     BEGIN(INITIAL);
     return parser::make_ID(string_t{s}, loc);
   }

@@ -151,6 +151,7 @@
   EDGE     "edge"
   GRAPH    "graph"
   NODE     "node"
+  SUBGRAPH "subgraph"
   LBRACE   "{"
   RBRACE   "}"
   LBRACKET "["
@@ -327,7 +328,7 @@ node_id:
   }
 ;
 
-// Let's no bother with compass_pt.  Which means that we accept too
+// Let's not bother with compass_pt.  Which means that we accept too
 // many inputs: we should check that the last ID is
 // (n|ne|e|se|s|sw|w|nw|c|_), but even dot itself accepts 'foo:bar'.
 // Note that compass points are explicitly not reserved keywords.
