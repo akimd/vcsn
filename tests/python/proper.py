@@ -3,9 +3,11 @@
 import vcsn
 from test import *
 
+algos = ['distance', 'inplace', 'separate']
+
 # check INPUT EXP ALGORITHM
 # -------------------------
-def check(i, o, algo):
+def check_algo(i, o, algo):
   i = vcsn.automaton(i)
   o = vcsn.automaton(o)
 
@@ -36,7 +38,7 @@ def check(i, o, algo):
     CHECK_EQ(i.proper(algo=algo).sort().strip(),
              i.proper(algo=algo).proper(algo=algo).sort().strip())
 
-def check_fail(aut, algo):
+def check_fail_algo(aut, algo):
   a = vcsn.automaton(aut)
   try:
     a.proper(algo=algo)
@@ -44,14 +46,22 @@ def check_fail(aut, algo):
   except RuntimeError:
     PASS()
 
+def check(i, o, algs=algos):
+  for algo in algs:
+    check_algo(i, o, algo)
 
-for algo in ('distance', 'inplace', 'separate'):
+def check_fail(i, algs=algos):
+  for algo in algs:
+    check_fail_algo(i, algo)
 
-    ## -------------------------------------------- ##
-    ## law_char, r: check the computation of star.  ##
-    ## -------------------------------------------- ##
 
-    check(r'''digraph
+
+
+## -------------------------------------------- ##
+## law_char, r: check the computation of star.  ##
+## -------------------------------------------- ##
+
+check(r'''digraph
 {
   vcsn_context = "law_char(ab), r"
   I -> 0 -> F
@@ -72,15 +82,15 @@ for algo in ('distance', 'inplace', 'separate'):
   }
   I0 -> 0
   0 -> F0 [label = "<2>"]
-}''', algo)
+}''')
 
 
 
-    ## ------------ ##
-    ## law_char_b.  ##
-    ## ------------ ##
+## ------------- ##
+## law_char, b.  ##
+## ------------- ##
 
-    check(r'''digraph
+check(r'''digraph
 {
   vcsn_context = "law_char(ab), b"
   rankdir = LR
@@ -135,14 +145,14 @@ for algo in ('distance', 'inplace', 'separate'):
   2 -> 0 [label = "a"]
   2 -> 1 [label = "a"]
   2 -> 2 [label = "a"]
-}''', algo)
+}''')
 
 
-    ## ------------------------------------------------ ##
-    ## law_char_z: invalid \e-cycle (weight is not 0).  ##
-    ## ------------------------------------------------ ##
+## ------------------------------------------------- ##
+## law_char, z: invalid \e-cycle (weight is not 0).  ##
+## ------------------------------------------------- ##
 
-    check_fail(r'''digraph
+check_fail(r'''digraph
 {
   vcsn_context = "law_char(ab), z"
   rankdir = LR
@@ -167,14 +177,14 @@ for algo in ('distance', 'inplace', 'separate'):
   2 -> 1 [label = "<-1>\\e"]
   2 -> 3 [label = "<2>a"]
   3 -> 0 [label = "<2>a"]
-}''', algo)
+}''')
 
 
-    ## ------------ ##
-    ## law_char_z.  ##
-    ## ------------ ##
+## ------------- ##
+## law_char, z.  ##
+## ------------- ##
 
-    check(r'''digraph
+check(r'''digraph
 {
   vcsn_context = "law_char(ab), z"
   rankdir = LR
@@ -228,15 +238,15 @@ for algo in ('distance', 'inplace', 'separate'):
   2 -> 2 [label = "<-1>a"]
   2 -> 3 [label = "<2>a"]
   3 -> 0 [label = "<2>a"]
-}''', algo)
+}''')
 
 
 
-    ## --------------------------------- ##
-    ## law_char_zmin: invalid \e-cycle.  ##
-    ## --------------------------------- ##
+## ---------------------------------- ##
+## law_char, zmin: invalid \e-cycle.  ##
+## ---------------------------------- ##
 
-    check_fail(r'''digraph
+check_fail(r'''digraph
 {
   vcsn_context = "law_char(ab), zmin"
   rankdir = LR
@@ -260,15 +270,15 @@ for algo in ('distance', 'inplace', 'separate'):
   1 -> 2 [label = "<2>a"]
   2 -> 0 [label = "<2>a"]
   2 -> 1 [label = "<-1>\\e"]
-}''', algo)
+}''')
 
 
-    ## --------------------------- ##
-    ## lan_char_zr: a long cycle.  ##
-    ## --------------------------- ##
+## ---------------------------- ##
+## lan_char, zr: a long cycle.  ##
+## ---------------------------- ##
 
-    if algo != 'distance':  # FIXME(ap): weights are equivalent but not the same
-        check(r'''digraph
+# FIXME(ap): with distance, weights are equivalent but not the same
+check(r'''digraph
 {
   vcsn_context = "lan_char(z), expressionset<lal_char(abcd), q>"
   rankdir = LR
@@ -304,20 +314,20 @@ for algo in ('distance', 'inplace', 'separate'):
   I0 -> 0
   0 -> 1 [label = "<(abcd)*>z"]
   1 -> F1
-}''', algo)
+}''', [algo for algo in algos if algo != 'distance'])
 
 
 
-    ## ---------------------------------------- ##
-    ## lan_char_zr: remove now-useless states.  ##
-    ## ---------------------------------------- ##
+## ----------------------------------------- ##
+## lan_char, zr: remove now-useless states.  ##
+## ----------------------------------------- ##
 
-    # Check that we remove states that _end_ without incoming transitions,
-    # but leave states that were inaccessible before the elimination of
-    # the spontaneous transitions.
+# Check that we remove states that _end_ without incoming transitions,
+# but leave states that were inaccessible before the elimination of
+# the spontaneous transitions.
 
-    if algo != 'distance':  # FIXME(ap): inaccessible states get pruned
-        check(r'''digraph
+# FIXME(ap): with distance, inaccessible states get pruned
+check(r'''digraph
 {
   vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), q>"
   rankdir = LR
@@ -362,14 +372,14 @@ for algo in ('distance', 'inplace', 'separate'):
   I0 -> 0
   0 -> F0 [label = "<beg>"]
   2 -> F2 [label = "<fh>", color = DimGray]
-}''', algo)
+}''', [algo for algo in algos if algo != 'distance'])
 
 
-    ## ------------ ##
-    ## lan_char_b.  ##
-    ## ------------ ##
+## ------------- ##
+## lan_char, b.  ##
+## ------------- ##
 
-    check(r'''digraph
+check(r'''digraph
 {
   vcsn_context = "lan_char(ab), b"
   I -> 0
@@ -395,13 +405,14 @@ for algo in ('distance', 'inplace', 'separate'):
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
-}''', algo)
+}''')
 
-    ## ---------------------------- ##
-    ## lat<lan_char, lan_char>, b.  ##
-    ## ---------------------------- ##
 
-    check(r'''digraph
+## ---------------------------- ##
+## lat<lan_char, lan_char>, b.  ##
+## ---------------------------- ##
+
+check(r'''digraph
 {
   vcsn_context = "lat<lan_char(ab),lan_char(xy)>, b"
   I0 -> 0
@@ -436,14 +447,14 @@ for algo in ('distance', 'inplace', 'separate'):
   1 -> F1
   1 -> 2 [label = "(\\e,y)"]
   2 -> F2
-}''', algo)
+}''')
 
 
-    ## ---------------------------- ##
-    ## lat<lan_char, lal_char>, b.  ##
-    ## ---------------------------- ##
+## ---------------------------- ##
+## lat<lan_char, lal_char>, b.  ##
+## ---------------------------- ##
 
-    check(r'''digraph
+check(r'''digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
   I0 -> 0
@@ -475,15 +486,16 @@ for algo in ('distance', 'inplace', 'separate'):
   1 -> F1
   1 -> 2 [label = "(\\e,y)"]
   2 -> F2
-}''', algo)
+}''')
 
 
-    ## ---------------------- ##
-    ## Forward vs. backward.  ##
-    ## ---------------------- ##
+## ---------------------- ##
+## Forward vs. backward.  ##
+## ---------------------- ##
 
-    a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
-    CHECK_EQ(vcsn.automaton(r'''digraph
+for algo in algos:
+  a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
+  CHECK_EQ(vcsn.automaton(r'''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
@@ -506,7 +518,7 @@ for algo in ('distance', 'inplace', 'separate'):
   1 -> 0 [label = "a"]
 }''').sort().strip(), a.proper(backward=True, algo=algo).sort().strip())
 
-    CHECK_EQ(vcsn.automaton(r'''digraph
+  CHECK_EQ(vcsn.automaton(r'''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
