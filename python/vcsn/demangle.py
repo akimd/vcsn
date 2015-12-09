@@ -174,11 +174,17 @@ def colorize(line):
 def demangle(s, color="auto"):
     color = has_color(color)
     # C++.
-    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|forward|less|make_shared|map|pair|set|shared_ptr|string|tuple)',
+    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|equal_to|forward|hash|less|make_shared|(unordered_)?map|pair|(unordered_)?set|shared_ptr|string|tuple|vector)',
             r'std::\1',
             s)
     s = sub(r'std::basic_string<char(?:,\s*(?:std::)?char_traits<char>,\s*(?:std::)?allocator<char>\s*)?>',
             r'std::string',
+            s)
+    s = sub(r'std::vector<{param},\s*std::allocator<\1\s*>\s*>',
+            r'std::vector<\1>',
+            s)
+    s = sub(r'std::unordered_set<{param},\s* std::hash<\1\s*>,\s*std::equal_to<\1\s*>,\s* std::allocator<\1\s*>',
+            r'std::unordered_set<\1>',
             s)
 
     # Misc.
