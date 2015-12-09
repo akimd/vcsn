@@ -48,7 +48,8 @@ def param(name=None):
 def sub(pattern, repl, string, *args, **kwargs):
     '''Apply `s/pattern/repl/g` as many times as possible in `string`.
 
-    Beware that in `pattern` the spaces are ignored: use \s.'''
+    Spaces in the pattern are mapped to `\s*`.'''
+    pattern = pattern.replace(' ', '\s*')
     if '{param}' in pattern:
         if has_regex:
             pattern = re.sub(r'\{param\}', lambda _: param(), pattern)
@@ -177,26 +178,26 @@ def demangle(s, color="auto"):
     s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|equal_to|forward|hash|less|make_shared|(unordered_)?map|pair|(unordered_)?set|shared_ptr|string|tuple|vector)',
             r'std::\1',
             s)
-    s = sub(r'std::basic_string<char(?:,\s*(?:std::)?char_traits<char>,\s*(?:std::)?allocator<char>\s*)?>',
+    s = sub(r'std::basic_string<char(?:, (?:std::)?char_traits<char>, (?:std::)?allocator<char> )?>',
             r'std::string',
             s)
-    s = sub(r'std::vector<{param},\s*std::allocator<\1\s*>\s*>',
+    s = sub(r'std::vector<{param}, std::allocator<\1 > >',
             r'std::vector<\1>',
             s)
-    s = sub(r'std::unordered_set<{param},\s* std::hash<\1\s*>,\s*std::equal_to<\1\s*>,\s* std::allocator<\1\s*>',
+    s = sub(r'std::unordered_set<{param},  std::hash<\1 >, std::equal_to<\1 >,  std::allocator<\1 >',
             r'std::unordered_set<\1>',
             s)
 
     # Misc.
-    s = sub(r'boost::flyweights::flyweight<std::string,\s*boost::flyweights::no_tracking,\s*boost::flyweights::intermodule_holder(?:,\s*boost::parameter::void_)*>',
+    s = sub(r'boost::flyweights::flyweight<std::string, boost::flyweights::no_tracking, boost::flyweights::intermodule_holder(?:, boost::parameter::void_)*>',
             r'vcsn::symbol',
             s)
 
     # Labesets.
-    s = sub(r'(?:vcsn::)?letterset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters>\s*>',
+    s = sub(r'(?:vcsn::)?letterset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters> >',
             r'lal_\1',
             s)
-    s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters>\s*>',
+    s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters> >',
             r'law_\1',
             s)
     s = sub(r'(?:vcsn::)?(nullableset|tupleset)<({param})>',
@@ -208,11 +209,11 @@ def demangle(s, color="auto"):
             r'\1',
             s)
 
-    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::rat::)?(expressionset)_impl<({param})>\s*>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::rat::)?(expressionset)_impl<({param})> >',
             r'\1<\2>',
             s)
 
-    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(tupleset)_impl<({param})>\s*>',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(tupleset)_impl<({param})> >',
             r'\1<\2>',
             s)
 
@@ -222,7 +223,7 @@ def demangle(s, color="auto"):
             s)
 
     # Polynomials.
-    s = sub(r'(vcsn::detail::wet_map<std::shared_ptr<const\s*vcsn::rat::node<({param})\s*>\s*>,\s*bool),\s*vcsn::less<expressionset<\2\s*>,\s*std::shared_ptr<const\s*vcsn::rat::node<\2\s*>\s*>\s*>\s*>',
+    s = sub(r'(vcsn::detail::wet_map<std::shared_ptr<const vcsn::rat::node<({param}) > >, bool), vcsn::less<expressionset<\2 >, std::shared_ptr<const vcsn::rat::node<\2 > > > >',
             r'\1>',
             s)
 
@@ -232,7 +233,7 @@ def demangle(s, color="auto"):
     # it (with clang 3.6).
     #
     # The optional parameter of shared_ptr is the memory lock policy (g++)
-    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:(?:vcsn::)?detail::)?(\w+_automaton)_impl<({param})>\s*(?:, [^>]+)?>',
+    s = sub(r'(?:std::)?(?:__)?shared_ptr<(?:(?:vcsn::)?detail::)?(\w+_automaton)_impl<({param})> (?:, [^>]+)?>',
             r'\1<\2>',
             s)
 
@@ -246,7 +247,7 @@ def demangle(s, color="auto"):
             s)
 
     # Dyn::.
-    s = sub(r'vcsn::dyn::detail::(automaton|expression(?:set)?)_wrapper<\1<({param})>\s*>',
+    s = sub(r'vcsn::dyn::detail::(automaton|expression(?:set)?)_wrapper<\1<({param})> >',
             r'dyn::\1<\2>',
             s)
 
