@@ -125,8 +125,10 @@ namespace vcsn
       /// Whether to prune states that become inaccessible.
       bool prune_;
 
-      std::vector<state_proper_t> d2p_; // dirty states -> proper states
-      std::vector<state_dirty_t> p2d_; // proper states -> dirty states
+      /// dirty states -> proper states.
+      std::vector<state_proper_t> d2p_;
+      /// proper states -> dirty states.
+      std::vector<state_dirty_t> p2d_;
 
       std::vector<std::vector<weight_t>> de_;
     };

@@ -101,7 +101,7 @@ namespace vcsn
       return false;
     }
 
-    static empty_t one()
+    static value_t one()
     {
       return {};
     }
@@ -156,7 +156,7 @@ namespace vcsn
     {
       require(ls.is_one(v),
               sname(), ": conv: invalid label: ", to_string(ls, v));
-      return {};
+      return one();
     }
 
 
@@ -165,12 +165,12 @@ namespace vcsn
       if (i.peek() == '\\')
         {
           i.ignore();
-          char c = i.peek();
+          int c = i.peek();
           require(c == 'e',
                   "invalid label: unexpected \\", c);
           i.ignore();
         }
-      return {};
+      return one();
     }
 
     template <typename Fun>

@@ -55,8 +55,6 @@ namespace vcsn
       epsilon_remover(automaton_t& aut, bool prune = true)
         : debug_(debug_level())
         , aut_(aut)
-        , ws_(*aut->weightset())
-        , empty_word_(aut->labelset()->one())
         , prune_(prune)
       {}
 
@@ -366,9 +364,9 @@ namespace vcsn
       /// The automaton we work on.
       automaton_t aut_;
       /// Shorthand to the weightset.
-      const weightset_t& ws_;
+      const weightset_t& ws_ = *aut_->weightset();
       /// Shorthand to the empty word.
-      label_t empty_word_;
+      label_t empty_word_ = aut_->labelset()->one();
 
       /// Max-heap to decide the order of state-elimination.
       using heap_t = boost::heap::fibonacci_heap<epsilon_profile<state_t>>;

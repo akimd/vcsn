@@ -207,7 +207,9 @@ namespace vcsn
 
   namespace detail
   {
-    /// Eliminate states in an automaton whose labelset is oneset.
+    /// Eliminate states in an automaton.
+    ///
+    /// \pre The labelset is oneset or expressionset.
     template <typename Aut, typename Profiler>
     struct state_eliminator
     {
