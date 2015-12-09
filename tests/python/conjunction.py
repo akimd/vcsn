@@ -294,6 +294,35 @@ q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
 r = vcsn.context('lal_char(d), r').expression('<.4>d*')
 CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', qr & z & q & r)
 
+## ------------------------- ##
+## polynomial & polynomial.  ##
+## ------------------------- ##
+
+poly = vcsn.context('lal_char(abc), q').polynomial
+a = poly('<2>a+<3>b')
+b = poly('<2>b+<3>c')
+c = poly('<3>c')
+CHECK_EQ('<4>a + <9>b', a & a)
+CHECK_EQ('<6>b', a & b)
+CHECK_EQ('<6>b', b & a)
+CHECK_EQ('\z', a & c)
+CHECK_EQ('<9>c', b & c)
+
+poly = vcsn.context('lan_char, q').polynomial
+a = poly('<2>\e')
+b = poly('<2>a+<3>\e')
+c = poly('<2>a+<3>c')
+CHECK_EQ('<4>\e', a & a)
+CHECK_EQ('\z', a & c)
+CHECK_EQ('<6>\e', a & b)
+CHECK_EQ('<4>a', b & c)
+
+poly = vcsn.context('law_char, q').polynomial
+a = poly('<1>aa')
+b = poly('<2>ab')
+CHECK_EQ('\z', a & b)
+CHECK_EQ('aa', a & a)
+
 ## ----------------- ##
 ## nullable labels.  ##
 ## ----------------- ##
