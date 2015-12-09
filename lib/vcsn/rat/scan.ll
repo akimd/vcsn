@@ -105,7 +105,7 @@ namespace
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
   "]" {
-    BEGIN INITIAL;
+    yy_pop_state();
     return parser::make_RBRACKET(loc);
   }
   "^" return parser::make_CARET(loc);

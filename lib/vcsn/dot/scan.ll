@@ -32,14 +32,15 @@ YY_FLEX_NAMESPACE_BEGIN
 
 %x SC_COMMENT SC_STRING
 
-alpha   [a-zA-Z\200-\377]
+alpha   [a-zA-Z\200-\377_]
 digit   [0-9]
-ID      {alpha}(_|{alpha}|{digit})*
+IDENT   {alpha}({alpha}|{digit})*
 NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
-
+ID      {IDENT}|{NUM}
 %%
 %{
-  std::string s;
+  // Growing string, for SC_STRING/SC_XML.
+  auto s = std::string{};
   loc.step();
 %}
 
@@ -60,9 +61,13 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
   ";"        return TOK(SEMI);
 
   "//".*     loc.step(); continue;
-  "/*"       BEGIN SC_COMMENT;
-  "\""       BEGIN SC_STRING;
-  {ID}|{NUM} return parser::make_ID(string_t{std::string{yytext, size_t(yyleng)}}, loc);
+  "/*"       BEGIN(SC_COMMENT);
+  "\""       BEGIN(SC_STRING);
+  {ID}       {
+               return parser::make_ID
+                 (string_t{std::string{yytext, size_t(yyleng)}},
+                  loc);
+             }
   [ \t]+     loc.step(); continue;
   \n+        LINE(yyleng); loc.step(); continue;
   .          driver_.error(loc, std::string{"invalid character: "}+yytext);
@@ -77,7 +82,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
 <SC_STRING>{ /* Handling of the strings.  Initial " is eaten. */
   \" {
-    BEGIN INITIAL;
+    BEGIN(INITIAL);
     return parser::make_ID(string_t{s}, loc);
   }
 
@@ -87,7 +92,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a string");
-    BEGIN INITIAL;
+    BEGIN(INITIAL);
     return parser::make_ID(string_t{s}, loc);
   }
 }
