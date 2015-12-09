@@ -55,6 +55,38 @@ def check_fail(i, algs=algos):
     check_fail_algo(i, algo)
 
 
+## --------------------------------------- ##
+## lao, r: check the computation of star.  ##
+## --------------------------------------- ##
+
+check(r'''context = "lao, r"
+$ -> 0 <3>
+0 -> 1 <5>
+1 -> 1 <.5>\e
+1 -> 2 <7>\e
+2 -> $ <11>
+''',
+      '''
+digraph
+{
+  vcsn_context = "lao, r"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+  }
+  I0 -> 0 [label = "<3>"]
+  0 -> 1 [label = "<5>"]
+  1 -> F1 [label = "<154>"]
+}
+''')
 
 
 ## -------------------------------------------- ##

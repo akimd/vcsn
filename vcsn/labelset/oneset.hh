@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 #include <vcsn/core/kind.hh>
-#include <vcsn/misc/empty.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>
@@ -18,7 +17,7 @@ namespace vcsn
   {
   public:
     using self_t = oneset;
-    using value_t = vcsn::empty_t;
+    using value_t = bool;
 
     using kind_t = labels_are_one;
 
@@ -60,27 +59,26 @@ namespace vcsn
 
     /// Whether \a l == \a r.
     static bool
-    equal(const value_t, const value_t)
+    equal(const value_t l, const value_t r)
     {
-      return true;
+      return l == r;
     }
 
     /// Whether \a l < \a r.
-    static bool less(const value_t, const value_t)
+    static bool less(const value_t l, const value_t r)
     {
-      return false;
+      return l < r;
     }
 
     static value_t special()
     {
-      return {};
+      return false;
     }
 
     /// The special label is indistinguishable for the others.
-    constexpr static bool
-    is_special(value_t)
+    static bool is_special(const value_t v)
     {
-      return true;
+      return v == special();
     }
 
     static constexpr bool
@@ -103,30 +101,30 @@ namespace vcsn
 
     static value_t one()
     {
-      return {};
-    }
-
-    static bool is_one(empty_t)
-    {
       return true;
     }
 
-    static empty_t transpose(empty_t)
+    static bool is_one(const value_t v)
     {
-      return {};
+      return v == one();
     }
 
-    static bool is_letter(empty_t)
+    static value_t transpose(const value_t v)
+    {
+      return v;
+    }
+
+    static bool is_letter(const value_t)
     {
       return false;
     }
 
-    static empty_t mul(empty_t, empty_t)
+    static value_t mul(value_t l, value_t r)
     {
-      return {};
+      return l && r;
     }
 
-    static std::ostream& print(empty_t, std::ostream& o,
+    static std::ostream& print(const value_t, std::ostream& o,
                                format = {})
     {
       return o;

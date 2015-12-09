@@ -23,3 +23,15 @@ for i in range(4):
 XFAIL(lambda: a.eliminate_state(0))
 XFAIL(lambda: a.eliminate_state(-3))
 XFAIL(lambda: a.eliminate_state())
+
+# Regression: at some point, because we made no difference between
+# special and one in oneset, we could have a transition to post that
+# was labeled by one, and another labeled by special.  That's two
+# transitions (<\e>\e, and <aa*>$) instead of a unique one
+# (<\e+aa*>$), which is visible in the dot output.
+a = vcsn.context('lal_char, b').expression('aa*').standard().lift()
+CHECK_EQ(r'''context = "lao, expressionset<letterset<char_letters(a)>, b>"
+$ -> 0
+0 -> 1 <a>
+1 -> $ <\e+aa*>''',
+         a.eliminate_state(2).format('daut'))

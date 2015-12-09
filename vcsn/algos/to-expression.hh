@@ -298,20 +298,23 @@ namespace vcsn
       {
         neighbors_.clear();
 
+        // Shorthand to the labelset.
+        const auto& ls = *aut_->labelset();
+
         // Shorthand to the weightset.
-        const auto& ws_ = *aut_->weightset();
+        const auto& ws = *aut_->weightset();
 
         // The loop's weight.
-        auto loop = ws_.zero();
+        auto loop = ws.zero();
         assert(aut_->outin(s, s).size() <= 1);
         // There is a single possible loop labeled by \e, but it's
         // easier and symmetrical with LAR to use a for-loop.
         for (auto t: make_vector(aut_->outin(s, s)))
           {
-            loop = ws_.add(loop, aut_->weight_of(t));
+            loop = ws.add(loop, aut_->weight_of(t));
             aut_->del_transition(t);
           }
-        loop = ws_.star(loop);
+        loop = ws.star(loop);
 
         // Get all the predecessors, and successors, except itself.
         auto outs = aut_->all_out(s);
@@ -322,8 +325,11 @@ namespace vcsn
               auto dst = aut_->dst_of(out);
               auto t = aut_->add_transition
                 (src, dst,
-                 aut_->label_of(in),
-                 ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
+                 // Of course, most of the time \e\e => \e.  But there
+                 // is also $ to take into account when eliminating an
+                 // initial/final state.
+                 ls.mul(aut_->label_of(in), aut_->label_of(out)),
+                 ws.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
               profiler_.invalidate_cache(t);
               neighbors_.emplace(src);
               neighbors_.emplace(dst);
@@ -351,17 +357,17 @@ namespace vcsn
         neighbors_.clear();
 
         // Shorthand to the labelset, which is an expressionset.
-        const auto& rs_ = *aut_->labelset();
+        const auto& rs = *aut_->labelset();
 
         // The loops' expression.
-        auto loop = rs_.zero();
+        auto loop = rs.zero();
         for (auto t: make_vector(aut_->outin(s, s)))
           {
-            loop = rs_.add(loop,
-                           rs_.lmul(aut_->weight_of(t), aut_->label_of(t)));
+            loop = rs.add(loop,
+                          rs.lmul(aut_->weight_of(t), aut_->label_of(t)));
             aut_->del_transition(t);
           }
-        loop = rs_.star(loop);
+        loop = rs.star(loop);
 
         // Get all the predecessors, and successors, except itself.
         auto outs = aut_->all_out(s);
@@ -372,9 +378,9 @@ namespace vcsn
               auto dst = aut_->dst_of(out);
               auto t = aut_->add_transition
                 (src, dst,
-                 rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
-                         loop,
-                         rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
+                 rs.mul(rs.lmul(aut_->weight_of(in), aut_->label_of(in)),
+                        loop,
+                        rs.lmul(aut_->weight_of(out), aut_->label_of(out))));
               profiler_.invalidate_cache(t);
               neighbors_.emplace(src);
               neighbors_.emplace(dst);
