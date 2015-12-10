@@ -94,7 +94,8 @@ def _guess_format(data='', filename=''):
     for line in open(filename) if filename else data.splitlines():
         if line.startswith('digraph'):
             return 'dot'
-        elif re.match('context *=|^\s*(\$|\w+)\s*->\s*(\$|\w+)', line):
+        elif re.match('context *=', line) \
+             or re.match('^\s*(\$|\w+|".*?")\s*->\s*(\$|\w+|".*?")', line):
             return 'daut'
         elif line.startswith('#! /bin/sh'):
             return 'efsm'

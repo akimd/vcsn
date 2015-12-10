@@ -270,16 +270,22 @@ class Daut:
         return "{} -> {}{}{}".format(s or '$', d or '$',
                                      ' ' if label else '', label)
 
+    def prepend(self, prefix, s):
+        if s.startswith('"'):
+            return '"' + prefix + s[1:]
+        else:
+            return prefix + s
+
     def transition_dot(self, s, d, a):
         '''Format a transition to Dot syntax.'''
-        if s == "" or s == "$":
-            s = "I" + d
+        if s == '' or s == '$':
+            s = self.prepend('I', d)
             self.hidden.append(s)
-        if d == "" or d == "$":
-            d = "F" + s
+        if d == '' or d == '$':
+            d = self.prepend('F', s)
             self.hidden.append(d)
         a = self.attr_dot(a)
-        return "  {} -> {}{}{}".format(s, d, " " if a else "", a)
+        return '  {} -> {}{}{}'.format(s, d, ' ' if a else '', a)
 
     def parse_context(self, match):
         '''Record the context.'''
@@ -288,10 +294,10 @@ class Daut:
     def parse_transition(self, match, format):
         '''Return (source, destination, attributes) with Daut syntax.'''
         s = match.group(1)
-        if s is None or s.startswith('I'):
+        if s is None or s.startswith('I') or s.startswith('"I'):
             s = '$'
         d = match.group(2)
-        if d is None or d.startswith('F'):
+        if d is None or d.startswith('F') or s.startswith('"F'):
             d = '$'
         if format == "dot":
             attr = self.parse_attr_dot(match.group(3))

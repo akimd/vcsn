@@ -465,6 +465,28 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(a, vcsn.automaton(exp))
 
 
+# A daut file whose names have quotes: beware of building "Ifoo" and
+# "Ffoo", not I"foo" and F"foo".
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "letterset<char_letters()>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "foo", shape = box]
+  }
+  I0 -> 0
+  0 -> F0
+}''',
+         vcsn.automaton('''$ -> "foo"
+         "foo" -> $''', strip = False))
+
 ## ----------- ##
 ## I/O: FAdo.  ##
 ## ----------- ##
