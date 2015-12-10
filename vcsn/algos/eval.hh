@@ -7,6 +7,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/weight.hh>
+#include <vcsn/algos/is-proper.hh>
 #include <vcsn/misc/algorithm.hh>
 
 namespace vcsn
@@ -93,14 +94,42 @@ namespace vcsn
 
   } // namespace detail
 
+  /// General case of evaluation.
   template <typename Aut>
   inline
   auto
   eval(const Aut& a, const word_t_of<Aut>& w)
-    -> weight_t_of<Aut>
+    -> vcsn::enable_if_t<!context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
     detail::evaluator<Aut> e(a);
     return e(w);
+  }
+
+  /// Evaluation for lao automaton.
+  ///
+  /// Require a proper automaton.
+  /// In a proper lao automaton, an accepting path can only be composed by
+  /// initial and final transitions. Sum the weight of these paths.
+  template <typename Aut>
+  inline
+  auto
+  eval(const Aut& a)
+    -> vcsn::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>
+  {
+    require(is_proper(a), "eval: cannot evaluate with spontaneous transitions");
+    const auto& ws = *a->weightset();
+    auto res = ws.zero();
+    for (auto init_tr: a->initial_transitions())
+      {
+        auto s = a->dst_of(init_tr);
+        auto w = a->weight_of(init_tr);
+        for (auto out: a->all_out(s))
+          {
+            assert(a->dst_of(out) == a->post());
+            res = ws.add(res, ws.mul(w, a->weight_of(out)));
+          }
+      }
+    return res;
   }
 
   namespace dyn
