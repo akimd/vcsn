@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 #include <vcsn/algos/project.hh> // bad layering: should not be in algos.
 #include <vcsn/core/rat/identities.hh>
@@ -48,6 +49,7 @@ namespace vcsn
       star = unary,
       complement = unary,
       transposition = unary,
+      exponent = unary,
       zero,
       one,
       atom,
@@ -107,7 +109,7 @@ namespace vcsn
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v);
       VCSN_RAT_VISIT(one, v);
-      VCSN_RAT_VISIT(prod, v)          { print_(v, product_); }
+      VCSN_RAT_VISIT(prod, v);
       VCSN_RAT_VISIT(rweight, v);
       VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
       VCSN_RAT_VISIT(star, v)          { print_(v, star_); }
@@ -149,7 +151,7 @@ namespace vcsn
         void operator()(const tuple_t& v)
         {
           visitor_.out_ << visitor_.tuple_left;
-          print_(v, labelset_t_of<context_t>::indices);
+          print_(v, labelset_t::indices);
           visitor_.out_ << visitor_.tuple_right;
         }
         const printer& visitor_;
@@ -324,6 +326,9 @@ namespace vcsn
       /// Left and right parentheses.
       const char* lparen_ = nullptr;
       const char* rparen_ = nullptr;
+      /// Left and right braces for exponents.
+      const char* lexponent_ = nullptr;
+      const char* rexponent_ = nullptr;
       /// External product.
       const char* lmul_ = nullptr;
       const char* rmul_ = nullptr;
@@ -349,6 +354,11 @@ namespace vcsn
       /// The constants.
       const char* zero_ = nullptr;
       const char* one_ = nullptr;
+      unsigned int exponent_threshold_ = 0;
+      const std::vector<const char*> to_exponent = std::vector<const char*>
+      {
+        "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"
+      };
     };
 
     template <typename ExpSet>

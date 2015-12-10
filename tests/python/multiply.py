@@ -156,7 +156,7 @@ r = vcsn.context('lal_char(c), r').expression('<.4>c') .derived_term()
 check('<2>a<1/3>b', z*q)
 check('<1/3>b<2>a', q*z)
 check('<2>a<1/3>b<2>a', z*q*z)
-check('<2>a<1/3>b<1/3>b', z*q*q)
+check('<2>a(<1/3>b){2}', z*q*q)
 
 check('<2>a<0.4>c', z*r)
 check('<0.4>c<2>a', r*z)

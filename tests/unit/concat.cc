@@ -14,9 +14,9 @@ check_concat(const Ctx& ctx)
   ASSERT_EQ(to_string(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))),     \
             Res)
 
-  CHECK("ab.a", "b", "(ab)(ab)");
-  CHECK("a", "b.ab", "(ab)(ab)");
-  CHECK("ab.a", "b.ab", "(ab)(ab)(ab)");
+  CHECK("ab.a", "b", "(ab){2}");
+  CHECK("a", "b.ab", "(ab){2}");
+  CHECK("ab.a", "b.ab", "(ab){3}");
 #undef CHECK
   return nerrs;
 }

@@ -2,6 +2,7 @@
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/memory.hh> // address
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -79,6 +80,8 @@ namespace vcsn
           rangle_        = " \\right\\rangle ";
           lparen_        = "\\left(";
           rparen_        = "\\right)";
+          lexponent_     = "^{";
+          rexponent_     = "}";
           star_          = "^{*}";
           complement_    = "^{c}";
           transposition_ = "^{T}";
@@ -96,6 +99,7 @@ namespace vcsn
           tuple_left     = " \\left. ";
           tuple_middle   = " \\middle| ";
           tuple_right    = " \\right. ";
+          exponent_threshold_= 2;
         }
       else if (fmt_ == format::text)
         {
@@ -105,6 +109,8 @@ namespace vcsn
           rangle_        = ">";
           lparen_        = "(";
           rparen_        = ")";
+          lexponent_     = "{";
+          rexponent_     = "}";
           star_          = "*";
           complement_    = "{c}";
           transposition_ = "{T}";
@@ -121,6 +127,7 @@ namespace vcsn
           tuple_left     = "";
           tuple_middle   = "|";
           tuple_right    = "";
+          exponent_threshold_= 4;
         }
       else if (fmt_ == format::utf8)
         {
@@ -146,6 +153,7 @@ namespace vcsn
           tuple_left     = "";
           tuple_middle   = "|";
           tuple_right    = "";
+          exponent_threshold_= 2;
         }
       else
         raise("expression: invalid format: ", fmt_);
@@ -217,6 +225,59 @@ namespace vcsn
     VISIT(atom)
     {
       rs_.labelset()->print(v.value(), out_, fmt_.for_labels());
+    }
+
+    VISIT(prod)
+    {
+      auto next = begin(v);
+      for (auto it = begin(v); it != end(v); it = next)
+        {
+          const auto& i = *it;
+          // Find the size of the sequence of nodes equal to i.
+          next = std::find_if(it, end(v),
+                              [&](const auto& e) { return !rs_.equal(e, i); });
+          auto count = std::distance(it, next);
+          if (1 < count)
+            {
+              // There is a sequence of equal nodes.
+              if (expressionset_t::context_t::is_lal && is_letter_(*i)
+                  && count <= exponent_threshold_)
+                // Writing the exponent would be longer than the actual product.
+                for (auto n = 0; n < count; ++n)
+                  {
+                    if (n != 0)
+                      out_ << product_;
+                    print_child_(*i, v);
+                  }
+              else
+                {
+                  // We can display an exponent.
+                  print_child(*i, precedence_t::exponent);
+                  if (fmt_ == format::utf8)
+                    {
+                      // Recursive lambda to display utf8 characters in the
+                      // correct order.
+                      std::function<void(int)> print = [this, &print](int n)
+                        {
+                          if (n)
+                          {
+                            print(n / 10);
+                            out_ << to_exponent[n % 10];
+                          }
+                        };
+                      print(count);
+                    }
+                  else
+                    out_ << lexponent_ << count << rexponent_;
+                }
+            }
+          else
+            // Print a single node.
+            print_child_(*i, v);
+          if (next != end(v))
+            // Handle operator.
+            out_ << product_;
+        }
     }
 
     DEFINE::print_child(const node_t& child, precedence_t parent)

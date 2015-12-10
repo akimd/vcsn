@@ -83,7 +83,7 @@ a(c+b)(f+e) => abe+abf+ace+acf
 
 %labels: words
 # Be sure that we get a product of two labels, not a single word,
-(<2>a)(<2>a) => <4>(aa)
+(<2>a)(<2>a) => <4>(a{2})
 (<2>a)(<2>a) == <4>((a)(a))
 <3>abcd == <3>(abcd)
 <3>(abcd) => <3>(abcd)

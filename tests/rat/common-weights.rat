@@ -44,15 +44,15 @@ axb ! 1.2: {abcdefgh}: invalid letter: x
 (ab)* => (ab)*
 abc => abc
 a(bc) => a(bc)
-ab(ab) => (ab)(ab)
-(ab)ab => (ab)(ab)
-ab(ab)ab => (ab)(ab)(ab)
-ab(ab)abc*  => (ab)(ab)(ab)c*
+ab(ab) => (ab){2}
+(ab)ab => (ab){2}
+ab(ab)ab => (ab){3}
+ab(ab)abc*  => (ab){3}c*
 (abc).(cba) => (abc)(cba)
 
 # Power is about mul, not concat.
-(ab){2} => (ab)(ab)
-(ab){3} => (ab)(ab)(ab)
-(ab){,2} => \e+ab+(ab)(ab)
+(ab){2} => (ab){2}
+(ab){3} => (ab){3}
+(ab){,2} => \e+ab+(ab){2}
 (ab){1,2} => (ab)(\e+ab)
-(ab){2,} => (ab)(ab)(ab)*
+(ab){2,} => (ab){2}(ab)*
