@@ -21,7 +21,7 @@ from vcsn.tools import _tmp_file
 # Default style for real states as issued by vcsn::dot.
 state_style = 'node [shape = circle, style = rounded, width = 0.5]'
 # IPython style for real states.
-state_pretty = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]'
+state_pretty = 'node [fontsize = 12, fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]'
 # Style for state in `simple` mode.
 state_simple = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.3]'
 # Style for pre and post states, or when rendering transitions only.
