@@ -76,7 +76,7 @@ namespace
 
   /* Quantifiers.  */
   "?"|"{?}"            return parser::make_STAR(std::make_tuple(0, 1), loc);
-  "*"|"{*}"            return parser::make_STAR(std::make_tuple(-1, -1), loc);
+  "*"|"∗"|"{*}"        return parser::make_STAR(std::make_tuple(-1, -1), loc);
   "{+}"                return parser::make_STAR(std::make_tuple(1, -1), loc);
   "{"[0-9]*,?[0-9]*"}" {
     return parser::make_STAR(quantifier(driver_, loc,

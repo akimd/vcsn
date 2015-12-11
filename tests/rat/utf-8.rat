@@ -1,4 +1,4 @@
-# -*- shell-script, coding:utf-8 -*-
+# -*- mode:shell-script, coding:utf-8 -*-
 
 %context: q
 
@@ -11,3 +11,6 @@
 ¬a == a{c}
 aᶜ == a{c}
 aᵗ == a{T}
+# Yes, this is a different asterisk.  This is the one which is emited
+# when copying from a LaTeX document.
+a∗ == a*
