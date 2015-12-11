@@ -5,11 +5,94 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-12-10
+### Tag based dispatch in vcsn::
+The treatments for which several algorithms exist (e.g.,
+minimize/cominimize ---hopcropft, moore, weighted, signature,
+brzozowski, auto---, determinize/codeterminize ---boolean, weighted,
+auto---, sum/multiply/star ---standard, general, auto---, etc.) now
+offer a cleaner tag-based interface in vcsn::, the static library.
+For instance, instead of:
+
+    auto m = minimize_moore(a);
+
+write:
+
+    auto m = minimize(a, moore_tag{});
+
+### dot format
+The HTML/XML style strings are now properly supported.
+
+### oneset and proper
+The oneset labelset has a single label: one.  It is used to denote automata
+with spontaneous transitions only.  Applying proper on such automata
+resulted in an ill-formed automaton (with a single subliminal transition
+from pre to post).  This is now fixed.
+
+### Flex 2.6
+We are now compatible with the new Flex, which made backward incompatible
+changes in its API.  Previous versions are supported too.
+
+### Text format
+When displaying value sets, the `text` format was improved, and the new
+format `utf8` improves on top of it.  An new format name `sname`, replaces
+previous uses of `text`:
+
+    In [2]: c = vcsn.context('lal_char(abc), expressionset<law_char(xyz), q>')
+
+    In [3]: c.format('sname')
+    Out[3]: 'letterset<char_letters(abc)>, expressionset<wordset<char_letters(xyz)>, q>'
+
+    In [4]: c.format('text')
+    Out[4]: '{abc} -> RatE[{xyz}* -> Q]'
+
+    In [5]: c.format('utf8')
+    Out[5]: '{abc} → RatE[{xyz}* → ℚ]'
+
+When displaying values, the new format `utf8` improves the result.
+
+    In [6]: e = c.expression('!(<x>a)*')
+
+    In [7]: e.format('text')
+    Out[8]: '(<x>a)*{c}'
+
+    In [9]: e.format('utf8')
+    Out[9]: '(⟨x⟩a)*ᶜ'
+
+    In [10]: e.expansion().format('text')
+    Out[10]: 'a.[(<x>a)*{c}] + b.[\\z{c}] + c.[\\z{c}]'
+
+    In [11]: e.expansion().format('utf8')
+    Out[11]: 'a⊙[(⟨x⟩a)*ᶜ] ⊕ b⊙[∅ᶜ] ⊕ c⊙[∅ᶜ]'
+
 ## 2015-12-08
 ### polynomial: conjunction
-Conjunction of polynomial is now available in dyn. For polynomial of
-expressionsets, compute the conjuction of the expressions. Otherwise, keep the
-common labels common to the two polynomials and multiply their weights.
+Conjunction of polynomials is now available in dyn. For polynomials of
+expressionsets, compute the conjunction of the expressions. Otherwise, keep
+the common labels common to the two polynomials and multiply their weights.
+
+## 2015-12-05
+### Syntactic sugar in expressions
+One may now use UTF-8 when entering expressions.  The negation may also be
+denoted by a prefix `!`, which binds weakly (less than concatenation).
+
++----------+---------------------+
+|Sugar     |Plain ASCII          |
++==========+=====================+
+|`∅`       |`\z`                 |
++----------+---------------------+
+|`ε`       |`\e`                 |
++----------+---------------------+
+|`⟨2⟩a`    |`<2>a`               |
++----------+---------------------+
+|`a∗`      |`a*`                 |
++----------+---------------------+
+|`!a`      |`a{c}`               |
+|`¬a`      |                     |
+|`aᶜ`      |                     |
++----------+---------------------+
+|`aᵗ`      |`a{T}`               |
++----------+---------------------+
 
 ## 2015-12-04
 ### weight_series: fix general case
@@ -17,7 +100,6 @@ This algorithm can now be applied to any automaton. In case of ℕmin weightset
 the implementation does not change (shortest path). Otherwise, the result is
 computed by applying proper on the `labels_are_one` version of the automaton.
 
-## 2015-12-04
 ### New trivial identities
 Two new trivial identities have been added (at the "trivial" level):
 neutrality of the universal language for conjunction (\z{c} & E => E, E &
@@ -34,6 +116,13 @@ algorithm: "standard", "general", "auto".  See 2015-11-13 for more details.
 ### to-automaton: trim automata
 Now `to_automaton` (or `expression.automaton` under Python) always produces
 a trim automaton.
+
+## 2015-11-29
+### Improved display of letter classes
+So far disjunction of letters were displayed as classes only if all
+the letters had the same weight.  So `<1>a + <2>[^a]` in an automaton
+resulted in an explicit list of letters.  This is especially
+inappropriate for Levenshtein automata.  We now display `<1>a + <2>[^a]`.
 
 ## 2015-11-20
 ### weight_series: new algorithm
@@ -4291,7 +4380,8 @@ LocalWords:  Vagrantfile VirtualBox mkdir wget VM cb Shortlex kE Ek RatE moore
 LocalWords:  tmp darwin inlined texdoc Moore's uv lhs rhs semirings aabb aab
 LocalWords:  abb MacBook subexpressions monomials Antimirov aaaa monomial aaa
 LocalWords:  Automake Makefile versa Boilod Barray Sébastien Piat Yann
-LocalWords:  Copigny levenshtein delgado
+LocalWords:  Copigny levenshtein delgado hopcropft oneset sname disjunction
+LocalWords:  expressionsets involutivity hopcroft
 
 Local Variables:
 coding: utf-8
