@@ -39,7 +39,7 @@ namespace vcsn LIBVCSN_API
     /// A copy of this format, but to print labels.
     format for_labels() const
     {
-      format res = *this;
+      auto res = *this;
       res.label_ = true;
       return res;
     }
@@ -47,7 +47,7 @@ namespace vcsn LIBVCSN_API
     /// A copy of this format, but to print weights.
     format for_weights() const
     {
-      format res = *this;
+      auto res = *this;
       res.label_ = false;
       return res;
     }
@@ -61,7 +61,7 @@ namespace vcsn LIBVCSN_API
     /// Set whether we should delimit: `(1, 2)` instead of `1, 2`.
     format delimit(bool d) const
     {
-      format res = *this;
+      auto res = *this;
       res.delimit_ = d;
       return res;
     }
