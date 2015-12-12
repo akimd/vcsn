@@ -174,6 +174,9 @@ namespace vcsn
           o << sname();
           break;
         case format::text:
+          o << "F2";
+          break;
+        case format::utf8:
           o << "𝔽₂";
           break;
         case format::raw:

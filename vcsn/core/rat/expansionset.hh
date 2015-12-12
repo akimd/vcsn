@@ -91,6 +91,7 @@ namespace vcsn
             o << ">";
             break;
           case format::text:
+          case format::utf8:
             o << "Expansion[";
             rs_.print_set(o, fmt);
             o << ']';
@@ -109,20 +110,30 @@ namespace vcsn
         bool first = true;
         if (!ws_.is_zero(v.constant) || v.polynomials.empty())
           {
-            o << (fmt == format::latex ? "\\left\\langle " : "<");
+            o << (fmt == format::latex ? "\\left\\langle "
+                  : fmt == format::utf8 ? "⟨"
+                  : "<");
             ws_.print(v.constant, o, fmt.for_weights());
-            o << (fmt == format::latex ? "\\right\\rangle " : ">");
+            o << (fmt == format::latex ? "\\right\\rangle "
+                  : fmt == format::utf8 ? "⟩"
+                  : ">");
             first = false;
           }
         for (const auto& p: v.polynomials)
           {
             if (!first)
-              o << (fmt == format::latex ? " \\oplus " : " + ");
+              o << (fmt == format::latex ? " \\oplus "
+                    : fmt == format::utf8 ? " ⊕ "
+                    : " + ");
             first = false;
             ls_.print(p.first, o, fmt.for_labels());
-            o << (fmt == format::latex ? " \\odot \\left[" : ".[");;
+            o << (fmt == format::latex ? " \\odot \\left["
+                  : fmt == format::utf8 ? "⊙["
+                  : ".[");
             ps_.print(p.second, o, fmt);
-            o << (fmt == format::latex ? "\\right]" : "]");;
+            o << (fmt == format::latex ? "\\right]"
+                  : fmt == format::utf8 ? "]"
+                  : "]");
           }
         return o;
       }

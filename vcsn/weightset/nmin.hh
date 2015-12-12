@@ -59,6 +59,9 @@ namespace vcsn
             o << sname();
             break;
           case format::text:
+            o << "Nmin";
+            break;
+          case format::utf8:
             o << "ℕmin";
             break;
           case format::raw:

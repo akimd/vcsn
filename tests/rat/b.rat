@@ -14,7 +14,7 @@
 [a-b] => a+b
 [a-bc-d] => [a-d]
 
-[b-a] ! 1.1-5: RatE[{abcdefgh}* → 𝔹](associative): invalid letter interval: b-a
+[b-a] ! 1.1-5: RatE[{abcdefgh}* -> B](associative): invalid letter interval: b-a
 []    ! 1.1-2: invalid empty letter class
 a|x   ! 1.2: too many tapes
 

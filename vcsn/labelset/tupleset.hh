@@ -890,6 +890,9 @@ namespace vcsn
         case format::text:
           sep = " x ";
           break;
+        case format::utf8:
+          sep = " × ";
+          break;
         case format::raw:
           assert(0);
           break;

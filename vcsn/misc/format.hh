@@ -22,8 +22,10 @@ namespace vcsn LIBVCSN_API
         raw,
         /// Print as a parsable type string.
         sname,
-        /// Print as text, escaped.
+        /// Print as plain (ASCII) text, escaped.
         text,
+        /// Print as rich UTF-8 text, escaped.
+        utf8,
         /// By default, print for text.
         deflt = text,
       };

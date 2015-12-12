@@ -122,6 +122,33 @@ namespace vcsn
           tuple_middle   = "|";
           tuple_right    = "";
         }
+      else if (fmt_ == format::utf8)
+        {
+          lgroup_        = "";
+          rgroup_        = "";
+          langle_        = "⟨";
+          rangle_        = "⟩";
+          lparen_        = "(";
+          rparen_        = ")";
+          star_          = "*";
+          complement_    = "ᶜ";
+          transposition_ = "ᵗ";
+          conjunction_   = "&";
+          infiltration_  = "&:";
+          shuffle_       = ":";
+          product_       = "";
+          sum_           = "+";
+          zero_          = "∅";
+          one_           = "ε";
+          lmul_          = "";
+          rmul_          = "";
+          ldiv_          = "{\\}";
+          tuple_left     = "";
+          tuple_middle   = "|";
+          tuple_right    = "";
+        }
+      else
+        raise("expression: invalid format: ", fmt_);
     }
 
     DEFINE::precedence_(const node_t& v) const

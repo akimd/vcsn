@@ -283,6 +283,7 @@ namespace vcsn
           o << '>';
           break;
         case format::text:
+        case format::utf8:
           this->genset()->print_set(o, fmt);
           break;
         case format::raw:

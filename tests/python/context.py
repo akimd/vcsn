@@ -26,11 +26,14 @@ check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
 check('lal_char, b',                'letterset<char_letters()>, b')
 # An open context is printed as open in LaTeX.
 check('lal_char, b',      r'\{\ldots\}\to\mathbb{B}', 'latex')
-check('lal_char, b',      r'{...} → 𝔹',               'text')
+check('lal_char, b',      r'{...} -> B',               'text')
+check('lal_char, b',      r'{...} → 𝔹',               'utf8')
 check('lal_char(abc), b', r'\{a, b, c\}\to\mathbb{B}', 'latex')
-check('lal_char(abc), b', r'{abc} → 𝔹',          'text')
+check('lal_char(abc), b', r'{abc} -> B',          'text')
+check('lal_char(abc), b', r'{abc} → 𝔹',          'utf8')
 check('lal_char(), b',    r'\{\}\to\mathbb{B}',  'latex')
-check('lal_char(), b',    r'{} → 𝔹',             'text')
+check('lal_char(), b',    r'{} -> B',             'text')
+check('lal_char(), b',    r'{} → 𝔹',             'utf8')
 
 # letterset and different char_letters.
 check(r'lal_char(), b',       r'letterset<char_letters()>, b')
@@ -89,8 +92,14 @@ check('lat<lal_char(a),lal_char(a)>,b', 'lat<letterset<char_letters(a)>, letters
 check('lal_char(ab), lat<b, z>', 'letterset<char_letters(ab)>, lat<b, z>')
 
 # End of level bosses.
-check('lat<lal_char(ba),lan_char(vu), law_char(x-z)>, lat<expressionset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>',
-      'lat<letterset<char_letters(ab)>, nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>')
+ctx = '''lat<lal_char(ba),lan_char(vu), law_char(x-z)>,
+         lat<expressionset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>'''
+check(ctx,
+      'lat<letterset<char_letters(ab)>, nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>', 'sname')
+check(ctx,
+      '{ab} x {uv}? x {xyz}* -> RatE[{ef} x {gh} -> Q] x R x Q', 'text')
+check(ctx,
+      '{ab} × {uv}? × {xyz}* → RatE[{ef} × {gh} → ℚ] × ℝ × ℚ', 'utf8')
 
 
 # Check that spaces are generously accepted.

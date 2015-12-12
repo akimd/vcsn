@@ -250,8 +250,12 @@ check_prod(r'<1/10>(cd{\}<1/2>cd+a)<2>', '<1/20>(cd{\}<1/3>cd+a)<3>',
 ## LaTeX rendering.  ##
 ## ----------------- ##
 
+x = c.expression(r'aa+<x>abc+<y>bc').expansion()
 CHECK_EQ(r'a \odot \left[a \oplus \left\langle x\right\rangle b \, c\right] \oplus b \odot \left[\left\langle y\right\rangle c\right]',
-         c.expression(r'aa+<x>abc+<y>bc').expansion().format("latex"))
+         x.format("latex"))
+
+CHECK_EQ(r'a⊙[a⊕⟨x⟩bc] ⊕ b⊙[⟨y⟩c]',
+         x.format("utf8"))
 
 
 ## ------------ ##

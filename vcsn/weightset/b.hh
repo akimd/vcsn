@@ -195,6 +195,9 @@ namespace vcsn
           o << sname();
           break;
         case format::text:
+          o << "B";
+          break;
+        case format::utf8:
           o << "𝔹";
           break;
         case format::raw:

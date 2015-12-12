@@ -223,6 +223,7 @@ namespace vcsn
             break;
 
           case format::text:
+          case format::utf8:
             if (l == '\\')
               o << "\\\\";
             else

@@ -115,6 +115,9 @@ namespace vcsn
           o << ", ";
           break;
         case format::text:
+          o << " -> ";
+          break;
+        case format::utf8:
           o << " → ";
           break;
         case format::raw:

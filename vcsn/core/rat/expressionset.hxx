@@ -95,6 +95,7 @@ namespace vcsn
               }
             break;
           case format::text:
+          case format::utf8:
             o << "RatE[";
             context().print_set(o, fmt);
             o << ']';

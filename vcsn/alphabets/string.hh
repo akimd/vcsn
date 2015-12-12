@@ -242,6 +242,7 @@ namespace vcsn
 
           case format::sname:
           case format::text:
+          case format::utf8:
             if (l.get().size() == 1)
               str_escape(o, l, "|',[-]<>");
             else

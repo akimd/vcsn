@@ -189,6 +189,9 @@ namespace vcsn
           o << sname();
           break;
         case format::text:
+          o << "{\\e}";
+          break;
+        case format::utf8:
           o << "{ε}";
           break;
         case format::raw:

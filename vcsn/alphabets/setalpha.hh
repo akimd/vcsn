@@ -290,6 +290,7 @@ namespace vcsn
           break;
 
         case format::text:
+        case format::utf8:
           o << '{';
           for (letter_t l: alphabet_)
             this->print(l, o, format::sname);

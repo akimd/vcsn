@@ -1004,6 +1004,7 @@ namespace vcsn
           o << '>';
           break;
         case format::text:
+        case format::utf8:
           o << "Poly[";
           context().print_set(o, fmt);
           o << ']';
@@ -1204,12 +1205,20 @@ namespace vcsn
           format fmt = {},
           const std::string& sep = " + ") const
     {
-      bool latex = fmt == format::latex;
       if (is_zero(v))
-        out << (latex ? "\\emptyset" : "\\z");
+        out << (fmt == format::latex ? "\\emptyset"
+                : fmt == format::utf8 ? "∅"
+                : "\\z");
       else
-        print_<context_t>(v, out, fmt,
-                          latex && sep == " + " ? " \\oplus " : sep);
+        {
+          const auto s =
+            (sep == " + "
+             ? (fmt == format::latex ? std::string{" \\oplus "}
+                : fmt == format::utf8 ? std::string{"⊕"}
+                : sep)
+             : sep);
+          print_(v, out, fmt, s);
+        }
       return out;
     }
 
@@ -1222,9 +1231,13 @@ namespace vcsn
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(w))
         {
-          out << (fmt == format::latex ? "\\left\\langle " : std::string{langle});
+          out << (fmt == format::latex ? "\\left\\langle "
+                  : fmt == format::utf8 ? "⟨"
+                  : "<");
           weightset()->print(w, out, fmt.for_weights());
-          out << (fmt == format::latex ? "\\right\\rangle " : std::string{rangle});
+          out << (fmt == format::latex ? "\\right\\rangle "
+                  : fmt == format::utf8 ? "⟩"
+                  : ">");
         }
       return out;
     }
@@ -1311,7 +1324,7 @@ namespace vcsn
     }
 
     /// Print a non-null value for a non letterized labelset.
-    template <typename Ctx>
+    template <typename Ctx = context_t>
     vcsn::enable_if_t<!labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>
     print_(const value_t& v, std::ostream& out,
@@ -1323,7 +1336,7 @@ namespace vcsn
 
     /// Print a non-null value for a letterized labelset (e.g., letterset
     /// or nullableset.
-    template <typename Ctx>
+    template <typename Ctx = context_t>
     vcsn::enable_if_t<labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>
     print_(const value_t& v, std::ostream& out,

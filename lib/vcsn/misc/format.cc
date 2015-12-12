@@ -20,6 +20,7 @@ namespace vcsn
         {"raw",        raw},
         {"sname",      sname},
         {"text",       text},
+        {"utf8",       utf8},
       };
     format_ = getargs("format", map, f);
   }
@@ -36,6 +37,8 @@ namespace vcsn
         return "sname";
       case format::text:
         return "text";
+      case format::utf8:
+        return "utf8";
       }
     BUILTIN_UNREACHABLE();
   }

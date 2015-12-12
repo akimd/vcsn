@@ -195,6 +195,9 @@ namespace vcsn
           o << sname();
           break;
         case format::text:
+          o << "Qmp";
+          break;
+        case format::utf8:
           o << "ℚmp";
           break;
         case format::raw:

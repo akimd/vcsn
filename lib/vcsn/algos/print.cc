@@ -28,7 +28,7 @@ namespace vcsn
     {
       if (format == "null")
         {}
-      else if (format == "latex")
+      else if (format == "latex" || format == "utf8")
         detail::print_expansion_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
@@ -54,7 +54,7 @@ namespace vcsn
     {
       if (format == "null")
         {}
-      else if (format == "latex")
+      else if (format == "latex" || format == "utf8")
         detail::print_label_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
@@ -83,7 +83,7 @@ namespace vcsn
         detail::list_polynomial_registry().call(p, out);
       else if (format == "null")
         {}
-      else if (format == "latex")
+      else if (format == "latex" || format == "utf8")
         detail::print_polynomial_registry().call(p, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
@@ -112,7 +112,7 @@ namespace vcsn
         info(exp, out);
       else if (format == "null")
         {}
-      else if (format == "latex")
+      else if (format == "latex" || format == "utf8")
         detail::print_expression_registry().call(exp, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
@@ -139,7 +139,7 @@ namespace vcsn
     {
       if (format == "null")
         {}
-      else if (format == "latex")
+      else if (format == "latex" || format == "utf8")
         detail::print_weight_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {

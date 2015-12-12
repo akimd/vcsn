@@ -515,6 +515,7 @@ namespace vcsn
           break;
 
         case format::text:
+        case format::utf8:
           ls_->print_set(o, fmt);
           o << '?';
           break;
