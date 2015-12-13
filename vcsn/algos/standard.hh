@@ -47,7 +47,6 @@ namespace vcsn
     template <typename... Auts>
     auto
     make_join_automaton(standard_tag, Auts&&... auts)
-      -> decltype(join_automata(std::forward<Auts>(auts)...))
     {
       return join_automata(std::forward<Auts>(auts)...);
     }
@@ -105,7 +104,6 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
-      inline
       bool
       is_standard(const automaton& aut)
       {
@@ -115,7 +113,6 @@ namespace vcsn
 
       /// Bridge.
       template <typename Aut>
-      inline
       bool
       is_costandard(const automaton& aut)
       {
@@ -170,7 +167,6 @@ namespace vcsn
   template <typename Aut>
   auto
   standard(const Aut& aut)
-    -> decltype(copy(aut))
   {
     auto res = copy(aut);
     standard_here(res);
@@ -192,7 +188,6 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
-      inline
       automaton
       standard(const automaton& aut)
       {
@@ -202,7 +197,6 @@ namespace vcsn
 
       /// Bridge.
       template <typename Aut>
-      inline
       automaton
       costandard(const automaton& aut)
       {

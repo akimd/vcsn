@@ -61,7 +61,6 @@ namespace vcsn
   ///
   /// \pre AutIn <: AutOut.
   template <typename A, typename B>
-  inline
   A&
   sum_here(A& res, const B& b, general_tag)
   {
@@ -75,7 +74,6 @@ namespace vcsn
   /// \param rhs  the second automaton.
   /// \param tag  whether to use constructs for standard automata.
   template <typename A, typename B, typename Tag = general_tag>
-  inline
   auto
   sum(const A& lhs, const B& rhs, Tag tag = {})
     -> decltype(join_automata(lhs, rhs))
@@ -114,7 +112,6 @@ namespace vcsn
 
   /// Sums of values.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   sum(const ValueSet& vs,
       const typename ValueSet::value_t& lhs,

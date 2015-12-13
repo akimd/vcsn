@@ -730,61 +730,34 @@ namespace vcsn
     | Iteration on states and transitions.   |
     `---------------------------------------*/
 
-    template <typename Pred>
-    using states_output_t
-      = container_filter_range<boost::integer_range<state_t>, Pred>;
-
   protected:
-    // FIXME: Exists only to work around Clang++ 3.5 dying on debug
-    // symbols for functions with deduced return type.
-    template <typename Pred>
-    struct valid_state_p
-    {
-      auto operator()(state_t s) -> bool
-      {
-        const stored_state_t& ss = aut_.states_[s];
-        return ((ss.succ.empty()
-                 || ss.succ.front() != aut_.null_transition())
-                && pred_(s));
-      }
-      const self_t& aut_;
-      Pred pred_;
-    };
-
     /// The range of state numbers in [b .. e] that validate the
     /// predicate \a pred.
     template <typename Pred>
-    states_output_t<valid_state_p<Pred>>
-    state_range(state_t b, state_t e, Pred pred) const
+    auto state_range(state_t b, state_t e, Pred pred) const
     {
-      return
-        {boost::irange<state_t>(b, e), valid_state_p<Pred>{*this, pred}};
+      return make_container_filter_range
+        (boost::irange<state_t>(b, e),
+         [this, pred]
+         (state_t s)
+         {
+           const stored_state_t& ss = states_[s];
+           return ((ss.succ.empty()
+                    || ss.succ.front() != null_transition())
+                   && pred(s));
+         });
     }
-
-    // FIXME: clang workaround.
-    /// Accept all the states.
-    ///
-    /// FIXME: exists only to work around limitations in Clang that
-    /// does not support debug symbols for function deduced types,
-    /// therefore it prevents use from using lambdas defined inside
-    /// the function itself.
-    struct all_states_p
-    {
-      bool operator()(state_t) const { return true; };
-    };
 
     /// The range of state numbers in [b .. e].
     auto state_range(state_t b, state_t e) const
-      -> decltype(this->state_range(b, e, all_states_p{}))
     {
-      return state_range(b, e, all_states_p{});
+      return state_range(b, e, [](state_t) { return true; });
     }
 
   public:
     /// All states including pre()/post().
     /// Guaranteed in increasing order.
     auto all_states() const
-      -> decltype(this->state_range(0U, states_.size()))
     {
       return state_range(0U, states_.size());
     }
@@ -793,7 +766,6 @@ namespace vcsn
     /// Guaranteed in increasing order.
     template <typename Pred>
     auto all_states(Pred pred) const
-      -> decltype(this->state_range(0U, states_.size(), pred))
     {
       return state_range(0U, states_.size(), pred);
     }
@@ -801,52 +773,27 @@ namespace vcsn
     /// All states excluding pre()/post().
     /// Guaranteed in increasing order.
     auto states() const
-      -> decltype(this->state_range(post() + 1, states_.size()))
     {
       return state_range(post() + 1, states_.size());
     }
 
-    template <typename Pred>
-    using transitions_output_t
-      = container_filter_range<boost::integer_range<transition_t>, Pred>;
-
-    // FIXME: clang workaround.
-    template <typename Pred>
-    struct has_state_p
-    {
-      bool operator()(transition_t t) const
-      {
-        return (aut_.src_of(t) != aut_.null_state()
-                && pred_(t));
-      };
-      const self_t& aut_;
-      Pred pred_;
-    };
-
     /// All the transition indexes between all states (including pre and post),
     /// that validate \a pred.
     template <typename Pred>
-    transitions_output_t<has_state_p<Pred>>
-    all_transitions(Pred pred) const
+    auto all_transitions(Pred pred) const
     {
-      return
-        {
-          boost::irange<transition_t>(0U, transitions_.size()),
-          has_state_p<Pred>{*this, pred}
-        };
+      return make_container_filter_range
+        (boost::irange<transition_t>(0U, transitions_.size()),
+         [this,pred](transition_t t)
+         {
+           return src_of(t) != null_state() && pred(t);
+         });
     }
-
-    // FIXME: clang workaround.
-    struct all_transitions_p
-    {
-      bool operator()(transition_t) const { return true; };
-    };
 
     /// All the transition indexes between all states (including pre and post).
     auto all_transitions() const
-      -> decltype(this->all_transitions(all_transitions_p{}))
     {
-      return all_transitions(all_transitions_p{});
+      return all_transitions([](transition_t) { return true; });
     }
 
     // FIXME: clang workaround.
@@ -869,22 +816,14 @@ namespace vcsn
       const self_t& aut_;
     };
 
-    // FIXME: clang workaround.
-    struct not_with_pre_post_p
-    {
-      bool operator()(transition_t t) const
-      {
-        return (aut_.src_of(t) != aut_.pre()
-                && aut_.dst_of(t) != aut_.post());
-      }
-      const self_t& aut_;
-    };
-
     /// All the transition indexes between visible states.
     auto transitions() const
-      -> decltype(this->all_transitions(not_with_pre_post_p{*this}))
     {
-      return all_transitions(not_with_pre_post_p{*this});
+      return all_transitions([this](transition_t t)
+                             {
+                               return (src_of(t) != pre()
+                                       && dst_of(t) != post());
+                             });
     }
 
     /// Indexes of all transitions leaving state \a s.
@@ -911,7 +850,6 @@ namespace vcsn
     /// Indexes of visible transitions leaving state \a s.
     /// Invalidated by del_transition() and del_state().
     auto out(state_t s) const
-      -> decltype(this->all_out(s, not_to_post_p{*this}))
     {
       return all_out(s, not_to_post_p{*this});
     }
@@ -932,7 +870,6 @@ namespace vcsn
     /// Indexes of all transitions leaving state \a s on label \a l.
     /// Invalidated by del_transition() and del_state().
     auto out(state_t s, label_t l) const
-      -> decltype(this->all_out(s, label_equal_p{*this, l}))
     {
       return all_out(s, label_equal_p{*this, l});
     }
@@ -961,7 +898,6 @@ namespace vcsn
     /// Indexes of visible transitions arriving to state \a s.
     /// Invalidated by del_transition() and del_state().
     auto in(state_t s) const
-      -> decltype(this->all_in(s, not_from_pre_p{*this}))
     {
       return all_in(s, not_from_pre_p{*this});
     }
@@ -969,7 +905,6 @@ namespace vcsn
     /// Indexes of visible transitions arriving to state \a s on label \a l.
     /// Invalidated by del_transition() and del_state().
     auto in(state_t s, label_t l) const
-      -> decltype(this->all_in(s, label_equal_p{*this, l}))
     {
       return all_in(s, label_equal_p{*this, l});
     }
@@ -989,7 +924,6 @@ namespace vcsn
     /// Also include the weird case of transitions between pre and
     /// post.  This is used when calling eliminate_state repeatedly.
     auto initial_transitions() const
-      -> decltype(this->all_out(pre()))
     {
       return all_out(pre());
     }
@@ -999,7 +933,6 @@ namespace vcsn
     /// Also include the weird case of transitions between pre and
     /// post.  This is used when calling eliminate_state repeatedly.
     auto final_transitions() const
-      -> decltype(this->all_in(post()))
     {
       return all_in(post());
     }

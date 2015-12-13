@@ -103,7 +103,6 @@ namespace vcsn
 
       template <typename Pred>
       auto all_states(Pred pred) const
-        -> decltype(this->aut_->all_states(has_state_p<Pred>{*this, pred}))
       {
         return aut_->all_states(has_state_p<Pred>{*this, pred});
       }
@@ -115,7 +114,6 @@ namespace vcsn
       };
 
       auto all_states() const
-        -> decltype(this->all_states(all_states_p{}))
       {
         return all_states(all_states_p{});
       }
@@ -132,7 +130,6 @@ namespace vcsn
       };
 
       auto states() const
-        -> decltype(this->all_states(visible_state_p{*this}))
       {
         return all_states(visible_state_p{*this});
       }
@@ -153,8 +150,6 @@ namespace vcsn
 
       template <typename Pred>
       auto all_transitions(Pred pred) const
-        -> decltype(this->aut_->all_transitions(has_transition_p<Pred>{*this,
-                                                                       pred}))
       {
         return aut_->all_transitions(has_transition_p<Pred>{*this, pred});
       }
@@ -168,15 +163,12 @@ namespace vcsn
       /// All the transition indexes between all states (including pre
       /// and post).
       auto all_transitions() const
-        -> decltype(this->all_transitions(all_transitions_p{}))
       {
         return all_transitions(all_transitions_p{});
       }
 
       /// All the transition indexes between visible states.
       auto transitions() const
-        -> decltype(this->all_transitions(has_transition_p<all_transitions_p>
-                                          {*this, all_transitions_p{}}))
       {
         auto pred
           = has_transition_p<all_transitions_p>{*this, all_transitions_p{}};
@@ -197,13 +189,11 @@ namespace vcsn
 
       template <typename Pred>
       auto all_out(state_t s, Pred pred) const
-        -> decltype(this->aut_->all_out(s, has_dst_p<Pred>{*this, pred}))
       {
         return aut_->all_out(s, has_dst_p<Pred>{*this, pred});
       }
 
       auto all_out(state_t s) const
-      -> decltype(this->all_out(s, all_transitions_p{}))
       {
         return all_out(s, all_transitions_p{});
       }
@@ -219,7 +209,6 @@ namespace vcsn
       };
 
       auto out(state_t s) const
-        -> decltype(this->all_out(s, not_to_post_p{*this}))
       {
         return all_out(s, not_to_post_p{*this});
       }
@@ -236,7 +225,6 @@ namespace vcsn
       };
 
       auto out(state_t s, label_t l) const
-        -> decltype(this->all_out(s, label_equal_p{*this, l}))
       {
         return all_out(s, label_equal_p{*this, l});
       }
@@ -255,13 +243,11 @@ namespace vcsn
 
       template <typename Pred>
       auto all_in(state_t s, Pred pred) const
-        -> decltype(this->aut_->all_in(s, has_src_p<Pred>{*this, pred}))
       {
         return aut_->all_in(s, has_src_p<Pred>{*this, pred});
       }
 
       auto all_in(state_t s) const
-        -> decltype(this->all_in(s, all_transitions_p{}))
       {
         return all_in(s, all_transitions_p{});
       }
@@ -277,13 +263,11 @@ namespace vcsn
       };
 
       auto in(state_t s) const
-        -> decltype(this->all_in(s, not_from_pre_p{*this}))
       {
         return all_in(s, not_from_pre_p{*this});
       }
 
       auto in(state_t s, label_t l) const
-        -> decltype(this->all_in(s, label_equal_p{*this, l}))
       {
         return all_in(s, label_equal_p{*this, l});
       }
@@ -296,14 +280,12 @@ namespace vcsn
 
       /// Indexes of transitions to visible initial states.
       auto initial_transitions() const
-        -> decltype(this->out(pre()))
       {
         return out(pre());
       }
 
       /// Indexes of transitions from visible final states.
       auto final_transitions() const
-        -> decltype(this->in(post()))
       {
         return in(post());
       }
@@ -324,7 +306,6 @@ namespace vcsn
 
   /// Get an automaton who is a part state set \a ss of \a aut.
   template <typename Aut>
-  inline
   filter_automaton<Aut>
   filter(const Aut& aut, const std::unordered_set<state_t_of<Aut>>& ss)
   {

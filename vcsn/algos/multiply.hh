@@ -123,7 +123,8 @@ namespace vcsn
   inline
   auto
   multiply(const A& lhs, const B& rhs, Tag tag = {})
-    -> decltype(detail::make_join_automaton(tag, lhs, rhs))
+    -> decltype(lhs->null_state(), // SFINAE.
+                detail::make_join_automaton(tag, lhs, rhs))
   {
     auto res = detail::make_join_automaton(tag, lhs, rhs);
     ::vcsn::copy_into(lhs, res);

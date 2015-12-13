@@ -11,7 +11,6 @@ namespace vcsn
 
     // automata that feature a strip member function.
     template <typename Aut>
-    inline
     auto
     strip(const Aut& aut, int)
       -> decltype(aut->strip())
@@ -21,7 +20,6 @@ namespace vcsn
 
     // automata that don't feature a strip member function.
     template <typename Aut>
-    inline
     auto
     strip(const Aut& aut, long)
       -> decltype(aut)
@@ -32,10 +30,8 @@ namespace vcsn
 
   /// Remove (all) the decorations from a decorated automaton.
   template <typename Aut>
-  inline
   auto
   strip(const Aut& aut)
-    -> decltype(detail::strip(aut, 0))
   {
     return detail::strip(aut, 0);
   }
@@ -46,7 +42,6 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
-      inline
       automaton
       strip(const automaton& aut)
       {
