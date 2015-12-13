@@ -176,6 +176,7 @@ namespace vcsn
           o << sname();
           break;
         case format::text:
+        case format::utf8:
           o << "Log";
           break;
         case format::raw:
