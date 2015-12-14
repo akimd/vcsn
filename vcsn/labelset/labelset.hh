@@ -77,10 +77,14 @@ namespace vcsn
 # pragma GCC diagnostic pop
 #endif
 
+
     /*-------------------.
     | make_letterized.   |
     `-------------------*/
 
+    /// A traits to compute the letterized context.
+    ///
+    /// For instance LAL -> LAL, LAW -> LAN, LAW x LAW -> LAN x LAN.
     template <typename LabelSet>
     struct letterized_traits
     {

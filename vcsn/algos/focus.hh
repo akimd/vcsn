@@ -120,14 +120,15 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res(("focus_automaton<" + std::to_string(Tape) + ", "
-                + automaton_t::element_type::sname() + '>'));
+        static auto res = symbol{"focus_automaton<"
+                                 + std::to_string(Tape) + ", "
+                                 + automaton_t::element_type::sname() + '>'};
         return res;
       }
 
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
-        o << "focus_automaton<" << std::to_string(Tape) << ", ";
+        o << "focus_automaton<" << Tape << ", ";
         aut_->print_set(o, fmt);
         return o << '>';
       }

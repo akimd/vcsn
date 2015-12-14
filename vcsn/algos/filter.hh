@@ -20,6 +20,7 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
+      using self_t = filter_automaton_impl;
       using super_t = automaton_decorator<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -97,7 +98,7 @@ namespace vcsn
         {
           return pred(s) && has(aut_.ss_, s);
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
         Pred pred;
       };
 
@@ -126,7 +127,7 @@ namespace vcsn
           // When transposing post() < pre().
           return std::max(pre(), post()) < s;
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
       };
 
       auto states() const
@@ -144,7 +145,7 @@ namespace vcsn
                   && has(aut_.ss_, aut_.src_of(t))
                   && has(aut_.ss_, aut_.dst_of(t)));
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
         Pred pred;
       };
 
@@ -183,7 +184,7 @@ namespace vcsn
         {
           return pred(t) && has(aut_.ss_, aut_.dst_of(t));
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
         Pred pred;
       };
 
@@ -205,7 +206,7 @@ namespace vcsn
         {
           return aut_.dst_of(t) != aut_.post();
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
       };
 
       auto out(state_t s) const
@@ -220,7 +221,7 @@ namespace vcsn
         {
           return aut_.labelset()->equal(aut_.label_of(t), label_);
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
         label_t label_;
       };
 
@@ -237,7 +238,7 @@ namespace vcsn
         {
           return pred(t) && has(aut_.ss_, aut_.src_of(t));
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
         Pred pred;
       };
 
@@ -259,7 +260,7 @@ namespace vcsn
         {
           return aut_.src_of(t) != aut_.pre();
         }
-        const filter_automaton_impl& aut_;
+        const self_t& aut_;
       };
 
       auto in(state_t s) const

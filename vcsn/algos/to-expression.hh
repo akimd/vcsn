@@ -232,7 +232,7 @@ namespace vcsn
       {
         if (s == aut_->null_state())
           {
-            require(!todo_.empty(), "not a valid state: ", s);
+            require(!todo_.empty(), "no state left to remove");
             auto p = todo_.top();
             todo_.pop();
             s = p.state_;

@@ -232,15 +232,15 @@ we treat it as if it were lan<string> instead of law<char>.
 Support several arguments.
 
 ** expression
-On occasions I would have liked to be able to see the AST draw as a Dot
-tree.  I'd like two different output: as a tree (semantical), or as a DAG: a
-physical reprensentation including the shared parts of an expression.
+On occasions I would have liked to be able to see the AST drawn as a Dot
+tree.  I'd like two different outputs: as a tree (semantical), or as a DAG:
+a physical representation including the shared parts of an expression.
 
 ** info
 The size of the expression is badly defined.  For instance 'a{10}' says it
 has a single prod.  By the way, it should be call multiplication, not prod.
 But it is also useful to know that there is a single node.  So it would be
-useful to have two informations: the number of AST nodes, and the
+useful to have two pieces of information: the number of AST nodes, and the
 theoretical size.  Both should be displayed and computed in a single
 traversal.
 
@@ -262,7 +262,7 @@ it.
 Actually, I have tracked it down, and it appears to be a mirage.  Or rather,
 when I run again the benchs of the previous commits, the loss of performance
 propagates backward!  So I guess the problem is actually due to a
-compiler/libc++ update that degradated this algorithm (or quite surprisingly
+compiler/libc++ update that degraded this algorithm (or quite surprisingly
 enough, no other).
 
 In other words, I'd say we should no longer bother about this.
@@ -529,7 +529,7 @@ We need to hide the map, and expose a polynomial_t type:
       return res;
     }
 
-likewise with assignements.  The problem came from derivation with
+likewise with assignments.  The problem came from derivation with
 conjunction:
 
       virtual void
@@ -686,7 +686,7 @@ than that of timings: 2750.
 
 * dyn::
 ** Implement implicit conversions
-So that, for instance, we can run is-derministic on a proper lan.
+So that, for instance, we can run is-deterministic on a proper lan.
 
 ** product
 Change product signature to take a vector<const automaton&> instead of a
@@ -809,13 +809,33 @@ Is this what we want?
 * mutable_automaton::set_transition
 We should find a means to forbid transition from pre to post.  This was the
 case initially, but it is troublesome to-expression.  Maybe it should be
-efforced only in non labels_are_unit case.
+enforced only in non labels_are_unit case.
 
 * Readings
 About dyn/static bridge:
 
 http://www.lrde.epita.fr/dload/papers/gcse00-yrw/olena.html
 ls ~theo/pub/*ouil*
+
+LocalWords:  subword Levenshtein automata ADL semirings Doxygen IPython Wc
+LocalWords:  IPython's mult lmul rmul fsanitize dsymutil dylib xargs ASAN
+LocalWords:  SYMBOLIZER llvm symbolizer MacPorts Libtool ArchLinux TAF vcsn
+LocalWords:  Traceback cxx ImportError asan DSO LD PRELOAD subprocesses lan
+LocalWords:  ASAN'd precedences thompson seriesset lal Tolmer cpu labelset
+LocalWords:  weightset parens gh tuple tupleset lao expressionset bw ptr RW
+LocalWords:  parenthetized crange letterize FWIW realtime aut commutativity
+LocalWords:  MathJax Stackoverflow SVG efsm AST semantical moore gceb gec
+LocalWords:  cccf benchs libc polynomialset aa ce ddfb Alexandre Duret Lutz
+LocalWords:  cls weakref setattr gd ae fdd dyn associativity abc lazyness
+LocalWords:  insplit insplitting API variadic scc Tarjan sccs const functor
+LocalWords:  gb dfc gff trie determinization Chrobak Marek aaaaa aaaab eps
+LocalWords:  bbbbb Refactoring functors ctors GCC subprocess variadicity hh
+LocalWords:  algos supertype typename WeightSet frac monomials monomial ws
+LocalWords:  init hadam namespace Optimizations subautomaton bool wrt JS SL
+LocalWords:  subexpression rhs de Bruijn aaa Booleans bitsets algo timeit
+LocalWords:  cachegrind determinized optimizations NDEBUG fado dl FAdo nfa
+LocalWords:  readFromFile dfa toDFA Forlan Vaucanson weightsets Hopcroft
+LocalWords:  Revuz Brzozowski invariants pre theo ouil utf ispell american
 
 Local Variables:
 coding: utf-8

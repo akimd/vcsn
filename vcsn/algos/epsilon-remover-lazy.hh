@@ -254,6 +254,6 @@ namespace vcsn
   }
 
   template <typename Aut>
-      using lazy_proper_automaton
-      = std::shared_ptr<detail::lazy_proper_automaton_impl<Aut>>;
+  using lazy_proper_automaton
+    = std::shared_ptr<detail::lazy_proper_automaton_impl<Aut>>;
 }
