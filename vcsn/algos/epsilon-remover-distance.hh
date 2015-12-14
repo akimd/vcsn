@@ -64,8 +64,8 @@ namespace vcsn
                 }
         );
         dcopier([&aut](state_t s) {
-                  return (!aut->in(s, aut->labelset()->one()).empty()
-                         || !aut->out(s, aut->labelset()->one()).empty());
+                  return (!in(aut, s, aut->labelset()->one()).empty()
+                         || !out(aut, s, aut->labelset()->one()).empty());
                 },
                 [&aut](transition_t t) {
                   return aut->labelset()->is_one(aut->label_of(t));

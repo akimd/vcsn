@@ -8,6 +8,7 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/irange.hpp>
 
+#include <vcsn/core/automaton.hh>
 #include <vcsn/core/fwd.hh>
 #include <vcsn/core/transition.hh>
 #include <vcsn/ctx/context.hh>
@@ -796,26 +797,6 @@ namespace vcsn
       return all_transitions([](transition_t) { return true; });
     }
 
-    // FIXME: clang workaround.
-    struct not_from_pre_p
-    {
-      bool operator()(transition_t t) const
-      {
-        return aut_.src_of(t) != aut_.pre();
-      }
-      const self_t& aut_;
-    };
-
-    // FIXME: clang workaround.
-    struct not_to_post_p
-    {
-      bool operator()(transition_t t) const
-      {
-        return aut_.dst_of(t) != aut_.post();
-      }
-      const self_t& aut_;
-    };
-
     /// All the transition indexes between visible states.
     auto transitions() const
     {
@@ -847,33 +828,6 @@ namespace vcsn
       return {states_[s].succ, pred};
     }
 
-    /// Indexes of visible transitions leaving state \a s.
-    /// Invalidated by del_transition() and del_state().
-    auto out(state_t s) const
-    {
-      return all_out(s, not_to_post_p{*this});
-    }
-
-    // FIXME: clang workaround.
-    struct label_equal_p
-    {
-      bool operator()(transition_t t) const
-      {
-        return aut_.labelset()->equal(aut_.label_of(t), label_);
-      }
-      const self_t& aut_;
-      // Capture by copy: in the case of the transpose_automaton, the
-      // labels are transposed, so they are temporaries.
-      label_t label_;
-    };
-
-    /// Indexes of all transitions leaving state \a s on label \a l.
-    /// Invalidated by del_transition() and del_state().
-    auto out(state_t s, label_t l) const
-    {
-      return all_out(s, label_equal_p{*this, l});
-    }
-
     /// Indexes of all transitions arriving to state \a s.
     /// Invalidated by del_transition() and del_state().
     container_range<const tr_cont_t&>
@@ -895,20 +849,6 @@ namespace vcsn
       return {states_[s].pred, pred};
     }
 
-    /// Indexes of visible transitions arriving to state \a s.
-    /// Invalidated by del_transition() and del_state().
-    auto in(state_t s) const
-    {
-      return all_in(s, not_from_pre_p{*this});
-    }
-
-    /// Indexes of visible transitions arriving to state \a s on label \a l.
-    /// Invalidated by del_transition() and del_state().
-    auto in(state_t s, label_t l) const
-    {
-      return all_in(s, label_equal_p{*this, l});
-    }
-
     /// Indexes of visible transitions from state \a s to state \a d.
     /// Invalidated by del_transition() and del_state().
     auto outin(state_t s, state_t d) const
@@ -917,24 +857,6 @@ namespace vcsn
                      {
                        return dst_of(t) == d;
                      });
-    }
-
-    /// Indexes of transitions to visible initial states.
-    ///
-    /// Also include the weird case of transitions between pre and
-    /// post.  This is used when calling eliminate_state repeatedly.
-    auto initial_transitions() const
-    {
-      return all_out(pre());
-    }
-
-    /// Indexes of transitions from visible final states.
-    ///
-    /// Also include the weird case of transitions between pre and
-    /// post.  This is used when calling eliminate_state repeatedly.
-    auto final_transitions() const
-    {
-      return all_in(post());
     }
   };
   }

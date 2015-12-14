@@ -61,7 +61,7 @@ namespace vcsn
   {
     auto less = detail::transition_less<Aut>{a};
     for (auto s: a->states())
-      if (!detail::is_sorted_forward(a->out(s), less))
+      if (!detail::is_sorted_forward(out(a, s), less))
         return false;
     return true;
   }
@@ -128,7 +128,7 @@ namespace vcsn
       void visit_successors_of_(input_state_t s, state_t res_s)
       {
         std::vector<input_transition_t> ts;
-        // Here a_->out(s) would just as well as a_->all_out(s) but it
+        // Here out(a_, s) would just as well as a_->all_out(s) but it
         // would be slower; later we have to test one condition per
         // transition anyway, which is just the additional work
         // performed by out.

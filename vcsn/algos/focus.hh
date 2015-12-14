@@ -223,38 +223,9 @@ namespace vcsn
       // using super_t::out;
       auto
       out(state_t s) const
-        -> decltype(aut_->out(s))
+        -> decltype(out(aut_, s))
       {
-        return aut_->out(s);
-      }
-
-      /// Indexes of all transitions leaving state \a s on label \a l.
-      /// Invalidated by del_transition() and del_state().
-      ///
-      /// FIXME: costly structure.
-      std::vector<transition_t>
-      out(state_t s, label_t l) const
-      {
-        std::vector<transition_t> res;
-        for (auto t: aut_->all_out(s))
-          if (labelset()->equal(label_of(t), l))
-            res.emplace_back(t);
-        return res;
-      }
-
-      /// Indexes of all transitions leaving state \a s on label \a l.
-      /// Invalidated by del_transition() and del_state().
-      ///
-      /// FIXME: costly structure.
-      using super_t::in;
-      std::vector<transition_t>
-      in(state_t s, label_t l) const
-      {
-        std::vector<transition_t> res;
-        for (auto t: aut_->all_in(s))
-          if (this->labelset()->equal(label_of(t), l))
-            res.emplace_back(t);
-        return res;
+        return out(aut_, s);
       }
 
       // FIXME: Having support for predicates in

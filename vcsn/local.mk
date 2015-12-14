@@ -126,6 +126,7 @@ nobase_include_HEADERS =                        \
   %D%/alphabets/setalpha.hh                     \
   %D%/alphabets/string.hh                       \
   %D%/core/automaton-decorator.hh               \
+  %D%/core/automaton.hh                         \
   %D%/core/expression-automaton.hh              \
   %D%/core/fwd.hh                               \
   %D%/core/join-automata.hh                     \

@@ -170,7 +170,7 @@ namespace vcsn
         // weight.  This requires, when we have several initial
         // states or an non, to "exhibit" pre() and spontaneous transitions.
         // Avoid this when possible.
-        auto inis =  aut_->initial_transitions();
+        auto inis =  initial_transitions(aut_);
         if (inis.size() != 1
             || !ws_.is_one(aut_->weight_of(inis.front())))
           for (auto t : inis)
@@ -196,7 +196,7 @@ namespace vcsn
           for (auto s: states)
             this->print_state_(s);
         }
-        for (auto t : aut_->final_transitions())
+        for (auto t : final_transitions(aut_))
           {
             os_ << '\n';
             print_transition_(t);

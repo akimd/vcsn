@@ -84,8 +84,8 @@ namespace vcsn
                 }
         );
         dcopier([&aut](state_t s) {
-                  return (!aut->in(s, aut->labelset()->one()).empty()
-                          || !aut->out(s, aut->labelset()->one()).empty());
+                  return (!in(aut, s, aut->labelset()->one()).empty()
+                          || !out(aut, s, aut->labelset()->one()).empty());
                 },
                 [&aut](transition_t t) {
                   return aut->labelset()->is_one(aut->label_of(t));
@@ -113,9 +113,9 @@ namespace vcsn
         auto dirty_s = p2d_[proper_s];
         if (auto p = profile_(proper_s))
           {
-            auto in_dirty = aut_dirty_->in(dirty_s).size();
-            auto in_proper = aut_proper_->in(proper_s).size();
-            auto out_dirty = aut_dirty_->out(dirty_s).size();
+            auto in_dirty = in(aut_dirty_, dirty_s).size();
+            auto in_proper = in(aut_proper_, proper_s).size();
+            auto out_dirty = out(aut_dirty_, dirty_s).size();
             auto out_proper = aut_proper_->all_out(proper_s).size();
 
             p->update(in_dirty, in_proper + in_dirty,
@@ -130,7 +130,7 @@ namespace vcsn
         for (auto s: aut_dirty_->states())
           // We don't care about states without incoming spontaneous
           // transitions.
-          if (aut_dirty_->in(s).size())
+          if (in(aut_dirty_, s).size())
             {
               auto proper_s = d2p_[s];
               auto h = todo_.emplace(profile_t{proper_s, 0, 0, 0, 0});
@@ -207,10 +207,10 @@ namespace vcsn
 
 #ifdef STATS
         // Number of transitions that will be removed.
-        auto removed = aut_dirty_->in(dirty_s).size();
+        auto removed = in(aut_dirty_, dirty_s).size();
 #endif
         // Iterate on a copy: we remove these transitions in the loop.
-        for (auto t : make_vector(aut_dirty_->in(dirty_s)))
+        for (auto t : make_vector(in(aut_dirty_, dirty_s)))
           {
             weight_t weight = aut_dirty_->weight_of(t);
             auto src = aut_dirty_->src_of(t);
@@ -239,7 +239,7 @@ namespace vcsn
 
 
         // TODO: factoring with lambda
-        for (auto t: aut_dirty_->out(dirty_s))
+        for (auto t: out(aut_dirty_, dirty_s))
           {
             weight_t blow = ws_.mul(star, aut_dirty_->weight_of(t));
             aut_dirty_->set_weight(t, blow);
@@ -270,15 +270,15 @@ namespace vcsn
 #ifdef STATS
         // Number of transition that have been added.
         auto added = (aut_proper_->all_out(proper_s).size()
-                      + aut_dirty_->out(dirty_s).size()) * closure.size();
+                      + out(aut_dirty_, dirty_s).size()) * closure.size();
 #endif
         if (prune_
-            && aut_dirty_->in(dirty_s).empty()
+            && in(aut_dirty_, dirty_s).empty()
             && aut_proper_->all_in(proper_s).empty())
           {
 #ifdef STATS
             removed += (aut_proper_->all_out(proper_s).size()
-                        + aut_dirty_->out(dirty_s).size());
+                        + out(aut_dirty_, dirty_s).size());
 #endif
             aut_proper_->del_state(proper_s);
             aut_dirty_->del_state(dirty_s);
@@ -358,20 +358,20 @@ namespace vcsn
 
             // Adjacent states.
             neighbors.clear();
-            for (auto t: aut_proper_->in(proper_s))
+            for (auto t: in(aut_proper_, proper_s))
               if (aut_proper_->src_of(t) != proper_s)
                 neighbors.emplace(aut_proper_->src_of(t));
-            for (auto t: aut_proper_->out(proper_s))
+            for (auto t: out(aut_proper_, proper_s))
               if (aut_proper_->dst_of(t) != proper_s)
                 neighbors.emplace(aut_proper_->dst_of(t));
 
             if (dirty_s != aut_dirty_->null_state())
               {
                 state_dirty_t n;
-                for (auto t: aut_dirty_->in(dirty_s))
+                for (auto t: in(aut_dirty_, dirty_s))
                   if ((n = aut_dirty_->src_of(t)) != dirty_s)
                     neighbors.emplace(d2p_[n]);
-                for (auto t: aut_dirty_->out(dirty_s))
+                for (auto t: out(aut_dirty_, dirty_s))
                   if ((n = aut_dirty_->dst_of(t)) != dirty_s)
                     neighbors.emplace(d2p_[n]);
 

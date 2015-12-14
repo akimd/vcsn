@@ -43,7 +43,7 @@ namespace vcsn
       automaton_t work_(const automaton_t& aut)
       {
         // The initial state of automaton.
-        state_t i = aut->dst_of(aut->initial_transitions().front());
+        state_t i = aut->dst_of(initial_transitions(aut).front());
 
         // compute the co-determinized of the minimal automaton
         // and retrieve the origin of each state.
@@ -65,7 +65,7 @@ namespace vcsn
 
         // The final states of aut.
         std::set<state_t> automaton_finals;
-        for (auto t: aut->final_transitions())
+        for (auto t: final_transitions(aut))
           automaton_finals.insert(aut->src_of(t));
 
         // we have to save the state set associated to each automaton.
@@ -95,7 +95,7 @@ namespace vcsn
                 for (auto s: subset_label[x])
                   {
                     bool empty = true;
-                    for (auto t: aut->out(s, a))
+                    for (auto t: out(aut, s, a))
                       {
                         empty = false;
                         delta_ret.insert(aut->dst_of(t));

@@ -35,7 +35,7 @@ namespace vcsn
       if (st != sink)
         {
           labels_met.clear();
-          for (auto tr : aut->out(st))
+          for (auto tr : out(aut, st))
             labels_met.insert(aut->label_of(tr));
 
           for (auto letter : ls.generators())

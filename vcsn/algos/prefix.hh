@@ -142,7 +142,7 @@ namespace vcsn
     for (auto s : aut->states())
       {
         ts.clear();
-        for (auto t : aut->out(s))
+        for (auto t : out(aut, s))
           if (!aut->labelset()->is_one(aut->label_of(t)))
             ts.emplace_back(t);
         for (auto t : ts)

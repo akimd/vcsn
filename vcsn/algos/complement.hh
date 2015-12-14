@@ -31,7 +31,7 @@ namespace vcsn
 
     // The final states of aut.
     std::set<state_t> finals;
-    for (auto t: aut->final_transitions())
+    for (auto t: final_transitions(aut))
       finals.insert(aut->src_of(t));
 
     // Complement.

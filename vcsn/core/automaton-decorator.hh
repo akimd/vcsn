@@ -124,14 +124,11 @@ namespace vcsn
       DEFINE(all_transitions);
       DEFINE(context);
       DEFINE(dst_of);
-      DEFINE(final_transitions);
       DEFINE(get_final_weight);
       DEFINE(get_initial_weight);
       DEFINE(get_transition);
       DEFINE(has_state);
       DEFINE(has_transition);
-      DEFINE(in);
-      DEFINE(initial_transitions);
       DEFINE(is_final);
       DEFINE(is_initial);
       DEFINE(label_of);
@@ -141,7 +138,6 @@ namespace vcsn
       DEFINE(num_initials);
       DEFINE(num_states);
       DEFINE(num_transitions);
-      DEFINE(out);
       DEFINE(outin);
       DEFINE(prepost_label);
       DEFINE(print);

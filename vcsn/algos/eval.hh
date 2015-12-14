@@ -60,7 +60,7 @@ namespace vcsn
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
-                for (auto t : aut_->out(s, l))
+                for (auto t : out(aut_, s, l))
                   {
                     // Make sure the vectors are large enough for dst.
                     // Exponential growth on the capacity, but keep
@@ -119,7 +119,7 @@ namespace vcsn
     require(is_proper(a), "eval: cannot evaluate with spontaneous transitions");
     const auto& ws = *a->weightset();
     auto res = ws.zero();
-    for (auto init_tr: a->initial_transitions())
+    for (auto init_tr: initial_transitions(a))
       {
         auto s = a->dst_of(init_tr);
         auto w = a->weight_of(init_tr);

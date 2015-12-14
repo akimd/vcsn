@@ -200,37 +200,6 @@ namespace vcsn
       }
 
       // FIXME: clang workaround.
-      struct not_to_post_p
-      {
-        bool operator()(transition_t t) const
-        {
-          return aut_.dst_of(t) != aut_.post();
-        }
-        const self_t& aut_;
-      };
-
-      auto out(state_t s) const
-      {
-        return all_out(s, not_to_post_p{*this});
-      }
-
-      // FIXME: clang workaround.
-      struct label_equal_p
-      {
-        bool operator()(transition_t t) const
-        {
-          return aut_.labelset()->equal(aut_.label_of(t), label_);
-        }
-        const self_t& aut_;
-        label_t label_;
-      };
-
-      auto out(state_t s, label_t l) const
-      {
-        return all_out(s, label_equal_p{*this, l});
-      }
-
-      // FIXME: clang workaround.
       template <typename Pred>
       struct has_src_p
       {
@@ -253,42 +222,10 @@ namespace vcsn
         return all_in(s, all_transitions_p{});
       }
 
-      // FIXME: clang workaround.
-      struct not_from_pre_p
-      {
-        bool operator()(transition_t t) const
-        {
-          return aut_.src_of(t) != aut_.pre();
-        }
-        const self_t& aut_;
-      };
-
-      auto in(state_t s) const
-      {
-        return all_in(s, not_from_pre_p{*this});
-      }
-
-      auto in(state_t s, label_t l) const
-      {
-        return all_in(s, label_equal_p{*this, l});
-      }
-
       fresh_automaton_t_of<automaton_t>
       strip() const
       {
         return ::vcsn::copy(aut_, ss_);
-      }
-
-      /// Indexes of transitions to visible initial states.
-      auto initial_transitions() const
-      {
-        return out(pre());
-      }
-
-      /// Indexes of transitions from visible final states.
-      auto final_transitions() const
-      {
-        return in(post());
       }
 
     protected:

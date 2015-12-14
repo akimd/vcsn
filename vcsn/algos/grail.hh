@@ -72,7 +72,7 @@ namespace vcsn
       void print_state_(const state_t s)
       {
         std::vector<transition_t> ts;
-        for (auto t : aut_->out(s))
+        for (auto t : out(aut_, s))
           ts.emplace_back(t);
         boost::sort(ts, detail::transition_less<Aut>{aut_});
         for (auto t : ts)
@@ -104,7 +104,7 @@ namespace vcsn
       states_t initials_()
       {
         states_t res;
-        for (auto t: aut_->initial_transitions())
+        for (auto t: initial_transitions(aut_))
           res.emplace_back(aut_->dst_of(t));
         boost::sort(res);
         return res;
@@ -114,7 +114,7 @@ namespace vcsn
       states_t finals_()
       {
         states_t res;
-        for (auto t: aut_->final_transitions())
+        for (auto t: final_transitions(aut_))
           res.emplace_back(aut_->src_of(t));
         boost::sort(res);
         return res;

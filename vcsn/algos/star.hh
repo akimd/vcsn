@@ -22,13 +22,13 @@ namespace vcsn
     const auto& ls = *res->labelset();
     // Branch all the final states (but initials) to initial states.
     auto initial = res->new_state();
-    for (auto ti: detail::make_vector(res->initial_transitions()))
+    for (auto ti: detail::make_vector(initial_transitions(res)))
       {
         res->new_transition(initial, res->dst_of(ti),
                             ls.one(), res->weight_of(ti));
         res->del_transition(ti);
       }
-    for (auto tf: detail::make_vector(res->final_transitions()))
+    for (auto tf: detail::make_vector(final_transitions(res)))
       {
         res->add_transition(res->src_of(tf), initial,
                             ls.one(), res->weight_of(tf));
@@ -57,15 +57,15 @@ namespace vcsn
 
     weightset_t ws(*res->context().weightset());
 
-    state_t initial = res->dst_of(res->initial_transitions().front());
+    state_t initial = res->dst_of(initial_transitions(res).front());
     // The "final weight of the initial state", starred.
     weight_t w = ws.star(res->get_final_weight(initial));
     // Branch all the final states (but initial) to the successors
     // of initial.
-    for (auto ti: res->out(initial))
+    for (auto ti: out(res, initial))
       {
         res->lmul_weight(ti, w);
-        for (auto tf: res->final_transitions())
+        for (auto tf: final_transitions(res))
           if (res->src_of(tf) != initial)
             // The weight of ti has already been multiplied, on the
             // left, by w.
@@ -75,7 +75,7 @@ namespace vcsn
                res->label_of(ti),
                ws.mul(res->weight_of(tf), res->weight_of(ti)));
       }
-    for (auto tf: res->final_transitions())
+    for (auto tf: final_transitions(res))
       res->rmul_weight(tf, w);
     res->set_final(initial, w);
     return res;

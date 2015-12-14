@@ -130,46 +130,6 @@ namespace vcsn
         return this->aut_->all_out(s, pred);
       }
 
-      // FIXME: clang workaround.
-      struct label_equal_p
-      {
-        bool operator()(transition_t_of<self_t> t) const
-        {
-          return this->aut_.labelset()->equal(this->aut_.label_of(t), label_);
-        }
-        const self_t& aut_;
-        // Capture by copy: in the case of the transpose_automaton, the
-        // labels are transposed, so they are temporaries.
-        label_t_of<self_t> label_;
-      };
-
-      // FIXME: clang workaround.
-      struct not_to_post_p
-      {
-        bool operator()(transition_t_of<self_t> t) const
-        {
-          return aut_.dst_of(t) != aut_.post();
-        }
-        const self_t& aut_;
-      };
-
-
-      /// Indexes of visible transitions leaving state \a s.
-      /// Invalidated by del_transition() and del_state().
-      auto out(state_t s)
-        -> decltype(this->all_out(s, not_to_post_p{*this}))
-      {
-        return this->all_out(s, not_to_post_p{*this});
-      }
-
-      /// Indexes of all transitions leaving state \a s on label \a l.
-      /// Invalidated by del_transition() and del_state().
-      auto out(state_t s, label_t_of<self_t> l)
-        -> decltype(this->all_out(s, label_equal_p{*this, l}))
-      {
-        return this->all_out(s, label_equal_p{*this, l});
-      }
-
       bool state_is_strict(state_t s) const
       {
         return has(proper_states_, s);

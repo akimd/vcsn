@@ -56,13 +56,13 @@ check_various(const context_t& ctx)
   ASSERT_EQ(aut->num_transitions(), 5u);
 
   std::cout << "Leaving s1 by d" << std::endl;
-  for (auto i: aut->out(s1, 'd'))
+  for (auto i: out(aut, s1, 'd'))
     {
       std::cout << i << " " << aut->dst_of(i) << std::endl;
       assert(aut->has_transition(i));
     }
   std::cout << "Entering s1 by b" << std::endl;
-  for (auto i: aut->in(s1, 'b'))
+  for (auto i: in(aut, s1, 'b'))
     {
       std::cout << i << " " << aut->src_of(i) << std::endl;
       assert(aut->has_transition(i));

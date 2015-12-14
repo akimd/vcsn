@@ -207,7 +207,7 @@ namespace vcsn
         {
           delay_t d = out_aut_->delay_of(s);
           if (d != delay_t{})
-            for (auto tr : out_aut_->out(s))
+            for (auto tr : out(out_aut_, s))
             {
               if (out_aut_->labelset()->is_one(out_aut_->label_of(tr)))
                 continue;

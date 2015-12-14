@@ -62,8 +62,8 @@ namespace vcsn
           {
             auto x = set_t(size);
             for (auto s: sub_w)
-              for (auto in: a->in(label_of(s), l))
-                x.set(a->src_of(in));
+              for (auto t: in(a, label_of(s), l))
+                x.set(a->src_of(t));
             auto p2 = partition_t(p);
             for (auto y: p2)
               {

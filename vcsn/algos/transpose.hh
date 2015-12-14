@@ -96,21 +96,13 @@ namespace vcsn
       DEFINE(all_out(state_t s, Pred pred),  all_in(s, pred));
 
       DEFINE(dst_of(transition_t t),         src_of(t));
-      DEFINE(final_transitions(),            initial_transitions());
-      DEFINE(in(state_t s),                  out(s));
-      DEFINE(initial_transitions(),          final_transitions());
       DEFINE(is_final(state_t s),            is_initial(s));
       DEFINE(num_finals(),                   num_initials());
       DEFINE(num_initials(),                 num_finals());
-      DEFINE(out(state_t s),                 in(s));
       DEFINE(outin(state_t s, state_t d),    outin(d, s));
       DEFINE(src_of(transition_t t),         dst_of(t));
       DEFINE(is_initial(state_t s),          is_final(s));
 
-      DEFINE(in(state_t s, label_t l),
-             out(s, aut_->labelset()->transpose(l)));
-      DEFINE(out(state_t s, label_t l),
-             in(s, aut_->labelset()->transpose(l)));
       DEFINE(get_transition(state_t s, state_t d, label_t l),
              get_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(has_transition(state_t s, state_t d, label_t l),

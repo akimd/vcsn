@@ -36,8 +36,8 @@ int main()
       }                                         \
   } while (false)
 
-  CHECK("Leaving s1", aut->out(s1, {}));
-  CHECK("Entering s1", aut->in(s1, {}));
+  CHECK("Leaving s1", out(aut, s1, {}));
+  CHECK("Entering s1", in(aut, s1, {}));
   CHECK("Between s1 and s1", aut->outin(s1, s1));
 #undef CHECK
 

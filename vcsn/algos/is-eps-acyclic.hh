@@ -47,7 +47,7 @@ namespace vcsn
         if (it == tag.end())
         {
           tag[s] = unknown;
-          for (auto t : aut_->out(s, one))
+          for (auto t : out(aut_, s, one))
             if (has_spontaneous_circuit(aut_->dst_of(t)))
             {
               tag[s] = circuit;

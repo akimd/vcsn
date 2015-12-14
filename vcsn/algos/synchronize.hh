@@ -244,25 +244,26 @@ namespace vcsn
           state_name_t st = std::move(out_aut_->todo_.top());
           out_aut_->todo_.pop();
           auto s = st.first;
-          label_t out = st.second;
+          label_t l = st.second;
           if (in_aut_->is_final(s))
             {
-              if (labelset_t::is_one(out))
+              if (labelset_t::is_one(l))
                 out_aut_->set_final(st, in_aut_->get_final_weight(s));
               else
                 {
                   auto f = state_name_t{s, labelset_t::one()};
                   // Create the state, don't add it to the todo list.
                   out_aut_->state(f, false);
-                  out_aut_->new_transition(st, f, out, in_aut_->get_final_weight(s));
+                  out_aut_->new_transition(st, f, l,
+                                           in_aut_->get_final_weight(s));
                   out_aut_->set_final(f, weightset_t::one());
                 }
             }
 
-          for (auto tr : in_aut_->out(s))
+          for (auto tr : out(in_aut_, s))
           {
             label_t combined =
-              out_aut_->labelset()->mul(out,
+              out_aut_->labelset()->mul(l,
                     out_aut_->labelset()->conv(*in_aut_->labelset(),
                                                in_aut_->label_of(tr)));
 
@@ -278,16 +279,14 @@ namespace vcsn
 
     private:
 
-
       std::pair<label_t, label_t>
       get_prefix(const label_t& l)
       {
         return get_prefix(get_min_length(l), l);
       }
 
-      /*
-       * Split the label in prefix/suffix, with the prefix of size length.
-       */
+      /// Split the label in prefix/suffix, with the prefix of size
+      /// length.
       std::pair<label_t, label_t>
       get_prefix(size_t length, const label_t& l)
       {

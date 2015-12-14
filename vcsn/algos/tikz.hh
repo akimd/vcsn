@@ -131,7 +131,7 @@ namespace vcsn
         for (auto src : aut_->states())
           {
             dsts.clear();
-            for (auto t: aut_->out(src))
+            for (auto t: out(aut_, src))
               // Bypass weight_of(set), because we know that the weight is
               // nonzero, and that there is only one weight per letter.
               ps_.new_weight(dsts[aut_->dst_of(t)],

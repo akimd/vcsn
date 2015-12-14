@@ -34,11 +34,11 @@ namespace vcsn
 
     // The set of the current (left-hand side) final transitions.
     // Store these transitions by copy.
-    auto ftr = detail::make_vector(res->final_transitions());
+    auto ftr = detail::make_vector(final_transitions(res));
 
     // The set of the current (right-hand side) initial transitions.
     // Store these transitions by copy.
-    auto init_ts = detail::make_vector(b->initial_transitions());
+    auto init_ts = detail::make_vector(initial_transitions(b));
 
     auto copy = make_copier(b, res);
     copy([](state_t_of<B>) { return true; },
@@ -79,9 +79,9 @@ namespace vcsn
 
     // The set of the current (left-hand side) final transitions.
     // Store these transitions by copy.
-    auto final_ts = detail::make_vector(res->final_transitions());
+    auto final_ts = detail::make_vector(final_transitions(res));
 
-    state_t_of<B> b_initial = b->dst_of(b->initial_transitions().front());
+    state_t_of<B> b_initial = b->dst_of(initial_transitions(b).front());
 
     auto copy = make_copier(b, res);
     copy(// The initial state of b is not copied.

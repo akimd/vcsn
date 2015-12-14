@@ -58,7 +58,7 @@ namespace vcsn
     static_assert(labelset_t_of<Aut>::is_free(),
                   "is_deterministic: requires free labelset");
 
-    if (1 < aut->initial_transitions().size())
+    if (1 < initial_transitions(aut).size())
       return false;
 
     for (auto s: aut->states())

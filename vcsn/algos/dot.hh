@@ -227,8 +227,8 @@ namespace vcsn
         if (!dot2tex_)
           {
             // Output the pre-initial and post-final states.
-            if (!aut_->initial_transitions().empty()
-                || !aut_->final_transitions().empty())
+            if (!initial_transitions(aut_).empty()
+                || !final_transitions(aut_).empty())
               {
                 bos_ <<
                   "  {\n"

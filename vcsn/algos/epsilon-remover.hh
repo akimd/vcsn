@@ -111,9 +111,9 @@ namespace vcsn
       void update_profile_(state_t s)
       {
         if (auto p = profile(s))
-          p->update(aut_->in(s, empty_word_).size(),
-                    aut_->in(s).size(),
-                    aut_->out(s, empty_word_).size(),
+          p->update(in(aut_, s, empty_word_).size(),
+                    in(aut_, s).size(),
+                    out(aut_, s, empty_word_).size(),
                     aut_->all_out(s).size());
       }
 
@@ -124,13 +124,13 @@ namespace vcsn
         for (auto s: aut_->states())
           // We don't care about states without incoming spontaneous
           // transitions.
-          if (auto in_sp = aut_->in(s, empty_word_).size())
+          if (auto in_sp = in(aut_, s, empty_word_).size())
             {
-              auto in = aut_->in(s).size();
-              auto out_sp = aut_->out(s, empty_word_).size();
+              auto ins = in(aut_, s).size();
+              auto out_sp = out(aut_, s, empty_word_).size();
               auto out = aut_->all_out(s).size();
               auto h = todo_.emplace(epsilon_profile<state_t>
-                                     {s, in_sp, in, out_sp, out});
+                                     {s, in_sp, ins, out_sp, out});
               handles_.emplace(s, h);
           }
       }
@@ -197,7 +197,7 @@ namespace vcsn
       {
         // Iterate on a copy, as we remove these transitions in the
         // loop.
-        auto transitions = make_vector(aut_->in(s, empty_word_));
+        auto transitions = make_vector(in(aut_, s, empty_word_));
         // The star of the weight of the loop on 's' (1 if no loop).
         weight_t star = ws_.one();
         using state_weight_t = std::pair<state_t, weight_t>;
@@ -304,13 +304,13 @@ namespace vcsn
             auto s = p.state;
             handles_.erase(s);
             neighbors.clear();
-            for (auto t: aut_->in(s))
+            for (auto t: in(aut_, s))
               {
                 state_t n = aut_->src_of(t);
                 if (n != s)
                   neighbors.emplace(n);
               }
-            for (auto t: aut_->out(s))
+            for (auto t: out(aut_, s))
               {
                 state_t n = aut_->dst_of(t);
                 if (n != s)

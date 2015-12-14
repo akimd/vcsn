@@ -48,7 +48,7 @@ namespace vcsn
         std::unordered_set<state_t> new_todo;
         for (auto s : todo)
           {
-            auto ntf = aut->out(s, l);
+            auto ntf = out(aut, s, l);
             auto size = ntf.size();
             require(0 < size,
                     "is_synchronized_by: automaton must be complete");
@@ -165,7 +165,7 @@ namespace vcsn
 
       state_t dest_state(state_t s, const label_t& l) const
       {
-        auto ntf = pair_->out(s, l);
+        auto ntf = out(pair_, s, l);
         auto size = ntf.size();
         require(0 < size, "automaton must be complete");
         require(size < 2, "automaton must be deterministic");

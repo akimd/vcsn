@@ -71,7 +71,7 @@ namespace vcsn
       void dfs(state_t s)
       {
         marked_.emplace(s);
-        for (auto t : aut_->out(s))
+        for (auto t : out(aut_, s))
           {
             auto dst = aut_->dst_of(t);
             if (!has(marked_, dst))
@@ -137,7 +137,7 @@ namespace vcsn
         ++count_;
         unassigned_.push(s);
         uncertain_.push(s);
-        for (auto t: aut_->out(s))
+        for (auto t: out(aut_, s))
           {
             state_t dst = aut_->dst_of(t);
             if (!has(preorder_, dst))
@@ -233,7 +233,7 @@ namespace vcsn
         else
           components_[num_].emplace(s);
 
-        for (auto t : aut_->out(s))
+        for (auto t : out(aut_, s))
           {
             auto dst = aut_->dst_of(t);
             if (!has(marked_, dst))
@@ -287,7 +287,7 @@ namespace vcsn
       void dfs(state_t s)
       {
         number_[s] = low_[s] = curr_state_num_++;
-        dfs_stack_.emplace_back(s, aut_->out(s).begin(), aut_->out(s).end());
+        dfs_stack_.emplace_back(s, out(aut_, s).begin(), out(aut_, s).end());
         stack_.push_back(s);
         while (!dfs_stack_.empty())
           {
@@ -300,8 +300,8 @@ namespace vcsn
                 if (!has(number_, dst))
                   {
                     number_[dst] = low_[dst] = curr_state_num_++;
-                    const auto& out = aut_->out(dst);
-                    dfs_stack_.emplace_back(dst, out.begin(), out.end());
+                    const auto& ts = out(aut_, dst);
+                    dfs_stack_.emplace_back(dst, ts.begin(), ts.end());
                     stack_.push_back(dst);
                   }
                 else if (low_[dst] < low_[src])
@@ -356,7 +356,7 @@ namespace vcsn
       components_t components_;
 
       /// Iterator on outgoing transitions.
-      using iterator_t = decltype(aut_->out(state_t{}).begin());
+      using iterator_t = decltype(out(aut_, state_t{}).begin());
 
       /// Step of one state contain infomation next successor and end
       /// iterator(output transitions or successors of this state).
@@ -409,7 +409,7 @@ namespace vcsn
         marked_.emplace(s);
         stack_.push_back(s);
 
-        for (auto t : aut_->out(s))
+        for (auto t : out(aut_, s))
           {
             auto dst = aut_->dst_of(t);
             if (!has(marked_, dst))
@@ -521,7 +521,7 @@ namespace vcsn
       {
         if (!has(map, s))
           map[s] = res->new_state();
-        for (auto t : aut->out(s))
+        for (auto t : out(aut, s))
           {
             auto dst = aut->dst_of(t);
             if (!has(com, dst))

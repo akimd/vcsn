@@ -222,10 +222,10 @@ namespace vcsn
         init.resize(i);
         final.resize(i);
         // Computation of the initial vector.
-        for (auto t : input_->initial_transitions())
+        for (auto t : initial_transitions(input_))
           init[state_to_index[input_->dst_of(t)]] = input_->weight_of(t);
         // Computation of the final vector.
-        for (auto t : input_->final_transitions())
+        for (auto t : final_transitions(input_))
           final[state_to_index[input_->src_of(t)]] = input_->weight_of(t);
         // For each letter, we define an adjency matrix.
         for (auto t : input_->transitions())

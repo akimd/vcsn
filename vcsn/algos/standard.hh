@@ -81,12 +81,12 @@ namespace vcsn
   bool
   is_standard(const Aut& a)
   {
-    auto inis = a->initial_transitions();
+    auto inis = initial_transitions(a);
     return
       inis.size() == 1
       && a->weightset()->is_one(a->weight_of(inis.front()))
       // No arrival on the initial state.
-      && a->in(a->dst_of(inis.front())).empty();
+      && in(a, a->dst_of(inis.front())).empty();
   }
 
   /// Whether \a a is costandard.
@@ -137,7 +137,7 @@ namespace vcsn
       return;
 
     const auto& ws = *aut->weightset();
-    const auto& inits = aut->initial_transitions();
+    const auto& inits = initial_transitions(aut);
     std::vector<transition_t_of<Aut>> initials{begin(inits), end(inits)};
 
     // See TAF-Kit documentation for the implementation details.
@@ -287,7 +287,7 @@ namespace vcsn
       finals()
       {
         states_t res;
-        for (auto t: res_->final_transitions())
+        for (auto t: final_transitions(res_))
           res.insert(res_->src_of(t));
         return res;
       }
@@ -327,7 +327,7 @@ namespace vcsn
         for (auto c: e.tail())
           {
             // The set of the current (left-hand side) final transitions.
-            auto ftr = detail::make_vector(res_->final_transitions());
+            auto ftr = detail::make_vector(final_transitions(res_));
 
             // Visit the next member of the product.
             c->accept(*this);
@@ -372,10 +372,10 @@ namespace vcsn
         weight_t w = ws_.star(res_->get_final_weight(initial_));
         // Branch all the final states (but initial) to the successors
         // of initial.
-        for (auto ti: res_->out(initial_))
+        for (auto ti: out(res_, initial_))
           {
             res_->lmul_weight(ti, w);
-            for (auto tf: res_->final_transitions())
+            for (auto tf: final_transitions(res_))
               if (res_->src_of(tf) != initial_
                   && !has(other_finals, res_->src_of(tf)))
                 // Note that the weight of ti has already been
@@ -389,7 +389,7 @@ namespace vcsn
                    res_->label_of(ti),
                    ws_.mul(res_->weight_of(tf), res_->weight_of(ti)));
           }
-        for (auto tf: res_->final_transitions())
+        for (auto tf: final_transitions(res_))
           res_->rmul_weight(tf, w);
         res_->set_final(initial_, w);
       }
@@ -405,7 +405,7 @@ namespace vcsn
       {
         states_t other_finals = finals();
         e.sub()->accept(*this);
-        for (auto t: res_->final_transitions())
+        for (auto t: final_transitions(res_))
           if (! has(other_finals, res_->src_of(t)))
             res_->rmul_weight(t, e.weight());
       }

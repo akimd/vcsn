@@ -83,7 +83,7 @@ namespace vcsn
         todo_.push(n);
 
         // Final states.
-        for (auto t : input_->final_transitions())
+        for (auto t : final_transitions(input_))
           finals_.set(input_->src_of(t));
       }
 
@@ -146,7 +146,7 @@ namespace vcsn
                   {
                     i = successors_.emplace(s, label_map_t{}).first;
                     auto& j = i->second;
-                    for (auto t : input_->out(s))
+                    for (auto t : out(input_, s))
                       {
                         auto l = input_->label_of(t);
                         if (j.find(l) == j.end())

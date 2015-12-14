@@ -168,7 +168,7 @@ namespace vcsn
       /// \returns  the destination state.
       state_t next_(state_t s, letter_t l)
       {
-        auto ts = res_->out(s, l);
+        auto ts = out(res_, s, l);
         assert(ts.size() == 0 || ts.size() == 1);
         if (ts.empty())
           {
