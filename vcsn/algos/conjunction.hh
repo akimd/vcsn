@@ -111,23 +111,12 @@ namespace vcsn
       }
 
       /// All the outgoing transitions.
-      using super_t::all_out;
       auto all_out(state_t s) const
         -> decltype(aut_->all_out(s))
       {
         if (!state_is_strict(s))
           complete_(s);
         return aut_->all_out(s);
-      }
-
-      /// All the outgoing transitions satisfying the predicate.
-      template <typename Pred>
-      auto all_out(state_t s, Pred pred) const
-        -> decltype(aut_->all_out(s, pred))
-      {
-        if (!state_is_strict(s))
-          complete_(s);
-        return aut_->all_out(s, pred);
       }
 
       /// Compute the (accessible part of the) conjunction.

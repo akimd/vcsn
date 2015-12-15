@@ -176,50 +176,24 @@ namespace vcsn
         return all_transitions(pred);
       }
 
-      // FIXME: clang workaround.
-      template <typename Pred>
-      struct has_dst_p
-      {
-        bool operator()(transition_t t) const
-        {
-          return pred(t) && has(aut_.ss_, aut_.dst_of(t));
-        }
-        const self_t& aut_;
-        Pred pred;
-      };
-
-      template <typename Pred>
-      auto all_out(state_t s, Pred pred) const
-      {
-        return aut_->all_out(s, has_dst_p<Pred>{*this, pred});
-      }
-
+      /// All the outgoing transitions.
       auto all_out(state_t s) const
       {
-        return all_out(s, all_transitions_p{});
+        return vcsn::detail::all_out(aut_, s,
+                                     [this](transition_t t)
+                                     {
+                                       return has(ss_, aut_->dst_of(t));
+                                     });
       }
 
-      // FIXME: clang workaround.
-      template <typename Pred>
-      struct has_src_p
-      {
-        bool operator()(transition_t t) const
-        {
-          return pred(t) && has(aut_.ss_, aut_.src_of(t));
-        }
-        const self_t& aut_;
-        Pred pred;
-      };
-
-      template <typename Pred>
-      auto all_in(state_t s, Pred pred) const
-      {
-        return aut_->all_in(s, has_src_p<Pred>{*this, pred});
-      }
-
+      /// All the incoming transitions.
       auto all_in(state_t s) const
       {
-        return all_in(s, all_transitions_p{});
+        return vcsn::detail::all_in(aut_, s,
+                                    [this](transition_t t)
+                                    {
+                                      return has(ss_, aut_->src_of(t));
+                                    });
       }
 
       fresh_automaton_t_of<automaton_t>

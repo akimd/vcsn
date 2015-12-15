@@ -38,12 +38,12 @@ int main()
 
   CHECK("Leaving s1", out(aut, s1, {}));
   CHECK("Entering s1", in(aut, s1, {}));
-  CHECK("Between s1 and s1", aut->outin(s1, s1));
+  CHECK("Between s1 and s1", outin(aut, s1, s1));
 #undef CHECK
 
   aut->add_transition(s1, s1, {}, -42);
   vcsn::dot(aut, std::cout) << '\n';
-  assert(aut->outin(s1, s1).empty());
+  assert(outin(aut, s1, s1).empty());
   assert(aut->num_states() == 3);
   assert(aut->num_transitions() == 4);
 

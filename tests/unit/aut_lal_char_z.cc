@@ -68,7 +68,7 @@ check_various(const context_t& ctx)
       assert(aut->has_transition(i));
     }
   std::cout << "Between s1 and s1" << std::endl;
-  for (auto i: aut->outin(s1, s1))
+  for (auto i: outin(aut, s1, s1))
     {
       std::cout << i << " " << aut->src_of(i) << std::endl;
       assert(aut->has_transition(i));
@@ -76,7 +76,7 @@ check_various(const context_t& ctx)
 
   aut->add_transition(s1, s1, 'd', -42);
   vcsn::dot(aut, std::cout) << '\n';
-  auto tj = aut->outin(s1, s1);
+  auto tj = outin(aut, s1, s1);
   assert(tj.begin() == tj.end());
   ASSERT_EQ(aut->num_states(), 3u);
   ASSERT_EQ(aut->num_transitions(), 4u);
@@ -106,12 +106,12 @@ check_del_transition(const context_t& ctx)
   ASSERT_EQ(aut->num_transitions(), 3 * 3 * 4u); // 4 letters.
   auto ss = vcsn::detail::make_vector(aut->states());
 
-  aut->del_transition(ss[0], ss[1]);
+  del_transition(aut, ss[0], ss[1]);
   ASSERT_EQ(aut->num_transitions(), (3 * 3 - 1) * 4u);
-  aut->del_transition(ss[0], ss[1]);
+  del_transition(aut, ss[0], ss[1]);
   ASSERT_EQ(aut->num_transitions(), (3 * 3 - 1) * 4u);
 
-  aut->del_transition(ss[2], ss[2]);
+  del_transition(aut, ss[2], ss[2]);
   ASSERT_EQ(aut->num_transitions(), (3 * 3 - 2) * 4u);
 
   return nerrs;

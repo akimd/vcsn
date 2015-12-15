@@ -494,17 +494,6 @@ namespace vcsn
         del_transition(t);
     }
 
-    /// Remove all the transitions between s and d.
-    void
-    del_transition(state_t s, state_t d)
-    {
-      // Make a copy of the transition indexes, as the iterators are
-      // invalidated by del_transition(t).
-      auto ts = outin(s, d);
-      for (auto t: tr_cont_t{std::begin(ts), std::end(ts)})
-        del_transition(t);
-    }
-
     /// Create a transition between two states.  There must not exist
     /// a previous transition with same (src, dst, l).
     ///
@@ -816,18 +805,6 @@ namespace vcsn
       return states_[s].succ;
     }
 
-    /// Indexes of transitions leaving state \a s that validate the
-    /// predicate.
-    ///
-    /// Invalidated by del_transition() and del_state().
-    template <typename Pred>
-    container_filter_range<const tr_cont_t&, Pred>
-    all_out(state_t s, Pred pred) const
-    {
-      assert(has_state(s));
-      return {states_[s].succ, pred};
-    }
-
     /// Indexes of all transitions arriving to state \a s.
     /// Invalidated by del_transition() and del_state().
     container_range<const tr_cont_t&>
@@ -835,28 +812,6 @@ namespace vcsn
     {
       assert(has_state(s));
       return states_[s].pred;
-    }
-
-    /// Indexes of transitions entering state \a s that validate the
-    /// predicate.
-    ///
-    /// Invalidated by del_transition() and del_state().
-    template <typename Pred>
-    container_filter_range<const tr_cont_t&, Pred>
-    all_in(state_t s, Pred pred) const
-    {
-      assert(has_state(s));
-      return {states_[s].pred, pred};
-    }
-
-    /// Indexes of visible transitions from state \a s to state \a d.
-    /// Invalidated by del_transition() and del_state().
-    auto outin(state_t s, state_t d) const
-    {
-      return all_out(s, [this, d](transition_t t)
-                     {
-                       return dst_of(t) == d;
-                     });
     }
   };
   }

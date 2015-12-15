@@ -306,10 +306,10 @@ namespace vcsn
 
         // The loop's weight.
         auto loop = ws.zero();
-        assert(aut_->outin(s, s).size() <= 1);
+        assert(outin(aut_, s, s).size() <= 1);
         // There is a single possible loop labeled by \e, but it's
         // easier and symmetrical with LAR to use a for-loop.
-        for (auto t: make_vector(aut_->outin(s, s)))
+        for (auto t: make_vector(outin(aut_, s, s)))
           {
             loop = ws.add(loop, aut_->weight_of(t));
             aut_->del_transition(t);
@@ -361,7 +361,7 @@ namespace vcsn
 
         // The loops' expression.
         auto loop = rs.zero();
-        for (auto t: make_vector(aut_->outin(s, s)))
+        for (auto t: make_vector(outin(aut_, s, s)))
           {
             loop = rs.add(loop,
                           rs.lmul(aut_->weight_of(t), aut_->label_of(t)));
