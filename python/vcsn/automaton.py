@@ -44,7 +44,7 @@ def _automaton_as_svg(self, format="dot", engine="dot"):
     if format == "dot":
         return _dot_to_svg(self.dot(), engine)
     elif format == "dot2tex":
-        return _dot_to_svg_dot2tex(self.format("dot2tex"), engine)
+        return _dot_to_svg_dot2tex(self.format("dot,latex"), engine)
     else:
         raise(ValueError("invalid format: ", format))
 
@@ -145,7 +145,7 @@ def _automaton_interact(self):
 automaton.display = _automaton_interact
 
 automaton.dot = lambda self, mode = "pretty": _dot_pretty(
-    self.format('dot'), mode)
+    self.format('dot,utf8'), mode)
 
 
 # automaton.eval.

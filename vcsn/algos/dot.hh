@@ -50,10 +50,9 @@ namespace vcsn
       const char* gray = "color = DimGray";
 
     public:
-      dotter(const automaton_t& aut, std::ostream& out,
-             bool dot2tex = false)
+      dotter(const automaton_t& aut, std::ostream& out, format fmt)
         : super_t(aut, out)
-        , dot2tex_(dot2tex)
+        , format_(fmt)
       {
 #if defined __GNUC__ && ! defined __clang__
         // GCC 4.9 and 5.0 warnings: see
@@ -92,12 +91,12 @@ namespace vcsn
         bos_ << "\"\n"
           "  rankdir = LR\n"
           "  edge ["
-            << (dot2tex_
-                ? "texmode = math, lblstyle = auto"
-                : "arrowhead = vee, arrowsize = .6")
-            << "]\n";
+             << (format_ == format::latex
+                 ? "texmode = math, lblstyle = auto"
+                 : "arrowhead = vee, arrowsize = .6")
+             << "]\n";
 
-        if (dot2tex_)
+        if (format_ == format::latex)
           bos_ <<
             "  d2toptions = \"--format tikz --tikzedgelabels"
             " --graphstyle=automaton --crop --nominsize --autosize\"\n"
@@ -134,19 +133,19 @@ namespace vcsn
             if (ws_.show_one() || !ws_.is_one(w))
               {
                 bos_ << ", " << kind << " text={";
-                ws_.print(w, bos_) << '}';
+                ws_.print(w, bos_, format_) << '}';
               }
             return true;
           }
       }
 
-      /// Pretty-print state \a s for both dot and dot2tex.
+      /// Pretty-print state \a s.
       void
       print_state_(state_t s)
       {
         aut_->print_state(s, bos_);
         bool has_attributes = false;
-        if (dot2tex_)
+        if (format_ == format::latex)
           {
             has_attributes = true;
             bos_ << " [";
@@ -159,7 +158,7 @@ namespace vcsn
               {
                 bos_ << "label = \"";
                 enable_();
-                aut_->print_state_name(s, bos_, format::latex);
+                aut_->print_state_name(s, bos_, format_);
                 disable_();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
@@ -187,7 +186,7 @@ namespace vcsn
                 has_attributes = true;
                 bos_ << " [label = \"";
                 enable_();
-                aut_->print_state_name(s, bos_, format::text);
+                aut_->print_state_name(s, bos_, format_);
                 disable_();
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
@@ -224,7 +223,7 @@ namespace vcsn
       /// Print the states.
       void print_states_()
       {
-        if (!dot2tex_)
+        if (format_ != format::latex)
           {
             // Output the pre-initial and post-final states.
             if (!initial_transitions(aut_).empty()
@@ -265,11 +264,11 @@ namespace vcsn
         if (!aut_->states().empty())
           {
             bos_ << "  {\n"
-                << "    node ["
-                << (dot2tex_
-                    ? "texmode = math, style = state"
-                    : "shape = circle, style = rounded, width = 0.5")
-                << "]\n";
+                 << "    node ["
+                 << (format_ == format::latex
+                     ? "texmode = math, style = state"
+                     : "shape = circle, style = rounded, width = 0.5")
+                 << "]\n";
             for (auto s : aut_->states())
               {
                 bos_ << "    ";
@@ -301,9 +300,7 @@ namespace vcsn
         else
           aut_->print_state(dst, bos_);
 
-        auto e = to_string(ps_, entry,
-                           dot2tex_ ? format::latex : format::text,
-                           ", ");
+        auto e = to_string(ps_, entry, format_, ", ");
         bool useless = !has(useful_, src) || !has(useful_, dst);
         if (!e.empty() || useless)
           {
@@ -332,11 +329,12 @@ namespace vcsn
         std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->all_states())
           if (aut_->state_is_strict(src)
-              && (!dot2tex_ || src != aut_->pre()))
+              && (format_ != format::latex || src != aut_->pre()))
             {
               dsts.clear();
               for (auto t: aut_->all_out(src))
-                if (!dot2tex_ || aut_->dst_of(t) != aut_->post())
+                if (format_ != format::latex
+                    || aut_->dst_of(t) != aut_->post())
                   // Bypass weight_of(set), because we know that the weight is
                   // nonzero, and that there is only one weight per letter.
                   ps_.new_weight(dsts[aut_->dst_of(t)],
@@ -362,8 +360,8 @@ namespace vcsn
 
       /// The output stream, with a backslashify filter.
       detail::io::filtering_ostream bos_;
-      /// Whether to format for dot2tex.
-      bool dot2tex_ = false;
+      /// Format for labels and weights.
+      format format_ = {};
       /// Useful states, without evaluating the lazy states.
       std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_, false);
     };
@@ -373,12 +371,12 @@ namespace vcsn
   ///
   /// \param aut     the automaton to print.
   /// \param out     the output stream.
-  /// \param dot2tex whether to format for use with dot2tex.
+  /// \param fmt     how to format the automaton.
   template <typename Aut>
   std::ostream&
-  dot(const Aut& aut, std::ostream& out, bool dot2tex = false)
+  dot(const Aut& aut, std::ostream& out, format fmt = {})
   {
-    detail::dotter<Aut> dot{aut, out, dot2tex};
+    detail::dotter<Aut> dot{aut, out, fmt};
     return dot();
   }
 }

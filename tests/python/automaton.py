@@ -435,7 +435,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(exp, a.format('dot'))
 
     exp  = open(fn.replace('.in.gv', '.tex.gv')).read().strip()
-    CHECK_EQ(exp, a.format('dot2tex'))
+    CHECK_EQ(exp, a.format('dot,latex'))
 
     exp = open(fn.replace('.in.gv', '.tex')).read().strip()
     CHECK_EQ(exp, a.format('tikz'))

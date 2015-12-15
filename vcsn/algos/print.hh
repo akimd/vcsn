@@ -74,14 +74,17 @@ namespace vcsn
 
   template <typename Aut>
   std::ostream&
-  print(const Aut& aut, std::ostream& out, const std::string& format)
+  print(const Aut& aut, std::ostream& out, const std::string& fmt)
   {
     static const auto map
       = std::map<std::string, std::function<void(const Aut&, std::ostream&)>>
       {
         {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
         {"default",      [](const Aut& a, std::ostream& o){ dot(a, o); }},
-        {"dot2tex",      [](const Aut& a, std::ostream& o){ dot(a, o, true); }},
+        {"dot,latex",    [](const Aut& a, std::ostream& o)
+                            { dot(a, o, format("latex")); }},
+        {"dot,utf8",     [](const Aut& a, std::ostream& o)
+                            { dot(a, o, format("utf8")); }},
         {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},
         {"fado",         detail::fado_impl_<Aut>},
         {"grail",        detail::grail_impl_<Aut>},
@@ -90,7 +93,7 @@ namespace vcsn
         {"null",         [](const Aut&, std::ostream&){}},
         {"tikz",         [](const Aut& a, std::ostream& o){ tikz(a, o); }},
       };
-    auto fun = getargs("automaton output format", map, format);
+    auto fun = getargs("automaton output format", map, fmt);
     fun(aut, out);
     return out;
   }

@@ -545,7 +545,8 @@ namespace vcsn
     /// \param format  the output format.
     ///    - "default"  Same as "dot".
     ///    - "dot"      GraphViz' Dot format.
-    ///    - "dot2tex"  Likewise, but generate LaTeX escapes for
+    ///    - "dot,utf8" Likewise, but benefit from UTF-8
+    ///    - "dot,latex" Likewise, but generate LaTeX escapes for
     ///                 use with dot2tex.
     ///    - "efsm"     Extended FSM.
     ///    - "fado"     FAdo format.

@@ -30,18 +30,6 @@ state_point = 'node [shape = point, width = 0]'
 # Style of transitions in dot.
 edge_style = 'edge [arrowhead = vee, arrowsize = .6]'
 
-def _label_pretty(s):
-    '''Convert angle brackets and \\e to UTF-8.  We used to use
-    HTML entities, but it resulted in wider arrows: dot is probably
-    counting the number of characters to compute the width, instead
-    of the real width of the glyphs.
-    '''
-    return (s.replace('<', '⟨')
-            .replace('>', '⟩')
-            .replace(r'\\e', 'ε')
-            .replace(r'\\z', '∅')
-            .replace(r'{c}', 'ᶜ'))
-
 
 def _states_as_tooltips(s):
     s = re.sub(r'label = (".*?"), shape = box', r'tooltip = \1', s)
@@ -102,9 +90,6 @@ def _dot_pretty(s, mode="pretty"):
     If it is `transitions`, then hide the states.
     '''
     if mode != 'dot':
-        s = re.sub(r'(label * = *)(".*?")',
-                   lambda m: m.group(1) + _label_pretty(m.group(2)),
-                   s)
         if mode == 'simple':
             s = _states_as_simple(s)
         elif mode == 'tooltip':
