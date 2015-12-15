@@ -5,7 +5,7 @@
 
 #include <boost/range/algorithm/sort.hpp>
 
-#include <vcsn/algos/grail.hh> // outputter
+#include <vcsn/algos/grail.hh> // printer
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/misc/escape.hh>
@@ -38,11 +38,11 @@ namespace vcsn
     ///
     /// http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
     template <typename Aut>
-    class efsmer: public outputter<Aut>
+    class efsmer: public printer<Aut>
     {
     protected:
       using automaton_t = Aut;
-      using super_t = outputter<Aut>;
+      using super_t = printer<Aut>;
 
       using label_t = typename super_t::label_t;
       using state_t = typename super_t::state_t;
@@ -72,11 +72,11 @@ namespace vcsn
 
           // Provide the symbols first, as when reading EFSM, knowing
           // how \e is represented will help reading the transitions.
-        output_symbols_();
+        print_symbols_();
 
         os_ <<
           "cat >$medir/transitions.fsm <<\\EOFSM";
-        output_transitions_();
+        print_transitions_();
         os_ <<
           "\n"
           "EOFSM\n"
@@ -117,7 +117,7 @@ namespace vcsn
       }
 
       template <typename LS>
-      void output_label_(const LS& ls, const typename LS::value_t& l) const
+      void print_label_(const LS& ls, const typename LS::value_t& l) const
       {
         if (ls.is_special(l))
           os_ << "\\e";
@@ -127,21 +127,21 @@ namespace vcsn
 
       /// Acceptor.
       template <typename Label>
-      void output_label_(const Label& l, std::false_type) const
+      void print_label_(const Label& l, std::false_type) const
       {
-        output_label_(ls_, l);
+        print_label_(ls_, l);
       }
 
       /// Two-tape automaton.
       template <typename Label>
-      void output_label_(const Label& l, std::true_type) const
+      void print_label_(const Label& l, std::true_type) const
       {
-        output_label_(ls_.template set<0>(), std::get<0>(l));
+        print_label_(ls_.template set<0>(), std::get<0>(l));
         os_ << '\t';
-        output_label_(ls_.template set<1>(), std::get<1>(l));
+        print_label_(ls_.template set<1>(), std::get<1>(l));
       }
 
-      void output_transition_(const transition_t t) const override
+      void print_transition_(const transition_t t) const override
       {
         // Don't output "pre", but an integer.
         if (aut_->src_of(t) == aut_->pre())
@@ -153,7 +153,7 @@ namespace vcsn
             os_ << '\t';
             aut_->print_state(aut_->dst_of(t), os_);
             os_ << '\t';
-            output_label_(aut_->label_of(t), is_transducer);
+            print_label_(aut_->label_of(t), is_transducer);
           }
 
         if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
@@ -164,7 +164,7 @@ namespace vcsn
       }
 
       /// Output all the transitions, and final states.
-      void output_transitions_()
+      void print_transitions_()
       {
         // FSM format supports a single initial state with one as
         // weight.  This requires, when we have several initial
@@ -180,7 +180,7 @@ namespace vcsn
               // a large unsigned integer.  But that is well supported
               // by OpenFST which renumbers the states continuously
               // from 0.
-              output_transition_(t);
+              print_transition_(t);
             }
 
         // We _must_ start by the initial state.
@@ -194,12 +194,12 @@ namespace vcsn
                                 < std::forward_as_tuple(!aut_->is_initial(r), r));
                       });
           for (auto s: states)
-            this->output_state_(s);
+            this->print_state_(s);
         }
         for (auto t : aut_->final_transitions())
           {
             os_ << '\n';
-            output_transition_(t);
+            print_transition_(t);
           }
       }
 
@@ -256,7 +256,7 @@ namespace vcsn
       ///    E.g., projections similar to "first" or "second" for
       ///    two-tape automata.
       template <typename LabelSet, typename GetLabel>
-      void output_symbols_(const std::string& name,
+      void print_symbols_(const std::string& name,
                            const LabelSet& ls,
                            GetLabel get_label)
       {
@@ -292,9 +292,9 @@ namespace vcsn
       /// Labels of an acceptor.
       template <typename>
       void
-      output_symbols_impl_(std::false_type)
+      print_symbols_impl_(std::false_type)
       {
-        output_symbols_(isymbols_,
+        print_symbols_(isymbols_,
                         ls_,
                         [](label_t l) { return l; });
       }
@@ -302,20 +302,20 @@ namespace vcsn
       /// Labels of a two-tape automaton.
       template <typename>
       void
-      output_symbols_impl_(std::true_type)
+      print_symbols_impl_(std::true_type)
       {
-        output_symbols_(isymbols_,
+        print_symbols_(isymbols_,
                         ls_.template set<0>(),
                         [](const label_t& l) { return std::get<0>(l); });
-        output_symbols_(osymbols_,
+        print_symbols_(osymbols_,
                         ls_.template set<1>(),
                         [](const label_t& l) { return std::get<1>(l); });
       }
 
       void
-      output_symbols_()
+      print_symbols_()
       {
-        output_symbols_impl_<automaton_t>(is_transducer);
+        print_symbols_impl_<automaton_t>(is_transducer);
       }
 
       /// Whether is a transducer (two-tape automaton) as opposed to

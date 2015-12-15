@@ -17,21 +17,21 @@ namespace vcsn
   namespace detail
   {
 
-    /*------------.
-    | outputter.  |
-    `------------*/
+    /*-----------.
+    | printer.   |
+    `-----------*/
 
     /// \brief Factor common bits in automaton formatting.
     ///
     /// \tparam Aut an automaton type.
     template <typename Aut>
-    class outputter
+    class printer
     {
     protected:
       using automaton_t = Aut;
 
     public:
-      outputter(const automaton_t& aut, std::ostream& out)
+      printer(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
         , os_(out)
       {}
@@ -61,7 +61,7 @@ namespace vcsn
 
       /// Output the transition \a t.  Do not insert eol.
       /// "Src Label Dst".
-      virtual void output_transition_(transition_t t) const
+      virtual void print_transition_(transition_t t) const
       {
         aut_->print_state(aut_->src_of(t), os_);
         os_ << ' ' << label_(aut_->label_of(t)) << ' ';
@@ -69,7 +69,7 @@ namespace vcsn
       }
 
       /// Output transitions, sorted lexicographically on (Label, Dest).
-      void output_state_(const state_t s)
+      void print_state_(const state_t s)
       {
         std::vector<transition_t> ts;
         for (auto t : aut_->out(s))
@@ -78,16 +78,16 @@ namespace vcsn
         for (auto t : ts)
           {
             os_ << '\n';
-            output_transition_(t);
+            print_transition_(t);
           }
       }
 
       /// Output transitions, sorted lexicographically.
       /// "Src Label Dst\n".
-      void output_transitions_()
+      void print_transitions_()
       {
         for (auto s: aut_->states())
-          output_state_(s);
+          print_state_(s);
       }
 
       /// List names of states in \a ss, preceded by ' '.
@@ -146,21 +146,21 @@ namespace vcsn
     ///
     /// \tparam Aut an automaton type, not a pointer type.
     template <typename Aut>
-    class fadoer: public outputter<Aut>
+    class fadoer: public printer<Aut>
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "fado: requires letter or nullable labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "fado: requires Boolean weights");
 
-      using super_t = outputter<Aut>;
+      using super_t = printer<Aut>;
 
       using super_t::aut_;
       using super_t::finals_;
       using super_t::initials_;
       using super_t::list_states_;
       using super_t::os_;
-      using super_t::output_transitions_;
+      using super_t::print_transitions_;
       using super_t::ws_;
 
       using super_t::super_t;
@@ -178,7 +178,7 @@ namespace vcsn
             os_ << " *";
             list_states_(initials_());
           }
-        output_transitions_();
+        print_transitions_();
       }
 
     private:
@@ -222,14 +222,14 @@ namespace vcsn
     ///
     /// See https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf.
     template <typename Aut>
-    class grailer: public outputter<Aut>
+    class grailer: public printer<Aut>
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "grail: requires letter or nullable labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "grail: requires Boolean weights");
 
-      using super_t = outputter<Aut>;
+      using super_t = printer<Aut>;
 
       using typename super_t::automaton_t;
       using typename super_t::state_t;
@@ -239,7 +239,7 @@ namespace vcsn
       using super_t::finals_;
       using super_t::initials_;
       using super_t::os_;
-      using super_t::output_transitions_;
+      using super_t::print_transitions_;
       using super_t::ws_;
 
       using super_t::super_t;
@@ -257,7 +257,7 @@ namespace vcsn
             aut_->print_state(s, os_);
             sep = "\n";
           }
-        output_transitions_();
+        print_transitions_();
         for (auto s: finals_())
           {
             os_ << '\n';

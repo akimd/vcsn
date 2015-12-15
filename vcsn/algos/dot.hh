@@ -25,10 +25,10 @@ namespace vcsn
     ///
     /// \tparam Aut an automaton type.
     template <typename Aut>
-    class dotter: public outputter<Aut>
+    class dotter: public printer<Aut>
     {
     private:
-      using super_t = outputter<Aut>;
+      using super_t = printer<Aut>;
       using typename super_t::automaton_t;
       using typename super_t::state_t;
       using typename super_t::polynomial_t;
@@ -118,11 +118,12 @@ namespace vcsn
         bos_ << '}';
       }
 
-      /// Format a TikZ attribute.
+      /// Print a TikZ attribute.
+      ///
       /// \param sep   the separator to print before (if we print something).
       /// \param kind  the attribute name (e.g., "initial").
       /// \param w     the associated weight (e.g., initial weight).
-      bool format_(const std::string& sep,
+      bool print_(const std::string& sep,
                    const std::string& kind, const weight_t& w)
       {
         if (ws_.is_zero(w))
@@ -169,12 +170,12 @@ namespace vcsn
               }
             else
               sep = "style = \"state, ";
-            if (format_(sep, "initial", aut_->get_initial_weight(s)))
+            if (print_(sep, "initial", aut_->get_initial_weight(s)))
               {
                 sep = ", ";
                 close = "\"";
               }
-            if (format_(sep, "accepting", aut_->get_final_weight(s)))
+            if (print_(sep, "accepting", aut_->get_final_weight(s)))
               close = "\"";
             bos_ << close;
           }
@@ -368,11 +369,16 @@ namespace vcsn
     };
   }
 
+  /// Print an automaton in Graphviz's Dot format.
+  ///
+  /// \param aut     the automaton to print.
+  /// \param out     the output stream.
+  /// \param dot2tex whether to format for use with dot2tex.
   template <typename Aut>
   std::ostream&
   dot(const Aut& aut, std::ostream& out, bool dot2tex = false)
   {
-    detail::dotter<Aut> dot(aut, out, dot2tex);
+    detail::dotter<Aut> dot{aut, out, dot2tex};
     return dot();
   }
 }

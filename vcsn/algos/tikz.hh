@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include <vcsn/algos/grail.hh> // outputter
+#include <vcsn/algos/grail.hh> // printer
 
 #include <vcsn/dyn/fwd.hh>
 
@@ -23,10 +23,10 @@ namespace vcsn
     ///
     /// \tparam Aut an automaton type, not a pointer type.
     template <typename Aut>
-    class tikzer: public outputter<Aut>
+    class tikzer: public printer<Aut>
     {
     public:
-      using super_t = outputter<Aut>;
+      using super_t = printer<Aut>;
       using typename super_t::automaton_t;
       using typename super_t::state_t;
       using typename super_t::polynomial_t;
