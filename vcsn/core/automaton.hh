@@ -26,6 +26,15 @@ namespace vcsn
 
   namespace detail
   {
+    /// Indexes of transitions leaving state \a s
+    ///
+    /// Invalidated by del_transition() and del_state().
+    template <typename Aut>
+    auto all_out(const Aut& aut, state_t_of<Aut> s)
+    {
+      return aut->all_out(s);
+    }
+
     /// Indexes of transitions leaving state \a s that validate the
     /// predicate.
     ///
@@ -62,6 +71,14 @@ namespace vcsn
                      });
     }
 
+    /// Indexes of transitions entering state \a s
+    ///
+    /// Invalidated by del_transition() and del_state().
+    template <typename Aut>
+    auto all_in(const Aut& aut, state_t_of<Aut> s)
+    {
+      return aut->all_in(s);
+    }
 
     /// Indexes of transitions entering state \a s that validate the
     /// predicate.
