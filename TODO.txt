@@ -10,10 +10,6 @@ http://blog.notdot.net/2010/07/Damn-Cool-Algorithms-Levenshtein-Automata
 http://en.wikipedia.org/wiki/Levenshtein_automata
 
 * Documentation
-** has_negative_cycle
-The case of "regular" semirings is really bizarre and requires more
-explanations.
-
 ** Doxygen
 The Doxygen style documentation is way too poor.  Aim at completion.
 

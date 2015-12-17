@@ -39,6 +39,8 @@ namespace vcsn
         return v;
       }
 
+      static constexpr bool can_have_negative_cycle() { return true; }
+
       std::ostream&
       print_set(std::ostream& o, format fmt = {}) const
       {

@@ -47,6 +47,8 @@ namespace vcsn
         return super_t::conv(is);
       }
 
+      static constexpr bool can_have_negative_cycle() { return false; }
+
       std::ostream&
       print_set(std::ostream& o, format fmt = {}) const
       {

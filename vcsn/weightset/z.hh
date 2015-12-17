@@ -136,6 +136,7 @@ namespace vcsn
 
     static constexpr bool is_commutative() { return true; }
     static constexpr bool is_idempotent() { return false; }
+    static constexpr bool can_have_negative_cycle() { return true; }
 
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::NON_STARRABLE; }
