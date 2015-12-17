@@ -10,14 +10,14 @@ namespace vcsn
 {
   /// Lightest Automaton
   ///
-  /// Return an automaton composed only of the states included in the
+  /// An automaton composed only of the states included in the
   /// lightest path from pre to post. Using the shortest path algorithm
   /// given as parameter to compute the lightest 'in' transition of each
   /// state. Then, reconstruct the path keeping the states and transitions
   /// we met. Now that we have the sets of elements to keep we can construct
   /// a new automaton using these states/transitions.
   template <typename Aut, typename Algo = dijkstra_tag>
-  Aut
+  fresh_automaton_t_of<Aut>
   lightest_automaton(const Aut& aut, Algo algo = {})
   {
     require(is_tropical<weightset_t_of<Aut>>(),
