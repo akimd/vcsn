@@ -34,6 +34,7 @@ args = parser.parse_args()
 
 last_setup = ['pass']
 
+
 def ctx_signature(ctx):
     'A short, nice looking, description of a context.'
     ctx = re.sub(r'lal_char\((.*?)\)',
@@ -46,12 +47,14 @@ def ctx_signature(ctx):
                  r'[\1]*',
                  ctx)
     ctx = re.sub(r'lat<(.*?)>',
-                 lambda m: 'x'.join([x.strip() for x in m.group(1).split(',')]),
+                 lambda m: 'x'.join([x.strip()
+                                     for x in m.group(1).split(',')]),
                  ctx)
     ctx = re.sub(r'^(.*), *(.*)$',
                  lambda m: '{} -> {}'.format(m.group(1), m.group(2).upper()),
                  ctx)
     return ctx
+
 
 def bench(stmt, comment, title=None, setup=['pass'], number=1):
     "Report the best timing of three batches of number runs of cmd."
@@ -85,7 +88,8 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
             builtins.__dict__.update({'vcsn': vcsn})
             if args.verbose:
                 print("run:", stmt)
-            t = round(min(timeit.repeat(stmt, number=number, repeat=args.repeat)), 2)
+            t = round(min(timeit.repeat(stmt, number=number, repeat=args.repeat)),
+                      2)
             t = "{:5.2f}s".format(t)
             err = None
         except RuntimeError as exc:
@@ -134,8 +138,8 @@ bench('b.format("text")',
 e = '[ab]{20000}'
 bench('b.expression(e)',
       'e = {}'.format(e),
-       setup='e = "{}"'.format(e),
-       number=1000)
+      setup='e = "{}"'.format(e),
+      number=1000)
 
 bench('b.expression(e)',
       'e = "(\e+a)" * 500',
@@ -168,6 +172,8 @@ for fmt in ['dot', 'efsm', 'fado']:
 ## -------------- ##
 ## derived_term.  ##
 ## -------------- ##
+
+
 def bench_derived_term(alphabet, exp, algo, number=10):
     bench('r.derived_term("{}")'.format(algo),
           'r = {}, c = [{}] -> Z'.format(exp, alphabet),
@@ -175,6 +181,7 @@ def bench_derived_term(alphabet, exp, algo, number=10):
                  'c = vcsn.context("lal_char({}), z")'.format(alphabet),
                  'r = c.expression(e)'],
           number=number)
+
 
 def bench_dt(alphabet, size, algo, number=10):
     bench_derived_term(alphabet,
@@ -256,7 +263,7 @@ for algo in ['', '"weighted"']:
     bench('a.determinize({})'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['r = "{}"'.format(r),
-                'c = vcsn.context("{}")'.format(ctx),
+                 'c = vcsn.context("{}")'.format(ctx),
                  'a = c.expression(r).standard()'],
           number=2)
 
@@ -268,7 +275,7 @@ for algo in ['', '"weighted"']:
 n = 150
 # Many many states active concurrently.
 # too slow: a = b.expression('(a+b)*a(a+b){{{n}}}).derived_term()
-bench('a.eval("a"*{})'.format(n+1),
+bench('a.eval("a"*{})'.format(n + 1),
       'a = de_bruijn({})'.format(n),
       setup=['n = {}'.format(n),
              'a = b.de_bruijn(n)'],
@@ -283,7 +290,6 @@ bench('a.eval("abcxyz"*{})'.format(n),
              'r = c.expression("{}")'.format(r),
              'a = r.standard()'],
       number=1000)
-
 
 
 ## ---------- ##
@@ -434,9 +440,9 @@ bench('a.conjunction(a)',
 n = 12
 r = "[a-e]*b(<2>[a-e])*"
 bench('a & {}'.format(n),
-     'a = std({})'.format(r),
-     setup=['r = "{}"'.format(r),
-            'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+      'a = std({})'.format(r),
+      setup=['r = "{}"'.format(r),
+             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
 # compose.
 r = "([a-z]|[a-z])?{20}"
@@ -484,7 +490,7 @@ def bench_minimize(ctx, r, algos):
                      'r = ctx.expression("{}")'.format(r),
                      'a = r.standard()'])
 bench_minimize('lal_char(a-k), b', '[a-g]{800}',
-                ['signature', 'hopcroft', 'moore'])
+               ['signature', 'hopcroft', 'moore'])
 bench_minimize('lal_char(a-k), b', '[a-k]{2000}', ['moore'])
 bench_minimize('lal_char(a-k), b', '[a-g]{300}', ['weighted', 'hopcroft'])
 bench_minimize('lal_char(a-k), z', '[a-g]{300}', ['weighted'])

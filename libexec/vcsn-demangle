@@ -15,5 +15,5 @@ parser.add_argument('-c', '--color', dest='color', action='store',
 args = parser.parse_args()
 
 for line in sys.stdin:
-    print(demangle(line, color=args.color), end = '')
+    print(demangle(line, color=args.color), end='')
     sys.stdout.flush()

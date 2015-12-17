@@ -13,16 +13,20 @@ me = sys.argv[0]
 
 import argparse
 
+
 class AppendStringAction(argparse.Action):
+
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         if nargs is not None:
-            raise ValueError("nargs not allowed")
-        super(AppendStringAction, self).__init__(option_strings, dest, **kwargs)
+            raise ValueError('nargs not allowed')
+        super(AppendStringAction, self).__init__(
+            option_strings, dest, **kwargs)
+
     def __call__(self, parser, namespace, values, option_string=None):
-        value = getattr(namespace, self.dest) + " " + values
+        value = getattr(namespace, self.dest) + ' ' + values
         setattr(namespace, self.dest, value)
 
-parser = argparse.ArgumentParser(description = 'Compile.')
+parser = argparse.ArgumentParser(description='Compile.')
 parser.add_argument('input', help='source file to compile')
 parser.add_argument('-shared', help='create a shared lib instead of an executable',
                     action='store_true')
@@ -45,7 +49,7 @@ parser.add_argument('--ldflags', help='Linker flags',
 parser.add_argument('--extra-ldflags', help='Additional linker flags',
                     action=AppendStringAction, dest='ldflags')
 parser.add_argument('-c', '--color', dest='color', action='store',
-                    default="auto",
+                    default='auto',
                     choices=['auto', 'always', 'never'],
                     help='Whether to use colors in the output')
 parser.add_argument('-p', '--plain', action='store_true',
@@ -58,15 +62,16 @@ for k in config:
     if not k in args:
         setattr(args, k, config[k])
 if 2 <= args.verbose:
-    print("args:", file=sys.stderr)
+    print('args:', file=sys.stderr)
     for k in sorted(args.__dict__):
-        print("  {}: {}".format(k, getattr(args, k)), file=sys.stderr)
+        print('  {}: {}'.format(k, getattr(args, k)), file=sys.stderr)
 
 # Strip extension.
 args.base = args.input[:-3]
 # Beware of concurrency issues: insert pid in the name to avoid problem.
 args.pid = str(os.getpid())
 args.tmp = args.base + '.' + args.pid
+
 
 def fmt(s, **kwargs):
     '''Substitute the value in args.'''
@@ -75,20 +80,22 @@ def fmt(s, **kwargs):
     d.update(kwargs)
     return s.format(**d)
 
+
 def notify():
     '''Notify the user that a compilation was finished.'''
-    sound = 'Glass' # or 'Basso'
+    sound = 'Glass'  # or 'Basso'
     title, message = pretty_plugin(args.base)
     # For some reason, the some first characters (such as open paren
     # or bracket) must be escaped.  Fortunately, a leading backlash
     # suffices.
     cmd = '(terminal-notifier -title "\\{title}" -message "\\{message}" -appIcon "{datadir}/figs/vcsn.png") 2>/dev/null'
-    os.system(fmt(cmd, title = title, message = message))
+    os.system(fmt(cmd, title=title, message=message))
+
 
 def run(cmd):
     cmd = fmt(cmd)
     if args.verbose:
-        print(me + ": run:", cmd, file=sys.stderr)
+        print(me + ': run:', cmd, file=sys.stderr)
     try:
         p = subprocess.Popen(cmd, shell=True,
                              stdin=subprocess.DEVNULL,
@@ -100,16 +107,17 @@ def run(cmd):
             print(out)
         if retcode:
             if retcode < 0:
-                print(me + ": child was terminated by signal", -retcode, file=sys.stderr)
+                print(me + ':', 'child was terminated by signal',
+                      -retcode, file=sys.stderr)
             else:
-                print(me + ": child returned", retcode, file=sys.stderr)
+                print(me + ':',  'child returned', retcode, file=sys.stderr)
             err = err.decode('utf-8')
             if not args.plain:
                 err = demangle(err, color=args.color)
             print(err, file=sys.stderr)
             sys.exit(retcode)
     except OSError as e:
-        print(me + ": execution failed:", e, file=sys.stderr)
+        print(me + ': execution failed:', e, file=sys.stderr)
         sys.exit(1)
 
 if args.shared:
@@ -119,7 +127,7 @@ if args.shared:
     # Upon success, remove the .o file, it is large (10x compared to
     # the *.so on erebus using clang) and not required.  However the
     # debug symbols are in there, so when debugging, leave them!
-    if "VCSN_DEBUG" not in os.environ:
+    if 'VCSN_DEBUG' not in os.environ:
         os.remove(fmt('{tmp}.o'))
     notify()
 else:
@@ -127,5 +135,5 @@ else:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o' '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
     os.rename(fmt('{tmp}'), fmt('{base}'))
-    if "VCSN_DEBUG" not in os.environ:
+    if 'VCSN_DEBUG' not in os.environ:
         os.remove(fmt('{tmp}.o'))
