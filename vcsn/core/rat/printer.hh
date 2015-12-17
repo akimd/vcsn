@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
 
 #include <vcsn/algos/project.hh> // bad layering: should not be in algos.
 #include <vcsn/core/rat/identities.hh>
@@ -54,6 +53,12 @@ namespace vcsn
       one,
       atom,
     };
+
+    /// Exponents in UTF-8.
+    constexpr static const char* const superscripts[] =
+      {
+        "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"
+      };
 
     template <typename ExpSet>
     class printer
@@ -355,10 +360,6 @@ namespace vcsn
       const char* zero_ = nullptr;
       const char* one_ = nullptr;
       unsigned int exponent_threshold_ = 0;
-      const std::vector<const char*> to_exponent = std::vector<const char*>
-      {
-        "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"
-      };
     };
 
     template <typename ExpSet>

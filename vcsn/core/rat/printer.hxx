@@ -40,8 +40,8 @@ namespace vcsn
     inline
     printer<ExpSet>::printer(const expressionset_t& rs,
                              std::ostream& out)
-      : out_(out)
-      , rs_(rs)
+      : out_{out}
+      , rs_{rs}
     {}
 
 
@@ -229,54 +229,48 @@ namespace vcsn
 
     VISIT(prod)
     {
-      auto next = begin(v);
-      for (auto it = begin(v); it != end(v); it = next)
+      for (auto it = begin(v); it != end(v); /* nothing */)
         {
+          if (it != begin(v))
+            out_ << product_;
+
           const auto& i = *it;
           // Find the size of the sequence of nodes equal to i.
-          next = std::find_if(it, end(v),
-                              [&](const auto& e) { return !rs_.equal(e, i); });
+          auto next =
+            std::find_if(it, end(v),
+                         [&](const auto& e) { return !rs_.equal(e, i); });
           auto count = std::distance(it, next);
-          if (1 < count)
+          if (1 < count
+              && (!expressionset_t::context_t::is_lal
+                  || ! is_letter_(*i)
+                  || exponent_threshold_ < count))
             {
-              // There is a sequence of equal nodes.
-              if (expressionset_t::context_t::is_lal && is_letter_(*i)
-                  && count <= exponent_threshold_)
-                // Writing the exponent would be longer than the actual product.
-                for (auto n = 0; n < count; ++n)
-                  {
-                    if (n != 0)
-                      out_ << product_;
-                    print_child_(*i, v);
-                  }
-              else
+              // We can display an exponent.
+              print_child(*i, precedence_t::exponent);
+              if (fmt_ == format::utf8)
                 {
-                  // We can display an exponent.
-                  print_child(*i, precedence_t::exponent);
-                  if (fmt_ == format::utf8)
+                  // Recursive lambda to display UTF-8 characters
+                  // in the correct order.
+                  std::function<void(int)> print = [this, &print](int n)
                     {
-                      // Recursive lambda to display utf8 characters in the
-                      // correct order.
-                      std::function<void(int)> print = [this, &print](int n)
+                      if (n)
                         {
-                          if (n)
-                          {
-                            print(n / 10);
-                            out_ << to_exponent[n % 10];
-                          }
-                        };
-                      print(count);
-                    }
-                  else
-                    out_ << lexponent_ << count << rexponent_;
+                          print(n / 10);
+                          out_ << superscripts[n % 10];
+                        }
+                    };
+                  print(count);
                 }
+              else
+                out_ << lexponent_ << count << rexponent_;
+              it = next;
             }
           else
-            // Print a single node.
-            print_child_(*i, v);
-          if (next != end(v))
-            // Handle operator.
-            out_ << product_;
+            {
+              // Print a single node.
+              print_child_(*i, v);
+              ++it;
+            }
         }
     }
 

@@ -129,7 +129,7 @@ xfail('&a')
 xfail('a&')
 xfail('\a')
 
-ctx = vcsn.context('lal_char(abc), z')
+ctx = vcsn.context('lal_char(abc), q')
 xfail('(?@lal_char(abc), b)<2>a')
 xfail('(?@lal_char(abc), b')
 xfail('(?@foobar)foo')
@@ -141,48 +141,78 @@ xfail('a<2')
 ## format.  ##
 ## -------- ##
 
-def check_format(ctx, r, text, latex):
+# FIXME: This should be part of check-rat.
+def check_format(ctx, r, text, utf8, latex):
     ctx = vcsn.context(ctx)
     e = ctx.expression(r)
     CHECK_EQ(text, e.format('text'))
+    CHECK_EQ(utf8, e.format('utf8'))
     CHECK_EQ(latex, e.format('latex'))
 
 check_format('lal_char(abcd), b',
              'abcd',
              'abcd',
-             'a \\, b \\, c \\, d')
+             'abcd',
+             r'a \, b \, c \, d')
 
-# Check classes.  A bit redundant with check-rat, except that we check
-# LaTeX output here.
+# Check classes.  FIXME: Redundant with check-rat.
 check_format('lal_char(abcdef), b',
              '[abcdef]',
-             '[^]', r'[\hat{}]')
+             '[^]', '[^]', r'[\hat{}]')
 check_format('lal_char(abcdef), b',
              '[abcde]',
-             '[^f]', r'[\hat{}f]')
+             '[^f]', '[^f]', r'[\hat{}f]')
 check_format('lal_char(a-z), b',
              '[abcd]',
-             '[a-d]', r'[a\textrm{-}d]')
+             '[a-d]', '[a-d]', r'[a\textrm{-}d]')
 
+# Check weights.
 check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), q>>',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
              '<<<93>x>d>a+(<<<42>y>e>b)*',
+             '⟨⟨⟨93⟩x⟩d⟩a+(⟨⟨⟨42⟩y⟩e⟩b)*',
              r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Words are in \mathit to get correct inter-letter spacing.
-check_format('law_char(abc), z',
+check_format('law_char(abc), q',
+             '(abc)a(bc)',
              '(abc)a(bc)',
              '(abc)a(bc)',
              r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
+
+# Exponents.
+check_format('lal_char, q',
+             'a{2}',
+             'aa', 'aa', r'a \, a')
+check_format('lal_char, q',
+             'a{3}',
+             'aaa', 'a³', r'{a}^{3}')
+check_format('lal_char, q',
+             'a{4}',
+             'aaaa', 'a⁴', r'{a}^{4}')
+check_format('lal_char, q',
+             'a{5}',
+             'a{5}', 'a⁵', r'{a}^{5}')
+check_format('lal_char, q',
+             'a{10}',
+             'a{10}', 'a¹⁰', r'{a}^{10}')
+check_format('lal_char, q',
+             'a{100}',
+             'a{100}', 'a¹⁰⁰', r'{a}^{100}')
+check_format('lal_char, q',
+             'a{987}',
+             'a{987}', 'a⁹⁸⁷', r'{a}^{987}')
 
 # Check that we do support digits as letters.
 check_format('lal_char(0123), b',
              '0123',
              '0123',
+             '0123',
              '0 \\, 1 \\, 2 \\, 3')
-check_format('lal_char(0123), z',
+check_format('lal_char(0123), q',
              '<0123>0123',
              '<123>(0123)',
+             '⟨123⟩(0123)',
              r' \left\langle 123 \right\rangle \,\left(0 \, 1 \, 2 \, 3\right)')
 
 ## -------- ##
@@ -192,7 +222,7 @@ def check(ctx, s1, exp):
     eff = ctx.series(s1)
     CHECK_EQ(exp, eff.format('text'))
 
-ctx = vcsn.context('lal_char(abcd), z')
+ctx = vcsn.context('lal_char(abcd), q')
 check(ctx, 'a+b', 'a+b')
 check(ctx, '(a+a)*', '(<2>a)*')
 
@@ -202,7 +232,7 @@ check(ctx, '(<5>a)(b)(c*)', '<5>(abc*)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 
-ctx = vcsn.context('law_char(abcd), z')
+ctx = vcsn.context('law_char(abcd), q')
 
 check(ctx, '(a<5>)b', '<5>(ab)')
 check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
