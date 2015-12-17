@@ -32,10 +32,14 @@ parser.add_argument('--ccache', help='Compiler prefix',
                     default=config['ccache'])
 parser.add_argument('--cppflags', help='Preprocessor flags',
                     default=config['cppflags'])
+parser.add_argument('--extra-cppflags', help='Additional preprocessor flags',
+                    action=AppendStringAction, dest='cppflags')
 parser.add_argument('--cxx', help='Compiler',
                     default=config['cxx'])
 parser.add_argument('--cxxflags', help='Compiler flags',
                     default=config['cxxflags'])
+parser.add_argument('--extra-cxxflags', help='Additional compiler flags',
+                    action=AppendStringAction, dest='cxxflags')
 parser.add_argument('--ldflags', help='Linker flags',
                     default=config['ldflags'])
 parser.add_argument('--extra-ldflags', help='Additional linker flags',
