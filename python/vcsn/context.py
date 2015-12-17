@@ -7,7 +7,7 @@ from vcsn import label, polynomial, expression, weight
 from vcsn.tools import _is_equal
 
 context.__eq__ = _is_equal
-context.__or__ = context.join
+context.__plus__ = context.join
 context.__repr__ = lambda self: self.format('text')
 context._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
