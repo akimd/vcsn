@@ -105,7 +105,11 @@ namespace vcsn
             return res ? polynomial_t{*res} : polynomial_t{};
           }
         else
-          return lightest_(num);
+          {
+            require(!has_negative_cycle(aut_),
+                "lightest(n > 1): requires automaton without negative cycles");
+            return lightest_(num);
+          }
       }
 
     private:
@@ -193,8 +197,6 @@ namespace vcsn
   typename detail::weighter<Aut>::polynomial_t
   lightest(const Aut& aut, unsigned num = 1)
   {
-    require(!has_negative_cycle(aut),
-            "lightest: require automaton without negative cycles");
     auto weighter = detail::weighter<Aut>{aut};
     return weighter(num);
   }
