@@ -15,8 +15,8 @@ namespace vcsn
   inline
   auto
   weight_series(const Aut& a)
-    -> std::enable_if_t<!std::is_same<weightset_t_of<Aut>, nmin>::value,
-                         weight_t_of<Aut>>
+    -> std::enable_if_t<!is_tropical<weightset_t_of<Aut>>::value,
+                        weight_t_of<Aut>>
   {
     auto aut = proper(to_spontaneous(a));
     return eval(aut);
@@ -26,8 +26,8 @@ namespace vcsn
   inline
   auto
   weight_series(const Aut& a)
-    -> std::enable_if_t<std::is_same<weightset_t_of<Aut>, nmin>::value,
-                         weight_t_of<Aut>>
+    -> std::enable_if_t<is_tropical<weightset_t_of<Aut>>::value,
+                        weight_t_of<Aut>>
   {
     state_distancer<Aut> d(a);
     return d(a->pre(), a->post());

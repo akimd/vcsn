@@ -60,12 +60,15 @@ namespace vcsn
     return d;
   }
 
-  /// State distancer for nmin.
+  /// State distancer for tropical weightsets.
+  ///
+  /// Implementation restricted to tropical weightsets as the computation
+  /// does not take into account addition if multiple paths are available.
   template <Automaton Aut>
   struct state_distancer
   {
-    static_assert(std::is_same<weightset_t_of<Aut>, nmin>::value,
-                  "state-distance: require Nmin weightset");
+    static_assert(is_tropical<weightset_t_of<Aut>>::value,
+                  "state-distance: require tropical weightset");
 
     state_distancer(const Aut& aut)
       : aut_(aut)
@@ -77,10 +80,10 @@ namespace vcsn
     using pair_t = std::pair<state_t, weight_t>;
 
 
-    /// State distance on nmin
+    /// State distance on tropical weightsets
     /// Find weighted distance between state \a s0 and state \a s1
     /// using a dfs.
-    /// The distance becomes a shortest path with only positive weights.
+    /// The distance becomes a lightest path with only positive weights.
     weight_t
     operator()(state_t s0, state_t s1) const
     {
