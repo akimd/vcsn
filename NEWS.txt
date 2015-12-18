@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-12-23
+### has-lightening-cycle: new name for 'has-negative-cyle'
+In static, dyn:: and Python, 'has-negative-cycle' is renamed
+'has-lightening-cycle'. It makes more sense as we consider '(<1/2>a)*' to be a
+lightening cycle.
+
 ## 2015-12-21
 ### Operators on expressions and expansions
 The `dyn::complement` function is now available on expansions, in addition

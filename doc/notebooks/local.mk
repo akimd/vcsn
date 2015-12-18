@@ -43,7 +43,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.factor.ipynb                    \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
-  %D%/automaton.has_negative_cycle.ipynb        \
+  %D%/automaton.has_lightening_cycle.ipynb      \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.infiltration.ipynb              \
   %D%/automaton.info.ipynb                      \

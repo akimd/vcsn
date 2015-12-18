@@ -48,7 +48,7 @@ algo_headers =                                  \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/has-bounded-lag.hh                  \
-  %D%/algos/has-negative-cycle.hh               \
+  %D%/algos/has-lightening-cycle.hh             \
   %D%/algos/has-twins-property.hh               \
   %D%/algos/identities.hh                       \
   %D%/algos/info.hh                             \

@@ -40,7 +40,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/filter.py                                 \
   %D%/focus.py                                  \
   %D%/has-bounded-lag.py                        \
-  %D%/has-negative-cycle.py                     \
+  %D%/has-lightening-cycle.py                   \
   %D%/has-twins-property.py                     \
   %D%/infiltration.py                           \
   %D%/info.py                                   \

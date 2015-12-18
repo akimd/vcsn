@@ -12,7 +12,7 @@ namespace vcsn
 
   /// Bellman-Ford implementation (from vcsn/algos/bellman-ford.hh).
   ///
-  /// Raise if the automaton contains a negative loop.
+  /// Raise if the automaton contains a lightening loop.
   struct bellmanford_tag {};
 
   namespace detail
@@ -53,7 +53,7 @@ namespace vcsn
               }
           }
 
-      // Check for negative cycles.
+      // Check for lightening cycles.
       for (auto t: aut->transitions())
         {
           auto src = aut->src_of(t);

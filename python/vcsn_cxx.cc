@@ -345,9 +345,9 @@ struct automaton
     return vcsn::dyn::has_bounded_lag(val_);
   }
 
-  bool has_negative_cycle() const
+  bool has_lightening_cycle() const
   {
-    return vcsn::dyn::has_negative_cycle(val_);
+    return vcsn::dyn::has_lightening_cycle(val_);
   }
 
   bool has_twins_property() const
@@ -1392,7 +1392,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("filter", &automaton::filter)
     .def("_format", &automaton::format)
     .def("has_bounded_lag", &automaton::has_bounded_lag)
-    .def("has_negative_cycle", &automaton::has_negative_cycle)
+    .def("has_lightening_cycle", &automaton::has_lightening_cycle)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
     .def("insplit", &automaton::insplit)

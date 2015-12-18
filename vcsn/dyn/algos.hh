@@ -250,8 +250,8 @@ namespace vcsn
     /// Whether the automaton has the twins property.
     bool has_twins_property(const automaton& aut);
 
-    /// Whether the automaton has a cycle with negative weight.
-    bool has_negative_cycle(const automaton& aut);
+    /// Whether the automaton has a cycle with lightening weight.
+    bool has_lightening_cycle(const automaton& aut);
 
     /// Whether the transducer has bounded lag.
     bool has_bounded_lag(const automaton& aut);

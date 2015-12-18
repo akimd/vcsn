@@ -5,7 +5,7 @@ from test import *
 
 def check(exp, has):
     a = ctx.expression(exp).standard()
-    CHECK(a.has_negative_cycle() == has)
+    CHECK(a.has_lightening_cycle() == has)
 
 ctx = vcsn.context('lan_char(a), nmin')
 check('\e', False)

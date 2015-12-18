@@ -8,7 +8,7 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/algos/lightest-path.hh>
-#include <vcsn/algos/has-negative-cycle.hh>
+#include <vcsn/algos/has-lightening-cycle.hh>
 #include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -106,8 +106,8 @@ namespace vcsn
           }
         else
           {
-            require(!has_negative_cycle(aut_),
-                "lightest(n > 1): requires automaton without negative cycles");
+            require(!has_lightening_cycle(aut_),
+                "lightest(n > 1): requires automaton without lightening cycles");
             return lightest_(num);
           }
       }
