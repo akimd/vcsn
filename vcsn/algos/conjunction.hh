@@ -483,7 +483,6 @@ namespace vcsn
     = std::shared_ptr<detail::product_automaton_impl<Aut, Auts...>>;
 
   template <typename Aut, typename... Auts>
-  inline
   auto
   make_product_automaton(Aut aut, const Auts&... auts)
     -> product_automaton<Aut, Auts...>
@@ -499,7 +498,6 @@ namespace vcsn
 
   /// Build the (accessible part of the) conjunction.
   template <typename... Auts>
-  inline
   auto
   conjunction(const Auts&... as)
     -> tuple_automaton<decltype(meet_automata(as...)),
@@ -513,7 +511,6 @@ namespace vcsn
 
   /// Build the (accessible part of the) conjunction.
   template <typename... Auts>
-  inline
   auto
   conjunction_lazy(const Auts&... as)
     -> product_automaton<decltype(meet_automata(as...)),
@@ -553,11 +550,11 @@ namespace vcsn
         if (lazy)
           return make_automaton
             (vcsn::conjunction_lazy
-             (do_insplit<I, tuple_element_t<I, Auts>>(as[I]->as<tuple_element_t<I, Auts>>())...));
+             (do_insplit<I>(as[I]->as<tuple_element_t<I, Auts>>())...));
         else
           return make_automaton
             (vcsn::conjunction
-             (do_insplit<I, tuple_element_t<I, Auts>>(as[I]->as<tuple_element_t<I, Auts>>())...));
+             (do_insplit<I>(as[I]->as<tuple_element_t<I, Auts>>())...));
       }
 
       /// Bridge (conjunction).
@@ -580,7 +577,6 @@ namespace vcsn
 
   /// The (accessible part of the) shuffle product.
   template <typename... Auts>
-  inline
   auto
   shuffle(const Auts&... as)
     -> tuple_automaton<decltype(join_automata(as...)),
@@ -624,7 +620,6 @@ namespace vcsn
 
   /// Shuffle product of expressions.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   shuffle(const ValueSet& vs,
           const typename ValueSet::value_t& lhs,
@@ -658,7 +653,6 @@ namespace vcsn
 
   /// The (accessible part of the) infiltration product.
   template <typename A1, typename A2>
-  inline
   auto
   infiltration(const A1& a1, const A2& a2)
     -> tuple_automaton<decltype(join_automata(a1, a2)),
@@ -671,7 +665,6 @@ namespace vcsn
 
   /// The (accessible part of the) infiltration product.
   template <typename A1, typename A2, typename A3, typename... Auts>
-  inline
   auto
   infiltration(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
     -> decltype(infiltration(infiltration(a1, a2), a3, as...))
@@ -712,7 +705,6 @@ namespace vcsn
 
   /// Infiltration product of expressions.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   infiltration(const ValueSet& vs,
                const typename ValueSet::value_t& lhs,
@@ -806,7 +798,6 @@ namespace vcsn
 
   /// Intersection/Hadamard product of expressions/polynomials.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   conjunction(const ValueSet& rs,
               const typename ValueSet::value_t& lhs,

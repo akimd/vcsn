@@ -61,33 +61,32 @@ namespace vcsn
     automaton2_t a2_;
 
     /// See the comment for out_ in minimize.hh.
-    template<typename Automaton>
+    template <typename Aut>
     using dout_t =
       std::unordered_map
-         <state_t_of<Automaton>,
-          std::unordered_map<label_t_of<Automaton>,
-                             std::pair<weight_t_of<Automaton>,
-                                       state_t_of<Automaton>>,
-                             vcsn::hash<labelset_t_of<Automaton>>,
-                             vcsn::equal_to<labelset_t_of<Automaton>>>>;
+         <state_t_of<Aut>,
+          std::unordered_map<label_t_of<Aut>,
+                             std::pair<weight_t_of<Aut>, state_t_of<Aut>>,
+                             vcsn::hash<labelset_t_of<Aut>>,
+                             vcsn::equal_to<labelset_t_of<Aut>>>>;
 
     /// For the simpler, faster sequential case.
     dout_t<automaton1_t> dout1_;
     dout_t<automaton2_t> dout2_;
 
     /// For the nonsequential case.
-    template<typename Automaton>
+    template <typename Aut>
     using nout_t =
       std::unordered_map
-         <state_t_of<Automaton>,
+         <state_t_of<Aut>,
           std::unordered_map
-             <label_t_of<Automaton>,
-              std::unordered_map<weight_t_of<Automaton>,
-                                 std::vector<state_t_of<Automaton>>,
-                                 vcsn::hash<weightset_t_of<Automaton>>,
-                                 vcsn::equal_to<weightset_t_of<Automaton>>>,
-              vcsn::hash<labelset_t_of<Automaton>>,
-              vcsn::equal_to<labelset_t_of<Automaton>>>>;
+             <label_t_of<Aut>,
+              std::unordered_map<weight_t_of<Aut>,
+                                 std::vector<state_t_of<Aut>>,
+                                 vcsn::hash<weightset_t_of<Aut>>,
+                                 vcsn::equal_to<weightset_t_of<Aut>>>,
+              vcsn::hash<labelset_t_of<Aut>>,
+              vcsn::equal_to<labelset_t_of<Aut>>>>;
     nout_t<automaton1_t> nout1_;
     nout_t<automaton2_t> nout2_;
 
@@ -137,14 +136,14 @@ namespace vcsn
     // Return true and fill \a dout if \a a is sequential; otherwise
     // return false and clear dout.  We can't use the is_deterministic
     // algorithm, as it's only defined for lal.
-    template <typename Automaton>
-    bool is_sequential_filling(const Automaton& a,
-                               dout_t<Automaton>& dout)
+    template <typename Aut>
+    bool is_sequential_filling(const Aut& a,
+                               dout_t<Aut>& dout)
     {
       for (auto t : a->all_transitions())
         {
-          const state_t_of<Automaton>& src = a->src_of(t);
-          const label_t_of<Automaton>& l = a->label_of(t);
+          const state_t_of<Aut>& src = a->src_of(t);
+          const label_t_of<Aut>& l = a->label_of(t);
           auto& doutsrc = dout[src];
           if (doutsrc.find(l) == doutsrc.end())
             dout[src][l] = {a->weight_of(t), a->dst_of(t)};
@@ -247,8 +246,8 @@ namespace vcsn
     using state_classes_t = std::vector<class_pair_t>;
     state_classes_t state_classes_;
 
-    template<typename Automaton>
-    class_id state_to_class(state_t_of<Automaton> s, Automaton& a)
+    template<typename Aut>
+    class_id state_to_class(state_t_of<Aut> s, Aut& a)
     {
       class_id res = 0;
 
@@ -258,8 +257,8 @@ namespace vcsn
       const auto ws = * a->weightset();
       const auto ls = * a->labelset();
 
-      using transition_t = std::pair<weight_t_of<Automaton>,
-                                     label_t_of<Automaton>>;
+      using transition_t = std::pair<weight_t_of<Aut>,
+                                     label_t_of<Aut>>;
       using transitions_t = std::vector<transition_t>;
       const auto less =
         [&](const transition_t& t1, const transition_t& t2)
@@ -274,7 +273,7 @@ namespace vcsn
 
 #define HASH_TRANSITIONS(expression, endpoint_getter)                   \
       {                                                                 \
-        std::unordered_set<state_t_of<Automaton>> endpoint_states;      \
+        std::unordered_set<state_t_of<Aut>> endpoint_states;            \
         transitions_t tt;                                               \
         for (auto& t: expression)                                       \
           {                                                             \

@@ -22,6 +22,7 @@ namespace vcsn
 
   namespace detail
   {
+    /// Compute the shortest words accepted by an automaton.
     template <typename Aut>
     class enumerater
     {
@@ -42,11 +43,11 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
 
       /// Used in the case of non-free labelsets.
-      using datum_t = std::tuple<state_t, word_t, weight_t>;
-      struct datum_less
+      using profile_t = std::tuple<state_t, word_t, weight_t>;
+      struct profile_less
       {
         /// Whether l < r (as this is a max heap).
-        bool operator()(const datum_t& r, const datum_t& l) const
+        bool operator()(const profile_t& r, const profile_t& l) const
         {
           if (labelset_t::less(std::get<1>(l), std::get<1>(r)))
             return true;
@@ -97,8 +98,8 @@ namespace vcsn
         if (len != std::numeric_limits<unsigned>::max())
           len += 2;
 
-        using queue_t = std::deque<datum_t>;
-        auto queue = queue_t{datum_t{aut_->pre(), ls_.one(), ws_.one()}};
+        using queue_t = std::deque<profile_t>;
+        auto queue = queue_t{profile_t{aut_->pre(), ls_.one(), ws_.one()}};
 
         // The approximated behavior: the first orders to post's past.
         polynomial_t output;
@@ -149,8 +150,8 @@ namespace vcsn
         // Benched as better than Fibonacci, Pairing and Skew Heaps.
         // D-ary heaps and Priority Queue fail to compile.
         using queue_t =
-          boost::heap::binomial_heap<datum_t,
-                                     boost::heap::compare<datum_less>>;
+          boost::heap::binomial_heap<profile_t,
+                                     boost::heap::compare<profile_less>>;
 
         auto queue = queue_t{};
         queue.emplace(aut_->pre(), ls_.one(), ws_.one());
@@ -166,10 +167,10 @@ namespace vcsn
             // label and state: sum the weights.
             //
             // Benches show that this is way more efficient than
-            // trying to update matching datum_t in the queue, even if
+            // trying to update matching profile_t in the queue, even if
             // we try to take advantage of the ordering in the heap.
             // Here, we benefit from the fact that the queue provides
-            // matching datum_t in a row.
+            // matching profile_t in a row.
             queue.pop();
 
             while (!queue.empty()
@@ -229,8 +230,11 @@ namespace vcsn
 
       /// The automaton whose behavior to approximate.
       automaton_t aut_;
+      /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
+      /// Shorthand to the polynomialset of words.
       const polynomialset_t ps_ = make_word_polynomialset(aut_->context());
+      /// Shorthand to the (word) labelset.
       const labelset_t& ls_ = *ps_.labelset();
     };
   }
@@ -240,14 +244,13 @@ namespace vcsn
   /// \param aut   the automaton whose behavior to approximate
   /// \param num   number of words looked for.
   /// \param len   maximum length of words looked for.
-  template <typename Automaton>
-  inline
-  typename detail::enumerater<Automaton>::polynomial_t
-  shortest(const Automaton& aut,
+  template <typename Aut>
+  typename detail::enumerater<Aut>::polynomial_t
+  shortest(const Aut& aut,
            boost::optional<unsigned> num = {},
            boost::optional<unsigned> len = {})
   {
-    detail::enumerater<Automaton> enumerater(aut);
+    auto enumerater = detail::enumerater<Aut>{aut};
     return enumerater(num, len);
   }
 
@@ -256,10 +259,9 @@ namespace vcsn
   ///
   /// \param aut   the automaton whose behavior to approximate
   /// \param len   maximum length of words looked for.
-  template <typename Automaton>
-  inline
-  typename detail::enumerater<Automaton>::polynomial_t
-  enumerate(const Automaton& aut, unsigned len)
+  template <typename Aut>
+  typename detail::enumerater<Aut>::polynomial_t
+  enumerate(const Aut& aut, unsigned len)
   {
     return shortest(aut, boost::none, len);
   }

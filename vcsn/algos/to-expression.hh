@@ -20,6 +20,8 @@ namespace vcsn
     | Naive profiler. |
     `----------------*/
 
+    /// Compute a state profile for state-elimination based on
+    /// connectivity.
     template <typename Aut>
     struct naive_profiler
     {
@@ -31,6 +33,9 @@ namespace vcsn
         : aut_(aut)
       {}
 
+      /// The state profile is the product of the number of (strictly)
+      /// incoming transitions with the number of (strictly) outgoing
+      /// ones, and whether it has loops.
       struct state_profile
       {
         state_profile(state_t state)
@@ -51,8 +56,8 @@ namespace vcsn
         }
 
         size_t size_;
-        state_t state_;
         bool has_loop_ = false;
+        state_t state_;
       };
 
       state_profile
@@ -69,8 +74,6 @@ namespace vcsn
       void update(state_profile& p)
       {
         size_t out = 0;
-        // Since we are in LAO, there can be at most one such loop.
-        // Don't count the loops as out-degree.
         for (auto t: aut_->all_out(p.state_))
           if (aut_->dst_of(t) == p.state_)
             p.has_loop_ = true;
@@ -87,6 +90,8 @@ namespace vcsn
     | Delgado profiler.  |
     `-------------------*/
 
+    /// Compute a state profile for state-elimination based on the
+    /// Delgado-Morais heuristic.
     template <typename Aut>
     struct delgado_profiler
     {
@@ -94,9 +99,14 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
+      /// Build a generator of Delgado-Morais state profiles.
+      ///
+      /// \param aut  the input automaton
+      /// \param count_labels  whether we use the width of the expressions,
+      ///                      instead of the length.
       delgado_profiler(const automaton_t& aut, bool count_labels = false)
-        : aut_(aut)
-        , count_labels_(count_labels)
+        : aut_{aut}
+        , count_labels_{count_labels}
         , transition_cache_(aut_->all_transitions().back() + 1, 0)
       {}
 
@@ -158,7 +168,7 @@ namespace vcsn
         transition_cache_[t] = 0;
       }
 
-      /// The "weight" of a state, as defined by Delgado/Morais.
+      /// The "weight" of a state, as defined by Delgado-Morais.
       ///
       /// We use the word "size" instead, since "weight" has already a
       /// strong meaning in Vcsn...
@@ -218,6 +228,10 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
 
+      /// Prepare for state-elimination.
+      ///
+      /// \param aut       the input automaton
+      /// \param profiler  the generator of state profiles.
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
         , profiler_(profiler)
@@ -419,7 +433,7 @@ namespace vcsn
   eliminate_state_here(Aut& res,
                        state_t_of<Aut> s = Aut::element_type::null_state())
   {
-    /// Delgado profiler not fit for lao with non expression weightset.
+    // Delgado profiler not fit for lao with non expression weightset.
     auto profiler = detail::naive_profiler<Aut>(res);
     auto eliminate_state = detail::make_state_eliminator(res, profiler);
     eliminate_state(s);

@@ -54,8 +54,8 @@ namespace vcsn
       using weight_t = weight_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
 
-      using datum_t = std::tuple<state_t, word_t, weight_t>;
-      struct datum_less
+      using profile_t = std::tuple<state_t, word_t, weight_t>;
+      struct profile_less
       {
         /// Whether l < r (as this is a max heap).
         ///
@@ -67,7 +67,7 @@ namespace vcsn
         /// Post is treated last in order to be sure that all the equivalent
         /// cases are treated before returning. When we finally reach post
         /// we know for sure that no smaller evaluation exists.
-        bool operator()(const datum_t& r, const datum_t& l) const
+        bool operator()(const profile_t& r, const profile_t& l) const
         {
           if (weightset_t::less(std::get<2>(l), std::get<2>(r)))
             return true;
@@ -85,8 +85,8 @@ namespace vcsn
         }
       };
       using queue_t =
-        boost::heap::binomial_heap<datum_t,
-                                   boost::heap::compare<datum_less>>;
+        boost::heap::binomial_heap<profile_t,
+                                   boost::heap::compare<profile_less>>;
 
       /// Prepare to compute an approximation of the behavior.
       ///
@@ -191,14 +191,13 @@ namespace vcsn
   ///
   /// \param aut   the automaton whose behavior to approximate
   /// \param num   number of words looked for.
-  template <typename Automaton>
-  inline
-  typename detail::weighter<Automaton>::polynomial_t
-  lightest(const Automaton& aut, unsigned num = 1)
+  template <typename Aut>
+  typename detail::weighter<Aut>::polynomial_t
+  lightest(const Aut& aut, unsigned num = 1)
   {
     require(!has_negative_cycle(aut),
             "lightest: require automaton without negative cycles");
-    detail::weighter<Automaton> weighter(aut);
+    auto weighter = detail::weighter<Aut>{aut};
     return weighter(num);
   }
 
