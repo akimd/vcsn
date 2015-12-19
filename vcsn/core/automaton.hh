@@ -4,13 +4,33 @@
 
 namespace vcsn
 {
+
+#if defined __cpp_concepts
+  template <typename Aut>
+  concept bool Automaton()
+  {
+    return requires (Aut a)
+      {
+        typename state_t_of<Aut>;
+        { a->null_state() } -> state_t_of<Aut>;
+        { a->pre() } -> state_t_of<Aut>;
+        { a->post() } -> state_t_of<Aut>;
+
+        typename transition_t_of<Aut>;
+        { a->null_transition() } -> transition_t_of<Aut>;
+      };
+  }
+#else
+# define Automaton typename
+#endif
+
   namespace detail
   {
     /// Indexes of transitions leaving state \a s that validate the
     /// predicate.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut, typename Pred>
+    template <Automaton Aut, typename Pred>
     auto all_out(const Aut& aut, state_t_of<Aut> s, Pred pred)
     {
       return make_container_filter_range(aut->all_out(s), pred);
@@ -19,7 +39,7 @@ namespace vcsn
     /// Indexes of visible transitions leaving state \a s.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto out(const Aut& aut, state_t_of<Aut> s)
     {
       return all_out(aut, s,
@@ -32,7 +52,7 @@ namespace vcsn
     /// Indexes of all transitions leaving state \a s on label \a l.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto out(const Aut& aut, state_t_of<Aut> s, label_t_of<Aut> l)
     {
       return all_out(aut, s,
@@ -47,7 +67,7 @@ namespace vcsn
     /// predicate.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut, typename Pred>
+    template <Automaton Aut, typename Pred>
     auto all_in(const Aut& aut, state_t_of<Aut> s, Pred pred)
     {
       return make_container_filter_range(aut->all_in(s), pred);
@@ -56,7 +76,7 @@ namespace vcsn
     /// Indexes of visible transitions arriving to state \a s.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto in(const Aut& aut, state_t_of<Aut> s)
     {
       return all_in(aut, s,
@@ -69,7 +89,7 @@ namespace vcsn
     /// Indexes of visible transitions arriving to state \a s on label \a l.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto in(const Aut& aut, state_t_of<Aut> s, label_t_of<Aut> l)
     {
       return all_in(aut, s,
@@ -84,7 +104,7 @@ namespace vcsn
     ///
     /// Also include the weird case of a transition from pre to post.
     /// This is used when calling eliminate_state repeatedly.
-    template <typename Aut>
+    template <Automaton Aut>
     auto initial_transitions(const Aut& aut)
       -> decltype(aut->all_out(aut->pre())) // for G++ 5.2
     {
@@ -95,7 +115,7 @@ namespace vcsn
     ///
     /// Also include the weird case of a transition from pre to post.
     /// This is used when calling eliminate_state repeatedly.
-    template <typename Aut>
+    template <Automaton Aut>
     auto final_transitions(const Aut& aut)
       -> decltype(aut->all_in(aut->post())) // for G++ 5.2
     {
@@ -106,7 +126,7 @@ namespace vcsn
     /// Indexes of visible transitions from state \a s to state \a d.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto outin(const Aut& aut, state_t_of<Aut> s, state_t_of<Aut> d)
     {
       return all_out(aut, s,
@@ -117,7 +137,7 @@ namespace vcsn
     }
 
     /// Remove all the transitions between s and d.
-    template <typename Aut>
+    template <Automaton Aut>
     void del_transition(const Aut& aut, state_t_of<Aut> s, state_t_of<Aut> d)
     {
       // Make a copy of the transition indexes, as the iterators are

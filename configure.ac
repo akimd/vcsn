@@ -94,7 +94,9 @@ m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody],
   }
 ])])
 
-for f in '-std=c++14' '-std=c++14 -stdlib=libc++' \
+for f in '-std=c++17' '-std=c++17 -stdlib=libc++' \
+         '-std=c++1z' '-std=c++1z -stdlib=libc++' \
+         '-std=c++14' '-std=c++14 -stdlib=libc++' \
          '-std=c++1y' '-std=c++1y -stdlib=libc++'
 do
   AX_CHECK_COMPILE_FLAG([$f], [CXXFLAGS="$CXXFLAGS $f" stdpass=true], [], [],
@@ -102,7 +104,7 @@ do
   ${stdpass-false} && break
 done
 if ! "${stdpass-false}"; then
-  AC_ERROR([unable to turn on C++14 mode with this compiler])
+  AC_ERROR([unable to turn on modern C++ mode with this compiler])
 fi
 
 # Check for a long-term GCC bug that prevents proper behavior of
