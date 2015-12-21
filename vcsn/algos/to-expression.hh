@@ -578,15 +578,18 @@ namespace vcsn
   to_expression(const Aut& a, vcsn::rat::identities ids,
                 const std::string& algo)
   {
-    static const auto map = std::map<std::string, to_expression_heuristic_t>
+    static const auto map = getarg<to_expression_heuristic_t>
       {
-        {"auto",          to_expression_heuristic_t::best},
-        {"best",          to_expression_heuristic_t::best},
-        {"delgado",       to_expression_heuristic_t::delgado},
-        {"delgado_label", to_expression_heuristic_t::delgado_label},
-        {"naive",         to_expression_heuristic_t::naive},
+        "heuristics",
+        {
+          {"auto",          "best"},
+          {"best",          to_expression_heuristic_t::best},
+          {"delgado",       to_expression_heuristic_t::delgado},
+          {"delgado_label", to_expression_heuristic_t::delgado_label},
+          {"naive",         to_expression_heuristic_t::naive}
+        }
       };
-    return to_expression<Aut, ExpSet>(a, ids, getargs("algorithm", map, algo));
+    return to_expression<Aut, ExpSet>(a, ids, map[algo]);
   }
 
   /*----------------------------.
