@@ -5,6 +5,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/dyn/expansion.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/fwd.hh> // b
 
@@ -30,7 +31,7 @@ namespace vcsn
     using state_t = state_t_of<automaton_t>;
 
     // The final states of aut.
-    std::set<state_t> finals;
+    auto finals = std::set<state_t>{};
     for (auto t: final_transitions(aut))
       finals.insert(aut->src_of(t));
 
@@ -67,6 +68,27 @@ namespace vcsn
     }
   }
 
+  /*-------------------------.
+  | complement(expansion).   |
+  `-------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (complement).
+      template <typename ExpansionSet>
+      expansion
+      complement_expansion(const expansion& xpn)
+      {
+        const auto& x = xpn->as<ExpansionSet>();
+        return make_expansion(x.expansionset(),
+                              x.expansionset().complement(x.expansion()));
+      }
+    }
+  }
+
+
   /*--------------------------.
   | complement(expression).   |
   `--------------------------*/
@@ -81,7 +103,6 @@ namespace vcsn
       complement_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-
         return make_expression(e.expressionset(),
                                e.expressionset().complement(e.expression()));
       }

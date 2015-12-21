@@ -18,13 +18,7 @@ expression.multiply = _expression_multiply
 expression.__add__ = expression.sum
 expression.__and__ = expression.conjunction
 expression.__floordiv__ = expression.ldiv
-expression.__truediv__ = expression.rdiv
-expression.__lt__ = expression.less_than
-expression.__le__ = lambda l, r: not r < l
-expression.__ge__ = lambda l, r: not l < r
-expression.__gt__ = lambda l, r: r < l
-expression.__eq__ = lambda l, r: not l < r and not r < l
-expression.__ne__ = lambda l, r: l < r or r < l
+expression.__invert__ = expression.complement
 expression.__mod__ = expression.difference
 expression.__mul__ = _right_mult
 expression.__or__ = lambda l, r: expression._tuple([l, r])
@@ -32,7 +26,15 @@ expression.__pow__ = _expression_multiply
 expression.__repr__ = lambda self: self.format('text')
 expression.__rmul__ = _left_mult
 expression.__str__ = lambda self: self.format('text')
+expression.__truediv__ = expression.rdiv
 expression._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
+expression.__lt__ = expression.less_than
+expression.__le__ = lambda l, r: not r < l
+expression.__ge__ = lambda l, r: not l < r
+expression.__gt__ = lambda l, r: r < l
+expression.__eq__ = lambda l, r: not l < r and not r < l
+expression.__ne__ = lambda l, r: l < r or r < l
 
 
 def _expression_derivation(self, w, *args):

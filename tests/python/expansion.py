@@ -5,6 +5,28 @@ from test import *
 
 ctx = vcsn.context("lal_char(abcd), q")
 
+## ------------ ##
+## Complement.  ##
+## ------------ ##
+def check(r):
+    '''Check that `~` on expansions corresponds to the expansion of
+    `~` on expressions.'''
+    e = ctx.expression(r)
+    eff = ~(e.expansion())
+    exp = (~e).expansion()
+    CHECK_EQ(exp, eff)
+
+check('\z')
+check('\e')
+check('<1/2>\e')
+check('a')
+check('(<1/2>a*+<1/3>b*)*')
+check('ab')
+check('abab')
+check('a*')
+check('(<1/2>a)*')
+
+
 ## ---------- ##
 ## Multiply.  ##
 ## ---------- ##
@@ -36,6 +58,27 @@ def check(r1, r2):
     exp2 = ctx.expression(r2)
     eff = exp1.expansion() + exp2.expansion()
     exp = (exp1 + exp2).expansion()
+    CHECK_EQ(exp, eff)
+
+check('ab', 'cd')
+check('a', 'bcd')
+check('abab', 'bbbb')
+check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
+check('a', '\e')
+check('a', '\z')
+
+
+## ------- ##
+## Tuple.  ##
+## ------- ##
+ctx = vcsn.context("lan_char(abcd), q")
+def check(r1, r2):
+    '''Check that `|` between expansions corresponds to the expansion of
+    `|` between expressions.'''
+    exp1 = ctx.expression(r1)
+    exp2 = ctx.expression(r2)
+    eff = exp1.expansion() | exp2.expansion()
+    exp = (exp1 | exp2).expansion()
     CHECK_EQ(exp, eff)
 
 check('ab', 'cd')

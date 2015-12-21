@@ -72,6 +72,9 @@ namespace vcsn
     /// \pre aut is complete
     automaton complement(const automaton& aut);
 
+    /// Complement this expansion.
+    expansion complement(const expansion& x);
+
     /// Add the complement operator to \a r.
     expression complement(const expression& r);
 

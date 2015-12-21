@@ -5,14 +5,20 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-12-21
+### Operators on expressions and expansions
+The `dyn::complement` function is now available on expansions, in addition
+to expressions and automata.  It is bound to the prefix `~` operator in
+Python.  The `dyn::tuple` function is available for expresions and
+expansions.  It is bound to `|` in Python.
+
 ## 2015-12-10
 ### Tag based dispatch in vcsn::
-The treatments for which several algorithms exist (e.g.,
-minimize/cominimize ---hopcropft, moore, weighted, signature,
-brzozowski, auto---, determinize/codeterminize ---boolean, weighted,
-auto---, sum/multiply/star ---standard, general, auto---, etc.) now
-offer a cleaner tag-based interface in vcsn::, the static library.
-For instance, instead of:
+The treatments for which several algorithms exist (e.g., minimize/cominimize
+---hopcropft, moore, weighted, signature, brzozowski, auto---,
+determinize/codeterminize ---boolean, weighted, auto---, sum/multiply/star
+---standard, general, auto---, etc.) now offer a cleaner tag-based interface
+in vcsn::, the static library.  For instance, instead of:
 
     auto m = minimize_moore(a);
 
