@@ -79,7 +79,7 @@ namespace vcsn
     require(pre_to_s, "ambiguous_word: did not find monomial");
     require(s_to_post, "ambiguous_word: did not find monomial");
 
-    return ls.mul((*pre_to_s).first, (*s_to_post).first);
+    return ls.mul(pre_to_s->first, s_to_post->first);
   }
 
 

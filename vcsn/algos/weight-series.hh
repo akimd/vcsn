@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/eval.hh>
-#include <vcsn/algos/distance.hh>
+#include <vcsn/algos/lightest-path.hh>
 #include <vcsn/algos/to-spontaneous.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -29,8 +29,8 @@ namespace vcsn
     -> std::enable_if_t<is_tropical<weightset_t_of<Aut>>::value,
                         weight_t_of<Aut>>
   {
-    state_distancer<Aut> d(a);
-    return d(a->pre(), a->post());
+    auto res = path_monomial(a, lightest_path(a));
+    return res ? res->second : a->weightset()->zero();
   }
 
   namespace dyn

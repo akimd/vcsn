@@ -636,7 +636,7 @@ bench('a.is_synchronized()',
 
 # weight_series
 ctx = "lal_char(a-z), nmin"
-r = "[a-z]{4000}"
+r = "a{12000}+<1>[b-z]{12000}"
 bench('a.weight_series()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['ctx = "{}"'.format(ctx),
