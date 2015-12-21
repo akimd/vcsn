@@ -38,11 +38,11 @@ namespace vcsn
     struct iterator
     {
       template <typename T>
-      using iterator_t = typename remove_reference_t<T>::const_iterator;
+      using iterator_t = typename std::remove_reference_t<T>::const_iterator;
       using iterators_t = std::tuple<iterator_t<Maps>...>;
 
       template <typename T>
-      using value_t = typename remove_reference_t<T>::value_type;
+      using value_t = typename std::remove_reference_t<T>::value_type;
       using values_t = std::tuple<value_t<Maps>...>;
 
       // FIXME: we should be using ::reference, but I can't get it to
@@ -55,10 +55,10 @@ namespace vcsn
 
       /// Common key type.
       using key_t
-        = remove_const_t<typename tuple_element_t<0, values_t>::first_type>;
+        = std::remove_const_t<typename tuple_element_t<0, values_t>::first_type>;
       /// Tuple of mapped types.
       using mapped_t
-        = std::tuple<const typename remove_reference_t<Maps>::mapped_type&...>;
+        = std::tuple<const typename std::remove_reference_t<Maps>::mapped_type&...>;
 
       iterator(zipped_maps& zip,
                iterator_t<Maps>... is, iterator_t<Maps>... ends)

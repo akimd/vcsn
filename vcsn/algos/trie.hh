@@ -55,7 +55,7 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
       /// The type of the automaton we work on.
       using work_automaton_t
-        = conditional_t<Dir == direction::forward,
+        = std::conditional_t<Dir == direction::forward,
                         automaton_t,
                         transpose_automaton<automaton_t>>;
       /// The input labelset, free/letterized or not.
@@ -131,7 +131,7 @@ namespace vcsn
       /// Get the result for the forward trie.
       template <direction D = Dir>
       auto result()
-        -> enable_if_t<D == direction::forward, automaton_t>
+        -> std::enable_if_t<D == direction::forward, automaton_t>
       {
         return res_;
       }
@@ -139,7 +139,7 @@ namespace vcsn
       /// Get the result for a backward trie.
       template <direction D = Dir>
       auto result()
-        -> enable_if_t<D == direction::backward, automaton_t>
+        -> std::enable_if_t<D == direction::backward, automaton_t>
       {
         return transpose(res_);
       }

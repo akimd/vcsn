@@ -84,20 +84,14 @@ m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody],
   }
 
   // C++14
-
-  // We want std::mismatch for wordset::lgcd.  Unfortunately G++ 4.8
-  // accepts -std=c++1y, but does not support this std::mismatch yet.
-  // Since we have a workaround in misc/algorithm.hh, don't check for it
-  // yet.  However, restore once we move to C++14 and drop G++ 4.8.
-  //
-  // void mismatch()
-  // {
-  //   using ints = std::vector<int>;
-  //   auto v1 = ints{1, 2, 3};
-  //   auto v2 = ints{1, 2};
-  //   std::mismatch(std::begin(v1), std::end(v1),
-  //                 std::begin(v2), std::end(v2));
-  // }
+  void mismatch()
+  {
+    using ints = std::vector<int>;
+    auto v1 = ints{1, 2, 3};
+    auto v2 = ints{1, 2};
+    std::mismatch(std::begin(v1), std::end(v1),
+                  std::begin(v2), std::end(v2));
+  }
 ])])
 
 for f in '-std=c++14' '-std=c++14 -stdlib=libc++' \

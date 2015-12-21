@@ -102,7 +102,7 @@ namespace vcsn
 
     /// Letterize an automaton whose type is not letterized already.
     template <typename Aut>
-    vcsn::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{},
+    std::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{},
                       mutable_automaton<letterized_context<context_t_of<Aut>>>>
     letterize(const Aut& aut)
     {
@@ -114,7 +114,7 @@ namespace vcsn
 
     /// Letterize an automaton whose type is letterized: do nothing.
     template <typename Aut>
-    vcsn::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{},
+    std::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{},
                       const Aut&>
     letterize(const Aut& aut)
     {
@@ -158,7 +158,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    vcsn::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{}, bool>
+    std::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{}, bool>
     is_letterized(const Aut& aut)
     {
       auto ls = aut->labelset();
@@ -175,7 +175,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    vcsn::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{}, bool>
+    std::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{}, bool>
     is_letterized(const Aut&)
     {
       return true;

@@ -307,7 +307,7 @@ namespace vcsn
   /// compilation fails but this time with the right diagnostic: the
   /// labelset must be free.
   template <typename ExpSet,
-            typename = vcsn::enable_if_t<!std::is_same<word_t_of<ExpSet>,
+            typename = std::enable_if_t<!std::is_same<word_t_of<ExpSet>,
                                                        label_t_of<ExpSet>>
                                          ::value>>
   rat::expression_polynomial_t<ExpSet>

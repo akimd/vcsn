@@ -38,7 +38,7 @@ namespace vcsn
     template <typename Aut>
     auto
     fado_impl_(const Aut& aut, std::ostream& out)
-      -> enable_if_t<has_fado_t<Aut>{}, void>
+      -> std::enable_if_t<has_fado_t<Aut>{}, void>
     {
       fado(aut, out);
     }
@@ -47,7 +47,7 @@ namespace vcsn
     ATTRIBUTE_NORETURN
     auto
     fado_impl_(const Aut&, std::ostream&)
-      -> enable_if_t<!has_fado_t<Aut>{}, void>
+      -> std::enable_if_t<!has_fado_t<Aut>{}, void>
     {
       raise("print: FAdo requires letter or nullable labels,"
             " and Boolean weights");
@@ -56,7 +56,7 @@ namespace vcsn
     template <typename Aut>
     auto
     grail_impl_(const Aut& aut, std::ostream& out)
-      -> enable_if_t<has_fado_t<Aut>{}, void>
+      -> std::enable_if_t<has_fado_t<Aut>{}, void>
     {
       grail(aut, out);
     }
@@ -65,7 +65,7 @@ namespace vcsn
     ATTRIBUTE_NORETURN
     auto
     grail_impl_(const Aut&, std::ostream&)
-      -> enable_if_t<!has_fado_t<Aut>{}, void>
+      -> std::enable_if_t<!has_fado_t<Aut>{}, void>
     {
       raise("print: Grail requires letter or nullable labels,"
             " and Boolean weights");

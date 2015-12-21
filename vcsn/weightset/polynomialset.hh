@@ -212,7 +212,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     auto
     add_here_impl(value_t& l, const value_t& r) const
-      -> enable_if_t<!(WetType == wet_kind_t::bitset
+      -> std::enable_if_t<!(WetType == wet_kind_t::bitset
                        && std::is_same<weightset_t, b>::value),
                      value_t&>
     {
@@ -225,7 +225,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     auto
     add_here_impl(value_t& l, const value_t& r) const
-      -> enable_if_t<WetType == wet_kind_t::bitset
+      -> std::enable_if_t<WetType == wet_kind_t::bitset
                      && std::is_same<weightset_t, b>::value,
                      value_t&>
     {
@@ -306,7 +306,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     auto
     mul_impl(const value_t& l, const value_t& r) const
-      -> enable_if_t<WetType != wet_kind_t::bitset,
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      value_t>
     {
       value_t res;
@@ -323,7 +323,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     auto
     mul_impl(const value_t& l, const value_t& r) const
-      -> enable_if_t<WetType == wet_kind_t::bitset,
+      -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      value_t>
     {
       return l.set() & r.set();
@@ -358,7 +358,7 @@ namespace vcsn
     /// The conjunction of polynomials \a l and \a r.
     /// Valid only for expressionsets.
     template <typename Ctx>
-    vcsn::enable_if_t<Ctx::is_lar, value_t>
+    std::enable_if_t<Ctx::is_lar, value_t>
     conjunction_impl(const value_t& l, const value_t& r) const
     {
       value_t res;
@@ -373,7 +373,7 @@ namespace vcsn
     /// The conjunction of polynomials \a l and \a r.
     /// Valid only for every other labelsets.
     template <typename Ctx>
-    vcsn::enable_if_t<!Ctx::is_lar, value_t>
+    std::enable_if_t<!Ctx::is_lar, value_t>
     conjunction_impl(const value_t& l, const value_t& r) const
     {
       value_t res;
@@ -782,7 +782,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static auto
     equal_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType != wet_kind_t::bitset,
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
       return boost::equal(l, r, monomial_equal);
@@ -792,7 +792,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static auto
     equal_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType == wet_kind_t::bitset,
+      -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      bool>
     {
       return l.set() == r.set();
@@ -902,7 +902,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static auto
     less_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType != wet_kind_t::bitset,
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
       return boost::range::lexicographical_compare(l, r, monomial_less);
@@ -912,7 +912,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static auto
     less_impl(const value_t& l, const value_t& r)
-      -> enable_if_t<WetType == wet_kind_t::bitset,
+      -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      bool>
     {
       return l.set() < r.set();
@@ -952,7 +952,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static auto
     hash_impl(const value_t& p)
-      -> enable_if_t<WetType != wet_kind_t::bitset,
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      size_t>
     {
       size_t res = 0;
@@ -965,7 +965,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static auto
     hash_impl(const value_t& p)
-      -> enable_if_t<WetType == wet_kind_t::bitset,
+      -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      size_t>
     {
       return hash_value(p.set());
@@ -1325,7 +1325,7 @@ namespace vcsn
 
     /// Print a non-null value for a non letterized labelset.
     template <typename Ctx = context_t>
-    vcsn::enable_if_t<!labelset_t_of<Ctx>::is_letterized(),
+    std::enable_if_t<!labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>
     print_(const value_t& v, std::ostream& out,
            format fmt = {},
@@ -1337,7 +1337,7 @@ namespace vcsn
     /// Print a non-null value for a letterized labelset (e.g., letterset
     /// or nullableset.
     template <typename Ctx = context_t>
-    vcsn::enable_if_t<labelset_t_of<Ctx>::is_letterized(),
+    std::enable_if_t<labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>
     print_(const value_t& v, std::ostream& out,
            format fmt = {},

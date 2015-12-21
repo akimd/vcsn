@@ -124,24 +124,6 @@ namespace vcsn
       abort();
     }
 
-    /// Same as C++14's mismatch, which is not available in G++-4.8
-    /// with -std=c++1y.  Get rid of this once we drop G++ 4.8
-    /// compatibility.
-    template <typename InputIt1, typename InputIt2>
-    std::pair<InputIt1, InputIt2>
-    mismatch(InputIt1 first1, InputIt1 last1,
-             InputIt2 first2, InputIt2 last2)
-    {
-      while (first1 != last1
-             && first2 != last2
-             && *first1 == *first2)
-        {
-          ++first1;
-          ++first2;
-        }
-      return std::make_pair(first1, first2);
-    }
-
     // Boost 1.49 does not have boost/algorithm/cxx11/none_of.hpp and the like.
     template <typename Range, typename Predicate>
     bool none_of(const Range &r, Predicate p)
@@ -164,16 +146,18 @@ namespace vcsn
   bool
   same_domain(const Container& x, const Container& y)
   {
-    if (x.size() != y.size())
+    if (x.size() == y.size())
+      {
+        using std::begin; using std::end;
+        for (auto xi = begin(x), xend = end(x), yi = begin(y);
+             xi != xend;
+             ++xi, ++yi)
+          if (x.key_comp()(xi->first, yi->first)
+              || x.key_comp()(yi->first, xi->first))
+            return false;
+        return true;
+      }
+    else
       return false;
-    // FIXME: no cbegin etc. in C++11.
-    using std::begin; using std::end;
-    for (auto xi = begin(x), xend = end(x), yi = begin(y);
-         xi != xend;
-         ++xi, ++yi)
-      if (x.key_comp()(xi->first, yi->first)
-          || x.key_comp()(yi->first, xi->first))
-        return false;
-    return true;
   }
 }

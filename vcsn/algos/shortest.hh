@@ -91,7 +91,7 @@ namespace vcsn
       /// `len` letters.
       template <typename LabelSet = labelset_t_of<context_t>>
       auto shortest_(unsigned num, unsigned len)
-        -> enable_if_t<LabelSet::is_free(), polynomial_t>
+        -> std::enable_if_t<LabelSet::is_free(), polynomial_t>
       {
         // Each step of propagation contributes a letter.  We need to
         // take the initial and final special characters into account.
@@ -145,7 +145,7 @@ namespace vcsn
       /// shortest words first.
       template <typename LabelSet = labelset_t_of<context_t>>
       auto shortest_(unsigned num, unsigned len)
-        -> enable_if_t<!LabelSet::is_free(), polynomial_t>
+        -> std::enable_if_t<!LabelSet::is_free(), polynomial_t>
       {
         // Benched as better than Fibonacci, Pairing and Skew Heaps.
         // D-ary heaps and Priority Queue fail to compile.

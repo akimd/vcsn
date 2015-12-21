@@ -4,7 +4,7 @@
 
 #include <vcsn/misc/raise.hh> // pass
 #include <vcsn/misc/tuple.hh>
-#include <vcsn/misc/type_traits.hh> // vcsn::enable_if_t
+#include <vcsn/misc/type_traits.hh> // std::enable_if_t
 
 namespace vcsn
 {

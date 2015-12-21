@@ -25,7 +25,7 @@ namespace vcsn
   template <typename Aut1, typename Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> vcsn::enable_if_t<(std::is_same<weightset_t_of<Aut1>, b>::value
+    -> std::enable_if_t<(std::is_same<weightset_t_of<Aut1>, b>::value
                           && std::is_same<weightset_t_of<Aut2>, b>::value),
                          bool>
   {
@@ -40,7 +40,7 @@ namespace vcsn
   template <typename Aut1, typename Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> decltype((enable_if_t<!std::is_same<weightset_t_of<Aut1>, b>::value>(),
+    -> decltype((std::enable_if_t<!std::is_same<weightset_t_of<Aut1>, b>::value>(),
                  a2->weightset()->sub(a2->weightset()->zero(),
                                       a2->weightset()->one()),
                  true))

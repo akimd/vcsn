@@ -24,7 +24,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
+  std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, hopcroft_tag)
   {
     using state_t = state_t_of<Aut>;
@@ -107,7 +107,7 @@ namespace vcsn
       template <typename Aut>
       ATTRIBUTE_NORETURN
       inline
-      vcsn::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
+      std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, hopcroft_tag)
       {
         raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",

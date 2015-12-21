@@ -4,7 +4,7 @@
 
 #include <vcsn/misc/stream.hh> // eat
 #include <vcsn/misc/symbol.hh>
-#include <vcsn/misc/type_traits.hh> // vcsn::is_same_t
+#include <vcsn/misc/type_traits.hh> // std::is_same_t
 
 namespace vcsn
 {
@@ -41,7 +41,7 @@ namespace vcsn
                                                                         \
   template <typename Kinded>                                            \
   struct is_ ## Abbrev                                                  \
-    : vcsn::is_same_t<typename Kinded::kind_t, labels_are_ ## Name>     \
+    : std::is_same<typename Kinded::kind_t, labels_are_ ## Name>        \
   {}
 
   DEFINE(lal, letters);

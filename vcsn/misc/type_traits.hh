@@ -4,29 +4,6 @@
 
 namespace vcsn
 {
-  /*---------.
-  | C++14.   |
-  `---------*/
-
-  // GCC 4.8 does not yet have std::enable_if_t and the like.
-  template <bool B, typename T, typename U>
-  using conditional_t = typename std::conditional<B, T, U>::type;
-
-  template <bool Cond, typename T = void>
-  using enable_if_t = typename std::enable_if<Cond, T>::type;
-
-  template <typename T, typename U>
-  using is_same_t = typename std::is_same<T, U>::type;
-
-  template <typename T>
-  using remove_const_t = typename std::remove_const<T>::type;
-
-  template <typename T>
-  using remove_cv_t = typename std::remove_cv<T>::type;
-
-  template <typename T>
-  using remove_reference_t = typename std::remove_reference<T>::type;
-
   /*----------.
   | C++ 17.   |
   `----------*/

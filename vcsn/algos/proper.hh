@@ -36,7 +36,7 @@ namespace vcsn
     template <typename Aut>
     class properer
     {
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
       using weightset_t = weightset_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
       using aut_proper_t = fresh_automaton_t_of<automaton_t,
@@ -106,7 +106,7 @@ namespace vcsn
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::TOPS, aut_proper_t>
+      std::enable_if_t<Status == star_status_t::TOPS, aut_proper_t>
       proper_star() const
       {
         try
@@ -120,7 +120,7 @@ namespace vcsn
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::ABSVAL, aut_proper_t>
+      std::enable_if_t<Status == star_status_t::ABSVAL, aut_proper_t>
       proper_star() const
       {
         require(is_valid(aut_), "proper: invalid automaton");
@@ -128,14 +128,14 @@ namespace vcsn
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::STARRABLE, aut_proper_t>
+      std::enable_if_t<Status == star_status_t::STARRABLE, aut_proper_t>
       proper_star() const
       {
         return remover_();
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE, aut_proper_t>
+      std::enable_if_t<Status == star_status_t::NON_STARRABLE, aut_proper_t>
       proper_star() const
       {
         require(is_valid(aut_), "proper: invalid automaton");
@@ -161,7 +161,7 @@ namespace vcsn
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::TOPS>
+      std::enable_if_t<Status == star_status_t::TOPS>
       proper_star_here()
       {
         try
@@ -175,7 +175,7 @@ namespace vcsn
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::ABSVAL>
+      std::enable_if_t<Status == star_status_t::ABSVAL>
       proper_star_here()
       {
         require(is_valid(aut_), "proper: invalid automaton");
@@ -183,14 +183,14 @@ namespace vcsn
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::STARRABLE>
+      std::enable_if_t<Status == star_status_t::STARRABLE>
       proper_star_here()
       {
         remover_here_();
       }
 
       template <star_status_t Status>
-      vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE>
+      std::enable_if_t<Status == star_status_t::NON_STARRABLE>
       proper_star_here()
       {
         require(is_valid(aut_), "proper: invalid automaton");

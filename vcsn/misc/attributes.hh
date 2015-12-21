@@ -6,7 +6,7 @@
 //    ATTRIBUTE_PURE
 //    static auto
 //    equal_impl(const value_t& l, const value_t& r)
-//      -> enable_if_t<WetType == value_t::bitset,
+//      -> std::enable_if_t<WetType == value_t::bitset,
 //                     bool>
 //    {
 //      return l == r;

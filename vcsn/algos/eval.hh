@@ -99,7 +99,7 @@ namespace vcsn
   inline
   auto
   eval(const Aut& a, const word_t_of<Aut>& w)
-    -> vcsn::enable_if_t<!context_t_of<Aut>::is_lao, weight_t_of<Aut>>
+    -> std::enable_if_t<!context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
     detail::evaluator<Aut> e(a);
     return e(w);
@@ -114,7 +114,7 @@ namespace vcsn
   inline
   auto
   eval(const Aut& a)
-    -> vcsn::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>
+    -> std::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
     require(is_proper(a), "eval: cannot evaluate with spontaneous transitions");
     const auto& ws = *a->weightset();

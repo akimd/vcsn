@@ -32,7 +32,7 @@ namespace vcsn
     /// The best tag depending on the type of Aut.
     template <typename Aut>
     using determinization_tag
-      = conditional_t<std::is_same<weightset_t_of<Aut>, b>::value,
+      = std::conditional_t<std::is_same<weightset_t_of<Aut>, b>::value,
                       boolean_tag,
                       weighted_tag>;
   }
@@ -264,10 +264,10 @@ namespace vcsn
     // Asserting here instead of inside the implementation to
     // avoid static_assert to be raised in this kind of cases:
     // auto func(const Aut& a)
-    //   -> vcsn::enable_if_t<false_condition, decltype(determinize(a))>
+    //   -> std::enable_if_t<false_condition, decltype(determinize(a))>
     // We can then declare our function this way:
     // auto func(const Aut& a)
-    //   -> vcsn::enable_if_t<false_condition, determinized_automaton<Aut>>
+    //   -> std::enable_if_t<false_condition, determinized_automaton<Aut>>
     static_assert(labelset_t_of<Aut>::is_free(),
                   "determinize: requires free labelset");
     static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
@@ -504,12 +504,12 @@ namespace vcsn
       /// Enable if Aut is Boolean.
       template <typename Aut, typename Type = void>
       using enable_if_boolean_t
-        = vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value, Type>;
+        = std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
       /// Enable if Aut is not Boolean.
       template <typename Aut, typename Type = void>
       using enable_if_not_boolean_t
-        = vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
+        = std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
 
       /// Boolean Bridge.

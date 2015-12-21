@@ -225,7 +225,7 @@ namespace vcsn
     {
       using profiler_t = Profiler;
       using profile_t = typename profiler_t::state_profile;
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
       using state_t = state_t_of<automaton_t>;
 
       /// Prepare for state-elimination.
@@ -307,7 +307,7 @@ namespace vcsn
       /// Eliminate state s in the case of labels are one.
       template <typename Kind = typename context_t_of<automaton_t>::kind_t>
       auto eliminate_state_(state_t s)
-        -> enable_if_t<std::is_same<Kind, labels_are_one>::value,
+        -> std::enable_if_t<std::is_same<Kind, labels_are_one>::value,
                        void>
       {
         neighbors_.clear();
@@ -365,7 +365,7 @@ namespace vcsn
       // relationship in Vcsn.
       template <typename Kind>
       auto eliminate_state_impl_(state_t s)
-        -> enable_if_t<std::is_same<Kind, labels_are_expressions>::value,
+        -> std::enable_if_t<std::is_same<Kind, labels_are_expressions>::value,
                        void>
       {
         neighbors_.clear();

@@ -16,7 +16,7 @@ namespace vcsn
 {
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
   minimize(const Aut& a, auto_tag = {})
   {
@@ -25,7 +25,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
   minimize(const Aut& a, auto_tag = {})
   {
@@ -34,7 +34,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
+  std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {
     static const auto map
@@ -52,7 +52,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
+  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && !labelset_t_of<Aut>::is_free(),
                     quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
@@ -70,7 +70,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {

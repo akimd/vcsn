@@ -86,7 +86,7 @@ namespace vcsn
     };
 
     template<typename Aut>
-    vcsn::enable_if_t<labelset_t_of<Aut>::has_one(), Aut>
+    std::enable_if_t<labelset_t_of<Aut>::has_one(), Aut>
     insplit(Aut& aut)
     {
       insplitter<Aut> insplit{aut};
@@ -94,7 +94,7 @@ namespace vcsn
     }
 
     template<typename Aut>
-    vcsn::enable_if_t<!labelset_t_of<Aut>::has_one(), Aut>
+    std::enable_if_t<!labelset_t_of<Aut>::has_one(), Aut>
     insplit(Aut& aut)
     {
       return aut;

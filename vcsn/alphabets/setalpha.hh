@@ -147,7 +147,7 @@ namespace vcsn
 
     template <typename Letter>
     auto add_range_(Letter l1, Letter l2)
-      -> enable_if_t<has_range<Letter>{}, set_alphabet&>
+      -> std::enable_if_t<has_range<Letter>{}, set_alphabet&>
     {
       for (/* empty */; L::less(l1, l2); ++l1)
         add_letter(l1);
@@ -161,7 +161,7 @@ namespace vcsn
 
     template <typename Letter>
     auto add_range_(Letter, Letter)
-      -> enable_if_t<!has_range<Letter>{}, set_alphabet&>
+      -> std::enable_if_t<!has_range<Letter>{}, set_alphabet&>
     {
       raise(sname(), ": does not support letter ranges");
     }

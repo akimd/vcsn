@@ -286,7 +286,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  vcsn::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
   minimize(const Aut& a, signature_tag)
   {
@@ -301,7 +301,7 @@ namespace vcsn
       template <typename Aut>
       ATTRIBUTE_NORETURN
       inline
-      vcsn::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+      std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                         quotient_t<Aut>>
       minimize(const Aut&, signature_tag)
       {

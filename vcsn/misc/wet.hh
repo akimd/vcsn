@@ -775,14 +775,14 @@ namespace vcsn
               typename Key, typename Value,
               typename Compare, typename Hash, typename KeyEqual>
     using wet_impl
-      = conditional_t<Kind == wet_kind_t::bitset,
-                      wet_bitset,
-        conditional_t<Kind == wet_kind_t::set,
-                      wet_set<Key, Compare>,
-        conditional_t<Kind == wet_kind_t::map,
-                      wet_map<Key, Value, Compare>,
-        conditional_t<Kind == wet_kind_t::unordered_map,
-                      wet_unordered_map<Key, Value, Hash, KeyEqual>,
+      = std::conditional_t<Kind == wet_kind_t::bitset,
+                           wet_bitset,
+        std::conditional_t<Kind == wet_kind_t::set,
+                           wet_set<Key, Compare>,
+        std::conditional_t<Kind == wet_kind_t::map,
+                           wet_map<Key, Value, Compare>,
+        std::conditional_t<Kind == wet_kind_t::unordered_map,
+                           wet_unordered_map<Key, Value, Hash, KeyEqual>,
         void> > > >;
 
   }

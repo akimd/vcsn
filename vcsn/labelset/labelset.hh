@@ -43,7 +43,7 @@ namespace vcsn
     /// This LabelSet's one(), if supported.
     template <typename LabelSet>
     auto label_one()
-      -> enable_if_t<LabelSet::has_one(),
+      -> std::enable_if_t<LabelSet::has_one(),
                      typename LabelSet::value_t>
     {
       return LabelSet::one();
@@ -52,7 +52,7 @@ namespace vcsn
     template <typename LabelSet>
     ATTRIBUTE_NORETURN
     auto label_one()
-      -> enable_if_t<!LabelSet::has_one(),
+      -> std::enable_if_t<!LabelSet::has_one(),
                      typename LabelSet::value_t>
     {
       raise(LabelSet::sname(), ": does not feature a neutral");
@@ -307,11 +307,9 @@ namespace vcsn
       for (auto it = std::begin(letters), letters_end = std::end(letters);
            it != letters_end; ++it)
         {
-          auto end
-            // not std::mismatch, to please G++ 4.8.
-            = vcsn::detail::mismatch(it, letters_end,
-                                     boost::range::find(alphabet, *it),
-                                     alphabet.end()).first;
+          auto end = std::mismatch(it, letters_end,
+                                   boost::range::find(alphabet, *it),
+                                   alphabet.end()).first;
           ls.print(*it, out, fmt);
           // No range for two letters or less.
           auto width = std::distance(it, end);

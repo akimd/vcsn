@@ -46,7 +46,7 @@ namespace vcsn
 
       template <typename Ls>
       ATTRIBUTE_PURE
-      static vcsn::enable_if_t<Ls::has_one(), bool>
+      static std::enable_if_t<Ls::has_one(), bool>
       is_one_(const value_t& l)
       {
         return std::get<1>(l) || Ls::is_one(get_value(l));
@@ -54,7 +54,7 @@ namespace vcsn
 
       template <typename Ls>
       ATTRIBUTE_PURE
-      static vcsn::enable_if_t<!Ls::has_one(), bool>
+      static std::enable_if_t<!Ls::has_one(), bool>
       is_one_(const value_t& l)
       {
         return std::get<1>(l);
@@ -595,7 +595,7 @@ namespace vcsn
     /// `oneset v LS -> nullableset<LS>` if \c !LS\::has_one.
     template <typename LS>
     struct join_impl<oneset, LS,
-                     enable_if_t<!LS::has_one()>>
+                     std::enable_if_t<!LS::has_one()>>
     {
       using type = nullableset<LS>;
       static type join(const oneset&, const LS& ls)
@@ -607,7 +607,7 @@ namespace vcsn
     /// `oneset v LS -> LS` if \c LS\::has_one.
     template <typename LS>
     struct join_impl<oneset, LS,
-                     enable_if_t<LS::has_one()>>
+                     std::enable_if_t<LS::has_one()>>
     {
       using type = LS;
       static type join(const oneset&, const LS& ls)

@@ -17,7 +17,7 @@ namespace vcsn
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
     auto make_project_context(const context<LabelSet, WeightSet>& ctx)
-      -> enable_if_t<context<LabelSet, WeightSet>::is_lat,
+      -> std::enable_if_t<context<LabelSet, WeightSet>::is_lat,
                      project_context<Tape, context<LabelSet, WeightSet>>>
     {
       static_assert(Tape < LabelSet::size(),
@@ -30,7 +30,7 @@ namespace vcsn
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
     auto make_project_context(const context<LabelSet, WeightSet>& ctx)
-      -> enable_if_t<!context<LabelSet, WeightSet>::is_lat,
+      -> std::enable_if_t<!context<LabelSet, WeightSet>::is_lat,
                      context<LabelSet, WeightSet>>
     {
       static_assert(Tape == 0,

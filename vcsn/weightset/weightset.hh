@@ -59,7 +59,7 @@ namespace vcsn
     /// member function.
     template <typename WS = super_t>
     auto power_(value_t e, unsigned n) const
-      -> vcsn::enable_if_t<has_power_mem_fn<WS>{}, value_t>
+      -> std::enable_if_t<has_power_mem_fn<WS>{}, value_t>
     {
       return super_t::power(e, n);
     }
@@ -68,7 +68,7 @@ namespace vcsn
     /// power(value_t, unsigned) member function.
     template <typename WS = super_t>
     auto power_(value_t e, unsigned n) const
-      -> vcsn::enable_if_t<!has_power_mem_fn<WS>{}, value_t>
+      -> std::enable_if_t<!has_power_mem_fn<WS>{}, value_t>
     {
       value_t res = super_t::one();
       if (!super_t::is_one(e))

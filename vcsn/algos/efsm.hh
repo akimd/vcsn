@@ -217,7 +217,7 @@ namespace vcsn
       ///     first or second.
       template <typename LabelSet, typename Labels, typename GetLabel>
       auto add_alphabet_(const LabelSet& ls, Labels& labels, GetLabel get_label)
-        -> enable_if_t<has_generators_mem_fn<LabelSet>{}>
+        -> std::enable_if_t<has_generators_mem_fn<LabelSet>{}>
       {
         for (auto l : ls.generators())
           labels.insert(get_label(ls.value(l)));
@@ -228,7 +228,7 @@ namespace vcsn
       /// Case where `genset` is not supported: do nothing.
       template <typename LabelSet, typename Labels, typename GetLabel>
       auto add_alphabet_(const LabelSet&, Labels&, GetLabel)
-        -> enable_if_t<!has_generators_mem_fn<LabelSet>{}>
+        -> std::enable_if_t<!has_generators_mem_fn<LabelSet>{}>
       {}
 
       /// Output the mapping from label name, to label number.

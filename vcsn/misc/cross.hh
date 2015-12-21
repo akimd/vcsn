@@ -30,7 +30,7 @@ namespace vcsn
 
     /// The type of the underlying sequences, without reference.
     template <typename Seq>
-    using seq_t = remove_reference_t<Seq>;
+    using seq_t = std::remove_reference_t<Seq>;
 
     /// The type of the members.
     using value_type

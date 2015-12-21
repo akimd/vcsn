@@ -183,14 +183,14 @@ namespace vcsn
 
     private:
       template <typename A>
-      vcsn::enable_if_t<labelset_t_of<A>::is_free(), bool>
+      std::enable_if_t<labelset_t_of<A>::is_free(), bool>
       is_deterministic_(const A& a)
       {
         return vcsn::is_deterministic(a);
       }
 
       template <typename A>
-      vcsn::enable_if_t<!labelset_t_of<A>::is_free(), bool>
+      std::enable_if_t<!labelset_t_of<A>::is_free(), bool>
       is_deterministic_(const A&)
       {
         return false;

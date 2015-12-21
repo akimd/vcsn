@@ -23,7 +23,7 @@ namespace vcsn
   template <typename Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
-    -> vcsn::enable_if_t<is_free_boolean<Aut>(),
+    -> std::enable_if_t<is_free_boolean<Aut>(),
                          determinized_automaton<codeterminized_automaton<decltype(transpose(a))>>>
   {
     return determinize(codeterminize(a));
@@ -35,7 +35,7 @@ namespace vcsn
     {
       template <typename Aut>
       ATTRIBUTE_NORETURN
-      vcsn::enable_if_t<!is_free_boolean<Aut>(), Aut>
+      std::enable_if_t<!is_free_boolean<Aut>(), Aut>
       minimize(const Aut&, brzozowski_tag)
       {
         raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",

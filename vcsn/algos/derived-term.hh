@@ -221,7 +221,7 @@ namespace vcsn
   /// \param algo  the algo to run: "auto", "derivation", or "expansion".
   template <typename ExpSet>
   inline
-  vcsn::enable_if_t<labelset_t_of<ExpSet>::is_free(),
+  std::enable_if_t<labelset_t_of<ExpSet>::is_free(),
     expression_automaton<mutable_automaton<typename ExpSet::context_t>>>
   derived_term(const ExpSet& rs,
                const typename ExpSet::value_t& r,
@@ -239,7 +239,7 @@ namespace vcsn
   /// \param algo  the algo to run: "auto", "derivation", or "expansion".
   template <typename ExpSet>
   inline
-  vcsn::enable_if_t<!labelset_t_of<ExpSet>::is_free(),
+  std::enable_if_t<!labelset_t_of<ExpSet>::is_free(),
     expression_automaton<mutable_automaton<typename ExpSet::context_t>>>
   derived_term(const ExpSet& rs,
                const typename ExpSet::value_t& r,

@@ -20,7 +20,7 @@ namespace vcsn
               bool has_one = labelset_t_of<Aut>::has_one()>
     class epsilon_remover_distance
     {
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
       using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
@@ -136,7 +136,7 @@ namespace vcsn
     template <typename Aut>
     class epsilon_remover_distance<Aut, false>
     {
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
       using aut_proper_t = fresh_automaton_t_of<automaton_t>;
     public:
       epsilon_remover_distance(const automaton_t& aut, bool)

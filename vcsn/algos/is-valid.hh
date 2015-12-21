@@ -58,7 +58,7 @@ namespace vcsn
     class is_valider
     {
     public:
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
       using weightset_t = weightset_t_of<automaton_t>;
 
       /** @brief Whether an automaton is valid.
@@ -87,7 +87,7 @@ namespace vcsn
     private:
       template <star_status_t Status>
       static
-      vcsn::enable_if_t<Status == star_status_t::TOPS, bool>
+      std::enable_if_t<Status == star_status_t::TOPS, bool>
       is_valid_(const automaton_t& aut)
       {
         return (is_proper(aut)
@@ -97,7 +97,7 @@ namespace vcsn
 
       template <star_status_t Status>
       static
-      vcsn::enable_if_t<Status == star_status_t::ABSVAL, bool>
+      std::enable_if_t<Status == star_status_t::ABSVAL, bool>
       is_valid_(const automaton_t& aut)
       {
         return (is_proper(aut)
@@ -107,7 +107,7 @@ namespace vcsn
 
       template <star_status_t Status>
       static
-      vcsn::enable_if_t<Status == star_status_t::STARRABLE, bool>
+      std::enable_if_t<Status == star_status_t::STARRABLE, bool>
       is_valid_(const automaton_t&)
       {
         return true;
@@ -115,7 +115,7 @@ namespace vcsn
 
       template <star_status_t Status>
       static
-      vcsn::enable_if_t<Status == star_status_t::NON_STARRABLE, bool>
+      std::enable_if_t<Status == star_status_t::NON_STARRABLE, bool>
       is_valid_(const automaton_t& aut)
       {
         return is_proper(aut) || is_eps_acyclic(aut);
@@ -125,7 +125,7 @@ namespace vcsn
     template <typename Aut>
     class is_valider<Aut, false>
     {
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
     public:
       static constexpr bool is_valid(const automaton_t&)
       {

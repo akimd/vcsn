@@ -23,7 +23,7 @@ namespace vcsn
     template <typename Aut>
     struct epsilon_acyclic<Aut, true>
     {
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
 
@@ -94,7 +94,7 @@ namespace vcsn
     template <typename Aut>
     struct epsilon_acyclic<Aut, false>
     {
-      using automaton_t = typename std::remove_cv<Aut>::type;
+      using automaton_t = std::remove_cv_t<Aut>;
 
       constexpr epsilon_acyclic(const automaton_t&)
       {}

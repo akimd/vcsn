@@ -12,7 +12,7 @@ namespace vcsn
   template <typename Aut>
   auto
   to_spontaneous(const Aut& aut)
-    -> vcsn::enable_if_t<!context_t_of<Aut>::is_lao,
+    -> std::enable_if_t<!context_t_of<Aut>::is_lao,
                          decltype(make_mutable_automaton(make_context(oneset(),
                                                                       *aut->weightset())))>
   {
@@ -50,7 +50,7 @@ namespace vcsn
   template <typename Aut>
   auto
   to_spontaneous(const Aut& aut)
-    -> vcsn::enable_if_t<context_t_of<Aut>::is_lao, decltype(copy(aut))>
+    -> std::enable_if_t<context_t_of<Aut>::is_lao, decltype(copy(aut))>
   {
     return copy(aut);
   }

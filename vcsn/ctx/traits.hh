@@ -9,7 +9,7 @@ namespace vcsn
 
   /// T without reference or const/volatile qualifiers.
   template <typename T>
-  using base_t = remove_cv_t<remove_reference_t<T>>;
+  using base_t = std::remove_cv_t<std::remove_reference_t<T>>;
 
   /*------------------.
   | Computing types.  |

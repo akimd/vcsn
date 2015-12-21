@@ -349,7 +349,7 @@ namespace vcsn
       template <typename LabelSet = labelset_t, typename Conjunction>
       auto conjunction_(value_t l, value_t r,
                         Conjunction conjunction) const
-        -> enable_if_t<detail::is_letterized_t<LabelSet>{},
+        -> std::enable_if_t<detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
         value_t res = zero();
@@ -372,7 +372,7 @@ namespace vcsn
       template <typename LabelSet = labelset_t, typename Conjunction>
       auto conjunction_(value_t lhs, value_t rhs,
                         Conjunction conjunction) const
-        -> enable_if_t<!detail::is_letterized_t<LabelSet>{},
+        -> std::enable_if_t<!detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
         value_t res = zero();
@@ -477,7 +477,7 @@ namespace vcsn
     private:
       /// Cannot complement on a non-free labelset.
       template <bool IsFree>
-      vcsn::enable_if_t<!IsFree, value_t>
+      std::enable_if_t<!IsFree, value_t>
       complement_(const value_t&) const
       {
         raise(me(), ": cannot handle complement without generators");
@@ -485,7 +485,7 @@ namespace vcsn
 
       /// Complement on a free labelset.
       template <bool IsFree>
-      vcsn::enable_if_t<IsFree, value_t>
+      std::enable_if_t<IsFree, value_t>
       complement_(const value_t& v) const
       {
         value_t res;

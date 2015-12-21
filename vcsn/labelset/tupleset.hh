@@ -1118,7 +1118,7 @@ namespace vcsn
   /// Conversion to a nullableset: all the labelsets support one.
   template <typename... LabelSets>
   struct nullableset_traits<tupleset<LabelSets...>,
-                            enable_if_t<tupleset<LabelSets...>::has_one()>>
+                            std::enable_if_t<tupleset<LabelSets...>::has_one()>>
   {
     using labelset_t = tupleset<LabelSets...>;
     using type = labelset_t;
@@ -1131,7 +1131,7 @@ namespace vcsn
   /// Conversion to a nullableset: not all the labelsets support one.
   template <typename... LabelSets>
   struct nullableset_traits<tupleset<LabelSets...>,
-                            enable_if_t<!tupleset<LabelSets...>::has_one()>>
+                            std::enable_if_t<!tupleset<LabelSets...>::has_one()>>
   {
     using labelset_t = tupleset<LabelSets...>;
     using type = nullableset<labelset_t>;

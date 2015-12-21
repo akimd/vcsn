@@ -68,7 +68,7 @@ namespace vcsn
               size_t... Tapes>
     struct lifter_impl<context<tupleset<LabelSets...>, WeightSet>,
                        vcsn::detail::index_sequence<Tapes...>,
-                       vcsn::enable_if_t<(0 < sizeof...(Tapes))>>
+                       std::enable_if_t<(0 < sizeof...(Tapes))>>
     {
       /// Input labelset.
       using in_labelset_t = tupleset<LabelSets...>;

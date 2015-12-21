@@ -135,7 +135,7 @@ namespace vcsn
   template <typename Ctx>
   constexpr auto
   num_tapes(const Ctx&)
-    -> enable_if_t<Ctx::is_lat, size_t>
+    -> std::enable_if_t<Ctx::is_lat, size_t>
   {
     return Ctx::labelset_t::size();
   }
@@ -143,7 +143,7 @@ namespace vcsn
   template <typename Ctx>
   constexpr auto
   num_tapes(const Ctx&)
-    -> enable_if_t<!Ctx::is_lat, size_t>
+    -> std::enable_if_t<!Ctx::is_lat, size_t>
   {
     return 0;
   }

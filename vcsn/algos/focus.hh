@@ -186,7 +186,7 @@ namespace vcsn
       }
 
       template <typename L, std::size_t... I>
-      vcsn::enable_if_t<L::has_one(), res_label_t>
+      std::enable_if_t<L::has_one(), res_label_t>
       hidden_one_(index_sequence<I...>) const
       {
         full_label_t l = aut_->labelset()->one();
@@ -194,7 +194,7 @@ namespace vcsn
       }
 
       template <typename L, std::size_t... I>
-      vcsn::enable_if_t<!L::has_one(), res_label_t>
+      std::enable_if_t<!L::has_one(), res_label_t>
       hidden_one_(index_sequence<I...>) const
       {
         raise("Should not get here");

@@ -37,7 +37,7 @@ namespace vcsn
     /// Case where T features a size() member function.
     template <typename T2>
     auto lt_(const T2& x, const T2& y) const
-      -> vcsn::enable_if_t<detail::has_size_mem_fn<T2>::value, bool>
+      -> std::enable_if_t<detail::has_size_mem_fn<T2>::value, bool>
     {
       return
         std::forward_as_tuple(x.size(), x) < std::forward_as_tuple(y.size(), y);
@@ -46,7 +46,7 @@ namespace vcsn
     /// Case where T does not feature a size() member function.
     template <typename T2>
     auto lt_(const T2& x, const T2& y) const
-      -> vcsn::enable_if_t<!detail::has_size_mem_fn<T2>::value, bool>
+      -> std::enable_if_t<!detail::has_size_mem_fn<T2>::value, bool>
     {
       return x < y;
     }
