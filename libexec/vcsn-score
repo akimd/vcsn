@@ -341,6 +341,13 @@ bench('a.shortest(5000)',
              'a = c.expression(r).derived_term().strip()'],
       number=10)
 
+ctx = 'lal_char(a-e), z'
+r = "[a-e]{10000}"
+bench('a.shortest()',
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['c = vcsn.context(ctx)',
+             'a = c.expression(r).standard()'])
+
 # lightest
 ctx = 'lal_char(a-e), z'
 r = "[a-e]?{150}"

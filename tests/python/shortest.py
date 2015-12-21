@@ -2,6 +2,7 @@
 
 import vcsn
 from test import *
+from re import split
 
 
 ## check_enumerate RE MAX EXP
@@ -20,6 +21,8 @@ def check_enumerate(re, len, *exp):
 ## Check that EXP accepts EXP has shortest word, or throws if empty.
 def check_shortest(re, num, *exp):
   exp = " + ".join(exp)
+  if num != 1:
+      check_shortest(re, 1, split('[ +]+', exp)[0])
   re = ctx.expression(re)
   CHECK_EQ(exp, re.standard().shortest(num = num))
   CHECK_EQ(exp, re.shortest(num = num))

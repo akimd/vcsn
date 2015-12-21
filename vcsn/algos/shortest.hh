@@ -13,6 +13,8 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/labelset/word-polynomialset.hh>
 
+#include <vcsn/algos/lightest-path.hh>
+
 namespace vcsn
 {
 
@@ -76,7 +78,23 @@ namespace vcsn
         if (!len)
           len = std::numeric_limits<unsigned>::max();
 
-        return shortest_(*num, *len);
+        // If the user did not specify a maximum length, and required only one
+        // path, a lightest-path algorithm is eligible.
+        if (*num == 1 && *len == std::numeric_limits<unsigned>::max())
+          {
+            auto get_value = [this](auto lhs, transition_t_of<Aut> t)
+                             {
+                               auto rhs = aut_->label_of(t);
+                               return (aut_->labelset()->is_special(rhs))
+                                      ? lhs
+                                      : ps_.labelset()->mul(lhs, aut_->label_of(t));
+                             };
+            auto algo = detail::make_dijkstra_impl(aut_, *ps_.labelset(), get_value);
+            auto res = path_monomial(aut_, algo(aut_->pre(), aut_->post()));
+            return res ? polynomial_t{*res} : polynomial_t{};
+          }
+        else
+          return shortest_(*num, *len);
       }
 
     private:
