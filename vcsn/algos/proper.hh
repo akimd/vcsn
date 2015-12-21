@@ -33,7 +33,7 @@ namespace vcsn
 {
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class properer
     {
       using automaton_t = std::remove_cv_t<Aut>;
@@ -202,7 +202,7 @@ namespace vcsn
       const std::string& algo_;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     auto make_properer(Aut aut,
                        bool prune = true,
                        const std::string& algo = "auto")
@@ -228,7 +228,7 @@ namespace vcsn
   ///     "separate"   first separate the automaton into spontaneous and
   ///                  proper parts
   ///     "distance"   compute all-pairs distances
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true, const std::string& algo = "auto")
@@ -245,7 +245,7 @@ namespace vcsn
     BUILTIN_UNREACHABLE();
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   proper_lazy(const Aut& aut, direction dir = direction::backward,
               bool prune = true)
@@ -262,7 +262,7 @@ namespace vcsn
   /// \param aut   the input automaton
   /// \param dir   whether backward or forward elimination
   /// \param prune whether to suppress states becoming inaccessible
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   void proper_here(Aut& aut, direction dir = direction::backward,
                    bool prune = true, const std::string& algo = "auto")
@@ -284,7 +284,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Dir, typename Bool, typename String>
+      template <Automaton Aut, typename Dir, typename Bool, typename String>
       automaton proper(const automaton& aut, direction dir, bool prune,
                        const std::string& algo)
       {

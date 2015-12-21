@@ -37,7 +37,7 @@ namespace vcsn
     /// \tparam Aut an automaton type, not a pointer type.
     ///
     /// http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
-    template <typename Aut>
+    template <Automaton Aut>
     class efsmer: public printer<Aut>
     {
     protected:
@@ -338,7 +338,7 @@ namespace vcsn
   /// \brief Format automaton to EFSM format, based on FSM format.
   ///
   /// \tparam Aut an automaton type.
-  template <typename Aut>
+  template <Automaton Aut>
   std::ostream&
   efsm(const Aut& aut, std::ostream& out)
   {

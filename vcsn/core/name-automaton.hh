@@ -27,7 +27,7 @@ namespace vcsn
   namespace detail
   {
     /// An incremental automaton whose states are names.
-    template <typename Aut>
+    template <Automaton Aut>
     class name_automaton_impl
       : public automaton_decorator<Aut>
     {

@@ -27,7 +27,7 @@ namespace vcsn
     /// Because we are on an SCC, it suffices to check on a DFS that
     /// every state is reached with a unique weight from any chosen
     /// "initial" state.
-    template <typename Aut>
+    template <Automaton Aut>
     class cycle_identity_impl
     {
     public:
@@ -82,7 +82,7 @@ namespace vcsn
   }
 
   /// Check the weight of two states on this component is unique.
-  template <typename Aut>
+  template <Automaton Aut>
   bool cycle_identity(const detail::component_t<Aut>& c,
                       const Aut& aut)
   {
@@ -98,12 +98,12 @@ namespace vcsn
   /// Create states and the transitions two new automata \a naut1 and
   /// \a naut2 with weight of transition `<(w, one)>` and `<(one, w)>`
   /// corresponding with the weight of transition `<w>` of \a aut.
-  template <typename InAut, typename OutAut>
-  void create_states_and_trans_(const InAut& aut,
-                                OutAut& naut1, OutAut& naut2)
+  template <Automaton AutIn, Automaton AutOut>
+  void create_states_and_trans_(const AutIn& aut,
+                                AutOut& naut1, AutOut& naut2)
   {
-    using state_t = state_t_of<InAut>;
-    std::unordered_map<state_t, state_t_of<OutAut>> ms;
+    using state_t = state_t_of<AutIn>;
+    std::unordered_map<state_t, state_t_of<AutOut>> ms;
 
     ms[aut->pre()] = naut1->pre();
     ms[aut->post()] = naut1->post();
@@ -128,7 +128,7 @@ namespace vcsn
   }
 
   /// Whether \a aut has the twins property.
-  template <typename Aut>
+  template <Automaton Aut>
   bool has_twins_property(const Aut& aut)
   {
     require(!is_cycle_ambiguous(aut),
@@ -164,7 +164,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool has_twins_property(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();

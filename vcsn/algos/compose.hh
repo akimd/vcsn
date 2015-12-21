@@ -138,17 +138,17 @@ namespace vcsn
         return std::tuple_cat(ll, rl);
       }
 
-      template<typename Aut>
+      template <Automaton Aut>
       std::enable_if_t<labelset_t_of<Aut>::has_one(),
-                        typename Aut::element_type::res_label_t>
+                       typename Aut::element_type::res_label_t>
       get_hidden_one(const Aut& aut)
       {
         return aut->hidden_one();
       }
 
-      template<typename Aut>
+      template <Automaton Aut>
       std::enable_if_t<!labelset_t_of<Aut>::has_one(),
-                        typename Aut::element_type::res_label_t>
+                       typename Aut::element_type::res_label_t>
       get_hidden_one(const Aut&)
       {
         raise("should not get here");
@@ -243,7 +243,7 @@ namespace vcsn
       /// Check if the state has only incoming spontaneous
       /// transitions.  As it is in the case of the one-free labelset,
       /// it's always false.
-      template <typename Aut>
+      template <Automaton Aut>
       constexpr
       std::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
       is_spontaneous_in(const Aut&, state_t_of<Aut>) const
@@ -255,7 +255,7 @@ namespace vcsn
       /// The automaton has been insplit, so either all incoming transitions
       /// are proper, or all transitions are spontaneous (including the first
       /// one).
-      template <typename Aut>
+      template <Automaton Aut>
       std::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
       is_spontaneous_in(const Aut& rhs, state_t_of<Aut> rst) const
       {

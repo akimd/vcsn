@@ -15,7 +15,7 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class bounded_lag_checker
     {
       static_assert(context_t_of<Aut>::is_lat,
@@ -144,7 +144,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the transducer
   /// \returns              whether the lag is bounded
-  template <typename Aut>
+  template <Automaton Aut>
   bool has_bounded_lag(const Aut& aut)
   {
     detail::bounded_lag_checker<Aut> blc(aut);
@@ -156,7 +156,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool has_bounded_lag(const automaton& aut)
       {
         return has_bounded_lag(aut->as<Aut>());

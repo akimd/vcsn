@@ -9,17 +9,19 @@
 using context_t = vcsn::ctx::lal_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
+/// Generate several new states in \a aut, and return them.
 template <typename Aut>
 std::vector<vcsn::state_t_of<Aut>>
 new_states(Aut& aut, size_t n)
 {
-  std::vector<vcsn::state_t_of<Aut>> res;
+  auto res = std::vector<vcsn::state_t_of<Aut>>{};
   res.reserve(n);
   for (size_t i = 0; i < n; ++i)
     res.push_back(aut->new_state());
-  return std::move(res);
+  return res;
 }
 
+/// Generate a clique automaton of size \a size.
 template <typename Aut>
 Aut
 clique(const vcsn::context_t_of<Aut>& ctx, size_t size)
@@ -31,7 +33,7 @@ clique(const vcsn::context_t_of<Aut>& ctx, size_t size)
     for (auto d: ss)
       for (auto l: letters)
         res->add_transition(s, d, l);
-  return std::move(res);
+  return res;
 }
 
 static size_t

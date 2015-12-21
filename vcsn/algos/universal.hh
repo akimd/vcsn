@@ -10,7 +10,7 @@ namespace vcsn
   namespace detail
   {
     /// Functor for universal.
-    template <typename Aut>
+    template <Automaton Aut>
     class universaler
     {
     public:
@@ -118,7 +118,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   Aut
   universal(const Aut& a)
@@ -132,7 +132,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       universal(const automaton& aut)
       {

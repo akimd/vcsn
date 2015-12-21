@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/misc/memory.hh>
+#include <vcsn/core/automaton.hh> // Automaton.
 #include <vcsn/ctx/traits.hh>
 
 namespace vcsn
@@ -13,7 +14,7 @@ namespace vcsn
     ///   The type of the wrapped automaton.
     /// \tparam Context
     ///   The context we pretend to feature.
-    template <typename Aut,
+    template <Automaton Aut,
               typename Context = context_t_of<Aut>>
     class automaton_decorator
     {

@@ -19,7 +19,7 @@ namespace vcsn
   namespace detail
   {
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct worded_automaton
     {
       template <typename Dummy>
@@ -67,7 +67,7 @@ namespace vcsn
       }
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     using fresh_worded_automaton_t
       = fresh_automaton_t_of<typename worded_automaton<Aut>::automaton_t>;
 
@@ -77,7 +77,7 @@ namespace vcsn
      * The semantics of the states are so varied that they cannot be easily and
      * clearly represented.
      */
-    template <typename Aut>
+    template <Automaton Aut>
     class synchronized_automaton_impl
       : public automaton_decorator<fresh_worded_automaton_t<Aut>>
     {
@@ -201,11 +201,11 @@ namespace vcsn
       automaton_t aut_;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     using synchronized_automaton
       = std::shared_ptr<synchronized_automaton_impl<Aut>>;
 
-    template <typename Aut>
+    template <Automaton Aut>
     class synchronizer
     {
       static_assert(context_t_of<Aut>::is_lat,
@@ -327,7 +327,7 @@ namespace vcsn
       out_automaton_t out_aut_;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     typename synchronizer<Aut>::out_automaton_t
     synchronize(const Aut& aut)
     {
@@ -345,7 +345,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the transducer
   /// \returns              the synchronized transducer
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   synchronize(const Aut& aut)
     -> decltype(detail::synchronize(aut))
@@ -358,7 +358,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton synchronize(const automaton& aut)
       {
         return make_automaton(::vcsn::synchronize(aut->as<Aut>()));

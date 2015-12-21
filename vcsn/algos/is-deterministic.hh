@@ -11,7 +11,7 @@ namespace vcsn
 {
 
   /// Whether state \a s is deterministic in \a aut.
-  template <typename Aut>
+  template <Automaton Aut>
   inline bool
   is_deterministic(const Aut& aut, state_t_of<Aut> s)
   {
@@ -28,7 +28,7 @@ namespace vcsn
   }
 
   /// Number of non-deterministic states.
-  template <typename Aut>
+  template <Automaton Aut>
   inline size_t
   num_deterministic_states(const Aut& aut)
   {
@@ -42,7 +42,7 @@ namespace vcsn
   }
 
  /// Number of non-deterministic states of transpositive automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   inline size_t
   num_codeterministic_states(const Aut& aut)
   {
@@ -51,7 +51,7 @@ namespace vcsn
 
   /// Whether has at most an initial state, and all its states
   /// are deterministic.
-  template <typename Aut>
+  template <Automaton Aut>
   inline bool
   is_deterministic(const Aut& aut)
   {
@@ -68,7 +68,7 @@ namespace vcsn
   }
 
   /// Whether the transpositive automaton is deterministic.
-  template <typename Aut>
+  template <Automaton Aut>
   inline bool
   is_codeterministic(const Aut& aut)
   {
@@ -80,7 +80,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_deterministic(const automaton& aut)
       {
@@ -88,7 +88,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_codeterministic(const automaton& aut)
       {

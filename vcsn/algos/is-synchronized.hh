@@ -24,7 +24,7 @@ namespace vcsn
      * The semantics of the states are so varied that they cannot be easily and
      * clearly represented.
      */
-    template <typename Aut>
+    template <Automaton Aut>
     class delay_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
@@ -165,7 +165,7 @@ namespace vcsn
       automaton_t aut_;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     class synchronize_checker
     {
       static_assert(context_t_of<Aut>::is_lat,
@@ -277,14 +277,14 @@ namespace vcsn
       out_automaton_t out_aut_;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     bool is_synchronized(const Aut& aut)
     {
       synchronize_checker<Aut> s(aut);
       return s.is_synchronized();
     }
 
-    template <typename Aut>
+    template <Automaton Aut>
     delay_automaton<Aut>
     make_delay_automaton(const Aut& aut)
     {
@@ -302,7 +302,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the transducer
   /// \returns              whether it is synchronized
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_synchronized(const Aut& aut)
   {
@@ -314,7 +314,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_synchronized(const automaton& aut)
       {
         return vcsn::is_synchronized(aut->as<Aut>());
@@ -330,7 +330,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the transducer
   /// \returns              whether it is synchronized
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   make_delay_automaton(const Aut& aut)
     -> decltype(detail::make_delay_automaton(aut))
@@ -343,7 +343,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton delay_automaton(const automaton& aut)
       {
         return make_automaton(vcsn::make_delay_automaton(aut->as<Aut>()));

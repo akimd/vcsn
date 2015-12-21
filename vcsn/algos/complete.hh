@@ -8,7 +8,7 @@
 namespace vcsn
 {
   /// Complete \a aut and return it.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   complete_here(Aut& aut)
   {
@@ -56,7 +56,7 @@ namespace vcsn
     return aut;
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   complete(const Aut& aut)
     -> decltype(::vcsn::copy(aut))
@@ -71,7 +71,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       complete(const automaton& aut)
       {

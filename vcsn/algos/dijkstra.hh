@@ -23,7 +23,7 @@ namespace vcsn
     /// Functor taking an automaton as parameter and applying
     /// dijkstra algorithm to compute the lightest 'in' transition
     /// of each state.
-    template <typename Aut>
+    template <Automaton Aut>
     struct dijkstra_impl
     {
       using automaton_t = Aut;
@@ -139,7 +139,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
                 dijkstra_tag = {})

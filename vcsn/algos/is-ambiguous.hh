@@ -19,7 +19,7 @@ namespace vcsn
   /// \param[in] aut        the automaton
   /// \param[out] witness   if ambiguous, a pair of "ambiguous" states.
   /// \returns whether ambiguous.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_ambiguous(const Aut& aut,
                     std::tuple<state_t_of<Aut>, state_t_of<Aut>>& witness)
   {
@@ -37,7 +37,7 @@ namespace vcsn
     return false;
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_ambiguous(const Aut& aut)
   {
     std::tuple<state_t_of<Aut>, state_t_of<Aut>> dummy;
@@ -49,7 +49,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_ambiguous(const automaton& aut)
       {
         return is_ambiguous(aut->as<Aut>());
@@ -62,7 +62,7 @@ namespace vcsn
   | ambiguous_word.  |
   `-----------------*/
 
-  template <typename Aut>
+  template <Automaton Aut>
   word_t_of<Aut> ambiguous_word(const Aut& aut)
   {
     std::tuple<state_t_of<Aut>, state_t_of<Aut>> witness;
@@ -88,7 +88,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       label
       ambiguous_word(const automaton& aut)
       {
@@ -106,7 +106,7 @@ namespace vcsn
   `---------------------*/
 
   /// Whether \a aut is cycle-ambiguous.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_cycle_ambiguous(const Aut& aut)
   {
     // Find all strongly connected components.
@@ -134,7 +134,7 @@ namespace vcsn
 
   /// Whether \a aut is cycle-ambiguous.
   /// Precondition: aut is a strongly connected component.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_cycle_ambiguous_scc(const Aut& aut)
   {
     auto prod = conjunction(aut, aut);
@@ -168,7 +168,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_cycle_ambiguous(const automaton& aut)
       {

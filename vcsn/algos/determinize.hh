@@ -30,7 +30,7 @@ namespace vcsn
   namespace detail
   {
     /// The best tag depending on the type of Aut.
-    template <typename Aut>
+    template <Automaton Aut>
     using determinization_tag
       = std::conditional_t<std::is_same<weightset_t_of<Aut>, b>::value,
                       boolean_tag,
@@ -49,7 +49,7 @@ namespace vcsn
     ///
     /// \pre labelset is free.
     /// \pre weightset is Boolean.
-    template <typename Aut>
+    template <Automaton Aut>
     class determinized_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
@@ -252,11 +252,11 @@ namespace vcsn
   }
 
   /// A determinized automaton as a shared pointer.
-  template <typename Aut>
+  template <Automaton Aut>
   using determinized_automaton
     = std::shared_ptr<detail::determinized_automaton_impl<Aut>>;
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   determinize(const Aut& a, boolean_tag)
     -> determinized_automaton<Aut>
@@ -290,7 +290,7 @@ namespace vcsn
     /// \tparam Aut the input weighted automaton type.
     ///
     /// \pre labelset is free.
-    template <typename Aut>
+    template <Automaton Aut>
     class detweighted_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
@@ -467,12 +467,12 @@ namespace vcsn
   }
 
   /// A determinized automaton as a shared pointer.
-  template <typename Aut>
+  template <Automaton Aut>
   using detweighted_automaton
     = std::shared_ptr<detail::detweighted_automaton_impl<Aut>>;
 
   /// Determinization: weighted, general case.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   determinize(const Aut& a, weighted_tag)
     -> detweighted_automaton<Aut>
@@ -484,7 +484,7 @@ namespace vcsn
 
 
   /// Determinization: automatic dispatch based on the automaton type.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   determinize(const Aut& a, auto_tag = {})
   {
@@ -502,18 +502,18 @@ namespace vcsn
     namespace detail
     {
       /// Enable if Aut is Boolean.
-      template <typename Aut, typename Type = void>
+      template <Automaton Aut, typename Type = void>
       using enable_if_boolean_t
         = std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
       /// Enable if Aut is not Boolean.
-      template <typename Aut, typename Type = void>
+      template <Automaton Aut, typename Type = void>
       using enable_if_not_boolean_t
         = std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
 
       /// Boolean Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       enable_if_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
@@ -527,7 +527,7 @@ namespace vcsn
       }
 
       /// Weighted Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       enable_if_not_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
@@ -541,7 +541,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       automaton
       determinize(const automaton& aut, const std::string& algo)
       {
@@ -555,7 +555,7 @@ namespace vcsn
   | codeterminize.  |
   `----------------*/
 
-  template <typename Aut, typename Tag = auto_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   auto
   codeterminize(const Aut& aut, Tag tag = {})
   {
@@ -572,7 +572,7 @@ namespace vcsn
     namespace detail
     {
       /// Boolean Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       enable_if_boolean_t<Aut, automaton>
       codeterminize_(const automaton& aut, const std::string& algo)
       {
@@ -586,7 +586,7 @@ namespace vcsn
       }
 
       /// Weighted Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       enable_if_not_boolean_t<Aut, automaton>
       codeterminize_(const automaton& aut, const std::string& algo)
       {
@@ -600,7 +600,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       automaton
       codeterminize(const automaton& aut, const std::string& algo)
       {

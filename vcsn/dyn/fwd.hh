@@ -2,6 +2,8 @@
 
 #include <memory> // shared_ptr
 
+#include <vcsn/core/automaton.hh> // Automaton
+
 namespace vcsn
 {
   namespace dyn
@@ -25,7 +27,7 @@ namespace vcsn
     namespace detail
     {
       class automaton_base;
-      template <typename Aut>
+      template <Automaton Aut>
       class automaton_wrapper;
     }
     using automaton = std::shared_ptr<detail::automaton_base>;
@@ -44,7 +46,7 @@ namespace vcsn
     namespace detail
     {
       class expansion_base;
-      template <typename Aut>
+      template <typename ExpansionSet>
       class expansion_wrapper;
     }
     using expansion = std::shared_ptr<const detail::expansion_base>;
@@ -53,7 +55,7 @@ namespace vcsn
     namespace detail
     {
       class label_base;
-      template <typename T>
+      template <typename LabelSet>
       class label_wrapper;
     }
     using label = std::shared_ptr<const detail::label_base>;
@@ -80,7 +82,7 @@ namespace vcsn
     namespace detail
     {
       class weight_base;
-      template <typename T>
+      template <typename WeightSet>
       class weight_wrapper;
     }
     using weight = std::shared_ptr<const detail::weight_base>;

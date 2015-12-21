@@ -17,7 +17,7 @@ namespace vcsn
   ///
   /// This automaton is expected to be two-tape, both tapes having the
   /// same labelset.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_partial_identity(const Aut& aut)
   {
     using state_t = state_t_of<Aut>;
@@ -76,7 +76,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_partial_identity(const automaton& aut)
       {
         return is_partial_identity(aut->as<Aut>());

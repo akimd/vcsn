@@ -12,7 +12,7 @@ namespace vcsn
   `---------*/
 
   /// Make all accessible states initial.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   suffix_here(Aut& aut)
   {
@@ -24,7 +24,7 @@ namespace vcsn
     return aut;
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   suffix(const Aut& aut)
     ->decltype(::vcsn::copy(aut))
@@ -39,7 +39,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       suffix(const automaton& aut)
       {
@@ -55,7 +55,7 @@ namespace vcsn
   `---------*/
 
   /// Make all coaccessible states final.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   prefix_here(Aut& aut)
   {
@@ -64,7 +64,7 @@ namespace vcsn
     return aut;
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   prefix(const Aut& aut)
     ->decltype(::vcsn::copy(aut))
@@ -79,7 +79,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       prefix(const automaton& aut)
       {
@@ -94,14 +94,14 @@ namespace vcsn
   `---------*/
 
   /// Make each useful state both initial and final.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   factor_here(Aut& aut)
   {
     return suffix_here(prefix_here(aut));
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   factor(const Aut& aut)
     ->decltype(::vcsn::copy(aut))
@@ -116,7 +116,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       factor(const automaton& aut)
       {
@@ -132,7 +132,7 @@ namespace vcsn
 
   /// Add spontaneous transitions for each non spontaneous transition,
   /// with same source, destination and weight.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   subword_here(Aut& aut)
   {
@@ -153,7 +153,7 @@ namespace vcsn
   }
 
   /// Apply subword_here() to a copy of \a aut.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   subword(const Aut& aut)
     -> decltype(make_nullable_automaton(aut->context()))
@@ -169,7 +169,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       subword(const automaton& aut)
       {

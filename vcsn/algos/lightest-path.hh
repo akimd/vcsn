@@ -10,7 +10,7 @@
 namespace vcsn
 {
   /// Lightest path dispatch between algorithms with tags.
-  template <typename Aut, typename Tag = dijkstra_tag>
+  template <Automaton Aut, typename Tag = dijkstra_tag>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, Tag tag = {})
   {
@@ -18,7 +18,7 @@ namespace vcsn
   }
 
   /// Lightest path dispatch between algorithms with string.
-  template <typename Aut>
+  template <Automaton Aut>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
                 const std::string& algo)
@@ -49,7 +49,7 @@ namespace vcsn
     return fun(aut, source, dest);
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   path_monomial(const Aut& aut,
                 const std::vector<transition_t_of<Aut>>& path,

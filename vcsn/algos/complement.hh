@@ -15,7 +15,7 @@ namespace vcsn
   | complement(automaton).  |
   `------------------------*/
 
-  template <typename Aut>
+  template <Automaton Aut>
   void
   complement_here(Aut& aut)
   {
@@ -42,7 +42,7 @@ namespace vcsn
         aut->set_final(s);
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   complement(const Aut& aut)
     -> decltype(copy(aut))
@@ -57,7 +57,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       complement(const automaton& aut)
       {

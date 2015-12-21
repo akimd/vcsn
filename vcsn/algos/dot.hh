@@ -24,7 +24,7 @@ namespace vcsn
     /// \brief Format an automaton into Dot.
     ///
     /// \tparam Aut an automaton type.
-    template <typename Aut>
+    template <Automaton Aut>
     class dotter: public printer<Aut>
     {
     private:
@@ -372,7 +372,7 @@ namespace vcsn
   /// \param aut     the automaton to print.
   /// \param out     the output stream.
   /// \param fmt     how to format the automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   std::ostream&
   dot(const Aut& aut, std::ostream& out, format fmt = {})
   {

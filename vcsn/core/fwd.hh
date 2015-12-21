@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/core/automaton.hh> // Automaton.
 #include <vcsn/misc/memory.hh> // make_shared_ptr.
 
 namespace vcsn
@@ -26,23 +27,23 @@ namespace vcsn
   // vcsn/core/name-automaton.hh
   namespace detail
   {
-    template <typename Context>
+    template <Automaton Aut>
     class name_automaton_impl;
   }
-  template <typename Context>
+  template <Automaton Aut>
   using name_automaton
-    = std::shared_ptr<detail::name_automaton_impl<Context>>;
+    = std::shared_ptr<detail::name_automaton_impl<Aut>>;
 
 
   // vcsn/core/permutation-automaton.hh.
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class permutation_automaton_impl;
   }
 
   /// A permutation automaton as a shared pointer.
-  template <typename Aut>
+  template <Automaton Aut>
   using permutation_automaton
     = std::shared_ptr<detail::permutation_automaton_impl<Aut>>;
 
@@ -50,12 +51,12 @@ namespace vcsn
   // vcsn/core/expression-automaton.hh.
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class expression_automaton_impl;
   }
 
   /// An expression automaton as a shared pointer.
-  template <typename Aut>
+  template <Automaton Aut>
   using expression_automaton
     = std::shared_ptr<detail::expression_automaton_impl<Aut>>;
 

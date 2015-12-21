@@ -24,7 +24,7 @@ namespace vcsn
     template <typename A, typename I>
     struct hidden_label_type;
 
-    template <typename Aut, std::size_t... I>
+    template <Automaton Aut, std::size_t... I>
     struct hidden_label_type<Aut, index_sequence<I...>>
     {
       using ls_t = labelset_t_of<Aut>;
@@ -33,7 +33,7 @@ namespace vcsn
 
 
     /// Read-write on an automaton, that hides all tapes but one.
-    template <std::size_t Tape, typename Aut>
+    template <std::size_t Tape, Automaton Aut>
     class focus_automaton_impl
       : public automaton_decorator<Aut,
                                    project_context<Tape, context_t_of<Aut>>>
@@ -313,7 +313,7 @@ namespace vcsn
     };
   }
 
-  template <unsigned Tape, typename Aut>
+  template <unsigned Tape, Automaton Aut>
   inline
   focus_automaton<Tape, Aut>
   focus(Aut aut)
@@ -327,7 +327,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Tape>
+      template <Automaton Aut, typename Tape>
       automaton
       focus(const automaton& aut, integral_constant)
       {

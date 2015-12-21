@@ -139,7 +139,7 @@ namespace vcsn
     {
 
       /// Instantiate the core functions for automata of type \a Aut.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       register_automaton_functions()
       {

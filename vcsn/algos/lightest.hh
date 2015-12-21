@@ -34,7 +34,7 @@ namespace vcsn
      * of the `num` smallest paths. This implementation uses a priority
      * queue that will order states by their weights (then labels).
      */
-    template <typename Aut>
+    template <Automaton Aut>
     class weighter
     {
     public:
@@ -191,7 +191,7 @@ namespace vcsn
   ///
   /// \param aut   the automaton whose behavior to approximate
   /// \param num   number of words looked for.
-  template <typename Aut>
+  template <Automaton Aut>
   typename detail::weighter<Aut>::polynomial_t
   lightest(const Aut& aut, unsigned num = 1)
   {
@@ -207,7 +207,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Num>
+      template <Automaton Aut, typename Num>
       polynomial
       lightest(const automaton& aut, unsigned num)
       {

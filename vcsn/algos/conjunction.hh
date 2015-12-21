@@ -26,7 +26,7 @@ namespace vcsn
     `---------------------------------*/
 
     /// Build the (accessible part of the) product.
-    template <typename Aut, typename... Auts>
+    template <Automaton Aut, Automaton... Auts>
     class product_automaton_impl
       : public automaton_decorator<tuple_automaton<Aut, Auts...>>
     {
@@ -329,7 +329,7 @@ namespace vcsn
 
       /// Check if the transition is spontaneous (in the case of a
       /// labelset with one).
-      template <typename Aut_>
+      template <Automaton Aut_>
       std::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
       is_one(const Aut_& aut, transition_t_of<Aut_> tr) const
       {
@@ -338,7 +338,7 @@ namespace vcsn
 
       /// Same as above, but for labelsets without one, so it's always
       /// false.
-      template <typename Aut_>
+      template <Automaton Aut_>
       constexpr std::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
       is_one(const Aut_&, transition_t_of<Aut_>) const
       {
@@ -348,7 +348,7 @@ namespace vcsn
       /// Check if the state has only incoming spontaneous
       /// transitions.  As it is in the case of the one-free labelset,
       /// it's always false.
-      template <typename Aut_>
+      template <Automaton Aut_>
       constexpr std::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
       is_spontaneous_in(const Aut_&,
                        state_t_of<Aut_>) const
@@ -360,7 +360,7 @@ namespace vcsn
       /// The automaton has been insplit, so either all incoming transitions
       /// are proper, or all transitions are spontaneous (including the first
       /// one).
-      template <typename Aut_>
+      template <Automaton Aut_>
       std::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
       is_spontaneous_in(const Aut_& rhs, state_t_of<Aut_> rst) const
       {
@@ -478,11 +478,11 @@ namespace vcsn
   }
 
   /// A product automaton as a shared pointer.
-  template <typename Aut, typename... Auts>
+  template <Automaton Aut, Automaton... Auts>
   using product_automaton
     = std::shared_ptr<detail::product_automaton_impl<Aut, Auts...>>;
 
-  template <typename Aut, typename... Auts>
+  template <Automaton Aut, Automaton... Auts>
   auto
   make_product_automaton(Aut aut, const Auts&... auts)
     -> product_automaton<Aut, Auts...>
@@ -497,7 +497,7 @@ namespace vcsn
   `-----------------------------*/
 
   /// Build the (accessible part of the) conjunction.
-  template <typename... Auts>
+  template <Automaton... Auts>
   auto
   conjunction(const Auts&... as)
     -> tuple_automaton<decltype(meet_automata(as...)),
@@ -510,7 +510,7 @@ namespace vcsn
   }
 
   /// Build the (accessible part of the) conjunction.
-  template <typename... Auts>
+  template <Automaton... Auts>
   auto
   conjunction_lazy(const Auts&... as)
     -> product_automaton<decltype(meet_automata(as...)),
@@ -526,14 +526,14 @@ namespace vcsn
   {
     namespace detail
     {
-      template <std::size_t I, typename Aut>
+      template <std::size_t I, Automaton Aut>
       std::enable_if_t<labelset_t_of<Aut>::has_one() && I != 0, Aut>
       do_insplit(Aut& aut)
       {
         return insplit(aut);
       }
 
-      template <std::size_t I, typename Aut>
+      template <std::size_t I, Automaton Aut>
       std::enable_if_t<!labelset_t_of<Aut>::has_one() || I == 0, Aut&>
       do_insplit(Aut& aut)
       {
@@ -576,7 +576,7 @@ namespace vcsn
   `------------------------*/
 
   /// The (accessible part of the) shuffle product.
-  template <typename... Auts>
+  template <Automaton... Auts>
   auto
   shuffle(const Auts&... as)
     -> tuple_automaton<decltype(join_automata(as...)),
@@ -664,7 +664,7 @@ namespace vcsn
   }
 
   /// The (accessible part of the) infiltration product.
-  template <typename A1, typename A2, typename A3, typename... Auts>
+  template <typename A1, typename A2, typename A3, Automaton... Auts>
   auto
   infiltration(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
     -> decltype(infiltration(infiltration(a1, a2), a3, as...))
@@ -736,7 +736,7 @@ namespace vcsn
   | conjunction(automaton, n).   |
   `-----------------------------*/
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   conjunction(const Aut& aut, unsigned n)
     -> fresh_automaton_t_of<Aut>
@@ -782,7 +782,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (conjunction).
-      template <typename Aut, typename Unsigned>
+      template <Automaton Aut, typename Unsigned>
       automaton
       conjunction_repeated(const automaton& aut, unsigned n)
       {

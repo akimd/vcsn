@@ -19,7 +19,7 @@ namespace vcsn
     ///
     /// Sort by label, and then by destination state.
     /// To be applied to outgoing transitions of a state.
-    template <typename Aut>
+    template <Automaton Aut>
     struct transition_less
     {
       using automaton_t = Aut;
@@ -54,7 +54,7 @@ namespace vcsn
 
   /// Whether for each state, the outgoing transitions are sorted by
   /// increasing label.
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   bool
   is_out_sorted(const Aut& a)
@@ -71,7 +71,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_out_sorted(const automaton& aut)
       {
@@ -88,7 +88,7 @@ namespace vcsn
   namespace detail
   {
     /// A function to sort an automaton.
-    template <typename Aut>
+    template <Automaton Aut>
     class sorter
     {
       /// Input automaton type.
@@ -157,7 +157,7 @@ namespace vcsn
     }; // class
   } // namespace
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   sort(const Aut& a)
@@ -173,7 +173,7 @@ namespace vcsn
     {
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       sort(const automaton& aut)
       {

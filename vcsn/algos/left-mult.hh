@@ -18,7 +18,7 @@ namespace vcsn
   {
     /// Implementation of left- and right- multiplication of an
     /// automaton by a weight.
-    template <typename Aut>
+    template <Automaton Aut>
     struct standard_operations
     {
       using automaton_t = Aut;
@@ -115,7 +115,7 @@ namespace vcsn
   `-----------------------*/
 
   /// In place left-multiplication of an automaton by a weight.
-  template <typename Aut, typename Tag = auto_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   Aut&
   left_mult_here(const weight_t_of<Aut>& w, Aut& res, Tag tag = {})
   {
@@ -123,7 +123,7 @@ namespace vcsn
   }
 
   /// Left-multiplication of an automaton by a weight.
-  template <typename Aut, typename Tag = auto_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   auto
   left_mult(const weight_t_of<Aut>& w,
             const Aut& aut, Tag tag = {})
@@ -139,7 +139,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename WeightSet, typename Aut, typename String>
+      template <typename WeightSet, Automaton Aut, typename String>
       automaton
       left_mult(const weight& weight, const automaton& aut,
                 const std::string& algo)
@@ -272,7 +272,7 @@ namespace vcsn
   `------------------------*/
 
   /// In place right-multiplication of an automaton by a weight.
-  template <typename Aut, typename Tag = auto_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   Aut&
   right_mult_here(Aut& res, const weight_t_of<Aut>& w, Tag tag = {})
   {
@@ -280,7 +280,7 @@ namespace vcsn
   }
 
   /// Right-multiplication of an automaton by a weight.
-  template <typename Aut, typename Tag = auto_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   fresh_automaton_t_of<Aut>
   right_mult(const Aut& aut, const weight_t_of<Aut>& w, Tag tag = {})
   {
@@ -294,7 +294,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename WeightSet, typename String>
+      template <Automaton Aut, typename WeightSet, typename String>
       automaton
       right_mult(const automaton& aut, const weight& weight,
                  const std::string& algo)

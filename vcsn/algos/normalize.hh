@@ -7,7 +7,7 @@
 namespace vcsn
 {
   /// Whether \a a is standard and co-standard.
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_normalized(const Aut& a)
   {
@@ -15,7 +15,7 @@ namespace vcsn
   }
 
   /// Normalize \a a automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   normalize(const Aut& a)
     -> decltype(copy(a))
@@ -28,7 +28,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_normalized(const automaton& aut)
       {
@@ -36,7 +36,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       normalize(const automaton& aut)
       {

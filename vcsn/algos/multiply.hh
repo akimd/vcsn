@@ -171,7 +171,7 @@ namespace vcsn
   ///
   /// FIXME: if you know how to use fresh_automaton_t_of instead, let
   /// me know.
-  template <typename Aut, typename Tag = general_tag>
+  template <Automaton Aut, typename Tag = general_tag>
   auto
   multiply(const Aut& aut, int min, int max, Tag tag = {})
     -> decltype(aut->null_state(), // SFINAE.
@@ -227,7 +227,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (multiply).
-      template <typename Aut, typename Int1, typename Int2, typename String>
+      template <Automaton Aut, typename Int1, typename Int2, typename String>
       automaton
       multiply_repeated(const automaton& a, int min, int max,
                         const std::string& algo)

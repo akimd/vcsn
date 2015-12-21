@@ -19,7 +19,7 @@ namespace vcsn
 
   namespace detail_weighted
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class minimizer
     {
       using automaton_t = Aut;
@@ -242,7 +242,7 @@ namespace vcsn
 
   } // weighted::
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   minimize(const Aut& a, weighted_tag)

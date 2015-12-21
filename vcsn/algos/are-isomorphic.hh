@@ -28,7 +28,7 @@ namespace vcsn
   | are_isomorphic.  |
   `-----------------*/
 
-  template <typename Aut1, typename Aut2>
+  template <Automaton Aut1, Automaton Aut2>
   class are_isomorphicer
   {
   private:
@@ -61,7 +61,7 @@ namespace vcsn
     automaton2_t a2_;
 
     /// See the comment for out_ in minimize.hh.
-    template <typename Aut>
+    template <Automaton Aut>
     using dout_t =
       std::unordered_map
          <state_t_of<Aut>,
@@ -75,7 +75,7 @@ namespace vcsn
     dout_t<automaton2_t> dout2_;
 
     /// For the nonsequential case.
-    template <typename Aut>
+    template <Automaton Aut>
     using nout_t =
       std::unordered_map
          <state_t_of<Aut>,
@@ -136,7 +136,7 @@ namespace vcsn
     // Return true and fill \a dout if \a a is sequential; otherwise
     // return false and clear dout.  We can't use the is_deterministic
     // algorithm, as it's only defined for lal.
-    template <typename Aut>
+    template <Automaton Aut>
     bool is_sequential_filling(const Aut& a,
                                dout_t<Aut>& dout)
     {
@@ -246,7 +246,7 @@ namespace vcsn
     using state_classes_t = std::vector<class_pair_t>;
     state_classes_t state_classes_;
 
-    template<typename Aut>
+    template <Automaton Aut>
     class_id state_to_class(state_t_of<Aut> s, Aut& a)
     {
       class_id res = 0;
@@ -680,7 +680,7 @@ namespace vcsn
 
   };
 
-  template <typename Aut1, typename Aut2>
+  template <Automaton Aut1, Automaton Aut2>
   bool
   are_isomorphic(const Aut1& a1, const Aut2& a2)
   {
@@ -695,7 +695,7 @@ namespace vcsn
     {
 
       /// Bridge.
-      template <typename Aut1, typename Aut2>
+      template <Automaton Aut1, Automaton Aut2>
       bool
       are_isomorphic(const automaton& aut1, const automaton& aut2)
       {

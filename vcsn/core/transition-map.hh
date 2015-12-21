@@ -25,7 +25,7 @@ namespace vcsn
     /// \tparam KeepTransitions
     ///    If enabled, add a "transition" field to the cache that
     ///    allows to recover the transition id.
-    template <typename Aut,
+    template <Automaton Aut,
               typename WeightSet = weightset_t_of<Aut>,
               bool Deterministic = false,
               bool AllOut = false,

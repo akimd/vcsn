@@ -24,7 +24,7 @@ namespace vcsn
 
   namespace detail_signature
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class minimizer
     {
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
@@ -284,7 +284,7 @@ namespace vcsn
 
   } // detail_signature::
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -298,7 +298,7 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      template <Automaton Aut>
       ATTRIBUTE_NORETURN
       inline
       std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,

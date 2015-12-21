@@ -24,7 +24,7 @@ namespace vcsn
   /// Single source shortest distance.
   /// Find shortest (weighted) path from state \a s0
   /// to all states of automaton \a aut.
-  template <typename Aut>
+  template <Automaton Aut>
   std::vector<weight_t_of<Aut>>
   ss_shortest_distance(const Aut& aut, state_t_of<Aut> s0)
   {
@@ -61,7 +61,7 @@ namespace vcsn
   }
 
   /// State distancer for nmin.
-  template <typename Aut>
+  template <Automaton Aut>
   struct state_distancer
   {
     static_assert(std::is_same<weightset_t_of<Aut>, nmin>::value,
@@ -129,7 +129,7 @@ namespace vcsn
   /// \param start  the states from which we reach the order states.
   /// \returns a map that, for each state, gives a pair: the shortest distance
   ///          to its parent, and the transition id that allows to reach it.
-  template<typename Aut>
+  template <Automaton Aut>
   std::unordered_map<state_t_of<Aut>,
                      std::pair<unsigned,
                                transition_t_of<Aut>>>
@@ -166,7 +166,7 @@ namespace vcsn
     return parent;
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   std::vector<std::vector<weight_t_of<Aut>>>
   all_distances(const Aut& aut)
   {

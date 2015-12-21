@@ -22,7 +22,7 @@ namespace vcsn
   `---------------------------------------*/
 
   /// Check equivalence between Boolean automata on a free labelset.
-  template <typename Aut1, typename Aut2>
+  template <Automaton Aut1, Automaton Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
     -> std::enable_if_t<(std::is_same<weightset_t_of<Aut1>, b>::value
@@ -37,7 +37,7 @@ namespace vcsn
 
 
   /// Check equivalence between automata on fields, or Z.
-  template <typename Aut1, typename Aut2>
+  template <Automaton Aut1, Automaton Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
     -> decltype((std::enable_if_t<!std::is_same<weightset_t_of<Aut1>, b>::value>(),
@@ -61,7 +61,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut1, typename Aut2>
+      template <Automaton Aut1, Automaton Aut2>
       bool
       are_equivalent(const automaton& aut1, const automaton& aut2)
       {

@@ -11,7 +11,7 @@
 
 namespace vcsn
 {
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   weight_series(const Aut& a)
@@ -22,7 +22,7 @@ namespace vcsn
     return eval(aut);
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   weight_series(const Aut& a)
@@ -38,7 +38,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       weight
       weight_series(const automaton& aut)
       {

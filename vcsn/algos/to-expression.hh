@@ -22,7 +22,7 @@ namespace vcsn
 
     /// Compute a state profile for state-elimination based on
     /// connectivity.
-    template <typename Aut>
+    template <Automaton Aut>
     struct naive_profiler
     {
       using automaton_t = Aut;
@@ -92,7 +92,7 @@ namespace vcsn
 
     /// Compute a state profile for state-elimination based on the
     /// Delgado-Morais heuristic.
-    template <typename Aut>
+    template <Automaton Aut>
     struct delgado_profiler
     {
       using automaton_t = Aut;
@@ -220,7 +220,7 @@ namespace vcsn
     /// Eliminate states in an automaton.
     ///
     /// \pre The labelset is oneset or expressionset.
-    template <typename Aut, typename Profiler>
+    template <Automaton Aut, typename Profiler>
     struct state_eliminator
     {
       using profiler_t = Profiler;
@@ -418,7 +418,7 @@ namespace vcsn
       std::unordered_set<state_t> neighbors_;
     };
 
-    template <typename Aut, typename Profiler>
+    template <Automaton Aut, typename Profiler>
     state_eliminator<Aut, Profiler>
     make_state_eliminator(Aut& a, Profiler& profiler)
     {
@@ -428,7 +428,7 @@ namespace vcsn
 
 
   /// In place removal of state \a s from automaton \a res.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   eliminate_state_here(Aut& res,
                        state_t_of<Aut> s = Aut::element_type::null_state())
@@ -441,7 +441,7 @@ namespace vcsn
   }
 
   /// A copy of automaton \a res without the state \a s.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   eliminate_state(const Aut& aut,
                   state_t_of<Aut> s = Aut::element_type::null_state())
@@ -470,7 +470,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Int>
+      template <Automaton Aut, typename Int>
       automaton
       eliminate_state(const automaton& aut, int state)
       {
@@ -487,7 +487,7 @@ namespace vcsn
   | to_expression(automaton).   |
   `----------------------------*/
 
-  template <typename Aut,
+  template <Automaton Aut,
             typename Profiler,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
@@ -506,7 +506,7 @@ namespace vcsn
       naive,
     };
 
-  template <typename Aut,
+  template <Automaton Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
   to_expression_heuristic(const Aut& aut, vcsn::rat::identities ids,
@@ -542,7 +542,7 @@ namespace vcsn
     BUILTIN_UNREACHABLE();
   }
 
-  template <typename Aut,
+  template <Automaton Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
   to_expression(const Aut& aut, vcsn::rat::identities ids,
@@ -572,7 +572,7 @@ namespace vcsn
       }
   }
 
-  template <typename Aut,
+  template <Automaton Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
   to_expression(const Aut& a, vcsn::rat::identities ids,
@@ -598,7 +598,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Identities, typename String>
+      template <Automaton Aut, typename Identities, typename String>
       expression
       to_expression(const automaton& aut, vcsn::rat::identities ids,
                     const std::string& algo)

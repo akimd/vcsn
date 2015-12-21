@@ -22,7 +22,7 @@ namespace vcsn
     /// \brief Format automaton to TikZ format.
     ///
     /// \tparam Aut an automaton type, not a pointer type.
-    template <typename Aut>
+    template <Automaton Aut>
     class tikzer: public printer<Aut>
     {
     public:
@@ -146,7 +146,7 @@ namespace vcsn
   /// \brief Print automaton to TikZ format.
   ///
   /// \tparam AutPtr an automaton type.
-  template <typename AutPtr>
+  template <Automaton AutPtr>
   std::ostream&
   tikz(const AutPtr& aut, std::ostream& out)
   {

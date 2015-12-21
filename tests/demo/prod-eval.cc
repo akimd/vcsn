@@ -32,7 +32,7 @@ namespace vcsn
     }
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   Aut
   read_automaton(const std::string& f)
   {

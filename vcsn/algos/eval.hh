@@ -14,7 +14,7 @@ namespace vcsn
 {
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class evaluator
     {
       static_assert(labelset_t_of<Aut>::is_free(),
@@ -95,7 +95,7 @@ namespace vcsn
   } // namespace detail
 
   /// General case of evaluation.
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   eval(const Aut& a, const word_t_of<Aut>& w)
@@ -110,7 +110,7 @@ namespace vcsn
   /// Require a proper automaton.
   /// In a proper lao automaton, an accepting path can only be composed by
   /// initial and final transitions. Sum the weight of these paths.
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   eval(const Aut& a)
@@ -137,7 +137,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename LabelSet>
+      template <Automaton Aut, typename LabelSet>
       weight
       eval(const automaton& aut, const label& lbl)
       {

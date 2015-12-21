@@ -14,7 +14,7 @@ namespace vcsn
   namespace detail
   {
     /// Hide some states of an automaton.
-    template <typename Aut>
+    template <Automaton Aut>
     class filter_automaton_impl
       : public automaton_decorator<Aut>
     {
@@ -212,12 +212,12 @@ namespace vcsn
    };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   using filter_automaton =
     std::shared_ptr<detail::filter_automaton_impl<Aut>>;
 
   /// Get an automaton who is a part state set \a ss of \a aut.
-  template <typename Aut>
+  template <Automaton Aut>
   filter_automaton<Aut>
   filter(const Aut& aut, const std::unordered_set<state_t_of<Aut>>& ss)
   {
@@ -229,7 +229,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Unsigneds>
+      template <Automaton Aut, typename Unsigneds>
       automaton
       filter(const automaton& aut, const std::vector<unsigned>& states)
       {

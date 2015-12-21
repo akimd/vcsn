@@ -18,7 +18,7 @@ namespace vcsn
   namespace detail
   {
     /// Read-write on an automaton, that transposes everything.
-    template <typename Aut>
+    template <Automaton Aut>
     class transpose_automaton_impl
       : public automaton_decorator<Aut>
     {
@@ -215,7 +215,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   Aut
   transpose(const transpose_automaton<Aut>& aut)
@@ -223,7 +223,7 @@ namespace vcsn
     return aut->naked_automaton();
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   transpose_automaton<Aut>
   transpose(Aut aut)
@@ -236,7 +236,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       transpose(automaton& aut)
       {

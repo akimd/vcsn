@@ -36,7 +36,7 @@ namespace vcsn
       return res;
     }
 
-    template< typename Container, typename Predicate>
+    template <typename Container, typename Predicate>
     void erase_if(Container& c, const Predicate& p)
     {
       using std::begin;

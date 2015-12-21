@@ -22,7 +22,7 @@ namespace vcsn
 
     /// The pair automaton is used by several algorithms for
     /// synchronizing words.
-    template <typename Aut>
+    template <Automaton Aut>
     class pair_automaton_impl
 #if 0
     // See comments below.
@@ -239,7 +239,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   using pair_automaton
     = std::shared_ptr<detail::pair_automaton_impl<Aut>>;
 
@@ -247,7 +247,7 @@ namespace vcsn
   | pair(automaton).  |
   `------------------*/
 
-  template <typename Aut>
+  template <Automaton Aut>
   pair_automaton<Aut> pair(const Aut& aut, bool keep_initials = false)
   {
     return make_shared_ptr<pair_automaton<Aut>>(aut, keep_initials);
@@ -258,7 +258,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename>
+      template <Automaton Aut, typename>
       automaton
       pair(const automaton& aut, bool keep_initials)
       {

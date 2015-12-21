@@ -59,7 +59,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       context
       context_of(const automaton& aut)
       {

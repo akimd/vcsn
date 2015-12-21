@@ -24,7 +24,7 @@ namespace vcsn
 
   namespace detail_moore
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class minimizer
     {
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
@@ -192,7 +192,7 @@ namespace vcsn
   }
 
   /// Minimize automaton \a a using the Moore algorithm.
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, moore_tag)
@@ -205,7 +205,7 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      template <Automaton Aut>
       ATTRIBUTE_NORETURN
       inline
       std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>

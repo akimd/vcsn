@@ -20,14 +20,14 @@ namespace vcsn
         virtual symbol vname() const = 0;
 
         /// Extract wrapped typed automaton.
-        template <typename Aut>
+        template <Automaton Aut>
         auto& as()
         {
           return dyn_cast<automaton_wrapper<Aut>&>(*this).automaton();
         }
 
         /// Extract wrapped typed automaton.
-        template <typename Aut>
+        template <Automaton Aut>
         auto& as() const
         {
           return dyn_cast<const automaton_wrapper<Aut>&>(*this).automaton();
@@ -35,7 +35,7 @@ namespace vcsn
       };
 
       /// A wrapped typed automaton.
-      template <typename Aut>
+      template <Automaton Aut>
       class automaton_wrapper final: public automaton_base
       {
       public:
@@ -69,7 +69,7 @@ namespace vcsn
     using automaton = std::shared_ptr<detail::automaton_base>;
 
     /// Build a dyn::automaton.
-    template <typename Aut>
+    template <Automaton Aut>
     inline
     automaton
     make_automaton(const Aut& aut)

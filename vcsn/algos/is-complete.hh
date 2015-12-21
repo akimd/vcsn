@@ -9,7 +9,7 @@ namespace vcsn
 {
   /// Whether \a aut is complete.
   /// \pre \a aut is LTL
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_complete(const Aut& aut)
   {
     static_assert(labelset_t_of<Aut>::is_free(),
@@ -44,7 +44,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_complete(const automaton& aut)
       {
         return is_complete(aut->as<Aut>());

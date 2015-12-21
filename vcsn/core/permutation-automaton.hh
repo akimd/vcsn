@@ -15,7 +15,7 @@ namespace vcsn
     /// An automaton isomorphic to another one.
     ///
     /// \tparam Aut the type of the wrapped input automaton.
-    template <typename Aut>
+    template <Automaton Aut>
     class permutation_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {

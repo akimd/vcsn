@@ -14,7 +14,7 @@
 
 using namespace vcsn;
 
-template<typename Aut>
+template <Automaton Aut>
 void print(const Aut& a)
 {
   vcsn::info(a, std::cout) << std::endl;

@@ -17,7 +17,7 @@ namespace vcsn
     ///
     /// \tparam Aut        relative the generated automaton
     /// \tparam ExpSet  relative to the expression.
-    template <typename Aut,
+    template <Automaton Aut,
               typename ExpSet>
     class thompson_visitor
       : public ExpSet::const_visitor
@@ -170,7 +170,7 @@ namespace vcsn
   ///
   /// \tparam Aut     relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
-  template <typename Aut, typename ExpSet>
+  template <Automaton Aut, typename ExpSet>
   inline
   Aut
   thompson(const context_t_of<Aut>& ctx,
@@ -184,7 +184,7 @@ namespace vcsn
   ///
   /// \tparam Aut     relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
-  template <typename Aut, typename ExpSet>
+  template <Automaton Aut, typename ExpSet>
   inline
   Aut
   thompson(const ExpSet& rs, const typename ExpSet::value_t& r)

@@ -22,7 +22,7 @@ namespace vcsn
   /// Request for Hopcroft implementation of minimize (B and free).
   struct hopcroft_tag {};
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, hopcroft_tag)
@@ -104,7 +104,7 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      template <Automaton Aut>
       ATTRIBUTE_NORETURN
       inline
       std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>

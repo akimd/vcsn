@@ -14,7 +14,7 @@
 
 namespace vcsn
 {
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -23,7 +23,7 @@ namespace vcsn
     return minimize(a, signature_tag{});
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -32,7 +32,7 @@ namespace vcsn
     return minimize(a, weighted_tag{});
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
@@ -50,7 +50,7 @@ namespace vcsn
     return fun(a);
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && !labelset_t_of<Aut>::is_free(),
@@ -68,7 +68,7 @@ namespace vcsn
     return fun(a);
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -84,7 +84,7 @@ namespace vcsn
     return fun(a);
   }
 
-  template <typename Aut, typename Tag = auto_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   inline
   auto
   cominimize(const Aut& a, Tag tag = {})
@@ -102,7 +102,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       inline
       automaton
       minimize(const automaton& aut, const std::string& algo)
@@ -153,7 +153,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       inline
       automaton
       cominimize(const automaton& aut, const std::string& algo)

@@ -23,17 +23,17 @@ namespace vcsn
     /// automaton.  So we need a means to recognize focus automata,
     /// and extract their true context, not just their visible
     /// context.
-    template <typename Aut>
+    template <Automaton Aut>
     struct real_context_impl;
 
     /// For a focus automaton, its genuine context (not the visible
     /// one), and for all the other automata, their context.
-    template <typename Aut>
+    template <Automaton Aut>
     auto
     real_context(const Aut& aut)
       -> decltype(real_context_impl<Aut>::context(aut));
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct real_context_impl
     {
       static auto context(const Aut& aut)
@@ -43,7 +43,7 @@ namespace vcsn
       }
     };
 
-    template <std::size_t Tape, typename Aut>
+    template <std::size_t Tape, Automaton Aut>
     struct real_context_impl<focus_automaton<Tape, Aut>>
     {
       static auto context(const focus_automaton<Tape, Aut>& aut)
@@ -57,7 +57,7 @@ namespace vcsn
     //
     // FIXME: try to recurse on all automaton decorator types without
     // listing them.
-    template <typename Aut>
+    template <Automaton Aut>
     struct real_context_impl<automaton_decorator<Aut>>
     {
       static auto context(const automaton_decorator<Aut>& aut)
@@ -67,7 +67,7 @@ namespace vcsn
       }
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     auto
     real_context(const Aut& aut)
       -> decltype(real_context_impl<Aut>::context(aut))
@@ -84,8 +84,8 @@ namespace vcsn
   /// transpose_automaton (of the fresh_automaton of Aut) so that we
   /// also create a transposed automaton.  In the case of decorator,
   /// it's the base type, as we don't copy decorations.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>>
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>>
   AutOut
   make_fresh_automaton(const AutIn& model)
   {
@@ -109,7 +109,7 @@ namespace vcsn
     /// \tparam AutOut
     ///    The type of the resulting automaton.
     /// \pre AutIn <: AutOut.
-    template <typename AutIn, typename AutOut = AutIn>
+    template <Automaton AutIn, Automaton AutOut = AutIn>
     class copier
     {
     public:
@@ -243,7 +243,7 @@ namespace vcsn
   }
 
   /// Build an automaton copier.
-  template <typename AutIn, typename AutOut>
+  template <Automaton AutIn, Automaton AutOut>
   detail::copier<AutIn, AutOut>
   make_copier(const AutIn& in, AutOut& out, bool safe = true)
   {
@@ -252,7 +252,7 @@ namespace vcsn
 
   /// Copy selected states and transitions of an automaton.
   /// \pre AutIn <: AutOut.
-  template <typename AutIn, typename AutOut,
+  template <Automaton AutIn, Automaton AutOut,
             typename KeepState, typename KeepTrans>
   void
   copy_into(const AutIn& in, AutOut& out,
@@ -264,7 +264,7 @@ namespace vcsn
 
   /// Copy the selected states an automaton.
   /// \pre AutIn <: AutOut.
-  template <typename AutIn, typename AutOut, typename KeepState>
+  template <Automaton AutIn, Automaton AutOut, typename KeepState>
   void
   copy_into(const AutIn& in, AutOut& out, KeepState keep_state)
   {
@@ -274,7 +274,7 @@ namespace vcsn
 
   /// Copy an automaton.
   /// \pre AutIn <: AutOut.
-  template <typename AutIn, typename AutOut>
+  template <Automaton AutIn, Automaton AutOut>
   void
   copy_into(const AutIn& in, AutOut& out)
   {
@@ -285,7 +285,7 @@ namespace vcsn
 
   /// Copy an automaton.
   /// \pre AutIn <: AutOut.
-  template <typename AutIn, typename AutOut>
+  template <Automaton AutIn, Automaton AutOut>
   void
   copy_into(const AutIn& in, AutOut& out, bool safe)
   {
@@ -297,8 +297,8 @@ namespace vcsn
 
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state, and transitions accepted by \a keep_trans.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>,
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState, typename KeepTrans>
   auto
   copy(const AutIn& input, KeepState keep_state, KeepTrans keep_trans)
@@ -312,8 +312,8 @@ namespace vcsn
   }
 
   /// A copy of \a input.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>,
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename KeepState>
   auto
   copy(const AutIn& input, KeepState keep_state)
@@ -328,8 +328,8 @@ namespace vcsn
   }
 
   /// A copy of \a input.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>>
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>>
   AutOut
   copy(const AutIn& input)
   {
@@ -342,8 +342,8 @@ namespace vcsn
 
   /// A copy of \a input keeping only its states that are members of
   /// std::set \a keep.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>,
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename States>
   auto
   copy(const AutIn& input, States states)
@@ -358,8 +358,8 @@ namespace vcsn
   /// A copy of \a input keeping only its states that are members of
   /// container \a states, and transitions that are members of
   /// container \a trans.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>,
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename States, typename Trans>
   auto
   copy(const AutIn& input, States states, Trans trans)
@@ -375,8 +375,8 @@ namespace vcsn
 
   /// A copy of \a input keeping only its transitions that are members
   /// of \a ts, and the states on which these transitions depend.
-  template <typename AutIn,
-            typename AutOut = fresh_automaton_t_of<AutIn>,
+  template <Automaton AutIn,
+            Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename Transitions>
   auto
   copy(const AutIn& input, const Transitions& ts)
@@ -394,7 +394,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (copy).
-      template <typename Aut, typename Ctx>
+      template <Automaton Aut, typename Ctx>
       automaton
       copy_convert(const automaton& aut, const context& ctx)
       {
@@ -406,7 +406,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       copy(const automaton& aut)
       {

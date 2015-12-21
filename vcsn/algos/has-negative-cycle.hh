@@ -11,7 +11,7 @@ namespace vcsn
   | has_negative_cycle.  |
   `---------------------*/
 
-  template <typename Aut>
+  template <Automaton Aut>
   bool has_negative_cycle(const Aut& aut)
   {
     return !detail::bellman_ford_impl(aut, aut->pre());
@@ -22,7 +22,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge
-      template <typename Aut>
+      template <Automaton Aut>
       bool has_negative_cycle(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();

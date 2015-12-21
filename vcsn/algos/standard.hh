@@ -34,7 +34,7 @@ namespace vcsn
   {
     /// Make an empty automaton which is a supertype of others, and
     /// with a nullable labelset.
-    template <typename... Auts>
+    template <Automaton... Auts>
     auto
     make_join_automaton(general_tag, Auts&&... auts)
       // SFINAE
@@ -44,7 +44,7 @@ namespace vcsn
     }
 
     /// Make an empty automaton which is a supertype of others.
-    template <typename... Auts>
+    template <Automaton... Auts>
     auto
     make_join_automaton(standard_tag, Auts&&... auts)
     {
@@ -53,7 +53,7 @@ namespace vcsn
 
     /// Dispatch an operation between automata depending on whether
     /// they are standard.
-    template <typename... Aut, typename Operation>
+    template <Automaton... Aut, typename Operation>
     auto
     dispatch_standard(std::string algo, Operation op, Aut&&... auts)
     {
@@ -77,7 +77,7 @@ namespace vcsn
   `-------------------------*/
 
   /// Whether \a a is standard.
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_standard(const Aut& a)
   {
@@ -90,7 +90,7 @@ namespace vcsn
   }
 
   /// Whether \a a is costandard.
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_costandard(const Aut& a)
   {
@@ -103,7 +103,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_standard(const automaton& aut)
       {
@@ -112,7 +112,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_costandard(const automaton& aut)
       {
@@ -129,7 +129,7 @@ namespace vcsn
   /// Turn \a aut into a standard automaton.
   ///
   /// \tparam Aut an automaton type, not a pointer type.
-  template <typename Aut>
+  template <Automaton Aut>
   void
   standard_here(Aut& aut)
   {
@@ -164,7 +164,7 @@ namespace vcsn
     aut->set_initial(ini);
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   standard(const Aut& aut)
   {
@@ -173,7 +173,7 @@ namespace vcsn
     return res;
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   costandard(const Aut& aut)
     -> decltype(copy(aut))
@@ -187,7 +187,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       standard(const automaton& aut)
       {
@@ -196,7 +196,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       costandard(const automaton& aut)
       {
@@ -217,7 +217,7 @@ namespace vcsn
     ///
     /// \tparam Aut     relative the generated automaton
     /// \tparam ExpSet  relative to the expression.
-    template <typename Aut,
+    template <Automaton Aut,
               typename ExpSet>
     class standard_visitor
       : public ExpSet::const_visitor
@@ -424,7 +424,7 @@ namespace vcsn
   ///
   /// \tparam Aut        relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
-  template <typename Aut,
+  template <Automaton Aut,
             typename ExpSet>
   Aut
   standard(const ExpSet& rs, const typename ExpSet::value_t& r)

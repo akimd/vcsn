@@ -14,7 +14,7 @@ namespace vcsn
   | project(automaton).   |
   `----------------------*/
 
-  template <std::size_t Tape, typename Aut>
+  template <std::size_t Tape, Automaton Aut>
   auto project(const Aut& aut)
     -> mutable_automaton<detail::project_context<Tape, context_t_of<Aut>>>
   {
@@ -31,7 +31,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Tape>
+      template <Automaton Aut, typename Tape>
       automaton
       project(const automaton& aut, integral_constant)
       {

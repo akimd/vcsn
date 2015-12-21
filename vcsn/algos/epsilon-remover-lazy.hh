@@ -25,7 +25,7 @@ namespace vcsn
     /// transpose the input automaton before passing it to the remover, and we
     /// transpose its proper part again when adding it as the underlying
     /// automaton.
-    template <typename Aut,
+    template <Automaton Aut,
               bool has_one = labelset_t_of<Aut>::has_one()>
     class lazy_proper_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut,
@@ -167,7 +167,7 @@ namespace vcsn
 
     /// Specialization for automata with non nullable context.
     /// We just forward everything. All states are strict.
-    template <typename Aut>
+    template <Automaton Aut>
     class lazy_proper_automaton_impl<Aut, false>
       : public automaton_decorator<Aut>
     {
@@ -202,7 +202,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   using lazy_proper_automaton
     = std::shared_ptr<detail::lazy_proper_automaton_impl<Aut>>;
 }

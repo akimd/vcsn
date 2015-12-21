@@ -9,7 +9,7 @@ namespace vcsn
   ///
   /// Convert to spontaneous automaton: simply change every transition's label
   /// to the empty word.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   to_spontaneous(const Aut& aut)
     -> std::enable_if_t<!context_t_of<Aut>::is_lao,
@@ -47,7 +47,7 @@ namespace vcsn
   /// to_spontaneous specialisation for lao automaton.
   ///
   /// The automaton is already spontaneous: we do not need to convert it.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   to_spontaneous(const Aut& aut)
     -> std::enable_if_t<context_t_of<Aut>::is_lao, decltype(copy(aut))>

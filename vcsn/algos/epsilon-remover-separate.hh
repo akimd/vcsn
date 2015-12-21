@@ -32,7 +32,7 @@ namespace vcsn
     ///
     /// This class is specialized for labels_are_letter automata since
     /// all these methods become trivial.
-    template <typename Aut,
+    template <Automaton Aut,
               bool has_one = labelset_t_of<Aut>::has_one()>
     class epsilon_remover_separate
     {
@@ -446,7 +446,7 @@ namespace vcsn
       std::vector<state_dirty_t> p2d_; // proper states -> dirty states
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     class epsilon_remover_separate<Aut, false>
     {
       using automaton_t = std::remove_cv_t<Aut>;

@@ -13,7 +13,7 @@ namespace vcsn
   namespace detail
   {
     // Helper struct to compute the context of the partial identity
-    template <typename Aut>
+    template <Automaton Aut>
     struct partial_identity_context
     {
       using in_labelset_t = labelset_t_of<Aut>;
@@ -29,11 +29,11 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   using partial_identity_context_t_of = typename detail::partial_identity_context<Aut>::context_t;
 
   /// Create a partial identity transducer from \a aut
-  template <typename Aut>
+  template <Automaton Aut>
   fresh_automaton_t_of<Aut, partial_identity_context_t_of<Aut>>
   partial_identity(const Aut& aut)
   {
@@ -74,7 +74,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       partial_identity(const automaton& aut)
       {

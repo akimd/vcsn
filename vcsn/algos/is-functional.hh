@@ -13,7 +13,7 @@ namespace vcsn
 
   /// Whether \a aut is functional.
   /// \pre \a aut is a transducer.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_functional(const Aut& aut)
   {
     // Compose aut and its invert.
@@ -29,7 +29,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_functional(const automaton& aut)
       {
         return is_functional(aut->as<Aut>());

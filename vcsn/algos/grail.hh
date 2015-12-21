@@ -24,7 +24,7 @@ namespace vcsn
     /// \brief Factor common bits in automaton formatting.
     ///
     /// \tparam Aut an automaton type.
-    template <typename Aut>
+    template <Automaton Aut>
     class printer
     {
     protected:
@@ -145,7 +145,7 @@ namespace vcsn
     /// \brief Format an automaton into Fado.
     ///
     /// \tparam Aut an automaton type, not a pointer type.
-    template <typename Aut>
+    template <Automaton Aut>
     class fadoer: public printer<Aut>
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
@@ -199,7 +199,7 @@ namespace vcsn
 
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   std::ostream&
   fado(const Aut& aut, std::ostream& out)
   {
@@ -221,7 +221,7 @@ namespace vcsn
     /// \tparam Aut an automaton type, not a pointer type.
     ///
     /// See https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf.
-    template <typename Aut>
+    template <Automaton Aut>
     class grailer: public printer<Aut>
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
@@ -267,7 +267,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   std::ostream&
   grail(const Aut& aut, std::ostream& out)
   {

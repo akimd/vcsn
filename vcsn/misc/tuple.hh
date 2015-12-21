@@ -221,7 +221,7 @@ namespace vcsn
               tails...);
     }
 
-    template<typename Fun, typename... Ts, size_t... I>
+    template <typename Fun, typename... Ts, size_t... I>
     inline void
     cross_tuple_(Fun f,
                  const std::tuple<Ts...>& ts,
@@ -230,7 +230,7 @@ namespace vcsn
       cross(f, std::get<I>(ts)...);
     }
 
-    template<typename Fun, typename... Ts>
+    template <typename Fun, typename... Ts>
     inline void
     cross_tuple(Fun f,
                 const std::tuple<Ts...>& ts)

@@ -186,7 +186,7 @@ namespace vcsn
     template <typename Ctx, size_t... Tapes>
     using lifter_t = lifter_impl<Ctx, detail::index_sequence<Tapes...>>;
 
-    template <typename Aut, size_t... Tapes>
+    template <Automaton Aut, size_t... Tapes>
     using lifted_automaton_t =
       mutable_automaton<typename lifter_t<context_t_of<Aut>,
                                           Tapes...>::context_t>;
@@ -209,7 +209,7 @@ namespace vcsn
   ///
   /// \param a    the input automaton
   /// \param ids  the identities to use for the generated expressions
-  template <typename Aut, size_t... Tapes>
+  template <Automaton Aut, size_t... Tapes>
   inline
   detail::lifted_automaton_t<Aut, Tapes...>
   lift(const Aut& a, vcsn::rat::identities ids = {})
@@ -255,7 +255,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Ids, typename... Tapes>
+      template <Automaton Aut, typename Ids, typename... Tapes>
       automaton
       lift_automaton(const automaton& aut,
                      vcsn::rat::identities ids, integral_constant)

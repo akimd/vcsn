@@ -13,14 +13,14 @@ namespace vcsn
   namespace detail
   {
 
-    template <typename Aut,
+    template <Automaton Aut,
               bool has_one = context_t_of<Aut>::has_one()>
     struct epsilon_acyclic;
 
     /// Detect epsilon-circuits.
     ///
     /// In this algorithm, only epsilon-transitions are considered.
-    template <typename Aut>
+    template <Automaton Aut>
     struct epsilon_acyclic<Aut, true>
     {
       using automaton_t = std::remove_cv_t<Aut>;
@@ -91,7 +91,7 @@ namespace vcsn
       label_t one = aut_->labelset()->one();
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct epsilon_acyclic<Aut, false>
     {
       using automaton_t = std::remove_cv_t<Aut>;
@@ -106,7 +106,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   ATTRIBUTE_CONST
   bool is_eps_acyclic(const Aut& aut)
   {
@@ -119,7 +119,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_eps_acyclic(const automaton& aut)
       {
         return is_eps_acyclic(aut->as<Aut>());

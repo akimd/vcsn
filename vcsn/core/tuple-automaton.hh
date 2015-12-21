@@ -25,7 +25,7 @@ namespace vcsn
     ///
     /// \tparam Aut   the output automaton type
     /// \tparam Auts  the input automaton types
-    template <typename Aut, typename... Auts>
+    template <Automaton Aut, Automaton... Auts>
     class tuple_automaton_impl
       : public automaton_decorator<Aut>
     {
@@ -254,12 +254,11 @@ namespace vcsn
   }
 
   /// A tuple automaton as a shared pointer.
-  template <typename... Auts>
+  template <Automaton... Auts>
   using tuple_automaton
     = std::shared_ptr<detail::tuple_automaton_impl<Auts...>>;
 
-  template <typename... Auts>
-  inline
+  template <Automaton... Auts>
   auto
   make_tuple_automaton(const Auts&... auts)
     -> tuple_automaton<Auts...>

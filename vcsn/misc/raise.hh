@@ -16,7 +16,7 @@ namespace vcsn
     /// Useful auxiliary to handle variadic arguments.
     struct pass
     {
-      template<typename ...T> pass(T...) {}
+      template <typename ...T> pass(T...) {}
     };
 
 

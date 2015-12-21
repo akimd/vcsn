@@ -22,7 +22,7 @@ namespace vcsn
     /// Function applying Bellman-Ford algorithm to the automaton
     /// given as parameter. Return the array of lightest 'in'
     /// transition of each state.
-    template <typename Aut>
+    template <Automaton Aut>
     boost::optional<std::vector<transition_t_of<Aut>>>
     bellman_ford_impl(const Aut& aut, state_t_of<Aut> source)
     {
@@ -70,7 +70,7 @@ namespace vcsn
 
   /// Destination is ignored as bellman-ford does not stop when reaching dest,
   /// but when each iteration has been done.
-  template <typename Aut>
+  template <Automaton Aut>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut>,
                 bellmanford_tag)

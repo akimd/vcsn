@@ -17,7 +17,7 @@ namespace vcsn
     /// Apply a quotient onto an automaton: fuse equivalent states.
     ///
     /// \tparam Aut  the type of the input automaton
-    template <typename Aut>
+    template <Automaton Aut>
     class quotienter
     {
     public:
@@ -115,10 +115,10 @@ namespace vcsn
   }
 
   /// The return type when calling quotient on Aut.
-  template <typename Aut>
+  template <Automaton Aut>
   using quotient_t = partition_automaton_t<Aut>;
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   quotient(const Aut& a,

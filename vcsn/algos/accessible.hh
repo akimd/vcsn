@@ -15,14 +15,14 @@ namespace vcsn
   | Sets of accessible, coaccessible, useful states.  |
   `--------------------------------------------------*/
 
-  template <typename Aut>
+  template <Automaton Aut>
   using states_t = std::unordered_set<state_t_of<Aut>>;
 
   /// The set of accessible states, including pre(), and possibly post().
   ///
   /// \param aut     the automaton.
   /// \param strict  whether to evaluate lazy states.
-  template <typename Aut>
+  template <Automaton Aut>
   states_t<Aut>
   accessible_states(const Aut& aut, bool strict = true)
   {
@@ -59,7 +59,7 @@ namespace vcsn
   ///
   /// \param a       the automaton.
   /// \param strict  whether to evaluate lazy states.
-  template <typename Aut>
+  template <Automaton Aut>
   states_t<Aut>
   coaccessible_states(const Aut& a, bool strict = true)
   {
@@ -70,7 +70,7 @@ namespace vcsn
   ///
   /// \param a       the automaton.
   /// \param strict  whether to evaluate lazy states.
-  template <typename Aut>
+  template <Automaton Aut>
   states_t<Aut>
   useful_states(const Aut& a, bool strict = true)
   {
@@ -85,7 +85,7 @@ namespace vcsn
   `----------------------------------------------------*/
 
   /// Number of accessible states, not counting pre() and post().
-  template <typename Aut>
+  template <Automaton Aut>
   size_t
   num_accessible_states(const Aut& a)
   {
@@ -100,7 +100,7 @@ namespace vcsn
   }
 
   /// Number of accessible states, not counting pre() and post().
-  template <typename Aut>
+  template <Automaton Aut>
   size_t
   num_coaccessible_states(const Aut& a)
   {
@@ -108,7 +108,7 @@ namespace vcsn
   }
 
   /// Number of accessible states, not counting pre() and post().
-  template <typename Aut>
+  template <Automaton Aut>
   size_t
   num_useful_states(const Aut& a)
   {
@@ -129,7 +129,7 @@ namespace vcsn
   `-----------------------------------------------*/
 
   /// Accessible part of an automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   filter_automaton<Aut>
   accessible(const Aut& a)
   {
@@ -137,7 +137,7 @@ namespace vcsn
   }
 
   /// Coaccessible part of an automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   filter_automaton<Aut>
   coaccessible(const Aut& a)
   {
@@ -145,7 +145,7 @@ namespace vcsn
   }
 
   /// Useful part of an automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   filter_automaton<Aut>
   trim(const Aut& a)
   {
@@ -157,38 +157,38 @@ namespace vcsn
   `----------------------------------------------------------------*/
 
   /// Whether all its states are useful.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_trim(const Aut& a)
   {
     return num_useful_states(a) == a->num_states();
   }
 
   /// Whether all no state is useful.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_useless(const Aut& a)
   {
     return num_useful_states(a) == 0;
   }
 
   /// Whether all its states are accessible.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_accessible(const Aut& a)
   {
     return num_accessible_states(a) == a->num_states();
   }
 
   /// Whether all its states are coaccessible.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_coaccessible(const Aut& a)
   {
     return num_coaccessible_states(a) == a->num_states();
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_empty(const Aut& a) ATTRIBUTE_PURE;
 
   /// Whether has no states.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_empty(const Aut& a)
   {
     // FIXME: Beware of the case where there is a transition from
@@ -201,7 +201,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       accessible(const automaton& aut)
       {
@@ -210,7 +210,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       coaccessible(const automaton& aut)
       {
@@ -219,7 +219,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       trim(const automaton& aut)
       {
@@ -228,7 +228,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_accessible(const automaton& aut)
       {
@@ -237,7 +237,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_coaccessible(const automaton& aut)
       {
@@ -246,7 +246,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_trim(const automaton& aut)
       {
@@ -255,7 +255,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_useless(const automaton& aut)
       {
@@ -264,7 +264,7 @@ namespace vcsn
       }
 
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool
       is_empty(const automaton& aut)
       {

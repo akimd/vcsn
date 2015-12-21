@@ -13,7 +13,7 @@ namespace vcsn
 
   /// Find shorhest of \a s0 to the final states of \a aut
   /// by using single source shortest distance.
-  template <typename Aut>
+  template <Automaton Aut>
   weight_t_of<Aut>
   shortest_distance_to_finals(Aut aut, state_t_of<Aut> s0)
   {
@@ -23,7 +23,7 @@ namespace vcsn
 
   /// Find all shortest distances of each state
   /// to the final states of \a aut.
-  template <typename Aut>
+  template <Automaton Aut>
   std::unordered_map<state_t_of<Aut>, weight_t_of<Aut>>
   shortest_distance_to_finals(Aut aut)
   {
@@ -39,7 +39,7 @@ namespace vcsn
   /// The algorithm weight pushing.
   /// 1) Calculate shortest distance each state s to final states.
   /// 2) Update the weight of each transition by using shortest distance.
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   push_weights(const Aut& aut)
     -> decltype(::vcsn::copy(aut))
@@ -66,7 +66,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       push_weights(const automaton& aut)
       {

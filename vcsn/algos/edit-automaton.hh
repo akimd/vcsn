@@ -80,7 +80,7 @@ namespace vcsn
   /// Returns (via result()) an allocated automaton.
   ///
   /// FIXME: cannot be reused for several automata.
-  template <typename Aut>
+  template <Automaton Aut>
   class edit_automaton: public automaton_editor
   {
   public:

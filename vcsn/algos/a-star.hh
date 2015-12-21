@@ -25,7 +25,7 @@ namespace vcsn
     /// applying a-star on the given automaton with the given heuristic.
     /// Return an array corresponding to the lightest 'in' transition of
     /// every state indexed by their state number.
-    template <typename Aut>
+    template <Automaton Aut>
     struct a_star_impl
     {
       using automaton_t = Aut;
@@ -146,7 +146,7 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
                 astar_tag)

@@ -11,7 +11,7 @@ namespace vcsn
 {
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class insplitter
     {
       static_assert(labelset_t_of<Aut>::has_one(), "insplit: the labelset must have a one label");
@@ -85,7 +85,7 @@ namespace vcsn
       automaton_t res_;
     };
 
-    template<typename Aut>
+    template <Automaton Aut>
     std::enable_if_t<labelset_t_of<Aut>::has_one(), Aut>
     insplit(Aut& aut)
     {
@@ -93,7 +93,7 @@ namespace vcsn
       return insplit(aut);
     }
 
-    template<typename Aut>
+    template <Automaton Aut>
     std::enable_if_t<!labelset_t_of<Aut>::has_one(), Aut>
     insplit(Aut& aut)
     {
@@ -101,7 +101,7 @@ namespace vcsn
     }
   } // namespace detail
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   auto
   insplit(const Aut& aut)
@@ -115,7 +115,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       insplit(const automaton& aut)
       {

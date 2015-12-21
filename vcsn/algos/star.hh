@@ -14,7 +14,7 @@ namespace vcsn
   `------*/
 
   /// In-place star of an automaton.
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   star_here(Aut& res, general_tag = {})
   {
@@ -43,7 +43,7 @@ namespace vcsn
   /// In-place star of a standard automaton.
   ///
   /// See standard_visitor::visit(star).
-  template <typename Aut>
+  template <Automaton Aut>
   Aut&
   star_here(Aut& res, standard_tag)
   {
@@ -82,7 +82,7 @@ namespace vcsn
   }
 
   /// Star of an automaton.
-  template <typename Aut, typename Tag = general_tag>
+  template <Automaton Aut, typename Tag = general_tag>
   auto
   star(const Aut& aut, Tag tag = {})
     -> decltype(detail::make_join_automaton(tag, aut))
@@ -98,7 +98,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       automaton
       star(const automaton& a, const std::string& algo)
       {

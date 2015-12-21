@@ -16,7 +16,7 @@ namespace vcsn
     /// state set of another automaton.
     ///
     /// \tparam Aut the type of the wrapped input automaton.
-    template <typename Aut>
+    template <Automaton Aut>
     class partition_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
@@ -135,7 +135,7 @@ namespace vcsn
   } // namespace detail
 
   /// A partition automaton as a shared pointer.
-  template <typename Aut>
+  template <Automaton Aut>
   using partition_automaton
     = std::shared_ptr<detail::partition_automaton_impl<Aut>>;
 
@@ -144,21 +144,21 @@ namespace vcsn
   namespace detail
   {
     /// From an (input) automaton type, compute its origin_t type.
-    template <typename Aut>
+    template <Automaton Aut>
     struct origins_t_of_impl;
 
     /// The type of the origins map for a partition automaton, or a
     /// transposed one.
-    template <typename Aut>
+    template <Automaton Aut>
     using origins_t_of = typename origins_t_of_impl<Aut>::type;
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct origins_t_of_impl<partition_automaton<Aut>>
     {
       using type = typename partition_automaton<Aut>::element_type::origins_t;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct origins_t_of_impl<transpose_automaton<Aut>>
     {
       using type = origins_t_of<Aut>;
@@ -174,18 +174,18 @@ namespace vcsn
     /// we don't want to stack partition_automaton, so that we can
     /// minimize (and cominimize) repeatedly without changing the type
     /// of the automaton).
-    template <typename Aut>
+    template <Automaton Aut>
     struct partition_automaton_t_impl
     {
       using type = partition_automaton<Aut>;
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct partition_automaton_t_impl<partition_automaton<Aut>>
       : partition_automaton_t_impl<Aut>
     {};
 
-    template <typename Aut>
+    template <Automaton Aut>
     struct partition_automaton_t_impl<transpose_automaton<Aut>>
     {
       using type
@@ -194,7 +194,7 @@ namespace vcsn
   }
 
   /// The return type when calling quotient on Aut.
-  template <typename Aut>
+  template <Automaton Aut>
   using partition_automaton_t
     = typename detail::partition_automaton_t_impl<Aut>::type;
 
@@ -204,7 +204,7 @@ namespace vcsn
   /// \param res     the actual result, typically a mutable_automaton
   /// \param input   the automaton from which the partition is computed
   /// \param origins map each state of res to its states in input
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   make_partition_automaton(const fresh_automaton_t_of<Aut>& res,
                            const Aut& input,
@@ -220,7 +220,7 @@ namespace vcsn
   /// \param res     the actual result, typically a mutable_automaton
   /// \param input   the automaton from which the partition is computed
   /// \param origins map each state of res to its states in input
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   make_partition_automaton(const fresh_automaton_t_of<Aut>& res,
                            const partition_automaton<Aut>& input,
@@ -246,7 +246,7 @@ namespace vcsn
   /// \param res     the actual result, typically a mutable_automaton
   /// \param input   the automaton from which the partition is computed
   /// \param origins map each state of res to its states in input
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   make_partition_automaton(const fresh_automaton_t_of<transpose_automaton<Aut>>& res,
                            const transpose_automaton<Aut>& input,

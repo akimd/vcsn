@@ -19,18 +19,18 @@ namespace vcsn
   namespace detail
   {
     /// From an automaton, the corresponding automaton with a non-word labelset.
-    template <typename In_Aut, typename Out_Aut>
+    template <Automaton AutIn, Automaton AutOut>
     class letterizer
     {
     public:
-      using in_automaton_t = In_Aut;
+      using in_automaton_t = AutIn;
       using in_ctx_t = context_t_of<in_automaton_t>;
       using in_state_t = state_t_of<in_automaton_t>;
       using in_labelset_t = labelset_t_of<in_automaton_t>;
       using in_label_t = typename in_labelset_t::value_t;
       using in_transition_t = transition_t_of<in_automaton_t>;
 
-      using out_automaton_t = Out_Aut;
+      using out_automaton_t = AutOut;
       using out_ctx_t = context_t_of<out_automaton_t>;
       using out_state_t = state_t_of<out_automaton_t>;
       using out_labelset_t = labelset_t_of<out_automaton_t>;
@@ -97,11 +97,11 @@ namespace vcsn
     };
 
 
-    template <typename Aut>
+    template <Automaton Aut>
     using letterized_ls = letterized_traits<labelset_t_of<Aut>>;
 
     /// Letterize an automaton whose type is not letterized already.
-    template <typename Aut>
+    template <Automaton Aut>
     std::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{},
                       mutable_automaton<letterized_context<context_t_of<Aut>>>>
     letterize(const Aut& aut)
@@ -113,7 +113,7 @@ namespace vcsn
     }
 
     /// Letterize an automaton whose type is letterized: do nothing.
-    template <typename Aut>
+    template <Automaton Aut>
     std::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{},
                       const Aut&>
     letterize(const Aut& aut)
@@ -130,7 +130,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the automaton
   /// \returns              the letterized automaton
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   letterize(const Aut& aut)
     -> decltype(detail::letterize(aut))
@@ -143,7 +143,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton letterize(const automaton& aut)
       {
         return make_automaton(::vcsn::letterize(aut->as<Aut>()));
@@ -157,7 +157,7 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     std::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{}, bool>
     is_letterized(const Aut& aut)
     {
@@ -174,7 +174,7 @@ namespace vcsn
       return true;
     }
 
-    template <typename Aut>
+    template <Automaton Aut>
     std::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{}, bool>
     is_letterized(const Aut&)
     {
@@ -186,7 +186,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the automaton
   /// \returns              whether the transitions are letters
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_letterized(const Aut& aut)
   {
@@ -198,7 +198,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_letterized(const automaton& aut)
       {
         return ::vcsn::is_letterized(aut->as<Aut>());
@@ -215,7 +215,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the automaton
   /// \returns              the realtime automaton
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   realtime(const Aut& aut)
     -> decltype(proper(::vcsn::letterize(aut)))
@@ -228,7 +228,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton realtime(const automaton& aut)
       {
         return make_automaton(::vcsn::realtime(aut->as<Aut>()));
@@ -244,7 +244,7 @@ namespace vcsn
   ///
   /// \param[in] aut        the automaton
   /// \returns              whether the automaton is realtime
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_realtime(const Aut& aut)
   {
@@ -256,7 +256,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_realtime(const automaton& aut)
       {
         return ::vcsn::is_realtime(aut->as<Aut>());

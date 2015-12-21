@@ -23,7 +23,7 @@ namespace vcsn
   namespace detail
   {
     /// Compute the shortest words accepted by an automaton.
-    template <typename Aut>
+    template <Automaton Aut>
     class enumerater
     {
     public:
@@ -244,7 +244,7 @@ namespace vcsn
   /// \param aut   the automaton whose behavior to approximate
   /// \param num   number of words looked for.
   /// \param len   maximum length of words looked for.
-  template <typename Aut>
+  template <Automaton Aut>
   typename detail::enumerater<Aut>::polynomial_t
   shortest(const Aut& aut,
            boost::optional<unsigned> num = {},
@@ -259,7 +259,7 @@ namespace vcsn
   ///
   /// \param aut   the automaton whose behavior to approximate
   /// \param len   maximum length of words looked for.
-  template <typename Aut>
+  template <Automaton Aut>
   typename detail::enumerater<Aut>::polynomial_t
   enumerate(const Aut& aut, unsigned len)
   {
@@ -272,7 +272,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Num, typename Len>
+      template <Automaton Aut, typename Num, typename Len>
       polynomial
       shortest(const automaton& aut,
                boost::optional<unsigned> num,

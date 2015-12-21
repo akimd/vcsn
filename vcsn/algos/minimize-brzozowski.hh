@@ -16,11 +16,11 @@ namespace vcsn
   /// Request for Brzozowski implementation of minimize (B and free).
   struct brzozowski_tag {};
 
-  template <typename Aut>
+  template <Automaton Aut>
   using codeterminized_automaton
     = transpose_automaton<determinized_automaton<Aut>>;
 
-  template <typename Aut>
+  template <Automaton Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
     -> std::enable_if_t<is_free_boolean<Aut>(),
@@ -33,7 +33,7 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      template <Automaton Aut>
       ATTRIBUTE_NORETURN
       std::enable_if_t<!is_free_boolean<Aut>(), Aut>
       minimize(const Aut&, brzozowski_tag)

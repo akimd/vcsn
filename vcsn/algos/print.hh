@@ -28,14 +28,14 @@ namespace vcsn
   namespace detail
   {
     // FIXME: C++14 and templated variables.
-    template <typename Aut>
+    template <Automaton Aut>
     using has_fado_t
     = std::integral_constant<bool,
                              ((context_t_of<Aut>::is_lal
                                || context_t_of<Aut>::is_lan)
                               && std::is_same<weightset_t_of<Aut>, b>::value)>;
 
-    template <typename Aut>
+    template <Automaton Aut>
     auto
     fado_impl_(const Aut& aut, std::ostream& out)
       -> std::enable_if_t<has_fado_t<Aut>{}, void>
@@ -43,7 +43,7 @@ namespace vcsn
       fado(aut, out);
     }
 
-    template <typename Aut>
+    template <Automaton Aut>
     ATTRIBUTE_NORETURN
     auto
     fado_impl_(const Aut&, std::ostream&)
@@ -53,7 +53,7 @@ namespace vcsn
             " and Boolean weights");
     }
 
-    template <typename Aut>
+    template <Automaton Aut>
     auto
     grail_impl_(const Aut& aut, std::ostream& out)
       -> std::enable_if_t<has_fado_t<Aut>{}, void>
@@ -61,7 +61,7 @@ namespace vcsn
       grail(aut, out);
     }
 
-    template <typename Aut>
+    template <Automaton Aut>
     ATTRIBUTE_NORETURN
     auto
     grail_impl_(const Aut&, std::ostream&)
@@ -72,7 +72,7 @@ namespace vcsn
     }
   }
 
-  template <typename Aut>
+  template <Automaton Aut>
   std::ostream&
   print(const Aut& aut, std::ostream& out, const std::string& fmt)
   {
@@ -103,7 +103,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Ostream, typename String>
+      template <Automaton Aut, typename Ostream, typename String>
       std::ostream& print(const automaton& aut, std::ostream& o,
                           const std::string& fmt)
       {

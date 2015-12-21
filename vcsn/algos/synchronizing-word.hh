@@ -31,7 +31,7 @@ namespace vcsn
   `--------------------------------------*/
 
   /// Whether \a w synchronizes automaton \a aut.
-  template <typename Aut>
+  template <Automaton Aut>
   bool
   is_synchronized_by(const Aut& aut, const word_t_of<Aut>& w)
   {
@@ -67,7 +67,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename LabelSet>
+      template <Automaton Aut, typename LabelSet>
       bool
       is_synchronized_by(const automaton& aut, const label& word)
       {
@@ -85,7 +85,7 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut>
+    template <Automaton Aut>
     class word_synchronizer
     {
     public:
@@ -386,7 +386,7 @@ namespace vcsn
   `-----------------------------*/
 
   /// Whether this automaton is synchronizing, i.e., has synchronizing words.
-  template <typename Aut>
+  template <Automaton Aut>
   bool is_synchronizing(const Aut& aut)
   {
     vcsn::detail::word_synchronizer<Aut> sync(aut);
@@ -398,7 +398,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_synchronizing(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
@@ -413,7 +413,7 @@ namespace vcsn
   `-------------------------------*/
 
   /// Return a synchronizing word for \a aut using algo \a algo.
-  template <typename Aut>
+  template <Automaton Aut>
   word_t_of<Aut>
   synchronizing_word(const Aut& aut, const std::string& algo = "greedy")
   {
@@ -437,7 +437,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       label
       synchronizing_word(const automaton& aut, const std::string& algo)
       {

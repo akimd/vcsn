@@ -8,7 +8,7 @@ namespace vcsn
   /// State labelset.
   ///
   /// Used when representing states as labels of polynomials.
-  template <typename Aut>
+  template <Automaton Aut>
   class stateset
   {
   public:

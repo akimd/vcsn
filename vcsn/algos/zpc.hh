@@ -18,7 +18,7 @@ namespace vcsn
     ///
     /// \tparam Aut     relative the generated automaton
     /// \tparam ExpSet  relative to the expression.
-    template <typename Aut,
+    template <Automaton Aut,
               typename ExpSet>
     class zpc_visitor
       : public ExpSet::const_visitor
@@ -329,7 +329,7 @@ namespace vcsn
   ///
   /// \tparam Aut     relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
-  template <typename Aut, typename ExpSet>
+  template <Automaton Aut, typename ExpSet>
   inline
   Aut
   zpc(const context_t_of<Aut>& ctx,

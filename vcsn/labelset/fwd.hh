@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/core/automaton.hh>
 #include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
@@ -17,7 +18,7 @@ namespace vcsn
   class oneset;
 
   // stateset.hh.
-  template <typename Aut>
+  template <Automaton Aut>
   class stateset;
 
   // tupleset.hh.

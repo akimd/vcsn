@@ -80,10 +80,10 @@ namespace vcsn
 
     */
 
-    template<typename Weightset>
+    template <typename Weightset>
     struct select
     {
-      template<typename Reduc, typename Vector>
+      template <typename Reduc, typename Vector>
       static unsigned
       find_pivot(Reduc* that, const Vector& v,
                  unsigned begin, unsigned* permutation)
@@ -91,7 +91,7 @@ namespace vcsn
         return that->find_pivot(v, begin, permutation);
       }
 
-      template<typename Reduc, typename Vector>
+      template <typename Reduc, typename Vector>
       static void
       reduce_vector(Reduc* that, Vector& vbasis,
                     Vector& current, unsigned b, unsigned* permutation)
@@ -99,7 +99,7 @@ namespace vcsn
         that->reduce_vector(vbasis, current, b, permutation);
       }
 
-      template<typename Reduc, typename Vector>
+      template <typename Reduc, typename Vector>
       static void
       normalisation_vector(Reduc* that, Vector& v,
                            unsigned pivot, unsigned* permutation)
@@ -107,14 +107,14 @@ namespace vcsn
         that->normalisation_vector(v, pivot, permutation);
       }
 
-      template<typename Reduc, typename Basis>
+      template <typename Reduc, typename Basis>
       static void
       bottom_up_reduction(Reduc* that, Basis& basis, unsigned* permutation)
       {
         that->bottom_up_reduction(basis, permutation);
       }
 
-      template<typename Reduc, typename Basis, typename Vector>
+      template <typename Reduc, typename Basis, typename Vector>
       static void
       vector_in_new_basis(Reduc* that, Basis& basis,
                           Vector& current, Vector& new_vector,
@@ -127,7 +127,7 @@ namespace vcsn
     template <>
     struct select<q> : select<void>
     {
-      template<typename Reduc, typename Vector>
+      template <typename Reduc, typename Vector>
       static unsigned
       find_pivot(Reduc* that, const Vector& v,
                  unsigned begin, unsigned* permutation)
@@ -139,7 +139,7 @@ namespace vcsn
     template <>
     struct select<r> : select<void>
     {
-      template<typename Reduc, typename Vector>
+      template <typename Reduc, typename Vector>
       static unsigned
       find_pivot(Reduc* that, const Vector& v,
                  unsigned begin, unsigned* permutation)
@@ -151,7 +151,7 @@ namespace vcsn
     template <>
     struct select<z> : select<void>
     {
-      template<typename Reduc, typename Vector>
+      template <typename Reduc, typename Vector>
       static unsigned
       find_pivot(Reduc* that, const Vector& v,
                  unsigned begin, unsigned* permutation)
@@ -171,11 +171,11 @@ namespace vcsn
       static void normalisation_vector(Reduc*, Vector&, unsigned, unsigned*)
       {}
 
-      template<typename Reduc, typename Basis>
+      template <typename Reduc, typename Basis>
       static void bottom_up_reduction(Reduc*, Basis&, unsigned*)
       {}
 
-      template<typename Reduc, typename Basis, typename Vector>
+      template <typename Reduc, typename Basis, typename Vector>
       static void
       vector_in_new_basis(Reduc* that, Basis& basis,
                           Vector& current, Vector& new_vector,
@@ -185,7 +185,7 @@ namespace vcsn
       }
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     class left_reductioner
     {
       static_assert(labelset_t_of<Aut>::is_free(),
@@ -593,7 +593,7 @@ namespace vcsn
 
   }
 
-  template<typename Aut>
+  template <Automaton Aut>
   auto
   left_reduce(const Aut& input)
     -> decltype(copy(input))
@@ -603,7 +603,7 @@ namespace vcsn
   }
 
 
-  template<typename Aut>
+  template <Automaton Aut>
   auto
   reduce(const Aut& input)
     -> decltype(copy(input))
@@ -616,7 +616,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       automaton
       reduce(const automaton& aut)
       {

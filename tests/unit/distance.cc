@@ -7,7 +7,7 @@
 
 using namespace vcsn;
 
-template <typename Aut>
+template <Automaton Aut>
 static void print_fw(std::vector<std::vector<weight_t_of<Aut>>> fw)
 {
   using ws_t = weightset_t_of<Aut>;

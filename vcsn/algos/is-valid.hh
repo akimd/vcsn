@@ -24,7 +24,7 @@ namespace vcsn
 
     /// Copy of \a aut, with absolute values.
     /// Templated to avoid useless instantiations.
-    template <typename Aut>
+    template <Automaton Aut>
     fresh_automaton_t_of<Aut>
     absval(const Aut& aut)
     {
@@ -38,7 +38,7 @@ namespace vcsn
 
     /// Whether proper_here(aut) succeeds.
     /// Destroys aut.
-    template <typename Aut>
+    template <Automaton Aut>
     bool is_properable(Aut&& aut)
     {
       try
@@ -54,7 +54,7 @@ namespace vcsn
     }
 
 
-    template <typename Aut, bool has_one = context_t_of<Aut>::has_one()>
+    template <Automaton Aut, bool has_one = context_t_of<Aut>::has_one()>
     class is_valider
     {
     public:
@@ -122,7 +122,7 @@ namespace vcsn
       }
     };
 
-    template <typename Aut>
+    template <Automaton Aut>
     class is_valider<Aut, false>
     {
       using automaton_t = std::remove_cv_t<Aut>;
@@ -136,7 +136,7 @@ namespace vcsn
   }
 
 
-  template <typename Aut>
+  template <Automaton Aut>
   inline
   bool is_valid(const Aut& aut)
   {
@@ -148,7 +148,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <Automaton Aut>
       bool is_valid(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();

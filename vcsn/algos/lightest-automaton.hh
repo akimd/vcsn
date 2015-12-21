@@ -16,7 +16,7 @@ namespace vcsn
   /// state. Then, reconstruct the path keeping the states and transitions
   /// we met. Now that we have the sets of elements to keep we can construct
   /// a new automaton using these states/transitions.
-  template <typename Aut, typename Algo = dijkstra_tag>
+  template <Automaton Aut, typename Algo = dijkstra_tag>
   fresh_automaton_t_of<Aut>
   lightest_automaton(const Aut& aut, Algo algo = {})
   {
@@ -37,7 +37,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <Automaton Aut, typename String>
       automaton
       lightest_automaton(const automaton& aut, const std::string& algo)
       {
