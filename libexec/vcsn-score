@@ -391,7 +391,7 @@ bench('a.proper()',
 # to-expression.
 bench('a.expression("associative", "delgado")',
       'a = ladybird(2000)',
-      setup=['a = vcsn.context("lal_char(a-c), b").ladybird(2000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'])
 
 r = '[a-d]?{100}'
 bench('a.expression("associative", "naive")',
@@ -401,7 +401,7 @@ bench('a.expression("associative", "naive")',
 
 bench('a.expression("associative", "naive")',
       'a = ladybird(8000)',
-      setup=['a = vcsn.context("lal_char(a-c), b").ladybird(8000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(8000)'])
 
 r = '[a-d]?{15}'
 bench('a.expression("linear", "delgado")',
@@ -411,7 +411,7 @@ bench('a.expression("linear", "delgado")',
 
 bench('a.expression("linear", "delgado")',
       'a = ladybird(2000)',
-      setup=['a = vcsn.context("lal_char(a-c), b").ladybird(2000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'])
 
 r = '[a-d]?{9}'
 bench('a.expression("linear", "naive")',
@@ -422,7 +422,7 @@ bench('a.expression("linear", "naive")',
 
 bench('a.expression("linear", "naive")',
       'a = ladybird(4000)',
-      setup=['a = vcsn.context("lal_char(a-c), b").ladybird(4000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(4000)'])
 
 # Other conjunction and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new conjunction algorithm.
@@ -525,7 +525,7 @@ bench_minimize('lal_char(a-k), z', '[a-g]{300}', ['weighted'])
 
 bench('a.synchronizing_word()',
       'a = de_bruijn(6)',
-      setup='a = vcsn.context("lal_char(a-c), b").de_bruijn(6).determinize()')
+      setup='a = vcsn.context("lal_char(abc), b").de_bruijn(6).determinize()')
 
 # reduce.
 ctx = "lal_char(a-k), z"

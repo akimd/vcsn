@@ -44,23 +44,23 @@ namespace vcsn
       {
         profile(state_t state, const self_t& d)
           : state_(state)
-          , dijkstra_(d)
+          , self_(d)
         {}
 
         bool operator<(const profile& rhs) const
         {
-          auto ws = *dijkstra_.aut_->weightset();
-          if (dijkstra_.res_[state_] == dijkstra_.aut_->null_transition())
+          auto ws = *self_.aut_->weightset();
+          if (self_.res_[state_] == self_.aut_->null_transition())
             return true;
-          else if (dijkstra_.res_[rhs.state_] == dijkstra_.aut_->null_transition())
+          else if (self_.res_[rhs.state_] == self_.aut_->null_transition())
             return false;
           else
-            return ws.less(dijkstra_.dist_[rhs.state_], dijkstra_.dist_[state_]);
+            return ws.less(self_.dist_[rhs.state_], self_.dist_[state_]);
         }
 
         friend std::ostream& operator<<(std::ostream& o, const profile& p)
         {
-          auto d = p.dijkstra_;
+          auto d = p.self_;
           auto ws = *d.aut_->weightset();
           d.aut_->print_state_name(p.state_, o) << ':';
           if (d.res_[p.state_] != d.aut_->null_transition())
@@ -70,7 +70,7 @@ namespace vcsn
         }
 
         state_t state_;
-        const self_t& dijkstra_;
+        const self_t& self_;
       };
 
       using heap_t = boost::heap::fibonacci_heap<profile>;

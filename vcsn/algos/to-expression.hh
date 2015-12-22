@@ -55,6 +55,8 @@ namespace vcsn
                    << 'l' << p.has_loop_;
         }
 
+        /// Number of strictly incoming transitions, times the number
+        /// of strictly outgoing transitions.
         size_t size_;
         bool has_loop_ = false;
         state_t state_;
