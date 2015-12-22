@@ -35,8 +35,17 @@ args = parser.parse_args()
 last_setup = ['pass']
 
 
+def ws_signature(ws):
+    if ws.endswith('min'):
+        return ws[:-3].upper() + 'min'
+    elif ws.endswith('mp'):
+        return ws[:-2].upper() + 'min'
+    else:
+        return ws.upper()
+
 def ctx_signature(ctx):
-    'A short, nice looking, description of a context.'
+    '''A short, nice looking, description of a context.  To replace eventually
+    with `ctx.format()`.'''
     ctx = re.sub(r'lal_char\((.*?)\)',
                  r'[\1]',
                  ctx)
@@ -51,7 +60,7 @@ def ctx_signature(ctx):
                                      for x in m.group(1).split(',')]),
                  ctx)
     ctx = re.sub(r'^(.*), *(.*)$',
-                 lambda m: '{} -> {}'.format(m.group(1), m.group(2).upper()),
+                 lambda m: '{} -> {}'.format(m.group(1), ws_signature(m.group(2))),
                  ctx)
     return ctx
 
@@ -175,10 +184,12 @@ for fmt in ['dot', 'efsm', 'fado']:
 
 
 def bench_derived_term(alphabet, exp, algo, number=10):
+    ctx = "lal_char({}), z".format(alphabet)
     bench('r.derived_term("{}")'.format(algo),
-          'r = {}, c = [{}] -> Z'.format(exp, alphabet),
-          setup=['e = "{}"'.format(exp),
-                 'c = vcsn.context("lal_char({}), z")'.format(alphabet),
+          'r = {}, c = {}'.format(exp, ctx_signature(ctx)),
+          setup=['ctx = "{}"'.format(ctx),
+                 'e = "{}"'.format(exp),
+                 'c = vcsn.context(ctx)',
                  'r = c.expression(e)'],
           number=number)
 
@@ -200,18 +211,22 @@ bench_derived_term('a', 'a?{150}', 'derivation', number=1)
 bench_derived_term('a', 'a?{150}', 'expansion', number=1)
 
 # standard
+ctx = 'lal_char(a-z), z'
 e = "(a+b)*b(<2>a+<2>b){20000}"
 bench('r.standard()',
-      'r = {}, c = [a-z] -> Z'.format(e),
-      setup=['e = "{}"'.format(e),
-             '''r = vcsn.context('lal_char(a-z), z').expression(e)'''],
+      'r = {}, c = {}'.format(e, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'e = "{}"'.format(e),
+             'r = vcsn.context(ctx).expression(e)'],
       number=10)
 
 # thompson
+ctx = 'lan_char(a-z), z'
 bench('r.thompson()',
-      'r = {}, c = [a-z]? -> Z'.format(e),
-      setup=['e = "{}"'.format(e),
-             '''r = vcsn.context('lan_char(a-z), z').expression(e)'''],
+      'r = {}, c = {}'.format(e, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'e = "{}"'.format(e),
+             'r = vcsn.context(ctx).expression(e)'],
       number=10)
 
 
@@ -358,11 +373,13 @@ for algo in ['a-star', 'bellman-ford', 'dijkstra']:
           number=1 if algo == 'bellman-ford' else 10)
 
 # sort.
+ctx = "lal_char(a-e), z"
 r = "[a-e]?{700}"
 bench('a.sort()',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+      setup=['c = vcsn.context(ctx)',
+             'r = "{}"'.format(r),
+             'a = c.expression(r).standard()'])
 
 # proper.
 r = "a?{1200}"
@@ -445,40 +462,50 @@ bench('a & {}'.format(n),
              'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
 # compose.
+ctx = "lat<lan<char(a-z)>, lan<char(a-z)>>, b"
 r = "([a-z]|[a-z])?{20}"
 bench('a.compose(a2)',
-      'a2 = std({}); a = std(a|a)'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<lan<char(a-z)>, lan<char(a-z)>>, b")',
+      'a2 = std({}), a = std(a|a)'.format(r),
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression("a|a").standard()',
              'a2 = c.expression(r).automaton()'],
       number=10)
 
+ctx = "lat<lal_char(a-z), lal_char(a-z)>, b"
 r = "['(a,a)'-'(i,z)']{4}"
 bench('a.compose(a)',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<lal_char(a-z), lal_char(a-z)>, b")',
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'])
 
+ctx = "lat<lan_char(a-z), lan_char(a-z)>, b"
 bench('a.compose(a)',
       'a = thompson({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<lan_char(a-z), lan_char(a-z)>, b")',
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression(r).thompson()'])
 
 # has_bounded_lag
-r = "(['(a,x)'-'(b,y)']{1000})*"
+ctx = "lat<lan_char(abc), lan_char(xyz)>, b"
+r = "['(a,x)'-'(b,y)']{1000}*"
 bench('a.has_bounded_lag()',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b")',
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'])
-r = "(['(a,x)'-'(b,y)']*){600}"
+ctx = "lat<lan_char(abc), lan_char(xyz)>, b"
+r = "['(a,x)'-'(b,y)']*{600}"
 bench('a.has_bounded_lag()',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<lan_char(a-c),lan_char(x-z)>, b")',
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'])
 
 
@@ -501,62 +528,79 @@ bench('a.synchronizing_word()',
       setup='a = vcsn.context("lal_char(a-c), b").de_bruijn(6).determinize()')
 
 # reduce.
+ctx = "lal_char(a-k), z"
 r = "[a-g]{300}"
 bench('a.reduce()',
-      'a = std({}), c = [a-k] -> Z'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-k), z").expression(r).standard()'])
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
+             'r = "{}"'.format(r),
+             'a = c.expression(r).standard()'])
+ctx = "lal_char(a-k), q"
 bench('a.reduce()',
-      'a = std({}), c = [a-k] -> Q'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-k), q").expression(r).standard()'])
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).standard()'])
 
 # twins property.
+ctx = "lal_char(abc), zmin"
 r = "[a-c]{200}*+[a-c]{200}*"
 bench('a.has_twins_property()',
-      'a = std({}, "associative"), c = [abc] -> Q'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-c), zmin").expression(r, "associative").standard()'],
+      'a = std({}, "associative"), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}".format(ctx)',
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r, "associative").standard()'],
       number=20)
 
 # cycle ambiguous.
+ctx = "lal_char(abc), z"
 r = "[a-c]{2000}(<2>ab+a<3>b)"
 bench('a.is_cycle_ambiguous()',
-      'a = std({}), c = [abc] -> B'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(abc), z").expression(r).standard()'],
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).standard()'],
       number=20)
 
 # ambiguous.
+ctx = "lal_char(abc), z"
 r = "[a-c]{2000}(<2>ab+a<3>b)"
 bench('a.is_ambiguous()',
-      'a = std({}), c = [abc] -> B'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(abc), z").expression(r).standard()'],
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).standard()'],
       number=20)
 
 # is_functional.
-r = "'(a, x)'{2000}'(b, y)'"
+ctx = "lat<lal_char(ab), lal_char(xy)>, b"
+r = "(a|x){2000}(b|y)"
 bench('a.is_functional()',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lat<lal_char(ab), lal_char(xy)>, b").expression(r).standard()'],
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).standard()'],
       number=100)
 
 # accessible.
+ctx = "lan_char(a-z), b"
 r = "[a-m]{20000}"
 bench('a.accessible()',
       'a = thompson({}).proper(False)'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lan_char(a-z), b").expression(r).thompson().proper(False)'])
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).thompson().proper(False)'])
 
 # scc.
+ctx = "lal_char(abc), b"
 r = '(abc)*{1000}'
 for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
     bench('a.scc("{}")'.format(algo),
           'a = std({})'.format(r),
-          setup=['r = "{}"'.format(r),
-                 'c = vcsn.context("lal_char(abc), b")',
+          setup=['ctx = "{}"'.format(ctx),
+                 'r = "{}"'.format(r),
+                 'c = vcsn.context(ctx)',
                  'a = c.expression(r).standard()'],
           number=20)
 
@@ -569,32 +613,40 @@ bench('p.trie()',
              'p = m ** 6'])
 
 # synchronize
+ctx = "lat<law_char, law_char>, b"
 r = r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn){2000}"""
 bench('a.synchronize()',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<law_char, law_char>, b")',
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'])
 
 # is_synchronized
+ctx = "lat<law_char, law_char>, b"
 r = r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn){500000}"""
 bench('a.is_synchronized()',
       'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'c = vcsn.context("lat<law_char, law_char>, b")',
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'])
 
 # weight_series
+ctx = "lal_char(a-z), nmin"
 r = "[a-z]{4000}"
 bench('a.weight_series()',
-      'a = std({}), c = [a-z] -> Nmin'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-z), nmin").expression(r).standard()'],
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).standard()'],
       number=20)
 
+ctx = "lal_char(a-z), z"
 r = "[a-z]{200}"
 bench('a.weight_series()',
-      'a = std({}), c = [a-z] -> Z'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-z), z").expression(r).standard()'],
+      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+      setup=['ctx = "{}"'.format(ctx),
+             'r = "{}"'.format(r),
+             'a = vcsn.context(ctx).expression(r).standard()'],
       number=20)

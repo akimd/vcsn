@@ -129,6 +129,29 @@ def normalize(k):
     k = re.sub(r'(a.has_twins_property.* # a = std\([^,]*?)\)',
                r'\1, "associative")', k)
 
+    # has_twins_property was run on Zmin, but with Q displayed.
+    k = re.sub(r'(a.has_twins_property.* # .*)Q,',
+               r'\1Zmin,', k)
+
+    # is_ambiguous and is_cycle_ambiguous run on Z, but with B
+    # displayed.
+    k = re.sub(r'(a.is_(cycle_)?ambiguous.* # .*)B,',
+               r'\1Z,', k)
+
+    # ZMIN -> Zmin.
+    k = re.sub(r'([NRZ])MIN', r'\1min', k)
+
+    # Nicer notation for tuples.
+    k = k.replace("'(a, x)'{2000}'(b, y)'", "(a|x){2000}(b|y)")
+
+    # Useless parens.
+    k = k.replace("(['(a,x)'-'(b,y)']*){600}", "['(a,x)'-'(b,y)']*{600}")
+    k = k.replace("(['(a,x)'-'(b,y)']{1000})*", "['(a,x)'-'(b,y)']{1000}*")
+
+    # Use of `;` instead of `,`.
+    k = re.sub(r'(a\.compose\(a2\).*);', r'\1,', k)
+
+    # Final format.
     k = '{:20s} # {}'.format(*map(str.strip, k.split('#', 2)))
     return k
 
