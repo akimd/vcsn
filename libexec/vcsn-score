@@ -142,22 +142,23 @@ bench('b.format("text")',
       number=100000)
 
 # I/O on expressions.
-# e{N} is amazingly costly, which is bad, since we often use it to
-# build large automata for benches.
 e = '[ab]{20000}'
 bench('b.expression(e)',
       'e = {}'.format(e),
       setup='e = "{}"'.format(e),
       number=1000)
 
+e = '"(\e+a)" * 500'
 bench('b.expression(e)',
-      'e = "(\e+a)" * 500',
-      setup='''e = '(\e+a)' * 500''',
+      'e = {}'.format(e),
+      setup='e = {}'.format(e),
       number=100)
+
+e = '"(\e+a)" * 500'
 bench('r.format("text")',
-      'r = b.expression("(\e+a)" * 500)',
-      setup=['''e = '(\e+a)' * 500''',
-             '''r = b.expression(e) '''],
+      'r = b.expression({})'.format(e),
+      setup=['e = {}'.format(e),
+             'r = b.expression(e)'],
       number=1000)
 
 # Output should be fast.
@@ -365,12 +366,12 @@ bench('a.lightest(5000)',
 # lightest-automaton
 ctx = 'lal_char(a-e), zmin'
 r = "[a-e]?{150}"
-for algo in ['a-star', 'bellman-ford', 'dijkstra']:
+for algo, number in [('a-star', 10), ('bellman-ford', 1), ('dijkstra', 100)]:
     bench('a.lightest_automaton("{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['c = vcsn.context(ctx)',
                  'a = c.expression(r).standard()'],
-          number=1 if algo == 'bellman-ford' else 10)
+          number=number)
 
 # sort.
 ctx = "lal_char(a-e), z"
@@ -506,7 +507,8 @@ bench('a.has_bounded_lag()',
       setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
              'c = vcsn.context(ctx)',
-             'a = c.expression(r).standard()'])
+             'a = c.expression(r).standard()'],
+      number=10)
 
 
 def bench_minimize(ctx, r, algos):
@@ -649,4 +651,4 @@ bench('a.weight_series()',
       setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
              'a = vcsn.context(ctx).expression(r).standard()'],
-      number=20)
+      number=10)
