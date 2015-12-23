@@ -189,8 +189,8 @@ namespace vcsn
     value_t
     conv(self_t, value_t v) const
     {
-      require(is_special(v) || is_valid(v),
-              *this, ": conv: invalid label: ", str_escape(v));
+      VCSN_REQUIRE(is_special(v) || is_valid(v),
+                   *this, ": conv: invalid label: ", str_escape(v));
       return v;
     }
 

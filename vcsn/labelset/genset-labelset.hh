@@ -78,8 +78,8 @@ namespace vcsn
       get_letter(std::istream& i, bool quoted = true) const
       {
         letter_t res = this->genset()->get_letter(i, quoted);
-        require(this->has(res),
-                "invalid label: unexpected ", str_escape(res));
+        VCSN_REQUIRE(this->has(res),
+                     "invalid label: unexpected ", str_escape(res));
         return res;
       }
 

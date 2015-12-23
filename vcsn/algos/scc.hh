@@ -599,9 +599,9 @@ namespace vcsn
 
       const component_t& component(unsigned num) const
       {
-        require(num < components_.size(),
-                "component: invalid component number: ",
-                num, ": there are ", components_.size(), " components");
+        VCSN_REQUIRE(num < components_.size(),
+                     "component: invalid component number: ",
+                     num, ": there are ", components_.size(), " components");
         return components_[num];
       }
 

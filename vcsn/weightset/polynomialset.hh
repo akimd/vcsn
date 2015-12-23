@@ -1056,10 +1056,10 @@ namespace vcsn
           //
           // However, we must have at least a weight: a completely
           // empty mononial ($ -> 0 "<2>,") is invalid.
-          require(weighted,
-                  sname(), ": conv: invalid monomial: ",
-                  str_escape(peek),
-                  " (did you mean \\e or \\z?)");
+          VCSN_REQUIRE(weighted,
+                       sname(), ": conv: invalid monomial: ",
+                       str_escape(peek),
+                       " (did you mean \\e or \\z?)");
           res = labelset()->special();
         }
       else

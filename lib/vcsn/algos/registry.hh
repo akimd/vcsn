@@ -83,11 +83,11 @@ namespace vcsn
             {
               vcsn::dyn::compile(name_, sig);
               auto fun = get0(sig);
-              require(fun,
-                      name_,
-                      ": compilation succeeded, "
-                      "but function is unavailable\n",
-                      signatures(sig));
+              VCSN_REQUIRE(fun,
+                           name_,
+                           ": compilation succeeded, "
+                           "but function is unavailable\n",
+                           signatures(sig));
               return fun;
             }
           catch (const jit_error& e)

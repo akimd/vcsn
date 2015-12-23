@@ -725,8 +725,8 @@ namespace vcsn
     else
       {
         res = std::make_shared<star_t>(e);
-        require(!ids_.is_distributive() || is_valid(*this, res),
-                "star: not starrable: ", to_string(self(), e));
+        VCSN_REQUIRE(!ids_.is_distributive() || is_valid(*this, res),
+                     "star: not starrable: ", to_string(self(), e));
       }
 
     return res;
@@ -1039,7 +1039,8 @@ namespace vcsn
   {
     using boost::range::find;
     value_t res = zero();
-    auto gens = labelset()->generators();
+    const auto& ls = *labelset();
+    auto gens = ls.generators();
     // FIXME: This piece of code screams for factoring.  Yet, I want
     // to avoid useless costs such as building a empty/full set of
     // letters for [^].
@@ -1050,18 +1051,18 @@ namespace vcsn
         {
           auto i = find(gens, cc.first);
           auto end = std::find(i, std::end(gens), cc.second);
-          require(end != std::end(gens),
-                  self(), ": invalid letter interval: ",
-                  to_string(*labelset(), labelset()->value(std::get<0>(cc))),
-                  '-',
-                  to_string(*labelset(), labelset()->value(std::get<1>(cc))));
+          VCSN_REQUIRE(end != std::end(gens),
+                       self(), ": invalid letter interval: ",
+                       to_string(*labelset(), ls.value(std::get<0>(cc))),
+                       '-',
+                       to_string(*labelset(), ls.value(std::get<1>(cc))));
           for (++end; i != end; ++i)
-            res = add(res, atom(labelset()->value(*i)));
+            res = add(res, atom(ls.value(*i)));
         }
     // [^].
     else if (ccs.empty())
       for (auto l: gens)
-        res = add(res, atom(labelset()->value(l)));
+        res = add(res, atom(ls.value(l)));
     // [^a-z].
     else
       {
@@ -1071,17 +1072,17 @@ namespace vcsn
           {
             auto i = find(gens, cc.first);
             auto end = std::find(i, std::end(gens), cc.second);
-            require(end != std::end(gens),
-                    "invalid letter interval: ",
-                    to_string(*labelset(), labelset()->value(std::get<0>(cc))),
-                    '-',
-                    to_string(*labelset(), labelset()->value(std::get<1>(cc))));
+            VCSN_REQUIRE(end != std::end(gens),
+                         "invalid letter interval: ",
+                         to_string(*labelset(), ls.value(std::get<0>(cc))),
+                         '-',
+                         to_string(*labelset(), ls.value(std::get<1>(cc))));
             for (++end; i != end; ++i)
               accepted.emplace(*i);
           }
         for (auto c: gens)
           if (!has(accepted, c))
-            res = add(res, atom(labelset()->value(c)));
+            res = add(res, atom(ls.value(c)));
       }
     require(!is_zero(res),
             "invalid empty letter class");

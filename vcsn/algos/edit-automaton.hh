@@ -179,12 +179,12 @@ namespace vcsn
               // one.
               auto e = conv(ps_, entry, sep_);
               auto i = begin(e);
-              require(e.size() == 1
-                      && (res_->labelset()->is_special(label_of(*i))
-                          || res_->labelset()->is_one(label_of(*i))),
-                      "edit_automaton: invalid ",
-                      s == res_->pre() ? "initial" : "final",
-                      " entry: ", entry.get());
+              VCSN_REQUIRE(e.size() == 1
+                           && (res_->labelset()->is_special(label_of(*i))
+                               || res_->labelset()->is_one(label_of(*i))),
+                           "edit_automaton: invalid ",
+                           s == res_->pre() ? "initial" : "final",
+                           " entry: ", entry.get());
               res_->add_transition(s, d,
                                    res_->prepost_label(), weight_of(*i));
             }

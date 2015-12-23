@@ -543,10 +543,10 @@ namespace vcsn
           auto es = eset_.template project<Tape>();
           auto res = e;
           es.denormalize(res);
-          require(es.expressionset().weightset()->is_zero(res.constant),
-                  es, ": to-expansion: cannot denormalize ",
-                  to_string(es, res),
-                  ", need support for label one (the empty label)");
+          VCSN_REQUIRE(es.expressionset().weightset()->is_zero(res.constant),
+                       es, ": to-expansion: cannot denormalize ",
+                       to_string(es, res),
+                       ", need support for label one (the empty label)");
           return res.polynomials;
         }
 

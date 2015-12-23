@@ -132,7 +132,7 @@ namespace vcsn
           {
             is.ignore();
             int c = is.get();
-            require(c == 'o', "invalid value: o", str_escape(c));
+            VCSN_REQUIRE(c == 'o', "invalid value: o", str_escape(c));
             res = zero();
           }
         else if (!(is >> res))

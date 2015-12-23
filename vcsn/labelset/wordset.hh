@@ -212,8 +212,8 @@ namespace vcsn
       else
         {
           auto res = value(v);
-          require(is_valid(res),
-                  *this, ": conv: invalid label: ", str_escape(v));
+          VCSN_REQUIRE(is_valid(res),
+                       *this, ": conv: invalid label: ", str_escape(v));
           return res;
         }
     }
@@ -299,9 +299,9 @@ namespace vcsn
     static value_t ldiv(const value_t& w1, const value_t& w2)
     {
       using boost::algorithm::starts_with;
-      require(starts_with(w2, w1),
-              sname(), ": ldiv: invalid arguments: ", str_escape(w1),
-              ", ", str_escape(w2));
+      VCSN_REQUIRE(starts_with(w2, w1),
+                   sname(), ": ldiv: invalid arguments: ", str_escape(w1),
+                   ", ", str_escape(w2));
       return {begin(w2) + size(w1), end(w2)};
     }
 

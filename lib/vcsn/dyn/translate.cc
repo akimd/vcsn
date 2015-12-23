@@ -307,7 +307,7 @@ namespace vcsn
               first = false;
             }
           lt_dlhandle lib = lt_dlopen((base + ".so").c_str());
-          require(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
+          VCSN_REQUIRE(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.

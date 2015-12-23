@@ -71,10 +71,23 @@ namespace vcsn
   }
 
   /// If \a b is not verified, raise an error with \a args as message.
+  ///
+  /// Beware that the arguments are, of course, always evaluated.  So
+  /// avoid passing costly function calls.  See VCSN_REQUIRE.
   template <typename Bool, typename... Args>
   inline void require(Bool b, Args&&... args)
   {
     if (!b)
       raise(std::forward<Args>(args)...);
   }
-};
+}
+
+/// A macro similar to require.
+///
+/// Its point is to avoid the cost of the evaluation of the variadic
+/// arguments.
+#define VCSN_REQUIRE(Cond, ...)                 \
+  do {                                          \
+    if (!(Cond))                                \
+      ::vcsn::raise(__VA_ARGS__);               \
+  } while (false)

@@ -30,10 +30,10 @@ namespace vcsn
             "divkbaseb: divisor cannot be 0");
     require(2 <= base,
             "divkbaseb: base (", base, ") must be at least 2");
-    require(base <= letters.size(),
-            "divkbaseb: base (", base,
-            ") must be less than or equal to the alphabet size (",
-            letters.size(), ')');
+    VCSN_REQUIRE(base <= letters.size(),
+                 "divkbaseb: base (", base,
+                 ") must be less than or equal to the alphabet size (",
+                 letters.size(), ')');
 
     automaton_t res = make_shared_ptr<automaton_t>(ctx);
 

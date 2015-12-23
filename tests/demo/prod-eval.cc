@@ -26,8 +26,7 @@ namespace vcsn
     {
       std::istringstream is{w};
       auto res = read_label(make_word_context(ctx), is);
-      vcsn::require(is.peek() == EOF,
-                    "unexpected trailing characters: ", is);
+      require(is.peek() == EOF, "unexpected trailing characters: ", is);
       return res;
     }
   }
@@ -39,9 +38,9 @@ namespace vcsn
     dyn::automaton res = dyn::read_automaton(f);
     // Automaton typename.
     auto vname = res->vname();
-    require(vname == Aut::element_type::sname(),
-            f, ": invalid context: ", vname,
-            ", expected: ", Aut::element_type::sname());
+    VCSN_REQUIRE(vname == Aut::element_type::sname(),
+                 f, ": invalid context: ", vname,
+                 ", expected: ", Aut::element_type::sname());
     return std::move(res->as<Aut>());
   }
 
@@ -52,8 +51,7 @@ namespace vcsn
     auto c = make_word_context(ctx);
     std::istringstream is{w};
     auto res = read_label(make_word_context(ctx), is);
-    vcsn::require(is.peek() == EOF,
-                  "unexpected trailing characters: ", is);
+    require(is.peek() == EOF, "unexpected trailing characters: ", is);
     return res;
   }
 }

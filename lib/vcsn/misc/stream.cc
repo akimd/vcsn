@@ -55,8 +55,9 @@ namespace vcsn
         s.append(1, c);
         --cnt;
       }
-    require(s == expect,
-            "unexpected: ", str_escape(s), ": expected ", str_escape(expect));
+    VCSN_REQUIRE(s == expect,
+                 "unexpected: ", str_escape(s),
+                 ": expected ", str_escape(expect));
     return expect;
   }
 
@@ -65,7 +66,7 @@ namespace vcsn
   get_file_contents(const std::string& file)
   {
     std::ifstream in(file.c_str(), std::ios::in | std::ios::binary);
-    require(in.good(), "cannot read file: ", file, ": ", strerror(errno));
+    VCSN_REQUIRE(in.good(), "cannot read file: ", file, ": ", strerror(errno));
 
     std::string res;
     in.seekg(0, std::ios::end);
@@ -85,8 +86,8 @@ namespace vcsn
     else
       {
         res.reset(new std::ifstream(file.c_str()));
-        require(res->good(),
-                "cannot open ", file, " for reading: ", strerror(errno));
+        VCSN_REQUIRE(res->good(),
+                     "cannot open ", file, " for reading: ", strerror(errno));
       }
     return res;
   }
@@ -100,8 +101,8 @@ namespace vcsn
     else
       {
         res.reset(new std::ofstream(file.c_str()));
-        require(res->good(),
-                "cannot open ", file, " for writing: ", strerror(errno));
+        VCSN_REQUIRE(res->good(),
+                     "cannot open ", file, " for writing: ", strerror(errno));
       }
     return res;
   }

@@ -152,8 +152,8 @@ namespace vcsn
     conv(const LabelSet& ls,
          typename LabelSet::value_t v) const
     {
-      require(ls.is_one(v),
-              sname(), ": conv: invalid label: ", to_string(ls, v));
+      VCSN_REQUIRE(ls.is_one(v),
+                   sname(), ": conv: invalid label: ", to_string(ls, v));
       return one();
     }
 

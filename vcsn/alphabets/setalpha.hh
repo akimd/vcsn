@@ -184,8 +184,7 @@ namespace vcsn
     word_t
     get_word(std::istream& i) const
     {
-      require(!i.bad(),
-              "conv: invalid stream");
+      require(!i.bad(), "conv: invalid stream");
       // Either an empty word: "\e", or a sequence of non-separators.
       if (i.good() && i.peek() == '\\')
         {
@@ -218,8 +217,7 @@ namespace vcsn
              && c != ')')
         {
           letter_t l = L::get_letter(i, true);
-          require(has(l),
-                  *this, ": invalid letter: ", str_escape(l));
+          VCSN_REQUIRE(has(l), *this, ": invalid letter: ", str_escape(l));
           // FIXME: in-place mul or temporary vector to build the
           // string.
           res = this->mul(res, l);

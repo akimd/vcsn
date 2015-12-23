@@ -395,6 +395,10 @@ this is because the core of sort is a loop calling new_transition_copy,
 which before did not check that the letter was in the alphabet, and now it
 does.  In this case, it is guaranteed to be, so it is uselessly costly.
 
+On the other hand, the commit after d8d4852cc738a845bd8da3b0904b63658610124c
+restored much better performances by using VCSN_REQUIRE instead of require.
+Check if there is still performances to gain without this VCSN_REQUIRE.
+
 ** trie
 We want to be able to load directly from a file.  Are there any possible
 optimization when the input is (mostly) sorted?  Actually, when the input is
