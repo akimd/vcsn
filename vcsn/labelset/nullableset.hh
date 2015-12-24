@@ -652,7 +652,7 @@ namespace vcsn
   Res                                                         \
   meet(const Lhs& lhs, const Rhs& rhs)                        \
   {                                                           \
-    return {intersection(*lhs.genset(), *rhs.genset())};      \
+    return {set_intersection(*lhs.genset(), *rhs.genset())};  \
   }
 
   /// Compute the meet with another labelset.

@@ -42,14 +42,14 @@ namespace vcsn
   /// Intersection of \a s1 and \a s2.
   template <typename Key, typename Hash, typename KeyEqual, typename Alloc>
   std::unordered_set<Key, Hash, KeyEqual, Alloc>
-  intersection(const std::unordered_set<Key, Hash, KeyEqual, Alloc>& s1,
-               const std::unordered_set<Key, Hash, KeyEqual, Alloc>& s2)
+  set_intersection(const std::unordered_set<Key, Hash, KeyEqual, Alloc>& s1,
+                   const std::unordered_set<Key, Hash, KeyEqual, Alloc>& s2)
   {
     if (s2.size() < s1.size())
-      return intersection(s2, s1);
+      return set_intersection(s2, s1);
     else
       {
-        std::unordered_set<Key, Hash, KeyEqual, Alloc> res;
+        auto res = std::unordered_set<Key, Hash, KeyEqual, Alloc>{};
         for (const auto& e : s1)
           if (has(s2, e))
             res.emplace(e);

@@ -1,9 +1,10 @@
 #pragma once
 
-#include <boost/range/iterator_range_core.hpp>
-
 #include <algorithm>
 #include <iterator> // next
+
+#include <boost/range/algorithm/set_algorithm.hpp>
+#include <boost/range/iterator_range_core.hpp>
 
 namespace vcsn
 {
@@ -20,7 +21,7 @@ namespace vcsn
 
     /// The last member of this Container.
     ///
-    /// Should specialized with containers with random access.
+    /// Should be specialized for containers with random access.
     template <typename Container>
     typename Container::value_type
     back(const Container& container)
@@ -141,6 +142,32 @@ namespace vcsn
     }
   }
 
+  /// The set of members of \a s1 that are not members of s2.
+  template <typename Container,
+            // SFINAE.
+            typename = typename Container::value_type>
+  Container
+  set_difference(const Container& s1, const Container& s2)
+  {
+    auto res = Container{s1.key_comp(), s1.get_allocator()};
+    auto i = std::insert_iterator<Container>{res, res.begin()};
+    boost::set_difference(s1, s2, i, s1.key_comp());
+    return res;
+  }
+
+  /// The intersection of two sets.
+  template <typename Container,
+            // SFINAE.
+            typename = typename Container::value_type>
+  Container
+  set_intersection(const Container& s1, const Container& s2)
+  {
+    auto res = Container{s1.key_comp(), s1.get_allocator()};
+    auto i = std::insert_iterator<Container>{res, res.begin()};
+    boost::set_intersection(s1, s2, i, s1.key_comp());
+    return res;
+  }
+
   /// Check that two associative containers have the same keys.
   template <typename Container>
   bool
@@ -159,5 +186,18 @@ namespace vcsn
       }
     else
       return false;
+  }
+
+  /// The union of two sets.
+  template <typename Container,
+            // SFINAE.
+            typename = typename Container::value_type>
+  Container
+  set_union(const Container& s1, const Container& s2)
+  {
+    auto res = Container{s1.key_comp(), s1.get_allocator()};
+    auto i = std::insert_iterator<Container>{res, res.begin()};
+    boost::set_union(s1, s2, i, s1.key_comp());
+    return res;
   }
 }

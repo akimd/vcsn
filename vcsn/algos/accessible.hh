@@ -76,7 +76,7 @@ namespace vcsn
   {
     auto accessible = accessible_states(a, strict);
     auto coaccessible = coaccessible_states(a, strict);
-    return intersection(accessible, coaccessible);
+    return set_intersection(accessible, coaccessible);
   }
 
 

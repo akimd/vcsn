@@ -370,7 +370,7 @@ namespace vcsn
       using type = Rhs;                                   \
       static type join(const Lhs& lhs, const Rhs& rhs)    \
       {                                                   \
-        return {get_union(*lhs.genset(), *rhs.genset())}; \
+        return {set_union(*lhs.genset(), *rhs.genset())}; \
       }                                                   \
     }
 
@@ -387,6 +387,6 @@ namespace vcsn
   wordset<GenSet>
   meet(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
   {
-    return {intersection(*lhs.genset(), *rhs.genset())};
+    return {set_intersection(*lhs.genset(), *rhs.genset())};
   }
 }

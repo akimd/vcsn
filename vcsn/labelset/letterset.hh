@@ -343,7 +343,7 @@ namespace vcsn
       static type join(const letterset<GenSet>& lhs,
                        const letterset<GenSet>& rhs)
       {
-        return {get_union(*lhs.genset(), *rhs.genset())};
+        return {set_union(*lhs.genset(), *rhs.genset())};
       }
     };
   }
@@ -353,6 +353,6 @@ namespace vcsn
   letterset<GenSet>
   meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
   {
-    return {intersection(*lhs.genset(), *rhs.genset())};
+    return {set_intersection(*lhs.genset(), *rhs.genset())};
   }
 }

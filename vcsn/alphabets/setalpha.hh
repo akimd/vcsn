@@ -306,16 +306,16 @@ namespace vcsn
 
     /// Compute the intersection with another alphabet.
     friend set_alphabet
-    intersection(const set_alphabet& lhs, const set_alphabet& rhs)
+    set_intersection(const set_alphabet& lhs, const set_alphabet& rhs)
     {
-      return {intersection(lhs.alphabet_, rhs.alphabet_)};
+      return {set_intersection(lhs.alphabet_, rhs.alphabet_)};
     }
 
     /// Compute the union with another alphabet.
     friend set_alphabet
-    get_union(const set_alphabet& lhs, const set_alphabet& rhs)
+    set_union(const set_alphabet& lhs, const set_alphabet& rhs)
     {
-      return {get_union(lhs.alphabet_, rhs.alphabet_)};
+      return {set_union(lhs.alphabet_, rhs.alphabet_)};
     }
 
   private:
