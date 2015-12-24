@@ -1125,7 +1125,7 @@ namespace vcsn
       SKIP_SPACES();
       auto l = conv_label(i, weighted, sep);
       require(l, "\\z is invalid for monomials");
-      return monomial_t{l.get(), w};
+      return monomial_t{*l, w};
 #undef SKIP_SPACES
     }
 
@@ -1163,7 +1163,7 @@ namespace vcsn
           else if (auto l = conv_label(i, weighted, sep))
             {
               require(l, "\\z is invalid for monomials");
-              add_here(res, l.get(), w);
+              add_here(res, *l, w);
             }
 
           // sep (e.g., '+'), or stop parsing.

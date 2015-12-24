@@ -410,7 +410,7 @@ namespace vcsn
               {
                 i.ignore();
                 // Handle a range.
-                require(prev != boost::none,
+                require(prev,
                         "letter classes cannot begin with '-'");
                 require(i.peek() != ']',
                         "letter classes cannot finish with '-'");
@@ -419,7 +419,7 @@ namespace vcsn
                 letter_t l2 = ls.get_letter(i);
                 // Skip prev, which was already processed.
                 auto gens = ls.generators();
-                auto i = boost::range::find(gens, prev.get());
+                auto i = boost::range::find(gens, *prev);
                 // FIXME: Cannot use std::next here, in the case of tuples.
                 if (i != std::end(gens))
                   ++i;
@@ -430,7 +430,7 @@ namespace vcsn
                 // The last letter.  Do not do this in the loop,
                 // we might overflow the capacity of char.
                 // Check validity, so that 'z-a' is empty.
-                if (prev.get() < l2)
+                if (*prev < l2)
                   fun(l2);
 
                 prev = boost::none;

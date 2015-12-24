@@ -69,28 +69,28 @@ namespace vcsn
                 goto done;
 
               case '-':
-                if (prev == boost::none)
-                  goto insert;
-                else
+                if (prev)
                   {
                     eat(is, '-');
-                    res.add_range(prev.get(), L::get_letter(is));
+                    res.add_range(*prev, L::get_letter(is));
                     prev = boost::none;
                     break;
                   }
+                else
+                  goto insert;
 
               insert:
               default:
                 {
-                  if (prev != boost::none)
-                    res.add_letter(prev.get());
+                  if (prev)
+                    res.add_letter(*prev);
                   prev = L::get_letter(is);
                   break;
                 }
               }
     done:
-          if (prev != boost::none)
-            res.add_letter(prev.get());
+          if (prev)
+            res.add_letter(*prev);
           ;
         }
       else // is.peek() != '('

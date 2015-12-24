@@ -114,7 +114,7 @@ namespace vcsn
       {
         auto ps = make_word_polynomialset(ctx_);
         while (auto m = ps.conv_monomial(is))
-          add(m.get());
+          add(*m);
       }
 
       /// Add all the monomials in this stream.

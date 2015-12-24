@@ -102,9 +102,7 @@ namespace vcsn
         if (num == 1)
           {
             auto res = path_monomial(aut_, lightest_path(aut_));
-            return (res != boost::none)
-                   ? polynomial_t{*res}
-                   : polynomial_t{};
+            return res ? polynomial_t{*res} : polynomial_t{};
           }
         else
           return lightest_(num);

@@ -75,8 +75,8 @@ namespace vcsn
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut>,
                 bellmanford_tag)
   {
-    auto bf = bellman_ford_impl(aut, source);
-    require(bf != boost::none, "bellman-ford: automaton with negative cycle");
-    return std::move(*bf);
+    auto res = bellman_ford_impl(aut, source);
+    require(res, "bellman-ford: automaton with negative cycle");
+    return std::move(*res);
   }
 }
