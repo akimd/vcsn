@@ -4,7 +4,9 @@
 #include <initializer_list>
 #include <stdexcept>
 
+#include <boost/container/flat_set.hpp>
 #include <boost/optional.hpp>
+#include <boost/version.hpp>
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/format.hh>
@@ -16,6 +18,16 @@
 
 namespace vcsn
 {
+  /// Whether \a e is member of \a s.
+  template <typename Key, typename Compare, typename Allocator>
+  ATTRIBUTE_PURE
+  bool
+  has(const boost::container::flat_set<Key, Compare, Allocator>& s,
+      const Key& e)
+  {
+    return s.find(e) != s.end();
+  }
+
   /// A set of letters of type \a L.
   ///
   /// \a L is not simply `char` or so.  Rather, see char_letters.
@@ -25,7 +37,8 @@ namespace vcsn
   public:
     using letter_t = typename L::letter_t;
     using word_t = typename L::word_t;
-    using letters_t = std::set<letter_t, vcsn::less<L, letter_t>>;
+    using letters_t
+      = boost::container::flat_set<letter_t, vcsn::less<L, letter_t>>;
     /// The type of our values, when seen as a container.
     using value_type = letter_t;
 
@@ -101,9 +114,12 @@ namespace vcsn
     set_alphabet() = default;
     set_alphabet(const set_alphabet&) = default;
     set_alphabet(const std::initializer_list<letter_t>& l)
+#if 105700 <= BOOST_VERSION
       : alphabet_{l}
+#else
+      : alphabet_{l.begin(), l.end()}
+#endif
     {}
-
     set_alphabet(const letters_t& l)
       : alphabet_{l}
     {}
