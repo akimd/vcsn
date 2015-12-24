@@ -14,3 +14,6 @@ aᵗ == a{T}
 # Yes, this is a different asterisk.  This is the one which is emited
 # when copying from a LaTeX document.
 a∗ == a*
+a⁰¹⁰²⁸ == a{1028}
+a⁰ == \e
+a¹ == a

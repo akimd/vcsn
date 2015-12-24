@@ -43,12 +43,14 @@ namespace
 }
 %}
 
-%x SC_CLASS SC_CONTEXT SC_WEIGHT
+%x SC_CLASS SC_CONTEXT SC_EXPONENT SC_WEIGHT
 
 %%
 %{
   // Count the number of opened braces in SC_WEIGHT, and parens in SC_CONTEXT.
   unsigned int nesting = 0;
+  // Compute the exponent.
+  unsigned int exponent = 0;
   // Build a context string.  "static" only to save build/dtor.
   static std::string context;
   std::string s;
@@ -83,6 +85,14 @@ namespace
                                         {yytext+1, static_cast<size_t>(yyleng)-2}),
                              loc);
   }
+  "⁰"|"¹"|"²"|"³"|"⁴"|"⁵"|"⁶"|"⁷"|"⁸"|"⁹" {
+    // Detect an exponent, do not read it yet. Handle it in the exponent state.
+    yyless(0);
+    loc -= yyleng;
+    exponent = 0;
+    yy_push_state(SC_EXPONENT);
+  }
+
 
   "!"|"¬"     return TOK(BANG);
   "{c}"|"ᶜ"   return TOK(COMPLEMENT);
@@ -170,6 +180,30 @@ namespace
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a context comment");
     unput(')');
+  }
+}
+
+<SC_EXPONENT>{ /* UTF-8 Exponent */
+  "⁰" exponent *= 10;
+  "¹" exponent *= 10; exponent += 1;
+  "²" exponent *= 10; exponent += 2;
+  "³" exponent *= 10; exponent += 3;
+  "⁴" exponent *= 10; exponent += 4;
+  "⁵" exponent *= 10; exponent += 5;
+  "⁶" exponent *= 10; exponent += 6;
+  "⁷" exponent *= 10; exponent += 7;
+  "⁸" exponent *= 10; exponent += 8;
+  "⁹" exponent *= 10; exponent += 9;
+  .|"\n" {
+    // The end of the exponent was met, do not read it as it would be lost.
+    yyless(0);
+    loc -= yyleng;
+    yy_pop_state();
+    return parser::make_STAR(std::make_tuple(exponent, exponent), loc);
+  }
+  <<EOF>> {
+    yy_pop_state();
+    return parser::make_STAR(std::make_tuple(exponent, exponent), loc);
   }
 }
 
