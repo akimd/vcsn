@@ -43,7 +43,7 @@ namespace vcsn
       : wordset{std::make_shared<const genset_t>(gs)}
     {}
 
-    wordset(const std::initializer_list<letter_t>& letters)
+    wordset(std::initializer_list<letter_t> letters)
       : wordset(std::make_shared<const genset_t>(letters))
     {}
 

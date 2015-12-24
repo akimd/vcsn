@@ -113,7 +113,7 @@ namespace vcsn
 
     set_alphabet() = default;
     set_alphabet(const set_alphabet&) = default;
-    set_alphabet(const std::initializer_list<letter_t>& l)
+    set_alphabet(std::initializer_list<letter_t> l)
 #if 105700 <= BOOST_VERSION
       : alphabet_{l}
 #else

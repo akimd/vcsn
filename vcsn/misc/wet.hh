@@ -203,7 +203,7 @@ namespace vcsn
 
       wet_map() = default;
 
-      wet_map(const std::initializer_list<value_type>& l)
+      wet_map(std::initializer_list<value_type> l)
         : map_{l}
       {}
 
@@ -284,7 +284,7 @@ namespace vcsn
 
       wet_unordered_map() = default;
 
-      wet_unordered_map(const std::initializer_list<value_type>& l)
+      wet_unordered_map(std::initializer_list<value_type> l)
         : map_{l}
       {}
 
@@ -360,7 +360,7 @@ namespace vcsn
       using value_type = welement_t;
 
       wet_set() = default;
-      wet_set(const std::initializer_list<value_type>& p)
+      wet_set(std::initializer_list<value_type> p)
       {
         for (const auto& m: p)
           set(label_of(m), weight_of(m));
@@ -521,7 +521,7 @@ namespace vcsn
         : set_{size}
       {}
 
-      wet_bitset(const std::initializer_list<value_type>& p)
+      wet_bitset(std::initializer_list<value_type> p)
       {
         for (const auto& m: p)
           set(label_of(m), weight_of(m));
