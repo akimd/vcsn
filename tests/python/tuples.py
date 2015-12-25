@@ -9,7 +9,7 @@ def check(ctx, exp):
         r = c.expression(exp)
     except RuntimeError:
         FAIL("error parsing " + exp)
-    finally:
+    else:
         CHECK_EQ(exp, r)
 
 check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
