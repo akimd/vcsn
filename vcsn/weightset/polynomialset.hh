@@ -12,6 +12,7 @@
 #include <boost/range/algorithm/lexicographical_compare.hpp>
 
 #include <vcsn/ctx/context.hh> // We need context to define join.
+#include <vcsn/ctx/project-context.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/misc/attributes.hh>
@@ -738,6 +739,19 @@ namespace vcsn
       return res;
     }
 
+    /// Extract a single tape.
+    template <size_t Tape>
+    auto project(const value_t& v) const
+    {
+      auto ps = make_polynomialset(make_project_context<Tape>(context()));
+      auto res = typename decltype(ps)::value_t{};
+      for (const auto& m: v)
+        ps.add_here(res,
+                    std::get<Tape>(label_of(m)),
+                    weight_of(m));
+      return res;
+    }
+
     /// Convert into a label.
     ///
     /// Requires a rather powerful labelset, typically expressionset.
@@ -1365,7 +1379,9 @@ namespace vcsn
     constexpr static char rangle = '>';
   };
 
-    template <typename Context, wet_kind_t Kind>
+    template <typename Context,
+              wet_kind_t Kind = detail::wet_kind<labelset_t_of<Context>,
+                                                 weightset_t_of<Context>>()>
     polynomialset<Context, Kind>
     make_polynomialset(const Context& context)
     {

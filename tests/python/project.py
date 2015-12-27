@@ -56,3 +56,22 @@ check('focus',
       'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')
 check('project',
       'mutable_automaton<letterset<char_letters(abc)>, q>')
+
+
+## ---------- ##
+## contexts.  ##
+## ---------- ##
+
+CHECK_EQ('{abc} -> Q', c.project(0))
+CHECK_EQ('{efg} -> Q', c.project(1))
+CHECK_EQ('{xyz} -> Q', c.project(2))
+
+
+## ------------- ##
+## polynomials.  ##
+## ------------- ##
+
+p = c.polynomial('<2>a|e|x + <3>a|f|x + <4>a|f|y')
+CHECK_EQ('<9>a',        p.project(0))
+CHECK_EQ('<2>e + <7>f', p.project(1))
+CHECK_EQ('<5>x + <4>y', p.project(2))

@@ -174,6 +174,8 @@ struct context
 
   automaton levenshtein() const;
 
+  context project(unsigned tape) const;
+
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1,
                    float loop_chance = 0.0) const;
@@ -846,6 +848,11 @@ struct polynomial
     return vcsn::dyn::multiply(val_, rhs.val_);
   }
 
+  polynomial project(unsigned tape)
+  {
+    return vcsn::dyn::project(val_, tape);
+  }
+
   polynomial split() const
   {
     return vcsn::dyn::split(val_);
@@ -1266,6 +1273,10 @@ automaton context::levenshtein() const
   return vcsn::dyn::levenshtein(val_);
 }
 
+context context::project(unsigned tape) const
+{
+  return vcsn::dyn::project(val_, tape);
+}
 
 automaton context::random(unsigned num_states, float density,
                           unsigned num_initial, unsigned num_final,
@@ -1488,6 +1499,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("join", &context::join)
     .def("ladybird", &context::ladybird)
     .def("levenshtein", &context::levenshtein)
+    .def("project", &context::project)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1),
@@ -1571,6 +1583,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("ldiv", &polynomial::ldiv)
     .def("lgcd", &polynomial::lgcd)
     .def("multiply", &polynomial::multiply)
+    .def("project", &polynomial::project)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
     .def("trie", &polynomial::trie)

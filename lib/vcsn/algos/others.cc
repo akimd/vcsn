@@ -3,6 +3,7 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/signature-printer.hh>
 #include <vcsn/dyn/translate.hh>
@@ -124,6 +125,13 @@ namespace vcsn
       return detail::project_context_registry().call(ctx, t);
     }
 
+    REGISTRY_DEFINE(project_polynomial);
+    polynomial
+    project(const polynomial& p, unsigned tape)
+    {
+      auto t = to_integral_constant(tape);
+      return detail::project_polynomial_registry().call(p, t);
+    }
 
     /*-----------.
     | shuffle.   |

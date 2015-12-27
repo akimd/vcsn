@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2015-12-27
+### project is available on contexts and polynomials
+One may now project not only multitape automata, but also contexts and
+polynomials.
+
 ## 2015-12-23
 ### has-lightening-cycle: new name for 'has-negative-cyle'
 In static, dyn:: and Python, 'has-negative-cycle' is renamed
