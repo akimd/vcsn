@@ -748,7 +748,8 @@ namespace vcsn
     {
       label_t res = labelset()->zero();
       for (const auto& m: v)
-        res = labelset()->add(res, labelset()->lmul(weight_of(m), label_of(m)));
+        res = labelset()->add(res,
+                              labelset()->lmul(weight_of(m), label_of(m)));
       return res;
     }
 
