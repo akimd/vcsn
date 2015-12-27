@@ -5,7 +5,7 @@
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
 
-#include <vcsn/algos/project.hh> // make_project.
+#include <vcsn/algos/project.hh> // project.
 
 namespace vcsn
 {
@@ -135,8 +135,8 @@ namespace vcsn
         template <size_t I>
         auto work_(const tuple_t& v)
         {
-          return rat::copy(detail::make_project<I>(visitor_.in_rs_),
-                           detail::make_project<I>(visitor_.out_rs_),
+          return rat::copy(detail::project<I>(visitor_.in_rs_),
+                           detail::project<I>(visitor_.out_rs_),
                            std::get<I>(v.sub()));
         }
 

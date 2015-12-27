@@ -6,18 +6,18 @@
 namespace vcsn
 {
 
-  /*-----------------.
-  | project_context. |
-  `-----------------*/
+  /*--------------------.
+  | project(context).   |
+  `--------------------*/
 
   namespace detail
   {
     /// The resulting apparent context when keeping only tape Tape.
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
-    auto make_project_context(const context<LabelSet, WeightSet>& ctx)
+    auto project(const context<LabelSet, WeightSet>& ctx)
       -> std::enable_if_t<context<LabelSet, WeightSet>::is_lat,
-                     project_context<Tape, context<LabelSet, WeightSet>>>
+                          project_context<Tape, context<LabelSet, WeightSet>>>
     {
       static_assert(Tape < LabelSet::size(),
                     "project: tape index out of bounds");
@@ -28,9 +28,9 @@ namespace vcsn
     /// and return it.
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
-    auto make_project_context(const context<LabelSet, WeightSet>& ctx)
+    auto project(const context<LabelSet, WeightSet>& ctx)
       -> std::enable_if_t<!context<LabelSet, WeightSet>::is_lat,
-                     context<LabelSet, WeightSet>>
+                          context<LabelSet, WeightSet>>
     {
       static_assert(Tape == 0,
                     "project: cannot extract non-0 tape from a non tupleset"

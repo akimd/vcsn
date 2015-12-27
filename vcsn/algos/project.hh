@@ -22,7 +22,7 @@ namespace vcsn
       project_context(const context& ctx, integral_constant)
       {
         auto& c = ctx->as<Context>();
-        return make_context(vcsn::detail::make_project_context<Tape::value>(c));
+        return make_context(vcsn::detail::project<Tape::value>(c));
       }
     }
   }
@@ -35,11 +35,11 @@ namespace vcsn
   namespace detail
   {
     template <size_t Tape, typename Context>
-    auto make_project(const expressionset<Context>& rs)
-      -> expressionset<decltype(make_project_context<Tape>(rs.context()))>
+    auto project(const expressionset<Context>& rs)
     {
-      return {make_project_context<Tape>(rs.context()),
-              rs.identities()};
+      // Weirdly enough, GCC enters an endless loop of instantiation
+      // if we use this type as explicit function return type.
+      return make_expressionset(project<Tape>(rs.context()), rs.identities());
     }
   }
 
@@ -70,8 +70,7 @@ namespace vcsn
       {
         auto& p = poly->as<PolynomialSet>();
         const auto& ps_in = p.polynomialset();
-        auto ctx_out
-          = vcsn::detail::make_project_context<Tape::value>(ps_in.context());
+        auto ctx_out = vcsn::detail::project<Tape::value>(ps_in.context());
         auto ps_out = make_polynomialset(ctx_out);
         return make_polynomial
           (ps_out,

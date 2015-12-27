@@ -134,7 +134,7 @@ namespace vcsn
         {
           if (I)
             visitor_.out_ << visitor_.tuple_middle;
-          auto rs = detail::make_project<I>(visitor_.rs_);
+          auto rs = detail::project<I>(visitor_.rs_);
           auto print = make_printer(rs, visitor_.out_);
           print.format(visitor_.fmt_);
           print.print_child(*std::get<I>(v.sub()), precedence_t::tuple);

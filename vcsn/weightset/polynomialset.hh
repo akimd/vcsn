@@ -743,7 +743,7 @@ namespace vcsn
     template <size_t Tape>
     auto project(const value_t& v) const
     {
-      auto ps = make_polynomialset(make_project_context<Tape>(context()));
+      auto ps = make_polynomialset(vcsn::detail::project<Tape>(context()));
       auto res = typename decltype(ps)::value_t{};
       for (const auto& m: v)
         ps.add_here(res,

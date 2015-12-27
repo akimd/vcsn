@@ -311,7 +311,7 @@ namespace vcsn
 
       static type value(const self_t& self)
       {
-        return {detail::make_project<I>(self)...};
+        return {detail::project<I>(self)...};
       }
     };
 

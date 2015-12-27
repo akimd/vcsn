@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/fwd.hh>
-#include <vcsn/algos/project.hh> // make_project_context
+#include <vcsn/algos/project.hh> // project
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/ctx/context.hh>
@@ -303,7 +303,7 @@ namespace vcsn
       /// benches show that in some cases, intensive (and admittedly
       /// wrong: they should have been cached on the caller side)
       /// calls to context() ruins the performances.
-      context_t context_ = make_project_context<Tape>(full_context());
+      context_t context_ = project<Tape>(full_context());
       /// The apparent labelset. Caching it avoids difference in
       /// behavior with other automata. This example would not be
       /// working otherwise (with `focus` a focus automaton):

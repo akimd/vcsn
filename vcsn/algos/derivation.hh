@@ -219,7 +219,7 @@ namespace vcsn
           return
             visitor_
             .ps_
-            .tuple(vcsn::derivation(detail::make_project<I>(visitor_.rs_),
+            .tuple(vcsn::derivation(detail::project<I>(visitor_.rs_),
                                     std::get<I>(v.sub()),
                                     std::get<I>(visitor_.variable_))...);
         }

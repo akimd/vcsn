@@ -20,8 +20,7 @@ namespace vcsn
   {
     static_assert(Tape < labelset_t_of<Aut>::size(),
                   "project: invalid tape number");
-    auto res =
-      make_mutable_automaton(detail::make_project_context<Tape>(aut->context()));
+    auto res = make_mutable_automaton(detail::project<Tape>(aut->context()));
     copy_into(focus<Tape>(aut), res, false);
     return res;
   }

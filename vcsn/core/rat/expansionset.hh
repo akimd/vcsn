@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/algos/project.hh> // make_project
+#include <vcsn/algos/project.hh> // project
 #include <vcsn/algos/split.hh> // expression_polynomialset_t
 #include <vcsn/misc/map.hh>
 
@@ -527,7 +527,7 @@ namespace vcsn
       auto project() const
         -> project_t<Tape>
       {
-        return {detail::make_project<Tape>(rs_)};
+        return {detail::project<Tape>(rs_)};
       }
 
       /// Denormalize a pack of one-tape expansions.
@@ -607,7 +607,7 @@ namespace vcsn
       ///       }
       /// if (!ws_.is_zero(e0.constant))
       ///   {
-      ///     auto rs0 = detail::make_project<0>(rs_);
+      ///     auto rs0 = detail::project<0>(rs_);
       ///     using p0_t = typename polynomialset_t::template project_t<0>;
       ///     auto p0 = p0_t{{rs0.one(), e0.constant}};
       ///     for (const auto& p1: e1.polynomials)
@@ -620,7 +620,7 @@ namespace vcsn
       ///   }
       /// if (!ws_.is_zero(e1.constant))
       ///   {
-      ///     auto rs1 = detail::make_project<1>(rs_);
+      ///     auto rs1 = detail::project<1>(rs_);
       ///     using p1_t = typename polynomialset_t::template project_t<1>;
       ///     auto p1 = p1_t{{rs1.one(), e1.constant}};
       ///     for (const auto& p0: e0.polynomials)
