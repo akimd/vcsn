@@ -3,16 +3,24 @@
 import vcsn
 from test import *
 
-c = vcsn.context('lat<lal_char(abc),lal_char(efg),lal_char(xyz)>, b')
+c = vcsn.context('lat<lal_char(abc), lal_char(efg), lal_char(xyz)>, q')
+
+## ---------- ##
+## automata.  ##
+## ---------- ##
+
 t = c.expression("((a|e|x):(b|f|y):(c|g|z))").automaton()
 
 def check(function_name, type_):
+    '''Check a function (`project` or `focus`).  Expect an automaton
+    of type `type_`.'''
+    fun = getattr(t, function_name)
     CHECK_EQ('(ab+ba)c+(ac+ca)b+(bc+cb)a',
-             getattr(t, function_name)(0).expression())
+             fun(0).expression())
     CHECK_EQ('(ef+fe)g+(eg+ge)f+(fg+gf)e',
-             getattr(t, function_name)(1).expression())
+             fun(1).expression())
     CHECK_EQ('(xy+yx)z+(xz+zx)y+(yz+zy)x',
-             getattr(t, function_name)(2).expression())
+             fun(2).expression())
     CHECK_EQ({
                'is ambiguous': False,
                'is codeterministic': True,
@@ -42,9 +50,9 @@ def check(function_name, type_):
                'number of lazy states': 0,
                'type': type_,
                },
-             getattr(t, function_name)(0).info(detailed = True))
+             fun(0).info(detailed = True))
 
 check('focus',
-      'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, b>>')
+      'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')
 check('project',
-      'mutable_automaton<letterset<char_letters(abc)>, b>')
+      'mutable_automaton<letterset<char_letters(abc)>, q>')

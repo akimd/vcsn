@@ -38,7 +38,6 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/expression.py                             \
   %D%/factory.py                                \
   %D%/filter.py                                 \
-  %D%/focus.py                                  \
   %D%/has-bounded-lag.py                        \
   %D%/has-lightening-cycle.py                   \
   %D%/has-twins-property.py                     \
@@ -57,8 +56,8 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/label.py                                  \
   %D%/letterize.py                              \
   %D%/lift.py                                   \
-  %D%/lightest.py                               \
   %D%/lightest-automaton.py                     \
+  %D%/lightest.py                               \
   %D%/minimize.py                               \
   %D%/multiply.py                               \
   %D%/normalize.py                              \
@@ -66,6 +65,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/polynomial.py                             \
   %D%/power.py                                  \
   %D%/prefix.py                                 \
+  %D%/project.py                                \
   %D%/proper.py                                 \
   %D%/push-weights.py                           \
   %D%/reduce.py                                 \
