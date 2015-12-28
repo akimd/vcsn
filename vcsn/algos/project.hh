@@ -34,6 +34,7 @@ namespace vcsn
 
   namespace detail
   {
+    /// Project an expressionset to one tape.
     template <size_t Tape, typename Context>
     auto project(const expressionset<Context>& rs)
     {
@@ -49,6 +50,7 @@ namespace vcsn
 
   namespace detail
   {
+    /// Project a value to one tape.
     template <size_t Tape, typename ValueSet>
     auto project(const ValueSet& vs,
                  const typename ValueSet::value_t& v)
@@ -56,6 +58,16 @@ namespace vcsn
       static_assert(Tape < labelset_t_of<ValueSet>::size(),
                     "project: invalid tape number");
       return vs.template project<Tape>(v);
+    }
+
+    /// Project a polynomialset to one tape.
+    template <size_t Tape, typename Context, wet_kind_t Kind>
+    auto project(const polynomialset<Context, Kind>& ps)
+    {
+      static_assert(Tape < labelset_t_of<Context>::size(),
+                    "project: invalid tape number");
+      auto ctx_out = vcsn::detail::project<Tape>(ps.context());
+      return make_polynomialset(ctx_out);
     }
   }
 
@@ -68,13 +80,13 @@ namespace vcsn
       polynomial
       project_polynomial(const polynomial& poly, integral_constant)
       {
+        constexpr auto tape = Tape::value;
         auto& p = poly->as<PolynomialSet>();
         const auto& ps_in = p.polynomialset();
-        auto ctx_out = vcsn::detail::project<Tape::value>(ps_in.context());
-        auto ps_out = make_polynomialset(ctx_out);
-        return make_polynomial
-          (ps_out,
-           vcsn::detail::project<Tape::value>(ps_in, p.polynomial()));
+        auto ps_out = vcsn::detail::project<tape>(ps_in);
+        return make_polynomial(ps_out,
+                               vcsn::detail::project<tape>(ps_in,
+                                                           p.polynomial()));
       }
     }
   }
