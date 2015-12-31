@@ -274,7 +274,7 @@ namespace vcsn
 #endif
         if (prune_
             && in(aut_dirty_, dirty_s).empty()
-            && aut_proper_->all_in(proper_s).empty())
+            && all_in(aut_proper_, proper_s).empty())
           {
 #ifdef STATS
             removed += (all_out(aut_proper_, proper_s).size()

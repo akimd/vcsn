@@ -59,7 +59,7 @@ namespace vcsn
         res_->set_initial(initial_);
         res_->set_final(final_);
 
-        for (auto t: res_->all_in(res_->post()))
+        for (auto t: all_in(res_, res_->post()))
           res_->set_weight(t, ws_.mul(res_->weight_of(t), final_weight_));
 
         return std::move(res_);

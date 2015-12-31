@@ -156,7 +156,7 @@ namespace vcsn
 
         // (iv) Remove the former initial states of A that are the
         // destination of no incoming transition.
-        if (aut->all_in(i).empty())
+        if (all_in(aut, i).empty())
           aut->del_state(i);
       }
     // (i.b) Make [state s] initial, with initial multiplicity equal

@@ -259,7 +259,7 @@ namespace vcsn
       std::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
       is_spontaneous_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
-        auto rin = rhs->all_in(rst);
+        auto rin = all_in(rhs, rst);
         auto rtr = rin.begin();
         return rtr != rin.end() && is_one(rhs, *rtr);
       }

@@ -86,7 +86,7 @@ namespace vcsn
         state_t p = todo.front();
         todo.pop();
         marked.insert(p);
-        for (auto t : aut->all_in(p))
+        for (auto t : all_in(aut, p))
           {
             auto s = aut->src_of(t);
             if (marked.find(s) == marked.end())

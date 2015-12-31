@@ -43,7 +43,7 @@ namespace vcsn
           bool epsilon_in = false;
           bool letter_in = false;
 
-          for (auto tr : aut->all_in(st))
+          for (auto tr : all_in(aut, st))
           {
             if (is_spontaneous(aut, tr))
               epsilon_in = true;

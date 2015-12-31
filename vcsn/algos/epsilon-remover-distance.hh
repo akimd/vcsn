@@ -109,7 +109,7 @@ namespace vcsn
             }
         if (prune_)
           for (auto s : aut_proper_->states())
-            if (aut_proper_->all_in(s).empty())
+            if (all_in(aut_proper_, s).empty())
               aut_proper_->del_state(s);
         return aut_proper_;
       }

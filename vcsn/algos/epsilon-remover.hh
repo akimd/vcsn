@@ -249,7 +249,7 @@ namespace vcsn
         unsigned added = all_out(aut_, s).size() * closure.size();
         unsigned removed = transitions.size();
 #endif
-        if (prune_ && aut_->all_in(s).empty())
+        if (prune_ && all_in(aut_, s).empty())
           {
 #ifdef STATS
             removed += all_out(aut_, s).size();

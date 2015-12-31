@@ -81,7 +81,7 @@ namespace vcsn
             p.has_loop_ = true;
           else
             ++out;
-        size_t in = aut_->all_in(p.state_).size();
+        size_t in = all_in(aut_, p.state_).size();
         p.size_ = in * out;
       }
 
@@ -182,7 +182,7 @@ namespace vcsn
         size_t ins = 0;
         // The size of the loop, if there is one.
         size_t size_loop = 0;
-        for (auto t: aut_->all_in(p.state_))
+        for (auto t: all_in(aut_, p.state_))
           if (aut_->src_of(t) == p.state_)
             size_loop += size_of_transition(t);
           else
@@ -334,7 +334,7 @@ namespace vcsn
 
         // Get all the predecessors, and successors, except itself.
         auto outs = all_out(aut_, s);
-        for (auto in: aut_->all_in(s))
+        for (auto in: all_in(aut_, s))
           for (auto out: outs)
             {
               auto src = aut_->src_of(in);
@@ -387,7 +387,7 @@ namespace vcsn
 
         // Get all the predecessors, and successors, except itself.
         auto outs = all_out(aut_, s);
-        for (auto in: aut_->all_in(s))
+        for (auto in: all_in(aut_, s))
           for (auto out: outs)
             {
               auto src = aut_->src_of(in);

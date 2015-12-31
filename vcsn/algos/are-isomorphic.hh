@@ -291,7 +291,7 @@ namespace vcsn
 
       // Hash input transitions data, in a way which doesn't depend on
       // state numbers or transition order.
-      HASH_TRANSITIONS(a->all_in(s), src_of);
+      HASH_TRANSITIONS(all_in(a, s), src_of);
 
       // Do the same for output transitions.
       HASH_TRANSITIONS(all_out(a, s), dst_of);
