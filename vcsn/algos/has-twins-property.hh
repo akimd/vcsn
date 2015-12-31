@@ -114,7 +114,7 @@ namespace vcsn
       }
 
     const auto& ws = *aut->weightset();
-    for (auto t : aut->all_transitions())
+    for (auto t : all_transitions(aut))
       {
         auto src = aut->src_of(t);
         auto dst = aut->dst_of(t);

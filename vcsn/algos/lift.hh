@@ -234,7 +234,7 @@ namespace vcsn
     for (auto s: a->states())
       map[s] = res->new_state();
 
-    for (auto t: a->all_transitions())
+    for (auto t: all_transitions(a))
       if (a->src_of(t) == a->pre())
         res->add_initial(map[a->dst_of(t)],
                          rs_in.lmul(a->weight_of(t), rs_in.one()));

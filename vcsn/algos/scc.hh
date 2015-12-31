@@ -754,7 +754,7 @@ namespace vcsn
     map[aut->post()] = res->post();
 
     // Add transitions to new automaton.
-    for (auto t: aut->all_transitions())
+    for (auto t: all_transitions(aut))
       {
         auto s = map[aut->src_of(t)];
         auto d = map[aut->dst_of(t)];

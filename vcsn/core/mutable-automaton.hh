@@ -721,7 +721,7 @@ namespace vcsn
     `---------------------------------------*/
 
   protected:
-    /// The range of state numbers in [b .. e] that validate the
+    /// The range of index numbers in [b .. e] that validate the
     /// predicate \a pred.
     template <typename Pred>
     auto state_range(state_t b, state_t e, Pred pred) const
@@ -767,33 +767,15 @@ namespace vcsn
       return state_range(post() + 1, states_.size());
     }
 
-    /// All the transition indexes between all states (including pre and post),
-    /// that validate \a pred.
-    template <typename Pred>
-    auto all_transitions(Pred pred) const
-    {
-      return make_container_filter_range
-        (boost::irange<transition_t>(0U, transitions_.size()),
-         [this,pred](transition_t t)
-         {
-           return src_of(t) != null_state() && pred(t);
-         });
-    }
-
     /// All the transition indexes between all states (including pre and post).
     auto all_transitions() const
     {
-      return all_transitions([](transition_t) { return true; });
-    }
-
-    /// All the transition indexes between visible states.
-    auto transitions() const
-    {
-      return all_transitions([this](transition_t t)
-                             {
-                               return (src_of(t) != pre()
-                                       && dst_of(t) != post());
-                             });
+      return make_container_filter_range
+        (boost::irange<transition_t>(0U, transitions_.size()),
+         [this](transition_t t)
+         {
+           return src_of(t) != null_state();
+         });
     }
 
     /// Indexes of all transitions leaving state \a s.

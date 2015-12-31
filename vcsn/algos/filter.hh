@@ -113,45 +113,17 @@ namespace vcsn
                           });
       }
 
-      // FIXME: clang workaround.
-      template <typename Pred>
-      struct has_transition_p
-      {
-        bool operator()(transition_t t) const
-        {
-          return (pred(t)
-                  && has(aut_.ss_, aut_.src_of(t))
-                  && has(aut_.ss_, aut_.dst_of(t)));
-        }
-        const self_t& aut_;
-        Pred pred;
-      };
-
-      template <typename Pred>
-      auto all_transitions(Pred pred) const
-      {
-        return aut_->all_transitions(has_transition_p<Pred>{*this, pred});
-      }
-
-      // FIXME: clang workaround.
-      struct all_transitions_p
-      {
-        bool operator()(transition_t) const { return true; };
-      };
-
       /// All the transition indexes between all states (including pre
       /// and post).
       auto all_transitions() const
       {
-        return all_transitions(all_transitions_p{});
-      }
-
-      /// All the transition indexes between visible states.
-      auto transitions() const
-      {
-        auto pred
-          = has_transition_p<all_transitions_p>{*this, all_transitions_p{}};
-        return all_transitions(pred);
+        return vcsn::detail::all_transitions
+          (aut_,
+           [this](transition_t t)
+           {
+             return (has(ss_, aut_->src_of(t))
+                     && has(ss_, aut_->dst_of(t)));
+           });
       }
 
       /// All the outgoing transitions.

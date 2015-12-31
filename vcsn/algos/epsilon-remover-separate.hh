@@ -385,9 +385,9 @@ namespace vcsn
               update_heap_(n);
             if (1 < debug_)
               std::cerr << " #tr: "
-                        << aut_dirty_->transitions().size()
-                        << "/" << (aut_dirty_->transitions().size()
-                                   + aut_proper_->transitions().size())
+                        << transitions(aut_dirty_).size()
+                        << "/" << (transitions(aut_dirty_).size()
+                                   + transitions(aut_proper_).size())
                         << std::endl;
             if (2 < debug_)
               {

@@ -56,7 +56,7 @@ namespace vcsn
       map[st] = res->new_state();
 
     // Transform every transition into identity
-    for (auto tr : aut->all_transitions())
+    for (auto tr : all_transitions(aut))
       res->new_transition(map[aut->src_of(tr)],
                           map[aut->dst_of(tr)],
                           label_t{aut->label_of(tr), aut->label_of(tr)},

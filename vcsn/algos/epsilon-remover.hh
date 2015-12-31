@@ -353,7 +353,7 @@ namespace vcsn
       size_t num_spontaneous_transitions_() const
       {
         size_t res = 0;
-        for (auto t : aut_->transitions())
+        for (auto t : transitions(aut_))
           res += aut_->labelset()->is_one(aut_->label_of(t));
         return res;
       }

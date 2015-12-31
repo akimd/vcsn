@@ -48,7 +48,7 @@ namespace vcsn
     auto distances = shortest_distance_to_finals(res);
     auto ws = *res->weightset();
     distances[res->post()] = ws.one();
-    for (auto t : res->all_transitions())
+    for (auto t : all_transitions(res))
       {
         auto ds = distances[res->src_of(t)];
         auto de = distances[res->dst_of(t)];

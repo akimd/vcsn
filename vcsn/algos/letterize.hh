@@ -162,7 +162,7 @@ namespace vcsn
     is_letterized(const Aut& aut)
     {
       auto ls = aut->labelset();
-      for (auto t : aut->transitions())
+      for (auto t : transitions(aut))
       {
         auto it = ls->letters_of_padded(aut->label_of(t),
                                         letterized_ls<Aut>::labelset_t::one());

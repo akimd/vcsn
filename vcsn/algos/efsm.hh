@@ -269,7 +269,7 @@ namespace vcsn
         // context in round trips.
         add_alphabet_(*aut_->labelset(), labels, get_label);
         // In any case, insert all our labels.
-        for (auto t : aut_->transitions())
+        for (auto t : transitions(aut_))
           labels.insert(get_label(aut_->label_of(t)));
 
         // Sorted per label name, which is fine, and deterministic.

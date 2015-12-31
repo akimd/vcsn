@@ -115,7 +115,7 @@ namespace vcsn
     std::vector<std::vector<weight_t>> res(
       n, std::vector<weight_t>(n, ws->zero()));
 
-    for (auto t : aut->all_transitions())
+    for (auto t : all_transitions(aut))
       {
         auto i = aut->src_of(t);
         auto j = aut->dst_of(t);

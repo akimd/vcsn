@@ -140,7 +140,7 @@ namespace vcsn
     bool is_sequential_filling(const Aut& a,
                                dout_t<Aut>& dout)
     {
-      for (auto t : a->all_transitions())
+      for (auto t : all_transitions(a))
         {
           const state_t_of<Aut>& src = a->src_of(t);
           const label_t_of<Aut>& l = a->label_of(t);
@@ -158,10 +158,10 @@ namespace vcsn
 
     void fill_nouts_()
     {
-      for (auto t1 : a1_->all_transitions())
+      for (auto t1 : all_transitions(a1_))
         nout1_[a1_->src_of(t1)][a1_->label_of(t1)][a1_->weight_of(t1)]
           .emplace_back(a1_->dst_of(t1));
-      for (auto t2 : a2_->all_transitions())
+      for (auto t2 : all_transitions(a2_))
         nout2_[a2_->src_of(t2)][a2_->label_of(t2)][a2_->weight_of(t2)]
           .emplace_back(a2_->dst_of(t2));
     }

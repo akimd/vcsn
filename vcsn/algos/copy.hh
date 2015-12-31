@@ -166,7 +166,7 @@ namespace vcsn
           if (keep_state(s))
             out_state_[s] = out_->new_state();
 
-        for (auto t : in_->all_transitions())
+        for (auto t : all_transitions(in_))
           if (keep_trans(t))
             {
               auto src = out_state_.find(in_->src_of(t));

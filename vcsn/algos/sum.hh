@@ -41,7 +41,7 @@ namespace vcsn
       m.emplace(s, b->is_initial(s) ? initial : res->new_state());
 
     // Add b.
-    for (auto t: b->all_transitions())
+    for (auto t: all_transitions(b))
       if (b->dst_of(t) == b->post())
         res->add_transition(m[b->src_of(t)], m[b->dst_of(t)],
                             b->label_of(t),

@@ -26,7 +26,11 @@ namespace vcsn
 
   namespace detail
   {
-    /// Indexes of transitions leaving state \a s
+    /*------------------------.
+    | Outgoing transitions.   |
+    `------------------------*/
+
+    /// Indexes of transitions leaving state \a s.
     ///
     /// Invalidated by del_transition() and del_state().
     template <typename Aut>
@@ -71,7 +75,11 @@ namespace vcsn
                      });
     }
 
-    /// Indexes of transitions entering state \a s
+    /*------------------------.
+    | Incoming transitions.   |
+    `------------------------*/
+
+    /// Indexes of transitions entering state \a s.
     ///
     /// Invalidated by del_transition() and del_state().
     template <typename Aut>
@@ -117,6 +125,10 @@ namespace vcsn
     }
 
 
+    /*-----------------------.
+    | Special transitions.   |
+    `-----------------------*/
+
     /// Indexes of transitions to (visible) initial states.
     ///
     /// Also include the weird case of a transition from pre to post.
@@ -161,6 +173,52 @@ namespace vcsn
       // invalidated by del_transition(t).
       for (auto t: make_vector(outin(aut, s, d)))
         aut->del_transition(t);
+    }
+
+    /*---------------.
+    | Transitions.   |
+    `---------------*/
+
+    /// All the transition indexes between all states (including pre and post).
+    template <Automaton Aut>
+    auto all_transitions(const Aut& aut)
+    {
+      return aut->all_transitions();
+    }
+
+    /// All the transition indexes between all states (including pre and post),
+    /// that validate \a pred.
+    template <Automaton Aut, typename Pred>
+    auto all_transitions(const Aut& aut, Pred pred)
+    {
+      return make_container_filter_range(aut->all_transitions(), pred);
+    }
+
+    /// Whether this transition is from pre or to post.
+    template <Automaton Aut>
+    bool is_special(const Aut& aut, transition_t_of<Aut> t)
+    {
+      return aut->src_of(t) != aut->pre() && aut->dst_of(t) != aut->post();
+    }
+
+    /// Needed for GCC 5 and 6 that refuse deduced return type for
+    /// transitions() when using a lambda.
+    template <Automaton Aut>
+    struct is_special_t
+    {
+      bool operator()(transition_t_of<Aut> t)
+      {
+        return is_special(aut, t);
+      }
+      const Aut& aut;
+    };
+
+    /// All the transition indexes between visible states.
+    template <Automaton Aut>
+    auto transitions(const Aut& aut)
+      -> decltype(all_transitions(aut, is_special_t<Aut>{aut})) // for G++ 5.2
+    {
+      return all_transitions(aut, is_special_t<Aut>{aut});
     }
   }
 }

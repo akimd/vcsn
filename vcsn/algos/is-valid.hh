@@ -31,7 +31,7 @@ namespace vcsn
       auto res = copy(aut);
       // Apply absolute value to the weight of each transition.
       const auto& ws = *aut->weightset();
-      for (auto t: res->transitions())
+      for (auto t: transitions(res))
         res->set_weight(t, ws.abs(res->weight_of(t)));
       return res;
     }

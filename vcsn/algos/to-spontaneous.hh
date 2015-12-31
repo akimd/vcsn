@@ -27,7 +27,7 @@ namespace vcsn
     for (auto s: aut->states())
       out_state_[s] = res->new_state();
 
-    for (auto t : aut->all_transitions())
+    for (auto t : all_transitions(aut))
       {
         auto src = out_state_.find(aut->src_of(t));
         auto dst = out_state_.find(aut->dst_of(t));

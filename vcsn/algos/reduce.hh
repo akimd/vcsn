@@ -228,7 +228,7 @@ namespace vcsn
         for (auto t : final_transitions(input_))
           final[state_to_index[input_->src_of(t)]] = input_->weight_of(t);
         // For each letter, we define an adjency matrix.
-        for (auto t : input_->transitions())
+        for (auto t : transitions(input_))
           {
             auto it = letter_matrix_set.find(input_->label_of(t));
             if (it == letter_matrix_set.end())

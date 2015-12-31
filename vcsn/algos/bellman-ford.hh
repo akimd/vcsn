@@ -36,7 +36,7 @@ namespace vcsn
 
       // Iterate one time for each state over each transitions.
       for (auto _: aut->all_states())
-        for (auto t: aut->all_transitions())
+        for (auto t: all_transitions(aut))
           {
             auto src = aut->src_of(t);
 
@@ -54,7 +54,7 @@ namespace vcsn
           }
 
       // Check for lightening cycles.
-      for (auto t: aut->transitions())
+      for (auto t: transitions(aut))
         {
           auto src = aut->src_of(t);
           auto dst = aut->dst_of(t);
