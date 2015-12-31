@@ -130,7 +130,7 @@ namespace vcsn
               {
                 state_t s; word_t l; weight_t w;
                 std::tie(s, l, w) = sm;
-                for (const auto t: aut_->all_out(s))
+                for (const auto t: all_out(aut_, s))
                   {
                     auto dst = aut_->dst_of(t);
                     auto nw = ws_.mul(w, aut_->weight_of(t));
@@ -199,7 +199,7 @@ namespace vcsn
                 queue.pop();
               }
 
-            for (const auto t: aut_->all_out(s))
+            for (const auto t: all_out(aut_, s))
               {
                 auto dst = aut_->dst_of(t);
                 auto nw = ws_.mul(w, aut_->weight_of(t));

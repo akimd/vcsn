@@ -151,7 +151,7 @@ namespace vcsn
       build_map_(typename maps_t::iterator lb, state_t s)
       {
         auto& res = maps_.emplace_hint(lb, s, map_t{})->second;
-        for (auto t: aut_->all_out(s))
+        for (auto t: all_out(aut_, s))
           if (AllOut || !aut_->labelset()->is_special(aut_->label_of(t)))
             {
               auto w = ws_.conv(*aut_->weightset(), aut_->weight_of(t));

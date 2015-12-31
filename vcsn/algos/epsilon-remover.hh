@@ -114,7 +114,7 @@ namespace vcsn
           p->update(in(aut_, s, empty_word_).size(),
                     in(aut_, s).size(),
                     out(aut_, s, empty_word_).size(),
-                    aut_->all_out(s).size());
+                    all_out(aut_, s).size());
       }
 
       /// Build the profiles and the heap for states with incoming
@@ -128,7 +128,7 @@ namespace vcsn
             {
               auto ins = in(aut_, s).size();
               auto out_sp = out(aut_, s, empty_word_).size();
-              auto out = aut_->all_out(s).size();
+              auto out = all_out(aut_, s).size();
               auto h = todo_.emplace(epsilon_profile<state_t>
                                      {s, in_sp, ins, out_sp, out});
               handles_.emplace(s, h);
@@ -228,7 +228,7 @@ namespace vcsn
           pair-second * weight is added to the final weight
           of closure->first
         */
-        for (auto t: aut_->all_out(s))
+        for (auto t: all_out(aut_, s))
           {
             // "Blowing": For each transition (or terminal arrow)
             // outgoing from (s), the weight is multiplied by
@@ -246,13 +246,13 @@ namespace vcsn
               }
           }
 #ifdef STATS
-        unsigned added = aut_->all_out(s).size() * closure.size();
+        unsigned added = all_out(aut_, s).size() * closure.size();
         unsigned removed = transitions.size();
 #endif
         if (prune_ && aut_->all_in(s).empty())
           {
 #ifdef STATS
-            removed += aut_->all_out(s).size();
+            removed += all_out(aut_, s).size();
 #endif
             aut_->del_state(s);
           }

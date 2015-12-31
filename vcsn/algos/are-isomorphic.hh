@@ -294,7 +294,7 @@ namespace vcsn
       HASH_TRANSITIONS(a->all_in(s), src_of);
 
       // Do the same for output transitions.
-      HASH_TRANSITIONS(a->all_out(s), dst_of);
+      HASH_TRANSITIONS(all_out(a, s), dst_of);
 
 #undef HASH_TRANSITIONS
 
@@ -417,7 +417,7 @@ namespace vcsn
             return false;
 
           int t1n = 0, t2n = 0;
-          for (auto t1: a1_->all_out(s1))
+          for (auto t1: all_out(a1_, s1))
             {
               auto d1 = a1_->dst_of(t1);
               const auto& w1 = a1_->weight_of(t1);
@@ -429,7 +429,7 @@ namespace vcsn
               worklist.push({d1, d2});
               ++ t1n;
             }
-          for (auto t2: a2_->all_out(s2))
+          for (auto t2: all_out(a2_, s2))
             {
               auto d2 = a2_->dst_of(t2);
               const auto& w2 = a2_->weight_of(t2);

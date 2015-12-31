@@ -25,7 +25,7 @@ namespace vcsn
     {
       label_set_t missing_letters = {std::begin(letters), std::end(letters)};
 
-      for (auto tr : aut->all_out(state))
+      for (auto tr : all_out(aut, state))
         missing_letters.erase(aut->label_of(tr));
 
       if (!missing_letters.empty())

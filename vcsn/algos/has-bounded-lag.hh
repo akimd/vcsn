@@ -88,7 +88,7 @@ namespace vcsn
       bool has_bounded_lag(state_t src)
       {
         v_[src] = VISITING;
-        for (auto tr : aut_->all_out(src))
+        for (auto tr : all_out(aut_, src))
           {
             state_t dst = aut_->dst_of(tr);
             auto visited = v_[dst];

@@ -332,7 +332,7 @@ namespace vcsn
               && (format_ != format::latex || src != aut_->pre()))
             {
               dsts.clear();
-              for (auto t: aut_->all_out(src))
+              for (auto t: all_out(aut_, src))
                 if (format_ != format::latex
                     || aut_->dst_of(t) != aut_->post())
                   // Bypass weight_of(set), because we know that the weight is

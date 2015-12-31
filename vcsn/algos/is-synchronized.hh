@@ -248,7 +248,7 @@ namespace vcsn
           auto st = val_state.first;
           delay_t delay = val_state.second;
           out_aut_->todo_.pop();
-          for (auto t : in_aut_->all_out(st))
+          for (auto t : all_out(in_aut_, st))
           {
             auto l = in_aut_->label_of(t);
             auto dst = in_aut_->dst_of(t);

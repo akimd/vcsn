@@ -47,7 +47,7 @@ namespace vcsn
       {
         auto s = todo.front();
         todo.pop();
-        for (auto t : aut->all_out(s))
+        for (auto t : all_out(aut, s))
           {
             auto dst = aut->dst_of(t);
             if (has(coaccessibles, dst))

@@ -21,7 +21,7 @@ namespace vcsn
 
     using label_t = label_t_of<automaton_t>;
     std::unordered_set<label_t> seen;
-    for (auto t : aut->all_out(s))
+    for (auto t : all_out(aut, s))
       if (!seen.insert(aut->label_of(t)).second)
         return false;
     return true;

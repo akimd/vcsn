@@ -76,7 +76,7 @@ namespace vcsn
       void update(state_profile& p)
       {
         size_t out = 0;
-        for (auto t: aut_->all_out(p.state_))
+        for (auto t: all_out(aut_, p.state_))
           if (aut_->dst_of(t) == p.state_)
             p.has_loop_ = true;
           else
@@ -195,7 +195,7 @@ namespace vcsn
         size_t size_out = 0;
         // The number of outgoing transitions excluding loops.
         size_t outs = 0;
-        for (auto t: aut_->all_out(p.state_))
+        for (auto t: all_out(aut_, p.state_))
           if (aut_->dst_of(t) != p.state_)
             {
               ++outs;
@@ -333,7 +333,7 @@ namespace vcsn
         loop = ws.star(loop);
 
         // Get all the predecessors, and successors, except itself.
-        auto outs = aut_->all_out(s);
+        auto outs = all_out(aut_, s);
         for (auto in: aut_->all_in(s))
           for (auto out: outs)
             {
@@ -386,7 +386,7 @@ namespace vcsn
         loop = rs.star(loop);
 
         // Get all the predecessors, and successors, except itself.
-        auto outs = aut_->all_out(s);
+        auto outs = all_out(aut_, s);
         for (auto in: aut_->all_in(s))
           for (auto out: outs)
             {

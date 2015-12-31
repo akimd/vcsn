@@ -145,7 +145,7 @@ namespace vcsn
         e.sub()->accept(*this);
 
         const weight_t& w = e.weight();
-        for (auto t: res_->all_out(initial_))
+        for (auto t: all_out(res_, initial_))
           res_->set_weight(t, ws_.mul(w, res_->weight_of(t)));
       }
 

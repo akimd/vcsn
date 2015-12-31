@@ -128,11 +128,11 @@ namespace vcsn
       void visit_successors_of_(input_state_t s, state_t res_s)
       {
         std::vector<input_transition_t> ts;
-        // Here out(a_, s) would just as well as a_->all_out(s) but it
+        // Here out(a_, s) would just as well as all_out(a_, s) but it
         // would be slower; later we have to test one condition per
         // transition anyway, which is just the additional work
         // performed by out.
-        for (auto t: res_->input_->all_out(s))
+        for (auto t: all_out(res_->input_, s))
           ts.emplace_back(t);
 
         boost::sort(ts, detail::transition_less<Aut>{res_->input_});

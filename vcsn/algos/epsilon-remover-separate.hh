@@ -116,7 +116,7 @@ namespace vcsn
             auto in_dirty = in(aut_dirty_, dirty_s).size();
             auto in_proper = in(aut_proper_, proper_s).size();
             auto out_dirty = out(aut_dirty_, dirty_s).size();
-            auto out_proper = aut_proper_->all_out(proper_s).size();
+            auto out_proper = all_out(aut_proper_, proper_s).size();
 
             p->update(in_dirty, in_proper + in_dirty,
                       out_dirty, out_proper + out_dirty);
@@ -253,7 +253,7 @@ namespace vcsn
               }
           }
 
-        for (auto t: aut_proper_->all_out(proper_s))
+        for (auto t: all_out(aut_proper_, proper_s))
           {
             weight_t blow = ws_.mul(star, aut_proper_->weight_of(t));
             aut_proper_->set_weight(t, blow);
@@ -269,7 +269,7 @@ namespace vcsn
           }
 #ifdef STATS
         // Number of transition that have been added.
-        auto added = (aut_proper_->all_out(proper_s).size()
+        auto added = (all_out(aut_proper_, proper_s).size()
                       + out(aut_dirty_, dirty_s).size()) * closure.size();
 #endif
         if (prune_
@@ -277,7 +277,7 @@ namespace vcsn
             && aut_proper_->all_in(proper_s).empty())
           {
 #ifdef STATS
-            removed += (aut_proper_->all_out(proper_s).size()
+            removed += (all_out(aut_proper_, proper_s).size()
                         + out(aut_dirty_, dirty_s).size());
 #endif
             aut_proper_->del_state(proper_s);

@@ -123,7 +123,7 @@ namespace vcsn
       {
         auto s = a->dst_of(init_tr);
         auto w = a->weight_of(init_tr);
-        for (auto out: a->all_out(s))
+        for (auto out: all_out(a, s))
           {
             assert(a->dst_of(out) == a->post());
             res = ws.add(res, ws.mul(w, a->weight_of(out)));

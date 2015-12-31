@@ -365,7 +365,7 @@ namespace vcsn
               {
                 auto s = label_of(p);
                 auto v = weight_of(p);
-                for (auto t : input_->all_out(s))
+                for (auto t : all_out(input_, s))
                   {
                     auto l = input_->label_of(t);
                     auto dst = input_->dst_of(t);

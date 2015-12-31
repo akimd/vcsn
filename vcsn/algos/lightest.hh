@@ -140,7 +140,7 @@ namespace vcsn
             if (s == aut_->post())
               ps_.add_here(res, std::move(l), std::move(w));
 
-            for (const auto t: aut_->all_out(s))
+            for (const auto t: all_out(aut_, s))
               {
                 auto dst = aut_->dst_of(t);
                 auto nw = ws_.mul(w, aut_->weight_of(t));

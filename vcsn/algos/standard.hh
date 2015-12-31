@@ -149,7 +149,7 @@ namespace vcsn
         // The initial state.
         auto i = aut->dst_of(ti);
         auto wi = aut->weight_of(ti);
-        for (auto t: aut->all_out(i))
+        for (auto t: all_out(aut, i))
           aut->new_transition(ini, aut->dst_of(t), aut->label_of(t),
                               ws.mul(wi, aut->weight_of(t)));
         aut->del_transition(ti);
@@ -300,7 +300,7 @@ namespace vcsn
         for (auto c: e.tail())
           {
             c->accept(*this);
-            for (auto t: res_->all_out(initial_))
+            for (auto t: all_out(res_, initial_))
               // Not set_transition: for instance 'a*+a*' will make
               // "initial" go twice to post().
               res_->add_transition(initial,
@@ -352,7 +352,7 @@ namespace vcsn
                   auto s1 = res_->src_of(t1);
                   auto w1 = res_->weight_of(t1);
                   res_->del_transition(t1);
-                  for (auto t2: res_->all_out(initial_))
+                  for (auto t2: all_out(res_, initial_))
                     res_->set_transition(s1,
                                         res_->dst_of(t2),
                                         res_->label_of(t2),
@@ -397,7 +397,7 @@ namespace vcsn
       VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
-        for (auto t: res_->all_out(initial_))
+        for (auto t: all_out(res_, initial_))
           res_->lmul_weight(t, e.weight());
       }
 

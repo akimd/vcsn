@@ -97,7 +97,7 @@ namespace vcsn
             // class in the result.
             state_t s = class_to_set_[c][0];
             state_t src = class_to_res_state[c];
-            for (auto t : aut->all_out(s))
+            for (auto t : all_out(aut, s))
               {
                 state_t d = aut->dst_of(t);
                 state_t dst = class_to_res_state[state_to_class[d]];

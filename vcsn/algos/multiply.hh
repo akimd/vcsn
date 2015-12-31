@@ -108,7 +108,7 @@ namespace vcsn
         auto s1 = res->src_of(t1);
         auto w1 = res->weight_of(t1);
         res->del_transition(t1);
-        for (auto t2: b->all_out(b_initial))
+        for (auto t2: all_out(b, b_initial))
           res->set_transition(s1,
                               map.at(b->dst_of(t2)),
                               ls.conv(bls, b->label_of(t2)),

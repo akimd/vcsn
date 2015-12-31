@@ -104,7 +104,7 @@ namespace vcsn
               return std::move(res_);
             todo.pop();
             done.insert(s);
-            for (auto t: aut_->all_out(s))
+            for (auto t: all_out(aut_, s))
               {
                 auto dst = aut_->dst_of(t);
                 if (!has(done, dst))

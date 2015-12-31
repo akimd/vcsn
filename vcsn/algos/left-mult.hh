@@ -51,7 +51,7 @@ namespace vcsn
         else if (!ws.is_one(w))
           {
             state_t initial = res->dst_of(initial_transitions(res).front());
-            for (auto t: res->all_out(initial))
+            for (auto t: all_out(res, initial))
               res->lmul_weight(t, w);
           }
         return res;

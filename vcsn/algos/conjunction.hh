@@ -112,11 +112,11 @@ namespace vcsn
 
       /// All the outgoing transitions.
       auto all_out(state_t s) const
-        -> decltype(aut_->all_out(s))
+        -> decltype(all_out(aut_, s))
       {
         if (!state_is_strict(s))
           complete_(s);
-        return aut_->all_out(s);
+        return all_out(aut_, s);
       }
 
       /// Compute the (accessible part of the) conjunction.

@@ -92,9 +92,9 @@ namespace vcsn
         bool has_removed = true;
         while (has_removed)
           {
-            auto all_out = this->aut_->all_out(s);
-            std::vector<state_t> todo(all_out.size());
-            std::transform(begin(all_out), end(all_out), begin(todo),
+            auto ts = all_out(this->aut_, s);
+            auto todo = std::vector<state_t>(ts.size());
+            std::transform(begin(ts), end(ts), begin(todo),
               [this](auto t){ return this->aut_->dst_of(t); });
             has_removed = false;
             for (auto succ : todo)
@@ -105,18 +105,18 @@ namespace vcsn
                 }
           }
 
-        for (auto t : this->aut_->all_out(s))
+        for (auto t : all_out(this->aut_, s))
           self.known_states_.emplace(this->aut_->dst_of(t));
         self.proper_states_.emplace(s);
       }
 
       /// All the outgoing transitions.
       auto all_out(state_t s) const
-        -> decltype(this->aut_->all_out(s))
+        -> decltype(all_out(this->aut_, s))
       {
         if (!state_is_strict(s))
           complete_(s);
-        return this->aut_->all_out(s);
+        return all_out(this->aut_, s);
       }
 
       bool state_is_strict(state_t s) const

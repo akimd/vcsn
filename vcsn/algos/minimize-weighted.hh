@@ -88,7 +88,7 @@ namespace vcsn
       signature_t signature(state_t s) const
       {
         auto res = signature_t{};
-        for (auto t: a_->all_out(s))
+        for (auto t: all_out(a_, s))
           cps_.add_here(res[a_->label_of(t)],
                         state_to_class_.at(a_->dst_of(t)),
                         a_->weight_of(t));

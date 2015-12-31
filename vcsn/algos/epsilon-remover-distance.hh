@@ -96,7 +96,7 @@ namespace vcsn
               if (!ws_.is_zero(dist_pq))
                 {
                   auto proper_q = d2p_[dirty_q];
-                  for (auto t : aut_proper_->all_out(proper_q))
+                  for (auto t : all_out(aut_proper_, proper_q))
                     {
                       auto proper_p = d2p_[dirty_p];
                       auto proper_r = aut_proper_->dst_of(t);

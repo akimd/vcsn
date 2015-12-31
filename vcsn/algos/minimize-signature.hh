@@ -204,7 +204,7 @@ namespace vcsn
 
             // Get the out-states from s, by label:
             label_to_states_t label_to_states;
-            for (auto t : a_->all_out(s))
+            for (auto t : all_out(a_, s))
               label_to_states[a_->label_of(t)].emplace_back(a_->dst_of(t));
 
             // Associate this information to s, as a vector sorted by label:

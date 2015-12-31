@@ -43,7 +43,7 @@ namespace vcsn
         todo.pop_front();
         auto r1 = r[s];
         r[s] = ws.zero();
-        for (auto t : aut->all_out(s))
+        for (auto t : all_out(aut, s))
           {
             auto dst = aut->dst_of(t);
             auto w1 = ws.mul(r1, aut->weight_of(t));

@@ -43,7 +43,7 @@ namespace vcsn
         todo.pop();
 
         if (strict || aut->state_is_strict(src))
-          for (auto tr : aut->all_out(src))
+          for (auto tr : all_out(aut, src))
             {
               state_t dst = aut->dst_of(tr);
               // If we have not seen it already, explore its successors.

@@ -57,7 +57,7 @@ namespace vcsn
           state_map_[st] = out_aut_->new_state();
 
         for (auto st : in_aut_->all_states())
-          for (auto tr : in_aut_->all_out(st))
+          for (auto tr : all_out(in_aut_, st))
             {
               auto letters = in_ls->letters_of_padded(in_aut_->label_of(tr),
                                                       out_labelset_t::one());

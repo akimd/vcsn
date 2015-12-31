@@ -93,7 +93,7 @@ namespace vcsn
             if (s == dest)
               break;
             else
-              for (auto t: aut_->all_out(s))
+              for (auto t: all_out(aut_, s))
                 {
                   auto dst = aut_->dst_of(t);
                   auto nv = mul_(dist_[s], t);
