@@ -90,49 +90,27 @@ namespace vcsn
         return all_states().size();
       }
 
-      // FIXME: clang workaround.
-      template <typename Pred>
-      struct has_state_p
-      {
-        bool operator()(state_t s) const
-        {
-          return pred(s) && has(aut_.ss_, s);
-        }
-        const self_t& aut_;
-        Pred pred;
-      };
-
       template <typename Pred>
       auto all_states(Pred pred) const
       {
-        return aut_->all_states(has_state_p<Pred>{*this, pred});
+        return aut_->all_states([this, pred](state_t s)
+                                {
+                                  return pred(s) && has(ss_, s);
+                                });
       }
-
-      // FIXME: clang workaround.
-      struct all_states_p
-      {
-        bool operator()(state_t) const { return true; };
-      };
 
       auto all_states() const
       {
-        return all_states(all_states_p{});
+        return all_states([](state_t) { return true; });
       }
-
-      // FIXME: clang workaround.
-      struct visible_state_p
-      {
-        bool operator()(state_t s) const
-        {
-          // When transposing post() < pre().
-          return std::max(pre(), post()) < s;
-        }
-        const self_t& aut_;
-      };
 
       auto states() const
       {
-        return all_states(visible_state_p{*this});
+        return all_states([this](state_t s)
+                          {
+                            // When transposing post() < pre().
+                            return std::max(pre(), post()) < s;
+                          });
       }
 
       // FIXME: clang workaround.
