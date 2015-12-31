@@ -796,6 +796,11 @@ struct label
     return vcsn::dyn::multiply(val_, rhs.val_);
   }
 
+  label project(unsigned tape) const
+  {
+    return vcsn::dyn::project(val_, tape);
+  }
+
   vcsn::dyn::label val_;
 };
 
@@ -1573,6 +1578,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const context&, const std::string&>())
     .def("format", &label::format)
     .def("multiply", &label::multiply)
+    .def("project", &label::project)
    ;
 
   bp::class_<polynomial>("polynomial", bp::no_init)

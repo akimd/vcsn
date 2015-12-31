@@ -5,6 +5,7 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/name.hh> // integral_constant
+#include <vcsn/dyn/label.hh>
 
 namespace vcsn
 {
@@ -87,6 +88,27 @@ namespace vcsn
         return make_polynomial(ps_out,
                                vcsn::detail::project<tape>(ps_in,
                                                            p.polynomial()));
+      }
+    }
+  }
+
+  /*------------------.
+  | project(label).   |
+  `------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (project).
+      template <typename Label, typename Tape>
+      label
+      project_label(const label& lbl, integral_constant)
+      {
+        constexpr auto tape = Tape::value;
+        const auto& l = lbl->as<Label>();
+        const auto& ls = l.labelset();
+        return make_label(ls.template set<tape>(), std::get<tape>(l.label()));
       }
     }
   }

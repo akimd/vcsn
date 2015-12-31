@@ -597,6 +597,9 @@ namespace vcsn
     /// Keep a single tape from a multiple-tape polynomial.
     polynomial project(const polynomial& p, unsigned tape);
 
+    /// Keep a single tape from a multiple-tape label.
+    label project(const label& p, unsigned tape);
+
     /// An equivalent automaton without spontaneous transitions.
     ///
     /// \param aut    the automaton in which to remove them

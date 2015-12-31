@@ -1,6 +1,7 @@
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/polynomial.hh>
@@ -131,6 +132,14 @@ namespace vcsn
     {
       auto t = to_integral_constant(tape);
       return detail::project_polynomial_registry().call(p, t);
+    }
+
+    REGISTRY_DEFINE(project_label);
+    label
+    project(const label& l, unsigned tape)
+    {
+      auto t = to_integral_constant(tape);
+      return detail::project_label_registry().call(l, t);
     }
 
     /*-----------.

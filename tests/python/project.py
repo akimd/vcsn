@@ -75,3 +75,12 @@ p = c.polynomial('<2>a|e|x + <3>a|f|x + <4>a|f|y')
 CHECK_EQ('<9>a',        p.project(0))
 CHECK_EQ('<2>e + <7>f', p.project(1))
 CHECK_EQ('<5>x + <4>y', p.project(2))
+
+## ------- ##
+## label.  ##
+## ------- ##
+
+l = c.label('a|e|x')
+CHECK_EQ('a', l.project(0))
+CHECK_EQ('e', l.project(1))
+CHECK_EQ('x', l.project(2))
