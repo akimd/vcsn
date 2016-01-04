@@ -49,13 +49,17 @@ namespace vcsn
     return fun(aut, source, dest);
   }
 
+  /// Given a path (typically computed by lightest_path), the
+  /// corresponding monomial (label, weight).
+  ///
+  /// \returns boost::none if there is no path from stc to dst.
   template <Automaton Aut>
   auto
   path_monomial(const Aut& aut,
                 const std::vector<transition_t_of<Aut>>& path,
                 state_t_of<Aut> src = Aut::element_type::pre(),
                 state_t_of<Aut> dst = Aut::element_type::post())
-    -> boost::optional<typename decltype(make_word_polynomialset(aut->context()))::monomial_t>
+    -> boost::optional<typename detail::word_polynomialset_t<context_t_of<Aut>>::monomial_t>
   {
     auto ps = make_word_polynomialset(aut->context());
     const auto& pls = *ps.labelset();
@@ -63,8 +67,7 @@ namespace vcsn
     const auto& ls = *aut->labelset();
     auto w = pws.one();
     auto l = pls.one();
-    auto t = path[dst];
-    for (; t != aut->null_transition();
+    for (auto t = path[dst]; t != aut->null_transition();
            t = path[aut->src_of(t)])
       {
         w = pws.mul(aut->weight_of(t), w);

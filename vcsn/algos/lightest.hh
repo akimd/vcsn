@@ -35,7 +35,7 @@ namespace vcsn
      * queue that will order states by their weights (then labels).
      */
     template <Automaton Aut>
-    class weighter
+    class lightest_impl
     {
     public:
       using automaton_t = Aut;
@@ -79,9 +79,10 @@ namespace vcsn
             return false;
           else if (std::get<0>(r) == automaton_t::element_type::post())
             return true;
+          else if (std::get<0>(l) == automaton_t::element_type::post())
+            return false;
           else
-            return std::get<0>(l) != automaton_t::element_type::post()
-                   && (std::get<0>(l) < std::get<0>(r));
+            return std::get<0>(l) < std::get<0>(r);
         }
       };
       using queue_t =
@@ -91,7 +92,7 @@ namespace vcsn
       /// Prepare to compute an approximation of the behavior.
       ///
       /// \param aut   the automaton to approximate
-      weighter(const automaton_t& aut)
+      lightest_impl(const automaton_t& aut)
         : aut_(aut)
       {}
 
@@ -99,17 +100,9 @@ namespace vcsn
       /// \param num   number of words looked for.
       polynomial_t operator()(unsigned num)
       {
-        if (num == 1)
-          {
-            auto res = path_monomial(aut_, lightest_path(aut_));
-            return res ? polynomial_t{*res} : polynomial_t{};
-          }
-        else
-          {
-            require(!has_lightening_cycle(aut_),
+        require(!has_lightening_cycle(aut_),
                 "lightest(n > 1): requires automaton without lightening cycles");
-            return lightest_(num);
-          }
+        return lightest_(num);
       }
 
     private:
@@ -194,11 +187,21 @@ namespace vcsn
   /// \param aut   the automaton whose behavior to approximate
   /// \param num   number of words looked for.
   template <Automaton Aut>
-  typename detail::weighter<Aut>::polynomial_t
+  typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t
   lightest(const Aut& aut, unsigned num = 1)
   {
-    auto weighter = detail::weighter<Aut>{aut};
-    return weighter(num);
+    if (num == 1)
+      {
+        if (auto res = path_monomial(aut, lightest_path(aut)))
+          return {*res};
+        else
+          return {};
+      }
+    else
+      {
+        auto lightest = detail::lightest_impl<Aut>{aut};
+        return lightest(num);
+      }
   }
 
 
