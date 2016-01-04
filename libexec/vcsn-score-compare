@@ -151,6 +151,19 @@ def normalize(k):
     # Use of `;` instead of `,`.
     k = re.sub(r'(a\.compose\(a2\).*);', r'\1,', k)
 
+    # It makes more sense to run these algos on Nmin, because we can
+    # use the fastest implementations without having to check for
+    # preconditions.  In the past, we used the fastest implementations
+    # blindly.
+    k = re.sub(r'(lightest_automaton.* ->) Zmin', r'\1 Nmin', k)
+
+    # For a while, we thought we were working on a different
+    # expression, but it was reusing the previous one.  Easy to see
+    # since the context is wrong: it does not go up to `z`.  And use
+    # Nmin now.
+    k = k.replace('a.lightest() # a = std([a-z]?{300}), c = [a-e] -> Z',
+                  'a.lightest() # a = std([a-e]?{150}), c = [a-e] -> Nmin')
+
     # Final format.
     k = '{:20s} # {}'.format(*map(str.strip, k.split('#', 2)))
     return k

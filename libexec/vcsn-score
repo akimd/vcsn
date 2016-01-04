@@ -241,7 +241,8 @@ for n in [18, 21]:
     bench('a.determinize()',
           'a = ladybird({})'.format(n),
           setup=['n = {}'.format(n),
-                 '''a = vcsn.context('lal_char(abc), b').ladybird(n)'''])
+                 'c = vcsn.context("lal_char(abc), b")',
+                 'a = c.ladybird(n)'])
 
 # In the case of 18, check that we scale well with the size of the
 # (context's) alphabet.
@@ -331,6 +332,7 @@ r = "[a-e]?{600}"
 bench('a.shortest(5)',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
+             'r = "{}"'.format(r),
              'a = c.expression(r).standard()'])
 
 ctx = 'lat<lan_char(a), lan_char(x)>, q'
@@ -338,6 +340,7 @@ r = "(\e|x + a|\e)*"
 bench('a.shortest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
+             'r = "{}"'.format(r),
              'a = c.expression(r).derived_term().strip()'],
       number=10)
 
@@ -346,37 +349,46 @@ r = "[a-e]{10000}"
 bench('a.shortest()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
+             'r = "{}"'.format(r),
              'a = c.expression(r).standard()'])
 
 # lightest
-ctx = 'lal_char(a-e), z'
+ctx = 'lal_char(a-e), nmin'
 r = "[a-e]?{150}"
 bench('a.lightest(5)',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
-             'a = c.expression(r).standard()'])
+             'r = "{}"'.format(r),
+             'a = c.expression(r).standard()'],
+      number=10)
 
-r = "[a-z]?{300}"
+# Building [a-z]?{300} is really time-consuming.  Make more iterations
+# instead.
+ctx = 'lal_char(a-e), nmin'
 bench('a.lightest()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
-             'a = c.expression(r).standard()'])
+             'r = "{}"'.format(r),
+             'a = c.expression(r).standard()'],
+      number=500)
 
 ctx = 'lat<lan_char(a), lan_char(x)>, q'
 r = "(\e|x + a|\e)*"
 bench('a.lightest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
+             'r = "{}"'.format(r),
              'a = c.expression(r).derived_term().strip()'],
       number=10)
 
 # lightest-automaton
-ctx = 'lal_char(a-e), zmin'
+ctx = 'lal_char(a-e), nmin'
 r = "[a-e]?{150}"
-for algo, number in [('a-star', 10), ('bellman-ford', 1), ('dijkstra', 100)]:
+for algo, number in [('a-star', 10), ('bellman-ford', 1), ('dijkstra', 500)]:
     bench('a.lightest_automaton("{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['c = vcsn.context(ctx)',
+                 'r = "{}"'.format(r),
                  'a = c.expression(r).standard()'],
           number=number)
 
