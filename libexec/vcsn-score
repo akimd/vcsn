@@ -296,7 +296,7 @@ bench('a.eval("a"*{})'.format(n + 1),
       'a = de_bruijn({})'.format(n),
       setup=['n = {}'.format(n),
              'a = b.de_bruijn(n)'],
-      number=1000)
+      number=2000)
 # Something less wide.
 ctx = 'lal_char(a-z), z'
 n = 25
@@ -306,7 +306,7 @@ bench('a.eval("abcxyz"*{})'.format(n),
       setup=['c = vcsn.context("{}")'.format(ctx),
              'r = c.expression("{}")'.format(r),
              'a = r.standard()'],
-      number=1000)
+      number=10000)
 
 
 ## ---------- ##
@@ -411,7 +411,8 @@ bench('a.proper()',
 # to-expression.
 bench('a.expression("associative", "delgado")',
       'a = ladybird(2000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'],
+      number=5)
 
 r = '[a-d]?{100}'
 bench('a.expression("associative", "naive")',
@@ -421,7 +422,8 @@ bench('a.expression("associative", "naive")',
 
 bench('a.expression("associative", "naive")',
       'a = ladybird(8000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(8000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(8000)'],
+      number=10)
 
 r = '[a-d]?{15}'
 bench('a.expression("linear", "delgado")',
@@ -661,7 +663,7 @@ bench('a.weight_series()',
       setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
              'a = vcsn.context(ctx).expression(r).standard()'],
-      number=20)
+      number=50)
 
 ctx = "lal_char(a-z), z"
 r = "[a-z]{200}"
