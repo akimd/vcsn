@@ -215,7 +215,7 @@ namespace vcsn
 
       /// The type of our transition maps: convert the weight to weightset_t,
       /// non deterministic, and including transitions to post().
-      template <typename A>
+      template <Automaton A>
       using transition_map_t = transition_map<A, weightset_t, false, true>;
 
       /// The outgoing tuple of transitions from state tuple \a ss.

@@ -33,7 +33,7 @@ namespace vcsn
     /// Indexes of transitions leaving state \a s.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto all_out(const Aut& aut, state_t_of<Aut> s)
     {
       return aut->all_out(s);
@@ -82,7 +82,7 @@ namespace vcsn
     /// Indexes of transitions entering state \a s.
     ///
     /// Invalidated by del_transition() and del_state().
-    template <typename Aut>
+    template <Automaton Aut>
     auto all_in(const Aut& aut, state_t_of<Aut> s)
     {
       return aut->all_in(s);

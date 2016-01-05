@@ -89,7 +89,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Lhs, typename Rhs, typename String>
+      template <Automaton Lhs, Automaton Rhs, typename String>
       automaton
       sum(const automaton& lhs, const automaton& rhs, const std::string& algo)
       {

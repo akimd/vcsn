@@ -117,7 +117,7 @@ namespace vcsn
   `-----------------------------------*/
 
   /// An automaton that computes weights of \a lhs, but not by \a rhs.
-  template <typename Lhs, typename Rhs>
+  template <Automaton Lhs, Automaton Rhs>
   fresh_automaton_t_of<Lhs>
   difference(const Lhs& lhs, const Rhs& rhs)
   {
@@ -135,7 +135,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Lhs, typename Rhs>
+      template <Automaton Lhs, Automaton Rhs>
       automaton
       difference(const automaton& lhs, const automaton& rhs)
       {

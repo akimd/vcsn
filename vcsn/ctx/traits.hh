@@ -60,6 +60,15 @@ namespace vcsn
 
 #undef DEFINE
 
+  /// Given an automaton type, the type of its copies.
+  ///
+  /// Strips most decorators, with the notable exception of
+  /// transpose_automaton: copies of transposed automata are
+  /// transposed automata, but with all other kinds of decorations
+  /// removed.  This allows a simple implementation of
+  /// "co-algorithms": transpose the input automaton, create a fresh
+  /// copy (which is therefore transposed), process it, and then
+  /// return its transposition, i.e., a forward automaton.
   template <typename Aut, typename Context = context_t_of<Aut>>
   using fresh_automaton_t_of
     = typename Aut::element_type::template fresh_automaton_t<Context>;

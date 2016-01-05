@@ -20,7 +20,7 @@ namespace vcsn
     `---------------------------------*/
 
     /// Build the (accessible part of the) composition.
-    template <typename Lhs, typename Rhs>
+    template <Automaton Lhs, Automaton Rhs>
     class composer
     {
       static_assert(Lhs::element_type::full_context_t::is_lat,
@@ -270,7 +270,7 @@ namespace vcsn
       std::tuple<transition_map_t<Lhs>, transition_map_t<Rhs>> transition_maps_;
     };
 
-    template <typename Lhs, typename Rhs>
+    template <Automaton Lhs, Automaton Rhs>
     auto
     make_composer(Lhs& lhs, Rhs& rhs)
       -> typename detail::composer<Lhs, Rhs>
@@ -284,7 +284,7 @@ namespace vcsn
   `--------------------------------*/
 
   /// Build the (accessible part of the) composition.
-  template <typename Lhs, typename Rhs,
+  template <Automaton Lhs, Automaton Rhs,
             std::size_t OutTape = 1, std::size_t InTape = 0>
   auto
   compose(Lhs& lhs, Rhs& rhs)
@@ -302,7 +302,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Lhs, typename Rhs>
+      template <Automaton Lhs, Automaton Rhs>
       automaton
       compose(automaton& lhs, automaton& rhs)
       {
