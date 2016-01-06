@@ -46,7 +46,6 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
-    public:
       automaton_decorator(automaton_t aut)
         : aut_{aut}
       {}
@@ -71,8 +70,10 @@ namespace vcsn
         return *this;
       }
 
-      automaton_t
-      strip()
+      /// The automaton we decorate.
+      ///
+      /// Does not strip recursively.
+      automaton_t strip()
       {
         return aut_;
       }

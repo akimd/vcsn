@@ -69,7 +69,6 @@ namespace vcsn
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
 
-    public:
       /// The type of input automata.
       using automata_t = std::tuple<Auts...>;
 
@@ -509,7 +508,7 @@ namespace vcsn
     return res->strip();
   }
 
-  /// Build the (accessible part of the) conjunction.
+  /// Build the (accessible part of the) conjunction, on-the-fly.
   template <Automaton... Auts>
   auto
   conjunction_lazy(const Auts&... as)
@@ -543,8 +542,7 @@ namespace vcsn
       /// Bridge helper.
       template <typename Auts, size_t... I>
       automaton
-      conjunction_(const std::vector<automaton>& as,
-                   bool lazy,
+      conjunction_(const std::vector<automaton>& as, bool lazy,
                    vcsn::detail::index_sequence<I...>)
       {
         if (lazy)
@@ -560,8 +558,7 @@ namespace vcsn
       /// Bridge (conjunction).
       template <typename Auts, typename Bool>
       automaton
-      conjunction(const std::vector<automaton>& as,
-                  bool lazy)
+      conjunction(const std::vector<automaton>& as, bool lazy)
       {
         auto indices
           = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
