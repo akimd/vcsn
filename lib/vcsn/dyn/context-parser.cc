@@ -1,3 +1,4 @@
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
 #include <vcsn/dyn/context-parser.hh>
@@ -103,23 +104,7 @@ namespace vcsn
     {
       std::string w = word_();
       auto res = std::shared_ptr<ast_node>{};
-      if (w == "delay_automaton"
-          || w == "determinized_automaton"
-          || w == "detweighted_automaton"
-          || w == "expression_automaton"
-          || w == "filter_automaton"
-          || w == "focus_automaton"
-          || w == "lazy_proper_automaton"
-          || w == "mutable_automaton"
-          || w == "name_automaton"
-          || w == "pair_automaton"
-          || w == "partition_automaton"
-          || w == "permutation_automaton"
-          || w == "product_automaton"
-          || w == "scc_automaton"
-          || w == "synchronized_automaton"
-          || w == "transpose_automaton"
-          || w == "tuple_automaton")
+      if (boost::ends_with(w, "_automaton"))
         res = automaton_(w);
       else if (w == "context")
         res = context_(w);

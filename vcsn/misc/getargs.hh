@@ -67,10 +67,10 @@ namespace vcsn LIBVCSN_API
           auto i = map_.find(s);
           if (i == end(map_))
             detail::invalid_argument(kind_, s, map_);
-          else if (auto* s2 = boost::get<std::string>(&i->second))
-            s = *s2;
+          else if (auto* res = boost::get<value_t>(&i->second))
+            return *res;
           else
-            return boost::get<value_t>(i->second);
+            s = boost::get<std::string>(i->second);
         }
     }
 

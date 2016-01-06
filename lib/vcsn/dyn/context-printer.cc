@@ -52,28 +52,31 @@ namespace vcsn
 
     DEFINE(automaton)
     {
-      static auto map = std::map<std::string, std::string>
+      static const auto map = getarg<std::string>
         {
-          {"delay_automaton"        , "vcsn/algos/is-synchronized.hh"},
-          {"determinized_automaton" , "vcsn/algos/determinize.hh"},
-          {"detweighted_automaton"  , "vcsn/algos/determinize.hh"},
-          {"expression_automaton"   , "vcsn/core/expression-automaton.hh"},
-          {"filter_automaton"       , "vcsn/algos/filter.hh"},
-          {"focus_automaton"        , "vcsn/algos/focus.hh"},
-          {"lazy_proper_automaton"  , "vcsn/algos/epsilon-remover-lazy.hh"},
-          {"mutable_automaton"      , "vcsn/core/mutable-automaton.hh"},
-          {"name_automaton"         , "vcsn/core/name-automaton.hh"},
-          {"pair_automaton"         , "vcsn/algos/synchronizing-word.hh"},
-          {"partition_automaton"    , "vcsn/core/partition-automaton.hh"},
-          {"permutation_automaton"  , "vcsn/core/permutation-automaton.hh"},
-          {"product_automaton"      , "vcsn/algos/conjunction.hh"},
-          {"scc_automaton"          , "vcsn/algos/scc.hh"},
-          {"synchronized_automaton" , "vcsn/algos/synchronize.hh"},
-          {"transpose_automaton"    , "vcsn/algos/transpose.hh"},
-          {"tuple_automaton"        , "vcsn/core/tuple-automaton.hh"},
+          "automaton type",
+          {
+            {"delay_automaton"        , "vcsn/algos/is-synchronized.hh"},
+            {"determinized_automaton" , "vcsn/algos/determinize.hh"},
+            {"detweighted_automaton"  , "vcsn/algos/determinize.hh"},
+            {"expression_automaton"   , "vcsn/core/expression-automaton.hh"},
+            {"filter_automaton"       , "vcsn/algos/filter.hh"},
+            {"focus_automaton"        , "vcsn/algos/focus.hh"},
+            {"lazy_proper_automaton"  , "vcsn/algos/epsilon-remover-lazy.hh"},
+            {"mutable_automaton"      , "vcsn/core/mutable-automaton.hh"},
+            {"name_automaton"         , "vcsn/core/name-automaton.hh"},
+            {"pair_automaton"         , "vcsn/algos/synchronizing-word.hh"},
+            {"partition_automaton"    , "vcsn/core/partition-automaton.hh"},
+            {"permutation_automaton"  , "vcsn/core/permutation-automaton.hh"},
+            {"product_automaton"      , "vcsn/algos/conjunction.hh"},
+            {"scc_automaton"          , "vcsn/algos/scc.hh"},
+            {"synchronized_automaton" , "vcsn/algos/synchronize.hh"},
+            {"transpose_automaton"    , "vcsn/algos/transpose.hh"},
+            {"tuple_automaton"        , "vcsn/core/tuple-automaton.hh"},
+          },
         };
       auto type = t.get_type();
-      header(getargs("automaton type", map, type));
+      header(map[type]);
       os_ << "vcsn::" << type << '<' << incendl;
       bool first = true;
       for (auto c: t.get_content())
