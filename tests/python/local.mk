@@ -67,6 +67,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/prefix.py                                 \
   %D%/project.py                                \
   %D%/proper.py                                 \
+  %D%/properlazy.py                             \
   %D%/push-weights.py                           \
   %D%/reduce.py                                 \
   %D%/scc.py                                    \
