@@ -513,7 +513,7 @@ struct automaton
     = auto (automaton::*)(const boost::python::list& tapes,
                           const std::string& ids) const -> automaton;
 
-  polynomial lightest(unsigned num) const;
+  polynomial lightest(unsigned num, const std::string& algo = "auto") const;
 
   automaton lightest_automaton(const std::string& algo = "auto") const
   {
@@ -1200,9 +1200,9 @@ automaton automaton::left_mult(const weight& w,
   return vcsn::dyn::left_mult(w.val_, val_, algo);
 }
 
-polynomial automaton::lightest(unsigned num) const
+polynomial automaton::lightest(unsigned num, const std::string& algo) const
 {
-  return vcsn::dyn::lightest(val_, num);
+  return vcsn::dyn::lightest(val_, num, algo);
 }
 
 automaton automaton::right_mult(const weight& w,
@@ -1442,7 +1442,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          (arg("weight"), arg("algo") = "auto"))
     .def("letterize", &automaton::letterize)
     .def("_lift", &automaton::lift)
-    .def("lightest", &automaton::lightest, (arg("num") = 1))
+    .def("lightest", &automaton::lightest,
+         (arg("num") = 1U, arg("algo") = "auto"))
     .def("lightest_automaton",
          &automaton::lightest_automaton, (arg("algo") = "auto"))
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))

@@ -443,7 +443,9 @@ namespace vcsn
     ///
     /// \param aut   the automaton whose behavior to approximate
     /// \param num   number of words looked for.
-    polynomial lightest(const automaton& aut, unsigned num = 1);
+    /// \param algo  the specific algorithm to use
+    polynomial lightest(const automaton& aut, unsigned num = 1,
+                        const std::string& algo = "auto");
 
     /// The shortest path automaton using the given algorithm.
     automaton lightest_automaton(const automaton& aut,

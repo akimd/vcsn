@@ -188,19 +188,19 @@ namespace vcsn
   /// \param num   number of words looked for.
   template <Automaton Aut>
   typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t
-  lightest(const Aut& aut, unsigned num = 1)
+  lightest(const Aut& aut, unsigned num = 1, const std::string& algo = "auto")
   {
-    if (num == 1)
-      {
-        if (auto res = path_monomial(aut, lightest_path(aut)))
-          return {*res};
-        else
-          return {};
-      }
-    else
+    if (num != 1 || algo == "breadth-first")
       {
         auto lightest = detail::lightest_impl<Aut>{aut};
         return lightest(num);
+      }
+    else
+      {
+        if (auto res = path_monomial(aut, lightest_path(aut, algo)))
+          return {*res};
+        else
+          return {};
       }
   }
 
@@ -210,13 +210,13 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <Automaton Aut, typename Num>
+      template <Automaton Aut, typename Num, typename String>
       polynomial
-      lightest(const automaton& aut, unsigned num)
+      lightest(const automaton& aut, unsigned num, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());
-        return make_polynomial(ps, lightest(a, num));
+        return make_polynomial(ps, lightest(a, num, algo));
       }
     }
   }
