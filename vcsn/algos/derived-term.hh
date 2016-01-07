@@ -65,9 +65,30 @@ namespace vcsn
       bool determinize = false;
     };
 
-    /*----------------------------.
-    | derived_term(expression).   |
-    `----------------------------*/
+    /*--------------------------.
+    | derived_term_automaton.   |
+    `--------------------------*/
+
+    /// Additional members when the labelset is free.
+    template <typename ExpSet,
+              bool = labelset_t_of<ExpSet>::is_free()>
+    struct derived_term_automaton_members
+    {
+      derived_term_automaton_members(const ExpSet& rs)
+        : gens{rs.labelset()->generators()}
+      {}
+
+      /// The alphabet.
+      using genset_t = typename labelset_t_of<ExpSet>::genset_t;
+      genset_t gens;
+    };
+
+    /// Additional members when the labelset is not free.
+    template <typename ExpSet>
+    struct derived_term_automaton_members<ExpSet, false>
+    {
+      derived_term_automaton_members(const ExpSet&){}
+    };
 
     /// Compute the derived-term automaton from an expression.
     ///
@@ -99,21 +120,32 @@ namespace vcsn
     /// So, after experimentation, as of 2014-10, I prefer not to use
     /// the pre/post based construct in either case.
     template <typename ExpSet>
-    struct derived_termer
+    class derived_term_automaton_impl
+      : public automaton_decorator<expression_automaton<mutable_automaton<context_t_of<ExpSet>>>>
     {
+    public:
       using expressionset_t = ExpSet;
+      /// Our state names: expressions.
       using expression_t = typename expressionset_t::value_t;
 
       using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<context_t>;
 
+      /// The type of the (strict) automaton we build.
       using automaton_t = expression_automaton<mutable_automaton<context_t>>;
       using state_t = state_t_of<automaton_t>;
 
-      derived_termer(const expressionset_t& rs, derived_term_algo algo)
-        : rs_(rs)
-        , algo_(algo)
-        , res_{make_shared_ptr<automaton_t>(rs_)}
+      /// This class.
+      using self_t = derived_term_automaton_impl;
+      /// Base class.
+      using super_t = automaton_decorator<automaton_t>;
+
+      derived_term_automaton_impl(const expressionset_t& rs,
+                                  derived_term_algo algo)
+        : super_t{make_shared_ptr<automaton_t>(rs)}
+        , rs_{rs}
+        , algo_{algo}
+        , members_{rs}
       {}
 
       /// Compute the derived-term automaton.
@@ -129,79 +161,84 @@ namespace vcsn
       automaton_t via_derivation(const expression_t& expression)
       {
         init_(expression);
-
-        // The alphabet.
-        const auto& ls = rs_.labelset()->generators();
-        while (!res_->todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            auto p = std::move(res_->todo_.top());
-            res_->todo_.pop();
-            const expression_t& src = p.second;
-            state_t s = p.first;
-
-            res_->set_final(s, constant_term(rs_, src));
-            for (auto l : ls)
-              {
-                auto p = derivation(rs_, src, l, algo_.breaking);
-                if (algo_.determinize)
-                  {
-                    auto m = ps_.determinize(p);
-                    res_->new_transition(s, label_of(m), l, weight_of(m));
-                  }
-                else
-                  for (const auto& m: p)
-                    res_->new_transition(s, label_of(m), l, weight_of(m));
-              }
+            auto p = std::move(aut_->todo_.top());
+            aut_->todo_.pop();
+            complete_via_derivation_(p.first, p.second);
           }
-        return res_;
+        return aut_;
       }
 
       /// Compute the derived-term automaton via expansion.
       automaton_t via_expansion(const expression_t& expression)
       {
         init_(expression);
-        // Might be needed to determinize.
-        auto es = rat::expansionset<expressionset_t>{rs_};
-
-        auto to_expansion = rat::to_expansion_visitor<expressionset_t>{rs_};
-        while (!res_->todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            auto p = std::move(res_->todo_.top());
-            res_->todo_.pop();
-            const auto& src = p.second;
-            auto s = p.first;
-
-            auto expansion = to_expansion(src);
-            if (algo_.determinize)
-              expansion = es.determinize(expansion);
-
-            res_->set_final(s, expansion.constant);
-            for (const auto& p: expansion.polynomials)
-              if (algo_.breaking)
-                for (const auto& m1: p.second)
-                  for (const auto& m2: split(rs_, label_of(m1)))
-                    res_->new_transition(s, label_of(m2), p.first,
-                                         ws_.mul(weight_of(m1), weight_of(m2)));
-              else if (algo_.determinize)
-                {
-                  auto m = ps_.determinize(p.second);
-                  res_->new_transition(s, label_of(m), p.first, weight_of(m));
-                }
-              else
-                for (const auto& m: p.second)
-                  res_->new_transition(s, label_of(m), p.first, weight_of(m));
+            auto p = std::move(aut_->todo_.top());
+            aut_->todo_.pop();
+            complete_via_expansion_(p.first, p.second);
           }
-        return res_;
+        return aut_;
       }
 
     private:
+      /// The expression_automaton we are building.
+      using super_t::aut_;
+
+      /// Initialize the computation: build the initial states.
       void init_(const expression_t& expression)
       {
         if (algo_.breaking)
           for (const auto& p: split(rs_, expression))
-            res_->set_initial(label_of(p), weight_of(p));
+            aut_->set_initial(label_of(p), weight_of(p));
         else
-          res_->set_initial(expression, ws_.one());
+          aut_->set_initial(expression, ws_.one());
+      }
+
+      /// Compute the outgoing transitions of \a src.
+      template <typename ES = expressionset_t,
+                typename = std::enable_if<labelset_t_of<ES>::is_free()>>
+      void complete_via_derivation_(state_t s, const expression_t& src)
+      {
+        aut_->set_final(s, constant_term(rs_, src));
+        for (auto l : members_.gens)
+          {
+            auto p = derivation(rs_, src, l, algo_.breaking);
+            if (algo_.determinize)
+              {
+                auto m = ps_.determinize(p);
+                aut_->new_transition(s, label_of(m), l, weight_of(m));
+              }
+            else
+              for (const auto& m: p)
+                aut_->new_transition(s, label_of(m), l, weight_of(m));
+          }
+      }
+
+      /// Compute the outgoing transitions of \a src.
+      void complete_via_expansion_(state_t s, const expression_t& src)
+      {
+        auto expansion = to_expansion_(src);
+        if (algo_.determinize)
+          expansion = es_.determinize(expansion);
+
+        aut_->set_final(s, expansion.constant);
+        for (const auto& p: expansion.polynomials)
+          if (algo_.breaking)
+            for (const auto& m1: p.second)
+              for (const auto& m2: split(rs_, label_of(m1)))
+                aut_->new_transition(s, label_of(m2), p.first,
+                                     ws_.mul(weight_of(m1), weight_of(m2)));
+          else if (algo_.determinize)
+            {
+              auto m = ps_.determinize(p.second);
+              aut_->new_transition(s, label_of(m), p.first, weight_of(m));
+            }
+          else
+            for (const auto& m: p.second)
+              aut_->new_transition(s, label_of(m), p.first, weight_of(m));
       }
 
       /// The expression's set.
@@ -213,9 +250,31 @@ namespace vcsn
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// How derived terms are computed.
       derived_term_algo algo_;
-      /// The resulting automaton.
-      automaton_t res_;
+
+      /// Might be needed to determinize.
+      using expansionset_t = rat::expansionset<expressionset_t>;
+      expansionset_t es_ = {rs_};
+      /// Used for expansions.
+      using to_expansion_t = rat::to_expansion_visitor<expressionset_t>;
+      to_expansion_t to_expansion_ = {rs_};
+      /// Possibly the generators.
+      derived_term_automaton_members<expressionset_t> members_ = {rs_};
     };
+  }
+
+  /// A derived-term automaton as a shared pointer.
+  template <typename ExpSet>
+  using derived_term_automaton
+    = std::shared_ptr<detail::derived_term_automaton_impl<ExpSet>>;
+
+  template <typename ExpSet>
+  auto
+  make_derived_term_automaton(const ExpSet& rs,
+                              const detail::derived_term_algo& algo)
+    -> derived_term_automaton<ExpSet>
+  {
+    using res_t = derived_term_automaton<ExpSet>;
+    return make_shared_ptr<res_t>(rs, algo);
   }
 
   /// The derived-term automaton, for free labelsets.
@@ -231,8 +290,8 @@ namespace vcsn
                const std::string& algo = "auto")
   {
     auto a = detail::derived_term_algo(algo);
-    auto dt = detail::derived_termer<ExpSet>{rs, a};
-    return dt(r);
+    auto dt = make_derived_term_automaton(rs, a);
+    return dt->operator()(r);
   }
 
   /// The derived-term automaton, for non free labelsets.
@@ -253,8 +312,8 @@ namespace vcsn
     // Do not call the operator(), this would trigger the compilation
     // of via_derivation, which does not compile (on purpose) for non
     // free labelsets.
-    auto dt = detail::derived_termer<ExpSet>{rs, a};
-    return dt.via_expansion(r);
+    auto dt = make_derived_term_automaton(rs, a);
+    return dt->via_expansion(r);
   }
 
   namespace dyn
