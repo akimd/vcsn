@@ -168,6 +168,12 @@ namespace vcsn
     }
 
     /// When used as WeightSet.
+    static constexpr bool has_lightening_weights()
+    {
+      return weightset_t::has_lightening_weights();
+    }
+
+    /// When used as WeightSet.
     static constexpr bool has_one()
     {
       return true;

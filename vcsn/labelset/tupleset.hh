@@ -254,6 +254,12 @@ namespace vcsn
     }
 
     static constexpr bool
+    has_lightening_weights()
+    {
+      return has_lightening_weights_(indices);
+    }
+
+    static constexpr bool
     has_one()
     {
       return has_one_(indices);
@@ -676,6 +682,13 @@ namespace vcsn
         if (!n)
           return false;
       return true;
+    }
+
+    template <std::size_t... I>
+    static constexpr bool
+    has_lightening_weights_(seq<I...>)
+    {
+      return all_<valueset_t<I>::has_lightening_weights()...>();
     }
 
     template <std::size_t... I>
