@@ -300,7 +300,7 @@ namespace vcsn
         if (dirty_s == aut_dirty_->null_state())
           return false;
         else
-          return !aut_dirty_->in(dirty_s).empty();
+          return !in(aut_dirty_, dirty_s).empty();
       }
 
       /// Wrapper around remover_on() which does a lookup of the dirty state.

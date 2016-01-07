@@ -3,6 +3,7 @@
 #include <vcsn/algos/epsilon-remover-separate.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/core/automaton.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/misc/symbol.hh>
 #include <vcsn/misc/raise.hh>
@@ -92,7 +93,7 @@ namespace vcsn
         bool has_removed = true;
         while (has_removed)
           {
-            auto ts = all_out(this->aut_, s);
+            auto ts = vcsn::detail::all_out(this->aut_, s);
             auto todo = std::vector<state_t>(ts.size());
             std::transform(begin(ts), end(ts), begin(todo),
               [this](auto t){ return this->aut_->dst_of(t); });
@@ -105,18 +106,18 @@ namespace vcsn
                 }
           }
 
-        for (auto t : all_out(this->aut_, s))
+        for (auto t : vcsn::detail::all_out(this->aut_, s))
           self.known_states_.emplace(this->aut_->dst_of(t));
         self.proper_states_.emplace(s);
       }
 
       /// All the outgoing transitions.
       auto all_out(state_t s) const
-        -> decltype(all_out(this->aut_, s))
+        -> decltype(vcsn::detail::all_out(this->aut_, s))
       {
         if (!state_is_strict(s))
           complete_(s);
-        return all_out(this->aut_, s);
+        return vcsn::detail::all_out(this->aut_, s);
       }
 
       bool state_is_strict(state_t s) const
