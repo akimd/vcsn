@@ -11,11 +11,22 @@
 namespace vcsn
 {
   /// Lightest path dispatch between algorithms with tags.
-  template <Automaton Aut, typename Tag = dijkstra_tag>
+  template <Automaton Aut, typename Tag = auto_tag>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, Tag tag = {})
   {
     return lightest_path(aut, aut->pre(), aut->post(), tag);
+  }
+
+  template <Automaton Aut>
+  std::vector<transition_t_of<Aut>>
+  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+                auto_tag = {})
+  {
+    if (weightset_t_of<Aut>::has_lightening_weights())
+      return lightest_path(aut, source, dest, bellman_ford_tag{});
+    else
+      return lightest_path(aut, source, dest, dijkstra_tag{});
   }
 
   namespace detail
@@ -43,7 +54,7 @@ namespace vcsn
     {
       "lightest-path algorithm",
       {
-        {"auto",         "dijkstra"},
+        {"auto",         detail::lightest_path_tag<Aut, auto_tag>},
         {"a-star",       detail::lightest_path_tag<Aut, a_star_tag>},
         {"bellman-ford", detail::lightest_path_tag<Aut, bellman_ford_tag>},
         {"dijkstra",     detail::lightest_path_tag<Aut, dijkstra_tag>},

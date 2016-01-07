@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/algos/lightest-path.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -16,7 +17,7 @@ namespace vcsn
   /// state. Then, reconstruct the path keeping the states and transitions
   /// we met. Now that we have the sets of elements to keep we can construct
   /// a new automaton using these states/transitions.
-  template <Automaton Aut, typename Algo = dijkstra_tag>
+  template <Automaton Aut, typename Algo = auto_tag>
   fresh_automaton_t_of<Aut>
   lightest_automaton(const Aut& aut, Algo algo = {})
   {
