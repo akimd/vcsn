@@ -13,14 +13,14 @@ namespace vcsn
   `-----------------------*/
 
   template <Automaton Aut>
-  std::enable_if_t<weightset_t_of<Aut>::can_have_lightening_cycle(), bool>
+  std::enable_if_t<weightset_t_of<Aut>::has_lightening_weights(), bool>
   has_lightening_cycle(const Aut& aut)
   {
     return !detail::bellman_ford_impl(aut, aut->pre());
   }
 
   template <Automaton Aut>
-  std::enable_if_t<!weightset_t_of<Aut>::can_have_lightening_cycle(), bool>
+  std::enable_if_t<!weightset_t_of<Aut>::has_lightening_weights(), bool>
   has_lightening_cycle(const Aut& aut)
   {
     return false;

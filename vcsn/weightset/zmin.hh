@@ -39,7 +39,7 @@ namespace vcsn
         return v;
       }
 
-      static constexpr bool can_have_lightening_cycle() { return true; }
+      static constexpr bool has_lightening_weights() { return true; }
 
       std::ostream&
       print_set(std::ostream& o, format fmt = {}) const

@@ -47,7 +47,7 @@ namespace vcsn
         return super_t::conv(is);
       }
 
-      static constexpr bool can_have_lightening_cycle() { return false; }
+      static constexpr bool has_lightening_weights() { return false; }
 
       std::ostream&
       print_set(std::ostream& o, format fmt = {}) const

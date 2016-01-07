@@ -122,9 +122,9 @@ namespace vcsn
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
     static constexpr bool is_commutative() { return false; }
-    static constexpr bool can_have_lightening_cycle()
+    static constexpr bool has_lightening_weights()
     {
-      return weightset_t::can_have_lightening_cycle();
+      return weightset_t::has_lightening_weights();
     }
 
     /// Remove the monomial of \a l in \a v.
