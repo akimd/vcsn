@@ -37,24 +37,28 @@ namespace vcsn
       /// From algo name to algo.
       derived_term_algo(std::string algo)
       {
-        static const auto map = std::map<std::string, derived_term_algo>
+        using dta = derived_term_algo;
+        static const auto map = getarg<derived_term_algo>
           {
-            //                          { algo, breaking, deterministic }.
-            {"auto",                    {expansion,  false, false}},
-            {"breaking_derivation",     {derivation, true,  false}},
-            {"breaking_expansion",      {expansion,  true,  false}},
-            {"derivation",              {derivation, false, false}},
-            {"derivation,breaking",     {derivation, true,  false}},
-            {"derivation,deterministic",{derivation, false,  true}},
-            {"derivation_breaking",     {derivation, true,  false}},
-            {"expansion",               {expansion,  false, false}},
-            {"expansion,breaking",      {expansion,  true,  false}},
-            {"expansion,deterministic", {expansion,  false, true}},
-            {"expansion_breaking",      {expansion,  true,  false}},
+            "derived-term algorithm",
+            {
+              //                          { algo, breaking, deterministic }.
+              {"auto",                    dta{expansion,  false, false}},
+              {"breaking_derivation",     "derivation,breaking"},
+              {"breaking_expansion",      "expansion,breaking"},
+              {"derivation",              dta{derivation, false, false}},
+              {"derivation,breaking",     dta{derivation, true,  false}},
+              {"derivation,deterministic",dta{derivation, false,  true}},
+              {"derivation_breaking",     "derivation,breaking"},
+              {"expansion",               dta{expansion,  false, false}},
+              {"expansion,breaking",      dta{expansion,  true,  false}},
+              {"expansion,deterministic", dta{expansion,  false, true}},
+              {"expansion_breaking",      "expansion,breaking"},
+            }
           };
         if (boost::starts_with(algo, "lazy,"))
           algo = algo.substr(5);
-        *this = getargs("derived-term algorithm", map, algo);
+        *this = map[algo];
       }
 
       /// Core algorithm.

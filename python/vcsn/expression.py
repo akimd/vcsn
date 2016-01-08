@@ -46,6 +46,19 @@ def _expression_derivation(self, w, *args):
 expression.derivation = _expression_derivation
 
 
+_expression_derived_term_orig = expression.derived_term
+def _expression_derived_term(self, algo="expansion",
+                             lazy=False, deterministic=False, breaking=False):
+    if lazy:
+        algo = 'lazy,' + algo
+    for b, tag in [(breaking, "breaking"),
+                   (deterministic, "deterministic")]:
+        if b:
+            algo += "," + tag
+    return _expression_derived_term_orig(self, algo)
+expression.derived_term = _expression_derived_term
+
+
 def _expression_info(self, key=None, detailed=False):
     res = _info_to_dict(self.format('info'))
     return res[key] if key else res
