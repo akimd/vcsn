@@ -5,22 +5,15 @@
 #include <string>
 #include <vector>
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/set_of.hpp>
+#include <boost/bimap/unordered_set_of.hpp>
+
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/fwd.hh> // expression_automaton
 #include <vcsn/core/rat/expressionset.hh>
-#include <vcsn/misc/map.hh>
+#include <vcsn/misc/bimap.hh>
 #include <vcsn/misc/symbol.hh>
-#include <vcsn/misc/unordered_map.hh>
-
-//# define DEBUG 1
-
-#if DEBUG
-# define DEBUG_IFELSE(Then, Else) Then
-#else
-# define DEBUG_IFELSE(Then, Else) Else
-#endif
-
-#define DEBUG_IF(Then) DEBUG_IFELSE(Then,)
 
 namespace vcsn
 {
@@ -40,6 +33,9 @@ namespace vcsn
       using state_t = state_t_of<super_t>;
       using label_t = label_t_of<super_t>;
       using weight_t = weight_t_of<super_t>;
+
+      /// State are named by expressions.
+      using state_name_t = expression_t;
 
       expression_automaton_impl(const expressionset_t& rs)
         : super_t(rs.context())
@@ -61,27 +57,27 @@ namespace vcsn
         return o << '>';
       }
 
-      /// Symbolic states to state handlers.
-      using smap = std::unordered_map<expression_t, state_t,
-                                      vcsn::hash<expressionset_t>,
-                                      vcsn::equal_to<expressionset_t>>;
+      /// Storage for state names.
+      using left_t
+        = boost::bimaps::unordered_set_of<expression_t,
+                                          vcsn::hash<expressionset_t>,
+                                          vcsn::equal_to<expressionset_t>>;
+      /// Storage for state index.
+      using right_t = boost::bimaps::set_of<state_t>;
+      /// Bijective map state_name_t -> state_t;
+      using bimap_t = boost::bimap<left_t, right_t>;
 
       /// The state for expression \a r.
       /// If this is a new state, schedule it for visit.
       state_t state(const expression_t& r)
       {
-        // Benches show that the map_.emplace technique is slower, and
-        // then that operator[] is faster than emplace.
         state_t res;
+        const auto& map_ = bimap_.left;
         auto i = map_.find(r);
         if (i == std::end(map_))
           {
-            DEBUG_IF(
-                     std::cerr << "New state: ";
-                     rs_.print(r, std::cerr) << '\n';
-                     );
             res = super_t::new_state();
-            map_[r] = res;
+            bimap_.insert({r, res});
             todo_.push(r);
           }
         else
@@ -131,23 +127,19 @@ namespace vcsn
       }
 
       /// Ordered map: state -> its derived term.
-      using origins_t = std::map<state_t, expression_t>;
-      mutable origins_t origins_;
-      const origins_t&
-      origins() const
+      using origins_t = typename bimap_t::right_map;
+      const origins_t& origins() const
       {
-        if (origins_.empty())
-          for (const auto& p: map_)
-            origins_[p.second] = p.first;
-        return origins_;
+        return bimap_.right;
       }
 
+      //    private:
       /// The expression's set.
       expressionset_t rs_;
       /// States to visit.
       std::stack<expression_t, std::vector<expression_t>> todo_;
       /// expression -> state.
-      smap map_;
+      bimap_t bimap_;
     };
   }
 }

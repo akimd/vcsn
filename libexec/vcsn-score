@@ -184,7 +184,7 @@ for fmt in ['dot', 'efsm', 'fado']:
 ## -------------- ##
 
 
-def bench_derived_term(alphabet, exp, algo, number=10):
+def bench_derived_term(alphabet, exp, algo, number):
     ctx = "lal_char({}), z".format(alphabet)
     bench('r.derived_term("{}")'.format(algo),
           'r = {}, c = {}'.format(exp, ctx_signature(ctx)),
@@ -195,21 +195,21 @@ def bench_derived_term(alphabet, exp, algo, number=10):
           number=number)
 
 
-def bench_dt(alphabet, size, algo, number=10):
+def bench_dt(alphabet, size, algo, number):
     bench_derived_term(alphabet,
                        "(a+b)*b(<2>a+<2>b){{{}}}".format(size),
                        algo,
                        number=number)
 
-bench_dt('ab',  150, 'derivation')
-bench_dt('a-z', 150, 'derivation')
-bench_dt('a-z', 150, 'expansion')
-bench_dt('ab',  300, 'derivation')
-bench_dt('a-z', 300, 'derivation')
-bench_dt('a-z', 300, 'expansion')
+bench_dt('ab',  150, 'derivation', 20)
+bench_dt('a-z', 150, 'derivation', 20)
+bench_dt('a-z', 150, 'expansion',  20)
+bench_dt('ab',  300, 'derivation', 10)
+bench_dt('a-z', 300, 'derivation', 10)
+bench_dt('a-z', 300, 'expansion',  10)
 
-bench_derived_term('a', 'a?{150}', 'derivation', number=1)
-bench_derived_term('a', 'a?{150}', 'expansion', number=1)
+bench_derived_term('a', 'a?{150}', 'derivation', 1)
+bench_derived_term('a', 'a?{150}', 'expansion',  1)
 
 # standard
 ctx = 'lal_char(a-z), z'
