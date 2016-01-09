@@ -115,7 +115,7 @@ namespace vcsn
       {
         if (!state_is_strict(s))
           complete_(s);
-        return all_out(aut_, s);
+        return vcsn::detail::all_out(aut_, s);
       }
 
       /// Compute the (accessible part of the) conjunction.
