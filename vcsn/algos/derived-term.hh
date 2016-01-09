@@ -134,9 +134,11 @@ namespace vcsn
         const auto& ls = rs_.labelset()->generators();
         while (!res_->todo_.empty())
           {
-            expression_t src = res_->todo_.top();
-            state_t s = res_->state(src);
+            auto p = std::move(res_->todo_.top());
             res_->todo_.pop();
+            const expression_t& src = p.second;
+            state_t s = p.first;
+
             res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
               {
@@ -164,9 +166,11 @@ namespace vcsn
         auto to_expansion = rat::to_expansion_visitor<expressionset_t>{rs_};
         while (!res_->todo_.empty())
           {
-            expression_t src = res_->todo_.top();
+            auto p = std::move(res_->todo_.top());
             res_->todo_.pop();
-            auto s = res_->state(src);
+            const auto& src = p.second;
+            auto s = p.first;
+
             auto expansion = to_expansion(src);
             if (algo_.determinize)
               expansion = es.determinize(expansion);

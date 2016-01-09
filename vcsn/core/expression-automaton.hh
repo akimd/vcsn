@@ -78,7 +78,7 @@ namespace vcsn
           {
             res = super_t::new_state();
             bimap_.insert({r, res});
-            todo_.push(r);
+            todo_.emplace(res, r);
           }
         else
           res = i->second;
@@ -137,7 +137,7 @@ namespace vcsn
       /// The expression's set.
       expressionset_t rs_;
       /// States to visit.
-      std::stack<expression_t, std::vector<expression_t>> todo_;
+      std::stack<std::pair<state_t, const state_name_t>> todo_;
       /// expression -> state.
       bimap_t bimap_;
     };
