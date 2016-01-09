@@ -186,7 +186,11 @@ for fmt in ['dot', 'efsm', 'fado']:
 
 def bench_derived_term(alphabet, exp, algo, number):
     ctx = "lal_char({}), z".format(alphabet)
-    bench('r.derived_term("{}")'.format(algo),
+    cmd = 'r.derived_term("{}")'.format(algo)
+    if 'lazy' in algo:
+        # Accessible resolves the lazy states.
+        cmd = cmd + '.accessible()'
+    bench(cmd,
           'r = {}, c = {}'.format(exp, ctx_signature(ctx)),
           setup=['ctx = "{}"'.format(ctx),
                  'e = "{}"'.format(exp),
@@ -207,9 +211,15 @@ bench_dt('a-z', 150, 'expansion',  20)
 bench_dt('ab',  300, 'derivation', 10)
 bench_dt('a-z', 300, 'derivation', 10)
 bench_dt('a-z', 300, 'expansion',  10)
+bench_dt('a-z', 300, 'lazy,expansion',  10)
+
+# Measure the cost of a lazy construction.
+bench_dt('a-z', 3, 'expansion', 5000)
+bench_dt('a-z', 3, 'lazy,expansion', 5000)
 
 bench_derived_term('a', 'a?{150}', 'derivation', 1)
-bench_derived_term('a', 'a?{150}', 'expansion',  1)
+bench_derived_term('a', 'a?{150}', 'expansion',  2)
+bench_derived_term('a', 'a?{150}', 'lazy,expansion',  2)
 
 # standard
 ctx = 'lal_char(a-z), z'

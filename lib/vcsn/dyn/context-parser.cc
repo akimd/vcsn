@@ -337,6 +337,14 @@ namespace vcsn
                                             context_());
           eat_('>');
         }
+      // xxx_automaton<ExpresionSet>.
+      else if (prefix == "derived_term_automaton")
+        {
+          eat_("<expressionset");
+          res = std::make_shared<automaton>(prefix,
+                                            expressionset_());
+          eat_('>');
+        }
       // xxx_automaton<Aut...>.
       else if (prefix == "product_automaton"
                || prefix == "tuple_automaton")

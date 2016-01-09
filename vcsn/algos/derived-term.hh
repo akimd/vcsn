@@ -35,7 +35,7 @@ namespace vcsn
       {}
 
       /// From algo name to algo.
-      derived_term_algo(const std::string& algo)
+      derived_term_algo(std::string algo)
       {
         static const auto map = std::map<std::string, derived_term_algo>
           {
@@ -52,6 +52,8 @@ namespace vcsn
             {"expansion,deterministic", {expansion,  false, true}},
             {"expansion_breaking",      {expansion,  true,  false}},
           };
+        if (boost::starts_with(algo, "lazy,"))
+          algo = algo.substr(5);
         *this = getargs("derived-term algorithm", map, algo);
       }
 
@@ -140,6 +142,20 @@ namespace vcsn
       /// Base class.
       using super_t = automaton_decorator<automaton_t>;
 
+      static symbol sname()
+      {
+        static auto res = symbol{"derived_term_automaton<"
+                                 + expressionset_t::sname()
+                                 + ">"};
+        return res;
+      }
+
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
+      {
+        o << "derived_term_automaton<";
+        return rs_.print_set(o, fmt) << '>';
+      }
+
       derived_term_automaton_impl(const expressionset_t& rs,
                                   derived_term_algo algo)
         : super_t{make_shared_ptr<automaton_t>(rs)}
@@ -183,18 +199,44 @@ namespace vcsn
         return aut_;
       }
 
-    private:
+      //    private:
       /// The expression_automaton we are building.
       using super_t::aut_;
 
       /// Initialize the computation: build the initial states.
       void init_(const expression_t& expression)
       {
+        done_.insert(aut_->pre());
         if (algo_.breaking)
           for (const auto& p: split(rs_, expression))
             aut_->set_initial(label_of(p), weight_of(p));
         else
           aut_->set_initial(expression, ws_.one());
+      }
+
+      /// Whether a given state's outgoing transitions have been
+      /// computed.
+      bool state_is_strict(state_t s) const
+      {
+        return has(done_, s);
+      }
+
+      /// Complete a state: find its outgoing transitions.
+      void complete_(state_t s) const
+      {
+        const auto& orig = aut_->origins();
+        auto sn = orig.at(s);
+        const_cast<self_t&>(*this).complete_via_expansion_(s, sn);
+        done_.insert(s);
+      }
+
+      /// All the outgoing transitions.
+      auto all_out(state_t s) const
+        -> decltype(vcsn::detail::all_out(aut_, s))
+      {
+        if (!state_is_strict(s))
+          complete_(s);
+        return vcsn::detail::all_out(aut_, s);
       }
 
       /// Compute the outgoing transitions of \a src.
@@ -259,6 +301,11 @@ namespace vcsn
       to_expansion_t to_expansion_ = {rs_};
       /// Possibly the generators.
       derived_term_automaton_members<expressionset_t> members_ = {rs_};
+
+      /// When performing the lazy construction, list of states that
+      /// have been completed (i.e., their outgoing transitions have
+      /// been computed).
+      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 
@@ -327,7 +374,20 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
         const auto& rs = e.expressionset();
         const auto& r = e.expression();
-        return make_automaton(::vcsn::derived_term(rs, r, algo));
+        if (boost::starts_with(algo, "lazy"))
+          {
+            auto a = vcsn::detail::derived_term_algo(algo);
+            require(a.algo == vcsn::detail::derived_term_algo::expansion,
+                    "derived_term: laziness works only with expansions");
+            // Do not call the operator(), this would trigger the compilation
+            // of via_derivation, which does not compile (on purpose) for non
+            // free labelsets.
+            auto res = make_derived_term_automaton(rs, a);
+            res->init_(r);
+            return make_automaton(res);
+          }
+        else
+          return make_automaton(::vcsn::derived_term(rs, r, algo));
       }
     }
   }

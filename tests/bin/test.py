@@ -140,10 +140,23 @@ def CHECK_EQ(expected, effective, loc = None):
     else:
         exp = format(expected)
         eff = format(effective)
-        msg = exp + " != " + eff
-        FAIL(loc=loc)
+        FAIL("Unexpected result", loc=loc)
         rst_file("Expected output", exp)
         rst_file("Effective output", eff)
+        rst_diff(exp, eff)
+
+def CHECK_NE(expected, effective, loc = None):
+    "Check that `effective` is not equal to `expected`."
+    if isinstance(expected, str) and not isinstance(effective, str):
+        effective = str(effective)
+    if expected != effective:
+        PASS(loc=loc)
+    else:
+        exp = format(expected)
+        eff = format(effective)
+        FAIL("Unexpected equality", loc=loc)
+        rst_file("First argument", exp)
+        rst_file("Second argument", eff)
         rst_diff(exp, eff)
 
 def normalize(a):

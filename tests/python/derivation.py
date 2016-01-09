@@ -6,12 +6,34 @@ from test import *
 ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 
 def check_derived_term(r, exp, algo):
+    print("{}: Checking: {}.derived_term({})".format(here(), r, algo))
+    if algo == 'lazy,expansion':
+        # When checking the lazy construction, make sure we have a
+        # derived_term_automaton, then snapshot it at the beginning
+        # (just the initial states), then make sure that when we
+        # evaluate the empty word, we have something different.
+        #
+        # Finally, evaluate it completely (with accessible), and check
+        # against the strict computation.
+        lazy = r.derived_term(algo)
+        CHECK(lazy.type().startswith('derived_term_automaton'))
+        first = str(lazy)
+        # Force the evaluation of the empty word to start computing
+        # the automaton.
+        lazy('')
+        second = str(lazy)
+        CHECK_NE(second, first)
+        lazy.accessible()
+        CHECK_NE(lazy, second)
+        eff = lazy.strip()
+    else:
+        eff = r.derived_term(algo)
     CHECK_EQ(open(medir + '/' + exp + '.gv').read().strip(),
-             r.derived_term(algo))
+             eff)
 
 def check_dt(r, exp):
     'Check derived-term automaton.'
-    for algo in ['derivation', 'expansion']:
+    for algo in ['derivation', 'expansion', 'lazy,expansion']:
         check_derived_term(r, exp, algo)
 
 def check_bdt(r, exp):
