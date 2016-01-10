@@ -33,8 +33,8 @@ namespace vcsn
     template <Automaton Aut>
     using determinization_tag
       = std::conditional_t<std::is_same<weightset_t_of<Aut>, b>::value,
-                      boolean_tag,
-                      weighted_tag>;
+                           boolean_tag,
+                           weighted_tag>;
   }
 
   /*----------------------.
@@ -90,7 +90,7 @@ namespace vcsn
       static symbol sname()
       {
         static auto res = symbol{"determinized_automaton<"
-                          + automaton_t::element_type::sname() + '>'};
+                                 + automaton_t::element_type::sname() + '>'};
         return res;
       }
 
@@ -212,7 +212,7 @@ namespace vcsn
         if (origins_.empty())
           for (const auto& p: map_)
             {
-              std::set<state_t> from;
+              auto from = std::set<state_t>{};
               const auto& ss = p.first;
               for (auto s = ss.find_first(); s != ss.npos;
                    s = ss.find_next(s))
@@ -336,7 +336,7 @@ namespace vcsn
       static symbol sname()
       {
         static auto res = symbol{"detweighted_automaton<"
-                          + automaton_t::element_type::sname() + '>'};
+                                 + automaton_t::element_type::sname() + '>'};
         return res;
       }
 
