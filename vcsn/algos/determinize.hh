@@ -1,7 +1,6 @@
 #pragma once
 
 #include <set>
-#include <stack>
 #include <string>
 #include <type_traits>
 #include <queue>
@@ -108,8 +107,8 @@ namespace vcsn
         auto dests = dests_t{};
         while (!todo_.empty())
           {
-            state_t src = todo_.top()->second;
-            const auto& ss = todo_.top()->first;
+            state_t src = todo_.front()->second;
+            const auto& ss = todo_.front()->first;
             todo_.pop();
 
             dests.clear();
@@ -231,8 +230,8 @@ namespace vcsn
       size_t state_size_ = input_->all_states().back() + 1;
 
       /// The sets of (input) states waiting to be processed.
-      using stack = std::stack<typename map_t::const_iterator>;
-      stack todo_;
+      using queue_t = std::queue<typename map_t::const_iterator>;
+      queue_t todo_;
 
       /// Set of final states in the input automaton.
       state_name_t finals_;
@@ -452,8 +451,8 @@ namespace vcsn
       state_nameset_t ns_ = {{stateset_t(input_), ws_}};
 
       /// The sets of (input) states waiting to be processed.
-      using queue = std::queue<typename map_t::const_iterator>;
-      queue todo_;
+      using queue_t = std::queue<typename map_t::const_iterator>;
+      queue_t todo_;
     };
   }
 
