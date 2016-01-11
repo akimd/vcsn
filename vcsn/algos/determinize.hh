@@ -79,8 +79,7 @@ namespace vcsn
         state_name_t n;
         n.resize(state_size_);
         n.set(input_->pre());
-        map_[n] = super_t::pre();
-        todo_.push(n);
+        todo_.push(map_.emplace(n, super_t::pre()).first);
 
         // Final states.
         for (auto t : final_transitions(input_))
@@ -101,29 +100,6 @@ namespace vcsn
         return o << '>';
       }
 
-      /// The state for set of states \a ss.
-      /// If this is a new state, schedule it for visit.
-      state_t state(const state_name_t& ss)
-      {
-        // Benches show that the map_.emplace technique is slower, and
-        // then that operator[] is faster than emplace.
-        state_t res;
-        auto i = map_.find(ss);
-        if (i == std::end(map_))
-          {
-            res = this->new_state();
-            map_[ss] = res;
-
-            if (ss.intersects(finals_))
-              this->set_final(res);
-
-            todo_.push(ss);
-          }
-        else
-          res = i->second;
-        return res;
-      }
-
       /// Determinize all accessible states.
       void operator()()
       {
@@ -132,8 +108,8 @@ namespace vcsn
         auto dests = dests_t{};
         while (!todo_.empty())
           {
-            auto ss = std::move(todo_.top());
-            state_t src = state(ss);
+            state_t src = todo_.top()->second;
+            const auto& ss = todo_.top()->first;
             todo_.pop();
 
             dests.clear();
@@ -168,7 +144,7 @@ namespace vcsn
 
             // Outgoing transitions from the current (result) state.
             for (const auto& d : dests)
-              this->new_transition(src, state(d.second), d.first);
+              this->new_transition(src, state_(d.second), d.first);
           }
       }
 
@@ -223,6 +199,25 @@ namespace vcsn
       }
 
     private:
+      /// The state for set of states \a ss.
+      /// If this is a new state, schedule it for visit.
+      state_t state_(const state_name_t& ss)
+      {
+        state_t res;
+        auto i = map_.find(ss);
+        if (i == std::end(map_))
+          {
+            res = this->new_state();
+            todo_.push(map_.emplace(ss, res).first);
+
+            if (ss.intersects(finals_))
+              this->set_final(res);
+          }
+        else
+          res = i->second;
+        return res;
+      }
+
       /// Set of input states -> output state.
       using map_t = std::unordered_map<state_name_t, state_t>;
       map_t map_;
@@ -236,7 +231,7 @@ namespace vcsn
       size_t state_size_ = input_->all_states().back() + 1;
 
       /// The sets of (input) states waiting to be processed.
-      using stack = std::stack<state_name_t>;
+      using stack = std::stack<typename map_t::const_iterator>;
       stack todo_;
 
       /// Set of final states in the input automaton.
@@ -324,8 +319,7 @@ namespace vcsn
         // Pre.
         state_name_t n;
         n.set(input_->pre(), ws_.one());
-        map_[n] = super_t::pre();
-        todo_.push(n);
+        todo_.push(map_.emplace(n, super_t::pre()).first);
 
         // Post.
         n.clear();
@@ -356,9 +350,9 @@ namespace vcsn
         auto dests = dests_t{};
         while (!todo_.empty())
           {
-            auto ss = std::move(todo_.front());
+            state_t src = todo_.front()->second;
+            const auto& ss = todo_.front()->first;
             todo_.pop();
-            auto src = map_[ss];
 
             dests.clear();
             for (const auto& p : ss)
@@ -430,15 +424,12 @@ namespace vcsn
       /// If this is a new state, schedule it for visit.
       state_t state_(const state_name_t& name)
       {
-        // Benches show that the map_.emplace technique is slower, and
-        // then that operator[] is faster than emplace.
         state_t res;
         auto i = map_.find(name);
         if (i == std::end(map_))
           {
             res = this->new_state();
-            map_[name] = res;
-            todo_.push(name);
+            todo_.push(map_.emplace(name, res).first);
           }
         else
           res = i->second;
@@ -461,7 +452,7 @@ namespace vcsn
       state_nameset_t ns_ = {{stateset_t(input_), ws_}};
 
       /// The sets of (input) states waiting to be processed.
-      using queue = std::queue<state_name_t>;
+      using queue = std::queue<typename map_t::const_iterator>;
       queue todo_;
     };
   }
