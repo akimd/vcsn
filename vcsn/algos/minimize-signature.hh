@@ -285,7 +285,6 @@ namespace vcsn
   } // detail_signature::
 
   template <Automaton Aut>
-  inline
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
   minimize(const Aut& a, signature_tag)
@@ -300,7 +299,6 @@ namespace vcsn
     {
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      inline
       std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                         quotient_t<Aut>>
       minimize(const Aut&, signature_tag)

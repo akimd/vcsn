@@ -193,7 +193,6 @@ namespace vcsn
 
   /// Minimize automaton \a a using the Moore algorithm.
   template <Automaton Aut>
-  inline
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, moore_tag)
   {
@@ -207,12 +206,12 @@ namespace vcsn
     {
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      inline
       std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, moore_tag)
       {
-        raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
-              "moore");
+        raise("minimize: invalid algorithm"
+              " (non-Boolean or non-free labelset):",
+              " moore");
       }
     }
   }

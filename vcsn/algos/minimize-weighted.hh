@@ -243,7 +243,6 @@ namespace vcsn
   } // weighted::
 
   template <Automaton Aut>
-  inline
   auto
   minimize(const Aut& a, weighted_tag)
     -> quotient_t<Aut>

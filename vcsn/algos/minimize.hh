@@ -1,19 +1,20 @@
 #pragma once
 
-#include <vcsn/misc/getargs.hh>
-#include <vcsn/algos/tags.hh>
-#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/minimize-brzozowski.hh>
 #include <vcsn/algos/minimize-hopcroft.hh>
 #include <vcsn/algos/minimize-moore.hh>
 #include <vcsn/algos/minimize-signature.hh>
 #include <vcsn/algos/minimize-weighted.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
+  /// Minimization for Boolean automata: auto_tag.
   template <Automaton Aut>
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -22,6 +23,7 @@ namespace vcsn
     return minimize(a, signature_tag{});
   }
 
+  /// Minimization for non Boolean automata: auto_tag..
   template <Automaton Aut>
   std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -30,6 +32,11 @@ namespace vcsn
     return minimize(a, weighted_tag{});
   }
 
+  /// Minimization for Boolean automata on a free labelset: algo
+  /// selection.
+  ///
+  /// \param a     the automaton
+  /// \param algo  the algorithm to run.
   template <Automaton Aut>
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
@@ -49,6 +56,12 @@ namespace vcsn
     return map[algo](a);
   }
 
+
+  /// Minimization for Boolean automata on a non-free labelset: algo
+  /// selection.
+  ///
+  /// \param a     the automaton
+  /// \param algo  the algorithm to run.
   template <Automaton Aut>
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
                     && !labelset_t_of<Aut>::is_free(),
@@ -68,6 +81,10 @@ namespace vcsn
     return map[algo](a);
   }
 
+  /// Minimization for non Boolean automata: algo selection.
+  ///
+  /// \param a     the automaton
+  /// \param algo  the algorithm to run.
   template <Automaton Aut>
   std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
@@ -85,6 +102,7 @@ namespace vcsn
     return map[algo](a);
   }
 
+  /// Cominimization.
   template <Automaton Aut, typename Tag = auto_tag>
   auto
   cominimize(const Aut& a, Tag tag = {})

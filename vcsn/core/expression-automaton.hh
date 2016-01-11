@@ -1,9 +1,6 @@
 #pragma once
 
-#include <memory>
 #include <stack>
-#include <string>
-#include <vector>
 
 #include <boost/bimap.hpp>
 #include <boost/bimap/set_of.hpp>
@@ -46,7 +43,7 @@ namespace vcsn
       static symbol sname()
       {
         static auto res = symbol{"expression_automaton<"
-                          + automaton_t::element_type::sname() + '>'};
+                                 + automaton_t::element_type::sname() + '>'};
         return res;
       }
 

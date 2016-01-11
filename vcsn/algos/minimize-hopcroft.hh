@@ -23,7 +23,6 @@ namespace vcsn
   struct hopcroft_tag {};
 
   template <Automaton Aut>
-  inline
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, hopcroft_tag)
   {
@@ -106,12 +105,12 @@ namespace vcsn
     {
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      inline
       std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, hopcroft_tag)
       {
-        raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
-              "hopcroft");
+        raise("minimize: invalid algorithm"
+              " (non-Boolean or non-free labelset):",
+              " hopcroft");
       }
     }
   }

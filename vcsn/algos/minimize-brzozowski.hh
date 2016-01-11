@@ -13,7 +13,8 @@ namespace vcsn
   | minimization with Brzozowski's algorithm.  |
   `-------------------------------------------*/
 
-  /// Request for Brzozowski implementation of minimize (B and free).
+  /// Request for Brzozowski implementation of minimize
+  /// Require B weights and free labelset.
   struct brzozowski_tag {};
 
   template <Automaton Aut>
@@ -38,8 +39,9 @@ namespace vcsn
       std::enable_if_t<!is_free_boolean<Aut>(), Aut>
       minimize(const Aut&, brzozowski_tag)
       {
-        raise("minimize: invalid algorithm (non-Boolean or non-free labelset): ",
-              "brzozowski");
+        raise("minimize: invalid algorithm"
+              " (non-Boolean or non-free labelset):",
+              " brzozowski");
       }
     }
   }

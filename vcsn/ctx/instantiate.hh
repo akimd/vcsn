@@ -5,6 +5,7 @@
 #include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/cerny.hh>
 #include <vcsn/algos/complete.hh>
+#include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/constant-term.hh>
 #include <vcsn/algos/constant.hh>
 #include <vcsn/algos/copy.hh>
@@ -34,7 +35,6 @@
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/print.hh>
-#include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/push-weights.hh>
 #include <vcsn/algos/random.hh>
