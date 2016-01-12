@@ -119,44 +119,35 @@ namespace vcsn
   {
     namespace detail
     {
+      template <Automaton Aut, typename Tag>
+      automaton minimize_tag_(const Aut& aut)
+      {
+        // There are several "minimize" that will match this
+        // definition: some are vcsn::minimize (e.g., for
+        // weighted_tag), but others will comes from vcsn::dyn::detail
+        // (e.g., for brzozowski_tag when inapplicable).  So do not
+        // specify the namespace.
+        return make_automaton(minimize(aut, Tag{}));
+      }
+
       /// Bridge.
       template <Automaton Aut, typename String>
       automaton
       minimize(const automaton& aut, const std::string& algo)
       {
-        const auto& a = aut->as<Aut>();
-
         static const auto map = getarg<std::function<automaton(const Aut&)>>
-        {
-          "minimization algorithm",
           {
-            {"auto",      [](const Aut& a)
-             {
-               return make_automaton(minimize(a, auto_tag{}));
-             }},
-            {"brzozowski",[](const Aut& a)
-             {
-               return make_automaton(minimize(a, brzozowski_tag{}));
-             }},
-            {"hopcroft",  [](const Aut& a)
-             {
-               return make_automaton(minimize(a, hopcroft_tag{}));
-             }},
-            {"moore",     [](const Aut& a)
-             {
-               return make_automaton(minimize(a, moore_tag{}));
-             }},
-            {"signature", [](const Aut& a)
-             {
-               return make_automaton(minimize(a, signature_tag{}));
-             }},
-            {"weighted",  [](const Aut& a)
-             {
-               return make_automaton(minimize(a, weighted_tag{}));
-             }},
-          }
-        };
-        return map[algo](a);
+            "minimization algorithm",
+            {
+              {"auto",       minimize_tag_<Aut, auto_tag>},
+              {"brzozowski", minimize_tag_<Aut, brzozowski_tag>},
+              {"hopcroft",   minimize_tag_<Aut, hopcroft_tag>},
+              {"moore",      minimize_tag_<Aut, moore_tag>},
+              {"signature",  minimize_tag_<Aut, signature_tag>},
+              {"weighted",   minimize_tag_<Aut, weighted_tag>},
+            }
+          };
+        return map[algo](aut->as<Aut>());
       }
     }
   }
@@ -170,57 +161,31 @@ namespace vcsn
   {
     namespace detail
     {
+      template <Automaton Aut, typename Tag>
+      automaton cominimize_tag_(const Aut& aut)
+      {
+        auto res = transpose(minimize(transpose(aut), Tag{}));
+        return make_automaton(res);
+      }
+
       /// Bridge.
       template <Automaton Aut, typename String>
       automaton
       cominimize(const automaton& aut, const std::string& algo)
       {
-        const auto& a = aut->as<Aut>();
-
-        static const auto map
-          = getarg<std::function<automaton(const Aut&)>>
-        {
-          "cominimization algorithm",
+        static const auto map = getarg<std::function<automaton(const Aut&)>>
           {
-            {"auto",
-             [](const Aut& a)
-             {
-               return make_automaton(transpose(minimize(transpose(a),
-                                                        auto_tag{})));
-             }},
-            {"brzozowski",
-             [](const Aut& a)
-             {
-               return make_automaton(transpose(minimize(transpose(a),
-                                                        brzozowski_tag{})));
-             }},
-            {"hopcroft",
-             [](const Aut& a)
-             {
-               return make_automaton(transpose(minimize(transpose(a),
-                                                        hopcroft_tag{})));
-           }},
-            {"moore",
-             [](const Aut& a)
-             {
-               return make_automaton(transpose(minimize(transpose(a),
-                                                      moore_tag{})));
-             }},
-            {"signature",
-             [](const Aut& a)
-             {
-               return make_automaton(transpose(minimize(transpose(a),
-                                                        signature_tag{})));
-             }},
-            {"weighted",
-             [](const Aut& a)
-             {
-               return make_automaton(transpose(minimize(transpose(a),
-                                                        weighted_tag{})));
-             }},
-          }
-        };
-        return map[algo](a);
+            "cominimization algorithm",
+            {
+              {"auto",       cominimize_tag_<Aut, auto_tag>},
+              {"brzozowski", cominimize_tag_<Aut, brzozowski_tag>},
+              {"hopcroft",   cominimize_tag_<Aut, hopcroft_tag>},
+              {"moore",      cominimize_tag_<Aut, moore_tag>},
+              {"signature",  cominimize_tag_<Aut, signature_tag>},
+              {"weighted",   cominimize_tag_<Aut, weighted_tag>},
+            }
+          };
+        return map[algo](aut->as<Aut>());
       }
     }
   }
