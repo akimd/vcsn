@@ -1,11 +1,12 @@
 #pragma once
 
-#include <vcsn/misc/getargs.hh>
+#include <vcsn/algos/a-star.hh>
 #include <vcsn/algos/bellman-ford.hh>
 #include <vcsn/algos/dijkstra.hh>
-#include <vcsn/algos/a-star.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/labelset/word-polynomialset.hh>
+#include <vcsn/misc/getargs.hh>
 
 namespace vcsn
 {
@@ -17,36 +18,38 @@ namespace vcsn
     return lightest_path(aut, aut->pre(), aut->post(), tag);
   }
 
+  namespace detail
+  {
+    /// Tag-based dispatch on implementation.
+    template <Automaton Aut, typename Tag>
+    std::vector<transition_t_of<Aut>>
+    lightest_path_tag(const Aut& aut,
+                      state_t_of<Aut> src, state_t_of<Aut> dst)
+    {
+      return lightest_path(aut, src, dst, Tag{});
+    }
+  }
+
   /// Lightest path dispatch between algorithms with string.
   template <Automaton Aut>
   std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+  lightest_path(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst,
                 const std::string& algo)
   {
     using state_t = state_t_of<Aut>;
     using path_t = std::vector<transition_t_of<Aut>>;
     static const auto map
-      = std::map<std::string, std::function<path_t(const Aut&, state_t, state_t)>>
+      = getarg<std::function<path_t(const Aut&, state_t, state_t)>>
     {
-      {"auto",         [](const Aut& a, state_t src, state_t dst)
-                       {
-                         return lightest_path(a, src, dst);
-                       }},
-      {"a-star",       [](const Aut& a, state_t src, state_t dst)
-                       {
-                         return lightest_path(a, src, dst, astar_tag{});
-                       }},
-      {"bellman-ford", [](const Aut& a, state_t src, state_t dst)
-                       {
-                         return lightest_path(a, src, dst, bellmanford_tag{});
-                       }},
-      {"dijkstra",     [](const Aut& a, state_t src, state_t dst)
-                       {
-                         return lightest_path(a, src, dst, dijkstra_tag{});
-                       }},
+      "lightest-path algorithm",
+      {
+        {"auto",         "dijkstra"},
+        {"a-star",       detail::lightest_path_tag<Aut, a_star_tag>},
+        {"bellman-ford", detail::lightest_path_tag<Aut, bellman_ford_tag>},
+        {"dijkstra",     detail::lightest_path_tag<Aut, dijkstra_tag>},
+      }
     };
-    auto fun = getargs("algorithm", map, algo);
-    return fun(aut, source, dest);
+    return map[algo](aut, src, dst);
   }
 
   /// Given a path (typically computed by lightest_path), the

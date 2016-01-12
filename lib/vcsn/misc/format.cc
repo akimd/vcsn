@@ -12,17 +12,20 @@ namespace vcsn
 
   format::format(const std::string& f)
   {
-    static const auto map = std::map<std::string, format_t>
+    static const auto map = getarg<format_t>
       {
-        {"auto",       deflt},
-        {"default",    deflt},
-        {"latex",      latex},
-        {"raw",        raw},
-        {"sname",      sname},
-        {"text",       text},
-        {"utf8",       utf8},
+        "format",
+        {
+          {"auto",       "default"},
+          {"default",    deflt},
+          {"latex",      latex},
+          {"raw",        raw},
+          {"sname",      sname},
+          {"text",       text},
+          {"utf8",       utf8},
+        }
       };
-    format_ = getargs("format", map, f);
+    format_ = map[f];
   }
 
   std::string to_string(format f)

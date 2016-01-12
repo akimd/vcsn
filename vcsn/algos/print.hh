@@ -77,24 +77,26 @@ namespace vcsn
   print(const Aut& aut, std::ostream& out, const std::string& fmt)
   {
     static const auto map
-      = std::map<std::string, std::function<void(const Aut&, std::ostream&)>>
+      = getarg<std::function<void(const Aut&, std::ostream&)>>
       {
-        {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
-        {"default",      [](const Aut& a, std::ostream& o){ dot(a, o); }},
-        {"dot,latex",    [](const Aut& a, std::ostream& o)
-                            { dot(a, o, format("latex")); }},
-        {"dot,utf8",     [](const Aut& a, std::ostream& o)
-                            { dot(a, o, format("utf8")); }},
-        {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},
-        {"fado",         detail::fado_impl_<Aut>},
-        {"grail",        detail::grail_impl_<Aut>},
-        {"info",         [](const Aut& a, std::ostream& o){ info(a, o); }},
-        {"info,detailed",[](const Aut& a, std::ostream& o){ info(a, o, true); }},
-        {"null",         [](const Aut&, std::ostream&){}},
-        {"tikz",         [](const Aut& a, std::ostream& o){ tikz(a, o); }},
+        "automaton output format",
+        {
+          {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
+          {"default",      "dot"},
+          {"dot,latex",    [](const Aut& a, std::ostream& o)
+                              { dot(a, o, format("latex")); }},
+          {"dot,utf8",     [](const Aut& a, std::ostream& o)
+                              { dot(a, o, format("utf8")); }},
+          {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},
+          {"fado",         detail::fado_impl_<Aut>},
+          {"grail",        detail::grail_impl_<Aut>},
+          {"info",         [](const Aut& a, std::ostream& o){ info(a, o); }},
+          {"info,detailed",[](const Aut& a, std::ostream& o){ info(a, o, true); }},
+          {"null",         [](const Aut&, std::ostream&){}},
+          {"tikz",         [](const Aut& a, std::ostream& o){ tikz(a, o); }},
+        }
       };
-    auto fun = getargs("automaton output format", map, fmt);
-    fun(aut, out);
+    map[fmt](aut, out);
     return out;
   }
 

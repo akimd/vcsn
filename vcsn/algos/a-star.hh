@@ -15,7 +15,7 @@ namespace vcsn
   ///
   /// Uses neutral heuristic.
   /// No preconditions.
-  struct astar_tag {};
+  struct a_star_tag {};
 
   namespace detail
   {
@@ -44,26 +44,26 @@ namespace vcsn
 
       struct profile
       {
-        profile(state_t state, const self_t& astar)
+        profile(state_t state, const self_t& a_star)
           : state_(state)
-          , astar_(astar)
+          , a_star_(a_star)
         {}
 
         bool operator<(const profile& rhs) const
         {
-          auto ws = *astar_.aut_->weightset();
-          if (astar_.res_[state_] == astar_.aut_->null_transition())
+          auto ws = *a_star_.aut_->weightset();
+          if (a_star_.res_[state_] == a_star_.aut_->null_transition())
             return true;
-          else if (astar_.res_[rhs.state_] == astar_.aut_->null_transition())
+          else if (a_star_.res_[rhs.state_] == a_star_.aut_->null_transition())
             return false;
           else
-            return ws.less(astar_.heuristic_dist_[rhs.state_],
-                           astar_.heuristic_dist_[state_]);
+            return ws.less(a_star_.heuristic_dist_[rhs.state_],
+                           a_star_.heuristic_dist_[state_]);
         }
 
         friend std::ostream& operator<<(std::ostream& o, const profile& p)
         {
-          auto a = p.astar_;
+          auto a = p.a_star_;
           auto ws = *a.aut_->weightset();
           a.aut_->print_state_name(p.state_, o) << ':';
           if (a.res_[p.state_] != a.aut_->null_transition())
@@ -73,7 +73,7 @@ namespace vcsn
         }
 
         state_t state_;
-        const self_t& astar_;
+        const self_t& a_star_;
       };
 
       using heap_t = boost::heap::fibonacci_heap<profile>;
@@ -149,7 +149,7 @@ namespace vcsn
   template <Automaton Aut>
   std::vector<transition_t_of<Aut>>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
-                astar_tag)
+                a_star_tag)
   {
     using state_t = state_t_of<Aut>;
     return detail::a_star_impl<Aut>(aut)(source, dest,

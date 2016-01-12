@@ -342,7 +342,7 @@ namespace vcsn
   std::ostream&
   efsm(const Aut& aut, std::ostream& out)
   {
-    detail::efsmer<Aut> efsm{aut, out};
+    auto efsm = detail::efsmer<Aut>{aut, out};
     efsm();
     return out;
   }
