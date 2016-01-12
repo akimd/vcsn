@@ -5,6 +5,46 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-01-09
+### derived-term: support for on-the-fly construction
+The implementation of `derived_term` now supports a `lazy` argument.  This
+is especially useful when working on "infinite derived-term automata" (which
+happens when requesting a deterministic automaton, or when using the
+complement operator).
+
+For instance:
+
+    In [2]: a = vcsn.Z.expression('a*+(<2>a)*').derived_term(deterministic=True, lazy=True)
+
+    In [3]: print(a.as_boxart())
+              ╭────────────╮
+          ──> │ a*+(⟨2⟩a)* │
+              ╰────────────╯
+
+
+    In [4]: a('')
+    Out[4]: 2
+
+    In [5]: print(a.as_boxart())
+              ╭────────────╮  a   ╭───────────────╮
+          ──> │ a*+(⟨2⟩a)* │ ───> │ a*+⟨2⟩(⟨2⟩a)* │
+              ╰────────────╯      ╰───────────────╯
+                │
+                │ ⟨2⟩
+                ∨
+
+
+    In [6]: a('aa')
+    Out[6]: 5
+
+    In [7]: print(a.as_boxart())
+              ╭────────────╮  a   ╭───────────────╮  a   ╭───────────────╮  a   ╭───────────────╮
+          ──> │ a*+(⟨2⟩a)* │ ───> │ a*+⟨2⟩(⟨2⟩a)* │ ───> │ a*+⟨4⟩(⟨2⟩a)* │ ───> │ a*+⟨8⟩(⟨2⟩a)* │
+              ╰────────────╯      ╰───────────────╯      ╰───────────────╯      ╰───────────────╯
+                │                      │                      │
+                │ ⟨2⟩                  │ ⟨3⟩                  │ ⟨5⟩
+                ∨                      ∨                      ∨
+
 ## 2015-12-31
 ### project is available on more structures
 One may now project not only multitape automata, but also contexts, labels
