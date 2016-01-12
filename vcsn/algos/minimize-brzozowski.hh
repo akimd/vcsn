@@ -13,19 +13,22 @@ namespace vcsn
   | minimization with Brzozowski's algorithm.  |
   `-------------------------------------------*/
 
-  /// Request for Brzozowski implementation of minimize
-  /// Require B weights and free labelset.
+  /// Request for Brzozowski implementation of minimize (B and free).
   struct brzozowski_tag {};
 
+  /// The type of the codeterminized automaton.
+  /// Use decltype on transpose because transpose(transpose(a)) returns a.
   template <Automaton Aut>
   using codeterminized_automaton
-    = transpose_automaton<determinized_automaton<Aut>>;
+    = transpose_automaton<determinized_automaton
+                          <decltype(transpose(std::declval<Aut>()))>>;
 
+  /// Brzozowski-based minimization.
   template <Automaton Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
     -> std::enable_if_t<is_free_boolean<Aut>(),
-                         determinized_automaton<codeterminized_automaton<decltype(transpose(a))>>>
+                        determinized_automaton<codeterminized_automaton<Aut>>>
   {
     return determinize(codeterminize(a));
   }
@@ -34,6 +37,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Handling of errors for dyn::minimize.
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
       std::enable_if_t<!is_free_boolean<Aut>(), Aut>
