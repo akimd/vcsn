@@ -12,6 +12,7 @@
 #include <vcsn/algos/de-bruijn.hh>
 #include <vcsn/algos/derivation.hh>
 #include <vcsn/algos/derived-term.hh>
+#include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/divide.hh>
 #include <vcsn/algos/divkbaseb.hh>
 #include <vcsn/algos/double-ring.hh>
@@ -184,6 +185,7 @@ namespace vcsn
         REGISTER(conjunction_repeated, aut_t, unsigned);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
+        REGISTER(determinize, aut_t, const std::string);
         REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
