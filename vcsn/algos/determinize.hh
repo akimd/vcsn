@@ -12,13 +12,15 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/labelset/stateset.hh>
+#include <vcsn/misc/bimap.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/map.hh> // vcsn::has
 #include <vcsn/misc/raise.hh> // b
 #include <vcsn/misc/unordered_map.hh> // vcsn::has
 #include <vcsn/weightset/fwd.hh> // b
 #include <vcsn/weightset/polynomialset.hh>
-#include <vcsn/labelset/stateset.hh>
 
 namespace vcsn
 {
@@ -502,18 +504,27 @@ namespace vcsn
         = std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value, Type>;
 
 
+      template <Automaton Aut, typename Tag>
+      automaton determinize_tag_(const Aut& aut)
+      {
+        return make_automaton(::vcsn::determinize(aut, Tag{}));
+      }
+
       /// Boolean Bridge.
       template <Automaton Aut, typename String>
       enable_if_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
-        const auto& a = aut->as<Aut>();
-        if (algo == "auto" || algo == "boolean")
-          return make_automaton(::vcsn::determinize(a, boolean_tag{}));
-        else if (algo == "weighted")
-          return make_automaton(::vcsn::determinize(a, weighted_tag{}));
-        else
-          raise("determinize: invalid algorithm: ", str_escape(algo));
+        static const auto map = getarg<std::function<automaton(const Aut&)>>
+          {
+            "determinization algorithm",
+            {
+              {"auto",     determinize_tag_<Aut, auto_tag>},
+              {"boolean",  determinize_tag_<Aut, boolean_tag>},
+              {"weighted", determinize_tag_<Aut, weighted_tag>},
+            }
+          };
+        return map[algo](aut->as<Aut>());
       }
 
       /// Weighted Bridge.
@@ -521,13 +532,18 @@ namespace vcsn
       enable_if_not_boolean_t<Aut, automaton>
       determinize_(const automaton& aut, const std::string& algo)
       {
-        const auto& a = aut->as<Aut>();
+        static const auto map = getarg<std::function<automaton(const Aut&)>>
+          {
+            "determinization algorithm",
+            {
+              {"auto",     determinize_tag_<Aut, auto_tag>},
+              {"weighted", determinize_tag_<Aut, weighted_tag>},
+            }
+          };
         if (algo == "boolean")
-          raise("determinize: cannot apply Boolean determinization");
-        else if (algo == "auto" || algo == "weighted")
-          return make_automaton(::vcsn::determinize(a, weighted_tag{}));
-        else
-          raise("determinize: invalid algorithm: ", str_escape(algo));
+          raise("determinize: cannot apply Boolean"
+                " determinization to weighted automata");
+        return map[algo](aut->as<Aut>());
       }
 
       /// Bridge.
@@ -556,23 +572,32 @@ namespace vcsn
   | dyn::codeterminize.  |
   `---------------------*/
 
-  // FIXME: duplicate code with determinize.
+  // FIXME: code duplication with determinize.
   namespace dyn
   {
     namespace detail
     {
+      template <Automaton Aut, typename Tag>
+      automaton codeterminize_tag_(const Aut& aut)
+      {
+        return make_automaton(::vcsn::codeterminize(aut, Tag{}));
+      }
+
       /// Boolean Bridge.
       template <Automaton Aut, typename String>
       enable_if_boolean_t<Aut, automaton>
       codeterminize_(const automaton& aut, const std::string& algo)
       {
-        const auto& a = aut->as<Aut>();
-        if (algo == "auto" || algo == "boolean")
-          return make_automaton(::vcsn::codeterminize(a, boolean_tag{}));
-        else if (algo == "weighted")
-          return make_automaton(::vcsn::codeterminize(a, weighted_tag{}));
-        else
-          raise("codeterminize: invalid algorithm: ", str_escape(algo));
+        static const auto map = getarg<std::function<automaton(const Aut&)>>
+          {
+            "codeterminization algorithm",
+            {
+              {"auto",     codeterminize_tag_<Aut, auto_tag>},
+              {"boolean",  codeterminize_tag_<Aut, boolean_tag>},
+              {"weighted", codeterminize_tag_<Aut, weighted_tag>},
+            }
+          };
+        return map[algo](aut->as<Aut>());
       }
 
       /// Weighted Bridge.
@@ -580,13 +605,18 @@ namespace vcsn
       enable_if_not_boolean_t<Aut, automaton>
       codeterminize_(const automaton& aut, const std::string& algo)
       {
-        const auto& a = aut->as<Aut>();
+        static const auto map = getarg<std::function<automaton(const Aut&)>>
+          {
+            "codeterminization algorithm",
+            {
+              {"auto",     codeterminize_tag_<Aut, auto_tag>},
+              {"weighted", codeterminize_tag_<Aut, weighted_tag>},
+            }
+          };
         if (algo == "boolean")
-          raise("codeterminize: cannot apply Boolean determinization");
-        else if (algo == "auto" || algo == "weighted")
-          return make_automaton(::vcsn::codeterminize(a));
-        else
-          raise("codeterminize: invalid algorithm: ", str_escape(algo));
+          raise("codeterminize: cannot apply Boolean"
+                " determinization to weighted automata");
+        return map[algo](aut->as<Aut>());
       }
 
       /// Bridge.
