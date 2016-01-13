@@ -21,6 +21,7 @@
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/direction.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/vector.hh> // make_vector
 
@@ -37,8 +38,10 @@ namespace vcsn
     class properer
     {
       using automaton_t = std::remove_cv_t<Aut>;
+      using self_t = properer;
       using weightset_t = weightset_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
+      /// The result type.
       using aut_proper_t = fresh_automaton_t_of<automaton_t,
                             detail::proper_context<context_t_of<automaton_t>>>;
 
@@ -85,24 +88,33 @@ namespace vcsn
 
       aut_proper_t remover_() const
       {
-        if (algo_ == "auto" || algo_ == "default" || algo_ == "inplace")
+        static const auto map
+          = getarg<std::function<aut_proper_t(const self_t&)>>
           {
-            auto a = copy(aut_); // in place
-            detail::epsilon_remover<decltype(a)> r(a, prune_);
-            return r();
-          }
-        else if (algo_ == "separate")
-          {
-            detail::epsilon_remover_separate<automaton_t> r(aut_, prune_);
-            return r();
-          }
-        else if (algo_ == "distance")
-          {
-            detail::epsilon_remover_distance<automaton_t> r(aut_, prune_);
-            return r();
-          }
-        else
-          raise("proper: invalid algorithm: ", algo_);
+            "proper algorithm",
+            {
+              {"auto",    "inplace"},
+              {"default", "inplace"},
+              {"distance", [](const self_t& s) {
+                  auto r =
+                    detail::epsilon_remover_distance<automaton_t>{s.aut_,
+                                                                  s.prune_};
+                  return r();
+                }},
+              {"inplace", [](const self_t& s) {
+                  auto a = copy(s.aut_); // in place
+                  auto r = detail::epsilon_remover<decltype(a)>{a, s.prune_};
+                  return r();
+                }},
+              {"separate", [](const self_t& s) {
+                  auto r =
+                    detail::epsilon_remover_separate<automaton_t>{s.aut_,
+                                                                  s.prune_};
+                  return r();
+                }},
+            },
+          };
+        return map[algo_](*this);
       }
 
       template <star_status_t Status>
