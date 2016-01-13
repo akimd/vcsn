@@ -10,6 +10,7 @@ ctx = vcsn.context(ctx_string)
 def check(exp, daut, v='auto'):
     # It compares automata as strings, then if zpc is isomorphic to standard.
     # At last it tests if it is epsilon acyclic.
+    print("Check: {}.zpc({})".format(exp, v))
     e = ctx.expression(exp)
     zpc = e.zpc(v)
     std = e.standard()
@@ -21,7 +22,7 @@ def check(exp, daut, v='auto'):
     CHECK_IS_EPS_ACYCLIC(zpc)
     zpt = zpc.trim()
     if not zpt.is_empty():
-        print('Check if trimed and propered zpc is isomorphic to standard.')
+        print('Check if trim and proper zpc is isomorphic to standard.')
         CHECK_ISOMORPHIC(zpt.proper(), std)
 
 def xfail(re, err = None):

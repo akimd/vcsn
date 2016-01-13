@@ -8,6 +8,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/labelset/labelset.hh> // make_nullableset_context
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -16,13 +17,16 @@ namespace vcsn
   {
     /// Build a ZPC automaton from an expression.
     ///
-    /// \tparam Aut     relative the generated automaton
+    /// \tparam Aut     relative the generated automaton.
     /// \tparam ExpSet  relative to the expression.
     template <Automaton Aut,
               typename ExpSet>
     class zpc_visitor
       : public ExpSet::const_visitor
     {
+      static_assert(labelset_t_of<Aut>::has_one(),
+                    "zpc: requires nullable labels");
+
     public:
       using automaton_t = Aut;
       using expressionset_t = ExpSet;
@@ -32,9 +36,6 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
 
       using super_t = typename expressionset_t::const_visitor;
-
-      static_assert(labelset_t_of<Aut>::has_one(),
-                    "zpc: requires nullable labels");
 
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "zpc"; }
@@ -322,7 +323,6 @@ namespace vcsn
       /// Whether to build the "compact" version of the ZPC automaton.
       const bool compact_;
     };
-
   } // rat::
 
   /// Build a ZPC automaton from an expression.
@@ -330,16 +330,25 @@ namespace vcsn
   /// \tparam Aut     relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
   template <Automaton Aut, typename ExpSet>
-  inline
   Aut
   zpc(const context_t_of<Aut>& ctx,
       const ExpSet& rs,
       const typename ExpSet::value_t& r,
       const std::string& algo = "auto")
   {
-    require(algo == "auto" || algo == "regular" || algo == "compact",
-            "zpc: expects \"auto\", \"regular\", \"compact\" or nothing");
-    rat::zpc_visitor<Aut, ExpSet> zpc{ctx, rs, algo == "compact"};
+    static const auto map = getarg<bool>
+      {
+        "zpc version",
+        {
+          // name,    compact.
+          // Beware of the conversion from const char* to bool here.
+          // http://stackoverflow.com/questions/13268608/.
+          {"auto",    std::string("regular")},
+          {"compact", true},
+          {"regular", false},
+        }
+      };
+    auto zpc = rat::zpc_visitor<Aut, ExpSet>{ctx, rs, map[algo]};
     return zpc(r);
   }
 
@@ -353,7 +362,6 @@ namespace vcsn
 
       /// Bridge.
       template <typename ExpSet, typename String>
-      inline
       automaton
       zpc(const expression& exp, const std::string& algo)
       {
