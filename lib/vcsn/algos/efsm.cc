@@ -25,7 +25,7 @@ namespace vcsn
       /// Look for the next "cat >$medir/FILE <<\EOFSM" file,
       /// and return FILE.
       std::string
-      next_here_doc(std::istream& is)
+      read_here_doc(std::istream& is)
       {
         static std::regex re("cat >\\$medir/([a-z]+)\\.[a-z]* <<\\\\EOFSM",
                              std::regex::extended);
@@ -40,11 +40,11 @@ namespace vcsn
         raise("invalid efsm file: missing \"cat\" symbol");
       }
 
-      /// Swallow a symbol table (i.e., eat up to the next EOFSM) and
+      /// Read a symbol table (i.e., eat up to the next EOFSM) and
       /// return the single piece of information we need from the
       /// symbol table: the representation of the empty word.
       std::string
-      swallow_symbol_table(std::istream& is)
+      read_symbol_table(std::istream& is)
       {
         std::string res;
         std::string line;
@@ -70,8 +70,34 @@ namespace vcsn
                 "invalid efsm file: missing closing EOFSM");
         return res;
       }
-    }
 
+      /// Look for the "arc_type=" line that specifies the weightset.
+      lazy_automaton_editor::weightset_type
+      read_weightset_type(std::istream& is)
+      {
+        using weightset_type = lazy_automaton_editor::weightset_type;
+        std::string line;
+        while (is.good())
+          {
+            std::getline(is, line, '\n');
+            if (boost::starts_with(line, "arc_type="))
+              {
+                boost::algorithm::erase_first(line, "arc_type=");
+                static auto map = getarg<weightset_type>
+                  {
+                    "arc type",
+                    {
+                      {"log",      weightset_type::logarithmic},
+                      {"log64",    weightset_type::logarithmic},
+                      {"standard", weightset_type::tropical},
+                    }
+                  };
+                return map[line];
+              }
+          }
+        raise("invalid efsm file: missing \"arc_type=\"");
+      }
+    }
 
     automaton
     read_efsm(std::istream& is)
@@ -83,52 +109,32 @@ namespace vcsn
       bool is_transducer = false;
 
       // Look for the arc type, which describes the weightset.
-      using weightset_type = lazy_automaton_editor::weightset_type;
-      weightset_type weightset = [&is]
-        {
-          std::string line;
-          while (is.good())
-            {
-              std::getline(is, line, '\n');
-              if (boost::starts_with(line, "arc_type="))
-                {
-                  boost::algorithm::erase_first(line, "arc_type=");
-                  static auto map = std::map<std::string, weightset_type>
-                  {
-                    {"log",      weightset_type::logarithmic},
-                    {"log64",    weightset_type::logarithmic},
-                    {"standard", weightset_type::tropical},
-                  };
-                  return getargs("arc type", map, line);
-                }
-            }
-          raise("invalid efsm file: missing \"arc_type=\"");
-        }();
+      auto weightset = read_weightset_type(is);
 
       // Look for the symbol table.
-      auto isyms = next_here_doc(is);
+      auto isyms = read_here_doc(is);
       // The single piece of information we need from the symbol
       // table: the representation of the empty word.
-      std::string ione = swallow_symbol_table(is);
+      std::string ione = read_symbol_table(is);
 
       // If we had "isymbols", we now expect "osymbols".
       std::string oone = ione;
       if (isyms == "isymbols")
       {
         is_transducer = true;
-        auto osyms = next_here_doc(is);
+        auto osyms = read_here_doc(is);
         require(osyms == "osymbols",
                 "invalid efsm file: expected osymbols: ", osyms);
-        oone = swallow_symbol_table(is);
+        oone = read_symbol_table(is);
       }
 
-      vcsn::lazy_automaton_editor edit;
+      auto edit = vcsn::lazy_automaton_editor{};
       edit.open(true);
       edit.weightset(weightset);
 
       // The first transition also provides the initial state.
       bool first = true;
-      auto trans = next_here_doc(is);
+      auto trans = read_here_doc(is);
       require(trans == "transitions",
               "invalid efsm file: expected transitions: ", trans);
       // Line: Source Dest ILabel [OLabel] [Weight].

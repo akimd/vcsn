@@ -28,22 +28,6 @@ namespace vcsn LIBVCSN_API
     }
   }
 
-  /// Find a correspondance in a map.  Meant for string to enum mostly.
-  ///
-  /// \param kind  the nature of arguments, e.g., "identities"
-  /// \param map   a map from keys to values.
-  /// \param key   the value to look for.
-  template <typename C>
-  typename C::mapped_type
-  getargs(const std::string& kind, const C& map, const std::string& key)
-  {
-    auto i = map.find(key);
-    if (i == end(map))
-      detail::invalid_argument(kind, key, map);
-    else
-      return i->second;
-  }
-
   /// A mapping from strings to Values.
   template <typename Value>
   struct getarg

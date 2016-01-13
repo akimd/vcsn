@@ -161,42 +161,34 @@ namespace vcsn
     automaton
     to_automaton(const expression& exp, const std::string& algo)
     {
-      enum class algo_t
-      {
-        derivation,
-        expansion,
-        standard,
-        thompson,
-        zpc,
-        zpc_compact,
-       };
-      static const auto map = std::map<std::string, algo_t>
+      static const auto map
+        = getarg<std::function<automaton(const expression&)>>
         {
-          {"derivation",   algo_t::derivation},
-          {"expansion",    algo_t::expansion},
-          {"derived_term", algo_t::expansion},
-          {"auto",         algo_t::expansion},
-          {"standard",     algo_t::standard},
-          {"thompson",     algo_t::thompson},
-          {"zpc",          algo_t::zpc},
-          {"zpc_compact",  algo_t::zpc_compact},
+          "to_automaton algorithm",
+          {
+            {"auto",         "expansion"},
+            {"derivation",   [](const expression& r) {
+                return strip(trim(strip(derived_term(r, "derivation"))));
+              }},
+            {"derived_term", "expansion"},
+            {"expansion",    [](const expression& r) {
+                return strip(trim(strip(derived_term(r))));
+              }},
+            {"standard",     [](const expression& r) {
+                return standard(r);
+              }},
+            {"thompson",     [](const expression& r) {
+                return thompson(r);
+              }},
+            {"zpc",          [](const expression& r) {
+                return strip(trim(zpc(r)));
+              }},
+            {"zpc_compact",  [](const expression& r) {
+                return strip(trim(zpc(r, "compact")));
+              }},
+          }
         };
-      switch (getargs("to_automaton: algorithm", map, algo))
-        {
-        case algo_t::expansion:
-          return strip(trim(strip(derived_term(exp))));
-        case algo_t::derivation:
-          return strip(trim(strip(derived_term(exp, "derivation"))));
-        case algo_t::standard:
-          return standard(exp);
-        case algo_t::thompson:
-          return thompson(exp);
-        case algo_t::zpc:
-          return strip(trim(zpc(exp)));
-        case algo_t::zpc_compact:
-          return strip(trim(zpc(exp, "compact")));
-        }
-      BUILTIN_UNREACHABLE();
+      return map[algo](exp);
     }
 
 

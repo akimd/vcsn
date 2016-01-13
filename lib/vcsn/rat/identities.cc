@@ -39,24 +39,25 @@ namespace vcsn
 
     static std::istream& operator>>(std::istream& is, identities::ids_t& ids)
     {
-      static const auto map = std::map<std::string, identities::ids_t>
+      static const auto map = getarg<identities::ids_t>
         {
-          {"associative",  identities::associative},
-          {"auto",         identities::deflt},
-          {"binary",       identities::trivial},
-          {"default",      identities::deflt},
-          {"distributive", identities::distributive},
-          {"linear",       identities::linear},
-          {"none",         identities::none},
-          {"series",       identities::distributive},
-          {"trivial",      identities::trivial},
+          "identities",
+          {
+            {"associative",  identities::associative},
+            {"auto",         identities::deflt},
+            {"binary",       "trivial"},
+            {"default",      identities::deflt},
+            {"distributive", identities::distributive},
+            {"linear",       identities::linear},
+            {"none",         identities::none},
+            {"series",       "distributive"},
+            {"trivial",      identities::trivial},
+          }
         };
-
       std::string buf;
       while (is && isalnum(is.peek()))
         buf += is.get();
-
-      ids = getargs("identities", map, buf);
+      ids = map[buf];
       return is;
     }
 

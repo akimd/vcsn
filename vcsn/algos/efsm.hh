@@ -105,15 +105,18 @@ namespace vcsn
       /// The OpenFST name that corresponds to our weightset.
       std::string arc_type_() const
       {
-        auto map = std::map<std::string, std::string>
+        static const auto map = getarg<std::string>
           {
-            {"b",    "standard"},
-            {"zmin", "standard"},
-            {"rmin", "standard"},
-            {"nmin", "standard"},
-            {"log",  "log64"},
+            "weightset",
+            {
+              {"b",    "standard"},
+              {"zmin", "standard"},
+              {"rmin", "standard"},
+              {"nmin", "standard"},
+              {"log",  "log64"},
+            }
           };
-        return getargs("weightset", map, ws_.sname());
+        return map[ws_.sname()];
       }
 
       template <typename LS>
