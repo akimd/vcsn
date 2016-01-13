@@ -2,16 +2,16 @@
 
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/labelset/labelset.hh> // detail::letterized_context
 #include <vcsn/labelset/word-polynomialset.hh>
 #include <vcsn/misc/algorithm.hh> // front
 #include <vcsn/misc/direction.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/weightset/polynomialset.hh>
-
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/polynomial.hh>
 
 namespace vcsn
 {
@@ -51,6 +51,7 @@ namespace vcsn
     {
     public:
       using context_t = Context;
+      using self_t = trie_builder;
       /// The type of the result.
       using automaton_t = mutable_automaton<context_t>;
       /// The type of the automaton we work on.
@@ -120,12 +121,16 @@ namespace vcsn
       /// Add all the monomials in this stream.
       void add(std::istream& is, const std::string& format)
       {
-        if (format == "words")
-          add_words(is);
-        else if  (format == "default" || format == "monomials")
-          add_monomials(is);
-        else
-          raise("trie: invalid format: ", format);
+        static const auto map = getarg<void(self_t::*)(std::istream&)>
+          {
+            "trie format",
+            {
+              {"default",   "monomials"},
+              {"monomials", &self_t::add_monomials},
+              {"words",     &self_t::add_words},
+            }
+          };
+        (this->*(map[format]))(is);
       }
 
       /// Get the result for the forward trie.
