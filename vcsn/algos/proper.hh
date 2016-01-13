@@ -2,38 +2,29 @@
 
 #include <stdexcept>
 #include <type_traits>
-#include <unordered_map>
-#include <unordered_set>
 #include <utility>
-#include <vector>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/heap/fibonacci_heap.hpp>
 
 #include <vcsn/algos/copy.hh>
-#include <vcsn/algos/dot.hh>
+#include <vcsn/algos/epsilon-remover-distance.hh>
+#include <vcsn/algos/epsilon-remover-lazy.hh>
+#include <vcsn/algos/epsilon-remover-separate.hh>
+#include <vcsn/algos/epsilon-remover.hh>
 #include <vcsn/algos/fwd.hh>
-#include <vcsn/algos/is-eps-acyclic.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/core/kind.hh>
-#include <vcsn/labelset/labelset.hh> // make_proper_context
-#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/star-status.hh>
-#include <vcsn/misc/vector.hh> // make_vector
-
-#include <vcsn/algos/epsilon-remover.hh>
-#include <vcsn/algos/epsilon-remover-distance.hh>
-#include <vcsn/algos/epsilon-remover-lazy.hh>
-#include <vcsn/algos/epsilon-remover-separate.hh>
 
 namespace vcsn
 {
   namespace detail
   {
+    /// Spontaneous transition elimination.
+    ///
+    /// \tparam Aut  the automaton type on which to run.
     template <Automaton Aut>
     class properer
     {
@@ -68,16 +59,16 @@ namespace vcsn
         , algo_(algo)
       {}
 
-      /// Proper automata with proper context
+      /// Proper automata with proper context.
       aut_proper_t operator()() const
       {
-        return proper_star<weightset_t::star_status()>();
+        return proper_star_<weightset_t::star_status()>();
       }
 
-      /// In-place transition removal
+      /// In-place spontaneous transition removal.
       void here()
       {
-        proper_star_here<weightset_t::star_status()>();
+        proper_star_here_<weightset_t::star_status()>();
       }
 
     private:
@@ -118,8 +109,31 @@ namespace vcsn
       }
 
       template <star_status_t Status>
+      std::enable_if_t<Status == star_status_t::ABSVAL, aut_proper_t>
+      proper_star_() const
+      {
+        require(is_valid(aut_), "proper: invalid automaton");
+        return remover_();
+      }
+
+      template <star_status_t Status>
+      std::enable_if_t<Status == star_status_t::NON_STARRABLE, aut_proper_t>
+      proper_star_() const
+      {
+        require(is_valid(aut_), "proper: invalid automaton");
+        return remover_();
+      }
+
+      template <star_status_t Status>
+      std::enable_if_t<Status == star_status_t::STARRABLE, aut_proper_t>
+      proper_star_() const
+      {
+        return remover_();
+      }
+
+      template <star_status_t Status>
       std::enable_if_t<Status == star_status_t::TOPS, aut_proper_t>
-      proper_star() const
+      proper_star_() const
       {
         try
           {
@@ -129,29 +143,6 @@ namespace vcsn
           {
             raise("proper: invalid automaton");
           }
-      }
-
-      template <star_status_t Status>
-      std::enable_if_t<Status == star_status_t::ABSVAL, aut_proper_t>
-      proper_star() const
-      {
-        require(is_valid(aut_), "proper: invalid automaton");
-        return remover_();
-      }
-
-      template <star_status_t Status>
-      std::enable_if_t<Status == star_status_t::STARRABLE, aut_proper_t>
-      proper_star() const
-      {
-        return remover_();
-      }
-
-      template <star_status_t Status>
-      std::enable_if_t<Status == star_status_t::NON_STARRABLE, aut_proper_t>
-      proper_star() const
-      {
-        require(is_valid(aut_), "proper: invalid automaton");
-        return remover_();
       }
 
 
@@ -173,8 +164,31 @@ namespace vcsn
       }
 
       template <star_status_t Status>
+      std::enable_if_t<Status == star_status_t::ABSVAL>
+      proper_star_here_()
+      {
+        require(is_valid(aut_), "proper: invalid automaton");
+        remover_here_();
+      }
+
+      template <star_status_t Status>
+      std::enable_if_t<Status == star_status_t::NON_STARRABLE>
+      proper_star_here_()
+      {
+        require(is_valid(aut_), "proper: invalid automaton");
+        remover_here_();
+      }
+
+      template <star_status_t Status>
+      std::enable_if_t<Status == star_status_t::STARRABLE>
+      proper_star_here_()
+      {
+        remover_here_();
+      }
+
+      template <star_status_t Status>
       std::enable_if_t<Status == star_status_t::TOPS>
-      proper_star_here()
+      proper_star_here_()
       {
         try
           {
@@ -184,29 +198,6 @@ namespace vcsn
           {
             raise("proper: invalid automaton");
           }
-      }
-
-      template <star_status_t Status>
-      std::enable_if_t<Status == star_status_t::ABSVAL>
-      proper_star_here()
-      {
-        require(is_valid(aut_), "proper: invalid automaton");
-        remover_here_();
-      }
-
-      template <star_status_t Status>
-      std::enable_if_t<Status == star_status_t::STARRABLE>
-      proper_star_here()
-      {
-        remover_here_();
-      }
-
-      template <star_status_t Status>
-      std::enable_if_t<Status == star_status_t::NON_STARRABLE>
-      proper_star_here()
-      {
-        require(is_valid(aut_), "proper: invalid automaton");
-        remover_here_();
       }
 
       automaton_t aut_;

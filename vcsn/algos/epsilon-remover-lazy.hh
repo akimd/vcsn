@@ -48,8 +48,9 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("lazy_proper_automaton<"
-                          + in_automaton_t::element_type::sname() + '>');
+        static auto res = symbol{"lazy_proper_automaton<"
+                                 + in_automaton_t::element_type::sname()
+                                 + '>'};
         return res;
       }
 
@@ -179,8 +180,9 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("lazy_proper_automaton<"
-                          + automaton_t::element_type::sname() + '>');
+        static auto res = symbol{"lazy_proper_automaton<"
+                                 + automaton_t::element_type::sname()
+                                 + '>'};
         return res;
       }
 
@@ -193,13 +195,7 @@ namespace vcsn
 
       lazy_proper_automaton_impl(const automaton_t& a, bool)
         : super_t(a)
-      {
-      }
-
-      bool state_is_strict(state_t)
-      {
-        return true;
-      }
+      {}
     };
   }
 
