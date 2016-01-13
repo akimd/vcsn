@@ -7,7 +7,6 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/registries.hh>
-#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 
 namespace vcsn
@@ -35,17 +34,21 @@ namespace vcsn
     read_automaton(std::istream& is, const std::string& f,
                    bool strip_p)
     {
+#if 1
       static const auto map
-        = std::map<std::string, std::function<automaton(std::istream&)>>
+        = getarg<std::function<automaton(std::istream&)>>
         {
-          {"default", read_dot},
-          {"dot",     read_dot},
-          {"efsm",    read_efsm},
-          {"fado",    read_fado},
+          "automaton input format",
+          {
+            {"default", "dot"},
+            {"dot",     read_dot},
+            {"efsm",    read_efsm},
+            {"fado",    read_fado},
+          }
         };
-      auto read = getargs("automaton input format", map, f);
-      auto res = read(is);
+      auto res = map[f](is);
       return strip_p ? strip(res) : res;
+#endif
     }
 
     /*-------------------.
@@ -56,21 +59,20 @@ namespace vcsn
     read_expression(const context& ctx, rat::identities ids,
                     std::istream& is, const std::string& f)
     {
-      enum fmt
-      {
-        text,
-      };
-      static const auto map = std::map<std::string, fmt>
+      using fun_t = auto (const context&, rat::identities,
+                          std::istream&) -> expression;
+      static const auto map = getarg<std::function<fun_t>>
         {
-          {"default", text},
-          {"text",    text},
+          "expression input format",
+          {
+            {"default", "text"},
+            {"text",    [](const context& ctx, rat::identities ids,
+                           std::istream& is) {
+                return rat::read(ctx, ids, is);
+              }},
+          }
         };
-      switch (getargs("expression input format", map, f))
-        {
-        case text:
-          return rat::read(ctx, ids, is);
-        }
-      BUILTIN_UNREACHABLE();
+      return map[f](ctx, ids, is);
     }
 
     /*-------------.
@@ -82,19 +84,18 @@ namespace vcsn
     read_label(const dyn::context& ctx, std::istream& is,
                const std::string& f)
     {
-      enum fmt
-      {
-        text,
-        quoted
-      };
-      static const auto map = std::map<std::string, fmt>
+      static const auto map = getarg<bool>
         {
-          {"default", text},
-          {"text",    text},
-          {"quoted",  quoted},
+          "label input format",
+          {
+            // name,     quoted
+            {"default", "text"},
+            {"text",    false},
+            {"quoted",  true},
+          }
         };
-      auto format = getargs("label input format", map, f);
-      bool is_quoted = format == quoted;
+      // Lvalue needed by dyn::.
+      bool is_quoted = map[f];
       return detail::read_label_registry().call(ctx, is, is_quoted);
     }
   }
