@@ -9,11 +9,13 @@
 
 #include <vcsn/algos/copy.hh> // make_fresh_automaton
 #include <vcsn/algos/filter.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/partition-automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/builtins.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/unordered_map.hh>
 #include <vcsn/misc/unordered_set.hh>
 #include <vcsn/misc/vector.hh> // has
@@ -28,11 +30,12 @@ namespace vcsn
     `--------------------------------*/
 
     /// A strongly-connected component: set of states.
-    /// Bench show that using std::unordered_set is better than
+    ///
+    /// Benches show that using std::unordered_set is better than
     /// std::set about ~10x. For example:
     /// std::set:
     ///   5.53s: a.scc("tarjan_iterative") # a = std((abc)*{1000})
-    /// std::unordereset:
+    /// std::unordered_set:
     ///   0.58s: a.scc("tarjan_iterative") # a = std((abc)*{1000})
     template <Automaton Aut>
     using component_t = std::unordered_set<state_t_of<Aut>>;
@@ -85,13 +88,12 @@ namespace vcsn
       /// Revert postorder of dfs.
       std::vector<state_t> rvp_;
       /// Store the visited states.
-      std::set<state_t> marked_;
+      std::unordered_set<state_t> marked_;
     };
   }
 
   /// Get all states in reverse postorder.
   template <Automaton Aut>
-  inline
   std::vector<state_t_of<Aut>>
   reverse_postorder(const Aut& aut)
   {
@@ -102,23 +104,30 @@ namespace vcsn
 
   namespace detail
   {
-    /*----------------.
-    | scc_dijkstra.   |
-    `----------------*/
+    /// Class template for strongly-connected-components computations.
+    ///
+    /// \tparam Aut  the automaton type.
+    /// \tparam Tag  specifies the chosen algorithm.
+    template <Automaton Aut, typename Tag = auto_tag>
+    class scc_impl;
+
+    /*------------.
+    | dijkstra.   |
+    `------------*/
 
     /// Compute the strongly connected components using Dijkstra's
     /// algorithm.
     ///
     /// https://en.wikipedia.org/wiki/Path-based_strong_component_algorithm
     template <Automaton Aut>
-    class scc_dijkstra_impl
+    class scc_impl<Aut, dijkstra_tag>
     {
     public:
       using state_t = state_t_of<Aut>;
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_dijkstra_impl(const Aut& aut)
+      scc_impl(const Aut& aut)
         : aut_{aut}
       {}
 
@@ -187,22 +196,28 @@ namespace vcsn
       /// All the components.
       components_t components_;
     };
+  }
 
-    /*----------------.
-    | scc_kosaraju.   |
-    `----------------*/
+  /*------------.
+  | kosaraju.   |
+  `------------*/
 
+  /// Request the Kosaraju's algorithm to compute the SCCs.
+  struct kosaraju_tag {};
+
+  namespace detail
+  {
     /// Compute the strongly connected components using Kosaraju's
     /// algorithm.
     template <Automaton Aut>
-    class scc_kosaraju_impl
+    class scc_impl<Aut, kosaraju_tag>
     {
     public:
       using state_t = state_t_of<Aut>;
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_kosaraju_impl(const Aut& aut)
+      scc_impl(const Aut& aut)
         : aut_{aut}
       {
         auto trans = ::vcsn::transpose(aut);
@@ -249,19 +264,25 @@ namespace vcsn
       components_t components_;
       std::unordered_set<state_t> marked_;
     };
+  }
 
+  /*---------------------.
+  | tarjan, iterative.   |
+  `---------------------*/
 
-    /*--------------------.
-    | tarjan_iterative.   |
-    `--------------------*/
+  /// Request the Tarjan's algorithm to compute the SCCs,
+  /// implemented with explicit stack handling.
+  struct tarjan_iterative_tag {};
 
+  namespace detail
+  {
     /// Tarjan's algorithm to find all strongly connected components:
     /// iterative implementation.
     ///
     /// Often slightly slower than the recursive implementation, but
     /// no limitation due to the stack.
     template <Automaton Aut>
-    class scc_tarjan_iterative_impl
+    class scc_impl<Aut, tarjan_iterative_tag>
     {
     public:
       using state_t = state_t_of<Aut>;
@@ -270,7 +291,7 @@ namespace vcsn
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_tarjan_iterative_impl(const Aut& aut)
+      scc_impl(const Aut& aut)
         : aut_{aut}
       {
         for (auto s : aut_->states())
@@ -369,26 +390,32 @@ namespace vcsn
         iterator_t end;
       };
     };
+  }
 
+  /*--------------------.
+  | tarjan_recursive.   |
+  `--------------------*/
 
-    /*--------------------.
-    | tarjan_recursive.   |
-    `--------------------*/
+  /// Request the Tarjan's algorithm to compute the SCCs,
+  /// implemented with recursion.
+  struct tarjan_recursive_tag {};
 
+  namespace detail
+  {
     /// Tarjan's algorithm to find all strongly connected components:
     /// recursive implementation.
     ///
     /// Often slightly faster than the iterative implementation, but
     /// may overflow the stack.
     template <Automaton Aut>
-    class scc_tarjan_recursive_impl
+    class scc_impl<Aut, tarjan_recursive_tag>
     {
     public:
       using state_t = state_t_of<Aut>;
       using component_t = detail::component_t<Aut>;
       using components_t = detail::components_t<Aut>;
 
-      scc_tarjan_recursive_impl(const Aut& aut)
+      scc_impl(const Aut& aut)
         : aut_{aut}
       {
         for (auto s : aut_->states())
@@ -455,6 +482,22 @@ namespace vcsn
     };
   }
 
+  /*--------.
+  | auto.   |
+  `--------*/
+
+  namespace detail
+  {
+    /// By default, use Tarjan iterative.
+    template <Automaton Aut>
+    class scc_impl<Aut, auto_tag>
+      : public scc_impl<Aut, tarjan_iterative_tag>
+    {
+      using super_t = scc_impl<Aut, tarjan_iterative_tag>;
+      using super_t::super_t;
+    };
+  }
+
 
   /*-------.
   | scc.   |
@@ -462,6 +505,7 @@ namespace vcsn
 
   enum class scc_algo_t
   {
+    auto_,
     dijkstra,
     tarjan_iterative,
     tarjan_recursive,
@@ -470,50 +514,67 @@ namespace vcsn
 
   inline scc_algo_t scc_algo(const std::string& algo)
   {
-    scc_algo_t res;
-    if (algo == "dijkstra")
-      res = scc_algo_t::dijkstra;
-    else if (algo == "auto" || algo == "tarjan_iterative")
-      res = scc_algo_t::tarjan_iterative;
-    else if (algo == "tarjan_recursive")
-      res = scc_algo_t::tarjan_recursive;
-    else if (algo == "kosaraju")
-      res = scc_algo_t::kosaraju;
-    else
-      raise("scc: invalid algorithm: ", str_escape(algo));
-    return res;
+    static const auto map = getarg<scc_algo_t>
+      {
+        "strongly connected components algorithm",
+        {
+          {"auto",             scc_algo_t::auto_},
+          {"dijkstra",         scc_algo_t::dijkstra},
+          {"kosaraju",         scc_algo_t::kosaraju},
+          {"tarjan",           "tarjan,iterative"},
+          {"tarjan,iterative", scc_algo_t::tarjan_iterative},
+          {"tarjan,recursive", scc_algo_t::tarjan_recursive},
+          {"tarjan_iterative", "tarjan,iterative"},
+          {"tarjan_recursive", "tarjan,recursive"},
+        }
+      };
+    return map[algo];
   }
 
   /// Find all strongly connected components of \a aut.
+  ///
+  /// \tparam Aut  the automaton type.
+  /// \tparam Tag  specifies the chosen algorithm.
+  template <Automaton Aut, typename Tag = auto_tag>
+  const detail::components_t<Aut>
+  strong_components(const Aut& aut, Tag = {})
+  {
+    return detail::scc_impl<Aut, Tag>{aut}.components();
+  }
+
+  /// Find all strongly connected components of \a aut.
+  ///
+  /// \param aut   the input automaton.
+  /// \param algo  specifies the chosen algorithm.
   template <Automaton Aut>
-  inline
   const detail::components_t<Aut>
   strong_components(const Aut& aut,
                     scc_algo_t algo = scc_algo_t::tarjan_iterative)
   {
     switch (algo)
       {
+      case scc_algo_t::auto_:
+        return strong_components(aut, auto_tag{});
       case scc_algo_t::dijkstra:
-        return detail::scc_dijkstra_impl<Aut>{aut}.components();
+        return strong_components(aut, dijkstra_tag{});
       case scc_algo_t::kosaraju:
-        return detail::scc_kosaraju_impl<Aut>{aut}.components();
+        return strong_components(aut, kosaraju_tag{});
       case scc_algo_t::tarjan_recursive:
-        return detail::scc_tarjan_recursive_impl<Aut>{aut}.components();
+        return strong_components(aut, tarjan_recursive_tag{});
       case scc_algo_t::tarjan_iterative:
-        return detail::scc_tarjan_iterative_impl<Aut>{aut}.components();
+        return strong_components(aut, tarjan_iterative_tag{});
       }
     BUILTIN_UNREACHABLE();
   }
 
   /// Generate a subautomaton corresponding to an SCC.
   template <Automaton Aut>
-  inline
   fresh_automaton_t_of<Aut>
   aut_of_component(const detail::component_t<Aut>& com, const Aut& aut)
   {
     auto res = make_fresh_automaton(aut);
     using res_t = decltype(res);
-    std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
+    auto map = std::unordered_map<state_t_of<Aut>, state_t_of<res_t>>{};
     auto s0 = *com.begin();
     map[s0] = res->new_state();
     res->set_initial(map[s0]);
@@ -572,7 +633,7 @@ namespace vcsn
       static symbol sname()
       {
         static auto res = symbol{"scc_automaton<"
-                          + automaton_t::element_type::sname() + '>'};
+                                 + automaton_t::element_type::sname() + '>'};
         return res;
       }
 
@@ -628,7 +689,6 @@ namespace vcsn
 
   /// Get scc_automaton from \a aut.
   template <Automaton Aut>
-  inline
   scc_automaton<Aut>
   scc(const Aut& aut, const std::string& algo = "auto")
   {
@@ -641,7 +701,6 @@ namespace vcsn
     {
       /// Bridge.
       template <Automaton Aut, typename String>
-      inline
       automaton scc(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -656,14 +715,12 @@ namespace vcsn
 
   /// Get number of strongly connected components.
   template <Automaton Aut>
-  inline
   std::size_t num_components(const scc_automaton<Aut>& aut)
   {
     return aut->num_components();
   }
 
   template <Automaton Aut>
-  inline
   std::size_t num_components(const Aut&)
   {
     raise("num_components: requires an scc_automaton");
@@ -675,7 +732,6 @@ namespace vcsn
     {
       /// Bridge.
       template <Automaton Aut>
-      inline
       std::size_t num_components(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
@@ -693,7 +749,6 @@ namespace vcsn
   /// \param aut  the input automaton.
   /// \param num  the number of the scc.
   template <Automaton Aut>
-  inline
   filter_automaton<scc_automaton<Aut>>
   component(const scc_automaton<Aut>& aut, unsigned num)
   {
@@ -701,7 +756,6 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  inline
   void
   component(const Aut&, unsigned)
   {
@@ -714,7 +768,6 @@ namespace vcsn
     {
       /// Bridge.
       template <Automaton Aut, typename Unsigned>
-      inline
       automaton component(const automaton& aut, unsigned num)
       {
         const auto& a = aut->as<Aut>();
@@ -731,27 +784,26 @@ namespace vcsn
   /// Create a condensation of automaton with each its state who is a strongly
   /// connected component of \a aut.
   template <Automaton Aut>
-  inline
   partition_automaton<scc_automaton<Aut>>
   condense(const scc_automaton<Aut>& aut)
   {
     auto res = make_shared_ptr<partition_automaton<scc_automaton<Aut>>>(aut);
     using state_t = state_t_of<Aut>;
-    /// map from state of aut to state(component) of new automaton.
-    std::unordered_map<state_t, state_t> map;
+
+    // State of aut -> state(component) of new automaton.
+    auto map = std::unordered_map<state_t, state_t>
+      {
+        {aut->pre(), res->pre()},
+        {aut->post(), res->post()},
+      };
 
     // Add states to new automaton.
-    std::set<state_t> ss;
     for (const auto& com : aut->components())
       {
-        ss.clear();
-        ss.insert(begin(com), end(com));
-        state_t new_state = res->new_state(ss);
+        state_t new_state = res->new_state(com);
         for (auto s : com)
           map[s] = new_state;
       }
-    map[aut->pre()] = res->pre();
-    map[aut->post()] = res->post();
 
     // Add transitions to new automaton.
     for (auto t: all_transitions(aut))
@@ -765,7 +817,6 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  inline
   partition_automaton<Aut>
   condense(const Aut&)
   {
@@ -778,7 +829,6 @@ namespace vcsn
     {
       /// Bridge.
       template <Automaton Aut>
-      inline
       automaton condense(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();

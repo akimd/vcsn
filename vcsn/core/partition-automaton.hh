@@ -62,7 +62,7 @@ namespace vcsn
       static symbol sname()
       {
         static auto res = symbol{"partition_automaton<"
-                          + automaton_t::element_type::sname() + '>'};
+                                 + automaton_t::element_type::sname() + '>'};
         return res;
       }
 
@@ -121,9 +121,12 @@ namespace vcsn
         return res;
       }
 
-      state_t new_state(const std::vector<state_t>& v)
+      template <typename States>
+      auto new_state(const States& ss)
+        -> decltype(*begin(ss) == std::declval<state_t>(),
+                    state_t{})
       {
-        return new_state(state_name_t{begin(v), end(v)});
+        return new_state(state_name_t{begin(ss), end(ss)});
       }
 
     private:

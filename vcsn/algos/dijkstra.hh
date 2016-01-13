@@ -1,6 +1,8 @@
 #pragma once
 
 #include <boost/heap/fibonacci_heap.hpp>
+
+#include <vcsn/algos/tags.hh>
 #include <vcsn/core/mutable-automaton.hh>
 
 namespace vcsn
@@ -10,15 +12,12 @@ namespace vcsn
   | Shortest path through Dijkstra algorithm.  |
   `-------------------------------------------*/
 
-  /// Dijkstra implementation (from vcsn/algos/dijkstra.hh).
-  ///
-  /// Uses fibonacci heap.
-  /// No preconditions.
-  struct dijkstra_tag {};
-
   namespace detail
   {
     /// Dijkstra implementation of lightest automaton.
+    ///
+    /// Uses Fibonacci heaps.
+    /// No preconditions.
     ///
     /// Functor taking an automaton as parameter and applying
     /// dijkstra algorithm to compute the lightest 'in' transition
