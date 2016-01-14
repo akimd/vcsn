@@ -23,20 +23,20 @@ namespace vcsn
   ///
   /// \pre The context of \a res must include that of \a b.
   /// \pre res and b must be standard.
-  template <typename A, typename B>
-  A&
-  sum_here(A& res, const B& b, standard_tag)
+  template <Automaton Aut1, Automaton Aut2>
+  Aut1&
+  sum_here(Aut1& res, const Aut2& b, standard_tag)
   {
     require(is_standard(res), __func__, ": lhs must be standard");
     require(is_standard(b), __func__, ": rhs must be standard");
 
     // State in B -> state in Res.
-    auto m = std::map<state_t_of<B>, state_t_of<A>>
+    auto m = std::map<state_t_of<Aut2>, state_t_of<Aut1>>
       {
         {b->pre(), res->pre()},
         {b->post(), res->post()},
       };
-    state_t_of<A> initial = res->dst_of(initial_transitions(res).front());
+    state_t_of<Aut1> initial = res->dst_of(initial_transitions(res).front());
     for (auto s: b->states())
       m.emplace(s, b->is_initial(s) ? initial : res->new_state());
 
@@ -59,10 +59,10 @@ namespace vcsn
 
   /// Merge transitions of \a b into those of \a res.
   ///
-  /// \pre AutIn <: AutOut.
-  template <typename A, typename B>
-  A&
-  sum_here(A& res, const B& b, general_tag)
+  /// \pre Aut2 <: Aut1.
+  template <Automaton Aut1, Automaton Aut2>
+  Aut1&
+  sum_here(Aut1& res, const Aut2& b, general_tag)
   {
     copy_into(b, res);
     return res;
@@ -73,9 +73,9 @@ namespace vcsn
   /// \param lhs  the first automaton.
   /// \param rhs  the second automaton.
   /// \param tag  whether to use constructs for standard automata.
-  template <typename A, typename B, typename Tag = general_tag>
+  template <Automaton Aut1, Automaton Aut2, typename Tag = general_tag>
   auto
-  sum(const A& lhs, const B& rhs, Tag tag = {})
+  sum(const Aut1& lhs, const Aut2& rhs, Tag tag = {})
     -> decltype(join_automata(lhs, rhs))
   {
     auto res = join_automata(lhs, rhs);
@@ -208,5 +208,4 @@ namespace vcsn
       }
     }
   }
-
 }

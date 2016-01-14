@@ -13,8 +13,8 @@
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/memory.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/vector.hh> // make_vector
 #include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/vector.hh> // make_vector
 
 namespace vcsn
 {
@@ -283,8 +283,7 @@ namespace vcsn
 
       /// The current set of final states.
       using states_t = std::set<state_t>;
-      states_t
-      finals()
+      states_t finals() const
       {
         states_t res;
         for (auto t: final_transitions(res_))

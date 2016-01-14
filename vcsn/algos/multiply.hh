@@ -24,9 +24,9 @@ namespace vcsn
   /// Append automaton \a b to \a res for non standard automata.
   ///
   /// \pre The context of \a res must include that of \a b.
-  template <typename A, typename B>
-  A&
-  multiply_here(A& res, const B& b, general_tag = {})
+  template <Automaton Aut1, Automaton Aut2>
+  Aut1&
+  multiply_here(Aut1& res, const Aut2& b, general_tag = {})
   {
     const auto& ls = *res->labelset();
     const auto& ws = *res->weightset();
@@ -41,9 +41,9 @@ namespace vcsn
     auto init_ts = detail::make_vector(initial_transitions(b));
 
     auto copy = make_copier(b, res);
-    copy([](state_t_of<B>) { return true; },
+    copy([](state_t_of<Aut2>) { return true; },
          // Import all the B transitions, except the initial ones.
-         [b] (transition_t_of<B> t) { return b->src_of(t) != b->pre(); });
+         [b] (transition_t_of<Aut2> t) { return b->src_of(t) != b->pre(); });
     const auto& map = copy.state_map();
 
     // Branch all the final transitions of res to the initial ones in b.
@@ -66,9 +66,9 @@ namespace vcsn
   ///
   /// \pre The context of \a res must include that of \a b.
   /// \pre both are standard.
-  template <typename A, typename B>
-  A&
-  multiply_here(A& res, const B& b, standard_tag)
+  template <Automaton Aut1, Automaton Aut2>
+  Aut1&
+  multiply_here(Aut1& res, const Aut2& b, standard_tag)
   {
     require(is_standard(b), __func__, ": rhs must be standard");
 
@@ -81,14 +81,14 @@ namespace vcsn
     // Store these transitions by copy.
     auto final_ts = detail::make_vector(final_transitions(res));
 
-    state_t_of<B> b_initial = b->dst_of(initial_transitions(b).front());
+    state_t_of<Aut2> b_initial = b->dst_of(initial_transitions(b).front());
 
     auto copy = make_copier(b, res);
     copy(// The initial state of b is not copied.
-         [b_initial](state_t_of<B> s) { return s != b_initial; },
+         [b_initial](state_t_of<Aut2> s) { return s != b_initial; },
          // Import all the B transitions, except the initial ones (and
          // those from its (genuine) initial state).
-         [b] (transition_t_of<B> t) { return b->src_of(t) != b->pre(); });
+         [b] (transition_t_of<Aut2> t) { return b->src_of(t) != b->pre(); });
     const auto& map = copy.state_map();
 
     // Branch all the final transitions of res to the successors of
@@ -118,11 +118,10 @@ namespace vcsn
     return res;
   }
 
-  /// Concatenate two automata.
-  template <typename A, typename B, typename Tag = general_tag>
-  inline
+  /// Concatenate two automata, general case.
+  template <Automaton Aut1, Automaton Aut2, typename Tag = general_tag>
   auto
-  multiply(const A& lhs, const B& rhs, Tag tag = {})
+  multiply(const Aut1& lhs, const Aut2& rhs, Tag tag = {})
     -> decltype(lhs->null_state(), // SFINAE.
                 detail::make_join_automaton(tag, lhs, rhs))
   {
@@ -137,7 +136,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Lhs, typename Rhs, typename String>
+      template <Automaton Lhs, Automaton Rhs, typename String>
       automaton
       multiply(const automaton& lhs, const automaton& rhs,
                const std::string& algo)
@@ -250,7 +249,6 @@ namespace vcsn
 
   /// Product (concatenation) of expressions/labels/polynomials/weights.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   multiply(const ValueSet& vs,
            const typename ValueSet::value_t& lhs,
