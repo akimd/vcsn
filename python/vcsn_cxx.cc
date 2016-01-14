@@ -515,7 +515,7 @@ struct automaton
 
   polynomial lightest(unsigned num) const;
 
-  automaton lightest_automaton(const std::string& algo) const
+  automaton lightest_automaton(const std::string& algo = "auto") const
   {
     return vcsn::dyn::lightest_automaton(val_, algo);
   }
