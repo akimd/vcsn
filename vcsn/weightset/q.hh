@@ -156,7 +156,8 @@ namespace vcsn
     /// Whether \a lhs < \a rhs.
     static bool less(const value_t lhs, const value_t rhs)
     {
-      return lhs.num * rhs.den < rhs.num * lhs.den;
+      return lhs.num * static_cast<long>(rhs.den)
+             < rhs.num * static_cast<long>(lhs.den);
     }
 
     static constexpr bool is_commutative() { return true; }
