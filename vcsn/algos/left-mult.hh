@@ -10,7 +10,7 @@
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/weight.hh>
-#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/getargs.hh>
 
 namespace vcsn
 {
@@ -125,8 +125,7 @@ namespace vcsn
   /// Left-multiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   auto
-  left_mult(const weight_t_of<Aut>& w,
-            const Aut& aut, Tag tag = {})
+  left_mult(const weight_t_of<Aut>& w, const Aut& aut, Tag tag = {})
     -> fresh_automaton_t_of<Aut>
   {
     auto res = copy(aut);
@@ -138,6 +137,14 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Left-product.
+      template <Automaton Aut, typename Tag>
+      automaton
+      left_mult_tag(const weight_t_of<Aut>& w, Aut& aut)
+      {
+        return make_automaton(::vcsn::left_mult_here(w, aut, Tag{}));
+      }
+
       /// Bridge.
       template <typename WeightSet, Automaton Aut, typename String>
       automaton
@@ -154,15 +161,20 @@ namespace vcsn
                                 join(w1.weightset(), *a1->weightset()));
         auto a2 = make_mutable_automaton(ctx);
         copy_into(a1, a2);
+        using automaton_t = decltype(a2);
         auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
-        if (algo == "auto")
-          return make_automaton(::vcsn::left_mult_here(w2, a2, auto_tag{}));
-        else if (algo == "general")
-          return make_automaton(::vcsn::left_mult_here(w2, a2, general_tag{}));
-        else if (algo == "standard")
-          return make_automaton(::vcsn::left_mult_here(w2, a2, standard_tag{}));
-        else
-          raise("left-multiply: invalid algorithm: ", algo);
+        using weight_t = decltype(w2);
+        static const auto map
+          = getarg<std::function<automaton(const weight_t&, automaton_t&)>>
+          {
+            "left-multiply algorithm",
+            {
+              {"auto",     left_mult_tag<automaton_t, auto_tag>},
+              {"general",  left_mult_tag<automaton_t, general_tag>},
+              {"standard", left_mult_tag<automaton_t, standard_tag>},
+            }
+          };
+        return map[algo](w2, a2);
       }
     }
   }
@@ -188,7 +200,8 @@ namespace vcsn
   template <typename WeightSet, typename ExpSet>
   expansionset<expressionset<context<labelset_t_of<ExpSet>,
                                      join_t<WeightSet, weightset_t_of<ExpSet>>>>>
-  join_weightset_expansionset(const WeightSet& ws, const expansionset<ExpSet>& rs)
+  join_weightset_expansionset(const WeightSet& ws,
+                              const expansionset<ExpSet>& rs)
   {
     return make_expansionset(join_weightset_expressionset(ws,
                                                           rs.expressionset()));
@@ -205,8 +218,10 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
-        auto rs = join_weightset_expansionset(w1.weightset(), r1.expansionset());
-        auto w2 = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
+        auto rs
+          = join_weightset_expansionset(w1.weightset(), r1.expansionset());
+        auto w2
+          = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
         return make_expansion(rs, ::vcsn::left_mult(rs, w2, r2));
       }
@@ -258,7 +273,8 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
-        auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
+        auto rs
+          = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
         return make_expression(rs,
@@ -293,6 +309,14 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Right-product.
+      template <Automaton Aut, typename Tag>
+      automaton
+      right_mult_tag(Aut& aut, const weight_t_of<Aut>& w)
+      {
+        return make_automaton(::vcsn::right_mult_here(aut, w, Tag{}));
+      }
+
       /// Bridge.
       template <Automaton Aut, typename WeightSet, typename String>
       automaton
@@ -301,21 +325,28 @@ namespace vcsn
       {
         const auto& a1 = aut->as<Aut>();
         const auto& w1 = weight->as<WeightSet>();
-        // FIXME: see comment for left_mult.
+        // FIXME: this is hairy because there is no elegant means (so
+        // far) to copy an automaton to a supertype, because the
+        // incoming context is not automatically converted to the
+        // supertype by vcsn::copy.
         auto ctx = make_context(*a1->labelset(),
-                                join(*a1->weightset(), w1.weightset()));
+                                join(w1.weightset(), *a1->weightset()));
         auto a2 = make_mutable_automaton(ctx);
         copy_into(a1, a2);
+        using automaton_t = decltype(a2);
         auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
-        if (algo == "auto")
-          return make_automaton(::vcsn::right_mult_here(a2, w2, auto_tag{}));
-        else if (algo == "general")
-          return make_automaton(::vcsn::right_mult_here(a2, w2, general_tag{}));
-        else if (algo == "standard")
-          return make_automaton(::vcsn::right_mult_here(a2, w2,
-                                                        standard_tag{}));
-        else
-          raise("right-multiply: invalid algorithm: ", algo);
+        using weight_t = decltype(w2);
+        static const auto map
+          = getarg<std::function<automaton(automaton_t&, const weight_t&)>>
+          {
+            "right-multiply algorithm",
+            {
+              {"auto",     right_mult_tag<automaton_t, auto_tag>},
+              {"general",  right_mult_tag<automaton_t, general_tag>},
+              {"standard", right_mult_tag<automaton_t, standard_tag>},
+            }
+          };
+        return map[algo](a2, w2);
       }
     }
   }
@@ -348,8 +379,10 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
-        auto rs = join_weightset_expansionset(w1.weightset(), r1.expansionset());
-        auto w2 = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
+        auto rs
+          = join_weightset_expansionset(w1.weightset(), r1.expansionset());
+        auto w2
+          = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
         return make_expansion(rs, ::vcsn::right_mult(rs, r2, w2));
       }
@@ -371,7 +404,8 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
-        auto rs = join_weightset_expressionset(w1.weightset(), r1.expressionset());
+        auto rs
+          = join_weightset_expressionset(w1.weightset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
         return make_expression(rs, ::vcsn::right_mult(rs, r2, w2));
