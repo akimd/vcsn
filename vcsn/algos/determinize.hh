@@ -71,9 +71,12 @@ namespace vcsn
 
       /// State index.
       using state_t = state_t_of<automaton_t>;
+      using stateset_t = stateset<automaton_t>;
 
-      /// The name: set of (input) states.
-      using state_name_t = dynamic_bitset;
+      /// The state name: set of (input) states.
+      using state_nameset_t = polynomialset<context<stateset_t, weightset_t>,
+                                            wet_kind_t::bitset>;
+      using state_name_t = typename state_nameset_t::value_t;
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
@@ -83,8 +86,7 @@ namespace vcsn
         , finals_(state_size_)
       {
         // Pre.
-        state_name_t n;
-        n.resize(state_size_);
+        state_name_t n(state_size_);
         n.set(input_->pre());
         todo_.push(map_.emplace(n, super_t::pre()).first);
 
@@ -121,9 +123,9 @@ namespace vcsn
             todo_.pop();
 
             dests.clear();
-            for (auto s = ss.find_first(); s != ss.npos;
-                 s = ss.find_next(s))
+            for (const auto& sw : ss)
               {
+                state_t s = label_of(sw);
                 // Cache the output transitions of state s.
                 auto i = successors_.find(s);
                 if (i == successors_.end())
@@ -134,7 +136,7 @@ namespace vcsn
                       {
                         auto l = input_->label_of(t);
                         if (j.find(l) == j.end())
-                          j[l].resize(state_size_);
+                          j.emplace(l, state_size_);
                         j[l].set(input_->dst_of(t));
                       }
                   }
@@ -146,7 +148,7 @@ namespace vcsn
                     if (j == dests.end())
                       dests[p.first] = p.second;
                     else
-                      j->second |= p.second;
+                      ns_.add_here(j->second, p.second);
                   }
               }
 
@@ -198,9 +200,8 @@ namespace vcsn
             {
               auto from = std::set<state_t>{};
               const auto& ss = p.first;
-              for (auto s = ss.find_first(); s != ss.npos;
-                   s = ss.find_next(s))
-                from.emplace(s);
+              for (auto sw: ss)
+                from.emplace(label_of(sw));
               origins_.emplace(p.second, std::move(from));
             }
         return origins_;
@@ -218,7 +219,7 @@ namespace vcsn
             res = this->new_state();
             todo_.push(map_.emplace(ss, res).first);
 
-            if (ss.intersects(finals_))
+            if (ss.set().intersects(finals_.set()))
               this->set_final(res);
           }
         else
@@ -227,11 +228,19 @@ namespace vcsn
       }
 
       /// Set of input states -> output state.
-      using map_t = std::unordered_map<state_name_t, state_t>;
+      using map_t = std::unordered_map<state_name_t, state_t,
+                                       vcsn::hash<state_nameset_t>,
+                                       vcsn::equal_to<state_nameset_t>>;
       map_t map_;
 
       /// Input automaton.
       automaton_t input_;
+
+      /// Its weightset.
+      weightset_t ws_ = *input_->weightset();
+
+      /// (Nameset) The polynomialset that stores weighted states.
+      state_nameset_t ns_ = {{stateset_t(input_), ws_}};
 
       /// We use state numbers as indexes, so we need to know the last
       /// state number.  If states were removed, it is not the same as
