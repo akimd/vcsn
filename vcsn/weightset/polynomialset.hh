@@ -234,7 +234,7 @@ namespace vcsn
                      && std::is_same<weightset_t, b>::value,
                      value_t&>
     {
-      l.set() += r.set();
+      l.set() |= r.set();
       return l;
     }
 

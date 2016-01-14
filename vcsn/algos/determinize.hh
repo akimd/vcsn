@@ -54,20 +54,26 @@ namespace vcsn
     class determinized_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
+      static_assert(labelset_t_of<Aut>::is_free(),
+                    "determinize: requires free labelset");
+
     public:
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       template <typename Ctx = context_t>
       using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
+      using super_t = automaton_decorator<fresh_automaton_t<>>;
+
+      /// Labels and weights.
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
-      using super_t = automaton_decorator<fresh_automaton_t<>>;
+      using weightset_t = weightset_t_of<automaton_t>;
+
+      /// State index.
+      using state_t = state_t_of<automaton_t>;
 
       /// The name: set of (input) states.
       using state_name_t = dynamic_bitset;
-
-      /// Result automaton state type.
-      using state_t = state_t_of<automaton_t>;
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
@@ -104,6 +110,7 @@ namespace vcsn
       /// Determinize all accessible states.
       void operator()()
       {
+        // label -> <destination, sum of weights>.
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
         auto dests = dests_t{};
@@ -300,14 +307,17 @@ namespace vcsn
       using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
       using super_t = automaton_decorator<fresh_automaton_t<>>;
 
+      /// Labels and weights.
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
-
-      using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
 
+      /// State index.
+      using state_t = state_t_of<automaton_t>;
       using stateset_t = stateset<automaton_t>;
+
+      /// The state name: polynomials of (input) states.
       using state_nameset_t = polynomialset<context<stateset_t, weightset_t>>;
       using state_name_t = typename state_nameset_t::value_t;
 
@@ -375,6 +385,7 @@ namespace vcsn
                   }
               }
 
+            // Outgoing transitions from the current (result) state.
             for (auto& d : dests)
               if (!ns_.is_zero(d.second))
                 {
