@@ -97,7 +97,7 @@ namespace vcsn
 
       /// The type of our transition maps: convert the weight to weightset_t,
       /// non deterministic, and including transitions to post().
-      template <typename A>
+      template <Automaton A>
       using transition_map_t
         = transition_map<A, weightset_t, false, true, true>;
 
@@ -224,17 +224,17 @@ namespace vcsn
                t.second);
       }
 
-      template <typename A>
-      std::enable_if_t<labelset_t_of<A>::has_one(), bool>
-      is_one(const A& aut, transition_t_of<A> tr) const
+      template <Automaton Aut>
+      std::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
+      is_one(const Aut& aut, transition_t_of<Aut> tr) const
       {
         return aut->labelset()->is_one(aut->label_of(tr));
       }
 
-      template <typename A>
+      template <Automaton Aut>
       constexpr
-      std::enable_if_t<!labelset_t_of<A>::has_one(), bool>
-      is_one(const A&, transition_t_of<A>)
+      std::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
+      is_one(const Aut&, transition_t_of<Aut>)
       const
       {
         return false;

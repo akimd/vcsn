@@ -177,14 +177,14 @@ namespace vcsn
       DEFINE(add_final(state_t s, weight_t k),
              add_initial(s, aut_->weightset()->transpose(k)));
 
-      template <typename A>
+      template <Automaton A>
       DEFINE(add_transition_copy(state_t src, state_t dst,
                                  const A& aut,
                                  typename A::element_type::transition_t t,
                                  bool transpose = false),
              add_transition_copy(dst, src, aut, t, !transpose));
 
-      template <typename A>
+      template <Automaton A>
       DEFINE(new_transition_copy(state_t src, state_t dst,
                                  const A& aut,
                                  typename A::element_type::transition_t t,

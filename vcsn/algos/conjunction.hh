@@ -649,7 +649,7 @@ namespace vcsn
   `-----------------------------*/
 
   /// The (accessible part of the) infiltration product.
-  template <typename A1, typename A2>
+  template <Automaton A1, Automaton A2>
   auto
   infiltration(const A1& a1, const A2& a2)
     -> tuple_automaton<decltype(join_automata(a1, a2)),
@@ -661,7 +661,7 @@ namespace vcsn
   }
 
   /// The (accessible part of the) infiltration product.
-  template <typename A1, typename A2, typename A3, Automaton... Auts>
+  template <Automaton A1, Automaton A2, Automaton A3, Automaton... Auts>
   auto
   infiltration(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
     -> decltype(infiltration(infiltration(a1, a2), a3, as...))
