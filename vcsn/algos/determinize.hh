@@ -220,7 +220,9 @@ namespace vcsn
           {
             res = this->new_state();
             todo_.push(map_.emplace(n, res).first);
-            this->set_final(res, ns_.scalar_product(n, finals_));
+            auto w = ns_.scalar_product(n, finals_);
+            if (!ws_.is_zero(w))
+              this->set_final(res, w);
           }
         else
           res = i->second;
@@ -335,16 +337,16 @@ namespace vcsn
       detweighted_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
+        , finals_()
       {
         // Pre.
         state_name_t n;
         n.set(input_->pre(), ws_.one());
         todo_.push(map_.emplace(n, super_t::pre()).first);
 
-        // Post.
-        n.clear();
-        n.set(input_->post(), ws_.one());
-        map_[n] = super_t::post();
+        // Final states.
+        for (auto t : final_transitions(input_))
+          ns_.add_here(finals_, input_->src_of(t), input_->weight_of(t));
       }
 
       static symbol sname()
@@ -379,7 +381,7 @@ namespace vcsn
               {
                 auto s = label_of(p);
                 auto v = weight_of(p);
-                for (auto t : all_out(input_, s))
+                for (auto t : out(input_, s))
                   {
                     auto l = input_->label_of(t);
                     auto dst = input_->dst_of(t);
@@ -451,6 +453,9 @@ namespace vcsn
           {
             res = this->new_state();
             todo_.push(map_.emplace(n, res).first);
+            auto w = ns_.scalar_product(n, finals_);
+            if (!ws_.is_zero(w))
+              this->set_final(res, w);
           }
         else
           res = i->second;
@@ -475,6 +480,9 @@ namespace vcsn
       /// The sets of (input) states waiting to be processed.
       using queue_t = std::queue<typename map_t::const_iterator>;
       queue_t todo_;
+
+      /// Set of final states in the input automaton.
+      state_name_t finals_;
     };
   }
 
