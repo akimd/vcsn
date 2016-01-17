@@ -79,12 +79,12 @@ namespace vcsn
       {
         // Pre.
         state_name_t n(state_size_);
-        n.set(input_->pre());
+        ns_.set_weight(n, input_->pre(), ws_.one());
         todo_.push(map_.emplace(n, super_t::pre()).first);
 
         // Final states.
         for (auto t : final_transitions(input_))
-          finals_.set(input_->src_of(t));
+          ns_.set_weight(finals_, input_->src_of(t), input_->weight_of(t));
       }
 
       static symbol sname()
@@ -103,7 +103,7 @@ namespace vcsn
         return o << ", " << tag_t::sname() << '>';
       }
 
-      /// Determinize all accessible states.
+      /// Determinize the automaton.
       void operator()()
       {
         // label -> <destination, sum of weights>.
@@ -117,9 +117,9 @@ namespace vcsn
             todo_.pop();
 
             dests.clear();
-            for (const auto& sw : ss)
+            for (const auto& p : ss)
               {
-                state_t s = label_of(sw);
+                auto s = label_of(p);
                 // Cache the output transitions of state s.
                 auto i = successors_.find(s);
                 if (i == successors_.end())
@@ -159,8 +159,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       format fmt = {},
-                       bool delimit = false) const
+                       format fmt = {}, bool delimit = false) const
       {
         auto i = origins().find(s);
         if (i == std::end(origins()))
@@ -169,13 +168,7 @@ namespace vcsn
           {
             if (delimit)
               o << '{';
-            const char* sep = "";
-            for (auto s: i->second)
-              {
-                o << sep;
-                input_->print_state_name(s, o, fmt, true);
-                sep = ", ";
-              }
+            ns_.print(i->second, o, fmt, ", ");
             if (delimit)
               o << '}';
           }
@@ -183,21 +176,14 @@ namespace vcsn
       }
 
       /// A map from determinized states to sets of original states.
-      using origins_t = std::map<state_t, std::set<state_t>>;
+      using origins_t = std::map<state_t, state_name_t>;
       mutable origins_t origins_;
-
       const origins_t&
       origins() const
       {
         if (origins_.empty())
           for (const auto& p: map_)
-            {
-              auto from = std::set<state_t>{};
-              const auto& ss = p.first;
-              for (auto sw: ss)
-                from.emplace(label_of(sw));
-              origins_.emplace(p.second, std::move(from));
-            }
+            origins_.emplace(p.second, p.first);
         return origins_;
       }
 
@@ -221,7 +207,7 @@ namespace vcsn
         return res;
       }
 
-      /// Set of input states -> output state.
+      /// Map from state name to state number.
       using map_t = std::unordered_map<state_name_t, state_t,
                                        vcsn::hash<state_nameset_t>,
                                        vcsn::equal_to<state_nameset_t>>;
@@ -296,8 +282,8 @@ namespace vcsn
       using state_nameset_t = polynomialset<context<stateset_t, weightset_t>>;
       using state_name_t = typename state_nameset_t::value_t;
 
-      /// Build the weighted determinizer.
-      /// \param a         the weighted automaton to determinize
+      /// Build the determinizer.
+      /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
@@ -305,12 +291,12 @@ namespace vcsn
       {
         // Pre.
         state_name_t n;
-        n.set(input_->pre(), ws_.one());
+        ns_.set_weight(n, input_->pre(), ws_.one());
         todo_.push(map_.emplace(n, super_t::pre()).first);
 
         // Final states.
         for (auto t : final_transitions(input_))
-          ns_.add_here(finals_, input_->src_of(t), input_->weight_of(t));
+          ns_.set_weight(finals_, input_->src_of(t), input_->weight_of(t));
       }
 
       static symbol sname()
@@ -329,7 +315,7 @@ namespace vcsn
         return o << ", " << tag_t::sname() << '>';
       }
 
-      /// The determinization of weighted automaton.
+      /// Determinize the automaton.
       void operator()()
       {
         // label -> <destination, sum of weights>.
@@ -379,12 +365,12 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(state_t ss, std::ostream& o,
+      print_state_name(state_t s, std::ostream& o,
                        format fmt = {}, bool delimit = false) const
       {
-        auto i = origins().find(ss);
+        auto i = origins().find(s);
         if (i == origins().end())
-          this->print_state(ss, o);
+          this->print_state(s, o);
         else
           {
             if (delimit)
@@ -409,7 +395,7 @@ namespace vcsn
       }
 
     private:
-      /// The state for set of states \a ss.
+      /// The state for set of states \a n.
       /// If this is a new state, schedule it for visit.
       state_t state_(const state_name_t& n)
       {

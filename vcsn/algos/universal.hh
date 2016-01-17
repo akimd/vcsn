@@ -47,10 +47,21 @@ namespace vcsn
 
         // compute the co-determinized of the minimal automaton
         // and retrieve the origin of each state.
-        const auto transposed = transpose(aut);
-        auto codet = determinize(transposed);
-        map_t origin = codet->origins();
-        origin.erase(codet->pre());
+        map_t origin = [&aut]
+          {
+            const auto transposed = transpose(aut);
+            auto codet = determinize(transposed);
+            auto res = map_t{};
+            for (const auto& p: codet->origins())
+              if (p.first != codet->pre())
+                {
+                  auto from = std::set<state_t>{};
+                  for (auto sw: p.second)
+                    from.emplace(label_of(sw));
+                  res.emplace(p.first, std::move(from));
+                }
+            return res;
+          }();
 
         // the 'origin' is a map from co_det's state_t to
         // minimal's state_set_t.
@@ -58,13 +69,13 @@ namespace vcsn
         pstate_t transp_states = image(origin);
 
         // the universal automaton's state set is its intersection closure.
-        pstate_t univers_states(intersection_closure(transp_states));
+        pstate_t univers_states = intersection_closure(transp_states);
 
         // The universal automaton.
         automaton_t res = make_fresh_automaton(aut);
 
         // The final states of aut.
-        std::set<state_t> automaton_finals;
+        auto automaton_finals = std::set<state_t>{};
         for (auto t: final_transitions(aut))
           automaton_finals.insert(aut->src_of(t));
 
