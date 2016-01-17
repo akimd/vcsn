@@ -240,7 +240,7 @@ namespace vcsn
     // Add loops
     if (0 < loop_chance)
       {
-        auto dis = std::bernoulli_distribution(0.5);
+        auto dis = std::bernoulli_distribution(loop_chance);
         for (auto s : res->states())
           if (dis(gen))
             res->add_transition(s, s, random_label(*ctx.labelset(), gen));
