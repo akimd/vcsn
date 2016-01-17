@@ -296,6 +296,12 @@ namespace vcsn
     }
 
     std::shared_ptr<automaton>
+    context_parser::automaton_()
+    {
+      return automaton_(word_());
+    }
+
+    std::shared_ptr<automaton>
     context_parser::automaton_(std::string prefix)
     {
       std::shared_ptr<automaton> res = nullptr;
@@ -306,7 +312,7 @@ namespace vcsn
           res = std::make_shared<automaton>(prefix,
                                             std::make_shared<other>(word_()));
           eat_(',');
-          res->get_content().emplace_back(automaton_(word_()));
+          res->get_content().emplace_back(automaton_());
           eat_('>');
         }
       // xxx_automaton<Aut>.
@@ -325,24 +331,21 @@ namespace vcsn
                || prefix == "transpose_automaton")
         {
           eat_('<');
-          res = std::make_shared<automaton>(prefix,
-                                            automaton_(word_()));
+          res = std::make_shared<automaton>(prefix, automaton_());
           eat_('>');
         }
       // mutable_automaton<Context>.
       else if (prefix == "mutable_automaton")
         {
           eat_('<');
-          res = std::make_shared<automaton>(prefix,
-                                            context_());
+          res = std::make_shared<automaton>(prefix, context_());
           eat_('>');
         }
       // xxx_automaton<ExpresionSet>.
       else if (prefix == "derived_term_automaton")
         {
           eat_("<expressionset");
-          res = std::make_shared<automaton>(prefix,
-                                            expressionset_());
+          res = std::make_shared<automaton>(prefix, expressionset_());
           eat_('>');
         }
       // xxx_automaton<Aut...>.
@@ -350,12 +353,11 @@ namespace vcsn
                || prefix == "tuple_automaton")
         {
           eat_('<');
-          res = std::make_shared<automaton>(prefix,
-                                            automaton_(word_()));
+          res = std::make_shared<automaton>(prefix, automaton_());
           while (peek_() == ',')
             {
               eat_(',');
-              res->get_content().emplace_back(automaton_(word_()));
+              res->get_content().emplace_back(automaton_());
             }
           eat_('>');
         }

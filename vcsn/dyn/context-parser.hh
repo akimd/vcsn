@@ -71,6 +71,7 @@ namespace vcsn
       std::shared_ptr<ast_node> weightset_(const std::string& ws);
 
       /// `<Automaton> "<" <Context> ">"`.
+      std::shared_ptr<automaton> automaton_();
       std::shared_ptr<automaton> automaton_(std::string prefix);
 
       /// `"<" (<Any> ",")* ">"`.
