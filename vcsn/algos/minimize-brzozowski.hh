@@ -21,14 +21,16 @@ namespace vcsn
   template <Automaton Aut>
   using codeterminized_automaton
     = transpose_automaton<determinized_automaton
-                          <decltype(transpose(std::declval<Aut>()))>>;
+                          <decltype(transpose(std::declval<Aut>())),
+                           boolean_tag>>;
 
   /// Brzozowski-based minimization.
   template <Automaton Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
     -> std::enable_if_t<is_free_boolean<Aut>(),
-                        determinized_automaton<codeterminized_automaton<Aut>>>
+                        determinized_automaton<codeterminized_automaton<Aut>,
+                                               boolean_tag>>
   {
     return determinize(codeterminize(a));
   }

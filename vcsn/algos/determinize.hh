@@ -24,26 +24,15 @@
 
 namespace vcsn
 {
-  /// Request the Boolean specialization for determinization (B and
-  /// F2).
-  struct boolean_tag {};
-
-  namespace detail
-  {
-    /// The best tag depending on the type of Aut.
-    template <Automaton Aut>
-    using determinization_tag
-      = std::conditional_t<std::is_same<weight_t_of<Aut>, bool>::value,
-                           boolean_tag,
-                           weighted_tag>;
-  }
-
   /*----------------------.
   | subset construction.  |
   `----------------------*/
 
   namespace detail
   {
+    template <Automaton Aut, typename Tag>
+    class determinized_automaton_impl;
+
     /// \brief The subset construction automaton from another.
     ///
     /// \tparam Aut the input automaton type.
@@ -51,7 +40,7 @@ namespace vcsn
     /// \pre labelset is free.
     /// \pre weightset is B or F2.
     template <Automaton Aut>
-    class determinized_automaton_impl
+    class determinized_automaton_impl<Aut, boolean_tag>
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
@@ -61,6 +50,7 @@ namespace vcsn
 
     public:
       using automaton_t = Aut;
+      using tag_t = boolean_tag;
       using context_t = context_t_of<automaton_t>;
       template <typename Ctx = context_t>
       using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
@@ -100,7 +90,9 @@ namespace vcsn
       static symbol sname()
       {
         static auto res = symbol{"determinized_automaton<"
-                                 + automaton_t::element_type::sname() + '>'};
+                                 + automaton_t::element_type::sname()
+                                 + ", " + tag_t::sname()
+                                 + '>'};
         return res;
       }
 
@@ -108,7 +100,7 @@ namespace vcsn
       {
         o << "determinized_automaton<";
         input_->print_set(o, fmt);
-        return o << '>';
+        return o << ", " << tag_t::sname() << '>';
       }
 
       /// Determinize all accessible states.
@@ -265,35 +257,6 @@ namespace vcsn
     };
   }
 
-  /// A determinized automaton as a shared pointer.
-  template <Automaton Aut>
-  using determinized_automaton
-    = std::shared_ptr<detail::determinized_automaton_impl<Aut>>;
-
-  template <Automaton Aut>
-  auto
-  determinize(const Aut& a, boolean_tag)
-    -> determinized_automaton<Aut>
-  {
-    // Asserting here instead of inside the implementation to
-    // avoid static_assert to be raised in this kind of cases:
-    // auto func(const Aut& a)
-    //   -> std::enable_if_t<false_condition, decltype(determinize(a))>
-    // We can then declare our function this way:
-    // auto func(const Aut& a)
-    //   -> std::enable_if_t<false_condition, determinized_automaton<Aut>>
-    static_assert(labelset_t_of<Aut>::is_free(),
-                  "determinize: requires free labelset");
-    static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
-                  "determinize: boolean: requires B or F2 weights");
-
-    auto res = make_shared_ptr<determinized_automaton<Aut>>(a);
-    // Determinize.
-    res->operator()();
-    return res;
-  }
-
-
   /*---------------------------.
   | weighted determinization.  |
   `---------------------------*/
@@ -305,7 +268,7 @@ namespace vcsn
     ///
     /// \pre labelset is free.
     template <Automaton Aut>
-    class detweighted_automaton_impl
+    class determinized_automaton_impl<Aut, weighted_tag>
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
@@ -313,6 +276,7 @@ namespace vcsn
 
     public:
       using automaton_t = Aut;
+      using tag_t = weighted_tag;
       using context_t = context_t_of<automaton_t>;
       template <typename Ctx = context_t>
       using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
@@ -334,7 +298,7 @@ namespace vcsn
 
       /// Build the weighted determinizer.
       /// \param a         the weighted automaton to determinize
-      detweighted_automaton_impl(const automaton_t& a)
+      determinized_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
         , finals_()
@@ -351,16 +315,18 @@ namespace vcsn
 
       static symbol sname()
       {
-        static auto res = symbol{"detweighted_automaton<"
-                                 + automaton_t::element_type::sname() + '>'};
+        static auto res = symbol{"determinized_automaton<"
+                                 + automaton_t::element_type::sname()
+                                 + ", " + tag_t::sname()
+                                 + '>'};
         return res;
       }
 
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
-        o << "detweighted_automaton<";
+        o << "determinized_automaton<";
         input_->print_set(o, fmt);
-        return o << '>';
+        return o << ", " << tag_t::sname() << '>';
       }
 
       /// The determinization of weighted automaton.
@@ -487,21 +453,31 @@ namespace vcsn
   }
 
   /// A determinized automaton as a shared pointer.
-  template <Automaton Aut>
-  using detweighted_automaton
-    = std::shared_ptr<detail::detweighted_automaton_impl<Aut>>;
+  template <Automaton Aut, typename Tag>
+  using determinized_automaton
+  = std::shared_ptr<detail::determinized_automaton_impl<Aut, Tag>>;
 
-  /// Determinization: weighted, general case.
-  template <Automaton Aut>
+  template <Automaton Aut, typename Tag>
   auto
-  determinize(const Aut& a, weighted_tag)
-    -> detweighted_automaton<Aut>
+  determinize(const Aut& a, Tag = {})
+    -> determinized_automaton<Aut, Tag>
   {
-    auto res = make_shared_ptr<detweighted_automaton<Aut>>(a);
+    auto res = make_shared_ptr<determinized_automaton<Aut, Tag>>(a);
+    // Determinize.
     res->operator()();
     return res;
   }
 
+
+  namespace detail
+  {
+    /// The best tag depending on the type of Aut.
+    template <Automaton Aut>
+    using determinization_tag
+      = std::conditional_t<std::is_same<weight_t_of<Aut>, bool>::value,
+                           boolean_tag,
+                           weighted_tag>;
+  }
 
   /// Determinization: automatic dispatch based on the automaton type.
   template <Automaton Aut>

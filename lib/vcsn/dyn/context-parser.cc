@@ -317,8 +317,6 @@ namespace vcsn
         }
       // xxx_automaton<Aut>.
       else if (prefix == "delay_automaton"
-               || prefix == "determinized_automaton"
-               || prefix == "detweighted_automaton"
                || prefix == "expression_automaton"
                || prefix == "filter_automaton"
                || prefix == "lazy_proper_automaton"
@@ -332,6 +330,15 @@ namespace vcsn
         {
           eat_('<');
           res = std::make_shared<automaton>(prefix, automaton_());
+          eat_('>');
+        }
+      // xxx_automaton<Aut, Tag>.
+      else if (prefix == "determinized_automaton")
+        {
+          eat_('<');
+          res = std::make_shared<automaton>(prefix, automaton_());
+          eat_(',');
+          res->get_content().emplace_back(any_());
           eat_('>');
         }
       // mutable_automaton<Context>.
