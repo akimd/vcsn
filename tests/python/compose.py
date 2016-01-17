@@ -63,6 +63,31 @@ check(c1.expression("(a|x)*").standard(),
       c2.expression("(x|d)*").standard(),
       a)
 
+# Check that weights are added, not replaced
+
+cz = vcsn.context('lat<lal_char, lal_char>, z')
+aut = cz.expression('[ab]|[ab]').automaton()
+b = r'''digraph
+{
+  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(ab)>>, z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
+  }
+  I0 -> 0
+  0 -> 1 [label = "<2>[^]"]
+  1 -> F1
+}'''
+check(aut, aut, b)
+
 ###############################
 ## Spontaneous transitions.  ##
 ###############################

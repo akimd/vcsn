@@ -177,7 +177,7 @@ namespace vcsn
           {
             has_eps_out = true;
             for (auto t: ltm.begin()->second)
-              res_->new_transition(src,
+              res_->add_transition(src,
                                    res_->state(t.dst, std::get<1>(psrc)),
                                    join_label(lhs->hidden_label_of(t.transition),
                                               get_hidden_one(rhs)),
@@ -196,7 +196,7 @@ namespace vcsn
             && !rtm.empty()
             && rhs->labelset()->is_one(rtm.begin()->first))
           for (auto t: rtm.begin()->second)
-            res_->new_transition(src,
+            res_->add_transition(src,
                                  res_->state(std::get<0>(psrc), t.dst),
                                  join_label(get_hidden_one(lhs),
                                             rhs->hidden_label_of(t.transition)),
@@ -206,15 +206,14 @@ namespace vcsn
           // The type of the common label is that of the visible tape
           // of either automata.
           if (!lhs->labelset()->is_one(t.first))
-            // These are always new transitions: first because the
-            // source state is visited for the first time, and second
-            // because the couple (left destination, label) is unique,
-            // and so is (right destination, label).
+            // These may not be new transitions: as the automata are focus,
+            // there might be two transitions with the same destination and
+            // label, with only the hidden part that changes.
             cross_tuple
               ([&] (const typename transition_map_t<Lhs>::transition& lts,
                     const typename transition_map_t<Rhs>::transition& rts)
                {
-                 res_->new_transition
+                 res_->add_transition
                    (src,
                     res_->state(lts.dst, rts.dst),
                     join_label(lhs->hidden_label_of(lts.transition),
