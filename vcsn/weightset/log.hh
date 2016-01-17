@@ -41,7 +41,7 @@ namespace vcsn
     /// The zero for the log semiring is +oo
     static value_t zero()
     {
-      return std::numeric_limits<value_t>::max();
+      return std::numeric_limits<value_t>::infinity();
     }
 
     /// The neutral element for the log semiring is 0
@@ -84,8 +84,7 @@ namespace vcsn
       if (v < 1)
         return std::log(1 - v);
       else
-        // We use this for -oo
-        return std::numeric_limits<value_t>::min();
+        return 0;
     }
 
     static bool equal(const value_t l, const value_t r)
