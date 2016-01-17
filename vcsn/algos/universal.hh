@@ -51,6 +51,7 @@ namespace vcsn
         auto codet = determinize(transposed);
         map_t origin = codet->origins();
         origin.erase(codet->pre());
+        origin.erase(codet->post());
 
         // the 'origin' is a map from co_det's state_t to
         // minimal's state_set_t.

@@ -85,16 +85,16 @@ namespace vcsn
       determinized_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
-        , finals_(state_size_)
       {
         // Pre.
         state_name_t n(state_size_);
         n.set(input_->pre());
         todo_.push(map_.emplace(n, super_t::pre()).first);
 
-        // Final states.
-        for (auto t : final_transitions(input_))
-          finals_.set(input_->src_of(t));
+        // Post.
+        n.clear();
+        n.set(input_->post());
+        map_[n] = super_t::post();
       }
 
       static symbol sname()
@@ -134,7 +134,7 @@ namespace vcsn
                   {
                     i = successors_.emplace(s, label_map_t{}).first;
                     auto& j = i->second;
-                    for (auto t : out(input_, s))
+                    for (auto t : all_out(input_, s))
                       {
                         auto l = input_->label_of(t);
                         if (j.find(l) == j.end())
@@ -156,7 +156,9 @@ namespace vcsn
 
             // Outgoing transitions from the current (result) state.
             for (const auto& d : dests)
-              this->new_transition(src, state_(d.second), d.first);
+              // Don't keep the empty state.
+              if (!ns_.is_zero(d.second))
+                this->new_transition(src, state_(d.second), d.first);
           }
       }
 
@@ -220,7 +222,6 @@ namespace vcsn
           {
             res = this->new_state();
             todo_.push(map_.emplace(n, res).first);
-            this->set_final(res, ns_.scalar_product(n, finals_));
           }
         else
           res = i->second;
@@ -250,9 +251,6 @@ namespace vcsn
       /// The sets of (input) states waiting to be processed.
       using queue_t = std::queue<typename map_t::const_iterator>;
       queue_t todo_;
-
-      /// Set of final states in the input automaton.
-      state_name_t finals_;
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
       using label_map_t = std::unordered_map<label_t, state_name_t,
@@ -396,6 +394,7 @@ namespace vcsn
 
             // Outgoing transitions from the current (result) state.
             for (auto& d : dests)
+              // Don't keep the empty state.
               if (!ns_.is_zero(d.second))
                 {
                   weight_t w = ns_.normalize_here(d.second);
