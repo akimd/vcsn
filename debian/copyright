@@ -3,7 +3,7 @@ Upstream-Name: vcsn
 Source: http://vcsn.lrde.epita.fr/dload/
 
 Files: *
-Copyright: 2012-2015 Laboratoire de Recherche et Développement de l'EPITA (LRDE)
+Copyright: 2012-2016 Laboratoire de Recherche et Développement de l'EPITA (LRDE)
 License: GPL-3+
  Spot is free software; you can redistribute it and/or modify it
  under the terms of the GNU General Public License as published by
