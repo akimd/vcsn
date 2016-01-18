@@ -658,6 +658,17 @@ namespace vcsn
     automaton random_automaton_deterministic(const context& ctx,
                                              unsigned num_states);
 
+    /// Produce a random expression.
+    ///
+    /// \param ctx
+    ///    The context of the result.
+    /// \param num_terminals
+    ///    The number of terminal symbols wanted in the output
+    /// \param ids
+    ///    The identities to use for the expression
+    expression random_expression(const context& ctx, unsigned num_terminals,
+                                 float star_chance, rat::identities ids);
+
     /// Right-division of two expressions (lhs \ rhs).
     expression rdiv(const expression& lhs, const expression& rhs);
 
