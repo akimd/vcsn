@@ -669,6 +669,14 @@ namespace vcsn
     expression random_expression(const context& ctx, unsigned num_terminals,
                                  float star_chance, rat::identities ids);
 
+    /// Produce random paths from an automaton to "sample" it.
+    ///
+    /// \param aut
+    ///    The automaton to sample.
+    /// \param num_paths
+    ///    The number of paths to sample.
+    automaton random_paths(const automaton& aut, unsigned num_paths);
+
     /// Right-division of two expressions (lhs \ rhs).
     expression rdiv(const expression& lhs, const expression& rhs);
 

@@ -605,6 +605,11 @@ struct automaton
     return vcsn::dyn::push_weights(val_);
   }
 
+  automaton random_paths(unsigned num_paths)
+  {
+    return vcsn::dyn::random_paths(val_, num_paths);
+  }
+
   automaton realtime() const
   {
     return vcsn::dyn::realtime(val_);
@@ -1476,6 +1481,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("proper", &automaton::proper,
          (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)
+    .def("random_paths", &automaton::random_paths)
     .def("realtime", &automaton::realtime)
     .def("expression", &automaton::to_expression,
          (arg("identities") = "default", arg("algo") = "auto"))

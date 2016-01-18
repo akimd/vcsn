@@ -40,6 +40,7 @@
 #include <vcsn/algos/push-weights.hh>
 #include <vcsn/algos/random.hh>
 #include <vcsn/algos/random-expression.hh>
+#include <vcsn/algos/random-paths.hh>
 #include <vcsn/algos/read.hh>
 #include <vcsn/algos/shortest.hh>
 #include <vcsn/algos/sort.hh>
