@@ -67,3 +67,43 @@ for name in ['b', 'f2']:
     for algo in ['auto', 'boolean', 'weighted']:
         aut = vcsn.automaton(load(name))
         check(aut, name + '-det', algo=algo)
+
+
+## ------------- ##
+## Empty state.  ##
+## ------------- ##
+
+# Check that we don't create the empty state when two paths ends in
+# the same state with opposite weights.
+def null_state(weightset, weight):
+    return vcsn.automaton('''
+context = "lal_char, {ws}"
+$ -> 0
+0 -> 1 a
+0 -> 2 <{w}>a
+1 -> 3 b
+2 -> 3 b'''.format(w=weight,ws=weightset))
+
+
+def null_state_det(weightset, weight):
+    return vcsn.automaton('''
+digraph
+{{
+  vcsn_context = "letterset<char_letters(ab)>, {ws}"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {{
+    node [shape = point, width = 0]
+    I0
+  }}
+  I0 -> 0 [color = DimGray]
+  0 -> 1 [label = "a", color = DimGray]
+}}'''.format(ws=ws, w=w))
+
+
+for ws, w, algo in [('f2', '1', 'boolean'),
+                    ('f2', '1', 'weighted'),
+                    ('q', '-1', 'weighted')]:
+    a = null_state(ws, w)
+    exp = null_state_det(ws, w).strip()
+    CHECK_EQ(exp, a.determinize(algo))
