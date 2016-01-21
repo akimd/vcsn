@@ -95,6 +95,7 @@ namespace vcsn
 
     polynomialset_impl() = delete;
     polynomialset_impl(const polynomialset_impl&) = default;
+    polynomialset_impl(polynomialset_impl&&) = default;
     polynomialset_impl(const context_t& ctx)
       : ctx_{ctx}
     {}

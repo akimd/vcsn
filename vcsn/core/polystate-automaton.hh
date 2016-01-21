@@ -115,17 +115,17 @@ namespace vcsn
 
       /// The state for set of states \a ss.
       /// If this is a new state, schedule it for visit.
-      state_t state_(const state_name_t& n)
+      state_t state_(state_name_t n)
       {
         state_t res;
         auto i = map_.find(n);
         if (i == std::end(map_))
           {
             res = this->new_state();
-            todo_.push(map_.emplace(n, res).first);
             auto w = ns_.scalar_product(n, finals_);
             if (!ws_.is_zero(w))
               this->set_final(res, w);
+            todo_.push(map_.emplace(std::move(n), res).first);
           }
         else
           res = i->second;

@@ -136,10 +136,11 @@ namespace vcsn
               }
 
             // Outgoing transitions from the current (result) state.
-            for (const auto& d : dests)
+            for (auto& d : dests)
               // Don't create transitions to the empty state.
               if (!aut_->ns_.is_zero(d.second))
-                this->new_transition(src, aut_->state_(d.second), d.first);
+                this->new_transition(src, aut_->state_(std::move(d.second)),
+                                     d.first);
           }
       }
 
@@ -260,7 +261,7 @@ namespace vcsn
               if (!aut_->ns_.is_zero(d.second))
                 {
                   weight_t w = aut_->ns_.normalize_here(d.second);
-                  this->new_transition(src, aut_->state_(d.second),
+                  this->new_transition(src, aut_->state_(std::move(d.second)),
                                        d.first, w);
                 }
           }

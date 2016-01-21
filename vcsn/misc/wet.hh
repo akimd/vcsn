@@ -30,7 +30,10 @@ namespace vcsn
     {
       using label_t = Label;
       welement_label(const label_t& l)
-        : label_(l)
+        : label_{l}
+      {}
+      welement_label(label_t&& l)
+        : label_{std::move(l)}
       {}
 
       const label_t& label() const { return label_; }
@@ -47,6 +50,8 @@ namespace vcsn
       using label_t = empty_t;
       welement_label(const label_t&)
       {}
+      welement_label(label_t&&)
+      {}
       label_t label() const { return {}; }
       void label(label_t) {}
     };
@@ -62,7 +67,10 @@ namespace vcsn
     {
       using weight_t = Weight;
       welement_weight(const weight_t& w)
-        : weight_(w)
+        : weight_{w}
+      {}
+      welement_weight(weight_t&& w)
+        : weight_{std::move(w)}
       {}
       const weight_t& weight() const { return weight_; }
       void weight(const weight_t& k) { weight_ = k; }
@@ -78,6 +86,10 @@ namespace vcsn
     {
       using weight_t = bool;
       welement_weight(const weight_t& w)
+      {
+        (void) w; assert(w);
+      }
+      welement_weight(weight_t&& w)
       {
         (void) w; assert(w);
       }
@@ -105,9 +117,10 @@ namespace vcsn
     using value_t = welement<typename std::remove_reference<label_t>::type,
                              typename std::remove_reference<weight_t>::type>;
 
-    welement(const label_t& l, const weight_t& w)
-      : welement_label_t(l)
-      , welement_weight_t(w)
+    template <typename Label2, typename Weight2>
+    welement(Label2&& l, Weight2&& w)
+      : welement_label_t(std::forward<Label2>(l))
+      , welement_weight_t(std::forward<Weight2>(w))
     {}
 
     operator value_t() const
