@@ -21,10 +21,10 @@ if '-O3' not in vcsn.config['cxxflags']:
     warnings.warn('not compiled with -O3, benches are irrelevant')
 
 parser = argparse.ArgumentParser(description='Bench some algorithms.')
-parser.add_argument('--only', metavar='RE',
+parser.add_argument('-O', '--only', metavar='RE',
                     type=re.compile, default='.*',
                     help='run only benches whose title is matched by RE')
-parser.add_argument('--repeat', metavar='NUM',
+parser.add_argument('-r', '--repeat', metavar='NUM',
                     type=int, default='3',
                     help='''number runs to perform, the best of which being kept.
                     The higher, the more stable the results are expected to be.''')
