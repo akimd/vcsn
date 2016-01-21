@@ -1,25 +1,16 @@
 #pragma once
 
-#include <set>
 #include <string>
-#include <type_traits>
-#include <queue>
 
 #include <vcsn/algos/tags.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/automaton-decorator.hh>
-#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/polystate-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/labelset/stateset.hh>
-#include <vcsn/misc/bimap.hh>
-#include <vcsn/misc/dynamic_bitset.hh>
 #include <vcsn/misc/getargs.hh>
-#include <vcsn/misc/map.hh> // vcsn::has
-#include <vcsn/misc/raise.hh> // b
-#include <vcsn/misc/unordered_map.hh> // vcsn::has
-#include <vcsn/weightset/fwd.hh> // b
+#include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
@@ -41,7 +32,7 @@ namespace vcsn
     /// \pre weightset is B or F2.
     template <Automaton Aut>
     class determinized_automaton_impl<Aut, boolean_tag>
-      : public automaton_decorator<fresh_automaton_t_of<Aut>>
+      : public automaton_decorator<polystate_automaton<Aut, wet_kind_t::bitset>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
@@ -51,12 +42,12 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using tag_t = boolean_tag;
-      using context_t = context_t_of<automaton_t>;
-      template <typename Ctx = context_t>
-      using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
-      using super_t = automaton_decorator<fresh_automaton_t<>>;
+      using super_t
+        = automaton_decorator<polystate_automaton<automaton_t,
+                                                  wet_kind_t::bitset>>;
 
       /// Labels and weights.
+      using context_t = context_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
@@ -66,25 +57,34 @@ namespace vcsn
       using stateset_t = stateset<automaton_t>;
 
       /// The state name: set of (input) states.
-      using state_nameset_t = polynomialset<context<stateset_t, weightset_t>,
-                                            wet_kind_t::bitset>;
-      using state_name_t = typename state_nameset_t::value_t;
+      using state_name_t = typename super_t::element_type::state_name_t;
+
+      using super_t::aut_;
+      auto strip() const
+      {
+        return aut_->strip();
+      }
+      auto origins() const
+      {
+        return aut_->origins();
+      }
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
-        : super_t(a->context())
-        , input_(a)
-        , finals_(state_size_)
+        : super_t{make_polystate_automaton<automaton_t, wet_kind_t::bitset>(a)}
       {
         // Pre.
         state_name_t n(state_size_);
-        ns_.set_weight(n, input_->pre(), ws_.one());
-        todo_.push(map_.emplace(n, super_t::pre()).first);
+        aut_->ns_.set_weight(n, aut_->input_->pre(), aut_->ws_.one());
+        aut_->todo_.push(aut_->map_.emplace(n, super_t::pre()).first);
 
         // Final states.
-        for (auto t : final_transitions(input_))
-          ns_.set_weight(finals_, input_->src_of(t), input_->weight_of(t));
+        aut_->finals_.set().resize(state_size_);
+        for (auto t : final_transitions(aut_->input_))
+          aut_->ns_.set_weight(aut_->finals_,
+                               aut_->input_->src_of(t),
+                               aut_->input_->weight_of(t));
       }
 
       static symbol sname()
@@ -99,7 +99,7 @@ namespace vcsn
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "determinized_automaton<";
-        input_->print_set(o, fmt);
+        aut_->input_->print_set(o, fmt);
         return o << ", " << tag_t::sname() << '>';
       }
 
@@ -110,11 +110,11 @@ namespace vcsn
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
         auto dests = dests_t{};
-        while (!todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            state_t src = todo_.front()->second;
-            const auto& ss = todo_.front()->first;
-            todo_.pop();
+            state_t src = aut_->todo_.front()->second;
+            const auto& ss = aut_->todo_.front()->first;
+            aut_->todo_.pop();
 
             dests.clear();
             for (const auto& p : ss)
@@ -126,12 +126,12 @@ namespace vcsn
                   {
                     i = successors_.emplace(s, label_map_t{}).first;
                     auto& j = i->second;
-                    for (auto t : out(input_, s))
+                    for (auto t : out(aut_->input_, s))
                       {
-                        auto l = input_->label_of(t);
+                        auto l = aut_->input_->label_of(t);
                         if (j.find(l) == j.end())
                           j.emplace(l, state_size_);
-                        j[l].set(input_->dst_of(t));
+                        j[l].set(aut_->input_->dst_of(t));
                       }
                   }
 
@@ -142,99 +142,23 @@ namespace vcsn
                     if (j == dests.end())
                       dests[p.first] = p.second;
                     else
-                      ns_.add_here(j->second, p.second);
+                      aut_->ns_.add_here(j->second, p.second);
                   }
               }
 
             // Outgoing transitions from the current (result) state.
             for (const auto& d : dests)
               // Don't create transitions to the empty state.
-              if (!ns_.is_zero(d.second))
-                this->new_transition(src, state_(d.second), d.first);
+              if (!aut_->ns_.is_zero(d.second))
+                this->new_transition(src, aut_->state_(d.second), d.first);
           }
-      }
-
-      bool state_has_name(state_t s) const
-      {
-        return has(origins(), s);
-      }
-
-      std::ostream&
-      print_state_name(state_t s, std::ostream& o,
-                       format fmt = {}, bool delimit = false) const
-      {
-        auto i = origins().find(s);
-        if (i == std::end(origins()))
-          this->print_state(s, o);
-        else
-          {
-            if (delimit)
-              o << '{';
-            ns_.print(i->second, o, fmt, ", ");
-            if (delimit)
-              o << '}';
-          }
-        return o;
-      }
-
-      /// A map from determinized states to sets of original states.
-      using origins_t = std::map<state_t, state_name_t>;
-      mutable origins_t origins_;
-      const origins_t&
-      origins() const
-      {
-        if (origins_.empty())
-          for (const auto& p: map_)
-            origins_.emplace(p.second, p.first);
-        return origins_;
       }
 
     private:
-      /// The state for set of states \a ss.
-      /// If this is a new state, schedule it for visit.
-      state_t state_(const state_name_t& n)
-      {
-        state_t res;
-        auto i = map_.find(n);
-        if (i == std::end(map_))
-          {
-            res = this->new_state();
-            todo_.push(map_.emplace(n, res).first);
-            auto w = ns_.scalar_product(n, finals_);
-            if (!ws_.is_zero(w))
-              this->set_final(res, w);
-          }
-        else
-          res = i->second;
-        return res;
-      }
-
-      /// Map from state name to state number.
-      using map_t = std::unordered_map<state_name_t, state_t,
-                                       vcsn::hash<state_nameset_t>,
-                                       vcsn::equal_to<state_nameset_t>>;
-      map_t map_;
-
-      /// Input automaton.
-      automaton_t input_;
-
-      /// Its weightset.
-      weightset_t ws_ = *input_->weightset();
-
-      /// (Nameset) The polynomialset that stores weighted states.
-      state_nameset_t ns_ = {{stateset_t(input_), ws_}};
-
       /// We use state numbers as indexes, so we need to know the last
       /// state number.  If states were removed, it is not the same as
       /// the number of states.
-      size_t state_size_ = input_->all_states().back() + 1;
-
-      /// The sets of (input) states waiting to be processed.
-      using queue_t = std::queue<typename map_t::const_iterator>;
-      queue_t todo_;
-
-      /// Set of final states in the input automaton.
-      state_name_t finals_;
+      size_t state_size_ = this->aut_->input_->all_states().back() + 1;
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
       using label_map_t = std::unordered_map<label_t, state_name_t,
@@ -257,7 +181,7 @@ namespace vcsn
     /// \pre labelset is free.
     template <Automaton Aut>
     class determinized_automaton_impl<Aut, weighted_tag>
-      : public automaton_decorator<fresh_automaton_t_of<Aut>>
+      : public automaton_decorator<polystate_automaton<Aut>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
@@ -265,12 +189,10 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using tag_t = weighted_tag;
-      using context_t = context_t_of<automaton_t>;
-      template <typename Ctx = context_t>
-      using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
-      using super_t = automaton_decorator<fresh_automaton_t<>>;
+      using super_t = automaton_decorator<polystate_automaton<automaton_t>>;
 
       /// Labels and weights.
+      using context_t = context_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
@@ -281,24 +203,33 @@ namespace vcsn
       using stateset_t = stateset<automaton_t>;
 
       /// The state name: polynomials of (input) states.
-      using state_nameset_t = polynomialset<context<stateset_t, weightset_t>>;
-      using state_name_t = typename state_nameset_t::value_t;
+      using state_name_t = typename super_t::element_type::state_name_t;
+
+      using super_t::aut_;
+
+      auto strip() const
+      {
+        return aut_->strip();
+      }
+      auto origins() const
+      {
+        return aut_->origins();
+      }
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
-        : super_t(a->context())
-        , input_(a)
-        , finals_()
+        : super_t{make_polystate_automaton(a)}
       {
         // Pre.
         state_name_t n;
-        ns_.set_weight(n, input_->pre(), ws_.one());
-        todo_.push(map_.emplace(n, super_t::pre()).first);
+        aut_->ns_.set_weight(n, aut_->input_->pre(), aut_->ws_.one());
+        aut_->todo_.push(aut_->map_.emplace(n, super_t::pre()).first);
 
         // Final states.
-        for (auto t : final_transitions(input_))
-          ns_.set_weight(finals_, input_->src_of(t), input_->weight_of(t));
+        for (auto t : final_transitions(aut_->input_))
+          aut_->ns_.set_weight(aut_->finals_,
+                         aut_->input_->src_of(t), aut_->input_->weight_of(t));
       }
 
       static symbol sname()
@@ -313,7 +244,7 @@ namespace vcsn
       std::ostream& print_set(std::ostream& o, format fmt = {}) const
       {
         o << "determinized_automaton<";
-        input_->print_set(o, fmt);
+        aut_->input_->print_set(o, fmt);
         return o << ", " << tag_t::sname() << '>';
       }
 
@@ -324,120 +255,43 @@ namespace vcsn
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
         auto dests = dests_t{};
-        while (!todo_.empty())
+        while (!aut_->todo_.empty())
           {
-            state_t src = todo_.front()->second;
-            const auto& ss = todo_.front()->first;
-            todo_.pop();
+            state_t src = aut_->todo_.front()->second;
+            const auto& ss = aut_->todo_.front()->first;
+            aut_->todo_.pop();
 
             dests.clear();
             for (const auto& p : ss)
               {
                 auto s = label_of(p);
                 auto v = weight_of(p);
-                for (auto t : out(input_, s))
+                for (auto t : out(aut_->input_, s))
                   {
-                    auto l = input_->label_of(t);
-                    auto dst = input_->dst_of(t);
-                    auto w = ws_.mul(v, input_->weight_of(t));
+                    auto l = aut_->input_->label_of(t);
+                    auto dst = aut_->input_->dst_of(t);
+                    auto w = aut_->ws_.mul(v, aut_->input_->weight_of(t));
 
                     // For each letter, update destination state, and
                     // sum of weights.
                     if (!has(dests, l))
-                      dests.emplace(l, ns_.zero());
+                      dests.emplace(l, aut_->ns_.zero());
                     auto& d = dests[l];
-                    ns_.add_here(d, dst, w);
+                    aut_->ns_.add_here(d, dst, w);
                   }
               }
 
             // Outgoing transitions from the current (result) state.
             for (auto& d : dests)
               // Don't create transitions to the empty state.
-              if (!ns_.is_zero(d.second))
+              if (!aut_->ns_.is_zero(d.second))
                 {
-                  weight_t w = ns_.normalize_here(d.second);
-                  this->new_transition(src, state_(d.second),
+                  weight_t w = aut_->ns_.normalize_here(d.second);
+                  this->new_transition(src, aut_->state_(d.second),
                                        d.first, w);
                 }
           }
       }
-
-      bool state_has_name(state_t s) const
-      {
-        return has(origins(), s);
-      }
-
-      std::ostream&
-      print_state_name(state_t s, std::ostream& o,
-                       format fmt = {}, bool delimit = false) const
-      {
-        auto i = origins().find(s);
-        if (i == origins().end())
-          this->print_state(s, o);
-        else
-          {
-            if (delimit)
-              o << '{';
-            ns_.print(i->second, o, fmt, ", ");
-            if (delimit)
-              o << '}';
-          }
-        return o;
-      }
-
-      /// A map from determinized states to sets of original states.
-      using origins_t = std::map<state_t, state_name_t>;
-      mutable origins_t origins_;
-      const origins_t&
-      origins() const
-      {
-        if (origins_.empty())
-          for (const auto& p: map_)
-            origins_.emplace(p.second, p.first);
-        return origins_;
-      }
-
-    private:
-      /// The state for set of states \a n.
-      /// If this is a new state, schedule it for visit.
-      state_t state_(const state_name_t& n)
-      {
-        state_t res;
-        auto i = map_.find(n);
-        if (i == std::end(map_))
-          {
-            res = this->new_state();
-            todo_.push(map_.emplace(n, res).first);
-            auto w = ns_.scalar_product(n, finals_);
-            if (!ws_.is_zero(w))
-              this->set_final(res, w);
-          }
-        else
-          res = i->second;
-        return res;
-      };
-
-      /// Map from state name to state number.
-      using map_t = std::unordered_map<state_name_t, state_t,
-                                       vcsn::hash<state_nameset_t>,
-                                       vcsn::equal_to<state_nameset_t>>;
-      map_t map_;
-
-      /// Input automaton.
-      automaton_t input_;
-
-      /// Its weightset.
-      weightset_t ws_ = *input_->weightset();
-
-      /// (Nameset) The polynomialset that stores weighted states.
-      state_nameset_t ns_ = {{stateset_t(input_), ws_}};
-
-      /// The sets of (input) states waiting to be processed.
-      using queue_t = std::queue<typename map_t::const_iterator>;
-      queue_t todo_;
-
-      /// Set of final states in the input automaton.
-      state_name_t finals_;
     };
   }
 

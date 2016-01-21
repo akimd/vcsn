@@ -136,6 +136,7 @@ nobase_include_HEADERS =                        \
   %D%/core/name-automaton.hh                    \
   %D%/core/partition-automaton.hh               \
   %D%/core/permutation-automaton.hh             \
+  %D%/core/polystate-automaton.hh               \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/expansionset.hh                  \
   %D%/core/rat/expression.hh                    \
