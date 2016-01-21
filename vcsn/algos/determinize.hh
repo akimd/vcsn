@@ -94,54 +94,59 @@ namespace vcsn
       /// Determinize the automaton.
       void operator()()
       {
-        // label -> <destination, sum of weights>.
-        using dests_t
-          = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
-        auto dests = dests_t{};
         while (!aut_->todo_.empty())
           {
             state_t src = aut_->todo_.front()->second;
             const auto& ss = aut_->todo_.front()->first;
             aut_->todo_.pop();
+            complete_(src, ss);
+          }
+      }
 
-            dests.clear();
-            for (const auto& p : ss)
+    private:
+      /// Compute the outgoing transitions of this state.
+      void complete_(state_t src, const state_name_t& ss)
+      {
+        // label -> <destination, sum of weights>.
+        using dests_t
+          = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
+        auto dests = dests_t{};
+        for (const auto& p : ss)
+          {
+            auto s = label_of(p);
+            // Cache the output transitions of state s.
+            auto i = successors_.find(s);
+            if (i == successors_.end())
               {
-                auto s = label_of(p);
-                // Cache the output transitions of state s.
-                auto i = successors_.find(s);
-                if (i == successors_.end())
+                i = successors_.emplace(s, label_map_t{}).first;
+                auto& j = i->second;
+                for (auto t : out(aut_->input_, s))
                   {
-                    i = successors_.emplace(s, label_map_t{}).first;
-                    auto& j = i->second;
-                    for (auto t : out(aut_->input_, s))
-                      {
-                        auto l = aut_->input_->label_of(t);
-                        auto dst = aut_->input_->dst_of(t);
-                        if (j.find(l) == j.end())
-                          j.emplace(l, aut_->zero());
-                        aut_->ns_.new_weight(j[l], dst, aut_->ws_.one());
-                      }
-                  }
-
-                // Store in dests the possible destinations per label.
-                for (const auto& p : i->second)
-                  {
-                    auto j = dests.find(p.first);
-                    if (j == dests.end())
-                      dests[p.first] = p.second;
-                    else
-                      aut_->ns_.add_here(j->second, p.second);
+                    auto l = aut_->input_->label_of(t);
+                    auto dst = aut_->input_->dst_of(t);
+                    if (j.find(l) == j.end())
+                      j.emplace(l, aut_->zero());
+                    aut_->ns_.new_weight(j[l], dst, aut_->ws_.one());
                   }
               }
 
-            // Outgoing transitions from the current (result) state.
-            for (auto& d : dests)
-              // Don't create transitions to the empty state.
-              if (!aut_->ns_.is_zero(d.second))
-                this->new_transition(src, aut_->state_(std::move(d.second)),
-                                     d.first);
+            // Store in dests the possible destinations per label.
+            for (const auto& p : i->second)
+              {
+                auto j = dests.find(p.first);
+                if (j == dests.end())
+                  dests[p.first] = p.second;
+                else
+                  aut_->ns_.add_here(j->second, p.second);
+              }
           }
+
+        // Outgoing transitions from the current (result) state.
+        for (auto& d : dests)
+          // Don't create transitions to the empty state.
+          if (!aut_->ns_.is_zero(d.second))
+            this->new_transition(src, aut_->state_(std::move(d.second)),
+                                 d.first);
       }
 
     private:
@@ -226,45 +231,50 @@ namespace vcsn
       /// Determinize the automaton.
       void operator()()
       {
-        // label -> <destination, sum of weights>.
-        using dests_t
-          = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
-        auto dests = dests_t{};
         while (!aut_->todo_.empty())
           {
             state_t src = aut_->todo_.front()->second;
             const auto& ss = aut_->todo_.front()->first;
             aut_->todo_.pop();
-
-            dests.clear();
-            for (const auto& p : ss)
-              {
-                auto s = label_of(p);
-                auto v = weight_of(p);
-                for (auto t : out(aut_->input_, s))
-                  {
-                    auto l = aut_->input_->label_of(t);
-                    auto dst = aut_->input_->dst_of(t);
-                    auto w = aut_->ws_.mul(v, aut_->input_->weight_of(t));
-
-                    // For each letter, update destination state, and
-                    // sum of weights.
-                    if (!has(dests, l))
-                      dests.emplace(l, aut_->zero());
-                    aut_->ns_.add_here(dests[l], dst, w);
-                  }
-              }
-
-            // Outgoing transitions from the current (result) state.
-            for (auto& d : dests)
-              // Don't create transitions to the empty state.
-              if (!aut_->ns_.is_zero(d.second))
-                {
-                  weight_t w = aut_->ns_.normalize_here(d.second);
-                  this->new_transition(src, aut_->state_(std::move(d.second)),
-                                       d.first, w);
-                }
+            complete_(src, ss);
           }
+      }
+
+    private:
+      /// Compute the outgoing transitions of this state.
+      void complete_(state_t src, const state_name_t& ss)
+      {
+        // label -> <destination, sum of weights>.
+        using dests_t
+          = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
+        auto dests = dests_t{};
+        for (const auto& p : ss)
+          {
+            auto s = label_of(p);
+            auto v = weight_of(p);
+            for (auto t : out(aut_->input_, s))
+              {
+                auto l = aut_->input_->label_of(t);
+                auto dst = aut_->input_->dst_of(t);
+                auto w = aut_->ws_.mul(v, aut_->input_->weight_of(t));
+
+                // For each letter, update destination state, and
+                // sum of weights.
+                if (!has(dests, l))
+                  dests.emplace(l, aut_->zero());
+                aut_->ns_.add_here(dests[l], dst, w);
+              }
+          }
+
+        // Outgoing transitions from the current (result) state.
+        for (auto& d : dests)
+          // Don't create transitions to the empty state.
+          if (!aut_->ns_.is_zero(d.second))
+            {
+              weight_t w = aut_->ns_.normalize_here(d.second);
+              this->new_transition(src, aut_->state_(std::move(d.second)),
+                                   d.first, w);
+            }
       }
     };
   }
