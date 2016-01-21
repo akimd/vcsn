@@ -14,6 +14,18 @@ namespace vcsn
 {
   namespace detail
   {
+    template <typename Then, typename Else>
+    auto static_if(std::true_type, Then then, Else)
+    {
+      return then;
+    }
+
+    template <typename Then, typename Else>
+    auto static_if(std::false_type, Then, Else else_)
+    {
+      return else_;
+    }
+
     template <Automaton Aut,
               wet_kind_t Kind = detail::wet_kind<labelset_t_of<Aut>,
                                                  weightset_t_of<Aut>>()>
@@ -46,11 +58,30 @@ namespace vcsn
       polystate_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
-      {}
+      {
+        // Pre.
+        auto pre = zero();
+        ns_.set_weight(pre, input_->pre(), ws_.one());
+        todo_.push(map_.emplace(pre, super_t::pre()).first);
+
+        // Final states.
+        for (auto t : final_transitions(input_))
+          ns_.set_weight(finals_, input_->src_of(t), input_->weight_of(t));
+      }
 
       bool state_has_name(state_t s) const
       {
         return has(origins(), s);
+      }
+
+      /// The empty polynomial of states.
+      state_name_t zero() const
+      {
+        return static_if
+          (bool_constant<Kind == wet_kind_t::bitset>{},
+           [] (const auto& self) { return state_name_t(self.state_size_); },
+           [] (const auto& self) { return self.ns_.zero(); })
+          (*this);
       }
 
       std::ostream&
@@ -120,8 +151,13 @@ namespace vcsn
       using queue_t = std::queue<typename map_t::const_iterator>;
       queue_t todo_;
 
+      /// We use state numbers as indexes, so we need to know the last
+      /// state number.  If states were removed, it is not the same as
+      /// the number of states.
+      size_t state_size_ = input_->all_states().back() + 1;
+
       /// Set of final states in the input automaton.
-      state_name_t finals_;
+      state_name_t finals_ = zero();
     };
 
     /// A polystate automaton as a shared pointer.

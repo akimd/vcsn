@@ -73,19 +73,7 @@ namespace vcsn
       /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
         : super_t{make_polystate_automaton<automaton_t, wet_kind_t::bitset>(a)}
-      {
-        // Pre.
-        state_name_t n(state_size_);
-        aut_->ns_.set_weight(n, aut_->input_->pre(), aut_->ws_.one());
-        aut_->todo_.push(aut_->map_.emplace(n, super_t::pre()).first);
-
-        // Final states.
-        aut_->finals_.set().resize(state_size_);
-        for (auto t : final_transitions(aut_->input_))
-          aut_->ns_.set_weight(aut_->finals_,
-                               aut_->input_->src_of(t),
-                               aut_->input_->weight_of(t));
-      }
+      {}
 
       static symbol sname()
       {
@@ -129,9 +117,10 @@ namespace vcsn
                     for (auto t : out(aut_->input_, s))
                       {
                         auto l = aut_->input_->label_of(t);
+                        auto dst = aut_->input_->dst_of(t);
                         if (j.find(l) == j.end())
-                          j.emplace(l, state_size_);
-                        j[l].set(aut_->input_->dst_of(t));
+                          j.emplace(l, aut_->zero());
+                        aut_->ns_.new_weight(j[l], dst, aut_->ws_.one());
                       }
                   }
 
@@ -155,11 +144,6 @@ namespace vcsn
       }
 
     private:
-      /// We use state numbers as indexes, so we need to know the last
-      /// state number.  If states were removed, it is not the same as
-      /// the number of states.
-      size_t state_size_ = this->aut_->input_->all_states().back() + 1;
-
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
       using label_map_t = std::unordered_map<label_t, state_name_t,
                                              vcsn::hash<labelset_t>,
@@ -220,17 +204,7 @@ namespace vcsn
       /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
         : super_t{make_polystate_automaton(a)}
-      {
-        // Pre.
-        state_name_t n;
-        aut_->ns_.set_weight(n, aut_->input_->pre(), aut_->ws_.one());
-        aut_->todo_.push(aut_->map_.emplace(n, super_t::pre()).first);
-
-        // Final states.
-        for (auto t : final_transitions(aut_->input_))
-          aut_->ns_.set_weight(aut_->finals_,
-                         aut_->input_->src_of(t), aut_->input_->weight_of(t));
-      }
+      {}
 
       static symbol sname()
       {
@@ -275,9 +249,8 @@ namespace vcsn
                     // For each letter, update destination state, and
                     // sum of weights.
                     if (!has(dests, l))
-                      dests.emplace(l, aut_->ns_.zero());
-                    auto& d = dests[l];
-                    aut_->ns_.add_here(d, dst, w);
+                      dests.emplace(l, aut_->zero());
+                    aut_->ns_.add_here(dests[l], dst, w);
                   }
               }
 
