@@ -9,6 +9,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 #include <vcsn/ctx/traits.hh> // labelset_t_of
+#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
 #include <vcsn/misc/empty.hh>
 #include <vcsn/misc/functional.hh> // vcsn::equal_to
@@ -23,6 +24,7 @@ namespace vcsn
     | welement_label.   |
     `------------------*/
 
+    /// Storage for a label.
     template <typename Label>
     struct welement_label
     {
@@ -38,6 +40,7 @@ namespace vcsn
       label_t label_;
     };
 
+    /// Storage for a label in the case of the empty labelset.
     template <>
     struct welement_label<empty_t>
     {
@@ -53,6 +56,7 @@ namespace vcsn
     | welement_weight.   |
     `-------------------*/
 
+    /// Storage for a non-null weight.
     template <typename Weight>
     struct welement_weight
     {
@@ -67,6 +71,8 @@ namespace vcsn
       weight_t weight_;
     };
 
+    /// Storage for a non-null single-bit weight: don't actually store
+    /// anything.
     template <>
     struct welement_weight<bool>
     {
@@ -84,6 +90,7 @@ namespace vcsn
   | welement.   |
   `------------*/
 
+  /// Storage for a label and a non-null weight.
   template <typename Label, typename Weight>
   struct welement
     : detail::welement_label<Label>
@@ -121,6 +128,7 @@ namespace vcsn
     }
   };
 
+  /// The label of a welement.
   template <typename Label, typename Weight>
   auto label_of(const welement<Label, Weight>& m)
     -> decltype(m.label())
@@ -128,6 +136,7 @@ namespace vcsn
     return m.label();
   }
 
+  /// The weight of a welement.
   template <typename Label, typename Weight>
   auto weight_of(const welement<Label, Weight>& m)
     -> decltype(m.weight())
@@ -135,44 +144,69 @@ namespace vcsn
     return m.weight();
   }
 
+  /// Set the weight of a welement.
   template <typename Label, typename Weight>
   void weight_set(welement<Label, Weight>& m, const Weight& w)
   {
     m.weight(w);
   }
 
+  /// The label of a pair (label, weight).
   template <typename Label, typename Weight>
   const Label& label_of(const std::pair<Label, Weight>& m)
   {
     return m.first;
   }
 
+  /// The weight of a pair (label, weight).
   template <typename Label, typename Weight>
   const Weight& weight_of(const std::pair<Label, Weight>& m)
   {
     return m.second;
   }
 
+  /// The label of a pair (label, weight).
   template <typename Label, typename Weight>
   Label& label_of(std::pair<Label, Weight>& m)
   {
     return m.first;
   }
 
+  /// Set the weight of a pair (label, weight).
   template <typename Label, typename Weight>
   void weight_set(std::pair<Label, Weight>& m, const Weight& w)
   {
     m.second = w;
   }
 
+
+  /// Different implementations of wets.
   enum class wet_kind_t
     {
+      /// Request the bitset implementation (bool weights).
       bitset,
+      /// Request the map implementation.
       map,
+      /// Request the set implementation (bool weights).
       set,
+      /// Request the unordered_map implementation.
       unordered_map,
     };
 
+  /// String version of a wet kind.
+  inline std::string to_string(wet_kind_t k)
+  {
+#define DEFINE(K) case wet_kind_t::K: return "vcsn::wet_kind_t::" #K
+    switch (k)
+      {
+        DEFINE(bitset);
+        DEFINE(map);
+        DEFINE(set);
+        DEFINE(unordered_map);
+      }
+#undef DEFINE
+    BUILTIN_UNREACHABLE();
+  }
 
   namespace detail
   {
@@ -181,7 +215,7 @@ namespace vcsn
     | wet_map<Key, Value>.   |
     `-----------------------*/
 
-    /// General case.
+    /// Weighted set: general, ordered, case.
     template <typename Key, typename Value,
               typename Compare>
     class wet_map
@@ -263,7 +297,7 @@ namespace vcsn
     | wet_unordered_map<Key, Value>.   |
     `---------------------------------*/
 
-    /// General case.
+    /// Weighted set: general, unordered, case.
     template <typename Key, typename Value,
               typename Hash, typename KeyEqual>
     class wet_unordered_map
@@ -343,7 +377,7 @@ namespace vcsn
     | wet_set<Key, bool>.   |
     `----------------------*/
 
-
+    /// Weighted set: weights are bools.
     template <typename Key, typename Compare>
     class wet_set
     {
@@ -494,6 +528,8 @@ namespace vcsn
     | wet_bitset<unsigned, bool>: bitsets.   |
     `---------------------------------------*/
 
+    /// Weighted set: labels are non-negative integers, weights are
+    /// bools.
     class wet_bitset
     {
     private:
@@ -738,27 +774,29 @@ namespace vcsn
     | wet_kind<Key, Value>.   |
     `------------------------*/
 
-    // wet_impl<Key, Value>: map.
+    /// wet_impl<Key, Value>: map.
     template <typename Key, typename Value>
     struct wet_kind_impl
     {
       static constexpr wet_kind_t kind = wet_kind_t::map;
     };
 
-    // wet_impl<Key, bool>: set.
+    /// wet_impl<Key, bool>: set.
     template <typename Key>
     struct wet_kind_impl<Key, bool>
     {
       static constexpr wet_kind_t kind = wet_kind_t::set;
     };
 
-    // wet_impl<char, bool>: bitsets.
+    /// wet_impl<char, bool>: bitsets.
     template <>
     struct wet_kind_impl<char, bool>
     {
       static constexpr wet_kind_t kind = wet_kind_t::bitset;
     };
 
+    /// Given a Key and a Value type, the appropriate weighted set
+    /// type.
     template <typename Key, typename Value>
     constexpr wet_kind_t wet_kind()
     {
@@ -770,7 +808,7 @@ namespace vcsn
     | wet_impl<Key, Value>.   |
     `------------------------*/
 
-    // wet_impl<Key, Value>: map.
+    /// A weighted set type from its kind.
     template <wet_kind_t Kind,
               typename Key, typename Value,
               typename Compare, typename Hash, typename KeyEqual>
@@ -787,6 +825,7 @@ namespace vcsn
 
   }
 
+  /// Given Key/Value types, the appropriate weighted set type.
   template <typename Key, typename Value,
             wet_kind_t Kind = detail::wet_kind<Key, Value>(),
             typename Compare = std::less<Key>,
