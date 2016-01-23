@@ -3,19 +3,25 @@
 import vcsn
 from test import *
 
+def gv(file):
+    return "{}/{}.gv".format(medir, file)
 
 def load(file):
-    return open(medir + "/" + file + ".gv").read().strip()
+    return open(gv(file)).read().strip()
 
 # check AUT EXP ALGO = "auto" DETERMINISTIC = False
 # -------------------------------------------------
 def check(aut, expfile, algo="auto", deterministic=False):
+    '''Check that `aut.determinize(algo)` results in the automaton
+    `determinize.dir/EXP-det.gv`.'''
+
     print("check: {}, algo={}".format(expfile, algo))
+
     CHECK_EQ(deterministic, aut.is_deterministic())
     CHECK_EQ(deterministic, aut.transpose().strip().is_codeterministic())
 
     det = aut.determinize()
-    exp = load(expfile)
+    exp = load(expfile + '-det')
     CHECK_EQ(exp, det)
     CHECK(det.is_deterministic())
     # Idempotence.
@@ -32,12 +38,12 @@ def check(aut, expfile, algo="auto", deterministic=False):
 ## -------------------- ##
 
 ctx = vcsn.context('lal_char(ab), b')
-check(ctx.de_bruijn(3), 'de-bruijn-3-det')
-check(ctx.de_bruijn(8), 'de-bruijn-8-det')
+check(ctx.de_bruijn(3), 'de-bruijn-3')
+check(ctx.de_bruijn(8), 'de-bruijn-8')
 
 ctx = vcsn.context('lal_char(abc), b')
-check(ctx.ladybird(4), 'ladybird-4-det')
-check(ctx.ladybird(8), 'ladybird-8-det')
+check(ctx.ladybird(4), 'ladybird-4')
+check(ctx.ladybird(8), 'ladybird-8')
 
 
 ## ------------------------------- ##
@@ -45,9 +51,9 @@ check(ctx.ladybird(8), 'ladybird-8-det')
 ## ------------------------------- ##
 
 for name in ['deterministic', 'empty', 'epsilon']:
-    aut = vcsn.automaton(load(name))
-    check(aut, name + "-det", deterministic=True)
-    check(aut, name + "-det", deterministic=True, algo='weighted')
+    aut = vcsn.automaton(filename=gv(name))
+    check(aut, name, deterministic=True)
+    check(aut, name, deterministic=True, algo='weighted')
 
 
 ## ------------------- ##
@@ -55,8 +61,8 @@ for name in ['deterministic', 'empty', 'epsilon']:
 ## ------------------- ##
 
 for name in ['q', 'z', 'zmin']:
-    aut = vcsn.automaton(load(name))
-    check(aut, name + '-det')
+    aut = vcsn.automaton(filename=gv(name))
+    check(aut, name)
 
 
 ## ----------------------------- ##
@@ -65,16 +71,16 @@ for name in ['q', 'z', 'zmin']:
 
 for name in ['b', 'f2']:
     for algo in ['auto', 'boolean', 'weighted']:
-        aut = vcsn.automaton(load(name))
-        check(aut, name + '-det', algo=algo)
+        aut = vcsn.automaton(filename=gv(name))
+        check(aut, name, algo=algo)
 
 
 ## ------------- ##
 ## Empty state.  ##
 ## ------------- ##
 
-# Check that we don't create the empty state when two paths ends in
-# the same state with opposite weights.
+# Check that we don't create the empty state when two paths end in the
+# same state with opposite weights.
 def null_state(weightset, weight):
     return vcsn.automaton('''
 context = "lal_char, {ws}"
@@ -105,5 +111,5 @@ for ws, w, algo in [('f2', '1', 'boolean'),
                     ('f2', '1', 'weighted'),
                     ('q', '-1', 'weighted')]:
     a = null_state(ws, w)
-    exp = null_state_det(ws, w).strip()
+    exp = null_state_det(ws, w)
     CHECK_EQ(exp, a.determinize(algo))
