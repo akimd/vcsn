@@ -21,40 +21,34 @@ namespace vcsn
 
   namespace detail
   {
-    template <Automaton Aut, typename Tag>
-    class determinized_automaton_impl;
-
     /// \brief The subset construction automaton from another.
     ///
     /// \tparam Aut the input automaton type.
     ///
     /// \pre labelset is free.
-    /// \pre weightset is B or F2.
-    template <Automaton Aut>
-    class determinized_automaton_impl<Aut, boolean_tag>
-      : public automaton_decorator<polystate_automaton<Aut, wet_kind_t::bitset>>
+    template <Automaton Aut, wet_kind_t Kind>
+    class determinized_automaton_impl
+      : public automaton_decorator<polystate_automaton<Aut, Kind>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
-                    "determinize: boolean: requires B or F2 weights");
 
     public:
       using automaton_t = Aut;
-      using tag_t = boolean_tag;
+      constexpr static wet_kind_t kind = Kind;
       using super_t
-        = automaton_decorator<polystate_automaton<automaton_t,
-                                                  wet_kind_t::bitset>>;
+        = automaton_decorator<polystate_automaton<automaton_t, kind>>;
 
       /// Labels and weights.
       using context_t = context_t_of<automaton_t>;
-      using label_t = label_t_of<automaton_t>;
       using labelset_t = labelset_t_of<automaton_t>;
+      using label_t = label_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
+      using weight_t = weight_t_of<automaton_t>;
 
       /// State index.
-      using state_t = state_t_of<automaton_t>;
       using stateset_t = stateset<automaton_t>;
+      using state_t = state_t_of<automaton_t>;
 
       /// The state name: set of (input) states.
       using state_name_t = typename super_t::element_type::state_name_t;
@@ -72,14 +66,14 @@ namespace vcsn
       /// Build the determinizer.
       /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
-        : super_t{make_polystate_automaton<automaton_t, wet_kind_t::bitset>(a)}
+        : super_t{make_polystate_automaton<automaton_t, kind>(a)}
       {}
 
       static symbol sname()
       {
         static auto res = symbol{"determinized_automaton<"
                                  + automaton_t::element_type::sname()
-                                 + ", " + tag_t::sname()
+                                 + ", " + to_string(kind)
                                  + '>'};
         return res;
       }
@@ -88,7 +82,7 @@ namespace vcsn
       {
         o << "determinized_automaton<";
         aut_->input_->print_set(o, fmt);
-        return o << ", " << tag_t::sname() << '>';
+        return o << ", " << to_string(kind) << '>';
       }
 
       /// Determinize the automaton.
@@ -105,8 +99,13 @@ namespace vcsn
 
     private:
       /// Compute the outgoing transitions of this state.
-      void complete_(state_t src, const state_name_t& ss)
+      /// \pre weightset is B or F2.
+      template <wet_kind_t K = kind>
+      auto complete_(state_t src, const state_name_t& ss)
+        -> std::enable_if_t<K == wet_kind_t::bitset>
       {
+        static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+                      "determinize: boolean: requires B or F2 weights");
         // label -> <destination, sum of weights>.
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
@@ -149,100 +148,10 @@ namespace vcsn
                                  d.first);
       }
 
-    private:
-      /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-      using label_map_t = std::unordered_map<label_t, state_name_t,
-                                             vcsn::hash<labelset_t>,
-                                             vcsn::equal_to<labelset_t>>;
-      using successors_t = std::map<state_t, label_map_t>;
-      successors_t successors_;
-    };
-  }
-
-  /*---------------------------.
-  | weighted determinization.  |
-  `---------------------------*/
-  namespace detail
-  {
-    /// \brief The weighted determinization of weighted automaton.
-    ///
-    /// \tparam Aut the input weighted automaton type.
-    ///
-    /// \pre labelset is free.
-    template <Automaton Aut>
-    class determinized_automaton_impl<Aut, weighted_tag>
-      : public automaton_decorator<polystate_automaton<Aut>>
-    {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: requires free labelset");
-
-    public:
-      using automaton_t = Aut;
-      using tag_t = weighted_tag;
-      using super_t = automaton_decorator<polystate_automaton<automaton_t>>;
-
-      /// Labels and weights.
-      using context_t = context_t_of<automaton_t>;
-      using label_t = label_t_of<automaton_t>;
-      using labelset_t = labelset_t_of<automaton_t>;
-      using weightset_t = weightset_t_of<automaton_t>;
-      using weight_t = weight_t_of<automaton_t>;
-
-      /// State index.
-      using state_t = state_t_of<automaton_t>;
-      using stateset_t = stateset<automaton_t>;
-
-      /// The state name: polynomials of (input) states.
-      using state_name_t = typename super_t::element_type::state_name_t;
-
-      using super_t::aut_;
-
-      auto strip() const
-      {
-        return aut_->strip();
-      }
-      auto origins() const
-      {
-        return aut_->origins();
-      }
-
-      /// Build the determinizer.
-      /// \param a         the automaton to determinize
-      determinized_automaton_impl(const automaton_t& a)
-        : super_t{make_polystate_automaton(a)}
-      {}
-
-      static symbol sname()
-      {
-        static auto res = symbol{"determinized_automaton<"
-                                 + automaton_t::element_type::sname()
-                                 + ", " + tag_t::sname()
-                                 + '>'};
-        return res;
-      }
-
-      std::ostream& print_set(std::ostream& o, format fmt = {}) const
-      {
-        o << "determinized_automaton<";
-        aut_->input_->print_set(o, fmt);
-        return o << ", " << tag_t::sname() << '>';
-      }
-
-      /// Determinize the automaton.
-      void operator()()
-      {
-        while (!aut_->todo_.empty())
-          {
-            state_t src = aut_->todo_.front()->second;
-            const auto& ss = aut_->todo_.front()->first;
-            aut_->todo_.pop();
-            complete_(src, ss);
-          }
-      }
-
-    private:
       /// Compute the outgoing transitions of this state.
-      void complete_(state_t src, const state_name_t& ss)
+      template <wet_kind_t K = kind>
+      auto complete_(state_t src, const state_name_t& ss)
+        -> std::enable_if_t<K != wet_kind_t::bitset>
       {
         // label -> <destination, sum of weights>.
         using dests_t
@@ -276,20 +185,30 @@ namespace vcsn
                                    d.first, w);
             }
       }
+
+      /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
+      using label_map_t = std::unordered_map<label_t, state_name_t,
+                                             vcsn::hash<labelset_t>,
+                                             vcsn::equal_to<labelset_t>>;
+      using successors_t = std::map<state_t, label_map_t>;
+      successors_t successors_;
     };
   }
 
   /// A determinized automaton as a shared pointer.
-  template <Automaton Aut, typename Tag>
+  template <Automaton Aut, wet_kind_t Kind>
   using determinized_automaton
-  = std::shared_ptr<detail::determinized_automaton_impl<Aut, Tag>>;
+  = std::shared_ptr<detail::determinized_automaton_impl<Aut, Kind>>;
 
   template <Automaton Aut, typename Tag>
   auto
   determinize(const Aut& a, Tag = {})
-    -> determinized_automaton<Aut, Tag>
   {
-    auto res = make_shared_ptr<determinized_automaton<Aut, Tag>>(a);
+    constexpr auto kind =
+      std::is_same<Tag, boolean_tag>::value
+      ? wet_kind_t::bitset
+      : detail::wet_kind<labelset_t_of<Aut>, weightset_t_of<Aut>>();
+    auto res = make_shared_ptr<determinized_automaton<Aut, kind>>(a);
     // Determinize.
     res->operator()();
     return res;
