@@ -97,8 +97,8 @@ namespace vcsn
       {
         while (!aut_->todo_.empty())
           {
-            state_t src = aut_->todo_.front()->second;
-            const auto& ss = aut_->todo_.front()->first;
+            state_t src = aut_->todo_.front()->right;
+            const auto& ss = aut_->todo_.front()->left;
             aut_->todo_.pop();
             complete_(src, ss);
           }
