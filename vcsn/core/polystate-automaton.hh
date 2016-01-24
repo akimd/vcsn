@@ -63,10 +63,6 @@ namespace vcsn
         auto pre = zero();
         ns_.set_weight(pre, input_->pre(), ws_.one());
         todo_.push(map_.emplace(pre, super_t::pre()).first);
-
-        // Final states.
-        for (auto t : final_transitions(input_))
-          ns_.set_weight(finals_, input_->src_of(t), input_->weight_of(t));
       }
 
       bool state_has_name(state_t s) const
@@ -122,9 +118,6 @@ namespace vcsn
         if (i == std::end(map_))
           {
             res = this->new_state();
-            auto w = ns_.scalar_product(n, finals_);
-            if (!ws_.is_zero(w))
-              this->set_final(res, w);
             todo_.push(map_.emplace(std::move(n), res).first);
           }
         else
@@ -155,9 +148,6 @@ namespace vcsn
       /// state number.  If states were removed, it is not the same as
       /// the number of states.
       size_t state_size_ = input_->all_states().back() + 1;
-
-      /// Set of final states in the input automaton.
-      state_name_t finals_ = zero();
     };
 
     /// A polystate automaton as a shared pointer.

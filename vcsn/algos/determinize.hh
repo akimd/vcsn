@@ -67,7 +67,13 @@ namespace vcsn
       /// \param a         the automaton to determinize
       determinized_automaton_impl(const automaton_t& a)
         : super_t{make_polystate_automaton<automaton_t, kind>(a)}
-      {}
+      {
+        // Final states.
+        for (auto t : final_transitions(aut_->input_))
+          aut_->ns_.new_weight(finals_,
+                               aut_->input_->src_of(t),
+                               aut_->input_->weight_of(t));
+      }
 
       static symbol sname()
       {
@@ -146,6 +152,10 @@ namespace vcsn
           if (!aut_->ns_.is_zero(d.second))
             this->new_transition(src, aut_->state_(std::move(d.second)),
                                  d.first);
+
+        auto w = aut_->ns_.scalar_product(ss, finals_);
+        if (!aut_->ws_.is_zero(w))
+          this->set_final(src, w);
       }
 
       /// Compute the outgoing transitions of this state.
@@ -184,7 +194,14 @@ namespace vcsn
               this->new_transition(src, aut_->state_(std::move(d.second)),
                                    d.first, w);
             }
+
+        auto w = aut_->ns_.scalar_product(ss, finals_);
+        if (!aut_->ws_.is_zero(w))
+          this->set_final(src, w);
       }
+
+      /// Set of final states in the input automaton.
+      state_name_t finals_ = aut_->zero();
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
       using label_map_t = std::unordered_map<label_t, state_name_t,
