@@ -76,6 +76,7 @@ namespace vcsn
             res = super_t::new_state();
             bimap_.insert({r, res});
             todo_.emplace(res, r);
+            super_t::set_lazy(res);
           }
         else
           res = i->second;

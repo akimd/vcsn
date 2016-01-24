@@ -99,6 +99,7 @@ namespace vcsn
         return element_type::Name(std::forward<Args>(args)...);         \
       }
 
+      DEFINE(lazy_transition);
       DEFINE(null_state);
       DEFINE(null_transition);
       DEFINE(post);
@@ -148,6 +149,7 @@ namespace vcsn
       DEFINE(src_of);
       DEFINE(state_has_name);
       DEFINE(state_is_strict);
+      DEFINE(state_is_strict_in);
       DEFINE(states);
       DEFINE(weight_of);
       DEFINE(weightset);
@@ -181,6 +183,8 @@ namespace vcsn
       DEFINE(new_transition_copy);
       DEFINE(rmul_weight);
       DEFINE(set_final);
+      DEFINE(set_lazy);
+      DEFINE(set_lazy_in);
       DEFINE(set_initial);
       DEFINE(set_transition);
       DEFINE(set_weight);

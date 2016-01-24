@@ -53,7 +53,8 @@ namespace vcsn
             auto codet = determinize(transposed);
             auto res = map_t{};
             for (const auto& p: codet->origins())
-              if (p.first != codet->pre())
+              if (p.first != codet->pre()
+                  && p.first != codet->post())
                 {
                   auto from = std::set<state_t>{};
                   for (auto sw: p.second)

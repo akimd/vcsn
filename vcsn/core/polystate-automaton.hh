@@ -60,9 +60,19 @@ namespace vcsn
         , input_(a)
       {
         // Pre.
-        auto pre = zero();
-        ns_.set_weight(pre, input_->pre(), ws_.one());
-        todo_.push(map_.emplace(pre, super_t::pre()).first);
+        {
+          auto pre = zero();
+          ns_.new_weight(pre, input_->pre(), ws_.one());
+          todo_.push(map_.emplace(std::move(pre), this->pre()).first);
+          this->set_lazy(this->pre());
+        }
+
+        // Post.
+        {
+          auto post = zero();
+          ns_.new_weight(post, input_->post(), ws_.one());
+          map_.emplace(std::move(post), this->post());
+        }
       }
 
       bool state_has_name(state_t s) const
@@ -119,6 +129,7 @@ namespace vcsn
         if (i == std::end(map_))
           {
             res = this->new_state();
+            this->set_lazy(res);
             todo_.push(map_.emplace(std::move(n), res).first);
           }
         else

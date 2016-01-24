@@ -156,6 +156,9 @@ namespace vcsn
     static constexpr state_t      null_state()      { return -1U; }
     /// Invalid transition.
     static constexpr transition_t null_transition() { return -1U; }
+    /// Invalid transition that shows that the state's outgoing
+    /// transitions are unknown.
+    static constexpr transition_t lazy_transition() { return -2U; }
 
     /// Label for preinitial and postfinal transitions.
     label_t prepost_label() const
@@ -199,12 +202,22 @@ namespace vcsn
         }
     }
 
-    /// Whether state s belongs to the automaton.
+    /// Whether a given state's outgoing transitions have been
+    /// computed.
     bool
     state_is_strict(state_t s) const
     {
-      assert(has_state(s)); (void) s;
-      return true;
+      auto ts = all_out(s);
+      return ts.empty() || ts.front() != lazy_transition();
+    }
+
+    /// Whether a given state's incoming transitions have been
+    /// computed.
+    bool
+    state_is_strict_in(state_t s) const
+    {
+      auto ts = all_in(s);
+      return ts.empty() || ts.front() != lazy_transition();
     }
 
     /// Whether s is initial.
@@ -430,6 +443,30 @@ namespace vcsn
     set_initial(state_t s)
     {
       set_initial(s, weightset()->one());
+    }
+
+    void
+    set_lazy(state_t s, bool lazy = true)
+    {
+      assert(has_state(s));
+      stored_state_t& ss = states_[s];
+      assert(ss.succ.empty()
+             || ss.succ.front() == lazy_transition());
+      ss.succ.clear();
+      if (lazy)
+        ss.succ.emplace_back(lazy_transition());
+    }
+
+    void
+    set_lazy_in(state_t s, bool lazy = true)
+    {
+      assert(has_state(s));
+      stored_state_t& ss = states_[s];
+      assert(ss.pred.empty()
+             || ss.pred.front() == lazy_transition());
+      ss.pred.clear();
+      if (lazy)
+        ss.pred.emplace_back(lazy_transition());
     }
 
     transition_t
@@ -677,6 +714,11 @@ namespace vcsn
     /// Print a transition, for debugging.
     std::ostream& print(transition_t t, std::ostream& o) const
     {
+      if (t == null_transition())
+        o << "null_transition";
+      else if (t == lazy_transition())
+        o << "lazy_transition";
+      else
         {
           print_state_name(src_of(t), o) << " -- <";
           weightset()->print(weight_of(t), o) << '>';

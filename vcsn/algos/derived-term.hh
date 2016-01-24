@@ -210,19 +210,11 @@ namespace vcsn
       /// Initialize the computation: build the initial states.
       void init_(const expression_t& expression)
       {
-        done_.insert(aut_->pre());
         if (algo_.breaking)
           for (const auto& p: split(rs_, expression))
             aut_->set_initial(label_of(p), weight_of(p));
         else
           aut_->set_initial(expression, ws_.one());
-      }
-
-      /// Whether a given state's outgoing transitions have been
-      /// computed.
-      bool state_is_strict(state_t s) const
-      {
-        return has(done_, s);
       }
 
       /// Complete a state: find its outgoing transitions.
@@ -231,14 +223,13 @@ namespace vcsn
         const auto& orig = aut_->origins();
         auto sn = orig.at(s);
         const_cast<self_t&>(*this).complete_via_expansion_(s, sn);
-        done_.insert(s);
       }
 
       /// All the outgoing transitions.
       auto all_out(state_t s) const
         -> decltype(vcsn::detail::all_out(aut_, s))
       {
-        if (!state_is_strict(s))
+        if (!this->state_is_strict(s))
           complete_(s);
         return vcsn::detail::all_out(aut_, s);
       }
@@ -248,6 +239,7 @@ namespace vcsn
                 typename = std::enable_if<labelset_t_of<ES>::is_free()>>
       void complete_via_derivation_(state_t s, const expression_t& src)
       {
+        aut_->set_lazy(s, false);
         aut_->set_final(s, constant_term(rs_, src));
         for (auto l : members_.gens)
           {
@@ -266,6 +258,7 @@ namespace vcsn
       /// Compute the outgoing transitions of \a src.
       void complete_via_expansion_(state_t s, const expression_t& src)
       {
+        aut_->set_lazy(s, false);
         auto expansion = to_expansion_(src);
         if (algo_.determinize)
           expansion = es_.determinize(expansion);
@@ -305,11 +298,6 @@ namespace vcsn
       to_expansion_t to_expansion_ = {rs_};
       /// Possibly the generators.
       derived_term_automaton_members<expressionset_t> members_ = {rs_};
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 

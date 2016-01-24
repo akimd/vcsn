@@ -104,20 +104,13 @@ namespace vcsn
           }
       }
 
-      /// Whether a given state's outgoing transitions have been
-      /// computed.
-      bool state_is_strict(state_t s) const
-      {
-        return has(done_, s);
-      }
-
       /// All the outgoing transitions.
       auto all_out(state_t s) const
         -> decltype(all_out(aut_, s))
       {
-        if (!state_is_strict(s))
+        if (!aut_->state_is_strict(s))
           complete_(s);
-        return vcsn::detail::all_out(aut_, s);
+        return aut_->all_out(s);
       }
 
     private:
@@ -136,7 +129,7 @@ namespace vcsn
       {
         static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
                       "determinize: boolean: requires B or F2 weights");
-        done_.insert(src);
+        aut_->set_lazy(src, false);
         // label -> <destination, sum of weights>.
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
@@ -188,7 +181,7 @@ namespace vcsn
       auto complete_(state_t src, const state_name_t& ss)
         -> std::enable_if_t<K != wet_kind_t::bitset>
       {
-        done_.insert(src);
+        aut_->set_lazy(src, false);
         // label -> <destination, sum of weights>.
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
@@ -235,11 +228,6 @@ namespace vcsn
                                              vcsn::equal_to<labelset_t>>;
       using successors_t = std::map<state_t, label_map_t>;
       successors_t successors_;
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 
