@@ -84,8 +84,9 @@ namespace vcsn
       print_state_name(state_t s, std::ostream& o,
                        format fmt = {}, bool delimit = false) const
       {
-        auto i = origins().find(s);
-        if (i == std::end(origins()))
+        const auto& origs = origins();
+        auto i = origs.find(s);
+        if (i == std::end(origs))
           this->print_state(s, o);
         else
           {
@@ -103,9 +104,9 @@ namespace vcsn
       mutable origins_t origins_;
       const origins_t& origins() const
       {
-        if (origins_.empty())
-          for (const auto& p: map_)
-            origins_.emplace(p.second, p.first);
+        origins_.clear();
+        for (const auto& p: map_)
+          origins_.emplace(p.second, p.first);
         return origins_;
       }
 

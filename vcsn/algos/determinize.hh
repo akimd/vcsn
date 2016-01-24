@@ -38,6 +38,7 @@ namespace vcsn
       constexpr static wet_kind_t kind = Kind;
       using super_t
         = automaton_decorator<polystate_automaton<automaton_t, kind>>;
+      using self_t = determinized_automaton_impl;
 
       /// Labels and weights.
       using context_t = context_t_of<automaton_t>;
@@ -103,7 +104,30 @@ namespace vcsn
           }
       }
 
+      /// Whether a given state's outgoing transitions have been
+      /// computed.
+      bool state_is_strict(state_t s) const
+      {
+        return has(done_, s);
+      }
+
+      /// All the outgoing transitions.
+      auto all_out(state_t s) const
+        -> decltype(all_out(aut_, s))
+      {
+        if (!state_is_strict(s))
+          complete_(s);
+        return vcsn::detail::all_out(aut_, s);
+      }
+
     private:
+      /// Complete a state: find its outgoing transitions.
+      void complete_(state_t s) const
+      {
+        const auto& orig = origins();
+        const_cast<self_t&>(*this).complete_(s, orig.at(s));
+      }
+
       /// Compute the outgoing transitions of this state.
       /// \pre weightset is B or F2.
       template <wet_kind_t K = kind>
@@ -112,6 +136,7 @@ namespace vcsn
       {
         static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
                       "determinize: boolean: requires B or F2 weights");
+        done_.insert(src);
         // label -> <destination, sum of weights>.
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
@@ -163,6 +188,7 @@ namespace vcsn
       auto complete_(state_t src, const state_name_t& ss)
         -> std::enable_if_t<K != wet_kind_t::bitset>
       {
+        done_.insert(src);
         // label -> <destination, sum of weights>.
         using dests_t
           = std::map<label_t, state_name_t, vcsn::less<labelset_t>>;
@@ -209,6 +235,11 @@ namespace vcsn
                                              vcsn::equal_to<labelset_t>>;
       using successors_t = std::map<state_t, label_map_t>;
       successors_t successors_;
+
+      /// When performing the lazy construction, list of states that
+      /// have been completed (i.e., their outgoing transitions have
+      /// been computed).
+      mutable std::set<state_t> done_ = {aut_->post()};
     };
   }
 
@@ -219,7 +250,7 @@ namespace vcsn
 
   template <Automaton Aut, typename Tag>
   auto
-  determinize(const Aut& a, Tag = {})
+  determinize(const Aut& a, bool lazy, Tag = {})
   {
     constexpr auto kind =
       std::is_same<Tag, boolean_tag>::value
@@ -227,10 +258,10 @@ namespace vcsn
       : detail::wet_kind<labelset_t_of<Aut>, weightset_t_of<Aut>>();
     auto res = make_shared_ptr<determinized_automaton<Aut, kind>>(a);
     // Determinize.
-    res->operator()();
+    if (!lazy)
+      res->operator()();
     return res;
   }
-
 
   namespace detail
   {
@@ -245,9 +276,9 @@ namespace vcsn
   /// Determinization: automatic dispatch based on the automaton type.
   template <Automaton Aut>
   auto
-  determinize(const Aut& a, auto_tag = {})
+  determinize(const Aut& a, bool lazy = false, auto_tag = {})
   {
-    return determinize(a, detail::determinization_tag<Aut>{});
+    return determinize(a, lazy, detail::determinization_tag<Aut>{});
   }
 
 
@@ -272,17 +303,18 @@ namespace vcsn
 
 
       template <Automaton Aut, typename Tag>
-      automaton determinize_tag_(const Aut& aut)
+      automaton determinize_tag_(const Aut& aut, bool lazy)
       {
-        return make_automaton(::vcsn::determinize(aut, Tag{}));
+        return make_automaton(::vcsn::determinize(aut, lazy, Tag{}));
       }
 
       /// Boolean Bridge.
       template <Automaton Aut, typename String>
       enable_if_boolean_t<Aut, automaton>
-      determinize_(const automaton& aut, const std::string& algo)
+      determinize_(const automaton& aut, std::string algo)
       {
-        static const auto map = getarg<std::function<automaton(const Aut&)>>
+        static const auto map
+          = getarg<std::function<automaton(const Aut&, bool)>>
           {
             "determinization algorithm",
             {
@@ -291,15 +323,22 @@ namespace vcsn
               {"weighted", determinize_tag_<Aut, weighted_tag>},
             }
           };
-        return map[algo](aut->as<Aut>());
+        bool lazy = false;
+        if (boost::starts_with(algo, "lazy,"))
+          {
+            lazy = true;
+            algo = algo.substr(5);
+          }
+        return map[algo](aut->as<Aut>(), lazy);
       }
 
       /// Weighted Bridge.
       template <Automaton Aut, typename String>
       enable_if_not_boolean_t<Aut, automaton>
-      determinize_(const automaton& aut, const std::string& algo)
+      determinize_(const automaton& aut, std::string algo)
       {
-        static const auto map = getarg<std::function<automaton(const Aut&)>>
+        static const auto map
+          = getarg<std::function<automaton(const Aut&, bool)>>
           {
             "determinization algorithm",
             {
@@ -310,7 +349,13 @@ namespace vcsn
         if (algo == "boolean")
           raise("determinize: cannot apply Boolean"
                 " determinization to weighted automata");
-        return map[algo](aut->as<Aut>());
+        bool lazy = false;
+        if (boost::starts_with(algo, "lazy,"))
+          {
+            lazy = true;
+            algo = algo.substr(5);
+          }
+        return map[algo](aut->as<Aut>(), lazy);
       }
 
       /// Bridge.
@@ -332,7 +377,7 @@ namespace vcsn
   auto
   codeterminize(const Aut& aut, Tag tag = {})
   {
-    return transpose(determinize(transpose(aut), tag));
+    return transpose(determinize(transpose(aut), false, tag));
   }
 
   /*---------------------.

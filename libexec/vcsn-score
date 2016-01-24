@@ -276,6 +276,14 @@ for n, number in [(13, 10), (14, 10), (16, 2)]:
                          'a = c.de_bruijn(n)'],
                   number=number)
 
+# Check the cost of lazyness.
+n = 10
+bench('a.determinize("lazy,weighted").accessible()',
+      'a = de_bruijn({}), c = {}'.format(n, ctx_signature(ctx)),
+      setup=['c = vcsn.context("{}")'.format(ctx),
+            'n = {}'.format(n),
+             'a = c.de_bruijn(n)'])
+
 # Something more realistic: the previous automata explode in an
 # exponential number of states, and half of them end up being final.
 # This exagerates the importance of the handling of the final states.
@@ -286,13 +294,17 @@ for n, number in [(13, 10), (14, 10), (16, 2)]:
 n = 100
 ctx = 'lal_char(a-zA-Z0-9), b'
 r = '([^]+a){{{}}}'.format(n)
-for algo in ['', '"weighted"']:
-    bench('a.determinize({})'.format(algo),
+for algo, number in [('', 2), ('"weighted"', 2), ('"lazy,weighted"', 1)]:
+    cmd = 'a.determinize({})'.format(algo)
+    if 'lazy' in algo:
+        # Accessible resolves the lazy states.
+        cmd = cmd + '.accessible()'
+    bench(cmd,
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['r = "{}"'.format(r),
                  'c = vcsn.context("{}")'.format(ctx),
                  'a = c.expression(r).standard()'],
-          number=2)
+          number=number)
 
 
 ## ------ ##
