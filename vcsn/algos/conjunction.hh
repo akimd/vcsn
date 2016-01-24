@@ -104,8 +104,7 @@ namespace vcsn
       void complete_(state_t s) const
       {
         const auto& orig = origins();
-        state_name_t sn = orig.at(s);
-        const_cast<self_t&>(*this).add_conjunction_transitions(s, sn);
+        const_cast<self_t&>(*this).add_conjunction_transitions(s, orig.at(s));
         done_.insert(s);
       }
 
