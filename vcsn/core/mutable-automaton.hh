@@ -677,10 +677,35 @@ namespace vcsn
     /// Print a transition, for debugging.
     std::ostream& print(transition_t t, std::ostream& o) const
     {
-      print_state_name(src_of(t), o) << " -- <";
-      weightset()->print(weight_of(t), o) << '>';
-      labelset()->print(label_of(t), o) << " --> ";
-      print_state_name(dst_of(t), o);
+        {
+          print_state_name(src_of(t), o) << " -- <";
+          weightset()->print(weight_of(t), o) << '>';
+          labelset()->print(label_of(t), o) << " --> ";
+          print_state_name(dst_of(t), o);
+        }
+      return o;
+    }
+
+    /// Print an automaton, for debugging.
+    std::ostream& print(std::ostream& o) const
+    {
+      for (auto s: all_states())
+        {
+          o << "State: ";
+          print_state_name(s, o) << '\n';
+          o << "  Incoming:\n";
+          for (auto t: all_in(s))
+            {
+              o << "    ";
+              print(t, o) << '\n';
+            }
+          o << "  Outgoing:\n";
+          for (auto t: all_out(s))
+            {
+              o << "    ";
+              print(t, o) << '\n';
+            }
+        }
       return o;
     }
 
