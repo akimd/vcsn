@@ -915,20 +915,20 @@ This file is about the latter, named "Vcsn".
 
 ## 2014-10-27
 ### WARNING: resyntaxed contexts
-The syntax for contexts has changed: the separator between the
-labelset and the weightset is now a comma (possibly with spaces)
-instead of an underscore.
+The syntax for contexts has changed: the separator between the labelset and
+the weightset is now a comma (possibly with spaces) instead of an
+underscore.
 
 So for instance:
 
-    lal_char(abc)_b
- -> lal_char(abc), b
+        lal_char(abc)_b
+     -> lal_char(abc), b
 
-    lat<lal_char(ab),lal_char(xy)>_lat<q,r>
- -> lat<lal_char(ab), lal_char(xy)>, lat<q, r>
+        lat<lal_char(ab),lal_char(xy)>_lat<q,r>
+     -> lat<lal_char(ab), lal_char(xy)>, lat<q, r>
 
-    law_char(a-z)_ratexpset<law_char(A-Z)_b>
- -> law_char(a-z), ratexpset<law_char(A-Z), b>
+        law_char(a-z)_ratexpset<law_char(A-Z)_b>
+     -> law_char(a-z), ratexpset<law_char(A-Z), b>
 
 This syntax is not (and has never been) the intended one, it should be
 considered as the "internal" syntax.  However, since the intended syntax is
