@@ -71,6 +71,13 @@ namespace vcsn
   template <typename ExpSet>
   bool is_valid(const ExpSet&, const typename ExpSet::value_t&);
 
+  // vcsn/algos/minimize.hh
+  namespace detail
+  {
+    template <Automaton Aut, typename Tag>
+    class minimizer;
+  }
+
   // vcsn/algos/synchronize.hh
   namespace detail
   {

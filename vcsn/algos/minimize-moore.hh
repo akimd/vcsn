@@ -22,10 +22,10 @@ namespace vcsn
   /// Request for Moore implementation of minimize (B and free).
   struct moore_tag {};
 
-  namespace detail_moore
+  namespace detail
   {
     template <Automaton Aut>
-    class minimizer
+    class minimizer<Aut, moore_tag>
     {
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "minimize: moore: requires Boolean weights");
@@ -196,7 +196,7 @@ namespace vcsn
   std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, moore_tag)
   {
-    auto minimize = detail_moore::minimizer<Aut>{a};
+    auto minimize = detail::minimizer<Aut, moore_tag>{a};
     return quotient(a, minimize.classes());
   }
 

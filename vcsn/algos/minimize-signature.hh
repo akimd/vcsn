@@ -22,10 +22,10 @@ namespace vcsn
   /// Request for Moore implementation of minimize (B).
   struct signature_tag {};
 
-  namespace detail_signature
+  namespace detail
   {
     template <Automaton Aut>
-    class minimizer
+    class minimizer<Aut, signature_tag>
     {
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "minimize: signature: requires Boolean weights");
@@ -281,15 +281,14 @@ namespace vcsn
           }
       }
     };
-
-  } // detail_signature::
+  } // detail::
 
   template <Automaton Aut>
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
                     quotient_t<Aut>>
   minimize(const Aut& a, signature_tag)
   {
-    auto minimize = detail_signature::minimizer<Aut>{a};
+    auto minimize = detail::minimizer<Aut, signature_tag>{a};
     return quotient(a, minimize.classes());
   }
 

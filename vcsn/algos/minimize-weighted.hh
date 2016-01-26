@@ -17,10 +17,10 @@ namespace vcsn
   | minimization with signatures; general version working on any weightset.  |
   `-------------------------------------------------------------------------*/
 
-  namespace detail_weighted
+  namespace detail
   {
     template <Automaton Aut>
-    class minimizer
+    class minimizer<Aut, weighted_tag>
     {
       using automaton_t = Aut;
 
@@ -247,7 +247,7 @@ namespace vcsn
   minimize(const Aut& a, weighted_tag)
     -> quotient_t<Aut>
   {
-    auto minimize = detail_weighted::minimizer<Aut>{a};
+    auto minimize = detail::minimizer<Aut, weighted_tag>{a};
     return quotient(a, minimize.classes());
   }
 } // namespace vcsn
