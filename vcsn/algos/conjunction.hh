@@ -95,7 +95,7 @@ namespace vcsn
 
       /// Whether a given state's outgoing transitions have been
       /// computed.
-      bool state_is_strict(state_t s) const
+      bool is_lazy(state_t s) const
       {
         return has(done_, s);
       }
@@ -112,7 +112,7 @@ namespace vcsn
       auto all_out(state_t s) const
         -> decltype(all_out(aut_, s))
       {
-        if (!state_is_strict(s))
+        if (is_lazy(s))
           complete_(s);
         return vcsn::detail::all_out(aut_, s);
       }

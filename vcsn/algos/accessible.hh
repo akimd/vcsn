@@ -42,7 +42,7 @@ namespace vcsn
         const state_t src = todo.front();
         todo.pop();
 
-        if (strict || aut->state_is_strict(src))
+        if (strict || !aut->is_lazy(src))
           for (auto tr : all_out(aut, src))
             {
               state_t dst = aut->dst_of(tr);

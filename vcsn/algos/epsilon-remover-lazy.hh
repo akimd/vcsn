@@ -116,14 +116,14 @@ namespace vcsn
       auto all_out(state_t s) const
         -> decltype(vcsn::detail::all_out(this->aut_, s))
       {
-        if (!state_is_strict(s))
+        if (is_lazy(s))
           complete_(s);
         return vcsn::detail::all_out(this->aut_, s);
       }
 
-      bool state_is_strict(state_t s) const
+      bool is_lazy(state_t s) const
       {
-        return has(proper_states_, s);
+        return !has(proper_states_, s);
       }
 
       /// All states including pre()/post().

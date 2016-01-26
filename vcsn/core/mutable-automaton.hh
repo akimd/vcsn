@@ -205,19 +205,19 @@ namespace vcsn
     /// Whether a given state's outgoing transitions have been
     /// computed.
     bool
-    state_is_strict(state_t s) const
+    is_lazy(state_t s) const
     {
       auto ts = all_out(s);
-      return ts.empty() || ts.front() != lazy_transition();
+      return !ts.empty() && ts.front() == lazy_transition();
     }
 
     /// Whether a given state's incoming transitions have been
     /// computed.
     bool
-    state_is_strict_in(state_t s) const
+    is_lazy_in(state_t s) const
     {
       auto ts = all_in(s);
-      return ts.empty() || ts.front() != lazy_transition();
+      return !ts.empty() && ts.front() == lazy_transition();
     }
 
     /// Whether s is initial.

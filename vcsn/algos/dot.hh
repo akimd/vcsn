@@ -193,7 +193,7 @@ namespace vcsn
                   bos_ << " (" << s << ')';
                 bos_ << "\", shape = box";
               }
-            if (!aut_->state_is_strict(s))
+            if (aut_->is_lazy(s))
               {
                 if (has_attributes)
                   bos_ << ", ";
@@ -328,7 +328,7 @@ namespace vcsn
         // For each src state, the destinations, sorted.
         std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->all_states())
-          if (aut_->state_is_strict(src)
+          if (!aut_->is_lazy(src)
               && (format_ != format::latex || src != aut_->pre()))
             {
               dsts.clear();

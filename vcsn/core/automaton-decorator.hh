@@ -148,8 +148,8 @@ namespace vcsn
       DEFINE(print_state_name);
       DEFINE(src_of);
       DEFINE(state_has_name);
-      DEFINE(state_is_strict);
-      DEFINE(state_is_strict_in);
+      DEFINE(is_lazy);
+      DEFINE(is_lazy_in);
       DEFINE(states);
       DEFINE(weight_of);
       DEFINE(weightset);

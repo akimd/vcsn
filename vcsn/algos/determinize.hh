@@ -108,7 +108,7 @@ namespace vcsn
       auto all_out(state_t s) const
         -> decltype(all_out(aut_, s))
       {
-        if (!aut_->state_is_strict(s))
+        if (aut_->is_lazy(s))
           complete_(s);
         return aut_->all_out(s);
       }

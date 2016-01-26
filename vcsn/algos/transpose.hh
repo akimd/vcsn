@@ -97,8 +97,8 @@ namespace vcsn
       DEFINE(src_of(transition_t t),         dst_of(t));
       DEFINE(is_initial(state_t s),          is_final(s));
 
-      DEFINE(state_is_strict(state_t s),     state_is_strict_in(s));
-      DEFINE(state_is_strict_in(state_t s),  state_is_strict(s));
+      DEFINE(is_lazy(state_t s),     is_lazy_in(s));
+      DEFINE(is_lazy_in(state_t s),  is_lazy(s));
 
       DEFINE(get_transition(state_t s, state_t d, label_t l),
              get_transition(d, s, aut_->labelset()->transpose(l)));

@@ -229,7 +229,7 @@ namespace vcsn
       auto all_out(state_t s) const
         -> decltype(vcsn::detail::all_out(aut_, s))
       {
-        if (!this->state_is_strict(s))
+        if (this->is_lazy(s))
           complete_(s);
         return vcsn::detail::all_out(aut_, s);
       }

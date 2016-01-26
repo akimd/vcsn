@@ -193,7 +193,7 @@ namespace vcsn
     {
       size_t res = 0;
       for (auto s: a->all_states())
-        res += !a->state_is_strict(s);
+        res += a->is_lazy(s);
       return res;
     }
   }
