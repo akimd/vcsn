@@ -18,12 +18,15 @@ namespace vcsn
 {
   namespace detail
   {
+
+    /// Execute the then-clause.
     template <typename Then, typename Else>
     auto static_if(std::true_type, Then then, Else)
     {
       return then;
     }
 
+    /// Execute the else-clause.
     template <typename Then, typename Else>
     auto static_if(std::false_type, Then, Else else_)
     {
@@ -31,19 +34,30 @@ namespace vcsn
     }
 
 
-    /// A map.
-    template <typename Stateset, typename StateNameset,
+    /// A bidirectional map from state names to state numbers.
+    ///
+    /// \tparam StateNameset   a valueset to manipulate the state names.
+    /// \tparam Stateset       a valueset to manipulate the state indexes.
+    /// \tparam Bidirectional  whether to maintain origins incrementally.
+    template <typename StateNameset, typename Stateset,
               bool Bidirectional>
     class state_bimap;
 
-    template <typename Stateset, typename StateNameset>
-    class state_bimap<Stateset, StateNameset, true>
+    /// A bidirectional map from state names to state numbers.
+    ///
+    /// The lazy case: maintain the origins() map constantly.
+    ///
+    /// \tparam StateNameset   a valueset to manipulate the state names.
+    /// \tparam Stateset       a valueset to manipulate the state indexes.
+    /// \tparam Bidirectional  whether to maintain origins incrementally.
+    template <typename StateNameset, typename Stateset>
+    class state_bimap<StateNameset, Stateset, true>
     {
-      using stateset_t = Stateset;
-      using state_t = typename stateset_t::value_t;
-
       using state_nameset_t = StateNameset;
       using state_name_t = typename state_nameset_t::value_t;
+
+      using stateset_t = Stateset;
+      using state_t = typename stateset_t::value_t;
 
       /// Storage for state names.
       using left_t
@@ -97,14 +111,21 @@ namespace vcsn
     };
 
 
-    template <typename Stateset, typename StateNameset>
-    class state_bimap<Stateset, StateNameset, false>
+    /// A bidirectional map from state names to state numbers.
+    ///
+    /// The strict case: compute origins() just once, at the end.
+    ///
+    /// \tparam StateNameset   a valueset to manipulate the state names.
+    /// \tparam Stateset       a valueset to manipulate the state indexes.
+    /// \tparam Bidirectional  whether to maintain origins incrementally.
+    template <typename StateNameset, typename Stateset>
+    class state_bimap<StateNameset, Stateset, false>
     {
-      using stateset_t = Stateset;
-      using state_t = typename stateset_t::value_t;
-
       using state_nameset_t = StateNameset;
       using state_name_t = typename state_nameset_t::value_t;
+
+      using stateset_t = Stateset;
+      using state_t = typename stateset_t::value_t;
 
       using map_t = std::unordered_map<state_name_t, state_t,
                                        vcsn::hash<state_nameset_t>,
@@ -154,15 +175,21 @@ namespace vcsn
       }
     };
 
+
+    /// An automaton whose state names are polynomials of states.
+    ///
+    /// \tparam Aut   the input automaton type, whose states
+    ///               will form the polynomials of states.
+    /// \tparam Kind  the desired implemenation of the polynomials.
     template <Automaton Aut,
               wet_kind_t Kind = detail::wet_kind<labelset_t_of<Aut>,
                                                  weightset_t_of<Aut>>(),
               bool Lazy = false>
     class polystate_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
-      , public state_bimap<stateset<Aut>,
-                           polynomialset<context<stateset<Aut>,
+      , public state_bimap<polynomialset<context<stateset<Aut>,
                                                  weightset_t_of<Aut>>, Kind>,
+                           stateset<Aut>,
                            Lazy>
     {
     public:
@@ -187,16 +214,16 @@ namespace vcsn
       using state_name_t = typename state_nameset_t::value_t;
 
       using state_bimap_t
-        = state_bimap<stateset<Aut>,
-                      polynomialset<context<stateset<Aut>,
+        = state_bimap<polynomialset<context<stateset<Aut>,
                                             weightset_t_of<Aut>>, Kind>,
+                      stateset<Aut>,
                       Lazy>;
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
       polystate_automaton_impl(const automaton_t& a)
-        : super_t(a->context())
-        , input_(a)
+        : super_t{a->context()}
+        , input_{a}
       {
         // Pre.
         {
@@ -249,7 +276,7 @@ namespace vcsn
         return o;
       }
 
-      /// The state for set of states \a ss.
+      /// The state for set of states \a n.
       /// If this is a new state, schedule it for visit.
       state_t state_(state_name_t n)
       {
