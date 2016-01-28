@@ -1502,8 +1502,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const std::string&>())
     .def("cerny", &context::cerny)
     .def("cotrie", &context::cotrie,
-         ((arg("data") = "", arg("format") = "default",
-           arg("filename") = "")))
+         (arg("data") = "", arg("format") = "default",
+          arg("filename") = ""))
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
     .def("double_ring", &context::double_ring)
@@ -1514,13 +1514,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("project", &context::project)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
-          arg("num_initial") = 1, arg("num_final") = 1),
-          arg("loop_chance") = 0)
+          arg("num_initial") = 1, arg("num_final") = 1,
+          arg("loop_chance") = 0))
     .def("random_deterministic", &context::random_deterministic)
     .def("series", &context::series)
     .def("trie", &context::trie,
-         ((arg("data") = "", arg("format") = "default",
-           arg("filename") = "")))
+         (arg("data") = "", arg("format") = "default",
+          arg("filename") = ""))
     .def("u", &context::u)
     .def("word", &context::word)
    ;
