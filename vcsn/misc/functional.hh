@@ -56,16 +56,22 @@ namespace vcsn
     using argument_type = value_t;
   };
 
-  /// Following the naming convention of Boost.
-  ///
-  /// Use SFINAE to avoid being too eager.
-  template <typename T>
-  auto hash_value(const T& v)
-    -> decltype(std::hash<T>{}(v))
+  namespace detail
   {
-    std::hash<T> hasher;
-    return hasher(v);
+
+    /// Following the naming convention of Boost.
+    ///
+    /// Use SFINAE to avoid being too eager.
+    template <typename T>
+    inline auto hash_value(const T& v)
+      -> decltype(std::hash<T>{}(v))
+    {
+      std::hash<T> hasher;
+      return hasher(v);
+    }
   }
+
+  using detail::hash_value;
 
   /// Functor to compare Values of ValueSets.
   template <typename ValueSet, typename Value = typename ValueSet::value_t>
@@ -111,4 +117,9 @@ namespace std
       return res;
     }
   };
+
+#if defined __clang__ and __clang_major__ == 3 and __clang_minor__ < 7
+  // For clang 3.5, this is needed for ADL
+  using vcsn::detail::hash_value;
+#endif
 };
