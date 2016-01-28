@@ -39,6 +39,8 @@ namespace vcsn
                RandomGenerator& gen,
                detail::index_sequence<I...>)
   {
+    require(ls.generators().begin() != ls.generators().end(),
+            "random_label: the alphabet needs at least 1 letter");
     return ls.value(std::make_tuple(random_label(ls.template set<I>(), gen)...));
   };
 
@@ -48,6 +50,8 @@ namespace vcsn
   random_label(const wordset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
+    require(ls.generators().begin() != ls.generators().end(),
+            "random_label: the alphabet needs at least 1 letter");
     std::uniform_int_distribution<> dis(0, 5);
     auto res_label = ls.one();
     auto pick = make_random_selector(gen);
@@ -62,6 +66,8 @@ namespace vcsn
   random_label(const LabelSet& ls,
                RandomGenerator& gen = RandomGenerator())
   {
+    require(ls.generators().begin() != ls.generators().end(),
+            "random_label: the alphabet needs at least 1 letter");
     // Pick a member of a container following a uniform distribution.
     auto pick = make_random_selector(gen);
     return ls.value(pick(ls.generators()));
@@ -74,7 +80,7 @@ namespace vcsn
                RandomGenerator& gen = RandomGenerator())
   {
     std::bernoulli_distribution dis(0.5);
-    if (dis(gen))
+    if (dis(gen) || ls.generators().begin() != ls.generators().end())
       return ls.one();
     else
       return ls.value(random_label(*ls.labelset(), gen));
