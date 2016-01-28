@@ -97,16 +97,73 @@ namespace vcsn
     };
 
 
+    template <typename Stateset, typename StateNameset>
+    class state_bimap<Stateset, StateNameset, false>
+    {
+      using stateset_t = Stateset;
+      using state_t = typename stateset_t::value_t;
+
+      using state_nameset_t = StateNameset;
+      using state_name_t = typename state_nameset_t::value_t;
+
+      using map_t = std::unordered_map<state_name_t, state_t,
+                                       vcsn::hash<state_nameset_t>,
+                                       vcsn::equal_to<state_nameset_t>>;
+      map_t map_;
+
+    public:
+      using const_iterator = typename map_t::const_iterator;
+
+      template <typename... Args>
+      auto emplace(Args&&... args)
+      {
+        return map_.emplace(std::forward<Args>(args)...);
+      }
+
+      auto find_key(const state_name_t& sn) const
+      {
+        return map_.find(sn);
+      }
+
+      auto end_key() const
+      {
+        return map_.end();
+      }
+
+      /// Get the state name from a const_iterator.
+      static const state_name_t& state_name(const const_iterator& i)
+      {
+        return i->first;
+      }
+
+      /// Get the state from a const_iterator.
+      static state_t state(const const_iterator& i)
+      {
+        return i->second;
+      }
+
+      /// A map from state indexes to state names.
+      using origins_t = std::map<state_t, state_name_t>;
+      mutable origins_t origins_;
+      const origins_t& origins() const
+      {
+        if (origins_.empty())
+          for (const auto& p: map_)
+            origins_.emplace(p.second, p.first);
+        return origins_;
+      }
+    };
 
     template <Automaton Aut,
               wet_kind_t Kind = detail::wet_kind<labelset_t_of<Aut>,
-                                                 weightset_t_of<Aut>>()>
+                                                 weightset_t_of<Aut>>(),
+              bool Lazy = false>
     class polystate_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
       , public state_bimap<stateset<Aut>,
                            polynomialset<context<stateset<Aut>,
                                                  weightset_t_of<Aut>>, Kind>,
-                           true>
+                           Lazy>
     {
     public:
       using automaton_t = Aut;
@@ -133,7 +190,7 @@ namespace vcsn
         = state_bimap<stateset<Aut>,
                       polynomialset<context<stateset<Aut>,
                                             weightset_t_of<Aut>>, Kind>,
-                      true>;
+                      Lazy>;
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
@@ -146,7 +203,8 @@ namespace vcsn
           auto pre = zero();
           ns_.new_weight(pre, input_->pre(), ws_.one());
           todo_.push(this->emplace(std::move(pre), this->pre()).first);
-          this->set_lazy(this->pre());
+          if (Lazy)
+            this->set_lazy(this->pre());
         }
 
         // Post.
@@ -200,7 +258,8 @@ namespace vcsn
         if (i == this->end_key())
           {
             res = this->new_state();
-            this->set_lazy(res);
+            if (Lazy)
+              this->set_lazy(res);
             todo_.push(this->emplace(std::move(n), res).first);
           }
         else
@@ -230,18 +289,19 @@ namespace vcsn
     /// A polystate automaton as a shared pointer.
     template <Automaton Aut,
               wet_kind_t Kind = wet_kind<labelset_t_of<Aut>,
-                                         weightset_t_of<Aut>>()>
+                                         weightset_t_of<Aut>>(),
+              bool Lazy = false>
     using polystate_automaton
-      = std::shared_ptr<polystate_automaton_impl<Aut, Kind>>;
+      = std::shared_ptr<polystate_automaton_impl<Aut, Kind, Lazy>>;
 
     template <Automaton Aut,
               wet_kind_t Kind = wet_kind<labelset_t_of<Aut>,
-                                         weightset_t_of<Aut>>()>
+                                         weightset_t_of<Aut>>(),
+              bool Lazy = false>
     auto
     make_polystate_automaton(const Aut& aut)
-      -> polystate_automaton<Aut, Kind>
     {
-      using res_t = polystate_automaton<Aut, Kind>;
+      using res_t = polystate_automaton<Aut, Kind, Lazy>;
       return make_shared_ptr<res_t>(aut);
     }
   }

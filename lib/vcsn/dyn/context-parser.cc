@@ -332,11 +332,13 @@ namespace vcsn
           res = std::make_shared<automaton>(prefix, automaton_());
           eat_('>');
         }
-      // xxx_automaton<Aut, Tag>.
+      // xxx_automaton<Aut, Tag, Lazy>.
       else if (prefix == "determinized_automaton")
         {
           eat_('<');
           res = std::make_shared<automaton>(prefix, automaton_());
+          eat_(',');
+          res->get_content().emplace_back(any_());
           eat_(',');
           res->get_content().emplace_back(any_());
           eat_('>');
