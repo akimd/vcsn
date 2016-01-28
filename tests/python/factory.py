@@ -109,6 +109,9 @@ CHECK_EQ(100, a.info()['number of states'])
 CHECK_EQ(20, a.info()['number of initial states'])
 CHECK_EQ(30, a.info()['number of final states'])
 
+# Random on an empty labelset doesn't work
+
+XFAIL(lambda: vcsn.b.random(2), "random_label: the alphabet needs at least 1 letter")
 
 ## ---------------------- ##
 ## random_deterministic.  ##
