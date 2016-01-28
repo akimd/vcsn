@@ -16,6 +16,15 @@ namespace vcsn
       template <typename T>
       index_t_impl(index_t_impl<T> t) = delete;
 
+      bool operator==(index_t_impl t) const
+      {
+        return s == t.s;
+      }
+
+      // Disallow index1_t{42} ==  index2_t{42};
+      template <typename T>
+      bool operator==(index_t_impl<T> t) const = delete;
+
       /// Default ctor to please containers.
       index_t_impl() = default;
       operator unsigned() const { return s; }

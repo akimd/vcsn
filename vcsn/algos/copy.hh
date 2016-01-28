@@ -242,6 +242,7 @@ namespace vcsn
     };
   }
 
+
   /// Build an automaton copier.
   template <Automaton AutIn, Automaton AutOut>
   detail::copier<AutIn, AutOut>
@@ -249,6 +250,7 @@ namespace vcsn
   {
     return {in, out, safe};
   }
+
 
   /// Copy selected states and transitions of an automaton.
   /// \pre AutIn <: AutOut.
@@ -272,6 +274,7 @@ namespace vcsn
                      [](transition_t_of<AutIn>) { return true; });
   }
 
+
   /// Copy an automaton.
   /// \pre AutIn <: AutOut.
   template <Automaton AutIn, Automaton AutOut>
@@ -282,6 +285,7 @@ namespace vcsn
                      [](state_t_of<AutIn>) { return true; },
                      [](transition_t_of<AutIn>) { return true; });
   }
+
 
   /// Copy an automaton.
   /// \pre AutIn <: AutOut.
@@ -311,6 +315,7 @@ namespace vcsn
     return res;
   }
 
+
   /// A copy of \a input.
   template <Automaton AutIn,
             Automaton AutOut = fresh_automaton_t_of<AutIn>,
@@ -327,6 +332,7 @@ namespace vcsn
     );
   }
 
+
   /// A copy of \a input.
   template <Automaton AutIn,
             Automaton AutOut = fresh_automaton_t_of<AutIn>>
@@ -340,38 +346,41 @@ namespace vcsn
     );
   }
 
+
   /// A copy of \a input keeping only its states that are members of
-  /// std::set \a keep.
+  /// \a states.
   template <Automaton AutIn,
             Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename States>
   auto
-  copy(const AutIn& input, States states)
-    -> decltype(has(states, input->null_state()),
+  copy(const AutIn& input, const States& ss)
+    -> decltype(*ss.begin() == input->null_state(),
                 make_fresh_automaton<AutIn, AutOut>(input))
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
-       [&states](state_t_of<AutIn> s) { return has(states, s); });
+       [&ss](state_t_of<AutIn> s) { return has(ss, s); });
   }
 
+
   /// A copy of \a input keeping only its states that are members of
-  /// container \a states, and transitions that are members of
-  /// container \a trans.
+  /// container \a ss, and transitions that are members of container
+  /// \a ts.
   template <Automaton AutIn,
             Automaton AutOut = fresh_automaton_t_of<AutIn>,
             typename States, typename Trans>
   auto
-  copy(const AutIn& input, States states, Trans trans)
-    -> decltype(has(states, input->null_state()),
-                has(trans, input->null_transition()),
+  copy(const AutIn& input, const States& ss, const Trans& ts)
+    -> decltype(*ss.begin() == input->null_state(),
+                *ts.begin() == input->null_transition(),
                 make_fresh_automaton<AutIn, AutOut>(input))
   {
     return ::vcsn::copy<AutIn, AutOut>
       (input,
-       [&states](state_t_of<AutIn> s) { return has(states, s); },
-       [&trans](transition_t_of<AutIn> t) { return has(trans, t); });
+       [&ss](state_t_of<AutIn> s)      { return has(ss, s); },
+       [&ts](transition_t_of<AutIn> t) { return has(ts, t); });
   }
+
 
   /// A copy of \a input keeping only its transitions that are members
   /// of \a ts, and the states on which these transitions depend.
@@ -380,7 +389,7 @@ namespace vcsn
             typename Transitions>
   auto
   copy(const AutIn& input, const Transitions& ts)
-    -> decltype(has(ts, input->null_transition()),
+    -> decltype(*ts.begin() == input->null_transition(),
                 make_fresh_automaton<AutIn, AutOut>(input))
   {
     auto res = make_fresh_automaton<AutIn, AutOut>(input);
@@ -388,6 +397,7 @@ namespace vcsn
     copy(ts);
     return res;
   }
+
 
   namespace dyn
   {

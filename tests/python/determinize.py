@@ -20,12 +20,17 @@ def check(aut, expfile, algo="auto", deterministic=False):
     CHECK_EQ(deterministic, aut.is_deterministic())
     CHECK_EQ(deterministic, aut.transpose().strip().is_codeterministic())
 
-    det = aut.determinize()
+    det = aut.determinize(algo)
     exp = load(expfile + '-det')
     CHECK_EQ(exp, det)
     CHECK(det.is_deterministic())
     # Idempotence.
     CHECK_EQ(det, det.determinize(algo))
+
+    # Laziness.
+    if algo != "boolean" and not aut.is_empty():
+        CHECK_NE(exp, aut.determinize("lazy,"+algo))
+        CHECK_EQ(exp, aut.determinize("lazy,"+algo).accessible())
 
     # Codeterminization.
     codet = aut.transpose().strip().determinize().transpose().strip()
