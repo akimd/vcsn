@@ -53,8 +53,6 @@ automaton.as_svg = _automaton_as_svg
 
 # conjunction.
 _automaton_conjunction_orig = automaton.conjunction
-
-
 def _automaton_conjunction(*args, lazy=False):
     '''Compute the conjunction of automata, possibly lazy, or the repeated
     conjunction of an automaton.'''
@@ -81,6 +79,15 @@ def _automaton_convert(self, mode, engine="dot"):
         return repr(self)
     else:
         raise(ValueError('invalid display format: ' + mode))
+
+
+_automaton_determinize_orig = automaton.determinize
+def _automaton_determinize(self, algo="auto",
+                           lazy=False):
+    if lazy:
+        algo = 'lazy,' + algo
+    return _automaton_determinize_orig(self, algo)
+automaton.determinize = _automaton_determinize
 
 
 def _automaton_display(self, mode, engine="dot"):

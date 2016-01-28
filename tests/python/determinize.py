@@ -29,8 +29,8 @@ def check(aut, expfile, algo="auto", deterministic=False):
 
     # Laziness.
     if algo != "boolean" and not aut.is_empty():
-        CHECK_NE(exp, aut.determinize("lazy,"+algo))
-        CHECK_EQ(exp, aut.determinize("lazy,"+algo).accessible())
+        CHECK_NE(exp, aut.determinize(algo, lazy=True))
+        CHECK_EQ(exp, aut.determinize(algo, lazy=True).accessible())
 
     # Codeterminization.
     codet = aut.transpose().strip().determinize().transpose().strip()
