@@ -97,9 +97,9 @@ namespace vcsn
       using transition = transition_<weight_t, KeepTransitions>;
 
       using transitions_t
-        = typename std::conditional<Deterministic,
-                                    transition,
-                                    std::vector<transition>>::type;
+        = std::conditional_t<Deterministic,
+                             transition,
+                             std::vector<transition>>;
       using map_t = std::map<label_t_of<Aut>, transitions_t,
                              less<labelset_t_of<Aut>>>;
 

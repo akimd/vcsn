@@ -133,7 +133,7 @@ namespace vcsn
       }
 
       res_label_t join_label(const hidden_l_label_t& ll,
-                             const hidden_r_label_t& rl)
+                             const hidden_r_label_t& rl) const
       {
         return std::tuple_cat(ll, rl);
       }
@@ -141,7 +141,7 @@ namespace vcsn
       template <Automaton Aut>
       std::enable_if_t<labelset_t_of<Aut>::has_one(),
                        typename Aut::element_type::res_label_t>
-      get_hidden_one(const Aut& aut)
+      get_hidden_one(const Aut& aut) const
       {
         return aut->hidden_one();
       }
@@ -149,7 +149,7 @@ namespace vcsn
       template <Automaton Aut>
       std::enable_if_t<!labelset_t_of<Aut>::has_one(),
                        typename Aut::element_type::res_label_t>
-      get_hidden_one(const Aut&)
+      get_hidden_one(const Aut&) const
       {
         raise("should not get here");
       }
@@ -234,8 +234,7 @@ namespace vcsn
       template <Automaton Aut>
       constexpr
       std::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
-      is_one(const Aut&, transition_t_of<Aut>)
-      const
+      is_one(const Aut&, transition_t_of<Aut>) const
       {
         return false;
       }
