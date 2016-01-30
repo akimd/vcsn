@@ -12,28 +12,13 @@
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/labelset/stateset.hh>
 #include <vcsn/misc/bimap.hh> // vcsn::has
+#include <vcsn/misc/static-if.hh> // vcsn::has
 #include <vcsn/misc/unordered_map.hh> // vcsn::has
 
 namespace vcsn
 {
   namespace detail
   {
-
-    /// Execute the then-clause.
-    template <typename Then, typename Else>
-    auto static_if(std::true_type, Then then, Else)
-    {
-      return then;
-    }
-
-    /// Execute the else-clause.
-    template <typename Then, typename Else>
-    auto static_if(std::false_type, Then, Else else_)
-    {
-      return else_;
-    }
-
-
     /// A bidirectional map from state names to state numbers.
     ///
     /// \tparam StateNameset   a valueset to manipulate the state names.
@@ -49,7 +34,6 @@ namespace vcsn
     ///
     /// \tparam StateNameset   a valueset to manipulate the state names.
     /// \tparam Stateset       a valueset to manipulate the state indexes.
-    /// \tparam Bidirectional  whether to maintain origins incrementally.
     template <typename StateNameset, typename Stateset>
     class state_bimap<StateNameset, Stateset, true>
     {
@@ -117,7 +101,6 @@ namespace vcsn
     ///
     /// \tparam StateNameset   a valueset to manipulate the state names.
     /// \tparam Stateset       a valueset to manipulate the state indexes.
-    /// \tparam Bidirectional  whether to maintain origins incrementally.
     template <typename StateNameset, typename Stateset>
     class state_bimap<StateNameset, Stateset, false>
     {
@@ -250,11 +233,10 @@ namespace vcsn
       /// The empty polynomial of states.
       state_name_t zero() const
       {
-        return static_if
-          (bool_constant<Kind == wet_kind_t::bitset>{},
-           [] (const auto& self) { return state_name_t(self.state_size_); },
+        return static_if<Kind == wet_kind_t::bitset>
+          ([] (const auto& self) { return state_name_t(self.state_size_); },
            [] (const auto& self) { return self.ns_.zero(); })
-          (*this);
+        (*this);
       }
 
       std::ostream&

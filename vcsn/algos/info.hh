@@ -18,149 +18,14 @@
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/expression.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
 
-  namespace detail_info
+  namespace detail
   {
-    /*---------------.
-    | is-ambiguous.  |
-    `---------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
-    is_ambiguous(const Aut& a)
-    {
-      return vcsn::is_ambiguous(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    is_ambiguous(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*--------------.
-    | is-complete.  |
-    `--------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
-    is_complete(const Aut& a)
-    {
-      return vcsn::is_complete(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    is_complete(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*---------------------.
-    | is_cycle_ambiguous.  |
-    `---------------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
-    is_cycle_ambiguous(const Aut& a)
-    {
-      return vcsn::is_cycle_ambiguous(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    is_cycle_ambiguous(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*---------------------.
-    | is_codeterministic.  |
-    `---------------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
-    is_codeterministic(const Aut& a)
-    {
-      return vcsn::is_codeterministic(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    is_codeterministic(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*-------------------.
-    | is_deterministic.  |
-    `-------------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
-    is_deterministic(const Aut& a)
-    {
-      return vcsn::is_deterministic(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    is_deterministic(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*-------------------.
-    | is_synchronizing.  |
-    `-------------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), bool>
-    is_synchronizing(const Aut& a)
-    {
-      return vcsn::is_synchronizing(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    is_synchronizing(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*------------------------------.
-    | num_codeterministic_states.   |
-    `------------------------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), size_t>
-    num_codeterministic_states(const Aut& a)
-    {
-      return vcsn::num_codeterministic_states(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    num_codeterministic_states(const Aut&)
-    {
-      return "N/A";
-    }
-
-    /*---------------------------.
-    | num_deterministic_states.  |
-    `---------------------------*/
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::is_free(), size_t>
-    num_deterministic_states(const Aut& a)
-    {
-      return vcsn::num_deterministic_states(a);
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::is_free(), std::string>
-    num_deterministic_states(const Aut&)
-    {
-      return "N/A";
-    }
-
     /*-------------------------------.
     | num_spontaneous_transitions.   |
     `-------------------------------*/
@@ -210,44 +75,51 @@ namespace vcsn
     aut->print_set(out, format::sname) << '\n';
 #define ECHO(Name, Value)                               \
     out << Name ": " << Value << '\n'
+#define VCSN_IF_FREE(Fun, Aut)                                  \
+    detail::static_if<labelset_t_of<decltype(Aut)>::is_free()>  \
+        ([](auto a) { return Fun(a); },                         \
+         [](auto)   { return "N/A";  })(Aut)
+
     ECHO("number of states", aut->num_states());
-    ECHO("number of lazy states", detail_info::num_lazy_states(aut));
+    ECHO("number of lazy states", detail::num_lazy_states(aut));
     ECHO("number of initial states", aut->num_initials());
     ECHO("number of final states", aut->num_finals());
     ECHO("number of accessible states", num_accessible_states(aut));
     ECHO("number of coaccessible states", num_coaccessible_states(aut));
     ECHO("number of useful states", num_useful_states(aut));
     ECHO("number of codeterministic states",
-         detail_info::num_codeterministic_states(aut));
+         VCSN_IF_FREE(num_codeterministic_states, aut));
     ECHO("number of deterministic states",
-         detail_info::num_deterministic_states(aut));
+         VCSN_IF_FREE(num_deterministic_states, aut));
     ECHO("number of transitions", aut->num_transitions());
     ECHO("number of spontaneous transitions",
-         detail_info::num_spontaneous_transitions(aut));
+         detail::num_spontaneous_transitions(aut));
     if (detailed)
       ECHO("number of strongly connected components",
            num_components(scc(aut)));
     if (detailed)
-      ECHO("is ambiguous", detail_info::is_ambiguous(aut));
-    ECHO("is complete", detail_info::is_complete(aut));
+      ECHO("is ambiguous", VCSN_IF_FREE(is_ambiguous, aut));
+    ECHO("is complete", VCSN_IF_FREE(is_complete, aut));
     if (detailed)
-      ECHO("is cycle ambiguous", detail_info::is_cycle_ambiguous(aut));
-    ECHO("is deterministic", detail_info::is_deterministic(aut));
-    ECHO("is codeterministic", detail_info::is_codeterministic(aut));
+      ECHO("is cycle ambiguous", VCSN_IF_FREE(is_cycle_ambiguous, aut));
+    ECHO("is deterministic", VCSN_IF_FREE(is_deterministic, aut));
+    ECHO("is codeterministic", VCSN_IF_FREE(is_codeterministic, aut));
     ECHO("is empty", is_empty(aut));
     ECHO("is eps-acyclic", is_eps_acyclic(aut));
     ECHO("is normalized", is_normalized(aut));
     ECHO("is proper", is_proper(aut));
     ECHO("is standard", is_standard(aut));
     if (detailed)
-      ECHO("is synchronizing", detail_info::is_synchronizing(aut));
+      ECHO("is synchronizing", VCSN_IF_FREE(is_synchronizing, aut));
     ECHO("is trim", is_trim(aut));
     ECHO("is useless", is_useless(aut));
+#undef VCSN_IF_FREE
 #undef ECHO
     // No eol for the last one.
     out << "is valid: " << is_valid(aut);
     return out;
   }
+
 
   namespace dyn
   {
