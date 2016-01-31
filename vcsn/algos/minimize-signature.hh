@@ -32,12 +32,7 @@ namespace vcsn
 
       using automaton_t = Aut;
 
-      /// Input automaton, supplied at construction time.
-      automaton_t a_;
-
       using labelset_t = labelset_t_of<automaton_t>;
-      const labelset_t& ls_;
-
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using class_t = unsigned;
@@ -49,11 +44,6 @@ namespace vcsn
 
       /// An invalid class.
       constexpr static class_t class_invalid = -1;
-      unsigned num_classes_ = 0;
-
-      class_to_set_t class_to_set_;
-      state_to_class_t state_to_class_;
-
       // For a given state, destination states for a specific label.
       struct state_output_for_label_t
       {
@@ -64,10 +54,6 @@ namespace vcsn
 
       // This is sorted by label.
       using state_output_t = std::vector<state_output_for_label_t>;
-
-      /// Sort of a transition map for each state:
-      /// state -> vector of (label, destination states).
-      std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
       struct signature_hasher
       {
@@ -191,7 +177,6 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , ls_(*a_->labelset())
       {
         require(is_trim(a_), me(), ": input must be trim");
 
@@ -280,17 +265,22 @@ namespace vcsn
               } // for on classes
           }
       }
+
+      /// Input automaton, supplied at construction time.
+      automaton_t a_;
+
+      const labelset_t& ls_ = *a_->labelset();
+
+      unsigned num_classes_ = 0;
+
+      class_to_set_t class_to_set_;
+      state_to_class_t state_to_class_;
+
+      /// Sort of a transition map for each state:
+      /// state -> vector of (label, destination states).
+      std::unordered_map<state_t, state_output_t> state_to_state_output_;
     };
   } // detail::
-
-  template <Automaton Aut>
-  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
-                    quotient_t<Aut>>
-  minimize(const Aut& a, signature_tag)
-  {
-    auto minimize = detail::minimizer<Aut, signature_tag>{a};
-    return quotient(a, minimize.classes());
-  }
 
   namespace dyn
   {

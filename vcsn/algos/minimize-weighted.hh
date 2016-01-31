@@ -24,15 +24,8 @@ namespace vcsn
     {
       using automaton_t = Aut;
 
-      /// Input automaton, supplied at construction time.
-      automaton_t a_;
-
       using labelset_t = labelset_t_of<automaton_t>;
-      const labelset_t& ls_;
-
       using weightset_t = weightset_t_of<automaton_t>;
-      const weightset_t& ws_;
-
       using label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
@@ -45,11 +38,6 @@ namespace vcsn
 
       /// An invalid class.
       constexpr static class_t class_invalid = -1;
-      unsigned num_classes_ = 0;
-
-      class_to_set_t class_to_set_;
-      state_to_class_t state_to_class_;
-
       /// Dealing with class numbers.
       struct classset
       {
@@ -76,9 +64,6 @@ namespace vcsn
       /// into account classes and weights.
       using class_polynomialset_t
         = polynomialset<context<classset, weightset_t>>;
-
-      /// Class polynomialset.
-      class_polynomialset_t cps_{{classset{}, ws_}};
 
       using class_polynomial_t = typename class_polynomialset_t::value_t;
 
@@ -172,8 +157,6 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , ls_(*a_->labelset())
-        , ws_(*a_->weightset())
       {
         require(is_trim(a_), me(), ": input must be trim");
       }
@@ -238,16 +221,20 @@ namespace vcsn
               } // for on classes
           }
       }
+
+      /// Input automaton, supplied at construction time.
+      automaton_t a_;
+
+      const labelset_t& ls_ = *a_->labelset();
+      const weightset_t& ws_ = *a_->weightset();
+
+      unsigned num_classes_ = 0;
+
+      class_to_set_t class_to_set_;
+      state_to_class_t state_to_class_;
+
+      /// Class polynomialset.
+      class_polynomialset_t cps_{{classset{}, ws_}};
     };
-
   } // weighted::
-
-  template <Automaton Aut>
-  auto
-  minimize(const Aut& a, weighted_tag)
-    -> quotient_t<Aut>
-  {
-    auto minimize = detail::minimizer<Aut, weighted_tag>{a};
-    return quotient(a, minimize.classes());
-  }
 } // namespace vcsn

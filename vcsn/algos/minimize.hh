@@ -14,6 +14,20 @@
 
 namespace vcsn
 {
+  /// Minimization via the minimizer functors.
+  ///
+  /// \tparam Aut  the input automaton type.
+  /// \tparam Tag  the requested algorithm:
+  ///      moore_tag, signature_tag, weighted_tag.
+  template <Automaton Aut, typename Tag>
+  auto
+  minimize(const Aut& a, Tag)
+    -> quotient_t<Aut>
+  {
+    auto minimize = detail::minimizer<Aut, Tag>{a};
+    return quotient(a, minimize.classes());
+  }
+
   /// Minimization for Boolean automata: auto_tag.
   template <Automaton Aut>
   std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,

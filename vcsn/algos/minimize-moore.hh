@@ -191,15 +191,6 @@ namespace vcsn
     };
   }
 
-  /// Minimize automaton \a a using the Moore algorithm.
-  template <Automaton Aut>
-  std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
-  minimize(const Aut& a, moore_tag)
-  {
-    auto minimize = detail::minimizer<Aut, moore_tag>{a};
-    return quotient(a, minimize.classes());
-  }
-
   namespace dyn
   {
     namespace detail

@@ -86,7 +86,7 @@ namespace vcsn
               }
           }
       }
-    auto res = std::vector<std::vector<state_t>>();
+    auto res = std::vector<std::vector<state_t>>{};
     std::transform(begin(p), end(p), std::back_inserter(res),
         [](const set_t& set)
         {
