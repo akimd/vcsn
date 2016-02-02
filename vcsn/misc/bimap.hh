@@ -6,10 +6,15 @@
 
 namespace vcsn
 {
+
   /// Whether \a e is in \a s.
   template <typename Map, typename Key>
-  bool has(const Map& s, const Key& e)
+  inline
+  auto
+  has(const Map& s, const Key& e)
+    -> decltype(s.find(e) != std::end(s))
   {
     return s.find(e) != std::end(s);
   }
+
 }
