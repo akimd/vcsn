@@ -122,6 +122,9 @@ namespace vcsn
     /// The Hadamard product of polynomials \a lhs and \a rhs.
     polynomial conjunction(const polynomial& lhs, const polynomial& rhs);
 
+    /// The conjugate of \a aut
+    automaton conjugate(const automaton& aut);
+
     /// The weight associated to the empty word in \a e.
     weight constant_term(const expression& e);
 

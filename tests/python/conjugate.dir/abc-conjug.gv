@@ -1,0 +1,99 @@
+digraph
+{
+  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    I4
+    I13
+    I22
+    I31
+    F3
+    F8
+    F17
+    F26
+    F35
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9 [color = DimGray]
+    10 [color = DimGray]
+    11 [color = DimGray]
+    12 [color = DimGray]
+    13
+    14
+    15
+    16
+    17
+    18 [color = DimGray]
+    19 [color = DimGray]
+    20 [color = DimGray]
+    21 [color = DimGray]
+    22
+    23
+    24
+    25
+    26
+    27 [color = DimGray]
+    28 [color = DimGray]
+    29 [color = DimGray]
+    30 [color = DimGray]
+    31
+    32
+    33
+    34
+    35
+  }
+  I0 -> 0
+  I4 -> 4
+  I13 -> 13
+  I22 -> 22
+  I31 -> 31
+  0 -> 1 [label = "a"]
+  1 -> 2 [label = "b"]
+  2 -> 3 [label = "c"]
+  3 -> F3
+  4 -> 5 [label = "a"]
+  5 -> 6 [label = "b"]
+  6 -> 7 [label = "c"]
+  7 -> 8 [label = "\\e"]
+  8 -> F8
+  8 -> 9 [label = "a", color = DimGray]
+  9 -> 10 [label = "b", color = DimGray]
+  10 -> 11 [label = "c", color = DimGray]
+  12 -> 13 [label = "a", color = DimGray]
+  13 -> 14 [label = "b"]
+  14 -> 15 [label = "c"]
+  15 -> 16 [label = "\\e"]
+  16 -> 17 [label = "a"]
+  17 -> F17
+  17 -> 18 [label = "b", color = DimGray]
+  18 -> 19 [label = "c", color = DimGray]
+  20 -> 21 [label = "a", color = DimGray]
+  21 -> 22 [label = "b", color = DimGray]
+  22 -> 23 [label = "c"]
+  23 -> 24 [label = "\\e"]
+  24 -> 25 [label = "a"]
+  25 -> 26 [label = "b"]
+  26 -> F26
+  26 -> 27 [label = "c", color = DimGray]
+  28 -> 29 [label = "a", color = DimGray]
+  29 -> 30 [label = "b", color = DimGray]
+  30 -> 31 [label = "c", color = DimGray]
+  31 -> 32 [label = "\\e"]
+  32 -> 33 [label = "a"]
+  33 -> 34 [label = "b"]
+  34 -> 35 [label = "c"]
+  35 -> F35
+}

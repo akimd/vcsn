@@ -271,9 +271,9 @@ struct automaton
     return vcsn::dyn::condense(val_);
   }
 
-  ::context context() const
+  automaton conjugate()
   {
-    return vcsn::dyn::context_of(val_);
+    return vcsn::dyn::conjugate(val_);
   }
 
   automaton conjunction(unsigned n) const
@@ -292,6 +292,11 @@ struct automaton
   /// The type of the previous function.
   using conjunction_variadic_t
     = auto (*)(const boost::python::list& auts, bool lazy) -> automaton;
+
+  ::context context() const
+  {
+    return vcsn::dyn::context_of(val_);
+  }
 
   automaton costandard() const
   {
@@ -1397,6 +1402,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          static_cast<automaton::conjunction_variadic_t>(&automaton::conjunction),
          (arg("lazy") = false))
         .staticmethod("conjunction")
+    .def("conjugate", &automaton::conjugate)
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)
     .def("delay_automaton", &automaton::delay_automaton)
