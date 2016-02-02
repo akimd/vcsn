@@ -7,6 +7,7 @@
 #include <vcsn/algos/star.hh>
 #include <vcsn/algos/sum.hh>
 #include <vcsn/algos/tags.hh>
+#include <vcsn/core/automaton.hh>
 #include <vcsn/core/join.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -79,13 +80,10 @@ namespace vcsn
   /// Append automaton \a b to \a res.
   ///
   /// \pre The context of \a res must include that of \a b.
-  /// \pre both are standard.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
   multiply_here(Aut1& res, const Aut2& b, standard_tag)
   {
-    require(is_standard(b), __func__, ": rhs must be standard");
-
     const auto& ls = *res->labelset();
     const auto& bls = *b->labelset();
     const auto& ws = *res->weightset();
@@ -95,18 +93,24 @@ namespace vcsn
     // Store these transitions by copy.
     auto final_ts = detail::make_vector(final_transitions(res));
 
-    state_t_of<Aut2> b_initial = b->dst_of(initial_transitions(b).front());
+    // The set of the current (right-hand side) initial transitions.
+    // Store these transitions by copy.
+    auto init_ts = detail::make_vector(initial_transitions(b));
 
     auto copy = make_copier(b, res);
-    copy(// The initial state of b is not copied.
-         [b_initial](state_t_of<Aut2> s) { return s != b_initial; },
+    copy(// In order to keep b's transitions unbroken we have to keep its
+         // initial states which have at least one incoming transition.
+         [b](state_t_of<Aut2> s)
+           {
+             return !b->is_initial(s) || !in(b, s).empty();
+           },
          // Import all the B transitions, except the initial ones (and
          // those from its (genuine) initial state).
          [b] (transition_t_of<Aut2> t) { return b->src_of(t) != b->pre(); });
     const auto& map = copy.state_map();
 
     // Branch all the final transitions of res to the successors of
-    // b's initial state.
+    // b's initial states.
     for (auto t1: final_ts)
       {
         // Remove the previous final transition first, as we might add
@@ -122,12 +126,17 @@ namespace vcsn
         auto s1 = res->src_of(t1);
         auto w1 = res->weight_of(t1);
         res->del_transition(t1);
-        for (auto t2: all_out(b, b_initial))
-          res->set_transition(s1,
-                              map.at(b->dst_of(t2)),
-                              ls.conv(bls, b->label_of(t2)),
-                              ws.mul(w1,
-                                     ws.conv(bws, b->weight_of(t2))));
+        for (auto t2: init_ts)
+          {
+            auto w2 = b->weight_of(t2);
+            for (auto t3: all_out(b, b->dst_of(t2)))
+              res->set_transition(s1,
+                                  map.at(b->dst_of(t3)),
+                                  ls.conv(bls, b->label_of(t3)),
+                                  ws.mul(w1,
+                                         ws.conv(bws, w2),
+                                         ws.conv(bws, b->weight_of(t3))));
+          }
       }
     return res;
   }
