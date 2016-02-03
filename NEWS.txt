@@ -330,7 +330,7 @@ People who worked on this release:
 - Antoine Pietri
 - Canh Luu
 - Clément Démoulins
-- Lucien Boilod
+- Lucien Boillod
 - Nicolas Barray
 - Sébastien Piat
 - Sylvain Lombardy
