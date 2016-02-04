@@ -273,8 +273,8 @@ namespace vcsn
             has_eps_out = true;
             // for each spontaneous transitions leaving the state
             for (auto t: ltm.begin()->second)
-              aut_->add_transition(src,
-                                   aut_->state(t.dst, std::get<1>(psrc)),
+              this->add_transition(src,
+                                   this->state(t.dst, std::get<1>(psrc)),
                                    join_label(lhs->hidden_label_of(t.transition),
                                               get_hidden_one(rhs->aut_out())),
                                    t.weight());
@@ -292,8 +292,8 @@ namespace vcsn
             && !rtm.empty()
             && rhs->labelset()->is_one(rtm.begin()->first))
           for (auto t: rtm.begin()->second)
-            aut_->add_transition(src,
-                                 aut_->state(std::get<0>(psrc), t.dst),
+            this->add_transition(src,
+                                 this->state(std::get<0>(psrc), t.dst),
                                  join_label(get_hidden_one(lhs),
                                             real_aut(rhs)->hidden_label_of(t.transition)),
                                  t.weight());
@@ -309,12 +309,12 @@ namespace vcsn
               ([&] (const typename transition_map_t<Lhs>::transition& lts,
                     const typename transition_map_t<Rhs>::transition& rts)
                {
-                 aut_->add_transition
+                 this->add_transition
                    (src,
-                    aut_->state(lts.dst, rts.dst),
+                    this->state(lts.dst, rts.dst),
                     join_label(lhs->hidden_label_of(lts.transition),
                                real_aut(rhs)->hidden_label_of(rts.transition)),
-                    aut_->weightset()->mul(lts.weight(), rts.weight()));
+                    this->weightset()->mul(lts.weight(), rts.weight()));
                },
                t.second);
       }

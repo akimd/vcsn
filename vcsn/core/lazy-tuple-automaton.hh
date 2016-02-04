@@ -10,26 +10,6 @@ namespace vcsn
   namespace detail
   {
 
-    template <typename State, bool Lazy>
-    struct lazy_state_set
-    {
-      lazy_state_set(std::initializer_list<State> l)
-        : set_(std::move(l))
-      {}
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      mutable std::set<State> set_;
-    };
-
-    template <typename State>
-    struct lazy_state_set<State, false>
-    {
-      lazy_state_set(std::initializer_list<State>)
-      {}
-    };
-
     /// Decorator implementing the laziness for an algorithm.
     ///
     /// The caller must inherit from lazy_tuple_automaton, and pass itself as
@@ -82,7 +62,10 @@ namespace vcsn
       lazy_tuple_automaton(Aut aut, const Auts&... auts)
         : super_t{make_tuple_automaton(aut, auts...)}
         , transition_maps_{{auts, ws_}...}
-      {}
+      {
+        if (Lazy)
+          this->set_lazy(this->pre());
+      }
 
       template <typename... T>
       static symbol sname_(const T&... t)
@@ -99,28 +82,15 @@ namespace vcsn
         return aut_->origins();
       }
 
-      /// Whether a given state's outgoing transitions have been
-      /// computed.
-      template <bool L = Lazy>
-      std::enable_if_t<L, bool> is_lazy(state_t s) const
-      {
-        return !has(done_.set_, s);
-      }
-
-      template <bool L = Lazy>
-      std::enable_if_t<!L, bool> is_lazy(state_t) const
-      {
-        return false;
-      }
-
       /// Complete a state: find its outgoing transitions.
       template <bool L = Lazy>
       std::enable_if_t<L, void> complete_(state_t s) const
       {
         const auto& orig = origins();
         state_name_t sn = orig.at(s);
-        static_cast<decorated_t&>(const_cast<self_t&>(*this)).add_transitions(s, sn);
-        done_.set_.insert(s);
+        auto& self = static_cast<decorated_t&>(const_cast<self_t&>(*this));
+        self.set_lazy(s, false);
+        self.add_transitions(s, sn);
       }
 
       template <bool L = Lazy>
@@ -136,7 +106,7 @@ namespace vcsn
       auto all_out(state_t s) const
         -> decltype(all_out(aut_, s))
       {
-        if (is_lazy(s))
+        if (this->is_lazy(s))
           complete_(s);
         return vcsn::detail::all_out(aut_, s);
       }
@@ -155,7 +125,10 @@ namespace vcsn
       template <typename... Args>
       state_t state(Args&&... args)
       {
-        return aut_->state(std::forward<Args>(args)...);
+        if (Lazy)
+          return aut_->state_lazy(std::forward<Args>(args)...);
+        else
+          return aut_->state(std::forward<Args>(args)...);
       }
 
       /// The outgoing tuple of transitions from state tuple \a ss.
@@ -178,12 +151,6 @@ namespace vcsn
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      lazy_state_set<state_t, Lazy> done_ = {aut_->post()};
-
     };
   }
 }

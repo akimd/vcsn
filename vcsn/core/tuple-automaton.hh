@@ -218,9 +218,27 @@ namespace vcsn
         return lb->second;
       }
 
+      state_t state_lazy(const state_name_t& state)
+      {
+        auto lb = pmap_().find(state);
+        if (lb == pmap_().end())
+          {
+            state_t s = aut_->new_state();
+            aut_->set_lazy(s, true);
+            lb = pmap_().insert(lb, {state, s});
+            todo_.emplace_back(state, s);
+          }
+        return lb->second;
+      }
+
       state_t state(state_t_of<Auts>... ss)
       {
         return state(std::make_tuple(ss...));
+      }
+
+      state_t state_lazy(state_t_of<Auts>... ss)
+      {
+        return state_lazy(std::make_tuple(ss...));
       }
 
       template <size_t... I>

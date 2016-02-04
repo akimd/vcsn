@@ -5,7 +5,7 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-# 2016-02-05
+## 2016-02-05
 ### conjugate: new algorithm
 The `automaton.conjugate` function builds an automaton whose language is the
 set of conjugates (i.e., "rotations", or "circular permutations") of the
@@ -23,7 +23,21 @@ words accepted by the input automaton.
 `demangle()` function when a variable with a vcsn type is printed.  Symbols
 are them *much* easier to read.
 
-# 2016-01-28
+### insplit: support for on-the-fly construction
+The implementation of `insplit` now supports a `lazy` argument. This is
+especially useful when composing a small transducer with a big one, to avoid
+computing the insplit of the right transducer for many states, that are not
+going to be useful.
+
+It is used in the composition algorithm for this very reason.
+
+### compose: support for on-the-fly construction
+The implementation of `compose` now supports a `lazy` argument. This is
+especially useful when composing two big transducers, and then compose with
+several small ones. The result of the first composition, although huge, will
+never be completely computed, but the required states are computed and cached.
+
+## 2016-01-28
 ### determinize: support for on-the-fly construction
 The implementation of `determinize` now supports a `lazy` argument.  This is
 especially useful when working on automata that do not admit a (finite)
