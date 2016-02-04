@@ -125,10 +125,7 @@ namespace vcsn
       template <typename... Args>
       state_t state(Args&&... args)
       {
-        if (Lazy)
-          return aut_->state_lazy(std::forward<Args>(args)...);
-        else
-          return aut_->state(std::forward<Args>(args)...);
+        return aut_->template state<Lazy>(std::forward<Args>(args)...);
       }
 
       /// The outgoing tuple of transitions from state tuple \a ss.
