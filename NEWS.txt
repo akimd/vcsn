@@ -6,6 +6,18 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 # 2016-02-05
+### conjugate: new algorithm
+The `automaton.conjugate` function builds an automaton whose language is the
+set of conjugates (i.e., "rotations", or "circular permutations") of the
+words accepted by the input automaton.
+
+    In [3]: vcsn.context('lan_char, b')         \
+                .expression('(ab)*')            \
+                .automaton()                    \
+                .conjugate()                    \
+                .expression()
+    Out[3]: (ab)*+(ab)*{2}+(ba)*ba(ba)*
+
 ### demangle: add a gdb pretty-printer for Vcsn types
 `vcsn gdb` runs gdb with a pretty-printer, which will automatically Vcsn's
 `demangle()` function when a variable with a vcsn type is printed.  Symbols
