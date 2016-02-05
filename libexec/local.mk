@@ -13,6 +13,7 @@
 
 dist_pkglibexec_SCRIPTS =                       \
   %D%/vcsn-compile                              \
+  %D%/vcsn-gdb                                  \
   %D%/vcsn-notebook                             \
   %D%/vcsn-ps                                   \
   %D%/vcsn-score                                \

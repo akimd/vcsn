@@ -3,13 +3,13 @@
 : ${PYTHON='@PYTHON@'}
 export PYTHON
 
-# _Append_ pyexecdir, not prepend, so that the user can still override
-# this path via $PYTHONPATH.  Note in particular that the
-# builddir-tests need to override $PYTHONPATH to use non-installed
-# modules, which would them be overriden here and installed files
-# would be used instead.
-: ${pyexecdir='@PYEXECDIR@'}
-PYTHONPATH=$PYTHONPATH:$pyexecdir
+# _Append_ VCSN_PYTHONDIR, not prepend, so that the user can still override this
+# path via $PYTHONPATH.  Note in particular that the builddir-tests need to
+# override $PYTHONPATH to use non-installed modules, which would them be
+# overriden here and installed files would be used instead.
+: ${VCSN_PYTHONDIR='@PYEXECDIR@'}
+export VCSN_PYTHONDIR
+PYTHONPATH=$PYTHONPATH:$VCSN_PYTHONDIR
 export PYTHONPATH
 
 # Used by commands such as vcsn-notebook.  Avoids the need for a
@@ -37,6 +37,8 @@ Vcsn, and run the ARGS...
 
 If COMMAND is "efstcompile", "efstdecompile", "python", or "ipython",
 run the corresponding program.
+
+If COMMAND is "gdb", run gdb with a type pretty-printer.
 
 If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:

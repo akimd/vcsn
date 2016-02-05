@@ -1,0 +1,3 @@
+#! /bin/sh
+
+exec gdb -x $VCSN_PYTHONDIR/vcsn/gdb-demangle.py "$@"

@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+# 2016-02-05
+### demangle: add a gdb pretty-printer for Vcsn types
+`vcsn gdb` runs gdb with a pretty-printer, which will automatically Vcsn's
+`demangle()` function when a variable with a vcsn type is printed.  Symbols
+are them *much* easier to read.
+
 # 2016-01-28
 ### determinize: support for on-the-fly construction
 The implementation of `determinize` now supports a `lazy` argument.  This is

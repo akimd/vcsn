@@ -25,6 +25,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/dot.py                               \
   %D%/vcsn/expansion.py                         \
   %D%/vcsn/expression.py                        \
+  %D%/vcsn/gdb-demangle.py                      \
   %D%/vcsn/ipython.py                           \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
