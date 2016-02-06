@@ -27,38 +27,24 @@ namespace vcsn
   namespace detail
   {
     /// Dispatch an operation between automata depending on their nature.
-    /// TO FIX
     template <Automaton... Aut, typename Operation>
     auto
-    dispatch_tags_(std::false_type,
-                   std::string algo, Operation op, Aut&&... auts)
+    dispatch_tags(std::string algo, Operation op, Aut&&... auts)
     {
+      // Whether all the labelsets are free.  Requirement to call
+      // determinize/is_deterministic.
+      constexpr bool are_free
+        = all_<labelset_t_of<decltype(auts)>::is_free()...>();
+
       if (algo == "auto")
         {
           if (all(is_standard(std::forward<Aut>(auts))...))
             algo = "standard";
-          else
-            algo = "general";
-        }
-
-      if (algo == "general")
-        return op(general_tag{});
-      else if (algo == "standard")
-        return op(standard_tag{});
-      else
-        raise("invalid algorithm: ", str_escape(algo));
-    }
-
-    template <Automaton... Aut, typename Operation>
-    auto
-    dispatch_tags_(std::true_type,
-                   std::string algo, Operation op, Aut&&... auts)
-    {
-      if (algo == "auto")
-        {
-          if (all(is_standard(std::forward<Aut>(auts))...))
-            algo = "standard";
-          else if (all(is_deterministic(auts)...))
+          else if (static_if<are_free>
+                   ([](auto&&... as){ return all(is_deterministic(as)...); },
+                    // clang 3.5 requires that we name the argument.
+                    [](auto&&... as){ return false; })
+                   (std::forward<Aut>(auts)...))
             algo = "deterministic";
           else
             algo = "general";
@@ -68,22 +54,16 @@ namespace vcsn
         return op(general_tag{});
       else if (algo == "standard")
         return op(standard_tag{});
-      else if (algo == "deterministic")
-        return op(deterministic_tag{});
       else
-        raise("invalid algorithm: ", str_escape(algo));
-    }
-
-    template <Automaton... Aut, typename Operation>
-    auto
-    dispatch_tags(std::string algo, Operation op, Aut&&... auts)
-    {
-      constexpr bool is_free
-        = all_<labelset_t_of<decltype(auts)>::is_free()...>();
-      return dispatch_tags_(bool_constant<is_free>{},
-                            algo,
-                            std::forward<Operation>(op),
-                            std::forward<Aut>(auts)...);
+        {
+          using res_t = decltype(op(standard_tag{}));
+          res_t res = nullptr;
+          if (algo == "deterministic")
+            static_if<are_free>([&res](auto&& op)
+                                { res = op(deterministic_tag{}); })(op);
+          require(res, "invalid algorithm: ", str_escape(algo));
+          return res;
+        }
     }
 
     /// Make an empty automaton which is a supertype of others.
