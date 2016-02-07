@@ -5,6 +5,7 @@
 #include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/standard.hh> // is_standard
 #include <vcsn/algos/tags.hh>
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/misc/raise.hh> // require
@@ -42,7 +43,6 @@ namespace vcsn
     return res;
   }
 
-
   /// In-place star of a standard automaton.
   ///
   /// See standard_visitor::visit(star).
@@ -50,6 +50,10 @@ namespace vcsn
   Aut&
   star_here(Aut& res, standard_tag)
   {
+    /// Standard algorithm requires standard automaton because
+    /// there is a problem with "final weight of the initial state" if
+    /// the automaton has several initial states. Indeed we cannot
+    /// preserve several initial states since (a+b) is not equal to (a*+b*)
     require(is_standard(res), __func__, ": input must be standard");
 
     using automaton_t = Aut;
@@ -89,8 +93,12 @@ namespace vcsn
   Aut&
   star_here(Aut& res, deterministic_tag)
   {
+    // Cannot use general algorithm since it introduces
+    // spontaneous transitions.
+    // Standard algorithm requires the automaton to be standard.
+    standard_here(res);
     star_here(res, standard_tag{});
-    assert(0);
+    res = determinize(res)->strip();
     return res;
   }
 

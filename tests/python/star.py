@@ -4,29 +4,33 @@ import vcsn
 from test import *
 
 def check_algo(input):
-  if isinstance(input, str):
-      input = ctx.expression(input, identities='none').standard()
-  gen = input.star("general")
-  std = input.star("standard")
-  CHECK_EQUIV(gen, std)
+    if isinstance(input, str):
+        input = ctx.expression(input, identities='none').automaton()
+    gen = input.star("general")
+    if not input.is_standard():
+        XFAIL(lambda: input.star("standard"))
+    std = input.standard().star("standard")
+    CHECK_EQUIV(gen, std)
+    det = input.standard().star("deterministic")
+    CHECK(det.is_deterministic(), det, "is_deterministic")
+    CHECK_EQUIV(gen, det)
+    CHECK(std.is_standard(), std, "is standard")
 
 def check(input, exp):
-  if isinstance(input, str):
-    input = vcsn.automaton(input)
-  if isinstance(exp, str):
-    exp = vcsn.automaton(exp)
-  CHECK_EQ(exp, input.star())
-  check_algo(input)
+    if isinstance(input, str):
+        input = vcsn.automaton(input)
+    if isinstance(exp, str):
+        exp = vcsn.automaton(exp)
+    CHECK_EQ(exp, input.star())
+    # Cannot call determinize algo on expressionset
+    # check_algo(input)
 
 ctx = vcsn.context('lal_char, q')
-a = ctx.expression('a(ba)*').automaton('derived_term')
-XFAIL(lambda: a.star("standard"))
 
 check_algo('a')
 check_algo('ab')
 check_algo('a+b')
 check_algo('a<2>')
-
 
 # This used to trigger an assert.
 l_br = vcsn.context('lal_char(a), expressionset<lal_char(xy), b>')
