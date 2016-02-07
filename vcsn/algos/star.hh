@@ -1,7 +1,10 @@
 #pragma once
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/is-deterministic.hh>
 #include <vcsn/algos/standard.hh> // is_standard
+#include <vcsn/algos/tags.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/misc/raise.hh> // require
@@ -81,6 +84,16 @@ namespace vcsn
     return res;
   }
 
+  /// In-place star of a deterministic automaton.
+  template <Automaton Aut>
+  Aut&
+  star_here(Aut& res, deterministic_tag)
+  {
+    star_here(res, standard_tag{});
+    assert(0);
+    return res;
+  }
+
   /// Star of an automaton.
   template <Automaton Aut, typename Tag = general_tag>
   auto
@@ -103,7 +116,7 @@ namespace vcsn
       star(const automaton& a, const std::string& algo)
       {
         const auto& aut = a->as<Aut>();
-        return ::vcsn::detail::dispatch_standard(algo,
+        return ::vcsn::detail::dispatch_tags(algo,
             [aut](auto tag)
             {
               return make_automaton(::vcsn::star(aut, tag));

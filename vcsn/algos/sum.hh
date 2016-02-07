@@ -3,11 +3,12 @@
 #include <map>
 
 #include <vcsn/algos/standard.hh> // is_standard
+#include <vcsn/algos/tags.hh>
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/dyn/expression.hh> // dyn::make_expression
 #include <vcsn/dyn/expansion.hh> // dyn::make_expansion
+#include <vcsn/dyn/expression.hh> // dyn::make_expression
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh> // require
@@ -18,6 +19,19 @@ namespace vcsn
   /*----------------------------.
   | sum(automaton, automaton).  |
   `----------------------------*/
+
+  /// Merge transitions of \a b into those of \a res.
+  ///
+  /// \pre The context of \a res must include that of \a b.
+  /// \pre res and b must be standard.
+  template <Automaton Aut1, Automaton Aut2>
+  Aut1&
+  sum_here(Aut1& res, const Aut2& b, deterministic_tag)
+  {
+    sum_here(res, b, standard_tag{});
+    assert(0);
+    return res;
+  }
 
   /// Merge transitions of \a b into those of \a res.
   ///
@@ -95,7 +109,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return ::vcsn::detail::dispatch_standard(algo,
+        return ::vcsn::detail::dispatch_tags(algo,
             [l, r](auto tag)
             {
               return make_automaton(::vcsn::sum(l, r, tag));

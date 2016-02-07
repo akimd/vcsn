@@ -18,60 +18,6 @@
 
 namespace vcsn
 {
-  /*----------------.
-  | standard tags.  |
-  `----------------*/
-
-  /// Tag for operations on standard automata.
-  struct standard_tag
-  {};
-
-  /// Tag for operations on all automata.
-  struct general_tag
-  {};
-
-  namespace detail
-  {
-    /// Make an empty automaton which is a supertype of others, and
-    /// with a nullable labelset.
-    template <Automaton... Auts>
-    auto
-    make_join_automaton(general_tag, Auts&&... auts)
-      // SFINAE
-      -> decltype(nullable_join_automata(std::forward<Auts>(auts)...))
-    {
-      return nullable_join_automata(std::forward<Auts>(auts)...);
-    }
-
-    /// Make an empty automaton which is a supertype of others.
-    template <Automaton... Auts>
-    auto
-    make_join_automaton(standard_tag, Auts&&... auts)
-    {
-      return join_automata(std::forward<Auts>(auts)...);
-    }
-
-    /// Dispatch an operation between automata depending on whether
-    /// they are standard.
-    template <Automaton... Aut, typename Operation>
-    auto
-    dispatch_standard(std::string algo, Operation op, Aut&&... auts)
-    {
-      if (algo == "auto")
-        algo = all(is_standard(std::forward<Aut>(auts))...)
-               ? "standard"
-               : "general";
-
-      if (algo == "standard")
-        return op(standard_tag{});
-      else if (algo == "general")
-        return op(general_tag{});
-      else
-        raise("invalid algorithm: ", str_escape(algo));
-    }
-  }
-
-
   /*-------------------------.
   | is_standard(automaton).  |
   `-------------------------*/

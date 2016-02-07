@@ -6,6 +6,7 @@
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star.hh>
 #include <vcsn/algos/sum.hh>
+#include <vcsn/algos/tags.hh>
 #include <vcsn/core/join.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -20,6 +21,19 @@ namespace vcsn
   /*----------------------------------.
   | multiply(automaton, automaton).   |
   `----------------------------------*/
+
+
+  /// Append automaton \a b to \a res for non standard automata.
+  ///
+  /// \pre The context of \a res must include that of \a b.
+  template <Automaton Aut1, Automaton Aut2>
+  Aut1&
+  multiply_here(Aut1& res, const Aut2& b, deterministic_tag = {})
+  {
+    multiply_here(res, b, standard_tag{});
+    assert(0);
+    return res;
+  }
 
   /// Append automaton \a b to \a res for non standard automata.
   ///
@@ -143,7 +157,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return ::vcsn::detail::dispatch_standard(algo,
+        return ::vcsn::detail::dispatch_tags(algo,
             [l, r](auto tag)
             {
               return make_automaton(::vcsn::multiply(l, r, tag));
@@ -232,7 +246,7 @@ namespace vcsn
                         const std::string& algo)
       {
         const auto& aut = a->as<Aut>();
-        return ::vcsn::detail::dispatch_standard(algo,
+        return ::vcsn::detail::dispatch_tags(algo,
             [aut, min, max](auto tag)
             {
               return make_automaton(::vcsn::multiply(aut, min, max, tag));
