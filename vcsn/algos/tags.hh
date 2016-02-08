@@ -42,8 +42,13 @@ namespace vcsn
             algo = "standard";
           else if (static_if<are_free>
                    ([](auto&&... as){ return all(is_deterministic(as)...); },
+#if defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6
                     // clang 3.5 requires that we name the argument.
-                    [](auto&&... as){ return false; })
+                    [](auto&&... as){ return false; }
+#else
+                    [](auto&&...){ return false; }
+#endif
+                    )
                    (std::forward<Aut>(auts)...))
             algo = "deterministic";
           else
