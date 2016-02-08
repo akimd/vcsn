@@ -42,8 +42,9 @@ namespace vcsn
             algo = "standard";
           else if (static_if<are_free>
                    ([](auto&&... as){ return all(is_deterministic(as)...); },
-#if defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6
-                    // clang 3.5 requires that we name the argument.
+#if (defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6   \
+     || defined __GNUC__ && !defined __clang__ && __GNUC__ < 5)
+                    // Clang 3.5 and GCC 4.9 require that we name the argument.
                     [](auto&&... as){ return false; }
 #else
                     [](auto&&...){ return false; }

@@ -133,6 +133,10 @@ namespace vcsn
   {
     namespace detail
     {
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
+#endif
       template <Automaton Aut, typename Tag>
       automaton minimize_tag_(const Aut& aut)
       {
@@ -143,6 +147,9 @@ namespace vcsn
         // specify the namespace.
         return make_automaton(minimize(aut, Tag{}));
       }
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic pop
+#endif
 
       /// Bridge.
       template <Automaton Aut, typename String>
