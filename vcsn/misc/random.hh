@@ -3,16 +3,13 @@
 #include <random>
 #include <iterator>
 
-#include <vcsn/misc/attributes.hh>
-
 namespace vcsn
 {
-
   // Based on https://gist.github.com/cbsmith/5538174.
-  template <typename RandomGenerator = std::default_random_engine>
+  template <typename RandomGenerator>
   struct random_selector
   {
-    random_selector(const RandomGenerator& g = RandomGenerator())
+    random_selector(RandomGenerator& g)
       : gen_(g)
     {}
 
@@ -51,20 +48,13 @@ namespace vcsn
     }
 
   private:
-    RandomGenerator gen_;
+    RandomGenerator& gen_;
   };
 
-
-  template <typename RandomGenerator = std::default_random_engine>
-  struct random_selector<RandomGenerator>
-  make_random_selector(const RandomGenerator& g)
-    ATTRIBUTE_PURE;
-
   template <typename RandomGenerator>
-  struct random_selector<RandomGenerator>
-  make_random_selector(const RandomGenerator& g)
+  random_selector<RandomGenerator>
+  make_random_selector(RandomGenerator& g)
   {
     return g;
   }
-
-} // !vcsn
+}
