@@ -21,9 +21,22 @@ XFAIL(lambda: vcsn.context("lal_char(a), b_z"))
 ## LabelSet: letterset.  ##
 ## --------------------- ##
 
+# Different types of syntactic sugar.
+for c in ['letterset<char_letters(abc)>, b',
+          'lal<char(abc)>, b',
+          'lal<char_letters(abc)>, b',
+          'lal_char(abc), b',
+          'lal(abc), b']:
+    check(c, 'letterset<char_letters(abc)>, b')
+
 # An open context is not printed as open in text.
-check('letterset<char_letters>, b', 'letterset<char_letters()>, b')
-check('lal_char, b',                'letterset<char_letters()>, b')
+for c in ['letterset<char_letters()>, b',
+          'lal<char>, b',
+          'lal<char_letters>, b',
+          'lal_char, b',
+          'lal, b']:
+    check(c, 'letterset<char_letters()>, b')
+
 # An open context is printed as open in LaTeX.
 check('lal_char, b',      r'\{\ldots\}\to\mathbb{B}', 'latex')
 check('lal_char, b',      r'{...} -> B',               'text')

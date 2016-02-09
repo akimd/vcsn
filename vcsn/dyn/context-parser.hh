@@ -54,8 +54,13 @@ namespace vcsn
       /// Accept anything.
       std::shared_ptr<ast_node> any_();
 
-      /// A generator set (e.g., `char_letters(abc)` or `char`).
+      /// An optional generator set in brackets (e.g.,
+      /// `<char_letters(abc)>` or `<char>`).  Defaults to `<char>` if
+      /// the stream does not start with `<`.
       std::shared_ptr<const genset> genset_();
+
+      /// A generator set (e.g., `char_letters(abc)` or `char`).
+      /// \param letter_type should be `char_letter`, or `char`, etc.
       std::shared_ptr<const genset> genset_(std::string letter_type);
 
       /// `<LabelSet>, <WeightSet>`.

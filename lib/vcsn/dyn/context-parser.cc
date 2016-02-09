@@ -187,9 +187,18 @@ namespace vcsn
       return std::make_shared<const genset>(letter_type, gens);
     }
 
-    std::shared_ptr<const genset> context_parser::genset_()
+    std::shared_ptr<const genset>
+    context_parser::genset_()
     {
-      return genset_(word_());
+      if (peek_() == '<')
+        {
+          eat_('<');
+          auto res = genset_(word_());
+          eat_('>');
+          return res;
+        }
+      else
+        return genset_("char_letters");
     }
 
     std::shared_ptr<context> context_parser::context_()
@@ -226,14 +235,9 @@ namespace vcsn
       if (ls == "lal_char")
         return std::make_shared<letterset>(genset_("char_letters"));
       else if (ls == "lan")
-        {
-          // lan<GENSET> => nullableset<letterset<GENSET>>.
-          eat_('<');
-          auto gs = genset_();
-          eat_('>');
-          return
-            std::make_shared<nullableset>(std::make_shared<letterset>(gs));
-        }
+        // lan<GENSET> => nullableset<letterset<GENSET>>.
+        return
+          std::make_shared<nullableset>(std::make_shared<letterset>(genset_()));
       else if (ls == "lan_char")
         return std::make_shared<nullableset>(std::make_shared<letterset>
                                              (genset_("char_letters")));
@@ -244,19 +248,9 @@ namespace vcsn
       else if (ls == "law_char")
         return std::make_shared<wordset>(genset_("char_letters"));
       else if (ls == "lal" || ls == "letterset")
-        {
-          eat_('<');
-          auto gs = genset_();
-          eat_('>');
-          return std::make_shared<letterset>(gs);
-        }
+        return std::make_shared<letterset>(genset_());
       else if (ls == "law" || ls == "wordset")
-        {
-          eat_('<');
-          auto gs = genset_();
-          eat_('>');
-          return std::make_shared<wordset>(gs);
-        }
+        return std::make_shared<wordset>(genset_());
       else if (ls == "nullableset")
         {
           eat_('<');
@@ -270,7 +264,8 @@ namespace vcsn
         return expressionset_();
       else if (ls == "seriesset")
         return seriesset_();
-      raise("invalid labelset name: ", str_escape(ls));
+      else
+        raise("invalid labelset name: ", str_escape(ls));
     }
 
     std::shared_ptr<ast_node> context_parser::weightset_()
@@ -304,7 +299,7 @@ namespace vcsn
     std::shared_ptr<automaton>
     context_parser::automaton_(std::string prefix)
     {
-      std::shared_ptr<automaton> res = nullptr;
+      auto res = std::shared_ptr<automaton>{};
       // focus_automaton<TapeNum, Aut>.
       if (prefix == "focus_automaton")
         {
