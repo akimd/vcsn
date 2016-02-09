@@ -235,6 +235,13 @@ namespace vcsn
       return end_(indices_t{});
     }
 
+    /// Whether the sequence is empty.
+    bool empty() const
+    {
+      return cbegin() == cend();
+    }
+
+
   private:
     template <std::size_t... I>
     const_iterator cbegin_(seq<I...>) const

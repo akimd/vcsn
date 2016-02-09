@@ -264,6 +264,12 @@ namespace vcsn
       return alphabet_.end();
     }
 
+    /// Whether this alphabet has no letters.
+    bool empty() const
+    {
+      return alphabet_.empty();
+    }
+
     const_iterator find(letter_t l) const
     {
       return alphabet_.find(l);

@@ -39,9 +39,9 @@ namespace vcsn
                RandomGenerator& gen,
                detail::index_sequence<I...>)
   {
-    require(ls.generators().begin() != ls.generators().end(),
-            "random_label: the alphabet needs at least 1 letter");
-    return ls.value(std::make_tuple(random_label(ls.template set<I>(), gen)...));
+    // No need to check for the emptiness here: it will be checked in
+    // each sub-labelset.
+    return ls.tuple(random_label(ls.template set<I>(), gen)...);
   };
 
   template <typename GenSet,
@@ -50,9 +50,9 @@ namespace vcsn
   random_label(const wordset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    require(ls.generators().begin() != ls.generators().end(),
+    require(!ls.generators().empty(),
             "random_label: the alphabet needs at least 1 letter");
-    std::uniform_int_distribution<> dis(0, 5);
+    auto dis = std::uniform_int_distribution<>(0, 5);
     auto res_label = ls.one();
     auto pick = make_random_selector(gen);
     for (auto i = 0; i < dis(gen); ++i)
@@ -66,7 +66,7 @@ namespace vcsn
   random_label(const LabelSet& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    require(ls.generators().begin() != ls.generators().end(),
+    require(!ls.generators().empty(),
             "random_label: the alphabet needs at least 1 letter");
     // Pick a member of a container following a uniform distribution.
     auto pick = make_random_selector(gen);
@@ -79,8 +79,9 @@ namespace vcsn
   random_label(const nullableset<LabelSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    std::bernoulli_distribution dis(0.5);
-    if (dis(gen) || ls.generators().begin() != ls.generators().end())
+    // FIXME: the proportion should be controllable.
+    auto dis = std::bernoulli_distribution(0.5);
+    if (dis(gen) || ls.generators().empty())
       return ls.one();
     else
       return ls.value(random_label(*ls.labelset(), gen));
@@ -151,7 +152,7 @@ namespace vcsn
     // Select the final states.
     for (unsigned i = 0; i < num_final; ++i)
       {
-        std::uniform_int_distribution<> dis(i, num_states - 1);
+        auto dis = std::uniform_int_distribution<>(i, num_states - 1);
         int index = dis(gen);
         res->set_final(states[state_randomizer[index]]);
         // Swap it at the beginning of state_randomizer, so we cannot
@@ -162,10 +163,10 @@ namespace vcsn
     // We want to connect each state to a number of successors between
     // 1 and n.  If the probability to connect to each successor is d,
     // the number of connected successors follows a binomial distribution.
-    std::binomial_distribution<> bin(num_states - 1, density);
+    auto bin = std::binomial_distribution<>(num_states - 1, density);
 
     // Pick a member of a container following a uniform distribution.
-    random_selector<std::mt19937> pick(gen);
+    auto pick = random_selector<std::mt19937>(gen);
 
     while (!worklist.empty())
       {
@@ -198,7 +199,8 @@ namespace vcsn
             else
               {
                 // Pick the index of a random state.
-                std::uniform_int_distribution<> dis(0, possibilities - 1);
+                auto dis
+                  = std::uniform_int_distribution<>(0, possibilities - 1);
                 int index = dis(gen);
                 possibilities--;
 
@@ -224,11 +226,11 @@ namespace vcsn
 
 
     // Add loops
-    if (loop_chance > 0)
+    if (0 < loop_chance)
     {
-      std::bernoulli_distribution bern(0.5);
+      auto dis = std::bernoulli_distribution(0.5);
       for (auto s : res->states())
-        if (bern(gen))
+        if (dis(gen))
           res->add_transition(s, s, random_label(*ctx.labelset(), gen));
     }
 
@@ -274,10 +276,10 @@ namespace vcsn
     auto seed = rd();
     if (getenv("VCSN_SEED"))
       seed = std::mt19937::default_seed;
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<int> distrib(0, num_states - 1);
+    auto gen = std::mt19937(seed);
+    auto dis = std::uniform_int_distribution<int>(0, num_states - 1);
 
-    std::vector<state_t> states;
+    auto states = std::vector<state_t>{};
     states.reserve(num_states);
 
     for (unsigned i = 0; i < num_states; ++i)
@@ -285,11 +287,11 @@ namespace vcsn
 
     for (unsigned i = 0; i < num_states; ++i)
       for (auto l : ctx.labelset()->generators())
-        res->add_transition(states[i], states[distrib(gen)], l,
+        res->add_transition(states[i], states[dis(gen)], l,
                            ctx.weightset()->one());
 
-    res->set_initial(states[distrib(gen)]);
-    res->set_final(states[distrib(gen)]);
+    res->set_initial(states[dis(gen)]);
+    res->set_final(states[dis(gen)]);
 
     return res;
   }
@@ -309,4 +311,4 @@ namespace vcsn
 
     }
   }
-} // vcsn::
+}
