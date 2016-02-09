@@ -14,36 +14,43 @@
 namespace vcsn
 {
 
+  /// Random label from oneset.
   template <typename RandomGenerator = std::default_random_engine>
   typename oneset::value_t
   random_label(const oneset& ls,
                RandomGenerator& = RandomGenerator())
   {
     return ls.one();
-  };
+  }
 
+
+  /// Random label from tupleset.
   template <typename... LabelSet,
             typename RandomGenerator = std::default_random_engine>
   typename tupleset<LabelSet...>::value_t
   random_label(const tupleset<LabelSet...>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    return random_label(ls, gen, ls.indices);
-  };
+    return random_label_(ls, gen, ls.indices);
+  }
 
+
+  /// Implementation detail for random label from tupleset.
   template <typename... LabelSet,
             size_t... I,
             typename RandomGenerator = std::default_random_engine>
   typename tupleset<LabelSet...>::value_t
-  random_label(const tupleset<LabelSet...>& ls,
-               RandomGenerator& gen,
-               detail::index_sequence<I...>)
+  random_label_(const tupleset<LabelSet...>& ls,
+                RandomGenerator& gen,
+                detail::index_sequence<I...>)
   {
     // No need to check for the emptiness here: it will be checked in
     // each sub-labelset.
     return ls.tuple(random_label(ls.template set<I>(), gen)...);
-  };
+  }
 
+
+  /// Random label from wordset.
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
   typename wordset<GenSet>::value_t
@@ -58,8 +65,10 @@ namespace vcsn
     for (auto i = 0; i < dis(gen); ++i)
       res_label = ls.mul(res_label, ls.value(pick(ls.generators())));
     return res_label;
-  };
+  }
 
+
+  /// Random label from general case such as letterset.
   template <typename LabelSet,
             typename RandomGenerator = std::default_random_engine>
   typename LabelSet::value_t
@@ -71,8 +80,10 @@ namespace vcsn
     // Pick a member of a container following a uniform distribution.
     auto pick = make_random_selector(gen);
     return ls.value(pick(ls.generators()));
-  };
+  }
 
+
+  /// Random label from nullableset.
   template <typename LabelSet,
             typename RandomGenerator = std::default_random_engine>
   typename nullableset<LabelSet>::value_t
@@ -85,9 +96,10 @@ namespace vcsn
       return ls.one();
     else
       return ls.value(random_label(*ls.labelset(), gen));
-  };
+  }
 
 
+  /// Random label from expressionset: limited to a single label.
   template <typename Context,
             typename RandomGenerator = std::default_random_engine>
   typename expressionset<Context>::value_t
@@ -95,7 +107,7 @@ namespace vcsn
                RandomGenerator& gen = RandomGenerator())
   {
     return rs.atom(random_label(*rs.labelset(), gen));
-  };
+  }
 
   /*--------------------.
   | random_automaton.   |
@@ -220,19 +232,19 @@ namespace vcsn
                   }
               }
             res->add_transition(src, states[dst],
-                               random_label(*ctx.labelset(), gen));
+                                random_label(*ctx.labelset(), gen));
           }
       }
 
 
     // Add loops
     if (0 < loop_chance)
-    {
-      auto dis = std::bernoulli_distribution(0.5);
-      for (auto s : res->states())
-        if (dis(gen))
-          res->add_transition(s, s, random_label(*ctx.labelset(), gen));
-    }
+      {
+        auto dis = std::bernoulli_distribution(0.5);
+        for (auto s : res->states())
+          if (dis(gen))
+            res->add_transition(s, s, random_label(*ctx.labelset(), gen));
+      }
 
     return res;
   }
@@ -288,7 +300,7 @@ namespace vcsn
     for (unsigned i = 0; i < num_states; ++i)
       for (auto l : ctx.labelset()->generators())
         res->add_transition(states[i], states[dis(gen)], l,
-                           ctx.weightset()->one());
+                            ctx.weightset()->one());
 
     res->set_initial(states[dis(gen)]);
     res->set_final(states[dis(gen)]);
@@ -308,7 +320,6 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         return make_automaton(vcsn::random_automaton_deterministic(c, num_states));
       }
-
     }
   }
 }

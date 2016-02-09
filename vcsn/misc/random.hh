@@ -20,7 +20,8 @@ namespace vcsn
     template <typename Iter>
     Iter select(Iter start, Iter end)
     {
-      std::uniform_int_distribution<> dis(0, std::distance(start, end) - 1);
+      auto dis
+        = std::uniform_int_distribution<>(0, std::distance(start, end) - 1);
       std::advance(start, dis(gen_));
       return start;
     }
