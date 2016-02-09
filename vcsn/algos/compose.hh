@@ -273,7 +273,7 @@ namespace vcsn
             has_eps_out = true;
             // for each spontaneous transitions leaving the state
             for (auto t: ltm.begin()->second)
-              this->add_transition(src,
+              this->new_transition(src,
                                    this->state(t.dst, std::get<1>(psrc)),
                                    join_label(lhs->hidden_label_of(t.transition),
                                               get_hidden_one(rhs->aut_out())),
@@ -292,7 +292,7 @@ namespace vcsn
             && !rtm.empty()
             && rhs->labelset()->is_one(rtm.begin()->first))
           for (auto t: rtm.begin()->second)
-            this->add_transition(src,
+            this->new_transition(src,
                                  this->state(std::get<0>(psrc), t.dst),
                                  join_label(get_hidden_one(lhs),
                                             real_aut(rhs)->hidden_label_of(t.transition)),
