@@ -20,9 +20,14 @@ RUN apt-get update                                              \
         python-matplotlib                                       \
         python3-dev                                             \
         python3-pip                                             \
-        stow                                                    \
         texlive-latex-extra                                     \
         texlive-pictures                                        \
+        wamerican                                               \
+        wamerican                                               \
+        wamerican-insane                                        \
+        wamerican-large                                         \
+        wamerican-small                                         \
+        wfrench                                                 \
   && apt-get autoremove                                         \
   && apt-get clean                                              \
   && pip3 install jupyter

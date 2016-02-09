@@ -34,7 +34,6 @@ RUN apt-get update                                              \
         python3-all-dev                                         \
         python3-pip                                             \
         python3.4-dev                                           \
-        stow                                                    \
         texlive-latex-extra                                     \
         texlive-pictures                                        \
   && apt-get autoremove                                         \
