@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star.hh>
 #include <vcsn/algos/sum.hh>
@@ -23,16 +24,16 @@ namespace vcsn
   | multiply(automaton, automaton).   |
   `----------------------------------*/
 
-
-  /// Append automaton \a b to \a res for non standard automata.
+  /// Append automaton \a b to \a res.
   ///
   /// \pre The context of \a res must include that of \a b.
+  /// \post The result is a deterministic automaton.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
   multiply_here(Aut1& res, const Aut2& b, deterministic_tag = {})
   {
     multiply_here(res, b, standard_tag{});
-    assert(0);
+    determinize(res);
     return res;
   }
 

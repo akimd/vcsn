@@ -5,7 +5,7 @@ from test import *
 
 ctx = vcsn.context('lal_char, q')
 
-def check_mult(lhs, rhs):
+def check_mult(lhs, rhs, algo="standard"):
     if isinstance(lhs, list):
         for aut in lhs:
             check_mult(aut, rhs)
@@ -14,8 +14,20 @@ def check_mult(lhs, rhs):
             check_mult(lhs, aut)
     else:
         gen = lhs.multiply(rhs, "general")
-        std = lhs.multiply(rhs, "standard")
-        CHECK_EQUIV(gen, std)
+        aut = lhs.multiply(rhs, algo)
+        CHECK_EQUIV(gen, aut)
+
+def check_mult_deter(lhs, rhs):
+    if isinstance(lhs, list):
+        for aut in lhs:
+            check_mult(aut, rhs)
+    elif isinstance(rhs, list):
+        for aut in rhs:
+            check_mult(lhs, aut)
+    else:
+        gen = lhs.multiply(rhs, "general")
+        det = lhs.multiply(rhs, "deterministic")
+        CHECK_EQUIV(gen, det)
 
 auts = [ctx.expression('a').standard(),
         ctx.expression('ab').standard(),
@@ -25,8 +37,13 @@ check_mult(auts, [1, 3, (-1, 5), (2, 4), (2, -1)])
 
 auts = [auts,
         ctx.expression('a(ba)*').automaton('derived_term'),
-        ctx.expression('a+b').derived_term(breaking=True)]
-check_mult(auts, auts)
+        ctx.expression('a+b').derived_term(breaking=True),
+        ctx.expression('a*').derived_term()]
+check_mult(auts, auts, "deterministic")
+
+auts = [auts,
+        ctx.expression('a*').derived_term()]
+check_mult_deter(auts, auts)
 
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*')
 bc = vcsn.context('lal_char(bc), b').expression('(b+c)*')
