@@ -17,14 +17,15 @@ def check_mult(lhs, rhs):
         if isinstance(rhs, vcsn.automaton):
             print("deterministic")
             det = lhs.multiply(rhs, "deterministic")
-            CHECK(det.is_deterministic(), "is deterministic")
+            CHECK(det.is_deterministic(), det, "is deterministic")
             CHECK_EQUIV(gen, det)
 
         print("standard")
         std = lhs.multiply(rhs, "standard")
         if (lhs.is_standard()
-            and (not isinstance(rhs, vcsn.automaton) or rhs.is_standard())):
-            CHECK(std.is_standard(), "is standard")
+            and (not isinstance(rhs, vcsn.automaton)
+                 or rhs.is_standard())):
+            CHECK(std.is_standard(), std, " is standard")
         CHECK_EQUIV(gen, std)
 
 ctx = vcsn.context('lal_char, q')

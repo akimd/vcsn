@@ -27,11 +27,14 @@ namespace vcsn
   /// Append automaton \a b to \a res.
   ///
   /// \pre The context of \a res must include that of \a b.
+  /// \pre The context of res is free.
   /// \post The result is a deterministic automaton.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
-  multiply_here(Aut1& res, const Aut2& b, deterministic_tag = {})
+  multiply_here(Aut1& res, const Aut2& b, deterministic_tag)
   {
+    static_assert(labelset_t_of<Aut1>::is_free(),
+                  "multiply_here: requires free labelset");
     multiply_here(res, b, standard_tag{});
     res = determinize(res)->strip();
     return res;
@@ -42,7 +45,7 @@ namespace vcsn
   /// \pre The context of \a res must include that of \a b.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
-  multiply_here(Aut1& res, const Aut2& b, general_tag = {})
+  multiply_here(Aut1& res, const Aut2& b, general_tag)
   {
     const auto& ls = *res->labelset();
     const auto& ws = *res->weightset();
@@ -83,7 +86,7 @@ namespace vcsn
   /// \pre The context of \a res must include that of \a b.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
-  multiply_here(Aut1& res, const Aut2& b, standard_tag)
+  multiply_here(Aut1& res, const Aut2& b, standard_tag = {})
   {
     const auto& ls = *res->labelset();
     const auto& bls = *b->labelset();
@@ -167,12 +170,13 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return ::vcsn::detail::dispatch_tags(algo,
+        return ::vcsn::detail::dispatch_tags
+          (algo == "auto" ? "standard" : algo,
             [l, r](auto tag)
             {
               return make_automaton(::vcsn::multiply(l, r, tag));
             },
-        r);
+            l, r);
       }
     }
   }
