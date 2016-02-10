@@ -109,7 +109,7 @@ def PASS(*msg, **kwargs):
 def SKIP(*msg):
     PASS('# SKIP', *msg)
 
-def XFAIL(fun, exp = None):
+def XFAIL(fun, exp=None):
     '''Run `fun`: it should fail.  If `exp` is given, check that the
     exception includes it.'''
     try:
@@ -124,12 +124,12 @@ def XFAIL(fun, exp = None):
     else:
         FAIL('did not raise an exception', str(fun))
 
-def CHECK(effective, loc = None):
+def CHECK(effective, msg='', loc=None):
     "Check that `effective` is `True`."
     if effective:
         PASS(loc=loc)
     else:
-        FAIL("assertion failed", loc=loc)
+        FAIL("assertion failed", msg, loc=loc)
 
 def CHECK_EQ(expected, effective, loc = None):
     "Check that `effective` is equal to `expected`."

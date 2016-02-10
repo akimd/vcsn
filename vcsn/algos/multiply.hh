@@ -33,7 +33,7 @@ namespace vcsn
   multiply_here(Aut1& res, const Aut2& b, deterministic_tag = {})
   {
     multiply_here(res, b, standard_tag{});
-    determinize(res);
+    res = determinize(res)->strip();
     return res;
   }
 

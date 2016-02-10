@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/standard.hh> // is_standard
 #include <vcsn/algos/tags.hh>
 #include <vcsn/core/join-automata.hh>
@@ -28,8 +29,10 @@ namespace vcsn
   Aut1&
   sum_here(Aut1& res, const Aut2& b, deterministic_tag)
   {
+    // FIXME: this is a stub: there are better algorithms to compute a
+    // deterministic sum of deterministic automata.
     sum_here(res, b, standard_tag{});
-    assert(0);
+    res = determinize(res)->strip();
     return res;
   }
 
