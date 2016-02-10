@@ -93,7 +93,7 @@ $ -> 0
 0 -> 1 a
 0 -> 2 <{w}>a
 1 -> 3 b
-2 -> 3 b'''.format(w=weight,ws=weightset))
+2 -> 3 b'''.format(w=weight, ws=weightset))
 
 
 def null_state_det(weightset, weight):

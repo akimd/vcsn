@@ -43,12 +43,12 @@ def check_bdt(r, exp):
     for algo in ['breaking_derivation', 'breaking_expansion']:
         check_derived_term(r, exp, algo)
 
-def check(re, s, exp, breaking = False):
+def check(re, s, exp, breaking=False):
     "Check that d/ds(re) = exp."
     if not isinstance(re, vcsn.expression):
         re = ctx.expression(re)
     eff = re.derivation(s, breaking)
-    print("d/d{}({}) = {}".format(s, re, eff));
+    print("d/d{}({}) = {}".format(s, re, eff))
     CHECK_EQ(exp, str(eff))
     # Check that the breaking derivation is exactly the breaking of
     # the regular derivation.
@@ -180,15 +180,15 @@ check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
 ## -------------------- ##
 
 # EAT, Example 4.3.
-E1='(<1/6>a*+<1/3>b*)*'
+E1 = '(<1/6>a*+<1/3>b*)*'
 # E1 typed.
 E1t = vcsn.context('lal_char(ab), q').expression(E1)
-check(E1t,  'a',  "<1/3>a*"+E1)
-check(E1t,  'b',  "<2/3>b*"+E1)
-check(E1t, 'aa',  "<4/9>a*"+E1)
-check(E1t, 'ab',  "<2/9>b*"+E1)
-check(E1t, 'ba',  "<2/9>a*"+E1)
-check(E1t, 'bb', "<10/9>b*"+E1)
+check(E1t,  'a',  "<1/3>a*" + E1)
+check(E1t,  'b',  "<2/3>b*" + E1)
+check(E1t, 'aa',  "<4/9>a*" + E1)
+check(E1t, 'ab',  "<2/9>b*" + E1)
+check(E1t, 'ba',  "<2/9>a*" + E1)
+check(E1t, 'bb', "<10/9>b*" + E1)
 
 check_dt(E1t, 'e1-dt')
 

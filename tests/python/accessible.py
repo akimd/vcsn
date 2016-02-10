@@ -14,10 +14,10 @@ minab = load('lal_char_zmin/minab.gv')
 ## check_accessible INPUT OUTPUT
 ## -----------------------------
 def check_accessible(input, output):
-  if isinstance(input, str):
-    input = vcsn.automaton(input)
-  CHECK_EQ(output, input.accessible())
-  CHECK(input.accessible().is_accessible())
+    if isinstance(input, str):
+        input = vcsn.automaton(input)
+    CHECK_EQ(output, input.accessible())
+    CHECK(input.accessible().is_accessible())
 
 # Regression.
 a = vcsn.context('lal_char(abcd), b').expression('ab+cd').standard().sort().strip()
@@ -157,10 +157,10 @@ digraph {
 ## is-trim.  ##
 ## --------- ##
 
-def check_is_trim (input, exp):
-  if isinstance(input, str):
-    input = vcsn.automaton(input)
-  CHECK_EQ(exp, input.is_trim())
+def check_is_trim(input, exp):
+    if isinstance(input, str):
+        input = vcsn.automaton(input)
+    CHECK_EQ(exp, input.is_trim())
 
 check_is_trim(a1, True)
 check_is_trim(b1, True)
@@ -205,10 +205,10 @@ digraph
 ## ---------- ##
 ## is-empty.  ##
 ## ---------- ##
-def check_is_empty (input, exp):
-  if isinstance(input, str):
-    input = vcsn.automaton(input)
-  CHECK_EQ(exp, input.is_empty())
+def check_is_empty(input, exp):
+    if isinstance(input, str):
+        input = vcsn.automaton(input)
+    CHECK_EQ(exp, input.is_empty())
 check_is_empty(a1, False)
 check_is_empty(b1, False)
 check_is_empty(minab, False)
@@ -247,10 +247,12 @@ digraph
 ## ------------ ##
 ## is-useless.  ##
 ## ------------ ##
-def check_is_useless (input, exp):
-  if isinstance(input, str):
-    input = vcsn.automaton(input)
-  CHECK_EQ(exp, input.is_useless())
+
+
+def check_is_useless(input, exp):
+    if isinstance(input, str):
+        input = vcsn.automaton(input)
+    CHECK_EQ(exp, input.is_useless())
 
 check_is_useless(a1, False)
 check_is_useless(b1, False)
@@ -301,16 +303,16 @@ digraph
 ## trim.  ##
 ## ------ ##
 def check_trim(input, exp):
-  if isinstance(input, str):
-    input = vcsn.automaton(input)
-  aut = input.trim()
-  CHECK_EQ(exp, aut)
-  CHECK(aut.is_trim())
-  CHECK(aut.is_accessible())
-  CHECK(aut.is_coaccessible())
+    if isinstance(input, str):
+        input = vcsn.automaton(input)
+    aut = input.trim()
+    CHECK_EQ(exp, aut)
+    CHECK(aut.is_trim())
+    CHECK(aut.is_accessible())
+    CHECK(aut.is_coaccessible())
 
-  CHECK_EQ(exp, input.coaccessible().accessible())
-  CHECK_EQ(exp, input.accessible().coaccessible())
+    CHECK_EQ(exp, input.coaccessible().accessible())
+    CHECK_EQ(exp, input.accessible().coaccessible())
 
 check_trim(a1, a1)
 check_trim(b1, b1)

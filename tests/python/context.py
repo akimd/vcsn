@@ -5,7 +5,7 @@ import re
 import vcsn
 from test import *
 
-def check(ctx, exp = None, format = "sname"):
+def check(ctx, exp=None, format="sname"):
     c = vcsn.context(ctx)
     if exp is None:
         exp = ctx
@@ -64,7 +64,7 @@ CHECK_EQ(r'''\x01 + \x02 + \x03 + \x04 + \x05 + \x06 + \x07 + \x08 + \x09 + \n +
          vcsn
          .context(r'lal_char(\x01-\xFE), b')
          .expression('[^]')
-         .shortest(len = 1))
+         .shortest(len=1))
 
 check('lal_char(ab), q', 'letterset<char_letters(ab)>, q')
 

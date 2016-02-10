@@ -43,7 +43,7 @@ check('name_automaton<mutable_automaton<context<letterset<char_letters>, express
 ## demangle.  ##
 ## ---------- ##
 
-def check(input, exp_regex, exp_re = None):
+def check(input, exp_regex, exp_re=None):
     '''Check that `demangle(input)` is `exp1` when regex is available,
     otherwise `exp2`.'''
     if exp_re == None:

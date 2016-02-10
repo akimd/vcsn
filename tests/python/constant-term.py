@@ -11,7 +11,7 @@ ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 # this is indeed the evaluation of the empty word on derived-term(RAT-EXP).
 #
 # Use a context with expression weights to check the order of products.
-def check(weight, exp, algo = 'expansion'):
+def check(weight, exp, algo='expansion'):
     w = ctx.weight(weight)
     re = ctx.expression(exp)
     CHECK_EQ(w, re.constant_term())

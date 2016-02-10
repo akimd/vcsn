@@ -226,8 +226,8 @@ check(c_r.expression("<3.1>(a|x)").standard(),
 ## Fibonacci normalizer ##
 ##########################
 
-check(vcsn.automaton(filename = medir + "/left.gv"),
-      vcsn.automaton(filename = medir + "/right.gv"),
+check(vcsn.automaton(filename=medir + "/left.gv"),
+      vcsn.automaton(filename=medir + "/right.gv"),
       open(medir + "/result.gv").read().strip())
 
 ######################
@@ -235,4 +235,4 @@ check(vcsn.automaton(filename = medir + "/left.gv"),
 ######################
 
 CHECK_EQ(open(medir + "/result.gv").read().strip(),
-         vcsn.automaton(filename = medir + "/left.gv").compose(vcsn.automaton(filename = medir + "/right.gv"), lazy=True).accessible())
+         vcsn.automaton(filename=medir + "/left.gv").compose(vcsn.automaton(filename=medir + "/right.gv"), lazy=True).accessible())

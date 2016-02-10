@@ -11,17 +11,17 @@ from test import *
 
 a = vcsn.context('lal_char(abc), b').cerny(6)
 CHECK_EQ(a.info()['number of states'], 6)
-CHECK_EQ(vcsn.automaton(filename = medir + '/cerny-6.gv'), a)
+CHECK_EQ(vcsn.automaton(filename=medir + '/cerny-6.gv'), a)
 
 
 ## ----------- ##
 ## de_bruijn.  ##
 ## ----------- ##
 
-CHECK_EQ(vcsn.automaton(filename = medir + '/de-bruijn-2.gv'),
+CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-2.gv'),
          vcsn.context('lal_char(ab), b').de_bruijn(2))
 
-CHECK_EQ(vcsn.automaton(filename = medir + '/de-bruijn-3.gv'),
+CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-3.gv'),
          vcsn.context('lal_char(xyz), b').de_bruijn(3))
 
 ## ----------- ##
@@ -37,13 +37,13 @@ XFAIL(lambda: b.divkbaseb(2, 11))
 
 # FIXME: we don't parse polynomials yet.
 CHECK_EQ(r'\e + 0 + 00 + 10 + 000 + 010 + 100 + 110 + 0000 + 0010',
-         str(b.divkbaseb(2,2).shortest(10)))
+         str(b.divkbaseb(2, 2).shortest(10)))
 CHECK_EQ(r'\e + 0 + 00 + 10 + 20 + 30 + 40 + 50 + 60 + 70',
-         str(b.divkbaseb(10,10).shortest(10)))
+         str(b.divkbaseb(10, 10).shortest(10)))
 CHECK_EQ(r'\e + 0 + 5 + 00 + 05 + 10 + 15 + 20 + 25 + 30',
-         str(b.divkbaseb(5,10).shortest(10)))
+         str(b.divkbaseb(5, 10).shortest(10)))
 CHECK_EQ(r'\e + 0 + 3 + 6 + 9 + 00 + 03 + 06 + 09 + 12',
-         str(b.divkbaseb(3,10).shortest(10)))
+         str(b.divkbaseb(3, 10).shortest(10)))
 
 
 ## ------------- ##
@@ -52,7 +52,7 @@ CHECK_EQ(r'\e + 0 + 3 + 6 + 9 + 00 + 03 + 06 + 09 + 12',
 
 ctx = vcsn.context('lal_char(abcd), b')
 CHECK_EQ(ctx.double_ring(0, []),
-vcsn.automaton('''
+         vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abcd), b"
@@ -61,10 +61,10 @@ digraph
 '''))
 
 CHECK_EQ(ctx.double_ring(1, [0]),
-vcsn.automaton(filename = medir + '/double-ring-1-0.gv'))
+         vcsn.automaton(filename=medir + '/double-ring-1-0.gv'))
 
 CHECK_EQ(ctx.double_ring(4, [2, 3]),
-vcsn.automaton(filename = medir + '/double-ring-4-2-3.gv'))
+         vcsn.automaton(filename=medir + '/double-ring-4-2-3.gv'))
 
 
 ## ---------- ##
@@ -74,12 +74,12 @@ vcsn.automaton(filename = medir + '/double-ring-4-2-3.gv'))
 b = vcsn.context('lal_char(abc), b')
 z = vcsn.context('lal_char(abc), z')
 
-exp = vcsn.automaton(filename = medir + '/ladybird-2.gv')
+exp = vcsn.automaton(filename=medir + '/ladybird-2.gv')
 
 CHECK_EQ(exp, b.ladybird(2))
 CHECK_EQ(vcsn.automaton(str(exp).replace(', b', ', z')), z.ladybird(2))
 
-exp = vcsn.automaton(filename = medir + '/ladybird-2-zmin.gv')
+exp = vcsn.automaton(filename=medir + '/ladybird-2-zmin.gv')
 CHECK_EQ(exp,
          vcsn.context('lal_char(abc), zmin').ladybird(2))
 
@@ -89,7 +89,7 @@ CHECK_EQ(exp,
 
 nmin = vcsn.context('lat<lan_char(abc), lan_char(bcd)>, nmin')
 
-exp = vcsn.automaton(filename = medir + '/levenshtein.gv')
+exp = vcsn.automaton(filename=medir + '/levenshtein.gv')
 
 CHECK_EQ(exp, nmin.levenshtein())
 
@@ -99,7 +99,7 @@ CHECK_EQ(exp, nmin.levenshtein())
 
 # Expect a clique.
 c1 = vcsn.context('lal_char(a), b').random(4, 1, 4, 4)
-c2 = vcsn.automaton(filename = medir + '/clique-a-4.gv')
+c2 = vcsn.automaton(filename=medir + '/clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
@@ -111,7 +111,8 @@ CHECK_EQ(30, a.info()['number of final states'])
 
 # Random on an empty labelset doesn't work
 
-XFAIL(lambda: vcsn.b.random(2), "random_label: the alphabet needs at least 1 letter")
+XFAIL(lambda: vcsn.b.random(2),
+      "random_label: the alphabet needs at least 1 letter")
 
 ## ---------------------- ##
 ## random_deterministic.  ##
@@ -129,5 +130,5 @@ CHECK(a.is_complete())
 ## u.  ##
 ## --- ##
 
-CHECK_EQ(vcsn.automaton(filename = medir + '/u-5.gv'),
+CHECK_EQ(vcsn.automaton(filename=medir + '/u-5.gv'),
          vcsn.context('lal_char(abc), b').u(5))

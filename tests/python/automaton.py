@@ -221,7 +221,7 @@ $ -> 3
 1 -> $
 2 -> 1 a
 3 -> 2 b''',
-         vcsn.automaton(filename=medir+'/html.gv').format('daut'))
+         vcsn.automaton(filename=medir + '/html.gv').format('daut'))
 
 
 ## --------------- ##
@@ -303,7 +303,7 @@ CHECK_EQ('''digraph
   10 -> 11 [label = "ε"]
   11 -> F11
 }''',
-         (a&a).dot())
+         (a & a).dot())
 
 # Tooltip.
 CHECK_EQ('''digraph
@@ -346,7 +346,7 @@ CHECK_EQ('''digraph
   10 -> 11 [label = "ε"]
   11 -> F11
 }''',
-         (a&a).dot("tooltip"))
+         (a & a).dot("tooltip"))
 
 # Transitions.
 CHECK_EQ('''digraph
@@ -389,7 +389,7 @@ CHECK_EQ('''digraph
   10 -> 11 [label = "ε"]
   11 -> F11
 }''',
-         (a&a).dot("transitions"))
+         (a & a).dot("transitions"))
 
 
 # Empty set.
@@ -429,12 +429,12 @@ CHECK_EQ(open(medir + '/drinks-simple.gv').read().strip(),
 import glob
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     print("Checking: ", fn)
-    a = vcsn.automaton(filename = fn)
+    a = vcsn.automaton(filename=fn)
 
     exp = open(fn.replace('.in.gv', '.out.gv')).read().strip()
     CHECK_EQ(exp, a.format('dot'))
 
-    exp  = open(fn.replace('.in.gv', '.tex.gv')).read().strip()
+    exp = open(fn.replace('.in.gv', '.tex.gv')).read().strip()
     CHECK_EQ(exp, a.format('dot,latex'))
 
     exp = open(fn.replace('.in.gv', '.tex')).read().strip()
@@ -485,7 +485,7 @@ CHECK_EQ(r'''digraph
   0 -> F0
 }''',
          vcsn.automaton('''$ -> "foo"
-         "foo" -> $''', strip = False))
+         "foo" -> $''', strip=False))
 
 ## ----------- ##
 ## I/O: FAdo.  ##
@@ -511,13 +511,13 @@ def check_fado(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.fado')):
-    exp = vcsn.automaton(filename = fn.replace('.fado', '.gv'))
+    exp = vcsn.automaton(filename=fn.replace('.fado', '.gv'))
     # Check that we can read FAdo.
-    CHECK_EQ(exp, vcsn.automaton(filename = fn, format = 'fado'))
-    CHECK_EQ(exp, vcsn.automaton(filename = fn, format = 'auto'))
+    CHECK_EQ(exp, vcsn.automaton(filename=fn, format='fado'))
+    CHECK_EQ(exp, vcsn.automaton(filename=fn, format='auto'))
 
     # Check that we can print FAdo.
-    fado   = open(fn).read().strip()
+    fado = open(fn).read().strip()
     CHECK_EQ(fado, exp.format('fado'))
     check_fado(a)
 
@@ -539,9 +539,9 @@ def check_grail(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.grail')):
-    a = vcsn.automaton(filename = fn.replace('.grail', '.gv'))
+    a = vcsn.automaton(filename=fn.replace('.grail', '.gv'))
     # Check that we can print Grail.
-    grail  = open(fn).read().strip()
+    grail = open(fn).read().strip()
     CHECK_EQ(grail, a.format('grail'))
     check_grail(a)
 
