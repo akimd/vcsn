@@ -109,9 +109,26 @@ CHECK_EQ(100, a.info()['number of states'])
 CHECK_EQ(20, a.info()['number of initial states'])
 CHECK_EQ(30, a.info()['number of final states'])
 
-# Random on an empty labelset doesn't work
+# For a while, we were only able to get matching letters (a|A, b|B,
+# etc.).
+ctx = vcsn.context('lat<lan(a-z), lan(a-z)>, b')
+a = ctx.random(num_states=10, density=1)
+# Get all the labels.
+print("Random:", a.format('daut'))
+labels = set(re.findall('\w+ -> \w+ (.*)$', a.format('daut'), re.M))
+# Make sure there are \e|a and a|\e.
+CHECK_NE([l for l in labels if re.match(r'\\e\|[a-z]', l)], [])
+CHECK_NE([l for l in labels if re.match(r'[a-z]\|\\e', l)], [])
+# Make sure there are a|b labels.
+CHECK_NE([l for l in labels
+          if (re.match(r'[a-z]\|[a-z]', l)
+              and not re.match(r'([a-z])\|\1', l))],
+         [])
+# Make sure there are \e|\e labels.
+CHECK(r'\e|\e' in labels)
 
-XFAIL(lambda: vcsn.b.random(2),
+# Random on an empty labelset doesn't work
+XFAIL(lambda: vcsn.context('lal(), b').random(2),
       "random_label: the alphabet needs at least 1 letter")
 
 ## ---------------------- ##
