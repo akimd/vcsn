@@ -11,6 +11,7 @@
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/tuple.hh> // make_index_sequence, cross_tuple
 #include <vcsn/misc/zip-maps.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -298,6 +299,15 @@ namespace vcsn
                                             real_aut(rhs)->hidden_label_of(t.transition)),
                                  t.weight());
 
+
+        // In order to avoid having to call add_transition each time, we cache
+        // the transitions we add using a polynomial. We conserve a polynomial
+        // for each successor of src.
+        using polynomialset_t = polynomialset<context_t, wet_kind_t::unordered_map>;
+        using polynomial_t = typename polynomialset_t::value_t;
+        const auto ps = polynomialset_t(aut_->context());
+        auto poly_maps = std::map<state_t, polynomial_t>();
+
         for (auto t: zip_maps(ltm, rtm))
           // The type of the common label is that of the visible tape
           // of either automata.
@@ -309,14 +319,19 @@ namespace vcsn
               ([&] (const typename transition_map_t<Lhs>::transition& lts,
                     const typename transition_map_t<Rhs>::transition& rts)
                {
-                 this->add_transition
-                   (src,
-                    this->state(lts.dst, rts.dst),
-                    join_label(lhs->hidden_label_of(lts.transition),
-                               real_aut(rhs)->hidden_label_of(rts.transition)),
-                    this->weightset()->mul(lts.weight(), rts.weight()));
+                 // Cache the transitions.
+                 ps.add_here(poly_maps[this->state(lts.dst, rts.dst)],
+                             join_label(lhs->hidden_label_of(lts.transition),
+                                        real_aut(rhs)->hidden_label_of(rts.transition)),
+                             this->weightset()->mul(lts.weight(), rts.weight()));
                },
                t.second);
+
+        // For each successor, add a transition for each monomial of the
+        // corresponding polynomial.
+        for (auto elt: poly_maps)
+          for (auto m: elt.second)
+            this->new_transition(src, elt.first, m.first, m.second);
       }
 
       template <Automaton Aut>
