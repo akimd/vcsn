@@ -21,6 +21,7 @@ dist_notebooks_DATA =                           \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
   %D%/References.ipynb                          \
+  %D%/Spell-checker.ipynb                       \
   %D%/Stackoverflow.ipynb                       \
   %D%/Transducers.ipynb                         \
   %D%/automaton.accessible.ipynb                \
