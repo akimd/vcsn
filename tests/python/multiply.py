@@ -14,11 +14,10 @@ def check_mult(lhs, rhs):
         print("general")
         gen = lhs.multiply(rhs, "general")
 
-        if isinstance(rhs, vcsn.automaton):
-            print("deterministic")
-            det = lhs.multiply(rhs, "deterministic")
-            CHECK(det.is_deterministic(), det, "is deterministic")
-            CHECK_EQUIV(gen, det)
+        print("deterministic")
+        det = lhs.multiply(rhs, "deterministic")
+        CHECK(det.is_deterministic(), det, "is deterministic")
+        CHECK_EQUIV(gen, det)
 
         print("standard")
         std = lhs.multiply(rhs, "standard")
