@@ -267,7 +267,9 @@ namespace vcsn
     get_transition(state_t src, state_t dst, label_t l) const
     {
       assert(has_state(src));
+      assert(!is_lazy(src));
       assert(has_state(dst));
+      assert(!is_lazy_in(dst));
       const tr_cont_t& succ = states_[src].succ;
       const tr_cont_t& pred = states_[dst].pred;
       const auto& ls = *this->labelset();

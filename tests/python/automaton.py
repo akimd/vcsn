@@ -447,6 +447,22 @@ exp = open(os.path.join(medir, 'derived-term.tex')).read().strip()
 CHECK_EQ(exp, a.format('tikz'))
 
 
+## ------ ##
+## Lazy.  ##
+## ------ ##
+
+# Check the case of a lazy automaton.
+ctx = vcsn.context('lal_char, q')
+a = ctx.expression('a*+(<2>a)*').derived_term(deterministic=True, lazy=True)
+a('aaa')
+
+exp = open(os.path.join(medir, 'lazy.out.gv')).read().strip()
+CHECK_EQ(exp, a.format('dot'))
+
+exp = open(os.path.join(medir, 'lazy.tex')).read().strip()
+CHECK_EQ(exp, a.format('tikz'))
+
+
 ## ----------- ##
 ## I/O: Daut.  ##
 ## ----------- ##

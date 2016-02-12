@@ -87,8 +87,13 @@ namespace vcsn
         for (auto s : aut_->states())
           {
             os_ << "  \\node[state";
-            print_finitial_("initial", aut_->get_initial_weight(s));
-            print_finitial_("accepting", aut_->get_final_weight(s));
+            if (aut_->is_lazy(s))
+              os_ << ",dashed";
+            else
+              {
+                print_finitial_("initial", aut_->get_initial_weight(s));
+                print_finitial_("accepting", aut_->get_final_weight(s));
+              }
             if (aut_->state_has_name(s))
               os_ << ",rounded rectangle";
             os_ << "] (";
@@ -129,16 +134,17 @@ namespace vcsn
         // For each src state, the destinations, sorted.
         std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->states())
-          {
-            dsts.clear();
-            for (auto t: out(aut_, src))
-              // Bypass weight_of(set), because we know that the weight is
-              // nonzero, and that there is only one weight per letter.
-              ps_.new_weight(dsts[aut_->dst_of(t)],
-                             aut_->label_of(t), aut_->weight_of(t));
-            for (const auto& p: dsts)
-              print_transitions_(src, p.first, p.second);
-          }
+          if (!aut_->is_lazy(src))
+            {
+              dsts.clear();
+              for (auto t: out(aut_, src))
+                // Bypass weight_of(set), because we know that the weight is
+                // nonzero, and that there is only one weight per letter.
+                ps_.new_weight(dsts[aut_->dst_of(t)],
+                               aut_->label_of(t), aut_->weight_of(t));
+              for (const auto& p: dsts)
+                print_transitions_(src, p.first, p.second);
+            }
       }
     };
   }

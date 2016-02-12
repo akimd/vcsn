@@ -135,6 +135,8 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/lao_z.out.gv                \
   %D%/automaton.dir/lao_z.tex                   \
   %D%/automaton.dir/lao_z.tex.gv                \
+  %D%/automaton.dir/lazy.out.gv                 \
+  %D%/automaton.dir/lazy.tex                    \
   %D%/automaton.dir/nfa.fado                    \
   %D%/automaton.dir/nfa.gv                      \
   %D%/automaton.dir/pyramid.daut                \
