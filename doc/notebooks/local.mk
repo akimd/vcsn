@@ -17,7 +17,6 @@ dist_notebooks_DATA =                           \
   %D%/Algorithms.ipynb                          \
   %D%/Automata.ipynb                            \
   %D%/Contexts.ipynb                            \
-  %D%/D3_IPython_widget.ipynb                   \
   %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
@@ -48,6 +47,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.has_twins_property.ipynb        \
   %D%/automaton.infiltration.ipynb              \
   %D%/automaton.info.ipynb                      \
+  %D%/automaton.insplit.ipynb                   \
   %D%/automaton.is_accessible.ipynb             \
   %D%/automaton.is_ambiguous.ipynb              \
   %D%/automaton.is_coaccessible.ipynb           \
@@ -59,7 +59,9 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_equivalent.ipynb             \
   %D%/automaton.is_functional.ipynb             \
   %D%/automaton.is_isomorphic.ipynb             \
+  %D%/automaton.is_letterized.ipynb             \
   %D%/automaton.is_partial_identity.ipynb       \
+  %D%/automaton.is_realtime.ipynb               \
   %D%/automaton.is_standard.ipynb               \
   %D%/automaton.is_synchronized.ipynb           \
   %D%/automaton.is_trim.ipynb                   \
@@ -75,8 +77,10 @@ dist_notebooks_DATA =                           \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.partial_identity.ipynb          \
   %D%/automaton.prefix.ipynb                    \
+  %D%/automaton.project.ipynb                   \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
+  %D%/automaton.realtime.ipynb                  \
   %D%/automaton.reduce.ipynb                    \
   %D%/automaton.scc.ipynb                       \
   %D%/automaton.shortest.ipynb                  \
@@ -131,6 +135,17 @@ dist_notebooks_DATA =                           \
 if HAVE_NBCONVERT
 nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html)
 endif
+
+
+## ------- ##
+## check.  ##
+## ------- ##
+
+check-local: check-doc
+check-doc:
+	nbdir=$(srcdir)/%D% $(PYTHON) $(srcdir)/%D%/check-notebooks
+EXTRA_DIST += %D%/check-notebooks
+
 
 ## --------------- ##
 ## ipynb -> html.  ##
