@@ -14,15 +14,17 @@ nfail = 0
 # install checks, since the latter is not run (it runs
 # /usr/local/bin/vcsn), use Automake's srcdir.
 srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
-         else os.environ['srcdir']
+    else os.environ['srcdir']
 
 # The directory associated to the current test.
 medir = sys.argv[0].replace(".py", ".dir")
+
 
 # http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
 def which(program):
     'Return the file name for program if it exists, None otherwise.'
     import os
+
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
@@ -39,12 +41,14 @@ def which(program):
 
     return None
 
+
 def rst_file(name, content):
     print(name + "::")
     print()
     for l in content.splitlines():
         print("\t" + l)
     print()
+
 
 def format(d):
     '''Pretty-print `d` into a diffable string.'''
@@ -53,6 +57,7 @@ def format(d):
                           for k in sorted(d.keys())])
     else:
         return str(d)
+
 
 def rst_diff(expected, effective):
     "Report the difference bw `expected` and `effective`."
@@ -67,18 +72,21 @@ def rst_diff(expected, effective):
                           eff.splitlines(1),
                           fromfile='expected', tofile='effective')))
 
+
 def load(fname):
     "Load the library automaton file `fname`."
     import vcsn
-    return vcsn.automaton(filename = vcsn.datadir + "/" + fname)
+    return vcsn.automaton(filename=vcsn.datadir + "/" + fname)
+
 
 def here():
     # Find the top-level call.
-    frame = inspect.currentframe();
+    frame = inspect.currentframe()
     while frame.f_back:
         frame = frame.f_back
     finfo = inspect.getframeinfo(frame)
     return finfo.filename + ":" + str(finfo.lineno)
+
 
 def FAIL(*msg, **kwargs):
     global count, nfail
@@ -91,23 +99,26 @@ def FAIL(*msg, **kwargs):
         print('not ok ', count, m)
     else:
         print('not ok ', count)
-    loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] is not None else here()
+    loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] else here()
     print(loc + ": fail:", *msg)
     print()
     sys.stdout.flush()
+
 
 def PASS(*msg, **kwargs):
     global count, npass
     count += 1
     npass += 1
     print('ok ', count, *msg)
-    loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] is not None else here()
+    loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] else here()
     print(loc + ": pass:", *msg)
     print()
     sys.stdout.flush()
 
+
 def SKIP(*msg):
     PASS('# SKIP', *msg)
+
 
 def XFAIL(fun, exp=None):
     '''Run `fun`: it should fail.  If `exp` is given, check that the
@@ -124,6 +135,7 @@ def XFAIL(fun, exp=None):
     else:
         FAIL('did not raise an exception', str(fun))
 
+
 def CHECK(effective, msg='', loc=None):
     "Check that `effective` is `True`."
     if effective:
@@ -131,7 +143,8 @@ def CHECK(effective, msg='', loc=None):
     else:
         FAIL("assertion failed", msg, loc=loc)
 
-def CHECK_EQ(expected, effective, loc = None):
+
+def CHECK_EQ(expected, effective, loc=None):
     "Check that `effective` is equal to `expected`."
     if isinstance(expected, str) and not isinstance(effective, str):
         effective = str(effective)
@@ -145,7 +158,8 @@ def CHECK_EQ(expected, effective, loc = None):
         rst_file("Effective output", eff)
         rst_diff(exp, eff)
 
-def CHECK_NE(expected, effective, loc = None):
+
+def CHECK_NE(expected, effective, loc=None):
     "Check that `effective` is not equal to `expected`."
     if isinstance(expected, str) and not isinstance(effective, str):
         effective = str(effective)
@@ -159,20 +173,24 @@ def CHECK_NE(expected, effective, loc = None):
         rst_file("Second argument", eff)
         rst_diff(exp, eff)
 
+
 def normalize(a):
     '''Turn automaton `a` into something we can check equivalence with.'''
     a = a.strip().realtime()
-    # Eliminate nullablesets if there are that remain.  If there are
-    # \e that remains, the following conversion _will_ reject it.
+    # Eliminate nullablesets if there are that remain.  This is safe:
+    # if there are \e that remain, the following conversion _will_
+    # fail.
     to = re.sub(r'nullableset<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>',
                 r'\1',
                 a.context().format('sname'))
     return a.automaton(vcsn.context(to))
 
+
 def can_test_equivalence(a):
     ctx = a.context().format('sname')
     expressionset_ws = re.match('.*expressionset<.*>', ctx) is None
     return not(ctx.endswith('min')) and expressionset_ws
+
 
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.  Also works for
@@ -204,7 +222,6 @@ def CHECK_EQUIV(a1, a2):
             FAIL("cannot run shortest: " + str(e))
 
 
-
 def CHECK_ISOMORPHIC(a1, a2):
     "Check that `a1` and `a2` are isomorphic."
     if a1.is_isomorphic(a2):
@@ -217,6 +234,7 @@ def CHECK_ISOMORPHIC(a1, a2):
         rst_file("Right automaton", a2)
         rst_diff(a1, a2)
 
+
 def CHECK_IS_EPS_ACYCLIC(a):
     "Check if `a` is epsilon acyclic."
     if a.is_eps_acyclic():
@@ -226,9 +244,10 @@ def CHECK_IS_EPS_ACYCLIC(a):
         FAIL("automata is not epsilon acyclic")
         rst_file(a)
 
+
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
-    print('1..'+str(count))
+    print('1..' + str(count))
     print('PASS:', npass)
     print('FAIL:', nfail)
 
