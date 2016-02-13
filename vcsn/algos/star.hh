@@ -93,9 +93,9 @@ namespace vcsn
   Aut&
   star_here(Aut& res, deterministic_tag)
   {
-    // Cannot use general algorithm since it introduces
-    // spontaneous transitions.
-    // Standard algorithm requires the automaton to be standard.
+    // Cannot use general star_here since it introduces spontaneous
+    // transitions.  Standard star_here requires the automaton to be
+    // standard.
     standard_here(res);
     star_here(res, standard_tag{});
     res = determinize(res)->strip();

@@ -3,18 +3,32 @@
 import vcsn
 from test import *
 
+
 def check_algo(input):
     if isinstance(input, str):
-        input = ctx.expression(input, identities='none').automaton()
+        input = ctx.expression(input, identities='trivial')
+    if isinstance(input, vcsn.expression):
+        input = input.automaton()
+
+    print("general")
     gen = input.star("general")
+
+    print("standard")
     if not input.is_standard():
         XFAIL(lambda: input.star("standard"))
-    std = input.standard().star("standard")
-    CHECK_EQUIV(gen, std)
-    det = input.standard().star("deterministic")
-    CHECK(det.is_deterministic(), det, "is_deterministic")
-    CHECK_EQUIV(gen, det)
+        std = input.standard().star("standard")
+    else:
+        std = input.star("standard")
     CHECK(std.is_standard(), std, "is standard")
+    CHECK_EQUIV(gen, std)
+
+    # Avoid determinizations that may not terminate.
+    if 'expressionset' not in input.context().format('sname'):
+        print("deterministic")
+        det = input.star("deterministic")
+        CHECK(det.is_deterministic(), det, "is_deterministic")
+        CHECK_EQUIV(gen, det)
+
 
 def check(input, exp):
     if isinstance(input, str):
@@ -22,15 +36,16 @@ def check(input, exp):
     if isinstance(exp, str):
         exp = vcsn.automaton(exp)
     CHECK_EQ(exp, input.star())
-    # Cannot call determinize algo on expressionset
-    # check_algo(input)
+    check_algo(input)
+
 
 ctx = vcsn.context('lal_char, q')
 
 check_algo('a')
 check_algo('ab')
 check_algo('a+b')
-check_algo('a<2>')
+check_algo(ctx.expression('a<2>', 'none'))
+check_algo('<1/2>a*+<1/3>b*')
 
 # This used to trigger an assert.
 l_br = vcsn.context('lal_char(a), expressionset<lal_char(xy), b>')
@@ -60,28 +75,12 @@ digraph
 ''')
 
 check('''
-digraph
-{
-  vcsn_context = "lal_char(ab), b"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-    F2
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-  }
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> F1
-  2 -> F2
-}
+context = "lal_char(ab), b"
+$ -> 0
+0 -> 1 a
+0 -> 2 b
+1 -> $
+2 -> $
 ''',
 '''
 digraph
