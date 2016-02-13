@@ -20,11 +20,11 @@ existing = set([f
 status = 0
 dre = referenced - existing
 if dre:
-    print("Referenced, not existing:", dre)
+    print("error: referenced, not existing:", dre)
     status = 1
 der = existing - referenced
 if der:
-    print("Existing, not referenced:", der)
+    print("error: existing, not referenced:", der)
     status = 1
 
 exit(status)
