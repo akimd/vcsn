@@ -593,7 +593,7 @@ struct automaton
   }
 
   automaton proper(bool prune = true, bool backward = true,
-                   const std::string algo = "auto") const
+                   const std::string& algo = "auto") const
   {
     return vcsn::dyn::proper(val_,
                              backward

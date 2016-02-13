@@ -269,6 +269,15 @@ def _automaton_lift(self, *tapes, identities="default"):
     return self._lift(tapes, identities)
 automaton.lift = _automaton_lift
 
+_automaton_proper_orig = automaton.proper
+def _automaton_proper(self, prune=True, backward=True, algo="auto", lazy=False):
+    if lazy:
+        if algo not in [None, 'auto']:
+            raise RuntimeError('proper: algo and lazy are incompatible')
+        algo = 'lazy'
+    return _automaton_proper_orig(self, prune, backward, algo)
+automaton.proper = _automaton_proper
+
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
 
 automaton.state_number = lambda self: self.info('number of states')
