@@ -1,8 +1,13 @@
 #! /bin/sh
 
 : ${IPYTHON=ipython}
+: ${JUPYTER=jupyter}
 
-if ($IPYTHON --version) >/dev/null 2>&1; then
+if ($JUPYTER --version) >/dev/null 2>&1; then
+  version=$($JUPYTER --version)
+  export JUPYTER_CONFIG_DIR=$VCSN_DATADIR/jupyter_profile
+  exec $JUPYTER notebook "$@"
+elif ($IPYTHON --version) >/dev/null 2>&1; then
   version=$($IPYTHON --version)
   case $version in
     (4.*)

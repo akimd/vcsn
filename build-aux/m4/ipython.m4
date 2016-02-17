@@ -19,7 +19,7 @@ AC_DEFUN([_VCSN_PROG_NBCONVERT],
 [test -f "$2" ||
   AC_MSG_ERROR([cannot read the nbconvert test file: $2])
 $1='no'
-for ac_nb_convert in ${NBCONVERT-'${IPYTHON} nbconvert'}
+for ac_nb_convert in ${NBCONVERT-'${JUPYTER} nbconvert'} '${IPYTHON} nbconvert'
 do
   # Expand possible shell variables, such as ${IPYTHON}, in
   # ac_nb_convert.
@@ -36,9 +36,15 @@ done
 # ----------------------------
 AC_DEFUN([VCSN_PROG_NBCONVERT],
 [VCSN_ARG_PROGS([ipython], [the IPython environment])
-AC_CACHE_CHECK([for ipython nbconvert],
+VCSN_ARG_PROGS([jupyter], [the Jupyter environment])
+AC_CACHE_CHECK([for Jupyter nbconvert],
                [vcsn_cv_nbconvert],
                [_VCSN_PROG_NBCONVERT([vcsn_cv_nbconvert], [$1])])
 AC_SUBST([NBCONVERT], [$vcsn_cv_nbconvert])
 AM_CONDITIONAL([HAVE_NBCONVERT], [test x"$NBCONVERT" != xno])
 ])
+
+
+## Local Variables:
+## mode: Autoconf
+## End:

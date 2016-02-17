@@ -100,7 +100,7 @@ case $1 in
       exec "$@";;
 
   (python) shift; exec "$PYTHON" "$@";;
-  (python*|ipython*) exec "$@";;
+  (python*|ipython*|jupyter*) exec "$@";;
 
   (accessible|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
