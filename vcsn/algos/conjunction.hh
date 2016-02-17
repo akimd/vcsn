@@ -6,6 +6,7 @@
 
 #include <vcsn/algos/insplit.hh>
 #include <vcsn/algos/strip.hh>
+#include <vcsn/algos/copy.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/core/lazy-tuple-automaton.hh>
@@ -103,6 +104,38 @@ namespace vcsn
               this->complete_(std::get<1>(p));
               aut_->todo_.pop_front();
             }
+      }
+
+      /// Compute the left quotient in-place.
+      // Division only makes sense for two automata.
+      // Lazy version is not implemented yet.
+      template <bool L = Lazy>
+      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv_here()
+      {
+        initialize_conjunction();
+
+        using rhs_t = tuple_element_t<1, std::tuple<Auts...>>;
+        auto new_initials = std::vector<state_t_of<rhs_t>>();
+
+        auto& lhs = std::get<0>(aut_->auts_);
+        auto& rhs = std::get<1>(aut_->auts_);
+
+        while (!aut_->todo_.empty())
+          {
+            const auto& p = aut_->todo_.front();
+            const auto& state_name = std::get<0>(p);
+            this->complete_(std::get<1>(p));
+
+            // If lhs's state is final, rhs's corresponding state is initial.
+            if (lhs->is_final(std::get<0>(state_name)))
+              new_initials.push_back(std::get<1>(state_name));
+            aut_->todo_.pop_front();
+          }
+
+        for (auto t: initial_transitions(rhs))
+          rhs->unset_initial(rhs->dst_of(t));
+        for (auto s: new_initials)
+          rhs->set_initial(s);
       }
 
       /// Compute the (accessible part of the) shuffle product.
@@ -512,6 +545,58 @@ namespace vcsn
         auto indices
           = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
         return conjunction_<Auts>(as, lazy, indices);
+      }
+    }
+  }
+
+
+  /*----------------------------------.
+  | ldiv_here(automaton, automaton).  |
+  `----------------------------------*/
+
+  /// Compute the left quotient in place.
+  ///
+  /// \param lhs  left hand side
+  /// \param res  right hand side, which holds the result
+  template <Automaton Aut1, Automaton Aut2>
+  Aut2&
+  ldiv_here(const Aut1& lhs, Aut2& res)
+  {
+    auto prod = make_product_automaton<false>(join_automata(lhs, res), lhs, res);
+    prod->ldiv_here();
+    return res;
+  }
+
+
+  /*-----------------------------.
+  | ldiv(automaton, automaton).  |
+  `-----------------------------*/
+
+  /// Compute the left quotient.
+  ///
+  /// \param a1  left hand side
+  /// \param a2  right hand side
+  template <Automaton Aut1, Automaton Aut2>
+  auto
+  ldiv(const Aut1& a1, const Aut2& a2)
+  {
+    auto res = copy(a2);
+    ldiv_here(a1, res);
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (ldiv).
+      template <Automaton Aut1, Automaton Aut2>
+      automaton
+      ldiv(const automaton& aut1, const automaton& aut2)
+      {
+        const auto& a1 = aut1->as<Aut1>();
+        const auto& a2 = aut2->as<Aut2>();
+        return make_automaton(vcsn::ldiv<Aut1, Aut2>(a1, a2));
       }
     }
   }

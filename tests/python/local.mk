@@ -55,6 +55,7 @@ PY_LOG_COMPILER = $(PYTHON)
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
+  %D%/ldiv.py                                   \
   %D%/less-than.py                              \
   %D%/letterize.py                              \
   %D%/lift.py                                   \

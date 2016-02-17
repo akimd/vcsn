@@ -389,6 +389,9 @@ namespace vcsn
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 
+    /// Left-division of two automata (lhs \ rhs).
+    automaton ldiv(const automaton& lhs, const automaton& rhs);
+
     /// Left-division of two polynomials (lhs \ rhs).
     polynomial ldiv(const polynomial& lhs, const polynomial& rhs);
 

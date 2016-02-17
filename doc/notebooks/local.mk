@@ -70,6 +70,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_trim.ipynb                   \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
+  %D%/automaton.ldiv.ipynb                      \
   %D%/automaton.letterize.ipynb                 \
   %D%/automaton.lift.ipynb                      \
   %D%/automaton.lightest.ipynb                  \

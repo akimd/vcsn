@@ -499,6 +499,11 @@ struct automaton
     return vcsn::dyn::is_valid(val_);
   }
 
+  automaton ldiv(const automaton& rhs) const
+  {
+    return vcsn::dyn::ldiv(val_, rhs.val_);
+  }
+
   automaton left_mult(const weight& w,
                       const std::string& algo = "auto") const;
 
@@ -1444,6 +1449,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
+    .def("ldiv", &automaton::ldiv)
     .def("left_mult", &automaton::left_mult,
          (arg("weight"), arg("algo") = "auto"))
     .def("letterize", &automaton::letterize)
