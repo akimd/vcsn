@@ -18,3 +18,5 @@ if (vcsn python -c 'import colorama') 2>/dev/null; then
     check default.out  -c always $a $b $c $d
     check shortest.out -c always --only shortest -t 2 $a $b $c $d
 fi
+
+check csv.out --all -c never --csv $a $b $c $d

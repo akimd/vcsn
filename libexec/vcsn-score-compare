@@ -26,8 +26,10 @@ parser.add_argument('-t', '--threshold', metavar='PERCENT',
                     type=float, default=10,
                     help='''Highlight good and bad scores with associated
                     threshold.  Defaults to 10%%.''')
-parser.add_argument('--csv', type=str,
-                    help='Create a csv file')
+parser.add_argument('--csv', action='store_true',
+                    help='Output in csv format')
+parser.add_argument('--output-file', type=str,
+                    help='The output file')
 args = parser.parse_args()
 
 # Colors support.
@@ -212,31 +214,18 @@ def read_files(files):
                 bench[k][f]['value'] *= number[k] // bench[k][f]['num']
                 bench[k][f]['num'] = number[k]
 
-
-def csv(keys, fn):
-    '''Save the benches about `keys` in CSV format in file named `fn`.'''
-    fl = sys.stdout if args.csv in ['', '-'] else open(args.csv, 'wa')
-    fl.write(' ,')
-    for k in keys:
-        str = '"' + k.replace('"', '""') + '"'
-        fl.write(str)
-        if k != keys[-1]:
-            fl.write(',')
-    fl.write('\n')
-    for f in args.file:
-        fl.write(os.path.basename(f))
-        fl.write(',')
-        for k in keys:
-            v = bench[k][f] if k in bench and f in bench[k] else ''
-            fl.write(v)
-            if k != keys[-1]:
-                fl.write(',')
-        fl.write('\n')
+def print_header(files):
+    if args.csv:
+        return 'Command,Setup,Repetitions,'\
+                + ','.join([os.path.basename(file) for file in files]) + '\n'
+    return ''
 
 def print_err_score(val):
     return '{:>5} '.format(val)
 
 def print_score(avg, score):
+    if args.csv:
+        return '{:5.2f}'.format(score)
     color = ''
     if score <= avg - args.threshold / 100 * avg:
         color = green
@@ -245,22 +234,32 @@ def print_score(avg, score):
     return color + '{:5.2f}'.format(score) + std + ' '
 
 def print_repetitions(nb):
-    if nb != 1:
-        return ', {}x'.format(nb)
-    else:
-        return ''
+    if args.csv:
+        return str(nb)
+    return '' if nb == 1 else ', {}x'.format(nb)
 
 def print_test(test, buf):
+    if args.csv:
+        return "\"" + test.split('#')[0].rstrip().replace("\"", "\"\"")\
+               + '\",\"' + test.split('#')[1][1:].lstrip().replace("\"", "\"\"") + "\""
     return test
 
-def print_all(buf):
-    print(''.join(buf['scores']), end='')
-    print(buf['test'], end='')
-    print(buf['repetitions'])
+def print_all(buf, fl):
+    if args.csv:
+        fl.write(buf['test'] + ',')
+        fl.write(buf['repetitions'] + ',')
+        fl.write(','.join(buf['scores']))
+        fl.write(',\n')
+    else:
+        fl.write(''.join(buf['scores']))
+        fl.write(buf['test'])
+        fl.write(buf['repetitions'] + '\n')
 
 
 def text(keys):
     # For each bench-case, compare all the recorded scores.
+    fl = sys.stdout if args.output_file in ['', '-', None] else open(args.output_file, 'a')
+    fl.write(print_header(args.file))
     for k in keys:
         # All the benches.
         bs = [bench[k][f] if f in bench[k] else {'value': 'N/A', 'num': 0}
@@ -285,7 +284,7 @@ def text(keys):
                 buf['scores'].append(print_score(avg, b['value']))
         buf['repetitions'] = print_repetitions(number[k])
         buf['test'] = print_test(k, buf)
-        print_all(buf)
+        print_all(buf, fl)
 
 
 # Main.
@@ -295,7 +294,4 @@ read_files(args.file)
 keys = [k for k in sorted(bench.keys()) if args.only.search(k)]
 
 # Print the score table.
-if args.csv is not None:
-    csv(keys, args.csv)
-else:
-    text(keys)
+text(keys)
