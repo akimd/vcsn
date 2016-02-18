@@ -30,6 +30,8 @@ parser.add_argument('--csv', action='store_true',
                     help='Output in csv format')
 parser.add_argument('--output-file', type=str,
                     help='The output file')
+parser.add_argument('--latex', action='store_true',
+                    help='Output in latex format')
 args = parser.parse_args()
 
 # Colors support.
@@ -218,6 +220,16 @@ def print_header(files):
     if args.csv:
         return 'Command,Setup,Repetitions,'\
                 + ','.join([os.path.basename(file) for file in files]) + '\n'
+    if args.latex:
+        tabular = '\\begin{tabular}{llr' + ('r' * len(args.file)) + '} \\toprule\n'
+        filenames = ''.join(['& {} '.format(os.path.basename(file)) for file in args.file])
+        titles = '{$Command$} & {$Setup$} & {$Repetitions$} ' + filenames + '\\\\ \\midrule'
+        return tabular + titles + '\n'
+    return ''
+
+def print_footer():
+    if args.latex:
+        return '\\bottomrule\n\\end{tabular}\n'
     return ''
 
 def print_err_score(val):
@@ -227,29 +239,51 @@ def print_score(avg, score):
     if args.csv:
         return '{:5.2f}'.format(score)
     color = ''
+    color_latex='black'
     if score <= avg - args.threshold / 100 * avg:
         color = green
+        color_latex = 'green'
     elif args.threshold / 100 * avg + avg <= score:
         color = red
+        color_latex = 'red'
+    if args.latex:
+        return '\\textcolor{' + color_latex + '}{\\num{' + '{:5.2f}'.format(score) + '}}'
     return color + '{:5.2f}'.format(score) + std + ' '
 
 def print_repetitions(nb):
     if args.csv:
         return str(nb)
+    if args.latex:
+        return '\\num{' + str(nb) + '}'
     return '' if nb == 1 else ', {}x'.format(nb)
+
+def latex_format(text):
+    return text.replace('->', '\\rightarrow ')\
+               .replace('^', '\\widehat')\
+               .replace('}', '\\}')\
+               .replace('{', '\\{')\
+               .replace('\/', '\\/')\
+               .replace('&', '\&')\
+               .replace('_', '\_')\
+               .replace('\\e', '\\backslash e')
 
 def print_test(test, buf):
     if args.csv:
         return "\"" + test.split('#')[0].rstrip().replace("\"", "\"\"")\
                + '\",\"' + test.split('#')[1][1:].lstrip().replace("\"", "\"\"") + "\""
+    if args.latex:
+         command = '$' + latex_format(test.split('#')[0].rstrip()) + '$ & '
+         setup = '$' + latex_format(test.split('#')[1][1:].lstrip()) + '$'
+         return command + setup
     return test
 
 def print_all(buf, fl):
-    if args.csv:
-        fl.write(buf['test'] + ',')
-        fl.write(buf['repetitions'] + ',')
-        fl.write(','.join(buf['scores']))
-        fl.write(',\n')
+    if args.csv or args.latex:
+        delimiter = ',' if args.csv else ' & '
+        fl.write(buf['test'] + delimiter)
+        fl.write(buf['repetitions'] + delimiter)
+        fl.write(delimiter.join(buf['scores']))
+        fl.write('\\\\\n' if args.latex else ',\n')
     else:
         fl.write(''.join(buf['scores']))
         fl.write(buf['test'])
@@ -285,7 +319,7 @@ def text(keys):
         buf['repetitions'] = print_repetitions(number[k])
         buf['test'] = print_test(k, buf)
         print_all(buf, fl)
-
+    fl.write(print_footer())
 
 # Main.
 

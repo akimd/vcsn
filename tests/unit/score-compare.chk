@@ -20,3 +20,4 @@ if (vcsn python -c 'import colorama') 2>/dev/null; then
 fi
 
 check csv.out --all -c never --csv $a $b $c $d
+check latex.out --all -c never --latex $a $b $c $d

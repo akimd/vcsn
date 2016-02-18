@@ -67,6 +67,7 @@ EXTRA_DIST +=					\
   %D%/score-compare.dir/default.out		\
   %D%/score-compare.dir/shortest.out		\
   %D%/score-compare.dir/csv.out			\
+  %D%/score-compare.dir/latex.out		\
   %D%/score-compare.dir/v2.0-0001-g6bfe026	\
   %D%/score-compare.dir/v2.0-0423-g841c067	\
   %D%/score-compare.dir/v2.0-1255-gafaf339	\
