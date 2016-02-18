@@ -84,6 +84,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.project.ipynb                   \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
+  %D%/automaton.rdiv.ipynb                      \
   %D%/automaton.realtime.ipynb                  \
   %D%/automaton.reduce.ipynb                    \
   %D%/automaton.scc.ipynb                       \

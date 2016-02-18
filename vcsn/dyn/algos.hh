@@ -664,6 +664,11 @@ namespace vcsn
     automaton random_automaton_deterministic(const context& ctx,
                                              unsigned num_states);
 
+    /// Right-division of two automata (lhs / rhs).
+    ///
+    /// \pre weightset is boolean
+    automaton rdiv(const automaton& lhs, const automaton& rhs);
+
     /// Right-division of two expressions (lhs \ rhs).
     expression rdiv(const expression& lhs, const expression& rhs);
 

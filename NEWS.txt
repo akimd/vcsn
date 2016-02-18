@@ -6,10 +6,10 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2016-02-18
-### ldiv for automata
+### ldiv and rdiv for automata
 
-`automaton.ldiv` is the equivalent of the `{\}` expression operator for
-automata.
+`automaton.ldiv` and `automaton.rdiv` compute the left and right quotients of
+two automata.
 
     In [1]: import vcsn
             ctx = vcsn.context('lal_char, b')
@@ -17,6 +17,9 @@ automata.
 
     In [2]: aut('ab').ldiv(aut('abcd')).expression()
     Out[2]: cd
+
+    In [3]: (aut('abcd') / (aut('cd')).expression()
+    Out[3]: ab
 
 # Vcsn 2.2 (2016-02-19)
 

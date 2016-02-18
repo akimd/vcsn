@@ -612,6 +612,11 @@ struct automaton
     return vcsn::dyn::push_weights(val_);
   }
 
+  automaton rdiv(const automaton& rhs) const
+  {
+    return vcsn::dyn::rdiv(val_, rhs.val_);
+  }
+
   automaton realtime() const
   {
     return vcsn::dyn::realtime(val_);
@@ -1479,6 +1484,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("realtime", &automaton::realtime)
     .def("expression", &automaton::to_expression,
          (arg("identities") = "default", arg("algo") = "auto"))
+    .def("rdiv", &automaton::rdiv)
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult,
          (arg("weight"), arg("algo") = "auto"))

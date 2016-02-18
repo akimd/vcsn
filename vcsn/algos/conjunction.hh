@@ -7,6 +7,7 @@
 #include <vcsn/algos/insplit.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/copy.hh>
+#include <vcsn/algos/transpose.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/core/lazy-tuple-automaton.hh>
@@ -117,7 +118,7 @@ namespace vcsn
         using rhs_t = tuple_element_t<1, std::tuple<Auts...>>;
         auto new_initials = std::vector<state_t_of<rhs_t>>();
 
-        auto& lhs = std::get<0>(aut_->auts_);
+        const auto& lhs = std::get<0>(aut_->auts_);
         auto& rhs = std::get<1>(aut_->auts_);
 
         while (!aut_->todo_.empty())
@@ -597,6 +598,41 @@ namespace vcsn
         const auto& a1 = aut1->as<Aut1>();
         const auto& a2 = aut2->as<Aut2>();
         return make_automaton(vcsn::ldiv<Aut1, Aut2>(a1, a2));
+      }
+    }
+  }
+
+
+  /*-----------------------------.
+  | rdiv(automaton, automaton).  |
+  `-----------------------------*/
+
+  /// Compute the right quotient.
+  ///
+  /// \param a1  left hand side
+  /// \param a2  right hand side
+  template <Automaton Aut1, Automaton Aut2>
+  auto
+  rdiv(const Aut1& a1, const Aut2& a2)
+  {
+    auto a1t = transpose(a1);
+    auto a2t = transpose(a2);
+    ldiv_here(a2t, a1t);
+    return transpose(a1t);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <Automaton Aut1, Automaton Aut2>
+      automaton
+      rdiv(const automaton& aut1, const automaton& aut2)
+      {
+        const auto& a1 = aut1->as<Aut1>();
+        const auto& a2 = aut2->as<Aut2>();
+        return make_automaton(vcsn::rdiv(a1, a2));
       }
     }
   }
