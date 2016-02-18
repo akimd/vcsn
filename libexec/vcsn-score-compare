@@ -233,6 +233,31 @@ def csv(keys, fn):
                 fl.write(',')
         fl.write('\n')
 
+def print_err_score(val):
+    return '{:>5} '.format(val)
+
+def print_score(avg, score):
+    color = ''
+    if score <= avg - args.threshold / 100 * avg:
+        color = green
+    elif args.threshold / 100 * avg + avg <= score:
+        color = red
+    return color + '{:5.2f}'.format(score) + std + ' '
+
+def print_repetitions(nb):
+    if nb != 1:
+        return ', {}x'.format(nb)
+    else:
+        return ''
+
+def print_test(test, buf):
+    return test
+
+def print_all(buf):
+    print(''.join(buf['scores']), end='')
+    print(buf['test'], end='')
+    print(buf['repetitions'])
+
 
 def text(keys):
     # For each bench-case, compare all the recorded scores.
@@ -251,20 +276,16 @@ def text(keys):
 
         # Compute average of benchs.
         avg = sum(bfs) / len(bfs)
+        buf = {}
+        buf['scores'] = []
         for b in bs:
             if b['value'] in ['FAIL', 'N/A']:
-                print('{:>5}'.format(b['value']), end=' ')
+                buf['scores'].append(print_err_score(b['value']))
             else:
-                color = ''
-                score = b['value']
-                if score <= avg - args.threshold / 100 * avg:
-                    color = green
-                elif args.threshold / 100 * avg + avg <= score:
-                    color = red
-                print(color + '{:5.2f}'.format(score) + std, end=' ')
-        if number[k] != 1:
-            k += ', {}x'.format(number[k])
-        print(k)
+                buf['scores'].append(print_score(avg, b['value']))
+        buf['repetitions'] = print_repetitions(number[k])
+        buf['test'] = print_test(k, buf)
+        print_all(buf)
 
 
 # Main.
