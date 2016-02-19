@@ -41,8 +41,12 @@ coverage:
 # Documentation.
 PANDOC = pandoc
 README.html: README.txt
-	$(PANDOC)  -s --toc --from rst --to html5 -o $@ $<
-
+	$(PANDOC) -s --toc --from rst --to html5 -o $@ $<
+NEWS.mw: NEWS.txt
+	$(PANDOC) -t mediawiki -o $@.t1 $<
+	sed -e 's/= Vcsn news =/{{TOC|limit=2}}/' $@.t1 >$@.tmp
+	mv $@.tmp $@
+	rm $@.t1
 
 ## -------- ##
 ## Debian.  ##
