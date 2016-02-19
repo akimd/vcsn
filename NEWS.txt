@@ -54,7 +54,7 @@ People who have influenced this release:
 - Alexandre Duret-Lutz
 - Jacques Sakarovitch
 - Luca Saiu
-
+- Sylvain Lombardy
 
 ## 2016-02-13
 ### operations on automata: deterministic versions
