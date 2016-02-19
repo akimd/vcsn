@@ -7,7 +7,7 @@ the internal API may also be documented.
 
 # Vcsn 2.2
 
-## 2015-02-15
+## 2015-02-19
 
 We are very happy to announce the release of Vcsn 2.2!  This version,
 code-named "the lazy release", concludes the work from Antoine and Valentin,
