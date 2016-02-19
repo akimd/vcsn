@@ -2,6 +2,20 @@ import tempfile
 from vcsn_cxx import weight
 
 
+def _extend(*classes):
+    """
+    Decorator that extends all the given classes with the contents
+    of the class currently being defined.
+    """
+    def wrap(this):
+        for cls in classes:
+            for (name, val) in this.__dict__.items():
+                if name not in ('__dict__', '__weakref__') \
+                   and not (name == '__doc__' and val is None):
+                    setattr(cls, name, val)
+        return classes[0]
+    return wrap
+
 def _info_to_dict(info):
     '''Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers.

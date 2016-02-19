@@ -3,9 +3,11 @@
 ## ------- ##
 
 from vcsn_cxx import label
-from vcsn.tools import _is_equal
+from vcsn.tools import _extend, _is_equal
 
-label.__eq__ = _is_equal
-label.__mul__ = label.multiply
-label.__repr__ = lambda self: self.format('text')
-label._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+@_extend(label)
+class label:
+    __eq__ = _is_equal
+    __mul__ = label.multiply
+    __repr__ = lambda self: self.format('text')
+    _repr_latex_ = lambda self: '$' + self.format('latex') + '$'

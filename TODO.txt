@@ -280,39 +280,6 @@ for i in range(10):
 it manages to factor out the '<2>x' bits?  Reading the code, I fail to see
 where the common 'xx' are removed.
 
-** Extending classes in Python (AD, AP, SP)
-In Python, we augment the classes built by Boost.Python, but Python is messy
-to do that: we have to create a function, and then to bind it as a method.
-Yet the function stays there, it's ugly.
-
-See the following commit (currently in their branch `next`) in Spot:
-
-commit e8ce08a98958d30ed15c443d960fa226650ddfb3
-Author: Alexandre Duret-Lutz <adl@lrde.epita.fr>
-Date:   Wed Oct 7 19:42:51 2015 +0200
-
-    python: better way to extend existing classes
-
-    * wrap/python/spot.py: Use a decorator to extend classes.
-    * wrap/python/tests/formulas.ipynb: Adjust expected help text.
-
-+def _extend(*classes):
-+    """
-+    Decorator that extends all the given classes with the contents
-+    of the class currently being defined.
-+    """
-+    def wrap(this):
-+        for cls in classes:
-+            for (name, val) in this.__dict__.items():
-+                if name not in ('__dict__', '__weakref__') \
-+                   and not (name == '__doc__' and val is None):
-+                    setattr(cls, name, val)
-+        return classes[0]
-+    return wrap
-+
-
-And use it to extend our classes in Python.
-
 ** Python: __format__ (AD, AP, SP)
 I just discovered that Python feature, which is nicely used in Spot, and I
 think we should have something like it.  See formula.wrap in
