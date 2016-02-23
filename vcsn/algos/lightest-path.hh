@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/k-lightest-path.hh>
 #include <vcsn/algos/a-star.hh>
 #include <vcsn/algos/bellman-ford.hh>
 #include <vcsn/algos/dijkstra.hh>
@@ -58,6 +59,7 @@ namespace vcsn
         {"a-star",       detail::lightest_path_tag<Aut, a_star_tag>},
         {"bellman-ford", detail::lightest_path_tag<Aut, bellman_ford_tag>},
         {"dijkstra",     detail::lightest_path_tag<Aut, dijkstra_tag>},
+        {"yen",          detail::lightest_path_tag<Aut, yen_tag>},
       }
     };
     return map[algo](aut, src, dst);

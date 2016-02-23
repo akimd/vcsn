@@ -65,6 +65,7 @@ algo_headers =                                  \
   %D%/algos/is-synchronized.hh                  \
   %D%/algos/is-valid-expression.hh              \
   %D%/algos/is-valid.hh                         \
+  %D%/algos/k-lightest-path.hh                  \
   %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
   %D%/algos/letterize.hh                        \

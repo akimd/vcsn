@@ -3,10 +3,10 @@
 import vcsn
 from test import *
 
-algos = ['auto', 'a-star', 'bellman-ford', 'breadth-first', 'dijkstra']
+algos = ['auto', 'a-star', 'bellman-ford', 'breadth-first', 'dijkstra', 'yen']
 def check(re, num, exp, algos = algos):
   r = ctx.expression(re, 'none')
-  for algo in algos if num == 1 else 'auto':
+  for algo in algos if num == 1 else ['auto']:
       p = r.standard().lightest(num = num, algo = algo)
       CHECK_EQ(exp, p)
 
