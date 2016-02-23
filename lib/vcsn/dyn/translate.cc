@@ -359,7 +359,7 @@ namespace vcsn
                 }
               os <<
                 "\n"
-                "static bool " << algo.first << " ATTRIBUTE_USED =" << incendl
+                "static bool vcsn_" << algo.first << " ATTRIBUTE_USED =" << incendl
                  << "vcsn::dyn::detail::" << algo.first << "_register(" << incendl
                  << "vcsn::ssignature<" << types << ">()," << iendl
                  << "vcsn::dyn::detail::" << algo.first << "<" << types << ">" << decendl
