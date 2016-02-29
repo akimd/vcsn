@@ -14,6 +14,7 @@
 notebooksdir = $(htmldir)/notebooks
 
 dist_notebooks_DATA =                           \
+  %D%/!Read-me-first.ipynb                      \
   %D%/Algorithms.ipynb                          \
   %D%/Automata.ipynb                            \
   %D%/Contexts.ipynb                            \
@@ -125,7 +126,6 @@ dist_notebooks_DATA =                           \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
   %D%/expression.zpc.ipynb                      \
-  %D%/index.ipynb                               \
   %D%/label.operators.ipynb                     \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
@@ -135,7 +135,7 @@ dist_notebooks_DATA =                           \
   %D%/weight.operators.ipynb
 
 if HAVE_NBCONVERT
-nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html)
+nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html) %D%/index.html
 endif
 
 
@@ -153,6 +153,9 @@ EXTRA_DIST += %D%/check-notebooks
 ## ipynb -> html.  ##
 ## --------------- ##
 
+
+%D%/index.html:
+	$(AM_V_GEN)cd $(@D) && ln -sf !Read-me-first.html index.html
 
 MATHJAX_BAD = <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
 MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'></script>

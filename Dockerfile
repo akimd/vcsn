@@ -49,7 +49,7 @@ RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/' >/etc/apt/sources
     && su vcsn -s /bin/bash -c 'cp -r /usr/share/doc/vcsn/notebooks /vcsn/Doc'                          \
     && su vcsn -s /bin/bash -c 'vcsn jupyter trust /vcsn/Doc/*'                                         \
     && ln -s /usr/share/doc/vcsn/notebooks '/vcsn/Doc (read only)'                                      \
-    && touch "/vcsn/Please read the index.ipynb file in Doc"
+    && touch "/vcsn/Please read the !Read-me-first.ipynb file in Doc"
 
 EXPOSE 8888
 
