@@ -26,24 +26,21 @@ parser.add_argument('-t', '--threshold', metavar='PERCENT',
                     type=float, default=10,
                     help='''Highlight good and bad scores with associated
                     threshold.  Defaults to 10%%.''')
-parser.add_argument('--csv', action='store_true',
-                    help='Output in csv format')
-parser.add_argument('--output-file', type=str,
+parser.add_argument('--output-format', type=str, choices=['text', 'csv', 'latex'],
+                    default='text',
+                    help='Select the output format')
+parser.add_argument('-o', '--output', type=str, metavar='FILE',
                     help='The output file')
-parser.add_argument('--latex', action='store_true',
-                    help='Output in latex format')
 args = parser.parse_args()
 
 # Colors support.
-green = ''
-red = ''
-std = ''
+color = {'green' : '', 'red' : '', 'std' : '', 'black' : ''}
 if args.color == 'always' or args.color == 'auto' and sys.stdout.isatty():
     try:
         from colorama import Fore, Style
-        green = Fore.GREEN + Style.BRIGHT
-        red = Fore.RED + Style.BRIGHT
-        std = Style.RESET_ALL
+        color['green'] = Fore.GREEN + Style.BRIGHT
+        color['red'] = Fore.RED + Style.BRIGHT
+        color['std'] = Style.RESET_ALL
     except:
         pass
 
@@ -216,74 +213,93 @@ def read_files(files):
                 bench[k][f]['value'] *= number[k] // bench[k][f]['num']
                 bench[k][f]['num'] = number[k]
 
-def print_header(files):
-    if args.csv:
+def header(files):
+    # The header of the output. Necessary for LaTeX and csv output.
+    if args.output_format == 'csv':
         return 'Command,Setup,Repetitions,'\
                 + ','.join([os.path.basename(file) for file in files]) + '\n'
-    if args.latex:
-        tabular = '\\begin{tabular}{llr' + ('r' * len(args.file)) + '} \\toprule\n'
-        filenames = ''.join(['& {} '.format(os.path.basename(file)) for file in args.file])
-        titles = '{$Command$} & {$Setup$} & {$Repetitions$} ' + filenames + '\\\\ \\midrule'
-        return tabular + titles + '\n'
-    return ''
+    elif args.output_format == 'latex':
+        title_rule = r'\newcommand{\titlerot}[4]{\multicolumn{#1}{#2}{\rlap{\rotatebox{#3}{#4}~}}}'
+        tabular = r'\begin{tabular}{llr' + ('r' * len(args.file)) + '}'
+        filenames = ''.join([r'& \titlerot{{1}}{{c}}{{60}}{{{}}} '.format(os.path.basename(file)) for file in args.file])
+        titles = 'Command & Setup & Repetitions ' + filenames + r'\\ \midrule'
+        return '\n'.join([title_rule, tabular, titles]) + '\n'
+    else:
+        return ''
 
-def print_footer():
-    if args.latex:
+def footer():
+    # The footer of the output. Usually closes what was opened in the header.
+    if args.output_format == 'latex':
         return '\\bottomrule\n\\end{tabular}\n'
-    return ''
+    else:
+        return ''
 
-def print_err_score(val):
+def err_score(val):
+    # N/A or FAIL.
     return '{:>5} '.format(val)
 
-def print_score(avg, score):
-    if args.csv:
+def score(avg, score):
+    # A single score to be displayed, handle the colors.
+    if args.output_format == 'csv':
         return '{:5.2f}'.format(score)
-    color = ''
-    color_latex='black'
-    if score <= avg - args.threshold / 100 * avg:
-        color = green
-        color_latex = 'green'
-    elif args.threshold / 100 * avg + avg <= score:
-        color = red
-        color_latex = 'red'
-    if args.latex:
-        return '\\textcolor{' + color_latex + '}{\\num{' + '{:5.2f}'.format(score) + '}}'
-    return color + '{:5.2f}'.format(score) + std + ' '
+    else:
+        the_color = 'black'
+        if score <= avg - args.threshold / 100 * avg:
+            the_color = 'green'
+        elif args.threshold / 100 * avg + avg <= score:
+            the_color = 'red'
+        if args.output_format == 'latex':
+            return r'\textcolor{' + the_color + r'}{\num{' + '{:5.2f}'.format(score) + '}}'
+        else:
+            return color[the_color] + '{:5.2f}'.format(score) + color['std'] + ' '
 
-def print_repetitions(nb):
-    if args.csv:
+def repetitions(nb):
+    # The number of times the test was executed in order to give these scores.
+    if args.output_format == 'csv':
         return str(nb)
-    if args.latex:
-        return '\\num{' + str(nb) + '}'
-    return '' if nb == 1 else ', {}x'.format(nb)
+    elif args.output_format == 'latex':
+        return r'\num{' + str(nb) + '}'
+    else:
+        return '' if nb == 1 else ', {}x'.format(nb)
 
 def latex_format(text):
-    return text.replace('->', '\\rightarrow ')\
-               .replace('^', '\\widehat')\
-               .replace('}', '\\}')\
-               .replace('{', '\\{')\
-               .replace('\/', '\\/')\
-               .replace('&', '\&')\
-               .replace('_', '\_')\
-               .replace('\\e', '\\backslash e')
+    # Escape special latex characters.
+    return text.replace('->', r'\rightarrow ')\
+               .replace('^', r'\widehat')\
+               .replace('}', r'\}')\
+               .replace('{', r'\{')\
+               .replace('&', r'\&')\
+               .replace('_', r'\_')\
+               .replace('\\e', r'\backslash e')
 
-def print_test(test, buf):
-    if args.csv:
-        return "\"" + test.split('#')[0].rstrip().replace("\"", "\"\"")\
-               + '\",\"' + test.split('#')[1][1:].lstrip().replace("\"", "\"\"") + "\""
-    if args.latex:
-         command = '$' + latex_format(test.split('#')[0].rstrip()) + '$ & '
-         setup = '$' + latex_format(test.split('#')[1][1:].lstrip()) + '$'
-         return command + setup
-    return test
+def get_command(test):
+    # The command executed in the test (ex: a.compose(b)).
+    return test.split('#')[0].rstrip()
+def get_setup(test):
+    # The setup of the test, object initialization (ex: a = std([a-z]*)).
+    return test.split('#')[1][1:].lstrip()
+
+def test(test, buf):
+    # The test's informations.
+    if args.output_format == 'csv':
+        return "\"" + get_command(test).replace("\"", "\"\"")\
+               + '\",\"' + get_setup(test).replace("\"", "\"\"") + "\""
+    elif args.output_format == 'latex':
+        command = '$' + latex_format(get_command(test)) + '$ & '
+        setup = '$' + latex_format(get_setup(test)) + '$'
+        return command + setup
+    else:
+        return test
 
 def print_all(buf, fl):
-    if args.csv or args.latex:
-        delimiter = ',' if args.csv else ' & '
+    # Print the test informations, repetitions and score.
+    # The order depending on the output format.
+    if args.output_format == 'csv' or args.output_format == 'latex':
+        delimiter = ',' if args.output_format == 'csv' else ' & '
         fl.write(buf['test'] + delimiter)
         fl.write(buf['repetitions'] + delimiter)
         fl.write(delimiter.join(buf['scores']))
-        fl.write('\\\\\n' if args.latex else ',\n')
+        fl.write('\\\\\n' if args.output_format == 'latex' else ',\n')
     else:
         fl.write(''.join(buf['scores']))
         fl.write(buf['test'])
@@ -292,8 +308,8 @@ def print_all(buf, fl):
 
 def text(keys):
     # For each bench-case, compare all the recorded scores.
-    fl = sys.stdout if args.output_file in ['', '-', None] else open(args.output_file, 'a')
-    fl.write(print_header(args.file))
+    fl = sys.stdout if args.output in ['', '-', None] else open(args.output, 'a')
+    fl.write(header(args.file))
     for k in keys:
         # All the benches.
         bs = [bench[k][f] if f in bench[k] else {'value': 'N/A', 'num': 0}
@@ -313,13 +329,13 @@ def text(keys):
         buf['scores'] = []
         for b in bs:
             if b['value'] in ['FAIL', 'N/A']:
-                buf['scores'].append(print_err_score(b['value']))
+                buf['scores'].append(err_score(b['value']))
             else:
-                buf['scores'].append(print_score(avg, b['value']))
-        buf['repetitions'] = print_repetitions(number[k])
-        buf['test'] = print_test(k, buf)
+                buf['scores'].append(score(avg, b['value']))
+        buf['repetitions'] = repetitions(number[k])
+        buf['test'] = test(k, buf)
         print_all(buf, fl)
-    fl.write(print_footer())
+    fl.write(footer())
 
 # Main.
 

@@ -19,5 +19,5 @@ if (vcsn python -c 'import colorama') 2>/dev/null; then
     check shortest.out -c always --only shortest -t 2 $a $b $c $d
 fi
 
-check csv.out --all -c never --csv $a $b $c $d
-check latex.out --all -c never --latex $a $b $c $d
+check csv.out --all -c never --output-format csv $a $b $c $d
+check latex.out --all -c never --output-format latex $a $b $c $d

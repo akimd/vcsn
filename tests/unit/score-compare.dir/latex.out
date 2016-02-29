@@ -1,5 +1,6 @@
-\begin{tabular}{llrrrrr} \toprule
-{$Command$} & {$Setup$} & {$Repetitions$} & v2.0-0001-g6bfe026 & v2.0-0423-g841c067 & v2.0-1255-gafaf339 & v2.1-0010-gd55ef26 \\ \midrule
+\newcommand{\titlerot}[4]{\multicolumn{#1}{#2}{\rlap{\rotatebox{#3}{#4}~}}}
+\begin{tabular}{llrrrrr}
+Command & Setup & Repetitions & \titlerot{1}{c}{60}{v2.0-0001-g6bfe026} & \titlerot{1}{c}{60}{v2.0-0423-g841c067} & \titlerot{1}{c}{60}{v2.0-1255-gafaf339} & \titlerot{1}{c}{60}{v2.1-0010-gd55ef26} \\ \midrule
 $a \& 12$ & $a = std([a-e]*b(<2>[a-e])*)$ & \num{1} & \textcolor{black}{\num{ 4.15}} & \textcolor{black}{\num{ 4.13}} & \textcolor{black}{\num{ 4.15}} & \textcolor{black}{\num{ 4.00}}\\
 $a.accessible()$ & $a = thompson([a-m]\{20000\}).proper(False)$ & \num{1} &   N/A  & \textcolor{black}{\num{ 0.30}} & \textcolor{black}{\num{ 0.36}} & \textcolor{black}{\num{ 0.33}}\\
 $a.compose(a)$ & $a = std(['(a,a)'-'(i,z)']\{4\})$ & \num{1} & \textcolor{black}{\num{ 1.22}} & \textcolor{black}{\num{ 1.22}} & \textcolor{black}{\num{ 1.16}} & \textcolor{black}{\num{ 1.18}}\\
