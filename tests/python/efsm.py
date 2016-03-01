@@ -54,7 +54,7 @@ check(a, 'slowgrow.efsm')
 
 for f in ["lal-char-zmin", "lat-zmin", "ascii-to-one"]:
   print("f:", f)
-  a = vcsn.automaton(filename = medir + "/" + f + '.gv')
+  a = vcsn.automaton(filename=medir + "/" + f + '.gv')
   check(a, f + '.efsm')
 
 # Check the case of an automaton without any transition.
@@ -89,16 +89,32 @@ a = vcsn.context('lat<lal<char>,lan<string>>, b')\
       .expression("(c|'child'+p|'parent')*").standard().sort().strip()
 check(a, 'char-string.efsm')
 
+
+def compose(l, r):
+  print("Compose:", l, r)
+  # We need to enforce the letters, otherwise fstcompose complains
+  # about incompatible symbol tables.
+  ctx = vcsn.context('lat<lan(amxy), lan(amxy)>, zmin')
+  l = ctx.expression(l).automaton()
+  r = ctx.expression(r).automaton()
+  c_vcsn = l.compose(r).strip()
+  c_ofst = l.fstcompose(r)
+  # We get a narrower context, restore the original one so that
+  # CHECK_EQ does not fail because of context differences.
+  c_ofst = c_ofst.automaton(ctx)
+  return (c_vcsn, c_ofst)
+
+
 if have_ofst:
   # Conjunction: check that OpenFST and Vcsn understand the weights
   # the same way.  We have zmin and log in common.
   for f in [vcsn.datadir + '/lal_char_zmin/minblocka.gv',
             vcsn.datadir + '/lal_char_zmin/slowgrow.gv',
             medir + '/lal-char-log.gv']:
-    print("Checking:", f)
+    print("Conjunction:", f)
     #
     # a & 2 by Vcsn.
-    a = vcsn.automaton(filename = f)
+    a = vcsn.automaton(filename=f)
     a2_vcsn = a & 2
 
     # c1 & c1 by OpenFST.
@@ -109,11 +125,26 @@ if have_ofst:
   # Make sure determinizations agree.  This automaton, determinized,
   # has weights on the final states only, which exercises a bug we
   # once had.
+  print("Determinize")
   zmin = vcsn.context('lal_char(ab), zmin')
   a = zmin.expression('[ab]*a(<2>[ab])').automaton()
   d_vcsn = a.determinize().strip()
   d_ofst = a.fstdeterminize()
   CHECK_EQ(d_vcsn, d_ofst)
+
+  # Make sure compositions agree, even when there are empty words on
+  # some tapes.
+  c_vcsn, c_ofst = compose('<2>a|m', '<3>m|x')
+  CHECK_EQ(c_vcsn, c_ofst)
+
+  c_vcsn, c_ofst = compose('<2>a|\e', '<3>\e|x')
+  CHECK_EQ(c_vcsn, c_ofst)
+
+  # In this case, we get two different automata: OpenFST's result is
+  # trim, and has one less state: we return a tree, they manage to
+  # keep a single final state.
+  c_vcsn, c_ofst = compose('<2>a|\e + <3>a|m', '<4>\e|x + <3>m|y')
+  CHECK_EQUIV(c_vcsn, c_ofst)
 
 else:
   SKIP('OpenFST is missing')
