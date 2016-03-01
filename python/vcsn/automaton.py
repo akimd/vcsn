@@ -209,6 +209,48 @@ class automaton:
             return self._format(fmt)
 
 
+    def __format__(self, spec):
+        """Format the automaton according to `spec`.
+
+        Parameters
+        ----------
+        spec : str, optional
+            a list of letters that specify how the automaton
+            should be formatted.
+
+        Supported specifiers
+        --------------------
+
+        - 'd': use Daut syntax (default)
+        - 'e': use EFSM syntax
+        - 'g': use Graphviz's Dot syntax
+        - 't': use TikZ syntax
+
+        - ':spec': pass the remaining specification to the
+                   formating function for strings.
+
+        """
+
+        syntax = 'daut'
+        syntaxes = {'d': 'daut',
+                    'e': 'efsm',
+                    'g': 'dot',
+                    'x': 'tikz'}
+
+        while spec:
+            c, spec = spec[0], spec[1:]
+            if c in syntaxes:
+                syntax = syntaxes[c]
+            elif c == ':':
+                break
+            else:
+                raise ValueError("unknown format specification: " + c + spec)
+
+        s = self.format(syntax)
+
+        return s.__format__(spec)
+
+
     def as_fst(self):
         '''Return an OpenFST binary file for `self`.  When the result is
         discarded, the file might be removed, so to keep the file alive,
