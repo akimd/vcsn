@@ -5,6 +5,7 @@
 #include <vcsn/misc/stream.hh> // eat
 #include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/min-plus.hh>
+#include <vcsn/weightset/nmin.hh>
 #include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
@@ -39,6 +40,12 @@ namespace vcsn
         return v;
       }
 
+      static value_t
+      conv(nmin, const nmin::value_t v)
+      {
+        return v;
+      }
+
       static constexpr bool has_lightening_weights() { return true; }
 
       std::ostream&
@@ -66,7 +73,8 @@ namespace vcsn
       }
     };
 
-    VCSN_JOIN_SIMPLE(b, zmin);
+    VCSN_JOIN_SIMPLE(b,    zmin);
+    VCSN_JOIN_SIMPLE(nmin, zmin);
     VCSN_JOIN_SIMPLE(zmin, zmin);
   }
 

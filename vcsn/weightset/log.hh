@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <string>
 
 #include <vcsn/core/join.hh>
 #include <vcsn/misc/format.hh>
