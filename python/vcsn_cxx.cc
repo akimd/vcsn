@@ -212,6 +212,7 @@ struct automaton
             const std::string& format = "default",
             const std::string& filename = "",
             bool strip = true)
+    : val_(nullptr)
   {
     auto is = make_istream(data, filename);
     val_ = vcsn::dyn::read_automaton(*is, format, strip);
@@ -1190,6 +1191,7 @@ struct weight
 `---------------------------*/
 
 automaton::automaton(const expression& r)
+  : val_(nullptr)
 {
   *this = r.derived_term();
 }

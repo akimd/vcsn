@@ -2,7 +2,7 @@
 
 #include <memory> // shared_ptr
 
-#include <vcsn/core/automaton.hh> // Automaton
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/cast.hh>
 
 namespace vcsn
@@ -12,11 +12,9 @@ namespace vcsn
     // vcsn/dyn/automaton.hh.
     namespace detail
     {
-      class automaton_base;
-      template <Automaton Aut>
-      class automaton_wrapper;
+      class automaton;
     }
-    using automaton = std::shared_ptr<detail::automaton_base>;
+    using automaton = detail::automaton;
 
     // vcsn/dyn/context.hh.
     namespace detail
