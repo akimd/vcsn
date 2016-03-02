@@ -122,7 +122,7 @@ algo_headers =                                  \
   %D%/algos/zpc.hh
 
 nobase_include_HEADERS =                        \
-  $(algo_headers)				\
+  $(algo_headers)                               \
   %D%/alphabets/char.hh                         \
   %D%/alphabets/setalpha.hh                     \
   %D%/alphabets/string.hh                       \
@@ -190,6 +190,7 @@ nobase_include_HEADERS =                        \
   %D%/ctx/traits.hh                             \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
+  %D%/dyn/cast.hh                               \
   %D%/dyn/context-parser.hh                     \
   %D%/dyn/context-printer.hh                    \
   %D%/dyn/context-visitor.hh                    \
