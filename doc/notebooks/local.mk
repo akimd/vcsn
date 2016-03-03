@@ -163,12 +163,18 @@ MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 # nbconvert appends ".html" to the argument of --output.
 	$(AM_V_at)$(NBCONVERT) $(if $(V:0=),,--log-level=CRITICAL) --output="$*.tmp" "$<"
-# The generated HTML files still point to ipynb files, which is ok for
-# nbviewer, but not for us.  So s/ipynb/html/.
 	$(AM_V_at)$(PERL) -pi					\
-	   -e 's{(<a href=".*?\.)ipynb([#"])}{$$1html$$2}g;'	\
 	   -e 's{\Q$(MATHJAX_BAD)\E}'"{$(MATHJAX_OK)}g;"	\
 	   "$*.tmp.html"
+# The generated HTML files still point to ipynb files, which is ok for
+# nbviewer, but not for us.  So s/ipynb/html/, except for ICALP.
+# FIXME: restore once the review process is over.
+	$(AM_V_at) case " $* " in				\
+	  *ICALP*) ;;						\
+	  *) $(PERL) -pi					\
+	   -e 's{(<a href=".*?\.)ipynb([#"])}{$$1html$$2}g;'	\
+	   "$*.tmp.html";;					\
+	esac
 	$(AM_V_at)mv -f "$*.tmp.html" "$@"
 
 upload-doc: upload-notebooks
