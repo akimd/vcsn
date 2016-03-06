@@ -24,7 +24,8 @@ namespace vcsn
     REGISTRY_DEFINE(print_expansion);
 
     std::ostream&
-    print(const dyn::expansion& w, std::ostream& out, const std::string& format)
+    print(const dyn::expansion& w, std::ostream& out,
+          const std::string& format)
     {
       if (format == "null")
         {}
@@ -42,6 +43,35 @@ namespace vcsn
         raise("invalid output format for expansion: ", str_escape(format));
       return out;
     }
+
+    /*-----------------------------.
+    | print(expression, stream).   |
+    `-----------------------------*/
+
+    REGISTRY_DEFINE(print_expression);
+
+    std::ostream&
+    print(const expression& exp, std::ostream& out, const std::string& format)
+    {
+      if (format == "info")
+        info(exp, out);
+      else if (format == "null")
+        {}
+      else if (format == "latex" || format == "utf8")
+        detail::print_expression_registry().call(exp, out, format);
+      else if (format == "text" || format == "default" || format == "")
+        {
+          // FIXME: problem with rvalue if we pass
+          // 'std::string("text")'.
+          // FIXME: We _need_ the const, see name.hh.
+          const std::string format = "text";
+          detail::print_expression_registry().call(exp, out, format);
+        }
+      else
+        raise("invalid output format for expression: ", str_escape(format));
+      return out;
+    }
+
 
     /*-----------------------.
     | print(label, stream).  |
@@ -95,35 +125,6 @@ namespace vcsn
         }
       else
         raise("invalid output format for polynomial: ", str_escape(format));
-      return out;
-    }
-
-
-    /*-----------------------------.
-    | print(expression, stream).   |
-    `-----------------------------*/
-
-    REGISTRY_DEFINE(print_expression);
-
-    std::ostream&
-    print(const expression& exp, std::ostream& out, const std::string& format)
-    {
-      if (format == "info")
-        info(exp, out);
-      else if (format == "null")
-        {}
-      else if (format == "latex" || format == "utf8")
-        detail::print_expression_registry().call(exp, out, format);
-      else if (format == "text" || format == "default" || format == "")
-        {
-          // FIXME: problem with rvalue if we pass
-          // 'std::string("text")'.
-          // FIXME: We _need_ the const, see name.hh.
-          const std::string format = "text";
-          detail::print_expression_registry().call(exp, out, format);
-        }
-      else
-        raise("invalid output format for expression: ", str_escape(format));
       return out;
     }
 

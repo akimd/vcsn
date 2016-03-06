@@ -69,44 +69,43 @@ namespace vcsn
   DEFINE::print_set(std::ostream& o, format fmt) const
     -> std::ostream&
   {
-        switch (fmt.kind())
+    switch (fmt.kind())
+      {
+      case format::latex:
+        o << "\\mathsf{"
+          << (identities().is_distributive() ? "Series" : "RatE")
+          << "}[";
+        context().print_set(o, fmt);
+        o << ']';
+        break;
+      case format::sname:
+        if (identities().is_distributive())
           {
-          case format::latex:
-            o << "\\mathsf{"
-              << (identities().is_distributive() ? "Series" : "RatE")
-              << "}[";
+            o << "seriesset<";
             context().print_set(o, fmt);
-            o << ']';
-            break;
-          case format::sname:
-            if (identities().is_distributive())
-              {
-                o << "seriesset<";
-                context().print_set(o, fmt);
-                o << '>';
-              }
-            else
-              {
-                o << "expressionset<";
-                context().print_set(o, fmt);
-                o << '>';
-                if (identities() != vcsn::rat::identities{})
-                  o << '(' << identities() << ')';
-              }
-            break;
-          case format::text:
-          case format::utf8:
-            o << "RatE[";
+            o << '>';
+          }
+        else
+          {
+            o << "expressionset<";
             context().print_set(o, fmt);
-            o << ']';
+            o << '>';
             if (identities() != vcsn::rat::identities{})
               o << '(' << identities() << ')';
-            break;
-          case format::raw:
-            assert(0);
-            break;
           }
-        return o;
+        break;
+      case format::text:
+      case format::utf8:
+        o << "RatE[";
+        context().print_set(o, fmt);
+        o << ']';
+        if (identities() != vcsn::rat::identities{})
+          o << '(' << identities() << ')';
+        break;
+      case format::raw:
+        assert(!"print: expression: invalid format: rat");
+        break;
+      }
     return o;
   }
 

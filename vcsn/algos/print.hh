@@ -138,10 +138,11 @@ namespace vcsn
   | print(expansion, stream).  |
   `---------------------------*/
 
+  /// Print a value thanks to a valueset.
+  ///
   /// Applies to (ValueSet, Value, ostream, string): for expansionset,
   /// polynomialset, expressionset, and weightset.
   template <typename ValueSet>
-  inline
   std::ostream&
   print(const ValueSet& vs, const typename ValueSet::value_t& v,
         std::ostream& o, format fmt)
@@ -155,11 +156,42 @@ namespace vcsn
     {
       /// Bridge (print).
       template <typename ExpansionSet, typename Ostream, typename String>
-      std::ostream& print_expansion(const expansion& expansion, std::ostream& o,
+      std::ostream& print_expansion(const expansion& expansion,
+                                    std::ostream& o,
                                     const std::string& fmt)
       {
         const auto& e = expansion->as<ExpansionSet>();
         return vcsn::print(e.expansionset(), e.expansion(), o, format(fmt));
+      }
+    }
+  }
+
+  /*-----------------------------.
+  | print(expression, stream).   |
+  `-----------------------------*/
+
+#if 0
+  /// See ExpansionSet.
+  template <typename ExpSet>
+  std::ostream&
+  print(const ExpSet& rs, const typename ExpSet::value_t& e,
+        std::ostream& o, format fmt)
+  {
+    return rs.print(e, o, format(fmt));
+  }
+#endif
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (print).
+      template <typename ExpSet, typename Ostream, typename String>
+      std::ostream& print_expression(const expression& exp, std::ostream& o,
+                                     const std::string& fmt)
+      {
+        const auto& e = exp->as<ExpSet>();
+        return vcsn::print(e.expressionset(), e.expression(), o, format(fmt));
       }
     }
   }
@@ -188,7 +220,6 @@ namespace vcsn
   `---------------------------*/
 
   template <typename PolynomialSet>
-  inline
   std::ostream&
   list(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
        std::ostream& o)
@@ -239,45 +270,13 @@ namespace vcsn
   }
 
 
-  /*-----------------------------.
-  | print(expression, stream).   |
-  `-----------------------------*/
-
-#if 0
-  /// See PolynomialSet.
-  template <typename ExpSet>
-  inline
-  std::ostream&
-  print(const ExpSet& rs, const typename ExpSet::value_t& e,
-        std::ostream& o, format fmt)
-  {
-    return rs.print(e, o, format(fmt));
-  }
-#endif
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (print).
-      template <typename ExpSet, typename Ostream, typename String>
-      std::ostream& print_expression(const expression& exp, std::ostream& o,
-                                     const std::string& fmt)
-      {
-        const auto& e = exp->as<ExpSet>();
-        return vcsn::print(e.expressionset(), e.expression(), o, format(fmt));
-      }
-    }
-  }
-
   /*------------------------.
   | print(weight, stream).  |
   `------------------------*/
 
 #if 0
-  /// See PolynomialSet.
+  /// See ExpansionSet.
   template <typename WeightSet>
-  inline
   std::ostream&
   print(const WeightSet& ws, const typename WeightSet::value_t& w,
         std::ostream& o)
