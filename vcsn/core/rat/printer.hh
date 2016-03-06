@@ -17,7 +17,6 @@ namespace vcsn
 {
   namespace rat
   {
-
     /// The possible node precedence levels, increasing.
     ///
     /// When printing a word (i.e., a label with several letters),
@@ -60,19 +59,22 @@ namespace vcsn
         "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"
       };
 
+    /// Pretty-printer for rational expressions.
     template <typename ExpSet>
     class printer
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
+      using super_t = typename expressionset_t::const_visitor;
+      using self_t = printer;
+
       using context_t = context_t_of<expressionset_t>;
       using identities_t = typename expressionset_t::identities_t;
       using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
 
-      using super_t = typename expressionset_t::const_visitor;
       /// Actual node, without indirection.
       using node_t = typename super_t::node_t;
       /// A shared_ptr to node_t.
@@ -94,19 +96,27 @@ namespace vcsn
       void format(format fmt);
 
       /// Entry point: print \a v.
-      std::ostream& operator()(const node_t& v);
-
-      /// Entry point: print \a v.
       std::ostream&
-      operator()(const std::shared_ptr<const node_t>& v)
+      operator()(const value_t& v)
       {
-        return operator()(*v);
+        return print_(*v);
       }
 
-      /// Print the given child node, also knowing its parent's precedence.
+      /// Print a child node, given its parent's precedence.
+      ///
+      /// Public function, to support tuples.
       void print_child(const node_t& child, precedence_t parent);
 
     private:
+      /// Print \a v.
+      std::ostream& print_(const node_t& v);
+
+      /// Print a weight.
+      void print_(const weight_t& w)
+      {
+        rs_.weightset()->print(w, out_, fmt_.for_weights());
+      }
+
       VCSN_RAT_VISIT(atom, v);
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
@@ -159,7 +169,7 @@ namespace vcsn
           print_(v, labelset_t::indices);
           visitor_.out_ << visitor_.tuple_right;
         }
-        const printer& visitor_;
+        const self_t& visitor_;
       };
 
       template <typename Dummy>
@@ -169,7 +179,7 @@ namespace vcsn
         {
           BUILTIN_UNREACHABLE();
         }
-        const printer& visitor_;
+        const self_t& visitor_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
@@ -229,7 +239,7 @@ namespace vcsn
       /// The precedence of \a v (to decide when to print parens).
       precedence_t precedence_(const node_t& v) const;
 
-      /// Print the given child node, also knowing its parent.
+      /// Print a child node, given its parent.
       void print_child_(const node_t& child, const node_t& parent);
 
       /// Print a unary node.

@@ -8,7 +8,6 @@ namespace vcsn
 {
   namespace rat
   {
-
     inline
     std::ostream&
     operator<<(std::ostream& o, type_t t)
@@ -37,7 +36,6 @@ namespace vcsn
     }
 
     template <typename ExpSet>
-    inline
     printer<ExpSet>::printer(const expressionset_t& rs,
                              std::ostream& out)
       : out_{out}
@@ -47,11 +45,10 @@ namespace vcsn
 
 #define DEFINE                                  \
     template <typename ExpSet>                  \
-    inline                                      \
     auto                                        \
     printer<ExpSet>
 
-    DEFINE::operator()(const node_t& v)
+    DEFINE::print_(const node_t& v)
       -> std::ostream&
     {
       static bool print = !! getenv("VCSN_PRINT");
@@ -197,7 +194,7 @@ namespace vcsn
     VISIT(lweight)
     {
       out_ << langle_;
-      rs_.weightset()->print(v.weight(), out_, fmt_.for_weights());
+      print_(v.weight());
       out_ << rangle_ << lmul_;
       print_child_(*v.sub(), v);
     }
@@ -206,7 +203,7 @@ namespace vcsn
     {
       print_child_(*v.sub(), v);
       out_ << rmul_ << langle_;
-      rs_.weightset()->print(v.weight(), out_, fmt_.for_weights());
+      print_(v.weight());
       out_ << rangle_;
     }
 
@@ -288,7 +285,7 @@ namespace vcsn
         out_ << lparen_;
       else if (parent == precedence_t::unary)
         out_ << lgroup_;
-      operator()(child);
+      print_(child);
       if (needs_parens)
         out_ << rparen_;
       else if (parent == precedence_t::unary)
@@ -303,7 +300,6 @@ namespace vcsn
 
     template <typename ExpSet>
     template <type_t Type>
-    inline
     auto
     printer<ExpSet>::print_(const unary_t<Type>& v, const char* op)
       -> void
@@ -314,7 +310,6 @@ namespace vcsn
 
     template <typename ExpSet>
     template <type_t Type>
-    inline
     auto
     printer<ExpSet>::print_(const variadic_t<Type>& n, const char* op)
       -> void
