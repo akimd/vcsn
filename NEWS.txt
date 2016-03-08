@@ -5,9 +5,7 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-## 2016-02-18
-### ldiv and rdiv for automata
-
+## 2016-03-08
 `automaton.ldiv` and `automaton.rdiv` compute the left and right quotients of
 two automata.
 
@@ -20,6 +18,8 @@ two automata.
 
     In [3]: (aut('abcd') / (aut('cd')).expression()
     Out[3]: ab
+
+
 
 # Vcsn 2.2 (2016-02-19)
 
@@ -414,6 +414,8 @@ with negative weights.
 
 - Tuples now display parentheses only when needed.  For instance with
   weights in ℤ ⨉ ℤ, instead of `<(1, 2)>a`, we display `<1, 2>a`.
+
+
 
 # Vcsn 2.1 (2015-10-11)
 
@@ -1262,6 +1264,8 @@ Error messages about failed algorithm instantiations are much clearer: they
 display failed preconditions.
 
 Blind is no longer limited to tape 0 or tape 1.
+
+
 
 # Vaucanson 2.0 (2014-07-25)
 

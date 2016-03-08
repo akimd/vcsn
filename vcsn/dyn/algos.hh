@@ -741,7 +741,7 @@ namespace vcsn
     expansion right_mult(const expansion& aut, const weight& w);
 
     /// The right-multiplication of an expression with \a w as weight.
-    expression right_mult(const expression& aut, const weight& w);
+    expression right_mult(const expression& exp, const weight& w);
 
     /// Build the SCC automaton whose states are labeled with number
     /// of the strongly-connected component they belong to.
