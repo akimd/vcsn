@@ -69,7 +69,6 @@ namespace vcsn
             typename... VSs>
   auto
   join(ValueSet1 vs1, ValueSet2 vs2, ValueSet3 vs3, VSs&&... vs)
-    -> decltype(join(join(vs1, vs2), vs3, std::forward<VSs>(vs)...))
   {
     return join(join(vs1, vs2), vs3, std::forward<VSs>(vs)...);
   }

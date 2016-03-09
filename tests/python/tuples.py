@@ -14,6 +14,9 @@ def check(ctx, exp):
 
 check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
       'a')
+# Yes, once we worked properly with 3 tapes, but not 4.  So check 5.
+check('lat<lan, lan, lan, lan, lan>, q',
+      '1|2|3|4|5')
 check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
       '<2/3,x,-3>a')
 check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
