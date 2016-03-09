@@ -12,6 +12,7 @@
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/stream.hh>
 

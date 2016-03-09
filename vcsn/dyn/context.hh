@@ -4,7 +4,7 @@
 #include <string>
 
 #include <vcsn/ctx/fwd.hh> // vcsn::context
-#include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/cast.hh>
 #include <vcsn/misc/export.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -15,55 +15,86 @@ namespace vcsn
     namespace detail
     {
       /// Template-less root for contexts.
-      class LIBVCSN_API context_base
+      class LIBVCSN_API context
       {
       public:
+        context()
+          : self_(nullptr)
+        {}
+
         /// A description of the context, sufficient to build it.
-        virtual symbol vname() const = 0;
+        template <typename LabelSet, typename WeightSet>
+        context(const vcsn::context<LabelSet, WeightSet>& ctx)
+          : self_(std::make_shared<model<vcsn::context<LabelSet, WeightSet>>>(ctx))
+        {}
+
+        symbol vname() const
+        {
+          return self_->vname();
+        }
 
         /// Downcast to the exact type.
         template <typename Ctx>
         auto& as()
         {
-          return dyn_cast<context_wrapper<Ctx>&>(*this).context();
+          return dyn_cast<model<Ctx>&>(*self_).context();
         }
 
         /// Downcast to the exact type.
         template <typename Ctx>
         auto& as() const
         {
-          return dyn_cast<const context_wrapper<Ctx>&>(*this).context();
-        }
-      };
-
-      /// A wrapped typed context.
-      template <typename Context>
-      class context_wrapper final: public context_base
-      {
-      public:
-        using context_t = Context;
-        using super_t = context_base;
-
-        context_wrapper(const context_t& context)
-          : context_(context)
-        {}
-
-        virtual symbol vname() const override
-        {
-          return context().sname();
+          return dyn_cast<const model<Ctx>&>(*self_).context();
         }
 
-        const context_t& context() const
+        const auto* operator->() const
         {
-          return context_;
+          return this;
+        }
+
+        operator bool() const
+        {
+          return bool(self_);
         }
 
       private:
-        /// The context.
-        const context_t context_;
-      };
+        /// Abstract wrapped type.
+        struct base
+        {
+          virtual ~base() = default;
+          virtual symbol vname() const = 0;
+        };
 
+        /// A wrapped type.
+        template <typename Context>
+        struct model final : base
+        {
+          using context_t = Context;
+
+          model(context_t ctx)
+            : context_(std::move(ctx))
+          {}
+
+          symbol vname() const
+          {
+            return context().sname();
+          }
+
+          const auto& context() const
+          {
+            return context_;
+          }
+
+          /// The context.
+          const context_t context_;
+        };
+
+        /// The wrapped context.
+        std::shared_ptr<base> self_;
+      };
     } // namespace detail
+
+    using context = detail::context;
 
     /// Build a dyn::context from a static one.
     template <typename LabelSet, typename WeightSet>
@@ -71,8 +102,7 @@ namespace vcsn
     context
     make_context(const vcsn::context<LabelSet, WeightSet>& ctx)
     {
-      using context_t = vcsn::context<LabelSet, WeightSet>;
-      return std::make_shared<detail::context_wrapper<context_t>>(ctx);
+      return context(ctx);
     }
   }
 }

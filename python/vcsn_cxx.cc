@@ -131,7 +131,6 @@ struct weight;
 struct context
 {
   context()
-    : val_(nullptr)
   {}
 
   context(const vcsn::dyn::context& ctx)

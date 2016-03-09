@@ -2,6 +2,7 @@
 
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/context.hh>
 #include <lib/vcsn/rat/location.hh>
 #include <vcsn/misc/export.hh>
 

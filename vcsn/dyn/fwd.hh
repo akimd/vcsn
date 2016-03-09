@@ -18,12 +18,10 @@ namespace vcsn
     // vcsn/dyn/context.hh.
     namespace detail
     {
-      class context_base;
-      template <typename Context>
-      class context_wrapper;
+      class context;
     }
     /// A dyn::context.
-    using context = std::shared_ptr<const detail::context_base>;
+    using context = detail::context;
 
     // vcsn/dyn/expansion.hh.
     namespace detail
