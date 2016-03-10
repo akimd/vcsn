@@ -241,7 +241,7 @@ namespace vcsn
       trie(const polynomial& poly)
       {
         const auto& p = poly->as<PolynomialSet>();
-        return make_automaton(trie(p.polynomialset(), p.polynomial()));
+        return trie(p.polynomialset(), p.polynomial());
       }
 
       /// Bridge.
@@ -250,7 +250,7 @@ namespace vcsn
       cotrie(const polynomial& poly)
       {
         const auto& p = poly->as<PolynomialSet>();
-        return make_automaton(cotrie(p.polynomialset(), p.polynomial()));
+        return cotrie(p.polynomialset(), p.polynomial());
       }
     }
   }
@@ -303,7 +303,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto ps = make_word_polynomialset(c);
-        return make_automaton(trie(ps, is, format));
+        return trie(ps, is, format);
       }
 
       /// Bridge (cotrie).
@@ -314,7 +314,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto ps = make_word_polynomialset(c);
-        return make_automaton(cotrie(ps, is, format));
+        return cotrie(ps, is, format);
       }
     }
   }

@@ -376,10 +376,10 @@ namespace vcsn
             // free labelsets.
             auto res = make_derived_term_automaton(rs, a);
             res->init_(r);
-            return make_automaton(res);
+            return res;
           }
         else
-          return make_automaton(::vcsn::derived_term(rs, r, algo));
+          return ::vcsn::derived_term(rs, r, algo);
       }
     }
   }

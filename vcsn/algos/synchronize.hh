@@ -361,7 +361,7 @@ namespace vcsn
       template <Automaton Aut>
       automaton synchronize(const automaton& aut)
       {
-        return make_automaton(::vcsn::synchronize(aut->as<Aut>()));
+        return ::vcsn::synchronize(aut->as<Aut>());
       }
     }
   }

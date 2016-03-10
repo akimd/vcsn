@@ -78,7 +78,7 @@ namespace vcsn
                   const std::vector<unsigned>& finals)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(::vcsn::double_ring(c, n, finals));
+        return ::vcsn::double_ring(c, n, finals);
       }
     }
   }

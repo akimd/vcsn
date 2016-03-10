@@ -349,7 +349,7 @@ namespace vcsn
       template <Automaton Aut>
       automaton delay_automaton(const automaton& aut)
       {
-        return make_automaton(vcsn::make_delay_automaton(aut->as<Aut>()));
+        return vcsn::make_delay_automaton(aut->as<Aut>());
       }
     }
   }

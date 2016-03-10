@@ -204,7 +204,7 @@ namespace vcsn
     result() override final
     {
       const_cast<labelset_t&>(*res_->context().labelset()).open(false);
-      return dyn::make_automaton(res_);
+      return res_;
     }
 
     /// Detach the built automaton.

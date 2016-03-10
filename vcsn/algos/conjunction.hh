@@ -529,13 +529,11 @@ namespace vcsn
                    vcsn::detail::index_sequence<I...>)
       {
         if (lazy)
-          return make_automaton
-            (vcsn::conjunction_lazy
-             (do_insplit<I>(as[I]->as<tuple_element_t<I, Auts>>())...));
+          return vcsn::conjunction_lazy
+             (do_insplit<I>(as[I]->as<tuple_element_t<I, Auts>>())...);
         else
-          return make_automaton
-            (vcsn::conjunction
-             (do_insplit<I>(as[I]->as<tuple_element_t<I, Auts>>())...));
+          return vcsn::conjunction
+             (do_insplit<I>(as[I]->as<tuple_element_t<I, Auts>>())...);
       }
 
       /// Bridge (conjunction).
@@ -597,7 +595,7 @@ namespace vcsn
       {
         const auto& a1 = aut1->as<Aut1>();
         const auto& a2 = aut2->as<Aut2>();
-        return make_automaton(vcsn::ldiv<Aut1, Aut2>(a1, a2));
+        return vcsn::ldiv<Aut1, Aut2>(a1, a2);
       }
     }
   }
@@ -632,7 +630,7 @@ namespace vcsn
       {
         const auto& a1 = aut1->as<Aut1>();
         const auto& a2 = aut2->as<Aut2>();
-        return make_automaton(vcsn::rdiv(a1, a2));
+        return vcsn::rdiv(a1, a2);
       }
     }
   }
@@ -665,7 +663,7 @@ namespace vcsn
                vcsn::detail::index_sequence<I...>)
       {
         auto res = vcsn::shuffle(as[I]->as<tuple_element_t<I, Auts>>()...);
-        return make_automaton(res);
+        return res;
       }
 
       /// Bridge (shuffle).
@@ -751,7 +749,7 @@ namespace vcsn
       {
         auto res
           = vcsn::infiltration(as[I]->as<tuple_element_t<I, Auts>>()...);
-        return make_automaton(res);
+        return res;
       }
 
       /// Bridge (infiltration).
@@ -854,7 +852,7 @@ namespace vcsn
       conjunction_repeated(const automaton& aut, unsigned n)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::conjunction(a, n));
+        return ::vcsn::conjunction(a, n);
       }
     }
   }

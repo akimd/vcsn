@@ -621,7 +621,7 @@ namespace vcsn
       reduce(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(reduce(a));
+        return reduce(a);
       }
     }
   }

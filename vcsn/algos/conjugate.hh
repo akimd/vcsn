@@ -58,7 +58,7 @@ namespace vcsn
       conjugate(const automaton& a)
       {
         const auto& aut = a->as<Aut>();
-        return make_automaton(conjugate(aut));
+        return conjugate(aut);
       }
     }
   }

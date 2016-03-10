@@ -146,7 +146,7 @@ namespace vcsn
       template <Automaton Aut>
       automaton letterize(const automaton& aut)
       {
-        return make_automaton(::vcsn::letterize(aut->as<Aut>()));
+        return ::vcsn::letterize(aut->as<Aut>());
       }
     }
   }
@@ -231,7 +231,7 @@ namespace vcsn
       template <Automaton Aut>
       automaton realtime(const automaton& aut)
       {
-        return make_automaton(::vcsn::realtime(aut->as<Aut>()));
+        return ::vcsn::realtime(aut->as<Aut>());
       }
     }
   }

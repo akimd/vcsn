@@ -145,7 +145,7 @@ namespace vcsn
         // weighted_tag), but others will comes from vcsn::dyn::detail
         // (e.g., for brzozowski_tag when inapplicable).  So do not
         // specify the namespace.
-        return make_automaton(minimize(aut, Tag{}));
+        return minimize(aut, Tag{});
       }
 #if defined __GNUC__ && ! defined __clang__
 # pragma GCC diagnostic pop
@@ -186,7 +186,7 @@ namespace vcsn
       automaton cominimize_tag_(const Aut& aut)
       {
         auto res = transpose(minimize(transpose(aut), Tag{}));
-        return make_automaton(res);
+        return res;
       }
 
       /// Bridge.

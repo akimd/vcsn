@@ -178,7 +178,7 @@ namespace vcsn
       sort(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::sort(a));
+        return ::vcsn::sort(a);
       }
     }
   }

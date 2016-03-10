@@ -43,7 +43,7 @@ namespace vcsn
       lightest_automaton(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::lightest_automaton(a, algo));
+        return ::vcsn::lightest_automaton(a, algo);
       }
     }
   }

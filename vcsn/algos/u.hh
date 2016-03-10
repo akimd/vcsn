@@ -70,7 +70,7 @@ namespace vcsn
       u(const context& ctx, unsigned n)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(::vcsn::u(c, n));
+        return ::vcsn::u(c, n);
       }
     }
   }

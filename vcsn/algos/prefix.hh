@@ -44,7 +44,7 @@ namespace vcsn
       suffix(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::suffix(a));
+        return ::vcsn::suffix(a);
       }
     }
   }
@@ -84,7 +84,7 @@ namespace vcsn
       prefix(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::prefix(a));
+        return ::vcsn::prefix(a);
       }
     }
   }
@@ -121,7 +121,7 @@ namespace vcsn
       factor(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::factor(a));
+        return ::vcsn::factor(a);
       }
     }
   }
@@ -174,7 +174,7 @@ namespace vcsn
       subword(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::subword(a));
+        return ::vcsn::subword(a);
       }
     }
   }

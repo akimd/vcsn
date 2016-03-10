@@ -63,7 +63,7 @@ namespace vcsn
       complement(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::complement(a));
+        return ::vcsn::complement(a);
       }
     }
   }

@@ -79,7 +79,7 @@ namespace vcsn
       partial_identity(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::partial_identity(a));
+        return ::vcsn::partial_identity(a);
       }
     }
   }

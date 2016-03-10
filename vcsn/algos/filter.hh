@@ -188,7 +188,7 @@ namespace vcsn
         // FIXME: this is wrong, of course.
         for (auto s: states)
           ss.emplace(s + 2);
-        return make_automaton(::vcsn::filter(a, ss));
+        return ::vcsn::filter(a, ss);
       }
     }
   }

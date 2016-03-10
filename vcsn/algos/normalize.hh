@@ -41,7 +41,7 @@ namespace vcsn
       normalize(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::normalize(a));
+        return ::vcsn::normalize(a);
       }
     }
   }

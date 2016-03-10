@@ -46,7 +46,7 @@ namespace vcsn
       strip(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::strip(a));
+        return ::vcsn::strip(a);
       }
     }
   }

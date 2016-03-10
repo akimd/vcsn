@@ -169,7 +169,7 @@ This tool reads the algorithm header files, looking for entries such as:
   {
     const auto& c = ctx->as<Context>();
     auto ps = make_word_polynomialset(c);
-    return make_automaton(trie(ps, is));
+    return trie(ps, is);
   }
 
 It does not care about the part in braces: only the comment and the

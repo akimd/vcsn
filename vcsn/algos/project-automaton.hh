@@ -35,7 +35,7 @@ namespace vcsn
       project(const automaton& aut, integral_constant)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(vcsn::project<Tape::value>(a));
+        return vcsn::project<Tape::value>(a);
       }
     }
   }

@@ -262,9 +262,8 @@ namespace vcsn
                        float loop_chance)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(vcsn::random_automaton(c, num_states, density,
-                                                     num_initial, num_final,
-                                                     loop_chance));
+        return vcsn::random_automaton(c, num_states, density, num_initial,
+                                      num_final, loop_chance);
       }
     }
   }
@@ -318,7 +317,7 @@ namespace vcsn
       random_automaton_deterministic(const context& ctx, unsigned num_states)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(vcsn::random_automaton_deterministic(c, num_states));
+        return vcsn::random_automaton_deterministic(c, num_states);
       }
     }
   }

@@ -332,7 +332,7 @@ namespace vcsn
       focus(const automaton& aut, integral_constant)
       {
         auto& a = aut->as<Aut>();
-        return make_automaton(vcsn::focus<Tape::value>(a));
+        return vcsn::focus<Tape::value>(a);
       }
     }
   }

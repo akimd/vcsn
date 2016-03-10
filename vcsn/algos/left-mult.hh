@@ -142,7 +142,7 @@ namespace vcsn
       automaton
       left_mult_tag(const weight_t_of<Aut>& w, Aut& aut)
       {
-        return make_automaton(::vcsn::left_mult_here(w, aut, Tag{}));
+        return ::vcsn::left_mult_here(w, aut, Tag{});
       }
 
       /// Bridge.
@@ -314,7 +314,7 @@ namespace vcsn
       automaton
       right_mult_tag(Aut& aut, const weight_t_of<Aut>& w)
       {
-        return make_automaton(::vcsn::right_mult_here(aut, w, Tag{}));
+        return ::vcsn::right_mult_here(aut, w, Tag{});
       }
 
       /// Bridge.

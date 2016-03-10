@@ -350,9 +350,9 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (lazy)
-          return make_automaton(::vcsn::insplit_lazy(a));
+          return ::vcsn::insplit_lazy(a);
         else
-          return make_automaton(::vcsn::insplit(a));
+          return ::vcsn::insplit(a);
       }
     }
   }

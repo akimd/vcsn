@@ -293,9 +293,9 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "lazy")
-          return make_automaton(proper_lazy(a, dir, prune));
+          return proper_lazy(a, dir, prune);
         else
-          return make_automaton(::vcsn::proper(a, dir, prune, algo));
+          return ::vcsn::proper(a, dir, prune, algo);
       }
     }
   }

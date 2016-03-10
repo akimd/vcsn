@@ -106,13 +106,5 @@ namespace vcsn
     }
 
     using automaton = detail::automaton;
-
-    /// Build a dyn::automaton.
-    template <Automaton Aut>
-    automaton
-    make_automaton(const Aut& aut)
-    {
-      return automaton(aut);
-    }
   }
 }

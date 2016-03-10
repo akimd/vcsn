@@ -174,7 +174,7 @@ namespace vcsn
           (algo == "auto" ? "standard" : algo,
             [l, r](auto tag)
             {
-              return make_automaton(::vcsn::multiply(l, r, tag));
+              return automaton(::vcsn::multiply(l, r, tag));
             },
             l, r);
       }
@@ -263,7 +263,7 @@ namespace vcsn
         return ::vcsn::detail::dispatch_tags(algo,
             [aut, min, max](auto tag)
             {
-              return make_automaton(::vcsn::multiply(aut, min, max, tag));
+              return automaton(::vcsn::multiply(aut, min, max, tag));
             },
         aut);
       }

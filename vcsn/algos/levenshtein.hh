@@ -66,7 +66,7 @@ namespace vcsn
       levenshtein(const dyn::context& ctx)
       {
         const auto& c = ctx->as<Context>();
-        return make_automaton(::vcsn::levenshtein(c));
+        return ::vcsn::levenshtein(c);
       }
     }
   }

@@ -373,10 +373,9 @@ namespace vcsn
           = vcsn::detail::make_nullableset_context(e.expressionset().context());
         using ctx_t = decltype(ctx);
         using automaton_t = mutable_automaton<ctx_t>;
-        return make_automaton(::vcsn::zpc<automaton_t>(ctx,
-                                                       e.expressionset(),
-                                                       e.expression(),
-                                                       algo));
+        return ::vcsn::zpc<automaton_t>(ctx, e.expressionset(),
+                                        e.expression(),
+                                        algo);
       }
     }
   }

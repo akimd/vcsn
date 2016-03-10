@@ -261,7 +261,7 @@ namespace vcsn
                      vcsn::rat::identities ids, integral_constant)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::lift<Aut, Tapes::value...>(a, ids));
+        return ::vcsn::lift<Aut, Tapes::value...>(a, ids);
       }
     }
   }

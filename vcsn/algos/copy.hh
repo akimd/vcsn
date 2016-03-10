@@ -412,7 +412,7 @@ namespace vcsn
         const auto& c = ctx->as<Ctx>();
         auto res = make_mutable_automaton(c);
         ::vcsn::copy_into(a, res);
-        return make_automaton(res);
+        return res;
       }
 
       /// Bridge.
@@ -421,7 +421,7 @@ namespace vcsn
       copy(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::copy(a));
+        return ::vcsn::copy(a);
       }
     }
   }

@@ -704,7 +704,7 @@ namespace vcsn
       automaton scc(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::scc(a, algo));
+        return ::vcsn::scc(a, algo);
       }
     }
   }
@@ -771,7 +771,7 @@ namespace vcsn
       automaton component(const automaton& aut, unsigned num)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::component(a, num));
+        return ::vcsn::component(a, num);
       }
     }
   }
@@ -832,7 +832,7 @@ namespace vcsn
       automaton condense(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::condense(a));
+        return ::vcsn::condense(a);
       }
     }
   }

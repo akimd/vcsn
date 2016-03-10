@@ -298,8 +298,7 @@ namespace vcsn
       template <Automaton Aut, typename Tag, bool Lazy = false>
       automaton determinize_tag_(const Aut& aut)
       {
-        return make_automaton(::vcsn::determinize(aut, Tag{},
-                                                  bool_constant<Lazy>{}));
+        return ::vcsn::determinize(aut, Tag{}, bool_constant<Lazy>{});
       }
 
       /// Boolean Bridge.
@@ -378,7 +377,7 @@ namespace vcsn
       template <Automaton Aut, typename Tag>
       automaton codeterminize_tag_(const Aut& aut)
       {
-        return make_automaton(::vcsn::codeterminize(aut, Tag{}));
+        return ::vcsn::codeterminize(aut, Tag{});
       }
 
       /// Boolean Bridge.

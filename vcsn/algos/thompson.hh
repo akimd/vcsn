@@ -215,9 +215,8 @@ namespace vcsn
           = vcsn::detail::make_nullableset_context(e.expressionset().context());
         using ctx_t = decltype(ctx);
         using automaton_t = mutable_automaton<ctx_t>;
-        return make_automaton(::vcsn::thompson<automaton_t>(ctx,
-                                                            e.expressionset(),
-                                                            e.expression()));
+        return ::vcsn::thompson<automaton_t>(ctx, e.expressionset(),
+                                             e.expression());
       }
     }
   }

@@ -141,7 +141,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::difference(l, r));
+        return ::vcsn::difference(l, r);
       }
     }
   }

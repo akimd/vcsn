@@ -56,7 +56,7 @@ namespace vcsn
       ladybird(const dyn::context& ctx, unsigned n)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(::vcsn::ladybird(c, n));
+        return ::vcsn::ladybird(c, n);
       }
     }
   }

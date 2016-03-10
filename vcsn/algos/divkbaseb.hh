@@ -71,7 +71,7 @@ namespace vcsn
       divkbaseb(const context& ctx, unsigned divisor, unsigned base)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(::vcsn::divkbaseb(c, divisor, base));
+        return ::vcsn::divkbaseb(c, divisor, base);
       }
     }
   }

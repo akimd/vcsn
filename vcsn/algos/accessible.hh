@@ -206,7 +206,7 @@ namespace vcsn
       accessible(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::accessible(a));
+        return ::vcsn::accessible(a);
       }
 
       /// Bridge.
@@ -215,7 +215,7 @@ namespace vcsn
       coaccessible(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::coaccessible(a));
+        return ::vcsn::coaccessible(a);
       }
 
       /// Bridge.
@@ -224,7 +224,7 @@ namespace vcsn
       trim(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::trim(a));
+        return ::vcsn::trim(a);
       }
 
       /// Bridge.

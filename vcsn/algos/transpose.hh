@@ -247,7 +247,7 @@ namespace vcsn
       transpose(automaton& aut)
       {
         auto& a = aut->as<Aut>();
-        return make_automaton(vcsn::transpose(a));
+        return vcsn::transpose(a);
       }
     }
   }

@@ -115,7 +115,7 @@ namespace vcsn
         return ::vcsn::detail::dispatch_tags(algo,
             [l, r](auto tag)
             {
-              return make_automaton(::vcsn::sum(l, r, tag));
+              return automaton(::vcsn::sum(l, r, tag));
             },
         l, r);
       }

@@ -59,7 +59,7 @@ namespace vcsn
       de_bruijn(const dyn::context& ctx, unsigned n)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(::vcsn::de_bruijn(c, n));
+        return ::vcsn::de_bruijn(c, n);
       }
     }
   }

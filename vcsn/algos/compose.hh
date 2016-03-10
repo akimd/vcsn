@@ -431,9 +431,9 @@ namespace vcsn
         auto& l = lhs->as<Lhs>();
         auto& r = rhs->as<Rhs>();
         if (lazy)
-          return make_automaton(::vcsn::compose_lazy(l, r));
+          return ::vcsn::compose_lazy(l, r);
         else
-          return make_automaton(::vcsn::compose(l, r));
+          return ::vcsn::compose(l, r);
       }
     }
   }

@@ -263,7 +263,7 @@ namespace vcsn
       pair(const automaton& aut, bool keep_initials)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::pair(a, keep_initials));
+        return ::vcsn::pair(a, keep_initials);
       }
     }
   }

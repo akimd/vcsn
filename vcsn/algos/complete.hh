@@ -76,7 +76,7 @@ namespace vcsn
       complete(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::complete(a));
+        return ::vcsn::complete(a);
       }
     }
   }

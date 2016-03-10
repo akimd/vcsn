@@ -138,7 +138,7 @@ namespace vcsn
       standard(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::standard(a));
+        return ::vcsn::standard(a);
       }
 
       /// Bridge.
@@ -147,7 +147,7 @@ namespace vcsn
       costandard(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(costandard(a));
+        return costandard(a);
       }
     }
   }
@@ -393,8 +393,8 @@ namespace vcsn
         using automaton_t
           = vcsn::mutable_automaton<context_t_of<expressionset_t>>;
         const auto& e = exp->as<expressionset_t>();
-        return make_automaton(::vcsn::standard<automaton_t>(e.expressionset(),
-                                                            e.expression()));
+        return ::vcsn::standard<automaton_t>(e.expressionset(),
+                                             e.expression());
       }
     }
   }

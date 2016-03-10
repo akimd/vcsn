@@ -14,7 +14,7 @@ int main()
   // vcsn:: automaton.
   auto aut = vcsn::make_mutable_automaton(ctx);
   // dyn:: automaton.
-  auto a = vcsn::dyn::make_automaton(aut);
+  auto a = vcsn::dyn::automaton(aut);
 
   using clock = std::chrono::steady_clock;
 
