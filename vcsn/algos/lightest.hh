@@ -190,7 +190,24 @@ namespace vcsn
   typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t
   lightest(const Aut& aut, unsigned num = 1, const std::string& algo = "auto")
   {
-    if (num != 1 || algo == "breadth-first")
+    if (algo == "yen")
+      {
+        using context_t = context_t_of<Aut>;
+        using wordset_context_t = detail::word_context_t<context_t>;
+        using polynomialset_t = polynomialset<wordset_context_t>;
+        using polynomial_t = typename polynomialset_t::value_t;
+        const polynomialset_t ps = make_word_polynomialset(aut->context());
+        polynomial_t res;
+        auto paths = k_lightest_path(aut, aut->pre(), aut->post(), num);
+        for (auto path : paths)
+          {
+            auto monomial = path_monomial(aut, format_lightest(aut, path));
+            if (monomial)
+              ps.add_here(res, *monomial);
+          }
+        return res;
+      }
+    else if (num != 1 || algo == "breadth-first")
       {
         auto lightest = detail::lightest_impl<Aut>{aut};
         return lightest(num);
