@@ -111,32 +111,18 @@ namespace vcsn
       // Division only makes sense for two automata.
       // Lazy version is not implemented yet.
       template <bool L = Lazy>
-      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv_here()
+      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv()
       {
+        require(aut_->labelset()->has_one(),
+            __func__, ": labelset must have a neutral");
         initialize_conjunction();
-
-        using rhs_t = tuple_element_t<1, std::tuple<Auts...>>;
-        auto new_initials = std::vector<state_t_of<rhs_t>>();
-
-        const auto& lhs = std::get<0>(aut_->auts_);
-        auto& rhs = std::get<1>(aut_->auts_);
 
         while (!aut_->todo_.empty())
           {
             const auto& p = aut_->todo_.front();
-            const auto& state_name = std::get<0>(p);
-            this->complete_(std::get<1>(p));
-
-            // If lhs's state is final, rhs's corresponding state is initial.
-            if (lhs->is_final(std::get<0>(state_name)))
-              new_initials.push_back(std::get<1>(state_name));
+            this->complete_ldiv(std::get<1>(p));
             aut_->todo_.pop_front();
           }
-
-        for (auto t: initial_transitions(rhs))
-          rhs->unset_initial(rhs->dst_of(t));
-        for (auto s: new_initials)
-          rhs->set_initial(s);
       }
 
       /// Compute the (accessible part of the) shuffle product.
@@ -247,6 +233,49 @@ namespace vcsn
         add_one_transitions_(src, psrc, aut_->indices);
       }
 
+      /// Behave similarly to add_conjunction_transitions, with three main
+      /// differences: the algorithm continues matching the right hand side
+      /// even when the left hand side has reached post, the labels are set to
+      /// one when the right hand side and left hand side match (that is,
+      /// before the left hand side reaches post), and the weights are divided
+      /// rather than multiplied.
+      template <bool L = Lazy>
+      std::enable_if_t<sizeof...(Auts) == 2 && !L>
+      add_ldiv_transitions(const state_t src, const state_name_t& psrc)
+      {
+        const auto& lhs = std::get<0>(aut_->auts_);
+        const auto& rhs = std::get<1>(aut_->auts_);
+        const auto& lstate = std::get<0>(psrc);
+        const auto& rstate = std::get<1>(psrc);
+
+        if (lhs->is_final(lstate) || lstate == lhs->post())
+        {
+          for (auto ts: all_out(rhs, rstate))
+          {
+            const auto& lweight = lhs->is_final(lstate)
+              ? lhs->get_final_weight(lstate) : ws_.one();
+            this->new_transition(src,
+                                 state(lhs->post(), rhs->dst_of(ts)),
+                                 rhs->label_of(ts),
+                                 ws_.ldiv(lweight, rhs->weight_of(ts)));
+          }
+        }
+        for (auto t: zip_map_tuple(out_(psrc)))
+          if (!aut_->labelset()->is_one(t.first)
+              && (!aut_->labelset()->is_special(t.first)
+              || src == aut_->pre()))
+            detail::cross_tuple
+              ([this,src,t]
+               (const typename transition_map_t<Auts>::transition&... ts)
+               {
+                 this->add_transition(src, state(ts.dst...),
+                     aut_->labelset()->is_special(t.first)
+                     ? t.first : aut_->labelset()->one(),
+                     ws_.ldiv(ts.weight()...));
+               },
+               t.second);
+      }
+
       /// Add the spontaneous transitions leaving state \a src, if it
       /// is relevant (i.e. only for the labelsets that have one).
       template <std::size_t... I>
@@ -288,6 +317,14 @@ namespace vcsn
                   this->new_transition(src, state(pdst), ls.one(), t.weight());
                 }
           }
+      }
+
+      template <bool L = Lazy>
+      std::enable_if_t<sizeof... (Auts) == 2 && !L, void>
+      complete_ldiv(state_t s)
+      {
+        state_name_t sn = aut_->origins().at(s);
+        add_ldiv_transitions(s, sn);
       }
 
       /// Check if all the tapes after the Ith have only incoming
@@ -549,24 +586,6 @@ namespace vcsn
   }
 
 
-  /*----------------------------------.
-  | ldiv_here(automaton, automaton).  |
-  `----------------------------------*/
-
-  /// Compute the left quotient in place.
-  ///
-  /// \param lhs  left hand side
-  /// \param res  right hand side, which holds the result
-  template <Automaton Aut1, Automaton Aut2>
-  Aut2&
-  ldiv_here(const Aut1& lhs, Aut2& res)
-  {
-    auto prod = make_product_automaton<false>(join_automata(lhs, res), lhs, res);
-    prod->ldiv_here();
-    return res;
-  }
-
-
   /*-----------------------------.
   | ldiv(automaton, automaton).  |
   `-----------------------------*/
@@ -577,12 +596,13 @@ namespace vcsn
   /// \param a2  right hand side
   template <Automaton Aut1, Automaton Aut2>
   auto
-  ldiv(const Aut1& a1, const Aut2& a2)
+  ldiv(const Aut1& lhs, const Aut2& rhs)
   {
-    auto res = copy(a2);
-    ldiv_here(a1, res);
-    return res;
+    auto prod = make_product_automaton<false>(join_automata(lhs, rhs), lhs, rhs);
+    prod->ldiv();
+    return prod;
   }
+
 
   namespace dyn
   {
@@ -615,8 +635,7 @@ namespace vcsn
   {
     auto a1t = transpose(a1);
     auto a2t = transpose(a2);
-    ldiv_here(a2t, a1t);
-    return transpose(a1t);
+    return transpose(ldiv(a2t, a1t));
   }
 
   namespace dyn

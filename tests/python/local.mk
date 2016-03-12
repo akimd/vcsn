@@ -226,6 +226,7 @@ EXTRA_DIST +=                                           \
   %D%/factory.dir/ladybird-2.gv                         \
   %D%/factory.dir/levenshtein.gv                        \
   %D%/factory.dir/u-5.gv                                \
+  %D%/ldiv.dir/aut1.gv                                  \
   %D%/minimize.dir/incomplete-non-trim.gv               \
   %D%/minimize.dir/incomplete-non-trim.moore.gv         \
   %D%/minimize.dir/intricate.exp.gv                     \
@@ -262,6 +263,7 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4-subword.gv                        \
   %D%/prefix.dir/aut4-suffix.gv                         \
   %D%/prefix.dir/aut4.gv                                \
+  %D%/rdiv.dir/aut1.gv                                  \
   %D%/synchronize.dir/bool.gv                           \
   %D%/synchronize.dir/bool_delay.gv                     \
   %D%/synchronize.dir/bool_min.gv                       \
@@ -284,9 +286,11 @@ EXTRA_DIST +=                                           \
 %D%/expression.log:      $(wildcard $(srcdir)/%D%/expression.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/infiltration.log:    $(wildcard $(srcdir)/%D%/conjunction.dir/*)
+%D%/ldiv.log:            $(wildcard $(srcdir)/%D%/ldiv.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
+%D%/rdiv.log:            $(wildcard $(srcdir)/%D%/rdiv.dir/*)
 %D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)

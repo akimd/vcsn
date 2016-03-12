@@ -665,8 +665,6 @@ namespace vcsn
                                              unsigned num_states);
 
     /// Right-division of two automata (lhs / rhs).
-    ///
-    /// \pre weightset is boolean
     automaton rdiv(const automaton& lhs, const automaton& rhs);
 
     /// Right-division of two expressions (lhs \ rhs).
