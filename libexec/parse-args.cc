@@ -1,3 +1,5 @@
+#include "parse-args.hh"
+
 #include <getopt.h>
 
 #include <iostream>
@@ -6,10 +8,10 @@
 #include <map>
 #include <stdexcept>
 
-#include "parse-args.hh"
 #include <vcsn/config.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/stream.hh>
 

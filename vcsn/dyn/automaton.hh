@@ -5,6 +5,7 @@
 
 #include <vcsn/core/automaton.hh> // Automaton
 #include <vcsn/dyn/cast.hh>
+#include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/export.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -57,22 +58,22 @@ namespace vcsn
           return this;
         }
 
-        bool operator!()
+        bool operator!() const
         {
           return !self_;
         }
 
       private:
         /// Abstract wrapped typed automaton.
-        struct base_t
+        struct base
         {
-          virtual ~base_t() = default;
+          virtual ~base() = default;
           virtual symbol vname() const = 0;
         };
 
         /// A wrapped typed automaton.
         template <Automaton Aut>
-        struct model final : base_t
+        struct model final : base
         {
           using automaton_t = Aut;
 
@@ -100,7 +101,7 @@ namespace vcsn
         };
 
         /// The wrapped automaton.
-        std::shared_ptr<base_t> self_;
+        std::shared_ptr<base> self_;
       };
     }
 

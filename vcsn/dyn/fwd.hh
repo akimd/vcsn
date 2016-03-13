@@ -2,7 +2,6 @@
 
 #include <memory> // shared_ptr
 
-#include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/cast.hh>
 
 namespace vcsn

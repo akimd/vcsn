@@ -19,6 +19,7 @@
 #include <boost/python/args.hpp>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh> // vname
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
