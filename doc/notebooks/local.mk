@@ -17,6 +17,7 @@ dist_notebooks_DATA =                           \
   %D%/!Read-me-first.ipynb                      \
   %D%/Algorithms.ipynb                          \
   %D%/Automata.ipynb                            \
+  %D%/CIAA-2016.ipynb                           \
   %D%/Contexts.ipynb                            \
   %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
