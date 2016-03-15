@@ -138,6 +138,7 @@ namespace vcsn
       }
 
     private:
+      /// A type to label the node.
       using name_t = unsigned;
 
       /// Easy recursion: print an expression and return its ID.
@@ -226,19 +227,20 @@ namespace vcsn
         visit_tuple<>{*this}(v);
       }
 
-      /// The identifier for this node.
+      /// The identifier for this node, and a Boolean stating whether
+      /// we should traverse (again) this node.
       template <typename Node>
-      name_t name_(const Node& n)
+      std::pair<name_t, bool> name_(const Node& n)
       {
         if (physical_)
           {
             auto p = names_.emplace(&n, 0);
             if (p.second)
               p.first->second = names_.size();
-            return p.first->second;
+            return {p.first->second, p.second};
           }
         else
-          return count_++;
+          return {count_++, true};
       }
 
       /// Print a nullary node.
@@ -246,9 +248,12 @@ namespace vcsn
       void print_(const constant_t<Type>& n, const char* op)
       {
         auto name = name_(n);
-        out_ << name
-             << " [label=\"" << op << "\"]";
-        last_name_ = name;
+        if (name.second)
+          {
+            out_ << name.first
+                 << " [label=\"" << op << "\"]";
+          }
+        last_name_ = name.first;
       }
 
       /// Print a unary node.
@@ -256,12 +261,15 @@ namespace vcsn
       void print_(const unary_t<Type>& n, const char* op)
       {
         auto name = name_(n);
-        auto sub = print_(n.sub());
-        out_ << vcsn::iendl
-             << name << " [label=\"" << op << "\"]"
-             << vcsn::iendl
-             << name << " -> " << sub;
-        last_name_ = name;
+        if (name.second)
+          {
+            auto sub = print_(n.sub());
+            out_ << vcsn::iendl
+                 << name.first << " [label=\"" << op << "\"]"
+                 << vcsn::iendl
+                 << name.first << " -> " << sub;
+          }
+        last_name_ = name.first;
       }
 
       /// Print a variadic node.
@@ -269,24 +277,27 @@ namespace vcsn
       void print_(const variadic_t<Type>& n, const char* op)
       {
         auto name = name_(n);
-        auto subs
-          = vcsn::detail::transform(n,
-                                    [this](const auto& i)
-                                    {
-                                      return this->print_(i);
-                                    }) ;
-        out_<< vcsn::iendl
-            << name << " [label=\"" << op << "\"]";
-        for (auto s: subs)
-          out_ << vcsn::iendl
-               << name << " -> " << s;
-        last_name_ = name;
+        if (name.second)
+          {
+            auto subs
+              = vcsn::detail::transform(n,
+                                        [this](const auto& i)
+                                        {
+                                          return this->print_(i);
+                                        }) ;
+            out_<< vcsn::iendl
+                << name.first << " [label=\"" << op << "\"]";
+            for (auto s: subs)
+              out_ << vcsn::iendl
+                   << name.first << " -> " << s;
+          }
+        last_name_ = name.first;
       }
 
       /// Print a weight.
       name_t print_(const weight_t& w)
       {
-        auto res = name_(w);
+        auto res = name_(w).first;
         out_ << vcsn::iendl
              << res << " [label=\"";
         rs_.weightset()->print(w, out_, fmt_.for_weights());
@@ -298,37 +309,46 @@ namespace vcsn
       void print_(const lweight_t& n)
       {
         auto name = name_(n);
-        auto weight = print_(n.weight());
-        auto sub = print_(n.sub());
-        out_ << vcsn::iendl
-             << name << " [label=\"" << lmul_ << "\"]" << vcsn::iendl
-             << name << " -> " << weight << vcsn::iendl
-             << name << " -> " << sub;
-        last_name_ = name;
+        if (name.second)
+          {
+            auto weight = print_(n.weight());
+            auto sub = print_(n.sub());
+            out_ << vcsn::iendl
+                 << name.first << " [label=\"" << lmul_ << "\"]" << vcsn::iendl
+                 << name.first << " -> " << weight << vcsn::iendl
+                 << name.first << " -> " << sub;
+          }
+        last_name_ = name.first;
       }
 
       /// Print a right-weight.
       void print_(const rweight_t& n)
       {
         auto name = name_(n);
-        auto sub = print_(n.sub());
-        auto weight = print_(n.weight());
-        out_ << vcsn::iendl
-             << name << " [label=\"" << rmul_ << "\"]" << vcsn::iendl
-             << name << " -> " << sub << vcsn::iendl
-             << name << " -> " << weight;
-        last_name_ = name;
+        if (name.second)
+          {
+            auto sub = print_(n.sub());
+            auto weight = print_(n.weight());
+            out_ << vcsn::iendl
+                 << name.first << " [label=\"" << rmul_ << "\"]" << vcsn::iendl
+                 << name.first << " -> " << sub << vcsn::iendl
+                 << name.first << " -> " << weight;
+          }
+        last_name_ = name.first;
       }
 
       /// Print a label.
       void print_(const atom_t& n)
       {
         auto name = name_(n);
-        out_ << vcsn::iendl;
-        out_ << name << " [label=\"";
-        rs_.labelset()->print(n.value(), out_, fmt_.for_labels());
-        out_ << "\"]";
-        last_name_ = name;
+        if (name.second)
+          {
+            out_ << vcsn::iendl;
+            out_ << name.first << " [label=\"";
+            rs_.labelset()->print(n.value(), out_, fmt_.for_labels());
+            out_ << "\"]";
+          }
+        last_name_ = name.first;
       }
 
       /// Output stream.
