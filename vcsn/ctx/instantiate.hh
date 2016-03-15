@@ -38,7 +38,6 @@
 #include <vcsn/algos/print.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/push-weights.hh>
-#include <vcsn/algos/random.hh>
 #include <vcsn/algos/read.hh>
 #include <vcsn/algos/shortest.hh>
 #include <vcsn/algos/sort.hh>
@@ -201,7 +200,6 @@ namespace vcsn
         REGISTER(multiply_polynomial, wps_t, wps_t);
         REGISTER(pair, aut_t, bool);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
-        REGISTER(random_automaton_deterministic, ctx_t, unsigned);
         REGISTER(shortest, aut_t, boost::optional<unsigned>, boost::optional<unsigned>);
         REGISTER(shuffle, std::tuple<aut_t, aut_t>);
         REGISTER(synchronizing_word, aut_t, const std::string);
@@ -341,7 +339,6 @@ namespace vcsn
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(push_weights, aut_t);
-        REGISTER(random_automaton, ctx_t, unsigned, float, unsigned, unsigned, float);
         REGISTER(rdiv_expression, rs_t, rs_t);
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
