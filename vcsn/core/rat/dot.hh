@@ -46,9 +46,13 @@ namespace vcsn
       ///
       /// \param rs   the expressionset
       /// \param out  the output stream
-      dot_printer(const expressionset_t& rs, std::ostream& out)
+      /// \param physical  whether to display the physical DAG
+      ///             rather than the logical tree.
+      dot_printer(const expressionset_t& rs, std::ostream& out,
+                  bool physical = false)
         : out_{out}
         , rs_{rs}
+        , physical_{physical}
       {
         format(vcsn::format("utf8"));
       }
@@ -224,9 +228,17 @@ namespace vcsn
 
       /// The identifier for this node.
       template <typename Node>
-      name_t name_(const Node&)
+      name_t name_(const Node& n)
       {
-        return count_++;
+        if (physical_)
+          {
+            auto p = names_.emplace(&n, 0);
+            if (p.second)
+              p.first->second = names_.size();
+            return p.first->second;
+          }
+        else
+          return count_++;
       }
 
       /// Print a nullary node.
@@ -325,8 +337,13 @@ namespace vcsn
       class format fmt_;
       /// The expressionset.
       const expressionset_t& rs_;
-      /// Whether to be overly verbose.
-      const bool debug_ = !!getenv("VCSN_PARENS");
+
+      /// Whether to display the physical DAG rather than the logical
+      /// tree.
+      bool physical_ = false;
+
+      /// If physical_ is enabled, register the identifiers of the nodes.
+      std::unordered_map<const void*, name_t> names_;
 
       /// The node counter, used to name the nodes.
       unsigned count_ = 0;
@@ -358,9 +375,10 @@ namespace vcsn
 
     template <typename ExpSet>
     dot_printer<ExpSet>
-    make_dot_printer(const ExpSet& rs, std::ostream& out)
+    make_dot_printer(const ExpSet& rs, std::ostream& out,
+                     bool physical = false)
     {
-      return {rs, out};
+      return {rs, out, physical};
     }
   } // namespace rat
 } // namespace vcsn

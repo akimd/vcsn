@@ -188,9 +188,14 @@ namespace vcsn
         const typename expressionset<Context>::value_t& r,
         std::ostream& o, const std::string& fmt)
   {
-    if (fmt == "dot")
+    if (fmt == "dot" || fmt == "dot,logical")
       {
         auto print = make_dot_printer(rs, o);
+        return print(r);
+      }
+    else if (fmt == "dot,physical")
+      {
+        auto print = make_dot_printer(rs, o, true);
         return print(r);
       }
     else

@@ -246,8 +246,11 @@ check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 def check(exp, dot):
     for ids in ['trivial', 'associative']:
         e = ctx.expression(exp, ids)
-        CHECK_EQ(open('{}/{}-{}.gv'.format(medir, dot, ids)).read().strip(),
-                 e.dot())
+        for type in ['logical', 'physical']:
+            fname = '{}/{}-{}-{}.gv'.format(medir, dot, ids, type)
+            print("Checking dot output:", fname)
+            ref = open(fname).read().strip()
+            CHECK_EQ(ref, e.dot(type == 'physical'))
 
 ctx = vcsn.context('lal, q')
 check('(<2>[abc])*a([abc]<3>){3}',

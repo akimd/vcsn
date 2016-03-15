@@ -38,18 +38,48 @@ class expression:
     __ne__ = lambda l, r: l < r or r < l
 
 
-    def dot(self, mode = "pretty"):
-        return _dot_pretty(self.format('dot'))
+    def dot(self, physical=False, mode="pretty"):
+        '''The Graphviz Dot text.
+
+        Parameters
+        ----------
+        physical : bool, optional
+            whether to display the physical representation, as a DAG,
+            rather than the logical tree.
+
+        '''
+
+        return _dot_pretty(self.format('dot,physical' if physical else 'dot'))
 
 
-    def svg(self):
-        return _dot_to_svg(self.dot())
+    def svg(self, physical=False):
+        '''The SVG text.
+
+        Parameters
+        ----------
+        physical : bool, optional
+            whether to display the physical representation, as a DAG,
+            rather than the logical tree.
+
+        '''
+
+        return _dot_to_svg(self.dot(physical))
 
 
-    def SVG(self):
+    def SVG(self, physical=False):
+        '''The IPython SVG object.
+
+        Parameters
+        ----------
+        physical : bool, optional
+            whether to display the physical representation, as a DAG,
+            rather than the logical tree.
+
+        '''
+
         from IPython.display import SVG
-        return SVG(self.svg(
-        ))
+        return SVG(self.svg(physical))
+
 
     def derivation(self, w, *args):
         "Derive wrt. w, but convert it into a label if needed."
