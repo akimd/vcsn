@@ -15,7 +15,7 @@ import pandas as pd
 import vcsn
 
 # some parameters
-pd.set_option('display.mpl_style', 'default')
+matplotlib.pyplot.style.use('default')
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 
