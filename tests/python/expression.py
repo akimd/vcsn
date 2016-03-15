@@ -255,3 +255,7 @@ def check(exp, dot):
 ctx = vcsn.context('lal, q')
 check('(<2>[abc])*a([abc]<3>){3}',
       'de-bruijn')
+
+ctx = vcsn.context('lat<lan, lan>, q')
+check('([ab]{3}|x* + [cd]{2}|y*){2}',
+      'lan-lan')

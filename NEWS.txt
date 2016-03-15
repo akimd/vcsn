@@ -5,7 +5,18 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-03-15
+### expression: a dot output
+Expression now feature a `"dot"` format to display graphically the structure
+of the expression.  There are actually two flavors: `"dot,logical"` (the
+default) which shows the semantical tree, and `"dot,physical"` which shows
+the DAG that is used to implement the expression (i.e., nodes used multiple
+times are displayed only once).
+
+Under IPython, experiment `exp.SVG()` (logical) and `exp.SVG(True)` (physical).
+
 ## 2016-03-08
+### ldiv, rdiv: compute quotient between automata
 `automaton.ldiv` and `automaton.rdiv` compute the left and right quotients of
 two automata.
 

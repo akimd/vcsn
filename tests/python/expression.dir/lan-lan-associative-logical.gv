@@ -1,0 +1,103 @@
+digraph
+{
+  edge [arrowhead = vee, arrowsize = .6]
+  node [fontsize = 12, fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]
+
+  2 [label="|"]
+  5 [label="a"]
+  6 [label="b"]
+  4 [label="+"]
+  4 -> 5
+  4 -> 6
+  8 [label="a"]
+  9 [label="b"]
+  7 [label="+"]
+  7 -> 8
+  7 -> 9
+  11 [label="a"]
+  12 [label="b"]
+  10 [label="+"]
+  10 -> 11
+  10 -> 12
+  3 [label="."]
+  3 -> 4
+  3 -> 7
+  3 -> 10
+  2 -> 3
+  14 [label="x"]
+  13 [label="*"]
+  13 -> 14
+  2 -> 13
+  15 [label="|"]
+  18 [label="c"]
+  19 [label="d"]
+  17 [label="+"]
+  17 -> 18
+  17 -> 19
+  21 [label="c"]
+  22 [label="d"]
+  20 [label="+"]
+  20 -> 21
+  20 -> 22
+  16 [label="."]
+  16 -> 17
+  16 -> 20
+  15 -> 16
+  24 [label="y"]
+  23 [label="*"]
+  23 -> 24
+  15 -> 23
+  1 [label="+"]
+  1 -> 2
+  1 -> 15
+  26 [label="|"]
+  29 [label="a"]
+  30 [label="b"]
+  28 [label="+"]
+  28 -> 29
+  28 -> 30
+  32 [label="a"]
+  33 [label="b"]
+  31 [label="+"]
+  31 -> 32
+  31 -> 33
+  35 [label="a"]
+  36 [label="b"]
+  34 [label="+"]
+  34 -> 35
+  34 -> 36
+  27 [label="."]
+  27 -> 28
+  27 -> 31
+  27 -> 34
+  26 -> 27
+  38 [label="x"]
+  37 [label="*"]
+  37 -> 38
+  26 -> 37
+  39 [label="|"]
+  42 [label="c"]
+  43 [label="d"]
+  41 [label="+"]
+  41 -> 42
+  41 -> 43
+  45 [label="c"]
+  46 [label="d"]
+  44 [label="+"]
+  44 -> 45
+  44 -> 46
+  40 [label="."]
+  40 -> 41
+  40 -> 44
+  39 -> 40
+  48 [label="y"]
+  47 [label="*"]
+  47 -> 48
+  39 -> 47
+  25 [label="+"]
+  25 -> 26
+  25 -> 39
+  0 [label="."]
+  0 -> 1
+  0 -> 25
+}

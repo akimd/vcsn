@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include <vcsn/algos/project.hh> // bad layering: should not be in algos.
 #include <vcsn/core/rat/visitor.hh>
@@ -56,6 +57,27 @@ namespace vcsn
       {
         format(vcsn::format("utf8"));
       }
+
+      /// Construct from another dot_printer.
+      ///
+      /// Used to "fork" new printers in the case of tuples, with
+      /// sharing of the state.
+      template <typename OtherExpSet>
+      dot_printer(const expressionset_t& rs,
+                  dot_printer<OtherExpSet>& other)
+        : out_{other.out_}
+        , rs_{rs}
+        , physical_{other.physical_}
+        , names_{other.names_}
+        , count_{other.count_}
+      {
+        format(other.fmt_);
+      }
+
+      /// Make it possible to view members from dot_printer's with a
+      /// different template parameter.
+      template <typename OtherExpSet>
+      friend class dot_printer;
 
       /// Set output format.
       void format(format fmt)
@@ -124,16 +146,9 @@ namespace vcsn
              << "{" << vcsn::incendl
              << "edge [arrowhead = vee, arrowsize = .6]" << vcsn::iendl
              << "node [shape = circle, style = rounded, width = 0.5]\n";
-        print(v);
+        print_(v);
         out_ << vcsn::decendl
              << "}";
-        return out_;
-      }
-
-      /// Print an expression as a tree.
-      std::ostream& print(const value_t& v)
-      {
-        print_(v);
         return out_;
       }
 
@@ -181,13 +196,10 @@ namespace vcsn
         {
           auto rs = detail::project<I>(self_.rs_);
           const auto& r = std::get<I>(v.sub());
-          self_.out_
-            << vcsn::iendl
-            << address(v) << " -> "
-            << address(*r) << vcsn::iendl;
-          auto printer = make_dot_printer(rs, self_.out_);
-          printer.format(self_.fmt_);
-          printer.print(r);
+          auto printer = dot_printer<decltype(rs)>(rs, self_);
+          auto name = printer.print_(r);
+          self_.out_ << vcsn::iendl
+                     << name_ << " -> " << name;
         }
 
         /// Print all the tapes.
@@ -205,11 +217,20 @@ namespace vcsn
         /// Entry point.
         void operator()(const tuple_t& v)
         {
-          self_.out_ << address(v)
-                     << " [label=\"" << self_.tuple_ << "\"]";
-          print_(v, labelset_t::indices);
+          auto name = self_.name_(v);
+          if (name.second)
+            {
+              name_ = name.first;
+              self_.out_ << vcsn::iendl
+                         << name_
+                         << " [label=\"" << self_.tuple_ << "\"]";
+              print_(v, labelset_t::indices);
+            }
+          self_.last_name_ = name.first;
         }
-        const self_t& self_;
+        self_t& self_;
+        /// The name of the tuple node.
+        name_t name_;
       };
 
       template <typename Dummy>
@@ -234,13 +255,13 @@ namespace vcsn
       {
         if (physical_)
           {
-            auto p = names_.emplace(&n, 0);
+            auto p = names_->emplace(&n, 0);
             if (p.second)
-              p.first->second = names_.size();
+              p.first->second = names_->size();
             return {p.first->second, p.second};
           }
         else
-          return {count_++, true};
+          return {(*count_)++, true};
       }
 
       /// Print a nullary node.
@@ -363,10 +384,13 @@ namespace vcsn
       bool physical_ = false;
 
       /// If physical_ is enabled, register the identifiers of the nodes.
-      std::unordered_map<const void*, name_t> names_;
+      using names_t = std::unordered_map<const void*, name_t>;
+      /// A shared_ptr, to support tuples.
+      std::shared_ptr<names_t> names_ = std::make_shared<names_t>();
 
       /// The node counter, used to name the nodes.
-      unsigned count_ = 0;
+      /// A shared_ptr, to support tuples.
+      std::shared_ptr<unsigned> count_ = std::make_shared<unsigned>(0);
       /// The name of the last visited node.
       name_t last_name_;
 
