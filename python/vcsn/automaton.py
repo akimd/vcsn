@@ -223,8 +223,12 @@ class automaton:
 
         - 'd': use Daut syntax (default)
         - 'e': use EFSM syntax
+        - 'f': use FAdo syntax
         - 'g': use Graphviz's Dot syntax
-        - 't': use TikZ syntax
+        - 'i': print info
+        - 'I': print detailed info
+        - 'r': use Grail syntax
+        - 'x': use TikZ syntax
 
         - ':spec': pass the remaining specification to the
                    formating function for strings.
@@ -234,7 +238,11 @@ class automaton:
         syntax = 'daut'
         syntaxes = {'d': 'daut',
                     'e': 'efsm',
+                    'f': 'fado',
                     'g': 'dot',
+                    'i': 'info',
+                    'I': 'info,detailed',
+                    'r': 'grail',
                     'x': 'tikz'}
 
         while spec:

@@ -55,9 +55,54 @@ class expression:
                 algo += "," + tag
         return self._derived_term_orig(algo)
 
+
+    def __format__(self, spec):
+        """Format the expression according to `spec`.
+
+        Parameters
+        ----------
+        spec : str, optional
+            a list of letters that specify how the expression
+            should be formatted.
+
+        Supported specifiers
+        --------------------
+
+        - 'd': use Graphviz's Dot syntax
+        - 'i': print info
+        - 't': use text ASCII syntax (default)
+        - 'u': use text UTF-8 syntax
+        - 'x': use LaTeX syntax
+
+        - ':spec': pass the remaining specification to the
+                   formating function for strings.
+
+        """
+
+        syntax = 'text'
+        syntaxes = {'i': 'info',
+                    't': 'text',
+                    'u': 'utf8',
+                    'x': 'latex',
+        }
+
+        while spec:
+            c, spec = spec[0], spec[1:]
+            if c in syntaxes:
+                syntax = syntaxes[c]
+            elif c == ':':
+                break
+            else:
+                raise ValueError("unknown format specification: " + c + spec)
+
+        s = self.format(syntax)
+        return s.__format__(spec)
+
+
     def info(self, key=None, detailed=False):
         res = _info_to_dict(self.format('info'))
         return res[key] if key else res
+
 
     shortest = lambda self, *a, **kw: self.automaton().shortest(*a, **kw)
     star = lambda self: self.multiply(-1)
