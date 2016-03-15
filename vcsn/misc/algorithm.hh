@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iterator> // next
+#include <vector>
 
 #include <boost/range/algorithm/set_algorithm.hpp>
 #include <boost/range/iterator_range_core.hpp>
@@ -64,8 +65,7 @@ namespace vcsn
       return *i;
     }
 
-    /// The return the longest initial range of elements matching the
-    /// predicate.
+    /// The longest initial range of elements matching the predicate.
     template <typename Iterator, typename Pred, typename Less>
     boost::iterator_range<Iterator>
     initial_sorted_range(Iterator begin, Iterator end,
@@ -139,6 +139,18 @@ namespace vcsn
     bool none_of_equal(const Range &r, const Value& value)
     {
       return none_of(r, [&value](const Value& v) { return v == value; });
+    }
+
+
+    /// Map a unary function on a container of values, and return the
+    /// vector the results.
+    template <typename Container, typename Fun>
+    auto transform(const Container& c, Fun&& fun)
+    {
+      using value_t = decltype(std::forward<Fun>(fun)(*begin(c)));
+      auto res = std::vector<value_t>(c.size());
+      std::transform(begin(c), end(c), begin(res), std::forward<Fun>(fun));
+      return res;
     }
   }
 

@@ -57,7 +57,7 @@ namespace vcsn
         info(exp, out);
       else if (format == "null")
         {}
-      else if (format == "latex" || format == "utf8")
+      else if (format == "dot" || format == "latex" || format == "utf8")
         detail::print_expression_registry().call(exp, out, format);
       else if (format == "text" || format == "default" || format == "")
         {

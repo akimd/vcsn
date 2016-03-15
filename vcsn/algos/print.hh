@@ -7,6 +7,7 @@
 #include <vcsn/algos/grail.hh>
 #include <vcsn/algos/info.hh>
 #include <vcsn/algos/tikz.hh>
+#include <vcsn/core/rat/dot.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/expansion.hh>
@@ -170,16 +171,31 @@ namespace vcsn
   | print(expression, stream).   |
   `-----------------------------*/
 
-#if 0
-  /// See ExpansionSet.
-  template <typename ExpSet>
+  /// Print an expression.
+  template <typename Context>
   std::ostream&
-  print(const ExpSet& rs, const typename ExpSet::value_t& e,
+  print(const expressionset<Context>& rs,
+        const typename expressionset<Context>::value_t& r,
         std::ostream& o, format fmt)
   {
-    return rs.print(e, o, format(fmt));
+    return rs.print(r, o, format(fmt));
   }
-#endif
+
+  /// Print an expression.
+  template <typename Context>
+  std::ostream&
+  print(const expressionset<Context>& rs,
+        const typename expressionset<Context>::value_t& r,
+        std::ostream& o, const std::string& fmt)
+  {
+    if (fmt == "dot")
+      {
+        auto print = make_dot_printer(rs, o);
+        return print(r);
+      }
+    else
+      return print(rs, r, o, format(fmt));
+  }
 
   namespace dyn
   {
@@ -191,7 +207,7 @@ namespace vcsn
                                      const std::string& fmt)
       {
         const auto& e = exp->as<ExpSet>();
-        return vcsn::print(e.expressionset(), e.expression(), o, format(fmt));
+        return vcsn::print(e.expressionset(), e.expression(), o, fmt);
       }
     }
   }

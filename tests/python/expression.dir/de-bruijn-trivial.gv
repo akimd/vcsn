@@ -1,0 +1,73 @@
+digraph
+{
+  edge [arrowhead = vee, arrowsize = .6]
+  node [fontsize = 12, fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]
+
+  3 [label="2"]
+  6 [label="a"]
+  7 [label="b"]
+  5 [label="+"]
+  5 -> 6
+  5 -> 7
+  8 [label="c"]
+  4 [label="+"]
+  4 -> 5
+  4 -> 8
+  2 [label="⟨.⟩."]
+  2 -> 3
+  2 -> 4
+  1 [label="*"]
+  1 -> 2
+  10 [label="a"]
+  16 [label="a"]
+  17 [label="b"]
+  15 [label="+"]
+  15 -> 16
+  15 -> 17
+  18 [label="c"]
+  14 [label="+"]
+  14 -> 15
+  14 -> 18
+  19 [label="3"]
+  13 [label=".⟨.⟩"]
+  13 -> 14
+  13 -> 19
+  23 [label="a"]
+  24 [label="b"]
+  22 [label="+"]
+  22 -> 23
+  22 -> 24
+  25 [label="c"]
+  21 [label="+"]
+  21 -> 22
+  21 -> 25
+  26 [label="3"]
+  20 [label=".⟨.⟩"]
+  20 -> 21
+  20 -> 26
+  12 [label="."]
+  12 -> 13
+  12 -> 20
+  30 [label="a"]
+  31 [label="b"]
+  29 [label="+"]
+  29 -> 30
+  29 -> 31
+  32 [label="c"]
+  28 [label="+"]
+  28 -> 29
+  28 -> 32
+  33 [label="3"]
+  27 [label=".⟨.⟩"]
+  27 -> 28
+  27 -> 33
+  11 [label="."]
+  11 -> 12
+  11 -> 27
+  9 [label="."]
+  9 -> 10
+  9 -> 11
+  0 [label="."]
+  0 -> 1
+  0 -> 9
+}

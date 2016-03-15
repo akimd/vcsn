@@ -237,3 +237,18 @@ ctx = vcsn.context('law_char(abcd), q')
 check('(a<5>)b', '<5>(ab)')
 check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
+
+
+## ------------- ##
+## Dot output.   ##
+## ------------- ##
+
+def check(exp, dot):
+    for ids in ['trivial', 'associative']:
+        e = ctx.expression(exp, ids)
+        CHECK_EQ(open('{}/{}-{}.gv'.format(medir, dot, ids)).read().strip(),
+                 e.dot())
+
+ctx = vcsn.context('lal, q')
+check('(<2>[abc])*a([abc]<3>){3}',
+      'de-bruijn')

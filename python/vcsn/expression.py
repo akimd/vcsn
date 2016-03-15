@@ -3,7 +3,9 @@
 ## ------------ ##
 
 from vcsn_cxx import label, expression
-from vcsn.tools import _extend, _is_equal, _info_to_dict, _left_mult, _right_mult
+from vcsn.dot import _dot_pretty, _dot_to_svg
+from vcsn.tools import (_extend, _is_equal, _info_to_dict,
+                        _left_mult, _right_mult)
 
 @_extend(expression)
 class expression:
@@ -35,6 +37,19 @@ class expression:
     __eq__ = lambda l, r: not l < r and not r < l
     __ne__ = lambda l, r: l < r or r < l
 
+
+    def dot(self, mode = "pretty"):
+        return _dot_pretty(self.format('dot'))
+
+
+    def svg(self):
+        return _dot_to_svg(self.dot())
+
+
+    def SVG(self):
+        from IPython.display import SVG
+        return SVG(self.svg(
+        ))
 
     def derivation(self, w, *args):
         "Derive wrt. w, but convert it into a label if needed."

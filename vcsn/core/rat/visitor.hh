@@ -17,10 +17,16 @@ namespace vcsn
       using node_t = node<context_t>;
       using inner_t = inner<context_t>;
       using leaf_t = leaf<context_t>;
+      /// Nullary node.
+      template <type_t Type>
+      using constant_t = rat::constant<Type, context_t>;
+      /// Unary node.
       template <type_t Type>
       using unary_t = rat::unary<Type, context_t>;
+      /// Variadic node.
       template <type_t Type>
       using variadic_t = rat::variadic<Type, context_t>;
+      /// Weight node.
       template <type_t Type>
       using weight_node_t = rat::weight_node<Type, context_t>;
 

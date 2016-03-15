@@ -208,6 +208,8 @@ EXTRA_DIST +=                                   \
   %D%/eliminate-state.dir/lao-elim-1.gv         \
   %D%/eliminate-state.dir/lao-elim-2.gv         \
   %D%/eliminate-state.dir/lao.gv                \
+  %D%/expression.dir/de-bruijn-associative.gv   \
+  %D%/expression.dir/de-bruijn-trivial.gv       \
   %D%/factory.dir/cerny-6.gv                    \
   %D%/factory.dir/clique-a-4.gv                 \
   %D%/factory.dir/de-bruijn-2.gv                \
@@ -273,6 +275,7 @@ EXTRA_DIST +=                                   \
 %D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
+%D%/expression.log:      $(wildcard $(srcdir)/%D%/expression.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/infiltration.log:    $(wildcard $(srcdir)/%D%/conjunction.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
