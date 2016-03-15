@@ -185,8 +185,7 @@ namespace vcsn
       template <Automaton Aut, typename Tag>
       automaton cominimize_tag_(const Aut& aut)
       {
-        auto res = transpose(minimize(transpose(aut), Tag{}));
-        return res;
+        return transpose(minimize(transpose(aut), Tag{}));
       }
 
       /// Bridge.

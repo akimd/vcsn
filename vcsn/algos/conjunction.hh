@@ -662,8 +662,7 @@ namespace vcsn
       shuffle_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        auto res = vcsn::shuffle(as[I]->as<tuple_element_t<I, Auts>>()...);
-        return res;
+        return vcsn::shuffle(as[I]->as<tuple_element_t<I, Auts>>()...);
       }
 
       /// Bridge (shuffle).
@@ -747,9 +746,7 @@ namespace vcsn
       infiltration_(const std::vector<automaton>& as,
                     vcsn::detail::index_sequence<I...>)
       {
-        auto res
-          = vcsn::infiltration(as[I]->as<tuple_element_t<I, Auts>>()...);
-        return res;
+        return vcsn::infiltration(as[I]->as<tuple_element_t<I, Auts>>()...);
       }
 
       /// Bridge (infiltration).
