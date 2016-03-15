@@ -35,11 +35,9 @@ namespace vcsn
     // vcsn/dyn/label.hh.
     namespace detail
     {
-      class label_base;
-      template <typename LabelSet>
-      class label_wrapper;
+      class label;
     }
-    using label = std::shared_ptr<const detail::label_base>;
+    using label = detail::label;
 
     // vcsn/dyn/polynomial.hh.
     namespace detail

@@ -6,6 +6,7 @@
 #include <lib/vcsn/rat/parse.hh>
 #include <lib/vcsn/rat/scan.hh>
 #include <vcsn/dyn/algos.hh> // make_context
+#include <vcsn/dyn/label.hh>
 #include <vcsn/misc/stream.hh> // fail_reading
 
 namespace vcsn

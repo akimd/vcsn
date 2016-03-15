@@ -11,68 +11,107 @@ namespace vcsn
   {
     namespace detail
     {
-
-      /// An abstract label.
-      class LIBVCSN_API label_base
+      class LIBVCSN_API label
       {
       public:
+        label()
+          : self_()
+        {}
+
+        template <typename LabelSet>
+        label(const LabelSet& ls, const typename LabelSet::value_t& l)
+          : self_(std::make_shared<model<LabelSet>>(ls, l))
+        {}
+
         /// A description of the label type.
-        virtual symbol vname() const = 0;
+        symbol vname() const
+        {
+          return self_->vname();
+        }
 
         /// Extract wrapped typed label.
         template <typename LabelSet>
         auto& as()
         {
-          return dyn_cast<label_wrapper<LabelSet>&>(*this);
+          return dyn_cast<model<LabelSet>&>(*self_);
         }
 
         /// Extract wrapped typed label.
         template <typename LabelSet>
-        auto& as() const
+        const auto& as() const
         {
-          return dyn_cast<const label_wrapper<LabelSet>&>(*this);
-        }
-      };
-
-      /// Aggregate a label and its labelset.
-      template <typename LabelSet>
-      class label_wrapper final: public label_base
-      {
-      public:
-        using labelset_t = LabelSet;
-        using super_t = label_base;
-        using label_t = typename labelset_t::value_t;
-
-        label_wrapper(const labelset_t& ls, const label_t& l)
-          : labelset_(ls)
-          , label_(l)
-        {}
-
-        virtual symbol vname() const override
-        {
-          return labelset().sname();
+          return dyn_cast<const model<LabelSet>&>(*self_);
         }
 
-        const labelset_t& labelset() const
+        auto* operator->()
         {
-          return labelset_;
+          return this;
         }
 
-        const label_t label() const
+        const auto* operator->() const
         {
-          return label_;
+          return this;
+        }
+
+        bool operator!()
+        {
+          return !self_;
+        }
+
+        auto& operator=(const label& l)
+        {
+          self_ = std::move(l.self_);
+          return *this;
         }
 
       private:
-        /// The label set.
-        const labelset_t labelset_;
-        /// The label.
-        const label_t label_;
-      };
+        /// Abstract wrapped typed automaton.
+        struct base
+        {
+          virtual ~base() = default;
+          virtual symbol vname() const = 0;
+        };
 
+        /// A wrapped typed automaton.
+        template <typename LabelSet>
+        struct model final : base
+        {
+          using labelset_t = LabelSet;
+          using label_t = typename labelset_t::value_t;
+
+          model(const labelset_t& ls, const label_t& l)
+            : labelset_(std::move(ls))
+            , label_(std::move(l))
+          {}
+
+          virtual symbol vname() const override
+          {
+            return labelset().sname();
+          }
+
+          const labelset_t& labelset() const
+          {
+            return labelset_;
+          }
+
+          const label_t label() const
+          {
+            return label_;
+          }
+
+        private:
+          /// The label set.
+          const labelset_t labelset_;
+          /// The label.
+          const label_t label_;
+        };
+
+        /// The wrapped LabelSet.
+        std::shared_ptr<base> self_;
+      };
     } // namespace detail
 
-    using label = std::shared_ptr<const detail::label_base>;
+    using label = detail::label;
 
     template <typename LabelSet>
     inline
@@ -80,7 +119,7 @@ namespace vcsn
     make_label(const LabelSet& ls,
                const typename LabelSet::value_t& l)
     {
-      return std::make_shared<detail::label_wrapper<LabelSet>>(ls, l);
+      return label(ls, l);
     }
 
     template <typename LabelSet>
