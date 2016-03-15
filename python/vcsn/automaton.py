@@ -185,8 +185,9 @@ class automaton:
         interact_h(lambda mode, engine: _automaton_display(self, mode, engine),
                    mode=modes, engine=engines)
 
-    dot = lambda self, mode = "pretty": _dot_pretty(
-        self.format('dot,utf8'), mode)
+
+    def dot(self, mode = "pretty"):
+        return _dot_pretty(self.format('dot,utf8'), mode)
 
 
     # automaton.eval.

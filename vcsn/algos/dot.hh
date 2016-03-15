@@ -123,7 +123,7 @@ namespace vcsn
       /// \param kind  the attribute name (e.g., "initial").
       /// \param w     the associated weight (e.g., initial weight).
       bool print_(const std::string& sep,
-                   const std::string& kind, const weight_t& w)
+                  const std::string& kind, const weight_t& w)
       {
         if (ws_.is_zero(w))
           return false;

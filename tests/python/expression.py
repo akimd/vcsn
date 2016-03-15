@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+# Check parsing and pretty-printing.
+
 import vcsn
 from test import *
 
@@ -218,22 +220,20 @@ check_format('lal_char(0123), q',
 ## -------- ##
 ## Series.  ##
 ## -------- ##
-def check(ctx, s1, exp):
+def check(s1, exp):
     eff = ctx.series(s1)
     CHECK_EQ(exp, eff.format('text'))
 
 ctx = vcsn.context('lal_char(abcd), q')
-check(ctx, 'a+b', 'a+b')
-check(ctx, '(a+a)*', '(<2>a)*')
-
-check(ctx, 'a+\z', 'a')
-check(ctx, '(<5>a)b', '<5>(ab)')
-check(ctx, '(<5>a)(b)(c*)', '<5>(abc*)')
-check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
-check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
+check('a+b', 'a+b')
+check('(a+a)*', '(<2>a)*')
+check('a+\z', 'a')
+check('(<5>a)b', '<5>(ab)')
+check('(<5>a)(b)(c*)', '<5>(abc*)')
+check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
+check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 
 ctx = vcsn.context('law_char(abcd), q')
-
-check(ctx, '(a<5>)b', '<5>(ab)')
-check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
-check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
+check('(a<5>)b', '<5>(ab)')
+check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
+check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
