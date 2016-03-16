@@ -311,15 +311,9 @@ left-associative, and a.b.c is left-associative too.
 Fix this.  Ask other members of the project what they think about that
 (left- vs. right- associativity).
 
-** products: lazyness
-We need a lazy implementation of product.
-
 ** product: is_idempotent (VT)
 We don't need to insplit in the case of idempotent semirings, not just in
 the case of B.
-
-** product: lazy insplit (VT)
-Explore the possibility to apply insplitting lazily.
 
 ** products: a function on top of all the products?
 See tests/python/to-expansion.py:prod.  Maybe this function could be useful
