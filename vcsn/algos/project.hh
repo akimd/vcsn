@@ -23,7 +23,7 @@ namespace vcsn
       project_context(const context& ctx, integral_constant)
       {
         auto& c = ctx->as<Context>();
-        return make_context(vcsn::detail::project<Tape::value>(c));
+        return vcsn::detail::project<Tape::value>(c);
       }
     }
   }

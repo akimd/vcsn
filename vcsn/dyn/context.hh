@@ -95,14 +95,5 @@ namespace vcsn
     } // namespace detail
 
     using context = detail::context;
-
-    /// Build a dyn::context from a static one.
-    template <typename LabelSet, typename WeightSet>
-    inline
-    context
-    make_context(const vcsn::context<LabelSet, WeightSet>& ctx)
-    {
-      return context(ctx);
-    }
   }
 }

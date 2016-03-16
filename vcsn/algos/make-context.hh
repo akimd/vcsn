@@ -44,7 +44,7 @@ namespace vcsn
       context
       make_context(const std::string& name)
       {
-        return dyn::make_context(vcsn::make_context<Ctx>(name));
+        return vcsn::make_context<Ctx>(name);
       }
     }
   }
@@ -64,7 +64,7 @@ namespace vcsn
       context_of(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return dyn::make_context(a->context());
+        return context(a->context());
       }
 
       /// Bridge (context_of).
@@ -73,7 +73,7 @@ namespace vcsn
       context_of_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>().expressionset();
-        return dyn::make_context(e.context());
+        return e.context();
       }
 
       /// Bridge (context_of).
@@ -82,7 +82,7 @@ namespace vcsn
       context_of_expansion(const expansion& exp)
       {
         const auto& e = exp->as<ExpansionSet>().expansionset();
-        return dyn::make_context(e.context());
+        return e.context();
       }
     }
   }
@@ -101,7 +101,7 @@ namespace vcsn
       context
       join(const context& c1, const context& c2)
       {
-        return dyn::make_context(join(c1->as<Ctx1>(), c2->as<Ctx2>()));
+        return join(c1->as<Ctx1>(), c2->as<Ctx2>());
       }
     }
   }
@@ -122,7 +122,7 @@ namespace vcsn
       make_word_context(const context& ctx)
       {
         const auto& c = ctx->as<Ctx>();
-        return ::vcsn::dyn::make_context(::vcsn::detail::make_word_context(c));
+        return ::vcsn::detail::make_word_context(c);
       }
     }
   }

@@ -991,9 +991,7 @@ namespace vcsn
   {
     // Our expression parser is written in dyn::, so we get a
     // dyn::expression that we down_cast.
-    auto dynres
-      = dyn::read_expression(dyn::make_context(context()), identities(),
-                             is);
+    auto dynres = dyn::read_expression(context(), identities(), is);
     const auto& res = dynres->template as<self_t>();
     return res.expression();
   }
