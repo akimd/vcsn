@@ -10,7 +10,9 @@ from subprocess import Popen, PIPE
 
 from vcsn.conjunction import Conjunction
 from vcsn_cxx import automaton, label, weight
-from vcsn.tools import _extend, _info_to_dict, _left_mult, _right_mult, _tmp_file
+from vcsn.tools import (_extend, _format, _info_to_dict,
+                        _left_mult, _right_mult,
+                        _tmp_file)
 from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
                       _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
 
@@ -236,7 +238,6 @@ class automaton:
 
         """
 
-        syntax = 'daut'
         syntaxes = {'d': 'daut',
                     'e': 'efsm',
                     'f': 'fado',
@@ -245,19 +246,7 @@ class automaton:
                     'I': 'info,detailed',
                     'r': 'grail',
                     'x': 'tikz'}
-
-        while spec:
-            c, spec = spec[0], spec[1:]
-            if c in syntaxes:
-                syntax = syntaxes[c]
-            elif c == ':':
-                break
-            else:
-                raise ValueError("unknown format specification: " + c + spec)
-
-        s = self.format(syntax)
-
-        return s.__format__(spec)
+        return _format(self, spec, 'daut', syntaxes)
 
 
     def as_fst(self):

@@ -4,7 +4,7 @@
 
 from vcsn_cxx import label, expression
 from vcsn.dot import _dot_pretty, _dot_to_svg
-from vcsn.tools import (_extend, _is_equal, _info_to_dict,
+from vcsn.tools import (_extend, _format, _is_equal, _info_to_dict,
                         _left_mult, _right_mult)
 
 @_extend(expression)
@@ -113,7 +113,8 @@ class expression:
         Supported specifiers
         --------------------
 
-        - 'd': use Graphviz's Dot syntax
+        - 'd': use Graphviz's Dot syntax to display logical tree
+        - 'D': use Graphviz's Dot syntax to display implementation DAG
         - 'i': print info
         - 't': use text ASCII syntax (default)
         - 'u': use text UTF-8 syntax
@@ -124,24 +125,14 @@ class expression:
 
         """
 
-        syntax = 'text'
-        syntaxes = {'i': 'info',
+        syntaxes = {'d': 'dot',
+                    'D': 'dot,physical',
+                    'i': 'info',
                     't': 'text',
                     'u': 'utf8',
                     'x': 'latex',
         }
-
-        while spec:
-            c, spec = spec[0], spec[1:]
-            if c in syntaxes:
-                syntax = syntaxes[c]
-            elif c == ':':
-                break
-            else:
-                raise ValueError("unknown format specification: " + c + spec)
-
-        s = self.format(syntax)
-        return s.__format__(spec)
+        return _format(self, spec, 'text', syntaxes)
 
 
     def info(self, key=None, detailed=False):

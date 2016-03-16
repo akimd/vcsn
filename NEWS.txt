@@ -15,6 +15,21 @@ times are displayed only once).
 
 Under IPython, experiment `exp.SVG()` (logical) and `exp.SVG(True)` (physical).
 
+### Python: __format__
+The Python objects now support the `format` protocol.  For instance:
+
+    In [2]: c = vcsn.context('lal(abc), q')
+
+    In [3]: for i in range(4):
+                e = c.expression('[ab]*a[ab]{{{i}}}'.format(i=i))
+                print('{i:3d} | {e:t:20} | {e:u:20} | {n:3d}'
+                      .format(i=i, e=e,
+                              n=e.automaton().determinize().state_number()))
+      0 | (a+b)*a              | (a+b)*a              |   2
+      1 | (a+b)*a(a+b)         | (a+b)*a(a+b)         |   4
+      2 | (a+b)*a(a+b){2}      | (a+b)*a(a+b)²        |   8
+      3 | (a+b)*a(a+b){3}      | (a+b)*a(a+b)³        |  16
+
 ## 2016-03-08
 ### ldiv, rdiv: compute quotient between automata
 `automaton.ldiv` and `automaton.rdiv` compute the left and right quotients of

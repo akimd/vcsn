@@ -280,11 +280,6 @@ for i in range(10):
 it manages to factor out the '<2>x' bits?  Reading the code, I fail to see
 where the common 'xx' are removed.
 
-** Python: __format__ (AD, AP, SP)
-I just discovered that Python feature, which is nicely used in Spot, and I
-think we should have something like it.  See formula.wrap in
-`wrap/python/spot.py` in their current branch `next`.
-
 ** rat: parse
 
 v score-compare --only 'b.expression\(e\)' +scores/36s/v2.0-0931-gd70d722  \

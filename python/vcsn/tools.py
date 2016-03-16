@@ -16,6 +16,7 @@ def _extend(*classes):
         return classes[0]
     return wrap
 
+
 def _info_to_dict(info):
     '''Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers.
@@ -45,9 +46,32 @@ def _info_to_dict(info):
         res[k] = v
     return res
 
+
+def _format(self, spec, syntax, syntaxes):
+    """Format `self` weight according to `spec`.
+
+    Parameters
+    ----------
+    spec : str, optional
+        a list of letters that specify how the label
+        should be formatted.
+
+    """
+
+    while spec:
+        c, spec = spec[0], spec[1:]
+        if c in syntaxes:
+            syntax = syntaxes[c]
+        elif c == ':':
+            break
+        else:
+            raise ValueError("unknown format specification: " + c + spec)
+
+    s = self.format(syntax)
+    return s.__format__(spec)
+
+
 # FIXME: Get rid of this.
-
-
 def _is_equal(lhs, rhs):
     "A stupid string-based comparison.  Must be eliminated once we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)

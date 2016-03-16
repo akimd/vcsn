@@ -3,7 +3,7 @@
 ## ------------ ##
 
 from vcsn_cxx import polynomial
-from vcsn.tools import _extend, _is_equal, _right_mult
+from vcsn.tools import _extend, _format, _is_equal, _right_mult
 
 @_extend(polynomial)
 class polynomial:
@@ -37,24 +37,12 @@ class polynomial:
 
         """
 
-        syntax = 'text'
         syntaxes = {'l': 'list',
                     't': 'text',
                     'u': 'utf8',
                     'x': 'latex',
         }
-
-        while spec:
-            c, spec = spec[0], spec[1:]
-            if c in syntaxes:
-                syntax = syntaxes[c]
-            elif c == ':':
-                break
-            else:
-                raise ValueError("unknown format specification: " + c + spec)
-
-        s = self.format(syntax)
-        return s.__format__(spec)
+        return _format(self, spec, 'text', syntaxes)
 
 
     def __pow__(p, k):
