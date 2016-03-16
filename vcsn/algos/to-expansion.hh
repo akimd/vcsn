@@ -231,18 +231,6 @@ namespace vcsn
                  std::cerr << "Rhs: "; print_(rhs, std::cerr) << '\n';
                  );
         res_ = es_.zero();
-        // lp: (label, left_polynomial)
-        if (!ws_.is_zero(lhs.constant))
-          {
-            if (transposed_)
-              {
-                auto rhs_transposed = to_expansion(e[1]);
-                es_.add_here(res_,
-                             es_.ldiv_here(lhs.constant, rhs_transposed));
-              }
-            else
-              es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
-          }
         auto one = detail::label_one(ls_);
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
           for (const auto& lm: std::get<0>(p.second))
@@ -259,6 +247,17 @@ namespace vcsn
                 ps_.add_here(res_.polynomials[one],
                              rs_.ldiv(label_of(lm), label_of(rm)),
                              ws_.ldiv(weight_of(lm), weight_of(rm)));
+        if (!ws_.is_zero(lhs.constant))
+          {
+            if (transposed_)
+              {
+                auto rhs_transposed = to_expansion(e[1]);
+                es_.add_here(res_,
+                             es_.ldiv_here(lhs.constant, rhs_transposed));
+              }
+            else
+              es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
+          }
         es_.normalize(res_);
       }
 

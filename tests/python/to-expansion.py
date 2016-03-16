@@ -120,6 +120,7 @@ check('a{\}(<x>a)*', '\e.[<x>(<x>a)*]')
 check('a*{\}a', '\e.[a*{\}\e] + a.[\e]')
 check('a*{\}a*', '<\e> + \e.[a*{\}a*] + a.[a*]')
 check('(<x>a)*{\}(<y>a)*', '<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]')
+check('<x>(<y>a)* {\} <z>a*', '<x{\}z> + \e.[<xy{\}z>(<y>a)*{\}a*] + a.[<x{\}z>a*]')
 
 # Left quotient vs. conjunction.
 check('(ab{\}ab)c&c', '\e.[(b{\}b)c&c]')
