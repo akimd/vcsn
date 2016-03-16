@@ -20,9 +20,9 @@ namespace vcsn
 {
   namespace detail
   {
-    /*-------------------------------------.
-    | tuple_automaton_impl<Aut, Auts...>.  |
-    `-------------------------------------*/
+    /*----------------------------------------------.
+    | tuple_automaton_impl<Ranked, Aut, Auts...>.   |
+    `----------------------------------------------*/
 
     /// An automaton whose states are tuples of states of automata.
     ///
@@ -30,7 +30,7 @@ namespace vcsn
     ///
     /// \tparam Aut   the output automaton type
     /// \tparam Auts  the input automaton types
-    template <Automaton Aut, Automaton... Auts>
+    template <bool Ranked, Automaton Aut, Automaton... Auts>
     class tuple_automaton_impl
       : public automaton_decorator<Aut>
     {
@@ -42,7 +42,10 @@ namespace vcsn
       /// Result state type.
       using state_t = typename super_t::state_t;
       /// State names: Tuple of states of input automata.
-      using state_name_t = std::tuple<state_t_of<Auts>...>;
+      using state_name_t
+        = std::conditional_t<Ranked,
+                             std::tuple<state_t_of<Auts>..., unsigned>,
+                             std::tuple<state_t_of<Auts>...>>;
 
       /// The type of context of the result.
       ///
@@ -129,6 +132,7 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
 
       /// The list of automaton indices as a static list.
+      constexpr static size_t rank = sizeof...(Auts);
       using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
       static constexpr indices_t indices{};
 
@@ -136,17 +140,21 @@ namespace vcsn
       template <typename... T>
       static std::string sname_(const T&... t)
       {
-        std::string res = "<" ;
+        // tuple_automaton<Ranked, SupportAutomaton, InputAutomaton...>.
+        auto res = std::string{"<"} + (Ranked ? "true" : "false") + ", ";
         using swallow = int[];
         const char* sep = "";
         (void) swallow
           {
-            (res += sep + t, sep = ", ", 0)...
+            (res += sep + t, sep = ", ",
+             std::cerr << "Wow! " << t << '\n',
+             0)...
           };
         res += sep + Aut::element_type::sname();
         (void) swallow
           {
-            (res += ", " + Auts::element_type::sname(), 0)...
+            (res += ", " + Auts::element_type::sname(),
+             0)...
           };
         res += ">";
         return res;
@@ -162,7 +170,7 @@ namespace vcsn
       std::ostream& print_set_(std::ostream& o, format fmt,
                                seq<I...>) const
       {
-        o << '<';
+        o << '<' << (Ranked ? "true" : "false") << ", ";
         aut_->print_set(o, fmt);
         o << ", ";
         const char* sep = "";
@@ -186,9 +194,11 @@ namespace vcsn
       template <size_t... I>
       state_name_t pre_(seq<I...>) const
       {
-        // clang 3.4 on top of libstdc++ wants this ctor to be
-        // explicitly called.
-        return state_name_t{(std::get<I>(auts_)->pre())...};
+        using std::get;
+        return static_if<Ranked>
+          ([this](auto r) { return state_name_t{get<I>(auts_)->pre()..., r}; },
+           [this](auto)   { return state_name_t{get<I>(auts_)->pre()...}; })
+          (0);
       }
 
       /// The name of the post of the output automaton.
@@ -200,9 +210,11 @@ namespace vcsn
       template <size_t... I>
       state_name_t post_(seq<I...>) const
       {
-        // clang 3.4 on top of libstdc++ wants this ctor to be
-        // explicitly called.
-        return state_name_t{(std::get<I>(auts_)->post())...};
+        using std::get;
+        return static_if<Ranked>
+          ([this](auto r) { return state_name_t{get<I>(auts_)->post()..., r}; },
+           [this](auto)   { return state_name_t{get<I>(auts_)->post()...}; })
+          (0);
       }
 
       /// The state in the product corresponding to a pair of states
@@ -226,8 +238,16 @@ namespace vcsn
         return lb->second;
       }
 
-      template <bool Lazy = false>
-      state_t state(state_t_of<Auts>... ss)
+      template <bool Lazy = false, bool Ranked_ = Ranked>
+      auto state(state_t_of<Auts>... ss, unsigned rank)
+        -> std::enable_if_t<Ranked_, state_t>
+      {
+        return state<Lazy>(std::make_tuple(ss..., rank));
+      }
+
+      template <bool Lazy = false, bool Ranked_ = Ranked>
+      auto state(state_t_of<Auts>... ss)
+        -> std::enable_if_t<!Ranked_, state_t>
       {
         return state<Lazy>(std::make_tuple(ss...));
       }
@@ -263,6 +283,9 @@ namespace vcsn
              sep = ", ",
              0)...
           };
+        static_if<Ranked>([&o](const auto& sn){
+            o << ", " << std::get<rank>(sn);
+          })(sn);
         if (delimit)
           o << ')';
         return o;
@@ -288,16 +311,16 @@ namespace vcsn
   }
 
   /// A tuple automaton as a shared pointer.
-  template <Automaton... Auts>
+  template <bool Ranked, Automaton... Auts>
   using tuple_automaton
-    = std::shared_ptr<detail::tuple_automaton_impl<Auts...>>;
+    = std::shared_ptr<detail::tuple_automaton_impl<Ranked, Auts...>>;
 
-  template <Automaton... Auts>
+  template <bool Ranked, Automaton... Auts>
   auto
   make_tuple_automaton(const Auts&... auts)
-    -> tuple_automaton<Auts...>
+    -> tuple_automaton<Ranked, Auts...>
   {
-    using res_t = tuple_automaton<Auts...>;
+    using res_t = tuple_automaton<Ranked, Auts...>;
     return make_shared_ptr<res_t>(auts...);
   }
 }

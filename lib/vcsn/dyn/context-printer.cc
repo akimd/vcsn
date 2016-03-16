@@ -59,6 +59,7 @@ namespace vcsn
           "automaton type",
           {
             {"compose_automaton"      , "vcsn/algos/compose.hh"},
+            {"compose2_automaton"     , "vcsn/algos/compose-ranked.hh"},
             {"delay_automaton"        , "vcsn/algos/is-synchronized.hh"},
             {"derived_term_automaton" , "vcsn/algos/derived-term.hh"},
             {"determinized_automaton" , "vcsn/algos/determinize.hh"},
@@ -73,6 +74,7 @@ namespace vcsn
             {"partition_automaton"    , "vcsn/core/partition-automaton.hh"},
             {"permutation_automaton"  , "vcsn/core/permutation-automaton.hh"},
             {"product_automaton"      , "vcsn/algos/conjunction.hh"},
+            {"product2_automaton"     , "vcsn/algos/conjunction-ranked.hh"},
             {"scc_automaton"          , "vcsn/algos/scc.hh"},
             {"synchronized_automaton" , "vcsn/algos/synchronize.hh"},
             {"transpose_automaton"    , "vcsn/algos/transpose.hh"},

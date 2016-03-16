@@ -23,12 +23,19 @@ namespace vcsn
     template <Automaton Aut, Automaton... Auts>
     class tuple_automata_impl
       : public lazy_tuple_automaton<tuple_automata_impl<Aut, Auts...>,
-                                    false, false, Aut, Auts...>
+                                    false, // Ranked.
+                                    false, // KeepTransitions.
+                                    false, // Lazy.
+                                    Aut, Auts...>
     {
       /// The type of the resulting automaton.
       using automaton_t = Aut;
       using self_t = tuple_automata_impl;
-      using super_t = lazy_tuple_automaton<self_t, false, false, Aut, Auts...>;
+      using super_t = lazy_tuple_automaton<self_t,
+                                           false, // Ranked.
+                                           false, // KeepTransitions.
+                                           false, // Lazy.
+                                           Aut, Auts...>;
 
     public:
       using state_name_t = typename super_t::state_name_t;

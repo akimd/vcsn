@@ -5,7 +5,7 @@ $a \& 12$ & $a = std([a-e]*b(<2>[a-e])*)$ & 1 & \num{ 4.15} & \num{ 4.13} & \num
 $a.accessible()$ & $a = thm([a-m]\{20000\}).proper(prune=False)$ & 1 &   N/A & \num{ 0.30} & \num{ 0.36} & \num{ 0.33} \\
 $a.compose(a)$ & $a = std(['(a,a)'-'(i,z)']\{4\}), c = [a-z]x[a-z] \rightarrow B$ & 1 & \num{ 1.22} & \num{ 1.22} & \num{ 1.16} & \num{ 1.18} \\
 $a.compose(a)$ & $a = thm(['(a,a)'-'(i,z)']\{4\}), c = [a-z]?x[a-z]? \rightarrow B$ & 1 & \num{ 0.48} & \num{ 0.47} & \num{ 0.41} & \num{ 0.41} \\
-$a.conjunction(a)$ & $a = std([a-e]?\{50\})$ & 1 & \num{ 3.92} & \num{ 3.75} & \num{ 3.89} & \num{ 3.80} \\
+$a.conjunction(a)$ & $a = std([a-e]?\{50\}), c = [a-e] \rightarrow Z$ & 1 & \num{ 3.92} & \num{ 3.75} & \num{ 3.89} & \num{ 3.80} \\
 $a.conjunction(a)$ & $a = thm([a-e]?\{80\})$ & 1 &   N/A & \textcolor{red}{\num{ 0.83}} & \num{ 0.69} & \num{ 0.70} \\
 $a.determinize("weighted")$ & $a = de\_bruijn(13)$ & 10 & \textcolor{red}{\num{ 1.80}} & \num{ 1.40} & \num{ 1.46} & \num{ 1.44} \\
 $a.determinize("weighted")$ & $a = de\_bruijn(13), c = [abc] \rightarrow F2$ & 10 &   N/A &   N/A & \num{ 1.48} & \num{ 1.37} \\

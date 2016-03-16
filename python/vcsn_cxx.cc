@@ -112,6 +112,12 @@ automaton automaton_conjunction(const boost::python::list& l,
   return automaton::conjunction(make_vector<automaton>(l), lazy);
 }
 
+automaton automaton_conjunction2(const boost::python::list& l,
+                                bool lazy = false)
+{
+  return automaton::conjunction2(make_vector<automaton>(l), lazy);
+}
+
 automaton automaton_infiltrate(const boost::python::list& l)
 {
   return automaton::infiltrate(make_vector<automaton>(l));
@@ -323,12 +329,18 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("complete", &automaton::complete)
     .def("component", &automaton::component)
     .def("compose", &automaton::compose, (arg("lazy") = false))
+    .def("compose2", &automaton::compose2, (arg("lazy") = false))
     .def("condense", &automaton::condense)
     .def("conjunction",
          static_cast<automaton_conjunction_repeated_t>(&automaton::conjunction))
     .def("conjunction", &automaton_conjunction,
          (arg("automata"), arg("lazy") = false))
         .staticmethod("conjunction")
+    .def("conjunction2",
+         static_cast<automaton_conjunction_repeated_t>(&automaton::conjunction2))
+    .def("conjunction2", &automaton_conjunction2,
+         (arg("automata"), arg("lazy") = false))
+        .staticmethod("conjunction2")
     .def("conjugate", &automaton::conjugate)
     .def("context", &automaton::context)
     .def("costandard", &automaton::costandard)

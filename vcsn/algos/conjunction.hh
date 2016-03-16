@@ -36,6 +36,7 @@ namespace vcsn
     template <bool Lazy, Automaton Aut, Automaton... Auts>
     class product_automaton_impl
       : public lazy_tuple_automaton<product_automaton_impl<Lazy, Aut, Auts...>,
+                                    false,
                                     false, Lazy, Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
@@ -44,7 +45,8 @@ namespace vcsn
       /// The type of the resulting automaton.
       using automaton_t = Aut;
       using self_t = product_automaton_impl;
-      using super_t = lazy_tuple_automaton<self_t, false, Lazy, Aut, Auts...>;
+      using super_t
+        = lazy_tuple_automaton<self_t, false, false, Lazy, Aut, Auts...>;
 
     public:
       using state_name_t = typename super_t::state_name_t;
@@ -783,7 +785,7 @@ namespace vcsn
   auto
   shuffle(const Auts&... as)
     // SFINAE
-    -> tuple_automaton<decltype(join_automata(as...)),
+    -> tuple_automaton<false, decltype(join_automata(as...)),
                        Auts...>
   {
     auto res =
@@ -859,7 +861,7 @@ namespace vcsn
   template <Automaton A1, Automaton A2>
   auto
   infiltrate(const A1& a1, const A2& a2)
-    -> tuple_automaton<decltype(join_automata(a1, a2)),
+    -> tuple_automaton<false, decltype(join_automata(a1, a2)),
                        A1, A2>
   {
     auto res =

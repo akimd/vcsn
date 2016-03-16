@@ -26,8 +26,10 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/complement.py                             \
   %D%/complete.py                               \
   %D%/compose.py                                \
+  %D%/compose2.py                               \
   %D%/conjugate.py                              \
   %D%/conjunction.py                            \
+  %D%/conjunction2.py                           \
   %D%/constant-term.py                          \
   %D%/context.py                                \
   %D%/demangle.py                               \
@@ -152,6 +154,9 @@ EXTRA_DIST +=                                           \
   %D%/compose.dir/left.gv                               \
   %D%/compose.dir/result.gv                             \
   %D%/compose.dir/right.gv                              \
+  %D%/compose2.dir/left.gv                              \
+  %D%/compose2.dir/result.gv                            \
+  %D%/compose2.dir/right.gv                             \
   %D%/conjugate.dir/ab-ac-conjug.gv                     \
   %D%/conjugate.dir/abc-conjug.gv                       \
   %D%/conjunction.dir/a.gv                              \
@@ -162,6 +167,14 @@ EXTRA_DIST +=                                           \
   %D%/conjunction.dir/xa.gv                             \
   %D%/conjunction.dir/xy.gv                             \
   %D%/conjunction.dir/xyz.gv                            \
+  %D%/conjunction2.dir/a.gv                             \
+  %D%/conjunction2.dir/ab.gv                            \
+  %D%/conjunction2.dir/abc.gv                           \
+  %D%/conjunction2.dir/ax.gv                            \
+  %D%/conjunction2.dir/x.gv                             \
+  %D%/conjunction2.dir/xa.gv                            \
+  %D%/conjunction2.dir/xy.gv                            \
+  %D%/conjunction2.dir/xyz.gv                           \
   %D%/derivation.dir/e1-dt.gv                           \
   %D%/derivation.dir/e2-dt-breaking.gv                  \
   %D%/derivation.dir/e2-dt.gv                           \
@@ -321,8 +334,10 @@ EXTRA_DIST +=                                           \
 
 %D%/automaton.log:       $(wildcard $(srcdir)/%D%/automaton.dir/*)
 %D%/compose.log:         $(wildcard $(srcdir)/%D%/compose.dir/*)
+%D%/compose2.log:        $(wildcard $(srcdir)/%D%/compose2.dir/*)
 %D%/conjugate.log:       $(wildcard $(srcdir)/%D%/conjugate.dir/*)
 %D%/conjunction.log:     $(wildcard $(srcdir)/%D%/conjunction.dir/*)
+%D%/conjunction2.log:    $(wildcard $(srcdir)/%D%/conjunction2.dir/*)
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)

@@ -533,10 +533,14 @@ bench('a.expression("linear", "naive")',
 # Other conjunction and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new conjunction algorithm.
 r = "[a-e]?{50}"
-bench('a.conjunction(a)',
-      'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+for ctx in ['lal_char(a-e), z', 'lan_char(a-e), z']:
+    for cmd in ['a.conjunction(a)', 'a.conjunction2(a)']:
+        bench(cmd,
+              'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+              setup=['ctx = "{}"'.format(ctx),
+                     'c = vcsn.context(ctx)',
+                     'r = "{}"'.format(r),
+                     'a = c.expression(r).standard()'])
 
 bench('a.shuffle(a)',
       'a = std({})'.format(r),
@@ -552,47 +556,52 @@ bench('a.infiltrate(a)',
 
 # Conjunction with spontaneous transitions.
 r = "[a-e]?{80}"
-bench('a.conjunction(a)',
-      'a = thompson({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
+for cmd in ['a.conjunction(a)', 'a.conjunction2(a)']:
+    bench(cmd,
+          'a = thompson({})'.format(r),
+          setup=['r = "{}"'.format(r),
+                 'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
 
 r = "[a-e]?{5}"
-bench('a.conjunction(a, a, a)',
-      'a = thompson({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
+for cmd in ['a.conjunction(a, a, a)', 'a.conjunction2(a, a, a)']:
+    bench(cmd,
+          'a = thompson({})'.format(r),
+          setup=['r = "{}"'.format(r),
+                 'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
 
 # power.
 n = 12
 r = "[a-e]*b(<2>[a-e])*"
-bench('a & {}'.format(n),
-      'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+for cmd in ['a & {}', 'a.conjunction2({})']:
+    bench(cmd.format(n),
+          'a = std({})'.format(r),
+          setup=['r = "{}"'.format(r),
+                 'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
 # compose.
 ctx = "lat<lan<char(a-z)>, lan<char(a-z)>>, b"
 r = "([a-z]|[a-z])?{20}"
-bench('a.compose(a2)',
-      'a2 = std({}), a = std(a|a)'.format(r),
-      setup=['ctx = "{}"'.format(ctx),
-             'r = "{}"'.format(r),
-             'c = vcsn.context(ctx)',
-             'a = c.expression("a|a").standard()',
-             'a2 = c.expression(r).automaton()'],
-      number=50)
+for algo in ['compose', 'compose2']:
+    bench('a.{}(a2)'.format(algo),
+          'a2 = std({}), a = std(a|a)'.format(r),
+          setup=['ctx = "{}"'.format(ctx),
+                 'r = "{}"'.format(r),
+                 'c = vcsn.context(ctx)',
+                 'a = c.expression("a|a").standard()',
+                 'a2 = c.expression(r).automaton()'],
+          number=50)
 
 def bench_compose(ls, r, a, number=50):
     ctx = "lat<{ls}(a-z), {ls}(a-z)>, b".format(ls=ls)
     algo = {'std': 'standard', 'thm': 'thompson'}[a]
-    bench('a.compose(a)',
-          'a = {}({}), c = {}'.format(a, r, ctx_signature(ctx)),
-          setup=['ctx = "{}"'.format(ctx),
-                 'r = "{}"'.format(r),
-                 'c = vcsn.context(ctx)',
-                 'a = c.expression(r).{}()'.format(algo)],
-          number=number)
+    for c in ['compose', 'compose2']:
+        bench('a.{}(a)'.format(c),
+              'a = {}({}), c = {}'.format(a, r, ctx_signature(ctx)),
+              setup=['ctx = "{}"'.format(ctx),
+                     'r = "{}"'.format(r),
+                     'c = vcsn.context(ctx)',
+                     'a = c.expression(r).{}()'.format(algo)],
+              number=number)
 
 # Those two are obsolete, remove them in some future.  They are
 # irrelevant (this pattern does not exist in "real life", and

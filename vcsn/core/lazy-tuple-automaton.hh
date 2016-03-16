@@ -29,16 +29,17 @@ namespace vcsn
     /// \tparam Aut              the output automaton type
     /// \tparam Auts             the input automaton types
     template <typename Decorated,
+              bool Ranked,
               bool KeepTransitions,
               bool Lazy,
               Automaton Aut, Automaton... Auts>
     class lazy_tuple_automaton
-      : public automaton_decorator<tuple_automaton<Aut, Auts...>>
+      : public automaton_decorator<tuple_automaton<Ranked, Aut, Auts...>>
     {
     public:
 
       /// The underlying automaton, output and inputs.
-      using tuple_automaton_t = tuple_automaton<Aut, Auts...>;
+      using tuple_automaton_t = tuple_automaton<Ranked, Aut, Auts...>;
       using tuple_automaton_impl = typename tuple_automaton_t::element_type;
       using state_name_t = typename tuple_automaton_impl::state_name_t;
       using state_t = typename tuple_automaton_impl::state_t;
@@ -58,7 +59,7 @@ namespace vcsn
       using super_t::aut_;
 
       lazy_tuple_automaton(Aut aut, const Auts&... auts)
-        : super_t{make_tuple_automaton(aut, auts...)}
+        : super_t{make_tuple_automaton<Ranked>(aut, auts...)}
         , transition_maps_{transition_map_t<Auts>{auts, ws_}...}
       {
         if (Lazy)

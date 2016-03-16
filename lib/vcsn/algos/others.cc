@@ -27,6 +27,15 @@ namespace vcsn
       return conjunction(auts, lazy);
     }
 
+    // Implement the binary case on top of the variadic one, to avoid
+    // compiling it twice.
+    automaton
+    conjunction2(const automaton& lhs, const automaton& rhs, bool lazy)
+    {
+      auto auts = std::vector<automaton>{lhs, rhs};
+      return conjunction2(auts, lazy);
+    }
+
 
     /*---------.
     | focus.   |

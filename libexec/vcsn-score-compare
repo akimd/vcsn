@@ -344,6 +344,12 @@ def normalize(k):
     k = k.replace('a.lightest() # a = std([a-z]?{300}), c = [a-e] -> Z',
                   'a.lightest() # a = std([a-e]?{150}), c = [a-e] -> Nmin')
 
+    # a.lightest_automaton("a-star") -> a.lightest_automaton(1, "a-star")
+    k = re.sub(r'(a.lightest_automaton)\("', r'\1(1, ', k)
+    k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
+
+    k = k.replace('a.conjunction2(12)', 'a &2 12')
+
     # Now we display the context.
     k = re.sub(r'thompson(\([^\)])', r'thm\1', k)
     k = re.sub(r"std\(\['\(a,a\)'-'\(i,z\)'\]\{4\}\)$",
@@ -352,11 +358,9 @@ def normalize(k):
     k = re.sub(r"thm\(\['\(a,a\)'-'\(i,z\)'\]\{4\}\)$",
                "thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B",
                k)
-
-    # a.lightest_automaton("a-star") -> a.lightest_automaton(1, "a-star")
-    k = re.sub(r'(a.lightest_automaton)\("', r'\1(1, ', k)
-    k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
-
+    k = re.sub(r'(a.conjunction.?\(a\) # a = std\(\[a-e\]\?\{50\}\))$',
+               r'\1, c = [a-e] -> Z',
+               k)
     k = k.replace('infiltration', 'infiltrate')
 
     k = k.replace('proper(False)', 'proper(prune=False)')

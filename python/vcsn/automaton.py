@@ -120,6 +120,16 @@ class automaton:
         else:
             return automaton._conjunction_orig(list(args), lazy)
 
+    _conjunction2_orig = automaton.conjunction2
+    def conjunction2(*args, lazy=False):
+        '''Compute the conjunction of automata, possibly lazy, or the repeated
+        conjunction of an automaton.'''
+        if len(args) == 2 and isinstance(args[1], int):
+            return automaton._conjunction2_orig(*args)
+        else:
+            return automaton._conjunction2_orig(list(args), lazy)
+
+
     def _convert(self, mode, engine="dot"):
         '''Display automaton `self` in `mode` with Graphviz `engine`.'''
         from IPython.display import SVG

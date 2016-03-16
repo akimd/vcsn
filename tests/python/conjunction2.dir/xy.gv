@@ -1,0 +1,20 @@
+digraph
+{
+  vcsn_context = "lal_char(xy), z"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "x"]
+  1 -> 2 [label = "y"]
+  2 -> F2
+}

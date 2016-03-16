@@ -23,8 +23,10 @@ algo_headers =                                  \
   %D%/algos/complete.hh                         \
   %D%/algos/compose-expression.hh               \
   %D%/algos/compose.hh                          \
+  %D%/algos/compose-ranked.hh                   \
   %D%/algos/conjugate.hh                        \
   %D%/algos/conjunction.hh                      \
+  %D%/algos/conjunction-ranked.hh               \
   %D%/algos/constant-term.hh                    \
   %D%/algos/constant.hh                         \
   %D%/algos/copy.hh                             \

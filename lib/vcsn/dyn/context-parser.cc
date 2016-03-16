@@ -361,25 +361,20 @@ namespace vcsn
             res = std::make_shared<automaton>(prefix, expressionset_());
             eat_('>');
           }
-        // xxx_automaton<Aut...>.
+        // xxx_automaton<bool, Aut...>.
         else if (prefix == "compose_automaton"
+                 || prefix == "compose2_automaton"
                  || prefix == "product_automaton"
+                 || prefix == "product2_automaton"
                  || prefix == "tuple_automaton")
           {
             eat_('<');
-            std::string w = "";
-            if (prefix != "tuple_automaton")
-            {
-              w = word_();
-              eat_(',');
-            }
+            std::string w = word_();
+            eat_(',');
             res = std::make_shared<automaton>(prefix,
                                               automaton_(word_()));
-            if (prefix != "tuple_automaton")
-            {
-              auto& c = res->get_content();
-              c.insert(c.begin(), std::make_shared<other>(w));
-            }
+            auto& c = res->get_content();
+            c.insert(c.begin(), std::make_shared<other>(w));
             while (peek_() == ',')
               {
                 eat_(',');

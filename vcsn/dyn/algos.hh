@@ -94,6 +94,7 @@ namespace vcsn
     /// \param lazy  whether to perform the computations on demand.
     automaton compose(const automaton& lhs, const automaton& rhs,
                       bool lazy = false);
+    automaton compose2(automaton& lhs, automaton& rhs, bool lazy = false);
 
     /// The composition of two expansions.
     expansion compose(const expansion& lhs, const expansion& rhs);
@@ -121,6 +122,8 @@ namespace vcsn
     /// \param lazy  whether to perform the computations on demand.
     automaton conjunction(const automaton& lhs, const automaton& rhs,
                           bool lazy = false);
+    automaton conjunction2(const automaton& lhs, const automaton& rhs,
+                           bool lazy = false);
 
     /// The conjunction (aka synchronized product) of automata.
     /// Performs the meet of the contexts.
@@ -129,9 +132,12 @@ namespace vcsn
     /// \param lazy  whether to perform the computations on demand.
     automaton conjunction(const std::vector<automaton>& as,
                           bool lazy = false);
+    automaton conjunction2(const std::vector<automaton>& as,
+                           bool lazy = false);
 
     /// Repeated conjunction of \a aut with itself.
     automaton conjunction(const automaton& aut, unsigned n);
+    automaton conjunction2(const automaton& aut, unsigned n);
 
     /// The Hadamard product of expansions \a lhs and \a rhs.
     expansion conjunction(const expansion& lhs, const expansion& rhs);
