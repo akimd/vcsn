@@ -39,15 +39,13 @@ namespace vcsn
 
       /// The underlying automaton, output and inputs.
       using tuple_automaton_t = tuple_automaton<Aut, Auts...>;
-      using state_name_t
-        = typename tuple_automaton_t::element_type::state_name_t;
-      using state_t
-        = typename tuple_automaton_t::element_type::state_t;
+      using tuple_automaton_impl = typename tuple_automaton_t::element_type;
+      using state_name_t = typename tuple_automaton_impl::state_name_t;
+      using state_t = typename tuple_automaton_impl::state_t;
 
 
       template <size_t... I>
-      using seq
-        = typename tuple_automaton_t::element_type::template seq<I...>;
+      using seq = typename tuple_automaton_impl::template seq<I...>;
 
       using self_t = lazy_tuple_automaton;
       using super_t = automaton_decorator<tuple_automaton_t>;
@@ -70,7 +68,7 @@ namespace vcsn
       template <typename... T>
       static symbol sname_(const T&... t)
       {
-        static symbol res(tuple_automaton_t::element_type::sname_(t...));
+        static auto res = symbol{tuple_automaton_impl::sname_(t...)};
         return res;
       }
 
@@ -83,24 +81,15 @@ namespace vcsn
       }
 
       /// Complete a state: find its outgoing transitions.
-      template <bool L = Lazy>
-      std::enable_if_t<L, void> complete_(state_t s) const
+      void complete_(state_t s) const
       {
         const auto& orig = origins();
         state_name_t sn = orig.at(s);
         auto& self = static_cast<decorated_t&>(const_cast<self_t&>(*this));
-        self.set_lazy(s, false);
+        if (Lazy)
+          self.set_lazy(s, false);
         self.add_transitions(s, sn);
       }
-
-      template <bool L = Lazy>
-      std::enable_if_t<!L, void> complete_(state_t s) const
-      {
-        const auto& orig = origins();
-        state_name_t sn = orig.at(s);
-        static_cast<decorated_t&>(const_cast<self_t&>(*this)).add_transitions(s, sn);
-      }
-
 
       /// All the outgoing transitions.
       auto all_out(state_t s) const

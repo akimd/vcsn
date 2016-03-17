@@ -78,10 +78,10 @@ namespace vcsn
     template <bool Lazy, Automaton Lhs, Automaton Rhs>
     class compose_automaton_impl
       : public lazy_tuple_automaton<compose_automaton_impl<Lazy, Lhs, Rhs>,
-                              true,
-                              Lazy,
-                              typename composed_type<Lhs, Rhs>::out_t,
-                              Lhs, Rhs>
+                                    true,
+                                    Lazy,
+                                    typename composed_type<Lhs, Rhs>::out_t,
+                                    Lhs, Rhs>
     {
       static_assert(full_context_t_of<Lhs>::is_lat,
                     "compose: lhs labelset must be a tupleset");
@@ -303,7 +303,8 @@ namespace vcsn
         // In order to avoid having to call add_transition each time, we cache
         // the transitions we add using a polynomial. We conserve a polynomial
         // for each successor of src.
-        using polynomialset_t = polynomialset<context_t, wet_kind_t::unordered_map>;
+        using polynomialset_t
+          = polynomialset<context_t, wet_kind_t::unordered_map>;
         using polynomial_t = typename polynomialset_t::value_t;
         const auto ps = polynomialset_t(aut_->context());
         auto poly_maps = std::map<state_t, polynomial_t>();

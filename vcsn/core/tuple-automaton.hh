@@ -13,6 +13,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/bimap.hh> // has
 #include <vcsn/misc/map.hh> // has
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/tuple.hh>
 
 namespace vcsn

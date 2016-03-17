@@ -31,14 +31,14 @@ namespace vcsn
     /// Build the (accessible part of the) product.
     template <bool Lazy, Automaton Aut, Automaton... Auts>
     class product_automaton_impl
-      : public lazy_tuple_automaton<product_automaton_impl<Lazy, Aut, Auts...>, false, Lazy, Aut, Auts...>
+      : public lazy_tuple_automaton<product_automaton_impl<Lazy, Aut, Auts...>,
+                                    false, Lazy, Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "product: requires letterized labels");
 
       /// The type of the resulting automaton.
       using automaton_t = Aut;
-      using tuple_automaton_t = tuple_automaton<automaton_t, Auts...>;
       using self_t = product_automaton_impl;
       using super_t = lazy_tuple_automaton<self_t, false, Lazy, Aut, Auts...>;
 
@@ -50,8 +50,7 @@ namespace vcsn
       using transition_map_t = typename super_t::template transition_map_t<A>;
 
       template <size_t... I>
-      using seq
-        = typename tuple_automaton_t::element_type::template seq<I...>;
+      using seq = typename super_t::template seq<I...>;
 
       using super_t::ws_;
       using super_t::transition_maps_;
@@ -517,6 +516,7 @@ namespace vcsn
   template <Automaton... Auts>
   auto
   conjunction(const Auts&... as)
+    // SFINAE
     -> tuple_automaton<decltype(meet_automata(as...)),
                        Auts...>
   {
@@ -530,8 +530,6 @@ namespace vcsn
   template <Automaton... Auts>
   auto
   conjunction_lazy(const Auts&... as)
-    -> product_automaton<true, decltype(meet_automata(as...)),
-                         Auts...>
   {
     auto res = make_product_automaton<true>(meet_automata(as...),
                                       as...);
@@ -663,6 +661,7 @@ namespace vcsn
   template <Automaton... Auts>
   auto
   shuffle(const Auts&... as)
+    // SFINAE
     -> tuple_automaton<decltype(join_automata(as...)),
                        Auts...>
   {
@@ -750,6 +749,7 @@ namespace vcsn
   template <Automaton A1, Automaton A2, Automaton A3, Automaton... Auts>
   auto
   infiltration(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
+    // SFINAE
     -> decltype(infiltration(infiltration(a1, a2), a3, as...))
   {
     return infiltration(infiltration(a1, a2), a3, as...);
