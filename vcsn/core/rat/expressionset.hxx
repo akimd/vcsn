@@ -481,9 +481,9 @@ namespace vcsn
     if (!ids_)
       res = std::make_shared<ldiv_t>(l, r);
 
-    // 0\E => 0{c}.
+    // 0\E => 0.
     else if (ids_ && is_zero(l))
-      res = complement(zero());
+      res = l;
 
     // 1\E => E.
     else if (ids_ && is_one(l))

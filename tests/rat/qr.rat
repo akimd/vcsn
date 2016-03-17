@@ -145,6 +145,11 @@ a{T} => a
 a{T} => a
 (abc){T} => cba
 
+# Trivial identities: quotient
+%labels: letters
+\z{\}a => \z
+a{/}\z => \z
+
 # Complement: same precedence/behavior as *.
 %labels: letters
 <i>a{c} => <i>a{c}
