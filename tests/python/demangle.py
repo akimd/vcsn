@@ -12,33 +12,6 @@ except ImportError:
     has_regex = False
 
 
-## ------- ##
-## sugar.  ##
-## ------- ##
-
-def check(input, exp_regex, exp_re):
-    '''Check that `sugar(input)` is `exp1` when regex is available,
-    otherwise `exp2`.'''
-    exp = exp_regex if has_regex else exp_re
-    CHECK_EQ(exp, sugar(input))
-
-check('context<nullableset<letterset<char_letters>>, b>',
-      '(chars)? → b',
-      'nullableset<letterset<chars>>, b')
-
-check('context<letterset<char_letters>, expressionset<context<letterset<char_letters>, b>>>',
-      'chars → expressionset<chars → b>',
-      'letterset<chars>, expressionset<context<letterset<chars>, b>>')
-
-check('transpose_automaton<mutable_automaton<context<letterset<char_letters>, b>>>',
-      'transpose<mutable<chars → b>>',
-      'transpose<mutable<context<letterset<chars>, b>>>')
-
-check('name_automaton<mutable_automaton<context<letterset<char_letters>, expressionset<context<letterset<char_letters>, b>>>>>',
-      'name<mutable<chars → expressionset<chars → b>>>',
-      'name<mutable<context<letterset<chars>, expressionset<context<letterset<chars>, b>>>>>')
-
-
 ## ---------- ##
 ## demangle.  ##
 ## ---------- ##
@@ -102,3 +75,29 @@ check('''
       '''
 #4 0x10f60846d in void vcsn::detail::copier<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > >::operator()<decltype((has(fp0fp->null_state())) , (make_fresh_automaton<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > >(fp))) vcsn::copy<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::unordered_set<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>, std::hash<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::equal_to<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::allocator<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> > > >(std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > const&, std::unordered_set<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>, std::hash<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::equal_to<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::allocator<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> > >)::'lambda'(vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>), decltype((fp0(fp->null_state())) , (make_fresh_automaton<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > >(fp))) vcsn::copy<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, decltype((has(fp0fp->null_state())) , (make_fresh_automaton<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > >(fp))) vcsn::copy<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > >, std::unordered_set<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>, std::hash<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::equal_to<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::allocator<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> > > >(std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > const&, std::unordered_set<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>, std::hash<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::equal_to<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::allocator<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> > >)::'lambda'(vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>)>(std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > > > const&, std::unordered_set<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag>, std::hash<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::equal_to<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> >, std::allocator<vcsn::detail::index_t_impl<vcsn::detail::mutable_automaton_impl<vcsn::context<lal_char, b > >::state_tag> > >)::'lambda'(vcs
 ''')
+
+## ------- ##
+## sugar.  ##
+## ------- ##
+
+def check(input, exp_regex, exp_re):
+    '''Check that `sugar(input)` is `exp1` when regex is available,
+    otherwise `exp2`.'''
+    exp = exp_regex if has_regex else exp_re
+    CHECK_EQ(exp, sugar(input))
+
+check('context<nullableset<letterset<char_letters>>, b>',
+      '(chars)? → b',
+      'nullableset<letterset<chars>>, b')
+
+check('context<letterset<char_letters>, expressionset<context<letterset<char_letters>, b>>>',
+      'chars → expressionset<chars → b>',
+      'letterset<chars>, expressionset<context<letterset<chars>, b>>')
+
+check('transpose_automaton<mutable_automaton<context<letterset<char_letters>, b>>>',
+      'transpose<mutable<chars → b>>',
+      'transpose<mutable<context<letterset<chars>, b>>>')
+
+check('name_automaton<mutable_automaton<context<letterset<char_letters>, expressionset<context<letterset<char_letters>, b>>>>>',
+      'name<mutable<chars → expressionset<chars → b>>>',
+      'name<mutable<context<letterset<chars>, expressionset<context<letterset<chars>, b>>>>>')
