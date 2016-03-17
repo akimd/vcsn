@@ -4,9 +4,10 @@
 #include <map>
 #include <utility>
 
+#include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/copy.hh>
 #include <vcsn/algos/insplit.hh>
 #include <vcsn/algos/strip.hh>
-#include <vcsn/algos/copy.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/join-automata.hh>
@@ -817,24 +818,40 @@ namespace vcsn
   | conjunction(automaton, n).   |
   `-----------------------------*/
 
+  /// Repeated conjunction of a automaton.
+  ///
+  /// \param aut  the automaton to conjoin with itself.
+  /// \param n    the "power": number of conjunction to apply.
+  ///
+  /// \returns A non-decorated automaton.
   template <Automaton Aut>
   auto
   conjunction(const Aut& aut, unsigned n)
     -> fresh_automaton_t_of<Aut>
   {
+    // We used to compute `a & n` as `([^]* & a) & a)...`.  The code
+    // was simpler, but the additional conjunction (with `[^]*`) made
+    // it noticeably slower.  Concrete `a & 2` was twice slower than
+    // `a & a`.
     auto res = make_fresh_automaton(aut);
-    {
-      // automatonset::one().
-      auto s = res->new_state();
-      res->set_initial(s);
-      res->set_final(s);
-      for (auto l: res->context().labelset()->generators())
-        res->new_transition(s, s, l);
-    }
-
-    if (n)
+    if (n < 2)
       {
-        // FIXME: for 1, we should return the accessible part only.
+        // automatonset::universal().
+        auto s = res->new_state();
+        res->set_initial(s);
+        res->set_final(s);
+        for (auto l: res->context().labelset()->generators())
+          res->new_transition(s, s, l);
+        if (n == 1)
+          // Don't return aut: we need the accessible part.  However,
+          // `copy_into(accessible(aut), res)` seems more costly than
+          // a plein conjunction!
+          res = strip(conjunction(res, aut));
+      }
+    else
+      {
+        res = strip(conjunction(aut, aut));
+        n -= 2;
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
           for (size_t i = 0; i < n; ++i)
