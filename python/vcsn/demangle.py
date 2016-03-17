@@ -129,12 +129,15 @@ if colors_enabled:
 
 
 def colorize_pattern(line):
+    '''Highlight some interesting part of the error messages.'''
     for p in color_patterns:
         line = line.replace(p[0], p[1] + p[0] + std)
     return line
 
 
 def colorize_line(line):
+    '''Give matching colors to left/right pairs of parens/angles/brackets.'''
+
     res = ""
     delim_stack = []
 
@@ -145,6 +148,18 @@ def colorize_line(line):
             res += std
             delim_stack.append(c)
         elif c in delimiters_close.keys():
+            # Beware that we may display a message which is a portion
+            # of the source, so we might have more closing delimiters
+            # than opening ones.  For instance:
+            #
+            # foo.cc:9:19: warning: expression result unused [-Wunused-value]
+            #       ([](auto) { "foo"; },
+            #                   ^~~~~
+            # foo.cc:10:19: warning: expression result unused [-Wunused-value]
+            #        [](auto) { "bar"; })
+            #                   ^~~~~
+            #
+            # in line 10, there is one closing brace too many.
             if delim_stack == [] or delimiters_close[c] != delim_stack[-1]:
                 return line  # error, don't color anything
             delim_stack.pop()
@@ -158,21 +173,19 @@ def colorize_line(line):
         colon = res.find(':')
         if colon != -1:
             res = white + res[:colon] + std + res[colon:]
-    return res + '\n'
+    return res
 
 
 def colorize(line):
-    if not colors_enabled:
-        return line
-    lines = line.split('\n')
-
-    res = ""
-    for line in lines:
-        res += colorize_line(line)
-    return colorize_pattern(res)
-
+    if colors_enabled:
+        line = "".join([colorize_line(l) for l in line.splitlines(True)])
+        line = colorize_pattern(line)
+    return line
 
 def demangle(s, color="auto"):
+    '''Improve the legibility of `s` (which can be several lines long) by
+    using more friendly type names.'''
+
     color = has_color(color)
     # C++.
     s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|equal_to|forward|function|hash|less|make_shared|(unordered_)?map|pair|(unordered_)?set|shared_ptr|string|tuple|vector)',
