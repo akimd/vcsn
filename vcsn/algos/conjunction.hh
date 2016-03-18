@@ -591,8 +591,8 @@ namespace vcsn
 
   /// Compute the left quotient.
   ///
-  /// \param a1  left hand side
-  /// \param a2  right hand side
+  /// \param lhs  left hand side
+  /// \param rhs  right hand side
   template <Automaton Aut1, Automaton Aut2>
   auto
   ldiv(const Aut1& lhs, const Aut2& rhs)
