@@ -474,7 +474,6 @@ bench('a.expression("linear", "naive")',
 r = "[a-e]?{50}"
 bench('a.conjunction(a)',
       'a = std({})'.format(r),
-      'a.conjunction(a)',
       setup=['r = "{}"'.format(r),
              'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
@@ -494,7 +493,6 @@ bench('a.infiltration(a)',
 r = "[a-e]?{80}"
 bench('a.conjunction(a)',
       'a = thompson({})'.format(r),
-      'a.conjunction(a)',
       setup=['r = "{}"'.format(r),
              'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
 
