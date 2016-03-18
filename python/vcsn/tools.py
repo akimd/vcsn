@@ -1,4 +1,5 @@
 import tempfile
+import timeit
 from vcsn_cxx import weight
 
 
@@ -91,6 +92,30 @@ def _right_mult(self, rhs):
         return self.right_mult(rhs)
     else:
         return self.right_mult(self.context().weight(str(rhs)))
+
+
+def _timeit(stmt="pass", setup="pass", repeat=3):
+    """
+    http://stackoverflow.com/q/19062202/190597 (endolith)
+    Imitate default behavior when timeit is run as a script.
+
+    Runs enough loops so that total execution time is greater than 0.2 sec,
+    and then repeats that 3 times and keeps the lowest value.
+
+    Returns the number of loops and the time for each loop in microseconds
+    """
+    t = timeit.Timer(stmt, setup)
+
+    # determine number so that 0.2 <= total time < 2.0
+    for i in range(1, 10):
+        number = 10**i
+        x = t.timeit(number) # seconds
+        if 0.2 <= x:
+            break
+    r = t.repeat(repeat, number)
+    best = min(r)
+    usec = best * 1e6 / number
+    return number, usec
 
 
 def _tmp_file(suffix, **kwargs):

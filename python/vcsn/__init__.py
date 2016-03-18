@@ -1,7 +1,3 @@
-import functools
-import os
-import sys
-
 from vcsn_cxx import (automaton, context, expansion, expression, label,
                       polynomial, weight)
 from vcsn_config import config
