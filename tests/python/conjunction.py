@@ -633,50 +633,22 @@ CHECK_EQUIV(vcsn.automaton(res),
 ###############################################
 
 
-a1 = vcsn.automaton(r'''digraph
-{
-  vcsn_context = "lan_char(abc), b"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-    F5
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    5
-  }
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  1 -> F1
-  0 -> 5 [label = "\\e"]
-  5 -> F5
-}''')
+a1 = vcsn.automaton(r'''
+context = "lan_char(abc), b"
+  $ -> 0
+  0 -> 1 a
+  1 -> $
+  0 -> 2 \e
+  2 -> $
+''')
 
-
-a2 = vcsn.automaton(r'''digraph
-{
-  vcsn_context = "lan_char(abc), b"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-    F5
-  }
-  {
-    node [shape = circle]
-    0
-    5
-  }
-  I0 -> 0
-  0 -> 5 [label = "\\e"]
-  5 -> 6 [label = "a"]
-  6 -> F6
-}''')
+a2 = vcsn.automaton(r'''
+context = "lan_char(abc), b"
+  $ -> 0
+  0 -> 1 \e
+  1 -> 2 a
+  2 -> $
+''')
 
 res = r'''digraph
 {
@@ -703,7 +675,6 @@ res = r'''digraph
   2 -> 4 [label = "a"]
   4 -> F4
 }'''
-
 CHECK_EQ(res, a1 & a2)
 
 ## ------------- ##
