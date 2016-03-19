@@ -17,12 +17,22 @@ namespace vcsn
 
   namespace detail
   {
-
-    template <Automaton Aut, bool HasOne>
+    /// Insplit automaton decorator.
+    ///
+    /// Build on-the-fly an insplit automaton, i.e., an automaton
+    /// whose states have either only proper incoming transitions, or
+    /// only spontaneous incoming transitions.
+    ///
+    /// This is the case where the automaton can have spontaneous
+    /// transitions.
+    template <Automaton Aut,
+              bool HasOne = labelset_t_of<Aut>::has_one()>
     class insplit_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
-      static_assert(labelset_t_of<Aut>::has_one(), "insplit: the labelset must have a one label");
+      static_assert(labelset_t_of<Aut>::has_one(),
+                    "insplit: the labelset must have a one label");
+
     public:
       using automaton_t = Aut;
       using out_automaton_t = fresh_automaton_t_of<Aut>;
@@ -40,16 +50,18 @@ namespace vcsn
 
       using super_t::aut_;
 
-      using bimap_t = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>,
-                                   boost::bimaps::unordered_set_of<state_t>>;
+      using bimap_t
+        = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>,
+                       boost::bimaps::unordered_set_of<state_t>>;
       using map_t = typename bimap_t::left_map;
       using origins_t = typename bimap_t::right_map;
 
 
-
       static symbol sname()
       {
-        static symbol res("insplit_automaton<" + Aut::element_type::sname() + ">");
+        static symbol res("insplit_automaton<"
+                          + Aut::element_type::sname()
+                          + ">");
         return res;
       }
 
@@ -138,7 +150,6 @@ namespace vcsn
       /// All the outgoing transitions.
       using super_t::all_out;
       auto all_out(state_t s) const
-        -> decltype(aut_->all_out(s))
       {
         if (is_lazy(s))
           complete_(s);
@@ -159,8 +170,7 @@ namespace vcsn
 
       /// A map from result state to original state and status (spontaneous or
       /// proper state).
-      const origins_t&
-      origins() const
+      const origins_t& origins() const
       {
         return bimap_.right;
       }
@@ -175,8 +185,10 @@ namespace vcsn
 
       void initialize_insplit()
       {
-        pmap_().insert({state_name_t(aut_in()->pre(), false), aut_out()->pre()});
-        pmap_().insert({state_name_t(aut_in()->post(), false), aut_out()->post()});
+        pmap_().insert({state_name_t(aut_in()->pre(), false),
+                        aut_out()->pre()});
+        pmap_().insert({state_name_t(aut_in()->post(), false),
+                        aut_out()->post()});
         todo_.emplace_back(pre_(), aut_->pre());
       }
 
@@ -195,13 +207,12 @@ namespace vcsn
                                            aut_in(), t);
       }
 
-      inline bool exists(state_t st, bool epsilon)
+      bool exists(state_t st, bool epsilon) const
       {
         return pmap_().find(state_name_t(st, epsilon)) != pmap_().end();
       }
 
-      bool
-      is_spontaneous(transition_t tr)
+      bool is_spontaneous(transition_t tr) const
       {
         return aut_in()->labelset()->is_one(aut_in()->label_of(tr));
       }
@@ -226,8 +237,7 @@ namespace vcsn
 
       /// A map from original state and status (spontaneous or proper state)
       /// to result state.
-      map_t&
-      pmap_()
+      map_t& pmap_()
       {
         return bimap_.left;
       }
@@ -252,6 +262,11 @@ namespace vcsn
       std::deque<std::pair<state_name_t, state_t>> todo_;
     };
 
+
+    /// Insplit automaton decorator.
+    ///
+    /// This is the case where the automaton cannot have spontaneous
+    /// transitions, so do nothing.
     template <Automaton Aut>
     class insplit_automaton_impl<Aut, false>
       : public automaton_decorator<Aut>
@@ -264,7 +279,9 @@ namespace vcsn
 
       static symbol sname()
       {
-        static symbol res("insplit_automaton<" + Aut::element_type::sname() + ">");
+        static symbol res("insplit_automaton<"
+                          + Aut::element_type::sname()
+                          + ">");
         return res;
       }
 
@@ -286,58 +303,70 @@ namespace vcsn
       }
     };
 
-    template<Automaton Aut>
+    /// An insplit automaton as a shared pointer.
+    template <Automaton Aut>
+    using insplit_automaton
+      = std::shared_ptr<insplit_automaton_impl<Aut>>;
+
+    /// Build an insplit automaton from an automaton.
+    template <Automaton Aut>
+    auto
+    make_insplit_automaton(const Aut& aut)
+      -> insplit_automaton<Aut>
+    {
+      return make_shared_ptr<insplit_automaton<Aut>>(aut);
+    }
+
+
+    /// Insplit an automaton with possible spontaneous transitions.
+    template <Automaton Aut>
     auto
     insplit(Aut& aut)
       -> std::enable_if_t<labelset_t_of<Aut>::has_one(),
-                           decltype(make_insplit_automaton(aut))>
+                          decltype(make_insplit_automaton(aut))>
     {
       auto res = make_insplit_automaton(aut);
       res->insplit(false);
       return res;
     }
 
+    /// Insplit an automaton without spontaneous transitions.
+    ///
+    /// Identity.
     template <Automaton Aut>
-    std::enable_if_t<!labelset_t_of<Aut>::has_one(), Aut>
+    auto
     insplit(Aut& aut)
+      -> std::enable_if_t<!labelset_t_of<Aut>::has_one(),
+                          Aut>
     {
       return aut;
     }
-
   } // namespace detail
 
-  /// A compose automaton as a shared pointer.
-  template <Automaton Aut>
-  using insplit_automaton
-    = std::shared_ptr<detail::insplit_automaton_impl<Aut, labelset_t_of<Aut>::has_one()>>;
 
+  /// An insplit automaton as a shared pointer.
   template <Automaton Aut>
-  auto
-  make_insplit_automaton(const Aut& aut)
-    -> insplit_automaton<Aut>
-  {
-    return make_shared_ptr<insplit_automaton<Aut>>(aut);
-  }
+  using insplit_automaton = detail::insplit_automaton<Aut>;
 
+  /// Build a lazy insplit automaton from an automaton.
   template <Automaton Aut>
-  inline
   auto
   insplit_lazy(const Aut& aut)
-    -> decltype(make_insplit_automaton(aut))
   {
-    auto res = make_insplit_automaton(aut);
+    auto res = detail::make_insplit_automaton(aut);
     res->insplit(true);
     return res;
   }
 
+
+  /// Insplit automaton from an automaton.
   template <Automaton Aut>
-  inline
   auto
   insplit(const Aut& aut)
-    -> decltype(detail::insplit(aut))
   {
     return detail::insplit(aut);
   }
+
 
   namespace dyn
   {
