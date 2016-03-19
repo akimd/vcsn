@@ -22,6 +22,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh> // vname
 #include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 

@@ -9,6 +9,7 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/raise.hh>
 
 #include "parse-args.hh"

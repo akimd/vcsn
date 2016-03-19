@@ -60,11 +60,9 @@ namespace vcsn
     // vcsn/dyn/weight.hh.
     namespace detail
     {
-      class weight_base;
-      template <typename WeightSet>
-      class weight_wrapper;
+      class weight;
     }
-    using weight = std::shared_ptr<const detail::weight_base>;
+    using weight = detail::weight;
   }
 
   // vcsn/dyn/type-ast.hh.
