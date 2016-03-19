@@ -35,7 +35,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto res = ::vcsn::read_label(c, is, quoted);
-        return make_label(*c.labelset(), res);
+        return {*c.labelset(), res};
       }
     }
   }

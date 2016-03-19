@@ -392,7 +392,7 @@ namespace vcsn
         auto rs = join(l.labelset(), r.labelset());
         auto lr = rs.conv(l.labelset(), l.label());
         auto rr = rs.conv(r.labelset(), r.label());
-        return make_label(rs, multiply(rs, lr, rr));
+        return {rs, multiply(rs, lr, rr)};
       }
     }
   }

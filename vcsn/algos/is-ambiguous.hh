@@ -94,7 +94,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         auto word = vcsn::ambiguous_word(a);
-        return make_label(make_wordset(*a->labelset()), word);
+        return {make_wordset(*a->labelset()), word};
       }
     }
   }
