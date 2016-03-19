@@ -286,23 +286,23 @@ namespace vcsn
         using swallow = int[];
         (void) swallow
         {
-          (maybe_add_one_transitions_<I>(*(std::get<I>(aut_->auts_)->labelset()),
-                                         src, psrc), 0)...
+          (add_one_transitions_<I>(*(std::get<I>(aut_->auts_)->labelset()),
+                                   src, psrc), 0)...
         };
       }
 
-      /// In the case where the labelset doesn't have one, do nothing
-      template <std::size_t I, typename L>
-      std::enable_if_t<!L::has_one(), void>
-      maybe_add_one_transitions_(const L&, const state_t, const state_name_t&)
+      /// In the case where the labelset doesn't have one, do nothing.
+      template <std::size_t I, typename LS>
+      std::enable_if_t<!LS::has_one(), void>
+      add_one_transitions_(const LS&, const state_t, const state_name_t&)
       {}
 
-      /// If the labelset has one, add the relevant
-      /// spontaneous-transitions leaving the state
-      template <std::size_t I, typename L>
-      std::enable_if_t<L::has_one(), void>
-      maybe_add_one_transitions_(const L& ls, const state_t src,
-                                 const state_name_t& psrc)
+      /// If the I-th labelset has one, add the relevant spontaneous
+      /// transitions leaving the state.
+      template <std::size_t I, typename LS>
+      std::enable_if_t<LS::has_one(), void>
+      add_one_transitions_(const LS& ls, const state_t src,
+                           const state_name_t& psrc)
       {
         if (!has_one_in(psrc, I + 1, aut_->indices)
             && !has_only_one_out(psrc, I, aut_->indices))
