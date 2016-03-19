@@ -87,6 +87,7 @@ class automaton:
     __eq__ = lambda self, other: str(self.strip()) == str(other.strip())
     __invert__ = automaton.complement
     __mod__ = automaton.difference
+    __matmul__ = automaton.compose
     __mul__ = _right_mult
     __pow__ = lambda self, *a: self.multiply(*a)
     __repr__ = lambda self: self.type()

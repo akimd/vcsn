@@ -63,10 +63,6 @@ namespace vcsn
       using context_t = ::vcsn::context<labelset_t, weightset_t>;
 
       using out_t = mutable_automaton<context_t>;
-
-       /// The type of the resulting automaton.
-       using automaton_t = tuple_automaton<mutable_automaton<context_t>,
-                                           Lhs, Rhs>;
     };
 
 
@@ -189,8 +185,10 @@ namespace vcsn
       static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
                                        const hidden_r_labelset_t& rl)
       {
-        return make_labelset_(ll, make_index_sequence<hidden_l_labelset_t::size()>{},
-                              rl, make_index_sequence<hidden_r_labelset_t::size()>{});
+        constexpr auto lsize = hidden_l_labelset_t::size();
+        constexpr auto rsize = hidden_r_labelset_t::size();
+        return make_labelset_(ll, make_index_sequence<lsize>{},
+                              rl, make_index_sequence<rsize>{});
       }
 
       template <std::size_t... I1, std::size_t... I2>
@@ -265,21 +263,8 @@ namespace vcsn
         const auto& rtm = std::get<1>(transition_maps_)[std::get<1>(psrc)];
 
         bool has_eps_out = false;
-        if (!is_spontaneous_in(rhs, std::get<1>(psrc))
-            // "Loop" only on the spontaneous transitions.  "One" is
-            // guaranteed to be first in the transition maps.
-            && !ltm.empty()
-            && lhs->labelset()->is_one(ltm.begin()->first))
-          {
-            has_eps_out = true;
-            // for each spontaneous transitions leaving the state
-            for (auto t: ltm.begin()->second)
-              this->new_transition(src,
-                                   this->state(t.dst, std::get<1>(psrc)),
-                                   join_label(lhs->hidden_label_of(t.transition),
-                                              get_hidden_one(rhs->aut_out())),
-                                   t.weight());
-          }
+        if (!is_spontaneous_in(rhs, std::get<1>(psrc)))
+          has_eps_out = add_one_transitions_<0>(src, psrc);
 
         // If lhs did not issue spontaneous transitions but has proper
         // transitions, issue follow all the rhs spontaneous
@@ -289,16 +274,8 @@ namespace vcsn
           && (!lhs->labelset()->is_one(ltm.begin()->first)
               || 2 <= ltm.size());
 
-        if ((!has_eps_out || lhs_has_proper_trans)
-            && !rtm.empty()
-            && rhs->labelset()->is_one(rtm.begin()->first))
-          for (auto t: rtm.begin()->second)
-            this->new_transition(src,
-                                 this->state(std::get<0>(psrc), t.dst),
-                                 join_label(get_hidden_one(lhs),
-                                            real_aut(rhs)->hidden_label_of(t.transition)),
-                                 t.weight());
-
+        if (!has_eps_out || lhs_has_proper_trans)
+          add_one_transitions_<1>(src, psrc);
 
         // In order to avoid having to call add_transition each time, we cache
         // the transitions we add using a polynomial. We conserve a polynomial
@@ -333,6 +310,51 @@ namespace vcsn
         for (auto elt: poly_maps)
           for (auto m: elt.second)
             this->new_transition(src, elt.first, m.first, m.second);
+      }
+
+
+      template <std::size_t I>
+      bool
+      add_one_transitions_(const state_t src, const state_name_t& psrc)
+      {
+        const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+
+        // "Loop" only on the spontaneous transitions.  "One" is
+        // guaranteed to be first in the transition maps.
+        if (tmap.empty()
+            || !std::get<I>(aut_->auts_)->labelset()->is_one(tmap.begin()->first))
+          return false;
+        else
+          {
+            for (auto t: tmap.begin()->second)
+              {
+                // Tuple of destination states.
+                auto pdst =
+                  static_if<I == 0>
+                  ([dst=t.dst, &psrc]{
+                    return std::make_tuple(dst, std::get<1>(psrc));
+                  },
+                   [dst=t.dst, &psrc]{
+                     return std::make_tuple(std::get<0>(psrc), dst);
+                   })();
+                // Label.
+                auto lbl =
+                  static_if<I == 0>
+                  ([this, t=t.transition](const auto& lhs, const auto& rhs)
+                   {
+                     return join_label(lhs->hidden_label_of(t),
+                                       get_hidden_one(rhs->aut_out()));
+                   },
+                   [this, t=t.transition](const auto& lhs, const auto& rhs)
+                   {
+                     return join_label(get_hidden_one(lhs),
+                                       real_aut(rhs)->hidden_label_of(t));
+                   })
+                  (std::get<0>(aut_->auts_), std::get<1>(aut_->auts_));
+                this->new_transition(src, this->state(pdst), lbl, t.weight());
+              }
+            return true;
+          }
       }
 
       template <Automaton Aut>
