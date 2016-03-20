@@ -363,8 +363,7 @@ namespace vcsn
       bool has_one_in(const state_name_t& psrc, std::size_t i,
                       seq<I...>) const
       {
-        bool has_ones[] = { is_spontaneous_in(std::get<I>(aut_->auts_),
-                                             std::get<I>(psrc))... };
+        bool has_ones[] = { is_spontaneous_in<I>(psrc)... };
         for (; i < sizeof...(Auts); ++i)
           if (has_ones[i])
             return true;
@@ -405,10 +404,11 @@ namespace vcsn
       /// Check if the state has only incoming spontaneous
       /// transitions.  As it is in the case of the one-free labelset,
       /// it's always false.
-      template <Automaton Aut_>
-      constexpr std::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
-      is_spontaneous_in(const Aut_&,
-                       state_t_of<Aut_>) const
+      template <size_t I>
+      constexpr auto
+      is_spontaneous_in(const state_name_t&) const
+        -> std::enable_if_t<!labelset_t_of<input_automaton_t<I>>::has_one(),
+                            bool>
       {
         return false;
       }
@@ -417,13 +417,17 @@ namespace vcsn
       /// The automaton has been insplit, so either all incoming transitions
       /// are proper, or all transitions are spontaneous (including the first
       /// one).
-      template <Automaton Aut_>
-      std::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
-      is_spontaneous_in(const Aut_& rhs, state_t_of<Aut_> rst) const
+      template <size_t I>
+      auto
+      is_spontaneous_in(const state_name_t& sn) const
+        -> std::enable_if_t<labelset_t_of<input_automaton_t<I>>::has_one(),
+                            bool>
       {
-        auto rin = all_in(rhs, rst);
+        const auto& aut = std::get<I>(aut_->auts_);
+        auto s = std::get<I>(sn);
+        auto rin = all_in(aut, s);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(rhs, *rtr);
+        return rtr != rin.end() && is_one(aut, *rtr);
       }
 
       /// Whether the Ith state of \a psrc in the Ith input automaton
