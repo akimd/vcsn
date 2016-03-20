@@ -85,7 +85,7 @@ namespace vcsn
 
       void insplit(bool lazy = false)
       {
-        initialize_insplit();
+        initialize_insplit_();
 
         if (!lazy)
           while (!todo_.empty())
@@ -177,13 +177,13 @@ namespace vcsn
 
 
     private:
-
+      /// The input automaton.
       const automaton_t& aut_in() const
       {
         return in_;
       }
 
-      void initialize_insplit()
+      void initialize_insplit_()
       {
         pmap_().insert({state_name_t(aut_in()->pre(), false),
                         aut_out()->pre()});
@@ -197,14 +197,16 @@ namespace vcsn
         return {aut_->pre(), false};
       }
 
+      /// Split the original outgoing transitions to the insplit
+      /// states.
       void add_insplit_transitions(const state_t st,
                                    const state_name_t& psrc)
       {
-          for (auto t : aut_in()->all_out(std::get<0>(psrc)))
-            aut_out()->new_transition_copy(st,
-                                           state({aut_in()->dst_of(t),
-                                                  is_spontaneous(t)}),
-                                           aut_in(), t);
+        for (auto t : aut_in()->all_out(std::get<0>(psrc)))
+          aut_out()->new_transition_copy(st,
+                                         state({aut_in()->dst_of(t),
+                                               is_spontaneous(t)}),
+                                         aut_in(), t);
       }
 
       bool exists(state_t st, bool epsilon) const
