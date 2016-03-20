@@ -634,13 +634,13 @@ namespace vcsn
     /// \param num_states
     ///    The number of states wanted in the automata
     ///    (>0).  All states will be connected, and there will be no dead
-    ///    state.
+    ///    state.  However, some might not be coaccessible.
     /// \param density
-    ///     The density of the automata.  This is the probability
-    ///     (between 0.0 and 1.0), to add a transition between two
-    ///     states.  All states have at least one outgoing transition,
-    ///     so \a d is considered only when adding the remaining transition.
-    ///     A density of 1 means all states will be connected to each other.
+    ///    The density of the automata.  This is the probability
+    ///    (between 0.0 and 1.0), to add a transition between two
+    ///    states.  All states have at least one outgoing transition,
+    ///    so \a d is considered only when adding the remaining transition.
+    ///    A density of 1 means all states will be connected to each other.
     /// \param num_initial
     ///    The number of initial states wanted (0 <= num_initial <= num_states)
     /// \param num_final

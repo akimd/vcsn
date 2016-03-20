@@ -1,10 +1,15 @@
 #pragma once
 
-#include <random>
 #include <iterator>
+#include <random>
 
-namespace vcsn
+#include <vcsn/misc/export.hh>
+
+namespace vcsn LIBVCSN_API
 {
+  /// Generate a unique random device.
+  std::mt19937& make_random_engine();
+
   // Based on https://gist.github.com/cbsmith/5538174.
   template <typename RandomGenerator>
   struct random_selector

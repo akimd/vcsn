@@ -242,6 +242,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/index.hh                             \
   %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \
+  %D%/misc/irange.hh                            \
   %D%/misc/map.hh                               \
   %D%/misc/math.hh                              \
   %D%/misc/memory.hh                            \

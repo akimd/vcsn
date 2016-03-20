@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vcsn/ctx/traits.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/labelset/nullableset.hh>
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/labelset/tupleset.hh>
+#include <vcsn/misc/irange.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/random.hh>
 #include <vcsn/misc/set.hh>
@@ -62,7 +63,7 @@ namespace vcsn
     auto dis = std::uniform_int_distribution<>(0, 5);
     auto res_label = ls.one();
     auto pick = make_random_selector(gen);
-    for (auto i = 0; i < dis(gen); ++i)
+    for (auto _: detail::irange(dis(gen)))
       res_label = ls.mul(res_label, ls.value(pick(ls.generators())));
     return res_label;
   }
@@ -113,6 +114,28 @@ namespace vcsn
   | random_automaton.   |
   `--------------------*/
 
+  /// Produce a random automaton.
+  ///
+  /// \param ctx
+  ///    The context of the result.
+  /// \param num_states
+  ///    The number of states wanted in the automata
+  ///    (>0).  All states will be connected, and there will be no dead
+  ///    state.  However, some might not be coaccessible.
+  /// \param density
+  ///    The density of the automata.  This is the probability
+  ///    (between 0.0 and 1.0), to add a transition between two
+  ///    states.  All states have at least one outgoing transition, so
+  ///    \a d is considered only when adding the remaining transition.
+  ///    A density of 1 means all states will be connected to each
+  ///    other.
+  /// \param num_initial
+  ///    The number of initial states wanted (0 <= num_initial <= num_states)
+  /// \param num_final
+  ///    The number of final states wanted (0 <= num_final <= num_states)
+  /// \param loop_chance
+  ///    The probability (between 0.0 and 1.0) for each state to have
+  ///    a loop.
   template <typename Ctx>
   mutable_automaton<Ctx>
   random_automaton(const Ctx& ctx,
@@ -124,21 +147,18 @@ namespace vcsn
             "random: density must be in [0,1]");
     require(0 <= loop_chance && loop_chance <= 1,
             "random: loop chance must be in [0,1]");
+
+    using detail::irange;
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = state_t_of<automaton_t>;
-    automaton_t res = make_shared_ptr<automaton_t>(ctx);
+    auto res = make_shared_ptr<automaton_t>(ctx);
 
-    // A good source of random integers.
-    std::random_device rd;
-    auto seed = rd();
-    if (getenv("VCSN_SEED"))
-      seed = std::mt19937::default_seed;
-    std::mt19937 gen(seed);
+    auto& gen = make_random_engine();
 
-    std::vector<state_t> states;
+    auto states = std::vector<state_t>{};
     states.reserve(num_states);
     // Indirect access to states[] to help random selection of successors.
-    std::vector<int> state_randomizer;
+    auto state_randomizer = std::vector<int>{};
     state_randomizer.reserve(num_states);
 
     // Using Sgi::hash_set instead of std::set for these sets is 3
@@ -149,10 +169,10 @@ namespace vcsn
     // Reachability from state[0] (_not_ from pre()).
     state_set unreachables;
 
-    for (unsigned i = 0; i < num_states; ++i)
+    for (unsigned i: detail::irange(num_states))
       {
-        states.push_back(res->new_state());
-        state_randomizer.push_back(i);
+        states.emplace_back(res->new_state());
+        state_randomizer.emplace_back(i);
         // State 0 is "reachable" from 0.
         if (i)
           unreachables.emplace(i);
@@ -162,7 +182,7 @@ namespace vcsn
     worklist.insert(0);
 
     // Select the final states.
-    for (unsigned i = 0; i < num_final; ++i)
+    for (unsigned i: detail::irange(num_final))
       {
         auto dis = std::uniform_int_distribution<>(i, num_states - 1);
         int index = dis(gen);
@@ -178,7 +198,7 @@ namespace vcsn
     auto bin = std::binomial_distribution<>(num_states - 1, density);
 
     // Pick a member of a container following a uniform distribution.
-    auto pick = random_selector<std::mt19937>(gen);
+    auto pick = make_random_selector(gen);
 
     while (!worklist.empty())
       {
@@ -236,8 +256,7 @@ namespace vcsn
           }
       }
 
-
-    // Add loops
+    // Add loops.
     if (0 < loop_chance)
       {
         auto dis = std::bernoulli_distribution(loop_chance);
@@ -283,20 +302,16 @@ namespace vcsn
     using state_t = state_t_of<automaton_t>;
     automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
-    std::random_device rd;
-    auto seed = rd();
-    if (getenv("VCSN_SEED"))
-      seed = std::mt19937::default_seed;
-    auto gen = std::mt19937(seed);
+    auto& gen = make_random_engine();
     auto dis = std::uniform_int_distribution<int>(0, num_states - 1);
 
     auto states = std::vector<state_t>{};
     states.reserve(num_states);
 
-    for (unsigned i = 0; i < num_states; ++i)
-      states.push_back(res->new_state());
+    for (auto _: detail::irange(num_states))
+      states.emplace_back(res->new_state());
 
-    for (unsigned i = 0; i < num_states; ++i)
+    for (auto i: detail::irange(num_states))
       for (auto l : ctx.labelset()->generators())
         res->add_transition(states[i], states[dis(gen)], l,
                             ctx.weightset()->one());
