@@ -108,6 +108,7 @@ dist_notebooks_DATA =                           \
   %D%/context.divkbaseb.ipynb                   \
   %D%/context.ladybird.ipynb                    \
   %D%/context.levenshtein.ipynb                 \
+  %D%/context.random.ipynb                      \
   %D%/context.trie.ipynb                        \
   %D%/expansion.operators.ipynb                 \
   %D%/expression.automaton.ipynb                \
