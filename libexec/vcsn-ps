@@ -4,6 +4,8 @@ try:
     import psutil
     has_psutil = True
 except ImportError:
+    import warnings
+    warnings.warn('you should install psutil for Python')
     import os
     has_psutil = False
 

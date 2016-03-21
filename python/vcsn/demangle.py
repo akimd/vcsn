@@ -2,6 +2,8 @@ try:
     import regex as re
     has_regex = True
 except ImportError:
+    import warnings
+    warnings.warn('you should install regex for Python')
     has_regex = False
     import re
 
