@@ -103,11 +103,11 @@ BUILDCHECK_ENVIRONMENT +=                               \
   PYTHONPATH=$(abs_top_srcdir)/tests/bin:$$PYTHONPATH;  \
   export PYTHONPATH;
 
-INSTALLCHECK_ENVIRONMENT +=                                                     \
-  $(CHECK_ENVIRONMENT);                                                         \
-  PATH=$(DESTDIR)$(bindir):$$PATH;                                              \
-  export PATH;                                                                  \
-  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH;   \
+INSTALLCHECK_ENVIRONMENT +=                                                   \
+  $(CHECK_ENVIRONMENT);                                                       \
+  PATH=$(DESTDIR)$(bindir):$$PATH;                                            \
+  export PATH;                                                                \
+  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH; \
   export PYTHONPATH;
 
 # Run the tests with the install-environment.

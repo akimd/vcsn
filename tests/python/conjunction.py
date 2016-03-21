@@ -3,8 +3,16 @@
 import vcsn
 from test import *
 
+def aut(ctx, exp, algo):
+    if isinstance(ctx, str):
+        ctx = vcsn.context(ctx)
+    return ctx.expression(exp).automaton(algo)
+
+def std(ctx, exp, algo='standard'):
+    return aut(ctx, exp, algo)
+
 def dt(ctx, exp):
-    return vcsn.context(ctx).expression(exp).derived_term()
+    return std(ctx, exp, 'expansion')
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -20,8 +28,8 @@ CHECK_EQ('a*a', a2.expression())
 ## (a+b)* & (b+c)* = b*.  ##
 ## ---------------------- ##
 
-lhs = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
-rhs = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
+lhs = std('lal_char(ab), b', '(a+b)*')
+rhs = std('lal_char(bc), b', '(b+c)*')
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters(b)>, b"
@@ -50,8 +58,8 @@ CHECK_EQ('''digraph
 ## ab & cd = 0.  ##
 ## ------------- ##
 
-lhs = vcsn.context('lal_char(ab), b').expression('ab').standard()
-rhs = vcsn.context('lal_char(cd), b').expression('cd').standard()
+lhs = std('lal_char(ab), b', 'ab')
+rhs = std('lal_char(cd), b', 'cd')
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
@@ -74,8 +82,8 @@ CHECK_EQ('''digraph
 ## (a+b)* & (c+d)* = \e.  ##
 ## ---------------------- ##
 
-lhs = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
-rhs = vcsn.context('lal_char(cd), b').expression('(c+d)*').standard()
+lhs = std('lal_char(ab), b', '(a+b)*')
+rhs = std('lal_char(cd), b', '(c+d)*')
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
@@ -195,9 +203,8 @@ def check(exp, aut):
     CHECK_EQ(exp, aut.expression())
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
-         .expression('(<u>a+<v>b)*').standard()
-a2 = vcsn.context('lal_char(ab), b').expression('a{+}').standard()
+a1 = std('lal_char(ab), seriesset<lal_char(uv), q>', '(<u>a+<v>b)*')
+a2 = std('lal_char(ab), b', 'a{+}')
 check('<u>a(\e+<u>a(<u>a)*)', a1 & a2)
 check('<u>a(\e+<u>a(<u>a)*)', a2 & a1)
 
@@ -222,10 +229,10 @@ check('(<0.1>a+<0.1>b)*', r & q)
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
-         .expression('<u>a<v>b').standard()
-a2 = vcsn.context('lal_char(ab), seriesset<lal_char(xy), q>') \
-         .expression('<x>a<y>b').standard()
+a1 = std('lal_char(ab), seriesset<lal_char(uv), q>',
+         '<u>a<v>b')
+a2 = std('lal_char(ab), seriesset<lal_char(xy), q>',
+         '<x>a<y>b')
 
 def check_enumerate(exp, aut):
     CHECK_EQ(exp, aut.strip().shortest(len=4))
@@ -277,7 +284,7 @@ digraph
 ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
-    a[l] = ctx.expression("<{}>x".format(l)).standard()
+    a[l] = std(ctx, '<{}>x'.format(l))
 check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 
 
@@ -327,8 +334,8 @@ CHECK_EQ('aa', a & a)
 ## nullable labels.  ##
 ## ----------------- ##
 
-lhs = vcsn.context('lan_char(ab), b').expression('(a+b)*').thompson()
-rhs = vcsn.context('lan_char(bc), b').expression('(b+c)*').thompson()
+lhs = aut('lan_char(ab), b', '(a+b)*', 'thompson')
+rhs = aut('lan_char(bc), b', '(b+c)*', 'thompson')
 res = r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(b)>>, b"
@@ -404,9 +411,9 @@ res = r'''digraph
 }'''
 CHECK_EQ(res, lhs & rhs)
 CHECK_EQUIV(vcsn.automaton(res),
-            vcsn.context("lal_char(b), b").expression("b*").standard())
+            std('lal_char(b), b', 'b*'))
 
-third = vcsn.context('lan_char(bcd), b').expression('(b+c+d)*').thompson()
+third = aut('lan_char(bcd), b', '(b+c+d)*', 'thompson')
 res = r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(b)>>, b"
@@ -626,7 +633,7 @@ res = r'''digraph
 }'''
 CHECK_EQ(res, lhs & rhs & third)
 CHECK_EQUIV(vcsn.automaton(res),
-            vcsn.context("lal_char(b), b").expression("b*").standard())
+            std('lal_char(b), b', 'b*'))
 
 ###############################################
 ## Check mixed epsilon and letters going out ##
@@ -682,6 +689,6 @@ CHECK_EQ(res, a1 & a2)
 ## ------------- ##
 
 # Check that the conjunction structure is transparent: invoke it.
-a = vcsn.context('lal_char(a), b').expression('a').standard()
+a = std('lal_char(a), b', 'a')
 a = a & a & a
 CHECK_EQ('1', a('a'))
