@@ -98,8 +98,7 @@ namespace vcsn
       using hidden_indices_t
         = concat_sequence
           <make_index_range_t<0, Tape>,
-           make_index_range_t<Tape + 1,
-                              std::tuple_size<full_label_t>::value - Tape - 1>>;
+           make_index_range_t<Tape + 1, std::tuple_size<full_label_t>::value>>;
 
       // All tapes except the exposed one.
       using res_labelset_t

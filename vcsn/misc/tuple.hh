@@ -60,18 +60,34 @@ namespace vcsn
     | make_index_range.   |
     `--------------------*/
 
+    /// A static range.
+    ///
+    /// \tparam S  starting point of the sequence.
+    /// \tparam L  length of the sequence.
     template <std::size_t S, std::size_t L>
-    struct make_index_range
+    struct make_index_range_impl
       : int_range<S, typename make_index_sequence<L>::type>
     {};
 
-    template <std::size_t S>
-    struct make_index_range<S, 0> : index_sequence<>{};
-    template <std::size_t S>
-    struct make_index_range<S, -1U> : index_sequence<>{};
 
-    template <std::size_t S, std::size_t L>
-    using make_index_range_t = typename make_index_range<S, L>::type;
+    template <std::size_t S>
+    struct make_index_range_impl<S, 0> : index_sequence<>{};
+    template <std::size_t S>
+    struct make_index_range_impl<S, -1U> : index_sequence<>{};
+
+    /// A static range.
+    ///
+    /// \tparam S  starting point of the sequence.
+    /// \tparam E  end of the sequence, excluded.
+    template <std::size_t S, std::size_t E>
+    struct make_index_range
+      : make_index_range_impl<S, E - S>
+    {};
+
+    template <std::size_t S, std::size_t E>
+    using make_index_range_t = typename make_index_range<S, E>::type;
+
+
 
     template <typename S1, typename S2>
     struct concat_index_sequence;
