@@ -34,23 +34,15 @@ namespace vcsn
     class tuple_automaton_impl
       : public automaton_decorator<Aut>
     {
+    public:
       /// The type of the resulting automaton.
       using automaton_t = Aut;
       using super_t = automaton_decorator<automaton_t>;
 
-    public:
-      static symbol sname()
-      {
-        static auto res = symbol{"tuple_automaton" + sname_()};
-        return res;
-      }
-
-      std::ostream& print_set(std::ostream& o, format fmt = {}) const
-      {
-        o << "tuple_automaton";
-        print_set_(o, fmt);
-        return o;
-      }
+      /// Result state type.
+      using state_t = typename super_t::state_t;
+      /// State names: Tuple of states of input automata.
+      using state_name_t = std::tuple<state_t_of<Auts>...>;
 
       /// The type of context of the result.
       ///
@@ -65,7 +57,19 @@ namespace vcsn
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
 
-    public:
+      static symbol sname()
+      {
+        static auto res = symbol{"tuple_automaton" + sname_()};
+        return res;
+      }
+
+      std::ostream& print_set(std::ostream& o, format fmt = {}) const
+      {
+        o << "tuple_automaton";
+        print_set_(o, fmt);
+        return o;
+      }
+
       /// The type of input automata.
       using automata_t = std::tuple<Auts...>;
 
@@ -84,30 +88,30 @@ namespace vcsn
         pmap_().insert({post_(), aut_->post()});
       }
 
-      bool state_has_name(typename super_t::state_t s) const
+      bool state_has_name(state_t s) const
       {
         return has(origins(), s);
       }
 
+      /// Print a state name from its state index.
       std::ostream&
-      print_state_name(typename super_t::state_t s, std::ostream& o,
-                       format fmt = {}, bool delimit = false)
-                      const
+      print_state_name(state_t s, std::ostream& o,
+                       format fmt = {}, bool delimit = false) const
       {
-        if (delimit)
-          o << '(';
-        print_state_name_(s, o, fmt, indices);
-        if (delimit)
-          o << ')';
-        return o;
+        return print_state_name_(s, o, fmt, delimit, indices);
       }
 
-      /// Result state type.
-      using state_t = state_t_of<automaton_t>;
-      /// State names: Tuple of states of input automata.
-      using state_name_t = std::tuple<state_t_of<Auts>...>;
+      /// Print a state name from its state name.
+      std::ostream&
+      print_state_name(const state_name_t& sn, std::ostream& o,
+                       format fmt = {}, bool delimit = false) const
+      {
+        return print_state_name_(sn, o, fmt, delimit, indices);
+      }
 
-      using bimap_t = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>, boost::bimaps::unordered_set_of<state_t>>;
+      using bimap_t
+        = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>,
+                       boost::bimaps::unordered_set_of<state_t>>;
       using map_t = typename bimap_t::left_map;
       using origins_t = typename bimap_t::right_map;
 
@@ -230,27 +234,37 @@ namespace vcsn
 
       template <size_t... I>
       std::ostream&
-      print_state_name_(typename super_t::state_t s, std::ostream& o,
-                        format fmt,
-                        seq<I...>) const
+      print_state_name_(state_t s, std::ostream& o, format fmt,
+                        bool delimit, seq<I...> indices) const
       {
         const auto& origs = origins();
         auto i = origs.find(s);
         if (i == std::end(origs))
           this->print_state(s, o);
         else
+          print_state_name_(i->second, o, fmt, delimit, indices);
+        return o;
+      }
+
+      template <size_t... I>
+      std::ostream&
+      print_state_name_(const state_name_t& sn, std::ostream& o,
+                        format fmt, bool delimit, seq<I...>) const
+      {
+        if (delimit)
+          o << '(';
+        const char* sep = "";
+        using swallow = int[];
+        (void) swallow
           {
-            const char* sep = "";
-            using swallow = int[];
-            (void) swallow
-              {
-                (o << sep,
-                 std::get<I>(auts_)->print_state_name(std::get<I>(i->second),
-                                                      o, fmt, true),
-                 sep = ", ",
-                 0)...
-               };
-          }
+            (o << sep,
+             std::get<I>(auts_)->print_state_name(std::get<I>(sn),
+                                                  o, fmt, true),
+             sep = ", ",
+             0)...
+          };
+        if (delimit)
+          o << ')';
         return o;
       }
 
