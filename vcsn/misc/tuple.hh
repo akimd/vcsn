@@ -138,14 +138,14 @@ namespace vcsn
                                            typename S2::type>::type;
 
     template <typename Fun, typename... Ts>
-    inline void
+    void
     for_(const std::tuple<Ts...>& ts, Fun f)
     {
       for_(f, ts, make_index_sequence<sizeof...(Ts)>());
     }
 
     template <typename Fun, typename... Ts, size_t... I>
-    inline void
+    void
     for_(Fun f,
          const std::tuple<Ts...>& ts,
          index_sequence<I...>)
@@ -156,7 +156,7 @@ namespace vcsn
 
     /// Map a function on a tuple, return tuple of the results.
     template <typename Fun, typename... Ts>
-    inline auto
+    auto
     map(const std::tuple<Ts...>& ts, Fun f)
       -> decltype(map_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>()))
     {
@@ -164,7 +164,7 @@ namespace vcsn
     }
 
     template <typename Fun, typename... Ts, size_t... I>
-    inline auto
+    auto
     map_tuple_(Fun f,
                const std::tuple<Ts...>& ts,
                index_sequence<I...>)
@@ -174,7 +174,7 @@ namespace vcsn
     }
 
     template <typename Fun>
-    inline auto
+    auto
     map_variadic_(Fun)
       -> decltype(std::make_tuple())
     {
@@ -182,7 +182,7 @@ namespace vcsn
     }
 
     template <typename Fun, typename T, typename... Ts>
-    inline auto
+    auto
     map_variadic_(Fun f, T t, Ts&&... ts)
       -> decltype(std::tuple_cat(std::make_tuple(f(t)),
                                  map_variadic_(f, ts...)))
@@ -203,7 +203,7 @@ namespace vcsn
     ///
     /// Beware of name conflicts with vcsn/misc/cross.
     template <typename Fun>
-    inline void
+    void
     cross(Fun f)
     {
       f();
@@ -211,7 +211,7 @@ namespace vcsn
 
     template <typename Fun,
               typename Cont, typename... Conts>
-    inline void
+    void
     cross(Fun f,
           const Cont& head, const Conts&... tails)
     {
@@ -222,7 +222,7 @@ namespace vcsn
     }
 
     template <typename Fun, typename... Ts, size_t... I>
-    inline void
+    void
     cross_tuple_(Fun f,
                  const std::tuple<Ts...>& ts,
                  index_sequence<I...>)
@@ -231,7 +231,7 @@ namespace vcsn
     }
 
     template <typename Fun, typename... Ts>
-    inline void
+    void
     cross_tuple(Fun f,
                 const std::tuple<Ts...>& ts)
     {
@@ -240,43 +240,12 @@ namespace vcsn
 
 
 
-#if 0
-
-    /*-----------------.
-    | make_gcc_tuple.  |
-    `-----------------*/
-
-    // This does not work, I don't understand why.  If you know, please
-    // let me (AD) know.
-    inline auto
-    make_gcc_tuple()
-      -> std::tuple<>
-    {
-      return {};
-    }
-
-    template <typename T, typename... Ts>
-    inline auto
-    make_gcc_tuple(T t, Ts&&... ts)
-      -> decltype(std::tuple_cat(make_gcc_tuple(std::forward<Ts>(ts)...), std::make_tuple(t)));
-
-    template <typename T, typename... Ts>
-    inline auto
-    make_gcc_tuple(T t, Ts&&... ts)
-      -> decltype(std::tuple_cat(make_gcc_tuple(std::forward<Ts>(ts)...), std::make_tuple(t)))
-    {
-      return std::tuple_cat(make_gcc_tuple(std::forward<Ts>(ts)...), std::make_tuple(t));
-    }
-
-#endif
-
-
     /*----------------.
     | reverse_tuple.  |
     `----------------*/
 
     template <typename... Ts>
-    inline auto
+    auto
     reverse_tuple(const std::tuple<Ts...>& t)
       -> decltype(reverse_tuple(t, make_index_sequence<sizeof...(Ts)>()))
     {
@@ -284,7 +253,7 @@ namespace vcsn
     }
 
     template <typename... Ts, std::size_t... I>
-    inline auto
+    auto
     reverse_tuple(const std::tuple<Ts...>& t, index_sequence<I...>)
       -> decltype(std::make_tuple(std::get<sizeof...(Ts) - 1 - I>(t)...))
     {
@@ -295,7 +264,7 @@ namespace vcsn
     /// right-to-left, in which case reverse the result.
 #if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
     template <typename... Ts>
-    inline auto
+    auto
     make_gcc_tuple(Ts&&... ts)
       -> decltype(std::make_tuple(std::forward<Ts>(ts)...))
     {
@@ -303,7 +272,7 @@ namespace vcsn
     }
 #else
     template <typename... Ts>
-    inline auto
+    auto
     make_gcc_tuple(Ts&&... ts)
       -> decltype(reverse_tuple(std::make_tuple(std::forward<Ts>(ts)...)))
     {
@@ -406,6 +375,7 @@ namespace vcsn
     return detail::and_<bool_constant<B>...>::value;
   }
 
+  /// Whether all the `values` evaluate as true.
   template <typename... Bool>
   bool all(Bool&&... values)
   {
@@ -417,7 +387,6 @@ namespace vcsn
     };
     return res;
   }
-
 }
 
 namespace std
