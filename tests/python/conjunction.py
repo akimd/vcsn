@@ -668,6 +668,20 @@ res = r'''digraph
 CHECK_EQ(res, a1 & a2)
 
 
+
+# Because of stupid implementation details, we used to _not_ insplit
+# the automaton in repeated conjunction, yielding an incorrect result.
+a = vcsn.automaton(r'''
+context = "lan, q"
+$ -> 0
+0 -> 0 <1/2>\e, <2>a
+0 -> $
+''')
+CHECK_EQ((a & a).strip(), a & 2)
+CHECK_EQ((a & a & a).strip(), a & 3)
+
+
+
 ###############################################
 ## Check mixed epsilon and letters going out ##
 ###############################################
