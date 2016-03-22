@@ -645,6 +645,9 @@ namespace vcsn
     ///    The number of initial states wanted (0 <= num_initial <= num_states)
     /// \param num_final
     ///    The number of final states wanted (0 <= num_final <= num_states)
+    /// \param max_labels
+    ///    The maximum number of labels per transition.  Defaults to the
+    ///    number of generators.
     /// \param loop_chance
     ///    The probability (between 0.0 and 1.0) for each state to have
     ///    a loop.
@@ -653,6 +656,7 @@ namespace vcsn
                                float density = 0.1,
                                unsigned num_initial = 1,
                                unsigned num_final = 1,
+                               boost::optional<unsigned> max_labels = {},
                                float loop_chance = 0.0);
 
     /// Produce a random deterministic automaton.

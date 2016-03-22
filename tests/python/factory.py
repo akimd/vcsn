@@ -5,6 +5,11 @@
 import vcsn
 from test import *
 
+def get_labels(aut):
+    'A set of the labels used in aut.'
+    return set(re.findall('\w+ -> \w+ (.*)$', a.format('daut'), re.M))
+vcsn.automaton.labels = get_labels
+
 ## ------- ##
 ## cerny.  ##
 ## ------- ##
@@ -102,6 +107,7 @@ c1 = vcsn.context('lal_char(a), b').random(4, 1, 4, 4)
 c2 = vcsn.automaton(filename=medir + '/clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
+
 # Expect the right number of states.
 a = vcsn.context('lal_char(a), b').random(100, .1, 20, 30)
 CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
@@ -109,13 +115,14 @@ CHECK_EQ(100, a.info()['number of states'])
 CHECK_EQ(20, a.info()['number of initial states'])
 CHECK_EQ(30, a.info()['number of final states'])
 
+
 # For a while, we were only able to get matching letters (a|A, b|B,
 # etc.).
 ctx = vcsn.context('lat<lan(a-z), lan(a-z)>, b')
-a = ctx.random(num_states=10, density=1)
+a = ctx.random(num_states=10, density=1, max_labels=1)
 # Get all the labels.
-print("Random:", a.format('daut'))
-labels = set(re.findall('\w+ -> \w+ (.*)$', a.format('daut'), re.M))
+print("random: {:d}".format(a))
+labels = a.labels()
 # Make sure there are \e|a and a|\e.
 CHECK_NE([l for l in labels if re.match(r'\\e\|[a-z]', l)], [])
 CHECK_NE([l for l in labels if re.match(r'[a-z]\|\\e', l)], [])
@@ -127,9 +134,32 @@ CHECK_NE([l for l in labels
 # Make sure there are \e|\e labels.
 CHECK(r'\e|\e' in labels)
 
+
 # Random on an empty labelset doesn't work
 XFAIL(lambda: vcsn.context('lal(), b').random(2),
-      "random_label: the alphabet needs at least 1 letter")
+      "random: empty labelset: {}")
+
+
+# Check that max_labels is honored.
+ctx = vcsn.context('lal(a-z), b')
+a = ctx.random(num_states=10, max_labels=5, density=1)
+labels = a.labels()
+print("random: {:d}".format(a))
+print("labels: {}".format(labels))
+# Expect from 1 to 5 labels per entry.
+for n in range(1, 7):
+    if n == 1:
+        pat = r'[a-z]'
+    elif n == 2:
+        pat = r'[a-z], [a-z]'
+    else:
+        pat = r'\[[a-z]{{{}}}\]'.format(n)
+    ls = [l for l in labels if re.match(pat, l)]
+    print("Number of labels:", n, ls)
+    if n == 6:
+        CHECK_EQ([], ls)
+    else:
+        CHECK_NE([], ls)
 
 ## ---------------------- ##
 ## random_deterministic.  ##

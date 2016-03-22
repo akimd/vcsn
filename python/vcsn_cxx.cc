@@ -179,6 +179,7 @@ struct context
 
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1,
+                   boost::optional<unsigned> max_labels = {},
                    float loop_chance = 0.0) const;
   automaton random_deterministic(unsigned num_states) const;
 
@@ -1303,11 +1304,13 @@ context context::project(unsigned tape) const
 
 automaton context::random(unsigned num_states, float density,
                           unsigned num_initial, unsigned num_final,
+                          boost::optional<unsigned> max_labels,
                           float loop_chance) const
 {
   return vcsn::dyn::random_automaton(val_,
                                      num_states, density,
-                                     num_initial, num_final, loop_chance);
+                                     num_initial, num_final,
+                                     max_labels, loop_chance);
 }
 
 automaton context::random_deterministic(unsigned num_states) const
@@ -1530,6 +1533,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1,
+          arg("max_labels") = boost::optional<unsigned>(),
           arg("loop_chance") = 0))
     .def("random_deterministic", &context::random_deterministic)
     .def("series", &context::series)

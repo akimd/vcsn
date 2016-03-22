@@ -133,6 +133,9 @@ namespace vcsn
   ///    The number of initial states wanted (0 <= num_initial <= num_states)
   /// \param num_final
   ///    The number of final states wanted (0 <= num_final <= num_states)
+  /// \param max_labels
+  ///    The maximum number of labels per transition.  Defaults to the
+  ///    number of generators.
   /// \param loop_chance
   ///    The probability (between 0.0 and 1.0) for each state to have
   ///    a loop.
@@ -141,6 +144,7 @@ namespace vcsn
   random_automaton(const Ctx& ctx,
                    unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1,
+                   boost::optional<unsigned> max_labels = {},
                    float loop_chance = 0.0)
   {
     require(0 <= density && density <= 1,
@@ -154,6 +158,19 @@ namespace vcsn
     auto res = make_shared_ptr<automaton_t>(ctx);
 
     auto& gen = make_random_engine();
+
+    // Labels.
+    const auto& ls = *ctx.labelset();
+    if (max_labels)
+      require(0 < *max_labels,
+              "random: max number of labels cannot be null");
+    else
+      {
+        max_labels = (boost::distance(ls.generators()) + ls.has_one());
+        require(0 < *max_labels,
+                "random: empty labelset: ", ls);
+      }
+    auto num_labels = std::uniform_int_distribution<>(1, *max_labels);
 
     auto states = std::vector<state_t>{};
     states.reserve(num_states);
@@ -251,8 +268,10 @@ namespace vcsn
                     saw_unreachable = true;
                   }
               }
-            res->add_transition(src, states[dst],
-                                random_label(*ctx.labelset(), gen));
+            auto n = num_labels(gen);
+            for (auto _: detail::irange(n))
+              res->add_transition(src, states[dst],
+                                  random_label(ls, gen));
           }
       }
 
@@ -273,16 +292,21 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Ctx, typename, typename, typename, typename, typename>
+      template <typename Ctx, typename NumStates, typename Density,
+                typename NumInitial, typename NumFinal,
+                typename MaxLabels, typename LoopChance>
       automaton
       random_automaton(const context& ctx,
                        unsigned num_states, float density,
                        unsigned num_initial, unsigned num_final,
+                       boost::optional<unsigned> max_labels,
                        float loop_chance)
       {
         const auto& c = ctx->as<Ctx>();
-        return vcsn::random_automaton(c, num_states, density, num_initial,
-                                      num_final, loop_chance);
+        return vcsn::random_automaton(c, num_states, density,
+                                      num_initial, num_final,
+                                      max_labels,
+                                      loop_chance);
       }
     }
   }
