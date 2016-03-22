@@ -117,6 +117,16 @@ namespace vcsn
       /// Tuple of states of input automata.
       using state_name_t = typename super_t::state_name_t;
 
+      /// The type of input automata.
+      using automata_t = std::tuple<Lhs, Rhs>;
+
+      /// The type of the Ith input automaton, unqualified.
+      template <size_t I>
+      using input_automaton_t = base_t<tuple_element_t<I, automata_t>>;
+
+      /// The number of input automata.
+      enum { Rank = 2 };
+
       using super_t::aut_;
 
       static symbol sname()
@@ -262,20 +272,8 @@ namespace vcsn
         const auto& ltm = std::get<0>(transition_maps_)[std::get<0>(psrc)];
         const auto& rtm = std::get<1>(transition_maps_)[std::get<1>(psrc)];
 
-        bool has_eps_out = false;
-        if (!is_spontaneous_in(rhs, std::get<1>(psrc)))
-          has_eps_out = add_one_transitions_<0>(src, psrc);
-
-        // If lhs did not issue spontaneous transitions but has proper
-        // transitions, issue follow all the rhs spontaneous
-        // transitions.
-        const bool lhs_has_proper_trans =
-          !ltm.empty()
-          && (!lhs->labelset()->is_one(ltm.begin()->first)
-              || 2 <= ltm.size());
-
-        if (!has_eps_out || lhs_has_proper_trans)
-          add_one_transitions_<1>(src, psrc);
+        add_one_transitions_<0>(src, psrc);
+        add_one_transitions_<1>(src, psrc);
 
         // In order to avoid having to call add_transition each time, we cache
         // the transitions we add using a polynomial. We conserve a polynomial
@@ -314,46 +312,45 @@ namespace vcsn
 
 
       template <std::size_t I>
-      bool
-      add_one_transitions_(const state_t src, const state_name_t& psrc)
+      void add_one_transitions_(const state_t src, const state_name_t& psrc)
       {
-        const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
-
-        // "Loop" only on the spontaneous transitions.  "One" is
-        // guaranteed to be first in the transition maps.
-        if (tmap.empty()
-            || !std::get<I>(aut_->auts_)->labelset()->is_one(tmap.begin()->first))
-          return false;
-        else
+        // The first condition prevents the creation of redundant
+        // paths that would lead to incorrect valuations (in the
+        // weighted case), while the second is purely an optimization,
+        // avoiding the creation of non-coaccessible states.
+        if (are_proper_in(psrc, make_index_range<I + 1, Rank>{})
+            && have_proper_out(psrc, make_index_range<0, I>{}))
           {
-            for (auto t: tmap.begin()->second)
-              {
-                // Tuple of destination states.
-                auto pdst =
-                  static_if<I == 0>
-                  ([dst=t.dst, &psrc]{
-                    return std::make_tuple(dst, std::get<1>(psrc));
-                  },
-                   [dst=t.dst, &psrc]{
-                     return std::make_tuple(std::get<0>(psrc), dst);
-                   })();
-                // Label.
-                auto lbl =
-                  static_if<I == 0>
-                  ([this, t=t.transition](const auto& lhs, const auto& rhs)
-                   {
-                     return join_label(lhs->hidden_label_of(t),
-                                       get_hidden_one(rhs->aut_out()));
-                   },
-                   [this, t=t.transition](const auto& lhs, const auto& rhs)
-                   {
-                     return join_label(get_hidden_one(lhs),
-                                       real_aut(rhs)->hidden_label_of(t));
-                   })
-                  (std::get<0>(aut_->auts_), std::get<1>(aut_->auts_));
-                this->new_transition(src, this->state(pdst), lbl, t.weight());
-              }
-            return true;
+            const auto& ls = *std::get<I>(aut_->auts_)->labelset();
+            const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+            if (!tmap.empty() && ls.is_one(tmap.begin()->first))
+              for (const auto& t: tmap.begin()->second)
+                {
+                  // Tuple of destination states.
+                  auto pdst =
+                    static_if<I == 0>
+                    ([dst=t.dst, &psrc]{
+                      return std::make_tuple(dst, std::get<1>(psrc));
+                    },
+                      [dst=t.dst, &psrc]{
+                        return std::make_tuple(std::get<0>(psrc), dst);
+                      })();
+                  // Label.
+                  auto lbl =
+                    static_if<I == 0>
+                    ([this, t=t.transition](const auto& lhs, const auto& rhs)
+                     {
+                       return join_label(lhs->hidden_label_of(t),
+                                         get_hidden_one(rhs->aut_out()));
+                     },
+                     [this, t=t.transition](const auto& lhs, const auto& rhs)
+                     {
+                       return join_label(get_hidden_one(lhs),
+                                         real_aut(rhs)->hidden_label_of(t));
+                     })
+                    (std::get<0>(aut_->auts_), std::get<1>(aut_->auts_));
+                  this->new_transition(src, this->state(pdst), lbl, t.weight());
+                }
           }
       }
 
@@ -372,28 +369,71 @@ namespace vcsn
         return false;
       }
 
-      /// Check if the state has only incoming spontaneous
-      /// transitions.  As it is in the case of the one-free labelset,
-      /// it's always false.
-      template <Automaton Aut>
-      constexpr
-      std::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
-      is_spontaneous_in(const Aut&, state_t_of<Aut>) const
+      /// Whether no tapes in the sequence have spontaneous incoming
+      /// transitions.
+      template <std::size_t... I>
+      bool are_proper_in(const state_name_t& psrc, seq<I...>) const
       {
-        return false;
+        return all(is_proper_in<I>(psrc)...);
       }
 
-      /// Whether the state has only incoming spontaneous transitions.
-      /// The automaton has been insplit, so either all incoming transitions
-      /// are proper, or all transitions are spontaneous (including the first
-      /// one).
-      template <Automaton Aut>
-      std::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
-      is_spontaneous_in(const Aut& rhs, state_t_of<Aut> rst) const
+      /// Whether the state has only proper incoming transitions.
+      template <size_t I>
+      constexpr auto
+      is_proper_in(const state_name_t&) const
+        -> std::enable_if_t<!labelset_t_of<input_automaton_t<I>>::has_one(),
+                            bool>
       {
-        auto rin = all_in(rhs, rst);
+        return true;
+      }
+
+      /// Whether the state has only proper incoming transitions.  The
+      /// automaton has been insplit, so either all incoming
+      /// transitions are proper, or all transitions are spontaneous
+      /// (including the first one).
+      template <size_t I>
+      auto
+      is_proper_in(const state_name_t& sn) const
+        -> std::enable_if_t<labelset_t_of<input_automaton_t<I>>::has_one(),
+                            bool>
+      {
+        // Amusingly enough, it is faster to check the incoming
+        // transitions rather than recovering the decoration of the
+        // insplit state, which tells whether the state is proper-in.
+        const auto& aut = std::get<I>(aut_->auts_);
+        auto s = std::get<I>(sn);
+        auto rin = all_in(aut, s);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(rhs, *rtr);
+        // Insplit state, so checking the first transition suffices.
+        // There can be no incoming transitions in the case of pre.
+        return rtr == rin.end() || !is_one(aut, *rtr);
+      }
+
+      /// Whether all the tapes in the sequence have proper outgoing
+      /// transitions (but possibly spontaneous too).
+      template <std::size_t... I>
+      bool have_proper_out(const state_name_t& psrc, seq<I...>)
+      {
+        return all(has_proper_out<I>(psrc)...);
+      }
+
+      /// Whether the Ith state of \a psrc in the Ith input automaton
+      /// has proper outgoing transitions (but possibly spontaneous
+      /// transitions too).
+      ///
+      /// Not const, because we (might) update the transition maps.
+      template <size_t I>
+      bool
+      has_proper_out(const state_name_t& psrc)
+      {
+        const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+        auto s = tmap.size();
+        if (s == 0)
+          return false;
+        else if (2 <= s)
+          return true;
+        else
+          return !std::get<I>(aut_->auts_)->labelset()->is_one(tmap.begin()->first);
       }
     };
   }
