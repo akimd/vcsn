@@ -20,6 +20,8 @@ RUN apt-get update                                              \
         python-matplotlib                                       \
         python3-dev                                             \
         python3-pip                                             \
+        python3-psutil                                          \
+        python3-regex                                           \
         texlive-latex-extra                                     \
         texlive-pictures                                        \
         wamerican                                               \
