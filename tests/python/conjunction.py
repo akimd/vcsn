@@ -681,6 +681,56 @@ CHECK_EQ((a & a).strip(), a & 2)
 CHECK_EQ((a & a & a).strip(), a & 3)
 
 
+# An automaton such that the insplit-based and the rank-based
+# algorithm given different results.
+a = vcsn.automaton(r'''
+context = "lan, q"
+$ -> 0
+0 -> 0 \e, a
+0 -> $
+''')
+
+insplit_res = r'''digraph
+{
+  vcsn_context = "nullableset<letterset<char_letters(a)>>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+    F1
+    F2
+    F3
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, (0, !\\e), (0, !\\e)", shape = box]
+    1 [label = "0, (0, \\e), (0, !\\e)", shape = box]
+    2 [label = "0, (0, !\\e), (0, \\e)", shape = box]
+    3 [label = "0, (0, \\e), (0, \\e)", shape = box]
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 0 [label = "\\e, a"]
+  0 -> 1 [label = "\\e"]
+  0 -> 2 [label = "\\e"]
+  1 -> F1
+  1 -> 0 [label = "a"]
+  1 -> 1 [label = "\\e"]
+  1 -> 3 [label = "\\e"]
+  2 -> F2
+  2 -> 0 [label = "a"]
+  2 -> 2 [label = "\\e"]
+  3 -> F3
+  3 -> 0 [label = "a"]
+  3 -> 3 [label = "\\e"]
+}'''
+
+CHECK_EQ(insplit_res, a & a & a)
+
+
+
 
 ###############################################
 ## Check mixed epsilon and letters going out ##
