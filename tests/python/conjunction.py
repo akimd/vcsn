@@ -635,10 +635,42 @@ CHECK_EQ(res, lhs & rhs & third)
 CHECK_EQUIV(vcsn.automaton(res),
             std('lal_char(b), b', 'b*'))
 
+
+# Simple micro-optimization: don't build states which have no possible
+# outgoing transitions.
+a1 = vcsn.automaton(r'''
+context = "lan, b"
+$ -> 0
+''')
+
+a2 = vcsn.automaton(r'''
+context = "lan, b"
+$ -> 0
+0 -> 1 \e
+1 -> $
+''')
+
+res = r'''digraph
+{
+  vcsn_context = "nullableset<letterset<char_letters()>>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, (0, !\\e)", shape = box, color = DimGray]
+  }
+  I0 -> 0 [color = DimGray]
+}'''
+CHECK_EQ(res, a1 & a2)
+
+
 ###############################################
 ## Check mixed epsilon and letters going out ##
 ###############################################
-
 
 a1 = vcsn.automaton(r'''
 context = "lan_char(abc), b"

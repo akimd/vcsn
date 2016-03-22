@@ -334,8 +334,12 @@ namespace vcsn
       add_one_transitions_(const LS& ls, const state_t src,
                            const state_name_t& psrc)
       {
-        if (!has_one_in(psrc, I + 1, aut_->indices)
-            && !has_only_one_out(psrc, I, aut_->indices))
+        // The first condition prevents the creation of redundant
+        // paths that would lead to incorrect valuations (in the
+        // weighted case), while the second is purely an optimization,
+        // avoiding the creation of non-coaccessible states.
+        if (are_proper_in(psrc, make_index_range<I + 1, sizeof...(Auts)>{})
+            && have_proper_out(psrc, make_index_range<0, I>{}))
           {
             // one is guaranteed to be first.
             const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
@@ -357,30 +361,20 @@ namespace vcsn
         add_ldiv_transitions(s, sn);
       }
 
-      /// Check if all the tapes after the Ith have only incoming
-      /// spontaneous transitions.
+      /// Whether no tapes in the sequence have spontaneous incoming
+      /// transitions.
       template <std::size_t... I>
-      bool has_one_in(const state_name_t& psrc, std::size_t i,
-                      seq<I...>) const
+      bool are_proper_in(const state_name_t& psrc, seq<I...>) const
       {
-        bool has_ones[] = { is_spontaneous_in<I>(psrc)... };
-        for (; i < sizeof...(Auts); ++i)
-          if (has_ones[i])
-            return true;
-        return false;
+        return all(is_proper_in<I>(psrc)...);
       }
 
-      /// Check if all the tapes before the Ith have only outgoing
-      /// spontaneous transitions.
+      /// Whether all the tapes in the sequence have proper outgoing
+      /// transitions (but possibly spontaneous too).
       template <std::size_t... I>
-      bool has_only_one_out(const state_name_t& psrc, std::size_t i,
-                            seq<I...>)
+      bool have_proper_out(const state_name_t& psrc, seq<I...>)
       {
-        bool has_ones[] = { has_only_ones_out<I>(psrc)... };
-        for (size_t j = 0; j < i; ++j)
-          if (has_ones[j])
-            return true;
-        return false;
+        return all(has_proper_out<I>(psrc)...);
       }
 
       /// Check if the transition is spontaneous (in the case of a
@@ -401,49 +395,55 @@ namespace vcsn
         return false;
       }
 
-      /// Check if the state has only incoming spontaneous
-      /// transitions.  As it is in the case of the one-free labelset,
-      /// it's always false.
+      /// Whether the state has only proper incoming transitions.
       template <size_t I>
       constexpr auto
-      is_spontaneous_in(const state_name_t&) const
+      is_proper_in(const state_name_t&) const
         -> std::enable_if_t<!labelset_t_of<input_automaton_t<I>>::has_one(),
                             bool>
       {
-        return false;
+        return true;
       }
 
-      /// Whether the state has only incoming spontaneous transitions.
-      /// The automaton has been insplit, so either all incoming transitions
-      /// are proper, or all transitions are spontaneous (including the first
-      /// one).
+      /// Whether the state has only proper incoming transitions.  The
+      /// automaton has been insplit, so either all incoming
+      /// transitions are proper, or all transitions are spontaneous
+      /// (including the first one).
       template <size_t I>
       auto
-      is_spontaneous_in(const state_name_t& sn) const
+      is_proper_in(const state_name_t& sn) const
         -> std::enable_if_t<labelset_t_of<input_automaton_t<I>>::has_one(),
                             bool>
       {
+        // Amusingly enough, it is faster to check the incoming
+        // transitions rather than recovering the decoration of the
+        // insplit state, which tells whether the state is proper-in.
         const auto& aut = std::get<I>(aut_->auts_);
         auto s = std::get<I>(sn);
         auto rin = all_in(aut, s);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(aut, *rtr);
+        // Insplit state, so checking the first transition suffices.
+        // There can be no incoming transitions in the case of pre.
+        return rtr == rin.end() || !is_one(aut, *rtr);
       }
 
       /// Whether the Ith state of \a psrc in the Ith input automaton
-      /// has no non-spontaneous outgoing transitions.
+      /// has proper outgoing transitions (but possibly spontaneous
+      /// transitions too).
+      ///
+      /// Not const, because we (might) update the transition maps.
       template <size_t I>
       bool
-      has_only_ones_out(const state_name_t& psrc)
+      has_proper_out(const state_name_t& psrc)
       {
         const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
         auto s = tmap.size();
         if (s == 0)
-          return true;
-        else if (2 <= s)
           return false;
+        else if (2 <= s)
+          return true;
         else
-          return std::get<I>(aut_->auts_)->labelset()->is_one(tmap.begin()->first);
+          return !std::get<I>(aut_->auts_)->labelset()->is_one(tmap.begin()->first);
       }
 
       /// Add transitions to the given result automaton, starting from
