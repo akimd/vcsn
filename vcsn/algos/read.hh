@@ -96,7 +96,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto res = ::vcsn::read_weight(c, is);
-        return make_weight(*c.weightset(), res);
+        return {*c.weightset(), res};
       }
     }
   }

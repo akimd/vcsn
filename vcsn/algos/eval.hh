@@ -145,7 +145,7 @@ namespace vcsn
         const auto& l = lbl->as<LabelSet>().label();
         auto res = ::vcsn::eval(a, l);
         const auto& ctx = a->context();
-        return make_weight(*ctx.weightset(), res);
+        return {*ctx.weightset(), res};
       }
     }
   }

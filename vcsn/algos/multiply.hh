@@ -438,7 +438,7 @@ namespace vcsn
         auto ws = join(l.weightset(), r.weightset());
         auto lw = ws.conv(l.weightset(), l.weight());
         auto rw = ws.conv(r.weightset(), r.weight());
-        return make_weight(ws, ::vcsn::multiply(ws, lw, rw));
+        return {ws, ::vcsn::multiply(ws, lw, rw)};
       }
 
       /// Bridge (multiply).
@@ -447,10 +447,8 @@ namespace vcsn
       multiply_weight_repeated(const weight& wgt, int min, int max)
       {
         const auto& w = wgt->as<WeightSet>();
-        return make_weight(w.weightset(),
-                           ::vcsn::multiply(w.weightset(),
-                                            w.weight(),
-                                            min, max));
+        return {w.weightset(),
+                ::vcsn::multiply(w.weightset(), w.weight(),min, max)};
       }
     }
   }

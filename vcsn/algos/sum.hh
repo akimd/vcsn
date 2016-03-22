@@ -221,7 +221,7 @@ namespace vcsn
         auto rs = join(l.weightset(), r.weightset());
         auto lr = rs.conv(l.weightset(), l.weight());
         auto rr = rs.conv(r.weightset(), r.weight());
-        return make_weight(rs, sum(rs, lr, rr));
+        return {rs, sum(rs, lr, rr)};
       }
     }
   }

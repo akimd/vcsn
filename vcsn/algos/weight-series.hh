@@ -45,7 +45,7 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         auto res = ::vcsn::weight_series(a);
         const auto& ctx = a->context();
-        return make_weight(*ctx.weightset(), res);
+        return {*ctx.weightset(), res};
       }
     }
   }

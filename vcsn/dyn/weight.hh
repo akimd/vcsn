@@ -12,7 +12,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// An abstract weight.
       class LIBVCSN_API weight
       {
@@ -104,12 +103,5 @@ namespace vcsn
 
     using weight =  detail::weight;
 
-    template <typename WeightSet>
-    inline
-    weight
-    make_weight(const WeightSet& ws, const typename WeightSet::value_t& w)
-    {
-      return weight(ws, w);
-    }
   } // namespace dyn
 } // namespace vcsn
