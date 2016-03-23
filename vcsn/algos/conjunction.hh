@@ -18,6 +18,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/value.hh>
+#include <vcsn/misc/set.hh> // has
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/tuple.hh> // tuple_element_t, cross_tuple
 #include <vcsn/misc/zip-maps.hh>
@@ -120,6 +121,25 @@ namespace vcsn
           {
             const auto& p = aut_->todo_.front();
             add_ldiv_transitions(std::get<1>(p), std::get<0>(p));
+            aut_->todo_.pop_front();
+          }
+      }
+
+      /// Compute the deterministic sum of two deterministic automata.
+      template <bool L = Lazy>
+      std::enable_if_t<sizeof...(Auts) == 2 && !L> sum()
+      {
+        using lhs_t = tuple_element_t<0, std::tuple<Auts...>>;
+        using rhs_t = tuple_element_t<1, std::tuple<Auts...>>;
+        constexpr bool bb = (std::is_same<weightset_t_of<lhs_t>, b>::value
+            && std::is_same<weightset_t_of<rhs_t>, b>::value);
+        static_assert(bb, "sum: requires Boolean weightset");
+        initialize_conjunction();
+
+        while (!aut_->todo_.empty())
+          {
+            const auto& p = aut_->todo_.front();
+            add_sum_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
       }
@@ -234,7 +254,6 @@ namespace vcsn
         add_conjunction_transitions(aut_->pre(), aut_->pre_());
       }
 
-
       using super_t::out_;
       using super_t::state;
       /// Add transitions to the result automaton, starting from the
@@ -303,6 +322,40 @@ namespace vcsn
                      ws_.ldiv(ts.weight()...));
                },
                t.second);
+      }
+
+      /// Behaves similarly to add_conjunction_transitions on a Boolean
+      /// weightset, but use post() as a special state that matches everything
+      /// when one of the two automata does not match on a label.
+      template <bool L = Lazy>
+      std::enable_if_t<sizeof...(Auts) == 2 && !L>
+      add_sum_transitions(const state_t src, const state_name_t& psrc)
+      {
+        const auto& lhs = std::get<0>(aut_->auts_);
+        const auto& rhs = std::get<1>(aut_->auts_);
+        const auto& lstate = std::get<0>(psrc);
+        const auto& rstate = std::get<1>(psrc);
+
+        auto common_labels = std::set<label_t_of<Aut>>{};
+        for (auto t: zip_map_tuple(out_(psrc)))
+        {
+          common_labels.insert(t.first);
+          detail::cross_tuple
+            ([this,src,t]
+             (const typename transition_map_t<Auts>::transition&... ts)
+             {
+             this->add_transition(src, state(ts.dst...), t.first);
+             },
+             t.second);
+        }
+        for (auto t: all_out(lhs, lstate))
+          if (!has(common_labels, lhs->label_of(t)))
+            this->new_transition(src, state(lhs->dst_of(t), rhs->post()),
+                  lhs->label_of(t));
+        for (auto t: all_out(rhs, rstate))
+          if (!has(common_labels, rhs->label_of(t)))
+            this->new_transition(src, state(lhs->post(), rhs->dst_of(t)),
+                  rhs->label_of(t));
       }
 
       /// Add the spontaneous transitions leaving state \a src, if it
@@ -653,6 +706,7 @@ namespace vcsn
       }
     }
   }
+
 
 
   /*-----------------------------.

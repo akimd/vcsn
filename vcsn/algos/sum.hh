@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/standard.hh> // is_standard
 #include <vcsn/algos/tags.hh>
@@ -17,21 +18,6 @@ namespace vcsn
   /*----------------------------.
   | sum(automaton, automaton).  |
   `----------------------------*/
-
-  /// Merge transitions of \a b into those of \a res.
-  ///
-  /// \pre The context of \a res must include that of \a b.
-  /// \pre res and b must be standard.
-  template <Automaton Aut1, Automaton Aut2>
-  Aut1&
-  sum_here(Aut1& res, const Aut2& b, deterministic_tag)
-  {
-    // FIXME: this is a stub: there are better algorithms to compute a
-    // deterministic sum of deterministic automata.
-    sum_here(res, b, standard_tag{});
-    res = determinize(res)->strip();
-    return res;
-  }
 
   /// Merge transitions of \a b into those of \a res.
   ///
@@ -69,6 +55,36 @@ namespace vcsn
                             res->weightset()->conv(*b->weightset(),
                                                    b->weight_of(t)));
     return res;
+  }
+
+  template <Automaton Aut1, Automaton Aut2>
+  auto
+  sum_here(Aut1& res, const Aut2& b, deterministic_tag)
+  {
+    sum_here(res, b, general_tag{});
+    res = determinize(res)->strip();
+    return res;
+  }
+
+  template <Automaton Aut1, Automaton Aut2>
+  auto
+  sum(const Aut1& lhs, const Aut2& rhs, deterministic_tag)
+  {
+    constexpr bool bb = (std::is_same<weightset_t_of<Aut1>, b>::value
+                        && std::is_same<weightset_t_of<Aut2>, b>::value);
+    return detail::static_if<bb>(
+      [] (const auto& lhs, const auto& rhs)
+      {
+        auto prod
+          = detail::make_product_automaton<false>(join_automata(lhs, rhs),
+                                                  lhs, rhs);
+        prod->sum();
+        return prod->strip();
+      },
+      [] (const auto& lhs, const auto& rhs)
+      {
+        return determinize(sum(lhs, rhs, general_tag{}))->strip();
+      })(lhs, rhs);
   }
 
   /// Merge transitions of \a b into those of \a res.

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import vcsn
+from itertools import product
 from test import *
 
 def std(ctx, exp):
@@ -174,6 +175,17 @@ c = std('lat<lan_char, lan_char>, b', "\e|x+a|\e")
 # Not the same states numbers, so not CHECK_EQ.
 CHECK_ISOMORPHIC(c, a + b)
 
+# Deterministic sum
+def check_det(lhs, rhs):
+    a = std('lal_char(ab), b', lhs)
+    b = std('lal_char(ab), b', rhs)
+    res = a.sum(b, algo='deterministic')
+    CHECK(res.is_deterministic())
+    CHECK_EQUIV(a.sum(b), res)
+
+exprs = ['a', 'a+b', '(a+b)*', 'ab', 'a*b*']
+for lhs, rhs in product(exprs, repeat=2):
+    check_det(lhs, rhs)
 
 ## ------------------------- ##
 ## expression + expression.  ##

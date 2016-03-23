@@ -240,7 +240,7 @@ namespace vcsn
           sum->set_final(s);
         }
         for (int n = 1; n <= max - min; ++n)
-          sum = vcsn::sum(sum, multiply(aut, n, n, tag), tag);
+          sum = vcsn::strip(vcsn::sum(sum, multiply(aut, n, n, tag), tag));
         res = vcsn::multiply(res, sum, tag);
       }
     }
