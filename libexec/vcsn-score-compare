@@ -26,7 +26,8 @@ parser.add_argument('-t', '--threshold', metavar='PERCENT',
                     type=float, default=10,
                     help='''Highlight good and bad scores with associated
                     threshold.  Defaults to 10%%.''')
-parser.add_argument('--output-format', type=str, choices=['text', 'csv', 'latex'],
+parser.add_argument('--output-format', type=str,
+                    choices=['csv', 'latex', 'text'],
                     default='text',
                     help='Select the output format')
 parser.add_argument('-o', '--output', type=str, metavar='FILE',
@@ -42,6 +43,8 @@ if args.color == 'always' or args.color == 'auto' and sys.stdout.isatty():
         color['red'] = Fore.RED + Style.BRIGHT
         color['std'] = Style.RESET_ALL
     except:
+        import warnings
+        warnings.warn('you should install colorama for Python')
         pass
 
 bench = dict()
@@ -338,7 +341,6 @@ def text(keys):
     fl.write(footer())
 
 # Main.
-
 read_files(args.file)
 # The keys we are interested in.
 keys = [k for k in sorted(bench.keys()) if args.only.search(k)]

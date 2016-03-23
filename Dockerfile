@@ -17,14 +17,14 @@ RUN apt-get update                                              \
         libzmq3-dev                                             \
         locales                                                 \
         pdf2svg                                                 \
-        python-matplotlib                                       \
+        python3-colorama                                        \
         python3-dev                                             \
+        python3-matplotlib                                      \
         python3-pip                                             \
         python3-psutil                                          \
         python3-regex                                           \
         texlive-latex-extra                                     \
         texlive-pictures                                        \
-        wamerican                                               \
         wamerican                                               \
         wamerican-insane                                        \
         wamerican-large                                         \
