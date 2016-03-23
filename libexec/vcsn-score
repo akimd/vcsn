@@ -26,8 +26,10 @@ parser.add_argument('-O', '--only', metavar='RE',
                     help='run only benches whose title is matched by RE')
 parser.add_argument('-r', '--repeat', metavar='NUM',
                     type=int, default='3',
-                    help='''number runs to perform, the best of which being kept.
-                    The higher, the more stable the results are expected to be.''')
+                    help='''number runs to perform, the best of which being
+                    kept.  The higher, the more stable the results are
+                    expected to be.  Pass 0 to run only the set-up parts;
+                    this is useful to warm up the plugin cache (ccache).''')
 parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose')
 
 args = parser.parse_args()
@@ -66,11 +68,11 @@ def ctx_signature(ctx):
 
 
 def bench(stmt, comment, title=None, setup=['pass'], number=1):
-    "Report the best timing of three batches of number runs of cmd."
+    'Report the best timing of three batches of number runs of cmd.'
     if title is None:
         title = stmt
 
-    if args.only.search(title + " # " + comment):
+    if args.only.search(title + ' # ' + comment):
 
         if 1 < number:
             comment += ', {}x'.format(number)
@@ -86,7 +88,7 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
             if setup != last_setup:
                 for s in setup:
                     if args.verbose:
-                        print("run:", s)
+                        print('run:', s)
                     exec(s)
                 last_setup = setup
 
@@ -96,15 +98,21 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
             builtins.__dict__.update(locals())
             builtins.__dict__.update({'vcsn': vcsn})
             if args.verbose:
-                print("run:", stmt)
-            t = round(min(timeit.repeat(stmt, number=number, repeat=args.repeat)),
-                      2)
-            t = "{:5.2f}s".format(t)
+                print('run:', stmt)
+            if args.repeat:
+                t = round(min(timeit.repeat(stmt, number=number,
+                                            repeat=args.repeat)),
+                          2)
+                t = '{:5.2f}s'.format(t)
+            else:
+                # Just run the set up, the user is just warming ccache
+                # by running the set ups.
+                t = 'SKIP'
             err = None
         except RuntimeError as exc:
-            t = " FAIL"
+            t = ' FAIL'
             err = exc
-        print("{:7s}: {:20s} # {}".format(t, title, comment))
+        print('{:7s}: {:20s} # {}'.format(t, title, comment))
         if err:
             print(err, file=sys.stderr)
         sys.stdout.flush()
