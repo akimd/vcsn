@@ -504,6 +504,12 @@ bench('a.conjunction(a)',
       setup=['r = "{}"'.format(r),
              'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
 
+r = "[a-e]?{5}"
+bench('a.conjunction(a, a, a)',
+      'a = thompson({})'.format(r),
+      setup=['r = "{}"'.format(r),
+             'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
+
 # power.
 n = 12
 r = "[a-e]*b(<2>[a-e])*"
