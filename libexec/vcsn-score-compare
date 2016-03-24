@@ -34,6 +34,57 @@ parser.add_argument('-o', '--output', type=str, metavar='FILE',
                     help='The output file')
 args = parser.parse_args()
 
+class Format:
+    def header(self, files):
+        return ''
+    def test(self, test):
+        '''The test's informations.'''
+        return test
+    def footer(self, files):
+        return ''
+
+class Csv(Format):
+    def header(self, files):
+        return 'Command,Setup,Repetitions,'\
+            + ','.join([os.path.basename(file) for file in files]) + '\n'
+    def test(self, test):
+        return "\"" + get_command(test).replace("\"", "\"\"")\
+               + '\",\"' + get_setup(test).replace("\"", "\"\"") + "\""
+
+class Latex(Format):
+    def escape(self, text):
+        # Escape special latex characters.
+        return text.replace('->', r'\rightarrow ')\
+                   .replace('^', r'\hat{}')\
+                   .replace('}', r'\}')\
+                   .replace('{', r'\{')\
+                   .replace('&', r'\&')\
+                   .replace('_', r'\_')\
+                   .replace('\\e', r'\backslash e')
+
+    def header(self, files):
+        title_rule = r'\newcommand{\titlerot}[1]{\multicolumn{1}{c}{\rlap{\rotatebox{60}{#1}~}}}'
+        tabular = r'\begin{{tabular}}{{llr *{{{}}}{{r}}}}'.format(len(args.file))
+        filenames = ''.join([r'& \titlerot{{{}}} '.format(os.path.basename(file)) for file in args.file])
+        titles = r'Command & Setup & \titles{Repetitions} ' + filenames + r'\\ \midrule'
+        return '\n'.join([title_rule, tabular, titles]) + '\n'
+
+    def test(self, test):
+        command = '$' + self.escape(get_command(test)) + '$ & '
+        setup = '$' + self.escape(get_setup(test)) + '$'
+        return command + setup
+
+    def footer(self, files):
+        return '\\bottomrule\n\\end{tabular}\n'
+
+
+class Text(Format):
+    def header(self, files):
+        return ' '.join(["{:^5}".format(i) for i in range(len(files))]) + '\n'
+    def footer(self, files):
+        return '\n'.join(["{:3}. {}".format(i, os.path.basename(files[i]))
+                          for i in range(len(files))]) + '\n'
+
 # Colors support.
 color = {'green' : '', 'red' : '', 'std' : '', 'black' : ''}
 if args.color == 'always' or args.color == 'auto' and sys.stdout.isatty():
@@ -216,30 +267,12 @@ def read_files(files):
                 bench[k][f]['value'] *= number[k] // bench[k][f]['num']
                 bench[k][f]['num'] = number[k]
 
-def header(files):
-    # The header of the output. Necessary for LaTeX and csv output.
-    if args.output_format == 'csv':
-        return 'Command,Setup,Repetitions,'\
-                + ','.join([os.path.basename(file) for file in files]) + '\n'
-    elif args.output_format == 'latex':
-        title_rule = r'\newcommand{\titlerot}[4]{\multicolumn{#1}{#2}{\rlap{\rotatebox{#3}{#4}~}}}'
-        tabular = r'\begin{tabular}{llr' + ('r' * len(args.file)) + '}'
-        filenames = ''.join([r'& \titlerot{{1}}{{c}}{{60}}{{{}}} '.format(os.path.basename(file)) for file in args.file])
-        titles = 'Command & Setup & Repetitions ' + filenames + r'\\ \midrule'
-        return '\n'.join([title_rule, tabular, titles]) + '\n'
-    else:
-        return ''
 
-def footer():
-    # The footer of the output. Usually closes what was opened in the header.
-    if args.output_format == 'latex':
-        return '\\bottomrule\n\\end{tabular}\n'
-    else:
-        return ''
 
 def err_score(val):
     # N/A or FAIL.
     return '{:>5} '.format(val)
+
 
 def score(avg, score):
     # A single score to be displayed, handle the colors.
@@ -256,6 +289,7 @@ def score(avg, score):
         else:
             return color[the_color] + '{:5.2f}'.format(score) + color['std'] + ' '
 
+
 def repetitions(nb):
     # The number of times the test was executed in order to give these scores.
     if args.output_format == 'csv':
@@ -265,15 +299,6 @@ def repetitions(nb):
     else:
         return '' if nb == 1 else ', {}x'.format(nb)
 
-def latex_format(text):
-    # Escape special latex characters.
-    return text.replace('->', r'\rightarrow ')\
-               .replace('^', r'\widehat')\
-               .replace('}', r'\}')\
-               .replace('{', r'\{')\
-               .replace('&', r'\&')\
-               .replace('_', r'\_')\
-               .replace('\\e', r'\backslash e')
 
 def get_command(test):
     # The command executed in the test (ex: a.compose(b)).
@@ -281,18 +306,6 @@ def get_command(test):
 def get_setup(test):
     # The setup of the test, object initialization (ex: a = std([a-z]*)).
     return test.split('#')[1][1:].lstrip()
-
-def test(test, buf):
-    # The test's informations.
-    if args.output_format == 'csv':
-        return "\"" + get_command(test).replace("\"", "\"\"")\
-               + '\",\"' + get_setup(test).replace("\"", "\"\"") + "\""
-    elif args.output_format == 'latex':
-        command = '$' + latex_format(get_command(test)) + '$ & '
-        setup = '$' + latex_format(get_setup(test)) + '$'
-        return command + setup
-    else:
-        return test
 
 def print_all(buf, fl):
     # Print the test informations, repetitions and score.
@@ -310,9 +323,15 @@ def print_all(buf, fl):
 
 
 def text(keys):
+    if args.output_format == 'csv':
+        printer = Csv()
+    elif args.output_format == 'latex':
+        printer = Latex()
+    else:
+        printer = Text()
     # For each bench-case, compare all the recorded scores.
     fl = sys.stdout if args.output in ['', '-', None] else open(args.output, 'a')
-    fl.write(header(args.file))
+    fl.write(printer.header(args.file))
     for k in keys:
         # All the benches.
         bs = [bench[k][f] if f in bench[k] else {'value': 'N/A', 'num': 0}
@@ -336,9 +355,9 @@ def text(keys):
             else:
                 buf['scores'].append(score(avg, b['value']))
         buf['repetitions'] = repetitions(number[k])
-        buf['test'] = test(k, buf)
+        buf['test'] = printer.test(k)
         print_all(buf, fl)
-    fl.write(footer())
+    fl.write(printer.footer(args.file))
 
 # Main.
 read_files(args.file)

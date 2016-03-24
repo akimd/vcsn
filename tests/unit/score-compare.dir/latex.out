@@ -1,6 +1,6 @@
-\newcommand{\titlerot}[4]{\multicolumn{#1}{#2}{\rlap{\rotatebox{#3}{#4}~}}}
-\begin{tabular}{llrrrrr}
-Command & Setup & Repetitions & \titlerot{1}{c}{60}{v2.0-0001-g6bfe026} & \titlerot{1}{c}{60}{v2.0-0423-g841c067} & \titlerot{1}{c}{60}{v2.0-1255-gafaf339} & \titlerot{1}{c}{60}{v2.1-0010-gd55ef26} \\ \midrule
+\newcommand{\titlerot}[1]{\multicolumn{1}{c}{\rlap{\rotatebox{60}{#1}~}}}
+\begin{tabular}{llr *{4}{r}}
+Command & Setup & \titles{Repetitions} & \titlerot{v2.0-0001-g6bfe026} & \titlerot{v2.0-0423-g841c067} & \titlerot{v2.0-1255-gafaf339} & \titlerot{v2.1-0010-gd55ef26} \\ \midrule
 $a \& 12$ & $a = std([a-e]*b(<2>[a-e])*)$ & \num{1} & \textcolor{black}{\num{ 4.15}} & \textcolor{black}{\num{ 4.13}} & \textcolor{black}{\num{ 4.15}} & \textcolor{black}{\num{ 4.00}}\\
 $a.accessible()$ & $a = thompson([a-m]\{20000\}).proper(False)$ & \num{1} &   N/A  & \textcolor{black}{\num{ 0.30}} & \textcolor{black}{\num{ 0.36}} & \textcolor{black}{\num{ 0.33}}\\
 $a.compose(a)$ & $a = std(['(a,a)'-'(i,z)']\{4\})$ & \num{1} & \textcolor{black}{\num{ 1.22}} & \textcolor{black}{\num{ 1.22}} & \textcolor{black}{\num{ 1.16}} & \textcolor{black}{\num{ 1.18}}\\
@@ -13,7 +13,7 @@ $a.determinize("weighted")$ & $a = de\_bruijn(14)$ & \num{10} & \textcolor{red}{
 $a.determinize("weighted")$ & $a = de\_bruijn(14), c = [abc] \rightarrow  F2$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 3.24}} & \textcolor{black}{\num{ 2.98}}\\
 $a.determinize("weighted")$ & $a = de\_bruijn(16)$ & \num{2} &   N/A  & \textcolor{black}{\num{ 2.72}} & \textcolor{black}{\num{ 3.00}} & \textcolor{black}{\num{ 2.88}}\\
 $a.determinize("weighted")$ & $a = de\_bruijn(16), c = [abc] \rightarrow  F2$ & \num{2} &   N/A  &   N/A  & \textcolor{black}{\num{ 2.96}} & \textcolor{black}{\num{ 2.78}}\\
-$a.determinize("weighted")$ & $a = std(([\widehat]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow  B$ & \num{2} &   N/A  & \textcolor{black}{\num{ 0.26}} & \textcolor{black}{\num{ 0.29}} & \textcolor{black}{\num{ 0.27}}\\
+$a.determinize("weighted")$ & $a = std(([\hat\{\}]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow  B$ & \num{2} &   N/A  & \textcolor{black}{\num{ 0.26}} & \textcolor{black}{\num{ 0.29}} & \textcolor{black}{\num{ 0.27}}\\
 $a.determinize()$ & $a = de\_bruijn(13)$ & \num{10} & \textcolor{red}{\num{ 0.40}} & \textcolor{green}{\num{ 0.30}} & \textcolor{black}{\num{ 0.38}} & \textcolor{black}{\num{ 0.34}}\\
 $a.determinize()$ & $a = de\_bruijn(13), c = [abc] \rightarrow  F2$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 1.38}} & \textcolor{black}{\num{ 1.38}}\\
 $a.determinize()$ & $a = de\_bruijn(14)$ & \num{10} & \textcolor{black}{\num{ 0.80}} & \textcolor{black}{\num{ 0.80}} & \textcolor{black}{\num{ 0.83}} & \textcolor{black}{\num{ 0.77}}\\
@@ -23,7 +23,7 @@ $a.determinize()$ & $a = de\_bruijn(16), c = [abc] \rightarrow  F2$ & \num{2} & 
 $a.determinize()$ & $a = ladybird(18)$ & \num{1} & \textcolor{black}{\num{ 0.84}} & \textcolor{black}{\num{ 0.80}} & \textcolor{black}{\num{ 0.85}} & \textcolor{black}{\num{ 0.80}}\\
 $a.determinize()$ & $a = ladybird(18), c = [a-zA-Z0-9] \rightarrow  B$ & \num{1} & \textcolor{black}{\num{ 0.84}} & \textcolor{black}{\num{ 0.81}} & \textcolor{black}{\num{ 0.85}} & \textcolor{black}{\num{ 0.79}}\\
 $a.determinize()$ & $a = ladybird(21)$ & \num{1} & \textcolor{black}{\num{ 7.43}} & \textcolor{black}{\num{ 7.20}} & \textcolor{black}{\num{ 7.28}} & \textcolor{black}{\num{ 7.31}}\\
-$a.determinize()$ & $a = std(([\widehat]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow  B$ & \num{2} &   N/A  & \textcolor{black}{\num{ 1.38}} & \textcolor{black}{\num{ 1.39}} & \textcolor{black}{\num{ 1.33}}\\
+$a.determinize()$ & $a = std(([\hat\{\}]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow  B$ & \num{2} &   N/A  & \textcolor{black}{\num{ 1.38}} & \textcolor{black}{\num{ 1.39}} & \textcolor{black}{\num{ 1.33}}\\
 $a.eval("a"*151)$ & $a = de\_bruijn(150)$ & \num{1000} & \textcolor{red}{\num{ 0.54}} & \textcolor{green}{\num{ 0.16}} & \textcolor{green}{\num{ 0.16}} & \textcolor{green}{\num{ 0.15}}\\
 $a.eval("abcxyz"*25)$ & $a = std([a-z]*), c = [a-z] \rightarrow  Z$ & \num{1000} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.07}} & \textcolor{black}{\num{ 0.06}}\\
 $a.expression("associative", "delgado")$ & $a = ladybird(2000)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.10}} & \textcolor{black}{\num{ 0.10}}\\
