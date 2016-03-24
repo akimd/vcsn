@@ -86,8 +86,10 @@ namespace vcsn
         const auto& orig = origins();
         state_name_t sn = orig.at(s);
         auto& self = static_cast<decorated_t&>(const_cast<self_t&>(*this));
-        if (Lazy)
-          self.set_lazy(s, false);
+        static_if<Lazy>([&self](auto s)
+                        {
+                          self.set_lazy(s, false);
+                        })(s);
         self.add_transitions(s, sn);
       }
 
@@ -95,8 +97,11 @@ namespace vcsn
       auto all_out(state_t s) const
         -> decltype(all_out(aut_, s))
       {
-        if (this->is_lazy(s))
-          complete_(s);
+        static_if<Lazy>([this](auto s)
+                        {
+                          if (this->is_lazy(s))
+                            complete_(s);
+                        })(s);
         return vcsn::detail::all_out(aut_, s);
       }
 
