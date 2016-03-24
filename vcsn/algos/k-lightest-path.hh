@@ -79,10 +79,6 @@ namespace vcsn
       paths_t
       operator()(state_t src, state_t dst, unsigned k)
       {
-        auto all_states = aut_->all_states();
-        auto ss = std::unordered_set<state_t>(all_states.begin(), all_states.end());
-        auto all_trans = aut_->all_transitions();
-        auto ts = std::unordered_set<transition_t>(all_trans.begin(), all_trans.end());
         auto res = paths_t{path(aut_, lightest_path(aut_, src, dst, dijkstra_tag{}), src, dst)};
         auto ps = make_word_polynomialset(aut_->context());
 
@@ -93,7 +89,7 @@ namespace vcsn
             const auto& prev = res[i - 1];
             for (unsigned j = 0u; j < prev.size(); j++)
               {
-                auto filter_aut = filter<automaton_t, true>(aut_, ss, ts);
+                auto filter_aut = filter<automaton_t, true, true>(aut_);
                 auto spur_node = filter_aut->src_of(prev[j]);
                 auto root_path = path_t(prev.begin(), prev.begin() + j);
 

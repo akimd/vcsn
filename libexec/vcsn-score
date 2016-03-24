@@ -386,12 +386,13 @@ bench('a.shortest()',
 # lightest
 ctx = 'lal_char(a-e), nmin'
 r = "[a-e]?{150}"
-bench('a.lightest(5)',
-      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['c = vcsn.context(ctx)',
-             'r = "{}"'.format(r),
-             'a = c.expression(r).standard()'],
-      number=10)
+for algo in ['auto', 'yen']:
+    bench('a.lightest(5, "{}")'.format(algo),
+          'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+          setup=['c = vcsn.context(ctx)',
+                 'r = "{}"'.format(r),
+                 'a = c.expression(r).standard()'],
+          number=10)
 
 # Building [a-z]?{300} is really time-consuming.  Make more iterations
 # instead.
