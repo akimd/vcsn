@@ -3,17 +3,45 @@
 import vcsn
 from test import *
 
-c = vcsn.context('lat<lal_char(abc), lal_char(efg), lal_char(xyz)>, q')
+# Tests are sorted per dependency: dependant types come after needed
+# ones.
+
+
+# Nullable labelsets to please expansions.
+c = vcsn.context('lat<lan(abc), lan(efg), lan(xyz)>, q')
+
+## ---------- ##
+## contexts.  ##
+## ---------- ##
+
+CHECK_EQ('{abc}? -> Q', c.project(0))
+CHECK_EQ('{efg}? -> Q', c.project(1))
+CHECK_EQ('{xyz}? -> Q', c.project(2))
+
+
+## ------- ##
+## label.  ##
+## ------- ##
+
+l = c.label('a|e|x')
+CHECK_EQ('a', l.project(0))
+CHECK_EQ('e', l.project(1))
+CHECK_EQ('x', l.project(2))
+
+
 
 ## ---------- ##
 ## automata.  ##
 ## ---------- ##
 
-t = c.expression("((a|e|x):(b|f|y):(c|g|z))").automaton()
+# We do not support properly focus automata on LAN.
+c2 = vcsn.context('lat<lal(abc), lal(efg), lal(xyz)>, q')
+t = c2.expression("(a|e|x) : (b|f|y) : (c|g|z)").automaton()
 
 def check(function_name, type_):
     '''Check a function (`project` or `focus`).  Expect an automaton
     of type `type_`.'''
+    print("Checking:", function_name)
     fun = getattr(t, function_name)
     CHECK_EQ('(ab+ba)c+(ac+ca)b+(bc+cb)a',
              fun(0).expression())
@@ -50,7 +78,7 @@ def check(function_name, type_):
                'number of lazy states': 0,
                'type': type_,
                },
-             fun(0).info(detailed = True))
+             fun(0).info(detailed=True))
 
 check('focus',
       'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')
@@ -58,13 +86,7 @@ check('project',
       'mutable_automaton<letterset<char_letters(abc)>, q>')
 
 
-## ---------- ##
-## contexts.  ##
-## ---------- ##
 
-CHECK_EQ('{abc} -> Q', c.project(0))
-CHECK_EQ('{efg} -> Q', c.project(1))
-CHECK_EQ('{xyz} -> Q', c.project(2))
 
 
 ## ------------- ##
@@ -76,11 +98,4 @@ CHECK_EQ('<9>a',        p.project(0))
 CHECK_EQ('<2>e + <7>f', p.project(1))
 CHECK_EQ('<5>x + <4>y', p.project(2))
 
-## ------- ##
-## label.  ##
-## ------- ##
 
-l = c.label('a|e|x')
-CHECK_EQ('a', l.project(0))
-CHECK_EQ('e', l.project(1))
-CHECK_EQ('x', l.project(2))

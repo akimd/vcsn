@@ -7,7 +7,7 @@ the internal API may also be documented.
 
 ## 2016-03-15
 ### expression: a dot output
-Expression now feature a `"dot"` format to display graphically the structure
+Expressions now feature a `"dot"` format to display graphically the structure
 of the expression.  There are actually two flavors: `"dot,logical"` (the
 default) which shows the semantical tree, and `"dot,physical"` which shows
 the DAG that is used to implement the expression (i.e., nodes used multiple

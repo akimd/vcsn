@@ -55,7 +55,7 @@ namespace vcsn
 
 
     template <Automaton Aut, bool has_one = context_t_of<Aut>::has_one()>
-    class is_valider
+    class is_valid_impl
     {
     public:
       using automaton_t = std::remove_cv_t<Aut>;
@@ -123,7 +123,7 @@ namespace vcsn
     };
 
     template <Automaton Aut>
-    class is_valider<Aut, false>
+    class is_valid_impl<Aut, false>
     {
       using automaton_t = std::remove_cv_t<Aut>;
     public:
@@ -140,7 +140,7 @@ namespace vcsn
   inline
   bool is_valid(const Aut& aut)
   {
-    return detail::is_valider<Aut>::is_valid(aut);
+    return detail::is_valid_impl<Aut>::is_valid(aut);
   }
 
   namespace dyn

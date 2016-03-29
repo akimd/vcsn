@@ -517,12 +517,12 @@ namespace vcsn
       | tuple(v...).   |
       `---------------*/
 
-      /// The type of the expansionsset for tape Tape.
+      /// The type of the expansionset for tape Tape.
       template <unsigned Tape>
       using project_t
         = expansionset<typename expressionset_t::template project_t<Tape>>;
 
-      /// The expansionsset for tape Tape.
+      /// The expansionset for tape Tape.
       template <unsigned Tape>
       auto project() const
         -> project_t<Tape>

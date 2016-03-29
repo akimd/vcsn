@@ -41,6 +41,20 @@ namespace vcsn
     using identities_t = rat::identities;
     using const_visitor = rat::const_visitor<context_t>;
 
+  private:
+    /// Ourself, but after the application of weightset_mixin.
+    ///
+    /// FIXME: this is ugly.  It is due to the fact that instead of the
+    /// CRTP, we used a mixin approach to add features to expressionset
+    /// as opposed to expressionset_impl.  Except that here, we have an
+    /// expression_impl, and we need the expression.  So after all,
+    /// maybe the CRTP is a better approach.
+    ///
+    /// Cannot be a reference member, as we do support assignments,
+    /// in which case the copied self would point to the original this.
+    const self_t& self() const { return static_cast<const self_t&>(*this); }
+
+  public:
     /// Type of expressions.
     //
     // See http://stackoverflow.com/questions/15537023 to know why we
@@ -83,7 +97,6 @@ namespace vcsn
     using word_t = value_t;
     using letter_t = value_t;
 
-  public:
     /// Static description key.
     static symbol sname();
     /// Build from the description in \a is.
@@ -327,6 +340,9 @@ namespace vcsn
       = typename as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t::type>::type;
 
     /// If we are multitape, ourself as a tupleset.
+    ///
+    /// This is used for instance when building a multitape
+    /// expression: first we need the "sub" expressionsets.
     template <typename Ctx = context_t>
     auto as_tupleset() const
       -> std::enable_if_t<Ctx::is_lat, as_tupleset_t<Ctx>>
@@ -335,18 +351,6 @@ namespace vcsn
     }
 
   private:
-    /// Ourself, but after the application of weightset_mixin.
-    ///
-    /// FIXME: this is ugly.  It is due to the fact that instead of the
-    /// CRTP, we used a mixin approach to add features to expressionset
-    /// as opposed to expressionset_impl.  Except that here, we have an
-    /// expression_impl, and we need the expression.  So after all,
-    /// maybe the CRTP is a better approach.
-    ///
-    /// Cannot be a reference member, as we do support assignments,
-    /// in which case the copied self would point to the original this.
-    const self_t& self() const { return static_cast<const self_t&>(*this); }
-
     /// From a list of values, build a sum, taking care of the empty
     /// and singleton cases.
     auto add_(values_t&& vs) const -> value_t;

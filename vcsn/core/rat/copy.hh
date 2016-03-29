@@ -66,7 +66,7 @@ namespace vcsn
         return res_;
       }
 
-      /// Factor the copy of n-ary operations.
+      /// Factor the handling of unary operations.
       template <exp::type_t Type>
       void
       copy_(const unary_t<Type>& v)
@@ -76,14 +76,14 @@ namespace vcsn
         res_ = std::make_shared<out_unary_t>(copy(v.sub()));
       }
 
-      /// Factor the copy of n-ary operations.
+      /// Factor the handling of n-ary operations.
       template <exp::type_t Type>
       void
       copy_(const variadic_t<Type>& v)
       {
         using out_variadic_t
           = typename out_expressionset_t::template variadic_t<Type>;
-        typename out_expressionset_t::values_t sub;
+        auto sub = typename out_expressionset_t::values_t{};
         for (const auto& s: v)
           sub.emplace_back(copy(s));
         res_ = std::make_shared<out_variadic_t>(sub);
