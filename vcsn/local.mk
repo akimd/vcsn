@@ -154,6 +154,7 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/less.hh                          \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \
+  %D%/core/rat/project.hh                       \
   %D%/core/rat/size.hh                          \
   %D%/core/rat/transpose.hh                     \
   %D%/core/rat/visitor.hh                       \

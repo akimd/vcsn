@@ -16,12 +16,15 @@ namespace vcsn
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
     auto project(const context<LabelSet, WeightSet>& ctx)
-      -> std::enable_if_t<context<LabelSet, WeightSet>::is_lat,
+      -> std::enable_if_t<is_multitape<LabelSet>{},
                           project_context<Tape, context<LabelSet, WeightSet>>>
     {
-      static_assert(Tape < LabelSet::size(),
-                    "project: tape index out of bounds");
-      return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
+      // FIXME: The following assert works only for tupleset. Handle
+      // the case of expressionset.
+      //
+      //      static_assert(Tape < LabelSet::size(),
+      //                    "project: tape index out of bounds");
+      return {ctx.labelset()->template project<Tape>(), *ctx.weightset()};
     }
 
     /// When the labelset is not a tupleset, require the tape to be 0,
@@ -29,7 +32,7 @@ namespace vcsn
     template <size_t Tape,
               typename LabelSet, typename WeightSet>
     auto project(const context<LabelSet, WeightSet>& ctx)
-      -> std::enable_if_t<!context<LabelSet, WeightSet>::is_lat,
+      -> std::enable_if_t<!is_multitape<LabelSet>{},
                           context<LabelSet, WeightSet>>
     {
       static_assert(Tape == 0,

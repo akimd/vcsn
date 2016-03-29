@@ -2,6 +2,7 @@
 
 #include <vcsn/ctx/project-context.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/name.hh> // integral_constant
@@ -45,13 +46,15 @@ namespace vcsn
     }
   }
 
-  /*-----------------------.
-  | project(polynomial).   |
-  `-----------------------*/
+  /*----------------------.
+  | project(expansion).   |
+  `----------------------*/
 
   namespace detail
   {
     /// Project a value to one tape.
+    ///
+    /// Used for expansion, expression, labels and polynomials.
     template <size_t Tape, typename ValueSet>
     auto project(const ValueSet& vs,
                  const typename ValueSet::value_t& v)
@@ -60,7 +63,58 @@ namespace vcsn
                     "project: invalid tape number");
       return vs.template project<Tape>(v);
     }
+  }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (project).
+      template <typename ExpansionSet, typename Tape>
+      expansion
+      project_expansion(const expansion& exp, integral_constant)
+      {
+        constexpr auto tape = Tape::value;
+        auto& x = exp->as<ExpansionSet>();
+        const auto& xs_in = x.expansionset();
+        auto xs_out = xs_in.template project<tape>();
+        return make_expansion(xs_out,
+                              vcsn::detail::project<tape>(xs_in,
+                                                          x.expansion()));
+      }
+    }
+  }
+
+  /*-----------------------.
+  | project(expression).   |
+  `-----------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (project).
+      template <typename ExpressionSet, typename Tape>
+      expression
+      project_expression(const expression& exp, integral_constant)
+      {
+        constexpr auto tape = Tape::value;
+        auto& r = exp->as<ExpressionSet>();
+        const auto& rs_in = r.expressionset();
+        auto rs_out = vcsn::detail::project<tape>(rs_in);
+        return make_expression(rs_out,
+                               vcsn::detail::project<tape>(rs_in,
+                                                           r.expression()));
+      }
+    }
+  }
+
+  /*-----------------------.
+  | project(polynomial).   |
+  `-----------------------*/
+
+  namespace detail
+  {
     /// Project a polynomialset to one tape.
     template <size_t Tape, typename Context, wet_kind_t Kind>
     auto project(const polynomialset<Context, Kind>& ps)

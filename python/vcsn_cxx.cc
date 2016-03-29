@@ -765,6 +765,11 @@ struct expansion
 
   expansion left_mult(const weight& w) const;
 
+  expansion project(unsigned tape)
+  {
+    return vcsn::dyn::project(val_, tape);
+  }
+
   expansion right_mult(const weight& w) const;
 
   static expansion tuple_(const boost::python::list& es)
@@ -1043,6 +1048,11 @@ struct expression
   expression multiply(int min) const
   {
     return multiply(min, min);
+  }
+
+  expression project(unsigned tape)
+  {
+    return vcsn::dyn::project(val_, tape);
   }
 
   expression rdiv(const expression& rhs) const
@@ -1550,6 +1560,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("context", &expansion::context)
     .def("format", &expansion::format)
     .def("left_mult", &expansion::left_mult)
+    .def("project", &expansion::project)
     .def("right_mult", &expansion::right_mult)
     .def("sum", &expansion::sum)
     .def("_tuple", &expansion::tuple_).staticmethod("_tuple")
@@ -1584,6 +1595,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("multiply",
          static_cast<expression::multiply_repeated_t>(&expression::multiply),
          multiply_repeated())
+    .def("project", &expression::project)
     .def("rdiv", &expression::rdiv)
     .def("right_mult", &expression::right_mult)
     .def("series", &expression::as_series, (arg("context") = context()))

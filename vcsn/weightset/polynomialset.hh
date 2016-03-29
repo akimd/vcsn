@@ -779,15 +779,25 @@ namespace vcsn
       return res;
     }
 
+    /// The polynomialset for tape Tape.
+    template <size_t Tape>
+    auto project() const
+    {
+      return make_polynomialset(vcsn::detail::project<Tape>(context()));
+    }
+
+    template <typename T>
+    struct VVV;
+
     /// Extract a single tape.
     template <size_t Tape>
     auto project(const value_t& v) const
     {
-      auto ps = make_polynomialset(vcsn::detail::project<Tape>(context()));
-      auto res = typename decltype(ps)::value_t{};
+      auto ps = project<Tape>();
+      auto res = ps.zero();
       for (const auto& m: v)
         ps.add_here(res,
-                    std::get<Tape>(label_of(m)),
+                    labelset()->template project<Tape>(label_of(m)),
                     weight_of(m));
       return res;
     }

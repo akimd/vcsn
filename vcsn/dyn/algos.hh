@@ -602,6 +602,12 @@ namespace vcsn
     /// Keep a single tape from a multiple-tape context.
     context project(const context& ctx, unsigned tape);
 
+    /// Keep a single tape from a multiple-tape expansion.
+    expansion project(const expansion& xpn, unsigned tape);
+
+    /// Keep a single tape from a multiple-tape expression.
+    expression project(const expression& exp, unsigned tape);
+
     /// Keep a single tape from a multiple-tape polynomial.
     polynomial project(const polynomial& p, unsigned tape);
 

@@ -4,6 +4,8 @@
 #include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/signature-printer.hh>
@@ -124,6 +126,22 @@ namespace vcsn
     {
       auto t = to_integral_constant(tape);
       return detail::project_context_registry().call(ctx, t);
+    }
+
+    REGISTRY_DEFINE(project_expansion);
+    expansion
+    project(const expansion& e, unsigned tape)
+    {
+      auto t = to_integral_constant(tape);
+      return detail::project_expansion_registry().call(e, t);
+    }
+
+    REGISTRY_DEFINE(project_expression);
+    expression
+    project(const expression& e, unsigned tape)
+    {
+      auto t = to_integral_constant(tape);
+      return detail::project_expression_registry().call(e, t);
     }
 
     REGISTRY_DEFINE(project_polynomial);

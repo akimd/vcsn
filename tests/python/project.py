@@ -86,7 +86,14 @@ check('project',
       'mutable_automaton<letterset<char_letters(abc)>, q>')
 
 
+## ------------- ##
+## expressions.  ##
+## ------------- ##
 
+e = c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y')
+CHECK_EQ('<9>a*',  e.project(0))
+CHECK_EQ('e+<3>f', e.project(1))
+CHECK_EQ('x+y+xy', e.project(2))
 
 
 ## ------------- ##
@@ -99,3 +106,16 @@ CHECK_EQ('<2>e + <7>f', p.project(1))
 CHECK_EQ('<5>x + <4>y', p.project(2))
 
 
+## ------------ ##
+## expansions.  ##
+## ------------ ##
+
+# Obviously, `expansion` and `project` don't commute.  For instance,
+# `a|[xy]` projected on 0 gives `a`, while expanded and projected
+# gives `<2>a`.
+e = c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y')
+x = e.expansion()
+# FIXME: This expansion is not in normal form.
+CHECK_EQ('\e.[<11>\e] + a.[<11>a*]',     x.project(0))
+CHECK_EQ('e.[<4>\e] + f.[<18>\e]',       x.project(1))
+CHECK_EQ('x.[<6>\e + <8>y] + y.[<8>\e]', x.project(2))

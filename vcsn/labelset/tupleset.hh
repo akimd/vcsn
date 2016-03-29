@@ -157,6 +157,26 @@ namespace vcsn
       return std::get<I>(sets());
     }
 
+    /// The type of the I-th tape valueset.
+    template <size_t I>
+    using project_t = valueset_t<I>;
+
+    /// The Ith component valueset.
+    ///
+    /// Alias for `set<I>`.
+    template <size_t I>
+    const valueset_t<I>& project() const
+    {
+      return set<I>();
+    }
+
+    /// The I-th component of the value.
+    template <size_t I>
+    auto project(const value_t& v) const
+    {
+      return std::get<I>(v);
+    }
+
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept
     /// \returns   the previous status.
@@ -1076,6 +1096,11 @@ namespace vcsn
     : is_multitape<LabelSet>
   {};
 
+  template <typename Context>
+  struct is_multitape<expressionset<Context>>
+    : is_multitape<Context>
+  {};
+
 
 
   template <typename T1, typename T2>
@@ -1240,17 +1265,16 @@ namespace vcsn
   template <size_t Tape, typename... LabelSets>
   struct project_labelset_impl<Tape, tupleset<LabelSets...>>
   {
-    using labelset_t = tupleset<LabelSets...>;
-    using type = typename labelset_t::template valueset_t<Tape>;
+    using valueset_t = tupleset<LabelSets...>;
+    using type = typename valueset_t::template project_t<Tape>;
   };
 
   /// Case of multitape expressionsets.
   template <size_t Tape, typename Context>
   struct project_labelset_impl<Tape, expressionset<Context>>
   {
-    using ctx_t = context<project_labelset<Tape, labelset_t_of<Context>>,
-                          weightset_t_of<Context>>;
-    using type = expressionset<ctx_t>;
+    using valueset_t = expressionset<Context>;
+    using type = typename valueset_t::template project_t<Tape>;
   };
 
 

@@ -527,7 +527,7 @@ namespace vcsn
       auto project() const
         -> project_t<Tape>
       {
-        return {detail::project<Tape>(rs_)};
+        return {rs_.template project<Tape>()};
       }
 
       /// Denormalize a pack of one-tape expansions.
@@ -652,6 +652,22 @@ namespace vcsn
         auto t = tuple_impl<Expansions...>{*this};
         return t.tuple(std::forward<Expansions>(es)...);
       }
+
+      /// Project a multitape expansion.
+      template <size_t Tape>
+      auto project(const value_t& v) const
+      {
+        auto xs = project<Tape>();
+        const auto& ps = xs.polynomialset();
+        using res_t = typename decltype(xs)::value_t;
+        auto res = res_t{};
+        res.constant = v.constant;
+        for (const auto& p: v.polynomials)
+          ps.add_here(res.polynomials[ls_.template project<Tape>(p.first)],
+                      ps_.template project<Tape>(p.second));
+        return res;
+      }
+
 
     private:
       /// The expressionset used for the expressions.

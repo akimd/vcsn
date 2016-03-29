@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+
+## 2016-03-29
+### project: support for expressions and expansions
+One may now project (multitape) automata, contexts, expansions, expressions,
+labels and polynomials.
+
 ## 2016-03-15
 ### expression: a dot output
 Expressions now feature a `"dot"` format to display graphically the structure

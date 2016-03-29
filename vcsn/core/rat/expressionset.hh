@@ -19,6 +19,8 @@
 #include <vcsn/weightset/z.hh>
 #include <vcsn/weightset/zmin.hh>
 
+#include <vcsn/core/rat/project.hh>
+
 namespace vcsn
 {
   namespace rat
@@ -318,6 +320,21 @@ namespace vcsn
     using project_t
       = expressionset<detail::project_context<Tape, Ctx>>;
 
+    /// The expressionset for the Tape-th tape.
+    template <unsigned Tape>
+    auto project() const
+      -> project_t<Tape>
+    {
+      return vcsn::detail::project<Tape>(context());
+    }
+
+    /// Project a multitape expression.
+    template <size_t Tape>
+    auto project(const value_t& v) const
+      -> decltype(::vcsn::rat::project<Tape>(this->self(), v))
+    {
+      return ::vcsn::rat::project<Tape>(self(), v);
+    }
 
     template <typename Sequence>
     struct as_tupleset_impl;
