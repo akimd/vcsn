@@ -665,6 +665,9 @@ namespace vcsn
         for (const auto& p: v.polynomials)
           ps.add_here(res.polynomials[ls_.template project<Tape>(p.first)],
                       ps_.template project<Tape>(p.second));
+        // We might generate denormalized expansions, e.g., when
+        // projecting the expansion of `\e|a`, `\e` is a label.
+        xs.normalize(res);
         return res;
       }
 

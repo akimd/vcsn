@@ -115,7 +115,6 @@ CHECK_EQ('<5>x + <4>y', p.project(2))
 # gives `<2>a`.
 e = c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y')
 x = e.expansion()
-# FIXME: This expansion is not in normal form.
-CHECK_EQ('\e.[<11>\e] + a.[<11>a*]',     x.project(0))
+CHECK_EQ('<11> + a.[<11>a*]',            x.project(0))
 CHECK_EQ('e.[<4>\e] + f.[<18>\e]',       x.project(1))
 CHECK_EQ('x.[<6>\e + <8>y] + y.[<8>\e]', x.project(2))
