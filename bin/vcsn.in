@@ -21,6 +21,12 @@ export VCSN_DATADIR
 : ${VCSN_LIBEXECDIR='@LIBEXECDIR@'}
 export VCSN_LIBEXECDIR
 
+# If we are not installed, set the dynamic library path.
+if test x"$VCSN_DYLD_LIBRARY_PATH" != x; then
+  DYLD_LIBRARY_PATH=$VCSN_DYLD_LIBRARY_PATH
+  export DYLD_LIBRARY_PATH
+fi
+
 # Find our auxiliary executables.
 PATH=$VCSN_LIBEXECDIR:$PATH
 export PATH

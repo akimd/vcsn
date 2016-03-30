@@ -13,7 +13,7 @@
 
 TEST_EXTENSIONS += .rat
 RAT_LOG_DRIVER = $(TAP_DRIVER)
-RAT_LOG_COMPILER = $(PYTHON) $(srcdir)/tests/bin/rat.py
+RAT_LOG_COMPILER = vcsn run $(PYTHON) $(srcdir)/tests/bin/rat.py
 AM_RAT_LOG_DEPS =                               \
   $(srcdir)/tests/bin/rat.py                    \
   $(VCSN_PYTHON_DEPS)                           \

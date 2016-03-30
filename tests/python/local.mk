@@ -13,7 +13,10 @@
 
 TEST_EXTENSIONS += .py
 PY_LOG_DRIVER = $(TAP_DRIVER)
-PY_LOG_COMPILER = $(PYTHON)
+# Use `vcsn run` rather than just $(PYTHON) to make sure we can set up
+# our envvars when not installed.  Besides, even if installed, we
+# probably need to setup PYTHONPATH.
+PY_LOG_COMPILER = vcsn run $(PYTHON)
 
 %C%_TESTS =                                     \
   %D%/accessible.py                             \

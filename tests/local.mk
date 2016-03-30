@@ -97,17 +97,16 @@ CHECK_ENVIRONMENT +=                            \
 
 # Use the wrappers to run the non-installed executables.
 # Find test.py which is in tests/bin.
-BUILDCHECK_ENVIRONMENT +=                               \
-  $(CHECK_ENVIRONMENT);                                 \
-  . $(abs_top_builddir)/tests/bin/vcsn --export;        \
-  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$$PYTHONPATH;  \
-  export PYTHONPATH;
+BUILDCHECK_ENVIRONMENT +=                       \
+  $(CHECK_ENVIRONMENT);                         \
+  PATH=$(abs_builddir)/tests/bin:$$PATH;        \
+  export PATH;
 
-INSTALLCHECK_ENVIRONMENT +=                                                   \
-  $(CHECK_ENVIRONMENT);                                                       \
-  PATH=$(DESTDIR)$(bindir):$$PATH;                                            \
-  export PATH;                                                                \
-  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH; \
+INSTALLCHECK_ENVIRONMENT +=                                                     \
+  $(CHECK_ENVIRONMENT);                                                         \
+  PATH=$(DESTDIR)$(bindir):$$PATH;                                              \
+  export PATH;                                                                  \
+  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH;   \
   export PYTHONPATH;
 
 # Run the tests with the install-environment.

@@ -157,8 +157,8 @@ namespace vcsn
 
     /// Project a rational expression.
     ///
-    /// \tparam ExpSet  the expressionset type
-    /// \tparam Tape    the selected tape
+    /// \tparam Tape     the selected tape
+    /// \tparam InExpSet the expressionset type
     template <size_t Tape, typename InExpSet>
     auto
     project(const InExpSet& in_rs, const typename InExpSet::value_t& v)

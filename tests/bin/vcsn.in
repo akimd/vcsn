@@ -38,6 +38,14 @@ export LD_LIBRARY_PATH
 DYLD_LIBRARY_PATH=$abs_builddir/lib/.libs:$abs_builddir/python/.libs:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 
+# Apple's SIP (System Integrity Protection) filters out the DYLD_*
+# envvars when calling programs from /bin, in particular /bin/sh.  As
+# a result, when we invoke `vcsn` (the installed binary) we lose these
+# variables.  So pass them via another envvar, and let the installed
+# `vcsn` install them when defined.
+VCSN_DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+export VCSN_DYLD_LIBRARY_PATH
+
 # If we need to compile, use the non-installed headers and libs.
 VCSN_CPPFLAGS="-I $abs_builddir -I $abs_srcdir @VCSN_CPPFLAGS@"
 export VCSN_CPPFLAGS

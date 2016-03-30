@@ -1,4 +1,4 @@
-# This is a modified version of Automake 1.14.1's distcheck.  The
+# This is a modified version of Automake 1.15's distcheck.  The
 # differences are:
 #
 # - we don't run "make dvi", we're not interested in it.
@@ -25,17 +25,17 @@ vcsn-distcheck: dist
 	esac
 	chmod -R a-w $(distdir)
 	chmod u+w $(distdir)
-	mkdir $(distdir)/_build $(distdir)/_inst
+	mkdir $(distdir)/_build $(distdir)/_build/sub $(distdir)/_inst
 	chmod a-w $(distdir)
 	test -d $(distdir)/_build || exit 0; \
 	dc_install_base=`$(am__cd) $(distdir)/_inst && pwd | sed -e 's,^[^:\\/]:[\\/],/,'` \
 	  && dc_destdir="$${TMPDIR-/tmp}/am-dc-$$$$/" \
 	  && am__cwd=`pwd` \
-	  && $(am__cd) $(distdir)/_build \
-	  && ../configure \
+	  && $(am__cd) $(distdir)/_build/sub \
+	  && ../../configure \
 	    $(AM_DISTCHECK_CONFIGURE_FLAGS) \
 	    $(DISTCHECK_CONFIGURE_FLAGS) \
-	    --srcdir=.. --prefix="$$dc_install_base" \
+	    --srcdir=../.. --prefix="$$dc_install_base" \
 	  && $(MAKE) $(AM_MAKEFLAGS) \
 ##	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
 ##	  && $(MAKE) $(AM_MAKEFLAGS) check \
