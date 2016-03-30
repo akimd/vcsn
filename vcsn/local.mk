@@ -159,6 +159,7 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/transpose.hh                     \
   %D%/core/rat/visitor.hh                       \
   %D%/core/rat/visitor.hxx                      \
+  %D%/core/state-bimap.hh                       \
   %D%/core/transition-map.hh                    \
   %D%/core/transition.hh                        \
   %D%/core/tuple-automaton.hh                   \

@@ -5,160 +5,13 @@
 #include <set>
 #include <type_traits>
 
-#include <boost/bimap.hpp>
-#include <boost/bimap/set_of.hpp>
-#include <boost/bimap/unordered_set_of.hpp>
-
 #include <vcsn/core/automaton-decorator.hh>
-#include <vcsn/labelset/stateset.hh>
-#include <vcsn/misc/bimap.hh> // vcsn::has
-#include <vcsn/misc/static-if.hh> // vcsn::has
-#include <vcsn/misc/unordered_map.hh> // vcsn::has
+#include <vcsn/core/state-bimap.hh>
 
 namespace vcsn
 {
   namespace detail
   {
-    /// A bidirectional map from state names to state numbers.
-    ///
-    /// \tparam StateNameset   a valueset to manipulate the state names.
-    /// \tparam Stateset       a valueset to manipulate the state indexes.
-    /// \tparam Bidirectional  whether to maintain origins incrementally.
-    template <typename StateNameset, typename Stateset,
-              bool Bidirectional>
-    class state_bimap;
-
-    /// A bidirectional map from state names to state numbers.
-    ///
-    /// The lazy case: maintain the origins() map constantly.
-    ///
-    /// \tparam StateNameset   a valueset to manipulate the state names.
-    /// \tparam Stateset       a valueset to manipulate the state indexes.
-    template <typename StateNameset, typename Stateset>
-    class state_bimap<StateNameset, Stateset, true>
-    {
-      using state_nameset_t = StateNameset;
-      using state_name_t = typename state_nameset_t::value_t;
-
-      using stateset_t = Stateset;
-      using state_t = typename stateset_t::value_t;
-
-      /// Storage for state names.
-      using left_t
-        = boost::bimaps::unordered_set_of<state_name_t,
-                                          vcsn::hash<state_nameset_t>,
-                                          vcsn::equal_to<state_nameset_t>>;
-      /// Storage for state index.
-      using right_t = boost::bimaps::set_of<state_t>;
-      /// Bidirectional map state_name_t -> state_t;
-      using bimap_t = boost::bimap<left_t, right_t>;
-
-      bimap_t map_;
-
-    public:
-      using const_iterator = typename bimap_t::const_iterator;
-
-      template <typename... Args>
-      auto emplace(Args&&... args)
-      {
-        return map_.insert({ std::forward<Args>(args)... });
-      }
-
-      auto find_key(const state_name_t& s) const
-      {
-        return map_.left.find(s);
-      }
-
-      auto end_key() const
-      {
-        return map_.left.end();
-      }
-
-      /// Get the state name from a const_iterator.
-      static const state_name_t& state_name(const const_iterator& i)
-      {
-        return i->left;
-      }
-
-      /// Get the state from a const_iterator.
-      static state_t state(const const_iterator& i)
-      {
-        return i->right;
-      }
-
-      /// A map from state indexes to state names.
-      using origins_t = typename bimap_t::right_map;
-      const origins_t& origins() const
-      {
-        return map_.right;
-      }
-    };
-
-
-    /// A bidirectional map from state names to state numbers.
-    ///
-    /// The strict case: compute origins() just once, at the end.
-    ///
-    /// \tparam StateNameset   a valueset to manipulate the state names.
-    /// \tparam Stateset       a valueset to manipulate the state indexes.
-    template <typename StateNameset, typename Stateset>
-    class state_bimap<StateNameset, Stateset, false>
-    {
-      using state_nameset_t = StateNameset;
-      using state_name_t = typename state_nameset_t::value_t;
-
-      using stateset_t = Stateset;
-      using state_t = typename stateset_t::value_t;
-
-      using map_t = std::unordered_map<state_name_t, state_t,
-                                       vcsn::hash<state_nameset_t>,
-                                       vcsn::equal_to<state_nameset_t>>;
-      map_t map_;
-
-    public:
-      using const_iterator = typename map_t::const_iterator;
-
-      template <typename... Args>
-      auto emplace(Args&&... args)
-      {
-        return map_.emplace(std::forward<Args>(args)...);
-      }
-
-      auto find_key(const state_name_t& sn) const
-      {
-        return map_.find(sn);
-      }
-
-      auto end_key() const
-      {
-        return map_.end();
-      }
-
-      /// Get the state name from a const_iterator.
-      static const state_name_t& state_name(const const_iterator& i)
-      {
-        return i->first;
-      }
-
-      /// Get the state from a const_iterator.
-      static state_t state(const const_iterator& i)
-      {
-        return i->second;
-      }
-
-      /// A map from state indexes to state names.
-      using origins_t = std::map<state_t, state_name_t>;
-      mutable origins_t origins_;
-      const origins_t& origins() const
-      {
-        if (origins_.empty())
-          for (const auto& p: map_)
-            origins_.emplace(p.second, p.first);
-        return origins_;
-      }
-    };
-
-
     /// An automaton whose state names are polynomials of states.
     ///
     /// \tparam Aut   the input automaton type, whose states
@@ -181,6 +34,11 @@ namespace vcsn
       template <typename Ctx = context_t>
       using fresh_automaton_t = fresh_automaton_t_of<Aut, Ctx>;
       using super_t = automaton_decorator<fresh_automaton_t<>>;
+      using state_bimap_t
+        = state_bimap<polynomialset<context<stateset<Aut>,
+                                            weightset_t_of<Aut>>, Kind>,
+                      stateset<Aut>,
+                      Lazy>;
 
       /// Labels and weights.
       using label_t = label_t_of<automaton_t>;
@@ -192,15 +50,8 @@ namespace vcsn
       using stateset_t = stateset<automaton_t>;
 
       /// The state name: set of (input) states.
-      using state_nameset_t
-        = polynomialset<context<stateset_t, weightset_t>, Kind>;
-      using state_name_t = typename state_nameset_t::value_t;
-
-      using state_bimap_t
-        = state_bimap<polynomialset<context<stateset<Aut>,
-                                            weightset_t_of<Aut>>, Kind>,
-                      stateset<Aut>,
-                      Lazy>;
+      using state_nameset_t = typename state_bimap_t::state_nameset_t;
+      using state_name_t = typename state_bimap_t::state_name_t;
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
