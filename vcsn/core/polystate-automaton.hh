@@ -136,7 +136,7 @@ namespace vcsn
       /// (Nameset) The polynomialset that stores weighted states.
       state_nameset_t ns_ = {{stateset_t(input_), ws_}};
 
-      /// The sets of (input) states waiting to be processed.
+      /// States waiting to be processed.
       using queue_t = std::queue<typename state_bimap_t::const_iterator>;
       queue_t todo_;
 

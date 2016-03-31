@@ -21,6 +21,22 @@ namespace vcsn
     }
   };
 
+  namespace detail
+  {
+    /// Following the naming convention of Boost.
+    ///
+    /// Use SFINAE to avoid being too eager.
+    template <typename T>
+    auto hash_value(const T& v)
+      -> decltype(std::hash<T>{}(v))
+    {
+      auto hasher = std::hash<T>{};
+      return hasher(v);
+    }
+  }
+
+  using detail::hash_value;
+
   // http://stackoverflow.com/questions/2590677
   inline void hash_combine_hash(std::size_t& seed, size_t h)
   {
@@ -31,8 +47,7 @@ namespace vcsn
   template <typename T>
   void hash_combine(std::size_t& seed, const T& v)
   {
-    std::hash<T> hasher;
-    hash_combine_hash(seed, hasher(v));
+    hash_combine_hash(seed, hash_value(v));
   }
 
   /// This is useful to make hashes with labels or weights as keys
@@ -55,23 +70,6 @@ namespace vcsn
     using result_type = size_t;
     using argument_type = value_t;
   };
-
-  namespace detail
-  {
-
-    /// Following the naming convention of Boost.
-    ///
-    /// Use SFINAE to avoid being too eager.
-    template <typename T>
-    inline auto hash_value(const T& v)
-      -> decltype(std::hash<T>{}(v))
-    {
-      std::hash<T> hasher;
-      return hasher(v);
-    }
-  }
-
-  using detail::hash_value;
 
   /// Functor to compare Values of ValueSets.
   template <typename ValueSet, typename Value = typename ValueSet::value_t>
