@@ -785,7 +785,7 @@ namespace vcsn
   auto
   shuffle(const Auts&... as)
     // SFINAE
-    -> tuple_automaton<false, decltype(join_automata(as...)),
+    -> tuple_automaton<false, false, decltype(join_automata(as...)),
                        Auts...>
   {
     auto res =
@@ -861,7 +861,7 @@ namespace vcsn
   template <Automaton A1, Automaton A2>
   auto
   infiltrate(const A1& a1, const A2& a2)
-    -> tuple_automaton<false, decltype(join_automata(a1, a2)),
+    -> tuple_automaton<false, false, decltype(join_automata(a1, a2)),
                        A1, A2>
   {
     auto res =

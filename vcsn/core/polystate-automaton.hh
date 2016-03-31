@@ -18,6 +18,7 @@ namespace vcsn
     /// \tparam Aut   the input automaton type, whose states
     ///               will form the polynomials of states.
     /// \tparam Kind  the desired implemenation of the polynomials.
+    /// \tparam Lazy  whether to maintain origins incrementally.
     template <Automaton Aut,
               wet_kind_t Kind = detail::wet_kind<labelset_t_of<Aut>,
                                                  weightset_t_of<Aut>>(),

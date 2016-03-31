@@ -28,9 +28,11 @@ namespace vcsn
     ///
     /// Corresponds to the Cartesian product of states.
     ///
-    /// \tparam Aut   the output automaton type
-    /// \tparam Auts  the input automaton types
-    template <bool Ranked, Automaton Aut, Automaton... Auts>
+    /// \tparam Ranked  whether to keep a rank per state
+    /// \tparam Lazy    whether to maintain origins incrementally.
+    /// \tparam Aut     the output automaton type
+    /// \tparam Auts    the types of the input automata
+    template <bool Ranked, bool Lazy, Automaton Aut, Automaton... Auts>
     class tuple_automaton_impl
       : public automaton_decorator<Aut>
     {
@@ -141,16 +143,18 @@ namespace vcsn
       static std::string sname_(const T&... t)
       {
         // tuple_automaton<Ranked, SupportAutomaton, InputAutomaton...>.
-        auto res = std::string{"<"} + (Ranked ? "true" : "false") + ", ";
+        auto res = std::string{"<"};
+        res += (Ranked ? "true" : "false");
+        res += ", ";
+        res += (Lazy ? "true" : "false");
         using swallow = int[];
-        const char* sep = "";
         (void) swallow
           {
-            (res += sep + t, sep = ", ",
+            (res += ", " + t,
              std::cerr << "Wow! " << t << '\n',
              0)...
           };
-        res += sep + Aut::element_type::sname();
+        res += ", " + Aut::element_type::sname();
         (void) swallow
           {
             (res += ", " + Auts::element_type::sname(),
@@ -223,7 +227,6 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      template <bool Lazy = false>
       state_t state(const state_name_t& state)
       {
         auto lb = pmap_().find(state);
@@ -238,18 +241,18 @@ namespace vcsn
         return lb->second;
       }
 
-      template <bool Lazy = false, bool Ranked_ = Ranked>
+      template <bool Ranked_ = Ranked>
       auto state(state_t_of<Auts>... ss, unsigned short rank)
         -> std::enable_if_t<Ranked_, state_t>
       {
-        return state<Lazy>(std::make_tuple(ss..., rank));
+        return state(std::make_tuple(ss..., rank));
       }
 
-      template <bool Lazy = false, bool Ranked_ = Ranked>
+      template <bool Ranked_ = Ranked>
       auto state(state_t_of<Auts>... ss)
         -> std::enable_if_t<!Ranked_, state_t>
       {
-        return state<Lazy>(std::make_tuple(ss...));
+        return state(std::make_tuple(ss...));
       }
 
       template <size_t... I>
@@ -311,16 +314,16 @@ namespace vcsn
   }
 
   /// A tuple automaton as a shared pointer.
-  template <bool Ranked, Automaton... Auts>
+  template <bool Ranked, bool Lazy, Automaton... Auts>
   using tuple_automaton
-    = std::shared_ptr<detail::tuple_automaton_impl<Ranked, Auts...>>;
+    = std::shared_ptr<detail::tuple_automaton_impl<Ranked, Lazy, Auts...>>;
 
-  template <bool Ranked, Automaton... Auts>
+  template <bool Ranked, bool Lazy, Automaton... Auts>
   auto
   make_tuple_automaton(const Auts&... auts)
-    -> tuple_automaton<Ranked, Auts...>
+    -> tuple_automaton<Ranked, Lazy, Auts...>
   {
-    using res_t = tuple_automaton<Ranked, Auts...>;
+    using res_t = tuple_automaton<Ranked, Lazy, Auts...>;
     return make_shared_ptr<res_t>(auts...);
   }
 }
