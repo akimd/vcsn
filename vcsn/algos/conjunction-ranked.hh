@@ -106,9 +106,9 @@ namespace vcsn
         if (!Lazy)
           while (!aut_->todo_.empty())
             {
-              const auto& p = aut_->todo_.front();
-              add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
-              aut_->todo_.pop_front();
+              const auto& i = aut_->todo_.front();
+              add_conjunction_transitions(aut_->state(i), aut_->state_name(i));
+              aut_->todo_.pop();
             }
       }
 
@@ -128,9 +128,9 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            const auto& p = aut_->todo_.front();
-            const auto& state_name = std::get<0>(p);
-            add_conjunction_transitions(std::get<1>(p), state_name);
+            const auto& i = aut_->todo_.front();
+            const auto& state_name = aut_->state_name(i);
+            add_conjunction_transitions(aut_->state(i), state_name);
 
             // If lhs's state is final, rhs's corresponding state is initial.
             if (lhs->is_final(std::get<0>(state_name)))
@@ -151,9 +151,9 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            const auto& p = aut_->todo_.front();
-            add_shuffle_transitions<false>(std::get<1>(p), std::get<0>(p));
-            aut_->todo_.pop_front();
+            const auto& i = aut_->todo_.front();
+            add_shuffle_transitions<false>(aut_->state(i), aut_->state_name(i));
+            aut_->todo_.pop();
           }
       }
 
@@ -187,16 +187,16 @@ namespace vcsn
 
         while (!aut_->todo_.empty())
           {
-            const auto& p = aut_->todo_.front();
+            const auto& i = aut_->todo_.front();
             // Infiltrate is a mix of conjunction and shuffle operations.
             //
             // Conjunction transitions must be added before shuffle ones:
             // this way "conjunction" can use "new_transition" only, which
             // is faster than "add_transition".
-            add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
-            add_shuffle_transitions<true>(std::get<1>(p), std::get<0>(p));
+            add_conjunction_transitions(aut_->state(i), aut_->state_name(i));
+            add_shuffle_transitions<true>(aut_->state(i), aut_->state_name(i));
 
-            aut_->todo_.pop_front();
+            aut_->todo_.pop();
           }
       }
 
@@ -212,7 +212,7 @@ namespace vcsn
       /// needed for the conjunction algorithm.
       void initialize_conjunction()
       {
-        aut_->todo_.emplace_back(aut_->pre_(), aut_->pre());
+        aut_->todo_.push(aut_->emplace(aut_->pre_(), aut_->pre()).first);
       }
 
       /// Fill the worklist with the initial source-state pairs, as

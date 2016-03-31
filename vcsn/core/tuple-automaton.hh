@@ -3,6 +3,7 @@
 #include <deque>
 #include <iostream>
 #include <map>
+#include <queue>
 #include <utility>
 
 #include <vcsn/core/automaton-decorator.hh>
@@ -245,6 +246,8 @@ namespace vcsn
           (get<I>(auts_)->post()...);
       }
 
+      using state_bimap_t::state;
+
       /// The state corresponding to a tuple of states of operands.
       ///
       /// If this is a new state, add to the worklist and update the
@@ -258,9 +261,7 @@ namespace vcsn
             res = this->new_state();
             if (Lazy)
               this->set_lazy(res);
-            // FIXME: todo_.push(this->emplace(std::move(sn), res).first);
-            this->emplace(sn, res);
-            todo_.emplace_back(sn, res);
+            todo_.push(this->emplace(std::move(sn), res).first);
           }
         else
           res = i->second;
@@ -323,8 +324,9 @@ namespace vcsn
       /// Input automata, supplied at construction time.
       automata_t auts_;
 
-      /// Worklist of state tuples.
-      std::deque<std::pair<state_name_t, state_t>> todo_;
+      /// States waiting to be processed.
+      using queue_t = std::queue<typename state_bimap_t::const_iterator>;
+      queue_t todo_;
     };
   }
 
