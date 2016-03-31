@@ -104,7 +104,7 @@ namespace vcsn
           while (!aut_->todo_.empty())
             {
               const auto& p = aut_->todo_.front();
-              this->complete_(std::get<1>(p));
+              add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
               aut_->todo_.pop_front();
             }
       }
@@ -120,7 +120,7 @@ namespace vcsn
         while (!aut_->todo_.empty())
           {
             const auto& p = aut_->todo_.front();
-            this->complete_ldiv(std::get<1>(p));
+            add_ldiv_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
       }
@@ -141,7 +141,7 @@ namespace vcsn
           {
             const auto& p = aut_->todo_.front();
             const auto& state_name = std::get<0>(p);
-            this->complete_(std::get<1>(p));
+            add_conjunction_transitions(std::get<1>(p), state_name);
 
             // If lhs's state is final, rhs's corresponding state is initial.
             if (lhs->is_final(std::get<0>(state_name)))
@@ -351,14 +351,6 @@ namespace vcsn
                   this->new_transition(src, state(pdst), ls.one(), t.weight());
                 }
           }
-      }
-
-      template <bool L = Lazy>
-      std::enable_if_t<sizeof... (Auts) == 2 && !L, void>
-      complete_ldiv(state_t s)
-      {
-        state_name_t sn = aut_->origins().at(s);
-        add_ldiv_transitions(s, sn);
       }
 
       /// Whether no tapes in the sequence have spontaneous incoming
