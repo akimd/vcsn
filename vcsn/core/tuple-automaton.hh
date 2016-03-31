@@ -44,6 +44,12 @@ namespace vcsn
       {
         return v1 == v2;
       }
+
+      /// Whether v1 is less than v2.
+      static auto less(const value_t& v1, const value_t& v2)
+      {
+        return v1 < v2;
+      }
     };
 
     /*----------------------------------------------.
