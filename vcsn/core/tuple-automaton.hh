@@ -63,7 +63,7 @@ namespace vcsn
       : public automaton_decorator<Aut>
       , public state_bimap<state_tupleset<Ranked, Auts...>,
                            stateset<Aut>,
-                           true>
+                           Lazy>
     {
     public:
       /// The type of the resulting automaton.
@@ -73,7 +73,7 @@ namespace vcsn
       using state_bimap_t
         = state_bimap<state_tupleset<Ranked, Auts...>,
                       stateset<Aut>,
-                      true>;
+                      Lazy>;
 
       /// Result state type.
       using state_t = typename super_t::state_t;
