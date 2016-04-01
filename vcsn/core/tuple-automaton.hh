@@ -51,6 +51,35 @@ namespace vcsn
       {
         return v1 < v2;
       }
+
+      template <std::size_t... I>
+      using seq = vcsn::detail::index_sequence<I...>;
+      constexpr static size_t rank = sizeof...(Auts);
+      using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
+
+      static std::ostream& printit(const state_name_t& sn, std::ostream& o)
+      {
+        print_(sn, o, indices_t{});
+        return o;
+      }
+
+      template <size_t... I>
+      static std::ostream&
+      print_(const state_name_t& sn, std::ostream& o, seq<I...>)
+      {
+        const char* sep = "";
+        using swallow = int[];
+        (void) swallow
+          {
+            (o << sep << std::get<I>(sn),
+             sep = ", ",
+             0)...
+          };
+        static_if<Ranked>([&o](const auto& sn){
+            o << ", " << std::get<rank>(sn);
+          })(sn);
+        return o;
+      }
     };
 
     /*----------------------------------------------.
@@ -127,6 +156,7 @@ namespace vcsn
         : super_t(aut)
         , auts_(auts...)
       {
+        reserve(10000);
         this->emplace(pre_(), aut_->pre());
         this->emplace(post_(), aut_->post());
       }
@@ -246,6 +276,7 @@ namespace vcsn
           (get<I>(auts_)->post()...);
       }
 
+      using state_bimap_t::reserve;
       using state_bimap_t::state;
 
       /// The state corresponding to a tuple of states of operands.

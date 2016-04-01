@@ -50,6 +50,12 @@ namespace vcsn
 
       using const_iterator = typename bimap_t::const_iterator;
 
+      /// Reserve to store at least count elements.
+      void reserve(size_t)
+      {
+        // No such feature in Boost.Bimap.
+      }
+
       /// Insert a new state.
       ///
       /// Pass a "pair" state-name -> state.
@@ -59,6 +65,7 @@ namespace vcsn
         return map_.insert({ std::forward<Args>(args)... });
       }
 
+      /// Find an element based on its (left) key.
       auto find_key(const state_name_t& s) const
       {
         return map_.left.find(s);
@@ -115,6 +122,46 @@ namespace vcsn
 
       using const_iterator = typename map_t::const_iterator;
 
+      ~state_bimap()
+      {
+#if 0
+        std::cerr << "End: " << map_.load_factor() << '\n';
+        unsigned n = map_.bucket_count();
+
+        std::cout << "map_ has " << n << " buckets.\n";
+
+        for (unsigned i=0; i<n; ++i)
+          {
+            std::cerr << "bucket #" << i << " contains: "
+                      << map_.bucket_size(i)
+                      << ' ';
+            for (auto it = map_.begin(i); it != map_.end(i); ++it)
+              {
+                std::cerr << "["; /* << it->first */
+                state_nameset_t::printit(it->first, std::cerr);
+                std::cerr << ":" << it->second << "] ";
+              }
+            std::cerr << "\n";
+          }
+#endif
+      }
+
+      /// Reserve to store at least count elements.
+      void reserve(size_t)
+      {
+        //        map_.reserve(count);
+#if 0
+        std::cerr << "Before: " << map_.max_load_factor() << '\n';
+        map_.max_load_factor(map_.max_load_factor() / 2);
+        std::cerr << "After: " << map_.max_load_factor() << '\n';
+        std::cerr << "Size: " << map_.size() << '\n';
+
+        std::cerr << "Bucket Before: " << map_.bucket_count() << '\n';
+        map_.rehash(count);
+        std::cerr << "Bucket After: " << map_.bucket_count() << '\n';
+#endif
+      }
+
       /// Insert a new state.
       ///
       /// Pass a "pair" state-name -> state.
@@ -124,6 +171,7 @@ namespace vcsn
         return map_.emplace(std::forward<Args>(args)...);
       }
 
+      /// Find an element based on its (left) key.
       auto find_key(const state_name_t& sn) const
       {
         return map_.find(sn);

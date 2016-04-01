@@ -101,6 +101,9 @@ namespace vcsn
       : ctx_{ctx}
     {}
 
+    template <typename... Args>
+    static void printit(Args&&...) {}
+
     /// Ourself, but after the application of weightset_mixin.
     ///
     /// FIXME: this is ugly.  It is due to the fact that instead of the
