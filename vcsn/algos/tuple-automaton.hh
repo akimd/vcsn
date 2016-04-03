@@ -70,7 +70,8 @@ namespace vcsn
       tuple_automata_impl(Aut aut, const Auts&... auts)
         : super_t{aut, auts...}
       {
-        aut_->todo_.push(aut_->emplace(aut_->pre_(), aut_->pre()).first);
+        aut_->todo_.push({aut_->pre_(), aut_->pre()});
+        aut_->emplace(aut_->pre_(), aut_->pre());
       }
 
       /// Compute the (accessible part of the) tuple.
@@ -78,8 +79,8 @@ namespace vcsn
       {
         while (!aut_->todo_.empty())
           {
-            const auto& i = aut_->todo_.front();
-            add_tuple_transitions(aut_->state(i), aut_->state_name(i));
+            const auto& p = aut_->todo_.front();
+            add_tuple_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop();
           }
       }

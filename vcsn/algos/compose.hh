@@ -159,8 +159,8 @@ namespace vcsn
         if (!Lazy)
           while (!aut_->todo_.empty())
             {
-              const auto& i = aut_->todo_.front();
-              add_compose_transitions(aut_->state(i), aut_->state_name(i));
+              const auto& p = aut_->todo_.front();
+              add_compose_transitions(std::get<1>(p), std::get<0>(p));
               aut_->todo_.pop();
             }
       }
@@ -228,7 +228,8 @@ namespace vcsn
       /// needed for the composition algorithm.
       void initialize_compose()
       {
-        aut_->todo_.push(aut_->emplace(aut_->pre_(), aut_->pre()).first);
+        aut_->todo_.push({aut_->pre_(), aut_->pre()});
+        aut_->emplace(aut_->pre_(), aut_->pre());
       }
 
       res_label_t join_label(const hidden_l_label_t& ll,

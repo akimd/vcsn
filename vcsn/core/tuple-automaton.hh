@@ -292,7 +292,8 @@ namespace vcsn
             res = this->new_state();
             if (Lazy)
               this->set_lazy(res);
-            todo_.push(this->emplace(std::move(sn), res).first);
+            todo_.push({sn, res});
+            this->emplace(std::move(sn), res);
           }
         else
           res = i->second;
@@ -356,7 +357,8 @@ namespace vcsn
       automata_t auts_;
 
       /// States waiting to be processed.
-      using queue_t = std::queue<typename state_bimap_t::const_iterator>;
+      using queued_state_t = std::pair<state_name_t, state_t>;
+      using queue_t = std::queue<queued_state_t>;
       queue_t todo_;
     };
   }
