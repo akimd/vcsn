@@ -11,45 +11,54 @@ namespace vcsn
   {
     namespace detail
     {
-      // A dyn label/labelset.
-      class LIBVCSN_API label
+      /// Tag for label/labelset.
+      struct label_tag
+      {};
+
+      /// Tag for weight/weightset.
+      struct weight_tag
+      {};
+
+      /// A dyn value/valueset.
+      template <typename tag>
+      class LIBVCSN_API value
       {
       public:
-        label()
+        value()
           : self_()
         {}
 
-        template <typename LabelSet>
-        label(const LabelSet& ls, const typename LabelSet::value_t& l)
-          : self_(std::make_shared<model<LabelSet>>(ls, l))
+        template <typename ValueSet>
+        value(const ValueSet& ls, const typename ValueSet::value_t& l)
+          : self_(std::make_shared<model<ValueSet>>(ls, l))
         {}
 
-        /// A description of the label type.
+        /// A description of the value type.
         symbol vname() const
         {
           return self_->vname();
         }
 
-        /// Extract wrapped typed label/labelset.
-        template <typename LabelSet>
+        /// Extract wrapped typed value.
+        template <typename ValueSet>
         auto& as()
         {
-          return dyn_cast<model<LabelSet>&>(*self_);
+          return dyn_cast<model<ValueSet>&>(*self_);
         }
 
-        /// Extract wrapped typed label/labelset.
-        template <typename LabelSet>
+        /// Extract wrapped typed value.
+        template <typename ValueSet>
         const auto& as() const
         {
-          return dyn_cast<const model<LabelSet>&>(*self_);
+          return dyn_cast<const model<ValueSet>&>(*self_);
         }
 
-        auto* operator->()
+        value<tag>* operator->()
         {
           return this;
         }
 
-        const auto* operator->() const
+        const value<tag>* operator->() const
         {
           return this;
         }
@@ -59,7 +68,7 @@ namespace vcsn
           return !self_;
         }
 
-        auto& operator=(const label& l)
+        auto& operator=(const value& l)
         {
           self_ = std::move(l.self_);
           return *this;
@@ -107,12 +116,16 @@ namespace vcsn
           const value_t value_;
         };
 
-        /// The wrapped label/labelset.
+        /// The wrapped value/valueset.
         std::shared_ptr<base> self_;
       };
+
     } // namespace detail
 
-    using label = detail::label;
+    // A class representing a label/labelset.
+    using label = detail::value<detail::label_tag>;
+    // A class representing a weight/weightset.
+    using weight = detail::value<detail::weigt_tag>;
 
   } // namespace dyn
 } // namespace vcsn

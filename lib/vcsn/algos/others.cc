@@ -1,7 +1,6 @@
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/expansion.hh>
@@ -10,6 +9,7 @@
 #include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/signature-printer.hh>
 #include <vcsn/dyn/translate.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 

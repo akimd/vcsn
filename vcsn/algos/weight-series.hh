@@ -6,7 +6,7 @@
 #include <vcsn/algos/proper.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/weightset/fwd.hh> // nmin
 
 namespace vcsn

@@ -201,12 +201,11 @@ nobase_include_HEADERS =                        \
   %D%/dyn/expansion.hh                          \
   %D%/dyn/expression.hh                         \
   %D%/dyn/fwd.hh                                \
-  %D%/dyn/label.hh                              \
   %D%/dyn/polynomial.hh                         \
   %D%/dyn/signature-printer.hh                  \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \
-  %D%/dyn/weight.hh                             \
+  %D%/dyn/value.hh                              \
   %D%/fwd.hh                                    \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \

@@ -19,7 +19,7 @@
   #include "location.hh"
   #include <vcsn/core/rat/expression.hh>
   #include <vcsn/dyn/expression.hh>
-  #include <vcsn/dyn/weight.hh>
+  #include <vcsn/dyn/value.hh>
   #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn

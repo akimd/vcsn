@@ -13,8 +13,7 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/label.hh>
-#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/stream.hh>
 

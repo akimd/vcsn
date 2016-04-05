@@ -32,12 +32,16 @@ namespace vcsn
     }
     using expansion = std::shared_ptr<const detail::expansion_base>;
 
-    // vcsn/dyn/label.hh.
+    // vcsn/dyn/value.hh.
     namespace detail
     {
-      class label;
+      struct label_tag;
+      struct weigt_tag;
+      template <typename tag>
+      class value;
     }
-    using label = detail::label;
+    using label = detail::value<detail::label_tag>;
+    using weight = detail::value<detail::weigt_tag>;
 
     // vcsn/dyn/polynomial.hh.
     namespace detail
@@ -56,13 +60,6 @@ namespace vcsn
       class expression_wrapper;
     }
     using expression = std::shared_ptr<detail::expression_base>;
-
-    // vcsn/dyn/weight.hh.
-    namespace detail
-    {
-      class weight;
-    }
-    using weight = detail::weight;
   }
 
   // vcsn/dyn/type-ast.hh.

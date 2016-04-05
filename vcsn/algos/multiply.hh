@@ -12,9 +12,8 @@
 #include <vcsn/core/join.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/polynomial.hh>
-#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh> // require
 #include <vcsn/misc/vector.hh> // make_vector
 

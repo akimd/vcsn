@@ -6,7 +6,7 @@
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/name.hh> // integral_constant
-#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/value.hh>
 
 namespace vcsn
 {

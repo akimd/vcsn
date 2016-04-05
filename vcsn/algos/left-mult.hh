@@ -9,7 +9,7 @@
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/expansion.hh>
-#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/getargs.hh>
 
 namespace vcsn

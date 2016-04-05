@@ -16,7 +16,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/labelset.hh> // make_wordset
 #include <vcsn/misc/algorithm.hh> // erase_if
 #include <vcsn/misc/map.hh>

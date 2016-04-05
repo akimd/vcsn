@@ -7,7 +7,7 @@
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/info.hh>
 #include <vcsn/core/rat/size.hh>
-#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/vector.hh>

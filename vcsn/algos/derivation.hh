@@ -4,7 +4,7 @@
 #include <vcsn/algos/split.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/fwd.hh>
-#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/raise.hh>

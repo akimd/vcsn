@@ -11,7 +11,7 @@
 #include <vcsn/dyn/expansion.hh> // dyn::make_expansion
 #include <vcsn/dyn/expression.hh> // dyn::make_expression
 #include <vcsn/dyn/polynomial.hh>
-#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh> // require
 
 namespace vcsn

@@ -2,9 +2,8 @@
 
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/polynomial.hh>
-#include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn

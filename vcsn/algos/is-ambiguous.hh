@@ -5,7 +5,7 @@
 #include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/value.hh>
 
 namespace vcsn
 {
