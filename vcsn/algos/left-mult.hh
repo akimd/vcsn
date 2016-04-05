@@ -158,11 +158,11 @@ namespace vcsn
         // incoming context is not automatically converted to the
         // supertype by vcsn::copy.
         auto ctx = make_context(*a1->labelset(),
-                                join(w1.weightset(), *a1->weightset()));
+                                join(w1.valueset(), *a1->weightset()));
         auto a2 = make_mutable_automaton(ctx);
         copy_into(a1, a2);
         using automaton_t = decltype(a2);
-        auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
+        auto w2 = ctx.weightset()->conv(w1.valueset(), w1.value());
         using weight_t = decltype(w2);
         static const auto map
           = getarg<std::function<automaton(const weight_t&, automaton_t&)>>
@@ -219,9 +219,9 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
         auto rs
-          = join_weightset_expansionset(w1.weightset(), r1.expansionset());
+          = join_weightset_expansionset(w1.valueset(), r1.expansionset());
         auto w2
-          = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
+          = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
         return make_expansion(rs, ::vcsn::left_mult(rs, w2, r2));
       }
@@ -236,7 +236,7 @@ namespace vcsn
   ///
   /// We must not perform a plain
   ///
-  /// join(w1.weightset(), r1.expressionset())
+  /// join(w1.valueset(), r1.expressionset())
   ///
   /// here.  Consider for instance
   ///
@@ -274,8 +274,8 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
         auto rs
-          = join_weightset_expressionset(w1.weightset(), r1.expressionset());
-        auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
+          = join_weightset_expressionset(w1.valueset(), r1.expressionset());
+        auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
         return make_expression(rs,
                                ::vcsn::left_mult(rs, w2, r2));
@@ -330,11 +330,11 @@ namespace vcsn
         // incoming context is not automatically converted to the
         // supertype by vcsn::copy.
         auto ctx = make_context(*a1->labelset(),
-                                join(w1.weightset(), *a1->weightset()));
+                                join(w1.valueset(), *a1->weightset()));
         auto a2 = make_mutable_automaton(ctx);
         copy_into(a1, a2);
         using automaton_t = decltype(a2);
-        auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
+        auto w2 = ctx.weightset()->conv(w1.valueset(), w1.value());
         using weight_t = decltype(w2);
         static const auto map
           = getarg<std::function<automaton(automaton_t&, const weight_t&)>>
@@ -380,9 +380,9 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
         auto rs
-          = join_weightset_expansionset(w1.weightset(), r1.expansionset());
+          = join_weightset_expansionset(w1.valueset(), r1.expansionset());
         auto w2
-          = rs.expressionset().weightset()->conv(w1.weightset(), w1.weight());
+          = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
         return make_expansion(rs, ::vcsn::right_mult(rs, r2, w2));
       }
@@ -405,8 +405,8 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
         auto rs
-          = join_weightset_expressionset(w1.weightset(), r1.expressionset());
-        auto w2 = rs.weightset()->conv(w1.weightset(), w1.weight());
+          = join_weightset_expressionset(w1.valueset(), r1.expressionset());
+        auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
         return make_expression(rs, ::vcsn::right_mult(rs, r2, w2));
       }

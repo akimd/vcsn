@@ -55,46 +55,46 @@ namespace vcsn
         }
 
       private:
-        /// Abstract wrapped typed label.
+        /// Abstract wrapped typed weight/weightset.
         struct base
         {
           virtual ~base() = default;
           virtual symbol vname() const = 0;
         };
 
-        /// Aggregate a weight and its weightset.
-        template <typename WeightSet>
+        /// A wrapped typed weight/weightset.
+        template <typename ValueSet>
         struct model final: base
         {
         public:
-          using weightset_t = WeightSet;
-          using weight_t = typename weightset_t::value_t;
+          using valueset_t = ValueSet;
+          using value_t = typename valueset_t::value_t;
 
-          model(const weightset_t& ws, const weight_t& w)
-            : weightset_(ws)
-            , weight_(w)
+          model(const valueset_t& ws, const value_t& w)
+            : valueset_(ws)
+            , value_(w)
           {}
 
           virtual symbol vname() const override
           {
-            return weightset().sname();
+            return valueset().sname();
           }
 
-          const weightset_t& weightset() const
+          const valueset_t& valueset() const
           {
-            return weightset_;
+            return valueset_;
           }
 
-          const weight_t weight() const
+          const value_t value() const
           {
-            return weight_;
+            return value_;
           }
 
         private:
-          /// The weight set.
-          const weightset_t weightset_;
-          /// The weight.
-          const weight_t weight_;
+          /// The value set.
+          const valueset_t valueset_;
+          /// The value.
+          const value_t value_;
         };
 
         std::shared_ptr<base> self_;

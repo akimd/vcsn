@@ -435,9 +435,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<WeightSetLhs>();
         const auto& r = rhs->as<WeightSetRhs>();
-        auto ws = join(l.weightset(), r.weightset());
-        auto lw = ws.conv(l.weightset(), l.weight());
-        auto rw = ws.conv(r.weightset(), r.weight());
+        auto ws = join(l.valueset(), r.valueset());
+        auto lw = ws.conv(l.valueset(), l.value());
+        auto rw = ws.conv(r.valueset(), r.value());
         return {ws, ::vcsn::multiply(ws, lw, rw)};
       }
 
@@ -447,8 +447,8 @@ namespace vcsn
       multiply_weight_repeated(const weight& wgt, int min, int max)
       {
         const auto& w = wgt->as<WeightSet>();
-        return {w.weightset(),
-                ::vcsn::multiply(w.weightset(), w.weight(),min, max)};
+        return {w.valueset(),
+                ::vcsn::multiply(w.valueset(), w.value(),min, max)};
       }
     }
   }

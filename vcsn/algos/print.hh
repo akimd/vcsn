@@ -316,7 +316,7 @@ namespace vcsn
                                  const std::string& fmt)
       {
         const auto& w = weight->as<WeightSet>();
-        return vcsn::print(w.weightset(), w.weight(), o, format(fmt));
+        return vcsn::print(w.valueset(), w.value(), o, format(fmt));
       }
     }
   }

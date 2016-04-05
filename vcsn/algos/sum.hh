@@ -218,9 +218,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<WeightSetLhs>();
         const auto& r = rhs->as<WeightSetRhs>();
-        auto rs = join(l.weightset(), r.weightset());
-        auto lr = rs.conv(l.weightset(), l.weight());
-        auto rr = rs.conv(r.weightset(), r.weight());
+        auto rs = join(l.valueset(), r.valueset());
+        auto lr = rs.conv(l.valueset(), l.value());
+        auto rr = rs.conv(r.valueset(), r.value());
         return {rs, sum(rs, lr, rr)};
       }
     }
