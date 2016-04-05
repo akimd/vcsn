@@ -108,8 +108,9 @@ namespace vcsn
       using stateset_t = Stateset;
       using state_t = typename stateset_t::value_t;
 
-      using map_t = std::map<state_name_t, state_t,
-                             vcsn::less<state_nameset_t>>;
+      using map_t = std::unordered_map<state_name_t, state_t,
+                                       vcsn::hash<state_nameset_t>,
+                                       vcsn::equal_to<state_nameset_t>>;
 
       using const_iterator = typename map_t::const_iterator;
 
