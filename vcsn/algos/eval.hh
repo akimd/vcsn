@@ -3,10 +3,10 @@
 #include <vector>
 
 #include <vcsn/ctx/traits.hh>
-#include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/label.hh>
 #include <vcsn/dyn/weight.hh>
+#include <vcsn/dyn/fwd.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/misc/algorithm.hh>
 
@@ -142,7 +142,7 @@ namespace vcsn
       eval(const automaton& aut, const label& lbl)
       {
         const auto& a = aut->as<Aut>();
-        const auto& l = lbl->as<LabelSet>().label();
+        const auto& l = lbl->as<LabelSet>().value();
         auto res = ::vcsn::eval(a, l);
         const auto& ctx = a->context();
         return {*ctx.weightset(), res};

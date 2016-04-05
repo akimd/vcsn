@@ -389,9 +389,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<LabelSetLhs>();
         const auto& r = rhs->as<LabelSetRhs>();
-        auto rs = join(l.labelset(), r.labelset());
-        auto lr = rs.conv(l.labelset(), l.label());
-        auto rr = rs.conv(r.labelset(), r.label());
+        auto rs = join(l.valueset(), r.valueset());
+        auto lr = rs.conv(l.valueset(), l.value());
+        auto rr = rs.conv(r.valueset(), r.value());
         return {rs, multiply(rs, lr, rr)};
       }
     }

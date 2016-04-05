@@ -161,8 +161,8 @@ namespace vcsn
       {
         constexpr auto tape = Tape::value;
         const auto& l = lbl->as<Label>();
-        const auto& ls = l.labelset();
-        return {ls.template set<tape>(), std::get<tape>(l.label())};
+        const auto& ls = l.valueset();
+        return {ls.template set<tape>(), std::get<tape>(l.value())};
       }
     }
   }

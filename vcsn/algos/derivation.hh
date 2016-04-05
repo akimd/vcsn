@@ -337,7 +337,7 @@ namespace vcsn
       derivation(const expression& exp, const label& lbl, bool breaking)
       {
         const auto& e = exp->as<ExpSet>();
-        const auto& l = lbl->as<Label>().label();
+        const auto& l = lbl->as<Label>().value();
         const auto& rs = e.expressionset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);
         return make_polynomial(ps,

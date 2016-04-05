@@ -11,6 +11,7 @@ namespace vcsn
   {
     namespace detail
     {
+      // A dyn label/labelset.
       class LIBVCSN_API label
       {
       public:
@@ -29,14 +30,14 @@ namespace vcsn
           return self_->vname();
         }
 
-        /// Extract wrapped typed label.
+        /// Extract wrapped typed label/labelset.
         template <typename LabelSet>
         auto& as()
         {
           return dyn_cast<model<LabelSet>&>(*self_);
         }
 
-        /// Extract wrapped typed label.
+        /// Extract wrapped typed label/labelset.
         template <typename LabelSet>
         const auto& as() const
         {
@@ -65,48 +66,48 @@ namespace vcsn
         }
 
       private:
-        /// Abstract wrapped typed automaton.
+        /// Abstract wrapped typed label/labelset.
         struct base
         {
           virtual ~base() = default;
           virtual symbol vname() const = 0;
         };
 
-        /// A wrapped typed automaton.
-        template <typename LabelSet>
+        /// A wrapped typed label/labelset.
+        template <typename ValueSet>
         struct model final : base
         {
-          using labelset_t = LabelSet;
-          using label_t = typename labelset_t::value_t;
+          using valueset_t = ValueSet;
+          using value_t = typename valueset_t::value_t;
 
-          model(const labelset_t& ls, const label_t& l)
-            : labelset_(std::move(ls))
-            , label_(std::move(l))
+          model(const valueset_t& ls, const value_t& l)
+            : valueset_(std::move(ls))
+            , value_(std::move(l))
           {}
 
           virtual symbol vname() const override
           {
-            return labelset().sname();
+            return valueset().sname();
           }
 
-          const labelset_t& labelset() const
+          const valueset_t& valueset() const
           {
-            return labelset_;
+            return valueset_;
           }
 
-          const label_t label() const
+          const value_t value() const
           {
-            return label_;
+            return value_;
           }
 
         private:
-          /// The label set.
-          const labelset_t labelset_;
-          /// The label.
-          const label_t label_;
+          /// The value set.
+          const valueset_t valueset_;
+          /// The value.
+          const value_t value_;
         };
 
-        /// The wrapped LabelSet.
+        /// The wrapped label/labelset.
         std::shared_ptr<base> self_;
       };
     } // namespace detail

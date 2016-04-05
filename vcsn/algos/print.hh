@@ -12,9 +12,9 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/label.hh>
+#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/polynomial.hh>
-#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/weight.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/format.hh>
@@ -231,7 +231,7 @@ namespace vcsn
                                 const std::string& fmt)
       {
         const auto& l = label->as<LabelSet>();
-        return vcsn::print(l.labelset(), l.label(), o, format(fmt));
+        return vcsn::print(l.valueset(), l.value(), o, format(fmt));
       }
     }
   }

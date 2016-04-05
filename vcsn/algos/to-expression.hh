@@ -635,7 +635,7 @@ namespace vcsn
         const auto& c = ctx->as<Context>();
         const auto& l = lbl->as<Label>();
         auto rs = vcsn::make_expressionset(c, ids);
-        return make_expression(rs, rs.atom(l.label()));
+        return make_expression(rs, rs.atom(l.value()));
       }
     }
   }

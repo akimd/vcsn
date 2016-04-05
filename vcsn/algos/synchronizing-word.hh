@@ -73,7 +73,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         const auto& w = word->as<LabelSet>();
-        return vcsn::is_synchronized_by(a, w.label());
+        return vcsn::is_synchronized_by(a, w.value());
       }
     }
   }
