@@ -8,10 +8,18 @@
 
 namespace vcsn
 {
+  /// Yen implementation.
+  ///
+  /// Retrieve the K lightest path in an automaton.
   struct yen_tag {};
 
   namespace detail
   {
+    /// Yen implementation of the K lightest automaton algorithm.
+    ///
+    /// Functor initialized by the automaton on which the lightest paths will
+    /// be computed. And called with the source and destination states of the
+    /// path, as long as the number (k) of paths to retrieve.
     template <Automaton Aut>
     struct yen_impl
     {

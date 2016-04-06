@@ -14,6 +14,7 @@ namespace vcsn
 {
   namespace detail
   {
+    /// Enables or not the presence of a container in a class.
     template <typename Container, bool Has = false>
     class optional_container
     {
@@ -36,6 +37,9 @@ namespace vcsn
     };
 
     /// Hide some states of an automaton.
+    ///
+    /// Parametrized on whether or not to consider transitions while filtering,
+    /// and whether or not the filtering sets are excluding or including elements.
     template <Automaton Aut, bool Trans = false, bool Exclusion = false>
     class filter_automaton_impl
       : public automaton_decorator<Aut>
@@ -208,6 +212,8 @@ namespace vcsn
           ss_.erase(s);
       }
 
+      /// Hide a transition from the automaton.
+      /// Only available if the filter_automaton filters with the transitions.
       template <bool U = Trans>
       std::enable_if_t<U, void>
       hide_trans(transition_t t)
