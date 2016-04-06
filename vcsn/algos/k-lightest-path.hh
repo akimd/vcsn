@@ -4,6 +4,7 @@
 
 #include <vcsn/algos/dijkstra.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/algos/filter.hh>
 
 namespace vcsn
 {
@@ -15,11 +16,17 @@ namespace vcsn
     struct yen_impl
     {
       using automaton_t = Aut;
+      using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using path_t = std::vector<transition_t>;
       using paths_t = std::vector<path_t>;
+
+      using wordset_context_t = word_context_t<context_t>;
+      using polynomialset_t = polynomialset<wordset_context_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
+      using monomial_t = typename polynomialset_t::monomial_t;
 
       yen_impl(const automaton_t& aut)
         : aut_(aut)
@@ -27,26 +34,32 @@ namespace vcsn
 
       struct profile
       {
-        profile(const path_t& path, const weight_t& w, const automaton_t& aut)
+        profile(const path_t& path, const monomial_t& m, const polynomialset_t& ps)
           : path_(path)
-          , w_(w)
-          , aut_(aut)
+          , m_(m)
+          , ps_(ps)
         {}
 
         bool operator<(const profile& rhs) const
         {
-          return aut_->weightset()->less(rhs.w_, w_);
+          if (ps_.weightset()->less(rhs.m_.second, m_.second))
+            return true;
+          else if (ps_.weightset()->less(m_.second, rhs.m_.second))
+            return false;
+          else
+            return ps_.labelset()->less(rhs.m_.first, m_.first);
         }
 
         path_t path_;
-        weight_t w_;
-        const automaton_t& aut_;
+        monomial_t m_;
+        const polynomialset_t& ps_;
       };
 
       using heap_t = boost::heap::fibonacci_heap<profile>;
 
+      template <Automaton AnyAut>
       path_t
-      path(const Aut& aut,
+      path(const AnyAut& aut,
            const path_t& path,
            state_t_of<Aut> src = Aut::element_type::pre(),
            state_t_of<Aut> dst = Aut::element_type::post())
@@ -66,7 +79,12 @@ namespace vcsn
       paths_t
       operator()(state_t src, state_t dst, unsigned k)
       {
+        auto all_states = aut_->all_states();
+        auto ss = std::unordered_set<state_t>(all_states.begin(), all_states.end());
+        auto all_trans = aut_->all_transitions();
+        auto ts = std::unordered_set<transition_t>(all_trans.begin(), all_trans.end());
         auto res = paths_t{path(aut_, lightest_path(aut_, src, dst, dijkstra_tag{}), src, dst)};
+        auto ps = make_word_polynomialset(aut_->context());
 
         auto heap = heap_t();
 
@@ -75,10 +93,8 @@ namespace vcsn
             const auto& prev = res[i - 1];
             for (unsigned j = 0u; j < prev.size(); j++)
               {
-                auto copy_aut = make_fresh_automaton(aut_);
-                auto copier = make_copier(aut_, copy_aut);
-                copier();
-                auto spur_node = copier.state_map()[aut_->src_of(prev[j])];
+                auto filter_aut = filter<automaton_t, true>(aut_, ss, ts);
+                auto spur_node = filter_aut->src_of(prev[j]);
                 auto root_path = path_t(prev.begin(), prev.begin() + j);
 
                 for (const auto& selected_path: res)
@@ -87,28 +103,26 @@ namespace vcsn
                       auto diff = std::mismatch(root_path.begin(), root_path.end(),
                                                 selected_path.begin(), selected_path.begin() + j);
                       if (diff.first == root_path.end()
-                          && copy_aut->has_transition(selected_path[j]))
-                        copy_aut->del_transition(selected_path[j]);
+                          && filter_aut->has_transition(selected_path[j]))
+                        filter_aut->hide_trans(selected_path[j]);
                     }
 
                 for (auto t: root_path)
-                  if (t != aut_->null_transition()
-                      && copy_aut->src_of(t) != spur_node
-                      && copy_aut->src_of(t) != aut_->pre()
-                      && copy_aut->has_state(copy_aut->src_of(t)))
-                    copy_aut->del_state(copy_aut->src_of(t));
+                  if (t != filter_aut->null_transition()
+                      && filter_aut->src_of(t) != spur_node
+                      && filter_aut->src_of(t) != aut_->pre()
+                      && filter_aut->has_state(filter_aut->src_of(t)))
+                    filter_aut->hide_state(filter_aut->src_of(t));
 
-                auto shortest_path = lightest_path(copy_aut, spur_node, dst, dijkstra_tag{});
-                auto spur_path = path(copy_aut, shortest_path, spur_node, dst);
+                auto shortest_path = lightest_path(filter_aut, spur_node, dst, dijkstra_tag{});
+                auto spur_path = path(filter_aut, shortest_path, spur_node, dst);
                 root_path.insert(root_path.end(), spur_path.begin(), spur_path.end());
                 if (!root_path.empty()
-                  && copy_aut->src_of(root_path.front()) == src
-                  && copy_aut->dst_of(root_path.back()) == dst)
+                    && filter_aut->src_of(root_path.front()) == src
+                    && filter_aut->dst_of(root_path.back()) == dst)
                   {
-                    weight_t weight = aut_->weightset()->one();
-                    for (auto t : root_path)
-                      weight = aut_->weightset()->mul(weight, aut_->weight_of(t));
-                    heap.emplace(std::move(root_path), weight, aut_);
+                    auto m = *path_monomial(filter_aut, format_lightest(filter_aut, root_path), src, dst);
+                    heap.emplace(std::move(root_path), m, ps);
                   }
               }
             if (heap.empty())
@@ -116,7 +130,6 @@ namespace vcsn
             res.push_back(heap.top().path_);
             heap.pop();
           }
-
         return res;
       }
 
