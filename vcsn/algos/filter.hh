@@ -8,15 +8,38 @@
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/unordered_set.hh>
 #include <vcsn/misc/vector.hh>
+#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
   namespace detail
   {
+    template <typename Container, bool Has = false>
+    class optional_container
+    {
+    public:
+      template <typename... Args>
+      optional_container(Args&&...)
+      {}
+    };
+
+    template <typename Container>
+    class optional_container<Container, true>
+    {
+    public:
+      template <typename... Args>
+      optional_container(Args&&... args)
+        : cont_(std::forward<Args>(args)...)
+      {}
+    protected:
+      Container cont_;
+    };
+
     /// Hide some states of an automaton.
-    template <Automaton Aut>
+    template <Automaton Aut, bool Trans = false>
     class filter_automaton_impl
       : public automaton_decorator<Aut>
+      , public optional_container<std::unordered_set<transition_t_of<Aut>>, Trans>
     {
     public:
       using automaton_t = Aut;
@@ -31,6 +54,8 @@ namespace vcsn
       /// accessible states are std::unordered_set the
       /// score(perfomance) is better(x2) than using std::set.
       using states_t = std::unordered_set<state_t>;
+      using transitions_t = std::unordered_set<transition_t>;
+      using optional_container_t = optional_container<transitions_t, Trans>;
 
       using tr_cont_t = std::vector<transition_t>;
 
@@ -39,8 +64,10 @@ namespace vcsn
       using super_t::src_of;
       using super_t::dst_of;
 
-      filter_automaton_impl(const automaton_t& input, const states_t& ss)
-        : super_t(input), ss_(ss)
+      filter_automaton_impl(const automaton_t& input,
+                            const states_t& ss,
+                            const transitions_t& ts = {})
+        : super_t(input), optional_container_t(ts), ss_(ss)
       {
         ss_.emplace(input->pre());
         ss_.emplace(input->post());
@@ -70,6 +97,20 @@ namespace vcsn
       bool has_state(state_t s) const
       {
         return has(ss_, s) && aut_->has_state(s);
+      }
+
+      using super_t::has_transition;
+
+      template <bool U = Trans>
+      std::enable_if_t<U, bool>
+      has_transition(transition_t t) const
+      {
+        return static_if<Trans>(
+                      [this](auto t)
+                      {
+                        return has(this->cont_, t) && aut_->has_transition(t);
+                      },
+                      [](auto) { return true; })(t);
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
@@ -121,8 +162,9 @@ namespace vcsn
           (aut_,
            [this](transition_t t)
            {
-             return (has(ss_, aut_->src_of(t))
-                     && has(ss_, aut_->dst_of(t)));
+             return has_transition(t)
+                    && has(ss_, aut_->src_of(t))
+                    && has(ss_, aut_->dst_of(t));
            });
       }
 
@@ -132,7 +174,8 @@ namespace vcsn
         return vcsn::detail::all_out(aut_, s,
                                      [this](transition_t t)
                                      {
-                                       return has(ss_, aut_->dst_of(t));
+                                      return has_transition(t)
+                                             && has(ss_, aut_->dst_of(t));
                                      });
       }
 
@@ -142,8 +185,22 @@ namespace vcsn
         return vcsn::detail::all_in(aut_, s,
                                     [this](transition_t t)
                                     {
-                                      return has(ss_, aut_->src_of(t));
+                                      return has_transition(t)
+                                             && has(ss_, aut_->src_of(t));
                                     });
+      }
+
+      void
+      hide_state(state_t s)
+      {
+        ss_.erase(s);
+      }
+
+      template <bool U = Trans>
+      std::enable_if_t<U, void>
+      hide_trans(transition_t t)
+      {
+        optional_container_t::cont_.erase(t);
       }
 
       fresh_automaton_t_of<automaton_t>
@@ -162,16 +219,19 @@ namespace vcsn
    };
   }
 
-  template <Automaton Aut>
+  template <Automaton Aut, bool Trans = false>
   using filter_automaton =
-    std::shared_ptr<detail::filter_automaton_impl<Aut>>;
+    std::shared_ptr<detail::filter_automaton_impl<Aut, Trans>>;
 
   /// Get an automaton who is a part state set \a ss of \a aut.
-  template <Automaton Aut>
-  filter_automaton<Aut>
-  filter(const Aut& aut, const std::unordered_set<state_t_of<Aut>>& ss)
+  template <Automaton Aut, bool Trans = false>
+  filter_automaton<Aut, Trans>
+  filter(const Aut& aut,
+         const std::unordered_set<state_t_of<Aut>>& ss,
+         const std::unordered_set<transition_t_of<Aut>>& ts
+           = std::unordered_set<transition_t_of<Aut>>{})
   {
-    return make_shared_ptr<filter_automaton<Aut>>(aut, ss);
+    return make_shared_ptr<filter_automaton<Aut, Trans>>(aut, ss, ts);
   }
 
   namespace dyn
