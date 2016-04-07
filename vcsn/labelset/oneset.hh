@@ -124,7 +124,7 @@ namespace vcsn
       return l && r;
     }
 
-    static std::ostream& print(const value_t, std::ostream& o,
+    static std::ostream& print(const value_t, std::ostream& o = std::cout,
                                format = {})
     {
       return o;

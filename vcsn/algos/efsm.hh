@@ -32,7 +32,7 @@ namespace vcsn
       static constexpr size_t value = sizeof...(LabelSet);
     };
 
-    /// \brief Format automaton to EFSM format, based on FSM format.
+    /// \brief Print automaton to EFSM format, based on FSM format.
     ///
     /// \tparam Aut an automaton type, not a pointer type.
     ///
@@ -338,12 +338,12 @@ namespace vcsn
   }
 
 
-  /// \brief Format automaton to EFSM format, based on FSM format.
+  /// \brief Print automaton to EFSM format, based on FSM format.
   ///
   /// \tparam Aut an automaton type.
   template <Automaton Aut>
   std::ostream&
-  efsm(const Aut& aut, std::ostream& out)
+  efsm(const Aut& aut, std::ostream& out = std::cout)
   {
     auto efsm = detail::efsmer<Aut>{aut, out};
     efsm();

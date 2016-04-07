@@ -280,11 +280,11 @@ namespace vcsn
     /// \param out  the output stream where to print the info
     /// \param detailed
     ///    whether to print even facts costly to compute.
-    std::ostream& info(const automaton& aut, std::ostream& out,
+    std::ostream& info(const automaton& aut, std::ostream& out = std::cout,
                        bool detailed = false);
 
     /// Output various facts about \a exp.
-    std::ostream& info(const expression& exp, std::ostream& out);
+    std::ostream& info(const expression& exp, std::ostream& out = std::cout);
 
     /// Split automaton on the incoming transition.
     /// Every state either has only epsilon incoming transitions
@@ -550,7 +550,7 @@ namespace vcsn
     /// Create a prefix automaton from \a aut.
     automaton prefix(const automaton& aut);
 
-    /// Print automaton \a a on \a o using format \a format.
+    /// Print automaton \a a on \a out using format \a format.
     ///
     /// \param aut  the automaton to format
     /// \param out  the output stream where to print the dot file
@@ -564,38 +564,38 @@ namespace vcsn
     ///    - "fado"     FAdo format.
     ///    - "grail"    Grail format.
     ///    - "tikz"     LaTeX's TikZ format.
-    std::ostream& print(const automaton& aut, std::ostream& out,
+    std::ostream& print(const automaton& aut, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Print context \a c on \a o using format \a format.
-    std::ostream& print(const context& c, std::ostream& o,
+    /// Print context \a c on \a out using format \a format.
+    std::ostream& print(const context& c, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Print expansion \a e on \a o using format \a format.
-    std::ostream& print(const expansion& e, std::ostream& o,
+    /// Print expansion \a e on \a out using format \a format.
+    std::ostream& print(const expansion& e, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Print expression \a e on \a o using format \a format.
-    std::ostream& print(const expression& e, std::ostream& o,
+    /// Print expression \a e on \a out using format \a format.
+    std::ostream& print(const expression& e, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Print label \a l on \a o using format \a format.
-    std::ostream& print(const label& l, std::ostream& o,
+    /// Print label \a l on \a out using format \a format.
+    std::ostream& print(const label& l, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Print polynomial \a p on \a o using format \a format.
-    std::ostream& print(const polynomial& p, std::ostream& o,
+    /// Print polynomial \a p on \a out using format \a format.
+    std::ostream& print(const polynomial& p, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Print weight \a w on \a o using format \a format.
-    std::ostream& print(const weight& w, std::ostream& o,
+    /// Print weight \a w on \a out using format \a format.
+    std::ostream& print(const weight& w, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
-    /// Specify the output format for \a o.
-    void set_format(std::ostream& o, const std::string& format);
+    /// Specify the output format for \a out.
+    void set_format(std::ostream& out, const std::string& format);
 
-    /// Get the output format for \a o.
-    std::string get_format(std::ostream& o);
+    /// Get the output format for \a out.
+    std::string get_format(std::ostream& out);
 
     /// Keep a single tape from a multiple-tape automaton.
     automaton project(const automaton& aut, unsigned tape);

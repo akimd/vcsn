@@ -144,7 +144,7 @@ namespace vcsn
 
     /// \brief Format an automaton into Fado.
     ///
-    /// \tparam Aut an automaton type, not a pointer type.
+    /// \tparam Aut an automaton type.
     template <Automaton Aut>
     class fadoer: public printer<Aut>
     {
@@ -196,12 +196,14 @@ namespace vcsn
         return false;
       }
     };
-
   }
 
+  /// \brief Format automaton to FAdo format.
+  ///
+  /// \tparam Aut an automaton type.
   template <Automaton Aut>
   std::ostream&
-  fado(const Aut& aut, std::ostream& out)
+  fado(const Aut& aut, std::ostream& out = std::cout)
   {
     auto fado = detail::fadoer<Aut>{aut, out};
     fado();
@@ -216,9 +218,9 @@ namespace vcsn
 
   namespace detail
   {
-    /// \brief Format an automaton into Fado.
+    /// \brief Print an automaton in Fado format.
     ///
-    /// \tparam Aut an automaton type, not a pointer type.
+    /// \tparam Aut an automaton type.
     ///
     /// See https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf.
     template <Automaton Aut>
@@ -267,6 +269,9 @@ namespace vcsn
     };
   }
 
+  /// \brief Print automaton in Grail format.
+  ///
+  /// \tparam Aut an automaton type.
   template <Automaton Aut>
   std::ostream&
   grail(const Aut& aut, std::ostream& out)

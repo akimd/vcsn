@@ -714,7 +714,8 @@ namespace vcsn
     }
 
     /// Print a transition, for debugging.
-    std::ostream& print(transition_t t, std::ostream& o) const
+    std::ostream& print(transition_t t, std::ostream& o,
+                        format fmt = {}) const
     {
       if (t == null_transition())
         o << "null_transition";
@@ -723,8 +724,8 @@ namespace vcsn
       else
         {
           print_state_name(src_of(t), o) << " -- <";
-          weightset()->print(weight_of(t), o) << '>';
-          labelset()->print(label_of(t), o) << " --> ";
+          weightset()->print(weight_of(t), o, fmt.for_weights()) << '>';
+          labelset()->print(label_of(t), o, fmt.for_labels()) << " --> ";
           print_state_name(dst_of(t), o);
         }
       return o;

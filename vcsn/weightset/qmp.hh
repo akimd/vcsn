@@ -169,7 +169,7 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(const value_t v, std::ostream& o,
+    print(const value_t v, std::ostream& o = std::cout,
           format fmt = {})
     {
       if (fmt == format::latex)

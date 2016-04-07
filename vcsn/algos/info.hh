@@ -69,7 +69,7 @@ namespace vcsn
 
   template <Automaton Aut>
   std::ostream&
-  info(const Aut& aut, std::ostream& out, bool detailed = false)
+  info(const Aut& aut, std::ostream& out = std::cout, bool detailed = false)
   {
     out << "type: ";
     aut->print_set(out, format::sname) << '\n';
@@ -144,7 +144,7 @@ namespace vcsn
   template <typename ExpSet>
   void
   info(const ExpSet& rs, const typename ExpSet::value_t& e,
-       std::ostream& o)
+       std::ostream& o = std::cout)
   {
     o << "type: ";
     rs.print_set(o, format::sname);

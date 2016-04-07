@@ -308,7 +308,8 @@ namespace vcsn
       raise(sname(), ": ranges not implemented");
     }
 
-    auto print(const value_t& v, std::ostream& o, format fmt = {}) const
+    auto print(const value_t& v,
+               std::ostream& o = std::cout, format fmt = {}) const
       -> std::ostream&;
 
     /// Format the description of this expressionset.

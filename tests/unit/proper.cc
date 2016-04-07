@@ -15,16 +15,16 @@
 using namespace vcsn;
 
 template <Automaton Aut>
-void print(const Aut& a)
+void print_info(const Aut& a)
 {
-  vcsn::info(a, std::cout) << std::endl;
+  vcsn::info(a, std::cout) << '\n';
 }
 
 /// Test des lal (booléens)
 static void check_lal_b()
 {
-  set_alphabet<char_letters> al{'a','b'};
-  ctx::lal_char_b ctx{al};
+  auto al = set_alphabet<char_letters>{'a','b'};
+  auto ctx = ctx::lal_char_b{al};
   using automaton_t = mutable_automaton<ctx::lal_char_b>;
   using state_t = state_t_of<automaton_t>;
 
@@ -36,17 +36,17 @@ static void check_lal_b()
     res->set_transition(s[i],s[(i+1)%3],'a');
   res->set_initial(s[0]);
   res->set_final(s[1]);
-  std::cout << "***LAL***" << std::endl;
-  print(res);
-  std::cout << "proper:" << std::endl;
+  std::cout << "***LAL***" << '\n';
+  print_info(res);
+  std::cout << "proper:" << '\n';
   automaton_t pro = proper(res);
-  print(pro);
-  std::cout << "forward_proper:" << std::endl;
+  print_info(pro);
+  std::cout << "forward_proper:" << '\n';
   automaton_t pro2 = proper(res, direction::forward);
-  print(pro2);
-  std::cout << "proper_here:" << std::endl;
+  print_info(pro2);
+  std::cout << "proper_here:" << '\n';
   proper_here(res);
-  print(res);
+  print_info(res);
 }
 
 /// Test des law booléens
@@ -68,17 +68,17 @@ static void check_law_char_b()
   res->set_initial(s[0]);
   res->set_final(s[1]);
 
-  std::cout << "***LAW***" << std::endl;
-  print(res);
-  std::cout << "proper:" << std::endl;
+  std::cout << "***LAW***" << '\n';
+  print_info(res);
+  std::cout << "proper:" << '\n';
   automaton_t pro = proper(res);
-  print(pro);
-  std::cout << "forward_proper:" << std::endl;
+  print_info(pro);
+  std::cout << "forward_proper:" << '\n';
   automaton_t pro2 = proper(res, direction::forward);
-  print(pro2);
-  std::cout << "proper_here:" << std::endl;
+  print_info(pro2);
+  std::cout << "proper_here:" << '\n';
   proper_here(res);
-  print(res);
+  print_info(res);
 }
 
 // Test des lal-char-z
@@ -97,14 +97,14 @@ static void check_lal_char_z()
     res->set_transition(s[i],s[(i+1)%3],'a',2);
   res->set_initial(s[0]);
   res->set_final(s[1]);
-  std::cout << "***LAL Z***" << std::endl;
-  print(res);
-  std::cout << "proper:" << std::endl;
+  std::cout << "***LAL Z***" << '\n';
+  print_info(res);
+  std::cout << "proper:" << '\n';
   automaton_t pro = proper(res);
-  print(pro);
-  std::cout << "proper_here:" << std::endl;
+  print_info(pro);
+  std::cout << "proper_here:" << '\n';
   proper_here(res);
-  print(res);
+  print_info(res);
 }
 
 /// Test des law Z
@@ -126,30 +126,30 @@ static void check_law_char_z()
   res->set_initial(s[0]);
   res->set_final(s[1]);
 
-  std::cout << "***LAW Z***" << std::endl;
-  std::cout << "* Circuit of eps-transition" << std::endl;
-  print(res);
+  std::cout << "***LAW Z***" << '\n';
+  std::cout << "* Circuit of eps-transition" << '\n';
+  print_info(res);
   try {
     automaton_t pro = proper(res);
-    print(pro);
+    print_info(pro);
   }
   catch(std::runtime_error& e) {
-    std::cout << "Exception: " << e.what() << std::endl;
+    std::cout << "Exception: " << e.what() << '\n';
   }
   res->del_transition(s[1],s[0], "");
-  std::cout << "* No circuit of eps-transition" << std::endl;
-  print(res);
+  std::cout << "* No circuit of eps-transition" << '\n';
+  print_info(res);
   //dot(res,std::cerr);
-  std::cout << "proper:" << std::endl;
+  std::cout << "proper:" << '\n';
   automaton_t pro = proper(res);
-  print(pro);
-  std::cout << "forward_proper:" << std::endl;
+  print_info(pro);
+  std::cout << "forward_proper:" << '\n';
   automaton_t pro2 = proper(res, direction::forward);
-  print(pro2);
+  print_info(pro2);
   //dot(pro2,std::cerr);
-  std::cout << "proper_here:" << std::endl;
+  std::cout << "proper_here:" << '\n';
   proper_here(res);
-  print(res);
+  print_info(res);
 }
 
 /// Test des law Zmin
@@ -171,30 +171,30 @@ static void check_law_char_zmin()
     res->set_transition(s[i],s[(i+2)%3],"",-1);
   res->set_initial(s[0]);
   res->set_final(s[1]);
-  std::cout << "***LAW Z-min+***" << std::endl;
-  std::cout << "* Circuit of eps-transition" << std::endl;
-  print(res);
+  std::cout << "***LAW Z-min+***" << '\n';
+  std::cout << "* Circuit of eps-transition" << '\n';
+  print_info(res);
   try {
     automaton_t pro = proper(res);
-    print(pro);
+    print_info(pro);
   }
   catch(std::runtime_error& e) {
-    std::cout << "Exception: " << e.what() << std::endl;
+    std::cout << "Exception: " << e.what() << '\n';
   }
   res->set_transition(s[1],s[0], "",3);
-  std::cout << "* No negative circuit" << std::endl;
-  print(res);
+  std::cout << "* No negative circuit" << '\n';
+  print_info(res);
   //dot(res,std::cerr);
-  std::cout << "proper:" << std::endl;
+  std::cout << "proper:" << '\n';
   automaton_t pro = proper(res);
-  print(pro);
-  std::cout << "forward_proper:" << std::endl;
+  print_info(pro);
+  std::cout << "forward_proper:" << '\n';
   automaton_t pro2 = proper(res, direction::forward);
-  print(pro2);
-  dot(pro2, std::cout) << std::endl;
-  std::cout << "proper_here:" << std::endl;
+  print_info(pro2);
+  dot(pro2, std::cout) << '\n';
+  std::cout << "proper_here:" << '\n';
   proper_here(res);
-  print(res);
+  print_info(res);
 }
 
 

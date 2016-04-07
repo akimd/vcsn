@@ -252,7 +252,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const value_t& l, std::ostream& o,
+    print(const value_t& l, std::ostream& o = std::cout,
           format fmt = {}) const
     {
       if (is_one(l))

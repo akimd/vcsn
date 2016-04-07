@@ -374,7 +374,7 @@ namespace vcsn
   /// \param fmt     how to format the automaton.
   template <Automaton Aut>
   std::ostream&
-  dot(const Aut& aut, std::ostream& out, format fmt = {})
+  dot(const Aut& aut, std::ostream& out = std::cout, format fmt = {})
   {
     detail::dotter<Aut> dot{aut, out, fmt};
     return dot();

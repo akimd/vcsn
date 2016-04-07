@@ -74,7 +74,8 @@ namespace vcsn
 
   template <Automaton Aut>
   std::ostream&
-  print(const Aut& aut, std::ostream& out, const std::string& fmt)
+  print(const Aut& aut,
+        std::ostream& out = std::cout, const std::string& fmt = "default")
   {
     static const auto map
       = getarg<std::function<void(const Aut&, std::ostream&)>>
@@ -140,12 +141,11 @@ namespace vcsn
 
   /// Print a value thanks to a valueset.
   ///
-  /// Applies to (ValueSet, Value, ostream, string): for expansionset,
-  /// polynomialset, expressionset, and weightset.
+  /// Applies for expansions, expressions, labels, polynomials, and weights.
   template <typename ValueSet>
   std::ostream&
   print(const ValueSet& vs, const typename ValueSet::value_t& v,
-        std::ostream& o, format fmt)
+        std::ostream& o = std::cout, format fmt = {})
   {
     return vs.print(v, o, format(fmt));
   }
@@ -175,17 +175,8 @@ namespace vcsn
   std::ostream&
   print(const expressionset<Context>& rs,
         const typename expressionset<Context>::value_t& r,
-        std::ostream& o, format fmt)
-  {
-    return rs.print(r, o, format(fmt));
-  }
-
-  /// Print an expression.
-  template <typename Context>
-  std::ostream&
-  print(const expressionset<Context>& rs,
-        const typename expressionset<Context>::value_t& r,
-        std::ostream& o, const std::string& fmt)
+        std::ostream& o = std::cout,
+        const std::string& fmt = "default")
   {
     if (fmt == "dot" || fmt == "dot,logical")
       {
@@ -242,7 +233,7 @@ namespace vcsn
   template <typename PolynomialSet>
   std::ostream&
   list(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
-       std::ostream& o)
+       std::ostream& o = std::cout)
   {
     bool first = true;
     for (const auto& m: p)
@@ -293,17 +284,6 @@ namespace vcsn
   /*------------------------.
   | print(weight, stream).  |
   `------------------------*/
-
-#if 0
-  /// See ExpansionSet.
-  template <typename WeightSet>
-  std::ostream&
-  print(const WeightSet& ws, const typename WeightSet::value_t& w,
-        std::ostream& o)
-  {
-    return ws.print(w, o);
-  }
-#endif
 
   namespace dyn
   {

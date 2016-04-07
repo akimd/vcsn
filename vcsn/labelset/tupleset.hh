@@ -510,7 +510,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const value_t& l, std::ostream& o,
+    print(const value_t& l, std::ostream& o = std::cout,
           format fmt = {}) const
     {
       return this->print_(l, o,
