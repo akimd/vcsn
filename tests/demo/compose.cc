@@ -13,67 +13,64 @@
  *
  * Creation of an automaton, composition, then display.
  */
-int main(int argc, const char *argv[])
+int main()
 {
   using namespace vcsn;
 
-  /// Alphabet
+  /// Basic alphabet type.
   using alphabet_t = set_alphabet<char_letters>;
 
-  /// Letterset (labelset with a simple alphabet)
+  /// Letterset (single-tape labelset).
   using letterset_t = letterset<alphabet_t>;
 
-  /// Tupleset (two-tape labelset)
-  using tupleset_t = tupleset<letterset_t, letterset_t>;
+  /// Create the letterset.
+  auto ls1 = letterset_t{'a'};
 
-  /// Context of the automaton: lat<lal_char, lal_char>, b
-  using context_t = context<tupleset_t, b>;
+  /// Labelset (double-tape).
+  using labelset_t = tupleset<letterset_t, letterset_t>;
 
-  /// Type of the automaton
-  using automaton_t = mutable_automaton<context_t>;
+  /// Create the double-tape labelset.
+  auto ls = labelset_t{ls1, ls1};
 
-  /// Create the letterset
-  // It's open, we can add letters to the alphabet
-  auto al1 = letterset_t();
 
-  /// Create the labelset (tupleset)
-  auto tp = tupleset_t{{al1}, {al1}};
+  /// Context of the automaton: lat<lal_char, lal_char>, b.
+  using context_t = context<labelset_t, b>;
 
   /// Create the context from the labelset
   // no parameter for the weightset, as it's just B
-  context_t ctx1 {tp};
+  auto ctx = context_t{ls};
 
-  /// Create an empty automaton, from the context
-  auto l = make_mutable_automaton(ctx1);
+
+  /// Create an empty automaton (transducer), from the context.
+  auto t = make_mutable_automaton(ctx);
 
   /// Add a state.
   // p is a state identifier, probably 0
-  auto p = l->new_state();
-  auto q = l->new_state();
+  auto p = t->new_state();
+  auto q = t->new_state();
 
-  /// Make p initial
-  l->set_initial(p);
-  /// Transition from p to q, with label "a|a"
-  l->new_transition(p, q, ctx1.labelset()->tuple('a', 'a'));
+  /// Make p initial.
+  t->set_initial(p);
+  /// Transition from p to q, with label "a|a".
+  t->new_transition(p, q, ctx.labelset()->tuple('a', 'a'));
   /// Make q final
-  l->set_final(q);
+  t->set_final(q);
 
   // The automaton looks like:
   // --> p --(a|a)--> q -->
 
   /// Lazy composition with itself
-  auto c = compose_lazy(l, l);
+  auto c = compose_lazy(t, t);
 
-  /// Display the automaton on standard output
-  // It's not complete, because it's a lazy composition
-  dot(c, std::cout);
+  /// Display the resulting automaton on standard output.
+  // It's partial, because it's a lazy composition.
+  dot(c, std::cout) << '\n';
 
-  /// Compute the accessible states of c, thus resolving all the states
+  /// Compute the accessible states of c, thus resolving all the states.
   auto d = accessible(c);
 
-  /// Display d
-  dot(d, std::cout);
-  /// Display c, all the states have been resolved
-  dot(c, std::cout);
-  return 0;
+  /// Display d.
+  dot(d, std::cout) << '\n';
+  /// Display c, all the states have been resolved.
+  dot(c, std::cout) << '\n';
 }

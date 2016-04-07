@@ -12,12 +12,15 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 # Not check_PROGRAMS, see below why.
-EXTRA_PROGRAMS +=                               \
+EXTRA_PROGRAMS +=				\
+  %D%/compose					\
   %D%/prod-eval
 
+%C%_compose_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_prod_eval_LDADD = $(all_libctx) $(unit_ldadd)
 
-%C%_TESTS =                                    \
+%C%_TESTS =					\
+  %D%/compose.chk				\
   %D%/prod-eval.chk
 
 dist_TESTS += $(%C%_TESTS)
@@ -25,6 +28,7 @@ dist_TESTS += $(%C%_TESTS)
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
+%D%/compose.log: %D%/compose
 %D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tafkit
 
 .PHONY: check-demo
