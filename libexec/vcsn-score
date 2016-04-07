@@ -48,13 +48,13 @@ def ws_signature(ws):
 def ctx_signature(ctx):
     '''A short, nice looking, description of a context.  To replace eventually
     with `ctx.format()`.'''
-    ctx = re.sub(r'lal_char\((.*?)\)',
+    ctx = re.sub(r'lal(?:_char)?\((.*?)\)',
                  r'[\1]',
                  ctx)
-    ctx = re.sub(r'lan_char\((.*?)\)',
+    ctx = re.sub(r'lan(?:_char)?\((.*?)\)',
                  r'[\1]?',
                  ctx)
-    ctx = re.sub(r'law_char\((.*?)\)',
+    ctx = re.sub(r'law(?:_char)?\((.*?)\)',
                  r'[\1]*',
                  ctx)
     ctx = re.sub(r'lat<(.*?)>',
@@ -529,24 +529,33 @@ bench('a.compose(a2)',
              'c = vcsn.context(ctx)',
              'a = c.expression("a|a").standard()',
              'a2 = c.expression(r).automaton()'],
-      number=10)
+      number=50)
 
-ctx = "lat<lal_char(a-z), lal_char(a-z)>, b"
+def bench_compose(ls, r, a, number=50):
+    ctx = "lat<{ls}(a-z), {ls}(a-z)>, b".format(ls=ls)
+    algo = {'std': 'standard', 'thm': 'thompson'}[a]
+    bench('a.compose(a)',
+          'a = {}({}), c = {}'.format(a, r, ctx_signature(ctx)),
+          setup=['ctx = "{}"'.format(ctx),
+                 'r = "{}"'.format(r),
+                 'c = vcsn.context(ctx)',
+                 'a = c.expression(r).{}()'.format(algo)],
+          number=number)
+
+# Those two are obsolete, remove them in some future.  They are
+# irrelevant (this pattern does not exist in "real life", and
+# extremely costly to run.
 r = "['(a,a)'-'(i,z)']{4}"
-bench('a.compose(a)',
-      'a = std({})'.format(r),
-      setup=['ctx = "{}"'.format(ctx),
-             'r = "{}"'.format(r),
-             'c = vcsn.context(ctx)',
-             'a = c.expression(r).standard()'])
+bench_compose('lal', r, 'std', 1)
+bench_compose('lan', r, 'thm', 1)
 
-ctx = "lat<lan_char(a-z), lan_char(a-z)>, b"
-bench('a.compose(a)',
-      'a = thompson({})'.format(r),
-      setup=['ctx = "{}"'.format(ctx),
-             'r = "{}"'.format(r),
-             'c = vcsn.context(ctx)',
-             'a = c.expression(r).thompson()'])
+r = '((a|b+b|c+c|d+d|a)(w|x+x|y+y|z+z|w)){300}'
+bench_compose('lal', r, 'std')
+bench_compose('lan', r, 'std')
+bench_compose('lan', r, 'thm', 20)
+r = '((\e|a+a|b+b|c+c|d+d|a)(w|x+x|y+y|z+z|w+z|\e)){300}'
+bench_compose('lan', r, 'std', 20)
+bench_compose('lan', r, 'thm', 10)
 
 # has_bounded_lag
 ctx = "lat<lan_char(abc), lan_char(xyz)>, b"

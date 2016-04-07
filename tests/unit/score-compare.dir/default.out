@@ -1,10 +1,10 @@
-  0     1     2     3  
+  0     1     2     3
  4.15[0m  4.13[0m  4.15[0m  4.00[0m a & 12               # a = std([a-e]*b(<2>[a-e])*)
-  N/A  0.30[0m  0.36[0m  0.33[0m a.accessible()       # a = thompson([a-m]{20000}).proper(False)
- 1.22[0m  1.22[0m  1.16[0m  1.18[0m a.compose(a)         # a = std(['(a,a)'-'(i,z)']{4})
- 0.48[0m  0.47[0m  0.41[0m  0.41[0m a.compose(a)         # a = thompson(['(a,a)'-'(i,z)']{4})
+  N/A  0.30[0m  0.36[0m  0.33[0m a.accessible()       # a = thm([a-m]{20000}).proper(False)
+ 1.22[0m  1.22[0m  1.16[0m  1.18[0m a.compose(a)         # a = std(['(a,a)'-'(i,z)']{4}), c = [a-z]x[a-z] -> B
+ 0.48[0m  0.47[0m  0.41[0m  0.41[0m a.compose(a)         # a = thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B
  3.92[0m  3.75[0m  3.89[0m  3.80[0m a.conjunction(a)     # a = std([a-e]?{50})
-  N/A [31m[1m 0.83[0m  0.69[0m  0.70[0m a.conjunction(a)     # a = thompson([a-e]?{80})
+  N/A [31m[1m 0.83[0m  0.69[0m  0.70[0m a.conjunction(a)     # a = thm([a-e]?{80})
 [31m[1m 1.80[0m  1.40[0m  1.46[0m  1.44[0m a.determinize("weighted") # a = de_bruijn(13), 10x
   N/A   N/A  1.48[0m  1.37[0m a.determinize("weighted") # a = de_bruijn(13), c = [abc] -> F2, 10x
 [31m[1m 4.30[0m [32m[1m 3.00[0m  3.25[0m  3.15[0m a.determinize("weighted") # a = de_bruijn(14), 10x
@@ -44,7 +44,7 @@
  4.40[0m  4.44[0m  4.75[0m  4.62[0m a.minimize("signature") # a = std([a-g]{800}), c = [a-k] -> B
   N/A   N/A  1.12[0m  1.24[0m a.minimize("weighted") # a = std([a-g]{300}), c = [a-k] -> B
   N/A   N/A  1.27[0m  1.11[0m a.minimize("weighted") # a = std([a-g]{300}), c = [a-k] -> Z
- 2.36[0m  2.39[0m  2.55[0m  2.52[0m a.proper()           # a = thompson(a?{1200})
+ 2.36[0m  2.39[0m  2.55[0m  2.52[0m a.proper()           # a = thm(a?{1200})
  1.89[0m  1.87[0m  1.97[0m  1.90[0m a.reduce()           # a = std([a-g]{300}), c = [a-k] -> Q
  1.26[0m  1.29[0m  1.31[0m  1.32[0m a.reduce()           # a = std([a-g]{300}), c = [a-k] -> Z
   N/A   N/A  0.59[0m  0.58[0m a.scc("dijkstra")    # a = std((abc)*{1000}), 20x
