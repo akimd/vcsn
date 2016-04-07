@@ -455,6 +455,7 @@ namespace vcsn
 
     /// The shortest path automaton using the given algorithm.
     automaton lightest_automaton(const automaton& aut,
+                                 unsigned num = 1,
                                  const std::string& algo = "auto");
 
     /// Build a context from its name.

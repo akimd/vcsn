@@ -528,9 +528,10 @@ struct automaton
 
   polynomial lightest(unsigned num, const std::string& algo = "auto") const;
 
-  automaton lightest_automaton(const std::string& algo = "auto") const
+  automaton lightest_automaton(unsigned num = 1U,
+                               const std::string& algo = "auto") const
   {
-    return vcsn::dyn::lightest_automaton(val_, algo);
+    return vcsn::dyn::lightest_automaton(val_, num, algo);
   }
 
   automaton minimize(const std::string& algo = "auto") const
@@ -1478,7 +1479,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lightest", &automaton::lightest,
          (arg("num") = 1U, arg("algo") = "auto"))
     .def("lightest_automaton",
-         &automaton::lightest_automaton, (arg("algo") = "auto"))
+         &automaton::lightest_automaton, (arg("num") = 1U, arg("algo") = "auto"))
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply),
          (arg("algo") = "auto"))

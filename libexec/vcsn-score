@@ -416,7 +416,7 @@ bench('a.lightest(5000)',
 ctx = 'lal_char(a-e), nmin'
 r = "[a-e]?{150}"
 for algo, number in [('a-star', 10), ('bellman-ford', 1), ('dijkstra', 500)]:
-    bench('a.lightest_automaton("{}")'.format(algo),
+    bench('a.lightest_automaton(1, "{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['c = vcsn.context(ctx)',
                  'r = "{}"'.format(r),

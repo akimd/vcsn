@@ -10,7 +10,7 @@ def check(re, weight, exp):
   aut = ctx.expression(re).automaton()
   ref = ctx.expression(wexp).standard().trim().strip()
   for algo in algos:
-      res = aut.lightest_automaton(algo)
+      res = aut.lightest_automaton(1, algo)
       CHECK_ISOMORPHIC(ref, res)
       CHECK_EQ(weight, res.weight_series())
 
@@ -25,4 +25,4 @@ check('[ab]', '0', 'a')
 
 ctx = vcsn.context('lal_char, q')
 for algo in algos:
-    XFAIL(lambda: ctx.expression('\z').standard().lightest_automaton(algo))
+    XFAIL(lambda: ctx.expression('\z').standard().lightest_automaton(1, algo))

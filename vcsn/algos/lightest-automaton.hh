@@ -19,17 +19,28 @@ namespace vcsn
   /// a new automaton using these states/transitions.
   template <Automaton Aut, typename Algo = auto_tag>
   fresh_automaton_t_of<Aut>
-  lightest_automaton(const Aut& aut, Algo algo = {})
+  lightest_automaton(const Aut& aut, unsigned k, Algo algo = {})
   {
     require(is_tropical<weightset_t_of<Aut>>(),
             "lightest-automaton: require tropical weightset");
-    auto pred = lightest_path(aut, algo);
     auto res = make_fresh_automaton(aut);
     auto copy = make_copier(aut, res);
-    for (auto t = pred[aut->post()];
-         t != aut->null_transition();
-         t = pred[aut->src_of(t)])
-      copy(t);
+    if (1 < k)
+      {
+        auto paths = k_lightest_path(aut, aut->pre(), aut->post(), k);
+        for (auto path : paths)
+          for (auto t : path)
+            if (t != aut->null_transition())
+              copy(t);
+      }
+    else
+      {
+        auto pred = lightest_path(aut, algo);
+        for (auto t = pred[aut->post()];
+             t != aut->null_transition();
+             t = pred[aut->src_of(t)])
+          copy(t);
+      }
     return res;
   }
 
@@ -38,12 +49,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <Automaton Aut, typename String>
+      template <Automaton Aut, typename Num, typename String>
       automaton
-      lightest_automaton(const automaton& aut, const std::string& algo)
+      lightest_automaton(const automaton& aut, unsigned k, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return ::vcsn::lightest_automaton(a, algo);
+        return ::vcsn::lightest_automaton(a, k, algo);
       }
     }
   }
