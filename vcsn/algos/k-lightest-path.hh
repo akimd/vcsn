@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include <boost/heap/fibonacci_heap.hpp>
 
 #include <vcsn/algos/dijkstra.hh>
@@ -77,10 +79,11 @@ namespace vcsn
              t != aut->null_transition();
              t = path[aut->src_of(t)])
           {
-            res.insert(res.begin(), t);
+            res.emplace_back(t);
             if (aut->src_of(t) == src)
               break;
           }
+        std::reverse(res.begin(), res.end());
         return res;
       }
 
