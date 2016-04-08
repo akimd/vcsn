@@ -59,7 +59,7 @@ namespace vcsn
 
       lazy_tuple_automaton(Aut aut, const Auts&... auts)
         : super_t{make_tuple_automaton(aut, auts...)}
-        , transition_maps_{{auts, ws_}...}
+        , transition_maps_{transition_map_t<Auts>{auts, ws_}...}
       {
         if (Lazy)
           this->set_lazy(this->pre());
@@ -108,7 +108,6 @@ namespace vcsn
       using transition_map_t = transition_map<A, weightset_t,
                                               false, true,
                                               KeepTransitions>;
-
 
       /// Conversion from state name to state number.
       template <typename... Args>

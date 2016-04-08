@@ -33,7 +33,9 @@ namespace vcsn
     class transition_map
     {
     public:
+      /// State index type.
       using state_t = state_t_of<Aut>;
+      /// Transition index type.
       using transition_t = transition_t_of<Aut>;
       using weightset_t = WeightSet;
       using weight_t = typename weightset_t::value_t;
@@ -104,7 +106,8 @@ namespace vcsn
                              less<labelset_t_of<Aut>>>;
 
       transition_map(const Aut& aut, const weightset_t& ws)
-        : aut_(aut)
+        : maps_(aut->all_states().back() + 1)
+        , aut_(aut)
         , ws_(ws)
       {}
 
@@ -112,18 +115,38 @@ namespace vcsn
         : transition_map(aut, *aut->weightset())
       {}
 
+      transition_map(transition_map&& that)
+        : maps_(std::move(that.maps_))
+        , aut_(std::move(that.aut_))
+        , ws_(that.ws_)
+      {}
+
       /// Outgoing transitions of state \a s, sorted by label.
       map_t& operator[](state_t s)
       {
-        auto lb = maps_.lower_bound(s);
-        if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
-          return build_map_(lb, s);
-        else
-          return lb->second;
+        // We might be working on a lazy automaton, so be prepared to
+        // find states that did not exist when we created this
+        // transition map.
+        if (maps_.size() <= s)
+          {
+            auto capacity = maps_.capacity();
+            while (capacity <= s)
+              capacity *= 2;
+            maps_.reserve(capacity);
+            maps_.resize(s + 1);
+          }
+        auto& res = maps_[s];
+        if (!res)
+          {
+            res = std::make_unique<map_t>();
+            build_map_(*res, s);
+          }
+        return *res;
       }
 
     private:
-      using maps_t = std::map<state_t, map_t>;
+      /// For each state number, its transition map.
+      using maps_t = std::vector<std::unique_ptr<map_t>>;
 
       /// Insert l -> t in map.
       template <bool Deterministic_>
@@ -145,21 +168,18 @@ namespace vcsn
         map[l].emplace_back(t);
       }
 
-      /// Build and return the transition map for state s, store at res.
-      /// Insert it in the cache.
-      map_t&
-      build_map_(typename maps_t::iterator lb, state_t s)
+      /// Build the transition map for state \a s, store at \a map.
+      void
+      build_map_(map_t& map, state_t s)
       {
-        auto& res = maps_.emplace_hint(lb, s, map_t{})->second;
         for (auto t: all_out(aut_, s))
           if (AllOut || !aut_->labelset()->is_special(aut_->label_of(t)))
             {
               auto w = ws_.conv(*aut_->weightset(), aut_->weight_of(t));
-              insert_<Deterministic>(res,
+              insert_<Deterministic>(map,
                                      aut_->label_of(t),
                                      transition{w, aut_->dst_of(t), t});
             }
-        return res;
       }
 
       /// The cache.
