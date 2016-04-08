@@ -100,7 +100,9 @@ namespace vcsn
             const auto& prev = res[i - 1];
             for (unsigned j = 0u; j < prev.size(); j++)
               {
-                auto filter_aut = filter<automaton_t, true, true>(aut_);
+                auto filter_aut = filter<automaton_t, true>(aut_);
+                filter_aut->unhide_all_states();
+                filter_aut->unhide_all_transition();
                 auto spur_node = filter_aut->src_of(prev[j]);
                 auto root_path = path_t(prev.begin(), prev.begin() + j);
 
@@ -111,7 +113,7 @@ namespace vcsn
                                                 selected_path.begin(), selected_path.begin() + j);
                       if (diff.first == root_path.end()
                           && filter_aut->has_transition(selected_path[j]))
-                        filter_aut->hide_trans(selected_path[j]);
+                        filter_aut->hide_transition(selected_path[j]);
                     }
 
                 for (auto t: root_path)
