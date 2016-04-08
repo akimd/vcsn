@@ -5,7 +5,6 @@
 #include <fstream>
 
 #include <boost/heap/binomial_heap.hpp>
-#include <boost/optional.hpp>
 
 #include <vcsn/algos/lightest-path.hh>
 #include <vcsn/algos/has-lightening-cycle.hh>

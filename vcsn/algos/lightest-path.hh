@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/optional.hpp>
+
 #include <vcsn/algos/k-lightest-path.hh>
 #include <vcsn/algos/a-star.hh>
 #include <vcsn/algos/bellman-ford.hh>
