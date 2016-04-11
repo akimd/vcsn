@@ -15,192 +15,202 @@
 using namespace vcsn;
 
 template <Automaton Aut>
-void print_info(const Aut& a)
+void
+print_info(const Aut& a)
 {
   vcsn::info(a, std::cout) << '\n';
 }
 
 /// Test des lal (booléens)
-static void check_lal_b()
+static void
+check_lal_char_b()
 {
-  auto al = set_alphabet<char_letters>{'a','b'};
+  auto al = set_alphabet<char_letters>{'a', 'b'};
   auto ctx = ctx::lal_char_b{al};
   using automaton_t = mutable_automaton<ctx::lal_char_b>;
   using state_t = state_t_of<automaton_t>;
 
   automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
-  for(int i=0;i<3;i++)
-    s[i]=res->new_state();
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+1)%3],'a');
+  for (int i = 0; i < 3; ++i)
+    s[i] = res->new_state();
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 1) % 3], 'a');
   res->set_initial(s[0]);
   res->set_final(s[1]);
-  std::cout << "***LAL***" << '\n';
+  std::cout << "***LAL***\n";
   print_info(res);
-  std::cout << "proper:" << '\n';
+  std::cout << "proper:\n";
   automaton_t pro = proper(res);
   print_info(pro);
-  std::cout << "forward_proper:" << '\n';
+  std::cout << "forward_proper:\n";
   automaton_t pro2 = proper(res, direction::forward);
   print_info(pro2);
-  std::cout << "proper_here:" << '\n';
+  std::cout << "proper_here:\n";
   proper_here(res);
   print_info(res);
 }
 
 /// Test des law booléens
-static void check_law_char_b()
+static void
+check_law_char_b()
 {
-  set_alphabet<char_letters> al{'a','b'};
-  ctx::law_char_b ctx{al};
+  auto al = set_alphabet<char_letters>{'a', 'b'};
+  auto ctx = ctx::law_char_b{al};
   using automaton_t = mutable_automaton<ctx::law_char_b>;
   using state_t = state_t_of<automaton_t>;
 
   automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
-  for(int i=0;i<3;i++)
-    s[i]=res->new_state();
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+1)%3],"a");
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+2)%3],"");
+  for (int i = 0; i < 3; ++i)
+    s[i] = res->new_state();
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 1) % 3], "a");
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 2) % 3], "");
   res->set_initial(s[0]);
   res->set_final(s[1]);
 
-  std::cout << "***LAW***" << '\n';
+  std::cout << "***LAW***\n";
   print_info(res);
-  std::cout << "proper:" << '\n';
+  std::cout << "proper:\n";
   automaton_t pro = proper(res);
   print_info(pro);
-  std::cout << "forward_proper:" << '\n';
+  std::cout << "forward_proper:\n";
   automaton_t pro2 = proper(res, direction::forward);
   print_info(pro2);
-  std::cout << "proper_here:" << '\n';
+  std::cout << "proper_here:\n";
   proper_here(res);
   print_info(res);
 }
 
 // Test des lal-char-z
-static void check_lal_char_z()
+static void
+check_lal_char_z()
 {
-  set_alphabet<char_letters> al{'a','b'};
-  ctx::lal_char_z ctx{al};
+  auto al = set_alphabet<char_letters>{'a', 'b'};
+  auto ctx = ctx::lal_char_z{al};
   using automaton_t = mutable_automaton<ctx::lal_char_z>;
   using state_t = state_t_of<automaton_t>;
 
   automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
-  for(int i=0;i<3;i++)
-    s[i]=res->new_state();
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+1)%3],'a',2);
+  for (int i = 0; i < 3; ++i)
+    s[i] = res->new_state();
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 1) % 3], 'a', 2);
   res->set_initial(s[0]);
   res->set_final(s[1]);
-  std::cout << "***LAL Z***" << '\n';
+  std::cout << "***LAL Z***\n";
   print_info(res);
-  std::cout << "proper:" << '\n';
+  std::cout << "proper:\n";
   automaton_t pro = proper(res);
   print_info(pro);
-  std::cout << "proper_here:" << '\n';
+  std::cout << "proper_here:\n";
   proper_here(res);
   print_info(res);
 }
 
 /// Test des law Z
-static void check_law_char_z()
+static void
+check_law_char_z()
 {
-  set_alphabet<char_letters> al{'a','b'};
-  ctx::law_char_z ctx{al};
+  auto al = set_alphabet<char_letters>{'a', 'b'};
+  auto ctx = ctx::law_char_z{al};
   using automaton_t = mutable_automaton<ctx::law_char_z>;
   using state_t = state_t_of<automaton_t>;
 
   automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
-  for(int i=0;i<3;i++)
-    s[i]=res->new_state();
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+1)%3],"a",2);
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+2)%3],"",-1);
+  for (int i = 0; i < 3; ++i)
+    s[i] = res->new_state();
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 1) % 3], "a", 2);
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 2) % 3], "", -1);
   res->set_initial(s[0]);
   res->set_final(s[1]);
 
-  std::cout << "***LAW Z***" << '\n';
-  std::cout << "* Circuit of eps-transition" << '\n';
+  std::cout << "***LAW Z***\n";
+  std::cout << "* Circuit of eps-transition\n";
   print_info(res);
-  try {
+  try
+  {
     automaton_t pro = proper(res);
     print_info(pro);
   }
-  catch(std::runtime_error& e) {
+  catch (std::runtime_error& e)
+  {
     std::cout << "Exception: " << e.what() << '\n';
   }
-  res->del_transition(s[1],s[0], "");
-  std::cout << "* No circuit of eps-transition" << '\n';
+  res->del_transition(s[1], s[0], "");
+  std::cout << "* No circuit of eps-transition\n";
   print_info(res);
-  //dot(res,std::cerr);
-  std::cout << "proper:" << '\n';
+  // dot(res,std::cerr);
+  std::cout << "proper:\n";
   automaton_t pro = proper(res);
   print_info(pro);
-  std::cout << "forward_proper:" << '\n';
+  std::cout << "forward_proper:\n";
   automaton_t pro2 = proper(res, direction::forward);
   print_info(pro2);
-  //dot(pro2,std::cerr);
-  std::cout << "proper_here:" << '\n';
+  // dot(pro2,std::cerr);
+  std::cout << "proper_here:\n";
   proper_here(res);
   print_info(res);
 }
 
 /// Test des law Zmin
-static void check_law_char_zmin()
+static void
+check_law_char_zmin()
 {
-  set_alphabet<char_letters> al{'a','b'};
+  auto al = set_alphabet<char_letters>{'a', 'b'};
   using law_char_zmin = vcsn::context<vcsn::ctx::law_char, vcsn::zmin>;
-  law_char_zmin ctx{al};
+  auto ctx = law_char_zmin{al};
   using automaton_t = mutable_automaton<law_char_zmin>;
   using state_t = state_t_of<automaton_t>;
 
   automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
-  for(int i=0;i<3;i++)
-    s[i]=res->new_state();
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+1)%3],"a",2);
-  for(int i=0;i<3;i++)
-    res->set_transition(s[i],s[(i+2)%3],"",-1);
+  for (int i = 0; i < 3; ++i)
+    s[i] = res->new_state();
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 1) % 3], "a", 2);
+  for (int i = 0; i < 3; ++i)
+    res->set_transition(s[i], s[(i + 2) % 3], "", -1);
   res->set_initial(s[0]);
   res->set_final(s[1]);
-  std::cout << "***LAW Z-min+***" << '\n';
-  std::cout << "* Circuit of eps-transition" << '\n';
+  std::cout << "***LAW Z-min+***\n";
+  std::cout << "* Circuit of eps-transition\n";
   print_info(res);
-  try {
+  try
+  {
     automaton_t pro = proper(res);
     print_info(pro);
   }
-  catch(std::runtime_error& e) {
+  catch (std::runtime_error& e)
+  {
     std::cout << "Exception: " << e.what() << '\n';
   }
-  res->set_transition(s[1],s[0], "",3);
-  std::cout << "* No negative circuit" << '\n';
+  res->set_transition(s[1], s[0], "", 3);
+  std::cout << "* No negative circuit\n";
   print_info(res);
-  //dot(res,std::cerr);
-  std::cout << "proper:" << '\n';
+  // dot(res,std::cerr);
+  std::cout << "proper:\n";
   automaton_t pro = proper(res);
   print_info(pro);
-  std::cout << "forward_proper:" << '\n';
+  std::cout << "forward_proper:\n";
   automaton_t pro2 = proper(res, direction::forward);
   print_info(pro2);
   dot(pro2, std::cout) << '\n';
-  std::cout << "proper_here:" << '\n';
+  std::cout << "proper_here:\n";
   proper_here(res);
   print_info(res);
 }
 
-
-int main()
+int
+main()
 {
-  check_lal_b();
+  check_lal_char_b();
   check_law_char_b();
   check_lal_char_z();
   check_law_char_z();
