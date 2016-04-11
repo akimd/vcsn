@@ -20,6 +20,14 @@ namespace std
       return res;
     }
   };
+
+  /// Whether \a e is in \a s.
+  template <typename B, typename A, typename Key>
+  bool
+  has(const boost::dynamic_bitset<B, A>& s, const Key& e)
+  {
+    return s.test(e);
+  }
 }
 
 namespace vcsn
