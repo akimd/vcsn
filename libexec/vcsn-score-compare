@@ -261,6 +261,10 @@ def normalize(k):
                "thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B",
                k)
 
+    # a.lightest_automaton("a-star") -> a.lightest_automaton(1, "a-star")
+    k = re.sub(r'(a.lightest_automaton)\("', '\1(1, ', k)
+    k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
+
     # Final format.
     k = '{:20s} # {}'.format(*map(str.strip, k.split('#', 2)))
     return k
