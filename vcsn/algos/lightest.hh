@@ -206,18 +206,20 @@ namespace vcsn
           }
         return res;
       }
-    else if (num != 1 || algo == "breadth-first")
+    else if ((algo == "auto" && num != 1) || algo == "breadth-first")
       {
         auto lightest = detail::lightest_impl<Aut>{aut};
         return lightest(num);
       }
-    else
+    else if (num == 1)
       {
         if (auto res = path_monomial(aut, lightest_path(aut, algo)))
           return {*res};
         else
           return {};
       }
+    else
+      raise("lightest: invalid algorithm: ", algo);
   }
 
 

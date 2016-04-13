@@ -4,7 +4,7 @@ import vcsn
 from test import *
 
 algos = ['auto', 'a-star', 'bellman-ford', 'breadth-first', 'dijkstra', 'yen']
-k_algos = ['auto', 'yen']
+k_algos = ['auto', 'breadth-first', 'yen']
 def check(re, num, exp, tests = []):
   a = ctx.expression(re, 'none').standard()
   for algo in tests if tests else algos if num == 1 else k_algos:
@@ -31,3 +31,9 @@ check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
 
 ctx = vcsn.context('law_char, nmin')
 check('<1>aaaa+<2>b', 1, '<1>aaaa')
+
+zero = ctx.expression('\z').standard()
+for algo in algos:
+    if algo not in k_algos:
+        XFAIL(lambda: zero.lightest(2, algo),
+              "lightest: invalid algorithm: " + algo)
