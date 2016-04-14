@@ -674,6 +674,19 @@ namespace vcsn
     ///    The number of states wanted in the automata (>0).
     automaton random_automaton_deterministic(const context& ctx,
                                              unsigned num_states);
+    /// Produce a random expression.
+    ///
+    /// \param ctx
+    ///    The context of the result.
+    /// \param param
+    ///    A string containing every operator and associated probability (as a
+    ///    weight) the user want on the generated expression.
+    ///    It can also contain the maximum of symbols of the expression.
+    ///    example: "+=1,.=2,{T}=0.5,symbols=6"
+    /// \param ids
+    ///    The identities to use for the expression
+    expression random_expression(const context& ctx, const std::string& param,
+                                 rat::identities ids);
 
     /// Right-division of two automata (lhs / rhs).
     automaton rdiv(const automaton& lhs, const automaton& rhs);

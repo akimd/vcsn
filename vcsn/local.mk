@@ -94,6 +94,7 @@ algo_headers =                                  \
   %D%/algos/push-weights.hh                     \
   %D%/algos/quotient.hh                         \
   %D%/algos/random.hh                           \
+  %D%/algos/random-expression.hh                \
   %D%/algos/read.hh                             \
   %D%/algos/reduce.hh                           \
   %D%/algos/scc.hh                              \

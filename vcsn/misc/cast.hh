@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vcsn/misc/raise.hh>
 
 #ifdef NDEBUG
 # define down_cast         static_cast
@@ -40,7 +41,6 @@ namespace vcsn
       }
 
       template <typename T, typename U>
-      inline
       T
       cast(U t)
       {
@@ -54,7 +54,6 @@ namespace vcsn
 
       /// Special case for shared_ptr.
       template <typename T, typename U>
-      inline
       std::shared_ptr<T>
       cast(std::shared_ptr<U> t)
       {
@@ -69,3 +68,25 @@ namespace vcsn
   }
 }
 #endif
+
+namespace vcsn
+{
+  namespace detail
+  {
+    /// String to templated type T conversion.
+    /// This lexical cast is similar to boost::lexical_cast.
+    template <typename T>
+    T lexical_cast(const std::string& str)
+    {
+      T res;
+      std::istringstream iss;
+      iss.str(str);
+      if (!(iss >> res))
+        raise("invalid value: ", str);
+      VCSN_REQUIRE(iss.peek() == EOF,
+                   ": invalid value: ", str,
+                   ", unexpected ", str_escape(iss.peek()));
+      return res;
+    }
+  }
+}

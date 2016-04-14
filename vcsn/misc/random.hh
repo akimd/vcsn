@@ -10,7 +10,34 @@ namespace vcsn LIBVCSN_API
   /// Generate a unique random device.
   std::mt19937& make_random_engine();
 
-  // Based on https://gist.github.com/cbsmith/5538174.
+  /// Random selector on container, using discrete distribution.
+  template <typename RandomGenerator>
+  struct discrete_chooser
+  {
+    discrete_chooser(RandomGenerator& g)
+      : gen_(g)
+    {}
+
+    template <typename Iter_weight, typename Iter>
+    Iter select(Iter_weight start_w, Iter_weight end_w, Iter start)
+    {
+      auto dis = std::discrete_distribution<>(start_w, end_w);
+      std::advance(start, dis(gen_));
+      return start;
+    }
+
+    template <typename Iter_weight, typename Iter>
+    Iter operator()(Iter_weight start_w, Iter_weight end_w, Iter start)
+    {
+      return select(start_w, end_w, start);
+    }
+
+  private:
+    RandomGenerator& gen_;
+  };
+
+  /// Random selector on container, using uniform distribution.
+  /// Based on https://gist.github.com/cbsmith/5538174.
   template <typename RandomGenerator>
   struct random_selector
   {

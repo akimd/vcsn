@@ -161,6 +161,31 @@ for n in range(1, 7):
     else:
         CHECK_NE([], ls)
 
+## ------------------- ##
+## random_expression.  ##
+## ------------------- ##
+
+# Check that a random expression without any operator.
+# return only a label
+exp = vcsn.context('lan_char(a-z), b').random_expression()
+print("Expression: ", exp)
+CHECK(re.match(r'\w{1}|\\e', str(exp)))
+
+# Check that operators are present only if the user has specified them
+exp = vcsn.context('lal_char(a), b').random_expression('+=0,*=0.5,{c}=1,{\\}=1,symbols=100',
+                                                       identities='none')
+print("Expression: ", exp)
+CHECK_EQ(str(exp).find('+'), -1)
+CHECK_EQ(str(exp).find('b'), -1)
+CHECK_EQ(str(exp).find('<+'), -1)
+CHECK_EQ(str(exp).find('!'), -1)
+
+# Check the length of the expression
+exp = vcsn.context('lal_char(a), b').random_expression('+=1,symbols=15',
+                                                       identities='none')
+print("Expression: ", exp)
+CHECK(str(exp).count('a') < 15)
+
 ## ---------------------- ##
 ## random_deterministic.  ##
 ## ---------------------- ##
@@ -171,7 +196,6 @@ CHECK_EQ(100, a.info()['number of states'])
 CHECK_EQ(1, a.info()['number of initial states'])
 CHECK_EQ(1, a.info()['number of final states'])
 CHECK(a.is_complete())
-
 
 ## --- ##
 ## u.  ##

@@ -183,6 +183,9 @@ struct context
                    float loop_chance = 0.0) const;
   automaton random_deterministic(unsigned num_states) const;
 
+  expression random_expression(const std::string& param,
+                               const std::string& ids) const;
+
   expression series(const std::string& s) const;
 
   automaton trie(const std::string& data = "",
@@ -1329,6 +1332,13 @@ automaton context::random_deterministic(unsigned num_states) const
   return vcsn::dyn::random_automaton_deterministic(val_, num_states);
 }
 
+expression context::random_expression(const std::string& param,
+                                      const std::string& ids) const
+{
+  return vcsn::dyn::random_expression(val_, param, identities(ids));
+}
+
+
 automaton context::trie(const std::string& data,
                         const std::string& format,
                         const std::string& filename) const
@@ -1547,6 +1557,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
           arg("max_labels") = boost::optional<unsigned>(),
           arg("loop_chance") = 0))
     .def("random_deterministic", &context::random_deterministic)
+    .def("random_expression", &context::random_expression,
+         (arg("parameters") = "", arg("identities") = "default"))
     .def("series", &context::series)
     .def("trie", &context::trie,
          (arg("data") = "", arg("format") = "default",
