@@ -158,12 +158,12 @@ namespace vcsn
           while (!aut_->todo_.empty())
             {
               const auto& p = aut_->todo_.front();
-              this->complete_(std::get<1>(p));
+              add_compose_transitions(std::get<1>(p), std::get<0>(p));
               aut_->todo_.pop_front();
             }
       }
 
-
+      /// Callback for complete_ when lazy.
       void add_transitions(const state_t src,
                            const state_name_t& psrc)
       {
@@ -172,14 +172,17 @@ namespace vcsn
 
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
-    private:
 
+    private:
+      /// Get the focus automaton, possibly from a non insplit
+      /// automaton.
       template <Automaton A>
       static auto real_aut(const A& aut)
       {
         return aut;
       }
 
+      /// Get the focus automaton from an insplit automaton.
       template <Automaton A>
       static auto real_aut(const insplit_automaton<A>& aut)
       {
