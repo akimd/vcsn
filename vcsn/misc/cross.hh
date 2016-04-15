@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
+
 #include <boost/iterator/iterator_facade.hpp>
 
-#include <vcsn/misc/raise.hh> // pass
 #include <vcsn/misc/tuple.hh>
 
 namespace vcsn

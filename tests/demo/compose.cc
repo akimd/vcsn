@@ -17,43 +17,43 @@ int main()
 {
   using namespace vcsn;
 
-  /// Basic alphabet type.
+  // Basic alphabet type.
   using alphabet_t = set_alphabet<char_letters>;
 
-  /// Letterset (single-tape labelset).
+  // Letterset (single-tape labelset).
   using letterset_t = letterset<alphabet_t>;
 
-  /// Create the letterset.
+  // Create the letterset.
   auto ls1 = letterset_t{'a'};
 
-  /// Labelset (double-tape).
+  // Labelset (double-tape).
   using labelset_t = tupleset<letterset_t, letterset_t>;
 
-  /// Create the double-tape labelset.
+  // Create the double-tape labelset.
   auto ls = labelset_t{ls1, ls1};
 
 
-  /// Context of the automaton: lat<lal_char, lal_char>, b.
+  // Context of the automaton: lat<lal_char, lal_char>, b.
   using context_t = context<labelset_t, b>;
 
-  /// Create the context from the labelset
-  // no parameter for the weightset, as it's just B
+  // Create the context from the labelset.
+  // No parameter for the weightset, as it's just B.
   auto ctx = context_t{ls};
 
 
-  /// Create an empty automaton (transducer), from the context.
+  // Create an empty automaton (transducer), from the context.
   auto t = make_mutable_automaton(ctx);
 
-  /// Add a state.
+  // Add a state.
   // p is a state identifier, probably 0
   auto p = t->new_state();
   auto q = t->new_state();
 
-  /// Make p initial.
+  // Make p initial.
   t->set_initial(p);
-  /// Transition from p to q, with label "a|a".
+  // Transition from p to q, with label "a|a".
   t->new_transition(p, q, ctx.labelset()->tuple('a', 'a'));
-  /// Make q final
+  // Make q final
   t->set_final(q);
 
   // The automaton looks like:
@@ -62,15 +62,15 @@ int main()
   /// Lazy composition with itself
   auto c = compose_lazy(t, t);
 
-  /// Display the resulting automaton on standard output.
+  // Display the resulting automaton on standard output.
   // It's partial, because it's a lazy composition.
   dot(c, std::cout) << '\n';
 
-  /// Compute the accessible states of c, thus resolving all the states.
+  // Compute the accessible states of c, thus resolving all the states.
   auto d = accessible(c);
 
-  /// Display d.
+  // Display d.
   dot(d, std::cout) << '\n';
-  /// Display c, all the states have been resolved.
+  // Display c, all the states have been resolved.
   dot(c, std::cout) << '\n';
 }
