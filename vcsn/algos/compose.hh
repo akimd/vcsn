@@ -308,8 +308,8 @@ namespace vcsn
 
         // For each successor, add a transition for each monomial of the
         // corresponding polynomial.
-        for (auto elt: poly_maps)
-          for (auto m: elt.second)
+        for (const auto& elt: poly_maps)
+          for (const auto& m: elt.second)
             this->new_transition(src, elt.first, m.first, m.second);
       }
 
