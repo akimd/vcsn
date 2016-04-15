@@ -1,3 +1,5 @@
+import os
+
 try:
     import regex as re
     has_regex = True
@@ -96,10 +98,10 @@ def pretty_plugin(filename):
 def has_color(color):
     color_dict = {
         "always": True,
-        "never": False,
-        "auto": sys.stdout.isatty()
+        # Emacs is having too hard a time with the colors here.
+        "auto":   sys.stdout.isatty() and not 'EMACS' in os.environ,
+        "never":  False,
     }
-
     return color_dict[color]
 
 delimiters_open = ['<', '[', '(']
