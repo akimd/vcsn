@@ -25,8 +25,7 @@ namespace vcsn
     ///
     /// This is the case where the automaton can have spontaneous
     /// transitions.
-    template <Automaton Aut,
-              bool HasOne = labelset_t_of<Aut>::has_one()>
+    template <Automaton Aut>
     class insplit_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
@@ -85,13 +84,14 @@ namespace vcsn
       /// Insplit the automaton.
       void insplit(bool lazy = false)
       {
+        lazy_ = lazy;
         initialize_insplit_();
 
         if (!lazy)
           while (!todo_.empty())
             {
               const auto& p = todo_.front();
-              this->complete_(std::get<1>(p));
+              this->add_insplit_transitions_(std::get<1>(p), std::get<0>(p));
               todo_.pop_front();
             }
       }
@@ -123,13 +123,14 @@ namespace vcsn
         return o;
       }
 
-      // Lazy
-
       /// Whether a given state's outgoing transitions have been
       /// computed.
       bool is_lazy(state_t s) const
       {
-        return !has(done_, s);
+        // Comply with the protocol for lazy automata: if we are not
+        // lazy at all, return false.  Otherwise the laziness-aware
+        // algorithms (such as printing) will behave incorrectly.
+        return lazy_ && !has(done_, s);
       }
 
       /// Complete a lazy state: find its outgoing transitions.
@@ -237,6 +238,9 @@ namespace vcsn
       /// The input automaton.
       automaton_t in_;
 
+      /// Whether the computation is lazy.
+      bool lazy_ = false;
+
       /// Map input-state, status -> result-state.
       /// status == false: no spontaneous incoming transition
       /// status == true: only spontaneous incoming transitions
@@ -249,47 +253,6 @@ namespace vcsn
 
       /// Worklist of state tuples.
       std::deque<std::pair<state_name_t, state_t>> todo_;
-    };
-
-
-    /// Insplit automaton decorator.
-    ///
-    /// This is the case where the automaton cannot have spontaneous
-    /// transitions, so do nothing.
-    template <Automaton Aut>
-    class insplit_automaton_impl<Aut, false>
-      : public automaton_decorator<Aut>
-    {
-      using super_t = automaton_decorator<Aut>;
-    public:
-      insplit_automaton_impl(const Aut& aut)
-        : super_t(aut)
-      {}
-
-      static symbol sname()
-      {
-        static symbol res("insplit_automaton<"
-                          + Aut::element_type::sname()
-                          + ">");
-        return res;
-      }
-
-      using automaton_t = Aut;
-
-      using super_t::aut_;
-
-      void insplit(bool = false)
-      {}
-
-      automaton_t& aut_out()
-      {
-        return aut_;
-      }
-
-      const automaton_t& aut_out() const
-      {
-        return aut_;
-      }
     };
 
     /// An insplit automaton as a shared pointer.
@@ -310,12 +273,12 @@ namespace vcsn
     /// Insplit an automaton with possible spontaneous transitions.
     template <Automaton Aut>
     auto
-    insplit(Aut& aut)
+    insplit(Aut aut, bool lazy = false)
       -> std::enable_if_t<labelset_t_of<Aut>::has_one(),
                           decltype(make_insplit_automaton(aut))>
     {
       auto res = make_insplit_automaton(aut);
-      res->insplit(false);
+      res->insplit(lazy);
       return res;
     }
 
@@ -324,7 +287,7 @@ namespace vcsn
     /// Identity.
     template <Automaton Aut>
     auto
-    insplit(Aut& aut)
+    insplit(Aut aut, bool = false)
       -> std::enable_if_t<!labelset_t_of<Aut>::has_one(),
                           Aut>
     {
@@ -337,25 +300,8 @@ namespace vcsn
   template <Automaton Aut>
   using insplit_automaton = detail::insplit_automaton<Aut>;
 
-  /// Build a lazy insplit automaton from an automaton.
-  template <Automaton Aut>
-  auto
-  insplit_lazy(const Aut& aut)
-  {
-    auto res = detail::make_insplit_automaton(aut);
-    res->insplit(true);
-    return res;
-  }
-
-
-  /// Insplit automaton from an automaton.
-  template <Automaton Aut>
-  auto
-  insplit(const Aut& aut)
-  {
-    return detail::insplit(aut);
-  }
-
+  /// Insplit an automaton.
+  using detail::insplit;
 
   namespace dyn
   {
@@ -367,10 +313,7 @@ namespace vcsn
       insplit(const automaton& aut, bool lazy)
       {
         const auto& a = aut->as<Aut>();
-        if (lazy)
-          return ::vcsn::insplit_lazy(a);
-        else
-          return ::vcsn::insplit(a);
+        return ::vcsn::insplit(a, lazy);
       }
     }
   }

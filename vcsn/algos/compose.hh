@@ -344,7 +344,7 @@ namespace vcsn
                     ([this, t=t.transition](const auto& lhs, const auto& rhs)
                      {
                        return join_label(lhs->hidden_label_of(t),
-                                         get_hidden_one(rhs->aut_out()));
+                                         get_hidden_one(real_aut(rhs)));
                      },
                      [this, t=t.transition](const auto& lhs, const auto& rhs)
                      {
@@ -452,7 +452,7 @@ namespace vcsn
   make_compose_automaton(const Lhs& lhs, const Rhs& rhs)
   {
     auto l = focus<OutTape>(lhs);
-    auto r = insplit_lazy(focus<InTape>(rhs));
+    auto r = insplit(focus<InTape>(rhs), Lazy);
     using res_t = compose_automaton<Lazy,
                                     focus_automaton<OutTape, Lhs>,
                                     decltype(r)>;
