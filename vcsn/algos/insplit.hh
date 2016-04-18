@@ -123,30 +123,21 @@ namespace vcsn
         return o;
       }
 
-      /// Whether a given state's outgoing transitions have been
-      /// computed.
-      bool is_lazy(state_t s) const
-      {
-        // Comply with the protocol for lazy automata: if we are not
-        // lazy at all, return false.  Otherwise the laziness-aware
-        // algorithms (such as printing) will behave incorrectly.
-        return lazy_ && !has(done_, s);
-      }
-
       /// Complete a lazy state: find its outgoing transitions.
-      void complete_(state_t s) const
+      void complete_(const state_t s) const
       {
+        auto& self = const_cast<self_t&>(*this);
         const auto& orig = origins();
         const state_name_t& sn = orig.at(s);
-        const_cast<self_t&>(*this).add_insplit_transitions_(s, sn);
-        done_.insert(s);
+        self.aut_->set_lazy(s, false);
+        self.add_insplit_transitions_(s, sn);
       }
 
       /// All the outgoing transitions.
       using super_t::all_out;
-      auto all_out(state_t s) const
+      auto all_out(const state_t s) const
       {
-        if (is_lazy(s))
+        if (lazy_ && aut_->is_lazy(s))
           complete_(s);
         return aut_->all_out(s);
       }
@@ -184,7 +175,9 @@ namespace vcsn
                         aut_out()->pre()});
         pmap_().insert({state_name_t(aut_in()->post(), false),
                         aut_out()->post()});
-        todo_.emplace_back(pre_(), aut_->pre());
+        todo_.emplace_back(pre_(), aut_out()->pre());
+        if (lazy_)
+          aut_out()->set_lazy(aut_out()->pre());
       }
 
       state_name_t pre_() const
@@ -222,6 +215,8 @@ namespace vcsn
         if (lb == pmap_().end())
           {
             state_t s = aut_->new_state();
+            if (lazy_)
+              aut_->set_lazy(s, true);
             lb = pmap_().insert(lb, {sn, s});
             todo_.emplace_back(sn, s);
           }
@@ -241,15 +236,10 @@ namespace vcsn
       /// Whether the computation is lazy.
       bool lazy_ = false;
 
-      /// Map input-state, status -> result-state.
+      /// Map (input-state, status) -> result-state.
       /// status == false: no spontaneous incoming transition
       /// status == true: only spontaneous incoming transitions
       mutable bimap_t bimap_;
-
-      /// When performing the lazy construction, list of states that
-      /// have been completed (i.e., their outgoing transitions have
-      /// been computed).
-      mutable std::set<state_t> done_ = {aut_->post()};
 
       /// Worklist of state tuples.
       std::deque<std::pair<state_name_t, state_t>> todo_;
