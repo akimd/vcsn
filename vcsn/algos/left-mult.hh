@@ -219,10 +219,10 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
         auto rs
-          = join_weightset_expansionset(w1.valueset(), r1.expansionset());
+          = join_weightset_expansionset(w1.valueset(), r1.valueset());
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
-        auto r2 = rs.conv(r1.expansionset(), r1.expansion());
+        auto r2 = rs.conv(r1.valueset(), r1.value());
         return {rs, ::vcsn::left_mult(rs, w2, r2)};
       }
     }
@@ -380,10 +380,10 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
         auto rs
-          = join_weightset_expansionset(w1.valueset(), r1.expansionset());
+          = join_weightset_expansionset(w1.valueset(), r1.valueset());
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
-        auto r2 = rs.conv(r1.expansionset(), r1.expansion());
+        auto r2 = rs.conv(r1.valueset(), r1.value());
         return {rs, ::vcsn::right_mult(rs, r2, w2)};
       }
     }

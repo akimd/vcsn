@@ -162,7 +162,7 @@ namespace vcsn
                                     const std::string& fmt)
       {
         const auto& e = expansion->as<ExpansionSet>();
-        return vcsn::print(e.expansionset(), e.expansion(), o, format(fmt));
+        return vcsn::print(e.valueset(), e.value(), o, format(fmt));
       }
     }
   }

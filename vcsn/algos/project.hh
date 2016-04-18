@@ -76,9 +76,9 @@ namespace vcsn
       {
         constexpr auto tape = Tape::value;
         auto& x = exp->as<ExpansionSet>();
-        const auto& xs_in = x.expansionset();
+        const auto& xs_in = x.valueset();
         auto xs_out = xs_in.template project<tape>();
-        return {xs_out, vcsn::detail::project<tape>(xs_in, x.expansion())};
+        return {xs_out, vcsn::detail::project<tape>(xs_in, x.value())};
       }
     }
   }

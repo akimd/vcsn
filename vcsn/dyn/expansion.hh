@@ -75,37 +75,37 @@ namespace vcsn
         };
 
         /// A wrapped typed label/labelset.
-        template <typename ExpansionSet>
+        template <typename ValueSet>
         struct model final : base
         {
-          using expansionset_t = ExpansionSet;
-          using expansion_t = typename expansionset_t::value_t;
+          using valueset_t = ValueSet;
+          using value_t = typename valueset_t::value_t;
 
-          model(const expansionset_t& es, const expansion_t& e)
-            : expansionset_(es)
-            , expansion_(e)
+          model(const valueset_t& es, const value_t& e)
+            : valueset_(es)
+            , value_(e)
           {}
 
           virtual symbol vname() const override
           {
-            return expansionset().sname();
+            return valueset().sname();
           }
 
-          const expansionset_t& expansionset() const
+          const valueset_t& valueset() const
           {
-            return expansionset_;
+            return valueset_;
           }
 
-          const expansion_t expansion() const
+          const value_t value() const
           {
-            return expansion_;
+            return value_;
           }
 
         private:
           /// The expansion set.
-          const expansionset_t expansionset_;
+          const valueset_t valueset_;
           /// The expansion.
-          const expansion_t expansion_;
+          const value_t value_;
         };
 
         /// The wrapped expansion/expansionset.

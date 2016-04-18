@@ -81,7 +81,7 @@ namespace vcsn
       context
       context_of_expansion(const expansion& exp)
       {
-        const auto& e = exp->as<ExpansionSet>().expansionset();
+        const auto& e = exp->as<ExpansionSet>().valueset();
         return e.context();
       }
     }

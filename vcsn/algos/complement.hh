@@ -82,7 +82,7 @@ namespace vcsn
       complement_expansion(const expansion& xpn)
       {
         const auto& x = xpn->as<ExpansionSet>();
-        return {x.expansionset(),  x.expansionset().complement(x.expansion())};
+        return {x.valueset(),  x.valueset().complement(x.value())};
       }
     }
   }

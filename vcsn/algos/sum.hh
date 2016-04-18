@@ -172,9 +172,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<ExpansionSetLhs>();
         const auto& r = rhs->as<ExpansionSetRhs>();
-        auto rs = join(l.expansionset(), r.expansionset());
-        auto lr = rs.conv(l.expansionset(), l.expansion());
-        auto rr = rs.conv(r.expansionset(), r.expansion());
+        auto rs = join(l.valueset(), r.valueset());
+        auto lr = rs.conv(l.valueset(), l.value());
+        auto rr = rs.conv(r.valueset(), r.value());
         return {rs, ::vcsn::sum(rs, lr, rr)};
       }
     }
