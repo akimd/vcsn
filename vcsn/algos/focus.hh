@@ -21,7 +21,7 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename A, typename I>
+    template <Automaton A, typename I>
     struct hidden_label_type;
 
     template <Automaton Aut, std::size_t... I>
@@ -256,11 +256,11 @@ namespace vcsn
       }
 
       /// Copy the full wrapped transition.
-      template <typename A>
+      template <Automaton A>
       transition_t
       new_transition_copy(state_t src, state_t dst,
                           const A& aut,
-                          typename A::element_type::transition_t t,
+                          transition_t_of<A> t,
                           bool transpose = false)
       {
         return aut_->new_transition_copy(src, dst,
@@ -268,11 +268,11 @@ namespace vcsn
       }
 
       /// Copy the full wrapped transition.
-      template <typename A>
+      template <Automaton A>
       transition_t
       add_transition_copy(state_t src, state_t dst,
                           const A& aut,
-                          typename A::element_type::transition_t t,
+                          transition_t_of<A> t,
                           bool transpose = false)
       {
         return aut_->add_transition_copy(src, dst,

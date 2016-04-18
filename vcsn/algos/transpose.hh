@@ -186,14 +186,14 @@ namespace vcsn
       template <Automaton A>
       DEFINE(add_transition_copy(state_t src, state_t dst,
                                  const A& aut,
-                                 typename A::element_type::transition_t t,
+                                 transition_t_of<A> t,
                                  bool transpose = false),
              add_transition_copy(dst, src, aut, t, !transpose));
 
       template <Automaton A>
       DEFINE(new_transition_copy(state_t src, state_t dst,
                                  const A& aut,
-                                 typename A::element_type::transition_t t,
+                                 transition_t_of<A> t,
                                  bool transpose = false),
              new_transition_copy(dst, src, aut, t, !transpose));
 

@@ -130,7 +130,7 @@ namespace vcsn
       return res;
     }
 
-    std::ostream& print_set(std::ostream& o, format fmt = {}) const
+    std::ostream& print_set(std::ostream& o = std::cout, format fmt = {}) const
     {
       o << "mutable_automaton<";
       context().print_set(o, fmt);
@@ -398,7 +398,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print_state(state_t s, std::ostream& o) const
+    print_state(state_t s, std::ostream& o = std::cout) const
     {
       if (s == pre())
         o << "pre";
@@ -410,7 +410,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print_state_name(state_t s, std::ostream& o,
+    print_state_name(state_t s, std::ostream& o = std::cout,
                      format = {},
                      bool = false) const
     {
@@ -586,10 +586,10 @@ namespace vcsn
     /// \param transpose   whether label and weight should be transposed
     ///
     /// \pre ! has_transition(src, dst, label_of(l)).
-    template <typename A>
+    template <Automaton A>
     transition_t
     new_transition_copy(state_t src, state_t dst,
-                        const A& aut, typename A::element_type::transition_t t,
+                        const A& aut, transition_t_of<A> t,
                         bool transpose = false)
     {
       auto l = aut->label_of(t);
@@ -695,10 +695,10 @@ namespace vcsn
     /// \param aut  the automaton whose transition will be copied.
     /// \param t    transition of \a aut whose label and weight are to copy
     /// \param transpose   whether label and weight should be transposed
-    template <typename A>
+    template <Automaton A>
     transition_t
     add_transition_copy(state_t src, state_t dst,
-                        const A& aut, typename A::element_type::transition_t t,
+                        const A& aut, transition_t_of<A> t,
                         bool transpose = false)
     {
       auto l = aut->label_of(t);
@@ -714,7 +714,7 @@ namespace vcsn
     }
 
     /// Print a transition, for debugging.
-    std::ostream& print(transition_t t, std::ostream& o,
+    std::ostream& print(transition_t t, std::ostream& o = std::cout,
                         format fmt = {}) const
     {
       if (t == null_transition())
@@ -723,6 +723,7 @@ namespace vcsn
         o << "lazy_transition";
       else
         {
+          o << t << ": ";
           print_state_name(src_of(t), o) << " -- <";
           weightset()->print(weight_of(t), o, fmt.for_weights()) << '>';
           labelset()->print(label_of(t), o, fmt.for_labels()) << " --> ";
@@ -732,7 +733,7 @@ namespace vcsn
     }
 
     /// Print an automaton, for debugging.
-    std::ostream& print(std::ostream& o) const
+    std::ostream& print(std::ostream& o = std::cout) const
     {
       for (auto s: all_states())
         {

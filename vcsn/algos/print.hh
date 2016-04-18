@@ -82,6 +82,7 @@ namespace vcsn
       {
         "automaton output format",
         {
+          {"debug",        [](const Aut& a, std::ostream& o){ a->print(o); }},
           {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
           {"default",      "dot"},
           {"dot,latex",    [](const Aut& a, std::ostream& o)
