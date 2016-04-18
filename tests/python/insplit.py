@@ -3,26 +3,18 @@
 import vcsn
 from test import *
 
-def check(i, exp):
+def check(i, exp=None):
+  if not exp:
+    exp = i
   i = vcsn.automaton(i)
   CHECK_EQ(exp, i.insplit())
   # Idempotence.
   CHECK_ISOMORPHIC(vcsn.automaton(exp), i.insplit().insplit())
 
 
-check('''
-digraph
+check('''digraph
 {
-  vcsn_context = "lal_char(abc), b"
-
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> 2 [label = "c"]
-  2 -> F2
-}''','''digraph
-{
-  vcsn_context = "letterset<char_letters(abc)>, b"
+  vcsn_context = "letterset<char_letters(abc)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -47,7 +39,7 @@ digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lan_char(abc), b"
+  vcsn_context = "lan_char(abc), q"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -56,7 +48,7 @@ digraph
   2 -> F2
 }''',r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(abc)>>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -83,7 +75,7 @@ digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lan_char(abc), b"
+  vcsn_context = "lan_char(abc), q"
 
   I0 -> 0
   0 -> 1 [label = "\\e"]
@@ -92,7 +84,7 @@ digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
+  vcsn_context = "nullableset<letterset<char_letters(abc)>>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

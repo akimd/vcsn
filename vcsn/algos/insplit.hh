@@ -82,7 +82,7 @@ namespace vcsn
         return true;
       }
 
-
+      /// Insplit the automaton.
       void insplit(bool lazy = false)
       {
         initialize_insplit_();
@@ -94,12 +94,6 @@ namespace vcsn
               this->complete_(std::get<1>(p));
               todo_.pop_front();
             }
-      }
-
-      void add_transitions(const state_t src,
-                           const state_name_t& psrc)
-      {
-        add_insplit_transitions(src, psrc);
       }
 
       std::ostream&
@@ -138,12 +132,12 @@ namespace vcsn
         return !has(done_, s);
       }
 
-      /// Complete a state: find its outgoing transitions.
+      /// Complete a lazy state: find its outgoing transitions.
       void complete_(state_t s) const
       {
         const auto& orig = origins();
-        state_name_t sn = orig.at(s);
-        const_cast<self_t&>(*this).add_transitions(s, sn);
+        const state_name_t& sn = orig.at(s);
+        const_cast<self_t&>(*this).add_insplit_transitions_(s, sn);
         done_.insert(s);
       }
 
@@ -199,24 +193,20 @@ namespace vcsn
 
       /// Split the original outgoing transitions to the insplit
       /// states.
-      void add_insplit_transitions(const state_t st,
-                                   const state_name_t& psrc)
+      void add_insplit_transitions_(const state_t s,
+                                    const state_name_t& sn)
       {
-        for (auto t : aut_in()->all_out(std::get<0>(psrc)))
-          aut_out()->new_transition_copy(st,
+        for (auto t : aut_in()->all_out(std::get<0>(sn)))
+          aut_out()->new_transition_copy(s,
                                          state({aut_in()->dst_of(t),
-                                               is_spontaneous(t)}),
+                                               is_spontaneous_(t)}),
                                          aut_in(), t);
       }
 
-      bool exists(state_t st, bool epsilon) const
+      /// Whether transition \a t is labeled by one.
+      bool is_spontaneous_(transition_t t) const
       {
-        return pmap_().find(state_name_t(st, epsilon)) != pmap_().end();
-      }
-
-      bool is_spontaneous(transition_t tr) const
-      {
-        return aut_in()->labelset()->is_one(aut_in()->label_of(tr));
+        return aut_in()->labelset()->is_one(aut_in()->label_of(t));
       }
 
       /// The state in the insplit corresponding to a state and a status
@@ -225,14 +215,14 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(const state_name_t& state)
+      state_t state(const state_name_t& sn)
       {
-        auto lb = pmap_().find(state);
+        auto lb = pmap_().find(sn);
         if (lb == pmap_().end())
           {
             state_t s = aut_->new_state();
-            lb = pmap_().insert(lb, {state, s});
-            todo_.emplace_back(state, s);
+            lb = pmap_().insert(lb, {sn, s});
+            todo_.emplace_back(sn, s);
           }
         return lb->second;
       }
@@ -244,11 +234,8 @@ namespace vcsn
         return bimap_.left;
       }
 
-      /// The input automaton
+      /// The input automaton.
       automaton_t in_;
-
-      /// The resulting weightset.
-      const weightset_t& ws_ = *aut_->weightset();
 
       /// Map input-state, status -> result-state.
       /// status == false: no spontaneous incoming transition
