@@ -5,7 +5,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
-#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/fwd.hh> // b
 

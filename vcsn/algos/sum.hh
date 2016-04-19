@@ -8,7 +8,6 @@
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/dyn/expansion.hh> // dyn::make_expansion
 #include <vcsn/dyn/expression.hh> // dyn::make_expression
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/value.hh>

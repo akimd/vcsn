@@ -6,7 +6,6 @@
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/core/expression-automaton.hh>
 #include <vcsn/ctx/fwd.hh>
-#include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/misc/indent.hh>

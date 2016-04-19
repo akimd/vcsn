@@ -2,7 +2,6 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/registries.hh>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/core/rat/fwd.hh>
-#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/value.hh>
 
 namespace vcsn
 {

@@ -6,7 +6,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/expansion.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn

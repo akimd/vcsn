@@ -10,7 +10,6 @@
 #include <vcsn/core/rat/dot.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/expansion.hh>
 #include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/polynomial.hh>

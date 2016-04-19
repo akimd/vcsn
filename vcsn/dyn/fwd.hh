@@ -23,21 +23,16 @@ namespace vcsn
     /// A dyn::context.
     using context = detail::context;
 
-    // vcsn/dyn/expansion.hh.
-    namespace detail
-    {
-      class expansion;
-    }
-    using expansion = detail::expansion;
-
     // vcsn/dyn/value.hh.
     namespace detail
     {
       struct label_tag;
+      struct expansion_tag;
       struct weight_tag;
       template <typename tag>
       class value;
     }
+    using expansion = detail::value<detail::expansion_tag>;
     using label = detail::value<detail::label_tag>;
     using weight = detail::value<detail::weight_tag>;
 

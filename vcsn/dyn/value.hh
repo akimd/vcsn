@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include <vcsn/dyn/cast.hh>
 #include <vcsn/misc/export.hh>
 
 namespace vcsn
@@ -11,6 +12,10 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Tag for expansion/expansionset
+      struct expansion_tag
+      {};
+
       /// Tag for label/labelset.
       struct label_tag
       {};
@@ -122,6 +127,8 @@ namespace vcsn
 
     } // namespace detail
 
+    // A class representing an expansion/expansionset.
+    using expansion = detail::value<detail::expansion_tag>;
     // A class representing a label/labelset.
     using label = detail::value<detail::label_tag>;
     // A class representing a weight/weightset.
