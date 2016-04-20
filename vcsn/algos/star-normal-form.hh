@@ -3,7 +3,7 @@
 #include <vcsn/algos/constant-term.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/fwd.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/algorithm.hh> // any_of
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/b.hh>

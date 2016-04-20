@@ -17,7 +17,7 @@
 #include <vcsn/core/rat/info.hh>
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/type_traits.hh>
 

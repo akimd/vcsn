@@ -2,7 +2,7 @@
 
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/core/rat/visitor.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 
 #include <vcsn/algos/derivation.hh> // expression_polynomialset_t.
 

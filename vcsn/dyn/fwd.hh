@@ -26,13 +26,15 @@ namespace vcsn
     // vcsn/dyn/value.hh.
     namespace detail
     {
-      struct label_tag;
       struct expansion_tag;
+      struct expression_tag;
+      struct label_tag;
       struct weight_tag;
       template <typename tag>
       class value;
     }
     using expansion = detail::value<detail::expansion_tag>;
+    using expression = detail::value<detail::expression_tag>;
     using label = detail::value<detail::label_tag>;
     using weight = detail::value<detail::weight_tag>;
 
@@ -44,13 +46,6 @@ namespace vcsn
       class polynomial_wrapper;
     }
     using polynomial = std::shared_ptr<const detail::polynomial_base>;
-
-    // vcsn/dyn/expression.hh.
-    namespace detail
-    {
-      class expression;
-    }
-    using expression = detail::expression;
   }
 
   // vcsn/dyn/type-ast.hh.

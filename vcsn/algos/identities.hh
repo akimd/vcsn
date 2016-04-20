@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/dyn/expression.hh> // dyn::make_expression
+#include <vcsn/dyn/value.hh>
 
 namespace vcsn
 {

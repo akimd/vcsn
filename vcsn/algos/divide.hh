@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/value.hh>
 
 namespace vcsn
 {

@@ -16,6 +16,10 @@ namespace vcsn
       struct expansion_tag
       {};
 
+      /// Tag for expression/expressionset
+      struct expression_tag
+      {};
+
       /// Tag for label/labelset.
       struct label_tag
       {};
@@ -29,8 +33,8 @@ namespace vcsn
       class LIBVCSN_API value
       {
       public:
-        value()
-          : self_()
+        value(std::nullptr_t null = nullptr)
+          : self_(null)
         {}
 
         template <typename ValueSet>
@@ -125,10 +129,26 @@ namespace vcsn
         std::shared_ptr<base> self_;
       };
 
+      /// Return the join of the expressionset of two expressions and their
+      /// values in this new expressionset.
+      template <typename ValueSetLhs, typename ValueSetRhs, typename Tag>
+      auto
+      join(const value<Tag>& lhs, const value<Tag>& rhs)
+      {
+        const auto& l = lhs->template as<ValueSetLhs>();
+        const auto& r = rhs->template as<ValueSetRhs>();
+        auto rs = join(l.valueset(), r.valueset());
+        auto lr = rs.conv(l.valueset(), l.value());
+        auto rr = rs.conv(r.valueset(), r.value());
+        return std::make_tuple(rs, lr, rr);
+      }
+
     } // namespace detail
 
     // A class representing an expansion/expansionset.
     using expansion = detail::value<detail::expansion_tag>;
+    // A class representing an expression/expressionset.
+    using expression = detail::value<detail::expression_tag>;
     // A class representing a label/labelset.
     using label = detail::value<detail::label_tag>;
     // A class representing a weight/weightset.

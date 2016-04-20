@@ -9,7 +9,7 @@
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/unordered_set.hh>

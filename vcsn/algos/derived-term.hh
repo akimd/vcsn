@@ -8,8 +8,8 @@
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/polynomialset.hh>

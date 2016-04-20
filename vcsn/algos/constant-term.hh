@@ -3,7 +3,6 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/core/rat/visitor.hh>
-#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/value.hh>
 
 namespace vcsn

@@ -7,7 +7,6 @@
 #include <vcsn/core/rat/expansionset.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/dyn/expression.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/getargs.hh>
 

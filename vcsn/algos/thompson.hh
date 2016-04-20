@@ -5,7 +5,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/labelset.hh> // make_nullableset_context
 #include <vcsn/misc/raise.hh>
 

@@ -12,7 +12,7 @@
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/sum.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 
 namespace vcsn
 {

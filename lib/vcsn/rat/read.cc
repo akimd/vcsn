@@ -1,6 +1,6 @@
 #include <lib/vcsn/rat/read.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 #include <lib/vcsn/rat/driver.hh>
 
 namespace vcsn

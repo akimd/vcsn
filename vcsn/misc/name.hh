@@ -13,7 +13,7 @@
 // FIXME: I don't like that misc depends on dyn.  Actually, it is
 // misc/name.hh which should be elsewhere.
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/expression.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/symbol.hh>
