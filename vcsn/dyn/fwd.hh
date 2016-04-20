@@ -48,11 +48,9 @@ namespace vcsn
     // vcsn/dyn/expression.hh.
     namespace detail
     {
-      class expression_base;
-      template <typename ExpSet>
-      class expression_wrapper;
+      class expression;
     }
-    using expression = std::shared_ptr<detail::expression_base>;
+    using expression = detail::expression;
   }
 
   // vcsn/dyn/type-ast.hh.
