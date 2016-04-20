@@ -370,12 +370,10 @@ namespace vcsn
         using expressionset_t = ExpSet;
         const auto& e = exp->as<expressionset_t>();
         auto ctx
-          = vcsn::detail::make_nullableset_context(e.expressionset().context());
+          = vcsn::detail::make_nullableset_context(e.valueset().context());
         using ctx_t = decltype(ctx);
         using automaton_t = mutable_automaton<ctx_t>;
-        return ::vcsn::zpc<automaton_t>(ctx, e.expressionset(),
-                                        e.expression(),
-                                        algo);
+        return ::vcsn::zpc<automaton_t>(ctx, e.valueset(), e.value(), algo);
       }
     }
   }

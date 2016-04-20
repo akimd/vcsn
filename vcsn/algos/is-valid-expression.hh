@@ -37,7 +37,7 @@ namespace vcsn
       is_valid_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return ::vcsn::is_valid(e.expressionset(), e.expression());
+        return ::vcsn::is_valid(e.valueset(), e.value());
       }
     }
   }

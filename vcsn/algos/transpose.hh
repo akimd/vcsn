@@ -266,9 +266,7 @@ namespace vcsn
       transpose_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-
-        return {e.expressionset(), ::vcsn::transpose(e.expressionset(),
-                                                     e.expression())};
+        return {e.valueset(), ::vcsn::transpose(e.valueset(), e.value())};
       }
     }
   }
@@ -286,9 +284,7 @@ namespace vcsn
       transposition_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-
-        return {e.expressionset(),
-                e.expressionset().transposition(e.expression())};
+        return {e.valueset(), e.valueset().transposition(e.value())};
       }
     }
   }

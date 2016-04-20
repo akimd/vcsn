@@ -75,37 +75,37 @@ namespace vcsn
         };
 
         /// Aggregate an expression and its expressionset.
-        template <typename ExpSet>
+        template <typename ValueSet>
         struct model final: base
         {
-          using expressionset_t = ExpSet;
-          using expression_t = typename expressionset_t::value_t;
+          using valueset_t = ValueSet;
+          using value_t = typename valueset_t::value_t;
 
-          model(const expressionset_t& rs, const expression_t& r)
-            : expressionset_(rs)
-            , expression_(r)
+          model(const valueset_t& rs, const value_t& r)
+            : valueset_(rs)
+            , value_(r)
           {}
 
           virtual symbol vname() const override
           {
-            return expressionset().sname();
+            return valueset().sname();
           }
 
-          const expressionset_t& expressionset() const
+          const valueset_t& valueset() const
           {
-            return expressionset_;
+            return valueset_;
           }
 
-          const expression_t expression() const
+          const value_t value() const
           {
-            return expression_;
+            return value_;
           }
 
         private:
-          /// The expression set.
-          const expressionset_t expressionset_;
-          /// The expression.
-          const expression_t expression_;
+          /// The value set.
+          const valueset_t valueset_;
+          /// The value.
+          const value_t value_;
         };
 
         /// The wrapped expression/expressionset.
@@ -120,9 +120,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<ExpSetLhs>();
         const auto& r = rhs->as<ExpSetRhs>();
-        auto rs = join(l.expressionset(), r.expressionset());
-        auto lr = rs.conv(l.expressionset(), l.expression());
-        auto rr = rs.conv(r.expressionset(), r.expression());
+        auto rs = join(l.valueset(), r.valueset());
+        auto lr = rs.conv(l.valueset(), l.value());
+        auto rr = rs.conv(r.valueset(), r.value());
         return std::make_tuple(rs, lr, rr);
       }
 

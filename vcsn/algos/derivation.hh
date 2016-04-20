@@ -338,11 +338,10 @@ namespace vcsn
       {
         const auto& e = exp->as<ExpSet>();
         const auto& l = lbl->as<Label>().value();
-        const auto& rs = e.expressionset();
+        const auto& rs = e.valueset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);
         return make_polynomial(ps,
-                               vcsn::derivation(rs, e.expression(),
-                                                l, breaking));
+                               vcsn::derivation(rs, e.value(), l, breaking));
       }
     }
   }

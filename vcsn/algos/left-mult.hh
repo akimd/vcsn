@@ -217,8 +217,7 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
-        auto rs
-          = join_weightset_expansionset(w1.valueset(), r1.valueset());
+        auto rs = join_weightset_expansionset(w1.valueset(), r1.valueset());
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
@@ -235,7 +234,7 @@ namespace vcsn
   ///
   /// We must not perform a plain
   ///
-  /// join(w1.valueset(), r1.expressionset())
+  /// join(w1.valueset(), r1.valueset())
   ///
   /// here.  Consider for instance
   ///
@@ -272,10 +271,9 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
-        auto rs
-          = join_weightset_expressionset(w1.valueset(), r1.expressionset());
+        auto rs = join_weightset_expressionset(w1.valueset(), r1.valueset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
-        auto r2 = rs.conv(r1.expressionset(), r1.expression());
+        auto r2 = rs.conv(r1.valueset(), r1.value());
         return {rs, ::vcsn::left_mult(rs, w2, r2)};
       }
     }
@@ -377,8 +375,7 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
-        auto rs
-          = join_weightset_expansionset(w1.valueset(), r1.valueset());
+        auto rs = join_weightset_expansionset(w1.valueset(), r1.valueset());
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
@@ -403,9 +400,9 @@ namespace vcsn
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
         auto rs
-          = join_weightset_expressionset(w1.valueset(), r1.expressionset());
+          = join_weightset_expressionset(w1.valueset(), r1.valueset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
-        auto r2 = rs.conv(r1.expressionset(), r1.expression());
+        auto r2 = rs.conv(r1.valueset(), r1.value());
         return {rs, ::vcsn::right_mult(rs, r2, w2)};
       }
     }

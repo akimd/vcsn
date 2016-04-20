@@ -364,8 +364,8 @@ namespace vcsn
       multiply_expression_repeated(const expression& re, int min, int max)
       {
         const auto& r = re->as<ExpSet>();
-        return {r.expressionset(), ::vcsn::multiply(r.expressionset(),
-                                                    r.expression(),
+        return {r.valueset(), ::vcsn::multiply(r.valueset(),
+                                                    r.value(),
                                                     min, max)};
       }
     }

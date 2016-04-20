@@ -393,8 +393,7 @@ namespace vcsn
         using automaton_t
           = vcsn::mutable_automaton<context_t_of<expressionset_t>>;
         const auto& e = exp->as<expressionset_t>();
-        return ::vcsn::standard<automaton_t>(e.expressionset(),
-                                             e.expression());
+        return ::vcsn::standard<automaton_t>(e.valueset(), e.value());
       }
     }
   }

@@ -105,8 +105,8 @@ namespace vcsn
       {
         const auto& l = r1->as<ExpSet1>();
         const auto& r = r2->as<ExpSet2>();
-        return ::vcsn::are_equivalent(l.expressionset(), l.expression(),
-                                      r.expressionset(), r.expression());
+        return ::vcsn::are_equivalent(l.valueset(), l.value(),
+                                      r.valueset(), r.value());
       }
     }
   }
@@ -172,9 +172,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<ExpSetLhs>();
         const auto& r = rhs->as<ExpSetLhs>();
-        return {l.expressionset(), ::vcsn::difference(l.expressionset(),
-                                                      l.expression(),
-                                                      r.expression())};
+        return {l.valueset(), ::vcsn::difference(l.valueset(),
+                                                 l.value(),
+                                                 r.value())};
       }
     }
   }

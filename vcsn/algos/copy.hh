@@ -444,9 +444,9 @@ namespace vcsn
         const auto& c = ctx->as<Context>();
         const auto& rs = make_expressionset(c, ids);
 
-        return {rs, ::vcsn::rat::copy(r.expressionset(),
+        return {rs, ::vcsn::rat::copy(r.valueset(),
                                       rs,
-                                      r.expression())};
+                                      r.value())};
       }
     }
   }

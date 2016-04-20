@@ -113,7 +113,7 @@ namespace vcsn
       star_height(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return ::vcsn::star_height<ExpSet>(e.expression());
+        return ::vcsn::star_height<ExpSet>(e.value());
       }
     }
   }

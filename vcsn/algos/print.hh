@@ -202,7 +202,7 @@ namespace vcsn
                                      const std::string& fmt)
       {
         const auto& e = exp->as<ExpSet>();
-        return vcsn::print(e.expressionset(), e.expression(), o, fmt);
+        return vcsn::print(e.valueset(), e.value(), o, fmt);
       }
     }
   }

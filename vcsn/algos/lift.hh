@@ -308,9 +308,9 @@ namespace vcsn
       lift_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        const auto& es = e.expressionset();
+        const auto& es = e.valueset();
         return {::vcsn::detail::lift_expressionset(es),
-                ::vcsn::lift(es, e.expression())};
+                ::vcsn::lift(es, e.value())};
       }
     }
   }

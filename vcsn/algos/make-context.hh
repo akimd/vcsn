@@ -72,7 +72,7 @@ namespace vcsn
       context
       context_of_expression(const expression& exp)
       {
-        const auto& e = exp->as<ExpSet>().expressionset();
+        const auto& e = exp->as<ExpSet>().valueset();
         return e.context();
       }
 

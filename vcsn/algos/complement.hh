@@ -102,8 +102,8 @@ namespace vcsn
       complement_expression(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return {e.expressionset(),
-                e.expressionset().complement(e.expression())};
+        return {e.valueset(),
+                e.valueset().complement(e.value())};
       }
     }
   }

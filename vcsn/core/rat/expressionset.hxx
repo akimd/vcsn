@@ -993,7 +993,7 @@ namespace vcsn
     // dyn::expression that we down_cast.
     auto dynres = dyn::read_expression(context(), identities(), is);
     const auto& res = dynres->template as<self_t>();
-    return res.expression();
+    return res.value();
   }
 
   DEFINE::print(const value_t& v, std::ostream& o,

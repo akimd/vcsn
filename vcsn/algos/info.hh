@@ -183,7 +183,7 @@ namespace vcsn
       std::ostream& info_expression(const expression& exp, std::ostream& o)
       {
         const auto& e = exp->as<ExpSet>();
-        vcsn::info(e.expressionset(), e.expression(), o);
+        vcsn::info(e.valueset(), e.value(), o);
         return o;
       }
     }

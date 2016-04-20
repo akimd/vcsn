@@ -364,8 +364,8 @@ namespace vcsn
       automaton derived_term(const expression& exp, const std::string& algo)
       {
         const auto& e = exp->as<ExpSet>();
-        const auto& rs = e.expressionset();
-        const auto& r = e.expression();
+        const auto& rs = e.valueset();
+        const auto& r = e.value();
         if (boost::starts_with(algo, "lazy"))
           {
             auto a = vcsn::detail::derived_term_algo(algo);

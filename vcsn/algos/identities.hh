@@ -19,7 +19,7 @@ namespace vcsn
       identities(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        auto rs = e.expressionset();
+        auto rs = e.valueset();
         return rs.identities();
       }
     }

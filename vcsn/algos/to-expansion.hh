@@ -424,9 +424,9 @@ namespace vcsn
       to_expansion(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        const auto& rs = e.expressionset();
+        const auto& rs = e.valueset();
         auto es = vcsn::rat::expansionset<ExpSet>(rs);
-        return {es, to_expansion<ExpSet>(rs, e.expression())};
+        return {es, to_expansion<ExpSet>(rs, e.value())};
       }
     }
   }

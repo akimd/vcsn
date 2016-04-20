@@ -204,8 +204,8 @@ namespace vcsn
       constant_term(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return {*e.expressionset().weightset(),
-                constant_term<ExpSet>(e.expressionset(), e.expression())};
+        return {*e.valueset().weightset(),
+                constant_term<ExpSet>(e.valueset(), e.value())};
       }
     }
   }

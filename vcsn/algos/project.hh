@@ -98,9 +98,9 @@ namespace vcsn
       {
         constexpr auto tape = Tape::value;
         auto& r = exp->as<ExpressionSet>();
-        const auto& rs_in = r.expressionset();
+        const auto& rs_in = r.valueset();
         auto rs_out = vcsn::detail::project<tape>(rs_in);
-        return {rs_out, vcsn::detail::project<tape>(rs_in, r.expression())};
+        return {rs_out, vcsn::detail::project<tape>(rs_in, r.value())};
       }
     }
   }
