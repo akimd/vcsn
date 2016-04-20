@@ -267,9 +267,8 @@ namespace vcsn
       {
         const auto& e = exp->as<ExpSet>();
 
-        return make_expression(e.expressionset(),
-                               ::vcsn::transpose(e.expressionset(),
-                                                 e.expression()));
+        return {e.expressionset(), ::vcsn::transpose(e.expressionset(),
+                                                     e.expression())};
       }
     }
   }
@@ -288,8 +287,8 @@ namespace vcsn
       {
         const auto& e = exp->as<ExpSet>();
 
-        return make_expression(e.expressionset(),
-                               e.expressionset().transposition(e.expression()));
+        return {e.expressionset(),
+                e.expressionset().transposition(e.expression())};
       }
     }
   }

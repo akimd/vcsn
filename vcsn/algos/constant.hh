@@ -16,7 +16,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto rs = vcsn::make_expressionset(c, ids);
-        return dyn::make_expression(rs, rs.one());
+        return {rs, rs.one()};
       }
 
       /// Bridge.
@@ -25,7 +25,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto rs = vcsn::make_expressionset(c, ids);
-        return dyn::make_expression(rs, rs.zero());
+        return {rs, rs.zero()};
       }
     }
   }

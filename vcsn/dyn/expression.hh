@@ -27,7 +27,7 @@ namespace vcsn
         {}
 
         template <typename ExpSet>
-        explicit expression(const ExpSet& es, const typename ExpSet::value_t& e)
+        expression(const ExpSet& es, const typename ExpSet::value_t& e)
           : self_(std::make_shared<model<ExpSet>>(es, e))
         {}
 
@@ -129,15 +129,6 @@ namespace vcsn
     } // namespace detail
 
     using expression = detail::expression;
-
-    template <typename ExpSet>
-    inline
-    expression
-    make_expression(const ExpSet& rs,
-                    const typename ExpSet::value_t& r)
-    {
-      return expression(rs, r);
-    }
 
   } // namespace dyn
 } // namespace vcsn

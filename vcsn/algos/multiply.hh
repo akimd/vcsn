@@ -294,10 +294,10 @@ namespace vcsn
       multiply_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return make_expression(std::get<0>(join_elts),
-                               ::vcsn::multiply(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts)));
+        return {std::get<0>(join_elts),
+                ::vcsn::multiply(std::get<0>(join_elts),
+                                 std::get<1>(join_elts),
+                                 std::get<2>(join_elts))};
       }
     }
   }
@@ -314,7 +314,7 @@ namespace vcsn
         auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
         auto res = std::get<0>(join_elts).concat(std::get<1>(join_elts),
                                                  std::get<2>(join_elts));
-        return make_expression(std::get<0>(join_elts), res);
+        return {std::get<0>(join_elts), res};
       }
     }
   }
@@ -364,10 +364,9 @@ namespace vcsn
       multiply_expression_repeated(const expression& re, int min, int max)
       {
         const auto& r = re->as<ExpSet>();
-        return make_expression(r.expressionset(),
-                               ::vcsn::multiply(r.expressionset(),
-                                                r.expression(),
-                                                min, max));
+        return {r.expressionset(), ::vcsn::multiply(r.expressionset(),
+                                                    r.expression(),
+                                                    min, max)};
       }
     }
   }

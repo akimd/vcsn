@@ -119,13 +119,12 @@ namespace vcsn
            ->template as<tuple_element_t<I, ExpSets>>()
            .expressionset()...);
         return
-          make_expression
-          (rs,
+          {rs,
            vcsn::tuple<decltype(rs), tuple_element_t<I, ExpSets>...>
            (rs,
             es[I]
             ->template as<tuple_element_t<I, ExpSets>>()
-            .expression()...));
+            .expression()...)};
       }
 
       /// Bridge (tuple).

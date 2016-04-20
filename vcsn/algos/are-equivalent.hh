@@ -172,10 +172,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<ExpSetLhs>();
         const auto& r = rhs->as<ExpSetLhs>();
-        return make_expression(l.expressionset(),
-                               ::vcsn::difference(l.expressionset(),
-                                                  l.expression(),
-                                                  r.expression()));
+        return {l.expressionset(), ::vcsn::difference(l.expressionset(),
+                                                      l.expression(),
+                                                      r.expression())};
       }
     }
   }

@@ -613,7 +613,7 @@ namespace vcsn
         using expressionset_t = vcsn::expressionset<context_t>;
         auto rs = expressionset_t{a->context(), ids};
         auto res = ::vcsn::to_expression(a, ids, algo);
-        return make_expression(rs, res);
+        return {rs, res};
       }
     }
   }
@@ -635,7 +635,7 @@ namespace vcsn
         const auto& c = ctx->as<Context>();
         const auto& l = lbl->as<Label>();
         auto rs = vcsn::make_expressionset(c, ids);
-        return make_expression(rs, rs.atom(l.value()));
+        return {rs, rs.atom(l.value())};
       }
     }
   }
@@ -723,7 +723,7 @@ namespace vcsn
       {
         const auto& c = ctx->as<Context>();
         auto rs = vcsn::make_expressionset(c, ids);
-        return make_expression(rs, to_expression(rs, letters, accept));
+        return {rs, to_expression(rs, letters, accept)};
       }
     }
   }

@@ -100,9 +100,7 @@ namespace vcsn
         auto& r = exp->as<ExpressionSet>();
         const auto& rs_in = r.expressionset();
         auto rs_out = vcsn::detail::project<tape>(rs_in);
-        return make_expression(rs_out,
-                               vcsn::detail::project<tape>(rs_in,
-                                                           r.expression()));
+        return {rs_out, vcsn::detail::project<tape>(rs_in, r.expression())};
       }
     }
   }

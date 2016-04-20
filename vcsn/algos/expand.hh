@@ -165,9 +165,8 @@ namespace vcsn
       expand(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return make_expression(e.expressionset(),
-                               ::vcsn::expand(e.expressionset(),
-                                              e.expression()));
+        return {e.expressionset(), ::vcsn::expand(e.expressionset(),
+                                                  e.expression())};
       }
     }
   }

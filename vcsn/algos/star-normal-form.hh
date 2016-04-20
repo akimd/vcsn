@@ -199,9 +199,8 @@ namespace vcsn
       star_normal_form(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
-        return make_expression(e.expressionset(),
-                               ::vcsn::star_normal_form(e.expressionset(),
-                                                        e.expression()));
+        return {e.expressionset(), ::vcsn::star_normal_form(e.expressionset(),
+                                                            e.expression())};
       }
     }
   }

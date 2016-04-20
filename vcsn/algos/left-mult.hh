@@ -276,8 +276,7 @@ namespace vcsn
           = join_weightset_expressionset(w1.valueset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
-        return make_expression(rs,
-                               ::vcsn::left_mult(rs, w2, r2));
+        return {rs, ::vcsn::left_mult(rs, w2, r2)};
       }
     }
   }
@@ -407,7 +406,7 @@ namespace vcsn
           = join_weightset_expressionset(w1.valueset(), r1.expressionset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expressionset(), r1.expression());
-        return make_expression(rs, ::vcsn::right_mult(rs, r2, w2));
+        return {rs, ::vcsn::right_mult(rs, r2, w2)};
       }
     }
   }

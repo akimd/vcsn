@@ -32,9 +32,9 @@ namespace vcsn
       ldiv_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
-        return make_expression(std::get<0>(join_elts), ldiv(std::get<0>(join_elts),
-                                                            std::get<1>(join_elts),
-                                                            std::get<2>(join_elts)));
+        return {std::get<0>(join_elts), ldiv(std::get<0>(join_elts),
+                                             std::get<1>(join_elts),
+                                             std::get<2>(join_elts))};
       }
 
       /// Bridge (ldiv).
@@ -108,9 +108,9 @@ namespace vcsn
       rdiv_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
-        return make_expression(std::get<0>(join_elts), rdiv(std::get<0>(join_elts),
-                                                            std::get<1>(join_elts),
-                                                            std::get<2>(join_elts)));
+        return {std::get<0>(join_elts), rdiv(std::get<0>(join_elts),
+                                             std::get<1>(join_elts),
+                                             std::get<2>(join_elts))};
       }
     }
   }
