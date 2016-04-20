@@ -43,8 +43,8 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0, 0", shape = box]
-    1 [label = "3, 1, 0", shape = box]
+    0 [label = "0, 0", shape = box]
+    1 [label = "3, 1", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -71,7 +71,7 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0, 0", shape = box, color = DimGray]
+    0 [label = "0, 0", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
 }''', lhs.conjunction2(rhs))
@@ -96,7 +96,7 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0, 0", shape = box]
+    0 [label = "0, 0", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -177,10 +177,10 @@ exp = '''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0, 0", shape = box]
-    1 [label = "0, 1, 0", shape = box]
-    2 [label = "2, 1, 0", shape = box, color = DimGray]
-    3 [label = "1, 0, 0", shape = box]
+    0 [label = "0, 0", shape = box]
+    1 [label = "0, 1", shape = box]
+    2 [label = "2, 1", shape = box, color = DimGray]
+    3 [label = "1, 0", shape = box]
   }
   I0 -> 0 [label = "<6>"]
   0 -> F0
@@ -259,9 +259,9 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box, color = DimGray]
-    1 [label = "1, 0", shape = box, color = DimGray]
-    2 [label = "2, 0", shape = box, color = DimGray]
+    0 [label = "0", shape = box, color = DimGray]
+    1 [label = "1", shape = box, color = DimGray]
+    2 [label = "2", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]

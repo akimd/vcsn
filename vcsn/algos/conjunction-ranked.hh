@@ -30,8 +30,9 @@ namespace vcsn
     template <bool Lazy, Automaton Aut, Automaton... Auts>
     class product2_automaton_impl
       : public lazy_tuple_automaton<product2_automaton_impl<Lazy, Aut, Auts...>,
-                                    true,
-                                    false, Lazy, Aut, Auts...>
+                                    any_<labelset_t_of<Auts>::has_one()...>(),
+                                    false, // KeepTransitions.
+                                    Lazy, Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "product: requires letterized labels");
@@ -39,8 +40,10 @@ namespace vcsn
       /// The type of the resulting automaton.
       using automaton_t = Aut;
       using self_t = product2_automaton_impl;
+      /// Whether states have a rank slot.
+      constexpr static bool ranked = any_<labelset_t_of<Auts>::has_one()...>();
       using super_t
-        = lazy_tuple_automaton<self_t, true, false, Lazy, Aut, Auts...>;
+        = lazy_tuple_automaton<self_t, ranked, false, Lazy, Aut, Auts...>;
 
     public:
       using state_name_t = typename super_t::state_name_t;
@@ -54,6 +57,9 @@ namespace vcsn
 
       using super_t::ws_;
       using super_t::transition_maps_;
+
+      /// Number of conjoined automata.
+      constexpr static size_t rank = sizeof...(Auts);
 
       static symbol sname()
       {
@@ -110,7 +116,7 @@ namespace vcsn
       // Division only makes sense for two automata.
       // Lazy version is not implemented yet.
       template <bool L = Lazy>
-      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv_here()
+      std::enable_if_t<rank == 2 && !L> ldiv_here()
       {
         initialize_conjunction();
 
@@ -171,7 +177,7 @@ namespace vcsn
         // This kind of transition that mixes conjunction and shuffle
         // would never appear in a naive implementation with only
         // conjunction and shuffle transitions, but no combinations.
-        require(sizeof...(Auts) == 2,
+        require(rank == 2,
                 "infiltration: variadic product does not work");
 
         // Infiltrate is a mix of conjunction and shuffle operations, and
@@ -238,9 +244,14 @@ namespace vcsn
               ([this,src,&t]
                (const typename transition_map_t<Auts>::transition&... ts)
                {
-                 this->new_transition(src, state(ts.dst..., 0),
-                                      t.first,
-                                      ws_.mul(ts.weight()...));
+                 this->new_transition
+                   (src,
+                    static_if<ranked>
+                    ([this](auto... s) { return state(s..., 0); },
+                     [this](auto... s) { return state(s...); })
+                    (ts.dst...),
+                    t.first,
+                    ws_.mul(ts.weight()...));
                },
                t.second);
         add_one_transitions_(src, psrc, aut_->indices);
@@ -278,8 +289,8 @@ namespace vcsn
         // paths that would lead to incorrect valuations (in the
         // weighted case), while the second is purely an optimization,
         // avoiding the creation of non-coaccessible states.
-        unsigned rank = std::get<sizeof...(Auts)>(psrc);
-        if (rank <= I
+        unsigned r = std::get<rank>(psrc);
+        if (r <= I
             && have_proper_out(psrc, make_index_range<0, I>{}))
           {
             // one is guaranteed to be first.
@@ -289,7 +300,7 @@ namespace vcsn
                 {
                   auto pdst = psrc;
                   std::get<I>(pdst) = t.dst;
-                  std::get<sizeof...(Auts)>(pdst) = I;
+                  static_if<ranked>([&pdst]{ std::get<rank>(pdst) = I; })();
                   this->new_transition(src, state(pdst), ls.one(), t.weight());
                 }
           }

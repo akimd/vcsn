@@ -79,8 +79,8 @@ b = r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0, 0", shape = box]
-    1 [label = "1, 1, 0", shape = box]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "<2>[^]"]

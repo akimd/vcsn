@@ -69,7 +69,8 @@ namespace vcsn
     template <bool Lazy, Automaton Lhs, Automaton Rhs>
     class compose2_automaton_impl
       : public lazy_tuple_automaton<compose2_automaton_impl<Lazy, Lhs, Rhs>,
-                                    true, // Ranked.
+                                    any_<labelset_t_of<Lhs>::has_one(),
+                                         labelset_t_of<Rhs>::has_one()>(),
                                     true, // KeepTransitions.
                                     Lazy,
                                     typename composed2_type<Lhs, Rhs>::out_t,
@@ -107,7 +108,10 @@ namespace vcsn
       using context_t = typename type_helper_t::context_t;
 
       using out_t = typename type_helper_t::out_t;
-      using super_t = lazy_tuple_automaton<self_t, true, true, Lazy, out_t,
+      /// Whether states have a rank slot.
+      constexpr static bool ranked = any_<labelset_t_of<Lhs>::has_one(),
+                                          labelset_t_of<Rhs>::has_one()>();
+      using super_t = lazy_tuple_automaton<self_t, ranked, true, Lazy, out_t,
                                            Lhs, Rhs>;
       /// Result state type.
       using state_t = typename super_t::state_t;
@@ -237,18 +241,24 @@ namespace vcsn
         const auto& ltm = std::get<0>(transition_maps_)[std::get<0>(psrc)];
         const auto& rtm = std::get<1>(transition_maps_)[std::get<1>(psrc)];
 
-        if (std::get<2>(psrc) <= 0
+        if (static_if<ranked>([](const auto& psrc){ return std::get<2>(psrc) <= 0; },
+                              [](const auto& psrc){ return true; })(psrc)
             // "Loop" only on the spontaneous transitions.  "One" is
             // guaranteed to be first in the transition maps.
             && !ltm.empty()
             && lhs->labelset()->is_one(ltm.begin()->first))
           // for each spontaneous transitions leaving the state
           for (auto t: ltm.begin()->second)
-            this->new_transition(src,
-                                 this->state(t.dst, std::get<1>(psrc), 0),
-                                 join_label(lhs->hidden_label_of(t.transition),
-                                            get_hidden_one(rhs)),
-                                 t.weight());
+            {
+              state_t dst = static_if<ranked>
+                ([this](auto... s) { return this->state(s..., 0); },
+                 [this](auto... s) { return this->state(s...); })
+                (t.dst, std::get<1>(psrc));
+              this->new_transition(src, dst,
+                                   join_label(lhs->hidden_label_of(t.transition),
+                                              get_hidden_one(rhs)),
+                                   t.weight());
+            }
 
         // If lhs did not issue spontaneous transitions but has proper
         // transitions, issue follow all the rhs spontaneous
@@ -262,11 +272,16 @@ namespace vcsn
             && !rtm.empty()
             && rhs->labelset()->is_one(rtm.begin()->first))
           for (auto t: rtm.begin()->second)
-            this->new_transition(src,
-                                 this->state(std::get<0>(psrc), t.dst, 1),
-                                 join_label(get_hidden_one(lhs),
-                                            rhs->hidden_label_of(t.transition)),
-                                 t.weight());
+            {
+              const state_t dst = static_if<ranked>
+                ([this](auto... s) { return this->state(s..., 1); },
+                 [this](auto... s) { return this->state(s...); })
+                (std::get<0>(psrc), t.dst);
+              this->new_transition(src, dst,
+                                   join_label(get_hidden_one(lhs),
+                                              rhs->hidden_label_of(t.transition)),
+                                   t.weight());
+            }
 
 
         // In order to avoid having to call add_transition each time, we cache
@@ -289,8 +304,12 @@ namespace vcsn
               ([&] (const typename transition_map_t<Lhs>::transition& lts,
                     const typename transition_map_t<Rhs>::transition& rts)
                {
+                 const state_t dst = static_if<ranked>
+                   ([this](auto... s) { return this->state(s..., 0); },
+                    [this](auto... s) { return this->state(s...); })
+                   (lts.dst, rts.dst);
                  // Cache the transitions.
-                 ps.add_here(poly_maps[this->state(lts.dst, rts.dst, 0)],
+                 ps.add_here(poly_maps[dst],
                              join_label(lhs->hidden_label_of(lts.transition),
                                         rhs->hidden_label_of(rts.transition)),
                              this->weightset()->mul(lts.weight(), rts.weight()));
