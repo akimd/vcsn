@@ -42,22 +42,22 @@ args = parser.parse_args()
 
 # Access to the git repository.
 if not args.no_git:
-  try:
-      import git
-      import gitdb
-      repo = git.Repo()
-  except ImportError:
-      import warnings
-      warnings.warn('you should install gitpython for Python')
-      repo = None
-  except git.exc.InvalidGitRepositoryError:
-      repo = None
+    try:
+        import git
+        import gitdb
+        repo = git.Repo()
+    except ImportError:
+        import warnings
+        warnings.warn('you should install gitpython for Python')
+        repo = None
+    except git.exc.InvalidGitRepositoryError:
+        repo = None
 else:
     repo = None
 
 
 def git_summary(fn):
-    m = re.match(r'^v\d+\.\d+-\d+-g([\da-f]+)(?:\.\d+)$', fn)
+    m = re.match(r'^v\d+\.\d+-\d+-g([\da-f]+)(?:\.\d+)?$', fn)
     if m and repo:
         try:
             return repo.commit(m.group(1)).summary
