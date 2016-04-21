@@ -111,6 +111,7 @@ dist_notebooks_DATA =                           \
   %D%/context.random.ipynb                      \
   %D%/context.trie.ipynb                        \
   %D%/expansion.operators.ipynb                 \
+  %D%/expansion.project.ipynb                   \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
   %D%/expression.conjunction.ipynb              \
@@ -122,6 +123,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.is_valid.ipynb                 \
   %D%/expression.multiply.ipynb                 \
   %D%/expression.operators.ipynb                \
+  %D%/expression.project.ipynb                  \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
