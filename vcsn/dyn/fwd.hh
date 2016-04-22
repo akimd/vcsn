@@ -41,11 +41,9 @@ namespace vcsn
     // vcsn/dyn/polynomial.hh.
     namespace detail
     {
-      class polynomial_base;
-      template <typename PolynomialSet>
-      class polynomial_wrapper;
+      class polynomial;
     }
-    using polynomial = std::shared_ptr<const detail::polynomial_base>;
+    using polynomial = detail::polynomial;
   }
 
   // vcsn/dyn/type-ast.hh.

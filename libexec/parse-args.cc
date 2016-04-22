@@ -13,6 +13,7 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/stream.hh>
