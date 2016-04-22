@@ -43,9 +43,9 @@ namespace vcsn
       ldiv_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
         auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return make_polynomial(std::get<0>(join_elts), ldiv(std::get<0>(join_elts),
-                                                            std::get<1>(join_elts),
-                                                            std::get<2>(join_elts)));
+        return {std::get<0>(join_elts), ldiv(std::get<0>(join_elts),
+                                             std::get<1>(join_elts),
+                                             std::get<2>(join_elts))};
       }
     }
   }
@@ -76,9 +76,9 @@ namespace vcsn
       lgcd_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
         auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return make_polynomial(std::get<0>(join_elts), lgcd(std::get<0>(join_elts),
-                                                            std::get<1>(join_elts),
-                                                            std::get<2>(join_elts)));
+        return {std::get<0>(join_elts), lgcd(std::get<0>(join_elts),
+                                             std::get<1>(join_elts),
+                                             std::get<2>(join_elts))};
       }
     }
   }

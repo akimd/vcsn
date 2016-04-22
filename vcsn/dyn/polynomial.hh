@@ -130,14 +130,5 @@ namespace vcsn
     } // namespace detail
 
     using polynomial = detail::polynomial;
-
-    template <typename PolynomialSet>
-    inline
-    polynomial
-    make_polynomial(const PolynomialSet& ps,
-                    const typename PolynomialSet::value_t& p)
-    {
-      return detail::polynomial(ps, p);
-    }
   } // namespace dyn
 } // namespace vcsn

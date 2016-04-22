@@ -340,8 +340,7 @@ namespace vcsn
         const auto& l = lbl->as<Label>().value();
         const auto& rs = e.valueset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);
-        return make_polynomial(ps,
-                               vcsn::derivation(rs, e.value(), l, breaking));
+        return {ps, vcsn::derivation(rs, e.value(), l, breaking)};
       }
     }
   }

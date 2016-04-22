@@ -279,7 +279,7 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
         const auto& rs = e.valueset();
         auto ps = vcsn::rat::make_expression_polynomialset(rs);
-        return make_polynomial(ps, vcsn::split<ExpSet>(rs, e.value()));
+        return {ps, vcsn::split<ExpSet>(rs, e.value())};
       }
     }
   }
@@ -320,9 +320,7 @@ namespace vcsn
       {
         const auto& p = poly->as<PolynomialSet>();
         const auto& ps = p.polynomialset();
-        return make_polynomial
-          (ps,
-           vcsn::split_polynomial<PolynomialSet>(ps, p.polynomial()));
+        return {ps, vcsn::split_polynomial<PolynomialSet>(ps, p.polynomial())};
       }
     }
   }

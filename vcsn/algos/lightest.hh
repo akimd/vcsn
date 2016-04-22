@@ -232,7 +232,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());
-        return make_polynomial(ps, lightest(a, num, algo));
+        return {ps, lightest(a, num, algo)};
       }
     }
   }

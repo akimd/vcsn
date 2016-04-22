@@ -65,7 +65,7 @@ namespace vcsn
         const auto& c = ctx->as<Context>();
         auto ps = polynomialset<Context>(c);
         auto res = ::vcsn::read_polynomial(c, is);
-        return make_polynomial(ps, res);
+        return {ps, res};
       }
     }
   }

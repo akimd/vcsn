@@ -978,10 +978,10 @@ namespace vcsn
       conjunction_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
         auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return make_polynomial(std::get<0>(join_elts),
-                               ::vcsn::conjunction(std::get<0>(join_elts),
-                                                   std::get<1>(join_elts),
-                                                   std::get<2>(join_elts)));
+        return {std::get<0>(join_elts),
+                ::vcsn::conjunction(std::get<0>(join_elts),
+                                    std::get<1>(join_elts),
+                                    std::get<2>(join_elts))};
       }
     }
   }

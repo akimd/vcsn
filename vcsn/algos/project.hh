@@ -135,9 +135,7 @@ namespace vcsn
         auto& p = poly->as<PolynomialSet>();
         const auto& ps_in = p.polynomialset();
         auto ps_out = vcsn::detail::project<tape>(ps_in);
-        return make_polynomial(ps_out,
-                               vcsn::detail::project<tape>(ps_in,
-                                                           p.polynomial()));
+        return {ps_out, vcsn::detail::project<tape>(ps_in, p.polynomial())};
       }
     }
   }

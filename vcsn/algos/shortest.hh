@@ -298,7 +298,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());
-        return make_polynomial(ps, shortest(a, num, len));
+        return {ps, shortest(a, num, len)};
       }
     }
   }
