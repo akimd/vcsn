@@ -8,6 +8,7 @@
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/unordered_set.hh>
 #include <vcsn/misc/vector.hh>
+#include <vcsn/misc/sparse-set.hh>
 #include <vcsn/misc/static-if.hh>
 
 namespace vcsn
@@ -43,7 +44,7 @@ namespace vcsn
     template <Automaton Aut, bool Trans = false, bool Exclusion = false>
     class filter_automaton_impl
       : public automaton_decorator<Aut>
-      , public optional_container<std::unordered_set<transition_t_of<Aut>>, Trans>
+      , public optional_container<sparse_set, Trans>
     {
     public:
       using automaton_t = Aut;
@@ -57,8 +58,8 @@ namespace vcsn
       /// Using std::unordered_set because when test states_t and
       /// accessible states are std::unordered_set the
       /// score(perfomance) is better(x2) than using std::set.
-      using states_t = std::unordered_set<state_t>;
-      using transitions_t = std::unordered_set<transition_t>;
+      using states_t = sparse_set;
+      using transitions_t = sparse_set;
       using optional_container_t = optional_container<transitions_t, Trans>;
 
       using tr_cont_t = std::vector<transition_t>;
@@ -73,11 +74,28 @@ namespace vcsn
                             const transitions_t& ts = {})
         : super_t(input), optional_container_t(ts), ss_(ss)
       {
+        set_max_size(states_size(input));
+
         if (!Exclusion)
           {
             ss_.emplace(input->pre());
             ss_.emplace(input->post());
           }
+      }
+
+      template <bool U = Trans>
+      std::enable_if_t<U, void>
+      set_max_size(unsigned size)
+      {
+        ss_.set_max_size(size);
+        optional_container_t::cont_.set_max_size(transitions_size(aut_));
+      }
+
+      template <bool U = Trans>
+      std::enable_if_t<!U, void>
+      set_max_size(unsigned size)
+      {
+        ss_.set_max_size(size);
       }
 
       /// Static name.
@@ -187,8 +205,8 @@ namespace vcsn
         return vcsn::detail::all_out(aut_, s,
                                      [this](transition_t t)
                                      {
-                                      return has_transition(t)
-                                             && filter(ss_, aut_->dst_of(t));
+                                       return has_transition(t)
+                                              && filter(ss_, aut_->dst_of(t));
                                      });
       }
 
@@ -227,7 +245,11 @@ namespace vcsn
       fresh_automaton_t_of<automaton_t>
       strip() const
       {
-        return ::vcsn::copy(aut_, ss_);
+        return ::vcsn::copy(aut_,
+                            [this](state_t_of<automaton_t> s)
+                            {
+                              return has(this->ss_, s);
+                            });
       }
 
     protected:
@@ -248,12 +270,39 @@ namespace vcsn
   template <Automaton Aut, bool Trans = false, bool Exclusion = false>
   filter_automaton<Aut, Trans, Exclusion>
   filter(const Aut& aut,
-         const std::unordered_set<state_t_of<Aut>>& ss
-           = std::unordered_set<state_t_of<Aut>>{},
-         const std::unordered_set<transition_t_of<Aut>>& ts
-           = std::unordered_set<transition_t_of<Aut>>{})
+         const std::unordered_set<state_t_of<Aut>>& ss,
+         const std::unordered_set<transition_t_of<Aut>>& ts)
   {
-    return make_shared_ptr<filter_automaton<Aut, Trans, Exclusion>>(aut, ss, ts);
+    auto rcss = sparse_set(states_size(aut));
+    for (auto s : ss)
+      rcss.emplace(s);
+    auto rcst = sparse_set(transitions_size(aut));
+    for (auto t : ts)
+      rcst.emplace(t);
+    return make_shared_ptr<filter_automaton<Aut, Trans, Exclusion>>(aut, rcss, rcst);
+  }
+
+  /// Get an automaton who is a part state set \a ss of \a aut.
+  template <Automaton Aut, bool Trans = false, bool Exclusion = false>
+  filter_automaton<Aut, Trans, Exclusion>
+  filter(const Aut& aut,
+         const std::unordered_set<state_t_of<Aut>>& ss
+           = std::unordered_set<state_t_of<Aut>>{})
+  {
+    auto rcss = sparse_set(states_size(aut));
+    auto rcst = sparse_set(transitions_size(aut));
+    for (auto s : ss)
+      {
+        rcss.emplace(s);
+        if (aut->has_state(s))
+        {
+          for (auto t : all_out(aut, s))
+            rcst.emplace(t);
+          for (auto t : all_in(aut, s))
+            rcst.emplace(t);
+        }
+      }
+    return make_shared_ptr<filter_automaton<Aut, Trans, Exclusion>>(aut, rcss, rcst);
   }
 
   namespace dyn
