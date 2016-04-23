@@ -88,6 +88,12 @@ def here():
     return finfo.filename + ":" + str(finfo.lineno)
 
 
+def automaton(a):
+    if not isinstance(a, vcsn.automaton):
+        a = vcsn.automaton(a)
+    return a
+
+
 def FAIL(*msg, **kwargs):
     global count, nfail
     count += 1
@@ -145,15 +151,24 @@ def CHECK(effective, msg='', loc=None):
 
 
 def CHECK_EQ(expected, effective, loc=None):
-    "Check that `effective` is equal to `expected`."
+    'Check that `effective` is equal to `expected`.'
+    aut = isinstance(effective, vcsn.automaton)
     if isinstance(expected, str) and not isinstance(effective, str):
         effective = str(effective)
     if expected == effective:
         PASS(loc=loc)
     else:
+        msg = 'Unexpected result'
+        if aut:
+            expaut = automaton(expected)
+            effaut = automaton(effective)
+            if expaut.is_isomorphic(effaut):
+                msg += ' (different but isomorphic)'
+            else:
+                msg += ' (different and not even isomorphic)'
         exp = format(expected)
         eff = format(effective)
-        FAIL("Unexpected result", loc=loc)
+        FAIL(msg, loc=loc)
         rst_file("Expected output", exp)
         rst_file("Effective output", eff)
         rst_diff(exp, eff)
