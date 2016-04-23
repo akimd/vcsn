@@ -682,11 +682,11 @@ CHECK_EQ((a & a & a).strip(), a & 3)
 
 
 # An automaton such that the insplit-based and the rank-based
-# algorithm given different results.
+# algorithm give different results.
 a = vcsn.automaton(r'''
 context = "lan, q"
 $ -> 0
-0 -> 0 \e, a
+0 -> 0 <1/2>\e, a
 0 -> $
 ''')
 
@@ -712,19 +712,19 @@ insplit_res = r'''digraph
   }
   I0 -> 0
   0 -> F0
-  0 -> 0 [label = "\\e, a"]
-  0 -> 1 [label = "\\e"]
-  0 -> 2 [label = "\\e"]
+  0 -> 0 [label = "<1/2>\\e, a"]
+  0 -> 1 [label = "<1/2>\\e"]
+  0 -> 2 [label = "<1/2>\\e"]
   1 -> F1
   1 -> 0 [label = "a"]
-  1 -> 1 [label = "\\e"]
-  1 -> 3 [label = "\\e"]
+  1 -> 1 [label = "<1/2>\\e"]
+  1 -> 3 [label = "<1/2>\\e"]
   2 -> F2
   2 -> 0 [label = "a"]
-  2 -> 2 [label = "\\e"]
+  2 -> 2 [label = "<1/2>\\e"]
   3 -> F3
   3 -> 0 [label = "a"]
-  3 -> 3 [label = "\\e"]
+  3 -> 3 [label = "<1/2>\\e"]
 }'''
 
 CHECK_EQ(insplit_res, a & a & a)
