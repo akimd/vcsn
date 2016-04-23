@@ -255,7 +255,7 @@ namespace vcsn
                                     std::ostream& o)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::list(p.polynomialset(), p.polynomial(), o);
+        return vcsn::list(p.valueset(), p.value(), o);
       }
     }
   }
@@ -274,7 +274,7 @@ namespace vcsn
                                      std::ostream& o, const std::string& fmt)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::print(p.polynomialset(), p.polynomial(), o, format(fmt));
+        return vcsn::print(p.valueset(), p.value(), o, format(fmt));
       }
     }
   }

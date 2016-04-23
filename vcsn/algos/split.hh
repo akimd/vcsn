@@ -319,8 +319,8 @@ namespace vcsn
       split_polynomial(const polynomial& poly)
       {
         const auto& p = poly->as<PolynomialSet>();
-        const auto& ps = p.polynomialset();
-        return {ps, vcsn::split_polynomial<PolynomialSet>(ps, p.polynomial())};
+        const auto& ps = p.valueset();
+        return {ps, vcsn::split_polynomial<PolynomialSet>(ps, p.value())};
       }
     }
   }

@@ -68,45 +68,45 @@ namespace vcsn
           virtual bool empty() const = 0;
         };
 
-        /// Aggregate a polynomial and its polynomialset.
-        template <typename PolynomialSet>
+        /// Aggregate a value and its valueset.
+        template <typename ValueSet>
         struct model final: base
         {
         public:
-          using polynomialset_t = PolynomialSet;
-          using polynomial_t = typename polynomialset_t::value_t;
+          using valueset_t = ValueSet;
+          using value_t = typename valueset_t::value_t;
 
-          model(const polynomialset_t& ps, const polynomial_t& p)
-            : polynomialset_(ps)
-            , polynomial_(p)
+          model(const valueset_t& vs, const value_t& v)
+            : valueset_(vs)
+            , value_(v)
           {}
 
           virtual symbol vname() const override
           {
-            return polynomialset().sname();
+            return valueset().sname();
           }
 
-          const polynomialset_t& polynomialset() const
+          const valueset_t& valueset() const
           {
-            return polynomialset_;
+            return valueset_;
           }
 
-          const polynomial_t polynomial() const
+          const value_t value() const
           {
-            return polynomial_;
+            return value_;
           }
 
           /// Whether is zero.
           virtual bool empty() const override
           {
-            return polynomial_.empty();
+            return value_.empty();
           }
 
         private:
-          /// The polynomial set.
-          const polynomialset_t polynomialset_;
-          /// The polynomial.
-          const polynomial_t polynomial_;
+          /// The value set.
+          const valueset_t valueset_;
+          /// The value.
+          const value_t value_;
         };
 
         /// The wrapped value/valueset.
@@ -121,9 +121,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<PolynomialSetLhs>();
         const auto& r = rhs->as<PolynomialSetRhs>();
-        auto rs = join(l.polynomialset(), r.polynomialset());
-        auto lr = rs.conv(l.polynomialset(), l.polynomial());
-        auto rr = rs.conv(r.polynomialset(), r.polynomial());
+        auto rs = join(l.valueset(), r.valueset());
+        auto lr = rs.conv(l.valueset(), l.value());
+        auto rr = rs.conv(r.valueset(), r.value());
         return std::make_tuple(rs, lr, rr);
       }
 

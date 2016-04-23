@@ -241,7 +241,7 @@ namespace vcsn
       trie(const polynomial& poly)
       {
         const auto& p = poly->as<PolynomialSet>();
-        return trie(p.polynomialset(), p.polynomial());
+        return trie(p.valueset(), p.value());
       }
 
       /// Bridge.
@@ -250,7 +250,7 @@ namespace vcsn
       cotrie(const polynomial& poly)
       {
         const auto& p = poly->as<PolynomialSet>();
-        return cotrie(p.polynomialset(), p.polynomial());
+        return cotrie(p.valueset(), p.value());
       }
     }
   }

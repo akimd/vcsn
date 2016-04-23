@@ -133,9 +133,9 @@ namespace vcsn
       {
         constexpr auto tape = Tape::value;
         auto& p = poly->as<PolynomialSet>();
-        const auto& ps_in = p.polynomialset();
+        const auto& ps_in = p.valueset();
         auto ps_out = vcsn::detail::project<tape>(ps_in);
-        return {ps_out, vcsn::detail::project<tape>(ps_in, p.polynomial())};
+        return {ps_out, vcsn::detail::project<tape>(ps_in, p.value())};
       }
     }
   }
