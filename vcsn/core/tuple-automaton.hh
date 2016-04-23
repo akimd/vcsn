@@ -44,7 +44,7 @@ namespace vcsn
       /// State names: Tuple of states of input automata.
       using state_name_t
         = std::conditional_t<Ranked,
-                             std::tuple<state_t_of<Auts>..., unsigned>,
+                             std::tuple<state_t_of<Auts>..., unsigned short>,
                              std::tuple<state_t_of<Auts>...>>;
 
       /// The type of context of the result.
@@ -239,7 +239,7 @@ namespace vcsn
       }
 
       template <bool Lazy = false, bool Ranked_ = Ranked>
-      auto state(state_t_of<Auts>... ss, unsigned rank)
+      auto state(state_t_of<Auts>... ss, unsigned short rank)
         -> std::enable_if_t<Ranked_, state_t>
       {
         return state<Lazy>(std::make_tuple(ss..., rank));

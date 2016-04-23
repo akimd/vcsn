@@ -264,11 +264,23 @@ namespace vcsn
       add_one_transitions_(const state_t src, const state_name_t& psrc,
                            seq<I...>)
       {
+        bool p_out[] = {has_proper_out<I>(psrc)...};
         using swallow = int[];
         (void) swallow
         {
-          (add_one_transitions_<I>(*(std::get<I>(aut_->auts_)->labelset()),
-                                   src, psrc), 0)...
+          // The first condition prevents the creation of redundant
+          // paths that would lead to incorrect valuations (in the
+          // weighted case), while the second is purely an
+          // optimization, avoiding the creation of non-coaccessible
+          // states.
+          (static_if<ranked>
+           ([](const auto& psrc){ return std::get<rank>(psrc) <= I; },
+            [](auto&&...){ return true; })(psrc)
+           && std::all_of(p_out, p_out + I, [](auto b){ return b; })
+           && (add_one_transitions_<I>(*(std::get<I>(aut_->auts_)->labelset()),
+                                       src, psrc),
+               true),
+           0)...
         };
       }
 
@@ -285,25 +297,16 @@ namespace vcsn
       add_one_transitions_(const LS& ls, const state_t src,
                            const state_name_t& psrc)
       {
-        // The first condition prevents the creation of redundant
-        // paths that would lead to incorrect valuations (in the
-        // weighted case), while the second is purely an optimization,
-        // avoiding the creation of non-coaccessible states.
-        unsigned r = std::get<rank>(psrc);
-        if (r <= I
-            && have_proper_out(psrc, make_index_range<0, I>{}))
-          {
-            // one is guaranteed to be first.
-            const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
-            if (!tmap.empty() && ls.is_one(tmap.begin()->first))
-              for (auto t : tmap.begin()->second)
-                {
-                  auto pdst = psrc;
-                  std::get<I>(pdst) = t.dst;
-                  static_if<ranked>([&pdst]{ std::get<rank>(pdst) = I; })();
-                  this->new_transition(src, state(pdst), ls.one(), t.weight());
-                }
-          }
+        // one is guaranteed to be first.
+        const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+        if (!tmap.empty() && ls.is_one(tmap.begin()->first))
+          for (auto t : tmap.begin()->second)
+            {
+              auto pdst = psrc;
+              std::get<I>(pdst) = t.dst;
+              static_if<ranked>([&pdst]{ std::get<rank>(pdst) = I; })();
+              this->new_transition(src, state(pdst), ls.one(), t.weight());
+            }
       }
 
       /// Whether all the tapes in the sequence have proper outgoing
