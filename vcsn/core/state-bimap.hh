@@ -1,7 +1,6 @@
 #pragma once
 
 #include <boost/bimap.hpp>
-#include <boost/bimap/set_of.hpp>
 #include <boost/bimap/unordered_set_of.hpp>
 
 #include <vcsn/labelset/stateset.hh>
@@ -44,7 +43,7 @@ namespace vcsn
                                           vcsn::hash<state_nameset_t>,
                                           vcsn::equal_to<state_nameset_t>>;
       /// Storage for state index.
-      using right_t = boost::bimaps::set_of<state_t>;
+      using right_t = boost::bimaps::unordered_set_of<state_t>;
       /// Bidirectional map state_name_t -> state_t;
       using bimap_t = boost::bimap<left_t, right_t>;
 
