@@ -77,7 +77,7 @@ class EditContext(Magics):
     def context(self, line, cell=None):
         args = parse_argstring(self.context, line)
         if cell is None:
-            ContextTextWidget(self, args.var)
+            ContextText(self, args.var)
 
 ip = get_ipython()
 ip.register_magics(EditContext)
