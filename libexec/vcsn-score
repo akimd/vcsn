@@ -112,7 +112,7 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
         except RuntimeError as exc:
             t = ' FAIL'
             err = exc
-        print('{:7s}: {:20s} # {}'.format(t, title, comment))
+        print('{:7s}: {:23s} # {}'.format(t, title, comment))
         if err:
             print(err, file=sys.stderr)
         sys.stdout.flush()
@@ -581,19 +581,20 @@ bench('a.has_bounded_lag()',
       number=20)
 
 # Minimize.
-def bench_minimize(ctx, r, algos, number=1):
-    for algo in algos:
-        bench('a.minimize("{}")'.format(algo),
-              'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-              setup=['ctx = vcsn.context("{}")'.format(ctx),
-                     'r = ctx.expression("{}")'.format(r),
-                     'a = r.standard()'],
-              number=number)
-bench_minimize('lal_char(a-k), b', '[a-g]{800}',  ['signature', 'hopcroft', 'moore'])
-bench_minimize('lal_char(a-k), b', '[a-g]{800}',  ['moore'], 5)
-bench_minimize('lal_char(a-k), b', '[a-k]{2000}', ['moore'])
-bench_minimize('lal_char(a-k), b', '[a-g]{300}',  ['weighted', 'hopcroft'])
-bench_minimize('lal_char(a-k), z', '[a-g]{300}',  ['weighted'])
+def bench_minimize(ws, algo, number=1):
+    ctx = 'lal_char(a-k), ' + ws
+    r = '[a-g]{300}'
+    bench('a.minimize("{}")'.format(algo),
+          'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+          setup=['ctx = vcsn.context("{}")'.format(ctx),
+                 'r = ctx.expression("{}")'.format(r),
+                 'a = r.standard()'],
+          number=number)
+bench_minimize('b', 'hopcroft',  2)
+bench_minimize('b', 'moore',    40)
+bench_minimize('b', 'signature', 2)
+bench_minimize('b', 'weighted')
+bench_minimize('z', 'weighted')
 
 
 # reduce.
