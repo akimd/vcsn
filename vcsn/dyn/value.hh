@@ -24,12 +24,16 @@ namespace vcsn
       struct label_tag
       {};
 
+      /// Tag for polynomial/polynomialset
+      struct polynomial_tag
+      {};
+
       /// Tag for weight/weightset.
       struct weight_tag
       {};
 
       /// A dyn value/valueset.
-      template <typename tag>
+      template <typename Tag>
       class LIBVCSN_API value
       {
       public:
@@ -129,8 +133,9 @@ namespace vcsn
         std::shared_ptr<base> self_;
       };
 
-      /// Return the join of the expressionset of two expressions and their
-      /// values in this new expressionset.
+      /// Return the join of the expressionset (or polynomialset) of two
+      /// expressions (polynomials) and their values in this new
+      /// expressionset (polynomialset).
       template <typename ValueSetLhs, typename ValueSetRhs, typename Tag>
       auto
       join(const value<Tag>& lhs, const value<Tag>& rhs)
@@ -151,6 +156,8 @@ namespace vcsn
     using expression = detail::value<detail::expression_tag>;
     // A class representing a label/labelset.
     using label = detail::value<detail::label_tag>;
+    // A class representing an polynomial/polynomialset.
+    using polynomial = detail::value<detail::polynomial_tag>;
     // A class representing a weight/weightset.
     using weight = detail::value<detail::weight_tag>;
 

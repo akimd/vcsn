@@ -6,7 +6,6 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -448,8 +447,7 @@ struct shortest: vcsn_function
 
     auto res = vcsn::dyn::shortest(aut, num, len);
 
-    if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
-      opts.print(res);
+    opts.print(res);
     return 0;
   }
 
@@ -470,8 +468,7 @@ struct shortest: vcsn_function
 
     auto res = vcsn::dyn::shortest(vcsn::dyn::standard(exp), num, len);
 
-    if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
-      opts.print(res);
+    opts.print(res);
     return 0;
   }
 };

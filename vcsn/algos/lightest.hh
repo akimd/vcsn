@@ -12,7 +12,7 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/word-polynomialset.hh>
 
 namespace vcsn

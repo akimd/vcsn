@@ -200,7 +200,6 @@ nobase_include_HEADERS =                        \
   %D%/dyn/context-visitor.hh                    \
   %D%/dyn/context.hh                            \
   %D%/dyn/fwd.hh                                \
-  %D%/dyn/polynomial.hh                         \
   %D%/dyn/signature-printer.hh                  \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \

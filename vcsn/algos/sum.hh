@@ -8,7 +8,6 @@
 #include <vcsn/core/join-automata.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh> // require
 

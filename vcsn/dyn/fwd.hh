@@ -29,6 +29,7 @@ namespace vcsn
       struct expansion_tag;
       struct expression_tag;
       struct label_tag;
+      struct polynomial_tag;
       struct weight_tag;
       template <typename tag>
       class value;
@@ -36,14 +37,9 @@ namespace vcsn
     using expansion = detail::value<detail::expansion_tag>;
     using expression = detail::value<detail::expression_tag>;
     using label = detail::value<detail::label_tag>;
+    using polynomial = detail::value<detail::polynomial_tag>;
     using weight = detail::value<detail::weight_tag>;
 
-    // vcsn/dyn/polynomial.hh.
-    namespace detail
-    {
-      class polynomial;
-    }
-    using polynomial = detail::polynomial;
   }
 
   // vcsn/dyn/type-ast.hh.

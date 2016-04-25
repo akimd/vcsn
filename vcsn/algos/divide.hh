@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/value.hh>
 
 namespace vcsn

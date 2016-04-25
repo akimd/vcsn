@@ -2,7 +2,6 @@
 
 #include <vcsn/ctx/project-context.hh>
 #include <vcsn/dyn/context.hh>
-#include <vcsn/dyn/polynomial.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/name.hh> // integral_constant
