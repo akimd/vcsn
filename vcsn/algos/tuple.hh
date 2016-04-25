@@ -80,13 +80,11 @@ namespace vcsn
            ->template as<tuple_element_t<I, ExpansionSets>>()
            .expansionset()...);
         return
-          make_expansion
-          (xs,
+          {xs,
            vcsn::tuple<decltype(xs), tuple_element_t<I, ExpansionSets>...>
            (xs,
-            es[I]
-            ->template as<tuple_element_t<I, ExpansionSets>>()
-            .expansion()...));
+            es[I]->template as<tuple_element_t<I, ExpansionSets>>()
+            .expansion()...)};
       }
 
       /// Bridge (tuple).

@@ -223,7 +223,7 @@ namespace vcsn
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
-        return make_expansion(rs, ::vcsn::left_mult(rs, w2, r2));
+        return {rs, ::vcsn::left_mult(rs, w2, r2)};
       }
     }
   }
@@ -384,7 +384,7 @@ namespace vcsn
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.expansionset(), r1.expansion());
-        return make_expansion(rs, ::vcsn::right_mult(rs, r2, w2));
+        return {rs, ::vcsn::right_mult(rs, r2, w2)};
       }
     }
   }

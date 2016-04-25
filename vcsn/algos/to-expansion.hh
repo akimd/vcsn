@@ -427,8 +427,7 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
         const auto& rs = e.expressionset();
         auto es = vcsn::rat::expansionset<ExpSet>(rs);
-        return make_expansion(es,
-                              to_expansion<ExpSet>(rs, e.expression()));
+        return {es, to_expansion<ExpSet>(rs, e.expression())};
       }
     }
   }

@@ -26,11 +26,9 @@ namespace vcsn
     // vcsn/dyn/expansion.hh.
     namespace detail
     {
-      class expansion_base;
-      template <typename ExpansionSet>
-      class expansion_wrapper;
+      class expansion;
     }
-    using expansion = std::shared_ptr<const detail::expansion_base>;
+    using expansion = detail::expansion;
 
     // vcsn/dyn/value.hh.
     namespace detail

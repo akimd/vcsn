@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/symbol.hh>
+#include <vcsn/dyn/cast.hh>
 
 namespace vcsn
 {
@@ -12,75 +12,107 @@ namespace vcsn
   {
     namespace detail
     {
-      /// An abstract expansion.
-      class expansion_base
+      /// A dyn expansion/expansionset.
+      class LIBVCSN_API expansion
       {
       public:
-        /// A description of the expansion.
-        virtual symbol vname() const = 0;
+        expansion()
+          : self_()
+        {}
 
+        template <typename ExpansionSet>
+        expansion(const ExpansionSet& es, const typename ExpansionSet::value_t& e)
+          : self_(std::make_shared<model<ExpansionSet>>(es, e))
+        {}
+
+        /// A description of the expansion type.
+        symbol vname() const
+        {
+          return self_->vname();
+        }
+
+        /// Extract wrapped typed expansion.
         template <typename ExpansionSet>
         auto& as()
         {
-          return dyn_cast<expansion_wrapper<ExpansionSet>&>(*this);
+          return dyn_cast<model<ExpansionSet>&>(*self_);
         }
 
+        /// Extract wrapped typed expansion.
         template <typename ExpansionSet>
-        auto& as() const
+        const auto& as() const
         {
-          return dyn_cast<const expansion_wrapper<ExpansionSet>&>(*this);
-        }
-      };
-
-      /// Aggregate an expansion and its expansionset.
-      template <typename ExpansionSet>
-      class expansion_wrapper final: public expansion_base
-      {
-      public:
-        using expansionset_t = ExpansionSet;
-        using super_t = expansion_base;
-        using expansion_t = typename expansionset_t::value_t;
-        expansion_wrapper(const expansionset_t& expansionset,
-                          const expansion_t& expansion)
-          : expansionset_(expansionset)
-          , expansion_(expansion)
-        {}
-        virtual ~expansion_wrapper() {}
-
-        virtual symbol vname() const override
-        {
-          return expansionset().sname();
+          return dyn_cast<const model<ExpansionSet>&>(*self_);
         }
 
-        const expansionset_t& expansionset() const
+        auto* operator->()
         {
-          return expansionset_;
+          return this;
         }
 
-        const expansion_t expansion() const
+        const auto* operator->() const
         {
-          return expansion_;
+          return this;
+        }
+
+        bool operator!()
+        {
+          return !self_;
+        }
+
+        auto& operator=(const expansion& e)
+        {
+          self_ = std::move(e.self_);
+          return *this;
         }
 
       private:
-        /// The expansion set.
-        const expansionset_t expansionset_;
-        /// The expansion.
-        const expansion_t expansion_;
-      };
+        /// Abstract wrapped typed expansion/expansionset.
+        struct base
+        {
+          virtual ~base() = default;
+          virtual symbol vname() const = 0;
+        };
 
+        /// A wrapped typed label/labelset.
+        template <typename ExpansionSet>
+        struct model final : base
+        {
+          using expansionset_t = ExpansionSet;
+          using expansion_t = typename expansionset_t::value_t;
+
+          model(const expansionset_t& es, const expansion_t& e)
+            : expansionset_(es)
+            , expansion_(e)
+          {}
+
+          virtual symbol vname() const override
+          {
+            return expansionset().sname();
+          }
+
+          const expansionset_t& expansionset() const
+          {
+            return expansionset_;
+          }
+
+          const expansion_t expansion() const
+          {
+            return expansion_;
+          }
+
+        private:
+          /// The expansion set.
+          const expansionset_t expansionset_;
+          /// The expansion.
+          const expansion_t expansion_;
+        };
+
+        /// The wrapped expansion/expansionset.
+        std::shared_ptr<base> self_;
+      };
     } // namespace detail
 
-    using expansion = std::shared_ptr<const detail::expansion_base>;
-
-    template <typename ExpansionSet>
-    inline
-    expansion
-    make_expansion(const ExpansionSet& ps,
-                   const typename ExpansionSet::value_t& expansion)
-    {
-      using wrapper_t = detail::expansion_wrapper<ExpansionSet>;
-      return std::make_shared<wrapper_t>(ps, expansion);
-    }
+    using expansion = detail::expansion;
   } // namespace dyn
 } // namespace vcsn

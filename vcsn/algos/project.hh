@@ -78,9 +78,7 @@ namespace vcsn
         auto& x = exp->as<ExpansionSet>();
         const auto& xs_in = x.expansionset();
         auto xs_out = xs_in.template project<tape>();
-        return make_expansion(xs_out,
-                              vcsn::detail::project<tape>(xs_in,
-                                                          x.expansion()));
+        return {xs_out, vcsn::detail::project<tape>(xs_in, x.expansion())};
       }
     }
   }

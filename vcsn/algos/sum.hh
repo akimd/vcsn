@@ -175,7 +175,7 @@ namespace vcsn
         auto rs = join(l.expansionset(), r.expansionset());
         auto lr = rs.conv(l.expansionset(), l.expansion());
         auto rr = rs.conv(r.expansionset(), r.expansion());
-        return make_expansion(rs, ::vcsn::sum(rs, lr, rr));
+        return {rs, ::vcsn::sum(rs, lr, rr)};
       }
     }
   }
