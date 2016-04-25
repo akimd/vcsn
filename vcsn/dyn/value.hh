@@ -53,12 +53,12 @@ namespace vcsn
           return dyn_cast<const model<ValueSet>&>(*self_);
         }
 
-        value<tag>* operator->()
+        value* operator->()
         {
           return this;
         }
 
-        const value<tag>* operator->() const
+        const value* operator->() const
         {
           return this;
         }
@@ -125,7 +125,7 @@ namespace vcsn
     // A class representing a label/labelset.
     using label = detail::value<detail::label_tag>;
     // A class representing a weight/weightset.
-    using weight = detail::value<detail::weigt_tag>;
+    using weight = detail::value<detail::weight_tag>;
 
   } // namespace dyn
 } // namespace vcsn

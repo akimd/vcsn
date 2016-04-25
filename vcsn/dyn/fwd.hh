@@ -36,12 +36,12 @@ namespace vcsn
     namespace detail
     {
       struct label_tag;
-      struct weigt_tag;
+      struct weight_tag;
       template <typename tag>
       class value;
     }
     using label = detail::value<detail::label_tag>;
-    using weight = detail::value<detail::weigt_tag>;
+    using weight = detail::value<detail::weight_tag>;
 
     // vcsn/dyn/polynomial.hh.
     namespace detail
