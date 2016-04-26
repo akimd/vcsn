@@ -44,7 +44,7 @@ namespace vcsn
     template <Automaton Aut, bool Trans = false, bool Exclusion = false>
     class filter_automaton_impl
       : public automaton_decorator<Aut>
-      , public optional_container<sparse_set, Trans>
+      , public optional_container<sparse_set<transition_t_of<Aut>>, Trans>
     {
     public:
       using automaton_t = Aut;
@@ -58,8 +58,8 @@ namespace vcsn
       /// Using std::unordered_set because when test states_t and
       /// accessible states are std::unordered_set the
       /// score(perfomance) is better(x2) than using std::set.
-      using states_t = sparse_set;
-      using transitions_t = sparse_set;
+      using states_t = sparse_set<state_t>;
+      using transitions_t = sparse_set<transition_t>;
       using optional_container_t = optional_container<transitions_t, Trans>;
 
       using tr_cont_t = std::vector<transition_t>;
@@ -273,12 +273,8 @@ namespace vcsn
          const std::unordered_set<state_t_of<Aut>>& ss,
          const std::unordered_set<transition_t_of<Aut>>& ts)
   {
-    auto rcss = sparse_set(states_size(aut));
-    for (auto s : ss)
-      rcss.emplace(s);
-    auto rcst = sparse_set(transitions_size(aut));
-    for (auto t : ts)
-      rcst.emplace(t);
+    auto rcss = sparse_set<state_t_of<Aut>>(ss);
+    auto rcst = sparse_set<transition_t_of<Aut>>(ts);
     return make_shared_ptr<filter_automaton<Aut, Trans, Exclusion>>(aut, rcss, rcst);
   }
 
@@ -289,8 +285,8 @@ namespace vcsn
          const std::unordered_set<state_t_of<Aut>>& ss
            = std::unordered_set<state_t_of<Aut>>{})
   {
-    auto rcss = sparse_set(states_size(aut));
-    auto rcst = sparse_set(transitions_size(aut));
+    auto rcss = sparse_set<state_t_of<Aut>>(states_size(aut));
+    auto rcst = sparse_set<transition_t_of<Aut>>(transitions_size(aut));
     for (auto s : ss)
       {
         rcss.emplace(s);
