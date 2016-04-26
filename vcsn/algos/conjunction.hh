@@ -244,7 +244,7 @@ namespace vcsn
       void add_conjunction_transitions(const state_t src,
                                        const state_name_t& psrc)
       {
-        for (auto t: zip_map_tuple(out_(psrc)))
+        for (const auto& t: zip_map_tuple(out_(psrc)))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
           // because the couple (left destination, label) is unique,
@@ -289,7 +289,7 @@ namespace vcsn
                                  ws_.ldiv(lweight, rhs->weight_of(ts)));
           }
         }
-        for (auto t: zip_map_tuple(out_(psrc)))
+        for (const auto& t: zip_map_tuple(out_(psrc)))
           if (!aut_->labelset()->is_one(t.first)
               && (!aut_->labelset()->is_special(t.first)
               || src == aut_->pre()))

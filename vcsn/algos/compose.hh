@@ -287,7 +287,7 @@ namespace vcsn
         const auto ps = polynomialset_t(aut_->context());
         auto poly_maps = std::map<state_t, polynomial_t>();
 
-        for (auto t: zip_maps(ltm, rtm))
+        for (const auto& t: zip_maps(ltm, rtm))
           // The type of the common label is that of the visible tape
           // of either automata.
           if (!lhs->labelset()->is_one(t.first))
