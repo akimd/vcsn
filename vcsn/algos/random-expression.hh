@@ -6,6 +6,7 @@
 #include <boost/tokenizer.hpp>
 
 #include <vcsn/algos/random.hh>
+#include <vcsn/core/rat/expressionset.hh> // make_expressionset
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/cast.hh>
@@ -27,22 +28,44 @@ namespace vcsn
     class random_expression_impl
     {
     public:
-      using operator_t = std::map<std::string, float>;
-      using weight_t = std::vector<float>;
+      using expressionset_t = ExpressionSet;
+      using expression_t = typename expressionset_t::value_t;
 
-      random_expression_impl(const std::string& param, RandomGenerator& gen)
-        : gen_{gen}
+      random_expression_impl(const expressionset_t& rs,
+                             const std::string& param, RandomGenerator& gen)
+        : rs_{rs}
+        , gen_{gen}
       {
         parse_param_(param);
       }
 
-      std::ostream& print_random_expression(std::ostream& out,
-                                            const ExpressionSet& ls)
+      /// Print a random expression string (not parsed, so there might
+      /// be some syntactic sugar such as `<+`).
+      std::ostream& print_random_expression(std::ostream& out) const
       {
-        return print_random_expression_(out, ls, length_);
+        return print_random_expression_(out, length_);
+      }
+
+      /// A random expression string (not parsed, so there might be
+      /// some syntactic sugar such as `<+`).
+      std::string random_expression_string() const
+      {
+        std::ostringstream out;
+        print_random_expression(out);
+        return out.str();
+      }
+
+      /// A random expression string (not parsed, so there might be
+      /// some syntactic sugar such as `<+`).
+      expression_t random_expression() const
+      {
+        return conv(rs_, random_expression_string());
       }
 
     private:
+      using operator_t = std::map<std::string, float>;
+      using weight_t = std::vector<float>;
+
       void parse_param_(const std::string& param)
       {
         // Set default value.
@@ -84,15 +107,13 @@ namespace vcsn
       /// If there is only one expression available, then apply Bernoulli
       /// distribution to choose if a nullary expresssion should be printed
       /// or not (if not then continue but decrement the length_).
-      void print_nullary_exp_(std::ostream& out,
-                              const ExpressionSet& ls,
-                              unsigned length)
+      void print_nullary_exp_(std::ostream& out, unsigned length) const
       {
         // FIXME: the proportion of \e should be controllable (see
         // random_label).
         if (nullary_op_.size() == 1
             && !std::bernoulli_distribution(nullary_op_.begin()->second)(gen_))
-          print_random_expression_(out, ls, length - 1);
+          print_random_expression_(out, length - 1);
         else
         {
           auto it =
@@ -109,15 +130,13 @@ namespace vcsn
       /// If there is only one operator available, then apply bernoulli
       /// distribution to choose if a unary operator should be print
       /// or not (if not then continue but decrement the number of symbols).
-      void print_unary_exp_(std::ostream& out,
-                            const ExpressionSet& ls,
-                            unsigned length)
+      void print_unary_exp_(std::ostream& out, unsigned length) const
       {
         if (unary_op_.empty())
-          ls.print(random_label(ls, gen_), out);
+          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
         else if (unary_op_.size() == 1
                  && !(std::bernoulli_distribution(unary_op_.begin()->second)(gen_)))
-          print_random_expression_(out, ls, length - 1);
+          print_random_expression_(out, length - 1);
         else
         {
           auto it =
@@ -128,16 +147,16 @@ namespace vcsn
           // prefix
           if (op == "!")
           {
-            out << "(" << op;
-            print_random_expression_(out, ls, length - 1);
-            out << ")";
+            out << '(' << op;
+            print_random_expression_(out, length - 1);
+            out << ')';
           }
           // postfix
           else
           {
-            out << "(";
-            print_random_expression_(out, ls, length - 1);
-            out << op << ")";
+            out << '(';
+            print_random_expression_(out, length - 1);
+            out << op << ')';
           }
         }
       }
@@ -145,9 +164,7 @@ namespace vcsn
       /// Print binary expression with binary operator.
       /// It is composed of the left and right side, and the operator.
       /// The number of symbols is randomly distribued between both side.
-      void print_binary_exp_(std::ostream& out,
-                             const ExpressionSet& ls,
-                             unsigned length)
+      void print_binary_exp_(std::ostream& out, unsigned length) const
       {
         auto it =
           discrete_chooser<RandomGenerator>{gen_}(weight_bin_.begin(),
@@ -156,21 +173,20 @@ namespace vcsn
         auto dis = std::uniform_int_distribution<>(1, length - 1);
         auto num_lhs = dis(gen_);
         out << "(";
-        print_random_expression_(out, ls, num_lhs);
+        print_random_expression_(out, num_lhs);
         out << it->first;
-        print_random_expression_(out, ls, length - num_lhs);
+        print_random_expression_(out, length - num_lhs);
         out << ")";
       }
 
-      std::ostream& print_random_expression_(std::ostream& out,
-                                             const ExpressionSet& ls,
-                                             unsigned length)
+      std::ostream&
+      print_random_expression_(std::ostream& out, unsigned length) const
       {
         // If there is no operators at all, that's impossible to
         // construct an expression, so just return a label.
         if (binary_op_.empty() && unary_op_.empty())
         {
-          ls.print(random_label(ls, gen_), out);
+          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
           return out;
         }
 
@@ -178,12 +194,12 @@ namespace vcsn
         {
           // 2 symbols left: take unary operator.
         case 2:
-          print_unary_exp_(out, ls, length);
+          print_unary_exp_(out, length);
           break;
 
           // 1 symbol left: print a label.
         case 1:
-          ls.print(random_label(ls, gen_), out);
+          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
           break;
 
           // binary, unary or nullary operators are possible
@@ -203,15 +219,15 @@ namespace vcsn
           switch (choose)
           {
           case 0:
-            print_nullary_exp_(out, ls, length);
+            print_nullary_exp_(out, length);
             break;
 
           case 1:
-            print_binary_exp_(out, ls, length);
+            print_binary_exp_(out, length);
             break;
 
           default:
-            print_unary_exp_(out, ls, length);
+            print_unary_exp_(out, length);
             break;
           }
         }
@@ -220,6 +236,7 @@ namespace vcsn
         return out;
       }
 
+      expressionset_t rs_;
       unsigned length_;
       operator_t nullary_op_;
       operator_t unary_op_;
@@ -227,49 +244,59 @@ namespace vcsn
       weight_t weight_null_;
       weight_t weight_un_;
       weight_t weight_bin_;
-      RandomGenerator gen_;
+      RandomGenerator& gen_;
     };
 
+    /// Convenience constructor.
     template <typename ExpressionSet, typename RandomGenerator = std::mt19937>
     random_expression_impl<ExpressionSet, RandomGenerator>
-    make_random_expression_impl(const std::string& param,
+    make_random_expression_impl(const ExpressionSet& rs,
+                                const std::string& param,
                                 RandomGenerator& gen = make_random_engine())
     {
-      return {param, gen};
+      return {rs, param, gen};
     }
 
   } // end namespace vcsn::detail
 
-  /// Generate a random expression from a context. This returns a string as
-  /// it is easier to generate that way without creating an AST in place, and
-  /// the cost of creating the expression from the string representation is
-  /// negligible. This also allows doing easily constructs that are not
-  /// possible in the AST in case we want them (i.e [a-z] ranges).
-  /// Furthermore, the user can then choose the identities they want to apply
-  /// to the resulting expression.
+
+  /// Generate a random expression string.
+  ///
+  /// Return a string. This allows doing easily constructs that are
+  /// not possible in the AST in case we want them (i.e [a-z] ranges).
+  /// Furthermore, the user can then choose the identities they want
+  /// to apply to the resulting expression.
   template <typename ExpressionSet>
   std::string
-  random_expression(const ExpressionSet& ls, const std::string& param)
+  random_expression_string(const ExpressionSet& rs, const std::string& param)
   {
-    std::ostringstream out;
-    auto random_exp = detail::make_random_expression_impl<ExpressionSet>(param);
-    random_exp.print_random_expression(out, ls);
-    return out.str();
+    auto random_exp = detail::make_random_expression_impl(rs, param);
+    return random_exp.random_expression_string();
+  }
+
+
+  /// Generate a random expression.
+  template <typename ExpressionSet>
+  typename ExpressionSet::value_t
+  random_expression(const ExpressionSet& rs, const std::string& param)
+  {
+    auto random_exp = detail::make_random_expression_impl(rs, param);
+    return random_exp.random_expression();
   }
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (random_expression).
+      /// Bridge.
       template <typename Context, typename String, typename Identities>
       expression
       random_expression(const context& ctx, const std::string& param,
                         rat::identities ids)
       {
         const auto& c = ctx->as<Context>();
-        std::istringstream in(random_expression(*c.labelset(), param));
-        return read_expression(ctx, ids, in);
+        auto rs = make_expressionset(c, ids);
+        return {rs, random_expression(rs, param)};
       }
     }
   }

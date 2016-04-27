@@ -173,13 +173,23 @@ CHECK(re.match(r'\w{1}|\\e', str(exp)))
 
 # Check that operators are present only if the user has specified them.
 exp = vcsn.context('lal_char(a), b')\
-          .random_expression('+=0,*=0.5,{c}=1,{\\}=1,length=100',
+          .random_expression('+=1,*=0.5,{c}=1,{\\}=0,length=100',
                              identities='none')
 print("Expression: ", exp)
-CHECK_EQ(str(exp).find('+'), -1)
-CHECK_EQ(str(exp).find('b'), -1)
-CHECK_EQ(str(exp).find('<+'), -1)
-CHECK_EQ(str(exp).find('!'), -1)
+info = exp.info()
+print("Info: ", info)
+CHECK_NE(info['complement'], 0)
+CHECK_EQ(info['conjunction'], 0)
+CHECK_EQ(info['infiltration'], 0)
+CHECK_EQ(info['ldiv'], 0)
+CHECK_EQ(info['lweight'], 0)
+CHECK_EQ(info['one'], 0)
+CHECK_EQ(info['prod'], 0)
+CHECK_EQ(info['rweight'], 0)
+CHECK_EQ(info['shuffle'], 0)
+CHECK_NE(info['star'], 0)
+CHECK_NE(info['sum'], 0)
+CHECK_EQ(info['zero'], 0)
 
 # Check the length of the expression.
 exp = vcsn.context('lal_char(a), b')\
