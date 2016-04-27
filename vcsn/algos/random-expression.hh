@@ -39,14 +39,14 @@ namespace vcsn
       std::ostream& print_random_expression(std::ostream& out,
                                             const ExpressionSet& ls)
       {
-        return print_random_expression_(out, ls, num_symbols_);
+        return print_random_expression_(out, ls, length_);
       }
 
     private:
       void parse_param_(const std::string& param)
       {
         // Set default value.
-        num_symbols_ = 6;
+        length_ = 6;
         using tokenizer = boost::tokenizer<boost::char_separator<char>>;
         auto sep = boost::char_separator<char>{","};
         auto tok = tokenizer(param, sep);
@@ -63,8 +63,8 @@ namespace vcsn
           boost::algorithm::erase_all(value, " ");
           if (op == "!" || op == "{c}" || op == "*" || op == "{T}")
             unary_op_[op] = lexical_cast<float>(value);
-          else if (op == "symbols")
-            num_symbols_ = lexical_cast<float>(value);
+          else if (op == "length")
+            length_ = lexical_cast<float>(value);
           else if (op == "\\e" || op == "\\z")
             nullary_op_[op] = lexical_cast<float>(value);
           else if (op == "&" || op == "&:" || op == ":"
@@ -83,15 +83,16 @@ namespace vcsn
       /// Print nullary expression (\z or \e).
       /// If there is only one expression available, then apply Bernoulli
       /// distribution to choose if a nullary expresssion should be printed
-      /// or not (if not then continue but decrement the number of symbols).
+      /// or not (if not then continue but decrement the length_).
       void print_nullary_exp_(std::ostream& out,
                               const ExpressionSet& ls,
-                              unsigned num_symbols)
+                              unsigned length)
       {
-        // FIXME: the proportion of \e should be controllable (see random_label).
+        // FIXME: the proportion of \e should be controllable (see
+        // random_label).
         if (nullary_op_.size() == 1
             && !std::bernoulli_distribution(nullary_op_.begin()->second)(gen_))
-          print_random_expression_(out, ls, num_symbols - 1);
+          print_random_expression_(out, ls, length - 1);
         else
         {
           auto it =
@@ -110,13 +111,13 @@ namespace vcsn
       /// or not (if not then continue but decrement the number of symbols).
       void print_unary_exp_(std::ostream& out,
                             const ExpressionSet& ls,
-                            unsigned num_symbols)
+                            unsigned length)
       {
         if (unary_op_.empty())
           ls.print(random_label(ls, gen_), out);
         else if (unary_op_.size() == 1
                  && !(std::bernoulli_distribution(unary_op_.begin()->second)(gen_)))
-          print_random_expression_(out, ls, num_symbols - 1);
+          print_random_expression_(out, ls, length - 1);
         else
         {
           auto it =
@@ -128,14 +129,14 @@ namespace vcsn
           if (op == "!")
           {
             out << "(" << op;
-            print_random_expression_(out, ls, num_symbols - 1);
+            print_random_expression_(out, ls, length - 1);
             out << ")";
           }
           // postfix
           else
           {
             out << "(";
-            print_random_expression_(out, ls, num_symbols - 1);
+            print_random_expression_(out, ls, length - 1);
             out << op << ")";
           }
         }
@@ -146,24 +147,24 @@ namespace vcsn
       /// The number of symbols is randomly distribued between both side.
       void print_binary_exp_(std::ostream& out,
                              const ExpressionSet& ls,
-                             unsigned num_symbols)
+                             unsigned length)
       {
         auto it =
           discrete_chooser<RandomGenerator>{gen_}(weight_bin_.begin(),
                                                   weight_bin_.end(),
                                                   binary_op_.begin());
-        auto dis = std::uniform_int_distribution<>(1, num_symbols - 1);
+        auto dis = std::uniform_int_distribution<>(1, length - 1);
         auto num_lhs = dis(gen_);
         out << "(";
         print_random_expression_(out, ls, num_lhs);
         out << it->first;
-        print_random_expression_(out, ls, num_symbols - num_lhs);
+        print_random_expression_(out, ls, length - num_lhs);
         out << ")";
       }
 
       std::ostream& print_random_expression_(std::ostream& out,
                                              const ExpressionSet& ls,
-                                             unsigned num_symbols)
+                                             unsigned length)
       {
         // If there is no operators at all, that's impossible to
         // construct an expression, so just return a label.
@@ -173,11 +174,11 @@ namespace vcsn
           return out;
         }
 
-        switch (num_symbols)
+        switch (length)
         {
           // 2 symbols left: take unary operator.
         case 2:
-          print_unary_exp_(out, ls, num_symbols);
+          print_unary_exp_(out, ls, length);
           break;
 
           // 1 symbol left: print a label.
@@ -202,15 +203,15 @@ namespace vcsn
           switch (choose)
           {
           case 0:
-            print_nullary_exp_(out, ls, num_symbols);
+            print_nullary_exp_(out, ls, length);
             break;
 
           case 1:
-            print_binary_exp_(out, ls, num_symbols);
+            print_binary_exp_(out, ls, length);
             break;
 
           default:
-            print_unary_exp_(out, ls, num_symbols);
+            print_unary_exp_(out, ls, length);
             break;
           }
         }
@@ -219,7 +220,7 @@ namespace vcsn
         return out;
       }
 
-      unsigned num_symbols_;
+      unsigned length_;
       operator_t nullary_op_;
       operator_t unary_op_;
       operator_t binary_op_;
@@ -228,6 +229,15 @@ namespace vcsn
       weight_t weight_bin_;
       RandomGenerator gen_;
     };
+
+    template <typename ExpressionSet, typename RandomGenerator = std::mt19937>
+    random_expression_impl<ExpressionSet, RandomGenerator>
+    make_random_expression_impl(const std::string& param,
+                                RandomGenerator& gen = make_random_engine())
+    {
+      return {param, gen};
+    }
+
   } // end namespace vcsn::detail
 
   /// Generate a random expression from a context. This returns a string as
@@ -238,13 +248,11 @@ namespace vcsn
   /// Furthermore, the user can then choose the identities they want to apply
   /// to the resulting expression.
   template <typename ExpressionSet>
-  std::string random_expression(const ExpressionSet& ls, const std::string& param)
+  std::string
+  random_expression(const ExpressionSet& ls, const std::string& param)
   {
-    using namespace detail;
-    auto& gen = make_random_engine();
-
     std::ostringstream out;
-    auto random_exp = random_expression_impl<ExpressionSet, decltype(gen)>(param, gen);
+    auto random_exp = detail::make_random_expression_impl<ExpressionSet>(param);
     random_exp.print_random_expression(out, ls);
     return out.str();
   }

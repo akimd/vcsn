@@ -171,18 +171,20 @@ exp = vcsn.context('lan_char(a-z), b').random_expression()
 print("Expression: ", exp)
 CHECK(re.match(r'\w{1}|\\e', str(exp)))
 
-# Check that operators are present only if the user has specified them
-exp = vcsn.context('lal_char(a), b').random_expression('+=0,*=0.5,{c}=1,{\\}=1,symbols=100',
-                                                       identities='none')
+# Check that operators are present only if the user has specified them.
+exp = vcsn.context('lal_char(a), b')\
+          .random_expression('+=0,*=0.5,{c}=1,{\\}=1,length=100',
+                             identities='none')
 print("Expression: ", exp)
 CHECK_EQ(str(exp).find('+'), -1)
 CHECK_EQ(str(exp).find('b'), -1)
 CHECK_EQ(str(exp).find('<+'), -1)
 CHECK_EQ(str(exp).find('!'), -1)
 
-# Check the length of the expression
-exp = vcsn.context('lal_char(a), b').random_expression('+=1,symbols=15',
-                                                       identities='none')
+# Check the length of the expression.
+exp = vcsn.context('lal_char(a), b')\
+          .random_expression('+=1,length=15',
+                             identities='none')
 print("Expression: ", exp)
 CHECK(str(exp).count('a') < 15)
 
