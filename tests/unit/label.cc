@@ -3,14 +3,16 @@
 #include <iomanip> // setw
 #include <iostream>
 
-#include <tests/unit/test.hh>
-
 #include <vcsn/alphabets/char.hh>
 #include <vcsn/alphabets/setalpha.hh>
 #include <vcsn/labelset/letterset.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/labelset/wordset.hh>
 #include <vcsn/misc/escape.hh>
+
+// Include this one last, as it defines a macro `V`, which is used as
+// a template parameter in boost/unordered/detail/allocate.hpp.
+#include "tests/unit/test.hh"
 
 /// The name of \a vs.
 template <typename ValueSet>

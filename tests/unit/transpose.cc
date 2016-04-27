@@ -1,11 +1,14 @@
 #undef NDEBUG
-#include <tests/unit/test.hh>
+
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/core/rat/expressionset.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/labelset/wordset.hh>
 
+// Include this one last, as it defines a macro `V`, which is used as
+// a template parameter in boost/unordered/detail/allocate.hpp.
+#include "tests/unit/test.hh"
 
 static size_t
 check_mutable_automaton()
@@ -33,9 +36,9 @@ check_mutable_automaton()
   auto s2 = aut1->new_state();
 
   aut1->set_initial(s0, conv(ks_b, "wxyz"));
-  aut1->add_transition(s0, s0, "cd", conv(ks_b, "wx"));
-  aut1->add_transition(s0, s1, "cd", conv(ks_b, "wxyz"));
-  aut1->add_transition(s1, s2, "cd");
+  aut1->new_transition(s0, s0, "cd", conv(ks_b, "wx"));
+  aut1->new_transition(s0, s1, "cd", conv(ks_b, "wxyz"));
+  aut1->new_transition(s1, s2, "cd");
   aut1->set_initial(s2, conv(ks_b, "wxyz"));
   vcsn::dot(aut1, std::cout) << '\n';
 

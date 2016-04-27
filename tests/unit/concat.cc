@@ -1,7 +1,11 @@
-#include <tests/unit/test.hh>
 #include <iostream>
+
 #include <vcsn/ctx/law_char_z.hh>
 #include <vcsn/core/rat/expressionset.hh>
+
+// Include this one last, as it defines a macro `V`, which is used as
+// a template parameter in boost/unordered/detail/allocate.hpp.
+#include "tests/unit/test.hh"
 
 template <typename Ctx>
 static size_t

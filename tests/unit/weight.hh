@@ -1,6 +1,7 @@
+#include "tests/unit/test.hh"
+
 /// Check axiomatic laws of a weightset (semiring).
 template <typename WeightSet>
-inline
 bool check_common(const WeightSet& ws)
 {
   size_t nerrs = 0;

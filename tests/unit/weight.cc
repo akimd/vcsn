@@ -7,8 +7,7 @@
 #include <vcsn/weightset/q.hh>
 #include <vcsn/weightset/zmin.hh>
 
-#include <tests/unit/test.hh>
-#include <tests/unit/weight.hh>
+#include "tests/unit/weight.hh"
 
 // FIXME: Check that invalid conv throws.
 // FIXME: Use Google Tests, or Boost Tests.

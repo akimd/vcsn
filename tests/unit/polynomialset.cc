@@ -4,8 +4,11 @@
 #include <vcsn/ctx/lao_z.hh>
 #include <vcsn/weightset/zmin.hh>
 #include <vcsn/weightset/polynomialset.hh>
-#include <tests/unit/test.hh>
 #include <tests/unit/weight.hh>
+
+// Include this one last, as it defines a macro `V`, which is used as
+// a template parameter in boost/unordered/detail/allocate.hpp.
+#include "tests/unit/test.hh"
 
 template <typename T>
 static

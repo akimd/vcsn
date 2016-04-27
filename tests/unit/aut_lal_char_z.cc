@@ -1,16 +1,19 @@
 #undef NDEBUG
-#include <tests/unit/test.hh>
 #include <iostream>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/misc/vector.hh> // make_vector
 #include <vcsn/ctx/lal_char_z.hh>
 
+// Include this one last, as it defines a macro `V`, which is used as
+// a template parameter in boost/unordered/detail/allocate.hpp.
+#include "tests/unit/test.hh"
+
 using context_t = vcsn::ctx::lal_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
 /// Generate several new states in \a aut, and return them.
-template <typename Aut>
+template <Automaton Aut>
 std::vector<vcsn::state_t_of<Aut>>
 new_states(Aut& aut, size_t n)
 {
@@ -22,7 +25,7 @@ new_states(Aut& aut, size_t n)
 }
 
 /// Generate a clique automaton of size \a size.
-template <typename Aut>
+template <Automaton Aut>
 Aut
 clique(const vcsn::context_t_of<Aut>& ctx, size_t size)
 {
@@ -32,7 +35,7 @@ clique(const vcsn::context_t_of<Aut>& ctx, size_t size)
   for (auto s: ss)
     for (auto d: ss)
       for (auto l: letters)
-        res->add_transition(s, d, l);
+        res->new_transition(s, d, l);
   return res;
 }
 
