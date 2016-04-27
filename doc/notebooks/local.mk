@@ -169,20 +169,16 @@ MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/
 %.html: %.ipynb
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 # nbconvert appends ".html" to the argument of --output.
-	$(AM_V_at)$(NBCONVERT) $(if $(V:0=),,--log-level=CRITICAL) --output="$*.tmp" "$<"
+	$(AM_V_at)$(NBCONVERT) $(if $(V:0=),,--log-level=CRITICAL) --stdout "$<" >"$@.tmp"
+# The generated HTML files still point to the local ipynb files, which
+# is ok for nbviewer, but not for static HTML pages.  So
+# s/NOTEBOOK.ipynb/NOTEBOOK.html/ for the notebooks, but not for the
+# URLs.  So change only [\w.]+.ipynb.
 	$(AM_V_at)$(PERL) -pi					\
 	   -e 's{\Q$(MATHJAX_BAD)\E}'"{$(MATHJAX_OK)}g;"	\
-	   "$*.tmp.html"
-# The generated HTML files still point to ipynb files, which is ok for
-# nbviewer, but not for us.  So s/ipynb/html/, except for ICALP.
-# FIXME: restore once the review process is over.
-	$(AM_V_at) case " $* " in				\
-	  *ICALP*) ;;						\
-	  *) $(PERL) -pi					\
-	   -e 's{(<a href=".*?\.)ipynb([#"])}{$$1html$$2}g;'	\
-	   "$*.tmp.html";;					\
-	esac
-	$(AM_V_at)mv -f "$*.tmp.html" "$@"
+	   -e 's{(<a href="[\w.]+\.)ipynb}{$$1html}g;'		\
+	   "$@.tmp"
+	$(AM_V_at)mv -f "$@.tmp" "$@"
 
 upload-doc: upload-notebooks
 upload-notebooks: $(dist_notebooks_DATA) $(nodist_notebooks_DATA)
