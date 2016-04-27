@@ -590,6 +590,7 @@ def bench_minimize(ws, algo, number=1):
                  'r = ctx.expression("{}")'.format(r),
                  'a = r.standard()'],
           number=number)
+bench_minimize('b', 'brzozowski', 200)
 bench_minimize('b', 'hopcroft',  2)
 bench_minimize('b', 'moore',    40)
 bench_minimize('b', 'signature', 2)
