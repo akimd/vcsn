@@ -467,7 +467,7 @@ namespace vcsn
   template <Automaton Lhs, Automaton Rhs,
             std::size_t OutTape = 1, std::size_t InTape = 0>
   auto
-  compose(Lhs& lhs, Rhs& rhs)
+  compose(const Lhs& lhs, const Rhs& rhs)
   {
     auto res = make_compose_automaton<false, OutTape, InTape>(lhs, rhs);
     res->compose();
@@ -478,7 +478,7 @@ namespace vcsn
   template <typename Lhs, typename Rhs,
             std::size_t OutTape = 1, std::size_t InTape = 0>
   auto
-  compose_lazy(Lhs& lhs, Rhs& rhs)
+  compose_lazy(const Lhs& lhs, const Rhs& rhs)
   {
     auto res = make_compose_automaton<true, OutTape, InTape>(lhs, rhs);
     res->compose();
@@ -492,7 +492,7 @@ namespace vcsn
       /// Bridge.
       template <Automaton Lhs, Automaton Rhs, typename Bool>
       automaton
-      compose(automaton& lhs, automaton& rhs, bool lazy)
+      compose(const automaton& lhs, const automaton& rhs, bool lazy)
       {
         auto& l = lhs->as<Lhs>();
         auto& r = rhs->as<Rhs>();
