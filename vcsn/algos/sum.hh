@@ -135,24 +135,6 @@ namespace vcsn
   }
 
 
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (sum).
-      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
-      polynomial
-      sum_polynomial(const polynomial& lhs, const polynomial& rhs)
-      {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return { std::get<0>(join_elts), sum(std::get<0>(join_elts),
-                                             std::get<1>(join_elts),
-                                             std::get<2>(join_elts))};
-      }
-    }
-  }
-
-
   /*-----------------------------.
   | sum(expansion, expansion).   |
   `-----------------------------*/
@@ -166,12 +148,10 @@ namespace vcsn
       expansion
       sum_expansion(const expansion& lhs, const expansion& rhs)
       {
-        const auto& l = lhs->as<ExpansionSetLhs>();
-        const auto& r = rhs->as<ExpansionSetRhs>();
-        auto rs = join(l.valueset(), r.valueset());
-        auto lr = rs.conv(l.valueset(), l.value());
-        auto rr = rs.conv(r.valueset(), r.value());
-        return {rs, ::vcsn::sum(rs, lr, rr)};
+        auto join_elts = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                ::vcsn::sum(std::get<0>(join_elts),
+                            std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }
   }
@@ -190,9 +170,31 @@ namespace vcsn
       sum_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), ::vcsn::sum(std::get<0>(join_elts),
-                                                    std::get<1>(join_elts),
-                                                    std::get<2>(join_elts))};
+        return {std::get<0>(join_elts),
+                ::vcsn::sum(std::get<0>(join_elts),
+                            std::get<1>(join_elts), std::get<2>(join_elts))};
+      }
+    }
+  }
+
+
+  /*-------------------------------.
+  | sum(polynomial, polynomial).   |
+  `-------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (sum).
+      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
+      polynomial
+      sum_polynomial(const polynomial& lhs, const polynomial& rhs)
+      {
+        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                sum(std::get<0>(join_elts),
+                    std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }
   }
@@ -211,12 +213,10 @@ namespace vcsn
       weight
       sum_weight(const weight& lhs, const weight& rhs)
       {
-        const auto& l = lhs->as<WeightSetLhs>();
-        const auto& r = rhs->as<WeightSetRhs>();
-        auto rs = join(l.valueset(), r.valueset());
-        auto lr = rs.conv(l.valueset(), l.value());
-        auto rr = rs.conv(r.valueset(), r.value());
-        return {rs, sum(rs, lr, rr)};
+        auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                sum(std::get<0>(join_elts),
+                    std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }
   }
