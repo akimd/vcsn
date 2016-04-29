@@ -224,6 +224,7 @@ namespace vcsn
       rs_.labelset()->print(v.value(), out_, fmt_.for_labels());
     }
 
+    /// Specific handling to using exponents as syntactic sugar.
     VISIT(prod)
     {
       for (auto it = begin(v); it != end(v); /* nothing */)

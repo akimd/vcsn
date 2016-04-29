@@ -261,20 +261,35 @@ namespace vcsn
     ///
     ///   Concat(word(a),word(b)) -> word(ab)
     ///
-    /// In other case, synonym for mul.
+    /// In other cases, synonym for mul.
     auto concat(const value_t& l, const value_t& r) const -> value_t;
 
+    /// Build an conjunction product: `l & r`.
     auto conjunction(const value_t& l, const value_t& r) const -> value_t;
+
+    /// Build an infiltration product: `l &: r`.
     auto infiltration(const value_t& l, const value_t& r) const -> value_t;
+
+    /// Build a shuffle product: `l : r`.
     auto shuffle(const value_t& l, const value_t& r) const -> value_t;
+
+    /// Build a tuple: `e | f | ...`.
     template <typename... Value>
     auto tuple(Value&&... v) const -> value_t;
-    /// Add a power operator.
+
+    /// Add a power operator: `e{n}`.
     auto power(const value_t& e, unsigned n) const -> value_t;
+
+    /// Build a left division: `l {\} r`.
     auto ldiv(const value_t& l, const value_t& r) const -> value_t;
+
+    /// Build a right division: `l {/} r`.
     auto rdiv(const value_t& l, const value_t& r) const -> value_t;
+
+    /// Add a star operator: `e*`.
     auto star(const value_t& e) const -> value_t;
-    /// Add a complement operator.
+
+    /// Add a complement operator: `e{c}`.
     auto complement(const value_t& e) const -> value_t;
     /// Add a transposition operator.
     auto transposition(const value_t& e) const -> value_t;

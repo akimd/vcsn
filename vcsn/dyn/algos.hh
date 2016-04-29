@@ -102,6 +102,10 @@ namespace vcsn
 
     /// The conjunction (aka synchronized product) of automata.
     /// Performs the meet of the contexts.
+    ///
+    /// \param lhs   the left automaton
+    /// \param rhs   the right automaton
+    /// \param lazy  whether to perform the computations on demand.
     automaton conjunction(const automaton& lhs, const automaton& rhs,
                           bool lazy = false);
 
@@ -287,10 +291,15 @@ namespace vcsn
     std::ostream& info(const expression& exp, std::ostream& out = std::cout);
 
     /// Split automaton on the incoming transition.
-    /// Every state either has only epsilon incoming transitions
-    /// or non-epsilon ones.
     ///
-    /// \pre aut is lal or lan
+    /// In an insplit automaton, each state has either only
+    /// spontaneous incoming transitions or only proper incoming
+    /// transitions.
+    ///
+    /// \param aut   automaton to insplit
+    /// \param lazy  whether to perform the computations on demand.
+    ///
+    /// \pre aut is lal or lan.
     automaton insplit(const automaton& aut, bool lazy = false);
 
     /// Whether \a aut is accessible.

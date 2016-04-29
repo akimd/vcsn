@@ -468,6 +468,7 @@ namespace vcsn
                  && type_ignoring_lweight_(r) == type_t::one))
       res = zero();
 
+    // General case: E & F.
     else
       res = std::make_shared<conjunction_t>(gather_<type_t::conjunction>(l, r));
     return res;

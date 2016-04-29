@@ -347,7 +347,7 @@ namespace vcsn
       /// External product.
       const char* lmul_ = nullptr;
       const char* rmul_ = nullptr;
-      /// Quotient.
+      /// Left-quotient.
       const char* ldiv_ = nullptr;
       /// The expression operators.
       const char* star_ = nullptr;

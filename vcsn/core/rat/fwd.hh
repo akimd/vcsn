@@ -81,8 +81,8 @@ namespace vcsn
               || t == type_t::sum);
     }
 
-    std::ostream&
-    operator<<(std::ostream& o, type_t t);
+    /// Print a expression type.
+    std::ostream& operator<<(std::ostream& o, type_t t);
 
 #define DEFINE(Node)             \
     template <typename Context>  \
