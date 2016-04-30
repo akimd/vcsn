@@ -16,9 +16,11 @@
 #include <vcsn/dyn/context.hh> // dyn::make_context
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/labelset/oneset.hh>
+#include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/stream.hh>
+#include <vcsn/misc/tuple.hh>
 
 namespace vcsn
 {
@@ -513,6 +515,16 @@ namespace vcsn
   {
     auto ts = as_tupleset();
     auto t = ts.tuple(v...);
+    // \z | E => \z.
+    //
+    // FIXME: maybe we should introduce a short-circuiting version
+    // that would not make useless invocation when a \z was found.
+    if (detail::apply(any{},
+                      detail::apply(([](const auto& rs, const auto& r)
+                                     { return rs.is_zero(r); }),
+                                    ts.sets(), t)))
+      return zero();
+    // \e | \e => \e.
     if (ts.is_one(t))
       return one();
     // If this is a tuple of labels, make it a (multitape) label.

@@ -20,6 +20,15 @@ namespace vcsn
       return std::any_of(begin(r), end(r), p);
     }
 
+    template <typename Range>
+    bool any_of(const Range &r)
+    {
+      using std::begin;
+      using std::end;
+      return std::any_of(begin(r), end(r),
+                         [](const auto& p) -> bool { return p; });
+    }
+
     /// The last member of this Container.
     ///
     /// Should be specialized for containers with random access.

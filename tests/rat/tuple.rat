@@ -2,6 +2,17 @@
 # display [a-d], not [^].
 %context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, q
 
+\z|\z|\z => \z
+\z|e|i   => \z
+a|\z|i   => \z
+a|e|\z   => \z
+
+\e|\e|\e => \e
+a|\e|\e  => a|\e|\e
+\e|e|\e  => \e|e|\e
+\e|\e|i  => \e|\e|i
+a|\e|i   => a|\e|i
+
 a|e|i                => a|e|i
 a*|e*|i*             => a*|e*|i*
 (a|e|i)*             => (a|e|i)*

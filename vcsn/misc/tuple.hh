@@ -190,6 +190,75 @@ namespace vcsn
     }
 
 
+    /// Unpack a tuple, and pass its content as argument to a funtion.
+    template <typename Fun, typename... Args>
+    auto
+    apply(Fun f, const std::tuple<Args...>& args)
+      // Return type needed by G++ 5.
+      -> decltype(apply_impl_(f, args, make_index_sequence<sizeof...(Args)>()))
+    {
+      return apply_impl_(f, args, make_index_sequence<sizeof...(Args)>());
+    }
+
+    template <typename Fun, typename... Args, size_t... I>
+    auto
+    apply_impl_(Fun f,
+                const std::tuple<Args...>& args,
+                index_sequence<I...>)
+      // Return type needed by G++ 5.
+      -> decltype(f(std::get<I>(args)...))
+    {
+      return f(std::get<I>(args)...);
+    }
+
+
+    /// Apply a tuple of functions on a tuple of arguments, return the
+    /// tuple of results.
+    template <typename... Funs, typename... Args>
+    auto
+    apply(const std::tuple<Funs...>& funs, const std::tuple<Args...>& args)
+    {
+      static_assert(sizeof...(Funs) == sizeof...(Args),
+                    "tuples of functions and arguments of different sizes");
+      return apply_impl_(funs, args, make_index_sequence<sizeof...(Funs)>());
+    }
+
+    /// Apply a tuple of functions on a tuple of arguments, return the
+    /// tuple of results.
+    template <typename... Funs, typename... Args, size_t... I>
+    auto
+    apply_impl_(const std::tuple<Funs...>& funs,
+                const std::tuple<Args...>& args,
+                index_sequence<I...>)
+    {
+      return std::make_tuple(std::get<I>(funs)(std::get<I>(args))...);
+    }
+
+
+    /// Apply a tuple of member functions on a tuple of arguments,
+    /// return the tuple of results.
+    template <typename Fun, typename... Objs, typename... Args>
+    auto
+    apply(Fun fun,
+          const std::tuple<Objs...>& objs, const std::tuple<Args...>& args)
+    {
+      static_assert(sizeof...(Objs) == sizeof...(Args),
+                    "tuples of objects and arguments of different sizes");
+      return apply_impl_(fun, objs, args,
+                         make_index_sequence<sizeof...(Objs)>());
+    }
+
+    template <typename Fun, typename... Objs, typename... Args, size_t... I>
+    auto
+    apply_impl_(Fun fun,
+                const std::tuple<Objs...>& objs,
+                const std::tuple<Args...>& args,
+                index_sequence<I...>)
+    {
+      return std::make_tuple(fun(std::get<I>(objs), std::get<I>(args))...);
+    }
+
+
     /*--------------------------------------------.
     | Variadic Cartesian product of containers.   |
     `--------------------------------------------*/
@@ -384,6 +453,24 @@ namespace vcsn
     };
     return res;
   }
+
+  /// Whether some of the `values` evaluate as true.
+  ///
+  /// Made a functor to be easily composable with unpack.
+  struct any
+  {
+    template <typename... Bool>
+    bool operator()(Bool&&... values)
+    {
+      bool res = false;
+      using swallow = int[];
+      (void) swallow
+        {
+          (res = res || values, 0)...
+            };
+      return res;
+    }
+  };
 }
 
 namespace std
