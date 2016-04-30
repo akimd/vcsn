@@ -170,42 +170,23 @@ namespace vcsn
       (void) swallow{ (f(std::get<I>(ts)), 0)... };
     }
 
+
     /// Map a function on a tuple, return tuple of the results.
     template <typename Fun, typename... Ts>
     auto
     map(const std::tuple<Ts...>& ts, Fun f)
       -> decltype(map_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>()))
     {
-      return map_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>());
+      return map_impl_(f, ts, make_index_sequence<sizeof...(Ts)>());
     }
 
     template <typename Fun, typename... Ts, size_t... I>
     auto
-    map_tuple_(Fun f,
-               const std::tuple<Ts...>& ts,
-               index_sequence<I...>)
-      -> decltype(map_variadic_(f, std::get<I>(ts)...))
+    map_impl_(Fun f,
+              const std::tuple<Ts...>& ts,
+              index_sequence<I...>)
     {
-      return map_variadic_(f, std::get<I>(ts)...);
-    }
-
-    template <typename Fun>
-    auto
-    map_variadic_(Fun)
-      -> decltype(std::make_tuple())
-    {
-      return std::make_tuple();
-    }
-
-    template <typename Fun, typename T, typename... Ts>
-    auto
-    map_variadic_(Fun f, T t, Ts&&... ts)
-      -> decltype(std::tuple_cat(std::make_tuple(f(t)),
-                                 map_variadic_(f, ts...)))
-    {
-      // Enforce evaluation order from left to right.
-      auto r = f(t);
-      return std::tuple_cat(std::make_tuple(r), map_variadic_(f, ts...));
+      return std::make_tuple(f(std::get<I>(ts))...);
     }
 
 
