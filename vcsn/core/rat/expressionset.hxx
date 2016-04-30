@@ -483,15 +483,15 @@ namespace vcsn
       res = std::make_shared<ldiv_t>(l, r);
 
     // 0\E => 0.
-    else if (ids_ && is_zero(l))
+    else if (is_zero(l))
       res = l;
 
     // 1\E => E.
-    else if (ids_ && is_one(l))
+    else if (is_one(l))
       res = r;
 
     // E\0 => 0.
-    else if (ids_ && is_zero(r))
+    else if (is_zero(r))
       res = r;
 
     else
@@ -519,8 +519,8 @@ namespace vcsn
     // That allows algorithms such as standard, thompson, etc. to work
     // on lal x lal.
     //
-    // Note that `\e|a` remains a tuple of expression on lal x lal,
-    // but it is turned into a (multitape) label on lan x lan.
+    // Note that `\e|a` remains a tuple of expressions on lal x lal,
+    // but it is turned into a (multitape) label on lan x lal.
     else if (tuple_of_label<>::is_label(t))
       return atom(tuple_of_label<>::as_label(t));
     else
@@ -535,20 +535,20 @@ namespace vcsn
     if (!ids_)
       res = std::make_shared<infiltration_t>(l, r);
 
-    // 0&:E => 0.
-    else if (ids_ && is_zero(l))
+    // 0 &: E => 0.
+    else if (is_zero(l))
       res = l;
 
-    // E&:0 => 0.
-    else if (ids_ && is_zero(r))
+    // E &: 0 => 0.
+    else if (is_zero(r))
       res = r;
 
-    // 1&:E => E.
-    else if (ids_ && is_one(l))
+    // 1 &: E => E.
+    else if (is_one(l))
       res = r;
 
-    // E&:1 => E.
-    else if (ids_ && is_one(r))
+    // E &: 1 => E.
+    else if (is_one(r))
       res = l;
 
     else
@@ -566,19 +566,19 @@ namespace vcsn
       res = std::make_shared<shuffle_t>(l, r);
 
     // 0:E => 0.
-    else if (ids_ && is_zero(l))
+    else if (is_zero(l))
       res = l;
 
     // E:0 => 0.
-    else if (ids_ && is_zero(r))
+    else if (is_zero(r))
       res = r;
 
     // 1:E => E.
-    else if (ids_ && is_one(l))
+    else if (is_one(l))
       res = r;
 
     // E:1 => E.
-    else if (ids_ && is_one(r))
+    else if (is_one(r))
       res = l;
 
     else
