@@ -137,6 +137,7 @@ namespace vcsn
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
 #endif
+      /// Helper function to facilitate dispatch below.
       template <Automaton Aut, typename Tag>
       automaton minimize_tag_(const Aut& aut)
       {
@@ -182,6 +183,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Helper function to facilitate dispatch below.
       template <Automaton Aut, typename Tag>
       automaton cominimize_tag_(const Aut& aut)
       {

@@ -19,10 +19,24 @@ namespace vcsn
   struct deterministic_tag {};
 
   /// Tag for operations on all automata.
-  struct general_tag {};
+  struct general_tag
+  {
+    static symbol sname()
+    {
+      static auto res = symbol{"general_tag"};
+      return res;
+    }
+  };
 
   /// Tag for operations on standard automata.
-  struct standard_tag {};
+  struct standard_tag
+  {
+    static symbol sname()
+    {
+      static auto res = symbol{"standard_tag"};
+      return res;
+    }
+  };
 
   namespace detail
   {

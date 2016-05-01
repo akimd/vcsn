@@ -129,10 +129,10 @@ namespace vcsn
       template <bool L = Lazy>
       std::enable_if_t<sizeof...(Auts) == 2 && !L> sum()
       {
-        using lhs_t = tuple_element_t<0, std::tuple<Auts...>>;
-        using rhs_t = tuple_element_t<1, std::tuple<Auts...>>;
+        using lhs_t = input_automaton_t<0>;
+        using rhs_t = input_automaton_t<1>;
         constexpr bool bb = (std::is_same<weightset_t_of<lhs_t>, b>::value
-            && std::is_same<weightset_t_of<rhs_t>, b>::value);
+                             && std::is_same<weightset_t_of<rhs_t>, b>::value);
         static_assert(bb, "sum: requires Boolean weightset");
         initialize_conjunction();
 
@@ -150,7 +150,7 @@ namespace vcsn
       {
         initialize_conjunction();
 
-        using rhs_t = tuple_element_t<1, std::tuple<Auts...>>;
+        using rhs_t = input_automaton_t<1>;
         auto new_initials = std::vector<state_t_of<rhs_t>>();
 
         const auto& lhs = std::get<0>(aut_->auts_);

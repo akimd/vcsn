@@ -294,7 +294,7 @@ namespace vcsn
       using enable_if_not_boolean_t
         = std::enable_if_t<!std::is_same<weight_t_of<Aut>, bool>::value, Type>;
 
-
+      /// Helper function to facilitate dispatch below.
       template <Automaton Aut, typename Tag, bool Lazy = false>
       automaton determinize_tag_(const Aut& aut)
       {
