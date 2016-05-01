@@ -27,6 +27,25 @@ check('a*')
 check('(<1/2>a)*')
 
 
+## ------------- ##
+## Conjunction.  ##
+## ------------- ##
+def check(r1, r2):
+    '''Check that `&` between expansions corresponds to the expansion of
+    `&` between expressions.'''
+    exp1 = ctx.expression(r1)
+    exp2 = ctx.expression(r2)
+    eff = exp1.expansion() & exp2.expansion()
+    exp = (exp1 & exp2).expansion()
+    CHECK_EQ(exp, eff)
+
+check('ab', 'cd')
+check('(ab)*', 'a*b*')
+check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
+check('a', '\e')
+check('a', '\z')
+
+
 ## ---------- ##
 ## Multiply.  ##
 ## ---------- ##

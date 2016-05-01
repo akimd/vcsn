@@ -750,6 +750,11 @@ struct expansion
     return vcsn::dyn::complement(val_);
   }
 
+  expansion conjunction(const expansion& rhs) const
+  {
+    return vcsn::dyn::conjunction(val_, rhs.val_);
+  }
+
   ::context context() const
   {
     return vcsn::dyn::context_of(val_);
@@ -1570,6 +1575,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<expansion>("expansion", bp::no_init)
     .def(bp::init<const std::string&>())
     .def("complement", &expansion::complement)
+    .def("conjunction", &expansion::conjunction)
     .def("context", &expansion::context)
     .def("format", &expansion::format)
     .def("left_mult", &expansion::left_mult)

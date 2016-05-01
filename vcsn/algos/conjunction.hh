@@ -1017,6 +1017,28 @@ namespace vcsn
     }
   }
 
+  /*-------------------------------------.
+  | conjunction(expansion, expansion).   |
+  `-------------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (conjunction).
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      expansion
+      conjunction_expansion(const expansion& lhs, const expansion& rhs)
+      {
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                ::vcsn::conjunction(std::get<0>(join_elts),
+                                    std::get<1>(join_elts),
+                                    std::get<2>(join_elts))};
+      }
+    }
+  }
+
   /*---------------------------------------.
   | conjunction(polynomial, polynomial).   |
   `---------------------------------------*/

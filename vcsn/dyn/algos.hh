@@ -125,6 +125,9 @@ namespace vcsn
     /// Repeated conjunction of \a aut with itself.
     automaton conjunction(const automaton& aut, unsigned n);
 
+    /// The Hadamard product of expansions \a lhs and \a rhs.
+    expansion conjunction(const expansion& lhs, const expansion& rhs);
+
     /// The Hadamard product of expressions \a lhs and \a rhs.
     expression conjunction(const expression& lhs, const expression& rhs);
 

@@ -370,7 +370,7 @@ namespace vcsn
       ///
       /// When labelset is not letterized.
       template <typename LabelSet = labelset_t, typename Conjunction>
-      auto conjunction_(value_t lhs, value_t rhs,
+      auto conjunction_(const value_t& lhs, const value_t& rhs,
                         Conjunction conjunction) const
         -> std::enable_if_t<!detail::is_letterized_t<LabelSet>{},
                        value_t>
@@ -417,7 +417,7 @@ namespace vcsn
 
     public:
       /// The conjunction of \a l and \a r.
-      value_t conjunction(value_t l, value_t r) const
+      value_t conjunction(const value_t& l, const value_t& r) const
       {
         return conjunction_(l, r,
                             [this](const polynomial_t& l,
