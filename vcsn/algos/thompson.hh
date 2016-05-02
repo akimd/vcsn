@@ -25,6 +25,7 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using expressionset_t = ExpSet;
+      using expression_t = typename expressionset_t::value_t;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = weight_t_of<expressionset_t>;
@@ -48,8 +49,8 @@ namespace vcsn
         : thompson_visitor(rs.context(), rs)
       {}
 
-      automaton_t
-      operator()(const typename expressionset_t::value_t& v)
+      /// The Thompson automaton of v.
+      automaton_t operator()(const expression_t& v)
       {
         v->accept(*this);
         res_->set_initial(initial_);
@@ -98,7 +99,7 @@ namespace vcsn
       {
         state_t initial = res_->new_state();
         state_t final = res_->new_state();
-        for (auto c: e)
+        for (const auto& c: e)
           {
             c->accept(*this);
             res_->new_transition(initial, initial_, epsilon_);
@@ -114,7 +115,7 @@ namespace vcsn
         state_t initial = initial_;
 
         // Then the remainder.
-        for (auto c: e.tail())
+        for (const auto& c: e.tail())
           {
             state_t final = final_;
             c->accept(*this);
@@ -163,7 +164,6 @@ namespace vcsn
       state_t initial_ = automaton_t::element_type::null_state();
       state_t final_ = automaton_t::element_type::null_state();
     };
-
   } // rat::
 
   /// Build a Thompson automaton from an expression.
@@ -171,13 +171,12 @@ namespace vcsn
   /// \tparam Aut     relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
   template <Automaton Aut, typename ExpSet>
-  inline
   Aut
   thompson(const context_t_of<Aut>& ctx,
            const ExpSet& rs, const typename ExpSet::value_t& r)
   {
-    rat::thompson_visitor<Aut, ExpSet> thompson{ctx, rs};
-    return thompson(r);
+    auto thm = rat::thompson_visitor<Aut, ExpSet>{ctx, rs};
+    return thm(r);
   }
 
   /// Build a Thompson automaton from an expression.
@@ -185,12 +184,11 @@ namespace vcsn
   /// \tparam Aut     relative to the generated automaton.
   /// \tparam ExpSet  relative to the expression.
   template <Automaton Aut, typename ExpSet>
-  inline
   Aut
   thompson(const ExpSet& rs, const typename ExpSet::value_t& r)
   {
-    rat::thompson_visitor<Aut, ExpSet> thompson{rs};
-    return thompson(r);
+    auto thm = rat::thompson_visitor<Aut, ExpSet>{rs};
+    return thm(r);
   }
 
   namespace dyn
@@ -203,7 +201,6 @@ namespace vcsn
 
       /// Bridge.
       template <typename ExpSet>
-      inline
       automaton
       thompson(const expression& exp)
       {

@@ -171,6 +171,7 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using expressionset_t = ExpSet;
+      using expression_t = typename expressionset_t::value_t;
       using weightset_t = weightset_t_of<expressionset_t>;
       using weight_t = weight_t_of<expressionset_t>;
       using state_t = state_t_of<automaton_t>;
@@ -185,12 +186,12 @@ namespace vcsn
         , res_(make_shared_ptr<automaton_t>(rs_.context()))
       {}
 
-      automaton_t
-      operator()(const typename expressionset_t::value_t& v)
+      /// The standard automaton of v.
+      automaton_t operator()(const expression_t& v)
       {
         v->accept(*this);
         res_->set_initial(initial_);
-        return res_;
+        return std::move(res_);
       }
 
     private:
@@ -242,7 +243,7 @@ namespace vcsn
         states_t other_finals = finals();
         e.head()->accept(*this);
         state_t initial = initial_;
-        for (auto c: e.tail())
+        for (const auto& c: e.tail())
           {
             c->accept(*this);
             for (auto t: all_out(res_, initial_))
@@ -269,7 +270,7 @@ namespace vcsn
         state_t initial = initial_;
 
         // Then the remainder.
-        for (auto c: e.tail())
+        for (const auto& c: e.tail())
           {
             // The set of the current (left-hand side) final transitions.
             auto ftr = detail::make_vector(final_transitions(res_));
@@ -374,8 +375,8 @@ namespace vcsn
   Aut
   standard(const ExpSet& rs, const typename ExpSet::value_t& r)
   {
-    rat::standard_visitor<Aut, ExpSet> standard{rs};
-    return standard(r);
+    auto std = rat::standard_visitor<Aut, ExpSet>{rs};
+    return std(r);
   }
 
   namespace dyn
