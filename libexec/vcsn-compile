@@ -12,42 +12,14 @@ from vcsn.demangle import demangle, pretty_plugin
 me = sys.argv[0]
 
 import argparse
-
-
-class AppendStringAction(argparse.Action):
-
-    def __init__(self, option_strings, dest, nargs=None, **kwargs):
-        if nargs is not None:
-            raise ValueError('nargs not allowed')
-        super(AppendStringAction, self).__init__(
-            option_strings, dest, **kwargs)
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        value = getattr(namespace, self.dest) + ' ' + values
-        setattr(namespace, self.dest, value)
-
-parser = argparse.ArgumentParser(description='Compile.')
+parser = argparse.ArgumentParser(description='Compile Vcsn programs.')
+parser.add_argument('vars', nargs='*', help='''variable assignments such
+                    as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
 parser.add_argument('input', help='source file to compile')
 parser.add_argument('-shared', help='create a shared lib instead of an executable',
                     action='store_true')
 parser.add_argument('-v', '--verbose', help='Be verbose',
                     action='count', default=config['verbose'])
-parser.add_argument('--ccache', help='Compiler prefix',
-                    default=config['ccache'])
-parser.add_argument('--cppflags', help='Preprocessor flags',
-                    default=config['cppflags'])
-parser.add_argument('--extra-cppflags', help='Additional preprocessor flags',
-                    action=AppendStringAction, dest='cppflags')
-parser.add_argument('--cxx', help='Compiler',
-                    default=config['cxx'])
-parser.add_argument('--cxxflags', help='Compiler flags',
-                    default=config['cxxflags'])
-parser.add_argument('--extra-cxxflags', help='Additional compiler flags',
-                    action=AppendStringAction, dest='cxxflags')
-parser.add_argument('--ldflags', help='Linker flags',
-                    default=config['ldflags'])
-parser.add_argument('--extra-ldflags', help='Additional linker flags',
-                    action=AppendStringAction, dest='ldflags')
 parser.add_argument('-c', '--color', dest='color', action='store',
                     default='auto',
                     choices=['auto', 'always', 'never'],
@@ -58,6 +30,21 @@ parser.add_argument('-p', '--plain', action='store_true',
 # Parse the arguments, and complete the 'args' object with the value
 # from the configuration (cxx, cxxflags, etc.).
 args = parser.parse_args()
+for v in args.vars:
+    m = re.match(r'(\w+)([-+]?=)(.*)', v)
+    if not m:
+        print(me + ': invalid argument:', v, file=sys.stderr)
+        sys.exit(1)
+    var = m.group(1).lower()
+    op  = m.group(2)
+    val = m.group(3)
+    if op == '=':
+        config[var] = val
+    elif op == '+=':
+        config[var].append(val)
+    elif op == '-=':
+        config[var] = config[var].replace(val, '')
+
 for k in config:
     if not k in args:
         setattr(args, k, config[k])
