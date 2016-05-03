@@ -44,6 +44,13 @@ namespace vcsn
     {                                                                   \
       using type = typename ValueSet::Type;                             \
     };                                                                  \
+                                                                        \
+    template <typename ValueSet>                                        \
+    struct Type ## _of_impl<ValueSet*,                                  \
+                            void_t<typename ValueSet::Type>>            \
+    {                                                                   \
+      using type = typename ValueSet::Type;                             \
+    };                                                                  \
   }                                                                     \
                                                                         \
   template <typename ValueSet>                                          \

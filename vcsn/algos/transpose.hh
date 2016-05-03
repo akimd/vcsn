@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/copy.hh>
 #include <vcsn/algos/fwd.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/core/automaton-decorator.hh>
@@ -25,6 +26,7 @@ namespace vcsn
     public:
       /// The type of automaton to wrap.
       using automaton_t = Aut;
+      using self_t = transpose_automaton<automaton_t>;
 
       using super_t = automaton_decorator<automaton_t>;
       using context_t = context_t_of<automaton_t>;
@@ -78,6 +80,12 @@ namespace vcsn
         return transpose(vcsn::strip(this->naked_automaton()));
       }
 
+      /// The transposed automaton without any decorator, not even the
+      /// transposition decorator.
+      auto automaton() const
+      {
+        return copy<const transpose_automaton_impl*, automaton_t>(this);
+      }
 
       /*-------------------------------.
       | const methods that transpose.  |
