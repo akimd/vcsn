@@ -1001,6 +1001,11 @@ struct expression
     return os.str();
   }
 
+  automaton inductive(const std::string& algo = "auto") const
+  {
+    return vcsn::dyn::inductive(val_, algo);
+  }
+
   expression infiltration(const expression& rhs)
   {
     return vcsn::dyn::infiltration(val_, rhs.val_);
@@ -1602,6 +1607,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expression", &expression::as_expression,
          (arg("context") = context()))
     .def("format", &expression::format)
+    .def("inductive", &expression::inductive, (arg("algo") = "auto"))
     .def("infiltration", &expression::infiltration)
     .def("is_equivalent", &expression::is_equivalent)
     .def("is_series", &expression::is_series)

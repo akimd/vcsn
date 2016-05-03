@@ -123,12 +123,22 @@ def check(re, exp):
     if isinstance(re, str):
         re = ctx.expression(re)
     a = re.standard()
-    CHECK_EQ(exp, str(a))
+    CHECK_EQ(exp, a)
     CHECK(a.is_standard())
+    # Check that inductive, standard flavor, computes exactly the same
+    # automaton.  Well, not the state numbers though.
+    CHECK_ISOMORPHIC(a, re.inductive('standard'))
 
 def xfail(re):
     r = ctx.expression(re)
     XFAIL(lambda: r.standard())
+
+# Unsupported by plain standard.
+xfail(r'a* &   b*')
+xfail(r'a* {\} b*')
+xfail(r'a* {/} b*')
+xfail(r'a* {T}')
+xfail(r'a* {c}')
 
 ## --- ##
 ## B.  ##
@@ -219,9 +229,6 @@ check('(?@lal_char(ab), b)a+b',
   1 -> F1
   3 -> F3
 }''')
-
-# B: conjunction.
-xfail('(?@lal_char(abc), b)a*&b*')
 
 # B: "abc".
 check('(?@lal_char(abc), b)abc',

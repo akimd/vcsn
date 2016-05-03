@@ -274,6 +274,15 @@ namespace vcsn
     /// The identities of expression \a exp.
     rat::identities identities(const expression& exp);
 
+    /// The inductive translation of \a e in an automaton.
+    ///
+    /// \param e     the expressions
+    /// \param algo  how to compute the result
+    ///   - "standard"    build a standard automaton.
+    ///   - "general"     no requirement on the result
+    ///   - "auto"        same as "standard"
+    automaton inductive(const expression& e, const std::string& algo = "auto");
+
     /// The infiltration of automata \a lhs and \a rhs.
     /// Performs the join of their types.
     automaton infiltration(const automaton& lhs, const automaton& rhs);

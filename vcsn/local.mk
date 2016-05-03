@@ -52,6 +52,7 @@ algo_headers =                                  \
   %D%/algos/has-lightening-cycle.hh             \
   %D%/algos/has-twins-property.hh               \
   %D%/algos/identities.hh                       \
+  %D%/algos/inductive.hh                        \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
   %D%/algos/is-ambiguous.hh                     \
@@ -130,6 +131,7 @@ nobase_include_HEADERS =                        \
   %D%/alphabets/string.hh                       \
   %D%/core/automaton-decorator.hh               \
   %D%/core/automaton.hh                         \
+  %D%/core/automatonset.hh                      \
   %D%/core/expression-automaton.hh              \
   %D%/core/fwd.hh                               \
   %D%/core/join-automata.hh                     \
