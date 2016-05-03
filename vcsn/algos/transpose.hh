@@ -69,6 +69,8 @@ namespace vcsn
         return aut_;
       }
 
+      /// Strip the decoration of the wrapped automaton, but keep the
+      /// transposition decoration.
       auto
       strip()
         -> decltype(transpose(vcsn::strip(this->naked_automaton())))
@@ -222,7 +224,6 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  inline
   Aut
   transpose(const transpose_automaton<Aut>& aut)
   {
@@ -230,7 +231,6 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  inline
   transpose_automaton<Aut>
   transpose(Aut aut)
   {

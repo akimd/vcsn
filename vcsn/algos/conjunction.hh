@@ -113,8 +113,8 @@ namespace vcsn
       template <bool L = Lazy>
       std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv()
       {
-        require(aut_->labelset()->has_one(),
-            __func__, ": labelset must have a neutral");
+        static_assert(labelset_t::has_one(),
+                      "ldiv: labelset must have a neutral");
         initialize_conjunction();
 
         while (!aut_->todo_.empty())
@@ -291,6 +291,7 @@ namespace vcsn
       std::enable_if_t<sizeof...(Auts) == 2 && !L>
       add_ldiv_transitions(const state_t src, const state_name_t& psrc)
       {
+        const auto& ls = *aut_->labelset();
         const auto& lhs = std::get<0>(aut_->auts_);
         const auto& rhs = std::get<1>(aut_->auts_);
         const auto& lstate = std::get<0>(psrc);
@@ -309,17 +310,16 @@ namespace vcsn
           }
         }
         for (const auto& t: zip_map_tuple(out_(psrc)))
-          if (!aut_->labelset()->is_one(t.first)
-              && (!aut_->labelset()->is_special(t.first)
-              || src == aut_->pre()))
+          if (!ls.is_one(t.first)
+              && (!ls.is_special(t.first) || src == aut_->pre()))
             detail::cross_tuple
-              ([this,src,t]
+              ([this,ls,src,t]
                (const typename transition_map_t<Auts>::transition&... ts)
                {
                  this->add_transition(src, state(ts.dst...),
-                     aut_->labelset()->is_special(t.first)
-                     ? t.first : aut_->labelset()->one(),
-                     ws_.ldiv(ts.weight()...));
+                                      ls.is_special(t.first)
+                                      ? t.first : ls.one(),
+                                      ws_.ldiv(ts.weight()...));
                },
                t.second);
       }

@@ -105,7 +105,7 @@ namespace vcsn
           o << '(' << identities() << ')';
         break;
       case format::raw:
-        assert(!"print: expression: invalid format: rat");
+        assert(!"expressionset::print_set: invalid format: rat");
         break;
       }
     return o;
