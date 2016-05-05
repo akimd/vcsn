@@ -269,6 +269,8 @@ EXTRA_DIST +=                                           \
   %D%/rdiv.dir/aut1.gv                                  \
   %D%/standard.dir/conjunction-1.gv                     \
   %D%/standard.dir/conjunction-2.gv                     \
+  %D%/standard.dir/infiltration-1.gv                    \
+  %D%/standard.dir/shuffle-1.gv                         \
   %D%/synchronize.dir/bool.gv                           \
   %D%/synchronize.dir/bool_delay.gv                     \
   %D%/synchronize.dir/bool_min.gv                       \

@@ -941,3 +941,7 @@ qexp = lambda e: vcsn.context('lal, q').expression(e)
 check(qexp('a*b*c* & abc*'), file='conjunction-1')
 check(qexp('[ab]*a[ab] & [ab]*a[ab]{2} & [ab]*a[ab]{3}'),
       file='conjunction-2')
+
+# Shuffle and infiltration.
+check(qexp('ab : cd : ef'), file='shuffle-1')
+check(qexp('ab &: ab &: ab'), file='infiltration-1')
