@@ -116,9 +116,11 @@ CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 ## standard(exp).  ##
 ## --------------- ##
 
-def check(re, exp):
+def check(re, exp=None, file=None):
     if isinstance(re, str):
         re = ctx.expression(re)
+    if file:
+        exp = open(medir + '/' + file + '.gv').read().strip()
 
     # Check inductive, standard flavor.
     a = re.inductive('standard')
@@ -128,16 +130,18 @@ def check(re, exp):
     # Check that we are equivalent with derived-term.
     CHECK_EQUIV(a, re.automaton('expansion'))
 
-    # Check that standard computes exactly the same automaton.  Well,
-    # not the state numbers though.
-    CHECK_ISOMORPHIC(a, re.standard())
+    if re.is_extended():
+        XFAIL(lambda: re.standard())
+    else:
+        # Check that standard computes the same automaton.  Well, not
+        # the same state numbers though: `standard` leaves gaps.
+        CHECK_ISOMORPHIC(a, re.standard())
 
 def xfail(re):
     r = ctx.expression(re)
     XFAIL(lambda: r.standard())
 
 # Unsupported by plain standard.
-xfail(r'a* &   b*')
 xfail(r'a* {\} b*')
 xfail(r'a* {/} b*')
 xfail(r'a* {T}')
@@ -927,3 +931,13 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
   2 -> F2 [label = "<fe*>"]
   2 -> 1 [label = "<fe*>a"]
 }''')
+
+
+# Extended operators.
+
+qexp = lambda e: vcsn.context('lal, q').expression(e)
+
+# Conjunction.
+check(qexp('a*b*c* & abc*'), file='conjunction-1')
+check(qexp('[ab]*a[ab] & [ab]*a[ab]{2} & [ab]*a[ab]{3}'),
+      file='conjunction-2')

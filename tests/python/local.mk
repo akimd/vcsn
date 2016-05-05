@@ -267,6 +267,8 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4-suffix.gv                         \
   %D%/prefix.dir/aut4.gv                                \
   %D%/rdiv.dir/aut1.gv                                  \
+  %D%/standard.dir/conjunction-1.gv                     \
+  %D%/standard.dir/conjunction-2.gv                     \
   %D%/synchronize.dir/bool.gv                           \
   %D%/synchronize.dir/bool_delay.gv                     \
   %D%/synchronize.dir/bool_min.gv                       \
@@ -294,6 +296,7 @@ EXTRA_DIST +=                                           \
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
 %D%/rdiv.log:            $(wildcard $(srcdir)/%D%/rdiv.dir/*)
+%D%/standard.log:        $(wildcard $(srcdir)/%D%/standard.dir/*)
 %D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)

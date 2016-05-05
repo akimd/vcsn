@@ -140,5 +140,16 @@ class expression:
         return res[key] if key else res
 
 
+    def is_extended(self):
+        '''Whether this expression uses extended operators.'''
+        ext = ['complement', 'conjunction', 'infiltration', 'ldiv',
+               'shuffle', 'transposition', 'tuple']
+        i = self.info()
+        for op in ext:
+            if i[op]:
+                return True
+        return False
+
+
     shortest = lambda self, *a, **kw: self.automaton().shortest(*a, **kw)
     star = lambda self: self.multiply(-1)

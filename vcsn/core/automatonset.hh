@@ -121,7 +121,8 @@ namespace vcsn
     /// Build an conjunction product: `l & r`.
     auto conjunction(const value_t& l, const value_t& r) const -> value_t
     {
-      return ::vcsn::conjunction(l, r)->strip();
+      namespace v = ::vcsn;
+      return v::strip(v::coaccessible(v::conjunction(l, r)));
     }
 
     /// Build an infiltration product: `l &: r`.
@@ -149,7 +150,7 @@ namespace vcsn
     /// Build a left division: `l {\} r`.
     auto ldiv(const value_t& l, const value_t& r) const -> value_t
     {
-      namespace v = vcsn;
+      namespace v = ::vcsn;
       return detail::static_if<labelset_t::has_one()>
         ([this](const auto& l, const auto& r)
          {
@@ -175,7 +176,7 @@ namespace vcsn
     /// Build a right division: `l {/} r`.
     auto rdiv(const value_t& l, const value_t& r) const -> value_t
     {
-      namespace v = vcsn;
+      namespace v = ::vcsn;
       return detail::static_if<labelset_t::has_one()>
         ([this](const auto& l, const auto& r)
          {
