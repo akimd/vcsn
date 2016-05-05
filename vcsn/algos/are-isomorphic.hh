@@ -52,6 +52,12 @@ namespace vcsn
 
     // FIXME: do we want to generalize this to heterogeneous contexts?
     // It is not completely clear whether such behavior is desirable.
+    //
+    // We don't check labelsets, because currently, by sheer luck,
+    // comparing lan vs. lal works.
+    static_assert(std::is_same<weightset1_t, weightset2_t>{},
+                  "are_isomorphic: contexts must be equal");
+
     using weightset_t = weightset1_t; // FIXME: join!
     using labelset_t = labelset1_t; // FIXME: join!
 
@@ -254,8 +260,8 @@ namespace vcsn
       hash_combine(res, s == a->pre());
       hash_combine(res, s == a->post());
 
-      const auto ws = * a->weightset();
-      const auto ls = * a->labelset();
+      const auto& ws = *a->weightset();
+      const auto& ls = *a->labelset();
 
       using transition_t = std::pair<weight_t_of<Aut>,
                                      label_t_of<Aut>>;
@@ -338,7 +344,8 @@ namespace vcsn
     }
 
     /// Handy debugging method.
-    void print_class_stats(const state_classes_t& cs)
+    void print_class_stats(const state_classes_t& cs,
+                           std::ostream& o = std::cerr) const
     {
       size_t max = 0, min = a1_->num_all_states();
       long double sum = 0.0;
@@ -349,25 +356,26 @@ namespace vcsn
           sum += c.first.size();
         }
       long state_no = a1_->num_all_states();
-      std::cerr << "State no: " << state_no << "\n";
-      std::cerr << "Class no: " << cs.size() << "\n";
-      std::cerr << "* min class size: " << min << "\n";
-      std::cerr << "* avg class size: " << sum / cs.size() << "\n";
-      std::cerr << "* max class size: " << max << "\n";
+      o << "State no: " << state_no << '\n'
+        << "Class no: " << cs.size() << '\n'
+        << "* min class size: " << min << '\n'
+        << "* avg class size: " << sum / cs.size() << '\n'
+        << "* max class size: " << max << '\n';
     }
 
     /// Handy debugging method.
-    void print_classes(const state_classes_t& cs)
+    void print_classes(const state_classes_t& cs,
+                       std::ostream& o = std::cerr)
     {
       for (const auto& c: cs)
         {
-          std::cerr << "* ";
+          o << "* ";
           for (const auto& s1: c.first)
-            std::cerr << s1 << " ";
-          std::cerr << "-- ";
+            o << s1 << ' ';
+          o << "-- ";
           for (const auto& s2: c.second)
-            std::cerr << s2 << " ";
-          std::cerr << "\n";
+            o << s2 << ' ';
+          o << '\n';
         }
     }
 
@@ -450,7 +458,7 @@ namespace vcsn
     void update_result_isomorphism()
     {
       for (const auto& c: state_classes_)
-        for (int i = 0; i < int(c.first.size()); ++ i)
+        for (size_t i = 0; i < c.first.size(); ++ i)
           {
             state1_t s1 = c.first[i];
             state2_t s2 = c.second[i];
@@ -476,10 +484,11 @@ namespace vcsn
     {
       class_permutation_max_.clear();
       class_permutation_generated_.clear();
-      for (const auto& c: state_classes_) {
-        class_permutation_max_.emplace_back(factorial(c.second.size()) - 1);
-        class_permutation_generated_.emplace_back(0);
-      }
+      for (const auto& c: state_classes_)
+        {
+          class_permutation_max_.emplace_back(factorial(c.second.size()) - 1);
+          class_permutation_generated_.emplace_back(0);
+        }
     }
 
     // Build the next class combination obtained by permuting one
@@ -668,7 +677,7 @@ namespace vcsn
     {
       o << "/* Origins." << std::endl
         << "    node [shape = box, style = rounded]" << std::endl;
-      for (auto p : orig)
+      for (const auto& p : orig)
         if (2 <= p.first)
           {
             o << "    " << p.first - 2
