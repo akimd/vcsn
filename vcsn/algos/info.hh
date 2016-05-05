@@ -67,6 +67,7 @@ namespace vcsn
   | info(automaton, stream).  |
   `--------------------------*/
 
+  /// Print info about an automaton.
   template <Automaton Aut>
   std::ostream&
   info(const Aut& aut, std::ostream& out = std::cout, bool detailed = false)
@@ -141,6 +142,7 @@ namespace vcsn
   | info(expression, stream).   |
   `----------------------------*/
 
+  /// Print info about the expression.
   template <typename ExpSet>
   void
   info(const ExpSet& rs, const typename ExpSet::value_t& e,
@@ -168,6 +170,7 @@ namespace vcsn
     ECHO(shuffle);
     ECHO(star);
     ECHO(sum);
+    ECHO(transposition);
     ECHO(tuple);
     ECHO(zero);
 #undef ECHO
