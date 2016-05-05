@@ -117,17 +117,20 @@ CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 ## --------------- ##
 
 def check(re, exp):
-    # We compare automata as strings, since when parsing the expected
-    # automaton we drop the hole in the state numbers created by
-    # standard.
     if isinstance(re, str):
         re = ctx.expression(re)
-    a = re.standard()
+
+    # Check inductive, standard flavor.
+    a = re.inductive('standard')
     CHECK_EQ(exp, a)
     CHECK(a.is_standard())
-    # Check that inductive, standard flavor, computes exactly the same
-    # automaton.  Well, not the state numbers though.
-    CHECK_ISOMORPHIC(a, re.inductive('standard'))
+
+    # Check that we are equivalent with derived-term.
+    CHECK_EQUIV(a, re.automaton('expansion'))
+
+    # Check that standard computes exactly the same automaton.  Well,
+    # not the state numbers though.
+    CHECK_ISOMORPHIC(a, re.standard())
 
 def xfail(re):
     r = ctx.expression(re)
@@ -215,19 +218,19 @@ check('(?@lal_char(ab), b)a+b',
     node [shape = point, width = 0]
     I0
     F1
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 3 [label = "b"]
+  0 -> 2 [label = "b"]
   1 -> F1
-  3 -> F3
+  2 -> F2
 }''')
 
 # B: "abc".
@@ -240,20 +243,20 @@ check('(?@lal_char(abc), b)abc',
   {
     node [shape = point, width = 0]
     I0
-    F4
+    F3
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
+    2
     3
-    4
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  1 -> 3 [label = "b"]
-  3 -> 4 [label = "c"]
-  4 -> F4
+  1 -> 2 [label = "b"]
+  2 -> 3 [label = "c"]
+  3 -> F3
 }''')
 
 # B: "ab+cd".
@@ -266,24 +269,24 @@ check('(?@lal_char(abcd), b)ab+cd',
   {
     node [shape = point, width = 0]
     I0
-    F3
-    F6
+    F2
+    F4
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
+    2
     3
     4
-    6
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 4 [label = "c"]
-  1 -> 3 [label = "b"]
-  3 -> F3
-  4 -> 6 [label = "d"]
-  6 -> F6
+  0 -> 3 [label = "c"]
+  1 -> 2 [label = "b"]
+  2 -> F2
+  3 -> 4 [label = "d"]
+  4 -> F4
 }''')
 
 # B: "a(b+c)d".
@@ -302,17 +305,17 @@ check('(?@lal_char(abcd), b)a(b+c)d',
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
+    2
     3
     4
-    5
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  1 -> 3 [label = "b"]
-  1 -> 5 [label = "c"]
+  1 -> 2 [label = "b"]
+  1 -> 3 [label = "c"]
+  2 -> 4 [label = "d"]
   3 -> 4 [label = "d"]
   4 -> F4
-  5 -> 4 [label = "d"]
 }''')
 
 # B: "(ab+cd+abcd)abc".
@@ -325,12 +328,13 @@ check('(?@lal_char(abcd), b)(ab+cd+abcd)abc',
   {
     node [shape = point, width = 0]
     I0
-    F12
+    F11
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
+    2
     3
     4
     5
@@ -340,23 +344,22 @@ check('(?@lal_char(abcd), b)(ab+cd+abcd)abc',
     9
     10
     11
-    12
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 4 [label = "c"]
+  0 -> 3 [label = "c"]
   0 -> 5 [label = "a"]
-  1 -> 3 [label = "b"]
-  3 -> 7 [label = "a"]
-  4 -> 6 [label = "d"]
-  5 -> 8 [label = "b"]
-  6 -> 7 [label = "a"]
-  7 -> 11 [label = "b"]
-  8 -> 9 [label = "c"]
-  9 -> 10 [label = "d"]
-  10 -> 7 [label = "a"]
-  11 -> 12 [label = "c"]
-  12 -> F12
+  1 -> 2 [label = "b"]
+  2 -> 9 [label = "a"]
+  3 -> 4 [label = "d"]
+  4 -> 9 [label = "a"]
+  5 -> 6 [label = "b"]
+  6 -> 7 [label = "c"]
+  7 -> 8 [label = "d"]
+  8 -> 9 [label = "a"]
+  9 -> 10 [label = "b"]
+  10 -> 11 [label = "c"]
+  11 -> F11
 }''')
 
 
@@ -437,24 +440,24 @@ check('(?@lal_char(abcd), b)(a+b)*',
     I0
     F0
     F1
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
-  0 -> 3 [label = "b"]
+  0 -> 2 [label = "b"]
   1 -> F1
   1 -> 1 [label = "a"]
-  1 -> 3 [label = "b"]
-  3 -> F3
-  3 -> 1 [label = "a"]
-  3 -> 3 [label = "b"]
+  1 -> 2 [label = "b"]
+  2 -> F2
+  2 -> 1 [label = "a"]
+  2 -> 2 [label = "b"]
 }''')
 
 check('(?@lal_char(abcd), b)(ab)*',
@@ -467,20 +470,20 @@ check('(?@lal_char(abcd), b)(ab)*',
     node [shape = point, width = 0]
     I0
     F0
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
-  1 -> 3 [label = "b"]
-  3 -> F3
-  3 -> 1 [label = "a"]
+  1 -> 2 [label = "b"]
+  2 -> F2
+  2 -> 1 [label = "a"]
 }''')
 
 check('(?@lal_char(abcd), b)a**',
@@ -523,19 +526,19 @@ check('(?@lal_char(a), expressionset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
     node [shape = point, width = 0]
     I0
     F1
-    F4
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    4
+    2
   }
   I0 -> 0
   0 -> 1 [label = "<x>a"]
   1 -> F1 [label = "<y>"]
-  1 -> 4 [label = "<z>a"]
-  4 -> F4
+  1 -> 2 [label = "<z>a"]
+  2 -> F2
 }''')
 
 
@@ -565,10 +568,10 @@ check('(?@lal_char(ab), q)<12>\e',
 }''')
 
 ## -------- ##
-## Z: sum.  ##
+## Q: sum.  ##
 ## -------- ##
 
-# Z: "\e+a+\e"
+# Q: "\e+a+\e"
 check('(?@lal_char(ab), q)\e+a+\e',
 '''digraph
 {
@@ -579,20 +582,20 @@ check('(?@lal_char(ab), q)\e+a+\e',
     node [shape = point, width = 0]
     I0
     F0
-    F2
+    F1
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
-    2
+    1
   }
   I0 -> 0
   0 -> F0 [label = "<2>"]
-  0 -> 2 [label = "a"]
-  2 -> F2
+  0 -> 1 [label = "a"]
+  1 -> F1
 }''')
 
-# Z: "<12>\e+<23>a+<34>b".
+# Q: "<12>\e+<23>a+<34>b".
 check('(?@lal_char(ab), q)<12>\e+<23>a+<34>b',
 '''digraph
 {
@@ -603,21 +606,21 @@ check('(?@lal_char(ab), q)<12>\e+<23>a+<34>b',
     node [shape = point, width = 0]
     I0
     F0
+    F1
     F2
-    F3
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
+    1
     2
-    3
   }
   I0 -> 0
   0 -> F0 [label = "<12>"]
-  0 -> 2 [label = "<23>a"]
-  0 -> 3 [label = "<34>b"]
+  0 -> 1 [label = "<23>a"]
+  0 -> 2 [label = "<34>b"]
+  1 -> F1
   2 -> F2
-  3 -> F3
 }''')
 
 # left weight.
@@ -631,21 +634,21 @@ check('(?@lal_char(ab), q)<12>(\e+a+<10>b+<10>\e)',
     node [shape = point, width = 0]
     I0
     F0
+    F1
     F2
-    F3
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
+    1
     2
-    3
   }
   I0 -> 0
   0 -> F0 [label = "<132>"]
-  0 -> 2 [label = "<12>a"]
-  0 -> 3 [label = "<120>b"]
+  0 -> 1 [label = "<12>a"]
+  0 -> 2 [label = "<120>b"]
+  1 -> F1
   2 -> F2
-  3 -> F3
 }''')
 
 # right weight.
@@ -659,28 +662,28 @@ check(vcsn.Q.expression('(\e+a+<2>b+<3>\e)<10>', 'associative'),
     node [shape = point, width = 0]
     I0
     F0
+    F1
     F2
-    F3
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
+    1
     2
-    3
   }
   I0 -> 0
   0 -> F0 [label = "<40>"]
-  0 -> 2 [label = "a"]
-  0 -> 3 [label = "<2>b"]
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "<2>b"]
+  1 -> F1 [label = "<10>"]
   2 -> F2 [label = "<10>"]
-  3 -> F3 [label = "<10>"]
 }''')
 
 ## ------------ ##
-## Z: product.  ##
+## Q: product.  ##
 ## ------------ ##
 
-# Z: "<12>(ab)<23>".
+# Q: "<12>(ab)<23>".
 check(vcsn.Q.expression('<12>(ab)<23>', 'associative'),
 '''digraph
 {
@@ -690,22 +693,22 @@ check(vcsn.Q.expression('<12>(ab)<23>', 'associative'),
   {
     node [shape = point, width = 0]
     I0
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> 1 [label = "<12>a"]
-  1 -> 3 [label = "b"]
-  3 -> F3 [label = "<23>"]
+  1 -> 2 [label = "b"]
+  2 -> F2 [label = "<23>"]
 }''')
 
 ## --------- ##
-## Z: star.  ##
+## Q: star.  ##
 ## --------- ##
 
 check('(?@lal_char(ab), q)\z*',
@@ -788,24 +791,24 @@ check(vcsn.Q.expression('(<2>a+<3>b)*', 'associative'),
     I0
     F0
     F1
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "<2>a"]
-  0 -> 3 [label = "<3>b"]
+  0 -> 2 [label = "<3>b"]
   1 -> F1
   1 -> 1 [label = "<2>a"]
-  1 -> 3 [label = "<3>b"]
-  3 -> F3
-  3 -> 1 [label = "<2>a"]
-  3 -> 3 [label = "<3>b"]
+  1 -> 2 [label = "<3>b"]
+  2 -> F2
+  2 -> 1 [label = "<2>a"]
+  2 -> 2 [label = "<3>b"]
 }''')
 
 check(vcsn.Q.expression('<2>(<3>a+<5>b)*<7>', 'associative'),
@@ -819,24 +822,24 @@ check(vcsn.Q.expression('<2>(<3>a+<5>b)*<7>', 'associative'),
     I0
     F0
     F1
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> F0 [label = "<14>"]
   0 -> 1 [label = "<6>a"]
-  0 -> 3 [label = "<10>b"]
+  0 -> 2 [label = "<10>b"]
   1 -> F1 [label = "<7>"]
   1 -> 1 [label = "<3>a"]
-  1 -> 3 [label = "<5>b"]
-  3 -> F3 [label = "<7>"]
-  3 -> 1 [label = "<3>a"]
-  3 -> 3 [label = "<5>b"]
+  1 -> 2 [label = "<5>b"]
+  2 -> F2 [label = "<7>"]
+  2 -> 1 [label = "<3>a"]
+  2 -> 2 [label = "<5>b"]
 }''')
 
 check(vcsn.Q.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
@@ -849,26 +852,26 @@ check(vcsn.Q.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
     node [shape = point, width = 0]
     I0
     F0
-    F3
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
     1
-    3
+    2
   }
   I0 -> 0
   0 -> F0 [label = "<14>"]
   0 -> 1 [label = "<6>a"]
-  1 -> 3 [label = "b"]
-  3 -> F3 [label = "<35>"]
-  3 -> 1 [label = "<15>a"]
+  1 -> 2 [label = "b"]
+  2 -> F2 [label = "<35>"]
+  2 -> 1 [label = "<15>a"]
 }''')
 
 xfail('(?@lal_char(ab), q)a**')
 
 ## ---------- ##
-## ZR: star.  ##
+## QR: star.  ##
 ## ---------- ##
 
 check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
@@ -881,22 +884,22 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
     node [shape = point, width = 0]
     I0
     F0
-    F5
+    F3
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
+    1
     2
-    4
-    5
+    3
   }
   I0 -> 0
   0 -> F0 [label = "<e*>"]
-  0 -> 2 [label = "<e*>a"]
-  2 -> 4 [label = "b"]
-  4 -> 5 [label = "c"]
-  5 -> F5 [label = "<e*>"]
-  5 -> 2 [label = "<e*>a"]
+  0 -> 1 [label = "<e*>a"]
+  1 -> 2 [label = "b"]
+  2 -> 3 [label = "c"]
+  3 -> F3 [label = "<e*>"]
+  3 -> 1 [label = "<e*>a"]
 }''')
 
 check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
@@ -909,18 +912,18 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
     node [shape = point, width = 0]
     I0
     F0
-    F4
+    F2
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
+    1
     2
-    4
   }
   I0 -> 0
   0 -> F0 [label = "<e*>"]
-  0 -> 2 [label = "<e*>a"]
-  2 -> 4 [label = "b"]
-  4 -> F4 [label = "<fe*>"]
-  4 -> 2 [label = "<fe*>a"]
+  0 -> 1 [label = "<e*>a"]
+  1 -> 2 [label = "b"]
+  2 -> F2 [label = "<fe*>"]
+  2 -> 1 [label = "<fe*>a"]
 }''')
