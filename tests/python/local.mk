@@ -267,10 +267,12 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4-suffix.gv                         \
   %D%/prefix.dir/aut4.gv                                \
   %D%/rdiv.dir/aut1.gv                                  \
+  %D%/standard.dir/complement-1.gv                      \
   %D%/standard.dir/conjunction-1.gv                     \
   %D%/standard.dir/conjunction-2.gv                     \
   %D%/standard.dir/infiltration-1.gv                    \
   %D%/standard.dir/shuffle-1.gv                         \
+  %D%/standard.dir/transposition-1.gv                   \
   %D%/synchronize.dir/bool.gv                           \
   %D%/synchronize.dir/bool_delay.gv                     \
   %D%/synchronize.dir/bool_min.gv                       \

@@ -144,8 +144,7 @@ def xfail(re):
 # Unsupported by plain standard.
 xfail(r'a* {\} b*')
 xfail(r'a* {/} b*')
-xfail(r'a* {T}')
-xfail(r'a* {c}')
+
 
 ## --- ##
 ## B.  ##
@@ -945,3 +944,7 @@ check(qexp('[ab]*a[ab] & [ab]*a[ab]{2} & [ab]*a[ab]{3}'),
 # Shuffle and infiltration.
 check(qexp('ab : cd : ef'), file='shuffle-1')
 check(qexp('ab &: ab &: ab'), file='infiltration-1')
+
+# Complement, transposition.
+check(qexp('! [ab]*a[ab]{2}'), file='complement-1')
+check(qexp('abcd & (dcba){T}'), file='transposition-1')
