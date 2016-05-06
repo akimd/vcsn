@@ -189,6 +189,10 @@ namespace vcsn
             {"expansion",    [](const expression& r) {
                 return strip(trim(strip(derived_term(r))));
               }},
+            {"inductive", "inductive,standard"},
+            {"inductive,standard",    [](const expression& r) {
+                return inductive(r, "standard");
+              }},
             {"standard",     [](const expression& r) {
                 return standard(r);
               }},

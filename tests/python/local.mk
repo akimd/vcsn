@@ -271,6 +271,8 @@ EXTRA_DIST +=                                           \
   %D%/standard.dir/conjunction-1.gv                     \
   %D%/standard.dir/conjunction-2.gv                     \
   %D%/standard.dir/infiltration-1.gv                    \
+  %D%/standard.dir/ldiv-1.gv                            \
+  %D%/standard.dir/rdiv-1.gv                            \
   %D%/standard.dir/shuffle-1.gv                         \
   %D%/standard.dir/transposition-1.gv                   \
   %D%/synchronize.dir/bool.gv                           \

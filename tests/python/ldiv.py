@@ -32,17 +32,22 @@ CHECK_EQUIV(aut(r'\z'), aut('ab').ldiv(aut('<2>a')))
 CHECK_EQUIV(aut('<3>a*b+<2>\e'), aut('<2>a+<3>b').ldiv(aut('<6>a*b')))
 CHECK_EQUIV(aut('<2>c'), aut('a+b').ldiv(aut('(a+b)c')))
 
-# Cross check with derived_term
+# Cross check with derived_term and inductive,standard.
 
 def check(lhs_expr, rhs_expr):
-    lhs_aut = lhs_expr.derived_term()
-    rhs_aut = rhs_expr.derived_term()
+    div_expr = lhs_expr.ldiv(rhs_expr)
+    print("Checking:", div_expr)
 
-    div_expr = lhs_expr.ldiv(rhs_expr).derived_term()
+    lhs_aut = lhs_expr.automaton()
+    rhs_aut = rhs_expr.automaton()
     div_aut = lhs_aut.ldiv(rhs_aut)
 
-    if div_aut.info()['is valid'] and div_expr.info()['is valid']:
-        CHECK_EQUIV(div_expr, div_aut)
+    if div_aut.is_valid():
+        for algo in ['expansion', 'inductive,standard']:
+            a = div_expr.automaton(algo)
+            CHECK_EQUIV(div_aut, a)
+    else:
+        SKIP('invalid expression', div_expr)
 
 exprs = [r'\z', r'<2>\e', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
         '<8>(a*b+c)*bba+a(b(c+<9>d)*+a)']

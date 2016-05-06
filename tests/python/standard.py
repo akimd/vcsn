@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import re
 import vcsn
 from test import *
 
@@ -116,34 +117,44 @@ CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 ## standard(exp).  ##
 ## --------------- ##
 
-def check(re, exp=None, file=None):
-    if isinstance(re, str):
-        re = ctx.expression(re)
+def check(r, exp=None, file=None):
+    if not isinstance(r, vcsn.expression):
+        r = ctx.expression(r)
     if file:
         exp = open(medir + '/' + file + '.gv').read().strip()
 
     # Check inductive, standard flavor.
-    a = re.inductive('standard')
+    a = r.inductive('standard')
     CHECK_EQ(exp, a)
-    CHECK(a.is_standard())
+    CHECK(a.is_standard(),
+          'automaton for {} is not standard: {}'.format(r, a))
 
-    # Check that we are equivalent with derived-term.
-    CHECK_EQUIV(a, re.automaton('expansion'))
+    # Check that we are equivalent to derived-term.  However,
+    # derived-term sometimes needs a neutral to compute ldiv/rdiv.
+    # FIXME: Not very elegant...
+    if r.info('ldiv'):
+        nctx = vcsn.context(re.sub('(.*?), *(.*)', r'nullableset<\1>, \2',
+                                   r.context().format('sname')))
+        nr = nctx.expression(str(r))
+        a_dt = nr.automaton('expansion')
+    else:
+        a_dt = r.automaton('expansion')
+    CHECK_EQUIV(a, a_dt)
 
-    if re.is_extended():
-        XFAIL(lambda: re.standard())
+    if r.is_extended():
+        XFAIL(lambda: r.standard())
     else:
         # Check that standard computes the same automaton.  Well, not
         # the same state numbers though: `standard` leaves gaps.
-        CHECK_ISOMORPHIC(a, re.standard())
+        CHECK_ISOMORPHIC(a, r.standard())
+
 
 def xfail(re):
+    'An invalid expression.'
+
     r = ctx.expression(re)
     XFAIL(lambda: r.standard())
-
-# Unsupported by plain standard.
-xfail(r'a* {\} b*')
-xfail(r'a* {/} b*')
+    XFAIL(lambda: r.inductive('standard'))
 
 
 ## --- ##
@@ -948,3 +959,7 @@ check(qexp('ab &: ab &: ab'), file='infiltration-1')
 # Complement, transposition.
 check(qexp('! [ab]*a[ab]{2}'), file='complement-1')
 check(qexp('abcd & (dcba){T}'), file='transposition-1')
+
+# Left and right divisions.
+check(qexp('<2>abc {\} <4>abcd*'), file='ldiv-1')
+check(qexp('<4>a*bcd {/} <2>bcd'), file='rdiv-1')

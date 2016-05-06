@@ -151,52 +151,31 @@ namespace vcsn
     auto ldiv(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
-      return detail::static_if<labelset_t::has_one()>
-        ([this](const auto& l, const auto& r)
-         {
-           // We need a free labelset, but might need to restore the
-           // context afterwards.
-           auto a = v::strip(v::ldiv(v::proper(l), v::proper(r)));
-           auto res = make_mutable_automaton(ctx_);
-           copy_into(a, res);
-           return res;
-         },
-#if defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6
-         // Clang 3.5 requires that we name the argument.
-         [this](auto&&... as) -> value_t
-#else
-         [this](auto&&...) -> value_t
-#endif
-         {
-           raise("ldiv: ", *this, ": labelset must have a neutral");
-         })
-        (l, r);
+      // We need a free labelset, but proper automata.
+      auto lhs = make_nullable_automaton(ctx_);
+      copy_into(v::proper(l), lhs);
+      auto rhs = make_nullable_automaton(ctx_);
+      copy_into(v::proper(r), rhs);
+
+      auto res = make_mutable_automaton(ctx_);
+      copy_into(v::proper(v::accessible(v::ldiv(lhs, rhs))), res);
+      return res;
     }
 
     /// Build a right division: `l {/} r`.
     auto rdiv(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
-      return detail::static_if<labelset_t::has_one()>
-        ([this](const auto& l, const auto& r)
-         {
-           // We need a free labelset, but might need to restore the
-           // context afterwards.
-           auto a = v::strip(v::rdiv(v::proper(l), v::proper(r)));
-           auto res = make_mutable_automaton(ctx_);
-           copy_into(a, res);
-           return res;
-         },
-#if defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6
-         // Clang 3.5 requires that we name the argument.
-         [this](auto&&... as) -> value_t
-#else
-         [this](auto&&...) -> value_t
-#endif
-         {
-           raise("ldiv: ", *this, ": labelset must have a neutral");
-         })
-        (l, r);
+      // We need a free labelset, but proper automata.
+      auto lhs = make_nullable_automaton(ctx_);
+      copy_into(v::proper(l), lhs);
+      auto rhs = make_nullable_automaton(ctx_);
+      copy_into(v::proper(r), rhs);
+
+      auto res = make_mutable_automaton(ctx_);
+      copy_into(v::standard(v::proper(v::coaccessible(v::rdiv(lhs, rhs)))),
+                res);
+      return res;
     }
 
     /// Add a star operator: `e*`.
@@ -220,7 +199,7 @@ namespace vcsn
     /// Add a transposition operator.
     auto transposition(const value_t& e) const -> value_t
     {
-      return ::vcsn::transpose(e)->automaton();
+      return ::vcsn::standard(::vcsn::transpose(e)->automaton());
     }
 
     /// Right-multiplication by a weight.
