@@ -945,12 +945,21 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
 
 # Extended operators.
 
-qexp = lambda e: vcsn.context('lal, q').expression(e)
+def qexp(e, gens=None):
+    if gens:
+        c = vcsn.context('lal({}), q'.format(gens))
+    else:
+        c = vcsn.context('lal, q')
+    return c.expression(e)
+
+zero = lambda gens: qexp(r'\z', gens).standard()
 
 # Conjunction.
 check(qexp('a*b*c* & abc*'), file='conjunction-1')
 check(qexp('[ab]*a[ab] & [ab]*a[ab]{2} & [ab]*a[ab]{3}'),
       file='conjunction-2')
+# Make sure we preserve standardness.
+check(qexp(r'\e & a'), zero('a'))
 
 # Shuffle and infiltration.
 check(qexp('ab : cd : ef'), file='shuffle-1')
@@ -958,6 +967,7 @@ check(qexp('ab &: ab &: ab'), file='infiltration-1')
 
 # Complement, transposition.
 check(qexp('! [ab]*a[ab]{2}'), file='complement-1')
+check(qexp('[abc]*{c}'), zero('abc'))
 check(qexp('abcd & (dcba){T}'), file='transposition-1')
 
 # Left and right divisions.

@@ -74,7 +74,7 @@ namespace vcsn
       return o;
     }
 
-    auto zero() -> value_t
+    auto zero() const -> value_t
     {
       auto res = make_mutable_automaton(ctx_);
       auto s = res->new_state();
@@ -82,7 +82,7 @@ namespace vcsn
       return res;
     }
 
-    auto one() -> value_t
+    auto one() const -> value_t
     {
       auto res = make_mutable_automaton(ctx_);
       auto s = res->new_state();
@@ -122,7 +122,9 @@ namespace vcsn
     auto conjunction(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
-      return v::strip(v::coaccessible(v::conjunction(l, r)));
+      auto res = v::strip(v::coaccessible(v::conjunction(l, r)));
+      // Preserve standardness.
+      return v::is_empty(res) ? zero() : res;
     }
 
     /// Build an infiltration product: `l &: r`.
@@ -159,7 +161,7 @@ namespace vcsn
 
       auto res = make_mutable_automaton(ctx_);
       copy_into(v::proper(v::accessible(v::ldiv(lhs, rhs))), res);
-      return res;
+      return v::is_empty(res) ? zero() : res;
     }
 
     /// Build a right division: `l {/} r`.
@@ -175,7 +177,7 @@ namespace vcsn
       auto res = make_mutable_automaton(ctx_);
       copy_into(v::standard(v::proper(v::coaccessible(v::rdiv(lhs, rhs)))),
                 res);
-      return res;
+      return v::is_empty(res) ? zero() : res;
     }
 
     /// Add a star operator: `e*`.
@@ -188,12 +190,19 @@ namespace vcsn
     auto complement(const value_t& e) const -> value_t
     {
       namespace v = ::vcsn;
-      auto a = v::complement(v::complete(v::determinize(v::proper(e))));
-      // We need a free labelset, but might need to restore the
-      // context afterwards.
-      auto res = make_mutable_automaton(ctx_);
-      copy_into(a, res);
-      return res;
+      // The automaton for e does not have spontaneous transitions,
+      // but we call proper because determinize needs the labelset to
+      // be free.  But then the result is free too, we might have to
+      // restore the context.
+      auto a = v::coaccessible(v::complement(v::complete(v::determinize(v::proper(e)))));
+      if (v::is_empty(a))
+        return zero();
+      else
+      {
+        auto res = make_mutable_automaton(ctx_);
+        copy_into(a, res);
+        return res;
+      }
     }
 
     /// Add a transposition operator.
