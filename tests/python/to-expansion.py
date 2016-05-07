@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from re import match
 import vcsn
 from test import *
 
@@ -18,11 +19,14 @@ def check(re, exp):
     aut = re.automaton("expansion")
     # Check that if derived_term can do it, then it's the same
     # automaton.
-    try:
-        dt = re.automaton("derivation")
-    except RuntimeError as e:
-        SKIP(e)
+    if match('^[^,]*(nullable|word)set', re.context().format('sname')):
+        XFAIL(lambda: re.automaton("derivation"),
+              'derived_term: cannot use derivation on non-free labelsets')
+    elif re.info('transposition'):
+        XFAIL(lambda: re.automaton("derivation"),
+              'derivation: transposition is not supported')
     else:
+        dt = re.automaton("derivation")
         CHECK_ISOMORPHIC(dt, aut)
 
 ##########################
@@ -112,6 +116,9 @@ check('\e{\}\e', '<\e>')
 check('\e{\}abc', 'a.[bc]')
 check('a{\}a', '<\e>')
 check('a{\}b', '<\z>')
+
+# Conjunction on a non-free letterized labelsets.
+check('!a', '<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}] + d.[\z{c}]')
 
 check('a{\}<x>a', '<x>')
 check('<x>a{\}<y>a', '<x{\}y>')
@@ -233,19 +240,19 @@ check_prod('(a+b+c)*<x>a(a+b+c)*',
 
 # Use ab{\}ab to introduce expansions with the empty word as label.
 ctx = vcsn.context('lan_char(abcd), q')
-check_prod(r'(cd{\}cd)',  r'(cd{\}cd)', equiv = True)
-check_prod(r'a(cd{\}cd)', r'a(cd{\}cd)', equiv = True)
-check_prod(r'(cd{\}cd)a', r'(cd{\}cd)a', equiv = True)
-check_prod(r'a(cd{\}cd)', r'(cd{\}cd)a', equiv = True)
+check_prod(r'(cd{\}cd)',  r'(cd{\}cd)', equiv=True)
+check_prod(r'a(cd{\}cd)', r'a(cd{\}cd)', equiv=True)
+check_prod(r'(cd{\}cd)a', r'(cd{\}cd)a', equiv=True)
+check_prod(r'a(cd{\}cd)', r'(cd{\}cd)a', equiv=True)
 
-check_prod(r'a(cd{\}cd)', r'b(cd{\}cd)', equiv = True)
-check_prod(r'(cd{\}cd)a', r'(cd{\}cd)b', equiv = True)
-check_prod(r'a(cd{\}cd)', r'(cd{\}cd)b', equiv = True)
+check_prod(r'a(cd{\}cd)', r'b(cd{\}cd)', equiv=True)
+check_prod(r'(cd{\}cd)a', r'(cd{\}cd)b', equiv=True)
+check_prod(r'a(cd{\}cd)', r'(cd{\}cd)b', equiv=True)
 
-check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv = True)
-check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv = True)
+check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv=True)
+check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv=True)
 check_prod(r'<1/10>(cd{\}<1/2>cd+a)<2>', '<1/20>(cd{\}<1/3>cd+a)<3>',
-           equiv = True)
+           equiv=True)
 
 ## ----------------- ##
 ## LaTeX rendering.  ##

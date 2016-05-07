@@ -3,6 +3,7 @@
 #include <vcsn/algos/project.hh> // project
 #include <vcsn/algos/split.hh> // expression_polynomialset_t
 #include <vcsn/misc/map.hh>
+#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -470,34 +471,54 @@ namespace vcsn
       /// The complement of v.
       value_t complement(const value_t& v) const
       {
-        // Complement requires a free labelset.
-        return complement_<labelset_t::is_free()>(v);
+        // We need an expansion whose firsts are letters.  However,
+        // requiring a free labelset, i.e., rulling out lan, is too
+        // demanding, since, for instance, to compute {\} requires lan
+        // instead of lal.
+        //
+        // So require a letterized labelset.
+        return complement_<detail::is_letterized_t<labelset_t>{}>(v);
       }
 
     private:
-      /// Cannot complement on a non-free labelset.
-      template <bool IsFree>
-      std::enable_if_t<!IsFree, value_t>
+      /// Complement on an invalid labelset.
+      template <bool IsLetterized>
+      std::enable_if_t<!IsLetterized, value_t>
       complement_(const value_t&) const
       {
-        raise(me(), ": cannot handle complement without generators");
+        raise(me(),
+              ": complement: labelset must be letterized: ", ls_);
       }
 
-      /// Complement on a free labelset.
-      template <bool IsFree>
-      std::enable_if_t<IsFree, value_t>
+      /// Complement on a letterized labelset.
+      template <bool IsLetterized>
+      std::enable_if_t<IsLetterized, value_t>
       complement_(const value_t& v) const
       {
         value_t res;
         res.constant = ws_.is_zero(v.constant) ? ws_.one() : ws_.zero();
 
-        // Turn the polynomials into expressions, and complement them.
-        for (auto l: ls_.generators())
+        detail::static_if<labelset_t::has_one()>
+          ([this](const auto& v, const auto& ls)
           {
-            auto i = v.polynomials.find(l);
-            res.polynomials[l] =
-              ps_.complement(i == end(v.polynomials) ? ps_.zero() : i->second);
-          }
+            require(!has(v.polynomials, ls.one()),
+                    me(), ": complement: expansion must be normalized: ",
+                    to_string(*this, v));
+          })(v, ls_);
+
+        // Turn the polynomials into expressions, and complement them.
+        // The static-if is made of oneset.
+        detail::static_if<detail::has_generators_mem_fn<labelset_t>{}>
+          ([this, &res](const auto& v, const auto& ls)
+           {
+             for (auto l: ls.generators())
+               {
+                 auto i = v.polynomials.find(l);
+                 res.polynomials[l] =
+                   ps_.complement(i == end(v.polynomials)
+                                  ? ps_.zero() : i->second);
+               }
+           })(v, ls_);
         return res;
       }
 
