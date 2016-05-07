@@ -256,7 +256,9 @@ namespace vcsn
           format fmt = {}) const
     {
       if (is_one(l))
-        o << (fmt == format::latex ? "\\varepsilon" : "\\e");
+        o << (fmt == format::latex ? "\\varepsilon"
+              : fmt == format::utf8 ? "ε"
+              : "\\e");
       else if (!is_special(l))
         this->genset()->print(l, o, fmt);
       return o;
