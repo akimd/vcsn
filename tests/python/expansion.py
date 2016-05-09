@@ -119,3 +119,14 @@ check('abab', 'bbbb')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
 check('a', '\e')
 check('a', '\z')
+
+## --------- ##
+## Division. ##
+## --------- ##
+
+def check(r1, r2):
+    exp1 = expr(r1)
+    CHECK_EQ(r2, str(exp1.expansion()))
+
+check(r'a{\}ab', r'\e.[b]')
+check(r'(a{\}ab){\}bc', r'\e.[b{\}bc]')

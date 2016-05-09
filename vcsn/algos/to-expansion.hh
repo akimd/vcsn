@@ -8,6 +8,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/indent.hh>
+#include <vcsn/misc/map.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
@@ -245,6 +246,42 @@ namespace vcsn
                 ps_.add_here(res_.polynomials[one],
                              rs_.ldiv(label_of(lm), label_of(rm)),
                              ws_.ldiv(weight_of(lm), weight_of(rm)));
+          if (has(lhs.polynomials, one))
+            for (const auto& rhsp: rhs.polynomials)
+              if (rhsp.first != one)
+                for (const auto& lm: lhs.polynomials[one])
+                  for (const auto& rm: rhsp.second)
+                    if (transposed_)
+                      ps_.add_here(res_.polynomials[one],
+                          rs_.transposition(
+                            rs_.ldiv(label_of(lm),
+                                     rs_.mul(rs_.atom(rhsp.first),
+                                             label_of(rm)))),
+                          ws_.transpose(ws_.ldiv(weight_of(lm),
+                              weight_of(rm))));
+                    else
+                      ps_.add_here(res_.polynomials[one],
+                          rs_.ldiv(label_of(lm),
+                            rs_.mul(rs_.atom(rhsp.first), label_of(rm))),
+                          ws_.ldiv(weight_of(lm), weight_of(rm)));
+          if (has(rhs.polynomials, one))
+            for (const auto& lhsp: lhs.polynomials)
+              if (lhsp.first != one)
+                for (const auto& lm: lhsp.second)
+                  for (const auto& rm: rhs.polynomials[one])
+                    if (transposed_)
+                      ps_.add_here(res_.polynomials[one],
+                          rs_.transposition(
+                            rs_.ldiv(rs_.mul(rs_.atom(lhsp.first),
+                                             label_of(lm)),
+                                     label_of(rm))),
+                          ws_.transpose(ws_.ldiv(weight_of(lm),
+                                        weight_of(rm))));
+                    else
+                      ps_.add_here(res_.polynomials[one],
+                          rs_.ldiv(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
+                            label_of(rm)),
+                          ws_.ldiv(weight_of(lm), weight_of(rm)));
         if (!ws_.is_zero(lhs.constant))
           {
             if (transposed_)
