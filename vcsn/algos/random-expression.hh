@@ -1,6 +1,7 @@
 #include <ostream>
 #include <regex>
 #include <string>
+#include <unordered_set>
 
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/tokenizer.hpp>
@@ -64,6 +65,7 @@ namespace vcsn
 
     private:
       using operator_t = std::map<std::string, float>;
+      using operator_set_t = std::unordered_set<std::string>;
       using weight_t = std::vector<float>;
 
       void parse_param_(const std::string& param)
@@ -77,106 +79,59 @@ namespace vcsn
         {
           auto tok_arg = std::string{*it};
           auto eq = tok_arg.find_first_of('=');
-          if (eq == std::string::npos)
-            raise("random_expression: operator '", tok_arg, "' need a value");
           auto op = tok_arg.substr(0, eq);
-          auto value = tok_arg.substr(eq + 1);
-          // trim whitespaces.
           boost::algorithm::erase_all(op, " ");
-          boost::algorithm::erase_all(value, " ");
-          if (op == "!" || op == "{c}" || op == "*" || op == "{T}")
-            unary_op_[op] = lexical_cast<float>(value);
+          float value = 1;
+          if (eq != std::string::npos)
+            value = lexical_cast<float>(tok_arg.substr(eq + 1));
+          if (nullary_op_.find(op)    != nullary_op_.end()
+              || unary_op_.find(op)   != unary_op_.end()
+              || binary_op_.find(op)  != binary_op_.end())
+            operators_[op] = value;
           else if (op == "length")
-            length_ = lexical_cast<float>(value);
-          else if (op == "\\e" || op == "\\z")
-            nullary_op_[op] = lexical_cast<float>(value);
-          else if (op == "&" || op == "&:" || op == ":"
-                   || op == "." || op == "<+" || op == "%"
-                   || op == "+" || op == "{/}" || op == "{\\}")
-            binary_op_[op] = lexical_cast<float>(value);
+            length_ = value;
           else
             raise("random_expression: invalid operator: ", op);
         }
-
-        weight_null_ = transform(nullary_op_, [](const auto& v){ return v.second; });
-        weight_un_   = transform(unary_op_,   [](const auto& v){ return v.second; });
-        weight_bin_  = transform(binary_op_,  [](const auto& v){ return v.second; });
-      }
-
-      /// Print nullary expression (\z or \e).
-      /// If there is only one expression available, then apply Bernoulli
-      /// distribution to choose if a nullary expresssion should be printed
-      /// or not (if not then continue but decrement the length_).
-      void print_nullary_exp_(std::ostream& out, unsigned length) const
-      {
-        // FIXME: the proportion of \e should be controllable (see
-        // random_label).
-        if (nullary_op_.size() == 1
-            && !std::bernoulli_distribution(nullary_op_.begin()->second)(gen_))
-          print_random_expression_(out, length - 1);
-        else
-        {
-          auto it =
-            discrete_chooser<RandomGenerator>{gen_}(weight_null_.begin(),
-                                                    weight_null_.end(),
-                                                    nullary_op_.begin());
-          out << it->first;
-        }
+        weight_ = transform(operators_, [](const auto& v){ return v.second; });
       }
 
       /// Print expression with unary operator
-      /// If there is no unary operator available and there is only 2 symbols
-      /// left, then just print a random label.
-      /// If there is only one operator available, then apply bernoulli
-      /// distribution to choose if a unary operator should be print
-      /// or not (if not then continue but decrement the number of symbols).
-      void print_unary_exp_(std::ostream& out, unsigned length) const
+      void print_unary_exp_(std::ostream& out, unsigned length, std::string op) const
       {
-        if (unary_op_.empty())
-          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
-        else if (unary_op_.size() == 1
-                 && !(std::bernoulli_distribution(unary_op_.begin()->second)(gen_)))
+        // prefix
+        if (op == "!")
+        {
+          out << '(' << op;
           print_random_expression_(out, length - 1);
+          out << ')';
+        }
+        // postfix
         else
         {
-          auto it =
-            discrete_chooser<RandomGenerator>{gen_}(weight_un_.begin(),
-                                                    weight_un_.end(),
-                                                    unary_op_.begin());
-          auto op = it->first;
-          // prefix
-          if (op == "!")
-          {
-            out << '(' << op;
-            print_random_expression_(out, length - 1);
-            out << ')';
-          }
-          // postfix
-          else
-          {
-            out << '(';
-            print_random_expression_(out, length - 1);
-            out << op << ')';
-          }
+          out << '(';
+          print_random_expression_(out, length - 1);
+          out << op << ')';
         }
       }
 
       /// Print binary expression with binary operator.
       /// It is composed of the left and right side, and the operator.
       /// The number of symbols is randomly distribued between both side.
-      void print_binary_exp_(std::ostream& out, unsigned length) const
+      void print_binary_exp_(std::ostream& out, unsigned length, std::string op) const
       {
-        auto it =
-          discrete_chooser<RandomGenerator>{gen_}(weight_bin_.begin(),
-                                                  weight_bin_.end(),
-                                                  binary_op_.begin());
-        auto dis = std::uniform_int_distribution<>(1, length - 1);
-        auto num_lhs = dis(gen_);
-        out << "(";
-        print_random_expression_(out, num_lhs);
-        out << it->first;
-        print_random_expression_(out, length - num_lhs);
-        out << ")";
+        if (length < 3)
+          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+        else
+        {
+          auto dis = std::uniform_int_distribution<>(1, length - 1);
+          auto num_lhs = dis(gen_);
+          out << "(";
+          print_random_expression_(out, num_lhs);
+          out << op;
+          print_random_expression_(out, length - num_lhs);
+          out << ")";
+        }
       }
 
       std::ostream&
@@ -184,66 +139,42 @@ namespace vcsn
       {
         // If there is no operators at all, that's impossible to
         // construct an expression, so just return a label.
-        if (binary_op_.empty() && unary_op_.empty())
+        if (operators_.empty())
         {
           rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
           return out;
         }
 
-        switch (length)
-        {
-          // 2 symbols left: take unary operator.
-        case 2:
-          print_unary_exp_(out, length);
-          break;
-
-          // 1 symbol left: print a label.
-        case 1:
+        // 1 symbol left: print a label.
+        if (length == 1)
           rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
-          break;
-
-          // binary, unary or nullary operators are possible
-          // just choose randomly one (between those that are not empty)
-          // and print the associated expression.
-        default:
+        // binary, unary or nullary operators are possible
+        // just choose randomly one (with associated weight probability)
+        // and print the associated expression.
+        else
         {
-          auto choose =
-            std::uniform_int_distribution<>(0, unary_op_.empty() ?  1 : 2)(gen_);
-          if (unary_op_.empty() && nullary_op_.empty())
-            choose = 1;
-          else if (binary_op_.empty() && choose == 1)
-            choose = 2;
-          else if (nullary_op_.empty())
-            choose = std::uniform_int_distribution<>(0, 1)(gen_) + 1;
-
-          switch (choose)
-          {
-          case 0:
-            print_nullary_exp_(out, length);
-            break;
-
-          case 1:
-            print_binary_exp_(out, length);
-            break;
-
-          default:
-            print_unary_exp_(out, length);
-            break;
-          }
-        }
-        break;
+          auto it =
+            discrete_chooser<RandomGenerator>{gen_}(weight_.begin(),
+                                                    weight_.end(),
+                                                    operators_.begin());
+          auto op = it->first;
+          if (nullary_op_.find(op) != nullary_op_.end())
+            out << op;
+          else if (unary_op_.find(op) != unary_op_.end())
+            print_unary_exp_(out, length, op);
+          else
+            print_binary_exp_(out, length, op);
         }
         return out;
       }
 
       expressionset_t rs_;
       unsigned length_;
-      operator_t nullary_op_;
-      operator_t unary_op_;
-      operator_t binary_op_;
-      weight_t weight_null_;
-      weight_t weight_un_;
-      weight_t weight_bin_;
+      operator_t operators_;
+      operator_set_t nullary_op_ = { "\\e", "\\z" };
+      operator_set_t unary_op_   = { "!", "{c}", "*", "{T}" };
+      operator_set_t binary_op_  = { "&", "&:", ":", ".", "<+", "%", "+", "{/}", "{\\}" };
+      weight_t weight_;
       RandomGenerator& gen_;
     };
 
