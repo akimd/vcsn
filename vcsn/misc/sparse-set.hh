@@ -11,7 +11,7 @@ namespace vcsn
   template <typename T>
   class sparse_set
   {
-    /// The template parameter corresponds to indexes so it has to  be unsigned.
+    /// The template parameter corresponds to indexes so it has to be unsigned.
     static_assert(std::is_unsigned<T>::value,
                   "sparse-set: requires unsigned indexes");
 
@@ -125,7 +125,6 @@ namespace vcsn
   };
 
   template <typename T>
-  inline
   bool
   has(const sparse_set<T>& s, T e)
   {

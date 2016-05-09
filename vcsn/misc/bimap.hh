@@ -9,7 +9,6 @@ namespace vcsn
 
   /// Whether \a e is in \a s.
   template <typename Map, typename Key>
-  inline
   auto
   has(const Map& s, const Key& e)
     -> decltype(s.find(e) != std::end(s))
