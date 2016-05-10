@@ -673,7 +673,7 @@ namespace vcsn
   auto
   ldiv(const Aut1& lhs, const Aut2& rhs, boolean_tag)
   {
-    auto res = copy(rhs);
+    auto res = insplit(rhs);
     auto prod =
       detail::make_product_automaton<false>(join_automata(lhs, res), lhs, res);
     prod->ldiv_here();
