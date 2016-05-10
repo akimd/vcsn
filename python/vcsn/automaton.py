@@ -16,6 +16,7 @@ from vcsn.tools import (_extend, _format, _info_to_dict,
 from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
                       _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
 
+
 def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
     format via pipes.
@@ -38,6 +39,7 @@ def _automaton_fst(cmd, aut):
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
 
+
 def _automaton_fst_files(cmd, *aut):
     '''Run the command `cmd` on the automata `aut` coded in OpenFST
     format, via files.
@@ -55,13 +57,14 @@ def _automaton_fst_files(cmd, *aut):
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
 
+
 def _guess_format(data='', filename=''):
     '''Try to find out what is the format used to encode this automaton.'''
     for line in open(filename) if filename else data.splitlines():
         if line.startswith('digraph'):
             return 'dot'
         elif re.match('context *=', line) \
-             or re.match('^\s*(\$|\w+|".*?")\s*->\s*(\$|\w+|".*?")', line):
+                or re.match(r'^\s*(\$|\w+|".*?")\s*->\s*(\$|\w+|".*?")', line):
             return 'daut'
         elif line.startswith('#! /bin/sh'):
             return 'efsm'
@@ -99,7 +102,6 @@ class automaton:
 
     as_boxart = lambda self: _dot_to_boxart(self.dot())
 
-
     def as_svg(self, format="dot", engine="dot"):
         if format == "dot":
             return _dot_to_svg(self.dot(), engine)
@@ -108,9 +110,9 @@ class automaton:
         else:
             raise(ValueError("invalid format: ", format))
 
-
     # conjunction.
     _conjunction_orig = automaton.conjunction
+
     def conjunction(*args, lazy=False):
         '''Compute the conjunction of automata, possibly lazy, or the repeated
         conjunction of an automaton.'''
@@ -118,7 +120,6 @@ class automaton:
             return automaton._conjunction_orig(*args)
         else:
             return automaton._conjunction_orig(list(args), lazy)
-
 
     def _convert(self, mode, engine="dot"):
         '''Display automaton `self` in `mode` with Graphviz `engine`.'''
@@ -137,19 +138,17 @@ class automaton:
         else:
             raise(ValueError('invalid display format: ' + mode))
 
-
     _determinize_orig = automaton.determinize
+
     def determinize(self, algo="auto", lazy=False):
         if lazy:
             algo = 'lazy,' + algo
         return self._determinize_orig(algo)
 
-
     def _automaton_display(self, mode, engine="dot"):
         '''Display automaton `self` in `mode` with Graphviz `engine`.'''
         from IPython.display import display
         display(_automaton_convert(self, mode, engine))
-
 
     # automaton.__init__
     # The point is to add support for the "daut" format.  So we save
@@ -157,9 +156,8 @@ class automaton:
     # and then provide a new __init__.
     _init_orig = automaton.__init__
 
-
     def __init__(self, data='', format='auto', filename='',
-                        strip=True):
+                 strip=True):
         if format == "auto":
             format = _guess_format(data, filename)
         if format == "daut":
@@ -170,7 +168,6 @@ class automaton:
             format = 'dot'
         self._init_orig(data=data, format=format, filename=filename,
                         strip=strip)
-
 
     def display(self):
         '''Display automaton `self` with a local menu to the select
@@ -184,14 +181,13 @@ class automaton:
             modes = ['simple', 'pretty', 'info']
         modes += ['info,detailed', 'tooltip', 'transitions', 'type',
                   'dot', 'dot2tex']
-        engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
+        engines = ['dot', 'neato', 'twopi',
+                   'circo', 'fdp', 'sfdp', 'patchwork']
         interact_h(lambda mode, engine: _automaton_display(self, mode, engine),
                    mode=modes, engine=engines)
 
-
-    def dot(self, mode = "pretty"):
+    def dot(self, mode="pretty"):
         return _dot_pretty(self.format('dot,utf8'), mode)
-
 
     # automaton.eval.
     def eval(self, w):
@@ -204,14 +200,12 @@ class automaton:
         return self._eval(w)
     __call__ = eval
 
-
     # automaton.format
     def format(self, fmt="daut"):
         if fmt == "daut":
             return dot_to_daut(self._format('dot'))
         else:
             return self._format(fmt)
-
 
     def __format__(self, spec):
         """Format the automaton according to `spec`.
@@ -249,7 +243,6 @@ class automaton:
                     'x': 'tikz'}
         return _format(self, spec, 'daut', syntaxes)
 
-
     def as_fst(self):
         '''Return an OpenFST binary file for `self`.  When the result is
         discarded, the file might be removed, so to keep the file alive,
@@ -264,13 +257,12 @@ class automaton:
             raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
         return fst
 
-
     fstcat           = lambda self: _automaton_fst("cat", self)
     fstcompose       = lambda a, b: _automaton_fst_files("fstcompose", a, b)
     fstconjunction   = lambda a, b: _automaton_fst_files("fstintersect", a, b)
     fstdeterminize   = lambda self: _automaton_fst("fstdeterminize", self)
-    fstis_equal      = lambda a, b: _automaton_fst("fstequal", a, b)
-    fstis_equivalent = lambda a, b: _automaton_fst("fstequivalent", a, b)
+    fstis_equal      = lambda a, b: _automaton_fst_files("fstequal", a, b)
+    fstis_equivalent = lambda a, b: _automaton_fst_files("fstequivalent", a, b)
     fstminimize      = lambda self: _automaton_fst("fstminimize", self)
     fstproper        = lambda self: _automaton_fst("fstrmepsilon", self)
     fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
@@ -278,18 +270,16 @@ class automaton:
 
     infiltration = lambda *auts: automaton._infiltration(list(auts))
 
-
     def info(self, key=None, detailed=False):
-        res = _info_to_dict(self.format('info,detailed' if detailed else 'info'))
+        res = _info_to_dict(self.format(
+            'info,detailed' if detailed else 'info'))
         return res[key] if key else res
-
 
     def is_synchronized_by(self, w):
         c = self.context()
         if not isinstance(w, label):
             w = c.word(str(w))
         return self._is_synchronized_by(w)
-
 
     def lift(self, *tapes, identities="default"):
         if len(tapes) == 1 and isinstance(tapes[0], list):
@@ -298,8 +288,8 @@ class automaton:
             tapes = list(tapes)
         return self._lift(tapes, identities)
 
-
     _proper_orig = automaton.proper
+
     def proper(self, prune=True, backward=True, algo="auto", lazy=False):
         if lazy:
             if algo not in [None, 'auto']:
