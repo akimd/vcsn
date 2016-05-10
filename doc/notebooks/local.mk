@@ -119,6 +119,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.derived_term.ipynb             \
   %D%/expression.difference.ipynb               \
   %D%/expression.expansion.ipynb                \
+  %D%/expression.inductive.ipynb                \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
   %D%/expression.multiply.ipynb                 \
