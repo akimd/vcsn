@@ -51,7 +51,7 @@ namespace vcsn
 
     // The set of the current (left-hand side) final transitions.
     // Store these transitions by copy.
-    auto ftr = detail::make_vector(final_transitions(res));
+    auto final_ts = detail::make_vector(final_transitions(res));
 
     // The set of the current (right-hand side) initial transitions.
     // Store these transitions by copy.
@@ -64,7 +64,7 @@ namespace vcsn
     const auto& map = copy.state_map();
 
     // Branch all the final transitions of res to the initial ones in b.
-    for (auto t1: ftr)
+    for (auto t1: final_ts)
       {
         auto s1 = res->src_of(t1);
         auto w1 = res->weight_of(t1);
@@ -106,8 +106,8 @@ namespace vcsn
            {
              return !b->is_initial(s) || !in(b, s).empty();
            },
-         // Import all the B transitions, except the initial ones (and
-         // those from its (genuine) initial state).
+         // Import b's transitions, except the initial ones (and those
+         // from its (genuine) initial state).
          [b] (transition_t_of<Aut2> t) { return b->src_of(t) != b->pre(); });
     const auto& map = copy.state_map();
 
