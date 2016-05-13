@@ -162,7 +162,10 @@ def CHECK_EQ(expected, effective, loc=None):
         if aut:
             expaut = automaton(expected)
             effaut = automaton(effective)
-            if expaut.is_isomorphic(effaut):
+            if not effaut.is_accessible():
+                msg += (" (different, but cannot check whether isomorphic"
+                        ", as is not accessible)")
+            elif expaut.is_isomorphic(effaut):
                 msg += ' (different but isomorphic)'
             else:
                 msg += ' (different and not even isomorphic)'
