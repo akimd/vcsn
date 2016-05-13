@@ -34,6 +34,58 @@ namespace vcsn
           str_escape(lbracket), o.str());
   }
 
+  char get_char(std::istream& i)
+  {
+    int res = i.get();
+    if (res == '\\')
+      switch (int c = i.get())
+        {
+          // Usual escapes.
+#define CASE(Key, Value)                                \
+          case Key: res = Value; i.ignore(); break
+          CASE('a', '\a');
+          CASE('b', '\b');
+          CASE('f', '\f');
+          CASE('n', '\n');
+          CASE('r', '\r');
+          CASE('t', '\t');
+          CASE('v', '\v');
+#undef CASE
+
+          // Hexadecimal escapes.
+        case 'x':
+          {
+            // Handle hexadecimal escape.
+            int c1 = i.get();
+            require(c1 != EOF,
+                    "get_char: unexpected end-of-file"
+                    " after: \\x");
+            require(isxdigit(c1),
+                    "get_char: invalid escape: \\x", char(c1));
+            int c2 = i.get();
+            require(c2 != EOF,
+                    "get_char: unexpected end-of-file"
+                    " after: \\x", char(c1));
+            require(isxdigit(c2),
+                    "get_char: invalid escape: \\x",
+                    char(c1), char(c2));
+            res = std::stoi(std::string{char(c1), char(c2)}, nullptr, 16);
+          }
+          break;
+
+          // Other escapes, e.g., \\, \", \', etc.  \(, \) and \-
+          // are used in setalpha::make, e.g., char_letters(\(\-\)).
+        default:
+          require(!std::isalnum(c),
+                  "get_char: invalid escape: \\", char(c), " in \\", i);
+          res = c;
+          break;
+        }
+    require(res != EOF,
+            "get_char: unexpected end-of-file");
+    return res;
+  }
+
   char eat(std::istream& is, char c)
   {
     if(is.peek() == c)

@@ -66,6 +66,21 @@ namespace vcsn LIBVCSN_API
       return res;
     }
 
+    /// Characters that need to be escaped.
+    const char* meta() const
+    {
+      return meta_;
+    }
+
+    /// Set the list of additional meta characters that need to be
+    /// escaped.
+    format meta(const char* m) const
+    {
+      auto res = *this;
+      res.meta_ = m;
+      return res;
+    }
+
     /// Whether to use the syntax for labels (e.g., "a|x").
     bool is_for_labels() const
     {
@@ -105,6 +120,8 @@ namespace vcsn LIBVCSN_API
     bool label_ = false;
     /// Whether we should delimit.  E.g., `1, 2` or `(1, 2)`.
     bool delimit_ = false;
+    /// Additional characters to escape.
+    const char* meta_ = nullptr;
   };
 
   /// Wrapper around operator<<.

@@ -5,6 +5,19 @@
 import vcsn
 from test import *
 
+## Escapes.
+
+ctx = vcsn.context("lal_char, b")
+def check(n):
+    e = r'\x{:02x}'.format(n)
+    print(e)
+    e = ctx.expression(e)
+    CHECK_EQ(e, ctx.expression(str(e)))
+
+# We use 0 for \e and -1 for $.
+for i in range(1, 255):
+    check(i)
+
 ctx = vcsn.context("lal_char(abcd), b")
 
 ## ------------ ##

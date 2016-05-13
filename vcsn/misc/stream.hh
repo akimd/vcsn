@@ -75,43 +75,7 @@ namespace vcsn LIBVCSN_API
 
   /// Read a single char, with possible \-escape support.
   /// EOF is an error.
-  inline char get_char(std::istream& i)
-  {
-    int res = i.get();
-    if (res == '\\')
-      {
-        int c = i.peek();
-        // \(, \) and \- are used in setalpha::make, e.g.,
-        // char_letters(\(\-\)), so strip the backslash.  Otherwise,
-        // return the backslash itself.
-        if (c == 'x')
-          {
-            i.ignore();
-            // Handle hexadecimal escape.
-            int c1 = i.get();
-            require(c1 != EOF,
-                    "get_char: unexpected end-of-file"
-                    " after: \\x");
-            require(isxdigit(c1),
-                    "get_char: invalid escape: \\x", char(c1));
-            int c2 = i.get();
-            require(c2 != EOF,
-                    "get_char: unexpected end-of-file"
-                    " after: \\x", char(c1));
-            require(isxdigit(c2),
-                    "get_char: invalid escape: \\x",
-                    char(c1), char(c2));
-            res = std::stoi(std::string{char(c1), char(c2)}, nullptr, 16);
-          }
-        else if (std::isalnum(c))
-          raise("get_char: invalid escape: \\", char(c), " in \\", i);
-        else
-          res = i.get();
-      }
-    require(res != EOF,
-            "get_char: unexpected end-of-file");
-    return res;
-  }
+  char get_char(std::istream& i);
 
   /// Format v via vs.print.
   template <typename ValueSet, typename Value = typename ValueSet::value_t,

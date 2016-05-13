@@ -133,26 +133,10 @@ namespace
     return parser::make_LETTER({yytext+1, size_t(yyleng-2)}, loc);
   }
 
-  \\[0-7]{3}         {
-    long c = strtol(yytext + 1, 0, 8);
-    if (255 < c)
-      driver_.error(loc, "invalid escape: " + str_escape(yytext));
-    return parser::make_LETTER({char(c)}, loc);
-  }
-
-  \\x[0-9a-fA-F]{2}  {
-    return parser::make_LETTER({char(strtol(yytext + 2, 0, 16))}, loc);
-  }
-
-  \\a        return parser::make_LETTER({'\a'}, loc);
-  \\b        return parser::make_LETTER({'\b'}, loc);
-  \\f        return parser::make_LETTER({'\f'}, loc);
-  \\n        return parser::make_LETTER({'\n'}, loc);
-  \\r        return parser::make_LETTER({'\r'}, loc);
-  \\t        return parser::make_LETTER({'\t'}, loc);
-  \\v        return parser::make_LETTER({'\v'}, loc);
-  "\\".      return parser::make_LETTER(yytext+1, loc+1);
-  .          return parser::make_LETTER(yytext, loc);
+  \\[0-7]{3}        |
+  \\x[0-9a-fA-F]{2} |
+  "\\".             |
+    .               return parser::make_LETTER({yytext, size_t(yyleng)}, loc);
 }
 
 

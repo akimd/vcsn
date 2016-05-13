@@ -221,7 +221,8 @@ namespace vcsn
 
     VISIT(atom)
     {
-      rs_.labelset()->print(v.value(), out_, fmt_.for_labels());
+      rs_.labelset()->print(v.value(), out_,
+                            fmt_.for_labels().meta("!&%|',[-]<> (){}\n*+:.?"));
     }
 
     /// Specific handling to using exponents as syntactic sugar.

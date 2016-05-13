@@ -227,7 +227,7 @@ namespace vcsn
             if (l == '\\')
               o << "\\\\";
             else
-              str_escape(o, l, "|',[-]<>");
+              str_escape(o, l, fmt.meta() ? fmt.meta() : "|',[-]<> ");
           }
       return o;
     }
