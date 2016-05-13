@@ -22,6 +22,7 @@ dist_notebooks_DATA =                           \
   %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
+  %D%/ICTAC-2016.ipynb                          \
   %D%/References.ipynb                          \
   %D%/Spell-checker.ipynb                       \
   %D%/Stackoverflow.ipynb                       \
