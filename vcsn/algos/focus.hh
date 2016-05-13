@@ -238,6 +238,15 @@ namespace vcsn
         return aut_->null_transition();
       }
 
+      /// Whether this transition is present in the automaton.
+      ///
+      /// Necessary for transpose's has_transition to be available.
+      bool
+      has_transition(transition_t t) const
+      {
+        return aut_->has_transition(t);
+      }
+
       /// Apparent label of a transition.
       bool
       has_transition(state_t src, state_t dst, label_t l) const

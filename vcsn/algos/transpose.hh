@@ -112,6 +112,8 @@ namespace vcsn
 
       DEFINE(get_transition(state_t s, state_t d, label_t l),
              get_transition(d, s, aut_->labelset()->transpose(l)));
+      DEFINE(has_transition(transition_t t),
+             has_transition(t));
       DEFINE(has_transition(state_t s, state_t d, label_t l),
              has_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(label_of(transition_t t),
