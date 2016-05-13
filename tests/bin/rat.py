@@ -31,14 +31,15 @@ def context_update():
   print("# context: {} ({})".format(context, ctx))
 
 
-def expr(re):
+def expr(e):
   '''Parse.  If it fails, prepend "! " to the error
   message and return it as result.  Strip the "try -h" line.'''
   try:
-    print(re, identities)
-    return ctx.expression(re, identities)
+    print(e, identities)
+    return ctx.expression(e, identities)
   except RuntimeError:
-    return "! " + str(sys.exc_info()[1])
+    err = re.sub('^', '! ', str(sys.exc_info()[1]), flags=re.M)
+    return r'\n'.join(err.splitlines())
 
 def pp(re):
   '''Parse and pretty-print.  If it fails, prepend "! " to the error

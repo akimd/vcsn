@@ -14,9 +14,9 @@
 [a-b] => a+b
 [a-bc-d] => [a-d]
 
-[b-a] ! 1.1-5: RatE[{abcdefgh}* -> B](associative): invalid letter interval: b-a
-[]    ! 1.1-2: invalid empty letter class
-a|x   ! 1.2: too many tapes
+[b-a] ! 1.1-5: RatE[{abcdefgh}* -> B](associative): invalid letter interval: b-a\n!   while reading expression: [b-a]
+[]    ! 1.1-2: invalid empty letter class\n!   while reading expression: []
+a|x   ! 1.2: too many tapes\n!   while reading expression: a|x
 
 [^] => [^]
 [^] == [a-h]
@@ -25,8 +25,8 @@ a|x   ! 1.2: too many tapes
 [^a-bgh] => [c-f]
 [^a-cgh] => d+e+f
 [^a-bd-h] => c
-[^b-a] ! 1.1-6: invalid letter interval: b-a
-[^a-h] ! 1.1-6: invalid empty letter class
+[^b-a] ! 1.1-6: invalid letter interval: b-a\n!   while reading expression: [^b-a]
+[^a-h] ! 1.1-6: invalid empty letter class\n!   while reading expression: [^a-h]
 
 %identities: associative
 a+a+a => a+a+a

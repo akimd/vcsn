@@ -21,9 +21,9 @@ a|e|i+b|f|j          => a|e|i+b|f|j
 [abcd]|[efgh]|[ijkl] => [a-d]|[e-h]|[i-l]
 abcd|efgh|ijkl       => abcd|efgh|ijkl
 
-a|e|i|z ! 1.6: too many tapes
-a|e ! 1.1-3: not enough tapes: 2 expected 3
-a ! 1.1: not enough tapes: 1 expected 3
+a|e|i|z ! 1.6: too many tapes\n!   while reading expression: a|e|i|z
+a|e ! 1.1-3: not enough tapes: 2 expected 3\n!   while reading expression: a|e
+a ! 1.1: not enough tapes: 1 expected 3\n!   while reading expression: a
 
 %identities: linear
 b|f|j+a|e|i          => a|e|i+b|f|j

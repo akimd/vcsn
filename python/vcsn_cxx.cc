@@ -922,7 +922,15 @@ struct expression
              vcsn::rat::identities ids)
   {
     std::istringstream is(r);
-    val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
+    try
+      {
+        val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
+      }
+    catch (const std::runtime_error& e)
+      {
+        vcsn::raise(e.what(), "\n",
+                    "  while reading expression: ", r);
+      }
     vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
