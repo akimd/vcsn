@@ -27,14 +27,7 @@ namespace vcsn
             os << uint8_t(c);
           }
         else
-          // Turn into an unsigned, otherwise if c has its highest bit
-          // set, it will be interpreted as a negative char, which
-          // will be mapped to a negative int.  So for instance c =
-          // 255 is mapped to \xFFFFFFF instead of \xFF.
-          //
-          // This happens only when char is "signed char".  Which is
-          // common.
-          os << "\\x" << std::setw(2) << int(uint8_t(c));
+          os << "\\x" << std::setw(2) << c;
         break;
       }
     os.fill(fill);
@@ -42,12 +35,16 @@ namespace vcsn
     return os;
   }
 
-  std::string
-  str_escape(const int c, const char* special)
+  std::ostream&
+  str_escape(std::ostream& os, char c, const char* special)
   {
-    std::ostringstream o;
-    str_escape(o, c, special);
-    return o.str();
+    // Turn into an unsigned, otherwise if c has its highest bit set,
+    // it will be interpreted as a negative char, which will be mapped
+    // to a negative int.  So for instance c = 255 is mapped to
+    // \xFFFFFFF instead of \xFF.
+    //
+    // This happens only when char is "signed char".  Which is common.
+    return str_escape(os, int(uint8_t(c)), special);
   }
 
   std::ostream&
@@ -56,13 +53,5 @@ namespace vcsn
     for (auto c: str)
       str_escape(o, c, special);
     return o;
-  }
-
-  std::string
-  str_escape(const std::string& s, const char* special)
-  {
-    std::ostringstream o;
-    str_escape(o, s, special);
-    return o.str();
   }
 }

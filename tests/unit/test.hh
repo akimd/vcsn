@@ -13,8 +13,8 @@
     if (lhs_ != rhs_)                                                   \
       {                                                                 \
         SHOWH("FAIL: assertion failed: " #Lhs " == " #Rhs);             \
-        SHOW("expected:\n\t\"" << vcsn::str_escape(lhs_) << '"');       \
-        SHOW("effective:\n\t\"" << vcsn::str_escape(rhs_) << '"');      \
+        SHOW("expected:\n\t\"" << lhs_ << '"');                         \
+        SHOW("effective:\n\t\"" << rhs_ << '"');                        \
         ++nerrs;                                                        \
       }                                                                 \
     else if (getenv("VERBOSE"))                                         \

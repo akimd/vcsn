@@ -5,7 +5,10 @@
 import vcsn
 from test import *
 
-## Escapes.
+
+## --------- ##
+## Escapes.  ##
+## --------- ##
 
 ctx = vcsn.context("lal_char, b")
 def check(n):
@@ -17,6 +20,11 @@ def check(n):
 # We use 0 for \e and -1 for $.
 for i in range(1, 255):
     check(i)
+
+XFAIL(lambda: ctx.expression(r'\xff'),
+      r'add_letter: the special letter is reserved: \xff')
+
+
 
 ctx = vcsn.context("lal_char(abcd), b")
 

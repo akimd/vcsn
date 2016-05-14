@@ -138,7 +138,7 @@ namespace vcsn
     add_letter(letter_t l)
     {
       require(l != this->template special<letter_t>(),
-              "add_letter: the special letter is reserved: ", l);
+              "add_letter: the special letter is reserved: ", str_escape(l));
       alphabet_.insert(l);
       return *this;
     }

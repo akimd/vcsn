@@ -2,6 +2,7 @@
 
 #include <iosfwd>
 #include <sstream>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -13,19 +14,15 @@ namespace vcsn LIBVCSN_API
   std::ostream& str_escape(std::ostream& os, const std::string& str,
                            const char* special = nullptr);
 
-  /// Likewise, but produces a string.
-  std::string str_escape(const std::string& c,
-                         const char* special = nullptr);
-
   /// A container of letters.
   template <typename T>
-  std::string str_escape(const std::vector<T>& s,
-                         const char* special = nullptr)
+  std::ostream& str_escape(std::ostream& os,
+                           const std::vector<T>& s,
+                           const char* special = nullptr)
   {
-    std::ostringstream o;
-    for (const auto& c: s)
-      str_escape(o, c, special);
-    return o.str();
+    for (auto c: s)
+      str_escape(os, c, special);
+    return os;
   }
 
   /// Output a character, escaping special characters.
@@ -33,7 +30,16 @@ namespace vcsn LIBVCSN_API
   std::ostream& str_escape(std::ostream& os, int c,
                            const char* special = nullptr);
 
-  /// Likewise, but produces a string.
-  std::string str_escape(int c,
-                         const char* special = nullptr);
+  /// Output a character, escaping special characters.
+  std::ostream& str_escape(std::ostream& os, char c,
+                           const char* special = nullptr);
+
+  template <typename T>
+  std::string str_escape(T&& s,
+                         const char* special = nullptr)
+  {
+    std::ostringstream o;
+    str_escape(o, std::forward<T>(s), special);
+    return o.str();
+  }
 }

@@ -72,7 +72,7 @@ namespace vcsn
     void driver::error(const location& l, const std::string& m)
     {
       std::ostringstream er;
-      er  << l << ": " << m;
+      er << l << ": " << m;
       if (!!getenv("YYDEBUG"))
         std::cerr << er.str() << std::endl;
       errors += (errors.empty() ? "" : "\n") + er.str();
