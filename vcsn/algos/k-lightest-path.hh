@@ -4,6 +4,7 @@
 
 #include <boost/heap/fibonacci_heap.hpp>
 
+#include <vcsn/weightset/weightset.hh>
 #include <vcsn/algos/dijkstra.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/algos/filter.hh>
@@ -22,7 +23,14 @@ namespace vcsn
     /// Functor initialized by the automaton on which the lightest paths will
     /// be computed. And called with the source and destination states of the
     /// path, as long as the number (k) of paths to retrieve.
-    template <Automaton Aut>
+    ///
+    /// \tparam ValueSet could be either a labelset or weightset.
+    ///         Must have a less and a one member function.
+    /// \tparam Mul lambda multiplying the current best candidate with
+    ///         the value taken from the transition given in parameter.
+    /// \tparam GetValue lambda used to retrieve the value_type expected by the
+    ///         single lightest path algorithm from a monomial.
+    template <Automaton Aut, typename ValueSet, typename Mul, typename GetValue>
     struct yen_impl
     {
       using automaton_t = Aut;
@@ -33,36 +41,32 @@ namespace vcsn
       using path_t = std::vector<transition_t>;
       using paths_t = std::vector<path_t>;
 
-      using wordset_context_t = word_context_t<context_t>;
-      using polynomialset_t = polynomialset<wordset_context_t>;
-      using polynomial_t = typename polynomialset_t::value_t;
-      using monomial_t = typename polynomialset_t::monomial_t;
+      using valueset_t = ValueSet;
+      using value_t = typename valueset_t::value_t;
 
-      yen_impl(const automaton_t& aut)
-        : aut_(aut)
+      yen_impl(const automaton_t& aut, const ValueSet& vs, Mul mul, GetValue get_value)
+        : aut_{aut}
+        , vs_{vs}
+        , mul_{mul}
+        , get_value_(get_value)
       {}
 
       struct profile
       {
-        profile(const path_t& path, const monomial_t& m, const polynomialset_t& ps)
-          : path_(path)
-          , m_(m)
-          , ps_(ps)
+        profile(const path_t& path, const value_t& v, const valueset_t& vs)
+          : path_{path}
+          , v_{v}
+          , vs_{vs}
         {}
 
         bool operator<(const profile& rhs) const
         {
-          if (ps_.weightset()->less(rhs.m_.second, m_.second))
-            return true;
-          else if (ps_.weightset()->less(m_.second, rhs.m_.second))
-            return false;
-          else
-            return ps_.labelset()->less(rhs.m_.first, m_.first);
+          return vs_.less(rhs.v_, v_);
         }
 
         path_t path_;
-        monomial_t m_;
-        const polynomialset_t& ps_;
+        value_t v_;
+        const valueset_t& vs_;
       };
 
       using heap_t = boost::heap::fibonacci_heap<profile>;
@@ -87,10 +91,21 @@ namespace vcsn
         return res;
       }
 
+      template <Automaton AnyAut>
+      path_t
+      compute_lightest_path(const AnyAut& aut,
+                            state_t_of<Aut> src = Aut::element_type::pre(),
+                            state_t_of<Aut> dst = Aut::element_type::post())
+      {
+        auto algo = detail::make_dijkstra_impl(aut, vs_, mul_);
+        return std::move(algo(src, dst));
+      }
+
       paths_t
       operator()(state_t src, state_t dst, unsigned k)
       {
-        auto res = paths_t{path(aut_, lightest_path(aut_, src, dst, dijkstra_tag{}), src, dst)};
+        auto first = compute_lightest_path(aut_, src, dst);
+        auto res = paths_t{path(aut_, first, src, dst)};
         auto ps = make_word_polynomialset(aut_->context());
 
         auto heap = heap_t();
@@ -123,7 +138,7 @@ namespace vcsn
                       && filter_aut->has_state(filter_aut->src_of(t)))
                     filter_aut->hide_state(filter_aut->src_of(t));
 
-                auto shortest_path = lightest_path(filter_aut, spur_node, dst, dijkstra_tag{});
+                auto shortest_path = compute_lightest_path(filter_aut, spur_node, dst);
                 auto spur_path = path(filter_aut, shortest_path, spur_node, dst);
                 root_path.insert(root_path.end(), spur_path.begin(), spur_path.end());
                 if (!root_path.empty()
@@ -131,7 +146,7 @@ namespace vcsn
                     && filter_aut->dst_of(root_path.back()) == dst)
                   {
                     auto m = *path_monomial(filter_aut, format_lightest(filter_aut, root_path), src, dst);
-                    heap.emplace(std::move(root_path), m, ps);
+                    heap.emplace(std::move(root_path), get_value_(m), vs_);
                   }
               }
             if (heap.empty())
@@ -143,14 +158,30 @@ namespace vcsn
       }
 
       const automaton_t& aut_;
+      const ValueSet& vs_;
+      Mul mul_;
+      GetValue get_value_;
     };
+
+    template <Automaton Aut, typename ValueSet, typename Mul, typename GetValue>
+    auto
+    make_yen(const Aut& aut, const ValueSet& vs, Mul mul, GetValue get_value)
+    {
+      return detail::yen_impl<Aut, ValueSet, Mul, GetValue>(aut, vs, mul, get_value);
+    }
   }
 
   template <Automaton Aut>
   std::vector<std::vector<transition_t_of<Aut>>>
   k_lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest, unsigned k)
   {
-    return detail::yen_impl<Aut>(aut)(source, dest, k);
+    auto mul = [&aut](auto lhs, transition_t_of<Aut> t)
+               {
+                 return aut->weightset()->mul(lhs, aut->weight_of(t));
+               };
+    auto get_value = [](auto m) { return m.second; };
+    auto yen = detail::make_yen(aut, *aut->weightset(), mul, get_value);
+    return yen(source, dest, k);
   }
 
   template <Automaton Aut>

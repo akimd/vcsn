@@ -198,7 +198,7 @@ namespace vcsn
         const polynomialset_t ps = make_word_polynomialset(aut->context());
         polynomial_t res;
         auto paths = k_lightest_path(aut, aut->pre(), aut->post(), num);
-        for (auto path : paths)
+        for (const auto& path : paths)
           {
             auto monomial = path_monomial(aut, format_lightest(aut, path));
             if (monomial)
