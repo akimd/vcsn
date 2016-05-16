@@ -1,11 +1,10 @@
 #include <lib/vcsn/algos/registry.hh>
+#include <lib/vcsn/dyn/signature-printer.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/registries.hh>
-#include <vcsn/dyn/signature-printer.hh>
-#include <vcsn/dyn/translate.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
@@ -97,8 +96,8 @@ namespace vcsn
     context
     make_context(const std::string& n)
     {
-      symbol sname{ast::normalize_context(n, false)};
-      std::string full_name = ast::normalize_context(n, true);
+      auto sname = symbol{ast::normalize_context(n, false)};
+      auto full_name = ast::normalize_context(n, true);
       if (!detail::make_context_registry().get0({sname}))
         compile(sname);
       return detail::make_context_registry().call({sname}, full_name);

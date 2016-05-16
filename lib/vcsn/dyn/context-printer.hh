@@ -3,7 +3,7 @@
 #include <set>
 #include <sstream>
 
-#include <vcsn/dyn/context-visitor.hh>
+#include <lib/vcsn/dyn/context-visitor.hh>
 
 namespace vcsn
 {

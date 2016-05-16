@@ -6,7 +6,7 @@
 
 #include <vcsn/core/rat/identities.hh>
 
-#include <vcsn/dyn/context-visitor.hh>
+#include <lib/vcsn/dyn/context-visitor.hh>
 #include <vcsn/dyn/fwd.hh>
 
 

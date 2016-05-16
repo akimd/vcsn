@@ -2,7 +2,7 @@
 #include <boost/algorithm/string/trim.hpp>
 
 #include <lib/vcsn/dyn/context-parser.hh>
-#include <vcsn/dyn/signature-printer.hh>
+#include <lib/vcsn/dyn/signature-printer.hh>
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>

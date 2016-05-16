@@ -128,7 +128,7 @@ def bridge():
 
 #include <unordered_map>
 
-#include <vcsn/dyn/context-printer.hh>
+#include <lib/vcsn/dyn/context-printer.hh>
 
 namespace vcsn { namespace ast {
 

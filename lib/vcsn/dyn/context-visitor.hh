@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/dyn/fwd.hh>
+#include <lib/vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {

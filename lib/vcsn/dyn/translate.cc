@@ -1,4 +1,4 @@
-#include <vcsn/dyn/translate.hh>
+#include <lib/vcsn/dyn/translate.hh>
 
 #include <chrono>
 #include <fstream>
@@ -13,8 +13,8 @@
 #include <ltdl.h>
 
 #include <lib/vcsn/dyn/context-parser.hh>
-#include <vcsn/dyn/type-ast.hh>
-#include <vcsn/dyn/context-printer.hh>
+#include <lib/vcsn/dyn/type-ast.hh>
+#include <lib/vcsn/dyn/context-printer.hh>
 
 #include <vcsn/config.hh>
 #include <vcsn/dyn/context.hh>

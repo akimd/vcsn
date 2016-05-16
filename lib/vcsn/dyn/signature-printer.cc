@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include <lib/vcsn/dyn/context-parser.hh>
-#include <vcsn/dyn/signature-printer.hh>
+#include <lib/vcsn/dyn/signature-printer.hh>
 
 
 namespace vcsn

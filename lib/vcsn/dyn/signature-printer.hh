@@ -2,7 +2,7 @@
 
 #include <ostream>
 
-#include <vcsn/dyn/type-ast.hh>
+#include <lib/vcsn/dyn/type-ast.hh>
 
 namespace vcsn
 {

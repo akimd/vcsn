@@ -198,13 +198,8 @@ nobase_include_HEADERS =                        \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
   %D%/dyn/cast.hh                               \
-  %D%/dyn/context-printer.hh                    \
-  %D%/dyn/context-visitor.hh                    \
   %D%/dyn/context.hh                            \
   %D%/dyn/fwd.hh                                \
-  %D%/dyn/signature-printer.hh                  \
-  %D%/dyn/translate.hh                          \
-  %D%/dyn/type-ast.hh                           \
   %D%/dyn/value.hh                              \
   %D%/fwd.hh                                    \
   %D%/labelset/fwd.hh                           \
