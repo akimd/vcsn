@@ -12,7 +12,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/fwd.hh>
-#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/core/kind.hh>

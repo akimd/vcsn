@@ -7,7 +7,7 @@
 #include <vcsn/algos/is-ambiguous.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
-#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/is-valid-expression.hh>

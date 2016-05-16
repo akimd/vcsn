@@ -56,10 +56,10 @@ algo_headers =                                  \
   %D%/algos/inductive.hh                        \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
+  %D%/algos/is-acyclic.hh                       \
   %D%/algos/is-ambiguous.hh                     \
   %D%/algos/is-complete.hh                      \
   %D%/algos/is-deterministic.hh                 \
-  %D%/algos/is-eps-acyclic.hh                   \
   %D%/algos/is-functional.hh                    \
   %D%/algos/is-free-boolean.hh                  \
   %D%/algos/is-partial-identity.hh              \

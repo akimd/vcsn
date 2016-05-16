@@ -3,7 +3,7 @@
 #include <type_traits>
 
 #include <vcsn/algos/copy.hh>
-#include <vcsn/algos/is-eps-acyclic.hh>
+#include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/core/kind.hh>
