@@ -1,7 +1,6 @@
 #include <ostream>
 #include <regex>
 #include <string>
-#include <unordered_set>
 
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/tokenizer.hpp>
@@ -13,6 +12,7 @@
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/random.hh>
+#include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -84,9 +84,7 @@ namespace vcsn
           float value = 1;
           if (eq != std::string::npos)
             value = lexical_cast<float>(tok_arg.substr(eq + 1));
-          if (nullary_op_.find(op)    != nullary_op_.end()
-              || unary_op_.find(op)   != unary_op_.end()
-              || binary_op_.find(op)  != binary_op_.end())
+          if (has(nullary_op_, op) || has(unary_op_, op) || has(binary_op_, op))
             operators_[op] = value;
           else if (op == "length")
             length_ = value;
@@ -97,7 +95,8 @@ namespace vcsn
       }
 
       /// Print expression with unary operator
-      void print_unary_exp_(std::ostream& out, unsigned length, std::string op) const
+      void print_unary_exp_(std::ostream& out, unsigned length,
+                            const std::string& op) const
       {
         // prefix
         if (op == "!")
@@ -118,7 +117,8 @@ namespace vcsn
       /// Print binary expression with binary operator.
       /// It is composed of the left and right side, and the operator.
       /// The number of symbols is randomly distribued between both side.
-      void print_binary_exp_(std::ostream& out, unsigned length, std::string op) const
+      void print_binary_exp_(std::ostream& out, unsigned length,
+                             const std::string& op) const
       {
         if (length < 3)
           rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
@@ -140,14 +140,12 @@ namespace vcsn
         // If there is no operators at all, that's impossible to
         // construct an expression, so just return a label.
         if (operators_.empty())
-        {
           rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
-          return out;
-        }
 
         // 1 symbol left: print a label.
-        if (length == 1)
+        else if (length == 1)
           rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+
         // binary, unary or nullary operators are possible
         // just choose randomly one (with associated weight probability)
         // and print the associated expression.
@@ -158,9 +156,9 @@ namespace vcsn
                                                     weight_.end(),
                                                     operators_.begin());
           auto op = it->first;
-          if (nullary_op_.find(op) != nullary_op_.end())
+          if (has(nullary_op_, op))
             out << op;
-          else if (unary_op_.find(op) != unary_op_.end())
+          else if (has(unary_op_, op))
             print_unary_exp_(out, length, op);
           else
             print_binary_exp_(out, length, op);
