@@ -14,6 +14,7 @@
 #include <vcsn/labelset/word-polynomialset.hh>
 
 #include <vcsn/algos/lightest-path.hh>
+#include <vcsn/algos/is-acyclic.hh>
 
 namespace vcsn
 {
@@ -80,18 +81,33 @@ namespace vcsn
 
         // If the user did not specify a maximum length, and required only one
         // path, a lightest-path algorithm is eligible.
-        if (*num == 1 && *len == std::numeric_limits<unsigned>::max())
+        if (*len == std::numeric_limits<unsigned>::max()
+            && (*num == 1 || is_acyclic(aut_)))
           {
-            auto get_value = [this](auto lhs, transition_t_of<Aut> t)
+            auto mul = [this](auto lhs, transition_t_of<Aut> t)
                              {
                                auto rhs = aut_->label_of(t);
                                return (aut_->labelset()->is_special(rhs))
                                       ? lhs
                                       : ps_.labelset()->mul(lhs, aut_->label_of(t));
                              };
-            auto algo = detail::make_dijkstra_impl(aut_, *ps_.labelset(), get_value);
-            auto res = path_monomial(aut_, algo(aut_->pre(), aut_->post()));
-            return res ? polynomial_t{*res} : polynomial_t{};
+            auto get_value = [](auto m) { return m.first; };
+            auto yen = detail::make_yen(aut_, *ps_.labelset(), mul, get_value);
+            auto paths = yen(aut_->pre(), aut_->post(), *num);
+
+            using context_t = context_t_of<Aut>;
+            using wordset_context_t = detail::word_context_t<context_t>;
+            using polynomialset_t = polynomialset<wordset_context_t>;
+            using polynomial_t = typename polynomialset_t::value_t;
+            const polynomialset_t ps = make_word_polynomialset(aut_->context());
+            polynomial_t res;
+            for (const auto& path : paths)
+              {
+                auto monomial = path_monomial(aut_, format_lightest(aut_, path));
+                if (monomial)
+                  ps.add_here(res, *monomial);
+              }
+            return res;
           }
         else
           return shortest_(*num, *len);

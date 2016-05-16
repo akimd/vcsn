@@ -145,8 +145,26 @@ namespace vcsn
                     && filter_aut->src_of(root_path.front()) == src
                     && filter_aut->dst_of(root_path.back()) == dst)
                   {
-                    auto m = *path_monomial(filter_aut, format_lightest(filter_aut, root_path), src, dst);
-                    heap.emplace(std::move(root_path), get_value_(m), vs_);
+                    bool already_found = false;
+                    for (const auto& profile: heap)
+                      {
+                        auto& selected_path = profile.path_;
+                        if (root_path.size() == selected_path.size())
+                          {
+                            auto diff = std::mismatch(root_path.begin(), root_path.end(),
+                                                      selected_path.begin(), selected_path.end());
+                            if (diff.first == root_path.end())
+                            {
+                              already_found = true;
+                              break;
+                            }
+                          }
+                      }
+                    if (!already_found)
+                      {
+                        auto m = *path_monomial(filter_aut, format_lightest(filter_aut, root_path), src, dst);
+                        heap.emplace(std::move(root_path), get_value_(m), vs_);
+                      }
                   }
               }
             if (heap.empty())
