@@ -102,7 +102,7 @@ def _timeit(stmt="pass", setup="pass", repeat=3):
     Runs enough loops so that total execution time is greater than 0.2 sec,
     and then repeats that 3 times and keeps the lowest value.
 
-    Returns the number of loops and the time for each loop in microseconds
+    Returns the number of loops and the time for each loop in microseconds.
     """
     t = timeit.Timer(stmt, setup)
 

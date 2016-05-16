@@ -307,8 +307,7 @@ namespace vcsn
   /// labelset must be free.
   template <typename ExpSet,
             typename = std::enable_if_t<!std::is_same<word_t_of<ExpSet>,
-                                                       label_t_of<ExpSet>>
-                                         ::value>>
+                                                      label_t_of<ExpSet>>{}>>
   rat::expression_polynomial_t<ExpSet>
   derivation(const ExpSet& rs,
              const typename ExpSet::value_t& e,
