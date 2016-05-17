@@ -49,7 +49,9 @@ algo_implems =                                  \
 lib_libvcsn_la_SOURCES =                        \
   $(algo_implems)                               \
   %D%/dyn/context-parser.cc                     \
+  %D%/dyn/context-parser.hh                     \
   %D%/dyn/context-printer.cc                    \
+  %D%/dyn/fwd.hh                                \
   %D%/dyn/signature-printer.cc                  \
   %D%/dyn/translate.cc                          \
   %D%/misc/direction.cc                         \

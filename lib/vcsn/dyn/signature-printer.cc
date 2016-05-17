@@ -1,6 +1,7 @@
 #include <ostream>
+#include <sstream>
 
-#include <vcsn/dyn/context-parser.hh>
+#include <lib/vcsn/dyn/context-parser.hh>
 #include <vcsn/dyn/signature-printer.hh>
 
 
@@ -13,10 +14,7 @@ namespace vcsn
     {
       std::ostringstream os;
       ast::signature_printer printer(os, full);
-      std::istringstream is;
-      ast::context_parser parser(is);
-      is.str(ctx);
-      auto ast = parser.parse_context();
+      auto ast = parse_context(ctx);
       ast->accept(printer);
       return os.str();
     }

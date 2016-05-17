@@ -198,7 +198,6 @@ nobase_include_HEADERS =                        \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
   %D%/dyn/cast.hh                               \
-  %D%/dyn/context-parser.hh                     \
   %D%/dyn/context-printer.hh                    \
   %D%/dyn/context-visitor.hh                    \
   %D%/dyn/context.hh                            \

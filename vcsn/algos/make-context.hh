@@ -16,23 +16,23 @@ namespace vcsn
   | make_context.  |
   `---------------*/
 
+  /// Build a context from its name.
   template <typename Ctx>
   Ctx
   make_context(const std::string& name)
   {
     std::istringstream is{name};
-    auto res = Ctx::make(is);
-    // Something extremely weird is going wrong with str_escape when
-    // called here from Python.  I have not been able to understand
-    // what the problem was, and maybe it's actually a problem bw the
-    // compiler (clang 3.4), the c++ lib (libstc++), and Python, and
-    // possibly Boost after all.
-    //
-    // The good news is that this seems to work properly.
-    if (is.peek() != -1)
-      raise(__func__, ": invalid context name: ", str_escape(name),
-            ", unexpected ", str_escape(is.peek()));
-    return res;
+    try
+      {
+        auto res = Ctx::make(is);
+        require(is.peek() == EOF, "unexpected trailing characters: ", is);
+        return res;
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e.what(), "\n",
+              "  while reading context: ", name);
+      }
   }
 
   namespace dyn
@@ -161,6 +161,4 @@ namespace vcsn
       }
     }
   }
-
-
-} // vcsn::
+}

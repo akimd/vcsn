@@ -12,7 +12,8 @@
 
 #include <ltdl.h>
 
-#include <vcsn/dyn/context-parser.hh>
+#include <lib/vcsn/dyn/context-parser.hh>
+#include <vcsn/dyn/type-ast.hh>
 #include <vcsn/dyn/context-printer.hh>
 
 #include <vcsn/config.hh>
@@ -84,7 +85,7 @@ namespace vcsn
       struct translation
       {
         translation()
-          : parser_(is), printer_(os)
+          : printer_(os)
         {}
 
         /// Generate the code to compile in file \a base ".cc".
@@ -111,19 +112,13 @@ namespace vcsn
         /// our syntax: 'lal_char(ab), z').
         void print_context(const std::string& ctx)
         {
-          is.clear();
-          is.str(ctx);
-          auto ast = parser_.parse_context();
-          ast->accept(printer_);
+          ast::parse_context(ctx)->accept(printer_);
         }
 
         /// Generate C++ syntax for type \a type.
         void print_type(const std::string& type)
         {
-          is.clear();
-          is.str(type);
-          auto ast = parser_.parse();
-          ast->accept(printer_);
+          ast::parse_type(type)->accept(printer_);
         }
 
         /// Parse compiler errors and throw.
@@ -376,11 +371,8 @@ namespace vcsn
           jit(base);
         }
 
-        /// The input stream: the specification to translate.
-        std::istringstream is;
         /// The output stream: the corresponding C++ snippet to compile.
         std::ostringstream os;
-        ast::context_parser parser_;
         ast::context_printer printer_;
       };
     } // namespace detail
