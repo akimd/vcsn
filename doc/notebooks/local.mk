@@ -27,6 +27,7 @@ dist_notebooks_DATA =                           \
   %D%/Spell-checker.ipynb                       \
   %D%/Stackoverflow.ipynb                       \
   %D%/Transducers.ipynb                         \
+  %D%/Trouble-Shooting.ipynb                    \
   %D%/automaton.accessible.ipynb                \
   %D%/automaton.ambiguous_word.ipynb            \
   %D%/automaton.coaccessible.ipynb              \
