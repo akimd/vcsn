@@ -786,9 +786,6 @@ namespace vcsn
       return make_polynomialset(vcsn::detail::project<Tape>(context()));
     }
 
-    template <typename T>
-    struct VVV;
-
     /// Extract a single tape.
     template <size_t Tape>
     auto project(const value_t& v) const

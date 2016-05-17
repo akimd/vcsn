@@ -56,8 +56,8 @@ namespace vcsn
         return out.str();
       }
 
-      /// A random expression string (not parsed, so there might be
-      /// some syntactic sugar such as `<+`).
+      /// A random expression (parsed, so there cannot be syntactic
+      /// sugar such as `<+`).
       expression_t random_expression() const
       {
         return conv(rs_, random_expression_string());
