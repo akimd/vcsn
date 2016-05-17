@@ -177,6 +177,8 @@ struct context
 
   context project(unsigned tape) const;
 
+  automaton quotkbaseb(unsigned divisor, unsigned base) const;
+
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1,
                    boost::optional<unsigned> max_labels = {},
@@ -1344,6 +1346,11 @@ context context::project(unsigned tape) const
   return vcsn::dyn::project(val_, tape);
 }
 
+automaton context::quotkbaseb(unsigned divisor, unsigned base) const
+{
+  return vcsn::dyn::quotkbaseb(val_, divisor, base);
+}
+
 automaton context::random(unsigned num_states, float density,
                           unsigned num_initial, unsigned num_final,
                           boost::optional<unsigned> max_labels,
@@ -1579,6 +1586,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("ladybird", &context::ladybird)
     .def("levenshtein", &context::levenshtein)
     .def("project", &context::project)
+    .def("quotkbaseb", &context::quotkbaseb)
     .def("random", &context::random,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1,

@@ -563,6 +563,27 @@ static int ladybird(int argc, char * const argv[])
   return 0;
 }
 
+static int quotkbaseb(int argc, char* const argv[])
+{
+  options opts;
+  opts.input_format = "text";
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = make_context(opts.context);
+  assert(2 <= argc);
+  auto k = boost::lexical_cast<unsigned>(argv[0]);
+  auto b = boost::lexical_cast<unsigned>(argv[1]);
+
+  // Process.
+  automaton aut = quotkbaseb(ctx, k, b);
+
+  // Output.
+  opts.print(aut);
+  return 0;
+}
+
 static int random(int argc, char * const argv[])
 {
   options opts;
@@ -621,6 +642,7 @@ try
   if (cmd == "de_bruijn") return de_bruijn(argc - 1, argv + 1);
   if (cmd == "double_ring") return double_ring(argc - 1, argv + 1);
   if (cmd == "ladybird") return ladybird(argc - 1, argv + 1);
+  if (cmd == "quotkbaseb") return quotkbaseb(argc - 1, argv + 1);
   if (cmd == "random") return random(argc - 1, argv + 1);
   if (cmd == "u") return u(argc - 1, argv + 1);
   else

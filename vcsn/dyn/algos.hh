@@ -623,6 +623,10 @@ namespace vcsn
     std::ostream& print(const weight& w, std::ostream& out = std::cout,
                         const std::string& format = "default");
 
+    /// A transducer that computes the quotient of the division
+    /// of a word n by k in base b iff k|n.
+    automaton quotkbaseb(const context& ctx, unsigned divisor, unsigned base);
+
     /// Specify the output format for \a out.
     void set_format(std::ostream& out, const std::string& format);
 

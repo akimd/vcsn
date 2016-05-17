@@ -29,9 +29,9 @@ CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-2.gv'),
 CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-3.gv'),
          vcsn.context('lal_char(xyz), b').de_bruijn(3))
 
-## ----------- ##
-## divkbaseb.  ##
-## ----------- ##
+## ---------------- ##
+## div/quotkbaseb.  ##
+## ---------------- ##
 
 b = vcsn.context('lal_char(0-9), b')
 
@@ -40,15 +40,30 @@ XFAIL(lambda: b.divkbaseb(2, 0))
 XFAIL(lambda: b.divkbaseb(2, 1))
 XFAIL(lambda: b.divkbaseb(2, 11))
 
+b2 = vcsn.context('lat<lal_char(0-9), lal_char(0-2)>, b')
+
+XFAIL(lambda: b2.quotkbaseb(0, 2))
+XFAIL(lambda: b2.quotkbaseb(2, 1))
+XFAIL(lambda: b2.quotkbaseb(2, 4))
+XFAIL(lambda: b2.quotkbaseb(2, 11))
+
+b3 = vcsn.context('lat<lal_char(0-9), lal_char(0-9)>, b')
+
+def check(k, base, exp):
+    a = b3.quotkbaseb(k, base)
+    CHECK_EQ(exp, a.shortest(10))
+    CHECK_EQ(a.project(0), b.divkbaseb(k, base))
+
 # FIXME: we don't parse polynomials yet.
-CHECK_EQ(r'\e + 0 + 00 + 10 + 000 + 010 + 100 + 110 + 0000 + 0010',
-         str(b.divkbaseb(2, 2).shortest(10)))
-CHECK_EQ(r'\e + 0 + 00 + 10 + 20 + 30 + 40 + 50 + 60 + 70',
-         str(b.divkbaseb(10, 10).shortest(10)))
-CHECK_EQ(r'\e + 0 + 5 + 00 + 05 + 10 + 15 + 20 + 25 + 30',
-         str(b.divkbaseb(5, 10).shortest(10)))
-CHECK_EQ(r'\e + 0 + 3 + 6 + 9 + 00 + 03 + 06 + 09 + 12',
-         str(b.divkbaseb(3, 10).shortest(10)))
+check(2, 2,
+      r'\e|\e + 0|0 + 00|00 + 10|01 + 000|000 + 010|001 + 100|010 + 110|011 + 0000|0000 + 0010|0001')
+check(10, 10,
+      r'\e|\e + 0|0 + 00|00 + 10|01 + 20|02 + 30|03 + 40|04 + 50|05 + 60|06 + 70|07')
+check(5, 10,
+      r'\e|\e + 0|0 + 5|1 + 00|00 + 05|01 + 10|02 + 15|03 + 20|04 + 25|05 + 30|06')
+check(3, 10,
+      r'\e|\e + 0|0 + 3|1 + 6|2 + 9|3 + 00|00 + 03|01 + 06|02 + 09|03 + 12|04')
+
 
 
 ## ------------- ##
