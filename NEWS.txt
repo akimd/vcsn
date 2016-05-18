@@ -5,6 +5,20 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-05-20
+### quotkbaseb: new alorithm
+From a context, a divisor k, and a base b, gives a transducer that,
+when given a number in b divisible by k, outputs the quotient of the division
+of that number by k in b.
+
+    In [2]: c = vcsn.context('lat<lal_char(0-9), lal_char(0-9)>, b')
+
+    In [3]: c.quotkbaseb(3, 2).shortest(10)
+    Out[3]: \e|\e + 0|0 + 00|00 + 11|01 + 000|000 + 011|001 + 110|010 + 0000|0000 + 0011|0001 + 0110|0010
+
+    In [4]: c.quotkbaseb(7, 10).shortest(10)
+    Out[4]: \e|\e + 0|0 + 7|1 + 00|00 + 07|01 + 14|02 + 21|03 + 28|04 + 35|05 + 42|06
+
 ## 2016-05-02
 ### expansions: support for &
 In addition to automata, expressions and polynomials, the conjunction can
