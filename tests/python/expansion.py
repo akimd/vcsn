@@ -3,8 +3,9 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(abcd), q')
+lal = vcsn.context('lal_char(abcd), q')
 
+ctx = lal
 def expr(e, *args):
     if not isinstance(e, vcsn.expression):
         e = ctx.expression(e, *args)
@@ -40,9 +41,37 @@ check(lan.expression('\z'))
 lao = vcsn.context('lao, q')
 check(lao.expression('(<1/2>\e)*'))
 
+
+
+
+## --------- ##
+## Compose.  ##
+## --------- ##
+ctx = vcsn.context('lat<lan(abcde), lan(abcde)>, q')
+def check(r1, r2):
+    '''Check that `@` between expansions corresponds to the expansion of
+    `@` between expressions.'''
+    exp1 = expr(r1)
+    exp2 = expr(r2)
+    eff = exp1.expansion().compose(exp2.expansion())
+    exp = exp1.compose(exp2).expansion()
+    CHECK_EQ(exp, eff)
+
+check('a|a', 'a|a')
+check('a|b', 'b|c')
+check('a*|b*', 'b*|c*')
+check(r'a|\e', r'\e|b')
+check(r'(a|\e)(b|c)', 'c|a')
+check('a|b', r'(\e|a)(b|c)')
+check(r'(a|c) + (b|\e)', r'(c|d)(\e|e)')
+CHECK_EQ(r'a|d.[b|\e@\e]', ctx.expression(r'(a|c)(b|\e) @ c|d').expansion())
+
+
+
 ## ------------- ##
 ## Conjunction.  ##
 ## ------------- ##
+ctx = lal
 def check(r1, r2):
     '''Check that `&` between expansions corresponds to the expansion of
     `&` between expressions.'''
@@ -57,6 +86,19 @@ check('(ab)*', 'a*b*')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
 check('a', '\e')
 check('a', '\z')
+
+
+
+## --------- ##
+## Division. ##
+## --------- ##
+ctx = vcsn.context('lan_char(abcd), q')
+def check(r1, r2):
+    exp1 = expr(r1)
+    CHECK_EQ(r2, str(exp1.expansion()))
+
+check(r'a{\}ab', r'\e.[b]')
+check(r'(a{\}ab){\}bc', r'\e.[b{\}bc]')
 
 
 ## ---------- ##
@@ -119,14 +161,3 @@ check('abab', 'bbbb')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
 check('a', '\e')
 check('a', '\z')
-
-## --------- ##
-## Division. ##
-## --------- ##
-
-def check(r1, r2):
-    exp1 = expr(r1)
-    CHECK_EQ(r2, str(exp1.expansion()))
-
-check(r'a{\}ab', r'\e.[b]')
-check(r'(a{\}ab){\}bc', r'\e.[b{\}bc]')

@@ -423,6 +423,30 @@ namespace vcsn
         res_ = visit_tuple<>{*this}(v);
       }
 
+      // d(E@F) = d(E)@d(F).
+      VCSN_RAT_VISIT(compose, e)
+      {
+        compose(e, 0);
+      }
+
+      template <typename Exp = expansion_t>
+      auto compose(const compose_t& e, int)
+        -> decltype(std::declval<expansionset_t>()
+                    .compose(std::declval<Exp>(), std::declval<Exp>()),
+                    void())
+      {
+        res_ = to_expansion(e.head());
+        for (const auto& r: e.tail())
+          res_ = es_.compose(res_, to_expansion(r));
+      }
+
+      auto compose(const compose_t&, long)
+        -> void
+      {
+        require(false, "compose: context is not composable");
+      }
+
+
       /// Manipulate the expressions.
       expressionset_t rs_;
       /// Manipulate the labels.

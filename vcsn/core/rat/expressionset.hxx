@@ -434,6 +434,13 @@ namespace vcsn
     else if (is_zero(r))
       res = r;
 
+    // <k>1 @ <h>1 => <kh>1
+    else if (type_ignoring_lweight_(l) == type_t::one
+             && type_ignoring_lweight_(r) == type_t::one)
+      res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
+                                  possibly_implicit_lweight_(r)),
+                 one());
+
     // General case.
     else
       res = std::make_shared<compose_t>(gather_<type_t::compose>(l, r));

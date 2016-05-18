@@ -839,37 +839,40 @@ namespace vcsn
     using has_compose_fn = detect<Ctx, compose_t>;
 
 
-    /// The composition of polynomials \a l and \a r.
+    /// The composition of polynomials \a l and \a r when the context is a
+    /// composable tupleset.
     template <typename Ctx = context_t>
     auto
     compose(const value_t& l, const value_t& r) const
-      -> std::enable_if_t<are_composable<Ctx, Ctx>{},
-                          value_t>
+      -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
     {
       value_t res;
       for (const auto& lm: l)
         for (const auto& rm: r)
-          static_if<has_compose_fn<context_t>{}>
-            ([this, &res] (const auto& ls,
-                           const auto& l0, const auto& l1,
-                           const auto& w)
-             {
-               add_here(res, ls.compose(l0, l1), w);
-             },
-             [this, &res] (const auto& ls,
-                           const auto& l0, const auto& l1,
-                           const auto& w)
-             {
-               if (ls.template set<0>().equal(std::get<1>(l0),
-                                              std::get<0>(l1)))
-                 add_here(res,
-                          ls.tuple(std::get<0>(l0), std::get<1>(l1)),
-                          w);
-             })
-            (*labelset(), label_of(lm), label_of(rm),
-             weightset()->mul(weight_of(lm), weight_of(rm)));
+          if (labelset()->template set<0>().equal(std::get<1>(label_of(lm)),
+                                                  std::get<0>(label_of(rm))))
+            add_here(res, labelset()->tuple(std::get<0>(label_of(lm)),
+                                            std::get<1>(label_of(rm))),
+                     weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
+
+    /// The composition of polynomials \a l and \a r when the context features
+    /// `compose`.
+    template <typename Ctx = context_t>
+    auto
+    compose(const value_t& l, const value_t& r) const
+      -> std::enable_if_t<has_compose_fn<Ctx>{}, value_t>
+    {
+      value_t res;
+      for (const auto& lm: l)
+        for (const auto& rm: r)
+          add_here(res, labelset()->compose(label_of(lm), label_of(rm)),
+                                            weightset()->mul(weight_of(lm),
+                                                             weight_of(rm)));
+      return res;
+    }
+
 
 
     /// Convert into a label.

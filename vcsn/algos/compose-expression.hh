@@ -19,6 +19,28 @@ namespace vcsn
   }
 
 
+  /*---------------------------------.
+  | compose(expansion, expansion).   |
+  `---------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (compose).
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      expansion
+      compose_expansion(const expansion& lhs, const expansion& rhs)
+      {
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                ::vcsn::compose(std::get<0>(join_elts),
+                                std::get<1>(join_elts),
+                                std::get<2>(join_elts))};
+      }
+    }
+  }
+
   /*-----------------------------------.
   | compose(expression, expression).   |
   `-----------------------------------*/

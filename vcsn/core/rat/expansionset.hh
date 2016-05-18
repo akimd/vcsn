@@ -692,6 +692,68 @@ namespace vcsn
         return res;
       }
 
+      void
+      compose_with_one_(value_t& res,
+                        const value_t& l, const value_t& r,
+                        std::false_type) const
+      {}
+
+      void
+      compose_with_one_(value_t& res,
+                        const value_t& l, const value_t& r,
+                        std::true_type) const
+      {
+        // Handle lhs labels with one on the second tape.
+        {
+          for (const auto& lhs: l.polynomials)
+            if (labelset_t::template valueset_t<1>::is_one(std::get<1>(lhs.first)))
+              for (const auto& rhs: r.polynomials)
+                if (!labelset_t::template valueset_t<0>::is_one(std::get<0>(rhs.first)))
+                  // a|\e . [P1] @ b|c . [P2] becomes a|\e . [P1 @ (b|c)P2]
+                  ps_.add_here(res.polynomials[lhs.first],
+                               ps_.compose(lhs.second,
+                                           ps_.lmul_label(rs_.atom(rhs.first),
+                                                          rhs.second)));
+        }
+        // Handle rhs labels with one on the first tape.
+        {
+          for (const auto& rhs: r.polynomials)
+            if (labelset_t::template valueset_t<0>::is_one(std::get<0>(rhs.first)))
+              for (const auto& lhs: l.polynomials)
+                if (!labelset_t::template valueset_t<1>::is_one(std::get<1>(lhs.first)))
+                  // a|b . [P1] @ \e|c . [P2] becomes \e|c . [(a|b)P1 @ P2]
+                  ps_.add_here(res.polynomials[rhs.first],
+                               ps_.compose(ps_.lmul_label(rs_.atom(lhs.first),
+                                                          lhs.second),
+                                           rhs.second));
+        }
+      }
+
+      /// The composition of \a l and \a r.
+      template <typename Ctx = context_t>
+      auto compose(value_t l, value_t r) const
+        -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
+      {
+        value_t res = zero();
+        denormalize(l);
+        denormalize(r);
+        res.constant = ws_.mul(l.constant, r.constant);
+        for (const auto& lm: l.polynomials)
+          for (const auto& rm: r.polynomials)
+            if (ls_.template set<0>().equal(std::get<1>(label_of(lm)),
+                                            std::get<0>(label_of(rm))))
+              {
+                auto l = ls_.tuple(std::get<0>(label_of(lm)),
+                                   std::get<1>(label_of(rm)));
+                ps_.add_here(res.polynomials[l],
+                             ps_.compose(lm.second, rm.second));
+              }
+        auto has_one = bool_constant<context_t::has_one()>();
+        compose_with_one_(res, l, r, has_one);
+        normalize(res);
+        return res;
+      }
+
 
     private:
       /// The expressionset used for the expressions.

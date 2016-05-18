@@ -17,7 +17,6 @@
 
 #include <boost/python.hpp>
 #include <boost/python/args.hpp>
-
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/raise.hh>
@@ -396,6 +395,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<expansion>("expansion", bp::no_init)
     .def("complement", &expansion::complement)
+    .def("compose", &expansion::compose)
     .def("conjunction", &expansion::conjunction)
     .def("context", &expansion::context)
     .def("format", &format<expansion>)

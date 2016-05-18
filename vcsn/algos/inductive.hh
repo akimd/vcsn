@@ -131,6 +131,29 @@ namespace vcsn
         res_ = as_.atom(e.value());
       }
 
+      VCSN_RAT_VISIT(compose, e)
+      {
+        compose(e, 0);
+      }
+
+      template <Automaton Aut_ = automaton_t>
+      auto compose(const compose_t& e, int)
+        -> decltype(std::declval<automatonset_t>()
+                    .compose(std::declval<Aut_>(), std::declval<Aut_>()),
+                    void())
+      {
+        auto res = recurse(e.head());
+        for (const auto& c: e.tail())
+          res = as_.compose(res, recurse(c));
+        res_ = std::move(res);
+      }
+
+      auto compose(const compose_t& e, long)
+        -> void
+      {
+        require(false, "compose: context is not composable");
+      }
+
       VCSN_RAT_VISIT(conjunction, e)
       {
         auto res = recurse(e.head());

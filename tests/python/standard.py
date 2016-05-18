@@ -944,13 +944,18 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
 
 
 # Extended operators.
+def exp(e, ctx):
+    return ctx.expression(e)
 
 def qexp(e, gens=None):
     if gens:
         c = vcsn.context('lal({}), q'.format(gens))
     else:
         c = vcsn.context('lal, q')
-    return c.expression(e)
+    return exp(e, c)
+
+def q2(e):
+    return exp(e, vcsn.context('lat<lal, lal>, q'))
 
 zero = lambda gens: qexp(r'\z', gens).standard()
 

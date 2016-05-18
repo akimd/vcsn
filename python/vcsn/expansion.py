@@ -11,6 +11,7 @@ class expansion:
     __and__ = expansion.conjunction
     __eq__ = _is_equal
     __invert__ = expansion.complement
+    __matmul__ = expansion.compose
     __mul__ = _right_mult
     __or__ = lambda l, r: expansion._tuple([l, r])
     __repr__ = lambda self: self.format('text')

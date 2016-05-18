@@ -114,9 +114,11 @@ namespace vcsn
     }
 
     /// Build a composition: `l @ r`.
-    auto compose(const value_t& l, const value_t& r) const -> value_t
+    template <typename Ctx = context_t>
+    auto compose(const value_t& l, const value_t& r) const
+      -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
     {
-      return ::vcsn::compose(l, r);
+      return ::vcsn::strip(::vcsn::compose(l, r));
     }
 
     /// Build an conjunction product: `l & r`.
