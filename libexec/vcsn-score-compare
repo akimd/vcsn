@@ -399,7 +399,7 @@ def text(keys):
             continue
 
         # Compute average of benchs.
-        avg = sum(bfs) / len(bfs)
+        avg = sum(bfs) / len(bfs) if bfs else 0
         buf = {}
         buf['scores'] = []
         for b in bs:
