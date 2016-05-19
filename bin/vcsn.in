@@ -27,6 +27,18 @@ if test x"$VCSN_DYLD_LIBRARY_PATH" != x; then
   export DYLD_LIBRARY_PATH
 fi
 
+# If there are environment variables that we wish to set, do it now.
+# For instance VCSN_ENV=LD_PRELOAD=libclang_rt.asan-x86_64.so`.
+if test x"$VCSN_ENV" != x; then
+  save_IFS=$IFS
+  IFS=';'
+  for v in $VCSN_ENV
+  do
+    eval "export $v"
+  done
+  IFS=$save_IFS
+fi
+
 # Find our auxiliary executables.
 PATH=$VCSN_LIBEXECDIR:$PATH
 export PATH
