@@ -158,24 +158,20 @@ namespace vcsn
     | ostream format.  |
     `-----------------*/
 
-    xalloc<std::string*> format_flag;
+    xalloc<const std::string*> format_flag;
 
     void
     set_format(std::ostream& o, const std::string& format)
     {
-      if (!format_flag(o))
-        format_flag(o) = new std::string{"default"};
-      *format_flag(o) = format;
+      static auto formats = std::set<std::string>{};
+      format_flag(o) = &*formats.insert(format).first;
     }
 
     std::string
     get_format(std::ostream& o)
     {
-      if (!format_flag(o))
-        format_flag(o) = new std::string{"default"};
-      return *format_flag(o);
+      return format_flag(o) ? *format_flag(o) : std::string{"default"};
     }
-
   }
 }
 
