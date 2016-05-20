@@ -52,7 +52,7 @@
     }                                                   \
   }
 
-#define DEFINE_RATEXP_FUNCTION(Name)            \
+#define DEFINE_EXP_FUNCTION(Name)               \
   struct Name: vcsn_function                    \
   {                                             \
     int work_exp(const options& opts) const     \
@@ -70,7 +70,7 @@
     }                                           \
   }
 
-#define DEFINE_AUT__RATEXP_FUNCTION(Name)       \
+#define DEFINE_AUT_EXP_FUNCTION(Name)           \
   struct Name: vcsn_function                    \
   {                                             \
     int work_aut(const options& opts) const     \
@@ -96,15 +96,38 @@
     }                                           \
   }
 
+#define DEFINE_INT_INT_FUNCTION(Name)                 \
+  static int Name(int argc, char* const argv[])       \
+  {                                                   \
+    options opts;                                     \
+    opts.input_format = "text";                       \
+    parse_args(opts, argc, argv);                     \
+                                                      \
+    /* Input. */                                      \
+    using namespace vcsn::dyn;                        \
+    auto ctx = make_context(opts.context);            \
+    assert(2 <= argc);                                \
+    auto k = boost::lexical_cast<unsigned>(argv[0]);  \
+    auto b = boost::lexical_cast<unsigned>(argv[1]);  \
+                                                      \
+    /* Process. */                                    \
+    automaton aut = Name(ctx, k, b);                  \
+                                                      \
+    /* Output. */                                     \
+    opts.print(aut);                                  \
+    return 0;                                         \
+  }
+
 
 DEFINE_AUT_FUNCTION(accessible);
 DEFINE_AUT_FUNCTION(coaccessible);
 DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
 DEFINE_AUT_VARIADIC_FUNCTION(compose);
-DEFINE_RATEXP_FUNCTION(constant_term);
+DEFINE_EXP_FUNCTION(constant_term);
 DEFINE_AUT_VARIADIC_FUNCTION(difference);
-DEFINE_RATEXP_FUNCTION(expand);
+DEFINE_INT_INT_FUNCTION(divkbaseb);
+DEFINE_EXP_FUNCTION(expand);
 DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
 DEFINE_AUT_FUNCTION(is_ambiguous);
 DEFINE_AUT_FUNCTION(is_complete);
@@ -116,19 +139,20 @@ DEFINE_AUT_FUNCTION(is_proper);
 DEFINE_AUT_FUNCTION(is_standard);
 DEFINE_AUT_FUNCTION(is_trim);
 DEFINE_AUT_FUNCTION(is_useless);
-DEFINE_AUT__RATEXP_FUNCTION(is_valid);
-DEFINE_AUT__RATEXP_FUNCTION(lift);
+DEFINE_AUT_EXP_FUNCTION(is_valid);
+DEFINE_AUT_EXP_FUNCTION(lift);
 DEFINE_AUT_VARIADIC_FUNCTION(multiply);
 DEFINE_AUT_FUNCTION(proper);
+DEFINE_INT_INT_FUNCTION(quotkbaseb);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
-DEFINE_RATEXP_FUNCTION(split);
-DEFINE_AUT__RATEXP_FUNCTION(standard);
+DEFINE_EXP_FUNCTION(split);
+DEFINE_AUT_EXP_FUNCTION(standard);
 DEFINE_AUT_FUNCTION(star);
-DEFINE_RATEXP_FUNCTION(star_normal_form);
+DEFINE_EXP_FUNCTION(star_normal_form);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
-DEFINE_RATEXP_FUNCTION(thompson);
+DEFINE_EXP_FUNCTION(thompson);
 DEFINE_AUT_FUNCTION(to_expression);
-DEFINE_AUT__RATEXP_FUNCTION(transpose);
+DEFINE_AUT_EXP_FUNCTION(transpose);
 DEFINE_AUT_FUNCTION(trim);
 DEFINE_AUT_FUNCTION(universal);
 
@@ -498,27 +522,6 @@ static int de_bruijn(int argc, char * const argv[])
   return 0;
 }
 
-static int divkbaseb(int argc, char* const argv[])
-{
-  options opts;
-  opts.input_format = "text";
-  parse_args(opts, argc, argv);
-
-  // Input.
-  using namespace vcsn::dyn;
-  auto ctx = make_context(opts.context);
-  assert(2 <= argc);
-  auto k = boost::lexical_cast<unsigned>(argv[0]);
-  auto b = boost::lexical_cast<unsigned>(argv[1]);
-
-  // Process.
-  automaton aut = divkbaseb(ctx, k, b);
-
-  // Output.
-  opts.print(aut);
-  return 0;
-}
-
 static int double_ring(int argc, char * const argv[])
 {
   options opts;
@@ -557,27 +560,6 @@ static int ladybird(int argc, char * const argv[])
 
   // Process.
   automaton aut = ladybird(ctx, n);
-
-  // Output.
-  opts.print(aut);
-  return 0;
-}
-
-static int quotkbaseb(int argc, char* const argv[])
-{
-  options opts;
-  opts.input_format = "text";
-  parse_args(opts, argc, argv);
-
-  // Input.
-  using namespace vcsn::dyn;
-  auto ctx = make_context(opts.context);
-  assert(2 <= argc);
-  auto k = boost::lexical_cast<unsigned>(argv[0]);
-  auto b = boost::lexical_cast<unsigned>(argv[1]);
-
-  // Process.
-  automaton aut = quotkbaseb(ctx, k, b);
 
   // Output.
   opts.print(aut);
