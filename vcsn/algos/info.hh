@@ -159,6 +159,7 @@ namespace vcsn
     o << "\n" #Type ": " << info.Type
     ECHO(atom);
     ECHO(complement);
+    ECHO(compose);
     ECHO(conjunction);
     ECHO(depth);
     ECHO(infiltration);

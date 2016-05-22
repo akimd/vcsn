@@ -42,6 +42,7 @@ namespace vcsn
       {
         atom = 0;
         complement = 0;
+        compose = 0;
         conjunction = 0;
         depth = 0;
         infiltration = 0;
@@ -64,6 +65,7 @@ namespace vcsn
       {
         atom += other.atom;
         complement += other.complement;
+        compose += other.compose;
         conjunction += other.conjunction;
         depth = std::max(depth, other.depth);
         infiltration += other.infiltration;
@@ -95,6 +97,7 @@ namespace vcsn
 
       DEFINE(atom)         { ++atom; (void) v; depth = 0; }
       DEFINE(complement)   { ++complement;   visit_(v); }
+      DEFINE(compose)      { ++compose;      visit_(v); }
       DEFINE(conjunction)  { ++conjunction;  visit_(v); }
       DEFINE(infiltration) { ++infiltration; visit_(v); }
       DEFINE(ldiv)         { ++ldiv;         visit_(v); }
