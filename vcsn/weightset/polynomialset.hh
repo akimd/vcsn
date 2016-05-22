@@ -799,6 +799,28 @@ namespace vcsn
       return res;
     }
 
+    /*-----------.
+    | compose.   |
+    `-----------*/
+
+    /// The composition of polynomials \a l and \a r.
+    /// Valid only for expressionsets.
+    template <typename Ctx = context_t>
+    auto
+    compose(const value_t& l, const value_t& r) const
+      -> std::enable_if_t<is_multitape<Ctx>{},
+                          value_t>
+    {
+      value_t res;
+      for (const auto& lm: l)
+        for (const auto& rm: r)
+          add_here(res,
+                   labelset()->compose(label_of(lm), label_of(rm)),
+                   weightset()->mul(weight_of(lm), weight_of(rm)));
+      return res;
+    }
+
+
     /// Convert into a label.
     ///
     /// Requires a rather powerful labelset, typically expressionset.

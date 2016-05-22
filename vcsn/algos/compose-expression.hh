@@ -40,4 +40,26 @@ namespace vcsn
       }
     }
   }
+
+  /*-----------------------------------.
+  | compose(polynomial, polynomial).   |
+  `-----------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (compose).
+      template <typename PolSetLhs, typename PolSetRhs>
+      polynomial
+      compose_polynomial(const polynomial& lhs, const polynomial& rhs)
+      {
+        auto join_elts = join<PolSetLhs, PolSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                ::vcsn::compose(std::get<0>(join_elts),
+                                std::get<1>(join_elts),
+                                std::get<2>(join_elts))};
+      }
+    }
+  }
 }

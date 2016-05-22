@@ -99,6 +99,9 @@ namespace vcsn
     /// The composition of two expressions.
     expression compose(const expression& lhs, const expression& rhs);
 
+    /// The composition of two polynomials.
+    polynomial compose(const polynomial& lhs, const polynomial& rhs);
+
     /// Concatenate two expressions.
     ///
     /// Do not use this routine, see multiply instead.

@@ -10,6 +10,7 @@ class polynomial:
     __add__ = polynomial.sum
     __and__ = polynomial.conjunction
     __eq__ = _is_equal
+    __matmul__ = polynomial.compose
     __mul__ = _right_mult
     __repr__ = lambda self: self.format('text')
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'

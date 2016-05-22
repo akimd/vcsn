@@ -853,6 +853,11 @@ struct polynomial
     vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
+  polynomial compose(const polynomial& rhs) const
+  {
+    return vcsn::dyn::compose(val_, rhs.val_);
+  }
+
   polynomial conjunction(const polynomial& rhs) const
   {
     return vcsn::dyn::conjunction(val_, rhs.val_);
@@ -1660,6 +1665,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<polynomial>("polynomial", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
+    .def("compose", &polynomial::compose)
     .def("conjunction", &polynomial::conjunction)
     .def("cotrie", &polynomial::cotrie)
     .def("format", &polynomial::format)
