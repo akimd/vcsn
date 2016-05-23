@@ -265,7 +265,7 @@ class automaton:
     fstis_equivalent = lambda a, b: _automaton_fst_files("fstequivalent", a, b)
     fstminimize      = lambda self: _automaton_fst("fstminimize", self)
     fstproper        = lambda self: _automaton_fst("fstrmepsilon", self)
-    fstshortestpath  = lambda self: _automaton_fst("fstshortestpath", self)
+    fstlightestpath  = lambda self: _automaton_fst("fstshortestpath", self)
     fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
     fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
 
