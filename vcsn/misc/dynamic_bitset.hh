@@ -33,4 +33,14 @@ namespace std
 namespace vcsn
 {
   using dynamic_bitset = boost::dynamic_bitset<>;
+
+  template <typename Container>
+  dynamic_bitset
+  make_dynamic_bitset(const Container& c, size_t size)
+  {
+    auto res = dynamic_bitset(size);
+    for (auto s: c)
+      res.set(s);
+    return res;
+  }
 }

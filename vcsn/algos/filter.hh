@@ -297,10 +297,7 @@ namespace vcsn
   filter_automaton<Aut>
   filter(const Aut& aut, const std::unordered_set<state_t_of<Aut>>& ss)
   {
-    auto bit_ss = dynamic_bitset(states_size(aut));
-    for (auto s: ss)
-      bit_ss.set(s);
-    return filter(aut, bit_ss);
+    return filter(aut, make_dynamic_bitset(ss, states_size(aut)));
   }
 
   namespace dyn
