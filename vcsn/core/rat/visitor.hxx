@@ -11,7 +11,7 @@ namespace vcsn
     void                                                        \
     const_visitor<Context>::visit(const Type ## _t& Name)
 
-    VISIT(prod, v)
+    VISIT(compose, v)
     {
       for (const auto& t : v)
         t->accept(*this);
@@ -24,6 +24,12 @@ namespace vcsn
     }
 
     VISIT(infiltration, v)
+    {
+      for (const auto& t : v)
+        t->accept(*this);
+    }
+
+    VISIT(prod, v)
     {
       for (const auto& t : v)
         t->accept(*this);

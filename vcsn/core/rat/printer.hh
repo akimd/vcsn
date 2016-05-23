@@ -33,6 +33,7 @@ namespace vcsn
     enum class precedence_t
     {
       sum,
+      compose,
       tuple,
       products,
       shuffle = products,
@@ -118,6 +119,7 @@ namespace vcsn
       }
 
       VCSN_RAT_VISIT(atom, v);
+      VCSN_RAT_VISIT(compose, v)       { print_(v, compose_); }
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
       VCSN_RAT_VISIT(infiltration, v)  { print_(v, infiltration_); }
@@ -352,6 +354,8 @@ namespace vcsn
       /// The expression operators.
       const char* star_ = nullptr;
       const char* complement_ = nullptr;
+      /// Operator for composition: `@`.
+      const char* compose_ = nullptr;
       const char* transposition_ = nullptr;
       const char* conjunction_ = nullptr;
       const char* infiltration_ = nullptr;

@@ -86,6 +86,7 @@ namespace vcsn
         if (fmt_ == format::latex)
           {
             star_          = "^{*}";
+            compose_       = "@";
             complement_    = "^{c}";
             transposition_ = "^{T}";
             conjunction_   = " \\& ";
@@ -104,6 +105,7 @@ namespace vcsn
         else if (fmt_ == format::text)
           {
             star_          = "*";
+            compose_       = "@";
             complement_    = "{c}";
             transposition_ = "{T}";
             conjunction_   = "&";
@@ -121,6 +123,7 @@ namespace vcsn
         else if (fmt_ == format::utf8)
           {
             star_          = "*";
+            compose_       = "@";
             complement_    = "ᶜ";
             transposition_ = "ᵗ";
             conjunction_   = "&";
@@ -171,6 +174,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(atom, v)          { print_(v); }
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
+      VCSN_RAT_VISIT(compose, v)       { print_(v, compose_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
       VCSN_RAT_VISIT(infiltration, v)  { print_(v, infiltration_); }
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
@@ -401,6 +405,7 @@ namespace vcsn
       const char* ldiv_ = nullptr;
       /// The expression operators.
       const char* star_ = nullptr;
+      const char* compose_ = nullptr;
       const char* complement_ = nullptr;
       const char* transposition_ = nullptr;
       const char* conjunction_ = nullptr;

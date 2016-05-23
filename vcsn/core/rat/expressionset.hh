@@ -66,6 +66,7 @@ namespace vcsn
     using Type ## _t = vcsn::rat::Type<context_t>
     DEFINE(atom);
     DEFINE(complement);
+    DEFINE(compose);
     DEFINE(conjunction);
     DEFINE(infiltration);
     DEFINE(inner);
@@ -263,6 +264,9 @@ namespace vcsn
     ///
     /// In other cases, synonym for mul.
     auto concat(const value_t& l, const value_t& r) const -> value_t;
+
+    /// Build a composition: `l @ r`.
+    auto compose(const value_t& l, const value_t& r) const -> value_t;
 
     /// Build an conjunction product: `l & r`.
     auto conjunction(const value_t& l, const value_t& r) const -> value_t;

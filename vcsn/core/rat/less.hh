@@ -84,6 +84,7 @@ namespace vcsn
       DEFINE(atom);
       DEFINE(complement);
       DEFINE(conjunction);
+      DEFINE(compose);
       DEFINE(infiltration);
       DEFINE(ldiv);
       DEFINE(lweight);

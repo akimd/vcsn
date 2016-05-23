@@ -17,6 +17,7 @@ namespace vcsn
 #define CASE(T) case type_t::T: o << #T; break
           CASE(atom);
           CASE(complement);
+          CASE(compose);
           CASE(conjunction);
           CASE(infiltration);
           CASE(ldiv);
@@ -80,6 +81,7 @@ namespace vcsn
           lexponent_     = "^{";
           rexponent_     = "}";
           star_          = "^{*}";
+          compose_       = "@";
           complement_    = "^{c}";
           transposition_ = "^{T}";
           conjunction_   = " \\& ";
@@ -110,6 +112,7 @@ namespace vcsn
           rexponent_     = "}";
           star_          = "*";
           complement_    = "{c}";
+          compose_       = "@";
           transposition_ = "{T}";
           conjunction_   = "&";
           infiltration_  = "&:";
@@ -135,6 +138,7 @@ namespace vcsn
           lparen_        = "(";
           rparen_        = ")";
           star_          = "*";
+          compose_       = "@";
           complement_    = "ᶜ";
           transposition_ = "ᵗ";
           conjunction_   = "&";
@@ -169,6 +173,7 @@ namespace vcsn
               return precedence_t::Type
             CASE(atom);
             CASE(complement);
+            CASE(compose);
             CASE(conjunction);
             CASE(infiltration);
             CASE(ldiv);
@@ -222,7 +227,7 @@ namespace vcsn
     VISIT(atom)
     {
       rs_.labelset()->print(v.value(), out_,
-                            fmt_.for_labels().meta("!&%|',[-]<> (){}\n*+:.?"));
+                            fmt_.for_labels().meta("!&%|@',[-]<> (){}\n*+:.?"));
     }
 
     /// Specific handling to using exponents as syntactic sugar.

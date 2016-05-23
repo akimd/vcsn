@@ -418,6 +418,28 @@ namespace vcsn
     return res;
   }
 
+  DEFINE::compose(const value_t& l, const value_t& r) const
+    -> value_t
+  {
+    value_t res = nullptr;
+
+    if (!ids_)
+      res = std::make_shared<compose_t>(l, r);
+
+    // 0 @ E => 0.
+    else if (is_zero(l))
+      res = l;
+
+    // E @ 0 => 0.
+    else if (is_zero(r))
+      res = r;
+
+    // General case.
+    else
+      res = std::make_shared<compose_t>(gather_<type_t::compose>(l, r));
+    return res;
+  }
+
   DEFINE::conjunction(const value_t& l, const value_t& r) const
     -> value_t
   {

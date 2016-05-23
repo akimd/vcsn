@@ -90,6 +90,7 @@ namespace vcsn
       }
 
       VCSN_RAT_VISIT(complement, v)   { copy_(v); }
+      VCSN_RAT_VISIT(compose, v)      { copy_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { copy_(v); }
       VCSN_RAT_VISIT(infiltration, v) { copy_(v); }
       VCSN_RAT_VISIT(ldiv, v)         { copy_(v); }

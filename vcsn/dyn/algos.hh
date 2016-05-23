@@ -96,6 +96,9 @@ namespace vcsn
     automaton compose(const automaton& lhs, const automaton& rhs,
                       bool lazy = false);
 
+    /// The composition of two expressions.
+    expression compose(const expression& lhs, const expression& rhs);
+
     /// Concatenate two expressions.
     ///
     /// Do not use this routine, see multiply instead.

@@ -20,6 +20,7 @@ class expression:
     __and__ = expression.conjunction
     __floordiv__ = expression.ldiv
     __invert__ = expression.complement
+    __matmul__ = expression.compose
     __mod__ = expression.difference
     __mul__ = _right_mult
     __or__ = lambda l, r: expression._tuple([l, r])

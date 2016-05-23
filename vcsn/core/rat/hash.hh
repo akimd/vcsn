@@ -48,6 +48,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(atom, v);
       VCSN_RAT_VISIT(complement, v)   { visit_unary(v); }
+      VCSN_RAT_VISIT(compose, v)      { visit_variadic(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_variadic(v); }
       VCSN_RAT_VISIT(infiltration, v) { visit_variadic(v); }
       VCSN_RAT_VISIT(ldiv, v)         { visit_variadic(v); }

@@ -53,6 +53,7 @@ namespace vcsn
       rweight,
       complement,
       tuple,
+      compose,
     };
 
     /// Whether is a constant (`\z` or `\e`).
@@ -73,7 +74,8 @@ namespace vcsn
     /// Whether one of the variadic types.
     inline constexpr bool is_variadic(type_t t)
     {
-      return (t == type_t::conjunction
+      return (t == type_t::compose
+              || t == type_t::conjunction
               || t == type_t::infiltration
               || t == type_t::ldiv
               || t == type_t::prod
@@ -134,7 +136,7 @@ namespace vcsn
     class variadic;
 
     template <typename Context>
-    using prod = variadic<type_t::prod, Context>;
+    using compose = variadic<type_t::compose, Context>;
 
     template <typename Context>
     using conjunction = variadic<type_t::conjunction, Context>;
@@ -144,6 +146,9 @@ namespace vcsn
 
     template <typename Context>
     using ldiv = variadic<type_t::ldiv, Context>;
+
+    template <typename Context>
+    using prod = variadic<type_t::prod, Context>;
 
     template <typename Context>
     using shuffle = variadic<type_t::shuffle, Context>;

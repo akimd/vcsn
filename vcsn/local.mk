@@ -21,6 +21,7 @@ algo_headers =                                  \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
   %D%/algos/compose.hh                          \
+  %D%/algos/compose-expression.hh               \
   %D%/algos/conjugate.hh                        \
   %D%/algos/conjunction.hh                      \
   %D%/algos/constant-term.hh                    \

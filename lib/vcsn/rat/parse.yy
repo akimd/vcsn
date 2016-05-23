@@ -148,6 +148,7 @@
 %token
   AMPERSAND       "&"
   AMPERSAND_COLON "&:"
+  AT              "@"
   BACKSLASH       "{\\}"
   BANG            "!"
   CARET           "^"
@@ -181,6 +182,7 @@
 %type <class_t> class;
 
 %left "+" "<+"
+%left "@"
  //%left "|"
 %left "%"
 %left "&" ":" "&:"
@@ -226,6 +228,7 @@ terminator.opt:
 sum:
   tuple           { $$ = $1; }
 | sum "+" sum     { $$ = dyn::sum($1.exp, $3.exp); }
+| sum "@" sum     { $$ = dyn::compose($1.exp, $3.exp); }
 ;
 
 // Deal with `|`: a* | (b+c) | \e.

@@ -73,6 +73,7 @@ namespace
   "{/}"       return TOK(SLASH);
   ","         return TOK(COMMA);
   "|"         return TOK(PIPE);
+  "@"         return TOK(AT);
   "\\z"|"∅"   return TOK(ZERO);
   "\\e"|"ε"   return TOK(ONE);
 

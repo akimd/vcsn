@@ -970,6 +970,11 @@ struct expression
     return vcsn::dyn::complement(val_);
   }
 
+  expression compose(expression& rhs)
+  {
+    return vcsn::dyn::compose(val_, rhs.val_);
+  }
+
   expression conjunction(const expression& rhs) const
   {
     return vcsn::dyn::conjunction(val_, rhs.val_);
@@ -1603,6 +1608,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          ((arg("context"), arg("data"), arg("identities") = "default")))
     .def("automaton", &expression::to_automaton, (arg("algo") = "auto"))
     .def("complement", &expression::complement)
+    .def("compose", &expression::compose)
     .def("conjunction", &expression::conjunction)
     .def("constant_term", &expression::constant_term)
     .def("context", &expression::context)
