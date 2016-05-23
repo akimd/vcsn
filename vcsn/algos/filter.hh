@@ -198,7 +198,8 @@ namespace vcsn
       void
       hide_state(state_t s)
       {
-        ss_.reset(s);
+        if (s < ss_.size())
+          ss_.reset(s);
       }
 
       /// Hide a transition from the automaton.
@@ -207,14 +208,16 @@ namespace vcsn
       std::enable_if_t<U, void>
       hide_transition(transition_t t)
       {
-        optional_container_t::cont_.reset(t);
+        if (t < optional_container_t::cont_.size())
+          optional_container_t::cont_.reset(t);
       }
 
       /// Reveal a state from the original automaton.
       void
       unhide_state(state_t s)
       {
-        ss_.set(s);
+        if (s < ss_.size())
+          ss_.set(s);
       }
 
       /// Reveal a transition from the original automaton.
@@ -223,7 +226,8 @@ namespace vcsn
       std::enable_if_t<U, void>
       unhide_transition(transition_t t)
       {
-        optional_container_t::cont_.set(t);
+        if (t < optional_container_t::cont_.size())
+          optional_container_t::cont_.set(t);
       }
 
       /// Hide all the states of the original automaton.
