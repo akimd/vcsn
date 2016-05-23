@@ -35,17 +35,23 @@ CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-3.gv'),
 
 b = vcsn.context('lal_char(0-9), b')
 
-XFAIL(lambda: b.divkbaseb(0, 2))
-XFAIL(lambda: b.divkbaseb(2, 0))
-XFAIL(lambda: b.divkbaseb(2, 1))
-XFAIL(lambda: b.divkbaseb(2, 11))
+XFAIL(lambda: b.divkbaseb(0, 2), "divkbaseb: divisor cannot be 0")
+XFAIL(lambda: b.divkbaseb(2, 0), "divkbaseb: base (0) must be at least 2")
+XFAIL(lambda: b.divkbaseb(2, 1), "divkbaseb: base (1) must be at least 2")
+XFAIL(lambda: b.divkbaseb(2, 11),
+      "divkbaseb: base (11) must be less than " +
+      "or equal to the alphabet size (10)")
 
 b2 = vcsn.context('lat<lal_char(0-9), lal_char(0-2)>, b')
 
-XFAIL(lambda: b2.quotkbaseb(0, 2))
-XFAIL(lambda: b2.quotkbaseb(2, 1))
-XFAIL(lambda: b2.quotkbaseb(2, 4))
-XFAIL(lambda: b2.quotkbaseb(2, 11))
+XFAIL(lambda: b2.quotkbaseb(0, 2), "quotkbaseb: divisor cannot be 0")
+XFAIL(lambda: b2.quotkbaseb(2, 1), "quotkbaseb: base (1) must be at least 2")
+XFAIL(lambda: b2.quotkbaseb(2, 4),
+      "quotkbaseb: base (4) must be less than " +
+      "or equal to the right alphabet size (3)")
+XFAIL(lambda: b2.quotkbaseb(2, 11),
+      "quotkbaseb: base (11) must be less than " +
+      "or equal to the left alphabet size (10)")
 
 b3 = vcsn.context('lat<lal_char(0-9), lal_char(0-9)>, b')
 
