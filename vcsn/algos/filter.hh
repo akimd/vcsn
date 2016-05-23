@@ -233,6 +233,8 @@ namespace vcsn
       hide_all_states()
       {
         ss_.reset();
+        ss_.set(aut_->pre());
+        ss_.set(aut_->post());
       }
 
       /// Reveal all the states of the original automaton.
@@ -292,7 +294,6 @@ namespace vcsn
     return make_shared_ptr<filter_automaton<Aut, Trans>>(aut, ss, ts);
   }
 
-  /// TMP
   template <Automaton Aut>
   filter_automaton<Aut>
   filter(const Aut& aut, const std::unordered_set<state_t_of<Aut>>& ss)
