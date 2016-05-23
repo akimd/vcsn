@@ -32,7 +32,7 @@ namespace vcsn
     using state_t = state_t_of<Aut>;
 
     auto ws = *aut->weightset();
-    auto d = std::vector<weight_t>(aut->all_states().back() + 1, ws.zero());
+    auto d = std::vector<weight_t>(states_size(aut), ws.zero());
     d[s0] = ws.one();
     auto r = d;
 
@@ -111,7 +111,7 @@ namespace vcsn
     using weight_t = weight_t_of<automaton_t>;
 
     auto ws = aut->weightset();
-    auto n = aut->all_states().back() + 1;
+    auto n = states_size(aut);
     std::vector<std::vector<weight_t>> res(
       n, std::vector<weight_t>(n, ws->zero()));
 

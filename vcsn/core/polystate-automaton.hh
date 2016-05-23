@@ -143,7 +143,7 @@ namespace vcsn
       /// We use state numbers as indexes, so we need to know the last
       /// state number.  If states were removed, it is not the same as
       /// the number of states.
-      size_t state_size_ = input_->all_states().back() + 1;
+      size_t state_size_ = states_size(input_);
     };
 
     /// A polystate automaton as a shared pointer.

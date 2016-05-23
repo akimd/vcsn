@@ -106,7 +106,7 @@ namespace vcsn
                              less<labelset_t_of<Aut>>>;
 
       transition_map(const Aut& aut, const weightset_t& ws)
-        : maps_(aut->all_states().back() + 1)
+        : maps_(states_size(aut))
         , aut_(aut)
         , ws_(ws)
       {}

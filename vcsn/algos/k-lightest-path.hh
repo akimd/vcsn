@@ -155,7 +155,7 @@ namespace vcsn
   std::vector<transition_t_of<Aut>>
   format_lightest(const Aut& aut, const std::vector<transition_t_of<Aut>>& path)
   {
-    auto res = std::vector<transition_t_of<Aut>>(aut->all_states().back() + 1,
+    auto res = std::vector<transition_t_of<Aut>>(states_size(aut),
                                                  aut->null_transition());
     for (auto t : path)
       if (t != aut->null_transition())

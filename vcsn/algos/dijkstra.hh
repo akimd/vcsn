@@ -45,8 +45,8 @@ namespace vcsn
 
       dijkstra_impl(const Aut& aut, const ValueSet& vs, Mul mul)
         : aut_(aut)
-        , res_(aut_->all_states().back() + 1, aut_->null_transition())
-        , dist_(aut_->all_states().back() + 1)
+        , res_(states_size(aut_), aut_->null_transition())
+        , dist_(states_size(aut_))
         , vs_{vs}
         , mul_{mul}
       {};
@@ -77,7 +77,7 @@ namespace vcsn
       std::vector<transition_t>
       operator()(state_t source, state_t dest)
       {
-        auto size = aut_->all_states().back() + 1;
+        auto size = states_size(aut_);
         auto handles = std::vector<typename heap_t::handle_type>(size);
         auto todo = heap_t();
 

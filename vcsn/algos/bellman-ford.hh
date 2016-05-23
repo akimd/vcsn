@@ -27,7 +27,7 @@ namespace vcsn
     bellman_ford_impl(const Aut& aut, state_t_of<Aut> source)
     {
       using transition_t = transition_t_of<Aut>;
-      auto size = aut->all_states().back() + 1;
+      auto size = states_size(aut);
       auto dist = std::vector<weight_t_of<Aut>>(size);
       auto res = std::vector<transition_t>(size, aut->null_transition());
       auto ws = *aut->weightset();

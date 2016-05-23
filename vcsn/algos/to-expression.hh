@@ -237,7 +237,7 @@ namespace vcsn
       state_eliminator(automaton_t& aut, profiler_t& profiler)
         : aut_(aut)
         , profiler_(profiler)
-        , handles_(aut_->all_states().back() + 1)
+        , handles_(states_size(aut_))
       {
         for (auto s: aut_->states())
           handles_[s] = todo_.emplace(profiler_.make_state_profile(s));

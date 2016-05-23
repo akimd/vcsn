@@ -45,9 +45,9 @@ namespace vcsn
       epsilon_remover_distance(const automaton_t& aut, bool prune = true)
         : ws_(*aut->weightset())
         , prune_(prune)
-        , d2p_(aut->all_states().back() + 1,
+        , d2p_(states_size(aut),
                aut_proper_t::element_type::null_state())
-        , p2d_(aut->all_states().back() + 1,
+        , p2d_(states_size(aut),
                aut_dirty_t::element_type::null_state())
       {
         auto dirty_ctx = dirty_ctx_t{{}, ws_};

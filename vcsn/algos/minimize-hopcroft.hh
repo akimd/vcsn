@@ -36,7 +36,7 @@ namespace vcsn
     using set_t = typename decltype(ps)::value_t;
     using partition_t = std::set<set_t>;
 
-    unsigned size = a->all_states().back() + 1;
+    auto size = states_size(a);
 
     auto f = set_t(size);
     f.set(a->post());

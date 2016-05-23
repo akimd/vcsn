@@ -38,8 +38,8 @@ namespace vcsn
 
       a_star_impl(const Aut& aut)
         : aut_(aut)
-        , res_(aut_->all_states().back() + 1, aut_->null_transition())
-        , heuristic_dist_(aut_->all_states().back() + 1)
+        , res_(states_size(aut_), aut_->null_transition())
+        , heuristic_dist_(states_size(aut_))
       {};
 
       struct profile
@@ -83,7 +83,7 @@ namespace vcsn
       operator()(state_t source, state_t dest, Heuristic heuristic)
       {
         auto ws = *aut_->weightset();
-        auto size = aut_->all_states().back() + 1;
+        auto size = states_size(aut_);
 
         auto done = std::set<state_t>();
 

@@ -26,6 +26,33 @@ namespace vcsn
 
   namespace detail
   {
+
+    /*---------.
+    | Sizes.   |
+    `---------*/
+
+    /// The largest state number, plus one.
+    ///
+    /// Used to compute the size of state-indexed vectors.
+    template <Automaton Aut>
+    size_t states_size(const Aut& aut)
+    {
+      // Cannot be empty.
+      return aut->all_states().back() + 1;
+    }
+
+    /// The largest state number, plus one.
+    ///
+    /// Used to compute the size of transition-indexed vectors.
+    template <Automaton Aut>
+    size_t transitions_size(const Aut& aut)
+    {
+      return (aut->all_transitions().empty()
+              ? 0
+              : aut->all_transitions().back() + 1);
+    }
+
+
     /*------------------------.
     | Outgoing transitions.   |
     `------------------------*/
