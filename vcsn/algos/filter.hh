@@ -110,12 +110,14 @@ namespace vcsn
       std::enable_if_t<U, bool>
       has_transition(transition_t t) const
       {
-        return static_if<Trans>(
-                      [this](auto t)
-                      {
-                        return has(this->cont_, t) && aut_->has_transition(t);
-                      },
-                      [](auto) { return true; })(t);
+        return has(this->cont_, t) && aut_->has_transition(t);
+      }
+
+      template <bool U = Trans>
+      std::enable_if_t<!U, bool>
+      has_transition(transition_t t) const
+      {
+        return aut_->has_transition(t);
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
@@ -267,11 +269,15 @@ namespace vcsn
       fresh_automaton_t_of<automaton_t>
       strip() const
       {
-        return ::vcsn::copy(aut_,
-                            [this](state_t_of<automaton_t> s)
+        auto state_filter = [this](state_t_of<automaton_t> s)
                             {
                               return has(this->ss_, s);
-                            });
+                            };
+        auto transition_filter = [this](transition_t_of<automaton_t> t)
+                                 {
+                                   return this->has_transition(t);
+                                 };
+        return ::vcsn::copy(aut_, state_filter, transition_filter);
       }
 
     protected:
