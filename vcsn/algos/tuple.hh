@@ -2,6 +2,7 @@
 
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/labelset/tupleset.hh>
 
 namespace vcsn
 {

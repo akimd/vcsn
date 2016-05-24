@@ -17,6 +17,8 @@ namespace vcsn
     using value_type = typename unref_C::value_type;
 
     using const_iterator = typename unref_C::const_iterator;
+    using iterator = typename unref_C::const_iterator;
+
   private:
     const C cont_;
   public:

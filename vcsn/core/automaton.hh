@@ -41,7 +41,7 @@ namespace vcsn
       return aut->all_states().back() + 1;
     }
 
-    /// The largest state number, plus one.
+    /// The largest transition number, plus one.
     ///
     /// Used to compute the size of transition-indexed vectors.
     template <Automaton Aut>

@@ -4,7 +4,6 @@
 #include <map>
 #include <utility>
 
-#include <vcsn/algos/accessible.hh>
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/insplit.hh>
 #include <vcsn/algos/strip.hh>
@@ -936,7 +935,7 @@ namespace vcsn
         if (n == 1)
           // Don't return aut: we need the accessible part.  However,
           // `copy_into(accessible(aut), res)` seems more costly than
-          // a plein conjunction!
+          // a plain conjunction!
           res = strip(conjunction(res, aut));
       }
     else

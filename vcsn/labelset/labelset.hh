@@ -44,7 +44,7 @@ namespace vcsn
     template <typename LabelSet>
     auto label_one()
       -> std::enable_if_t<LabelSet::has_one(),
-                     typename LabelSet::value_t>
+                          typename LabelSet::value_t>
     {
       return LabelSet::one();
     }
@@ -53,7 +53,7 @@ namespace vcsn
     ATTRIBUTE_NORETURN
     auto label_one()
       -> std::enable_if_t<!LabelSet::has_one(),
-                     typename LabelSet::value_t>
+                          typename LabelSet::value_t>
     {
       raise(LabelSet::sname(), ": does not feature a neutral");
     }

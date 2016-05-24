@@ -41,7 +41,7 @@ for v in args.vars:
     if op == '=':
         config[var] = val
     elif op == '+=':
-        config[var].append(val)
+        config[var] += ' ' + val
     elif op == '-=':
         config[var] = config[var].replace(val, '')
 

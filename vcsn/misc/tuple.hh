@@ -467,7 +467,7 @@ namespace vcsn
       (void) swallow
         {
           (res = res || values, 0)...
-            };
+        };
       return res;
     }
   };
