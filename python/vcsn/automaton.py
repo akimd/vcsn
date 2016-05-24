@@ -220,6 +220,7 @@ class automaton:
         --------------------
 
         - 'd': use Daut syntax (default)
+        - 'D': show implementation details for debugging
         - 'e': use EFSM syntax
         - 'f': use FAdo syntax
         - 'g': use Graphviz's Dot syntax
@@ -234,6 +235,7 @@ class automaton:
         """
 
         syntaxes = {'d': 'daut',
+                    'D': 'debug',
                     'e': 'efsm',
                     'f': 'fado',
                     'g': 'dot',
