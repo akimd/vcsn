@@ -34,23 +34,25 @@ RUN apt-get update                                              \
   && apt-get clean                                              \
   && pip3 install jupyter
 
-# Set the locale
+# Set the locale.
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
   && locale-gen
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-# Install vcsn
-RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/' >/etc/apt/sources.list.d/lrde.list       \
-    && apt-get update                                                                                   \
-    && apt-get install -y --force-yes --no-install-recommends vcsn                                      \
-    && useradd -d /vcsn -m -r vcsn                                                                      \
-    && mkdir /vcsn/.jupyter                                                                             \
-    && chown vcsn:vcsn /vcsn/.jupyter                                                                   \
-    && su vcsn -s /bin/bash -c 'cp -r /usr/share/doc/vcsn/notebooks /vcsn/Doc'                          \
-    && su vcsn -s /bin/bash -c 'vcsn jupyter trust /vcsn/Doc/*'                                         \
-    && ln -s /usr/share/doc/vcsn/notebooks '/vcsn/Doc (read only)'                                      \
+# Install vcsn and its dependencies.
+RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  \
+           >/etc/apt/sources.list.d/lrde.list                                   \
+    && apt-get update                                                           \
+    && apt-get install -y --force-yes --no-install-recommends vcsn              \
+    && jupyter nbextension enable --py --sys-prefix widgetsnbextension          \
+    && useradd -d /vcsn -m -r vcsn                                              \
+    && mkdir /vcsn/.jupyter                                                     \
+    && chown vcsn:vcsn /vcsn/.jupyter                                           \
+    && su vcsn -s /bin/bash -c 'cp -r /usr/share/doc/vcsn/notebooks /vcsn/Doc'  \
+    && su vcsn -s /bin/bash -c 'vcsn jupyter trust /vcsn/Doc/*'                 \
+    && ln -s /usr/share/doc/vcsn/notebooks '/vcsn/Doc (read only)'              \
     && touch "/vcsn/Please read the !Read-me-first.ipynb file in Doc"
 
 EXPOSE 8888
