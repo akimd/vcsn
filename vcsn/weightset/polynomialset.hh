@@ -827,20 +827,47 @@ namespace vcsn
     | compose.   |
     `-----------*/
 
+    /// Detect whether the labelset features `compose`.
+    template <typename Ctx>
+    using compose_t
+    = decltype(std::declval<labelset_t_of<Ctx>>()
+               .compose(std::declval<label_t_of<Ctx>>(),
+                        std::declval<label_t_of<Ctx>>()));
+
+    /// Whether LabelSet features `compose`.
+    template <typename Ctx>
+    using has_compose_fn = detect<Ctx, compose_t>;
+
+
     /// The composition of polynomials \a l and \a r.
-    /// Valid only for expressionsets.
     template <typename Ctx = context_t>
     auto
     compose(const value_t& l, const value_t& r) const
-      -> std::enable_if_t<is_multitape<Ctx>{},
+      -> std::enable_if_t<are_composable<Ctx, Ctx>{},
                           value_t>
     {
       value_t res;
       for (const auto& lm: l)
         for (const auto& rm: r)
-          add_here(res,
-                   labelset()->compose(label_of(lm), label_of(rm)),
-                   weightset()->mul(weight_of(lm), weight_of(rm)));
+          static_if<has_compose_fn<context_t>{}>
+            ([this, &res] (const auto& ls,
+                           const auto& l0, const auto& l1,
+                           const auto& w)
+             {
+               add_here(res, ls.compose(l0, l1), w);
+             },
+             [this, &res] (const auto& ls,
+                           const auto& l0, const auto& l1,
+                           const auto& w)
+             {
+               if (ls.template set<0>().equal(std::get<1>(l0),
+                                              std::get<0>(l1)))
+                 add_here(res,
+                          ls.tuple(std::get<0>(l0), std::get<1>(l1)),
+                          w);
+             })
+            (*labelset(), label_of(lm), label_of(rm),
+             weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
 

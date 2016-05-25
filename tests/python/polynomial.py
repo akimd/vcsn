@@ -102,6 +102,17 @@ CHECK_EQ('<20>a + <30>b',
          10 * poly('<2>a+<3>b'))
 
 
+## ----- ##
+## Pow.  ##
+## ----- ##
+
+poly = vcsn.context('law, q').polynomial
+XFAIL(lambda: poly('a') ** 0)
+CHECK_EQ('<4>a + <12>b + <-3>c', poly('<4>a + <12>b + <-3>c') ** 1)
+CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)
+
+
+
 ## ------------- ##
 ## Conjunction.  ##
 ## ------------- ##
@@ -122,11 +133,11 @@ CHECK_EQ('<10>a|x + <14>a|y + <15>b|x + <21>b|y',
          poly('<2>a+<3>b') | poly('<5>x+<7>y'))
 
 
-## ----- ##
-## Pow.  ##
-## ----- ##
+## --------- ##
+## Compose.  ##
+## --------- ##
 
-poly = vcsn.context('law, q').polynomial
-XFAIL(lambda: poly('a') ** 0)
-CHECK_EQ('<4>a + <12>b + <-3>c', poly('<4>a + <12>b + <-3>c') ** 1)
-CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)
+poly = vcsn.context('lat<lan, lan>, q').polynomial
+CHECK_EQ('a|A + b|B', poly('a|x + b|y').compose(poly('x|A + y|B')))
+CHECK_EQ('<10>a|A + <21>b|B',
+         poly('<2>a|x + <3>b|y + c|z').compose(poly('<5>x|A + <7>y|B + c|C')))

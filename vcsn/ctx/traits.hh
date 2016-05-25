@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <vcsn/misc/type_traits.hh>
+#include <vcsn/labelset/fwd.hh> // tupleset.
 
 namespace vcsn
 {
@@ -87,4 +88,20 @@ namespace vcsn
   template <typename ValueSet>
   using word_t_of
     = typename labelset_t_of<base_t<ValueSet>>::word_t;
+
+  /// Whether two labelsets are composable.
+  template <typename LS1, typename LS2>
+  struct are_labelsets_composable : std::false_type
+  {};
+
+  template <typename LS1, typename LS2, typename LS3>
+  struct are_labelsets_composable<tupleset<LS1, LS2>, tupleset<LS2, LS3>>
+    : std::true_type
+  {};
+
+  /// Whether two contexts are composable.
+  template <typename Ctx1, typename Ctx2>
+  struct are_composable
+    : are_labelsets_composable<labelset_t_of<Ctx1>, labelset_t_of<Ctx2>>
+  {};
 }
