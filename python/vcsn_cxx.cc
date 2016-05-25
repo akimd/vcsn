@@ -911,6 +911,11 @@ struct polynomial
     return vcsn::dyn::sum(val_, rhs.val_);
   }
 
+  static polynomial tuple(const boost::python::list& polys)
+  {
+    return vcsn::dyn::tuple(make_value_vector<polynomial>(polys));
+  }
+
   automaton trie() const
   {
     return vcsn::dyn::trie(val_);
@@ -1685,6 +1690,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
     .def("trie", &polynomial::trie)
+    .def("_tuple", &polynomial::tuple).staticmethod("_tuple")
    ;
 
   bp::class_<weight>("weight", bp::no_init)

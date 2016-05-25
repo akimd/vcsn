@@ -136,4 +136,56 @@ namespace vcsn
       }
     }
   }
+
+
+  /*-----------------------------------------.
+  | tuple_polynomialset(polynomialset...).   |
+  `-----------------------------------------*/
+
+  template <typename... PolynomialSets>
+  auto
+  tuple_polynomialset(const PolynomialSets&... pss)
+    -> polynomialset<decltype(tuple_context(pss.context()...))>
+  {
+    auto ctx = tuple_context(pss.context()...);
+    return {ctx};
+  }
+
+
+  /*------------------------.
+  | tuple(polynomial...).   |
+  `------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge helper.
+      template <typename PolynomialSet, size_t... I>
+      polynomial
+      tuple_(const std::vector<polynomial>& polys,
+             vcsn::detail::index_sequence<I...>)
+      {
+        auto ps
+          = vcsn::tuple_polynomialset
+          (polys[I]->template as<tuple_element_t<I, PolynomialSet>>().valueset()...);
+        return
+          {ps,
+           vcsn::tuple<decltype(ps), tuple_element_t<I, PolynomialSet>...>
+           (ps,
+            polys[I]
+            ->template as<tuple_element_t<I, PolynomialSet>>().value()...)};
+      }
+
+      /// Bridge (tuple).
+      template <typename PolynomialSets>
+      polynomial
+      tuple_polynomial(const std::vector<polynomial>& ps)
+      {
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<PolynomialSets>{}>{};
+        return tuple_<PolynomialSets>(ps, indices);
+      }
+    }
+  }
 }

@@ -998,6 +998,9 @@ namespace vcsn
     /// Build a k-tape expression from k expressions.
     expression tuple(const std::vector<expression>& rs);
 
+    /// Build a k-tape polynomial from k polynomials.
+    polynomial tuple(const std::vector<polynomial>& ps);
+
     /// The implementation type of a.
     std::string type(const automaton& a);
 

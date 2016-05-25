@@ -12,6 +12,7 @@ class polynomial:
     __eq__ = _is_equal
     __matmul__ = polynomial.compose
     __mul__ = _right_mult
+    __or__ = lambda l, r: polynomial._tuple([l, r])
     __repr__ = lambda self: self.format('text')
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

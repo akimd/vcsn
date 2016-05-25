@@ -56,3 +56,13 @@ XFAIL(lambda: vcsn.context('lal_char(ab), z').polynomial('<123>a*'))
 c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
 CHECK_EQ(r'\left\langle  \left\langle 2 \right\rangle \,\varepsilon\right\rangle a \oplus \left\langle x + y\right\rangle b',
          c.polynomial(r'a + a + <x>b + <y>b').format("latex"))
+
+
+## ------- ##
+## Tuple.  ##
+## ------- ##
+
+poly = vcsn.context('lan, q').polynomial
+CHECK_EQ('a|x + a|y + b|x + b|y', poly('a+b') | poly('x+y'))
+CHECK_EQ('<10>a|x + <14>a|y + <15>b|x + <21>b|y',
+         poly('<2>a+<3>b') | poly('<5>x+<7>y'))

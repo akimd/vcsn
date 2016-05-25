@@ -254,6 +254,12 @@ namespace vcsn
     : dyn_vector_vnamer<dyn::expression>
   {};
 
+  /// vector<dyn::polynomial> -> std::tuple<polynomial_t, ...>.
+  template <>
+  struct vnamer<const std::vector<dyn::polynomial>>
+    : dyn_vector_vnamer<dyn::polynomial>
+  {};
+
   /// The sname of a tuple is the tuple of the snames.
   template <typename... Args>
   struct snamer<std::tuple<Args...>>
