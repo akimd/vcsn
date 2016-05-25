@@ -1,6 +1,3 @@
-from vcsn import automaton
-
-
 class Conjunction(object):
 
     '''A proxy class that delays calls to the & operator in order
@@ -88,7 +85,7 @@ class Conjunction(object):
                 namespace[name] = make_method(name)
         return type("%s(%s)" % (cls.__name__, theclass.__name__), (cls,), namespace)
 
-    def __new__(cls, obj, *args, **kwargs):
+    def __new__(cls, obj, *args, **kwargs): # pylint: disable=unused-argument
         try:
             cache = cls.__dict__["_class_proxy_cache"]
         except KeyError:

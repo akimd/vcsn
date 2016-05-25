@@ -1,13 +1,13 @@
-import re
+# pylint: disable=protected-access
+import cgi
 
-from IPython.core.magic import (Magics, magics_class, line_cell_magic)
-from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
-from IPython.display import display, HTML, Latex, SVG
 try:
     import ipywidgets as widgets
 except ImportError:
-    from IPython.html import widgets
-import cgi
+    from IPython.html import widgets # pylint: disable=no-name-in-module
+from IPython.core.magic import (Magics, magics_class, line_cell_magic)
+from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
+from IPython.display import display
 import vcsn
 
 from vcsn.dot import _dot_to_svg, _dot_pretty, daut_to_dot
@@ -34,7 +34,7 @@ class ContextText:
                 ctx = vcsn.context('lal_char, b')
                 self.ipython.shell.user_ns[self.name] = ctx
         else:
-            ctx = ctx = vcsn.context('lal_char, b')
+            ctx = vcsn.context('lal_char, b')
         text = format(ctx)
         self.text = widgets.Textarea(description='Context: ', value=text)
         self.width = '250px'
@@ -79,7 +79,7 @@ class EditContext(Magics):
         if cell is None:
             ContextText(self, args.var)
 
-ip = get_ipython()
+ip = get_ipython() # pylint: disable=undefined-variable
 ip.register_magics(EditContext)
 
 
@@ -99,7 +99,7 @@ class AutomatonText:
 
         text = aut.format(self.format)
         self.text = widgets.Textarea(value=text)
-        height = self.text.value.count('\n')
+        self.height = self.text.value.count('\n')
         self.text.lines = '500'
         self.text.on_trait_change(lambda: self.update())
         self.error = widgets.HTML(value='')
@@ -191,7 +191,7 @@ class DemoAutomaton(Magics):
             print(self.__doc__)
             return
 
-        if (var in self.shell.user_ns):
+        if var in self.shell.user_ns:
             if algo == 'eliminate_state':
                 a = demo.EliminateState(self.shell.user_ns[var])
             elif algo == 'automaton':
@@ -199,10 +199,9 @@ class DemoAutomaton(Magics):
 
         try:
             a.show()
-        except Exception as e:
+        except Exception:
             print(self.__doc__)
 
-ip = get_ipython()
 ip.register_magics(EditAutomaton)
 ip.register_magics(DemoAutomaton)
 
@@ -227,15 +226,15 @@ class table(list):
     def to_html(self, s):
         try:
             return s._repr_svg_()
-        except AttributeError as e:
+        except AttributeError:
             pass
         try:
             return s._repr_latex_()
-        except AttributeError as e:
+        except AttributeError:
             pass
         try:
             return s._repr_html_()
-        except AttributeError as e:
+        except AttributeError:
             pass
         return s
 

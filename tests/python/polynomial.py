@@ -66,3 +66,13 @@ poly = vcsn.context('lan, q').polynomial
 CHECK_EQ('a|x + a|y + b|x + b|y', poly('a+b') | poly('x+y'))
 CHECK_EQ('<10>a|x + <14>a|y + <15>b|x + <21>b|y',
          poly('<2>a+<3>b') | poly('<5>x+<7>y'))
+
+
+## ----- ##
+## Pow.  ##
+## ----- ##
+
+poly = vcsn.context('law, q').polynomial
+XFAIL(lambda: poly('a') ** 0)
+CHECK_EQ('<4>a + <12>b + <-3>c', poly('<4>a + <12>b + <-3>c') ** 1)
+CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)

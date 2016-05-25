@@ -50,10 +50,10 @@ def param(name=None):
 
 
 def sub(pattern, repl, string, *args, **kwargs):
-    '''Apply `s/pattern/repl/g` as many times as possible in `string`.
+    r'''Apply `s/pattern/repl/g` as many times as possible in `string`.
 
     Spaces in the pattern are mapped to `\s*`.'''
-    pattern = pattern.replace(' ', '\s*')
+    pattern = pattern.replace(' ', r'\s*')
     if '{param}' in pattern:
         if has_regex:
             pattern = re.sub(r'\{param\}', lambda _: param(), pattern)

@@ -1,21 +1,22 @@
-from IPython.display import display, Javascript
+import cgi
+
+# pylint: disable=ungrouped-imports
+from IPython.display import display#, Javascript (unused, mentionned in fixme)
 try:
     import ipywidgets as widgets
 except ImportError:
-    from IPython.html import widgets
+    from IPython.html import widgets # pylint: disable=no-name-in-module
 try:
     from notebook import nbextensions
 except ImportError:
-    from IPython.html import nbextensions
+    from IPython.html import nbextensions # pylint: disable=no-name-in-module
 #from IPython.html.nbextensions import install_nbextension
 try:
     import traitlets
 except ImportError:
-    from IPython.utils import traitlets
+    from IPython.utils import traitlets # pylint: disable=no-name-in-module
 from vcsn.dot import daut_to_transitions
 
-import cgi
-import os
 import vcsn
 import vcsn.ipython
 
@@ -40,7 +41,7 @@ class VcsnD3DataFrame(object):
         aut = AutomatonD3Widget(states=states, transitions=transitions)#, context=self.context)
         self.error = widgets.HTMLWidget(value='')
 
-        self._widget_ctx = ipython.ContextTextWidget(self, self.context)
+        self._widget_ctx = vcsn.ipython.ContextTextWidget(self, self.context)
         self._widget_ctx.text.on_trait_change(lambda: self._on_change())
 
         self._widget = aut

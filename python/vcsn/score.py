@@ -1,21 +1,19 @@
 import re
 
-from IPython.core.magic import (Magics, magics_class, line_magic)
-from IPython.core.magic_arguments import (
-    argument, magic_arguments, parse_argstring)
 try:
     import ipywidgets as widgets
 except ImportError:
-    from IPython.html import widgets
-from IPython.display import display
+    from IPython.html import widgets # pylint: disable=no-name-in-module
+from IPython.core.magic import (Magics, magics_class, line_magic)
+from IPython.core.magic_arguments import (
+    argument, magic_arguments, parse_argstring)
 from pylab import *
 import matplotlib.pyplot as plt
 import pandas as pd
 
-import vcsn
 
 # some parameters
-matplotlib.pyplot.style.use('default')
+plt.style.use('default')
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 
@@ -52,7 +50,7 @@ class Benchmarks(Magics):
             _display(algos, True)
         else:
             algos = list(df.columns.values)
-            widget.interact(lambda algo: _display(algo, False), algo=algos)
+            widgets.interact(lambda algo: _display(algo, False), algo=algos)
 
-ip = get_ipython()
+ip = get_ipython() # pylint: disable=undefined-variable
 ip.register_magics(Benchmarks)

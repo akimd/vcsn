@@ -10,10 +10,8 @@
 # attribute.
 
 from functools import lru_cache
-import locale
 import re
 from subprocess import PIPE, Popen, check_call
-import sys
 
 from vcsn.tools import _tmp_file
 
@@ -101,7 +99,7 @@ def _dot_pretty(s, mode="pretty"):
         # Useless states should be filled in gray, instead of having a
         # gray contour.  Fill with a lighter gray.  But don't change the
         # color of the arrows.
-        s = re.sub('^(.*)(\[.*?\])$', _dot_gray_node, s, flags=re.MULTILINE)
+        s = re.sub(r'^(.*)(\[.*?\])$', _dot_gray_node, s, flags=re.MULTILINE)
     return s
 
 
@@ -161,7 +159,7 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
         p1 = Popen(['dot2tex', '--prog', engine],
                    stdin=PIPE, stdout=tex, stderr=PIPE,
                    universal_newlines=True)
-        out, err = p1.communicate(dot)
+        _, err = p1.communicate(dot)
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err)
         check_call(["texi2pdf", "--batch", "--clean", "--quiet",
@@ -179,7 +177,7 @@ class Daut:
         self.transitions = []
         self.id = r'(?:\w+|"(?:[^\\"]|\\.)*")'
         # An RE than matches transitions in Daut syntax.
-        self.re_daut_tr = '^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id)
+        self.re_daut_tr = r'^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id)
 
     def quote(self, s):
         '''Turn a string (label) into a string in double-quotes.'''
@@ -329,7 +327,7 @@ class Daut:
         s = re.sub('^ *vcsn_context *= *"(.*?)"$',
                    lambda m: res.append('context = "{}"'.format(m.group(1))),
                    s, flags=re.MULTILINE)
-        re.sub('^ *({id}?) *-> *({id}?) *(\[.*?\])?$'.format(id=self.id),
+        re.sub(r'^ *({id}?) *-> *({id}?) *(\[.*?\])?$'.format(id=self.id),
                lambda m: res.append(
                    self.transition_daut(*self.parse_transition(m, "dot"))),
                s, flags=re.MULTILINE)

@@ -2,7 +2,6 @@
 
 import gdb
 import gdb.printing
-import re
 from vcsn.demangle import demangle
 
 

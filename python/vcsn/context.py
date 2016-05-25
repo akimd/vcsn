@@ -3,6 +3,9 @@
 ## --------- ##
 
 from vcsn_cxx import context
+# Pylint doesn't understand the syntax lines 49-52.
+# This will be reported.
+# pylint: disable=unused-import,undefined-variable
 from vcsn import label, polynomial, expression, weight
 from vcsn.tools import _extend, _format, _is_equal
 

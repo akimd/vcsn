@@ -2,14 +2,11 @@
 ## automaton.  ##
 ## ----------- ##
 
-import tempfile
-import os
 import re
-import subprocess
 from subprocess import Popen, PIPE
 
+from vcsn_cxx import automaton, label
 from vcsn.conjunction import Conjunction
-from vcsn_cxx import automaton, label, weight
 from vcsn.tools import (_extend, _format, _info_to_dict,
                         _left_mult, _right_mult,
                         _tmp_file)
@@ -109,7 +106,7 @@ class automaton:
         elif format == "dot2tex":
             return _dot_to_svg_dot2tex(self.format("dot,latex"), engine)
         else:
-            raise(ValueError("invalid format: ", format))
+            raise ValueError("invalid format: ", format)
 
     # conjunction.
     _conjunction_orig = automaton.conjunction
@@ -137,7 +134,7 @@ class automaton:
         elif mode == 'type':
             return repr(self)
         else:
-            raise(ValueError('invalid display format: ' + mode))
+            raise ValueError('invalid display format: ' + mode)
 
     _determinize_orig = automaton.determinize
 
@@ -146,10 +143,10 @@ class automaton:
             algo = 'lazy,' + algo
         return self._determinize_orig(algo)
 
-    def _automaton_display(self, mode, engine="dot"):
+    def _display(self, mode, engine="dot"):
         '''Display automaton `self` in `mode` with Graphviz `engine`.'''
         from IPython.display import display
-        display(_automaton_convert(self, mode, engine))
+        display(self._convert(mode, engine))
 
     # automaton.__init__
     # The point is to add support for the "daut" format.  So we save
@@ -184,7 +181,7 @@ class automaton:
                   'dot', 'dot2tex']
         engines = ['dot', 'neato', 'twopi',
                    'circo', 'fdp', 'sfdp', 'patchwork']
-        interact_h(lambda mode, engine: _automaton_display(self, mode, engine),
+        interact_h(lambda mode, engine: self._display(mode, engine),
                    mode=modes, engine=engines)
 
     def dot(self, mode="pretty"):
@@ -255,7 +252,7 @@ class automaton:
         proc = Popen(['efstcompile'],
                      stdin=PIPE, stdout=fst, stderr=PIPE)
         proc.stdin.write(self.format('efsm').encode('utf-8'))
-        out, err = proc.communicate()
+        _, err = proc.communicate()
         if proc.wait():
             raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
         return fst

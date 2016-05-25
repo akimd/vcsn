@@ -1,9 +1,5 @@
 from vcsn_cxx import (automaton, context, expansion, expression, label,
                       polynomial, weight)
-from vcsn_config import config
-datadir = config['datadir']
-version = config['version']
-
 from vcsn.automaton  import automaton
 from vcsn.context    import context
 from vcsn.expansion  import expansion
@@ -20,6 +16,10 @@ try:
     from vcsn.score import *
 except (ImportError, NameError):
     pass
+
+from vcsn_config import config
+datadir = config['datadir']
+version = config['version']
 
 # Predefined contexts for casual users.
 B = context('lal_char, b')

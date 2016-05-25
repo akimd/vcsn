@@ -47,10 +47,10 @@ class polynomial:
         return _format(self, spec, 'text', syntaxes)
 
 
-    def __pow__(p, k):
-        # FIXME: cannot generate the unit polynomial with the current API.
-        assert 0 < k
-        res = p
-        for i in range(1, k):
-            res *= p
+    def __pow__(self, k):
+        if k == 0:
+            raise RuntimeError("cannot compute power 0 of a polynomial")
+        res = self
+        for _ in range(1, k):
+            res *= self
         return res

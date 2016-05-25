@@ -4,7 +4,7 @@
 
 from vcsn_cxx import label, expression
 from vcsn.dot import _dot_pretty, _dot_to_svg
-from vcsn.tools import (_extend, _format, _is_equal, _info_to_dict,
+from vcsn.tools import (_extend, _format, _info_to_dict,
                         _left_mult, _right_mult)
 
 @_extend(expression)
