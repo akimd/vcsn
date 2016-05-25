@@ -101,6 +101,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
+  %D%/automaton.tuple.ipynb                     \
   %D%/automaton.type.ipynb                      \
   %D%/automaton.weight_series.ipynb             \
   %D%/context.cerny.ipynb                       \

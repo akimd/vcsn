@@ -989,6 +989,17 @@ namespace vcsn
     /// The trim subautomaton of \a aut.
     automaton trim(const automaton& aut);
 
+    /// Build a two-tape automaton from two automata.
+    ///
+    /// \param lhs   the left automaton
+    /// \param rhs   the right automaton
+    automaton tuple(const automaton& lhs, const automaton& rhs);
+
+    /// Build a k-tape automaton from k automata.
+    ///
+    /// \param as    the automata
+    automaton tuple(const std::vector<automaton>& as);
+
     /// Build a k-tape expansion from k expansions.
     expansion tuple(const std::vector<expansion>& rs);
 

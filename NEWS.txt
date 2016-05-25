@@ -5,6 +5,23 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-05-25
+### tuple: applies to more types
+The Cartesian product, dubbed "tuple" in Vcsn, was already available on
+expansions and expressions in the three layers (static, dyn, Python as `|`).
+It is now also available on automata and on polynomials.
+
+    In [2]: exp = vcsn.context('lan, q').expression
+
+    In [3]: a = exp('(<2>a)*').automaton()
+    In [4]: b = exp('x+y').automaton()
+
+    In [5]: (a|b).shortest(8)
+    Out[5]: \e|x + \e|y + <2>a|x + <2>a|y + <4>aa|x + <4>aa|y + <8>aaa|x + <8>aaa|y
+
+    In [6]: a.shortest(4) | b.shortest(2)
+    Out[6]: \e|x + \e|y + <2>a|x + <2>a|y + <4>aa|x + <4>aa|y + <8>aaa|x + <8>aaa|y
+
 ## 2016-05-20
 ### quotkbaseb: new alorithm
 From a context, a divisor k, and a base b, gives a transducer that,

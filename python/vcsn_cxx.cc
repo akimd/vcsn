@@ -717,6 +717,11 @@ struct automaton
     return vcsn::dyn::trim(val_);
   }
 
+  static automaton tuple(const boost::python::list& auts)
+  {
+    return vcsn::dyn::tuple(automata_(auts));
+  }
+
   std::string type() const
   {
     return vcsn::dyn::type(val_);
@@ -1573,6 +1578,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          &automaton::synchronizing_word, (arg("algo") = "greedy"))
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
+    .def("_tuple", &automaton::tuple).staticmethod("_tuple")
     .def("type", &automaton::type)
     .def("universal", &automaton::universal)
     .def("weight_series", &automaton::weight_series)

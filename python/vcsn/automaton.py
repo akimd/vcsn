@@ -92,6 +92,7 @@ class automaton:
     __mod__ = automaton.difference
     __matmul__ = automaton.compose
     __mul__ = _right_mult
+    __or__ = lambda l, r: automaton._tuple([l, r])
     __pow__ = lambda self, *a: self.multiply(*a)
     __repr__ = lambda self: self.type()
     __rmul__ = _left_mult

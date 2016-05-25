@@ -121,6 +121,7 @@ algo_headers =                                  \
   %D%/algos/transpose.hh                        \
   %D%/algos/trie.hh                             \
   %D%/algos/tuple.hh                            \
+  %D%/algos/tuple-automaton.hh                  \
   %D%/algos/u.hh                                \
   %D%/algos/universal.hh                        \
   %D%/algos/weight-series.hh                    \
