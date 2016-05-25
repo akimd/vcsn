@@ -206,8 +206,16 @@ def normalize(a):
 
 def can_test_equivalence(a):
     ctx = a.context().format('sname')
-    expressionset_ws = re.match('.*expressionset<.*>', ctx) is None
-    return not(ctx.endswith('min')) and expressionset_ws
+    # Cannot check on Zmin and the like.
+    if ctx.endswith('min'):
+        return False
+    # Cannot check on expressionset as weightset.
+    if 'expressionset<' in ctx:
+        return False
+    # Cannot check equivalence on labelset.
+    if 'lat<' in ctx:
+        return False
+    return True
 
 
 def CHECK_EQUIV(a1, a2):

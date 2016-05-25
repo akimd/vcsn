@@ -8,6 +8,7 @@
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/sum.hh>
+#include <vcsn/algos/tuple-automaton.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/context.hh>
 
@@ -141,7 +142,10 @@ namespace vcsn
 
     /// Build a tuple: `e | f | ...`.
     template <typename... Value>
-    auto tuple(Value&&... v) const -> value_t;
+    auto tuple(Value&&... v) const -> value_t
+    {
+      return ::vcsn::tuple(v...)->strip();
+    }
 
     /// Add a power operator: `e{n}`.
     auto power(const value_t& e, unsigned n) const -> value_t
@@ -187,14 +191,15 @@ namespace vcsn
     }
 
     /// Add a complement operator: `e{c}`.
-    auto complement(const value_t& e) const -> value_t
+    auto complement(const value_t& e, std::true_type) const -> value_t
     {
       namespace v = ::vcsn;
       // The automaton for e does not have spontaneous transitions,
       // but we call proper because determinize needs the labelset to
       // be free.  But then the result is free too, we might have to
       // restore the context.
-      auto a = v::coaccessible(v::complement(v::complete(v::determinize(v::proper(e)))));
+      auto a =
+        v::coaccessible(v::complement(v::complete(v::determinize(v::proper(e)))));
       if (v::is_empty(a))
         return zero();
       else
@@ -203,6 +208,18 @@ namespace vcsn
         copy_into(a, res);
         return res;
       }
+    }
+
+    /// Add a complement operator: `e{c}`.
+    auto complement(const value_t& e, std::false_type) const -> value_t
+    {
+      raise("inductive: cannot complement on multitape: ", ctx_);
+    }
+
+    /// Add a complement operator: `e{c}`.
+    auto complement(const value_t& e) const -> value_t
+    {
+      return complement(e, bool_constant<!detail::is_multitape<context_t>{}>{});
     }
 
     /// Add a transposition operator.

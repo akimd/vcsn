@@ -128,6 +128,7 @@ DEFINE_EXP_FUNCTION(constant_term);
 DEFINE_AUT_VARIADIC_FUNCTION(difference);
 DEFINE_INT_INT_FUNCTION(divkbaseb);
 DEFINE_EXP_FUNCTION(expand);
+DEFINE_EXP_FUNCTION(inductive);
 DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
 DEFINE_AUT_FUNCTION(is_ambiguous);
 DEFINE_AUT_FUNCTION(is_complete);
@@ -650,6 +651,7 @@ try
       ALGO(eliminate_state);
       ALGO(evaluate);
       ALGO(expand);
+      ALGO(inductive);
       ALGO(infiltration);
       ALGO(is_ambiguous);
       ALGO(is_complete);
@@ -681,10 +683,10 @@ try
       if (f)
         return vcsn_main(argc - 1, argv + 1, *f);
     }
-  vcsn::raise("unknown command: " + cmd);
+  vcsn::raise("unknown command: ", cmd);
 }
 catch (const std::exception& e)
 {
   std::cerr << e.what() << std::endl;
   exit(EXIT_FAILURE);
- }
+}

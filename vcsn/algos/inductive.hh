@@ -1,7 +1,5 @@
 #pragma once
 
-#include <set>
-
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/core/automatonset.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -13,6 +11,16 @@ namespace vcsn
   /*-------------------------.
   | inductive(expression).   |
   `-------------------------*/
+
+  /// Build a inductive automaton from an expression.
+  ///
+  /// \tparam Aut      the type of the generated automaton.
+  /// \tparam ExpSet   the expressionset.
+  /// \tparam Tag      the nature of the operations (standard_tag, etc.).
+  template <Automaton Aut, typename ExpSet, typename Tag>
+  Aut
+  inductive(const ExpSet& rs, const typename ExpSet::value_t& r,
+            Tag = {});
 
   namespace rat
   {
@@ -29,7 +37,9 @@ namespace vcsn
       using automaton_t = Aut;
       using expressionset_t = ExpSet;
       using tag_t = Tag;
+      using self_t = inductive_visitor;
 
+      using context_t = context_t_of<expressionset_t>;
       using automatonset_t = automatonset<context_t_of<automaton_t>, tag_t>;
       using expression_t = typename expressionset_t::value_t;
       using weightset_t = weightset_t_of<expressionset_t>;
@@ -42,7 +52,8 @@ namespace vcsn
       constexpr static const char* me() { return "inductive"; }
 
       inductive_visitor(const expressionset_t& rs)
-        : as_{automatonset_t{rs.context()}}
+        : rs_{rs}
+        , as_{rs_.context()}
       {}
 
       automaton_t operator()(const expression_t& v)
@@ -59,9 +70,50 @@ namespace vcsn
       }
 
       using tuple_t = typename super_t::tuple_t;
-      virtual void visit(const tuple_t&, std::true_type) override
+      template <bool = context_t::is_lat,
+                typename Dummy = void>
+      struct visit_tuple
       {
-        raise(me(), ": tuple is not supported");
+        /// One tape.
+        template <size_t I>
+        auto tape_(const tuple_t& v)
+        {
+          const auto& rs = project<I>(visitor_.rs_);
+          using automaton_t =
+            vcsn::mutable_automaton<context_t_of<decltype(rs)>>;
+          return ::vcsn::inductive<automaton_t>(rs,
+                                                std::get<I>(v.sub()),
+                                                tag_t{});
+        }
+
+        /// Sum of sizes for all tapes.
+        template <size_t... I>
+        auto tape_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          return visitor_.as_.tuple(tape_<I>(v)...);
+        }
+
+        /// Entry point.
+        auto operator()(const tuple_t& v)
+        {
+          visitor_.res_ = tape_(v, labelset_t_of<context_t>::indices);
+        }
+        self_t& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        void operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        self_t& visitor_;
+      };
+
+      virtual void visit(const tuple_t& v, std::true_type) override
+      {
+        visit_tuple<>{*this}(v);
       }
 
       VCSN_RAT_VISIT(zero,)
@@ -153,21 +205,16 @@ namespace vcsn
       }
 
     private:
+      expressionset_t rs_;
       automatonset_t as_;
       automaton_t res_ = nullptr;
     };
   } // rat::
 
 
-  /// Build a inductive automaton from an expression.
-  ///
-  /// \tparam Aut      the type of the generated automaton.
-  /// \tparam ExpSet   the expressionset.
-  /// \tparam Tag      the nature of the operations (standard_tag, etc.).
   template <Automaton Aut, typename ExpSet, typename Tag>
   Aut
-  inductive(const ExpSet& rs, const typename ExpSet::value_t& r,
-            Tag = {})
+  inductive(const ExpSet& rs, const typename ExpSet::value_t& r, Tag)
   {
     auto ind = rat::inductive_visitor<Aut, ExpSet, Tag>{rs};
     return ind(r);

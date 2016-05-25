@@ -275,6 +275,9 @@ EXTRA_DIST +=                                           \
   %D%/standard.dir/rdiv-1.gv                            \
   %D%/standard.dir/shuffle-1.gv                         \
   %D%/standard.dir/transposition-1.gv                   \
+  %D%/standard.dir/tuple-1.gv                           \
+  %D%/standard.dir/tuple-2.gv                           \
+  %D%/standard.dir/tuple-3.gv                           \
   %D%/synchronize.dir/bool.gv                           \
   %D%/synchronize.dir/bool_delay.gv                     \
   %D%/synchronize.dir/bool_min.gv                       \

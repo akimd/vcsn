@@ -973,3 +973,11 @@ check(qexp('abcd & (dcba){T}'), file='transposition-1')
 # Left and right divisions.
 check(qexp('<2>abc {\} <4>abcd*'), file='ldiv-1')
 check(qexp('<4>a*bcd {/} <2>bcd'), file='rdiv-1')
+
+# Tupling.
+def tuple(*exps):
+    return vcsn.expression._tuple([vcsn.context('lan, q').expression(e)
+                                   for e in exps])
+check(tuple('abc', 'xyz'), file='tuple-1')
+check(tuple('abc', 'xy'),  file='tuple-2')
+check(tuple('ab*', 'cd*', 'ef*'), file='tuple-3')
