@@ -93,9 +93,19 @@ template <typename T>
 auto make_vector(const boost::python::list& list)
   -> std::vector<T>
 {
-  std::vector<T> res;
+  auto res = std::vector<T>{};
   for (int i = 0; i < boost::python::len(list); ++i)
     res.emplace_back(boost::python::extract<T>(list[i]));
+  return res;
+}
+
+/// Convert a Python list to a C++ vector.
+template <typename T>
+auto make_value_vector(const boost::python::list& list)
+{
+  auto res = std::vector<decltype(std::declval<T>().val_)>{};
+  for (auto v: make_vector<T>(list))
+    res.emplace_back(v.val_);
   return res;
 }
 
@@ -723,10 +733,7 @@ struct automaton
   using automata_t = std::vector<vcsn::dyn::automaton>;
   static automata_t automata_(const boost::python::list& auts)
   {
-    auto res = automata_t{};
-    for (int i = 0; i < boost::python::len(auts); ++i)
-      res.emplace_back(boost::python::extract<automaton>(auts[i])().val_);
-    return res;
+    return make_value_vector<automaton>(auts);
   }
 
   vcsn::dyn::automaton val_;
@@ -792,10 +799,7 @@ struct expansion
   using expansions_t = std::vector<vcsn::dyn::expansion>;
   static expansions_t expansions_(const boost::python::list& es)
   {
-    auto res = expansions_t{};
-    for (int i = 0; i < boost::python::len(es); ++i)
-      res.emplace_back(boost::python::extract<expansion>(es[i])().val_);
-    return res;
+    return make_value_vector<expansion>(es);
   }
 
   vcsn::dyn::expansion val_;
@@ -1165,10 +1169,7 @@ struct expression
   using expressions_t = std::vector<vcsn::dyn::expression>;
   static expressions_t expressions_(const boost::python::list& es)
   {
-    auto res = expressions_t{};
-    for (int i = 0; i < boost::python::len(es); ++i)
-      res.emplace_back(boost::python::extract<expression>(es[i])().val_);
-    return res;
+    return make_value_vector<expression>(es);
   }
 
   vcsn::dyn::expression val_;
