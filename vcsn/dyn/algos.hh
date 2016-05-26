@@ -165,7 +165,7 @@ namespace vcsn
     expression copy(const expression& exp,
                     const context& ctx, rat::identities ids);
 
-    /// A standardized transpositive \a a.
+    /// A co-standardized \a a.
     automaton costandard(const automaton& a);
 
     /// A reversed trie-like automaton (multiple initial states,

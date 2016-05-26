@@ -1,6 +1,5 @@
 #pragma once
 
-#include <queue>
 #include <unordered_set>
 
 #include <vcsn/algos/transpose.hh>
@@ -20,7 +19,7 @@ namespace vcsn
                   "is_deterministic: requires free labelset");
 
     using label_t = label_t_of<automaton_t>;
-    std::unordered_set<label_t> seen;
+    auto seen = std::unordered_set<label_t>{};
     for (auto t : all_out(aut, s))
       if (!seen.insert(aut->label_of(t)).second)
         return false;
@@ -41,7 +40,7 @@ namespace vcsn
     return res;
   }
 
- /// Number of non-deterministic states of transpositive automaton.
+  /// Number of non-deterministic states of transposed automaton.
   template <Automaton Aut>
   inline size_t
   num_codeterministic_states(const Aut& aut)
@@ -67,7 +66,7 @@ namespace vcsn
     return true;
   }
 
-  /// Whether the transpositive automaton is deterministic.
+  /// Whether the transposed automaton is deterministic.
   template <Automaton Aut>
   inline bool
   is_codeterministic(const Aut& aut)
