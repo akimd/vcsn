@@ -152,7 +152,6 @@ namespace vcsn
 
   /// Difference of expressions.
   template <typename ExpSet>
-  inline
   typename ExpSet::value_t
   difference(const ExpSet& rs,
              const typename ExpSet::value_t& lhs,

@@ -13,7 +13,6 @@ namespace vcsn
   `-------------*/
 
   template <typename Context>
-  inline
   auto
   read_label(const Context& ctx, std::istream& is,
              bool quoted = false)
@@ -44,7 +43,6 @@ namespace vcsn
   `------------------*/
 
   template <typename Context>
-  inline
   auto
   read_polynomial(const Context& ctx, std::istream& is)
     -> typename polynomialset<Context>::value_t
@@ -75,7 +73,6 @@ namespace vcsn
   `--------------*/
 
   template <typename Context>
-  inline
   auto
   read_weight(const Context& ctx, std::istream& is)
     -> weight_t_of<Context>

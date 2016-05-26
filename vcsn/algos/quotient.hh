@@ -119,13 +119,12 @@ namespace vcsn
   using quotient_t = partition_automaton_t<Aut>;
 
   template <Automaton Aut>
-  inline
   auto
   quotient(const Aut& a,
            typename detail::quotienter<Aut>::class_to_set_t& cs)
     -> quotient_t<Aut>
   {
-    detail::quotienter<Aut> quotient(cs);
+    auto quotient = detail::quotienter<Aut>{cs};
     return quotient(a);
   }
 

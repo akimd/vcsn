@@ -95,7 +95,6 @@ namespace vcsn
 
   /// General case of evaluation.
   template <Automaton Aut>
-  inline
   auto
   eval(const Aut& a, const word_t_of<Aut>& w)
     -> std::enable_if_t<!context_t_of<Aut>::is_lao, weight_t_of<Aut>>
@@ -110,7 +109,6 @@ namespace vcsn
   /// In a proper lao automaton, an accepting path can only be composed by
   /// initial and final transitions. Sum the weight of these paths.
   template <Automaton Aut>
-  inline
   auto
   eval(const Aut& a)
     -> std::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>

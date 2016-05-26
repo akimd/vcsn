@@ -39,7 +39,6 @@ namespace vcsn
   `------------------------*/
 
   template <typename ValueSet, typename... ValueSets>
-  inline
   typename ValueSet::value_t
   tuple(const ValueSet& vs,
         const typename ValueSets::value_t&... v)

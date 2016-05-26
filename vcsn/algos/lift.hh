@@ -210,7 +210,6 @@ namespace vcsn
   /// \param a    the input automaton
   /// \param ids  the identities to use for the generated expressions
   template <Automaton Aut, size_t... Tapes>
-  inline
   detail::lifted_automaton_t<Aut, Tapes...>
   lift(const Aut& a, vcsn::rat::identities ids = {})
   {
@@ -289,7 +288,6 @@ namespace vcsn
 
   /// Move all the labels to the weights.
   template <typename ExpSet>
-  inline
   typename detail::lifted_expressionset_t<ExpSet>::value_t
   lift(const ExpSet& rs, const typename ExpSet::value_t& e)
   {

@@ -11,7 +11,7 @@ namespace vcsn
   {
     /// Functor for universal.
     template <Automaton Aut>
-    class universaler
+    class universal_impl
     {
     public:
       static_assert(labelset_t_of<Aut>::is_free(),
@@ -131,11 +131,10 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  inline
   Aut
   universal(const Aut& a)
   {
-    detail::universaler<Aut> universal;
+    auto universal = detail::universal_impl<Aut>{};
     return universal(a);
   }
 

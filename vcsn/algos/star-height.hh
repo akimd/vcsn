@@ -95,11 +95,10 @@ namespace vcsn
 
   /// Star height of an expression.
   template <typename ExpSet>
-  inline
   unsigned
   star_height(const typename ExpSet::value_t& e)
   {
-    detail::star_heighter<ExpSet> s;
+    auto s = detail::star_heighter<ExpSet>{};
     return s(e);
   }
 

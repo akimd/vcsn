@@ -55,7 +55,6 @@ namespace vcsn
   /// Whether for each state, the outgoing transitions are sorted by
   /// increasing label.
   template <Automaton Aut>
-  inline
   bool
   is_out_sorted(const Aut& a)
   {
@@ -158,12 +157,11 @@ namespace vcsn
   } // namespace
 
   template <Automaton Aut>
-  inline
   auto
   sort(const Aut& a)
     -> permutation_automaton<Aut>
   {
-    detail::sorter<Aut> sorter(a);
+    auto sorter = detail::sorter<Aut>(a);
     return sorter();
   }
 

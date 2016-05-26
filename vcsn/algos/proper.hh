@@ -266,7 +266,6 @@ namespace vcsn
   /// \param dir   whether backward or forward elimination
   /// \param prune whether to suppress states becoming inaccessible
   template <Automaton Aut>
-  inline
   void proper_here(Aut& aut, direction dir = direction::backward,
                    bool prune = true, const std::string& algo = "auto")
   {

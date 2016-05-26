@@ -146,11 +146,10 @@ namespace vcsn
 
   /// Expand a typed expression.
   template <typename ExpSet>
-  inline
   typename ExpSet::value_t
   expand(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::expand_visitor<ExpSet> expand{rs};
+    auto expand = rat::expand_visitor<ExpSet>{rs};
     return expand(e);
   }
 
@@ -160,7 +159,6 @@ namespace vcsn
     {
       /// Bridge.
       template <typename ExpSet>
-      inline
       expression
       expand(const expression& exp)
       {

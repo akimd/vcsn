@@ -322,7 +322,6 @@ namespace vcsn
   }
 
   template <unsigned Tape, Automaton Aut>
-  inline
   focus_automaton<Tape, Aut>
   focus(Aut aut)
   {

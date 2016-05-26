@@ -137,7 +137,6 @@ namespace vcsn
 
 
   template <Automaton Aut>
-  inline
   bool is_valid(const Aut& aut)
   {
     return detail::is_valid_impl<Aut>::is_valid(aut);

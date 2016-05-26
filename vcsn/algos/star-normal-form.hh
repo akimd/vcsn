@@ -180,12 +180,11 @@ namespace vcsn
 
   /// Star-normal form of an expression.
   template <typename ExpSet>
-  inline
   typename ExpSet::value_t
   star_normal_form(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    rat::star_normal_form_visitor<ExpSet> star_normal_form{rs};
-    return star_normal_form(e);
+    auto snf = rat::star_normal_form_visitor<ExpSet>{rs};
+    return snf(e);
   }
 
   namespace dyn
@@ -194,7 +193,6 @@ namespace vcsn
     {
       /// Bridge.
       template <typename ExpSet>
-      inline
       expression
       star_normal_form(const expression& exp)
       {

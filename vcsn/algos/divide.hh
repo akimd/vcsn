@@ -11,7 +11,6 @@ namespace vcsn
 
   /// Left-division of values.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   ldiv(const ValueSet& vs,
        const typename ValueSet::value_t& lhs,
@@ -55,7 +54,6 @@ namespace vcsn
 
   /// Left-division of values.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   lgcd(const ValueSet& vs,
        const typename ValueSet::value_t& lhs,
@@ -88,7 +86,6 @@ namespace vcsn
 
   /// Right-division of values.
   template <typename ValueSet>
-  inline
   typename ValueSet::value_t
   rdiv(const ValueSet& vs,
        const typename ValueSet::value_t& lhs,

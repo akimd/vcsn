@@ -12,7 +12,6 @@
 namespace vcsn
 {
   template <Automaton Aut>
-  inline
   auto
   weight_series(const Aut& a)
     -> std::enable_if_t<!is_tropical<weightset_t_of<Aut>>::value,
@@ -23,7 +22,6 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  inline
   auto
   weight_series(const Aut& a)
     -> std::enable_if_t<is_tropical<weightset_t_of<Aut>>::value,

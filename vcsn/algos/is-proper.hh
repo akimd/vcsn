@@ -13,7 +13,6 @@ namespace vcsn
   namespace detail
   {
     template <Automaton Aut>
-    inline
     std::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut& aut)
     {
@@ -24,7 +23,7 @@ namespace vcsn
     }
 
     template <Automaton Aut>
-    inline constexpr
+    constexpr
     std::enable_if_t<!labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut&)
     {
@@ -43,7 +42,6 @@ namespace vcsn
   bool is_proper(const Aut& aut) ATTRIBUTE_CONST;
 
   template <Automaton Aut>
-  inline
   bool
   is_proper(const Aut& aut)
   {
@@ -56,7 +54,6 @@ namespace vcsn
     {
       /// Bridge.
       template <Automaton Aut>
-      inline
       bool is_proper(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();

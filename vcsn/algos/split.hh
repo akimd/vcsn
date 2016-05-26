@@ -27,7 +27,6 @@ namespace vcsn
 
     /// From a ExpSet to its polynomialset.
     template <typename ExpSet>
-    inline
     expression_polynomialset_t<ExpSet>
     make_expression_polynomialset(const ExpSet& rs)
     {
@@ -258,7 +257,6 @@ namespace vcsn
 
   /// Split an expression.
   template <typename ExpSet>
-  inline
   rat::expression_polynomial_t<ExpSet>
   split(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
@@ -285,7 +283,6 @@ namespace vcsn
 
   /// Split a polynomial of expressions, given the polynomialset.
   template <typename PolynomialSet>
-  inline
   typename PolynomialSet::value_t
   split_polynomial(const PolynomialSet& ps,
                    const typename PolynomialSet::value_t& p)
@@ -301,7 +298,6 @@ namespace vcsn
 
   /// Split a polynomial of expressions, given the expressionset.
   template <typename ExpSet>
-  inline
   rat::expression_polynomial_t<ExpSet>
   split(const ExpSet& rs, const rat::expression_polynomial_t<ExpSet>& p)
   {
