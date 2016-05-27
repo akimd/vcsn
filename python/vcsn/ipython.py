@@ -1,11 +1,12 @@
 # pylint: disable=protected-access
-import cgi
+from html import escape
 
 try:
     import ipywidgets as widgets
 except ImportError:
     from IPython.html import widgets # pylint: disable=no-name-in-module
-from IPython.core.magic import (Magics, magics_class, line_cell_magic)
+from IPython.core.magic import (Magics, magics_class,
+                                line_magic, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
 from IPython.display import display
 import vcsn
@@ -25,7 +26,7 @@ class ContextText:
         self.name = name
         if self.name:
             # Here the way to differenciate the use into the d3 widget.
-            if type(self.name) != str:
+            if not isinstance(self.name, str):
                 ctx = name
             elif self.name in self.ipython.shell.user_ns:
                 ctx = vcsn.context(
@@ -44,7 +45,7 @@ class ContextText:
         self.error = widgets.HTML(value=' ')
         self.svg = widgets.Latex(value=ctx._repr_latex_())
         # Display the widget if it is not use into the d3 widget
-        if type(self.name) == str:
+        if isinstance(self.name, str):
 
             wc1 = widgets.VBox()
             wc1.children = [self.text]
@@ -60,11 +61,11 @@ class ContextText:
             self.error.value = ''
             txt = self.text.value.encode('utf-8')
             c = vcsn.context(txt)
-            if type(self.name) == str:
+            if isinstance(self.name, str):
                 self.ipython.shell.user_ns[self.name] = c
             self.svg.value = c._repr_latex_()
         except RuntimeError as e:
-            self.error.value = cgi.escape(str(e))
+            self.error.value = escape(str(e))
 
 
 @magics_class
@@ -130,7 +131,7 @@ class AutomatonText:
                 txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
         except RuntimeError as e:
-            self.error.value = cgi.escape(str(e))
+            self.error.value = escape(str(e))
 
 
 @magics_class
@@ -183,8 +184,8 @@ class DemoAutomaton(Magics):
         a = e.standard().lift()
         %demo a eliminate_state
         '''
-    @line_cell_magic
-    def demo(self, line, cell=None):
+    @line_magic
+    def demo(self, line):
         args = line.split(' ')
         var = args[0]
         algo = args[1] if len(args) > 1 else ''

@@ -1,7 +1,7 @@
 try:
     import ipywidgets as widgets
 except ImportError:
-    from IPython.html import widgets
+    from IPython.html import widgets # pylint: disable=no-name-in-module
 from IPython.display import display
 
 # Same function as in ipython module. It needs to be define here to break

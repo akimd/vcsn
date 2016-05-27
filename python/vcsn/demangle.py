@@ -1,5 +1,7 @@
 import os
 
+# pylint: disable=line-too-long
+
 try:
     import regex as re
     has_regex = True
@@ -30,7 +32,7 @@ except:
 param_num = 0
 def param(name=None):
     if name is None:
-        global param_num
+        global param_num # pylint: disable=global-statement
         name = param_num
         param_num += 1
     # Here, we use a backtracking group, which is *much* slower, but

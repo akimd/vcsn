@@ -19,9 +19,12 @@ from vcsn.tools import _tmp_file
 # Default style for real states as issued by vcsn::dot.
 state_style = 'node [shape = circle, style = rounded, width = 0.5]'
 # IPython style for real states.
-state_pretty = 'node [fontsize = 12, fillcolor = cadetblue1, shape = circle, style = "filled,rounded", height = 0.4, width = 0.4, fixedsize = true]'
+state_pretty = ('node [fontsize = 12, fillcolor = cadetblue1, '
+                'shape = circle, style = "filled,rounded", height = 0.4, '
+                'width = 0.4, fixedsize = true]')
 # Style for state in `simple` mode.
-state_simple = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.3]'
+state_simple = ('node [fillcolor = cadetblue1, shape = circle, '
+                'style = "filled,rounded", width = 0.3]')
 # Style for pre and post states, or when rendering transitions only.
 state_point = 'node [shape = point, width = 0]'
 
@@ -148,7 +151,7 @@ def _dot_to_svg(dot, engine='dot', *args):
 
 
 @lru_cache(maxsize=32)
-def _dot_to_svg_dot2tex(dot, engine="dot", *args):
+def _dot_to_svg_dot2tex(dot, engine="dot"):
     '''The conversion of a Dot source into SVG by dot2tex.
 
     Requires dot2tex, texi2pdf and pdf2svg.
@@ -178,6 +181,8 @@ class Daut:
         self.id = r'(?:\w+|"(?:[^\\"]|\\.)*")'
         # An RE than matches transitions in Daut syntax.
         self.re_daut_tr = r'^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id)
+        self.hidden = []
+        self.context = None
 
     def quote(self, s):
         '''Turn a string (label) into a string in double-quotes.'''

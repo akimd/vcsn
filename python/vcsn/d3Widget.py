@@ -1,4 +1,4 @@
-import cgi
+import html
 
 # pylint: disable=ungrouped-imports
 from IPython.display import display#, Javascript (unused, mentionned in fixme)
@@ -6,11 +6,6 @@ try:
     import ipywidgets as widgets
 except ImportError:
     from IPython.html import widgets # pylint: disable=no-name-in-module
-try:
-    from notebook import nbextensions
-except ImportError:
-    from IPython.html import nbextensions # pylint: disable=no-name-in-module
-#from IPython.html.nbextensions import install_nbextension
 try:
     import traitlets
 except ImportError:
@@ -50,7 +45,7 @@ class VcsnD3DataFrame(object):
     def _aut_of_d3(self):
         '''Conversion from d3 to an automaton, via "daut".'''
         self.error.value = ''
-        ctx = 'context = {}\n'.format(self.context)
+        ctx = 'context = {:s}\n'.format(self.context)
         trans = self._widget.transitions
         aut = ''
         for t in trans:
@@ -65,7 +60,7 @@ class VcsnD3DataFrame(object):
         try:
             return vcsn.automaton(res, 'daut')
         except RuntimeError as e:
-            self.error.value = cgi.escape(str(e))
+            self.error.value = html.escape(str(e))
 
     def _d3_of_aut(self, aut):
         '''Convert an automaton into a list of states and a list

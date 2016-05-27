@@ -1,19 +1,15 @@
+# pylint: disable=ungrouped-imports
 from IPython.display import display
 try:
     import ipywidgets as widgets
 except ImportError:
-    from IPython.html import widgets
-try:
-    import traitlets
-except ImportError:
-    from IPython.utils import traitlets
+    from IPython.html import widgets # pylint: disable=no-name-in-module
 
 from .utils import _interact_h
 
 def _slider_eliminate_state(automaton):
     ''' Create the list of automata while applying the eliminate_state algorithm.'''
     count = automaton.state_number()
-    global automata
     automata = {}
     automata[0] = automaton
     for i in range(count):
@@ -44,4 +40,4 @@ class EliminateState(widgets.DOMWidget):
 
     def show(self):
         display(self._slide_bar)
-        _interact_h(lambda: display(automata[0]))
+        _interact_h(lambda: display(self.automata[0]))

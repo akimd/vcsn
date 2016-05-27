@@ -39,7 +39,7 @@ class expression:
     __ne__ = lambda l, r: l < r or r < l
 
 
-    def dot(self, physical=False, mode="pretty"):
+    def dot(self, physical=False):
         '''The Graphviz Dot text.
 
         Parameters
