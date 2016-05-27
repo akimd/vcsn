@@ -79,8 +79,8 @@ standard(exp).  We should use fewer contexts, to speed up our development.
 Unfortunately we then have a problem: are-equivalent no longer applies, so
 it's not so clear what should be done.
 
-** operations on polynomials and weights
-Check +.
+** operations on weights
+Check +, etc.
 
 ** conjunction
 Check standard, thompson.  Check the trivial identities.  What should be the

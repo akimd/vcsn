@@ -3,7 +3,7 @@
 ## ------------ ##
 
 from vcsn_cxx import polynomial
-from vcsn.tools import _extend, _format, _is_equal, _right_mult
+from vcsn.tools import _extend, _format, _is_equal, _left_mult, _right_mult
 
 @_extend(polynomial)
 class polynomial:
@@ -14,6 +14,7 @@ class polynomial:
     __mul__ = _right_mult
     __or__ = lambda l, r: polynomial._tuple([l, r])
     __repr__ = lambda self: self.format('text')
+    __rmul__ = _left_mult
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
 

@@ -5,6 +5,30 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-05-27
+### polynomials: more basic operations
+Polynomials now support (in the three layers) the addition, multiplication,
+exterior products, and conjunction.
+
+    In [4]: p = vcsn.context('law, q').polynomial
+
+    In [5]: p0 = p('<2>a + <3>b + <4>c'); p1 = p('<5>a + <6>b + <7>d')
+
+    In [6]: p0 + p1
+    Out[6]: <7>a + <9>b + <4>c + <7>d
+
+    In [7]: p0 * p1
+    Out[7]: <10>aa + <12>ab + <14>ad + <15>ba + <18>bb + <21>bd + <20>ca + <24>cb + <28>cd
+
+    In [8]: p0 * 2
+    Out[8]: <4>a + <6>b + <8>c
+
+    In [9]: 2 * p0
+    Out[9]: <4>a + <6>b + <8>c
+
+    In [10]: p0 & p1
+    Out[10]: <10>a + <18>b
+
 ## 2016-05-25
 ### tuple: applies to more types
 The Cartesian product, dubbed "tuple" in Vcsn, was already available on
@@ -397,7 +421,7 @@ When displaying values, the new format `utf8` improves the result.
 ### polynomial: conjunction
 Conjunction of polynomials is now available in dyn. For polynomials of
 expressionsets, compute the conjunction of the expressions. Otherwise, keep
-the common labels common to the two polynomials and multiply their weights.
+the common labels and multiply their weights.
 
 ## 2015-12-05
 ### Syntactic sugar in expressions

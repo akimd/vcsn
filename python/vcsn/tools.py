@@ -79,13 +79,14 @@ def _is_equal(lhs, rhs):
 
 
 def _left_mult(self, lhs):
-    '''Support "aut * weight".  Also serves for expressions and expansions.'''
+    '''Support "weight * self".  Serves for automata, expansions,
+    expressions and polynomials.'''
     return self.left_mult(self.context().weight(str(lhs)))
 
 
 def _right_mult(self, rhs):
     '''Support both "aut * aut" and "aut * weight".  Also serves for
-    expressions.'''
+    expressions and polynomials.'''
     if isinstance(rhs, type(self)):
         return self.multiply(rhs)
     elif isinstance(rhs, weight):

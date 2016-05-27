@@ -84,6 +84,15 @@ namespace vcsn
         const auto& e = exp->as<ExpansionSet>().valueset();
         return e.context();
       }
+
+      /// Bridge (context_of).
+      template <typename PolynomialSet>
+      context
+      context_of_polynomial(const polynomial& poly)
+      {
+        const auto& p = poly->as<PolynomialSet>().valueset();
+        return p.context();
+      }
     }
   }
 

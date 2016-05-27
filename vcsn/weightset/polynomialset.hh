@@ -19,6 +19,7 @@
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/star-status.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/wet.hh>
@@ -518,21 +519,44 @@ namespace vcsn
       return res;
     }
 
+    /// Detect whether the labelset features `rmul`.
+    template <typename Ctx>
+    using right_mult_t
+    = decltype(std::declval<labelset_t_of<Ctx>>()
+               .rmul(std::declval<label_t_of<Ctx>>(),
+                     std::declval<weight_t_of<Ctx>>()));
+
+    /// Whether LabelSet features `rmul`.
+    template <typename Ctx>
+    using has_right_mult_fn = detect<Ctx, right_mult_t>;
+
     /// Right exterior product.
-    ///
-    /// Beware that we do not multiply the weight here, but the label.
-    /// It seems that this routine is used _only_ when calling
-    /// "split", which is done only on polynomials of expressions, so
-    /// it is valid to rmul a label by a weight.  If some day we need
-    /// an rmul between weights, we will need additional properties to
-    /// allow it.
-    value_t
+    auto
     rmul(const value_t& v, const weight_t w) const
+      -> value_t
     {
       value_t res;
-      if (!weightset()->is_zero(w))
+      if (weightset()->is_one(w))
+        res = v;
+      else if (!weightset()->is_zero(w))
         for (const auto& m: v)
-          add_here(res, labelset()->rmul(label_of(m), w), weight_of(m));
+          // Beware that if the labelset supports weights (e.g.,
+          // polynomial of expressions), we do not multiply the weight
+          // here, but the label.
+          static_if<has_right_mult_fn<context_t>{}>
+            ([this, &res] (const auto& ls, const auto& m, const auto& w)
+             {
+               add_here(res,
+                        ls.rmul(label_of(m), w),
+                        weight_of(m));
+             },
+             [this, &res] (const auto&, const auto& m, const auto& w)
+             {
+               add_here(res,
+                        label_of(m),
+                        weightset()->mul(w, weight_of(m)));
+             })
+            (*labelset(), m, w);
       return res;
     }
 

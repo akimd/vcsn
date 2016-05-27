@@ -155,6 +155,9 @@ namespace vcsn
     /// The context of this expression.
     context context_of(const expression& r);
 
+    /// The context of this polynomial.
+    context context_of(const polynomial& r);
+
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
 
@@ -452,6 +455,9 @@ namespace vcsn
 
     /// The left-multiplication of an expression with \a w as weight.
     expression left_mult(const weight& w, const expression& exp);
+
+    /// The left-multiplication of a polynomial with \a w as weight.
+    polynomial left_mult(const weight& w, const polynomial& p);
 
     /// Ordering between expressions.
     bool less_than(const expression& lhs, const expression& rhs);
@@ -800,6 +806,9 @@ namespace vcsn
 
     /// The right-multiplication of an expression with \a w as weight.
     expression right_mult(const expression& exp, const weight& w);
+
+    /// The right-multiplication of a polynomial with \a w as weight.
+    polynomial right_mult(const polynomial& p, const weight& w);
 
     /// Build the SCC automaton whose states are labeled with number
     /// of the strongly-connected component they belong to.

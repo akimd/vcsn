@@ -58,6 +58,60 @@ CHECK_EQ(r'\left\langle  \left\langle 2 \right\rangle \,\varepsilon\right\rangle
          c.polynomial(r'a + a + <x>b + <y>b').format("latex"))
 
 
+## ----- ##
+## Add.  ##
+## ----- ##
+
+poly = vcsn.context('lan, q').polynomial
+CHECK_EQ('a + b + x + y', poly('a+b') + poly('x+y'))
+CHECK_EQ('<7>a + <7>c',
+         poly('<2>a+<3>b') + poly('<5>a + <-3>b + <7>c'))
+
+
+## --------- ##
+## Weights.  ##
+## --------- ##
+
+poly = vcsn.context('law, q').polynomial
+# Left.
+CHECK_EQ('<2>a + <2>b', 2 * poly('a+b'))
+CHECK_EQ('a + b',       1 * poly('a+b'))
+CHECK_EQ('\z',          0 * poly('a+b'))
+
+# Right.
+#
+# Here the result must be different when the labels support weights,
+# e.g., polynomials of expressions.  This is checked elsewhere, when
+# dealing with expansions of expressions.
+CHECK_EQ('<2>a + <2>b', poly('a+b') * 2)
+CHECK_EQ('a + b',       poly('a+b') * 1)
+CHECK_EQ('\z',          poly('a+b') * 0)
+
+
+## ----- ##
+## Mul.  ##
+## ----- ##
+
+poly = vcsn.context('law, q').polynomial
+CHECK_EQ('ax + ay + bx + by', poly('a+b') * poly('x+y'))
+CHECK_EQ('<10>ax + <14>ay + <15>bx + <21>by',
+         poly('<2>a+<3>b') * poly('<5>x+<7>y'))
+CHECK_EQ('<20>a + <30>b',
+         poly('<2>a+<3>b') * 10)
+CHECK_EQ('<20>a + <30>b',
+         10 * poly('<2>a+<3>b'))
+
+
+## ------------- ##
+## Conjunction.  ##
+## ------------- ##
+
+poly = vcsn.context('lan, q').polynomial
+CHECK_EQ('\z', poly('a+b') & poly('x+y'))
+CHECK_EQ('<10>a',
+         poly('<2>a+<3>b') & poly('<5>a+<7>c'))
+
+
 ## ------- ##
 ## Tuple.  ##
 ## ------- ##

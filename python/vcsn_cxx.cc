@@ -874,6 +874,11 @@ struct polynomial
     return vcsn::dyn::conjunction(val_, rhs.val_);
   }
 
+  ::context context() const
+  {
+    return vcsn::dyn::context_of(val_);
+  }
+
   automaton cotrie() const
   {
     return vcsn::dyn::cotrie(val_);
@@ -891,6 +896,8 @@ struct polynomial
     return vcsn::dyn::ldiv(val_, rhs.val_);
   }
 
+  polynomial left_mult(const weight& w) const;
+
   polynomial lgcd(const polynomial& rhs) const
   {
     return vcsn::dyn::lgcd(val_, rhs.val_);
@@ -905,6 +912,8 @@ struct polynomial
   {
     return vcsn::dyn::project(val_, tape);
   }
+
+  polynomial right_mult(const weight& w) const;
 
   polynomial split() const
   {
@@ -1438,6 +1447,20 @@ expression expression::right_mult(const weight& w) const
   return vcsn::dyn::right_mult(val_, w.val_);
 }
 
+/*-----------------------------.
+| polynomial implementation.   |
+`-----------------------------*/
+
+polynomial polynomial::left_mult(const weight& w) const
+{
+  return vcsn::dyn::left_mult(w.val_, val_);
+}
+
+polynomial polynomial::right_mult(const weight& w) const
+{
+  return vcsn::dyn::right_mult(val_, w.val_);
+}
+
 
 /*-----------.
 | vcsn_cxx.  |
@@ -1687,12 +1710,15 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const context&, const std::string&>())
     .def("compose", &polynomial::compose)
     .def("conjunction", &polynomial::conjunction)
+    .def("context", &polynomial::context)
     .def("cotrie", &polynomial::cotrie)
     .def("format", &polynomial::format)
     .def("ldiv", &polynomial::ldiv)
+    .def("left_mult", &polynomial::left_mult)
     .def("lgcd", &polynomial::lgcd)
     .def("multiply", &polynomial::multiply)
     .def("project", &polynomial::project)
+    .def("right_mult", &polynomial::right_mult)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
     .def("trie", &polynomial::trie)

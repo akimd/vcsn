@@ -278,6 +278,39 @@ namespace vcsn
     }
   }
 
+  /*-------------------------.
+  | left-mult(polynomial).   |
+  `-------------------------*/
+
+  template <typename WeightSet, typename ExpSet>
+  auto
+  join_weightset_polynomialset(const WeightSet& ws,
+                               const polynomialset<ExpSet>& ps)
+  {
+    return make_polynomialset(make_context(*ps.labelset(),
+                                           join(ws, *ps.weightset())));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (left_mult).
+      template <typename WeightSet, typename PolynomialSet>
+      polynomial
+      left_mult_polynomial(const weight& weight, const polynomial& poly)
+      {
+        const auto& w1 = weight->as<WeightSet>();
+        const auto& p1 = poly->as<PolynomialSet>();
+        auto ps = join_weightset_polynomialset(w1.valueset(), p1.valueset());
+        auto w2 = ps.weightset()->conv(w1.valueset(), w1.value());
+        auto p2 = ps.conv(p1.valueset(), p1.value());
+        return {ps, ::vcsn::left_mult(ps, w2, p2)};
+      }
+    }
+  }
+
+
   /*------------------------.
   | right-mult(automaton).  |
   `------------------------*/
@@ -402,6 +435,29 @@ namespace vcsn
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
         return {rs, ::vcsn::right_mult(rs, r2, w2)};
+      }
+    }
+  }
+
+  /*--------------------------.
+  | right-mult(polynomial).   |
+  `--------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (right_mult).
+      template <typename PolynomialSet, typename WeightSet>
+      polynomial
+      right_mult_polynomial(const polynomial& poly, const weight& weight)
+      {
+        const auto& w1 = weight->as<WeightSet>();
+        const auto& p1 = poly->as<PolynomialSet>();
+        auto ps = join_weightset_polynomialset(w1.valueset(), p1.valueset());
+        auto w2 = ps.weightset()->conv(w1.valueset(), w1.value());
+        auto p2 = ps.conv(p1.valueset(), p1.value());
+        return {ps, ::vcsn::right_mult(ps, p2, w2)};
       }
     }
   }
