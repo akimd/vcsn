@@ -20,18 +20,18 @@ check('lal_char(a), b', r'\z+\z', r'\z')
 check('lal_char(a), b', r'a', r'a')
 check('lal_char(ab), b', r'a+b+b+a', r'a + b')
 
-check('lal_char(abcd), z', r'[abcd]',     r'a + b + c + d')
-check('lal_char(abcd), z', r'[dcba]',     r'a + b + c + d')
-check('lal_char(abcd), z', r'[abcdabcd]', r'a + b + c + d')
-check('lal_char(abcd), z', r'[a-d]',      r'a + b + c + d')
-check('lal_char(abcd), z', r'[a-bd]',     r'a + b + d')
+check('lal_char(abcd), q', r'[abcd]',     r'a + b + c + d')
+check('lal_char(abcd), q', r'[dcba]',     r'a + b + c + d')
+check('lal_char(abcd), q', r'[abcdabcd]', r'a + b + c + d')
+check('lal_char(abcd), q', r'[a-d]',      r'a + b + c + d')
+check('lal_char(abcd), q', r'[a-bd]',     r'a + b + d')
 
-check('lal_char(ab), z', r'a+b+b+a+b', r'<2>a + <3>b')
-check('lal_char(ab), z', r'a+b+b+<-1>a+b', r'<3>b')
+check('lal_char(ab), q', r'a+b+b+a+b', r'<2>a + <3>b')
+check('lal_char(ab), q', r'a+b+b+<-1>a+b', r'<3>b')
 
 check('law_char(a), b', r'\e+\e', r'\e')
 
-check('law_char(ab), z', r'ba+ab+bb+aa+a+b+\e+bb+aa',
+check('law_char(ab), q', r'ba+ab+bb+aa+a+b+\e+bb+aa',
       r'\e + a + b + <2>aa + ab + ba + <2>bb')
 
 check('lal_char(abc), expressionset<lal_char(xyz), q>',
@@ -39,15 +39,15 @@ check('lal_char(abc), expressionset<lal_char(xyz), q>',
 
 # Be sure to have proper ordering on tuples with LAN.
 # For the time being, we support both | and , as separators.
-check('lat<lan_char(abc), lan_char(xyz)>, z',
+check('lat<lan_char(abc), lan_char(xyz)>, q',
       r'a|\e + \e|x + a|\e + a|x + \e|y',
       r'\e|x + \e|y + <2>a|\e + a|x')
-check('lat<lan_char(abc), lan_char(xyz)>, z',
+check('lat<lan_char(abc), lan_char(xyz)>, q',
       r'(a,\e) + (\e,x) + (a,\e) + (a, x) + (\e,y)',
       r'\e|x + \e|y + <2>a|\e + a|x')
 
 # Check that we don't ignore trailing characters.
-XFAIL(lambda: vcsn.context('lal_char(ab), z').polynomial('<123>a*'))
+XFAIL(lambda: vcsn.context('lal_char(ab), q').polynomial('<123>a*'))
 
 ## ----------------- ##
 ## LaTeX rendering.  ##

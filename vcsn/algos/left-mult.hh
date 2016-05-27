@@ -233,7 +233,7 @@ namespace vcsn
   ///
   /// We must not perform a plain
   ///
-  /// join(w1.valueset(), r1.valueset())
+  /// join(w1.weightset(), r1.expressionset())
   ///
   /// here.  Consider for instance
   ///
@@ -398,8 +398,7 @@ namespace vcsn
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
-        auto rs
-          = join_weightset_expressionset(w1.valueset(), r1.valueset());
+        auto rs = join_weightset_expressionset(w1.valueset(), r1.valueset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
         return {rs, ::vcsn::right_mult(rs, r2, w2)};
