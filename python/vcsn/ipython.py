@@ -93,11 +93,14 @@ class AutomatonText:
             # Strip the automaton, as we cannot preserve the state names
             # anyway.
             aut = self.ipython.shell.user_ns[self.name].strip()
+            text = aut.format(self.format)
         else:
-            aut = vcsn.context('lal_char, b').expression(r'\e').standard()
+            c = 'lan, b'
+            ctx = vcsn.context(c)
+            aut = ctx.expression(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
+            text = aut.format(self.format).replace(ctx.format('sname'), c)
 
-        text = aut.format(self.format)
         self.text = widgets.Textarea(value=text)
         self.height = self.text.value.count('\n')
         self.text.lines = '500'
