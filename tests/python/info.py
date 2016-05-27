@@ -119,6 +119,11 @@ check(vcsn.context('law_char(ab), b')
 ## expression.info.  ##
 ## ----------------- ##
 
+
+# expression.info does not accept a detailed parameter.
+def check(obj, exp):
+    CHECK_EQ(exp, obj.info())
+
 b = vcsn.context('lal_char(abc), b')
 check(b.expression('abc'),
       {

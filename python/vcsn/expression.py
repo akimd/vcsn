@@ -136,7 +136,7 @@ class expression:
         return _format(self, spec, 'text', syntaxes)
 
 
-    def info(self, key=None, detailed=False):
+    def info(self, key=None):
         res = _info_to_dict(self.format('info'))
         return res[key] if key else res
 
