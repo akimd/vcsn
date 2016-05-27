@@ -91,7 +91,7 @@ namespace vcsn { namespace dyn { namespace detail {
 
 '''
     for f in sorted(bridges):
-        res += register.format(**bridges[f])
+        res += register.format_map(bridges[f])
 
     res += '''
 #undef REGISTRY_DECLARE
@@ -113,7 +113,7 @@ namespace vcsn { namespace dyn {
 '''
     for f in sorted(bridges):
         if 'by hand' not in bridges[f]:
-            res += implementation.format(**bridges[f])
+            res += implementation.format_map(bridges[f])
 
     res += '''
 }}'''
@@ -139,7 +139,7 @@ namespace vcsn { namespace ast {
         {
 '''
     for f in sorted(bridges):
-        res += '          {{ "{reg}", "{file}" }},\n'.format(**bridges[f])
+        res += '          {{ "{reg}", "{file}" }},\n'.format_map(bridges[f])
 
     res += '''\
         };

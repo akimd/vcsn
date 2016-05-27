@@ -65,7 +65,7 @@ def fmt(s, **kwargs):
     # Can be nicer once we require Python 3.5.
     d = args.__dict__.copy()
     d.update(kwargs)
-    return s.format(**d)
+    return s.format_map(d)
 
 
 def notify():
