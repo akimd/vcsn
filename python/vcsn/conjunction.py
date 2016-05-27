@@ -85,7 +85,7 @@ class Conjunction(object):
                 namespace[name] = make_method(name)
         return type("%s(%s)" % (cls.__name__, theclass.__name__), (cls,), namespace)
 
-    def __new__(cls, obj, *args, **kwargs): # pylint: disable=unused-argument
+    def __new__(cls, obj, *_): # additional parameters are used in __init__
         try:
             cache = cls.__dict__["_class_proxy_cache"]
         except KeyError:
