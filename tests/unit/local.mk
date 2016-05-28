@@ -54,6 +54,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/label.chk                                 \
   %D%/polynomialset.chk                         \
   %D%/proper.chk                                \
+  %D%/score.chk                                 \
   %D%/score-compare.chk                         \
   %D%/transpose.chk                             \
   %D%/weight.chk                                \
