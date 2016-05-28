@@ -744,11 +744,6 @@ struct expansion
     : val_(val)
   {}
 
-  expansion(const std::string&)
-  {
-    vcsn::raise("not implemented");
-  }
-
   expansion complement() const
   {
     return vcsn::dyn::complement(val_);
@@ -1612,7 +1607,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
    ;
 
   bp::class_<expansion>("expansion", bp::no_init)
-    .def(bp::init<const std::string&>())
     .def("complement", &expansion::complement)
     .def("conjunction", &expansion::conjunction)
     .def("context", &expansion::context)
