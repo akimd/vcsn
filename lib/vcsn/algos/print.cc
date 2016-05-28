@@ -172,51 +172,51 @@ namespace vcsn
     {
       return format_flag(o) ? *format_flag(o) : std::string{"default"};
     }
-  }
-}
 
-namespace std
-{
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::automaton& a)
-  {
-    return vcsn::dyn::print(a, o, vcsn::dyn::get_format(o));
-  }
 
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::context& c)
-  {
-    return vcsn::dyn::print(c, o, vcsn::dyn::get_format(o));
-  }
+    namespace detail
+    {
+      std::ostream&
+      operator<<(std::ostream& o, const automaton& a)
+      {
+        return print(a, o, get_format(o));
+      }
 
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::expansion& e)
-  {
-    return vcsn::dyn::print(e, o, vcsn::dyn::get_format(o));
-  }
+      std::ostream&
+      operator<<(std::ostream& o, const context& c)
+      {
+        return print(c, o, get_format(o));
+      }
 
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::expression& r)
-  {
-    return vcsn::dyn::print(r, o, vcsn::dyn::get_format(o));
-  }
+      std::ostream&
+      operator<<(std::ostream& o, const expansion& e)
+      {
+        return print(e, o, get_format(o));
+      }
 
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::label& l)
-  {
-    return vcsn::dyn::print(l, o, vcsn::dyn::get_format(o));
-  }
+      std::ostream&
+      operator<<(std::ostream& o, const expression& r)
+      {
+        return print(r, o, get_format(o));
+      }
 
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::polynomial& p)
-  {
-    return vcsn::dyn::print(p, o, vcsn::dyn::get_format(o));
-  }
+      std::ostream&
+      operator<<(std::ostream& o, const label& l)
+      {
+        return print(l, o, get_format(o));
+      }
 
-  std::ostream&
-  operator<<(std::ostream& o, const vcsn::dyn::weight& w)
-  {
-    return vcsn::dyn::print(w, o, vcsn::dyn::get_format(o));
-  }
+      std::ostream&
+      operator<<(std::ostream& o, const polynomial& p)
+      {
+        return print(p, o, get_format(o));
+      }
 
+      std::ostream&
+      operator<<(std::ostream& o, const weight& w)
+      {
+        return print(w, o, get_format(o));
+      }
+    }
+  }
 }

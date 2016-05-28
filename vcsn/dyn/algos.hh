@@ -1045,32 +1045,29 @@ namespace vcsn
     /// \param algo   the specific algorithm to use.
     ///               It can be "regular"/"auto" or the variant "compact".
     automaton zpc(const expression& exp, const std::string& algo = "auto");
+
+    namespace detail
+    {
+      /// Output automaton \a a on \a o.
+      std::ostream& operator<<(std::ostream& o, const automaton& a);
+
+      /// Output context \a c on \a o.
+      std::ostream& operator<<(std::ostream& o, const context& c);
+
+      /// Output expansion \a e on \a o.
+      std::ostream& operator<<(std::ostream& o, const expansion& e);
+
+      /// Output expression \a r on \a o.
+      std::ostream& operator<<(std::ostream& o, const expression& r);
+
+      /// Output label \a l on \a o.
+      std::ostream& operator<<(std::ostream& o, const label& l);
+
+      /// Output polynomial \a p on \a o.
+      std::ostream& operator<<(std::ostream& o, const polynomial& p);
+
+      /// Output weight \a w on \a o.
+      std::ostream& operator<<(std::ostream& o, const weight& w);
+    }
   }
-}
-
-// dyn::automaton and the like are actually type aliases for
-// std::shared_ptr, so for ADL to work properly, we need these
-// operators to be defined in std.
-namespace std LIBVCSN_API
-{
-  /// Output automaton \a a on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);
-
-  /// Output context \a c on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::context& c);
-
-  /// Output expansion \a e on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expansion& e);
-
-  /// Output expression \a r on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expression& r);
-
-  /// Output label \a l on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::label& l);
-
-  /// Output polynomial \a p on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::polynomial& p);
-
-  /// Output weight \a w on \a o.
-  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);
 }
