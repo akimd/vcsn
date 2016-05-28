@@ -185,17 +185,23 @@ namespace vcsn
 
   /// Repeated concatenation of an automaton.
   ///
-  /// The return type, via SFINAE on aut->null_state(), makes the
-  /// difference with another overload, `<ValueSet>(ValueSet, value,
-  /// value)`, which coincides in the case ValueSet = Z, hence value =
-  /// int.
-  ///
-  /// Unfortunately, fresh_automaton_t_of, which uses
-  /// context_t_of<Aut>, is not SFINAE transparent: it causes a hard
-  /// failure instead of being ignored.
-  ///
-  /// FIXME: if you know how to use fresh_automaton_t_of instead, let
-  /// me know.
+  /// \param aut  the automaton
+  /// \param min  the minimum number.  If -1, denotes 0.
+  /// \param max  the maximum number.
+  ///             If -1, denotes infinity, using star.
+  ///             If -2, denotes the same value as min.
+  //
+  // The return type, via SFINAE on aut->null_state(), makes the
+  // difference with another overload, `<ValueSet>(ValueSet, value,
+  // value)`, which coincides in the case ValueSet = Z, hence value =
+  // int.
+  //
+  // Unfortunately, fresh_automaton_t_of, which uses
+  // context_t_of<Aut>, is not SFINAE transparent: it causes a hard
+  // failure instead of being ignored.
+  //
+  // FIXME: if you know how to use fresh_automaton_t_of instead, let
+  // me know.
   template <Automaton Aut, typename Tag = general_tag>
   auto
   multiply(const Aut& aut, int min, int max, Tag tag = {})
@@ -203,6 +209,8 @@ namespace vcsn
                 detail::make_join_automaton(tag, aut))
   {
     auto res = detail::make_join_automaton(tag, aut);
+    if (max == -2)
+      max = min;
     if (min == -1)
       min = 0;
     if (max == -1)
@@ -319,35 +327,45 @@ namespace vcsn
   }
 
 
-  /*----------------------------------.
-  | multiply(expression, min, max).   |
-  `----------------------------------*/
+  /*-----------------------------.
+  | multiply(value, min, max).   |
+  `-----------------------------*/
 
-  template <typename ExpSet>
-  typename ExpSet::value_t
-  multiply(const ExpSet& rs, const typename ExpSet::value_t& r,
-           int min, int max)
+  /// Repeated multiplication of values.
+  ///
+  /// \param vs   the valueset
+  /// \param v    the value
+  /// \param min  the minimum number.  If -1, denotes 0.
+  /// \param max  the maximum number.
+  ///             If -1, denotes infinity, using star.
+  ///             If -2, denotes the same value as min.
+  template <typename ValueSet>
+  typename ValueSet::value_t
+  multiply(const ValueSet& vs, const typename ValueSet::value_t& v,
+           int min, int max = -2)
   {
-    typename ExpSet::value_t res;
+    auto res = typename ValueSet::value_t{};
+    if (max == -2)
+      max = min;
     if (min == -1)
       min = 0;
     if (max == -1)
       {
-        res = rs.star(r);
+        res = vs.star(v);
         if (min)
-          res = rs.mul(rs.power(r, min), res);
+          res = vs.mul(vs.power(v, min), res);
       }
     else
       {
         require(min <= max,
                 "multiply: invalid exponents: ", min, ", ", max);
-        res = rs.power(r, min);
+        res = vs.power(v, min);
         if (min < max)
           {
-            typename ExpSet::value_t sum = rs.one();
+            auto sum = vs.one();
             for (int n = 1; n <= max - min; ++n)
-              sum = rs.add(sum, rs.power(r, n));
-            res = rs.mul(res, sum);
+              sum = vs.add(sum, vs.power(v, n));
+            res = vs.mul(res, sum);
           }
       }
     return res;

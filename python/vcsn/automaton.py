@@ -80,7 +80,7 @@ class automaton:
         if isinstance(exp, tuple):
             return self._multiply_orig(*exp, algo=algo)
         else:
-            return self._multiply_orig(exp, algo)
+            return self._multiply_orig(exp, algo=algo)
 
     __add__ = automaton.sum
     __and__ = lambda l, r: Conjunction(l, r)
@@ -90,7 +90,7 @@ class automaton:
     __matmul__ = automaton.compose
     __mul__ = _right_mult
     __or__ = lambda l, r: automaton._tuple([l, r])
-    __pow__ = lambda self, *a: self.multiply(*a)
+    __pow__ = multiply
     __repr__ = lambda self: self.type()
     __rmul__ = _left_mult
     __str__ = lambda self: self.format('dot')

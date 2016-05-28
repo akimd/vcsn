@@ -523,7 +523,9 @@ namespace vcsn
     ///
     /// \param aut  the automaton.
     /// \param min  the minimum number.  If -1, denotes 0.
-    /// \param max  the maximum number.  If -1, denotes infinity, using star.
+    /// \param max  the maximum number.
+    ///             If -1, denotes infinity, using star.
+    ///             If -2, denotes the same value as min.
     /// \param algo  how to compute the result
     ///   - "standard"    \a aut is standard,
     ///                   build a standard automaton.
@@ -531,7 +533,7 @@ namespace vcsn
     ///                   but add spontaneous transitions.
     ///   - "auto"        "standard" if \a aut is standard,
     ///                   "general" otherwise.
-    automaton multiply(const automaton& aut, int min, int max,
+    automaton multiply(const automaton& aut, int min, int max = -2,
                        const std::string& algo = "auto");
 
     /// Multiply (concatenate) two expressions.
@@ -541,8 +543,10 @@ namespace vcsn
     ///
     /// \param e    the expression.
     /// \param min  the minimum number.  If -1, denotes 0.
-    /// \param max  the maximum number.  If -1, denotes infinity, using star.
-    expression multiply(const expression& e, int min, int max);
+    /// \param max  the maximum number.
+    ///             If -1, denotes infinity, using star.
+    ///             If -2, denotes the same value as min.
+    expression multiply(const expression& e, int min, int max = -2);
 
     /// Multiply (concatenate) two labels.
     label multiply(const label& lhs, const label& rhs);
@@ -557,8 +561,10 @@ namespace vcsn
     ///
     /// \param e    the weight.
     /// \param min  the minimum number.  If -1, denotes 0.
-    /// \param max  the maximum number.  If -1, denotes infinity, using star.
-    weight multiply(const weight& e, int min, int max);
+    /// \param max  the maximum number.
+    ///             If -1, denotes infinity, using star.
+    ///             If -2, denotes the same value as min.
+    weight multiply(const weight& e, int min, int max = -2);
 
     /// The minimized automaton.
     ///
