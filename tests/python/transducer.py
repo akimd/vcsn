@@ -10,7 +10,7 @@ c = vcsn.context("lat<lan_char(abc), lan_char(xyz)>, q")
 
 # Make sure we can copy/convert a k-tape expression.
 e = c.expression('a|x')
-CHECK_EQ(e, e.series())
+CHECK_EQ(e, e.expression())
 
 # Check that a|x is understood as a single two-tape label, not as a
 # two-tuple of single-tape labels.  Since standard does not support

@@ -78,7 +78,7 @@ struct python_optional
 };
 
 /// Convert to identities.
-auto identities(const std::string& s)
+auto make_identities(const std::string& s)
   -> vcsn::rat::identities
 {
   std::istringstream is{s};
@@ -533,7 +533,8 @@ struct automaton
   automaton lift(const boost::python::list& tapes,
                  const std::string& ids = "default") const
   {
-    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes), identities(ids));
+    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes),
+                           make_identities(ids));
   }
 
   /// The type of the previous function.
@@ -951,7 +952,7 @@ struct expression
 
   expression(const context& ctx, const std::string& r,
              const std::string& ids)
-    : expression{ctx, r, identities(ids)}
+    : expression{ctx, r, make_identities(ids)}
   {}
 
   /// Parse as a series.
@@ -961,23 +962,11 @@ struct expression
   }
 
   /// Convert \a this to \a ctx, using \a ids.
-  expression as_(const ::context& ctx, vcsn::rat::identities ids = {})
+  expression as(const ::context& ctx = {}, const std::string& ids = "default")
   {
     // The destination expressionset.
-    return vcsn::dyn::copy(val_, (ctx ? ctx : context()).val_, ids);
-  }
-
-  /// Same expression/series, but in context \a ctx, with expression
-  /// identities.
-  expression as_expression(const ::context& ctx = {})
-  {
-    return as_(ctx);
-  }
-
-  /// Same expression/series, but in context \a ctx, with series identities.
-  expression as_series(const ::context& ctx = {})
-  {
-    return as_(ctx, vcsn::rat::identities::distributive);
+    return vcsn::dyn::copy(val_, (ctx ? ctx : context()).val_,
+                           make_identities(ids));
   }
 
   expression complement() const
@@ -1042,11 +1031,6 @@ struct expression
   bool is_equivalent(const expression& rhs) const
   {
     return vcsn::dyn::are_equivalent(val_, rhs.val_);
-  }
-
-  bool is_series() const
-  {
-    return vcsn::dyn::identities(val_).is_distributive();
   }
 
   bool is_valid() const
@@ -1283,7 +1267,7 @@ label automaton::synchronizing_word(const std::string& algo) const
 expression automaton::to_expression(const std::string& ids,
                                     const std::string& algo) const
 {
-  return vcsn::dyn::to_expression(val_, identities(ids), algo);
+  return vcsn::dyn::to_expression(val_, make_identities(ids), algo);
 }
 
 weight automaton::weight_series() const
@@ -1365,7 +1349,7 @@ automaton context::random_deterministic(unsigned num_states) const
 expression context::random_expression(const std::string& param,
                                       const std::string& ids) const
 {
-  return vcsn::dyn::random_expression(val_, param, identities(ids));
+  return vcsn::dyn::random_expression(val_, param, make_identities(ids));
 }
 
 
@@ -1633,13 +1617,12 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("difference", &expression::difference)
     .def("expand", &expression::expand)
     .def("expansion", &expression::to_expansion)
-    .def("expression", &expression::as_expression,
-         (arg("context") = context()))
+    .def("expression", &expression::as,
+         (arg("context") = context(), arg("identities") = "default"))
     .def("format", &expression::format)
     .def("inductive", &expression::inductive, (arg("algo") = "auto"))
     .def("infiltration", &expression::infiltration)
     .def("is_equivalent", &expression::is_equivalent)
-    .def("is_series", &expression::is_series)
     .def("is_valid", &expression::is_valid)
     .def("ldiv", &expression::ldiv)
     .def("left_mult", &expression::left_mult)
@@ -1652,7 +1635,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("project", &expression::project)
     .def("rdiv", &expression::rdiv)
     .def("right_mult", &expression::right_mult)
-    .def("series", &expression::as_series, (arg("context") = context()))
     .def("shuffle", &expression::shuffle)
     .def("split", &expression::split)
     .def("standard", &expression::standard)

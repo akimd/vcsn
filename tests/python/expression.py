@@ -238,11 +238,11 @@ check_format('lal_char(0123), q',
              '⟨123⟩(0123)',
              r' \left\langle 123 \right\rangle \,\left(0 \, 1 \, 2 \, 3\right)')
 
-## -------- ##
-## Series.  ##
-## -------- ##
+## ------------------------- ##
+## Distributive identities.  ##
+## ------------------------- ##
 def check(s1, exp):
-    eff = ctx.series(s1)
+    eff = ctx.expression(s1, 'distributive')
     CHECK_EQ(exp, eff.format('text'))
 
 ctx = vcsn.context('lal_char(abcd), q')
