@@ -214,6 +214,13 @@ namespace vcsn
     | tuple.   |
     `---------*/
 
+    automaton
+    tuple(const automaton& lhs, const automaton& rhs)
+    {
+      auto auts = std::vector<automaton>{lhs, rhs};
+      return tuple(auts);
+    }
+
     expression
     tuple(const expression& lhs, const expression& rhs)
     {
