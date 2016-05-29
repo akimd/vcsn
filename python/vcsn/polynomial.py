@@ -48,10 +48,22 @@ class polynomial:
         return _format(self, spec, 'text', syntaxes)
 
 
+    def one(self):
+        '''The polynomial for `\e`, if we can represent it.'''
+        try:
+            return self.context().polynomial('\e')
+        except RuntimeError as e:
+            if r'cannot represent \e' in str(e):
+                raise RuntimeError(str(self.context())
+                                   + ": cannot represent polynomial one")
+            else:
+                raise e
+
     def __pow__(self, k):
         if k == 0:
-            raise RuntimeError("cannot compute power 0 of a polynomial")
-        res = self
-        for _ in range(1, k):
-            res *= self
+            res = self.one()
+        else:
+            res = self
+            for _ in range(1, k):
+                res *= self
         return res

@@ -106,8 +106,11 @@ CHECK_EQ('<20>a + <30>b',
 ## Pow.  ##
 ## ----- ##
 
+poly = vcsn.context('lal, q').polynomial
+XFAIL(lambda: poly('a') ** 0,
+      'cannot represent polynomial one')
 poly = vcsn.context('law, q').polynomial
-XFAIL(lambda: poly('a') ** 0)
+CHECK_EQ('\e',                   poly('a') ** 0)
 CHECK_EQ('<4>a + <12>b + <-3>c', poly('<4>a + <12>b + <-3>c') ** 1)
 CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)
 

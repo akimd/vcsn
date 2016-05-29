@@ -209,6 +209,15 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
+      // Check for '\e', to generate a nicer error message than the
+      // one from get_letter.
+      if (i.good() && i.peek() == '\\')
+        {
+          i.ignore();
+          require(i.peek() != 'e',
+                  *this, ": cannot represent \\e");
+          !i.unget();
+        }
       return this->get_letter(i, quoted);
     }
 

@@ -77,7 +77,8 @@ namespace vcsn
           // are used in setalpha::make, e.g., char_letters(\(\-\)).
         default:
           require(!std::isalnum(c),
-                  "get_char: invalid escape: \\", char(c), " in \\", i);
+                  "get_char: invalid escape: \\", char(c), " in \\",
+                  char(c), i);
           res = c;
           break;
         }
