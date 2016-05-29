@@ -49,6 +49,9 @@ namespace vcsn LIBVCSN_API
         : ids_{id}
       {}
 
+      /// Build from a string.
+      identities(const std::string& i);
+
       ids_t ids() const
       {
         return ids_;

@@ -14,6 +14,26 @@ namespace vcsn
   namespace rat
   {
 
+    identities::identities(const std::string& s)
+    {
+      static const auto map = getarg<identities::ids_t>
+        {
+          "identities",
+          {
+            {"associative",  identities::associative},
+            {"auto",         identities::deflt},
+            {"binary",       "trivial"},
+            {"default",      identities::deflt},
+            {"distributive", identities::distributive},
+            {"linear",       identities::linear},
+            {"none",         identities::none},
+            {"series",       "distributive"},
+            {"trivial",      identities::trivial},
+          }
+        };
+      ids_ = map[s];
+    }
+
     std::string to_string(identities i)
     {
       switch (i.ids())
@@ -37,35 +57,12 @@ namespace vcsn
       return os << to_string(i);
     }
 
-    static std::istream& operator>>(std::istream& is, identities::ids_t& ids)
+    std::istream& operator>>(std::istream& is, identities& ids)
     {
-      static const auto map = getarg<identities::ids_t>
-        {
-          "identities",
-          {
-            {"associative",  identities::associative},
-            {"auto",         identities::deflt},
-            {"binary",       "trivial"},
-            {"default",      identities::deflt},
-            {"distributive", identities::distributive},
-            {"linear",       identities::linear},
-            {"none",         identities::none},
-            {"series",       "distributive"},
-            {"trivial",      identities::trivial},
-          }
-        };
       std::string buf;
       while (is && isalnum(is.peek()))
         buf += is.get();
-      ids = map[buf];
-      return is;
-    }
-
-    std::istream& operator>>(std::istream& is, identities& ids)
-    {
-      identities::ids_t id;
-      is >> id;
-      ids = identities{id};
+      ids = identities{buf};
       return is;
     }
 

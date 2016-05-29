@@ -77,17 +77,6 @@ struct python_optional
   }
 };
 
-/// Convert to identities.
-auto make_identities(const std::string& s)
-  -> vcsn::rat::identities
-{
-  std::istringstream is{s};
-  vcsn::rat::identities res;
-  is >> res;
-  vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-  return res;
-}
-
 /// Convert a Python list to a C++ vector.
 template <typename T>
 auto make_vector(const boost::python::list& list)
@@ -533,8 +522,7 @@ struct automaton
   automaton lift(const boost::python::list& tapes,
                  const std::string& ids = "default") const
   {
-    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes),
-                           make_identities(ids));
+    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes), ids);
   }
 
   /// The type of the previous function.
@@ -950,11 +938,6 @@ struct expression
     vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
-  expression(const context& ctx, const std::string& r,
-             const std::string& ids)
-    : expression{ctx, r, make_identities(ids)}
-  {}
-
   /// Parse as a series.
   static expression series(const context& ctx, const std::string& r)
   {
@@ -965,8 +948,7 @@ struct expression
   expression as(const ::context& ctx = {}, const std::string& ids = "default")
   {
     // The destination expressionset.
-    return vcsn::dyn::copy(val_, (ctx ? ctx : context()).val_,
-                           make_identities(ids));
+    return vcsn::dyn::copy(val_, (ctx ? ctx : context()).val_, ids);
   }
 
   expression complement() const
@@ -1267,7 +1249,7 @@ label automaton::synchronizing_word(const std::string& algo) const
 expression automaton::to_expression(const std::string& ids,
                                     const std::string& algo) const
 {
-  return vcsn::dyn::to_expression(val_, make_identities(ids), algo);
+  return vcsn::dyn::to_expression(val_, ids, algo);
 }
 
 weight automaton::weight_series() const
@@ -1349,7 +1331,7 @@ automaton context::random_deterministic(unsigned num_states) const
 expression context::random_expression(const std::string& param,
                                       const std::string& ids) const
 {
-  return vcsn::dyn::random_expression(val_, param, make_identities(ids));
+  return vcsn::dyn::random_expression(val_, param, ids);
 }
 
 
