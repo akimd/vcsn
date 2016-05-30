@@ -1,0 +1,432 @@
+#! /usr/bin/env python
+
+import argparse
+import os
+import re
+import sys
+
+def vcsn_prefix(s):
+    '''Convert prefix types that belong to `vcsn::`.'''
+    return re.sub('(direction|letter_class_t|rat::identities)',
+                  r'vcsn::\1', s)
+
+'''The types defined in vcsn::dyn that we wrap.'''
+dyn_types = ['automaton', 'context', 'expansion', 'expression', 'label',
+             'polynomial', 'weight']
+
+
+'''A regex to parse the components of a C++ formal argument such
+as `const std::string& algo = "default"`.'''
+formal_re = re.compile(r'^(?P<type>(?P<const>const\s+)?(?P<class>[:\w<>]+)&?)'
+                       r'\s+'
+                       r'(?P<arg>\w+)'
+                       r'(?P<default>\s+=.*)?$',
+                       flags=re.MULTILINE)
+def formals_list(formals):
+    return re.split(r',\s*', formals)
+
+
+def formal_to_class(formal):
+    '''`const std::string& algo = "default"` => `std::string`.'''
+    return formal_re.sub(r'\g<class>', formal)
+
+def formal_to_arg(formal):
+    '''`const std::string& algo = "default"` => `algo`, but
+    `const automaton& aut = "default"` => `aut.val_`'''
+    res = formal_re.sub(r'\g<arg>', formal)
+    cls = formal_to_class(formal)
+    if cls in dyn_types:
+        res += '.val_'
+    return res
+
+def formals_to_args(formals):
+    return [formal_to_arg(f) for f in formals]
+
+
+'''A dictionary of all the classes and function,
+   with the class name as key.
+
+   Each class is a list of dictionaries that define function,
+   providing the following keys:
+
+   const: ` const` if the first argument was const, empty otherwise.
+   static: `static ` if the function should be static, empty otherwise.
+   doc: the documentation string.
+   args: the effective arguments (e.g., "aut, i").
+   formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
+   formals_impl: the formals arguments without the default values.
+   fun: function name (e.g., multiply, is_equivalent).
+   dynfun: function name in vcsn::dyn:: (e.g., multiply, are_equivalent).
+   result: return type.'''
+classes = {}
+
+'''For each class, a piece of code to include in the class
+   definition.'''
+classes_prologue_header = {
+'automaton':
+    r'''
+  /// Create an automaton from a file, or from a string.
+  automaton(const std::string& data = "",
+            const std::string& format = "default",
+            const std::string& filename = "",
+            bool strip = true);
+    ''',
+
+    'context':
+    r'''
+  context();
+
+  context(const std::string& ctx);
+
+  explicit operator bool() const;
+
+  automaton cotrie(const std::string& data,
+                   const std::string& format,
+                   const std::string& filename) const;
+
+  automaton trie(const std::string& data,
+                 const std::string& format,
+                 const std::string& filename) const;
+    ''',
+
+    'expression':
+    r'''
+  expression(const struct context& ctx, const std::string& r,
+             vcsn::rat::identities ids);
+
+  expression(const struct context& ctx, const std::string& r,
+             const std::string& ids);
+
+  /// Convert \a this to \a ctx, using \a ids.
+  expression as(const struct context& ctx = {},
+                const std::string& ids = "default") const;
+
+    ''',
+
+    'label':
+    r'''
+  label(const context& ctx, const std::string& s);
+    ''',
+
+    'polynomial':
+    r'''
+  polynomial(const struct context& ctx, const std::string& s);
+    ''',
+
+    'weight':
+    r'''
+  weight(const context& ctx, const std::string& s);
+    ''',
+}
+
+
+'''For each class, a piece of code to include in the definition
+   of the class' functions.'''
+classes_prologue_impl = {
+    'automaton':
+    r'''
+  automaton::automaton(const std::string& data, const std::string& format,
+                       const std::string& filename, bool strip)
+    : val_{nullptr}
+  {
+    auto is = make_istream(data, filename);
+    val_ = vcsn::dyn::read_automaton(*is, format, strip);
+    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+  }
+    ''',
+
+    'context':
+    r'''
+  context::context()
+  {}
+
+  context::context(const std::string& ctx)
+    : context(vcsn::dyn::make_context(ctx))
+  {}
+
+  context::operator bool() const
+  {
+    return bool(val_);
+  }
+
+  automaton context::cotrie(const std::string& data,
+                            const std::string& format,
+                            const std::string& filename) const
+  {
+    auto is = make_istream(data, filename);
+    auto res = cotrie(*is, format);
+    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+    return res;
+  }
+
+  automaton context::trie(const std::string& data,
+                          const std::string& format,
+                          const std::string& filename) const
+  {
+    auto is = make_istream(data, filename);
+    auto res = trie(*is, format);
+    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+    return res;
+  }
+    ''',
+
+    'expression':
+    r'''
+  expression::expression(const struct context& ctx, const std::string& r,
+                         vcsn::rat::identities ids)
+  {
+    std::istringstream is{r};
+    try
+      {
+        val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
+      }
+    catch (const std::runtime_error& e)
+      {
+        vcsn::raise(e.what(), "\n",
+                    "  while reading expression: ", r);
+      }
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+  }
+
+  expression::expression(const struct context& ctx, const std::string& r,
+                         const std::string& ids)
+    : expression{ctx, r, vcsn::rat::identities{ids}}
+  {}
+
+  expression expression::as(const struct context& ctx,
+                            const std::string& ids) const
+  {
+    return copy((ctx ? ctx : context()), ids);
+  }
+
+    ''',
+
+    'label':
+    r'''
+
+  label::label(const context& ctx, const std::string& s)
+  {
+    std::istringstream is{s};
+    val_ = vcsn::dyn::read_label(ctx.val_, is);
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+  }
+''',
+
+    'polynomial':
+    r'''
+  polynomial::polynomial(const struct context& ctx, const std::string& s)
+  {
+    std::istringstream is{s};
+    val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+  }
+''',
+
+    'weight':
+    r'''
+  weight::weight(const context& ctx, const std::string& s)
+  {
+    std::istringstream is(s);
+    val_ = vcsn::dyn::read_weight(ctx.val_, is);
+    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+  }
+''',
+}
+
+class_declare = '''struct {class};
+'''
+
+class_open = '''\
+/// A object oriented-wrapper around a dyn::{class}.
+struct {class}
+{{
+public:
+  {class}(const vcsn::dyn::{class}& val)
+    : val_{{val}}
+  {{}}
+'''
+
+class_close = '''
+
+  /// The wrapped dyn::{class}.
+  vcsn::dyn::{class} val_;
+}};
+
+'''
+
+memfn_declaration = '''\
+{doc}
+  {static}auto {fun}({formals}){const}
+    -> {result};
+'''
+
+memfn_definition = '''\
+  {result} {class}::{fun}({formals_impl}){const}
+  {{
+    return vcsn::dyn::{dynfun}({args});
+  }}
+
+'''
+
+def ignore(fun):
+    '''Report that we don't process this case.'''
+    print('warning: ignoring: {fun}({formals}) -> {result}'
+          .format_map(fun), file=sys.stderr)
+
+def process_function(fun):
+    fun['const'] = ''
+    fun['static'] = ''
+    fun['doc'] = fun['doc'].rstrip()
+    for k in ['formals', 'result']:
+        fun[k] = vcsn_prefix(fun[k])
+
+    if fun['dynfun'] == 'context_of':
+        fun['fun'] = 'context'
+    else:
+        fun['fun'] = re.sub('^are_', 'is_', fun['dynfun'])
+
+    fs = formals_list(fun['formals'])
+    cls = formal_to_class(fs[0])
+    args = formals_to_args(fs)
+
+    if fun['fun'] == 'left_mult':
+        # In this case, the class is actually that of the second
+        # argument: left_mult(weight, automaton) ->
+        # automaton.left_mult(weight).
+        cls = formal_to_class(fs[1])
+        fun['const'] = ' const'
+        fs = [fs[0]] + fs[2:]
+        args[1] = 'val_'
+
+    elif cls.isidentifier():
+        # The first argument is ours, e.g., `automaton`.
+        if 'const ' in fs[0]:
+            fun['const'] = ' const'
+        fs = fs[1:]
+        args[0] = 'val_'
+
+    elif 'std::vector' in cls:
+        # The first argument is not ours, e.g.,
+        # `std::vector<automaton>`.  Make it belongs to the
+        # class `automaton`.
+        cls = re.sub('.*<(?P<class>\w+)>', '\g<class>', cls)
+        fun['static'] = 'static '
+        args[0] = 'make_dyn_vector<{cls}>({arg})'.format(cls=cls,
+                                                           arg=args[0])
+    elif fun['result'].isidentifier() and not fun['result'] == 'void':
+        # The first argument is std::ostream or std::istream.
+        # Bind this to the return type.
+        cls = fun['result']
+    else:
+        ignore(fun)
+        return
+
+    fun['class'] = cls
+
+    # We both have both a function and a type named 'context'.  To
+    # avoid clashes, we need to prefix the type by 'struct'.
+    fs = [re.sub(r'\b(context)\b', r'struct \1', f) for f in fs]
+    fun['formals'] = ', '.join(fs)
+    fun['formals_impl'] = ', '.join([re.sub(r'\s+=.*', '', f) for f in fs])
+    fun['args'] = ', '.join(args)
+
+    if cls not in classes:
+        classes[cls] = []
+    classes[cls].append(fun)
+
+
+'''A regexp to "parse" a function declaration in `vcsn/dyn/algos.hh`.'''
+function_re = re.compile(r'''(?P<doc>(?:^\s*///[^\n]*\n)*)?
+^\s*(?P<result>[:\w]+)
+\s+(?P<dynfun>\w+)\s*\((?P<formals>.*?)\);''',
+                    flags=re.DOTALL | re.MULTILINE | re.VERBOSE)
+
+def process_header(fn):
+    '''Store in `classes` the signatures from header `fn`.'''
+    with open(fn, 'r') as f:
+        for m in function_re.finditer(f.read()):
+            process_function(m.groupdict())
+    for cls in classes:
+        classes[cls].sort(key=lambda f: f['fun'])
+
+
+def output_memfn(format, cls):
+    res = ''
+    for f in cls:
+        res += format.format_map(f)
+    return res
+
+
+def output():
+    '''Generate the C++ OO Bindings.'''
+    res = r'''// Generated, do not edit by hand.
+
+#include <vcsn/core/rat/identities.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh> // vname
+#include <vcsn/dyn/value.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh>
+
+/// Convert a vector of oodyn values to a vector of dyn values.
+template <typename T>
+auto make_dyn_vector(const std::vector<T>& v)
+{{
+  auto res = std::vector<decltype(std::declval<T>().val_)>{};
+  for (const auto& e: v)
+    res.emplace_back(e.val_);
+  return res;
+}}
+
+/// Create an input stream from a file, or from a string.
+auto make_istream(const std::string& data = "",
+                  const std::string& filename = "")
+  -> std::shared_ptr<std::istream>
+{
+  vcsn::require(!data.empty() || !filename.empty(),
+                "cannot provide both data and filename");
+  if (!data.empty())
+    return std::make_shared<std::istringstream>(data);
+  else if (!filename.empty())
+    return vcsn::open_input_file(filename);
+  else
+    vcsn::raise("must provide either data or filename");
+}
+
+'''
+    for c in sorted(classes.keys()):
+        res += class_declare.format_map({'class': c})
+    res += '\n\n'
+    for c in sorted(classes.keys()):
+        res += class_open.format_map({'class': c})
+        if c in classes_prologue_header:
+            res += classes_prologue_header[c]
+        res += output_memfn(memfn_declaration, classes[c])
+        res += class_close.format_map({'class': c})
+    for c in sorted(classes.keys()):
+        if c in classes_prologue_impl:
+            res += classes_prologue_impl[c]
+        res += output_memfn(memfn_definition, classes[c])
+
+    return res
+
+
+
+parser = argparse.ArgumentParser(description='Generate registries file.',
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 epilog = \
+'''
+This tool reads `dyn/algos.hh` and generates an object-oriented
+version of this API, in C++.
+''')
+
+parser.add_argument('--output',
+                    type=argparse.FileType('w'), default = '-',
+                    help='implementation file to generate')
+parser.add_argument('input', type=str, default=None,
+                    help='''header to process (`dyn/algos.hh`).''')
+args = parser.parse_args()
+process_header(args.input)
+
+print(output(), file=args.output)

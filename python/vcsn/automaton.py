@@ -55,7 +55,7 @@ def _automaton_fst_files(cmd, *aut):
     return automaton(res.decode('utf-8'), 'efsm')
 
 
-def _guess_format(data='', filename=''):
+def _guess_format(data=None, filename=None):
     '''Try to find out what is the format used to encode this automaton.'''
     for line in open(filename) if filename else data.splitlines():
         if line.startswith('digraph'):
@@ -69,7 +69,8 @@ def _guess_format(data='', filename=''):
             return 'grail'
         elif re.match('^@[DN]FA ', line):
             return 'fado'
-    raise RuntimeError('cannot guess automaton format')
+    raise RuntimeError('cannot guess automaton format: ',
+                       data if data else filename)
 
 
 @_extend(automaton)

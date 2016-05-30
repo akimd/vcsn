@@ -25,6 +25,160 @@
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 
+#include "python/oodyn.cc"
+
+/// The type of the repeated conjunction function.
+using automaton_conjunction_repeated_t
+  = auto (automaton::*)(unsigned n) const -> automaton;
+
+using automaton_copy_t
+  = auto (automaton::*)(const context&) const -> automaton;
+
+/// The type of the binary multiply function for automata.
+using automaton_multiply_t
+  = auto
+    (automaton::*)(const automaton&, const std::string& algo) const
+    -> automaton;
+/// The type of the repeated multiply function for automata.
+using automaton_multiply_repeated_t =
+  auto
+  (automaton::*)(int min, int max, const std::string& algo) const
+    -> automaton;
+
+/// The type of the binary multiply function for expressions and
+/// weights.
+template <typename Value>
+using multiply_t
+  = auto (Value::*)(const Value&) const -> Value;
+/// The type of the repeated multiply function for expressions and
+/// weights.
+template <typename Value>
+using multiply_repeated_t =
+  auto (Value::*)(int min, int max) const -> Value;
+
+/// The type of string-based trie/cotrie.
+using string_trie_t =
+  auto (context::*)(const std::string&, const std::string&,
+                    const std::string&) const
+    -> automaton;
+
+/// Convert a Python list to a C++ vector.
+template <typename T>
+auto make_vector(const boost::python::list& list)
+  -> std::vector<T>
+{
+  auto res = std::vector<T>{};
+  for (int i = 0; i < boost::python::len(list); ++i)
+    res.emplace_back(boost::python::extract<T>(list[i]));
+  return res;
+}
+
+/// Convert a Python list to a C++ vector.
+template <typename T>
+auto make_value_vector(const boost::python::list& list)
+{
+  auto res = std::vector<decltype(std::declval<T>().val_)>{};
+  for (auto v: make_vector<T>(list))
+    res.emplace_back(v.val_);
+  return res;
+}
+
+/// Convert this value to string.
+template <typename Value>
+std::string format(const Value& v,
+                   const std::string& format = "text")
+{
+  std::ostringstream os;
+  vcsn::dyn::print(v.val_, os, format);
+  return os.str();
+}
+
+label context_word(const context& ctx, const std::string& s)
+{
+  return label(context(vcsn::dyn::make_word_context(ctx.val_)), s);
+}
+
+expression context_random_expression(const context& ctx,
+                                     const std::string& param,
+                                     const std::string& ids)
+{
+  return ctx.random_expression(param, ids);
+}
+
+automaton automaton_conjunction(const boost::python::list& l,
+                                bool lazy = false)
+{
+  return automaton::conjunction(make_vector<automaton>(l), lazy);
+}
+
+automaton automaton_infiltration(const boost::python::list& l)
+{
+  return automaton::infiltration(make_vector<automaton>(l));
+}
+
+automaton automaton_filter(const automaton& aut,
+                           const boost::python::list& states)
+{
+  return aut.filter(make_vector<unsigned>(states));
+}
+
+automaton automaton_lift(const automaton& aut,
+                         const boost::python::list& tapes,
+                         const std::string& ids = "default")
+{
+  return aut.lift(make_vector<unsigned>(tapes), ids);
+}
+
+// FIXME: The arguments are not in the same order, for no good reason.
+automaton automaton_proper(const automaton& aut,
+                           bool prune = true, bool backward = true,
+                           const std::string& algo = "auto")
+{
+  return aut.proper(backward
+                    ? vcsn::direction::backward
+                    : vcsn::direction::forward,
+                    prune, algo);
+}
+
+automaton automaton_shuffle(const boost::python::list& l)
+{
+  return automaton::shuffle(make_vector<automaton>(l));
+}
+
+expression automaton_expression(const automaton& aut,
+                                const std::string& ids = "default",
+                                const std::string& algo = "auto")
+{
+  return aut.to_expression(ids, algo);
+}
+
+automaton automaton_tuple(const boost::python::list& l)
+{
+  return automaton::tuple(make_vector<automaton>(l));
+}
+
+automaton context_double_ring(const context& ctx, unsigned n,
+                              const boost::python::list& finals)
+{
+  return ctx.double_ring(n, make_vector<unsigned>(finals));
+}
+
+expansion expansion_tuple(const boost::python::list& l)
+{
+  return expansion::tuple(make_vector<expansion>(l));
+}
+
+expression expression_tuple(const boost::python::list& l)
+{
+  return expression::tuple(make_vector<expression>(l));
+}
+
+polynomial polynomial_tuple(const boost::python::list& l)
+{
+  return polynomial::tuple(make_vector<polynomial>(l));
+}
+
+
 /// See http://stackoverflow.com/a/6794523/1353549.
 ///
 /// Invoke `python_optional<type_t>()` from the module initialization
@@ -77,1338 +231,10 @@ struct python_optional
   }
 };
 
-/// Convert a Python list to a C++ vector.
-template <typename T>
-auto make_vector(const boost::python::list& list)
-  -> std::vector<T>
-{
-  auto res = std::vector<T>{};
-  for (int i = 0; i < boost::python::len(list); ++i)
-    res.emplace_back(boost::python::extract<T>(list[i]));
-  return res;
-}
-
-/// Convert a Python list to a C++ vector.
-template <typename T>
-auto make_value_vector(const boost::python::list& list)
-{
-  auto res = std::vector<decltype(std::declval<T>().val_)>{};
-  for (auto v: make_vector<T>(list))
-    res.emplace_back(v.val_);
-  return res;
-}
-
-/// Create an input stream from a file, or from a string.
-auto make_istream(const std::string& data = "",
-                  const std::string& filename = "")
-  -> std::shared_ptr<std::istream>
-{
-  vcsn::require(!data.empty() || !filename.empty(),
-                "cannot provide both data and filename");
-  if (!data.empty())
-    return std::make_shared<std::istringstream>(data);
-  else if (!filename.empty())
-    return vcsn::open_input_file(filename);
-  else
-    vcsn::raise("must provide either data or filename");
-}
-
-
-
-struct automaton;
-struct context;
-struct expansion;
-struct label;
-struct polynomial;
-struct expression;
-struct weight;
-
-
-/*----------.
-| context.  |
-`----------*/
-
-struct context
-{
-  context()
-  {}
-
-  context(const vcsn::dyn::context& ctx)
-    : val_(ctx)
-  {}
-
-  context(const std::string& ctx)
-    : context(vcsn::dyn::make_context(ctx))
-  {}
-
-  explicit operator bool() const
-  {
-    return bool(val_);
-  }
-
-  automaton cerny(unsigned n) const;
-
-  automaton cotrie(const std::string& data = "",
-                   const std::string& format = "default",
-                   const std::string& filename = "") const;
-
-  automaton de_bruijn(unsigned n) const;
-
-  automaton divkbaseb(unsigned divisor, unsigned base) const;
-
-  automaton double_ring(unsigned n, const boost::python::list& finals) const;
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  context join(const context& rhs) const
-  {
-    return vcsn::dyn::join(val_, rhs.val_);
-  }
-
-  automaton ladybird(unsigned n) const;
-
-  automaton levenshtein() const;
-
-  context project(unsigned tape) const;
-
-  automaton quotkbaseb(unsigned divisor, unsigned base) const;
-
-  automaton random(unsigned num_states, float density = 0.1,
-                   unsigned num_initial = 1, unsigned num_final = 1,
-                   boost::optional<unsigned> max_labels = {},
-                   float loop_chance = 0.0) const;
-  automaton random_deterministic(unsigned num_states) const;
-
-  expression random_expression(const std::string& param,
-                               const std::string& ids) const;
-
-  expression series(const std::string& s) const;
-
-  automaton trie(const std::string& data = "",
-                 const std::string& format = "default",
-                 const std::string& filename = "") const;
-
-  automaton u(unsigned num_states) const;
-
-  label word(const std::string& s) const;
-
-  vcsn::dyn::context val_;
-};
-
-/*------------.
-| automaton.  |
-`------------*/
-
-struct automaton
-{
-  automaton(const vcsn::dyn::automaton& a)
-    : val_(a)
-  {}
-
-  /// Derived-term automaton from r.
-  automaton(const expression& r);
-
-  /// Create an automaton from a file, or from a string.
-  automaton(const std::string& data = "",
-            const std::string& format = "default",
-            const std::string& filename = "",
-            bool strip = true)
-    : val_(nullptr)
-  {
-    auto is = make_istream(data, filename);
-    val_ = vcsn::dyn::read_automaton(*is, format, strip);
-    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-  }
-
-  automaton accessible() const
-  {
-    return vcsn::dyn::accessible(val_);
-  }
-
-  label ambiguous_word() const;
-
-  /// Convert \a this to \a ctx, using \a ids.
-  automaton as(const ::context& ctx) const
-  {
-    return vcsn::dyn::copy(val_, ctx.val_);
-  }
-
-  automaton coaccessible() const
-  {
-    return vcsn::dyn::coaccessible(val_);
-  }
-
-  automaton codeterminize(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::codeterminize(val_, algo);
-  }
-
-  automaton cominimize(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::cominimize(val_, algo);
-  }
-
-  automaton complement() const
-  {
-    return vcsn::dyn::complement(val_);
-  }
-
-  automaton complete() const
-  {
-    return vcsn::dyn::complete(val_);
-  }
-
-  automaton component(unsigned com_num) const
-  {
-    return vcsn::dyn::component(val_, com_num);
-  }
-
-  automaton compose(automaton& rhs, bool lazy = false)
-  {
-    return vcsn::dyn::compose(val_, rhs.val_, lazy);
-  }
-
-  automaton condense() const
-  {
-    return vcsn::dyn::condense(val_);
-  }
-
-  automaton conjugate()
-  {
-    return vcsn::dyn::conjugate(val_);
-  }
-
-  automaton conjunction(unsigned n) const
-  {
-    return vcsn::dyn::conjunction(val_, n);
-  }
-  /// The type of the previous function.
-  using conjunction_repeated_t
-    = auto (automaton::*)(unsigned n) const -> automaton;
-
-  static automaton conjunction(const boost::python::list& auts,
-                               bool lazy = false)
-  {
-    return vcsn::dyn::conjunction(automata_(auts), lazy);
-  }
-  /// The type of the previous function.
-  using conjunction_variadic_t
-    = auto (*)(const boost::python::list& auts, bool lazy) -> automaton;
-
-  ::context context() const
-  {
-    return vcsn::dyn::context_of(val_);
-  }
-
-  automaton costandard() const
-  {
-    return vcsn::dyn::costandard(val_);
-  }
-
-  automaton delay_automaton() const
-  {
-    return vcsn::dyn::delay_automaton(val_);
-  }
-
-  automaton determinize(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::determinize(val_, algo);
-  }
-
-  automaton difference(const automaton& rhs) const
-  {
-    return vcsn::dyn::difference(val_, rhs.val_);
-  }
-
-  automaton eliminate_state(int s) const
-  {
-    return vcsn::dyn::eliminate_state(val_, s);
-  }
-
-  weight eval(const label& l) const;
-
-  automaton factor() const
-  {
-    return vcsn::dyn::factor(val_);
-  }
-
-  automaton filter(const boost::python::list& states) const
-  {
-    return vcsn::dyn::filter(val_, make_vector<unsigned>(states));
-  }
-
-  automaton focus(unsigned tape)
-  {
-    return vcsn::dyn::focus(val_, tape);
-  }
-
-  std::string format(const std::string& format = "dot") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  bool has_bounded_lag() const
-  {
-    return vcsn::dyn::has_bounded_lag(val_);
-  }
-
-  bool has_lightening_cycle() const
-  {
-    return vcsn::dyn::has_lightening_cycle(val_);
-  }
-
-  bool has_twins_property() const
-  {
-    return vcsn::dyn::has_twins_property(val_);
-  }
-
-  static automaton infiltration_(const boost::python::list& auts)
-  {
-    return vcsn::dyn::infiltration(automata_(auts));
-  }
-
-  automaton insplit(bool lazy = false) const
-  {
-    return vcsn::dyn::insplit(val_, lazy);
-  }
-
-  bool is_accessible() const
-  {
-    return vcsn::dyn::is_accessible(val_);
-  }
-
-  bool is_ambiguous() const
-  {
-    return vcsn::dyn::is_ambiguous(val_);
-  }
-
-  bool is_coaccessible() const
-  {
-    return vcsn::dyn::is_coaccessible(val_);
-  }
-
-  bool is_codeterministic() const
-  {
-    return vcsn::dyn::is_codeterministic(val_);
-  }
-
-  bool is_complete() const
-  {
-    return vcsn::dyn::is_complete(val_);
-  }
-
-  bool is_costandard() const
-  {
-    return vcsn::dyn::is_costandard(val_);
-  }
-
-  bool is_cycle_ambiguous() const
-  {
-    return vcsn::dyn::is_cycle_ambiguous(val_);
-  }
-
-  bool is_deterministic() const
-  {
-    return vcsn::dyn::is_deterministic(val_);
-  }
-
-  bool is_empty() const
-  {
-    return vcsn::dyn::is_empty(val_);
-  }
-
-  bool is_eps_acyclic() const
-  {
-    return vcsn::dyn::is_eps_acyclic(val_);
-  }
-
-  bool is_equivalent(const automaton& rhs) const
-  {
-    return vcsn::dyn::are_equivalent(val_, rhs.val_);
-  }
-
-  bool is_functional() const
-  {
-    return vcsn::dyn::is_functional(val_);
-  }
-
-  bool is_letterized() const
-  {
-    return vcsn::dyn::is_letterized(val_);
-  }
-
-  bool is_partial_identity() const
-  {
-    return vcsn::dyn::is_partial_identity(val_);
-  }
-
-  bool is_isomorphic(const automaton& rhs) const
-  {
-    return vcsn::dyn::are_isomorphic(val_, rhs.val_);
-  }
-
-  bool is_normalized() const
-  {
-    return vcsn::dyn::is_normalized(val_);
-  }
-
-  bool is_out_sorted() const
-  {
-    return vcsn::dyn::is_out_sorted(val_);
-  }
-
-  bool is_proper() const
-  {
-    return vcsn::dyn::is_proper(val_);
-  }
-
-  bool is_realtime() const
-  {
-    return vcsn::dyn::is_realtime(val_);
-  }
-
-  bool is_standard() const
-  {
-    return vcsn::dyn::is_standard(val_);
-  }
-
-  bool is_synchronized() const
-  {
-    return vcsn::dyn::is_synchronized(val_);
-  }
-
-  bool is_synchronized_by(const label& word) const;
-
-  bool is_synchronizing() const
-  {
-    return vcsn::dyn::is_synchronizing(val_);
-  }
-
-  bool is_trim() const
-  {
-    return vcsn::dyn::is_trim(val_);
-  }
-
-  bool is_useless() const
-  {
-    return vcsn::dyn::is_useless(val_);
-  }
-
-  bool is_valid() const
-  {
-    return vcsn::dyn::is_valid(val_);
-  }
-
-  automaton ldiv(const automaton& rhs) const
-  {
-    return vcsn::dyn::ldiv(val_, rhs.val_);
-  }
-
-  automaton left_mult(const weight& w,
-                      const std::string& algo = "auto") const;
-
-  automaton letterize() const
-  {
-    return vcsn::dyn::letterize(val_);
-  }
-
-  automaton lift(const boost::python::list& tapes,
-                 const std::string& ids = "default") const
-  {
-    return vcsn::dyn::lift(val_, make_vector<unsigned>(tapes), ids);
-  }
-
-  /// The type of the previous function.
-  using lift_tapes_t
-    = auto (automaton::*)(const boost::python::list& tapes,
-                          const std::string& ids) const -> automaton;
-
-  polynomial lightest(unsigned num, const std::string& algo = "auto") const;
-
-  automaton lightest_automaton(unsigned num = 1U,
-                               const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::lightest_automaton(val_, num, algo);
-  }
-
-  automaton minimize(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::minimize(val_, algo);
-  }
-
-  automaton multiply(const automaton& rhs,
-                     const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::multiply(val_, rhs.val_, algo);
-  }
-  /// The type of the previous function.
-  using multiply_t =
-    auto
-    (automaton::*)(const automaton&, const std::string& algo) const
-      -> automaton;
-
-  automaton multiply(int min, int max = -2,
-                     const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::multiply(val_, min, max, algo);
-  }
-  /// The type of the previous function.
-  using multiply_repeated_t =
-    auto
-    (automaton::*)(int min, int max, const std::string& algo) const
-      -> automaton;
-
-  automaton normalize() const
-  {
-    return vcsn::dyn::normalize(val_);
-  }
-
-  std::size_t num_components() const
-  {
-    return vcsn::dyn::num_components(val_);
-  }
-
-  automaton pair(bool keep_initials = false) const
-  {
-    return vcsn::dyn::pair(val_, keep_initials);
-  }
-
-  automaton partial_identity() const
-  {
-    return vcsn::dyn::partial_identity(val_);
-  }
-
-  automaton prefix() const
-  {
-    return vcsn::dyn::prefix(val_);
-  }
-
-  automaton project(unsigned tape)
-  {
-    return vcsn::dyn::project(val_, tape);
-  }
-
-  automaton proper(bool prune = true, bool backward = true,
-                   const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::proper(val_,
-                             backward
-                             ? vcsn::direction::backward
-                             : vcsn::direction::forward,
-                             prune, algo);
-  }
-
-  automaton push_weights() const
-  {
-    return vcsn::dyn::push_weights(val_);
-  }
-
-  automaton rdiv(const automaton& rhs) const
-  {
-    return vcsn::dyn::rdiv(val_, rhs.val_);
-  }
-
-  automaton realtime() const
-  {
-    return vcsn::dyn::realtime(val_);
-  }
-
-  automaton reduce() const
-  {
-    return vcsn::dyn::reduce(val_);
-  }
-
-  automaton right_mult(const weight& w,
-                       const std::string& algo = "auto") const;
-
-  automaton scc(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::scc(val_, algo);
-  }
-
-  polynomial shortest(boost::optional<unsigned> num,
-                      boost::optional<unsigned> len) const;
-
-  static automaton shuffle_(const boost::python::list& auts)
-  {
-    return vcsn::dyn::shuffle(automata_(auts));
-  }
-
-  automaton sort() const
-  {
-    return vcsn::dyn::sort(val_);
-  }
-
-  automaton standard() const
-  {
-    return vcsn::dyn::standard(val_);
-  }
-
-  automaton star(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::star(val_, algo);
-  }
-
-  automaton strip() const
-  {
-    return vcsn::dyn::strip(val_);
-  }
-
-  automaton suffix() const
-  {
-    return vcsn::dyn::suffix(val_);
-  }
-
-  automaton subword() const
-  {
-    return vcsn::dyn::subword(val_);
-  }
-
-  automaton sum(const automaton& rhs, const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::sum(val_, rhs.val_, algo);
-  }
-
-  automaton synchronize() const
-  {
-    return vcsn::dyn::synchronize(val_);
-  }
-
-  label synchronizing_word(const std::string& algo = "greedy") const;
-
-  expression to_expression(const std::string& ids = "default",
-                           const std::string& algo = "auto") const;
-
-  automaton transpose()
-  {
-    return vcsn::dyn::transpose(val_);
-  }
-
-  automaton trim() const
-  {
-    return vcsn::dyn::trim(val_);
-  }
-
-  static automaton tuple(const boost::python::list& auts)
-  {
-    return vcsn::dyn::tuple(automata_(auts));
-  }
-
-  std::string type() const
-  {
-    return vcsn::dyn::type(val_);
-  }
-
-  automaton universal() const
-  {
-    return vcsn::dyn::universal(val_);
-  }
-
-  weight weight_series() const;
-
-  /// Convert to a vector of dyn:: automata.
-  using automata_t = std::vector<vcsn::dyn::automaton>;
-  static automata_t automata_(const boost::python::list& auts)
-  {
-    return make_value_vector<automaton>(auts);
-  }
-
-  vcsn::dyn::automaton val_;
-};
-
-/*------------.
-| expansion.  |
-`------------*/
-
-struct expansion
-{
-  expansion(const vcsn::dyn::expansion& val)
-    : val_(val)
-  {}
-
-  expansion complement() const
-  {
-    return vcsn::dyn::complement(val_);
-  }
-
-  expansion conjunction(const expansion& rhs) const
-  {
-    return vcsn::dyn::conjunction(val_, rhs.val_);
-  }
-
-  ::context context() const
-  {
-    return vcsn::dyn::context_of(val_);
-  }
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  expansion sum(const expansion& rhs) const
-  {
-    return vcsn::dyn::sum(val_, rhs.val_);
-  }
-
-  expansion left_mult(const weight& w) const;
-
-  expansion project(unsigned tape)
-  {
-    return vcsn::dyn::project(val_, tape);
-  }
-
-  expansion right_mult(const weight& w) const;
-
-  static expansion tuple_(const boost::python::list& es)
-  {
-    return vcsn::dyn::tuple(expansions_(es));
-  }
-
-  /// Convert to a vector of dyn:: expansions.
-  using expansions_t = std::vector<vcsn::dyn::expansion>;
-  static expansions_t expansions_(const boost::python::list& es)
-  {
-    return make_value_vector<expansion>(es);
-  }
-
-  vcsn::dyn::expansion val_;
-};
-
-/*--------.
-| label.  |
-`--------*/
-
-struct label
-{
-  label(const vcsn::dyn::label& val)
-    : val_(val)
-  {}
-
-  label(const context& ctx, const std::string& s)
-  {
-    std::istringstream is(s);
-    val_ = vcsn::dyn::read_label(ctx.val_, is);
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-  }
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  label multiply(const label& rhs) const
-  {
-    return vcsn::dyn::multiply(val_, rhs.val_);
-  }
-
-  label project(unsigned tape) const
-  {
-    return vcsn::dyn::project(val_, tape);
-  }
-
-  vcsn::dyn::label val_;
-};
-
-/*-------------.
-| polynomial.  |
-`-------------*/
-
-struct polynomial
-{
-  polynomial(const vcsn::dyn::polynomial& val)
-    : val_(val)
-  {}
-
-  polynomial(const context& ctx, const std::string& s)
-  {
-    std::istringstream is(s);
-    val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-  }
-
-  polynomial compose(const polynomial& rhs) const
-  {
-    return vcsn::dyn::compose(val_, rhs.val_);
-  }
-
-  polynomial conjunction(const polynomial& rhs) const
-  {
-    return vcsn::dyn::conjunction(val_, rhs.val_);
-  }
-
-  ::context context() const
-  {
-    return vcsn::dyn::context_of(val_);
-  }
-
-  automaton cotrie() const
-  {
-    return vcsn::dyn::cotrie(val_);
-  }
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  polynomial ldiv(const polynomial& rhs) const
-  {
-    return vcsn::dyn::ldiv(val_, rhs.val_);
-  }
-
-  polynomial left_mult(const weight& w) const;
-
-  polynomial lgcd(const polynomial& rhs) const
-  {
-    return vcsn::dyn::lgcd(val_, rhs.val_);
-  }
-
-  polynomial multiply(const polynomial& rhs) const
-  {
-    return vcsn::dyn::multiply(val_, rhs.val_);
-  }
-
-  polynomial project(unsigned tape)
-  {
-    return vcsn::dyn::project(val_, tape);
-  }
-
-  polynomial right_mult(const weight& w) const;
-
-  polynomial split() const
-  {
-    return vcsn::dyn::split(val_);
-  }
-
-  polynomial sum(const polynomial& rhs) const
-  {
-    return vcsn::dyn::sum(val_, rhs.val_);
-  }
-
-  static polynomial tuple(const boost::python::list& polys)
-  {
-    return vcsn::dyn::tuple(make_value_vector<polynomial>(polys));
-  }
-
-  automaton trie() const
-  {
-    return vcsn::dyn::trie(val_);
-  }
-
-  vcsn::dyn::polynomial val_;
-};
-
-/*--------------.
-| expression.   |
-`--------------*/
-
-struct expression
-{
-  expression(const vcsn::dyn::expression& r)
-    : val_(r)
-  {}
-
-  expression(const context& ctx, const std::string& r,
-             vcsn::rat::identities ids)
-  {
-    std::istringstream is(r);
-    try
-      {
-        val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
-      }
-    catch (const std::runtime_error& e)
-      {
-        vcsn::raise(e.what(), "\n",
-                    "  while reading expression: ", r);
-      }
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-  }
-
-  /// Parse as a series.
-  static expression series(const context& ctx, const std::string& r)
-  {
-    return expression(ctx, r, vcsn::rat::identities::distributive);
-  }
-
-  /// Convert \a this to \a ctx, using \a ids.
-  expression as(const ::context& ctx = {}, const std::string& ids = "default")
-  {
-    // The destination expressionset.
-    return vcsn::dyn::copy(val_, (ctx ? ctx : context()).val_, ids);
-  }
-
-  expression complement() const
-  {
-    return vcsn::dyn::complement(val_);
-  }
-
-  expression compose(expression& rhs)
-  {
-    return vcsn::dyn::compose(val_, rhs.val_);
-  }
-
-  expression conjunction(const expression& rhs) const
-  {
-    return vcsn::dyn::conjunction(val_, rhs.val_);
-  }
-
-  weight constant_term() const;
-
-  ::context context() const
-  {
-    return vcsn::dyn::context_of(val_);
-  }
-
-  polynomial derivation(const label& l, bool breaking = false) const
-  {
-    return vcsn::dyn::derivation(val_, l.val_, breaking);
-  }
-
-  automaton derived_term(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::derived_term(val_, algo);
-  }
-
-  expression difference(const expression& rhs) const
-  {
-    return vcsn::dyn::difference(val_, rhs.val_);
-  }
-
-  expression expand() const
-  {
-    return vcsn::dyn::expand(val_);
-  }
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  automaton inductive(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::inductive(val_, algo);
-  }
-
-  expression infiltration(const expression& rhs)
-  {
-    return vcsn::dyn::infiltration(val_, rhs.val_);
-  }
-
-  bool is_equivalent(const expression& rhs) const
-  {
-    return vcsn::dyn::are_equivalent(val_, rhs.val_);
-  }
-
-  bool is_valid() const
-  {
-    return vcsn::dyn::is_valid(val_);
-  }
-
-  expression ldiv(const expression& rhs) const
-  {
-    return vcsn::dyn::ldiv(val_, rhs.val_);
-  }
-
-  expression left_mult(const weight& w) const;
-
-  bool less_than(const expression& rhs) const
-  {
-    return vcsn::dyn::less_than(val_, rhs.val_);
-  }
-
-  expression lift() const
-  {
-    return vcsn::dyn::lift(val_);
-  }
-
-  expression multiply(const expression& rhs) const
-  {
-    return vcsn::dyn::multiply(val_, rhs.val_);
-  }
-  /// The type of the previous function.
-  using multiply_t
-    = auto (expression::*)(const expression&) const -> expression;
-
-  expression multiply(int min, int max = -2) const
-  {
-    return vcsn::dyn::multiply(val_, min, max);
-  }
-  /// The type of the previous function.
-  using multiply_repeated_t
-    = auto (expression::*)(int min, int max) const -> expression;
-
-  expression project(unsigned tape)
-  {
-    return vcsn::dyn::project(val_, tape);
-  }
-
-  expression rdiv(const expression& rhs) const
-  {
-    return vcsn::dyn::rdiv(val_, rhs.val_);
-  }
-
-  expression right_mult(const weight& w) const;
-
-  expression shuffle(const expression& rhs)
-  {
-    return vcsn::dyn::shuffle(val_, rhs.val_);
-  }
-
-  polynomial split() const
-  {
-    return vcsn::dyn::split(val_);
-  }
-
-  automaton standard() const
-  {
-    return vcsn::dyn::standard(val_);
-  }
-
-  unsigned star_height() const
-  {
-    return vcsn::dyn::star_height(val_);
-  }
-
-  expression star_normal_form() const
-  {
-    return vcsn::dyn::star_normal_form(val_);
-  }
-
-  expression sum(const expression& rhs) const
-  {
-    return vcsn::dyn::sum(val_, rhs.val_);
-  }
-
-  automaton thompson() const
-  {
-    return vcsn::dyn::thompson(val_);
-  }
-
-  automaton to_automaton(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::to_automaton(val_, algo);
-  }
-
-  expansion to_expansion() const
-  {
-    return vcsn::dyn::to_expansion(val_);
-  }
-
-  expression transpose() const
-  {
-    return vcsn::dyn::transpose(val_);
-  }
-
-  expression transposition() const
-  {
-    return vcsn::dyn::transposition(val_);
-  }
-
-  static expression tuple_(const boost::python::list& es)
-  {
-    return vcsn::dyn::tuple(expressions_(es));
-  }
-
-  automaton zpc(const std::string& algo = "auto") const
-  {
-    return vcsn::dyn::zpc(val_, algo);
-  }
-
-  /// Convert to a vector of dyn:: expressions.
-  using expressions_t = std::vector<vcsn::dyn::expression>;
-  static expressions_t expressions_(const boost::python::list& es)
-  {
-    return make_value_vector<expression>(es);
-  }
-
-  vcsn::dyn::expression val_;
-};
-
-expression context::series(const std::string& s) const
-{
-  return expression::series(*this, s);
-}
-
-/*---------.
-| weight.  |
-`---------*/
-
-struct weight
-{
-  weight(const vcsn::dyn::weight& val)
-    : val_(val)
-  {}
-
-  weight(const context& ctx, const std::string& s)
-  {
-    std::istringstream is(s);
-    val_ = vcsn::dyn::read_weight(ctx.val_, is);
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-  }
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(val_, os, format);
-    return os.str();
-  }
-
-  weight multiply(const weight& rhs) const
-  {
-    return vcsn::dyn::multiply(val_, rhs.val_);
-  }
-  /// The type of the previous function.
-  using multiply_t
-    = auto (weight::*)(const weight&) const -> weight;
-
-  weight multiply(int min, int max = -2) const
-  {
-    return vcsn::dyn::multiply(val_, min, max);
-  }
-  /// The type of the previous function.
-  using multiply_repeated_t =
-    auto (weight::*)(int min, int max) const -> weight;
-
-  weight sum(const weight& rhs) const
-  {
-    return vcsn::dyn::sum(val_, rhs.val_);
-  }
-
-  vcsn::dyn::weight val_;
-};
-
-/*---------------------------.
-| automaton implementation.  |
-`---------------------------*/
-
-automaton::automaton(const expression& r)
-  : val_(nullptr)
-{
-  *this = r.derived_term();
-}
-
-label automaton::ambiguous_word() const
-{
-  return vcsn::dyn::ambiguous_word(val_);
-}
-
-weight automaton::eval(const label& l) const
-{
-  return vcsn::dyn::eval(val_, l.val_);
-}
-
-bool automaton::is_synchronized_by(const label& word) const
-{
-  return vcsn::dyn::is_synchronized_by(val_, word.val_);
-}
-
-automaton automaton::left_mult(const weight& w,
-                               const std::string& algo) const
-{
-  return vcsn::dyn::left_mult(w.val_, val_, algo);
-}
-
-polynomial automaton::lightest(unsigned num, const std::string& algo) const
-{
-  return vcsn::dyn::lightest(val_, num, algo);
-}
-
-automaton automaton::right_mult(const weight& w,
-                                const std::string& algo) const
-{
-  return vcsn::dyn::right_mult(val_, w.val_, algo);
-}
-
-polynomial automaton::shortest(boost::optional<unsigned> num,
-                               boost::optional<unsigned> len) const
-{
-  return vcsn::dyn::shortest(val_, num, len);
-}
-
-label automaton::synchronizing_word(const std::string& algo) const
-{
-  return vcsn::dyn::synchronizing_word(val_, algo);
-}
-
-expression automaton::to_expression(const std::string& ids,
-                                    const std::string& algo) const
-{
-  return vcsn::dyn::to_expression(val_, ids, algo);
-}
-
-weight automaton::weight_series() const
-{
-  return vcsn::dyn::weight_series(val_);
-}
-
-/*-------------------------.
-| context implementation.  |
-`-------------------------*/
-
-automaton context::cerny(unsigned n) const
-{
-  return vcsn::dyn::cerny(val_, n);
-}
-
-automaton context::cotrie(const std::string& data,
-                          const std::string& format,
-                          const std::string& filename) const
-{
-  auto is = make_istream(data, filename);
-  auto res = vcsn::dyn::cotrie(val_, *is, format);
-  vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-  return res;
-}
-
-automaton context::de_bruijn(unsigned n) const
-{
-  return vcsn::dyn::de_bruijn(val_, n);
-}
-
-automaton context::divkbaseb(unsigned divisor, unsigned base) const
-{
-  return vcsn::dyn::divkbaseb(val_, divisor, base);
-}
-
-automaton context::double_ring(unsigned n,
-                               const boost::python::list& finals) const
-{
-  return vcsn::dyn::double_ring(val_, n, make_vector<unsigned>(finals));
-}
-
-automaton context::ladybird(unsigned n) const
-{
-  return vcsn::dyn::ladybird(val_, n);
-}
-
-automaton context::levenshtein() const
-{
-  return vcsn::dyn::levenshtein(val_);
-}
-
-context context::project(unsigned tape) const
-{
-  return vcsn::dyn::project(val_, tape);
-}
-
-automaton context::quotkbaseb(unsigned divisor, unsigned base) const
-{
-  return vcsn::dyn::quotkbaseb(val_, divisor, base);
-}
-
-automaton context::random(unsigned num_states, float density,
-                          unsigned num_initial, unsigned num_final,
-                          boost::optional<unsigned> max_labels,
-                          float loop_chance) const
-{
-  return vcsn::dyn::random_automaton(val_,
-                                     num_states, density,
-                                     num_initial, num_final,
-                                     max_labels, loop_chance);
-}
-
-automaton context::random_deterministic(unsigned num_states) const
-{
-  return vcsn::dyn::random_automaton_deterministic(val_, num_states);
-}
-
-expression context::random_expression(const std::string& param,
-                                      const std::string& ids) const
-{
-  return vcsn::dyn::random_expression(val_, param, ids);
-}
-
-
-automaton context::trie(const std::string& data,
-                        const std::string& format,
-                        const std::string& filename) const
-{
-  auto is = make_istream(data, filename);
-  auto res = vcsn::dyn::trie(val_, *is, format);
-  vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-  return res;
-}
-
-automaton context::u(unsigned num_states) const
-{
-  return vcsn::dyn::u(val_, num_states);
-}
-
-label context::word(const std::string& s) const
-{
-  return label(context(vcsn::dyn::make_word_context(val_)), s);
-}
-
-/*----------------------------.
-| expansion implementation.   |
-`----------------------------*/
-
-expansion expansion::left_mult(const weight& w) const
-{
-  return vcsn::dyn::left_mult(w.val_, val_);
-}
-
-expansion expansion::right_mult(const weight& w) const
-{
-  return vcsn::dyn::right_mult(val_, w.val_);
-}
-
-/*-----------------------------.
-| expression implementation.   |
-`-----------------------------*/
-
-weight expression::constant_term() const
-{
-  return vcsn::dyn::constant_term(val_);
-}
-
-expression expression::left_mult(const weight& w) const
-{
-  return vcsn::dyn::left_mult(w.val_, val_);
-}
-
-expression expression::right_mult(const weight& w) const
-{
-  return vcsn::dyn::right_mult(val_, w.val_);
-}
-
-/*-----------------------------.
-| polynomial implementation.   |
-`-----------------------------*/
-
-polynomial polynomial::left_mult(const weight& w) const
-{
-  return vcsn::dyn::left_mult(w.val_, val_);
-}
-
-polynomial polynomial::right_mult(const weight& w) const
-{
-  return vcsn::dyn::right_mult(val_, w.val_);
-}
-
 
 /*-----------.
 | vcsn_cxx.  |
 `-----------*/
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(lift,
-                                       lift, 0, 2);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -1429,7 +255,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
            arg("filename") = "", arg("strip") = true)))
     .def("accessible", &automaton::accessible)
     .def("ambiguous_word", &automaton::ambiguous_word)
-    .def("automaton", &automaton::as)
+    .def("automaton", static_cast<automaton_copy_t>(&automaton::copy))
     .def("focus", &automaton::focus)
     .def("coaccessible", &automaton::coaccessible)
     .def("codeterminize", &automaton::codeterminize, (arg("algo") = "auto"))
@@ -1440,10 +266,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("compose", &automaton::compose, (arg("lazy") = false))
     .def("condense", &automaton::condense)
     .def("conjunction",
-         static_cast<automaton::conjunction_repeated_t>(&automaton::conjunction))
-    .def("conjunction",
-         static_cast<automaton::conjunction_variadic_t>(&automaton::conjunction),
-         (arg("lazy") = false))
+         static_cast<automaton_conjunction_repeated_t>(&automaton::conjunction))
+    .def("conjunction", &automaton_conjunction,
+         (arg("automata"), arg("lazy") = false))
         .staticmethod("conjunction")
     .def("conjugate", &automaton::conjugate)
     .def("context", &automaton::context)
@@ -1454,12 +279,12 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("eliminate_state", &automaton::eliminate_state, (arg("state") = -1))
     .def("_eval", &automaton::eval)
     .def("factor", &automaton::factor)
-    .def("filter", &automaton::filter)
-    .def("_format", &automaton::format)
+    .def("filter", &automaton_filter)
+    .def("_format", &format<automaton>)
     .def("has_bounded_lag", &automaton::has_bounded_lag)
     .def("has_lightening_cycle", &automaton::has_lightening_cycle)
     .def("has_twins_property", &automaton::has_twins_property)
-    .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
+    .def("_infiltration", &automaton_infiltration).staticmethod("_infiltration")
     .def("insplit", &automaton::insplit, (arg("lazy") = false))
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
@@ -1491,16 +316,17 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("left_mult", &automaton::left_mult,
          (arg("weight"), arg("algo") = "auto"))
     .def("letterize", &automaton::letterize)
+    .def("_lift", &automaton_lift)
     .def("_lift", &automaton::lift)
     .def("lightest", &automaton::lightest,
          (arg("num") = 1U, arg("algo") = "auto"))
     .def("lightest_automaton",
          &automaton::lightest_automaton, (arg("num") = 1U, arg("algo") = "auto"))
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
-    .def("multiply", static_cast<automaton::multiply_t>(&automaton::multiply),
+    .def("multiply", static_cast<automaton_multiply_t>(&automaton::multiply),
          (arg("algo") = "auto"))
     .def("multiply",
-         static_cast<automaton::multiply_repeated_t>(&automaton::multiply),
+         static_cast<automaton_multiply_repeated_t>(&automaton::multiply),
          (arg("min"), arg("max") = -2, arg("algo") = "auto"))
     .def("normalize", &automaton::normalize)
     .def("num_components", &automaton::num_components)
@@ -1508,11 +334,11 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("prefix", &automaton::prefix)
     .def("partial_identity", &automaton::partial_identity)
     .def("project", &automaton::project)
-    .def("proper", &automaton::proper,
+    .def("proper", &automaton_proper,
          (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)
     .def("realtime", &automaton::realtime)
-    .def("expression", &automaton::to_expression,
+    .def("expression", &automaton_expression,
          (arg("identities") = "default", arg("algo") = "auto"))
     .def("rdiv", &automaton::rdiv)
     .def("reduce", &automaton::reduce)
@@ -1522,7 +348,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("shortest", &automaton::shortest,
          (arg("num") = boost::optional<unsigned>(),
           arg("len") = boost::optional<unsigned>()))
-    .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")
+    .def("_shuffle", &automaton_shuffle).staticmethod("_shuffle")
     .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star, (arg("algo") = "auto"))
@@ -1535,7 +361,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          &automaton::synchronizing_word, (arg("algo") = "greedy"))
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
-    .def("_tuple", &automaton::tuple).staticmethod("_tuple")
+    .def("_tuple", &automaton_tuple).staticmethod("_tuple")
     .def("type", &automaton::type)
     .def("universal", &automaton::universal)
     .def("weight_series", &automaton::weight_series)
@@ -1544,44 +370,43 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<context>("context", bp::no_init)
     .def(bp::init<const std::string&>())
     .def("cerny", &context::cerny)
-    .def("cotrie", &context::cotrie,
+    .def("cotrie", static_cast<string_trie_t>(&context::cotrie),
          (arg("data") = "", arg("format") = "default",
           arg("filename") = ""))
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
-    .def("double_ring", &context::double_ring)
-    .def("format", &context::format)
+    .def("double_ring", &context_double_ring)
+    .def("format", &format<context>)
     .def("join", &context::join)
     .def("ladybird", &context::ladybird)
     .def("levenshtein", &context::levenshtein)
     .def("project", &context::project)
     .def("quotkbaseb", &context::quotkbaseb)
-    .def("random", &context::random,
+    .def("random", &context::random_automaton,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1,
           arg("max_labels") = boost::optional<unsigned>(),
           arg("loop_chance") = 0))
-    .def("random_deterministic", &context::random_deterministic)
-    .def("random_expression", &context::random_expression,
+    .def("random_deterministic", &context::random_automaton_deterministic)
+    .def("random_expression", &context_random_expression,
          (arg("parameters") = "", arg("identities") = "default"))
-    .def("series", &context::series)
-    .def("trie", &context::trie,
+    .def("trie", static_cast<string_trie_t>(&context::trie),
          (arg("data") = "", arg("format") = "default",
           arg("filename") = ""))
     .def("u", &context::u)
-    .def("word", &context::word)
+    .def("word", &context_word)
    ;
 
   bp::class_<expansion>("expansion", bp::no_init)
     .def("complement", &expansion::complement)
     .def("conjunction", &expansion::conjunction)
     .def("context", &expansion::context)
-    .def("format", &expansion::format)
+    .def("format", &format<expansion>)
     .def("left_mult", &expansion::left_mult)
     .def("project", &expansion::project)
     .def("right_mult", &expansion::right_mult)
     .def("sum", &expansion::sum)
-    .def("_tuple", &expansion::tuple_).staticmethod("_tuple")
+    .def("_tuple", &expansion_tuple).staticmethod("_tuple")
    ;
 
   bp::class_<expression>("expression", bp::no_init)
@@ -1601,7 +426,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expansion", &expression::to_expansion)
     .def("expression", &expression::as,
          (arg("context") = context(), arg("identities") = "default"))
-    .def("format", &expression::format)
+    .def("format", &format<expression>)
     .def("inductive", &expression::inductive, (arg("algo") = "auto"))
     .def("infiltration", &expression::infiltration)
     .def("is_equivalent", &expression::is_equivalent)
@@ -1610,9 +435,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("left_mult", &expression::left_mult)
     .def("less_than", &expression::less_than)
     .def("lift", &expression::lift)
-    .def("multiply", static_cast<expression::multiply_t>(&expression::multiply))
+    .def("multiply", static_cast<multiply_t<expression>>(&expression::multiply))
     .def("multiply",
-         static_cast<expression::multiply_repeated_t>(&expression::multiply),
+         static_cast<multiply_repeated_t<expression>>(&expression::multiply),
          (arg("min"), arg("max") = -2))
     .def("project", &expression::project)
     .def("rdiv", &expression::rdiv)
@@ -1626,13 +451,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("thompson", &expression::thompson)
     .def("transpose", &expression::transpose)
     .def("transposition", &expression::transposition)
-    .def("_tuple", &expression::tuple_).staticmethod("_tuple")
+    .def("_tuple", &expression_tuple).staticmethod("_tuple")
     .def("zpc", &expression::zpc, (arg("algo") = "auto"))
     ;
 
   bp::class_<label>("label", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
-    .def("format", &label::format)
+    .def("format", &format<label>)
     .def("multiply", &label::multiply)
     .def("project", &label::project)
    ;
@@ -1643,7 +468,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("conjunction", &polynomial::conjunction)
     .def("context", &polynomial::context)
     .def("cotrie", &polynomial::cotrie)
-    .def("format", &polynomial::format)
+    .def("format", &format<polynomial>)
     .def("ldiv", &polynomial::ldiv)
     .def("left_mult", &polynomial::left_mult)
     .def("lgcd", &polynomial::lgcd)
@@ -1653,15 +478,15 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("split", &polynomial::split)
     .def("sum", &polynomial::sum)
     .def("trie", &polynomial::trie)
-    .def("_tuple", &polynomial::tuple).staticmethod("_tuple")
+    .def("_tuple", &polynomial_tuple).staticmethod("_tuple")
    ;
 
   bp::class_<weight>("weight", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
-    .def("format", &weight::format)
-    .def("multiply", static_cast<weight::multiply_t>(&weight::multiply))
+    .def("format", &format<weight>)
+    .def("multiply", static_cast<multiply_t<weight>>(&weight::multiply))
     .def("multiply",
-         static_cast<weight::multiply_repeated_t>(&weight::multiply),
+         static_cast<multiply_repeated_t<weight>>(&weight::multiply),
          (arg("min"), arg("max") = -2))
     .def("sum", &weight::sum)
    ;
