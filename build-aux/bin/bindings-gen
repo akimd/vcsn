@@ -7,7 +7,7 @@ import sys
 
 def vcsn_prefix(s):
     '''Convert prefix types that belong to `vcsn::`.'''
-    return re.sub('(direction|letter_class_t)',
+    return re.sub('(letter_class_t)',
                   r'vcsn::\1', s)
 
 '''The types defined in vcsn::dyn that we wrap.'''
@@ -65,6 +65,9 @@ classes = {}
 classes_prologue_header = {
 'automaton':
     r'''
+  /// Direction for proper.
+  using direction = ::vcsn::dyn::direction;
+
   /// Create an automaton from a file, or from a string.
   automaton(const std::string& data = "",
             const std::string& format = "default",
@@ -369,7 +372,6 @@ def header():
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/dyn/types.hh>
-#include <vcsn/misc/direction.hh>
 
 using identities = vcsn::dyn::identities;
 

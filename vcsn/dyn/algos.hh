@@ -10,7 +10,6 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/types.hh>
-#include <vcsn/misc/direction.hh>
 #include <vcsn/misc/export.hh>
 
 namespace vcsn
