@@ -8,7 +8,7 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/irange.hpp>
 
-#include <vcsn/core/automaton.hh>
+#include <vcsn/concepts/automaton.hh>
 #include <vcsn/core/fwd.hh>
 #include <vcsn/core/transition.hh>
 #include <vcsn/ctx/context.hh>

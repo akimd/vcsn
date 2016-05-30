@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/constant-term.hh>
+#include <vcsn/core/automaton.hh> // all_in
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/ctx/fwd.hh>
@@ -377,5 +378,4 @@ namespace vcsn
       }
     }
   }
-
 } // vcsn::

@@ -6,6 +6,7 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/core/automaton.hh> // all_transitions
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/misc/crange.hh>
 #include <vcsn/dyn/fwd.hh>

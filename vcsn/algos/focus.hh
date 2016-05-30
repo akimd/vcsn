@@ -2,6 +2,7 @@
 
 #include <vcsn/algos/fwd.hh>
 #include <vcsn/algos/project.hh> // project
+#include <vcsn/core/automaton.hh> // out
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/ctx/context.hh>

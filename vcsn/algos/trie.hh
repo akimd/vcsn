@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/transpose.hh>
+#include <vcsn/core/automaton.hh> // out
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>

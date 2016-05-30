@@ -4,7 +4,8 @@
 
 #include <vcsn/algos/tags.hh>
 #include <vcsn/algos/transpose.hh>
-#include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/automaton.hh>
+#include <vcsn/core/automaton-decorator.hh> // all_out
 #include <vcsn/core/polystate-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton

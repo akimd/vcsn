@@ -3,7 +3,7 @@
 #include <memory>
 #include <set>
 
-#include <vcsn/core/automaton.hh>
+#include <vcsn/concepts/automaton.hh>
 #include <vcsn/core/rat/fwd.hh>
 
 // This file is dangerous, it prevents automatic instantiation of

@@ -132,6 +132,7 @@ nobase_include_HEADERS =                        \
   %D%/alphabets/char.hh                         \
   %D%/alphabets/setalpha.hh                     \
   %D%/alphabets/string.hh                       \
+  %D%/concepts/automaton.hh                     \
   %D%/core/automaton-decorator.hh               \
   %D%/core/automaton.hh                         \
   %D%/core/automatonset.hh                      \

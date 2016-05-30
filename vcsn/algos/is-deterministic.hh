@@ -3,6 +3,7 @@
 #include <unordered_set>
 
 #include <vcsn/algos/transpose.hh>
+#include <vcsn/core/automaton.hh> // all_out
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 

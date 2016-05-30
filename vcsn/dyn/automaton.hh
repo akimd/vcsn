@@ -3,7 +3,7 @@
 #include <algorithm> // move
 #include <memory> // shared_ptr
 
-#include <vcsn/core/automaton.hh> // Automaton
+#include <vcsn/concepts/automaton.hh> // Automaton
 #include <vcsn/dyn/cast.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/export.hh>

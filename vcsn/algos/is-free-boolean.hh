@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/core/automaton.hh>
+#include <vcsn/concepts/automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/weightset/fwd.hh> // b
 

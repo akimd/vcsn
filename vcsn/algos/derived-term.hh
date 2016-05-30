@@ -4,6 +4,7 @@
 #include <vcsn/algos/derivation.hh>
 #include <vcsn/algos/split.hh>
 #include <vcsn/algos/to-expansion.hh>
+#include <vcsn/core/automaton.hh> // all_out
 #include <vcsn/core/expression-automaton.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/fwd.hh>

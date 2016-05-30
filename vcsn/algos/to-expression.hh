@@ -4,6 +4,7 @@
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/lift.hh>
+#include <vcsn/core/automaton.hh> // all_in
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/info.hh>
 #include <vcsn/core/rat/size.hh>

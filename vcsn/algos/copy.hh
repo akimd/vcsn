@@ -4,6 +4,7 @@
 
 #include <vcsn/algos/fwd.hh> // focus_automaton.
 #include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/automaton.hh>
 #include <vcsn/core/fwd.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/core/rat/copy.hh>

@@ -13,7 +13,6 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/value.hh>
-#include <vcsn/misc/algorithm.hh> // detail::back
 #include <vcsn/misc/deque.hh>
 #include <vcsn/misc/pair.hh>
 #include <vcsn/misc/queue.hh>

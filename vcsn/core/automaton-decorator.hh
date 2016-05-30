@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/misc/memory.hh>
-#include <vcsn/core/automaton.hh> // Automaton.
+#include <vcsn/concepts/automaton.hh> // Automaton.
 #include <vcsn/ctx/traits.hh>
 
 namespace vcsn

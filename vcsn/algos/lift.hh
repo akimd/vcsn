@@ -4,6 +4,7 @@
 
 #include <boost/optional.hpp>
 
+#include <vcsn/core/automaton.hh> // all_transitions
 #include <vcsn/core/mutable-automaton.hh> // fresh_automaton_t_of
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/expressionset.hh>

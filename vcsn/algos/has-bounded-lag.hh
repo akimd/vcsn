@@ -3,11 +3,10 @@
 #include <array>
 #include <vector>
 
-#include <vcsn/core/tuple-automaton.hh>
+#include <vcsn/core/automaton.hh> // states_size
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/labelset/tupleset.hh>
-#include <vcsn/misc/algorithm.hh> // detail::back
 #include <vcsn/misc/tuple.hh> // make_index_sequence
 
 namespace vcsn
@@ -84,7 +83,7 @@ namespace vcsn
         add_delay(d, tr, delay_index_t{});
       }
 
-      // Depth-first search
+      // Depth-first search.
       bool has_bounded_lag(state_t src)
       {
         v_[src] = VISITING;
@@ -100,14 +99,14 @@ namespace vcsn
               }
             else if (visited == VISITING)
               {
-                // Cycle, compute the cycle's delay
+                // Cycle, compute the cycle's delay.
                 delay_t d = {0};
                 add_delay(d, tr);
                 if (src != dst)
                   {
                     transition_t t = p_[src];
-                    // Go back through the transitions we followed until we
-                    // loop
+                    // Go back through the transitions we followed
+                    // until we loop.
                     while (aut_->src_of(t) != dst)
                       {
                         add_delay(d, t);

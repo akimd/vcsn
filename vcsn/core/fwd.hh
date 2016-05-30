@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/core/automaton.hh> // Automaton.
+#include <vcsn/concepts/automaton.hh> // Automaton.
 #include <vcsn/misc/memory.hh> // make_shared_ptr.
 
 namespace vcsn

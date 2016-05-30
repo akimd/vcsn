@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/core/automaton.hh>
 
 namespace vcsn
 {

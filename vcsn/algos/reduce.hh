@@ -6,7 +6,7 @@
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/transpose.hh>
-#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/weightset/q.hh>
 #include <vcsn/weightset/r.hh>

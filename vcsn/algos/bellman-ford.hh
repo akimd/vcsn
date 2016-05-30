@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcsn/core/mutable-automaton.hh>
-#include <vcsn/weightset/fwd.hh>
+#include <vcsn/core/automaton.hh> // states_size
 #include <vcsn/misc/set.hh>
+#include <vcsn/weightset/fwd.hh>
 
 namespace vcsn
 {

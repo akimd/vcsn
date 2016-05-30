@@ -8,9 +8,9 @@
 #include <boost/bimap/unordered_set_of.hpp>
 
 #include <vcsn/algos/fwd.hh>
-#include <vcsn/ctx/context.hh>
 #include <vcsn/core/automaton-decorator.hh>
-#include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/core/automaton.hh> // all_out
+#include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/misc/bimap.hh>
 #include <vcsn/misc/pair.hh> // hash
@@ -22,12 +22,11 @@ namespace vcsn
   namespace detail
   {
 
-    /**
-     * An automaton whose states may be qualified by delays and/or prefixes.
-     *
-     * The semantics of the states are so varied that they cannot be easily and
-     * clearly represented.
-     */
+    /// An automaton whose states may be qualified by delays and/or
+    /// prefixes.
+    ///
+    /// The semantics of the states are so varied that they cannot be
+    /// easily and clearly represented.
     template <Automaton Aut>
     class delay_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
