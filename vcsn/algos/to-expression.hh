@@ -110,7 +110,7 @@ namespace vcsn
       delgado_profiler(const automaton_t& aut, bool count_labels = false)
         : aut_{aut}
         , count_labels_{count_labels}
-        , transition_cache_(all_transitions(aut_).back() + 1, 0)
+        , transition_cache_(transitions_size(aut_), 0)
       {}
 
       struct state_profile

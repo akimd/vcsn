@@ -48,10 +48,10 @@ namespace vcsn
         // We start with just two states numbered 0 and 1: pre() and
         // post().
         weights_t v1(2, zero);
-        v1.reserve(detail::back(aut_->all_states()) + 1);
+        v1.reserve(states_size(aut_));
         v1[aut_->pre()] = ws_.one();
         weights_t v2{v1};
-        v2.reserve(detail::back(aut_->all_states()) + 1);
+        v2.reserve(states_size(aut_));
 
         // Computation.
         auto ls = *aut_->labelset();

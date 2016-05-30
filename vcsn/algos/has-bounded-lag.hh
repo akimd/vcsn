@@ -54,11 +54,11 @@ namespace vcsn
       using delay_t = std::array<int, number_of_tapes - 1>;
 
     public:
-
-      // The vectors are indexed by the state number
+      // The vectors are indexed by the state number.
       bounded_lag_checker(const automaton_t& aut)
-        : aut_(aut), v_(detail::back(aut_->all_states()) + 1, NOT_VISITED)
-        , p_(detail::back(aut_->all_states()) + 1, -1)
+        : aut_(aut)
+        , v_(states_size(aut_), NOT_VISITED)
+        , p_(states_size(aut_), -1)
       {}
 
       // Get the size (number of letters) of a label on a specific tape.

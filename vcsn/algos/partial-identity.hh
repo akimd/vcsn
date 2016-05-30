@@ -24,13 +24,15 @@ namespace vcsn
 
       static context_t value(const Aut& aut)
       {
-        return {labelset_t{*aut->labelset(), *aut->labelset()}, *aut->weightset()};
+        return {labelset_t{*aut->labelset(), *aut->labelset()},
+                *aut->weightset()};
       }
     };
   }
 
   template <Automaton Aut>
-  using partial_identity_context_t_of = typename detail::partial_identity_context<Aut>::context_t;
+  using partial_identity_context_t_of
+    = typename detail::partial_identity_context<Aut>::context_t;
 
   /// Create a partial identity transducer from \a aut
   template <Automaton Aut>
@@ -38,15 +40,15 @@ namespace vcsn
   partial_identity(const Aut& aut)
   {
     using part_id_ctx = detail::partial_identity_context<Aut>;
-    using automaton_t = fresh_automaton_t_of<Aut, typename part_id_ctx::context_t>;
+    using automaton_t
+      = fresh_automaton_t_of<Aut, typename part_id_ctx::context_t>;
     using state_t = state_t_of<automaton_t>;
     using label_t = label_t_of<automaton_t>;
     automaton_t res = make_shared_ptr<automaton_t>(part_id_ctx::value(aut));
 
 
     // map from aut state -> res state
-    auto map
-      = std::vector<state_t>(detail::back(aut->all_states()) + 1);
+    auto map = std::vector<state_t>(states_size(aut));
 
     map[aut->pre()] = res->pre();
     map[aut->post()] = res->post();

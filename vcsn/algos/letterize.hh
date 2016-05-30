@@ -8,7 +8,6 @@
 #include <vcsn/ctx/traits.hh> // context_t_of
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/labelset/labelset.hh> // detail::make_letterized
-#include <vcsn/misc/algorithm.hh> // detail::back
 
 namespace vcsn
 {
@@ -43,7 +42,7 @@ namespace vcsn
       letterizer(const in_automaton_t& in_aut, const out_labelset_t& ls)
         : in_aut_(in_aut)
         , out_aut_(make_mutable_automaton(out_ctx_t{ls, *in_aut->weightset()}))
-        , state_map_(detail::back(in_aut->all_states()) + 1)
+        , state_map_(states_size(in_aut))
       {}
 
       out_automaton_t letterize()
