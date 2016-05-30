@@ -5,7 +5,7 @@
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/tokenizer.hpp>
 
-#include <vcsn/algos/random.hh>
+#include <vcsn/algos/random-label.hh>
 #include <vcsn/core/rat/expressionset.hh> // make_expressionset
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/algorithm.hh>
