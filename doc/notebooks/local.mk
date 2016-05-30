@@ -121,6 +121,7 @@ dist_notebooks_DATA =                           \
   %D%/context.quotkbaseb.ipynb                  \
   %D%/context.random_automaton.ipynb            \
   %D%/context.random_expression.ipynb           \
+  %D%/context.random_weight.ipynb               \
   %D%/context.trie.ipynb                        \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.lweight.ipynb                   \

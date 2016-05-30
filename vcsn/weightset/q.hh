@@ -58,6 +58,12 @@ namespace vcsn
       unsigned int den;
     };
 
+    /// Create rational weight from num and den.
+    static value_t value(int num, unsigned int den)
+    {
+      return value_t{num, den}.reduce();
+    }
+
     static unsigned int abs(int a)
     {
       return a < 0 ? -a : a;
@@ -71,6 +77,18 @@ namespace vcsn
     static value_t one()
     {
       return value_t{1, 1};
+    }
+
+    static value_t min()
+    {
+      auto num = std::numeric_limits<int>::min();
+      return value_t{num, 1};
+    }
+
+    static value_t max()
+    {
+      auto num = std::numeric_limits<int>::max();
+      return value_t{num, 1};
     }
 
     static value_t add(const value_t l, const value_t r)
@@ -282,6 +300,29 @@ namespace vcsn
     }
   };
 
+    /// Random generation.
+    template <typename RandomGenerator>
+    class random_weight<q, RandomGenerator>
+      : public random_weight_base<q, RandomGenerator>
+    {
+    public:
+      using super_t = random_weight_base<q, RandomGenerator>;
+      using value_t = typename super_t::weight_t;
+
+      using super_t::super_t;
+
+    private:
+      value_t pick_value_() const
+      {
+        auto dis_num = std::uniform_int_distribution<>(super_t::min_.num,
+                                                       super_t::max_.num);
+        auto dis_den = std::uniform_int_distribution<unsigned int>(super_t::min_.den,
+                                                                   super_t::max_.num);
+        auto num = dis_num(super_t::gen_);
+        auto den = dis_den(super_t::gen_);
+        return super_t::ws_.value(num, den);
+      }
+    };
     /*-------.
     | join.  |
     `-------*/
