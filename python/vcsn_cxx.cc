@@ -436,7 +436,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("levenshtein", &context::levenshtein)
     .def("project", &context::project)
     .def("quotkbaseb", &context::quotkbaseb)
-    .def("random", &context::random_automaton,
+    .def("random_automaton", &context::random_automaton,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1,
           arg("max_labels") = boost::optional<unsigned>(),

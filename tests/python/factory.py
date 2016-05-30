@@ -124,13 +124,13 @@ CHECK_EQ(exp, nmin.levenshtein())
 ## -------- ##
 
 # Expect a clique.
-c1 = vcsn.context('lal_char(a), b').random(4, 1, 4, 4)
+c1 = vcsn.context('lal_char(a), b').random_automaton(4, 1, 4, 4)
 c2 = vcsn.automaton(filename=medir + '/clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 
 # Expect the right number of states.
-a = vcsn.context('lal_char(a), b').random(100, .1, 20, 30)
+a = vcsn.context('lal_char(a), b').random_automaton(100, .1, 20, 30)
 CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
 CHECK_EQ(100, a.info()['number of states'])
 CHECK_EQ(20, a.info()['number of initial states'])
@@ -140,9 +140,9 @@ CHECK_EQ(30, a.info()['number of final states'])
 # For a while, we were only able to get matching letters (a|A, b|B,
 # etc.).
 ctx = vcsn.context('lat<lan(a-z), lan(a-z)>, b')
-a = ctx.random(num_states=10, density=1, max_labels=1)
+a = ctx.random_automaton(num_states=10, density=1, max_labels=1)
 # Get all the labels.
-print("random: {:d}".format(a))
+print("random_automaton: {:d}".format(a))
 labels = a.labels()
 # Make sure there are \e|a and a|\e.
 CHECK_NE([l for l in labels if re.match(r'\\e\|[a-z]', l)], [])
@@ -157,15 +157,15 @@ CHECK(r'\e|\e' in labels)
 
 
 # Random on an empty labelset doesn't work
-XFAIL(lambda: vcsn.context('lal(), b').random(2),
-      "random: empty labelset: {}")
+XFAIL(lambda: vcsn.context('lal(), b').random_automaton(2),
+      "random_automaton: empty labelset: {}")
 
 
 # Check that max_labels is honored.
 ctx = vcsn.context('lal(a-z), b')
-a = ctx.random(num_states=10, max_labels=5, density=1)
+a = ctx.random_automaton(num_states=10, max_labels=5, density=1)
 labels = a.labels()
-print("random: {:d}".format(a))
+print("random_automaton: {:d}".format(a))
 print("labels: {}".format(labels))
 # Expect from 1 to 5 labels per entry.
 for n in range(1, 7):

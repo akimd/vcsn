@@ -14,6 +14,11 @@ expansions, polynomials).
     infiltration -> infiltrate
     sum          -> add
 
+## 2016-06-07
+### random_automaton: new name for random algorithm
+Random generation of automaton is now named random_automaton
+as it is exaclty what it does.
+
 ## 2016-05-27
 ### polynomials: more basic operations
 Polynomials now support (in the three layers) the addition, multiplication,
