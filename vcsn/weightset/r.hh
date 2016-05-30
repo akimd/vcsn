@@ -53,6 +53,18 @@ namespace vcsn
     }
 
     static value_t
+    min()
+    {
+      return std::numeric_limits<value_t>::min();
+    }
+
+    static value_t
+    max()
+    {
+      return std::numeric_limits<value_t>::max();
+    }
+
+    static value_t
     add(const value_t l, const value_t r)
     {
       return l + r;
@@ -224,6 +236,25 @@ namespace vcsn
       return o;
     }
   };
+
+    // Random generation.
+    template <typename RandomGenerator>
+    class random_weight<r, RandomGenerator>
+      : public random_weight_base<r, RandomGenerator>
+    {
+    public:
+      using super_t = random_weight_base<r, RandomGenerator>;
+      using value_t = typename super_t::weight_t;
+
+      using super_t::super_t;
+
+    private:
+      value_t pick_value_() const
+      {
+        auto dis = std::uniform_real_distribution<>(super_t::min_, super_t::max_);
+        return dis(super_t::gen_);
+      }
+    };
 
     VCSN_JOIN_SIMPLE(b, r);
     VCSN_JOIN_SIMPLE(z, r);

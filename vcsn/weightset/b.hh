@@ -22,6 +22,7 @@ namespace vcsn
   {
   public:
     using self_t = b;
+    using value_t = bool;
 
     static symbol sname()
     {
@@ -36,8 +37,6 @@ namespace vcsn
       return {};
     }
 
-    using value_t = bool;
-
     static value_t
     zero()
     {
@@ -46,6 +45,18 @@ namespace vcsn
 
     static value_t
     one()
+    {
+      return true;
+    }
+
+    static value_t
+    min()
+    {
+      return false;
+    }
+
+    static value_t
+    max()
     {
       return true;
     }
@@ -208,6 +219,28 @@ namespace vcsn
       return o;
     }
   };
+
+    /// Random generation.
+    template <typename RandomGenerator>
+    class random_weight<b, RandomGenerator>
+      : public random_weight_base<b, RandomGenerator>
+    {
+    public:
+      using super_t = random_weight_base<b, RandomGenerator>;
+      using value_t = typename super_t::weight_t;
+
+      using super_t::super_t;
+
+    private:
+      value_t pick_value_() const
+      {
+        auto dis = std::uniform_int_distribution<>(super_t::min_, super_t::max_);
+        if (dis(super_t::gen_))
+          return super_t::ws_.zero();
+        else
+          return super_t::ws_.one();
+      }
+    };
 
     /*-------.
     | join.  |

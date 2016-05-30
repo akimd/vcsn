@@ -74,6 +74,18 @@ namespace vcsn
         return std::numeric_limits<value_t>::max();
       }
 
+      static value_t
+      min()
+      {
+        return std::numeric_limits<value_t>::min();
+      }
+
+      static value_t
+      max()
+      {
+        return std::numeric_limits<value_t>::max();
+      }
+
       static bool
       equal(const value_t l, const value_t r)
       {
