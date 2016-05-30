@@ -52,7 +52,7 @@ algo_headers =                                  \
   %D%/algos/has-bounded-lag.hh                  \
   %D%/algos/has-lightening-cycle.hh             \
   %D%/algos/has-twins-property.hh               \
-  %D%/algos/identities.hh                       \
+  %D%/algos/identities-of.hh                    \
   %D%/algos/inductive.hh                        \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \

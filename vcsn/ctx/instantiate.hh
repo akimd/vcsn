@@ -19,7 +19,7 @@
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/expand.hh>
-#include <vcsn/algos/identities.hh>
+#include <vcsn/algos/identities-of.hh>
 #include <vcsn/algos/info.hh>
 #include <vcsn/algos/is-ambiguous.hh>
 #include <vcsn/algos/is-complete.hh>
@@ -304,7 +304,7 @@ namespace vcsn
         REGISTER(expand, rs_t);
         REGISTER(expression_one, ctx_t, rat::identities);
         REGISTER(expression_zero, ctx_t, rat::identities);
-        REGISTER(identities, rs_t);
+        REGISTER(identities_of, rs_t);
         REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);

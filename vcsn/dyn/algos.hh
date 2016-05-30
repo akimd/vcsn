@@ -281,7 +281,7 @@ namespace vcsn
     bool has_bounded_lag(const automaton& aut);
 
     /// The identities of expression \a exp.
-    rat::identities identities(const expression& exp);
+    rat::identities identities_of(const expression& exp);
 
     /// The inductive translation of \a e in an automaton.
     ///

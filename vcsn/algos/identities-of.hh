@@ -5,9 +5,9 @@
 namespace vcsn
 {
 
-  /*--------------------------.
-  | identities(expression).   |
-  `--------------------------*/
+  /*-----------------------------.
+  | identities_of(expression).   |
+  `-----------------------------*/
 
   namespace dyn
   {
@@ -16,7 +16,7 @@ namespace vcsn
       /// Bridge.
       template <typename ExpSet>
       rat::identities
-      identities(const expression& exp)
+      identities_of(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();
         auto rs = e.valueset();
