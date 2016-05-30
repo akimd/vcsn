@@ -17,15 +17,12 @@
 
 #include <boost/python.hpp>
 #include <boost/python/args.hpp>
+
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/context.hh> // vname
-#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/stream.hh>
 
-#include "python/oodyn.cc"
+#include "python/oodyn.hh"
 
 /// The type of the repeated conjunction function.
 using automaton_conjunction_repeated_t

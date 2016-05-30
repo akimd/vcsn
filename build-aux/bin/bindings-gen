@@ -357,15 +357,40 @@ def output_memfn(format, cls):
     return res
 
 
-def output():
-    '''Generate the C++ OO Bindings.'''
+def header():
+    '''Generate the header of the C++ OO Bindings.'''
     res = r'''// Generated, do not edit by hand.
 
+#include <boost/optional.hpp>
+
+#include <vcsn/algos/fwd.hh> // letter_class_t
 #include <vcsn/core/rat/identities.hh>
-#include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/context.hh> // vname
+#include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/misc/direction.hh>
+
+'''
+    # Forward declarations.
+    for c in sorted(classes.keys()):
+        res += class_declare.format_map({'class': c})
+    res += '\n\n'
+
+    # Class definitions.
+    for c in sorted(classes.keys()):
+        res += class_open.format_map({'class': c})
+        if c in classes_prologue_header:
+            res += classes_prologue_header[c]
+        res += output_memfn(memfn_declaration, classes[c])
+        res += class_close.format_map({'class': c})
+    return res
+
+def output():
+    '''Generate the implementation of the C++ OO Bindings.'''
+    res = r'''// Generated, do not edit by hand.
+#include "python/oodyn.hh"
+
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 
@@ -396,15 +421,6 @@ auto make_istream(const std::string& data = "",
 
 '''
     for c in sorted(classes.keys()):
-        res += class_declare.format_map({'class': c})
-    res += '\n\n'
-    for c in sorted(classes.keys()):
-        res += class_open.format_map({'class': c})
-        if c in classes_prologue_header:
-            res += classes_prologue_header[c]
-        res += output_memfn(memfn_declaration, classes[c])
-        res += class_close.format_map({'class': c})
-    for c in sorted(classes.keys()):
         if c in classes_prologue_impl:
             res += classes_prologue_impl[c]
         res += output_memfn(memfn_definition, classes[c])
@@ -421,6 +437,9 @@ This tool reads `dyn/algos.hh` and generates an object-oriented
 version of this API, in C++.
 ''')
 
+parser.add_argument('--header',
+                    type=argparse.FileType('w'), default = '-',
+                    help='header file to generate')
 parser.add_argument('--output',
                     type=argparse.FileType('w'), default = '-',
                     help='implementation file to generate')
@@ -429,4 +448,5 @@ parser.add_argument('input', type=str, default=None,
 args = parser.parse_args()
 process_header(args.input)
 
+print(header(), file=args.header)
 print(output(), file=args.output)
