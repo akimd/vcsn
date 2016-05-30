@@ -7,7 +7,7 @@ import sys
 
 def vcsn_prefix(s):
     '''Convert prefix types that belong to `vcsn::`.'''
-    return re.sub('(direction|letter_class_t|rat::identities)',
+    return re.sub('(direction|letter_class_t)',
                   r'vcsn::\1', s)
 
 '''The types defined in vcsn::dyn that we wrap.'''
@@ -92,7 +92,7 @@ classes_prologue_header = {
     'expression':
     r'''
   expression(const struct context& ctx, const std::string& r,
-             vcsn::rat::identities ids);
+             identities ids);
 
   expression(const struct context& ctx, const std::string& r,
              const std::string& ids);
@@ -173,7 +173,7 @@ classes_prologue_impl = {
     'expression':
     r'''
   expression::expression(const struct context& ctx, const std::string& r,
-                         vcsn::rat::identities ids)
+                         identities ids)
   {
     std::istringstream is{r};
     try
@@ -190,7 +190,7 @@ classes_prologue_impl = {
 
   expression::expression(const struct context& ctx, const std::string& r,
                          const std::string& ids)
-    : expression{ctx, r, vcsn::rat::identities{ids}}
+    : expression{ctx, r, identities{ids}}
   {}
 
   expression expression::as(const struct context& ctx,
@@ -368,7 +368,10 @@ def header():
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/dyn/types.hh>
 #include <vcsn/misc/direction.hh>
+
+using identities = vcsn::dyn::identities;
 
 '''
     # Forward declarations.

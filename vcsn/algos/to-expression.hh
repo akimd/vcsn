@@ -605,7 +605,7 @@ namespace vcsn
       /// Bridge.
       template <Automaton Aut, typename Identities, typename String>
       expression
-      to_expression(const automaton& aut, vcsn::rat::identities ids,
+      to_expression(const automaton& aut, identities ids,
                     const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
@@ -629,7 +629,7 @@ namespace vcsn
       /// Bridge (to_expression).
       template <typename Context, typename Identities, typename Label>
       expression
-      to_expression_label(const context& ctx, rat::identities ids,
+      to_expression_label(const context& ctx, identities ids,
                           const label& lbl)
       {
         const auto& c = ctx->as<Context>();
@@ -718,7 +718,7 @@ namespace vcsn
       template <typename Context, typename Identities,
                 typename Letters, typename Bool>
       expression
-      to_expression_class(const context& ctx, rat::identities ids,
+      to_expression_class(const context& ctx, identities ids,
                           const letter_class_t& letters, bool accept)
       {
         const auto& c = ctx->as<Context>();

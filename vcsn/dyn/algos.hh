@@ -7,9 +7,9 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/algos/fwd.hh>
-#include <vcsn/core/rat/identities.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/dyn/types.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/export.hh>
 
@@ -166,7 +166,7 @@ namespace vcsn
 
     /// Copy of \a exp, but built with \a ctx.
     expression copy(const expression& exp,
-                    const context& ctx, rat::identities ids);
+                    const context& ctx, identities ids);
 
     /// A co-standardized \a a.
     automaton costandard(const automaton& a);
@@ -257,10 +257,10 @@ namespace vcsn
     expression expand(const expression& e);
 
     /// The expression for `\e`.
-    expression expression_one(const context& c, rat::identities ids);
+    expression expression_one(const context& c, identities ids);
 
     /// The expression for `\z`.
-    expression expression_zero(const context& c, rat::identities ids);
+    expression expression_zero(const context& c, identities ids);
 
     /// Create a factor automaton from \a aut.
     automaton factor(const automaton& aut);
@@ -281,7 +281,7 @@ namespace vcsn
     bool has_bounded_lag(const automaton& aut);
 
     /// The identities of expression \a exp.
-    rat::identities identities_of(const expression& exp);
+    identities identities_of(const expression& exp);
 
     /// The inductive translation of \a e in an automaton.
     ///
@@ -478,7 +478,7 @@ namespace vcsn
     /// \param ids    the identities of the expression
     automaton lift(const automaton& aut,
                    const std::vector<unsigned>& tapes = {},
-                   rat::identities ids = {});
+                   identities ids = {});
 
     /// The lifted LAO rational expression from \a e.
     expression lift(const expression& e);
@@ -734,7 +734,7 @@ namespace vcsn
     /// \param ids
     ///    The identities to use for the expression
     expression random_expression(const context& ctx, const std::string& param,
-                                 rat::identities ids);
+                                 identities ids);
 
     /// Right-division of two automata (lhs / rhs).
     automaton rdiv(const automaton& lhs, const automaton& rhs);
@@ -757,7 +757,7 @@ namespace vcsn
     /// \param ids     the identities to apply.
     /// \param is      the input stream.
     /// \param format  the expression's format.
-    expression read_expression(const context& ctx, rat::identities ids,
+    expression read_expression(const context& ctx, identities ids,
                                std::istream& is,
                                const std::string& format = "default");
 
@@ -955,11 +955,11 @@ namespace vcsn
     /// \param ids   the identities to use for the expression
     /// \param algo  the state selection strategy
     expression to_expression(const automaton& aut,
-                             rat::identities ids = {},
+                             identities ids = {},
                              const std::string& algo = "auto");
 
     /// An expression denoting the label of \a l.
-    expression to_expression(const context& ctx, rat::identities ids,
+    expression to_expression(const context& ctx, identities ids,
                              const label& l);
 
     /// An expression matching one letter in a letter class.
@@ -973,7 +973,7 @@ namespace vcsn
     /// \param accept
     ///   Whether to accept these characters ([abc]) as opposed
     ///   to refusing them ([^abc]).
-    expression to_expression(const context& ctx, rat::identities ids,
+    expression to_expression(const context& ctx, identities ids,
                              const letter_class_t& letters,
                              bool accept = true);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/dyn/value.hh>
+#include <vcsn/dyn/types.hh>
 
 namespace vcsn
 {
@@ -15,7 +16,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename ExpSet>
-      rat::identities
+      identities
       identities_of(const expression& exp)
       {
         const auto& e = exp->as<ExpSet>();

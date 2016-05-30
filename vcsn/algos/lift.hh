@@ -257,7 +257,7 @@ namespace vcsn
       template <Automaton Aut, typename Ids, typename... Tapes>
       automaton
       lift_automaton(const automaton& aut,
-                     vcsn::rat::identities ids, integral_constant)
+                     identities ids, integral_constant)
       {
         const auto& a = aut->as<Aut>();
         return ::vcsn::lift<Aut, Tapes::value...>(a, ids);

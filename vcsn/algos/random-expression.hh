@@ -221,7 +221,7 @@ namespace vcsn
       template <typename Context, typename String, typename Identities>
       expression
       random_expression(const context& ctx, const std::string& param,
-                        rat::identities ids)
+                        identities ids)
       {
         const auto& c = ctx->as<Context>();
         auto rs = make_expressionset(c, ids);

@@ -12,7 +12,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Context, typename Identities>
-      expression expression_one(const context& ctx, rat::identities ids)
+      expression expression_one(const context& ctx, identities ids)
       {
         const auto& c = ctx->as<Context>();
         auto rs = vcsn::make_expressionset(c, ids);
@@ -21,7 +21,7 @@ namespace vcsn
 
       /// Bridge.
       template <typename Context, typename Identities>
-      expression expression_zero(const context& ctx, rat::identities ids)
+      expression expression_zero(const context& ctx, identities ids)
       {
         const auto& c = ctx->as<Context>();
         auto rs = vcsn::make_expressionset(c, ids);

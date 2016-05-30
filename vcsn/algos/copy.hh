@@ -9,6 +9,7 @@
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/dyn/types.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/set.hh>
@@ -19,10 +20,9 @@ namespace vcsn
 
   namespace detail
   {
-    /// When we copy a focus automaton, create another focus
+    /// When we copy a focus automaton, we create another focus
     /// automaton.  So we need a means to recognize focus automata,
-    /// and extract their true context, not just their visible
-    /// context.
+    /// and extract their true context, not just the visible one.
     template <Automaton Aut>
     struct real_context_impl;
 
@@ -438,7 +438,7 @@ namespace vcsn
       template <typename ExpSet, typename Context, typename Identities>
       expression
       copy_expression(const expression& exp,
-                      const context& ctx, rat::identities ids)
+                      const context& ctx, identities ids)
       {
         const auto& r = exp->as<ExpSet>();
         const auto& c = ctx->as<Context>();
