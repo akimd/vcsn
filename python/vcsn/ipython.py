@@ -176,7 +176,7 @@ class DemoAutomaton(Magics):
         algorithm    one that is valid for the variable: [eliminate_state,
         automaton]
 
-        Type %demo help to display this message.
+        Type %demo --help to display this message.
 
         Example:
 
@@ -191,20 +191,30 @@ class DemoAutomaton(Magics):
         algo = args[1] if len(args) > 1 else ''
 
         # The help message.
-        if var == 'help':
+        if var == '--help' or algo == '' or var == '':
             print(self.__doc__)
             return
 
-        if var in self.shell.user_ns:
-            if algo == 'eliminate_state':
-                a = demo.EliminateState(self.shell.user_ns[var])
-            elif algo == 'automaton':
-                a = demo.Automaton(self.shell.user_ns[var])
+        if var not in self.shell.user_ns:
+            raise NameError(var + ' does not exist')
 
-        try:
-            a.show()
-        except Exception:
-            print(self.__doc__)
+        var = self.shell.user_ns[var]
+
+        if isinstance(var, vcsn.automaton):
+            if algo == 'eliminate_state':
+                a = demo.EliminateState(var)
+            else:
+                raise NameError(algo +
+                                ' is not a valid algorithm for automaton')
+        elif isinstance(var, vcsn.expression):
+            if algo == 'automaton':
+                a = demo.Automaton(var)
+            else:
+                raise NameError(algo +
+                                ' is not a valid algorithm for expression')
+        else:
+            raise TypeError(args[0] + ' is not an automaton or an expression')
+        a.show()
 
 ip.register_magics(EditAutomaton)
 ip.register_magics(DemoAutomaton)
