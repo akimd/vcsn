@@ -5,4 +5,4 @@ run 0 ignore -vcsn score -r 0
 
 # Check the test cases, but just one run, we are not collecting the
 # result (yet).
-run 0 ignore -vcsn score -r 1
+run 0 ignore -vcsn score --check

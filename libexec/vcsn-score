@@ -31,6 +31,8 @@ parser.add_argument('-r', '--repeat', metavar='NUM',
                     expected to be.  Pass 0 to run only the set-up parts;
                     this is useful to warm up the plugin cache (ccache).''')
 parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose')
+parser.add_argument('--check', action='store_true',
+                    help='only run a quick check. Implies -r 1.')
 
 args = parser.parse_args()
 
@@ -66,11 +68,32 @@ def ctx_signature(ctx):
                  ctx)
     return ctx
 
+def downsize(statement):
+    'Replace size identifiers with 1.'
+    # Examples of numbers not to match:
+    # - lal_char, f2
+    # - lal_char(A-Z0-9), ...
+    # - a2 = ...
+    return re.sub(r'(?<![-a-zA-Z])\d+', '1', statement)
 
 def bench(stmt, comment, title=None, setup=['pass'], number=1):
     'Report the best timing of three batches of number runs of cmd.'
     if title is None:
         title = stmt
+
+    if not isinstance(setup, list):
+        setup = [setup]
+
+    if args.check:
+        number = 1
+        args.repeat = 1
+        oldstmt = stmt
+        oldsetup = list(setup)
+        stmt = downsize(stmt)
+        comment = downsize(comment)
+        title = downsize(title)
+        for i, s in enumerate(oldsetup):
+            setup[i] = downsize(s)
 
     if args.only.search(title + ' # ' + comment):
 
@@ -82,13 +105,14 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
 
         try:
             # Run the set up if it is not the last one we ran.
-            if not isinstance(setup, list):
-                setup = [setup]
             global last_setup
             if setup != last_setup:
-                for s in setup:
+                for i, s in enumerate(setup):
                     if args.verbose:
-                        print('run:', s)
+                        if args.check and oldsetup[i] != s:
+                            print('run: {:27s} (was: {})'.format(s, oldsetup[i]))
+                        else:
+                            print('run:', s)
                     exec(s)
                 last_setup = setup
 
@@ -98,11 +122,12 @@ def bench(stmt, comment, title=None, setup=['pass'], number=1):
             builtins.__dict__.update(locals())
             builtins.__dict__.update({'vcsn': vcsn})
             if args.verbose:
-                print('run:', stmt)
+                if args.check and oldstmt != stmt:
+                    print('run: {:27s} (was: {})'.format(stmt, oldstmt))
+                else:
+                    print('run:', stmt)
             if args.repeat:
-                t = round(min(timeit.repeat(stmt, number=number,
-                                            repeat=args.repeat)),
-                          2)
+                t = min(timeit.repeat(stmt, number=number, repeat=args.repeat))
                 t = '{:5.2f}s'.format(t)
             else:
                 # Just run the set up, the user is just warming ccache
