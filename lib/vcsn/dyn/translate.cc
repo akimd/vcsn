@@ -277,8 +277,8 @@ namespace vcsn
               {
                 auto linkflags = printer_.linkflags();
                 if (!linkflags.empty())
-                  linkflags = " --extra-ldflags='" + linkflags + "'";
-                cxx("vcsn compile -shared '" + base + ".cc'" + linkflags,
+                  linkflags = " LDFLAGS+='" + linkflags + "'";
+                cxx("vcsn compile -shared" + linkflags + " '" + base + ".cc'",
                     tmp);
               }
             auto d
