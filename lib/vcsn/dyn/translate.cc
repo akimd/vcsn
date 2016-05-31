@@ -20,6 +20,7 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
+#include <vcsn/misc/set.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/signature.hh>
@@ -354,7 +355,7 @@ namespace vcsn
                 }
               os <<
                 "\n"
-                "static bool vcsn_" << algo.first << " ATTRIBUTE_USED =" << incendl
+                "static bool vcsn_" << algo.first << "_" << count << " ATTRIBUTE_USED =" << incendl
                  << "vcsn::dyn::detail::" << algo.first << "_register(" << incendl
                  << "vcsn::ssignature<" << types << ">()," << iendl
                  << "vcsn::dyn::detail::" << algo.first << "<" << types << ">" << decendl
@@ -383,16 +384,45 @@ namespace vcsn
       translate.compile(ctx);
     }
 
+    using set_algo = std::set<std::pair<std::string, signature>>;
+    using set_str = std::set<std::string>;
+
+    static void add_automaton_cluster(set_algo& algos,
+                                      const std::string& algo,
+                                      const signature& sig)
+    {
+      // automata: accessibility.
+      static const set_str cluster
+        = { "accessible",
+          "coaccessible",
+          "is_accessible",
+          "is_coaccessible",
+          "is_trim",
+          "trim" };
+      if (has(cluster, algo))
+      {
+        for (const auto& a: cluster)
+          algos.emplace(a, sig);
+        algos.emplace("strip", sig);
+        algos.emplace("strip", signature{symbol("filter_automaton<" + sig.to_string() + ">")});
+      }
+    }
+
     void compile(const std::string& algo, const signature& sig)
     {
       translation translate;
-      std::set<std::pair<std::string, signature>> algos{{algo, sig}};
+      set_algo algos{{algo, sig}};
+
+      if (sig.to_string().find("automaton") != std::string::npos)
+        add_automaton_cluster(algos, algo, sig);
+
       if (algo == "delay_automaton"
           || algo == "is_synchronized")
         {
           algos.emplace("delay_automaton", sig);
           algos.emplace("is_synchronized", sig);
         }
+
       translate.compile(algos);
     }
   } // namespace dyn
