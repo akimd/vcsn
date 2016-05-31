@@ -49,9 +49,9 @@ class polynomial:
 
 
     def one(self):
-        '''The polynomial for `\e`, if we can represent it.'''
+        r'''The polynomial for `\e`, if we can represent it.'''
         try:
-            return self.context().polynomial('\e')
+            return self.context().polynomial(r'\e')
         except RuntimeError as e:
             if r'cannot represent \e' in str(e):
                 raise RuntimeError(str(self.context())

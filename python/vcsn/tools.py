@@ -29,21 +29,21 @@ def _info_to_dict(info):
         # Beware that we may display "N/A" for Boolean (e.g., "is
         # ambiguous" for non LAL), and for integers (e.g., "number of
         # deterministic states" for non LAL).
-        try:
-            # Don't convert "0" and "1", which are used for false and
-            # true, as integer: special case categories that start
-            # with "is ".
-            if k.startswith('is '):
-                if v in ['false', '0']:
-                    v = False
-                elif v in ['true', '1']:
-                    v = True
-            # Otherwise, if it passes the conversion into a number,
-            # make it a number.
-            else:
+        # Don't convert "0" and "1", which are used for false and
+        # true, as integer: special case categories that start
+        # with "is ".
+        if k.startswith('is '):
+            if v in ['false', '0']:
+                v = False
+            elif v in ['true', '1']:
+                v = True
+        # Otherwise, if it passes the conversion into a number,
+        # make it a number.
+        else:
+            try:
                 v = int(v)
-        except:
-            pass
+            except ValueError:
+                pass
         res[k] = v
     return res
 

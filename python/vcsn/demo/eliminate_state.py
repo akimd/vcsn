@@ -21,8 +21,10 @@ def _create_callback(widget):
     ''' Create a callback which update an interactive svg for an EliminateState
         widget object. The result is required as argument of
         IPython.html.widget.on_trait_change(callback, ...)'''
+    # Known pylint issue: https://github.com/PyCQA/pylint/issues/760
+    # FIXME: Remove comment once issue is fixed
     return lambda name, value, new: _interact_h(lambda:
-            display(widget.automata[new]))
+            display(widget.automata[new])) # pylint: disable=undefined-variable
 
 class EliminateState(widgets.DOMWidget):
     ''' Create a widget composed of an IntSlider and a svg to showcase each

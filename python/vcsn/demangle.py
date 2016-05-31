@@ -25,7 +25,7 @@ try:
     std     = Style.RESET_ALL
     color_cycle = [red, blue, yellow, green, magenta, cyan]
     colors_enabled = True
-except:
+except ImportError:
     colors_enabled = False
 
 
