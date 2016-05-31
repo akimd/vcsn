@@ -4,6 +4,25 @@ import argparse
 import os
 import re
 import sys
+import textwrap
+
+class Indent(str):
+    '''
+    An indenting string, to be used with str.format.
+    See http://stackoverflow.com/questions/37501228.
+    '''
+
+    indent_format_spec = re.compile(r'i([0-9]+)')
+
+    def __format__(self, format_spec):
+        matches = self.indent_format_spec.search(format_spec)
+        if matches:
+            level = int(matches.group(1))
+            first, sep, text = textwrap.dedent(self).strip().partition('\n')
+            return first + sep + textwrap.indent(text, ' ' * level)
+        else:
+            return super(Indent, self).__format__(format_spec)
+
 
 def vcsn_prefix(s):
     '''Convert prefix types that belong to `vcsn::`.'''
@@ -249,8 +268,7 @@ public:
   {{}}
 '''
 
-class_close = '''
-
+class_close = '''\
   /// The wrapped dyn::{class}.
   vcsn::dyn::{class} val_;
 }};
@@ -258,9 +276,10 @@ class_close = '''
 '''
 
 memfn_declaration = '''\
-{doc}
+  {doc:i2}
   {static}auto {fun}({formals}){const}
     -> {result};
+
 '''
 
 memfn_definition = '''\
@@ -276,10 +295,11 @@ def ignore(fun):
     print('warning: ignoring: {fun}({formals}) -> {result}'
           .format_map(fun), file=sys.stderr)
 
+
 def process_function(fun):
     fun['const'] = ''
     fun['static'] = ''
-    fun['doc'] = fun['doc'].rstrip()
+    fun['doc'] = Indent(fun['doc'])
     for k in ['formals', 'result']:
         fun[k] = vcsn_prefix(fun[k])
 
@@ -302,7 +322,9 @@ def process_function(fun):
         args[1] = 'val_'
 
     elif cls.isidentifier():
-        # The first argument is ours, e.g., `automaton`.
+        # The first argument is ours, e.g., `automaton`.  In the
+        # function body, use `val_` to denote the value stored by
+        # `this`.  And keep the `const` as the function's constness.
         if 'const ' in fs[0]:
             fun['const'] = ' const'
         fs = fs[1:]
@@ -310,12 +332,13 @@ def process_function(fun):
 
     elif 'std::vector' in cls:
         # The first argument is not ours, e.g.,
-        # `std::vector<automaton>`.  Make it belongs to the
-        # class `automaton`.
+        # `std::vector<automaton>`.  Make this function a static
+        # function of class `automaton`.
         cls = re.sub('.*<(?P<class>\w+)>', '\g<class>', cls)
         fun['static'] = 'static '
         args[0] = 'make_dyn_vector<{cls}>({arg})'.format(cls=cls,
-                                                           arg=args[0])
+                                                         arg=args[0])
+
     elif fun['result'].isidentifier() and not fun['result'] == 'void':
         # The first argument is std::ostream or std::istream.
         # Bind this to the return type.
@@ -343,6 +366,7 @@ function_re = re.compile(r'''(?P<doc>(?:^\s*///[^\n]*\n)*)?
 ^\s*(?P<result>[:\w]+)
 \s+(?P<dynfun>\w+)\s*\((?P<formals>.*?)\);''',
                     flags=re.DOTALL | re.MULTILINE | re.VERBOSE)
+
 
 def process_header(fn):
     '''Store in `classes` the signatures from header `fn`.'''
@@ -389,6 +413,7 @@ using identities = vcsn::dyn::identities;
         res += output_memfn(memfn_declaration, classes[c])
         res += class_close.format_map({'class': c})
     return res
+
 
 def output():
     '''Generate the implementation of the C++ OO Bindings.'''
