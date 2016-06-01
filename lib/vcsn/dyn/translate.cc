@@ -473,6 +473,24 @@ namespace vcsn
             algos.emplace(algo, signature{sig[0], symbol(str + "0>")});
             algos.emplace(algo, signature{sig[0], symbol(str + "1>")});
           }
+          return;
+        }
+      }
+      // num_tapes
+      {
+        static const set_str cluster
+          = { "num_tapes",
+            "read_label",
+            "read_weight"};
+        if (has(cluster, algo))
+        {
+          algos.emplace("num_tapes", signature{sig[0]});
+          algos.emplace("read_weight", signature{sig[0], symbol("std::istream")});
+          algos.emplace("read_label", signature{sig[0],
+                                                symbol("std::istream"),
+                                                symbol("bool")});
+          return;
+
         }
       }
     }
