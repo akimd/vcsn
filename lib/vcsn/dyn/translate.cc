@@ -392,19 +392,38 @@ namespace vcsn
                                       const signature& sig)
     {
       // automata: accessibility.
-      static const set_str cluster
-        = { "accessible",
-          "coaccessible",
-          "is_accessible",
-          "is_coaccessible",
-          "is_trim",
-          "trim" };
-      if (has(cluster, algo))
       {
-        for (const auto& a: cluster)
-          algos.emplace(a, sig);
-        algos.emplace("strip", sig);
-        algos.emplace("strip", signature{symbol("filter_automaton<" + sig.to_string() + ">")});
+        static const set_str cluster
+          = { "accessible",
+            "coaccessible",
+            "is_accessible",
+            "is_coaccessible",
+            "is_trim",
+            "trim" };
+        if (has(cluster, algo))
+        {
+          for (const auto& a: cluster)
+            algos.emplace(a, sig);
+          algos.emplace("strip", sig);
+          algos.emplace("strip", signature{symbol("filter_automaton<" + sig.to_string() + ">")});
+          return;
+        }
+      }
+      // automata: determinize
+      {
+        static const set_str cluster
+          = { "codeterminize",
+            "determinize",
+            "is_codeterministic",
+            "is_deterministic"};
+        if (has(cluster, algo))
+        {
+          algos.emplace("codeterminize", signature{sig[0], symbol("const std::string")});
+          algos.emplace("determinize", signature{sig[0], symbol("const std::string")});
+          algos.emplace("is_codeterministic", signature{sig[0]});
+          algos.emplace("is_deterministic", signature{sig[0]});
+          algos.emplace("strip", signature{sig[0]});
+        }
       }
     }
 
