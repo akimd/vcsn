@@ -440,6 +440,23 @@ namespace vcsn
       }
     }
 
+    static void add_expression_cluster(set_algo& algos,
+                                      const std::string& algo,
+                                      const signature& sig)
+    {
+      // expression: multiplication
+      static const set_str cluster
+        = { "right_mult_expression",
+          "left_mult_expression"};
+      if (has(cluster, algo))
+      {
+        auto other = algo == "right_mult_expression"
+                   ? "left_mult_expression" : "right_mult_expression";
+        algos.emplace(other, signature{sig[1], sig[0]});
+        return;
+      }
+    }
+
     static void add_other_cluster(set_algo& algos,
                                   const std::string& algo,
                                   const signature& sig)
@@ -467,6 +484,8 @@ namespace vcsn
 
       if (sig.to_string().find("automaton") != std::string::npos)
         add_automaton_cluster(algos, algo, sig);
+      else if (sig.to_string().find("expression") != std::string::npos)
+        add_expression_cluster(algos, algo, sig);
       else
         add_other_cluster(algos, algo, sig);
 
