@@ -409,6 +409,17 @@ namespace vcsn
           return;
         }
       }
+      // automata: context_of
+      {
+        if (algo == "context_of")
+        {
+          algos.emplace("context_of", signature{sig[0]});
+          algos.emplace("print", signature{sig[0], symbol("std::ostream"), symbol("const std::string")});
+          if (sig.to_string().find("null") == std::string::npos)
+            algos.emplace("eval", signature{sig[0], symbol("wordset<char_letters>")});
+          return;
+        }
+      }
       // automata: determinize
       {
         static const set_str cluster
