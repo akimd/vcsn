@@ -9,6 +9,7 @@
 #include <unistd.h> // getpid
 
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <ltdl.h>
 
@@ -434,6 +435,27 @@ namespace vcsn
           algos.emplace("is_codeterministic", signature{sig[0]});
           algos.emplace("is_deterministic", signature{sig[0]});
           algos.emplace("strip", signature{sig[0]});
+          return;
+        }
+      }
+    }
+
+    static void add_other_cluster(set_algo& algos,
+                                  const std::string& algo,
+                                  const signature& sig)
+    {
+      // FIXME: Should contains more algo (to_expression, tuple_expression ...)
+      // but the signature should be adjusted to do so.
+      {
+        if (algo == "project_context")
+        {
+          std::string str = sig[1].get();
+          if (boost::lexical_cast<unsigned>(&str[str.length() - 2]) <= 1)
+          {
+            str = str.substr(0, str.length() - 2);
+            algos.emplace(algo, signature{sig[0], symbol(str + "0>")});
+            algos.emplace(algo, signature{sig[0], symbol(str + "1>")});
+          }
         }
       }
     }
@@ -445,6 +467,8 @@ namespace vcsn
 
       if (sig.to_string().find("automaton") != std::string::npos)
         add_automaton_cluster(algos, algo, sig);
+      else
+        add_other_cluster(algos, algo, sig);
 
       if (algo == "delay_automaton"
           || algo == "is_synchronized")
