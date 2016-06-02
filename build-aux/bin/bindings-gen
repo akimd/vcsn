@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
 import argparse
-import os
 import re
 import sys
 import textwrap
@@ -29,13 +28,13 @@ def vcsn_prefix(s):
     return re.sub('(letter_class_t)',
                   r'vcsn::\1', s)
 
-'''The types defined in vcsn::dyn that we wrap.'''
+# The types defined in vcsn::dyn that we wrap.
 dyn_types = ['automaton', 'context', 'expansion', 'expression', 'label',
              'polynomial', 'weight']
 
 
-'''A regex to parse the components of a C++ formal argument such
-as `const std::string& algo = "default"`.'''
+# A regex to parse the components of a C++ formal argument such
+# as `const std::string& algo = "default"`.
 formal_re = re.compile(r'^(?P<type>(?P<const>const\s+)?(?P<class>[:\w<>]+)&?)'
                        r'\s+'
                        r'(?P<arg>\w+)'
@@ -62,25 +61,25 @@ def formals_to_args(formals):
     return [formal_to_arg(f) for f in formals]
 
 
-'''A dictionary of all the classes and function,
-   with the class name as key.
-
-   Each class is a list of dictionaries that define function,
-   providing the following keys:
-
-   const: ` const` if the first argument was const, empty otherwise.
-   static: `static ` if the function should be static, empty otherwise.
-   doc: the documentation string.
-   args: the effective arguments (e.g., "aut, i").
-   formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
-   formals_impl: the formals arguments without the default values.
-   fun: function name (e.g., multiply, is_equivalent).
-   dynfun: function name in vcsn::dyn:: (e.g., multiply, are_equivalent).
-   result: return type.'''
+# A dictionary of all the classes and function,
+# with the class name as key.
+#
+# Each class is a list of dictionaries that define function,
+# providing the following keys:
+#
+# const: ` const` if the first argument was const, empty otherwise.
+# static: `static ` if the function should be static, empty otherwise.
+# doc: the documentation string.
+# args: the effective arguments (e.g., "aut, i").
+# formals: the formals arguments (e.g., "const automaton& aut, unsigned i").
+# formals_impl: the formals arguments without the default values.
+# fun: function name (e.g., multiply, is_equivalent).
+# dynfun: function name in vcsn::dyn:: (e.g., multiply, are_equivalent).
+# result: return type.'''
 classes = {}
 
-'''For each class, a piece of code to include in the class
-   definition.'''
+# For each class, a piece of code to include in the class
+# definition.
 classes_prologue_header = {
 'automaton':
     r'''
@@ -142,8 +141,8 @@ classes_prologue_header = {
 }
 
 
-'''For each class, a piece of code to include in the definition
-   of the class' functions.'''
+# For each class, a piece of code to include in the definition
+# of the class' functions.
 classes_prologue_impl = {
     'automaton':
     r'''
@@ -334,7 +333,7 @@ def process_function(fun):
         # The first argument is not ours, e.g.,
         # `std::vector<automaton>`.  Make this function a static
         # function of class `automaton`.
-        cls = re.sub('.*<(?P<class>\w+)>', '\g<class>', cls)
+        cls = re.sub(r'.*<(?P<class>\w+)>', r'\g<class>', cls)
         fun['static'] = 'static '
         args[0] = 'make_dyn_vector<{cls}>({arg})'.format(cls=cls,
                                                          arg=args[0])
@@ -361,7 +360,7 @@ def process_function(fun):
     classes[cls].append(fun)
 
 
-'''A regexp to "parse" a function declaration in `vcsn/dyn/algos.hh`.'''
+# A regexp to "parse" a function declaration in `vcsn/dyn/algos.hh`.
 function_re = re.compile(r'''(?P<doc>(?:^\s*///[^\n]*\n)*)?
 ^\s*(?P<result>[:\w]+)
 \s+(?P<dynfun>\w+)\s*\((?P<formals>.*?)\);''',

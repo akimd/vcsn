@@ -46,9 +46,9 @@ def process_header(fn):
             bridge['file'] = os.path.basename(fn)
             reg = bridge['reg']
             # Compute the algo name.
-            if bridge['algo'] == None:
+            if bridge['algo'] is None:
                 bridge['algo'] = reg
-            bridge['formals'] = re.sub('\s+', ' ', bridge['formals'])
+            bridge['formals'] = re.sub(r'\s+', ' ', bridge['formals'])
             bridge['args'] = ', '.join(re.sub(r'[^,]* (\w+)',
                                               r'\1',
                                               bridge['formals']).split(','))
@@ -59,7 +59,7 @@ def process_header(fn):
 def process_implem(fn):
     '''Find the registries already dealt with in the implementation file `fn`.'''
     with open(fn, 'r') as f:
-        for m in re.finditer('REGISTRY_DEFINE\((.*?)\);', f.read()):
+        for m in re.finditer(r'REGISTRY_DEFINE\((.*?)\);', f.read()):
             bridges[m.group(1)]['by hand'] = True
 
 # Generate the header.
