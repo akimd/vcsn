@@ -71,8 +71,8 @@
 ##  7  0.03  0.09  0.32  1.30  5.23  22.40  95.73
 ##
 
-import vcsn
 import timeit
+import vcsn
 
 repetitions = 1
 
@@ -87,6 +87,9 @@ for i in val:
     a[i] = aut.conjunction(i)
     time[i] = dict()
 
+# Known pylint issue: https://github.com/PyCQA/pylint/issues/178
+# FIXME: Remove this once issue is fixed.
+# pylint: disable=undefined-loop-variable,cell-var-from-loop
 for i in val:
     for j in val:
         t = min(timeit.repeat(lambda: a[i].conjunction(a[j]),

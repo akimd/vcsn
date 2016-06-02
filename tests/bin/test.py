@@ -1,4 +1,5 @@
 from difflib import unified_diff as diff
+import atexit
 import inspect
 import os
 import re
@@ -23,12 +24,11 @@ medir = sys.argv[0].replace(".py", ".dir")
 # http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
 def which(program):
     'Return the file name for program if it exists, None otherwise.'
-    import os
 
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-    fpath, fname = os.path.split(program)
+    fpath, _ = os.path.split(program)
     if fpath:
         if is_exe(program):
             return program
@@ -75,7 +75,6 @@ def rst_diff(expected, effective):
 
 def load(fname):
     "Load the library automaton file `fname`."
-    import vcsn
     return vcsn.automaton(filename=vcsn.datadir + "/" + fname)
 
 
@@ -95,7 +94,7 @@ def automaton(a):
 
 
 def FAIL(*msg, **kwargs):
-    global count, nfail
+    global count, nfail # pylint: disable=global-statement
     count += 1
     nfail += 1
     # Don't display multi-line failure messages, only the first line
@@ -112,7 +111,7 @@ def FAIL(*msg, **kwargs):
 
 
 def PASS(*msg, **kwargs):
-    global count, npass
+    global count, npass # pylint: disable=global-statement
     count += 1
     npass += 1
     print('ok ', count, *msg)
@@ -278,5 +277,4 @@ def PLAN():
     print('PASS:', npass)
     print('FAIL:', nfail)
 
-import atexit
 atexit.register(PLAN)

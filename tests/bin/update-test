@@ -7,7 +7,7 @@
 # usage:
 #   update-test --builddir=_build tests/python/*.py tests/python/determinize.dir/*
 
-import argparse, os, re, sys
+import argparse, re
 
 parser = argparse.ArgumentParser(description='Update test cases.')
 parser.add_argument('tests', metavar='test', nargs='+',
@@ -51,7 +51,6 @@ def diff_to_re(match):
   if is_diff:
     frm = "\n".join(frm)
     to = "\n".join(to)
-    global subst
     subst[frm] = to
 
 def exp_eff_to_re(match):
@@ -67,7 +66,6 @@ def exp_eff_to_re(match):
   for l in match.group(2).splitlines(True):
     to += l[1:]
   to = to[:-1]
-  global subst
   subst[fr] = to
   if args.verbose:
     print("SUBST: {} -> {}".format(fr, to))
@@ -78,7 +76,7 @@ def update(test, logfile):
     log = contents(logfile)
     if args.verbose:
       print("LOG: ", logfile)
-    global subst
+    global subst # pylint: disable=global-statement
     subst = dict()
     re.sub(r'Expected out.*?::\n\n((?:^\t.*\n)+)\n'
            +'Effective out.*?::\n\n((?:^\t.*\n)+)\n',
@@ -87,7 +85,7 @@ def update(test, logfile):
 #           diff_to_re, log, flags = re.MULTILINE)
     if subst != dict():
       # Turn "subst{frm} -> to" into a large RE.
-      frm = '|'.join(map(re.escape, subst.keys()))
+      frm = '|'.join([re.escape(x) for x in subst.keys()])
       if args.verbose:
         print("FROM:", frm)
       test = re.sub("(" + frm + ")",

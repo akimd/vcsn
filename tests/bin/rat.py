@@ -24,7 +24,7 @@ contexts = {
 }
 
 def context_update():
-  global context, ctx
+  global context, ctx # pylint: disable=global-statement
   if context in contexts:
     context = contexts[context]
   ctx = vcsn.context(context)
@@ -49,7 +49,7 @@ def pp(re):
 def check_rat_exp(fname):
   file = open(fname, 'r', encoding='utf-8')
   lineno = 0
-  global context, identities
+  global context, identities # pylint: disable=global-statement
   for line in file:
     lineno += 1
     loc = fname + ':' + str(lineno)
@@ -99,7 +99,7 @@ def check_rat_exp(fname):
 
     # == tests that boths are equivalent.
     # => check the actual result.
-    m = re.match('(.*\S)\s*(=>|==)\s*(.*)$', line)
+    m = re.match(r'(.*\S)\s*(=>|==)\s*(.*)$', line)
     if m is not None:
       l = m.group(1)
       op = m.group(2)
@@ -118,7 +118,7 @@ def check_rat_exp(fname):
       continue
 
     # !: Look for syntax errors.
-    m = re.match('(.*\S)\s+(!.*)$', line)
+    m = re.match(r'(.*\S)\s+(!.*)$', line)
     if m is not None:
       l = m.group(1)
       err = m.group(2)
