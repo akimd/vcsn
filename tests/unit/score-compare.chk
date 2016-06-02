@@ -3,9 +3,12 @@
 # check OUTPUT ARGS...
 check ()
 {
-    out=$1
+    case $1 in
+        ('') out=$1;;
+        (*)  out=$(cat $medir/$1);;
+    esac
     shift
-    run 0 "$(cat $medir/$out)" -vcsn score-compare --no-git "$@"
+    run 0 "$out" -vcsn score-compare --no-git "$@"
 }
 
 a=$medir/v2.0-0001-g6bfe026
@@ -13,7 +16,14 @@ b=$medir/v2.0-0423-g841c067
 c=$medir/v2.0-1255-gafaf339
 d=$medir/v2.1-0010-gd55ef26
 
+
 check all.out --all -c never $a $b $c $d
+
+# Make sure `-o` overrides the existing content of files.
+echo 'foo' >output
+check '' --all -c never -o output $a $b $c $d
+run 0 "$(cat $medir/all.out)" -cat output
+
 if (vcsn python -c 'import colorama') 2>/dev/null; then
     check default.out  -c always $a $b $c $d
     check shortest.out -c always --only shortest -t 2 $a $b $c $d

@@ -39,7 +39,8 @@ parser.add_argument('--output-format', type=str,
                     choices=['csv', 'latex', 'text'],
                     default='text',
                     help='Select the output format')
-parser.add_argument('-o', '--output', type=str, metavar='FILE',
+parser.add_argument('-o', '--output', metavar='FILE',
+                    type=argparse.FileType('w'), default='-',
                     help='The output file')
 args = parser.parse_args()
 
@@ -383,8 +384,7 @@ def text(keys):
     else:
         printer = Text()
     # For each bench-case, compare all the recorded scores.
-    fl = sys.stdout if args.output in ['', '-', None] else open(args.output, 'a')
-    fl.write(printer.header(args.file))
+    args.output.write(printer.header(args.file))
     for k in keys:
         # All the benches.
         bs = [bench[k][f] if f in bench[k] else {'value': 'N/A', 'num': 0}
@@ -409,8 +409,8 @@ def text(keys):
                 buf['scores'].append(score(avg, b['value']))
         buf['repetitions'] = repetitions(number[k])
         buf['test'] = printer.test(k)
-        print_all(buf, fl)
-    fl.write(printer.footer(args.file))
+        print_all(buf, args.output)
+    args.output.write(printer.footer(args.file))
 
 # Main.
 # If some arguments are directories, then read the files in it.
