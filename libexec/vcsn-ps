@@ -17,7 +17,7 @@ from vcsn.demangle import pretty_plugin
 
 def user_proc(proc):
     for elt in proc.cmdline():
-        cmd = search('.*vcsn.compile.*\'.*?(/plugins/[^/]+/.*)\.cc\'.*$', elt)
+        cmd = search(r'.*vcsn.compile.*\'.*?(/plugins/[^/]+/.*)\.cc\'.*$', elt)
         if cmd:
             title, message = pretty_plugin(cmd.group(1))
             delta = datetime.now() - datetime.fromtimestamp(proc.create_time())
@@ -34,7 +34,7 @@ if has_psutil:
             pass
 else:
     cmd = \
-    '''ps uxww |
+    r'''ps uxww |
         grep -v perl |
         grep "vcsn compile" |
         perl -ne "s{^.*'.*?/lib/plugins/(.*?)\.cc'.*$}{\$1}g && print \$_"'''

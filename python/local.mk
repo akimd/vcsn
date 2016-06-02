@@ -60,7 +60,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/tools.py                             \
   %D%/vcsn/weight.py
 
-EXTRA_DIST += %D%/vcsn/pylintrc
+EXTRA_DIST += %D%/pylintrc
 
 vcsn_python_demodir = $(vcsn_pythondir)/demo
 vcsn_python_demo_PYTHON =                       \

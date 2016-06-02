@@ -26,7 +26,8 @@ disable=
         function-redefined,too-few-public-methods,too-many-public-methods,
         redefined-builtin,no-self-use,pointless-statement,wildcard-import,
         no-method-argument,fixme,cyclic-import,duplicate-code,
-        super-init-not-called
+        super-init-not-called,redefined-outer-name,too-many-branches,
+        too-many-nested-blocks
 
 
 [REPORTS]

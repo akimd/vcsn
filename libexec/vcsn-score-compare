@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# pylint: disable=wrong-import-position
 
 import argparse
 # Deprecated since Python3.5 use math module.
@@ -72,12 +73,12 @@ def git_summary(fn):
         return ''
 
 class Format:
-    def header(self, files):
+    def header(self, _):
         return ''
     def test(self, test):
         '''The test's information.'''
         return test
-    def footer(self, files):
+    def footer(self, _):
         return ''
 
 class Csv(Format):
@@ -99,10 +100,12 @@ class Latex(Format):
                    .replace('_', r'\_')\
                    .replace('\\e', r'\backslash e')
 
-    def header(self, files):
-        title_rule = r'\newcommand{\titlerot}[1]{\multicolumn{1}{c}{\rlap{\rotatebox{60}{#1}~}}}'
+    def header(self, _):
+        title_rule = (r'\newcommand{\titlerot}[1]'
+                      r'{\multicolumn{1}{c}{\rlap{\rotatebox{60}{#1}~}}}')
         tabular = r'\begin{{tabular}}{{llr *{{{}}}{{r}}}}'.format(len(args.file))
-        filenames = ''.join([r'& \titlerot{{{}}} '.format(os.path.basename(file)) for file in args.file])
+        filenames = ''.join([r'& \titlerot{{{}}} '.format(os.path.basename(file))
+                             for file in args.file])
         titles = r'Command & Setup & \titles{Repetitions} ' + filenames + r'\\ \midrule'
         return '\n'.join([title_rule, tabular, titles]) + '\n'
 
@@ -111,7 +114,7 @@ class Latex(Format):
         setup = '$' + self.escape(get_setup(test)) + '$'
         return command + setup
 
-    def footer(self, files):
+    def footer(self, _):
         return '\\bottomrule\n\\end{tabular}\n'
 
 
@@ -120,8 +123,8 @@ class Text(Format):
         return ' '.join(["{:^5}".format(i) for i in range(len(files))]).rstrip() + '\n'
     def footer(self, files):
         res = ''
-        for i in range(len(files)):
-            f = os.path.basename(files[i])
+        for i, file in enumerate(files):
+            f = os.path.basename(file)
             s = git_summary(f)
             res += "{:3}. {} {}".format(i, f, s).rstrip() + '\n'
         return res
@@ -134,10 +137,9 @@ if args.color == 'always' or args.color == 'auto' and sys.stdout.isatty():
         color['green'] = Fore.GREEN + Style.BRIGHT
         color['red'] = Fore.RED + Style.BRIGHT
         color['std'] = Style.RESET_ALL
-    except:
+    except ImportError:
         import warnings
         warnings.warn('you should install colorama for Python')
-        pass
 
 bench = dict()
 # bench-id => number of iterations (e.g., `20` for 20x).
@@ -156,7 +158,7 @@ def normalize(k):
     '''Fix a bench fix, i.e., fix errors, update APIs etc.
     '''
     # Separate with ' # ' only.
-    k = ' # '.join(map(str.strip, k.split('#', 2)))
+    k = ' # '.join([str.strip(x) for x in k.split('#', 2)])
 
     # The right symbol for repeated &.
     k = re.sub(r'a\*\*(\d+) ', r'a & \1', k)
@@ -274,7 +276,7 @@ def normalize(k):
     k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
 
     # Final format.
-    k = '{:20s} # {}'.format(*map(str.strip, k.split('#', 2)))
+    k = '{:20s} # {}'.format(*[str.strip(x) for x in k.split('#', 2)])
     return k
 
 
@@ -289,7 +291,7 @@ def read_file(fn):
     '''
     with open(fn) as f:
         for line in f:
-            v, k = map(str.strip, line.split(':', 1))
+            v, k = [str.strip(x) for x in line.split(':', 1)]
             # Get rid of "s", we know the unit.  And make it a float.
             if v[-1] == 's':
                 v = float(v[:-1])

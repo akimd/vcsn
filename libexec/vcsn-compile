@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import argparse
 import os
 import re
 import subprocess
@@ -11,7 +12,6 @@ from vcsn.demangle import demangle, pretty_plugin
 
 me = sys.argv[0]
 
-import argparse
 parser = argparse.ArgumentParser(description='Compile Vcsn programs.')
 parser.add_argument('vars', nargs='*', help='''variable assignments such
                     as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
@@ -70,12 +70,12 @@ def fmt(s, **kwargs):
 
 def notify():
     '''Notify the user that a compilation was finished.'''
-    sound = 'Glass'  # or 'Basso'
     title, message = pretty_plugin(args.base)
     # For some reason, the some first characters (such as open paren
     # or bracket) must be escaped.  Fortunately, a leading backlash
     # suffices.
-    cmd = '(terminal-notifier -title "\\{title}" -message "\\{message}" -appIcon "{datadir}/figs/vcsn.png") 2>/dev/null'
+    cmd = ('(terminal-notifier -title "\\{title}" -message "\\{message}"'
+           ' -appIcon "{datadir}/figs/vcsn.png") 2>/dev/null')
     os.system(fmt(cmd, title=title, message=message))
 
 
