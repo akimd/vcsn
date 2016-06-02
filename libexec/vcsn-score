@@ -76,6 +76,11 @@ def downsize(statement):
     # - a2 = ...
     return re.sub(r'(?<![-a-zA-Z])\d+', '1', statement)
 
+def log(*logs):
+    'Print logs to stderr.'
+    if args.verbose:
+        print(*logs, file=sys.stderr)
+
 def bench(stmt, comment, title=None, setup=None, number=1):
     'Report the best timing of three batches of number runs of cmd.'
     if title is None:
@@ -111,12 +116,11 @@ def bench(stmt, comment, title=None, setup=None, number=1):
             global last_setup # pylint: disable=global-statement
             if setup != last_setup:
                 for i, s in enumerate(setup):
-                    if args.verbose:
-                        if args.check and oldsetup[i] != s:
-                            print('run: {:27s} (was: {})'.format(s, oldsetup[i]))
-                        else:
-                            print('run:', s)
-                    exec(s) # pylint: disable=exec-used
+                    if args.check and oldsetup[i] != s:
+                        log('run: {:27s} (was: {})'.format(s, oldsetup[i]))
+                    else:
+                        log('run:', s)
+                    exec(s)
                 last_setup = setup
 
             # Inject the result into `builtins`, so that the stmt run by
@@ -124,11 +128,10 @@ def bench(stmt, comment, title=None, setup=None, number=1):
             # http://stackoverflow.com/a/5390326/4065671.
             builtins.__dict__.update(locals())
             builtins.__dict__.update({'vcsn': vcsn})
-            if args.verbose:
-                if args.check and oldstmt != stmt:
-                    print('run: {:27s} (was: {})'.format(stmt, oldstmt))
-                else:
-                    print('run:', stmt)
+            if args.check and oldstmt != stmt:
+                log('run: {:27s} (was: {})'.format(stmt, oldstmt))
+            else:
+                log('run:', stmt)
             if args.repeat:
                 t = min(timeit.repeat(stmt, number=number, repeat=args.repeat))
                 t = '{:5.2f}s'.format(t)
