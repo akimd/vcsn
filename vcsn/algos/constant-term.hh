@@ -97,9 +97,15 @@ namespace vcsn
       VCSN_RAT_VISIT(prod, v)        { visit_product(v); }
       VCSN_RAT_VISIT(shuffle, v)     { visit_product(v); }
 
-      /// Cannot compute the constant-term easily here: c(<x>a{\}<y>a)
-      /// = x{\}y, yet both operands have a null constant-term.
+      /// Cannot compute the constant-term easily here:
+      /// c(<x>a{\}<y>a) = x{\}y, yet both operands have a null
+      /// constant-term.
       VCSN_RAT_UNSUPPORTED(ldiv);
+
+      /// Cannot compute the constant-term easily here:
+      /// c(<x>\e|x @ <y>x|\e) = xy, yet both operands have a null
+      /// constant-term.
+      VCSN_RAT_UNSUPPORTED(compose);
 
       VCSN_RAT_VISIT(transposition, v)
       {
@@ -181,7 +187,6 @@ namespace vcsn
       weightset_t ws_;
       weight_t res_;
     };
-
   } // rat::
 
   /// The constant term of \a e.
@@ -189,8 +194,8 @@ namespace vcsn
   weight_t_of<ExpSet>
   constant_term(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
-    auto constant_term = rat::constant_term_visitor<ExpSet>{rs};
-    return constant_term(e);
+    auto c = rat::constant_term_visitor<ExpSet>{rs};
+    return c(e);
   }
 
   namespace dyn

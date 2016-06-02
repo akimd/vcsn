@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring> // strstr
 #include <stdexcept>
 
 #include <vcsn/algos/constant-term.hh>
@@ -18,11 +19,21 @@ namespace vcsn
   {
     try
     {
+      // We check validity by checking whether constant_term succeeds:
+      // `1*` will raise.
       constant_term(rs, e);
       return true;
     }
-    catch (const std::runtime_error&)
+    catch (const std::runtime_error& e)
     {
+      // Some operators prevent the computation of the constant-term,
+      // and raise an exception.  Forward that failure.
+      if (std::strstr(e.what(), "is not supported"))
+        raise("is_valid", strchr(e.what(), ':'));
+      // Make sure this is really the failure we are looking for.
+      if (std::strstr(e.what(), "star: invalid value"))
+        std::cerr << "warning: is_valid: unexpected error: "
+                  << e.what() << '\n';
       return false;
     }
   }

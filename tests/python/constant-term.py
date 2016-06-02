@@ -3,14 +3,14 @@
 import vcsn
 from test import *
 
+# Use a context with expression weights to check the order of
+# products.
 ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 
-# check WEIGHT RAT-EXP
-# --------------------
-# Check that the constant-term of RAT-EXP is WEIGHT, and check that
-# this is indeed the evaluation of the empty word on derived-term(RAT-EXP).
-#
-# Use a context with expression weights to check the order of products.
+# check WEIGHT EXP
+# ----------------
+# Check that the constant-term of EXP is WEIGHT, and check that this
+# is indeed the evaluation of the empty word on derived-term(EXP).
 def check(weight, exp, algo='expansion'):
     w = ctx.weight(weight)
     re = ctx.expression(exp)
@@ -61,7 +61,8 @@ check('zyx', '(<xyz>\e){T}')
 
 # ldiv
 e = ctx.expression('<x>a{\}<x>a')
-XFAIL(lambda: e.constant_term())
+XFAIL(lambda: e.constant_term(),
+      "constant_term: ldiv is not supported")
 
 # tuple.
 #
@@ -73,3 +74,8 @@ check('0', ' (<2>a)|(<3>x)',  'derivation')
 check('0', ' (<2>a)|(<3>\e)', 'derivation')
 check('0', '(<2>\e)|(<3>x)',  'derivation')
 check('6', '(<2>\e)|(<3>\e)', 'derivation')
+
+# compose
+e = ctx.expression('\e|a @ a|\e')
+XFAIL(lambda: e.constant_term(),
+      "constant_term: compose is not supported")

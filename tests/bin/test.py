@@ -135,9 +135,10 @@ def XFAIL(fun, exp=None):
         if exp is None or exp in str(e):
             PASS()
         else:
-            FAIL('does not include the expected error message')
+            FAIL('Unexpected error message')
             rst_file("Expected error", exp)
             rst_file("Effective error", str(e))
+            rst_diff(exp, str(e))
     else:
         FAIL('did not raise an exception', str(fun))
 
