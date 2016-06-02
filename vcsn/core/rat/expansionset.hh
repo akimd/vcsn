@@ -693,8 +693,8 @@ namespace vcsn
       }
 
       void
-      compose_with_one_(value_t& res,
-                        const value_t& l, const value_t& r,
+      compose_with_one_(value_t&,
+                        const value_t&, const value_t&,
                         std::false_type) const
       {}
 
@@ -706,9 +706,9 @@ namespace vcsn
         // Handle lhs labels with one on the second tape.
         {
           for (const auto& lhs: l.polynomials)
-            if (labelset_t::template valueset_t<1>::is_one(std::get<1>(lhs.first)))
+            if (ls_.template set<1>().is_one(std::get<1>(lhs.first)))
               for (const auto& rhs: r.polynomials)
-                if (!labelset_t::template valueset_t<0>::is_one(std::get<0>(rhs.first)))
+                if (!ls_.template set<0>().is_one(std::get<0>(rhs.first)))
                   // a|\e . [P1] @ b|c . [P2] becomes a|\e . [P1 @ (b|c)P2]
                   ps_.add_here(res.polynomials[lhs.first],
                                ps_.compose(lhs.second,
@@ -718,9 +718,9 @@ namespace vcsn
         // Handle rhs labels with one on the first tape.
         {
           for (const auto& rhs: r.polynomials)
-            if (labelset_t::template valueset_t<0>::is_one(std::get<0>(rhs.first)))
+            if (ls_.template set<0>().is_one(std::get<0>(rhs.first)))
               for (const auto& lhs: l.polynomials)
-                if (!labelset_t::template valueset_t<1>::is_one(std::get<1>(lhs.first)))
+                if (!ls_.template set<1>().is_one(std::get<1>(lhs.first)))
                   // a|b . [P1] @ \e|c . [P2] becomes \e|c . [(a|b)P1 @ P2]
                   ps_.add_here(res.polynomials[rhs.first],
                                ps_.compose(ps_.lmul_label(rs_.atom(lhs.first),
