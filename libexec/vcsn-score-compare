@@ -371,7 +371,7 @@ def print_all(buf, fl):
         fl.write(buf['test'] + delimiter)
         fl.write(buf['repetitions'] + delimiter)
         fl.write(delimiter.join(buf['scores']))
-        fl.write('\\\\\n' if args.output_format == 'latex' else ',\n')
+        fl.write('\\\\\n' if args.output_format == 'latex' else '\n')
     else:
         fl.write(''.join(buf['scores']))
         fl.write(buf['test'])
