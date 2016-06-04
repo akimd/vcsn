@@ -60,6 +60,7 @@ namespace vcsn
 
     private:
       VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(compose)
       VCSN_RAT_UNSUPPORTED(conjunction)
       VCSN_RAT_UNSUPPORTED(infiltration)
       VCSN_RAT_UNSUPPORTED(ldiv)
