@@ -39,7 +39,6 @@ namespace vcsn
 
 #define DEFINE                                  \
   template <typename Context>                   \
-  inline                                        \
   auto                                          \
   expressionset_impl<Context>
 
@@ -160,7 +159,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename expressionset_impl<Context>::type_t Type>
-  inline
   auto
   expressionset_impl<Context>::gather_(values_t& res, const value_t& v) const
     -> void
@@ -174,7 +172,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename expressionset_impl<Context>::type_t Type>
-  inline
   auto
   expressionset_impl<Context>::gather_(const value_t& l, const value_t& r) const
     -> values_t
@@ -977,7 +974,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename GenSet>
-  inline
   auto
   expressionset_impl<Context>::conv(const letterset<GenSet>& ls,
                                     typename letterset<GenSet>::value_t v) const
@@ -1018,7 +1014,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename Ctx2>
-  inline
   auto
   expressionset_impl<Context>::conv(const expressionset<Ctx2>& rs,
                                     typename expressionset<Ctx2>::value_t r)
@@ -1056,7 +1051,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename... Args>
-  inline
   auto
   expressionset_impl<Context>::letter_class(Args&&... args) const
     -> value_t
@@ -1067,7 +1061,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename LabelSet_>
-  inline
   auto
   expressionset_impl<Context>::letter_class_
     (std::set<std::pair<typename LabelSet_::letter_t,
@@ -1130,7 +1123,6 @@ namespace vcsn
 
   template <typename Context>
   template <typename LabelSet_, typename... Args>
-  inline
   auto
   expressionset_impl<Context>::letter_class_(const Args&&...,
                                              std::true_type) const

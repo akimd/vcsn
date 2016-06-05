@@ -3,9 +3,9 @@
 #include <set>
 #include <string>
 
+#include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/core/rat/printer.hh>
-#include <vcsn/core/rat/expression.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/labelset/letterset.hh>
@@ -591,16 +591,17 @@ namespace vcsn
   }
 
   /// Shorthand to expressionset constructor.
-  template <typename Context>
-  expressionset<Context>
-  make_expressionset(const Context& ctx, rat::identities identities = {})
+  template <typename LabelSet, typename WeightSet>
+  auto
+  make_expressionset(const context<LabelSet, WeightSet>& ctx,
+                     rat::identities ids = {})
+    -> expressionset<context<LabelSet, WeightSet>>
   {
-    return {ctx, identities};
+    return {ctx, ids};
   }
 
   /// The meet of two expressionsets.
   template <typename Ctx1, typename Ctx2>
-  inline
   auto
   meet(const expressionset<Ctx1>& a, const expressionset<Ctx2>& b)
     -> expressionset<meet_t<Ctx1, Ctx2>>

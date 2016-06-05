@@ -10,12 +10,10 @@ namespace vcsn
 
 #define DEFINE_CTOR(Node)                       \
     template <typename Context>                 \
-    inline                                      \
     Node<Context>::Node
 
 #define DEFINE(Node)                            \
     template <typename Context>                 \
-    inline                                      \
     auto                                        \
     Node<Context>
 
@@ -45,12 +43,10 @@ namespace vcsn
 
 #define DEFINE_CTOR(Node)                       \
     template <type_t Type, typename Context>    \
-    inline                                      \
     Node<Type, Context>::Node
 
 #define DEFINE(Node)                            \
     template <type_t Type, typename Context>    \
-    inline                                      \
     auto                                        \
     Node<Type, Context>
 
@@ -197,5 +193,5 @@ namespace vcsn
 #undef DEFINE_CTOR
 #undef DEFINE
 
-  } // namespace exp
+  } // namespace rat
 } // namespace vcsn

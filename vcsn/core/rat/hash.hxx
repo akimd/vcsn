@@ -7,7 +7,6 @@ namespace vcsn
 
 #define DEFINE                                  \
     template <typename ExpSet>                  \
-    inline                                      \
     auto                                        \
     hash<ExpSet>
 
@@ -33,7 +32,6 @@ namespace vcsn
     }
 
     template <typename ExpSet>
-    inline
     void
     hash<ExpSet>::combine_type(const node_t& node)
     {
@@ -41,7 +39,6 @@ namespace vcsn
     }
 
     template <typename ExpSet>
-    inline
     void
     hash<ExpSet>::visit_nullary(const node_t &n)
     {
@@ -50,7 +47,6 @@ namespace vcsn
 
     template <typename ExpSet>
     template <type_t Type>
-    inline
     void
     hash<ExpSet>::visit_unary(const unary_t<Type>& n)
     {
@@ -60,7 +56,6 @@ namespace vcsn
 
     template <typename ExpSet>
     template <type_t Type>
-    inline
     void
     hash<ExpSet>::visit_weight_node(const weight_node_t<Type>& n)
     {
@@ -71,7 +66,6 @@ namespace vcsn
 
     template <typename ExpSet>
     template <type_t Type>
-    inline
     void
     hash<ExpSet>::visit_variadic(const variadic_t<Type>& n)
     {

@@ -70,7 +70,5 @@ namespace vcsn
     {
       return std::max(i1, i2);
     }
-
   } // namespace rat
-
 } // namespace vcsn

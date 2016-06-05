@@ -451,7 +451,4 @@ namespace vcsn
       }
     }
   }
-
-
-
 } // namespace vcsn

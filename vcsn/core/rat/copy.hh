@@ -187,6 +187,5 @@ namespace vcsn
       auto copy = copier<InExpSet, OutExpSet>{in_rs, out_rs};
       return copy(v);
     }
-
   } // namespace rat
 } // namespace vcsn

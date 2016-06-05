@@ -42,7 +42,7 @@ namespace vcsn LIBVCSN_API
           distributive,
 
           /// The default value.
-          deflt = linear
+          deflt = linear,
         };
 
       identities(ids_t id = deflt)
