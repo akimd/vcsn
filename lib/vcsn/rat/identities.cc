@@ -34,6 +34,10 @@ namespace vcsn
       ids_ = map[s];
     }
 
+    identities::identities(const char* cp)
+      : identities(std::string{cp})
+    {}
+
     std::string to_string(identities i)
     {
       switch (i.ids())

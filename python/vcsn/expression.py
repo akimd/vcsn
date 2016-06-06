@@ -1,6 +1,7 @@
 ## ------------ ##
 ## expression.  ##
 ## ------------ ##
+import re
 
 from vcsn_cxx import label, expression
 from vcsn.dot import _dot_pretty, _dot_to_svg
@@ -136,6 +137,10 @@ class expression:
         return _format(self, spec, 'text', syntaxes)
 
 
+    def identities(self):
+        return re.sub(r'.*\((.*)\)', r'\1', self.type())
+
+
     def info(self, key=None):
         res = _info_to_dict(self.format('info'))
         return res[key] if key else res
@@ -154,3 +159,4 @@ class expression:
 
     shortest = lambda self, *a, **kw: self.automaton().shortest(*a, **kw)
     star = lambda self: self.multiply(-1)
+    type = lambda self: self.info('type')

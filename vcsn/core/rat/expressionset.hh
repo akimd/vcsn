@@ -600,6 +600,16 @@ namespace vcsn
     return {ctx, ids};
   }
 
+  /// Shorthand to expressionset constructor.
+  template <typename Context>
+  auto
+  make_expressionset(const expressionset<Context>& rs,
+                     rat::identities ids = {})
+    -> expressionset<Context>
+  {
+    return {rs.context(), ids};
+  }
+
   /// The meet of two expressionsets.
   template <typename Ctx1, typename Ctx2>
   auto
