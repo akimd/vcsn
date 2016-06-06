@@ -7,7 +7,6 @@ except ImportError:
 from IPython.core.magic import (Magics, magics_class, line_magic)
 from IPython.core.magic_arguments import (
     argument, magic_arguments, parse_argstring)
-from pylab import *
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -37,11 +36,19 @@ class Benchmarks(Magics):
                 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
             else:
                 plt.title(algo)
-            ax = plt.figure()
         args = parse_argstring(self.plot, line)
-        df = pd.read_csv(args.file)
-        df.index = df[' ']
-        df = df.drop(' ', 1)
+        # Consider '  N/A ' as NaN
+        df = pd.read_csv(args.file, na_values=['  N/A '])
+        # Compound titles
+        def format(x):
+            if x > 1:
+                return ', ' + str(x) + 'x'
+            return ''
+        df.index = df['Command'] + ' # ' + df['Setup'] + df['Repetitions'].map(format)
+        # Drop now useless columns
+        df = df.drop(['Command','Setup','Repetitions'], 1)
+        # Swap axes to get back to old score-compare format
+        df = df.T
         if args.regex:
             algos = []
             for ag in list(df.columns.values):
