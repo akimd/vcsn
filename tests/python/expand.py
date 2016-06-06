@@ -3,33 +3,32 @@
 import vcsn
 from test import *
 
-z = vcsn.context('lal_char(abcd), z')
+ctx = vcsn.context('lal_char(abcd), z')
+def expr(e, ids='associative'):
+    return ctx.expression(e, ids)
 
 # check(INPUT, EXP)
 # -----------------
-def check(input, exp):
-    eff = z.expression(input).expand()
-    exp = z.expression(exp)
-    if eff == exp:
-        PASS()
-    else:
-        FAIL(str(exp) + " != " + str(eff))
+def check(input, exp=None):
+    if exp is None:
+        exp = input
+    ref = expr(exp)
+    CHECK_EQ(ref, expr(input).expand())
 
-check('\z', '\z')
-check('\e', '\e')
-check('a',    'a')
-check('<2>a',  '<2>a')
-check('a+a',  '<2>a')
-check('a+a',  '<2>a')
-check('b+a+b+a',  '<2>a+<2>b')
+check('\z')
+check('\e')
+check('a')
+check('<2>a')
+check('a+a', '<2>a')
+check('b+a+b+a', '<2>a+<2>b')
 
-check('(a*)&(b+a+b+a)',  '<2>(a*&a)+<2>(a*&b)')
+check('(a*)&(b+a+b+a)', '<2>(a*&a)+<2>(a*&b)')
 
-check('<3>(b+a+b+a)<5>',  '<30>a+<30>b')
+check('<3>(b+a+b+a)<5>', '<30>a+<30>b')
 
 check('(a+b)?{3}', \
-      '\e+<3>a+<3>b+<3>(aa)+<3>(ab)+<3>(ba)+<3>(bb)' \
-      + '+aaa+aab+aba+abb+baa+bab+bba+bbb')
+      r'\e+<3>a+<3>b+<3>(aa)+<3>(ab)+<3>(ba)+<3>(bb)' \
+      r'+aaa+aab+aba+abb+baa+bab+bba+bbb')
 
 # TAF-Kit doc
 check('(a+b+\e)((a+ba)(ca+cc))*',\
