@@ -222,6 +222,24 @@ exp = vcsn.context('lal_char(a), b')\
 print("Expression: ", exp)
 CHECK(str(exp).count('a') < 15)
 
+# Check the weight generation on expression.
+exp = vcsn.context('lal_char(abc), b')\
+          .random_expression('+,*,!,k.=1,w="1=1"',
+                             identities='none')
+print("Expression: ", exp)
+CHECK(str(exp).find('<1>') is not -1)
+CHECK(str(exp).find('<0>') is -1)
+
+# Check rweight and lweight.
+exp = vcsn.context('lal_char(abc), b')\
+          .random_expression('+=1,!=0.5,k.=1,length=50',
+                             identities='none')
+print("Expression: ", exp)
+info = exp.info()
+print("Info: ", info)
+CHECK_NE(info['lweight'], 0)
+CHECK_EQ(info['rweight'], 0)
+
 ## ---------------------- ##
 ## random_deterministic.  ##
 ## ---------------------- ##

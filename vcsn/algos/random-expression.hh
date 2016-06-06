@@ -6,6 +6,7 @@
 #include <boost/tokenizer.hpp>
 
 #include <vcsn/core/rat/expressionset.hh> // make_expressionset
+#include <vcsn/core/rat/less.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/cast.hh>
@@ -29,12 +30,16 @@ namespace vcsn
     {
     public:
       using expressionset_t = ExpressionSet;
-      using expression_t = typename expressionset_t::value_t;
+      using expression_t    = typename expressionset_t::value_t;
+      using weight_t        = typename expressionset_t::weight_t;
+      using weightset_t     = typename expressionset_t::weightset_t;
 
       random_expression_impl(const expressionset_t& rs,
-                             const std::string& param, RandomGenerator& gen)
+                             const std::string& param,
+                             RandomGenerator& gen)
         : rs_{rs}
         , gen_{gen}
+        , random_weight_{gen_, ws_}
       {
         parse_param_(param);
       }
@@ -65,14 +70,18 @@ namespace vcsn
     private:
       using operator_t = std::map<std::string, float>;
       using operator_set_t = std::unordered_set<std::string>;
-      using weight_t = std::vector<float>;
+      /// Vector of weights associated with the operators
+      /// aka the probabilities to pick each operators.
+      using proba_op_t = std::vector<float>;
 
+      /// FIXME: maybe use something similar to Boost.ProgramOptions
+      /// or getargs.
       void parse_param_(const std::string& param)
       {
         // Set default value.
         length_ = 6;
-        using tokenizer = boost::tokenizer<boost::char_separator<char>>;
-        auto sep = boost::char_separator<char>{","};
+        using tokenizer = boost::tokenizer<boost::escaped_list_separator<char>>;
+        auto sep = boost::escaped_list_separator<char>("-", ",", "\"");
         auto tok = tokenizer(param, sep);
         for (auto it = tok.begin(); it != tok.end(); ++it)
         {
@@ -80,27 +89,50 @@ namespace vcsn
           auto eq = tok_arg.find_first_of('=');
           auto op = tok_arg.substr(0, eq);
           boost::algorithm::erase_all(op, " ");
-          float value = 1;
-          if (eq != std::string::npos)
-            value = lexical_cast<float>(tok_arg.substr(eq + 1));
-          if (has(nullary_op_, op) || has(unary_op_, op) || has(binary_op_, op))
-            operators_[op] = value;
-          else if (op == "length")
-            length_ = value;
+          if (op == "w")
+            random_weight_.parse_param(tok_arg.substr(eq + 1));
           else
-            raise("random_expression: invalid operator: ", op);
+          {
+            float value = 1;
+            if (eq != std::string::npos)
+              value = lexical_cast<float>(tok_arg.substr(eq + 1));
+            if (has(nullary_op_, op) || has(unary_op_, op) || has(binary_op_, op))
+              operators_[op] = value;
+            else if (op == "length")
+              length_ = value;
+            else
+              raise("random_expression: invalid operator: ", op);
+          }
         }
-        weight_ = transform(operators_, [](const auto& v){ return v.second; });
+        proba_op_ = transform(operators_, [](const auto& v){ return v.second; });
       }
 
-      /// Print expression with unary operator
+      /// Print random weight.
+      void print_weight_(std::ostream& out) const
+      {
+        out << "<";
+        rs_.weightset()->print(random_weight_.generate_random_weight(), out);
+        out << ">";
+      }
+
+      /// Print label.
+      void print_label_(std::ostream& out) const
+      {
+        rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+      }
+
+      /// Print expression with unary operator.
       void print_unary_exp_(std::ostream& out, unsigned length,
                             const std::string& op) const
       {
         // prefix
-        if (op == "!")
+        if (op == "!" || op == "k.")
         {
-          out << '(' << op;
+          out << '(';
+          if (op == "k.")
+            print_weight_(out);
+          else
+            out << op;
           print_random_expression_(out, length - 1);
           out << ')';
         }
@@ -109,7 +141,11 @@ namespace vcsn
         {
           out << '(';
           print_random_expression_(out, length - 1);
-          out << op << ')';
+          if (op == ".k")
+            print_weight_(out);
+          else
+            out << op;
+          out << ")";
         }
       }
 
@@ -120,7 +156,7 @@ namespace vcsn
                              const std::string& op) const
       {
         if (length < 3)
-          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+          print_label_(out);
         else
         {
           auto dis = std::uniform_int_distribution<>(1, length - 1);
@@ -139,19 +175,19 @@ namespace vcsn
         // If there is no operators at all, that's impossible to
         // construct an expression, so just return a label.
         if (operators_.empty())
-          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+          print_label_(out);
 
         // 1 symbol left: print a label.
         else if (length == 1)
-          rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+          print_label_(out);
 
         // binary, unary or nullary operators are possible
         // just choose randomly one (with associated weight probability)
         // and print the associated expression.
         else
         {
-          auto it =
-            discrete_chooser<RandomGenerator>{gen_}(weight_, operators_);
+          // Choose an operator.
+          auto it = chooser_it_(proba_op_, operators_);
           auto op = it->first;
           if (has(nullary_op_, op))
             out << op;
@@ -164,13 +200,16 @@ namespace vcsn
       }
 
       expressionset_t rs_;
+      weightset_t ws_;
       unsigned length_;
       operator_t operators_;
       operator_set_t nullary_op_ = { "\\e", "\\z" };
-      operator_set_t unary_op_   = { "!", "{c}", "*", "{T}" };
+      operator_set_t unary_op_   = { "!", "{c}", "*", "{T}", "k.", ".k" };
       operator_set_t binary_op_  = { "&", "&:", ":", ".", "<+", "%", "+", "{/}", "{\\}" };
-      weight_t weight_;
+      proba_op_t proba_op_;
       RandomGenerator& gen_;
+      random_weight<weightset_t, RandomGenerator> random_weight_;
+      discrete_chooser<RandomGenerator> chooser_it_{gen_};
     };
 
     /// Convenience constructor.
