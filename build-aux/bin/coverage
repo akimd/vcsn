@@ -24,15 +24,18 @@ lcov --capture                                  \
 # all our generated sources: genhtml fails to find them.  So also skip
 # algos.cc etc. which are generated.
 lcov --remove vcsn.info.tmp -o vcsn.info                \
+     'lib/plugins/*'                                    \
      'lib/vcsn/*/parse.cc'                              \
      'lib/vcsn/*/parse.hh'                              \
      'lib/vcsn/*/scan.cc'                               \
      'lib/vcsn/*/stack.hh'                              \
      'lib/vcsn/algos/algos.cc'                          \
-     'lib/vcsn/dyn/context-printer-header-algo.cc'      \
      'lib/vcsn/dot/stack.hh'                            \
+     'lib/vcsn/dyn/context-printer-header-algo.cc'      \
      'lib/vcsn/rat/location.hh'                         \
-     'lib/vcsn/rat/position.hh'
+     'lib/vcsn/rat/position.hh'                         \
+     'python/oodyn.cc'                                  \
+     'python/oodyn.hh'
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn.cov.html           \
