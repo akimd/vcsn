@@ -79,16 +79,18 @@ CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>
 ## transpose(expression).  ##
 ## ----------------------- ##
 
-def check(re, exp):
-    exp = ctx.expression(exp)
-    r = ctx.expression(re)
-    CHECK_EQ(exp, r.transpose())
-    CHECK_EQ(r, exp.transpose())
+def check(r1, r2=None):
+    if r2 is None:
+        r2 = r1
+    e1 = ctx.expression(r1)
+    e2 = ctx.expression(r2)
+    CHECK_EQ(e2, e1.transpose())
+    CHECK_EQ(e1, e2.transpose())
 
 ctx = vcsn.context('lal_char(abcd), b')
-check('\e', '\e')
-check('\z', '\z')
-check('a', 'a')
+check('\e')
+check('\z')
+check('a')
 check('ab', 'ba')
 check('abc+aba', 'cba+aba')
 check('abc&aba', 'cba&aba')
@@ -100,9 +102,9 @@ check('ab{/}cd', '((cd){T}{\}(ab){T})')
 check('(ab){c}', '(ba){c}')
 
 ctx = vcsn.context('law_char(abcd), b')
-check('\e', '\e')
-check('\z', '\z')
-check('a', 'a')
+check('\e')
+check('\z')
+check('a')
 check('ab', 'ba')
 check('abc+aba', 'cba+aba')
 check('(ab)*&(ab)*', '(ba)*&(ba)*')

@@ -23,6 +23,7 @@ namespace vcsn
       using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
       using super_t = typename expressionset_t::const_visitor;
+      using context_t = context_t_of<expressionset_t>;
 
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "transpose"; }
@@ -65,41 +66,41 @@ namespace vcsn
         res_ = rs_.atom(rs_.labelset()->transpose(e.value()));
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      /// Binary member functions of the expressionset.
+      using binary_t =
+        expression_t (expressionset_t::*)(const expression_t&,
+                                          const expression_t&) const;
+
+      template <rat::type_t Type>
+      using variadic_t = rat::variadic<Type, context_t>;
+
+      /// Factor the visitation of "commutative" variadic nodes.
+      template <rat::type_t Type>
+      void visit_(const variadic_t<Type>& v, binary_t f)
       {
-        res_ = rs_.zero();
-        for (const auto& v: e)
-          res_ = rs_.add(res_, transpose(v));
+        res_ = transpose(v.head());
+        for (const auto& c: v.tail())
+          res_ = (rs_.*f)(res_, transpose(c));
       }
 
-      VCSN_RAT_VISIT(conjunction, e)
-      {
-        res_ = transpose(e.head());
-        for (const auto& v: e.tail())
-          res_ = rs_.conjunction(res_, transpose(v));
+      /// Handle variadic operations.
+#define DEFINE(Node, Operation)                 \
+      VCSN_RAT_VISIT(Node, e)                   \
+      {                                         \
+        visit_(e, &expressionset_t::Operation); \
       }
 
-      VCSN_RAT_VISIT(infiltration, e)
-      {
-        // FIXME: that should be easy to factor.
-        res_= transpose(e.head());
-        for (const auto& v: e.tail())
-          res_ = rs_.infiltration(res_, transpose(v));
-      }
-
-      VCSN_RAT_VISIT(shuffle, e)
-      {
-        // FIXME: that should be easy to factor.
-        res_= transpose(e.head());
-        for (const auto& v: e.tail())
-          res_ = rs_.shuffle(res_, transpose(v));
-      }
+      DEFINE(sum, add);
+      DEFINE(conjunction, conjunction);
+      DEFINE(infiltration, infiltration);
+      DEFINE(shuffle, shuffle);
+#undef DEFINE
 
       VCSN_RAT_VISIT(prod, e)
       {
-        res_ = rs_.one();
-        for (const auto& v: e)
-          res_ = rs_.mul(transpose(v), res_);
+        res_ = transpose(e.head());
+        for (const auto& c: e.tail())
+          res_ = rs_.mul(transpose(c), res_);
       }
 
       VCSN_RAT_VISIT(star, e)
