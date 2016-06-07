@@ -31,7 +31,7 @@ namespace vcsn
       if (std::strstr(e.what(), "is not supported"))
         raise("is_valid", strchr(e.what(), ':'));
       // Make sure this is really the failure we are looking for.
-      if (std::strstr(e.what(), "star: invalid value"))
+      if (!std::strstr(e.what(), "star: invalid value"))
         std::cerr << "warning: is_valid: unexpected error: "
                   << e.what() << '\n';
       return false;
