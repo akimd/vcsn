@@ -89,23 +89,25 @@ def run(cmd):
                              stderr=subprocess.PIPE)
         out, err = p.communicate()
         retcode = p.wait()
-        if out:
-            out = out.decode('utf-8')
-            print(out)
-        if retcode:
-            if retcode < 0:
-                print(me + ':', 'child was terminated by signal',
-                      -retcode, file=sys.stderr)
-            else:
-                print(me + ':',  'child returned', retcode, file=sys.stderr)
-            err = err.decode('utf-8')
-            if not args.plain:
-                err = demangle(err, color=args.color)
-            print(err, file=sys.stderr)
-            sys.exit(retcode)
     except OSError as e:
         print(me + ': execution failed:', e, file=sys.stderr)
         sys.exit(1)
+    if out:
+        out = out.decode('utf-8')
+        print(out)
+    if err:
+        err = err.decode('utf-8')
+        if not args.plain:
+            err = demangle(err, color=args.color)
+        print(err, file=sys.stderr)
+    if retcode:
+        if retcode < 0:
+            print(me + ':', 'child was terminated by signal',
+                  -retcode, file=sys.stderr)
+        else:
+            print(me + ':',  'child returned', retcode, file=sys.stderr)
+        sys.exit(retcode)
+
 
 if args.shared:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")
