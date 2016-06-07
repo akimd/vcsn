@@ -434,6 +434,7 @@ auto make_dyn_vector(const std::vector<T>& v)
 }}
 
 /// Create an input stream from a file, or from a string.
+static
 auto make_istream(const std::string& data = "",
                   const std::string& filename = "")
   -> std::shared_ptr<std::istream>

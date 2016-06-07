@@ -251,37 +251,41 @@ namespace vcsn
               if (rhsp.first != one)
                 for (const auto& lm: lhs.polynomials[one])
                   for (const auto& rm: rhsp.second)
-                    if (transposed_)
-                      ps_.add_here(res_.polynomials[one],
+                    {
+                      if (transposed_)
+                        ps_.add_here(res_.polynomials[one],
                           rs_.transposition(
                             rs_.ldiv(label_of(lm),
                                      rs_.mul(rs_.atom(rhsp.first),
                                              label_of(rm)))),
                           ws_.transpose(ws_.ldiv(weight_of(lm),
                               weight_of(rm))));
-                    else
-                      ps_.add_here(res_.polynomials[one],
+                      else
+                        ps_.add_here(res_.polynomials[one],
                           rs_.ldiv(label_of(lm),
                             rs_.mul(rs_.atom(rhsp.first), label_of(rm))),
                           ws_.ldiv(weight_of(lm), weight_of(rm)));
+                    }
           if (has(rhs.polynomials, one))
             for (const auto& lhsp: lhs.polynomials)
               if (lhsp.first != one)
                 for (const auto& lm: lhsp.second)
                   for (const auto& rm: rhs.polynomials[one])
-                    if (transposed_)
-                      ps_.add_here(res_.polynomials[one],
+                    {
+                      if (transposed_)
+                        ps_.add_here(res_.polynomials[one],
                           rs_.transposition(
                             rs_.ldiv(rs_.mul(rs_.atom(lhsp.first),
                                              label_of(lm)),
                                      label_of(rm))),
                           ws_.transpose(ws_.ldiv(weight_of(lm),
                                         weight_of(rm))));
-                    else
-                      ps_.add_here(res_.polynomials[one],
+                      else
+                        ps_.add_here(res_.polynomials[one],
                           rs_.ldiv(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
                             label_of(rm)),
                           ws_.ldiv(weight_of(lm), weight_of(rm)));
+                    }
         if (!ws_.is_zero(lhs.constant))
           {
             if (transposed_)
@@ -296,7 +300,7 @@ namespace vcsn
         es_.normalize(res_);
       }
 
-      // d(E&F) = d(E)&d(F).
+      // d(E&F) = d(E) & d(F).
       VCSN_RAT_VISIT(conjunction, e)
       {
         res_ = to_expansion(e.head());
