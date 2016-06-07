@@ -142,8 +142,7 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         const auto& l = lbl->as<LabelSet>().value();
         auto res = ::vcsn::eval(a, l);
-        const auto& ctx = a->context();
-        return {*ctx.weightset(), res};
+        return {*a->weightset(), res};
       }
     }
   }

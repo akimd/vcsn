@@ -75,29 +75,31 @@ namespace vcsn
       const Fun* get(const signature& sig)
       {
         // Maybe already loaded.
-        if (auto fun = get0(sig))
-          return fun;
+        if (auto res = get0(sig))
+          return res;
         else
           // No, try to compile it.
-          try
-            {
-              vcsn::dyn::compile(name_, sig);
-              auto fun = get0(sig);
-              VCSN_REQUIRE(fun,
-                           name_,
-                           ": compilation succeeded, "
-                           "but function is unavailable\n",
-                           signatures(sig));
-              return fun;
-            }
-          catch (const jit_error& e)
-            {
-              raise(e.assertions.empty()
-                    ? name_ + ": no such implementation\n"
-                    : e.assertions,
-                    signatures(sig),
-                    e.what());
-            }
+          {
+            try
+              {
+                vcsn::dyn::compile(name_, sig);
+              }
+            catch (const jit_error& e)
+              {
+                raise(e.assertions.empty()
+                      ? name_ + ": no such implementation\n"
+                      : e.assertions,
+                      signatures(sig),
+                      e.what());
+              }
+            res = get0(sig);
+            VCSN_REQUIRE(res,
+                         name_,
+                         ": compilation succeeded, "
+                         "but function is unavailable\n",
+                         signatures(sig));
+            return res;
+          }
       }
 
       /// Call function for signature \a sig.
