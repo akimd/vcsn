@@ -3,8 +3,10 @@
 ## --------- ##
 
 from vcsn_cxx import context
-# Pylint doesn't understand the syntax lines 49-52.
-# This will be reported.
+# Known pylint issue: https://github.com/PyCQA/pylint/issues/848
+# Reported pylint issue: https://github.com/PyCQA/pylint/issues/931
+# Last seen in pylint 1.5.6, astroid 1.4.6
+# FIXME: Remove comment once issues are fixed.
 # pylint: disable=unused-import,undefined-variable
 from vcsn import label, polynomial, expression, weight
 from vcsn.tools import _extend, _format, _is_equal
