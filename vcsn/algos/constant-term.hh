@@ -73,7 +73,7 @@ namespace vcsn
         res_ = ws_.zero();
       }
 
-      VCSN_RAT_VISIT(sum, v)
+      VCSN_RAT_VISIT(add, v)
       {
         weight_t res = ws_.zero();
         for (auto c: v)

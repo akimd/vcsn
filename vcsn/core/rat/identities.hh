@@ -31,11 +31,11 @@ namespace vcsn LIBVCSN_API
           /// Trivial identities only.
           trivial,
 
-          /// Trivial, plus associativity of sum and product.
+          /// Trivial, plus associativity of add and product.
           associative,
 
           /// Associative plus commutativity, and "idempotence" for
-          /// sum.
+          /// add.
           linear,
 
           /// Traditional plus distribution.  Used for series identities.

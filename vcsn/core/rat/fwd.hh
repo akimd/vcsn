@@ -41,7 +41,7 @@ namespace vcsn
       zero,
       one,
       atom,
-      sum,
+      add,
       prod,
       ldiv,
       conjunction,
@@ -80,7 +80,7 @@ namespace vcsn
               || t == type_t::ldiv
               || t == type_t::prod
               || t == type_t::shuffle
-              || t == type_t::sum);
+              || t == type_t::add);
     }
 
     /// Print a expression type.
@@ -154,7 +154,7 @@ namespace vcsn
     using shuffle = variadic<type_t::shuffle, Context>;
 
     template <typename Context>
-    using sum = variadic<type_t::sum, Context>;
+    using add = variadic<type_t::add, Context>;
 
 
 

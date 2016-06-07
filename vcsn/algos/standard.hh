@@ -239,7 +239,7 @@ namespace vcsn
         return res;
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      VCSN_RAT_VISIT(add, e)
       {
         states_t other_finals = finals();
         e.head()->accept(*this);

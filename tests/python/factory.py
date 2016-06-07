@@ -199,7 +199,10 @@ exp = vcsn.context('lal_char(a), b')\
 print("Expression: ", exp)
 info = exp.info()
 print("Info: ", info)
+CHECK_NE(info['add'], 0)
 CHECK_NE(info['complement'], 0)
+CHECK_NE(info['star'], 0)
+
 CHECK_EQ(info['conjunction'], 0)
 CHECK_EQ(info['infiltration'], 0)
 CHECK_EQ(info['ldiv'], 0)
@@ -208,8 +211,6 @@ CHECK_EQ(info['one'], 0)
 CHECK_EQ(info['prod'], 0)
 CHECK_EQ(info['rweight'], 0)
 CHECK_EQ(info['shuffle'], 0)
-CHECK_NE(info['star'], 0)
-CHECK_NE(info['sum'], 0)
 CHECK_EQ(info['zero'], 0)
 
 # Check the length of the expression.

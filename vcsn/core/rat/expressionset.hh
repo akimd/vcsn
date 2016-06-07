@@ -64,6 +64,7 @@ namespace vcsn
     // both are right.
 #define DEFINE(Type)                                           \
     using Type ## _t = vcsn::rat::Type<context_t>
+    DEFINE(add);
     DEFINE(atom);
     DEFINE(complement);
     DEFINE(compose);
@@ -79,7 +80,6 @@ namespace vcsn
     DEFINE(rweight);
     DEFINE(shuffle);
     DEFINE(star);
-    DEFINE(sum);
     DEFINE(transposition);
     DEFINE(tuple);
     DEFINE(zero);
@@ -392,8 +392,8 @@ namespace vcsn
     /// and singleton cases.
     auto add_(values_t&& vs) const -> value_t;
 
-    auto add_linear_(const sum_t& addends, const value_t& r) const -> value_t;
-    auto add_linear_(const sum_t& s1, const sum_t& s2) const -> value_t;
+    auto add_linear_(const add_t& addends, const value_t& r) const -> value_t;
+    auto add_linear_(const add_t& s1, const add_t& s2) const -> value_t;
 
     /// The sum of two non-zero series.
     /// \pre  !is_zero(l)

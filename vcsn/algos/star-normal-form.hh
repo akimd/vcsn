@@ -74,7 +74,7 @@ namespace vcsn
       }
 
       // Plain traversal for sums.
-      VCSN_RAT_VISIT(sum, v)
+      VCSN_RAT_VISIT(add, v)
       {
         v.head()->accept(*this);
         expression_t res = res_;

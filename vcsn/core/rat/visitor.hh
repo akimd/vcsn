@@ -47,6 +47,7 @@ namespace vcsn
       using Type ## _t = Type<context_t>;       \
       virtual void visit(const Type ## _t& v)
 
+      DEFINE(add);
       DEFINE(atom);
       DEFINE(complement);
       DEFINE(compose);
@@ -59,7 +60,6 @@ namespace vcsn
       DEFINE(rweight);
       DEFINE(shuffle);
       DEFINE(star);
-      DEFINE(sum);
       DEFINE(transposition);
       DEFINE(zero);
 #undef DEFINE

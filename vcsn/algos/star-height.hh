@@ -48,6 +48,7 @@ namespace vcsn
         return res;
       }
 
+      VCSN_RAT_VISIT(add, v)          { visit_(v); }
       VCSN_RAT_VISIT(atom,)           {}
       VCSN_RAT_VISIT(complement, v)   { visit_(v); }
       VCSN_RAT_VISIT(compose, v)      { visit_(v); }
@@ -60,7 +61,6 @@ namespace vcsn
       VCSN_RAT_VISIT(rweight, v)      { v.sub()->accept(*this); }
       VCSN_RAT_VISIT(shuffle, v)      { visit_(v); }
       VCSN_RAT_VISIT(star, v)         { visit_(v); ++height_; }
-      VCSN_RAT_VISIT(sum, v)          { visit_(v); }
       VCSN_RAT_VISIT(transposition, v){ visit_(v); }
       VCSN_RAT_VISIT(zero,)           {}
 

@@ -124,7 +124,7 @@ namespace vcsn
         res_ = polynomial_t{{rs_.atom(e.value()), ws_.one()}};
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      VCSN_RAT_VISIT(add, e)
       {
         polynomial_t res = ps_.zero();
         for (const auto& v: e)

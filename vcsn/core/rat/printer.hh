@@ -32,7 +32,7 @@ namespace vcsn
     /// passing an argument of type precedence_t.
     enum class precedence_t
     {
-      sum,
+      add,
       compose,
       tuple,
       products,
@@ -130,7 +130,7 @@ namespace vcsn
       VCSN_RAT_VISIT(rweight, v);
       VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
       VCSN_RAT_VISIT(star, v)          { print_(v, star_); }
-      VCSN_RAT_VISIT(sum, v)           { print_sum_(v); }
+      VCSN_RAT_VISIT(add, v)           { print_add_(v); }
       VCSN_RAT_VISIT(transposition, v) { print_(v, transposition_); }
       VCSN_RAT_VISIT(zero, v);
 
@@ -228,7 +228,7 @@ namespace vcsn
       /// want to print `[a-z]*`, not `([a-z])*`.
       bool is_braced_(const node_t& v) const
       {
-        if (auto s = dynamic_cast<const sum_t*>(&v))
+        if (auto s = dynamic_cast<const add_t*>(&v))
           {
             auto range = letter_range(s->begin(), s->end());
             return (end(range) == s->end()
@@ -280,7 +280,7 @@ namespace vcsn
 
       /// Print a sum, when the labelset has a genset() function.
       template <typename LS = labelset_t>
-      auto print_sum_(const sum_t& v)
+      auto print_add_(const add_t& v)
         -> std::enable_if_t<detail::has_generators_mem_fn<LS>{}, void>
       {
         bool first = true;
@@ -290,7 +290,7 @@ namespace vcsn
              /* nothing. */)
           {
             if (! first)
-              out_ << sum_;
+              out_ << add_;
             first = false;
             // If in front of a row of letters, in strictly increasing
             // order, issue a class.
@@ -316,10 +316,10 @@ namespace vcsn
 
       /// Print a sum, when the labelset does not have a genset() function.
       template <typename LS = labelset_t>
-      auto print_sum_(const sum_t& v)
+      auto print_add_(const add_t& v)
         -> std::enable_if_t<!detail::has_generators_mem_fn<LS>{}, void>
       {
-        print_(v, sum_);
+        print_(v, add_);
       }
 
       /// Output stream.
@@ -361,7 +361,7 @@ namespace vcsn
       const char* infiltration_ = nullptr;
       const char* shuffle_ = nullptr;
       const char* product_ = nullptr;
-      const char* sum_ = nullptr;
+      const char* add_ = nullptr;
 
       /// Left tuple delimiter.
       const char* tuple_left = nullptr;

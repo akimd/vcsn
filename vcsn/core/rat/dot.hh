@@ -85,58 +85,58 @@ namespace vcsn
         fmt_ = fmt;
         if (fmt_ == format::latex)
           {
-            star_          = "^{*}";
-            compose_       = "@";
+            add_           = (rs_.identities().is_distributive() ? " \\oplus "
+                              : " + ");
             complement_    = "^{c}";
-            transposition_ = "^{T}";
+            compose_       = "@";
             conjunction_   = " \\& ";
             infiltration_  = " \\uparrow ";
-            shuffle_       = " \\between ";
-            product_       = " \\, ";
-            sum_           = (rs_.identities().is_distributive() ? " \\oplus "
-                              : " + ");
-            zero_          = "\\emptyset";
-            one_           = "\\varepsilon";
-            lmul_          = "\\,";
-            rmul_          = "\\,";
             ldiv_          = " \\backslash ";
+            lmul_          = "\\,";
+            one_           = "\\varepsilon";
+            product_       = " \\, ";
+            rmul_          = "\\,";
+            shuffle_       = " \\between ";
+            star_          = "^{*}";
+            transposition_ = "^{T}";
             tuple_         = " \\mid ";
+            zero_          = "\\emptyset";
           }
         else if (fmt_ == format::text)
           {
-            star_          = "*";
-            compose_       = "@";
+            add_           = "+";
             complement_    = "{c}";
-            transposition_ = "{T}";
+            compose_       = "@";
             conjunction_   = "&";
             infiltration_  = "&:";
-            shuffle_       = ":";
-            product_       = ".";
-            sum_           = "+";
-            zero_          = "\\z";
-            one_           = "\\e";
-            lmul_          = "<.>.";
-            rmul_          = ".<.>";
             ldiv_          = "{\\}";
+            lmul_          = "<.>.";
+            one_           = "\\e";
+            product_       = ".";
+            rmul_          = ".<.>";
+            shuffle_       = ":";
+            star_          = "*";
+            transposition_ = "{T}";
             tuple_         = "|";
+            zero_          = "\\z";
           }
         else if (fmt_ == format::utf8)
           {
-            star_          = "*";
-            compose_       = "@";
+            add_           = "+";
             complement_    = "ᶜ";
-            transposition_ = "ᵗ";
+            compose_       = "@";
             conjunction_   = "&";
             infiltration_  = "&:";
-            shuffle_       = ":";
-            product_       = ".";
-            sum_           = "+";
-            zero_          = "∅";
-            one_           = "ε";
-            lmul_          = "⟨.⟩.";
-            rmul_          = ".⟨.⟩";
             ldiv_          = "{\\}";
+            lmul_          = "⟨.⟩.";
+            one_           = "ε";
+            product_       = ".";
+            rmul_          = ".⟨.⟩";
+            shuffle_       = ":";
+            star_          = "*";
+            transposition_ = "ᵗ";
             tuple_         = "|";
+            zero_          = "∅";
           }
         else
           raise("expression: invalid format: ", fmt_);
@@ -172,6 +172,7 @@ namespace vcsn
         return last_name_;
       }
 
+      VCSN_RAT_VISIT(add, v)           { print_(v, add_); }
       VCSN_RAT_VISIT(atom, v)          { print_(v); }
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
       VCSN_RAT_VISIT(compose, v)       { print_(v, compose_); }
@@ -184,7 +185,6 @@ namespace vcsn
       VCSN_RAT_VISIT(rweight, v)       { print_(v); }
       VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
       VCSN_RAT_VISIT(star, v)          { print_(v, star_); }
-      VCSN_RAT_VISIT(sum, v)           { print_(v, sum_); }
       VCSN_RAT_VISIT(transposition, v) { print_(v, transposition_); }
       VCSN_RAT_VISIT(zero, v)          { print_(v, zero_); }
 
@@ -404,15 +404,15 @@ namespace vcsn
       /// Quotient.
       const char* ldiv_ = nullptr;
       /// The expression operators.
-      const char* star_ = nullptr;
-      const char* compose_ = nullptr;
+      const char* add_ = nullptr;
       const char* complement_ = nullptr;
-      const char* transposition_ = nullptr;
+      const char* compose_ = nullptr;
       const char* conjunction_ = nullptr;
       const char* infiltration_ = nullptr;
-      const char* shuffle_ = nullptr;
       const char* product_ = nullptr;
-      const char* sum_ = nullptr;
+      const char* shuffle_ = nullptr;
+      const char* star_ = nullptr;
+      const char* transposition_ = nullptr;
 
       /// Tuple tape separator.
       const char* tuple_ = nullptr;

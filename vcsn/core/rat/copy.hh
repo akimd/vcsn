@@ -98,7 +98,7 @@ namespace vcsn
       VCSN_RAT_VISIT(prod, v)         { copy_(v); }
       VCSN_RAT_VISIT(shuffle, v)      { copy_(v); }
       VCSN_RAT_VISIT(star, v)         { copy_(v); }
-      VCSN_RAT_VISIT(sum, v)          { copy_(v); }
+      VCSN_RAT_VISIT(add, v)          { copy_(v); }
       VCSN_RAT_VISIT(transposition, v){ copy_(v); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 

@@ -186,7 +186,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      VCSN_RAT_VISIT(add, e)
       {
         auto res = recurse(e.head());
         for (const auto& c: e.tail())

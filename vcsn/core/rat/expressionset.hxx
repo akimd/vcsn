@@ -196,7 +196,7 @@ namespace vcsn
     value_t res = nullptr;
 
     if (!ids_)
-      res = std::make_shared<sum_t>(l, r);
+      res = std::make_shared<add_t>(l, r);
 
     // 0+E => E.
     else if (is_zero(l))
@@ -211,11 +211,11 @@ namespace vcsn
       res = add_linear_(l, r);
 
     else
-      res = std::make_shared<sum_t>(gather_<type_t::sum>(l, r));
+      res = std::make_shared<add_t>(gather_<type_t::add>(l, r));
     return res;
   }
 
-  DEFINE::add_linear_(const sum_t& s, const value_t& r) const
+  DEFINE::add_linear_(const add_t& s, const value_t& r) const
     -> value_t
   {
     auto res = values_t{};
@@ -256,10 +256,10 @@ namespace vcsn
     else if (vs.size() == 1)
       return vs[0];
     else
-      return std::make_shared<sum_t>(std::move(vs));
+      return std::make_shared<add_t>(std::move(vs));
   }
 
-  DEFINE::add_linear_(const sum_t& s1, const sum_t& s2) const
+  DEFINE::add_linear_(const add_t& s1, const add_t& s2) const
     -> value_t
   {
     auto res = values_t{};
@@ -307,19 +307,19 @@ namespace vcsn
     assert(!is_zero(l));
     assert(!is_zero(r));
     value_t res = nullptr;
-    if (auto ls = std::dynamic_pointer_cast<const sum_t>(l))
+    if (auto ls = std::dynamic_pointer_cast<const add_t>(l))
       {
-        if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
+        if (auto rs = std::dynamic_pointer_cast<const add_t>(r))
           res = add_linear_(*ls, *rs);
         else
           res = add_linear_(*ls, r);
       }
-    else if (auto rs = std::dynamic_pointer_cast<const sum_t>(r))
+    else if (auto rs = std::dynamic_pointer_cast<const add_t>(r))
       res = add_linear_(*rs, l);
     else if (less_linear(l, r))
-      res = std::make_shared<sum_t>(l, r);
+      res = std::make_shared<add_t>(l, r);
     else if (less_linear(r, l))
-      res = std::make_shared<sum_t>(r, l);
+      res = std::make_shared<add_t>(r, l);
     else
       {
         auto w = weightset()->add(possibly_implicit_lweight_(l),
@@ -393,20 +393,20 @@ namespace vcsn
       }
 
     // (E+F)G => EG + FG.
-    else if (ids_.is_distributive() && l->type() == type_t::sum)
+    else if (ids_.is_distributive() && l->type() == type_t::add)
       {
         res = zero();
         // l is a sum, and r might be as well.
-        for (const auto& la: *down_pointer_cast<const sum_t>(l))
+        for (const auto& la: *down_pointer_cast<const add_t>(l))
           res = add(res, mul(la, r));
       }
 
     // E(F+G) => EF + EG.
-    else if (ids_.is_distributive() && r->type() == type_t::sum)
+    else if (ids_.is_distributive() && r->type() == type_t::add)
       {
         res = zero();
         // r is a sum, l is not.
-        for (const auto& ra: *down_pointer_cast<const sum_t>(r))
+        for (const auto& ra: *down_pointer_cast<const add_t>(r))
           res = add(res, mul(l, ra));
       }
 
@@ -664,7 +664,7 @@ namespace vcsn
       }
 
     // Sums in series: we have to distribute ([ab]{2} = aa+ab+ba+bb).
-    else if (ids_.is_distributive() && e->type() == type_t::sum)
+    else if (ids_.is_distributive() && e->type() == type_t::add)
       {
         // FIXME: code duplication with weightset_mixin::power_.
         res = e;
@@ -850,15 +850,15 @@ namespace vcsn
       res = lmul(weightset()->mul(w, lw->weight()), lw->sub());
 
     // Distributive: <k>(E+F) => <k>E + <k>F.
-    else if (ids_.is_distributive() && e->type() == type_t::sum)
+    else if (ids_.is_distributive() && e->type() == type_t::add)
       {
-        const auto& s = down_pointer_cast<const sum_t>(e);
+        const auto& s = down_pointer_cast<const add_t>(e);
         // We can build the result faster by emplace_back'ing addends without
         // passing thru add; the order will be the same as in *ss.
         values_t addends;
         for (const auto& a: *s)
           addends.emplace_back(lmul(w, a));
-        res = std::make_shared<sum_t>(std::move(addends));
+        res = std::make_shared<add_t>(std::move(addends));
       }
 
     // General case: <k>E.

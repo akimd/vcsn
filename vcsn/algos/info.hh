@@ -157,6 +157,7 @@ namespace vcsn
     o << "\nwidth: " << info.atom;
 #define ECHO(Type)                              \
     o << "\n" #Type ": " << info.Type
+    ECHO(add);
     ECHO(atom);
     ECHO(complement);
     ECHO(compose);
@@ -170,7 +171,6 @@ namespace vcsn
     ECHO(rweight);
     ECHO(shuffle);
     ECHO(star);
-    ECHO(sum);
     ECHO(transposition);
     ECHO(tuple);
     ECHO(zero);

@@ -81,10 +81,11 @@ namespace vcsn
         res_ = less_(lhs, *down_pointer_cast<const Type ## _t>(rhs_));  \
       }
 
+      DEFINE(add);
       DEFINE(atom);
       DEFINE(complement);
-      DEFINE(conjunction);
       DEFINE(compose);
+      DEFINE(conjunction);
       DEFINE(infiltration);
       DEFINE(ldiv);
       DEFINE(lweight);
@@ -93,7 +94,6 @@ namespace vcsn
       DEFINE(rweight);
       DEFINE(shuffle);
       DEFINE(star);
-      DEFINE(sum);
       DEFINE(transposition);
       DEFINE(zero);
 #undef DEFINE

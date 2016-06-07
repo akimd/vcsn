@@ -96,7 +96,7 @@ namespace vcsn
                                                     e.value()));
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      VCSN_RAT_VISIT(add, e)
       {
         state_t initial = res_->new_state();
         state_t final = res_->new_state();

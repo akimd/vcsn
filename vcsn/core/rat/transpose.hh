@@ -84,16 +84,16 @@ namespace vcsn
       }
 
       /// Handle variadic operations.
-#define DEFINE(Node, Operation)                 \
+#define DEFINE(Node)                            \
       VCSN_RAT_VISIT(Node, e)                   \
       {                                         \
-        visit_(e, &expressionset_t::Operation); \
+        visit_(e, &expressionset_t::Node);      \
       }
 
-      DEFINE(sum, add);
-      DEFINE(conjunction, conjunction);
-      DEFINE(infiltration, infiltration);
-      DEFINE(shuffle, shuffle);
+      DEFINE(add);
+      DEFINE(conjunction);
+      DEFINE(infiltration);
+      DEFINE(shuffle);
 #undef DEFINE
 
       VCSN_RAT_VISIT(prod, e)
@@ -119,7 +119,7 @@ namespace vcsn
         // transitions.  Not only is this useless, it would also break
         // the involution as r.transpose().transpose() would not be r,
         // but "r{T}{T}".  On the other hand, if "(abc){T}".transpose()
-        // return "abc", we also lose the involution.
+        // returns "abc", we also lose the involution.
         //
         // So rather, don't stack more that two transpositions:
         //

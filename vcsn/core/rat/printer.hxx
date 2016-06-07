@@ -15,6 +15,7 @@ namespace vcsn
       switch (t)
         {
 #define CASE(T) case type_t::T: o << #T; break
+          CASE(add);
           CASE(atom);
           CASE(complement);
           CASE(compose);
@@ -27,7 +28,6 @@ namespace vcsn
           CASE(rweight);
           CASE(shuffle);
           CASE(star);
-          CASE(sum);
           CASE(transposition);
           CASE(tuple);
           CASE(zero);
@@ -88,7 +88,7 @@ namespace vcsn
           infiltration_  = " \\uparrow ";
           shuffle_       = " \\between ";
           product_       = " \\, ";
-          sum_           = (rs_.identities().is_distributive() ? " \\oplus "
+          add_           = (rs_.identities().is_distributive() ? " \\oplus "
                             : " + ");
           zero_          = "\\emptyset";
           one_           = "\\varepsilon";
@@ -118,7 +118,7 @@ namespace vcsn
           infiltration_  = "&:";
           shuffle_       = ":";
           product_       = "";
-          sum_           = "+";
+          add_           = "+";
           zero_          = "\\z";
           one_           = "\\e";
           lmul_          = "";
@@ -145,7 +145,7 @@ namespace vcsn
           infiltration_  = "&:";
           shuffle_       = ":";
           product_       = "";
-          sum_           = "+";
+          add_           = "+";
           zero_          = "∅";
           one_           = "ε";
           lmul_          = "";
@@ -171,6 +171,7 @@ namespace vcsn
 #define CASE(Type)                              \
             case exp::type_t::Type:             \
               return precedence_t::Type
+            CASE(add);
             CASE(atom);
             CASE(complement);
             CASE(compose);
@@ -183,7 +184,6 @@ namespace vcsn
             CASE(rweight);
             CASE(shuffle);
             CASE(star);
-            CASE(sum);
             CASE(transposition);
             CASE(tuple);
             CASE(zero);

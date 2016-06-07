@@ -50,6 +50,7 @@ namespace vcsn
 
     private:
 
+      VCSN_RAT_VISIT(add, v)          { visit_variadic(v); };
       VCSN_RAT_VISIT(atom,)           { ++size_; }
       VCSN_RAT_VISIT(complement, v)   { visit_unary(v); }
       VCSN_RAT_VISIT(compose, v)      { visit_variadic(v); }
@@ -62,7 +63,6 @@ namespace vcsn
       VCSN_RAT_VISIT(rweight, v)      { ++size_; v.sub()->accept(*this); }
       VCSN_RAT_VISIT(shuffle, v)      { visit_variadic(v); };
       VCSN_RAT_VISIT(star, v)         { visit_unary(v); }
-      VCSN_RAT_VISIT(sum, v)          { visit_variadic(v); };
       VCSN_RAT_VISIT(transposition, v){ visit_unary(v); }
       VCSN_RAT_VISIT(zero,)           { ++size_; }
 

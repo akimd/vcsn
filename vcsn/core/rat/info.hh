@@ -40,6 +40,7 @@ namespace vcsn
 
       void clear()
       {
+        add = 0;
         atom = 0;
         complement = 0;
         compose = 0;
@@ -53,7 +54,6 @@ namespace vcsn
         rweight = 0;
         shuffle = 0;
         star = 0;
-        sum = 0;
         transposition = 0;
         tuple = 0;
         zero = 0;
@@ -63,6 +63,7 @@ namespace vcsn
       template <typename OtherExpSet>
       info& operator+=(const info<OtherExpSet>& other)
       {
+        add += other.add;
         atom += other.atom;
         complement += other.complement;
         compose += other.compose;
@@ -76,7 +77,6 @@ namespace vcsn
         rweight += other.rweight;
         shuffle += other.shuffle;
         star += other.star;
-        sum += other.sum;
         transposition += other.transposition;
         tuple += other.tuple;
         zero += other.zero;
@@ -95,6 +95,7 @@ namespace vcsn
     private:                                            \
       VCSN_RAT_VISIT(Type, v)
 
+      DEFINE(add)          { ++add;          visit_(v);  }
       DEFINE(atom)         { ++atom; (void) v; depth = 0; }
       DEFINE(complement)   { ++complement;   visit_(v); }
       DEFINE(compose)      { ++compose;      visit_(v); }
@@ -107,7 +108,6 @@ namespace vcsn
       DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); ++depth; }
       DEFINE(shuffle)      { ++shuffle;      visit_(v); }
       DEFINE(star)         { ++star;         visit_(v); }
-      DEFINE(sum)          { ++sum;          visit_(v);  }
       DEFINE(transposition){ ++transposition; visit_(v); }
       DEFINE(zero)         { ++zero; (void) v; depth = 0; }
 #undef DEFINE

@@ -92,7 +92,7 @@ namespace vcsn
                                                  static_cast<bin_t>(&out_expressionset_t::mul)); }
       VCSN_RAT_VISIT(shuffle, v)      { project_(v, &out_expressionset_t::shuffle); }
       VCSN_RAT_VISIT(star, v)         { project_(v); }
-      VCSN_RAT_VISIT(sum, v)          { project_(v, &out_expressionset_t::add); }
+      VCSN_RAT_VISIT(add, v)          { project_(v, &out_expressionset_t::add); }
       VCSN_RAT_VISIT(transposition, v){ project_(v); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 

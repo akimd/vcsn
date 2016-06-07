@@ -11,6 +11,12 @@ namespace vcsn
     void                                                        \
     const_visitor<Context>::visit(const Type ## _t& Name)
 
+    VISIT(add, v)
+    {
+      for (const auto& t : v)
+        t->accept(*this);
+    }
+
     VISIT(compose, v)
     {
       for (const auto& t : v)
@@ -42,12 +48,6 @@ namespace vcsn
     }
 
     VISIT(ldiv, v)
-    {
-      for (const auto& t : v)
-        t->accept(*this);
-    }
-
-    VISIT(sum, v)
     {
       for (const auto& t : v)
         t->accept(*this);

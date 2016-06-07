@@ -106,12 +106,12 @@ namespace vcsn
                                                     e.value()));
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      VCSN_RAT_VISIT(add, e)
       {
         if (compact_)
-          sum_compact(e);
+          add_compact(e);
         else
-          sum_regular(e);
+          add_regular(e);
       }
 
       VCSN_RAT_VISIT(prod, e)
@@ -159,7 +159,7 @@ namespace vcsn
         final_weight_ = ws_.mul(e.weight(), final_weight_);
       }
 
-      void sum_regular(const sum_t& e)
+      void add_regular(const add_t& e)
       {
         state_t initial = res_->new_state();
 
@@ -198,7 +198,7 @@ namespace vcsn
 
         e.head()->accept(*this);
 
-        // In each methods prod_regular, prod_compact and sum_compact,
+        // In each methods prod_regular, prod_compact and add_compact,
         // sometimes it's necessary to create simultaneously
         // two sub-automaton, the first one's states are postfixes by _e and
         // the next one (creation order) by _f.
@@ -248,7 +248,7 @@ namespace vcsn
         final_ = final;
       }
 
-      void sum_compact(const sum_t& e)
+      void add_compact(const add_t& e)
       {
         e.head()->accept(*this);
 

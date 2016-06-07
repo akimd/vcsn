@@ -144,7 +144,7 @@ namespace vcsn
                         : e.value());
       }
 
-      VCSN_RAT_VISIT(sum, e)
+      VCSN_RAT_VISIT(add, e)
       {
         res_ = es_.zero();
         for (const auto& v: e)
