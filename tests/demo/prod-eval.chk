@@ -9,7 +9,7 @@ run 0 '' -vcsn standard -C 'lal_char(01), z' -Ee '(0+1)*0'             -o even.g
 # Otherwise OUTPUT is 0.
 check ()
 {
-  run 0 "$2,$2" tests/demo/prod-eval bin.gv even.gv $1
+  run 0 "$2, $2" tests/demo/prod-eval bin.gv even.gv $1
 }
 
 check '0' '0'

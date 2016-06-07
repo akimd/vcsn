@@ -61,12 +61,13 @@ void
 sta_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
-  using automaton_t = vcsn::mutable_automaton<Ctx>;
-  automaton_t l = vcsn::read_automaton<automaton_t>(lhs);
-  automaton_t r = vcsn::read_automaton<automaton_t>(rhs);
-  automaton_t prod = vcsn::conjunction<automaton_t, automaton_t>(l, r)->strip();
-  vcsn::word_t_of<Ctx> input = vcsn::read_word<Ctx>(prod->context(), word);
-  vcsn::weight_t_of<Ctx> w = vcsn::eval<automaton_t>(prod, input);
+  using namespace vcsn;
+  using automaton_t = mutable_automaton<Ctx>;
+  automaton_t l = read_automaton<automaton_t>(lhs);
+  automaton_t r = read_automaton<automaton_t>(rhs);
+  automaton_t prod = conjunction<automaton_t, automaton_t>(l, r)->strip();
+  word_t_of<Ctx> input = read_word<Ctx>(prod->context(), word);
+  weight_t_of<Ctx> w = eval<automaton_t>(prod, input);
   prod->context().weightset()->print(w, std::cout);
 }
 
@@ -75,10 +76,11 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
   using namespace vcsn::dyn;
+  using vcsn::dyn::label;
   automaton l = read_automaton(lhs);
   automaton r = read_automaton(rhs);
   automaton prod = conjunction(l, r);
-  vcsn::dyn::label input = read_word(context_of(prod), word);
+  label input = read_word(context_of(prod), word);
   weight w = eval(prod, input);
   print(w, std::cout, "text");
 }
@@ -87,11 +89,11 @@ int
 main(int argc, const char* argv[])
 try
   {
-    assert(argc == 4); (void) argc;
+    vcsn::require(argc == 4, "not enough arguments");
     dyn_prod_eval(argv[1], argv[2], argv[3]);
-    std::cout << ",";
+    std::cout << ", ";
     sta_prod_eval<vcsn::ctx::lal_char_z>(argv[1], argv[2], argv[3]);
-    std::cout << std::endl;
+    std::cout << '\n';
   }
  catch (const std::exception& e)
    {
