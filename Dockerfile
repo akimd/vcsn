@@ -44,8 +44,11 @@ ENV LC_ALL en_US.UTF-8
 # Install vcsn and its dependencies.
 RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  \
            >/etc/apt/sources.list.d/lrde.list                                   \
+    && echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/'                 \
+             >>/etc/apt/sources.list.d/lrde.list                                \
     && apt-get update                                                           \
     && apt-get install -y --force-yes --no-install-recommends vcsn              \
+        libfst3 libfst3-plugins-base libfst-dev libfst-tools                    \
     && jupyter nbextension enable --py --sys-prefix widgetsnbextension          \
     && useradd -d /vcsn -m -r vcsn                                              \
     && mkdir /vcsn/.jupyter                                                     \
