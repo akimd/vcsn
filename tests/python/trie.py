@@ -57,7 +57,7 @@ def check(algo, ctx, polynomial, exp):
 
 check('trie',
       'law_char, q',
-      '<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc',
+      r'<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc',
       r'''context = "letterset<char_letters(abcd)>, q"
 $ -> 0
 0 -> $ <2>
@@ -79,7 +79,7 @@ $ -> 0
 
 check('cotrie',
       'law_char, q',
-      '<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba',
+      r'<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba',
       r'''context = "letterset<char_letters(abcd)>, q"
 $ -> 0 <2>
 $ -> 1 <3>

@@ -160,7 +160,7 @@ def check(exp, eff):
 a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
          .expression('<u>a').derived_term()
 a2 = vcsn.context('lal_char(b), b').expression('b*').standard()
-check('<u>a(\e+bb*)', a1*a2)
+check(r'<u>a(\e+bb*)', a1*a2)
 # FIXME: Why don't we get (\e+bb*)<u>a?
 check('<u>a+bb*<u>a', a2*a1)
 
@@ -189,7 +189,7 @@ br = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
 z = vcsn.context('lal_char(b), z').expression('<2>b')
 q = vcsn.context('lal_char(c), q').expression('<1/3>c')
 r = vcsn.context('lal_char(d), r').expression('<.4>d')
-CHECK_EQ('<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
+CHECK_EQ(r'<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
 
 ## --------------- ##
 ## label * label.  ##
@@ -197,7 +197,7 @@ CHECK_EQ('<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
 
 c = vcsn.context('law_char, b')
 CHECK_EQ(c.label('abc'),
-         c.label('ab') * c.label('\e') * c.label('c'))
+         c.label('ab') * c.label(r'\e') * c.label('c'))
 
 
 ## ------------------------- ##
@@ -206,7 +206,7 @@ CHECK_EQ(c.label('abc'),
 
 c = vcsn.context('law_char, z')
 CHECK_EQ(c.polynomial('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
-         c.polynomial('\e + <2>a + <3>b') * c.polynomial('\e') * c.polynomial('c + <5>d'))
+         c.polynomial(r'\e + <2>a + <3>b') * c.polynomial(r'\e') * c.polynomial('c + <5>d'))
 
 
 ## ----------------- ##

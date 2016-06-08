@@ -30,10 +30,10 @@ check(True,  '(<6/10>a*.<4/10>b*)*')
 # Arguably, we should be able to answer here, since there are no star
 # that depends on knowing these constant-terms.  The day we pass
 # instead of failing, just add a star...
-e = expr('a{\}a')
+e = expr(r'a{\}a')
 XFAIL(lambda: e.is_valid(),
       'is_valid: ldiv is not supported')
 
-e = vcsn.context('lat<lan, lan>, q').expression('a|\e @ \e|a')
+e = vcsn.context('lat<lan, lan>, q').expression(r'a|\e @ \e|a')
 XFAIL(lambda: e.is_valid(),
       'is_valid: compose is not supported')

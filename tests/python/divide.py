@@ -12,8 +12,8 @@ z = vcsn.context('law_char(abcd), z')
 
 def check_div(l, r):
     make = z.expression
-    CHECK_EQ(make('({}){{\}}({})'.format(l, r)), make(l) // make(r))
-    CHECK_EQ(make('({}){{\}}({})'.format(l, r)), make(l).ldiv(make(r)))
+    CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l) // make(r))
+    CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l).ldiv(make(r)))
 
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l) / make(r))
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l).rdiv(make(r)))
@@ -75,7 +75,7 @@ def check(exp, lhs, rhs):
     CHECK_EQ(exp, lhs.lgcd(rhs))
 
 check('a', 'a', 'a')
-check('\e', 'a', 'b')
+check(r'\e', 'a', 'b')
 
 check('<2>a', '<2>a', '<2>a')
 check('<2>a', '<2>a', '<4>a')
@@ -89,4 +89,4 @@ check('ab', 'ab', 'ab')
 #check('<2>a+<3>b', '<2>a+<3>b', '<4>ac+<6>bc')
 #check('<2>a+<3>b', '<6>a+<9>b', '<4>ac+<6>bc')
 
-check('\e', 'a+b', 'a+c')
+check(r'\e', 'a+b', 'a+c')

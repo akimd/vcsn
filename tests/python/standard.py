@@ -162,7 +162,7 @@ def xfail(re):
 ## --- ##
 
 # B: "\z".
-check('(?@lal_char(ab), b)\z',
+check(r'(?@lal_char(ab), b)\z',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
@@ -180,7 +180,7 @@ check('(?@lal_char(ab), b)\z',
 }''')
 
 # B: "\e".
-check('(?@lal_char(ab), b)\e',
+check(r'(?@lal_char(ab), b)\e',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, b"
@@ -381,7 +381,7 @@ check('(?@lal_char(abcd), b)(ab+cd+abcd)abc',
 ## B: Star.  ##
 ## --------- ##
 
-check('(?@lal_char(abcd), b)\z*',
+check(r'(?@lal_char(abcd), b)\z*',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(abcd)>, b"
@@ -400,7 +400,7 @@ check('(?@lal_char(abcd), b)\z*',
   0 -> F0
 }''')
 
-check('(?@lal_char(abcd), b)\e*',
+check(r'(?@lal_char(abcd), b)\e*',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(abcd)>, b"
@@ -530,7 +530,7 @@ check('(?@lal_char(abcd), b)a**',
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check('(?@lal_char(a), expressionset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
+check(r'(?@lal_char(a), expressionset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(a)>, expressionset<letterset<char_letters(xyz)>, b>"
@@ -562,7 +562,7 @@ check('(?@lal_char(a), expressionset<lal_char(xyz), b>)<x>a(<y>\e+<z>a)',
 
 
 # Q: "<12>\e".
-check('(?@lal_char(ab), q)<12>\e',
+check(r'(?@lal_char(ab), q)<12>\e',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, q"
@@ -586,7 +586,7 @@ check('(?@lal_char(ab), q)<12>\e',
 ## -------- ##
 
 # Q: "\e+a+\e"
-check('(?@lal_char(ab), q)\e+a+\e',
+check(r'(?@lal_char(ab), q)\e+a+\e',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, q"
@@ -610,7 +610,7 @@ check('(?@lal_char(ab), q)\e+a+\e',
 }''')
 
 # Q: "<12>\e+<23>a+<34>b".
-check('(?@lal_char(ab), q)<12>\e+<23>a+<34>b',
+check(r'(?@lal_char(ab), q)<12>\e+<23>a+<34>b',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, q"
@@ -638,7 +638,7 @@ check('(?@lal_char(ab), q)<12>\e+<23>a+<34>b',
 }''')
 
 # left weight.
-check('(?@lal_char(ab), q)<12>(\e+a+<10>b+<10>\e)',
+check(r'(?@lal_char(ab), q)<12>(\e+a+<10>b+<10>\e)',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, q"
@@ -666,7 +666,7 @@ check('(?@lal_char(ab), q)<12>(\e+a+<10>b+<10>\e)',
 }''')
 
 # right weight.
-check(vcsn.Q.expression('(\e+a+<2>b+<3>\e)<10>', 'associative'),
+check(vcsn.Q.expression(r'(\e+a+<2>b+<3>\e)<10>', 'associative'),
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, q"
@@ -725,7 +725,7 @@ check(vcsn.Q.expression('<12>(ab)<23>', 'associative'),
 ## Q: star.  ##
 ## --------- ##
 
-check('(?@lal_char(ab), q)\z*',
+check(r'(?@lal_char(ab), q)\z*',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(ab)>, q"
@@ -744,7 +744,7 @@ check('(?@lal_char(ab), q)\z*',
   0 -> F0
 }''')
 
-xfail('(?@lal_char(ab), q)\e*')
+xfail(r'(?@lal_char(ab), q)\e*')
 
 check('(?@lal_char(ab), q)(<2>a)*',
 '''digraph
@@ -888,7 +888,7 @@ xfail('(?@lal_char(ab), q)a**')
 ## QR: star.  ##
 ## ---------- ##
 
-check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
+check(r'(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, q>"
@@ -916,7 +916,7 @@ check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
   3 -> 1 [label = "<e*>a"]
 }''')
 
-check('(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
+check(r'(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+(ab)<f>)*',
 '''digraph
 {
   vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, q>"
@@ -976,7 +976,7 @@ check(qexp('[abc]*{c}'), zero('abc'))
 check(qexp('abcd & (dcba){T}'), file='transposition-1')
 
 # Left and right divisions.
-check(qexp('<2>abc {\} <4>abcd*'), file='ldiv-1')
+check(qexp(r'<2>abc {\} <4>abcd*'), file='ldiv-1')
 check(qexp('<4>a*bcd {/} <2>bcd'), file='rdiv-1')
 
 # Tupling.

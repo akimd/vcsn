@@ -169,9 +169,9 @@ CHECK_EQ(result, a.add(b))
 
 
 # lan x lal + lal x lan = lan x lan.
-a = std('lat<lan_char, lal_char>, b', "\e|x")
-b = std('lat<lal_char, lan_char>, b', "a|\e")
-c = std('lat<lan_char, lan_char>, b', "\e|x+a|\e")
+a = std('lat<lan_char, lal_char>, b', r"\e|x")
+b = std('lat<lal_char, lan_char>, b', r"a|\e")
+c = std('lat<lan_char, lan_char>, b', r"\e|x+a|\e")
 # Not the same states numbers, so not CHECK_EQ.
 CHECK_ISOMORPHIC(c, a + b)
 
@@ -195,7 +195,7 @@ br = ctxbr.expression('<u>a')
 z = ctxz.expression('<2>b')
 q = ctxq.expression('<1/3>c')
 r = ctxr.expression('<.4>d')
-CHECK_EQ('<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br + z + q + r))
+CHECK_EQ(r'<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br + z + q + r))
 
 
 ## ------------------------- ##
@@ -206,7 +206,7 @@ br = ctxbr.polynomial('<u>a')
 z = ctxz.polynomial('<2>b')
 q = ctxq.polynomial('<1/3>c')
 r = ctxr.polynomial('<.4>d')
-CHECK_EQ('<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
+CHECK_EQ(r'<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
 
 
 ## ----------------- ##
@@ -218,4 +218,4 @@ z = ctxz.weight('2')
 q = ctxq.weight('1/3')
 r = ctxr.weight('.4')
 CHECK_EQ('2.73333', str(z + q + r))
-CHECK_EQ('<2.73333>\e+u', str(br + z + q + r))
+CHECK_EQ(r'<2.73333>\e+u', str(br + z + q + r))

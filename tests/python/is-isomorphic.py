@@ -21,14 +21,14 @@ def check(exp, r1, r2):
             FAIL('isomorphism check is not commutative on ' + r1 + ' and ' + r2)
     CHECK_EQ(exp, eff)
 
-check(False, '\z', '\e')
+check(False, r'\z', r'\e')
 
 a = '(ab*c)*'
 b = '(c*ba)*'
-check(False, a, '\e')
-check(False, b, '\e')
-check(False, a, '\z')
-check(False, b, '\z')
+check(False, a, r'\e')
+check(False, b, r'\e')
+check(False, a, r'\z')
+check(False, b, r'\z')
 
 check(False, a, b)
 check(True, a+'+'+b, b+'+'+a)

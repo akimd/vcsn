@@ -77,50 +77,50 @@ CHECK_EQ('b+a',
 ## ---------------------------- ##
 
 # Zero, one.
-check(   '\z', 'a', '\z')
-check(   '\e', 'a', '\z')
-check('<x>\e', 'a', '\z')
+check(   r'\z', 'a', r'\z')
+check(   r'\e', 'a', r'\z')
+check(r'<x>\e', 'a', r'\z')
 
 # Letters.
-check(   'a', 'a', '\e')
-check(   'a', 'b', '\z')
-check('<x>a', 'a', '<x>\e')
-check('<x>a', 'b', '\z')
+check(   'a', 'a', r'\e')
+check(   'a', 'b', r'\z')
+check('<x>a', 'a', r'<x>\e')
+check('<x>a', 'b', r'\z')
 
 # Sum.
-check('<x>a+<y>b', 'a', '<x>\e')
-check('<x>a+<y>b', 'b', '<y>\e')
-check('<x>a+<y>a', 'a', '<x+y>\e')
+check('<x>a+<y>b', 'a', r'<x>\e')
+check('<x>a+<y>b', 'b', r'<y>\e')
+check('<x>a+<y>a', 'a', r'<x+y>\e')
 
 # Prod.
 check('ab', 'a', 'b')
-check('ab', 'b', '\z')
+check('ab', 'b', r'\z')
 check('(<x>a).(<y>a).(<z>a)', 'a', '<x><y>a<z>a')
 
 # Conjunction.
-check('<x>a&<y>a&<z>a', 'a', '<xyz>\e')
-check('<x>a&<y>a&<z>a', 'b', '\z')
+check('<x>a&<y>a&<z>a', 'a', r'<xyz>\e')
+check('<x>a&<y>a&<z>a', 'b', r'\z')
 
-check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'a', '\z')
+check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'a', r'\z')
 check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'b', '<yz>(<x>a+<y>b)*&(<z>b+<x>c)*')
-check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'c', '\z')
+check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'c', r'\z')
 
 # Shuffle.
-check('<x>a:<y>a:<z>a', 'a', '<x>\e:<y>a:<z>a + <y><x>a:\e:<z>a + <z><x>a:<y>a:\e')
-check('<x>a:<y>b:<z>c', 'a', '<x>\e:<y>b:<z>c')
-check('<x>a:<y>b:<z>c', 'b', '<y><x>a:\e:<z>c')
-check('<x>a:<y>b:<z>c', 'c', '<z><x>a:<y>b:\e')
+check('<x>a:<y>a:<z>a', 'a', r'<x>\e:<y>a:<z>a + <y><x>a:\e:<z>a + <z><x>a:<y>a:\e')
+check('<x>a:<y>b:<z>c', 'a', r'<x>\e:<y>b:<z>c')
+check('<x>a:<y>b:<z>c', 'b', r'<y><x>a:\e:<z>c')
+check('<x>a:<y>b:<z>c', 'c', r'<z><x>a:<y>b:\e')
 
 check('(<x>a<y>b)*:(<x>a<x>c)*',
       'a', '<x>(<x>a<y>b)*:<x>c(<x>a<x>c)* + <x><y>b(<x>a<y>b)*:(<x>a<x>c)*')
-check('(<x>a<y>b)*:(<x>a<x>c)*', 'b', '\z')
-check('(<x>a<y>b)*:(<x>a<x>c)*', 'c', '\z')
+check('(<x>a<y>b)*:(<x>a<x>c)*', 'b', r'\z')
+check('(<x>a<y>b)*:(<x>a<x>c)*', 'c', r'\z')
 
 # Star.
 check('a*', 'a', 'a*')
-check('a*', 'b', '\z')
+check('a*', 'b', r'\z')
 check('(<x>a)*', 'a', '<x>(<x>a)*')
-check('(<x>a)*', 'b', '\z')
+check('(<x>a)*', 'b', r'\z')
 check('<x>a*',   'a', '<x>a*')
 check('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 check('(<x>a)*<y>', 'a', '<x>(<x>a)*<y>')
@@ -128,30 +128,30 @@ check('(<x>a)*<y>', 'aa', '<xx>(<x>a)*<y>')
 
 
 # Complement.
-check('\z{c}', 'a', '\z{c}')
-check('\e{c}', 'a', '\z{c}')
+check(r'\z{c}', 'a', r'\z{c}')
+check(r'\e{c}', 'a', r'\z{c}')
 
-check('a{c}', 'a', '\e{c}')
-check('a{c}', 'b', '\z{c}')
+check('a{c}', 'a', r'\e{c}')
+check('a{c}', 'b', r'\z{c}')
 
-check('(a+b){c}', 'a', '\e{c}')
-check('(a+b){c}', 'c', '\z{c}')
+check('(a+b){c}', 'a', r'\e{c}')
+check('(a+b){c}', 'c', r'\z{c}')
 
 check('(a.b){c}', 'a', 'b{c}')
-check('(a.b){c}', 'b', '\z{c}')
+check('(a.b){c}', 'b', r'\z{c}')
 
-check('(a:b){c}', 'a', '(\e:b){c}')
-check('(a:b){c}', 'b', '(a:\e){c}')
-check('(a:b){c}', 'c', '\z{c}')
+check('(a:b){c}', 'a', r'(\e:b){c}')
+check('(a:b){c}', 'b', r'(a:\e){c}')
+check('(a:b){c}', 'c', r'\z{c}')
 
 check('(a*&a*){c}', 'a', '(a*&a*){c}')
-check('(a*&a*){c}', 'b', '\z{c}')
+check('(a*&a*){c}', 'b', r'\z{c}')
 
 check('(<x>(<y>a)*<z>){c}', 'a', '(<y>a)*{c}')
-check('(<x>(<y>a)*<z>){c}', 'b', '\z{c}')
+check('(<x>(<y>a)*<z>){c}', 'b', r'\z{c}')
 
-check('a{c}{c}', 'a', '\e{c}{c}')
-check('a{c}{c}', 'b', '\z{c}{c}')
+check('a{c}{c}', 'a', r'\e{c}{c}')
+check('a{c}{c}', 'b', r'\z{c}{c}')
 
 # We could easily generate an infinite derived-term automaton here.
 # However, currently we don't support a powerful enough normalization
@@ -169,7 +169,7 @@ check(e, 'aaaa', '((<2>a)*+(<4>(aa))*){c}')
 
 check('(<x>a)*', 'aa',   '<xx>(<x>a)*')
 check('(<x>a)*', 'aaaa', '<xxxx>(<x>a)*')
-check('(<x>a)*', 'aaab', '\z')
+check('(<x>a)*', 'aaab', r'\z')
 
 check('(<x>a)*(<y>b)*', 'aa',   '<xx>(<x>a)*(<y>b)*')
 check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
@@ -206,24 +206,24 @@ def check_br(re, letter, exp):
 ## ---------------------------- ##
 
 # Zero, one.
-check_br(   '\z', 'a', '\z')
-check_br(   '\e', 'a', '\z')
-check_br('<x>\e', 'a', '\z')
+check_br(   r'\z', 'a', r'\z')
+check_br(   r'\e', 'a', r'\z')
+check_br(r'<x>\e', 'a', r'\z')
 
 # Letters.
-check_br(   'a', 'a', '\e')
-check_br(   'a', 'b', '\z')
-check_br('<x>a', 'a', '<x>\e')
-check_br('<x>a', 'b', '\z')
+check_br(   'a', 'a', r'\e')
+check_br(   'a', 'b', r'\z')
+check_br('<x>a', 'a', r'<x>\e')
+check_br('<x>a', 'b', r'\z')
 
 # Sum.
-check_br('<x>a+<y>b', 'a', '<x>\e')
-check_br('<x>a+<y>b', 'b', '<y>\e')
-check_br('<x>a+<y>a', 'a', '<x+y>\e')
+check_br('<x>a+<y>b', 'a', r'<x>\e')
+check_br('<x>a+<y>b', 'b', r'<y>\e')
+check_br('<x>a+<y>a', 'a', r'<x+y>\e')
 
 # Prod.
 check_br('ab', 'a', 'b')
-check_br('ab', 'b', '\z')
+check_br('ab', 'b', r'\z')
 check_br('(<x>a)(<y>a)(<z>a)', 'a', '<xy>a<z>a')
 
 # Exterior products.
@@ -231,9 +231,9 @@ check_br('(<x>ab)<y>', 'a', '<xy>b')
 
 # Star.
 check_br('a*', 'a', 'a*')
-check_br('a*', 'b', '\z')
+check_br('a*', 'b', r'\z')
 check_br('(<x>a)*', 'a', '<x>(<x>a)*')
-check_br('(<x>a)*', 'b', '\z')
+check_br('(<x>a)*', 'b', r'\z')
 check_br('<x>a*',   'a', '<x>a*')
 check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 

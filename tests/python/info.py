@@ -18,7 +18,7 @@ def check(obj, exp):
 # Check that ':', which is used as a separator by info, is also
 # properly treated as a letter.
 check(vcsn.context('lal_char(:a-z), q')
-      .expression("a+a\:").standard(),
+      .expression(r"a+a\:").standard(),
       {
           'is ambiguous': False,
           'is codeterministic': False,
@@ -149,7 +149,7 @@ check(b.expression('abc'),
           'zero': 0,
       })
 
-check(b.expression('\e+bc*'),
+check(b.expression(r'\e+bc*'),
       {
           'add': 1,
           'atom': 2,
@@ -198,7 +198,7 @@ check(q.expression('<2>a<3>'),
           'zero': 0,
       })
 
-check(q.expression('(a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}&:a){3}', 'associative'),
+check(q.expression(r'(a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}&:a){3}', 'associative'),
       {
           'add': 3,
           'atom': 21,
@@ -223,7 +223,7 @@ check(q.expression('(a{\}(<2>(\e+a+b)<3>)&(a:b)a*{c}{T}&:a){3}', 'associative'),
       })
 
 # This expression is \z.
-check(q.expression('(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
+check(q.expression(r'(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
       {
           'add': 0,
           'atom': 0,
@@ -248,7 +248,7 @@ check(q.expression('(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
       })
 
 c = vcsn.context('lat<lan_char, lan_char>, q')
-check(c.expression('a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
+check(c.expression(r'a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
       {
           'add': 3,
           'atom': 10,

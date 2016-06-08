@@ -118,7 +118,7 @@ CHECK_EQ(aref, a.lift([1, 2]))
 ## lift(expression).  ##
 ## ------------------ ##
 
-CHECK_EQ('''<abc>\e''',
+CHECK_EQ(r'''<abc>\e''',
          vcsn.context('lal_char(abc), b').expression('abc').lift())
-CHECK_EQ('''<<2>(abc)>\e''',
+CHECK_EQ(r'''<<2>(abc)>\e''',
          vcsn.context('lal_char(abc), z').expression('<2>abc').lift())

@@ -26,7 +26,7 @@ CHECK_EQ(vcsn.context('law_char(ab), b').label('ab'),
          vcsn.context('law_char(ab), b').word('ab'))
 
 # wordset.
-check('law_char(a), b',  'a',  'a',   '\mathit{a}')
+check('law_char(a), b',  'a',  'a',  r'\mathit{a}')
 check('law_char(ab), b', 'ab', 'ab', r'\mathit{ab}')
 # Trailing characters.
 XFAIL(lambda: vcsn.context('law_char(ab), b').label('ab*'))

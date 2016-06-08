@@ -38,7 +38,7 @@ def check_complement(r1):
     exp = ctx.expression('({}){{c}}'.format(r1))
     CHECK_EQ(exp, eff)
 
-check_complement('\z')
+check_complement(r'\z')
 check_complement('ab')
 
 ## -------- ##
@@ -57,8 +57,8 @@ check_concat('abab', 'bbbb')
 check_concat('a*', 'a*b*')
 check_concat('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_concat('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
-check_concat('a', '\e')
-check_concat('a', '\z')
+check_concat('a', r'\e')
+check_concat('a', r'\z')
 
 ## ------------ ##
 ## Difference.  ##
@@ -76,8 +76,8 @@ check_difference('abab', 'bbbb')
 check_difference('a*', 'a*b*')
 check_difference('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_difference('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
-check_difference('a', '\e')
-check_difference('a', '\z')
+check_difference('a', r'\e')
+check_difference('a', r'\z')
 
 ## ------------- ##
 ## Conjunction.  ##
@@ -95,8 +95,8 @@ check_conj('abab', 'bbbb')
 check_conj('a*', 'a*b*')
 check_conj('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_conj('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
-check_conj('a', '\e')
-check_conj('a', '\z')
+check_conj('a', r'\e')
+check_conj('a', r'\z')
 
 ## ----- ##
 ## Sum.  ##
@@ -114,8 +114,8 @@ check_sum('abab', 'bbbb')
 check_sum('a*', 'a*b*')
 check_sum('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_sum('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
-check_sum('a', '\e')
-check_sum('a', '\z')
+check_sum('a', r'\e')
+check_sum('a', r'\z')
 
 
 ## --------------- ##
@@ -128,7 +128,7 @@ def check_transposition(r1):
     exp = ctx.expression('({}){{T}}'.format(r1))
     CHECK_EQ(exp, eff)
 
-check_transposition('\z')
+check_transposition(r'\z')
 check_transposition('ab')
 
 
@@ -150,7 +150,7 @@ xfail('a[')
 xfail('*')
 xfail('&a')
 xfail('a&')
-xfail('\a')
+xfail(r'\a')
 
 ctx = vcsn.context('lal_char(abc), q')
 xfail('(?@lal_char(abc), b)<2>a')
@@ -248,7 +248,7 @@ def check(s1, exp):
 ctx = vcsn.context('lal_char(abcd), q')
 check('a+b', 'a+b')
 check('(a+a)*', '(<2>a)*')
-check('a+\z', 'a')
+check(r'a+\z', 'a')
 check('(<5>a)b', '<5>(ab)')
 check('(<5>a)(b)(c*)', '<5>(abc*)')
 check('a+b(c+<2>d)', 'a+bc+<2>(bd)')

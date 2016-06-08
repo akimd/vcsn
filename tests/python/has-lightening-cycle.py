@@ -8,7 +8,7 @@ def check(exp, has):
     CHECK(a.has_lightening_cycle() == has)
 
 ctx = vcsn.context('lan_char(a), nmin')
-check('\e', False)
+check(r'\e', False)
 
 ctx = vcsn.context('lal_char(a), zmin')
 check('(<-1>a)*', True)

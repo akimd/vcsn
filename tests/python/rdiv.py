@@ -29,7 +29,7 @@ CHECK_EQUIV(aut(r'(<1/2>\e)*a*'), aut('a*').rdiv(aut('(<2>a)*')))
 CHECK_EQUIV(aut(r'\z'), aut('<2>a').rdiv(aut('ab')))
 
 # Misc
-CHECK_EQUIV(aut('<2>ab*+<3>\e'), aut('<6>ab*').rdiv(aut('<2>a+<3>b')))
+CHECK_EQUIV(aut(r'<2>ab*+<3>\e'), aut('<6>ab*').rdiv(aut('<2>a+<3>b')))
 CHECK_EQUIV(aut('<2>a'), aut('a(b+c)').rdiv(aut('b+c')))
 
 # Cross check with derived_term

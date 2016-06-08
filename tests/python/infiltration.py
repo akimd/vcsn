@@ -167,9 +167,9 @@ CHECK_EQ('''digraph
 ab = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
     .expression('(<u>a+<v>b)*').standard()
 a = vcsn.context('lal_char(ab), b').expression('a').standard()
-CHECK_EQ('<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
+CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
          str(ab.infiltration(a).shortest(4)))
-CHECK_EQ('<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
+CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
          str(a.infiltration(ab).shortest(4)))
 
 

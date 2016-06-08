@@ -22,9 +22,9 @@ def check(r):
     exp = (~e).expansion()
     CHECK_EQ(exp, eff)
 
-check('\z')
-check('\e')
-check('<1/2>\e')
+check(r'\z')
+check(r'\e')
+check(r'<1/2>\e')
 check('a')
 check('(<1/2>a*+<1/3>b*)*')
 check('ab')
@@ -35,11 +35,11 @@ check('(<1/2>a)*')
 # Also check with lan.
 lan = vcsn.context('lan, b')
 check(lan.expression('abc'))
-check(lan.expression('\z'))
+check(lan.expression(r'\z'))
 
 # And with LAO.
 lao = vcsn.context('lao, q')
-check(lao.expression('(<1/2>\e)*'))
+check(lao.expression(r'(<1/2>\e)*'))
 
 
 
@@ -84,8 +84,8 @@ def check(r1, r2):
 check('ab', 'cd')
 check('(ab)*', 'a*b*')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
-check('a', '\e')
-check('a', '\z')
+check('a', r'\e')
+check('a', r'\z')
 
 
 
@@ -138,8 +138,8 @@ check('ab', 'cd')
 check('a', 'bcd')
 check('abab', 'bbbb')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
-check('a', '\e')
-check('a', '\z')
+check('a', r'\e')
+check('a', r'\z')
 
 
 ## ------- ##
@@ -159,5 +159,5 @@ check('ab', 'cd')
 check('a', 'bcd')
 check('abab', 'bbbb')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
-check('a', '\e')
-check('a', '\z')
+check('a', r'\e')
+check('a', r'\z')

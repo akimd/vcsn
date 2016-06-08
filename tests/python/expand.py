@@ -19,8 +19,8 @@ def check(input, exp=None):
     # Make sure the expression has the right identities.
     CHECK_EQ(eff.identities(), 'associative')
 
-check('\z')
-check('\e')
+check(r'\z')
+check(r'\e')
 check('a')
 check('<2>a')
 check('a+a', '<2>a')
@@ -37,10 +37,10 @@ check('(a+b)?{3}', \
       r'+aaa+aab+aba+abb+baa+bab+bba+bbb')
 
 # TAF-Kit doc
-check('(a+b+\e)((a+ba)(ca+cc))*',\
+check(r'(a+b+\e)((a+ba)(ca+cc))*',\
       '(aca+acc+baca+bacc)*+a(aca+acc+baca+bacc)*+b(aca+acc+baca+bacc)*')
 
-check('a(b(c+a)*+c(b)*)+ac(\e+b)(b*)', '<2>(acb*)+ab(a+c)*+acbb*')
+check(r'a(b(c+a)*+c(b)*)+ac(\e+b)(b*)', '<2>(acb*)+ab(a+c)*+acbb*')
 
 check('([ab]a){c}', '(aa+ba){c}')
 check('([ab]a){T}', '(aa+ba){T}')

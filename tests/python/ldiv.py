@@ -29,7 +29,7 @@ CHECK_EQUIV(aut(r'(<1/2>\e)*a*'), aut('(<2>a)*').ldiv(aut('a*')))
 CHECK_EQUIV(aut(r'\z'), aut('ab').ldiv(aut('<2>a')))
 
 # Misc
-CHECK_EQUIV(aut('<3>a*b+<2>\e'), aut('<2>a+<3>b').ldiv(aut('<6>a*b')))
+CHECK_EQUIV(aut(r'<3>a*b+<2>\e'), aut('<2>a+<3>b').ldiv(aut('<6>a*b')))
 CHECK_EQUIV(aut('<2>c'), aut('a+b').ldiv(aut('(a+b)c')))
 
 # Cross check with derived_term and inductive,standard.

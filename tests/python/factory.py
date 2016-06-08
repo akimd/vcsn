@@ -7,7 +7,7 @@ from test import *
 
 def get_labels(aut):
     'A set of the labels used in aut.'
-    return set(re.findall('\w+ -> \w+ (.*)$', a.format('daut'), re.M))
+    return set(re.findall(r'\w+ -> \w+ (.*)$', a.format('daut'), re.M))
 vcsn.automaton.labels = get_labels
 
 ## ------- ##

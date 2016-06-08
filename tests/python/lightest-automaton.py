@@ -6,7 +6,7 @@ from test import *
 algos = ['a-star', 'bellman-ford', 'dijkstra']
 
 def check(re, weight, exp):
-  wexp = '<{w}>{e}'.format(w=weight, e=exp) if exp != '\z' else '\z'
+  wexp = '<{w}>{e}'.format(w=weight, e=exp) if exp != r'\z' else r'\z'
   aut = ctx.expression(re).automaton()
   ref = ctx.expression(wexp).standard().trim().strip()
   for algo in algos:
@@ -15,8 +15,8 @@ def check(re, weight, exp):
       CHECK_EQ(weight, res.weight_series())
 
 ctx = vcsn.context('lal_char, nmin')
-check('\z', 'oo', '\z')
-check('\e', '0', '\e')
+check(r'\z', 'oo', r'\z')
+check(r'\e', '0', r'\e')
 check('<1>a+<2>b', '1', 'a')
 check('<1>b+<1>a', '1', 'a')
 check('aaa+<2>b', '0', 'aaa')
@@ -25,4 +25,4 @@ check('[ab]', '0', 'a')
 
 ctx = vcsn.context('lal_char, q')
 for algo in algos:
-    XFAIL(lambda: ctx.expression('\z').standard().lightest_automaton(1, algo))
+    XFAIL(lambda: ctx.expression(r'\z').standard().lightest_automaton(1, algo))

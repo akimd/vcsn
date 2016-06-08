@@ -205,8 +205,8 @@ def check(exp, aut):
 # RatE and B, in both directions.
 a1 = std('lal_char(ab), seriesset<lal_char(uv), q>', '(<u>a+<v>b)*')
 a2 = std('lal_char(ab), b', 'a{+}')
-check('<u>a(\e+<u>a(<u>a)*)', a1 & a2)
-check('<u>a(\e+<u>a(<u>a)*)', a2 & a1)
+check(r'<u>a(\e+<u>a(<u>a)*)', a1 & a2)
+check(r'<u>a(\e+<u>a(<u>a)*)', a2 & a1)
 
 # Z, Q, R.
 z = dt('lal_char(ab), z', '(<2>a+<3>b)*')
@@ -238,8 +238,8 @@ def check_enumerate(exp, aut):
     CHECK_EQ(exp, aut.strip().shortest(len=4))
 
 check_enumerate('<uxvy>ab', a1 & a2)
-check_enumerate('\z', a1.transpose() & a2)
-check_enumerate('\z', a1 & a2.transpose())
+check_enumerate(r'\z', a1.transpose() & a2)
+check_enumerate(r'\z', a1 & a2.transpose())
 check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 
 
@@ -299,7 +299,7 @@ qr = vcsn.context('lal_char(a), seriesset<lal_char(uv), q>') \
 z = vcsn.context('lal_char(b), z').expression('<2>b*')
 q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
 r = vcsn.context('lal_char(d), r').expression('<.4>d*')
-CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', qr & z & q & r)
+CHECK_EQ(r'<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', qr & z & q & r)
 
 ## ------------------------- ##
 ## polynomial & polynomial.  ##
@@ -312,22 +312,22 @@ c = poly('<3>c')
 CHECK_EQ('<4>a + <9>b', a & a)
 CHECK_EQ('<6>b', a & b)
 CHECK_EQ('<6>b', b & a)
-CHECK_EQ('\z', a & c)
+CHECK_EQ(r'\z', a & c)
 CHECK_EQ('<9>c', b & c)
 
 poly = vcsn.context('lan_char, q').polynomial
-a = poly('<2>\e')
-b = poly('<2>a+<3>\e')
+a = poly(r'<2>\e')
+b = poly(r'<2>a+<3>\e')
 c = poly('<2>a+<3>c')
-CHECK_EQ('<4>\e', a & a)
-CHECK_EQ('\z', a & c)
-CHECK_EQ('<6>\e', a & b)
+CHECK_EQ(r'<4>\e', a & a)
+CHECK_EQ(r'\z', a & c)
+CHECK_EQ(r'<6>\e', a & b)
 CHECK_EQ('<4>a', b & c)
 
 poly = vcsn.context('law_char, q').polynomial
 a = poly('<1>aa')
 b = poly('<2>ab')
-CHECK_EQ('\z', a & b)
+CHECK_EQ(r'\z', a & b)
 CHECK_EQ('aa', a & a)
 
 ## ----------------- ##

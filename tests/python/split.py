@@ -24,12 +24,12 @@ def fail(re):
     XFAIL(lambda: re.split())
 
 fail('a*{c}')
-fail('a*{\}b*')
+fail(r'a*{\}b*')
 fail('a:b')
 fail('a*{T}')
 
-check('\z')
-check('<x>\e')
+check(r'\z')
+check(r'<x>\e')
 check('<x>a')
 check('(<x>a)*<y>')
 check('<xy>a<z>b')

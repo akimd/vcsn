@@ -10,7 +10,7 @@ from test import *
 # Standard automata.
 q = vcsn.context('lal_char(ab), q')
 # This automaton is standard.
-r = q.expression('\e+[ab]b[ab]*', 'associative')
+r = q.expression(r'\e+[ab]b[ab]*', 'associative')
 
 # Derived-term commutes with kmul.
 CHECK_EQ(('3/4' * r).automaton(),
@@ -44,9 +44,9 @@ CHECK_EQUIV(q.expression('(ab)<3/4>+(ab)<3/4>').derived_term(),
             a * '3/4')
 
 # Check the case of multiplication by 0: generate the empty automaton.
-CHECK_EQ(q.expression('\z').automaton(),
+CHECK_EQ(q.expression(r'\z').automaton(),
          0 * a)
-CHECK_EQ(q.expression('\z').automaton(),
+CHECK_EQ(q.expression(r'\z').automaton(),
          a * 0)
 
 ## ------------ ##

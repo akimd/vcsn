@@ -410,7 +410,7 @@ CHECK_EQ('''digraph
   I0 -> 0
   0 -> F0
 }''',
-         vcsn.context('lal_char, b').expression('\z{c}').derived_term().dot())
+         vcsn.context('lal_char, b').expression(r'\z{c}').derived_term().dot())
 
 ## ------------- ##
 ## dot: simple.  ##
@@ -442,7 +442,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
 
 
 # Check state names in TikZ.
-a = vcsn.context('lal_char, b').expression('\e+a').derived_term()
+a = vcsn.context('lal_char, b').expression(r'\e+a').derived_term()
 exp = open(os.path.join(medir, 'derived-term.tex')).read().strip()
 CHECK_EQ(exp, a.format('tikz'))
 

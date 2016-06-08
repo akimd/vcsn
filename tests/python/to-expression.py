@@ -51,7 +51,7 @@ def check_exp(rat, exp = None):
 
 check_exp('a')
 check_exp('ab')
-check_exp('a*', '\e+aa*')
+check_exp('a*', r'\e+aa*')
 check_exp('a+b')
 check_exp('(?@lal_char(ab), z)<2>(ab)<3>', '<6>(ab)')
 check_exp('(?@law_char(ab), z)<2>(ab)<3>', '<6>(ab)')

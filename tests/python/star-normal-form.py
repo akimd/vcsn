@@ -27,10 +27,10 @@ def fail(re):
     re = ctx.expression(re)
     XFAIL(lambda: re.star_normal_form())
 
-check('\z')
+check(r'\z')
 check('a')
 check('a*')
-check('\e*', '\e')
+check(r'\e*', r'\e')
 check('(a*b*)*', '(a+b)*')
 check('(a*b*)**', '(a+b)*')
 check('(a*b*)**+b**', '(a+b)*+b*')
@@ -43,7 +43,7 @@ check('(ab?)*')
 fail('a{c}')
 fail('a*&b*')
 fail('a:b')
-fail('a{\}b')
+fail(r'a{\}b')
 fail('a*{T}')
 
 # We don't support weighted expressions.

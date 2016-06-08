@@ -9,7 +9,7 @@ def check(aut, n, exp):
     CHECK_EQ(exp, aut.multiply(n))
 
 a = vcsn.B.expression('a').standard()
-check(a, 0, vcsn.B.expression('\e').standard())
+check(a, 0, vcsn.B.expression(r'\e').standard())
 check(a, 5, '''digraph
 {
   vcsn_context = "letterset<char_letters(a)>, b"

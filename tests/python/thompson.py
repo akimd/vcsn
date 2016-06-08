@@ -32,7 +32,7 @@ xfail(r'(ab){T}')
 ## --- ##
 
 # Z: "\z".
-check('(?@lal_char(), z)\z',
+check(r'(?@lal_char(), z)\z',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters()>>, z"
@@ -53,7 +53,7 @@ r'''digraph
 }''')
 
 # Z: "<12>\e".
-check('(?@lal_char(a), z)<12>\e',
+check(r'(?@lal_char(a), z)<12>\e',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(a)>>, z"
@@ -79,7 +79,7 @@ r'''digraph
 ## -------- ##
 
 # Z: "\e+a+\e"
-check('(?@lal_char(ab), z)\e+a+\e',
+check(r'(?@lal_char(ab), z)\e+a+\e',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -110,7 +110,7 @@ r'''digraph
 }''')
 
 # Z: "<12>\e+<23>a+<34>b".
-check('(?@law_char(ab), z)<12>\e+<23>a+<34>b',
+check(r'(?@law_char(ab), z)<12>\e+<23>a+<34>b',
 r'''digraph
 {
   vcsn_context = "wordset<char_letters(ab)>, z"
@@ -146,7 +146,7 @@ r'''digraph
 }''')
 
 # left weight.
-check('(?@lan_char(ab), z)<10>(<2>\e+<3>a+<5>b)',
+check(r'(?@lan_char(ab), z)<10>(<2>\e+<3>a+<5>b)',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -183,7 +183,7 @@ r'''digraph
 
 # right weight.
 check(vcsn.context('lan_char(ab), z')
-      .expression('(<2>\e+<3>a+<5>b)<10>', 'associative'),
+      .expression(r'(<2>\e+<3>a+<5>b)<10>', 'associative'),
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -252,7 +252,7 @@ r'''digraph
 ## Z: star.  ##
 ## --------- ##
 
-check('(?@lan_char(ab), z)\z*',
+check(r'(?@lan_char(ab), z)\z*',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
@@ -273,7 +273,7 @@ r'''digraph
   1 -> F1
 }''')
 
-check('(?@lan_char(ab), b)\e*',
+check(r'(?@lan_char(ab), b)\e*',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(ab)>>, b"
@@ -496,7 +496,7 @@ r'''digraph
 ## ZR: star.  ##
 ## ---------- ##
 
-check('(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
+check(r'(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, q>"
@@ -540,7 +540,7 @@ r'''digraph
   11 -> F11
 }''')
 
-check('(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+ab<f>)*',
+check(r'(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+ab<f>)*',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, q>"
@@ -582,7 +582,7 @@ r'''digraph
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check('(?@lan_char(a), expressionset<lal_char(xyz), q>)<x>a(<y>\e+<z>a)',
+check(r'(?@lan_char(a), expressionset<lal_char(xyz), q>)<x>a(<y>\e+<z>a)',
 r'''digraph
 {
   vcsn_context = "nullableset<letterset<char_letters(a)>>, expressionset<letterset<char_letters(xyz)>, q>"

@@ -19,12 +19,12 @@ e = c.expression('a|x')
 CHECK_EQ(e.standard(), e.derived_term().strip())
 
 # Likewise with a|\e.
-e = c.expression('a|\e')
+e = c.expression(r'a|\e')
 CHECK_EQ(e.standard(), e.derived_term().strip())
 
 e = c.expression('[ab]|x')
 CHECK_EQ('(a+b)|x', e)
-CHECK_EQ('''a|x.[\e] + b|x.[\e]''', e.expansion())
+CHECK_EQ(r'''a|x.[\e] + b|x.[\e]''', e.expansion())
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(xyz)>>>, q"

@@ -34,25 +34,25 @@ def check(re, exp):
 ##########################
 
 # Zero, one.
-check(   '\z', '<\z>')
-check(   '\e', '<\e>')
-check('<x>\e', '<x>')
+check(   r'\z', r'<\z>')
+check(   r'\e', r'<\e>')
+check(r'<x>\e', '<x>')
 
 # Letters.
-check(   'a', 'a.[\e]')
-check('<x>a', 'a.[<x>\e]')
+check(   'a', r'a.[\e]')
+check('<x>a', r'a.[<x>\e]')
 
 # Sum.
-check('<x>a+<y>b', 'a.[<x>\e] + b.[<y>\e]')
-check('<x>a+<y>a', 'a.[<x+y>\e]')
+check('<x>a+<y>b', r'a.[<x>\e] + b.[<y>\e]')
+check('<x>a+<y>a', r'a.[<x+y>\e]')
 
 # Prod.
 check('ab', 'a.[b]')
 check('(<x>a).(<y>a).(<z>a)', 'a.[<x><y>a<z>a]')
 
 # Conjunction.
-check('<x>a&<y>a&<z>a', 'a.[<xyz>\e]')
-check('(<x>a+<y>b)*&(<z>b+<x>c)*', '<\e> + b.[<yz>(<x>a+<y>b)*&(<z>b+<x>c)*]')
+check('<x>a&<y>a&<z>a', r'a.[<xyz>\e]')
+check('(<x>a+<y>b)*&(<z>b+<x>c)*', r'<\e> + b.[<yz>(<x>a+<y>b)*&(<z>b+<x>c)*]')
 
 # Shuffle.
 # FIXME: CHECK_ISOMORPHIC fails to see both results are the same:
@@ -63,25 +63,25 @@ check('(<x>a+<y>b)*&(<z>b+<x>c)*', '<\e> + b.[<yz>(<x>a+<y>b)*&(<z>b+<x>c)*]')
 #   -<xyz+xzy+yxz+yzx+zxy+zyx>aaa
 #   +<zyx+zxy+yzx+yxz+xzy+xyz>aaa
 check('<x>a:<y>a:<z>a', 'a.[<z><x>a:<y>a + <y><x>a:<z>a + <x><y>a:<z>a]')
-check('(<x>a<y>b)*:(<x>a<x>c)*', '<\e> + a.[<x>(<x>a<y>b)*:<x>c(<x>a<x>c)* + <x><y>b(<x>a<y>b)*:(<x>a<x>c)*]')
+check('(<x>a<y>b)*:(<x>a<x>c)*', r'<\e> + a.[<x>(<x>a<y>b)*:<x>c(<x>a<x>c)* + <x><y>b(<x>a<y>b)*:(<x>a<x>c)*]')
 
 # Star.
-check('a*', '<\e> + a.[a*]')
-check('(<x>a)*', '<\e> + a.[<x>(<x>a)*]')
+check('a*', r'<\e> + a.[a*]')
+check('(<x>a)*', r'<\e> + a.[<x>(<x>a)*]')
 check('<x>a*', '<x> + a.[<x>a*]')
 check('<x>(<y>a)*', '<x> + a.[<xy>(<y>a)*]')
 check('(<x>a)*<y>', '<y> + a.[<x>(<x>a)*<y>]')
 
 # Complement.
-check('\z{c}', '<\e> + a.[\z{c}] + b.[\z{c}] + c.[\z{c}]')
-check('\e{c}', 'a.[\z{c}] + b.[\z{c}] + c.[\z{c}]')
-check('a{c}', '<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}]')
-check('(a+b){c}', '<\e> + a.[\e{c}] + b.[\e{c}] + c.[\z{c}]')
-check('(a.b){c}', '<\e> + a.[b{c}] + b.[\z{c}] + c.[\z{c}]')
-check('(a:b){c}', '<\e> + a.[b{c}] + b.[a{c}] + c.[\z{c}]')
-check('(a*&a*){c}', 'a.[(a*&a*){c}] + b.[\z{c}] + c.[\z{c}]')
-check('(<x>(<y>a)*<z>){c}', 'a.[(<y>a)*{c}] + b.[\z{c}] + c.[\z{c}]')
-check('a{c}{c}', 'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
+check(r'\z{c}', r'<\e> + a.[\z{c}] + b.[\z{c}] + c.[\z{c}]')
+check(r'\e{c}', r'a.[\z{c}] + b.[\z{c}] + c.[\z{c}]')
+check('a{c}', r'<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}]')
+check('(a+b){c}', r'<\e> + a.[\e{c}] + b.[\e{c}] + c.[\z{c}]')
+check('(a.b){c}', r'<\e> + a.[b{c}] + b.[\z{c}] + c.[\z{c}]')
+check('(a:b){c}', r'<\e> + a.[b{c}] + b.[a{c}] + c.[\z{c}]')
+check('(a*&a*){c}', r'a.[(a*&a*){c}] + b.[\z{c}] + c.[\z{c}]')
+check('(<x>(<y>a)*<z>){c}', r'a.[(<y>a)*{c}] + b.[\z{c}] + c.[\z{c}]')
+check('a{c}{c}', r'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
 # A case where it would be easy not to terminate.
 # The real value of this check is ensuring the termination of derived-term.
 e = vcsn.context('lal_char(a), q').expression('((<2>a)*+(<4>aa)*){c}')
@@ -92,15 +92,15 @@ check(ctx.expression('((<x>a)*+(<xx>aa)*){c}'),       'a.[(<x>(<x>a)*+<xx>(a(<xx
 check(ctx.expression('((<<2>x>a)*+(<<4>xx>aa)*){c}'), 'a.[(<<2>x>(<<2>x>a)*+<<4>xx>(a(<<4>xx>aa)*)){c}]')
 
 # Transposition.
-check('\z{T}', '<\z>')
-check('\e{T}', '<\e>')
-check('a{T}', 'a.[\e]')
+check(r'\z{T}', r'<\z>')
+check(r'\e{T}', r'<\e>')
+check('a{T}', r'a.[\e]')
 check('(abc){T}', 'c.[(ab){T}]')
 check('(abc+aabbcc){T}', 'c.[(ab){T} + (aabbc){T}]')
 check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>ab){T}]')
 
-check('(ab)*{T}', '<\e> + b.[a(ab)*{T}]')
-check('(<xy>(abc)<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
+check('(ab)*{T}', r'<\e> + b.[a(ab)*{T}]')
+check('(<xy>(abc)<yz>)*{T}', r'<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 
 
 
@@ -111,52 +111,52 @@ check('(<xy>(abc)<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 c = vcsn.context("lan_char(abcd), expressionset<lal_char(xyz), q>")
 
 # Lquotient with spontaneous transitions.
-check('\e{\}\z', '<\z>')
-check('\e{\}\e', '<\e>')
-check('\e{\}abc', 'a.[bc]')
-check('a{\}a', '<\e>')
-check('a{\}b', '<\z>')
+check(r'\e{\}\z', r'<\z>')
+check(r'\e{\}\e', r'<\e>')
+check(r'\e{\}abc', 'a.[bc]')
+check(r'a{\}a', r'<\e>')
+check(r'a{\}b', r'<\z>')
 
 # Conjunction on a non-free letterized labelsets.
-check('!a', '<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}] + d.[\z{c}]')
+check('!a', r'<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}] + d.[\z{c}]')
 
-check('a{\}<x>a', '<x>')
-check('<x>a{\}<y>a', '<x{\}y>')
-check('<x>a{\}<x>a', '<x{\}x>')
-check('a{\}(<x>a)*', '\e.[<x>(<x>a)*]')
-check('a*{\}a', '\e.[a*{\}\e] + a.[\e]')
-check('a*{\}a*', '<\e> + \e.[a*{\}a*] + a.[a*]')
-check('(<x>a)*{\}(<y>a)*', '<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]')
-check('<x>(<y>a)* {\} <z>a*', '<x{\}z> + \e.[<xy{\}z>(<y>a)*{\}a*] + a.[<x{\}z>a*]')
+check(r'a{\}<x>a', '<x>')
+check(r'<x>a{\}<y>a', r'<x{\}y>')
+check(r'<x>a{\}<x>a', r'<x{\}x>')
+check(r'a{\}(<x>a)*', r'\e.[<x>(<x>a)*]')
+check(r'a*{\}a', r'\e.[a*{\}\e] + a.[\e]')
+check(r'a*{\}a*', r'<\e> + \e.[a*{\}a*] + a.[a*]')
+check(r'(<x>a)*{\}(<y>a)*', r'<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]')
+check(r'<x>(<y>a)* {\} <z>a*', r'<x{\}z> + \e.[<xy{\}z>(<y>a)*{\}a*] + a.[<x{\}z>a*]')
 
 # Left quotient vs. conjunction.
-check('(ab{\}ab)c&c', '\e.[(b{\}b)c&c]')
+check(r'(ab{\}ab)c&c', r'\e.[(b{\}b)c&c]')
 
 # Right quotient with spontaneous transitions.
-check('\z{/}\e', '<\z>')
-check('\e{/}\e', '<\e>')
-check('a{/}a', '<\e>')
-check('a{/}b', '<\z>')
-check('abcd{/}\e', 'a.[bcd]')
-check('abcd{/}d', '\e.[(abc){T}{T}]')
-check('abcd{/}cd', '\e.[(c{\}(abc){T}){T}]')
-check('abcd{/}bcd', '\e.[((bc){T}{\}(abc){T}){T}]')
-check('abcd{/}abcd', '\e.[((abc){T}{\}(abc){T}){T}]')
+check(r'\z{/}\e', r'<\z>')
+check(r'\e{/}\e', r'<\e>')
+check('a{/}a', r'<\e>')
+check('a{/}b', r'<\z>')
+check(r'abcd{/}\e', 'a.[bcd]')
+check('abcd{/}d', r'\e.[(abc){T}{T}]')
+check('abcd{/}cd', r'\e.[(c{\}(abc){T}){T}]')
+check('abcd{/}bcd', r'\e.[((bc){T}{\}(abc){T}){T}]')
+check('abcd{/}abcd', r'\e.[((abc){T}{\}(abc){T}){T}]')
 
-check('(<x>a){/}a', '\e.[(<x>\e){T}]')
-check('<x>a{/}<y>a', '\e.[(<y>\e{\}<x>\e){T}]')
-check('a{/}(<x>a)*', '\e.[(<x>(<x>a)*{T}{\}\e){T}] + a.[\e]')
+check('(<x>a){/}a', r'\e.[(<x>\e){T}]')
+check('<x>a{/}<y>a', r'\e.[(<y>\e{\}<x>\e){T}]')
+check('a{/}(<x>a)*', r'\e.[(<x>(<x>a)*{T}{\}\e){T}] + a.[\e]')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(a)*',
-'<\e> + \e.[(a*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
-check('a*{/}a', '\e.[a*{T}{T}]')
-check('a*{/}a*', '<\e> + \e.[(a*{T}{\}a*{T}){T}] + a.[a*]')
+r'<\e> + \e.[(a*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
+check('a*{/}a', r'\e.[a*{T}{T}]')
+check('a*{/}a*', r'<\e> + \e.[(a*{T}{\}a*{T}){T}] + a.[a*]')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
-'<\e> + \e.[(<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
+r'<\e> + \e.[(<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
 
 # Right quotient vs. conjunction.
-check('(ab{/}ab)c&c', '\e.[(a{\}a){T}c&c]')
+check('(ab{/}ab)c&c', r'\e.[(a{\}a){T}c&c]')
 
 
 
@@ -213,7 +213,7 @@ def check_prod(*exps, **kwargs):
             # when there are one as labels.  Which is also when
             # "equiv" is passed.
             if p == 'infiltration':
-                SKIP('infiltration does not work with \e as label')
+                SKIP(r'infiltration does not work with \e as label')
             else:
                 CHECK_EQUIV(a1, a2)
         else:
@@ -226,7 +226,7 @@ check_prod('(<1/6>a*+<1/3>b*)*', 'b*')
 check_prod('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
 
 ctx = vcsn.context('lal_char(abc), expressionset<lal_char(xyz), b>')
-check_prod('<x>\e', '<y>\e')
+check_prod(r'<x>\e', r'<y>\e')
 
 
 check_prod('<x>a', '<y>a')
@@ -251,7 +251,7 @@ check_prod(r'a(cd{\}cd)', r'(cd{\}cd)b', equiv=True)
 
 check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv=True)
 check_prod(r'(cd{\}cd)[ab]', r'a(cd{\}cd+b)', equiv=True)
-check_prod(r'<1/10>(cd{\}<1/2>cd+a)<2>', '<1/20>(cd{\}<1/3>cd+a)<3>',
+check_prod(r'<1/10>(cd{\}<1/2>cd+a)<2>', r'<1/20>(cd{\}<1/3>cd+a)<3>',
            equiv=True)
 
 ## ----------------- ##
@@ -274,20 +274,20 @@ c = vcsn.context("law_char(a-z), expressionset<lal_char(xyz), q>")
 
 # Transposition is the most risky one, as we must not forget to
 # transpose the labels in the expansion.
-check('\z{T}', '<\z>')
-check('\e{T}', '<\e>')
-check('a{T}', 'a.[\e]')
-check('(abc){T}', 'cba.[\e]')
-check('(abc+aabbcc){T}', 'cba.[\e] + ccbbaa.[\e]')
+check(r'\z{T}', r'<\z>')
+check(r'\e{T}', r'<\e>')
+check('a{T}', r'a.[\e]')
+check('(abc){T}', r'cba.[\e]')
+check('(abc+aabbcc){T}', r'cba.[\e] + ccbbaa.[\e]')
 check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>(ab)){T}]')
 check('((foo)(bar)(baz)){T}', 'zab.[((foo)(bar)){T}]')
-check('(ab)*{T}', '<\e> + ba.[(ab)*{T}]')
+check('(ab)*{T}', r'<\e> + ba.[(ab)*{T}]')
 check('(<xy>((abc)(abc))<yz>)*{T}',
-      '<\e> + cba.[<zy><yx>(cba)(<xy>((abc){2})<yz>)*{T}]')
+      r'<\e> + cba.[<zy><yx>(cba)(<xy>((abc){2})<yz>)*{T}]')
 check('a*b* & (ab)*',
-      '<\e> + a.[a*b*&b(ab)*]')
+      r'<\e> + a.[a*b*&b(ab)*]')
 check('(<x>a)*(<y>b)* & (<z>ab)*',
-      '<\e> + a.[<xz>(<x>a)*(<y>b)*&b(<z>(ab))*]')
+      r'<\e> + a.[<xz>(<x>a)*(<y>b)*&b(<z>(ab))*]')
 
 
 ## ---------- ##
@@ -301,18 +301,18 @@ check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
       'a|xy.[<XY>bc|z&(<Y>a|xy)*(<Z>(bc)|z)*]')
 
 c = vcsn.context("lat<lan<char(abc)>, lan<char(xyz)>>, q")
-check('\e|\e',
+check(r'\e|\e',
       '<1>')
 check('a|x',
-      'a|x.[\e]')
+      r'a|x.[\e]')
 check('a*|x*',
-      '<1> + \e|x.[\e|x*] + a|\e.[a*|\e] + a|x.[a*|x*]')
+      r'<1> + \e|x.[\e|x*] + a|\e.[a*|\e] + a|x.[a*|x*]')
 
 c = vcsn.context("lat<lal<char(abc)>, lal<char(xyz)>>, q")
-check('\e|\e',
+check(r'\e|\e',
       '<1>')
 check('a|x',
-      'a|x.[\e]')
+      r'a|x.[\e]')
 XFAIL(lambda: c.expression('a*|x*').expansion(),
       'to-expansion: cannot denormalize')
 

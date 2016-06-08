@@ -42,13 +42,13 @@ xfail(r'(ab){T}')
 ## -------------- ##
 
 # "\z".
-check('\z',
+check(r'\z',
 '''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 1 -> $''')
 
 # "\e".
-check('\e',
+check(r'\e',
 '''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $
@@ -71,7 +71,7 @@ $ -> 0
 5 -> $''')
 
 # "\e+a"
-check('\e+a',
+check(r'\e+a',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $
@@ -232,7 +232,7 @@ $ -> 0
 'compact')
 
 # "\e+a"
-check('\e+a',
+check(r'\e+a',
 r'''context = "nullableset<letterset<char_letters(abc)>>, seriesset<letterset<char_letters(xyz)>, q>"
 $ -> 0
 0 -> $

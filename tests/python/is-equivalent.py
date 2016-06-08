@@ -16,15 +16,15 @@ def check(exp, r1, r2):
 
 ctx = vcsn.context('lal_char(ab), b')
 
-check(True, '\z', '\z')
-check(True, '\e', '\e')
+check(True, r'\z', r'\z')
+check(True, r'\e', r'\e')
 check(True, 'a', 'a')
 check(True, 'ab', 'a.b')
-check(True, 'a*', '\e+(a.(a*))')
+check(True, 'a*', r'\e+(a.(a*))')
 check(True, 'a+b', 'b+a')
-check(True, 'a*+a*+(\e+aa*)', 'a*')
+check(True, r'a*+a*+(\e+aa*)', 'a*')
 
-check(False, '\z', '\e')
+check(False, r'\z', r'\e')
 check(False, 'a', 'b')
 check(False, 'ab', 'ba')
 check(False, 'aa*', 'a*')

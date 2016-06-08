@@ -59,7 +59,7 @@ for f in ["lal-char-zmin", "lat-zmin", "ascii-to-one"]:
     check(a, f + '.efsm')
 
 # Check the case of an automaton without any transition.
-a = vcsn.context('lal_char(), b').expression('\e').standard()
+a = vcsn.context('lal_char(), b').expression(r'\e').standard()
 check(a, 'one.efsm')
 
 # Check the support of spontaneous transitions.
@@ -138,13 +138,13 @@ if have_ofst:
     c_vcsn, c_ofst = compose('<2>a|m', '<3>m|x')
     CHECK_EQ(c_vcsn, c_ofst)
 
-    c_vcsn, c_ofst = compose('<2>a|\e', '<3>\e|x')
+    c_vcsn, c_ofst = compose(r'<2>a|\e', r'<3>\e|x')
     CHECK_EQ(c_vcsn, c_ofst)
 
     # In this case, we get two different automata: OpenFST's result is
     # trim, and has one less state: we return a tree, they manage to
     # keep a single final state.
-    c_vcsn, c_ofst = compose('<2>a|\e + <3>a|m', '<4>\e|x + <3>m|y')
+    c_vcsn, c_ofst = compose(r'<2>a|\e + <3>a|m', r'<4>\e|x + <3>m|y')
     CHECK_EQUIV(c_vcsn, c_ofst)
 
 else:

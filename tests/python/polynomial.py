@@ -76,7 +76,7 @@ poly = vcsn.context('law, q').polynomial
 # Left.
 CHECK_EQ('<2>a + <2>b', 2 * poly('a+b'))
 CHECK_EQ('a + b',       1 * poly('a+b'))
-CHECK_EQ('\z',          0 * poly('a+b'))
+CHECK_EQ(r'\z',         0 * poly('a+b'))
 
 # Right.
 #
@@ -85,7 +85,7 @@ CHECK_EQ('\z',          0 * poly('a+b'))
 # dealing with expansions of expressions.
 CHECK_EQ('<2>a + <2>b', poly('a+b') * 2)
 CHECK_EQ('a + b',       poly('a+b') * 1)
-CHECK_EQ('\z',          poly('a+b') * 0)
+CHECK_EQ(r'\z',         poly('a+b') * 0)
 
 
 ## ----- ##
@@ -110,7 +110,7 @@ poly = vcsn.context('lal, q').polynomial
 XFAIL(lambda: poly('a') ** 0,
       'cannot represent polynomial one')
 poly = vcsn.context('law, q').polynomial
-CHECK_EQ('\e',                   poly('a') ** 0)
+CHECK_EQ(r'\e',                  poly('a') ** 0)
 CHECK_EQ('<4>a + <12>b + <-3>c', poly('<4>a + <12>b + <-3>c') ** 1)
 CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)
 
@@ -121,7 +121,7 @@ CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)
 ## ------------- ##
 
 poly = vcsn.context('lan, q').polynomial
-CHECK_EQ('\z', poly('a+b') & poly('x+y'))
+CHECK_EQ(r'\z', poly('a+b') & poly('x+y'))
 CHECK_EQ('<10>a',
          poly('<2>a+<3>b') & poly('<5>a+<7>c'))
 
