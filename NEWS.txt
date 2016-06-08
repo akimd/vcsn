@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-06-09
+### sum is renamed add
+All the `sum` operations, in vcsn::, dyn::, Python, and TAF-Kit, have been
+renamed `add`.
+
 ## 2016-05-27
 ### polynomials: more basic operations
 Polynomials now support (in the three layers) the addition, multiplication,

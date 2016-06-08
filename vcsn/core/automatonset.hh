@@ -7,7 +7,7 @@
 #include <vcsn/algos/left-mult.hh>
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/proper.hh>
-#include <vcsn/algos/sum.hh>
+#include <vcsn/algos/add.hh>
 #include <vcsn/algos/tuple-automaton.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/context.hh>
@@ -105,7 +105,7 @@ namespace vcsn
 
     static auto add(const value_t& l, const value_t& r) -> value_t
     {
-      return ::vcsn::sum(l, r, tag_t{});
+      return ::vcsn::add(l, r, tag_t{});
     }
 
     static auto mul(const value_t& l, const value_t& r) -> value_t

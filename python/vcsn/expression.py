@@ -17,7 +17,7 @@ class expression:
         else:
             return self._multiply_orig(exp)
 
-    __add__ = expression.sum
+    __add__ = expression.add
     __and__ = expression.conjunction
     __floordiv__ = expression.ldiv
     __invert__ = expression.complement

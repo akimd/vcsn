@@ -64,7 +64,7 @@ a+b+a+b => <2>a+<2>b
 (a+<-1>b)+(b+<-1>a) => \z
 
 # Make sure we don't create sums of one element only.  If we did, we
-# would get 'a(<2>b)' since the "sum" <2>b has lower precedence than
+# would get 'a(<2>b)' since the "add" <2>b has lower precedence than
 # the product.
 a(b+b) => <2>(ab)
 a(b+b) == <2>ab

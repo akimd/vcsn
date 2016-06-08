@@ -6,7 +6,7 @@
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star.hh>
-#include <vcsn/algos/sum.hh>
+#include <vcsn/algos/add.hh>
 #include <vcsn/algos/tags.hh>
 #include <vcsn/core/automaton.hh>
 #include <vcsn/core/join.hh>
@@ -248,7 +248,7 @@ namespace vcsn
           sum->set_final(s);
         }
         for (int n = 1; n <= max - min; ++n)
-          sum = vcsn::strip(vcsn::sum(sum, multiply(aut, n, n, tag), tag));
+          sum = vcsn::strip(vcsn::add(sum, multiply(aut, n, n, tag), tag));
         res = vcsn::multiply(res, sum, tag);
       }
     }

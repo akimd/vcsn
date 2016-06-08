@@ -83,7 +83,7 @@ class automaton:
         else:
             return self._multiply_orig(exp, algo=algo)
 
-    __add__ = automaton.sum
+    __add__ = automaton.add
     __and__ = lambda l, r: Conjunction(l, r)
     __eq__ = lambda self, other: str(self.strip()) == str(other.strip())
     __invert__ = automaton.complement

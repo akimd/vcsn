@@ -37,7 +37,7 @@ CHECK_EQ((r * 0).standard(),
 
 # Non-standard automata.  This time, it does not commute.
 ab = q.expression('ab').automaton()
-a = ab.sum(ab, "general")
+a = ab.add(ab, "general")
 CHECK_EQUIV(q.expression('<3/4>ab+<3/4>ab').derived_term(),
             '3/4' * a)
 CHECK_EQUIV(q.expression('(ab)<3/4>+(ab)<3/4>').derived_term(),

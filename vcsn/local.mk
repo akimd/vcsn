@@ -14,14 +14,15 @@
 algo_headers =                                  \
   %D%/algos/a-star.hh                           \
   %D%/algos/accessible.hh                       \
+  %D%/algos/add.hh                              \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
   %D%/algos/bellman-ford.hh                     \
   %D%/algos/cerny.hh                            \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
-  %D%/algos/compose.hh                          \
   %D%/algos/compose-expression.hh               \
+  %D%/algos/compose.hh                          \
   %D%/algos/conjugate.hh                        \
   %D%/algos/conjunction.hh                      \
   %D%/algos/constant-term.hh                    \
@@ -60,8 +61,8 @@ algo_headers =                                  \
   %D%/algos/is-ambiguous.hh                     \
   %D%/algos/is-complete.hh                      \
   %D%/algos/is-deterministic.hh                 \
-  %D%/algos/is-functional.hh                    \
   %D%/algos/is-free-boolean.hh                  \
+  %D%/algos/is-functional.hh                    \
   %D%/algos/is-partial-identity.hh              \
   %D%/algos/is-proper.hh                        \
   %D%/algos/is-synchronized.hh                  \
@@ -70,13 +71,13 @@ algo_headers =                                  \
   %D%/algos/k-lightest-path.hh                  \
   %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
-  %D%/algos/letterize.hh                        \
   %D%/algos/less-than.hh                        \
+  %D%/algos/letterize.hh                        \
   %D%/algos/levenshtein.hh                      \
   %D%/algos/lift.hh                             \
-  %D%/algos/lightest.hh                         \
   %D%/algos/lightest-automaton.hh               \
   %D%/algos/lightest-path.hh                    \
+  %D%/algos/lightest.hh                         \
   %D%/algos/make-context.hh                     \
   %D%/algos/minimize-brzozowski.hh              \
   %D%/algos/minimize-hopcroft.hh                \
@@ -90,14 +91,14 @@ algo_headers =                                  \
   %D%/algos/partial-identity.hh                 \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
-  %D%/algos/project.hh                          \
   %D%/algos/project-automaton.hh                \
+  %D%/algos/project.hh                          \
   %D%/algos/proper.hh                           \
   %D%/algos/push-weights.hh                     \
   %D%/algos/quotient.hh                         \
   %D%/algos/quotkbaseb.hh                       \
-  %D%/algos/random.hh                           \
   %D%/algos/random-expression.hh                \
+  %D%/algos/random.hh                           \
   %D%/algos/read.hh                             \
   %D%/algos/reduce.hh                           \
   %D%/algos/scc.hh                              \
@@ -109,7 +110,6 @@ algo_headers =                                  \
   %D%/algos/star-normal-form.hh                 \
   %D%/algos/star.hh                             \
   %D%/algos/strip.hh                            \
-  %D%/algos/sum.hh                              \
   %D%/algos/synchronize.hh                      \
   %D%/algos/synchronizing-word.hh               \
   %D%/algos/tags.hh                             \
@@ -120,8 +120,8 @@ algo_headers =                                  \
   %D%/algos/to-spontaneous.hh                   \
   %D%/algos/transpose.hh                        \
   %D%/algos/trie.hh                             \
-  %D%/algos/tuple.hh                            \
   %D%/algos/tuple-automaton.hh                  \
+  %D%/algos/tuple.hh                            \
   %D%/algos/u.hh                                \
   %D%/algos/universal.hh                        \
   %D%/algos/weight-series.hh                    \

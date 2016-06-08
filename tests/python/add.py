@@ -55,7 +55,7 @@ result = '''digraph
   4 -> 3 [label = "b"]
   4 -> 4 [label = "c"]
 }'''
-CHECK_EQ(result, ab.sum(bc))
+CHECK_EQ(result, ab.add(bc))
 
 a = vcsn.automaton('''
 digraph
@@ -132,7 +132,7 @@ result = '''digraph
   3 -> F3
   3 -> 3 [label = "a, b"]
 }'''
-CHECK_EQ(result, a.sum(b))
+CHECK_EQ(result, a.add(b))
 
 # Check join of contexts.
 a = std('lal_char(a), expressionset<lal_char(x), b>', '<x>a*')
@@ -165,7 +165,7 @@ result = r'''digraph
   2 -> F2
   2 -> 2 [label = "b"]
 }'''
-CHECK_EQ(result, a.sum(b))
+CHECK_EQ(result, a.add(b))
 
 
 # lan x lal + lal x lan = lan x lan.
@@ -175,13 +175,13 @@ c = std('lat<lan_char, lan_char>, b', "\e|x+a|\e")
 # Not the same states numbers, so not CHECK_EQ.
 CHECK_ISOMORPHIC(c, a + b)
 
-# Deterministic sum
+# Deterministic add
 def check_det(lhs, rhs):
     a = std('lal_char(ab), b', lhs)
     b = std('lal_char(ab), b', rhs)
-    res = a.sum(b, algo='deterministic')
+    res = a.add(b, algo='deterministic')
     CHECK(res.is_deterministic())
-    CHECK_EQUIV(a.sum(b), res)
+    CHECK_EQUIV(a.add(b), res)
 
 exprs = ['a', 'a+b', '(a+b)*', 'ab', 'a*b*']
 for lhs, rhs in product(exprs, repeat=2):

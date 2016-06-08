@@ -118,8 +118,8 @@
     return 0;                                         \
   }
 
-
 DEFINE_AUT_FUNCTION(accessible);
+DEFINE_AUT_VARIADIC_FUNCTION(add);
 DEFINE_AUT_FUNCTION(coaccessible);
 DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
@@ -150,7 +150,6 @@ DEFINE_EXP_FUNCTION(split);
 DEFINE_AUT_EXP_FUNCTION(standard);
 DEFINE_AUT_FUNCTION(star);
 DEFINE_EXP_FUNCTION(star_normal_form);
-DEFINE_AUT_VARIADIC_FUNCTION(sum);
 DEFINE_EXP_FUNCTION(thompson);
 DEFINE_AUT_FUNCTION(to_expression);
 DEFINE_AUT_EXP_FUNCTION(transpose);
@@ -635,6 +634,7 @@ try
       else if (cmd == #Name) f = std::unique_ptr<Name>(new Name{})
       if (false) {}
       ALGO(accessible);
+      ALGO(add);
       ALGO(are_equivalent);
       ALGO(are_isomorphic);
       ALGO(cat);
@@ -674,7 +674,6 @@ try
       ALGO(standard);
       ALGO(star);
       ALGO(star_normal_form);
-      ALGO(sum);
       ALGO(thompson);
       ALGO(to_expression);
       ALGO(transpose);

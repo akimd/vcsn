@@ -6,7 +6,7 @@ from test import *
 def union(*auts):
     res = auts[0]
     for a in auts[1:]:
-        res = res.sum(a, "general")
+        res = res.add(a, "general")
     return res
 
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()

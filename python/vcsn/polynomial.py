@@ -7,7 +7,7 @@ from vcsn.tools import _extend, _format, _is_equal, _left_mult, _right_mult
 
 @_extend(polynomial)
 class polynomial:
-    __add__ = polynomial.sum
+    __add__ = polynomial.add
     __and__ = polynomial.conjunction
     __eq__ = _is_equal
     __matmul__ = polynomial.compose

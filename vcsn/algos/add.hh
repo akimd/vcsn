@@ -16,7 +16,7 @@ namespace vcsn
 {
 
   /*----------------------------.
-  | sum(automaton, automaton).  |
+  | add(automaton, automaton).  |
   `----------------------------*/
 
   /// Merge transitions of \a b into those of \a res.
@@ -25,7 +25,7 @@ namespace vcsn
   /// \pre res and b must be standard.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
-  sum_here(Aut1& res, const Aut2& b, standard_tag)
+  add_here(Aut1& res, const Aut2& b, standard_tag)
   {
     require(is_standard(res), __func__, ": lhs must be standard");
     require(is_standard(b), __func__, ": rhs must be standard");
@@ -59,16 +59,16 @@ namespace vcsn
 
   template <Automaton Aut1, Automaton Aut2>
   auto
-  sum_here(Aut1& res, const Aut2& b, deterministic_tag)
+  add_here(Aut1& res, const Aut2& b, deterministic_tag)
   {
-    sum_here(res, b, general_tag{});
+    add_here(res, b, general_tag{});
     res = determinize(res)->strip();
     return res;
   }
 
   template <Automaton Aut1, Automaton Aut2>
   auto
-  sum(const Aut1& lhs, const Aut2& rhs, deterministic_tag)
+  add(const Aut1& lhs, const Aut2& rhs, deterministic_tag)
   {
     constexpr bool bb = (std::is_same<weightset_t_of<Aut1>, b>::value
                         && std::is_same<weightset_t_of<Aut2>, b>::value);
@@ -78,12 +78,12 @@ namespace vcsn
         auto prod
           = detail::make_product_automaton<false>(join_automata(lhs, rhs),
                                                   lhs, rhs);
-        prod->sum();
+        prod->add();
         return prod->strip();
       },
       [] (const auto& lhs, const auto& rhs)
       {
-        return determinize(sum(lhs, rhs, general_tag{}))->strip();
+        return determinize(add(lhs, rhs, general_tag{}))->strip();
       })(lhs, rhs);
   }
 
@@ -92,7 +92,7 @@ namespace vcsn
   /// \pre Aut2 <: Aut1.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
-  sum_here(Aut1& res, const Aut2& b, general_tag)
+  add_here(Aut1& res, const Aut2& b, general_tag)
   {
     copy_into(b, res);
     return res;
@@ -105,12 +105,12 @@ namespace vcsn
   /// \param tag  whether to use constructs for standard automata.
   template <Automaton Aut1, Automaton Aut2, typename Tag = general_tag>
   auto
-  sum(const Aut1& lhs, const Aut2& rhs, Tag tag = {})
+  add(const Aut1& lhs, const Aut2& rhs, Tag tag = {})
     -> decltype(join_automata(lhs, rhs))
   {
     auto res = join_automata(lhs, rhs);
     copy_into(lhs, res);
-    sum_here(res, rhs, tag);
+    add_here(res, rhs, tag);
     return res;
   }
 
@@ -121,14 +121,14 @@ namespace vcsn
       /// Bridge.
       template <Automaton Lhs, Automaton Rhs, typename String>
       automaton
-      sum(const automaton& lhs, const automaton& rhs, const std::string& algo)
+      add(const automaton& lhs, const automaton& rhs, const std::string& algo)
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
         return ::vcsn::detail::dispatch_tags(algo,
             [l, r](auto tag)
             {
-              return automaton(::vcsn::sum(l, r, tag));
+              return automaton(::vcsn::add(l, r, tag));
             },
         l, r);
       }
@@ -137,13 +137,13 @@ namespace vcsn
 
 
   /*---------------------.
-  | sum(Value, Value).   |
+  | add(Value, Value).   |
   `---------------------*/
 
   /// Sums of values.
   template <typename ValueSet>
   typename ValueSet::value_t
-  sum(const ValueSet& vs,
+  add(const ValueSet& vs,
       const typename ValueSet::value_t& lhs,
       const typename ValueSet::value_t& rhs)
   {
@@ -152,42 +152,42 @@ namespace vcsn
 
 
   /*-----------------------------.
-  | sum(expansion, expansion).   |
+  | add(expansion, expansion).   |
   `-----------------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (sum).
+      /// Bridge (add).
       template <typename ExpansionSetLhs, typename ExpansionSetRhs>
       expansion
-      sum_expansion(const expansion& lhs, const expansion& rhs)
+      add_expansion(const expansion& lhs, const expansion& rhs)
       {
         auto join_elts = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts),
-                ::vcsn::sum(std::get<0>(join_elts),
+                ::vcsn::add(std::get<0>(join_elts),
                             std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }
   }
 
   /*-------------------------------.
-  | sum(expression, expression).   |
+  | add(expression, expression).   |
   `-------------------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (sum).
+      /// Bridge (add).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
-      sum_expression(const expression& lhs, const expression& rhs)
+      add_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts),
-                ::vcsn::sum(std::get<0>(join_elts),
+                ::vcsn::add(std::get<0>(join_elts),
                             std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }
@@ -195,21 +195,21 @@ namespace vcsn
 
 
   /*-------------------------------.
-  | sum(polynomial, polynomial).   |
+  | add(polynomial, polynomial).   |
   `-------------------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (sum).
+      /// Bridge (add).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
-      sum_polynomial(const polynomial& lhs, const polynomial& rhs)
+      add_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
         auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts),
-                sum(std::get<0>(join_elts),
+                add(std::get<0>(join_elts),
                     std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }
@@ -217,21 +217,21 @@ namespace vcsn
 
 
   /*----------------------.
-  | sum(weight, weight).  |
+  | add(weight, weight).  |
   `----------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (sum).
+      /// Bridge (add).
       template <typename WeightSetLhs, typename WeightSetRhs>
       weight
-      sum_weight(const weight& lhs, const weight& rhs)
+      add_weight(const weight& lhs, const weight& rhs)
       {
         auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts),
-                sum(std::get<0>(join_elts),
+                add(std::get<0>(join_elts),
                     std::get<1>(join_elts), std::get<2>(join_elts))};
       }
     }

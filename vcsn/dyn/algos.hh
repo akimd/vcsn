@@ -904,20 +904,20 @@ namespace vcsn
     ///   - "general"     no requirement on \a lhs and and \a rhs.
     ///   - "auto"        "standard" if both automata are standard,
     ///                   "general" otherwise.
-    automaton sum(const automaton& lhs, const automaton& rhs,
+    automaton add(const automaton& lhs, const automaton& rhs,
                   const std::string& algo = "auto");
 
     /// Sum of two expressions.
-    expression sum(const expression& lhs, const expression& rhs);
+    expression add(const expression& lhs, const expression& rhs);
 
     /// Sum of two expansions.
-    expansion sum(const expansion& lhs, const expansion& rhs);
+    expansion add(const expansion& lhs, const expansion& rhs);
 
     /// Sum of two polynomials.
-    polynomial sum(const polynomial& lhs, const polynomial& rhs);
+    polynomial add(const polynomial& lhs, const polynomial& rhs);
 
     /// Sum of two weights.
-    weight sum(const weight& lhs, const weight& rhs);
+    weight add(const weight& lhs, const weight& rhs);
 
     /// Create a synchronized transducer from \a aut.
     automaton synchronize(const automaton& aut);

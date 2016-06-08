@@ -29,6 +29,7 @@ dist_notebooks_DATA =                           \
   %D%/Transducers.ipynb                         \
   %D%/Trouble-Shooting.ipynb                    \
   %D%/automaton.accessible.ipynb                \
+  %D%/automaton.add.ipynb                       \
   %D%/automaton.ambiguous_word.ipynb            \
   %D%/automaton.coaccessible.ipynb              \
   %D%/automaton.codeterminize.ipynb             \
@@ -96,7 +97,6 @@ dist_notebooks_DATA =                           \
   %D%/automaton.star.ipynb                      \
   %D%/automaton.subword.ipynb                   \
   %D%/automaton.suffix.ipynb                    \
-  %D%/automaton.sum.ipynb                       \
   %D%/automaton.synchronize.ipynb               \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
@@ -116,6 +116,7 @@ dist_notebooks_DATA =                           \
   %D%/context.trie.ipynb                        \
   %D%/expansion.operators.ipynb                 \
   %D%/expansion.project.ipynb                   \
+  %D%/expression.add.ipynb                      \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
   %D%/expression.conjunction.ipynb              \
@@ -132,7 +133,6 @@ dist_notebooks_DATA =                           \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
-  %D%/expression.sum.ipynb                      \
   %D%/expression.thompson.ipynb                 \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \

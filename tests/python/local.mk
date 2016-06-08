@@ -20,6 +20,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
 
 %C%_TESTS =                                     \
   %D%/accessible.py                             \
+  %D%/add.py                                    \
   %D%/automaton.py                              \
   %D%/chain.py                                  \
   %D%/complement.py                             \
@@ -86,7 +87,6 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/star-height.py                            \
   %D%/star-normal-form.py                       \
   %D%/star.py                                   \
-  %D%/sum.py                                    \
   %D%/synchronize.py                            \
   %D%/synchronizing-word.py                     \
   %D%/thompson.py                               \

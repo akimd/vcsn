@@ -176,7 +176,7 @@
 %token <std::string> LETTER "letter";
 %token <std::string> WEIGHT "weight";
 
-%type <braced_expression> exp input sum tuple;
+%type <braced_expression> exp input add tuple;
 %type <std::vector<vcsn::dyn::expression>> tuple.1;
 %type <dyn::weight> weights;
 %type <class_t> class;
@@ -201,7 +201,7 @@
 %%
 
 input:
-  sum terminator.opt
+  add terminator.opt
   {
     auto dim_exp = dyn::num_tapes(dyn::context_of($1.exp));
     auto dim_ctx = dyn::num_tapes(driver_.ctx_);
@@ -225,10 +225,10 @@ terminator.opt:
 | ")"        { driver_.scanner_->putback(')'); }
 ;
 
-sum:
+add:
   tuple           { $$ = $1; }
-| sum "+" sum     { $$ = dyn::sum($1.exp, $3.exp); }
-| sum "@" sum     { $$ = dyn::compose($1.exp, $3.exp); }
+| add "+" add     { $$ = dyn::add($1.exp, $3.exp); }
+| add "@" add     { $$ = dyn::compose($1.exp, $3.exp); }
 ;
 
 // Deal with `|`: a* | (b+c) | \e.
@@ -298,7 +298,7 @@ exp:
 | "letter"          { $$ = driver_.make_atom(@1, $1); }
 | "[" class "]"     { $$ = driver_.make_expression(@$, $2, true); }
 | "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
-| "(" sum ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
+| "(" add ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
 ;
 
 weights:
@@ -322,7 +322,7 @@ namespace vcsn
     static
     dyn::expression prefer(const dyn::expression& e, const dyn::expression& f)
     {
-      return dyn::sum(e, dyn::conjunction(dyn::complement(e), f));
+      return dyn::add(e, dyn::conjunction(dyn::complement(e), f));
     }
 
     void

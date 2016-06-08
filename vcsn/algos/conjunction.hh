@@ -126,19 +126,19 @@ namespace vcsn
 
       /// Compute the deterministic sum of two deterministic automata.
       template <bool L = Lazy>
-      std::enable_if_t<sizeof...(Auts) == 2 && !L> sum()
+      std::enable_if_t<sizeof...(Auts) == 2 && !L> add()
       {
         using lhs_t = input_automaton_t<0>;
         using rhs_t = input_automaton_t<1>;
         constexpr bool bb = (std::is_same<weightset_t_of<lhs_t>, b>::value
                              && std::is_same<weightset_t_of<rhs_t>, b>::value);
-        static_assert(bb, "sum: requires Boolean weightset");
+        static_assert(bb, "add: requires Boolean weightset");
         initialize_conjunction();
 
         while (!aut_->todo_.empty())
           {
             const auto& p = aut_->todo_.front();
-            add_sum_transitions(std::get<1>(p), std::get<0>(p));
+            add_add_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
       }
@@ -328,7 +328,7 @@ namespace vcsn
       /// when one of the two automata does not match on a label.
       template <bool L = Lazy>
       std::enable_if_t<sizeof...(Auts) == 2 && !L>
-      add_sum_transitions(const state_t src, const state_name_t& psrc)
+      add_add_transitions(const state_t src, const state_name_t& psrc)
       {
         const auto& lhs = std::get<0>(aut_->auts_);
         const auto& rhs = std::get<1>(aut_->auts_);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/accessible.hh>
+#include <vcsn/algos/add.hh>
 #include <vcsn/algos/are-equivalent.hh> // difference
 #include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/cerny.hh>
@@ -21,10 +22,10 @@
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities-of.hh>
 #include <vcsn/algos/info.hh>
+#include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-ambiguous.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
-#include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
@@ -45,7 +46,6 @@
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star-height.hh>
 #include <vcsn/algos/star.hh>
-#include <vcsn/algos/sum.hh>
 #include <vcsn/algos/synchronizing-word.hh>
 #include <vcsn/algos/thompson.hh>
 #include <vcsn/algos/to-expansion.hh>
@@ -292,6 +292,9 @@ namespace vcsn
         register_automaton_functions<aut_t>();
 
         REGISTER(accessible, aut_t);
+        REGISTER(add, aut_t, aut_t, const std::string);
+        REGISTER(add_expression, rs_t, rs_t);
+        REGISTER(add_weight, ws_t, ws_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(coaccessible, aut_t);
         REGISTER(complement_expression, rs_t);
@@ -352,9 +355,6 @@ namespace vcsn
         REGISTER(standard_expression, rs_t);
         REGISTER(star, aut_t, const std::string);
         REGISTER(star_height, rs_t);
-        REGISTER(sum, aut_t, aut_t, const std::string);
-        REGISTER(sum_expression, rs_t, rs_t);
-        REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(thompson, rs_t);
         REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, rat::identities, const std::string);

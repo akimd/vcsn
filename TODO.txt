@@ -23,8 +23,6 @@ Something similar to IPython's "?" shortcut.
 * Naming issues
 ** left_mult and right_mult should be lmul and rmul
 
-** sum should be add
-
 * Build
 ** -fsanitize=address
 Try that on the BF.

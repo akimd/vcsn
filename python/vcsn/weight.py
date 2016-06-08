@@ -9,7 +9,7 @@ from vcsn.tools import _extend, _format, _is_equal
 @_extend(weight)
 class weight:
     __eq__ = _is_equal
-    __add__ = weight.sum
+    __add__ = weight.add
     __repr__ = lambda self: self.format('text')
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

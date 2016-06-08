@@ -7,7 +7,7 @@ from vcsn.tools import _extend, _format, _is_equal, _left_mult, _right_mult
 
 @_extend(expansion)
 class expansion:
-    __add__ = expansion.sum
+    __add__ = expansion.add
     __and__ = expansion.conjunction
     __eq__ = _is_equal
     __invert__ = expansion.complement

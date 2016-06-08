@@ -61,15 +61,16 @@ If COMMAND is "gdb", run gdb with a type pretty-printer.
 If COMMAND is one of the following commands, run the corresponding
 TAF-Kit program:
 
-  accessible are-equivalent are-isomorphic cat coaccessible complement
-  complete compose constant-term conjunction derivation derived-term
-  de-bruijn divkbaseb determinize difference divkbaseb double-ring
-  eliminate-state enumerate evaluate expand inductive infiltration
-  is-ambiguous is-complete is-deterministic is-empty is-eps-acyclic
-  is-normalized is-proper is-standard is-trim is-useless is-valid
-  ladybird left-mult lift minimize multiply proper quotkbaseb
-  right-mult shortest shuffle split standard star star-normal-form sum
-  thompson to-expression transpose trim u union universal
+  accessible add are-equivalent are-isomorphic cat coaccessible
+  complement complete compose constant-term conjunction derivation
+  derived-term de-bruijn divkbaseb determinize difference divkbaseb
+  double-ring eliminate-state enumerate evaluate expand inductive
+  infiltration is-ambiguous is-complete is-deterministic is-empty
+  is-eps-acyclic is-normalized is-proper is-standard is-trim
+  is-useless is-valid ladybird left-mult lift minimize multiply proper
+  quotkbaseb right-mult shortest shuffle split standard star
+  star-normal-form thompson to-expression transpose trim u union
+  universal
 
 For more information, run:
 
@@ -120,7 +121,7 @@ case $1 in
   (python) shift; exec "$PYTHON" "$@";;
   (python*|ipython*|jupyter*) exec "$@";;
 
-  (accessible|are-equivalent|are-isomorphic \
+  (accessible|add|are-equivalent|are-isomorphic \
       |cat|chain|coaccessible|complement|complete \
       |compose|conjunction \
       |de-bruijn \
@@ -138,7 +139,7 @@ case $1 in
       |proper \
       |quotkbaseb \
       |random|right-mult \
-      |shuffle|shortest|split|standard|star|star-normal-form|sum \
+      |shuffle|shortest|split|standard|star|star-normal-form \
       |thompson \
       |to-expression \
       |transpose|trim \

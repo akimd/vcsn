@@ -81,7 +81,7 @@
             <UML:Generalization xmi.idref="mg6iLthWbR5a"/>
            </UML:GeneralizableElement.generalization>
           </UML:Class>
-          <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="gkaRSM6CuAkR" name="sum">
+          <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="gkaRSM6CuAkR" name="add">
            <UML:ModelElement.templateParameter>
             <UML:TemplateParameter visibility="public" isSpecification="false" namespace="jUXOQCOSYiWN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="z9U0uHC381C9" name="Label"/>
             <UML:TemplateParameter visibility="public" isSpecification="false" namespace="jUXOQCOSYiWN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="qvkkNKWl2AeK" name="Weight"/>
