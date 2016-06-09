@@ -69,7 +69,7 @@ namespace vcsn
     DEFINE(complement);
     DEFINE(compose);
     DEFINE(conjunction);
-    DEFINE(infiltration);
+    DEFINE(infiltrate);
     DEFINE(inner);
     DEFINE(ldiv);
     DEFINE(leaf);
@@ -272,7 +272,7 @@ namespace vcsn
     auto conjunction(const value_t& l, const value_t& r) const -> value_t;
 
     /// Build an infiltration product: `l &: r`.
-    auto infiltration(const value_t& l, const value_t& r) const -> value_t;
+    auto infiltrate(const value_t& l, const value_t& r) const -> value_t;
 
     /// Build a shuffle product: `l : r`.
     auto shuffle(const value_t& l, const value_t& r) const -> value_t;

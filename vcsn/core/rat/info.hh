@@ -46,7 +46,7 @@ namespace vcsn
         compose = 0;
         conjunction = 0;
         depth = 0;
-        infiltration = 0;
+        infiltrate = 0;
         ldiv = 0;
         lweight = 0;
         one = 0;
@@ -69,7 +69,7 @@ namespace vcsn
         compose += other.compose;
         conjunction += other.conjunction;
         depth = std::max(depth, other.depth);
-        infiltration += other.infiltration;
+        infiltrate += other.infiltrate;
         ldiv += other.ldiv;
         lweight += other.lweight;
         one += other.one;
@@ -100,7 +100,7 @@ namespace vcsn
       DEFINE(complement)   { ++complement;   visit_(v); }
       DEFINE(compose)      { ++compose;      visit_(v); }
       DEFINE(conjunction)  { ++conjunction;  visit_(v); }
-      DEFINE(infiltration) { ++infiltration; visit_(v); }
+      DEFINE(infiltrate)   { ++infiltrate;   visit_(v); }
       DEFINE(ldiv)         { ++ldiv;         visit_(v); }
       DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); ++depth; }
       DEFINE(one)          { ++one; (void) v; depth = 0; }

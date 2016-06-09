@@ -49,7 +49,7 @@ namespace vcsn
       /// The type is the "join" of the contexts, independently of the
       /// algorithm.  However, its _value_ differs: in the case of the
       /// product, the labelset is the meet of the labelsets, it is
-      /// its join for shuffle and infiltration.
+      /// its join for shuffle and infiltrate.
       using context_t = context_t_of<Aut>;
       using labelset_t = labelset_t_of<context_t>;
       using weightset_t = weightset_t_of<context_t>;

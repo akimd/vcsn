@@ -187,9 +187,9 @@ namespace vcsn
       }
 
       /// Compute the (accessible part of the) infiltration product.
-      void infiltration()
+      void infiltrate()
       {
-        // Variadic infiltration is not trivial to implement, it's not
+        // Variadic infiltrate is not trivial to implement, it's not
         // just conjunction and shuffle in series.  For instance, consider
         // three automata:
         //
@@ -197,7 +197,7 @@ namespace vcsn
         // x = -> 0 ------> 1 ->
         //
         // and likewise for y and z.  Let's use `&:` to denote
-        // infiltration.  In (x &: y) there is a transition ((0,0),
+        // infiltrate.  In (x &: y) there is a transition ((0,0),
         // <xy>a, (1,1)) coming from the conjunction-like transitions.
         //
         // Therefore in (x &: y) &: z there is a transition ((0,0),0),
@@ -207,7 +207,7 @@ namespace vcsn
         // would never appear in a naive implementation with only
         // conjunction and shuffle transitions, but no combinations.
         require(sizeof...(Auts) == 2,
-                "infiltration: variadic product does not work");
+                "infiltrate: variadic product does not work");
 
         // Infiltrate is a mix of conjunction and shuffle operations, and
         // the initial states for shuffle are a superset of the
@@ -493,12 +493,12 @@ namespace vcsn
       /// the given result input state, which must correspond to the
       /// given tuple of input state automata.  Update the worklist
       /// with the needed source-state pairs.
-      template <bool Infiltration = false>
+      template <bool Infiltrate = false>
       void add_shuffle_transitions(const state_t src,
                                    const state_name_t& psrc)
       {
         weight_t final
-          = add_shuffle_transitions_<Infiltration>(src, psrc, aut_->indices);
+          = add_shuffle_transitions_<Infiltrate>(src, psrc, aut_->indices);
         aut_->set_final(src, final);
       }
 
@@ -506,7 +506,7 @@ namespace vcsn
       /// corresponding transitions in the output.
       ///
       /// Return the product of the final states.
-      template <bool Infiltration, size_t... I>
+      template <bool Infiltrate, size_t... I>
       weight_t add_shuffle_transitions_(const state_t src,
                                         const state_name_t& psrc,
                                         seq<I...>)
@@ -516,7 +516,7 @@ namespace vcsn
         (void) swallow
         {
           (res = ws_.mul(res,
-                         add_shuffle_transitions_<Infiltration, I>(src, psrc)),
+                         add_shuffle_transitions_<Infiltrate, I>(src, psrc)),
            0)...
         };
         return res;
@@ -528,11 +528,11 @@ namespace vcsn
       /// If we reach a final state, return the corresponding final
       /// weight (zero otherwise).
       ///
-      /// \tparam Infiltration
+      /// \tparam Infiltrate
       ///    whether we are called after add_conjunction_transitions.
       /// \tparam I
       ///    the tape on which to perform a transition.
-      template <bool Infiltration, size_t I>
+      template <bool Infiltrate, size_t I>
       weight_t
       add_shuffle_transitions_(const state_t src,
                                const state_name_t& psrc)
@@ -550,16 +550,16 @@ namespace vcsn
             // we have a loop on some tapes.
             //
             // If add_conjunction_transitions was called before (in the
-            // case of infiltration), there may even exist such a
+            // case of infiltrate), there may even exist such a
             // transition in the first loop.
             //
-            // To trigger the later case, try the self-infiltration on
+            // To trigger the later case, try the self-infiltrate on
             // derived_term('a*a').
             for (auto d: t.second)
               {
                 auto pdst = psrc;
                 std::get<I>(pdst) = d.dst;
-                if (Infiltration
+                if (Infiltrate
                     || std::get<I>(psrc) == d.dst)
                   this->add_transition(src, state(pdst), t.first, d.weight());
                 else
@@ -819,31 +819,31 @@ namespace vcsn
   }
 
 
-  /*-----------------------------.
-  | infiltration(automaton...).  |
-  `-----------------------------*/
+  /*----------------------------.
+  | infiltrate(automaton...).   |
+  `----------------------------*/
 
   /// The (accessible part of the) infiltration product.
   template <Automaton A1, Automaton A2>
   auto
-  infiltration(const A1& a1, const A2& a2)
+  infiltrate(const A1& a1, const A2& a2)
     -> tuple_automaton<decltype(join_automata(a1, a2)),
                        A1, A2>
   {
     auto res =
       detail::make_product_automaton<false>(join_automata(a1, a2), a1, a2);
-    res->infiltration();
+    res->infiltrate();
     return res->strip();
   }
 
   /// The (accessible part of the) infiltration product.
   template <Automaton A1, Automaton A2, Automaton A3, Automaton... Auts>
   auto
-  infiltration(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
+  infiltrate(const A1& a1, const A2& a2, const A3& a3, const Auts&... as)
     // SFINAE
-    -> decltype(infiltration(infiltration(a1, a2), a3, as...))
+    -> decltype(infiltrate(infiltrate(a1, a2), a3, as...))
   {
-    return infiltration(infiltration(a1, a2), a3, as...);
+    return infiltrate(infiltrate(a1, a2), a3, as...);
   }
 
   namespace dyn
@@ -853,50 +853,50 @@ namespace vcsn
       /// Variadic bridge helper.
       template <typename Auts, size_t... I>
       automaton
-      infiltration_(const std::vector<automaton>& as,
+      infiltrate_(const std::vector<automaton>& as,
                     vcsn::detail::index_sequence<I...>)
       {
-        return vcsn::infiltration(as[I]->as<tuple_element_t<I, Auts>>()...);
+        return vcsn::infiltrate(as[I]->as<tuple_element_t<I, Auts>>()...);
       }
 
-      /// Bridge (infiltration).
+      /// Bridge (infiltrate).
       template <typename Auts>
       automaton
-      infiltration(const std::vector<automaton>& as)
+      infiltrate(const std::vector<automaton>& as)
       {
         auto indices
           = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
-        return infiltration_<Auts>(as, indices);
+        return infiltrate_<Auts>(as, indices);
       }
     }
   }
 
-  /*----------------------------------------.
-  | infiltration(expression, expression).   |
-  `----------------------------------------*/
+  /*--------------------------------------.
+  | infiltrate(expression, expression).   |
+  `--------------------------------------*/
 
   /// Infiltration product of expressions.
   template <typename ValueSet>
   typename ValueSet::value_t
-  infiltration(const ValueSet& vs,
+  infiltrate(const ValueSet& vs,
                const typename ValueSet::value_t& lhs,
                const typename ValueSet::value_t& rhs)
   {
-    return vs.infiltration(lhs, rhs);
+    return vs.infiltrate(lhs, rhs);
   }
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (infiltration).
+      /// Bridge (infiltrate).
       template <typename ExpSetLhs, typename ExpSetRhs>
       expression
-      infiltration_expression(const expression& lhs, const expression& rhs)
+      infiltrate_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts),
-                ::vcsn::infiltration(std::get<0>(join_elts),
+                ::vcsn::infiltrate(std::get<0>(join_elts),
                                     std::get<1>(join_elts),
                                     std::get<2>(join_elts))};
       }

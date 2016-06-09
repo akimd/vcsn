@@ -966,9 +966,9 @@ check(qexp('[ab]*a[ab] & [ab]*a[ab]{2} & [ab]*a[ab]{3}'),
 # Make sure we preserve standardness.
 check(qexp(r'\e & a'), zero('a'))
 
-# Shuffle and infiltration.
+# Shuffle and infiltrate.
 check(qexp('ab : cd : ef'), file='shuffle-1')
-check(qexp('ab &: ab &: ab'), file='infiltration-1')
+check(qexp('ab &: ab &: ab'), file='infiltrate-1')
 
 # Complement, transposition.
 check(qexp('! [ab]*a[ab]{2}'), file='complement-1')

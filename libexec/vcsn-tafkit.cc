@@ -132,7 +132,7 @@ DEFINE(difference, AUT_VARIADIC);
 DEFINE(divkbaseb, INT_INT);
 DEFINE(expand, EXP);
 DEFINE(inductive, EXP);
-DEFINE(infiltration, AUT_VARIADIC);
+DEFINE(infiltrate, AUT_VARIADIC);
 DEFINE(is_ambiguous, AUT);
 DEFINE(is_complete, AUT);
 DEFINE(is_deterministic, AUT);
@@ -655,7 +655,7 @@ try
       ALGO(evaluate);
       ALGO(expand);
       ALGO(inductive);
-      ALGO(infiltration);
+      ALGO(infiltrate);
       ALGO(is_ambiguous);
       ALGO(is_complete);
       ALGO(is_deterministic);

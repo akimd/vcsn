@@ -189,7 +189,7 @@ namespace vcsn
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(eval, aut_t, wls_t);
-        REGISTER(infiltration, std::tuple<aut_t, aut_t>);
+        REGISTER(infiltrate, std::tuple<aut_t, aut_t>);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);

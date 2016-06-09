@@ -413,13 +413,13 @@ namespace vcsn
     /// The infiltration of polynomials \a l and \a r.
     /// Not valid for all the labelsets.
     value_t
-    infiltration(const value_t& l, const value_t& r) const
+    infiltrate(const value_t& l, const value_t& r) const
     {
       value_t res;
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
-                   labelset()->infiltration(label_of(lm), label_of(rm)),
+                   labelset()->infiltrate(label_of(lm), label_of(rm)),
                    weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }

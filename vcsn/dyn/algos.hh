@@ -296,15 +296,15 @@ namespace vcsn
 
     /// The infiltration of automata \a lhs and \a rhs.
     /// Performs the join of their types.
-    automaton infiltration(const automaton& lhs, const automaton& rhs);
+    automaton infiltrate(const automaton& lhs, const automaton& rhs);
 
     /// The infiltration product of automata.
     /// Performs the join of their types.
-    automaton infiltration(const std::vector<automaton>& as);
+    automaton infiltrate(const std::vector<automaton>& as);
 
     /// The infiltration product of expressions \a lhs and \a rhs.
     /// Performs the join of their type.
-    expression infiltration(const expression& lhs, const expression& rhs);
+    expression infiltrate(const expression& lhs, const expression& rhs);
 
     /// Output various facts about an automaton.
     ///

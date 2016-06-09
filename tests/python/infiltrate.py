@@ -14,13 +14,13 @@ medir = srcdir + '/tests/python/conjunction.dir'
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
 a1 = z.expression('a*a').automaton()
-CHECK_EQ('(<3>a)*(a+<4>(aa*a))', str(a1.infiltration(a1).expression()))
+CHECK_EQ('(<3>a)*(a+<4>(aa*a))', str(a1.infiltrate(a1).expression()))
 
 ## -------------------- ##
 ## Hand crafted tests.  ##
 ## -------------------- ##
 
-# a infiltration a
+# a infiltrate a
 a = vcsn.automaton(filename = medir + "/a.gv")
 CHECK_EQ('''digraph
 {
@@ -46,9 +46,9 @@ CHECK_EQ('''digraph
   1 -> F1
   2 -> 1 [label = "a"]
   3 -> 1 [label = "a"]
-}''',  a.infiltration(a))
+}''',  a.infiltrate(a))
 
-# abc infiltration abc
+# abc infiltrate abc
 abc = vcsn.automaton(filename = medir + "/abc.gv")
 CHECK_EQ('''digraph
 {
@@ -108,9 +108,9 @@ CHECK_EQ('''digraph
   13 -> 11 [label = "b"]
   14 -> 12 [label = "a"]
   15 -> 13 [label = "a"]
-}''', abc.infiltration(abc))
+}''', abc.infiltrate(abc))
 
-# abc infiltration xy
+# abc infiltrate xy
 xy = vcsn.automaton(filename = medir + "/xy.gv")
 CHECK_EQ('''digraph
 {
@@ -156,7 +156,7 @@ CHECK_EQ('''digraph
   9 -> 11 [label = "y"]
   10 -> 11 [label = "c"]
   11 -> F11
-}''', abc.infiltration(xy))
+}''', abc.infiltrate(xy))
 
 
 ## --------------------- ##
@@ -168,9 +168,9 @@ ab = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
     .expression('(<u>a+<v>b)*').standard()
 a = vcsn.context('lal_char(ab), b').expression('a').standard()
 CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
-         str(ab.infiltration(a).shortest(4)))
+         str(ab.infiltrate(a).shortest(4)))
 CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
-         str(a.infiltration(ab).shortest(4)))
+         str(a.infiltrate(ab).shortest(4)))
 
 
 ## ----------------- ##
@@ -182,7 +182,7 @@ uavb = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
 xayb = vcsn.context('lal_char(ab), seriesset<lal_char(xy), q>') \
     .expression('<x>a<y>b').standard()
 CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
-         str(uavb.infiltration(xayb).shortest(len = 4)))
+         str(uavb.infiltrate(xayb).shortest(len = 4)))
 
 
 ## ---------- ##
@@ -198,7 +198,7 @@ CHECK_EQ('''<abcd>x
 <<3>(abcd)+abdc+acbd+acdb+adbc+bacd+bcad+bcda+bdac+cabd+cdab+dabc>xx
 <<3>(abcd)+<2>(abdc)+<2>(acbd)+<2>(acdb)+<2>(adbc)+adcb+<2>(bacd)+badc+<2>(bcad)+<2>(bcda)+<2>(bdac)+bdca+<2>(cabd)+cadb+cbad+cbda+<2>(cdab)+cdba+<2>(dabc)+dacb+dbac+dbca+dcab>xxx
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
-         a['a'].infiltration(a['b'], a['c'], a['d'])
+         a['a'].infiltrate(a['b'], a['c'], a['d'])
          .strip()
          .shortest(len = 10)
          .format('list'))

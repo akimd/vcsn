@@ -29,7 +29,7 @@ namespace vcsn
         t->accept(*this);
     }
 
-    VISIT(infiltration, v)
+    VISIT(infiltrate, v)
     {
       for (const auto& t : v)
         t->accept(*this);

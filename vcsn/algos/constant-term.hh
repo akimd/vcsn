@@ -93,7 +93,7 @@ namespace vcsn
       }
 
       VCSN_RAT_VISIT(conjunction, v) { visit_product(v); }
-      VCSN_RAT_VISIT(infiltration, v){ visit_product(v); }
+      VCSN_RAT_VISIT(infiltrate, v)  { visit_product(v); }
       VCSN_RAT_VISIT(prod, v)        { visit_product(v); }
       VCSN_RAT_VISIT(shuffle, v)     { visit_product(v); }
 

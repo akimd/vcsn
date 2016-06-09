@@ -107,9 +107,9 @@ automaton automaton_conjunction(const boost::python::list& l,
   return automaton::conjunction(make_vector<automaton>(l), lazy);
 }
 
-automaton automaton_infiltration(const boost::python::list& l)
+automaton automaton_infiltrate(const boost::python::list& l)
 {
-  return automaton::infiltration(make_vector<automaton>(l));
+  return automaton::infiltrate(make_vector<automaton>(l));
 }
 
 automaton automaton_filter(const automaton& aut,
@@ -281,7 +281,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("has_bounded_lag", &automaton::has_bounded_lag)
     .def("has_lightening_cycle", &automaton::has_lightening_cycle)
     .def("has_twins_property", &automaton::has_twins_property)
-    .def("_infiltration", &automaton_infiltration).staticmethod("_infiltration")
+    .def("_infiltrate", &automaton_infiltrate).staticmethod("_infiltrate")
     .def("insplit", &automaton::insplit, (arg("lazy") = false))
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
@@ -426,7 +426,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          (arg("context") = context(), arg("identities") = "default"))
     .def("format", &format<expression>)
     .def("inductive", &expression::inductive, (arg("algo") = "auto"))
-    .def("infiltration", &expression::infiltration)
+    .def("infiltrate", &expression::infiltrate)
     .def("is_equivalent", &expression::is_equivalent)
     .def("is_valid", &expression::is_valid)
     .def("ldiv", &expression::ldiv)

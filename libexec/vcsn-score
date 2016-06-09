@@ -525,9 +525,9 @@ bench('a.shuffle(a)',
       setup=['r = "{}"'.format(r),
              'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
-# infiltration.
+# infiltrate.
 r = "[a-e]?{30}"
-bench('a.infiltration(a)',
+bench('a.infiltrate(a)',
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
              'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])

@@ -270,7 +270,7 @@ class automaton:
     fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
     fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
 
-    infiltration = lambda *auts: automaton._infiltration(list(auts))
+    infiltrate = lambda *auts: automaton._infiltrate(list(auts))
 
     def info(self, key=None, detailed=False):
         res = _info_to_dict(self.format(

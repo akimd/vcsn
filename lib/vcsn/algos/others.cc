@@ -48,15 +48,15 @@ namespace vcsn
     }
 
 
-    /*----------------.
-    | infiltration.   |
-    `----------------*/
+    /*--------------.
+    | infiltrate.   |
+    `--------------*/
 
     automaton
-    infiltration(const automaton& lhs, const automaton& rhs)
+    infiltrate(const automaton& lhs, const automaton& rhs)
     {
       auto auts = std::vector<automaton>{lhs, rhs};
-      return infiltration(auts);
+      return infiltrate(auts);
     }
 
 

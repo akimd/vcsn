@@ -20,7 +20,7 @@ namespace vcsn
           CASE(complement);
           CASE(compose);
           CASE(conjunction);
-          CASE(infiltration);
+          CASE(infiltrate);
           CASE(ldiv);
           CASE(lweight);
           CASE(one);
@@ -85,7 +85,7 @@ namespace vcsn
           complement_    = "^{c}";
           transposition_ = "^{T}";
           conjunction_   = " \\& ";
-          infiltration_  = " \\uparrow ";
+          infiltrate_    = " \\uparrow ";
           shuffle_       = " \\between ";
           product_       = " \\, ";
           add_           = (rs_.identities().is_distributive() ? " \\oplus "
@@ -115,7 +115,7 @@ namespace vcsn
           compose_       = "@";
           transposition_ = "{T}";
           conjunction_   = "&";
-          infiltration_  = "&:";
+          infiltrate_    = "&:";
           shuffle_       = ":";
           product_       = "";
           add_           = "+";
@@ -142,7 +142,7 @@ namespace vcsn
           complement_    = "ᶜ";
           transposition_ = "ᵗ";
           conjunction_   = "&";
-          infiltration_  = "&:";
+          infiltrate_    = "&:";
           shuffle_       = ":";
           product_       = "";
           add_           = "+";
@@ -176,7 +176,7 @@ namespace vcsn
             CASE(complement);
             CASE(compose);
             CASE(conjunction);
-            CASE(infiltration);
+            CASE(infiltrate);
             CASE(ldiv);
             CASE(lweight);
             CASE(one);

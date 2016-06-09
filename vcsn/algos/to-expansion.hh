@@ -324,7 +324,7 @@ namespace vcsn
       }
 
       // d(E&:F) = d(E)&:F + d(E)&:d(F) + E&:d(F)
-      VCSN_RAT_VISIT(infiltration, e)
+      VCSN_RAT_VISIT(infiltrate, e)
       {
         // The infiltration-product of the previously traversed
         // siblings, to compute the "E&:d(F)" part, E being all the
@@ -333,9 +333,9 @@ namespace vcsn
         res_ = to_expansion(prev);
         for (const auto& r: e.tail())
           {
-            res_ = es_.infiltration(res_, prev,
+            res_ = es_.infiltrate(res_, prev,
                                     to_expansion(r), r);
-            prev = rs_.infiltration(prev, r);
+            prev = rs_.infiltrate(prev, r);
           }
       }
 

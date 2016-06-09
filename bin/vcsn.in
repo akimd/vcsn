@@ -65,7 +65,7 @@ TAF-Kit program:
   complement complete compose constant-term conjunction derivation
   derived-term de-bruijn divkbaseb determinize difference divkbaseb
   double-ring eliminate-state enumerate evaluate expand inductive
-  infiltration is-ambiguous is-complete is-deterministic is-empty
+  infiltrate is-ambiguous is-complete is-deterministic is-empty
   is-eps-acyclic is-normalized is-proper is-standard is-trim
   is-useless is-valid ladybird left-mult lift minimize multiply proper
   quotkbaseb right-mult shortest shuffle split standard star
@@ -129,7 +129,7 @@ case $1 in
       |difference|divkbaseb \
       |double-ring \
       |eliminate-state|enumerate|evaluate|expand \
-      |infiltration \
+      |infiltrate \
       |is-ambiguous|is-complete|is-deterministic \
       |is-empty|is-eps-acyclic|is-normalized|is-proper \
       |is-standard|is-trim|is-useless|is-valid \

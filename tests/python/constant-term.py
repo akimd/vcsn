@@ -44,7 +44,7 @@ check('xy', '<x>a*&<y>b*')
 check(r'\z', '<x>a:<y>b')
 check('xy', '<x>a*:<y>b*')
 
-# infiltration.
+# infiltrate.
 check(r'\z', '<x>a&:<y>b')
 check('xy', '<x>a*&:<y>b*')
 

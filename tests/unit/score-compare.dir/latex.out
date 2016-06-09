@@ -41,7 +41,7 @@ $a.format("tikz")$ & $a = std(a?\{500\})$ & \num{5} & \textcolor{red}{\num{ 1.55
 $a.has\_bounded\_lag()$ & $a = std(['(a,x)'-'(b,y)']*\{600\})$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.03}} & \textcolor{black}{\num{ 0.03}}\\
 $a.has\_bounded\_lag()$ & $a = std(['(a,x)'-'(b,y)']\{1000\}*)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.12}} & \textcolor{black}{\num{ 0.11}}\\
 $a.has\_twins\_property()$ & $a = std([a-c]\{200\}*+[a-c]\{200\}*, "associative"), c = [abc] \rightarrow Zmin$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.34}} & \textcolor{black}{\num{ 0.36}} & \textcolor{black}{\num{ 0.37}}\\
-$a.infiltration(a)$ & $a = std([a-e]?\{30\})$ & \num{1} & \textcolor{green}{\num{ 3.24}} & \textcolor{green}{\num{ 3.28}} & \textcolor{red}{\num{ 7.92}} & \textcolor{red}{\num{ 7.92}}\\
+$a.infiltrate(a)$ & $a = std([a-e]?\{30\})$ & \num{1} & \textcolor{green}{\num{ 3.24}} & \textcolor{green}{\num{ 3.28}} & \textcolor{red}{\num{ 7.92}} & \textcolor{red}{\num{ 7.92}}\\
 $a.is\_cycle\_ambiguous()$ & $a = std([a-c]\{2000\}(<2>ab+a<3>b)), c = [abc] \rightarrow Z$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.88}} & \textcolor{black}{\num{ 1.00}} & \textcolor{black}{\num{ 1.03}}\\
 $a.is\_functional()$ & $a = std((a|x)\{2000\}(b|y))$ & \num{100} &   N/A  & \textcolor{black}{\num{ 0.56}} & \textcolor{black}{\num{ 0.57}} & \textcolor{black}{\num{ 0.57}}\\
 $a.is\_proper()$ & $a = ""$ & \num{1000000} &   N/A  & \textcolor{red}{\num{ 0.60}} & \textcolor{green}{\num{ 0.34}} & \textcolor{green}{\num{ 0.35}}\\

@@ -6,9 +6,13 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2016-06-09
-### sum is renamed add
-All the `sum` operations, in vcsn::, dyn::, Python, and TAF-Kit, have been
-renamed `add`.
+### renamings
+The following operations have been renamed, in all APIs (vcsn::, dyn::,
+Python, and TAF-Kit), and on all applicable types (automaton, expressions,
+expansions, polynomials).
+
+    infiltration -> infiltrate
+    sum          -> add
 
 ## 2016-05-27
 ### polynomials: more basic operations
@@ -2511,9 +2515,9 @@ independent of the dyn API, and the dyn API consists only of wrappers of
 
 ## 2013-10-25
 ### renamings (static, dynamic, TAF-Kit)
-derive        -> derivation
-derived-terms -> derived-term
-infiltrate    -> infiltration
+    derive        -> derivation
+    derived-terms -> derived-term
+    infiltrate    -> infiltration
 
 ## 2013-10-24
 ### taf-kit: option -q for "quiet"

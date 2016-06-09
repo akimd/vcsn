@@ -275,6 +275,8 @@ def normalize(k):
     k = re.sub(r'(a.lightest_automaton)\("', '\1(1, ', k)
     k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
 
+    k = k.replace('infiltration', 'infiltrate')
+
     # Final format.
     k = '{:20s} # {}'.format(*[str.strip(x) for x in k.split('#', 2)])
     return k

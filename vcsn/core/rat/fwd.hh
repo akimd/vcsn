@@ -46,7 +46,7 @@ namespace vcsn
       ldiv,
       conjunction,
       shuffle,
-      infiltration,
+      infiltrate,
       star,
       transposition,
       lweight,
@@ -76,7 +76,7 @@ namespace vcsn
     {
       return (t == type_t::compose
               || t == type_t::conjunction
-              || t == type_t::infiltration
+              || t == type_t::infiltrate
               || t == type_t::ldiv
               || t == type_t::prod
               || t == type_t::shuffle
@@ -142,7 +142,7 @@ namespace vcsn
     using conjunction = variadic<type_t::conjunction, Context>;
 
     template <typename Context>
-    using infiltration = variadic<type_t::infiltration, Context>;
+    using infiltrate = variadic<type_t::infiltrate, Context>;
 
     template <typename Context>
     using ldiv = variadic<type_t::ldiv, Context>;

@@ -80,7 +80,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(complement, v)   { project_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { project_(v, &out_expressionset_t::conjunction); }
-      VCSN_RAT_VISIT(infiltration, v) { project_(v, &out_expressionset_t::infiltration); }
+      VCSN_RAT_VISIT(infiltrate, v)   { project_(v, &out_expressionset_t::infiltrate); }
       VCSN_RAT_VISIT(ldiv, v)         { project_(v, &out_expressionset_t::ldiv); }
       VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
       // I do not understand why I need the cast just for this one,

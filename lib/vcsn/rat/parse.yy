@@ -266,7 +266,7 @@ exp:
   exp "." exp                 { $$ = dyn::multiply($1.exp, $3.exp); }
 | exp "&" exp                 { $$ = dyn::conjunction($1.exp, $3.exp); }
 | exp ":" exp                 { $$ = dyn::shuffle($1.exp, $3.exp); }
-| exp "&:" exp                { $$ = dyn::infiltration($1.exp, $3.exp); }
+| exp "&:" exp                { $$ = dyn::infiltrate($1.exp, $3.exp); }
 | exp "<+" exp                { $$ = prefer($1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = dyn::ldiv($1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }

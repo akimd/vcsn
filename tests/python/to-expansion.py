@@ -176,13 +176,13 @@ check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 ############################################
 
 def prod(kind, args):
-    '''The product of `kind` (`conjunction`, `infiltration`, or `shuffle`)
+    '''The product of `kind` (`conjunction`, `infiltrate`, or `shuffle`)
     of `*args`.'''
     if isinstance(args[0], vcsn.automaton):
         if kind == 'conjunction':
             res = vcsn.automaton.conjunction(*args)
-        elif kind == 'infiltration':
-            res = vcsn.automaton._infiltration(list(args))
+        elif kind == 'infiltrate':
+            res = vcsn.automaton._infiltrate(list(args))
         elif kind == 'shuffle':
             res = vcsn.automaton._shuffle(list(args))
     else:
@@ -190,8 +190,8 @@ def prod(kind, args):
         for e in args[1:]:
             if kind == 'conjunction':
                 res = res.conjunction(e)
-            elif kind == 'infiltration':
-                res = res.infiltration(e)
+            elif kind == 'infiltrate':
+                res = res.infiltrate(e)
             elif kind == 'shuffle':
                 res = res.shuffle(e)
     return res
@@ -202,18 +202,17 @@ def prod(kind, args):
 def check_prod(*exps, **kwargs):
     exps = [ctx.expression(r) for r in exps]
     auts = [r.automaton("expansion") for r in exps]
-    for p in ['conjunction', 'infiltration', 'shuffle']:
+    for p in ['conjunction', 'infiltrate', 'shuffle']:
         print("Product:", p)
         # Product of automata, trimmed.
         a1 = prod(p, auts).strip().trim().strip()
         # Automaton of product.
         a2 = prod(p, exps).automaton("expansion")
         if 'equiv' in kwargs:
-            # FIXME: So far the infiltration product does not work
-            # when there are one as labels.  Which is also when
-            # "equiv" is passed.
-            if p == 'infiltration':
-                SKIP(r'infiltration does not work with \e as label')
+            # FIXME: So far infiltrate does not work when there are
+            # one as labels.  Which is also when "equiv" is passed.
+            if p == 'infiltrate':
+                SKIP(r'infiltrate does not work with \e as label')
             else:
                 CHECK_EQUIV(a1, a2)
         else:

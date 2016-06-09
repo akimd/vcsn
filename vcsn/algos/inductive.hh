@@ -162,11 +162,11 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(infiltration, e)
+      VCSN_RAT_VISIT(infiltrate, e)
       {
         auto res = recurse(e.head());
         for (const auto& c: e.tail())
-          res = as_.infiltration(res, recurse(c));
+          res = as_.infiltrate(res, recurse(c));
         res_ = std::move(res);
       }
 

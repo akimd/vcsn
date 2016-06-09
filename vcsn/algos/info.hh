@@ -163,7 +163,7 @@ namespace vcsn
     ECHO(compose);
     ECHO(conjunction);
     ECHO(depth);
-    ECHO(infiltration);
+    ECHO(infiltrate);
     ECHO(ldiv);
     ECHO(lweight);
     ECHO(one);

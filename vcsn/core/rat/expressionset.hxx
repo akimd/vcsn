@@ -565,13 +565,13 @@ namespace vcsn
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }
 
-  DEFINE::infiltration(const value_t& l, const value_t& r) const
+  DEFINE::infiltrate(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
 
     if (!ids_)
-      res = std::make_shared<infiltration_t>(l, r);
+      res = std::make_shared<infiltrate_t>(l, r);
 
     // 0 &: E => 0.
     else if (is_zero(l))
@@ -591,7 +591,7 @@ namespace vcsn
 
     else
       res =
-        std::make_shared<infiltration_t>(gather_<type_t::infiltration>(l, r));
+        std::make_shared<infiltrate_t>(gather_<type_t::infiltrate>(l, r));
     return res;
   }
 

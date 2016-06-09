@@ -53,7 +53,7 @@ namespace vcsn
       VCSN_RAT_VISIT(complement, v)   { visit_(v); }
       VCSN_RAT_VISIT(compose, v)      { visit_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
-      VCSN_RAT_VISIT(infiltration, v) { visit_(v); }
+      VCSN_RAT_VISIT(infiltrate, v)   { visit_(v); }
       VCSN_RAT_VISIT(ldiv, v)         { visit_(v); }
       VCSN_RAT_VISIT(lweight, v)      { v.sub()->accept(*this); }
       VCSN_RAT_VISIT(one,)            {}

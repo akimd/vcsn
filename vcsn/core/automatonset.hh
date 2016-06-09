@@ -131,9 +131,9 @@ namespace vcsn
     }
 
     /// Build an infiltration product: `l &: r`.
-    auto infiltration(const value_t& l, const value_t& r) const -> value_t
+    auto infiltrate(const value_t& l, const value_t& r) const -> value_t
     {
-      return ::vcsn::infiltration(l, r)->strip();
+      return ::vcsn::infiltrate(l, r)->strip();
     }
 
     /// Build a shuffle product: `l : r`.

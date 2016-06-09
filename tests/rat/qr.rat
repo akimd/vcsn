@@ -104,7 +104,7 @@ a<i> => <i>a
 <i>a&<j>\e => \z
 <i>a&<j>a => <ij>a
 
-# Trivial identities: infiltration.
+# Trivial identities: infiltrate.
 \z&:<j>\e => \z
 <j>\e&:\z => \z
 

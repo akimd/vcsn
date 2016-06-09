@@ -443,7 +443,7 @@ namespace vcsn
       }
 
       /// The infiltration product of \a l and \a r.
-      value_t infiltration(const value_t& lhs_xpn, const expression_t& lhs_xpr,
+      value_t infiltrate(const value_t& lhs_xpn, const expression_t& lhs_xpr,
                            const value_t& rhs_xpn, const expression_t& rhs_xpr) const
       {
         // Conjunction part: lhs_xpn&:rhs_xpn.
@@ -451,7 +451,7 @@ namespace vcsn
           conjunction_(lhs_xpn, rhs_xpn,
                        [this](const polynomial_t& l, const polynomial_t& r)
                        {
-                         return ps_.infiltration(l, r);
+                         return ps_.infiltrate(l, r);
                        });
 
         // Shuffle part: lhs_xpn&:rhs_xpr + lhs_xpr&:rhs_xpn.
@@ -459,7 +459,7 @@ namespace vcsn
                  lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
                  [this](const expression_t& l, const expression_t& r)
                  {
-                   return rs_.infiltration(l, r);
+                   return rs_.infiltrate(l, r);
                  });
         return res;
       }

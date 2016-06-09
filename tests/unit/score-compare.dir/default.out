@@ -36,7 +36,7 @@
 [31m[1m 1.55[0m [32m[1m 0.80[0m [32m[1m 0.64[0m [32m[1m 0.62[0m a.format("tikz")     # a = std(a?{500}), 5x
   N/A   N/A  0.12[0m  0.11[0m a.has_bounded_lag()  # a = std(['(a,x)'-'(b,y)']{1000}*)
   N/A  0.34[0m  0.36[0m  0.37[0m a.has_twins_property() # a = std([a-c]{200}*+[a-c]{200}*, "associative"), c = [abc] -> Zmin, 20x
-[32m[1m 3.24[0m [32m[1m 3.28[0m [31m[1m 7.92[0m [31m[1m 7.92[0m a.infiltration(a)    # a = std([a-e]?{30})
+[32m[1m 3.24[0m [32m[1m 3.28[0m [31m[1m 7.92[0m [31m[1m 7.92[0m a.infiltrate(a)      # a = std([a-e]?{30})
   N/A  0.88[0m  1.00[0m  1.03[0m a.is_cycle_ambiguous() # a = std([a-c]{2000}(<2>ab+a<3>b)), c = [abc] -> Z, 20x
   N/A  0.56[0m  0.57[0m  0.57[0m a.is_functional()    # a = std((a|x){2000}(b|y)), 100x
   N/A [31m[1m 0.60[0m [32m[1m 0.34[0m [32m[1m 0.35[0m a.is_proper()        # a = "", 1000000x

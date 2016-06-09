@@ -46,7 +46,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/has-bounded-lag.py                        \
   %D%/has-lightening-cycle.py                   \
   %D%/has-twins-property.py                     \
-  %D%/infiltration.py                           \
+  %D%/infiltrate.py                             \
   %D%/info.py                                   \
   %D%/insplit.py                                \
   %D%/is-ambiguous.py                           \
@@ -271,7 +271,7 @@ EXTRA_DIST +=                                           \
   %D%/standard.dir/composition-1.gv                     \
   %D%/standard.dir/conjunction-1.gv                     \
   %D%/standard.dir/conjunction-2.gv                     \
-  %D%/standard.dir/infiltration-1.gv                    \
+  %D%/standard.dir/infiltrate-1.gv                      \
   %D%/standard.dir/ldiv-1.gv                            \
   %D%/standard.dir/rdiv-1.gv                            \
   %D%/standard.dir/shuffle-1.gv                         \
@@ -300,7 +300,7 @@ EXTRA_DIST +=                                           \
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/expression.log:      $(wildcard $(srcdir)/%D%/expression.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
-%D%/infiltration.log:    $(wildcard $(srcdir)/%D%/conjunction.dir/*)
+%D%/infiltrate.log:      $(wildcard $(srcdir)/%D%/conjunction.dir/*)
 %D%/ldiv.log:            $(wildcard $(srcdir)/%D%/ldiv.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)

@@ -39,7 +39,7 @@
   N/A   N/A  0.03  0.03 a.has_bounded_lag()  # a = std(['(a,x)'-'(b,y)']*{600})
   N/A   N/A  0.12  0.11 a.has_bounded_lag()  # a = std(['(a,x)'-'(b,y)']{1000}*)
   N/A  0.34  0.36  0.37 a.has_twins_property() # a = std([a-c]{200}*+[a-c]{200}*, "associative"), c = [abc] -> Zmin, 20x
- 3.24  3.28  7.92  7.92 a.infiltration(a)    # a = std([a-e]?{30})
+ 3.24  3.28  7.92  7.92 a.infiltrate(a)      # a = std([a-e]?{30})
   N/A  0.88  1.00  1.03 a.is_cycle_ambiguous() # a = std([a-c]{2000}(<2>ab+a<3>b)), c = [abc] -> Z, 20x
   N/A  0.56  0.57  0.57 a.is_functional()    # a = std((a|x){2000}(b|y)), 100x
   N/A  0.60  0.34  0.35 a.is_proper()        # a = "", 1000000x

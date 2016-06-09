@@ -92,7 +92,7 @@ namespace vcsn
 
       DEFINE(add);
       DEFINE(conjunction);
-      DEFINE(infiltration);
+      DEFINE(infiltrate);
       DEFINE(shuffle);
 #undef DEFINE
 

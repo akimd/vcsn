@@ -90,7 +90,7 @@ namespace vcsn
             complement_    = "^{c}";
             compose_       = "@";
             conjunction_   = " \\& ";
-            infiltration_  = " \\uparrow ";
+            infiltrate_    = " \\uparrow ";
             ldiv_          = " \\backslash ";
             lmul_          = "\\,";
             one_           = "\\varepsilon";
@@ -108,7 +108,7 @@ namespace vcsn
             complement_    = "{c}";
             compose_       = "@";
             conjunction_   = "&";
-            infiltration_  = "&:";
+            infiltrate_    = "&:";
             ldiv_          = "{\\}";
             lmul_          = "<.>.";
             one_           = "\\e";
@@ -126,7 +126,7 @@ namespace vcsn
             complement_    = "ᶜ";
             compose_       = "@";
             conjunction_   = "&";
-            infiltration_  = "&:";
+            infiltrate_    = "&:";
             ldiv_          = "{\\}";
             lmul_          = "⟨.⟩.";
             one_           = "ε";
@@ -177,7 +177,7 @@ namespace vcsn
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
       VCSN_RAT_VISIT(compose, v)       { print_(v, compose_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
-      VCSN_RAT_VISIT(infiltration, v)  { print_(v, infiltration_); }
+      VCSN_RAT_VISIT(infiltrate, v)    { print_(v, infiltrate_); }
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v)       { print_(v); }
       VCSN_RAT_VISIT(one, v)           { print_(v, one_); }
@@ -408,7 +408,7 @@ namespace vcsn
       const char* complement_ = nullptr;
       const char* compose_ = nullptr;
       const char* conjunction_ = nullptr;
-      const char* infiltration_ = nullptr;
+      const char* infiltrate_ = nullptr;
       const char* product_ = nullptr;
       const char* shuffle_ = nullptr;
       const char* star_ = nullptr;
