@@ -98,7 +98,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         // We generate a sum.
         auto res = ps_.zero();
@@ -109,7 +109,7 @@ namespace vcsn
           {
             const auto& v = e[i];
             v->accept(*this);
-            // See to-expansion.hh, case of prod, for an explanation
+            // See to-expansion.hh, case of mul, for an explanation
             // of the following line.
             res_
               = ps_.rmul_label(res_,
@@ -127,16 +127,16 @@ namespace vcsn
       ///
       /// FIXME: Code duplication with to_expansion.
       expression_t
-      prod_(typename prod_t::iterator begin,
-            typename prod_t::iterator end) const
+      prod_(typename mul_t::iterator begin,
+            typename mul_t::iterator end) const
       {
-        using expressions_t = typename prod_t::values_t;
+        using expressions_t = typename mul_t::values_t;
         if (begin == end)
           return rs_.one();
         else if (std::next(begin, 1) == end)
           return *begin;
         else
-          return std::make_shared<prod_t>(expressions_t{begin, end});
+          return std::make_shared<mul_t>(expressions_t{begin, end});
       }
 
 

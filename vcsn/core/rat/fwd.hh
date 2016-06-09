@@ -42,7 +42,7 @@ namespace vcsn
       one,
       atom,
       add,
-      prod,
+      mul,
       ldiv,
       conjunction,
       shuffle,
@@ -78,7 +78,7 @@ namespace vcsn
               || t == type_t::conjunction
               || t == type_t::infiltrate
               || t == type_t::ldiv
-              || t == type_t::prod
+              || t == type_t::mul
               || t == type_t::shuffle
               || t == type_t::add);
     }
@@ -148,7 +148,7 @@ namespace vcsn
     using ldiv = variadic<type_t::ldiv, Context>;
 
     template <typename Context>
-    using prod = variadic<type_t::prod, Context>;
+    using mul = variadic<type_t::mul, Context>;
 
     template <typename Context>
     using shuffle = variadic<type_t::shuffle, Context>;

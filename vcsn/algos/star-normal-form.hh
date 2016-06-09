@@ -101,7 +101,7 @@ namespace vcsn
         raise(me(), ": tuple is not supported");
       }
 
-      VCSN_RAT_VISIT(prod, v)
+      VCSN_RAT_VISIT(mul, v)
       {
         if (operation_ == box)
           box_of(v);
@@ -110,7 +110,7 @@ namespace vcsn
       }
 
       /// Handling of a product by the box operator.
-      void box_of(const prod_t& v)
+      void box_of(const mul_t& v)
       {
         using detail::any_of;
         if (any_of(v,
@@ -139,7 +139,7 @@ namespace vcsn
       }
 
       /// Handling of a product by the dot operator.
-      void dot_of(const prod_t& v)
+      void dot_of(const mul_t& v)
       {
         v.head()->accept(*this);
         expression_t res = res_;

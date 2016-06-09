@@ -359,7 +359,7 @@ namespace vcsn
     value_t res = nullptr;
 
     if (!ids_)
-      res = std::make_shared<prod_t>(l, r);
+      res = std::make_shared<mul_t>(l, r);
 
     // 0.E => 0.
     else if (is_zero(l))
@@ -411,7 +411,7 @@ namespace vcsn
       }
 
     else
-      res = std::make_shared<prod_t>(gather_<type_t::prod>(l, r));
+      res = std::make_shared<mul_t>(gather_<type_t::mul>(l, r));
     return res;
   }
 
@@ -675,7 +675,7 @@ namespace vcsn
     // When associative, instead of repeated multiplication,
     // immediately create n copies of E.
     else if (ids_.is_associative())
-      res = std::make_shared<prod_t>(n, e);
+      res = std::make_shared<mul_t>(n, e);
 
     // Default case: E{n} = ((..(EE)...)E.
     else
@@ -712,15 +712,15 @@ namespace vcsn
     //
     // Store (ab) in expression, then concat(<2>c, d) if c and d are
     // atoms, otherwise <2>c then d, then (ef).
-    if ((type_ignoring_lweight_(l) == type_t::atom || l->type() == type_t::prod)
-        && (r->type() == type_t::atom || r->type() == type_t::prod))
+    if ((type_ignoring_lweight_(l) == type_t::atom || l->type() == type_t::mul)
+        && (r->type() == type_t::atom || r->type() == type_t::mul))
       {
         // Left-hand sides.
         values_t ls;
-        gather_<type_t::prod>(ls, l);
+        gather_<type_t::mul>(ls, l);
         // Right-hand sides.
         values_t rs;
-        gather_<type_t::prod>(rs, r);
+        gather_<type_t::mul>(rs, r);
 
         // FIXME: we should perform that "if" with the one above, and
         // enter this section only if we really are going to concat.
@@ -744,7 +744,7 @@ namespace vcsn
         if (ls.size() == 1)
           return ls.front();
         else
-          return std::make_shared<prod_t>(std::move(ls));
+          return std::make_shared<mul_t>(std::move(ls));
       }
     else
       // Handle all the trivial identities.

@@ -40,8 +40,8 @@ namespace vcsn
       conjunction = products,
       infiltrate = products,
       ldiv,
-      prod,
-      word = prod, // Multi-letter atoms.
+      mul,
+      word = mul, // Multi-letter atoms.
       lweight,
       rweight,
       unary, // All the unary (postfix) operators.
@@ -126,7 +126,7 @@ namespace vcsn
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v);
       VCSN_RAT_VISIT(one, v);
-      VCSN_RAT_VISIT(prod, v);
+      VCSN_RAT_VISIT(mul, v);
       VCSN_RAT_VISIT(rweight, v);
       VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
       VCSN_RAT_VISIT(star, v)          { print_(v, star_); }

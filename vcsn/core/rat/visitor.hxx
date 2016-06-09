@@ -35,7 +35,7 @@ namespace vcsn
         t->accept(*this);
     }
 
-    VISIT(prod, v)
+    VISIT(mul, v)
     {
       for (const auto& t : v)
         t->accept(*this);

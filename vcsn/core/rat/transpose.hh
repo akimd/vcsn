@@ -96,7 +96,7 @@ namespace vcsn
       DEFINE(shuffle);
 #undef DEFINE
 
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         res_ = transpose(e.head());
         for (const auto& c: e.tail())

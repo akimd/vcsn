@@ -49,8 +49,8 @@ namespace vcsn
         infiltrate = 0;
         ldiv = 0;
         lweight = 0;
+        mul = 0;
         one = 0;
-        prod = 0;
         rweight = 0;
         shuffle = 0;
         star = 0;
@@ -72,8 +72,8 @@ namespace vcsn
         infiltrate += other.infiltrate;
         ldiv += other.ldiv;
         lweight += other.lweight;
+        mul += other.mul;
         one += other.one;
-        prod += other.prod;
         rweight += other.rweight;
         shuffle += other.shuffle;
         star += other.star;
@@ -103,8 +103,8 @@ namespace vcsn
       DEFINE(infiltrate)   { ++infiltrate;   visit_(v); }
       DEFINE(ldiv)         { ++ldiv;         visit_(v); }
       DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); ++depth; }
+      DEFINE(mul)          { ++mul;         visit_(v);}
       DEFINE(one)          { ++one; (void) v; depth = 0; }
-      DEFINE(prod)         { ++prod;         visit_(v);}
       DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); ++depth; }
       DEFINE(shuffle)      { ++shuffle;      visit_(v); }
       DEFINE(star)         { ++star;         visit_(v); }

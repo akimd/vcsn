@@ -167,7 +167,7 @@ namespace vcsn
     ECHO(ldiv);
     ECHO(lweight);
     ECHO(one);
-    ECHO(prod);
+    ECHO(mul);
     ECHO(rweight);
     ECHO(shuffle);
     ECHO(star);

@@ -114,7 +114,7 @@ namespace vcsn
           add_regular(e);
       }
 
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         if (compact_)
           prod_compact(e);
@@ -188,7 +188,7 @@ namespace vcsn
         res_->set_final(initial_, cst);
       }
 
-      void prod_regular(const prod_t& e)
+      void prod_regular(const mul_t& e)
       {
         std::vector<state_t> state_stack;
 
@@ -277,7 +277,7 @@ namespace vcsn
         res_->set_final(initial_, cst);
       }
 
-      void prod_compact(const prod_t& e)
+      void prod_compact(const mul_t& e)
       {
         e.head()->accept(*this);
 

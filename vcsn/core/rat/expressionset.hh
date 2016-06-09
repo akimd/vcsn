@@ -76,7 +76,7 @@ namespace vcsn
     DEFINE(lweight);
     DEFINE(node);
     DEFINE(one);
-    DEFINE(prod);
+    DEFINE(mul);
     DEFINE(rweight);
     DEFINE(shuffle);
     DEFINE(star);
@@ -256,7 +256,7 @@ namespace vcsn
 
     /// Similar to mul, but in the case of LAW, merge the labels.
     ///
-    ///   Mul(word(a),word(b)) -> prod(word(a), word(b))
+    ///   Mul(word(a),word(b)) -> mul(word(a), word(b))
     ///
     /// but
     ///

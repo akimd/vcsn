@@ -165,7 +165,7 @@ namespace vcsn
       }
 
       /// Handle an n-ary product.
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         auto res = product(e[0], e[1]);
         for (unsigned i = 2, n = e.size(); i < n; ++i)

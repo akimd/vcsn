@@ -82,11 +82,11 @@ Victory!
 
 No, not yet.  Consider "(ab)cd".  At this point, "(ab)c . d", the parser
 will already have converted this concat by an explicit product since the
-first word is in parens, so the stack contains "prod(atom(ab), atom(c))",
+first word is in parens, so the stack contains "mul(atom(ab), atom(c))",
 and when "d" arrives, again, this is a product, so it results in
 "((ab).c).d)".  The trick then is twofold: make the "parens" field of
 "(ab).c" be "false" to enable the call to "concat()" rather than "mul()",
-and teach "concat(prod(<exp>, <word1>), <word2>)" to return "prod(<exp>,
+and teach "concat(mul(<exp>, <word1>), <word2>)" to return "mul(<exp>,
 <word1+2>)".
 
 * How about glr?

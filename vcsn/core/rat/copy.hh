@@ -89,16 +89,16 @@ namespace vcsn
         res_ = std::make_shared<out_variadic_t>(sub);
       }
 
+      VCSN_RAT_VISIT(add, v)          { copy_(v); }
       VCSN_RAT_VISIT(complement, v)   { copy_(v); }
       VCSN_RAT_VISIT(compose, v)      { copy_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { copy_(v); }
       VCSN_RAT_VISIT(infiltrate, v)   { copy_(v); }
       VCSN_RAT_VISIT(ldiv, v)         { copy_(v); }
+      VCSN_RAT_VISIT(mul, v)          { copy_(v); }
       VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
-      VCSN_RAT_VISIT(prod, v)         { copy_(v); }
       VCSN_RAT_VISIT(shuffle, v)      { copy_(v); }
       VCSN_RAT_VISIT(star, v)         { copy_(v); }
-      VCSN_RAT_VISIT(add, v)          { copy_(v); }
       VCSN_RAT_VISIT(transposition, v){ copy_(v); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 

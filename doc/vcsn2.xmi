@@ -43,7 +43,7 @@
         <UML:Class visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="Gt4VbabKxxYx" name="expressionset_base"/>
         <UML:Package visibility="public" isSpecification="false" namespace="mPUmyD8ksKEH" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ROGwGJ2KUHqN" name="rat">
          <UML:Namespace.ownedElement>
-          <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="jUXOQCOSYiWN" name="prod">
+          <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="jUXOQCOSYiWN" name="mul">
            <UML:ModelElement.templateParameter>
             <UML:TemplateParameter visibility="public" isSpecification="false" namespace="jUXOQCOSYiWN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="PVyjaNmJHamZ" name="Label"/>
             <UML:TemplateParameter visibility="public" isSpecification="false" namespace="jUXOQCOSYiWN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="s5pqsvGpzaAU" name="Weight"/>

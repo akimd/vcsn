@@ -151,7 +151,7 @@ namespace vcsn
           es_.add_here(res_, to_expansion(v));
       }
 
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         res_ = es_.one();
         for (size_t i = 0, size = e.size(); i < size; ++i)
@@ -200,16 +200,16 @@ namespace vcsn
       ///
       /// FIXME: Code duplication with derivation.
       expression_t
-      prod_(typename prod_t::iterator begin,
-            typename prod_t::iterator end) const
+      prod_(typename mul_t::iterator begin,
+            typename mul_t::iterator end) const
       {
-        using expressions_t = typename prod_t::values_t;
+        using expressions_t = typename mul_t::values_t;
         if (begin == end)
           return rs_.one();
         else if (std::next(begin, 1) == end)
           return *begin;
         else
-          return std::make_shared<prod_t>(expressions_t{begin, end});
+          return std::make_shared<mul_t>(expressions_t{begin, end});
       }
 
       VCSN_RAT_VISIT(ldiv, e)

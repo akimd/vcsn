@@ -259,7 +259,7 @@ namespace vcsn
         initial_ = initial;
       }
 
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         // The set of the final states that were introduced in pending
         // parts of the automaton (for instance if we are in the rhs

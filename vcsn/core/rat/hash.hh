@@ -54,8 +54,8 @@ namespace vcsn
       VCSN_RAT_VISIT(infiltrate, v)   { visit_(v); }
       VCSN_RAT_VISIT(ldiv, v)         { visit_(v); }
       VCSN_RAT_VISIT(lweight, v);
+      VCSN_RAT_VISIT(mul, v)          { visit_(v); }
       VCSN_RAT_VISIT(one, v)          { visit_(v); }
-      VCSN_RAT_VISIT(prod, v)         { visit_(v); }
       VCSN_RAT_VISIT(rweight, v);
       VCSN_RAT_VISIT(shuffle, v)      { visit_(v); }
       VCSN_RAT_VISIT(star, v)         { visit_(v); }

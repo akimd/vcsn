@@ -90,7 +90,7 @@ namespace vcsn
       DEFINE(ldiv);
       DEFINE(lweight);
       DEFINE(one);
-      DEFINE(prod);
+      DEFINE(mul);
       DEFINE(rweight);
       DEFINE(shuffle);
       DEFINE(star);

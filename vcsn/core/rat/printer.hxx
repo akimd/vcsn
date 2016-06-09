@@ -24,7 +24,7 @@ namespace vcsn
           CASE(ldiv);
           CASE(lweight);
           CASE(one);
-          CASE(prod);
+          CASE(mul);
           CASE(rweight);
           CASE(shuffle);
           CASE(star);
@@ -180,7 +180,7 @@ namespace vcsn
             CASE(ldiv);
             CASE(lweight);
             CASE(one);
-            CASE(prod);
+            CASE(mul);
             CASE(rweight);
             CASE(shuffle);
             CASE(star);
@@ -231,7 +231,7 @@ namespace vcsn
     }
 
     /// Specific handling to using exponents as syntactic sugar.
-    VISIT(prod)
+    VISIT(mul)
     {
       for (auto it = begin(v); it != end(v); /* nothing */)
         {

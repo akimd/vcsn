@@ -94,7 +94,7 @@ namespace vcsn
             ldiv_          = " \\backslash ";
             lmul_          = "\\,";
             one_           = "\\varepsilon";
-            product_       = " \\, ";
+            mul_           = " \\, ";
             rmul_          = "\\,";
             shuffle_       = " \\between ";
             star_          = "^{*}";
@@ -112,7 +112,7 @@ namespace vcsn
             ldiv_          = "{\\}";
             lmul_          = "<.>.";
             one_           = "\\e";
-            product_       = ".";
+            mul_           = ".";
             rmul_          = ".<.>";
             shuffle_       = ":";
             star_          = "*";
@@ -130,7 +130,7 @@ namespace vcsn
             ldiv_          = "{\\}";
             lmul_          = "⟨.⟩.";
             one_           = "ε";
-            product_       = ".";
+            mul_           = ".";
             rmul_          = ".⟨.⟩";
             shuffle_       = ":";
             star_          = "*";
@@ -180,8 +180,8 @@ namespace vcsn
       VCSN_RAT_VISIT(infiltrate, v)    { print_(v, infiltrate_); }
       VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v)       { print_(v); }
+      VCSN_RAT_VISIT(mul, v)           { print_(v, mul_); }
       VCSN_RAT_VISIT(one, v)           { print_(v, one_); }
-      VCSN_RAT_VISIT(prod, v)          { print_(v, product_); }
       VCSN_RAT_VISIT(rweight, v)       { print_(v); }
       VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
       VCSN_RAT_VISIT(star, v)          { print_(v, star_); }
@@ -409,7 +409,7 @@ namespace vcsn
       const char* compose_ = nullptr;
       const char* conjunction_ = nullptr;
       const char* infiltrate_ = nullptr;
-      const char* product_ = nullptr;
+      const char* mul_ = nullptr;
       const char* shuffle_ = nullptr;
       const char* star_ = nullptr;
       const char* transposition_ = nullptr;

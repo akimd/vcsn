@@ -110,7 +110,7 @@ namespace vcsn
         final_ = final;
       }
 
-      VCSN_RAT_VISIT(prod, e)
+      VCSN_RAT_VISIT(mul, e)
       {
         e.head()->accept(*this);
         state_t initial = initial_;
