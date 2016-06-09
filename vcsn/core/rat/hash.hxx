@@ -17,18 +17,18 @@ namespace vcsn
 
     VISIT(atom)
     {
-      visit_nullary(v);
+      visit_(v);
       hash_combine(res_, ExpSet::labelset_t::hash(v.value()));
     }
 
     VISIT(lweight)
     {
-      visit_weight_node(v);
+      visit_(v);
     }
 
     VISIT(rweight)
     {
-      visit_weight_node(v);
+      visit_(v);
     }
 
     template <typename ExpSet>
@@ -40,7 +40,7 @@ namespace vcsn
 
     template <typename ExpSet>
     void
-    hash<ExpSet>::visit_nullary(const node_t &n)
+    hash<ExpSet>::visit_(const node_t &n)
     {
       combine_type(n);
     }
@@ -48,7 +48,7 @@ namespace vcsn
     template <typename ExpSet>
     template <type_t Type>
     void
-    hash<ExpSet>::visit_unary(const unary_t<Type>& n)
+    hash<ExpSet>::visit_(const unary_t<Type>& n)
     {
       combine_type(n);
       n.sub()->accept(*this);
@@ -57,7 +57,7 @@ namespace vcsn
     template <typename ExpSet>
     template <type_t Type>
     void
-    hash<ExpSet>::visit_weight_node(const weight_node_t<Type>& n)
+    hash<ExpSet>::visit_(const weight_node_t<Type>& n)
     {
       combine_type(n);
       hash_combine(res_, ExpSet::weightset_t::hash(n.weight()));
@@ -67,7 +67,7 @@ namespace vcsn
     template <typename ExpSet>
     template <type_t Type>
     void
-    hash<ExpSet>::visit_variadic(const variadic_t<Type>& n)
+    hash<ExpSet>::visit_(const variadic_t<Type>& n)
     {
       combine_type(n);
       for (const auto& child : n)

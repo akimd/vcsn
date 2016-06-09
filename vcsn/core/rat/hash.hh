@@ -46,21 +46,21 @@ namespace vcsn
 
     private:
 
-      VCSN_RAT_VISIT(add, v)          { visit_variadic(v); }
+      VCSN_RAT_VISIT(add, v)          { visit_(v); }
       VCSN_RAT_VISIT(atom, v);
-      VCSN_RAT_VISIT(complement, v)   { visit_unary(v); }
-      VCSN_RAT_VISIT(compose, v)      { visit_variadic(v); }
-      VCSN_RAT_VISIT(conjunction, v)  { visit_variadic(v); }
-      VCSN_RAT_VISIT(infiltrate, v)   { visit_variadic(v); }
-      VCSN_RAT_VISIT(ldiv, v)         { visit_variadic(v); }
+      VCSN_RAT_VISIT(complement, v)   { visit_(v); }
+      VCSN_RAT_VISIT(compose, v)      { visit_(v); }
+      VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
+      VCSN_RAT_VISIT(infiltrate, v)   { visit_(v); }
+      VCSN_RAT_VISIT(ldiv, v)         { visit_(v); }
       VCSN_RAT_VISIT(lweight, v);
-      VCSN_RAT_VISIT(one, v)          { visit_nullary(v); }
-      VCSN_RAT_VISIT(prod, v)         { visit_variadic(v); }
+      VCSN_RAT_VISIT(one, v)          { visit_(v); }
+      VCSN_RAT_VISIT(prod, v)         { visit_(v); }
       VCSN_RAT_VISIT(rweight, v);
-      VCSN_RAT_VISIT(shuffle, v)      { visit_variadic(v); }
-      VCSN_RAT_VISIT(star, v)         { visit_unary(v); }
-      VCSN_RAT_VISIT(transposition, v){ visit_unary(v); }
-      VCSN_RAT_VISIT(zero, v)         { visit_nullary(v); }
+      VCSN_RAT_VISIT(shuffle, v)      { visit_(v); }
+      VCSN_RAT_VISIT(star, v)         { visit_(v); }
+      VCSN_RAT_VISIT(transposition, v){ visit_(v); }
+      VCSN_RAT_VISIT(zero, v)         { visit_(v); }
 
       using tuple_t = typename super_t::tuple_t;
 
@@ -93,19 +93,19 @@ namespace vcsn
       void combine_type(const node_t& node);
 
       /// Traverse a nullary node (atom, `\z`, `\e`).
-      void visit_nullary(const node_t& v);
+      void visit_(const node_t& v);
 
       /// Traverse a unary node (`*`, `{c}`).
       template <rat::exp::type_t Type>
-      void visit_unary(const unary_t<Type>& v);
+      void visit_(const unary_t<Type>& v);
 
       /// Traverse an n-ary node (`+`, concatenation, `&`, `:`).
       template <rat::exp::type_t Type>
-      void visit_variadic(const variadic_t<Type>& v);
+      void visit_(const variadic_t<Type>& v);
 
       /// Traverse a weight node (lweight, rweight).
       template <rat::exp::type_t Type>
-      void visit_weight_node(const weight_node_t<Type>& v);
+      void visit_(const weight_node_t<Type>& v);
 
       size_t res_;
     };
