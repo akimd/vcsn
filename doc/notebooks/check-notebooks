@@ -7,24 +7,66 @@ import re
 
 nbdir = os.environ['nbdir']
 
-# Make sure that all the existing documentation about algorithms is in
-# Algorithm.ipynb.
+def referenced(nb):
+    '''A set of all the notebook that are referenced to from
+    this one.'''
+    return set(re.findall(r'(\w+\.\w+\.ipynb)',
+                          open(nbdir + '/' + nb).read()))
 
-referenced = set(re.findall(r'(\w+\.\w+\.ipynb)',
-                            open(nbdir + '/Algorithms.ipynb').read()))
-
+# All the documentation notebooks (<type>.<function>.ipynb) that
+# exist.
 existing = set([f
                 for f in os.listdir(path=nbdir)
                 if re.match(r'(\w+\.\w+)\.ipynb', f)])
 
+
+
+# Make sure that all the existing documentation about algorithms is in
+# Algorithm.ipynb.
+nb_referenced = referenced('Algorithms.ipynb')
+
 status = 0
-dre = referenced - existing
+dre = nb_referenced - existing
 if dre:
     print("error: referenced, not existing:", dre)
     status = 1
-der = existing - referenced
+der = existing - nb_referenced
 if der:
     print("error: existing, not referenced:", der)
     status = 1
 
 exit(status)
+
+
+
+# Check that the notebooks we reference to, exist.
+#
+# Unfortunately, we are not ready for this yet.
+#
+# error: label.operators.ipynb references {'label.power.ipynb', 'label.multiply.ipynb'} which does not exit
+# error: expression.derivation.ipynb references {'polynomial.split.ipynb'} which does not exit
+# error: automaton.is_realtime.ipynb references {'automaton.is_proper.ipynb'} which does not exit
+# error: expression.operators.ipynb references {'expression.right_mult.ipynb', 'expression.tuple.ipynb', 'expression.left_mult.ipynb'} which does not exit
+# error: expression.expansion.ipynb references {'expression.constant_term.ipynb'} which does not exit
+# error: automaton.shortest.ipynb references {'automaton.eval.ipynb'} which does not exit
+# error: expression.add.ipynb references {'polynomial.add.ipynb'} which does not exit
+# error: automaton.proper.ipynb references {'automaton.is_proper.ipynb'} which does not exit
+# error: automaton.shuffle.ipynb references {'expression.shuffle.ipynb'} which does not exit
+# error: expansion.operators.ipynb references {'expansion.right_mult.ipynb', 'expansion.left_mult.ipynb', 'expansion.conjunction.ipynb', 'expansion.complement.ipynb', 'expansion.tuple.ipynb', 'expansion.add.ipynb'} which does not exit
+# error: automaton.determinize.ipynb references {'automaton.strip.ipynb'} which does not exit
+# error: automaton.operators.ipynb references {'automaton.left_mult.ipynb', 'automaton.right_mult.ipynb', 'automaton.eval.ipynb'} which does not exit
+# error: automaton.info.ipynb references {'automaton.format.ipynb'} which does not exit
+# error: automaton.compose.ipynb references {'automaton.strip.ipynb'} which does not exit
+# error: weight.operators.ipynb references {'weight.multiply.ipynb', 'weight.difference.ipynb', 'weight.conjunction.ipynb', 'weight.add.ipynb', 'weight.power.ipynb'} which does not exit
+# error: automaton.costandard.ipynb references {'automaton.is_costandard.ipynb'} which does not exit
+# error: polynomial.operators.ipynb references {'polynomial.difference.ipynb', 'polynomial.add.ipynb', 'polynomial.tuple.ipynb', 'polynomial.power.ipynb'} which does not exit
+# error: automaton.lift.ipynb references {'expression.lift.ipynb'} which does not exit
+# error: expression.is_valid.ipynb references {'expression.constant_term.ipynb'} which does not exit
+
+print(existing)
+for nb in existing:
+    diff = referenced(nb) - existing
+    if diff:
+        print("error: {} references {} which does not exit"
+              .format(nb, diff))
+        status = 1
