@@ -118,43 +118,46 @@
     return 0;                                         \
   }
 
-DEFINE_AUT_FUNCTION(accessible);
-DEFINE_AUT_VARIADIC_FUNCTION(add);
-DEFINE_AUT_FUNCTION(coaccessible);
-DEFINE_AUT_FUNCTION(complement);
-DEFINE_AUT_FUNCTION(complete);
-DEFINE_AUT_VARIADIC_FUNCTION(compose);
-DEFINE_EXP_FUNCTION(constant_term);
-DEFINE_AUT_VARIADIC_FUNCTION(difference);
-DEFINE_INT_INT_FUNCTION(divkbaseb);
-DEFINE_EXP_FUNCTION(expand);
-DEFINE_EXP_FUNCTION(inductive);
-DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
-DEFINE_AUT_FUNCTION(is_ambiguous);
-DEFINE_AUT_FUNCTION(is_complete);
-DEFINE_AUT_FUNCTION(is_deterministic);
-DEFINE_AUT_FUNCTION(is_empty);
-DEFINE_AUT_FUNCTION(is_eps_acyclic);
-DEFINE_AUT_FUNCTION(is_normalized);
-DEFINE_AUT_FUNCTION(is_proper);
-DEFINE_AUT_FUNCTION(is_standard);
-DEFINE_AUT_FUNCTION(is_trim);
-DEFINE_AUT_FUNCTION(is_useless);
-DEFINE_AUT_EXP_FUNCTION(is_valid);
-DEFINE_AUT_EXP_FUNCTION(lift);
-DEFINE_AUT_VARIADIC_FUNCTION(multiply);
-DEFINE_AUT_FUNCTION(proper);
-DEFINE_INT_INT_FUNCTION(quotkbaseb);
-DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
-DEFINE_EXP_FUNCTION(split);
-DEFINE_AUT_EXP_FUNCTION(standard);
-DEFINE_AUT_FUNCTION(star);
-DEFINE_EXP_FUNCTION(star_normal_form);
-DEFINE_EXP_FUNCTION(thompson);
-DEFINE_AUT_FUNCTION(to_expression);
-DEFINE_AUT_EXP_FUNCTION(transpose);
-DEFINE_AUT_FUNCTION(trim);
-DEFINE_AUT_FUNCTION(universal);
+#define DEFINE(Function, Signature)             \
+  DEFINE_ ## Signature ## _FUNCTION(Function)
+
+DEFINE(accessible, AUT);
+DEFINE(add, AUT_VARIADIC);
+DEFINE(coaccessible, AUT);
+DEFINE(complement, AUT);
+DEFINE(complete, AUT);
+DEFINE(compose, AUT_VARIADIC);
+DEFINE(constant_term, EXP);
+DEFINE(difference, AUT_VARIADIC);
+DEFINE(divkbaseb, INT_INT);
+DEFINE(expand, EXP);
+DEFINE(inductive, EXP);
+DEFINE(infiltration, AUT_VARIADIC);
+DEFINE(is_ambiguous, AUT);
+DEFINE(is_complete, AUT);
+DEFINE(is_deterministic, AUT);
+DEFINE(is_empty, AUT);
+DEFINE(is_eps_acyclic, AUT);
+DEFINE(is_normalized, AUT);
+DEFINE(is_proper, AUT);
+DEFINE(is_standard, AUT);
+DEFINE(is_trim, AUT);
+DEFINE(is_useless, AUT);
+DEFINE(is_valid, AUT_EXP);
+DEFINE(lift, AUT_EXP);
+DEFINE(multiply, AUT_VARIADIC);
+DEFINE(proper, AUT);
+DEFINE(quotkbaseb, INT_INT);
+DEFINE(shuffle, AUT_VARIADIC);
+DEFINE(split, EXP);
+DEFINE(standard, AUT_EXP);
+DEFINE(star, AUT);
+DEFINE(star_normal_form, EXP);
+DEFINE(thompson, EXP);
+DEFINE(to_expression, AUT);
+DEFINE(transpose, AUT_EXP);
+DEFINE(trim, AUT);
+DEFINE(universal, AUT);
 
 struct are_equivalent: vcsn_function
 {
