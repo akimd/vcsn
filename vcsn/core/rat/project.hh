@@ -24,8 +24,8 @@ namespace vcsn
       using super_t = typename in_expressionset_t::const_visitor;
       using self_t = project_impl;
 
-      using in_value_t = typename in_expressionset_t::value_t;
-      using out_value_t = typename out_expressionset_t::value_t;
+      using in_expression_t = typename in_expressionset_t::value_t;
+      using out_expression_t = typename out_expressionset_t::value_t;
       using node_t = typename super_t::node_t;
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
@@ -40,15 +40,15 @@ namespace vcsn
       {}
 
       /// Entry point: print \a v.
-      out_value_t
-      operator()(const in_value_t& v)
+      out_expression_t
+      operator()(const in_expression_t& v)
       {
         return project(v);
       }
 
     private:
       /// Easy recursion.
-      out_value_t project(const in_value_t& v)
+      out_expression_t project(const in_expression_t& v)
       {
         v->accept(*this);
         return res_;
@@ -86,8 +86,8 @@ namespace vcsn
       // I do not understand why I need the cast just for this one,
       // but GCC and Clang agree.
       using bin_t =
-        out_value_t
-        (out_expressionset_t::*)(const out_value_t&, const out_value_t&) const;
+        out_expression_t
+        (out_expressionset_t::*)(const out_expression_t&, const out_expression_t&) const;
       VCSN_RAT_VISIT(mul, v)          { project_(v,
                                                  static_cast<bin_t>(&out_expressionset_t::mul)); }
       VCSN_RAT_VISIT(shuffle, v)      { project_(v, &out_expressionset_t::shuffle); }
@@ -124,7 +124,7 @@ namespace vcsn
       struct visit_tuple
       {
         /// Entry point.
-        out_value_t operator()(const tuple_t& v)
+        out_expression_t operator()(const tuple_t& v)
         {
           return std::get<Tape>(v.sub());
         }
@@ -134,7 +134,7 @@ namespace vcsn
       template <typename Dummy>
       struct visit_tuple<false, Dummy>
       {
-        out_value_t operator()(const tuple_t&)
+        out_expression_t operator()(const tuple_t&)
         {
           BUILTIN_UNREACHABLE();
         }
@@ -151,7 +151,7 @@ namespace vcsn
       /// expressionset to build the output value.
       out_expressionset_t out_rs_;
       /// Output value, under construction.
-      out_value_t res_;
+      out_expression_t res_;
     };
 
 
@@ -162,7 +162,7 @@ namespace vcsn
     template <size_t Tape, typename InExpSet>
     auto
     project(const InExpSet& in_rs, const typename InExpSet::value_t& v)
-      -> typename project_impl<InExpSet, Tape>::out_value_t
+      -> typename project_impl<InExpSet, Tape>::out_expression_t
     {
       auto p = project_impl<InExpSet, Tape>{in_rs};
       return p(v);

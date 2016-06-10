@@ -15,7 +15,12 @@ namespace vcsn
       using context_t = context_t_of<expressionset_t>;
       using weight_t = typename context_t::weightset_t::value_t;
       using super_t = typename expressionset_t::const_visitor;
+
+      /// Actual node, without indirection.
       using node_t = typename super_t::node_t;
+      /// A shared_ptr to node_t.
+      using expression_t = typename node_t::value_t;
+
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
       using variadic_t = typename super_t::template variadic_t<Type>;
@@ -29,19 +34,11 @@ namespace vcsn
       constexpr static const char* me() { return "hash"; }
 
       /// Entry point: return the hash of \a v.
-      size_t
-      operator()(const node_t& v)
+      size_t operator()(const expression_t& v)
       {
         res_ = 0;
-        v.accept(*this);
+        v->accept(*this);
         return res_;
-      }
-
-      /// Entry point: return the hash of \a v.
-      size_t
-      operator()(const std::shared_ptr<const node_t>& v)
-      {
-        return operator()(*v);
       }
 
     private:

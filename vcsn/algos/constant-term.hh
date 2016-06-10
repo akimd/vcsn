@@ -43,11 +43,9 @@ namespace vcsn
         : constant_term_visitor(*rs.weightset())
       {}
 
-      weight_t
-      operator()(const expression_t& v)
+      weight_t operator()(const expression_t& v)
       {
-        v->accept(*this);
-        return std::move(res_);
+        return constant_term(v);
       }
 
     private:
@@ -94,7 +92,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(conjunction, v) { visit_product(v); }
       VCSN_RAT_VISIT(infiltrate, v)  { visit_product(v); }
-      VCSN_RAT_VISIT(mul, v)        { visit_product(v); }
+      VCSN_RAT_VISIT(mul, v)         { visit_product(v); }
       VCSN_RAT_VISIT(shuffle, v)     { visit_product(v); }
 
       /// Cannot compute the constant-term easily here:
@@ -213,5 +211,4 @@ namespace vcsn
       }
     }
   }
-
 } // vcsn::

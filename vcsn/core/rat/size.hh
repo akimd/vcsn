@@ -21,7 +21,11 @@ namespace vcsn
 
       using context_t = context_t_of<expressionset_t>;
       using weight_t = typename context_t::weightset_t::value_t;
+      /// Actual node, without indirection.
       using node_t = typename super_t::node_t;
+      /// A shared_ptr to node_t.
+      using expression_t = typename node_t::value_t;
+
       using inner_t = typename super_t::inner_t;
       template <type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;
@@ -34,18 +38,11 @@ namespace vcsn
 
       /// Entry point: return the size of \a v.
       size_t
-      operator()(const node_t& v)
+      operator()(const expression_t& v)
       {
         size_ = 0;
-        v.accept(*this);
+        v->accept(*this);
         return size_;
-      }
-
-      /// Entry point: return the size of \a v.
-      size_t
-      operator()(const std::shared_ptr<const node_t>& v)
-      {
-        return operator()(*v);
       }
 
     private:

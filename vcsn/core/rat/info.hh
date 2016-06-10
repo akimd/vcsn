@@ -23,21 +23,20 @@ namespace vcsn
       using self_t = info;
 
       using context_t = context_t_of<expressionset_t>;
-      using node_t = typename expressionset_t::node_t;
 
-      /// For each node type, count its number of occurrences.
-      void operator()(const node_t& v)
-      {
-        clear();
-        v.accept(*this);
-      }
+      /// Actual node, without indirection.
+      using node_t = typename super_t::node_t;
+      /// A shared_ptr to node_t.
+      using expression_t = typename node_t::value_t;
 
       /// Entry point: compute info about \a v.
-      void operator()(const std::shared_ptr<const node_t>& v)
+      void operator()(const expression_t& v)
       {
-        operator()(*v);
+        clear();
+        v->accept(*this);
       }
 
+      /// Reset the visitor.
       void clear()
       {
         add = 0;
