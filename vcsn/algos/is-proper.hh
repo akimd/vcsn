@@ -2,10 +2,11 @@
 
 #include <type_traits>
 
-#include <vcsn/ctx/traits.hh>
-#include <vcsn/misc/attributes.hh>
+#include <vcsn/core/automaton.hh> // transitions.
 #include <vcsn/core/kind.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // make_automaton
+#include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
