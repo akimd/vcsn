@@ -16,6 +16,9 @@ namespace vcsn
 {
   namespace dyn
   {
+    /// Dyn version of the read_automaton function.
+    ///
+    /// Read an automaton without knowing its context.
     static automaton read_automaton(const std::string& f)
     {
       auto is = open_input_file(f);
@@ -31,6 +34,9 @@ namespace vcsn
     }
   }
 
+  /// Static version of the read_automaton function.
+  ///
+  /// Read an automaton with a specified context (from the Aut template parameter).
   template <Automaton Aut>
   Aut
   read_automaton(const std::string& f)
@@ -56,32 +62,62 @@ namespace vcsn
   }
 }
 
+/// Static implementation of the prod_eval.
+///
+/// Read two automata and a word. Compute the product of these automata and
+/// evaluate the word from it.
+/// \param Ctx the specified context of the automata and the word. Each of them
+/// have to be from these context or the program will fail.
 template <typename Ctx>
 void
 sta_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
   using namespace vcsn;
+  // The automata's exact type.
   using automaton_t = mutable_automaton<Ctx>;
+  // Left automaton, here the binary decoder.
   automaton_t l = read_automaton<automaton_t>(lhs);
+  // Right automaton, here the automaton accepting only even numbers.
   automaton_t r = read_automaton<automaton_t>(rhs);
+  // The product automaton, accepting even numbers and outputing them as
+  // decimal numbers. Needs to be stripped if we want to retrieve the same type
+  // of automata as l and r.
   automaton_t prod = conjunction<automaton_t, automaton_t>(l, r)->strip();
+  // The word to evaluate in prod.
   word_t_of<Ctx> input = read_word<Ctx>(prod->context(), word);
+  // The result weight from the evaluation corresponding to its decimal value,
   weight_t_of<Ctx> w = eval<automaton_t>(prod, input);
+  // Display of the result, we need to use the automaton's weightset to be able
+  // to print the weight as the print function cannot be generic in static.
   prod->context().weightset()->print(w, std::cout);
 }
 
+/// Dyn implementation of the prod_eval.
+///
+/// Read two automata and a word. Compute the product of these automata and
+/// evaluate the word from it. The context does not have to be specified as
+/// the context of the parameters is computed dynamically.
 static void
 dyn_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
   using namespace vcsn::dyn;
   using vcsn::dyn::label;
+  // We don't need the automata's exact type.
+  // Left automaton, here the binary decoder.
   automaton l = read_automaton(lhs);
+  // Right automaton, here the automaton accepting only even numbers.
   automaton r = read_automaton(rhs);
+  // The product automaton, accepting even numbers and outputing them as
+  // decimal numbers.
   automaton prod = conjunction(l, r);
+  // The word to evaluate in prod.
   label input = read_word(context_of(prod), word);
+  // The result weight from the evaluation corresponding to its decimal value,
   weight w = eval(prod, input);
+  // Display of the result, no need to use the weightset as the dynamic print
+  // is generic, the format is specified though.
   print(w, std::cout, "text");
 }
 
