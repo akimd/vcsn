@@ -37,13 +37,24 @@ parser.add_argument('-n', '--lines', type=int, metavar='NUM', action='store',
 parser.add_argument('--no-git', action='store_true',
                     help="don't try to use git")
 parser.add_argument('--output-format', type=str,
-                    choices=['csv', 'latex', 'text'],
-                    default='text',
-                    help='Select the output format')
+                    choices=['auto', 'csv', 'latex', 'text'],
+                    default='auto',
+                    help='''Select the output format.  If `auto`, guess from
+                    the output file name, or default to `text`.''')
 parser.add_argument('-o', '--output', metavar='FILE',
                     type=argparse.FileType('w'), default='-',
                     help='The output file')
 args = parser.parse_args()
+
+# Decide the output format.
+if args.output_format == 'auto':
+    ext = args.output.name.split(".")[-1]
+    exts = {
+        'csv': 'csv',
+        'ltx': 'latex',
+        'tex': 'latex',
+        }
+    args.output_format = exts.get(ext, 'text')
 
 
 # Access to the git repository.

@@ -31,3 +31,7 @@ fi
 
 check csv.out   --all -c never --output-format csv   $a $b $c $d
 check latex.out --all -c never --output-format latex $a $b $c $d
+
+# Inference on the output file name.
+check '' --all -c never -o out.csv   $a $b $c $d
+run 0 "$(cat $medir/csv.out)" -cat out.csv
