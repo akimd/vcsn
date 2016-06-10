@@ -24,7 +24,9 @@ namespace vcsn
     require(is_tropical<weightset_t_of<Aut>>(),
             "lightest-automaton: require tropical weightset");
     auto res = make_fresh_automaton(aut);
-    auto copy = make_copier(aut, res);
+    // The copy is not 'safe' (uses add_transition instead of new_transition),
+    // as there can be the same transition multiple times.
+    auto copy = make_copier(aut, res, false);
     if (1 < k)
       {
         auto paths = k_lightest_path(aut, aut->pre(), aut->post(), k);
@@ -33,7 +35,7 @@ namespace vcsn
             if (t != aut->null_transition())
               copy(t);
       }
-    else
+    else if (k == 1)
       {
         auto pred = lightest_path(aut, algo);
         for (auto t = pred[aut->post()];
