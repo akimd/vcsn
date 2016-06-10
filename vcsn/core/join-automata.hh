@@ -11,7 +11,9 @@ namespace vcsn
     template <Automaton... Auts>
     auto
     join_automata(Auts&&... auts)
-      -> decltype(make_mutable_automaton(join(auts->context()...)))
+      // SFINAE
+      -> decltype(pass(auts->null_state()...),
+                  make_mutable_automaton(join(auts->context()...)))
     {
       return make_mutable_automaton(join(auts->context()...));
     }
@@ -25,7 +27,8 @@ namespace vcsn
     template <Automaton... Auts>
     auto
     nullable_join_context(Auts&&... auts)
-      -> decltype(make_nullableset_context(join(auts->context()...)))
+      -> decltype(pass(auts->null_state()...),
+                  make_nullableset_context(join(auts->context()...)))
     {
       return make_nullableset_context(join(auts->context()...));
     }
@@ -34,7 +37,8 @@ namespace vcsn
     template <Automaton... Auts>
     auto
     nullable_join_automata(Auts&&... auts)
-      -> decltype(make_mutable_automaton(nullable_join_context(auts...)))
+      -> decltype(pass(auts->null_state()...),
+                  make_mutable_automaton(nullable_join_context(auts...)))
     {
       return make_mutable_automaton(nullable_join_context(auts...));
     }
@@ -43,10 +47,10 @@ namespace vcsn
     template <Automaton... Auts>
     auto
     meet_automata(Auts&&... auts)
-      -> decltype(make_mutable_automaton(meet(auts->context()...)))
+      -> decltype(pass(auts->null_state()...),
+                  make_mutable_automaton(meet(auts->context()...)))
     {
       return make_mutable_automaton(meet(auts->context()...));
     }
-
   }
 }

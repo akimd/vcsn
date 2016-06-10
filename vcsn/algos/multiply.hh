@@ -14,6 +14,7 @@
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh> // require
+#include <vcsn/misc/to.hh> // to
 #include <vcsn/misc/vector.hh> // make_vector
 
 namespace vcsn
@@ -148,10 +149,11 @@ namespace vcsn
   auto
   multiply(const Aut1& lhs, const Aut2& rhs, Tag tag = {})
     -> decltype(lhs->null_state(), // SFINAE.
+                rhs->null_state(), // SFINAE.
                 detail::make_join_automaton(tag, lhs, rhs))
   {
     auto res = detail::make_join_automaton(tag, lhs, rhs);
-    ::vcsn::copy_into(lhs, res);
+    copy_into(lhs, res);
     multiply_here(res, rhs, tag);
     return res;
   }
@@ -186,11 +188,7 @@ namespace vcsn
   /// Repeated concatenation of an automaton.
   ///
   /// \param aut  the automaton
-  /// \param min  the minimum number.  If -1, denotes 0.
-  /// \param max  the maximum number.
-  ///             If -1, denotes infinity, using star.
-  ///             If -2, denotes the same value as min.
-  //
+  /// \param to   the exponents
   // The return type, via SFINAE on aut->null_state(), makes the
   // difference with another overload, `<ValueSet>(ValueSet, value,
   // value)`, which coincides in the case ValueSet = Z, hence value =
@@ -204,26 +202,20 @@ namespace vcsn
   // me know.
   template <Automaton Aut, typename Tag = general_tag>
   auto
-  multiply(const Aut& aut, int min, int max, Tag tag = {})
+  multiply(const Aut& aut, to exp, Tag tag = {})
     -> decltype(aut->null_state(), // SFINAE.
                 detail::make_join_automaton(tag, aut))
   {
     auto res = detail::make_join_automaton(tag, aut);
-    if (max == -2)
-      max = min;
-    if (min == -1)
-      min = 0;
-    if (max == -1)
+    if (exp.max == -1)
     {
       res = star(aut, tag);
-      if (min)
-        res = multiply(multiply(aut, min, min, tag), res, tag);
+      if (exp.min)
+        res = multiply(multiply(aut, to{exp.min}, tag), res, tag);
     }
     else
     {
-      require(min <= max,
-              "multiply: invalid exponents: ", min, ", ", max);
-      if (min == 0)
+      if (exp.min == 0)
       {
         //automatonset::one().
         auto s = res->new_state();
@@ -235,10 +227,10 @@ namespace vcsn
         auto tag_aut = detail::make_join_automaton(tag, aut);
         copy_into(aut, res);
         copy_into(aut, tag_aut);
-        for (int n = 1; n < min; ++n)
+        for (int n = 1; n < exp.min; ++n)
           res = multiply(res, tag_aut, tag);
       }
-      if (min < max)
+      if (exp.min < exp.max)
       {
         // Aut sum = automatonset.one();
         auto sum = detail::make_join_automaton(tag, aut);
@@ -247,9 +239,9 @@ namespace vcsn
           sum->set_initial(s);
           sum->set_final(s);
         }
-        for (int n = 1; n <= max - min; ++n)
-          sum = vcsn::strip(vcsn::add(sum, multiply(aut, n, n, tag), tag));
-        res = vcsn::multiply(res, sum, tag);
+        for (int n = 1; n <= exp.max - exp.min; ++n)
+          sum = strip(add(sum, multiply(aut, to{n}, tag), tag));
+        res = multiply(res, sum, tag);
       }
     }
     return res;
@@ -269,7 +261,7 @@ namespace vcsn
         return ::vcsn::detail::dispatch_tags(algo,
             [aut, min, max](auto tag)
             {
-              return automaton(::vcsn::multiply(aut, min, max, tag));
+              return automaton(::vcsn::multiply(aut, to{min, max}, tag));
             },
         aut);
       }
@@ -341,29 +333,22 @@ namespace vcsn
   ///             If -2, denotes the same value as min.
   template <typename ValueSet>
   typename ValueSet::value_t
-  multiply(const ValueSet& vs, const typename ValueSet::value_t& v,
-           int min, int max = -2)
+  multiply(const ValueSet& vs, const typename ValueSet::value_t& v, to exp)
   {
     auto res = typename ValueSet::value_t{};
-    if (max == -2)
-      max = min;
-    if (min == -1)
-      min = 0;
-    if (max == -1)
+    if (exp.max == -1)
       {
         res = vs.star(v);
-        if (min)
-          res = vs.mul(vs.power(v, min), res);
+        if (exp.min)
+          res = vs.mul(vs.power(v, exp.min), res);
       }
     else
       {
-        require(min <= max,
-                "multiply: invalid exponents: ", min, ", ", max);
-        res = vs.power(v, min);
-        if (min < max)
+        res = vs.power(v, exp.min);
+        if (exp.min < exp.max)
           {
             auto sum = vs.one();
-            for (int n = 1; n <= max - min; ++n)
+            for (int n = 1; n <= exp.max - exp.min; ++n)
               sum = vs.add(sum, vs.power(v, n));
             res = vs.mul(res, sum);
           }
@@ -381,9 +366,8 @@ namespace vcsn
       multiply_expression_repeated(const expression& re, int min, int max)
       {
         const auto& r = re->as<ExpSet>();
-        return {r.valueset(), ::vcsn::multiply(r.valueset(),
-                                                    r.value(),
-                                                    min, max)};
+        return {r.valueset(),
+            ::vcsn::multiply(r.valueset(), r.value(), to{min, max})};
       }
     }
   }
@@ -462,7 +446,7 @@ namespace vcsn
       {
         const auto& w = wgt->as<WeightSet>();
         return {w.valueset(),
-                ::vcsn::multiply(w.valueset(), w.value(),min, max)};
+                ::vcsn::multiply(w.valueset(), w.value(), to{min, max})};
       }
     }
   }

@@ -19,6 +19,7 @@
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/set.hh> // has
 #include <vcsn/misc/static-if.hh>
+#include <vcsn/misc/to.hh>
 #include <vcsn/misc/tuple.hh> // tuple_element_t, cross_tuple
 #include <vcsn/misc/zip-maps.hh>
 
@@ -916,7 +917,7 @@ namespace vcsn
   /// \returns A non-decorated automaton.
   template <Automaton Aut>
   auto
-  conjunction(const Aut& aut, unsigned n)
+  conjunction(const Aut& aut, to exp)
     -> fresh_automaton_t_of<Aut>
   {
     // We used to compute `a & n` as `([^]* & a) & a)...`.  The code
@@ -924,6 +925,11 @@ namespace vcsn
     // it noticeably slower.  Concrete `a & 2` was twice slower than
     // `a & a`.
     auto res = make_fresh_automaton(aut);
+    require(exp.single(),
+            "conjunction: exponents must be single, ", exp);
+    require(exp.finite(),
+            "conjunction: exponents must be finite, ", exp);
+    unsigned n = exp.min;
     if (n < 2)
       {
         // automatonset::universal().
@@ -975,7 +981,7 @@ namespace vcsn
       conjunction_repeated(const automaton& aut, unsigned n)
       {
         const auto& a = aut->as<Aut>();
-        return ::vcsn::conjunction(a, n);
+        return ::vcsn::conjunction(a, to{n});
       }
     }
   }

@@ -90,6 +90,8 @@ namespace vcsn
     template <Automaton... Auts>
     auto
     make_join_automaton(deterministic_tag, Auts&&... auts)
+      // SFINAE
+      -> decltype(join_automata(std::forward<Auts>(auts)...))
     {
       return join_automata(std::forward<Auts>(auts)...);
     }
@@ -109,6 +111,8 @@ namespace vcsn
     template <Automaton... Auts>
     auto
     make_join_automaton(standard_tag, Auts&&... auts)
+      // SFINAE
+      -> decltype(join_automata(std::forward<Auts>(auts)...))
     {
       return join_automata(std::forward<Auts>(auts)...);
     }

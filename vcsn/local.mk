@@ -266,6 +266,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/static-if.hh                         \
   %D%/misc/stream.hh                            \
   %D%/misc/symbol.hh                            \
+  %D%/misc/to.hh                                \
   %D%/misc/tuple.hh                             \
   %D%/misc/type_traits.hh                       \
   %D%/misc/unordered_map.hh                     \

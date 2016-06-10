@@ -40,7 +40,7 @@ a<x> ! 1.2-4: 1.1: {ijklmn}: invalid letter: x\n!   while reading expression: a<
 (<i>a){2} => (<i>a){2}
 (<i>a){5} => (<i>a){5}
 
-(<i>a){1,0} ! 1.1-11: multiply: invalid exponents: 1, 0\n!   while reading expression: (<i>a){1,0}
+(<i>a){1,0} ! 1.1-11: invalid exponents: 1, 0\n!   while reading expression: (<i>a){1,0}
 (<i>a){0,0} == (<i>a){0}
 (<i>a){1,1} == (<i>a){1}
 (<i>a){2,2} == (<i>a){2}

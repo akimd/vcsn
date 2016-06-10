@@ -4,6 +4,10 @@ import vcsn
 from test import *
 
 def check_mult(lhs, rhs):
+    '''Check l * r for l in lhs, r in rhs.
+    Check the different flavors: general, deterministic,
+    and standard.'''
+
     if isinstance(lhs, list):
         for aut in lhs:
             check_mult(aut, rhs)
@@ -147,6 +151,8 @@ digraph
 }
 '''), a.multiply(a))
 
+
+
 ## --------------------- ##
 ## Heterogeneous input.  ##
 ## --------------------- ##
@@ -191,28 +197,38 @@ q = vcsn.context('lal_char(c), q').expression('<1/3>c')
 r = vcsn.context('lal_char(d), r').expression('<.4>d')
 CHECK_EQ(r'<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
 
+# This is a real regression (#68): we used to interpret `<3><3>a` as
+# `<27>a` because `3 * 3` in Z was intrepreted as `3 ** 3`, because `w
+# * n` is interpreted as repeated multiplication, `w ** n` when n is
+# an int.  Which collides with binary multiplication in Z.
+zexp = vcsn.context('lal, z').expression
+CHECK_EQ(zexp('<9>a'), zexp('<3><3>a'))
+
 ## --------------- ##
 ## label * label.  ##
 ## --------------- ##
 
-c = vcsn.context('law_char, b')
-CHECK_EQ(c.label('abc'),
-         c.label('ab') * c.label(r'\e') * c.label('c'))
+l = vcsn.context('law_char, b').label
+CHECK_EQ(l('abc'),
+         l('ab') * l(r'\e') * l('c'))
 
 
 ## ------------------------- ##
 ## polynomial * polynomial.  ##
 ## ------------------------- ##
 
-c = vcsn.context('law_char, z')
-CHECK_EQ(c.polynomial('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
-         c.polynomial(r'\e + <2>a + <3>b') * c.polynomial(r'\e') * c.polynomial('c + <5>d'))
+pol = vcsn.context('law_char, z').polynomial
+CHECK_EQ(pol('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
+         pol(r'\e + <2>a + <3>b') * pol(r'\e') * pol('c + <5>d'))
 
 
 ## ----------------- ##
 ## weight * weight.  ##
 ## ----------------- ##
 
-c = vcsn.context('lal_char, seriesset<lal_char, q>')
-CHECK_EQ(c.weight('<4>aa+<6>ab+<6>ba+<9>bb'),
-         c.weight('<2>a+<3>b') * c.weight('<2>a+<3>b'))
+w = vcsn.context('lal_char, seriesset<lal_char, q>').weight
+CHECK_EQ(w('<4>aa+<6>ab+<6>ba+<9>bb'),
+         w('<2>a+<3>b') * w('<2>a+<3>b'))
+# See the comment above about #68.
+w = vcsn.context('lal, z').weight
+CHECK_EQ(w('9'), w('3') * w('3'))
