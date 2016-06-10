@@ -166,7 +166,8 @@ namespace vcsn
       copy_into(v::proper(r), rhs);
 
       auto res = make_mutable_automaton(ctx_);
-      copy_into(v::proper(v::accessible(v::ldiv(lhs, rhs))), res);
+      // ldiv might introduce several initial states, e.g. a? \ a.
+      copy_into(v::proper(v::accessible(v::standard(v::ldiv(lhs, rhs)))), res);
       return v::is_empty(res) ? zero() : res;
     }
 

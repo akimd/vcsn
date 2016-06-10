@@ -977,6 +977,7 @@ check(qexp('abcd & (dcba){T}'), file='transposition-1')
 
 # Left and right divisions.
 check(qexp(r'<2>abc {\} <4>abcd*'), file='ldiv-1')
+check(qexp(r'a? {\} a'), file='ldiv-2')
 check(qexp('<4>a*bcd {/} <2>bcd'), file='rdiv-1')
 
 # Tupling.
