@@ -43,30 +43,23 @@ exit(status)
 #
 # Unfortunately, we are not ready for this yet.
 #
-# error: label.operators.ipynb references {'label.power.ipynb', 'label.multiply.ipynb'} which does not exit
-# error: expression.derivation.ipynb references {'polynomial.split.ipynb'} which does not exit
-# error: automaton.is_realtime.ipynb references {'automaton.is_proper.ipynb'} which does not exit
-# error: expression.operators.ipynb references {'expression.right_mult.ipynb', 'expression.tuple.ipynb', 'expression.left_mult.ipynb'} which does not exit
-# error: expression.expansion.ipynb references {'expression.constant_term.ipynb'} which does not exit
-# error: automaton.shortest.ipynb references {'automaton.eval.ipynb'} which does not exit
-# error: expression.add.ipynb references {'polynomial.add.ipynb'} which does not exit
-# error: automaton.proper.ipynb references {'automaton.is_proper.ipynb'} which does not exit
-# error: automaton.shuffle.ipynb references {'expression.shuffle.ipynb'} which does not exit
-# error: expansion.operators.ipynb references {'expansion.right_mult.ipynb', 'expansion.left_mult.ipynb', 'expansion.conjunction.ipynb', 'expansion.complement.ipynb', 'expansion.tuple.ipynb', 'expansion.add.ipynb'} which does not exit
-# error: automaton.determinize.ipynb references {'automaton.strip.ipynb'} which does not exit
-# error: automaton.operators.ipynb references {'automaton.left_mult.ipynb', 'automaton.right_mult.ipynb', 'automaton.eval.ipynb'} which does not exit
-# error: automaton.info.ipynb references {'automaton.format.ipynb'} which does not exit
-# error: automaton.compose.ipynb references {'automaton.strip.ipynb'} which does not exit
-# error: weight.operators.ipynb references {'weight.multiply.ipynb', 'weight.difference.ipynb', 'weight.conjunction.ipynb', 'weight.add.ipynb', 'weight.power.ipynb'} which does not exit
-# error: automaton.costandard.ipynb references {'automaton.is_costandard.ipynb'} which does not exit
-# error: polynomial.operators.ipynb references {'polynomial.difference.ipynb', 'polynomial.add.ipynb', 'polynomial.tuple.ipynb', 'polynomial.power.ipynb'} which does not exit
-# error: automaton.lift.ipynb references {'expression.lift.ipynb'} which does not exit
-# error: expression.is_valid.ipynb references {'expression.constant_term.ipynb'} which does not exit
+# error: label.operators.ipynb references {'label.power.ipynb', 'label.multiply.ipynb'} which does not exist
+# error: expression.derivation.ipynb references {'polynomial.split.ipynb'} which does not exist
+# error: expression.operators.ipynb references {'expression.right_mult.ipynb', 'expression.tuple.ipynb', 'expression.left_mult.ipynb'} which does not exist
+# error: expression.expansion.ipynb references {'expression.constant_term.ipynb'} which does not exist
+# error: expression.add.ipynb references {'polynomial.add.ipynb'} which does not exist
+# error: automaton.shuffle.ipynb references {'expression.shuffle.ipynb'} which does not exist
+# error: expansion.operators.ipynb references {'expansion.tuple.ipynb', 'expansion.conjunction.ipynb', 'expansion.complement.ipynb', 'expansion.right_mult.ipynb', 'expansion.add.ipynb', 'expansion.left_mult.ipynb'} which does not exist
+# error: automaton.info.ipynb references {'automaton.format.ipynb'} which does not exist
+# error: weight.operators.ipynb references {'weight.power.ipynb', 'weight.difference.ipynb', 'weight.add.ipynb', 'weight.conjunction.ipynb', 'weight.multiply.ipynb'} which does not exist
+# error: polynomial.operators.ipynb references {'polynomial.power.ipynb', 'polynomial.tuple.ipynb', 'polynomial.difference.ipynb', 'polynomial.add.ipynb'} which does not exist
+# error: automaton.lift.ipynb references {'expression.lift.ipynb'} which does not exist
+# error: expression.is_valid.ipynb references {'expression.constant_term.ipynb'} which does not exist
 
 print(existing)
 for nb in existing:
     diff = referenced(nb) - existing
     if diff:
-        print("error: {} references {} which does not exit"
+        print("error: {} references {} which does not exist"
               .format(nb, diff))
         status = 1

@@ -45,13 +45,14 @@ dist_notebooks_DATA =                           \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.difference.ipynb                \
   %D%/automaton.eliminate_state.ipynb           \
+  %D%/automaton.eval.ipynb                      \
   %D%/automaton.expression.ipynb                \
   %D%/automaton.factor.ipynb                    \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_lightening_cycle.ipynb      \
   %D%/automaton.has_twins_property.ipynb        \
-  %D%/automaton.infiltrate.ipynb              \
+  %D%/automaton.infiltrate.ipynb                \
   %D%/automaton.info.ipynb                      \
   %D%/automaton.insplit.ipynb                   \
   %D%/automaton.is_accessible.ipynb             \
@@ -59,6 +60,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_coaccessible.ipynb           \
   %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
+  %D%/automaton.is_costandard.ipynb             \
   %D%/automaton.is_cycle_ambiguous.ipynb        \
   %D%/automaton.is_deterministic.ipynb          \
   %D%/automaton.is_empty.ipynb                  \
@@ -67,6 +69,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_isomorphic.ipynb             \
   %D%/automaton.is_letterized.ipynb             \
   %D%/automaton.is_partial_identity.ipynb       \
+  %D%/automaton.is_proper.ipynb                 \
   %D%/automaton.is_realtime.ipynb               \
   %D%/automaton.is_standard.ipynb               \
   %D%/automaton.is_synchronized.ipynb           \
@@ -97,6 +100,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.shuffle.ipynb                   \
   %D%/automaton.standard.ipynb                  \
   %D%/automaton.star.ipynb                      \
+  %D%/automaton.strip.ipynb                     \
   %D%/automaton.subword.ipynb                   \
   %D%/automaton.suffix.ipynb                    \
   %D%/automaton.synchronize.ipynb               \
