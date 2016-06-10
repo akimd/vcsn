@@ -89,6 +89,25 @@ class Format:
     def test(self, test):
         '''The test's information.'''
         return test
+
+    def score(self, score, color):
+        '''Print a score, in color.'''
+        return score
+
+    def color(self, score, avg):
+        # Given a score and the average score, the color to use.
+        res = 'black'
+        if score <= avg - args.threshold / 100 * avg:
+            res = 'green'
+        elif args.threshold / 100 * avg + avg <= score:
+            res = 'red'
+        return res
+    def line(self, test, repetitions, avg, scores):
+        '''Print a whole benchmark line.'''
+        print('{}, {}, {}'.format(self.test(test),
+                                  repetitions,
+                                  ', '.join([self.score(s, avg) for s in scores])),
+              file=args.output)
     def footer(self, _):
         return ''
 
@@ -96,6 +115,14 @@ class Csv(Format):
     def header(self, files):
         return 'Command,Setup,Repetitions,'\
             + ','.join([os.path.basename(file) for file in files]) + '\n'
+
+    def score(self, score, color):
+        '''Print a score, in color.'''
+        if score in ['N/A', 'FAIL']:
+            return score
+        else:
+            return '{:.2f}'.format(score)
+
     def test(self, test):
         return "\"" + get_command(test).replace("\"", "\"\"")\
                + '\",\"' + get_setup(test).replace("\"", "\"\"") + "\""
@@ -125,6 +152,24 @@ class Latex(Format):
         setup = '$' + self.escape(get_setup(test)) + '$'
         return command + setup
 
+    def score(self, score, avg):
+        if score in ['N/A', 'FAIL']:
+            return '{:>5}'.format(score)
+        else:
+            c = self.color(score, avg)
+            if c is 'black':
+                return r'\num{{{:5.2f}}}'.format(score)
+            else:
+                return (r'\textcolor{{{}}}{{\num{{{:5.2f}}}}}'
+                        .format(c, score))
+
+    def line(self, test, repetitions, avg, scores):
+        '''Print a whole benchmark line.'''
+        print(r'{} & {} & {} \\'.format(self.test(test),
+                                        repetitions,
+                                        ' & '.join([self.score(s, avg) for s in scores])),
+              file=args.output)
+
     def footer(self, _):
         return '\\bottomrule\n\\end{tabular}\n'
 
@@ -132,6 +177,23 @@ class Latex(Format):
 class Text(Format):
     def header(self, files):
         return ' '.join(["{:^5}".format(i) for i in range(len(files))]).rstrip() + '\n'
+
+    def score(self, score, avg):
+        if score in ['N/A', 'FAIL']:
+            return '{:>5}'.format(score)
+        else:
+            return '{}{:5.2f}{}'.format(color[self.color(score, avg)],
+                                        score,
+                                        color['std'])
+
+    def line(self, test, repetitions, avg, scores):
+        '''Print a whole benchmark line.'''
+        r = ', {}x'.format(repetitions) if repetitions != 1 else ''
+        print('{} {}{}'.format(' '.join([self.score(s, avg) for s in scores]),
+                               self.test(test),
+                               r),
+              file=args.output)
+
     def footer(self, files):
         res = ''
         for i, file in enumerate(files):
@@ -139,6 +201,15 @@ class Text(Format):
             s = git_summary(f)
             res += "{:3}. {} {}".format(i, f, s).rstrip() + '\n'
         return res
+
+# A printer, from the output format.
+if args.output_format == 'csv':
+    printer = Csv()
+elif args.output_format == 'latex':
+    printer = Latex()
+else:
+    printer = Text()
+
 
 # Colors support.
 color = {'green' : '', 'red' : '', 'std' : '', 'black' : ''}
@@ -283,7 +354,7 @@ def normalize(k):
                k)
 
     # a.lightest_automaton("a-star") -> a.lightest_automaton(1, "a-star")
-    k = re.sub(r'(a.lightest_automaton)\("', '\1(1, ', k)
+    k = re.sub(r'(a.lightest_automaton)\("', r'\1(1, ', k)
     k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
 
     k = k.replace('infiltration', 'infiltrate')
@@ -338,27 +409,6 @@ def read_files(files):
 
 
 
-def err_score(val):
-    # N/A or FAIL.
-    return '{:>5} '.format(val)
-
-
-def score(avg, score):
-    # A single score to be displayed, handle the colors.
-    if args.output_format == 'csv':
-        return '{:5.2f}'.format(score)
-    else:
-        the_color = 'black'
-        if score <= avg - args.threshold / 100 * avg:
-            the_color = 'green'
-        elif args.threshold / 100 * avg + avg <= score:
-            the_color = 'red'
-        if args.output_format == 'latex':
-            return r'\textcolor{' + the_color + r'}{\num{' + '{:5.2f}'.format(score) + '}}'
-        else:
-            return color[the_color] + '{:5.2f}'.format(score) + color['std'] + ' '
-
-
 def repetitions(nb):
     # The number of times the test was executed in order to give these scores.
     if args.output_format == 'csv':
@@ -376,28 +426,7 @@ def get_setup(test):
     # The setup of the test, object initialization (ex: a = std([a-z]*)).
     return test.split('#')[1][1:].lstrip()
 
-def print_all(buf, fl):
-    # Print the test informations, repetitions and score.
-    # The order depending on the output format.
-    if args.output_format == 'csv' or args.output_format == 'latex':
-        delimiter = ',' if args.output_format == 'csv' else ' & '
-        fl.write(buf['test'] + delimiter)
-        fl.write(buf['repetitions'] + delimiter)
-        fl.write(delimiter.join(buf['scores']))
-        fl.write('\\\\\n' if args.output_format == 'latex' else '\n')
-    else:
-        fl.write(''.join(buf['scores']))
-        fl.write(buf['test'])
-        fl.write(buf['repetitions'] + '\n')
-
-
 def text(keys):
-    if args.output_format == 'csv':
-        printer = Csv()
-    elif args.output_format == 'latex':
-        printer = Latex()
-    else:
-        printer = Text()
     # For each bench-case, compare all the recorded scores.
     args.output.write(printer.header(args.file))
     for k in keys:
@@ -415,16 +444,10 @@ def text(keys):
 
         # Compute average of benchs.
         avg = sum(bfs) / len(bfs) if bfs else 0
-        buf = {}
-        buf['scores'] = []
+        scores = []
         for b in bs:
-            if b['value'] in ['FAIL', 'N/A']:
-                buf['scores'].append(err_score(b['value']))
-            else:
-                buf['scores'].append(score(avg, b['value']))
-        buf['repetitions'] = repetitions(number[k])
-        buf['test'] = printer.test(k)
-        print_all(buf, args.output)
+            scores.append(b['value'])
+        printer.line(k, number[k], avg, scores)
     args.output.write(printer.footer(args.file))
 
 # Main.

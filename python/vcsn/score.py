@@ -37,8 +37,10 @@ class Benchmarks(Magics):
             else:
                 plt.title(algo)
         args = parse_argstring(self.plot, line)
-        # Consider '  N/A ' as NaN
-        df = pd.read_csv(args.file, na_values=['  N/A '])
+        df = pd.read_csv(args.file,
+                         # Consider 'N/A' etc. as NaN
+                         na_values=['FAIL', 'N/A'],
+                         skipinitialspace=True)
         # Compound titles
         def format(x):
             if x > 1:

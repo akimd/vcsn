@@ -1,85 +1,85 @@
 \newcommand{\titlerot}[1]{\multicolumn{1}{c}{\rlap{\rotatebox{60}{#1}~}}}
 \begin{tabular}{llr *{4}{r}}
 Command & Setup & \titles{Repetitions} & \titlerot{v2.0-0001-g6bfe026} & \titlerot{v2.0-0423-g841c067} & \titlerot{v2.0-1255-gafaf339} & \titlerot{v2.1-0010-gd55ef26} \\ \midrule
-$a \& 12$ & $a = std([a-e]*b(<2>[a-e])*)$ & \num{1} & \textcolor{black}{\num{ 4.15}} & \textcolor{black}{\num{ 4.13}} & \textcolor{black}{\num{ 4.15}} & \textcolor{black}{\num{ 4.00}}\\
-$a.accessible()$ & $a = thm([a-m]\{20000\}).proper(False)$ & \num{1} &   N/A  & \textcolor{black}{\num{ 0.30}} & \textcolor{black}{\num{ 0.36}} & \textcolor{black}{\num{ 0.33}}\\
-$a.compose(a)$ & $a = std(['(a,a)'-'(i,z)']\{4\}), c = [a-z]x[a-z] \rightarrow B$ & \num{1} & \textcolor{black}{\num{ 1.22}} & \textcolor{black}{\num{ 1.22}} & \textcolor{black}{\num{ 1.16}} & \textcolor{black}{\num{ 1.18}}\\
-$a.compose(a)$ & $a = thm(['(a,a)'-'(i,z)']\{4\}), c = [a-z]?x[a-z]? \rightarrow B$ & \num{1} & \textcolor{black}{\num{ 0.48}} & \textcolor{black}{\num{ 0.47}} & \textcolor{black}{\num{ 0.41}} & \textcolor{black}{\num{ 0.41}}\\
-$a.conjunction(a)$ & $a = std([a-e]?\{50\})$ & \num{1} & \textcolor{black}{\num{ 3.92}} & \textcolor{black}{\num{ 3.75}} & \textcolor{black}{\num{ 3.89}} & \textcolor{black}{\num{ 3.80}}\\
-$a.conjunction(a)$ & $a = thm([a-e]?\{80\})$ & \num{1} &   N/A  & \textcolor{red}{\num{ 0.83}} & \textcolor{black}{\num{ 0.69}} & \textcolor{black}{\num{ 0.70}}\\
-$a.determinize("weighted")$ & $a = de\_bruijn(13)$ & \num{10} & \textcolor{red}{\num{ 1.80}} & \textcolor{black}{\num{ 1.40}} & \textcolor{black}{\num{ 1.46}} & \textcolor{black}{\num{ 1.44}}\\
-$a.determinize("weighted")$ & $a = de\_bruijn(13), c = [abc] \rightarrow F2$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 1.48}} & \textcolor{black}{\num{ 1.37}}\\
-$a.determinize("weighted")$ & $a = de\_bruijn(14)$ & \num{10} & \textcolor{red}{\num{ 4.30}} & \textcolor{green}{\num{ 3.00}} & \textcolor{black}{\num{ 3.25}} & \textcolor{black}{\num{ 3.15}}\\
-$a.determinize("weighted")$ & $a = de\_bruijn(14), c = [abc] \rightarrow F2$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 3.24}} & \textcolor{black}{\num{ 2.98}}\\
-$a.determinize("weighted")$ & $a = de\_bruijn(16)$ & \num{2} &   N/A  & \textcolor{black}{\num{ 2.72}} & \textcolor{black}{\num{ 3.00}} & \textcolor{black}{\num{ 2.88}}\\
-$a.determinize("weighted")$ & $a = de\_bruijn(16), c = [abc] \rightarrow F2$ & \num{2} &   N/A  &   N/A  & \textcolor{black}{\num{ 2.96}} & \textcolor{black}{\num{ 2.78}}\\
-$a.determinize("weighted")$ & $a = std(([\hat\{\}]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow B$ & \num{2} &   N/A  & \textcolor{black}{\num{ 0.26}} & \textcolor{black}{\num{ 0.29}} & \textcolor{black}{\num{ 0.27}}\\
-$a.determinize()$ & $a = de\_bruijn(13)$ & \num{10} & \textcolor{red}{\num{ 0.40}} & \textcolor{green}{\num{ 0.30}} & \textcolor{black}{\num{ 0.38}} & \textcolor{black}{\num{ 0.34}}\\
-$a.determinize()$ & $a = de\_bruijn(13), c = [abc] \rightarrow F2$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 1.38}} & \textcolor{black}{\num{ 1.38}}\\
-$a.determinize()$ & $a = de\_bruijn(14)$ & \num{10} & \textcolor{black}{\num{ 0.80}} & \textcolor{black}{\num{ 0.80}} & \textcolor{black}{\num{ 0.83}} & \textcolor{black}{\num{ 0.77}}\\
-$a.determinize()$ & $a = de\_bruijn(14), c = [abc] \rightarrow F2$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 3.22}} & \textcolor{black}{\num{ 3.01}}\\
-$a.determinize()$ & $a = de\_bruijn(16)$ & \num{2} &   N/A  & \textcolor{black}{\num{ 0.74}} & \textcolor{black}{\num{ 0.78}} & \textcolor{black}{\num{ 0.73}}\\
-$a.determinize()$ & $a = de\_bruijn(16), c = [abc] \rightarrow F2$ & \num{2} &   N/A  &   N/A  & \textcolor{black}{\num{ 2.96}} & \textcolor{black}{\num{ 2.75}}\\
-$a.determinize()$ & $a = ladybird(18)$ & \num{1} & \textcolor{black}{\num{ 0.84}} & \textcolor{black}{\num{ 0.80}} & \textcolor{black}{\num{ 0.85}} & \textcolor{black}{\num{ 0.80}}\\
-$a.determinize()$ & $a = ladybird(18), c = [a-zA-Z0-9] \rightarrow B$ & \num{1} & \textcolor{black}{\num{ 0.84}} & \textcolor{black}{\num{ 0.81}} & \textcolor{black}{\num{ 0.85}} & \textcolor{black}{\num{ 0.79}}\\
-$a.determinize()$ & $a = ladybird(21)$ & \num{1} & \textcolor{black}{\num{ 7.43}} & \textcolor{black}{\num{ 7.20}} & \textcolor{black}{\num{ 7.28}} & \textcolor{black}{\num{ 7.31}}\\
-$a.determinize()$ & $a = std(([\hat\{\}]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow B$ & \num{2} &   N/A  & \textcolor{black}{\num{ 1.38}} & \textcolor{black}{\num{ 1.39}} & \textcolor{black}{\num{ 1.33}}\\
-$a.eval("a"*151)$ & $a = de\_bruijn(150)$ & \num{1000} & \textcolor{red}{\num{ 0.54}} & \textcolor{green}{\num{ 0.16}} & \textcolor{green}{\num{ 0.16}} & \textcolor{green}{\num{ 0.15}}\\
-$a.eval("abcxyz"*25)$ & $a = std([a-z]*), c = [a-z] \rightarrow Z$ & \num{1000} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.07}} & \textcolor{black}{\num{ 0.06}}\\
-$a.expression("associative", "delgado")$ & $a = ladybird(2000)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.10}} & \textcolor{black}{\num{ 0.10}}\\
-$a.expression("associative", "naive")$ & $a = ladybird(8000)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.08}} & \textcolor{black}{\num{ 0.07}}\\
-$a.expression("associative", "naive")$ & $a = std([a-d]?\{100\})$ & \num{1} & \textcolor{red}{\num{ 0.75}} & \textcolor{red}{\num{ 0.73}} & \textcolor{green}{\num{ 0.56}} & \textcolor{green}{\num{ 0.51}}\\
-$a.expression("linear", "delgado")$ & $a = ladybird(2000)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.20}} & \textcolor{black}{\num{ 0.19}}\\
-$a.expression("linear", "delgado")$ & $a = std([a-d]?\{15\})$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.24}} & \textcolor{black}{\num{ 0.22}}\\
-$a.expression("linear", "naive")$ & $a = ladybird(4000)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.39}} & \textcolor{black}{\num{ 0.37}}\\
-$a.expression("linear", "naive")$ & $a = std([a-d]?\{9\})$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.15}} & \textcolor{black}{\num{ 0.14}}\\
-$a.format("dot")$ & $a = std(a?\{500\})$ & \num{5} & \textcolor{red}{\num{ 1.75}} & \textcolor{black}{\num{ 1.25}} & \textcolor{green}{\num{ 0.98}} & \textcolor{green}{\num{ 0.94}}\\
-$a.format("efsm")$ & $a = std(a?\{500\})$ & \num{5} & \textcolor{red}{\num{ 0.40}} & \textcolor{black}{\num{ 0.35}} & \textcolor{black}{\num{ 0.34}} & \textcolor{green}{\num{ 0.31}}\\
-$a.format("fado")$ & $a = std(a?\{500\})$ & \num{5} & \textcolor{red}{\num{ 0.45}} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.38}}\\
-$a.format("grail")$ & $a = std(a?\{500\})$ & \num{5} & \textcolor{red}{\num{ 0.45}} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.38}}\\
-$a.format("tikz")$ & $a = std(a?\{500\})$ & \num{5} & \textcolor{red}{\num{ 1.55}} & \textcolor{green}{\num{ 0.80}} & \textcolor{green}{\num{ 0.64}} & \textcolor{green}{\num{ 0.62}}\\
-$a.has\_bounded\_lag()$ & $a = std(['(a,x)'-'(b,y)']*\{600\})$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.03}} & \textcolor{black}{\num{ 0.03}}\\
-$a.has\_bounded\_lag()$ & $a = std(['(a,x)'-'(b,y)']\{1000\}*)$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.12}} & \textcolor{black}{\num{ 0.11}}\\
-$a.has\_twins\_property()$ & $a = std([a-c]\{200\}*+[a-c]\{200\}*, "associative"), c = [abc] \rightarrow Zmin$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.34}} & \textcolor{black}{\num{ 0.36}} & \textcolor{black}{\num{ 0.37}}\\
-$a.infiltrate(a)$ & $a = std([a-e]?\{30\})$ & \num{1} & \textcolor{green}{\num{ 3.24}} & \textcolor{green}{\num{ 3.28}} & \textcolor{red}{\num{ 7.92}} & \textcolor{red}{\num{ 7.92}}\\
-$a.is\_cycle\_ambiguous()$ & $a = std([a-c]\{2000\}(<2>ab+a<3>b)), c = [abc] \rightarrow Z$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.88}} & \textcolor{black}{\num{ 1.00}} & \textcolor{black}{\num{ 1.03}}\\
-$a.is\_functional()$ & $a = std((a|x)\{2000\}(b|y))$ & \num{100} &   N/A  & \textcolor{black}{\num{ 0.56}} & \textcolor{black}{\num{ 0.57}} & \textcolor{black}{\num{ 0.57}}\\
-$a.is\_proper()$ & $a = ""$ & \num{1000000} &   N/A  & \textcolor{red}{\num{ 0.60}} & \textcolor{green}{\num{ 0.34}} & \textcolor{green}{\num{ 0.35}}\\
-$a.minimize("moore")$ & $a = std([a-k]\{2000\}), c = [a-k] \rightarrow B$ & \num{1} & \textcolor{black}{\num{ 3.29}} & \textcolor{black}{\num{ 3.17}} & \textcolor{black}{\num{ 3.40}} & \textcolor{black}{\num{ 3.17}}\\
-$a.minimize("signature")$ & $a = std([a-g]\{800\}), c = [a-k] \rightarrow B$ & \num{1} & \textcolor{black}{\num{ 4.40}} & \textcolor{black}{\num{ 4.44}} & \textcolor{black}{\num{ 4.75}} & \textcolor{black}{\num{ 4.62}}\\
-$a.minimize("weighted")$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow B$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 1.12}} & \textcolor{black}{\num{ 1.24}}\\
-$a.minimize("weighted")$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow Z$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 1.27}} & \textcolor{black}{\num{ 1.11}}\\
-$a.proper()$ & $a = thm(a?\{1200\})$ & \num{1} & \textcolor{black}{\num{ 2.36}} & \textcolor{black}{\num{ 2.39}} & \textcolor{black}{\num{ 2.55}} & \textcolor{black}{\num{ 2.52}}\\
-$a.reduce()$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow Q$ & \num{1} & \textcolor{black}{\num{ 1.89}} & \textcolor{black}{\num{ 1.87}} & \textcolor{black}{\num{ 1.97}} & \textcolor{black}{\num{ 1.90}}\\
-$a.reduce()$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow Z$ & \num{1} & \textcolor{black}{\num{ 1.26}} & \textcolor{black}{\num{ 1.29}} & \textcolor{black}{\num{ 1.31}} & \textcolor{black}{\num{ 1.32}}\\
-$a.scc("dijkstra")$ & $a = std((abc)*\{1000\})$ & \num{20} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.59}} & \textcolor{black}{\num{ 0.58}}\\
-$a.scc("kosaraju")$ & $a = std((abc)*\{1000\})$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.65}} & \textcolor{black}{\num{ 0.72}} & \textcolor{black}{\num{ 0.67}}\\
-$a.scc("tarjan\_iterative")$ & $a = std((abc)*\{1000\})$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.71}} & \textcolor{black}{\num{ 0.81}} & \textcolor{black}{\num{ 0.76}}\\
-$a.scc("tarjan\_recursive")$ & $a = std((abc)*\{1000\})$ & \num{20} &   N/A  & \textcolor{black}{\num{ 0.56}} & \textcolor{black}{\num{ 0.65}} & \textcolor{black}{\num{ 0.61}}\\
-$a.shortest(5)$ & $a = de\_bruijn(9)$ & \num{10} & \textcolor{red}{\num{22.70}} & \textcolor{red}{\num{28.70}} & \textcolor{green}{\num{ 0.65}} & \textcolor{green}{\num{ 0.63}}\\
-$a.shortest(5)$ & $a = std([a-e]?\{600\}), c = [a-e] \rightarrow Z$ & \num{1} & \textcolor{red}{\num{ 1.26}} & \textcolor{red}{\num{ 0.93}} & \textcolor{green}{\num{ 0.20}} & \textcolor{green}{\num{ 0.19}}\\
-$a.shortest(5000)$ & $a = de\_bruijn(9)$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.71}} & \textcolor{black}{\num{ 0.67}}\\
-$a.shortest(5000)$ & $a = derived\_term((\backslash e|x + a|\backslash e)*), c = [a]?x[x]? \rightarrow Q$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.28}} & \textcolor{black}{\num{ 0.27}}\\
-$a.shuffle(a)$ & $a = std([a-e]?\{50\})$ & \num{1} & \textcolor{black}{\num{ 3.03}} & \textcolor{black}{\num{ 2.92}} & \textcolor{black}{\num{ 3.13}} & \textcolor{black}{\num{ 3.00}}\\
-$a.sort()$ & $a = std([a-e]?\{700\})$ & \num{1} &   N/A  & \textcolor{green}{\num{ 0.89}} & \textcolor{red}{\num{ 1.63}} & \textcolor{red}{\num{ 1.66}}\\
-$a.synchronizing\_word()$ & $a = de\_bruijn(6)$ & \num{1} & \textcolor{red}{\num{ 1.18}} & \textcolor{black}{\num{ 0.85}} & \textcolor{black}{\num{ 0.84}} & \textcolor{black}{\num{ 0.84}}\\
-$b.expression(e)$ & $e = "(\backslash e+a)" * 500$ & \num{100} & \textcolor{green}{\num{ 0.58}} & \textcolor{green}{\num{ 0.62}} & \textcolor{red}{\num{ 0.88}} & \textcolor{red}{\num{ 0.85}}\\
-$b.expression(e)$ & $e = [ab]\{20000\}$ & \num{1000} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.38}}\\
-$b.format("text")$ & $b = [abc] \rightarrow B$ & \num{100000} & \textcolor{green}{\num{ 0.16}} & \textcolor{red}{\num{ 0.27}} & \textcolor{black}{\num{ 0.21}} & \textcolor{black}{\num{ 0.20}}\\
-$p.trie()$ & $p = [a-j]\{6\}$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.91}} & \textcolor{black}{\num{ 0.91}}\\
-$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{150\}, c = [a-z] \rightarrow Z$ & \num{10} & \textcolor{red}{\num{33.80}} & \textcolor{red}{\num{32.70}} & \textcolor{green}{\num{ 0.21}} & \textcolor{green}{\num{ 0.20}}\\
-$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{150\}, c = [ab] \rightarrow Z$ & \num{10} & \textcolor{red}{\num{30.30}} & \textcolor{red}{\num{29.00}} & \textcolor{green}{\num{ 0.14}} & \textcolor{green}{\num{ 0.13}}\\
-$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{300\}, c = [a-z] \rightarrow Z$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.82}} & \textcolor{black}{\num{ 0.79}}\\
-$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{300\}, c = [ab] \rightarrow Z$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.58}} & \textcolor{black}{\num{ 0.54}}\\
-$r.derived\_term("derivation")$ & $r = a?\{150\}, c = [a] \rightarrow Z$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.33}} & \textcolor{black}{\num{ 0.36}}\\
-$r.derived\_term("expansion")$ & $r = (a+b)*b(<2>a+<2>b)\{150\}, c = [a-z] \rightarrow Z$ & \num{10} & \textcolor{red}{\num{ 2.20}} & \textcolor{red}{\num{ 2.20}} & \textcolor{green}{\num{ 0.09}} & \textcolor{green}{\num{ 0.08}}\\
-$r.derived\_term("expansion")$ & $r = (a+b)*b(<2>a+<2>b)\{300\}, c = [a-z] \rightarrow Z$ & \num{10} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.38}} & \textcolor{black}{\num{ 0.37}}\\
-$r.derived\_term("expansion")$ & $r = a?\{150\}, c = [a] \rightarrow Z$ & \num{1} &   N/A  &   N/A  & \textcolor{black}{\num{ 0.35}} & \textcolor{black}{\num{ 0.33}}\\
-$r.format("text")$ & $r = b.expression("(\backslash e+a)" * 500)$ & \num{1000} & \textcolor{red}{\num{ 0.22}} & \textcolor{green}{\num{ 0.13}} & \textcolor{black}{\num{ 0.16}} & \textcolor{black}{\num{ 0.16}}\\
-$r.standard()$ & $r = (a+b)*b(<2>a+<2>b)\{20000\}, c = [a-z] \rightarrow Z$ & \num{10} & \textcolor{black}{\num{ 0.30}} & \textcolor{black}{\num{ 0.30}} & \textcolor{red}{\num{ 0.37}} & \textcolor{black}{\num{ 0.36}}\\
-$r.thompson()$ & $r = (a+b)*b(<2>a+<2>b)\{20000\}, c = [a-z]? \rightarrow Z$ & \num{10} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.40}} & \textcolor{black}{\num{ 0.40}}\\
-$read(s)$ & $s = dot(std(a?\{500\}))$ & \num{1} & \textcolor{red}{\num{ 1.02}} & \textcolor{black}{\num{ 0.87}} & \textcolor{black}{\num{ 0.82}} & \textcolor{green}{\num{ 0.77}}\\
-$read(s)$ & $s = efsm(std(a?\{500\}))$ & \num{1} & \textcolor{red}{\num{ 0.27}} & \textcolor{black}{\num{ 0.21}} & \textcolor{black}{\num{ 0.22}} & \textcolor{green}{\num{ 0.20}}\\
-$read(s)$ & $s = fado(std(a?\{500\}))$ & \num{1} & \textcolor{red}{\num{ 0.16}} & \textcolor{black}{\num{ 0.13}} & \textcolor{black}{\num{ 0.13}} & \textcolor{green}{\num{ 0.12}}\\
+$a \& 12$ & $a = std([a-e]*b(<2>[a-e])*)$ & 1 & \num{ 4.15} & \num{ 4.13} & \num{ 4.15} & \num{ 4.00} \\
+$a.accessible()$ & $a = thm([a-m]\{20000\}).proper(False)$ & 1 &   N/A & \num{ 0.30} & \num{ 0.36} & \num{ 0.33} \\
+$a.compose(a)$ & $a = std(['(a,a)'-'(i,z)']\{4\}), c = [a-z]x[a-z] \rightarrow B$ & 1 & \num{ 1.22} & \num{ 1.22} & \num{ 1.16} & \num{ 1.18} \\
+$a.compose(a)$ & $a = thm(['(a,a)'-'(i,z)']\{4\}), c = [a-z]?x[a-z]? \rightarrow B$ & 1 & \num{ 0.48} & \num{ 0.47} & \num{ 0.41} & \num{ 0.41} \\
+$a.conjunction(a)$ & $a = std([a-e]?\{50\})$ & 1 & \num{ 3.92} & \num{ 3.75} & \num{ 3.89} & \num{ 3.80} \\
+$a.conjunction(a)$ & $a = thm([a-e]?\{80\})$ & 1 &   N/A & \textcolor{red}{\num{ 0.83}} & \num{ 0.69} & \num{ 0.70} \\
+$a.determinize("weighted")$ & $a = de\_bruijn(13)$ & 10 & \textcolor{red}{\num{ 1.80}} & \num{ 1.40} & \num{ 1.46} & \num{ 1.44} \\
+$a.determinize("weighted")$ & $a = de\_bruijn(13), c = [abc] \rightarrow F2$ & 10 &   N/A &   N/A & \num{ 1.48} & \num{ 1.37} \\
+$a.determinize("weighted")$ & $a = de\_bruijn(14)$ & 10 & \textcolor{red}{\num{ 4.30}} & \textcolor{green}{\num{ 3.00}} & \num{ 3.25} & \num{ 3.15} \\
+$a.determinize("weighted")$ & $a = de\_bruijn(14), c = [abc] \rightarrow F2$ & 10 &   N/A &   N/A & \num{ 3.24} & \num{ 2.98} \\
+$a.determinize("weighted")$ & $a = de\_bruijn(16)$ & 2 &   N/A & \num{ 2.72} & \num{ 3.00} & \num{ 2.88} \\
+$a.determinize("weighted")$ & $a = de\_bruijn(16), c = [abc] \rightarrow F2$ & 2 &   N/A &   N/A & \num{ 2.96} & \num{ 2.78} \\
+$a.determinize("weighted")$ & $a = std(([\hat\{\}]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow B$ & 2 &   N/A & \num{ 0.26} & \num{ 0.29} & \num{ 0.27} \\
+$a.determinize()$ & $a = de\_bruijn(13)$ & 10 & \textcolor{red}{\num{ 0.40}} & \textcolor{green}{\num{ 0.30}} & \num{ 0.38} & \num{ 0.34} \\
+$a.determinize()$ & $a = de\_bruijn(13), c = [abc] \rightarrow F2$ & 10 &   N/A &   N/A & \num{ 1.38} & \num{ 1.38} \\
+$a.determinize()$ & $a = de\_bruijn(14)$ & 10 & \num{ 0.80} & \num{ 0.80} & \num{ 0.83} & \num{ 0.77} \\
+$a.determinize()$ & $a = de\_bruijn(14), c = [abc] \rightarrow F2$ & 10 &   N/A &   N/A & \num{ 3.22} & \num{ 3.01} \\
+$a.determinize()$ & $a = de\_bruijn(16)$ & 2 &   N/A & \num{ 0.74} & \num{ 0.78} & \num{ 0.73} \\
+$a.determinize()$ & $a = de\_bruijn(16), c = [abc] \rightarrow F2$ & 2 &   N/A &   N/A & \num{ 2.96} & \num{ 2.75} \\
+$a.determinize()$ & $a = ladybird(18)$ & 1 & \num{ 0.84} & \num{ 0.80} & \num{ 0.85} & \num{ 0.80} \\
+$a.determinize()$ & $a = ladybird(18), c = [a-zA-Z0-9] \rightarrow B$ & 1 & \num{ 0.84} & \num{ 0.81} & \num{ 0.85} & \num{ 0.79} \\
+$a.determinize()$ & $a = ladybird(21)$ & 1 & \num{ 7.43} & \num{ 7.20} & \num{ 7.28} & \num{ 7.31} \\
+$a.determinize()$ & $a = std(([\hat\{\}]+a)\{100\}), c = [a-zA-Z0-9] \rightarrow B$ & 2 &   N/A & \num{ 1.38} & \num{ 1.39} & \num{ 1.33} \\
+$a.eval("a"*151)$ & $a = de\_bruijn(150)$ & 1000 & \textcolor{red}{\num{ 0.54}} & \textcolor{green}{\num{ 0.16}} & \textcolor{green}{\num{ 0.16}} & \textcolor{green}{\num{ 0.15}} \\
+$a.eval("abcxyz"*25)$ & $a = std([a-z]*), c = [a-z] \rightarrow Z$ & 1000 &   N/A &   N/A & \num{ 0.07} & \num{ 0.06} \\
+$a.expression("associative", "delgado")$ & $a = ladybird(2000)$ & 1 &   N/A &   N/A & \num{ 0.10} & \num{ 0.10} \\
+$a.expression("associative", "naive")$ & $a = ladybird(8000)$ & 1 &   N/A &   N/A & \num{ 0.08} & \num{ 0.07} \\
+$a.expression("associative", "naive")$ & $a = std([a-d]?\{100\})$ & 1 & \textcolor{red}{\num{ 0.75}} & \textcolor{red}{\num{ 0.73}} & \textcolor{green}{\num{ 0.56}} & \textcolor{green}{\num{ 0.51}} \\
+$a.expression("linear", "delgado")$ & $a = ladybird(2000)$ & 1 &   N/A &   N/A & \num{ 0.20} & \num{ 0.19} \\
+$a.expression("linear", "delgado")$ & $a = std([a-d]?\{15\})$ & 1 &   N/A &   N/A & \num{ 0.24} & \num{ 0.22} \\
+$a.expression("linear", "naive")$ & $a = ladybird(4000)$ & 1 &   N/A &   N/A & \num{ 0.39} & \num{ 0.37} \\
+$a.expression("linear", "naive")$ & $a = std([a-d]?\{9\})$ & 1 &   N/A &   N/A & \num{ 0.15} & \num{ 0.14} \\
+$a.format("dot")$ & $a = std(a?\{500\})$ & 5 & \textcolor{red}{\num{ 1.75}} & \num{ 1.25} & \textcolor{green}{\num{ 0.98}} & \textcolor{green}{\num{ 0.94}} \\
+$a.format("efsm")$ & $a = std(a?\{500\})$ & 5 & \textcolor{red}{\num{ 0.40}} & \num{ 0.35} & \num{ 0.34} & \textcolor{green}{\num{ 0.31}} \\
+$a.format("fado")$ & $a = std(a?\{500\})$ & 5 & \textcolor{red}{\num{ 0.45}} & \num{ 0.40} & \num{ 0.40} & \num{ 0.38} \\
+$a.format("grail")$ & $a = std(a?\{500\})$ & 5 & \textcolor{red}{\num{ 0.45}} & \num{ 0.40} & \num{ 0.40} & \num{ 0.38} \\
+$a.format("tikz")$ & $a = std(a?\{500\})$ & 5 & \textcolor{red}{\num{ 1.55}} & \textcolor{green}{\num{ 0.80}} & \textcolor{green}{\num{ 0.64}} & \textcolor{green}{\num{ 0.62}} \\
+$a.has\_bounded\_lag()$ & $a = std(['(a,x)'-'(b,y)']*\{600\})$ & 1 &   N/A &   N/A & \num{ 0.03} & \num{ 0.03} \\
+$a.has\_bounded\_lag()$ & $a = std(['(a,x)'-'(b,y)']\{1000\}*)$ & 1 &   N/A &   N/A & \num{ 0.12} & \num{ 0.11} \\
+$a.has\_twins\_property()$ & $a = std([a-c]\{200\}*+[a-c]\{200\}*, "associative"), c = [abc] \rightarrow Zmin$ & 20 &   N/A & \num{ 0.34} & \num{ 0.36} & \num{ 0.37} \\
+$a.infiltrate(a)$ & $a = std([a-e]?\{30\})$ & 1 & \textcolor{green}{\num{ 3.24}} & \textcolor{green}{\num{ 3.28}} & \textcolor{red}{\num{ 7.92}} & \textcolor{red}{\num{ 7.92}} \\
+$a.is\_cycle\_ambiguous()$ & $a = std([a-c]\{2000\}(<2>ab+a<3>b)), c = [abc] \rightarrow Z$ & 20 &   N/A & \num{ 0.88} & \num{ 1.00} & \num{ 1.03} \\
+$a.is\_functional()$ & $a = std((a|x)\{2000\}(b|y))$ & 100 &   N/A & \num{ 0.56} & \num{ 0.57} & \num{ 0.57} \\
+$a.is\_proper()$ & $a = ""$ & 1000000 &   N/A & \textcolor{red}{\num{ 0.60}} & \textcolor{green}{\num{ 0.34}} & \textcolor{green}{\num{ 0.35}} \\
+$a.minimize("moore")$ & $a = std([a-k]\{2000\}), c = [a-k] \rightarrow B$ & 1 & \num{ 3.29} & \num{ 3.17} & \num{ 3.40} & \num{ 3.17} \\
+$a.minimize("signature")$ & $a = std([a-g]\{800\}), c = [a-k] \rightarrow B$ & 1 & \num{ 4.40} & \num{ 4.44} & \num{ 4.75} & \num{ 4.62} \\
+$a.minimize("weighted")$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow B$ & 1 &   N/A &   N/A & \num{ 1.12} & \num{ 1.24} \\
+$a.minimize("weighted")$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow Z$ & 1 &   N/A &   N/A & \num{ 1.27} & \num{ 1.11} \\
+$a.proper()$ & $a = thm(a?\{1200\})$ & 1 & \num{ 2.36} & \num{ 2.39} & \num{ 2.55} & \num{ 2.52} \\
+$a.reduce()$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow Q$ & 1 & \num{ 1.89} & \num{ 1.87} & \num{ 1.97} & \num{ 1.90} \\
+$a.reduce()$ & $a = std([a-g]\{300\}), c = [a-k] \rightarrow Z$ & 1 & \num{ 1.26} & \num{ 1.29} & \num{ 1.31} & \num{ 1.32} \\
+$a.scc("dijkstra")$ & $a = std((abc)*\{1000\})$ & 20 &   N/A &   N/A & \num{ 0.59} & \num{ 0.58} \\
+$a.scc("kosaraju")$ & $a = std((abc)*\{1000\})$ & 20 &   N/A & \num{ 0.65} & \num{ 0.72} & \num{ 0.67} \\
+$a.scc("tarjan\_iterative")$ & $a = std((abc)*\{1000\})$ & 20 &   N/A & \num{ 0.71} & \num{ 0.81} & \num{ 0.76} \\
+$a.scc("tarjan\_recursive")$ & $a = std((abc)*\{1000\})$ & 20 &   N/A & \num{ 0.56} & \num{ 0.65} & \num{ 0.61} \\
+$a.shortest(5)$ & $a = de\_bruijn(9)$ & 10 & \textcolor{red}{\num{22.70}} & \textcolor{red}{\num{28.70}} & \textcolor{green}{\num{ 0.65}} & \textcolor{green}{\num{ 0.63}} \\
+$a.shortest(5)$ & $a = std([a-e]?\{600\}), c = [a-e] \rightarrow Z$ & 1 & \textcolor{red}{\num{ 1.26}} & \textcolor{red}{\num{ 0.93}} & \textcolor{green}{\num{ 0.20}} & \textcolor{green}{\num{ 0.19}} \\
+$a.shortest(5000)$ & $a = de\_bruijn(9)$ & 10 &   N/A &   N/A & \num{ 0.71} & \num{ 0.67} \\
+$a.shortest(5000)$ & $a = derived\_term((\backslash e|x + a|\backslash e)*), c = [a]?x[x]? \rightarrow Q$ & 10 &   N/A &   N/A & \num{ 0.28} & \num{ 0.27} \\
+$a.shuffle(a)$ & $a = std([a-e]?\{50\})$ & 1 & \num{ 3.03} & \num{ 2.92} & \num{ 3.13} & \num{ 3.00} \\
+$a.sort()$ & $a = std([a-e]?\{700\})$ & 1 &   N/A & \textcolor{green}{\num{ 0.89}} & \textcolor{red}{\num{ 1.63}} & \textcolor{red}{\num{ 1.66}} \\
+$a.synchronizing\_word()$ & $a = de\_bruijn(6)$ & 1 & \textcolor{red}{\num{ 1.18}} & \num{ 0.85} & \num{ 0.84} & \num{ 0.84} \\
+$b.expression(e)$ & $e = "(\backslash e+a)" * 500$ & 100 & \textcolor{green}{\num{ 0.58}} & \textcolor{green}{\num{ 0.62}} & \textcolor{red}{\num{ 0.88}} & \textcolor{red}{\num{ 0.85}} \\
+$b.expression(e)$ & $e = [ab]\{20000\}$ & 1000 &   N/A &   N/A & \num{ 0.40} & \num{ 0.38} \\
+$b.format("text")$ & $b = [abc] \rightarrow B$ & 100000 & \textcolor{green}{\num{ 0.16}} & \textcolor{red}{\num{ 0.27}} & \num{ 0.21} & \num{ 0.20} \\
+$p.trie()$ & $p = [a-j]\{6\}$ & 1 &   N/A &   N/A & \num{ 0.91} & \num{ 0.91} \\
+$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{150\}, c = [a-z] \rightarrow Z$ & 10 & \textcolor{red}{\num{33.80}} & \textcolor{red}{\num{32.70}} & \textcolor{green}{\num{ 0.21}} & \textcolor{green}{\num{ 0.20}} \\
+$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{150\}, c = [ab] \rightarrow Z$ & 10 & \textcolor{red}{\num{30.30}} & \textcolor{red}{\num{29.00}} & \textcolor{green}{\num{ 0.14}} & \textcolor{green}{\num{ 0.13}} \\
+$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{300\}, c = [a-z] \rightarrow Z$ & 10 &   N/A &   N/A & \num{ 0.82} & \num{ 0.79} \\
+$r.derived\_term("derivation")$ & $r = (a+b)*b(<2>a+<2>b)\{300\}, c = [ab] \rightarrow Z$ & 10 &   N/A &   N/A & \num{ 0.58} & \num{ 0.54} \\
+$r.derived\_term("derivation")$ & $r = a?\{150\}, c = [a] \rightarrow Z$ & 1 &   N/A &   N/A & \num{ 0.33} & \num{ 0.36} \\
+$r.derived\_term("expansion")$ & $r = (a+b)*b(<2>a+<2>b)\{150\}, c = [a-z] \rightarrow Z$ & 10 & \textcolor{red}{\num{ 2.20}} & \textcolor{red}{\num{ 2.20}} & \textcolor{green}{\num{ 0.09}} & \textcolor{green}{\num{ 0.08}} \\
+$r.derived\_term("expansion")$ & $r = (a+b)*b(<2>a+<2>b)\{300\}, c = [a-z] \rightarrow Z$ & 10 &   N/A &   N/A & \num{ 0.38} & \num{ 0.37} \\
+$r.derived\_term("expansion")$ & $r = a?\{150\}, c = [a] \rightarrow Z$ & 1 &   N/A &   N/A & \num{ 0.35} & \num{ 0.33} \\
+$r.format("text")$ & $r = b.expression("(\backslash e+a)" * 500)$ & 1000 & \textcolor{red}{\num{ 0.22}} & \textcolor{green}{\num{ 0.13}} & \num{ 0.16} & \num{ 0.16} \\
+$r.standard()$ & $r = (a+b)*b(<2>a+<2>b)\{20000\}, c = [a-z] \rightarrow Z$ & 10 & \num{ 0.30} & \num{ 0.30} & \textcolor{red}{\num{ 0.37}} & \num{ 0.36} \\
+$r.thompson()$ & $r = (a+b)*b(<2>a+<2>b)\{20000\}, c = [a-z]? \rightarrow Z$ & 10 & \num{ 0.40} & \num{ 0.40} & \num{ 0.40} & \num{ 0.40} \\
+$read(s)$ & $s = dot(std(a?\{500\}))$ & 1 & \textcolor{red}{\num{ 1.02}} & \num{ 0.87} & \num{ 0.82} & \textcolor{green}{\num{ 0.77}} \\
+$read(s)$ & $s = efsm(std(a?\{500\}))$ & 1 & \textcolor{red}{\num{ 0.27}} & \num{ 0.21} & \num{ 0.22} & \textcolor{green}{\num{ 0.20}} \\
+$read(s)$ & $s = fado(std(a?\{500\}))$ & 1 & \textcolor{red}{\num{ 0.16}} & \num{ 0.13} & \num{ 0.13} & \textcolor{green}{\num{ 0.12}} \\
 \bottomrule
 \end{tabular}
