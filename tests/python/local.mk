@@ -274,6 +274,7 @@ EXTRA_DIST +=                                           \
   %D%/standard.dir/infiltrate-1.gv                      \
   %D%/standard.dir/ldiv-1.gv                            \
   %D%/standard.dir/ldiv-2.gv                            \
+  %D%/standard.dir/ldiv-3.gv                            \
   %D%/standard.dir/rdiv-1.gv                            \
   %D%/standard.dir/shuffle-1.gv                         \
   %D%/standard.dir/transposition-1.gv                   \

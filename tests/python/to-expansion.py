@@ -123,11 +123,11 @@ check('!a', r'<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}] + d.[\z{c}]')
 check(r'a{\}<x>a', '<x>')
 check(r'<x>a{\}<y>a', r'<x{\}y>')
 check(r'<x>a{\}<x>a', r'<x{\}x>')
-check(r'a{\}(<x>a)*', r'\e.[<x>(<x>a)*]')
-check(r'a*{\}a', r'\e.[a*{\}\e] + a.[\e]')
-check(r'a*{\}a*', r'<\e> + \e.[a*{\}a*] + a.[a*]')
-check(r'(<x>a)*{\}(<y>a)*', r'<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]')
-check(r'<x>(<y>a)* {\} <z>a*', r'<x{\}z> + \e.[<xy{\}z>(<y>a)*{\}a*] + a.[<x{\}z>a*]')
+check(r'a{\}(<x>a)*', r'\e.[a{\}\e + <x>(<x>a)*]')
+check(r'a*{\}a', r'\e.[a + a*{\}\e]')
+check(r'a*{\}a*', r'<\e> + \e.[aa* + a*{\}a* + aa*{\}\e]')
+check(r'(<x>a)*{\}(<y>a)*', r'<\e> + \e.[<y>a(<y>a)* + <x{\}y>(<x>a)*{\}(<y>a)* + <x{\}\e>a(<x>a)*{\}\e]')
+check(r'<x>(<y>a)* {\} <z>a*', r'<x{\}z> + \e.[<x{\}z>aa* + <xy{\}z>(<y>a)*{\}a* + <xy{\}z>a(<y>a)*{\}\e]')
 
 # Left quotient vs. conjunction.
 check(r'(ab{\}ab)c&c', r'\e.[(b{\}b)c&c]')
@@ -145,15 +145,15 @@ check('abcd{/}abcd', r'\e.[((abc){T}{\}(abc){T}){T}]')
 
 check('(<x>a){/}a', r'\e.[(<x>\e){T}]')
 check('<x>a{/}<y>a', r'\e.[(<y>\e{\}<x>\e){T}]')
-check('a{/}(<x>a)*', r'\e.[(<x>(<x>a)*{T}{\}\e){T}] + a.[\e]')
+check('a{/}(<x>a)*', r'\e.[a + (<x>(<x>a)*{T}{\}\e){T}]')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(a)*',
-r'<\e> + \e.[(a*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
-check('a*{/}a', r'\e.[a*{T}{T}]')
-check('a*{/}a*', r'<\e> + \e.[(a*{T}{\}a*{T}){T}] + a.[a*]')
+r'<\e> + \e.[(a<x>(<x>a)*{T}){T} + (aa*{T}{\}\e){T} + (a*{T}{\}<x>(<x>a)*{T}){T}]')
+check('a*{/}a', r'\e.[(a{\}\e){T} + a*{T}{T}]')
+check('a*{/}a*', r'<\e> + \e.[(aa*{T}){T} + (a*{T}{\}a*{T}){T} + (aa*{T}{\}\e){T}]')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
-r'<\e> + \e.[(<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
+r'<\e> + \e.[(a<x>(<x>a)*{T}){T} + (a<y>(<y>a)*{T}{\}\e){T} + (<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}]')
 
 # Right quotient vs. conjunction.
 check('(ab{/}ab)c&c', r'\e.[(a{\}a){T}c&c]')

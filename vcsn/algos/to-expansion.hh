@@ -232,6 +232,8 @@ namespace vcsn
         transposed_ = false;
         expansion_t lhs = to_expansion(e[0]);
         expansion_t rhs = to_expansion(e[1]);
+        es_.denormalize(lhs);
+        es_.denormalize(rhs);
         transposed_ = transposed;
         DEBUG_IF(
                  std::cerr << "Lhs: "; print_(lhs, std::cerr) << '\n';
@@ -291,17 +293,6 @@ namespace vcsn
                                  label_of(rm)),
                         ws_.ldiv(weight_of(lm), weight_of(rm)));
                   }
-        if (!ws_.is_zero(lhs.constant))
-          {
-            if (transposed_)
-              {
-                auto rhs_transposed = to_expansion(e[1]);
-                es_.add_here(res_,
-                             es_.ldiv_here(lhs.constant, rhs_transposed));
-              }
-            else
-              es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
-          }
         es_.normalize(res_);
       }
 

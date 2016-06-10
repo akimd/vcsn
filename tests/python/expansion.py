@@ -108,6 +108,7 @@ def check(r1, r2):
     CHECK_EQ(r2, str(exp1.expansion()))
 
 check(r'a{\}ab', r'\e.[b]')
+check(r'(a*{\}a){\}\e', r'\e.[a{\}\e + (a*{\}\e){\}\e]')
 check(r'(a{\}ab){\}bc', r'\e.[b{\}bc]')
 
 
