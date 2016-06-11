@@ -96,7 +96,8 @@ class AutomatonText:
             aut = self.ipython.shell.user_ns[self.name].strip()
             text = aut.format(self.format)
         else:
-            c = 'lan, b'
+            # Use a prebuilt context.
+            c = 'lal, b'
             ctx = vcsn.context(c)
             aut = ctx.expression(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
