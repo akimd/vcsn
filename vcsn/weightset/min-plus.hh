@@ -14,11 +14,17 @@ namespace vcsn
 {
   namespace detail
   {
-    template <typename Value>
+    template <typename Derived, typename Value>
     class min_plus_impl
     {
     public:
+      using self_t = Derived;
       using value_t = Value;
+
+      const self_t& self() const
+      {
+        return static_cast<const self_t&>(*this);
+      }
 
       static value_t
       add(const value_t l, const value_t r)
@@ -53,8 +59,7 @@ namespace vcsn
         if (0 <= v)
           return one();
         else
-          // FIXME: sname.
-          raise("star: invalid value: ", to_string(*this, v));
+          raise_not_starrable(self(), v);
       }
 
       static value_t

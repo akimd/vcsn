@@ -17,7 +17,7 @@ def expr(e, *args):
 ## ------ ##
 
 XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
-      r'''q: star: invalid value: 1
+      r'''Q: value is not starrable: 1
   while computing expansion of: a**''')
 
 

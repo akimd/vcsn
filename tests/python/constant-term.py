@@ -52,7 +52,7 @@ check('xy', '<x>a*&:<y>b*')
 check(r'\e', '(<x>a)*')
 check('x*', r'(<x>\e)*')
 XFAIL(lambda: vcsn.Q.expression('a**').constant_term(),
-      r'''q: star: invalid value: 1
+      r'''Q: value is not starrable: 1
   while computing constant-term of: a**''')
 
 # complement.

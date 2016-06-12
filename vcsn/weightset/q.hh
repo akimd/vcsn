@@ -129,7 +129,7 @@ namespace vcsn
         // No need to reduce: numerator and denominator are coprime.
         return {int(v.den), v.den - v.num};
       else
-        raise(sname(), ": star: invalid value: ", to_string(*this, v));
+        raise_not_starrable(*this, v);
     }
 
     static bool is_special(const value_t) // C++11: cannot be constexpr.

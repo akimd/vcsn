@@ -12,10 +12,10 @@ namespace vcsn
   namespace detail
   {
     class nmin_impl
-      : public min_plus_impl<unsigned int>
+      : public min_plus_impl<nmin_impl, unsigned int>
     {
     public:
-      using super_t = min_plus_impl<unsigned int>;
+      using super_t = min_plus_impl<nmin_impl, unsigned int>;
       using self_t = nmin;
       using value_t = typename super_t::value_t;
 

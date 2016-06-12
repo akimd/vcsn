@@ -103,7 +103,7 @@ namespace vcsn
       if (-1 < v && v < 1)
         return 1/(1-v);
       else
-        raise(sname(), ": star: invalid value: ", v);
+        raise_not_starrable(*this, v);
     }
 
     constexpr static bool is_special(const value_t)

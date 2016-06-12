@@ -13,10 +13,10 @@ namespace vcsn
   namespace detail
   {
     class zmin_impl
-      : public min_plus_impl<int>
+      : public min_plus_impl<zmin_impl, int>
     {
     public:
-      using super_t = min_plus_impl<int>;
+      using super_t = min_plus_impl<zmin_impl, int>;
       using self_t = zmin;
       using value_t = typename super_t::value_t;
 

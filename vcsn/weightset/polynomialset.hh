@@ -479,7 +479,7 @@ namespace vcsn
           if (i != v.end())
             return {{i->first, weightset()->star(i->second)}};
         }
-      raise(sname(), ": star: invalid value: ", to_string(*this, v));
+      raise_not_starrable(*this, v);
     }
 
     /// Left exterior product.

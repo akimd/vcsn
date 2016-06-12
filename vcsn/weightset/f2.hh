@@ -80,11 +80,13 @@ namespace vcsn
       return rdiv(r, l);
     }
 
-    static value_t
-    star(const value_t v)
+    value_t
+    star(const value_t v) const
     {
-      require(v != 1, "f2: star: invalid value: 1");
-      return true;
+      if (v == 0)
+        return one();
+      else
+        raise_not_starrable(*this, v);
     }
 
     static bool
