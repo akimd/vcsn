@@ -8,6 +8,7 @@
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/export.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/to-string.hh>
 
 namespace vcsn LIBVCSN_API
 {
@@ -24,7 +25,7 @@ namespace vcsn LIBVCSN_API
 
   /// Parse str via vs.conv.
   template <typename ValueSet, typename... Args>
-  inline auto
+  auto
   conv(const ValueSet& vs, const std::string& str, Args&&... args)
     -> decltype(vs.conv(std::declval<std::istream&>(),
                         std::forward<Args>(args)...))
@@ -58,7 +59,6 @@ namespace vcsn LIBVCSN_API
   /// should not contain trailing punctuation or spaces.
   template <typename... Args>
   ATTRIBUTE_NORETURN
-  inline
   void fail_reading(std::istream& is, Args&&... args)
   {
     is.clear();
@@ -76,18 +76,6 @@ namespace vcsn LIBVCSN_API
   /// Read a single char, with possible \-escape support.
   /// EOF is an error.
   char get_char(std::istream& i);
-
-  /// Format v via vs.print.
-  template <typename ValueSet, typename Value = typename ValueSet::value_t,
-            typename... Args>
-  inline auto
-  to_string(const ValueSet& vs, const Value& v, Args&&... args)
-    -> std::string
-  {
-    std::ostringstream o;
-    vs.print(v, o, std::forward<Args>(args)...);
-    return o.str();
-  }
 
   /// Return the contents of \a file.
   std::string get_file_contents(const std::string& file);

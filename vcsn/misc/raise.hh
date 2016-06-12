@@ -6,6 +6,7 @@
 
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/to-string.hh> // to_string
 
 namespace vcsn
 {
@@ -59,7 +60,7 @@ namespace vcsn
   /// Raise a runtime_error with the concatenation of \a args as message.
   template <typename... Args>
   ATTRIBUTE_NORETURN
-  inline void raise(Args&&... args)
+  void raise(Args&&... args)
   {
     std::ostringstream o;
     using swallow = int[];
@@ -75,7 +76,7 @@ namespace vcsn
   /// Beware that the arguments are, of course, always evaluated.  So
   /// avoid passing costly function calls.  See VCSN_REQUIRE.
   template <typename Bool, typename... Args>
-  inline void require(Bool b, Args&&... args)
+  void require(Bool b, Args&&... args)
   {
     if (!b)
       raise(std::forward<Args>(args)...);
