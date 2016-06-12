@@ -131,7 +131,9 @@ def XFAIL(fun, exp=None):
     try:
         fun()
     except RuntimeError as e:
-        if exp is None or exp in str(e):
+        if (exp is None
+            or isinstance(exp, re._pattern_type) and re.match(exp, str(e))
+            or isinstance(exp, str) and exp in str(e)):
             PASS()
         else:
             FAIL('Unexpected error message')

@@ -169,18 +169,26 @@ namespace vcsn
       {}
 
       /// Compute the derived-term automaton.
-      automaton_t operator()(const expression_t& expression)
+      automaton_t operator()(const expression_t& exp)
       {
-        if (algo_.algo == derived_term_algo::derivation)
-          return via_derivation(expression);
-        else
-          return via_expansion(expression);
+        try
+          {
+            if (algo_.algo == derived_term_algo::derivation)
+              return via_derivation(exp);
+            else
+              return via_expansion(exp);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e.what(), "\n",
+                  "  while computing derived-term of: ", to_string(rs_, exp));
+          }
       }
 
       /// Compute the derived-term automaton via derivation.
-      automaton_t via_derivation(const expression_t& expression)
+      automaton_t via_derivation(const expression_t& exp)
       {
-        init_(expression);
+        init_(exp);
         while (!aut_->todo_.empty())
           {
             auto p = std::move(aut_->todo_.top());
@@ -191,9 +199,9 @@ namespace vcsn
       }
 
       /// Compute the derived-term automaton via expansion.
-      automaton_t via_expansion(const expression_t& expression)
+      automaton_t via_expansion(const expression_t& exp)
       {
-        init_(expression);
+        init_(exp);
         while (!aut_->todo_.empty())
           {
             auto p = std::move(aut_->todo_.top());
@@ -208,13 +216,13 @@ namespace vcsn
       using super_t::aut_;
 
       /// Initialize the computation: build the initial states.
-      void init_(const expression_t& expression)
+      void init_(const expression_t& exp)
       {
         if (algo_.breaking)
-          for (const auto& p: split(rs_, expression))
+          for (const auto& p: split(rs_, exp))
             aut_->set_initial(label_of(p), weight_of(p));
         else
-          aut_->set_initial(expression, ws_.one());
+          aut_->set_initial(exp, ws_.one());
       }
 
       /// Complete a state: find its outgoing transitions.
@@ -366,7 +374,7 @@ namespace vcsn
         const auto& e = exp->as<ExpSet>();
         const auto& rs = e.valueset();
         const auto& r = e.value();
-        if (boost::starts_with(algo, "lazy"))
+        if (boost::starts_with(algo, "lazy,"))
           {
             auto a = vcsn::detail::derived_term_algo(algo);
             require(a.algo == vcsn::detail::derived_term_algo::expansion,

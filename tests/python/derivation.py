@@ -126,6 +126,21 @@ check('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 check('(<x>a)*<y>', 'a', '<x>(<x>a)*<y>')
 check('(<x>a)*<y>', 'aa', '<xx>(<x>a)*<y>')
 
+XFAIL(lambda: vcsn.Q.expression('a**').derivation('a'),
+      r'''q: star: invalid value: 1
+  while computing derivative of: a**
+                with respect to: a''')
+
+XFAIL(lambda: vcsn.Q.expression('a**').derived_term(),
+      r'''q: star: invalid value: 1
+  while computing expansion of: a**
+  while computing derived-term of: a**''')
+
+XFAIL(lambda: vcsn.Q.expression('a**').derived_term('derivation'),
+      r'''q: star: invalid value: 1
+  while computing constant-term of: a**
+  while computing derived-term of: a**''')
+
 
 # Complement.
 check(r'\z{c}', 'a', r'\z{c}')

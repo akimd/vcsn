@@ -66,9 +66,17 @@ namespace vcsn
       /// From an expression, build its expansion.
       expansion_t operator()(const expression_t& v)
       {
-        res_ = es_.zero();
-        v->accept(*this);
-        return res_;
+        try
+          {
+            res_ = es_.zero();
+            v->accept(*this);
+            return res_;
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e.what(), "\n",
+                  "  while computing expansion of: ", to_string(rs_, v));
+          }
       }
 
     private:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/project.hh>
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/core/rat/visitor.hh>
@@ -7,6 +8,11 @@
 
 namespace vcsn
 {
+
+  /// The constant term of \a e.
+  template <typename ExpSet>
+  weight_t_of<ExpSet>
+  constant_term(const ExpSet& rs, const typename ExpSet::value_t& e);
 
   namespace rat
   {
@@ -35,17 +41,23 @@ namespace vcsn
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "constant_term"; }
 
-      constant_term_visitor(const weightset_t& ws)
-        : ws_(ws)
-      {}
-
       constant_term_visitor(const expressionset_t& rs)
-        : constant_term_visitor(*rs.weightset())
+        : rs_{rs}
+        , ws_{*rs_.weightset()}
       {}
 
       weight_t operator()(const expression_t& v)
       {
-        return constant_term(v);
+        try
+          {
+            return constant_term(v);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e.what(), "\n",
+                  "  while computing constant-term of: ", to_string(rs_, v));
+          }
+
       }
 
     private:
@@ -146,9 +158,8 @@ namespace vcsn
         template <size_t I>
         weight_t work_(const tuple_t& v)
         {
-          using rs_t = typename expressionset_t::template project_t<I>;
-          auto constant_term = constant_term_visitor<rs_t>{visitor_.ws_};
-          return constant_term(std::get<I>(v.sub()));
+          return ::vcsn::constant_term(visitor_.rs_.template project<I>(),
+                                       std::get<I>(v.sub()));
         }
 
         /// Product of the constant-terms of all tapes.
@@ -182,12 +193,12 @@ namespace vcsn
       }
 
     private:
+      expressionset_t rs_;
       weightset_t ws_;
       weight_t res_;
     };
   } // rat::
 
-  /// The constant term of \a e.
   template <typename ExpSet>
   weight_t_of<ExpSet>
   constant_term(const ExpSet& rs, const typename ExpSet::value_t& e)

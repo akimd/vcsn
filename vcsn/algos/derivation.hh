@@ -58,9 +58,19 @@ namespace vcsn
       polynomial_t
       operator()(const expression_t& v, label_t var)
       {
-        variable_ = var;
-        v->accept(*this);
-        return std::move(res_);
+        try
+          {
+            variable_ = var;
+            v->accept(*this);
+            return std::move(res_);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e.what(), "\n",
+                  "  while computing derivative of: ", to_string(rs_, v), "\n"
+                  "                with respect to: ",
+                  to_string(*rs_.labelset(), var));
+          }
       }
 
     private:

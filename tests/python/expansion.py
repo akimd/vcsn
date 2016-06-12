@@ -11,6 +11,16 @@ def expr(e, *args):
         e = ctx.expression(e, *args)
     return e
 
+
+## ------ ##
+## Star.  ##
+## ------ ##
+
+XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
+      r'''q: star: invalid value: 1
+  while computing expansion of: a**''')
+
+
 ## ------------ ##
 ## Complement.  ##
 ## ------------ ##
