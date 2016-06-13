@@ -1,4 +1,5 @@
 import re
+import sys
 
 try:
     import ipywidgets as widgets
@@ -31,6 +32,10 @@ class Benchmarks(Magics):
               graph. Default: line''')
     @line_magic
     def plot(self, line):
+        # if we are not running in a notebook
+        if 'connection_file' not in ip.config['IPKernelApp']:
+            print('This functionnality is only available in notebooks.', file=sys.stderr)
+            return
         def _display(algo, several):
             group = df[algo]
             ax = group.plot(kind=args.mode)
@@ -65,3 +70,7 @@ class Benchmarks(Magics):
 
 ip = get_ipython()
 ip.register_magics(Benchmarks)
+
+# if we are running in a notebook
+if 'connection_file' in ip.config['IPKernelApp']:
+    ip.magic("matplotlib inline")
