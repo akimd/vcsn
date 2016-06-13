@@ -138,8 +138,8 @@ namespace vcsn
       ///
       /// \param in     input automaton, to copy
       /// \param out    output automaton, the destination
-      /// \param safe   whether the input automaton is in normal form
-      ///               and never has two transitions with same
+      /// \param safe   whether the input automaton is in normal form,
+      ///               i.e., never has two transitions with same
       ///               (src, label, dst).
       copier(const in_automaton_t& in, out_automaton_t& out,
              bool safe = true)
@@ -245,6 +245,12 @@ namespace vcsn
 
 
   /// Build an automaton copier.
+  ///
+  /// \param in     input automaton, to copy
+  /// \param out    output automaton, the destination
+  /// \param safe   whether the input automaton is in normal form,
+  ///               i.e., never has two transitions with same
+  ///               (src, label, dst).
   template <Automaton AutIn, Automaton AutOut>
   detail::copier<AutIn, AutOut>
   make_copier(const AutIn& in, AutOut& out, bool safe = true)
@@ -289,6 +295,13 @@ namespace vcsn
 
 
   /// Copy an automaton.
+  ///
+  /// \param in     input automaton, to copy
+  /// \param out    output automaton, the destination
+  /// \param safe   whether the input automaton is in normal form,
+  ///               i.e., never has two transitions with same
+  ///               (src, label, dst).
+  ///
   /// \pre AutIn <: AutOut.
   template <Automaton AutIn, Automaton AutOut>
   void

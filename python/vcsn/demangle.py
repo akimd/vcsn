@@ -200,6 +200,9 @@ def demangle(s, color="auto"):
     s = sub(r'std::basic_string<char(?:, (?:std::)?char_traits<char>, (?:std::)?allocator<char> )?>',
             r'std::string',
             s)
+    s = sub(r'std::basic_([io]stream)<char(?:, (?:std::)?char_traits<char> )?>',
+            r'std::\1',
+            s)
     s = sub(r'std::vector<{param}, std::allocator<\1 > >',
             r'std::vector<\1>',
             s)
