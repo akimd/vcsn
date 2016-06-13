@@ -54,6 +54,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/label.chk                                 \
   %D%/polynomialset.chk                         \
   %D%/proper.chk                                \
+  %D%/pylint.chk                                \
   %D%/score.chk                                 \
   %D%/score-compare.chk                         \
   %D%/transpose.chk                             \
@@ -87,6 +88,7 @@ EXTRA_DIST +=                                   \
 %D%/label.log:          %D%/label
 %D%/polynomialset.log:  %D%/polynomialset
 %D%/proper.log:         %D%/proper
+%D%/pylint.log:         $(vcsn_python_PYTHON) $(dist_pkglibexec_SCRIPTS)
 %D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
 %D%/transpose.log:      %D%/transpose
 %D%/weight.log:         %D%/weight

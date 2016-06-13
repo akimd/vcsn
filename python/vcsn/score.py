@@ -7,6 +7,8 @@ except ImportError:
 from IPython.core.magic import (Magics, magics_class, line_magic)
 from IPython.core.magic_arguments import (
     argument, magic_arguments, parse_argstring)
+
+# pylint: disable=import-error
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -61,5 +63,5 @@ class Benchmarks(Magics):
             algos = list(df.columns.values)
             widgets.interact(lambda algo: _display(algo, False), algo=algos)
 
-ip = get_ipython() # pylint: disable=undefined-variable
+ip = get_ipython()
 ip.register_magics(Benchmarks)

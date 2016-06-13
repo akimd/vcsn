@@ -33,7 +33,7 @@ class VcsnD3DataFrame(object):
                            {'target': '0', 'label': ''}]
             self.context = vcsn.context('letterset<char_letters(b)>, b')
 
-        aut = AutomatonD3(states=states, transitions=transitions)#, context=self.context)
+        aut = AutomatonD3Widget(states=states, transitions=transitions)#, context=self.context)
         self.error = widgets.HTML(value='')
 
         self._widget_ctx = vcsn.ipython.ContextText(self, self.context)

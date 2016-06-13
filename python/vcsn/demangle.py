@@ -1,6 +1,7 @@
 import os
 
 # pylint: disable=line-too-long
+import sys
 
 try:
     import regex as re
@@ -11,7 +12,6 @@ except ImportError:
     has_regex = False
     import re
 
-import sys
 
 try:
     from colorama import Fore, Style

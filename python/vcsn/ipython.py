@@ -88,7 +88,7 @@ class EditContext(Magics):
         if cell is None:
             ContextText(self, args.var)
 
-ip = get_ipython() # pylint: disable=undefined-variable
+ip = get_ipython()
 ip.register_magics(EditContext)
 
 

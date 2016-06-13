@@ -90,7 +90,7 @@ class Format:
         '''The test's information.'''
         return test
 
-    def score(self, score, color):
+    def score(self, score, avg): # pylint: disable=unused-argument
         '''Print a score, in color.'''
         return score
 
@@ -116,7 +116,7 @@ class Csv(Format):
         return 'Command,Setup,Repetitions,'\
             + ','.join([os.path.basename(file) for file in files]) + '\n'
 
-    def score(self, score, color):
+    def score(self, score, avg): # pylint: disable=unused-argument
         '''Print a score, in color.'''
         if score in ['N/A', 'FAIL']:
             return score
@@ -232,7 +232,7 @@ benc_csv = dict()
 def lcm(numbers):
     res = 1
     for num in numbers:
-        res = (num * res) // gcd(num, res)
+        res = (num * res) // gcd(num, res) # pylint: disable=deprecated-method
     return res
 
 

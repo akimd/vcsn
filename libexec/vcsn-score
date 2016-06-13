@@ -120,7 +120,7 @@ def bench(stmt, comment, title=None, setup=None, number=1):
                         log('run: {:27s} (was: {})'.format(s, oldsetup[i]))
                     else:
                         log('run:', s)
-                    exec(s)
+                    exec(s) # pylint: disable=exec-used
                 last_setup = setup
 
             # Inject the result into `builtins`, so that the stmt run by

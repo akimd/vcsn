@@ -1,7 +1,6 @@
 ## ------------ ##
 ## expression.  ##
 ## ------------ ##
-import re
 
 from vcsn_cxx import label, expression
 from vcsn.dot import _dot_pretty, _dot_to_svg

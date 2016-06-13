@@ -67,6 +67,12 @@ init-import=no
 # not used).
 dummy-variables-rgx=_$|dummy
 
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid to define new builtins when possible.
+additional-builtins=
+# built in IPython
+                    get_ipython
+
 
 [FORMAT]
 

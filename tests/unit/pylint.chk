@@ -1,0 +1,92 @@
+#! /bin/sh
+
+# We do not want to run pylint under Valgrind.
+unset PREPROG
+
+if test x"$srcdir" = x; then
+    tap_skip "not run from a build tree"
+    exit 0
+fi
+
+# Look for pylint.
+short_python_version="$(echo $PYTHON_VERSION | cut -d'.' -f1)"
+
+for candidate in pylint                                                   \
+                 pylint-$PYTHON_VERSION pylint$PYTHON_VERSION             \
+                 pylint-$short_python_version pylint$short_python_version \
+                 pylint3
+do
+    # If candidate exists:
+    if command -v $candidate > /dev/null; then
+        pylint_version=$($candidate --version 2> /dev/null)
+        pylint_python_version=$(echo "$pylint_version" \
+                                | grep 'Python '       \
+                                | cut -d' ' -f2        \
+                                | cut -d'.' -f1        \
+                               )
+        # If candidate's Python version is >= 3:
+        if test 3 -le "$pylint_python_version"; then
+            # Pylint's version in `pylint --version`
+            pylint_pylint_version=$(echo "$pylint_version" \
+                                    | grep 'pylint '       \
+                                    | cut -d' ' -f2        \
+                                    | sed 's/,//'          \
+                                   )
+            pylint_major_version=$(echo "$pylint_pylint_version" \
+                                   | cut -d'.' -f1)
+            pylint_minor_version=$(echo "$pylint_pylint_version" \
+                                   | cut -d'.' -f2)
+            pylint_revision_number=$(echo "$pylint_pylint_version" \
+                                     | cut -d'.' -f3)
+            # We require Pylint >= 1.5.4
+            #
+            # If candidate's Pylint:
+            # major version is > 1 or
+            # major version is = 1 and
+            #     minor version is > 5 or
+            #     minor version is = 5 and
+            #         revision is >= 4:
+            if test 1 -lt "$pylint_major_version"                   \
+               || (test 1 -eq "$pylint_major_version"               \
+                   && (test 5 -lt "$pylint_minor_version"           \
+                       || (test 5 -eq "$pylint_minor_version"       \
+                           && test 4 -le "$pylint_revision_number") \
+                      )                                             \
+                  )
+            then
+                pylint=$candidate
+                break
+            fi
+        fi
+    fi
+done
+
+# pylint_version is defined as soon as a candidate is found.
+if test -z "$pylint_version"; then
+    tap_skip "cannot find pylint"
+    exit 0
+fi
+
+# pylint_pylint_version is defined as soon as
+# a candidate with the right Python version is found.
+if test -z "$pylint_pylint_version"; then
+    tap_skip "pylint doesn't run with Python >= 3"
+    exit 0
+fi
+
+# pylint is defined as soon as a candidate
+# with the right Pylint version is found.
+if test -z "$pylint"; then
+    tap_skip "pylint doesn't have version >= 1.5.4"
+    exit 0
+fi
+
+pylintflags=--rcfile=$srcdir/python/pylintrc
+
+run 0 ignore -$pylint $pylintflags --version
+
+run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn
+
+# Get all the Python scripts from libexec/.
+pyscripts=$(grep -l '/usr/bin/env python' $srcdir/libexec/*)
+run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
