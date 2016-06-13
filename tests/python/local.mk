@@ -268,7 +268,7 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4.gv                                \
   %D%/rdiv.dir/aut1.gv                                  \
   %D%/standard.dir/complement-1.gv                      \
-  %D%/standard.dir/composition-1.gv                     \
+  %D%/standard.dir/compose-1.gv                         \
   %D%/standard.dir/conjunction-1.gv                     \
   %D%/standard.dir/conjunction-2.gv                     \
   %D%/standard.dir/infiltrate-1.gv                      \

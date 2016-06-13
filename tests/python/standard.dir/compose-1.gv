@@ -1,0 +1,39 @@
+digraph
+{
+  vcsn_context = "lat<nullableset<letterset<char_letters(abcxz)>>, nullableset<letterset<char_letters(Yxyz)>>>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+    F2
+    F3
+    F4
+    F5
+    F6
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+  }
+  I0 -> 0
+  0 -> 1 [label = "a|Y"]
+  0 -> 2 [label = "b|Y"]
+  0 -> 3 [label = "c|Y"]
+  0 -> 4 [label = "a|Y"]
+  0 -> 5 [label = "b|Y"]
+  0 -> 6 [label = "c|Y"]
+  1 -> F1
+  2 -> F2
+  3 -> F3
+  4 -> F4
+  5 -> F5
+  6 -> F6
+}

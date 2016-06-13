@@ -987,3 +987,8 @@ def tuple(*exps):
 check(tuple('abc', 'xyz'), file='tuple-1')
 check(tuple('abc', 'xy'),  file='tuple-2')
 check(tuple('ab*', 'cd*', 'ef*'), file='tuple-3')
+
+# Compose.
+def q2(e):
+    return exp(e, vcsn.context('lat<lan, lan>, q'))
+check(q2('[abc]|[xyz] @ [xz]|Y'), file='compose-1')
