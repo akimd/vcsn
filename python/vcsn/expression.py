@@ -137,10 +137,6 @@ class expression:
         return _format(self, spec, 'text', syntaxes)
 
 
-    def identities(self):
-        return re.sub(r'.*\((.*)\)', r'\1', self.type())
-
-
     def info(self, key=None):
         res = _info_to_dict(self.format('info'))
         return res[key] if key else res

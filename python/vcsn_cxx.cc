@@ -205,7 +205,7 @@ struct python_optional
   {
     using namespace boost::python;
     using data_t = converter::rvalue_from_python_storage<boost::optional<T>>;
-    void *const storage =reinterpret_cast<data_t*>(data)->storage.bytes;
+    void *const storage = reinterpret_cast<data_t*>(data)->storage.bytes;
     if (obj == Py_None)
       new (storage) boost::optional<T>();
     else
@@ -227,6 +227,63 @@ struct python_optional
   }
 };
 
+struct python_identities
+  : private boost::noncopyable
+{
+  struct conversion
+  {
+    static PyObject* convert(vcsn::dyn::identities const& s)
+    {
+      return PyUnicode_FromString(to_string(s).c_str());
+    }
+  };
+
+  // Determine if obj_ptr can be converted in identities.
+  static void* convertible(PyObject* obj_ptr)
+  {
+    return PyUnicode_Check(obj_ptr) ? obj_ptr : nullptr;
+  }
+
+  // Convert obj_ptr into an `identities`.
+  static void
+  constructor(PyObject* obj,
+              boost::python::converter::rvalue_from_python_stage1_data* data)
+  {
+    namespace bp = boost::python;
+
+    // Extract the character data from the python string
+    const char* value = PyBytes_AsString(PyUnicode_AsASCIIString(obj));
+
+    // Verify that obj is a string (should be ensured by convertible()).
+    assert(value);
+
+    // Grab pointer to memory into which to construct the new `identities`.
+    using data_t =
+      bp::converter::rvalue_from_python_storage<vcsn::dyn::identities>;
+    void* storage = reinterpret_cast<data_t*>(data)->storage.bytes;
+
+    // In-place construct the new `identities` using the character
+    // data extraced from the python object.
+    new (storage) identities(value);
+
+    // Stash the memory chunk pointer for later use by Boost.Python.
+    data->convertible = storage;
+  }
+
+  explicit python_identities()
+  {
+    namespace bp = boost::python;
+    if (!bp::extract<python_identities>(bp::object()).check())
+      {
+        bp::to_python_converter< vcsn::dyn::identities, conversion>();
+        bp::converter::registry::push_back
+          (&convertible,
+           &constructor,
+           bp::type_id<vcsn::dyn::identities>());
+      }
+    }
+};
+
 
 /*-----------.
 | vcsn_cxx.  |
@@ -237,8 +294,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   namespace bp = boost::python;
   using bp::arg;
 
-  // Activate support for boost::optional.
+  // Activate support for boost::optional and identities.
   python_optional<unsigned>();
+  python_identities();
 
   // We use bp::no_init to disable the use of the default ctor from
   // our classes, and prefer to use "def(init<...>)" to define our
@@ -425,6 +483,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expression", &expression::as,
          (arg("context") = context(), arg("identities") = "default"))
     .def("format", &format<expression>)
+    .def("identities", &expression::identities_of)
     .def("inductive", &expression::inductive, (arg("algo") = "auto"))
     .def("infiltrate", &expression::infiltrate)
     .def("is_equivalent", &expression::is_equivalent)

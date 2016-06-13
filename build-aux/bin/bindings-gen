@@ -115,12 +115,9 @@ classes_prologue_header = {
   expression(const struct context& ctx, const std::string& r,
              identities ids);
 
-  expression(const struct context& ctx, const std::string& r,
-             const std::string& ids);
-
   /// Convert \a this to \a ctx, using \a ids.
   expression as(const struct context& ctx = {},
-                const std::string& ids = "default") const;
+                identities ids = "default") const;
 
     ''',
 
@@ -209,13 +206,8 @@ classes_prologue_impl = {
     vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
-  expression::expression(const struct context& ctx, const std::string& r,
-                         const std::string& ids)
-    : expression{ctx, r, identities{ids}}
-  {}
-
   expression expression::as(const struct context& ctx,
-                            const std::string& ids) const
+                            identities ids) const
   {
     return copy((ctx ? ctx : context()), ids);
   }
