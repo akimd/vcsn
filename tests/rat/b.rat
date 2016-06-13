@@ -60,3 +60,7 @@ a+a+a+a+[b-h] => [^]
 [bcdefg]+h => [^a]
 [bcdefg]+h+h => [^a]
 h+[bcdefg] => [^a]
+
+%identities: none
+[ab] => a+b
+[^abc] => (((d+e)+f)+g)+h

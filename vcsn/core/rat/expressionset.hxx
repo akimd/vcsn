@@ -1088,7 +1088,10 @@ namespace vcsn
                        '-',
                        to_string(*labelset(), ls.value(std::get<1>(cc))));
           for (++end; i != end; ++i)
-            res = add(res, atom(ls.value(*i)));
+            // We want to avoid having (\z + a) + b in case of [ab].
+            res = (is_zero(res)
+                   ? atom(ls.value(*i))
+                   : add(res, atom(ls.value(*i))));
         }
     // [^].
     else if (ccs.empty())
@@ -1113,7 +1116,11 @@ namespace vcsn
           }
         for (auto c: gens)
           if (!has(accepted, c))
-            res = add(res, atom(ls.value(c)));
+            // We want to avoid having (\z + c) in case of [^ab]
+            // (considering lal_char(abc)).
+            res = (is_zero(res)
+                   ? atom(ls.value(c))
+                   : add(res, atom(ls.value(c))));
       }
     require(!is_zero(res),
             "invalid empty letter class");
