@@ -1,0 +1,31 @@
+#! /bin/sh
+
+# Do not run under Valgrind
+unset PREPROG
+
+if test -z "$srcdir"; then
+    tap_skip "not run from a build tree"
+    exit 0
+fi
+
+for i in ipython$PYTHON_VERSION ipython3 ipython
+do
+    if $i --version; then
+        ipython=$i
+        break
+    fi
+done
+
+if test -z $ipython; then
+    tap_skip "cannot find IPython"
+    exit 0
+fi
+
+if $($ipython -c 'import sys; sys.version_info.major < 3' |
+     grep 'True' >/dev/null)
+then
+    tap_skip "$ipython runs Python < 3"
+    exit 0
+fi
+
+run 0 ignore -vcsn run $ipython $srcdir/$me.ipy

@@ -51,6 +51,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/concat.chk                                \
   %D%/cross.chk                                 \
   %D%/dyn.chk                                   \
+  %D%/ipython.chk                               \
   %D%/label.chk                                 \
   %D%/polynomialset.chk                         \
   %D%/proper.chk                                \
@@ -85,6 +86,7 @@ EXTRA_DIST +=                                   \
 %D%/cross.log:          %D%/cross
 %D%/distance.log:       %D%/distance
 %D%/dyn.log:            %D%/dyn
+%D%/ipython.log:        $(vcsn_python_PYTHON)
 %D%/label.log:          %D%/label
 %D%/polynomialset.log:  %D%/polynomialset
 %D%/proper.log:         %D%/proper
