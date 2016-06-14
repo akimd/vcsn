@@ -33,10 +33,10 @@ class VcsnD3DataFrame(object):
                            {'target': '0', 'label': ''}]
             self.context = vcsn.context('letterset<char_letters(b)>, b')
 
-        aut = AutomatonD3Widget(states=states, transitions=transitions)#, context=self.context)
-        self.error = widgets.HTMLWidget(value='')
+        aut = AutomatonD3(states=states, transitions=transitions)#, context=self.context)
+        self.error = widgets.HTML(value='')
 
-        self._widget_ctx = vcsn.ipython.ContextTextWidget(self, self.context)
+        self._widget_ctx = vcsn.ipython.ContextText(self, self.context)
         self._widget_ctx.text.on_trait_change(lambda: self._on_change())
 
         self._widget = aut
@@ -77,7 +77,7 @@ class VcsnD3DataFrame(object):
         states = [{'id': s}
                   for s in set().union(*[set([t[0], t[1]]) for t in ts])
                   if s != '$']
-        context = str(aut.context())
+        context = aut.context().format('sname')
         return (states, transitions, context)
 
     def _on_change(self):
@@ -93,10 +93,10 @@ class VcsnD3DataFrame(object):
         wc1 = widgets.ContainerWidget()
         wc1.children = [self._widget_ctx.text]
         wc2 = widgets.ContainerWidget()
-        self._widget_ctx.svg.set_css({
+        self._widget_ctx.latex.set_css({
             'padding-left': '10px',
             'padding-top': '15px', })
-        wc2.children = [wc1, self._widget_ctx.svg]
+        wc2.children = [wc1, self._widget_ctx.latex]
         wc3 = widgets.ContainerWidget()
         self.error.set_css({
             'padding-left': '20px',

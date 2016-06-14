@@ -25,33 +25,35 @@ class ContextText:
         self.ipython = ipython
         self.name = name
         if self.name:
-            # Here the way to differenciate the use into the d3 widget.
+            # A named context (i.e., not used in the d3 widget).
             if not isinstance(self.name, str):
                 ctx = name
+                text = ctx.format('sname')
             elif self.name in self.ipython.shell.user_ns:
-                ctx = vcsn.context(
-                    format(self.ipython.shell.user_ns[self.name]))
+                ctx = self.ipython.shell.user_ns[self.name]
+                text = ctx.format('sname')
             else:
-                ctx = vcsn.context('lal_char, b')
-                self.ipython.shell.user_ns[self.name] = ctx
+                text = 'lal, b'
+                ctx = vcsn.context(text)
         else:
+            # An unnamed context (i.e., used in the d3 widget).
             ctx = vcsn.context('lal_char, b')
-        text = format(ctx)
         self.text = widgets.Textarea(description='Context: ', value=text)
         self.width = '250px'
         self.height = '25px'
         self.text.lines = '500'
         self.text.on_trait_change(lambda: self.update())
         self.error = widgets.HTML(value=' ')
-        self.svg = widgets.Latex(value=ctx._repr_latex_())
-        # Display the widget if it is not use into the d3 widget
-        if isinstance(self.name, str):
+        self.latex = widgets.Label(value=ctx._repr_latex_())
+        self.latex.width = '250px'
 
+        # Display the widget if it is not use into the d3 widget.
+        if isinstance(self.name, str):
             wc1 = widgets.VBox()
             wc1.children = [self.text]
 
             wc2 = widgets.HBox()
-            wc2.children = [wc1, self.svg]
+            wc2.children = [wc1, self.latex]
             wc3 = widgets.VBox()
             wc3.children = [wc2, self.error]
             display(wc3)
@@ -63,7 +65,7 @@ class ContextText:
             c = vcsn.context(txt)
             if isinstance(self.name, str):
                 self.ipython.shell.user_ns[self.name] = c
-            self.svg.value = c._repr_latex_()
+            self.latex.value = c._repr_latex_()
         except RuntimeError as e:
             self.error.value = escape(str(e))
 
