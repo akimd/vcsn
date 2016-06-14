@@ -103,6 +103,7 @@ namespace vcsn
       }
 
       DEFINE(add);
+      DEFINE(compose);
       DEFINE(conjunction);
       DEFINE(infiltrate);
       DEFINE(shuffle);

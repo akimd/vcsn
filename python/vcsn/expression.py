@@ -148,7 +148,7 @@ class expression:
 
     def is_extended(self):
         '''Whether this expression uses extended operators.'''
-        ext = ['complement', 'conjunction', 'infiltrate', 'ldivide',
+        ext = ['complement', 'compose', 'conjunction', 'infiltrate', 'ldivide',
                'shuffle', 'transposition', 'tuple']
         i = self.info()
         for op in ext:

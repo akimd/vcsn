@@ -305,6 +305,7 @@ EXTRA_DIST +=                                           \
   %D%/standard.dir/ldivide-3.gv                         \
   %D%/standard.dir/rdivide-1.gv                         \
   %D%/standard.dir/shuffle-1.gv                         \
+  %D%/standard.dir/transpose-1.gv                       \
   %D%/standard.dir/transposition-1.gv                   \
   %D%/standard.dir/transposition-2.gv                   \
   %D%/standard.dir/transposition-3.gv                   \

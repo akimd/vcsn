@@ -916,3 +916,6 @@ check(tuple('ab*', 'cd*', 'ef*'), file='tuple-3')
 def q2(e):
     return exp(e, vcsn.context('lat<lan, lan>, q'))
 check(q2('[abc]|[xyz] @ [xz]|Y'), file='compose-1')
+
+# Transpose.
+check(q2('((a|x) (b|y) @ (x|i) (y|j)){t}'), file='transpose-1')
