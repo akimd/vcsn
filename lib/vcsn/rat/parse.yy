@@ -169,6 +169,7 @@
   RPAREN          ")"
   SLASH           "{/}"
   TRANSPOSITION   "{T}"
+  TRANSPOSE       "{t}"
   ZERO            "\\z"
 ;
 
@@ -195,7 +196,7 @@
 %precedence RWEIGHT
 %precedence "letter" "\\z" "\\e" "[" "(" // RWEIGHT < LETTER: a <x> . b => shift
 %precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
-%precedence "*" "{c}" "{T}"
+%precedence "*" "{c}" "{T}" "{t}"
 
 %start input
 %%
@@ -293,6 +294,7 @@ exp:
 | exp "{c}"         { $$ = dyn::complement($1.exp); }
 | "!" exp           { $$ = dyn::complement($2.exp); }
 | exp "{T}"         { $$ = dyn::transposition($1.exp); }
+| exp "{t}"         { $$ = dyn::transpose($1.exp); }
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
 | "letter"          { $$ = driver_.make_atom(@1, $1); }

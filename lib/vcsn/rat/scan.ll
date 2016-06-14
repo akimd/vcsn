@@ -98,6 +98,7 @@ namespace
   "!"|"¬"     return TOK(BANG);
   "{c}"|"ᶜ"   return TOK(COMPLEMENT);
   "{T}"|"ᵗ"   return TOK(TRANSPOSITION);
+  "{t}"       return TOK(TRANSPOSE);
 
   /* Special constructs.  */
   "(?@"          context.clear(); yy_push_state(SC_CONTEXT);

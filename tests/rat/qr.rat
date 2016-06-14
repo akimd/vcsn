@@ -182,6 +182,9 @@ a{/}\z => \z
 
 %labels: letters
 
+# Transpose.
+(<ij>ab){t} == b<ji>a
+
 # Preference.
 <i>a<+<j>b => <i>a+a{c}&<j>b
 
