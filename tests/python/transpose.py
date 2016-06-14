@@ -79,11 +79,14 @@ CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>
 ## transpose(expression).  ##
 ## ----------------------- ##
 
+def exp(e, ctx):
+    return ctx.expression(e)
+
 def check(r1, r2=None):
     if r2 is None:
         r2 = r1
-    e1 = ctx.expression(r1)
-    e2 = ctx.expression(r2)
+    e1 = exp(r1, ctx)
+    e2 = exp(r2, ctx)
     CHECK_EQ(e2, e1.transpose())
     CHECK_EQ(e1, e2.transpose())
 
@@ -113,3 +116,6 @@ check('(ab)*', '(ba)*')
 ctx = vcsn.context('law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), q>>')
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')
+
+ctx = vcsn.context('lat<lan, lan>, q')
+check('a(bc)*d | uvw*yz', 'd(cb)*a | zyw*vu')

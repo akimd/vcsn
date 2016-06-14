@@ -5,6 +5,14 @@
 namespace vcsn
 {
 
+  /// An expression that denotes the transposition of \a v.
+  ///
+  /// Works deeply, contrary to transposition() that merely applies
+  /// the `{T}` operator.
+  template <typename ExpSet>
+  typename ExpSet::value_t
+  transpose(const ExpSet& rs, const typename ExpSet::value_t& v);
+
   namespace detail
   {
 
@@ -16,23 +24,25 @@ namespace vcsn
     ///
     /// \tparam ExpSet  the expression set.
     template <typename ExpSet>
-    class transposer
+    class transpose_impl
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
       using expression_t = typename expressionset_t::value_t;
       using super_t = typename expressionset_t::const_visitor;
+      using self_t = transpose_impl;
       using context_t = context_t_of<expressionset_t>;
 
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "transpose"; }
 
-      transposer(const expressionset_t& rs)
+      transpose_impl(const expressionset_t& rs)
         : rs_{rs}
         , res_{}
       {}
 
+      /// An expression denoting the transposition of \a e.
       expression_t
       operator()(const expression_t& e)
       {
@@ -40,17 +50,18 @@ namespace vcsn
         return std::move(res_);
       }
 
+    private:
+      /// Easy recursion.
       expression_t
       transpose(const expression_t& e)
       {
-        expression_t res;
+        auto res = expression_t{};
         std::swap(res_, res);
         e->accept(*this);
         std::swap(res_, res);
         return res;
       }
 
-    private:
       VCSN_RAT_VISIT(zero,)
       {
         res_ = rs_.zero();
@@ -156,12 +167,53 @@ namespace vcsn
                         transpose(e.sub()));
       }
 
-      using tuple_t = typename super_t::tuple_t;
-      virtual void visit(const tuple_t&, std::true_type) override
-      {
-        raise(me(), ": tuple is not supported");
-      }
+      /*---------.
+      | tuple.   |
+      `---------*/
 
+      using tuple_t = typename super_t::tuple_t;
+
+      template <bool = context_t::is_lat,
+                typename Dummy = void>
+      struct visit_tuple
+      {
+        /// Copy one tape.
+        template <size_t I>
+        auto work_(const tuple_t& v)
+        {
+          return vcsn::transpose(detail::project<I>(visitor_.rs_),
+                                 std::get<I>(v.sub()));
+        }
+
+        /// Copy all the tapes.
+        template <size_t... I>
+        auto work_(const tuple_t& v, detail::index_sequence<I...>)
+        {
+          return visitor_.rs_.tuple(work_<I>(v)...);
+        }
+
+        /// Entry point.
+        auto operator()(const tuple_t& v)
+        {
+          return work_(v, labelset_t_of<context_t>::indices);
+        }
+        self_t& visitor_;
+      };
+
+      template <typename Dummy>
+      struct visit_tuple<false, Dummy>
+      {
+        expression_t operator()(const tuple_t&)
+        {
+          BUILTIN_UNREACHABLE();
+        }
+        self_t& visitor_;
+      };
+
+      void visit(const tuple_t& v, std::true_type) override
+      {
+        res_ = visit_tuple<>{*this}(v);
+      }
 
     private:
       expressionset_t rs_;
@@ -169,15 +221,11 @@ namespace vcsn
     };
   }
 
-  /// A expression that denotes the transposition of \a v.
-  ///
-  /// Works deeply, contrary to transposition() that merely applies
-  /// the `{T}` operator.
   template <typename ExpSet>
   typename ExpSet::value_t
   transpose(const ExpSet& rs, const typename ExpSet::value_t& v)
   {
-    return rs.transpose(v);
+    auto tr = detail::transpose_impl<ExpSet>{rs};
+    return tr(v);
   }
-
 }

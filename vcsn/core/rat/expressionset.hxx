@@ -1045,8 +1045,7 @@ namespace vcsn
   DEFINE::transpose(const value_t& v) const
     -> value_t
   {
-    auto tr = detail::transposer<self_t>{self()};
-    return tr(v);
+    return vcsn::transpose(self(), v);
   }
 
   template <typename Context>
