@@ -32,6 +32,14 @@ check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
 ctx = vcsn.context('law_char, nmin')
 check('<1>aaaa+<2>b', 1, '<1>aaaa')
 
+ctx = vcsn.context('lal_char, rmin')
+check(r'\z', 3, r'\z')
+check(r'\e', 3, r'<0>\e')
+check('a+b', 2, '<0>a + <0>b')
+check('ababab', 10, '<0>ababab')
+check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb', ['auto'])
+check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c')
+
 zero = ctx.expression(r'\z').standard()
 for algo in algos:
     if algo not in k_algos:

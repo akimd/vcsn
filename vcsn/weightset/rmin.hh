@@ -14,10 +14,10 @@ namespace vcsn
   namespace detail
   {
     class rmin_impl
-      : public min_plus_impl<double>
+      : public min_plus_impl<rmin_impl, double>
     {
     public:
-      using super_t = min_plus_impl<double>;
+      using super_t = min_plus_impl<rmin_impl, double>;
       using self_t = rmin;
       using value_t = typename super_t::value_t;
 
