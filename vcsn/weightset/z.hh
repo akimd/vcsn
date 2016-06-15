@@ -67,31 +67,31 @@ namespace vcsn
       return l * r;
     }
 
-    static value_t
-    lgcd(const value_t l, const value_t r)
+    value_t
+    lgcd(const value_t l, const value_t r) const
     {
-      require(!is_zero(l), sname(), ": lgcd: invalid lhs: zero");
-      require(!is_zero(r), sname(), ": lgcd: invalid rhs: zero");
+      require(!is_zero(l), *this, ": lgcd: invalid lhs: zero");
+      require(!is_zero(r), *this, ": lgcd: invalid rhs: zero");
       return detail::gcd(l, r);
     }
 
-    static value_t
-    rgcd(const value_t l, const value_t r)
+    value_t
+    rgcd(const value_t l, const value_t r) const
     {
       return lgcd(l, r);
     }
 
-    static value_t
-    rdiv(const value_t l, const value_t r)
+    value_t
+    rdiv(const value_t l, const value_t r) const
     {
-      require(!is_zero(r), "div: division by zero");
+      require(!is_zero(r), *this, "div: division by zero");
       require(!(l % r),
-              "z: div: invalid division: ", l, '/', r);
+              *this, "div: invalid division: ", l, '/', r);
       return l / r;
     }
 
-    static value_t
-    ldiv(const value_t l, const value_t r)
+    value_t
+    ldiv(const value_t l, const value_t r) const
     {
       return rdiv(r, l);
     }
@@ -165,14 +165,14 @@ namespace vcsn
       return v;
     }
 
-    static value_t
-    conv(std::istream& is, bool = true)
+    value_t
+    conv(std::istream& is, bool = true) const
     {
       int res;
       if (is >> res)
         return res;
       else
-        vcsn::fail_reading(is, sname(), ": invalid value");
+        vcsn::fail_reading(is, *this, ": invalid value");
      }
 
     static std::ostream&

@@ -93,32 +93,32 @@ namespace vcsn
     }
 
     /// GCD: arbitrarily the first argument.
-    static value_t
-    lgcd(const value_t l, const value_t r)
+    value_t
+    lgcd(const value_t l, const value_t r) const
     {
-      require(!is_zero(l), sname(), ": lgcd: invalid lhs: zero");
-      require(!is_zero(r), sname(), ": lgcd: invalid rhs: zero");
+      require(!is_zero(l), *this, ": lgcd: invalid lhs: zero");
+      require(!is_zero(r), *this, ": lgcd: invalid rhs: zero");
       return l;
     }
 
-    static value_t
-    rgcd(const value_t l, const value_t r)
+    value_t
+    rgcd(const value_t l, const value_t r) const
     {
       return lgcd(l, r);
     }
 
-    static value_t
-    rdiv(const value_t l, const value_t r)
+    value_t
+    rdiv(const value_t l, const value_t r) const
     {
-      require(!is_zero(r), "div: division by zero");
+      require(!is_zero(r), *this, ": div: division by zero");
       if (0 < r.num)
         return value_t{l.num * int(r.den), l.den * r.num}.reduce();
       else
         return value_t{-l.num * int(r.den), l.den * -r.num}.reduce();
     }
 
-    static value_t
-    ldiv(const value_t l, const value_t r)
+    value_t
+    ldiv(const value_t l, const value_t r) const
     {
       return rdiv(r, l);
     }
@@ -204,12 +204,12 @@ namespace vcsn
       return {v, 1};
     }
 
-    static value_t
-    conv(std::istream& i, bool = true)
+    value_t
+    conv(std::istream& i, bool = true) const
     {
       int num;
       if (!(i >> num))
-        raise(sname(), ": invalid numerator: ", i);
+        raise(*this, ": invalid numerator: ", i);
 
       // If we have a slash after the numerator then we have a
       // denominator as well.
@@ -228,9 +228,9 @@ namespace vcsn
 
           unsigned int den;
           if (!(i >> den))
-            raise(sname(), ": invalid denominator: ", i);
+            raise(*this, ": invalid denominator: ", i);
           // Make sure our rational respects our constraints.
-          require(den, sname(), ": null denominator");
+          require(den, *this, ": null denominator");
           return value_t{num, den}.reduce();
         }
       else

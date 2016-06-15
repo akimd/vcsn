@@ -280,7 +280,7 @@ namespace vcsn
           auto i = v.find(label_of(m));
           if (i == v.end())
             {
-              raise(sname(), ": sub_here: invalid arguments: ",
+              raise(*this, ": sub_here: invalid arguments: ",
                     to_string(*this, v), ", ", to_string(*this, m));
             }
           else
@@ -587,7 +587,7 @@ namespace vcsn
     value_t
     rdiv(const value_t& l, const value_t& r) const
     {
-      raise(sname(), ": rdiv: not implemented (",
+      raise(*this, ": rdiv: not implemented (",
             to_string(*this, l), ", ", to_string(*this, r), ")");
     }
 
@@ -613,7 +613,7 @@ namespace vcsn
     {
       value_t res;
       if (is_zero(l))
-        raise(sname(), ": ldiv: division by zero");
+        raise(*this, ": ldiv: division by zero");
       else
         {
           value_t remainder = r;
@@ -646,7 +646,7 @@ namespace vcsn
           print(remainder, std::cerr) << "\n";
 #endif
           if (!is_zero(remainder))
-            raise(sname(), ": ldiv: not implemented (",
+            raise(*this, ": ldiv: not implemented (",
                   to_string(*this, l), ", ", to_string(*this, r), ")");
         }
       return res;
@@ -1199,7 +1199,7 @@ namespace vcsn
           // However, we must have at least a weight: a completely
           // empty mononial ($ -> 0 "<2>,") is invalid.
           VCSN_REQUIRE(weighted,
-                       sname(), ": conv: invalid monomial: ",
+                       *this, ": conv: invalid monomial: ",
                        str_escape(peek),
                        " (did you mean \\e or \\z?)");
           res = labelset()->special();
@@ -1218,7 +1218,7 @@ namespace vcsn
           // Make sure we catch this.  Beware that tellg returns -1
           // (yes, signed!) on EOF.
           require(i.peek() == EOF || pos < i.tellg(),
-                  "invalid implicit empty word before: ", i);
+                  *this, ": invalid implicit empty word before: ", i);
         }
       return res;
     }
@@ -1266,7 +1266,7 @@ namespace vcsn
       // Possibly, a label.
       SKIP_SPACES();
       auto l = conv_label(i, weighted, sep);
-      require(l, "\\z is invalid for monomials");
+      require(l, *this, ": \\z is invalid for monomials");
       return monomial_t{*l, w};
 #undef SKIP_SPACES
     }
@@ -1304,7 +1304,7 @@ namespace vcsn
                               });
           else if (auto l = conv_label(i, weighted, sep))
             {
-              require(l, "\\z is invalid for monomials");
+              require(l, *this, ": \\z is invalid for monomials");
               add_here(res, *l, w);
             }
 

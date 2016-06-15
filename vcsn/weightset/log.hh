@@ -66,15 +66,15 @@ namespace vcsn
       return is_zero(l) || is_zero(r) ? zero() : l + r;
     }
 
-    static value_t
-    rdiv(const value_t l, const value_t r)
+    value_t
+    rdiv(const value_t l, const value_t r) const
     {
-      require(!is_zero(r), "div: division by zero");
+      require(!is_zero(r), *this, ": div: division by zero");
       return is_zero(l) ? l : l - r;
     }
 
-    static value_t
-    ldiv(const value_t l, const value_t r)
+    value_t
+    ldiv(const value_t l, const value_t r) const
     {
       return rdiv(r, l);
     }
@@ -140,8 +140,8 @@ namespace vcsn
       return v;
     }
 
-    static value_t
-    conv(std::istream& i, bool = true)
+    value_t
+    conv(std::istream& i, bool = true) const
     {
       value_t res;
       if (i.peek() == 'o')
@@ -150,7 +150,7 @@ namespace vcsn
           res = zero();
         }
       else if (! (i >> res))
-        raise(sname(), ": invalid value: ", i);
+        raise(*this, ": invalid value: ", i);
       return res;
     }
 

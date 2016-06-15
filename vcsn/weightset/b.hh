@@ -70,29 +70,29 @@ namespace vcsn
       return l && r;
     }
 
-    static value_t
-    lgcd(const value_t l, const value_t r)
+    value_t
+    lgcd(const value_t l, const value_t r) const
     {
-      require(!is_zero(l), sname(), ": lgcd: invalid lhs: zero");
-      require(!is_zero(r), sname(), ": lgcd: invalid rhs: zero");
+      require(!is_zero(l), *this, ": lgcd: invalid lhs: zero");
+      require(!is_zero(r), *this, ": lgcd: invalid rhs: zero");
       return one();
     }
 
-    static value_t
-    rgcd(const value_t l, const value_t r)
+    value_t
+    rgcd(const value_t l, const value_t r) const
     {
       return lgcd(l, r);
     }
 
-    static value_t
-    rdiv(const value_t l, const value_t r)
+    value_t
+    rdiv(const value_t l, const value_t r) const
     {
-      require(!is_zero(r), "div: division by zero");
+      require(!is_zero(r), *this, ": div: division by zero");
       return l;
     }
 
-    static value_t
-    ldiv(const value_t l, const value_t r)
+    value_t
+    ldiv(const value_t l, const value_t r) const
     {
       return rdiv(r, l);
     }
@@ -159,18 +159,18 @@ namespace vcsn
       return v;
     }
 
-    static value_t
-    conv(std::istream& is, bool = true)
+    value_t
+    conv(std::istream& is, bool = true) const
     {
       int i;
       if (is >> i)
         {
           require(i == 0 || i == 1,
-                  sname(), ": invalid value: ", i);
+                  *this, ": invalid value: ", i);
           return i;
         }
       else
-        raise(sname(), ": invalid value: ", is);
+        raise(*this, ": invalid value: ", is);
     }
 
     static std::ostream&

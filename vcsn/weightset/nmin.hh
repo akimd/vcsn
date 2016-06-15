@@ -39,12 +39,13 @@ namespace vcsn
         return v;
       }
 
-      static value_t
-      conv(std::istream& is, bool = true)
+      value_t
+      conv(std::istream& is, bool = true) const
       {
         if (is.peek() == '-')
-          fail_reading(is, sname(), ": negative values are invalid");
-        return super_t::conv(is);
+          fail_reading(is, *this, ": negative values are invalid");
+        else
+          return super_t::conv(is);
       }
 
       static constexpr bool has_lightening_weights() { return false; }

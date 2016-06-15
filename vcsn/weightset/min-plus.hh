@@ -40,15 +40,15 @@ namespace vcsn
                 : l + r);
       }
 
-      static value_t
-      rdiv(const value_t l, const value_t r)
+      value_t
+      rdiv(const value_t l, const value_t r) const
       {
-        require(!is_zero(r), "div: division by zero");
+        require(!is_zero(r), self(), "div: division by zero");
         return is_zero(l) ? l : l - r;
       }
 
-      static value_t
-      ldiv(const value_t l, const value_t r)
+      value_t
+      ldiv(const value_t l, const value_t r) const
       {
         return rdiv(r, l);
       }
