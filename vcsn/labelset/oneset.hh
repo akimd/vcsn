@@ -153,28 +153,28 @@ namespace vcsn
          typename LabelSet::value_t v) const
     {
       VCSN_REQUIRE(ls.is_one(v),
-                   sname(), ": conv: invalid label: ", to_string(ls, v));
+                   *this, ": conv: invalid label: ", to_string(ls, v));
       return one();
     }
 
 
-    static value_t conv(std::istream& i, bool = true)
+    value_t conv(std::istream& i, bool = true) const
     {
       if (i.peek() == '\\')
         {
           i.ignore();
           int c = i.peek();
           require(c == 'e',
-                  "invalid label: unexpected \\", c);
+                  *this, ": invalid label: unexpected \\", c);
           i.ignore();
         }
       return one();
     }
 
     template <typename Fun>
-    static void convs(std::istream&, Fun)
+    void convs(std::istream&, Fun) const
     {
-      raise("oneset: ranges not implemented");
+      raise(*this, ": ranges not implemented");
     }
 
     std::ostream&

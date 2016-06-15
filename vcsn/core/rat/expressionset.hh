@@ -322,9 +322,9 @@ namespace vcsn
 
     /// Read a range of expressions.
     template <typename Fun>
-    static void convs(std::istream&, Fun)
+    void convs(std::istream&, Fun) const
     {
-      raise(sname(), ": ranges not implemented");
+      raise(*this, ": ranges not implemented");
     }
 
     auto print(const value_t& v,
@@ -452,11 +452,12 @@ namespace vcsn
 
       /// All the components are (single-tape) labels: make this a
       /// multitape label.
-      static label_t as_label(const tuple_t& v)
+      label_t as_label(const tuple_t& v) const
       {
         return as_label_(v, labelset_t::indices);
       }
 
+      /// Are all the components on I... labels?
       template <size_t... I>
       static bool is_label_(const tuple_t& v, detail::index_sequence<I...>)
       {
@@ -469,20 +470,22 @@ namespace vcsn
       }
 
       template <size_t... I>
-      static label_t as_label_(const tuple_t& v, detail::index_sequence<I...>)
+      label_t as_label_(const tuple_t& v, detail::index_sequence<I...>) const
       {
         return label_t{as_label_<I>(v)...};
       }
 
+      /// The expression on tape I is actually a label: get it.
       template <size_t I>
-      static typename project_t<I>::label_t as_label_(const tuple_t& v)
+      typename project_t<I>::label_t as_label_(const tuple_t& v) const
       {
         if (std::get<I>(v.sub())->type() == type_t::one)
-          return detail::label_one<typename labelset_t::template valueset_t<I>>();
+          return detail::label_one(rs_.labelset()->template set<I>());
         else
           return std::dynamic_pointer_cast<const typename project_t<I>::atom_t>
                  (std::get<I>(v.sub()))->value();
       }
+      const self_t& rs_;
     };
 
   private:

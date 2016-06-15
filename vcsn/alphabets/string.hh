@@ -196,8 +196,7 @@ namespace vcsn
     /// Read one letter from i.
     ///
     /// Either a single char, or a "letter" enclosed in single-quotes.
-    static letter_t get_letter(std::istream& i,
-                               bool quoted = true)
+    static letter_t get_letter(std::istream& i, bool quoted = true)
     {
       std::string res;
       if (quoted)

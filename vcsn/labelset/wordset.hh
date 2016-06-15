@@ -298,17 +298,17 @@ namespace vcsn
 
     /// Compute w1 \ w2 = w1^{-1}w2.
     /// Precondition: w1 is prefix of w2.
-    static value_t ldiv(const value_t& w1, const value_t& w2)
+    value_t ldiv(const value_t& w1, const value_t& w2) const
     {
       using boost::algorithm::starts_with;
       VCSN_REQUIRE(starts_with(w2, w1),
-                   sname(), ": ldiv: invalid arguments: ", str_escape(w1),
+                   *this, ": ldiv: invalid arguments: ", str_escape(w1),
                    ", ", str_escape(w2));
       return {begin(w2) + size(w1), end(w2)};
     }
 
     /// w2 := w1 \ w2.
-    static value_t& ldiv_here(const value_t& w1, value_t& w2)
+    value_t& ldiv_here(const value_t& w1, value_t& w2) const
     {
       w2 = ldiv(w1, w2);
       return w2;
@@ -319,7 +319,9 @@ namespace vcsn
       if (equal(l, r))
         return l;
       else
-        raise("conjunction: invalid operation (lhs and rhs are not equal)");
+        raise(*this,
+              ": conjunction: invalid operation (lhs and rhs are not equal): ",
+              to_string(*this, l), ", ", to_string(*this, r));
     }
   };
 

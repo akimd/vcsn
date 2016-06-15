@@ -10,6 +10,7 @@
 #include <vcsn/ctx/traits.hh> // labelset_t_of
 #include <vcsn/misc/algorithm.hh> // none_of
 #include <vcsn/misc/functional.hh> // less
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/type_traits.hh> // detect
 
 namespace vcsn
@@ -40,24 +41,6 @@ namespace vcsn
     | label_one.   |
     `-------------*/
 
-    /// This LabelSet's one(), if supported.
-    template <typename LabelSet>
-    auto label_one()
-      -> std::enable_if_t<LabelSet::has_one(),
-                          typename LabelSet::value_t>
-    {
-      return LabelSet::one();
-    }
-
-    template <typename LabelSet>
-    ATTRIBUTE_NORETURN
-    auto label_one()
-      -> std::enable_if_t<!LabelSet::has_one(),
-                          typename LabelSet::value_t>
-    {
-      raise(LabelSet::sname(), ": does not feature a neutral");
-    }
-
 #if defined __GNUC__ && !defined __clang__
  // GCC can't figure out that this one does return, because of the template
  // instanciation, where one of them doesn't return.
@@ -67,10 +50,16 @@ namespace vcsn
 
     /// Enjoy type inference.
     template <typename LabelSet>
-    auto label_one(const LabelSet&)
+    auto label_one(const LabelSet& ls)
       -> typename LabelSet::value_t
     {
-      return label_one<LabelSet>();
+      return static_if<LabelSet::has_one()>
+        ([](const auto& ls) { return ls.one(); },
+         [](const auto& ls) -> typename LabelSet::value_t
+        {
+          raise(ls, ": does not feature a neutral");
+        })
+        (ls);
     }
 
 #if defined __GNUC__ && !defined __clang__
@@ -410,10 +399,11 @@ namespace vcsn
               {
                 i.ignore();
                 // Handle a range.
+                // FIXME: ls instead of ls.sname would be better.
                 require(prev,
-                        "letter classes cannot begin with '-'");
+                        ls.sname(), ": letter classes cannot begin with '-'");
                 require(i.peek() != ']',
-                        "letter classes cannot finish with '-'");
+                        ls.sname(), ": letter classes cannot finish with '-'");
 
                 // [prev - l2].
                 letter_t l2 = ls.get_letter(i);

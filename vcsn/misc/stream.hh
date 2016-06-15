@@ -31,9 +31,9 @@ namespace vcsn LIBVCSN_API
                         std::forward<Args>(args)...))
   {
     std::istringstream i{str};
-    auto res = vs.conv(i, std::forward<Args>(args)...);
+    const auto res = vs.conv(i, std::forward<Args>(args)...);
     VCSN_REQUIRE(i.peek() == EOF,
-                 vs.sname(), ": invalid value: ", str,
+                 vs, ": invalid value: ", str,
                  ", unexpected ", str_escape(i.peek()));
     return res;
   }

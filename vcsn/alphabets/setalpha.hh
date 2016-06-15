@@ -137,8 +137,10 @@ namespace vcsn
     set_alphabet&
     add_letter(letter_t l)
     {
-      require(l != this->template special<letter_t>(),
-              "add_letter: the special letter is reserved: ", str_escape(l));
+      VCSN_REQUIRE(l != this->template special<letter_t>(),
+                   *this,
+                   ": add_letter: the special letter is reserved: ",
+                   str_escape(l));
       alphabet_.insert(l);
       return *this;
     }
@@ -179,7 +181,7 @@ namespace vcsn
     auto add_range_(Letter, Letter)
       -> std::enable_if_t<!has_range<Letter>{}, set_alphabet&>
     {
-      raise(sname(), ": does not support letter ranges");
+      raise(*this, ": does not support letter ranges");
     }
 
     /// Whether \a l is a letter.
@@ -200,7 +202,7 @@ namespace vcsn
     word_t
     get_word(std::istream& i) const
     {
-      require(!i.bad(), "conv: invalid stream");
+      require(!i.bad(), *this, ": conv: invalid stream");
       // Either an empty word: "\e", or a sequence of non-separators.
       if (i.good() && i.peek() == '\\')
         {

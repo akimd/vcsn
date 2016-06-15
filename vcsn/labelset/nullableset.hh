@@ -455,7 +455,9 @@ namespace vcsn
       else if (!is_one(l) && !is_one(r))
         return ls_->conjunction(get_value(l), get_value(r));
       else
-        raise("conjunction: invalid operation (lhs and rhs are not equal)");
+        raise(*this,
+              ": conjunction: invalid operation (lhs and rhs are not equal): ",
+              to_string(*this, l), ", ", to_string(*this, r));
     }
 
     /// Print label to stream.

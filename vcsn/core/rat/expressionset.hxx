@@ -559,8 +559,8 @@ namespace vcsn
     //
     // Note that `\e|a` remains a tuple of expressions on lal x lal,
     // but it is turned into a (multitape) label on lan x lal.
-    else if (tuple_of_label<>::is_label(t))
-      return atom(tuple_of_label<>::as_label(t));
+    else if (tuple_of_label<>{self()}.is_label(t))
+      return atom(tuple_of_label<>{self()}.as_label(t));
     else
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }

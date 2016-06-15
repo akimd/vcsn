@@ -252,15 +252,15 @@ namespace vcsn
     /// abstraction (I, Akim, now tend to think that we should only
     /// support nullableset<letterset>), let's not fight this fight
     /// now.
-    static value_t lgcd(value_t, value_t)
+    value_t lgcd(value_t, value_t) const
     {
-      raise(sname(), ": lgcd: impossible operation");
+      raise(*this, ": lgcd: impossible operation");
     }
 
     /// Compute w1 \ w2 = w1^{-1}w2.
-    static value_t ldiv(value_t, value_t)
+    value_t ldiv(value_t, value_t) const
     {
-      raise(sname(), ": ldiv: impossible operation");
+      raise(*this, ": ldiv: impossible operation");
     }
 
     value_t conjunction(const value_t& l, const value_t& r) const

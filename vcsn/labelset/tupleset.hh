@@ -8,12 +8,11 @@
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/labelset/labelset.hh>
+#include <vcsn/misc/cross.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/tuple.hh> // tuple_element_t
-#include <vcsn/misc/cross.hh>
-#include <vcsn/misc/raise.hh>
 #include <vcsn/misc/zip.hh>
 #include <vcsn/weightset/b.hh>
 
@@ -104,7 +103,7 @@ namespace vcsn
 
     static symbol sname()
     {
-      static symbol res(sname_(indices));
+      static auto res = symbol{sname_(indices)};
       return res;
     }
 
