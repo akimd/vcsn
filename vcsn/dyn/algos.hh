@@ -10,7 +10,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/types.hh>
-#include <vcsn/misc/export.hh>
+#include <vcsn/misc/export.hh> // LIBVCSN_API
 
 namespace vcsn
 {

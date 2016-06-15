@@ -3,6 +3,8 @@
 #include <string>
 #include <sstream>
 
+#include <vcsn/misc/export.hh> // LIBVCSN_API
+
 namespace vcsn LIBVCSN_API
 {
   /// Format v via vs.print.
