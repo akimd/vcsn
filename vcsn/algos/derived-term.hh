@@ -180,8 +180,7 @@ namespace vcsn
           }
         catch (const std::runtime_error& e)
           {
-            raise(e.what(), "\n",
-                  "  while computing derived-term of: ", to_string(rs_, exp));
+            raise(e, "  while computing derived-term of: ", to_string(rs_, exp));
           }
       }
 

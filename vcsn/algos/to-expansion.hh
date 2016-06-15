@@ -74,8 +74,7 @@ namespace vcsn
           }
         catch (const std::runtime_error& e)
           {
-            raise(e.what(), "\n",
-                  "  while computing expansion of: ", to_string(rs_, v));
+            raise(e, "  while computing expansion of: ", to_string(rs_, v));
           }
       }
 

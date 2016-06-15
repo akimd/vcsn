@@ -66,7 +66,7 @@ namespace vcsn
           }
         catch (const std::runtime_error& e)
           {
-            raise(e.what(), "\n",
+            raise(e,
                   "  while computing derivative of: ", to_string(rs_, v), "\n"
                   "                with respect to: ",
                   to_string(*rs_.labelset(), var));

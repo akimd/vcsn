@@ -54,8 +54,7 @@ namespace vcsn
           }
         catch (const std::runtime_error& e)
           {
-            raise(e.what(), "\n",
-                  "  while computing constant-term of: ", to_string(rs_, v));
+            raise(e, "  while computing constant-term of: ", to_string(rs_, v));
           }
 
       }

@@ -200,8 +200,7 @@ classes_prologue_impl = {
       }
     catch (const std::runtime_error& e)
       {
-        vcsn::raise(e.what(), "\n",
-                    "  while reading expression: ", r);
+        vcsn::raise(e, "  while reading expression: ", r);
       }
     vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }

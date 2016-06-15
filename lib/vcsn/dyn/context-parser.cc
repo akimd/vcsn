@@ -534,8 +534,7 @@ namespace vcsn
         }
       catch (const std::runtime_error& e)
         {
-          raise(e.what(), "\n",
-                "  while reading context: ", ctx);
+          raise(e, "  while reading context: ", ctx);
         }
     }
 
@@ -549,8 +548,7 @@ namespace vcsn
         }
       catch (const std::runtime_error& e)
         {
-          raise(e.what(), "\n",
-                "  while reading type: ", type);
+          raise(e, "  while reading type: ", type);
         }
     }
   }
