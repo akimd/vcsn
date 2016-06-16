@@ -111,10 +111,10 @@ namespace vcsn
 
       /// Compute the left quotient
       template <bool L = Lazy>
-      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv()
+      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldivide()
       {
         static_assert(labelset_t::has_one(),
-                      "ldiv: labelset must have a neutral");
+                      "ldivide: labelset must have a neutral");
         initialize_conjunction();
 
         while (!aut_->todo_.empty())
@@ -306,7 +306,7 @@ namespace vcsn
             this->new_transition(src,
                                  state(lhs->post(), rhs->dst_of(ts)),
                                  rhs->label_of(ts),
-                                 ws_.ldiv(lweight, rhs->weight_of(ts)));
+                                 ws_.ldivide(lweight, rhs->weight_of(ts)));
           }
         }
         for (const auto& t: zip_map_tuple(out_(psrc)))
@@ -319,7 +319,7 @@ namespace vcsn
                  this->add_transition(src, state(ts.dst...),
                                       ls.is_special(t.first)
                                       ? t.first : ls.one(),
-                                      ws_.ldiv(ts.weight()...));
+                                      ws_.ldivide(ts.weight()...));
                },
                t.second);
       }
@@ -645,7 +645,7 @@ namespace vcsn
 
 
   /*-----------------------------.
-  | ldiv(automaton, automaton).  |
+  | ldivide(automaton, automaton).  |
   `-----------------------------*/
 
   /// Compute the left quotient.
@@ -654,24 +654,24 @@ namespace vcsn
   /// \param rhs  right hand side
   template <Automaton Aut1, Automaton Aut2>
   auto
-  ldiv(const Aut1& lhs, const Aut2& rhs, auto_tag = {})
+  ldivide(const Aut1& lhs, const Aut2& rhs, auto_tag = {})
   {
     return detail::static_if<std::is_same<weightset_t_of<Aut1>, b>::value
                              && std::is_same<weightset_t_of<Aut2>, b>::value>
              ([] (const auto& lhs, const auto& rhs)
               {
-                return ldiv(lhs, rhs, boolean_tag{});
+                return ldivide(lhs, rhs, boolean_tag{});
               },
               [] (const auto& lhs, const auto& rhs)
               {
-                return ldiv(lhs, rhs, weighted_tag{});
+                return ldivide(lhs, rhs, weighted_tag{});
               }
              )(lhs, rhs);
   }
 
   template <Automaton Aut1, Automaton Aut2>
   auto
-  ldiv(const Aut1& lhs, const Aut2& rhs, boolean_tag)
+  ldivide(const Aut1& lhs, const Aut2& rhs, boolean_tag)
   {
     auto res = insplit(rhs);
     auto prod =
@@ -682,11 +682,11 @@ namespace vcsn
 
   template <Automaton Aut1, Automaton Aut2>
   auto
-  ldiv(const Aut1& lhs, const Aut2& rhs, weighted_tag)
+  ldivide(const Aut1& lhs, const Aut2& rhs, weighted_tag)
   {
     auto prod =
       detail::make_product_automaton<false>(join_automata(lhs, rhs), lhs, rhs);
-    prod->ldiv();
+    prod->ldivide();
     return prod->strip();
   }
 
@@ -695,14 +695,14 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (ldiv).
+      /// Bridge (ldivide).
       template <Automaton Aut1, Automaton Aut2>
       automaton
-      ldiv(const automaton& aut1, const automaton& aut2)
+      ldivide(const automaton& aut1, const automaton& aut2)
       {
         const auto& a1 = aut1->as<Aut1>();
         const auto& a2 = aut2->as<Aut2>();
-        return vcsn::ldiv<Aut1, Aut2>(a1, a2);
+        return vcsn::ldivide<Aut1, Aut2>(a1, a2);
       }
     }
   }
@@ -710,7 +710,7 @@ namespace vcsn
 
 
   /*-----------------------------.
-  | rdiv(automaton, automaton).  |
+  | rdivide(automaton, automaton).  |
   `-----------------------------*/
 
   /// Compute the right quotient.
@@ -719,11 +719,11 @@ namespace vcsn
   /// \param a2  right hand side
   template <Automaton Aut1, Automaton Aut2>
   auto
-  rdiv(const Aut1& a1, const Aut2& a2)
+  rdivide(const Aut1& a1, const Aut2& a2)
   {
     auto a1t = transpose(a1);
     auto a2t = transpose(a2);
-    return transpose(ldiv(a2t, a1t));
+    return transpose(ldivide(a2t, a1t));
   }
 
   namespace dyn
@@ -733,11 +733,11 @@ namespace vcsn
       /// Bridge.
       template <Automaton Aut1, Automaton Aut2>
       automaton
-      rdiv(const automaton& aut1, const automaton& aut2)
+      rdivide(const automaton& aut1, const automaton& aut2)
       {
         const auto& a1 = aut1->as<Aut1>();
         const auto& a2 = aut2->as<Aut2>();
-        return vcsn::rdiv(a1, a2);
+        return vcsn::rdivide(a1, a2);
       }
     }
   }

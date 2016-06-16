@@ -205,7 +205,7 @@ CHECK_NE(info['star'], 0)
 
 CHECK_EQ(info['conjunction'], 0)
 CHECK_EQ(info['infiltrate'], 0)
-CHECK_EQ(info['ldiv'], 0)
+CHECK_EQ(info['ldivide'], 0)
 CHECK_EQ(info['lweight'], 0)
 CHECK_EQ(info['mul'], 0)
 CHECK_EQ(info['one'], 0)

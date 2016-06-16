@@ -39,7 +39,7 @@ namespace vcsn
       shuffle = products,
       conjunction = products,
       infiltrate = products,
-      ldiv,
+      ldivide,
       mul,
       word = mul, // Multi-letter atoms.
       lweight,
@@ -123,7 +123,7 @@ namespace vcsn
       VCSN_RAT_VISIT(complement, v)    { print_(v, complement_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
       VCSN_RAT_VISIT(infiltrate, v)    { print_(v, infiltrate_); }
-      VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
+      VCSN_RAT_VISIT(ldivide, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v);
       VCSN_RAT_VISIT(one, v);
       VCSN_RAT_VISIT(mul, v);

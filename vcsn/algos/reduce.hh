@@ -453,7 +453,7 @@ namespace vcsn
           {
             v[permutation[pivot]] = ws_.one();
             for (unsigned r = pivot + 1; r < dimension; ++r)
-              v[permutation[r]] = ws_.rdiv(v[permutation[r]], k);
+              v[permutation[r]] = ws_.rdivide(v[permutation[r]], k);
           }
       }
 

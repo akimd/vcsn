@@ -53,7 +53,7 @@ namespace vcsn
       DEFINE(compose);
       DEFINE(conjunction);
       DEFINE(infiltrate);
-      DEFINE(ldiv);
+      DEFINE(ldivide);
       DEFINE(lweight);
       DEFINE(one);
       DEFINE(mul);

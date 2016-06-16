@@ -59,7 +59,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
-  %D%/ldiv.py                                   \
+  %D%/ldivide.py                                \
   %D%/less-than.py                              \
   %D%/letterize.py                              \
   %D%/lift.py                                   \
@@ -76,7 +76,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/proper.py                                 \
   %D%/properlazy.py                             \
   %D%/push-weights.py                           \
-  %D%/rdiv.py                                   \
+  %D%/rdivide.py                                \
   %D%/reduce.py                                 \
   %D%/scc.py                                    \
   %D%/shortest.py                               \
@@ -229,7 +229,7 @@ EXTRA_DIST +=                                           \
   %D%/factory.dir/ladybird-2.gv                         \
   %D%/factory.dir/levenshtein.gv                        \
   %D%/factory.dir/u-5.gv                                \
-  %D%/ldiv.dir/aut1.gv                                  \
+  %D%/ldivide.dir/aut1.gv                               \
   %D%/minimize.dir/incomplete-non-trim.gv               \
   %D%/minimize.dir/incomplete-non-trim.moore.gv         \
   %D%/minimize.dir/intricate.exp.gv                     \
@@ -266,16 +266,16 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4-subword.gv                        \
   %D%/prefix.dir/aut4-suffix.gv                         \
   %D%/prefix.dir/aut4.gv                                \
-  %D%/rdiv.dir/aut1.gv                                  \
+  %D%/rdivide.dir/aut1.gv                               \
   %D%/standard.dir/complement-1.gv                      \
   %D%/standard.dir/compose-1.gv                         \
   %D%/standard.dir/conjunction-1.gv                     \
   %D%/standard.dir/conjunction-2.gv                     \
   %D%/standard.dir/infiltrate-1.gv                      \
-  %D%/standard.dir/ldiv-1.gv                            \
-  %D%/standard.dir/ldiv-2.gv                            \
-  %D%/standard.dir/ldiv-3.gv                            \
-  %D%/standard.dir/rdiv-1.gv                            \
+  %D%/standard.dir/ldivide-1.gv                         \
+  %D%/standard.dir/ldivide-2.gv                         \
+  %D%/standard.dir/ldivide-3.gv                         \
+  %D%/standard.dir/rdivide-1.gv                         \
   %D%/standard.dir/shuffle-1.gv                         \
   %D%/standard.dir/transposition-1.gv                   \
   %D%/standard.dir/tuple-1.gv                           \
@@ -303,11 +303,11 @@ EXTRA_DIST +=                                           \
 %D%/expression.log:      $(wildcard $(srcdir)/%D%/expression.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/infiltrate.log:      $(wildcard $(srcdir)/%D%/conjunction.dir/*)
-%D%/ldiv.log:            $(wildcard $(srcdir)/%D%/ldiv.dir/*)
+%D%/ldivide.log:         $(wildcard $(srcdir)/%D%/ldivide.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
-%D%/rdiv.log:            $(wildcard $(srcdir)/%D%/rdiv.dir/*)
+%D%/rdivide.log:         $(wildcard $(srcdir)/%D%/rdivide.dir/*)
 %D%/standard.log:        $(wildcard $(srcdir)/%D%/standard.dir/*)
 %D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)

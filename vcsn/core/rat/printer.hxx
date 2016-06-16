@@ -21,7 +21,7 @@ namespace vcsn
           CASE(compose);
           CASE(conjunction);
           CASE(infiltrate);
-          CASE(ldiv);
+          CASE(ldivide);
           CASE(lweight);
           CASE(one);
           CASE(mul);
@@ -177,7 +177,7 @@ namespace vcsn
             CASE(compose);
             CASE(conjunction);
             CASE(infiltrate);
-            CASE(ldiv);
+            CASE(ldivide);
             CASE(lweight);
             CASE(one);
             CASE(mul);

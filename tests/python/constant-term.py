@@ -62,10 +62,10 @@ check('x*', r'(<x>\e)*')
 # transposition.
 check('zyx', r'(<xyz>\e){T}')
 
-# ldiv
+# ldivide
 e = ctx.expression(r'<x>a{\}<x>a')
 XFAIL(lambda: e.constant_term(),
-      "constant_term: ldiv is not supported")
+      "constant_term: ldivide is not supported")
 
 # tuple.
 #

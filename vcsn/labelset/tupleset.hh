@@ -370,23 +370,23 @@ namespace vcsn
 
     /// Pointwise right division (l / r).
     value_t
-    rdiv(const value_t& l, const value_t& r) const
+    rdivide(const value_t& l, const value_t& r) const
     {
       return map_(l, r,
                   [](const auto& vs, const auto& l, const auto& r)
                   {
-                    return vs.rdiv(l, r);
+                    return vs.rdivide(l, r);
                   });
     }
 
     /// Pointwise left division (l \ r).
     value_t
-    ldiv(const value_t& l, const value_t& r) const
+    ldivide(const value_t& l, const value_t& r) const
     {
       return map_(l, r,
                   [](const auto& vs, const auto& l, const auto& r)
                   {
-                    return vs.ldiv(l, r);
+                    return vs.ldivide(l, r);
                   });
     }
 

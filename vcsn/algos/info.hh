@@ -164,7 +164,7 @@ namespace vcsn
     ECHO(conjunction);
     ECHO(depth);
     ECHO(infiltrate);
-    ECHO(ldiv);
+    ECHO(ldivide);
     ECHO(lweight);
     ECHO(one);
     ECHO(mul);

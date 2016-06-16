@@ -19,7 +19,7 @@ class expression:
 
     __add__ = expression.add
     __and__ = expression.conjunction
-    __floordiv__ = expression.ldiv
+    __floordiv__ = expression.ldivide
     __invert__ = expression.complement
     __matmul__ = expression.compose
     __mod__ = expression.difference
@@ -29,7 +29,7 @@ class expression:
     __repr__ = lambda self: self.format('text')
     __rmul__ = _lweight
     __str__ = lambda self: self.format('text')
-    __truediv__ = expression.rdiv
+    __truediv__ = expression.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
     __lt__ = expression.less_than
@@ -144,7 +144,7 @@ class expression:
 
     def is_extended(self):
         '''Whether this expression uses extended operators.'''
-        ext = ['complement', 'conjunction', 'infiltrate', 'ldiv',
+        ext = ['complement', 'conjunction', 'infiltrate', 'ldivide',
                'shuffle', 'transposition', 'tuple']
         i = self.info()
         for op in ext:

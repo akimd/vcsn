@@ -232,11 +232,11 @@ static size_t check_zmin()
   ASSERT_VS_EQ(ws, ws.mul(-12, ws.one()), -12);
 
   // div: sub.
-  ASSERT_VS_EQ(ws, ws.rdiv(23, 42), 23-42);
-  ASSERT_VS_EQ(ws, ws.rdiv(42, 23), 42-23);
-  ASSERT_VS_EQ(ws, ws.rdiv(ws.zero(), 12), ws.zero());
-  ASSERT_VS_EQ(ws, ws.rdiv(ws.one(), 12), -12);
-  ASSERT_VS_EQ(ws, ws.rdiv(-12, ws.one()), -12);
+  ASSERT_VS_EQ(ws, ws.rdivide(23, 42), 23-42);
+  ASSERT_VS_EQ(ws, ws.rdivide(42, 23), 42-23);
+  ASSERT_VS_EQ(ws, ws.rdivide(ws.zero(), 12), ws.zero());
+  ASSERT_VS_EQ(ws, ws.rdivide(ws.one(), 12), -12);
+  ASSERT_VS_EQ(ws, ws.rdivide(-12, ws.one()), -12);
 
 
   // equal
@@ -284,11 +284,11 @@ static size_t check_log()
   ASSERT_VS_EQ(ws, ws.mul(-12, ws.one()), -12);
 
   // div: sub.
-  ASSERT_VS_EQ(ws, ws.rdiv(23, 42), 23-42);
-  ASSERT_VS_EQ(ws, ws.rdiv(42, 23), 42-23);
-  ASSERT_VS_EQ(ws, ws.rdiv(ws.zero(), 12), ws.zero());
-  ASSERT_VS_EQ(ws, ws.rdiv(ws.one(), 12), -12);
-  ASSERT_VS_EQ(ws, ws.rdiv(-12, ws.one()), -12);
+  ASSERT_VS_EQ(ws, ws.rdivide(23, 42), 23-42);
+  ASSERT_VS_EQ(ws, ws.rdivide(42, 23), 42-23);
+  ASSERT_VS_EQ(ws, ws.rdivide(ws.zero(), 12), ws.zero());
+  ASSERT_VS_EQ(ws, ws.rdivide(ws.one(), 12), -12);
+  ASSERT_VS_EQ(ws, ws.rdivide(-12, ws.one()), -12);
 
 
   // equal

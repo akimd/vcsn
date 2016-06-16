@@ -156,7 +156,7 @@ namespace vcsn
     }
 
     /// Build a left division: `l {\} r`.
-    auto ldiv(const value_t& l, const value_t& r) const -> value_t
+    auto ldivide(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
       // We need a free labelset, but proper automata.
@@ -166,13 +166,13 @@ namespace vcsn
       copy_into(v::proper(r), rhs);
 
       auto res = make_mutable_automaton(ctx_);
-      // ldiv might introduce several initial states, e.g. a? \ a.
-      copy_into(v::proper(v::accessible(v::standard(v::ldiv(lhs, rhs)))), res);
+      // ldivide might introduce several initial states, e.g. a? \ a.
+      copy_into(v::proper(v::accessible(v::standard(v::ldivide(lhs, rhs)))), res);
       return v::is_empty(res) ? zero() : res;
     }
 
     /// Build a right division: `l {/} r`.
-    auto rdiv(const value_t& l, const value_t& r) const -> value_t
+    auto rdivide(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
       // We need a free labelset, but proper automata.
@@ -182,7 +182,7 @@ namespace vcsn
       copy_into(v::proper(r), rhs);
 
       auto res = make_mutable_automaton(ctx_);
-      copy_into(v::standard(v::proper(v::coaccessible(v::rdiv(lhs, rhs)))),
+      copy_into(v::standard(v::proper(v::coaccessible(v::rdivide(lhs, rhs)))),
                 res);
       return v::is_empty(res) ? zero() : res;
     }

@@ -43,7 +43,7 @@ namespace vcsn
       atom,
       add,
       mul,
-      ldiv,
+      ldivide,
       conjunction,
       shuffle,
       infiltrate,
@@ -77,7 +77,7 @@ namespace vcsn
       return (t == type_t::compose
               || t == type_t::conjunction
               || t == type_t::infiltrate
-              || t == type_t::ldiv
+              || t == type_t::ldivide
               || t == type_t::mul
               || t == type_t::shuffle
               || t == type_t::add);
@@ -145,7 +145,7 @@ namespace vcsn
     using infiltrate = variadic<type_t::infiltrate, Context>;
 
     template <typename Context>
-    using ldiv = variadic<type_t::ldiv, Context>;
+    using ldivide = variadic<type_t::ldivide, Context>;
 
     template <typename Context>
     using mul = variadic<type_t::mul, Context>;

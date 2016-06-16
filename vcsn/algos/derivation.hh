@@ -76,7 +76,7 @@ namespace vcsn
     private:
       VCSN_RAT_UNSUPPORTED(compose)
       VCSN_RAT_UNSUPPORTED(infiltrate)
-      VCSN_RAT_UNSUPPORTED(ldiv)
+      VCSN_RAT_UNSUPPORTED(ldivide)
       VCSN_RAT_UNSUPPORTED(transposition)
 
       VCSN_RAT_VISIT(zero,)

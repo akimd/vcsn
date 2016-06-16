@@ -49,7 +49,7 @@ namespace vcsn
       VCSN_RAT_VISIT(compose, v)      { visit_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
       VCSN_RAT_VISIT(infiltrate, v)   { visit_(v); }
-      VCSN_RAT_VISIT(ldiv, v)         { visit_(v); }
+      VCSN_RAT_VISIT(ldivide, v)         { visit_(v); }
       VCSN_RAT_VISIT(lweight, v);
       VCSN_RAT_VISIT(mul, v)          { visit_(v); }
       VCSN_RAT_VISIT(one, v)          { visit_(v); }

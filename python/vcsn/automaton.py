@@ -96,7 +96,7 @@ class automaton:
     __rmul__ = _lweight
     __str__ = lambda self: self.format('dot')
     __sub__ = automaton.difference
-    __truediv__ = automaton.rdiv
+    __truediv__ = automaton.rdivide
     _repr_svg_ = lambda self: self.as_svg()
 
     as_boxart = lambda self: _dot_to_boxart(self.dot())

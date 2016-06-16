@@ -9,10 +9,12 @@ the internal API may also be documented.
 ### renamings
 The following operations have been renamed, in all APIs (vcsn::, dyn::,
 Python, and TAF-Kit), and on all applicable types (automaton, expressions,
-expansions, polynomials).
+expansions, polynomials, weights).
 
     infiltration -> infiltrate
+    ldiv         -> ldivide
     left_mult    -> lweight
+    rdiv         -> rdivide
     right_mult   -> rweight
     sum          -> add
 

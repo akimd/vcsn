@@ -268,8 +268,8 @@ exp:
 | exp ":" exp                 { $$ = dyn::shuffle($1.exp, $3.exp); }
 | exp "&:" exp                { $$ = dyn::infiltrate($1.exp, $3.exp); }
 | exp "<+" exp                { $$ = prefer($1.exp, $3.exp); }
-| exp "{\\}" exp              { $$ = dyn::ldiv($1.exp, $3.exp); }
-| exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
+| exp "{\\}" exp              { $$ = dyn::ldivide($1.exp, $3.exp); }
+| exp "{/}" exp               { $$ = dyn::rdivide($1.exp, $3.exp); }
 | exp "%" exp                 { $$ = dyn::conjunction($1.exp,
                                                       dyn::complement($3.exp)); }
 | weights exp %prec LWEIGHT   { $$ = dyn::lweight($1, $2.exp); }

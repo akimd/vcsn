@@ -170,11 +170,11 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(ldiv, e)
+      VCSN_RAT_VISIT(ldivide, e)
       {
         auto res = recurse(e.head());
         for (const auto& c: e.tail())
-          res = as_.ldiv(res, recurse(c));
+          res = as_.ldivide(res, recurse(c));
         res_ = std::move(res);
       }
 

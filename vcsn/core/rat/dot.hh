@@ -178,7 +178,7 @@ namespace vcsn
       VCSN_RAT_VISIT(compose, v)       { print_(v, compose_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
       VCSN_RAT_VISIT(infiltrate, v)    { print_(v, infiltrate_); }
-      VCSN_RAT_VISIT(ldiv, v)          { print_(v, ldiv_); }
+      VCSN_RAT_VISIT(ldivide, v)          { print_(v, ldiv_); }
       VCSN_RAT_VISIT(lweight, v)       { print_(v); }
       VCSN_RAT_VISIT(mul, v)           { print_(v, mul_); }
       VCSN_RAT_VISIT(one, v)           { print_(v, one_); }

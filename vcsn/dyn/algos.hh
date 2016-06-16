@@ -427,13 +427,13 @@ namespace vcsn
     automaton ladybird(const context& ctx, unsigned n);
 
     /// Left-division of two automata (lhs \ rhs).
-    automaton ldiv(const automaton& lhs, const automaton& rhs);
+    automaton ldivide(const automaton& lhs, const automaton& rhs);
 
     /// Left-division of two polynomials (lhs \ rhs).
-    polynomial ldiv(const polynomial& lhs, const polynomial& rhs);
+    polynomial ldivide(const polynomial& lhs, const polynomial& rhs);
 
     /// Left-division of two expressions (lhs \ rhs).
-    expression ldiv(const expression& lhs, const expression& rhs);
+    expression ldivide(const expression& lhs, const expression& rhs);
 
     /// Left greatest common divisor of two polynomials (lhs \ rhs).
     polynomial lgcd(const polynomial& lhs, const polynomial& rhs);
@@ -739,10 +739,10 @@ namespace vcsn
                                  identities ids);
 
     /// Right-division of two automata (lhs / rhs).
-    automaton rdiv(const automaton& lhs, const automaton& rhs);
+    automaton rdivide(const automaton& lhs, const automaton& rhs);
 
     /// Right-division of two expressions (lhs \ rhs).
-    expression rdiv(const expression& lhs, const expression& rhs);
+    expression rdivide(const expression& lhs, const expression& rhs);
 
     /// Read an automaton from a stream.
     /// \param is      the input stream.

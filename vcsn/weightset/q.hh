@@ -108,7 +108,7 @@ namespace vcsn
     }
 
     value_t
-    rdiv(const value_t l, const value_t r) const
+    rdivide(const value_t l, const value_t r) const
     {
       require(!is_zero(r), *this, ": div: division by zero");
       if (0 < r.num)
@@ -118,9 +118,9 @@ namespace vcsn
     }
 
     value_t
-    ldiv(const value_t l, const value_t r) const
+    ldivide(const value_t l, const value_t r) const
     {
-      return rdiv(r, l);
+      return rdivide(r, l);
     }
 
     value_t star(const value_t v) const

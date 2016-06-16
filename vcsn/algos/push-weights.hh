@@ -56,7 +56,7 @@ namespace vcsn
         if (res->src_of(t) == res->pre())
           res->set_weight(t, de);
         else if (!ws.is_zero(ds))
-          res->set_weight(t, ws.rdiv(w, ds));
+          res->set_weight(t, ws.rdivide(w, ds));
       }
     return res;
   }

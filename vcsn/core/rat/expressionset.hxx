@@ -502,13 +502,13 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::ldiv(const value_t& l, const value_t& r) const
+  DEFINE::ldivide(const value_t& l, const value_t& r) const
     -> value_t
   {
     value_t res = nullptr;
 
     if (!ids_)
-      res = std::make_shared<ldiv_t>(l, r);
+      res = std::make_shared<ldivide_t>(l, r);
 
     // 0\E => 0.
     else if (is_zero(l))
@@ -523,15 +523,15 @@ namespace vcsn
       res = r;
 
     else
-      res = std::make_shared<ldiv_t>(l, r);
+      res = std::make_shared<ldivide_t>(l, r);
     return res;
   }
 
-  DEFINE::rdiv(const value_t& l, const value_t& r) const
+  DEFINE::rdivide(const value_t& l, const value_t& r) const
     -> value_t
   {
     // l/r = (r{T} {\} l{T}){T}.
-    return transposition(ldiv(transposition(r), transposition(l)));
+    return transposition(ldivide(transposition(r), transposition(l)));
   }
 
   template <typename Context>

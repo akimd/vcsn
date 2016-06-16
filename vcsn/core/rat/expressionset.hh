@@ -71,7 +71,7 @@ namespace vcsn
     DEFINE(conjunction);
     DEFINE(infiltrate);
     DEFINE(inner);
-    DEFINE(ldiv);
+    DEFINE(ldivide);
     DEFINE(leaf);
     DEFINE(lweight);
     DEFINE(node);
@@ -285,10 +285,10 @@ namespace vcsn
     auto power(const value_t& e, unsigned n) const -> value_t;
 
     /// Build a left division: `l {\} r`.
-    auto ldiv(const value_t& l, const value_t& r) const -> value_t;
+    auto ldivide(const value_t& l, const value_t& r) const -> value_t;
 
     /// Build a right division: `l {/} r`.
-    auto rdiv(const value_t& l, const value_t& r) const -> value_t;
+    auto rdivide(const value_t& l, const value_t& r) const -> value_t;
 
     /// Add a star operator: `e*`.
     auto star(const value_t& e) const -> value_t;

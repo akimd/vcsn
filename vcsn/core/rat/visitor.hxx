@@ -47,7 +47,7 @@ namespace vcsn
         t->accept(*this);
     }
 
-    VISIT(ldiv, v)
+    VISIT(ldivide, v)
     {
       for (const auto& t : v)
         t->accept(*this);

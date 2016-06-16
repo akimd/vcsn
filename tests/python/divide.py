@@ -13,10 +13,10 @@ z = vcsn.context('law_char(abcd), z')
 def check_div(l, r):
     make = z.expression
     CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l) // make(r))
-    CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l).ldiv(make(r)))
+    CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l).ldivide(make(r)))
 
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l) / make(r))
-    CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l).rdiv(make(r)))
+    CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l).rdivide(make(r)))
 
 check_div(r'\e', 'a')
 check_div(r'\e', '<2>a')
@@ -28,7 +28,7 @@ check_div(r'<2>c+<3>d', 'ab')
 check_div(r'<2>c+<3>d', '<2>ab')
 
 ## ------------------------------ ##
-## ldiv(polynomial, polynomial).  ##
+## ldivide(polynomial, polynomial).  ##
 ## ------------------------------ ##
 
 def check(exp, lhs, rhs):
@@ -36,13 +36,13 @@ def check(exp, lhs, rhs):
     exp = make(exp)
     lhs = make(lhs)
     rhs = make(rhs)
-    CHECK_EQ(exp, lhs.ldiv(rhs))
+    CHECK_EQ(exp, lhs.ldivide(rhs))
 
 def xfail(lhs, rhs):
     make = z.polynomial
     lhs = make(lhs)
     rhs = make(rhs)
-    XFAIL(lambda: lhs.ldiv(rhs))
+    XFAIL(lambda: lhs.ldivide(rhs))
 
 xfail('a', 'b')
 

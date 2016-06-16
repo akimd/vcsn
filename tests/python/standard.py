@@ -130,9 +130,9 @@ def check(r, exp=None, file=None):
           'automaton for {} is not standard: {}'.format(r, a))
 
     # Check that we are equivalent to derived-term.  However,
-    # derived-term sometimes needs a neutral to compute ldiv/rdiv.
+    # derived-term sometimes needs a neutral to compute ldivide/rdivide.
     # FIXME: Not very elegant...
-    if r.info('ldiv'):
+    if r.info('ldivide'):
         nctx = vcsn.context(re.sub('(.*?), *(.*)', r'nullableset<\1>, \2',
                                    r.context().format('sname')))
         nr = nctx.expression(str(r))
@@ -976,10 +976,10 @@ check(qexp('[abc]*{c}'), zero('abc'))
 check(qexp('abcd & (dcba){T}'), file='transposition-1')
 
 # Left and right divisions.
-check(qexp(r'<2>abc {\} <4>abcd*'), file='ldiv-1')
-check(qexp(r'a? {\} a'), file='ldiv-2')
-check(qexp(r'(a* {\} a) {\} \e'), file='ldiv-3')
-check(qexp('<4>a*bcd {/} <2>bcd'), file='rdiv-1')
+check(qexp(r'<2>abc {\} <4>abcd*'), file='ldivide-1')
+check(qexp(r'a? {\} a'), file='ldivide-2')
+check(qexp(r'(a* {\} a) {\} \e'), file='ldivide-3')
+check(qexp('<4>a*bcd {/} <2>bcd'), file='rdivide-1')
 
 # Tupling.
 def tuple(*exps):

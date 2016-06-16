@@ -110,7 +110,7 @@ namespace vcsn
       /// Cannot compute the constant-term easily here:
       /// c(<x>a{\}<y>a) = x{\}y, yet both operands have a null
       /// constant-term.
-      VCSN_RAT_UNSUPPORTED(ldiv);
+      VCSN_RAT_UNSUPPORTED(ldivide);
 
       /// Cannot compute the constant-term easily here:
       /// c(<x>\e|x @ <y>x|\e) = xy, yet both operands have a null

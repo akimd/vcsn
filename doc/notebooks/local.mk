@@ -76,7 +76,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_trim.ipynb                   \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
-  %D%/automaton.ldiv.ipynb                      \
+  %D%/automaton.ldivide.ipynb                   \
   %D%/automaton.letterize.ipynb                 \
   %D%/automaton.lift.ipynb                      \
   %D%/automaton.lightest.ipynb                  \
@@ -91,7 +91,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.project.ipynb                   \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
-  %D%/automaton.rdiv.ipynb                      \
+  %D%/automaton.rdivide.ipynb                   \
   %D%/automaton.realtime.ipynb                  \
   %D%/automaton.reduce.ipynb                    \
   %D%/automaton.rweight.ipynb                   \

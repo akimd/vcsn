@@ -366,17 +366,17 @@ namespace vcsn
     }
 
     /// Compute l \ r = l^{-1}r.
-    value_t ldiv(const value_t& l, const value_t& r) const
+    value_t ldivide(const value_t& l, const value_t& r) const
     {
       if (equal(l, r))
         return one();
       else if (is_one(l))
         return r;
       else if (is_one(r))
-        raise(*this, ": ldiv: invalid arguments: ",
+        raise(*this, ": ldivide: invalid arguments: ",
               to_string(*this, l), ", ", to_string(*this, r));
       else
-        return value(ls_->ldiv(get_value(l), get_value(r)));
+        return value(ls_->ldivide(get_value(l), get_value(r)));
     }
 
     static value_t

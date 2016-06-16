@@ -32,7 +32,7 @@ check(True,  '(<6/10>a*.<4/10>b*)*')
 # instead of failing, just add a star...
 e = expr(r'a{\}a')
 XFAIL(lambda: e.is_valid(),
-      'is_valid: ldiv is not supported')
+      'is_valid: ldivide is not supported')
 
 e = vcsn.context('lat<lan, lan>, q').expression(r'a|\e @ \e|a')
 XFAIL(lambda: e.is_valid(),

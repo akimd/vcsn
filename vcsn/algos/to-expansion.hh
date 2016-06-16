@@ -220,7 +220,7 @@ namespace vcsn
           return std::make_shared<mul_t>(expressions_t{begin, end});
       }
 
-      VCSN_RAT_VISIT(ldiv, e)
+      VCSN_RAT_VISIT(ldivide, e)
       {
         assert(e.size() == 2);
         DEBUG_IF(
@@ -248,14 +248,14 @@ namespace vcsn
               // directly in res_.
               if (transposed_)
                 ps_.add_here(res_.polynomials[one],
-                             rs_.transposition(rs_.ldiv(label_of(lm),
+                             rs_.transposition(rs_.ldivide(label_of(lm),
                                                         label_of(rm))),
-                             ws_.transpose(ws_.ldiv(weight_of(lm),
+                             ws_.transpose(ws_.ldivide(weight_of(lm),
                                                     weight_of(rm))));
               else
                 ps_.add_here(res_.polynomials[one],
-                             rs_.ldiv(label_of(lm), label_of(rm)),
-                             ws_.ldiv(weight_of(lm), weight_of(rm)));
+                             rs_.ldivide(label_of(lm), label_of(rm)),
+                             ws_.ldivide(weight_of(lm), weight_of(rm)));
         if (has(lhs.polynomials, one))
           for (const auto& rhsp: rhs.polynomials)
             if (rhsp.first != one)
@@ -265,15 +265,15 @@ namespace vcsn
                     if (transposed_)
                       ps_.add_here(res_.polynomials[one],
                         rs_.transposition(
-                          rs_.ldiv(label_of(lm),
+                          rs_.ldivide(label_of(lm),
                                    rs_.mul(rs_.atom(rhsp.first),
                                            label_of(rm)))),
-                        ws_.transpose(ws_.ldiv(weight_of(lm), weight_of(rm))));
+                        ws_.transpose(ws_.ldivide(weight_of(lm), weight_of(rm))));
                     else
                       ps_.add_here(res_.polynomials[one],
-                        rs_.ldiv(label_of(lm),
+                        rs_.ldivide(label_of(lm),
                           rs_.mul(rs_.atom(rhsp.first), label_of(rm))),
-                        ws_.ldiv(weight_of(lm), weight_of(rm)));
+                        ws_.ldivide(weight_of(lm), weight_of(rm)));
                   }
         if (has(rhs.polynomials, one))
           for (const auto& lhsp: lhs.polynomials)
@@ -284,14 +284,14 @@ namespace vcsn
                     if (transposed_)
                       ps_.add_here(res_.polynomials[one],
                         rs_.transposition(
-                          rs_.ldiv(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
+                          rs_.ldivide(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
                                    label_of(rm))),
-                        ws_.transpose(ws_.ldiv(weight_of(lm), weight_of(rm))));
+                        ws_.transpose(ws_.ldivide(weight_of(lm), weight_of(rm))));
                     else
                       ps_.add_here(res_.polynomials[one],
-                        rs_.ldiv(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
+                        rs_.ldivide(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
                                  label_of(rm)),
-                        ws_.ldiv(weight_of(lm), weight_of(rm)));
+                        ws_.ldivide(weight_of(lm), weight_of(rm)));
                   }
         es_.normalize(res_);
       }

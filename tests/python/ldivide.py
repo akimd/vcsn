@@ -11,36 +11,36 @@ def aut(e):
 def load(fname):
     return open(medir + '/' + fname).read().strip()
 
-CHECK_EQ(load('aut1.gv'), aut('a+b').ldiv(aut('a*b*')))
+CHECK_EQ(load('aut1.gv'), aut('a+b').ldivide(aut('a*b*')))
 
 # Addition
-CHECK_EQUIV(aut(r'<3>\e'), aut('<2>a').ldiv(aut('<6>(a+b)')))
+CHECK_EQUIV(aut(r'<3>\e'), aut('<2>a').ldivide(aut('<6>(a+b)')))
 
 # Concatenation
-CHECK_EQUIV(aut('<3>b'), aut('<2>a').ldiv(aut('<6>ab')))
+CHECK_EQUIV(aut('<3>b'), aut('<2>a').ldivide(aut('<6>ab')))
 
 # Star
-CHECK_EQUIV(aut('<3>a*'), aut('<2>a').ldiv(aut('<6>a*')))
+CHECK_EQUIV(aut('<3>a*'), aut('<2>a').ldivide(aut('<6>a*')))
 
 # Epsilon cycles
-CHECK_EQUIV(aut(r'(<1/2>\e)*a*'), aut('(<2>a)*').ldiv(aut('a*')))
+CHECK_EQUIV(aut(r'(<1/2>\e)*a*'), aut('(<2>a)*').ldivide(aut('a*')))
 
 # Empty result
-CHECK_EQUIV(aut(r'\z'), aut('ab').ldiv(aut('<2>a')))
+CHECK_EQUIV(aut(r'\z'), aut('ab').ldivide(aut('<2>a')))
 
 # Misc
-CHECK_EQUIV(aut(r'<3>a*b+<2>\e'), aut('<2>a+<3>b').ldiv(aut('<6>a*b')))
-CHECK_EQUIV(aut('<2>c'), aut('a+b').ldiv(aut('(a+b)c')))
+CHECK_EQUIV(aut(r'<3>a*b+<2>\e'), aut('<2>a+<3>b').ldivide(aut('<6>a*b')))
+CHECK_EQUIV(aut('<2>c'), aut('a+b').ldivide(aut('(a+b)c')))
 
 # Cross check with derived_term and inductive,standard.
 
 def check(lhs_expr, rhs_expr):
-    div_expr = lhs_expr.ldiv(rhs_expr)
+    div_expr = lhs_expr.ldivide(rhs_expr)
     print("Checking:", div_expr)
 
     lhs_aut = lhs_expr.automaton()
     rhs_aut = rhs_expr.automaton()
-    div_aut = lhs_aut.ldiv(rhs_aut)
+    div_aut = lhs_aut.ldivide(rhs_aut)
 
     if div_aut.is_valid():
         for algo in ['expansion', 'inductive,standard']:

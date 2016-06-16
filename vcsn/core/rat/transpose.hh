@@ -137,18 +137,18 @@ namespace vcsn
         // (abc){T}.transpose() => (abc){T}{T}
         // (abc){T}{T}.transpose() => (abc){T}
         //
-        // Do the same with ldiv, for the same reasons: involution.
+        // Do the same with ldivide, for the same reasons: involution.
         //
         // (E\F).transpose() => (E\F){T}
         // (E\F){T}.transpose() => (E\F)
         if (e.sub()->type() == rat::type_t::transposition
-            || e.sub()->type() == rat::type_t::ldiv)
+            || e.sub()->type() == rat::type_t::ldivide)
           res_ = e.sub();
         else
           res_ = rs_.transposition(e.shared_from_this());
       }
 
-      VCSN_RAT_VISIT(ldiv, e)
+      VCSN_RAT_VISIT(ldivide, e)
       {
         // There is nothing we can do here but leaving an explicit
         // transposition.

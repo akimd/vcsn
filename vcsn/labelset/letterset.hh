@@ -239,13 +239,13 @@ namespace vcsn
     /// The longest common prefix.
     ///
     /// It would be better not to define it and to adjust
-    /// tupleset::ldiv to be SNIFAE compliant, so that we get a
+    /// tupleset::ldivide to be SNIFAE compliant, so that we get a
     /// compile time error instead of a runtime one when we try to
-    /// using lgcd/ldiv on labelsets that don't support it.  However,
-    /// I feel it is not nice not to get tupleset::ldiv fail to
+    /// using lgcd/ldivide on labelsets that don't support it.  However,
+    /// I feel it is not nice not to get tupleset::ldivide fail to
     /// compile without a clear explanation of why, and it is quite
     /// some work to write code that supports this possible missing
-    /// ldiv/lgcd (see the case of conjunction in expansionset, case
+    /// ldivide/lgcd (see the case of conjunction in expansionset, case
     /// of non free labelsets).
     ///
     /// Since I'm not convinced that letterset is the right
@@ -258,9 +258,9 @@ namespace vcsn
     }
 
     /// Compute w1 \ w2 = w1^{-1}w2.
-    value_t ldiv(value_t, value_t) const
+    value_t ldivide(value_t, value_t) const
     {
-      raise(*this, ": ldiv: impossible operation");
+      raise(*this, ": ldivide: impossible operation");
     }
 
     value_t conjunction(const value_t& l, const value_t& r) const

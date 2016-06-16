@@ -585,46 +585,46 @@ namespace vcsn
     }
 
     value_t
-    rdiv(const value_t& l, const value_t& r) const
+    rdivide(const value_t& l, const value_t& r) const
     {
-      raise(*this, ": rdiv: not implemented (",
+      raise(*this, ": rdivide: not implemented (",
             to_string(*this, l), ", ", to_string(*this, r), ")");
     }
 
     monomial_t
-    ldiv(const monomial_t& l, const monomial_t& r) const
+    ldivide(const monomial_t& l, const monomial_t& r) const
     {
-      return {labelset()->ldiv(label_of(l), label_of(r)),
-              weightset()->ldiv(weight_of(l), weight_of(r))};
+      return {labelset()->ldivide(label_of(l), label_of(r)),
+              weightset()->ldivide(weight_of(l), weight_of(r))};
     }
 
     /// Left division by a monomial.
     value_t
-    ldiv(const monomial_t& l, const value_t& r) const
+    ldivide(const monomial_t& l, const value_t& r) const
     {
       value_t res;
       for (const auto& m: r)
-        add_here(res, ldiv(l, m));
+        add_here(res, ldivide(l, m));
       return res;
     }
 
     value_t
-    ldiv(const value_t& l, const value_t& r) const
+    ldivide(const value_t& l, const value_t& r) const
     {
       value_t res;
       if (is_zero(l))
-        raise(*this, ": ldiv: division by zero");
+        raise(*this, ": ldivide: division by zero");
       else
         {
           value_t remainder = r;
 #if DEBUG
-          std::cerr << "ldiv(";
+          std::cerr << "ldivide(";
           print(l, std::cerr) << ", ";
           print(r, std::cerr) << "\n";
 #endif
           while (!is_zero(remainder))
             {
-              auto factor = ldiv(detail::front(l), detail::front(remainder));
+              auto factor = ldivide(detail::front(l), detail::front(remainder));
 #if DEBUG
               std::cerr << "factor = "; print(factor, std::cerr) << "\n";
 #endif
@@ -639,14 +639,14 @@ namespace vcsn
 #endif
             }
 #if DEBUG
-          std::cerr << "ldiv(";
+          std::cerr << "ldivide(";
           print(l, std::cerr) << ", ";
           print(r, std::cerr) << ") = ";
           print(res, std::cerr) << " rem: ";
           print(remainder, std::cerr) << "\n";
 #endif
           if (!is_zero(remainder))
-            raise(*this, ": ldiv: not implemented (",
+            raise(*this, ": ldivide: not implemented (",
                   to_string(*this, l), ", ", to_string(*this, r), ")");
         }
       return res;
@@ -658,7 +658,7 @@ namespace vcsn
     {
       if (!weightset()->is_one(w))
         for (auto&& m: v)
-          weight_set(m, weightset()->ldiv(w, weight_of(m)));
+          weight_set(m, weightset()->ldivide(w, weight_of(m)));
       return v;
     }
 
@@ -668,7 +668,7 @@ namespace vcsn
     {
       if (!weightset()->is_one(w))
         for (auto& m: v)
-          weight_set(m, weightset()->rdiv(weight_of(m), w));
+          weight_set(m, weightset()->rdivide(weight_of(m), w));
       return v;
     }
 
@@ -761,7 +761,7 @@ namespace vcsn
     | normalize.   |
     `-------------*/
 
-    /// Normalize v in place: compute the LGCD of the weights, ldiv
+    /// Normalize v in place: compute the LGCD of the weights, ldivide
     /// the monomials with that factor, and return the factor.
     weight_t normalize_here(value_t& v) const
     {

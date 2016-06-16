@@ -296,10 +296,10 @@ namespace vcsn
       /// Inplace left-division by \a w of \a res.
       value_t& ldiv_here(const weight_t& w, value_t& res) const
       {
-        res.constant = ws_.ldiv(w, res.constant);
+        res.constant = ws_.ldivide(w, res.constant);
         for (auto& p: res.polynomials)
           for (auto&& m: p.second)
-            weight_set(m, ws_.ldiv(w, weight_of(m)));
+            weight_set(m, ws_.ldivide(w, weight_of(m)));
         return normalize(res);
       }
 
@@ -385,8 +385,8 @@ namespace vcsn
               auto lcp = ls_.lgcd(l.first, r.first);
               if (!ls_.is_one(lcp))
                 {
-                  auto left  = rs_.atom(ls_.ldiv(lcp, l.first));
-                  auto right = rs_.atom(ls_.ldiv(lcp, r.first));
+                  auto left  = rs_.atom(ls_.ldivide(lcp, l.first));
+                  auto right = rs_.atom(ls_.ldivide(lcp, r.first));
                   ps_.add_here(res.polynomials[lcp],
                                conjunction(ps_.lmul_label(left,  l.second),
                                            ps_.lmul_label(right, r.second)));

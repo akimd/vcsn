@@ -199,7 +199,7 @@ namespace vcsn
       VCSN_RAT_UNSUPPORTED(compose)
       VCSN_RAT_UNSUPPORTED(conjunction)
       VCSN_RAT_UNSUPPORTED(infiltrate)
-      VCSN_RAT_UNSUPPORTED(ldiv)
+      VCSN_RAT_UNSUPPORTED(ldivide)
       VCSN_RAT_UNSUPPORTED(shuffle)
       VCSN_RAT_UNSUPPORTED(transposition)
       using tuple_t = typename super_t::tuple_t;
