@@ -195,7 +195,7 @@ class Text(Format):
               file=args.output)
 
     def footer(self, files):
-        res = ''
+        res = self.header(files)
         for i, file in enumerate(files):
             f = os.path.basename(file)
             s = git_summary(f)

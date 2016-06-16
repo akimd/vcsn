@@ -17,21 +17,21 @@ c=$medir/v2.0-1255-gafaf339
 d=$medir/v2.1-0010-gd55ef26
 
 
-check all.out --all -c never $a $b $c $d
+check all.txt --all -c never $a $b $c $d
 
 # Make sure `-o` overrides the existing content of files.
 echo 'foo' >output
 check '' --all -c never -o output $a $b $c $d
-run 0 "$(cat $medir/all.out)" -cat output
+run 0 "$(cat $medir/all.txt)" -cat output
 
 if (vcsn python -c 'import colorama') 2>/dev/null; then
-    check default.out  -c always $a $b $c $d
-    check shortest.out -c always --only shortest -t 2 $a $b $c $d
+    check default.txt  -c always $a $b $c $d
+    check shortest.txt -c always --only shortest -t 2 $a $b $c $d
 fi
 
-check csv.out   --all -c never --output-format csv   $a $b $c $d
-check latex.out --all -c never --output-format latex $a $b $c $d
+check all.csv --all -c never --output-format csv   $a $b $c $d
+check all.tex --all -c never --output-format latex $a $b $c $d
 
 # Inference on the output file name.
-check '' --all -c never -o out.csv   $a $b $c $d
-run 0 "$(cat $medir/csv.out)" -cat out.csv
+check '' --all -c never -o all.csv   $a $b $c $d
+run 0 "$(cat $medir/all.csv)" -cat all.csv

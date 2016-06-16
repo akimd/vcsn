@@ -63,15 +63,15 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 
 dist_TESTS += $(%C%_TESTS)
 
-EXTRA_DIST +=					\
-  %D%/score-compare.dir/all.out			\
-  %D%/score-compare.dir/default.out		\
-  %D%/score-compare.dir/shortest.out		\
-  %D%/score-compare.dir/csv.out			\
-  %D%/score-compare.dir/latex.out		\
-  %D%/score-compare.dir/v2.0-0001-g6bfe026	\
-  %D%/score-compare.dir/v2.0-0423-g841c067	\
-  %D%/score-compare.dir/v2.0-1255-gafaf339	\
+EXTRA_DIST +=                                   \
+  %D%/score-compare.dir/all.csv                 \
+  %D%/score-compare.dir/all.tex                 \
+  %D%/score-compare.dir/all.txt                 \
+  %D%/score-compare.dir/default.txt             \
+  %D%/score-compare.dir/shortest.txt            \
+  %D%/score-compare.dir/v2.0-0001-g6bfe026      \
+  %D%/score-compare.dir/v2.0-0423-g841c067      \
+  %D%/score-compare.dir/v2.0-1255-gafaf339      \
   %D%/score-compare.dir/v2.1-0010-gd55ef26
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out

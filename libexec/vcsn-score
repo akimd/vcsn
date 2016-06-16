@@ -211,12 +211,13 @@ for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
 
 # Input should be too.
 r = 'a?{500}'
-for fmt in ['dot', 'efsm', 'fado']:
+for fmt, number in [('dot', 1), ('efsm', 5), ('fado', 5)]:
     bench('vcsn.automaton(a, "{}")'.format(fmt),
           's = {}(std({}))'.format(fmt, r),
           'read(s)',
           setup=['r = "{}"'.format(r),
-                 'a = b.expression(r).standard().format("{}")'.format(fmt)])
+                 'a = b.expression(r).standard().format("{}")'.format(fmt)],
+          number=number)
 
 ## -------------- ##
 ## derived_term.  ##
@@ -359,7 +360,7 @@ bench('a.eval("a"*{})'.format(n + 1),
       'a = de_bruijn({})'.format(n),
       setup=['n = {}'.format(n),
              'a = b.de_bruijn(n)'],
-      number=2000)
+      number=10000)
 # Something less wide.
 ctx = 'lal_char(a-z), z'
 n = 25
@@ -369,7 +370,7 @@ bench('a.eval("abcxyz"*{})'.format(n),
       setup=['c = vcsn.context("{}")'.format(ctx),
              'r = c.expression("{}")'.format(r),
              'a = r.standard()'],
-      number=10000)
+      number=20000)
 
 
 ## ---------- ##
@@ -396,7 +397,8 @@ bench('a.shortest(5)',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
-             'a = c.expression(r).standard()'])
+             'a = c.expression(r).standard()'],
+      number=5)
 
 ctx = 'lat<lan_char(a), lan_char(x)>, q'
 r = r'(\e|x + a|\e)*'
@@ -476,7 +478,7 @@ bench('a.proper()',
 bench('a.expression("associative", "delgado")',
       'a = ladybird(2000)',
       setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'],
-      number=5)
+      number=10)
 
 r = '[a-d]?{100}'
 bench('a.expression("associative", "naive")',
@@ -498,7 +500,8 @@ bench('a.expression("linear", "delgado")',
 
 bench('a.expression("linear", "delgado")',
       'a = ladybird(2000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'],
+      number=5)
 
 r = '[a-d]?{9}'
 bench('a.expression("linear", "naive")',
@@ -510,7 +513,8 @@ bench('a.expression("linear", "naive")',
 
 bench('a.expression("linear", "naive")',
       'a = ladybird(4000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(4000)'])
+      setup=['a = vcsn.context("lal_char(abc), b").ladybird(4000)'],
+      number=2)
 
 # Other conjunction and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new conjunction algorithm.
@@ -697,7 +701,8 @@ bench('a.accessible()',
       'a = thompson({}).proper(False)'.format(r),
       setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
-             'a = vcsn.context(ctx).expression(r).thompson().proper(False)'])
+             'a = vcsn.context(ctx).expression(r).thompson().proper(False)'],
+      number=4)
 
 # scc.
 ctx = "lal_char(abc), b"
@@ -747,7 +752,7 @@ bench('a.weight_series()',
       setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
              'a = vcsn.context(ctx).expression(r).standard()'],
-      number=50)
+      number=200)
 
 ctx = "lal_char(a-z), z"
 r = "[a-z]{200}"
