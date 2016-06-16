@@ -449,17 +449,17 @@ namespace vcsn
     ///                   but add spontaneous transitions.
     ///   - "auto"        "standard" if \a aut is standard,
     ///                   "general" otherwise.
-    automaton left_mult(const weight& w, const automaton& aut,
+    automaton lweight(const weight& w, const automaton& aut,
                         const std::string& algo = "auto");
 
     /// The left-multiplication of an expansion with \a w as weight.
-    expansion left_mult(const weight& w, const expansion& exp);
+    expansion lweight(const weight& w, const expansion& exp);
 
     /// The left-multiplication of an expression with \a w as weight.
-    expression left_mult(const weight& w, const expression& exp);
+    expression lweight(const weight& w, const expression& exp);
 
     /// The left-multiplication of a polynomial with \a w as weight.
-    polynomial left_mult(const weight& w, const polynomial& p);
+    polynomial lweight(const weight& w, const polynomial& p);
 
     /// Ordering between expressions.
     bool less_than(const expression& lhs, const expression& rhs);
@@ -806,17 +806,17 @@ namespace vcsn
     ///                   but add spontaneous transitions.
     ///   - "auto"        "standard" if \a aut is standard,
     ///                   "general" otherwise.
-    automaton right_mult(const automaton& aut, const weight& w,
+    automaton rweight(const automaton& aut, const weight& w,
                          const std::string& algo = "auto");
 
     /// The right-multiplication of an expansion with \a w as weight.
-    expansion right_mult(const expansion& aut, const weight& w);
+    expansion rweight(const expansion& aut, const weight& w);
 
     /// The right-multiplication of an expression with \a w as weight.
-    expression right_mult(const expression& exp, const weight& w);
+    expression rweight(const expression& exp, const weight& w);
 
     /// The right-multiplication of a polynomial with \a w as weight.
-    polynomial right_mult(const polynomial& p, const weight& w);
+    polynomial rweight(const polynomial& p, const weight& w);
 
     /// Build the SCC automaton whose states are labeled with number
     /// of the strongly-connected component they belong to.

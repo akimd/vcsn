@@ -303,10 +303,10 @@ def process_function(fun):
     cls = formal_to_class(fs[0])
     args = formals_to_args(fs)
 
-    if fun['fun'] == 'left_mult':
+    if fun['fun'] == 'lweight':
         # In this case, the class is actually that of the second
-        # argument: left_mult(weight, automaton) ->
-        # automaton.left_mult(weight).
+        # argument: lweight(weight, automaton) ->
+        # automaton.lweight(weight).
         cls = formal_to_class(fs[1])
         fun['const'] = ' const'
         fs = [fs[0]] + fs[2:]

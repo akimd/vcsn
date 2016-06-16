@@ -4,7 +4,7 @@
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/compose.hh>
 #include <vcsn/algos/conjunction.hh>
-#include <vcsn/algos/left-mult.hh>
+#include <vcsn/algos/weight.hh>
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/add.hh>
@@ -234,13 +234,13 @@ namespace vcsn
     /// Right-multiplication by a weight.
     auto rweight(const value_t& e, const weight_t& w) const -> value_t
     {
-      return ::vcsn::right_mult(e, w, tag_t{});
+      return ::vcsn::rweight(e, w, tag_t{});
     }
 
     /// Left-multiplication by a weight.
     auto lweight(const weight_t& w, const value_t& e) const -> value_t
     {
-      return ::vcsn::left_mult(w, e, tag_t{});
+      return ::vcsn::lweight(w, e, tag_t{});
     }
 
   protected:

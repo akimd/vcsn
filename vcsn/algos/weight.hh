@@ -27,7 +27,7 @@ namespace vcsn
 
       /// Left-multiplication of any automaton by a weight.
       static automaton_t&
-      left_mult_here(const weight_t& w, automaton_t& res, general_tag tag)
+      lweight_here(const weight_t& w, automaton_t& res, general_tag tag)
       {
         const auto& ws = *res->context().weightset();
         if (ws.is_zero(w))
@@ -38,9 +38,9 @@ namespace vcsn
         return res;
       }
 
-      /// Standard-preserving left-multiplication by a weight.
+      /// Standard-preserving lweightiplication by a weight.
       static automaton_t&
-      left_mult_here(const weight_t& w, automaton_t& res, standard_tag tag)
+      lweight_here(const weight_t& w, automaton_t& res, standard_tag tag)
       {
         require(is_standard(res), __func__, ": automaton must be standard");
         const auto& ws = *res->context().weightset();
@@ -57,18 +57,18 @@ namespace vcsn
 
       /// Same as standard if res is standard, otherwise, general.
       static automaton_t&
-      left_mult_here(const weight_t& w, automaton_t& res, auto_tag = {})
+      lweight_here(const weight_t& w, automaton_t& res, auto_tag = {})
       {
         if (is_standard(res))
-          return left_mult_here(w, res, standard_tag{});
+          return lweight_here(w, res, standard_tag{});
         else
-          return left_mult_here(w, res, general_tag{});
+          return lweight_here(w, res, general_tag{});
       }
 
       /// Right-multiplication of any automaton by a weight.
       template <typename Tag = general_tag>
       static automaton_t&
-      right_mult_here(automaton_t& res, const weight_t& w, Tag tag = {})
+      rweight_here(automaton_t& res, const weight_t& w, Tag tag = {})
       {
         const auto& ws = *res->context().weightset();
         if (ws.is_zero(w))
@@ -81,12 +81,12 @@ namespace vcsn
 
       /// Same as standard if res is standard, otherwise, general.
       static automaton_t&
-      right_mult_here(automaton_t& res, const weight_t& w, auto_tag = {})
+      rweight_here(automaton_t& res, const weight_t& w, auto_tag = {})
       {
         if (is_standard(res))
-          return right_mult_here(res, w, standard_tag{});
+          return rweight_here(res, w, standard_tag{});
         else
-          return right_mult_here(res, w, general_tag{});
+          return rweight_here(res, w, general_tag{});
       }
 
       /// Transform \a res into the empty automaton.
@@ -108,26 +108,26 @@ namespace vcsn
     };
   }
 
-  /*-----------------------.
-  | left-mult(automaton).  |
-  `-----------------------*/
+  /*---------------------.
+  | lweight(automaton).  |
+  `---------------------*/
 
-  /// In place left-multiplication of an automaton by a weight.
+  /// In place lweightiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   Aut&
-  left_mult_here(const weight_t_of<Aut>& w, Aut& res, Tag tag = {})
+  lweight_here(const weight_t_of<Aut>& w, Aut& res, Tag tag = {})
   {
-    return detail::standard_operations<Aut>::left_mult_here(w, res, tag);
+    return detail::standard_operations<Aut>::lweight_here(w, res, tag);
   }
 
   /// Left-multiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   auto
-  left_mult(const weight_t_of<Aut>& w, const Aut& aut, Tag tag = {})
+  lweight(const weight_t_of<Aut>& w, const Aut& aut, Tag tag = {})
     -> fresh_automaton_t_of<Aut>
   {
     auto res = copy(aut);
-    left_mult_here(w, res, tag);
+    lweight_here(w, res, tag);
     return res;
   }
 
@@ -138,15 +138,15 @@ namespace vcsn
       /// Left-product.
       template <Automaton Aut, typename Tag>
       automaton
-      left_mult_tag(const weight_t_of<Aut>& w, Aut& aut)
+      lweight_tag(const weight_t_of<Aut>& w, Aut& aut)
       {
-        return ::vcsn::left_mult_here(w, aut, Tag{});
+        return ::vcsn::lweight_here(w, aut, Tag{});
       }
 
       /// Bridge.
       template <typename WeightSet, Automaton Aut, typename String>
       automaton
-      left_mult(const weight& weight, const automaton& aut,
+      lweight(const weight& weight, const automaton& aut,
                 const std::string& algo)
       {
         const auto& a1 = aut->as<Aut>();
@@ -165,11 +165,11 @@ namespace vcsn
         static const auto map
           = getarg<std::function<automaton(const weight_t&, automaton_t&)>>
           {
-            "left-multiply algorithm",
+            "lweightiply algorithm",
             {
-              {"auto",     left_mult_tag<automaton_t, auto_tag>},
-              {"general",  left_mult_tag<automaton_t, general_tag>},
-              {"standard", left_mult_tag<automaton_t, standard_tag>},
+              {"auto",     lweight_tag<automaton_t, auto_tag>},
+              {"general",  lweight_tag<automaton_t, general_tag>},
+              {"standard", lweight_tag<automaton_t, standard_tag>},
             }
           };
         return map[algo](w2, a2);
@@ -177,13 +177,13 @@ namespace vcsn
     }
   }
 
-  /*-----------------------.
-  | left-mult(valueset).   |
-  `-----------------------*/
+  /*---------------------.
+  | lweight(valueset).   |
+  `---------------------*/
 
   template <typename ValueSet>
   auto
-  left_mult(const ValueSet& rs,
+  lweight(const ValueSet& rs,
             const weight_t_of<ValueSet>& w,
             const typename ValueSet::value_t& r)
     -> decltype(rs.lweight(w, r)) // for SFINAE.
@@ -191,9 +191,9 @@ namespace vcsn
     return rs.lweight(w, r);
   }
 
-  /*------------------------.
-  | left-mult(expansion).   |
-  `------------------------*/
+  /*----------------------.
+  | lweight(expansion).   |
+  `----------------------*/
 
   template <typename WeightSet, typename ExpSet>
   expansionset<expressionset<context<labelset_t_of<ExpSet>,
@@ -209,10 +209,10 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (left_mult).
+      /// Bridge (lweight).
       template <typename WeightSet, typename ExpansionSet>
       expansion
-      left_mult_expansion(const weight& weight, const expansion& exp)
+      lweight_expansion(const weight& weight, const expansion& exp)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
@@ -220,14 +220,14 @@ namespace vcsn
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
-        return {rs, ::vcsn::left_mult(rs, w2, r2)};
+        return {rs, ::vcsn::lweight(rs, w2, r2)};
       }
     }
   }
 
-  /*-------------------------.
-  | left-mult(expression).   |
-  `-------------------------*/
+  /*-----------------------.
+  | lweight(expression).   |
+  `-----------------------*/
 
   /// Join between an expressionset and a weightset.
   ///
@@ -263,24 +263,24 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (left_mult).
+      /// Bridge (lweight).
       template <typename WeightSet, typename ExpSet>
       expression
-      left_mult_expression(const weight& weight, const expression& exp)
+      lweight_expression(const weight& weight, const expression& exp)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
         auto rs = join_weightset_expressionset(w1.valueset(), r1.valueset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
-        return {rs, ::vcsn::left_mult(rs, w2, r2)};
+        return {rs, ::vcsn::lweight(rs, w2, r2)};
       }
     }
   }
 
-  /*-------------------------.
-  | left-mult(polynomial).   |
-  `-------------------------*/
+  /*-----------------------.
+  | lweight(polynomial).   |
+  `-----------------------*/
 
   template <typename WeightSet, typename ExpSet>
   auto
@@ -295,41 +295,41 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (left_mult).
+      /// Bridge (lweight).
       template <typename WeightSet, typename PolynomialSet>
       polynomial
-      left_mult_polynomial(const weight& weight, const polynomial& poly)
+      lweight_polynomial(const weight& weight, const polynomial& poly)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& p1 = poly->as<PolynomialSet>();
         auto ps = join_weightset_polynomialset(w1.valueset(), p1.valueset());
         auto w2 = ps.weightset()->conv(w1.valueset(), w1.value());
         auto p2 = ps.conv(p1.valueset(), p1.value());
-        return {ps, ::vcsn::left_mult(ps, w2, p2)};
+        return {ps, ::vcsn::lweight(ps, w2, p2)};
       }
     }
   }
 
 
-  /*------------------------.
-  | right-mult(automaton).  |
-  `------------------------*/
+  /*---------------------.
+  | rweight(automaton).  |
+  `---------------------*/
 
-  /// In place right-multiplication of an automaton by a weight.
+  /// In place rweightiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   Aut&
-  right_mult_here(Aut& res, const weight_t_of<Aut>& w, Tag tag = {})
+  rweight_here(Aut& res, const weight_t_of<Aut>& w, Tag tag = {})
   {
-    return detail::standard_operations<Aut>::right_mult_here(res, w, tag);
+    return detail::standard_operations<Aut>::rweight_here(res, w, tag);
   }
 
   /// Right-multiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   fresh_automaton_t_of<Aut>
-  right_mult(const Aut& aut, const weight_t_of<Aut>& w, Tag tag = {})
+  rweight(const Aut& aut, const weight_t_of<Aut>& w, Tag tag = {})
   {
     auto res = copy(aut);
-    right_mult_here(res, w, tag);
+    rweight_here(res, w, tag);
     return res;
   }
 
@@ -340,15 +340,15 @@ namespace vcsn
       /// Right-product.
       template <Automaton Aut, typename Tag>
       automaton
-      right_mult_tag(Aut& aut, const weight_t_of<Aut>& w)
+      rweight_tag(Aut& aut, const weight_t_of<Aut>& w)
       {
-        return ::vcsn::right_mult_here(aut, w, Tag{});
+        return ::vcsn::rweight_here(aut, w, Tag{});
       }
 
       /// Bridge.
       template <Automaton Aut, typename WeightSet, typename String>
       automaton
-      right_mult(const automaton& aut, const weight& weight,
+      rweight(const automaton& aut, const weight& weight,
                  const std::string& algo)
       {
         const auto& a1 = aut->as<Aut>();
@@ -367,11 +367,11 @@ namespace vcsn
         static const auto map
           = getarg<std::function<automaton(automaton_t&, const weight_t&)>>
           {
-            "right-multiply algorithm",
+            "rweightiply algorithm",
             {
-              {"auto",     right_mult_tag<automaton_t, auto_tag>},
-              {"general",  right_mult_tag<automaton_t, general_tag>},
-              {"standard", right_mult_tag<automaton_t, standard_tag>},
+              {"auto",     rweight_tag<automaton_t, auto_tag>},
+              {"general",  rweight_tag<automaton_t, general_tag>},
+              {"standard", rweight_tag<automaton_t, standard_tag>},
             }
           };
         return map[algo](a2, w2);
@@ -379,31 +379,31 @@ namespace vcsn
     }
   }
 
-  /*------------------------.
-  | right-mult(valueset).   |
-  `------------------------*/
+  /*---------------------.
+  | rweight(valueset).   |
+  `---------------------*/
 
   template <typename ValueSet>
   typename ValueSet::value_t
-  right_mult(const ValueSet& rs,
+  rweight(const ValueSet& rs,
              const typename ValueSet::value_t& r,
              const weight_t_of<ValueSet>& w)
   {
     return rs.rweight(r, w);
   }
 
-  /*-------------------------.
-  | right-mult(expansion).   |
-  `-------------------------*/
+  /*----------------------.
+  | rweight(expansion).   |
+  `----------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (right_mult).
+      /// Bridge (rweight).
       template <typename ExpansionSet, typename WeightSet>
       expansion
-      right_mult_expansion(const expansion& exp, const weight& weight)
+      rweight_expansion(const expansion& exp, const weight& weight)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpansionSet>();
@@ -411,53 +411,53 @@ namespace vcsn
         auto w2
           = rs.expressionset().weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
-        return {rs, ::vcsn::right_mult(rs, r2, w2)};
+        return {rs, ::vcsn::rweight(rs, r2, w2)};
       }
     }
   }
 
-  /*--------------------------.
-  | right-mult(expression).   |
-  `--------------------------*/
+  /*-----------------------.
+  | rweight(expression).   |
+  `-----------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (right_mult).
+      /// Bridge (rweight).
       template <typename ExpSet, typename WeightSet>
       expression
-      right_mult_expression(const expression& exp, const weight& weight)
+      rweight_expression(const expression& exp, const weight& weight)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& r1 = exp->as<ExpSet>();
         auto rs = join_weightset_expressionset(w1.valueset(), r1.valueset());
         auto w2 = rs.weightset()->conv(w1.valueset(), w1.value());
         auto r2 = rs.conv(r1.valueset(), r1.value());
-        return {rs, ::vcsn::right_mult(rs, r2, w2)};
+        return {rs, ::vcsn::rweight(rs, r2, w2)};
       }
     }
   }
 
-  /*--------------------------.
-  | right-mult(polynomial).   |
-  `--------------------------*/
+  /*-----------------------.
+  | rweight(polynomial).   |
+  `-----------------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge (right_mult).
+      /// Bridge (rweight).
       template <typename PolynomialSet, typename WeightSet>
       polynomial
-      right_mult_polynomial(const polynomial& poly, const weight& weight)
+      rweight_polynomial(const polynomial& poly, const weight& weight)
       {
         const auto& w1 = weight->as<WeightSet>();
         const auto& p1 = poly->as<PolynomialSet>();
         auto ps = join_weightset_polynomialset(w1.valueset(), p1.valueset());
         auto w2 = ps.weightset()->conv(w1.valueset(), w1.value());
         auto p2 = ps.conv(p1.valueset(), p1.value());
-        return {ps, ::vcsn::right_mult(ps, p2, w2)};
+        return {ps, ::vcsn::rweight(ps, p2, w2)};
       }
     }
   }

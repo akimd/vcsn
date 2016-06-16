@@ -78,21 +78,21 @@ def _is_equal(lhs, rhs):
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
 
-def _left_mult(self, lhs):
+def _lweight(self, lhs):
     '''Support "weight * self".  Serves for automata, expansions,
     expressions and polynomials.'''
-    return self.left_mult(self.context().weight(str(lhs)))
+    return self.lweight(self.context().weight(str(lhs)))
 
 
-def _right_mult(self, rhs):
+def _rweight(self, rhs):
     '''Support both "aut * aut" and "aut * weight".  Also serves for
     expressions and polynomials.'''
     if isinstance(rhs, type(self)):
         return self.multiply(rhs)
     elif isinstance(rhs, weight):
-        return self.right_mult(rhs)
+        return self.rweight(rhs)
     else:
-        return self.right_mult(self.context().weight(str(rhs)))
+        return self.rweight(self.context().weight(str(rhs)))
 
 
 def _timeit(stmt="pass", setup="pass", repeat=3):

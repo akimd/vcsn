@@ -70,7 +70,6 @@ algo_headers =                                  \
   %D%/algos/is-valid.hh                         \
   %D%/algos/k-lightest-path.hh                  \
   %D%/algos/ladybird.hh                         \
-  %D%/algos/left-mult.hh                        \
   %D%/algos/less-than.hh                        \
   %D%/algos/letterize.hh                        \
   %D%/algos/levenshtein.hh                      \
@@ -126,6 +125,7 @@ algo_headers =                                  \
   %D%/algos/u.hh                                \
   %D%/algos/universal.hh                        \
   %D%/algos/weight-series.hh                    \
+  %D%/algos/weight.hh                           \
   %D%/algos/zpc.hh
 
 nobase_include_HEADERS =                        \

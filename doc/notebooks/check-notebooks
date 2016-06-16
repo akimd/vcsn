@@ -45,11 +45,11 @@ exit(status)
 #
 # error: label.operators.ipynb references {'label.power.ipynb', 'label.multiply.ipynb'} which does not exist
 # error: expression.derivation.ipynb references {'polynomial.split.ipynb'} which does not exist
-# error: expression.operators.ipynb references {'expression.right_mult.ipynb', 'expression.tuple.ipynb', 'expression.left_mult.ipynb'} which does not exist
+# error: expression.operators.ipynb references {'expression.rweight.ipynb', 'expression.tuple.ipynb', 'expression.lweight.ipynb'} which does not exist
 # error: expression.expansion.ipynb references {'expression.constant_term.ipynb'} which does not exist
 # error: expression.add.ipynb references {'polynomial.add.ipynb'} which does not exist
 # error: automaton.shuffle.ipynb references {'expression.shuffle.ipynb'} which does not exist
-# error: expansion.operators.ipynb references {'expansion.tuple.ipynb', 'expansion.conjunction.ipynb', 'expansion.complement.ipynb', 'expansion.right_mult.ipynb', 'expansion.add.ipynb', 'expansion.left_mult.ipynb'} which does not exist
+# error: expansion.operators.ipynb references {'expansion.tuple.ipynb', 'expansion.conjunction.ipynb', 'expansion.complement.ipynb', 'expansion.rweight.ipynb', 'expansion.add.ipynb', 'expansion.lweight.ipynb'} which does not exist
 # error: automaton.info.ipynb references {'automaton.format.ipynb'} which does not exist
 # error: weight.operators.ipynb references {'weight.power.ipynb', 'weight.difference.ipynb', 'weight.add.ipynb', 'weight.conjunction.ipynb', 'weight.multiply.ipynb'} which does not exist
 # error: polynomial.operators.ipynb references {'polynomial.power.ipynb', 'polynomial.tuple.ipynb', 'polynomial.difference.ipynb', 'polynomial.add.ipynb'} which does not exist

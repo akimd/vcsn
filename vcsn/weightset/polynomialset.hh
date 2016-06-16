@@ -521,14 +521,14 @@ namespace vcsn
 
     /// Detect whether the labelset features `rweight`.
     template <typename Ctx>
-    using right_mult_t
+    using rweight_t
     = decltype(std::declval<labelset_t_of<Ctx>>()
                .rweight(std::declval<label_t_of<Ctx>>(),
                         std::declval<weight_t_of<Ctx>>()));
 
     /// Whether LabelSet features `rweight`.
     template <typename Ctx>
-    using has_right_mult_fn = detect<Ctx, right_mult_t>;
+    using has_rweight_fn = detect<Ctx, rweight_t>;
 
     /// Right exterior product.
     auto
@@ -543,7 +543,7 @@ namespace vcsn
           // Beware that if the labelset supports weights (e.g.,
           // polynomial of expressions), we do not multiply the weight
           // here, but the label.
-          static_if<has_right_mult_fn<context_t>{}>
+          static_if<has_rweight_fn<context_t>{}>
             ([this, &res] (const auto& ls, const auto& m, const auto& w)
              {
                add_here(res,

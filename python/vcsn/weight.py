@@ -42,9 +42,9 @@ class weight:
 
 
     def __mul__(self, rhs):
-        '''Translate `weight * expression` to `expression.left_mult(weight)`.'''
+        '''Translate `weight * expression` to `expression.lweight(weight)`.'''
         if isinstance(rhs, automaton) or isinstance(rhs, expression):
-            return rhs.left_mult(self)
+            return rhs.lweight(self)
         elif isinstance(rhs, int):
             raise RuntimeError(
                 "cannot multiply a weight by and int: need two weights")

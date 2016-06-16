@@ -8,7 +8,7 @@ from subprocess import Popen, PIPE
 from vcsn_cxx import automaton, label
 from vcsn.conjunction import Conjunction
 from vcsn.tools import (_extend, _format, _info_to_dict,
-                        _left_mult, _right_mult,
+                        _lweight, _rweight,
                         _tmp_file)
 from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
                       _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
@@ -89,11 +89,11 @@ class automaton:
     __invert__ = automaton.complement
     __mod__ = automaton.difference
     __matmul__ = automaton.compose
-    __mul__ = _right_mult
+    __mul__ = _rweight
     __or__ = lambda l, r: automaton._tuple([l, r])
     __pow__ = multiply
     __repr__ = lambda self: self.type()
-    __rmul__ = _left_mult
+    __rmul__ = _lweight
     __str__ = lambda self: self.format('dot')
     __sub__ = automaton.difference
     __truediv__ = automaton.rdiv

@@ -6,7 +6,7 @@ import re
 from vcsn_cxx import label, expression
 from vcsn.dot import _dot_pretty, _dot_to_svg
 from vcsn.tools import (_extend, _format, _info_to_dict,
-                        _left_mult, _right_mult)
+                        _lweight, _rweight)
 
 @_extend(expression)
 class expression:
@@ -23,11 +23,11 @@ class expression:
     __invert__ = expression.complement
     __matmul__ = expression.compose
     __mod__ = expression.difference
-    __mul__ = _right_mult
+    __mul__ = _rweight
     __or__ = lambda l, r: expression._tuple([l, r])
     __pow__ = multiply
     __repr__ = lambda self: self.format('text')
-    __rmul__ = _left_mult
+    __rmul__ = _lweight
     __str__ = lambda self: self.format('text')
     __truediv__ = expression.rdiv
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'

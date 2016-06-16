@@ -67,8 +67,8 @@ TAF-Kit program:
   double-ring eliminate-state enumerate evaluate expand inductive
   infiltrate is-ambiguous is-complete is-deterministic is-empty
   is-eps-acyclic is-normalized is-proper is-standard is-trim
-  is-useless is-valid ladybird left-mult lift minimize multiply proper
-  quotkbaseb right-mult shortest shuffle split standard star
+  is-useless is-valid ladybird lweight lift minimize multiply proper
+  quotkbaseb rweight shortest shuffle split standard star
   star-normal-form thompson to-expression transpose trim u union
   universal
 
@@ -133,12 +133,12 @@ case $1 in
       |is-ambiguous|is-complete|is-deterministic \
       |is-empty|is-eps-acyclic|is-normalized|is-proper \
       |is-standard|is-trim|is-useless|is-valid \
-      |ladybird|left-mult|lift \
+      |ladybird|lweight|lift \
       |minimize \
       |multiply \
       |proper \
       |quotkbaseb \
-      |random|right-mult \
+      |random|rweight \
       |shuffle|shortest|split|standard|star|star-normal-form \
       |thompson \
       |to-expression \

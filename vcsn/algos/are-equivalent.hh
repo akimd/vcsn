@@ -5,7 +5,7 @@
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/derived-term.hh>
-#include <vcsn/algos/left-mult.hh>
+#include <vcsn/algos/weight.hh>
 #include <vcsn/algos/letterize.hh> // rea
 #include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/reduce.hh>
@@ -40,7 +40,7 @@ namespace vcsn
   template <Automaton Aut1, Automaton Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> decltype((std::enable_if_t<!std::is_same<weightset_t_of<Aut1>, b>::value>(),
+    -> decltype((std::enable_if_t<!std::is_same<weightset_t_of<Aut1>, b>()>(),
                  a2->weightset()->sub(a2->weightset()->zero(),
                                       a2->weightset()->one()),
                  true))
@@ -50,8 +50,8 @@ namespace vcsn
     const auto& r = realtime(a2);
     // d = l + -r.
     auto d = add(l,
-                 left_mult(ws2.sub(ws2.zero(), ws2.one()),
-                           r));
+                 lweight(ws2.sub(ws2.zero(), ws2.one()),
+                         r));
     return is_empty(reduce(d));
   }
 

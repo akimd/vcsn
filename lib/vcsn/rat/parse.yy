@@ -272,8 +272,8 @@ exp:
 | exp "{/}" exp               { $$ = dyn::rdiv($1.exp, $3.exp); }
 | exp "%" exp                 { $$ = dyn::conjunction($1.exp,
                                                       dyn::complement($3.exp)); }
-| weights exp %prec LWEIGHT   { $$ = dyn::left_mult($1, $2.exp); }
-| exp weights %prec RWEIGHT   { $$ = dyn::right_mult($1.exp, $2); }
+| weights exp %prec LWEIGHT   { $$ = dyn::lweight($1, $2.exp); }
+| exp weights %prec RWEIGHT   { $$ = dyn::rweight($1.exp, $2); }
 | exp exp %prec CONCAT
   {
     // See README.txt.

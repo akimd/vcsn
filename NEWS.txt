@@ -5,13 +5,15 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-## 2016-06-09
+## 2016-06-16
 ### renamings
 The following operations have been renamed, in all APIs (vcsn::, dyn::,
 Python, and TAF-Kit), and on all applicable types (automaton, expressions,
 expansions, polynomials).
 
     infiltration -> infiltrate
+    left_mult    -> lweight
+    right_mult   -> rweight
     sum          -> add
 
 ## 2016-06-07

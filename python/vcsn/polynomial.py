@@ -3,7 +3,7 @@
 ## ------------ ##
 
 from vcsn_cxx import polynomial
-from vcsn.tools import _extend, _format, _is_equal, _left_mult, _right_mult
+from vcsn.tools import _extend, _format, _is_equal, _lweight, _rweight
 
 @_extend(polynomial)
 class polynomial:
@@ -11,10 +11,10 @@ class polynomial:
     __and__ = polynomial.conjunction
     __eq__ = _is_equal
     __matmul__ = polynomial.compose
-    __mul__ = _right_mult
+    __mul__ = _rweight
     __or__ = lambda l, r: polynomial._tuple([l, r])
     __repr__ = lambda self: self.format('text')
-    __rmul__ = _left_mult
+    __rmul__ = _lweight
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
 

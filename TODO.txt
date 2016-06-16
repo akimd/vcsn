@@ -20,9 +20,6 @@ They should also include complexity information.
 We should have a means to open the documentation page of a given function.
 Something similar to IPython's "?" shortcut.
 
-* Naming issues
-** left_mult and right_mult should be lweight and rweight
-
 * Build
 ** -fsanitize=address
 Try that on the BF.
@@ -432,7 +429,7 @@ See the hairy code and comment in
       /// Bridge.
       template <typename WeightSet, typename Aut>
       automaton
-      left_mult(const weight& weight, const automaton& aut)
+      lweight(const weight& weight, const automaton& aut)
 
 ** Use Boost.Format to support multiple formats
 We have loads of code that open-code the output format.  This is

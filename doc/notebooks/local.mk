@@ -77,11 +77,11 @@ dist_notebooks_DATA =                           \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.ldiv.ipynb                      \
-  %D%/automaton.left_mult.ipynb                 \
   %D%/automaton.letterize.ipynb                 \
   %D%/automaton.lift.ipynb                      \
   %D%/automaton.lightest.ipynb                  \
   %D%/automaton.lightest_automaton.ipynb        \
+  %D%/automaton.lweight.ipynb                   \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.multiply.ipynb                  \
   %D%/automaton.operators.ipynb                 \
@@ -92,9 +92,9 @@ dist_notebooks_DATA =                           \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
   %D%/automaton.rdiv.ipynb                      \
-  %D%/automaton.right_mult.ipynb                \
   %D%/automaton.realtime.ipynb                  \
   %D%/automaton.reduce.ipynb                    \
+  %D%/automaton.rweight.ipynb                   \
   %D%/automaton.scc.ipynb                       \
   %D%/automaton.shortest.ipynb                  \
   %D%/automaton.shuffle.ipynb                   \

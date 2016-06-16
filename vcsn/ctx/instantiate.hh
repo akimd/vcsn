@@ -30,7 +30,7 @@
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/ladybird.hh>
-#include <vcsn/algos/left-mult.hh>
+#include <vcsn/algos/weight.hh>
 #include <vcsn/algos/less-than.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
@@ -320,8 +320,8 @@ namespace vcsn
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_expression, rs_t);
         REGISTER(ldiv_expression, rs_t, rs_t);
-        REGISTER(left_mult, ws_t, aut_t, const std::string);
-        REGISTER(left_mult_expression, ws_t, rs_t);
+        REGISTER(lweight, ws_t, aut_t, const std::string);
+        REGISTER(lweight_expression, ws_t, rs_t);
         REGISTER(less_than_expression, rs_t, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
@@ -346,8 +346,8 @@ namespace vcsn
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
-        REGISTER(right_mult, aut_t, ws_t, const std::string);
-        REGISTER(right_mult_expression, rs_t, ws_t);
+        REGISTER(rweight, aut_t, ws_t, const std::string);
+        REGISTER(rweight_expression, rs_t, ws_t);
         REGISTER(shuffle_expression, rs_t, rs_t);
         REGISTER(sort, aut_t);
         REGISTER(split, rs_t);

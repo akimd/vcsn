@@ -389,7 +389,7 @@ struct evaluate: vcsn_function
   }
 };
 
-struct left_mult: vcsn_function
+struct lweight: vcsn_function
 {
   int work_aut(const options& opts) const
   {
@@ -405,7 +405,7 @@ struct left_mult: vcsn_function
     weight w = read_weight(opts2);
 
     // Process.
-    auto res = vcsn::dyn::left_mult(w, aut);
+    auto res = vcsn::dyn::lweight(w, aut);
 
     // Output.
     opts.print(res);
@@ -431,7 +431,7 @@ struct minimize: vcsn_function
   }
 };
 
-struct right_mult: vcsn_function
+struct rweight: vcsn_function
 {
   int work_aut(const options& opts) const
   {
@@ -447,7 +447,7 @@ struct right_mult: vcsn_function
     weight w = read_weight(opts2);
 
     // Process.
-    auto res = vcsn::dyn::right_mult(aut, w);
+    auto res = vcsn::dyn::rweight(aut, w);
 
     // Output.
     opts.print(res);
