@@ -219,12 +219,12 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, e)
       {
-        res_ = as_.lmul(e.weight(), recurse(e.sub()));
+        res_ = as_.lweight(e.weight(), recurse(e.sub()));
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
-        res_ = as_.rmul(recurse(e.sub()), e.weight());
+        res_ = as_.rweight(recurse(e.sub()), e.weight());
       }
 
     private:

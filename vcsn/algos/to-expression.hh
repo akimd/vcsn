@@ -381,7 +381,7 @@ namespace vcsn
         for (auto t: make_vector(outin(aut_, s, s)))
           {
             loop = rs.add(loop,
-                          rs.lmul(aut_->weight_of(t), aut_->label_of(t)));
+                          rs.lweight(aut_->weight_of(t), aut_->label_of(t)));
             aut_->del_transition(t);
           }
         loop = rs.star(loop);
@@ -395,9 +395,9 @@ namespace vcsn
               auto dst = aut_->dst_of(out);
               auto t = aut_->add_transition
                 (src, dst,
-                 rs.mul(rs.lmul(aut_->weight_of(in), aut_->label_of(in)),
+                 rs.mul(rs.lweight(aut_->weight_of(in), aut_->label_of(in)),
                         loop,
-                        rs.lmul(aut_->weight_of(out), aut_->label_of(out))));
+                        rs.lweight(aut_->weight_of(out), aut_->label_of(out))));
               profiler_.invalidate_cache(t);
               neighbors_.emplace(src);
               neighbors_.emplace(dst);

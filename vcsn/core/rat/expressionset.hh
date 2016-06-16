@@ -298,9 +298,9 @@ namespace vcsn
     /// Add a transposition operator.
     auto transposition(const value_t& e) const -> value_t;
     /// Right-multiplication by a weight.
-    auto rmul(const value_t& e, const weight_t& w) const -> value_t;
+    auto rweight(const value_t& e, const weight_t& w) const -> value_t;
     /// Left-multiplication by a weight.
-    auto lmul(const weight_t& w, const value_t& e) const -> value_t;
+    auto lweight(const weight_t& w, const value_t& e) const -> value_t;
     /// The transposed of this rational expression.
     auto transpose(const value_t& e) const -> value_t;
 

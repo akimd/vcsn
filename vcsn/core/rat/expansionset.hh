@@ -258,7 +258,7 @@ namespace vcsn
       }
 
       /// Left-multiplication by \a w of \a rhs.
-      value_t lmul(const weight_t& w, const value_t& rhs) const
+      value_t lweight(const weight_t& w, const value_t& rhs) const
       {
         value_t res = rhs;
         lmul_here(w, res);
@@ -270,18 +270,18 @@ namespace vcsn
       {
         res.constant = ws_.mul(w, res.constant);
         for (auto& p: res.polynomials)
-          p.second = ps_.lmul(w, p.second);
+          p.second = ps_.lweight(w, p.second);
         return res;
       }
 
       /// Right-multiplication of \a lhs by \a w.
-      value_t rmul(const value_t& lhs, const weight_t& w) const
+      value_t rweight(const value_t& lhs, const weight_t& w) const
       {
         value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
         for (auto& p: lhs.polynomials)
           for (const auto& m: p.second)
             ps_.add_here(res.polynomials[p.first],
-                         rs_.rmul(label_of(m), w), weight_of(m));
+                         rs_.rweight(label_of(m), w), weight_of(m));
         return res;
       }
 

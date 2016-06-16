@@ -21,7 +21,7 @@ We should have a means to open the documentation page of a given function.
 Something similar to IPython's "?" shortcut.
 
 * Naming issues
-** left_mult and right_mult should be lmul and rmul
+** left_mult and right_mult should be lweight and rweight
 
 * Build
 ** -fsanitize=address
@@ -772,7 +772,7 @@ http://www.lrde.epita.fr/dload/papers/gcse00-yrw/olena.html
 ls ~theo/pub/*ouil*
 
 LocalWords:  subword Levenshtein automata ADL semirings Doxygen IPython Wc
-LocalWords:  IPython's mult lmul rmul fsanitize dsymutil dylib xargs ASAN
+LocalWords:  IPython's mult lweight rweight fsanitize dsymutil dylib xargs ASAN
 LocalWords:  SYMBOLIZER llvm symbolizer MacPorts Libtool ArchLinux TAF vcsn
 LocalWords:  Traceback cxx ImportError asan DSO LD PRELOAD subprocesses lan
 LocalWords:  ASAN'd precedences thompson seriesset lal Tolmer cpu labelset

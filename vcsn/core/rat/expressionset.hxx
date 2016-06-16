@@ -238,7 +238,7 @@ namespace vcsn
             if (!weightset()->is_zero(w))
               {
                 auto l = unwrap_possible_lweight_(*i);
-                res.emplace_back(lmul(w, l));
+                res.emplace_back(lweight(w, l));
               }
             ++i;
           }
@@ -292,7 +292,7 @@ namespace vcsn
             if (!weightset()->is_zero(w))
               {
                 auto l = unwrap_possible_lweight_(*i1);
-                res.emplace_back(lmul(w, l));
+                res.emplace_back(lweight(w, l));
               }
             ++i1;
             ++i2;
@@ -324,7 +324,7 @@ namespace vcsn
       {
         auto w = weightset()->add(possibly_implicit_lweight_(l),
                                   possibly_implicit_lweight_(r));
-        res = lmul(w, unwrap_possible_lweight_(l));
+        res = lweight(w, unwrap_possible_lweight_(l));
       }
     return res;
   }
@@ -371,11 +371,11 @@ namespace vcsn
 
     // U_K: E.(<k>1) ⇒ E<k>, subsuming T: E.1 = E.
     else if (type_ignoring_lweight_(r) == type_t::one)
-      res = rmul(l, possibly_implicit_lweight_(r));
+      res = rweight(l, possibly_implicit_lweight_(r));
 
     // U_K: (<k>1).E ⇒ <k>E, subsuming T: 1.E = E.
     else if (type_ignoring_lweight_(l) == type_t::one)
-      res = lmul(possibly_implicit_lweight_(l), r);
+      res = lweight(possibly_implicit_lweight_(l), r);
 
     // (<k>E)(<h>F) => <kh>(EF).
     else if (ids_.is_linear() && weightset()->is_commutative()
@@ -388,8 +388,8 @@ namespace vcsn
         value_t
           nl = unwrap_possible_lweight_(l),
           nr = unwrap_possible_lweight_(r);
-        res = lmul(weightset()->mul(lw, rw),
-                   mul(nl, nr));
+        res = lweight(weightset()->mul(lw, rw),
+                      mul(nl, nr));
       }
 
     // (E+F)G => EG + FG.
@@ -434,9 +434,9 @@ namespace vcsn
     // <k>1 @ <h>1 => <kh>1
     else if (type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
-      res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
-                                  possibly_implicit_lweight_(r)),
-                 one());
+      res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
+                                     possibly_implicit_lweight_(r)),
+                    one());
 
     // General case.
     else
@@ -471,9 +471,9 @@ namespace vcsn
     // <k>1&<h>1 => <kh>1.
     else if (type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
-      res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
-                                  possibly_implicit_lweight_(r)),
-                 one());
+      res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
+                                     possibly_implicit_lweight_(r)),
+                    one());
 
     // <k>a&<h>a => <kh>a.  <k>a&<h>b => 0.
     else if (type_ignoring_lweight_(l) == type_t::atom
@@ -484,7 +484,7 @@ namespace vcsn
         auto rhs =
           down_pointer_cast<const atom_t>(unwrap_possible_lweight_(r))->value();
         if (labelset()->equal(lhs, rhs))
-          res = rmul(l, possibly_implicit_lweight_(r));
+          res = rweight(l, possibly_implicit_lweight_(r));
         else
           res = zero();
       }
@@ -650,7 +650,7 @@ namespace vcsn
     else if (ids_ && type_ignoring_lweight_(e) == type_t::one)
       {
         weight_t w = possibly_implicit_lweight_(e);
-        res = lmul(weightset()->power(w, n), one());
+        res = lweight(weightset()->power(w, n), one());
       }
 
     // Lweight in linear commutative: (<k>E){n} => <k{n}>(E{n}).
@@ -659,8 +659,8 @@ namespace vcsn
              && e->type() == type_t::lweight)
       {
         const auto& lw = down_pointer_cast<const lweight_t>(e);
-        res = lmul(weightset()->power(lw->weight(), n),
-                   power(lw->sub(), n));
+        res = lweight(weightset()->power(lw->weight(), n),
+                      power(lw->sub(), n));
       }
 
     // Sums in series: we have to distribute ([ab]{2} = aa+ab+ba+bb).
@@ -735,8 +735,9 @@ namespace vcsn
               (unwrap_possible_lweight_(ls.back()));
             // Fetch atom of the first rhs.
             auto rhs = std::dynamic_pointer_cast<const atom_t>(rs.front());
-            ls.back() = lmul(w,
-                             atom(labelset()->mul(lhs->value(), rhs->value())));
+            ls.back() =
+              lweight(w,
+                      atom(labelset()->mul(lhs->value(), rhs->value())));
             ls.insert(ls.end(), rs.begin() + 1, rs.end());
           }
         else
@@ -829,7 +830,7 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  DEFINE::lmul(const weight_t& w, const value_t& e) const
+  DEFINE::lweight(const weight_t& w, const value_t& e) const
     -> value_t
   {
     value_t res = nullptr;
@@ -847,7 +848,7 @@ namespace vcsn
 
     // <k>(<h>E) => <kh>E.
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
-      res = lmul(weightset()->mul(w, lw->weight()), lw->sub());
+      res = lweight(weightset()->mul(w, lw->weight()), lw->sub());
 
     // Distributive: <k>(E+F) => <k>E + <k>F.
     else if (ids_.is_distributive() && e->type() == type_t::add)
@@ -857,7 +858,7 @@ namespace vcsn
         // passing thru add; the order will be the same as in *ss.
         values_t addends;
         for (const auto& a: *s)
-          addends.emplace_back(lmul(w, a));
+          addends.emplace_back(lweight(w, a));
         res = std::make_shared<add_t>(std::move(addends));
       }
 
@@ -868,7 +869,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::rmul(const value_t& e, const weight_t& w) const
+  DEFINE::rweight(const value_t& e, const weight_t& w) const
     -> value_t
   {
     value_t res = nullptr;
@@ -878,7 +879,7 @@ namespace vcsn
 
     // Linear identity: E<k> => <k>E.
     else if (ids_.is_linear() && weightset()->is_commutative())
-      res = lmul(w, e);
+      res = lweight(w, e);
 
     // Trivial identity: E<0> => 0.
     else if (weightset()->is_zero(w))
@@ -889,16 +890,16 @@ namespace vcsn
       res = e;
 
     else if (e->is_leaf())
-      // Can only have left weights and lmul takes care of normalization.
-      res = lmul(w, e);
+      // Can only have left weights and lweight takes care of normalization.
+      res = lweight(w, e);
 
     // Trivial identity: (<k>E)<h> => <k>(E<h>).
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
-      res = lmul(lw->weight(), rmul(lw->sub(), w));
+      res = lweight(lw->weight(), rweight(lw->sub(), w));
 
     // Trivial identity: (E<k>)<h> => E<kh>.
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
-      res = rmul(rw->sub(), weightset()->mul(rw->weight(), w));
+      res = rweight(rw->sub(), weightset()->mul(rw->weight(), w));
 
     // General case: E<k>.
     else
@@ -991,25 +992,25 @@ namespace vcsn
   DEFINE::conv(const z& ws, typename z::value_t v) const
     -> value_t
   {
-    return lmul(weightset()->conv(ws, v), one());
+    return lweight(weightset()->conv(ws, v), one());
   }
 
   DEFINE::conv(const q& ws, typename q::value_t v) const
     -> value_t
   {
-    return lmul(weightset()->conv(ws, v), one());
+    return lweight(weightset()->conv(ws, v), one());
   }
 
   DEFINE::conv(const r& ws, typename r::value_t v) const
     -> value_t
   {
-    return lmul(weightset()->conv(ws, v), one());
+    return lweight(weightset()->conv(ws, v), one());
   }
 
   DEFINE::conv(const zmin& ws, typename zmin::value_t v) const
     -> value_t
   {
-    return lmul(weightset()->conv(ws, v), one());
+    return lweight(weightset()->conv(ws, v), one());
   }
 
   template <typename Context>

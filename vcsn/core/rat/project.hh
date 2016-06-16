@@ -103,14 +103,12 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, v)
       {
-        res_ = out_rs_.lmul(v.weight(),
-                            project(v.sub()));
+        res_ = out_rs_.lweight(v.weight(), project(v.sub()));
       }
 
       VCSN_RAT_VISIT(rweight, v)
       {
-        res_ = out_rs_.rmul(project(v.sub()),
-                            v.weight());
+        res_ = out_rs_.rweight(project(v.sub()), v.weight());
       }
 
       /*---------.

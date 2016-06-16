@@ -484,7 +484,7 @@ namespace vcsn
 
     /// Left exterior product.
     value_t
-    lmul(const weight_t w, const value_t& v) const
+    lweight(const weight_t w, const value_t& v) const
     {
       value_t res;
       if (weightset()->is_one(w))
@@ -519,20 +519,20 @@ namespace vcsn
       return res;
     }
 
-    /// Detect whether the labelset features `rmul`.
+    /// Detect whether the labelset features `rweight`.
     template <typename Ctx>
     using right_mult_t
     = decltype(std::declval<labelset_t_of<Ctx>>()
-               .rmul(std::declval<label_t_of<Ctx>>(),
-                     std::declval<weight_t_of<Ctx>>()));
+               .rweight(std::declval<label_t_of<Ctx>>(),
+                        std::declval<weight_t_of<Ctx>>()));
 
-    /// Whether LabelSet features `rmul`.
+    /// Whether LabelSet features `rweight`.
     template <typename Ctx>
     using has_right_mult_fn = detect<Ctx, right_mult_t>;
 
     /// Right exterior product.
     auto
-    rmul(const value_t& v, const weight_t w) const
+    rweight(const value_t& v, const weight_t w) const
       -> value_t
     {
       value_t res;
@@ -547,7 +547,7 @@ namespace vcsn
             ([this, &res] (const auto& ls, const auto& m, const auto& w)
              {
                add_here(res,
-                        ls.rmul(label_of(m), w),
+                        ls.rweight(label_of(m), w),
                         weight_of(m));
              },
              [this, &res] (const auto&, const auto& m, const auto& w)
@@ -886,7 +886,7 @@ namespace vcsn
       label_t res = labelset()->zero();
       for (const auto& m: v)
         res = labelset()->add(res,
-                              labelset()->lmul(weight_of(m), label_of(m)));
+                              labelset()->lweight(weight_of(m), label_of(m)));
       return res;
     }
 

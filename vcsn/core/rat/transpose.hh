@@ -157,14 +157,14 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, e)
       {
-        res_ = rs_.rmul(transpose(e.sub()),
-                        rs_.weightset()->transpose(e.weight()));
+        res_ = rs_.rweight(transpose(e.sub()),
+                           rs_.weightset()->transpose(e.weight()));
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
-        res_ = rs_.lmul(rs_.weightset()->transpose(e.weight()),
-                        transpose(e.sub()));
+        res_ = rs_.lweight(rs_.weightset()->transpose(e.weight()),
+                           transpose(e.sub()));
       }
 
       /*---------.

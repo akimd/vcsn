@@ -124,7 +124,7 @@ namespace vcsn
             res_
               = ps_.rmul_label(res_,
                                prod_(std::next(e.begin(), i+1), std::end(e)));
-            ps_.add_here(res, ps_.lmul(constant, res_));
+            ps_.add_here(res, ps_.lweight(constant, res_));
             constant = ws_.mul(constant, constant_term(rs_, v));
             if (ws_.is_zero(constant))
               break;
@@ -197,20 +197,20 @@ namespace vcsn
       {
         e.sub()->accept(*this);
         // We need a copy of e, but without its weights.
-        res_ = ps_.lmul(ws_.star(constant_term(rs_, e.sub())),
-                        ps_.rmul_label(res_, e.shared_from_this()));
+        res_ = ps_.lweight(ws_.star(constant_term(rs_, e.sub())),
+                           ps_.rmul_label(res_, e.shared_from_this()));
       }
 
       VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
-        res_ = ps_.lmul(e.weight(), res_);
+        res_ = ps_.lweight(e.weight(), res_);
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
-        res_ = ps_.rmul(res_, e.weight());
+        res_ = ps_.rweight(res_, e.weight());
       }
 
       /*---------.
@@ -302,8 +302,8 @@ namespace vcsn
     auto res = polynomial_t{};
     for (const auto& m: p)
       res = ps.add(res,
-                   ps.lmul(weight_of(m),
-                           derivation(rs, label_of(m), a, breaking)));
+                   ps.lweight(weight_of(m),
+                              derivation(rs, label_of(m), a, breaking)));
     return res;
   }
 

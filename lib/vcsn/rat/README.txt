@@ -24,7 +24,7 @@ correctly:
 
         <b><b>aa<c><d>aa<b><b>
 
-as (warning: this is no longer how we parse this, see "lmul and mul" below):
+as (warning: this is no longer how we parse this, see "lweight and mul" below):
 
         (<bb>(aa).<cc>(aa))<bb>
 
@@ -94,7 +94,7 @@ Most probably several of these complications can be avoided thanks to GLR.
 Unfortunately it is far from being usable in C++, especially because our
 semantic values are objects (shared_ptr).
 
-* lmul and mul
+* lweight and mul
 At the origin, we were trying to read "<2>abc" as "<2>(abc)".  We stopped
 that, because it was actually complex to parse and pretty-print the same
 way.  Actually, at some point, I also realized that "<2>abc" when converted

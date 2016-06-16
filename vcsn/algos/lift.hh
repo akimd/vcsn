@@ -237,15 +237,15 @@ namespace vcsn
     for (auto t: all_transitions(a))
       if (a->src_of(t) == a->pre())
         res->add_initial(map[a->dst_of(t)],
-                         rs_in.lmul(a->weight_of(t), rs_in.one()));
+                         rs_in.lweight(a->weight_of(t), rs_in.one()));
       else if (a->dst_of(t) == a->post())
         res->add_final(map[a->src_of(t)],
-                       rs_in.lmul(a->weight_of(t), rs_in.one()));
+                       rs_in.lweight(a->weight_of(t), rs_in.one()));
       else
         res->add_transition
           (map[a->src_of(t)], map[a->dst_of(t)],
            lifter::kept_label(a->label_of(t)),
-           rs_in.lmul(a->weight_of(t),
+           rs_in.lweight(a->weight_of(t),
                       rs_in.atom(lifter::weight_label(a->label_of(t)))));
     return res;
   }
@@ -293,7 +293,7 @@ namespace vcsn
   lift(const ExpSet& rs, const typename ExpSet::value_t& e)
   {
     auto lrs = detail::lift_expressionset(rs);
-    return lrs.lmul(e, lrs.one());
+    return lrs.lweight(e, lrs.one());
   }
 
 

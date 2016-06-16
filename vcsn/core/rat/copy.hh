@@ -110,16 +110,16 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, v)
       {
-        res_ = out_rs_.lmul(out_rs_.weightset()->conv(*in_rs_.weightset(),
-                                                      v.weight()),
-                            copy(v.sub()));
+        res_ = out_rs_.lweight(out_rs_.weightset()->conv(*in_rs_.weightset(),
+                                                         v.weight()),
+                               copy(v.sub()));
       }
 
       VCSN_RAT_VISIT(rweight, v)
       {
-        res_ = out_rs_.rmul(copy(v.sub()),
-                            out_rs_.weightset()->conv(*in_rs_.weightset(),
-                                                      v.weight()));
+        res_ = out_rs_.rweight(copy(v.sub()),
+                               out_rs_.weightset()->conv(*in_rs_.weightset(),
+                                                         v.weight()));
       }
 
       /*---------.

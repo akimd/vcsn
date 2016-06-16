@@ -195,7 +195,7 @@ namespace vcsn
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
-                           ps_.lmul(res_.constant, p.second));
+                           ps_.lweight(res_.constant, p.second));
             res_.constant = ws_.mul(res_.constant, rhs.constant);
             // Nothing else will be added.
             if (ws_.is_zero(res_.constant))
@@ -361,7 +361,7 @@ namespace vcsn
 
         for (const auto& p: res.polynomials)
           res_.polynomials[label_of(p)]
-            = ps_.lmul(res_.constant,
+            = ps_.lweight(res_.constant,
                        ps_.rmul_label(weight_of(p), f));
       }
 
@@ -371,7 +371,7 @@ namespace vcsn
         auto r = to_expansion(e.sub());
         res_
           = transposed_
-          ? es_.rmul(r, ws_.transpose(l))
+          ? es_.rweight(r, ws_.transpose(l))
           : es_.lmul_here(l, r);
       }
 
@@ -382,7 +382,7 @@ namespace vcsn
         res_
           = transposed_
           ? es_.lmul_here(ws_.transpose(r), l)
-          : es_.rmul(l, r);
+          : es_.rweight(l, r);
       }
 
       using tuple_t = typename super_t::tuple_t;

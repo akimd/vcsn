@@ -150,7 +150,7 @@ namespace vcsn
 
         // res = proper(B(l)).r + constant-term(B(l))B(r).
         return ps_.add(ps_.rmul_label(l_split, r),
-                       ps_.lmul(l_split_const, split(r)));
+                       ps_.lweight(l_split_const, split(r)));
       }
 
       /// The split-product of \a l with \a r.
@@ -160,7 +160,7 @@ namespace vcsn
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_here(res, ps_.lmul(weight_of(m), product(label_of(m), r)));
+          ps_.add_here(res, ps_.lweight(weight_of(m), product(label_of(m), r)));
         return res;
       }
 
@@ -192,7 +192,7 @@ namespace vcsn
           ps_.add_here(res, rs_.conjunction(label_of(e), r), weight_of(e));
         // res += constant-term(B(l))B(r)
         ps_.add_here(res,
-                       ps_.lmul(l_split_const, split(r)));
+                       ps_.lweight(l_split_const, split(r)));
         return res;
       }
 
@@ -203,7 +203,7 @@ namespace vcsn
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_here(res, ps_.lmul(weight_of(m), conjunction(label_of(m), r)));
+          ps_.add_here(res, ps_.lweight(weight_of(m), conjunction(label_of(m), r)));
         return res;
       }
 
@@ -237,13 +237,13 @@ namespace vcsn
       VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
-        res_ = ps_.lmul(e.weight(), res_);
+        res_ = ps_.lweight(e.weight(), res_);
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
-        res_ = ps_.rmul(res_, e.weight());
+        res_ = ps_.rweight(res_, e.weight());
       }
 
     private:
@@ -293,7 +293,7 @@ namespace vcsn
     const auto& rs = *ps.labelset();
     polynomial_t res;
     for (const auto& m: p)
-      res = ps.add(res, ps.lmul(weight_of(m), split(rs, label_of(m))));
+      res = ps.add(res, ps.lweight(weight_of(m), split(rs, label_of(m))));
     return res;
   }
 

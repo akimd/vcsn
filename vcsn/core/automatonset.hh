@@ -232,13 +232,13 @@ namespace vcsn
     }
 
     /// Right-multiplication by a weight.
-    auto rmul(const value_t& e, const weight_t& w) const -> value_t
+    auto rweight(const value_t& e, const weight_t& w) const -> value_t
     {
       return ::vcsn::right_mult(e, w, tag_t{});
     }
 
     /// Left-multiplication by a weight.
-    auto lmul(const weight_t& w, const value_t& e) const -> value_t
+    auto lweight(const weight_t& w, const value_t& e) const -> value_t
     {
       return ::vcsn::left_mult(w, e, tag_t{});
     }

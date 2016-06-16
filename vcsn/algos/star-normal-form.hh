@@ -158,7 +158,7 @@ namespace vcsn
             operation_ = box;
             v.sub()->accept(*this);
             res_ = rs_.star(res_);
-            res_ = rs_.lmul(ws_.star(constant_term(rs_, v.sub())), res_);
+            res_ = rs_.lweight(ws_.star(constant_term(rs_, v.sub())), res_);
             operation_ = dot;
           }
         else

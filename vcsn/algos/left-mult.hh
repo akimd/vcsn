@@ -186,9 +186,9 @@ namespace vcsn
   left_mult(const ValueSet& rs,
             const weight_t_of<ValueSet>& w,
             const typename ValueSet::value_t& r)
-    -> decltype(rs.lmul(w, r)) // for SFINAE.
+    -> decltype(rs.lweight(w, r)) // for SFINAE.
   {
-    return rs.lmul(w, r);
+    return rs.lweight(w, r);
   }
 
   /*------------------------.
@@ -389,7 +389,7 @@ namespace vcsn
              const typename ValueSet::value_t& r,
              const weight_t_of<ValueSet>& w)
   {
-    return rs.rmul(r, w);
+    return rs.rweight(r, w);
   }
 
   /*-------------------------.
