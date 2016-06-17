@@ -55,7 +55,7 @@ check(a, 'slowgrow.efsm')
 
 for f in ["lal-char-zmin", "lat-zmin", "ascii-to-one"]:
     print("f:", f)
-    a = vcsn.automaton(filename=medir + "/" + f + '.gv')
+    a = meaut(f, 'gv')
     check(a, f + '.efsm')
 
 # Check the case of an automaton without any transition.

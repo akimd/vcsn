@@ -221,7 +221,7 @@ $ -> 3
 1 -> $
 2 -> 1 a
 3 -> 2 b''',
-         vcsn.automaton(filename=medir + '/html.gv').format('daut'))
+         meaut('html.gv').format('daut'))
 
 
 ## --------------- ##
@@ -418,7 +418,7 @@ CHECK_EQ('''digraph
 
 ctx = vcsn.context('lal<string>, b')
 e = ctx.expression("'🍺':'🍾':'☕️':'🍷' & [^]*'🍺'[^]*'☕️'[^]* & ([^]*'🍷''🍾'[^]*){c}")
-CHECK_EQ(open(medir + '/drinks-simple.gv').read().strip(),
+CHECK_EQ(metext('drinks-simple.gv'),
          e.automaton().minimize().dot('simple'))
 
 
@@ -443,7 +443,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
 
 # Check state names in TikZ.
 a = vcsn.context('lal_char, b').expression(r'\e+a').derived_term()
-exp = open(os.path.join(medir, 'derived-term.tex')).read().strip()
+exp = metext('derived-term.tex')
 CHECK_EQ(exp, a.format('tikz'))
 
 
@@ -456,10 +456,10 @@ ctx = vcsn.context('lal_char, q')
 a = ctx.expression('a*+(<2>a)*').derived_term(deterministic=True, lazy=True)
 a('aaa')
 
-exp = open(os.path.join(medir, 'lazy.out.gv')).read().strip()
+exp = metext('lazy.out.gv')
 CHECK_EQ(exp, a.format('dot'))
 
-exp = open(os.path.join(medir, 'lazy.tex')).read().strip()
+exp = metext('lazy.tex')
 CHECK_EQ(exp, a.format('tikz'))
 
 

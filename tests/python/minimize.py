@@ -6,18 +6,12 @@ from test import *
 
 algos = ['hopcroft', 'moore', 'signature', 'weighted']
 
-def aut(file):
-    return vcsn.automaton(filename = medir + "/" + file)
-
-def file_to_string(file):
-    return open(medir + "/" + file, "r").read().strip()
-
 def check(algo, aut, exp):
     if isinstance(algo, list):
         for a in algo:
             check(a, aut, exp)
     else:
-        print("checking minimize with algorithm ", algo)
+        print('checking minimize with algorithm ', algo)
         CHECK_EQ(exp, aut.minimize(algo))
         # Check that repeated minimization still gives the same type of
         # automaton.  We don't want to get partition_automaton of
@@ -46,13 +40,13 @@ def xfail(algo, aut):
 ## Simple minimization test.  The example comes from the "Théorie des
 ## langages" lecture notes by François Yvon & Akim Demaille.
 ## Automaton 4.23 at page 59, as of revision a0761d6.
-a = aut("redundant.gv")
-exp = file_to_string('redundant.exp.gv')
+a = meaut('redundant.gv')
+exp = metext('redundant.exp.gv')
 check('brzozowski', a, vcsn.automaton(exp))
 check(algos, a, exp)
 
 ## An automaton equal to redundant.exp, with one transition removed.
-a = aut('incomplete-non-trim.gv')
+a = meaut('incomplete-non-trim.gv')
 #xfail('brzozowski', a)
 xfail('moore',      a)
 xfail('signature',  a)
@@ -60,8 +54,8 @@ xfail('weighted',   a)
 
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
-a = aut('no-initial-states.gv')
-z = file_to_string('no-initial-states.exp.gv')
+a = meaut('no-initial-states.gv')
+z = metext('no-initial-states.exp.gv')
 check('brzozowski', a, z)
 xfail('moore',      a)
 xfail('signature',  a)
@@ -69,7 +63,7 @@ xfail('weighted',   a)
 
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
-a = aut("no-final-states.gv")
+a = meaut('no-final-states.gv')
 check('brzozowski', a, z)
 xfail('moore',      a)
 xfail('signature',  a)
@@ -84,7 +78,7 @@ check('moore', all_states_final, all_states_final.minimize('signature'))
 a = vcsn.context('lal_char(a-k), b') \
         .expression('[a-k]{10}') \
         .standard()
-exp = file_to_string("intricate.exp.gv")
+exp = metext('intricate.exp.gv')
 check('brzozowski', a, vcsn.automaton(exp))
 check(algos, a, exp)
 
@@ -93,25 +87,25 @@ check(algos, a, exp)
 a = vcsn.context('lal_char(a), b') \
         .expression('a{2}*+a{2}*', 'trivial') \
         .standard()
-exp = file_to_string("small-nfa.exp.gv")
+exp = metext('small-nfa.exp.gv')
 check('brzozowski', a, vcsn.automaton(exp))
 xfail('moore',      a)
 check('signature',  a, exp)
 check('weighted',   a, exp)
 
 ## A small weighted automaton.
-a = aut("small-z.gv")
-exp = file_to_string("small-z.exp.gv")
+a = meaut('small-z.gv')
+exp = metext('small-z.exp.gv')
 xfail('brzozowski', a)
 xfail('moore',      a)
 xfail('signature',  a)
 check('weighted',   a, exp)
 
 ## Non-lal automata.
-a = vcsn.context('law_char(a-c), b').expression("abc(bc)*+acb(bc)*").standard()
-exp = file_to_string("nonlal.exp.gv")
-check("signature", a, exp)
-check("weighted",  a, exp)
+a = vcsn.context('law_char(a-c), b').expression('abc(bc)*+acb(bc)*').standard()
+exp = metext('nonlal.exp.gv')
+check('signature', a, exp)
+check('weighted',  a, exp)
 
 ## An already-minimal automaton.  This used to fail with Moore,
 ## because of a subtly wrong optimization attempt in
@@ -129,12 +123,12 @@ check("weighted",  a, exp)
 ## It remained associated to its old class identifier in
 ## state_to_class, which in the mean time would come to identify some
 ## subset of its old value.
-a = vcsn.context('lal_char(ab), b').expression("a+ba").automaton()
+a = vcsn.context('lal_char(ab), b').expression('a+ba').automaton()
 check('brzozowski', a, a)
 CHECK_ISOMORPHIC(a.minimize('moore'), a)
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 
 ## Check minimization idempotency in the non-lal case as well.
-a = vcsn.context('law_char(ab), b').expression("ab").standard()
+a = vcsn.context('law_char(ab), b').expression('ab').standard()
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 CHECK_ISOMORPHIC(a.minimize('weighted'), a)

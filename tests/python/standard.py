@@ -37,7 +37,7 @@ def check(r, exp=None, file=None):
         r = ctx.expression(r)
     print("check: {:u}".format(r))
     if file:
-        exp = open(medir + '/' + file + '.gv').read().strip()
+        exp = metext(file, 'gv')
 
     # Check inductive, standard flavor.
     a = r.inductive('standard')

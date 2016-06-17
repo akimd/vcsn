@@ -3,9 +3,9 @@
 import vcsn
 from test import *
 
-a = vcsn.Q.expression("<3>abc*(<2>d)*+ce<5>").derived_term().strip()
+a = vcsn.Q.expression('<3>abc*(<2>d)*+ce<5>').derived_term().strip()
 
-ref = vcsn.automaton("""
+ref = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lat<letterset<char_letters(abcde)>, letterset<char_letters(abcde)>>, q"
@@ -39,12 +39,6 @@ digraph
   5 -> F5
   5 -> 5 [label = "<2>d|d"]
 }
-""")
-
-
-def load(file):
-
-    return open(medir + "/" + file + ".gv").read().strip()
-
+''')
 
 CHECK_EQ(a.partial_identity(), ref)

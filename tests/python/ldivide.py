@@ -8,10 +8,7 @@ ctx = vcsn.context('lan_char, q')
 def aut(e):
     return ctx.expression(e).automaton()
 
-def load(fname):
-    return open(medir + '/' + fname).read().strip()
-
-CHECK_EQ(load('aut1.gv'), aut('a+b').ldivide(aut('a*b*')))
+CHECK_EQ(metext('aut1.gv'), aut('a+b').ldivide(aut('a*b*')))
 
 # Addition
 CHECK_EQUIV(aut(r'<3>\e'), aut('<2>a').ldivide(aut('<6>(a+b)')))

@@ -11,7 +11,7 @@ def union(*auts):
 
 ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
-CHECK_EQ(vcsn.automaton(filename = medir + '/abc.gv'), union(ab, bc))
+CHECK_EQ(meaut('abc.gv'), union(ab, bc))
 
 ## ------------ ##
 ## lal_char_z.  ##

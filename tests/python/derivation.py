@@ -28,7 +28,7 @@ def check_derived_term(r, exp, algo):
         eff = lazy.strip()
     else:
         eff = r.derived_term(algo)
-    CHECK_EQ(open(medir + '/' + exp + '.gv').read().strip(),
+    CHECK_EQ(metext(exp, 'gv'),
              eff)
 
 def check_dt(r, exp):

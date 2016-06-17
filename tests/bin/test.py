@@ -21,6 +21,11 @@ srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
 medir = sys.argv[0].replace(".py", ".dir")
 
 
+def set_medir(dir):
+    global medir
+    medir = dir
+
+
 def mefile(fn, ext=None):
     '''The path to the test's file `fn.ext`,
     where `ext` is possibly empty.'''

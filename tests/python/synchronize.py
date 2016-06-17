@@ -3,15 +3,12 @@
 import vcsn
 from test import *
 
-def load(file):
-    return open(medir + "/" + file + ".gv").read().strip()
-
 ## ------------- ##
 ## synchronize.  ##
 ## ------------- ##
 
 def check(input, file):
-    aut = load(file)
+    aut = metext(file, 'gv')
     syn = input.synchronize()
     CHECK_EQ(aut, syn)
     #CHECK_EQUIV(input, syn) #free labelset for determinize?
@@ -33,7 +30,7 @@ check(ctx.expression(r"""(a|e)((f|\e)+((g|h)(i|j)*(o|k)))(l|n)""").standard().mi
 ## ----------------- ##
 
 def check(input, file):
-    aut = load(file)
+    aut = metext(file, 'gv')
     d = input.delay_automaton()
     CHECK_EQ(aut, d)
 

@@ -5,7 +5,7 @@ from test import *
 
 z = vcsn.context('lal_char(abcd), z')
 
-medir = srcdir + '/tests/python/conjunction.dir'
+set_medir(srcdir + '/tests/python/conjunction.dir')
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -21,7 +21,7 @@ CHECK_EQ('(<3>a)*(a+<4>(aa*a))', str(a1.infiltrate(a1).expression()))
 ## -------------------- ##
 
 # a infiltrate a
-a = vcsn.automaton(filename = medir + "/a.gv")
+a = meaut("a.gv")
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters(a)>, z"
@@ -49,7 +49,7 @@ CHECK_EQ('''digraph
 }''',  a.infiltrate(a))
 
 # abc infiltrate abc
-abc = vcsn.automaton(filename = medir + "/abc.gv")
+abc = meaut("abc.gv")
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters(abc)>, z"
@@ -111,7 +111,7 @@ CHECK_EQ('''digraph
 }''', abc.infiltrate(abc))
 
 # abc infiltrate xy
-xy = vcsn.automaton(filename = medir + "/xy.gv")
+xy = meaut('xy.gv')
 CHECK_EQ('''digraph
 {
   vcsn_context = "letterset<char_letters(abcxy)>, z"

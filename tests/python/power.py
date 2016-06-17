@@ -10,11 +10,11 @@ z = vcsn.context('lal_char(01), z')
 binary = load('lal_char_z/binary.gv')
 
 # power 0.
-CHECK_EQ(vcsn.automaton(filename = medir + '/binary^0.gv'),
+CHECK_EQ(meaut('binary^0.gv'),
          binary & 0)
 
 # power 1.
-CHECK_EQ(vcsn.automaton(filename = medir + '/binary^1.gv'),
+CHECK_EQ(meaut('binary^1.gv'),
          binary & 1)
 
 # power 4.

@@ -16,17 +16,17 @@ vcsn.automaton.labels = get_labels
 
 a = vcsn.context('lal_char(abc), b').cerny(6)
 CHECK_EQ(a.info()['number of states'], 6)
-CHECK_EQ(vcsn.automaton(filename=medir + '/cerny-6.gv'), a)
+CHECK_EQ(meaut('cerny-6.gv'), a)
 
 
 ## ----------- ##
 ## de_bruijn.  ##
 ## ----------- ##
 
-CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-2.gv'),
+CHECK_EQ(meaut('de-bruijn-2.gv'),
          vcsn.context('lal_char(ab), b').de_bruijn(2))
 
-CHECK_EQ(vcsn.automaton(filename=medir + '/de-bruijn-3.gv'),
+CHECK_EQ(meaut('de-bruijn-3.gv'),
          vcsn.context('lal_char(xyz), b').de_bruijn(3))
 
 ## ---------------- ##
@@ -87,10 +87,10 @@ digraph
 '''))
 
 CHECK_EQ(ctx.double_ring(1, [0]),
-         vcsn.automaton(filename=medir + '/double-ring-1-0.gv'))
+         meaut('double-ring-1-0.gv'))
 
 CHECK_EQ(ctx.double_ring(4, [2, 3]),
-         vcsn.automaton(filename=medir + '/double-ring-4-2-3.gv'))
+         meaut('double-ring-4-2-3.gv'))
 
 
 ## ---------- ##
@@ -100,12 +100,12 @@ CHECK_EQ(ctx.double_ring(4, [2, 3]),
 b = vcsn.context('lal_char(abc), b')
 z = vcsn.context('lal_char(abc), z')
 
-exp = vcsn.automaton(filename=medir + '/ladybird-2.gv')
+exp = meaut('ladybird-2.gv')
 
 CHECK_EQ(exp, b.ladybird(2))
 CHECK_EQ(vcsn.automaton(str(exp).replace(', b', ', z')), z.ladybird(2))
 
-exp = vcsn.automaton(filename=medir + '/ladybird-2-zmin.gv')
+exp = meaut('ladybird-2-zmin.gv')
 CHECK_EQ(exp,
          vcsn.context('lal_char(abc), zmin').ladybird(2))
 
@@ -115,7 +115,7 @@ CHECK_EQ(exp,
 
 nmin = vcsn.context('lat<lan_char(abc), lan_char(bcd)>, nmin')
 
-exp = vcsn.automaton(filename=medir + '/levenshtein.gv')
+exp = meaut('levenshtein.gv')
 
 CHECK_EQ(exp, nmin.levenshtein())
 
@@ -125,7 +125,7 @@ CHECK_EQ(exp, nmin.levenshtein())
 
 # Expect a clique.
 c1 = vcsn.context('lal_char(a), b').random_automaton(4, 1, 4, 4)
-c2 = vcsn.automaton(filename=medir + '/clique-a-4.gv')
+c2 = meaut('clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 
@@ -235,5 +235,5 @@ CHECK(a.is_complete())
 ## u.  ##
 ## --- ##
 
-CHECK_EQ(vcsn.automaton(filename=medir + '/u-5.gv'),
+CHECK_EQ(meaut('u-5.gv'),
          vcsn.context('lal_char(abc), b').u(5))
