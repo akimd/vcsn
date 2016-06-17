@@ -19,6 +19,12 @@ import vcsn.demo as demo
 # The class MUST call this class decorator at creation time.
 
 
+def formatError(error):
+    res = '<pre style="color: maroon; background: #FDD; padding: 5px;">'
+    res += escape(str(error))
+    res += '</pre>'
+    return res
+
 class ContextText:
 
     def __init__(self, ipython, name=None):
@@ -67,7 +73,7 @@ class ContextText:
                 self.ipython.shell.user_ns[self.name] = c
             self.latex.value = c._repr_latex_()
         except RuntimeError as e:
-            self.error.value = escape(str(e))
+            self.error.value = formatError(e)
 
 
 @magics_class
@@ -134,7 +140,7 @@ class AutomatonText:
                 txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
         except RuntimeError as e:
-            self.error.value = escape(str(e))
+            self.error.value = formatError(e)
 
 
 @magics_class
