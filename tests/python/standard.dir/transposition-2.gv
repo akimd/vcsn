@@ -1,0 +1,58 @@
+digraph
+{
+  vcsn_context = "letterset<char_letters(abc)>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I7
+    F0
+    F7
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+  }
+  I7 -> 7
+  0 -> F0
+  1 -> 0 [label = "a"]
+  1 -> 1 [label = "a"]
+  1 -> 2 [label = "a"]
+  1 -> 3 [label = "a"]
+  2 -> 0 [label = "b"]
+  2 -> 2 [label = "b"]
+  3 -> 0 [label = "b"]
+  3 -> 1 [label = "b"]
+  3 -> 2 [label = "b"]
+  3 -> 3 [label = "b"]
+  4 -> 0 [label = "b"]
+  4 -> 2 [label = "b"]
+  4 -> 4 [label = "b"]
+  4 -> 6 [label = "b"]
+  5 -> 0 [label = "b"]
+  5 -> 1 [label = "b"]
+  5 -> 2 [label = "b"]
+  5 -> 3 [label = "b"]
+  5 -> 4 [label = "b"]
+  5 -> 5 [label = "b"]
+  5 -> 6 [label = "b"]
+  6 -> 0 [label = "c"]
+  6 -> 2 [label = "c"]
+  6 -> 4 [label = "c"]
+  6 -> 6 [label = "c"]
+  7 -> F7
+  7 -> 0 [label = "a, <4>b, c"]
+  7 -> 1 [label = "a, <2>b"]
+  7 -> 2 [label = "a, <4>b, c"]
+  7 -> 3 [label = "a, <2>b"]
+  7 -> 4 [label = "<2>b, c"]
+  7 -> 5 [label = "b"]
+  7 -> 6 [label = "<2>b, c"]
+}

@@ -35,6 +35,7 @@ for fs in ['1', '2', '3']:
 def check(r, exp=None, file=None):
     if not isinstance(r, vcsn.expression):
         r = ctx.expression(r)
+    print("check: {:u}".format(r))
     if file:
         exp = open(medir + '/' + file + '.gv').read().strip()
 
@@ -886,18 +887,24 @@ check(qexp(r'\e & a'), zero('a'))
 check(qexp('ab : cd : ef'), file='shuffle-1')
 check(qexp('ab &: ab &: ab'), file='infiltrate-1')
 
-# Complement, transposition.
+# Complement.
 check(qexp('! [ab]*a[ab]{2}'), file='complement-1')
 check(qexp('[abc]*{c}'), zero('abc'))
-check(qexp('abcd & (dcba){T}'), file='transposition-1')
 
-# Left and right divisions.
+# Transposition.
+check(qexp('abcd & (dcba){T}'), file='transposition-1')
+check(qexp('(a* & a*a*){T}'), file='transposition-5')
+check(qexp('([ab]*[bc]* & [bc]*[ab]*){T}'), file='transposition-2')
+check(qexp('(ab : cd){T}'), file='transposition-3')
+check(qexp('(ab &: ab){T}'), file='transposition-4')
+
+# Divide.
 check(qexp(r'<2>abc {\} <4>abcd*'), file='ldivide-1')
 check(qexp(r'a? {\} a'), file='ldivide-2')
 check(qexp(r'(a* {\} a) {\} \e'), file='ldivide-3')
 check(qexp('<4>a*bcd {/} <2>bcd'), file='rdivide-1')
 
-# Tupling.
+# Tuple.
 def tuple(*exps):
     return vcsn.expression._tuple([vcsn.context('lan, q').expression(e)
                                    for e in exps])

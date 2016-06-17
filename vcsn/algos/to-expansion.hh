@@ -296,7 +296,7 @@ namespace vcsn
         es_.normalize(res_);
       }
 
-      // d(E&F) = d(E) & d(F).
+      /// d(E&F) = d(E) & d(F).
       VCSN_RAT_VISIT(conjunction, e)
       {
         res_ = to_expansion(e.head());
@@ -304,7 +304,8 @@ namespace vcsn
           res_ = es_.conjunction(res_, to_expansion(r));
       }
 
-      // d(E:F) = d(E):F + E:d(F)
+      /// d(E:F) = d(E):F + E:d(F)
+      /// dᵗ(E:F) = dᵗ(E):Fᵗ + Eᵗ:dᵗ(F)
       VCSN_RAT_VISIT(shuffle, e)
       {
         // The shuffle-product of the previously traversed siblings,
@@ -313,13 +314,16 @@ namespace vcsn
         res_ = to_expansion(prev);
         for (const auto& r: e.tail())
           {
-            res_ = es_.shuffle(res_, prev,
-                               to_expansion(r), r);
+            res_ = es_.shuffle(res_,
+                               transposed_ ? rs_.transposition(prev) : prev,
+                               to_expansion(r),
+                               transposed_ ? rs_.transposition(r) : r);
             prev = rs_.shuffle(prev, r);
           }
       }
 
-      // d(E&:F) = d(E)&:F + d(E)&:d(F) + E&:d(F)
+      /// d(E&:F) = d(E)&:F + d(E)&:d(F) + E&:d(F)
+      /// dᵗ(E&:F) = dᵗ(E)&:Fᵗ + dᵗ(E)&:dᵗ(F) + Eᵗ&:dᵗ(F)
       VCSN_RAT_VISIT(infiltrate, e)
       {
         // The infiltration-product of the previously traversed
@@ -329,8 +333,11 @@ namespace vcsn
         res_ = to_expansion(prev);
         for (const auto& r: e.tail())
           {
-            res_ = es_.infiltrate(res_, prev,
-                                    to_expansion(r), r);
+            res_ = es_.infiltrate
+              (res_,
+               transposed_ ? rs_.transposition(prev) : prev,
+               to_expansion(r),
+               transposed_ ? rs_.transposition(r) : r);
             prev = rs_.infiltrate(prev, r);
           }
       }
@@ -340,7 +347,7 @@ namespace vcsn
         res_ = es_.complement(to_expansion(e.sub()));
       }
 
-
+      /// d(Eᵗ) = dᵗ(E)
       VCSN_RAT_VISIT(transposition, e)
       {
         transposed_ = !transposed_;

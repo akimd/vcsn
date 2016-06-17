@@ -1,0 +1,37 @@
+digraph
+{
+  vcsn_context = "letterset<char_letters(abcd)>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I8
+    F0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+  }
+  I8 -> 8
+  0 -> F0
+  1 -> 0 [label = "a"]
+  2 -> 0 [label = "c"]
+  3 -> 1 [label = "b"]
+  4 -> 1 [label = "c"]
+  4 -> 2 [label = "a"]
+  5 -> 2 [label = "d"]
+  6 -> 3 [label = "c"]
+  6 -> 4 [label = "b"]
+  7 -> 4 [label = "d"]
+  7 -> 5 [label = "a"]
+  8 -> 6 [label = "d"]
+  8 -> 7 [label = "b"]
+}

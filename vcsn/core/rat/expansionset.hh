@@ -429,6 +429,8 @@ namespace vcsn
       }
 
       /// The shuffle product of \a lhs_xpn and \a rhs_xpn.
+      ///
+      /// d(E) : F + E : d(F)
       value_t shuffle(const value_t& lhs_xpn, const expression_t& lhs_xpr,
                       const value_t& rhs_xpn, const expression_t& rhs_xpr) const
       {
