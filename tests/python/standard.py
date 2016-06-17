@@ -17,7 +17,10 @@ ctx = vcsn.context('lal_char(ab), b')
 #
 # 2. Make sure we deleted former initial states that become
 # inaccessible.
-for fs in ['1', '2']:
+#
+# 3. This one shows we need to use add_transition, it aborts with
+# new_transition.
+for fs in ['1', '2', '3']:
     a = meaut(fs, 'in.gv')
     exp = metext(fs, 'out.gv')
     CHECK_EQ(exp, a.standard())

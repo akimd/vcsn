@@ -96,7 +96,8 @@ namespace vcsn
         auto i = aut->dst_of(ti);
         auto wi = aut->weight_of(ti);
         for (auto t: all_out(aut, i))
-          aut->new_transition(ini, aut->dst_of(t), aut->label_of(t),
+          // Cannot use new_transition.
+          aut->add_transition(ini, aut->dst_of(t), aut->label_of(t),
                               ws.mul(wi, aut->weight_of(t)));
         aut->del_transition(ti);
 

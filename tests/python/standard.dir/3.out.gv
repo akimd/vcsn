@@ -1,0 +1,22 @@
+digraph
+{
+  vcsn_context = "letterset<char_letters(a)>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I2
+    F0
+    F2
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    2
+  }
+  I2 -> 2
+  0 -> F0
+  0 -> 0 [label = "a"]
+  2 -> F2
+  2 -> 0 [label = "<2>a"]
+}
