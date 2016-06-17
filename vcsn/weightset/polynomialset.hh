@@ -654,7 +654,7 @@ namespace vcsn
 
     /// Left exterior division.
     value_t&
-    ldiv_here(const weight_t w, value_t& v) const
+    ldivide_here(const weight_t w, value_t& v) const
     {
       if (!weightset()->is_one(w))
         for (auto&& m: v)
@@ -664,7 +664,7 @@ namespace vcsn
 
     /// Right exterior division.
     value_t&
-    rdiv_here(value_t& v, const weight_t w) const
+    rdivide_here(value_t& v, const weight_t w) const
     {
       if (!weightset()->is_one(w))
         for (auto& m: v)
@@ -768,7 +768,7 @@ namespace vcsn
       // Zero is in normal form, don't try to divide by zero.
       auto res = norm(v);
       if (!weightset()->is_zero(res))
-        ldiv_here(res, v);
+        ldivide_here(res, v);
       return res;
     }
 

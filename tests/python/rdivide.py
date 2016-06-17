@@ -38,11 +38,11 @@ def check(lhs_expr, rhs_expr):
     lhs_aut = lhs_expr.derived_term()
     rhs_aut = rhs_expr.derived_term()
 
-    div_expr = lhs_expr.ldivide(rhs_expr).derived_term()
-    div_aut = lhs_aut.ldivide(rhs_aut)
+    divide_expr = lhs_expr.ldivide(rhs_expr).derived_term()
+    divide_aut = lhs_aut.ldivide(rhs_aut)
 
-    if div_aut.info()['is valid'] and div_expr.info()['is valid']:
-        CHECK_EQUIV(div_expr, div_aut)
+    if divide_aut.info()['is valid'] and divide_expr.info()['is valid']:
+        CHECK_EQUIV(divide_expr, divide_aut)
 
 exprs = [r'\z', r'<2>\e', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
         '<8>(a*b+c)*bba+a(b(c+<9>d)*+a)']

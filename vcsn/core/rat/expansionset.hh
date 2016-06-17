@@ -294,7 +294,7 @@ namespace vcsn
       }
 
       /// Inplace left-division by \a w of \a res.
-      value_t& ldiv_here(const weight_t& w, value_t& res) const
+      value_t& ldivide_here(const weight_t& w, value_t& res) const
       {
         res.constant = ws_.ldivide(w, res.constant);
         for (auto& p: res.polynomials)

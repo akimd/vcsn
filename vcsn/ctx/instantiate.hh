@@ -319,7 +319,7 @@ namespace vcsn
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_expression, rs_t);
-        REGISTER(ldiv_expression, rs_t, rs_t);
+        REGISTER(ldivide_expression, rs_t, rs_t);
         REGISTER(lweight, ws_t, aut_t, const std::string);
         REGISTER(lweight_expression, ws_t, rs_t);
         REGISTER(less_than_expression, rs_t, rs_t);
@@ -342,7 +342,7 @@ namespace vcsn
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(push_weights, aut_t);
-        REGISTER(rdiv_expression, rs_t, rs_t);
+        REGISTER(rdivide_expression, rs_t, rs_t);
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);

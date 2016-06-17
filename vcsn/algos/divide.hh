@@ -27,7 +27,7 @@ namespace vcsn
       /// Bridge (ldivide).
       template <typename ExpressionSetLhs, typename ExpressionSetRhs>
       expression
-      ldiv_expression(const expression& lhs, const expression& rhs)
+      ldivide_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
@@ -38,7 +38,7 @@ namespace vcsn
       /// Bridge (ldivide).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
-      ldiv_polynomial(const polynomial& lhs, const polynomial& rhs)
+      ldivide_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
         auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
@@ -101,7 +101,7 @@ namespace vcsn
       /// Bridge (rdivide).
       template <typename ExpressionSetLhs, typename ExpressionSetRhs>
       expression
-      rdiv_expression(const expression& lhs, const expression& rhs)
+      rdivide_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),

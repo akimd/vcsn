@@ -308,7 +308,7 @@ namespace vcsn
     }
 
     /// w2 := w1 \ w2.
-    value_t& ldiv_here(const value_t& w1, value_t& w2) const
+    value_t& ldivide_here(const value_t& w1, value_t& w2) const
     {
       w2 = ldivide(w1, w2);
       return w2;

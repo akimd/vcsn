@@ -91,7 +91,7 @@ namespace vcsn
             compose_       = "@";
             conjunction_   = " \\& ";
             infiltrate_    = " \\uparrow ";
-            ldiv_          = " \\backslash ";
+            ldivide_       = " \\backslash ";
             lmul_          = "\\,";
             one_           = "\\varepsilon";
             mul_           = " \\, ";
@@ -109,7 +109,7 @@ namespace vcsn
             compose_       = "@";
             conjunction_   = "&";
             infiltrate_    = "&:";
-            ldiv_          = "{\\}";
+            ldivide_       = "{\\}";
             lmul_          = "<.>.";
             one_           = "\\e";
             mul_           = ".";
@@ -127,7 +127,7 @@ namespace vcsn
             compose_       = "@";
             conjunction_   = "&";
             infiltrate_    = "&:";
-            ldiv_          = "{\\}";
+            ldivide_       = "{\\}";
             lmul_          = "⟨.⟩.";
             one_           = "ε";
             mul_           = ".";
@@ -178,7 +178,7 @@ namespace vcsn
       VCSN_RAT_VISIT(compose, v)       { print_(v, compose_); }
       VCSN_RAT_VISIT(conjunction, v)   { print_(v, conjunction_); }
       VCSN_RAT_VISIT(infiltrate, v)    { print_(v, infiltrate_); }
-      VCSN_RAT_VISIT(ldivide, v)          { print_(v, ldiv_); }
+      VCSN_RAT_VISIT(ldivide, v)       { print_(v, ldivide_); }
       VCSN_RAT_VISIT(lweight, v)       { print_(v); }
       VCSN_RAT_VISIT(mul, v)           { print_(v, mul_); }
       VCSN_RAT_VISIT(one, v)           { print_(v, one_); }
@@ -402,7 +402,7 @@ namespace vcsn
       const char* lmul_ = nullptr;
       const char* rmul_ = nullptr;
       /// Quotient.
-      const char* ldiv_ = nullptr;
+      const char* ldivide_ = nullptr;
       /// The expression operators.
       const char* add_ = nullptr;
       const char* complement_ = nullptr;

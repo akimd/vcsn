@@ -27,9 +27,9 @@ check_div(r'c+d', 'ab')
 check_div(r'<2>c+<3>d', 'ab')
 check_div(r'<2>c+<3>d', '<2>ab')
 
-## ------------------------------ ##
+## --------------------------------- ##
 ## ldivide(polynomial, polynomial).  ##
-## ------------------------------ ##
+## --------------------------------- ##
 
 def check(exp, lhs, rhs):
     make = z.polynomial

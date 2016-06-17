@@ -797,7 +797,7 @@ namespace vcsn
       for (auto v: {std::get<I>(vs)...})
         res = set<0>().lgcd(res, v);
       using swallow = int[];
-      (void) swallow { (set<0>().ldiv_here(res, std::get<I>(vs)), 0)... };
+      (void) swallow { (set<0>().ldivide_here(res, std::get<I>(vs)), 0)... };
       return res;
     }
 

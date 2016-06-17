@@ -94,7 +94,7 @@ namespace vcsn
           one_           = "\\varepsilon";
           lmul_          = "\\,";
           rmul_          = "\\,";
-          ldiv_          = " \\backslash ";
+          ldivide_       = " \\backslash ";
           tuple_left     = " \\left. ";
           tuple_middle   = " \\middle| ";
           tuple_right    = " \\right. ";
@@ -123,7 +123,7 @@ namespace vcsn
           one_           = "\\e";
           lmul_          = "";
           rmul_          = "";
-          ldiv_          = "{\\}";
+          ldivide_       = "{\\}";
           tuple_left     = "";
           tuple_middle   = "|";
           tuple_right    = "";
@@ -150,7 +150,7 @@ namespace vcsn
           one_           = "ε";
           lmul_          = "";
           rmul_          = "";
-          ldiv_          = "{\\}";
+          ldivide_       = "{\\}";
           tuple_left     = "";
           tuple_middle   = "|";
           tuple_right    = "";

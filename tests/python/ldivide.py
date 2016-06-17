@@ -35,19 +35,19 @@ CHECK_EQUIV(aut('<2>c'), aut('a+b').ldivide(aut('(a+b)c')))
 # Cross check with derived_term and inductive,standard.
 
 def check(lhs_expr, rhs_expr):
-    div_expr = lhs_expr.ldivide(rhs_expr)
-    print("Checking:", div_expr)
+    divide_expr = lhs_expr.ldivide(rhs_expr)
+    print("Checking:", divide_expr)
 
     lhs_aut = lhs_expr.automaton()
     rhs_aut = rhs_expr.automaton()
-    div_aut = lhs_aut.ldivide(rhs_aut)
+    divide_aut = lhs_aut.ldivide(rhs_aut)
 
-    if div_aut.is_valid():
+    if divide_aut.is_valid():
         for algo in ['expansion', 'inductive,standard']:
-            a = div_expr.automaton(algo)
-            CHECK_EQUIV(div_aut, a)
+            a = divide_expr.automaton(algo)
+            CHECK_EQUIV(divide_aut, a)
     else:
-        SKIP('invalid expression', div_expr)
+        SKIP('invalid expression', divide_expr)
 
 exprs = [r'\z', r'<2>\e', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
         '<8>(a*b+c)*bba+a(b(c+<9>d)*+a)']

@@ -120,7 +120,7 @@ namespace vcsn
         while (!aut_->todo_.empty())
           {
             const auto& p = aut_->todo_.front();
-            add_ldiv_transitions(std::get<1>(p), std::get<0>(p));
+            add_ldivide_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
       }
@@ -146,7 +146,7 @@ namespace vcsn
 
       /// Compute the left quotient in-place.
       template <bool L = Lazy>
-      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldiv_here()
+      std::enable_if_t<sizeof...(Auts) == 2 && !L> ldivide_here()
       {
         initialize_conjunction();
 
@@ -289,7 +289,7 @@ namespace vcsn
       /// rather than multiplied.
       template <bool L = Lazy>
       std::enable_if_t<sizeof...(Auts) == 2 && !L>
-      add_ldiv_transitions(const state_t src, const state_name_t& psrc)
+      add_ldivide_transitions(const state_t src, const state_name_t& psrc)
       {
         const auto& ls = *aut_->labelset();
         const auto& lhs = std::get<0>(aut_->auts_);
@@ -676,7 +676,7 @@ namespace vcsn
     auto res = insplit(rhs);
     auto prod =
       detail::make_product_automaton<false>(join_automata(lhs, res), lhs, res);
-    prod->ldiv_here();
+    prod->ldivide_here();
     return res;
   }
 
