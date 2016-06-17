@@ -3,11 +3,6 @@
 import vcsn
 from test import *
 
-def gv(file):
-    return "{}/{}.gv".format(medir, file)
-
-def load(file):
-    return open(gv(file)).read().strip()
 
 # check AUT EXP ALGO = "auto" DETERMINISTIC = False
 # -------------------------------------------------
@@ -21,7 +16,7 @@ def check(aut, expfile, algo="auto", deterministic=False):
     CHECK_EQ(deterministic, aut.transpose().strip().is_codeterministic())
 
     det = aut.determinize(algo)
-    exp = load(expfile + '-det')
+    exp = metext(expfile + '-det', 'gv')
     CHECK_EQ(exp, det)
     CHECK(det.is_deterministic())
     # Idempotence.
@@ -56,7 +51,7 @@ check(ctx.ladybird(8), 'ladybird-8')
 ## ------------------------------- ##
 
 for name in ['deterministic', 'empty', 'epsilon']:
-    aut = vcsn.automaton(filename=gv(name))
+    aut = meaut(name, 'gv')
     check(aut, name, deterministic=True)
     check(aut, name, deterministic=True, algo='weighted')
 
@@ -66,7 +61,7 @@ for name in ['deterministic', 'empty', 'epsilon']:
 ## ------------------- ##
 
 for name in ['q', 'z', 'zmin']:
-    aut = vcsn.automaton(filename=gv(name))
+    aut = meaut(name, 'gv')
     check(aut, name)
 
 
@@ -75,8 +70,8 @@ for name in ['q', 'z', 'zmin']:
 ## ----------------------------- ##
 
 for name in ['b', 'f2']:
+    aut = meaut(name, 'gv')
     for algo in ['auto', 'boolean', 'weighted']:
-        aut = vcsn.automaton(filename=gv(name))
         check(aut, name, algo=algo)
 
 

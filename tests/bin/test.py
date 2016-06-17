@@ -21,6 +21,22 @@ srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
 medir = sys.argv[0].replace(".py", ".dir")
 
 
+def mefile(fn, ext=None):
+    '''The path to the test's file `fn.ext`,
+    where `ext` is possibly empty.'''
+    return medir + '/' + fn + ('.' + ext if ext else '')
+
+def metext(fn, ext=None):
+    '''The content of the test's file `fn.ext`,
+    where `ext` is possibly empty.'''
+    return open(mefile(fn, ext)).read().strip()
+
+def meaut(fn, ext=None):
+    '''The automaton stored in the test's file `fn.ext`,
+    where `ext` is possibly empty.'''
+    return vcsn.automaton(filename=mefile(fn, ext))
+
+
 # http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
 def which(program):
     'Return the file name for program if it exists, None otherwise.'

@@ -1,0 +1,17 @@
+digraph
+{
+ vcsn_context = "lal_char(a), expressionset<lal_char(xyz), b>"
+ rankdir = LR
+ {
+   node [shape = point, width = 0]
+   I0
+   F0
+   F1
+ }
+ {
+   node [shape = circle]
+   0
+ }
+ I0 -> 0 [label = "<x>"]
+ 0 -> F0 [label = "<y>"]
+}

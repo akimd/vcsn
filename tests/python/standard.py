@@ -10,107 +10,19 @@ ctx = vcsn.context('lal_char(ab), b')
 ## standard(aut).  ##
 ## --------------- ##
 
-# Try to be exhaustive: Several initials states, with weights, one of
-# which is final, the other has a loop.
-a = vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab), q"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    I2
-    F
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-  }
-  I0 -> 0 [label = "<1/2>"]
-  I2 -> 2 [label = "<1/4>"]
-  0 -> 0 [label = "a, <2>b"]
-  0 -> 1 [label = "<3>a"]
-  1 -> 2 [label = "b"]
-  2 -> 2 [label = "a, b"]
-  2 -> F
-}''')
-
-exp = vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab), q"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I3
-    F2
-    F3
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-    3
-  }
-  I3 -> 3
-  0 -> 0 [label = "a, <2>b"]
-  0 -> 1 [label = "<3>a"]
-  1 -> 2 [label = "b"]
-  2 -> F2
-  2 -> 2 [label = "a, b"]
-  3 -> F3 [label = "<1/4>"]
-  3 -> 0 [label = "<1/2>a, b"]
-  3 -> 1 [label = "<3/2>a"]
-  3 -> 2 [label = "<1/4>a, <1/4>b"]
-}''')
-CHECK_EQ(exp, a.standard())
-CHECK_EQ(a.transpose().standard().transpose(), a.costandard())
-CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
-
-# Make sure we deleted former initial states that become inaccessible.
-a = vcsn.automaton('''digraph
-{
- vcsn_context = "lal_char(a), expressionset<lal_char(xyz), b>"
- rankdir = LR
- {
-   node [shape = point, width = 0]
-   I0
-   F0
-   F1
- }
- {
-   node [shape = circle]
-   0
- }
- I0 -> 0 [label = "<x>"]
- 0 -> F0 [label = "<y>"]
-}
-''')
-
-exp = '''digraph
-{
-  vcsn_context = "letterset<char_letters(a)>, expressionset<letterset<char_letters(xyz)>, b>"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I1
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    1
-  }
-  I1 -> 1
-  1 -> F1 [label = "<xy>"]
-}'''
-CHECK_EQ(exp, str(a.standard()))
-CHECK_EQ(a.transpose().standard().transpose(), a.costandard())
-CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
+# Automata:
+#
+# 1. Try to be exhaustive: Several initials states, with weights, one
+# of which is final, the other has a loop.
+#
+# 2. Make sure we deleted former initial states that become
+# inaccessible.
+for fs in ['1', '2']:
+    a = meaut(fs, 'in.gv')
+    exp = metext(fs, 'out.gv')
+    CHECK_EQ(exp, a.standard())
+    CHECK_EQ(a.transpose().standard().transpose(), a.costandard())
+    CHECK_EQ(a.transpose().is_standard(), a.is_costandard())
 
 
 ## --------------- ##
