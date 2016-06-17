@@ -131,11 +131,12 @@ def check(r, exp=None, file=None):
 
     # Check that we are equivalent to derived-term.  However,
     # derived-term sometimes needs a neutral to compute ldivide/rdivide.
-    # FIXME: Not very elegant...
     if r.info('ldivide'):
+        # FIXME: Not very elegant...  We need means to derive context
+        # from others.  Unless we get rid of lal.
         nctx = vcsn.context(re.sub('(.*?), *(.*)', r'nullableset<\1>, \2',
                                    r.context().format('sname')))
-        nr = nctx.expression(str(r))
+        nr = r.expression(nctx)
         a_dt = nr.automaton('expansion')
     else:
         a_dt = r.automaton('expansion')

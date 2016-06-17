@@ -223,7 +223,7 @@ def can_test_equivalence(a):
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.  Also works for
     expressions.'''
-    num = 10
+    num = 20
     # Cannot compute equivalence on Zmin, approximate with shortest.
     try:
         if can_test_equivalence(a1) and can_test_equivalence(a2):

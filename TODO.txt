@@ -222,11 +222,6 @@ we treat it as if it were lan<string> instead of law<char>.
 ** eliminate-state
 Support several arguments.
 
-** expression
-On occasions I would have liked to be able to see the AST drawn as a Dot
-tree.  I'd like two different outputs: as a tree (semantical), or as a DAG:
-a physical representation including the shared parts of an expression.
-
 ** info
 The size of the expression is badly defined.  For instance 'a{10}' says it
 has a single prod.  By the way, it should be call multiplication, not prod.

@@ -17,7 +17,7 @@ def referenced(nb):
 # exist.
 existing = set([f
                 for f in os.listdir(path=nbdir)
-                if re.match(r'(\w+\.\w+)\.ipynb', f)])
+                if re.match(r'(\w+\.\w+)\.ipynb$', f)])
 
 
 
