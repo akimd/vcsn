@@ -322,7 +322,7 @@ namespace vcsn
         // of initial.
         for (auto ti: out(res_, initial_))
           {
-            res_->lmul_weight(ti, w);
+            res_->lweight(ti, w);
             for (auto tf: final_transitions(res_))
               if (res_->src_of(tf) != initial_
                   && !has(other_finals, res_->src_of(tf)))
@@ -338,7 +338,7 @@ namespace vcsn
                    ws_.mul(res_->weight_of(tf), res_->weight_of(ti)));
           }
         for (auto tf: final_transitions(res_))
-          res_->rmul_weight(tf, w);
+          res_->rweight(tf, w);
         res_->set_final(initial_, w);
       }
 
@@ -346,7 +346,7 @@ namespace vcsn
       {
         e.sub()->accept(*this);
         for (auto t: all_out(res_, initial_))
-          res_->lmul_weight(t, e.weight());
+          res_->lweight(t, e.weight());
       }
 
       VCSN_RAT_VISIT(rweight, e)
@@ -355,7 +355,7 @@ namespace vcsn
         e.sub()->accept(*this);
         for (auto t: final_transitions(res_))
           if (! has(other_finals, res_->src_of(t)))
-            res_->rmul_weight(t, e.weight());
+            res_->rweight(t, e.weight());
       }
 
     private:

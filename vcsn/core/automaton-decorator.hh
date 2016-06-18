@@ -177,11 +177,11 @@ namespace vcsn
       DEFINE(add_weight);
       DEFINE(del_state);
       DEFINE(del_transition);
-      DEFINE(lmul_weight);
+      DEFINE(lweight);
       DEFINE(new_state);
       DEFINE(new_transition);
       DEFINE(new_transition_copy);
-      DEFINE(rmul_weight);
+      DEFINE(rweight);
       DEFINE(set_final);
       DEFINE(set_lazy);
       DEFINE(set_lazy_in);

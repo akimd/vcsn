@@ -92,8 +92,8 @@ namespace vcsn
                             : " + ");
           zero_          = "\\emptyset";
           one_           = "\\varepsilon";
-          lmul_          = "\\,";
-          rmul_          = "\\,";
+          lweight_       = "\\,";
+          rweight_       = "\\,";
           ldivide_       = " \\backslash ";
           tuple_left     = " \\left. ";
           tuple_middle   = " \\middle| ";
@@ -121,8 +121,8 @@ namespace vcsn
           add_           = "+";
           zero_          = "\\z";
           one_           = "\\e";
-          lmul_          = "";
-          rmul_          = "";
+          lweight_       = "";
+          rweight_       = "";
           ldivide_       = "{\\}";
           tuple_left     = "";
           tuple_middle   = "|";
@@ -148,8 +148,8 @@ namespace vcsn
           add_           = "+";
           zero_          = "∅";
           one_           = "ε";
-          lmul_          = "";
-          rmul_          = "";
+          lweight_       = "";
+          rweight_       = "";
           ldivide_       = "{\\}";
           tuple_left     = "";
           tuple_middle   = "|";
@@ -200,14 +200,14 @@ namespace vcsn
     {
       out_ << langle_;
       print_(v.weight());
-      out_ << rangle_ << lmul_;
+      out_ << rangle_ << lweight_;
       print_child_(*v.sub(), v);
     }
 
     VISIT(rweight)
     {
       print_child_(*v.sub(), v);
-      out_ << rmul_ << langle_;
+      out_ << rweight_ << langle_;
       print_(v.weight());
       out_ << rangle_;
     }

@@ -34,7 +34,7 @@ namespace vcsn
           zero_here(res, tag);
         else if (!ws.is_one(w))
           for (auto t: initial_transitions(res))
-            res->lmul_weight(t, w);
+            res->lweight(t, w);
         return res;
       }
 
@@ -50,7 +50,7 @@ namespace vcsn
           {
             state_t initial = res->dst_of(initial_transitions(res).front());
             for (auto t: all_out(res, initial))
-              res->lmul_weight(t, w);
+              res->lweight(t, w);
           }
         return res;
       }
@@ -75,7 +75,7 @@ namespace vcsn
           zero_here(res, tag);
         else if (!ws.is_one(w))
           for (auto t: final_transitions(res))
-            res->rmul_weight(t, w);
+            res->rweight(t, w);
         return res;
       }
 

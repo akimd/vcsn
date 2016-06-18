@@ -158,10 +158,10 @@ namespace vcsn
              set_weight(t, aut_->weightset()->transpose(k)));
       DEFINE(add_weight(transition_t t, weight_t k),
              add_weight(t, aut_->weightset()->transpose(k)));
-      DEFINE(lmul_weight(transition_t t, weight_t k),
-             lmul_weight(t, aut_->weightset()->transpose(k)));
-      DEFINE(rmul_weight(transition_t t, weight_t k),
-             rmul_weight(t, aut_->weightset()->transpose(k)));
+      DEFINE(lweight(transition_t t, weight_t k),
+             lweight(t, aut_->weightset()->transpose(k)));
+      DEFINE(rweight(transition_t t, weight_t k),
+             rweight(t, aut_->weightset()->transpose(k)));
 
       DEFINE(del_transition(transition_t t), del_transition(t));
       DEFINE(del_transition(state_t s, state_t d, label_t l),

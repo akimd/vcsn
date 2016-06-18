@@ -8,8 +8,8 @@ the internal API may also be documented.
 ## 2016-06-16
 ### renamings
 The following operations have been renamed, in all APIs (vcsn::, dyn::,
-Python, and TAF-Kit), and on all applicable types (automaton, expressions,
-expansions, polynomials, weights).
+Python, and TAF-Kit), and on all applicable types (automaton, expansions,
+expressions, polynomials, weights).
 
     infiltration -> infiltrate
     ldiv         -> ldivide

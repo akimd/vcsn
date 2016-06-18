@@ -191,7 +191,7 @@ namespace vcsn
               ? rs_.transposition(prod_(e.begin(),
                                         std::next(e.begin(), size-(i+1))))
               : prod_(std::next(e.begin(), i + 1), std::end(e));
-            es_.rmul_here(rhs, rhss);
+            es_.rweight_here(rhs, rhss);
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
@@ -379,7 +379,7 @@ namespace vcsn
         res_
           = transposed_
           ? es_.rweight(r, ws_.transpose(l))
-          : es_.lmul_here(l, r);
+          : es_.lweight_here(l, r);
       }
 
       VCSN_RAT_VISIT(rweight, e)
@@ -388,7 +388,7 @@ namespace vcsn
         auto r = e.weight();
         res_
           = transposed_
-          ? es_.lmul_here(ws_.transpose(r), l)
+          ? es_.lweight_here(ws_.transpose(r), l)
           : es_.rweight(l, r);
       }
 

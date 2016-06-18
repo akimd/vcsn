@@ -92,10 +92,10 @@ namespace vcsn
             conjunction_   = " \\& ";
             infiltrate_    = " \\uparrow ";
             ldivide_       = " \\backslash ";
-            lmul_          = "\\,";
+            lweight_       = "\\,";
             one_           = "\\varepsilon";
             mul_           = " \\, ";
-            rmul_          = "\\,";
+            rweight_       = "\\,";
             shuffle_       = " \\between ";
             star_          = "^{*}";
             transposition_ = "^{T}";
@@ -110,10 +110,10 @@ namespace vcsn
             conjunction_   = "&";
             infiltrate_    = "&:";
             ldivide_       = "{\\}";
-            lmul_          = "<.>.";
+            lweight_       = "<.>.";
             one_           = "\\e";
             mul_           = ".";
-            rmul_          = ".<.>";
+            rweight_       = ".<.>";
             shuffle_       = ":";
             star_          = "*";
             transposition_ = "{T}";
@@ -128,10 +128,10 @@ namespace vcsn
             conjunction_   = "&";
             infiltrate_    = "&:";
             ldivide_       = "{\\}";
-            lmul_          = "⟨.⟩.";
+            lweight_       = "⟨.⟩.";
             one_           = "ε";
             mul_           = ".";
-            rmul_          = ".⟨.⟩";
+            rweight_       = ".⟨.⟩";
             shuffle_       = ":";
             star_          = "*";
             transposition_ = "ᵗ";
@@ -339,7 +339,7 @@ namespace vcsn
             auto weight = print_(n.weight());
             auto sub = print_(n.sub());
             out_ << vcsn::iendl
-                 << name.first << " [label=\"" << lmul_ << "\"]" << vcsn::iendl
+                 << name.first << " [label=\"" << lweight_ << "\"]" << vcsn::iendl
                  << name.first << " -> " << weight << vcsn::iendl
                  << name.first << " -> " << sub;
           }
@@ -355,7 +355,7 @@ namespace vcsn
             auto sub = print_(n.sub());
             auto weight = print_(n.weight());
             out_ << vcsn::iendl
-                 << name.first << " [label=\"" << rmul_ << "\"]" << vcsn::iendl
+                 << name.first << " [label=\"" << rweight_ << "\"]" << vcsn::iendl
                  << name.first << " -> " << sub << vcsn::iendl
                  << name.first << " -> " << weight;
           }
@@ -399,8 +399,8 @@ namespace vcsn
       name_t last_name_;
 
       /// External product.
-      const char* lmul_ = nullptr;
-      const char* rmul_ = nullptr;
+      const char* lweight_ = nullptr;
+      const char* rweight_ = nullptr;
       /// Quotient.
       const char* ldivide_ = nullptr;
       /// The expression operators.

@@ -71,7 +71,7 @@ namespace vcsn
     // of initial.
     for (auto ti: out(res, initial))
       {
-        res->lmul_weight(ti, w);
+        res->lweight(ti, w);
         for (auto tf: final_transitions(res))
           if (res->src_of(tf) != initial)
             // The weight of ti has already been multiplied, on the
@@ -83,7 +83,7 @@ namespace vcsn
                ws.mul(res->weight_of(tf), res->weight_of(ti)));
       }
     for (auto tf: final_transitions(res))
-      res->rmul_weight(tf, w);
+      res->rweight(tf, w);
     res->set_final(initial, w);
     return res;
   }

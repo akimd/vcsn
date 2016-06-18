@@ -261,12 +261,12 @@ namespace vcsn
       value_t lweight(const weight_t& w, const value_t& rhs) const
       {
         value_t res = rhs;
-        lmul_here(w, res);
+        lweight_here(w, res);
         return res;
       }
 
       /// Inplace left-multiplication by \a w of \a res.
-      value_t& lmul_here(const weight_t& w, value_t& res) const
+      value_t& lweight_here(const weight_t& w, value_t& res) const
       {
         res.constant = ws_.mul(w, res.constant);
         for (auto& p: res.polynomials)
@@ -286,7 +286,7 @@ namespace vcsn
       }
 
       /// In place right multiplication by an expression.
-      value_t& rmul_here(value_t& res, const expression_t& rhs) const
+      value_t& rweight_here(value_t& res, const expression_t& rhs) const
       {
         for (auto& p: res.polynomials)
           p.second = ps_.rmul_label(p.second, rhs);
