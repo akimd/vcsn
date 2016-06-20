@@ -1,6 +1,6 @@
 Command,Setup,Repetitions,v2.0-0001-g6bfe026,v2.0-0423-g841c067,v2.0-1255-gafaf339,v2.1-0010-gd55ef26
 "a & 12","a = std([a-e]*b(<2>[a-e])*)", 1, 4.15, 4.13, 4.15, 4.00
-"a.accessible()","a = thm([a-m]{20000}).proper(False)", 1, N/A, 0.30, 0.36, 0.33
+"a.accessible()","a = thm([a-m]{20000}).proper(prune=False)", 1, N/A, 0.30, 0.36, 0.33
 "a.compose(a)","a = std(['(a,a)'-'(i,z)']{4}), c = [a-z]x[a-z] -> B", 1, 1.22, 1.22, 1.16, 1.18
 "a.compose(a)","a = thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B", 1, 0.48, 0.47, 0.41, 0.41
 "a.conjunction(a)","a = std([a-e]?{50})", 1, 3.92, 3.75, 3.89, 3.80

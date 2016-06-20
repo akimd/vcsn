@@ -5,6 +5,16 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-06-20
+### proper: more consistent signatures
+The Python binding of `automaton.proper` was different from the static and
+dyn:: versions for no sound reason: instead of a `direction` argument taking
+`backward` or `foreward`, it had a `backward` argument taking an Boolean,
+and the `prune` and `direction` (well, `backward`) arguments were swapped.
+
+The signature in Python is now consistent:
+`aut.proper(direction="backward", prune=False, algo="auto", lazy=False)`.
+
 ## 2016-06-16
 ### renamings
 The following operations have been renamed, in all APIs (vcsn::, dyn::,

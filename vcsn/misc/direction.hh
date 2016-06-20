@@ -3,7 +3,9 @@
 #include <iosfwd>
 #include <string>
 
-namespace vcsn
+#include <vcsn/misc/export.hh>
+
+namespace vcsn LIBVCSN_API
 {
   /// Orientation.
   enum class direction

@@ -359,6 +359,8 @@ def normalize(k):
 
     k = k.replace('infiltration', 'infiltrate')
 
+    k = k.replace('proper(False)', 'proper(prune=False)')
+
     # Final format.
     k = '{:20s} # {}'.format(*[str.strip(x) for x in k.split('#', 2)])
     return k

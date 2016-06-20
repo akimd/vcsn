@@ -127,17 +127,6 @@ automaton automaton_lift(const automaton& aut,
   return aut.lift(make_vector<unsigned>(tapes), ids);
 }
 
-// FIXME: The arguments are not in the same order, for no good reason.
-automaton automaton_proper(const automaton& aut,
-                           bool prune = true, bool backward = true,
-                           const std::string& algo = "auto")
-{
-  return aut.proper(backward
-                    ? vcsn::direction::backward
-                    : vcsn::direction::forward,
-                    prune, algo);
-}
-
 automaton automaton_shuffle(const boost::python::list& l)
 {
   return automaton::shuffle(make_vector<automaton>(l));
@@ -307,6 +296,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   // Activate support for boost::optional and identities.
   python_optional<unsigned>();
+  python_string__enum<vcsn::dyn::direction>();
   python_string__enum<vcsn::dyn::identities>();
 
   // We use bp::no_init to disable the use of the default ctor from
@@ -401,8 +391,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("prefix", &automaton::prefix)
     .def("partial_identity", &automaton::partial_identity)
     .def("project", &automaton::project)
-    .def("proper", &automaton_proper,
-         (arg("prune") = true, arg("backward") = true, arg("algo") = "auto"))
+    .def("proper", &automaton::proper,
+         (arg("direction") = "backward", arg("prune") = true,
+          arg("algo") = "auto"))
     .def("push_weights", &automaton::push_weights)
     .def("realtime", &automaton::realtime)
     .def("expression", &automaton_expression,

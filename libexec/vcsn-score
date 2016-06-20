@@ -698,10 +698,10 @@ bench('a.is_functional()',
 ctx = "lan_char(a-z), b"
 r = "[a-m]{20000}"
 bench('a.accessible()',
-      'a = thompson({}).proper(False)'.format(r),
+      'a = thompson({}).proper(prune=False)'.format(r),
       setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
-             'a = vcsn.context(ctx).expression(r).thompson().proper(False)'],
+             'a = vcsn.context(ctx).expression(r).thompson().proper(prune=False)'],
       number=4)
 
 # scc.

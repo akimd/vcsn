@@ -548,7 +548,7 @@ for algo in algos:
   0 -> 0 [label = "a"]
   1 -> F1
   1 -> 0 [label = "a"]
-}''').sort().strip(), a.proper(backward=True, algo=algo).sort().strip())
+}''').sort().strip(), a.proper(direction="backward", algo=algo).sort().strip())
 
   CHECK_EQ(vcsn.automaton(r'''digraph
 {
@@ -571,4 +571,4 @@ for algo in algos:
   0 -> 0 [label = "a"]
   0 -> 1 [label = "a"]
   1 -> F1
-}''').sort().strip(), a.proper(backward=False, algo=algo).sort().strip())
+}''').sort().strip(), a.proper(direction="forward", algo=algo).sort().strip())

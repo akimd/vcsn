@@ -1,6 +1,6 @@
   0     1     2     3
  4.15[0m  4.13[0m  4.15[0m  4.00[0m a & 12               # a = std([a-e]*b(<2>[a-e])*)
-  N/A  0.30[0m  0.36[0m  0.33[0m a.accessible()       # a = thm([a-m]{20000}).proper(False)
+  N/A  0.30[0m  0.36[0m  0.33[0m a.accessible()       # a = thm([a-m]{20000}).proper(prune=False)
  1.22[0m  1.22[0m  1.16[0m  1.18[0m a.compose(a)         # a = std(['(a,a)'-'(i,z)']{4}), c = [a-z]x[a-z] -> B
  0.48[0m  0.47[0m  0.41[0m  0.41[0m a.compose(a)         # a = thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B
  3.92[0m  3.75[0m  3.89[0m  3.80[0m a.conjunction(a)     # a = std([a-e]?{50})

@@ -292,12 +292,12 @@ class automaton:
 
     _proper_orig = automaton.proper
 
-    def proper(self, prune=True, backward=True, algo="auto", lazy=False):
+    def proper(self, direction="backward", prune=True, algo="auto", lazy=False):
         if lazy:
             if algo not in [None, 'auto']:
                 raise RuntimeError('proper: algo and lazy are incompatible')
             algo = 'lazy'
-        return self._proper_orig(prune, backward, algo)
+        return self._proper_orig(direction=direction, prune=prune, algo=algo)
 
     shuffle = lambda *auts: automaton._shuffle(list(auts))
 
