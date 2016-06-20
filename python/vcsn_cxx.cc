@@ -17,8 +17,10 @@
 
 #include <boost/python.hpp>
 #include <boost/python/args.hpp>
+
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
 
 #include "python/oodyn.hh"
@@ -227,24 +229,26 @@ struct python_optional
   }
 };
 
-struct python_identities
+/// Bidirectional conversion for `EnumType` as a Python string.
+template <typename EnumType>
+struct python_string__enum
   : private boost::noncopyable
 {
   struct conversion
   {
-    static PyObject* convert(vcsn::dyn::identities const& s)
+    static PyObject* convert(EnumType const& s)
     {
       return PyUnicode_FromString(to_string(s).c_str());
     }
   };
 
-  // Determine if obj_ptr can be converted in identities.
+  // Determine if obj_ptr can be converted in `EnumType`.
   static void* convertible(PyObject* obj_ptr)
   {
     return PyUnicode_Check(obj_ptr) ? obj_ptr : nullptr;
   }
 
-  // Convert obj_ptr into an `identities`.
+  // Convert obj_ptr into an `EnumType`.
   static void
   constructor(PyObject* obj,
               boost::python::converter::rvalue_from_python_stage1_data* data)
@@ -257,29 +261,36 @@ struct python_identities
     // Verify that obj is a string (should be ensured by convertible()).
     assert(value);
 
-    // Grab pointer to memory into which to construct the new `identities`.
-    using data_t =
-      bp::converter::rvalue_from_python_storage<vcsn::dyn::identities>;
+    // Grab pointer to memory into which to construct the new `EnumType` value.
+    using data_t = bp::converter::rvalue_from_python_storage<EnumType>;
     void* storage = reinterpret_cast<data_t*>(data)->storage.bytes;
 
-    // In-place construct the new `identities` using the character
-    // data extraced from the python object.
-    new (storage) identities(value);
+    // In-place construct the new `EnumType` using the character
+    // data extracted from the Python object.
+    {
+      std::istringstream is{value};
+      EnumType e;
+      is >> e;
+      VCSN_REQUIRE(is.peek() == EOF,
+                   "invalid value: ", value,
+                   ", unexpected ", vcsn::str_escape(is.peek()));
+      new (storage) EnumType{e};
+    }
 
     // Stash the memory chunk pointer for later use by Boost.Python.
     data->convertible = storage;
   }
 
-  explicit python_identities()
+  explicit python_string__enum()
   {
     namespace bp = boost::python;
-    if (!bp::extract<python_identities>(bp::object()).check())
+    if (!bp::extract<python_string__enum>(bp::object()).check())
       {
-        bp::to_python_converter< vcsn::dyn::identities, conversion>();
+        bp::to_python_converter<EnumType, conversion>();
         bp::converter::registry::push_back
           (&convertible,
            &constructor,
-           bp::type_id<vcsn::dyn::identities>());
+           bp::type_id<EnumType>());
       }
     }
 };
@@ -296,7 +307,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   // Activate support for boost::optional and identities.
   python_optional<unsigned>();
-  python_identities();
+  python_string__enum<vcsn::dyn::identities>();
 
   // We use bp::no_init to disable the use of the default ctor from
   // our classes, and prefer to use "def(init<...>)" to define our
@@ -376,7 +387,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lightest", &automaton::lightest,
          (arg("num") = 1U, arg("algo") = "auto"))
     .def("lightest_automaton",
-         &automaton::lightest_automaton, (arg("num") = 1U, arg("algo") = "auto"))
+         &automaton::lightest_automaton,
+         (arg("num") = 1U, arg("algo") = "auto"))
     .def("minimize", &automaton::minimize, (arg("algo") = "auto"))
     .def("multiply", static_cast<automaton_multiply_t>(&automaton::multiply),
          (arg("algo") = "auto"))
