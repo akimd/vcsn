@@ -127,6 +127,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
   %D%/expression.conjunction.ipynb              \
+  %D%/expression.constant_term.ipynb            \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
   %D%/expression.difference.ipynb               \

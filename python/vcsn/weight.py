@@ -36,7 +36,7 @@ class weight:
 
         syntaxes = {'t': 'text',
                     'u': 'utf8',
-                    'x': 'weight',
+                    'x': 'latex',
         }
         return _format(self, spec, 'text', syntaxes)
 
