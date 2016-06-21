@@ -5,14 +5,10 @@
 #include <map>
 #include <utility>
 
-#include <boost/bimap.hpp>
-#include <boost/bimap/unordered_set_of.hpp>
-
 #include <vcsn/core/automaton-decorator.hh>
+#include <vcsn/core/state-bimap.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
-#include <vcsn/misc/bimap.hh> // has
-#include <vcsn/misc/map.hh> // has
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/tuple.hh>
 
@@ -20,6 +16,36 @@ namespace vcsn
 {
   namespace detail
   {
+
+    /// A valueset to manipulate tuples of states.
+    ///
+    /// \tparam Ranked  whether to keep a rank per state
+    /// \tparam Auts    the types of the input automata
+    template <bool Ranked, Automaton... Auts>
+    struct state_tupleset
+    {
+      /// State names: Tuple of states of input automata.
+      using state_name_t
+        = std::conditional_t<Ranked,
+                             std::tuple<state_t_of<Auts>..., unsigned short>,
+                             std::tuple<state_t_of<Auts>...>>;
+
+      /// State names are the values we manipulate.
+      using value_t = state_name_t;
+
+      /// Hash a state name.
+      static auto hash(const value_t& v)
+      {
+        return vcsn::detail::hash_value(v);
+      }
+
+      /// Whether are equal.
+      static auto equal(const value_t& v1, const value_t& v2)
+      {
+        return v1 == v2;
+      }
+    };
+
     /*----------------------------------------------.
     | tuple_automaton_impl<Ranked, Aut, Auts...>.   |
     `----------------------------------------------*/
@@ -35,19 +61,24 @@ namespace vcsn
     template <bool Ranked, bool Lazy, Automaton Aut, Automaton... Auts>
     class tuple_automaton_impl
       : public automaton_decorator<Aut>
+      , public state_bimap<state_tupleset<Ranked, Auts...>,
+                           stateset<Aut>,
+                           Lazy>
     {
     public:
       /// The type of the resulting automaton.
       using automaton_t = Aut;
       using super_t = automaton_decorator<automaton_t>;
 
+      using state_bimap_t
+        = state_bimap<state_tupleset<Ranked, Auts...>,
+                      stateset<Aut>,
+                      Lazy>;
+
       /// Result state type.
       using state_t = typename super_t::state_t;
       /// State names: Tuple of states of input automata.
-      using state_name_t
-        = std::conditional_t<Ranked,
-                             std::tuple<state_t_of<Auts>..., unsigned short>,
-                             std::tuple<state_t_of<Auts>...>>;
+      using state_name_t = typename state_bimap_t::state_name_t;
 
       /// The type of context of the result.
       ///
@@ -89,13 +120,13 @@ namespace vcsn
         : super_t(aut)
         , auts_(auts...)
       {
-        pmap_().insert({pre_(), aut_->pre()});
-        pmap_().insert({post_(), aut_->post()});
+        this->emplace(pre_(), aut_->pre());
+        this->emplace(post_(), aut_->post());
       }
 
       bool state_has_name(state_t s) const
       {
-        return has(origins(), s);
+        return has(this->origins(), s);
       }
 
       /// Print a state name from its state index.
@@ -112,20 +143,6 @@ namespace vcsn
                        format fmt = {}, bool delimit = false) const
       {
         return print_state_name_(sn, o, fmt, delimit, indices);
-      }
-
-      using bimap_t
-        = boost::bimap<boost::bimaps::unordered_set_of<state_name_t>,
-                       boost::bimaps::unordered_set_of<state_t>>;
-      using map_t = typename bimap_t::left_map;
-      using origins_t = typename bimap_t::right_map;
-
-
-      /// A map from result state to tuple of original states.
-      const origins_t&
-      origins() const
-      {
-        return bimap_.right;
       }
 
       // FIXME: protected:
@@ -175,6 +192,7 @@ namespace vcsn
                                seq<I...>) const
       {
         o << '<' << (Ranked ? "true" : "false") << ", ";
+        o << '<' << (Lazy ? "true" : "false") << ", ";
         aut_->print_set(o, fmt);
         o << ", ";
         const char* sep = "";
@@ -221,24 +239,26 @@ namespace vcsn
           (get<I>(auts_)->post()...);
       }
 
-      /// The state in the product corresponding to a pair of states
-      /// of operands.
+      /// The state corresponding to a tuple of states of operands.
       ///
-      /// Add the given two source-automaton states to the worklist
-      /// for the given result automaton if they aren't already there,
-      /// updating the map; in any case return.
-      state_t state(const state_name_t& state)
+      /// If this is a new state, add to the worklist and update the
+      /// map.
+      state_t state(const state_name_t& sn)
       {
-        auto lb = pmap_().find(state);
-        if (lb == pmap_().end())
+        state_t res;
+        auto i = this->find_key(sn);
+        if (i == this->end_key())
           {
-            state_t s = aut_->new_state();
+            res = this->new_state();
             if (Lazy)
-              aut_->set_lazy(s, true);
-            lb = pmap_().insert(lb, {state, s});
-            todo_.emplace_back(state, s);
+              this->set_lazy(res);
+            // FIXME: todo_.push(this->emplace(std::move(sn), res).first);
+            this->emplace(sn, res);
+            todo_.emplace_back(sn, res);
           }
-        return lb->second;
+        else
+          res = i->second;
+        return res;
       }
 
       template <bool Ranked_ = Ranked>
@@ -260,7 +280,7 @@ namespace vcsn
       print_state_name_(state_t s, std::ostream& o, format fmt,
                         bool delimit, seq<I...> indices) const
       {
-        const auto& origs = origins();
+        const auto& origs = this->origins();
         auto i = origs.find(s);
         if (i == std::end(origs))
           this->print_state(s, o);
@@ -294,19 +314,8 @@ namespace vcsn
         return o;
       }
 
-      /// A map from original state and status (spontaneous or proper state)
-      /// to result state.
-      map_t&
-      pmap_()
-      {
-        return bimap_.left;
-      }
-
       /// Input automata, supplied at construction time.
       automata_t auts_;
-
-      /// Bijective map state_name_t -> state_t
-      mutable bimap_t bimap_;
 
       /// Worklist of state tuples.
       std::deque<std::pair<state_name_t, state_t>> todo_;
