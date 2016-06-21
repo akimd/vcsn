@@ -2,6 +2,7 @@
 
 #include <vcsn/algos/tuple.hh>
 #include <vcsn/core/lazy-tuple-automaton.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {

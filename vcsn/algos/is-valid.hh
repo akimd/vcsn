@@ -43,7 +43,7 @@ namespace vcsn
     {
       try
         {
-          detail::epsilon_remover<Aut> remover(aut, true);
+          auto remover = detail::epsilon_remover<Aut>{aut, true};
           remover();
           return true;
         }

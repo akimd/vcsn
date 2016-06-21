@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/project.hh>
 #include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn

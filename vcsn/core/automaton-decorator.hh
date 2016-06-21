@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcsn/misc/memory.hh>
 #include <vcsn/concepts/automaton.hh> // Automaton.
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/memory.hh>
 
 namespace vcsn
 {

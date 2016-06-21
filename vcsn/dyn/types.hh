@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vcsn/misc/direction.hh>
 #include <vcsn/core/rat/identities.hh>
+#include <vcsn/misc/direction.hh>
 #include <vcsn/misc/export.hh>
 
 namespace vcsn

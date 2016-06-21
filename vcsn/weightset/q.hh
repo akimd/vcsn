@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <ostream>
+#include <string>
 
 #include <vcsn/core/join.hh>
 #include <vcsn/misc/format.hh>

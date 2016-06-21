@@ -1,9 +1,9 @@
 #pragma once
 
-#include <sstream>
-#include <stdexcept>
 #include <iostream> // cin
 #include <memory> // shared_ptr
+#include <sstream>
+#include <stdexcept>
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/export.hh>

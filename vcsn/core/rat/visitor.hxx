@@ -1,6 +1,6 @@
-#include <vcsn/core/rat/visitor.hh>
-#include <vcsn/core/rat/expression.hh>
 #include <cassert>
+#include <vcsn/core/rat/expression.hh>
+#include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {

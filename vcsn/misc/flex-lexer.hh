@@ -47,6 +47,9 @@
 #ifndef VCSN_MISC_FLEX_LEXER_HH
 # define VCSN_MISC_FLEX_LEXER_HH
 
+# include <iosfwd>
+# include <ostream>
+
 # include <vcsn/config.hh>
 
 # ifndef FLEX_STD

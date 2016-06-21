@@ -4,8 +4,8 @@
 #include <string>
 
 #include <vcsn/core/join.hh>
-#include <vcsn/misc/format.hh>
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/format.hh>
 #include <vcsn/misc/functional.hh> // hash_value
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star-status.hh>

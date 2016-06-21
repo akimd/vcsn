@@ -61,9 +61,9 @@ namespace vcsn
 
     bool has(Key k) const
     {
-      return k < sparse_.capacity()
-             && sparse_[k] < curr_
-             && dense_[sparse_[k]].first == k;
+      return (k < sparse_.capacity()
+              && sparse_[k] < curr_
+              && dense_[sparse_[k]].first == k);
     }
 
     /// Access an element.
@@ -73,7 +73,7 @@ namespace vcsn
     {
       if (!has(k))
         emplace(k, Value());
-      return dense_[sparse[e]].second;
+      return dense_[sparse_[k]].second;
     }
 
     /// Erase an element.

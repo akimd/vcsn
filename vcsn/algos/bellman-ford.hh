@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/optional.hpp>
+
 #include <vcsn/core/automaton.hh> // states_size
 #include <vcsn/misc/set.hh>
 #include <vcsn/weightset/fwd.hh>

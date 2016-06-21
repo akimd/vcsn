@@ -2,15 +2,16 @@
 
 #include <algorithm>
 
-#include <vcsn/misc/attributes.hh>
 #include <vcsn/algos/is-free-boolean.hh>
+#include <vcsn/algos/quotient.hh>
+#include <vcsn/labelset/stateset.hh>
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
-#include <vcsn/misc/wet.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/vector.hh>
+#include <vcsn/misc/wet.hh>
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/polynomialset.hh>
-#include <vcsn/algos/quotient.hh>
 
 namespace vcsn
 {

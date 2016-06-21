@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ostream>
 #include <tuple>
 
 namespace vcsn

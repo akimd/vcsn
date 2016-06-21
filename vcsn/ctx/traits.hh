@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include <vcsn/misc/type_traits.hh>
 #include <vcsn/labelset/fwd.hh> // tupleset.
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {

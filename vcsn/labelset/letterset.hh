@@ -4,14 +4,14 @@
 
 #include <vcsn/alphabets/setalpha.hh> // intersection
 #include <vcsn/core/kind.hh>
-#include <vcsn/misc/attributes.hh>
-#include <vcsn/misc/escape.hh>
-#include <vcsn/misc/raise.hh>
-#include <vcsn/misc/set.hh> // intersection
 #include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/labelset/nullableset.hh>
 #include <vcsn/labelset/wordset.hh>
+#include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/escape.hh>
+#include <vcsn/misc/raise.hh>
+#include <vcsn/misc/set.hh> // intersection
 
 namespace vcsn
 {

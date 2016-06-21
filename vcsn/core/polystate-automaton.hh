@@ -7,6 +7,7 @@
 
 #include <vcsn/core/automaton-decorator.hh>
 #include <vcsn/core/state-bimap.hh>
+#include <vcsn/misc/wet.hh>
 
 namespace vcsn
 {

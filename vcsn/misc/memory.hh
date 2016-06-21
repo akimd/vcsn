@@ -30,7 +30,7 @@ namespace vcsn
   template <typename T>
   unsigned address(T* t)
   {
-    return address((const void*)t);
+    return address(static_cast<const void*>(t));
   }
 
   template <typename T>

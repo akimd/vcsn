@@ -5,6 +5,7 @@
 
 #include <vcsn/dyn/cast.hh>
 #include <vcsn/misc/export.hh>
+#include <vcsn/misc/symbol.hh>
 
 namespace vcsn
 {
@@ -12,11 +13,11 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Tag for expansion/expansionset
+      /// Tag for expansion/expansionset.
       struct expansion_tag
       {};
 
-      /// Tag for expression/expressionset
+      /// Tag for expression/expressionset.
       struct expression_tag
       {};
 
@@ -24,7 +25,7 @@ namespace vcsn
       struct label_tag
       {};
 
-      /// Tag for polynomial/polynomialset
+      /// Tag for polynomial/polynomialset.
       struct polynomial_tag
       {};
 
@@ -37,13 +38,12 @@ namespace vcsn
       class LIBVCSN_API value
       {
       public:
-        value(std::nullptr_t null = nullptr)
-          : self_(null)
-        {}
+        /// Default construction: empty.
+        value() {}
 
         template <typename ValueSet>
         value(const ValueSet& ls, const typename ValueSet::value_t& l)
-          : self_(std::make_shared<model<ValueSet>>(ls, l))
+          : self_{std::make_shared<model<ValueSet>>(ls, l)}
         {}
 
         /// A description of the value type.
@@ -79,6 +79,12 @@ namespace vcsn
         bool operator!()
         {
           return !self_;
+        }
+
+        auto& operator=(std::nullptr_t)
+        {
+          self_ = nullptr;
+          return *this;
         }
 
         auto& operator=(const value& l)
@@ -130,7 +136,7 @@ namespace vcsn
         };
 
         /// The wrapped value/valueset.
-        std::shared_ptr<base> self_;
+        std::shared_ptr<base> self_ = nullptr;
       };
 
       /// Return the join of the expressionset (or polynomialset) of two

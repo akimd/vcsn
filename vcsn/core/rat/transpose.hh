@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/core/rat/fwd.hh>
+#include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {

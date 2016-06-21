@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <sstream>
+#include <string>
 
 #include <vcsn/misc/export.hh> // LIBVCSN_API
 

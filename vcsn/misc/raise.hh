@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 #include <utility>
 
 #include <vcsn/misc/attributes.hh>

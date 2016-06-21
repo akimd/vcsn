@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vcsn/ctx/traits.hh>
 #include <vcsn/alphabets/char.hh>
 #include <vcsn/alphabets/setalpha.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/vector.hh> // make_vector
 
 namespace vcsn
 {

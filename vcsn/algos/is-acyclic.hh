@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/builtins.hh>
@@ -15,64 +17,68 @@ namespace vcsn
 
     /// Detect circuits.
     template <Automaton Aut>
-    struct acyclic
+    class is_acyclic_impl
     {
+    public:
       using automaton_t = std::remove_cv_t<Aut>;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
 
-      acyclic(const automaton_t& aut, boost::optional<label_t> label = {})
+      is_acyclic_impl(const automaton_t& aut,
+                      boost::optional<label_t> label = {})
         : aut_(aut)
-        , one(label)
+        , one_(label)
       {}
 
-      bool is_acyclic()
+      /// Whether the automaton is acyclic.
+      bool operator()()
       {
         for (auto s : aut_->states())
-          if (has_circuit(s))
+          if (has_circuit_(s))
             return false;
         return true;
       }
 
+    private:
       /// Return true if an circuit is accessible from s.
-      bool has_circuit(state_t s)
+      bool has_circuit_(state_t s)
       {
-        auto it = tag.find(s);
-        if (it == tag.end())
+        auto it = tag_.find(s);
+        if (it == tag_.end())
           {
-            tag[s] = unknown;
-            // This code duplication is caused by the fact that
-            // out(aut_, s, *one) has a return type different from out(aut_, s).
-            if (one != boost::none)
+            tag_[s] = unknown;
+            // Code duplication because `out(aut_, s, *one)` and
+            // `out(aut_, s)` have different return types.
+            if (one_)
               {
-                for (auto t : out(aut_, s, *one))
-                  if ((aut_->dst_of(t) == s && aut_->label_of(t) == *one)
-                      || has_circuit(aut_->dst_of(t)))
+                for (auto t : out(aut_, s, *one_))
+                  if ((aut_->dst_of(t) == s && aut_->label_of(t) == *one_)
+                      || has_circuit_(aut_->dst_of(t)))
                     {
-                      tag[s] = circuit;
+                      tag_[s] = circuit;
                       return true;
                     }
               }
             else
               {
                 for (auto t : out(aut_, s))
-                  if (aut_->dst_of(t) == s || has_circuit(aut_->dst_of(t)))
+                  if (aut_->dst_of(t) == s || has_circuit_(aut_->dst_of(t)))
                     {
-                      tag[s] = circuit;
+                      tag_[s] = circuit;
                       return true;
                     }
               }
-            tag[s] = ok;
+            tag_[s] = ok;
             return false;
           }
 
-        // Switch with respect to tag[s].
+        // Switch with respect to tag_[s].
         switch (it->second)
           {
           case unknown:
             // s is reached while we are exploring successors of s:
             // there is a circuit.
-            tag[s] = circuit;
+            tag_[s] = circuit;
             return true;
           case ok:
             // Otherwise the graph reachable from s has already been explored.
@@ -94,10 +100,10 @@ namespace vcsn
         };
 
       // States not in the map have not been reached yet.
-      std::unordered_map<state_t, status> tag;
+      std::unordered_map<state_t, status> tag_;
 
       automaton_t aut_;
-      boost::optional<label_t> one;
+      boost::optional<label_t> one_;
     };
   }
 
@@ -109,8 +115,8 @@ namespace vcsn
   std::enable_if_t<context_t_of<Aut>::has_one(), bool>
   is_eps_acyclic(const Aut& aut)
   {
-    auto t = detail::acyclic<Aut>{aut, aut->labelset()->one()};
-    return t.is_acyclic();
+    auto is_acyclic = detail::is_acyclic_impl<Aut>{aut, aut->labelset()->one()};
+    return is_acyclic();
   }
 
   template <Automaton Aut>
@@ -126,8 +132,8 @@ namespace vcsn
   bool
   is_acyclic(const Aut& aut)
   {
-    auto t = detail::acyclic<Aut>{aut};
-    return t.is_acyclic();
+    auto is_acyclic = detail::is_acyclic_impl<Aut>{aut};
+    return is_acyclic();
   }
 
   namespace dyn

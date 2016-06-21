@@ -1,7 +1,9 @@
 #pragma once
 
 #include <type_traits>
+#include <vector>
 
+#include <vcsn/concepts/automaton.hh>
 #include <vcsn/misc/map.hh> // vcsn::less
 
 namespace vcsn

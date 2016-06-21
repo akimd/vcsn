@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+//#include <vcsn/core/rat/expressionset.hh> needed, but breaks everythying...
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/misc/cross.hh>

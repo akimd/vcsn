@@ -19,13 +19,13 @@
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/math.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/star-status.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/wet.hh>
 #include <vcsn/misc/zip-maps.hh>
-#include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/f2.hh>
+#include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/z.hh>
 
 namespace vcsn

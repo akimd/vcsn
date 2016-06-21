@@ -8,9 +8,9 @@
 
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/fwd.hh>
+#include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/labelset/letterset.hh> // for letterized_traits
-#include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh>
 #include <vcsn/misc/raise.hh>

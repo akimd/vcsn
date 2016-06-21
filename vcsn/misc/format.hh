@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <vcsn/misc/export.hh>
 
 namespace vcsn LIBVCSN_API

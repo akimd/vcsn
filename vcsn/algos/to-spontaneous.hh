@@ -1,14 +1,13 @@
 #pragma once
 
-#include <vcsn/misc/type_traits.hh>
 #include <vcsn/algos/copy.hh>
+#include <vcsn/misc/type_traits.hh>
+#include <vcsn/labelset/oneset.hh>
 
 namespace vcsn
 {
-  /// to_spontaneous
-  ///
-  /// Convert to spontaneous automaton: simply change every transition's label
-  /// to the empty word.
+  /// Convert to spontaneous automaton: change every transition's
+  /// label to the empty word.
   template <Automaton Aut>
   auto
   to_spontaneous(const Aut& aut)
@@ -16,7 +15,8 @@ namespace vcsn
                          decltype(make_mutable_automaton(make_context(oneset(),
                                                                       *aut->weightset())))>
   {
-    auto res = make_mutable_automaton(make_context(oneset(), *aut->weightset()));
+    auto res
+      = make_mutable_automaton(make_context(oneset(), *aut->weightset()));
 
     using in_state_t = state_t_of<Aut>;
     using out_state_t = state_t_of<decltype(res)>;
@@ -35,7 +35,8 @@ namespace vcsn
           {
             if (src->second == res->pre() || dst->second == res->post())
               res->new_transition(src->second, dst->second,
-                                  res->labelset()->special(), aut->weight_of(t));
+                                  res->labelset()->special(),
+                                  aut->weight_of(t));
             else
               res->new_transition(src->second, dst->second,
                                   res->labelset()->one(), aut->weight_of(t));

@@ -6,13 +6,13 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/algos/copy.hh>
-#include <vcsn/core/automaton.hh> // all_transitions
 #include <vcsn/core/automaton-decorator.hh>
-#include <vcsn/misc/crange.hh>
+#include <vcsn/core/automaton.hh> // all_transitions
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/crange.hh>
 #include <vcsn/misc/dynamic_bitset.hh>
-#include <vcsn/misc/vector.hh>
 #include <vcsn/misc/sparse-set.hh>
+#include <vcsn/misc/vector.hh>
 #include <vcsn/misc/static-if.hh>
 
 namespace vcsn

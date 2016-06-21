@@ -1,11 +1,12 @@
 #pragma once
-#undef NDEBUG
+
 #include <cassert>
 #include <string>
 #include <iostream>
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/format.hh>
+#include <vcsn/misc/raise.hh>
 #include <vcsn/misc/symbol.hh>
 
 namespace vcsn

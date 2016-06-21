@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility> // std::forward
+
 namespace vcsn
 {
   namespace dyn

@@ -4,6 +4,8 @@
 
 #include <boost/range/algorithm/find.hpp>
 
+#include <vcsn/misc/attributes.hh>
+
 namespace vcsn
 {
   namespace detail

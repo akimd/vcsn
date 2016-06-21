@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vcsn/misc/empty.hh>
+#include <cassert>
 
 #include <vcsn/misc/attributes.hh>
+#include <vcsn/misc/empty.hh>
 
 namespace vcsn
 {
@@ -12,7 +13,7 @@ namespace vcsn
   `------------------------------------*/
 
   /// Transition on non-empty label.
-  template <typename State, class Label>
+  template <typename State, typename Label>
   struct possibly_labeled_transition_tuple
   {
     using label_t = Label;
@@ -52,7 +53,7 @@ namespace vcsn
   `-------------------*/
 
   /// Transition with label and non Boolean weight.
-  template <typename State, class Label, class Weight>
+  template <typename State, typename Label, typename Weight>
   struct transition_tuple
     : possibly_labeled_transition_tuple<State, Label>
   {
@@ -76,7 +77,7 @@ namespace vcsn
   /// always true.  This is correct for weight in the Boolean ring, as
   /// well as for those in the F₂ (a.k.a. ℤ/2ℤ) field, both encoded
   /// using the bool type.
-  template <typename State, class Label>
+  template <typename State, typename Label>
   struct transition_tuple<State, Label, bool>
     : possibly_labeled_transition_tuple<State, Label>
   {

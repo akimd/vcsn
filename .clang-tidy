@@ -1,0 +1,2 @@
+---
+Checks: '*,-*-namespace-comment*,-misc-virtual-near-miss,-readability-named-parameter,-readability-else-after-return,-*readability-braces-around-statements'

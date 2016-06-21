@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcsn/misc/raise.hh>
+
 namespace vcsn
 {
   /// An exponent, or range of exponents.

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <vcsn/concepts/automaton.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/format.hh>
 
 namespace vcsn
 {
