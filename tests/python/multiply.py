@@ -211,6 +211,10 @@ CHECK_EQ(zexp('<9>a'), zexp('<3><3>a'))
 l = vcsn.context('law_char, b').label
 CHECK_EQ(l('abc'),
          l('ab') * l(r'\e') * l('c'))
+CHECK_EQ(l('\e'),
+         l('ab') ** 0)
+CHECK_EQ(l('ababab'),
+         l('ab') ** 3)
 
 
 ## ------------------------- ##
@@ -232,3 +236,4 @@ CHECK_EQ(w('<4>aa+<6>ab+<6>ba+<9>bb'),
 # See the comment above about #68.
 w = vcsn.context('lal, z').weight
 CHECK_EQ(w('9'), w('3') * w('3'))
+# More * and ** tests in tests/python/weight.py.

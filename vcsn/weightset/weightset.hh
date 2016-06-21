@@ -18,6 +18,19 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
+    /// The signature of power.
+    template <typename T>
+    using power_mem_fn_t
+      = decltype(std::declval<T>()
+                 .power(std::declval<typename T::value_t>(), 0));
+
+    /// Whether T features a power member function.
+    template <typename T>
+    using has_power_mem_fn = detail::detect<T, power_mem_fn_t>;
+  }
+
   /// Provide a variadic mul on top of a binary mul(), and one().
   template <typename WeightSet>
   struct weightset_mixin : WeightSet
@@ -46,20 +59,11 @@ namespace vcsn
     }
 
   private:
-    /// The signature of power.
-    template <typename T>
-    using power_t = decltype(std::declval<T>()
-                             .power(std::declval<typename T::value_t>(), 0));
-
-    /// Whether T features a power member function.
-    template <typename T>
-    using has_power_mem_fn = detail::detect<T, power_t>;
-
     /// Case where the weightset T features a power(value_t, unsigned)
     /// member function.
     template <typename WS = super_t>
     auto power_(value_t e, unsigned n) const
-      -> std::enable_if_t<has_power_mem_fn<WS>{}, value_t>
+      -> std::enable_if_t<detail::has_power_mem_fn<WS>{}, value_t>
     {
       return super_t::power(e, n);
     }
@@ -68,7 +72,7 @@ namespace vcsn
     /// power(value_t, unsigned) member function.
     template <typename WS = super_t>
     auto power_(value_t e, unsigned n) const
-      -> std::enable_if_t<!has_power_mem_fn<WS>{}, value_t>
+      -> std::enable_if_t<!detail::has_power_mem_fn<WS>{}, value_t>
     {
       value_t res = super_t::one();
       if (!super_t::is_one(e))

@@ -53,6 +53,9 @@ using multiply_t
 template <typename Value>
 using multiply_repeated_t =
   auto (Value::*)(int min, int max) const -> Value;
+/// The type of the repeated multiply function for labels.
+using label_multiply_repeated_t =
+  auto (label::*)(int exp) const -> label;
 
 /// The type of string-based trie/cotrie.
 using string_trie_t =
@@ -517,7 +520,10 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<label>("label", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
     .def("format", &format<label>)
-    .def("multiply", &label::multiply)
+    .def("multiply", static_cast<multiply_t<label>>(&label::multiply))
+    .def("multiply",
+         static_cast<label_multiply_repeated_t>(&label::multiply),
+         (arg("exp")))
     .def("project", &label::project)
    ;
 

@@ -553,6 +553,12 @@ namespace vcsn
     /// Multiply (concatenate) two labels.
     label multiply(const label& lhs, const label& rhs);
 
+    /// Repeated multiplication of a label with itself.
+    ///
+    /// \param l    the label.
+    /// \param num  the exponent.
+    label multiply(const label& l, int num);
+
     /// Multiply two polynomials.
     polynomial multiply(const polynomial& lhs, const polynomial& rhs);
 

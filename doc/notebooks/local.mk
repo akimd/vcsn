@@ -145,12 +145,14 @@ dist_notebooks_DATA =                           \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
   %D%/expression.zpc.ipynb                      \
+  %D%/label.multiply.ipynb                      \
   %D%/label.operators.ipynb                     \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
   %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.trie.ipynb                     \
+  %D%/weight.multiply.ipynb                     \
   %D%/weight.operators.ipynb
 
 if HAVE_NBCONVERT

@@ -15,6 +15,7 @@
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh> // require
 #include <vcsn/misc/to.hh> // to
+#include <vcsn/misc/type_traits.hh> // to
 #include <vcsn/misc/vector.hh> // make_vector
 
 namespace vcsn
@@ -323,17 +324,58 @@ namespace vcsn
   | multiply(value, min, max).   |
   `-----------------------------*/
 
-  /// Repeated multiplication of values.
+  /// The type of the `add` member function in valuesets.
+  template <typename ValueSet>
+  using add_mem_fn_t
+    = decltype(std::declval<ValueSet>()
+               .add(std::declval<typename ValueSet::value_t>(),
+                    std::declval<typename ValueSet::value_t>()));
+
+  /// Whether ValueSet features an `add()` member function.
+  template <typename ValueSet>
+  using has_add_mem_fn = detail::detect<ValueSet, add_mem_fn_t>;
+
+  /// Repeated multiplication of values that cannot be added.
   ///
   /// \param vs   the valueset
   /// \param v    the value
-  /// \param min  the minimum number.  If -1, denotes 0.
-  /// \param max  the maximum number.
-  ///             If -1, denotes infinity, using star.
-  ///             If -2, denotes the same value as min.
+  /// \param to   the exponent, single.
   template <typename ValueSet>
-  typename ValueSet::value_t
-  multiply(const ValueSet& vs, const typename ValueSet::value_t& v, to exp)
+  auto
+  multiply(const ValueSet& vs, const typename ValueSet::value_t& v,
+           const to& exp)
+    -> std::enable_if_t<!has_add_mem_fn<ValueSet>{},
+                        typename ValueSet::value_t>
+  {
+    VCSN_REQUIRE(exp.single() && exp.finite(),
+                 vs, ": invalid range exponent: ", exp);
+    return detail::static_if<detail::has_power_mem_fn<ValueSet>{}>
+      ([](const auto& vs, const auto& v, auto n){ return vs.power(v, n); },
+       [](const auto& vs, const auto& v, auto n)
+       {
+         auto res = vs.one();
+         if (!vs.is_one(v))
+           while (n--)
+             res = vs.mul(res, v);
+         return res;
+       })(vs, v, exp.min);
+  }
+
+  /// Repeated multiplication of values that can be added.
+  ///
+  /// \param vs   the valueset
+  /// \param v    the value
+  /// \param to   the exponent, composed of:
+  ///    - min  the minimum number.  If -1, denotes 0.
+  ///    - max  the maximum number.
+  ///           If -1, denotes infinity, using star.
+  ///           If -2, denotes the same value as min.
+  template <typename ValueSet>
+  auto
+  multiply(const ValueSet& vs, const typename ValueSet::value_t& v,
+           const to& exp)
+    -> std::enable_if_t<has_add_mem_fn<ValueSet>{},
+                        typename ValueSet::value_t>
   {
     auto res = typename ValueSet::value_t{};
     if (exp.max == -1)
@@ -367,7 +409,7 @@ namespace vcsn
       {
         const auto& r = re->as<ExpSet>();
         return {r.valueset(),
-            ::vcsn::multiply(r.valueset(), r.value(), to{min, max})};
+                ::vcsn::multiply(r.valueset(), r.value(), to{min, max})};
       }
     }
   }
@@ -392,6 +434,16 @@ namespace vcsn
         auto lr = rs.conv(l.valueset(), l.value());
         auto rr = rs.conv(r.valueset(), r.value());
         return {rs, multiply(rs, lr, rr)};
+      }
+
+      /// Bridge (multiply).
+      template <typename LabelSet, typename Int>
+      label
+      multiply_label_repeated(const label& re, int exp)
+      {
+        const auto& r = re->as<LabelSet>();
+        return {r.valueset(),
+                ::vcsn::multiply(r.valueset(), r.value(), to{exp})};
       }
     }
   }

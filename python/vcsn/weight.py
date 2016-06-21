@@ -10,6 +10,7 @@ from vcsn.tools import _extend, _format, _is_equal
 class weight:
     __eq__ = _is_equal
     __add__ = weight.add
+    __pow__ = weight.multiply
     __repr__ = lambda self: self.format('text')
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
@@ -57,3 +58,6 @@ class weight:
             return self.multiply(*exp)
         else:
             return self.multiply(exp)
+
+
+    star = lambda self: self.multiply(-1)

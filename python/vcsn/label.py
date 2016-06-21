@@ -9,6 +9,7 @@ from vcsn.tools import _extend, _format, _is_equal
 class label:
     __eq__ = _is_equal
     __mul__ = label.multiply
+    __pow__ = label.multiply
     __repr__ = lambda self: self.format('text')
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
