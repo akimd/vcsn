@@ -152,6 +152,48 @@ namespace vcsn
         return true;
       }
 
+      /// Instantiate the core functions for expressions of type \a ExpSet.
+      template <typename ExpressionSet>
+      bool
+      register_expression_functions()
+      {
+        using namespace dyn::detail;
+        using rs_t = ExpressionSet;
+        using ctx_t = context_t_of<rs_t>;
+        using ws_t = weightset_t_of<ctx_t>;
+
+        REGISTER(add_expression, rs_t, rs_t);
+        REGISTER(complement_expression, rs_t);
+        REGISTER(concatenate_expression, rs_t, rs_t);
+        REGISTER(conjunction_expression, rs_t, rs_t);
+        REGISTER(constant_term, rs_t);
+        REGISTER(context_of_expression, rs_t);
+        REGISTER(derived_term, rs_t, const std::string);
+        REGISTER(expand, rs_t);
+        REGISTER(expression_one, ctx_t, rat::identities);
+        REGISTER(expression_zero, ctx_t, rat::identities);
+        REGISTER(identities_of, rs_t);
+        REGISTER(info_expression, rs_t, std::ostream);
+        REGISTER(ldivide_expression, rs_t, rs_t);
+        REGISTER(less_than_expression, rs_t, rs_t);
+        REGISTER(lweight_expression, ws_t, rs_t);
+        REGISTER(multiply_expression, rs_t, rs_t);
+        REGISTER(multiply_expression_repeated, rs_t, int, int);
+        REGISTER(print_expression, rs_t, std::ostream, const std::string);
+        REGISTER(rdivide_expression, rs_t, rs_t);
+        REGISTER(rweight_expression, rs_t, ws_t);
+        REGISTER(shuffle_expression, rs_t, rs_t);
+        REGISTER(split, rs_t);
+        REGISTER(standard_expression, rs_t);
+        REGISTER(star_height, rs_t);
+        REGISTER(thompson, rs_t);
+        REGISTER(to_expansion, rs_t);
+        REGISTER(transpose_expression, rs_t);
+        REGISTER(transposition_expression, rs_t);
+
+        return true;
+      }
+
       template <typename Ctx>
       bool
       register_kind_functions(labels_are_letters)
@@ -290,25 +332,14 @@ namespace vcsn
         using namespace dyn::detail;
 
         register_automaton_functions<aut_t>();
+        register_expression_functions<rs_t>();
 
         REGISTER(accessible, aut_t);
         REGISTER(add, aut_t, aut_t, const std::string);
-        REGISTER(add_expression, rs_t, rs_t);
         REGISTER(add_weight, ws_t, ws_t);
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(coaccessible, aut_t);
-        REGISTER(complement_expression, rs_t);
-        REGISTER(concatenate_expression, rs_t, rs_t);
-        REGISTER(conjunction_expression, rs_t, rs_t);
-        REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
-        REGISTER(context_of_expression, rs_t);
-        REGISTER(derived_term, rs_t, const std::string);
-        REGISTER(expand, rs_t);
-        REGISTER(expression_one, ctx_t, rat::identities);
-        REGISTER(expression_zero, ctx_t, rat::identities);
-        REGISTER(identities_of, rs_t);
-        REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);
@@ -319,50 +350,34 @@ namespace vcsn
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_expression, rs_t);
-        REGISTER(ldivide_expression, rs_t, rs_t);
         REGISTER(lweight, ws_t, aut_t, const std::string);
-        REGISTER(lweight_expression, ws_t, rs_t);
-        REGISTER(less_than_expression, rs_t, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply, aut_t, aut_t, const std::string);
-        REGISTER(multiply_expression, rs_t, rs_t);
-        REGISTER(multiply_expression_repeated, rs_t, int, int);
         REGISTER(multiply_repeated, aut_t, int, int, const std::string);
         REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(num_tapes, ctx_t);
         REGISTER(print_context, ctx_t, std::ostream, const std::string);
         REGISTER(print_expansion, es_t, std::ostream, const std::string);
-        REGISTER(print_expression, rs_t, std::ostream, const std::string);
         REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(push_weights, aut_t);
-        REGISTER(rdivide_expression, rs_t, rs_t);
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(rweight, aut_t, ws_t, const std::string);
-        REGISTER(rweight_expression, rs_t, ws_t);
-        REGISTER(shuffle_expression, rs_t, rs_t);
         REGISTER(sort, aut_t);
-        REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
-        REGISTER(standard_expression, rs_t);
         REGISTER(star, aut_t, const std::string);
-        REGISTER(star_height, rs_t);
-        REGISTER(thompson, rs_t);
-        REGISTER(to_expansion, rs_t);
         REGISTER(to_expression, aut_t, rat::identities, const std::string);
         REGISTER(to_expression_class, ctx_t, rat::identities, const letter_class_t, bool);
         REGISTER(to_expression_label, ctx_t, rat::identities, ls_t);
         REGISTER(transpose, aut_t);
-        REGISTER(transpose_expression, rs_t);
-        REGISTER(transposition_expression, rs_t);
         REGISTER(trim, aut_t);
 
         using is_free_t = bool_constant<ctx_t::labelset_t::is_free()>;
