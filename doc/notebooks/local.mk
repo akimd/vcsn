@@ -133,12 +133,17 @@ dist_notebooks_DATA =                           \
   %D%/expression.difference.ipynb               \
   %D%/expression.expansion.ipynb                \
   %D%/expression.inductive.ipynb                \
+  %D%/expression.infiltrate.ipynb               \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
+  %D%/expression.lift.ipynb                     \
+  %D%/expression.lweight.ipynb                  \
   %D%/expression.multiply.ipynb                 \
   %D%/expression.operators.ipynb                \
   %D%/expression.project.ipynb                  \
+  %D%/expression.rweight.ipynb                  \
   %D%/expression.shortest.ipynb                 \
+  %D%/expression.shuffle.ipynb                  \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
   %D%/expression.thompson.ipynb                 \

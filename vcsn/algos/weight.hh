@@ -38,7 +38,7 @@ namespace vcsn
         return res;
       }
 
-      /// Standard-preserving lweightiplication by a weight.
+      /// Standard-preserving left-multiplication by a weight.
       static automaton_t&
       lweight_here(const weight_t& w, automaton_t& res, standard_tag tag)
       {
@@ -112,7 +112,7 @@ namespace vcsn
   | lweight(automaton).  |
   `---------------------*/
 
-  /// In place lweightiplication of an automaton by a weight.
+  /// In place left-multiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   Aut&
   lweight_here(const weight_t_of<Aut>& w, Aut& res, Tag tag = {})
@@ -165,7 +165,7 @@ namespace vcsn
         static const auto map
           = getarg<std::function<automaton(const weight_t&, automaton_t&)>>
           {
-            "lweightiply algorithm",
+            "left-multiply algorithm",
             {
               {"auto",     lweight_tag<automaton_t, auto_tag>},
               {"general",  lweight_tag<automaton_t, general_tag>},
@@ -315,7 +315,7 @@ namespace vcsn
   | rweight(automaton).  |
   `---------------------*/
 
-  /// In place rweightiplication of an automaton by a weight.
+  /// In place right-multiplication of an automaton by a weight.
   template <Automaton Aut, typename Tag = auto_tag>
   Aut&
   rweight_here(Aut& res, const weight_t_of<Aut>& w, Tag tag = {})
@@ -367,7 +367,7 @@ namespace vcsn
         static const auto map
           = getarg<std::function<automaton(automaton_t&, const weight_t&)>>
           {
-            "rweightiply algorithm",
+            "right-multiply algorithm",
             {
               {"auto",     rweight_tag<automaton_t, auto_tag>},
               {"general",  rweight_tag<automaton_t, general_tag>},
