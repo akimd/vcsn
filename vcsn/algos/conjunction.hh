@@ -6,6 +6,7 @@
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/insplit.hh>
+#include <vcsn/algos/is-proper.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/tags.hh>
 #include <vcsn/algos/transpose.hh>
@@ -177,6 +178,19 @@ namespace vcsn
       /// Compute the (accessible part of the) shuffle product.
       void shuffle()
       {
+        // Issue #86.
+        if (!std::is_same<weightset_t, b>{})
+          {
+            require(is_proper(std::get<0>(aut_->auts_)),
+                    "shuffle: invalid lhs:"
+                    " weighted automata with spontaneous"
+                    " transitions are not supported");
+            require(is_proper(std::get<1>(aut_->auts_)),
+                    "shuffle: invalid rhs:"
+                    " weighted automata with spontaneous"
+                    " transitions are not supported");
+          }
+
         initialize_shuffle();
 
         while (!aut_->todo_.empty())
@@ -209,6 +223,19 @@ namespace vcsn
         // conjunction and shuffle transitions, but no combinations.
         require(sizeof...(Auts) == 2,
                 "infiltrate: variadic product does not work");
+
+        // Issue #86.
+        if (!std::is_same<weightset_t, b>{})
+          {
+            require(is_proper(std::get<0>(aut_->auts_)),
+                    "infiltrate: invalid lhs:"
+                    " weighted automata with spontaneous"
+                    " transitions are not supported");
+            require(is_proper(std::get<1>(aut_->auts_)),
+                    "infiltrate: invalid rhs:"
+                    " weighted automata with spontaneous"
+                    " transitions are not supported");
+          }
 
         // Infiltrate is a mix of conjunction and shuffle operations, and
         // the initial states for shuffle are a superset of the
