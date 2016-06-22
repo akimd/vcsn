@@ -79,38 +79,7 @@ namespace vcsn
         if (!len)
           len = std::numeric_limits<unsigned>::max();
 
-        // If the user did not specify a maximum length, and required only one
-        // path, a lightest-path algorithm is eligible.
-        if (*len == std::numeric_limits<unsigned>::max()
-            && (*num == 1 || is_acyclic(aut_)))
-          {
-            auto mul = [this](auto lhs, transition_t_of<Aut> t)
-                             {
-                               auto rhs = aut_->label_of(t);
-                               return (aut_->labelset()->is_special(rhs))
-                                      ? lhs
-                                      : ps_.labelset()->mul(lhs, aut_->label_of(t));
-                             };
-            auto get_value = [](auto m) { return m.first; };
-            auto yen = detail::make_yen(aut_, *ps_.labelset(), mul, get_value);
-            auto paths = yen(aut_->pre(), aut_->post(), *num);
-
-            using context_t = context_t_of<Aut>;
-            using wordset_context_t = detail::word_context_t<context_t>;
-            using polynomialset_t = polynomialset<wordset_context_t>;
-            using polynomial_t = typename polynomialset_t::value_t;
-            const polynomialset_t ps = make_word_polynomialset(aut_->context());
-            polynomial_t res;
-            for (const auto& path : paths)
-              {
-                auto monomial = path_monomial(aut_, format_lightest(aut_, path));
-                if (monomial)
-                  ps.add_here(res, *monomial);
-              }
-            return res;
-          }
-        else
-          return shortest_(*num, *len);
+        return shortest_(*num, *len);
       }
 
     private:

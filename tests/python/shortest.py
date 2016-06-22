@@ -13,8 +13,11 @@ def check_enumerate(re, len, *exp):
   # have a means to build the right context, with LAW, not LAL etc.
   exp = " + ".join(exp)
   re = ctx.expression(re)
-  CHECK_EQ(exp, re.standard().shortest(len = len))
-  CHECK_EQ(exp, re.shortest(len = len))
+  CHECK_EQ(exp, re.standard().shortest(len=len))
+  CHECK_EQ(exp, re.shortest(len=len))
+
+def check_one(aut, num, exp):
+  CHECK_EQ(exp, aut.shortest(num=num))
 
 ## check_shortest RE NUM EXP
 ## --------------------------
@@ -24,8 +27,8 @@ def check_shortest(re, num, *exp):
   if num != 1:
       check_shortest(re, 1, split('[ +]+', exp)[0])
   re = ctx.expression(re)
-  CHECK_EQ(exp, re.standard().shortest(num = num))
-  CHECK_EQ(exp, re.shortest(num = num))
+  check_one(re.standard(), num, exp)
+  check_one(re, num, exp)
 
 
 ## check RE MAX WORD...
@@ -71,3 +74,29 @@ check_shortest(r'(\e|x + a|\e)*', 9,
                r'\e|\e + \e|x + a|\e + <2>a|x + \e|xx + <3>a|xx + aa|\e + <3>aa|x + <6>aa|xx')
 check_enumerate(r'(\e|x + a|\e)*', 2,
                 r'\e|\e + \e|x + a|\e + <2>a|x + \e|xx + <3>a|xx + aa|\e + <3>aa|x + <6>aa|xx')
+
+aut = vcsn.automaton('''
+context = "letterset<char_letters(a)>, q"
+$ -> 0
+0 -> 1 <2>a
+0 -> 2 <-1>a
+0 -> 3 <-1>a
+1 -> $
+2 -> $
+3 -> $
+''')
+check_one(aut, 1, '\z')
+
+aut = vcsn.automaton('''
+context = "letterset<char_letters(ab)>, q"
+$ -> 0
+0 -> 1 <2>a
+0 -> 2 <-1>a
+0 -> 3 <-1>a
+0 -> 4 b
+1 -> $
+2 -> $
+3 -> $
+4 -> $
+''')
+check_one(aut, 1, 'b')
