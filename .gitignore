@@ -37,9 +37,11 @@
 /configure
 /doc/notebooks/a.efsm
 /doc/notebooks/a.fst
+/doc/notebooks/bin.gv
 /doc/notebooks/d.efsm
 /doc/notebooks/d.fst
 /doc/notebooks/en2es
+/doc/notebooks/even.gv
 /doc/notebooks/fr2en
 /doc/notebooks/numbers
 /doc/notebooks/translator

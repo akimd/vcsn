@@ -210,11 +210,6 @@ non-commutativity: as is, (a, b) can work, but not (b, a).
 But anyway: does it really mean something to compare a B-automaton with a Z
 one?
 
-** dot (SP)
-Let's try a means to improve our rendering of decorated automaton (typically
-derived-term) with MathJax rendering.  Stackoverflow has hints on how we can
-do that for SVG, but so far, I failed to adjust the output of dot.
-
 ** efsm (SP)
 When passing a LAW, maybe we should letterize it transparently?  Currently,
 we treat it as if it were lan<string> instead of law<char>.
