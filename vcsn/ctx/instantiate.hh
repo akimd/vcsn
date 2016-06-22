@@ -30,7 +30,6 @@
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/ladybird.hh>
-#include <vcsn/algos/weight.hh>
 #include <vcsn/algos/less-than.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
@@ -52,6 +51,7 @@
 #include <vcsn/algos/to-expression.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/algos/u.hh>
+#include <vcsn/algos/weight.hh>
 
 #include <vcsn/core/rat/identities.hh>
 

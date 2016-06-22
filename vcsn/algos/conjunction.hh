@@ -644,9 +644,9 @@ namespace vcsn
   }
 
 
-  /*-----------------------------.
-  | ldivide(automaton, automaton).  |
-  `-----------------------------*/
+  /*---------------------------------.
+  | ldivide(automaton, automaton).   |
+  `---------------------------------*/
 
   /// Compute the left quotient.
   ///
@@ -709,9 +709,9 @@ namespace vcsn
 
 
 
-  /*-----------------------------.
-  | rdivide(automaton, automaton).  |
-  `-----------------------------*/
+  /*---------------------------------.
+  | rdivide(automaton, automaton).   |
+  `---------------------------------*/
 
   /// Compute the right quotient.
   ///
@@ -926,9 +926,9 @@ namespace vcsn
     // `a & a`.
     auto res = make_fresh_automaton(aut);
     require(exp.single(),
-            "conjunction: exponents must be single, ", exp);
+            "conjunction: exponent must be single, ", exp);
     require(exp.finite(),
-            "conjunction: exponents must be finite, ", exp);
+            "conjunction: exponent must be finite, ", exp);
     unsigned n = exp.min;
     if (n < 2)
       {

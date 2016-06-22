@@ -17,13 +17,13 @@ namespace vcsn
 {
   namespace detail
   {
-    /// A probe for the LabelSet::generators().
+    /// The type of the LabelSet::generators() member function.
     template <typename LabelSet>
-    using generators_t = decltype(std::declval<LabelSet>().generators());
+    using generators_mem_fn_t = decltype(std::declval<LabelSet>().generators());
 
     /// Whether LabelSet features a generators() member function.
     template <typename LabelSet>
-    using has_generators_mem_fn = detect<LabelSet, generators_t>;
+    using has_generators_mem_fn = detect<LabelSet, generators_mem_fn_t>;
 
 
     /*-----------.

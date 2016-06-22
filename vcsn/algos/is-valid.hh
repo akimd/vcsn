@@ -64,12 +64,12 @@ namespace vcsn
       /** @brief Whether an automaton is valid.
 
          The behavior of this method depends on the star_status of
-         the weight_set:
+         the weightset:
 
          -- starrable: return true;
          -- tops: copy the input and return the result of proper on the copy;
          -- non_starrable: return true iff the automaton is epsilon-acyclic
-         WARNING: for weight_sets with zero divisor, should test whether
+         WARNING: for weightsets with zero divisor, should test whether
          the weight of every simple circuit is zero;
          -- absval: build a copy of the input where each weight
          is replaced by its absolute value and return the result
@@ -132,7 +132,6 @@ namespace vcsn
         return true;
       }
     };
-
   }
 
 

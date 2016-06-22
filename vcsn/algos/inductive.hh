@@ -148,7 +148,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      auto compose(const compose_t& e, long)
+      auto compose(const compose_t&, long)
         -> void
       {
         require(false, "compose: context is not composable");
@@ -265,8 +265,6 @@ namespace vcsn
         // but we should actually be parameterized by its type too.
         using expressionset_t = ExpSet;
         using expression_t = typename expressionset_t::value_t;
-        using automaton_t
-          = vcsn::mutable_automaton<context_t_of<expressionset_t>>;
         const auto& e = exp->as<expressionset_t>();
 
         using fn_t

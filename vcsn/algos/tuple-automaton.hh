@@ -12,7 +12,14 @@ namespace vcsn
     | tuple_automata_impl<Aut...>.   |
     `-------------------------------*/
 
-    /// Build the (accessible part of the) product.
+    /// Build the (accessible part of the) Cartesian product of
+    /// automata.
+    ///
+    /// Warning: beware of naming issues: do not confuse it with
+    /// tuple_automaton_impl which is actually an automaton decorator
+    /// whose states are tuples of states of other automata.  This
+    /// class, tuple_automata_impl, derives (indirectly) from
+    /// tuple_automaton_impl.
     template <Automaton Aut, Automaton... Auts>
     class tuple_automata_impl
       : public lazy_tuple_automaton<tuple_automata_impl<Aut, Auts...>,

@@ -214,7 +214,7 @@ namespace vcsn
     }
 
     /// Add a complement operator: `e{c}`.
-    auto complement(const value_t& e, std::false_type) const -> value_t
+    auto complement(const value_t&, std::false_type) const -> value_t
     {
       raise("inductive: cannot complement on multitape: ", ctx_);
     }
