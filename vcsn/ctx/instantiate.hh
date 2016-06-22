@@ -21,6 +21,7 @@
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities-of.hh>
+#include <vcsn/algos/inductive.hh>
 #include <vcsn/algos/info.hh>
 #include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-ambiguous.hh>
@@ -173,6 +174,8 @@ namespace vcsn
         REGISTER(expression_one, ctx_t, rat::identities);
         REGISTER(expression_zero, ctx_t, rat::identities);
         REGISTER(identities_of, rs_t);
+        REGISTER(inductive, rs_t, const std::string);
+        REGISTER(infiltrate_expression, rs_t, rs_t);
         REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(ldivide_expression, rs_t, rs_t);
         REGISTER(less_than_expression, rs_t, rs_t);
