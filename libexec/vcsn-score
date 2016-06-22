@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# pylint: disable=global-statement
+
 try:
     import builtins
 except ImportError:
@@ -20,6 +22,7 @@ if '-DNDEBUG' not in ' '.join([vcsn.config['cppflags'],
 if '-O3' not in vcsn.config['cxxflags']:
     warnings.warn('not compiled with -O3, benches are irrelevant')
 
+
 parser = argparse.ArgumentParser(description='Bench some algorithms.')
 parser.add_argument('-O', '--only', metavar='RE',
                     type=re.compile, default='.*',
@@ -36,7 +39,13 @@ parser.add_argument('--check', action='store_true',
 
 args = parser.parse_args()
 
+# The last setup that we run.  Used to maintain a cache of setups:
+# when the same setup is used several times in a row, the first result
+# is just reused.
 last_setup = ['pass']
+
+# The number of failures
+nfail = 0
 
 
 def ws_signature(ws):
@@ -46,6 +55,7 @@ def ws_signature(ws):
         return ws[:-2].upper() + 'min'
     else:
         return ws.upper()
+
 
 def ctx_signature(ctx):
     '''A short, nice looking, description of a context.  To replace eventually
@@ -68,6 +78,7 @@ def ctx_signature(ctx):
                  ctx)
     return ctx
 
+
 def downsize(statement):
     'Replace size identifiers with 1.'
     # Examples of numbers not to match:
@@ -76,10 +87,12 @@ def downsize(statement):
     # - a2 = ...
     return re.sub(r'(?<![-a-zA-Z])\d+', '1', statement)
 
+
 def log(*logs):
     'Print logs to stderr.'
     if args.verbose:
         print(*logs, file=sys.stderr)
+
 
 def bench(stmt, comment, title=None, setup=None, number=1):
     'Report the best timing of three batches of number runs of cmd.'
@@ -113,7 +126,7 @@ def bench(stmt, comment, title=None, setup=None, number=1):
 
         try:
             # Run the set up if it is not the last one we ran.
-            global last_setup # pylint: disable=global-statement
+            global last_setup
             if setup != last_setup:
                 for i, s in enumerate(setup):
                     if args.check and oldsetup[i] != s:
@@ -137,16 +150,17 @@ def bench(stmt, comment, title=None, setup=None, number=1):
                 t = '{:5.2f}s'.format(t)
             else:
                 # Just run the set up, the user is just warming ccache
-                # by running the set ups.
+                # by running the setups.
                 t = 'SKIP'
             err = None
         except RuntimeError as exc:
             t = ' FAIL'
             err = exc
-        print('{:7s}: {:23s} # {}'.format(t, title, comment))
+            global nfail
+            nfail += 1
+        print('{:7s}: {:23s} # {}'.format(t, title, comment), flush=True)
         if err:
             print(err, file=sys.stderr)
-        sys.stdout.flush()
 
 # Check the cost of dyn calls.
 #
@@ -762,3 +776,7 @@ bench('a.weight_series()',
              'r = "{}"'.format(r),
              'a = vcsn.context(ctx).expression(r).standard()'],
       number=10)
+
+if nfail:
+    print("vcsn-score: error: there were {} failures".format(nfail))
+    exit(1)
