@@ -1,0 +1,6 @@
+digraph
+{
+  vcsn_context = "lan_char(ab), r"
+  I -> 0 -> F
+  0 -> 0 [label = "<.5>\\e"]
+}

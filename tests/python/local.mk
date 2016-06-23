@@ -266,6 +266,19 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4-subword.gv                        \
   %D%/prefix.dir/aut4-suffix.gv                         \
   %D%/prefix.dir/aut4.gv                                \
+  %D%/proper.dir/lan-b.in.gv                            \
+  %D%/proper.dir/lan-b.out.gv                           \
+  %D%/proper.dir/lan-qr.in.gv                           \
+  %D%/proper.dir/lan-qr.out.gv                          \
+  %D%/proper.dir/lan-r.in.gv                            \
+  %D%/proper.dir/lan-r.out.gv                           \
+  %D%/proper.dir/lan-z.fail.gv                          \
+  %D%/proper.dir/lan-z.in.gv                            \
+  %D%/proper.dir/lan-z.out.gv                           \
+  %D%/proper.dir/lao-r.in.gv                            \
+  %D%/proper.dir/lao-r.out.gv                           \
+  %D%/proper.dir/law-b.in.gv                            \
+  %D%/proper.dir/law-b.out.gv                           \
   %D%/rdivide.dir/aut1.gv                               \
   %D%/standard.dir/1.in.gv                              \
   %D%/standard.dir/1.out.gv                             \
@@ -317,6 +330,7 @@ EXTRA_DIST +=                                           \
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
+%D%/proper.log:          $(wildcard $(srcdir)/%D%/proper.dir/*)
 %D%/rdivide.log:         $(wildcard $(srcdir)/%D%/rdivide.dir/*)
 %D%/standard.log:        $(wildcard $(srcdir)/%D%/standard.dir/*)
 %D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)

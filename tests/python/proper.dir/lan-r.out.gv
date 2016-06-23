@@ -1,0 +1,17 @@
+digraph
+{
+  vcsn_context = "letterset<char_letters(ab)>, r"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+  }
+  I0 -> 0
+  0 -> F0 [label = "<2>"]
+}
