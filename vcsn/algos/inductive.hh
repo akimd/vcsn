@@ -42,8 +42,9 @@ namespace vcsn
       using context_t = context_t_of<expressionset_t>;
       using automatonset_t = automatonset<context_t_of<automaton_t>, tag_t>;
       using expression_t = typename expressionset_t::value_t;
-      using weightset_t = weightset_t_of<expressionset_t>;
-      using weight_t = weight_t_of<expressionset_t>;
+      using labelset_t = labelset_t_of<context_t>;
+      using weightset_t = weightset_t_of<context_t>;
+      using weight_t = weight_t_of<context_t>;
       using state_t = state_t_of<automaton_t>;
 
       using super_t = typename expressionset_t::const_visitor;
@@ -58,15 +59,22 @@ namespace vcsn
 
       automaton_t operator()(const expression_t& v)
       {
-        v->accept(*this);
-        return res_;
+        try
+          {
+            v->accept(*this);
+            return std::move(res_);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e, "  while computing inductive of: ", to_string(rs_, v));
+          }
       }
 
     private:
       automaton_t recurse(const expression_t& v)
       {
         v->accept(*this);
-        return res_;
+        return std::move(res_);
       }
 
       using tuple_t = typename super_t::tuple_t;
@@ -96,7 +104,7 @@ namespace vcsn
         /// Entry point.
         auto operator()(const tuple_t& v)
         {
-          visitor_.res_ = tape_(v, labelset_t_of<context_t>::indices);
+          visitor_.res_ = tape_(v, labelset_t::indices);
         }
         self_t& visitor_;
       };
@@ -131,59 +139,105 @@ namespace vcsn
         res_ = as_.atom(e.value());
       }
 
+      /// The type of the AutSet::compose() member function.
+      template <Automaton AutSet>
+      using compose_mem_fn_t =
+        decltype(std::declval<AutSet>()
+                 .compose(std::declval<typename AutSet::value_t>(),
+                          std::declval<typename AutSet::value_t>()));
+
+      /// Whether AutSet features a compose() member function.
+      template <typename AutSet>
+      using has_compose_mem_fn = detail::detect<AutSet, compose_mem_fn_t>;
+
+
       VCSN_RAT_VISIT(compose, e)
       {
-        compose(e, 0);
-      }
-
-      template <Automaton Aut_ = automaton_t>
-      auto compose(const compose_t& e, int)
-        -> decltype(std::declval<automatonset_t>()
-                    .compose(std::declval<Aut_>(), std::declval<Aut_>()),
-                    void())
-      {
-        auto res = recurse(e.head());
-        for (const auto& c: e.tail())
-          res = as_.compose(res, recurse(c));
-        res_ = std::move(res);
-      }
-
-      auto compose(const compose_t&, long)
-        -> void
-      {
-        require(false, "compose: context is not composable");
+        detail::static_if<has_compose_mem_fn<automatonset_t>{}>
+          ([this](const auto& e)
+           {
+             auto res = recurse(e.head());
+             for (const auto& c: e.tail())
+               res = as_.compose(res, recurse(c));
+             res_ = std::move(res);
+           },
+           [](const auto&)
+           {
+             raise("compose: context is not composable");
+           })
+            (e);
       }
 
       VCSN_RAT_VISIT(conjunction, e)
       {
-        auto res = recurse(e.head());
-        for (const auto& c: e.tail())
-          res = as_.conjunction(res, recurse(c));
-        res_ = std::move(res);
+        detail::static_if<labelset_t::is_letterized()>
+          ([this](const auto& e)
+           {
+             auto res = recurse(e.head());
+             for (const auto& c: e.tail())
+               res = as_.conjunction(res, recurse(c));
+             res_ = std::move(res);
+           },
+           [this](const auto&)
+           {
+             raise("conjunction: labelset must be letterized: ",
+                   *rs_.labelset());
+           })
+          (e);
       }
 
       VCSN_RAT_VISIT(infiltrate, e)
       {
-        auto res = recurse(e.head());
-        for (const auto& c: e.tail())
-          res = as_.infiltrate(res, recurse(c));
-        res_ = std::move(res);
+        detail::static_if<labelset_t::is_letterized()>
+          ([this](const auto& e)
+           {
+             auto res = recurse(e.head());
+             for (const auto& c: e.tail())
+               res = as_.infiltrate(res, recurse(c));
+             res_ = std::move(res);
+           },
+           [this](const auto&)
+           {
+             raise("infiltrate: labelset must be letterized: ",
+                   *rs_.labelset());
+           })
+          (e);
       }
 
       VCSN_RAT_VISIT(ldivide, e)
       {
-        auto res = recurse(e.head());
-        for (const auto& c: e.tail())
-          res = as_.ldivide(res, recurse(c));
-        res_ = std::move(res);
+        detail::static_if<labelset_t::is_letterized()>
+          ([this](const auto& e)
+           {
+             auto res = recurse(e.head());
+             for (const auto& c: e.tail())
+               res = as_.ldivide(res, recurse(c));
+             res_ = std::move(res);
+           },
+           [this](const auto&)
+           {
+             raise("ldivide: labelset must be letterized: ",
+                   *rs_.labelset());
+           })
+          (e);
       }
 
       VCSN_RAT_VISIT(shuffle, e)
       {
-        auto res = recurse(e.head());
-        for (const auto& c: e.tail())
-          res = as_.shuffle(res, recurse(c));
-        res_ = std::move(res);
+        detail::static_if<labelset_t::is_letterized()>
+          ([this](const auto& e)
+           {
+             auto res = recurse(e.head());
+             for (const auto& c: e.tail())
+               res = as_.shuffle(res, recurse(c));
+             res_ = std::move(res);
+           },
+           [this](const auto&)
+           {
+             raise("shuffle: labelset must be letterized: ",
+                   *rs_.labelset());
+           })
+          (e);
       }
 
       VCSN_RAT_VISIT(add, e)
@@ -209,7 +263,17 @@ namespace vcsn
 
       VCSN_RAT_VISIT(complement, e)
       {
-        res_ = as_.complement(recurse(e.sub()));
+        detail::static_if<labelset_t::is_free()>
+          ([this](const auto& e)
+           {
+             res_ = as_.complement(recurse(e.sub()));
+           },
+           [this](const auto&)
+           {
+             raise("complement: labelset must be free: ",
+                   *rs_.labelset());
+           })
+          (e);
       }
 
       VCSN_RAT_VISIT(transposition, e)
