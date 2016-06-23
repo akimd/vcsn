@@ -464,6 +464,15 @@ namespace vcsn
       return (l.set() & r.set()).count() % 2;
     }
 
+    /// Map all weights to their absolute value.
+    value_t abs(const value_t& v) const
+    {
+      value_t res;
+      for (const auto& m: v)
+        add_here(res, label_of(m), weightset()->abs(weight_of(m)));
+      return res;
+    }
+
     /// The star of polynomial \a v.
     value_t
     star(const value_t& v) const
@@ -720,9 +729,9 @@ namespace vcsn
       typename z::value_t operator()(const value_t& v) const
       {
         int sign = 0 < weight_of(detail::front(v)) ? 1 : -1;
-        auto res = abs(weight_of(detail::front(v)));
+        auto res = std::abs(weight_of(detail::front(v)));
         for (const auto& m: v)
-          res = z_.lgcd(res, abs(weight_of(m)));
+          res = z_.lgcd(res, std::abs(weight_of(m)));
         res *= sign;
         return res;
       }

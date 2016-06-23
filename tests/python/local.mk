@@ -268,6 +268,10 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4.gv                                \
   %D%/proper.dir/lan-b.in.gv                            \
   %D%/proper.dir/lan-b.out.gv                           \
+  %D%/proper.dir/lan-poly.1.in.gv                       \
+  %D%/proper.dir/lan-poly.1.out.gv                      \
+  %D%/proper.dir/lan-poly.2.fail.gv                     \
+  %D%/proper.dir/lan-poly.3.fail.gv                     \
   %D%/proper.dir/lan-qr.in.gv                           \
   %D%/proper.dir/lan-qr.out.gv                          \
   %D%/proper.dir/lan-r.in.gv                            \

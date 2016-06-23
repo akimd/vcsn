@@ -354,6 +354,18 @@ namespace vcsn
         return labelset_t::less(get_value(l), get_value(r));
     }
 
+    /// The concatenation.
+    value_t mul(const value_t& l, const value_t& r) const
+    {
+      if (is_one(r))
+        return l;
+      else if (is_one(l))
+        return r;
+      else
+        raise(*this, ": mul: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
+    }
+
     /// The longest common prefix.
     value_t lgcd(const value_t& l, const value_t& r) const
     {

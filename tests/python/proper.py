@@ -276,6 +276,15 @@ check(r'''digraph
 }''')
 
 
+## ------------------------- ##
+## lan, polynomial<law, q>.  ##
+## ------------------------- ##
+
+check(metext('lan-poly.1.in.gv'), metext('lan-poly.1.out.gv'))
+check_fail(metext('lan-poly.2.fail.gv'))
+check_fail(metext('lan-poly.3.fail.gv'))
+
+
 ## ---------------------- ##
 ## Forward vs. backward.  ##
 ## ---------------------- ##

@@ -1,0 +1,18 @@
+digraph
+{
+  vcsn_context = "nullableset<letterset<char_letters()>>, polynomialset<wordset<char_letters()>, q>"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+  }
+  I0 -> 0 [label = "<<3>\\e>"]
+  0 -> F0 [label = "<<5>\\e>"]
+  0 -> 0 [label = "<<1/2>\\e>\\e"]
+}
