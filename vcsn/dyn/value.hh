@@ -14,26 +14,21 @@ namespace vcsn
     namespace detail
     {
       /// Tag for expansion/expansionset.
-      struct expansion_tag
-      {};
+      struct expansion_tag {};
 
       /// Tag for expression/expressionset.
-      struct expression_tag
-      {};
+      struct expression_tag {};
 
       /// Tag for label/labelset.
-      struct label_tag
-      {};
+      struct label_tag {};
 
       /// Tag for polynomial/polynomialset.
-      struct polynomial_tag
-      {};
+      struct polynomial_tag {};
 
       /// Tag for weight/weightset.
-      struct weight_tag
-      {};
+      struct weight_tag {};
 
-      /// A dyn value/valueset.
+      /// A dyn Value/ValueSet.
       template <typename Tag>
       class LIBVCSN_API value
       {
@@ -42,8 +37,8 @@ namespace vcsn
         value() {}
 
         template <typename ValueSet>
-        value(const ValueSet& ls, const typename ValueSet::value_t& l)
-          : self_{std::make_shared<model<ValueSet>>(ls, l)}
+        value(const ValueSet& vs, const typename ValueSet::value_t& v)
+          : self_{std::make_shared<model<ValueSet>>(vs, v)}
         {}
 
         /// A description of the value type.
@@ -94,26 +89,25 @@ namespace vcsn
         }
 
       private:
-        /// Abstract wrapped typed label/labelset.
+        /// Abstract wrapped typed Value/ValueSet.
         struct base
         {
           virtual ~base() = default;
           virtual symbol vname() const = 0;
         };
 
-        /// A wrapped typed label/labelset.
+        /// A wrapped typed Value/ValueSet.
         template <typename ValueSet>
         struct model final : base
         {
           using valueset_t = ValueSet;
           using value_t = typename valueset_t::value_t;
-
-          model(const valueset_t& ls, const value_t& l)
-            : valueset_(std::move(ls))
-            , value_(std::move(l))
+          model(valueset_t vs, value_t v)
+            : valueset_(std::move(vs))
+            , value_(std::move(v))
           {}
 
-          virtual symbol vname() const override
+          symbol vname() const override
           {
             return valueset().sname();
           }
@@ -139,9 +133,8 @@ namespace vcsn
         std::shared_ptr<base> self_ = nullptr;
       };
 
-      /// Return the join of the expressionset (or polynomialset) of two
-      /// expressions (polynomials) and their values in this new
-      /// expressionset (polynomialset).
+      /// Return the join of the valuesets of two dyn values and their
+      /// values in this new valueset.
       template <typename ValueSetLhs, typename ValueSetRhs, typename Tag>
       auto
       join(const value<Tag>& lhs, const value<Tag>& rhs)
