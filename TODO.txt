@@ -88,7 +88,7 @@ features of the right definition?
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
-** proper: accessible part (AP)
+** proper: accessible part
 This fails:
 
 import vcsn
@@ -121,7 +121,7 @@ We need more tests.  In particular something that checks:
     * vcsn/algos/synchronize.hh: Here.
 
 * Bugs
-** subprograms (AP)
+** subprograms
 We don't kill our children when we are killed.  For instance, if the user
 asked for the graphical rendering of a huge automaton, and decides to kill
 vcsn realizing her error, the dot process will continue to waste cpu.
@@ -296,7 +296,7 @@ left-associative, and a.b.c is left-associative too.
 Fix this.  Ask other members of the project what they think about that
 (left- vs. right- associativity).
 
-** product: is_idempotent (VT)
+** product: is_idempotent
 We don't need to insplit in the case of idempotent semirings, not just in
 the case of B.
 
@@ -388,7 +388,7 @@ call copy with a lambda that transforms the weights: \w.w -> (w, 1) and
 likewise for the other tape.  If we can do that on-the-fly, then the
 remainder can benefit from it too.
 
-** Beware of our use of subprocess (AP)
+** Beware of our use of subprocess
 I think my code is really wrong.
 http://stackoverflow.com/questions/6341451/piping-together-several-subprocesses
 
@@ -437,12 +437,6 @@ header-only.  A mixture of both might be the best: where they suffice,
 format _are_ superior.
 
 ** Eliminate rat::exp
-It does seem to be useful, except for one thing: dyn::expressionset uses a
-shared_ptr to exp (which is rat::exp_t is) as a means to handle expressions.  It
-would make much more sense for dyn::expressionset to use dyn::expression as an
-abstraction to typed expression, but this should be thoroughly benched to make
-sure this is not (much) costlier.
-
 Getting rid of this will allow rat::node to use single inheritance.
 
 ** polynomialset
@@ -523,12 +517,6 @@ then that should follow naturally.
 
 Working on this for polynomials should also help fusing the two
 determinization algorithms.
-
-** constant-term
-To compute the constant-term of an expression, we compute that of its
-subexpression, which will be recomputed uselessly by derived-term based on
-derivation.  Yet, the whole point of expansion is to address issues such as
-this one.
 
 ** derivation
 We could provide a faster implementation of derivation wrt to a word by
@@ -657,21 +645,6 @@ optimizations could even be experimented.
 ** static_cast
 Check what we get if we replace the dynamic_cast in the dyn::wrappers by a
 static_cast in the case of optimized implementation (say, NDEBUG).
-
-* IPython
-** %context
-I would like to have an interactive editor of contexts, just like what we
-have with %automaton.
-
-** %expression
-I would like to have an interactive editor for expressions that would allow
-me to see directly the automaton it builds.  Actually, it would be nice to
-be able to specify what algorithm to use to build the automaton.  And why
-not being able to see *several* translations: you'd have radio buttons to
-select what automata you would like to see built interactively.
-
-We need a means to specify the context: another field would be nice.  See
-%context.
 
 * I/O
 ** fado
