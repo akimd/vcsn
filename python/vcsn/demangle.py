@@ -269,8 +269,8 @@ def demangle(s, color="auto"):
             s)
 
     # Dyn::.
-    s = sub(r'vcsn::dyn::detail::(automaton|expression(?:set)?)_wrapper<\1<({param})> >',
-            r'dyn::\1<\2>',
+    s = sub(r'vcsn::dyn::detail::value<vcsn::dyn::detail::(\w+)_tag>',
+            r'dyn::\1',
             s)
 
     if color:
