@@ -2,10 +2,12 @@ Misc
 ====
 
 Mail:
+
 To access your email account go to the following site:
 https://webmail.lrde.epita.fr
+
 If you notice a serious bug that needs fixing you can send an e-mail at:
-vaucanson-private@lrde.epita.fr
+vcsn-dev@lrde.epita.fr
 
 SSH:
 To connect to the laboratory with ssh you simply need to type:
@@ -14,27 +16,38 @@ To connect to the laboratory with ssh you simply need to type:
 The -Y option enables the graphical mode.
 
 Vcsn installation:
-    $ssh-keygen
+    $ ssh-keygen
 This will create an ssh key.
+
 Send your id_rsa.pub to admin@lrde.epita.fr. He will then add your key to the
-vaucanson git repository. Once added you can:
-    $ ssh node7
+vcsn git repository. Once added you can:
+
+$ ssh node7
     $ source /lrde/dev/profile
-    $ git clone git@git.lrde.epita.fr:vaucanson2.git
-    $ cd vaucanson2
-    $ ./configure CXX=g++4.8
+    $ git clone git@gitlab.lrde.epita.fr:vcsn/vcsn.git
+    $ cd vcsn
+    $ ./configure CXX=g++4.9
     $ make install
     $ make check
-"make check" will do several tests. They should all pass, except one that is
-an expected failure. Create a special directory where you will have all your
-binary files:
+
+"make check" will do several tests. They should all pass, except one
+that is an expected failure. Create a special directory where you will
+have all your binary files:
+
     $ mkdir _build
     $ g++ --version
-    $ mkdir _build/48d
-48 is the g++ version.
-    $ cd _build/48d
+    $ mkdir _build/49d
+
+49 is the g++ version, d stands for "debug".
+
+    $ cd _build/49d
     $ ../../configure
-    $ ../../configure -C CXX="ccache g++" CC="ccache gcc"
+
+A "speed" configuration is:
+
+    $ mkdir _build/49s
+    $ cd _build/49s
+    $ ../../configure CPPFLAGS='-DNDEBUG' CXXFLAGS='-O3 -g3'
 
 Bashrc:
 Here is an example for your bash configuration.
@@ -43,11 +56,11 @@ Create the file ~/.bashrc and copy this in it:
 alias ls='ls --color'
 export EDITOR=vim        # Enables your default editor.
 source /lrde/dev/profile #Activates efstcomile and other stuff.
-48d()
+49s()
 {
-  make -C _build/48d "$@"
+  make -C _build/49s "$@"
 }
-# 48d() is a function declaration. When you type 48d on the shell it will run
+# 49s() is a function declaration. When you type 49s on the shell it will run
 # that function. The "$@" option means add any option you type on the shell.
 d()
 {
@@ -66,8 +79,8 @@ d()
 Source your bashrc file by typing the following command:
     $ source ~/.bashrc
 Now you can run the following command:
-    $ 48d check -j20
-This will compile and put all the generated files in _build/48d/
+    $ 49s check -j20
+This will compile and put all the generated files in _build/49s
 
 What is an automaton:
 An automaton can be seen as a function that takes words, letters or nullable
@@ -168,13 +181,13 @@ The "vcsn" namespace is the static code.
 "vcsn::detail" is extra code that does not need to be known by the user.
 
 TafKit:
-TafKit contains all the binaries of vaucanson. There is a different "program"
-for each existing algorithm in vaucanson. They all start by "vcsn-"
+TafKit contains all the binaries of Vcsn. There is a different "program"
+for each existing algorithm in Vcsn. They all start by "vcsn-"
 You find these files in "bin/". The tests for the different "programs" are in
 "tests/tafkit/"
 
 Git:
-Once vaucanson is running and working you should create a new branch.
+Once Vcsn is running and working you should create a new branch.
     $ git checkout -b "my_branch_name" :
 This branch will be your working branch and only seen by you. To create a
 branch on the remote machine, you need to type:
@@ -183,21 +196,19 @@ branch on the remote machine, you need to type:
 means you wish to push all the work on your current local branch. "al" is your
 initials.
 Here are a few useful commands.
+
     $ git branch -a                        : Shows you all the branches.
     $ git add -u                           : Add every files for next commit.
     $ git add "file_name"                  : To add new files.
     $ git commit -a                        : To commit all the files.
     $ git commit --amend                   : Allows to change last commit.
     $ git log                              : Shows you the commit history.
-    $ git log -p --reverse origin/master.. : Shows you the commit history in
-revers order, and shows all the modifications made.
+    $ git log -p --reverse origin/master.. : Shows you the commit history in revers order, and shows all the modifications made.
     $ git show                             : Shows you last commit in detail.
-    $ git status                           : Gives information on the status of
-each file, and the branch you are currently working on.
-    $ git fetch                            : updates your origin/master to the
-current location of master in vaucanson.
-    $ git rebase origin/master             : puts your branch up to date by
-having its base start at the new location of "origin/master".
+    $ git status                           : Gives information on the status of each file, and the branch you are currently working on.
+    $ git fetch                            : updates your origin/master to the current location of master in Vcsn.
+    $ git rebase origin/master             : puts your branch up to date by having its base start at the new location of "origin/master".
+
 Note: Never use "git pull". This make messy merges and a non-linear history.
 
 Once you have done all your commits you can reorder them and rewrite the commit
