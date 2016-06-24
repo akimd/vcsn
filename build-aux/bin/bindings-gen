@@ -148,8 +148,16 @@ classes_prologue_impl = {
     : val_{nullptr}
   {
     auto is = make_istream(data, filename);
-    val_ = vcsn::dyn::read_automaton(*is, format, strip);
-    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+    try
+      {
+        val_ = vcsn::dyn::read_automaton(*is, format, strip);
+        vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+      }
+    catch (const std::runtime_error& e)
+      {
+        vcsn::raise(e, "  while reading automaton: ",
+                    data.empty() ? filename : data);
+      }
   }
     ''',
 
@@ -197,12 +205,12 @@ classes_prologue_impl = {
     try
       {
         val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
+        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
       }
     catch (const std::runtime_error& e)
       {
         vcsn::raise(e, "  while reading expression: ", r);
       }
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
   }
 
   expression expression::as(const struct context& ctx,
@@ -219,8 +227,15 @@ classes_prologue_impl = {
   label::label(const context& ctx, const std::string& s)
   {
     std::istringstream is{s};
-    val_ = vcsn::dyn::read_label(ctx.val_, is);
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    try
+      {
+        val_ = vcsn::dyn::read_label(ctx.val_, is);
+        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+      }
+    catch (const std::runtime_error& e)
+      {
+        vcsn::raise(e, "  while reading label: ", s);
+      }
   }
 ''',
 
@@ -229,8 +244,15 @@ classes_prologue_impl = {
   polynomial::polynomial(const struct context& ctx, const std::string& s)
   {
     std::istringstream is{s};
-    val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    try
+      {
+        val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
+        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+      }
+    catch (const std::runtime_error& e)
+      {
+        vcsn::raise(e, "  while reading polynomial: ", s);
+      }
   }
 ''',
 
@@ -239,8 +261,15 @@ classes_prologue_impl = {
   weight::weight(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_weight(ctx.val_, is);
-    vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    try
+      {
+        val_ = vcsn::dyn::read_weight(ctx.val_, is);
+        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+      }
+    catch (const std::runtime_error& e)
+      {
+        vcsn::raise(e, "  while reading weight: ", s);
+      }
   }
 ''',
 }
@@ -399,7 +428,7 @@ using identities = vcsn::dyn::identities;
     for c in sorted(classes.keys()):
         res += class_open.format_map({'class': c})
         if c in classes_prologue_header:
-            res += classes_prologue_header[c]
+            res += classes_prologue_header[c].rstrip(' ')
         res += output_memfn(memfn_declaration, classes[c])
         res += class_close.format_map({'class': c})
     return res
@@ -443,7 +472,7 @@ auto make_istream(const std::string& data = "",
 '''
     for c in sorted(classes.keys()):
         if c in classes_prologue_impl:
-            res += classes_prologue_impl[c]
+            res += classes_prologue_impl[c].rstrip(' ')
         res += output_memfn(memfn_definition, classes[c])
 
     return res

@@ -31,11 +31,17 @@ namespace vcsn LIBVCSN_API
                         std::forward<Args>(args)...))
   {
     std::istringstream i{str};
-    const auto res = vs.conv(i, std::forward<Args>(args)...);
-    VCSN_REQUIRE(i.peek() == EOF,
-                 vs, ": invalid value: ", str,
-                 ", unexpected ", str_escape(i.peek()));
-    return res;
+    try
+      {
+        const auto res = vs.conv(i, std::forward<Args>(args)...);
+        VCSN_REQUIRE(i.peek() == EOF,
+                     vs, ": unexpected ", str_escape(i.peek()));
+        return res;
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while reading: ", str_escape(str));
+      }
   }
 
   /// Check lookahead character and advance.
