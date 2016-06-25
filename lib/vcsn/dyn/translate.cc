@@ -438,6 +438,21 @@ namespace vcsn
           return;
         }
       }
+      // automata: standard
+      {
+        static const set_str cluster
+          = { "costandard",
+            "is_costandard",
+            "is_standard",
+            "standard"};
+        if (has(cluster, algo))
+        {
+          for (const auto& a: cluster)
+            algos.emplace(a, sig);
+          return;
+        }
+      }
+      // automata: factor
       {
         static const set_str cluster
           = { "factor",
