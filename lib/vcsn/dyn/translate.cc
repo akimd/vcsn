@@ -473,15 +473,54 @@ namespace vcsn
                                       const signature& sig)
     {
       // expression: multiplication
-      static const set_str cluster
-        = { "right_mult_expression",
-          "left_mult_expression"};
-      if (has(cluster, algo))
       {
-        auto other = algo == "right_mult_expression"
-                   ? "left_mult_expression" : "right_mult_expression";
-        algos.emplace(other, signature{sig[1], sig[0]});
-        return;
+        static const set_str cluster
+          = { "right_mult_expression",
+            "left_mult_expression"};
+        if (has(cluster, algo))
+        {
+          auto other = algo == "right_mult_expression"
+                     ? "left_mult_expression" : "right_mult_expression";
+          algos.emplace(other, signature{sig[1], sig[0]});
+          return;
+        }
+      }
+      // expression: general
+      {
+        static const set_str binary
+          = {"ldiv_expression",
+            "rdiv_expression",
+            "less_than_expression"};
+        static const set_str unary
+          = {"complement_expression",
+            "constant_term",
+            "expand",
+            "identities_of",
+            "is_valid_expression",
+            "star_height",
+            "to_expansion",
+            "transpose_expression",
+            "transposition_expression"};
+        if (has(binary, algo))
+        {
+          signature inv = signature{sig[1], sig[0]};
+          for (const auto& a: binary)
+          {
+            algos.emplace(a, sig);
+            algos.emplace(a, inv);
+          }
+          for (const auto& a: unary)
+            algos.emplace(a, signature{sig[0]});
+          return;
+        }
+        if (has(unary, algo))
+        {
+          for (const auto& a: unary)
+            algos.emplace(a, sig);
+          for (const auto& a: binary)
+            algos.emplace(a, signature{sig[0], sig[0]});
+          return;
+        }
       }
     }
 
