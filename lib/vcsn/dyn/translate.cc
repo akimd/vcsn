@@ -524,6 +524,25 @@ namespace vcsn
       }
     }
 
+    static void add_polynomial_cluster(set_algo& algos,
+                                      const std::string& algo,
+                                      const signature& sig)
+    {
+      // polynomial: mult
+      {
+        static const set_str cluster
+          = { "right_mult_polynomial",
+            "left_mult_polynomial"};
+        if (has(cluster, algo))
+        {
+          auto other = algo == "right_mult_polynomial"
+                     ? "left_mult_polynomial" : "right_mult_polynomial";
+          algos.emplace(other, signature{sig[1], sig[0]});
+          return;
+        }
+      }
+    }
+
     static void add_other_cluster(set_algo& algos,
                                   const std::string& algo,
                                   const signature& sig)
@@ -567,10 +586,12 @@ namespace vcsn
       translation translate;
       set_algo algos{{algo, sig}};
 
-      if (sig.to_string().find("automaton") != std::string::npos)
-        add_automaton_cluster(algos, algo, sig);
+      if (sig.to_string().find("polynomial") != std::string::npos)
+        add_polynomial_cluster(algos, algo, sig);
       else if (sig.to_string().find("expression") != std::string::npos)
         add_expression_cluster(algos, algo, sig);
+      else if (sig.to_string().find("automaton") != std::string::npos)
+        add_automaton_cluster(algos, algo, sig);
       else
         add_other_cluster(algos, algo, sig);
 
