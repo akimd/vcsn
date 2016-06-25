@@ -438,6 +438,19 @@ namespace vcsn
           return;
         }
       }
+      {
+        static const set_str cluster
+          = { "factor",
+            "prefix",
+            "subword",
+            "suffix"};
+        if (has(cluster, algo))
+        {
+          for (const auto& a: cluster)
+            algos.emplace(a, sig);
+          return;
+        }
+      }
     }
 
     static void add_expression_cluster(set_algo& algos,
