@@ -562,6 +562,20 @@ namespace vcsn
           return;
         }
       }
+      // project_label
+      {
+        if (algo == "project_label")
+        {
+          std::string str = sig[1].get();
+          if (boost::lexical_cast<unsigned>(&str[str.length() - 2]) <= 1)
+          {
+            str = str.substr(0, str.length() - 2);
+            algos.emplace(algo, signature{sig[0],symbol(str + "0>")});
+            algos.emplace(algo, signature{sig[0], symbol(str + "1>")});
+          }
+          return;
+        }
+      }
       // num_tapes
       {
         static const set_str cluster
