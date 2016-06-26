@@ -778,5 +778,6 @@ bench('a.weight_series()',
       number=10)
 
 if nfail:
-    print("vcsn-score: error: there were {} failures".format(nfail))
+    print("vcsn-score: error: there were {} failures".format(nfail),
+          file=sys.stderr)
     exit(1)
