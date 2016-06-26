@@ -472,8 +472,16 @@ if args.lines:
 args.file = files
 read_files(args.file)
 
-# The keys we are interested in.
-keys = [k for k in sorted(bench.keys()) if args.only.search(k)]
+def s(k):
+    res = re.sub(r'(compose|conjunction|&)2(.*)',
+                 r'\1\g<2>2', k)
+    res = '{:20s} # {}'.format(*[str.strip(x) for x in res.split('#', 2)])
+    print(k, '\n', res)
+    return res
 
+
+# The keys we are interested in.
+keys = [k for k in sorted(bench.keys(), key=s) if args.only.search(k)]
+print(keys)
 # Print the score table.
 text(keys)
