@@ -9,7 +9,7 @@ the internal API may also be documented.
 ### proper: more consistent signatures
 The Python binding of `automaton.proper` was different from the static and
 dyn:: versions for no sound reason: instead of a `direction` argument taking
-`backward` or `foreward`, it had a `backward` argument taking an Boolean,
+`backward` or `forward`, it had a `backward` argument taking an Boolean,
 and the `prune` and `direction` (well, `backward`) arguments were swapped.
 
 The signature in Python is now consistent:
@@ -18,8 +18,8 @@ The signature in Python is now consistent:
 ## 2016-06-16
 ### renamings
 The following operations have been renamed, in all APIs (vcsn::, dyn::,
-Python, and TAF-Kit), and on all applicable types (automaton, expansions,
-expressions, polynomials, weights).
+Python, and TAF-Kit), and on all applicable types (automaton, expansion,
+expression, polynomial, weight).
 
     infiltration -> infiltrate
     ldiv         -> ldivide
@@ -29,9 +29,8 @@ expressions, polynomials, weights).
     sum          -> add
 
 ## 2016-06-07
-### random_automaton: new name for random algorithm
-Random generation of automaton is now named random_automaton
-as it is exaclty what it does.
+### random_automaton: new name for `random`
+Random generation of automata is now named `random_automaton`.
 
 ## 2016-05-27
 ### polynomials: more basic operations
@@ -109,10 +108,10 @@ One may now generate random expressions.
     In [2]: def rand(spec):
                 return vcsn.context('lal(abc), b').random_expression(spec)
 
-    In [3]: rand('+=1, .=1, length=10')
+    In [3]: rand('+, ., length=10')
     Out[3]: c(b+c+ca)c
 
-    In [4]: rand('+=1, .=1, length=10')
+    In [4]: rand('+, ., length=10')
     Out[4]: c+abcac
 
     In [5]: rand('+=1, .=1, *=.2, length=10')
@@ -365,7 +364,7 @@ and polynomials.
 ## 2015-12-23
 ### has-lightening-cycle: new name for `has-negative-cyle`
 In static, dyn:: and Python, `has-negative-cycle` is renamed
-'has-lightening-cycle'. It makes more sense as we consider `(<1/2>a)*` to be a
+`has-lightening-cycle`. It makes more sense as we consider `(<1/2>a)*` to be a
 lightening cycle.
 
 ## 2015-12-21
@@ -456,23 +455,23 @@ the common labels and multiply their weights.
 One may now use UTF-8 when entering expressions.  The negation may also be
 denoted by a prefix `!`, which binds weakly (less than concatenation).
 
-+----------+---------------------+
-|Sugar     |Plain ASCII          |
-+==========+=====================+
-|`∅`       |`\z`                 |
-+----------+---------------------+
-|`ε`       |`\e`                 |
-+----------+---------------------+
-|`⟨2⟩a`    |`<2>a`               |
-+----------+---------------------+
-|`a∗`      |`a*`                 |
-+----------+---------------------+
-|`!a`      |`a{c}`               |
-|`¬a`      |                     |
-|`aᶜ`      |                     |
-+----------+---------------------+
-|`aᵗ`      |`a{T}`               |
-+----------+---------------------+
+    +----------+---------------------+
+    |Sugar     |Plain ASCII          |
+    +==========+=====================+
+    |`∅`       |`\z`                 |
+    +----------+---------------------+
+    |`ε`       |`\e`                 |
+    +----------+---------------------+
+    |`⟨2⟩a`    |`<2>a`               |
+    +----------+---------------------+
+    |`a∗`      |`a*`                 |
+    +----------+---------------------+
+    |`!a`      |`a{c}`               |
+    |`¬a`      |                     |
+    |`aᶜ`      |                     |
+    +----------+---------------------+
+    |`aᵗ`      |`a{T}`               |
+    +----------+---------------------+
 
 ## 2015-12-04
 ### weight_series: fix general case
@@ -760,20 +759,20 @@ most people would understand as "power".
 So, to enforce consistency, and to avoid bad surprises, these functions were
 renamed.
 
-+----------+---------------------+------------------------------------+
-|Python    |dyn::                |Comment                             |
-+==========+=====================+====================================+
-|`a * b`   |`multiply(a, b)`     |Multiplication for automata and     |
-|          |                     |expressions (concatenation),        |
-|          |                     |polynomials, weights, labels etc.   |
-+----------+---------------------+------------------------------------+
-|`a ** n`  |`multiply(a, n)`     |Repeated multiplication.            |
-+----------+---------------------+------------------------------------+
-|`a & b`   |`conjunction(a, b)`  |Conjunction for automata and        |
-|          |                     |expressions.                        |
-+----------+---------------------+------------------------------------+
-|`a & n`   |`conjunction(a, n)`  |Repeated conjunction.               |
-+----------+---------------------+------------------------------------+
+    +----------+---------------------+------------------------------------+
+    |Python    |dyn::                |Comment                             |
+    +==========+=====================+====================================+
+    |`a * b`   |`multiply(a, b)`     |Multiplication for automata and     |
+    |          |                     |expressions (concatenation),        |
+    |          |                     |polynomials, weights, labels etc.   |
+    +----------+---------------------+------------------------------------+
+    |`a ** n`  |`multiply(a, n)`     |Repeated multiplication.            |
+    +----------+---------------------+------------------------------------+
+    |`a & b`   |`conjunction(a, b)`  |Conjunction for automata and        |
+    |          |                     |expressions.                        |
+    +----------+---------------------+------------------------------------+
+    |`a & n`   |`conjunction(a, n)`  |Repeated conjunction.               |
+    +----------+---------------------+------------------------------------+
 
 ## 2015-06-11
 ### eliminate_state: fixes
@@ -894,7 +893,7 @@ alphabetical order, and are more than two thirds of the whole alphabet
 
 ## 2015-05-21
 ### multiply: new name for 'concatenate'
-In static, dyn:: and Python, 'concatenate' is renamed 'multiply'.
+In static, dyn:: and Python, `concatenate` is renamed `multiply`.
 
 The "concatenation" of automata or rational expressions would never be
 called the concatenation in the case of series or polynomials etc.  If we
@@ -2130,17 +2129,17 @@ of two rational expressions.  Also bound as the "*" operator in Python.
 ### Python API: Operators overloading on automata
 The Python API now overloads the following operators for automata:
 
-- "+", sum of two automata
-- "&", product of two automata
-- "~", complement of an automaton
-- "*", concatenation of two automata
-- "%", difference between two automata
-- "|", union of two automata
-- "**", power of an automaton
+- `+`, sum of two automata
+- `&`, product of two automata
+- `~`, complement of an automaton
+- `*`, concatenation of two automata
+- `%`, difference between two automata
+- `|`, union of two automata
+- `**`, power of an automaton
 
 ## 2014-01-24
 ### ratexp sum: new algorithm (static, dyn, Python)
-Compute the sum of two rational expressions.  Also bound as the "+" operator
+Compute the sum of two rational expressions.  Also bound as the `+` operator
 in Python.
 
     >>> ctx = vcsn.context('lal_char(abc)_b')
@@ -2180,20 +2179,22 @@ Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
 "vaucanson".
 
 ### Letter classes
-Letter classes are available in ratexps: '[a-d0-9_]' is expanded into
-(a+b+c+d+0+1+2+3+4+5+6+7+8+9+_).  The negation ([^...]) is not supported.
+Letter classes are available in ratexps: `[a-d0-9_]` is expanded into
+`(a+b+c+d+0+1+2+3+4+5+6+7+8+9+_)`.  The negation, `[^...]`, is not supported.
 
 ## 2014-01-02
 ### The '.' operator is no longer printed
 The pretty-printing of (non-LAW) ratexps is simplified.
 
 Before:
+
     $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
     \e+a.(b+a.a+c.(a+c)*.b)*.(a+c.(a+c)*)
     $ vcsn derived-term -Ee 'a:b:c' | vcsn aut-to-exp
     (a.b+b.a).c+(a.c+c.a).b+(b.c+c.b).a
 
 After:
+
     $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
     \e+a(b+aa+c(a+c)*b)*(a+c(a+c)*)
     $ vcsn derived-term -Ee 'a:b:c' | vcsn aut-to-exp
@@ -2204,10 +2205,12 @@ This changes the pretty-printing of polynomials of ratexps, for instance the
 result of derivations.
 
 Before:
+
     $ vcsn derivation -e '(a*+b*)a(a*+b*)' aa
     a*+b* + a*.a.(a*+b*) + a*
 
 After:
+
     $ vcsn derivation -e '(a*+b*)a(a*+b*)' aa
     a* + a*+b* + a*a(a*+b*)
 
@@ -2234,18 +2237,18 @@ products of automata with different types of "basic" weightsets (e.g. B, Z,
 Q, R).
 
 It is now also possible when weights are ratexps.  For instance the product
-of automaton with weights in Q and an automaton with weights in RatE yields
-an automaton with weights in Q-RatE.
+of an automaton with weights in Q and an automaton with weights in RatE
+yields an automaton with weights in Q-RatE.
 
-### New ratexp operators: '&' (intersection) and ':' (shuffle)
-The operator '&' denotes the intersection in the case of Boolean weights, or
+### New ratexp operators: `&` (intersection) and `:` (shuffle)
+The operator `&` denotes the intersection in the case of Boolean weights, or
 more generally, the Hadamard product.  Only "derived_term" can compute an
 automaton from it, in which case:
 
     derived_term(E & F) = product(derived_term(E), derived_term(F))
 
-The operator ':' denotes the shuffle product, aka interleave.  For instance
-'a:b:c' denotes the language of the permutations of "abc".  Only
+The operator `:` denotes the shuffle product, aka interleave.  For instance
+`a:b:c` denotes the language of the permutations of "abc".  Only
 "derived_term" can compute an automaton from it, in which case:
 
     derived_term(E : F) = shuffle(derived_term(E), derived_term(F))
@@ -2352,6 +2355,7 @@ Given a deterministic Boolean lal automaton, compute its minimal equivalent
 automaton using Moore's algorithm.
 
 Example:
+
     $ vcsn standard -e '(a+b+c+d){100}' -o 100.gv
     $ vcsn cat -f 100.gv -O info | grep 'number of states'
     number of states: 401
@@ -2450,6 +2454,7 @@ Support for EFSM in input/output is improved to support weights.  Output was
 significantly sped up.
 
 Before:
+
     0.64s: standard -Ee 'a?{500}' -O dot  >a500.gv
     4.47s: standard -Ee 'a?{500}' -O efsm >a500.efsm
     4.04s: standard -Ee 'a?{500}' -O fado >a500.fado
@@ -2457,6 +2462,7 @@ Before:
     1.03s: standard -Ee 'a?{500}' -O tikz >a500.tikz
 
 After:
+
     0.76s: standard -Ee 'a?{500}' -O dot  >a500.gv
     0.37s: standard -Ee 'a?{500}' -O efsm >a500.efsm
     0.35s: standard -Ee 'a?{500}' -O fado >a500.fado
@@ -2474,10 +2480,12 @@ On erebus (MacBook Pro i7 2.9GHz 8GB, GCC 4.8 -O3), with "vcsn standard -E
 -e 'a?70' -o a70.gv":
 
 Before:
+
        13.01s: product -q -f a70.gv a70.gv
         0.23s: shuffle -q -f a70.gv a70.gv
        16.64s: infiltration -q -f a70.gv a70.gv
 After:
+
         0.77s: product -q -f a70.gv a70.gv
         0.19s: shuffle -q -f a70.gv a70.gv
         0.87s: infiltration -q -f a70.gv a70.gv
@@ -2557,12 +2565,14 @@ Print rational expressions with the minimum required number of parentheses,
 making some large expressions considerably easier to read.  For example
 
 Before:
+
     $ vcsn expand -C 'law_char(abc)_z' -e '(a+b)?{2}*'
     (\e+<2>a+<2>b+(aa)+(ab)+(ba)+(bb))*
     $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
     \e+(a.((b+(a.a)+(c.((a+c)*).b))*).(a+(c.((a+c)*))))
 
 After:
+
     $ vcsn expand -C 'law_char(abc)_z' -e '(a+b)?{2}*'
     (\e+<2>a+<2>b+aa+ab+ba+bb)*
     $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
@@ -2709,6 +2719,7 @@ format:
 performance impact on some algorithms.  This is fixed.
 
 Before:
+
     9.08s (0.33s+8.75s): ladybird 21 | determinize -O null
    16.88s (0.85s+16.03s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
    21.30s (9.76s+11.54s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
@@ -2717,6 +2728,7 @@ Before:
    24.20s (24.20s): product -O null -f a70.gv a70.gv
 
 After:
+
     8.54s (0.13s+8.41s): ladybird 21 | determinize -O null
    11.87s (0.86s+11.01s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
    21.03s (9.40s+11.63s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
@@ -3654,6 +3666,7 @@ New dyn algorithm and tool (vcsn-is-proper).
 Determinization algorithm is five times faster.
 
 Before:
+
     $ time bin/vcsn-de-bruijn 18 | bin/vcsn-determinize -Af - -Onull
     real    0m13.049s
     user    0m12.773s
@@ -3664,6 +3677,7 @@ Before:
     sys     0m0.988s
 
 Now:
+
     $ time bin/vcsn-de-bruijn 18 | bin/vcsn-determinize -Af - -Onull
     real     0m2.181s
     user     0m2.048s

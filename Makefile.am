@@ -29,7 +29,7 @@ include share/local.mk
 include tests/local.mk
 include vcsn/local.mk
 
-EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.md   \
+EXTRA_DIST += COPYING.txt NEWS.md TODO.txt README.md    \
   build-aux/bin/coverage build-aux/bin/fuse-switch      \
   build-aux/bin/move-if-change
 
@@ -40,9 +40,9 @@ coverage:
 
 # Documentation.
 PANDOC = pandoc
-README.html: README.txt
-	$(PANDOC) -s --toc --from rst --to html5 -o $@ $<
-NEWS.mw: NEWS.txt
+README.html: README.md
+	$(PANDOC) -s --toc --from markdown --to html5 -o $@ $<
+NEWS.mw: NEWS.md
 	$(PANDOC) -t mediawiki -o $@.t1 $<
 	sed -e 's/= Vcsn news =/{{TOC|limit=2}}/' $@.t1 >$@.tmp
 	mv $@.tmp $@
