@@ -158,6 +158,7 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.trie.ipynb                     \
+  %D%/polynomial.tuple.ipynb                    \
   %D%/weight.multiply.ipynb                     \
   %D%/weight.operators.ipynb
 

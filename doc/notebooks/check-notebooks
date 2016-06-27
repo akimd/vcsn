@@ -38,16 +38,7 @@ if der:
 
 # Check that the notebooks we reference to, exist.
 #
-# Unfortunately, we are not ready for this yet.
-#
-# error: expression.derivation.ipynb references {'polynomial.split.ipynb'} which does not exist
-# error: expression.operators.ipynb references {'expression.tuple.ipynb'} which does not exist
-# error: expression.add.ipynb references {'polynomial.add.ipynb'} which does not exist
-# error: expansion.operators.ipynb references {'expansion.tuple.ipynb', 'expansion.conjunction.ipynb', 'expansion.complement.ipynb', 'expansion.rweight.ipynb', 'expansion.add.ipynb', 'expansion.lweight.ipynb'} which does not exist
-# error: automaton.info.ipynb references {'automaton.format.ipynb'} which does not exist
-# error: weight.operators.ipynb references {'weight.add.ipynb', 'weight.conjunction.ipynb'} which does not exist
-# error: polynomial.operators.ipynb references {'polynomial.add.ipynb', 'polynomial.power.ipynb', 'polynomial.tuple.ipynb'} which does not exist
-
+# We are not ready for this yet, so just warnings, for the time being.
 for nb in existing:
     diff = referenced(nb) - existing
     if diff:
