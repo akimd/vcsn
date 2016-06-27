@@ -35,6 +35,9 @@ class ContextText:
             if not isinstance(self.name, str):
                 ctx = name
                 text = ctx.format('sname')
+            elif not name.isidentifier():
+                raise NameError(
+                        '`{}` is not a valid variable name'.format(name))
             elif self.name in self.ipython.shell.user_ns:
                 ctx = self.ipython.shell.user_ns[self.name]
                 text = ctx.format('sname')
@@ -95,6 +98,9 @@ ip.register_magics(EditContext)
 class AutomatonText:
 
     def __init__(self, ipython, name, format, mode):
+        if not name.isidentifier():
+            raise NameError(
+                    '`{}` is not a valid variable name'.format(name))
         self.ipython = ipython
         self.name = name
         self.format = format
@@ -160,6 +166,9 @@ class EditAutomaton(Magics):
     @line_cell_magic
     def automaton(self, line, cell=None):
         args = parse_argstring(self.automaton, line)
+        if not args.var.isidentifier():
+            raise NameError(
+                    '`{}` is not a valid variable name'.format(args.var))
         if cell is None:
             # Line magic.
             if args.format == 'auto':
@@ -185,7 +194,7 @@ class DemoAutomaton(Magics):
         algorithm    one that is valid for the variable: [eliminate_state,
         automaton]
 
-        Type %demo --help to display this message.
+        Type %demo --help or %demo? to display this message.
 
         Example:
 
@@ -205,7 +214,7 @@ class DemoAutomaton(Magics):
             return
 
         if var not in self.shell.user_ns:
-            raise NameError(var + ' does not exist')
+            raise NameError('`{}` does not exist'.format(var))
 
         var = self.shell.user_ns[var]
 
@@ -213,17 +222,22 @@ class DemoAutomaton(Magics):
             if algo == 'eliminate_state':
                 a = demo.EliminateState(var)
             else:
-                raise NameError(algo +
-                                ' is not a valid algorithm for automaton')
+                raise NameError(
+                    '`{}` is not a valid algorithm for automaton'.format(algo))
         elif isinstance(var, vcsn.expression):
             if algo == 'automaton':
                 a = demo.Automaton(var)
             else:
-                raise NameError(algo +
-                                ' is not a valid algorithm for expression')
+                raise NameError(
+                    '`{}` is not a valid algorithm for expression'.format(algo))
         else:
-            raise TypeError(args[0] + ' is not an automaton or an expression')
+            raise TypeError(
+                '`{}` is not an automaton nor an expression'.format(args[0]))
         a.show()
+
+    # This makes demo.__doc__, DemoAutomaton.__doc__ and self.__doc__
+    # all equals, so that `%demo --help` and `%demo?` both work.
+    demo.__doc__ = __doc__
 
 ip.register_magics(EditAutomaton)
 ip.register_magics(DemoAutomaton)
