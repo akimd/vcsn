@@ -35,9 +35,6 @@ if der:
     print("error: existing, not referenced:", der)
     status = 1
 
-exit(status)
-
-
 
 # Check that the notebooks we reference to, exist.
 #
@@ -51,10 +48,11 @@ exit(status)
 # error: weight.operators.ipynb references {'weight.add.ipynb', 'weight.conjunction.ipynb'} which does not exist
 # error: polynomial.operators.ipynb references {'polynomial.add.ipynb', 'polynomial.power.ipynb', 'polynomial.tuple.ipynb'} which does not exist
 
-print(existing)
 for nb in existing:
     diff = referenced(nb) - existing
     if diff:
-        print("error: {} references {} which does not exist"
+        # Not yet an error.
+        print("warning: {} references {} which does not exist"
               .format(nb, diff))
-        status = 1
+        # status = 1
+exit(status)

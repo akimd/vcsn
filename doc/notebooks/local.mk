@@ -149,6 +149,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.thompson.ipynb                 \
   %D%/expression.transpose.ipynb                \
   %D%/expression.transposition.ipynb            \
+  %D%/expression.tuple.ipynb                    \
   %D%/expression.zpc.ipynb                      \
   %D%/label.multiply.ipynb                      \
   %D%/label.operators.ipynb                     \
