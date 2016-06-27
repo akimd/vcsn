@@ -3,6 +3,9 @@ MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 
 COPY sources.list /etc/apt/sources.list
 
+# pandas is used in some notebooks (e.g., Expressions.ipynb).
+# psutil is used by vcsn ps.
+# regex is used by vcsn demangle.
 RUN apt-get update                                              \
    && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive                 \
      apt-get install -y --force-yes --no-install-recommends     \
@@ -20,6 +23,7 @@ RUN apt-get update                                              \
         python3-colorama                                        \
         python3-dev                                             \
         python3-matplotlib                                      \
+        python3-pandas                                          \
         python3-pip                                             \
         python3-psutil                                          \
         python3-regex                                           \
