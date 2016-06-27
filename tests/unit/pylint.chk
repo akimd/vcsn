@@ -16,7 +16,7 @@ for p in pylint                                                   \
          pylint-$short_python_version pylint$short_python_version \
          pylint3
 do
-    # We require Python >= 3 and Pylint >= 1.5.4
+    # We require Python >= 3 and Pylint >= 1.5.4.
     version=$($p --version 2> /dev/null || true)
     if $(echo "$version" |
          grep -E '^Python [3-9]\.' >/dev/null) &&
@@ -35,11 +35,12 @@ fi
 
 pylintflags=--rcfile=$srcdir/python/pylintrc
 
-# Print version in log
+# Print version in log.
 run 0 ignore -$pylint $pylintflags --version
 
-# Run Pylint on our module
+# Run Pylint on our modules.
 run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn
+run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn_tools
 
 # Get all the Python scripts from libexec/.
 pyscripts=$(grep -l '/usr/bin/env python' $srcdir/libexec/*)

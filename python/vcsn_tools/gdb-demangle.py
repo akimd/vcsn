@@ -2,7 +2,7 @@
 
 import gdb
 import gdb.printing
-from vcsn.demangle import demangle
+from vcsn_tools.demangle import demangle
 
 
 def build_pretty_printer():

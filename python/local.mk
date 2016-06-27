@@ -11,8 +11,7 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-nodist_python_PYTHON = %D%/vcsn_config.py
-DISTCLEANFILES += %D%/vcsn_config.pyc
+EXTRA_DIST += %D%/pylintrc
 
 bindings_gen = build-aux/bin/bindings-gen
 EXTRA_DIST += $(bindings_gen)
@@ -48,11 +47,9 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/conjunction.py                       \
   %D%/vcsn/context.py                           \
   %D%/vcsn/d3Widget.py                          \
-  %D%/vcsn/demangle.py                          \
   %D%/vcsn/dot.py                               \
   %D%/vcsn/expansion.py                         \
   %D%/vcsn/expression.py                        \
-  %D%/vcsn/gdb-demangle.py                      \
   %D%/vcsn/ipython.py                           \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
@@ -60,7 +57,13 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/tools.py                             \
   %D%/vcsn/weight.py
 
-EXTRA_DIST += %D%/pylintrc
+vcsn_tools_pythondir = $(pythondir)/vcsn_tools
+vcsn_tools_python_PYTHON =                      \
+  %D%/vcsn_tools/demangle.py                    \
+  %D%/vcsn_tools/gdb-demangle.py
+
+nodist_vcsn_tools_python_PYTHON =               \
+  %D%/vcsn_tools/config.py
 
 vcsn_python_demodir = $(vcsn_pythondir)/demo
 vcsn_python_demo_PYTHON =                       \

@@ -17,7 +17,7 @@ try:
 except (ImportError, NameError):
     pass
 
-from vcsn_config import config
+from vcsn_tools.config import config # pylint: disable=wrong-import-order
 datadir = config['datadir']
 version = config['version']
 

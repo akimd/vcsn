@@ -13,7 +13,7 @@ except ImportError:
     import os
     has_psutil = False
 
-from vcsn.demangle import pretty_plugin
+from vcsn_tools.demangle import pretty_plugin
 
 
 def user_proc(proc):

@@ -3,7 +3,7 @@
 
 import vcsn
 from test import *
-from vcsn.demangle import demangle, sugar
+from vcsn_tools.demangle import demangle, sugar
 
 try:
     import regex

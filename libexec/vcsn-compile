@@ -7,8 +7,8 @@ import re
 import subprocess
 import sys
 
-from vcsn_config import config
-from vcsn.demangle import demangle, pretty_plugin
+from vcsn_tools.config import config
+from vcsn_tools.demangle import demangle, pretty_plugin
 
 me = sys.argv[0]
 

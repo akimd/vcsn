@@ -2,7 +2,7 @@
 
 import sys
 import argparse
-from vcsn.demangle import demangle
+from vcsn_tools.demangle import demangle
 
 parser = argparse.ArgumentParser(
     description='''Demangle and prettify error output of the compiler''',

@@ -328,6 +328,6 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
-AC_CONFIG_FILES([python/vcsn_config.py:python/vcsn_config.in.py])
+AC_CONFIG_FILES([python/vcsn_tools/config.py:python/vcsn_tools/config.in.py])
 
 AC_OUTPUT
