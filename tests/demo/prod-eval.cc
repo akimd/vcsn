@@ -1,5 +1,4 @@
 // demaille.13.ciaa
-#include <cassert>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -36,7 +35,8 @@ namespace vcsn
 
   /// Static version of the read_automaton function.
   ///
-  /// Read an automaton with a specified context (from the Aut template parameter).
+  /// Read an automaton with a specified context (from the Aut
+  /// template parameter).
   template <Automaton Aut>
   Aut
   read_automaton(const std::string& f)
@@ -76,17 +76,15 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   using namespace vcsn;
   // The automata's exact type.
   using automaton_t = mutable_automaton<Ctx>;
-  // Left automaton, here the binary decoder.
+  // Left and right automata.
   automaton_t l = read_automaton<automaton_t>(lhs);
-  // Right automaton, here the automaton accepting only even numbers.
   automaton_t r = read_automaton<automaton_t>(rhs);
-  // The product automaton, accepting even numbers and outputing them as
-  // decimal numbers. Needs to be stripped if we want to retrieve the same type
-  // of automata as l and r.
+  // The synchronized product.  Stripped to retrieve the same type of
+  // automata as l and r.
   automaton_t prod = conjunction<automaton_t, automaton_t>(l, r)->strip();
   // The word to evaluate in prod.
   word_t_of<Ctx> input = read_word<Ctx>(prod->context(), word);
-  // The result weight from the evaluation corresponding to its decimal value,
+  // The result weight from the evaluation.
   weight_t_of<Ctx> w = eval<automaton_t>(prod, input);
   // Display of the result, we need to use the automaton's weightset to be able
   // to print the weight as the print function cannot be generic in static.
@@ -104,21 +102,17 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
 {
   using namespace vcsn::dyn;
   using vcsn::dyn::label;
-  // We don't need the automata's exact type.
-  // Left automaton, here the binary decoder.
+  // Left and right automata.  A simple type, not parameterized.
   automaton l = read_automaton(lhs);
-  // Right automaton, here the automaton accepting only even numbers.
   automaton r = read_automaton(rhs);
-  // The product automaton, accepting even numbers and outputing them as
-  // decimal numbers.
+  // The synchronized product.
   automaton prod = conjunction(l, r);
   // The word to evaluate in prod.
   label input = read_word(context_of(prod), word);
-  // The result weight from the evaluation corresponding to its decimal value,
+  // The result weight from the evaluation.
   weight w = eval(prod, input);
-  // Display of the result, no need to use the weightset as the dynamic print
-  // is generic, the format is specified though.
-  print(w, std::cout, "text");
+  // Display of the result, no need to use the weightset.
+  std::cout << w;
 }
 
 int
@@ -133,11 +127,11 @@ try
   }
  catch (const std::exception& e)
    {
-     std::cerr << argv[0] << ": " << e.what() << std::endl;
+     std::cerr << argv[0] << ": " << e.what() << '\n';
      exit(EXIT_FAILURE);
    }
  catch (...)
    {
-     std::cerr << argv[0] << ": unknown exception caught" << std::endl;
+     std::cerr << argv[0] << ": unknown exception caught\n";
      exit(EXIT_FAILURE);
    }
