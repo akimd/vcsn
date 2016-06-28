@@ -496,9 +496,16 @@ namespace vcsn
   typename ExpSet::value_t
   to_expression(Aut& a, Profiler& profiler)
   {
-    auto eliminate_states = detail::make_state_eliminator(a, profiler);
-    eliminate_states();
-    return a->get_initial_weight(a->post());
+    try
+      {
+        auto eliminate_states = detail::make_state_eliminator(a, profiler);
+        eliminate_states();
+        return a->get_initial_weight(a->post());
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while making expression");
+      }
   }
 
   enum class to_expression_heuristic_t

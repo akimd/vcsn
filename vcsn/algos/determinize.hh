@@ -272,7 +272,14 @@ namespace vcsn
   auto
   determinize(const Aut& a, auto_tag = {}, bool_constant<Lazy> lazy = {})
   {
-    return determinize(a, detail::determinization_tag<Aut>{}, lazy);
+    try
+      {
+        return determinize(a, detail::determinization_tag<Aut>{}, lazy);
+      }
+    catch(const std::runtime_error& e)
+      {
+        raise(e, "  while determinizing");
+      }
   }
 
 

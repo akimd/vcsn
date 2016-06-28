@@ -17,8 +17,15 @@ namespace vcsn
     -> std::enable_if_t<!is_tropical<weightset_t_of<Aut>>::value,
                         weight_t_of<Aut>>
   {
-    auto aut = proper(to_spontaneous(a));
-    return eval(aut);
+    try
+      {
+        auto aut = proper(to_spontaneous(a));
+        return eval(aut);
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while computing weight series");
+      }
   }
 
   template <Automaton Aut>
@@ -27,8 +34,15 @@ namespace vcsn
     -> std::enable_if_t<is_tropical<weightset_t_of<Aut>>::value,
                         weight_t_of<Aut>>
   {
-    auto res = path_monomial(a, lightest_path(a));
-    return res ? res->second : a->weightset()->zero();
+    try
+      {
+        auto res = path_monomial(a, lightest_path(a));
+        return res ? res->second : a->weightset()->zero();
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while computing weight series");
+      }
   }
 
   namespace dyn

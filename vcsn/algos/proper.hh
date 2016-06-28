@@ -210,7 +210,14 @@ namespace vcsn
                        bool prune = true,
                        const std::string& algo = "auto")
     {
-      return properer<Aut>(aut, prune, algo);
+      try
+        {
+          return properer<Aut>(aut, prune, algo);
+        }
+      catch(const std::runtime_error& e)
+        {
+          raise(e, "  while making proper");
+        }
     }
   }
 
