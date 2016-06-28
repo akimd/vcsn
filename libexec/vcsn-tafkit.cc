@@ -96,26 +96,28 @@
     }                                           \
   }
 
-#define DEFINE_INT_INT_FUNCTION(Name)                 \
-  static int Name(int argc, char* const argv[])       \
-  {                                                   \
-    options opts;                                     \
-    opts.input_format = "text";                       \
-    parse_args(opts, argc, argv);                     \
-                                                      \
-    /* Input. */                                      \
-    using namespace vcsn::dyn;                        \
-    auto ctx = make_context(opts.context);            \
-    assert(2 <= argc);                                \
-    auto k = boost::lexical_cast<unsigned>(argv[0]);  \
-    auto b = boost::lexical_cast<unsigned>(argv[1]);  \
-                                                      \
-    /* Process. */                                    \
-    automaton aut = Name(ctx, k, b);                  \
-                                                      \
-    /* Output. */                                     \
-    opts.print(aut);                                  \
-    return 0;                                         \
+#define DEFINE_INT_INT_FUNCTION(Name)                           \
+  static int Name(int argc, char* const argv[])                 \
+  {                                                             \
+    options opts;                                               \
+    opts.input_format = "text";                                 \
+    parse_args(opts, argc, argv);                               \
+                                                                \
+    /* Input. */                                                \
+    using namespace vcsn::dyn;                                  \
+    auto ctx = make_context(opts.context);                      \
+    vcsn::require(2 <= argc,                                    \
+                  "vcsn " #Name ": too few arguments: ",        \
+                  argc, ", expected 2");                        \
+    auto k = boost::lexical_cast<unsigned>(argv[0]);            \
+    auto b = boost::lexical_cast<unsigned>(argv[1]);            \
+                                                                \
+    /* Process. */                                              \
+    automaton aut = Name(ctx, k, b);                            \
+                                                                \
+    /* Output. */                                               \
+    opts.print(aut);                                            \
+    return 0;                                                   \
   }
 
 #define DEFINE(Function, Signature)             \
@@ -293,7 +295,9 @@ struct derivation: vcsn_function
     // Input.
     using namespace vcsn::dyn;
     expression exp = read_expression(opts);
-    assert(0 < opts.argv.size());
+    vcsn::require(0 < opts.argv.size(),
+                  "vcsn derivation: too few arguments: ",
+                  opts.argv.size(), ", expected 2");
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;
@@ -374,7 +378,9 @@ struct evaluate: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
-    assert(0 < opts.argv.size());
+    vcsn::require(0 < opts.argv.size(),
+                  "vcsn evaluate: too few arguments: ",
+                  opts.argv.size(), ", expected 2");
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;
@@ -396,7 +402,9 @@ struct lweight: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     automaton aut = read_automaton(opts);
-    assert(1 <= opts.argv.size());
+    vcsn::require(1 < opts.argv.size(),
+                  "vcsn lweight: too few arguments: ",
+                  opts.argv.size(), ", expected 2");
 
     // Hack.
     options opts2 = opts;
@@ -438,7 +446,9 @@ struct rweight: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     automaton aut = read_automaton(opts);
-    assert(1 <= opts.argv.size());
+    vcsn::require(1 < opts.argv.size(),
+                  "vcsn rweight: too few arguments: ",
+                  opts.argv.size(), ", expected 2");
 
     // Hack.
     options opts2 = opts;
@@ -469,7 +479,7 @@ struct shortest: vcsn_function
                     ? boost::lexical_cast<unsigned>(opts.argv[0])
                     : 1);
     unsigned len = (1 < opts.argv.size()
-                    ? boost::lexical_cast<unsigned>(opts.argv[0])
+                    ? boost::lexical_cast<unsigned>(opts.argv[1])
                     : -1U);
 
     auto res = vcsn::dyn::shortest(aut, num, len);
@@ -490,7 +500,7 @@ struct shortest: vcsn_function
                     ? boost::lexical_cast<unsigned>(opts.argv[0])
                     : 1);
     unsigned len = (1 < opts.argv.size()
-                    ? boost::lexical_cast<unsigned>(opts.argv[0])
+                    ? boost::lexical_cast<unsigned>(opts.argv[1])
                     : -1U);
 
     auto res = vcsn::dyn::shortest(vcsn::dyn::standard(exp), num, len);
@@ -514,7 +524,9 @@ static int de_bruijn(int argc, char * const argv[])
   // Input.
   using namespace vcsn::dyn;
   auto ctx = vcsn::dyn::make_context(opts.context);
-  assert(1 <= argc);
+  vcsn::require(argc == 1,
+                "vcsn de_bruijn: invalid number of arguments: ",
+                argc, ", expected 1");
   size_t n = boost::lexical_cast<size_t>(argv[0]);
 
   // Process.
@@ -534,7 +546,9 @@ static int double_ring(int argc, char * const argv[])
   // Input.
   using namespace vcsn::dyn;
   auto ctx = vcsn::dyn::make_context(opts.context);
-  assert(1 <= argc);
+  vcsn::require(1 < argc,
+                "vcsn double_ring: too few arguments: ",
+                argc, ", expected at least 1");
   size_t n = boost::lexical_cast<size_t>(argv[0]);
   // final states.
   std::vector<unsigned> f;
@@ -558,7 +572,9 @@ static int ladybird(int argc, char * const argv[])
   // Input.
   using namespace vcsn::dyn;
   auto ctx = vcsn::dyn::make_context(opts.context);
-  assert(1 <= argc);
+  vcsn::require(argc == 1,
+                "vcsn ladybird: invalid number of arguments: ",
+                argc, ", expected 1");
   size_t n = boost::lexical_cast<size_t>(argv[0]);
 
   // Process.
@@ -577,9 +593,10 @@ static int random(int argc, char * const argv[])
   // Input.
   using namespace vcsn::dyn;
   auto ctx = vcsn::dyn::make_context(opts.context);
-  assert(0 < argc);
-  assert(argc <= 4);
-  unsigned num_states  =          boost::lexical_cast<unsigned>(argv[0]);
+  vcsn::require(0 < argc && argc <= 4,
+                "vcsn random: invalid number of arguments: ",
+                argc, ", expected from 1 to 4");
+  unsigned num_states  =            boost::lexical_cast<unsigned>(argv[0]);
   float density        = 1 < argc ? boost::lexical_cast<float>(argv[1])    : .1;
   unsigned num_initial = 2 < argc ? boost::lexical_cast<unsigned>(argv[2]) : 1;
   unsigned num_final   = 3 < argc ? boost::lexical_cast<unsigned>(argv[3]) : 1;
@@ -602,7 +619,9 @@ static int u(int argc, char * const argv[])
   // Input.
   using namespace vcsn::dyn;
   auto ctx = vcsn::dyn::make_context(opts.context);
-  assert(1 <= argc);
+  vcsn::require(argc == 1,
+                "vcsn u: invalid number of arguments: ",
+                argc, ", expected 1");
   auto n = boost::lexical_cast<unsigned>(argv[0]);
 
   // Process.
@@ -689,6 +708,11 @@ try
 }
 catch (const std::exception& e)
 {
-  std::cerr << e.what() << std::endl;
+  std::cerr << argv[0] << ": " << e.what() << '\n';
+  exit(EXIT_FAILURE);
+}
+catch (...)
+{
+  std::cerr << argv[0] << ": unknown exception caught\n";
   exit(EXIT_FAILURE);
 }

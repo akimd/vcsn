@@ -65,7 +65,7 @@ input(const options& opts)
         ? vcsn::path("-")
         : opts.data_library.find_file(opts.input);
       if (getenv("VCSN_DEBUG"))
-        std::cerr << "reading: " << p << std::endl;
+        std::cerr << "reading: " << p << '\n';
       return vcsn::open_input_file(p.string());
     }
   else
@@ -150,14 +150,14 @@ usage(const char* prog, int exit_status)
   if (exit_status == EXIT_SUCCESS)
     std::cout
       << "usage: " << prog << " [OPTIONS...] [ARGS...]\n"
-      "General Options\n"
       "\n"
+      "General Options:\n"
       "  -h          display this help message and exit successfully\n"
       "  -v          display version information and exit successfully\n"
       "\n"
       "Input/Output:\n"
       "  -C CONTEXT    the context to use\n"
-      "                la[lnow]_char_(b|q|r|z|zmin), etc.\n"
+      "                'lal, b', 'law, q', 'lan(abc), zmin', etc.\n"
       "  -A            input is an automaton\n"
       "  -E            input is a rational expression\n"
       "  -P            input is a polynomial\n"
@@ -165,7 +165,8 @@ usage(const char* prog, int exit_status)
       "  -e STRING     input is STRING\n"
       "  -f FILE       input is FILE\n"
       "  -I FORMAT     input format (dot, efsm, fado, text)\n"
-      "  -O FORMAT     output format (dot, efsm, grail, info, list, null, text, tikz)\n"
+      "  -O FORMAT     output format\n"
+      "                (dot, efsm, grail, info, list, null, text, tikz, utf8)\n"
       "  -o FILE       save output into FILE\n"
       "  -q            discard any output\n"
       "\n"
@@ -175,15 +176,15 @@ usage(const char* prog, int exit_status)
       "  fado   A     FAdo's format\n"
       "  grail  A     Grail's format\n"
       "  info   AE    facts about the result (size, etc.)\n"
-      "  latex   E    display as a LaTeX formula\n"
+      "  latex   EPW  display as a LaTeX formula\n"
       "  list     P   display one monomial per line\n"
       "  null   AEPW  no output at all (e.g., for benchmarks)\n"
-      "  text    EPW  usual concrete syntax\n"
+      "  text    EPW  usual concrete syntax in ASCII\n"
       "  tikz   A     LaTeX source for TikZ\n"
+      "  utf8    EPW  usual concrete syntax in UTF-8\n"
       ;
   else
-    std::cerr << "Try `" << prog << " -h' for more information."
-              << std::endl;
+    std::cerr << "Try `" << prog << " -h' for more information.\n";
   exit(exit_status);
 }
 
