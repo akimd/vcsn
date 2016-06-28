@@ -62,6 +62,8 @@ struct options
 
 std::ostream& operator<<(std::ostream& o, const options& opts);
 
+/// The supported commands.
+const char* commands();
 void usage(const char* prog, int exit_status);
 void version(const options& opts);
 

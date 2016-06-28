@@ -162,16 +162,36 @@ read_word(const options& opts)
   return res;
 }
 
+const char* commands()
+{
+  return
+    "  accessible add are-equivalent are-isomorphic cat coaccessible\n"
+    "  complement complete compose constant-term conjunction derivation\n"
+    "  derived-term de-bruijn divkbaseb determinize difference divkbaseb\n"
+    "  double-ring eliminate-state enumerate evaluate expand inductive\n"
+    "  infiltrate is-ambiguous is-complete is-deterministic is-empty\n"
+    "  is-eps-acyclic is-normalized is-proper is-standard is-trim\n"
+    "  is-useless is-valid ladybird lweight lift minimize multiply proper\n"
+    "  quotkbaseb rweight shortest shuffle split standard star\n"
+    "  star-normal-form thompson to-expression transpose trim u union\n"
+    "  universal\n"
+    ;
+}
+
 void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
     std::cout
-      << "usage: " << prog << " [OPTIONS...] [ARGS...]\n"
+      << "usage: " << prog << " COMMAND [OPTIONS...] [ARGS...]\n"
       "\n"
       "General Options:\n"
-      "  -h          display this help message and exit successfully\n"
-      "  -v          display version information and exit successfully\n"
+      "  -h, --help       display this help message and exit successfully\n"
+      "  -v, --version    display version information and exit successfully\n"
+      "  -c, --commands   display the supported commands and exit successfully\n"
+      "\n"
+      "Available COMMANDs:\n"
+      << commands() <<
       "\n"
       "Input/Output:\n"
       "  -C CONTEXT    the context to use\n"
@@ -251,8 +271,10 @@ parse_args(options& opts, int argc, char* const* argv)
   argv += 1;
   if (opts.cmd == "--help" || opts.cmd == "-h")
     opts.cmd = "help";
-  if (opts.cmd == "--version" || opts.cmd == "-v")
+  else if (opts.cmd == "--version" || opts.cmd == "-v")
     opts.cmd = "version";
+  else if (opts.cmd == "--commands" || opts.cmd == "-c")
+    opts.cmd = "commands";
 
   int opt;
   while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:PqvW?")) != -1)

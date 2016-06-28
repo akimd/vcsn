@@ -643,6 +643,7 @@ try
   auto opts = parse_args(argc, argv);
 
   if (opts.cmd == "help")        usage(argv[0], EXIT_SUCCESS);
+  if (opts.cmd == "commands")    { std::cout << commands(); exit(EXIT_SUCCESS); }
   if (opts.cmd == "version")     version(opts);
   if (opts.cmd == "de_bruijn")   return de_bruijn(argc - 1, argv + 1);
   if (opts.cmd == "divkbaseb")   return divkbaseb(argc - 1, argv + 1);
