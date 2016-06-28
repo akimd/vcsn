@@ -27,7 +27,25 @@ std::string xgetenv(const char* var, const char* val)
 
 options::options()
   : data_library(xgetenv("VCSN_DATA_PATH", VCSN_DATADIR), ":")
+  , input_type(type::automaton)
 {}
+
+std::ostream& operator<<(std::ostream& o, const options& opts)
+{
+#define SHOW(F) o << #F ": " << opts.F << '\n'
+  SHOW(program);
+  SHOW(input);
+  SHOW(input_is_file);
+  SHOW(context);
+  SHOW(output);
+  SHOW(cmd);
+  o << "argv:";
+  for (const auto& a: opts.argv)
+    o << ' ' << a;
+  o << '\n';
+#undef SHOW
+  return o;
+}
 
 void options::print(bool a) const
 {
@@ -36,7 +54,7 @@ void options::print(bool a) const
 
 void options::print(vcsn::dyn::automaton a) const
 {
-  *out << a << std::endl;
+  *out << strip(a) << std::endl;
 }
 
 void options::print(vcsn::dyn::expression a) const
@@ -144,7 +162,7 @@ read_word(const options& opts)
   return res;
 }
 
-static void
+void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
@@ -182,13 +200,27 @@ usage(const char* prog, int exit_status)
       "  text    EPW  usual concrete syntax in ASCII\n"
       "  tikz   A     LaTeX source for TikZ\n"
       "  utf8    EPW  usual concrete syntax in UTF-8\n"
+      "\n"
+      "Examples:\n"
+      "  $ vcsn thompson -Ee '[ab]*a[ab]{3}' |\n"
+      "      vcsn proper |\n"
+      "      vcsn determinize |\n"
+      "      vcsn evaluate 'abba'\n"
+      "\n"
+      "  $ vcsn thompson -Ee '[ab]*a[ab]{3}' |\n"
+      "      vcsn proper -f - |\n"
+      "      vcsn determinize -f - |\n"
+      "      vcsn evaluate -f - 'abba'\n"
+      "\n"
+      "  $ vcsn derived-term -C 'lat<lan, lan>, q' -Ee 'a*|b*' |\n"
+      "      vcsn shortest 10\n"
       ;
   else
     std::cerr << "Try `" << prog << " -h' for more information.\n";
   exit(exit_status);
 }
 
-static void
+void
 version(const options& opts)
 {
   std::cout
@@ -208,10 +240,19 @@ version(const options& opts)
 }
 
 void
-parse_args(options& opts, int& argc, char* const*& argv)
+parse_args(options& opts, int argc, char* const* argv)
 {
   if (opts.program.empty())
     opts.program = vcsn::path(argv[0]).filename().string();
+
+  vcsn::require(1 < argc, "no command given");
+  opts.cmd = argv[1];
+  argc -= 1;
+  argv += 1;
+  if (opts.cmd == "--help" || opts.cmd == "-h")
+    opts.cmd = "help";
+  if (opts.cmd == "--version" || opts.cmd == "-v")
+    opts.cmd = "version";
 
   int opt;
   while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:PqvW?")) != -1)
@@ -264,6 +305,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
       }
   argc -= optind;
   argv += optind;
+
   opts.argv.insert(opts.argv.end(), argv, argv + argc);
   // Open the file anyway, as the user specified it.
   opts.out = vcsn::open_output_file(opts.output);
@@ -275,40 +317,11 @@ parse_args(options& opts, int& argc, char* const*& argv)
 }
 
 options
-parse_args(int& argc, char* const*& argv)
+parse_args(int argc, char* const* argv)
 {
   options res;
   parse_args(res, argc, argv);
+  if (getenv("VCSN_DEBUG"))
+    std::cerr << res << '\n';
   return res;
-}
-
-
-int
-vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
-          type t)
-{
-  options opts;
-  opts.input_type = t;
-  try
-    {
-      parse_args(opts, argc, argv);
-      switch (opts.input_type)
-        {
-        case type::automaton:  return fun.work_aut(opts);
-        case type::polynomial: return fun.work_polynomial(opts);
-        case type::expression:     return fun.work_exp(opts);
-        case type::weight:     return fun.work_weight(opts);
-        }
-      abort();
-    }
-  catch (const std::exception& e)
-    {
-      std::cerr << opts.program << ": " << e.what() << std::endl;
-      exit(EXIT_FAILURE);
-    }
-  catch (...)
-    {
-      std::cerr << opts.program << ": unknown exception caught" << std::endl;
-      exit(EXIT_FAILURE);
-    }
 }

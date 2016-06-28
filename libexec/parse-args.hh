@@ -44,6 +44,9 @@ struct options
   /// Output format.
   std::string output_format = "default";
 
+  /// The command.
+  std::string cmd;
+
   /// The remainder of the arguments.
   std::vector<std::string> argv;
 
@@ -57,9 +60,14 @@ struct options
   void print(vcsn::dyn::weight a) const;
 };
 
+std::ostream& operator<<(std::ostream& o, const options& opts);
+
+void usage(const char* prog, int exit_status);
+void version(const options& opts);
+
 /// Read the command line arguments.
-void parse_args(options& opts, int& argc, char* const*& argv);
-options parse_args(int& argc, char* const*& argv);
+void parse_args(options& opts, int argc, char* const* argv);
+options parse_args(int argc, char* const* argv);
 
 /// Read automaton/expression according to \a opts.
 vcsn::dyn::automaton read_automaton(const options& opts);
@@ -92,12 +100,3 @@ struct vcsn_function
     throw std::runtime_error("not implemented for weights");
   }
 };
-
-/// Read the command line argument, and based on them, run \a fun's \a
-/// work_aut, or \a work_exp.
-/// \param argc    argv size
-/// \param argv    command line arguments
-/// \param fun     the visitor to run
-/// \param t       the default input type
-int vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
-              type t = type::automaton);

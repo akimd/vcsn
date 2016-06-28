@@ -640,20 +640,22 @@ static int u(int argc, char * const argv[])
 int main(int argc, char* const argv[])
 try
 {
-  vcsn::require(1 < argc, "no command given");
-  std::string cmd{argv[1]};
-  if (cmd == "divkbaseb") return divkbaseb(argc - 1, argv + 1);
-  if (cmd == "de_bruijn") return de_bruijn(argc - 1, argv + 1);
-  if (cmd == "double_ring") return double_ring(argc - 1, argv + 1);
-  if (cmd == "ladybird") return ladybird(argc - 1, argv + 1);
-  if (cmd == "quotkbaseb") return quotkbaseb(argc - 1, argv + 1);
-  if (cmd == "random") return random(argc - 1, argv + 1);
-  if (cmd == "u") return u(argc - 1, argv + 1);
+  auto opts = parse_args(argc, argv);
+
+  if (opts.cmd == "help")        usage(argv[0], EXIT_SUCCESS);
+  if (opts.cmd == "version")     version(opts);
+  if (opts.cmd == "de_bruijn")   return de_bruijn(argc - 1, argv + 1);
+  if (opts.cmd == "divkbaseb")   return divkbaseb(argc - 1, argv + 1);
+  if (opts.cmd == "double_ring") return double_ring(argc - 1, argv + 1);
+  if (opts.cmd == "ladybird")    return ladybird(argc - 1, argv + 1);
+  if (opts.cmd == "quotkbaseb")  return quotkbaseb(argc - 1, argv + 1);
+  if (opts.cmd == "random")      return random(argc - 1, argv + 1);
+  if (opts.cmd == "u")           return u(argc - 1, argv + 1);
   else
     {
       std::unique_ptr<vcsn_function> f;
 #define ALGO(Name)                                                      \
-      else if (cmd == #Name) f = std::unique_ptr<Name>(new Name{})
+      else if (opts.cmd == #Name) f = std::unique_ptr<Name>(new Name{})
       if (false) {}
       ALGO(accessible);
       ALGO(add);
@@ -701,18 +703,23 @@ try
       ALGO(transpose);
       ALGO(trim);
       ALGO(universal);
-      if (f)
-        return vcsn_main(argc - 1, argv + 1, *f);
+      vcsn::require(f != nullptr, "unknown command: ", opts.cmd);
+      switch (opts.input_type)
+        {
+        case type::automaton:  return f->work_aut(opts);
+        case type::polynomial: return f->work_polynomial(opts);
+        case type::expression: return f->work_exp(opts);
+        case type::weight:     return f->work_weight(opts);
+        }
     }
-  vcsn::raise("unknown command: ", cmd);
 }
 catch (const std::exception& e)
 {
-  std::cerr << argv[0] << ": " << e.what() << '\n';
+  std::cerr << "error: " << e.what() << '\n';
   exit(EXIT_FAILURE);
 }
 catch (...)
 {
-  std::cerr << argv[0] << ": unknown exception caught\n";
+  std::cerr << "error: unknown exception caught\n";
   exit(EXIT_FAILURE);
 }
