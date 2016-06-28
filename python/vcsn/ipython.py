@@ -184,6 +184,119 @@ class EditAutomaton(Magics):
             self.shell.user_ns[args.var] = a
             display(a)
 
+ip.register_magics(EditAutomaton)
+
+
+def makeLabel(label):
+    return widgets.Label(value=label, height='33%', padding='5px 0 0 0')
+
+def makeLatex(obj):
+    return widgets.Label(value=obj._repr_latex_(), width='50%')
+
+class ExpressionText:
+    '''A widgets that allows us to edit an expression and its context, save it
+    under chosen identities, and render an automaton of it using a chosen
+    algorithm.'''
+    # pylint: disable=too-many-instance-attributes,too-many-locals
+    def __init__(self, ipython, name):
+        if not name.isidentifier():
+            raise NameError(
+                    '`{}` is not a valid variable name'.format(name))
+        self.ipython = ipython
+        self.name = name
+        if self.name in self.ipython.shell.user_ns:
+            exp = self.ipython.shell.user_ns[self.name]
+            if not isinstance(exp, vcsn.expression):
+                raise NameError(
+                        '`{}` is defined but is not an expression'.format(name))
+            text = exp.format('utf8')
+            cont = exp.context().format('sname')
+        else:
+            text = None
+            cont = 'lal, b'
+
+        ctx = vcsn.context(cont)
+        exp = ctx.expression(text if text else r'\e')
+        aut = exp.automaton()
+        algos = vcsn.expression.automaton.algos
+        ids = vcsn.expression.identities_list
+
+
+        ctx_lab = makeLabel('Context:')
+        self.ctx = widgets.Text(value=cont)
+        self.ctx_lat = makeLatex(ctx)
+
+        exp_lab = makeLabel('Expression:')
+        self.exp = widgets.Text(value=text)
+        self.exp_lat = makeLatex(exp)
+
+        algo_lab = makeLabel('Algorithm:')
+        self.algo = widgets.Dropdown(options=algos)
+        self.ids = widgets.Dropdown(options=ids, description='Identity: ')
+
+        self.aut = widgets.HTML(value=aut._repr_svg_())
+
+
+        self.ctx.on_trait_change(lambda: self.update())
+        self.exp.on_trait_change(lambda: self.update())
+        self.algo.on_trait_change(lambda: self.update())
+        self.ids.on_trait_change(lambda: self.update())
+
+
+        # Labels
+        labs = widgets.VBox(children=[ctx_lab, exp_lab, algo_lab])
+        # Context editor and latex
+        ctx_box = widgets.HBox(children=[self.ctx, self.ctx_lat])
+        # Expression editor and latex
+        exp_box = widgets.HBox(children=[self.exp, self.exp_lat])
+        # Algorithm and identities dropdowns
+        algs_box = widgets.HBox(children=[self.algo, self.ids])
+
+        # All 3 above
+        interactive = widgets.VBox(children=[ctx_box, exp_box, algs_box])
+        # Append the labels to the interactive bits
+        panel = widgets.HBox(children=[labs, interactive])
+        # Append the automaton/error widget
+        box = widgets.VBox(children=[panel, self.aut])
+
+        display(box)
+
+    def update(self):
+        try:
+            cont = self.ctx.value.encode('utf-8')
+            text = self.exp.value.encode('utf-8')
+            algo = self.algo.value
+            idt = self.ids.value
+            if text == b'':
+                text = r'\e'
+            ctx = vcsn.context(cont)
+            exp = ctx.expression(text, idt)
+            aut = exp.automaton(algo=algo)
+
+            self.ctx_lat.value = ctx._repr_latex_()
+            self.exp_lat.value = exp._repr_latex_()
+
+            self.ipython.shell.user_ns[self.name] = exp
+            self.aut.value = aut._repr_svg_()
+        except RuntimeError as e:
+            self.aut.value = formatError(e)
+
+
+@magics_class
+class EditExpression(Magics):
+
+    @magic_arguments()
+    @argument('var', type=str, help='The name of the variable to edit.')
+    @line_cell_magic
+    def expression(self, line, cell=None):
+        args = parse_argstring(self.expression, line)
+        if not args.var.isidentifier():
+            raise NameError(
+                    '`{}` is not a valid variable name'.format(args.var))
+        if cell is None:
+            ExpressionText(self, args.var)
+
+ip.register_magics(EditExpression)
 
 @magics_class
 class DemoAutomaton(Magics):
@@ -239,7 +352,6 @@ class DemoAutomaton(Magics):
     # all equals, so that `%demo --help` and `%demo?` both work.
     demo.__doc__ = __doc__
 
-ip.register_magics(EditAutomaton)
 ip.register_magics(DemoAutomaton)
 
 

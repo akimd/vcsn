@@ -11,6 +11,13 @@ The shell tools (formerly known as TAF-Kit) such as `vcsn standard`, `vcsn
 determinize`, etc. have finally been documented!  Several issues have been
 fixed too.
 
+## 2016-06-27
+### expression widget
+You can now use `%expression` in the notebook to interactively edit an
+expression and its context while seeing the automaton it builds. You are also
+able to chose the identities you want to use for the expression, and the automaton
+generating algorithm used to render the automaton.
+
 ## 2016-06-20
 ### proper: more consistent signatures
 The Python binding of `automaton.proper` was different from the static and
