@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-06-28
+### Command line executables
+The shell tools (formerly known as TAF-Kit) such as `vcsn standard`, `vcsn
+determinize`, etc. have finally been documented!  Several issues have been
+fixed too.
+
 ## 2016-06-20
 ### proper: more consistent signatures
 The Python binding of `automaton.proper` was different from the static and

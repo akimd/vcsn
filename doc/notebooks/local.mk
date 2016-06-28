@@ -20,6 +20,7 @@ dist_notebooks_DATA =                           \
   %D%/C++-Library.ipynb                         \
   %D%/CIAA-2016.ipynb                           \
   %D%/Contexts.ipynb                            \
+  %D%/Executables.ipynb                         \
   %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
