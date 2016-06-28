@@ -196,9 +196,9 @@ namespace vcsn
       {
         using std::get;
         return static_if<Ranked>
-          ([this](auto r) { return state_name_t{get<I>(auts_)->pre()..., r}; },
-           [this](auto)   { return state_name_t{get<I>(auts_)->pre()...}; })
-          (0);
+          ([this](auto... ss) { return state_name_t{ss..., 0}; },
+           [this](auto... ss) { return state_name_t{ss...}; })
+          (get<I>(auts_)->pre()...);
       }
 
       /// The name of the post of the output automaton.
@@ -212,9 +212,9 @@ namespace vcsn
       {
         using std::get;
         return static_if<Ranked>
-          ([this](auto r) { return state_name_t{get<I>(auts_)->post()..., r}; },
-           [this](auto)   { return state_name_t{get<I>(auts_)->post()...}; })
-          (0);
+          ([this](auto... ss) { return state_name_t{ss..., 0}; },
+           [this](auto... ss) { return state_name_t{ss...}; })
+          (get<I>(auts_)->post()...);
       }
 
       /// The state in the product corresponding to a pair of states
