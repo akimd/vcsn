@@ -675,15 +675,15 @@ namespace vcsn
     std::ostream&
     print(const origins_t& orig, std::ostream& o)
     {
-      o << "/* Origins." << std::endl
-        << "    node [shape = box, style = rounded]" << std::endl;
+      o << "/* Origins.\n"
+        << "    node [shape = box, style = rounded]\n";
       for (const auto& p : orig)
         if (2 <= p.first)
           {
             o << "    " << p.first - 2
-              << " [label = \"" << p.second << "\"]" << std::endl;
+              << " [label = \"" << p.second << "\"]\n";
           }
-      o << "*/" << std::endl;
+      o << "*/\n";
       return o;
     }
 

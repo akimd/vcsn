@@ -163,7 +163,7 @@ namespace vcsn
           {
             std::cerr << ") => ";
             show_heap_();
-            std::cerr << std::endl;
+            std::cerr << '\n';
           }
       }
 
@@ -294,7 +294,7 @@ namespace vcsn
               {
                 std::cerr << "Before: ";
                 show_heap_();
-                std::cerr << std::endl;
+                std::cerr << '\n';
               }
             auto p = todo_.top();
             todo_.pop();
@@ -327,22 +327,22 @@ namespace vcsn
             if (1 < debug_)
               std::cerr << " #tr: "
                         << num_spontaneous_transitions_()
-                        << "/" << aut_->num_transitions() << std::endl;
+                        << "/" << aut_->num_transitions() << '\n';
             if (2 < debug_)
               {
                 std::cerr << "After:  ";
                 show_heap_();
-                std::cerr << std::endl;
+                std::cerr << '\n';
               }
             if (4 < debug_)
-              dot(aut_, std::cerr) << std::endl;
+              dot(aut_, std::cerr) << '\n';
             if (2 < debug_)
-              std::cerr << std::endl;
+              std::cerr << '\n';
           }
 #ifdef STATS
         if (0 < debug_)
           std::cerr << "Total transitions -" << removed_
-                    << "+" << added_ << std::endl;
+                    << "+" << added_ << '\n';
 #endif
       }
 

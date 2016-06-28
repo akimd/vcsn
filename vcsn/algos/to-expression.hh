@@ -268,7 +268,7 @@ namespace vcsn
             todo_.pop();
 
 #ifdef DEBUG_LOOP
-            std::cerr << "Remove: " << p << std::endl;
+            std::cerr << "Remove: " << p << '\n';
 #endif
             eliminate_state_(p.state_);
           }
@@ -291,7 +291,7 @@ namespace vcsn
 #ifdef DEBUG_UPDATE
         std::cerr << ") => ";
         show_heap_();
-        std::cerr << std::endl;
+        std::cerr << '\n';
 #endif
       }
 

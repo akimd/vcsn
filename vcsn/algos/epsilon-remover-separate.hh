@@ -167,7 +167,7 @@ namespace vcsn
           {
             std::cerr << ") => ";
             show_heap_();
-            std::cerr << std::endl;
+            std::cerr << '\n';
           }
       }
 
@@ -327,8 +327,8 @@ namespace vcsn
       {
         if (4 < debug_)
           {
-            dot(aut_proper_, std::cerr) << std::endl;
-            dot(aut_dirty_, std::cerr) << std::endl;
+            dot(aut_proper_, std::cerr) << '\n';
+            dot(aut_dirty_, std::cerr) << '\n';
           }
         build_heap_();
         /* For each state (s), for each incoming epsilon-transitions
@@ -345,7 +345,7 @@ namespace vcsn
               {
                 std::cerr << "Before: ";
                 show_heap_();
-                std::cerr << std::endl;
+                std::cerr << '\n';
               }
             auto p = todo_.top();
             todo_.pop();
@@ -388,25 +388,25 @@ namespace vcsn
                         << transitions(aut_dirty_).size()
                         << "/" << (transitions(aut_dirty_).size()
                                    + transitions(aut_proper_).size())
-                        << std::endl;
+                        << '\n';
             if (2 < debug_)
               {
                 std::cerr << "After:  ";
                 show_heap_();
-                std::cerr << std::endl;
+                std::cerr << '\n';
               }
             if (4 < debug_)
               {
-                dot(aut_proper_, std::cerr) << std::endl;
-                dot(aut_dirty_, std::cerr) << std::endl;
+                dot(aut_proper_, std::cerr) << '\n';
+                dot(aut_dirty_, std::cerr) << '\n';
               }
             if (2 < debug_)
-              std::cerr << std::endl;
+              std::cerr << '\n';
           }
 #ifdef STATS
         if (0 < debug_)
           std::cerr << "Total transitions -" << removed_
-                    << "+" << added_ << std::endl;
+                    << "+" << added_ << '\n';
 #endif
 
         return aut_proper_;

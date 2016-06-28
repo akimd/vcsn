@@ -135,7 +135,7 @@ namespace vcsn
             std::cout << sep << *i;
             sep = ", ";
           }
-        std::cout << std::endl;
+        std::cout << '\n';
       }
 
     public:
