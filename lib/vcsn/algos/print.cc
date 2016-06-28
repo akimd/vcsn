@@ -174,49 +174,46 @@ namespace vcsn
     }
 
 
-    namespace detail
+    std::ostream&
+    operator<<(std::ostream& o, const automaton& a)
     {
-      std::ostream&
-      operator<<(std::ostream& o, const automaton& a)
-      {
-        return print(a, o, get_format(o));
-      }
+      return print(a, o, get_format(o));
+    }
 
-      std::ostream&
-      operator<<(std::ostream& o, const context& c)
-      {
-        return print(c, o, get_format(o));
-      }
+    std::ostream&
+    operator<<(std::ostream& o, const context& c)
+    {
+      return print(c, o, get_format(o));
+    }
 
-      std::ostream&
-      operator<<(std::ostream& o, const expansion& e)
-      {
-        return print(e, o, get_format(o));
-      }
+    std::ostream&
+    operator<<(std::ostream& o, const expansion& e)
+    {
+      return print(e, o, get_format(o));
+    }
 
-      std::ostream&
-      operator<<(std::ostream& o, const expression& r)
-      {
-        return print(r, o, get_format(o));
-      }
+    std::ostream&
+    operator<<(std::ostream& o, const expression& r)
+    {
+      return print(r, o, get_format(o));
+    }
 
-      std::ostream&
-      operator<<(std::ostream& o, const label& l)
-      {
-        return print(l, o, get_format(o));
-      }
+    std::ostream&
+    operator<<(std::ostream& o, const label& l)
+    {
+      return print(l, o, get_format(o));
+    }
 
-      std::ostream&
-      operator<<(std::ostream& o, const polynomial& p)
-      {
-        return print(p, o, get_format(o));
-      }
+    std::ostream&
+    operator<<(std::ostream& o, const polynomial& p)
+    {
+      return print(p, o, get_format(o));
+    }
 
-      std::ostream&
-      operator<<(std::ostream& o, const weight& w)
-      {
-        return print(w, o, get_format(o));
-      }
+    std::ostream&
+    operator<<(std::ostream& o, const weight& w)
+    {
+      return print(w, o, get_format(o));
     }
   }
 }

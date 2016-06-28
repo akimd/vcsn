@@ -1054,28 +1054,25 @@ namespace vcsn
     ///               It can be "regular"/"auto" or the variant "compact".
     automaton zpc(const expression& exp, const std::string& algo = "auto");
 
-    namespace detail
-    {
-      /// Output automaton \a a on \a o.
-      std::ostream& operator<<(std::ostream& o, const automaton& a);
+    /// Output automaton \a a on \a o.
+    std::ostream& operator<<(std::ostream& o, const automaton& a);
 
-      /// Output context \a c on \a o.
-      std::ostream& operator<<(std::ostream& o, const context& c);
+    /// Output context \a c on \a o.
+    std::ostream& operator<<(std::ostream& o, const context& c);
 
-      /// Output expansion \a e on \a o.
-      std::ostream& operator<<(std::ostream& o, const expansion& e);
+    /// Output expansion \a e on \a o.
+    std::ostream& operator<<(std::ostream& o, const expansion& e);
 
-      /// Output expression \a r on \a o.
-      std::ostream& operator<<(std::ostream& o, const expression& r);
+    /// Output expression \a r on \a o.
+    std::ostream& operator<<(std::ostream& o, const expression& r);
 
-      /// Output label \a l on \a o.
-      std::ostream& operator<<(std::ostream& o, const label& l);
+    /// Output label \a l on \a o.
+    std::ostream& operator<<(std::ostream& o, const label& l);
 
-      /// Output polynomial \a p on \a o.
-      std::ostream& operator<<(std::ostream& o, const polynomial& p);
+    /// Output polynomial \a p on \a o.
+    std::ostream& operator<<(std::ostream& o, const polynomial& p);
 
-      /// Output weight \a w on \a o.
-      std::ostream& operator<<(std::ostream& o, const weight& w);
-    }
+    /// Output weight \a w on \a o.
+    std::ostream& operator<<(std::ostream& o, const weight& w);
   }
 }

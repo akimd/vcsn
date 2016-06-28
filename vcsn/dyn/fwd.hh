@@ -5,19 +5,10 @@ namespace vcsn
   namespace dyn
   {
     // vcsn/dyn/automaton.hh.
-    namespace detail
-    {
-      class automaton;
-    }
-    using automaton = detail::automaton;
+    class automaton;
 
     // vcsn/dyn/context.hh.
-    namespace detail
-    {
-      class context;
-    }
-    /// A dyn::context.
-    using context = detail::context;
+    class context;
 
     // vcsn/dyn/value.hh.
     namespace detail
@@ -27,13 +18,13 @@ namespace vcsn
       struct label_tag;
       struct polynomial_tag;
       struct weight_tag;
-      template <typename tag>
-      class value;
     }
-    using expansion = detail::value<detail::expansion_tag>;
-    using expression = detail::value<detail::expression_tag>;
-    using label = detail::value<detail::label_tag>;
-    using polynomial = detail::value<detail::polynomial_tag>;
-    using weight = detail::value<detail::weight_tag>;
+    template <typename tag>
+    class value_impl;
+    using expansion = value_impl<detail::expansion_tag>;
+    using expression = value_impl<detail::expression_tag>;
+    using label = value_impl<detail::label_tag>;
+    using polynomial = value_impl<detail::polynomial_tag>;
+    using weight = value_impl<detail::weight_tag>;
   }
 }
