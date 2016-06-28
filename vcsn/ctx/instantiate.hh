@@ -132,7 +132,8 @@ namespace vcsn
   `----------------------------------*/
 
 #define REGISTER(Algo, ...)                                     \
-  Algo ## _register(ssignature<__VA_ARGS__>(), Algo<__VA_ARGS__>)
+  dyn::detail::Algo ## _register(ssignature<__VA_ARGS__>(),     \
+                                 dyn::detail::Algo<__VA_ARGS__>)
 
   namespace ctx
   {
@@ -145,7 +146,6 @@ namespace vcsn
       register_automaton_functions()
       {
         using aut_t = Aut;
-        using namespace dyn::detail;
         REGISTER(copy, aut_t);
         REGISTER(print, aut_t, std::ostream, const std::string);
         REGISTER(info, aut_t, std::ostream, bool);
@@ -158,7 +158,6 @@ namespace vcsn
       bool
       register_expression_functions()
       {
-        using namespace dyn::detail;
         using rs_t = ExpressionSet;
         using ctx_t = context_t_of<rs_t>;
         using ws_t = weightset_t_of<ctx_t>;
@@ -222,7 +221,6 @@ namespace vcsn
         using b_ctx_t = context<labelset_t_of<Ctx>, b>;
         using b_rs_t = expressionset<b_ctx_t>;
 
-        using namespace dyn::detail;
         REGISTER(cerny, ctx_t, unsigned);
         REGISTER(complete, aut_t);
         REGISTER(conjunction, std::tuple<aut_t, aut_t>, bool);
@@ -267,8 +265,6 @@ namespace vcsn
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
 
-        using namespace dyn::detail;
-
         REGISTER(eliminate_state, aut_t, int);
 
         return true;
@@ -279,8 +275,6 @@ namespace vcsn
       register_kind_functions(labels_are_nullable)
       {
         using ctx_t = Ctx;
-
-        using namespace dyn::detail;
 
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
@@ -331,8 +325,6 @@ namespace vcsn
         // expansionset.
         using es_t = rat::expansionset<rs_t>;
 
-
-        using namespace dyn::detail;
 
         register_automaton_functions<aut_t>();
         register_expression_functions<rs_t>();

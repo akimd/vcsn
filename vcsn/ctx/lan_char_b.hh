@@ -52,10 +52,10 @@ namespace vcsn
       register_functions()
       {
         using aut_t = mutable_automaton<Ctx>;
-        using namespace dyn::detail;
 
 # define REGISTER(Algo, ...)                                            \
-        Algo ## _register(ssignature<__VA_ARGS__>(), Algo<__VA_ARGS__>)
+        dyn::detail::Algo ## _register(ssignature<__VA_ARGS__>(),       \
+                                       dyn::detail::Algo<__VA_ARGS__>)
 
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);

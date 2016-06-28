@@ -484,10 +484,6 @@ conjunction:
 here, res _can_ be \z, in which case we build a polynomial (\z -> 1), which
 is forbidden (this should be the empty polynomial).
 
-** REGISTER namespace
-In vcsn/ctx/instantiate.hh, we shouldn't need to say
-"using namespace dyn::detail". Add it in REGISTER?
-
 * Optimizations
 ** Simplify contexts
 Remove useless stacks of lat, lan, etc.
