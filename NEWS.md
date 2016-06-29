@@ -5,6 +5,83 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+# Vcsn 2.3 (2016-07-??)
+
+About four hundred commits and five months after Vcsn 2.2, we are proud to
+announce the release of Vcsn 2.3, code-named "the tuple release"!
+
+As usual, many bugs were fixed (some quite old yet unnoticed so far!).
+Noteworthy changes include:
+
+- a particular effort was put on the documentation: there are thirty new
+  documentation pages, and thirty-six others were improved.
+
+- full support for a "tuple" operator on all entities: expressions,
+  polynomials, automata, etc.
+
+    In [13]: aut = lambda e: vcsn.context('lan, q').expression(e).automaton()
+
+    In [14]: a = aut('[ab]*') | aut('x')
+
+    In [15]: a.shortest(6)
+    Out[15]: \e|x + a|x + b|x + aa|x + ab|x + ba|x
+
+  It is also available in the rational expressions themselves:
+
+    In [16]: c = vcsn.context('lat<lan, lan>, q'); c
+    Out[16]: {...}? x {...}? -> Q
+
+    In [17]: e = c.expression('[ab]*|x'); e
+    Out[17]: (a+b)*|x
+
+    In [18]: e.shortest(6)
+    Out[18]: \e|x + a|x + b|x + aa|x + ab|x + ba|x
+
+  The derived-term algorithm supports this operator, and generates
+  equivalent multitape automata.
+
+- many error messages were improved, to help users understand their
+  mistakes.  For instance, instead of
+
+    In [2]: vcsn.Q.expression('a**').derivation('a')
+    RuntimeError: q: star: invalid value: 1
+
+  we now display:
+
+    In [2]: vcsn.Q.expression('a**').derivation('a')
+    RuntimeError: Q: value is not starrable: 1
+      while computing derivative of: a**
+                    with respect to: a
+
+- in addition to `%automaton a`, which allows interactive edition of
+  automata, the notebooks now feature two new interactive editors:
+  `%context c` to edit/create context `c`, and `%expression e` for
+  expressions (with an interactive display of the generated automata).
+
+- one may now generate random rational expressions and control the
+  operators and their probabilities.
+
+- a lot of code improvement and consistency enforcement, both in C++ and in
+  Python.
+
+For more details, please, see the news below.
+
+People who worked on this release:
+
+- Akim Demaille
+- Clément Gillard
+- Lucien Boillod
+- Raoul Billion
+- Sébastien Piat
+- Thibaud Michaud
+
+People who have influenced this release:
+
+- Alexandre Duret-Lutz
+- Jacques Sakarovitch
+- Luca Saiu
+- Sylvain Lombardy
+
 ## 2016-06-28
 ### Command line executables
 The shell tools (formerly known as TAF-Kit) such as `vcsn standard`, `vcsn
@@ -87,7 +164,7 @@ It is now also available on automata and on polynomials.
     Out[6]: \e|x + \e|y + <2>a|x + <2>a|y + <4>aa|x + <4>aa|y + <8>aaa|x + <8>aaa|y
 
 ## 2016-05-20
-### quotkbaseb: new alorithm
+### quotkbaseb: new algorithm
 From a context, a divisor k, and a base b, gives a transducer that,
 when given a number in b divisible by k, outputs the quotient of the division
 of that number by k in b.
@@ -151,7 +228,7 @@ labels and polynomials.
 ### expression: a dot output
 Expressions now feature a `"dot"` format to display graphically the structure
 of the expression.  There are actually two flavors: `"dot,logical"` (the
-default) which shows the semantical tree, and `"dot,physical"` which shows
+default) which shows the semantic tree, and `"dot,physical"` which shows
 the DAG that is used to implement the expression (i.e., nodes used multiple
 times are displayed only once).
 
@@ -375,7 +452,7 @@ One may now project not only multitape automata, but also contexts, labels
 and polynomials.
 
 ## 2015-12-23
-### has-lightening-cycle: new name for `has-negative-cyle`
+### has-lightening-cycle: new name for `has-negative-cycle`
 In static, dyn:: and Python, `has-negative-cycle` is renamed
 `has-lightening-cycle`. It makes more sense as we consider `(<1/2>a)*` to be a
 lightening cycle.
@@ -384,7 +461,7 @@ lightening cycle.
 ### Operators on expressions and expansions
 The `dyn::complement` function is now available on expansions, in addition
 to expressions and automata.  It is bound to the prefix `~` operator in
-Python.  The `dyn::tuple` function is available for expresions and
+Python.  The `dyn::tuple` function is available for expressions and
 expansions.  It is bound to `|` in Python.
 
 ## 2015-12-10
@@ -4780,9 +4857,12 @@ LocalWords:  tuple bc ky dfg Luca's tafkit MacPorts Clément Démoulins distro
 LocalWords:  Vagrantfile VirtualBox mkdir wget VM cb Shortlex kE Ek RatE moore
 LocalWords:  tmp darwin inlined texdoc Moore's uv lhs rhs semirings aabb aab
 LocalWords:  abb MacBook subexpressions monomials Antimirov aaaa monomial aaa
-LocalWords:  Automake Makefile versa Boilod Barray Sébastien Piat Yann
+LocalWords:  Automake Makefile versa Boilod Barray Sébastien Piat Yann APIs
 LocalWords:  Copigny levenshtein delgado hopcropft oneset sname disjunction
-LocalWords:  expressionsets involutivity hopcroft
+LocalWords:  expressionsets involutivity hopcroft starrable Gillard Boillod
+LocalWords:  Thibaud Michaud executables ldiv ldivide lweight rdiv rdivide
+LocalWords:  rweight bd quotkbaseb abcac SVG demangle gdb Vcsn's boxart
+LocalWords:  dijkstra
 
 Local Variables:
 coding: utf-8
