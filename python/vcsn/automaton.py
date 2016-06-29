@@ -58,7 +58,7 @@ def _automaton_fst_files(cmd, *aut):
 def _guess_format(data=None, filename=None):
     '''Try to find out what is the format used to encode this automaton.'''
     for line in open(filename) if filename else data.splitlines():
-        if line.startswith('digraph'):
+        if re.match(r'^\s*digraph', line):
             return 'dot'
         elif re.match('context *=', line) \
                 or re.match(r'^\s*(\$|\w+|".*?")\s*->\s*(\$|\w+|".*?")', line):

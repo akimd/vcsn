@@ -153,6 +153,20 @@ xfail(r'''digraph
 }
 ''')
 
+# There are spaces before 'digraph'.
+CHECK_EQ(vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lal_char(abcd), b"
+  0 -> 0 [label="a, b, c, d"]
+}'''),
+vcsn.automaton('''
+\t  digraph
+\t  {
+\t    vcsn_context = "lal_char(abcd), b"
+\t    0 -> 0 [label="a, b, c, d"]
+\t  }
+'''))
+
 # An open context (letters are not specified).
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
