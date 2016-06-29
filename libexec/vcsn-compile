@@ -60,6 +60,11 @@ args.pid = str(os.getpid())
 args.tmp = args.base + '.' + args.pid
 
 
+def log(*msg, level=0):
+    if level <= args.verbose:
+        print(me + ":", *msg, file=sys.stderr)
+
+
 def fmt(s, **kwargs):
     '''Substitute the value in args.'''
     # Can be nicer once we require Python 3.5.
@@ -81,8 +86,7 @@ def notify():
 
 def run(cmd):
     cmd = fmt(cmd)
-    if args.verbose:
-        print(me + ': run:', cmd, file=sys.stderr)
+    log('run:', cmd, level=2)
     try:
         p = subprocess.Popen(cmd, shell=True,
                              stdin=subprocess.DEVNULL,
@@ -90,7 +94,7 @@ def run(cmd):
         out, err = p.communicate()
         retcode = p.wait()
     except OSError as e:
-        print(me + ': execution failed:', e, file=sys.stderr)
+        log('execution failed:', e)
         sys.exit(1)
     if out:
         out = out.decode('utf-8')
@@ -102,10 +106,9 @@ def run(cmd):
         print(err, file=sys.stderr)
     if retcode:
         if retcode < 0:
-            print(me + ':', 'child was terminated by signal',
-                  -retcode, file=sys.stderr)
+            log('child was terminated by signal', -retcode)
         else:
-            print(me + ':',  'child returned', retcode, file=sys.stderr)
+            log('child returned', retcode)
         sys.exit(retcode)
 
 
