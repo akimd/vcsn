@@ -65,7 +65,8 @@ check('zyx', r'(<xyz>\e){T}')
 # ldivide
 e = ctx.expression(r'<x>a{\}<x>a')
 XFAIL(lambda: e.constant_term(),
-      "constant_term: ldivide is not supported")
+      r'''constant_term: operator ldivide not supported: <x>a{\}<x>a
+  while computing constant-term of: <x>a{\}<x>a''')
 
 # tuple.
 #
@@ -81,4 +82,5 @@ check('6', r'(<2>\e)|(<3>\e)', 'derivation')
 # compose
 e = ctx.expression(r'\e|a @ a|\e')
 XFAIL(lambda: e.constant_term(),
-      "constant_term: compose is not supported")
+      r'''operator compose not supported: \e|a@a|\e
+  while computing constant-term of: \e|a@a|\e''')

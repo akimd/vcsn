@@ -24,7 +24,7 @@ def check(re, exp):
               'derived_term: cannot use derivation on non-free labelsets')
     elif re.info('transposition'):
         XFAIL(lambda: re.automaton("derivation"),
-              'derivation: transposition is not supported')
+              'operator transposition not supported')
     else:
         dt = re.automaton("derivation")
         CHECK_ISOMORPHIC(dt, aut)

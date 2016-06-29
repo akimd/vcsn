@@ -70,12 +70,13 @@ namespace vcsn
 
 #define VCSN_RAT_VISIT(Type, Val)                       \
   using Type ## _t = typename super_t::Type ## _t;      \
-  virtual void visit(const Type ## _t& Val) override
+  void visit(const Type ## _t& Val) override
 
 #define VCSN_RAT_UNSUPPORTED(Type)                      \
-  VCSN_RAT_VISIT(Type,)                                 \
+  VCSN_RAT_VISIT(Type, e)                               \
   {                                                     \
-    raise(me(), ": " #Type " is not supported");        \
+    raise(me(), ": operator " #Type " not supported: ", \
+          to_string(rs_, e.shared_from_this()));        \
   }
 
 #include <vcsn/core/rat/visitor.hxx>

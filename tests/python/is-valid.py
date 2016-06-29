@@ -32,8 +32,10 @@ check(True,  '(<6/10>a*.<4/10>b*)*')
 # instead of failing, just add a star...
 e = expr(r'a{\}a')
 XFAIL(lambda: e.is_valid(),
-      'is_valid: ldivide is not supported')
+      r'''is_valid: operator ldivide not supported: a{\}a
+  while computing constant-term of: a{\}a''')
 
 e = vcsn.context('lat<lan, lan>, q').expression(r'a|\e @ \e|a')
 XFAIL(lambda: e.is_valid(),
-      'is_valid: compose is not supported')
+      r'''is_valid: operator compose not supported: a|\e@\e|a
+  while computing constant-term of: a|\e@\e|a''')

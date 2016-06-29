@@ -28,10 +28,10 @@ namespace vcsn
     {
       // Some operators prevent the computation of the constant-term,
       // and raise an exception.  Forward that failure.
-      if (std::strstr(e.what(), "is not supported"))
+      if (std::strstr(e.what(), "not supported:"))
         raise("is_valid", strchr(e.what(), ':'));
       // Make sure this is really the failure we are looking for.
-      if (!std::strstr(e.what(), "star: invalid value"))
+      if (!std::strstr(e.what(), "value is not starrable"))
         std::cerr << "warning: is_valid: unexpected error: "
                   << e.what() << '\n';
       return false;
