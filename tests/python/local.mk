@@ -106,6 +106,11 @@ $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) $(srcdir)/tests/bin/test.py
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                           \
+  %D%/add.dir/a1+b1.gv                                  \
+  %D%/add.dir/a1.gv                                     \
+  %D%/add.dir/ab+bc.gv                                  \
+  %D%/add.dir/b1.gv                                     \
+  %D%/add.dir/join.gv                                   \
   %D%/automaton.dir/a.grail                             \
   %D%/automaton.dir/a.gv                                \
   %D%/automaton.dir/derived-term.tex                    \
@@ -319,6 +324,7 @@ EXTRA_DIST +=                                           \
   %D%/to-expression.dir/a.gv                            \
   %D%/union.dir/abc.gv
 
+%D%/add.log:             $(wildcard $(srcdir)/%D%/add.dir/*)
 %D%/automaton.log:       $(wildcard $(srcdir)/%D%/automaton.dir/*)
 %D%/compose.log:         $(wildcard $(srcdir)/%D%/compose.dir/*)
 %D%/conjugate.log:       $(wildcard $(srcdir)/%D%/conjugate.dir/*)
