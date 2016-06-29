@@ -39,6 +39,11 @@ class expression:
     __ne__ = lambda l, r: l < r or r < l
 
 
+    # Turn automaton into a native Python function
+    # so that we can then give it attributes (PEP 232).
+    def automaton(self, algo='auto'):
+        return self._automaton(algo)
+
     def dot(self, physical=False):
         '''The Graphviz Dot text.
 

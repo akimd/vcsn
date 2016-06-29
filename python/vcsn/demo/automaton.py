@@ -27,8 +27,8 @@ class Automaton(widgets.DOMWidget):
 
     def __init__(self, expression):
         self._expression = expression
-        self._automata = {'derived_term': self._expression.automaton()}
-        algos = ('derived_term', 'standard', 'thompson', 'zpc', 'zpc_compact')
+        self._automata = {'auto': self._expression.automaton()}
+        algos = expression.automaton.algos
         self._algorithm_option = widgets.Dropdown(options=algos)
         self._algorithm_option.on_trait_change(_create_callback(self), 'value')
 

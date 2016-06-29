@@ -26,3 +26,13 @@ B = context('lal_char, b')
 Z = context('lal_char, z')
 Q = context('lal_char, q')
 b = B
+
+# Cause an error to get back algorithms list
+try:
+    B.expression(r'\e').automaton('')
+except RuntimeError as e:
+    expression.automaton.algos = e.args[0].split('expected: ')[1].split()
+try:
+    B.expression(r'\e', '')
+except RuntimeError as e:
+    expression.identities_list = e.args[0].split('expected: ')[1].split()
