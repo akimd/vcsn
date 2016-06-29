@@ -19,7 +19,7 @@ except ImportError:
 def check(input, exp_regex, exp_re=None):
     '''Check that `demangle(input)` is `exp1` when regex is available,
     otherwise `exp2`.'''
-    if exp_re == None:
+    if exp_re is None:
         exp_re = input
     exp = exp_regex if has_regex else exp_re
     CHECK_EQ(exp, demangle(input, color="never"))

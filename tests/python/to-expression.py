@@ -45,7 +45,7 @@ ctx = vcsn.context("lal_char(abc), b")
 # -----------------------------
 # Check that to-expression(standard(RAT)) = EXP-OUT.
 def check_exp(rat, exp = None):
-    if exp == None:
+    if exp is None:
         exp = rat
     check_aut(ctx.expression(rat).standard(), exp)
 
