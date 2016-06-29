@@ -69,11 +69,18 @@ namespace vcsn
       /// Compute the (accessible part of the) tuple.
       void tuple()
       {
-        while (!aut_->todo_.empty())
+        try
           {
-            const auto& p = aut_->todo_.front();
-            add_tuple_transitions(std::get<1>(p), std::get<0>(p));
-            aut_->todo_.pop_front();
+            while (!aut_->todo_.empty())
+              {
+                const auto& p = aut_->todo_.front();
+                add_tuple_transitions(std::get<1>(p), std::get<0>(p));
+                aut_->todo_.pop_front();
+              }
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e, "  while tupling automata");
           }
       }
 

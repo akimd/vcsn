@@ -57,14 +57,22 @@ namespace vcsn
       automaton_t
       operator()(const typename expressionset_t::value_t& v)
       {
-        v->accept(*this);
-        res_->set_initial(initial_);
-        res_->set_final(final_);
+        try
+          {
+            v->accept(*this);
+            res_->set_initial(initial_);
+            res_->set_final(final_);
 
-        for (auto t: all_in(res_, res_->post()))
-          res_->set_weight(t, ws_.mul(res_->weight_of(t), final_weight_));
+            for (auto t: all_in(res_, res_->post()))
+              res_->set_weight(t, ws_.mul(res_->weight_of(t), final_weight_));
 
-        return std::move(res_);
+            return std::move(res_);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e,
+                  "  while computing ZPC automaton of: ", to_string(rs_, v));
+          }
       }
 
     private:

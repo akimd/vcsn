@@ -190,9 +190,18 @@ namespace vcsn
       /// The standard automaton of v.
       automaton_t operator()(const expression_t& v)
       {
-        v->accept(*this);
-        res_->set_initial(initial_);
-        return std::move(res_);
+        try
+          {
+            v->accept(*this);
+            res_->set_initial(initial_);
+            return std::move(res_);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e,
+                  "  while computing standard automaton of: ",
+                  to_string(rs_, v));
+          }
       }
 
     private:
