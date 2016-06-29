@@ -242,15 +242,17 @@ def can_test_equivalence(a):
 
 
 def CHECK_EQUIV(a1, a2):
-    '''Check that `a1` and `a2` are equivalent.  Also works for
-    expressions.'''
+    '''Check that `a1` and `a2` are equivalent.  Works for
+    two automata, or two expressions.'''
     num = 20
     # Cannot compute equivalence on Zmin, approximate with shortest.
     try:
         if can_test_equivalence(a1) and can_test_equivalence(a2):
             res = a1.is_equivalent(a2)
+            via = '(via is_equivalent)'
         else:
             res = a1.proper().shortest(num) == a2.proper().shortest(num)
+            via = '(via shortests)'
     except RuntimeError as e:
         FAIL("cannot check equivalence: " + str(e))
         res = False
@@ -258,7 +260,7 @@ def CHECK_EQUIV(a1, a2):
     if res:
         PASS()
     else:
-        FAIL("not equivalent")
+        FAIL("not equivalent", via)
         rst_file("Left", format(a1))
         rst_file("Right", format(a2))
         try:
