@@ -225,7 +225,7 @@ struct are_isomorphic: vcsn_function
 
 struct cat: vcsn_function
 {
-  virtual int work_aut(const options& opts) const override
+  int work_aut(const options& opts) const override
   {
     using namespace vcsn::dyn;
     // Input.
@@ -235,7 +235,7 @@ struct cat: vcsn_function
     return 0;
   }
 
-  virtual int work_exp(const options& opts) const override
+  int work_exp(const options& opts) const override
   {
     using namespace vcsn::dyn;
     // Input.
@@ -245,7 +245,7 @@ struct cat: vcsn_function
     return 0;
   }
 
-  virtual int work_polynomial(const options& opts) const override
+  int work_polynomial(const options& opts) const override
   {
     using namespace vcsn::dyn;
     // Input.
@@ -255,7 +255,7 @@ struct cat: vcsn_function
     return 0;
   }
 
-  virtual int work_weight(const options& opts) const override
+  int work_weight(const options& opts) const override
   {
     using namespace vcsn::dyn;
     // Input.

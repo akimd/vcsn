@@ -105,46 +105,46 @@ namespace vcsn
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept
     /// \returns   the previous status.
-    virtual bool
+    bool
     open(bool o) override final
     {
       return const_cast<labelset_t&>(*res_->context().labelset()).open(o);
     }
 
     /// Register the existence of state named \a s.
-    virtual void
+    void
     add_state(string_t s) override final
     {
       state_(s);
     }
 
     /// Register that state named \a s is preinitial.
-    virtual void
+    void
     add_pre(string_t s) override final
     {
       res_->state(s, res_->pre());
     }
 
     /// Register that state named \a s is postfinal.
-    virtual void
+    void
     add_post(string_t s) override final
     {
       res_->state(s, res_->post());
     }
 
-    virtual void
+    void
     add_initial(string_t s, string_t weight = string_t{}) override final
     {
       res_->add_initial(state_(s), weight_(weight));
     }
 
-    virtual void
+    void
     add_final(string_t s, string_t weight = string_t{}) override final
     {
       res_->add_final(state_(s), weight_(weight));
     }
 
-    virtual void
+    void
     add_transition(string_t src, string_t dst,
                    string_t label,
                    string_t weight = string_t{}) override final
@@ -159,7 +159,7 @@ namespace vcsn
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
-    virtual void
+    void
     add_entry(string_t src, string_t dst, string_t entry) override final
     {
       auto s = state_(src);
@@ -200,7 +200,7 @@ namespace vcsn
     }
 
     /// Return the built automaton.
-    virtual dyn::automaton
+    dyn::automaton
     result() override final
     {
       const_cast<labelset_t&>(*res_->context().labelset()).open(false);
@@ -208,7 +208,7 @@ namespace vcsn
     }
 
     /// Detach the built automaton.
-    virtual void
+    void
     reset() override final
     {
       res_ = nullptr;

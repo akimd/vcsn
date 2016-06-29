@@ -119,7 +119,7 @@ namespace vcsn
         self_t& visitor_;
       };
 
-      virtual void visit(const tuple_t& v, std::true_type) override
+      void visit(const tuple_t& v, std::true_type) override
       {
         visit_tuple<>{*this}(v);
       }
