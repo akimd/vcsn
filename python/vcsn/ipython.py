@@ -25,6 +25,35 @@ def formatError(error):
     res += '</pre>'
     return res
 
+class TextLatexWidget:
+    '''A class to eliminate redundancy over our widgets.
+    Parameters:
+        name: the name for the label.
+        value: the default value of the text box.
+        toLatex: optional, the function to render the text in LaTeX.
+    '''
+    def __init__(self, name, value, toLatex=None):
+        self.label = widgets.Label(value=name, padding='5px 0 7px 0')
+        self.text = widgets.Text(value=value)
+        self.text.on_trait_change(self.update)
+        self.latex = widgets.Label(width='50%', padding='5px 0 0 0')
+        self.toLatex = toLatex
+        self.update()
+
+    def update(self):
+        if self.toLatex:
+            try:
+                self.latex.value = self.toLatex(self.getvalue())
+            except RuntimeError:
+                self.latex.value = r'Could not generate $\LaTeX$ output.'
+
+    def getvalue(self):
+        return self.text.value.encode('utf-8')
+
+    def tolist(self):
+        return [self.label, self.text, self.latex]
+
+
 class ContextText:
 
     def __init__(self, ipython, name=None):
@@ -47,34 +76,26 @@ class ContextText:
         else:
             # An unnamed context (i.e., used in the d3 widget).
             ctx = vcsn.context('lal_char, b')
-        self.text = widgets.Textarea(description='Context: ', value=text)
-        self.width = '250px'
-        self.height = '25px'
-        self.text.lines = '500'
-        self.text.on_trait_change(lambda: self.update())
-        self.error = widgets.HTML(value=' ')
-        self.latex = widgets.Label(value=ctx._repr_latex_())
-        self.latex.width = '250px'
+
+        toLatex = lambda txt: vcsn.context(txt)._repr_latex_()
+        self.widget = TextLatexWidget('Context:', text, toLatex)
+        self.widget.text.on_trait_change(self.update)
+
+        self.error = widgets.HTML(value='')
 
         # Display the widget if it is not use into the d3 widget.
         if isinstance(self.name, str):
-            wc1 = widgets.VBox()
-            wc1.children = [self.text]
-
-            wc2 = widgets.HBox()
-            wc2.children = [wc1, self.latex]
-            wc3 = widgets.VBox()
-            wc3.children = [wc2, self.error]
-            display(wc3)
+            ctx = widgets.HBox(children=self.widget.tolist())
+            box = widgets.VBox(children=[ctx, self.error])
+            display(box)
 
     def update(self):
         try:
             self.error.value = ''
-            txt = self.text.value.encode('utf-8')
+            txt = self.widget.getvalue()
             c = vcsn.context(txt)
             if isinstance(self.name, str):
                 self.ipython.shell.user_ns[self.name] = c
-            self.latex.value = c._repr_latex_()
         except RuntimeError as e:
             self.error.value = formatError(e)
 
@@ -120,7 +141,7 @@ class AutomatonText:
         self.text = widgets.Textarea(value=text)
         self.height = self.text.value.count('\n')
         self.text.lines = '500'
-        self.text.on_trait_change(lambda: self.update())
+        self.text.on_trait_change(self.update)
         self.error = widgets.HTML(value='')
         self.svg = widgets.HTML(value=aut._repr_svg_())
         if mode == "h":
@@ -187,12 +208,6 @@ class EditAutomaton(Magics):
 ip.register_magics(EditAutomaton)
 
 
-def makeLabel(label):
-    return widgets.Label(value=label, height='33%', padding='5px 0 0 0')
-
-def makeLatex(obj):
-    return widgets.Label(value=obj._repr_latex_(), width='50%')
-
 class ExpressionText:
     '''A widgets that allows us to edit an expression and its context, save it
     under chosen identities, and render an automaton of it using a chosen
@@ -222,33 +237,32 @@ class ExpressionText:
         ids = vcsn.expression.identities_list
 
 
-        ctx_lab = makeLabel('Context:')
-        self.ctx = widgets.Text(value=cont)
-        self.ctx_lat = makeLatex(ctx)
+        ctxToLatex = lambda txt: vcsn.context(txt)._repr_latex_()
+        self.ctx = TextLatexWidget('Context: ', cont, ctxToLatex)
 
-        exp_lab = makeLabel('Expression:')
-        self.exp = widgets.Text(value=text)
-        self.exp_lat = makeLatex(exp)
+        # The expression relies on the context and identities
+        # so it can't generate its latex by itself.
+        self.exp = TextLatexWidget('Expression: ', text)
+        self.exp.latex.value = exp._repr_latex_()
 
-        algo_lab = makeLabel('Algorithm:')
+        algo_lab = widgets.Label(value='Algorithm:', padding='5px 0 0 0')
         self.algo = widgets.Dropdown(options=algos)
         self.ids = widgets.Dropdown(options=ids, description='Identity: ')
 
         self.aut = widgets.HTML(value=aut._repr_svg_())
 
-
-        self.ctx.on_trait_change(lambda: self.update())
-        self.exp.on_trait_change(lambda: self.update())
-        self.algo.on_trait_change(lambda: self.update())
-        self.ids.on_trait_change(lambda: self.update())
+        self.ctx.text.on_trait_change(self.update)
+        self.exp.text.on_trait_change(self.update)
+        self.algo.on_trait_change(self.update)
+        self.ids.on_trait_change(self.update)
 
 
         # Labels
-        labs = widgets.VBox(children=[ctx_lab, exp_lab, algo_lab])
+        labs = widgets.VBox(children=[self.ctx.label, self.exp.label, algo_lab])
         # Context editor and latex
-        ctx_box = widgets.HBox(children=[self.ctx, self.ctx_lat])
+        ctx_box = widgets.HBox(children=[self.ctx.text, self.ctx.latex])
         # Expression editor and latex
-        exp_box = widgets.HBox(children=[self.exp, self.exp_lat])
+        exp_box = widgets.HBox(children=[self.exp.text, self.exp.latex])
         # Algorithm and identities dropdowns
         algs_box = widgets.HBox(children=[self.algo, self.ids])
 
@@ -263,8 +277,8 @@ class ExpressionText:
 
     def update(self):
         try:
-            cont = self.ctx.value.encode('utf-8')
-            text = self.exp.value.encode('utf-8')
+            cont = self.ctx.getvalue()
+            text = self.exp.getvalue()
             algo = self.algo.value
             idt = self.ids.value
             if text == b'':
@@ -273,12 +287,11 @@ class ExpressionText:
             exp = ctx.expression(text, idt)
             aut = exp.automaton(algo=algo)
 
-            self.ctx_lat.value = ctx._repr_latex_()
-            self.exp_lat.value = exp._repr_latex_()
-
-            self.ipython.shell.user_ns[self.name] = exp
+            self.exp.latex.value = exp._repr_latex_()
             self.aut.value = aut._repr_svg_()
+            self.ipython.shell.user_ns[self.name] = exp
         except RuntimeError as e:
+            self.exp.latex.value = ''
             self.aut.value = formatError(e)
 
 
