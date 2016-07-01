@@ -69,8 +69,7 @@ vcsn_python_demodir = $(vcsn_pythondir)/demo
 vcsn_python_demo_PYTHON =                       \
   %D%/vcsn/demo/__init__.py                     \
   %D%/vcsn/demo/automaton.py                    \
-  %D%/vcsn/demo/eliminate_state.py              \
-  %D%/vcsn/demo/utils.py
+  %D%/vcsn/demo/eliminate_state.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
 %C%_vcsn_cxx_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)

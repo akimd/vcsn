@@ -97,17 +97,9 @@ class automaton:
     __str__ = lambda self: self.format('dot')
     __sub__ = automaton.difference
     __truediv__ = automaton.rdivide
-    _repr_svg_ = lambda self: self.as_svg()
+    _repr_svg_ = lambda self: self.SVG()
 
     as_boxart = lambda self: _dot_to_boxart(self.dot())
-
-    def as_svg(self, format="dot", engine="dot"):
-        if format == "dot":
-            return _dot_to_svg(self.dot(), engine)
-        elif format == "dot2tex":
-            return _dot_to_svg_dot2tex(self.format("dot,latex"), engine)
-        else:
-            raise ValueError("invalid format: ", format)
 
     # conjunction.
     _conjunction_orig = automaton.conjunction
@@ -122,12 +114,12 @@ class automaton:
 
     def _convert(self, mode, engine="dot"):
         '''Display automaton `self` in `mode` with Graphviz `engine`.'''
-        from IPython.display import SVG
+        from IPython import display
         if mode in ['dot', 'pretty', 'simple', 'tooltip', 'transitions']:
             svg = _dot_to_svg(self.dot(mode), engine)
-            return SVG(svg)
+            return display.SVG(svg)
         elif mode == 'dot2tex':
-            return SVG(self.as_svg(mode, engine))
+            return display.SVG(self.SVG(mode, engine))
         elif mode == 'info':
             return self.info(detailed=False)
         elif mode == 'info,detailed':
@@ -302,3 +294,11 @@ class automaton:
     shuffle = lambda *auts: automaton._shuffle(list(auts))
 
     state_number = lambda self: self.info('number of states')
+
+    def SVG(self, format="dot", engine="dot"):
+        if format == "dot":
+            return _dot_to_svg(self.dot(), engine)
+        elif format == "dot2tex":
+            return _dot_to_svg_dot2tex(self.format("dot,latex"), engine)
+        else:
+            raise ValueError("invalid format: ", format)

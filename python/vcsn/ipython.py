@@ -16,8 +16,8 @@ from vcsn import d3Widget
 
 import vcsn.demo as demo
 
-# The class MUST call this class decorator at creation time.
 
+ip = get_ipython()
 
 def formatError(error):
     res = '<pre style="color: maroon; background: #FDD; padding: 5px;">'
@@ -112,7 +112,6 @@ class EditContext(Magics):
         if cell is None:
             ContextText(self, args.var)
 
-ip = get_ipython()
 ip.register_magics(EditContext)
 
 
@@ -143,7 +142,7 @@ class AutomatonText:
         self.text.lines = '500'
         self.text.on_trait_change(self.update)
         self.error = widgets.HTML(value='')
-        self.svg = widgets.HTML(value=aut._repr_svg_())
+        self.svg = widgets.HTML(value=aut.SVG())
         if mode == "h":
             wc1 = widgets.Box()
             wc1.children = [self.text]
@@ -249,7 +248,7 @@ class ExpressionText:
         self.algo = widgets.Dropdown(options=algos)
         self.ids = widgets.Dropdown(options=ids, description='Identity: ')
 
-        self.aut = widgets.HTML(value=aut._repr_svg_())
+        self.aut = widgets.HTML(value=aut.SVG())
 
         self.ctx.text.on_trait_change(self.update)
         self.exp.text.on_trait_change(self.update)
@@ -288,7 +287,7 @@ class ExpressionText:
             aut = exp.automaton(algo=algo)
 
             self.exp.latex.value = exp._repr_latex_()
-            self.aut.value = aut._repr_svg_()
+            self.aut.value = aut.SVG()
             self.ipython.shell.user_ns[self.name] = exp
         except RuntimeError as e:
             self.exp.latex.value = ''
@@ -346,20 +345,19 @@ class DemoAutomaton(Magics):
 
         if isinstance(var, vcsn.automaton):
             if algo == 'eliminate_state':
-                a = demo.EliminateState(var)
+                demo.EliminateState(var)
             else:
                 raise NameError(
                     '`{}` is not a valid algorithm for automaton'.format(algo))
         elif isinstance(var, vcsn.expression):
             if algo == 'automaton':
-                a = demo.Automaton(var)
+                demo.Automaton(var)
             else:
                 raise NameError(
                     '`{}` is not a valid algorithm for expression'.format(algo))
         else:
             raise TypeError(
                 '`{}` is not an automaton nor an expression'.format(args[0]))
-        a.show()
 
     # This makes demo.__doc__, DemoAutomaton.__doc__ and self.__doc__
     # all equals, so that `%demo --help` and `%demo?` both work.
@@ -387,7 +385,7 @@ class table(list):
 
     def to_html(self, s):
         try:
-            return s._repr_svg_()
+            return s.SVG()
         except AttributeError:
             pass
         try:
