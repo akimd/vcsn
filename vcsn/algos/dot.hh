@@ -4,10 +4,10 @@
 #include <iostream>
 #include <sstream>
 
-#include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/grail.hh>
 #include <vcsn/algos/accessible.hh> // useful_states
+#include <vcsn/algos/detail/printer.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/iostream.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/unordered_set.hh>
@@ -25,7 +25,7 @@ namespace vcsn
     ///
     /// \tparam Aut an automaton type.
     template <Automaton Aut>
-    class dotter: public printer<Aut>
+    class dot_impl: public printer<Aut>
     {
     private:
       using super_t = printer<Aut>;
@@ -50,7 +50,7 @@ namespace vcsn
       const char* gray = "color = DimGray";
 
     public:
-      dotter(const automaton_t& aut, std::ostream& out, format fmt)
+      dot_impl(const automaton_t& aut, std::ostream& out, format fmt)
         : super_t(aut, out)
         , format_(fmt)
       {
@@ -376,7 +376,8 @@ namespace vcsn
   std::ostream&
   dot(const Aut& aut, std::ostream& out = std::cout, format fmt = {})
   {
-    detail::dotter<Aut> dot{aut, out, fmt};
+    // Cannot use auto here.
+    detail::dot_impl<Aut> dot{aut, out, fmt};
     return dot();
   }
 }
