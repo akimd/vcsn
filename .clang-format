@@ -16,34 +16,34 @@ AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterReturnType: All
 AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: false
+AlwaysBreakTemplateDeclarations: true
 BinPackArguments: true
 BinPackParameters: true
 BraceWrapping:
-  AfterClass:      false
-  AfterControlStatement: false
-  AfterEnum:       false
-  AfterFunction:   false
-  AfterNamespace:  false
-  AfterObjCDeclaration: false
-  AfterStruct:     false
-  AfterUnion:      false
-  BeforeCatch:     false
-  BeforeElse:      false
-  IndentBraces:    false
-BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Allman
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  BeforeCatch:     true
+  BeforeElse:      true
+  IndentBraces:    true
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
 BreakBeforeTernaryOperators: true
-BreakConstructorInitializersBeforeComma: false
+BreakConstructorInitializersBeforeComma: true
 ColumnLimit:     80
 CommentPragmas:  '^ IWYU pragma:'
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 4
+ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 DisableFormat:   false
-ExperimentalAutoDetectBinPacking: false
+ExperimentalAutoDetectBinPacking: true
 ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH ]
 IncludeCategories:
   - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
@@ -58,7 +58,7 @@ IndentWrappedFunctionNames: false
 KeepEmptyLinesAtTheStartOfBlocks: true
 MacroBlockBegin: ''
 MacroBlockEnd:   ''
-MaxEmptyLinesToKeep: 1
+MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 ObjCBlockIndentWidth: 2
 ObjCSpaceAfterProperty: false
