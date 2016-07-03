@@ -5,9 +5,9 @@
 namespace vcsn
 {
 
-  /*----------------------.
+  /*-------------------------.
   | ldivide(value, value).   |
-  `----------------------*/
+  `-------------------------*/
 
   /// Left-division of values.
   template <typename ValueSet>
@@ -80,9 +80,9 @@ namespace vcsn
     }
   }
 
-  /*----------------------.
+  /*-------------------------.
   | rdivide(value, value).   |
-  `----------------------*/
+  `-------------------------*/
 
   /// Right-division of values.
   template <typename ValueSet>

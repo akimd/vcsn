@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>

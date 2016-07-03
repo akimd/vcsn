@@ -3,8 +3,6 @@
 #include <iterator> // std::distance
 #include <stdexcept>
 
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
