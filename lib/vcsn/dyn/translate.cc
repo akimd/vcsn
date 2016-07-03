@@ -329,7 +329,7 @@ namespace vcsn
         void compile(const std::set<std::pair<std::string, signature>>& algos)
         {
           printer_.header("vcsn/misc/attributes.hh"); // ATTRIBUTE_USED
-          printer_.header("vcsn/misc/name.hh"); // ssignature
+          printer_.header("vcsn/dyn/name.hh"); // ssignature
           printer_.header("vcsn/dyn/registries.hh");
           for (const auto& algo: algos)
             printer_.header_algo(algo.first);

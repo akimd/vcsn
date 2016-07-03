@@ -10,7 +10,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/labelset/tupleset.hh>
-#include <vcsn/misc/name.hh> // integral_constant
+#include <vcsn/dyn/name.hh> // integral_constant
 #include <vcsn/misc/tuple.hh> // make_index_range
 
 namespace vcsn

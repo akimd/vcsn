@@ -5,7 +5,7 @@
 #include <vcsn/algos/project.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/labelset/tupleset.hh>
-#include <vcsn/misc/name.hh> // integral_constant
+#include <vcsn/dyn/name.hh> // integral_constant
 
 namespace vcsn
 {

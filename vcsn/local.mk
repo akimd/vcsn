@@ -205,8 +205,9 @@ nobase_include_HEADERS =                        \
   %D%/dyn/cast.hh                               \
   %D%/dyn/context.hh                            \
   %D%/dyn/fwd.hh                                \
-  %D%/dyn/value.hh                              \
+  %D%/dyn/name.hh                               \
   %D%/dyn/types.hh                              \
+  %D%/dyn/value.hh                              \
   %D%/fwd.hh                                    \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
@@ -249,7 +250,6 @@ nobase_include_HEADERS =                        \
   %D%/misc/math.hh                              \
   %D%/misc/memory.hh                            \
   %D%/misc/military-order.hh                    \
-  %D%/misc/name.hh                              \
   %D%/misc/pair.hh                              \
   %D%/misc/path.hh                              \
   %D%/misc/path.hxx                             \

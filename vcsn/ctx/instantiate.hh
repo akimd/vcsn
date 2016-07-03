@@ -62,7 +62,7 @@
 #include <vcsn/weightset/polynomialset.hh>
 
 #include <vcsn/misc/attributes.hh>
-#include <vcsn/misc/name.hh>
+#include <vcsn/dyn/name.hh>
 
 /* The purpose of this file is manyfold:
 

@@ -18,7 +18,6 @@ namespace vcsn
 #include <vcsn/algos/universal.hh>
 #include <vcsn/ctx/instantiate.hh>
 #include <vcsn/misc/attributes.hh>
-#include <vcsn/misc/name.hh>
 
 namespace vcsn
 {

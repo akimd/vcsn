@@ -10,8 +10,6 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/core/rat/identities.hh>
-// FIXME: I don't like that misc depends on dyn.  Actually, it is
-// misc/name.hh which should be elsewhere.
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/direction.hh>

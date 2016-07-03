@@ -4,7 +4,7 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/tupleset.hh>
-#include <vcsn/misc/name.hh> // integral_constant
+#include <vcsn/dyn/name.hh> // integral_constant
 #include <vcsn/dyn/value.hh>
 
 namespace vcsn

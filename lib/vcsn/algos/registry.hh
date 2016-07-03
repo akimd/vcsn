@@ -6,7 +6,7 @@
 #include <boost/range/algorithm/sort.hpp>
 
 #include <lib/vcsn/dyn/translate.hh> // compile
-#include <vcsn/misc/name.hh>
+#include <vcsn/dyn/name.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/unordered_map.hh>

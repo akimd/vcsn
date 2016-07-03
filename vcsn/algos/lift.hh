@@ -11,7 +11,7 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/labelset/oneset.hh>
-#include <vcsn/misc/name.hh>
+#include <vcsn/dyn/name.hh>
 
 namespace vcsn
 {
