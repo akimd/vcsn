@@ -16,7 +16,7 @@ namespace vcsn
 
   /// Whether an automaton is ambiguous.
   ///
-  /// \param[in] aut        the automaton
+  /// \param[in] aut        the automaton.
   /// \param[out] witness   if ambiguous, a pair of "ambiguous" states.
   /// \returns whether ambiguous.
   template <Automaton Aut>
@@ -112,14 +112,6 @@ namespace vcsn
     // Find all strongly connected components.
     const auto& coms = strong_components(aut,
                                          scc_algo_t::tarjan_iterative);
-    if (getenv("VCSN_DEBUG"))
-      {
-        std::cerr << "number states of automaton: " <<
-          aut->num_states() << std::endl;
-        std::cerr << "number components: " <<
-          coms.size() << std::endl;
-      }
-
     // Check each component if it is cycle-ambiguous.
     if (coms.size() == 1)
       return is_cycle_ambiguous_scc(aut);
@@ -133,7 +125,8 @@ namespace vcsn
   }
 
   /// Whether \a aut is cycle-ambiguous.
-  /// Precondition: aut is a strongly connected component.
+  ///
+  /// \pre aut is a strongly connected component.
   template <Automaton Aut>
   bool is_cycle_ambiguous_scc(const Aut& aut)
   {
