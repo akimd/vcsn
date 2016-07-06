@@ -323,10 +323,12 @@ EXTRA_DIST +=                                           \
   %D%/synchronize.dir/z_delay.gv                        \
   %D%/synchronize.dir/z_min.gv                          \
   %D%/synchronize.dir/z_min_delay.gv                    \
-  %D%/tracebacks.dir/non-verbose.out                    \
-  %D%/tracebacks.dir/non-verbose.py                     \
-  %D%/tracebacks.dir/verbose.out                        \
-  %D%/tracebacks.dir/verbose.py                         \
+  %D%/tracebacks.dir/non-verbose.ipy                    \
+  %D%/tracebacks.dir/non-verbose.ipy.out                \
+  %D%/tracebacks.dir/non-verbose.py.out                 \
+  %D%/tracebacks.dir/verbose.ipy                        \
+  %D%/tracebacks.dir/verbose.ipy.out                    \
+  %D%/tracebacks.dir/verbose.py.out                     \
   %D%/to-expression.dir/a.gv                            \
   %D%/union.dir/abc.gv
 

@@ -19,6 +19,7 @@ config = {
     'version': '@PACKAGE_VERSION@',
 
     'python':   env('VCSN_PYTHON',   r'''@PYTHON@'''),
+    'ipython':  env('VCSN_IPYTHON',  r'''@IPYTHON@'''),
 
     'ccache':   env('VCSN_CCACHE',   r'''@CCACHE@'''),
     'cppflags': env('VCSN_CPPFLAGS', r'''@VCSN_CPPFLAGS@'''),

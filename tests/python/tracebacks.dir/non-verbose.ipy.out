@@ -1,0 +1,28 @@
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mRuntimeError[0m                              Traceback (most recent call last)
+[1;32mtracebacks.dir/non-verbose.ipy[0m in [0;36m<module>[1;34m()[0m
+[0;32m      ??[0m         [0mtest2[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0;32m      ??[0m     [0mtest1[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[1;32m----> ??[1;33m [0mtest[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0m
+[1;32mtracebacks.dir/non-verbose.ipy[0m in [0;36mtest[1;34m()[0m
+[0;32m      ??[0m             [1;34m'{:f}'[0m[1;33m.[0m[0mformat[0m[1;33m([0m[0mvcsn[0m[1;33m.[0m[0mQ[0m[1;33m.[0m[0mexpression[0m[1;33m([0m[1;34m'abc'[0m[1;33m)[0m[1;33m.[0m[0mautomaton[0m[1;33m([0m[1;33m)[0m[1;33m)[0m[1;33m[0m[0m
+[0;32m      ??[0m         [0mtest2[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[1;32m----> ??[1;33m     [0mtest1[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m      ??[0m [0mtest[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+
+[1;32mtracebacks.dir/non-verbose.ipy[0m in [0;36mtest1[1;34m()[0m
+[0;32m      ??[0m         [1;32mdef[0m [0mtest2[0m[1;33m([0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+[0;32m      ??[0m             [1;34m'{:f}'[0m[1;33m.[0m[0mformat[0m[1;33m([0m[0mvcsn[0m[1;33m.[0m[0mQ[0m[1;33m.[0m[0mexpression[0m[1;33m([0m[1;34m'abc'[0m[1;33m)[0m[1;33m.[0m[0mautomaton[0m[1;33m([0m[1;33m)[0m[1;33m)[0m[1;33m[0m[0m
+[1;32m----> ??[1;33m         [0mtest2[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m      ??[0m     [0mtest1[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0;32m      ??[0m [0mtest[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+
+[1;32mtracebacks.dir/non-verbose.ipy[0m in [0;36mtest2[1;34m()[0m
+[0;32m      ??[0m     [1;32mdef[0m [0mtest1[0m[1;33m([0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+[0;32m      ??[0m         [1;32mdef[0m [0mtest2[0m[1;33m([0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+[1;32m----> ??[1;33m             [1;34m'{:f}'[0m[1;33m.[0m[0mformat[0m[1;33m([0m[0mvcsn[0m[1;33m.[0m[0mQ[0m[1;33m.[0m[0mexpression[0m[1;33m([0m[1;34m'abc'[0m[1;33m)[0m[1;33m.[0m[0mautomaton[0m[1;33m([0m[1;33m)[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m      ??[0m         [0mtest2[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0;32m      ??[0m     [0mtest1[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+
+[1;31mRuntimeError[0m: print: FAdo requires letter or nullable labels, and Boolean weights

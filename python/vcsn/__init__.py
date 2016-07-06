@@ -67,3 +67,29 @@ def vcsn_exception_handler(type, value, tb):
         traceback.print_exception(type, value, tb, length)
 
 sys.excepthook = vcsn_exception_handler
+
+try:
+    __IPYTHON__
+    # pylint: disable=wrong-import-order,wrong-import-position
+    from IPython.core.ultratb import AutoFormattedTB
+    ip = get_ipython()
+    mode = ip.InteractiveTB.mode
+    offset = ip.InteractiveTB.tb_offset
+    class vcsnTB(AutoFormattedTB):
+        def structured_traceback(self, type, value, tb, tb_offset=None,
+                                 *args, **kwargs):
+            # If an offset is given, use it, else use the default
+            offset = tb_offset if tb_offset else self.tb_offset
+            ftb = AutoFormattedTB.structured_traceback(self, type, value, tb,
+                                                       offset, *args, **kwargs)
+            if _traceback_verbose:
+                return ftb
+            else:
+                length = vcsn_traceback_levels(tb)
+                # Display the 2 header entries plus `length` entries
+                # minus the entries that were offset, and the footer entry.
+                return ftb[:2+length-offset] + ftb[-1:]
+
+    ip.InteractiveTB = vcsnTB(mode=mode, tb_offset=offset)
+except (ImportError, NameError):
+    pass
