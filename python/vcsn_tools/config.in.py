@@ -18,6 +18,8 @@ def integer(key):
 config = {
     'version': '@PACKAGE_VERSION@',
 
+    'python':   env('VCSN_PYTHON',   r'''@PYTHON@'''),
+
     'ccache':   env('VCSN_CCACHE',   r'''@CCACHE@'''),
     'cppflags': env('VCSN_CPPFLAGS', r'''@VCSN_CPPFLAGS@'''),
     'cxx':      env('VCSN_CXX',      r'''@VCSN_CXX@'''),

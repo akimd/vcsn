@@ -1,3 +1,5 @@
+import sys, traceback, inspect
+
 from vcsn_cxx import (automaton, context, expansion, expression, label,
                       polynomial, weight)
 from vcsn.automaton  import automaton
@@ -36,3 +38,32 @@ try:
     B.expression(r'\e', '')
 except RuntimeError as e:
     expression.identities_list = e.args[0].split('expected: ')[1].split()
+
+# Traceback handler
+_traceback_verbose = False
+
+def is_vcsn(tb):
+    '''Does this traceback frame contain vcsn code?'''
+    try:
+        return 'vcsn' == inspect.getmodule(tb.tb_frame).__package__
+    except AttributeError:
+        return False
+
+def vcsn_traceback_levels(tb):
+    '''Returns the amount of frames deep into the traceback
+    we have to go through before we reach vcsn.'''
+    length = 0
+    while tb and not is_vcsn(tb):
+        tb = tb.tb_next
+        length += 1
+    return length
+
+def vcsn_exception_handler(type, value, tb):
+    '''Prints traceback according to vcsn._traceback_verbose.'''
+    if _traceback_verbose:
+        traceback.print_exception(type, value, tb)
+    else:
+        length = vcsn_traceback_levels(tb)
+        traceback.print_exception(type, value, tb, length)
+
+sys.excepthook = vcsn_exception_handler

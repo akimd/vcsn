@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "tracebacks.dir/non-verbose.py", line 8, in <module>
+    test()
+  File "tracebacks.dir/non-verbose.py", line 7, in test
+    test1()
+  File "tracebacks.dir/non-verbose.py", line 6, in test1
+    test2()
+  File "tracebacks.dir/non-verbose.py", line 5, in test2
+    '{:f}'.format(vcsn.Q.expression('abc').automaton())
+RuntimeError: print: FAdo requires letter or nullable labels, and Boolean weights

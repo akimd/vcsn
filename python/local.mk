@@ -92,6 +92,7 @@ install$(DASH)pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIE
 VCSN_PYTHON_DEPS =				\
   $(HEADERS)					\
   $(nodist_python_PYTHON)			\
+  $(nodist_vcsn_tools_python_PYTHON)		\
   $(pyexec_LTLIBRARIES)				\
   $(top_srcdir)/libexec/vcsn-compile		\
   $(vcsn_python_PYTHON)

@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "tracebacks.dir/verbose.py", line 9, in <module>
+    test()
+  File "tracebacks.dir/verbose.py", line 7, in test
+    test1()
+  File "tracebacks.dir/verbose.py", line 6, in test1
+    test2()
+  File "tracebacks.dir/verbose.py", line 5, in test2
+    '{:f}'.format(vcsn.Q.expression('abc').automaton())
+  File "vcsn/automaton.py", line ??, in __format__
+    return _format(self, spec, 'daut', syntaxes)
+  File "vcsn/tools.py", line ??, in _format
+    s = self.format(syntax)
+  File "vcsn/automaton.py", line ??, in format
+    return self._format(fmt)
+RuntimeError: print: FAdo requires letter or nullable labels, and Boolean weights

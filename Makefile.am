@@ -55,6 +55,7 @@ NEWS.mw: NEWS.md
 EXTRA_DIST += debian/changelog debian/compat	\
   debian/control debian/rules debian/copyright
 
+# Maintainer rule: do not depend on debian/changelog.in, which is not shipped
 debian/changelog: configure.ac
 	$(top_builddir)/config.status --file debian/changelog
 

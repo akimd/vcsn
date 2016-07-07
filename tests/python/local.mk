@@ -92,6 +92,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/thompson.py                               \
   %D%/to-expansion.py                           \
   %D%/to-expression.py                          \
+  %D%/tracebacks.py                             \
   %D%/transducer.py                             \
   %D%/transpose.py                              \
   %D%/trie.py                                   \
@@ -322,6 +323,10 @@ EXTRA_DIST +=                                           \
   %D%/synchronize.dir/z_delay.gv                        \
   %D%/synchronize.dir/z_min.gv                          \
   %D%/synchronize.dir/z_min_delay.gv                    \
+  %D%/tracebacks.dir/non-verbose.out                    \
+  %D%/tracebacks.dir/non-verbose.py                     \
+  %D%/tracebacks.dir/verbose.out                        \
+  %D%/tracebacks.dir/verbose.py                         \
   %D%/to-expression.dir/a.gv                            \
   %D%/union.dir/abc.gv
 
@@ -346,6 +351,7 @@ EXTRA_DIST +=                                           \
 %D%/standard.log:        $(wildcard $(srcdir)/%D%/standard.dir/*)
 %D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
+%D%/tracebacks.log:      $(wildcard $(srcdir)/%D%/tracebacks.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)
 
 .PHONY: check-python
