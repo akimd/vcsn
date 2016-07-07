@@ -52,3 +52,13 @@ class context:
     label = lambda *a, **kw: label(*a, **kw)
     polynomial = lambda *a, **kw: polynomial(*a, **kw)
     weight = lambda *a, **kw: weight(*a, **kw)
+
+    # Add support for `length` as a kwarg.
+    _random_expression_orig = context.random_expression
+    def random_expression(self, parameters='', *args, **kwargs):
+        if 'length' in kwargs:
+            parameters = '{}{}length={}'.format(parameters,
+                                                ', ' if parameters else '',
+                                                kwargs['length'])
+            del kwargs['length']
+        return self._random_expression_orig(parameters, *args, **kwargs)

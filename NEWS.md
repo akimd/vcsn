@@ -195,28 +195,27 @@ change.
 ### random_expression
 One may now generate random expressions.
 
-    In [2]: def rand(spec):
-                return vcsn.context('lal(abc), b').random_expression(spec)
+    In [2]: rand = vcsn.context('lal(abc), b').random_expression
 
-    In [3]: rand('+, ., length=10')
+    In [3]: rand('+,.', length=10)
     Out[3]: c(b+c+ca)c
 
-    In [4]: rand('+, ., length=10')
+    In [4]: rand('+,.', length=10)
     Out[4]: c+abcac
 
-    In [5]: rand('+=1, .=1, *=.2, length=10')
+    In [5]: rand('+=1, .=1, *=.2', length=10)
     Out[5]: (b(a+b+c))*
 
-    In [6]: rand('+=1, .=1, *=.2, length=10')
+    In [6]: rand('+=1, .=1, *=.2', length=10)
     Out[6]: bb*ca
 
-    In [7]: rand('+=1, .=1, *=.2, &=1, length=10')
+    In [7]: rand('+=1, .=1, *=.2, &=1', length=10)
     Out[7]: c
 
-    In [8]: rand('+=1, .=1, *=.2, &=1, length=10')
+    In [8]: rand('+=1, .=1, *=.2, &=1', length=10)
     Out[8]: a*cb*
 
-    In [9]: rand('+=1, .=1, *=.2, &=1, length=10')
+    In [9]: rand('+=1, .=1, *=.2, &=1', length=10)
     Out[9]: a((a+a*)&b*)*
 
 ## 2016-03-29
