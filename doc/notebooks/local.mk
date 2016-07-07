@@ -135,6 +135,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.expansion.ipynb                \
   %D%/expression.inductive.ipynb                \
   %D%/expression.infiltrate.ipynb               \
+  %D%/expression.info.ipynb                     \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
   %D%/expression.lift.ipynb                     \

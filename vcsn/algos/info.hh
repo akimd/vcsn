@@ -151,7 +151,10 @@ namespace vcsn
     o << "type: ";
     rs.print_set(o, format::sname);
 
-    o << "\nsize: " << rat::size<ExpSet>(e);
+    // `length` and `size` are synonymous.
+    auto s = rat::size<ExpSet>(e);
+    o << "\nsize: " << s
+      << "\nlength: " << s;
 
     auto info = rat::make_info<ExpSet>(e);
     o << "\nwidth: " << info.atom;
