@@ -122,8 +122,11 @@ dist_notebooks_DATA =                           \
   %D%/context.random_automaton.ipynb            \
   %D%/context.random_expression.ipynb           \
   %D%/context.trie.ipynb                        \
+  %D%/expansion.add.ipynb                       \
+  %D%/expansion.lweight.ipynb                   \
   %D%/expansion.operators.ipynb                 \
   %D%/expansion.project.ipynb                   \
+  %D%/expansion.rweight.ipynb                   \
   %D%/expression.add.ipynb                      \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
@@ -161,6 +164,7 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.trie.ipynb                     \
   %D%/polynomial.tuple.ipynb                    \
+  %D%/weight.add.ipynb                          \
   %D%/weight.multiply.ipynb                     \
   %D%/weight.operators.ipynb
 

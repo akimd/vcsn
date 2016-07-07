@@ -3,7 +3,6 @@
 ## -------- ##
 
 from vcsn_cxx import weight
-from vcsn import automaton, expression
 from vcsn.tools import _extend, _format, _is_equal
 
 @_extend(weight)
@@ -43,8 +42,8 @@ class weight:
 
 
     def __mul__(self, rhs):
-        '''Translate `weight * expression` to `expression.lweight(weight)`.'''
-        if isinstance(rhs, automaton) or isinstance(rhs, expression):
+        '''Translate `weight * obj` to `obj.lweight(weight)` when applicable.'''
+        if 'lweight' in dir(rhs):
             return rhs.lweight(self)
         elif isinstance(rhs, int):
             raise RuntimeError(
