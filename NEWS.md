@@ -13,8 +13,8 @@ announce the release of Vcsn 2.3, code-named "the tuple release"!
 As usual, many bugs were fixed (some quite old yet unnoticed so far!).
 Noteworthy changes include:
 
-- a particular effort was put on the documentation: there are thirty new
-  documentation pages, and thirty-six others were improved.
+- a particular effort was put on the documentation: there are thirty-five
+  new documentation pages, and about forty others were improved.
 
 - full support for a "tuple" operator on all entities: expressions,
   polynomials, automata, etc.
