@@ -87,15 +87,19 @@ def sugar(s):
 def pretty_plugin(filename):
     '''Split compilation type with its arguments and add sugar to the message.'''
     # what = algos|contexts, specs = argument specifications.
-    what, specs = re.match(r'.*/plugins/([^/]+)/(.*)', filename).group(1, 2)
-    if what == 'algos':
-        title, message = specs.split('/', 1)
-        message = sugar(message)
+    m = re.match(r'.*/plugins/([^/]+)/(.*)', filename)
+    if m:
+        what, specs = m.group(1, 2)
+        if what == 'algos':
+            title, message = specs.split('/', 1)
+            message = sugar(message)
+        else:
+            title = 'context'
+            message = sugar(specs)
     else:
-        title = 'context'
-        message = sugar(specs)
+        title = 'vcsn compile'
+        message = os.path.basename(filename)
     return title, message
-
 
 def has_color(color):
     color_dict = {
