@@ -1,18 +1,22 @@
 #pragma once
 
+#include <random> // std::mt19937
+
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/weightset/weightset.hh> // detail::random_weight.
 
 namespace vcsn
 {
   /// Generate a random weight.
   template <typename WeightSet>
   typename WeightSet::value_t
-  random_weight(const WeightSet& ws, const std::string& param)
+  random_weight(const WeightSet& ws, const std::string& param = {})
   {
-    auto random_w = detail::random_weight<WeightSet,
-                                          std::mt19937>{make_random_engine(), ws};
+    auto random_w
+      = detail::random_weight<WeightSet,
+                              std::mt19937>{make_random_engine(), ws};
     random_w.parse_param(param);
     return random_w.generate_random_weight();
   }

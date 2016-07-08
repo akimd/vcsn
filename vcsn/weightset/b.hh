@@ -234,11 +234,9 @@ namespace vcsn
     private:
       value_t pick_value_() const
       {
-        auto dis = std::uniform_int_distribution<>(super_t::min_, super_t::max_);
-        if (dis(super_t::gen_))
-          return super_t::ws_.zero();
-        else
-          return super_t::ws_.one();
+        auto dis
+          = std::uniform_int_distribution<>(super_t::min_, super_t::max_);
+        return dis(super_t::gen_) ? super_t::ws_.zero() : super_t::ws_.one();
       }
     };
 
