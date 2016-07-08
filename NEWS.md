@@ -5,7 +5,8 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-# Vcsn 2.3 (2016-07-??)
+
+# Vcsn 2.3 (2016-07-08)
 
 About four hundred commits and five months after Vcsn 2.2, we are proud to
 announce the release of Vcsn 2.3, code-named "the tuple release"!
