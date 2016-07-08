@@ -158,6 +158,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.zpc.ipynb                      \
   %D%/label.multiply.ipynb                      \
   %D%/label.operators.ipynb                     \
+  %D%/polynomial.add.ipynb                      \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
   %D%/polynomial.multiply.ipynb                 \
