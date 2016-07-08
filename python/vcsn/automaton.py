@@ -262,6 +262,51 @@ class automaton:
     fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
     fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
 
+    def HTML(self):
+        """Display `self` with SVG and MathJax together."""
+        svg = _dot_to_svg(self.dot())
+        # Any <text> that contains at least 2 $s.
+        svg = re.sub(r'<text ([^>]*)>(.*?\$.*?\$.*?)</text>',
+                     r'''<foreignObject class="automaton_raw" height="24" \1>
+  <body xmlns="http://www.w3.org/1999/xhtml">
+    <div style="text-align: center;">
+      \2
+    </div>
+  </body>
+</foreignObject>''', svg)
+        # Replace matching $s with matching \(\). Do not match \$.
+        svg = re.sub(r'(?<!\\)\$(.*?)\$', r'\(\1\)', svg)
+        html = r'''<!DOCTYPE html>
+<html>
+  <head>
+    <title>MathJax in SVG diagram</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    {svg}
+    <script>
+      $('.automaton_raw').each(function(){{
+        var width = $(this).parent()[0].getBoundingClientRect().width;
+        var x = this.getAttribute('x');
+        var y = this.getAttribute('y');
+
+        width = parseFloat(width)
+        x = parseFloat(x)
+        y = parseFloat(y)
+
+        this.setAttribute('width', width);
+        this.setAttribute('x', x - width / 2);
+        this.setAttribute('y', y - 14);
+
+        $(this).removeClass('automaton_raw')
+      }});
+    </script>
+  </body>
+</html>'''.format(svg=svg)
+        return html
+
     infiltrate = lambda *auts: automaton._infiltrate(list(auts))
 
     def info(self, key=None, detailed=False):
