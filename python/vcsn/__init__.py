@@ -1,7 +1,5 @@
 import sys, traceback, inspect
 
-from vcsn_cxx import (automaton, context, expansion, expression, label,
-                      polynomial, weight)
 from vcsn.automaton  import automaton
 from vcsn.context    import context
 from vcsn.expansion  import expansion

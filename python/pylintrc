@@ -20,6 +20,8 @@ disable=
         maybe-no-member,no-init,no-member,
 # correct uses that are considered warnings
         star-args,unnecessary-lambda,
+# API too deep for pylint
+        too-many-ancestors,
 # known false-negative of pylint
         redefined-variable-type,
 # various structures that are considered invalid
