@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/file-library.hh>
 
 enum class type
@@ -64,7 +65,9 @@ std::ostream& operator<<(std::ostream& o, const options& opts);
 
 /// The supported commands.
 const char* commands();
+ATTRIBUTE_NORETURN
 void usage(const char* prog, int exit_status);
+ATTRIBUTE_NORETURN
 void version(const options& opts);
 
 /// Read the command line arguments.
