@@ -264,7 +264,7 @@ class automaton:
 
     def HTML(self):
         """Display `self` with SVG and MathJax together."""
-        svg = _dot_to_svg(self.dot())
+        svg = _dot_to_svg(_dot_pretty(self.format('dot,mathjax'), 'pretty'))
         # Any <text> that contains at least 2 $s.
         svg = re.sub(r'<text ([^>]*)>(.*?\$.*?\$.*?)</text>',
                      r'''<foreignObject class="automaton_raw" height="24" \1>

@@ -84,6 +84,8 @@ namespace vcsn
           {"default",      "dot"},
           {"dot,latex",    [](const Aut& a, std::ostream& o)
                               { dot(a, o, format("latex")); }},
+          {"dot,mathjax",  [](const Aut& a, std::ostream& o)
+                              { dot(a, o, format("latex"), true); }},
           {"dot,utf8",     [](const Aut& a, std::ostream& o)
                               { dot(a, o, format("utf8")); }},
           {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},

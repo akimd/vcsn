@@ -50,7 +50,8 @@ namespace vcsn
       const char* gray = "color = DimGray";
 
     public:
-      dot_impl(const automaton_t& aut, std::ostream& out, format fmt)
+      dot_impl(const automaton_t& aut, std::ostream& out, format fmt,
+               bool mathjax)
         : super_t(aut, out)
         , format_(fmt)
       {
@@ -65,6 +66,7 @@ namespace vcsn
 # pragma GCC diagnostic pop
 #endif
         bos_.push(out);
+        dot2tex_ = fmt == format::latex && !mathjax;
       }
 
       /// Print the automaton on the stream.
@@ -91,12 +93,12 @@ namespace vcsn
         bos_ << "\"\n"
           "  rankdir = LR\n"
           "  edge ["
-             << (format_ == format::latex
+             << (dot2tex_
                  ? "texmode = math, lblstyle = auto"
                  : "arrowhead = vee, arrowsize = .6")
              << "]\n";
 
-        if (format_ == format::latex)
+        if (dot2tex_)
           bos_ <<
             "  d2toptions = \"--format tikz --tikzedgelabels"
             " --graphstyle=automaton --crop --nominsize --autosize\"\n"
@@ -145,7 +147,7 @@ namespace vcsn
       {
         aut_->print_state(s, bos_);
         bool has_attributes = false;
-        if (format_ == format::latex)
+        if (dot2tex_)
           {
             has_attributes = true;
             bos_ << " [";
@@ -185,13 +187,27 @@ namespace vcsn
               {
                 has_attributes = true;
                 bos_ << " [label = \"";
+                if (format_ == format::latex)
+                  bos_ << '$';
                 enable_();
                 aut_->print_state_name(s, bos_, format_);
                 disable_();
+                if (format_ == format::latex)
+                  bos_ << '$';
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   bos_ << " (" << s << ')';
                 bos_ << "\", shape = box";
+                if (format_ == format::latex)
+                  {
+                    // Approximate a fixed width based on raw text output
+                    std::ostringstream oss;
+                    aut_->print_state_name(s, oss, format::text);
+                    size_t len = oss.str().size();
+                    float width = 0.5f + 0.1f * (len / 2);
+                    bos_ << ", fixedsize = true"
+                         << ", width = " << width;
+                  }
               }
             if (aut_->is_lazy(s))
               {
@@ -223,7 +239,7 @@ namespace vcsn
       /// Print the states.
       void print_states_()
       {
-        if (format_ != format::latex)
+        if (!dot2tex_)
           {
             // Output the pre-initial and post-final states.
             if (!initial_transitions(aut_).empty()
@@ -265,7 +281,7 @@ namespace vcsn
           {
             bos_ << "  {\n"
                  << "    node ["
-                 << (format_ == format::latex
+                 << (dot2tex_
                      ? "texmode = math, style = state"
                      : "shape = circle, style = rounded, width = 0.5")
                  << "]\n";
@@ -329,12 +345,11 @@ namespace vcsn
         std::map<state_t, polynomial_t> dsts;
         for (auto src : aut_->all_states())
           if (!aut_->is_lazy(src)
-              && (format_ != format::latex || src != aut_->pre()))
+              && (!dot2tex_ || src != aut_->pre()))
             {
               dsts.clear();
               for (auto t: all_out(aut_, src))
-                if (format_ != format::latex
-                    || aut_->dst_of(t) != aut_->post())
+                if (!dot2tex_ || aut_->dst_of(t) != aut_->post())
                   // Bypass weight_of(set), because we know that the weight is
                   // nonzero, and that there is only one weight per letter.
                   ps_.new_weight(dsts[aut_->dst_of(t)],
@@ -362,6 +377,8 @@ namespace vcsn
       detail::io::filtering_ostream bos_;
       /// Format for labels and weights.
       format format_ = {};
+      /// Whether we need dot2tex formatting.
+      bool dot2tex_ = false;
       /// Useful states, without evaluating the lazy states.
       std::unordered_set<state_t_of<Aut>> useful_ = useful_states(aut_, false);
     };
@@ -372,12 +389,14 @@ namespace vcsn
   /// \param aut     the automaton to print.
   /// \param out     the output stream.
   /// \param fmt     how to format the automaton.
+  /// \param mathjax shall it be formatted for MathJax.
   template <Automaton Aut>
   std::ostream&
-  dot(const Aut& aut, std::ostream& out = std::cout, format fmt = {})
+  dot(const Aut& aut, std::ostream& out = std::cout, format fmt = {},
+      bool mathjax = false)
   {
     // Cannot use auto here.
-    detail::dot_impl<Aut> dot{aut, out, fmt};
+    detail::dot_impl<Aut> dot{aut, out, fmt, mathjax};
     return dot();
   }
 }
