@@ -35,17 +35,17 @@ class TextLatexWidget:
     def __init__(self, name, value, toLatex=None):
         self.label = widgets.Label(value=name, padding='5px 0 7px 0')
         self.text = widgets.Text(value=value)
-        self.text.on_trait_change(self.update)
+        self.text.on_submit(self.update)
         self.latex = widgets.Label(width='50%', padding='5px 0 0 0')
         self.toLatex = toLatex
         self.update()
 
-    def update(self):
+    def update(self, *_):
         if self.toLatex:
             try:
                 self.latex.value = self.toLatex(self.getvalue())
             except RuntimeError:
-                self.latex.value = r'Could not generate $\LaTeX$ output.'
+                self.latex.value = ''
 
     def getvalue(self):
         return self.text.value.encode('utf-8')
@@ -79,7 +79,7 @@ class ContextText:
 
         toLatex = lambda txt: vcsn.context(txt)._repr_latex_()
         self.widget = TextLatexWidget('Context:', text, toLatex)
-        self.widget.text.on_trait_change(self.update)
+        self.widget.text.on_submit(self.update)
 
         self.error = widgets.HTML(value='')
 
@@ -89,7 +89,7 @@ class ContextText:
             box = widgets.VBox(children=[ctx, self.error])
             display(box)
 
-    def update(self):
+    def update(self, *_):
         try:
             self.error.value = ''
             txt = self.widget.getvalue()
@@ -250,8 +250,8 @@ class ExpressionText:
 
         self.aut = widgets.HTML(value=aut.SVG())
 
-        self.ctx.text.on_trait_change(self.update)
-        self.exp.text.on_trait_change(self.update)
+        self.ctx.text.on_submit(self.update)
+        self.exp.text.on_submit(self.update)
         self.algo.on_trait_change(self.update)
         self.ids.on_trait_change(self.update)
 
@@ -274,7 +274,7 @@ class ExpressionText:
 
         display(box)
 
-    def update(self):
+    def update(self, *_):
         try:
             cont = self.ctx.getvalue()
             text = self.exp.getvalue()
