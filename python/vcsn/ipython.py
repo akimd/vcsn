@@ -224,13 +224,15 @@ class ExpressionText:
                 raise NameError(
                         '`{}` is defined but is not an expression'.format(name))
             text = exp.format('utf8')
+            identities = exp.identities()
             cont = exp.context().format('sname')
         else:
             text = None
+            identities = 'linear'
             cont = 'lal, b'
 
         ctx = vcsn.context(cont)
-        exp = ctx.expression(text if text else r'\e')
+        exp = ctx.expression((text if text else r'\e'), identities)
         aut = exp.automaton()
         algos = vcsn.expression.automaton.algos
         ids = vcsn.expression.identities_list
@@ -245,8 +247,9 @@ class ExpressionText:
         self.exp.latex.value = exp._repr_latex_()
 
         algo_lab = widgets.Label(value='Algorithm:', padding='5px 0 0 0')
-        self.algo = widgets.Dropdown(options=algos)
-        self.ids = widgets.Dropdown(options=ids, description='Identity: ')
+        self.algo = widgets.Dropdown(options=algos, value='auto')
+        self.ids = widgets.Dropdown(options=ids, description='Identity: ',
+                                    value=identities)
 
         self.aut = widgets.HTML(value=aut.SVG())
 
