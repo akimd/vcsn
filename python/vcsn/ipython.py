@@ -233,7 +233,6 @@ class ExpressionText:
 
         ctx = vcsn.context(cont)
         exp = ctx.expression((text if text else r'\e'), identities)
-        aut = exp.automaton()
         algos = vcsn.expression.automaton.algos
         ids = vcsn.expression.identities_list
 
@@ -246,38 +245,54 @@ class ExpressionText:
         self.exp = TextLatexWidget('Expression: ', text)
         self.exp.latex.value = exp._repr_latex_()
 
-        algo_lab = widgets.Label(value='Algorithm:', padding='5px 0 0 0')
-        self.algo = widgets.Dropdown(options=algos, value='auto')
-        self.ids = widgets.Dropdown(options=ids, description='Identity: ',
+        self.algo = widgets.Dropdown(options=algos,
+                                     description='Algo:',
+                                     value='auto')
+        self.ids = widgets.Dropdown(options=ids,
+                                    description='Identities:',
                                     value=identities)
+        self.mode = widgets.Dropdown(options=vcsn.automaton.display.modes,
+                                     description='Mode:',
+                                     value='pretty')
+        self.engine = widgets.Dropdown(options=vcsn.automaton.display.engines,
+                                       description='Engine:')
 
-        self.aut = widgets.HTML(value=aut.SVG())
+        self.out = widgets.Output()
+        self.err = widgets.HTML()
 
         self.ctx.text.on_submit(self.update)
         self.exp.text.on_submit(self.update)
         self.algo.on_trait_change(self.update)
         self.ids.on_trait_change(self.update)
+        self.mode.on_trait_change(self.update)
+        self.engine.on_trait_change(self.update)
 
 
-        # Labels
-        labs = widgets.VBox(children=[self.ctx.label, self.exp.label, algo_lab])
-        # Context editor and latex
+        # Labels.
+        labs = widgets.VBox(children=[self.ctx.label, self.exp.label])
+        # Context editor and latex.
         ctx_box = widgets.HBox(children=[self.ctx.text, self.ctx.latex])
-        # Expression editor and latex
+        # Expression editor and latex.
         exp_box = widgets.HBox(children=[self.exp.text, self.exp.latex])
-        # Algorithm and identities dropdowns
+        # Append all 3 above.
+        editors = widgets.VBox(children=[ctx_box, exp_box])
+        editors_box = widgets.HBox(children=[labs, editors])
+        # Algorithm and identities dropdowns.
         algs_box = widgets.HBox(children=[self.algo, self.ids])
+        # Mode and engine dropdowns.
+        render_box = widgets.HBox(children=[self.mode, self.engine])
 
-        # All 3 above
-        interactive = widgets.VBox(children=[ctx_box, exp_box, algs_box])
-        # Append the labels to the interactive bits
-        panel = widgets.HBox(children=[labs, interactive])
-        # Append the automaton/error widget
-        box = widgets.VBox(children=[panel, self.aut])
+        # All the interactive bits.
+        interactive = widgets.VBox(children=[editors_box, algs_box, render_box])
+        # Append the output and error widgets.
+        box = widgets.VBox(children=[interactive, self.out, self.err])
 
         display(box)
+        self.update()
 
     def update(self, *_):
+        self.err.value = ''
+        self.out.clear_output()
         try:
             cont = self.ctx.getvalue()
             text = self.exp.getvalue()
@@ -290,11 +305,12 @@ class ExpressionText:
             aut = exp.automaton(algo=algo)
 
             self.exp.latex.value = exp._repr_latex_()
-            self.aut.value = aut.SVG()
+            with self.out:
+                aut._display(self.mode.value, self.engine.value)
             self.ipython.shell.user_ns[self.name] = exp
         except RuntimeError as e:
             self.exp.latex.value = ''
-            self.aut.value = formatError(e)
+            self.err.value = formatError(e)
 
 
 @magics_class

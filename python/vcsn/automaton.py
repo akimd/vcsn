@@ -166,16 +166,19 @@ class automaton:
         automata by default.
         '''
         from vcsn.ipython import interact_h
+        modes = automaton.display.modes
+        engines = automaton.display.engines
         if 20 < self.state_number():
-            modes = ['info', 'simple', 'pretty']
-        else:
-            modes = ['simple', 'pretty', 'info']
-        modes += ['info,detailed', 'tooltip', 'transitions', 'type',
-                  'dot', 'dot2tex']
-        engines = ['dot', 'neato', 'twopi',
-                   'circo', 'fdp', 'sfdp', 'patchwork']
+            # Put 'info' first, to be the default.
+            modes.remove('info')
+            modes.insert(0, 'info')
         interact_h(lambda mode, engine: self._display(mode, engine),
                    mode=modes, engine=engines)
+
+    display.modes = ['simple', 'pretty', 'info', 'info,detailed', 'tooltip',
+                     'transitions', 'type', 'dot', 'dot2tex']
+    display.engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp',
+                       'patchwork']
 
     def dot(self, mode="pretty"):
         return _dot_pretty(self.format('dot,utf8'), mode)
