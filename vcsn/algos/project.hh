@@ -41,7 +41,8 @@ namespace vcsn
     {
       // Weirdly enough, GCC enters an endless loop of instantiation
       // if we use this type as explicit function return type.
-      return make_expressionset(project<Tape>(rs.context()), rs.identities());
+      return make_expressionset(project<Tape>(rs.context()),
+                                rs.identities());
     }
   }
 

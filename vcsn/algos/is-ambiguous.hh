@@ -40,7 +40,7 @@ namespace vcsn
   template <Automaton Aut>
   bool is_ambiguous(const Aut& aut)
   {
-    std::tuple<state_t_of<Aut>, state_t_of<Aut>> dummy;
+    auto dummy = std::tuple<state_t_of<Aut>, state_t_of<Aut>>{};
     return is_ambiguous(aut, dummy);
   }
 
@@ -65,7 +65,7 @@ namespace vcsn
   template <Automaton Aut>
   word_t_of<Aut> ambiguous_word(const Aut& aut)
   {
-    std::tuple<state_t_of<Aut>, state_t_of<Aut>> witness;
+    auto witness = std::tuple<state_t_of<Aut>, state_t_of<Aut>>{};
     require(is_ambiguous(aut, witness),
             "automaton is unambiguous");
     const auto& ls = *aut->labelset();

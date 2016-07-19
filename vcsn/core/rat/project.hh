@@ -78,13 +78,12 @@ namespace vcsn
         res_ = std::move(res);
       }
 
+      VCSN_RAT_VISIT(add, v)          { project_(v, &out_expressionset_t::add); }
       VCSN_RAT_VISIT(complement, v)   { project_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { project_(v, &out_expressionset_t::conjunction); }
       VCSN_RAT_VISIT(infiltrate, v)   { project_(v, &out_expressionset_t::infiltrate); }
       VCSN_RAT_VISIT(ldivide, v)         { project_(v, &out_expressionset_t::ldivide); }
       VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
-      // I do not understand why I need the cast just for this one,
-      // but GCC and Clang agree.
       using bin_t =
         out_expression_t
         (out_expressionset_t::*)(const out_expression_t&, const out_expression_t&) const;
@@ -92,7 +91,6 @@ namespace vcsn
                                                  static_cast<bin_t>(&out_expressionset_t::mul)); }
       VCSN_RAT_VISIT(shuffle, v)      { project_(v, &out_expressionset_t::shuffle); }
       VCSN_RAT_VISIT(star, v)         { project_(v); }
-      VCSN_RAT_VISIT(add, v)          { project_(v, &out_expressionset_t::add); }
       VCSN_RAT_VISIT(transposition, v){ project_(v); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 

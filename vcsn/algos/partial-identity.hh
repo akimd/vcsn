@@ -67,9 +67,9 @@ namespace vcsn
     return res;
   }
 
-  /*------------------------.
-  | dyn::partial_identity.  |
-  `------------------------*/
+  /*-------------------------------.
+  | partial_identity(automaton).   |
+  `-------------------------------*/
 
   namespace dyn
   {

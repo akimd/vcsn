@@ -168,18 +168,18 @@ namespace vcsn
 
     DEFINE(expressionset)
     {
+      header("vcsn/core/rat/expressionset.hh");
       os_ << "vcsn::expressionset<" << incendl;
       t.get_context()->accept(*this);
       os_ << decendl << '>';
-      header("vcsn/core/rat/expressionset.hh");
     }
 
     DEFINE(expansionset)
     {
+      header("vcsn/core/rat/expansionset.hh");
       os_ << "vcsn::rat::expansionset<" << incendl;
       t.get_expressionset()->accept(*this);
       os_ << decendl << '>';
-      header("vcsn/core/rat/expansionset.hh");
     }
 
     DEFINE(weightset)
@@ -207,10 +207,10 @@ namespace vcsn
 
     DEFINE(polynomialset)
     {
+      header("vcsn/weightset/polynomialset.hh");
       os_ << "vcsn::polynomialset<" << incendl;
       t.get_content()->accept(*this);
       os_ << decendl << '>';
-      header("vcsn/weightset/polynomialset.hh");
     }
 #undef DEFINE
   }

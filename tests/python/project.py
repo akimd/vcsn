@@ -10,25 +10,29 @@ from test import *
 # Nullable labelsets to please expansions.
 c = vcsn.context('lat<lan(abc), lan(efg), lan(xyz)>, q')
 
+def check(v, *p):
+    for i in range(3):
+        CHECK_EQ(p[i], v.project(i))
+
+
 ## ---------- ##
 ## contexts.  ##
 ## ---------- ##
 
-CHECK_EQ('{abc}? -> Q', c.project(0))
-CHECK_EQ('{efg}? -> Q', c.project(1))
-CHECK_EQ('{xyz}? -> Q', c.project(2))
+check(c,
+      '{abc}? -> Q',
+      '{efg}? -> Q',
+      '{xyz}? -> Q')
 
 
 ## ------- ##
 ## label.  ##
 ## ------- ##
 
-l = c.label('a|e|x')
-CHECK_EQ('a', l.project(0))
-CHECK_EQ('e', l.project(1))
-CHECK_EQ('x', l.project(2))
-
-
+check(c.label('a|e|x'),
+      'a',
+      'e',
+      'x')
 
 ## ---------- ##
 ## automata.  ##
@@ -38,7 +42,7 @@ CHECK_EQ('x', l.project(2))
 c2 = vcsn.context('lat<lal(abc), lal(efg), lal(xyz)>, q')
 t = c2.expression("(a|e|x) : (b|f|y) : (c|g|z)").automaton()
 
-def check(function_name, type_):
+def check_aut(function_name, type_):
     '''Check a function (`project` or `focus`).  Expect an automaton
     of type `type_`.'''
     print("Checking:", function_name)
@@ -80,30 +84,30 @@ def check(function_name, type_):
                },
              fun(0).info(detailed=True))
 
-check('focus',
-      'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')
-check('project',
-      'mutable_automaton<letterset<char_letters(abc)>, q>')
+check_aut('focus',
+          'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')
+check_aut('project',
+          'mutable_automaton<letterset<char_letters(abc)>, q>')
 
 
 ## ------------- ##
 ## expressions.  ##
 ## ------------- ##
 
-e = c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y')
-CHECK_EQ('<9>a*',  e.project(0))
-CHECK_EQ('e+<3>f', e.project(1))
-CHECK_EQ('x+y+xy', e.project(2))
+check(c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y'),
+      '<9>a*',
+      'e+<3>f',
+      'x+y+xy')
 
 
 ## ------------- ##
 ## polynomials.  ##
 ## ------------- ##
 
-p = c.polynomial('<2>a|e|x + <3>a|f|x + <4>a|f|y')
-CHECK_EQ('<9>a',        p.project(0))
-CHECK_EQ('<2>e + <7>f', p.project(1))
-CHECK_EQ('<5>x + <4>y', p.project(2))
+check(c.polynomial('<2>a|e|x + <3>a|f|x + <4>a|f|y'),
+      '<9>a',
+      '<2>e + <7>f',
+      '<5>x + <4>y')
 
 
 ## ------------ ##
@@ -114,7 +118,7 @@ CHECK_EQ('<5>x + <4>y', p.project(2))
 # `a|[xy]` projected on 0 gives `a`, while expanded and projected
 # gives `<2>a`.
 e = c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y')
-x = e.expansion()
-CHECK_EQ('<11> + a.[<11>a*]',            x.project(0))
-CHECK_EQ(r'e.[<4>\e] + f.[<18>\e]',       x.project(1))
-CHECK_EQ(r'x.[<6>\e + <8>y] + y.[<8>\e]', x.project(2))
+check(e.expansion(),
+      '<11> + a.[<11>a*]',
+      r'e.[<4>\e] + f.[<18>\e]',
+      r'x.[<6>\e + <8>y] + y.[<8>\e]')

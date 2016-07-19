@@ -26,14 +26,14 @@ namespace vcsn
     /// \tparam InExpSet   the input expressionset type.
     /// \tparam OutExpSet  the output expressionset type.
     template <typename InExpSet, typename OutExpSet = InExpSet>
-    class copier
+    class copy_impl
       : public InExpSet::const_visitor
     {
     public:
       using in_expressionset_t = InExpSet;
       using out_expressionset_t = OutExpSet;
       using super_t = typename in_expressionset_t::const_visitor;
-      using self_t = copier;
+      using self_t = copy_impl;
 
       using in_context_t = context_t_of<in_expressionset_t>;
       using in_value_t = typename in_expressionset_t::value_t;
@@ -46,7 +46,8 @@ namespace vcsn
       using variadic_t = typename super_t::template variadic_t<Type>;
       using leaf_t = typename super_t::leaf_t;
 
-      copier(const in_expressionset_t& in_rs, const out_expressionset_t& out_rs)
+      copy_impl(const in_expressionset_t& in_rs,
+                const out_expressionset_t& out_rs)
         : in_rs_(in_rs)
         , out_rs_(out_rs)
       {}
@@ -184,7 +185,7 @@ namespace vcsn
     copy(const InExpSet& in_rs, const OutExpSet& out_rs,
          const typename InExpSet::value_t& v)
     {
-      auto copy = copier<InExpSet, OutExpSet>{in_rs, out_rs};
+      auto copy = copy_impl<InExpSet, OutExpSet>{in_rs, out_rs};
       return copy(v);
     }
   } // namespace rat

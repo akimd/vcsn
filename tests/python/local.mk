@@ -250,6 +250,7 @@ EXTRA_DIST +=                                           \
   %D%/minimize.dir/small-nfa.exp.gv                     \
   %D%/minimize.dir/small-z.exp.gv                       \
   %D%/minimize.dir/small-z.gv                           \
+  %D%/partial-identity.dir/lal,q.gv                     \
   %D%/power.dir/binary^0.gv                             \
   %D%/power.dir/binary^1.gv                             \
   %D%/prefix.dir/aut1-factor.gv                         \
@@ -323,13 +324,13 @@ EXTRA_DIST +=                                           \
   %D%/synchronize.dir/z_delay.gv                        \
   %D%/synchronize.dir/z_min.gv                          \
   %D%/synchronize.dir/z_min_delay.gv                    \
+  %D%/to-expression.dir/a.gv                            \
   %D%/tracebacks.dir/non-verbose.ipy                    \
   %D%/tracebacks.dir/non-verbose.ipy.out                \
   %D%/tracebacks.dir/non-verbose.py.out                 \
   %D%/tracebacks.dir/verbose.ipy                        \
   %D%/tracebacks.dir/verbose.ipy.out                    \
   %D%/tracebacks.dir/verbose.py.out                     \
-  %D%/to-expression.dir/a.gv                            \
   %D%/union.dir/abc.gv
 
 %D%/add.log:             $(wildcard $(srcdir)/%D%/add.dir/*)
@@ -346,6 +347,7 @@ EXTRA_DIST +=                                           \
 %D%/infiltrate.log:      $(wildcard $(srcdir)/%D%/conjunction.dir/*)
 %D%/ldivide.log:         $(wildcard $(srcdir)/%D%/ldivide.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
+%D%/partial-identity.log:$(wildcard $(srcdir)/%D%/partial-identity.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
 %D%/proper.log:          $(wildcard $(srcdir)/%D%/proper.dir/*)

@@ -14,6 +14,7 @@ namespace vcsn
 {
   namespace detail
   {
+    /// Evaluate a word on an automaton.
     template <Automaton Aut>
     class evaluator
     {
@@ -87,6 +88,7 @@ namespace vcsn
           }
         return v1[aut_->post()];
       }
+
     private:
       automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
@@ -100,7 +102,7 @@ namespace vcsn
   eval(const Aut& a, const word_t_of<Aut>& w)
     -> std::enable_if_t<!context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
-    detail::evaluator<Aut> e(a);
+    auto e = detail::evaluator<Aut>{a};
     return e(w);
   }
 
