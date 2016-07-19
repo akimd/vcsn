@@ -1,5 +1,6 @@
 # pylint: disable=protected-access
 from html import escape
+from threading import Thread, Event
 
 try:
     import ipywidgets as widgets
@@ -53,6 +54,55 @@ class TextLatexWidget:
     def tolist(self):
         return [self.label, self.text, self.latex]
 
+class AsyncUpdater:
+    '''Asynchronous calls to `update` manager.
+
+    Parameters:
+        - widget: the widget to update,
+        - wait: the time to wait before updating.
+    '''
+    def __init__(self, widget, wait):
+        self.widget = widget
+        self.wait = wait
+        self.thread = None
+        # Used to restart timer in the thread.
+        self.event = Event()
+        self.running = False
+
+    def launch(self):
+        '''Restarts the countdown.
+        If no thread has been started, starts one.
+        If a thread has been started and is running, restarts its countdown.
+        If a thread has been started and has finished, starts a new one.'''
+        if self.thread is not None \
+           and self.thread.is_alive():
+            # Unblock the thread a restart its countdown.
+            self.event.set()
+        else:
+            self.thread = Thread(target=self.run)
+            self.thread.start()
+
+    def abort(self):
+        '''Aborts the thread if it is running.'''
+        if self.thread is not None \
+           and self.thread.is_alive():
+            self.running = False
+            self.event.set()
+
+    def run(self):
+        '''Thread function.
+        Loops as long as other threads call
+        `self.event.set()` before the timeout'''
+        self.running = True
+        while self.running:
+            self.event.clear()
+            # If the unblocking is due to the timeout and not `event.set()`
+            # i.e. we haven't been woken up to restart.
+            if not self.event.wait(self.wait):
+                break
+        # If we are not being aborted.
+        if self.running:
+            self.widget.update()
 
 class ContextText:
 
@@ -227,12 +277,12 @@ class ExpressionText:
             identities = exp.identities()
             cont = exp.context().format('sname')
         else:
-            text = None
+            text = r'\e'
             identities = 'linear'
             cont = 'lal, b'
 
         ctx = vcsn.context(cont)
-        exp = ctx.expression((text if text else r'\e'), identities)
+        exp = ctx.expression(text, identities)
         algos = vcsn.expression.automaton.algos
         ids = vcsn.expression.identities_list
 
@@ -262,6 +312,8 @@ class ExpressionText:
 
         self.ctx.text.on_submit(self.update)
         self.exp.text.on_submit(self.update)
+        self.ctx.text.observe(self.asyncUpdate, 'value')
+        self.exp.text.observe(self.asyncUpdate, 'value')
         self.algo.observe(self.update, 'value')
         self.ids.observe(self.update, 'value')
         self.mode.observe(self.update, 'value')
@@ -288,9 +340,13 @@ class ExpressionText:
         box = widgets.VBox(children=[interactive, self.out, self.err])
 
         display(box)
+
+        self.updater = AsyncUpdater(self, 0.5)
         self.update()
 
     def update(self, *_):
+        # Abort asynchronous updates.
+        self.updater.abort()
         self.err.value = ''
         self.out.clear_output()
         try:
@@ -298,8 +354,7 @@ class ExpressionText:
             text = self.exp.getvalue()
             algo = self.algo.value
             idt = self.ids.value
-            if text == b'':
-                text = r'\e'
+
             ctx = vcsn.context(cont)
             exp = ctx.expression(text, idt)
             aut = exp.automaton(algo=algo)
@@ -311,6 +366,9 @@ class ExpressionText:
         except RuntimeError as e:
             self.exp.latex.value = ''
             self.err.value = formatError(e)
+
+    def asyncUpdate(self, *_):
+        self.updater.launch()
 
 
 @magics_class
