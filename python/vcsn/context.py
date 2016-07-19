@@ -14,6 +14,7 @@ from vcsn.tools import _extend, _format, _is_equal
 @_extend(context)
 class context:
     __eq__ = _is_equal
+    __or__ = lambda l, r: context._tuple([l, r])
     __plus__ = context.join
     __repr__ = lambda self: self.format('text')
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'

@@ -221,11 +221,18 @@ namespace vcsn
       return tuple(auts);
     }
 
+    context
+    tuple(const context& lhs, const context& rhs)
+    {
+      auto cs = std::vector<context>{lhs, rhs};
+      return tuple(cs);
+    }
+
     expression
     tuple(const expression& lhs, const expression& rhs)
     {
-      auto auts = std::vector<expression>{lhs, rhs};
-      return tuple(auts);
+      auto es = std::vector<expression>{lhs, rhs};
+      return tuple(es);
     }
 
     std::string type(const automaton& a)

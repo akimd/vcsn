@@ -153,6 +153,11 @@ automaton context_double_ring(const context& ctx, unsigned n,
   return ctx.double_ring(n, make_vector<unsigned>(finals));
 }
 
+context context_tuple(const boost::python::list& l)
+{
+  return context::tuple(make_vector<context>(l));
+}
+
 expansion expansion_tuple(const boost::python::list& l)
 {
   return expansion::tuple(make_vector<expansion>(l));
@@ -453,6 +458,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("trie", static_cast<string_trie_t>(&context::trie),
          (arg("data") = "", arg("format") = "default",
           arg("filename") = ""))
+    .def("_tuple", &context_tuple).staticmethod("_tuple")
     .def("u", &context::u)
     .def("word", &context_word)
    ;

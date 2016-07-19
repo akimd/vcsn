@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-07-19
+### tuple: applies to contexts
+It is now possible from dyn and Python to tuple several contexts.  For
+instance `vcsn.B | vcsn.Q` is `lat<lal, lal>, q`.
+
 
 # Vcsn 2.3 (2016-07-08)
 

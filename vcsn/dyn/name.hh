@@ -234,10 +234,16 @@ namespace vcsn
     }
   };
 
-  /// vector<dyn::automata> -> std::tuple<automaton_t, ...>.
+  /// vector<dyn::automaton> -> std::tuple<automaton_t, ...>.
   template <>
   struct vnamer<const std::vector<dyn::automaton>>
     : dyn_vector_vnamer<dyn::automaton>
+  {};
+
+  /// vector<dyn::context> -> std::tuple<context_t, ...>.
+  template <>
+  struct vnamer<const std::vector<dyn::context>>
+    : dyn_vector_vnamer<dyn::context>
   {};
 
   /// vector<dyn::expansion> -> std::tuple<expansion_t, ...>.
@@ -252,10 +258,22 @@ namespace vcsn
     : dyn_vector_vnamer<dyn::expression>
   {};
 
+  /// vector<dyn::label> -> std::tuple<label_t, ...>.
+  template <>
+  struct vnamer<const std::vector<dyn::label>>
+    : dyn_vector_vnamer<dyn::label>
+  {};
+
   /// vector<dyn::polynomial> -> std::tuple<polynomial_t, ...>.
   template <>
   struct vnamer<const std::vector<dyn::polynomial>>
     : dyn_vector_vnamer<dyn::polynomial>
+  {};
+
+  /// vector<dyn::weight> -> std::tuple<weight_t, ...>.
+  template <>
+  struct vnamer<const std::vector<dyn::weight>>
+    : dyn_vector_vnamer<dyn::weight>
   {};
 
   /// The sname of a tuple is the tuple of the snames.

@@ -1023,6 +1023,14 @@ namespace vcsn
     /// \param as    the automata
     automaton tuple(const std::vector<automaton>& as);
 
+    /// Tuple two contexts.
+    context tuple(const context& lhs, const context& rhs);
+
+    /// A k-tape context from k contexts.
+    ///
+    /// \param ctxs    the contexts
+    context tuple(const std::vector<context>& ctxs);
+
     /// Build a k-tape expansion from k expansions.
     expansion tuple(const std::vector<expansion>& rs);
 

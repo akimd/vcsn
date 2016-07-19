@@ -96,15 +96,20 @@ check('lal_char(ab), polynomialset<law_char(xy), q>',
 ## LabelSet: tupleset.  ##
 ## -------------------- ##
 
-# Arguably useless, but stresses our tupleset implementation.
-check('lat<lat<lal_char(a)>>, b',
-      'lat<lat<letterset<char_letters(a)>>>, b')
-
 check('lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b')
 check('lat<lal_char(a),lal_char(a)>,b', 'lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b')
 check('lal_char(ab), lat<b, z>', 'letterset<char_letters(ab)>, lat<b, z>')
 
+# Tuple contexts.
+c1 = vcsn.context('lal(abc), b')
+c2 = vcsn.context('lan(xyz), q')
+CHECK_EQ(vcsn.context('lat<lal(abc), lan(xyz)>, q'), c1 | c2)
+
+
 # End of level bosses.
+check('lat<lat<lal_char(a)>>, b',
+      'lat<lat<letterset<char_letters(a)>>>, b')
+
 ctx = '''lat<lal_char(ba),lan_char(vu), law_char(x-z)>,
          lat<expressionset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>'''
 check(ctx,

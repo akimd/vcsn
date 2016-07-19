@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/core/rat/fwd.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/tupleset.hh>
 
@@ -21,6 +22,35 @@ namespace vcsn
     return {ls, ws};
   }
 
+  /*-----------------------.
+  | tuple(expansion...).   |
+  `-----------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge helper.
+      template <typename Contexts, size_t... I>
+      context
+      tuple_(const std::vector<context>& cs,
+             vcsn::detail::index_sequence<I...>)
+      {
+        return tuple_context(cs[I]->template as<tuple_element_t<I, Contexts>>()
+                             ...);
+      }
+
+      /// Bridge (tuple).
+      template <typename Contexts>
+      context
+      tuple_context(const std::vector<context>& cs)
+      {
+        auto indices
+          = vcsn::detail::make_index_sequence<std::tuple_size<Contexts>{}>{};
+        return tuple_<Contexts>(cs, indices);
+      }
+    }
+  }
 
   /*---------------------------------------.
   | tuple_expansionset(expansionset...).   |
