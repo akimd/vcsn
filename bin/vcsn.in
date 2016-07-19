@@ -44,8 +44,16 @@ PATH=$VCSN_LIBEXECDIR:$PATH
 export PATH
 
 # The TAF-Kit commands.
-commands=$(vcsn-tafkit --commands)
-commands_pattern='^('$(echo $commands | sed -e 's/ /|/g')')$'
+commands ()
+{
+  vcsn-tafkit --commands
+}
+
+# The TAF-Kit commands as a grep pattern.
+commands_pattern ()
+{
+  echo '^('$(commands | sed -e 's/ /|/g')')$'
+}
 
 help ()
 {
@@ -65,7 +73,7 @@ If COMMAND is "gdb", run gdb with a type pretty-printer.
 If COMMAND is one of the following commands, run the corresponding
 algorithm:
 
-$commands
+$(commands)
 
 For more information, run:
 
@@ -117,7 +125,7 @@ case $1 in
   (python*|ipython*|jupyter*) exec "$@";;
 
   (*)
-      if echo "$1" | grep -E "$commands_pattern" >/dev/null; then
+      if echo "$1" | grep -E "$(commands_pattern)" >/dev/null; then
           cmd=$(echo "$1" | sed -e 's/-/_/g')
           shift
           exec vcsn-tafkit "$cmd" "$@"
