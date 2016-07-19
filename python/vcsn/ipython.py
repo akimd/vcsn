@@ -25,34 +25,6 @@ def formatError(error):
     res += '</pre>'
     return res
 
-class TextLatexWidget:
-    '''A class to eliminate redundancy over our widgets.
-    Parameters:
-        name: the name for the label.
-        value: the default value of the text box.
-        toLatex: optional, the function to render the text in LaTeX.
-    '''
-    def __init__(self, name, value, toLatex=None):
-        self.label = widgets.Label(value=name, padding='5px 0 7px 0')
-        self.text = widgets.Text(value=value)
-        self.text.on_submit(self.update)
-        self.latex = widgets.Label(width='50%', padding='5px 0 0 0')
-        self.toLatex = toLatex
-        self.update()
-
-    def update(self, *_):
-        if self.toLatex:
-            try:
-                self.latex.value = self.toLatex(self.getvalue())
-            except RuntimeError:
-                self.latex.value = ''
-
-    def getvalue(self):
-        return self.text.value.encode('utf-8')
-
-    def tolist(self):
-        return [self.label, self.text, self.latex]
-
 class AsyncUpdater:
     '''Asynchronous calls to `update` manager.
 
@@ -103,6 +75,40 @@ class AsyncUpdater:
         if self.running:
             self.widget.update()
 
+class TextLatexWidget:
+    '''A class to eliminate redundancy over our widgets.
+    Parameters:
+        name: the name for the label.
+        value: the default value of the text box.
+        toLatex: optional, the function to render the text in LaTeX.
+    '''
+    def __init__(self, name, value, toLatex=None):
+        self.label = widgets.Label(value=name, padding='5px 0 7px 0')
+        self.text = widgets.Text(value=value)
+        self.text.on_submit(self.update)
+        self.text.observe(self.asyncUpdate, 'value')
+        self.latex = widgets.Label(width='50%', padding='5px 0 0 0')
+        self.toLatex = toLatex
+        self.updater = AsyncUpdater(self, 0.5)
+        self.update()
+
+    def asyncUpdate(self, *_):
+        self.updater.launch()
+
+    def update(self, *_):
+        self.updater.abort()
+        if self.toLatex:
+            try:
+                self.latex.value = self.toLatex(self.getvalue())
+            except RuntimeError:
+                self.latex.value = ''
+
+    def getvalue(self):
+        return self.text.value.encode('utf-8')
+
+    def tolist(self):
+        return [self.label, self.text, self.latex]
+
 class ContextText:
 
     def __init__(self, ipython, name=None):
@@ -129,6 +135,7 @@ class ContextText:
         toLatex = lambda txt: vcsn.context(txt)._repr_latex_()
         self.widget = TextLatexWidget('Context:', text, toLatex)
         self.widget.text.on_submit(self.update)
+        self.widget.text.observe(self.asyncUpdate, 'value')
 
         self.error = widgets.HTML(value='')
 
@@ -138,7 +145,13 @@ class ContextText:
             box = widgets.VBox(children=[ctx, self.error])
             display(box)
 
+        self.updater = AsyncUpdater(self, 0.5)
+
+    def asyncUpdate(self, *_):
+        self.updater.launch()
+
     def update(self, *_):
+        self.updater.abort()
         try:
             self.error.value = ''
             txt = self.widget.getvalue()
@@ -204,7 +217,7 @@ class AutomatonText:
         self.out = widgets.Output()
         self.err = widgets.HTML()
 
-        self.text.observe(self.update, 'value')
+        self.text.observe(self.asyncUpdate, 'value')
         self.mode.observe(self.update, 'value')
         self.engine.observe(self.update, 'value')
 
@@ -217,9 +230,14 @@ class AutomatonText:
             self.text.width = '100%'
         box = widgets.VBox(children=[interface, self.err])
         display(box)
+        self.updater = AsyncUpdater(self, 1)
         self.update()
 
+    def asyncUpdate(self, *_):
+        self.updater.launch()
+
     def update(self, *_):
+        self.updater.abort()
         self.err.value = ''
         self.out.clear_output()
         try:
