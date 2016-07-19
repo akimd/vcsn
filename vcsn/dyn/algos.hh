@@ -599,6 +599,9 @@ namespace vcsn
     /// Create a partial identity transducer from \a aut.
     automaton partial_identity(const automaton& aut);
 
+    /// Create a partial-identity two-tape expression from \a e.
+    expression partial_identity(const expression& e);
+
     /// Create a prefix automaton from \a aut.
     automaton prefix(const automaton& aut);
 

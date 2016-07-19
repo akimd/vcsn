@@ -6,6 +6,9 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2016-07-19
+### expression: partial_identity
+The `partial_identity` algorithm is now available on expressions too.
+
 ### tuple: applies to contexts
 It is now possible from dyn and Python to tuple several contexts.  For
 instance `vcsn.B | vcsn.Q` is `lat<lal, lal>, q`.

@@ -89,6 +89,7 @@ algo_headers =                                  \
   %D%/algos/normalize.hh                        \
   %D%/algos/pair.hh                             \
   %D%/algos/partial-identity.hh                 \
+  %D%/algos/partial-identity-expression.hh      \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/project-automaton.hh                \
@@ -162,6 +163,7 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
   %D%/core/rat/less.hh                          \
+  %D%/core/rat/partial-identity.hh              \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \
   %D%/core/rat/project.hh                       \
