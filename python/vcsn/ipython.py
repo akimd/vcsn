@@ -140,7 +140,7 @@ class AutomatonText:
         self.text = widgets.Textarea(value=text)
         self.height = self.text.value.count('\n')
         self.text.lines = '500'
-        self.text.on_trait_change(self.update)
+        self.text.observe(self.update, 'value')
         self.error = widgets.HTML(value='')
         self.svg = widgets.HTML(value=aut.SVG())
         if mode == "h":
@@ -156,7 +156,7 @@ class AutomatonText:
             wc.children = [self.svg, self.error, self.text]
             display(wc)
 
-    def update(self):
+    def update(self, *_):
         try:
             self.error.value = ''
             txt = self.text.value
@@ -262,10 +262,10 @@ class ExpressionText:
 
         self.ctx.text.on_submit(self.update)
         self.exp.text.on_submit(self.update)
-        self.algo.on_trait_change(self.update)
-        self.ids.on_trait_change(self.update)
-        self.mode.on_trait_change(self.update)
-        self.engine.on_trait_change(self.update)
+        self.algo.observe(self.update, 'value')
+        self.ids.observe(self.update, 'value')
+        self.mode.observe(self.update, 'value')
+        self.engine.observe(self.update, 'value')
 
 
         # Labels.

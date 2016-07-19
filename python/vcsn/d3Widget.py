@@ -37,10 +37,10 @@ class VcsnD3DataFrame(object):
         self.error = widgets.HTML(value='')
 
         self._widget_ctx = vcsn.ipython.ContextText(self, self.context)
-        self._widget_ctx.text.on_trait_change(lambda: self._on_change())
+        self._widget_ctx.text.observe(self._on_change, 'value')
 
         self._widget = aut
-        self._widget.on_trait_change(lambda: self._on_change())
+        self._widget.observe(self._on_change, 'value')
 
     def _aut_of_d3(self):
         '''Conversion from d3 to an automaton, via "daut".'''
@@ -80,7 +80,7 @@ class VcsnD3DataFrame(object):
         context = aut.context().format('sname')
         return (states, transitions, context)
 
-    def _on_change(self):
+    def _on_change(self, *_):
         # d3 ==> python (called every time the user changes a value on
         # the gui).  Here the conversion from d3 to vcsn.
         self.context = self._widget_ctx.text.value.encode('utf-8')

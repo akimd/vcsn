@@ -14,12 +14,12 @@ class Automaton:
         algos = expression.automaton.algos
 
         self.option = widgets.Dropdown(options=algos)
-        self.option.on_trait_change(self.update)
+        self.option.observe(self.update, 'value')
 
         self.aut = widgets.HTML(value=self.exp.automaton().SVG())
 
         display(self.option)
         display(self.aut)
 
-    def update(self):
+    def update(self, *_):
         self.aut.value = self.exp.automaton(algo=self.option.value).SVG()

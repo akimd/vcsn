@@ -22,7 +22,7 @@ class EliminateState:
         self.automata, count = eliminate_states(automaton)
 
         self.slider = widgets.IntSlider(value=0, min=0, max=count, step=1)
-        self.slider.on_trait_change(self.update)
+        self.slider.observe(self.update, 'value')
         slider_label = widgets.Label(value='Algorithm step(s):', padding='5px 0 0 0')
         self.aut = widgets.HTML(value=self.automata[0])
 
@@ -31,5 +31,5 @@ class EliminateState:
         display(box)
         display(self.aut)
 
-    def update(self):
+    def update(self, *_):
         self.aut.value = self.automata[self.slider.value]
