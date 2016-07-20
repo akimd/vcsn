@@ -35,7 +35,9 @@ namespace vcsn
     template <bool cond, typename Then>
     auto static_if(Then&& then)
     {
-#if defined __GNUC__ && ! defined __clang__
+      // Applies to both GCC and Clang.  Cannot be done inside a
+      // statement.
+#if defined __GNUC__
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
@@ -48,7 +50,7 @@ namespace vcsn
                              [](auto&&...){}
 #endif
                              );
-#if defined __GNUC__ && ! defined __clang__
+#if defined __GNUC__
 # pragma GCC diagnostic pop
 #endif
     }
