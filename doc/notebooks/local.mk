@@ -146,6 +146,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.lweight.ipynb                  \
   %D%/expression.multiply.ipynb                 \
   %D%/expression.operators.ipynb                \
+  %D%/expression.partial_identity.ipynb         \
   %D%/expression.project.ipynb                  \
   %D%/expression.rweight.ipynb                  \
   %D%/expression.shortest.ipynb                 \

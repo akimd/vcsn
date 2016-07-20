@@ -18,11 +18,12 @@ CHECK_EQ(a, a.partial_identity().project(1))
 
 c1 = vcsn.Q
 c2 = c1 | c1
-def check(e, exp):
-    e = c1.expression(e)
-    exp = c2.expression(exp)
+def check(e, exp, ids='auto'):
+    e = c1.expression(e, ids)
+    exp = c2.expression(exp, ids)
     e2 = e.partial_identity()
     CHECK_EQ(exp, e2)
+    CHECK_EQ(exp.identities(), e2.identities())
     # The partial identity of the automaton is the automaton of the
     # partial identity.
     CHECK_EQ(e.automaton().partial_identity(), e2.automaton())
@@ -36,3 +37,5 @@ check('abc', '(a|a)(b|b)(c|c)')
 check('ab*c', '(a|a)(b|b)*(c|c)')
 check('[abc]', '(a|a)+(b|b)+(c|c)')
 check('<2>a', '<2>(a|a)')
+# Make check we preserve the identities.
+check('<2>ab<3>', '<2>(a|a)(b|b)<3>', 'associative')

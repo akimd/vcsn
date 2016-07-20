@@ -186,6 +186,10 @@ namespace vcsn
       out_value_t res_;
     };
 
+    /// Partial identity of a rational expression.
+    ///
+    /// \tparam InExpSet  the input expressionset type
+    /// \tparam OutExpSet the output expressionset type
     template <typename InExpSet, typename OutExpSet>
     typename OutExpSet::value_t
     partial_identity(const InExpSet& in_rs, const OutExpSet& out_rs,
