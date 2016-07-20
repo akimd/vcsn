@@ -275,6 +275,7 @@ namespace vcsn
         auto name = name_(n);
         if (name.second)
           {
+            out_ << vcsn::iendl;
             out_ << name.first
                  << " [label=\"" << op << "\"]";
           }
@@ -338,10 +339,11 @@ namespace vcsn
           {
             auto weight = print_(n.weight());
             auto sub = print_(n.sub());
-            out_ << vcsn::iendl
-                 << name.first << " [label=\"" << lweight_ << "\"]" << vcsn::iendl
-                 << name.first << " -> " << weight << vcsn::iendl
-                 << name.first << " -> " << sub;
+            out_
+              << vcsn::iendl
+              << name.first << " [label=\"" << lweight_ << "\"]" << vcsn::iendl
+              << name.first << " -> " << weight << vcsn::iendl
+              << name.first << " -> " << sub;
           }
         last_name_ = name.first;
       }
@@ -354,10 +356,11 @@ namespace vcsn
           {
             auto sub = print_(n.sub());
             auto weight = print_(n.weight());
-            out_ << vcsn::iendl
-                 << name.first << " [label=\"" << rweight_ << "\"]" << vcsn::iendl
-                 << name.first << " -> " << sub << vcsn::iendl
-                 << name.first << " -> " << weight;
+            out_
+              << vcsn::iendl
+              << name.first << " [label=\"" << rweight_ << "\"]" << vcsn::iendl
+              << name.first << " -> " << sub << vcsn::iendl
+              << name.first << " -> " << weight;
           }
         last_name_ = name.first;
       }
@@ -368,8 +371,8 @@ namespace vcsn
         auto name = name_(n);
         if (name.second)
           {
-            out_ << vcsn::iendl;
-            out_ << name.first << " [label=\"";
+            out_ << vcsn::iendl
+                 << name.first << " [label=\"";
             rs_.labelset()->print(n.value(), out_, fmt_.for_labels());
             out_ << "\"]";
           }

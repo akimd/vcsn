@@ -221,6 +221,8 @@ EXTRA_DIST +=                                           \
   %D%/expression.dir/de-bruijn-associative-physical.gv  \
   %D%/expression.dir/de-bruijn-trivial-logical.gv       \
   %D%/expression.dir/de-bruijn-trivial-physical.gv      \
+  %D%/expression.dir/labels-none-logical.gv             \
+  %D%/expression.dir/labels-none-physical.gv            \
   %D%/expression.dir/lan-lan-associative-logical.gv     \
   %D%/expression.dir/lan-lan-associative-physical.gv    \
   %D%/expression.dir/lan-lan-trivial-logical.gv         \
