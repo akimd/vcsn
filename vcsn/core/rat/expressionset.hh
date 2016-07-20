@@ -144,12 +144,12 @@ namespace vcsn
       return false;
     }
 
-    /// Whether \a v is the `\z`.
+    /// Whether \a v is the `\\z`.
     ///
     /// Used when used as WeightSet.
     bool is_zero(const value_t& v) const ATTRIBUTE_PURE;
 
-    /// Whether \a v is the `\e`.
+    /// Whether \a v is the `\\e`.
     ///
     /// Used when used as WeightSet.
     static bool is_one(const value_t& v) ATTRIBUTE_PURE;

@@ -35,7 +35,7 @@ namespace vcsn
     ///
     /// They also code the order in which they are sorted by
     /// less, so that, for instance, polynomials always display
-    /// `\e + a`, and never `a + \e`.
+    /// `\\e + a`, and never `a + \\e`.
     enum class type_t
     {
       zero,
@@ -56,7 +56,7 @@ namespace vcsn
       compose,
     };
 
-    /// Whether is a constant (`\z` or `\e`).
+    /// Whether is a constant (`\\z` or `\\e`).
     inline constexpr bool is_constant(type_t t)
     {
       return (t == type_t::one

@@ -258,10 +258,10 @@ namespace vcsn
     /// subexpressions and group the equal monomials.
     expression expand(const expression& e);
 
-    /// The expression for `\e`.
+    /// The expression for `\\e`.
     expression expression_one(const context& c, identities ids);
 
-    /// The expression for `\z`.
+    /// The expression for `\\z`.
     expression expression_zero(const context& c, identities ids);
 
     /// Create a factor automaton from \a aut.
@@ -473,7 +473,7 @@ namespace vcsn
     /// Lift some tapes of the transducer, or turn an automaton into a
     /// spontaneous automaton.
     ///
-    /// Each `<k>l` transition is mapped to a `<<k>l>\e` transition.
+    /// Each `<k>l` transition is mapped to a `<<k>l>\\e` transition.
     ///
     /// \param aut    the input automaton
     /// \param tapes  the tapes to lift to weights

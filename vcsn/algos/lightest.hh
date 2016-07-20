@@ -184,7 +184,8 @@ namespace vcsn
   /// The approximated behavior of an automaton.
   ///
   /// \param aut   the automaton whose behavior to approximate
-  /// \param num   number of words looked for.
+  /// \param num   number of words looked for
+  /// \param algo  the algorithm to use.
   template <Automaton Aut>
   typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t
   lightest(const Aut& aut, unsigned num = 1, const std::string& algo = "auto")

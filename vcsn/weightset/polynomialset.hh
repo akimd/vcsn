@@ -1169,7 +1169,7 @@ namespace vcsn
 
     /// Read a label, if there is one.
     ///
-    /// Does not handle `\z`, nor letter classes.
+    /// Does not handle `\\z`, nor letter classes.
     ///
     /// \returns  none if there is no label.
     boost::optional<label_t>

@@ -189,7 +189,7 @@ namespace vcsn
   /// Repeated concatenation of an automaton.
   ///
   /// \param aut  the automaton
-  /// \param to   the exponents
+  /// \param exp  the exponents
   // The return type, via SFINAE on aut->null_state(), makes the
   // difference with another overload, `<ValueSet>(ValueSet, value,
   // value)`, which coincides in the case ValueSet = Z, hence value =
@@ -339,7 +339,7 @@ namespace vcsn
   ///
   /// \param vs   the valueset
   /// \param v    the value
-  /// \param to   the exponent, single.
+  /// \param exp  the exponent, single.
   template <typename ValueSet>
   auto
   multiply(const ValueSet& vs, const typename ValueSet::value_t& v,
@@ -365,7 +365,7 @@ namespace vcsn
   ///
   /// \param vs   the valueset
   /// \param v    the value
-  /// \param to   the exponent, composed of:
+  /// \param exp  the exponent, composed of:
   ///    - min  the minimum number.  If -1, denotes 0.
   ///    - max  the maximum number.
   ///           If -1, denotes infinity, using star.

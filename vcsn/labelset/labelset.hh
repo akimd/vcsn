@@ -175,7 +175,7 @@ namespace vcsn
     /// Unfortunately cannot be always done.  For instance,
     /// `tupleset<nullableset<letterset>, nullableset<letterset>>`
     /// cannot be turned in `tupleset<letterset, letterset>`, as it
-    /// also forbids `(a, \e)` and `(\e, x)` which should be kept
+    /// also forbids `(a, \\e)` and `(\\e, x)` which should be kept
     /// legitimate.
     template <typename LabelSet>
     struct proper_traits

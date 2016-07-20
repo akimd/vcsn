@@ -939,7 +939,7 @@ namespace vcsn
   /// Repeated conjunction of a automaton.
   ///
   /// \param aut  the automaton to conjoin with itself.
-  /// \param n    the "power": number of conjunction to apply.
+  /// \param exp  the "power": number of conjunction to apply.
   ///
   /// \returns A non-decorated automaton.
   template <Automaton Aut>

@@ -107,12 +107,12 @@ namespace vcsn
       VCSN_RAT_VISIT(shuffle, v)     { visit_product(v); }
 
       /// Cannot compute the constant-term easily here:
-      /// c(<x>a{\}<y>a) = x{\}y, yet both operands have a null
+      /// `c(<x>a{\}<y>a) = x{\}y`, yet both operands have a null
       /// constant-term.
       VCSN_RAT_UNSUPPORTED(ldivide);
 
       /// Cannot compute the constant-term easily here:
-      /// c(<x>\e|x @ <y>x|\e) = xy, yet both operands have a null
+      /// `c(<x>\\e|x @ <y>x|\\e) = xy`, yet both operands have a null
       /// constant-term.
       VCSN_RAT_UNSUPPORTED(compose);
 

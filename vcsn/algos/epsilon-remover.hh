@@ -45,31 +45,6 @@ namespace vcsn
                             detail::proper_context<context_t_of<automaton_t>>>;
 
     public:
-      /// Get ready to eliminate spontaneous transitions.
-      /// \param aut    the automaton in which to remove them
-      /// \param prune  whether to delete states that become inaccessible
-      epsilon_remover(automaton_t& aut, bool prune = true)
-        : debug_(debug_level())
-        , aut_(aut)
-        , prune_(prune)
-      {}
-
-      aut_proper_t operator()()
-      {
-        auto proper_ctx = make_proper_context(aut_->context());
-        auto res = make_shared_ptr<aut_proper_t>(proper_ctx);
-
-        in_situ_remover();
-
-        copy_into(aut_, res);
-        return res;
-      }
-
-      void in_situ_remover()
-      {
-        if (!is_proper(aut_))
-          in_situ_remover_();
-      }
 
       /**
          @brief The core of the (backward) epsilon-removal.
@@ -101,6 +76,32 @@ namespace vcsn
          @param prune   Whether to remove states that become inaccessible.
          @return true if the proper succeeds, or false otherwise.
       */
+
+      /// Get ready to eliminate spontaneous transitions.
+      /// \param aut    the automaton in which to remove them
+      /// \param prune  whether to delete states that become inaccessible
+      epsilon_remover(automaton_t& aut, bool prune = true)
+        : debug_(debug_level())
+        , aut_(aut)
+        , prune_(prune)
+      {}
+
+      aut_proper_t operator()()
+      {
+        auto proper_ctx = make_proper_context(aut_->context());
+        auto res = make_shared_ptr<aut_proper_t>(proper_ctx);
+
+        in_situ_remover();
+
+        copy_into(aut_, res);
+        return res;
+      }
+
+      void in_situ_remover()
+      {
+        if (!is_proper(aut_))
+          in_situ_remover_();
+      }
 
     private:
       /// Update the profile of \a s.

@@ -89,7 +89,7 @@ namespace vcsn
       /// Update res_ by hashing the node type; this is needed for any node.
       void combine_type(const node_t& node);
 
-      /// Traverse a nullary node (atom, `\z`, `\e`).
+      /// Traverse a nullary node (atom, `\\z`, `\\e`).
       void visit_(const node_t& v);
 
       /// Traverse a unary node (`*`, `{c}`).

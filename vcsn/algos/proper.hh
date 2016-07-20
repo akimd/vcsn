@@ -37,7 +37,7 @@ namespace vcsn
                             detail::proper_context<context_t_of<automaton_t>>>;
 
     public:
-      /**@brief Remove the epsilon-transitions of the input
+      /**\brief Remove the epsilon-transitions of the input
 
         The behaviour of this method depends on the star_status of the
         weight_set:
@@ -47,9 +47,10 @@ namespace vcsn
          if it returns false, an exception is launched
          -- non_starrable / absval:
          is_valid is called before launching the algorithm.
-         @param aut The automaton in which epsilon-transitions will be removed
-         @param prune   Whether to remove states that become inaccessible.
-         @throw runtime_error if the input is not valid
+         \param aut The automaton in which epsilon-transitions will be removed
+         \param prune   Whether to remove states that become inaccessible
+         \param algo    the algorithm to use.
+         \throw runtime_error if the input is not valid
       */
       properer(automaton_t aut,
                bool prune = true,
@@ -272,6 +273,7 @@ namespace vcsn
   /// \param aut   the input automaton
   /// \param dir   whether backward or forward elimination
   /// \param prune whether to suppress states becoming inaccessible
+  /// \param algo  the algorithm to use
   template <Automaton Aut>
   void proper_here(Aut& aut, direction dir = direction::backward,
                    bool prune = true, const std::string& algo = "auto")

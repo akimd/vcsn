@@ -104,7 +104,7 @@ namespace vcsn
     /// The handling of initial and final states can be simplified by
     /// working on a delimited rational expression (`$r$` with `$`
     /// being the special label), and mapping `$r$` to `pre()`, and
-    /// `\e` to `post()`.  Then, there is no special treatment needed
+    /// `\\e` to `post()`.  Then, there is no special treatment needed
     /// to handle the initial split in the case of a breaking
     /// derivation, and there is no special need to handle the final
     /// transitions.
