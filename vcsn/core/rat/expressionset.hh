@@ -345,7 +345,7 @@ namespace vcsn
     auto project() const
       -> project_t<Tape>
     {
-      return vcsn::detail::project<Tape>(context());
+      return vcsn::detail::project<Tape>(self());
     }
 
     /// Project a multitape expression.

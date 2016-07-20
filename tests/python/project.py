@@ -99,6 +99,14 @@ check(c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y'),
       'e+<3>f',
       'x+y+xy')
 
+# Check identities.
+e = c.expression('<2>(ab|ef|xyz)<3>', 'associative')
+check(e,
+      '<2>(ab)<3>',
+      '<2>(ef)<3>',
+      '<2>(xyz)<3>')
+CHECK_EQ('associative', e.project(0).identities())
+
 
 ## ------------- ##
 ## polynomials.  ##

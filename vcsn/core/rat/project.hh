@@ -10,20 +10,20 @@ namespace vcsn
   {
     /// Functor to project a rational expression.
     ///
-    /// \tparam InExpSet  the input expressionset type
-    /// \tparam Tape      the selected tape
-    template <typename InExpSet, size_t Tape>
+    /// \tparam InExpSet   the input expressionset type
+    /// \tparam OutExpSet  the output expressionset type
+    /// \tparam Tape       the selected tape
+    template <typename InExpSet, typename OutExpSet, size_t Tape>
     class project_impl
       : public InExpSet::const_visitor
     {
     public:
       using in_expressionset_t = InExpSet;
-      using in_context_t = context_t_of<in_expressionset_t>;
-      using out_expressionset_t
-        = typename in_expressionset_t::template project_t<Tape>;
+      using out_expressionset_t = OutExpSet;
       using super_t = typename in_expressionset_t::const_visitor;
       using self_t = project_impl;
 
+      using in_context_t = context_t_of<in_expressionset_t>;
       using in_expression_t = typename in_expressionset_t::value_t;
       using out_expression_t = typename out_expressionset_t::value_t;
       using node_t = typename super_t::node_t;
@@ -34,9 +34,15 @@ namespace vcsn
       using variadic_t = typename super_t::template variadic_t<Type>;
       using leaf_t = typename super_t::leaf_t;
 
+      project_impl(const in_expressionset_t& in_rs,
+                   const out_expressionset_t& out_rs)
+        : in_rs_{in_rs}
+        , out_rs_{out_rs}
+      {}
+
       project_impl(const in_expressionset_t& in_rs)
-        : in_rs_(in_rs)
-        , out_rs_(::vcsn::detail::project<Tape>(in_rs_.context()))
+        : project_impl{in_rs,
+                       in_rs.template project<Tape>()}
       {}
 
       /// Entry point: print \a v.
@@ -153,15 +159,29 @@ namespace vcsn
 
     /// Project a rational expression.
     ///
+    /// \tparam Tape      the selected tape
+    /// \tparam InExpSet  the input expressionset type
+    /// \tparam OutExpSet the output expressionset type
+    template <size_t Tape, typename InExpSet, typename OutExpSet>
+    auto
+    project(const InExpSet& in_rs, const OutExpSet& out_rs,
+            const typename InExpSet::value_t& v)
+      -> typename OutExpSet::value_t
+    {
+      auto p = project_impl<InExpSet, OutExpSet, Tape>{in_rs, out_rs};
+      return p(v);
+    }
+
+    /// Project a rational expression.
+    ///
     /// \tparam Tape     the selected tape
     /// \tparam InExpSet the expressionset type
     template <size_t Tape, typename InExpSet>
     auto
     project(const InExpSet& in_rs, const typename InExpSet::value_t& v)
-      -> typename project_impl<InExpSet, Tape>::out_expression_t
+      -> typename InExpSet::template project_t<Tape>::value_t
     {
-      auto p = project_impl<InExpSet, Tape>{in_rs};
-      return p(v);
+      return project<Tape>(in_rs, in_rs.template project<Tape>(), v);
     }
-  } // namespace rat
+} // namespace rat
 } // namespace vcsn
