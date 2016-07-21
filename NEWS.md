@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-07-23
+### automaton.info: levels of detail
+Instead of a Boolean argument `detailed`, `info` now features an integer
+argument `details`, defaulting to 2.  A new level, 1, contains only basic
+information (number of states and transitions).
+
 ## 2016-07-19
 ### expression: partial_identity
 The `partial_identity` algorithm is now available on expressions too.

@@ -9,7 +9,7 @@ from test import *
 
 
 def check(obj, exp):
-    CHECK_EQ(exp, obj.info(detailed=True))
+    CHECK_EQ(exp, obj.info(details=3))
 
 ## ---------------- ##
 ## automaton.info.  ##
@@ -120,7 +120,7 @@ check(vcsn.context('law_char(ab), b')
 ## ----------------- ##
 
 
-# expression.info does not accept a detailed parameter.
+# expression.info does not accept a `details` parameter.
 def check(obj, exp):
     CHECK_EQ(exp, obj.info())
 

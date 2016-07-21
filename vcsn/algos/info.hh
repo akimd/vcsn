@@ -70,54 +70,59 @@ namespace vcsn
   /// Print info about an automaton.
   template <Automaton Aut>
   std::ostream&
-  info(const Aut& aut, std::ostream& out = std::cout, bool detailed = false)
+  info(const Aut& aut, std::ostream& out = std::cout, unsigned details = 2)
   {
-    out << "type: ";
-    aut->print_set(out, format::sname) << '\n';
-#define ECHO(Name, Value)                               \
-    out << Name ": " << Value << '\n'
+    const char* sep = "";
+    if (2 <= details)
+      {
+        out << "type: ";
+        aut->print_set(out, format::sname);
+        sep = "\n";
+      }
+#define ECHO(Level, Name, Value)                 \
+    do {                                         \
+      if (Level <= details)                      \
+        out << sep << Name ": " << Value;        \
+      sep = "\n";                                \
+  } while (false)
+
 #define VCSN_IF_FREE(Fun, Aut)                                  \
     detail::static_if<labelset_t_of<decltype(Aut)>::is_free()>  \
         ([](auto a) { return Fun(a); },                         \
          [](auto)   { return "N/A";  })(Aut)
 
-    ECHO("number of states", aut->num_states());
-    ECHO("number of lazy states", detail::num_lazy_states(aut));
-    ECHO("number of initial states", aut->num_initials());
-    ECHO("number of final states", aut->num_finals());
-    ECHO("number of accessible states", num_accessible_states(aut));
-    ECHO("number of coaccessible states", num_coaccessible_states(aut));
-    ECHO("number of useful states", num_useful_states(aut));
-    ECHO("number of codeterministic states",
+    ECHO(1, "number of states", aut->num_states());
+    ECHO(2, "number of lazy states", detail::num_lazy_states(aut));
+    ECHO(1, "number of initial states", aut->num_initials());
+    ECHO(1, "number of final states", aut->num_finals());
+    ECHO(2, "number of accessible states", num_accessible_states(aut));
+    ECHO(2, "number of coaccessible states", num_coaccessible_states(aut));
+    ECHO(1, "number of useful states", num_useful_states(aut));
+    ECHO(2, "number of codeterministic states",
          VCSN_IF_FREE(num_codeterministic_states, aut));
-    ECHO("number of deterministic states",
+    ECHO(2, "number of deterministic states",
          VCSN_IF_FREE(num_deterministic_states, aut));
-    ECHO("number of transitions", aut->num_transitions());
-    ECHO("number of spontaneous transitions",
+    ECHO(1, "number of transitions", aut->num_transitions());
+    ECHO(2, "number of spontaneous transitions",
          detail::num_spontaneous_transitions(aut));
-    if (detailed)
-      ECHO("number of strongly connected components",
-           num_components(scc(aut)));
-    if (detailed)
-      ECHO("is ambiguous", VCSN_IF_FREE(is_ambiguous, aut));
-    ECHO("is complete", VCSN_IF_FREE(is_complete, aut));
-    if (detailed)
-      ECHO("is cycle ambiguous", VCSN_IF_FREE(is_cycle_ambiguous, aut));
-    ECHO("is deterministic", VCSN_IF_FREE(is_deterministic, aut));
-    ECHO("is codeterministic", VCSN_IF_FREE(is_codeterministic, aut));
-    ECHO("is empty", is_empty(aut));
-    ECHO("is eps-acyclic", is_eps_acyclic(aut));
-    ECHO("is normalized", is_normalized(aut));
-    ECHO("is proper", is_proper(aut));
-    ECHO("is standard", is_standard(aut));
-    if (detailed)
-      ECHO("is synchronizing", VCSN_IF_FREE(is_synchronizing, aut));
-    ECHO("is trim", is_trim(aut));
-    ECHO("is useless", is_useless(aut));
+    ECHO(3, "number of strongly connected components",
+         num_components(scc(aut)));
+    ECHO(3, "is ambiguous", VCSN_IF_FREE(is_ambiguous, aut));
+    ECHO(2, "is complete", VCSN_IF_FREE(is_complete, aut));
+    ECHO(3, "is cycle ambiguous", VCSN_IF_FREE(is_cycle_ambiguous, aut));
+    ECHO(2, "is deterministic", VCSN_IF_FREE(is_deterministic, aut));
+    ECHO(2, "is codeterministic", VCSN_IF_FREE(is_codeterministic, aut));
+    ECHO(2, "is empty", is_empty(aut));
+    ECHO(2, "is eps-acyclic", is_eps_acyclic(aut));
+    ECHO(2, "is normalized", is_normalized(aut));
+    ECHO(2, "is proper", is_proper(aut));
+    ECHO(2, "is standard", is_standard(aut));
+    ECHO(3, "is synchronizing", VCSN_IF_FREE(is_synchronizing, aut));
+    ECHO(2, "is trim", is_trim(aut));
+    ECHO(2, "is useless", is_useless(aut));
+    ECHO(2, "is valid", is_valid(aut));
 #undef VCSN_IF_FREE
 #undef ECHO
-    // No eol for the last one.
-    out << "is valid: " << is_valid(aut);
     return out;
   }
 
@@ -129,9 +134,9 @@ namespace vcsn
       /// Bridge.
       template <Automaton Aut, typename Ostream, typename Bool>
       std::ostream& info(const automaton& aut, std::ostream& out,
-                         bool detailed)
+                         unsigned details)
       {
-        info(aut->as<Aut>(), out, detailed);
+        info(aut->as<Aut>(), out, details);
         return out;
       }
     }

@@ -91,8 +91,9 @@ namespace vcsn
           {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},
           {"fado",         detail::fado_impl_<Aut>},
           {"grail",        detail::grail_impl_<Aut>},
-          {"info",         [](const Aut& a, std::ostream& o){ info(a, o); }},
-          {"info,detailed",[](const Aut& a, std::ostream& o){ info(a, o, true); }},
+          {"info",         [](const Aut& a, std::ostream& o){ info(a, o, 2); }},
+          {"info,detailed",[](const Aut& a, std::ostream& o){ info(a, o, 3); }},
+          {"info,size",    [](const Aut& a, std::ostream& o){ info(a, o, 1); }},
           {"null",         [](const Aut&, std::ostream&){}},
           {"tikz",         [](const Aut& a, std::ostream& o){ tikz(a, o); }},
         }

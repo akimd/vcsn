@@ -82,7 +82,7 @@ def check_aut(function_name, type_):
                'number of lazy states': 0,
                'type': type_,
                },
-             fun(0).info(detailed=True))
+             fun(0).info(details=3))
 
 check_aut('focus',
           'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')

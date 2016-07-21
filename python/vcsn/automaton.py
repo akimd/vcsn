@@ -121,9 +121,11 @@ class automaton:
         elif mode == 'dot2tex':
             return display.SVG(self.SVG(mode, engine))
         elif mode == 'info':
-            return self.info(detailed=False)
+            return self.info(details=2)
         elif mode == 'info,detailed':
-            return self.info(detailed=True)
+            return self.info(details=3)
+        elif mode == 'info,size':
+            return self.info(details=1)
         elif mode == 'type':
             return repr(self)
         else:
@@ -169,13 +171,14 @@ class automaton:
         modes = automaton.display.modes
         engines = automaton.display.engines
         if 20 < self.state_number():
-            # Put 'info' first, to be the default.
-            modes.remove('info')
-            modes.insert(0, 'info')
+            # Put 'info,size' first, to be the default.
+            modes.remove('info,size')
+            modes.insert(0, 'info,size')
         interact_h(lambda mode, engine: self._display(mode, engine),
                    mode=modes, engine=engines)
 
-    display.modes = ['simple', 'pretty', 'info', 'info,detailed', 'tooltip',
+    display.modes = ['simple', 'pretty', 'info,size', 'info',
+                     'info,detailed', 'tooltip',
                      'transitions', 'type', 'dot', 'dot2tex']
     display.engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp',
                        'patchwork']
@@ -312,9 +315,10 @@ class automaton:
 
     infiltrate = lambda *auts: automaton._infiltrate(list(auts))
 
-    def info(self, key=None, detailed=False):
-        res = _info_to_dict(self.format(
-            'info,detailed' if detailed else 'info'))
+    def info(self, key=None, details=2):
+        formats = ['info,size', 'info', 'info,detailed']
+        details = max(0, min(3, details))
+        res = _info_to_dict(self.format(formats[details - 1]))
         return res[key] if key else res
 
     def is_synchronized_by(self, w):

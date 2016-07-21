@@ -310,10 +310,10 @@ namespace vcsn
     ///
     /// \param aut  the automaton under study
     /// \param out  the output stream where to print the info
-    /// \param detailed
-    ///    whether to print even facts costly to compute.
+    /// \param details
+    ///    levels of details from 1 (fewer), to 3 (more).
     std::ostream& info(const automaton& aut, std::ostream& out = std::cout,
-                       bool detailed = false);
+                       unsigned details = 2);
 
     /// Output various facts about \a exp.
     std::ostream& info(const expression& exp, std::ostream& out = std::cout);
