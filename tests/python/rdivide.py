@@ -38,7 +38,7 @@ def check(lhs_expr, rhs_expr):
     divide_expr = lhs_expr.ldivide(rhs_expr).derived_term()
     divide_aut = lhs_aut.ldivide(rhs_aut)
 
-    if divide_aut.info()['is valid'] and divide_expr.info()['is valid']:
+    if divide_aut.is_valid() and divide_expr.is_valid():
         CHECK_EQUIV(divide_expr, divide_aut)
 
 exprs = [r'\z', r'<2>\e', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
