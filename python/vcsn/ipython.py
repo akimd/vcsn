@@ -1,4 +1,4 @@
-# pylint: disable=protected-access
+# pylint: disable=protected-access, too-many-instance-attributes
 from html import escape
 from threading import Thread, Event
 
@@ -12,7 +12,6 @@ from IPython.core.magic_arguments import (argument, magic_arguments, parse_argst
 from IPython.display import display
 import vcsn
 
-from vcsn.dot import _dot_to_svg, _dot_pretty, daut_to_dot
 from vcsn import d3Widget
 
 import vcsn.demo as demo
@@ -167,7 +166,15 @@ ip.register_magics(EditContext)
 
 class AutomatonText:
 
-    def __init__(self, ipython, name, format, mode):
+    def __init__(self, ipython, name, format, horizontal=True):
+        '''A wrapper of widgets to edit an automaton interactively.
+
+        Parameters:
+          - ipython: a reference to the caller shell
+          - name: the name of the variable to edit
+          - format: the format in which we want to edit it
+          - horizontal (optional): layout the widgets horizontally, default: True
+        '''
         if not name.isidentifier():
             raise NameError(
                     '`{}` is not a valid variable name'.format(name))
@@ -188,35 +195,43 @@ class AutomatonText:
             text = aut.format(self.format).replace(ctx.format('sname'), c)
 
         self.text = widgets.Textarea(value=text)
-        self.height = self.text.value.count('\n')
-        self.text.lines = '500'
+        self.mode = widgets.Dropdown(options=vcsn.automaton.display.modes,
+                                     description='Mode:',
+                                     value='pretty')
+        self.engine = widgets.Dropdown(options=vcsn.automaton.display.engines,
+                                       description='Engine:')
+
+        self.out = widgets.Output()
+        self.err = widgets.HTML()
+
         self.text.observe(self.update, 'value')
-        self.error = widgets.HTML(value='')
-        self.svg = widgets.HTML(value=aut.SVG())
-        if mode == "h":
-            wc1 = widgets.Box()
-            wc1.children = [self.text]
-            wc2 = widgets.HBox()
-            wc2.children = [wc1, self.svg]
-            wc3 = widgets.Box()
-            wc3.children = [wc2, self.error]
-            display(wc3)
-        elif mode == "v":
-            wc = widgets.HBox()
-            wc.children = [self.svg, self.error, self.text]
-            display(wc)
+        self.mode.observe(self.update, 'value')
+        self.engine.observe(self.update, 'value')
+
+        dropdowns = widgets.HBox(children=[self.mode, self.engine])
+        displayer = widgets.VBox(children=[dropdowns, self.out])
+        if horizontal:
+            interface = widgets.HBox(children=[self.text, displayer])
+        else:
+            interface = widgets.VBox(children=[self.text, displayer])
+            self.text.width = '100%'
+        box = widgets.VBox(children=[interface, self.err])
+        display(box)
+        self.update()
 
     def update(self, *_):
+        self.err.value = ''
+        self.out.clear_output()
         try:
-            self.error.value = ''
             txt = self.text.value
             a = vcsn.automaton(txt, self.format, strip=False)
             self.ipython.shell.user_ns[self.name] = a
-            dot = daut_to_dot(
-                txt) if self.format == "daut" else a.format('dot')
-            self.svg.value = _dot_to_svg(_dot_pretty(dot))
+            # There is currently no official documentation on this,
+            # so please check out `ipywidgets.Output`'s docstring.
+            with self.out:
+                a._display(self.mode.value, self.engine.value)
         except RuntimeError as e:
-            self.error.value = formatError(e)
+            self.err.value = formatError(e)
 
 
 @magics_class
@@ -247,7 +262,7 @@ class EditAutomaton(Magics):
                 a = d3Widget.VcsnD3DataFrame(self, args.var)
                 a.show()
             else:
-                AutomatonText(self, args.var, args.format, args.mode)
+                AutomatonText(self, args.var, args.format, args.mode != 'v')
         else:
             # Cell magic.
             a = vcsn.automaton(cell, format=args.format, strip=args.strip)
@@ -261,7 +276,7 @@ class ExpressionText:
     '''A widgets that allows us to edit an expression and its context, save it
     under chosen identities, and render an automaton of it using a chosen
     algorithm.'''
-    # pylint: disable=too-many-instance-attributes,too-many-locals
+    # pylint: disable=too-many-locals
     def __init__(self, ipython, name):
         if not name.isidentifier():
             raise NameError(
@@ -360,6 +375,8 @@ class ExpressionText:
             aut = exp.automaton(algo=algo)
 
             self.exp.latex.value = exp._repr_latex_()
+            # There is currently no official documentation on this,
+            # so please check out `ipywidgets.Output`'s docstring.
             with self.out:
                 aut._display(self.mode.value, self.engine.value)
             self.ipython.shell.user_ns[self.name] = exp
