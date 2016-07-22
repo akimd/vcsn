@@ -138,20 +138,17 @@ digraph
 }''')
 CHECK(aut3.is_cycle_ambiguous())
 
+ctx = vcsn.context("lal_char(abc), b")
+
 r1 = "((abc)*){5}abc" + format(aut1.expression())
-aut4 = vcsn.context("lal_char(abc), b").expression(r1).derived_term()
+aut4 = ctx.expression(r1).derived_term()
 CHECK(aut4.is_cycle_ambiguous())
 
 r2 = "((abc)*){5}abc" + format(aut2.expression())
-aut5 = vcsn.context("lal_char(abc), b").expression(r2).derived_term()
+aut5 = ctx.expression(r2).derived_term()
 CHECK(not aut5.is_cycle_ambiguous())
 
-
-CHECK(vcsn.context("lal_char(abc), b").
-         ladybird(5).is_cycle_ambiguous())
-CHECK(not vcsn.context("lal_char(abc), b").
-         de_bruijn(5).is_cycle_ambiguous())
-CHECK(vcsn.context("lal_char(abc), b").
-         ladybird(20).is_cycle_ambiguous())
-CHECK(not vcsn.context("lal_char(abc), b").
-        de_bruijn(20).is_cycle_ambiguous())
+CHECK(ctx.ladybird(5).is_cycle_ambiguous())
+CHECK(not ctx.de_bruijn(5).is_cycle_ambiguous())
+CHECK(ctx.ladybird(20).is_cycle_ambiguous())
+CHECK(not ctx.de_bruijn(20).is_cycle_ambiguous())
