@@ -14,34 +14,77 @@ namespace vcsn
   | is_ambiguous.  |
   `---------------*/
 
-  /// Whether an automaton is ambiguous.
-  ///
-  /// \param[in] aut        the automaton.
-  /// \param[out] witness   if ambiguous, a pair of "ambiguous" states.
-  /// \returns whether ambiguous.
-  template <Automaton Aut>
-  bool is_ambiguous(const Aut& aut,
-                    std::tuple<state_t_of<Aut>, state_t_of<Aut>>& witness)
+  namespace detail
   {
-    auto prod = conjunction(aut, aut);
-    // Check if there useful states outside of the diagonal.  Since
-    // the conjunction is accessible, check only for coaccessibles states.
-    auto coaccessible = coaccessible_states(prod);
-    for (const auto& o: prod->origins())
-      if (std::get<0>(o.second) != std::get<1>(o.second)
-          && has(coaccessible, o.first))
-        {
-          witness = o.second;
-          return true;
-        }
-    return false;
+    /// Whether an automaton is ambiguous.
+    template <Automaton Aut>
+    struct is_ambiguous_impl
+    {
+      using automaton_t = Aut;
+      using conjunction_t
+      = decltype(conjunction(std::declval<automaton_t>(),
+                             std::declval<automaton_t>()));
+      using word_t = word_t_of<automaton_t>;
+
+      is_ambiguous_impl(const automaton_t& aut)
+        // FIXME: this product should not take weights into account!
+        : conj_{conjunction(aut, aut)}
+      {}
+
+      /// Whether an automaton is ambiguous.
+      ///
+      /// \param[in] aut        the automaton.
+      /// \returns whether ambiguous.
+      bool operator()()
+      {
+        // Check if there useful states outside of the diagonal.
+        // Since the conjunction is accessible, check only for
+        // coaccessibles states.
+        auto coaccessible = coaccessible_states(conj_);
+        for (const auto& o: conj_->origins())
+          if (std::get<0>(o.second) != std::get<1>(o.second)
+              && has(coaccessible, o.first))
+            {
+              witness_ = o.first;
+              return true;
+            }
+        return false;
+      }
+
+      word_t ambiguous_word()
+      {
+        require(witness_ != conj_->null_state(),
+                "ambiguous_word: automaton is unambiguous, "
+                "or has not been tested, for ambiguity");
+        const auto ls = make_wordset(*conj_->labelset());
+
+        // FIXME: I would prefer the shortest path (length of word),
+        // rather than the lightest.
+        auto pre_to_w
+          = path_monomial(conj_, lightest_path(conj_, conj_->pre(), witness_),
+                          conj_->pre(), witness_);
+        auto w_to_post
+          = path_monomial(conj_, lightest_path(conj_, witness_, conj_->post()),
+                          witness_, conj_->post());
+        assert(pre_to_w || !"ambiguous_word: did not find monomial");
+        assert(w_to_post || !"ambiguous_word: did not find monomial");
+
+        return ls.mul(pre_to_w->first, w_to_post->first);
+      }
+
+      /// The self-conjunction of the input automaton.
+      conjunction_t conj_;
+      /// State index in the conjunction of a state that is not on the
+      /// diagonal.
+      state_t_of<conjunction_t> witness_ = conj_->null_state();
+    };
   }
 
   template <Automaton Aut>
   bool is_ambiguous(const Aut& aut)
   {
-    auto dummy = std::tuple<state_t_of<Aut>, state_t_of<Aut>>{};
-    return is_ambiguous(aut, dummy);
+    auto is_ambiguous = detail::is_ambiguous_impl<Aut>{aut};
+    return is_ambiguous();
   }
 
   namespace dyn
@@ -65,23 +108,10 @@ namespace vcsn
   template <Automaton Aut>
   word_t_of<Aut> ambiguous_word(const Aut& aut)
   {
-    auto witness = std::tuple<state_t_of<Aut>, state_t_of<Aut>>{};
-    require(is_ambiguous(aut, witness),
-            "automaton is unambiguous");
-    const auto& ls = *aut->labelset();
-    // Find the shortest word from initial to the witness.
-    auto s = std::get<0>(witness);
-
-    auto pre_to_s = path_monomial(aut, lightest_path(aut, aut->pre(), s),
-                                  aut->pre(), s);
-    auto s_to_post = path_monomial(aut, lightest_path(aut, s, aut->post()),
-                                   s, aut->post());
-    require(pre_to_s, "ambiguous_word: did not find monomial");
-    require(s_to_post, "ambiguous_word: did not find monomial");
-
-    return ls.mul(pre_to_s->first, s_to_post->first);
+    auto is_ambiguous = detail::is_ambiguous_impl<Aut>{aut};
+    require(is_ambiguous(), "ambiguous_word: automaton is unambiguous");
+    return is_ambiguous.ambiguous_word();
   }
-
 
   namespace dyn
   {
