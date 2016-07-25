@@ -44,7 +44,6 @@ vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \
   %D%/vcsn/__init__.py                          \
   %D%/vcsn/automaton.py                         \
-  %D%/vcsn/conjunction.py                       \
   %D%/vcsn/context.py                           \
   %D%/vcsn/d3Widget.py                          \
   %D%/vcsn/dot.py                               \
@@ -53,6 +52,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/ipython.py                           \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
+  %D%/vcsn/proxy.py                             \
   %D%/vcsn/score.py                             \
   %D%/vcsn/tools.py                             \
   %D%/vcsn/weight.py

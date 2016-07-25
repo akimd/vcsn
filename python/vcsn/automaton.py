@@ -6,7 +6,7 @@ import re
 from subprocess import Popen, PIPE
 
 from vcsn_cxx import automaton, label
-from vcsn.conjunction import Conjunction
+from vcsn.proxy import variadicProxy
 from vcsn.tools import (_extend, _format, _info_to_dict,
                         _lweight, _rweight,
                         _tmp_file)
@@ -71,6 +71,29 @@ def _guess_format(data=None, filename=None):
             return 'fado'
     raise RuntimeError('cannot guess automaton format: ',
                        data if data else filename)
+
+@variadicProxy('__and__')
+class Conjunction:
+    '''A proxy class to delay calls to the & operator in order to turn
+    a & b & c into a variadic evaluation of vcsn.automaton.conjunction(a, b, c).
+    '''
+    def __and__(self, arg):
+        if isinstance(arg, int):
+            object.__getattribute__(self, "_proxy_vars")[-1] =  \
+                object.__getattribute__(self, "_proxy_vars")[-1].conjunction(arg)
+        else:
+            object.__getattribute__(self, "_proxy_vars").append(arg)
+        return self
+
+    def __value__(self):
+        aut = object.__getattribute__(self, "_proxy_vars")
+        if isinstance(aut, list):
+            if len(aut) == 1:
+                aut = aut[0]
+            else:
+                aut = aut[0].conjunction(*(aut[1:]), lazy=False)
+            object.__setattr__(self, "_proxy_vars", aut)
+        return aut
 
 
 @_extend(automaton)
