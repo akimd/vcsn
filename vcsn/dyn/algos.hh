@@ -948,10 +948,11 @@ namespace vcsn
     ///      stripped.
     ///   - "derived_term": same as "expansion"
     ///   - "expansion": use expansion-based expression.derived_term, stripped.
+    ///   - "inductive": use expression.inductive
     ///   - "standard": use expression.standard.
     ///   - "thompson": use expression.thompson.
     ///   - "zpc": use expression.zpc.
-    ///   - "zpc_compact": use expression.zpc, "compact" version.
+    ///   - "zpc,compact": use expression.zpc, "compact" version.
     automaton to_automaton(const expression& exp,
                            const std::string& algo = "auto");
 

@@ -201,7 +201,8 @@ namespace vcsn
             {"zpc",          [](const expression& r) {
                 return strip(trim(zpc(r)));
               }},
-            {"zpc_compact",  [](const expression& r) {
+            {"zpc_compact",  "zpc,compact"},
+            {"zpc,compact",  [](const expression& r) {
                 return strip(trim(zpc(r, "compact")));
               }},
           }
