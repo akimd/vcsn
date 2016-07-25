@@ -6,7 +6,7 @@ from test import *
 ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
 
 def check_derived_term(r, exp, algo):
-    print("{}: Checking: {}.derived_term({})".format(here(), r, algo))
+    print('{}: checking: {:u}.derived_term("{}")'.format(here(), r, algo))
     if algo == 'lazy,expansion':
         # When checking the lazy construction, make sure we have a
         # derived_term_automaton, then snapshot it at the beginning
@@ -40,16 +40,16 @@ def check_bdt(r, exp):
     'Check broken derived-term automaton.'
     if not isinstance(r, vcsn.expression):
         r = ctx.expression(r)
-    for algo in ['breaking_derivation', 'breaking_expansion']:
+    for algo in ['derivation,breaking', 'expansion,breaking']:
         check_derived_term(r, exp, algo)
 
 def check(re, s, exp, breaking=False):
-    "Check that d/ds(re) = exp."
+    "Check that ∂/∂s(re) = exp."
     if not isinstance(re, vcsn.expression):
         re = ctx.expression(re)
     eff = re.derivation(s, breaking)
-    print("d/d{}({}) = {}".format(s, re, eff))
-    CHECK_EQ(exp, str(eff))
+    print("∂/∂{}({:u}) = {:u}".format(s, re, eff))
+    CHECK_EQ(exp, eff)
     # Check that the breaking derivation is exactly the breaking of
     # the regular derivation.
     if breaking:
