@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-07-25
+### expression.derivation works on multitape expressions
+It is now possible to compute derivatives wrt labels such as `a|x`, `a|\e`
+or `\e|x`; `\e|\e`, however, is forbidden.
+
 ## 2016-07-23
 ### automaton.info: levels of detail
 Instead of a Boolean argument `detailed`, `info` now features an integer

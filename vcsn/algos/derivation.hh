@@ -222,16 +222,27 @@ namespace vcsn
                 typename Dummy = void>
       struct visit_tuple
       {
+        /// Work on tape I.
+        template <size_t I>
+        auto work_(const tuple_t& v)
+        {
+          const auto& ps = visitor_.ps_.template project<I>();
+          const auto& rs = visitor_.rs_.template project<I>();
+          if (rs.labelset()->is_one(std::get<I>(visitor_.variable_)))
+            // ∂ε(E) = ⟨c(E)⟩ . 1.
+            return ps.value(rs.one(),
+                            constant_term(rs, std::get<I>(v.sub())));
+          else
+            return vcsn::derivation(rs,
+                                    std::get<I>(v.sub()),
+                                    std::get<I>(visitor_.variable_));
+        }
+
         /// Tuple of derivations of all the tapes.
         template <size_t... I>
         polynomial_t work_(const tuple_t& v, detail::index_sequence<I...>)
         {
-          return
-            visitor_
-            .ps_
-            .tuple(vcsn::derivation(detail::project<I>(visitor_.rs_),
-                                    std::get<I>(v.sub()),
-                                    std::get<I>(visitor_.variable_))...);
+          return visitor_.ps_.tuple(work_<I>(v)...);
         }
 
         /// Entry point.
@@ -268,7 +279,6 @@ namespace vcsn
       /// The derivation variable.
       label_t variable_;
     };
-
   } // rat::
 
   /// Derive an expression wrt to a letter.
@@ -279,8 +289,8 @@ namespace vcsn
              label_t_of<ExpSet> a,
              bool breaking)
   {
-    static_assert(ExpSet::context_t::labelset_t::is_free(),
-                  "derivation: requires free labelset");
+    static_assert(ExpSet::context_t::labelset_t::is_letterized(),
+                  "derivation: requires letterized labelset");
     auto derivation = rat::derivation_visitor<ExpSet>{rs};
     auto res = derivation(e, a);
     if (breaking)

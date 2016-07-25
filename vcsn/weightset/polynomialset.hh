@@ -130,6 +130,12 @@ namespace vcsn
       return weightset_t::has_lightening_weights();
     }
 
+    /// Create a polynomial with a single value.
+    value_t value(const label_t& l, const weight_t w) const
+    {
+      return value_t{{l, w}};
+    }
+
     /// Remove the monomial of \a l in \a v.
     value_t&
     del_weight(value_t& v, const label_t& l) const
@@ -138,7 +144,7 @@ namespace vcsn
       return v;
     }
 
-    /// Set the monomial of \a l in \a v to weight \a k.
+    /// Set the monomial of \a l in \a v to weight \a w.
     /// \pre  w is not null
     value_t&
     new_weight(value_t& v, const label_t& l, const weight_t w) const

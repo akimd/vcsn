@@ -299,3 +299,35 @@ check_bdt(fig3, 'h3-dt-breaking')
 
 ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
 check('ab|xy', 'a|x', 'b|y')
+
+ctx = vcsn.context('lat<lan<char>, lan<char>>, q')
+check('ab|xy', 'a|x', 'b|y')
+check('ab|xy', r'a|\e', r'\z')
+check('a*|x*', 'a|x', 'a*|x*')
+
+exp = ctx.expression
+e = exp('(a{+}|x + b{+}|y)*')
+f = exp(r'a*|\e') * e
+g = exp(r'b*|\e') * e
+z = exp(r'\z|\z')
+#check_dt(e, 'ax-by')
+check(e, r'a|\e', str(z))
+check(e, 'a|x',   str(f))
+check(e, 'a|y',   str(z))
+check(e, r'b|\e', str(z))
+check(e, 'b|x',   str(z))
+check(e, 'b|y',   str(g))
+
+check(f, r'a|\e', str(f))
+check(f, 'a|x',   str(f))
+check(f, 'a|y',   str(z))
+check(f, r'b|\e', str(z))
+check(f, 'b|x',   str(z))
+check(f, 'b|y',   str(g))
+
+check(g, r'a|\e', str(z))
+check(g, 'a|x',   str(f))
+check(g, 'a|y',   str(z))
+check(g, r'b|\e', str(g))
+check(g, 'b|x',   str(z))
+check(g, 'b|y',   str(g))
