@@ -43,7 +43,7 @@ namespace vcsn
 
     using automaton2_t = Aut2;
     using context2_t = context_t_of<automaton2_t>;
-    using weightset2_t = weightset_t_of<automaton1_t>;
+    using weightset2_t = weightset_t_of<automaton2_t>;
     using labelset2_t = labelset_t_of<context2_t>;
     using state2_t = state_t_of<automaton2_t>;
     using label2_t = label_t_of<automaton2_t>;
