@@ -15,7 +15,7 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.69])
 
-AC_INIT([Vcsn], [2.3],
+AC_INIT([Vcsn], [2.3a],
         [vcsn-bugs@lrde.epita.fr], [],
         [http://vcsn.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
