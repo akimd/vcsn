@@ -142,7 +142,9 @@ namespace vcsn
 
   /// Print a value thanks to a valueset.
   ///
-  /// Applies for expansions, expressions, labels, polynomials, and weights.
+  /// Applies for expansions, expressions, labels, polynomials, and
+  /// weights.  Beware that because of this, the fmt ought to specify
+  /// whether to print for labels or for weights.
   template <typename ValueSet>
   std::ostream&
   print(const ValueSet& vs, const typename ValueSet::value_t& v,
@@ -222,7 +224,8 @@ namespace vcsn
                                 const std::string& fmt)
       {
         const auto& l = label->as<LabelSet>();
-        return vcsn::print(l.valueset(), l.value(), o, format(fmt));
+        return vcsn::print(l.valueset(), l.value(),
+                           o, format(fmt).for_labels());
       }
     }
   }

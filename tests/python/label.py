@@ -30,3 +30,7 @@ check('law_char(a), b',  'a',  'a',  r'\mathit{a}')
 check('law_char(ab), b', 'ab', 'ab', r'\mathit{ab}')
 # Trailing characters.
 XFAIL(lambda: vcsn.context('law_char(ab), b').label('ab*'))
+
+# tupleset.
+check('lat<lan, lan>, q',   'a|x',   'a|x', r'a|x')
+check('lat<lan, lan>, q', r'\e|x', r'\e|x', r'\varepsilon|x')
