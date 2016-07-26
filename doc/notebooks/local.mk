@@ -123,16 +123,19 @@ dist_notebooks_DATA =                           \
   %D%/context.random_automaton.ipynb            \
   %D%/context.random_expression.ipynb           \
   %D%/context.trie.ipynb                        \
+  %D%/context.tuple.ipynb                       \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.lweight.ipynb                   \
   %D%/expansion.operators.ipynb                 \
   %D%/expansion.project.ipynb                   \
   %D%/expansion.rweight.ipynb                   \
+  %D%/expansion.tuple.ipynb                     \
   %D%/expression.add.ipynb                      \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.constant_term.ipynb            \
+  %D%/expression.context.ipynb                  \
   %D%/expression.derivation.ipynb               \
   %D%/expression.derived_term.ipynb             \
   %D%/expression.difference.ipynb               \
@@ -163,8 +166,10 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.add.ipynb                      \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
+  %D%/polynomial.lweight.ipynb                  \
   %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
+  %D%/polynomial.rweight.ipynb                  \
   %D%/polynomial.trie.ipynb                     \
   %D%/polynomial.tuple.ipynb                    \
   %D%/weight.add.ipynb                          \
