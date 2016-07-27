@@ -125,6 +125,8 @@ dist_notebooks_DATA =                           \
   %D%/context.trie.ipynb                        \
   %D%/context.tuple.ipynb                       \
   %D%/expansion.add.ipynb                       \
+  %D%/expansion.complement.ipynb                \
+  %D%/expansion.conjunction.ipynb               \
   %D%/expansion.lweight.ipynb                   \
   %D%/expansion.operators.ipynb                 \
   %D%/expansion.project.ipynb                   \
