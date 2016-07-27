@@ -137,6 +137,9 @@ class ContextText:
         self.widget.text.on_submit(self.update)
         self.widget.text.observe(self.asyncUpdate, 'value')
 
+        # Binding for D3widget
+        self.text = self.widget.text
+
         self.error = widgets.HTML(value='')
 
         # Display the widget if it is not use into the d3 widget.

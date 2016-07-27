@@ -8,18 +8,19 @@ from vcsn.label      import label
 from vcsn.polynomial import polynomial
 from vcsn.weight     import weight
 
+from vcsn_tools.config import config
+datadir = config['datadir']
+version = config['version']
+
 # Load IPython specific support if we can.
 try:
     # Load only if we are running IPython.
     __IPYTHON__
+    # pylint: disable=ungrouped-imports
     from vcsn.ipython import *
     from vcsn.score import *
 except (ImportError, NameError):
     pass
-
-from vcsn_tools.config import config # pylint: disable=wrong-import-order
-datadir = config['datadir']
-version = config['version']
 
 # Predefined contexts for casual users.
 B = context('lal_char, b')

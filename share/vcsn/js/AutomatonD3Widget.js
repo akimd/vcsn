@@ -1,8 +1,12 @@
-require.config({paths: {d3: "//d3js.org/d3.v3.min"}});
-require(['widgets/js/widget','d3','jquery','underscore'],
-function(WidgetManager, d3, $,  _){
+require.config({paths: {d3: "http://d3js.org/d3.v3.min"}});
 
-    var AutomatonView = IPython.DOMWidgetView.extend({
+// In case an old version is already loaded.
+require.undef('AutomatonD3Widget');
+
+define('AutomatonD3Widget',
+       ['jupyter-js-widgets', 'd3'],
+       function(widgets, d3) {
+    var AutomatonView = widgets.DOMWidgetView.extend({
 
         // RENDER THE VIEW
         render: function(){
@@ -925,5 +929,8 @@ function(WidgetManager, d3, $,  _){
             this.force.start();
         }
     });
-    WidgetManager.register_widget_view("AutomatonView", AutomatonView);
+
+    return {
+        AutomatonView: AutomatonView
+    }
 });
