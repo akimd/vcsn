@@ -1,5 +1,5 @@
 # pylint: disable=ungrouped-imports
-from IPython.display import display, Javascript
+from IPython.display import display, display_javascript
 try:
     import ipywidgets as widgets
 except ImportError:
@@ -95,4 +95,4 @@ class AutomatonD3Widget(widgets.DOMWidget):
 
 # Load the Javascript front-end
 with open(vcsn.datadir + '/js/AutomatonD3Widget.js') as f:
-    display(Javascript(f.read()))
+    display_javascript(f.read())
