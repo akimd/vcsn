@@ -315,7 +315,7 @@ e = exp('(a{+}|x + b{+}|y)*')
 f = exp(r'a*|\e') * e
 g = exp(r'b*|\e') * e
 z = exp(r'\z|\z')
-#check_dt(e, 'ax-by')
+check_dt(e, 'ax-by')
 check(e, r'a|\e', str(z))
 check(e, 'a|x',   str(f))
 check(e, 'a|y',   str(z))

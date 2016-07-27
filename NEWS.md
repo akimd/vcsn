@@ -5,6 +5,15 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-07-28
+### expression.derived_term supports multitape expressions
+Vcsn 2.3 already supports multitape expressions with the derived-term
+algorithm, but it was restricted to the expansion-based computation.  The
+derivative-based computation is now also supported.
+
+This is only a proof of concept: the implementation is more complex and much
+slower than the expansion-based approach.
+
 ## 2016-07-25
 ### expression.derivation works on multitape expressions
 It is now possible to compute derivatives wrt labels such as `a|x`, `a|\e`

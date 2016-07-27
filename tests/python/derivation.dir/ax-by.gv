@@ -1,0 +1,29 @@
+digraph
+{
+  vcsn_context = "lat<nullableset<letterset<char_letters(ab)>>, nullableset<letterset<char_letters(xy)>>>, q"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+    F1
+    F2
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "(aa*|x+bb*|y)*", shape = box]
+    1 [label = "(a*|\\e)(aa*|x+bb*|y)*", shape = box]
+    2 [label = "(b*|\\e)(aa*|x+bb*|y)*", shape = box]
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "a|x"]
+  0 -> 2 [label = "b|y"]
+  1 -> F1
+  1 -> 1 [label = "a|\\e, a|x"]
+  1 -> 2 [label = "b|y"]
+  2 -> F2
+  2 -> 1 [label = "a|x"]
+  2 -> 2 [label = "b|\\e, b|y"]
+}

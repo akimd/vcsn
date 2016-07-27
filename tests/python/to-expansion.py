@@ -13,15 +13,18 @@ def check(re, exp):
     if not isinstance(re, vcsn.expression):
         re = c.expression(re)
     eff = re.expansion()
-    print("d: {} => {}".format(re, eff));
+    print("d: {:u} => {:u}".format(re, eff));
     CHECK_EQ(exp, str(eff))
     # Make sure we terminate.
     aut = re.automaton("expansion")
     # Check that if derived_term can do it, then it's the same
     # automaton.
-    if match('^[^,]*(nullable|word)set', re.context().format('sname')):
+    if match('^[^,]*wordset', re.context().format('sname')):
         XFAIL(lambda: re.automaton("derivation"),
-              'derived_term: cannot use derivation on non-free labelsets')
+              'derived_term: cannot use derivation on non-letterized labelsets')
+    elif re.info('ldivide'):
+        XFAIL(lambda: re.automaton("derivation"),
+              'operator ldivide not supported')
     elif re.info('transposition'):
         XFAIL(lambda: re.automaton("derivation"),
               'operator transposition not supported')

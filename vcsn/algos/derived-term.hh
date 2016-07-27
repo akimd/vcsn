@@ -75,9 +75,9 @@ namespace vcsn
     | derived_term_automaton.   |
     `--------------------------*/
 
-    /// Additional members when the labelset is free.
+    /// Additional members when the labelset is letterized.
     template <typename ExpSet,
-              bool = labelset_t_of<ExpSet>::is_free()>
+              bool = labelset_t_of<ExpSet>::is_letterized()>
     struct derived_term_automaton_members
     {
       derived_term_automaton_members(const ExpSet& rs)
@@ -90,7 +90,7 @@ namespace vcsn
       genset_t gens;
     };
 
-    /// Additional members when the labelset is not free.
+    /// Additional members when the labelset is not letterized.
     template <typename ExpSet>
     struct derived_term_automaton_members<ExpSet, false>
     {
@@ -244,7 +244,7 @@ namespace vcsn
 
       /// Compute the outgoing transitions of \a src.
       template <typename ES = expressionset_t,
-                typename = std::enable_if<labelset_t_of<ES>::is_free()>>
+                typename = std::enable_if<labelset_t_of<ES>::is_letterized()>>
       void complete_via_derivation_(state_t s, const expression_t& src)
       {
         aut_->set_lazy(s, false);
@@ -324,13 +324,13 @@ namespace vcsn
     return make_shared_ptr<res_t>(rs, algo);
   }
 
-  /// The derived-term automaton, for free labelsets.
+  /// The derived-term automaton, for letterized labelsets.
   ///
   /// \param rs    the expressionset
   /// \param r     the expression
   /// \param algo  the algo to run: "auto", "derivation", or "expansion".
   template <typename ExpSet>
-  std::enable_if_t<labelset_t_of<ExpSet>::is_free(),
+  std::enable_if_t<labelset_t_of<ExpSet>::is_letterized(),
     expression_automaton<mutable_automaton<typename ExpSet::context_t>>>
   derived_term(const ExpSet& rs,
                const typename ExpSet::value_t& r,
@@ -341,13 +341,13 @@ namespace vcsn
     return dt->operator()(r);
   }
 
-  /// The derived-term automaton, for non free labelsets.
+  /// The derived-term automaton, for non letterized labelsets.
   ///
   /// \param rs    the expressionset
   /// \param r     the expression
   /// \param algo  the algo to run: "auto", "derivation", or "expansion".
   template <typename ExpSet>
-  std::enable_if_t<!labelset_t_of<ExpSet>::is_free(),
+  std::enable_if_t<!labelset_t_of<ExpSet>::is_letterized(),
     expression_automaton<mutable_automaton<typename ExpSet::context_t>>>
   derived_term(const ExpSet& rs,
                const typename ExpSet::value_t& r,
@@ -355,10 +355,10 @@ namespace vcsn
   {
     auto a = detail::derived_term_algo(algo);
     require(a.algo == detail::derived_term_algo::expansion,
-            "derived_term: cannot use derivation on non-free labelsets");
+            "derived_term: cannot use derivation on non-letterized labelsets");
     // Do not call the operator(), this would trigger the compilation
     // of via_derivation, which does not compile (on purpose) for non
-    // free labelsets.
+    // letterized labelsets.
     auto dt = make_derived_term_automaton(rs, a);
     return dt->via_expansion(r);
   }
@@ -381,7 +381,7 @@ namespace vcsn
                     "derived_term: laziness works only with expansions");
             // Do not call the operator(), this would trigger the compilation
             // of via_derivation, which does not compile (on purpose) for non
-            // free labelsets.
+            // letterized labelsets.
             auto res = make_derived_term_automaton(rs, a);
             res->init_(r);
             return res;

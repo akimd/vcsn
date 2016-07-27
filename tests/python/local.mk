@@ -168,6 +168,7 @@ EXTRA_DIST +=                                           \
   %D%/conjunction.dir/xa.gv                             \
   %D%/conjunction.dir/xy.gv                             \
   %D%/conjunction.dir/xyz.gv                            \
+  %D%/derivation.dir/ax-by.gv                           \
   %D%/derivation.dir/e1-dt.gv                           \
   %D%/derivation.dir/e2-dt-breaking.gv                  \
   %D%/derivation.dir/e2-dt.gv                           \
