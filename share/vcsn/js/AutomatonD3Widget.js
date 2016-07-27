@@ -296,7 +296,8 @@ define('AutomatonD3Widget',
                 // insert new state at point
                 var point = d3.mouse(doc);
                 var lastState = this.lastStateValidId(this.states);
-                var state = {id: lastState + 1};
+                var newid = parseInt(lastState) + 1;
+                var state = {id: newid.toString()};
                 state.x = point[0];
                 state.y = point[1];
                 var new_states = this.model.get('states').slice();
@@ -537,15 +538,18 @@ define('AutomatonD3Widget',
             return false;
         },
         lastStateValidId: function(states){
-            for(var t = states.length -1; t>=0; t--)
-                    {
-                        if((parseFloat((states[t].id)) == parseInt((states[t].id)))
-                           && !isNaN((states[t].id)))
-                            {
-                                return states[t].id;
-                            }
-                    }
-
+            var max = 0;
+            for(var t = 0; t < states.length; t++)
+                {
+                    var statenum = parseInt(states[t].id);
+                    if((parseFloat((states[t].id)) == statenum)
+                       && !isNaN((states[t].id)))
+                        {
+                            if(max < statenum)
+                                max = statenum;
+                        }
+                }
+            return max.toString();
         },
         findFinalState: function(state, states){
             for(var i = 0; i <= states.length -1; i++)
