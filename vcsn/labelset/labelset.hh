@@ -409,7 +409,7 @@ namespace vcsn
                 letter_t l2 = ls.get_letter(i);
                 // Skip prev, which was already processed.
                 auto gens = ls.generators();
-                auto i = boost::range::find(gens, *prev);
+                auto i = std::find(std::begin(gens), std::end(gens), *prev);
                 // FIXME: Cannot use std::next here, in the case of tuples.
                 if (i != std::end(gens))
                   ++i;

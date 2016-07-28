@@ -84,8 +84,9 @@ namespace vcsn
         : gens{rs.labelset()->generators()}
       {}
 
-      /// The alphabet.
-      using genset_t = typename labelset_t_of<ExpSet>::genset_t;
+      using ls_t = labelset_t_of<ExpSet>;
+      /// The generators.
+      using genset_t = decltype(std::declval<ls_t>().generators());
       genset_t gens;
     };
 

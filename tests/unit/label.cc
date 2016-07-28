@@ -260,11 +260,73 @@ check_tupleset()
   return nerrs;
 }
 
+/// Check the generators for a tuple of nullables.
+///
+/// \tparam LabelSet  a labelset template, e.g., vcsn::letterset.
+///
+/// \param exp  The expected list of generators.
+template <template <typename GenSet> typename LabelSet>
+static unsigned check_generators(const std::string& exp)
+{
+  unsigned nerrs = 0;
+  using namespace vcsn;
+
+  // Basic alphabet type.
+  using alphabet_t = set_alphabet<char_letters>;
+
+  // Single-tape labelset.
+  using labelset1_t = LabelSet<alphabet_t>;
+
+  // Create the labelsets.
+  auto ls1 = labelset1_t{{'a', 'b', 'c'}};
+  auto ls2 = labelset1_t{{'x', 'y'}};
+
+  // Labelset (double-tape).
+  using labelset_t = tupleset<labelset1_t, labelset1_t>;
+
+  // Create the double-tape labelset.
+  auto ls = labelset_t{ls1, ls1};
+
+  std::cerr << "Working on: ";
+  ls.print_set(std::cerr) << '\n';
+
+  // Specify the syntax of printing labels.
+  auto fmt = vcsn::format{}.for_labels();
+
+  auto res = [&]{
+    std::ostringstream o;
+    const char* sep = "";
+    for (auto&& g: ls.generators())
+      {
+        o << sep;
+        ls.print(g, o, fmt);
+        sep = ", ";
+      }
+    return o.str();
+  }();
+
+  ASSERT_EQ(exp, res);
+
+  return nerrs;
+}
+
+template <typename GenSet>
+using nullableset = vcsn::nullableset<vcsn::letterset<GenSet>>;
+
 int main()
 {
   size_t nerrs = 0;
   nerrs += check_letterset();
   nerrs += check_wordset();
   nerrs += check_tupleset();
+
+  nerrs += check_generators<vcsn::letterset>("a|a, a|b, a|c, "
+                                             "b|a, b|b, b|c, "
+                                             "c|a, c|b, c|c");
+  nerrs += check_generators<nullableset>("\\e|a, \\e|b, \\e|c, "
+                                         "a|\\e, a|a, a|b, a|c, "
+                                         "b|\\e, b|a, b|b, b|c, "
+                                         "c|\\e, c|a, c|b, c|c");
+
   return !!nerrs;
 }

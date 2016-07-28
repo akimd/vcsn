@@ -1,9 +1,12 @@
 #pragma once
 
+#include <array>
 #include <iosfwd>
 #include <istream>
 #include <set>
 #include <tuple>
+
+#include <boost/range/join.hpp>
 
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
 //#include <vcsn/core/rat/expressionset.hh> needed, but breaks everythying...
@@ -11,7 +14,9 @@
 #include <vcsn/labelset/labelset.hh>
 #include <vcsn/misc/cross.hh>
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/filter.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/tuple.hh> // tuple_element_t
 #include <vcsn/misc/zip.hh>
@@ -35,6 +40,7 @@ namespace vcsn
     using letters_t = void;
     /// Same as value_t.
     using word_t = std::tuple<typename ValueSets::value_t...>;
+    constexpr static bool is_labelset = false;
   };
 
   /// Specialization for tuples of labelsets.
@@ -50,6 +56,7 @@ namespace vcsn
     using letters_t = std::set<letter_t,
                                vcsn::less<tupleset<ValueSets...>, letter_t>>;
     using word_t = std::tuple<typename ValueSets::word_t...>;
+    constexpr static bool is_labelset = true;
   };
 
   template <typename... ValueSets>
@@ -84,10 +91,14 @@ namespace vcsn
     /// A set of letters if meaningful, void otherwise.
     using letters_t = typename labelset_types<ValueSets...>::letters_t;
     /// A tuple of generators if meaningful, void otherwise.
-    using genset_t = typename labelset_types<ValueSets...>::genset_t;
+    //    using genset_t = typename labelset_types<ValueSets...>::genset_t;
     using genset_ptr = typename labelset_types<ValueSets...>::genset_ptr;
     /// A tuple of words if meaningful, void otherwise.
     using word_t = typename labelset_types<ValueSets...>::word_t;
+
+    /// Whether this models a labelset.
+    constexpr static bool is_labelset
+      = labelset_types<ValueSets...>::is_labelset;
 
     /// To be iterable.
     using value_type = letter_t;
@@ -206,7 +217,7 @@ namespace vcsn
     }
 
     /// The generators.  Meaningful for labelsets only.
-    genset_t
+    auto
     generators() const
     {
       return this->generators_(indices);
@@ -486,10 +497,8 @@ namespace vcsn
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
-      // To know whether we have a tupleset of labelsets, we check if
-      // genset_t is not void.  See labelset_types_impl above.
       constexpr auto has_label_one
-        = !std::is_same<genset_t, void>::value && has_one_mem_fn<self_t>{};
+        = is_labelset && has_one_mem_fn<self_t>{};
       return conv_(i, quoted, bool_constant<has_label_one>{});
     }
 
@@ -499,7 +508,8 @@ namespace vcsn
     {
       eat(i, '[');
       conv_label_class_(*this, i,
-                        [this,fun](const letter_t& l) { fun(value(l)); });
+                        [this,fun](const letter_t& l)
+                        { fun(this->value(l)); });
       eat(i, ']');
     }
 
@@ -612,11 +622,35 @@ namespace vcsn
       return genset_ptr{set<I>().genset()...};
     }
 
+    template <std::size_t I>
+    decltype(auto) generators_() const
+    {
+      return static_if<valueset_t<I>::is_letterized()
+                       && valueset_t<I>::has_one()>
+        ([](const auto& ls)
+         {
+           using label_t = typename valueset_t<I>::value_t;
+           static const auto one = std::array<label_t, 1>{{ls.one()}};
+           return boost::range::join(one, ls.generators());
+         },
+         [](const auto& ls)
+         {
+           return ls.generators();
+         })(set<I>());
+    }
+
     template <std::size_t... I>
-    genset_t
+    decltype(auto)
     generators_(seq<I...>) const
     {
-      return ::vcsn::cross(set<I>().generators()...);
+      // Need value(), since we might have to convert from letter_t to
+      // value_t.
+      auto p = [this](const auto& g)
+        { return !this->is_one(this->value(g)); };
+      return filter(vcsn::cross(generators_<I>()...),
+                    // Need std::ref so that we can copy-assignment
+                    // (filtered) iterators, which is needed with lat<lat<>>.
+                    std::ref(p));
     }
 
     template <std::size_t... I>

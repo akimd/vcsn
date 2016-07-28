@@ -261,7 +261,7 @@ namespace vcsn
     }
 
     /// The generators.  Meaningful for labelsets only.
-    genset_t
+    decltype(auto)
     generators() const
     {
       return ls_->generators();

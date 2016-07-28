@@ -17,15 +17,20 @@ def check_derived_term(r, exp, algo):
         # against the strict computation.
         lazy = r.derived_term(algo)
         CHECK(lazy.type().startswith('derived_term_automaton'))
-        first = str(lazy)
-        # Force the evaluation of the empty word to start computing
-        # the automaton.
-        lazy('')
-        second = str(lazy)
-        CHECK_NE(second, first)
-        lazy.accessible()
-        CHECK_NE(lazy, second)
-        eff = lazy.strip()
+        # FIXME: we don't support eval on non-free.  #101.
+        if r.info('tuple') == 0:
+            first = str(lazy)
+            # Force the evaluation of the empty word to start computing
+            # the automaton.
+            lazy('')
+            second = str(lazy)
+            CHECK_NE(second, first)
+            lazy.accessible()
+            CHECK_NE(lazy, second)
+            eff = lazy.strip()
+        else:
+            lazy.accessible()
+            eff = lazy.strip()
     else:
         eff = r.derived_term(algo)
     CHECK_EQ(metext(exp, 'gv'),

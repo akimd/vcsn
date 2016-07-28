@@ -37,8 +37,10 @@ namespace vcsn
       /// Input automaton, supplied at construction time.
       automaton_t a_;
 
+      using labelset_t = labelset_t_of<automaton_t>;
       /// The generators.
-      const typename labelset_t_of<Aut>::genset_t gs_;
+      using genset_t = decltype(std::declval<labelset_t>().generators());
+      const genset_t gs_;
 
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;

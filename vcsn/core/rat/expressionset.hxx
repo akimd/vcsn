@@ -1069,7 +1069,6 @@ namespace vcsn
      std::false_type) const
     -> value_t
   {
-    using boost::range::find;
     value_t res = zero();
     const auto& ls = *labelset();
     auto gens = ls.generators();
@@ -1081,7 +1080,7 @@ namespace vcsn
     if (accept)
       for (const auto& cc: ccs)
         {
-          auto i = find(gens, cc.first);
+          auto i = std::find(std::begin(gens), std::end(gens), cc.first);
           auto end = std::find(i, std::end(gens), cc.second);
           VCSN_REQUIRE(end != std::end(gens),
                        self(), ": invalid letter interval: ",
@@ -1105,7 +1104,7 @@ namespace vcsn
         std::set<typename LabelSet_::letter_t> accepted;
         for (const auto& cc: ccs)
           {
-            auto i = find(gens, cc.first);
+            auto i = std::find(std::begin(gens), std::end(gens), cc.first);
             auto end = std::find(i, std::end(gens), cc.second);
             VCSN_REQUIRE(end != std::end(gens),
                          "invalid letter interval: ",
