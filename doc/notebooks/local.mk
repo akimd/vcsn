@@ -156,6 +156,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.rweight.ipynb                  \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.shuffle.ipynb                  \
+  %D%/expression.split.ipynb                    \
   %D%/expression.standard.ipynb                 \
   %D%/expression.star_normal_form.ipynb         \
   %D%/expression.thompson.ipynb                 \
@@ -172,6 +173,7 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.rweight.ipynb                  \
+  %D%/polynomial.split.ipynb                    \
   %D%/polynomial.trie.ipynb                     \
   %D%/polynomial.tuple.ipynb                    \
   %D%/weight.add.ipynb                          \
