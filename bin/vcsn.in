@@ -52,7 +52,9 @@ commands ()
 # The TAF-Kit commands as a grep pattern.
 commands_pattern ()
 {
-  echo '^('$(commands | sed -e 's/ /|/g')')$'
+  commands |
+    tr -d '\n' |
+    sed -e 's/^ */^(/;s/  */|/g;s/$/)$/'
 }
 
 help ()
