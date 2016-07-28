@@ -248,12 +248,12 @@ namespace vcsn
 
     const_iterator begin() const
     {
-      return alphabet_.begin();
+      return cbegin();
     }
 
     const_iterator end() const
     {
-      return alphabet_.end();
+      return cend();
     }
 
     const_iterator cbegin() const

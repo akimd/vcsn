@@ -1,4 +1,4 @@
-context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(xyz)>>>, q"
+context = "lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, q"
 $ -> 0 <3>
 0 -> 1 [^]
 1 -> 2 <2>[a|x-a|z], <3>[b|x-b|z], <4>[c|x-c|z]

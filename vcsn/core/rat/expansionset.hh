@@ -428,16 +428,16 @@ namespace vcsn
                             });
       }
 
-      /// The shuffle product of \a lhs_xpn and \a rhs_xpn.
+      /// The shuffle product of \a de and \a df.
       ///
       /// d(E) : F + E : d(F)
-      value_t shuffle(const value_t& lhs_xpn, const expression_t& lhs_xpr,
-                      const value_t& rhs_xpn, const expression_t& rhs_xpr) const
+      value_t shuffle(const value_t& de, const expression_t& e,
+                      const value_t& df, const expression_t& f) const
       {
         value_t res;
-        res.constant = ws_.mul(lhs_xpn.constant, rhs_xpn.constant);
+        res.constant = ws_.mul(de.constant, df.constant);
         return shuffle_(res,
-                        lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
+                        de, e, df, f,
                         [this](const expression_t& l, const expression_t& r)
                         {
                           return rs_.shuffle(l, r);
@@ -445,20 +445,20 @@ namespace vcsn
       }
 
       /// The infiltration product of \a l and \a r.
-      value_t infiltrate(const value_t& lhs_xpn, const expression_t& lhs_xpr,
-                           const value_t& rhs_xpn, const expression_t& rhs_xpr) const
+      value_t infiltrate(const value_t& de, const expression_t& e,
+                         const value_t& df, const expression_t& f) const
       {
-        // Conjunction part: lhs_xpn&:rhs_xpn.
+        // Conjunction part: de&:df.
         value_t res =
-          conjunction_(lhs_xpn, rhs_xpn,
+          conjunction_(de, df,
                        [this](const polynomial_t& l, const polynomial_t& r)
                        {
                          return ps_.infiltrate(l, r);
                        });
 
-        // Shuffle part: lhs_xpn&:rhs_xpr + lhs_xpr&:rhs_xpn.
+        // Shuffle part: de&:f + e&:df.
         shuffle_(res,
-                 lhs_xpn, lhs_xpr, rhs_xpn, rhs_xpr,
+                 de, e, df, f,
                  [this](const expression_t& l, const expression_t& r)
                  {
                    return rs_.infiltrate(l, r);

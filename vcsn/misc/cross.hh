@@ -246,29 +246,36 @@ namespace vcsn
     template <std::size_t... I>
     const_iterator cbegin_(seq<I...>) const
     {
-      return {const_iterators_t{std::get<I>(sequences_).cbegin()...},
-              const_iterators_t{std::get<I>(sequences_).cend()...}};
+      // FIXME: clang-3.5: std::cbegin/cend are not supported, yet.
+      using std::begin;
+      using std::end;
+      return {const_iterators_t{begin(std::get<I>(sequences_))...},
+              const_iterators_t{end(std::get<I>(sequences_))...}};
     }
 
     template <std::size_t... I>
     const_iterator cend_(seq<I...>) const
     {
-      return {const_iterators_t{std::get<I>(sequences_).cend()...},
-              const_iterators_t{std::get<I>(sequences_).cend()...}};
+      using std::end;
+      return {const_iterators_t{end(std::get<I>(sequences_))...},
+              const_iterators_t{end(std::get<I>(sequences_))...}};
     }
 
     template <std::size_t... I>
     iterator begin_(seq<I...>)
     {
-      return {iterators_t{std::get<I>(sequences_).begin()...},
-              iterators_t{std::get<I>(sequences_).end()...}};
+      using std::begin;
+      using std::end;
+      return {iterators_t{begin(std::get<I>(sequences_))...},
+              iterators_t{end(std::get<I>(sequences_))...}};
     }
 
     template <std::size_t... I>
     iterator end_(seq<I...>)
     {
-      return {iterators_t{std::get<I>(sequences_).end()...},
-              iterators_t{std::get<I>(sequences_).end()...}};
+      using std::end;
+      return {iterators_t{end(std::get<I>(sequences_))...},
+              iterators_t{end(std::get<I>(sequences_))...}};
     }
 
     /// The sequences we iterate upon.
