@@ -79,7 +79,7 @@ define('AutomatonD3Widget',
             var that = this;
 
             // Catch source and target with their ID
-            for(var c = 0; c <= this.transitions.length -1; c++)
+            for(var c = 0; c < this.transitions.length; c++)
                 {
                     this.transitions[c].source = this.idToState(this.transitions[c].source);
                     this.transitions[c].target = this.idToState(this.transitions[c].target);
@@ -520,7 +520,7 @@ define('AutomatonD3Widget',
 
         // METHODS
         idToState: function(id){
-            for(var j=0; j <= this.states.length -1; j++)
+            for(var j=0; j < this.states.length; j++)
                 {
                     if(this.states[j].id == id)
                         {
@@ -529,7 +529,7 @@ define('AutomatonD3Widget',
                 }
         },
         existingTrans: function(transition, transitions){
-            for(var i=0; i<= transitions.length -1; i++){
+            for(var i=0; i< transitions.length; i++){
                 if((transitions[i].source == transition.target) &&
                   (transitions[i].target == transition.source)){
                     return true;
@@ -552,7 +552,7 @@ define('AutomatonD3Widget',
             return max.toString();
         },
         findFinalState: function(state, states){
-            for(var i = 0; i <= states.length -1; i++)
+            for(var i = 0; i < states.length; i++)
                 {
                     if(states[i].id.toString() == (state.id.toString() + '.2'))
                         {
@@ -561,7 +561,7 @@ define('AutomatonD3Widget',
                 }
         },
         findInitialState: function(state, states){
-            for(var i = 0; i <= states.length -1; i++)
+            for(var i = 0; i < states.length; i++)
                 {
                     if(states[i].id.toString() == (state.id.toString() + '.1'))
                         {
@@ -570,7 +570,7 @@ define('AutomatonD3Widget',
                 }
         },
         isInitial: function(state, transitions){
-                for(var i=0; i<= transitions.length -1; i++)
+                for(var i=0; i< transitions.length; i++)
                     {
                         if(transitions[i].source.id == state.id ||
                            transitions[i].target.id == state.id)
@@ -586,7 +586,7 @@ define('AutomatonD3Widget',
                 return false;
         },
         isFinal: function(state, transitions){
-                for(var i=0; i<= transitions.length -1; i++)
+                for(var i=0; i< transitions.length; i++)
                     {
                         if(transitions[i].source.id == state.id ||
                            transitions[i].target.id == state.id)
@@ -622,7 +622,7 @@ define('AutomatonD3Widget',
 
         },
         isLoop: function(state, transitions){
-                for(var i =0; i <= transitions.length -1; i++)
+                for(var i =0; i < transitions.length; i++)
                     {
                         if(transitions[i].target.id == transitions[i].source.id)
                             {
@@ -635,7 +635,7 @@ define('AutomatonD3Widget',
                 return false;
         },
         idToNode: function(id){
-            for(var j=0; j <= this.states.length -1; j++)
+            for(var j=0; j < this.states.length; j++)
                 {
                     if(this.states[j].id == id)
                         {
@@ -644,7 +644,7 @@ define('AutomatonD3Widget',
                 }
         },
         completeTransitions: function(transitions){
-                for(var i =0; i <= transitions.length -1; i++)
+                for(var i =0; i < transitions.length; i++)
                     {
                         if(transitions[i].length != 3)
                             {
