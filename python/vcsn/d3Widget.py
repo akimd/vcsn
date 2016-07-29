@@ -1,15 +1,9 @@
-import os
-
 # pylint: disable=ungrouped-imports
 from IPython.display import display, Javascript
 try:
     import ipywidgets as widgets
 except ImportError:
     from IPython.html import widgets # pylint: disable=no-name-in-module
-try:
-    from notebook import nbextensions
-except ImportError:
-    from IPython.html import nbextensions # pylint: disable=no-name-in-module
 try:
     import traitlets
 except ImportError:
@@ -99,12 +93,6 @@ class AutomatonD3Widget(widgets.DOMWidget):
     transitions = traitlets.List(sync=True)
     context = traitlets.Unicode(sync=True)
 
-# Load the Javascript file as a jupyter notebook extension.
-# Overwrite to be sure to have the newest Javascript.
-nbextensions.install_nbextension(
-    os.path.abspath(vcsn.datadir + '/js/AutomatonD3Widget.js'),
-    overwrite=True, user=True)
-script = """IPython.notebook.config.update({
-                "load_extensions": {"AutomatonD3Widget":true}
-            })"""
-display(Javascript(script))
+# Load the Javascript front-end
+with open(vcsn.datadir + '/js/AutomatonD3Widget.js') as f:
+    display(Javascript(f.read()))
