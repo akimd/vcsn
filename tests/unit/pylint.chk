@@ -45,3 +45,14 @@ run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn_tools
 # Get all the Python scripts from libexec/.
 pyscripts=$(grep -l '/usr/bin/env python' $srcdir/libexec/*)
 run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
+
+# Convert the notebooks to Python scripts
+#FIXME: optimize with a makefile rule
+run 0 ignore -jupyter nbconvert --to script $srcdir/doc/notebooks/*.ipynb
+# Errors introduced by nbconvert
+pylintflags="$pylintflags --disable=trailing-whitespace,trailing-newlines"
+# Errors that can only be picked up properly by ipynbdoctest
+pylintflags="$pylintflags --disable=undefined-variable"
+# Errors that are OK in a notebook
+pylintflags="$pylintflags --disable=line-too-long"
+run 0 ignore -vcsn run $pylint $pylintflags $srcdir/doc/notebooks/*.py
