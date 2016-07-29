@@ -49,7 +49,7 @@ define('AutomatonD3Widget',
             this.states = this.model.get('states');
             var trans = this.model.get('transitions');
             this.transitions = this.completeTransitions(trans);
-            this.lastStateId = this.states[this.states.length - 1].id;
+            this.lastStateId = lastStateValidId(this.states);
 
             // Define here to avoid recreation in every update
             this.path = this.svg.append('svg:g').selectAll('g');
@@ -296,7 +296,9 @@ define('AutomatonD3Widget',
                 // insert new state at point
                 var point = d3.mouse(doc);
                 var lastState = this.lastStateValidId(this.states);
+                console.log('"' + lastState + '"');
                 var newid = parseInt(lastState) + 1;
+                console.log('"' + lastState + '" -> "' + newid + '"');
                 var state = {id: newid.toString()};
                 state.x = point[0];
                 state.y = point[1];

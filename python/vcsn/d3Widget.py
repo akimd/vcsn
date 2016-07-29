@@ -46,15 +46,39 @@ class VcsnD3DataFrame(object):
         ctx = 'context = {:s}\n'.format(self.context)
         trans = self._widget.transitions
         aut = ''
+        def get_state(obj):
+            '''Convert whatever the given state is into a daut state.'''
+            # Things that are not constant:
+            #  - PRE and POST are decimals or '$'
+            #  - states are strings or dicts
+            if isinstance(obj, dict):
+                state = str(obj['id'])
+            elif isinstance(obj, str):
+                state = obj
+            try:
+                # State ID is a valid integer number
+                int(state)
+                return state
+            except ValueError:
+                return '$'
+
         for t in trans:
-            src = t['source'] if 'source' in t.keys() else '$'
-            dst = t['target'] if 'target' in t.keys() else '$'
+            src = get_state(t['source'])
+            dst = get_state(t['target'])
             aut += "{} -> {} {}\n".format(src, dst, t['label'])
         res = ctx + aut
         try:
+            self.error.value = str(trans)
             return vcsn.automaton(res, 'daut')
         except RuntimeError as e:
-            self.error.value = vcsn.ipython.formatError(e)
+            ts = ['{} -> {}'.format(t['source']['id'], t['target']['id'])
+                  for t in trans
+                  if isinstance(t['source'], dict) and isinstance(t['target'], dict)]
+            self.error.value = vcsn.ipython.formatError(str(e)
+                                                        + '\n#####\n'
+                                                        + res
+                                                        + '\n#####\n'
+                                                        + '\n'.join(ts))
 
     def _d3_of_aut(self, aut):
         '''Convert an automaton into a list of states and a list
