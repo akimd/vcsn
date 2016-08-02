@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <set>
 
 #include <boost/range/algorithm/mismatch.hpp>
 #include <boost/algorithm/string/predicate.hpp> // starts_with
@@ -29,7 +28,6 @@ namespace vcsn
 
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using letters_t = std::set<letter_t>;
 
     using value_t = word_t;
 

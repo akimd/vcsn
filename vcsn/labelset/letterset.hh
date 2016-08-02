@@ -27,7 +27,6 @@ namespace vcsn
 
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using letters_t = std::set<letter_t, vcsn::less<self_t, letter_t>>;
 
     using value_t = letter_t;
     using values_t = std::set<value_t, vcsn::less<self_t>>;

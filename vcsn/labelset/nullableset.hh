@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <set>
 #include <sstream>
 
 #include <vcsn/alphabets/setalpha.hh> // intersect
