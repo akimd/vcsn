@@ -52,6 +52,12 @@ namespace vcsn
 
       if (algo == "auto")
         {
+          // Applies to both GCC and Clang.  Cannot be done inside a
+          // statement.
+#if defined __GNUC__
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
           if (all(is_standard(std::forward<Aut>(auts))...))
             algo = "standard";
           else if (static_if<are_free>
@@ -68,6 +74,9 @@ namespace vcsn
             algo = "deterministic";
           else
             algo = "general";
+#if defined __GNUC__
+# pragma GCC diagnostic pop
+#endif
         }
 
       if (algo == "general")
