@@ -1323,4 +1323,36 @@ namespace vcsn
               weightset_t_of<Context>>;
 
   }// detail::
+
+
+  /*----------------.
+  | random_label.   |
+  `----------------*/
+
+  /// Random label from tupleset.
+  template <typename... LabelSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename tupleset<LabelSet...>::value_t
+  random_label(const tupleset<LabelSet...>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    return random_label_(ls, gen, ls.indices);
+  }
+
+
+  /// Implementation detail for random label from tupleset.
+  template <typename... LabelSet,
+            size_t... I,
+            typename RandomGenerator = std::default_random_engine>
+  typename tupleset<LabelSet...>::value_t
+  random_label_(const tupleset<LabelSet...>& ls,
+                RandomGenerator& gen,
+                detail::index_sequence<I...>)
+  {
+    // No need to check for the emptiness here: it will be checked in
+    // each sub-labelset.
+    return ls.tuple(random_label(ls.template set<I>(), gen)...);
+  }
+
+
 }// vcsn::

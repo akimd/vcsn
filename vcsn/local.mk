@@ -100,7 +100,6 @@ algo_headers =                                  \
   %D%/algos/quotkbaseb.hh                       \
   %D%/algos/random-automaton.hh                 \
   %D%/algos/random-expression.hh                \
-  %D%/algos/random-label.hh                     \
   %D%/algos/read.hh                             \
   %D%/algos/reduce.hh                           \
   %D%/algos/scc.hh                              \

@@ -623,6 +623,20 @@ namespace vcsn
             meet(a.identities(), b.identities())};
   }
 
+
+  /*----------------.
+  | random_label.   |
+  `----------------*/
+
+  /// Random label from expressionset: limited to a single label.
+  template <typename Context,
+            typename RandomGenerator = std::default_random_engine>
+  typename expressionset<Context>::value_t
+  random_label(const expressionset<Context>& rs,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    return rs.atom(random_label(*rs.labelset(), gen));
+  }
 } // namespace vcsn
 
 #include <vcsn/core/rat/expressionset.hxx>

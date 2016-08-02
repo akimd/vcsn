@@ -12,6 +12,7 @@
 #include <vcsn/labelset/letterset.hh> // for letterized_traits
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh>
+#include <vcsn/misc/irange.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -390,5 +391,27 @@ namespace vcsn
   meet(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
   {
     return {set_intersection(*lhs.genset(), *rhs.genset())};
+  }
+
+
+  /*----------------.
+  | random_label.   |
+  `----------------*/
+
+  /// Random label from wordset.
+  template <typename GenSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename wordset<GenSet>::value_t
+  random_label(const wordset<GenSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    require(!ls.generators().empty(),
+            "random_label: the alphabet needs at least 1 letter");
+    auto dis = std::uniform_int_distribution<>(0, 5);
+    auto res_label = ls.one();
+    auto pick = make_random_selector(gen);
+    for (auto _: detail::irange(dis(gen)))
+      res_label = ls.mul(res_label, ls.value(pick(ls.generators())));
+    return res_label;
   }
 }

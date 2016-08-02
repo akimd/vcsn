@@ -688,4 +688,23 @@ namespace vcsn
 
 #undef DEFINE
 
+
+  /*----------------.
+  | random_label.   |
+  `----------------*/
+
+  /// Random label from nullableset.
+  template <typename LabelSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename nullableset<LabelSet>::value_t
+  random_label(const nullableset<LabelSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    // FIXME: the proportion should be controllable.
+    auto dis = std::bernoulli_distribution(0.5);
+    if (dis(gen) || ls.generators().empty())
+      return ls.one();
+    else
+      return ls.value(random_label(*ls.labelset(), gen));
+  }
 }

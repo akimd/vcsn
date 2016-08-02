@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vcsn/algos/random-label.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>

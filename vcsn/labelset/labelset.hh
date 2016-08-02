@@ -10,6 +10,7 @@
 #include <vcsn/ctx/traits.hh> // labelset_t_of
 #include <vcsn/misc/algorithm.hh> // none_of
 #include <vcsn/misc/functional.hh> // less
+#include <vcsn/misc/random.hh>
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/type_traits.hh> // detect
 
@@ -19,7 +20,8 @@ namespace vcsn
   {
     /// The type of the LabelSet::generators() member function.
     template <typename LabelSet>
-    using generators_mem_fn_t = decltype(std::declval<LabelSet>().generators());
+    using generators_mem_fn_t
+      = decltype(std::declval<LabelSet>().generators());
 
     /// Whether LabelSet features a generators() member function.
     template <typename LabelSet>
@@ -446,5 +448,19 @@ namespace vcsn
       conv_label_class_(ls, i, [&res](letter_t l){ res.insert(l); });
       return res;
     }
+  }
+
+  /// Random label from general case such as letterset.
+  template <typename LabelSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename LabelSet::value_t
+  random_label(const LabelSet& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    require(!ls.generators().empty(),
+            "random_label: the alphabet needs at least 1 letter");
+    // Pick a member of a container following a uniform distribution.
+    auto pick = make_random_selector(gen);
+    return ls.value(pick(ls.generators()));
   }
 }
