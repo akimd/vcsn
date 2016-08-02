@@ -272,6 +272,12 @@ namespace vcsn
       return alphabet_.empty();
     }
 
+    /// Number of letters.
+    size_t size() const
+    {
+      return alphabet_.size();
+    }
+
     const_iterator find(letter_t l) const
     {
       return alphabet_.find(l);

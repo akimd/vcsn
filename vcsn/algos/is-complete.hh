@@ -2,6 +2,7 @@
 
 #include <set>
 
+#include <vcsn/core/automaton.hh> // all_out
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 
@@ -18,12 +19,15 @@ namespace vcsn
     if (aut->num_initials() == 0)
       return false;
 
+    // FIXME: this is naive: an unordered_set and/or a bitset would
+    // probably be more efficient.  See the benches.
     using label_set_t = std::set<typename labelset_t_of<Aut>::letter_t>;
 
     const auto& letters = aut->labelset()->generators();
     for (auto state : aut->states())
     {
-      label_set_t missing_letters = {std::begin(letters), std::end(letters)};
+      auto missing_letters
+        = label_set_t{std::begin(letters), std::end(letters)};
 
       for (auto tr : all_out(aut, state))
         missing_letters.erase(aut->label_of(tr));

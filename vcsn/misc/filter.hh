@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/range/adaptor/filtered.hpp>
+#include <boost/range/distance.hpp>
 
 namespace vcsn
 {
@@ -23,6 +24,18 @@ namespace vcsn
 
       const_iterator begin() const { return std::begin(filtered_); }
       const_iterator end() const { return std::end(filtered_); }
+
+      /// Whether filters to nothing.
+      bool empty() const
+      {
+        return filtered_.empty();
+      }
+
+      /// Number of elements in the filtered range.
+      size_t size() const
+      {
+        return boost::distance(filtered_);
+      }
 
       Range range_;
       filtered_t filtered_;

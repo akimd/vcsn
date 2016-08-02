@@ -29,8 +29,10 @@ namespace vcsn
         aut->set_initial(sink);
       }
 
+    auto num_gens = ls.generators().size();
+
     // The outgoing labels of a state.
-    std::unordered_set<letter_t> labels_met;
+    auto labels_met = std::unordered_set<letter_t>{};
     for (auto st : aut->states())
       if (st != sink)
         {
@@ -38,13 +40,14 @@ namespace vcsn
           for (auto tr : out(aut, st))
             labels_met.insert(aut->label_of(tr));
 
-          for (auto letter : ls.generators())
-            if (!has(labels_met, letter))
-              {
-                if (sink == aut->null_state())
-                  sink = aut->new_state();
-                aut->new_transition(st, sink, letter);
-              }
+          if (labels_met.size() < num_gens)
+            for (auto letter : ls.generators())
+              if (!has(labels_met, letter))
+                {
+                  if (sink == aut->null_state())
+                    sink = aut->new_state();
+                  aut->new_transition(st, sink, letter);
+                }
         }
 
     // Sink is created in two different cases, be careful if you want
@@ -56,6 +59,7 @@ namespace vcsn
     return aut;
   }
 
+  /// A complete copy of \a aut.
   template <Automaton Aut>
   auto
   complete(const Aut& aut)
