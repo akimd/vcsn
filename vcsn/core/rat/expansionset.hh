@@ -524,6 +524,82 @@ namespace vcsn
         return res;
       }
 
+      /*-----------.
+      | ldivide.   |
+      `-----------*/
+
+    public:
+      value_t ldivide(value_t lhs, value_t rhs,
+                      bool transposed = false) const
+      {
+        value_t res = zero();
+        denormalize(lhs);
+        denormalize(rhs);
+        auto one = detail::label_one(ls_);
+        // ε⊙[X_a \ Y_a + ...] for common firsts, included ε.
+        for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
+          for (const auto& lm: std::get<0>(p.second))
+            for (const auto& rm: std::get<1>(p.second))
+              // Now, recursively develop the quotient of monomials,
+              // directly in res.
+              if (transposed)
+                ps_.add_here(res.polynomials[one],
+                             rs_.transposition(rs_.ldivide(label_of(lm),
+                                                           label_of(rm))),
+                             ws_.transpose(ws_.ldivide(weight_of(lm),
+                                                       weight_of(rm))));
+              else
+                ps_.add_here(res.polynomials[one],
+                             rs_.ldivide(label_of(lm), label_of(rm)),
+                             ws_.ldivide(weight_of(lm), weight_of(rm)));
+
+        // If ε ∈ f(X) then ε⊙[X_ε \ (b Y_b) + ...]
+        if (has(lhs.polynomials, one))
+          for (const auto& rhsp: rhs.polynomials)
+            if (rhsp.first != one)
+              for (const auto& lm: lhs.polynomials[one])
+                for (const auto& rm: rhsp.second)
+                  {
+                    if (transposed)
+                      ps_.add_here(res.polynomials[one],
+                        rs_.transposition(
+                          rs_.ldivide(label_of(lm),
+                                   rs_.mul(rs_.atom(rhsp.first),
+                                           label_of(rm)))),
+                        ws_.transpose(ws_.ldivide(weight_of(lm),
+                                                  weight_of(rm))));
+                    else
+                      ps_.add_here(res.polynomials[one],
+                        rs_.ldivide(label_of(lm),
+                          rs_.mul(rs_.atom(rhsp.first), label_of(rm))),
+                        ws_.ldivide(weight_of(lm), weight_of(rm)));
+                  }
+
+        // If ε ∈ f(Y) then ε⊙[(a X_a) \ Y_ε + ...]
+        if (has(rhs.polynomials, one))
+          for (const auto& lhsp: lhs.polynomials)
+            if (lhsp.first != one)
+              for (const auto& lm: lhsp.second)
+                for (const auto& rm: rhs.polynomials[one])
+                  {
+                    if (transposed)
+                      ps_.add_here(res.polynomials[one],
+                        rs_.transposition(
+                          rs_.ldivide(rs_.mul(rs_.atom(lhsp.first),
+                                              label_of(lm)),
+                                      label_of(rm))),
+                        ws_.transpose(ws_.ldivide(weight_of(lm),
+                                                  weight_of(rm))));
+                    else
+                      ps_.add_here(res.polynomials[one],
+                        rs_.ldivide(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
+                                    label_of(rm)),
+                        ws_.ldivide(weight_of(lm), weight_of(rm)));
+                  }
+        normalize(res);
+        return res;
+      }
+
     public:
       /// Turn the polynomials into (normalized) monomials.
       value_t

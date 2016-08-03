@@ -222,77 +222,12 @@ namespace vcsn
       VCSN_RAT_VISIT(ldivide, e)
       {
         assert(e.size() == 2);
-        DEBUG_IF(
-                 std::cerr << "Start: ";
-                 rs_.print(e.shared_from_this(), std::cerr) << " =>\n";
-                 );
-
         bool transposed = transposed_;
         transposed_ = false;
         expansion_t lhs = to_expansion(e[0]);
         expansion_t rhs = to_expansion(e[1]);
-        es_.denormalize(lhs);
-        es_.denormalize(rhs);
+        res_ = es_.ldivide(lhs, rhs, transposed);
         transposed_ = transposed;
-        DEBUG_IF(
-                 std::cerr << "Lhs: "; print_(lhs, std::cerr) << '\n';
-                 std::cerr << "Rhs: "; print_(rhs, std::cerr) << '\n';
-                 );
-        res_ = es_.zero();
-        auto one = detail::label_one(ls_);
-        for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
-          for (const auto& lm: std::get<0>(p.second))
-            for (const auto& rm: std::get<1>(p.second))
-              // Now, recursively develop the quotient of monomials,
-              // directly in res_.
-              if (transposed_)
-                ps_.add_here(res_.polynomials[one],
-                             rs_.transposition(rs_.ldivide(label_of(lm),
-                                                        label_of(rm))),
-                             ws_.transpose(ws_.ldivide(weight_of(lm),
-                                                    weight_of(rm))));
-              else
-                ps_.add_here(res_.polynomials[one],
-                             rs_.ldivide(label_of(lm), label_of(rm)),
-                             ws_.ldivide(weight_of(lm), weight_of(rm)));
-        if (has(lhs.polynomials, one))
-          for (const auto& rhsp: rhs.polynomials)
-            if (rhsp.first != one)
-              for (const auto& lm: lhs.polynomials[one])
-                for (const auto& rm: rhsp.second)
-                  {
-                    if (transposed_)
-                      ps_.add_here(res_.polynomials[one],
-                        rs_.transposition(
-                          rs_.ldivide(label_of(lm),
-                                   rs_.mul(rs_.atom(rhsp.first),
-                                           label_of(rm)))),
-                        ws_.transpose(ws_.ldivide(weight_of(lm), weight_of(rm))));
-                    else
-                      ps_.add_here(res_.polynomials[one],
-                        rs_.ldivide(label_of(lm),
-                          rs_.mul(rs_.atom(rhsp.first), label_of(rm))),
-                        ws_.ldivide(weight_of(lm), weight_of(rm)));
-                  }
-        if (has(rhs.polynomials, one))
-          for (const auto& lhsp: lhs.polynomials)
-            if (lhsp.first != one)
-              for (const auto& lm: lhsp.second)
-                for (const auto& rm: rhs.polynomials[one])
-                  {
-                    if (transposed_)
-                      ps_.add_here(res_.polynomials[one],
-                        rs_.transposition(
-                          rs_.ldivide(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
-                                   label_of(rm))),
-                        ws_.transpose(ws_.ldivide(weight_of(lm), weight_of(rm))));
-                    else
-                      ps_.add_here(res_.polynomials[one],
-                        rs_.ldivide(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
-                                 label_of(rm)),
-                        ws_.ldivide(weight_of(lm), weight_of(rm)));
-                  }
-        es_.normalize(res_);
       }
 
       /// d(E&F) = d(E) & d(F).
