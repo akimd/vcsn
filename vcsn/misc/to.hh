@@ -10,11 +10,10 @@ namespace vcsn
   /// `a{2}`, `a{2, 3}`, `a{-1}` etc.  To support them, we used to
   /// rely on overloads, e.g.,
   ///
-  /// auto multiply(weight, weight) -> weight;
-  /// auto multiply(weight, int min, int max = min) -> weight;
+  ///   auto multiply(weight, weight) -> weight;
+  ///   auto multiply(weight, int min, int max = min) -> weight;
   ///
-
-  /// unfortunately when on Z, the two signatures collide, but not
+  /// unfortunately when on Z, both signatures collide, but not
   /// exactly, so the compiler chose the "best" one, which resulted in
   /// `3 * 3 = 27` in Z.  In turn, this results in `<3><3>a = <27>a`
   /// in Z.
@@ -22,14 +21,14 @@ namespace vcsn
   /// To avoid this collision, we decided that the second signature
   /// would be
   ///
-  /// auto multiply(weight, to{int min, int max = min}) -> weight;
+  ///   auto multiply(weight, to{int min, int max = min}) -> weight;
   class to
   {
   public:
     /// Build a exponent range.
     ///
-    /// \param min  the minimum number.  If -1, denotes 0.
-    /// \param max  the maximum number.
+    /// \param min_  the minimum number.  If -1, denotes 0.
+    /// \param max_  the maximum number.
     ///             If -1, denotes infinity, using star.
     ///             If -2, denotes the same value as min.
     to(int min_, int max_)
