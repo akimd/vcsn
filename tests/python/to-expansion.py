@@ -113,14 +113,14 @@ check('(<xy>(abc)<yz>)*{T}', r'<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 
 c = vcsn.context("lan_char(abcd), expressionset<lal_char(xyz), q>")
 
-# Lquotient with spontaneous transitions.
+# Ldivide with spontaneous transitions.
 check(r'\e{\}\z', r'<\z>')
 check(r'\e{\}\e', r'<\e>')
 check(r'\e{\}abc', 'a.[bc]')
 check(r'a{\}a', r'<\e>')
 check(r'a{\}b', r'<\z>')
 
-# Conjunction on a non-free letterized labelsets.
+# Complement on a non-free letterized labelsets.
 check('!a', r'<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}] + d.[\z{c}]')
 
 check(r'a{\}<x>a', '<x>')

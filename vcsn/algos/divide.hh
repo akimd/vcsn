@@ -13,8 +13,8 @@ namespace vcsn
   template <typename ValueSet>
   typename ValueSet::value_t
   ldivide(const ValueSet& vs,
-       const typename ValueSet::value_t& lhs,
-       const typename ValueSet::value_t& rhs)
+          const typename ValueSet::value_t& lhs,
+          const typename ValueSet::value_t& rhs)
   {
     return vs.ldivide(lhs, rhs);
   }
@@ -31,8 +31,8 @@ namespace vcsn
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                             std::get<1>(join_elts),
-                                             std::get<2>(join_elts))};
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
       }
 
       /// Bridge (ldivide).
@@ -42,8 +42,8 @@ namespace vcsn
       {
         auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                             std::get<1>(join_elts),
-                                             std::get<2>(join_elts))};
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
       }
     }
   }
@@ -88,8 +88,8 @@ namespace vcsn
   template <typename ValueSet>
   typename ValueSet::value_t
   rdivide(const ValueSet& vs,
-       const typename ValueSet::value_t& lhs,
-       const typename ValueSet::value_t& rhs)
+          const typename ValueSet::value_t& lhs,
+          const typename ValueSet::value_t& rhs)
   {
     return vs.rdivide(lhs, rhs);
   }
@@ -105,8 +105,8 @@ namespace vcsn
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
-                                             std::get<1>(join_elts),
-                                             std::get<2>(join_elts))};
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
       }
     }
   }

@@ -384,7 +384,7 @@ namespace vcsn
     /// Valid only for expressionsets.
     template <typename Ctx>
     std::enable_if_t<Ctx::is_lar, value_t>
-    conjunction_impl(const value_t& l, const value_t& r) const
+    conjunction_impl_(const value_t& l, const value_t& r) const
     {
       value_t res;
       for (const auto& lm: l)
@@ -399,7 +399,7 @@ namespace vcsn
     /// Valid only for every other labelsets.
     template <typename Ctx>
     std::enable_if_t<!Ctx::is_lar, value_t>
-    conjunction_impl(const value_t& l, const value_t& r) const
+    conjunction_impl_(const value_t& l, const value_t& r) const
     {
       value_t res;
       for (const auto& p: zip_maps<vcsn::as_tuple>(l, r))
@@ -413,7 +413,7 @@ namespace vcsn
     value_t
     conjunction(const value_t& l, const value_t& r) const
     {
-      return conjunction_impl<context_t>(l, r);
+      return conjunction_impl_<context_t>(l, r);
     }
 
     /// The infiltration of polynomials \a l and \a r.

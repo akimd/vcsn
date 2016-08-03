@@ -429,11 +429,12 @@ namespace vcsn
     /// Left-division of two automata (lhs \ rhs).
     automaton ldivide(const automaton& lhs, const automaton& rhs);
 
-    /// Left-division of two polynomials (lhs \ rhs).
-    polynomial ldivide(const polynomial& lhs, const polynomial& rhs);
 
     /// Left-division of two expressions (lhs \ rhs).
     expression ldivide(const expression& lhs, const expression& rhs);
+
+    /// Left-division of two polynomials (lhs \ rhs).
+    polynomial ldivide(const polynomial& lhs, const polynomial& rhs);
 
     /// Left greatest common divisor of two polynomials (lhs \ rhs).
     polynomial lgcd(const polynomial& lhs, const polynomial& rhs);
