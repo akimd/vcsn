@@ -265,7 +265,7 @@ check_tupleset()
 /// \tparam LabelSet  a labelset template, e.g., vcsn::letterset.
 ///
 /// \param exp  The expected list of generators.
-template <template <typename GenSet> typename LabelSet>
+template <template <typename GenSet> class LabelSet>
 static unsigned check_generators(const std::string& exp)
 {
   unsigned nerrs = 0;
