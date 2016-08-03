@@ -10,6 +10,7 @@ class expansion:
     __add__ = expansion.add
     __and__ = expansion.conjunction
     __eq__ = _is_equal
+    __floordiv__ = expansion.ldivide
     __invert__ = expansion.complement
     __matmul__ = expansion.compose
     __mul__ = _rweight

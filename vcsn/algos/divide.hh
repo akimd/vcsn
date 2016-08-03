@@ -25,6 +25,17 @@ namespace vcsn
     namespace detail
     {
       /// Bridge (ldivide).
+      template <typename ExpansionSetLhs, typename ExpansionSetRhs>
+      expansion
+      ldivide_expansion(const expansion& lhs, const expansion& rhs)
+      {
+        auto join_elts = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
+      }
+
+      /// Bridge (ldivide).
       template <typename ExpressionSetLhs, typename ExpressionSetRhs>
       expression
       ldivide_expression(const expression& lhs, const expression& rhs)

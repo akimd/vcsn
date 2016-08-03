@@ -429,6 +429,8 @@ namespace vcsn
     /// Left-division of two automata (lhs \ rhs).
     automaton ldivide(const automaton& lhs, const automaton& rhs);
 
+    /// Left-division of two expansions (lhs \ rhs).
+    expansion ldivide(const expansion& lhs, const expansion& rhs);
 
     /// Left-division of two expressions (lhs \ rhs).
     expression ldivide(const expression& lhs, const expression& rhs);

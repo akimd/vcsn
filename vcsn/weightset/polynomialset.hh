@@ -623,8 +623,26 @@ namespace vcsn
       return res;
     }
 
-    value_t
-    ldivide(const value_t& l, const value_t& r) const
+    /// The left-division of polynomials \a l and \a r.
+    /// Valid only for expressionsets.
+    template <typename Ctx>
+    std::enable_if_t<Ctx::is_lar, value_t>
+    ldivide_impl_(const value_t& l, const value_t& r) const
+    {
+      value_t res;
+      for (const auto& lm: l)
+        for (const auto& rm: r)
+          add_here(res,
+                   labelset()->ldivide(label_of(lm), label_of(rm)),
+                   weightset()->ldivide(weight_of(lm), weight_of(rm)));
+      return res;
+    }
+
+    /// The left-division of polynomials \a l and \a r.
+    /// Valid only for every other labelsets.
+    template <typename Ctx>
+    std::enable_if_t<!Ctx::is_lar, value_t>
+    ldivide_impl_(const value_t& l, const value_t& r) const
     {
       value_t res;
       if (is_zero(l))
@@ -665,6 +683,12 @@ namespace vcsn
                   to_string(*this, l), ", ", to_string(*this, r), ")");
         }
       return res;
+    }
+
+    value_t
+    ldivide(const value_t& l, const value_t& r) const
+    {
+      return ldivide_impl_<context_t>(l, r);
     }
 
     /// Left exterior division.
