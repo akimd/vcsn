@@ -68,7 +68,7 @@ namespace vcsn
       {
         try
           {
-            res_ = es_.zero();
+            res_ = xs_.zero();
             v->accept(*this);
             return res_;
           }
@@ -90,7 +90,7 @@ namespace vcsn
       expansion_t to_expansion(const expression_t& e)
       {
 #if CACHE
-        auto insert = cache_.emplace(e, es_.zero());
+        auto insert = cache_.emplace(e, xs_.zero());
         auto& res = insert.first->second;
         if (insert.second)
           {
@@ -112,7 +112,7 @@ namespace vcsn
           }
         return res;
 #else
-        auto res = es_.zero();
+        auto res = xs_.zero();
         std::swap(res, res_);
         e->accept(*this);
         std::swap(res, res_);
@@ -127,7 +127,7 @@ namespace vcsn
       /// Print an expansion.
       std::ostream& print_(const expansion_t& v, std::ostream& o) const
       {
-        es_.print(v, o);
+        xs_.print(v, o);
         if (transposed_)
           o << " (transposed)";
         return o;
@@ -136,31 +136,31 @@ namespace vcsn
     private:
       VCSN_RAT_VISIT(zero,)
       {
-        res_ = es_.zero();
+        res_ = xs_.zero();
       }
 
       VCSN_RAT_VISIT(one,)
       {
-        res_ = es_.one();
+        res_ = xs_.one();
       }
 
       VCSN_RAT_VISIT(atom, e)
       {
-        res_ = es_.atom(transposed_
+        res_ = xs_.atom(transposed_
                         ? ls_.transpose(e.value())
                         : e.value());
       }
 
       VCSN_RAT_VISIT(add, e)
       {
-        res_ = es_.zero();
+        res_ = xs_.zero();
         for (const auto& v: e)
-          es_.add_here(res_, to_expansion(v));
+          xs_.add_here(res_, to_expansion(v));
       }
 
       VCSN_RAT_VISIT(mul, e)
       {
-        res_ = es_.one();
+        res_ = xs_.one();
         for (size_t i = 0, size = e.size(); i < size; ++i)
           {
             auto r = e[transposed_ ? size-1 - i : i];
@@ -190,7 +190,7 @@ namespace vcsn
               ? rs_.transposition(prod_(e.begin(),
                                         std::next(e.begin(), size-(i+1))))
               : prod_(std::next(e.begin(), i + 1), std::end(e));
-            es_.rweight_here(rhs, rhss);
+            xs_.rweight_here(rhs, rhss);
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
@@ -226,7 +226,7 @@ namespace vcsn
         transposed_ = false;
         expansion_t lhs = to_expansion(e[0]);
         expansion_t rhs = to_expansion(e[1]);
-        res_ = es_.ldivide(lhs, rhs, transposed);
+        res_ = xs_.ldivide(lhs, rhs, transposed);
         transposed_ = transposed;
       }
 
@@ -235,7 +235,7 @@ namespace vcsn
       {
         res_ = to_expansion(e.head());
         for (const auto& r: e.tail())
-          res_ = es_.conjunction(res_, to_expansion(r));
+          res_ = xs_.conjunction(res_, to_expansion(r));
       }
 
       /// d(E:F) = d(E):F + E:d(F)
@@ -248,7 +248,7 @@ namespace vcsn
         res_ = to_expansion(prev);
         for (const auto& r: e.tail())
           {
-            res_ = es_.shuffle(res_,
+            res_ = xs_.shuffle(res_,
                                transposed_ ? rs_.transposition(prev) : prev,
                                to_expansion(r),
                                transposed_ ? rs_.transposition(r) : r);
@@ -267,7 +267,7 @@ namespace vcsn
         res_ = to_expansion(prev);
         for (const auto& r: e.tail())
           {
-            res_ = es_.infiltrate
+            res_ = xs_.infiltrate
               (res_,
                transposed_ ? rs_.transposition(prev) : prev,
                to_expansion(r),
@@ -278,7 +278,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(complement, e)
       {
-        res_ = es_.complement(to_expansion(e.sub()));
+        res_ = xs_.complement(to_expansion(e.sub()));
       }
 
       /// d(Eᵗ) = dᵗ(E)
@@ -312,8 +312,8 @@ namespace vcsn
         auto r = to_expansion(e.sub());
         res_
           = transposed_
-          ? es_.rweight(r, ws_.transpose(l))
-          : es_.lweight_here(l, r);
+          ? xs_.rweight(r, ws_.transpose(l))
+          : xs_.lweight_here(l, r);
       }
 
       VCSN_RAT_VISIT(rweight, e)
@@ -322,8 +322,8 @@ namespace vcsn
         auto r = e.weight();
         res_
           = transposed_
-          ? es_.lweight_here(ws_.transpose(r), l)
-          : es_.rweight(l, r);
+          ? xs_.lweight_here(ws_.transpose(r), l)
+          : xs_.rweight(l, r);
       }
 
       using tuple_t = typename super_t::tuple_t;
@@ -337,7 +337,7 @@ namespace vcsn
         {
           return
             visitor_
-            .es_
+            .xs_
             .tuple(vcsn::to_expansion(detail::project<I>(visitor_.rs_),
                                       std::get<I>(v.sub()))...);
         }
@@ -378,7 +378,7 @@ namespace vcsn
       {
         res_ = to_expansion(e.head());
         for (const auto& r: e.tail())
-          res_ = es_.compose(res_, to_expansion(r));
+          res_ = xs_.compose(res_, to_expansion(r));
       }
 
       auto compose(const compose_t&, long)
@@ -397,7 +397,7 @@ namespace vcsn
       /// Manipulate the polynomials of expressions.
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
       /// Manipulate the expansions.
-      expansionset_t es_ = {rs_};
+      expansionset_t xs_ = {rs_};
 
       /// Whether to work transposed.
       bool transposed_ = false;
