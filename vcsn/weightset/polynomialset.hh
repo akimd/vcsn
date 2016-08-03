@@ -1107,12 +1107,21 @@ namespace vcsn
     }
 
 
+    /// Transpose the labels and the weights.
+    ///
+    /// In the case of a polynomial of expressions, use transposition
+    /// instead of transpose, i.e., add tranposition operators instead
+    /// of creating deep transposed copies of the expressions.
     value_t
     transpose(const value_t& v) const
     {
       value_t res;
+      auto label_transpose
+        = static_if<context_t::is_lar>
+        ([](const auto& ls, const auto& l) { return ls.transposition(l); },
+         [](const auto& ls, const auto& l) { return ls.transpose(l); });
       for (const auto& i: v)
-        res.set(labelset()->transpose(label_of(i)),
+        res.set(label_transpose(*labelset(), label_of(i)),
                 weightset()->transpose(weight_of(i)));
       return res;
     }

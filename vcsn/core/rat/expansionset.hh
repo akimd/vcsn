@@ -146,9 +146,11 @@ namespace vcsn
         return normalize_(res, has_one);
       }
 
-      /// Normalize \a res:
-      /// There must not remain a constant-term associated to one:
-      /// put it with the constant term of the expansion.
+      /// Normalize \a res.
+      ///
+      /// There must not remain a constant-term associated to one: put
+      /// it with the constant term of the expansion.  I.e., turn
+      /// `ε⊙[⟨w⟩ε + P...] + X_p...` into `⟨w⟩ + ε⊙[P...] + X_p...`.
       value_t& normalize_(value_t& res, std::true_type) const
       {
         auto one = ls_.one();
@@ -529,29 +531,37 @@ namespace vcsn
       `-----------*/
 
     public:
-      value_t ldivide(value_t lhs, value_t rhs,
-                      bool transposed = false) const
+      /// Transpose an expansion.  The firsts must be reduced to one.
+      value_t transpose(const value_t& v) const
+      {
+        value_t res = {ws_.transpose(v.constant), polys_t{}};
+        for (const auto& p: v.polynomials)
+          {
+            VCSN_REQUIRE(ls_.is_one(p.first),
+                         *this, ": cannot transpose an expansion "
+                         "with proper firsts: ", to_string(*this, v));
+            res.polynomials[p.first] = ps_.transpose(p.second);
+          }
+        return res;
+      }
+
+      value_t ldivide(value_t lhs, value_t rhs) const
       {
         value_t res = zero();
         denormalize(lhs);
         denormalize(rhs);
         auto one = detail::label_one(ls_);
+        auto& res_one = res.polynomials[one];
+
         // ε⊙[X_a \ Y_a + ...] for common firsts, included ε.
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
           for (const auto& lm: std::get<0>(p.second))
             for (const auto& rm: std::get<1>(p.second))
               // Now, recursively develop the quotient of monomials,
               // directly in res.
-              if (transposed)
-                ps_.add_here(res.polynomials[one],
-                             rs_.transposition(rs_.ldivide(label_of(lm),
-                                                           label_of(rm))),
-                             ws_.transpose(ws_.ldivide(weight_of(lm),
-                                                       weight_of(rm))));
-              else
-                ps_.add_here(res.polynomials[one],
-                             rs_.ldivide(label_of(lm), label_of(rm)),
-                             ws_.ldivide(weight_of(lm), weight_of(rm)));
+              ps_.add_here(res_one,
+                           rs_.ldivide(label_of(lm), label_of(rm)),
+                           ws_.ldivide(weight_of(lm), weight_of(rm)));
 
         // If ε ∈ f(X) then ε⊙[X_ε \ (b Y_b) + ...]
         if (has(lhs.polynomials, one))
@@ -559,21 +569,11 @@ namespace vcsn
             if (rhsp.first != one)
               for (const auto& lm: lhs.polynomials[one])
                 for (const auto& rm: rhsp.second)
-                  {
-                    if (transposed)
-                      ps_.add_here(res.polynomials[one],
-                        rs_.transposition(
-                          rs_.ldivide(label_of(lm),
-                                   rs_.mul(rs_.atom(rhsp.first),
-                                           label_of(rm)))),
-                        ws_.transpose(ws_.ldivide(weight_of(lm),
-                                                  weight_of(rm))));
-                    else
-                      ps_.add_here(res.polynomials[one],
-                        rs_.ldivide(label_of(lm),
-                          rs_.mul(rs_.atom(rhsp.first), label_of(rm))),
-                        ws_.ldivide(weight_of(lm), weight_of(rm)));
-                  }
+                  ps_.add_here(res_one,
+                               rs_.ldivide(label_of(lm),
+                                           rs_.mul(rs_.atom(rhsp.first),
+                                                   label_of(rm))),
+                               ws_.ldivide(weight_of(lm), weight_of(rm)));
 
         // If ε ∈ f(Y) then ε⊙[(a X_a) \ Y_ε + ...]
         if (has(rhs.polynomials, one))
@@ -581,21 +581,15 @@ namespace vcsn
             if (lhsp.first != one)
               for (const auto& lm: lhsp.second)
                 for (const auto& rm: rhs.polynomials[one])
-                  {
-                    if (transposed)
-                      ps_.add_here(res.polynomials[one],
-                        rs_.transposition(
-                          rs_.ldivide(rs_.mul(rs_.atom(lhsp.first),
-                                              label_of(lm)),
-                                      label_of(rm))),
-                        ws_.transpose(ws_.ldivide(weight_of(lm),
-                                                  weight_of(rm))));
-                    else
-                      ps_.add_here(res.polynomials[one],
-                        rs_.ldivide(rs_.mul(rs_.atom(lhsp.first), label_of(lm)),
-                                    label_of(rm)),
-                        ws_.ldivide(weight_of(lm), weight_of(rm)));
-                  }
+                  ps_.add_here(res_one,
+                               rs_.ldivide(rs_.mul(rs_.atom(lhsp.first),
+                                                   label_of(lm)),
+                                           label_of(rm)),
+                               ws_.ldivide(weight_of(lm), weight_of(rm)));
+
+        // It was handy to use res_one, but if it's zero, then remove it.
+        if (ps_.is_zero(res_one))
+          res.polynomials.erase(one);
         normalize(res);
         return res;
       }

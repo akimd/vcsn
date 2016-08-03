@@ -226,7 +226,9 @@ namespace vcsn
         transposed_ = false;
         expansion_t lhs = to_expansion(e[0]);
         expansion_t rhs = to_expansion(e[1]);
-        res_ = xs_.ldivide(lhs, rhs, transposed);
+        res_ = xs_.ldivide(lhs, rhs);
+        if (transposed)
+          res_ = xs_.transpose(res_);
         transposed_ = transposed;
       }
 
