@@ -5,55 +5,58 @@ from test import *
 
 algos = ['distance', 'inplace', 'separate']
 
-# check INPUT EXP ALGORITHM
-# -------------------------
+# check_algo INPUT EXP ALGORITHM
+# ------------------------------
 def check_algo(i, o, algo):
-  i = vcsn.automaton(i)
-  o = vcsn.automaton(o)
+    i = vcsn.automaton(i)
+    o = vcsn.automaton(o)
 
-  print("using algorithm: ", algo)
-  print("checking proper")
+    print("using algorithm: ", algo)
+    print("checking proper")
 
-  # We call sort().strip() everywhere to avoid seeing differences
-  # caused by the different numbering of the states between the
-  # algorithms.
-  CHECK_EQ(o.sort().strip(), i.proper(algo=algo).sort().strip())
+    # We call sort().strip() everywhere to avoid seeing differences
+    # caused by the different numbering of the states between the
+    # algorithms.
+    CHECK_EQ(o.sort().strip(), i.proper(algo=algo).sort().strip())
 
-  # Since we remove only states that _become_ inaccessible,
-  # i.proper(prune=False).accessible() is not the same as i.proper():
-  # in the former case we also removed the non-accessible states.
-  print("checking proper(prune=False)")
-  CHECK_EQ(o.accessible(),
-           i.proper(prune=False, algo=algo).accessible())
+    # Since we remove only states that _become_ inaccessible,
+    # i.proper(prune=False).accessible() is not the same as i.proper():
+    # in the former case we also removed the non-accessible states.
+    print("checking proper(prune=False)")
+    CHECK_EQ(o.accessible(),
+             i.proper(prune=False, algo=algo).accessible())
 
-  # FIXME: Because proper uses copy, state numbers are changed.
-  #
-  # FIXME: cannot use is_isomorphic because some of our test cases
-  # have unreachable states, which is considered invalid by
-  # is_isomorphic.
-  print("checking idempotence")
-  p = i.proper(algo=algo)
-  if p.is_accessible():
-    CHECK_ISOMORPHIC(p, p.proper(algo=algo))
-  else:
-    CHECK_EQ(p.sort().strip(),
-             p.proper(algo=algo).sort().strip())
+    # FIXME: Because proper uses copy, state numbers are changed.
+    #
+    # FIXME: cannot use is_isomorphic because some of our test cases
+    # have unreachable states, which is considered invalid by
+    # is_isomorphic.
+    print("checking idempotence")
+    p = i.proper(algo=algo)
+    if p.is_accessible():
+        CHECK_ISOMORPHIC(p, p.proper(algo=algo))
+    else:
+        CHECK_EQ(p.sort().strip(),
+                 p.proper(algo=algo).sort().strip())
+
 
 def check_fail_algo(aut, algo):
-  a = vcsn.automaton(aut)
-  try:
-    a.proper(algo=algo)
-    FAIL(r"invalid \\e-cycle not detected")
-  except RuntimeError:
-    PASS()
+    a = vcsn.automaton(aut)
+    try:
+        a.proper(algo=algo)
+        FAIL(r"invalid \\e-cycle not detected")
+    except RuntimeError:
+        PASS()
+
 
 def check(i, o, algs=algos):
-  for algo in algs:
-    check_algo(i, o, algo)
+    for algo in algs:
+        check_algo(i, o, algo)
+
 
 def check_fail(i, algs=algos):
-  for algo in algs:
-    check_fail_algo(i, algo)
+    for algo in algs:
+        check_fail_algo(i, algo)
 
 
 ## --------------------------------------- ##
@@ -87,7 +90,6 @@ check_fail(metext('lan-z.fail.gv'))
 ## ------------- ##
 
 check(metext('lan-z.in.gv'), metext('lan-z.out.gv'))
-
 
 
 ## ---------------------------------- ##
@@ -128,7 +130,6 @@ check_fail(r'''digraph
 # FIXME(ap): with distance, weights are equivalent but not the same
 check(metext('lan-qr.in.gv'), metext('lan-qr.out.gv'),
       [algo for algo in algos if algo != 'distance'])
-
 
 
 ## ----------------------------------------- ##
@@ -289,7 +290,8 @@ check_fail(metext('lan-poly.3.fail.gv'))
 ## Forward vs. backward.  ##
 ## ---------------------- ##
 
+a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
 for algo in algos:
-  a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
-  for dir in ['backward', 'forward']:
-    CHECK_EQ(meaut('astar-' + dir, 'gv').sort().strip(), a.proper(direction=dir, algo=algo).sort().strip())
+    for dir in ['backward', 'forward']:
+        CHECK_EQ(meaut('astar-' + dir, 'gv').sort().strip(),
+                 a.proper(direction=dir, algo=algo).sort().strip())
