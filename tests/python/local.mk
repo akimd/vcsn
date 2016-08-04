@@ -276,6 +276,8 @@ EXTRA_DIST +=                                           \
   %D%/prefix.dir/aut4-subword.gv                        \
   %D%/prefix.dir/aut4-suffix.gv                         \
   %D%/prefix.dir/aut4.gv                                \
+  %D%/proper.dir/astar-backward.gv                      \
+  %D%/proper.dir/astar-forward.gv                       \
   %D%/proper.dir/lan-b.in.gv                            \
   %D%/proper.dir/lan-b.out.gv                           \
   %D%/proper.dir/lan-poly.1.in.gv                       \

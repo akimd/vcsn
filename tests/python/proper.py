@@ -291,48 +291,5 @@ check_fail(metext('lan-poly.3.fail.gv'))
 
 for algo in algos:
   a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
-  CHECK_EQ(vcsn.automaton(r'''digraph
-{
-  vcsn_context = "letterset<char_letters(ab)>, b"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I1
-    F0
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-  }
-  I1 -> 1
-  0 -> F0
-  0 -> 0 [label = "a"]
-  1 -> F1
-  1 -> 0 [label = "a"]
-}''').sort().strip(), a.proper(direction="backward", algo=algo).sort().strip())
-
-  CHECK_EQ(vcsn.automaton(r'''digraph
-{
-  vcsn_context = "letterset<char_letters(ab)>, b"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    I1
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-  }
-  I0 -> 0
-  I1 -> 1
-  0 -> 0 [label = "a"]
-  0 -> 1 [label = "a"]
-  1 -> F1
-}''').sort().strip(), a.proper(direction="forward", algo=algo).sort().strip())
+  for dir in ['backward', 'forward']:
+    CHECK_EQ(meaut('astar-' + dir, 'gv').sort().strip(), a.proper(direction=dir, algo=algo).sort().strip())
