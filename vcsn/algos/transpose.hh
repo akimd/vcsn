@@ -18,7 +18,7 @@ namespace vcsn
   `-----------------------*/
   namespace detail
   {
-    /// Read-write on an automaton, that transposes everything.
+    /// Read-write view on an automaton, that transposes everything.
     template <Automaton Aut>
     class transpose_automaton_impl
       : public automaton_decorator<Aut>
@@ -31,12 +31,26 @@ namespace vcsn
       using super_t = automaton_decorator<automaton_t>;
       using context_t = context_t_of<automaton_t>;
 
+      /// The transpose of a fresh non-transposed automaton.
+      template <Automaton Fresh>
+      struct fresh_impl_
+      {
+        using type = transpose_automaton<Fresh>;
+      };
+
+      /// The transpose of a fresh transposed automaton: the fresh type.
+      template <Automaton Fresh>
+      struct fresh_impl_<transpose_automaton<Fresh>>
+      {
+        using type = Fresh;
+      };
+
       /// The type to use to build an automaton of the same type:
-      /// remove the inner const-volatile qualifiers, but still build
-      /// a transpose_automaton.
+      /// remove the inner const-volatile qualifiers, and
+      /// transpose_automaton if needed.
       template <typename Ctx = context_t>
-      using fresh_automaton_t
-        = transpose_automaton<fresh_automaton_t_of<automaton_t, Ctx>>;
+      using fresh_automaton_t =
+        typename fresh_impl_<fresh_automaton_t_of<automaton_t, Ctx>>::type;
 
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -233,6 +247,7 @@ namespace vcsn
     };
   }
 
+  /// The transpose of a transpose automaton is the original automaton.
   template <Automaton Aut>
   Aut
   transpose(const transpose_automaton<Aut>& aut)
@@ -240,6 +255,7 @@ namespace vcsn
     return aut->naked_automaton();
   }
 
+  /// Transpose of an automaton.
   template <Automaton Aut>
   transpose_automaton<Aut>
   transpose(Aut aut)
