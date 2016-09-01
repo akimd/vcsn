@@ -118,9 +118,9 @@ The "standard" algorithm allows you to create an automaton from a rational
 expression. Lets create an automaton that accepts the word "a" and whose
 context is "lal_char(a), b". Type the following command to create that
 automaton:
-    $ vcsn-standard -e '?@lal_char(a), b(a)'
+    $ vcsn standard -E -e '(?@lal_char(a), b)(a)'
 If you wish to display this automaton you can type:
-    $ vcsn-standard -e '?@lal_char(a), b(a)' | d
+    $ vcsn standard -E -e '(?@lal_char(a), b)(a)' | d
 PS: This will only work if you are using the bashrc file given earlier.
 
 Cost of a path:
