@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <queue>
 
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/core/automaton.hh> // out
@@ -8,7 +9,9 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/labelset/labelset.hh>
 #include <vcsn/misc/algorithm.hh>
+#include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
 {
@@ -18,10 +21,8 @@ namespace vcsn
     template <Automaton Aut>
     class evaluator
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "evaluate: requires free labelset");
-
       using automaton_t = Aut;
+      using labelset_t = labelset_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using word_t = word_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
@@ -35,7 +36,57 @@ namespace vcsn
         : aut_(a)
       {}
 
-      weight_t operator()(const word_t& word) const
+      struct labeled_weight
+      {
+        weight_t w;
+        word_t l;
+        state_t s;
+        labeled_weight(weight_t w_, word_t l_, state_t s_)
+        {
+          w = w_;
+          l = l_;
+          s = s_;
+        }
+      };
+
+      template <typename LabelSet = labelset_t>
+      std::enable_if_t<!LabelSet::is_free(),
+                      weight_t>
+      operator()(const word_t& word) const
+      {
+        weight_t res = ws_.zero();
+
+        auto q = std::queue<labeled_weight>{};
+        q.emplace(ws_.one(), ls_.delimit(word), aut_->pre());
+
+        while (!q.empty())
+          {
+            auto cur = q.front();
+            q.pop();
+
+            if (cur.s == aut_->post())
+              res = ws_.add(res, cur.w);
+            else
+              for (auto t : all_out(aut_, cur.s))
+                {
+                  using boost::algorithm::starts_with;
+                  if (starts_with(cur.l, aut_->label_of(t)))
+                  {
+                    q.emplace(
+                        ws_.mul(cur.w, aut_->weight_of(t)),
+                        ls_.word(ls_.ldivide(aut_->label_of(t), cur.l)),
+                        aut_->dst_of(t));
+                  }
+                }
+          }
+
+        return res;
+      }
+
+      template <typename LabelSet = labelset_t>
+      std::enable_if_t<LabelSet::is_free(),
+                      weight_t>
+      operator()(const word_t& word) const
       {
         // Initialization.
         const weight_t zero = ws_.zero();
@@ -92,6 +143,7 @@ namespace vcsn
     private:
       automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
+      const labelset_t& ls_ = *aut_->labelset();
     };
 
   } // namespace detail

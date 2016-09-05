@@ -376,16 +376,15 @@ bench('a.eval("a"*{})'.format(n + 1),
              'a = b.de_bruijn(n)'],
       number=10000)
 # Something less wide.
-ctx = 'lal_char(a-z), z'
-n = 25
-r = '[a-z]*'
-bench('a.eval("abcxyz"*{})'.format(n),
-      'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['c = vcsn.context("{}")'.format(ctx),
-             'r = c.expression("{}")'.format(r),
-             'a = r.standard()'],
-      number=20000)
-
+for ctx in ['lal_char(a-z), z','law_char(a-z), z']:
+    n = 25
+    r = '[a-z]*'
+    bench('a.eval("abcxyz"*{})'.format(n),
+          'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+          setup=['c = vcsn.context("{}")'.format(ctx),
+                 'r = c.expression("{}")'.format(r),
+                 'a = r.standard()'],
+          number=20000)
 
 ## ---------- ##
 ## shortest.  ##
