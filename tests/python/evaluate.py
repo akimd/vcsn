@@ -223,3 +223,15 @@ check(a_epsilon, 'abdcef', '0')
 check(a_epsilon, 'abcef', '0')
 check(a_epsilon, 'abc', '0')
 check(a_epsilon, 'abcd', '0')
+
+## -------------------- ##
+## lat<law, law>, zmin  ##
+## -------------------- ##
+
+ctx = vcsn.context('lat<law, law>, zmin')
+e = ctx.expression(r'(<0>(a|a+b|b))* (<1>[^]|\e + <1>\e|[^] + <2>(a|[^a]+b|[^b])){*}')
+a = e.automaton()
+
+check(a, "aba|ab", '1')
+check(a, "", '0')
+check(a, "aaa|ab", '3')

@@ -68,16 +68,15 @@ namespace vcsn
               res = ws_.add(res, cur.w);
             else
               for (auto t : all_out(aut_, cur.s))
+                try
                 {
-                  using boost::algorithm::starts_with;
-                  if (starts_with(cur.l, aut_->label_of(t)))
-                  {
-                    q.emplace(
-                        ws_.mul(cur.w, aut_->weight_of(t)),
-                        ls_.word(ls_.ldivide(aut_->label_of(t), cur.l)),
-                        aut_->dst_of(t));
-                  }
+                  q.emplace(
+                      ws_.mul(cur.w, aut_->weight_of(t)),
+                      ls_.word(ls_.ldivide(aut_->label_of(t), cur.l)),
+                      aut_->dst_of(t));
                 }
+                catch (...)
+                {}
           }
 
         return res;
