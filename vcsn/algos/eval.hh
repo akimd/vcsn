@@ -25,6 +25,7 @@ namespace vcsn
       using labelset_t = labelset_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using word_t = word_t_of<automaton_t>;
+      using wordset_t = law_t<labelset_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
 
@@ -54,25 +55,31 @@ namespace vcsn
                       weight_t>
       operator()(const word_t& word) const
       {
+        // Initialization.
         weight_t res = ws_.zero();
 
+        // A queue of current word states in the automaton.
         auto q = std::queue<labeled_weight>{};
-        q.emplace(ws_.one(), ls_.delimit(word), aut_->pre());
+        q.emplace(ws_.one(), wordset_.delimit(word), aut_->pre());
 
         while (!q.empty())
           {
             auto cur = q.front();
             q.pop();
 
-            if (cur.s == aut_->post())
-              res = ws_.add(res, cur.w);
-            else
-              for (auto t : all_out(aut_, cur.s))
+            for (auto t : all_out(aut_, cur.s))
+              if (aut_->dst_of(t) == aut_->post() && wordset_.is_special(cur.l))
+              // The word is accepted.
+                {
+                  cur.w = ws_.mul(cur.w, aut_->weight_of(t));
+                  res = ws_.add(res, cur.w);
+                }
+              else
                 try
                 {
                   q.emplace(
                       ws_.mul(cur.w, aut_->weight_of(t)),
-                      ls_.word(ls_.ldivide(aut_->label_of(t), cur.l)),
+                      wordset_.ldivide(ls_.word(aut_->label_of(t)), cur.l),
                       aut_->dst_of(t));
                 }
                 catch (...)
@@ -143,6 +150,7 @@ namespace vcsn
       automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
       const labelset_t& ls_ = *aut_->labelset();
+      const wordset_t wordset_ = make_wordset(*aut_->labelset());
     };
 
   } // namespace detail

@@ -12,9 +12,10 @@ def check(aut, word, exp):
 
 ## ------------- ##
 ## lal_char, z.  ##
+## lan_char, z.  ##
 ## law_char, z.  ##
 ## ------------- ##
-for c in ["lal_char(ab), z", "law_char(ab), z"]:
+for c in ["lal_char(ab), z", "lan_char, z", "law_char(ab), z"]:
     ctx = vcsn.context(c)
     simple = vcsn.automaton('''
     digraph
@@ -139,10 +140,11 @@ for c in ["lal_char(abc), z", "law_char(abc), z"]:
 
 ## --------------- ##
 ## lal_char_zmin.  ##
+## lan_char_zmin.  ##
 ## law_char_zmin.  ##
 ## --------------- ##
 
-for c in ['lal_char(abc), zmin','law_char(abc), zmin']:
+for c in ['lal_char(abc), zmin', 'lan_char(abc), zmin', 'law_char(abc), zmin']:
     ctx = vcsn.context(c)
     a = ctx.expression('a').standard()
     check(a, '',   'oo')
@@ -225,10 +227,10 @@ check(a_epsilon, 'abc', '0')
 check(a_epsilon, 'abcd', '0')
 
 ## -------------------- ##
-## lat<law, law>, zmin  ##
+## lat<lan, lan>, zmin  ##
 ## -------------------- ##
 
-ctx = vcsn.context('lat<law, law>, zmin')
+ctx = vcsn.context('lat<lan, lan>, zmin')
 e = ctx.expression(r'(<0>(a|a+b|b))* (<1>[^]|\e + <1>\e|[^] + <2>(a|[^a]+b|[^b])){*}')
 a = e.automaton()
 
