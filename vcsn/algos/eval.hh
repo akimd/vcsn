@@ -74,16 +74,12 @@ namespace vcsn
                   cur.w = ws_.mul(cur.w, aut_->weight_of(t));
                   res = ws_.add(res, cur.w);
                 }
-              else
-                try
-                {
-                  q.emplace(
-                      ws_.mul(cur.w, aut_->weight_of(t)),
-                      wordset_.ldivide(ls_.word(aut_->label_of(t)), cur.l),
-                      aut_->dst_of(t));
-                }
-                catch (...)
-                {}
+              else if (auto new_word
+                        = wordset_.maybe_ldivide(ls_.word(aut_->label_of(t)), cur.l))
+                q.emplace(
+                    ws_.mul(cur.w, aut_->weight_of(t)),
+                    std::move(*new_word),
+                    aut_->dst_of(t));
           }
 
         return res;

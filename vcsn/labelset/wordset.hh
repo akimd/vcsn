@@ -4,6 +4,7 @@
 
 #include <boost/range/algorithm/mismatch.hpp>
 #include <boost/algorithm/string/predicate.hpp> // starts_with
+#include <boost/optional.hpp>
 
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/fwd.hh>
@@ -299,11 +300,20 @@ namespace vcsn
     /// Precondition: w1 is prefix of w2.
     value_t ldivide(const value_t& w1, const value_t& w2) const
     {
+      auto res = maybe_ldivide(w1, w2);
+      VCSN_REQUIRE(res,
+                   *this, ": ldivide: invalid arguments: ", to_string(*this, w1),
+                   ", ", to_string(*this, w2));
+      return *res;
+    }
+
+    boost::optional<value_t> maybe_ldivide(const value_t& w1, const value_t& w2) const
+    {
       using boost::algorithm::starts_with;
-      VCSN_REQUIRE(starts_with(w2, w1),
-                   *this, ": ldivide: invalid arguments: ", str_escape(w1),
-                   ", ", str_escape(w2));
-      return {begin(w2) + size(w1), end(w2)};
+      if (starts_with(w2, w1))
+        return value_t{begin(w2) + size(w1), end(w2)};
+      else
+        return boost::none;
     }
 
     /// w2 := w1 \ w2.

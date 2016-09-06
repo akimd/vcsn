@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/alphabets/setalpha.hh> // intersection
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/genset-labelset.hh>
@@ -251,23 +253,32 @@ namespace vcsn
     /// abstraction (I, Akim, now tend to think that we should only
     /// support nullableset<letterset>), let's not fight this fight
     /// now.
-    value_t lgcd(value_t, value_t) const
+    value_t lgcd(const value_t l, const value_t r) const
     {
-      raise(*this, ": lgcd: impossible operation");
+      raise(*this, ": lgcd: impossible operation. Arguments: ",
+          to_string(*this, l), ", ", to_string(*this, r));
     }
 
     /// Compute w1 \ w2 = w1^{-1}w2.
-    value_t ldivide(value_t, value_t) const
+    value_t ldivide(const value_t l, const value_t r) const
     {
-      raise(*this, ": ldivide: impossible operation");
+      raise(*this, ": ldivide: impossible operation. Arguments: ",
+          to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    value_t conjunction(const value_t& l, const value_t& r) const
+    boost::optional<value_t> maybe_ldivide(const value_t l, const value_t r) const
+    {
+      raise(*this, ": maybe_ldivide: impossible operation. Arguments: ",
+          to_string(*this, l), ", ", to_string(*this, r));
+    }
+
+    value_t conjunction(const value_t l, const value_t r) const
     {
       if (equal(l, r))
         return l;
       else
-        raise("conjunction: invalid operation (lhs and rhs are not equal)");
+        raise("conjunction: invalid operation (lhs and rhs are not equal). Arguments: ",
+          to_string(*this, l), ", ", to_string(this, r));
     }
 
     std::ostream&

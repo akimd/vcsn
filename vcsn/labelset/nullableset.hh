@@ -3,6 +3,8 @@
 #include <memory>
 #include <sstream>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/alphabets/setalpha.hh> // intersect
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/fwd.hh>
@@ -379,15 +381,25 @@ namespace vcsn
     /// Compute l \ r = l^{-1}r.
     value_t ldivide(const value_t& l, const value_t& r) const
     {
+      if (auto res = maybe_ldivide(l, r))
+        return *res;
+      else
+        raise(*this, ": ldivide: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
+    }
+
+    boost::optional<value_t> maybe_ldivide(const value_t& l, const value_t& r) const
+    {
       if (equal(l, r))
         return one();
       else if (is_one(l))
         return r;
       else if (is_one(r))
-        raise(*this, ": ldivide: invalid arguments: ",
-              to_string(*this, l), ", ", to_string(*this, r));
+        return boost::none;
+      else if (auto res = ls_->maybe_ldivide(get_value(l), get_value(r)))
+        return value(*res);
       else
-        return value(ls_->ldivide(get_value(l), get_value(r)));
+        return boost::none;
     }
 
     static value_t

@@ -7,6 +7,7 @@
 #include <tuple>
 
 #include <boost/range/join.hpp>
+#include <boost/optional.hpp>
 
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
 //#include <vcsn/core/rat/expressionset.hh> needed, but breaks everythying...
@@ -400,6 +401,28 @@ namespace vcsn
                   {
                     return vs.ldivide(l, r);
                   });
+    }
+
+    boost::optional<value_t>
+    maybe_ldivide(const value_t& l, const value_t& r) const
+    {
+      bool valid = true;
+      auto res = map_(l, r,
+                 [&valid](const auto& vs, const auto& l, const auto& r)
+                 {
+                   if (auto res = vs.maybe_ldivide(l, r))
+                    return *res;
+                   else
+                    {
+                      valid = false;
+                      return l;
+                    }
+                 });
+      
+      if (valid) 
+        return res;
+      else
+        return boost::none;
     }
 
     /// Eliminate the LGCD between all the tapes.  E.g., `(abc, abd)
