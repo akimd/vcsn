@@ -54,35 +54,35 @@ namespace vcsn
       return value_t{1, 1};
     }
 
-    static value_t add(const value_t l, const value_t r)
+    static value_t add(const value_t& l, const value_t& r)
     {
       return l + r;
     }
 
-    static value_t sub(const value_t l, const value_t r)
+    static value_t sub(const value_t& l, const value_t& r)
     {
       return l - r;
     }
 
-    static value_t mul(const value_t l, const value_t r)
+    static value_t mul(const value_t& l, const value_t& r)
     {
       return l * r;
     }
 
     value_t
-    rdivide(const value_t l, const value_t r) const
+    rdivide(const value_t& l, const value_t& r) const
     {
       require(!is_zero(r), *this, ":div: division by zero");
       return l / r;
     }
 
     value_t
-    ldivide(const value_t l, const value_t r) const
+    ldivide(const value_t& l, const value_t& r) const
     {
       return rdivide(r, l);
     }
 
-    value_t star(const value_t v) const
+    value_t star(const value_t& v) const
     {
       if (abs(v.get_num()) < v.get_den())
         // No need to reduce: numerator and denominators are primes.
@@ -91,23 +91,23 @@ namespace vcsn
         raise_not_starrable(*this, v);
     }
 
-    static bool is_special(const value_t) // C++11: cannot be constexpr.
+    static bool is_special(const value_t&) // C++11: cannot be constexpr.
     {
       return false;
     }
 
-    static bool is_zero(const value_t v)
+    static bool is_zero(const value_t& v)
     {
       return v.get_num() == 0;
     }
 
-    static bool is_one(const value_t v)
+    static bool is_one(const value_t& v)
     {
       // All values are normalized.
       return v.get_num() == 1 && v.get_den() == 1;
     }
 
-    static bool equal(const value_t l, const value_t r)
+    static bool equal(const value_t& l, const value_t& r)
     {
       return l == r;
     }
@@ -125,13 +125,13 @@ namespace vcsn
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
 
     static value_t
-    abs(const value_t v)
+    abs(const value_t& v)
     {
       return ::abs(v);
     }
 
     static value_t
-    transpose(const value_t v)
+    transpose(const value_t& v)
     {
       return v;
     }
@@ -169,7 +169,7 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(const value_t v, std::ostream& o = std::cout,
+    print(const value_t& v, std::ostream& o = std::cout,
           format fmt = {})
     {
       if (fmt == format::latex)
