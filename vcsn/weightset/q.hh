@@ -73,28 +73,28 @@ namespace vcsn
       return value_t{1, 1};
     }
 
-    static value_t add(const value_t l, const value_t r)
+    static value_t add(const value_t& l, const value_t& r)
     {
       unsigned int cm = lcm(l.den, abs(r.den));
       return value_t{l.num * int (cm / l.den) + r.num * int (cm / r.den),
                      cm}.reduce();
     }
 
-    static value_t sub(const value_t l, const value_t r)
+    static value_t sub(const value_t& l, const value_t& r)
     {
       unsigned int cm = lcm(l.den, abs(r.den));
       return value_t{l.num * int (cm / l.den) - r.num * int (cm / r.den),
                      cm}.reduce();
     }
 
-    static value_t mul(const value_t l, const value_t r)
+    static value_t mul(const value_t& l, const value_t& r)
     {
       return value_t{l.num * r.num, l.den * r.den}.reduce();
     }
 
     /// GCD: arbitrarily the first argument.
     value_t
-    lgcd(const value_t l, const value_t r) const
+    lgcd(const value_t& l, const value_t& r) const
     {
       require(!is_zero(l), *this, ": lgcd: invalid lhs: zero");
       require(!is_zero(r), *this, ": lgcd: invalid rhs: zero");
@@ -102,13 +102,13 @@ namespace vcsn
     }
 
     value_t
-    rgcd(const value_t l, const value_t r) const
+    rgcd(const value_t& l, const value_t& r) const
     {
       return lgcd(l, r);
     }
 
     value_t
-    rdivide(const value_t l, const value_t r) const
+    rdivide(const value_t& l, const value_t& r) const
     {
       require(!is_zero(r), *this, ": div: division by zero");
       if (0 < r.num)
@@ -118,12 +118,12 @@ namespace vcsn
     }
 
     value_t
-    ldivide(const value_t l, const value_t r) const
+    ldivide(const value_t& l, const value_t& r) const
     {
       return rdivide(r, l);
     }
 
-    value_t star(const value_t v) const
+    value_t star(const value_t& v) const
     {
       if (abs(v.num) < v.den)
         // No need to reduce: numerator and denominator are coprime.
@@ -132,29 +132,29 @@ namespace vcsn
         raise_not_starrable(*this, v);
     }
 
-    static bool is_special(const value_t) // C++11: cannot be constexpr.
+    static bool is_special(const value_t&) // C++11: cannot be constexpr.
     {
       return false;
     }
 
-    static bool is_zero(const value_t v)
+    static bool is_zero(const value_t& v)
     {
       return v.num == 0;
     }
 
-    static bool is_one(const value_t v)
+    static bool is_one(const value_t& v)
     {
       // All values are normalized.
       return v.num == 1 && v.den == 1;
     }
 
-    static bool equal(const value_t l, const value_t r)
+    static bool equal(const value_t& l, const value_t& r)
     {
       return l.num == r.num && l.den == r.den;
     }
 
     /// Whether \a lhs < \a rhs.
-    static bool less(const value_t lhs, const value_t rhs)
+    static bool less(const value_t& lhs, const value_t& rhs)
     {
       return lhs.num * static_cast<long>(rhs.den)
              < rhs.num * static_cast<long>(lhs.den);
@@ -167,18 +167,18 @@ namespace vcsn
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
 
     static value_t
-    abs(const value_t v)
+    abs(const value_t& v)
     {
       return v.num < 0 ? (value_t{-v.num, v.den}) : v;
     }
 
     static value_t
-    transpose(const value_t v)
+    transpose(const value_t& v)
     {
       return v;
     }
 
-    static size_t hash(const value_t v)
+    static size_t hash(const value_t& v)
     {
       size_t res = 0;
       hash_combine(res, hash_value(v.num));
@@ -187,7 +187,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_t, const value_t v)
+    conv(self_t, const value_t& v)
     {
       return v;
     }
@@ -238,7 +238,7 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(const value_t v, std::ostream& o = std::cout,
+    print(const value_t& v, std::ostream& o = std::cout,
           format fmt = {})
     {
       if (fmt == format::latex)
