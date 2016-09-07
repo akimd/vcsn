@@ -84,9 +84,9 @@ namespace vcsn
     value_t
     rdivide(const value_t l, const value_t r) const
     {
-      require(!is_zero(r), *this, "div: division by zero");
+      require(!is_zero(r), *this, ": div: division by zero");
       require(!(l % r),
-              *this, "div: invalid division: ", l, '/', r);
+              *this, ": div: invalid division: ", l, '/', r);
       return l / r;
     }
 

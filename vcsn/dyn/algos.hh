@@ -753,7 +753,7 @@ namespace vcsn
     /// Right-division of two automata (lhs / rhs).
     automaton rdivide(const automaton& lhs, const automaton& rhs);
 
-    /// Right-division of two expressions (lhs \ rhs).
+    /// Right-division of two expressions (lhs / rhs).
     expression rdivide(const expression& lhs, const expression& rhs);
 
     /// Read an automaton from a stream.
