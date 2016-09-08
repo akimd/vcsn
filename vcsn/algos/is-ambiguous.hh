@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/accessible.hh>
-#include <vcsn/algos/lightest-path.hh>
+#include <vcsn/algos/shortest.hh>
 #include <vcsn/algos/conjunction.hh> // conjunction
 #include <vcsn/algos/scc.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -59,18 +59,14 @@ namespace vcsn
                 "or has not been tested, for ambiguity");
         const auto ls = make_wordset(*conj_->labelset());
 
-        // FIXME: I would prefer the shortest path (length of word),
-        // rather than the lightest.
-        auto pre_to_w
-          = path_monomial(conj_, lightest_path(conj_, conj_->pre(), witness_),
-                          conj_->pre(), witness_);
-        auto w_to_post
-          = path_monomial(conj_, lightest_path(conj_, witness_, conj_->post()),
-                          witness_, conj_->post());
-        assert(pre_to_w || !"ambiguous_word: did not find monomial");
-        assert(w_to_post || !"ambiguous_word: did not find monomial");
+        auto p1 = shortest(conj_, conj_->pre(), witness_);
+        auto p2 = shortest(conj_, witness_, conj_->post());
 
-        return ls.mul(pre_to_w->first, w_to_post->first);
+        assert(!p1.empty() || !p2.empty()
+               || !"ambiguous_word: did not find an ambiguous word");
+        return ls.mul(p1.empty() ? ls.one() : p1.begin()->first,
+                      p2.empty() ? ls.one() : p2.begin()->first);
+
       }
 
       /// The self-conjunction of the input automaton.

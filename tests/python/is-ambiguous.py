@@ -95,6 +95,29 @@ CHECK(not a.is_ambiguous())
 XFAIL(lambda: a.ambiguous_word(), "automaton is unambiguous")
 CHECK(a.is_deterministic())
 
+# Retrieve shortest word, not lightest word.
+# When using lightest to retrieve the shortest ambiguous word, ambiguous_word
+# would return abb instead of ab.
+a = vcsn.automaton('''
+digraph
+{
+  vcsn_context="lal_char(ab), nmin"
+  I -> 1
+  1 -> 2 [label = "a"]
+  1 -> 3 [label = "a"]
+  2 -> 2 [label = "b"]
+  2 -> 7 [label = "<4>b"]
+  3 -> 4 [label = "b"]
+  3 -> 5 [label = "<4>b"]
+  4 -> 6 [label = "b"]
+  5 -> F
+  6 -> F
+  7 -> F
+}
+''')
+CHECK(a.is_ambiguous())
+CHECK_EQ("ab", a.ambiguous_word())
+CHECK(not a.is_deterministic())
 
 ## -------------------- ##
 ## is_cycle_ambiguous.  ##
