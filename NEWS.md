@@ -5,6 +5,23 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+##2016-09-08
+## automaton.eval supports non-free labelsets
+It is now possible to evaluate words on automata with non-free labelsets.
+
+For example, we can compute the edit distance between two words:
+
+    In [1]: c = vcsn.context('lan(a-z), nmin')
+            a = (c|c).levenshtein()
+            a('foo|bar')
+    Out[11: 3
+
+    In [2]: a('bar|baz')
+    Out[2]: 1
+
+    In [3]: a('qux|quuux')
+    Out[3]: 2
+
 ## 2016-07-28
 ### expression.derived_term supports multitape expressions
 Vcsn 2.3 already supports multitape expressions with the derived-term
