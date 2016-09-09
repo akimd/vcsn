@@ -70,7 +70,7 @@ namespace vcsn
   /// Given a path (typically computed by lightest_path), the
   /// corresponding monomial (label, weight).
   ///
-  /// \returns boost::none if there is no path from stc to dst.
+  /// \returns boost::none if there is no path from src to dst.
   template <Automaton Aut>
   auto
   path_monomial(const Aut& aut,

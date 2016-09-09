@@ -192,19 +192,12 @@ namespace vcsn
   {
     if (algo == "yen")
       {
-        using context_t = context_t_of<Aut>;
-        using wordset_context_t = detail::word_context_t<context_t>;
-        using polynomialset_t = polynomialset<wordset_context_t>;
-        using polynomial_t = typename polynomialset_t::value_t;
-        const polynomialset_t ps = make_word_polynomialset(aut->context());
-        polynomial_t res;
+        const auto ps = make_word_polynomialset(aut->context());
+        auto res = ps.zero();
         auto paths = k_lightest_path(aut, aut->pre(), aut->post(), num);
         for (const auto& path : paths)
-          {
-            auto monomial = path_monomial(aut, format_lightest(aut, path));
-            if (monomial)
-              ps.add_here(res, *monomial);
-          }
+          if (auto m = path_monomial(aut, format_lightest(aut, path)))
+            ps.add_here(res, *m);
         return res;
       }
     else if ((algo == "auto" && num != 1) || algo == "breadth-first")

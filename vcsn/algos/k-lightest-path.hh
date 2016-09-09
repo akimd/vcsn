@@ -13,7 +13,7 @@ namespace vcsn
 {
   /// Yen implementation.
   ///
-  /// Retrieve the K lightest path in an automaton.
+  /// Retrieve the K lightest paths in an automaton.
   struct yen_tag {};
 
   namespace detail
@@ -24,13 +24,19 @@ namespace vcsn
     /// be computed. And called with the source and destination states of the
     /// path, as long as the number (k) of paths to retrieve.
     ///
-    /// \tparam ValueSet could be either a labelset or weightset.
-    ///         Must have a less and a one member function.
-    /// \tparam Mul lambda multiplying the current best candidate with
-    ///         the value taken from the transition given in parameter.
-    /// \tparam GetValue lambda used to retrieve the value_type expected by the
-    ///         single lightest path algorithm from a monomial.
-    template <Automaton Aut, typename ValueSet, typename Mul, typename GetValue>
+    /// \tparam Aut
+    ///   The type of the automaton.
+    /// \tparam ValueSet
+    ///   could be either a labelset or weightset.
+    ///   Must have a less and a one member function.
+    /// \tparam Mul
+    ///   lambda multiplying the current best candidate with
+    ///   the value taken from the transition given in parameter.
+    /// \tparam GetValue
+    ///   lambda used to retrieve the value_type expected by the
+    ///   single lightest path algorithm from a monomial.
+    template <Automaton Aut, typename ValueSet,
+              typename Mul, typename GetValue>
     struct yen_impl
     {
       using automaton_t = Aut;
@@ -44,7 +50,8 @@ namespace vcsn
       using valueset_t = ValueSet;
       using value_t = typename valueset_t::value_t;
 
-      yen_impl(const automaton_t& aut, const ValueSet& vs, Mul mul, GetValue get_value)
+      yen_impl(const automaton_t& aut, const ValueSet& vs,
+               Mul mul, GetValue get_value)
         : aut_{aut}
         , vs_{vs}
         , mul_{mul}
@@ -138,9 +145,12 @@ namespace vcsn
                       && filter_aut->has_state(filter_aut->src_of(t)))
                     filter_aut->hide_state(filter_aut->src_of(t));
 
-                auto shortest_path = compute_lightest_path(filter_aut, spur_node, dst);
-                auto spur_path = path(filter_aut, shortest_path, spur_node, dst);
-                root_path.insert(root_path.end(), spur_path.begin(), spur_path.end());
+                auto shortest_path
+                  = compute_lightest_path(filter_aut, spur_node, dst);
+                auto spur_path
+                  = path(filter_aut, shortest_path, spur_node, dst);
+                root_path.insert(root_path.end(),
+                                 spur_path.begin(), spur_path.end());
                 if (!root_path.empty()
                     && filter_aut->src_of(root_path.front()) == src
                     && filter_aut->dst_of(root_path.back()) == dst)
@@ -148,7 +158,7 @@ namespace vcsn
                     bool already_found = false;
                     for (const auto& profile: heap)
                       {
-                        auto& selected_path = profile.path_;
+                        const auto& selected_path = profile.path_;
                         if (root_path.size() == selected_path.size())
                           {
                             auto diff = std::mismatch(root_path.begin(), root_path.end(),
@@ -185,13 +195,16 @@ namespace vcsn
     auto
     make_yen(const Aut& aut, const ValueSet& vs, Mul mul, GetValue get_value)
     {
-      return detail::yen_impl<Aut, ValueSet, Mul, GetValue>(aut, vs, mul, get_value);
+      return (detail::yen_impl<Aut, ValueSet, Mul, GetValue>
+              (aut, vs, mul, get_value));
     }
   }
 
+
   template <Automaton Aut>
   std::vector<std::vector<transition_t_of<Aut>>>
-  k_lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest, unsigned k)
+  k_lightest_path(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst,
+                  unsigned k)
   {
     auto mul = [&aut](auto lhs, transition_t_of<Aut> t)
                {
@@ -199,15 +212,30 @@ namespace vcsn
                };
     auto get_value = [](auto m) { return m.second; };
     auto yen = detail::make_yen(aut, *aut->weightset(), mul, get_value);
-    return yen(source, dest, k);
+    return yen(src, dst, k);
   }
 
+
+  /// A state-indexed vector of predecessor transitions from the path \a path.
+  ///
+  /// For each state `s`, `res[s]` is `null_transition` if it is not
+  /// part of `path` (or it is its beginning), or `res[s]` is the
+  /// transition index that points to the incoming transition to `s`
+  /// in `path`.
+  template <typename Aut>
+  using predecessors_t_of = std::vector<transition_t_of<Aut>>;
+
+  /// A state-indexed vector of predecessor transitions from the path \a path.
+  ///
+  /// For each state `s`, `res[s]` is `null_transition` if it is not
+  /// part of `path` (or it is its beginning), or `res[s]` is the
+  /// transition index that points to the incoming transition to `s`
+  /// in `path`.
   template <Automaton Aut>
-  std::vector<transition_t_of<Aut>>
+  predecessors_t_of<Aut>
   format_lightest(const Aut& aut, const std::vector<transition_t_of<Aut>>& path)
   {
-    auto res = std::vector<transition_t_of<Aut>>(states_size(aut),
-                                                 aut->null_transition());
+    auto res = predecessors_t_of<Aut>(states_size(aut), aut->null_transition());
     for (auto t : path)
       if (t != aut->null_transition())
         res[aut->dst_of(t)] = t;
@@ -215,12 +243,13 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  std::vector<transition_t_of<Aut>>
-  lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
+  predecessors_t_of<Aut>
+  lightest_path(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst,
                 yen_tag)
   {
-    auto paths = k_lightest_path(aut, source, dest, 1);
-    auto res = paths.empty() ? std::vector<transition_t_of<Aut>>() : paths.front();
+    auto paths = k_lightest_path(aut, src, dst, 1);
+    auto res
+      = paths.empty() ? std::vector<transition_t_of<Aut>>() : paths.front();
     return format_lightest(aut, res);
   }
 }
