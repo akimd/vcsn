@@ -10,6 +10,7 @@
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/labelset.hh>
+#include <vcsn/labelset/word-polynomialset.hh>
 #include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/type_traits.hh>
 
@@ -26,11 +27,18 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using word_t = word_t_of<automaton_t>;
       using wordset_t = law_t<labelset_t>;
+      using context_t = context_t_of<automaton_t>;
+      using wps_t = word_polynomialset_t<context_t>;
+      using monomial_t = typename wps_t::monomial_t;
+      using polynomial_t = typename wps_t::value_t;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
 
-      // state -> weight.
+      /// state -> weight.
       using weights_t = std::vector<weight_t>;
+
+      /// state -> polynomial.
+      using polynomials_t = std::vector<polynomial_t>;
 
     public:
       evaluator(const automaton_t& a)
@@ -141,12 +149,66 @@ namespace vcsn
           }
         return v1[aut_->post()];
       }
+        
+      /// Polynomial implementation.
+      weight_t operator()(const polynomial_t& poly) const
+      {
+        auto v1 = std::vector<polynomial_t>(states_size(aut_), wps_.zero());
+        auto v2 = v1;
+
+        for (auto t : initial_transitions(aut_))
+        {
+          v1[aut_->dst_of(t)] = wps_.add(
+              wps_.mul(monomial_t{wordset_.one(), aut_->weight_of(t)}, poly),
+              v1[aut_->dst_of(t)]);
+        }
+
+        bool finished;
+        do
+        {
+          finished = true;
+          for (int s = 0; s < v1.size(); s++)
+            if (!wps_.is_zero(v1[s]) && s != aut_->post())
+              {
+                for (auto t : all_out(aut_, s))
+                  for (const auto& m: v1[s])
+                    monomial_transition(v2, t, m);
+                v1[s] = wps_.zero();
+                finished = false;
+              }
+          v1[aut_->post()] = v2[aut_->post()];
+          std::swap(v1, v2);
+        } while (!finished);
+
+        weight_t res = ws_.zero();
+        for (const auto& m : v2[aut_->post()])
+          res = ws_.add(res, weight_of(m));
+        return res;
+      }
 
     private:
+      void
+      monomial_transition(polynomials_t& v, transition_t_of<Aut> t, const monomial_t& m) const
+      {
+        auto label = label_of(m);
+        auto weight = weight_of(m);
+        auto dst = aut_->dst_of(t);
+
+        if (dst == aut_->post() && wordset_.is_one(label))
+          v[dst] = wps_.add(v[dst], wps_.value(label,
+                ws_.mul(aut_->weight_of(t), weight)));
+
+        else if (auto r = wordset_.maybe_ldivide(ls_.word(aut_->label_of(t)),
+                                                 label))
+          v[dst] = wps_.add(v[dst],
+              wps_.value(*r, ws_.mul(aut_->weight_of(t), weight)));
+      }
+
       automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
       const labelset_t& ls_ = *aut_->labelset();
       const wordset_t wordset_ = make_wordset(*aut_->labelset());
+      const wps_t wps_ = make_word_polynomialset(aut_->context());
     };
 
   } // namespace detail
@@ -199,6 +261,35 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         const auto& l = lbl->as<LabelSet>().value();
         auto res = ::vcsn::eval(a, l);
+        return {*a->weightset(), res};
+      }
+    }
+  }
+
+  /// Evaluation of a polynomial.
+  template <Automaton Aut>
+  auto
+  eval(const Aut& a,
+      const typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t& p)
+    -> weight_t_of<Aut>
+  {
+    auto e = detail::evaluator<Aut>{a};
+    return e(p);
+  }
+
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (eval).
+      template <Automaton Aut, typename PolynomialSet>
+      weight
+      eval_polynomial(const automaton& aut, const polynomial& poly)
+      {
+        const auto& a = aut->as<Aut>();
+        const auto& p = poly->as<PolynomialSet>().value();
+        auto res = ::vcsn::eval(a, p);
         return {*a->weightset(), res};
       }
     }

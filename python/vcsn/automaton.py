@@ -5,7 +5,7 @@
 import re
 from subprocess import Popen, PIPE
 
-from vcsn_cxx import automaton, label
+from vcsn_cxx import automaton, label, polynomial
 from vcsn.proxy import variadicProxy
 from vcsn.tools import (_extend, _format, _info_to_dict,
                         _lweight, _rweight,
@@ -211,11 +211,11 @@ class automaton:
 
     # automaton.eval.
     def eval(self, w):
-        '''Evaluation of word `w` on `self`, with possible conversion from
-        plain string to genuine label object.
+        '''Evaluation of word (or polynomial) `w` on `self`, with possible
+        conversion from plain string to genuine label object.
         '''
         c = self.context()
-        if not isinstance(w, label):
+        if not isinstance(w, label) and not isinstance(w, polynomial):
             w = c.word(str(w))
         return self._eval(w)
     __call__ = eval
