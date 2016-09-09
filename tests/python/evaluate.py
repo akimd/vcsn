@@ -12,7 +12,7 @@ def check(aut, word, exp):
     CHECK_EQ(exp, aut(word))
     if word == '':
         word = r'\e'
-    CHECK_EQ(exp, aut.eval(word_ctx.polynomial(word)))
+    CHECK_EQ(exp, aut.eval(ctx.word_context().polynomial(word)))
 
 ## ------------- ##
 ## lal_char, z.  ##
@@ -20,7 +20,6 @@ def check(aut, word, exp):
 ## law_char, z.  ##
 ## ------------- ##
 
-word_ctx = vcsn.context("law_char(ab),z")
 for c in ["lal_char(ab), z", "lan_char, z", "law_char(ab), z"]:
     ctx = vcsn.context(c)
     simple = vcsn.automaton('''
@@ -70,7 +69,6 @@ for c in ["lal_char(ab), z", "lan_char, z", "law_char(ab), z"]:
     check(initial_weight, 'abab',   '8')
     check(initial_weight, 'aabab', '12')
 
-word_ctx = vcsn.context("law_char(abc),z")
 for c in ["lal_char(abc), z", "law_char(abc), z"]:
     ctx = vcsn.context(c)
     more_letters = vcsn.automaton('''
@@ -151,7 +149,6 @@ for c in ["lal_char(abc), z", "law_char(abc), z"]:
 ## law_char_zmin.  ##
 ## --------------- ##
 
-word_ctx = vcsn.context("law_char,zmin")
 for c in ['lal_char(abc), zmin', 'lan_char(abc), zmin', 'law_char(abc), zmin']:
     ctx = vcsn.context(c)
     a = ctx.expression('a').standard()
@@ -191,7 +188,7 @@ for c in ['lal_char(abc), zmin', 'lan_char(abc), zmin', 'law_char(abc), zmin']:
 ## law_char, z.  ##
 ## ------------- ##
 
-ctx = word_ctx = vcsn.context('law_char(abcdef), z')
+ctx = vcsn.context('law_char(abcdef), z')
 a = ctx.expression('<2>(ab(<3>cd)*(ef))<5>', 'associative').automaton()
 check(a, 'abef', '10')
 check(a, 'abcdef', '30')
@@ -202,7 +199,7 @@ check(a, 'abcef', '0')
 check(a, 'abc', '0')
 check(a, 'abcd', '0')
 
-ctx = word_ctx = vcsn.context('law_char(abcdef), q')
+ctx = vcsn.context('law_char(abcdef), q')
 a_epsilon = vcsn.automaton('''
 digraph
 {
@@ -240,7 +237,6 @@ check(a_epsilon, 'abcd', '0')
 ## lat<lan, lan>, zmin  ##
 ## -------------------- ##
 
-word_ctx = vcsn.context('lat<law, law>, zmin')
 ctx = vcsn.context('lat<lan, lan>, zmin')
 e = ctx.expression(r'(<0>(a|a+b|b))* (<1>[^]|\e + <1>\e|[^] + <2>(a|[^a]+b|[^b])){*}')
 a = e.automaton()
@@ -255,7 +251,7 @@ check(a, "aaa|ab", '3')
 
 def check(aut, poly, exp):
     exp = ctx.weight(exp)
-    CHECK_EQ(exp, aut._eval(ctx.polynomial(poly)))
+    CHECK_EQ(exp, aut.eval(ctx.polynomial(poly)))
 
 ##---------------##
 ## law_char, z.  ##

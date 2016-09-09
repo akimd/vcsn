@@ -124,6 +124,7 @@ dist_notebooks_DATA =                           \
   %D%/context.random_expression.ipynb           \
   %D%/context.trie.ipynb                        \
   %D%/context.tuple.ipynb                       \
+  %D%/context.word_context.ipynb                \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.complement.ipynb                \
   %D%/expansion.conjunction.ipynb               \

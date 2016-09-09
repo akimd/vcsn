@@ -468,6 +468,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_tuple", &context_tuple).staticmethod("_tuple")
     .def("u", &context::u)
     .def("word", &context_word)
+    .def("word_context", &context::make_word_context)
    ;
 
   bp::class_<expansion>("expansion", bp::no_init)

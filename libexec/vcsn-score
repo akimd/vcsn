@@ -386,6 +386,16 @@ for ctx in ['lal_char(a-z), z','law_char(a-z), z']:
                  'a = r.standard()'],
           number=20000)
 
+
+    bench('a.eval(wc.polynomial("abcxyz"*{}))'.format(n),
+          'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
+          setup=['c = vcsn.context("{}")'.format(ctx),
+                 'r = c.expression("{}")'.format(r),
+                 'a = r.standard()',
+                 'exp = "abcxyz"*{}'.format(n),
+                 'wc = c.word_context()'],
+          number=20000)
+
 ## ---------- ##
 ## shortest.  ##
 ## ---------- ##
