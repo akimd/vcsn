@@ -708,6 +708,7 @@ namespace vcsn
   DEFINE::concat_(const value_t& l, const value_t& r, std::true_type) const
     -> value_t
   {
+    // For instance:
     // concat((ab).<2>c, d.(ef)) = (ab).<2>(cd).(ef).
     //
     // Store (ab) in expression, then concat(<2>c, d) if c and d are
@@ -728,16 +729,22 @@ namespace vcsn
         if (type_ignoring_lweight_(ls.back()) == type_t::atom
             && rs.front()->type() == type_t::atom)
           {
-            // Fetch weight and atom of the last lhs.
-            auto w = possibly_implicit_lweight_(ls.back());
+            // Fetch atom of the last lhs.
             auto lhs
               = std::dynamic_pointer_cast<const atom_t>
               (unwrap_possible_lweight_(ls.back()));
             // Fetch atom of the first rhs.
             auto rhs = std::dynamic_pointer_cast<const atom_t>(rs.front());
-            ls.back() =
-              lweight(w,
-                      atom(labelset()->mul(lhs->value(), rhs->value())));
+
+            auto product = atom(labelset()->mul(lhs->value(), rhs->value()));
+
+            if (ls.back()->type() == type_t::lweight)
+              {
+                const auto& lw = down_pointer_cast<const lweight_t>(ls.back());
+                product = lweight(lw->weight(), product);
+              }
+            ls.back() = product;
+
             ls.insert(ls.end(), rs.begin() + 1, rs.end());
           }
         else
