@@ -44,8 +44,18 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
-      using path_t = std::vector<transition_t>;
-      using paths_t = std::vector<path_t>;
+
+
+      /// A list of transitions representing a path.
+      ///
+      /// Transitions are listed from source (front) to destination (back).
+      /// The destination of each transition is the source of the following one
+      /// in the vector.
+      template <typename AnyAut>
+      using path_t = std::vector<transition_t_of<AnyAut>>;
+
+      template <typename AnyAut>
+      using paths_t = std::vector<path_t<AnyAut>>;
 
       using valueset_t = ValueSet;
       using value_t = typename valueset_t::value_t;
@@ -60,10 +70,11 @@ namespace vcsn
 
       struct profile
       {
-        profile(const path_t& path, const value_t& v, const valueset_t& vs)
+        profile(const path_t<automaton_t>& path, const valueset_t& vs,
+                const value_t& v)
           : path_{path}
-          , v_{v}
           , vs_{vs}
+          , v_{v}
         {}
 
         bool operator<(const profile& rhs) const
@@ -71,21 +82,29 @@ namespace vcsn
           return vs_.less(rhs.v_, v_);
         }
 
-        path_t path_;
-        value_t v_;
+        path_t<automaton_t> path_;
         const valueset_t& vs_;
+        value_t v_;
       };
 
       using heap_t = boost::heap::fibonacci_heap<profile>;
 
+      /// Transform a map transition_t -> transition_t representing the
+      /// predecessors of each transition into a list of transitions used
+      /// for concatenating paths.
+      ///
+      /// \tparam AnyAut
+      ///   the automaton parameter needs to be generic as this function could
+      ///   be used with either automaton_t or the filter automaton version
+      ///   of automaton_t.
       template <Automaton AnyAut>
-      path_t
+      path_t<AnyAut>
       path(const AnyAut& aut,
-           const path_t& path,
-           state_t_of<Aut> src = Aut::element_type::pre(),
-           state_t_of<Aut> dst = Aut::element_type::post())
+           const path_t<AnyAut>& path,
+           state_t_of<AnyAut> src = AnyAut::element_type::pre(),
+           state_t_of<AnyAut> dst = AnyAut::element_type::post())
       {
-        path_t res;
+        auto res = path_t<AnyAut>();
         for (auto t = path[dst];
              t != aut->null_transition();
              t = path[aut->src_of(t)])
@@ -98,21 +117,27 @@ namespace vcsn
         return res;
       }
 
+      /// Compute a lightest path on a part of the automaton.
+      ///
+      /// \tparam AnyAut
+      ///   the automaton parameter needs to be generic as this function could
+      ///   be used with either automaton_t or the filter automaton version
+      ///   of automaton_t.
       template <Automaton AnyAut>
-      path_t
+      path_t<AnyAut>
       compute_lightest_path(const AnyAut& aut,
-                            state_t_of<Aut> src = Aut::element_type::pre(),
-                            state_t_of<Aut> dst = Aut::element_type::post())
+                            state_t_of<AnyAut> src = Aut::element_type::pre(),
+                            state_t_of<AnyAut> dst = Aut::element_type::post())
       {
         auto algo = detail::make_dijkstra_impl(aut, vs_, mul_);
         return std::move(algo(src, dst));
       }
 
-      paths_t
+      paths_t<automaton_t>
       operator()(state_t src, state_t dst, unsigned k)
       {
         auto first = compute_lightest_path(aut_, src, dst);
-        auto res = paths_t{path(aut_, first, src, dst)};
+        auto res = paths_t<automaton_t>{path(aut_, first, src, dst)};
         auto ps = make_word_polynomialset(aut_->context());
 
         auto heap = heap_t();
@@ -126,7 +151,7 @@ namespace vcsn
                 filter_aut->unhide_all_states();
                 filter_aut->unhide_all_transition();
                 auto spur_node = filter_aut->src_of(prev[j]);
-                auto root_path = path_t(prev.begin(), prev.begin() + j);
+                auto root_path = path_t<automaton_t>(prev.begin(), prev.begin() + j);
 
                 for (const auto& selected_path: res)
                   if (j < selected_path.size())
@@ -173,7 +198,7 @@ namespace vcsn
                     if (!already_found)
                       {
                         auto m = *path_monomial(filter_aut, format_lightest(filter_aut, root_path), src, dst);
-                        heap.emplace(std::move(root_path), get_value_(m), vs_);
+                        heap.emplace(std::move(root_path), vs_, get_value_(m));
                       }
                   }
               }
