@@ -64,10 +64,12 @@ namespace vcsn
 
 /// Static implementation of the prod_eval.
 ///
-/// Read two automata and a word. Compute the product of these automata and
-/// evaluate the word from it.
-/// \param Ctx the specified context of the automata and the word. Each of them
-/// have to be from these context or the program will fail.
+/// Read two automata and a word. Compute the product of these
+/// automata and evaluate the word from it.
+///
+/// \tparam Ctx the specified context of the automata and the
+///    word. Each of them have to be from these context or the program
+///    will fail.
 template <typename Ctx>
 void
 sta_prod_eval(const std::string& lhs, const std::string& rhs,

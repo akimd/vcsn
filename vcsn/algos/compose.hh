@@ -474,7 +474,7 @@ namespace vcsn
     return res->strip();
   }
 
-  /// Build the (accessible part of the) laze composition.
+  /// Build the (accessible part of the) lazy composition.
   template <typename Lhs, typename Rhs,
             std::size_t OutTape = 1, std::size_t InTape = 0>
   auto

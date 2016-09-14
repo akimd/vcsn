@@ -26,6 +26,8 @@ namespace vcsn
                              std::declval<automaton_t>()));
       using word_t = word_t_of<automaton_t>;
 
+      /// Constructor
+      /// \param[in] aut the automaton to study.
       is_ambiguous_impl(const automaton_t& aut)
         // FIXME: this product should not take weights into account!
         : conj_{conjunction(aut, aut)}
@@ -33,7 +35,6 @@ namespace vcsn
 
       /// Whether an automaton is ambiguous.
       ///
-      /// \param[in] aut        the automaton.
       /// \returns whether ambiguous.
       bool operator()()
       {
@@ -80,6 +81,10 @@ namespace vcsn
     };
   }
 
+  /// Whether an automaton is ambiguous.
+  ///
+  /// \param[in] aut        the automaton.
+  /// \returns whether ambiguous.
   template <Automaton Aut>
   bool is_ambiguous(const Aut& aut)
   {
