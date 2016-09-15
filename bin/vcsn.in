@@ -54,7 +54,7 @@ commands_pattern ()
 {
   commands |
     tr -d '\n' |
-    sed -e 's/^ */^(/;s/  */|/g;s/$/)$/'
+    sed -e 's/^ */^(/;s/-/(_|-)/;s/  */|/g;s/$/)$/'
 }
 
 help ()

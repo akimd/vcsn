@@ -79,7 +79,9 @@ pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
 %C%_vcsn_cxx_la_LIBADD = $(BOOST_PYTHON_LIBS) $(all_libctx) lib/libvcsn.la
 %C%_vcsn_cxx_la_SOURCES = $(from_bindings_gen) %D%/vcsn_cxx.cc
 
-CLEANDIRS += %D%/__pycache__
+# Arguably should be taken care of by Automake.  But at least 1.15
+# fails to clean the latter properly.
+CLEANDIRS += %D%/__pycache__ %D%/vcsn_tools/__pycache__
 
 # Before installing this library, wait for the libraries against which
 # it is linked to be installed.  Otherwise libtool will complain that

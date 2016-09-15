@@ -1,0 +1,201 @@
+#! /usr/bin/env python
+
+import argparse
+import string
+import sys
+from dyn_algo_parse import *
+
+fun_def = string.Template('''
+      {"$algo_name",
+       {{$type_list},
+       [](const auto& args, const dyn::context& ctx)
+       {
+$body
+       }}},
+''')
+
+fun_body_return =\
+'''$conversion_list
+          auto res = dyn::$algo_name($arg_list);
+          std::cout << res;'''
+
+fun_body_void =\
+'''$conversion_list
+          dyn::$algo_name(
+          $arg_list
+     );'''
+
+conversions_indent = '          '
+
+def fun_def_template(fun):
+    body = fun_body_void if fun['result'] == 'void' else fun_body_return
+    return string.Template(fun_def.safe_substitute(body=body))
+
+
+def ignore(fun):
+    '''Report that we don't process this case.'''
+    print('warning: ignoring: {fun}({formals}) -> {result}'
+          .format_map(fun), file=sys.stderr)
+
+
+# FIXME: Add support for these types
+unsupported_types = [
+    'boost::optional<unsigned>',
+    'direction',
+    'expansion',
+    'identities',
+    'letter_class_t',
+    'std::istream',
+    'std::vector<automaton>',
+    'std::vector<context>',
+    'std::vector<expansion>',
+    'std::vector<expression>',
+    'std::vector<polynomial>',
+    'std::vector<unsigned>',
+    ]
+
+
+def process_function(fun):
+    '''Process a function in dyn/algo.hh'''
+    fun['const'] = ''
+    fun['static'] = ''
+    fun['doc'] = Indent(fun['doc'])
+    formals_strings = formals_list(fun['formals'])
+    formals = []
+    for formal in formals_strings:
+        formals.append(formal_re.match(formal).groupdict())
+
+    algos.append(gen_function_decl(fun, formals))
+
+    # Generate the function without it's default arguments too
+    while formals and formals[-1]['default'] is not None:
+        formals.pop()
+        algos.append(gen_function_decl(fun, formals))
+
+
+def gen_function_decl(fun, formals):
+    '''Generate the binding of an algorithm from its declaration
+        and its parameters and return it (as a string).'''
+    conversions = []
+    types = []
+    args = []
+    removed_args = 0
+    for i, formal in enumerate(formals):
+        i = i - removed_args
+        if formal['class'] in unsupported_types:
+            return ""
+
+        # We don't match on the context, and don't require it
+        # as an argument in tafkit.
+        if formal['class'] == "context":
+            if formal['default'] is None:
+                args.append('ctx')
+                removed_args += 1
+                continue
+            else:
+                return ""
+
+        # dyn::word isn't really a type, it's just
+        # an indication for us to use a word context.
+        if formal['class'] == 'word':
+            formal['class'] = 'label'
+            formal['context'] = 'make_word_context(ctx)'
+        else:
+            formal['context'] = 'ctx'
+
+        # The only ostream supported is std::cout.
+        if formal['class'] == "std::ostream":
+            if formal['default'] is None:
+                args.append('std::cout')
+                removed_args += 1
+                continue
+            else:
+                return ""
+
+        # Remove std:: and dyn:: for the Type enum.
+        if formal['class'][3:5] == "::":
+            formal['type_enum'] = formal['class'][5:]
+        # and append an underscore for built-in types.
+        elif formal['class'] in ['bool', 'float']:
+            formal['type_enum'] = formal['class'] + '_'
+        elif formal['class'] in ['int', 'unsigned']:
+            formal['type_enum'] = 'number'
+        else:
+            formal['type_enum'] = formal['class']
+
+        # Qualify dyn types to avoid possible conflicts.
+        if formal['class'] in dyn_types:
+            formal['class'] = 'dyn::' + formal['class']
+
+        # Convert the argument from a string to
+        # the actual type for the function call
+        conversions.append(conversions_indent+
+                "auto a{} = vcsn::tafkit::convert<{}>(args[{}].arg, {}, args[{}].input_format);"
+                .format(i, formal['class'], i, formal['context'], i))
+
+        args.append('a{}'.format(i))
+        types.append('type::'+formal['type_enum'])
+
+    return fun_def_template(fun).substitute(
+            algo_name=fun['dynfun'],
+            conversion_list='\n'.join(conversions),
+            type_list=', '.join(types),
+            arg_list=(', ').join(args))
+
+# The list of generated bindings
+algos = []
+
+
+def process_header(fn):
+    '''Process all functions from a header `fn`.'''
+    with open(fn, 'r') as f:
+        for m in function_re.finditer(f.read()):
+            process_function(m.groupdict())
+
+
+def output(header):
+    '''Generate the implementation of Tafkit C++ bindings.'''
+    res = string.Template( r'''// Generated, do not edit by hand.
+
+#include <initializer_list>
+#include <iostream>
+#include <map>
+
+#include <vcsn/dyn/algos.hh>
+
+#include "$header"
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
+namespace vcsn
+{
+  namespace tafkit
+  {
+    const std::unordered_multimap<std::string, algo> algos
+    {$algos    };
+  }
+}''')
+
+    return res.substitute(header=header, algos=''.join(algos))
+
+
+
+parser = argparse.ArgumentParser(description='Generate tafkit registry',
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 epilog='''
+Read `dyn/algos.hh` and generate a registry its functions in C++,
+to be used by the tafkit CLI interface.
+''')
+
+parser.add_argument('--output',
+                    type=argparse.FileType('w'), default='-',
+                    help='implementation file to generate')
+parser.add_argument('--header',
+                    help='location of vcsn-tafkit.hh')
+parser.add_argument('input', type=str, default=None,
+                    help='''header to process (`dyn/algos.hh`).''')
+args = parser.parse_args()
+
+process_header(args.input)
+
+print(output(args.header), file=args.output)

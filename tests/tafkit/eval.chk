@@ -1,0 +1,42 @@
+#! /bin/sh
+
+# check AUTOMATON INPUT OUTPUT
+# ----------------------------
+
+vcsn="$builddir/tests/bin/vcsn"
+
+check ()
+{
+  local expected=$1
+  shift
+  run 0 "$expected" tests/bin/vcsn eval $@
+}
+
+cat >simple.gv <<EOF
+digraph
+{
+  vcsn_context = "lal_char(ab), z"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+  }
+  0 -> 0 [label = "a, b"]
+  0 -> 1 [label = "<2>a"]
+  1 -> 1 [label = "a, b"]
+  1 -> F1
+  I0 -> 0
+}
+EOF
+
+check 4 - -L aab <simple.gv
+check 4 -A - -L aab <simple.gv
+check 4 -Af - -L aab <simple.gv
+check 4 -f simple.gv -L aab
+
+run 0 2 -/bin/sh -c "( $vcsn thompson -Ee -ab |
+                       $vcsn proper |
+                       $vcsn lweight -C 'lal_char, q' -W 2 -A - |
+                       $vcsn eval -L -e-ab )"
