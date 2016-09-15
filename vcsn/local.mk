@@ -35,6 +35,7 @@ algo_headers =                                  \
   %D%/algos/detail/printer.hh                   \
   %D%/algos/determinize.hh                      \
   %D%/algos/dijkstra.hh                         \
+  %D%/algos/dijkstra-node.hh                    \
   %D%/algos/distance.hh                         \
   %D%/algos/divide.hh                           \
   %D%/algos/divkbaseb.hh                        \
@@ -42,6 +43,7 @@ algo_headers =                                  \
   %D%/algos/double-ring.hh                      \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
+  %D%/algos/eppstein.hh                         \
   %D%/algos/epsilon-remover-distance.hh         \
   %D%/algos/epsilon-remover-lazy.hh             \
   %D%/algos/epsilon-remover-separate.hh         \
@@ -56,6 +58,7 @@ algo_headers =                                  \
   %D%/algos/has-lightening-cycle.hh             \
   %D%/algos/has-twins-property.hh               \
   %D%/algos/identities-of.hh                    \
+  %D%/algos/implicit-path.hh                    \
   %D%/algos/inductive.hh                        \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
@@ -91,6 +94,7 @@ algo_headers =                                  \
   %D%/algos/pair.hh                             \
   %D%/algos/partial-identity.hh                 \
   %D%/algos/partial-identity-expression.hh      \
+  %D%/algos/path.hh                             \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/project-automaton.hh                \
@@ -106,6 +110,7 @@ algo_headers =                                  \
   %D%/algos/reduce.hh                           \
   %D%/algos/scc.hh                              \
   %D%/algos/shortest.hh                         \
+  %D%/algos/shortest-path-tree.hh               \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \

@@ -7,6 +7,7 @@
 #include <boost/heap/binomial_heap.hpp>
 
 #include <vcsn/algos/lightest-path.hh>
+#include <vcsn/algos/eppstein.hh>
 #include <vcsn/algos/has-lightening-cycle.hh>
 #include <vcsn/core/name-automaton.hh>
 #include <vcsn/ctx/context.hh>
@@ -198,6 +199,15 @@ namespace vcsn
         for (const auto& path : paths)
           if (auto m = path_monomial(aut, format_lightest(aut, path)))
             ps.add_here(res, *m);
+        return res;
+      }
+    else if (algo == "eppstein" && std::is_same<weightset_t_of<Aut>, vcsn::nmin>::value)
+      {
+        const auto ps = make_word_polynomialset(aut->context());
+        auto res = ps.zero();
+        auto computed = compute_eppstein(aut, aut->pre(), aut->post(), num);
+        for (const auto& path : computed)
+          ps.add_here(res, path.make_monomial(ps));
         return res;
       }
     else if ((algo == "auto" && num != 1) || algo == "breadth-first")
