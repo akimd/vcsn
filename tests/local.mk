@@ -20,15 +20,16 @@ TAP_DRIVER = $(top_srcdir)/build-aux/bin/tap-driver.sh
 
 EXTRA_DIST += %D%/bin/test.py
 
+TESTS = $(dist_TESTS) $(nodist_TESTS)
+# Lazy test suite.
+RECHECK_LOGS =
+
 dist_noinst_SCRIPTS += %D%/bin/checker
 TEST_EXTENSIONS += .chk
 CHK_LOG_DRIVER = $(TAP_DRIVER)
 CHK_LOG_COMPILER = $(srcdir)/%D%/bin/checker
-$(dist_TESTS:.chk=.log): %D%/bin/checker
-
-TESTS = $(dist_TESTS)
-# Lazy test suite.
-RECHECK_LOGS =
+CHK_TESTS = $(patsubst %.chk,%.log,$(filter %.chk,$(dist_TESTS)))
+$(CHECK_TESTS): %D%/bin/checker
 
 # Logical order: start with elementary tests, then more complex ones.
 include %D%/unit/local.mk

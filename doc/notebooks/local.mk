@@ -195,6 +195,198 @@ check-doc:
 	nbdir=$(srcdir)/%D% $(PYTHON) $(srcdir)/%D%/check-notebooks
 EXTRA_DIST += %D%/check-notebooks
 
+# Check input/output in the notebooks.
+IPYNBDOCTEST = $(srcdir)/tests/bin/ipynbdoctest.py
+TEST_EXTENSIONS += .ipynb
+IPYNB_LOG_DRIVER = $(TAP_DRIVER)
+IPYNB_LOG_COMPILER = vcsn run $(PYTHON) $(IPYNBDOCTEST) --tap
+EXTRA_DIST += $(IPYNBDOCTEST)
+AM_IPYNB_LOG_DEPS =                             \
+  $(IPYNBDOCTEST)                               \
+  $(VCSN_PYTHON_DEPS)
+$(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
+
+## FIXME: Currently I have no means to flag failing pages, so I have
+## to repeat $(dist_notebooks_DATA) but without the failing pages.
+## This is really bad, yet I don't want pages that do pass not to be
+## checked...
+##
+## FAIL: doc/notebooks/Stackoverflow.ipynb
+## FAIL: doc/notebooks/automaton.compose.ipynb
+## FAIL: doc/notebooks/automaton.delay_automaton.ipynb
+## FAIL: doc/notebooks/automaton.factor.ipynb
+## FAIL: doc/notebooks/automaton.is_accessible.ipynb
+## FAIL: doc/notebooks/automaton.is_coaccessible.ipynb
+## FAIL: doc/notebooks/automaton.is_costandard.ipynb
+## FAIL: doc/notebooks/automaton.is_realtime.ipynb
+## FAIL: doc/notebooks/automaton.is_synchronized.ipynb
+## FAIL: doc/notebooks/automaton.is_trim.ipynb
+## FAIL: doc/notebooks/automaton.rdivide.ipynb
+## FAIL: doc/notebooks/automaton.realtime.ipynb
+## FAIL: doc/notebooks/automaton.reduce.ipynb
+## FAIL: doc/notebooks/automaton.shortest.ipynb
+## FAIL: doc/notebooks/automaton.synchronize.ipynb
+## FAIL: doc/notebooks/context.random_expression.ipynb
+## FAIL: doc/notebooks/polynomial.trie.ipynb
+%C%_TESTS =					\
+  %D%/!Read-me-first.ipynb                      \
+  %D%/Algorithms.ipynb                          \
+  %D%/Automata.ipynb                            \
+  %D%/C++-Library.ipynb                         \
+  %D%/CIAA-2016.ipynb                           \
+  %D%/Contexts.ipynb                            \
+  %D%/Executables.ipynb                         \
+  %D%/Expressions.ipynb                         \
+  %D%/Glossary.ipynb                            \
+  %D%/Hacking.ipynb                             \
+  %D%/ICTAC-2016.ipynb                          \
+  %D%/References.ipynb                          \
+  %D%/Spell-checker.ipynb                       \
+  %D%/Transducers.ipynb                         \
+  %D%/Trouble-Shooting.ipynb                    \
+  %D%/automaton.accessible.ipynb                \
+  %D%/automaton.add.ipynb                       \
+  %D%/automaton.ambiguous_word.ipynb            \
+  %D%/automaton.coaccessible.ipynb              \
+  %D%/automaton.codeterminize.ipynb             \
+  %D%/automaton.cominimize.ipynb                \
+  %D%/automaton.complement.ipynb                \
+  %D%/automaton.complete.ipynb                  \
+  %D%/automaton.conjugate.ipynb                 \
+  %D%/automaton.conjunction.ipynb               \
+  %D%/automaton.context.ipynb                   \
+  %D%/automaton.costandard.ipynb                \
+  %D%/automaton.determinize.ipynb               \
+  %D%/automaton.difference.ipynb                \
+  %D%/automaton.eliminate_state.ipynb           \
+  %D%/automaton.eval.ipynb                      \
+  %D%/automaton.expression.ipynb                \
+  %D%/automaton.filter.ipynb                    \
+  %D%/automaton.has_bounded_lag.ipynb           \
+  %D%/automaton.has_lightening_cycle.ipynb      \
+  %D%/automaton.has_twins_property.ipynb        \
+  %D%/automaton.infiltrate.ipynb                \
+  %D%/automaton.info.ipynb                      \
+  %D%/automaton.insplit.ipynb                   \
+  %D%/automaton.is_ambiguous.ipynb              \
+  %D%/automaton.is_codeterministic.ipynb        \
+  %D%/automaton.is_complete.ipynb               \
+  %D%/automaton.is_cycle_ambiguous.ipynb        \
+  %D%/automaton.is_deterministic.ipynb          \
+  %D%/automaton.is_empty.ipynb                  \
+  %D%/automaton.is_equivalent.ipynb             \
+  %D%/automaton.is_functional.ipynb             \
+  %D%/automaton.is_isomorphic.ipynb             \
+  %D%/automaton.is_letterized.ipynb             \
+  %D%/automaton.is_partial_identity.ipynb       \
+  %D%/automaton.is_proper.ipynb                 \
+  %D%/automaton.is_standard.ipynb               \
+  %D%/automaton.is_useless.ipynb                \
+  %D%/automaton.is_valid.ipynb                  \
+  %D%/automaton.ldivide.ipynb                   \
+  %D%/automaton.letterize.ipynb                 \
+  %D%/automaton.lift.ipynb                      \
+  %D%/automaton.lightest.ipynb                  \
+  %D%/automaton.lightest_automaton.ipynb        \
+  %D%/automaton.lweight.ipynb                   \
+  %D%/automaton.minimize.ipynb                  \
+  %D%/automaton.multiply.ipynb                  \
+  %D%/automaton.operators.ipynb                 \
+  %D%/automaton.pair.ipynb                      \
+  %D%/automaton.partial_identity.ipynb          \
+  %D%/automaton.prefix.ipynb                    \
+  %D%/automaton.project.ipynb                   \
+  %D%/automaton.proper.ipynb                    \
+  %D%/automaton.push_weights.ipynb              \
+  %D%/automaton.rweight.ipynb                   \
+  %D%/automaton.scc.ipynb                       \
+  %D%/automaton.shuffle.ipynb                   \
+  %D%/automaton.standard.ipynb                  \
+  %D%/automaton.star.ipynb                      \
+  %D%/automaton.strip.ipynb                     \
+  %D%/automaton.subword.ipynb                   \
+  %D%/automaton.suffix.ipynb                    \
+  %D%/automaton.synchronizing_word.ipynb        \
+  %D%/automaton.transpose.ipynb                 \
+  %D%/automaton.trim.ipynb                      \
+  %D%/automaton.tuple.ipynb                     \
+  %D%/automaton.type.ipynb                      \
+  %D%/automaton.weight_series.ipynb             \
+  %D%/context.cerny.ipynb                       \
+  %D%/context.cotrie.ipynb                      \
+  %D%/context.de_bruijn.ipynb                   \
+  %D%/context.divkbaseb.ipynb                   \
+  %D%/context.ladybird.ipynb                    \
+  %D%/context.levenshtein.ipynb                 \
+  %D%/context.operators.ipynb                   \
+  %D%/context.quotkbaseb.ipynb                  \
+  %D%/context.random_automaton.ipynb            \
+  %D%/context.tuple.ipynb                       \
+  %D%/expansion.add.ipynb                       \
+  %D%/expansion.complement.ipynb                \
+  %D%/expansion.conjunction.ipynb               \
+  %D%/expansion.lweight.ipynb                   \
+  %D%/expansion.operators.ipynb                 \
+  %D%/expansion.project.ipynb                   \
+  %D%/expansion.rweight.ipynb                   \
+  %D%/expansion.tuple.ipynb                     \
+  %D%/expression.add.ipynb                      \
+  %D%/expression.automaton.ipynb                \
+  %D%/expression.complement.ipynb               \
+  %D%/expression.conjunction.ipynb              \
+  %D%/expression.constant_term.ipynb            \
+  %D%/expression.context.ipynb                  \
+  %D%/expression.derivation.ipynb               \
+  %D%/expression.derived_term.ipynb             \
+  %D%/expression.difference.ipynb               \
+  %D%/expression.expansion.ipynb                \
+  %D%/expression.inductive.ipynb                \
+  %D%/expression.infiltrate.ipynb               \
+  %D%/expression.info.ipynb                     \
+  %D%/expression.is_equivalent.ipynb            \
+  %D%/expression.is_valid.ipynb                 \
+  %D%/expression.lift.ipynb                     \
+  %D%/expression.lweight.ipynb                  \
+  %D%/expression.multiply.ipynb                 \
+  %D%/expression.operators.ipynb                \
+  %D%/expression.partial_identity.ipynb         \
+  %D%/expression.project.ipynb                  \
+  %D%/expression.rweight.ipynb                  \
+  %D%/expression.shortest.ipynb                 \
+  %D%/expression.shuffle.ipynb                  \
+  %D%/expression.split.ipynb                    \
+  %D%/expression.standard.ipynb                 \
+  %D%/expression.star_normal_form.ipynb         \
+  %D%/expression.thompson.ipynb                 \
+  %D%/expression.transpose.ipynb                \
+  %D%/expression.transposition.ipynb            \
+  %D%/expression.tuple.ipynb                    \
+  %D%/expression.zpc.ipynb                      \
+  %D%/label.multiply.ipynb                      \
+  %D%/label.operators.ipynb                     \
+  %D%/polynomial.add.ipynb                      \
+  %D%/polynomial.conjunction.ipynb              \
+  %D%/polynomial.cotrie.ipynb                   \
+  %D%/polynomial.lweight.ipynb                  \
+  %D%/polynomial.multiply.ipynb                 \
+  %D%/polynomial.operators.ipynb                \
+  %D%/polynomial.rweight.ipynb                  \
+  %D%/polynomial.split.ipynb                    \
+  %D%/polynomial.tuple.ipynb                    \
+  %D%/weight.add.ipynb                          \
+  %D%/weight.multiply.ipynb                     \
+  %D%/weight.operators.ipynb
+
+# nodist_TESTS += $(%C%_TESTS)
+
+
+.PHONY: check-nb
+check-nb:
+# Depend on check-TESTS, not 'check', because the latter depends on
+# "all", which compiles TAF-Kit etc.  Leave "check" for simple users.
+# Here, we know that our dependencies are right, so use check-TESTS.
+	@$(MAKE) $(AM_MAKEFLAGS) check-TESTS TESTS='$(%C%_TESTS)'
+
 
 ## --------------- ##
 ## ipynb -> html.  ##
