@@ -228,20 +228,98 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ## FAIL: doc/notebooks/automaton.synchronize.ipynb
 ## FAIL: doc/notebooks/context.random_expression.ipynb
 ## FAIL: doc/notebooks/polynomial.trie.ipynb
+
+## Nondeterminism:
+## %D%/Spell-checker.ipynb: depends on /usr/share/dict/words.
+## %D%/context.random_automaton.ipynb
+
+## %D%/automaton.eliminate_state.ipynb: module 'ipywidgets' has no attribute 'Label'
+
+## %D%/Expressions.ipynb
+## %D%/automaton.expression.ipynb: require pandas.
+## Effective output::
+##
+##      [{'ename': 'ImportError',
+##        'evalue': "No module named 'pandas'",
+
+
+## %D%/Executables.ipynb
+##
+## /srv/teamcity-agent/work/a0185dad9234e013/tests/bin/ipynbdoctest.py:251: pass: cell #1
+##
+## Expected output::
+##
+##         []
+##
+## Effective output::
+##
+##         [{'name': 'stdout',
+##           'output_type': 'stream',
+##           'text': '/srv/teamcity-agent/work/a0185dad9234e013/python/vcsn_tools/demangle.py:11: UserWarning: you should install regex for '
+##                   'Python\n'
+##                   "  warnings.warn('you should install regex for Python')\n"}]
+##
+## Diff on output::
+##
+##         --- expected
+##         +++ effective
+##         @@ -1 +1,5 @@
+##         -[]
+##         +[{'name': 'stdout',
+##         +  'output_type': 'stream',
+##         +  'text': '/srv/teamcity-agent/work/a0185dad9234e013/python/vcsn_tools/demangle.py:11: UserWarning: you should install regex for '
+##         +          'Python\n'
+##         +          "  warnings.warn('you should install regex for Python')\n"}]
+##
+
+##   %D%/Automata.ipynb: needs OpenFST
+##        [{'name': 'stdout',
+##          'output_type': 'stream',
+##          'text': 'a.efsm: line 26: fstcompile: command not found\n'
+##                  '/usr/sbin/sh: fstdeterminize: command not found\n'
+##                  '/srv/teamcity-agent/work/a0185dad9234e013/bin/efstdecompile: line 53: fstprint: command not found\n'
+##                  'efstdecompile: fstprint failed\n'
+##                  '\n'},
+
+## %D%/C++-Library.ipynb: tons of warnings.
+##
+##
+## Expected output::
+##
+##      []
+##
+## Effective output::
+##
+##      [{'name': 'stdout',
+##        'output_type': 'stream',
+##        'text': '/srv/teamcity-agent/work/a0185dad9234e013/python/vcsn_tools/demangle.py:11: UserWarning: you should install regex for '
+##                'Python\n'
+##                "  warnings.warn('you should install regex for Python')\n"
+##                'In file included from /usr/include/boost/iostreams/detail/is_dereferenceable.hpp:12:0,\n'
+##                '                 from /usr/include/boost/iostreams/detail/resolve.hpp:26,\n'
+##                '                 from /usr/include/boost/iostreams/detail/push.hpp:24,\n'
+##                '                 from /usr/include/boost/iostreams/filtering_stream.hpp:19,\n'
+##                '                 from ../../vcsn/misc/iostream.hh:5,\n'
+##                '                 from ../../vcsn/algos/dot.hh:11,\n'
+##                '                 from ../../vcsn/algos/epsilon-remover-separate.hh:13,\n'
+##                '                 from ../../vcsn/algos/epsilon-remover-lazy.hh:3,\n'
+##                '                 from ../../vcsn/algos/proper.hh:9,\n'
+##                '                 from ../../vcsn/algos/letterize.hh:5,\n'
+##                '                 from ../../vcsn/algos/are-equivalent.hh:9,\n'
+##                '                 from ../../vcsn/ctx/instantiate.hh:5,\n'
+##                '                 from ../../vcsn/ctx/lal_char_z.hh:15,\n'
+##                '                 from ../../tests/demo/prod-eval.cc:8:\n'
+##                '/usr/include/boost/type_traits/detail/bool_trait_def.hpp:18:79: note: #pragma message: NOTE: Use of this header '
+
 %C%_TESTS =					\
   %D%/!Read-me-first.ipynb                      \
   %D%/Algorithms.ipynb                          \
-  %D%/Automata.ipynb                            \
-  %D%/C++-Library.ipynb                         \
   %D%/CIAA-2016.ipynb                           \
   %D%/Contexts.ipynb                            \
-  %D%/Executables.ipynb                         \
-  %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
   %D%/ICTAC-2016.ipynb                          \
   %D%/References.ipynb                          \
-  %D%/Spell-checker.ipynb                       \
   %D%/Transducers.ipynb                         \
   %D%/Trouble-Shooting.ipynb                    \
   %D%/automaton.accessible.ipynb                \
@@ -258,9 +336,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.costandard.ipynb                \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.difference.ipynb                \
-  %D%/automaton.eliminate_state.ipynb           \
   %D%/automaton.eval.ipynb                      \
-  %D%/automaton.expression.ipynb                \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_lightening_cycle.ipynb      \
@@ -320,7 +396,6 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/context.levenshtein.ipynb                 \
   %D%/context.operators.ipynb                   \
   %D%/context.quotkbaseb.ipynb                  \
-  %D%/context.random_automaton.ipynb            \
   %D%/context.tuple.ipynb                       \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.complement.ipynb                \
@@ -377,7 +452,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/weight.multiply.ipynb                     \
   %D%/weight.operators.ipynb
 
-# nodist_TESTS += $(%C%_TESTS)
+nodist_TESTS += $(%C%_TESTS)
 
 
 .PHONY: check-nb

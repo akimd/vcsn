@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import pprint
 import re
 import subprocess
 import sys
@@ -54,8 +55,9 @@ def flatten(d):
             flat.append((key, value))
     return dict(flat)
 
-def canonicalize(k, s):
-    '''Canonicalize a string `s` for comparison.  `k` is its key.
+
+def canonicalize(s):
+    '''Canonicalize a string `s` for comparison.
 
     Fix universal newlines, strip trailing newlines, and normalize likely
     random values (memory addresses and UUIDs).
@@ -97,27 +99,39 @@ def canonicalize(k, s):
 
     return s
 
-def compare_outputs(test, ref):
-    ref = flatten(ref)
-    test = flatten(test)
-    kref = sorted(list(ref.keys()))
-    ktest = sorted(list(test.keys()))
-    if kref != ktest:
-        print("keys differ:")
-        print("    Expected: ", kref)
-        print("    Effective:", ktest)
+
+def canonical_dict(dict):
+    '''Neutralize gratuitous differences in a Jupyter dictionary.
+
+    For instance, neutralize different Graphviz layouts in SVG.
+    '''
+    if 'data' in dict and 'image/svg+xml' in dict['data']:
+        dict['data']['image/svg+xml'] = canonicalize(dict['data']['image/svg+xml'])
+    if 'data' in dict and 'text/html' in dict['data']:
+        dict['data']['text/html'] = canonicalize(dict['data']['text/html'])
+    if 'text' in dict:
+        # Normalize newline.
+        dict['text'] = dict['text'].replace('\r\n', '\n')
+        # TAF-Kit path.
+        dict['text'] = re.sub(r'usage: .*?vcsn-tafkit', 'usage: vcsn-tafkit',
+                              dict['text'])
+        # %%file writes `Writing`, or `Overwriting` if the file exists.
+        dict['text'] = re.sub(r'^Overwriting ', 'Writing ',
+                              dict['text'])
+    return dict
+
+
+def compare_outputs(ref, test):
+    exp = pprint.pformat([canonical_dict(d) for d in ref], width=132)
+    eff = pprint.pformat([canonical_dict(d) for d in test], width=132)
+    if exp == eff:
+        return True
+    else:
+        rst_file("Expected output", exp)
+        rst_file("Effective output", eff)
+        rst_diff(exp, eff)
         return False
-    for key in kref:
-        exp = canonicalize(key, ref[key])
-        eff = canonicalize(key, test[key])
-        if exp != eff:
-            for k in kref:
-                print("  REF:", k, truncate(ref[k]))
-                print("  TST:", k, truncate(test[k]))
-            print("mismatch %s:" % key)
-            print('\n'.join(diff(exp.splitlines(), eff.splitlines())))
-            return False
-    return True
+
 
 def run_cell(kc, cell):
     kc.execute(cell['source'])
@@ -199,22 +213,14 @@ def test_notebook(ipynb):
             FAIL('failed to run cell #{}'.format(i))
             nerror += 1
             continue
-        failed = False
-        if len(outs) != len(cell['outputs']):
-            print("output length mismatch (expected {}, got {})".format(
-                  len(cell['outputs']), len(outs)))
-            print('    Expected: ', truncate(repr_list(cell['outputs'])))
-            print('    Effective:', truncate(repr_list(outs)))
-            failed = True
-        for out, ref in zip(outs, cell.outputs):
-            failed |= not compare_outputs(out, ref)
-        print('cell #{}'.format(i), end='')
+        failed = not compare_outputs(cell.outputs, outs)
+        print('cell #{} ({}): '.format(i, n), end='')
         if failed:
-            print(' ({}): FAIL'.format(n))
+            print('FAIL')
             FAIL('cell #{}'.format(i))
             nfail += 1
         else:
-            print(': OK')
+            print('OK')
             PASS('cell #{}'.format(i))
             npass += 1
     print("Tested notebook {}".format(ipynb))
