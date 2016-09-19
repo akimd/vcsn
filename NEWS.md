@@ -5,6 +5,10 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-09-19
+### automaton.eval supports polynomials
+It is now possible to evaluate polynomials of words on automata.
+
 ## 2016-09-12
 ### make_word_context is exposed in Python
 It is now possible to call `context.word_context()` to get the context of the
