@@ -1,5 +1,5 @@
-Introduction to Vcsn
-====================
+Vcsn
+====
 
 [Vcsn](http://vcsn.lrde.epita.fr) is a platform for weighted automata
 and rational expressions.
@@ -24,30 +24,36 @@ we can write algorithms working on every automaton with weights in any
 semiring and with words from any free monoids. And on the other hand, a
 particular algorithm can be specialized for a particular data structure.
 
-Vcsn is an ongoing development project. Therefore algorithms, data
-structures and the general architecture are not totally stable and well
-tested.
+The Python bindings, and particularly the IPython interface, make Vcsn a
+tool particularly well suited for practical sessions in courses of Formal
+Language Theory.  More generally, it proves to be a handy means to explore
+compositions of algorithms on automata from small sizes to "real world"
+cases.
+
+Although it is now quite mature, Vcsn is an ongoing development
+project. Therefore some algorithms and data structures may change in the
+future.
 
 Please send any question or comments to <vcsn@lrde.epita.fr>, and report
 bugs to either our issue tracker
 <https://gitlab.lrde.epita.fr/vcsn/vcsn/issues>, or via emails to
-<vcsn-bugs@lrde.epita.fr>.
+<vcsn@lrde.epita.fr>.
 
 Using Vcsn
 ----------
 
 Documentation about Vcsn can be found in several places:
 
--   the directory doc/notebooks documents the Python interface and
+-   the directory `doc/notebooks` documents the Python interface and
     provides examples. It is also helpful to understand the C++ API.
     This documentation is also available on line. The [online
     notebooks](http://vcsn-sandbox.lrde.epita.fr/tree/Doc) will be
     frequently updated, so please be sure to check there. In particular,
     be sure to read the [introduction to
     Vcsn](http://vcsn-sandbox.lrde.epita.fr/notebooks/Doc/!Read-me-first.ipynb).
--   the file `NEWS.txt` includes many examples of how to run commands
+-   the file `NEWS.md` includes many examples of how to run commands
     and algorithms.
--   the directory tests/python contains tons of test cases written in
+-   the directory `tests/python` contains tons of test cases written in
     Python.
 -   the C++ low-level interface is documented via comments in the header
     files (`vcsn/algos/*.hh`).
