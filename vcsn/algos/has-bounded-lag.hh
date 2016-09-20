@@ -19,10 +19,12 @@ namespace vcsn
     {
       static_assert(context_t_of<Aut>::is_lat,
                     "has_bounded_lag: automaton labelset must be a tupleset");
+      static constexpr size_t number_of_tapes = labelset_t_of<Aut>::size();
       // The algorithm makes no sense (and doesn't compile) if the transducer
       // has only one tape.
-      static_assert(labelset_t_of<Aut>::size() >= 2,
-                    "has_bounded_lag: transducer labelset must have at least 2 tapes");
+      static_assert(2 <= number_of_tapes,
+                    "has_bounded_lag: transducer labelset must have"
+                    " at least 2 tapes");
 
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
@@ -30,18 +32,16 @@ namespace vcsn
       using label_t = typename labelset_t::value_t;
       using transition_t = transition_t_of<automaton_t>;
 
-      static constexpr size_t number_of_tapes = labelset_t_of<Aut>::size();
-
       enum visit_state {
-        NOT_VISITED,
-        VISITING,
-        VISITED
+        not_visited,
+        visiting,
+        visited
       };
 
-      // Keep track of what states we have visited or are visiting
+      /// Keep track of what states we have visited or are visiting
       using visited_t = std::vector<visit_state>;
 
-      // Keep track of how we arrived in a state
+      /// Keep track of how we arrived in a state
       using parent_state_t = std::vector<transition_t>;
 
       /// A static list of integers.
@@ -54,22 +54,22 @@ namespace vcsn
       using delay_t = std::array<int, number_of_tapes - 1>;
 
     public:
-      // The vectors are indexed by the state number.
+      /// The vectors are indexed by the state number.
       bounded_lag_checker(const automaton_t& aut)
         : aut_(aut)
-        , v_(states_size(aut_), NOT_VISITED)
+        , v_(states_size(aut_), not_visited)
         , p_(states_size(aut_), -1)
       {}
 
-      // Get the size (number of letters) of a label on a specific tape.
+      /// Get the size (number of letters) of a label on a specific tape.
       template <std::size_t I>
-      int get_size_tape(label_t l)
+      static int get_size_tape(label_t l)
       {
         using tape_labelset_t = typename labelset_t::template valueset_t<I>;
         return tape_labelset_t::size(std::get<I>(l));
       }
 
-      // Add the delay from the transition's label to the given delay
+      /// Add the delay from the transition's label to the given delay
       template <std::size_t... I>
       void add_delay(delay_t& d, transition_t tr, seq<I...>)
       {
@@ -83,42 +83,48 @@ namespace vcsn
         add_delay(d, tr, delay_index_t{});
       }
 
-      // Depth-first search.
+      /// Depth-first search.
       bool has_bounded_lag(state_t src)
       {
-        v_[src] = VISITING;
+        v_[src] = visiting;
         for (auto tr : all_out(aut_, src))
           {
             state_t dst = aut_->dst_of(tr);
-            auto visited = v_[dst];
-            if (visited == NOT_VISITED)
+            switch (v_[dst])
               {
-                p_[dst] = tr;
-                if (!has_bounded_lag(dst))
-                  return false;
-              }
-            else if (visited == VISITING)
-              {
-                // Cycle, compute the cycle's delay.
-                delay_t d = {0};
-                add_delay(d, tr);
-                if (src != dst)
-                  {
-                    transition_t t = p_[src];
-                    // Go back through the transitions we followed
-                    // until we loop.
-                    while (aut_->src_of(t) != dst)
-                      {
-                        add_delay(d, t);
-                        t = p_[aut_->src_of(t)];
-                      }
-                    add_delay(d, t);
-                  }
-                if (d != delay_t{0})
-                  return false;
+              case visited:
+                break;
+              case not_visited:
+                {
+                  p_[dst] = tr;
+                  if (!has_bounded_lag(dst))
+                    return false;
+                }
+                break;
+              case visiting:
+                {
+                  // Cycle, compute the cycle's delay.
+                  auto d = delay_t{0};
+                  add_delay(d, tr);
+                  if (src != dst)
+                    {
+                      transition_t t = p_[src];
+                      // Go back through the transitions we followed
+                      // until we loop.
+                      while (aut_->src_of(t) != dst)
+                        {
+                          add_delay(d, t);
+                          t = p_[aut_->src_of(t)];
+                        }
+                      add_delay(d, t);
+                    }
+                  if (d != delay_t{0})
+                    return false;
+                }
+                break;
               }
           }
-        v_[src] = VISITED;
+        v_[src] = visited;
         return true;
       }
 
@@ -146,7 +152,7 @@ namespace vcsn
   template <Automaton Aut>
   bool has_bounded_lag(const Aut& aut)
   {
-    detail::bounded_lag_checker<Aut> blc(aut);
+    auto blc = detail::bounded_lag_checker<Aut>{aut};
     return blc.has_bounded_lag();
   }
 
@@ -162,5 +168,4 @@ namespace vcsn
       }
     }
   }
-
 }
