@@ -228,12 +228,12 @@ vcsn.automaton(r'''digraph
 }'''))
 
 # A dot file which uses the HTML strings.  And a subgraph.
-CHECK_EQ(r'''context = "nullableset<letterset<char_letters(ab)>>, b"
+CHECK_EQ(r'''context = "nullableset<letterset<char_letters(ab)>>, q"
 $ -> 0
 $ -> 3
 0 -> 1 a, b
 1 -> $
-2 -> 1 a
+2 -> 1 <123>a
 3 -> 2 b''',
          meaut('html.gv').format('daut'))
 

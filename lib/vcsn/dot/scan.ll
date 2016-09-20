@@ -113,7 +113,7 @@ ID      {IDENT}|{NUM}
       s.push_back('>');
   }
 
-  "<"       ++nesting; s.push_back('>');
+  "<"       ++nesting; s.push_back('<');
   [^<>\n]+  s.append(yytext, yyleng);
   "\n"+     LINE(yyleng); s.append(yytext, yyleng);
 

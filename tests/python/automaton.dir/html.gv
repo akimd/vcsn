@@ -1,7 +1,7 @@
 // Based on http://www.graphviz.org/doc/info/html2.gv.
 
 digraph G {
-  vcsn_context = "lan_char, b"
+  vcsn_context = "lan_char, q"
 rankdir=LR
   node [shape=plaintext]
   a [
@@ -34,7 +34,7 @@ rankdir=LR
 
   subgraph { rank=same b c }
   a:here -> b:there [label = <a,b>]
-  c -> b [label = <a>]
+  c -> b [label = <<123>a>]
   d [shape=triangle]
   d -> c [label=<b>]
   I -> {a d}
