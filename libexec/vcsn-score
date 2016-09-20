@@ -606,10 +606,11 @@ def bench_compose(ls, r, a, number=50):
 
 # Those two are obsolete, remove them in some future.  They are
 # irrelevant (this pattern does not exist in "real life", and
-# extremely costly to run.
+# extremely costly to run.  Besides, commit f893b2f1 changed the
+# meaning of this expression when in LAN (see #119).
 r = "['(a,a)'-'(i,z)']{4}"
 bench_compose('lal', r, 'std', 1)
-bench_compose('lan', r, 'thm', 2)
+# bench_compose('lan', r, 'thm', 2)
 
 r = '((a|b+b|c+c|d+d|a)(w|x+x|y+y|z+z|w)){300}'
 bench_compose('lal', r, 'std')
@@ -619,22 +620,24 @@ r = r'((\e|a+a|b+b|c+c|d+d|a)(w|x+x|y+y|z+z|w+z|\e)){300}'
 bench_compose('lan', r, 'std', 20)
 bench_compose('lan', r, 'thm', 10)
 
-# has_bounded_lag
+# automaton.has_bounded_lag.
 ctx = "lat<lan_char(abc), lan_char(xyz)>, b"
-r = "['(a,x)'-'(b,y)']{1000}*"
+r1 = "['(a,x)'-'(b,y)']{1000}*"
+r2 = "(a|x+a|y+a|z+b|x+b|y){1000}*"
 bench('a.has_bounded_lag()',
-      'a = std({})'.format(r),
+      'a = std({})'.format(r1),
       setup=['ctx = "{}"'.format(ctx),
-             'r = "{}"'.format(r),
+             'r = "{}"'.format(r2),
              'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'],
       number=10)
 ctx = "lat<lan_char(abc), lan_char(xyz)>, b"
-r = "['(a,x)'-'(b,y)']*{600}"
+r1 = "['(a,x)'-'(b,y)']*{600}"
+r2 = "(a|x+a|y+a|z+b|x+b|y)*{600}"
 bench('a.has_bounded_lag()',
-      'a = std({})'.format(r),
+      'a = std({})'.format(r1),
       setup=['ctx = "{}"'.format(ctx),
-             'r = "{}"'.format(r),
+             'r = "{}"'.format(r2),
              'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'],
       number=20)
