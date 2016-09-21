@@ -1,6 +1,11 @@
 # We add useless letters (0-9) so that when printing [abcd], we
 # display [a-d], not [^].
 %context: lat<lan_char(abcd0-9), lan_char(efgh0-9)>, q
+\z|\z  => \z
+
+# Beware of 'b|\e'.
+['a,e'-'b,0'] => a|e+a|f+a|g+a|h+b|\e+b|0
+
 \z|\z @ a|e   => \z
 a|e   @ \z|\z => \z
 \z|\z @ \z|\z => \z
@@ -36,6 +41,4 @@ a ! 1.1: not enough tapes: 1 expected 3\n!   while reading expression: a
 %identities: linear
 b|f|j+a|e|i          => a|e|i+b|f|j
 (b+a)|(f+e)|(j+i)    => (a+b)|(e+f)|(i+j)
-
-%context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, q
 abcd|efgh|ijkl       => abcd|efgh|ijkl
