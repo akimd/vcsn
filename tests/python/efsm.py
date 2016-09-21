@@ -40,10 +40,15 @@ def check(aut, fefsm):
 
     # Check that OpenFST accepts and reproduces our EFSM files.
     if have_ofst:
-        if aut.is_standard():
-            CHECK_EQ(aut, aut.fstcat())
+        # FIXME: We don't support automata with several initial states
+        # with recent versions of OpenFST.
+        if aut.info('number of initial states') == 1:
+            if aut.is_standard():
+                CHECK_EQ(aut, aut.fstcat())
+            else:
+                CHECK_EQUIV(aut, normalize(aut.fstcat()))
         else:
-            CHECK_EQUIV(aut, normalize(aut.fstcat()))
+            SKIP('several initial states')
     else:
         SKIP('OpenFST is missing')
 
@@ -54,9 +59,7 @@ a = load('lal_char_zmin/slowgrow.gv')
 check(a, 'slowgrow.efsm')
 
 for f in ["lal-char-zmin", "lat-zmin", "ascii-to-one"]:
-    print("f:", f)
-    a = meaut(f, 'gv')
-    check(a, f + '.efsm')
+    check(meaut(f, 'gv'), f + '.efsm')
 
 # Check the case of an automaton without any transition.
 a = vcsn.context('lal_char(), b').expression(r'\e').standard()
