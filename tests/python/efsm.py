@@ -27,8 +27,9 @@ def check(aut, fefsm):
     # reading back and printing again.  This does not work for automata
     # with several initial states or a non-one initial weight (which is
     # approximated below as !is_standard), as then we show pre as the
-    # real initial state.  The pre state is displayed as a large natural
-    # integer, and when read and printed back, it is renumbered as 0.
+    # real initial state.  The pre state is displayed as the state
+    # number immediately after the highest state number, and when read
+    # and printed back by OpenFST, it is renumbered as 0.
     #
     # So (read | print) is not the identity.
     aut2 = vcsn.automaton(efsm, 'efsm')
@@ -40,15 +41,10 @@ def check(aut, fefsm):
 
     # Check that OpenFST accepts and reproduces our EFSM files.
     if have_ofst:
-        # FIXME: We don't support automata with several initial states
-        # with recent versions of OpenFST.
-        if aut.info('number of initial states') == 1:
-            if aut.is_standard():
-                CHECK_EQ(aut, aut.fstcat())
-            else:
-                CHECK_EQUIV(aut, normalize(aut.fstcat()))
+        if aut.is_standard():
+            CHECK_EQ(aut, aut.fstcat())
         else:
-            SKIP('several initial states')
+            CHECK_EQUIV(aut, normalize(aut.fstcat()))
     else:
         SKIP('OpenFST is missing')
 

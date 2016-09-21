@@ -16,8 +16,8 @@ x	1
 EOFSM
 
 cat >$medir/transitions.fsm <<\EOFSM
-4294967294	0	\e	\e	2
-4294967294	4	\e	\e	3
+5	0	\e	\e	2
+5	4	\e	\e	3
 0	1	a	x	4
 0	3	a	x	5
 1	2	a	x	6

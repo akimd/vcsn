@@ -147,8 +147,13 @@ namespace vcsn
       void print_transition_(const transition_t t) const override
       {
         // Don't output "pre", but an integer.
+        // Previously, a very large unsigned integer was used. This introduced
+        // an error in newer version of OpenFST, which read it as if it were a
+        // negative number. Instead, the state number immediately after
+        // the highest state number is used. There is a shift of 2 when printing
+        // states number because of pre/post.
         if (aut_->src_of(t) == aut_->pre())
-          os_ << aut_->pre() - 2;
+          os_ << states_size(aut_) - 2;
         else
           aut_->print_state(aut_->src_of(t), os_);
         if (aut_->dst_of(t) != aut_->post())
@@ -179,10 +184,6 @@ namespace vcsn
           for (auto t : inis)
             {
               os_ << '\n';
-              // Yes, this means that we display pre as -1U, which is
-              // a large unsigned integer.  But that is well supported
-              // by OpenFST which renumbers the states continuously
-              // from 0.
               print_transition_(t);
             }
 
