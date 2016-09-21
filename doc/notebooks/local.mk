@@ -213,21 +213,10 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ##
 ## FAIL: doc/notebooks/Stackoverflow.ipynb
 ## FAIL: doc/notebooks/automaton.compose.ipynb
-## FAIL: doc/notebooks/automaton.delay_automaton.ipynb
-## FAIL: doc/notebooks/automaton.factor.ipynb
-## FAIL: doc/notebooks/automaton.is_accessible.ipynb
-## FAIL: doc/notebooks/automaton.is_coaccessible.ipynb
-## FAIL: doc/notebooks/automaton.is_costandard.ipynb
-## FAIL: doc/notebooks/automaton.is_realtime.ipynb
-## FAIL: doc/notebooks/automaton.is_synchronized.ipynb
-## FAIL: doc/notebooks/automaton.is_trim.ipynb
 ## FAIL: doc/notebooks/automaton.rdivide.ipynb
-## FAIL: doc/notebooks/automaton.realtime.ipynb
 ## FAIL: doc/notebooks/automaton.reduce.ipynb
 ## FAIL: doc/notebooks/automaton.shortest.ipynb
-## FAIL: doc/notebooks/automaton.synchronize.ipynb
 ## FAIL: doc/notebooks/context.random_expression.ipynb
-## FAIL: doc/notebooks/polynomial.trie.ipynb
 
 ## Nondeterminism:
 ## %D%/Spell-checker.ipynb: depends on /usr/share/dict/words.
@@ -311,7 +300,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ##                '                 from ../../tests/demo/prod-eval.cc:8:\n'
 ##                '/usr/include/boost/type_traits/detail/bool_trait_def.hpp:18:79: note: #pragma message: NOTE: Use of this header '
 
-%C%_TESTS =					\
+%C%_TESTS =                                     \
   %D%/!Read-me-first.ipynb                      \
   %D%/Algorithms.ipynb                          \
   %D%/CIAA-2016.ipynb                           \
@@ -334,9 +323,11 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.conjunction.ipynb               \
   %D%/automaton.context.ipynb                   \
   %D%/automaton.costandard.ipynb                \
+  %D%/automaton.delay_automaton.ipynb           \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.difference.ipynb                \
   %D%/automaton.eval.ipynb                      \
+  %D%/automaton.factor.ipynb                    \
   %D%/automaton.filter.ipynb                    \
   %D%/automaton.has_bounded_lag.ipynb           \
   %D%/automaton.has_lightening_cycle.ipynb      \
@@ -344,9 +335,12 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.infiltrate.ipynb                \
   %D%/automaton.info.ipynb                      \
   %D%/automaton.insplit.ipynb                   \
+  %D%/automaton.is_accessible.ipynb             \
   %D%/automaton.is_ambiguous.ipynb              \
+  %D%/automaton.is_coaccessible.ipynb           \
   %D%/automaton.is_codeterministic.ipynb        \
   %D%/automaton.is_complete.ipynb               \
+  %D%/automaton.is_costandard.ipynb             \
   %D%/automaton.is_cycle_ambiguous.ipynb        \
   %D%/automaton.is_deterministic.ipynb          \
   %D%/automaton.is_empty.ipynb                  \
@@ -356,7 +350,10 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.is_letterized.ipynb             \
   %D%/automaton.is_partial_identity.ipynb       \
   %D%/automaton.is_proper.ipynb                 \
+  %D%/automaton.is_realtime.ipynb               \
   %D%/automaton.is_standard.ipynb               \
+  %D%/automaton.is_synchronized.ipynb           \
+  %D%/automaton.is_trim.ipynb                   \
   %D%/automaton.is_useless.ipynb                \
   %D%/automaton.is_valid.ipynb                  \
   %D%/automaton.ldivide.ipynb                   \
@@ -374,14 +371,17 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.project.ipynb                   \
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
+  %D%/automaton.realtime.ipynb                  \
   %D%/automaton.rweight.ipynb                   \
   %D%/automaton.scc.ipynb                       \
+  %D%/automaton.shortest.ipynb                  \
   %D%/automaton.shuffle.ipynb                   \
   %D%/automaton.standard.ipynb                  \
   %D%/automaton.star.ipynb                      \
   %D%/automaton.strip.ipynb                     \
   %D%/automaton.subword.ipynb                   \
   %D%/automaton.suffix.ipynb                    \
+  %D%/automaton.synchronize.ipynb               \
   %D%/automaton.synchronizing_word.ipynb        \
   %D%/automaton.transpose.ipynb                 \
   %D%/automaton.trim.ipynb                      \
@@ -447,6 +447,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.rweight.ipynb                  \
   %D%/polynomial.split.ipynb                    \
+  %D%/polynomial.trie.ipynb                     \
   %D%/polynomial.tuple.ipynb                    \
   %D%/weight.add.ipynb                          \
   %D%/weight.multiply.ipynb                     \
