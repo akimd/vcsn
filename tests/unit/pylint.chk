@@ -47,5 +47,6 @@ pyscripts=$(grep -l '/usr/bin/env python' $srcdir/libexec/*)
 run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
 
 # Get all the Python scripts from build-aux/bin.
-pyscripts=$(grep -lr '/usr/bin/env python' $srcdir/build-aux/bin)
+pyscripts=$(grep -lr '/usr/bin/env python' $srcdir/build-aux/bin/ \
+           | grep -Ev '\..*\.swp') # Ignore Vim swap files
 run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
