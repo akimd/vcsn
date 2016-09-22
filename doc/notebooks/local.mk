@@ -224,14 +224,6 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 
 ## %D%/automaton.eliminate_state.ipynb: module 'ipywidgets' has no attribute 'Label'
 
-## %D%/Expressions.ipynb
-## %D%/automaton.expression.ipynb: require pandas.
-## Effective output::
-##
-##      [{'ename': 'ImportError',
-##        'evalue': "No module named 'pandas'",
-
-
 ## %D%/Executables.ipynb
 ##
 ## /srv/teamcity-agent/work/a0185dad9234e013/tests/bin/ipynbdoctest.py:251: pass: cell #1
@@ -260,15 +252,6 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ##         +          'Python\n'
 ##         +          "  warnings.warn('you should install regex for Python')\n"}]
 ##
-
-##   %D%/Automata.ipynb: needs OpenFST
-##        [{'name': 'stdout',
-##          'output_type': 'stream',
-##          'text': 'a.efsm: line 26: fstcompile: command not found\n'
-##                  '/usr/sbin/sh: fstdeterminize: command not found\n'
-##                  '/srv/teamcity-agent/work/a0185dad9234e013/bin/efstdecompile: line 53: fstprint: command not found\n'
-##                  'efstdecompile: fstprint failed\n'
-##                  '\n'},
 
 ## %D%/C++-Library.ipynb: tons of warnings.
 ##
@@ -303,8 +286,10 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 %C%_TESTS =                                     \
   %D%/!Read-me-first.ipynb                      \
   %D%/Algorithms.ipynb                          \
+  %D%/Automata.ipynb                            \
   %D%/CIAA-2016.ipynb                           \
   %D%/Contexts.ipynb                            \
+  %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
   %D%/ICTAC-2016.ipynb                          \

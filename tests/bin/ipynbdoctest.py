@@ -105,11 +105,15 @@ def canonical_dict(dict):
 
     For instance, neutralize different Graphviz layouts in SVG.
     '''
-    if 'data' in dict and 'image/svg+xml' in dict['data']:
-        dict['data']['image/svg+xml'] = canonicalize(dict['data']['image/svg+xml'])
-    if 'data' in dict and 'text/html' in dict['data']:
-        dict['data']['text/html'] = canonicalize(dict['data']['text/html'])
+
+    if 'evalue' in dict and dict['evalue'] == "No module named 'pandas'":
+        SKIP('pandas not installed')
+        exit(0)
+
     if 'text' in dict:
+        if 'fstcompile: command not found' in dict['text']:
+            SKIP('OpenFST not installed')
+            exit(0)
         # Normalize newline.
         dict['text'] = dict['text'].replace('\r\n', '\n')
         # TAF-Kit path.
@@ -118,6 +122,11 @@ def canonical_dict(dict):
         # %%file writes `Writing`, or `Overwriting` if the file exists.
         dict['text'] = re.sub(r'^Overwriting ', 'Writing ',
                               dict['text'])
+
+    if 'data' in dict and 'image/svg+xml' in dict['data']:
+        dict['data']['image/svg+xml'] = canonicalize(dict['data']['image/svg+xml'])
+    if 'data' in dict and 'text/html' in dict['data']:
+        dict['data']['text/html'] = canonicalize(dict['data']['text/html'])
     return dict
 
 
