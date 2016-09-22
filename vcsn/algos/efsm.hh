@@ -59,6 +59,10 @@ namespace vcsn
       /// Actually output \a aut_ on \a os_.
       void operator()()
       {
+        // Get it before, as it could raise an invalid argument error during
+        // the outputting.
+        auto arc_type = arc_type_();
+
         os_ <<
           "#! /bin/sh\n"
           "\n"
@@ -67,7 +71,7 @@ namespace vcsn
           "\n";
 
         os_ <<
-          "arc_type=" << arc_type_() << "\n"
+          "arc_type=" << arc_type << "\n"
           "\n";
 
           // Provide the symbols first, as when reading EFSM, knowing
