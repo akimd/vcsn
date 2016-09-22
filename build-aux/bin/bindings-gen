@@ -424,16 +424,16 @@ using identities = vcsn::dyn::identities;
 
 '''
     # Forward declarations.
-    for c in sorted(classes.keys()):
+    for c, _ in sorted(classes.items()):
         res += class_declare.format_map({'class': c})
     res += '\n\n'
 
     # Class definitions.
-    for c in sorted(classes.keys()):
+    for c, cls in sorted(classes.items()):
         res += class_open.format_map({'class': c})
         if c in classes_prologue_header:
             res += classes_prologue_header[c].rstrip(' ')
-        res += output_memfn(memfn_declaration, classes[c])
+        res += output_memfn(memfn_declaration, cls)
         res += class_close.format_map({'class': c})
     return res
 
@@ -474,10 +474,10 @@ auto make_istream(const std::string& data = "",
 }
 
 '''
-    for c in sorted(classes.keys()):
+    for c, cls in sorted(classes.items()):
         if c in classes_prologue_impl:
             res += classes_prologue_impl[c].rstrip(' ')
-        res += output_memfn(memfn_definition, classes[c])
+        res += output_memfn(memfn_definition, cls)
 
     return res
 

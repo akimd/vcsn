@@ -90,7 +90,7 @@ EXTRA_DIST +=                                   \
 %D%/label.log:          %D%/label
 %D%/polynomialset.log:  %D%/polynomialset
 %D%/proper.log:         %D%/proper
-%D%/pylint.log:         $(vcsn_python_PYTHON) $(dist_pkglibexec_SCRIPTS) $(vcsn_python_pylint)
+%D%/pylint.log:         $(vcsn_python_PYTHON) $(dist_pkglibexec_SCRIPTS) $(vcsn_python_pylint) $(dist_noinst_python)
 %D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
 %D%/transpose.log:      %D%/transpose
 %D%/weight.log:         %D%/weight

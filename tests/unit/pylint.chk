@@ -45,3 +45,7 @@ run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn_tools
 # Get all the Python scripts from libexec/.
 pyscripts=$(grep -l '/usr/bin/env python' $srcdir/libexec/*)
 run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
+
+# Get all the Python scripts from build-aux/bin.
+pyscripts=$(grep -lr '/usr/bin/env python' $srcdir/build-aux/bin)
+run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
