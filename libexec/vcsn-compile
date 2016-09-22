@@ -18,14 +18,14 @@ parser.add_argument('vars', nargs='*', help='''variable assignments such
 parser.add_argument('input', help='source file to compile')
 parser.add_argument('-shared', help='create a shared lib instead of an executable',
                     action='store_true')
-parser.add_argument('-v', '--verbose', help='Be verbose',
+parser.add_argument('-v', '--verbose', help='be verbose',
                     action='count', default=config['verbose'])
 parser.add_argument('-c', '--color', dest='color', action='store',
                     default='auto',
                     choices=['auto', 'always', 'never'],
-                    help='Whether to use colors in the output')
+                    help='whether to use colors in the output')
 parser.add_argument('-p', '--plain', action='store_true',
-                    help='Disable all extra features (color and demangle)')
+                    help='disable all extra features (color and demangle)')
 
 # Parse the arguments, and complete the 'args' object with the value
 # from the configuration (cxx, cxxflags, etc.).
