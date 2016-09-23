@@ -214,8 +214,6 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ## FAIL: doc/notebooks/Stackoverflow.ipynb
 ## FAIL: doc/notebooks/automaton.compose.ipynb
 ## FAIL: doc/notebooks/automaton.rdivide.ipynb
-## FAIL: doc/notebooks/automaton.reduce.ipynb
-## FAIL: doc/notebooks/automaton.shortest.ipynb
 ## FAIL: doc/notebooks/context.random_expression.ipynb
 
 ## Nondeterminism:
@@ -328,6 +326,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.proper.ipynb                    \
   %D%/automaton.push_weights.ipynb              \
   %D%/automaton.realtime.ipynb                  \
+  %D%/automaton.reduce.ipynb                    \
   %D%/automaton.rweight.ipynb                   \
   %D%/automaton.scc.ipynb                       \
   %D%/automaton.shortest.ipynb                  \
