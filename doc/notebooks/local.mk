@@ -217,7 +217,6 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ## FAIL: doc/notebooks/context.random_expression.ipynb
 
 ## Nondeterminism:
-## %D%/Spell-checker.ipynb: depends on /usr/share/dict/words.
 ## %D%/context.random_automaton.ipynb
 
 ## %D%/automaton.eliminate_state.ipynb: module 'ipywidgets' has no attribute 'Label'
@@ -263,6 +262,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/Hacking.ipynb                             \
   %D%/ICTAC-2016.ipynb                          \
   %D%/References.ipynb                          \
+  %D%/Spell-checker.ipynb                       \
   %D%/Transducers.ipynb                         \
   %D%/Trouble-Shooting.ipynb                    \
   %D%/automaton.accessible.ipynb                \

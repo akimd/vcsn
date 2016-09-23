@@ -91,7 +91,7 @@ def canonicalize(s):
     s = re.sub(r'transform="[^"]*"', 'transform=""', s)
     s = re.sub(r'font-size="[^"]*"', 'font-size=""', s)
 
-    # Normalize wether data was already there or not.
+    # Normalize whether data was already there or not.
     s = re.sub(r'(Over)?[Ww]rit', 'Writ', s)
 
     # Normalize paths.
@@ -106,9 +106,13 @@ def canonical_dict(dict):
     For instance, neutralize different Graphviz layouts in SVG.
     '''
 
-    if 'evalue' in dict and dict['evalue'] == "No module named 'pandas'":
-        SKIP('pandas not installed')
-        exit(0)
+    if 'evalue' in dict:
+        if dict['evalue'] == "No module named 'pandas'":
+            SKIP('pandas not installed')
+            exit(0)
+        if dict['evalue'] == "cannot open /usr/share/dict/words for reading: No such file or directory":
+            SKIP('/usr/share/dict/words not installed')
+            exit(0)
 
     if 'text' in dict:
         if 'fstcompile: command not found' in dict['text']:
