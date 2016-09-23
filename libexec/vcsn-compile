@@ -6,59 +6,68 @@ import os
 import re
 import subprocess
 import sys
+import warnings
 
 from vcsn_tools.config import config
-from vcsn_tools.demangle import demangle, pretty_plugin
 
 me = sys.argv[0]
 
-parser = argparse.ArgumentParser(description='Compile Vcsn programs.')
-parser.add_argument('vars', nargs='*', help='''variable assignments such
-                    as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
-parser.add_argument('input', help='source file to compile')
-parser.add_argument('-shared', help='create a shared lib instead of an executable',
-                    action='store_true')
-parser.add_argument('-v', '--verbose', help='be verbose',
-                    action='count', default=config['verbose'])
-parser.add_argument('-c', '--color', dest='color', action='store',
-                    default='auto',
-                    choices=['auto', 'always', 'never'],
-                    help='whether to use colors in the output')
-parser.add_argument('-p', '--plain', action='store_true',
-                    help='disable all extra features (color and demangle)')
+def parse_args():
+    parser = argparse.ArgumentParser(description='Compile Vcsn programs.')
+    parser.add_argument('vars', nargs='*', help='''variable assignments such
+                        as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
+    parser.add_argument('input', help='source file to compile')
+    parser.add_argument('-shared', help='create a shared lib instead of an executable',
+                        action='store_true')
+    parser.add_argument('-v', '--verbose', help='be verbose',
+                        action='count', default=config['verbose'])
+    parser.add_argument('-q', '--quiet', help='hide warnings (including compiler warnings)',
+                        action='store_true')
+    parser.add_argument('-c', '--color', dest='color', action='store',
+                        default='auto',
+                        choices=['auto', 'always', 'never'],
+                        help='whether to use colors in the output')
+    parser.add_argument('-p', '--plain', action='store_true',
+                        help='disable all extra features (color and demangle)')
 
-# Parse the arguments, and complete the 'args' object with the value
-# from the configuration (cxx, cxxflags, etc.).
-args = parser.parse_args()
-for v in args.vars:
-    m = re.match(r'(\w+)([-+]?=)(.*)', v)
-    if not m:
-        print(me + ': invalid argument:', v, file=sys.stderr)
-        sys.exit(1)
-    var = m.group(1).lower()
-    op  = m.group(2)
-    val = m.group(3)
-    if op == '=':
-        config[var] = val
-    elif op == '+=':
-        config[var] += ' ' + val
-    elif op == '-=':
-        config[var] = config[var].replace(val, '')
+    # Parse the arguments, and complete the 'args' object with the value
+    # from the configuration (cxx, cxxflags, etc.).
+    args = parser.parse_args()
+    for v in args.vars:
+        # Process VAR=VAL, VAR+=VAL, VAR-=VAL.
+        m = re.match(r'(\w+)([-+]?=)(.*)', v)
+        if not m:
+            print(me + ': invalid argument:', v, file=sys.stderr)
+            sys.exit(1)
+        var = m.group(1).lower()
+        op  = m.group(2)
+        val = m.group(3)
+        if op == '=':
+            config[var] = val
+        elif op == '+=':
+            config[var] += ' ' + val
+        elif op == '-=':
+            config[var] = config[var].replace(val, '')
 
-for k in config:
-    if not k in args:
-        setattr(args, k, config[k])
-if 2 <= args.verbose:
-    print('args:', file=sys.stderr)
-    for k in sorted(args.__dict__):
-        print('  {}: {}'.format(k, getattr(args, k)), file=sys.stderr)
+    for k in config:
+        if not k in args:
+            setattr(args, k, config[k])
+    if 2 <= args.verbose:
+        print('args:', file=sys.stderr)
+        for k in sorted(args.__dict__):
+            print('  {}: {}'.format(k, getattr(args, k)), file=sys.stderr)
 
-# Strip extension.
-args.base = args.input[:-3]
-# Beware of concurrency issues: insert pid in the name to avoid problem.
-args.pid = str(os.getpid())
-args.tmp = args.base + '.' + args.pid
+    # Strip extension.
+    args.base = args.input[:-3]
+    # Beware of concurrency issues: insert pid in the name to avoid problem.
+    args.pid = str(os.getpid())
+    args.tmp = args.base + '.' + args.pid
 
+    # Obey --quiet.
+    if args.quiet:
+        warnings.filterwarnings('ignore', 'you should install')
+
+    return args
 
 def log(*msg, level=0):
     if level <= args.verbose:
@@ -99,7 +108,7 @@ def run(cmd):
     if out:
         out = out.decode('utf-8')
         print(out)
-    if err:
+    if err and (retcode or not args.quiet):
         err = err.decode('utf-8')
         if not args.plain:
             err = demangle(err, color=args.color)
@@ -111,6 +120,10 @@ def run(cmd):
             log('child returned', retcode)
         sys.exit(retcode)
 
+
+# Main.
+args = parse_args()
+from vcsn_tools.demangle import demangle, pretty_plugin # pylint: disable=wrong-import-position
 
 if args.shared:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")

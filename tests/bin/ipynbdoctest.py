@@ -114,6 +114,9 @@ def canonical_dict(dict):
         if 'fstcompile: command not found' in dict['text']:
             SKIP('OpenFST not installed')
             exit(0)
+        if 'pygmentize: command not found' in dict['text']:
+            SKIP('Pygmentize not installed')
+            exit(0)
         # Normalize newline.
         dict['text'] = dict['text'].replace('\r\n', '\n')
         # TAF-Kit path.

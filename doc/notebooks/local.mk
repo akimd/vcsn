@@ -253,40 +253,11 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ##         +          "  warnings.warn('you should install regex for Python')\n"}]
 ##
 
-## %D%/C++-Library.ipynb: tons of warnings.
-##
-##
-## Expected output::
-##
-##      []
-##
-## Effective output::
-##
-##      [{'name': 'stdout',
-##        'output_type': 'stream',
-##        'text': '/srv/teamcity-agent/work/a0185dad9234e013/python/vcsn_tools/demangle.py:11: UserWarning: you should install regex for '
-##                'Python\n'
-##                "  warnings.warn('you should install regex for Python')\n"
-##                'In file included from /usr/include/boost/iostreams/detail/is_dereferenceable.hpp:12:0,\n'
-##                '                 from /usr/include/boost/iostreams/detail/resolve.hpp:26,\n'
-##                '                 from /usr/include/boost/iostreams/detail/push.hpp:24,\n'
-##                '                 from /usr/include/boost/iostreams/filtering_stream.hpp:19,\n'
-##                '                 from ../../vcsn/misc/iostream.hh:5,\n'
-##                '                 from ../../vcsn/algos/dot.hh:11,\n'
-##                '                 from ../../vcsn/algos/epsilon-remover-separate.hh:13,\n'
-##                '                 from ../../vcsn/algos/epsilon-remover-lazy.hh:3,\n'
-##                '                 from ../../vcsn/algos/proper.hh:9,\n'
-##                '                 from ../../vcsn/algos/letterize.hh:5,\n'
-##                '                 from ../../vcsn/algos/are-equivalent.hh:9,\n'
-##                '                 from ../../vcsn/ctx/instantiate.hh:5,\n'
-##                '                 from ../../vcsn/ctx/lal_char_z.hh:15,\n'
-##                '                 from ../../tests/demo/prod-eval.cc:8:\n'
-##                '/usr/include/boost/type_traits/detail/bool_trait_def.hpp:18:79: note: #pragma message: NOTE: Use of this header '
-
 %C%_TESTS =                                     \
   %D%/!Read-me-first.ipynb                      \
   %D%/Algorithms.ipynb                          \
   %D%/Automata.ipynb                            \
+  %D%/C++-Library.ipynb                         \
   %D%/CIAA-2016.ipynb                           \
   %D%/Contexts.ipynb                            \
   %D%/Expressions.ipynb                         \

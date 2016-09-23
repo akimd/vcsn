@@ -24,6 +24,7 @@ namespace vcsn
       return read_automaton(*is);
     }
 
+    /// Read a dyn label which is a word for context ctx.
     static label read_word(const context& ctx, const std::string& w)
     {
       std::istringstream is{w};
@@ -50,6 +51,7 @@ namespace vcsn
     return std::move(res->as<Aut>());
   }
 
+  /// Read a label which is a word for context ctx.
   template <typename Ctx>
   word_t_of<Ctx>
   read_word(const Ctx& ctx, const std::string& w)
