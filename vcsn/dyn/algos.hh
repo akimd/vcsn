@@ -20,7 +20,7 @@ namespace vcsn
     automaton accessible(const automaton& aut);
 
     /// An ambiguous word, or raise if there is none.
-    label ambiguous_word(const automaton& aut);
+    word ambiguous_word(const automaton& aut);
 
     /// Whether compute the same series.
     /// \pre The labelsets of lhs and rhs are free.
@@ -252,7 +252,7 @@ namespace vcsn
                               int s = -1);
 
     /// Evaluate \a l on \a aut.
-    weight eval(const automaton& aut, const label& l);
+    weight eval(const automaton& aut, const word& l);
 
     /// Evaluate \a p on \a aut.
     weight eval(const automaton& aut, const polynomial& p);
@@ -405,7 +405,7 @@ namespace vcsn
     bool is_synchronized(const automaton& aut);
 
     /// Whether the word synchronizes aut.
-    bool is_synchronized_by(const automaton& aut, const label& word);
+    bool is_synchronized_by(const automaton& aut, const word& word);
 
     /// Whether is synchronizing.
     bool is_synchronizing(const automaton& aut);
@@ -938,8 +938,8 @@ namespace vcsn
     automaton synchronize(const automaton& aut);
 
     /// A synchronizing word, or raise if there is none.
-    label synchronizing_word(const automaton& aut,
-                             const std::string& algo = "greedy");
+    word synchronizing_word(const automaton& aut,
+                            const std::string& algo = "greedy");
 
     /// The Thompson automaton of \a e.
     automaton thompson(const expression& e);

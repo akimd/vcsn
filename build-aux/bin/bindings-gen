@@ -276,6 +276,11 @@ def process_function(fun):
         fun['fun'] = re.sub('^are_', 'is_', fun['dynfun'])
 
     fs = formals_list(fun['formals'])
+
+    #A dyn::word is really a dyn::label
+    fs = [x.replace('word', 'label') for x in fs]
+    fun['result'] = fun['result'].replace('word', 'label')
+
     cls = formal_to_class(fs[0])
     args = formals_to_args(fs)
 
