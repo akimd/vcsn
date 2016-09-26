@@ -624,61 +624,36 @@ namespace vcsn
       return res;
     }
 
-    /// The left-division of polynomials \a l and \a r.
+    /// The left-division of polynomials \a l and \a r: `res += l \ r`.
     /// Valid only for expressionsets.
-    template <typename Ctx>
-    std::enable_if_t<Ctx::is_lar, value_t>
-    ldivide_impl_(const value_t& l, const value_t& r) const
+    template <typename Ctx = context_t>
+    std::enable_if_t<Ctx::is_lar, value_t&>
+    add_ldivide_here(value_t& res, const value_t& l, const value_t& r) const
     {
-      value_t res;
       for (const auto& lm: l)
         for (const auto& rm: r)
-          add_here(res,
-                   labelset()->ldivide(label_of(lm), label_of(rm)),
-                   weightset()->ldivide(weight_of(lm), weight_of(rm)));
+          add_here(res, ldivide(lm, rm));
       return res;
     }
 
-    /// The left-division of polynomials \a l and \a r.
+    /// The left-division of polynomials \a l and \a r: `res += l \ r`.
     /// Valid only for every other labelsets.
-    template <typename Ctx>
-    std::enable_if_t<!Ctx::is_lar, value_t>
-    ldivide_impl_(const value_t& l, const value_t& r) const
+    template <typename Ctx = context_t>
+    std::enable_if_t<!Ctx::is_lar, value_t&>
+    add_ldivide_here(value_t& res, const value_t& l, const value_t& r) const
     {
-      value_t res;
       if (is_zero(l))
         raise(*this, ": ldivide: division by zero");
       else
         {
           value_t remainder = r;
-#if DEBUG
-          std::cerr << "ldivide(";
-          print(l, std::cerr) << ", ";
-          print(r, std::cerr) << "\n";
-#endif
           while (!is_zero(remainder))
             {
               auto factor = ldivide(detail::front(l), detail::front(remainder));
-#if DEBUG
-              std::cerr << "factor = "; print(factor, std::cerr) << "\n";
-#endif
               add_here(res, factor);
-#if DEBUG
-              std::cerr << "res = "; print(res, std::cerr) << "\n";
-              std::cerr << "sub = "; print(mul(l, factor), std::cerr) << "\n";
-#endif
               remainder = sub(remainder, mul(l, factor));
-#if DEBUG
-              std::cerr << "rem = "; print(remainder, std::cerr) << "\n";
-#endif
             }
-#if DEBUG
-          std::cerr << "ldivide(";
-          print(l, std::cerr) << ", ";
-          print(r, std::cerr) << ") = ";
-          print(res, std::cerr) << " rem: ";
-          print(remainder, std::cerr) << "\n";
-#endif
+
           if (!is_zero(remainder))
             raise(*this, ": ldivide: not implemented (",
                   to_string(*this, l), ", ", to_string(*this, r), ")");
@@ -686,10 +661,13 @@ namespace vcsn
       return res;
     }
 
+    /// Left division of two polynomials: `l \ r`.
     value_t
     ldivide(const value_t& l, const value_t& r) const
     {
-      return ldivide_impl_<context_t>(l, r);
+      value_t res;
+      add_ldivide_here(res, l, r);
+      return res;
     }
 
     /// Left exterior division.
