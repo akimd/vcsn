@@ -11,8 +11,9 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-%C%_TESTS =								\
-	%D%/eval.chk
+%C%_TESTS =                \
+  %D%/eval.chk             \
+  %D%/help.chk
 
 dist_TESTS += $(%C%_TESTS)
 

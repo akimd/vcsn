@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
@@ -48,11 +50,22 @@ namespace vcsn
     struct algo
     {
       std::vector<type> signature;
+      std::string declaration;
       std::function<void (const std::vector<parsed_arg>&, dyn::context)> exec;
     };
 
+    /// The documentation of an algorithm from dyn algos:
+    /// Separate from struct algo because it is not duplicated when optional 
+    /// parameters are involved.
+    struct algo_doc
+    {
+      std::string declaration;
+      std::string doc;
+    };
+    
     /// Map from an algo name to its descriptor structure.
     extern const std::unordered_multimap<std::string, algo> algos;
+    extern const std::unordered_multimap<std::string, algo_doc> algos_doc;
 
     /// Conversion functions.
     template <typename T>
@@ -161,6 +174,18 @@ namespace vcsn
     inline unsigned
     convert<unsigned>(const std::string& str, const dyn::context& ctx,
                       const std::string& format)
+    {
+      std::istringstream stream{str};
+      unsigned res;
+      stream >> res;
+      return res;
+    }
+
+    template <>
+    inline boost::optional<unsigned>
+    convert<boost::optional<unsigned>>(const std::string& str,
+                                       const dyn::context& ctx,
+                                       const std::string& format)
     {
       std::istringstream stream{str};
       unsigned res;

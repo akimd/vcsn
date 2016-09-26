@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import argparse
+import copy
 import string
 import sys
 from dyn_algo_parse import *
@@ -8,24 +9,32 @@ from dyn_algo_parse import *
 fun_def = string.Template('''
       {"$algo_name",
        {{$type_list},
-       [](const auto& args, const dyn::context& ctx)
-       {
+        $declaration,
+        [](const auto& args, const dyn::context& ctx)
+        {
 $body
-       }}},
+        }}},
 ''')
 
 fun_body_return =\
 '''$conversion_list
-          auto res = dyn::$algo_name($arg_list);
-          std::cout << res;'''
+           auto res = dyn::$algo_name($arg_list);
+           std::cout << res;'''
 
 fun_body_void =\
 '''$conversion_list
-          dyn::$algo_name(
-          $arg_list
+           dyn::$algo_name(
+           $arg_list
      );'''
 
-conversions_indent = '          '
+conversions_indent = '           '
+
+fun_doc_def = string.Template('''
+      {"$algo_name",
+       {$declaration,
+        $doc
+       }},
+''')
 
 def fun_def_template(fun):
     body = fun_body_void if fun['result'] == 'void' else fun_body_return
@@ -37,10 +46,12 @@ def ignore(fun):
     print('warning: ignoring: {fun}({formals}) -> {result}'
           .format_map(fun), file=sys.stderr)
 
-
+# These types are not supported by tafkit yet, meaning that
+# any function using them as parameter types will be ignored
+# when generating the bindings and won't be callable from
+# tafkit.
 # FIXME: Add support for these types
 unsupported_types = [
-    'boost::optional<unsigned>',
     'direction',
     'expansion',
     'identities',
@@ -54,6 +65,121 @@ unsupported_types = [
     'std::vector<unsigned>',
     ]
 
+# We don't want to see these types in the documentation.
+# This dictionnary map them to the name used instead.
+ugly_types = {
+    'int': 'number',
+    'unsigned': 'number',
+    'boost::optional<unsigned>': 'number',
+    }
+
+def gen_function_doc_decl(fun, formals):
+    '''Generate the documentation entry of an algorithm
+       from its formals parameters. Called once per algorithm
+       even when optional arguments are involved.'''
+
+    formals_def = []
+
+    for f in formals:
+        f_def = {}
+        f_def['arg'] = f['arg'].upper()
+
+        if f['class'] == 'context':
+            continue
+
+        if f['class'][3:5] == "::":
+            f['class'] = f['class'][5:]
+
+        f_def['type'] = f['class'] if f['class'] not in ugly_types else ugly_types[f['class']]
+
+        if f['class'].startswith("boost::optional"):
+            f_def['default'] = ""
+        elif f['default'] is None:
+            f_def['default'] = None
+        else:
+            f_def['default'] = '='+f['default'][3:]
+
+        format_string = '{arg}:{type}' if f_def['default'] is None else '[{arg}{default}:{type}]'
+        formals_def.append(format_string.format(arg=f_def['arg'],
+            default=f_def['default'],
+            type=f_def['type']).lstrip())
+
+    declaration = 'R"tafkit_doc( {dynfun}: {formals} -> {result})tafkit_doc"' \
+                    .format(dynfun=fun['dynfun'],
+                            formals=' '.join(formals_def),
+                            result=fun['result'])
+
+    return fun_doc_def.substitute(
+            algo_name=fun['dynfun'],
+            declaration=declaration,
+            doc=format_function_doc(fun, formals))
+
+def format_function_doc(fun, formals):
+    doc = []
+
+    # Remove ///.
+    for line in fun['doc'].split('\n'):
+        m = re.compile(r'\s*/// (?P<doc>.*)').match(line)
+        if m is not None:
+            doc.append(m.group('doc'))
+
+    # Filter unsupported parameters.
+    def is_supported_parameter(line):
+        m = re.compile(r'\\param (?P<name>\S*)').search(line)
+        if m:
+            if next((f for f in formals if f['arg'] == m.group('name')), None)\
+                is None:
+                    return False
+        return True
+
+    doc = [l for l in doc if is_supported_parameter(l)]
+
+    # Now we need to find the start of the parameter and precondition blocks.
+    def find_block(name):
+        start = None
+        end = None
+        for i, line in enumerate(doc):
+            m = re.compile('\\\\{}'.format(name)).search(line)
+            if m is not None:
+                if start is None:
+                    start = i
+            else:
+                # Are we indented ? If we are, this isn't the end of the block.
+                if start is not None and end is None and line[0] != ' ':
+                    end = i
+
+        if end is None:
+            end = len(doc)
+        return (start, end)
+
+    def mark_block(name, mark, indent=False):
+        start, end = find_block(name)
+        if start is not None:
+            is_after_dash = False
+            for i in range(start, end):
+                # If line is indented, remove some indent
+                # to keep it aligned even after \param or \pre
+                # are removed. Once we start seeing lists, we don't
+                # do that anymore.
+                if indent:
+                    if doc[i].lstrip()[0] == '-':
+                        is_after_dash = True
+                    if doc[i][:len(name)+2] == ' '*(len(name)+2) and not is_after_dash:
+                        doc[i] = doc[i][len(name)+2:]
+                doc[i] = doc[i].replace('\\{} '.format(name), '')
+                doc[i] = '  '+doc[i]
+            doc.insert(start, ''+mark)
+
+    doc = [re.sub(r'\\param (\S*)', lambda m: r'\param ' + m.group(1).upper(), l) for l in doc]
+
+    mark_block('param', 'Parameters:', indent=True)
+    mark_block('pre', 'Preconditions:')
+    mark_block('returns', 'Return value:')
+
+    # Remove \a and uppercase argument name
+    doc = ['  ' + re.sub(r'\\a (\S*)', lambda m: m.group(1).upper(), l) for l in doc]
+
+    return 'R"tafkit_doc('+ '\n'.join(doc) +')tafkit_doc"'
 
 def process_function(fun):
     '''Process a function in dyn/algo.hh'''
@@ -63,15 +189,25 @@ def process_function(fun):
     formals_strings = formals_list(fun['formals'])
     formals = []
     for formal in formals_strings:
-        formals.append(formal_re.match(formal).groupdict())
+        formal_dict = formal_re.match(formal).groupdict()
+        formals.append(formal_dict)
 
-    algos.append(gen_function_decl(fun, formals))
+    decl = gen_function_decl(fun, formals)
+    algos.append(decl)
 
-    # Generate the function without it's default arguments too
+    doc_decl = ""
+    if decl != "":
+        doc_decl = gen_function_doc_decl(fun, formals)
+
+    # Generate the function without its default arguments too.
     while formals and formals[-1]['default'] is not None:
         formals.pop()
-        algos.append(gen_function_decl(fun, formals))
+        decl = gen_function_decl(fun, formals)
+        algos.append(decl)
+        if decl != "" and doc_decl == "":
+            doc_decl = gen_function_doc_decl(fun, formals)
 
+    algos_doc.append(doc_decl)
 
 def gen_function_decl(fun, formals):
     '''Generate the binding of an algorithm from its declaration
@@ -80,6 +216,14 @@ def gen_function_decl(fun, formals):
     types = []
     args = []
     removed_args = 0
+
+    # Copy formals to avoid interfering with the documentation generation.
+    formals = copy.deepcopy(formals)
+
+    # Construct the function declaration for documentation.
+    declaration = '"' + fun['result'] + ' ' + fun['dynfun'] + '(' +\
+        ', '.join(f['type'] + ' ' + f['arg'] for f in formals) + ')"'
+
     for i, formal in enumerate(formals):
         i = i - removed_args
         if formal['class'] in unsupported_types:
@@ -118,7 +262,7 @@ def gen_function_decl(fun, formals):
         # and append an underscore for built-in types.
         elif formal['class'] in ['bool', 'float']:
             formal['type_enum'] = formal['class'] + '_'
-        elif formal['class'] in ['int', 'unsigned']:
+        elif formal['class'] in ['int', 'unsigned', 'boost::optional<unsigned>']:
             formal['type_enum'] = 'number'
         else:
             formal['type_enum'] = formal['class']
@@ -128,7 +272,7 @@ def gen_function_decl(fun, formals):
             formal['class'] = 'dyn::' + formal['class']
 
         # Convert the argument from a string to
-        # the actual type for the function call
+        # the actual type for the function call.
         conversions.append(conversions_indent+
                 "auto a{} = vcsn::tafkit::convert<{}>(args[{}].arg, {}, args[{}].input_format);"
                 .format(i, formal['class'], i, formal['context'], i))
@@ -138,12 +282,14 @@ def gen_function_decl(fun, formals):
 
     return fun_def_template(fun).substitute(
             algo_name=fun['dynfun'],
+            declaration=declaration,
             conversion_list='\n'.join(conversions),
             type_list=', '.join(types),
             arg_list=(', ').join(args))
 
-# The list of generated bindings
+# The list of generated bindings.
 algos = []
+algos_doc = []
 
 
 def process_header(fn):
@@ -173,10 +319,13 @@ namespace vcsn
   {
     const std::unordered_multimap<std::string, algo> algos
     {$algos    };
+
+    const std::unordered_multimap<std::string, algo_doc> algos_doc
+    {$algos_doc    };
   }
 }''')
 
-    return res.substitute(header=header, algos=''.join(algos))
+    return res.substitute(header=header, algos=''.join(algos), algos_doc=''.join(algos_doc))
 
 
 

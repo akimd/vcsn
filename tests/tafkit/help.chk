@@ -1,0 +1,162 @@
+#! /bin/sh
+
+
+vcsn="$builddir/tests/bin/vcsn"
+
+check ()
+{
+  run 0 - tests/bin/vcsn $@
+}
+
+check rweight -h <<EOF
+usage: vcsn rweight [OPTIONS...] [ARGS...]
+
+Available versions:
+ rweight: P:polynomial W:weight -> polynomial
+    The right-multiplication of a polynomial with W as weight.
+
+ rweight: EXP:expression W:weight -> expression
+    The right-multiplication of an expression with W as weight.
+
+ rweight: AUT:automaton W:weight [ALGO="auto":string] -> automaton
+    The right-mult automaton with W as weight.
+  Parameters:
+    AUT   the input automaton.
+    W     the weight to right-multiply
+    ALGO  how to compute the result.
+          In most cases, "standard" and "general" have
+          equal results.  The only difference in when
+          when W is null, in which case "general"
+          produces an empty automaton, while "standard"
+          produces an automaton with a single state, which
+          is initial (and, of course, no final states).
+      - "standard"    AUT is standard,
+                      build a standard automaton.
+      - "general"     no requirement on AUT,
+                      but add spontaneous transitions.
+      - "auto"        "standard" if AUT is standard,
+                      "general" otherwise.
+
+For more help about available options, please use "vcsn tafkit --help"
+EOF
+
+
+check eval -h <<EOF
+usage: vcsn eval [OPTIONS...] [ARGS...]
+
+Available versions:
+ eval: AUT:automaton P:polynomial -> weight
+    Evaluate P on AUT.
+
+ eval: AUT:automaton L:word -> weight
+    Evaluate L on AUT.
+
+For more help about available options, please use "vcsn tafkit --help"
+EOF
+
+
+check shortest --help <<EOF 
+usage: vcsn shortest [OPTIONS...] [ARGS...]
+
+Available versions:
+ shortest: AUT:automaton [NUM:number] [LEN:number] -> polynomial
+    The approximated behavior of an automaton.
+  Parameters:
+    AUT   the automaton whose behavior to approximate
+    NUM   number of words looked for.
+    LEN   maximum length of words looked for.
+
+For more help about available options, please use "vcsn tafkit --help"
+EOF
+
+
+
+check multiply --help <<EOF 
+usage: vcsn multiply [OPTIONS...] [ARGS...]
+
+Available versions:
+ multiply: E:weight MIN:number [MAX=-2:number] -> weight
+    Repeated multiplication of a weight with itself.
+  Parameters:
+    E    the weight.
+    MIN  the minimum number.  If -1, denotes 0.
+    MAX  the maximum number.
+         If -1, denotes infinity, using star.
+         If -2, denotes the same value as min.
+
+ multiply: LHS:weight RHS:weight -> weight
+    Multiply two weights.
+
+ multiply: LHS:polynomial RHS:polynomial -> polynomial
+    Multiply two polynomials.
+
+ multiply: L:label NUM:number -> label
+    Repeated multiplication of a label with itself.
+  Parameters:
+    L    the label.
+    NUM  the exponent.
+
+ multiply: LHS:label RHS:label -> label
+    Multiply (concatenate) two labels.
+
+ multiply: E:expression MIN:number [MAX=-2:number] -> expression
+    Repeated multiplication (concatenation) of an expression with itself.
+  Parameters:
+    E    the expression.
+    MIN  the minimum number.  If -1, denotes 0.
+    MAX  the maximum number.
+         If -1, denotes infinity, using star.
+         If -2, denotes the same value as min.
+
+ multiply: LHS:expression RHS:expression -> expression
+    Multiply (concatenate) two expressions.
+
+ multiply: AUT:automaton MIN:number [MAX=-2:number] [ALGO="auto":string] -> automaton
+    Repeated multiplication (concatenation) of an automaton with itself.
+  Parameters:
+    AUT  the automaton.
+    MIN  the minimum number.  If -1, denotes 0.
+    MAX  the maximum number.
+         If -1, denotes infinity, using star.
+         If -2, denotes the same value as min.
+    ALGO  how to compute the result
+      - "standard"    AUT is standard,
+                      build a standard automaton.
+      - "general"     no requirement on AUT,
+                      but add spontaneous transitions.
+      - "auto"        "standard" if AUT is standard,
+                      "general" otherwise.
+
+ multiply: LHS:automaton RHS:automaton [ALGO="auto":string] -> automaton
+    Multiply (concatenate) two automata.
+  Parameters:
+    LHS   an automaton.
+    RHS   another one.
+    ALGO  how to compute the result
+      - "standard"    both LHS and RHS are standard,
+                      build a standard automaton.
+      - "general"     no requirement on LHS and and RHS,
+                      but add spontaneous transitions.
+      - "auto"        "standard" if both automata are standard,
+                      "general" otherwise.
+
+For more help about available options, please use "vcsn tafkit --help"
+EOF
+
+
+
+check minimize -h <<EOF
+usage: vcsn minimize [OPTIONS...] [ARGS...]
+
+Available versions:
+ minimize: AUT:automaton [ALGO="auto":string] -> automaton
+    The minimized automaton.
+  Parameters:
+    AUT       the automaton to minimize
+    ALGO      the specific algorithm to use
+  Preconditions:
+     AUT must be LAL.
+     AUT must be deterministic.
+
+For more help about available options, please use "vcsn tafkit --help"
+EOF

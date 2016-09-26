@@ -206,6 +206,9 @@ AM_IPYNB_LOG_DEPS =                             \
   $(VCSN_PYTHON_DEPS)
 $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 
+# Executables depends on Vcsn executable, not simply the librairy.
+%D%/Executables.log: libexec/vcsn-tafkit                         
+
 ## FIXME: Currently I have no means to flag failing pages, so I have
 ## to repeat $(dist_notebooks_DATA) but without the failing pages.
 ## This is really bad, yet I don't want pages that do pass not to be
