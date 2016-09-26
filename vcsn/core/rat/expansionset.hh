@@ -555,37 +555,27 @@ namespace vcsn
 
         // ε⊙[X_a \ Y_a + ...] for common firsts, included ε.
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
-          for (const auto& lm: std::get<0>(p.second))
-            for (const auto& rm: std::get<1>(p.second))
-              // Now, recursively develop the quotient of monomials,
-              // directly in res.
-              ps_.add_here(res_one,
-                           rs_.ldivide(label_of(lm), label_of(rm)),
-                           ws_.ldivide(weight_of(lm), weight_of(rm)));
+          ps_.add_ldivide_here(res_one,
+                               std::get<0>(p.second),
+                               std::get<1>(p.second));
 
         // If ε ∈ f(X) then ε⊙[X_ε \ (b Y_b) + ...]
         if (has(lhs.polynomials, one))
           for (const auto& rhsp: rhs.polynomials)
-            if (rhsp.first != one)
-              for (const auto& lm: lhs.polynomials[one])
-                for (const auto& rm: rhsp.second)
-                  ps_.add_here(res_one,
-                               rs_.ldivide(label_of(lm),
-                                           rs_.mul(rs_.atom(rhsp.first),
-                                                   label_of(rm))),
-                               ws_.ldivide(weight_of(lm), weight_of(rm)));
+            if (!ls_.is_one(rhsp.first))
+              ps_.add_ldivide_here(res_one,
+                                   lhs.polynomials[one],
+                                   ps_.lmul_label(rs_.atom(rhsp.first),
+                                                  rhsp.second));
 
         // If ε ∈ f(Y) then ε⊙[(a X_a) \ Y_ε + ...]
         if (has(rhs.polynomials, one))
           for (const auto& lhsp: lhs.polynomials)
-            if (lhsp.first != one)
-              for (const auto& lm: lhsp.second)
-                for (const auto& rm: rhs.polynomials[one])
-                  ps_.add_here(res_one,
-                               rs_.ldivide(rs_.mul(rs_.atom(lhsp.first),
-                                                   label_of(lm)),
-                                           label_of(rm)),
-                               ws_.ldivide(weight_of(lm), weight_of(rm)));
+            if (!ls_.is_one(lhsp.first))
+              ps_.add_ldivide_here(res_one,
+                                   ps_.lmul_label(rs_.atom(lhsp.first),
+                                                  lhsp.second),
+                                   rhs.polynomials[one]);
 
         // It was handy to use res_one, but if it's zero, then remove it.
         if (ps_.is_zero(res_one))
