@@ -225,7 +225,7 @@ namespace vcsn
     /// `v += p`, default case.
     template <wet_kind_t WetType, typename WS>
     auto
-    add_here_impl(value_t& l, const value_t& r) const
+    add_here_impl_(value_t& l, const value_t& r) const
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                           value_t&>
     {
@@ -237,7 +237,7 @@ namespace vcsn
     /// `v += p`, B and bitsets.
     template <wet_kind_t WetType, typename WS>
     auto
-    add_here_impl(value_t& l, const value_t& r) const
+    add_here_impl_(value_t& l, const value_t& r) const
       -> std::enable_if_t<(WetType == wet_kind_t::bitset
                            && std::is_same<WS, b>::value),
                      value_t&>
@@ -249,7 +249,7 @@ namespace vcsn
     /// `v += p`, F2 and bitsets.
     template <wet_kind_t WetType, typename WS>
     auto
-    add_here_impl(value_t& l, const value_t& r) const
+    add_here_impl_(value_t& l, const value_t& r) const
       -> std::enable_if_t<(WetType == wet_kind_t::bitset
                            && std::is_same<WS, f2>::value),
                           value_t&>
@@ -261,7 +261,7 @@ namespace vcsn
     value_t&
     add_here(value_t& l, const value_t& r) const
     {
-      return add_here_impl<value_t::kind, weightset_t>(l, r);
+      return add_here_impl_<value_t::kind, weightset_t>(l, r);
     }
 
     /// The sum of polynomials \a l and \a r.
@@ -330,7 +330,7 @@ namespace vcsn
     /// General case.
     template <wet_kind_t WetType>
     auto
-    mul_impl(const value_t& l, const value_t& r) const
+    mul_impl_(const value_t& l, const value_t& r) const
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      value_t>
     {
@@ -347,7 +347,7 @@ namespace vcsn
     /// Case of bitsets.
     template <wet_kind_t WetType>
     auto
-    mul_impl(const value_t& l, const value_t& r) const
+    mul_impl_(const value_t& l, const value_t& r) const
       -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      value_t>
     {
@@ -359,7 +359,7 @@ namespace vcsn
     mul(const value_t& l, const value_t& r) const
       -> value_t
     {
-      return mul_impl<value_t::kind>(l, r);
+      return mul_impl_<value_t::kind>(l, r);
     }
 
     /// The product of polynomials \a l and \a r.
@@ -606,6 +606,7 @@ namespace vcsn
             to_string(*this, l), ", ", to_string(*this, r), ")");
     }
 
+    /// Left division between two mononials: `l \ r`.
     monomial_t
     ldivide(const monomial_t& l, const monomial_t& r) const
     {
@@ -613,7 +614,7 @@ namespace vcsn
               weightset()->ldivide(weight_of(l), weight_of(r))};
     }
 
-    /// Left division by a monomial.
+    /// Left division by a monomial: `l \ r`.
     value_t
     ldivide(const monomial_t& l, const value_t& r) const
     {
@@ -962,7 +963,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
-    equal_impl(const value_t& l, const value_t& r)
+    equal_impl_(const value_t& l, const value_t& r)
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
@@ -972,7 +973,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
-    equal_impl(const value_t& l, const value_t& r)
+    equal_impl_(const value_t& l, const value_t& r)
       -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      bool>
     {
@@ -983,7 +984,7 @@ namespace vcsn
     static bool
     equal(const value_t& l, const value_t& r)
     {
-      return equal_impl<value_t::kind>(l, r);
+      return equal_impl_<value_t::kind>(l, r);
     }
 
     /// The unit polynomial.
@@ -1082,7 +1083,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
-    less_impl(const value_t& l, const value_t& r)
+    less_impl_(const value_t& l, const value_t& r)
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      bool>
     {
@@ -1092,7 +1093,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
-    less_impl(const value_t& l, const value_t& r)
+    less_impl_(const value_t& l, const value_t& r)
       -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      bool>
     {
@@ -1103,7 +1104,7 @@ namespace vcsn
     static bool
     less(const value_t& l, const value_t& r)
     {
-      return less_impl<value_t::kind>(l, r);
+      return less_impl_<value_t::kind>(l, r);
     }
 
 
@@ -1141,7 +1142,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
-    hash_impl(const value_t& p)
+    hash_impl_(const value_t& p)
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      size_t>
     {
@@ -1154,7 +1155,7 @@ namespace vcsn
     template <wet_kind_t WetType>
     ATTRIBUTE_PURE
     static auto
-    hash_impl(const value_t& p)
+    hash_impl_(const value_t& p)
       -> std::enable_if_t<WetType == wet_kind_t::bitset,
                      size_t>
     {
@@ -1164,7 +1165,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static size_t hash(const value_t& v)
     {
-      return hash_impl<value_t::kind>(v);
+      return hash_impl_<value_t::kind>(v);
     }
 
 

@@ -839,11 +839,11 @@ namespace vcsn
     };
   }
 
-  template <typename ExpSet>
-  expansionset<ExpSet>
-  make_expansionset(const ExpSet& expset)
+  template <typename Context>
+  expansionset<expressionset<Context>>
+  make_expansionset(const expressionset<Context>& es)
   {
-    return {expset};
+    return {es};
   }
 
   namespace detail
