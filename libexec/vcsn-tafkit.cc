@@ -185,7 +185,7 @@ namespace vcsn
       if (!a && !used_stdin)
         {
           //Let's try with stdin as an input.
-          args.insert(args.begin(), {read_stdin(), type::unknown});
+          args.insert(args.begin(), {read_stdin(), type::unknown, "default"});
           a = match(algo_name, args, context);
         }
       if (!a)

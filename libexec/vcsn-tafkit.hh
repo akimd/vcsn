@@ -39,7 +39,9 @@ namespace vcsn
     {
       std::string arg;
       type t;
-      std::string input_format = "default";
+      // We can't use a default initializer here as GCC 4.9 doesn't
+      // support them in aggregate types.
+      std::string input_format;
     };
 
     /// A structure to represent a function from dyn algo:
