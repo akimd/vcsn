@@ -176,12 +176,12 @@ class automaton:
                  strip=True):
         if format == "auto":
             format = _guess_format(data, filename)
-        if format == "daut":
-            if filename:
-                data = open(filename).read()
-                filename = ''
-            data = daut_to_dot(data)
-            format = 'dot'
+#        if format == "daut":
+#            if filename:
+#                data = open(filename).read()
+#                filename = ''
+#            data = daut_to_dot(data)
+#            format = 'dot'
         self._init_orig(data=data, format=format, filename=filename,
                         strip=strip)
 

@@ -9,6 +9,8 @@ namespace vcsn
 {
   namespace dyn
   {
+    // daut.cc.
+    automaton read_daut(std::istream& is);
     // efsm.cc.
     automaton read_efsm(std::istream& is);
     // fado.cc.

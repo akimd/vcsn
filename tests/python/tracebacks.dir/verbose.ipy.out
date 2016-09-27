@@ -41,9 +41,9 @@
 [0;32m     ??[0m [1;33m[0m[0m
 
 [1;32mvcsn/automaton.py[0m in [0;36mformat[1;34m(self, fmt)[0m
-[0;32m    ??[0m             [1;32mreturn[0m [0mdot_to_daut[0m[1;33m([0m[0mself[0m[1;33m.[0m[0m_format[0m[1;33m([0m[1;34m'dot'[0m[1;33m)[0m[1;33m)[0m[1;33m[0m[0m
-[0;32m    ??[0m         [1;32melse[0m[1;33m:[0m[1;33m[0m[0m
-[1;32m--> ??[1;33m             [1;32mreturn[0m [0mself[0m[1;33m.[0m[0m_format[0m[1;33m([0m[0mfmt[0m[1;33m)[0m[1;33m[0m[0m
+[0;32m    ??[0m     [1;31m# automaton.format[0m[1;33m[0m[1;33m[0m[0m
+[0;32m    ??[0m     [1;32mdef[0m [0mformat[0m[1;33m([0m[0mself[0m[1;33m,[0m [0mfmt[0m[1;33m=[0m[1;34m"daut"[0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+[1;32m--> ??[1;33m         [1;32mreturn[0m [0mself[0m[1;33m.[0m[0m_format[0m[1;33m([0m[0mfmt[0m[1;33m)[0m[1;33m[0m[0m
 [0m[0;32m    ??[0m [1;33m[0m[0m
 [0;32m    ??[0m     [1;32mdef[0m [0m__format__[0m[1;33m([0m[0mself[0m[1;33m,[0m [0mspec[0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
 

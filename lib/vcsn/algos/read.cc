@@ -41,6 +41,7 @@ namespace vcsn
           "automaton input format",
           {
             {"default", "dot"},
+            {"daut",    read_daut},
             {"dot",     read_dot},
             {"efsm",    read_efsm},
             {"fado",    read_fado},

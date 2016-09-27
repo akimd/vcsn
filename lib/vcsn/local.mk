@@ -37,6 +37,7 @@ nodist_lib_libvcsn_la_SOURCES =                 \
 
 # Used in vcsn/local.mk to generate the registries.
 algo_implems =                                  \
+  %D%/algos/daut.cc                             \
   %D%/algos/edit-automaton.cc                   \
   %D%/algos/efsm.cc                             \
   %D%/algos/fado.cc                             \
