@@ -39,31 +39,24 @@ namespace vcsn
       }
 
     private:
-      /// Skip white spaces.
-      void skip_space_()
-      {
-        while (isspace(is_.peek()))
-          is_.ignore();
-      }
-
       /// The next character, possibly preceded by spaces.
       int peek_()
       {
-        skip_space_();
+        skip_space(is_);
         return is_.peek();
       }
 
       /// Accept this character, possibly preceded by spaces.
       char eat_(char c)
       {
-        skip_space_();
+        skip_space(is_);
         return eat(is_, c);
       }
 
       /// Accept this string, possibly preceded by spaces.
       const std::string& eat_(const std::string& s)
       {
-        skip_space_();
+        skip_space(is_);
         return eat(is_, s);
       }
 
@@ -86,7 +79,7 @@ namespace vcsn
       /// underscore is word-constituent.  Skips spaces.
       std::string word_()
       {
-        skip_space_();
+        skip_space(is_);
         std::string res;
         int c;
         while ((c = is_.peek()) != EOF)

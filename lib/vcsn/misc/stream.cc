@@ -159,4 +159,10 @@ namespace vcsn
       }
     return res;
   }
+
+  void skip_space(std::istream& is)
+  {
+    while (isspace(is.peek()))
+      is.ignore();
+  }
 }

@@ -94,4 +94,7 @@ namespace vcsn LIBVCSN_API
   /// \param file   the file name.  "-" and "" denote stdout.
   std::shared_ptr<std::ostream> open_output_file(const std::string& file);
 
+  /// Ignore spaces.
+  /// \param is the stream to read.
+  void skip_space(std::istream& is);
 }
