@@ -119,7 +119,7 @@ def canonical_dict(dict):
             SKIP('OpenFST not installed')
             exit(0)
         if 'pygmentize: command not found' in dict['text']:
-            SKIP('Pygmentize not installed')
+            SKIP('pygmentize (from python-pygments) not installed')
             exit(0)
         # Normalize newline.
         dict['text'] = dict['text'].replace('\r\n', '\n')
@@ -260,6 +260,11 @@ if __name__ == '__main__':
     p.add_argument('--tap', action='store_true', help='enable TAP mode')
     p.add_argument('notebooks', nargs='+', help='IPython notebook to check')
     args = p.parse_args()
+
+    # Set the locale to something simple, so that we don't have
+    # surprises on translated error messages.
+    os.environ['LC_MESSAGES'] = 'C'
+
     success = True
     cwd = os.getcwd()
     for ipynb in args.notebooks:
