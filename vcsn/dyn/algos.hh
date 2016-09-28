@@ -518,7 +518,7 @@ namespace vcsn
     /// \param lhs   an automaton.
     /// \param rhs   another one.
     /// \param algo  how to compute the result
-    ///   - "standard"    both \a lhs and \b rhs are standard,
+    ///   - "standard"    both \a lhs and \a rhs are standard,
     ///                   build a standard automaton.
     ///   - "general"     no requirement on \a lhs and and \a rhs,
     ///                   but add spontaneous transitions.
@@ -914,7 +914,7 @@ namespace vcsn
     /// \param lhs   an automaton.
     /// \param rhs   another one.
     /// \param algo  how to compute the result
-    ///   - "standard"    both \a lhs and \b rhs are standard,
+    ///   - "standard"    both \a lhs and \a rhs are standard,
     ///                   build a standard automaton.
     ///   - "general"     no requirement on \a lhs and and \a rhs.
     ///   - "auto"        "standard" if both automata are standard,
