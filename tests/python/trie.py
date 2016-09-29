@@ -58,7 +58,7 @@ def check(algo, ctx, polynomial, exp):
 check('trie',
       'law_char, q',
       r'<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc',
-      r'''context = "letterset<char_letters(abcd)>, q"
+      r'''context = letterset<char_letters(abcd)>, q
 $ -> 0
 0 -> $ <2>
 0 -> 1 a
@@ -80,7 +80,7 @@ $ -> 0
 check('cotrie',
       'law_char, q',
       r'<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba',
-      r'''context = "letterset<char_letters(abcd)>, q"
+      r'''context = letterset<char_letters(abcd)>, q
 $ -> 0 <2>
 $ -> 1 <3>
 $ -> 2 <4>
@@ -105,7 +105,7 @@ check('trie',
       'lat<law_char, law_char>, q',
       '<1>one|un + <2>two|deux + <3>three|trois  + <4>four|quatre'
       + ' + <14>forteen|quatorze + <40>forty|quarante',
-      r'''context = "lat<nullableset<letterset<char_letters(efhnortuwy)>>, nullableset<letterset<char_letters(adeinoqrstuxz)>>>, q"
+      r'''context = lat<nullableset<letterset<char_letters(efhnortuwy)>>, nullableset<letterset<char_letters(adeinoqrstuxz)>>>, q
 $ -> 0
 0 -> 1 o|u
 0 -> 4 t|d
@@ -152,7 +152,7 @@ he's
 ()
 ""
 ''', format='words')
-exp = r'''context = "letterset<char_letters(\"\\'\\(\\)2<>ehst{})>, q"
+exp = r'''context = letterset<char_letters("\'\(\)2<>ehst{})>, q
 $ -> 0
 0 -> $
 0 -> 1 h

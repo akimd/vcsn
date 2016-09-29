@@ -28,6 +28,7 @@ algo_headers =                                  \
   %D%/algos/constant-term.hh                    \
   %D%/algos/constant.hh                         \
   %D%/algos/copy.hh                             \
+  %D%/algos/daut.hh                             \
   %D%/algos/de-bruijn.hh                        \
   %D%/algos/derivation.hh                       \
   %D%/algos/derived-term.hh                     \

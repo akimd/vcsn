@@ -11,7 +11,7 @@ from vcsn.tools import (_extend, _format, _info_to_dict,
                         _lweight, _rweight,
                         _tmp_file)
 from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
-                      _dot_to_svg_dot2tex, dot_to_daut, daut_to_dot)
+                      _dot_to_svg_dot2tex)
 
 
 def _automaton_fst(cmd, aut):
@@ -167,7 +167,7 @@ class automaton:
         display(self._convert(mode, engine))
 
     # automaton.__init__
-    # The point is to add support for the "daut" format.  So we save
+    # The point is to add support for the format guessing.  So we save
     # the original, C++ based, implementation of __init__ as _init,
     # and then provide a new __init__.
     _init_orig = automaton.__init__
@@ -176,12 +176,6 @@ class automaton:
                  strip=True):
         if format == "auto":
             format = _guess_format(data, filename)
-#        if format == "daut":
-#            if filename:
-#                data = open(filename).read()
-#                filename = ''
-#            data = daut_to_dot(data)
-#            format = 'dot'
         self._init_orig(data=data, format=format, filename=filename,
                         strip=strip)
 
@@ -222,10 +216,7 @@ class automaton:
 
     # automaton.format
     def format(self, fmt="daut"):
-        if fmt == "daut":
-            return dot_to_daut(self._format('dot'))
-        else:
-            return self._format(fmt)
+        return self._format(fmt)
 
     def __format__(self, spec):
         """Format the automaton according to `spec`.

@@ -1,4 +1,4 @@
-context = "nullableset<letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>>, z"
+context = nullableset<letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>>, z
 $ -> 0
 0 -> 1 \e
 1 -> 2 <2>\e

@@ -407,14 +407,12 @@ auto make_istream(const std::string& data = "",
                   const std::string& filename = "")
   -> std::shared_ptr<std::istream>
 {
-  vcsn::require(!data.empty() || !filename.empty(),
+  vcsn::require(data.empty() || filename.empty(),
                 "cannot provide both data and filename");
-  if (!data.empty())
-    return std::make_shared<std::istringstream>(data);
-  else if (!filename.empty())
+  if (!filename.empty())
     return vcsn::open_input_file(filename);
   else
-    vcsn::raise("must provide either data or filename");
+    return std::make_shared<std::istringstream>(data);
 }
 
 '''

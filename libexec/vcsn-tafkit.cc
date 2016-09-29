@@ -290,7 +290,7 @@ namespace {
          "  -f FILE       input is FILE\n"
          "  -I FORMAT     input format (daut, dot, efsm, fado, text)\n"
          "  -O FORMAT     output format\n"
-         "                (dot, efsm, grail, info, list, null, text, tikz, utf8)\n"
+         "                (daut, dot, efsm, grail, info, list, null, text, tikz, utf8)\n"
          "  -o FILE       save output into FILE\n"
          "  -q            discard any output\n"
          "\n"

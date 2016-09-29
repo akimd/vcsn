@@ -1,4 +1,4 @@
-context = "letterset<char_letters(a)>, b"
+context = letterset<char_letters(a)>, b
 $ -> 0
 0 -> 1 a
 0 -> 2 a
