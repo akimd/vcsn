@@ -700,7 +700,11 @@ namespace vcsn
   auto
   ldivide(const Aut1& lhs, const Aut2& rhs, boolean_tag)
   {
-    auto res = insplit(rhs);
+    auto res =
+      detail::static_if<labelset_t_of<Aut2>::has_one()>
+      ([](const auto& rhs){ return insplit(rhs); },
+       [](const auto& rhs){ return copy(rhs); })
+      (rhs);
     auto prod =
       detail::make_product_automaton<false>(join_automata(lhs, res), lhs, res);
     prod->ldivide_here();

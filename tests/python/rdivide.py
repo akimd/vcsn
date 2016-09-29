@@ -24,6 +24,9 @@ def check_rdivide(res, l, r):
         SKIP('invalid expression', res)
     return eff
 
+# Boolean.  Very important, as we have two different implementations.
+ctx = 'lal, b'
+check_rdivide('a+b', 'abcd+bbcd', 'bcd')
 
 
 # Weighted.
