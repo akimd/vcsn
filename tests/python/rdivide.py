@@ -3,47 +3,60 @@
 import vcsn
 from test import *
 
-ctx = 'lan_char, q'
 def exp(e):
-    return vcsn.context(ctx).expression(e)
+    return e if isinstance(e, vcsn.expression) else vcsn.context(ctx).expression(e)
 
 def aut(e):
     return exp(e).automaton()
 
-def check(res, l, r):
-    CHECK_EQUIV(aut(res), aut(l).rdivide(aut(r)))
+def check_rdivide(res, l, r):
+    lhs = aut(l)
+    rhs = aut(r)
+    eff = lhs.rdivide(rhs)
+    # Make sure that we did not modify the rhs.  This did happen with
+    # ldivide.
+    CHECK_EQ(lhs, aut(l))
+    CHECK_EQ(rhs, aut(r))
+    CHECK_EQ(aut(res).is_valid(), eff.is_valid())
+    if eff.is_valid():
+        CHECK_EQUIV(aut(res), eff)
+    else:
+        SKIP('invalid expression', res)
+    return eff
 
+
+
+# Weighted.
+ctx = 'lan_char, q'
 # Addition
-check(r'<3>\e', '<6>(a+b)', '<2>a')
+check_rdivide(r'<3>\e', '<6>(a+b)', '<2>a')
 # Concatenation
-check('<3>a', '<6>ab', '<2>b')
+check_rdivide('<3>a', '<6>ab', '<2>b')
 # Star
-check('<3>a*', '<6>a*', '<2>a')
+check_rdivide('<3>a*', '<6>a*', '<2>a')
 # Epsilon cycles
-check(r'(<1/2>\e)*a*', 'a*', '(<2>a)*')
+check_rdivide(r'(<1/2>\e)*a*', 'a*', '(<2>a)*')
 # Empty result
-check(r'\z', '<2>a', 'ab')
+check_rdivide(r'\z', '<2>a', 'ab')
 # Misc
-check(r'<2>ab*+<3>\e', '<6>ab*', '<2>a+<3>b')
-check('<2>a', 'a(b+c)', 'b+c')
+check_rdivide(r'<2>ab*+<3>\e', '<6>ab*', '<2>a+<3>b')
+check_rdivide('<2>a', 'a(b+c)', 'b+c')
 
 CHECK_EQ(metext('aut1.gv'), aut('a*b*').rdivide(aut('a+b')))
 
 # Cross check with derived_term and inductive,standard.
-def check(lhs_expr, rhs_expr):
-    divide_expr = lhs_expr.rdivide(rhs_expr)
-    print("Checking:", divide_expr)
+def check(l, r):
+    print("Checking: {}, {}".format(l, r))
 
-    lhs_aut = lhs_expr.automaton()
-    rhs_aut = rhs_expr.automaton()
-    divide_aut = lhs_aut.rdivide(rhs_aut)
+    divide_exp = l.rdivide(r)
+    divide_aut = check_rdivide(divide_exp, l, r)
 
     if divide_aut.is_valid():
         for algo in ['expansion', 'inductive,standard']:
-            a = divide_expr.automaton(algo)
+            a = divide_exp.automaton(algo)
             CHECK_EQUIV(divide_aut, a)
     else:
-        SKIP('invalid expression', divide_expr)
+        SKIP('invalid expression', divide_exp)
 
 exprs = [r'\z', r'<2>\e', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
         '<8>(a*b+c)*bba+a(b(c+<9>d)*+a)']
