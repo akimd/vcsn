@@ -342,7 +342,7 @@ namespace vcsn
       void print_transitions_()
       {
         // For each src state, the destinations, sorted.
-        std::map<state_t, polynomial_t> dsts;
+        auto dsts = std::map<state_t, polynomial_t>{};
         for (auto src : aut_->all_states())
           if (!aut_->is_lazy(src)
               && (!dot2tex_ || src != aut_->pre()))
