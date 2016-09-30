@@ -4,7 +4,8 @@ import argparse
 import copy
 import string
 import sys
-from dyn_algo_parse import *
+import json
+import re
 
 fun_def = string.Template('''
       {"$algo_name",
@@ -50,7 +51,7 @@ def ignore(fun):
 # any function using them as parameter types will be ignored
 # when generating the bindings and won't be callable from
 # tafkit.
-# FIXME: Add support for these types
+# FIXME: Add support for these types.
 unsupported_types = [
     'direction',
     'expansion',
@@ -97,7 +98,7 @@ def gen_function_doc_decl(fun, formals):
         elif f['default'] is None:
             f_def['default'] = None
         else:
-            f_def['default'] = '='+f['default'][3:]
+            f_def['default'] = '='+f['default']
 
         format_string = '{arg}:{type}' if f_def['default'] is None else '[{arg}{default}:{type}]'
         formals_def.append(format_string.format(arg=f_def['arg'],
@@ -115,82 +116,58 @@ def gen_function_doc_decl(fun, formals):
             doc=format_function_doc(fun, formals))
 
 def format_function_doc(fun, formals):
-    doc = []
+    res = []
+    doc = fun['doc']
+    # First, the short decription.
+    res = fun['doc']['desc']
 
-    # Remove ///.
-    for line in fun['doc'].split('\n'):
-        m = re.compile(r'\s*/// (?P<doc>.*)').match(line)
-        if m is not None:
-            doc.append(m.group('doc'))
+    def is_supported(name):
+        for formal in formals:
+            if formal['arg'] == name:
+                return True
+        return False
 
-    # Filter unsupported parameters.
-    def is_supported_parameter(line):
-        m = re.compile(r'\\param (?P<name>\S*)').search(line)
-        if m:
-            if next((f for f in formals if f['arg'] == m.group('name')), None)\
-                is None:
-                    return False
-        return True
+    # Filter for unsupported parameters.
+    doc['params'] = [p for p in doc['params'] if is_supported(p['name'])]
+    # Reconstruct the parameter list to make it look like other fields.
+    doc['params'] = [[r'\param ' + p['name'].upper()
+            + p['desc'][0]] + p['desc'][1:]
+            for p in doc['params']]
+    # Flatten it.
+    doc['params'] = sum(doc['params'], [])
 
-    doc = [l for l in doc if is_supported_parameter(l)]
-
-    # Now we need to find the start of the parameter and precondition blocks.
-    def find_block(name):
-        start = None
-        end = None
-        for i, line in enumerate(doc):
-            m = re.compile('\\\\{}'.format(name)).search(line)
-            if m is not None:
-                if start is None:
-                    start = i
-            else:
-                # Are we indented ? If we are, this isn't the end of the block.
-                if start is not None and end is None and line[0] != ' ':
-                    end = i
-
-        if end is None:
-            end = len(doc)
-        return (start, end)
-
-    def mark_block(name, mark, indent=False):
-        start, end = find_block(name)
-        if start is not None:
+    def process_block(block, name, mark, indent=False):
+        if block != []:
             is_after_dash = False
-            for i in range(start, end):
+            for i, line in enumerate(block):
                 # If line is indented, remove some indent
                 # to keep it aligned even after \param or \pre
                 # are removed. Once we start seeing lists, we don't
                 # do that anymore.
-                if indent:
-                    if doc[i].lstrip()[0] == '-':
+                if indent and line.lstrip() != '':
+                    if line.lstrip()[0] == '-':
                         is_after_dash = True
-                    if doc[i][:len(name)+2] == ' '*(len(name)+2) and not is_after_dash:
-                        doc[i] = doc[i][len(name)+2:]
-                doc[i] = doc[i].replace('\\{} '.format(name), '')
-                doc[i] = '  '+doc[i]
-            doc.insert(start, ''+mark)
+                    if line[:len(name)+2] == ' ' * (len(name)+2) and not is_after_dash:
+                        line = line[len(name)+2:]
+                block[i] = '  '+line.replace('\\{} '.format(name), '')
+            block.insert(0, mark)
 
-    doc = [re.sub(r'\\param (\S*)', lambda m: r'\param ' + m.group(1).upper(), l) for l in doc]
+    process_block(doc['params'], 'param', 'Parameters:', indent=True)
+    process_block(doc['pre'], 'pre', 'Preconditions:')
+    process_block(doc['returns'], 'returns', 'Return value:')
 
-    mark_block('param', 'Parameters:', indent=True)
-    mark_block('pre', 'Preconditions:')
-    mark_block('returns', 'Return value:')
+    res += doc['params'] + doc['pre'] + doc['returns']
 
-    # Remove \a and uppercase argument name
-    doc = ['  ' + re.sub(r'\\a (\S*)', lambda m: m.group(1).upper(), l) for l in doc]
+    # Remove \a and uppercase argument name.
+    res = ['  ' + re.sub(r'\\a (\S*)', lambda m: m.group(1).upper(), l) for l in res]
 
-    return 'R"tafkit_doc('+ '\n'.join(doc) +')tafkit_doc"'
+    res = [l for l in res if l.strip() != '']
+
+    return 'R"tafkit_doc('+ '\n'.join(res) +')tafkit_doc"'
 
 def process_function(fun):
     '''Process a function in dyn/algo.hh'''
-    fun['const'] = ''
-    fun['static'] = ''
-    fun['doc'] = Indent(fun['doc'])
-    formals_strings = formals_list(fun['formals'])
-    formals = []
-    for formal in formals_strings:
-        formal_dict = formal_re.match(formal).groupdict()
-        formals.append(formal_dict)
+    formals = fun['formals']
 
     decl = gen_function_decl(fun, formals)
     algos.append(decl)
@@ -292,12 +269,16 @@ algos = []
 algos_doc = []
 
 
+# The list of dyn types, loaded from JSON.
+dyn_types = []
+
 def process_header(fn):
     '''Process all functions from a header `fn`.'''
-    with open(fn, 'r') as f:
-        for m in function_re.finditer(f.read()):
-            process_function(m.groupdict())
-
+    with open(fn, mode='r') as f:
+        json_ = json.load(f)
+        dyn_types.extend(json_['dyn_types'])
+        for fun in json_['algos']:
+            process_function(fun)
 
 def output(header):
     '''Generate the implementation of Tafkit C++ bindings.'''
@@ -342,7 +323,7 @@ parser.add_argument('--output',
 parser.add_argument('--header',
                     help='location of vcsn-tafkit.hh')
 parser.add_argument('input', type=str, default=None,
-                    help='''header to process (`dyn/algos.hh`).''')
+                    help='''JSON file to process.''')
 args = parser.parse_args()
 
 process_header(args.input)

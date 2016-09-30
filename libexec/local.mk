@@ -27,14 +27,14 @@ dist_noinst_python += $(tafkit_gen)
 from_tafkit_gen =	\
 	%D%/vcsn-tafkit-algos.cc
 CLEANFILES += %D%/tafkit.stamp $(from_tafkit_gen)
-%D%/tafkit.stamp: $(tafkit_gen) vcsn/dyn/algos.hh
+%D%/tafkit.stamp: $(tafkit_gen) vcsn/dyn/algos.json
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
 	$(AM_V_at)$(PYTHON) $(srcdir)/$(tafkit_gen)                     \
 	  --output %D%/vcsn-tafkit-algos.cc.tmp                         \
 		--header $(srcdir)/%D%/vcsn-tafkit.hh                   \
-	  $(srcdir)/vcsn/dyn/algos.hh
+		vcsn/dyn/algos.json
 	$(AM_V_at)for f in $(from_tafkit_gen);          \
 	do                                              \
 	  $(move_if_change) $$f.tmp $$f || exit 1;      \
