@@ -33,7 +33,7 @@ namespace vcsn
       std::string output_format;
       std::string context_string;
     };
- 
+
     options parse_arguments(int argc, char** argv)
     {
       // We are not interested by the program or the function name.
@@ -203,49 +203,56 @@ namespace vcsn
   }
 }
 
+namespace
+{
+  int
+  list_commands()
+  {
+    // Extract the algorithm list into v.
+    auto v = std::vector<std::string>{};
+    for (auto it = vcsn::tafkit::algos.begin();
+         it != vcsn::tafkit::algos.end();
+         it = vcsn::tafkit::algos.equal_range(it->first).second)
+      {
+        auto algo = it->first;
+        std::replace(algo.begin(), algo.end(), '_', '-');
+        v.emplace_back(algo);
+      }
+
+    // Sort it.
+    std::sort(v.begin(), v.end());
+
+    // Pretty-print it.
+    constexpr size_t max_width = 70;
+    size_t space_left = max_width - 2;
+    std::cout << "  ";
+    for (auto a : v)
+      {
+        if (space_left < a.size() + 1)
+          {
+            std::cout << "\n  ";
+            space_left = max_width - 2;
+          }
+
+        std::cout << a << ' ';
+        space_left -= a.size() + 1;
+      }
+
+    std::cout << '\n';
+    return 0;
+  }
+}
+
 using namespace vcsn;
 using namespace vcsn::tafkit;
 int main(int argc, char** argv)
 {
   if (argv[1] == std::string("--commands"))
-    {
-      // Extract the algorithm list into v.
-      std::vector<std::string> v;
-      for (auto it = algos.begin();
-          it != algos.end();
-          it = algos.equal_range(it->first).second)
-        {
-          auto algo = it->first;
-          std::replace(algo.begin(), algo.end(), '_', '-');
-          v.emplace_back(algo);
-        }
-
-      // Sort it.
-      std::sort(v.begin(), v.end());
-
-      // Pretty-print it.
-      constexpr size_t max_width = 70;
-      size_t space_left = max_width - 2;
-      std::cout << "  ";
-      for (auto a : v)
-        {
-          if (a.size() + 1 > space_left)
-            {
-              std::cout << "\n  ";
-              space_left = max_width-2;
-            }
-
-          std::cout << a << ' ';
-          space_left -= a.size() + 1;
-        }
-
-      std::cout << '\n';
-      return 0;
-    }
+    return list_commands();
 
   auto algo = std::string(argv[1]);
   std::replace(algo.begin(), algo.end(), '-', '_');
-  
+
   auto options = parse_arguments(argc, argv);
 
   std::shared_ptr<std::ostream> out;
