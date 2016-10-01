@@ -233,11 +233,12 @@ using namespace vcsn::tafkit;
 int main(int argc, char** argv)
 try
 {
-  if (argv[1] == std::string("--commands"))
-    return list_commands();
-
   auto algo = std::string(argv[1]);
+  if (algo == "--commands" || algo == "commands")
+    return list_commands();
   std::replace(algo.begin(), algo.end(), '-', '_');
+  vcsn::require(algos.find(algo) != end(algos),
+                "unknown algorithm: ", argv[1]);
 
   auto options = parse_arguments(argc, argv);
 
