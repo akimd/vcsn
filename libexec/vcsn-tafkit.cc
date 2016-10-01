@@ -40,7 +40,8 @@ namespace vcsn
       --argc;
       ++argv;
 
-      auto res = options{std::vector<parsed_arg>{}, "", "default", "lal_char, b"};
+      auto res
+        = options{std::vector<parsed_arg>{}, "", "default", "lal_char, b"};
 
       auto t = type::unknown;
       std::string input_format = "default";
@@ -53,7 +54,7 @@ namespace vcsn
         "ALEPWSBFUf:e:C:O:o:I:";
 
       while (true)
-        switch(char opt = getopt(argc, argv, optstring))
+        switch (char opt = getopt(argc, argv, optstring))
         {
           case 'f':
             if (optarg == std::string("-"))
@@ -69,11 +70,8 @@ namespace vcsn
            break;
 
           case 'I':
-           if(input_format != "default")
-             {
-               std::cerr << "Too many input formats for one argument\n";
-               exit(1);
-             }
+           if (input_format != "default")
+             raise("too many input formats for one argument");
            else
              input_format = optarg;
            break;
@@ -124,16 +122,12 @@ namespace vcsn
             if (t == type::unknown)
               t = static_cast<type>(opt);
             else
-              {
-                std::cout << "Too many type qualifiers for one argument\n";
-                exit(1);
-              }
+              raise("too many type qualifiers for one argument");
             break;
 
           case '?':
             //ERROR
-            std::cerr << "Unknown option: " << opt << '\n';
-            exit(1);
+            raise("unknown option: ", opt);
         }
     }
 
@@ -150,28 +144,22 @@ namespace vcsn
       return true;
     }
 
-    const algo* match(
-        const std::string& algo_name,
-        std::vector<parsed_arg>& args,
-        dyn::context context)
+    const algo* match(const std::string& algo_name,
+                      const std::vector<parsed_arg>& args,
+                      dyn::context context)
     {
       const algo* a = nullptr;
-      auto range = algos.equal_range(algo_name);
+      auto range = vcsn::tafkit::algos.equal_range(algo_name);
       for (auto it = range.first; it != range.second; it++)
         {
           const auto& candidate = it->second;
           if (!is_match(candidate, args))
             continue;
           else if (a)
-            {
-              //TODO: make a better error.
-              std::cout << "More than one algo found\n";
-              std::exit(1);
-            }
+            // FIXME: make a better error.
+            raise("more than one algo found");
           else
-            {
-              a = &candidate;
-            }
+            a = &candidate;
         }
       return a;
     }
@@ -192,7 +180,7 @@ namespace vcsn
         {
           //TODO: make a better error.
           std::cerr << "No algo found\n";
-          for (auto arg : args)
+          for (const auto& arg : args)
             // Type is a char-based enum class, this cast is safe.
             std::cerr << static_cast<char>(arg.t) << '\n';
           std::exit(1);
@@ -208,25 +196,22 @@ namespace
   int
   list_commands()
   {
-    // Extract the algorithm list into v.
-    auto v = std::vector<std::string>{};
-    for (auto it = vcsn::tafkit::algos.begin();
-         it != vcsn::tafkit::algos.end();
-         it = vcsn::tafkit::algos.equal_range(it->first).second)
-      {
-        auto algo = it->first;
-        std::replace(algo.begin(), algo.end(), '_', '-');
-        v.emplace_back(algo);
-      }
-
-    // Sort it.
-    std::sort(v.begin(), v.end());
+    // The list of algorithm names.
+    auto names = std::set<std::string>{};
+    std::transform(begin(vcsn::tafkit::algos), end(vcsn::tafkit::algos),
+                   std::inserter(names, begin(names)),
+                   [](const auto& a)
+                   {
+                     auto name = a.first;
+                     std::replace(name.begin(), name.end(), '_', '-');
+                     return name;
+                   });
 
     // Pretty-print it.
     constexpr size_t max_width = 70;
     size_t space_left = max_width - 2;
     std::cout << "  ";
-    for (auto a : v)
+    for (const auto& a : names)
       {
         if (space_left < a.size() + 1)
           {
@@ -246,6 +231,7 @@ namespace
 using namespace vcsn;
 using namespace vcsn::tafkit;
 int main(int argc, char** argv)
+try
 {
   if (argv[1] == std::string("--commands"))
     return list_commands();
@@ -255,18 +241,16 @@ int main(int argc, char** argv)
 
   auto options = parse_arguments(argc, argv);
 
-  std::shared_ptr<std::ostream> out;
+  auto out = std::shared_ptr<std::ostream>{};
   auto saved_cout_buffer = std::cout.rdbuf();
-  if (options.output_file != "")
+  if (!options.output_file.empty())
     {
       // Redirect std::cout.
       if (out = open_output_file(options.output_file))
         std::cout.rdbuf(out->rdbuf());
       else
-        {
-          std::cerr << "Can't open output file\n";
-          exit(1);
-        }
+        // FIXME: strerror
+        raise("can't open output file: ", options.output_file);
     }
 
   dyn::set_format(std::cout, options.output_format);
@@ -276,6 +260,14 @@ int main(int argc, char** argv)
 
   // Reattach std::cout to the standard output.
   std::cout.rdbuf(saved_cout_buffer);
-
-  return 0;
+}
+catch (const std::exception& e)
+{
+  std::cerr << "error: " << e.what() << '\n';
+  exit(EXIT_FAILURE);
+}
+catch (...)
+{
+  std::cerr << "error: unknown exception caught\n";
+  exit(EXIT_FAILURE);
 }
