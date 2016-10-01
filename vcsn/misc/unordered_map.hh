@@ -8,7 +8,6 @@ namespace vcsn
   /// Sum of bucket sizes.
   template <typename Key, typename T,
             typename Hash, typename KeyEqual, typename Alloc>
-  inline
   size_t
   collision_count(const std::unordered_map<Key, T, Hash, KeyEqual, Alloc>& m)
   {
@@ -21,7 +20,6 @@ namespace vcsn
   /// Whether \a e is member of \a m.
   template <typename Key, typename T,
             typename Hash, typename KeyEqual, typename Alloc>
-  inline
   bool
   has(const std::unordered_map<Key, T, Hash, KeyEqual, Alloc>& m,
       const Key& k)
