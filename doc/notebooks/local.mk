@@ -211,43 +211,9 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 ## This is really bad, yet I don't want pages that do pass not to be
 ## checked...
 ##
-## FAIL: doc/notebooks/Stackoverflow.ipynb
 ## FAIL: doc/notebooks/automaton.compose.ipynb
-## FAIL: doc/notebooks/context.random_expression.ipynb
-
-## Nondeterminism:
-## %D%/context.random_automaton.ipynb
-
 ## %D%/automaton.eliminate_state.ipynb: module 'ipywidgets' has no attribute 'Label'
-
 ## %D%/Executables.ipynb
-##
-## /srv/teamcity-agent/work/a0185dad9234e013/tests/bin/ipynbdoctest.py:251: pass: cell #1
-##
-## Expected output::
-##
-##         []
-##
-## Effective output::
-##
-##         [{'name': 'stdout',
-##           'output_type': 'stream',
-##           'text': '/srv/teamcity-agent/work/a0185dad9234e013/python/vcsn_tools/demangle.py:11: UserWarning: you should install regex for '
-##                   'Python\n'
-##                   "  warnings.warn('you should install regex for Python')\n"}]
-##
-## Diff on output::
-##
-##         --- expected
-##         +++ effective
-##         @@ -1 +1,5 @@
-##         -[]
-##         +[{'name': 'stdout',
-##         +  'output_type': 'stream',
-##         +  'text': '/srv/teamcity-agent/work/a0185dad9234e013/python/vcsn_tools/demangle.py:11: UserWarning: you should install regex for '
-##         +          'Python\n'
-##         +          "  warnings.warn('you should install regex for Python')\n"}]
-##
 
 %C%_TESTS =                                     \
   %D%/!Read-me-first.ipynb                      \
@@ -262,6 +228,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/ICTAC-2016.ipynb                          \
   %D%/References.ipynb                          \
   %D%/Spell-checker.ipynb                       \
+  %D%/Stackoverflow.ipynb                       \
   %D%/Transducers.ipynb                         \
   %D%/Trouble-Shooting.ipynb                    \
   %D%/automaton.accessible.ipynb                \
@@ -351,6 +318,8 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/context.levenshtein.ipynb                 \
   %D%/context.operators.ipynb                   \
   %D%/context.quotkbaseb.ipynb                  \
+  %D%/context.random_automaton.ipynb            \
+  %D%/context.random_expression.ipynb           \
   %D%/context.tuple.ipynb                       \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.complement.ipynb                \

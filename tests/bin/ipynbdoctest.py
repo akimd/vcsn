@@ -6,6 +6,7 @@ import pprint
 import re
 import subprocess
 import sys
+import tempfile
 
 from test import *
 
@@ -17,6 +18,22 @@ try:
 except ImportError as e:
     SKIP('cannot run ipynbdoctest: ', e)
     exit(0)
+
+
+def is_libcpp():
+    '''Whether `vcsn compile` uses libc++.  Matters when we use random
+    number generation, otherwise we get different sequences.
+
+    '''
+    with tempfile.NamedTemporaryFile(mode='w+', suffix='.cc') as f:
+        print('''#include <cstddef>
+        #ifndef _LIBCPP_VERSION
+        # error "this is not libc++"
+        #endif
+        int main() {}''', file=f)
+        f.flush()
+        return subprocess.call(['vcsn', 'compile', f.name]) == 0
+
 
 def truncate(text):
     '''Truncate a too long text to its first characters.'''
@@ -205,6 +222,9 @@ def test_notebook(ipynb):
             FAIL('failed to run cell #{}'.format(i))
             nerror += 1
             continue
+        if 'source' in cell and 'VCSN_SEED' in cell['source'] and not is_libcpp():
+            SKIP('random number generation not on libc++')
+            exit(0)
         failed = not compare_outputs(cell.outputs, outs)
         print('cell #{} ({}): '.format(i, n), end='')
         if failed:
