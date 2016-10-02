@@ -31,30 +31,6 @@ def truncate(text):
     text = text.replace('\n', '\\n')
     return text
 
-def repr_list(l):
-    '''Stringify a list of dicts by only showing the keys, in order.
-
-    This is only called when an output list length mismatch occurs, to give the
-    user just enough information on what the different output is.'''
-    res = '['
-    for d in l:
-        res += re.sub(r'\[(.*)\]', r'{\1}', str(sorted(list(d.keys()))))
-        res += ', '
-    res = res.rstrip(', ')
-    res += ']'
-    return res
-
-def flatten(d):
-    '''Turn nested dicts into a single dict
-    to avoid recursion in `compare_outputs`.'''
-    flat = []
-    for key, value in d.items():
-        if isinstance(value, dict):
-            flat.extend(flatten(value).items())
-        else:
-            flat.append((key, value))
-    return dict(flat)
-
 
 def canonicalize(s):
     '''Canonicalize a string `s` for comparison.
@@ -130,10 +106,10 @@ def canonical_dict(dict):
         dict['text'] = re.sub(r'^Overwriting ', 'Writing ',
                               dict['text'])
 
-    if 'data' in dict and 'image/svg+xml' in dict['data']:
-        dict['data']['image/svg+xml'] = canonicalize(dict['data']['image/svg+xml'])
-    if 'data' in dict and 'text/html' in dict['data']:
-        dict['data']['text/html'] = canonicalize(dict['data']['text/html'])
+    if 'data' in dict:
+        for k in ['image/svg+xml', 'text/html']:
+            if k in dict['data']:
+                dict['data'][k] = canonicalize(dict['data'][k])
     return dict
 
 
