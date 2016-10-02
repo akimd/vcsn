@@ -340,7 +340,7 @@ class automaton:
 
     def info(self, key=None, details=2):
         formats = ['info,size', 'info', 'info,detailed']
-        details = max(0, min(3, details))
+        details = max(1, min(3, details))
         res = _info_to_dict(self.format(formats[details - 1]))
         return res[key] if key else res
 
