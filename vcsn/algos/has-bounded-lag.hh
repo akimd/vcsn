@@ -41,9 +41,6 @@ namespace vcsn
       /// Keep track of what states we have visited or are visiting
       using visited_t = std::vector<visit_state>;
 
-      /// Keep track of how we arrived in a state
-      using parent_state_t = std::vector<transition_t>;
-
       /// A static list of integers.
       template <std::size_t... I>
       using seq = vcsn::detail::index_sequence<I...>;
@@ -136,7 +133,7 @@ namespace vcsn
     private:
       automaton_t aut_;
       visited_t v_;
-      parent_state_t p_;
+      predecessors_t_of<automaton_t> p_;
     };
   }
 

@@ -16,23 +16,6 @@ namespace vcsn
   /// Retrieve the K lightest paths in an automaton.
   struct yen_tag {};
 
-  /// A state-indexed vector of predecessor transitions from the path \a path.
-  ///
-  /// For each state `s`, `res[s]` is `null_transition` if it is not
-  /// part of `path` (or it is its beginning), or `res[s]` is the
-  /// transition index that points to the incoming transition to `s`
-  /// in `path`.
-  template <typename Aut>
-  using predecessors_t_of = std::vector<transition_t_of<Aut>>;
-
-  /// A list of transitions representing a path.
-  ///
-  /// Transitions are listed from source (front) to destination (back).
-  /// The destination of each transition is the source of the following one in
-  /// the vector.
-  template <typename Aut>
-  using path_t_of = std::vector<transition_t_of<Aut>>;
-
   namespace detail
   {
     /// Yen implementation of the K lightest automaton algorithm.
