@@ -19,14 +19,14 @@ dist_noinst_python += $(bindings_gen)
 from_bindings_gen =				\
   %D%/oodyn.hh %D%/oodyn.cc
 CLEANFILES += %D%/bindings.stamp $(from_bindings_gen)
-%D%/bindings.stamp: $(bindings_gen) vcsn/dyn/algos.hh
+%D%/bindings.stamp: $(bindings_gen) vcsn/dyn/algos.json
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
 	$(AM_V_at)$(PYTHON) $(srcdir)/$(bindings_gen)	\
 	  --header %D%/oodyn.hh.tmp			\
 	  --output %D%/oodyn.cc.tmp			\
-	  $(srcdir)/vcsn/dyn/algos.hh
+	  vcsn/dyn/algos.json
 	$(AM_V_at)for f in $(from_bindings_gen);	\
 	do						\
 	  $(move_if_change) $$f.tmp $$f || exit 1;	\
