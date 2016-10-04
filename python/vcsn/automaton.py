@@ -67,7 +67,7 @@ def _guess_format(data=None, filename=None):
             return 'efsm'
         elif line.startswith('(START)'):
             return 'grail'
-        elif re.match('^@[DN]FA ', line):
+        elif re.match('^@([DN]FA|Transducer) ', line):
             return 'fado'
     raise RuntimeError('cannot guess automaton format: ',
                        data if data else filename)

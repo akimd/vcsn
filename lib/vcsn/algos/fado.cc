@@ -6,6 +6,7 @@
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
 
 namespace vcsn
@@ -16,6 +17,26 @@ namespace vcsn
     /*-----------------.
     | read_fado(aut).  |
     `-----------------*/
+    namespace
+    {
+      /// Read an id until a space or a comment.
+      std::string read_id(std::istream& is)
+      {
+        std::string res;
+        int c;
+        skip_space(is);
+        while ((c = is.get()) != EOF && !isspace(c))
+          {
+            if (c == '#')
+              {
+                is.unget();
+                break;
+              }
+            res += c;
+          }
+        return res;
+      }
+    }
 
     automaton
     read_fado(std::istream& is)
@@ -25,73 +46,86 @@ namespace vcsn
 
       // The header (the first line) looks like:
       //
-      // @DFA 3 4 5 * 0 1 2
+      // @NFA 3 4 5 * 0 1 2
       //
       // where 0 1 2 are initial states, and 3 4 5 are final states.
       //
       // The star is optional, in which case the initial state
       // is the src state of the first transition.
-      {
-        std::string kind;
-        is >> kind;
-        if (kind != "@DFA" && kind != "@NFA")
-          raise(file, ": bad automaton kind: ", kind);
-      }
 
-      vcsn::lazy_automaton_editor edit;
+      auto edit = vcsn::lazy_automaton_editor{};
       edit.open(true);
 
-      char c;
-      // Whether we process initial states.
+      // Whether we process initial states / first line.
       bool init = false;
-      std::string state;
-      while ((c = is.get()) != '\n' && !is.eof())
-        if (c == ' ' || c == '\t')
-          {
-            // Eat blanks.
-            if (state.empty())
-              continue;
-            string_t s1{state};
-            if (init)
-              edit.add_initial(s1);
-            else
-              edit.add_final(s1);
-            state = "";
-          }
-        else if (c == '*')
-          init = true;
-        else
-          // Grow the name of the state.
-          state.append(1, c);
-
-      // Make sure we don't skip last state, which happens
-      // when there are no spaces before '\n'.
-      if (!state.empty())
+      bool first = true;
+      bool is_transducer = false;
+      bool is_dfa = false;
+      std::string line, state;
+      while (is.good())
         {
-          string_t s1{state};
-          if (init)
-            edit.add_initial(s1);
+          std::getline(is, line, '\n');
+          std::istringstream ss{line};
+          state = read_id(ss);
+          if (state.empty()) // Empty line or comments
+            continue;
+
+          if (first)
+            {
+              is_transducer = state == "@Transducer";
+              is_dfa = state == "@DFA";
+              if (!is_transducer && !is_dfa && state != "@NFA")
+                raise(file, ": bad automaton kind: ", state);
+
+              while (!(state = read_id(ss)).empty())
+                {
+                  if (state == "$") // Alphabet declaration
+                    break;
+                  else if (state == "*")
+                    {
+                      require(!is_dfa, "fado: invalid '*' for DFA");
+                      require(!init, "fado: multiple '*' in first line");
+                      init = true;
+                    }
+                  else if (init)
+                    edit.add_initial(string_t{state});
+                  else
+                    edit.add_final(string_t{state});
+                }
+              first = false;
+            }
           else
-            edit.add_final(s1);
+            {
+              // Line: Source InputLabel [OutputLabel] Destination.
+              auto s1 = string_t{state};
+              auto l1 = string_t{read_id(ss)};
+              auto l2 = string_t{read_id(ss)};
+              auto s2 = string_t{read_id(ss)};
+              // First state is our initial state if not declared before by "*".
+              if (!init)
+                {
+                  edit.add_initial(s1);
+                  init = true;
+                }
+              if (l1 == "@epsilon")
+                {
+                  require(!is_dfa, "fado: unexpected '@epsilon' in DFA");
+                  l1 = "\\e";
+                }
+              if (is_transducer)
+                {
+                  if (l2 == "@epsilon")
+                    l2 = "\\e";
+                  edit.add_transition(s1, s2, l1, l2, string_t{});
+                }
+              else
+                {
+                  require(s2 == "",
+                      "fado: unexpected trailling characters after: ", l2);
+                  edit.add_transition(s1, l2, l1);
+                }
+            }
         }
-
-      {
-        // Line: Source Label Destination.
-        string_t s1, l, s2;
-        is >> s1 >> l >> s2;
-
-        // First state is our initial state if not declared before by "*".
-        if (!init && !is.eof())
-          edit.add_initial(s1);
-
-        while (!is.eof())
-          {
-            if (l == "@epsilon")
-              l = "\\e";
-            edit.add_transition(s1, s2, l);
-            is >> s1 >> l >> s2;
-          }
-      }
       return edit.result();
     }
   }// dyn::

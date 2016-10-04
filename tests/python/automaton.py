@@ -551,16 +551,25 @@ for fn in glob.glob(os.path.join(medir, '*.fado')):
     CHECK_EQ(fado, exp.format('fado'))
     check_fado(exp)
 
-def check_fado_transducer(fn):
-    exp = vcsn.automaton(filename=fn, format='dot')
-    # Use '.tfado' extension, as it would try to parse it before with '.fado'
-    # and it is currently not handled.
-    fado = open(fn.replace('.gv', '.tfado')).read().strip()
-    CHECK_EQ(fado, exp.format('fado'))
+# Invalid kind
+XFAIL(lambda: vcsn.automaton('''@GFA 0 1 * 2 3
+  2 a 0
+  3 b 1''', 'fado'))
 
-# Transducer printing
-check_fado_transducer(os.path.join(medir,'lat.gv'))
-check_fado_transducer(os.path.join(medir,'lat_lan.gv'))
+# Invalid initial states in DFA
+XFAIL(lambda: vcsn.automaton('''@DFA 0 1 * 2 3
+  2 a 0
+  3 b 1''', 'fado'))
+
+# Multiple '*' in NFA
+XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3 * 5 2
+  2 a 0
+  3 b 1''', 'fado'))
+
+# Trailing characters in acceptor
+XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3
+  2 a 0
+  3 b 1 c''', 'fado'))
 
 ## --------------- ##
 ## Output: Grail.  ##

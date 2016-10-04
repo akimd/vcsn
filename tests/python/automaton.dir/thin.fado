@@ -1,0 +1,9 @@
+@Transducer 1
+0 a a 0
+0 a b 1
+0 b a 1
+0 b b 0
+1 a a 1
+1 a b 1
+1 b a 1
+1 b b 1

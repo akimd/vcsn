@@ -112,6 +112,8 @@ EXTRA_DIST +=                                           \
   %D%/add.dir/join.gv                                   \
   %D%/automaton.dir/a.grail                             \
   %D%/automaton.dir/a.gv                                \
+  %D%/automaton.dir/del-1.fado                          \
+  %D%/automaton.dir/del-1.gv                            \
   %D%/automaton.dir/derived-term.tex                    \
   %D%/automaton.dir/dfa.fado                            \
   %D%/automaton.dir/dfa.gv                              \
@@ -144,10 +146,10 @@ EXTRA_DIST +=                                           \
   %D%/automaton.dir/lao_z.out.gv                        \
   %D%/automaton.dir/lao_z.tex                           \
   %D%/automaton.dir/lao_z.tex.gv                        \
+  %D%/automaton.dir/lat.fado                            \
   %D%/automaton.dir/lat.gv                              \
-  %D%/automaton.dir/lat.tfado                           \
+  %D%/automaton.dir/lat_lan.fado                        \
   %D%/automaton.dir/lat_lan.gv                          \
-  %D%/automaton.dir/lat_lan.tfado                       \
   %D%/automaton.dir/lazy.out.gv                         \
   %D%/automaton.dir/lazy.tex                            \
   %D%/automaton.dir/nfa.fado                            \
@@ -157,6 +159,8 @@ EXTRA_DIST +=                                           \
   %D%/automaton.dir/pyramid.out.gv                      \
   %D%/automaton.dir/pyramid.tex                         \
   %D%/automaton.dir/pyramid.tex.gv                      \
+  %D%/automaton.dir/thin.fado                           \
+  %D%/automaton.dir/thin.gv                             \
   %D%/compose.dir/left.gv                               \
   %D%/compose.dir/result.gv                             \
   %D%/compose.dir/right.gv                              \
