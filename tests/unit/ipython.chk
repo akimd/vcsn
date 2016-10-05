@@ -10,7 +10,7 @@ fi
 
 for i in ipython$PYTHON_VERSION ipython3 ipython
 do
-    if $i --version; then
+    if ($i --version); then
         ipython=$i
         break
     fi
