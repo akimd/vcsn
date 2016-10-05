@@ -59,7 +59,6 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
-  %D%/ldivide.py                                \
   %D%/less-than.py                              \
   %D%/letterize.py                              \
   %D%/lift.py                                   \
@@ -76,7 +75,6 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/proper.py                                 \
   %D%/properlazy.py                             \
   %D%/push-weights.py                           \
-  %D%/rdivide.py                                \
   %D%/reduce.py                                 \
   %D%/scc.py                                    \
   %D%/shortest.py                               \
@@ -195,6 +193,8 @@ EXTRA_DIST +=                                           \
   %D%/determinize.dir/z.gv                              \
   %D%/determinize.dir/zmin-det.gv                       \
   %D%/determinize.dir/zmin.gv                           \
+  %D%/divide.dir/ldiv.gv                                \
+  %D%/divide.dir/rdiv.gv                                \
   %D%/efsm.dir/a1.efsm                                  \
   %D%/efsm.dir/a2x.efsm                                 \
   %D%/efsm.dir/a2xyz.efsm                               \
@@ -238,7 +238,6 @@ EXTRA_DIST +=                                           \
   %D%/factory.dir/ladybird-2.gv                         \
   %D%/factory.dir/levenshtein.gv                        \
   %D%/factory.dir/u-5.gv                                \
-  %D%/ldivide.dir/aut1.gv                               \
   %D%/minimize.dir/incomplete-non-trim.gv               \
   %D%/minimize.dir/incomplete-non-trim.moore.gv         \
   %D%/minimize.dir/intricate.exp.gv                     \
@@ -295,7 +294,6 @@ EXTRA_DIST +=                                           \
   %D%/proper.dir/lao-r.out.gv                           \
   %D%/proper.dir/law-b.in.gv                            \
   %D%/proper.dir/law-b.out.gv                           \
-  %D%/rdivide.dir/aut1.gv                               \
   %D%/standard.dir/1.in.gv                              \
   %D%/standard.dir/1.out.gv                             \
   %D%/standard.dir/2.in.gv                              \
@@ -344,19 +342,18 @@ EXTRA_DIST +=                                           \
 %D%/conjugate.log:       $(wildcard $(srcdir)/%D%/conjugate.dir/*)
 %D%/conjunction.log:     $(wildcard $(srcdir)/%D%/conjunction.dir/*)
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
+%D%/divide.log:          $(wildcard $(srcdir)/%D%/divide.dir/*)
 %D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/expression.log:      $(wildcard $(srcdir)/%D%/expression.dir/*)
 %D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/infiltrate.log:      $(wildcard $(srcdir)/%D%/conjunction.dir/*)
-%D%/ldivide.log:         $(wildcard $(srcdir)/%D%/ldivide.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/partial-identity.log:$(wildcard $(srcdir)/%D%/partial-identity.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
 %D%/proper.log:          $(wildcard $(srcdir)/%D%/proper.dir/*)
-%D%/rdivide.log:         $(wildcard $(srcdir)/%D%/rdivide.dir/*)
 %D%/standard.log:        $(wildcard $(srcdir)/%D%/standard.dir/*)
 %D%/synchronize.log:     $(wildcard $(srcdir)/%D%/synchronize.dir/*)
 %D%/to-expression.log:   $(wildcard $(srcdir)/%D%/to-expression.dir/*)
