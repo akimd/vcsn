@@ -193,4 +193,13 @@ namespace vcsn
       return res;
     }
   }
+
+  namespace dyn
+  {
+    template <typename T>
+    const T& cat(const T& arg)
+    {
+      return arg;
+    }
+  }
 } // namespace vcsn

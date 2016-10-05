@@ -272,11 +272,35 @@ algos_doc = []
 # The list of dyn types, loaded from JSON.
 dyn_types = []
 
+def add_cat(algos):
+    for t in dyn_types:
+        if t == 'context':
+            continue
+        algos.append({
+                'dynfun': 'cat',
+                'formals': [
+                    {
+                        'arg': 'arg',
+                        'class': t,
+                        'const': 'const',
+                        'default': None,
+                        'type': 'const {}&'.format(t),
+                    }],
+                'result': '{}'.format(t),
+                'doc': {
+                    'desc': ['Return its argument.'],
+                    'params': [],
+                    'pre': [],
+                    'returns':[]
+                    }
+                })
+
 def process_header(fn):
     '''Process all functions from a header `fn`.'''
     with open(fn, mode='r') as f:
         json_ = json.load(f)
         dyn_types.extend(json_['dyn_types'])
+        add_cat(json_['algos'])
         for fun in json_['algos']:
             process_function(fun)
 
