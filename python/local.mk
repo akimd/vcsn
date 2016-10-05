@@ -39,6 +39,7 @@ $(from_bindings_gen): %D%/bindings.stamp
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
 
+BUILT_SOURCES += $(from_bindings_gen)
 
 vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \

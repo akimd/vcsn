@@ -302,7 +302,7 @@ def process_doc(doc, args):
             for p in doc['params'] if p['name'] in args]
 
     res = '\n'.join(doc['desc'] + params + doc['pre'] + doc['returns'])
-    res = ['  /// ' + l for l in res.split('\n')]
+    res = ['  /// ' + l.rstrip() for l in res.split('\n')]
 
     if res[-1] == '  /// ':
         del res[-1]
@@ -376,7 +376,11 @@ def process_function(fun):
     fun['doc'] = Indent(fun['doc'])
 
     # Flatten the formal parameter list
-    fs = ['{} {}'.format(f['type'], f['arg']) for f in fs]
+    fs = ['{} {}{}'.format(
+        f['type'],
+        f['arg'],
+        '' if f['default'] is None else ' = ' + f['default']
+        ) for f in fs]
 
     # We both have both a function and a type named 'context'.  To
     # avoid clashes, we need to prefix the type by 'struct'.
