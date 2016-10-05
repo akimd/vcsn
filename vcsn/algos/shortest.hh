@@ -69,6 +69,7 @@ namespace vcsn
       {}
 
       /// The approximated behavior of the automaton.
+      ///
       /// \param num   number of words looked for.
       /// \param len   maximum length of words looked for.
       polynomial_t operator()(boost::optional<unsigned> num,
@@ -82,6 +83,16 @@ namespace vcsn
         return shortest_(*num, *len);
       }
 
+      /// The approximated behavior of a part of the automaton (looks for one
+      /// word of unspecified length).
+      ///
+      /// \param src   the starting state of the calculation
+      /// \param dst   the ending state of the calculation.
+      polynomial_t operator()(state_t src, state_t dst)
+      {
+        return shortest_(1, std::numeric_limits<unsigned>::max(), src, dst);
+      }
+
     private:
       /// Case of free labelsets (e.g., `lal` or `lal x lal`).
       ///
@@ -93,7 +104,9 @@ namespace vcsn
       /// once we ran `len` rounds, we have all the words shorter than
       /// `len` letters.
       template <typename LabelSet = labelset_t_of<context_t>>
-      auto shortest_(unsigned num, unsigned len)
+      auto shortest_(unsigned num, unsigned len,
+                     state_t_of<Aut> src = Aut::element_type::pre(),
+                     state_t_of<Aut> dst = Aut::element_type::post())
         -> std::enable_if_t<LabelSet::is_free(), polynomial_t>
       {
         // Each step of propagation contributes a letter.  We need to
@@ -102,7 +115,7 @@ namespace vcsn
           len += 2;
 
         using queue_t = std::deque<profile_t>;
-        auto queue = queue_t{profile_t{aut_->pre(), ls_.one(), ws_.one()}};
+        auto queue = queue_t{profile_t{src, ls_.one(), ws_.one()}};
 
         // The approximated behavior: the first orders to post's past.
         polynomial_t output;
@@ -117,14 +130,16 @@ namespace vcsn
                 std::tie(s, l, w) = sm;
                 for (const auto t: all_out(aut_, s))
                   {
-                    auto dst = aut_->dst_of(t);
+                    auto t_dst = aut_->dst_of(t);
                     auto nw = ws_.mul(w, aut_->weight_of(t));
-                    if (aut_->src_of(t) == aut_->pre())
-                      q2.emplace_back(dst, l, std::move(nw));
-                    else if (dst == aut_->post())
+                    if (t_dst == aut_->post() && t_dst == dst)
                       ps_.add_here(output, l, std::move(nw));
+                    else if (aut_->src_of(t) == aut_->pre() || t_dst == aut_->post())
+                      q2.emplace_back(t_dst, l, std::move(nw));
+                    else if (t_dst == dst)
+                      ps_.add_here(output, ls_.mul(l, aut_->label_of(t)), std::move(nw));
                     else
-                      q2.emplace_back(dst,
+                      q2.emplace_back(t_dst,
                                       ls_.mul(l, aut_->label_of(t)),
                                       std::move(nw));
                   }
@@ -147,7 +162,9 @@ namespace vcsn
       /// We use a unique queue composed of (state, word, weight),
       /// shortest words first.
       template <typename LabelSet = labelset_t_of<context_t>>
-      auto shortest_(unsigned num, unsigned len)
+      auto shortest_(unsigned num, unsigned len,
+                     state_t_of<Aut> src = Aut::element_type::pre(),
+                     state_t_of<Aut> dst = Aut::element_type::post())
         -> std::enable_if_t<!LabelSet::is_free(), polynomial_t>
       {
         // Benched as better than Fibonacci, Pairing and Skew Heaps.
@@ -157,7 +174,7 @@ namespace vcsn
                                      boost::heap::compare<profile_less>>;
 
         auto queue = queue_t{};
-        queue.emplace(aut_->pre(), ls_.one(), ws_.one());
+        queue.emplace(src, ls_.one(), ws_.one());
 
         // The approximated behavior: the first orders to post's past.
         polynomial_t res;
@@ -186,18 +203,25 @@ namespace vcsn
 
             for (const auto t: all_out(aut_, s))
               {
-                auto dst = aut_->dst_of(t);
+                auto t_dst = aut_->dst_of(t);
                 auto nw = ws_.mul(w, aut_->weight_of(t));
-                if (aut_->src_of(t) == aut_->pre())
-                  queue.emplace(dst, l, std::move(nw));
-                else if (dst == aut_->post())
+                if (t_dst == aut_->post() && t_dst == dst)
                   ps_.add_here(res, l, std::move(nw));
+                else if (aut_->src_of(t) == aut_->pre() || t_dst == aut_->post())
+                  queue.emplace(t_dst, l, std::move(nw));
+                else if (t_dst == dst)
+                {
+                  auto nl = ls_.mul(l, aut_->label_of(t));
+                  // Discard candidates that are too long.
+                  if (ls_.size(nl) <= len)
+                    ps_.add_here(res, std::move(nl), std::move(nw));
+                }
                 else
                   {
                     auto nl = ls_.mul(l, aut_->label_of(t));
                     // Discard candidates that are too long.
                     if (ls_.size(nl) <= len)
-                      queue.emplace(dst, std::move(nl), std::move(nw));
+                      queue.emplace(t_dst, std::move(nl), std::move(nw));
                   }
               }
 
@@ -255,6 +279,20 @@ namespace vcsn
   {
     auto enumerater = detail::enumerater<Aut>{aut};
     return enumerater(num, len);
+  }
+
+  /// The approximated behavior of a part of an automaton (looks for one word
+  /// of unspecified length).
+  ///
+  /// \param aut   the automaton whose behavior to approximate
+  /// \param src   the starting state of the calculation
+  /// \param dst   the ending state of the calculation.
+  template <Automaton Aut>
+  typename detail::enumerater<Aut>::polynomial_t
+  shortest(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst)
+  {
+    auto enumerater = detail::enumerater<Aut>{aut};
+    return enumerater(src, dst);
   }
 
 
