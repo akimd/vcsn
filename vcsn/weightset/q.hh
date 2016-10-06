@@ -314,15 +314,19 @@ namespace vcsn
     private:
       value_t pick_value_() const
       {
-        auto dis_num = std::uniform_int_distribution<>(super_t::min_.num,
-                                                       super_t::max_.num);
-        auto dis_den = std::uniform_int_distribution<unsigned int>(super_t::min_.den,
-                                                                   super_t::max_.num);
+        auto dis_num
+          = std::uniform_int_distribution<>(super_t::min_.num,
+                                            super_t::max_.num);
+        auto dis_den
+          = std::uniform_int_distribution<unsigned>(super_t::min_.den,
+                                                    super_t::max_.num);
         auto num = dis_num(super_t::gen_);
         auto den = dis_den(super_t::gen_);
         return super_t::ws_.value(num, den);
       }
     };
+
+
     /*-------.
     | join.  |
     `-------*/

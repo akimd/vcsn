@@ -12,6 +12,7 @@
 #include <vcsn/misc/symbol.hh>
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/fwd.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
@@ -231,12 +232,14 @@ namespace vcsn
       using super_t::super_t;
 
     private:
-      value_t pick_value_() const
+      value_t pick_value_() const override
       {
-        auto dis = std::uniform_int_distribution<>(super_t::min_, super_t::max_);
+        auto dis
+          = std::uniform_int_distribution<>(super_t::min_, super_t::max_);
         return dis(super_t::gen_);
       }
     };
+
     /*-------.
     | join.  |
     `-------*/

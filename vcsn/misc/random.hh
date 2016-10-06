@@ -10,9 +10,9 @@ namespace vcsn LIBVCSN_API
   /// Generate a unique random device.
   std::mt19937& make_random_engine();
 
-  /// Choose weither to pick an element from a map or not.
-  /// To do so we apply a bernoulli distribution on the
-  /// sum of the probabilities of the map.
+  /// Choose whether to pick an element from a map or not.  To do so
+  /// we apply a Bernoulli distribution on the sum of the
+  /// probabilities of the map.
   template <typename RandomGenerator = std::default_random_engine>
   static bool choose_map(const std::vector<float>& map,
                          RandomGenerator& gen = RandomGenerator())
@@ -31,7 +31,8 @@ namespace vcsn LIBVCSN_API
     {}
 
     template <typename Container_w, typename Container>
-    typename Container::iterator select(Container_w weight, Container cont) const
+    typename Container::iterator
+    select(Container_w weight, Container cont) const
     {
       auto dis = std::discrete_distribution<>(weight.begin(), weight.end());
       auto res = std::next(cont.begin(), dis(gen_));
@@ -39,7 +40,8 @@ namespace vcsn LIBVCSN_API
     }
 
     template <typename Container_w, typename Container>
-    typename Container::iterator operator()(Container_w weight, Container cont) const
+    typename Container::iterator
+    operator()(Container_w weight, Container cont) const
     {
       return select(weight, cont);
     }

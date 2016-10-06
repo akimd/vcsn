@@ -229,7 +229,7 @@ namespace vcsn
     }
   };
 
-    // Random generation.
+    /// Random generation.
     template <typename RandomGenerator>
     class random_weight<qmp, RandomGenerator>
       : public random_weight_base<qmp, RandomGenerator>
@@ -247,13 +247,16 @@ namespace vcsn
           std::uniform_int_distribution<>(super_t::min_.get_num().get_ui(),
                                           super_t::max_.get_num().get_ui());
         auto dis_den =
-          std::uniform_int_distribution<unsigned int>(super_t::min_.get_den().get_ui(),
-                                                      super_t::max_.get_num().get_ui());
+          std::uniform_int_distribution<unsigned>
+          (super_t::min_.get_den().get_ui(),
+           super_t::max_.get_num().get_ui());
         auto num = dis_num(super_t::gen_);
         auto den = dis_den(super_t::gen_);
         return super_t::ws_.value(num, den);
       }
     };
+
+
     /*-------.
     | join.  |
     `-------*/

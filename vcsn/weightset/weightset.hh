@@ -4,6 +4,8 @@
 #include <map>
 #include <memory> // std::make_shared
 #include <string>
+#include <type_traits>
+#include <vector>
 
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/tokenizer.hpp>
@@ -160,7 +162,8 @@ namespace vcsn
           }
         }
 
-        weight_weight_ = detail::transform(weight_, [](const auto& v){ return v.second; });
+        weight_weight_
+          = detail::transform(weight_, [](const auto& v){ return v.second; });
       }
 
       virtual weight_t pick_value_() const = 0;
@@ -199,8 +202,7 @@ namespace vcsn
     /// Generic declaration of the class which is specialized
     /// in each weightset.
     template <typename WeightSet, typename RandomGenerator>
-    class random_weight : random_weight_base<WeightSet, RandomGenerator>
-    {};
+    class random_weight;
   }
 
 
@@ -208,5 +210,4 @@ namespace vcsn
   template <typename T>
   struct is_tropical : std::false_type
   {};
-
 }
