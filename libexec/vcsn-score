@@ -216,7 +216,7 @@ bench('r.format("text")',
 
 # Output should be fast.
 r = 'a?{500}'
-for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
+for fmt in ['daut', 'dot', 'efsm', 'fado', 'grail', 'tikz']:
     bench('a.format("{}")'.format(fmt),
           'a = std({})'.format(r),
           setup=['r = "{}"'.format(r),
@@ -225,7 +225,7 @@ for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
 
 # Input should be too.
 r = 'a?{500}'
-for fmt, number in [('dot', 1), ('efsm', 5), ('fado', 5)]:
+for fmt, number in [('daut', 5), ('dot', 1), ('efsm', 5), ('fado', 5)]:
     bench('vcsn.automaton(a, "{}")'.format(fmt),
           's = {}(std({}))'.format(fmt, r),
           'read(s)',
