@@ -753,6 +753,16 @@ namespace vcsn
     expression random_expression(const context& ctx, const std::string& param,
                                  identities ids);
 
+    /// Produce a random weight.
+    ///
+    /// \param ctx
+    ///    The context of the result.
+    /// \param param
+    ///    A string containing paramaters for the generation such as the
+    ///    min and max, or an element you want with specific probability.
+    ///    example: "1=0.2,10=0.3,min=0,max=20"
+    weight random_weight(const context& ctx, const std::string& param);
+
     /// Right-division of two automata (lhs / rhs).
     automaton rdivide(const automaton& lhs, const automaton& rhs);
 

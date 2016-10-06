@@ -151,9 +151,7 @@ namespace vcsn
         else
         {
           auto it =
-            discrete_chooser<RandomGenerator>{gen_}(weight_.begin(),
-                                                    weight_.end(),
-                                                    operators_.begin());
+            discrete_chooser<RandomGenerator>{gen_}(weight_, operators_);
           auto op = it->first;
           if (has(nullary_op_, op))
             out << op;

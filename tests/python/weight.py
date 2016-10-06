@@ -42,3 +42,36 @@ CHECK_EQ(w('7/16'),   w('1/2') ** (2, 4))
 
 CHECK_EQ(w('2'),      w('1/2') ** -1)
 CHECK_EQ(w('1/2'),    w('1/2') ** (2, -1))
+
+
+## ---------------- ##
+## Random Weights.  ##
+## ---------------- ##
+
+def check(ctx, w, params):
+    w = ctx.weight(w)
+    output = ctx.random_weight(params)
+    CHECK_EQ(output, w)
+
+ctx = vcsn.context('lal_char(abc), z')
+
+# Check the property "element=density".
+check(ctx, '1', '1=1')
+check(ctx, '0', '0=1')
+check(ctx, '3563', '3563=1')
+w = ctx.random_weight('2=0.5,1=0.5')
+CHECK(str(w) in ['1', '2'])
+
+# Check the range.
+w = ctx.random_weight('min=0,max=3')
+CHECK(re.match('^[0-3]$', str(w)))
+
+# Check some weightSet.
+ctx = vcsn.context('lal_char(abc), b')
+for _ in range(3):
+    w = ctx.random_weight()
+    CHECK(re.match('^[0-1]$', str(w)))
+ctx = vcsn.context('lal_char(abc), q')
+check(ctx, '1/3', '1/3=1')
+ctx = vcsn.context('lal_char(abc), r')
+CHECK(re.match(r'[0-5].[0-9]*', str(ctx.random_weight('min=0,max=5'))))

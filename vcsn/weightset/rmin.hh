@@ -80,6 +80,26 @@ namespace vcsn
       }
     };
 
+    // Random generation.
+    template <typename RandomGenerator>
+    class random_weight<rmin, RandomGenerator>
+      : public random_weight_base<rmin, RandomGenerator>
+    {
+    public:
+      using super_t = random_weight_base<rmin, RandomGenerator>;
+      using value_t = typename super_t::weight_t;
+
+      using super_t::super_t;
+
+    private:
+      value_t pick_value_() const
+      {
+        auto dis =
+          std::uniform_real_distribution<rmin::value_t>(super_t::min_, super_t::max_);
+        return dis(super_t::gen_);
+      }
+    };
+
     VCSN_JOIN_SIMPLE(b,    rmin);
     VCSN_JOIN_SIMPLE(nmin, rmin);
     VCSN_JOIN_SIMPLE(zmin, rmin);

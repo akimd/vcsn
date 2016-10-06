@@ -10,6 +10,18 @@ namespace vcsn LIBVCSN_API
   /// Generate a unique random device.
   std::mt19937& make_random_engine();
 
+  /// Choose weither to pick an element from a map or not.
+  /// To do so we apply a bernoulli distribution on the
+  /// sum of the probabilities of the map.
+  template <typename RandomGenerator = std::default_random_engine>
+  static bool choose_map(const std::vector<float>& map,
+                         RandomGenerator& gen = RandomGenerator())
+  {
+    float sum = std::accumulate(map.begin(), map.end(), 0.0);
+    auto dis = std::bernoulli_distribution(sum);
+    return dis(gen);
+  }
+
   /// Random selector on container, using discrete distribution.
   template <typename RandomGenerator>
   struct discrete_chooser
@@ -18,18 +30,18 @@ namespace vcsn LIBVCSN_API
       : gen_(g)
     {}
 
-    template <typename Iter_weight, typename Iter>
-    Iter select(Iter_weight start_w, Iter_weight end_w, Iter start)
+    template <typename Container_w, typename Container>
+    typename Container::iterator select(Container_w weight, Container cont) const
     {
-      auto dis = std::discrete_distribution<>(start_w, end_w);
-      std::advance(start, dis(gen_));
-      return start;
+      auto dis = std::discrete_distribution<>(weight.begin(), weight.end());
+      auto res = std::next(cont.begin(), dis(gen_));
+      return res;
     }
 
-    template <typename Iter_weight, typename Iter>
-    Iter operator()(Iter_weight start_w, Iter_weight end_w, Iter start)
+    template <typename Container_w, typename Container>
+    typename Container::iterator operator()(Container_w weight, Container cont) const
     {
-      return select(start_w, end_w, start);
+      return select(weight, cont);
     }
 
   private:
