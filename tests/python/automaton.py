@@ -549,7 +549,18 @@ for fn in glob.glob(os.path.join(medir, '*.fado')):
     # Check that we can print FAdo.
     fado = open(fn).read().strip()
     CHECK_EQ(fado, exp.format('fado'))
-    check_fado(a)
+    check_fado(exp)
+
+def check_fado_transducer(fn):
+    exp = vcsn.automaton(filename=fn, format='dot')
+    # Use '.tfado' extension, as it would try to parse it before with '.fado'
+    # and it is currently not handled.
+    fado = open(fn.replace('.gv', '.tfado')).read().strip()
+    CHECK_EQ(fado, exp.format('fado'))
+
+# Transducer printing
+check_fado_transducer(os.path.join(medir,'lat.gv'))
+check_fado_transducer(os.path.join(medir,'lat_lan.gv'))
 
 ## --------------- ##
 ## Output: Grail.  ##

@@ -30,8 +30,16 @@ namespace vcsn
     using has_fado_t
     = std::integral_constant<bool,
                              ((context_t_of<Aut>::is_lal
+                               || context_t_of<Aut>::is_lan
+                               || context_t_of<Aut>::is_lat)
+                              && std::is_same<weightset_t_of<Aut>, b>::value)>;
+    template <Automaton Aut>
+    using has_grail_t
+    = std::integral_constant<bool,
+                             ((context_t_of<Aut>::is_lal
                                || context_t_of<Aut>::is_lan)
                               && std::is_same<weightset_t_of<Aut>, b>::value)>;
+
 
     template <Automaton Aut>
     auto
@@ -47,14 +55,14 @@ namespace vcsn
     fado_impl_(const Aut&, std::ostream&)
       -> std::enable_if_t<!has_fado_t<Aut>{}, void>
     {
-      raise("print: FAdo requires letter or nullable labels,"
+      raise("print: FAdo requires tuple, letter or nullable labels,"
             " and Boolean weights");
     }
 
     template <Automaton Aut>
     auto
     grail_impl_(const Aut& aut, std::ostream& out)
-      -> std::enable_if_t<has_fado_t<Aut>{}, void>
+      -> std::enable_if_t<has_grail_t<Aut>{}, void>
     {
       grail(aut, out);
     }
@@ -63,7 +71,7 @@ namespace vcsn
     ATTRIBUTE_NORETURN
     auto
     grail_impl_(const Aut&, std::ostream&)
-      -> std::enable_if_t<!has_fado_t<Aut>{}, void>
+      -> std::enable_if_t<!has_grail_t<Aut>{}, void>
     {
       raise("print: Grail requires letter or nullable labels,"
             " and Boolean weights");

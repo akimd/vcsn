@@ -6,12 +6,25 @@
 
 #include <vcsn/algos/sort.hh> // transition_less.
 #include <vcsn/concepts/automaton.hh>
+#include <vcsn/labelset/tupleset.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
   namespace detail
   {
+     /// Number of tapes.
+     template <typename LabelSet>
+     struct rank
+     {
+       static constexpr size_t value = 1;
+     };
+
+     template <typename... LabelSet>
+     struct rank<tupleset<LabelSet...>>
+     {
+       static constexpr size_t value = tupleset<LabelSet...>::size();
+     };
 
     /*-----------.
     | printer.   |
@@ -126,6 +139,12 @@ namespace vcsn
       const weightset_t& ws_ = *aut_->weightset();
       /// Short-hand to the polynomialset used to print the entries.
       const polynomialset_t ps_{aut_->context()};
+      /// Whether is a transducer (two-tape automaton) as opposed to
+      /// an acceptor.
+      using is_transducer_t =
+           std::integral_constant<bool,
+                                  2 <= rank<labelset_t_of<automaton_t>>::value>;
+      const is_transducer_t is_transducer_ = {};
     };
   }
 }

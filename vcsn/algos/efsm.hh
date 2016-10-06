@@ -19,19 +19,6 @@ namespace vcsn
   `--------------------------*/
   namespace detail
   {
-    /// Number of tapes.
-    template <typename LabelSet>
-    struct rank
-    {
-      static constexpr size_t value = 1;
-    };
-
-    template <typename... LabelSet>
-    struct rank<tupleset<LabelSet...>>
-    {
-      static constexpr size_t value = sizeof...(LabelSet);
-    };
-
     /// \brief Print automaton to EFSM format, based on FSM format.
     ///
     /// \tparam Aut an automaton type, not a pointer type.
@@ -52,6 +39,7 @@ namespace vcsn
       using super_t::aut_;
       using super_t::ls_;
       using super_t::ws_;
+      using super_t::is_transducer_;
 
     public:
       using super_t::super_t;
@@ -93,7 +81,7 @@ namespace vcsn
           // this seems to be due to the fact that Open FST bases its
           // implementation of intersect on its (transducer)
           // composition.
-          "fstcompile" << (is_transducer ? "" : " --acceptor") << " \\\n"
+          "fstcompile" << (is_transducer_ ? "" : " --acceptor") << " \\\n"
           "  --arc_type=$arc_type \\\n"
           "  --keep_isymbols --isymbols=" << isymbols_ << " \\\n"
           "  --keep_osymbols --osymbols=" << osymbols_ << " \\\n"
@@ -165,7 +153,7 @@ namespace vcsn
             os_ << '\t';
             aut_->print_state(aut_->dst_of(t), os_);
             os_ << '\t';
-            print_label_(aut_->label_of(t), is_transducer);
+            print_label_(aut_->label_of(t), is_transducer_);
           }
 
         if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
@@ -323,22 +311,15 @@ namespace vcsn
       void
       print_symbols_()
       {
-        print_symbols_impl_<automaton_t>(is_transducer);
+        print_symbols_impl_<automaton_t>(is_transducer_);
       }
-
-      /// Whether is a transducer (two-tape automaton) as opposed to
-      /// an acceptor.
-      using is_transducer_t =
-        std::integral_constant<bool,
-                               2 <= rank<labelset_t_of<automaton_t>>::value>;
-      const is_transducer_t is_transducer = {};
 
       /// File name for input tape symbols.
       const char* isymbols_ =
-        is_transducer ? "$medir/isymbols.txt" : "$medir/symbols.txt";
+        is_transducer_ ? "$medir/isymbols.txt" : "$medir/symbols.txt";
       /// File name for output tape symbols.
       const char* osymbols_ =
-        is_transducer ? "$medir/osymbols.txt" : "$medir/symbols.txt";
+        is_transducer_ ? "$medir/osymbols.txt" : "$medir/symbols.txt";
     };
   }
 

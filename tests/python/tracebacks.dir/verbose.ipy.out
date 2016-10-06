@@ -47,4 +47,4 @@
 [0m[0;32m    ??[0m [1;33m[0m[0m
 [0;32m    ??[0m     [1;32mdef[0m [0m__format__[0m[1;33m([0m[0mself[0m[1;33m,[0m [0mspec[0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
 
-[1;31mRuntimeError[0m: print: FAdo requires letter or nullable labels, and Boolean weights
+[1;31mRuntimeError[0m: print: FAdo requires tuple, letter or nullable labels, and Boolean weights

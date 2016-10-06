@@ -13,4 +13,4 @@ Traceback (most recent call last):
     s = self.format(syntax)
   File "vcsn/automaton.py", line ??, in format
     return self._format(fmt)
-RuntimeError: print: FAdo requires letter or nullable labels, and Boolean weights
+RuntimeError: print: FAdo requires tuple, letter or nullable labels, and Boolean weights

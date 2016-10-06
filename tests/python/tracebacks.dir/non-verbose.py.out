@@ -7,4 +7,4 @@ Traceback (most recent call last):
     test2()
   File "tracebacks.dir/non-verbose.ipy", line 5, in test2
     '{:f}'.format(vcsn.Q.expression('abc').automaton())
-RuntimeError: print: FAdo requires letter or nullable labels, and Boolean weights
+RuntimeError: print: FAdo requires tuple, letter or nullable labels, and Boolean weights

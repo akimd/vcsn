@@ -14,14 +14,15 @@ namespace vcsn
   namespace detail
   {
 
-    /// \brief Format an automaton into Fado.
+    /// \brief Format an automaton into FAdo.
     ///
     /// \tparam Aut an automaton type.
     template <Automaton Aut>
     class fado_impl: public printer<Aut>
     {
-      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
-                    "fado: requires letter or nullable labels");
+      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan
+                    || context_t_of<Aut>::is_lat,
+                    "fado: requires tuple, letter or nullable labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "fado: requires Boolean weights");
 
@@ -30,19 +31,22 @@ namespace vcsn
       using super_t::aut_;
       using super_t::finals_;
       using super_t::initials_;
+      using super_t::is_transducer_;
       using super_t::list_states_;
+      using super_t::ls_;
       using super_t::os_;
       using super_t::print_transitions_;
 
       using super_t::super_t;
+      using typename super_t::transition_t;
 
     public:
       /// Actually output \a aut_ on \a os_.
-      // http://www.dcc.fc.up.pt/~rvr/FAdoDoc/_modules/fa.html#saveToFile
+      // http://www.dcc.fc.up.pt/~rvr/FAdoDoc/_modules/fio.html#saveToFile
       void operator()()
       {
         bool is_deter = is_deterministic_(aut_);
-        os_ << (is_deter ? "@DFA" : "@NFA");
+        os_ << (is_transducer_ ? "@Transducer" : is_deter ? "@DFA" : "@NFA");
         list_states_(finals_());
         if (!is_deter)
           {
@@ -53,6 +57,40 @@ namespace vcsn
       }
 
     private:
+      template <typename LS>
+      void print_label_(const LS& ls, const typename LS::value_t& l) const
+      {
+        if (ls.is_one(l))
+          os_ << "@epsilon";
+        else
+          ls.print(l, os_, format::raw);
+      }
+
+      /// Acceptor.
+      template <typename Label>
+      void print_label_(const Label& l, std::false_type) const
+      {
+        print_label_(ls_, l);
+      }
+
+      /// Two-tape automaton.
+      template <typename Label>
+      void print_label_(const Label& l, std::true_type) const
+      {
+        print_label_(ls_.template set<0>(), std::get<0>(l));
+        os_ << ' ';
+        print_label_(ls_.template set<1>(), std::get<1>(l));
+      }
+
+      void print_transition_(const transition_t t) const override
+      {
+        aut_->print_state(aut_->src_of(t), os_);
+        os_ << ' ';
+        print_label_(aut_->label_of(t), is_transducer_);
+        os_ << ' ';
+        aut_->print_state(aut_->dst_of(t), os_);
+      }
+
       template <Automaton A>
       std::enable_if_t<labelset_t_of<A>::is_free(), bool>
       is_deterministic_(const A& a)
