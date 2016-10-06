@@ -36,7 +36,7 @@ check('(a+b)?{3}', \
       r'\e+<3>a+<3>b+<3>(aa)+<3>(ab)+<3>(ba)+<3>(bb)' \
       r'+aaa+aab+aba+abb+baa+bab+bba+bbb')
 
-# TAF-Kit doc
+# Tools doc
 check(r'(a+b+\e)((a+ba)(ca+cc))*',\
       '(aca+acc+baca+bacc)*+a(aca+acc+baca+bacc)*+b(aca+acc+baca+bacc)*')
 

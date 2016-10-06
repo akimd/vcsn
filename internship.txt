@@ -180,11 +180,11 @@ The "vcsn" namespace is the static code.
 "vcsn::ctx" is the namespace with all the different contexts.
 "vcsn::detail" is extra code that does not need to be known by the user.
 
-TafKit:
-TafKit contains all the binaries of Vcsn. There is a different "program"
+Tools:
+Tools contains all the binaries of Vcsn. There is a different "program"
 for each existing algorithm in Vcsn. They all start by "vcsn-"
 You find these files in "bin/". The tests for the different "programs" are in
-"tests/tafkit/"
+"tests/tools/"
 
 Git:
 Once Vcsn is running and working you should create a new branch.

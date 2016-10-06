@@ -9,12 +9,12 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/stream.hh> // get_file_contents().
 
-#include "vcsn-tafkit.hh"
+#include "vcsn-tools.hh"
 
 #pragma GCC diagnostic ignored "-Wmissing-declarations"
 
 using namespace vcsn;
-using namespace vcsn::tafkit;
+using namespace vcsn::tools;
 
 namespace {
   int print_usage(std::string);
@@ -165,7 +165,7 @@ namespace {
                     const dyn::context& context)
   {
     const algo* a = nullptr;
-    auto range = vcsn::tafkit::algos.equal_range(algo_name);
+    auto range = vcsn::tools::algos.equal_range(algo_name);
     for (auto it = range.first; it != range.second; it++)
       {
         const auto& candidate = it->second;
@@ -220,7 +220,7 @@ namespace {
   {
     // The list of algorithm names.
     auto names = std::set<std::string>{};
-    std::transform(begin(vcsn::tafkit::algos), end(vcsn::tafkit::algos),
+    std::transform(begin(vcsn::tools::algos), end(vcsn::tools::algos),
                    std::inserter(names, begin(names)),
                    [](const auto& a)
                    {
@@ -257,11 +257,11 @@ namespace {
     if (!algo_name.empty())
     {
       std::cout << "Available versions:\n";
-      auto range = vcsn::tafkit::algos_doc.equal_range(algo_name);
+      auto range = vcsn::tools::algos_doc.equal_range(algo_name);
       for (auto it = range.first; it != range.second; it++)
         std::cout << it->second.declaration << '\n'
                   << "  " << it->second.doc << "\n\n";
-      std::cout << "For more help about available options, please use \"vcsn tafkit --help\"\n";
+      std::cout << "For more help about available options, please use \"vcsn tools --help\"\n";
     }
     else
     {

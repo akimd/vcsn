@@ -2,7 +2,7 @@
 
 set -e
 
-# ../../tests/tafkit/transpose.chk => takfit/transpose
+# ../../tests/tools/transpose.chk => tools/transpose
 me=${1#${srcdir}/}
 me=${me%.chk}
 
@@ -13,11 +13,11 @@ top_srcdir=$srcdir
 test=$(cd $(dirname $1) && pwd)/$(basename $1)
 
 # Source directory where auxiliary files are stored.
-# ../../tests/tafkit/transpose.chk => /.../tests/tafkit/transpose.dir
+# ../../tests/tools/transpose.chk => /.../tests/tools/transpose.dir
 medir=$srcdir/$me.dir
 
 # Work directory where temporary files are stored.
-# ../../tests/tafkit/transpose.chk => takfit/transpose.tmp
+# ../../tests/tools/transpose.chk => tools/transpose.tmp
 metmp=$me.tmp
 
 # Number of the current test.

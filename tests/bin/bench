@@ -170,8 +170,8 @@ sub complete ($)
 
 =item C<ladybird($base, $size)>
 
-Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from $exp, via Ladybird.
+Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for Tools 1), and
+C<$base.gv> (for Tools 2) from $exp, via Ladybird.
 
 =cut
 
@@ -206,8 +206,8 @@ sub ladybird ($$)
 
 =item C<standard($base, $exp, $ctx)>
 
-Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from C<$exp>, via standard.
+Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for Tools 1), and
+C<$base.gv> (for Tools 2) from C<$exp>, via standard.
 
 =cut
 
@@ -247,8 +247,8 @@ sub standard ($$$)
 
 =item C<thompson($base, $exp, $alphabet)>
 
-Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from C<$exp>, via Thompson.
+Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for Tools 1), and
+C<$base.gv> (for Tools 2) from C<$exp>, via Thompson.
 
 =cut
 

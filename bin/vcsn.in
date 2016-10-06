@@ -43,13 +43,13 @@ fi
 PATH=$VCSN_LIBEXECDIR:$PATH
 export PATH
 
-# The TAF-Kit commands.
+# The Tools commands.
 commands ()
 {
-  vcsn-tafkit --commands
+  vcsn-tools --commands
 }
 
-# The TAF-Kit commands as a grep pattern.
+# The Tools commands as a grep pattern.
 commands_pattern ()
 {
   commands |
@@ -130,7 +130,7 @@ case $1 in
       if echo "$1" | grep -E "$(commands_pattern)" >/dev/null; then
           cmd=$(echo "$1" | sed -e 's/-/_/g')
           shift
-          exec vcsn-tafkit "$cmd" "$@"
+          exec vcsn-tools "$cmd" "$@"
       else
           prog=vcsn-$1
           shift

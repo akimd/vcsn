@@ -15,7 +15,7 @@ namespace vcsn
     using ::vcsn::rat::identities;
 
     /// The type of a word.
-    /// This is used by Tafkit to infer
+    /// This is used by Tools to infer
     //  how to convert its arguments.
     using word = label;
   }

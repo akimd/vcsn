@@ -14,13 +14,13 @@
 
 namespace vcsn
 {
-  namespace tafkit
+  namespace tools
   {
     /// An enum for the type of a parameter.
     /// Values of the members represent the CLI flag
     /// used to qualify an argument.
     /// If you update this enum, please keep parse_arguments()
-    /// in sync (in vcsn-tafkit.cc)
+    /// in sync (in vcsn-tools.cc)
     enum class type : char
     {
       automaton = 'A',

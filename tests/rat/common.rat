@@ -32,7 +32,7 @@ a+(b+c) => a+(b+c)
 a+(b+c) => a+b+c
 (a+b)+(c+d) => [a-d]
 
-# Trivial identities, called T in TAF-Kit's documentation.
+# Trivial identities, called T in Tools's documentation.
 \z*  => \e
 a+\z => a
 \z+a => a

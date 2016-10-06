@@ -47,10 +47,10 @@ def ignore(fun):
     print('warning: ignoring: {fun}({formals}) -> {result}'
           .format_map(fun), file=sys.stderr)
 
-# These types are not supported by tafkit yet, meaning that
+# These types are not supported by tools yet, meaning that
 # any function using them as parameter types will be ignored
 # when generating the bindings and won't be callable from
-# tafkit.
+# tools.
 # FIXME: Add support for these types.
 unsupported_types = [
     'direction',
@@ -105,7 +105,7 @@ def gen_function_doc_decl(fun, formals):
             default=f_def['default'],
             type=f_def['type']).lstrip())
 
-    declaration = 'R"tafkit_doc( {dynfun}: {formals} -> {result})tafkit_doc"' \
+    declaration = 'R"tools_doc( {dynfun}: {formals} -> {result})tools_doc"' \
                     .format(dynfun=fun['dynfun'],
                             formals=' '.join(formals_def),
                             result=fun['result'])
@@ -163,7 +163,7 @@ def format_function_doc(fun, formals):
 
     res = [l for l in res if l.strip() != '']
 
-    return 'R"tafkit_doc('+ '\n'.join(res) +')tafkit_doc"'
+    return 'R"tools_doc('+ '\n'.join(res) +')tools_doc"'
 
 def process_function(fun):
     '''Process a function in dyn/algo.hh'''
@@ -207,7 +207,7 @@ def gen_function_decl(fun, formals):
             return ""
 
         # We don't match on the context, and don't require it
-        # as an argument in tafkit.
+        # as an argument in tools.
         if formal['class'] == "context":
             if formal['default'] is None:
                 args.append('ctx')
@@ -251,7 +251,7 @@ def gen_function_decl(fun, formals):
         # Convert the argument from a string to
         # the actual type for the function call.
         conversions.append(conversions_indent+
-                "auto a{} = vcsn::tafkit::convert<{}>(args[{}].arg, {}, args[{}].input_format);"
+                "auto a{} = vcsn::tools::convert<{}>(args[{}].arg, {}, args[{}].input_format);"
                 .format(i, formal['class'], i, formal['context'], i))
 
         args.append('a{}'.format(i))
@@ -305,7 +305,7 @@ def process_header(fn):
             process_function(fun)
 
 def output(header):
-    '''Generate the implementation of Tafkit C++ bindings.'''
+    '''Generate the implementation of Tools C++ bindings.'''
     res = string.Template( r'''// Generated, do not edit by hand.
 
 #include <initializer_list>
@@ -320,7 +320,7 @@ def output(header):
 
 namespace vcsn
 {
-  namespace tafkit
+  namespace tools
   {
     const std::unordered_multimap<std::string, algo> algos
     {$algos    };
@@ -334,18 +334,18 @@ namespace vcsn
 
 
 
-parser = argparse.ArgumentParser(description='Generate tafkit registry',
+parser = argparse.ArgumentParser(description='Generate tools functions',
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog='''
-Read `dyn/algos.hh` and generate a registry its functions in C++,
-to be used by the tafkit CLI interface.
+Read `dyn/algos.hh` and generate its functions in C++,
+to be used by the tools CLI interface.
 ''')
 
 parser.add_argument('--output',
                     type=argparse.FileType('w'), default='-',
                     help='implementation file to generate')
 parser.add_argument('--header',
-                    help='location of vcsn-tafkit.hh')
+                    help='location of vcsn-tools.hh')
 parser.add_argument('input', type=str, default=None,
                     help='''JSON file to process.''')
 args = parser.parse_args()

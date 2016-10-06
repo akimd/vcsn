@@ -34,11 +34,11 @@ Add it to the repo.
 ** bin/local.mk.
 Adjust all_vcsn and %C%_vcsn_foo_LDADD.  Respect the order.
 
-** tests/tafkit/foo.chk
+** tests/tools/foo.chk
 See how other files are written.
 Add it to the repo.
 
-** tests/tafkit/local.mk
+** tests/tools/local.mk
 Adjust.  Pay extra attention to the handle of foo.dir files if you
 used external files.  See how similar cases are treated.
 

@@ -34,7 +34,7 @@ lcov --remove vcsn.info.tmp -o vcsn.info                \
      'lib/vcsn/dyn/context-printer-header-algo.cc'      \
      'lib/vcsn/rat/location.hh'                         \
      'lib/vcsn/rat/position.hh'                         \
-     'libexec/vcsn-tafkit-algos.cc'                     \
+     'libexec/vcsn-tools-algos.cc'                     \
      'python/oodyn.cc'                                  \
      'python/oodyn.hh'
 

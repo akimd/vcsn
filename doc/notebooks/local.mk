@@ -208,7 +208,7 @@ AM_IPYNB_LOG_DEPS =                             \
 $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 
 # Executables depends on Vcsn executable, not simply the librairy.
-%D%/Executables.log: libexec/vcsn-tafkit                         
+%D%/Executables.log: libexec/vcsn-tools                         
 
 ## FIXME: Currently I have no means to flag failing pages, so I have
 ## to repeat $(dist_notebooks_DATA) but without the failing pages.
@@ -387,7 +387,7 @@ nodist_TESTS += $(%C%_TESTS)
 .PHONY: check-nb
 check-nb:
 # Depend on check-TESTS, not 'check', because the latter depends on
-# "all", which compiles TAF-Kit etc.  Leave "check" for simple users.
+# "all", which compiles Tools etc.  Leave "check" for simple users.
 # Here, we know that our dependencies are right, so use check-TESTS.
 	@$(MAKE) $(AM_MAKEFLAGS) check-TESTS TESTS='$(%C%_TESTS)'
 

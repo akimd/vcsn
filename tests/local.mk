@@ -36,7 +36,7 @@ include %D%/unit/local.mk
 include %D%/demo/local.mk
 include %D%/python/local.mk
 include %D%/rat/local.mk
-include %D%/tafkit/local.mk
+include %D%/tools/local.mk
 
 TEST_SUITE_LOG = %D%/test-suite.log
 AM_RST2HTMLFLAGS = -d -t

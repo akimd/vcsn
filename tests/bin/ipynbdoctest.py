@@ -116,8 +116,8 @@ def canonical_dict(dict):
             exit(0)
         # Normalize newline.
         dict['text'] = dict['text'].replace('\r\n', '\n')
-        # TAF-Kit path.
-        dict['text'] = re.sub(r'usage: .*?vcsn-tafkit', 'usage: vcsn-tafkit',
+        # Tools path.
+        dict['text'] = re.sub(r'usage: .*?vcsn-tools', 'usage: vcsn-tools',
                               dict['text'])
         # %%file writes `Writing`, or `Overwriting` if the file exists.
         dict['text'] = re.sub(r'^Overwriting ', 'Writing ',

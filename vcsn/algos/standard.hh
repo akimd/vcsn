@@ -86,7 +86,7 @@ namespace vcsn
     const auto& inits = initial_transitions(aut);
     std::vector<transition_t_of<Aut>> initials{begin(inits), end(inits)};
 
-    // See TAF-Kit documentation for the implementation details.
+    // See Tools documentation for the implementation details.
     //
     // (i.a) Add a new state s...
     auto ini = aut->new_state();

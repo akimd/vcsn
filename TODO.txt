@@ -38,7 +38,7 @@ and run the tests with $ASAN_SYMBOLIZER_PATH defined, something like
 For some reason, Libtool strips this flag when linking python/vcsn-cxx.so.
 To force it (which is needed), use -Wc,-fsanitize=address when linking it.
 
-Well, actually it works fine on OS X, but on GNU/Linux (ArchLinux), TAF-Kit
+Well, actually it works fine on OS X, but on GNU/Linux (ArchLinux), Tools
 works properly, but vcsn under Python fails at start:
 
     [forge@prague 37d]$ ./tests/bin/vcsn python -c 'import vcsn'
@@ -699,7 +699,7 @@ pay attention to the case of large alphabets.
 Implement more minimization algorithms (Hopcroft, Revuz, Brzozowski...).
 Work for trim automata.
 
-We need generalizations of minimization for weighted automata.  See TAF-Kit
+We need generalizations of minimization for weighted automata.  See Tools
 1 and quotient.
 
 ** "check" algorithm

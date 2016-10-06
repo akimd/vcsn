@@ -29,7 +29,7 @@ dist_TESTS += $(%C%_TESTS)
 # the dependencies, so that the test suite does not make useless
 # compilations.
 %D%/compose.log: %D%/compose
-%D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tafkit
+%D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tools
 
 .PHONY: check-demo
 check-demo:

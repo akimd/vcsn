@@ -17,8 +17,8 @@
 
 dist_TESTS += $(%C%_TESTS)
 
-$(%C%_TESTS:.chk=.log): libexec/vcsn-tafkit
+$(%C%_TESTS:.chk=.log): libexec/vcsn-tools
 
-.PHONY: check-tafkit
-check-tafkit:
+.PHONY: check-tools
+check-tools:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'
