@@ -22,6 +22,7 @@ namespace vcsn
   {
   public:
     using self_t = b;
+    using value_t = bool;
 
     static symbol sname()
     {
@@ -35,8 +36,6 @@ namespace vcsn
       eat(is, sname());
       return {};
     }
-
-    using value_t = bool;
 
     static value_t
     zero()

@@ -2,10 +2,10 @@
 
 import argparse
 import copy
-import string
-import sys
 import json
 import re
+import string
+import sys
 
 fun_def = string.Template('''
       {"$algo_name",

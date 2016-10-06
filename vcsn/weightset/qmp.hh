@@ -42,6 +42,12 @@ namespace vcsn
 
     using value_t = mpq_class;
 
+    /// Create rational weight from num and den.
+    static value_t value(int num, unsigned den)
+    {
+      return value_t{num, den};
+    }
+
     static value_t zero()
     {
       // Not value_t{0, 1} to avoid the (const char* s, int base)

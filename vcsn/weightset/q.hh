@@ -55,10 +55,16 @@ namespace vcsn
       }
 
       int num;
-      unsigned int den;
+      unsigned den;
     };
 
-    static unsigned int abs(int a)
+    /// Create rational weight from num and den.
+    static value_t value(int num, unsigned den)
+    {
+      return value_t{num, den}.reduce();
+    }
+
+    static unsigned abs(int a)
     {
       return a < 0 ? -a : a;
     }
@@ -75,14 +81,14 @@ namespace vcsn
 
     static value_t add(const value_t& l, const value_t& r)
     {
-      unsigned int cm = lcm(l.den, abs(r.den));
+      unsigned cm = lcm(l.den, abs(r.den));
       return value_t{l.num * int (cm / l.den) + r.num * int (cm / r.den),
                      cm}.reduce();
     }
 
     static value_t sub(const value_t& l, const value_t& r)
     {
-      unsigned int cm = lcm(l.den, abs(r.den));
+      unsigned cm = lcm(l.den, abs(r.den));
       return value_t{l.num * int (cm / l.den) - r.num * int (cm / r.den),
                      cm}.reduce();
     }
@@ -217,7 +223,7 @@ namespace vcsn
         {
           eat(i, '/');
 
-          // operator>> with an istream and an unsigned int silently
+          // operator>> with an istream and an unsigned silently
           // mangles a negative number into its two's complement
           // representation as a positive number.
           if (i.peek() == '-')
@@ -226,7 +232,7 @@ namespace vcsn
               eat(i, '-');
             }
 
-          unsigned int den;
+          unsigned den;
           if (!(i >> den))
             raise(*this, ": invalid denominator: ", i);
           // Make sure our rational respects our constraints.
