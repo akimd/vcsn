@@ -221,4 +221,8 @@ export CCACHE_BASEDIR=$DIR_SOURCE
 
 stderr "$BUILDFARM_HOSTNAME: $BUILDFARM_PROJECT-$BUILDFARM_NAME-$BUILDFARM_MODE"
 
+# Cannot just close stdin, as libtool is exec'ing with redirection on
+# stdin, so it fails.
+exec </dev/null
+
 set -x
