@@ -15,7 +15,7 @@ vcsn.automaton.labels = get_labels
 ## ------- ##
 
 a = vcsn.context('lal_char(abc), b').cerny(6)
-CHECK_EQ(a.info()['number of states'], 6)
+CHECK_EQ(6, a.info('number of states'))
 CHECK_EQ(meaut('cerny-6.gv'), a)
 
 
@@ -42,7 +42,7 @@ XFAIL(lambda: b.divkbaseb(2, 11),
       "divkbaseb: base (11) must be less than " +
       "or equal to the alphabet size (10)")
 
-b2 = vcsn.context('lat<lal_char(0-9), lal_char(0-2)>, b')
+b2 = vcsn.context('lat<lan(0-9), lan(0-2)>, b')
 
 XFAIL(lambda: b2.quotkbaseb(0, 2), "quotkbaseb: divisor cannot be 0")
 XFAIL(lambda: b2.quotkbaseb(2, 1), "quotkbaseb: base (1) must be at least 2")
@@ -53,12 +53,12 @@ XFAIL(lambda: b2.quotkbaseb(2, 11),
       "quotkbaseb: base (11) must be less than " +
       "or equal to the left alphabet size (10)")
 
-b3 = vcsn.context('lat<lal_char(0-9), lal_char(0-9)>, b')
+b3 = vcsn.context('lat<lan(0-9), lan(0-9)>, b')
 
 def check(k, base, exp):
     a = b3.quotkbaseb(k, base)
     CHECK_EQ(exp, a.shortest(10))
-    CHECK_EQ(a.project(0), b.divkbaseb(k, base))
+    CHECK_EQ(a.project(0), b3.project(0).divkbaseb(k, base))
 
 # FIXME: we don't parse polynomials yet.
 check(2, 2,
@@ -101,27 +101,26 @@ b = vcsn.context('lal_char(abc), b')
 z = vcsn.context('lal_char(abc), z')
 
 exp = meaut('ladybird-2.gv')
-
 CHECK_EQ(exp, b.ladybird(2))
-CHECK_EQ(vcsn.automaton(str(exp).replace(', b', ', z')), z.ladybird(2))
 
-exp = meaut('ladybird-2-zmin.gv')
-CHECK_EQ(exp,
+exp = vcsn.automaton(str(exp).replace(', b', ', z'))
+CHECK_EQ(exp, z.ladybird(2))
+
+CHECK_EQ(meaut('ladybird-2-zmin.gv'),
          vcsn.context('lal_char(abc), zmin').ladybird(2))
 
-## ------------ ##
-## levenshein.  ##
-## ------------ ##
 
-nmin = vcsn.context('lat<lan_char(abc), lan_char(bcd)>, nmin')
+## ------------- ##
+## levenshtein.  ##
+## ------------- ##
 
-exp = meaut('levenshtein.gv')
+nmin = vcsn.context('lat<lan(abc), lan(bcd)>, nmin')
+CHECK_EQ(meaut('levenshtein.gv'), nmin.levenshtein())
 
-CHECK_EQ(exp, nmin.levenshtein())
 
-## -------- ##
-## random.  ##
-## -------- ##
+## ------------------ ##
+## random_automaton.  ##
+## ------------------ ##
 
 # Expect a clique.
 c1 = vcsn.context('lal_char(a), b').random_automaton(4, 1, 4, 4)
@@ -131,10 +130,11 @@ CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
 a = vcsn.context('lal_char(a), b').random_automaton(100, .1, 20, 30)
-CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
-CHECK_EQ(100, a.info()['number of states'])
-CHECK_EQ(20, a.info()['number of initial states'])
-CHECK_EQ(30, a.info()['number of final states'])
+CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>',
+         a.info('type'))
+CHECK_EQ(100, a.info('number of states'))
+CHECK_EQ(20, a.info('number of initial states'))
+CHECK_EQ(30, a.info('number of final states'))
 
 
 # For a while, we were only able to get matching letters (a|A, b|B,
@@ -182,18 +182,19 @@ for n in range(1, 7):
     else:
         CHECK_NE([], ls)
 
+
 ## ------------------- ##
 ## random_expression.  ##
 ## ------------------- ##
 
 # Check that a random expression without any operator.
 # return only a label
-exp = vcsn.context('lan_char(a-z), b').random_expression()
+exp = vcsn.context('lan(a-z), b').random_expression()
 print("Expression: ", exp)
 CHECK(re.match(r'\w{1}|\\e', str(exp)))
 
 # Check that operators are present only if the user has specified them.
-exp = vcsn.context('lal_char(a), b')\
+exp = vcsn.context('lal(a), b')\
           .random_expression('+=1,*=0.5,{c}=1,{\\}=0',
                              length=100,
                              identities='none')
@@ -224,11 +225,11 @@ CHECK(str(exp).count('a') < 15)
 
 # Check the weight generation on expression.
 exp = vcsn.context('lal_char(abc), b')\
-          .random_expression('+,*,!,k.=1,w="1=1"',
+          .random_expression('+,k.=1,w="1=1",length=20',
                              identities='none')
 print("Expression: ", exp)
-CHECK(str(exp).find('<1>') is not -1)
-CHECK(str(exp).find('<0>') is -1)
+CHECK_NE(str(exp).find('<1>'), -1)
+CHECK_EQ(str(exp).find('<0>'), -1)
 
 # Check rweight and lweight.
 exp = vcsn.context('lal_char(abc), b')\
@@ -245,10 +246,11 @@ CHECK_EQ(info['rweight'], 0)
 ## ---------------------- ##
 
 a = vcsn.context('lal_char(a), b').random_deterministic(100)
-CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>', a.info()['type'])
-CHECK_EQ(100, a.info()['number of states'])
-CHECK_EQ(1, a.info()['number of initial states'])
-CHECK_EQ(1, a.info()['number of final states'])
+CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>',
+         a.info('type'))
+CHECK_EQ(100, a.info('number of states'))
+CHECK_EQ(1, a.info('number of initial states'))
+CHECK_EQ(1, a.info('number of final states'))
 CHECK(a.is_complete())
 
 ## --- ##

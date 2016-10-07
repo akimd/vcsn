@@ -699,7 +699,7 @@ namespace vcsn
     /// The weight pushing automaton of \a aut.
     automaton push_weights(const automaton& aut);
 
-    /// Produce a random automaton.
+    /// A random automaton.
     ///
     /// \param ctx
     ///    The context of the result.
@@ -731,7 +731,7 @@ namespace vcsn
                                boost::optional<unsigned> max_labels = {},
                                float loop_chance = 0.0);
 
-    /// Produce a random deterministic automaton.
+    /// A random deterministic automaton.
     ///
     /// \param ctx
     ///    The context of the result.
@@ -739,7 +739,8 @@ namespace vcsn
     ///    The number of states wanted in the automata (>0).
     automaton random_automaton_deterministic(const context& ctx,
                                              unsigned num_states);
-    /// Produce a random expression.
+
+    /// A random expression.
     ///
     /// \param ctx
     ///    The context of the result.
@@ -753,7 +754,7 @@ namespace vcsn
     expression random_expression(const context& ctx, const std::string& param,
                                  identities ids);
 
-    /// Produce a random weight.
+    /// A random weight.
     ///
     /// \param ctx
     ///    The context of the result.

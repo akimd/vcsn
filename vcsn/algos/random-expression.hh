@@ -12,7 +12,7 @@
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/random.hh>
-#include <vcsn/misc/unordered_set.hh>
+#include <vcsn/misc/unordered_map.hh>
 
 namespace vcsn
 {
@@ -39,7 +39,6 @@ namespace vcsn
                              RandomGenerator& gen)
         : rs_{rs}
         , gen_{gen}
-        , random_weight_{gen_, ws_}
       {
         parse_param_(param);
       }
@@ -68,12 +67,6 @@ namespace vcsn
       }
 
     private:
-      using operator_t = std::map<std::string, float>;
-      using operator_set_t = std::unordered_set<std::string>;
-      /// Vector of weights associated with the operators
-      /// aka the probabilities to pick each operators.
-      using proba_op_t = std::vector<float>;
-
       /// FIXME: maybe use something similar to Boost.ProgramOptions
       /// or getargs.
       void parse_param_(const std::string& param)
@@ -96,7 +89,7 @@ namespace vcsn
             float value = 1;
             if (eq != std::string::npos)
               value = lexical_cast<float>(tok_arg.substr(eq + 1));
-            if (has(nullary_op_, op) || has(unary_op_, op) || has(binary_op_, op))
+            if (has(arities_, op))
               operators_[op] = value;
             else if (op == "length")
               length_ = value;
@@ -104,7 +97,8 @@ namespace vcsn
               raise("random_expression: invalid operator: ", op);
           }
         }
-        proba_op_ = transform(operators_, [](const auto& v){ return v.second; });
+        proba_op_ = transform(operators_,
+                              [](const auto& v){ return v.second; });
       }
 
       /// Print random weight.
@@ -125,7 +119,7 @@ namespace vcsn
       void print_unary_exp_(std::ostream& out, unsigned length,
                             const std::string& op) const
       {
-        // prefix
+        // Prefix.
         if (op == "!" || op == "k.")
         {
           out << '(';
@@ -136,7 +130,7 @@ namespace vcsn
           print_random_expression_(out, length - 1);
           out << ')';
         }
-        // postfix
+        // Postfix.
         else
         {
           out << '(';
@@ -177,24 +171,31 @@ namespace vcsn
         if (operators_.empty())
           print_label_(out);
 
-        // 1 symbol left: print a label.
+        // One symbol left: print a label.
         else if (length == 1)
           print_label_(out);
 
-        // binary, unary or nullary operators are possible
-        // just choose randomly one (with associated weight probability)
-        // and print the associated expression.
+        // All operators are possible, choose one randomly (with
+        // associated weight probability) and print the associated
+        // expression.
         else
         {
           // Choose an operator.
-          auto it = chooser_it_(proba_op_, operators_);
-          auto op = it->first;
-          if (has(nullary_op_, op))
-            out << op;
-          else if (has(unary_op_, op))
-            print_unary_exp_(out, length, op);
-          else
-            print_binary_exp_(out, length, op);
+          auto op = chooser_it_(proba_op_, operators_)->first;
+          switch (arities_.at(op))
+            {
+            case 0:
+              out << op;
+              break;
+            case 1:
+              print_unary_exp_(out, length, op);
+              break;
+            case 2:
+              print_binary_exp_(out, length, op);
+              break;
+            default:
+              assert(!"invalid arity");
+            }
         }
         return out;
       }
@@ -202,13 +203,40 @@ namespace vcsn
       expressionset_t rs_;
       weightset_t ws_;
       unsigned length_;
-      operator_t operators_;
-      operator_set_t nullary_op_ = { "\\e", "\\z" };
-      operator_set_t unary_op_   = { "!", "{c}", "*", "{T}", "k.", ".k" };
-      operator_set_t binary_op_  = { "&", "&:", ":", ".", "<+", "%", "+", "{/}", "{\\}" };
-      proba_op_t proba_op_;
+      /// For each operator, its probability.
+      std::map<std::string, float> operators_;
+      /// Number of arguments of each operator.
+      std::unordered_map<std::string, int> arities_
+      {
+        // Nullary.
+        {"\\e", 0},
+        {"\\z", 0},
+        // Unary.
+        {"!", 1},
+        {"{c}", 1},
+        {"*", 1},
+        {"{T}", 1},
+        {"k.", 1},
+        {".k", 1},
+        // Binary.
+        {"&", 2},
+        {"&:", 2},
+        {":", 2},
+        {".", 2},
+        {"<+", 2},
+        {"%", 2},
+        {"+", 2},
+        {"{/}", 2},
+        {"{\\}",2},
+      };
+
+      /// Vector of weights associated with the operators, i.e., the
+      /// probabilities to pick each operator.
+      std::vector<float> proba_op_;
+      /// Random generator.
       RandomGenerator& gen_;
-      random_weight<weightset_t, RandomGenerator> random_weight_;
+      /// Random weights generator.
+      random_weight<weightset_t, RandomGenerator> random_weight_{gen_, ws_};
       discrete_chooser<RandomGenerator> chooser_it_{gen_};
     };
 
