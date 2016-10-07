@@ -55,7 +55,6 @@ def ignore(fun):
 unsupported_types = [
     'direction',
     'expansion',
-    'identities',
     'letter_class_t',
     'std::istream',
     'std::vector<automaton>',
@@ -124,6 +123,8 @@ def format_function_doc(fun, formals):
     def is_supported(name):
         for formal in formals:
             if formal['arg'] == name:
+                if formal['class'] == 'context':
+                    return False
                 return True
         return False
 
@@ -270,7 +271,7 @@ algos_doc = []
 
 
 # The list of dyn types, loaded from JSON.
-dyn_types = []
+dyn_types = ['identities']
 
 def add_cat(algos):
     for t in dyn_types:

@@ -27,6 +27,7 @@ namespace vcsn
       bool_ = 'B',
       expression = 'E',
       float_ = 'F',
+      identities = 'D',
       label = 'L',
       number = 'N',
       polynomial = 'P',
@@ -191,6 +192,14 @@ namespace vcsn
       unsigned res;
       stream >> res;
       return res;
+    }
+
+    template <>
+    inline dyn::identities
+    convert<dyn::identities>(const std::string& str, const dyn::context& ctx,
+                             const std::string& format)
+    {
+      return str;
     }
   }
 

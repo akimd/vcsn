@@ -55,7 +55,7 @@ namespace {
       // Put GNU getopt() in POSIXLY_CORRECT mode.
       "+"
 #endif
-      "ABEFLNPSWchf:e:C:O:o:qI:";
+      "ABDEFLNPSWchf:e:C:O:o:qI:";
 
     while (true)
       switch (char opt = getopt(argc, argv, optstring))
@@ -118,6 +118,7 @@ namespace {
 
         case 'A':
         case 'B':
+        case 'D':
         case 'E':
         case 'F':
         case 'L':
@@ -279,6 +280,7 @@ namespace {
          "                'lal, b', 'law, q', 'lan(abc), zmin', etc.\n"
          "  -A            input is an automaton\n"
          "  -B            input is a boolean\n"
+         "  -D            input is an identity\n"
          "  -E            input is a rational expression\n"
          "  -F            input is a float\n"
          "  -L            input is a label (or a word)\n"
