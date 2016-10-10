@@ -64,7 +64,7 @@ urbi_resolve_dir ()
   while true
   do
     eval res="$dir"
-    if test x"$dir" == x"$res"; then
+    if test x"$dir" = x"$res"; then
       break
     fi
     dir=$res

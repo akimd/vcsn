@@ -1,8 +1,16 @@
 # Check IPython's ability to import vcsn.
 import os, sys
+
+def log(e):
+    print(e)
+    print(e, file=sys.stderr)
+
 try:
+    log("Trying to import vcsn")
     import vcsn
+    log("Import vcsn successfully")
 except Exception as e:
-    sys.stderr.write("Could not import vcsn in IPython:\n")
-    sys.stderr.write("%s\n" % e)
+    log("Could not import vcsn in IPython:")
+    log(e)
     os._exit(1)
+log("Done")
