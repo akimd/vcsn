@@ -233,18 +233,18 @@ namespace {
     // Pretty-print it.
     constexpr size_t max_width = 70;
     size_t space_left = max_width - 2;
-    std::cout << "  ";
+    std::cout << ' ';
     for (const auto& a : names)
-      {
-        if (space_left < a.size() + 1)
-          {
-            std::cout << "\n  ";
-            space_left = max_width - 2;
-          }
-
-        std::cout << a << ' ';
-        space_left -= a.size() + 1;
-      }
+      if (space_left < (a.size()+1))
+        {
+          std::cout << "\n  " << a;
+          space_left = max_width - (a.size() + 2);
+        }
+      else
+        {
+          std::cout << ' ' << a ;
+          space_left -= a.size() + 1;
+        }
 
     std::cout << '\n';
     return 0;
