@@ -54,6 +54,12 @@ namespace vcsn
                   + "'");
         }
     }
+
+    std::string weight(const std::string& w)
+    {
+      return w.empty() ? std::string{} : "<" + w + ">";
+
+    }
   }
 
 
@@ -174,14 +180,39 @@ namespace vcsn
     edit->open(open_);
 
     for (auto t: transitions_)
-      edit->add_transition(std::get<0>(t), std::get<1>(t),
-                           std::get<2>(t), std::get<3>(t));
+      try
+        {
+          edit->add_transition(std::get<0>(t), std::get<1>(t),
+                               std::get<2>(t), std::get<3>(t));
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e, "  while adding transition: (", std::get<0>(t), ", ",
+                weight(std::get<3>(t)), std::get<2>(t), ", ",
+                std::get<1>(t), ')');
+        }
 
     for (auto p: initial_states_)
-      edit->add_initial(p.first, p.second);
+      try
+        {
+          edit->add_initial(p.first, p.second);
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e, "  while setting initial state: ", weight(p.second),
+                p.first);
+        }
 
     for (auto p: final_states_)
-      edit->add_final(p.first, p.second);
+      try
+        {
+          edit->add_final(p.first, p.second);
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e, "  while setting final state: ", weight(p.second), p.first);
+        }
+
     return edit->result();
   }
 }

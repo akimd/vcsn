@@ -517,6 +517,30 @@ CHECK_EQ(r'''digraph
          vcsn.automaton('''$ -> "foo"
          "foo" -> $''', strip=False))
 
+# Invalid transitions
+XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
+$ -> 0 <a>
+0 -> $ <1/2>''', 'daut'), '''Q: invalid numerator: a
+  while reading: a
+  while reading: <a>
+  while adding transitions: ($, <a>, 0)''')
+
+XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
+$ -> 0 <1/2>
+0 -> $ <a>''', 'daut'), '''Q: invalid numerator: a
+  while reading: a
+  while reading: <a>
+  while adding transitions: (0, <a>, $)''')
+
+XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
+$ -> 0 <1/2>
+0 -> 1 <2/a>a
+1 -> $ <2>''', 'daut'), '''Q: invalid denominator: a
+  while reading: 2/a
+  while reading: <2/a>a
+  while adding transitions: (0, <2/a>a, 1)''')
+
+
 ## ----------- ##
 ## I/O: FAdo.  ##
 ## ----------- ##
@@ -569,7 +593,13 @@ XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3 * 5 2
 # Trailing characters in acceptor
 XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3
   2 a 0
-  3 b 1 c''', 'fado'))
+  3 b 1 c''', 'fado'), 'unexpected trailing characters after: 3 b 1')
+
+# Epsilon in DFA
+XFAIL(lambda: vcsn.automaton('''@DFA 0 1
+  2 @epsilon 0
+  3 b 1''', 'fado'), "unexpected '@epsilon' in DFA, in: 2 @epsilon 0")
+
 
 ## --------------- ##
 ## Output: Grail.  ##

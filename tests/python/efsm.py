@@ -148,3 +148,12 @@ if have_ofst:
 
 else:
     SKIP('OpenFST is missing')
+
+# Invalid final weight
+XFAIL(lambda: meaut('bad_final_weight', 'efsm'), '''Zmin: unexpected d
+  while reading: 7df
+  while setting final state: <7df>0''')
+# Invalid transition weight
+XFAIL(lambda: meaut('bad_weight', 'efsm'), '''Zmin: unexpected e
+  while reading: 4er
+  while adding transition: (0, <4er>a, 1)''')

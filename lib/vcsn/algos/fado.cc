@@ -75,7 +75,7 @@ namespace vcsn
               is_transducer = state == "@Transducer";
               is_dfa = state == "@DFA";
               if (!is_transducer && !is_dfa && state != "@NFA")
-                raise(file, ": bad automaton kind: ", state);
+                raise(file, ": bad automaton kind in first line: ", state);
 
               while (!(state = read_id(ss)).empty())
                 {
@@ -83,7 +83,8 @@ namespace vcsn
                     break;
                   else if (state == "*")
                     {
-                      require(!is_dfa, "fado: invalid '*' for DFA");
+                      require(!is_dfa, "fado: invalid '*' for DFA"
+                              " in first line");
                       require(!init, "fado: multiple '*' in first line");
                       init = true;
                     }
@@ -109,7 +110,10 @@ namespace vcsn
                 }
               if (l1 == "@epsilon")
                 {
-                  require(!is_dfa, "fado: unexpected '@epsilon' in DFA");
+                  require(!is_dfa, "fado: unexpected '@epsilon' in DFA, in: ",
+                          s1, ' ', l1, ' ',
+                          l2, s2.get().empty() ? "" : " ",
+                          s2);
                   l1 = "\\e";
                 }
               if (is_transducer)
@@ -121,7 +125,8 @@ namespace vcsn
               else
                 {
                   require(s2 == "",
-                      "fado: unexpected trailling characters after: ", l2);
+                          "fado: unexpected trailing characters after: ", s1,
+                          ' ', l1, ' ', l2);
                   edit.add_transition(s1, l2, l1);
                 }
             }

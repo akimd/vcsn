@@ -145,10 +145,10 @@ namespace vcsn
               if (!ctx.empty())
                 continue;
             }
+
           std::istringstream ss{line};
-          string_t s{read_state(ss)}, d{read_state(ss)};
-          if (s == "$")
-            s = "$pre";
+          auto s = string_t{read_state(ss)};
+          auto d = string_t{read_state(ss)};
           if (d.get().empty()) // Declaring a state with no transitions
             {
               edit->add_state(s);
@@ -158,9 +158,17 @@ namespace vcsn
             d = read_state(ss);
           require(!d.get().empty(),
                   "invalid daut file: expected destination after: ", s);
-          if (d == "$")
-            d = "$post";
-          edit->add_entry(s, d, string_t{read_entry(ss)});
+          auto entry = string_t{read_entry(ss)};
+          try
+            {
+              edit->add_entry(s == "$" ? string_t{"$pre"} : s,
+                              d == "$" ? string_t{"$post"} : d, entry);
+            }
+          catch (const std::runtime_error& e)
+            {
+              raise(e, "  while adding transitions: (", s, ", ", entry, ", ",
+                    d, ')');
+            }
         }
 
       if (!edit)

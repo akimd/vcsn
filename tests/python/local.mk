@@ -209,6 +209,8 @@ EXTRA_DIST +=                                           \
   %D%/efsm.dir/abs.efsm                                 \
   %D%/efsm.dir/ascii-to-one.efsm                        \
   %D%/efsm.dir/ascii-to-one.gv                          \
+  %D%/efsm.dir/bad_final_weight.efsm                    \
+  %D%/efsm.dir/bad_weight.efsm                          \
   %D%/efsm.dir/char-string.efsm                         \
   %D%/efsm.dir/lal-char-log.gv                          \
   %D%/efsm.dir/lal-char-zmin.efsm                       \
