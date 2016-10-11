@@ -208,7 +208,7 @@ AM_IPYNB_LOG_DEPS =                             \
 $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 
 # Executables depends on Vcsn executable, not simply the librairy.
-%D%/Executables.log: libexec/vcsn-tools                         
+%D%/Executables.log: libexec/vcsn-tools
 
 ## FIXME: Currently I have no means to flag failing pages, so I have
 ## to repeat $(dist_notebooks_DATA) but without the failing pages.

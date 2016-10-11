@@ -141,7 +141,7 @@ namespace {
         case 'h':
           print_usage(argv[0]);
           exit(0);
-          
+
         case '?':
           //ERROR
           raise("unknown option: ", optarg);
@@ -337,7 +337,7 @@ try
   auto algo = std::string(argv[1]);
   if (algo == "--commands" || algo == "commands" || algo == "-c")
     return list_commands();
-  if (algo == "-h" || algo == "--help") 
+  if (algo == "-h" || algo == "--help")
     return print_usage();
 
   std::replace(algo.begin(), algo.end(), '-', '_');

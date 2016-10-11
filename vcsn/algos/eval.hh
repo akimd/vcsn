@@ -145,7 +145,7 @@ namespace vcsn
           }
         return v1[aut_->post()];
       }
-        
+
       /// Polynomial implementation.
       weight_t operator()(const polynomial_t& poly) const
       {

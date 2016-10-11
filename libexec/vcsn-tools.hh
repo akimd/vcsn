@@ -56,14 +56,14 @@ namespace vcsn
     };
 
     /// The documentation of an algorithm from dyn algos:
-    /// Separate from struct algo because it is not duplicated when optional 
+    /// Separate from struct algo because it is not duplicated when optional
     /// parameters are involved.
     struct algo_doc
     {
       std::string declaration;
       std::string doc;
     };
-    
+
     /// Map from an algo name to its descriptor structure.
     extern const std::unordered_multimap<std::string, algo> algos;
     extern const std::unordered_multimap<std::string, algo_doc> algos_doc;

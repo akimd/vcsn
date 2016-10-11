@@ -73,7 +73,7 @@ CHECK_EQ(metext('rdiv.gv'), aut('a*b*').rdivide(aut('a+b')))
 
 # Cross check with derived_term and inductive,standard.
 def check(l, r):
-    for f in [ldivide, rdivide]: 
+    for f in [ldivide, rdivide]:
         print("Checking: {}, {}".format(l, r))
 
         divide_exp = f(l, r)

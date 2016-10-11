@@ -48,5 +48,5 @@ $(from_tools_gen): %D%/tools.stamp
 	fi
 
 pkglibexec_PROGRAMS = %D%/vcsn-tools
-%C%_vcsn_tools_SOURCES = $(from_tools_gen) %D%/vcsn-tools.cc %D%/vcsn-tools.hh 
+%C%_vcsn_tools_SOURCES = $(from_tools_gen) %D%/vcsn-tools.cc %D%/vcsn-tools.hh
 %C%_vcsn_tools_LDADD = $(all_libctx) $(libvcsn)

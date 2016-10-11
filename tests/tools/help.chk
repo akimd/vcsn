@@ -55,7 +55,7 @@ For more help about available options, please use "vcsn tools --help"
 EOF
 
 
-check shortest --help <<EOF 
+check shortest --help <<EOF
 usage: vcsn shortest [OPTIONS...] [ARGS...]
 
 Available versions:
@@ -71,7 +71,7 @@ EOF
 
 
 
-check multiply --help <<EOF 
+check multiply --help <<EOF
 usage: vcsn multiply [OPTIONS...] [ARGS...]
 
 Available versions:

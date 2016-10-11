@@ -35,23 +35,23 @@ Some notes on the files that are in this directory:
 VM/vcsn.box is the full installation, with VCSN compiled.  This file
   is large (~1G) so it is best.  This, and VM/Vagrantfile (see below)
   would be what is distributed to users.
- 
+
 VM/Vagrantfile contains instructions for `vagrant' for setting up the
   VCSN virtual machine.
- 
+
 The following files are only useful for people who want to create
 `vcsn.box':
- 
+
 unstable64.box is a `clean' installation of Debian (unstable); patched
   for Vagrant use.  See README.unstable64 (attached) for instructions
   on how it was created.  This base box can be downloaded from
   minsky:~ams/unstable64.box.
- 
+
 Vagrantfile contains the instructions for Vagrant that it needs to
   execute.  This file might need to be edited depending on what kind
   of machine is being used to build.  It is used by `vagrant' for
   setting up the unstable64 virtual machine.
- 
+
 vcsn-bootstrap.sh contains commands to install any build dependencies
   required for VCSN; fetch the latest version of VCSN; and finally
   fires up the notebook.

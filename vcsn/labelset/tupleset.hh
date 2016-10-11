@@ -418,8 +418,8 @@ namespace vcsn
                       return l;
                     }
                  });
-      
-      if (valid) 
+
+      if (valid)
         return res;
       else
         return boost::none;
