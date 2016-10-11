@@ -5,6 +5,70 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-10-11
+### TAF-Kit is replaced by Tools
+The new command line interface is now automatically generated
+from the algorithms in dyn, allowing it to support a lot more
+functions than previously.
+
+The supported algorithms are:
+
+    accessible add ambiguous-word are-equivalent are-isomorphic cat
+    cerny coaccessible codeterminize cominimize complement complete
+    component compose concatenate condense conjugate conjunction
+    constant-term context-of copy costandard cotrie de-bruijn
+    delay-automaton derivation derived-term determinize difference
+    divkbaseb eliminate-state eval expand expression-one expression-zero
+    factor focus get-format has-bounded-lag has-lightening-cycle
+    has-twins-property identities-of inductive infiltrate insplit
+    is-accessible is-ambiguous is-coaccessible is-codeterministic
+    is-complete is-costandard is-cycle-ambiguous is-deterministic
+    is-empty is-eps-acyclic is-functional is-letterized is-normalized
+    is-out-sorted is-partial-identity is-proper is-realtime is-standard
+    is-synchronized is-synchronized-by is-synchronizing is-trim
+    is-useless is-valid join ladybird ldivide less-than letterize
+    levenshtein lgcd lift lightest lightest-automaton lweight
+    make-context make-word-context minimize multiply normalize
+    num-components num-tapes pair partial-identity prefix project proper
+    push-weights quotkbaseb random-automaton
+    random-automaton-deterministic random-expression random-weight
+    rdivide realtime reduce rweight scc set-format shortest shuffle sort
+    split standard star star-height star-normal-form strip subword
+    suffix synchronize synchronizing-word thompson to-automaton
+    to-expansion to-expression transpose transposition trie trim tuple
+    type u universal weight-series zpc
+
+To get more information about a particular algorithm, you can type `vcsn COMMAND -h`:
+
+    $ vcsn eval --help
+    usage: vcsn eval [OPTIONS...] [ARGS...]
+
+    Available versions:
+     eval: AUT:automaton P:polynomial -> weight
+        Evaluate P on AUT.
+
+     eval: AUT:automaton L:word -> weight
+        Evaluate L on AUT.
+
+    For more help about available options, please use "vcsn tools --help"
+
+You can for example generate the Thompson automaton that accepts `ab*`:
+
+    $ vcsn thompson 'ab*' -O daut
+    $ -> 0
+    0 -> 1 a
+    1 -> 4 \e
+    2 -> 3 b
+    3 -> 2 \e
+    3 -> 5 \e
+    4 -> 2 \e
+    4 -> 5 \e
+    5 -> $
+
+For more information, please consult the Executables documentation page, and
+`vcsn tools -h`.
+
+
 ## 2016-09-19
 ### automaton.eval supports polynomials
 It is now possible to evaluate polynomials of words on automata.
