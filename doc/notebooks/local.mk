@@ -207,7 +207,7 @@ AM_IPYNB_LOG_DEPS =                             \
   $(VCSN_PYTHON_DEPS)
 $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
 
-# Executables depends on Vcsn executable, not simply the librairy.
+# Executables depends on vcsn tools, not just the library.
 %D%/Executables.log: libexec/vcsn-tools
 
 ## FIXME: Currently I have no means to flag failing pages, so I have
@@ -412,7 +412,7 @@ MATHJAX_OK = <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/
 # URLs.  So change only [\w.]+.ipynb.
 	$(AM_V_at)$(PERL) -pi					\
 	   -e 's{\Q$(MATHJAX_BAD)\E}'"{$(MATHJAX_OK)}g;"	\
-	   -e 's{(<a href="[\w.]+\.)ipynb}{$$1html}g;'		\
+	   -e 's{(<a href="[-\w.]+\.)ipynb}{$$1html}g;'		\
 	   "$@.tmp"
 	$(AM_V_at)mv -f "$@.tmp" "$@"
 
