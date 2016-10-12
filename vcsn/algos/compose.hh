@@ -452,7 +452,7 @@ namespace vcsn
   make_compose_automaton(const Lhs& lhs, const Rhs& rhs)
   {
     auto l = focus<OutTape>(lhs);
-    auto r = insplit(focus<InTape>(rhs), Lazy);
+    auto r = insplit(focus<InTape>(rhs), true);
     using res_t = compose_automaton<Lazy,
                                     focus_automaton<OutTape, Lhs>,
                                     decltype(r)>;

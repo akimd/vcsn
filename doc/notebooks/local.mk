@@ -243,6 +243,7 @@ $(%C%_TESTS:.ipynb=.log): $(AM_IPYNB_LOG_DEPS)
   %D%/automaton.cominimize.ipynb                \
   %D%/automaton.complement.ipynb                \
   %D%/automaton.complete.ipynb                  \
+  %D%/automaton.compose.ipynb                   \
   %D%/automaton.conjugate.ipynb                 \
   %D%/automaton.conjunction.ipynb               \
   %D%/automaton.context.ipynb                   \

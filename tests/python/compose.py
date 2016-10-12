@@ -236,3 +236,18 @@ check(meaut('left.gv'),
 
 CHECK_EQ(metext('result.gv'),
          meaut('left.gv').compose(meaut('right.gv'), lazy=True).accessible())
+
+
+# Test laziness on strict composition
+ctx = vcsn.context("lat<lan<char>, lan<char>>, b")
+fr_to_en = ctx.expression("chien|dog + chat|cat").automaton()
+en_to_es = ctx.expression("dog|perro + cat|gato").automaton()
+fr_to_es_lazy = fr_to_en.compose(en_to_es, lazy=True)
+chien = ctx.expression("chien|chien").automaton()
+c2 = chien.compose(fr_to_es_lazy)
+
+# FIXME: info resolves part of the laziness (because it calls
+# number_of_accessible_states etc. which, stupidly, do not respect
+# laziness).  This is to be fixed at some point, but in the meanwhile,
+# just be cautious about calling info.
+CHECK_EQ(fr_to_es_lazy.info('number of lazy states'), 1)
