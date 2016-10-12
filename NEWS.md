@@ -68,6 +68,51 @@ You can for example generate the Thompson automaton that accepts `ab*`:
 For more information, please consult the Executables documentation page, and
 `vcsn tools -h`.
 
+## 2016-10-04
+### fado: transducers and comments support
+It is now possible to read and produce transducers in FAdo format.  Comments
+are also supported in the parser.
+
+    In [1]: a = vcsn.automaton(data='''
+            @Transducer 0 2 * 0 # Final * Initial
+            0 0 @epsilon 1
+            0 0 0 0
+            0 1 @epsilon 1
+            0 1 1 0
+            1 @epsilon 0 2
+            1 @epsilon 1 2
+            1 0 0 1
+            1 1 1 1''')
+
+    In [2]: print(a.format('fado'))
+    @Transducer 0 2 * 0
+    0 0 @epsilon 1
+    0 0 0 0
+    0 1 @epsilon 1
+    0 1 1 0
+    1 @epsilon 0 2
+    1 @epsilon 1 2
+    1 0 0 1
+    1 1 1 1
+
+## 2016-09-27
+### daut native parser and producer
+Daut is a simplified Dot syntax for automata.  This format was only available
+in Python. It is now possible to read and produce it in C++.
+
+    $ vcsn cat -A -I daut -O daut -f lal_char_q.daut
+    context = letterset<char_letters(abc)>, q
+    $ -> 0 <3>
+    0 -> 1 <1/2>a, <1/3>b
+    1 -> $ <2>
+
+## 2016-09-21
+### improved compatibility with newer OpenFST
+As OpenFST only supports a single initial state, pre is showed in case of
+several ones, with spontaneous transitions to them.  Pre was represented by a
+very large integer which was read as a negative one in newer version of
+OpenFST, thus raising an error.  The state number immediately after the highest
+state number is now used.
 
 ## 2016-09-19
 ### automaton.eval supports polynomials
