@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 # Check the factories (of automata, expressions, etc.)
-
+import re
 import vcsn
 from test import *
 
@@ -227,12 +227,6 @@ for _ in range(10):
     print('Length =', length)
     CHECK(length < 15)
 
-# Check the weight generation on expression.
-exp = randexp('lal_char(abc), b',
-              '+,w.=1,w="1=1",length=20', identities='none')
-CHECK_NE(str(exp).find('<1>'), -1)
-CHECK_EQ(str(exp).find('<0>'), -1)
-
 # Check rweight and lweight.
 exp = randexp('lal_char(abc), b',
               '+=1,!=0.5,w.=1,length=50', identities='none')
@@ -240,6 +234,19 @@ info = exp.info()
 print("Info: ", info)
 CHECK_NE(info['lweight'], 0)
 CHECK_EQ(info['rweight'], 0)
+
+# Check the weight generation on expression.
+exp = randexp('lal_char(abc), b',
+              '+, w., w="1=1", length=20', identities='none')
+CHECK_NE(str(exp).find('<1>'), -1)
+CHECK_EQ(str(exp).find('<0>'), -1)
+
+# Check `w=specs`.
+exp = randexp('lal(abc), z',
+              'w., .w, w="min=-10, max=10"', length=100, identities='none')
+for m in re.findall('<(.*?)>', str(exp)):
+    CHECK(-10 <= int(m))
+    CHECK(int(m) <= 10)
 
 
 

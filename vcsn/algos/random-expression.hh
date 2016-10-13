@@ -74,7 +74,7 @@ namespace vcsn
         // Set default value.
         length_ = 6;
         using tokenizer = boost::tokenizer<boost::escaped_list_separator<char>>;
-        auto sep = boost::escaped_list_separator<char>("-", ",", "\"");
+        auto sep = boost::escaped_list_separator<char>("#####", ",", "\"");
         auto tok = tokenizer(param, sep);
         for (auto it = tok.begin(); it != tok.end(); ++it)
         {
