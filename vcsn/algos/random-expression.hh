@@ -153,12 +153,12 @@ namespace vcsn
           print_label_(out);
         else
         {
-          auto dis = std::uniform_int_distribution<>(1, length - 1);
+          auto dis = std::uniform_int_distribution<>(1, length - 2);
           auto num_lhs = dis(gen_);
           out << "(";
           print_random_expression_(out, num_lhs);
           out << op;
-          print_random_expression_(out, length - num_lhs);
+          print_random_expression_(out, length - 1 - num_lhs);
           out << ")";
         }
       }

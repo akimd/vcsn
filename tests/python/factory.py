@@ -222,10 +222,9 @@ CHECK_EQ(info['zero'], 0)
 for _ in range(10):
     exp = randexp('lal_char(a), b',
                   '+', length=15, identities='none')
-    # FIXME: this is the width, not the length!
-    length = str(exp).count('a')
+    length = exp.info('length')
     print('Length =', length)
-    CHECK(length < 15)
+    CHECK(length <= 15)
 
 # Check rweight and lweight.
 exp = randexp('lal_char(abc), b',
