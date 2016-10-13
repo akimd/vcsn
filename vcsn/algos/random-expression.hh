@@ -120,10 +120,10 @@ namespace vcsn
                             const std::string& op) const
       {
         // Prefix.
-        if (op == "!" || op == "k.")
+        if (op == "!" || op == "w.")
         {
           out << '(';
-          if (op == "k.")
+          if (op == "w.")
             print_weight_(out);
           else
             out << op;
@@ -135,7 +135,7 @@ namespace vcsn
         {
           out << '(';
           print_random_expression_(out, length - 1);
-          if (op == ".k")
+          if (op == ".w")
             print_weight_(out);
           else
             out << op;
@@ -216,8 +216,8 @@ namespace vcsn
         {"{c}", 1},
         {"*", 1},
         {"{T}", 1},
-        {"k.", 1},
-        {".k", 1},
+        {"w.", 1},
+        {".w", 1},
         // Binary.
         {"&", 2},
         {"&:", 2},

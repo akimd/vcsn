@@ -229,13 +229,13 @@ for _ in range(10):
 
 # Check the weight generation on expression.
 exp = randexp('lal_char(abc), b',
-              '+,k.=1,w="1=1",length=20', identities='none')
+              '+,w.=1,w="1=1",length=20', identities='none')
 CHECK_NE(str(exp).find('<1>'), -1)
 CHECK_EQ(str(exp).find('<0>'), -1)
 
 # Check rweight and lweight.
 exp = randexp('lal_char(abc), b',
-              '+=1,!=0.5,k.=1,length=50', identities='none')
+              '+=1,!=0.5,w.=1,length=50', identities='none')
 info = exp.info()
 print("Info: ", info)
 CHECK_NE(info['lweight'], 0)
