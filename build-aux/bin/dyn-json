@@ -24,8 +24,23 @@ formal_re = re.compile(r'^(?P<type>(?P<const>const\s+)?(?P<class>[:\w<>]+)&?)'
 
 
 def formals_list(formals):
-    return re.split(r',\s*', formals)
-
+    # Using split(',\s*') is tempting, but will break default values
+    # that contain quoted commas, for example
+    # const std::string& param = "+, ., *=.2, w., .w, length=10"
+    res = []
+    s = ""
+    in_string = False
+    for c in formals:
+        if c == ',' and not in_string:
+            res.append(s.strip())
+            s = ""
+        elif c in ['"', "'"]:
+            in_string = not in_string
+            s += c
+        else:
+            s += c
+    res.append(s.strip())
+    return res
 
 def process_doc(doc):
     res = {}
@@ -90,12 +105,18 @@ def process_doc(doc):
 
     return res
 
+def formal_to_dict(formal):
+    m = formal_re.match(formal)
+    if m:
+        return m.groupdict()
+    else:
+        raise RuntimeError("invalid formal parameter {}".format(formal))
 
 def process_function(fun):
     # Split the formal parameters into a list.
     fun['formals'] = formals_list(fun['formals'])
     # And transform each of them into a dict.
-    fun['formals'] = [formal_re.match(f).groupdict() for f in fun['formals']]
+    fun['formals'] = [formal_to_dict(f) for f in fun['formals']]
     fun['doc'] = process_doc(fun['doc'])
     return fun
 
