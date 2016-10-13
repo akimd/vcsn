@@ -751,7 +751,8 @@ namespace vcsn
     ///    example: "+=1,.=2,{T}=0.5,length=6"
     /// \param ids
     ///    The identities to use for the expression
-    expression random_expression(const context& ctx, const std::string& param,
+    expression random_expression(const context& ctx,
+                                 const std::string& param,
                                  identities ids);
 
     /// A random weight.
