@@ -187,18 +187,21 @@ for n in range(1, 7):
 ## random_expression.  ##
 ## ------------------- ##
 
-# Check that a random expression without any operator.
-# return only a label
-exp = vcsn.context('lan(a-z), b').random_expression()
-print("Expression: ", exp)
+def randexp(c, *args, **kwargs):
+    if not isinstance(c, vcsn.context):
+        c = vcsn.context(c)
+    res = c.random_expression(*args, **kwargs)
+    print("Expression: ", res)
+    return res
+
+# Check that a random expression without any operator return only a
+# label.  FIXME: not so nice!
+exp = randexp('lan(a-z), b')
 CHECK(re.match(r'\w{1}|\\e', str(exp)))
 
 # Check that operators are present only if the user has specified them.
-exp = vcsn.context('lal(a), b')\
-          .random_expression('+=1,*=0.5,{c}=1,{\\}=0',
-                             length=100,
-                             identities='none')
-print("Expression: ", exp)
+exp = randexp('lal(a), b',
+              '+=1,*=0.5,{c}=1,{\\}=0', length=100, identities='none')
 info = exp.info()
 print("Info: ", info)
 CHECK_NE(info['add'], 0)
@@ -215,31 +218,30 @@ CHECK_EQ(info['rweight'], 0)
 CHECK_EQ(info['shuffle'], 0)
 CHECK_EQ(info['zero'], 0)
 
-# Check the length of the expression.
-exp = vcsn.context('lal_char(a), b')\
-          .random_expression('+',
-                             length=15,
-                             identities='none')
-print("Expression: ", exp)
-CHECK(str(exp).count('a') < 15)
+# Check the length.
+for _ in range(10):
+    exp = randexp('lal_char(a), b',
+                  '+', length=15, identities='none')
+    # FIXME: this is the width, not the length!
+    length = str(exp).count('a')
+    print('Length =', length)
+    CHECK(length < 15)
 
 # Check the weight generation on expression.
-exp = vcsn.context('lal_char(abc), b')\
-          .random_expression('+,k.=1,w="1=1",length=20',
-                             identities='none')
-print("Expression: ", exp)
+exp = randexp('lal_char(abc), b',
+              '+,k.=1,w="1=1",length=20', identities='none')
 CHECK_NE(str(exp).find('<1>'), -1)
 CHECK_EQ(str(exp).find('<0>'), -1)
 
 # Check rweight and lweight.
-exp = vcsn.context('lal_char(abc), b')\
-          .random_expression('+=1,!=0.5,k.=1,length=50',
-                             identities='none')
-print("Expression: ", exp)
+exp = randexp('lal_char(abc), b',
+              '+=1,!=0.5,k.=1,length=50', identities='none')
 info = exp.info()
 print("Info: ", info)
 CHECK_NE(info['lweight'], 0)
 CHECK_EQ(info['rweight'], 0)
+
+
 
 ## ---------------------- ##
 ## random_deterministic.  ##
