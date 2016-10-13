@@ -172,6 +172,7 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
   %D%/polynomial.lweight.ipynb                  \
+  %D%/polynomial.ldivide.ipynb                  \
   %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.rweight.ipynb                  \

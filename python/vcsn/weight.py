@@ -9,8 +9,10 @@ from vcsn.tools import _extend, _format, _is_equal
 class weight:
     __eq__ = _is_equal
     __add__ = weight.add
+    __floordiv__ = weight.ldivide
     __pow__ = weight.multiply
     __repr__ = lambda self: self.format('text')
+    __truediv__ = weight.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
     def __format__(self, spec):

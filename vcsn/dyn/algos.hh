@@ -441,6 +441,9 @@ namespace vcsn
     /// Left-division of two polynomials (lhs \ rhs).
     polynomial ldivide(const polynomial& lhs, const polynomial& rhs);
 
+    /// Left-division of two weights (lhs \ rhs).
+    weight ldivide(const weight& lhs, const weight& rhs);
+
     /// Left greatest common divisor of two polynomials (lhs \ rhs).
     polynomial lgcd(const polynomial& lhs, const polynomial& rhs);
 
@@ -770,6 +773,9 @@ namespace vcsn
 
     /// Right-division of two expressions (lhs / rhs).
     expression rdivide(const expression& lhs, const expression& rhs);
+
+    /// Right-division of two weights (lhs / rhs).
+    weight rdivide(const weight& lhs, const weight& rhs);
 
     /// Read an automaton from a stream.
     /// \param is      the input stream.

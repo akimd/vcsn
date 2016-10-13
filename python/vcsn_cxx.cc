@@ -569,9 +569,11 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const context&, const std::string&>())
     .def("add", &weight::add)
     .def("format", &format<weight>)
+    .def("ldivide", &weight::ldivide)
     .def("multiply", static_cast<multiply_t<weight>>(&weight::multiply))
     .def("multiply",
          static_cast<multiply_repeated_t<weight>>(&weight::multiply),
          (arg("min"), arg("max") = -2))
+    .def("rdivide", &weight::rdivide)
    ;
 }

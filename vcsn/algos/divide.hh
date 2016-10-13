@@ -56,6 +56,17 @@ namespace vcsn
                                                 std::get<1>(join_elts),
                                                 std::get<2>(join_elts))};
       }
+
+      /// Bridge (ldivide).
+      template <typename WeightSetLhs, typename WeightSetRhs>
+      weight
+      ldivide_weight(const weight& lhs, const weight& rhs)
+      {
+        auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
+      }
     }
   }
 
@@ -115,6 +126,17 @@ namespace vcsn
       rdivide_expression(const expression& lhs, const expression& rhs)
       {
         auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
+      }
+
+      /// Bridge (rdivide).
+      template <typename WeightSetLhs, typename WeightSetRhs>
+      weight
+      rdivide_weight(const weight& lhs, const weight& rhs)
+      {
+        auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
         return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
                                                 std::get<1>(join_elts),
                                                 std::get<2>(join_elts))};
