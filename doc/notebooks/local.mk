@@ -20,7 +20,6 @@ dist_notebooks_DATA =                           \
   %D%/C++-Library.ipynb                         \
   %D%/CIAA-2016.ipynb                           \
   %D%/Contexts.ipynb                            \
-  %D%/Executables.ipynb                         \
   %D%/Expressions.ipynb                         \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
@@ -28,6 +27,7 @@ dist_notebooks_DATA =                           \
   %D%/References.ipynb                          \
   %D%/Spell-checker.ipynb                       \
   %D%/Stackoverflow.ipynb                       \
+  %D%/Tools.ipynb                               \
   %D%/Transducers.ipynb                         \
   %D%/Trouble-Shooting.ipynb                    \
   %D%/automaton.accessible.ipynb                \
@@ -171,8 +171,8 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.add.ipynb                      \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
-  %D%/polynomial.lweight.ipynb                  \
   %D%/polynomial.ldivide.ipynb                  \
+  %D%/polynomial.lweight.ipynb                  \
   %D%/polynomial.multiply.ipynb                 \
   %D%/polynomial.operators.ipynb                \
   %D%/polynomial.rweight.ipynb                  \

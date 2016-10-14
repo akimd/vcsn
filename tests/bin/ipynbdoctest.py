@@ -114,6 +114,11 @@ def canonical_dict(dict):
         if 'pygmentize: command not found' in dict['text']:
             SKIP('pygmentize (from python-pygments) not installed')
             exit(0)
+        if re.search('Use of this header .* is deprecated',
+                    dict['text']):
+            SKIP('spurious warnings about deprecated header')
+            print(dict['text'])
+            exit(0)
         # Normalize newline.
         dict['text'] = dict['text'].replace('\r\n', '\n')
         # Tools path.
