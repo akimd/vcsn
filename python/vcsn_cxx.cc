@@ -539,11 +539,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<label>("label", bp::no_init)
     .def(bp::init<const context&, const std::string&>())
     .def("format", &format<label>)
+    .def("ldivide", &label::ldivide)
     .def("multiply", static_cast<multiply_t<label>>(&label::multiply))
     .def("multiply",
          static_cast<label_multiply_repeated_t>(&label::multiply),
          (arg("exp")))
     .def("project", &label::project)
+    .def("rdivide", &label::rdivide)
    ;
 
   bp::class_<polynomial>("polynomial", bp::no_init)

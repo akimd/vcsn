@@ -302,12 +302,14 @@ namespace vcsn
     {
       auto res = maybe_ldivide(w1, w2);
       VCSN_REQUIRE(res,
-                   *this, ": ldivide: invalid arguments: ", to_string(*this, w1),
+                   *this, ": ldivide: invalid arguments: ",
+                   to_string(*this, w1),
                    ", ", to_string(*this, w2));
       return *res;
     }
 
-    boost::optional<value_t> maybe_ldivide(const value_t& w1, const value_t& w2) const
+    boost::optional<value_t>
+    maybe_ldivide(const value_t& w1, const value_t& w2) const
     {
       using boost::algorithm::starts_with;
       if (starts_with(w2, w1))
@@ -321,6 +323,35 @@ namespace vcsn
     {
       w2 = ldivide(w1, w2);
       return w2;
+    }
+
+    /// Compute w1 / w2.
+    /// Precondition: w2 is suffix of w1.
+    value_t rdivide(const value_t& w1, const value_t& w2) const
+    {
+      auto res = maybe_rdivide(w1, w2);
+      VCSN_REQUIRE(res,
+                   *this, ": rdivide: invalid arguments: ",
+                   to_string(*this, w1),
+                   ", ", to_string(*this, w2));
+      return *res;
+    }
+
+    boost::optional<value_t>
+    maybe_rdivide(const value_t& w1, const value_t& w2) const
+    {
+      using boost::algorithm::ends_with;
+      if (ends_with(w1, w2))
+        return value_t{begin(w1), end(w1) - size(w2)};
+      else
+        return boost::none;
+    }
+
+    /// w1 := w1 / w2.
+    value_t& rdivide_here(value_t& w1, const value_t& w2) const
+    {
+      w1 = rdivide(w1, w2);
+      return w1;
     }
 
     const value_t& conjunction(const value_t& l, const value_t& r) const

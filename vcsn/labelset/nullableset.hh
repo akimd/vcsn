@@ -388,7 +388,8 @@ namespace vcsn
               to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    boost::optional<value_t> maybe_ldivide(const value_t& l, const value_t& r) const
+    boost::optional<value_t>
+    maybe_ldivide(const value_t& l, const value_t& r) const
     {
       if (equal(l, r))
         return one();
@@ -397,6 +398,31 @@ namespace vcsn
       else if (is_one(r))
         return boost::none;
       else if (auto res = ls_->maybe_ldivide(get_value(l), get_value(r)))
+        return value(*res);
+      else
+        return boost::none;
+    }
+
+    /// Compute l / r
+    value_t rdivide(const value_t& l, const value_t& r) const
+    {
+      if (auto res = maybe_rdivide(l, r))
+        return *res;
+      else
+        raise(*this, ": rdivide: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
+    }
+
+    boost::optional<value_t>
+    maybe_rdivide(const value_t& l, const value_t& r) const
+    {
+      if (equal(l, r))
+        return one();
+      else if (is_one(l))
+        return boost::none;
+      else if (is_one(r))
+        return l;
+      else if (auto res = ls_->maybe_rdivide(get_value(l), get_value(r)))
         return value(*res);
       else
         return boost::none;

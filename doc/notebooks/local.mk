@@ -166,8 +166,10 @@ dist_notebooks_DATA =                           \
   %D%/expression.transposition.ipynb            \
   %D%/expression.tuple.ipynb                    \
   %D%/expression.zpc.ipynb                      \
+  %D%/label.ldivide.ipynb                       \
   %D%/label.multiply.ipynb                      \
   %D%/label.operators.ipynb                     \
+  %D%/label.rdivide.ipynb                       \
   %D%/polynomial.add.ipynb                      \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \

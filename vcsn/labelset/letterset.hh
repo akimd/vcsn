@@ -266,18 +266,35 @@ namespace vcsn
           to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    boost::optional<value_t> maybe_ldivide(const value_t l, const value_t r) const
+    boost::optional<value_t>
+    maybe_ldivide(const value_t l, const value_t r) const
     {
       raise(*this, ": maybe_ldivide: impossible operation. Arguments: ",
           to_string(*this, l), ", ", to_string(*this, r));
     }
+
+    /// Compute w1 / w2.
+    value_t rdivide(const value_t l, const value_t r) const
+    {
+      raise(*this, ": rdivide: impossible operation. Arguments: ",
+          to_string(*this, l), ", ", to_string(*this, r));
+    }
+
+    boost::optional<value_t>
+    maybe_rdivide(const value_t l, const value_t r) const
+    {
+      raise(*this, ": maybe_rdivide: impossible operation. Arguments: ",
+          to_string(*this, l), ", ", to_string(*this, r));
+    }
+
 
     value_t conjunction(const value_t l, const value_t r) const
     {
       if (equal(l, r))
         return l;
       else
-        raise("conjunction: invalid operation (lhs and rhs are not equal). Arguments: ",
+        raise("conjunction: invalid operation (lhs and rhs are not equal)."
+              " Arguments: ",
           to_string(*this, l), ", ", to_string(this, r));
     }
 

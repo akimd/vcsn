@@ -392,6 +392,28 @@ namespace vcsn
                   });
     }
 
+    boost::optional<value_t>
+    maybe_rdivide(const value_t& l, const value_t& r) const
+    {
+      bool valid = true;
+      auto res = map_(l, r,
+                 [&valid](const auto& vs, const auto& l, const auto& r)
+                 {
+                   if (auto res = vs.maybe_rdivide(l, r))
+                    return *res;
+                   else
+                    {
+                      valid = false;
+                      return l;
+                    }
+                 });
+
+      if (valid)
+        return res;
+      else
+        return boost::none;
+    }
+
     /// Pointwise left division (l \ r).
     value_t
     ldivide(const value_t& l, const value_t& r) const

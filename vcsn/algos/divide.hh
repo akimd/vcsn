@@ -47,6 +47,17 @@ namespace vcsn
       }
 
       /// Bridge (ldivide).
+      template <typename LabelSetLhs, typename LabelSetRhs>
+      label
+      ldivide_label(const label& lhs, const label& rhs)
+      {
+        auto join_elts = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
+      }
+
+      /// Bridge (ldivide).
       template <typename PolynomialSetLhs, typename PolynomialSetRhs>
       polynomial
       ldivide_polynomial(const polynomial& lhs, const polynomial& rhs)
@@ -120,6 +131,17 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge (rdivide).
+      template <typename LabelSetLhs, typename LabelSetRhs>
+      label
+      rdivide_label(const label& lhs, const label& rhs)
+      {
+        auto join_elts = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
+                                                std::get<1>(join_elts),
+                                                std::get<2>(join_elts))};
+      }
+
       /// Bridge (rdivide).
       template <typename ExpressionSetLhs, typename ExpressionSetRhs>
       expression

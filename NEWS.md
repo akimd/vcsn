@@ -5,6 +5,24 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-10-17
+### Left and right divisions are now supported on labels
+It is now possible to call left and right divisions on labels from Python,
+using `//` and `/` operators (respectively).
+
+    In [1]: import vcsn
+            ctx = vcsn.context('law_char, b')
+    In [2]: l = ctx.label('a')
+            r = ctx.label('abc')
+            l // r # == l.ldivide(r)
+    Out [2]: bc
+
+    In [3]: l = ctx.label('abc')
+            r = ctx.label('bc')
+            l / r # == l.rdivide(r)
+    Out [3]: a
+
+
 ## 2016-10-11
 ### TAF-Kit is replaced by Tools
 The new command line interface is now automatically generated
@@ -38,7 +56,8 @@ The supported algorithms are:
     to-expansion to-expression transpose transposition trie trim tuple
     type u universal weight-series zpc
 
-To get more information about a particular algorithm, you can type `vcsn COMMAND -h`:
+To get more information about a particular algorithm, you can type
+`vcsn COMMAND -h`:
 
     $ vcsn eval --help
     usage: vcsn eval [OPTIONS...] [ARGS...]

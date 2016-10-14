@@ -438,6 +438,9 @@ namespace vcsn
     /// Left-division of two expressions (lhs \ rhs).
     expression ldivide(const expression& lhs, const expression& rhs);
 
+    /// Left-division of two labels (lhs \ rhs).
+    label ldivide(const label& lhs, const label& rhs);
+
     /// Left-division of two polynomials (lhs \ rhs).
     polynomial ldivide(const polynomial& lhs, const polynomial& rhs);
 
@@ -773,6 +776,9 @@ namespace vcsn
 
     /// Right-division of two expressions (lhs / rhs).
     expression rdivide(const expression& lhs, const expression& rhs);
+
+    /// Right-division of two labels (lhs / rhs).
+    label rdivide(const label& lhs, const label& rhs);
 
     /// Right-division of two weights (lhs / rhs).
     weight rdivide(const weight& lhs, const weight& rhs);

@@ -11,6 +11,9 @@ from test import *
 def exp(e):
     return e if isinstance(e, vcsn.expression) else vcsn.context(ctx).expression(e)
 
+def label(l):
+    return vcsn.context(ctx).word_context().label(l)
+
 def aut(e):
     return exp(e).automaton()
 
@@ -118,6 +121,27 @@ check_div(r'\e', 'a+<2>b')
 check_div(r'c+d', 'ab')
 check_div(r'<2>c+<3>d', 'ab')
 check_div(r'<2>c+<3>d', '<2>ab')
+
+## --------------------- ##
+## div(label, label).    ##
+## --------------------- ##
+
+def check(fun, l, r, res):
+    CHECK_EQ(res, fun(label(l), label(r)))
+
+check(ldivide, 'a', 'ab', 'b')
+check(ldivide, 'aba', 'abaaba', 'aba')
+check(ldivide, r'\e', 'abaaba', 'abaaba')
+check(ldivide, r'\e', r'\e', r'\e')
+
+XFAIL(lambda: ldivide(label('b'), label('ab')), "ldivide: invalid arguments: b, ab")
+
+check(rdivide, 'ba', 'a', 'b')
+check(rdivide, 'abaaba', 'aba', 'aba')
+check(rdivide, 'abaaba', r'\e', 'abaaba')
+check(rdivide, r'\e', r'\e', r'\e')
+
+XFAIL(lambda: rdivide(label('a'), label('ab')), "rdivide: invalid arguments: a, ab")
 
 ## --------------------------------- ##
 ## ldivide(polynomial, polynomial).  ##

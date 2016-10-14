@@ -8,9 +8,11 @@ from vcsn.tools import _extend, _format, _is_equal
 @_extend(label)
 class label:
     __eq__ = _is_equal
+    __floordiv__ = label.ldivide
     __mul__ = label.multiply
     __pow__ = label.multiply
     __repr__ = lambda self: self.format('text')
+    __truediv__ = label.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
 
