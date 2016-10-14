@@ -106,6 +106,9 @@ def canonical_dict(dict):
         if dict['evalue'] == "cannot open /usr/share/dict/words for reading: No such file or directory":
             SKIP('/usr/share/dict/words not installed')
             exit(0)
+        if dict['evalue'] == "module 'ipywidgets' has no attribute 'Label'":
+            SKIP('cannot use ipywidgets.Label for some reason...')
+            exit(0)
 
     if 'text' in dict:
         if 'fstcompile: command not found' in dict['text']:
