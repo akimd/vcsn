@@ -88,9 +88,11 @@ def gen_function_doc_decl(fun, formals):
             continue
 
         if f['class'][3:5] == "::":
-            f['class'] = f['class'][5:]
+            f_def['class'] = f['class'][5:]
+        else:
+            f_def['class'] = f['class']
 
-        f_def['type'] = f['class'] if f['class'] not in ugly_types else ugly_types[f['class']]
+        f_def['type'] = ugly_types.get(f_def['class'], f_def['class'])
 
         if f['class'].startswith("boost::optional"):
             f_def['default'] = ""
