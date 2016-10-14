@@ -16,7 +16,8 @@
 using namespace vcsn;
 using namespace vcsn::tools;
 
-namespace {
+namespace
+{
   int print_usage(std::string);
   int list_commands();
 
@@ -252,17 +253,28 @@ namespace {
 
   int print_usage(std::string algo_name = "")
   {
-    std::cout <<
-      "usage: vcsn "<< (algo_name == "" ? "COMMAND" : algo_name) << " [OPTIONS...] [ARGS...]\n"
+    std::cout
+      << "usage: vcsn " << (algo_name == "" ? "COMMAND" : algo_name)
+      << " [OPTIONS...] [ARGS...]\n"
       "\n";
     if (!algo_name.empty())
     {
       std::cout << "Available versions:\n";
       auto range = vcsn::tools::algos_doc.equal_range(algo_name);
-      for (auto it = range.first; it != range.second; it++)
-        std::cout << it->second.declaration << '\n'
-                  << "  " << it->second.doc << "\n\n";
-      std::cout << "For more help about available options, please use \"vcsn tools --help\"\n";
+      auto v = std::vector<algo_doc>(algos_doc.count(algo_name));
+      std::transform(range.first, range.second, v.begin(),
+                     [](auto e){ return e.second; });
+      std::sort(v.begin(), v.end(),
+                [](const algo_doc& l, const algo_doc& r)
+                {
+                  return l.declaration < r.declaration;
+                });
+      for (const auto& a : v)
+        std::cout << a.declaration << '\n'
+                  << "  " << a.doc << "\n\n";
+      std::cout <<
+        "For more help about available options, "
+        "please use \"vcsn tools --help\"\n";
     }
     else
     {
@@ -344,7 +356,9 @@ try
   vcsn::require(algos.find(algo) != end(algos),
                 "unknown algorithm: ", argv[1]);
 
-  if (argc > 2 && (argv[2] == std::string("--help") || argv[2] == std::string("-h")))
+  if (2 < argc
+      && (argv[2] == std::string("--help")
+          || argv[2] == std::string("-h")))
     return print_usage(algo);
 
   auto options = parse_arguments(argc, argv);

@@ -12,12 +12,6 @@ check rweight -h <<EOF
 usage: vcsn rweight [OPTIONS...] [ARGS...]
 
 Available versions:
- rweight: P:polynomial W:weight -> polynomial
-    The right-multiplication of a polynomial with W as weight.
-
- rweight: EXP:expression W:weight -> expression
-    The right-multiplication of an expression with W as weight.
-
  rweight: AUT:automaton W:weight [ALGO="auto":string] -> automaton
     The right-mult automaton with W as weight.
   Parameters:
@@ -37,6 +31,12 @@ Available versions:
       - "auto"        "standard" if AUT is standard,
                       "general" otherwise.
 
+ rweight: EXP:expression W:weight -> expression
+    The right-multiplication of an expression with W as weight.
+
+ rweight: P:polynomial W:weight -> polynomial
+    The right-multiplication of a polynomial with W as weight.
+
 For more help about available options, please use "vcsn tools --help"
 EOF
 
@@ -45,11 +45,11 @@ check eval -h <<EOF
 usage: vcsn eval [OPTIONS...] [ARGS...]
 
 Available versions:
- eval: AUT:automaton P:polynomial -> weight
-    Evaluate P on AUT.
-
  eval: AUT:automaton L:word -> weight
     Evaluate L on AUT.
+
+ eval: AUT:automaton P:polynomial -> weight
+    Evaluate P on AUT.
 
 For more help about available options, please use "vcsn tools --help"
 EOF
@@ -70,47 +70,10 @@ For more help about available options, please use "vcsn tools --help"
 EOF
 
 
-
 check multiply --help <<EOF
 usage: vcsn multiply [OPTIONS...] [ARGS...]
 
 Available versions:
- multiply: E:weight MIN:number [MAX=-2:number] -> weight
-    Repeated multiplication of a weight with itself.
-  Parameters:
-    E    the weight.
-    MIN  the minimum number.  If -1, denotes 0.
-    MAX  the maximum number.
-         If -1, denotes infinity, using star.
-         If -2, denotes the same value as min.
-
- multiply: LHS:weight RHS:weight -> weight
-    Multiply two weights.
-
- multiply: LHS:polynomial RHS:polynomial -> polynomial
-    Multiply two polynomials.
-
- multiply: L:label NUM:number -> label
-    Repeated multiplication of a label with itself.
-  Parameters:
-    L    the label.
-    NUM  the exponent.
-
- multiply: LHS:label RHS:label -> label
-    Multiply (concatenate) two labels.
-
- multiply: E:expression MIN:number [MAX=-2:number] -> expression
-    Repeated multiplication (concatenation) of an expression with itself.
-  Parameters:
-    E    the expression.
-    MIN  the minimum number.  If -1, denotes 0.
-    MAX  the maximum number.
-         If -1, denotes infinity, using star.
-         If -2, denotes the same value as min.
-
- multiply: LHS:expression RHS:expression -> expression
-    Multiply (concatenate) two expressions.
-
  multiply: AUT:automaton MIN:number [MAX=-2:number] [ALGO="auto":string] -> automaton
     Repeated multiplication (concatenation) of an automaton with itself.
   Parameters:
@@ -127,6 +90,30 @@ Available versions:
       - "auto"        "standard" if AUT is standard,
                       "general" otherwise.
 
+ multiply: E:expression MIN:number [MAX=-2:number] -> expression
+    Repeated multiplication (concatenation) of an expression with itself.
+  Parameters:
+    E    the expression.
+    MIN  the minimum number.  If -1, denotes 0.
+    MAX  the maximum number.
+         If -1, denotes infinity, using star.
+         If -2, denotes the same value as min.
+
+ multiply: E:weight MIN:number [MAX=-2:number] -> weight
+    Repeated multiplication of a weight with itself.
+  Parameters:
+    E    the weight.
+    MIN  the minimum number.  If -1, denotes 0.
+    MAX  the maximum number.
+         If -1, denotes infinity, using star.
+         If -2, denotes the same value as min.
+
+ multiply: L:label NUM:number -> label
+    Repeated multiplication of a label with itself.
+  Parameters:
+    L    the label.
+    NUM  the exponent.
+
  multiply: LHS:automaton RHS:automaton [ALGO="auto":string] -> automaton
     Multiply (concatenate) two automata.
   Parameters:
@@ -139,6 +126,18 @@ Available versions:
                       but add spontaneous transitions.
       - "auto"        "standard" if both automata are standard,
                       "general" otherwise.
+
+ multiply: LHS:expression RHS:expression -> expression
+    Multiply (concatenate) two expressions.
+
+ multiply: LHS:label RHS:label -> label
+    Multiply (concatenate) two labels.
+
+ multiply: LHS:polynomial RHS:polynomial -> polynomial
+    Multiply two polynomials.
+
+ multiply: LHS:weight RHS:weight -> weight
+    Multiply two weights.
 
 For more help about available options, please use "vcsn tools --help"
 EOF
