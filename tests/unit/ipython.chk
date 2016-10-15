@@ -21,4 +21,9 @@ if test x"$ipython" = x; then
     exit 0
 fi
 
-run 0 ignore -vcsn run $ipython $srcdir/$me.ipy
+# We used to run a script which imports vcsn, but upon failure, we
+# lost every single bit of log, so there was no way to get an error
+# message.  Using `-m` fixes the issue.  Yet, we don't run `-m vcsn`
+# because it does not have a __main__.
+echo 'import vcsn' >load-vcsn.py
+run 0 ignore -vcsn run $ipython -m load-vcsn
