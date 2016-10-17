@@ -70,7 +70,4 @@ class Benchmarks(Magics):
 
 ip = get_ipython()
 ip.register_magics(Benchmarks)
-
-# if we are running in a notebook
-if 'connection_file' in ip.config['IPKernelApp']:
-    ip.magic("matplotlib inline")
+ip.magic("matplotlib inline")

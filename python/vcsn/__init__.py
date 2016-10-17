@@ -18,7 +18,11 @@ try:
     __IPYTHON__
     # pylint: disable=ungrouped-imports
     from vcsn.ipython import *
-    from vcsn.score import *
+
+    ip = get_ipython()
+    # If we are running in a notebook.
+    if 'connection_file' in ip.config['IPKernelApp']:
+        from vcsn.score import *
 except (ImportError, NameError):
     pass
 
