@@ -27,6 +27,24 @@ namespace vcsn
         auto rs = vcsn::make_expressionset(c, ids);
         return {rs, rs.zero()};
       }
+
+      /// Bridge.
+      template <typename Context>
+      weight weight_one(const context& ctx)
+      {
+        const auto& c = ctx->as<Context>();
+        auto ws = *c.weightset();
+        return {ws, ws.one()};
+      }
+
+      /// Bridge.
+      template <typename Context>
+      weight weight_zero(const context& ctx)
+      {
+        const auto& c = ctx->as<Context>();
+        auto ws = *c.weightset();
+        return {ws, ws.zero()};
+      }
     }
   }
 } // namespace vcsn

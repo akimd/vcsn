@@ -5,6 +5,18 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-10-18
+### weight_one and weight_zero are now avaible in Python
+These methods return the "one" and "zero" weights of a context.
+
+    In [1]: import vcsn
+            ctx = vcsn.context('lal_char, zmin')
+    In [2]: ctx.weight_one()
+    Out [2]: 0
+
+    In [3]: ctx.weight_zero()
+    Out [3]: ∞
+
 ## 2016-10-17
 ### Left and right divisions are now supported on labels
 It is now possible to call left and right divisions on labels from Python,
@@ -21,7 +33,6 @@ using `//` and `/` operators (respectively).
             r = ctx.label('bc')
             l / r # == l.rdivide(r)
     Out [3]: a
-
 
 ## 2016-10-11
 ### TAF-Kit is replaced by Tools

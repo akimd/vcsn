@@ -1086,8 +1086,14 @@ namespace vcsn
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
 
+    /// The weight one.
+    weight weight_one(const context& c);
+
     /// Compute weight of the series
     weight weight_series(const automaton& aut);
+
+    /// The weight zero.
+    weight weight_zero(const context& c);
 
     /// The ZPC automaton of \a exp.
     ///

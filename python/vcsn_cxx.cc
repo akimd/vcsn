@@ -469,6 +469,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
           arg("filename") = ""))
     .def("_tuple", &context_tuple).staticmethod("_tuple")
     .def("u", &context::u)
+    .def("weight_one", &context::weight_one)
+    .def("weight_zero", &context::weight_zero)
     .def("word", &context_word)
     .def("word_context", &context::make_word_context)
    ;

@@ -125,6 +125,8 @@ dist_notebooks_DATA =                           \
   %D%/context.random_weight.ipynb               \
   %D%/context.trie.ipynb                        \
   %D%/context.tuple.ipynb                       \
+  %D%/context.weight_one.ipynb                  \
+  %D%/context.weight_zero.ipynb                 \
   %D%/context.word_context.ipynb                \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.complement.ipynb                \
