@@ -152,12 +152,14 @@ dist_notebooks_DATA =                           \
   %D%/expression.info.ipynb                     \
   %D%/expression.is_equivalent.ipynb            \
   %D%/expression.is_valid.ipynb                 \
+  %D%/expression.ldivide.ipynb                  \
   %D%/expression.lift.ipynb                     \
   %D%/expression.lweight.ipynb                  \
   %D%/expression.multiply.ipynb                 \
   %D%/expression.operators.ipynb                \
   %D%/expression.partial_identity.ipynb         \
   %D%/expression.project.ipynb                  \
+  %D%/expression.rdivide.ipynb                  \
   %D%/expression.rweight.ipynb                  \
   %D%/expression.shortest.ipynb                 \
   %D%/expression.shuffle.ipynb                  \
