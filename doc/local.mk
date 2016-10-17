@@ -43,7 +43,7 @@ dload_dir = /var/www/dload/vcsn/$(PACKAGE_VERSION)
 RSYNCFLAGS =                                    \
   --checksum --compress                         \
   --delete --delete-excluded                    \
-  --recursive --verbose                         \
+  --recursive --links --verbose                 \
   --exclude '*.md5' --exclude '*.map'
 upload-doc: upload-doxygen
 upload-doxygen: %D%/vcsn.htmldir

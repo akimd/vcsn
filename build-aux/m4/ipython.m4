@@ -24,7 +24,11 @@ do
   # Expand possible shell variables, such as ${IPYTHON}, in
   # ac_nb_convert.
   eval ac_nb_conv="\"$ac_nb_convert\""
-  _vcsn_try([$ac_nb_conv --output=conftest "$2"])
+  # We used to run a simple `--output="`pwd`/conftest"`, but then
+  # nbconvert prepends the directory to the source file (dirname
+  # "$2$).  We need to pass an absolute path to get the result in the
+  # cwd.
+  _vcsn_try([$ac_nb_conv --output="`pwd`/conftest" "$2"])
   if test -f conftest.html; then
     $1=$ac_nb_convert
     break
