@@ -153,7 +153,7 @@ It is now possible to evaluate polynomials of words on automata.
 It is now possible to call `context.word_context()` to get the context of the
 words of any context.
 
-##2016-09-08
+## 2016-09-08
 ## automaton.eval supports non-free labelsets
 It is now possible to evaluate words on automata with non-free labelsets.
 
@@ -171,6 +171,19 @@ For example, we can compute the edit distance between two words:
     Out[3]: 2
 
 ## 2016-07-28
+### expression: inductive
+Implemented as a hidden feature in Vcsn 2.3, inductive is a new way of
+constructing automata from expressions, based on the algorithm given as
+argument. The only algorithm implemented yet is "standard" which uses standard
+operations to construct a standard automaton. The difference with
+expression.standard is that it handles the case of extended expressions.
+
+For example, we can compute the automaton equivalent of such expressions with
+the inductive method whereas we cannot with the standard one:
+
+    In [1]: vcsn.B.expression('! [ab]*a[ab]*').inductive().expression()
+    Out[1]: \e+bb*
+
 ### expression.derived_term supports multitape expressions
 Vcsn 2.3 already supports multitape expressions with the derived-term
 algorithm, but it was restricted to the expansion-based computation.  The
