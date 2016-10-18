@@ -93,10 +93,9 @@ namespace vcsn
 
     value_t star(const value_t v) const
     {
-      if (v < 1)
-        return std::log(1 - v);
-      else
-        return 0;
+      if (v < 0)
+        raise_not_starrable(*this, v);
+      return std::log1p(-std::exp(-v));
     }
 
     static bool equal(const value_t l, const value_t r)

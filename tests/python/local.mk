@@ -289,6 +289,8 @@ EXTRA_DIST +=                                           \
   %D%/proper.dir/astar-forward.gv                       \
   %D%/proper.dir/lan-b.in.gv                            \
   %D%/proper.dir/lan-b.out.gv                           \
+  %D%/proper.dir/lan-log.in.daut                        \
+  %D%/proper.dir/lan-log.out.daut                       \
   %D%/proper.dir/lan-poly.1.in.gv                       \
   %D%/proper.dir/lan-poly.1.out.gv                      \
   %D%/proper.dir/lan-poly.2.fail.gv                     \

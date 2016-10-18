@@ -71,6 +71,13 @@ check(metext('lao-r.in.gv'), metext('lao-r.out.gv'))
 
 check(metext('lan-r.in.gv'), metext('lan-r.out.gv'))
 
+## ---------------------------------------------- ##
+## lan_char, log: check the computation of star.  ##
+## ---------------------------------------------- ##
+
+check(metext('lan-log.in.daut'), metext('lan-log.out.daut'))
+
+
 ## ------------- ##
 ## law_char, b.  ##
 ## ------------- ##
