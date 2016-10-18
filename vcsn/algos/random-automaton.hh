@@ -59,8 +59,14 @@ namespace vcsn
     // Labels.
     const auto& ls = *ctx.labelset();
     if (max_labels)
-      require(0 < *max_labels,
-              "random_automaton: max number of labels cannot be null");
+      {
+        require(0 < *max_labels,
+                "random_automaton: max number of labels cannot be null");
+
+        require(*max_labels <= boost::distance(ls.generators()) + ls.has_one(),
+                "random_automaton: max number of labels cannot be greater "
+                "than the number of generators");
+      }
     else
       {
         max_labels = (boost::distance(ls.generators()) + ls.has_one());

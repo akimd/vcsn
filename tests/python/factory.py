@@ -160,6 +160,10 @@ CHECK(r'\e|\e' in labels)
 XFAIL(lambda: vcsn.context('lal(), b').random_automaton(2),
       "random_automaton: empty labelset: {}")
 
+# Check that we check that max_labels is <= number of generators.
+XFAIL(lambda: vcsn.context('lal(a), b').random_automaton(2, max_labels=2),
+      "random_automaton: max number of labels cannot be greater than "
+      "the number of generators")
 
 # Check that max_labels is honored.
 ctx = vcsn.context('lal(a-z), b')
