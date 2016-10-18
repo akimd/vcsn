@@ -100,6 +100,26 @@ People who have influenced this release:
 - Luca Saiu
 - Sylvain Lombardy
 
+## 2016-11-04
+### random_automaton now generates weights
+
+`context.random_automaton` now takes an optional `weights` parameter,
+allowing to set how the weights are generated. The syntax is the same
+as the `param` string of `random_weights`.
+
+    In [1]: import vcsn
+            ctx = vcsn.context('lal_char(ab), z')
+            a = ctx.random_automaton(3, weights='1=0.2, 10=0.3, min=0, max=20')
+            print(a.format('daut')
+    Out[1]: context = letterset<char_letters(ab)>, z
+            $ -> 0
+            0 -> $
+            0 -> 2 <17>b
+            1 -> 1 <13>b
+            1 -> 2 <11>b
+            2 -> 0 <18>a, <13>b
+            2 -> 1 <12>a
+
 ## 2016-10-31
 ### eval is renamed evaluate
 For consistency with the remainder of the API, we use the full,

@@ -458,7 +458,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1,
           arg("max_labels") = boost::optional<unsigned>(),
-          arg("loop_chance") = 0))
+          arg("loop_chance") = 0,
+          arg("weights") = std::string("")))
     .def("random_deterministic", &context::random_automaton_deterministic)
     .def("random_expression", &context_random_expression,
          (arg("parameters") = "", arg("identities") = "default"))

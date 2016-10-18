@@ -186,6 +186,11 @@ for n in range(1, 7):
     else:
         CHECK_NE([], ls)
 
+# Check that we do generate weights on transitions
+ctx = vcsn.context('lal(a), z')
+a = ctx.random_automaton(num_states=2, loop_chance=1, weights='5=1')
+print("random_automaton: {:d}".format(a))
+CHECK(a('a') != ctx.weight_one())
 
 ## ------------------- ##
 ## random_expression.  ##

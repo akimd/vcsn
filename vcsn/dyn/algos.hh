@@ -729,13 +729,17 @@ namespace vcsn
     /// \param loop_chance
     ///    The probability (between 0.0 and 1.0) for each state to have
     ///    a loop.
+    /// \param weights
+    ///    The specification string (following the format of random_weight) used
+    ///    to generate weights on each transitions.
     automaton random_automaton(const context& ctx,
                                unsigned num_states,
                                float density = 0.1,
                                unsigned num_initial = 1,
                                unsigned num_final = 1,
                                boost::optional<unsigned> max_labels = {},
-                               float loop_chance = 0.0);
+                               float loop_chance = 0.0,
+                               const std::string& weights = "");
 
     /// A random deterministic automaton.
     ///

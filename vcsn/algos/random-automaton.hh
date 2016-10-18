@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcsn/algos/random-weight.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -36,13 +37,16 @@ namespace vcsn
   /// \param loop_chance
   ///    The probability (between 0.0 and 1.0) for each state to have
   ///    a loop.
+  /// \param weights
+  ///    The specification string (following the format of random_weight) used
+  ///    to generate weights on each transitions.
   template <typename Ctx>
   mutable_automaton<Ctx>
   random_automaton(const Ctx& ctx,
                    unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1,
                    boost::optional<unsigned> max_labels = {},
-                   float loop_chance = 0.0)
+                   float loop_chance = 0.0, const std::string& weights = "")
   {
     require(0 <= density && density <= 1,
             "random_automaton: density must be in [0,1]");
@@ -55,6 +59,8 @@ namespace vcsn
     auto res = make_shared_ptr<automaton_t>(ctx);
 
     auto& gen = make_random_engine();
+
+    const auto& ws = *ctx.weightset();
 
     // Labels.
     const auto& ls = *ctx.labelset();
@@ -74,6 +80,11 @@ namespace vcsn
                 "random_automaton: empty labelset: ", ls);
       }
     auto num_labels = std::uniform_int_distribution<>(1, *max_labels);
+
+    auto random_weight = [&weights, &ws]()
+    {
+      return weights.empty() ? ws.one() : vcsn::random_weight(ws, weights);
+    };
 
     auto states = std::vector<state_t>{};
     states.reserve(num_states);
@@ -174,7 +185,8 @@ namespace vcsn
             auto n = num_labels(gen);
             for (auto _: detail::irange(n))
               res->add_transition(src, states[dst],
-                                  random_label(ls, gen));
+                                  random_label(ls, gen),
+                                  random_weight());
           }
       }
 
@@ -184,7 +196,10 @@ namespace vcsn
         auto dis = std::bernoulli_distribution(loop_chance);
         for (auto s : res->states())
           if (dis(gen))
-            res->add_transition(s, s, random_label(*ctx.labelset(), gen));
+            res->add_transition(s, s,
+                random_label(*ctx.labelset(), gen),
+                random_weight());
+
       }
 
     return res;
@@ -197,19 +212,21 @@ namespace vcsn
       /// Bridge.
       template <typename Ctx, typename NumStates, typename Density,
                 typename NumInitial, typename NumFinal,
-                typename MaxLabels, typename LoopChance>
+                typename MaxLabels, typename LoopChance, typename String>
       automaton
       random_automaton(const context& ctx,
                        unsigned num_states, float density,
                        unsigned num_initial, unsigned num_final,
                        boost::optional<unsigned> max_labels,
-                       float loop_chance)
+                       float loop_chance,
+                       const std::string& weights)
       {
         const auto& c = ctx->as<Ctx>();
         return vcsn::random_automaton(c, num_states, density,
                                       num_initial, num_final,
                                       max_labels,
-                                      loop_chance);
+                                      loop_chance,
+                                      weights);
       }
     }
   }
