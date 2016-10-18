@@ -106,9 +106,8 @@ def gen_function_doc_decl(fun, formals):
             default=f_def['default'],
             type=f_def['type']).lstrip())
 
-    declaration = 'R"tools_doc( {dynfun}: {formals} -> {result})tools_doc"' \
-                    .format(dynfun=fun['dynfun'],
-                            formals=' '.join(formals_def),
+    declaration = 'R"tools_doc(  {formals} -> {result})tools_doc"' \
+                    .format(formals=' '.join(formals_def),
                             result=fun['result'])
 
     return fun_doc_def.substitute(
@@ -119,8 +118,10 @@ def gen_function_doc_decl(fun, formals):
 def format_function_doc(fun, formals):
     res = []
     doc = fun['doc']
-    # First, the short decription.
     res = fun['doc']['desc']
+
+    # Indent all lines but the first
+    res = [res[0]] + ['  ' + l for l in res[1:]]
 
     def is_supported(name):
         for formal in formals:
@@ -152,8 +153,8 @@ def format_function_doc(fun, formals):
                         is_after_dash = True
                     if line[:len(name)+2] == ' ' * (len(name)+2) and not is_after_dash:
                         line = line[len(name)+2:]
-                block[i] = '  '+line.replace('\\{} '.format(name), '')
-            block.insert(0, mark)
+                block[i] = '    '+line.replace('\\{} '.format(name), '')
+            block.insert(0, '  ' + mark)
 
     process_block(doc['params'], 'param', 'Parameters:', indent=True)
     process_block(doc['pre'], 'pre', 'Preconditions:')
