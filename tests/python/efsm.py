@@ -104,6 +104,10 @@ def compose(l, r):
     c_ofst = c_ofst.automaton(ctx)
     return (c_vcsn, c_ofst)
 
+def check_proper(aut):
+    pfst = aut.fstproper().sort().strip()
+    p = aut.proper().sort().strip()
+    CHECK_EQUIV(p, pfst)
 
 if have_ofst:
     # Conjunction: check that OpenFST and Vcsn understand the weights
@@ -145,6 +149,13 @@ if have_ofst:
     # keep a single final state.
     c_vcsn, c_ofst = compose(r'<2>a|\e + <3>a|m', r'<4>\e|x + <3>m|y')
     CHECK_EQUIV(c_vcsn, c_ofst)
+
+    # Check our proper against OpenFST
+    import glob
+    files = [f for f in glob.glob(os.path.join(medir, '*.efsm'))
+             if not os.path.basename(f).startswith('bad_')]
+    for fn in files:
+        check_proper(vcsn.automaton(filename=fn))
 
 else:
     SKIP('OpenFST is missing')
