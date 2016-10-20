@@ -43,6 +43,18 @@ CHECK_EQ(w('7/16'),   w('1/2') ** (2, 4))
 CHECK_EQ(w('2'),      w('1/2') ** -1)
 CHECK_EQ(w('1/2'),    w('1/2') ** (2, -1))
 
+# Check log addition
+
+w = lambda s: vcsn.context('lal_char, log').weight(s)
+CHECK_EQ(w('-0.693147'), w('0') + w('0'))
+CHECK_EQ(w('1.30685'), w('2') + w('2'))
+CHECK_EQ(w('1.95141'), w('2') + w('5'))
+CHECK_EQ(w('1.95141'), w('5') + w('2'))
+CHECK_EQ(w('2'), w('oo') + w('2'))
+CHECK_EQ(w('2'), w('2') + w('oo'))
+CHECK_EQ(w('oo'), w('oo') + w('oo'))
+CHECK_EQ(w('799.99999'), w('800') + w('850'))
+CHECK_EQ(w('799.99999'), w('850') + w('800'))
 
 ## ---------------- ##
 ## Random Weights.  ##

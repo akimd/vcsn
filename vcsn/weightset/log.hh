@@ -64,7 +64,14 @@ namespace vcsn
 
     static value_t add(const value_t l, const value_t r)
     {
-      return - std::log(std::exp(-l) + std::exp(-r));
+      // https://lingpipe-blog.com/2009/06/25/log-sum-of-exponentials/
+      auto diff = l - r;
+      if (0 < diff)
+        return r - std::log1p(std::exp(-diff));
+      else if (diff <= 0)
+        return l - std::log1p(std::exp(diff));
+      else // NaN
+        return zero();
     }
 
     static value_t sub(const value_t l, const value_t r)
