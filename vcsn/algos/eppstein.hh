@@ -58,7 +58,7 @@ namespace vcsn
     k_shortest_path(state_t src, state_t dst, int K)
     {
       auto tree = compute_shortest_path_tree(aut_, dst);
-      auto sidetrack_edge_costs_map = sidetrack_edge_costs(aut_, tree);
+      auto sidetrack_edge_costs_map = sidetrack_costs_t();
       auto res = std::vector<path<automaton_t>>{};
       auto queue = queue_t{};
       queue.emplace(implicit_path_t(aut_, aut_->null_transition(),
@@ -76,31 +76,17 @@ namespace vcsn
 
         res.emplace_back(std::move(k_path));
 
-        add_children_to_queue_(sidetrack_edge_costs_map, src, k_path_implicit, k, queue);
+        add_children_to_queue_(sidetrack_edge_costs_map, src, k_path_implicit, k, queue, tree);
       }
 
-      return res;
-    }
-
-    sidetrack_costs_t
-    sidetrack_edge_costs(const automaton_t& aut, shortest_path_tree<automaton_t>& spt)
-    {
-      auto res = sidetrack_costs_t{};
-      for (auto tr : aut->all_transitions())
-      {
-        state_t parent = spt.get_parent_of(aut->src_of(tr));
-        if (parent == aut->null_state() || parent != aut->dst_of(tr))
-          res[tr] = (aut->weight_of(tr)
-                     + spt.states_[aut->dst_of(tr)].get_weight()
-                     - spt.states_[aut->src_of(tr)].get_weight());
-      }
       return res;
     }
 
   private:
     void
     add_children_to_queue_(sidetrack_costs_t& sidetracks, state_t src,
-                           const implicit_path_t& k_path_implicit, int k, queue_t& queue)
+                           const implicit_path_t& k_path_implicit, int k,
+                           queue_t& queue, shortest_path_tree<automaton_t>& spt)
     {
       auto k_path_cost = k_path_implicit.weight_;
       auto transition_stack = std::vector<transition_t>{};
@@ -113,7 +99,20 @@ namespace vcsn
         transition_t curr = transition_stack.back();
         transition_stack.pop_back();
 
-        if (has(sidetracks, curr))
+        bool has_curr = has(sidetracks, curr);
+        if (!has_curr)
+        {
+          state_t parent = spt.get_parent_of(aut_->src_of(curr));
+          if (parent == aut_->null_state() || parent != aut_->dst_of(curr))
+          {
+            sidetracks[curr] = aut_->weight_of(curr)
+                             + spt.states_[aut_->dst_of(curr)].get_weight()
+                             - spt.states_[aut_->src_of(curr)].get_weight();
+            has_curr = true;
+          }
+        }
+
+        if (has_curr)
           queue.emplace(implicit_path_t(aut_, curr, k, k_path_cost + sidetracks[curr]));
         else
           for (auto tr : all_out(aut_, aut_->dst_of(curr)))

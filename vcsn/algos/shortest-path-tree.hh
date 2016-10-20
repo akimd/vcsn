@@ -54,7 +54,7 @@ namespace vcsn
     }
 
   // FIXME: private
-    std::map<state_t, dijkstra_node_t> states_;
+    std::unordered_map<state_t, dijkstra_node_t> states_;
     state_t root_;
   };
 
