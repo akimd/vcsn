@@ -25,6 +25,26 @@ XFAIL(lambda: ctx.expression(r'\xff'),
       r'add_letter: the special letter is reserved: \xff')
 
 
+## ------------- ##
+## Copy/convert. ##
+## ------------- ##
+
+def check(e, ctx, ids, exp):
+    '''When `e` is converted to `ctx` and `ids`, it should be `exp`.'''
+    if not isinstance(ctx, vcsn.context):
+        ctx = vcsn.context(ctx)
+    CHECK_EQ(exp, e.expression(ctx, ids))
+q = vcsn.context('lan, q')
+e = q.expression('a+b+<1/2>a', 'none')
+check(e, q, 'none', e)
+check(e, q, 'linear', '<3/2>a+b')
+check(e, 'law, q', 'none', '(a+b)+<1/2>a')
+check(e, 'lan, r', 'none', '(a+b)+<0.5>a')
+check(e, 'law, r', 'linear', '<1.5>a+b')
+check(q.expression(r'\z*', 'none'), q, 'linear', r'\e')
+
+
+
 
 ctx = vcsn.context("lal_char(abcd), b")
 
@@ -41,9 +61,9 @@ def check_complement(r1):
 check_complement(r'\z')
 check_complement('ab')
 
-## -------- ##
-## Concat.  ##
-## -------- ##
+## ---------- ##
+## Multiply.  ##
+## ---------- ##
 def check_concat(r1, r2):
     '''Check that `*` between rational expression corresponds to
     concatenation concrete syntax.'''
@@ -99,7 +119,7 @@ check_conj('a', r'\e')
 check_conj('a', r'\z')
 
 ## ----- ##
-## Sum.  ##
+## Add.  ##
 ## ----- ##
 def check_sum(r1, r2):
     '''Check that `+` between rational expression corresponds to

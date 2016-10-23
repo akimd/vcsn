@@ -35,8 +35,8 @@ namespace vcsn
       using self_t = copy_impl;
 
       using in_context_t = context_t_of<in_expressionset_t>;
-      using in_value_t = typename in_expressionset_t::value_t;
-      using out_value_t = typename out_expressionset_t::value_t;
+      using in_expression_t = typename in_expressionset_t::value_t;
+      using out_expression_t = typename out_expressionset_t::value_t;
       template <type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;
       template <type_t Type>
@@ -48,55 +48,57 @@ namespace vcsn
         , out_rs_{out_rs}
       {}
 
-      /// Entry point: print \a v.
-      out_value_t
-      operator()(const in_value_t& v)
+      /// Entry point: copy/convert \a v.
+      out_expression_t
+      operator()(const in_expression_t& v)
       {
-        return copy(v);
+        return rec_(v);
       }
 
-    private:
+    protected:
       /// Easy recursion.
-      out_value_t copy(const in_value_t& v)
+      out_expression_t rec_(const in_expression_t& v)
       {
         v->accept(*this);
         return res_;
       }
 
       /// Factor the handling of unary operations.
-      template <exp::type_t Type>
+      template <exp::type_t Type, typename Fun>
       void
-      copy_(const unary_t<Type>& v)
+      rec_(const unary_t<Type>& v, Fun&& fun)
       {
-        using out_unary_t
-          = typename out_expressionset_t::template unary_t<Type>;
-        res_ = std::make_shared<out_unary_t>(copy(v.sub()));
+        // FIXME: C++17: invoke.
+        res_ = (out_rs_.*fun)(rec_(v.sub()));
       }
 
       /// Factor the handling of n-ary operations.
-      template <exp::type_t Type>
+      template <exp::type_t Type, typename Fun>
       void
-      copy_(const variadic_t<Type>& v)
+      rec_(const variadic_t<Type>& v, Fun&& fun)
       {
-        using out_variadic_t
-          = typename out_expressionset_t::template variadic_t<Type>;
-        auto sub = typename out_expressionset_t::values_t{};
-        for (const auto& s: v)
-          sub.emplace_back(copy(s));
-        res_ = std::make_shared<out_variadic_t>(sub);
+        auto res = rec_(v.head());
+        for (const auto& c: v.tail())
+          // FIXME: C++17: invoke.
+          res = (out_rs_.*fun)(res, rec_(c));
+        res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(add, v)          { copy_(v); }
-      VCSN_RAT_VISIT(complement, v)   { copy_(v); }
-      VCSN_RAT_VISIT(compose, v)      { copy_(v); }
-      VCSN_RAT_VISIT(conjunction, v)  { copy_(v); }
-      VCSN_RAT_VISIT(infiltrate, v)   { copy_(v); }
-      VCSN_RAT_VISIT(ldivide, v)         { copy_(v); }
-      VCSN_RAT_VISIT(mul, v)          { copy_(v); }
+      using ors_t = out_expressionset_t;
+      VCSN_RAT_VISIT(add, v)          { rec_(v, &ors_t::add); }
+      VCSN_RAT_VISIT(complement, v)   { rec_(v, &ors_t::complement); }
+      VCSN_RAT_VISIT(conjunction, v)  { rec_(v, &ors_t::conjunction); }
+      VCSN_RAT_VISIT(infiltrate, v)   { rec_(v, &ors_t::infiltrate); }
+      VCSN_RAT_VISIT(ldivide, v)      { rec_(v, &ors_t::ldivide); }
       VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
-      VCSN_RAT_VISIT(shuffle, v)      { copy_(v); }
-      VCSN_RAT_VISIT(star, v)         { copy_(v); }
-      VCSN_RAT_VISIT(transposition, v){ copy_(v); }
+      using bin_t =
+        out_expression_t (ors_t::*)(const out_expression_t&,
+                                    const out_expression_t&) const;
+      VCSN_RAT_VISIT(mul, v)          { rec_(v,
+                                             static_cast<bin_t>(&ors_t::mul)); }
+      VCSN_RAT_VISIT(shuffle, v)      { rec_(v, &ors_t::shuffle); }
+      VCSN_RAT_VISIT(star, v)         { rec_(v, &ors_t::star); }
+      VCSN_RAT_VISIT(transposition, v){ rec_(v, &ors_t::transposition); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 
       VCSN_RAT_VISIT(atom, v)
@@ -109,12 +111,12 @@ namespace vcsn
       {
         res_ = out_rs_.lweight(out_rs_.weightset()->conv(*in_rs_.weightset(),
                                                          v.weight()),
-                               copy(v.sub()));
+                               rec_(v.sub()));
       }
 
       VCSN_RAT_VISIT(rweight, v)
       {
-        res_ = out_rs_.rweight(copy(v.sub()),
+        res_ = out_rs_.rweight(rec_(v.sub()),
                                out_rs_.weightset()->conv(*in_rs_.weightset(),
                                                          v.weight()));
       }
@@ -125,47 +127,38 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = in_context_t::is_lat,
-                typename Dummy = void>
+      template <typename Dummy = void>
       struct visit_tuple
       {
         /// Copy one tape.
         template <size_t I>
         auto work_(const tuple_t& v)
         {
-          return rat::copy(detail::project<I>(visitor_.in_rs_),
-                           detail::project<I>(visitor_.out_rs_),
+          return rat::copy(detail::project<I>(self_.in_rs_),
+                           detail::project<I>(self_.out_rs_),
                            std::get<I>(v.sub()));
         }
 
         /// Copy all the tapes.
         template <size_t... I>
-        out_value_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        out_expression_t work_(const tuple_t& v, detail::index_sequence<I...>)
         {
-          return visitor_.out_rs_.tuple(work_<I>(v)...);
+          return self_.out_rs_.tuple(work_<I>(v)...);
         }
 
         /// Entry point.
-        out_value_t operator()(const tuple_t& v)
+        out_expression_t operator()(const tuple_t& v)
         {
           return work_(v, labelset_t_of<in_context_t>::indices);
         }
-        self_t& visitor_;
-      };
-
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        out_value_t operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-        self_t& visitor_;
+        self_t& self_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        res_ = visit_tuple<>{*this}(v);
+        detail::static_if<in_context_t::is_lat>
+          ([this](auto&& v){ res_ = visit_tuple<>{*this}(v); })
+          (v);
       }
 
       /// expressionset to decode the input value.
@@ -173,7 +166,7 @@ namespace vcsn
       /// expressionset to build the output value.
       const out_expressionset_t& out_rs_;
       /// Output value, under construction.
-      out_value_t res_;
+      out_expression_t res_;
     };
 
     template <typename InExpSet, typename OutExpSet>
