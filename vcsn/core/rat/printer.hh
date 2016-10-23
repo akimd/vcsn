@@ -12,6 +12,7 @@
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/format.hh>
+#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -136,8 +137,7 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = context_t::is_lat,
-                typename Dummy = void>
+      template <typename Dummy = void>
       struct visit_tuple
       {
         /// Print one tape.
@@ -145,10 +145,10 @@ namespace vcsn
         void print_(const tuple_t& v)
         {
           if (I)
-            visitor_.out_ << visitor_.tuple_middle;
-          auto rs = detail::project<I>(visitor_.rs_);
-          auto print = make_printer(rs, visitor_.out_);
-          print.format(visitor_.fmt_);
+            self_.out_ << self_.tuple_middle;
+          auto rs = detail::project<I>(self_.rs_);
+          auto print = make_printer(rs, self_.out_);
+          print.format(self_.fmt_);
           print.print_child(*std::get<I>(v.sub()), precedence_t::tuple);
         }
 
@@ -167,26 +167,18 @@ namespace vcsn
         /// Entry point.
         void operator()(const tuple_t& v)
         {
-          visitor_.out_ << visitor_.tuple_left;
+          self_.out_ << self_.tuple_left;
           print_(v, labelset_t::indices);
-          visitor_.out_ << visitor_.tuple_right;
+          self_.out_ << self_.tuple_right;
         }
-        const self_t& visitor_;
-      };
-
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        void operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-        const self_t& visitor_;
+        const self_t& self_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        visit_tuple<>{*this}(v);
+        detail::static_if<context_t::is_lat>
+          ([this](auto&& v){ visit_tuple<>{*this}(v); })
+          (v);
       }
 
 

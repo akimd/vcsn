@@ -49,11 +49,11 @@ namespace vcsn
       VCSN_RAT_VISIT(compose, v)      { visit_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
       VCSN_RAT_VISIT(infiltrate, v)   { visit_(v); }
-      VCSN_RAT_VISIT(ldivide, v)         { visit_(v); }
-      VCSN_RAT_VISIT(lweight, v);
+      VCSN_RAT_VISIT(ldivide, v)      { visit_(v); }
+      VCSN_RAT_VISIT(lweight, v)      { visit_(v); }
       VCSN_RAT_VISIT(mul, v)          { visit_(v); }
       VCSN_RAT_VISIT(one, v)          { visit_(v); }
-      VCSN_RAT_VISIT(rweight, v);
+      VCSN_RAT_VISIT(rweight, v)      { visit_(v); }
       VCSN_RAT_VISIT(shuffle, v)      { visit_(v); }
       VCSN_RAT_VISIT(star, v)         { visit_(v); }
       VCSN_RAT_VISIT(transposition, v){ visit_(v); }

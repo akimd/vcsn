@@ -21,16 +21,6 @@ namespace vcsn
       hash_combine(res_, ExpSet::labelset_t::hash(v.value()));
     }
 
-    VISIT(lweight)
-    {
-      visit_(v);
-    }
-
-    VISIT(rweight)
-    {
-      visit_(v);
-    }
-
     template <typename ExpSet>
     void
     hash<ExpSet>::combine_type(const node_t& node)

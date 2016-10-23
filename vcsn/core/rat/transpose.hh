@@ -16,7 +16,6 @@ namespace vcsn
 
   namespace detail
   {
-
     /*-------------------------.
     | transpose(expression).   |
     `-------------------------*/
@@ -175,15 +174,14 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = context_t::is_lat,
-                typename Dummy = void>
+      template <typename Dummy = void>
       struct visit_tuple
       {
         /// Copy one tape.
         template <size_t I>
         auto work_(const tuple_t& v)
         {
-          return vcsn::transpose(detail::project<I>(visitor_.rs_),
+          return vcsn::transpose(detail::project<I>(self_.rs_),
                                  std::get<I>(v.sub()));
         }
 
@@ -191,7 +189,7 @@ namespace vcsn
         template <size_t... I>
         auto work_(const tuple_t& v, detail::index_sequence<I...>)
         {
-          return visitor_.rs_.tuple(work_<I>(v)...);
+          return self_.rs_.tuple(work_<I>(v)...);
         }
 
         /// Entry point.
@@ -199,22 +197,14 @@ namespace vcsn
         {
           return work_(v, labelset_t_of<context_t>::indices);
         }
-        self_t& visitor_;
-      };
-
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        expression_t operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-        self_t& visitor_;
+        self_t& self_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        res_ = visit_tuple<>{*this}(v);
+        detail::static_if<context_t::is_lat>
+          ([this](auto&& v){ res_ = visit_tuple<>{*this}(v); })
+          (v);
       }
 
     private:

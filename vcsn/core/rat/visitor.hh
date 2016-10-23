@@ -64,7 +64,6 @@ namespace vcsn
       DEFINE(zero);
 #undef DEFINE
     };
-
   } // namespace rat
 } // namespace vcsn
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
@@ -25,7 +24,7 @@ namespace vcsn
     ///
     /// \tparam InExpSet   the input expressionset type.
     /// \tparam OutExpSet  the output expressionset type.
-    template <typename InExpSet, typename OutExpSet = InExpSet>
+    template <typename InExpSet, typename OutExpSet>
     class copy_impl
       : public InExpSet::const_visitor
     {
@@ -38,18 +37,15 @@ namespace vcsn
       using in_context_t = context_t_of<in_expressionset_t>;
       using in_value_t = typename in_expressionset_t::value_t;
       using out_value_t = typename out_expressionset_t::value_t;
-      using node_t = typename super_t::node_t;
-      using inner_t = typename super_t::inner_t;
       template <type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;
       template <type_t Type>
       using variadic_t = typename super_t::template variadic_t<Type>;
-      using leaf_t = typename super_t::leaf_t;
 
       copy_impl(const in_expressionset_t& in_rs,
                 const out_expressionset_t& out_rs)
-        : in_rs_(in_rs)
-        , out_rs_(out_rs)
+        : in_rs_{in_rs}
+        , out_rs_{out_rs}
       {}
 
       /// Entry point: print \a v.

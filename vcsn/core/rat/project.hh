@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
@@ -75,8 +73,8 @@ namespace vcsn
       void
       project_(const variadic_t<Type>& v, Fun&& fun)
       {
-        // Be sure to apply the identities: merely projecting on 0 in
-        // `a|b+a|b` would result in `a+a`.
+        // Be sure to apply the identities: merely projecting on tape
+        // 0 in `a|b+a|c` would result in `a+a`.
         auto res = project(v.head());
         for (const auto& c: v.tail())
           // FIXME: C++17: invoke.

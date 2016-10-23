@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <vcsn/core/rat/visitor.hh>
+#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -100,7 +101,7 @@ namespace vcsn
       DEFINE(compose)      { ++compose;      visit_(v); }
       DEFINE(conjunction)  { ++conjunction;  visit_(v); }
       DEFINE(infiltrate)   { ++infiltrate;   visit_(v); }
-      DEFINE(ldivide)         { ++ldivide;         visit_(v); }
+      DEFINE(ldivide)      { ++ldivide;         visit_(v); }
       DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); ++depth; }
       DEFINE(mul)          { ++mul;         visit_(v);}
       DEFINE(one)          { ++one; (void) v; depth = 0; }
@@ -149,8 +150,7 @@ namespace vcsn
       using tuple_t = typename super_t::tuple_t;
 
     private:
-      template <bool = context_t::is_lat,
-                typename Dummy = void>
+      template <typename Dummy = void>
       struct visit_tuple
       {
         /// Info about tape I.
@@ -183,19 +183,11 @@ namespace vcsn
         self_t& visitor_;
       };
 
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        void operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-        self_t& visitor_;
-      };
-
       void visit(const tuple_t& v, std::true_type) override
       {
-        visit_tuple<>{*this}(v);
+        detail::static_if<context_t::is_lat>
+          ([this](auto&& v){ visit_tuple<>{*this}(v); })
+          (v);
       }
     };
 

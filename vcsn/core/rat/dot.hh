@@ -190,8 +190,7 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = context_t::is_lat,
-                typename Dummy = void>
+      template <typename Dummy = void>
       struct visit_tuple
       {
         /// Print one tape.
@@ -237,19 +236,11 @@ namespace vcsn
         name_t name_;
       };
 
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        void operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-        const self_t& self_;
-      };
-
       void visit(const tuple_t& v, std::true_type) override
       {
-        visit_tuple<>{*this}(v);
+        detail::static_if<context_t::is_lat>
+          ([this](auto&& v){ visit_tuple<>{*this}(v); })
+          (v);
       }
 
       /// The identifier for this node, and a Boolean stating whether

@@ -64,8 +64,7 @@ namespace vcsn
       VCSN_RAT_VISIT(zero,)           { ++size_; }
 
       using tuple_t = typename super_t::tuple_t;
-      template <bool = context_t::is_lat,
-                typename Dummy = void>
+      template <typename Dummy = void>
       struct visit_tuple
       {
         /// Size for one tape.
@@ -97,18 +96,11 @@ namespace vcsn
         }
       };
 
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        size_t operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-      };
-
       void visit(const tuple_t& v, std::true_type) override
       {
-        size_ += visit_tuple<>{}(v);
+        detail::static_if<context_t::is_lat>
+          ([this](auto&& v){ size_ += visit_tuple<>{}(v); })
+          (v);
       }
 
       /// Traverse unary node.
