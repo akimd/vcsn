@@ -64,6 +64,15 @@ Then it works, but it's extraordinarily slow (can subprocesses, such as the
 compiler, get ASAN'd too?).  So this should be reserved to some well-chosen
 nightly build.
 
+* Expression
+** Reserve {}
+If you type 'a{x}' by accident instead of `a{c}`, then you get an error
+about `{` being an unexpected label.  This is not helping.  We should always
+escape the braces.
+
+** copy, project, etc.
+The recurring function should move its return value.
+
 * Tests
 ** check-rat
 Check the precedences, for instance between the products.

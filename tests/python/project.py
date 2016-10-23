@@ -94,18 +94,34 @@ check_aut('project',
 ## expressions.  ##
 ## ------------- ##
 
+# Check that we do obey the identities.
 check(c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y'),
       '<9>a*',
       'e+<3>f',
       'x+y+xy')
 
 # Check identities.
+check(vcsn
+      .context('lat<lan, lan, lan>, b')
+      .expression('(a{c}|e{c}|x{c}){c}'),
+      'a', 'e', 'x')
+
 e = c.expression('<2>(ab|ef|xyz)<3>', 'associative')
 check(e,
       '<2>(ab)<3>',
       '<2>(ef)<3>',
       '<2>(xyz)<3>')
 CHECK_EQ('associative', e.project(0).identities())
+
+# Composition does not make any sense, but it's not `project` that
+# should know about it.  At some point, it should be an error.
+for op in ['&', ':', '&:', r'{\}', '@']:
+    check(c.expression('(a*|e*|x*){op}(a*|e*|x*)'.format(op=op)),
+          'a*{op}a*'.format(op=op),
+          'e*{op}e*'.format(op=op),
+          'x*{op}x*'.format(op=op))
+check(c.expression('(a*|e*|x*){2}'),
+      'a*{2}', 'e*{2}', 'x*{2}')
 
 
 ## ------------- ##

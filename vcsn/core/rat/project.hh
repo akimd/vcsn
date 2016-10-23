@@ -24,13 +24,10 @@ namespace vcsn
       using in_context_t = context_t_of<in_expressionset_t>;
       using in_expression_t = typename in_expressionset_t::value_t;
       using out_expression_t = typename out_expressionset_t::value_t;
-      using node_t = typename super_t::node_t;
-      using inner_t = typename super_t::inner_t;
       template <type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;
       template <type_t Type>
       using variadic_t = typename super_t::template variadic_t<Type>;
-      using leaf_t = typename super_t::leaf_t;
 
       project_impl(const in_expressionset_t& in_rs,
                    const out_expressionset_t& out_rs)
@@ -47,55 +44,56 @@ namespace vcsn
       out_expression_t
       operator()(const in_expression_t& v)
       {
-        return project(v);
+        return rec_(v);
       }
 
     private:
       /// Easy recursion.
-      out_expression_t project(const in_expression_t& v)
+      out_expression_t rec_(const in_expression_t& v)
       {
         v->accept(*this);
         return res_;
       }
 
       /// Factor the handling of unary operations.
-      template <exp::type_t Type>
+      template <exp::type_t Type, typename Fun>
       void
-      project_(const unary_t<Type>& v)
+      rec_(const unary_t<Type>& v, Fun&& fun)
       {
-        using out_unary_t
-          = typename out_expressionset_t::template unary_t<Type>;
-        res_ = std::make_shared<out_unary_t>(project(v.sub()));
+        // FIXME: C++17: invoke.
+        res_ = (out_rs_.*fun)(rec_(v.sub()));
       }
 
       /// Factor the handling of n-ary operations.
       template <exp::type_t Type, typename Fun>
       void
-      project_(const variadic_t<Type>& v, Fun&& fun)
+      rec_(const variadic_t<Type>& v, Fun&& fun)
       {
         // Be sure to apply the identities: merely projecting on tape
         // 0 in `a|b+a|c` would result in `a+a`.
-        auto res = project(v.head());
+        auto res = rec_(v.head());
         for (const auto& c: v.tail())
           // FIXME: C++17: invoke.
-          res = (out_rs_.*fun)(res, project(c));
+          res = (out_rs_.*fun)(res, rec_(c));
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(add, v)          { project_(v, &out_expressionset_t::add); }
-      VCSN_RAT_VISIT(complement, v)   { project_(v); }
-      VCSN_RAT_VISIT(conjunction, v)  { project_(v, &out_expressionset_t::conjunction); }
-      VCSN_RAT_VISIT(infiltrate, v)   { project_(v, &out_expressionset_t::infiltrate); }
-      VCSN_RAT_VISIT(ldivide, v)         { project_(v, &out_expressionset_t::ldivide); }
+      using ors_t = out_expressionset_t;
+      VCSN_RAT_VISIT(add, v)          { rec_(v, &ors_t::add); }
+      VCSN_RAT_VISIT(complement, v)   { rec_(v, &ors_t::complement); }
+      VCSN_RAT_VISIT(compose, v)      { rec_(v, &ors_t::compose); }
+      VCSN_RAT_VISIT(conjunction, v)  { rec_(v, &ors_t::conjunction); }
+      VCSN_RAT_VISIT(infiltrate, v)   { rec_(v, &ors_t::infiltrate); }
+      VCSN_RAT_VISIT(ldivide, v)      { rec_(v, &ors_t::ldivide); }
       VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
       using bin_t =
         out_expression_t
-        (out_expressionset_t::*)(const out_expression_t&, const out_expression_t&) const;
-      VCSN_RAT_VISIT(mul, v)          { project_(v,
-                                                 static_cast<bin_t>(&out_expressionset_t::mul)); }
-      VCSN_RAT_VISIT(shuffle, v)      { project_(v, &out_expressionset_t::shuffle); }
-      VCSN_RAT_VISIT(star, v)         { project_(v); }
-      VCSN_RAT_VISIT(transposition, v){ project_(v); }
+        (ors_t::*)(const out_expression_t&, const out_expression_t&) const;
+      VCSN_RAT_VISIT(mul, v)          { rec_(v,
+                                             static_cast<bin_t>(&ors_t::mul)); }
+      VCSN_RAT_VISIT(shuffle, v)      { rec_(v, &ors_t::shuffle); }
+      VCSN_RAT_VISIT(star, v)         { rec_(v, &ors_t::star); }
+      VCSN_RAT_VISIT(transposition, v){ rec_(v, &ors_t::transposition); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 
       VCSN_RAT_VISIT(atom, v)
@@ -105,12 +103,12 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, v)
       {
-        res_ = out_rs_.lweight(v.weight(), project(v.sub()));
+        res_ = out_rs_.lweight(v.weight(), rec_(v.sub()));
       }
 
       VCSN_RAT_VISIT(rweight, v)
       {
-        res_ = out_rs_.rweight(project(v.sub()), v.weight());
+        res_ = out_rs_.rweight(rec_(v.sub()), v.weight());
       }
 
       /*---------.
