@@ -61,7 +61,7 @@ namespace vcsn
           auto next = tree.get_parent_of(s);
           if (s == aut_->null_state() || next == aut_->null_state())
             return path<automaton_t>(aut_);
-          auto weight = tree.states_[s].get_weight() - tree.states_[next].get_weight();
+          auto weight = tree.get_weight_of(s) - tree.get_weight_of(next);
           auto t = find_transition(s, next);
           assert(t != aut_->null_transition());
           res.emplace_back(weight, t);

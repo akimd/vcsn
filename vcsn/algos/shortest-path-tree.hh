@@ -13,6 +13,7 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
+    using weight_t = weight_t_of<automaton_t>;
     using dijkstra_node_t = dijkstra_node<automaton_t>;
 
   public:
@@ -33,6 +34,29 @@ namespace vcsn
         states_[s].parent_ = parent;
       else
         states_[s] = dijkstra_node_t{s, {}, parent};
+    }
+
+    weight_t
+    get_weight_of(state_t s)
+    {
+      auto it = states_.find(s);
+      if (it != states_.end())
+        return it->second.get_weight();
+      else
+        return std::numeric_limits<unsigned>::max();
+    }
+
+    dijkstra_node_t&
+    get_node_of(state_t s)
+    {
+      auto it = states_.find(s);
+      if (it == states_.end())
+      {
+        auto elt = dijkstra_node_t{s, {}, Aut::element_type::null_state()};
+        auto p = states_.emplace(s, elt);
+        it = p.first;
+      }
+      return it->second;
     }
 
     state_t
@@ -73,9 +97,7 @@ namespace vcsn
 
     auto predecessor_tree = shortest_path_tree<automaton_t>(src);
     auto queue = queue_t{};
-    for (auto s : aut->all_states())
-      predecessor_tree.add(dijkstra_node_t{s, {}, aut->null_state()});
-    auto src_node = predecessor_tree.states_[predecessor_tree.root_];
+    auto& src_node = predecessor_tree.get_node_of(predecessor_tree.root_);
     src_node.set_weight(weightset_t_of<automaton_t>::one());
     src_node.depth_ = 0;
     queue.emplace(src_node);
@@ -88,7 +110,7 @@ namespace vcsn
 
       for (auto tr : all_in(aut, s))
       {
-        auto& neighbor = predecessor_tree.states_[aut->src_of(tr)];
+        auto& neighbor = predecessor_tree.get_node_of(aut->src_of(tr));
         auto dist = neighbor.get_weight();
         auto new_dist = current.get_weight() + aut->weight_of(tr);
         if (new_dist < dist)
