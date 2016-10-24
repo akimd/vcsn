@@ -160,7 +160,6 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/expressionset.hxx                \
   %D%/core/rat/fwd.hh                           \
   %D%/core/rat/hash.hh                          \
-  %D%/core/rat/hash.hxx                         \
   %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
   %D%/core/rat/less.hh                          \

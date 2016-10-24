@@ -13,7 +13,6 @@ namespace vcsn
     public:
       using expressionset_t = ExpSet;
       using context_t = context_t_of<expressionset_t>;
-      using weight_t = typename context_t::weightset_t::value_t;
       using super_t = typename expressionset_t::const_visitor;
 
       /// Actual node, without indirection.
@@ -21,14 +20,14 @@ namespace vcsn
       /// A shared_ptr to node_t.
       using expression_t = typename node_t::value_t;
 
-      using inner_t = typename super_t::inner_t;
       template <type_t Type>
-      using variadic_t = typename super_t::template variadic_t<Type>;
+      using constant_t = typename super_t::template constant_t<Type>;
       template <type_t Type>
       using unary_t = typename super_t::template unary_t<Type>;
       template <type_t Type>
+      using variadic_t = typename super_t::template variadic_t<Type>;
+      template <type_t Type>
       using weight_node_t = typename super_t::template weight_node_t<Type>;
-      using leaf_t = typename super_t::leaf_t;
 
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "hash"; }
@@ -43,8 +42,20 @@ namespace vcsn
 
     private:
 
+      /// Update res_ with the hash.
+      void combine_(size_t h)
+      {
+        hash_combine(res_, h);
+      }
+
+      /// Update res_ by hashing the node type.  Must be for every
+      /// node.
+      void combine_type_(const node_t& node)
+      {
+        combine_(int(node.type()));
+      }
+
       VCSN_RAT_VISIT(add, v)          { visit_(v); }
-      VCSN_RAT_VISIT(atom, v);
       VCSN_RAT_VISIT(complement, v)   { visit_(v); }
       VCSN_RAT_VISIT(compose, v)      { visit_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
@@ -58,6 +69,12 @@ namespace vcsn
       VCSN_RAT_VISIT(star, v)         { visit_(v); }
       VCSN_RAT_VISIT(transposition, v){ visit_(v); }
       VCSN_RAT_VISIT(zero, v)         { visit_(v); }
+
+      VCSN_RAT_VISIT(atom, v)
+      {
+        combine_type_(v);
+        combine_(ExpSet::labelset_t::hash(v.value()));
+      }
 
       using tuple_t = typename super_t::tuple_t;
 
@@ -83,30 +100,46 @@ namespace vcsn
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        res_ = visit_tuple<>{}(v);
+        combine_type_(v);
+        combine_(visit_tuple<>{}(v));
       }
 
-      /// Update res_ by hashing the node type; this is needed for any node.
-      void combine_type(const node_t& node);
-
-      /// Traverse a nullary node (atom, `\\z`, `\\e`).
-      void visit_(const node_t& v);
-
-      /// Traverse a unary node (`*`, `{c}`).
+      /// Traverse a nullary node.
       template <rat::exp::type_t Type>
-      void visit_(const unary_t<Type>& v);
+      void visit_(const constant_t<Type>& v)
+      {
+        combine_type_(v);
+      }
 
-      /// Traverse an n-ary node (`+`, concatenation, `&`, `:`).
+      /// Traverse a unary node.
       template <rat::exp::type_t Type>
-      void visit_(const variadic_t<Type>& v);
+      void visit_(const unary_t<Type>& v)
+      {
+        combine_type_(v);
+        v.sub()->accept(*this);
+      }
+
+      /// Traverse an n-ary node.
+      template <rat::exp::type_t Type>
+      void visit_(const variadic_t<Type>& v)
+      {
+        combine_type_(v);
+        for (const auto& child : v)
+          child->accept(*this);
+      }
 
       /// Traverse a weight node (lweight, rweight).
       template <rat::exp::type_t Type>
-      void visit_(const weight_node_t<Type>& v);
+      void visit_(const weight_node_t<Type>& v)
+      {
+        combine_type_(v);
+        combine_(ExpSet::weightset_t::hash(v.weight()));
+        v.sub()->accept(*this);
+      }
 
+      /// The result, which must be updated incrementally.  Do not
+      /// modify directly, call `combine_` instead.
       size_t res_;
     };
   } // namespace rat
 } // namespace vcsn
-
-#include <vcsn/core/rat/hash.hxx>
