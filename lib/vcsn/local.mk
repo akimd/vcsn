@@ -70,11 +70,12 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc                            \
   %D%/misc/xltdl.cc                             \
-  %D%/misc/xltdl.hh
+  %D%/misc/xltdl.hh                             \
+  %D%/misc/yaml.cc
 
 lib_libvcsn_la_LDFLAGS =					\
   $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\
-  $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)
+  $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS) -lyaml-cpp
 lib_libvcsn_la_LIBADD =					\
   $(BOOST_FLYWEIGHT_LIBS) $(BOOST_FILESYSTEM_LIBS)	\
   $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)		\

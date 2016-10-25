@@ -126,6 +126,9 @@ Arithmetic Library](https://gmplib.org).
 [Doxygen](http://doxygen.org) is used to generate the C++ reference
 documentation.
 
+[yaml-cpp](https://github.com/jbeder/yaml-cpp) is used to handle the
+configuration files.
+
 ### Libraries installed in non-standard directories
 
 If you have installed Boost in a non-standard directory (i.e., a directory

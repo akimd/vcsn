@@ -11,6 +11,7 @@
 #include <vcsn/misc/iostream.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/unordered_set.hh>
+#include <vcsn/misc/yaml.hh>
 
 namespace vcsn
 {
@@ -80,6 +81,22 @@ namespace vcsn
       }
 
     private:
+      vcsn::config::config_value get_style(const std::string& style_name)
+      {
+         auto conf = get_config()["dot"]["styles"];
+         auto style = conf[style_name];
+         while (style.is_valid("inherits"))
+         {
+           auto parent = style["inherits"].str();
+           //std::cerr << "\n\nmergin parent: " << parent << std::endl;
+           style.remove("inherits");
+           style.merge(conf[parent]);
+         }
+
+         get_config()["dot"]["styles"][style_name] = style;
+         return style;
+      }
+
       /// Start the dot graph.
       void print_prologue_()
       {
@@ -92,11 +109,22 @@ namespace vcsn
         disable_();
         bos_ << "\"\n"
           "  rankdir = LR\n"
-          "  edge ["
-             << (dot2tex_
-                 ? "texmode = math, lblstyle = auto"
-                 : "arrowhead = vee, arrowsize = .6")
-             << "]\n";
+          "  edge [";
+
+        if (dot2tex_)
+          bos_ << "texmode = math, lblstyle = auto";
+        else
+        {
+          auto style_name = get_config()["dot"]["default-style"].str();
+          auto conf = get_style(style_name)["edge"];
+          auto keys = conf.keys();
+          bos_ << keys[0] << " = " << conf[keys[0]].str();
+          for (size_t i = 1; i < keys.size(); i++)
+          {
+            bos_ << ", " << keys[i] << " = " << conf[keys[i]].str();
+          }
+        }
+        bos_  << "]\n" << std::flush;
 
         if (dot2tex_)
           bos_ <<
@@ -281,11 +309,22 @@ namespace vcsn
         if (!aut_->states().empty())
           {
             bos_ << "  {\n"
-                 << "    node ["
-                 << (dot2tex_
-                     ? "texmode = math, style = state"
-                     : "shape = circle, style = rounded, width = 0.5")
-                 << "]\n";
+                 << "    node [";
+
+            if (dot2tex_)
+              bos_ << "texmode = math, style = state";
+            else
+            {
+              auto style_name = get_config()["dot"]["default-style"].str();
+              auto conf = get_style(style_name)["node"];
+              auto keys = conf.keys();
+              bos_ << keys[0] << " = " << conf[keys[0]].str();
+              for (size_t i = 1; i < keys.size(); i++)
+              {
+                bos_ << ", " << keys[i] << " = " << conf[keys[i]].str();
+              }
+            }
+            bos_  << "]\n";
             for (auto s : aut_->states())
               {
                 bos_ << "    ";

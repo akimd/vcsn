@@ -94,16 +94,21 @@ $(TEST_LOGS): %D%/bin/vcsn
 AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
 # Common to build and install check.
-CHECK_ENVIRONMENT +=                            \
-  VCSN_VERBOSE=1; export VCSN_VERBOSE
+CHECK_ENVIRONMENT +=                                \
+  VCSN_VERBOSE=1; export VCSN_VERBOSE;              \
+  VCSN_NO_HOME_CONFIG= ; export VCSN_NO_HOME_CONFIG
 
 # Use the wrappers to run the non-installed executables.
-# Find test.py which is in tests/bin.
 BUILDCHECK_ENVIRONMENT +=                       \
   $(CHECK_ENVIRONMENT);                         \
   PATH=$(abs_builddir)/tests/bin:$$PATH;        \
-  export PATH;
+  export PATH;                                  \
+  : $${VCSN_DATADIR=$(abs_srcdir)/share/vcsn};  \
+  export VCSN_DATADIR;                          \
+  : $${VCSN_DATA_PATH=$$VCSN_DATADIR};          \
+  export VCSN_DATA_PATH;
 
+# Find test.py which is in tests/bin.
 INSTALLCHECK_ENVIRONMENT +=                                                     \
   $(CHECK_ENVIRONMENT);                                                         \
   PATH=$(DESTDIR)$(bindir):$$PATH;                                              \

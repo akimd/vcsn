@@ -1,0 +1,19 @@
+dot:
+  styles: !StyleList
+    square:
+      node:
+        shape: square
+    default:
+      node:
+        shape: circle
+        style: rounded
+        width: 0.5
+      edge:
+        arrowhead: vee
+        arrowsize: .6
+    important:
+      inherits: square
+      node:
+        style: filled
+        fillcolor: red
+  default-style: default
