@@ -3,12 +3,17 @@
 import vcsn
 from test import *
 
+# Check lift result and cached value for is_proper.
+def check_lift(exp, aut):
+    CHECK_EQ(exp, aut)
+    CHECK_EQ(False, aut.info('is proper'))
+
 ## ---------- ##
 ## Automata.  ##
 ## ---------- ##
 
 l4 = vcsn.context('lal_char(abc), b').ladybird(4)
-CHECK_EQ('''digraph
+check_lift('''digraph
 {
   vcsn_context = "lao, expressionset<letterset<char_letters(abc)>, b>"
   rankdir = LR
@@ -67,7 +72,7 @@ aref = '''digraph
   0 -> 1 [label = "<<2>(a)>d|gh"]
   1 -> F1
 }'''
-CHECK_EQ(aref, a.lift(0))
+check_lift(aref, a.lift(0))
 
 # lift(1).
 aref = '''digraph
@@ -89,7 +94,7 @@ aref = '''digraph
   0 -> 1 [label = "<<2>(d)>a|gh"]
   1 -> F1
 }'''
-CHECK_EQ(aref, a.lift(1))
+check_lift(aref, a.lift(1))
 
 # lift(1, 2).
 aref = '''digraph
@@ -111,8 +116,8 @@ aref = '''digraph
   0 -> 1 [label = "<<2>(d|gh)>a"]
   1 -> F1
 }'''
-CHECK_EQ(aref, a.lift(1, 2))
-CHECK_EQ(aref, a.lift([1, 2]))
+check_lift(aref, a.lift(1, 2))
+check_lift(aref, a.lift([1, 2]))
 
 ## ------------------ ##
 ## lift(expression).  ##

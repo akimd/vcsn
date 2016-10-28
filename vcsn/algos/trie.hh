@@ -16,6 +16,12 @@
 
 namespace vcsn
 {
+  /*-----------------.
+  | Function tags.   |
+  `-----------------*/
+
+  CREATE_FUNCTION_TAG(trie);
+  CREATE_FUNCTION_TAG(cotrie);
 
   namespace detail
   {
@@ -139,6 +145,7 @@ namespace vcsn
       auto result()
         -> std::enable_if_t<D == direction::forward, automaton_t>
       {
+        res_->properties().update(trie_ftag{});
         return res_;
       }
 
@@ -147,7 +154,9 @@ namespace vcsn
       auto result()
         -> std::enable_if_t<D == direction::backward, automaton_t>
       {
-        return transpose(res_);
+        auto res = transpose(res_);
+        res->properties().update(cotrie_ftag{});
+        return res;
       }
 
     private:

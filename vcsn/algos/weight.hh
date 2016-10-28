@@ -12,6 +12,13 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(lweight);
+  CREATE_FUNCTION_TAG(rweight);
+
   namespace detail
   {
     /// Implementation of left- and right- multiplication of an
@@ -35,6 +42,7 @@ namespace vcsn
         else if (!ws.is_one(w))
           for (auto t: initial_transitions(res))
             res->lweight(t, w);
+        res->properties().update(lweight_ftag{});
         return res;
       }
 
@@ -52,6 +60,7 @@ namespace vcsn
             for (auto t: all_out(res, initial))
               res->lweight(t, w);
           }
+        res->properties().update(lweight_ftag{});
         return res;
       }
 
@@ -76,6 +85,7 @@ namespace vcsn
         else if (!ws.is_one(w))
           for (auto t: final_transitions(res))
             res->rweight(t, w);
+        res->properties().update(rweight_ftag{});
         return res;
       }
 

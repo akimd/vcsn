@@ -14,6 +14,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(eliminate_state);
+
   namespace detail
   {
     /*----------------.
@@ -352,6 +358,7 @@ namespace vcsn
             }
 
         aut_->del_state(s);
+        aut_->properties().update(eliminate_state_ftag{});
         update_heap_();
       }
 

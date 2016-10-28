@@ -8,6 +8,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(divkbaseb);
 
   /// Build the Boolean automaton which accepts a word n representing a
   /// number in base "base" if and only if divisor|n.
@@ -55,6 +60,7 @@ namespace vcsn
             res->new_transition(states[i], states[d], letters[l]);
           }
       }
+    res->properties().update(divkbaseb_ftag{});
     return res;
   }
 

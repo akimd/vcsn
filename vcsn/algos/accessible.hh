@@ -10,6 +10,13 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(accessible);
+  CREATE_FUNCTION_TAG(coaccessible);
+  CREATE_FUNCTION_TAG(trim);
 
   /*--------------------------------------------------.
   | Sets of accessible, coaccessible, useful states.  |
@@ -133,7 +140,9 @@ namespace vcsn
   filter_automaton<Aut>
   accessible(const Aut& a)
   {
-    return vcsn::filter(a, accessible_states(a));
+    auto res = vcsn::filter(a, accessible_states(a));
+    res->properties().update(accessible_ftag{});
+    return res;
   }
 
   /// Coaccessible part of an automaton.
@@ -141,7 +150,9 @@ namespace vcsn
   filter_automaton<Aut>
   coaccessible(const Aut& a)
   {
-    return vcsn::filter(a, coaccessible_states(a));
+    auto res = vcsn::filter(a, coaccessible_states(a));
+    res->properties().update(coaccessible_ftag{});
+    return res;
   }
 
   /// Useful part of an automaton.
@@ -149,7 +160,9 @@ namespace vcsn
   filter_automaton<Aut>
   trim(const Aut& a)
   {
-    return vcsn::filter(a, useful_states(a));
+    auto res = vcsn::filter(a, useful_states(a));
+    res->properties().update(trim_ftag{});
+    return res;
   }
 
   /*----------------------------------------------------------------.

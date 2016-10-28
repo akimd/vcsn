@@ -8,7 +8,10 @@ from test import *
 # --------------------
 # Check that vcsn is-proper gives EXPECTED.
 def check(exp, aut):
-  CHECK_EQ(exp, vcsn.automaton(aut).is_proper())
+  a = vcsn.automaton(aut)
+  CHECK_EQ('N/A', a.info('is proper'))
+  CHECK_EQ(exp, a.is_proper())
+  CHECK_EQ(exp, a.info('is proper'))
 
 def check_context(exp, aut, ctx):
   print('Context: {}'.format(ctx))

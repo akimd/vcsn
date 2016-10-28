@@ -18,6 +18,13 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(standard);
+  CREATE_FUNCTION_TAG(costandard);
+
   /*-------------------------.
   | is_standard(automaton).  |
   `-------------------------*/
@@ -109,6 +116,7 @@ namespace vcsn
     // (i.b) Make [state s] initial, with initial multiplicity equal
     // to the unit of the multiplicity semiring.
     aut->set_initial(ini);
+    aut->properties().update(standard_ftag{});
   }
 
   template <Automaton Aut>
@@ -125,7 +133,9 @@ namespace vcsn
   costandard(const Aut& aut)
     -> decltype(copy(aut))
   {
-    return transpose(standard(transpose(aut)));
+    auto res = transpose(standard(transpose(aut)));
+    res->properties().update(costandard_ftag{});
+    return res;
   }
 
 
@@ -194,6 +204,7 @@ namespace vcsn
           {
             v->accept(*this);
             res_->set_initial(initial_);
+            res_->properties().update(standard_ftag{});
             return std::move(res_);
           }
         catch (const std::runtime_error& e)

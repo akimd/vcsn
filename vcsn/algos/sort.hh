@@ -12,6 +12,14 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(sort);
+
+  // Properties are copied as the automata are equivalent, so keep it.
+  KEEP_PROPERTIES(sort);
 
   namespace detail
   {
@@ -110,6 +118,7 @@ namespace vcsn
         visit_and_update_res_();
         push_inaccessible_states_();
         visit_and_update_res_();
+        res_->properties().update(sort_ftag{});
         return std::move(res_);
       }
 

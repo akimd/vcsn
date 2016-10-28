@@ -14,6 +14,11 @@
 
 namespace vcsn
 {
+  /*------------------------------.
+  | Function tag and properties.  |
+  `------------------------------*/
+
+  CREATE_FUNCTION_TAG(insplit);
 
   namespace detail
   {
@@ -94,6 +99,7 @@ namespace vcsn
               this->add_insplit_transitions_(std::get<1>(p), std::get<0>(p));
               todo_.pop_front();
             }
+        aut_->properties().update(insplit_ftag{});
       }
 
       std::ostream&

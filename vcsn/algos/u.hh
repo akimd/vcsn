@@ -8,6 +8,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(u);
 
   /// The Brzozowski universal witness.
   template <typename Context>
@@ -51,6 +56,7 @@ namespace vcsn
       res->new_transition(states[i], states[i], c);
     res->new_transition(states[n - 1], states[0], c);
 
+    res->properties().update(u_ftag{});
     return res;
   }
 

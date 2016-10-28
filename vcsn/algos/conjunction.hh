@@ -26,6 +26,17 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(add);
+  CREATE_FUNCTION_TAG(conjunction);
+  CREATE_FUNCTION_TAG(infiltrate);
+  CREATE_FUNCTION_TAG(ldivide);
+  CREATE_FUNCTION_TAG(rdivide);
+  CREATE_FUNCTION_TAG(shuffle);
+
   namespace detail
   {
     /*---------------------------------.
@@ -108,6 +119,7 @@ namespace vcsn
               add_conjunction_transitions(std::get<1>(p), std::get<0>(p));
               aut_->todo_.pop_front();
             }
+        aut_->properties().update(conjunction_ftag{});
       }
 
       /// Compute the left quotient
@@ -124,6 +136,7 @@ namespace vcsn
             add_ldivide_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
+        aut_->properties().update(ldivide_ftag{});
       }
 
       /// Compute the deterministic sum of two deterministic automata.
@@ -143,6 +156,7 @@ namespace vcsn
             add_add_transitions(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
+        aut_->properties().update(add_ftag{});
       }
 
       /// Compute the left quotient in-place.
@@ -173,6 +187,7 @@ namespace vcsn
           rhs->unset_initial(rhs->dst_of(t));
         for (auto s: new_initials)
           rhs->set_initial(s);
+        rhs->properties().update(ldivide_ftag{});
       }
 
       /// Compute the (accessible part of the) shuffle product.
@@ -199,6 +214,7 @@ namespace vcsn
             add_shuffle_transitions<false>(std::get<1>(p), std::get<0>(p));
             aut_->todo_.pop_front();
           }
+        aut_->properties().update(shuffle_ftag{});
       }
 
       /// Compute the (accessible part of the) infiltration product.
@@ -255,6 +271,7 @@ namespace vcsn
 
             aut_->todo_.pop_front();
           }
+        aut_->properties().update(infiltrate_ftag{});
       }
 
       /// Tell lazy_tuple_automaton how to add the transitions to a state
@@ -754,7 +771,9 @@ namespace vcsn
   {
     auto a1t = transpose(a1);
     auto a2t = transpose(a2);
-    return transpose(ldivide(a2t, a1t));
+    auto res = transpose(ldivide(a2t, a1t));
+    res->properties().update(rdivide_ftag{});
+    return res;
   }
 
   namespace dyn

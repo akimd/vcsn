@@ -11,6 +11,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(double_ring);
+
   template <typename Context>
   mutable_automaton<Context>
   double_ring(const Context& ctx, unsigned n,
@@ -62,6 +68,7 @@ namespace vcsn
       res->set_final(states[f]);
     }
 
+    res->properties().update(double_ring_ftag{});
     return res;
   }
 

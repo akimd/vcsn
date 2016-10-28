@@ -16,6 +16,13 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(codeterminize);
+  CREATE_FUNCTION_TAG(determinize);
+
   /*----------------------.
   | subset construction.  |
   `----------------------*/
@@ -106,6 +113,7 @@ namespace vcsn
             aut_->todo_.pop();
             complete_(src, ss);
           }
+        aut_->properties().update(determinize_ftag{});
       }
 
       /// All the outgoing transitions.
@@ -375,7 +383,9 @@ namespace vcsn
   auto
   codeterminize(const Aut& aut, Tag tag = {})
   {
-    return transpose(determinize(transpose(aut), tag));
+    auto res = transpose(determinize(transpose(aut), tag));
+    res->properties().update(codeterminize_ftag{});
+    return res;
   }
 
   /*---------------------.

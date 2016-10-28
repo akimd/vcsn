@@ -7,6 +7,15 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(factor);
+  CREATE_FUNCTION_TAG(prefix);
+  CREATE_FUNCTION_TAG(suffix);
+  CREATE_FUNCTION_TAG(subword);
+
   /*---------.
   | suffix.  |
   `---------*/
@@ -21,6 +30,7 @@ namespace vcsn
           && s != aut->post()
           && !aut->is_initial(s))
         aut->set_initial(s);
+    aut->properties().update(suffix_ftag{});
     return aut;
   }
 
@@ -61,6 +71,7 @@ namespace vcsn
   {
     auto t = transpose(aut);
     suffix_here(t);
+    aut->properties().update(prefix_ftag{});
     return aut;
   }
 
@@ -98,7 +109,9 @@ namespace vcsn
   Aut&
   factor_here(Aut& aut)
   {
-    return suffix_here(prefix_here(aut));
+    auto& res = suffix_here(prefix_here(aut));
+    res->properties().update(factor_ftag{});
+    return res;
   }
 
   template <Automaton Aut>
@@ -149,6 +162,7 @@ namespace vcsn
           aut->add_transition(s, aut->dst_of(t), one, aut->weight_of(t));
       }
 
+    aut->properties().update(subword_ftag{});
     return aut;
   }
 

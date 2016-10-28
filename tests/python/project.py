@@ -62,7 +62,7 @@ def check_aut(function_name, type_):
                'is empty': False,
                'is eps-acyclic': True,
                'is normalized': True,
-               'is proper': True,
+               'is proper': 'N/A',
                'is standard': True,
                'is synchronizing': False,
                'is trim': True,

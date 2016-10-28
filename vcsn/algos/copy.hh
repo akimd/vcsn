@@ -213,6 +213,7 @@ namespace vcsn
       {
         operator()([](state_t_of<in_automaton_t>) { return true; },
                    [](transition_t_of<in_automaton_t>) { return true; });
+        out_->properties() = in_->properties();
       }
 
       /// A map from original state to result state.

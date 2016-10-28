@@ -7,6 +7,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(complete);
+
   /// Complete \a aut and return it.
   template <Automaton Aut>
   Aut&
@@ -56,6 +62,7 @@ namespace vcsn
       for (auto letter : ls.generators())
         aut->new_transition(sink, sink, letter);
 
+    aut->properties().update(complete_ftag{});
     return aut;
   }
 

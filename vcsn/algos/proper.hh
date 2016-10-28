@@ -20,6 +20,36 @@
 
 namespace vcsn
 {
+  /*------------------------------.
+  | Function tag and properties.  |
+  `------------------------------*/
+
+  CREATE_FUNCTION_TAG(proper);
+
+  template <>
+  struct function_prop<proper_ftag>
+  {
+    static const bool invalidate = true;
+
+    static auto& updated_prop()
+    {
+#if defined __GNUC__ && ! defined __clang__
+      // GCC 4.9 and 5.0 warnings: see
+      // <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65324>.
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+      static auto updated_prop = create_updated_prop(
+        {
+          { is_proper_ptag::id(), boost::any{true} }
+        });
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic pop
+#endif
+      return updated_prop;
+    }
+  };
+
   namespace detail
   {
     /// Spontaneous transition elimination.
@@ -63,13 +93,16 @@ namespace vcsn
       /// Proper automata with proper context.
       aut_proper_t operator()() const
       {
-        return proper_star_<weightset_t::star_status()>();
+        auto res = proper_star_<weightset_t::star_status()>();
+        res->properties().update(proper_ftag{});
+        return res;
       }
 
       /// In-place spontaneous transition removal.
       void here()
       {
         proper_star_here_<weightset_t::star_status()>();
+        aut_->properties().update(proper_ftag{});
       }
 
     private:
@@ -250,8 +283,12 @@ namespace vcsn
       case direction::backward:
         return detail::make_properer(aut, prune, algo)();
       case direction::forward:
-        return transpose(proper(transpose(aut),
+        {
+          auto res = transpose(proper(transpose(aut),
                                 direction::backward, prune, algo));
+          res->properties().update(proper_ftag{});
+          return res;
+        }
       }
     BUILTIN_UNREACHABLE();
   }
@@ -264,7 +301,9 @@ namespace vcsn
   {
     require(dir == direction::backward,
             "backward direction for lazy proper is not implemented");
-    return make_shared_ptr<lazy_proper_automaton<Aut>>(aut, prune);
+    auto res = make_shared_ptr<lazy_proper_automaton<Aut>>(aut, prune);
+    res->properties().update(proper_ftag{});
+    return res;
   }
 
   /// Eliminate spontaneous transitions in place.  Raise if the

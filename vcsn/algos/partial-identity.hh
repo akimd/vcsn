@@ -10,6 +10,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(partial_identity);
+
   namespace detail
   {
     // Helper struct to compute the context of the partial identity
@@ -64,6 +70,7 @@ namespace vcsn
                           label_t{aut->label_of(tr), aut->label_of(tr)},
                           aut->weight_of(tr));
 
+    res->properties().update(partial_identity_ftag{});
     return res;
   }
 

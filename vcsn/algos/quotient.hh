@@ -11,6 +11,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(quotient);
 
   namespace detail
   {
@@ -105,7 +110,10 @@ namespace vcsn
                                     aut->label_of(t), aut->weight_of(t));
               }
           }
-        return make_partition_automaton(res, aut, origins);
+
+        auto out = make_partition_automaton(res, aut, origins);
+        out->properties().update(quotient_ftag{});
+        return out;
       }
 
     private:

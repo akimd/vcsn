@@ -6,6 +6,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(normalize);
+
   /// Whether \a a is standard and co-standard.
   template <Automaton Aut>
   bool
@@ -20,7 +26,9 @@ namespace vcsn
   normalize(const Aut& a)
     -> decltype(copy(a))
   {
-    return costandard(standard(a));
+    auto res = costandard(standard(a));
+    res->properties().update(normalize_ftag{});
+    return res;
   }
 
   namespace dyn

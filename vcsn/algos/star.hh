@@ -13,6 +13,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(star);
+
   /*------.
   | star  |
   `------*/
@@ -40,6 +46,7 @@ namespace vcsn
       }
     res->set_initial(initial, ws.one());
     res->set_final(initial, ws.one());
+    res->properties().update(star_ftag{});
     return res;
   }
 
@@ -85,6 +92,7 @@ namespace vcsn
     for (auto tf: final_transitions(res))
       res->rweight(tf, w);
     res->set_final(initial, w);
+    res->properties().update(star_ftag{});
     return res;
   }
 
@@ -111,6 +119,7 @@ namespace vcsn
     auto res = detail::make_join_automaton(tag, aut);
     copy_into(aut, res);
     star_here(res, tag);
+    res->properties().update(star_ftag{});
     return res;
   }
 

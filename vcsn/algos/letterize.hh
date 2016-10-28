@@ -11,6 +11,12 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tags.  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(letterize);
+  CREATE_FUNCTION_TAG(realtime);
 
   /*------------------------.
   | letterize(automaton).   |
@@ -86,6 +92,7 @@ namespace vcsn
                                         in_aut_->weight_of(tr));
             }
 
+        out_aut_->properties().update(letterize_ftag{});
         return std::move(out_aut_);
       }
 
@@ -219,7 +226,9 @@ namespace vcsn
   realtime(const Aut& aut)
     -> decltype(proper(::vcsn::letterize(aut)))
   {
-    return proper(::vcsn::letterize(aut));
+    auto res = proper(::vcsn::letterize(aut));
+    res->properties().update(realtime_ftag{});
+    return res;
   }
 
   namespace dyn

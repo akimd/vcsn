@@ -86,6 +86,16 @@ namespace vcsn
       sep = "\n";                                \
   } while (false)
 
+#define ECHO_PROP(Level, Property)                      \
+    do {                                                \
+      if (Level <= details)                             \
+        {                                               \
+          out << sep;                                   \
+          aut->properties().print_prop(Property, out);  \
+        }                                               \
+      sep = "\n";                                       \
+  } while (false)
+
 #define VCSN_IF_FREE(Fun, Aut)                                  \
     detail::static_if<labelset_t_of<decltype(Aut)>::is_free()>  \
         ([](auto a) { return Fun(a); },                         \
@@ -115,7 +125,7 @@ namespace vcsn
     ECHO(2, "is empty", is_empty(aut));
     ECHO(2, "is eps-acyclic", is_eps_acyclic(aut));
     ECHO(2, "is normalized", is_normalized(aut));
-    ECHO(2, "is proper", is_proper(aut));
+    ECHO_PROP(2, is_proper_ptag{});
     ECHO(2, "is standard", is_standard(aut));
     ECHO(3, "is synchronizing", VCSN_IF_FREE(is_synchronizing, aut));
     ECHO(2, "is trim", is_trim(aut));

@@ -11,6 +11,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(complement);
 
   /*------------------------.
   | complement(automaton).  |
@@ -41,6 +46,8 @@ namespace vcsn
         aut->unset_final(s);
       else
         aut->set_final(s);
+
+    aut->properties().update(complement_ftag{});
   }
 
   template <Automaton Aut>

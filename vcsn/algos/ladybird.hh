@@ -8,7 +8,13 @@
 
 namespace vcsn
 {
-  /// Build the ladybird automaton of \a n states.
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(ladybird);
+
+   /// Build the ladybird automaton of \a n states.
   template <typename Context>
   mutable_automaton<Context>
   ladybird(const Context& ctx, unsigned n)
@@ -37,6 +43,7 @@ namespace vcsn
         x = y;
       }
     res->new_transition(x, s, a);
+    res->properties().update(ladybird_ftag{});
     return res;
   }
 

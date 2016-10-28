@@ -125,6 +125,7 @@ namespace vcsn
       DEFINE(all_out);
       DEFINE(all_states);
       DEFINE(all_transitions);
+      DEFINE(properties);
       DEFINE(context);
       DEFINE(dst_of);
       DEFINE(get_final_weight);

@@ -33,6 +33,8 @@ namespace vcsn
       /// Sorted automaton state type.
       using state_t = state_t_of<fresh_automaton_t<>>;
 
+      using super_t::aut_;
+
     public:
       permutation_automaton_impl(const automaton_t& input)
         : super_t(make_fresh_automaton(input))
@@ -41,6 +43,7 @@ namespace vcsn
         map_[input_->pre()] = super_t::pre();
         map_[input_->post()] = super_t::post();
         todo_.push({input_->pre(), super_t::pre()});
+        aut_->properties() = input_->properties();
       }
 
       /// Static name.

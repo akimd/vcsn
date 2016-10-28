@@ -11,6 +11,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  struct de_bruijn_ftag{};
+
   // (a+b)*a(a+b)^n.
   template <typename Context>
   mutable_automaton<Context>
@@ -40,6 +46,7 @@ namespace vcsn
         prev = next;
       }
     res->set_final(prev);
+    res->properties().update(de_bruijn_ftag{});
     return res;
   }
 

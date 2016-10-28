@@ -14,6 +14,13 @@
 
 namespace vcsn
 {
+  /*------------------------------.
+  | Function tag and properties.  |
+  `------------------------------*/
+
+  // Defined in conjunction.hh
+  // Invalidate all properties.
+  struct add_ftag;
 
   /*----------------------------.
   | add(automaton, automaton).  |
@@ -54,6 +61,7 @@ namespace vcsn
                             b->label_of(t),
                             res->weightset()->conv(*b->weightset(),
                                                    b->weight_of(t)));
+    res->properties().update(add_ftag{});
     return res;
   }
 
@@ -95,6 +103,7 @@ namespace vcsn
   add_here(Aut1& res, const Aut2& b, general_tag)
   {
     copy_into(b, res);
+    res->properties().update(add_ftag{});
     return res;
   }
 

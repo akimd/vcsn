@@ -11,6 +11,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(thompson);
+
   namespace rat
   {
     /// Build a Thompson automaton from an expression.
@@ -57,6 +63,7 @@ namespace vcsn
             v->accept(*this);
             res_->set_initial(initial_);
             res_->set_final(final_);
+            res_->properties().update(thompson_ftag{});
             return std::move(res_);
           }
         catch (const std::runtime_error& e)

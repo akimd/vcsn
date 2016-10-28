@@ -14,6 +14,13 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  struct minimize_ftag; // Defined in minimize-brzozowski.hh
+  CREATE_FUNCTION_TAG(cominimize);
+
   /// Minimization via the minimizer functors.
   ///
   /// \tparam Aut  the input automaton type.
@@ -25,7 +32,9 @@ namespace vcsn
     -> quotient_t<Aut>
   {
     auto minimize = detail::minimizer<Aut, Tag>{a};
-    return quotient(a, minimize.classes());
+    auto res = quotient(a, minimize.classes());
+    res->properties().update(minimize_ftag{});
+    return res;
   }
 
   /// Minimization for Boolean automata: auto_tag.
@@ -122,7 +131,9 @@ namespace vcsn
   cominimize(const Aut& a, Tag tag = {})
     -> decltype(transpose(minimize(transpose(a), tag)))
   {
-    return transpose(minimize(transpose(a), tag));
+    auto res = transpose(minimize(transpose(a), tag));
+    res->properties().update(cominimize_ftag{});
+    return res;
   }
 
   /*----------------.

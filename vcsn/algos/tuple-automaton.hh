@@ -6,6 +6,12 @@
 
 namespace vcsn
 {
+  /*------------------------------.
+  | Function tag and properties.  |
+  `------------------------------*/
+
+  CREATE_FUNCTION_TAG(tuple);
+
   namespace detail
   {
     /*-------------------------------.
@@ -185,6 +191,7 @@ namespace vcsn
       auto aut = make_mutable_automaton(ctx);
       auto res = tuple_automata_impl<decltype(aut), Auts...>(aut, as...);
       res.tuple();
+      res.properties().update(tuple_ftag{});
       return res.strip();
     }
   }

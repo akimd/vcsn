@@ -7,6 +7,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(push_weights);
+
   /*--------------.
   | push weights. |
   `--------------*/
@@ -58,6 +64,7 @@ namespace vcsn
         else if (!ws.is_zero(ds))
           res->set_weight(t, ws.rdivide(w, ds));
       }
+    res->properties().update(push_weights_ftag{});
     return res;
   }
 

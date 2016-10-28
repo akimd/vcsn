@@ -9,6 +9,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(project);
 
   /*----------------------.
   | project(automaton).   |
@@ -22,6 +27,7 @@ namespace vcsn
                   "project: invalid tape number");
     auto res = make_mutable_automaton(detail::project<Tape>(aut->context()));
     copy_into(focus<Tape>(aut), res, false);
+    res->properties().update(project_ftag{});
     return res;
   }
 

@@ -15,6 +15,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(synchronize);
 
   namespace detail
   {
@@ -274,6 +279,7 @@ namespace vcsn
                                      in_aut_->weight_of(tr));
           }
         }
+        out_aut_->properties().update(synchronize_ftag{});
         return out_aut_;
       }
 

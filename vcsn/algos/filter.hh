@@ -17,6 +17,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(filter);
+
   namespace detail
   {
     /// Enables or not the presence of a container in a class.
@@ -77,6 +83,7 @@ namespace vcsn
       {
         ss_.set(input->pre());
         ss_.set(input->post());
+        properties_.update(filter_ftag{});
       }
 
       /// Static name.
@@ -281,6 +288,12 @@ namespace vcsn
         return ::vcsn::copy(aut_, state_filter, transition_filter);
       }
 
+      /// Accessor to the property cache.
+      auto& properties()
+      {
+        return properties_;
+      }
+
     protected:
       /// The "full" automaton whose some states are hidden.
       using super_t::aut_;
@@ -288,6 +301,8 @@ namespace vcsn
     private:
       /// The states we keep.
       states_t ss_;
+      /// Cache of properties, which can be empty values ("unknown").
+      property_cache properties_;
    };
   }
 

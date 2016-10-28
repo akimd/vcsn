@@ -6,6 +6,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(cerny);
 
   /*--------.
   | cerny.  |
@@ -50,6 +55,7 @@ namespace vcsn
 
     res->set_initial(states[0]);
     res->set_final(states[0]);
+    res->properties().update(cerny_ftag{});
 
     return res;
   }

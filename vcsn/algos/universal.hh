@@ -7,6 +7,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(universal);
+
   namespace detail
   {
     /// Functor for universal.
@@ -125,6 +131,7 @@ namespace vcsn
                 if (subset(delta_ret, subset_label[y]))
                   res->new_transition(x, y, a);
               }
+        res->properties().update(universal_ftag{});
         return res;
       }
     };

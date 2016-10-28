@@ -15,6 +15,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(compose);
+
   namespace detail
   {
 #define DEFINE(Type)                                                      \
@@ -471,6 +477,7 @@ namespace vcsn
   {
     auto res = make_compose_automaton<false, OutTape, InTape>(lhs, rhs);
     res->compose();
+    res->properties().update(compose_ftag{});
     return res->strip();
   }
 
@@ -482,6 +489,7 @@ namespace vcsn
   {
     auto res = make_compose_automaton<true, OutTape, InTape>(lhs, rhs);
     res->compose();
+    res->properties().update(compose_ftag{});
     return res;
   }
 

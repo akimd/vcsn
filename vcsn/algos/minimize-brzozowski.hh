@@ -8,6 +8,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(minimize);
 
   /*-------------------------------------------.
   | minimization with Brzozowski's algorithm.  |
@@ -32,7 +37,9 @@ namespace vcsn
                         determinized_automaton<codeterminized_automaton<Aut>,
                                                wet_kind_t::bitset>>
   {
-    return determinize(codeterminize(a));
+    auto res = determinize(codeterminize(a));
+    res->properties().update(minimize_ftag{});
+    return res;
   }
 
   namespace dyn

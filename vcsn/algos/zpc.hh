@@ -14,6 +14,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(zpc);
+
   namespace rat
   {
     /// Build a ZPC automaton from an expression.
@@ -66,6 +72,7 @@ namespace vcsn
             for (auto t: all_in(res_, res_->post()))
               res_->set_weight(t, ws_.mul(res_->weight_of(t), final_weight_));
 
+            res_->properties().update(zpc_ftag{});
             return std::move(res_);
           }
         catch (const std::runtime_error& e)

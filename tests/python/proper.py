@@ -17,14 +17,24 @@ def check_algo(i, o, algo):
     # We call sort().strip() everywhere to avoid seeing differences
     # caused by the different numbering of the states between the
     # algorithms.
-    CHECK_EQ(o.sort().strip(), i.proper(algo=algo).sort().strip())
+    iprop = i.proper(algo=algo)
+    CHECK_EQ(o.sort().strip(), iprop.sort().strip())
+
+    print("checking proper cache")
+
+    CHECK_EQ(True, iprop.info('is proper'))
 
     # Since we remove only states that _become_ inaccessible,
     # i.proper(prune=False).accessible() is not the same as i.proper():
     # in the former case we also removed the non-accessible states.
     print("checking proper(prune=False)")
-    CHECK_EQ(o.accessible(),
-             i.proper(prune=False, algo=algo).accessible())
+
+    iprop = i.proper(prune=False, algo=algo).accessible()
+    CHECK_EQ(o.accessible(), iprop)
+
+    print("checking proper(prune=False).accessible() cache")
+    # Check that proper is invalidated.
+    CHECK_EQ('N/A', iprop.info('is proper'))
 
     # FIXME: Because proper uses copy, state numbers are changed.
     #

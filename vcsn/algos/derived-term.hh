@@ -16,6 +16,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(derived_term);
+
   namespace detail
   {
     /// Specify a variety of derived-term construction.
@@ -195,6 +201,7 @@ namespace vcsn
             aut_->todo_.pop();
             complete_via_derivation_(p.first, p.second);
           }
+        aut_->properties().update(derived_term_ftag{});
         return aut_;
       }
 
@@ -208,6 +215,7 @@ namespace vcsn
             aut_->todo_.pop();
             complete_via_expansion_(p.first, p.second);
           }
+        aut_->properties().update(derived_term_ftag{});
         return aut_;
       }
 

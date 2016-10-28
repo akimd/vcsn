@@ -5,6 +5,12 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tag .  |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(conjugate);
+
   template <Automaton Aut>
   Aut
   conjugate(const Aut& aut)
@@ -46,6 +52,7 @@ namespace vcsn
                                 ls.one(), ws.one());
       }
 
+    res->properties().update(conjugate_ftag{});
     return res;
   }
 

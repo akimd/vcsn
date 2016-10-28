@@ -20,6 +20,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(multiply);
+
   /*----------------------------------.
   | multiply(automaton, automaton).   |
   `----------------------------------*/
@@ -37,6 +43,7 @@ namespace vcsn
                   "multiply_here: requires free labelset");
     multiply_here(res, b, standard_tag{});
     res = determinize(res)->strip();
+    res->properties().update(multiply_ftag{});
     return res;
   }
 
@@ -78,6 +85,7 @@ namespace vcsn
                               ws.mul(w1,
                                      ws.conv(bws, b->weight_of(t2))));
       }
+    res->properties().update(multiply_ftag{});
     return res;
   }
 
@@ -142,6 +150,7 @@ namespace vcsn
                                          ws.conv(bws, b->weight_of(t3))));
           }
       }
+    res->properties().update(multiply_ftag{});
     return res;
   }
 

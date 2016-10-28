@@ -7,6 +7,11 @@
 
 namespace vcsn
 {
+  /*----------------.
+  | Function tag.   |
+  `----------------*/
+
+  CREATE_FUNCTION_TAG(inductive);
 
   /*-------------------------.
   | inductive(expression).   |
@@ -62,6 +67,7 @@ namespace vcsn
         try
           {
             v->accept(*this);
+            res_->properties().update(inductive_ftag{});
             return std::move(res_);
           }
         catch (const std::runtime_error& e)

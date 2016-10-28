@@ -13,6 +13,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(pair);
 
   /*-----------------.
   | pair_automaton.  |
@@ -122,6 +127,8 @@ namespace vcsn
             singletons_.push_back(state_(s, s));
         else
           singletons_.push_back(q0_);
+
+        this->aut_->properties().update(pair_ftag{});
       }
 
       static symbol sname()

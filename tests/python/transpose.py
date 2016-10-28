@@ -54,7 +54,7 @@ CHECK_EQ({
            'is empty': False,
            'is eps-acyclic': True,
            'is normalized': False,
-           'is proper': True,
+           'is proper': 'N/A',
            'is standard': False,
            'is trim': True,
            'is useless': False,

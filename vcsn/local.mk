@@ -158,6 +158,8 @@ nobase_include_HEADERS =                        \
   %D%/core/partition-automaton.hh               \
   %D%/core/permutation-automaton.hh             \
   %D%/core/polystate-automaton.hh               \
+  %D%/core/property-cache.hh                    \
+  %D%/core/property.hh                          \
   %D%/core/rat/compare.hh                       \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/dot.hh                           \
@@ -263,6 +265,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/memory.hh                            \
   %D%/misc/military-order.hh                    \
   %D%/misc/pair.hh                              \
+  %D%/misc/property-indexer.hh                  \
   %D%/misc/queue.hh                             \
   %D%/misc/raise.hh                             \
   %D%/misc/random.hh                            \

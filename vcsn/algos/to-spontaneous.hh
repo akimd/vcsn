@@ -6,6 +6,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(to_spontaneous);
+
   /// Convert to spontaneous automaton: change every transition's
   /// label to the empty word.
   template <Automaton Aut>
@@ -36,6 +42,7 @@ namespace vcsn
                           ils.is_special(aut->label_of(t))
                           ? ols.special() : ols.one(),
                           aut->weight_of(t));
+    res->properties().update(to_spontaneous_ftag{});
     return res;
   }
 

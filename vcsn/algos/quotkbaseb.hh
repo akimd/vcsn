@@ -9,6 +9,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(quotkbaseb);
 
   /// Build the transducer which accepts a word n representing a number in base
   /// "base" and outputs the quotient of the division of n by k.
@@ -62,6 +67,7 @@ namespace vcsn
                                 ls.tuple(lgens[l], rgens[f]));
           }
       }
+    res->properties().update(quotkbaseb_ftag{});
     return res;
   }
 

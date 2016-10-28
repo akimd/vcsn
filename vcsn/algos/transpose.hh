@@ -12,6 +12,11 @@
 
 namespace vcsn
 {
+ /*---------------.
+  | Function tag. |
+  `--------------*/
+
+  CREATE_FUNCTION_TAG(transpose);
 
   /*-----------------------.
   | transpose(automaton).  |
@@ -61,8 +66,14 @@ namespace vcsn
       using weightset_t = weightset_t_of<automaton_t>;
       using kind_t = typename automaton_t::element_type::kind_t;
 
-      using super_t::super_t;
       using super_t::aut_;
+
+      template <typename T>
+      transpose_automaton_impl(T input)
+        : super_t(input)
+      {
+        properties_.update(transpose_ftag{});
+      }
 
       static symbol sname()
       {
@@ -99,6 +110,12 @@ namespace vcsn
       auto automaton() const
       {
         return copy<const transpose_automaton_impl*, automaton_t>(this);
+      }
+
+      /// Accessor to the property cache.
+      auto& properties()
+      {
+        return properties_;
       }
 
       /*-------------------------------.
@@ -244,6 +261,10 @@ namespace vcsn
       DEFINE(pre(), post());
 
 #undef DEFINE
+
+    private:
+      /// Cache of properties, which can be empty values ("unknown").
+      property_cache properties_;
     };
   }
 

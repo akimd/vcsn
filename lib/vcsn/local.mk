@@ -67,6 +67,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/flex-lexer.hh                        \
   %D%/misc/format.cc                            \
   %D%/misc/indent.cc                            \
+  %D%/misc/property-indexer.cc                  \
   %D%/misc/random.cc                            \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc                            \

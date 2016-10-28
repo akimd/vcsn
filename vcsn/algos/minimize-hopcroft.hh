@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <vcsn/algos/is-free-boolean.hh>
+#include <vcsn/algos/minimize-brzozowski.hh>
 #include <vcsn/algos/quotient.hh>
 #include <vcsn/labelset/stateset.hh>
 #include <vcsn/misc/attributes.hh>
@@ -15,6 +16,11 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  struct minimize_ftag; // Defined in minimize-brzozowski.hh
 
   /*------------------------------------------.
   | minimization with Hopcrofts's algorithm.  |
@@ -97,7 +103,9 @@ namespace vcsn
             res.push_back(label_of(s));
           return res;
         });
-    return quotient(a, res);
+    auto out = quotient(a, res);
+    out->properties().update(minimize_ftag{});
+    return out;
   }
 
   namespace dyn

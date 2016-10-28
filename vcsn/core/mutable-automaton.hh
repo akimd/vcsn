@@ -10,6 +10,7 @@
 
 #include <vcsn/concepts/automaton.hh>
 #include <vcsn/core/fwd.hh>
+#include <vcsn/core/property-cache.hh>
 #include <vcsn/core/transition.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
@@ -87,6 +88,8 @@ namespace vcsn
     free_store_t transitions_fs_;
     /// Label for initial and final transitions.
     label_t prepost_label_;
+    /// Cache for properties, which can have a value or not.
+    property_cache properties_;
 
   public:
     mutable_automaton_impl() = delete;
@@ -110,6 +113,7 @@ namespace vcsn
         {
           ctx_ = std::move(that.ctx_);
           prepost_label_ = std::move(that.prepost_label_);
+          properties_ = std::move(that.properties_);
           std::swap(states_, that.states_);
           std::swap(states_fs_, that.states_fs_);
           std::swap(transitions_, that.transitions_);
@@ -140,6 +144,7 @@ namespace vcsn
     const context_t& context() const { return ctx_; }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
+    property_cache& properties() { return properties_; }
 
 
     /*----------------------------------.

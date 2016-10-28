@@ -14,6 +14,12 @@
 
 namespace vcsn
 {
+  /*---------------.
+  | Function tag.  |
+  `---------------*/
+
+  CREATE_FUNCTION_TAG(reduce);
+
   namespace detail
   {
     /*
@@ -575,6 +581,8 @@ namespace vcsn
                                        mu.first, vect_new_basis[b]);
               }
         }
+
+        res_->properties().update(reduce_ftag{});
         return res_;
       }
 
