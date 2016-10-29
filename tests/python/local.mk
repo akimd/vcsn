@@ -98,6 +98,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/union.py                                  \
   %D%/universal.py                              \
   %D%/weight.py                                 \
+  %D%/weight-series.py                          \
   %D%/zpc.py
 
 $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) $(srcdir)/tests/bin/test.py

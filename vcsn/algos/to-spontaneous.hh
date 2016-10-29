@@ -22,26 +22,20 @@ namespace vcsn
     using out_state_t = state_t_of<decltype(res)>;
     /// input state -> output state.
     using state_map_t = std::unordered_map<in_state_t, out_state_t>;
-    state_map_t out_state_{{aut->pre(),  res->pre()},
-                           {aut->post(), res->post()}};
+    auto out_state = state_map_t{{aut->pre(),  res->pre()},
+                                 {aut->post(), res->post()}};
     for (auto s: aut->states())
-      out_state_[s] = res->new_state();
+      out_state[s] = res->new_state();
+
+    const auto& ils = *aut->labelset();
+    const auto& ols = *res->labelset();
 
     for (auto t : all_transitions(aut))
-      {
-        auto src = out_state_.find(aut->src_of(t));
-        auto dst = out_state_.find(aut->dst_of(t));
-        if (src != out_state_.end() && dst != out_state_.end())
-          {
-            if (src->second == res->pre() || dst->second == res->post())
-              res->new_transition(src->second, dst->second,
-                                  res->labelset()->special(),
-                                  aut->weight_of(t));
-            else
-              res->new_transition(src->second, dst->second,
-                                  res->labelset()->one(), aut->weight_of(t));
-          }
-      }
+      res->add_transition(out_state[aut->src_of(t)],
+                          out_state[aut->dst_of(t)],
+                          ils.is_special(aut->label_of(t))
+                          ? ols.special() : ols.one(),
+                          aut->weight_of(t));
     return res;
   }
 
