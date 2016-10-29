@@ -360,7 +360,7 @@ namespace vcsn
       //
       // FIXME: expressionset<lal_char(a-c), z>, q for instance cannot
       // work, because we need to move the q weights inside the
-      // lal_char(a-c), z expressions, which obviously not possible.
+      // lal_char(a-c), z expressions, which is obviously not possible.
       // So we need to require that there is a subtype relationship
       // between the weightset and the weightset of the expression.
       //
@@ -425,7 +425,7 @@ namespace vcsn
     state_eliminator<Aut, Profiler>
     make_state_eliminator(Aut& a, Profiler& profiler)
     {
-      return state_eliminator<Aut, Profiler>(a, profiler);
+      return {a, profiler};
     }
   }
 
