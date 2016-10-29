@@ -187,8 +187,10 @@ dist_notebooks_DATA =                           \
   %D%/polynomial.trie.ipynb                     \
   %D%/polynomial.tuple.ipynb                    \
   %D%/weight.add.ipynb                          \
+  %D%/weight.ldivide.ipynb                      \
   %D%/weight.multiply.ipynb                     \
-  %D%/weight.operators.ipynb
+  %D%/weight.operators.ipynb                    \
+  %D%/weight.rdivide.ipynb
 
 if HAVE_NBCONVERT
 nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html) %D%/index.html
