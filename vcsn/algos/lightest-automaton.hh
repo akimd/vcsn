@@ -22,26 +22,24 @@ namespace vcsn
   lightest_automaton(const Aut& aut, unsigned k, Algo algo = {})
   {
     require(is_tropical<weightset_t_of<Aut>>(),
-            "lightest-automaton: require tropical weightset");
+            "lightest-automaton: ", *aut->weightset(),
+            " is not a tropical weightset");
     auto res = make_fresh_automaton(aut);
     // The copy is not 'safe' (uses add_transition instead of new_transition),
     // as there can be the same transition multiple times.
     auto copy = make_copier(aut, res, false);
-    if (1 < k)
-      {
-        auto paths = k_lightest_path(aut, aut->pre(), aut->post(), k);
-        for (auto path : paths)
-          for (auto t : path)
-            if (t != aut->null_transition())
-              copy(t);
-      }
-    else if (k == 1)
+    if (k == 1)
       {
         auto pred = lightest_path(aut, algo);
         for (auto t = pred[aut->post()];
              t != aut->null_transition();
              t = pred[aut->src_of(t)])
           copy(t);
+      }
+    else if (1 < k)
+      {
+        for (auto path : k_lightest_path(aut, aut->pre(), aut->post(), k))
+          copy(path);
       }
     return res;
   }
@@ -53,7 +51,8 @@ namespace vcsn
       /// Bridge.
       template <Automaton Aut, typename Num, typename String>
       automaton
-      lightest_automaton(const automaton& aut, unsigned k, const std::string& algo)
+      lightest_automaton(const automaton& aut, unsigned k,
+                         const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
         return ::vcsn::lightest_automaton(a, k, algo);
