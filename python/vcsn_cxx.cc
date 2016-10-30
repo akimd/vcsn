@@ -32,10 +32,10 @@ using automaton_conjunction_repeated_t
 using automaton_copy_t
   = auto (automaton::*)(const context&) const -> automaton;
 
-using eval_t
+using evaluate_t
   = auto (automaton::*)(const label&) const -> weight;
 
-using eval_polynomial_t
+using evaluate_polynomial_t
   = auto (automaton::*)(const polynomial&) const -> weight;
 
 /// The type of the binary multiply function for automata.
@@ -347,8 +347,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("determinize", &automaton::determinize, (arg("algo") = "auto"))
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state, (arg("state") = -1))
-    .def("_eval", static_cast<eval_t>(&automaton::eval))
-    .def("_eval", static_cast<eval_polynomial_t>(&automaton::eval))
+    .def("_evaluate", static_cast<evaluate_t>(&automaton::evaluate))
+    .def("_evaluate", static_cast<evaluate_polynomial_t>(&automaton::evaluate))
     .def("factor", &automaton::factor)
     .def("filter", &automaton_filter)
     .def("_format", &format<automaton>)

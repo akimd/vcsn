@@ -49,7 +49,7 @@ dist_notebooks_DATA =                           \
   %D%/automaton.determinize.ipynb               \
   %D%/automaton.difference.ipynb                \
   %D%/automaton.eliminate_state.ipynb           \
-  %D%/automaton.eval.ipynb                      \
+  %D%/automaton.evaluate.ipynb                  \
   %D%/automaton.expression.ipynb                \
   %D%/automaton.factor.ipynb                    \
   %D%/automaton.filter.ipynb                    \

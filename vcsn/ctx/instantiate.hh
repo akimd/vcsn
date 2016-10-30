@@ -18,7 +18,7 @@
 #include <vcsn/algos/divkbaseb.hh>
 #include <vcsn/algos/double-ring.hh>
 #include <vcsn/algos/edit-automaton.hh>
-#include <vcsn/algos/eval.hh>
+#include <vcsn/algos/evaluate.hh>
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities-of.hh>
 #include <vcsn/algos/inductive.hh>
@@ -231,7 +231,7 @@ namespace vcsn
         REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
-        REGISTER(eval, aut_t, wls_t);
+        REGISTER(evaluate, aut_t, wls_t);
         REGISTER(infiltrate, std::tuple<aut_t, aut_t>);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcsn/algos/eval.hh>
+#include <vcsn/algos/evaluate.hh>
 #include <vcsn/algos/lightest-path.hh>
 #include <vcsn/algos/to-spontaneous.hh>
 #include <vcsn/algos/proper.hh>
@@ -20,7 +20,7 @@ namespace vcsn
     try
       {
         auto aut = proper(to_spontaneous(a));
-        return eval(aut);
+        return evaluate(aut);
       }
     catch (const std::runtime_error& e)
       {

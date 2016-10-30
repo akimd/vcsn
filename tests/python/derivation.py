@@ -17,7 +17,7 @@ def check_derived_term(r, exp, algo):
         # against the strict computation.
         lazy = r.derived_term(algo)
         CHECK(lazy.type().startswith('derived_term_automaton'))
-        # FIXME: we don't support eval on non-free.  #101.
+        # FIXME: we don't support evaluate on non-free.  #101.
         if r.info('tuple') == 0:
             first = str(lazy)
             # Force the evaluation of the empty word to start computing

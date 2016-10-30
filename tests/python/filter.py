@@ -101,12 +101,12 @@ check(in_aut.filter([0, 1, 2, 3, 4]), [0, 1, 2, 3, 7], out_aut)
 check(in_aut.transpose(), [0, 1, 2, 3, 7],
       in_aut.filter([0, 1, 2, 3]).transpose())
 
-# Regression: eval did not work once.
-CHECK_EQ('1', in_aut.filter([0, 1, 2, 3, 4, 5]).eval('cba'))
-CHECK_EQ('1', in_aut.filter([0, 1, 2, 3, 4, 5]).eval('a'))
+# Regression: evaluate did not work once.
+CHECK_EQ('1', in_aut.filter([0, 1, 2, 3, 4, 5]).evaluate('cba'))
+CHECK_EQ('1', in_aut.filter([0, 1, 2, 3, 4, 5]).evaluate('a'))
 
-CHECK_EQ('0', in_aut.filter([0, 1]).eval('cba'))
-CHECK_EQ('1', in_aut.filter([0, 1]).eval('a'))
+CHECK_EQ('0', in_aut.filter([0, 1]).evaluate('cba'))
+CHECK_EQ('1', in_aut.filter([0, 1]).evaluate('a'))
 
-CHECK_EQ('0', in_aut.filter([]).eval('cba'))
-CHECK_EQ('0', in_aut.filter([]).eval('a'))
+CHECK_EQ('0', in_aut.filter([]).evaluate('cba'))
+CHECK_EQ('0', in_aut.filter([]).evaluate('a'))

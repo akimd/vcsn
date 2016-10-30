@@ -41,8 +41,8 @@ For more help about available options, please use "vcsn tools --help"
 EOF
 
 
-check eval -h <<EOF
-usage: vcsn eval [OPTIONS...] [ARGS...]
+check evaluate -h <<EOF
+usage: vcsn evaluate [OPTIONS...] [ARGS...]
 
 Available versions:
   AUT:automaton L:word -> weight

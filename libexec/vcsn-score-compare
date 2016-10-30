@@ -361,6 +361,8 @@ def normalize(k):
 
     k = k.replace('proper(False)', 'proper(prune=False)')
 
+    k = re.sub(r'\beval\b', 'evaluate', k)
+
     # Final format.
     k = '{:20s} # {}'.format(*[str.strip(x) for x in k.split('#', 2)])
     return k

@@ -8,11 +8,11 @@ from test import *
 
 def check(aut, word, exp):
     exp = ctx.weight(exp)
-    CHECK_EQ(exp, aut.eval(word))
+    CHECK_EQ(exp, aut.evaluate(word))
     CHECK_EQ(exp, aut(word))
     if word == '':
         word = r'\e'
-    CHECK_EQ(exp, aut.eval(ctx.word_context().polynomial(word)))
+    CHECK_EQ(exp, aut.evaluate(ctx.word_context().polynomial(word)))
 
 ## ------------- ##
 ## lal_char, z.  ##
@@ -251,7 +251,7 @@ check(a, "aaa|ab", '3')
 
 def check(aut, poly, exp):
     exp = ctx.weight(exp)
-    CHECK_EQ(exp, aut.eval(ctx.polynomial(poly)))
+    CHECK_EQ(exp, aut.evaluate(ctx.polynomial(poly)))
 
 ##---------------##
 ## law_char, z.  ##

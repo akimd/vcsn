@@ -9,7 +9,7 @@ check ()
 {
   local expected=$1
   shift
-  run 0 "$expected" tests/bin/vcsn eval $@
+  run 0 "$expected" tests/bin/vcsn evaluate $@
 }
 
 cat >simple.gv <<EOF
@@ -39,4 +39,4 @@ check 4 -f simple.gv -L aab
 run 0 2 -/bin/sh -c "( $vcsn thompson -Ee -ab |
                        $vcsn proper |
                        $vcsn lweight -C 'lal_char, q' -W 2 -A - |
-                       $vcsn eval -L -e-ab )"
+                       $vcsn evaluate -L -e-ab )"

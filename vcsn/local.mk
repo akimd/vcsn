@@ -46,7 +46,7 @@ algo_headers =                                  \
   %D%/algos/epsilon-remover-lazy.hh             \
   %D%/algos/epsilon-remover-separate.hh         \
   %D%/algos/epsilon-remover.hh                  \
-  %D%/algos/eval.hh                             \
+  %D%/algos/evaluate.hh                         \
   %D%/algos/expand.hh                           \
   %D%/algos/filter.hh                           \
   %D%/algos/focus.hh                            \

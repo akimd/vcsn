@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-10-31
+### eval is renamed evaluate
+For consistency with the remainder of the API, we use the full,
+unabbreviated, name: evaluate.
+
 ## 2016-10-18
 ### weight_one and weight_zero are now avaible in Python
 These methods return the "one" and "zero" weights of a context.
@@ -12,10 +17,10 @@ These methods return the "one" and "zero" weights of a context.
     In [1]: import vcsn
             ctx = vcsn.context('lal_char, zmin')
     In [2]: ctx.weight_one()
-    Out [2]: 0
+    Out[2]: 0
 
     In [3]: ctx.weight_zero()
-    Out [3]: ∞
+    Out[3]: ∞
 
 ## 2016-10-17
 ### Left and right divisions are now supported on labels
@@ -27,12 +32,12 @@ using `//` and `/` operators (respectively).
     In [2]: l = ctx.label('a')
             r = ctx.label('abc')
             l // r # == l.ldivide(r)
-    Out [2]: bc
+    Out[2]: bc
 
     In [3]: l = ctx.label('abc')
             r = ctx.label('bc')
             l / r # == l.rdivide(r)
-    Out [3]: a
+    Out[3]: a
 
 ## 2016-10-11
 ### TAF-Kit is replaced by Tools
@@ -162,7 +167,7 @@ For example, we can compute the edit distance between two words:
     In [1]: c = vcsn.context('lan(a-z), nmin')
             a = (c|c).levenshtein()
             a('foo|bar')
-    Out[11: 3
+    Out[1]: 3
 
     In [2]: a('bar|baz')
     Out[2]: 1

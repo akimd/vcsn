@@ -363,14 +363,14 @@ for algo in ['', '"weighted"', '"lazy,weighted"']:
           number=2)
 
 
-## ------ ##
-## eval.  ##
-## ------ ##
+## ---------- ##
+## evaluate.  ##
+## ---------- ##
 
 n = 150
 # Many many states active concurrently.
 # too slow: a = b.expression('(a+b)*a(a+b){{{n}}}).derived_term()
-bench('a.eval("a"*{})'.format(n + 1),
+bench('a.evaluate("a"*{})'.format(n + 1),
       'a = de_bruijn({})'.format(n),
       setup=['n = {}'.format(n),
              'a = b.de_bruijn(n)'],
@@ -381,7 +381,7 @@ for ctx, number in [('lal(a-z), z', 20000),
                     ('law(a-z), z', 10000)]:
     n = 25
     r = '[a-z]*'
-    bench('a.eval("abcxyz"*{})'.format(n),
+    bench('a.evaluate("abcxyz"*{})'.format(n),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['c = vcsn.context("{}")'.format(ctx),
                  'r = c.expression("{}")'.format(r),
@@ -389,7 +389,7 @@ for ctx, number in [('lal(a-z), z', 20000),
           number=number)
 
 
-    bench('a.eval(wc.polynomial("abcxyz"*{}))'.format(n),
+    bench('a.evaluate(wc.polynomial("abcxyz"*{}))'.format(n),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
           setup=['c = vcsn.context("{}")'.format(ctx),
                  'r = c.expression("{}")'.format(r),

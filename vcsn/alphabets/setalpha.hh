@@ -222,7 +222,7 @@ namespace vcsn
       //
       // The empty word (i.e., an empty stream) is a valid
       // representation of the mpty word.  We want to be able to call
-      // `aut.eval("")`, instead of mandating `aut.eval("\e")`.
+      // `aut.evaluate("")`, instead of mandating `aut.evaluate("\e")`.
       word_t res;
       int c = i.peek();
       while (i.good()

@@ -21,8 +21,8 @@
  0.84[0m  0.81[0m  0.85[0m  0.79[0m a.determinize()      # a = ladybird(18), c = [a-zA-Z0-9] -> B
  7.43[0m  7.20[0m  7.28[0m  7.31[0m a.determinize()      # a = ladybird(21)
   N/A  1.38[0m  1.39[0m  1.33[0m a.determinize()      # a = std(([^]+a){100}), c = [a-zA-Z0-9] -> B, 2x
-[31m[1m 0.54[0m [32m[1m 0.16[0m [32m[1m 0.16[0m [32m[1m 0.15[0m a.eval("a"*151)      # a = de_bruijn(150), 1000x
-  N/A   N/A  0.07[0m  0.06[0m a.eval("abcxyz"*25)  # a = std([a-z]*), c = [a-z] -> Z, 1000x
+[31m[1m 0.54[0m [32m[1m 0.16[0m [32m[1m 0.16[0m [32m[1m 0.15[0m a.evaluate("a"*151)  # a = de_bruijn(150), 1000x
+  N/A   N/A  0.07[0m  0.06[0m a.evaluate("abcxyz"*25) # a = std([a-z]*), c = [a-z] -> Z, 1000x
   N/A   N/A  0.08[0m  0.07[0m a.expression("associative", "naive") # a = ladybird(8000)
 [31m[1m 0.75[0m [31m[1m 0.73[0m [32m[1m 0.56[0m [32m[1m 0.51[0m a.expression("associative", "naive") # a = std([a-d]?{100})
   N/A   N/A  0.20[0m  0.19[0m a.expression("linear", "delgado") # a = ladybird(2000)

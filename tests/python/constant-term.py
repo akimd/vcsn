@@ -15,7 +15,7 @@ def check(weight, exp, algo='expansion'):
     w = ctx.weight(weight)
     re = ctx.expression(exp)
     CHECK_EQ(w, re.constant_term())
-    CHECK_EQ(w, re.automaton(algo).eval(''))
+    CHECK_EQ(w, re.automaton(algo).evaluate(''))
 
 # zero.
 check(r'\z', r'<x>\z')

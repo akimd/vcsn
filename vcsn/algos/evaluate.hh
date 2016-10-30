@@ -169,7 +169,7 @@ namespace vcsn
   /// General case of evaluation.
   template <Automaton Aut>
   auto
-  eval(const Aut& a, const word_t_of<Aut>& w)
+  evaluate(const Aut& a, const word_t_of<Aut>& w)
     -> std::enable_if_t<!context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
     auto e = detail::evaluator<Aut>{a};
@@ -183,10 +183,10 @@ namespace vcsn
   /// initial and final transitions. Sum the weight of these paths.
   template <Automaton Aut>
   auto
-  eval(const Aut& a)
+  evaluate(const Aut& a)
     -> std::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
-    require(is_proper(a), "eval: cannot evaluate with spontaneous transitions");
+    require(is_proper(a), "evaluate: cannot evaluate with spontaneous transitions");
     const auto& ws = *a->weightset();
     auto res = ws.zero();
     for (auto init_tr: initial_transitions(a))
@@ -209,11 +209,11 @@ namespace vcsn
       /// Bridge.
       template <Automaton Aut, typename LabelSet>
       weight
-      eval(const automaton& aut, const label& lbl)
+      evaluate(const automaton& aut, const label& lbl)
       {
         const auto& a = aut->as<Aut>();
         const auto& l = lbl->as<LabelSet>().value();
-        auto res = ::vcsn::eval(a, l);
+        auto res = ::vcsn::evaluate(a, l);
         return {*a->weightset(), res};
       }
     }
@@ -222,7 +222,7 @@ namespace vcsn
   /// Evaluation of a polynomial.
   template <Automaton Aut>
   auto
-  eval(const Aut& a,
+  evaluate(const Aut& a,
       const typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t& p)
     -> weight_t_of<Aut>
   {
@@ -235,14 +235,14 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge (eval).
+      /// Bridge (evaluate).
       template <Automaton Aut, typename PolynomialSet>
       weight
       eval_polynomial(const automaton& aut, const polynomial& poly)
       {
         const auto& a = aut->as<Aut>();
         const auto& p = poly->as<PolynomialSet>().value();
-        auto res = ::vcsn::eval(a, p);
+        auto res = ::vcsn::evaluate(a, p);
         return {*a->weightset(), res};
       }
     }

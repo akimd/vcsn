@@ -252,10 +252,10 @@ namespace vcsn
                               int s = -1);
 
     /// Evaluate \a l on \a aut.
-    weight eval(const automaton& aut, const word& l);
+    weight evaluate(const automaton& aut, const word& l);
 
     /// Evaluate \a p on \a aut.
-    weight eval(const automaton& aut, const polynomial& p);
+    weight evaluate(const automaton& aut, const polynomial& p);
 
     /// Distribute product over addition recursively under the starred
     /// subexpressions and group the equal monomials.

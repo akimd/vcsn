@@ -203,16 +203,16 @@ class automaton:
     def dot(self, mode="pretty"):
         return _dot_pretty(self.format('dot,utf8'), mode)
 
-    # automaton.eval.
-    def eval(self, w):
+    # automaton.evaluate.
+    def evaluate(self, w):
         '''Evaluation of word (or polynomial) `w` on `self`, with possible
         conversion from plain string to genuine label object.
         '''
         c = self.context()
         if not isinstance(w, label) and not isinstance(w, polynomial):
             w = c.word(str(w))
-        return self._eval(w)
-    __call__ = eval
+        return self._evaluate(w)
+    __call__ = evaluate
 
     # automaton.format
     def format(self, fmt="daut"):

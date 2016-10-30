@@ -89,7 +89,7 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   // The word to evaluate in prod.
   word_t_of<Ctx> input = read_word<Ctx>(prod->context(), word);
   // The result weight from the evaluation.
-  weight_t_of<Ctx> w = eval<automaton_t>(prod, input);
+  weight_t_of<Ctx> w = evaluate<automaton_t>(prod, input);
   // Display of the result, we need to use the automaton's weightset to be able
   // to print the weight as the print function cannot be generic in static.
   prod->context().weightset()->print(w, std::cout);
@@ -114,7 +114,7 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
   // The word to evaluate in prod.
   label input = read_word(context_of(prod), word);
   // The result weight from the evaluation.
-  weight w = eval(prod, input);
+  weight w = evaluate(prod, input);
   // Display of the result, no need to use the weightset.
   std::cout << w;
 }
