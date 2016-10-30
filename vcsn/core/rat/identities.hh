@@ -38,8 +38,11 @@ namespace vcsn LIBVCSN_API
           /// add.
           linear,
 
-          /// Traditional plus distribution.  Used for series identities.
+          /// Linear plus distribution.  Used for series identities.
           distributive,
+
+          /// Linear plus optimizations.
+          agressive,
 
           /// The default value.
           deflt = linear,
@@ -60,6 +63,12 @@ namespace vcsn LIBVCSN_API
         return ids_;
       }
 
+      /// Whether agressive optimizations are on.
+      bool is_agressive() const
+      {
+        return ids_ == agressive;
+      }
+
       /// Whether associative.
       bool is_associative() const
       {
@@ -69,7 +78,7 @@ namespace vcsn LIBVCSN_API
       /// Whether distributive.
       bool is_distributive() const
       {
-        return distributive <= ids_;
+        return ids_ == distributive;
       }
 
       /// Whether linear.

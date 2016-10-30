@@ -20,6 +20,7 @@ namespace vcsn
         {
           "identities",
           {
+            {"agressive",    identities::agressive},
             {"associative",  identities::associative},
             {"auto",         identities::deflt},
             {"binary",       "trivial"},
@@ -44,6 +45,8 @@ namespace vcsn
         {
         case identities::associative:
           return "associative";
+        case identities::agressive:
+          return "agressive";
         case identities::linear:
           return "linear";
         case identities::distributive:

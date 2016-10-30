@@ -768,6 +768,12 @@ namespace vcsn
     if (ids_ && is_zero(e))
       res = one();
 
+    // E** => E* if on B.
+    else if (ids_.is_agressive()
+             && e->type() == type_t::star
+             && std::is_same<weightset_t, b>{})
+      res = e;
+
     else
       {
         res = std::make_shared<star_t>(e);
@@ -816,6 +822,10 @@ namespace vcsn
     if (!ids_)
       res = std::make_shared<transposition_t>(e);
 
+    // E{T} => E{t} when agressive.
+    else if (ids_.is_agressive())
+      res = transpose(e);
+
     // 0{T} => 0.
     else if (is_zero(e))
       res = e;
@@ -827,6 +837,11 @@ namespace vcsn
     // a{T} => a, (abc){T} => cba.
     else if (auto l = std::dynamic_pointer_cast<const atom_t>(e))
       res = atom(labelset()->transpose(l->value()));
+
+    // E{T}{T} => E, if agressive.
+    else if (ids_.is_agressive()
+             && e->type() == type_t::transposition)
+      res = down_pointer_cast<const transposition_t>(e)->sub();
 
     else
       res = std::make_shared<transposition_t>(e);

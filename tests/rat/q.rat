@@ -90,3 +90,6 @@ a(c+b)(f+e) => abe+abf+ace+acf
 
 %identities: none
 ab => ab
+
+%identities: agressive
+a** => a**

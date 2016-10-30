@@ -41,6 +41,8 @@ a+a+a+a+[b-h] => a+a+a+[^]
 [bcdefg]+h => [^a]
 [bcdefg]+h+h => [^a]+h
 h+[bcdefg] => h+[^ah]
+a** => a**
+a*{T} => a*{T}
 
 # Computations in B.
 %identities: linear
@@ -64,3 +66,7 @@ h+[bcdefg] => [^a]
 %identities: none
 [ab] => a+b
 [^abc] => (((d+e)+f)+g)+h
+
+%identities: agressive
+a** => a*
+a*{T} => a*
