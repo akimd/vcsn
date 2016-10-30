@@ -31,6 +31,7 @@ dist_notebooks_DATA =                           \
   %D%/Tools.ipynb                               \
   %D%/Transducers.ipynb                         \
   %D%/Trouble-Shooting.ipynb                    \
+  %D%/automaton.Operators.ipynb                 \
   %D%/automaton.accessible.ipynb                \
   %D%/automaton.add.ipynb                       \
   %D%/automaton.ambiguous_word.ipynb            \
@@ -87,7 +88,6 @@ dist_notebooks_DATA =                           \
   %D%/automaton.lweight.ipynb                   \
   %D%/automaton.minimize.ipynb                  \
   %D%/automaton.multiply.ipynb                  \
-  %D%/automaton.operators.ipynb                 \
   %D%/automaton.pair.ipynb                      \
   %D%/automaton.partial_identity.ipynb          \
   %D%/automaton.prefix.ipynb                    \
@@ -113,13 +113,13 @@ dist_notebooks_DATA =                           \
   %D%/automaton.tuple.ipynb                     \
   %D%/automaton.type.ipynb                      \
   %D%/automaton.weight_series.ipynb             \
+  %D%/context.Operators.ipynb                   \
   %D%/context.cerny.ipynb                       \
   %D%/context.cotrie.ipynb                      \
   %D%/context.de_bruijn.ipynb                   \
   %D%/context.divkbaseb.ipynb                   \
   %D%/context.ladybird.ipynb                    \
   %D%/context.levenshtein.ipynb                 \
-  %D%/context.operators.ipynb                   \
   %D%/context.quotkbaseb.ipynb                  \
   %D%/context.random_automaton.ipynb            \
   %D%/context.random_expression.ipynb           \
@@ -129,15 +129,16 @@ dist_notebooks_DATA =                           \
   %D%/context.weight_one.ipynb                  \
   %D%/context.weight_zero.ipynb                 \
   %D%/context.word_context.ipynb                \
+  %D%/expansion.Operators.ipynb                 \
   %D%/expansion.add.ipynb                       \
   %D%/expansion.complement.ipynb                \
   %D%/expansion.conjunction.ipynb               \
   %D%/expansion.ldivide.ipynb                   \
   %D%/expansion.lweight.ipynb                   \
-  %D%/expansion.operators.ipynb                 \
   %D%/expansion.project.ipynb                   \
   %D%/expansion.rweight.ipynb                   \
   %D%/expansion.tuple.ipynb                     \
+  %D%/expression.Operators.ipynb                \
   %D%/expression.add.ipynb                      \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
@@ -157,7 +158,6 @@ dist_notebooks_DATA =                           \
   %D%/expression.lift.ipynb                     \
   %D%/expression.lweight.ipynb                  \
   %D%/expression.multiply.ipynb                 \
-  %D%/expression.operators.ipynb                \
   %D%/expression.partial_identity.ipynb         \
   %D%/expression.project.ipynb                  \
   %D%/expression.rdivide.ipynb                  \
@@ -172,25 +172,25 @@ dist_notebooks_DATA =                           \
   %D%/expression.transposition.ipynb            \
   %D%/expression.tuple.ipynb                    \
   %D%/expression.zpc.ipynb                      \
+  %D%/label.Operators.ipynb                     \
   %D%/label.ldivide.ipynb                       \
   %D%/label.multiply.ipynb                      \
-  %D%/label.operators.ipynb                     \
   %D%/label.rdivide.ipynb                       \
+  %D%/polynomial.Operators.ipynb                \
   %D%/polynomial.add.ipynb                      \
   %D%/polynomial.conjunction.ipynb              \
   %D%/polynomial.cotrie.ipynb                   \
   %D%/polynomial.ldivide.ipynb                  \
   %D%/polynomial.lweight.ipynb                  \
   %D%/polynomial.multiply.ipynb                 \
-  %D%/polynomial.operators.ipynb                \
   %D%/polynomial.rweight.ipynb                  \
   %D%/polynomial.split.ipynb                    \
   %D%/polynomial.trie.ipynb                     \
   %D%/polynomial.tuple.ipynb                    \
+  %D%/weight.Operators.ipynb                    \
   %D%/weight.add.ipynb                          \
   %D%/weight.ldivide.ipynb                      \
   %D%/weight.multiply.ipynb                     \
-  %D%/weight.operators.ipynb                    \
   %D%/weight.rdivide.ipynb
 
 if HAVE_NBCONVERT
