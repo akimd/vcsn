@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/heap/fibonacci_heap.hpp>
+
 #include <vcsn/misc/map.hh>
 #include <vcsn/algos/dijkstra-node.hh>
 #include <vcsn/ctx/traits.hh>
@@ -64,27 +66,10 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using dijkstra_node_t = dijkstra_node<automaton_t>;
-
-    struct profile
-    {
-      profile(const dijkstra_node_t& node)
-        : node_{node}
-      {}
-
-      profile(dijkstra_node_t&& node)
-        : node_{node}
-      {}
-
-      bool operator<(const profile& rhs) const
-      {
-        // We want a min-heap.
-        return rhs.node_ < node_;
-      }
-
-      dijkstra_node_t node_;
-    };
-
-    using queue_t = boost::heap::fibonacci_heap<profile>;
+    using profile_t = dijkstra_node_t;
+    // We want a min-heap.
+    using comparator_t = boost::heap::compare<std::greater<profile_t>>;
+    using queue_t = boost::heap::fibonacci_heap<profile_t, comparator_t>;
 
     auto predecessor_tree = shortest_path_tree<automaton_t>(src);
     auto queue = queue_t{};
@@ -97,7 +82,7 @@ namespace vcsn
 
     while (!queue.empty())
     {
-      auto current = queue.top().node_;
+      auto current = std::move(queue.top());
       queue.pop();
       auto s = current.state_;
 

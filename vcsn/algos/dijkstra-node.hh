@@ -26,14 +26,14 @@ namespace vcsn
     {}
 
     bool
-    operator<(const dijkstra_node& other) const
+    operator>(const dijkstra_node& other) const
     {
       if (!weight_)
-        return false;
-      else if (!other.weight_)
         return true;
+      else if (!other.weight_)
+        return false;
       else
-        return *weight_ < *other.weight_;
+        return *other.weight_ < *weight_;
     }
 
     weight_t

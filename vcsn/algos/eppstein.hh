@@ -29,31 +29,12 @@ namespace vcsn
       : aut_{aut}
     {}
 
-    /// Elements of the heap
-    ///
-    /// This is needed in order to unsure a max heap (operator< is actually
-    /// computing other < this).
-    struct profile
-    {
-      profile(const implicit_path_t& path)
-        : path_{path}
-      {}
+    using profile_t = implicit_path_t;
+    // We want a min-heap.
+    using comparator_t = boost::heap::compare<std::greater<profile_t>>;
+    using queue_t = boost::heap::fibonacci_heap<profile_t, comparator_t>;
 
-      profile(implicit_path_t&& path)
-        : path_{path}
-      {}
-
-      bool operator<(const profile& rhs) const
-      {
-        // We want a min-heap.
-        return rhs.path_ < path_;
-      }
-
-      implicit_path_t path_;
-    };
-
-    using queue_t = boost::heap::fibonacci_heap<profile>;
-
+    /// Compute the \a K shortest paths in the automaton from \a src to \a dst.
     std::vector<path<automaton_t>>
     k_shortest_path(state_t src, state_t dst, int K)
     {
@@ -61,13 +42,13 @@ namespace vcsn
       auto sidetrack_edge_costs_map = sidetrack_costs_t();
       auto res = std::vector<path<automaton_t>>{};
       auto queue = queue_t{};
-      queue.emplace(implicit_path_t(aut_, aut_->null_transition(),
-                                    implicit_path_t::null_parent_path,
-                                    tree.states_[src].get_weight()));
+      queue.emplace(aut_, aut_->null_transition(),
+                    int(implicit_path_t::null_parent_path),
+                    tree.states_[src].get_weight());
 
       for (int k = 0; k < K && !queue.empty(); k++)
       {
-        auto k_path_implicit = std::move(queue.top().path_);
+        auto k_path_implicit = std::move(queue.top());
         queue.pop();
 
         auto k_path = k_path_implicit.explicit_path(res, tree, src);
@@ -113,7 +94,7 @@ namespace vcsn
         }
 
         if (has_curr)
-          queue.emplace(implicit_path_t(aut_, curr, k, k_path_cost + sidetracks[curr]));
+          queue.emplace(aut_, curr, k, k_path_cost + sidetracks[curr]);
         else
           for (auto tr : all_out(aut_, aut_->dst_of(curr)))
             transition_stack.push_back(tr);
