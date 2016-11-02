@@ -5,6 +5,101 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+# Vcsn 2.4 (2016-11-??)
+
+The Vcsn team is happy to announce the release of Vcsn 2.4.
+
+Noteworthy changes include, besides a few bug fixes:
+
+- an overhaul of the "Vcsn Tools" (previously known as TAF-Kit).  Because
+  the tools are now automatically generated, they are much more extensive
+  than previously: (almost) all of the dyn algorithms are now available from
+  the shell.  It now also supports the 'daut' format for automata.
+
+    $ vcsn thompson -Ee '[ab]*c' | vcsn proper | vcsn determinize | vcsn minimize | vcsn to-expression
+    (a+b)*c
+
+    $ vcsn random-expression
+
+- an new method to construct an automaton from an extended expression:
+  `expression.inductive`.  This provides an alternative to
+  `expression.derived_term`.  Currently provides a single flavor: generation
+  of standard automata.
+
+    In [2]: vcsn.B.expression('! [ab]*a[ab]*').inductive().expression()
+    Out[2]: \e+bb*
+
+    In [3]: vcsn.B.expression('! [ab]*a[ab]*').automaton().expression()
+    Out[3]: b*
+
+- full support for quotient operators on all entities: labels, expressions,
+  automata, expansions, etc.
+
+    In [2]: c = vcsn.context('lan, q')
+       ...: c
+    Out[2]: {...}? -> Q
+
+    In [3]: label = vcsn.context('law, q').label
+       ...: label('abc') / label('c')
+    Out[3]: ab
+
+    In [4]: exp = c.expression
+
+    In [5]: exp('ab').ldivide(exp('ab*c'))
+    Out[5]: ab{\}ab*c
+
+    In [6]: e = exp('ab').ldivide(exp('ab*c'))
+       ...: e
+    Out[6]: ab{\}ab*c
+
+    In [7]: e.automaton().expression()
+    Out[7]: b*c
+
+  Operators {\} (left quotient) and {/} (right quotient) are available in
+  the rational expressions:
+
+    In [8]: e = exp('ab {\} abc*')
+       ...: e
+    Out[8]: ab{\}abc*
+
+    In [9]: e.expansion()
+    Out[9]: \e.[b{\}bc*]
+
+    In [10]: e.derived_term().expression()
+    Out[10]: c*
+
+    In [11]: e.inductive().expression()
+    Out[11]: \e+cc*
+
+- automaton.evaluate works properly on non-free automata, including
+  multitape automata:
+
+    In [2]: c = vcsn.context('lan(a-z), nmin')
+            a = (c|c).levenshtein()
+            a('foo|bar')
+    Out[2]: 3
+
+- input/output support for FAdo's format for transducers, and improved
+  compatibility with OpenFST.
+
+For more information, please, see the detailed news below.
+
+People who worked on this release:
+
+- Akim Demaille
+- Clément Gillard
+- Lucien Boillod
+- Sarasvati Moutoucomarapoulé
+- Sébastien Piat
+- Younes Khoudli
+
+People who have influenced this release:
+
+- Alexandre Duret-Lutz
+- Jacques Sakarovitch
+- Luca Saiu
+- Sylvain Lombardy
+
 ## 2016-10-31
 ### eval is renamed evaluate
 For consistency with the remainder of the API, we use the full,
@@ -164,16 +259,16 @@ It is now possible to evaluate words on automata with non-free labelsets.
 
 For example, we can compute the edit distance between two words:
 
-    In [1]: c = vcsn.context('lan(a-z), nmin')
+    In [2]: c = vcsn.context('lan(a-z), nmin')
             a = (c|c).levenshtein()
             a('foo|bar')
-    Out[1]: 3
+    Out[2]: 3
 
-    In [2]: a('bar|baz')
-    Out[2]: 1
+    In [3]: a('bar|baz')
+    Out[3]: 1
 
-    In [3]: a('qux|quuux')
-    Out[3]: 2
+    In [4]: a('qux|quuux')
+    Out[4]: 2
 
 ## 2016-07-28
 ### expression: inductive
@@ -186,8 +281,8 @@ expression.standard is that it handles the case of extended expressions.
 For example, we can compute the automaton equivalent of such expressions with
 the inductive method whereas we cannot with the standard one:
 
-    In [1]: vcsn.B.expression('! [ab]*a[ab]*').inductive().expression()
-    Out[1]: \e+bb*
+    In [2]: vcsn.B.expression('! [ab]*a[ab]*').inductive().expression()
+    Out[2]: \e+bb*
 
 ### expression.derived_term supports multitape expressions
 Vcsn 2.3 already supports multitape expressions with the derived-term
