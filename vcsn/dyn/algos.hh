@@ -751,15 +751,16 @@ namespace vcsn
     /// \param ctx
     ///    The context of the result.
     /// \param param
-    ///    A string containing every operator and associated probability (as a
-    ///    weight) the user want on the generated expression.
-    ///    It can also contain the maximum of symbols of the expression.
-    ///    example: "+=1,.=2,{T}=0.5,length=6"
+    ///    A specification of the wanted operators and their relative
+    ///    probability.  May also contain the maximum number of
+    ///    symbols of the expression with key `length`.  For instance:
+    ///    "+=1,.=2,{T}=0.5,length=6".
     /// \param ids
-    ///    The identities to use for the expression
-    expression random_expression(const context& ctx,
-                                 const std::string& param,
-                                 identities ids);
+    ///    The identities to use for the expression.
+    expression
+    random_expression(const context& ctx,
+                      const std::string& param = "+, ., *=.2, w., .w, length=10",
+                      identities ids = {});
 
     /// A random weight.
     ///
@@ -768,7 +769,7 @@ namespace vcsn
     /// \param param
     ///    A string containing paramaters for the generation such as the
     ///    min and max, or an element you want with specific probability.
-    ///    example: "1=0.2,10=0.3,min=0,max=20"
+    ///    For instance: "1=0.2, 10=0.3, min=0, max=20".
     weight random_weight(const context& ctx, const std::string& param);
 
     /// Right-division of two automata (lhs / rhs).
