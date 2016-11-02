@@ -105,6 +105,7 @@ components are used:
 -   Boost.Python
 -   Boost.Range
 -   Boost.Regex
+-   Boost.System
 -   Boost.Tokenizer
 
 [Ccache](http://ccache.samba.org) saves the user from repeated
