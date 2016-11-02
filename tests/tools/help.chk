@@ -37,7 +37,7 @@ Available versions:
   P:polynomial W:weight -> polynomial
     The right-multiplication of a polynomial with W as weight.
 
-For more help about available options, please use "vcsn tools --help"
+Try 'vcsn tools --help' for more information.
 EOF
 
 
@@ -51,7 +51,7 @@ Available versions:
   AUT:automaton P:polynomial -> weight
     Evaluate P on AUT.
 
-For more help about available options, please use "vcsn tools --help"
+Try 'vcsn tools --help' for more information.
 EOF
 
 
@@ -66,7 +66,7 @@ Available versions:
       NUM   number of words looked for.
       LEN   maximum length of words looked for.
 
-For more help about available options, please use "vcsn tools --help"
+Try 'vcsn tools --help' for more information.
 EOF
 
 
@@ -139,7 +139,7 @@ Available versions:
   LHS:weight RHS:weight -> weight
     Multiply two weights.
 
-For more help about available options, please use "vcsn tools --help"
+Try 'vcsn tools --help' for more information.
 EOF
 
 
@@ -157,7 +157,7 @@ Available versions:
        AUT must be LAL.
        AUT must be deterministic.
 
-For more help about available options, please use "vcsn tools --help"
+Try 'vcsn tools --help' for more information.
 EOF
 
 check proper -h <<EOF
@@ -169,5 +169,5 @@ Available versions:
     Parameters:
       AUT    the automaton in which to remove them
 
-For more help about available options, please use "vcsn tools --help"
+Try 'vcsn tools --help' for more information.
 EOF

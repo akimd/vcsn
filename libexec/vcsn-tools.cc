@@ -181,6 +181,7 @@ namespace
             for (auto it = range.first; it != range.second; it++)
               if(is_match(it->second, args))
                 ss << "  "<< it->second.declaration << '\n';
+            ss << "Try 'vcsn " << algo_name << " --help' for more information.";
             raise(ss.str());
           }
         else
@@ -211,6 +212,7 @@ namespace
         auto range = algos.equal_range(algo_name);
         for (auto it = range.first; it != range.second; it++)
           ss << "    " << it->second.declaration << '\n';
+        ss << "Try 'vcsn " << algo_name << " --help' for more information.";
         raise(ss.str());
       }
     else
@@ -272,9 +274,7 @@ namespace
       for (const auto& a : v)
         std::cout << a.declaration << '\n'
                   << "  " << a.doc << "\n\n";
-      std::cout <<
-        "For more help about available options, "
-        "please use \"vcsn tools --help\"\n";
+      std::cout << "Try 'vcsn tools --help' for more information.\n";
     }
     else
     {

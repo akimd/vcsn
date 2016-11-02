@@ -78,6 +78,16 @@ def gen_function_doc_decl(fun, formals):
        from its formals parameters. Called once per algorithm
        even when optional arguments are involved.'''
 
+    declaration = gen_doc_sig(fun, formals)
+
+    return fun_doc_def.substitute(
+            algo_name=fun['dynfun'],
+            declaration=declaration,
+            doc=format_function_doc(fun, formals))
+
+def gen_doc_sig(fun, formals, gen_defaults=True):
+    '''Generate a function signature for use
+       in help and error messages.'''
     formals_def = []
 
     for f in formals:
@@ -101,19 +111,15 @@ def gen_function_doc_decl(fun, formals):
         else:
             f_def['default'] = '='+f['default']
 
-        format_string = '{arg}:{type}' if f_def['default'] is None else '[{arg}{default}:{type}]'
+        format_string = '{arg}:{type}' if f_def['default'] is None or not gen_defaults \
+                        else '[{arg}{default}:{type}]'
         formals_def.append(format_string.format(arg=f_def['arg'],
             default=f_def['default'],
             type=f_def['type']).lstrip())
 
-    declaration = 'R"tools_doc(  {formals} -> {result})tools_doc"' \
+    return  'R"tools_doc(  {formals} -> {result})tools_doc"' \
                     .format(formals=' '.join(formals_def),
                             result=fun['result'])
-
-    return fun_doc_def.substitute(
-            algo_name=fun['dynfun'],
-            declaration=declaration,
-            doc=format_function_doc(fun, formals))
 
 def format_function_doc(fun, formals):
     res = []
@@ -202,8 +208,7 @@ def gen_function_decl(fun, formals):
     formals = copy.deepcopy(formals)
 
     # Construct the function declaration for documentation.
-    declaration = '"' + fun['result'] + ' ' + fun['dynfun'] + '(' +\
-        ', '.join(f['type'] + ' ' + f['arg'] for f in formals) + ')"'
+    declaration = gen_doc_sig(fun, formals, gen_defaults=False)
 
     for i, formal in enumerate(formals):
         i = i - removed_args
