@@ -20,7 +20,7 @@ namespace vcsn
       case '\\': os << "\\\\";          break;
       case '\n': os << "\\n";           break;
       default:
-        if (0 <= c && c <= 0177 && std::isprint(c))
+        if (0 <= c && c <= 127 && std::isprint(c))
           {
             if (special && strchr(special, c))
               os << '\\';
