@@ -72,7 +72,7 @@ namespace vcsn
       std::string read_state(std::istream& is)
       {
         std::string res;
-        char c;
+        int c;
         skip_space(is);
         while ((c = is.get()) != EOF)
           {
@@ -97,7 +97,7 @@ namespace vcsn
       std::string read_entry(std::istream& is)
       {
         std::string res;
-        char c;
+        int c;
         skip_space(is);
         while ((c = is.get()) != EOF)
           {

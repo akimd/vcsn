@@ -89,7 +89,7 @@ namespace vcsn
 
   char eat(std::istream& is, char c)
   {
-    if(is.peek() == c)
+    if (is.peek() == c)
       {
         is.ignore();
         return c;
