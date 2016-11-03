@@ -426,14 +426,17 @@ namespace vcsn
         using value_t = Value;
         using reference_t = value_t&;
 
-        template <typename OtherValue, typename OtherIterator>
-        iterator_impl(const iterator_impl<OtherValue, OtherIterator>& that)
-          : it_(that.iterator())
+        iterator_impl(const iterator_t& it) noexcept
+          : it_{it}
         {}
 
-        iterator_impl(const iterator_t& it)
-          : it_(it)
+        template <typename OtherValue, typename OtherIterator>
+        iterator_impl(const iterator_impl<OtherValue, OtherIterator>& that)
+          noexcept
+          : iterator_impl{that.iterator()}
         {}
+
+        iterator_impl(const iterator_impl&) noexcept = default;
 
         const iterator_t& iterator() const
         {
@@ -622,23 +625,24 @@ namespace vcsn
         using value_t = Value;
         using reference_t = value_t&;
 
-        template <typename OtherValue, typename OtherSet>
-        iterator_impl(const iterator_impl<OtherValue, OtherSet>& that)
-          : set_(that.set())
-          , it_(that.iterator())
+        iterator_impl(set_t& set, iterator_t it) noexcept
+          : set_{set}
+          , it_{it}
         {}
 
-        iterator_impl(set_t& set, size_t pos)
-          : set_(set)
-          , it_(pos)
+        iterator_impl(set_t& set) noexcept
+          : iterator_impl{set, set.find_first()}
         {}
 
-        iterator_impl(set_t& set)
-          : set_(set)
-          , it_(set.find_first())
+        iterator_impl(const iterator_impl&) noexcept = default;
+
+        template <typename OtherValue, typename OtherIterator>
+        iterator_impl(const iterator_impl<OtherValue, OtherIterator>& that)
+           noexcept
+          : iterator_impl{that.set, that.iterator()}
         {}
 
-        iterator_impl& operator=(const iterator_impl& that)
+        iterator_impl& operator=(const iterator_impl& that) noexcept
         {
           assert(&set_ == &that.set_);
           it_ = that.it_;
@@ -672,8 +676,8 @@ namespace vcsn
         template <typename OtherValue, typename OtherSet>
         bool equal(const iterator_impl<OtherValue, OtherSet>& that) const
         {
-          return (iterator() == that.iterator()
-                  && set() == that.set());
+          assert(&set() == &that.set());
+          return (iterator() == that.iterator());
         }
 
         /// Underlying bitset.
