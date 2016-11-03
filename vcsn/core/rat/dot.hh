@@ -190,7 +190,7 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <typename Dummy = void>
+      template <typename = void>
       struct visit_tuple
       {
         /// Print one tape.
@@ -233,13 +233,13 @@ namespace vcsn
         }
         self_t& self_;
         /// The name of the tuple node.
-        name_t name_;
+        name_t name_ = {};
       };
 
       void visit(const tuple_t& v, std::true_type) override
       {
         detail::static_if<context_t::is_lat>
-          ([this](auto&& v){ visit_tuple<>{*this}(v); })
+          ([this](auto&& v){ visit_tuple<decltype(v)>{*this}(v); })
           (v);
       }
 
