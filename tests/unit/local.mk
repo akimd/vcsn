@@ -92,6 +92,7 @@ EXTRA_DIST +=                                   \
 %D%/proper.log:         %D%/proper
 %D%/pylint.log:         $(vcsn_python_PYTHON) $(dist_pkglibexec_SCRIPTS) $(vcsn_python_pylint) $(dist_noinst_python)
 %D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
+%D%/score.log:          $(VCSN_PYTHON_DEPS) $(top_srcdir)/libexec/vcsn-score
 %D%/transpose.log:      %D%/transpose
 %D%/weight.log:         %D%/weight
 %D%/zip-maps.log:       %D%/zip-maps
