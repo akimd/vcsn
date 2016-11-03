@@ -72,18 +72,6 @@ namespace vcsn
       return sub_.end();
     }
 
-    DEFINE(variadic)::rbegin() const
-      -> const_reverse_iterator
-    {
-      return sub_.begin();
-    }
-
-    DEFINE(variadic)::rend() const
-      -> const_reverse_iterator
-    {
-      return sub_.end();
-    }
-
     DEFINE(variadic)::size() const
       -> size_t
     {

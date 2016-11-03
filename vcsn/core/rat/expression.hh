@@ -130,15 +130,11 @@ namespace vcsn
       // over const value (well, shared_ptr to const values), make it
       // a const_iterator anyway.  Otherwise, clang won't compile.
       using iterator = const_iterator;
-      using const_reverse_iterator = typename values_t::const_reverse_iterator;
-      using reverse_iterator = const_reverse_iterator;
 
       virtual type_t type() const { return Type; };
 
       const_iterator begin() const;
       const_iterator end() const;
-      const_reverse_iterator rbegin() const;
-      const_reverse_iterator rend() const;
       size_t size() const;
 
       /// Access the n-th element.
@@ -158,11 +154,6 @@ namespace vcsn
       template <typename... Vs>
       variadic(Vs&&... vs)
         : sub_{std::forward<Vs>(vs)...}
-      {}
-
-      variadic(const variadic& that)
-        : super_t(that)
-        , sub_(that.sub_)
       {}
 
       /// Return a copy of children.
@@ -280,10 +271,6 @@ namespace vcsn
       void set_weight(weight_t w);
 
       weight_node(weight_t w, value_t exp);
-      weight_node(const weight_node& that)
-        : sub_(that.sub_)
-        , weight_(that.weight_)
-      {}
 
       virtual void accept(typename super_t::const_visitor& v) const;
 
