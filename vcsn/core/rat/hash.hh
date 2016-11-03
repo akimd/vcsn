@@ -78,8 +78,7 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = context_t::is_lat,
-                typename Dummy = void>
+      template <typename = void>
       struct visit_tuple
       {
         using tupleset_t = typename expressionset_t::template as_tupleset_t<>;
@@ -89,19 +88,15 @@ namespace vcsn
         }
       };
 
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        size_t operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-      };
-
       void visit(const tuple_t& v, std::true_type) override
       {
-        combine_type_(v);
-        combine_(visit_tuple<>{}(v));
+        detail::static_if<context_t::is_lat>
+          ([this](auto&& v)
+           {
+             combine_type_(v);
+             combine_(visit_tuple<decltype(v)>{}(v));
+           })
+          (v);
       }
 
       /// Traverse a nullary node.

@@ -127,7 +127,7 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <typename Dummy = void>
+      template <typename = void>
       struct visit_tuple
       {
         /// Copy one tape.
@@ -157,7 +157,7 @@ namespace vcsn
       void visit(const tuple_t& v, std::true_type) override
       {
         detail::static_if<in_context_t::is_lat>
-          ([this](auto&& v){ res_ = visit_tuple<>{*this}(v); })
+          ([this](auto&& v){ res_ = visit_tuple<decltype(v)>{*this}(v); })
           (v);
       }
 

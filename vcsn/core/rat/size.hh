@@ -99,7 +99,7 @@ namespace vcsn
       void visit(const tuple_t& v, std::true_type) override
       {
         detail::static_if<context_t::is_lat>
-          ([this](auto&& v){ size_ += visit_tuple<>{}(v); })
+          ([this](auto&& v){ size_ += visit_tuple<decltype(v)>{}(v); })
           (v);
       }
 

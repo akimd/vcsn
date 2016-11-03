@@ -117,8 +117,7 @@ namespace vcsn
 
       using tuple_t = typename super_t::tuple_t;
 
-      template <bool = in_context_t::is_lat,
-                typename Dummy = void>
+      template <typename = void>
       struct visit_tuple
       {
         /// Entry point.
@@ -129,19 +128,11 @@ namespace vcsn
         self_t& visitor_;
       };
 
-      template <typename Dummy>
-      struct visit_tuple<false, Dummy>
-      {
-        out_expression_t operator()(const tuple_t&)
-        {
-          BUILTIN_UNREACHABLE();
-        }
-        self_t& visitor_;
-      };
-
       void visit(const tuple_t& v, std::true_type) override
       {
-        res_ = visit_tuple<>{*this}(v);
+        detail::static_if<in_context_t::is_lat>
+          ([this](auto&& v){ res_ = visit_tuple<decltype(v)>{*this}(v); })
+          (v);
       }
 
       /// expressionset to decode the input value.
