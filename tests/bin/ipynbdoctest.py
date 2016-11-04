@@ -201,7 +201,11 @@ def test_notebook(ipynb):
                     stderr=subprocess.DEVNULL)
     kc = km.client()
     kc.start_channels()
-    kc.wait_for_ready()
+    try:
+        kc.wait_for_ready()
+    except Exception as e:
+        SKIP('cannot start Jupyter kernel:', repr(e))
+        exit(0)
     npass, nfail, nerror = 0, 0, 0
     i = 0
     for n, cell in enumerate(nb['cells']):
@@ -218,14 +222,13 @@ def test_notebook(ipynb):
             print('Failed to run cell #{} ({}):'.format(i, n),
                   '    Kernel Client is Empty; this is most likely due to a',
                   '    timeout issue. Check with `vcsn ps` or run the notebook',
-                  '    manually, then retry.', file=sys.stderr, sep='\n')
+                  '    manually, then retry.', sep='\n')
             print('Source was:\n', cell['source'])
             FAIL('failed to run cell #{}'.format(i))
             nerror += 1
             continue
         except Exception as e:
-            print('Failed to run cell #{} ({}):'.format(i, n), repr(e),
-                  file=sys.stderr)
+            print('Failed to run cell #{} ({}):'.format(i, n), repr(e))
             print('Source was:', cell['source'], sep='\n')
             FAIL('failed to run cell #{}'.format(i))
             nerror += 1
