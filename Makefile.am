@@ -40,13 +40,18 @@ coverage:
 
 # Documentation.
 PANDOC = pandoc
+EXTRA_DIST +=					\
+  build-aux/bin/md-2-mw				\
+  doc/NEWS.mw.patches/01-2.2.patch		\
+  doc/NEWS.mw.patches/02-2.3.patch		\
+  doc/NEWS.mw.patches/03-2.4.patch
+
 README.html: README.md
 	$(PANDOC) -s --toc --from markdown --to html5 -o $@ $<
 NEWS.mw: NEWS.md
-	$(PANDOC) -t mediawiki -o $@.t1 $<
-	sed -e 's/= Vcsn news =/{{TOC|limit=2}}/' $@.t1 >$@.tmp
-	mv $@.tmp $@
-	rm $@.t1
+	src=$< dst=$@ patchdir=$(top_srcdir)/doc/news.mw.patches	\
+	PANDOC=$(PANDOC)						\
+	  $(top_srcdir)/build-aux/bin/md-2-mw
 
 ## -------- ##
 ## Debian.  ##

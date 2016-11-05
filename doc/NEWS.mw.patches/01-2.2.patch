@@ -1,0 +1,11 @@
+--- _build/39s/NEWS.mw	2016-11-05 17:24:38.000000000 +0100
++++ /tmp/NEWS.mw	2016-11-05 17:28:00.000000000 +0100
+@@ -809,7 +809,7 @@
+ 
+ === New trivial identities ===
+ 
+-Two new trivial identities have been added (at the &quot;trivial&quot; level): neutrality of the universal language for conjunction ( &amp; E =&gt; E, E &amp;  =&gt; E), and involutivity of complement on 𝔹 and 𝔽₂ (E{c}{c} =&gt; E). It is not applied in the other case, since in ℤ (&lt;2&gt;a)''{c}{c} is actually a'', not (&lt;2&gt;a)*.
++Two new trivial identities have been added (at the &quot;trivial&quot; level): neutrality of the universal language for conjunction ( &amp; E =&gt; E, E &amp;  =&gt; E), and involutivity of complement on 𝔹 and 𝔽₂ (E{c}{c} =&gt; E). It is not applied in the other case, since in ℤ (&lt;2&gt;a)*{c}{c} is actually a*, not (&lt;2&gt;a)*.
+ 
+ == 2015-12-02 ==
+ 

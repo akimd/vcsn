@@ -1,0 +1,47 @@
+--- _build/39s/NEWS.mw	2016-11-05 16:43:48.000000000 +0100
++++ NEWS.2.3.mw	2016-11-05 11:18:40.000000000 +0100
+@@ -294,9 +11,13 @@
+ <ul>
+ <li><p>a particular effort was put on the documentation: there are thirty-five new documentation pages, and about forty others were improved.</p></li>
+ <li><p>full support for a &quot;tuple&quot; operator on all entities: expressions, polynomials, automata, etc.</p>
+-<p>In [13]: aut = lambda e: vcsn.context('lan, q').expression(e).automaton()</p>
+-<p>In [14]: a = aut('[ab]*') | aut('x')</p>
+-<p>In [15]: a.shortest(6) Out[15]: |x + a|x + b|x + aa|x + ab|x + ba|x</p></li></ul>
++<pre>
++In [13]: aut = lambda e: vcsn.context('lan, q').expression(e).automaton()
++
++In [14]: a = aut('[ab]*') | aut('x')
++
++In [15]: a.shortest(6)
++Out[15]: |x + a|x + b|x + aa|x + ab|x + ba|x</pre></li>
+
+ It is also available in the rational expressions themselves:
+
+@@ -310,9 +31,9 @@
+ Out[18]: \e|x + a|x + b|x + aa|x + ab|x + ba|x</pre>
+ The derived-term algorithm supports this operator, and generates equivalent multitape automata.
+
+-<ul>
+-<li><p>many error messages were improved, to help users understand their mistakes. For instance, instead of</p>
+-<p>In [2]: vcsn.Q.expression('a**').derivation('a') RuntimeError: q: star: invalid value: 1</p></li></ul>
++<li>many error messages were improved, to help users understand their mistakes. For instance, instead of</p>
++<pre>In [2]: vcsn.Q.expression('a**').derivation('a')
++RuntimeError: q: star: invalid value: 1</pre></li>
+
+ we now display:
+
+@@ -320,10 +41,9 @@
+ RuntimeError: Q: value is not starrable: 1
+   while computing derivative of: a**
+                 with respect to: a</pre>
+-* in addition to <code>%automaton a</code>, which allows interactive edition of automata, the notebooks now feature two new interactive editors: <code>%context c</code> to edit/create context <code>c</code>, and <code>%expression e</code> for expressions (with an interactive display of the generated automata).
+-* one may now generate random rational expressions and control the operators and their probabilities.
+-* a lot of code improvement and consistency enforcement, both in C++ and in Python.
+-
+-For more details, please, see the news below.
++<li> in addition to <code>%automaton a</code>, which allows interactive edition of automata, the notebooks now feature two new interactive editors: <code>%context c</code> to edit/create context <code>c</code>, and <code>%expression e</code> for expressions (with an interactive display of the generated automata).</li>
++<li> one may now generate random rational expressions and control the operators and their probabilities.</li>
++<li> a lot of code improvement and consistency enforcement, both in C++ and in Python.</li>
++</ul>
+
+ People who worked on this release:

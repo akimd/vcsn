@@ -5,9 +5,10 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-# Vcsn 2.4 (2016-11-??)
+# Vcsn 2.4 (2016-11-05)
 
-The Vcsn team is happy to announce the release of Vcsn 2.4.
+The Vcsn team is happy to announce the release of Vcsn 2.4, code named "the
+quotient tools"!
 
 Noteworthy changes include, besides a few bug fixes:
 
@@ -19,7 +20,8 @@ Noteworthy changes include, besides a few bug fixes:
     $ vcsn thompson -Ee '[ab]*c' | vcsn proper | vcsn determinize | vcsn minimize | vcsn to-expression
     (a+b)*c
 
-    $ vcsn random-expression
+    $ vcsn random-expression -C 'lal(abc), z' '+, ., w., length=20, w="min=-2, max=10"'
+    (a+<2>(ac)+<5>(acca))a
 
 - an new method to construct an automaton from an extended expression:
   `expression.inductive`.  This provides an alternative to
@@ -109,16 +111,16 @@ as the `param` string of `random_weights`.
 
     In [1]: import vcsn
             ctx = vcsn.context('lal_char(ab), z')
-            a = ctx.random_automaton(3, weights='1=0.2, 10=0.3, min=0, max=20')
-            print(a.format('daut')
-    Out[1]: context = letterset<char_letters(ab)>, z
-            $ -> 0
-            0 -> $
-            0 -> 2 <17>b
-            1 -> 1 <13>b
-            1 -> 2 <11>b
-            2 -> 0 <18>a, <13>b
-            2 -> 1 <12>a
+            a = ctx.random_automaton(3, weights='min=0, max=20')
+            print(a.format('daut'))
+    context = letterset<char_letters(ab)>, z
+    $ -> 0
+    0 -> $
+    0 -> 2 <17>b
+    1 -> 1 <13>b
+    1 -> 2 <11>b
+    2 -> 0 <18>a, <13>b
+    2 -> 1 <12>a
 
 ## 2016-10-31
 ### eval is renamed evaluate
@@ -126,7 +128,7 @@ For consistency with the remainder of the API, we use the full,
 unabbreviated, name: evaluate.
 
 ## 2016-10-18
-### weight_one and weight_zero are now avaible in Python
+### weight_one and weight_zero are now available in Python
 These methods return the "one" and "zero" weights of a context.
 
     In [1]: import vcsn
@@ -2939,20 +2941,20 @@ Better names were chosen for the various details of the dyn:: value support:
                   abstract_weight -> weight_base
          concrete_abstract_weight -> weight_wrapper
 
-Note that "_base" is slightly misleading, as it actually applies to the
+Note that `_base` is slightly misleading, as it actually applies to the
 wrappers, and not to the static objects.  For instance, weightset_wrapper
-derives from weightset_base, but b, z, and the other (static) weightsets do
-not derive from weightset_base.  It would therefore be more precise to name
-"weightset_base" as "weightset_wrapper_base", but that might be uselessly
-long.  Names may change again in the future.
+derives from weightset_base, but `b`, `z`, and the other (static) weightsets
+do not derive from `weightset_base`.  It would therefore be more precise to
+name `weightset_base` as `weightset_wrapper_base`, but that might be
+uselessly long.  Names may change again in the future.
 
-Because dyn::polynomial and dyn::weight store the corresponding
+Because `dyn::polynomial` and `dyn::weight` store the corresponding
 polynomialset/weightset, there is no need (so far?) for a
-dyn::polynomialset/dyn::weightset.  Therefore, abstract_polynomialset and
-abstract_weightset were removed.
+`dyn::polynomialset`/`dyn::weightset`.  Therefore, `abstract_polynomialset`
+and `abstract_weightset` were removed.
 
-For consistency (and many other benefits), automaton_wrapper and
-context_wrapper were introduced.  Now, the whole static API is completely
+For consistency (and many other benefits), `automaton_wrapper` and
+`context_wrapper` were introduced.  Now, the whole static API is completely
 independent of the dyn API, and the dyn API consists only of wrappers of
 "static"-level values---instead of inheritance for automata and contexts.
 
@@ -3136,21 +3138,21 @@ performance impact on some algorithms.  This is fixed.
 
 Before:
 
-    9.08s (0.33s+8.75s): ladybird 21 | determinize -O null
-   16.88s (0.85s+16.03s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
-   21.30s (9.76s+11.54s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
-    7.29s (0.04s+7.25s): standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | power -O null -f- 10
-    0.04s (0.04s): standard -E -e "(a?){70}" -o a70.gv
-   24.20s (24.20s): product -O null -f a70.gv a70.gv
+     9.08s (0.33s+8.75s): ladybird 21 | determinize -O null
+    16.88s (0.85s+16.03s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
+    21.30s (9.76s+11.54s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
+     7.29s (0.04s+7.25s): standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | power -O null -f- 10
+     0.04s (0.04s): standard -E -e "(a?){70}" -o a70.gv
+    24.20s (24.20s): product -O null -f a70.gv a70.gv
 
 After:
 
-    8.54s (0.13s+8.41s): ladybird 21 | determinize -O null
-   11.87s (0.86s+11.01s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
-   21.03s (9.40s+11.63s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
-    6.58s (0.06s+6.52s): standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | power -O null -f- 10
-    0.07s (0.07s): standard -E -e "(a?){70}" -o a70.gv
-   13.16s (13.16s): product -O null -f a70.gv a70.gv
+     8.54s (0.13s+8.41s): ladybird 21 | determinize -O null
+    11.87s (0.86s+11.01s): thompson -C "lan_char(a)_b" -Ee "a?{2000}" | proper -O null
+    21.03s (9.40s+11.63s): standard -Ee "(a+b+c+d)?{100}" | aut-to-exp -O null
+     6.58s (0.06s+6.52s): standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | power -O null -f- 10
+     0.07s (0.07s): standard -E -e "(a?){70}" -o a70.gv
+    13.16s (13.16s): product -O null -f a70.gv a70.gv
 
 Note in particular that the spontaneous transition elimination algorithm is
 faster, going from 16s to 11s on a MacBook Pro i7 2.9GHz 8GB RAM, on the
@@ -4226,9 +4228,9 @@ These tools support -C, -g, etc. like the other tools.  See "vcsn-<tool> -h".
 
 ### context names are now complete
 Context names used to describe the "static" structure only (e.g.,
-lal_char_ratexpset<law_char_b>).  It now includes the "dynamic" part,
+`lal_char_ratexpset<law_char_b>`).  It now includes the "dynamic" part,
 currently only the list of generators (e.g.,
-lal_char(abc)_ratexpset<law_char(xyz)_b>).
+`lal_char(abc)_ratexpset<law_char(xyz)_b>`).
 
 This context strings are both printed and read by the various tools.  For
 instance:
@@ -5187,8 +5189,8 @@ LocalWords:  Automake Makefile versa Boilod Barray Sébastien Piat Yann APIs
 LocalWords:  Copigny levenshtein delgado hopcropft oneset sname disjunction
 LocalWords:  expressionsets involutivity hopcroft starrable Gillard Boillod
 LocalWords:  Thibaud Michaud executables ldiv ldivide lweight rdiv rdivide
-LocalWords:  rweight bd quotkbaseb abcac SVG demangle gdb Vcsn's boxart
-LocalWords:  dijkstra
+LocalWords:  rweight bd quotkbaseb abcac SVG demangle gdb Vcsn's boxart baz
+LocalWords:  dijkstra acca FAdo's Sarasvati Moutoucomarapoulé Younes param
 
 Local Variables:
 coding: utf-8
@@ -5198,3 +5200,4 @@ mode: markdown
 End:
 
 -->
+LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt

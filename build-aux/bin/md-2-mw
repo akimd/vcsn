@@ -1,0 +1,26 @@
+#! /bin/sh
+
+# This file generates NEWS.mw, which we use on vcsn.lrde.epita.fr:
+# https://www.lrde.epita.fr/wiki/Vcsn/News_File.
+
+set -e
+
+: ${PANDOC=pandoc}
+
+: ${src=$1}
+: ${dst=$2}
+: ${patchdir=$3}
+
+tmp=$dst.tmp
+
+${PANDOC} -t mediawiki -o $tmp $src
+perl -pi -e 's/= Vcsn news =/{{TOC|limit=2}}/' $tmp
+perl -pi -0777 -e 's/<!--.*?-->//gs' $tmp
+
+for p in $patchdir/*.patch
+do
+  echo "$0: applying $p"
+  patch <$p $tmp
+done
+
+mv $tmp $dst

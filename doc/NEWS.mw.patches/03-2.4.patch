@@ -1,0 +1,65 @@
+--- _build/39s/NEWS.mw.tmp	2016-11-05 17:11:41.000000000 +0100
++++ /tmp/NEWS.nw.2	2016-11-05 17:15:41.000000000 +0100
+@@ -2,22 +2,41 @@
+ 
+ Noteworthy changes include, besides a few bug fixes:
+ 
+ <ul>
+ <li><p>an overhaul of the &quot;Vcsn Tools&quot; (previously known as TAF-Kit). Because the tools are now automatically generated, they are much more extensive than previously: (almost) all of the dyn algorithms are now available from the shell. It now also supports the 'daut' format for automata.</p>
+-<p>$ vcsn thompson -Ee '[ab]''c' | vcsn proper | vcsn determinize | vcsn minimize | vcsn to-expression (a+b)''c</p>
+-<p>$ vcsn random-expression -C 'lal(abc), z' '+, ., w., length=20, w=&quot;min=-2, max=10&quot;' (a+&lt;2&gt;(ac)+&lt;5&gt;(acca))a</p></li>
++<pre>$ vcsn thompson -Ee '[ab]*c' | vcsn proper | vcsn determinize | vcsn minimize | vcsn to-expression
++(a+b)*c
++
++$ vcsn random-expression -C 'lal(abc), z' '+, ., w., length=20, w=&quot;min=-2, max=10&quot;'
++(a+&lt;2&gt;(ac)+&lt;5&gt;(acca))a
++</pre></li>
+ <li><p>an new method to construct an automaton from an extended expression: <code>expression.inductive</code>. This provides an alternative to <code>expression.derived_term</code>. Currently provides a single flavor: generation of standard automata.</p>
+-<p>In [2]: vcsn.B.expression('! [ab]''a[ab]''').inductive().expression() Out[2]: +bb*</p>
+-<p>In [3]: vcsn.B.expression('! [ab]''a[ab]''').automaton().expression() Out[3]: b*</p></li>
++<pre>In [2]: vcsn.B.expression('! [ab]*a[ab]*').inductive().expression()
++Out[2]: +bb*
++
++In [3]: vcsn.B.expression('! [ab]*a[ab]*').automaton().expression()
++Out[3]: b*</pre></li>
+ <li><p>full support for quotient operators on all entities: labels, expressions, automata, expansions, etc.</p>
+-<p>In [2]: c = vcsn.context('lan, q') ...: c Out[2]: {...}? -&gt; Q</p>
+-<p>In [3]: label = vcsn.context('law, q').label ...: label('abc') / label('c') Out[3]: ab</p>
+-<p>In [4]: exp = c.expression</p>
+-<p>In [5]: exp('ab').ldivide(exp('ab''c')) Out[5]: ab{}ab''c</p>
+-<p>In [6]: e = exp('ab').ldivide(exp('ab''c')) ...: e Out[6]: ab{}ab''c</p>
+-<p>In [7]: e.automaton().expression() Out[7]: b*c</p></li></ul>
++<pre>In [2]: c = vcsn.context('lan, q')
++   ...: c
++Out[2]: {...}? -&gt; Q
++
++In [3]: label = vcsn.context('law, q').label
++   ...: label('abc') / label('c')
++Out[3]: ab
++
++In [4]: exp = c.expression
++In [5]: exp('ab').ldivide(exp('ab*c'))
++Out[5]: ab{\}ab*c
++
++In [6]: e = exp('ab').ldivide(exp('ab*c'))
++   ...: e
++Out[6]: ab{\}ab*c
++
++In [7]: e.automaton().expression()
++Out[7]: b*c</pre></li></ul>
+ 
+-Operators {} (left quotient) and {/} (right quotient) are available in the rational expressions:
++Operators {\} (left quotient) and {/} (right quotient) are available in the rational expressions:
+ 
+ <pre>In [8]: e = exp('ab {\} abc*')
+    ...: e
+@@ -58,7 +58,8 @@
+ Out[11]: \e+cc*</pre>
+ <ul>
+ <li><p>automaton.evaluate works properly on non-free automata, including multitape automata:</p>
+-<p>In [2]: c = vcsn.context('lan(a-z), nmin') a = (c|c).levenshtein() a('foo|bar') Out[2]: 3</p></li>
++<pre>In [2]: c = vcsn.context('lan(a-z), nmin') a = (c|c).levenshtein() a('foo|bar')
++Out[2]: 3</pre></li>
+ <li><p>input/output support for FAdo's format for transducers, and improved compatibility with OpenFST.</p></li></ul>
+ 
+ For more information, please, see the detailed news below.
