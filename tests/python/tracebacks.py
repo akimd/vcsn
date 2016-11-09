@@ -5,16 +5,17 @@ import subprocess
 from test import *
 from vcsn_tools.config import config
 
-has_ipython = False
+ipython = None
 if 'missing' in config['ipython']:
     SKIP('missing IPython')
 else:
-    output = subprocess.check_output([config['ipython'], '-c',
-            'import sys; assert sys.version_info.major >= 3']).decode('utf-8')
-    if 'AssertionError' in output:
-        SKIP(config['ipython'], 'runs Python < 3')
+    try:
+        subprocess.check_output([config['ipython'], '-c',
+            'import sys; assert sys.version_info.major >= 3'])
+    except Error as e:
+        SKIP(config['ipython'], 'runs Python < 3', e)
     else:
-        has_ipython = True
+        ipython = config['ipython']
 
 def canonical(s):
      '''Clean up paths (keep only the last two directories to be
@@ -44,11 +45,11 @@ for t in ['non-verbose', 'verbose']:
     else:
         FAIL(mefile(t, 'ipy'), 'did not fail!')
 
-    if has_ipython:
+    if ipython:
         # IPython doesn't fail and prints on stdout,
         # so not try..except, redirection to stdout nor warning removal here.
         # However the warnings will still appear on stderr, so redirect to devnull.
-        output = subprocess.check_output([config['ipython'], mefile(t, 'ipy')],
+        output = subprocess.check_output([ipython, mefile(t, 'ipy')],
                                          stderr=subprocess.DEVNULL)
         output = output.decode('utf-8')
         ## Clean up absolute paths
