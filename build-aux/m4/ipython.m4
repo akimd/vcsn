@@ -7,6 +7,25 @@ m4_define([_vcsn_try],
 $1 >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD
 ])
 
+
+# _VCSN_PROG_IPYTHON(CACHE-ID)
+# ----------------------------
+# Check for an ipython running Python3.
+AC_DEFUN([_VCSN_PROG_IPYTHON],
+[$1='no'
+ac_ipython_test='import sys
+if sys.version_info.major < 3:
+    raise ValueError("IPython not running Python 3: ", sys.version_info)'
+for ac_ipython in ${IPYTHON} ipython$PYTHON_VERSION ipython3 ipython
+do
+  if ($ac_ipython -c "$ac_ipython_test") >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+    $1=$ac_ipython
+    break
+  fi
+done
+])
+
+
 # _VCSN_PROG_NBCONVERT(CACHE-ID, NB-FILE)
 # ---------------------------------------
 # Check whether ipython supports the nbconvert subcommand.
@@ -39,8 +58,14 @@ done
 # VCSN_PROG_NBCONVERT(NB-FILE)
 # ----------------------------
 AC_DEFUN([VCSN_PROG_NBCONVERT],
-[VCSN_ARG_PROGS([ipython], [the IPython environment])
+[AC_ARG_VAR([IPYTHON], [the IPython environment])
+AC_CACHE_CHECK([for IPython for Python 3],
+               [vcsn_cv_ipython],
+               [_VCSN_PROG_IPYTHON([vcsn_cv_ipython], [$1])])
+AC_SUBST([IPYTHON], [$vcsn_cv_ipython])
+
 VCSN_ARG_PROGS([jupyter], [the Jupyter environment])
+
 AC_CACHE_CHECK([for Jupyter nbconvert],
                [vcsn_cv_nbconvert],
                [_VCSN_PROG_NBCONVERT([vcsn_cv_nbconvert], [$1])])

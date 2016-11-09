@@ -3,6 +3,9 @@
 : ${PYTHON='@PYTHON@'}
 export PYTHON
 
+: ${IPYTHON='@IPYTHON@'}
+export IPYTHON
+
 # _Append_ VCSN_PYTHONDIR, not prepend, so that the user can still override this
 # path via $PYTHONPATH.  Note in particular that the builddir-tests need to
 # override $PYTHONPATH to use non-installed modules, which would them be
@@ -124,6 +127,7 @@ case $1 in
       exec "$@";;
 
   (python) shift; exec "$PYTHON" "$@";;
+  (ipython) shift; exec "IPYTHON" "$@";;
   (python*|ipython*|jupyter*) exec "$@";;
 
   (*)
