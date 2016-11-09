@@ -1,4 +1,6 @@
-import sys, traceback, inspect
+import inspect, sys, traceback
+
+import vcsn.python3
 
 from vcsn.automaton  import automaton
 from vcsn.context    import context

@@ -16,7 +16,7 @@ do
     if $(echo "$version" |
          grep -E '^Python [3-9]\.' >/dev/null) &&
        $(echo "$version" |
-         grep -E '^pylint ([2-9]\.*|1\.([6-9]|[1-9][0-9]+)|1\.5\.([4-9]|[1-9][0-9]+))' >/dev/null)
+         grep -E '^pylint[^ ]* ([2-9]\.*|1\.([6-9]|[1-9][0-9]+)|1\.5\.([4-9]|[1-9][0-9]+))' >/dev/null)
     then
         pylint=$p
         break

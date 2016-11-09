@@ -54,6 +54,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
   %D%/vcsn/proxy.py                             \
+  %D%/vcsn/python3.py                           \
   %D%/vcsn/score.py                             \
   %D%/vcsn/tools.py                             \
   %D%/vcsn/weight.py
