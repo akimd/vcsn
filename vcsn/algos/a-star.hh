@@ -1,9 +1,9 @@
 #pragma once
 
-#include <boost/heap/fibonacci_heap.hpp>
 
 #include <vcsn/misc/set.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/misc/fibonacci_heap.hh>
 
 namespace vcsn
 {
@@ -52,13 +52,13 @@ namespace vcsn
         bool operator<(const profile& rhs) const
         {
           auto ws = *a_star_.aut_->weightset();
-          if (a_star_.res_[state_] == a_star_.aut_->null_transition())
+          if (a_star_.res_[rhs.state_] == a_star_.aut_->null_transition())
             return true;
-          else if (a_star_.res_[rhs.state_] == a_star_.aut_->null_transition())
+          else if (a_star_.res_[state_] == a_star_.aut_->null_transition())
             return false;
           else
-            return ws.less(a_star_.heuristic_dist_[rhs.state_],
-                           a_star_.heuristic_dist_[state_]);
+            return ws.less(a_star_.heuristic_dist_[state_],
+                           a_star_.heuristic_dist_[rhs.state_]);
         }
 
         friend std::ostream& operator<<(std::ostream& o, const profile& p)
@@ -76,7 +76,7 @@ namespace vcsn
         const self_t& a_star_;
       };
 
-      using heap_t = boost::heap::fibonacci_heap<profile>;
+      using heap_t = vcsn::min_fibonacci_heap<profile>;
 
       template <typename Heuristic>
       std::vector<transition_t>

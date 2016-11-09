@@ -82,9 +82,9 @@ namespace vcsn
       return min_tr;
     }
 
-    bool operator>(const implicit_path& other) const
+    bool operator<(const implicit_path& other) const
     {
-      return other.weight_ < weight_;
+      return weight_ < other.weight_;
     }
 
     // FIXME: private

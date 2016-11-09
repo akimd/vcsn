@@ -242,6 +242,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/epsilon-profile.hh                   \
   %D%/misc/escape.hh                            \
   %D%/misc/export.hh                            \
+  %D%/misc/fibonacci_heap.hh                    \
   %D%/misc/file-library.hh                      \
   %D%/misc/file-library.hxx                     \
   %D%/misc/filter.hh                            \

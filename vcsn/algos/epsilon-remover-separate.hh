@@ -7,8 +7,6 @@
 #include <utility>
 #include <vector>
 
-#include <boost/heap/fibonacci_heap.hpp>
-
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/fwd.hh>
@@ -16,7 +14,7 @@
 #include <vcsn/misc/debug-level.hh>
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/epsilon-profile.hh>
-#include <vcsn/misc/vector.hh> // make_vector
+#include <vcsn/misc/fibonacci_heap.hh>
 
 #define STATS
 
@@ -429,8 +427,8 @@ namespace vcsn
       /// Shorthand to the weightset.
       const weightset_t& ws_;
 
-      /// Max-heap to decide the order of state-elimination.
-      using heap_t = boost::heap::fibonacci_heap<profile_t>;
+      /// Min-heap to decide the order of state-elimination.
+      using heap_t = vcsn::min_fibonacci_heap<profile_t>;
       heap_t todo_;
       /// Map: state -> heap-handle.
       std::unordered_map<state_proper_t, typename heap_t::handle_type> handles_;

@@ -2,8 +2,7 @@
 
 #include <vector>
 
-#include <boost/heap/fibonacci_heap.hpp>
-
+#include <vcsn/misc/fibonacci_heap.hh>
 #include <vcsn/misc/unordered_map.hh>
 #include <vcsn/algos/path.hh>
 #include <vcsn/algos/shortest-path-tree.hh>
@@ -29,10 +28,7 @@ namespace vcsn
       : aut_{aut}
     {}
 
-    using profile_t = implicit_path_t;
-    // We want a min-heap.
-    using comparator_t = boost::heap::compare<std::greater<profile_t>>;
-    using queue_t = boost::heap::fibonacci_heap<profile_t, comparator_t>;
+    using queue_t = vcsn::min_fibonacci_heap<implicit_path_t>;
 
     /// Compute the \a K shortest paths in the automaton from \a src to \a dst.
     std::vector<path<automaton_t>>

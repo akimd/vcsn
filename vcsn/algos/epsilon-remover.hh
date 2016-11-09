@@ -7,8 +7,6 @@
 #include <utility>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/heap/fibonacci_heap.hpp>
-
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/fwd.hh>
@@ -18,6 +16,7 @@
 #include <vcsn/misc/direction.hh>
 #include <vcsn/misc/epsilon-profile.hh>
 #include <vcsn/misc/vector.hh> // make_vector
+#include <vcsn/misc/fibonacci_heap.hh>
 
 #define STATS
 
@@ -366,7 +365,7 @@ namespace vcsn
       label_t empty_word_ = aut_->labelset()->one();
 
       /// Max-heap to decide the order of state-elimination.
-      using heap_t = boost::heap::fibonacci_heap<epsilon_profile<state_t>>;
+      using heap_t = vcsn::min_fibonacci_heap<epsilon_profile<state_t>>;
       heap_t todo_;
       /// Map: state -> heap-handle.
       std::unordered_map<state_t, typename heap_t::handle_type> handles_;

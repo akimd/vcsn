@@ -1,7 +1,5 @@
 #pragma once
 
-#include <boost/heap/fibonacci_heap.hpp>
-
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/core/automaton.hh> // all_in
@@ -12,6 +10,7 @@
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/vector.hh>
+#include <vcsn/misc/fibonacci_heap.hh>
 
 namespace vcsn
 {
@@ -45,8 +44,8 @@ namespace vcsn
 
         bool operator<(const state_profile& rhs) const
         {
-          return std::make_tuple(rhs.size_, rhs.has_loop_, rhs.state_)
-                 < std::make_tuple(size_, has_loop_, state_);
+          return std::make_tuple(size_, has_loop_, state_)
+                 < std::make_tuple(rhs.size_, rhs.has_loop_, rhs.state_);
         }
 
         friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
@@ -121,8 +120,8 @@ namespace vcsn
 
         bool operator<(const state_profile& rhs) const
         {
-          return std::make_tuple(rhs.size_, rhs.state_)
-                 < std::make_tuple(size_, state_);
+          return std::make_tuple(size_, state_)
+                 < std::make_tuple(rhs.size_, rhs.state_);
         }
 
         friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
@@ -413,7 +412,7 @@ namespace vcsn
       profiler_t& profiler_;
 
       /// Max-heap to decide the order of state-elimination.
-      using heap_t = boost::heap::fibonacci_heap<profile_t>;
+      using heap_t = vcsn::min_fibonacci_heap<profile_t>;
       heap_t todo_;
       /// Map: state -> heap-handle.
       std::vector<typename heap_t::handle_type> handles_;

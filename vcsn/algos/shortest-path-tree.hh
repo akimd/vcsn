@@ -1,10 +1,9 @@
 #pragma once
 
-#include <boost/heap/fibonacci_heap.hpp>
-
 #include <vcsn/misc/map.hh>
 #include <vcsn/algos/dijkstra-node.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/fibonacci_heap.hh>
 
 namespace vcsn
 {
@@ -90,10 +89,7 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using dijkstra_node_t = dijkstra_node<automaton_t>;
-    using profile_t = dijkstra_node_t;
-    // We want a min-heap.
-    using comparator_t = boost::heap::compare<std::greater<profile_t>>;
-    using queue_t = boost::heap::fibonacci_heap<profile_t, comparator_t>;
+    using queue_t = vcsn::min_fibonacci_heap<dijkstra_node_t>;
 
     auto predecessor_tree = shortest_path_tree<automaton_t>(src);
     auto queue = queue_t{};

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <boost/heap/fibonacci_heap.hpp>
-
 #include <vcsn/algos/tags.hh>
 #include <vcsn/core/mutable-automaton.hh>
+#include <vcsn/misc/fibonacci_heap.hh>
 
 namespace vcsn
 {
@@ -60,19 +59,19 @@ namespace vcsn
 
         bool operator<(const profile& rhs) const
         {
-          if (self_.res_[state_] == self_.aut_->null_transition())
+          if (self_.res_[rhs.state_] == self_.aut_->null_transition())
             return true;
-          else if (self_.res_[rhs.state_] == self_.aut_->null_transition())
+          else if (self_.res_[state_] == self_.aut_->null_transition())
             return false;
           else
-            return self_.vs_.less(self_.dist_[rhs.state_], self_.dist_[state_]);
+            return self_.vs_.less(self_.dist_[state_], self_.dist_[rhs.state_]);
         }
 
         state_t state_;
         const self_t& self_;
       };
 
-      using heap_t = boost::heap::fibonacci_heap<profile>;
+      using heap_t = vcsn::min_fibonacci_heap<profile>;
 
       std::vector<transition_t>
       operator()(state_t source, state_t dest)

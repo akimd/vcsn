@@ -2,8 +2,7 @@
 
 #include <algorithm>
 
-#include <boost/heap/fibonacci_heap.hpp>
-
+#include <vcsn/misc/fibonacci_heap.hh>
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/algos/dijkstra.hh>
 #include <vcsn/core/mutable-automaton.hh>
@@ -69,7 +68,7 @@ namespace vcsn
 
         bool operator<(const profile& rhs) const
         {
-          return vs_.less(rhs.v_, v_);
+          return vs_.less(v_, rhs.v_);
         }
 
         path_t path_;
@@ -77,7 +76,7 @@ namespace vcsn
         value_t v_;
       };
 
-      using heap_t = boost::heap::fibonacci_heap<profile>;
+      using heap_t = vcsn::min_fibonacci_heap<profile>;
 
       /// Transform a map transition_t -> transition_t representing the
       /// predecessors of each transition into a list of transitions used

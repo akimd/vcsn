@@ -55,10 +55,10 @@ namespace vcsn
         out_nsp = out - outsp;
       }
 
-      /// Whether l < r for the max-heap.
+      /// Whether l < r for the min-heap.
       ///
-      /// Compare priorities: return true if \a r should be
-      /// treated before \a l.  Must be strict.
+      /// Compare priorities: return true if \a l should be
+      /// treated before \a r.  Must be strict.
       bool operator<(const epsilon_profile& r) const
       {
         // (i) First, work on those with fewer outgoing spontaneous
@@ -66,10 +66,8 @@ namespace vcsn
         // (ii) Prefer fewer outgoing transitions.
         // (iii) Prefer fewer incoming spontaneous transitions.
         // (iv) Then, ensure total order using state handle.
-        //
-        // Note the inversions between lhs and rhs.
-        return (std::tie  (r.out_sp, r.out_nsp, r.in_sp, state)
-                < std::tie(out_sp,   out_nsp,   in_sp,   r.state));
+        return (std::tie  (out_sp,   out_nsp,   in_sp,   r.state)
+                < std::tie(r.out_sp, r.out_nsp, r.in_sp, state));
       }
 
       friend std::ostream& operator<<(std::ostream& o, const epsilon_profile& p)
