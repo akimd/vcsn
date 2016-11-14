@@ -106,6 +106,9 @@ namespace vcsn
       auto current = std::move(queue.top());
       queue.pop();
       auto s = current.state_;
+      // This saves us very little time compared to retrieval at each iteration.
+      const auto curr_weight = current.get_weight();
+      const auto curr_depth = current.depth_;
 
       for (auto tr : all_in(aut, s))
       {
@@ -114,11 +117,11 @@ namespace vcsn
         // In the case of Nmin, this computation is costly because of the
         // further verification on whether lhs or rhs is max_int but using
         // lhs + rhs would disable genericity.
-        auto new_dist = ws.mul(current.get_weight(), aut->weight_of(tr));
+        auto new_dist = ws.mul(curr_weight, aut->weight_of(tr));
         if (ws.less(new_dist, dist))
         {
           neighbor.set_weight(new_dist);
-          neighbor.depth_ = current.depth_ + 1;
+          neighbor.depth_ = curr_depth + 1;
           neighbor.parent_ = s;
           queue.emplace(neighbor);
         }
