@@ -92,13 +92,15 @@ namespace vcsn
     using automaton_t = Aut;
     using dijkstra_node_t = dijkstra_node<automaton_t>;
     using queue_t = vcsn::min_fibonacci_heap<dijkstra_node_t>;
+    using handle_t = typename queue_t::handle_type;
+    auto handles = std::unordered_map<state_t_of<automaton_t>, handle_t>{};
 
     auto predecessor_tree = shortest_path_tree<automaton_t>(aut, src);
     auto queue = queue_t{};
     auto& src_node = predecessor_tree.get_node_of(predecessor_tree.root_);
     src_node.set_weight(weightset_t_of<automaton_t>::one());
     src_node.depth_ = 0;
-    queue.emplace(src_node);
+    handles[src_node.state_] = queue.emplace(src_node);
 
     const auto& ws = *aut->weightset();
     while (!queue.empty())
@@ -123,7 +125,11 @@ namespace vcsn
           neighbor.set_weight(new_dist);
           neighbor.depth_ = curr_depth + 1;
           neighbor.parent_ = s;
-          queue.emplace(neighbor);
+          auto p = handles.emplace(neighbor.state_, handle_t{});
+          if (p.second)
+            p.first->second = queue.emplace(neighbor);
+          else
+            queue.update(p.first->second);
         }
       }
     }
