@@ -100,6 +100,7 @@ namespace vcsn
     src_node.depth_ = 0;
     queue.emplace(src_node);
 
+    const auto& ws = *aut->weightset();
     while (!queue.empty())
     {
       auto current = std::move(queue.top());
@@ -110,8 +111,11 @@ namespace vcsn
       {
         auto& neighbor = predecessor_tree.get_node_of(aut->src_of(tr));
         auto dist = neighbor.get_weight();
-        auto new_dist = current.get_weight() + aut->weight_of(tr);
-        if (new_dist < dist)
+        // In the case of Nmin, this computation is costly because of the
+        // further verification on whether lhs or rhs is max_int but using
+        // lhs + rhs would disable genericity.
+        auto new_dist = ws.mul(current.get_weight(), aut->weight_of(tr));
+        if (ws.less(new_dist, dist))
         {
           neighbor.set_weight(new_dist);
           neighbor.depth_ = current.depth_ + 1;
