@@ -65,6 +65,7 @@ namespace vcsn
                            const implicit_path_t& k_path_implicit, int k,
                            queue_t& queue, shortest_path_tree<automaton_t>& tree)
     {
+      const auto& ws = *aut_->weightset();
       auto k_path_cost = k_path_implicit.weight_;
       auto transition_stack = std::vector<transition_t>{};
       auto s = k == 0 ? src : aut_->dst_of(k_path_implicit.sidetrack_);
@@ -82,15 +83,15 @@ namespace vcsn
           state_t parent = tree.get_parent_of(aut_->src_of(curr));
           if (parent == aut_->null_state() || parent != aut_->dst_of(curr))
           {
-            sidetracks[curr] = aut_->weight_of(curr)
-                             + tree.get_weight_of(aut_->dst_of(curr))
-                             - tree.get_weight_of(aut_->src_of(curr));
+            sidetracks[curr] = ws.mul(aut_->weight_of(curr),
+                                      ws.rdivide(tree.get_weight_of(aut_->dst_of(curr)),
+                                                 tree.get_weight_of(aut_->src_of(curr))));
             has_curr = true;
           }
         }
 
         if (has_curr)
-          queue.emplace(aut_, curr, k, k_path_cost + sidetracks[curr]);
+          queue.emplace(aut_, curr, k, ws.mul(k_path_cost, sidetracks[curr]));
         else
           for (auto tr : all_out(aut_, aut_->dst_of(curr)))
             transition_stack.push_back(tr);
