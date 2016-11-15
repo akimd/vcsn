@@ -14,15 +14,18 @@ namespace vcsn
     using automaton_t = Aut;
     using weight_t = weight_t_of<automaton_t>;
     using state_t = state_t_of<automaton_t>;
+    using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
   public:
     dijkstra_node() = default;
 
-    dijkstra_node(state_t state, const boost::optional<weight_t>& weight,
-                  state_t parent, unsigned depth = std::numeric_limits<unsigned>::max())
-      : state_{state}
-      , weight_{weight}
+    dijkstra_node(const automaton_t& aut, state_t state,
+                  boost::optional<weight_t> weight, state_t parent,
+                  unsigned depth = std::numeric_limits<unsigned>::max())
+      : depth_{depth}
+      , state_{state}
       , parent_{parent}
-      , depth_{depth}
+      , weight_{weight}
+      , ws_{aut->weightset()}
     {}
 
     bool
@@ -33,14 +36,13 @@ namespace vcsn
       else if (!other.weight_)
         return false;
       else
-        return *weight_ < *other.weight_;
+        return ws_->less(*weight_, *other.weight_);
     }
 
     weight_t
     get_weight() const
     {
-      // FIXME: max
-      return weight_ ? *weight_ : std::numeric_limits<weight_t>::max();
+      return weight_ ? *weight_ : ws_->max();
     }
 
     void
@@ -52,9 +54,9 @@ namespace vcsn
     // FIXME: private
     unsigned depth_;
     state_t state_;
+    state_t parent_;
   private:
     boost::optional<weight_t> weight_;
-  public:
-    state_t parent_;
+    weightset_ptr ws_;
   };
 }

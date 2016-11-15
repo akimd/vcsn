@@ -33,7 +33,7 @@ namespace vcsn
       if (has(states_, s))
         states_[s].parent_ = parent;
       else
-        states_[s] = dijkstra_node_t{s, {}, parent};
+        states_[s] = dijkstra_node_t{aut_, s, {}, parent};
     }
 
     weight_t
@@ -52,7 +52,7 @@ namespace vcsn
       auto it = states_.find(s);
       if (it == states_.end())
       {
-        auto elt = dijkstra_node_t{s, {}, Aut::element_type::null_state()};
+        auto elt = dijkstra_node_t{aut_, s, {}, Aut::element_type::null_state()};
         auto p = states_.emplace(s, elt);
         it = p.first;
       }
