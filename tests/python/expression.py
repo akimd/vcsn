@@ -29,28 +29,56 @@ XFAIL(lambda: ctx.expression(r'\xff'),
 ## Copy/convert. ##
 ## ------------- ##
 
-def check(e, ctx, ids, exp):
-    '''When `e` is converted to `ctx` and `ids`, it should be `exp`.'''
+def check(e, ctx=None, ids=None, exp=None):
+    '''When `e` is converted to `ctx` and `ids`, it should be `exp`.
+    `exp` defaults to `e`.'''
+    if ctx is None:
+        ctx = e.context()
+    if ids is None:
+        ids = e.identities()
+    if exp is None:
+        exp = e
     if not isinstance(ctx, vcsn.context):
         ctx = vcsn.context(ctx)
     CHECK_EQ(exp, e.expression(ctx, ids))
+
 q = vcsn.context('lan, q')
-e = q.expression('a+b+<1/2>a', 'none')
+qexp = q.expression
+
+e = qexp('a+b+<1/2>a', 'none')
 check(e, q, 'none', e)
 check(e, q, 'linear', '<3/2>a+b')
 check(e, 'law, q', 'none', '(a+b)+<1/2>a')
 check(e, 'lan, r', 'none', '(a+b)+<0.5>a')
 check(e, 'law, r', 'linear', '<1.5>a+b')
-check(q.expression(r'\z*', 'none'), q, 'linear', r'\e')
 
+check(qexp(r'\z*', 'none'), q, 'none', r'\z*')
+check(qexp(r'\z*', 'none'), q, 'linear', r'\e')
 
+check(qexp(r'\z'))
+check(qexp(r'\e'))
 
+check(qexp(r'ab'))
+check(qexp(r'a+b'))
+check(qexp(r'a&b'))
+check(qexp(r'a:b'))
+check(qexp(r'a&:b'))
+check(qexp(r'a{\}b'))
 
-ctx = vcsn.context("lal_char(abcd), b")
+check(qexp(r'a*'))
+check(qexp(r'a{c}'))
+check(qexp(r'a{T}'))
+# Doesn't make any sense, but that's not for copy to check that.
+check(qexp(r'a@b'))
+
+# FIXME: check the tuple case.
 
 ## ------------ ##
 ## Complement.  ##
 ## ------------ ##
+
+ctx = vcsn.context("lal_char(abcd), b")
+
 def check_complement(r1):
     '''Check that `complement` on a rational expression corresponds to
     its concrete syntax.'''

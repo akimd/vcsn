@@ -87,6 +87,7 @@ namespace vcsn
       using ors_t = out_expressionset_t;
       VCSN_RAT_VISIT(add, v)          { rec_(v, &ors_t::add); }
       VCSN_RAT_VISIT(complement, v)   { rec_(v, &ors_t::complement); }
+      VCSN_RAT_VISIT(compose, v)      { rec_(v, &ors_t::compose); }
       VCSN_RAT_VISIT(conjunction, v)  { rec_(v, &ors_t::conjunction); }
       VCSN_RAT_VISIT(infiltrate, v)   { rec_(v, &ors_t::infiltrate); }
       VCSN_RAT_VISIT(ldivide, v)      { rec_(v, &ors_t::ldivide); }
