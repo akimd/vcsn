@@ -16,8 +16,9 @@ namespace vcsn
     using dijkstra_node_t = dijkstra_node<automaton_t>;
 
   public:
-    shortest_path_tree(state_t root)
+    shortest_path_tree(const automaton_t& aut, state_t root)
       : root_{root}
+      , aut_{aut}
     {}
 
     void
@@ -42,7 +43,7 @@ namespace vcsn
       if (it != states_.end())
         return it->second.get_weight();
       else
-        return std::numeric_limits<unsigned>::max();
+        return aut_->weightset()->max();
     }
 
     dijkstra_node_t&
@@ -81,6 +82,7 @@ namespace vcsn
   // FIXME: private
     std::unordered_map<state_t, dijkstra_node_t> states_;
     state_t root_;
+    const automaton_t& aut_;
   };
 
   template <typename Aut>
@@ -91,7 +93,7 @@ namespace vcsn
     using dijkstra_node_t = dijkstra_node<automaton_t>;
     using queue_t = vcsn::min_fibonacci_heap<dijkstra_node_t>;
 
-    auto predecessor_tree = shortest_path_tree<automaton_t>(src);
+    auto predecessor_tree = shortest_path_tree<automaton_t>(aut, src);
     auto queue = queue_t{};
     auto& src_node = predecessor_tree.get_node_of(predecessor_tree.root_);
     src_node.set_weight(weightset_t_of<automaton_t>::one());
