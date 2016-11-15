@@ -56,12 +56,15 @@ namespace vcsn
         }
 
       auto s = parent_path_ == null_parent_path ? src : aut_->dst_of(sidetrack_);
+
+      const auto& ws = *aut_->weightset();
       while (s != tree.root_)
         {
           auto next = tree.get_parent_of(s);
           if (s == aut_->null_state() || next == aut_->null_state())
             return path<automaton_t>(aut_);
-          auto weight = tree.get_weight_of(s) - tree.get_weight_of(next);
+          auto weight = ws.rdivide(tree.states_[s].get_weight(),
+                                   tree.states_[next].get_weight());
           auto t = find_transition(s, next);
           assert(t != aut_->null_transition());
           res.emplace_back(weight, t);
@@ -77,14 +80,15 @@ namespace vcsn
       auto min_tr = aut_->null_transition();
       for (auto tr : detail::outin(aut_, src, dst))
         if (min_tr == aut_->null_transition()
-            || aut_->weight_of(tr) < aut_->weight_of(min_tr))
+            || aut_->weightset()->less(aut_->weight_of(tr),
+                                       aut_->weight_of(min_tr)))
           min_tr = tr;
       return min_tr;
     }
 
     bool operator<(const implicit_path& other) const
     {
-      return weight_ < other.weight_;
+      return aut_->weightset()->less(weight_, other.weight_);
     }
 
     // FIXME: private
