@@ -17,7 +17,8 @@ dist_pkglibexec_SCRIPTS =                       \
   %D%/vcsn-notebook                             \
   %D%/vcsn-ps                                   \
   %D%/vcsn-score                                \
-  %D%/vcsn-score-compare
+  %D%/vcsn-score-compare			\
+  %D%/vcsn-score-list
 
 
 # The generator.

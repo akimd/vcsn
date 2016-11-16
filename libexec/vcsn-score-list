@@ -1,0 +1,120 @@
+#!/bin/bash
+
+SCORES_BASE_DIR=_score
+
+SHORT_OPTIONS='bf:o:O:at'
+LONG_OPTIONS='branch,filter:,full,tips'
+
+
+RED="$(tput setaf 9)"
+RESET="$(tput sgr0)"
+
+main()
+{
+  (for i in $(get_scores_filenames); do
+    # If an object no longer exists, don't try to work with it.
+    if [[ $(git cat-file -t $i 2>&1) != 'commit' ]]; then
+      continue;
+    fi
+    branches="$(git branch --contains $i |tr '*' ' '| tr '\n' ' ')"
+    if [[ $branches != *$BRANCH_TO_FILTER* || ($branches == "" && $NON_ACCESSIBLE != y) ]]; then
+     continue
+    fi
+
+    if [[ $ONLY_TIPS == y && $(git branch --points-at $i|grep -v HEAD) == "" ]]; then
+      continue
+    fi
+
+    # Get timestamp
+    git cat-file -p $i | sed -n '4p' | rev | cut -d' ' -f2 | rev | tr -d '\n'
+    echo -n ' '
+
+    # Print file name
+    printf "$i\t"
+    # Get the short commit message
+    git cat-file -p $i | sed -n '6p' | tr -d '\n'
+    printf ' '
+
+    if [[ $SHOW_BRANCHES == y ]]; then
+      if [[ $branches == *"master"* ]]
+      then
+        if [[ $(git branch --points-at $i) == *master* ]]
+        then
+          echo -n ${RED}
+        fi
+        printf "(master)${RESET}"
+      else
+        for branch in $branches; do
+          if [[ $(git branch --points-at $i) == *$branch* ]]
+          then
+            echo -n ${RED}
+          fi
+          printf "(%s) ${RESET}" $branch
+        done
+      fi
+    fi
+
+    echo
+  done)|
+  sort | cut -d' ' -f'2-'|column -t -s $'\t' -c $(tput cols)
+}
+
+get_scores_filenames()
+{
+  if [[ $ONLY_FULL_SCORES == y ]]; then
+    find $SCORES_BASE_DIR/ -maxdepth 1 -type f
+  else
+    find $SCORES_BASE_DIR/$SCORES_DIR -type f
+  fi
+}
+
+ARGUMENTS=$(getopt -o "$SHORT_OPTIONS" -l "$LONG_OPTIONS" -n "$0" -- "$@")
+if [[ $? != 0 ]]; then
+    # e.g. $? == 1
+    #  then getopt has complained about wrong arguments to stdout
+    exit 2
+fi
+
+eval set -- "$ARGUMENTS"
+
+while true; do
+  case "$1" in
+    -b|--branch)
+      SHOW_BRANCHES=y
+      shift
+      ;;
+    -f|--filter)
+      shift
+      BRANCH_TO_FILTER=$1
+      shift
+      ;;
+    -O|-o)
+      shift
+      SCORES_DIR=$1
+      shift
+      ;;
+    --full)
+      ONLY_FULL_SCORES=y
+      shift
+      ;;
+    -a)
+      NON_ACCESSIBLE=y
+      shift
+      ;;
+    -t|--tips)
+      ONLY_TIPS=y
+      shift;
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "Programming error"
+      exit 3
+      ;;
+  esac
+done
+
+# Call Main
+main
