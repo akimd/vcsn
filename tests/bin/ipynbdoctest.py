@@ -103,6 +103,12 @@ def canonical_dict(dict):
         if dict['evalue'] == "No module named 'pandas'":
             SKIP('pandas not installed')
             exit(0)
+        if dict['evalue'] == "No module named 'ipywidgets'":
+            SKIP('ipywidgets not installed')
+            exit(0)
+        if dict['evalue'] == "module 'vcsn' has no attribute 'ipython'":
+            SKIP('ipywidgets not installed')
+            exit(0)
         if dict['evalue'] == "cannot open /usr/share/dict/words for reading: No such file or directory":
             SKIP('/usr/share/dict/words not installed')
             exit(0)
@@ -117,11 +123,18 @@ def canonical_dict(dict):
         if 'pygmentize: command not found' in dict['text']:
             SKIP('pygmentize (from python-pygments) not installed')
             exit(0)
+        if 'ERROR:root:Cell magic `%%automaton` not found.' in dict['text']:
+            SKIP("cell magic doesn't work")
+            exit(0)
+        if 'ERROR:root:Line magic function `%demo` not found' in dict['text']:
+            SKIP("line magic doesn't work")
+            exit(0)
         if re.search('Use of this header .* is deprecated',
                     dict['text']):
             SKIP('spurious warnings about deprecated header')
             print(dict['text'])
             exit(0)
+
         # Normalize newline.
         dict['text'] = dict['text'].replace('\r\n', '\n')
         # Tools path.

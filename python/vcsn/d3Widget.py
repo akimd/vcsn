@@ -1,13 +1,7 @@
 # pylint: disable=ungrouped-imports
 from IPython.display import display, display_javascript
-try:
-    import ipywidgets as widgets
-except ImportError:
-    from IPython.html import widgets # pylint: disable=no-name-in-module
-try:
-    import traitlets
-except ImportError:
-    from IPython.utils import traitlets # pylint: disable=no-name-in-module
+import ipywidgets as widgets
+import traitlets
 
 import vcsn
 import vcsn.ipython

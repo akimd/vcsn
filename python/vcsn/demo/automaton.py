@@ -1,8 +1,5 @@
 # pylint: disable=protected-access
-try:
-    import ipywidgets as widgets
-except ImportError:
-    from IPython.html import widgets # pylint: disable=no-name-in-module
+import ipywidgets as widgets
 from IPython.display import display
 
 class Automaton:
