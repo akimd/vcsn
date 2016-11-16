@@ -56,7 +56,7 @@
 @@ -58,7 +58,8 @@
  Out[11]: \e+cc*</pre>
  <ul>
- <li><p>automaton.evaluate works properly on non-free automata, including multitape automata:</p>
+ <li><p><code>automaton.evaluate</code> works properly on non-free automata, including multitape automata:</p>
 -<p>In [2]: c = vcsn.context('lan(a-z), nmin') a = (c|c).levenshtein() a('foo|bar') Out[2]: 3</p></li>
 +<pre>In [2]: c = vcsn.context('lan(a-z), nmin') a = (c|c).levenshtein() a('foo|bar')
 +Out[2]: 3</pre></li>

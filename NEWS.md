@@ -5,9 +5,9 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-# Vcsn 2.4 (2016-11-05)
+# Vcsn 2.4 (2016-11-16)
 
-The Vcsn team is happy to announce the release of Vcsn 2.4, code named "the
+The Vcsn team is happy to announce the release of Vcsn 2.4, code-named "the
 quotient tools"!
 
 Noteworthy changes include, besides a few bug fixes:
@@ -73,7 +73,7 @@ Noteworthy changes include, besides a few bug fixes:
     In [11]: e.inductive().expression()
     Out[11]: \e+cc*
 
-- automaton.evaluate works properly on non-free automata, including
+- `automaton.evaluate` works properly on non-free automata, including
   multitape automata:
 
     In [2]: c = vcsn.context('lan(a-z), nmin')
@@ -128,8 +128,8 @@ For consistency with the remainder of the API, we use the full,
 unabbreviated, name: evaluate.
 
 ## 2016-10-18
-### weight_one and weight_zero are now available in Python
-These methods return the "one" and "zero" weights of a context.
+### weight_zero and weight_one are now available in Python
+These methods return the "zero" and "one" weights of a context.
 
     In [1]: import vcsn
             ctx = vcsn.context('lal_char, zmin')
@@ -190,7 +190,7 @@ The supported algorithms are:
     type u universal weight-series zpc
 
 To get more information about a particular algorithm, you can type
-`vcsn COMMAND -h`:
+`vcsn COMMAND -h` or `--help`:
 
     $ vcsn eval --help
     usage: vcsn eval [OPTIONS...] [ARGS...]
@@ -202,7 +202,7 @@ To get more information about a particular algorithm, you can type
      eval: AUT:automaton L:word -> weight
         Evaluate L on AUT.
 
-    For more help about available options, please use "vcsn tools --help"
+    Try 'vcsn tools --help' for more information.
 
 You can for example generate the Thompson automaton that accepts `ab*`:
 
@@ -217,11 +217,11 @@ You can for example generate the Thompson automaton that accepts `ab*`:
     4 -> 5 \e
     5 -> $
 
-For more information, please consult the Executables documentation page, and
+For more information, please see the Executables documentation page, and
 `vcsn tools -h`.
 
 ## 2016-10-04
-### fado: transducers and comments support
+### FAdo: transducers and comments support
 It is now possible to read and produce transducers in FAdo format.  Comments
 are also supported in the parser.
 
@@ -259,7 +259,7 @@ in Python. It is now possible to read and produce it in C++.
     1 -> $ <2>
 
 ## 2016-09-21
-### improved compatibility with newer OpenFST
+### Improved compatibility with newer OpenFST
 As OpenFST only supports a single initial state, pre is showed in case of
 several ones, with spontaneous transitions to them.  Pre was represented by a
 very large integer which was read as a negative one in newer version of
@@ -294,11 +294,11 @@ For example, we can compute the edit distance between two words:
 
 ## 2016-07-28
 ### expression: inductive
-Implemented as a hidden feature in Vcsn 2.3, inductive is a new way of
-constructing automata from expressions, based on the algorithm given as
-argument. The only algorithm implemented yet is "standard" which uses standard
-operations to construct a standard automaton. The difference with
-expression.standard is that it handles the case of extended expressions.
+Implemented as a hidden feature in Vcsn 2.3, `expression.inductive` is a new
+way of constructing automata from expressions, based on the algorithm given
+as argument.  The only algorithm implemented yet is "standard" which uses
+standard operations to construct a standard automaton. The difference with
+`expression.standard` is that it handles extended expressions.
 
 For example, we can compute the automaton equivalent of such expressions with
 the inductive method whereas we cannot with the standard one:
@@ -317,7 +317,7 @@ slower than the expansion-based approach.
 ## 2016-07-25
 ### expression.derivation works on multitape expressions
 It is now possible to compute derivatives wrt labels such as `a|x`, `a|\e`
-or `\e|x`; `\e|\e`, however, is forbidden.
+or `\e|x`.  It is however forbidden wrt `\e|\e`.
 
 ## 2016-07-23
 ### automaton.info: levels of detail
