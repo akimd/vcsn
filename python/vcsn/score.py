@@ -1,7 +1,7 @@
 import re
 import sys
 
-import ipywidgets as widgets
+import ipywidgets as widgets # pylint: disable=import-error
 from IPython.core.magic import (Magics, magics_class, line_magic)
 from IPython.core.magic_arguments import (
     argument, magic_arguments, parse_argstring)

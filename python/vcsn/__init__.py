@@ -10,7 +10,7 @@ from vcsn.label      import label
 from vcsn.polynomial import polynomial
 from vcsn.weight     import weight
 
-from vcsn_tools.config import config
+from vcsn_tools.config import config # pylint: disable=wrong-import-order
 datadir = config['datadir']
 version = config['version']
 
@@ -19,12 +19,12 @@ try:
     # Load only if we are running IPython.
     __IPYTHON__
     # pylint: disable=ungrouped-imports
-    from vcsn.ipython import *
+    from vcsn.ipython import * # pylint: disable=wrong-import-position
 
     ip = get_ipython()
     # If we are running in a notebook.
     if 'connection_file' in ip.config['IPKernelApp']:
-        from vcsn.score import *
+        from vcsn.score import * # pylint: disable=wrong-import-position
 except (ImportError, NameError):
     pass
 

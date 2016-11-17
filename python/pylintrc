@@ -30,7 +30,9 @@ disable=
         no-method-argument,fixme,cyclic-import,duplicate-code,
         super-init-not-called,redefined-outer-name,too-many-branches,
         too-many-nested-blocks,multiple-imports,too-many-statements,
-        unused-wildcard-import,bad-indentation
+        unused-wildcard-import,bad-indentation,
+# don't give an error when ipywidget isn't available
+        import-error
 
 
 [REPORTS]
