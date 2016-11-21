@@ -21,8 +21,10 @@ def canonical(s):
      '''Clean up paths (keep only the last two directories to be
      independent of where vcsn was installed), and the line numbers (so
      that we may edit files in vcsn/ without having to tweak the
-     lines here).
+     lines here). Also remove the escape sequence trying to set the window
+     title.
      '''
+     s = re.sub('\033]0;[^\a]*\a', '', s)
      def place(m):
          line = "??" if 'vcsn' in m.group(1) else m.group(2)
          return '"{}", line {}'.format(m.group(1), line)
@@ -56,5 +58,7 @@ for t in ['non-verbose', 'verbose']:
         output = re.sub('/.*?([^/\n]+/[^/\n]+) in', r'\1 in', output)
         ## Clean up line numbers
         output = re.sub(r' \d+', ' ??', output)
+        ## Remove window title escape sequence
+        output = re.sub('\033]0;[^\a]*\a', '', output)
         with open(mefile(t, 'ipy.out')) as f:
             CHECK_EQ(f.read(), output)
