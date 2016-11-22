@@ -14,7 +14,14 @@ namespace vcsn
     using automaton_t = Aut;
     using weight_t = weight_t_of<automaton_t>;
     using state_t = state_t_of<automaton_t>;
-    using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
+    /// We have 2 alternatives to raw pointer:
+    /// - Reference: Not possible as the dijkstra node is used in a boost
+    ///   container that requires default contructible objects.
+    /// - Shared pointer: Using the shared pointer returned by `aut->weightset()`
+    ///   would work but slows the algorithm down as a lot of dijkstra nodes
+    ///   are created.
+    /// Hence, we stick with the raw pointer for now.
+    using weightset_ptr = const weightset_t_of<automaton_t>*;
   public:
     dijkstra_node() = default;
 
@@ -25,7 +32,7 @@ namespace vcsn
       , state_{state}
       , parent_{parent}
       , weight_{weight}
-      , ws_{aut->weightset()}
+      , ws_{aut->weightset().get()}
     {}
 
     bool
