@@ -5,18 +5,6 @@ import subprocess
 from test import *
 from vcsn_tools.config import config
 
-ipython = None
-if 'missing' in config['ipython']:
-    SKIP('missing IPython')
-else:
-    try:
-        subprocess.check_output([config['ipython'], '-c',
-            'import sys; assert sys.version_info.major >= 3'])
-    except Error as e:
-        SKIP(config['ipython'], 'runs Python < 3', e)
-    else:
-        ipython = config['ipython']
-
 def canonical(s):
      '''Clean up paths (keep only the last two directories to be
      independent of where vcsn was installed), and the line numbers (so
@@ -30,7 +18,13 @@ def canonical(s):
          return '"{}", line {}'.format(m.group(1), line)
      return re.sub('".*?([^/\n]+/[^/\n]+)", line (\d+)', place, s)
 
-for t in ['non-verbose', 'verbose']:
+tests = ['non-verbose', 'verbose']
+
+## -------- ##
+## Python.  ##
+## -------- ##
+
+for t in tests:
     try:
         # IPython needs `.ipy` files, but Python doesn't care,
         # so the tests scripts have the `ipy` extension.
@@ -47,7 +41,33 @@ for t in ['non-verbose', 'verbose']:
     else:
         FAIL(mefile(t, 'ipy'), 'did not fail!')
 
-    if ipython:
+## --------- ##
+## IPython.  ##
+## --------- ##
+
+
+# Check for IPython
+ipython = None
+if 'missing' in config['ipython']:
+    SKIP('missing IPython')
+else:
+    try: # Check that ipython is running Python 3
+        subprocess.check_output([config['ipython'], '-c',
+            'import sys; assert sys.version_info.major >= 3'])
+    except Error as e:
+        SKIP(config['ipython'], 'runs Python < 3', e)
+    else:
+        # Check that IPython is at least IPython 3
+        try:
+            subprocess.check_output([config['ipython'], '-c',
+                'import IPython; assert IPython.version_info[0] >= 3'])
+        except Error as e:
+            SKIP("runs IPython <= 3, tracebacks won't be filtered correctly")
+        else:
+            ipython = config['ipython']
+
+if ipython:
+    for t in tests:
         # IPython doesn't fail and prints on stdout,
         # so not try..except, redirection to stdout nor warning removal here.
         # However the warnings will still appear on stderr, so redirect to devnull.
