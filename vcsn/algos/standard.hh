@@ -27,7 +27,7 @@ namespace vcsn
   bool
   is_standard(const Aut& a)
   {
-    auto inis = initial_transitions(a);
+    auto inis = detail::initial_transitions(a);
     return
       inis.size() == 1
       && a->weightset()->is_one(a->weight_of(inis.front()))
@@ -83,7 +83,7 @@ namespace vcsn
       return;
 
     const auto& ws = *aut->weightset();
-    const auto& inits = initial_transitions(aut);
+    const auto& inits = detail::initial_transitions(aut);
     std::vector<transition_t_of<Aut>> initials{begin(inits), end(inits)};
 
     // See Tools documentation for the implementation details.
@@ -95,7 +95,7 @@ namespace vcsn
         // The initial state.
         auto i = aut->dst_of(ti);
         auto wi = aut->weight_of(ti);
-        for (auto t: all_out(aut, i))
+        for (auto t: detail::all_out(aut, i))
           // Cannot use new_transition.
           aut->add_transition(ini, aut->dst_of(t), aut->label_of(t),
                               ws.mul(wi, aut->weight_of(t)));
@@ -103,7 +103,7 @@ namespace vcsn
 
         // (iv) Remove the former initial states of A that are the
         // destination of no incoming transition.
-        if (all_in(aut, i).empty())
+        if (detail::all_in(aut, i).empty())
           aut->del_state(i);
       }
     // (i.b) Make [state s] initial, with initial multiplicity equal
@@ -244,7 +244,7 @@ namespace vcsn
       states_t finals() const
       {
         states_t res;
-        for (auto t: final_transitions(res_))
+        for (auto t: detail::final_transitions(res_))
           res.insert(res_->src_of(t));
         return res;
       }
@@ -284,7 +284,7 @@ namespace vcsn
         for (const auto& c: e.tail())
           {
             // The set of the current (left-hand side) final transitions.
-            auto ftr = detail::make_vector(final_transitions(res_));
+            auto ftr = detail::make_vector(detail::final_transitions(res_));
 
             // Visit the next member of the product.
             c->accept(*this);
@@ -332,7 +332,7 @@ namespace vcsn
         for (auto ti: out(res_, initial_))
           {
             res_->lweight(ti, w);
-            for (auto tf: final_transitions(res_))
+            for (auto tf: detail::final_transitions(res_))
               if (res_->src_of(tf) != initial_
                   && !has(other_finals, res_->src_of(tf)))
                 // Note that the weight of ti has already been
@@ -346,7 +346,7 @@ namespace vcsn
                    res_->label_of(ti),
                    ws_.mul(res_->weight_of(tf), res_->weight_of(ti)));
           }
-        for (auto tf: final_transitions(res_))
+        for (auto tf: detail::final_transitions(res_))
           res_->rweight(tf, w);
         res_->set_final(initial_, w);
       }
@@ -362,7 +362,7 @@ namespace vcsn
       {
         states_t other_finals = finals();
         e.sub()->accept(*this);
-        for (auto t: final_transitions(res_))
+        for (auto t: detail::final_transitions(res_))
           if (! has(other_finals, res_->src_of(t)))
             res_->rweight(t, e.weight());
       }

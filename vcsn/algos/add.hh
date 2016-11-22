@@ -36,7 +36,7 @@ namespace vcsn
         {b->pre(), res->pre()},
         {b->post(), res->post()},
       };
-    state_t_of<Aut1> initial = res->dst_of(initial_transitions(res).front());
+    state_t_of<Aut1> initial = res->dst_of(detail::initial_transitions(res).front());
     for (auto s: b->states())
       m.emplace(s, b->is_initial(s) ? initial : res->new_state());
 

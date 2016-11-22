@@ -32,7 +32,7 @@ namespace vcsn
 
     // The final states of aut.
     auto finals = std::set<state_t>{};
-    for (auto t: final_transitions(aut))
+    for (auto t: detail::final_transitions(aut))
       finals.insert(aut->src_of(t));
 
     // Complement.
@@ -46,7 +46,6 @@ namespace vcsn
   template <Automaton Aut>
   auto
   complement(const Aut& aut)
-    -> decltype(copy(aut))
   {
     auto res = copy(aut);
     complement_here(res);

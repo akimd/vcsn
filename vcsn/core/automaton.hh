@@ -164,7 +164,6 @@ namespace vcsn
     /// This is used when calling eliminate_state repeatedly.
     template <Automaton Aut>
     auto initial_transitions(const Aut& aut)
-      -> decltype(aut->all_out(aut->pre())) // for G++ 5.2
     {
       return aut->all_out(aut->pre());
     }
@@ -175,7 +174,6 @@ namespace vcsn
     /// This is used when calling eliminate_state repeatedly.
     template <Automaton Aut>
     auto final_transitions(const Aut& aut)
-      -> decltype(aut->all_in(aut->post())) // for G++ 5.2
     {
       return aut->all_in(aut->post());
     }
@@ -245,7 +243,6 @@ namespace vcsn
     /// All the transition indexes between visible states.
     template <Automaton Aut>
     auto transitions(const Aut& aut)
-      -> decltype(all_transitions(aut, is_special_t<Aut>{aut})) // for G++ 5.2
     {
       return all_transitions(aut, is_special_t<Aut>{aut});
     }
