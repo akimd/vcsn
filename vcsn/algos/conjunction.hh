@@ -157,6 +157,9 @@ namespace vcsn
             aut_->todo_.pop_front();
           }
         aut_->properties().update(add_ftag{});
+        // All implementations of add are not deterministic, thus the need to
+        // specify it here.
+        aut_->properties().put(is_deterministic_ptag{}, true);
       }
 
       /// Compute the left quotient in-place.

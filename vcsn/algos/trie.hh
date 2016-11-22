@@ -23,6 +23,32 @@ namespace vcsn
   CREATE_FUNCTION_TAG(trie);
   CREATE_FUNCTION_TAG(cotrie);
 
+  template <>
+  struct function_prop<trie_ftag>
+  {
+    static const bool invalidate = false;
+
+    static auto& updated_prop()
+    {
+#if defined __GNUC__ && ! defined __clang__
+      // GCC 4.9 and 5.0 warnings: see
+      // <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65324>.
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+      static auto updated_prop = create_updated_prop(
+        {
+          // By construction, the trie is deterministic (see notebook).
+          { is_deterministic_ptag::id(), boost::any{true} }
+        });
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic pop
+#endif
+      return updated_prop;
+    }
+  };
+
+
   namespace detail
   {
     /// Turn a label into a parsable label: escape special characters.

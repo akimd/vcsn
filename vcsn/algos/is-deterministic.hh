@@ -49,22 +49,39 @@ namespace vcsn
     return num_deterministic_states(transpose(aut));
   }
 
+  namespace detail
+  {
+    template <Automaton Aut>
+    bool
+    is_deterministic_(const Aut& aut)
+    {
+      static_assert(labelset_t_of<Aut>::is_free(),
+                    "is_deterministic: requires free labelset");
+
+      if (1 < initial_transitions(aut).size())
+        return false;
+
+      for (auto s: aut->states())
+        if (!is_deterministic(aut, s))
+          return false;
+      return true;
+    }
+  }
+
   /// Whether has at most an initial state, and all its states
   /// are deterministic.
   template <Automaton Aut>
   bool
   is_deterministic(const Aut& aut)
   {
-    static_assert(labelset_t_of<Aut>::is_free(),
-                  "is_deterministic: requires free labelset");
-
-    if (1 < initial_transitions(aut).size())
-      return false;
-
-    for (auto s: aut->states())
-      if (!is_deterministic(aut, s))
-        return false;
-    return true;
+    if (aut->properties().is_unknown(is_deterministic_ptag{}))
+    {
+      auto res = detail::is_deterministic_(aut);
+      aut->properties().put(is_deterministic_ptag{}, res);
+      return res;
+    }
+    else
+      return aut->properties().get(is_deterministic_ptag{});
   }
 
   /// Whether the transposed automaton is deterministic.

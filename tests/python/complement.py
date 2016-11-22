@@ -101,7 +101,13 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 ''')
-CHECK_EQUIV(o, a.complement())
+
+comp = a.complement()
+CHECK_EQUIV(o, comp)
+# Check cached value.
+CHECK_EQ(True, comp.info('is deterministic'))
 
 # Involution.
-CHECK_EQUIV(a, a.complement().complement())
+invol = a.complement().complement()
+CHECK_EQUIV(a, invol)
+CHECK_EQ(True, invol.info('is deterministic'))

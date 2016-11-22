@@ -15,7 +15,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
@@ -39,7 +39,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
@@ -63,7 +63,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
@@ -87,7 +87,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
@@ -207,7 +207,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
@@ -231,7 +231,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
@@ -255,7 +255,7 @@ number of deterministic states: 3
 number of transitions: 3
 number of spontaneous transitions: 0
 is complete: 0
-is deterministic: 1
+is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1

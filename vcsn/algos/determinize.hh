@@ -16,12 +16,37 @@
 
 namespace vcsn
 {
-  /*----------------.
-  | Function tags.  |
-  `----------------*/
+  /*-------------------------------.
+  | Function tags and properties.  |
+  `-------------------------------*/
 
   CREATE_FUNCTION_TAG(codeterminize);
   CREATE_FUNCTION_TAG(determinize);
+
+  template <>
+  struct function_prop<determinize_ftag>
+  {
+    // New automaton, no need to invalidate.
+    static const bool invalidate = false;
+
+    static auto& updated_prop()
+    {
+#if defined __GNUC__ && ! defined __clang__
+      // GCC 4.9 and 5.0 warnings: see
+      // <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65324>.
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+      static auto updated_prop = create_updated_prop(
+        {
+          { is_deterministic_ptag::id(), boost::any{true} }
+        });
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic pop
+#endif
+      return updated_prop;
+    }
+  };
 
   /*----------------------.
   | subset construction.  |

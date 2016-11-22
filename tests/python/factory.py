@@ -10,24 +10,32 @@ def get_labels(aut):
     return set(re.findall(r'\w+ -> \w+ (.*)$', a.format('daut'), re.M))
 vcsn.automaton.labels = get_labels
 
+def check_aut_cache(exp, aut, prop, value):
+    CHECK_EQ(exp, aut)
+    CHECK_EQ(value, aut.info(prop))
+
 ## ------- ##
 ## cerny.  ##
 ## ------- ##
 
 a = vcsn.context('lal_char(abc), b').cerny(6)
-CHECK_EQ(6, a.info('number of states'))
+a_info = a.info()
+CHECK_EQ(6, a_info['number of states'])
+CHECK_EQ(True, a_info['is deterministic'])
 CHECK_EQ(meaut('cerny-6.gv'), a)
-
 
 ## ----------- ##
 ## de_bruijn.  ##
 ## ----------- ##
 
-CHECK_EQ(meaut('de-bruijn-2.gv'),
-         vcsn.context('lal_char(ab), b').de_bruijn(2))
+def check_de_bruijn(exp, aut):
+    check_aut_cache(exp, aut, 'is deterministic', False)
 
-CHECK_EQ(meaut('de-bruijn-3.gv'),
-         vcsn.context('lal_char(xyz), b').de_bruijn(3))
+check_de_bruijn(meaut('de-bruijn-2.gv'),
+                vcsn.context('lal_char(ab), b').de_bruijn(2))
+
+check_de_bruijn(meaut('de-bruijn-3.gv'),
+                vcsn.context('lal_char(xyz), b').de_bruijn(3))
 
 ## ---------------- ##
 ## div/quotkbaseb.  ##
@@ -97,17 +105,20 @@ CHECK_EQ(ctx.double_ring(4, [2, 3]),
 ## ladybird.  ##
 ## ---------- ##
 
+def check_ladybird(exp, aut):
+    check_aut_cache(exp, aut, 'is deterministic', False)
+
 b = vcsn.context('lal_char(abc), b')
 z = vcsn.context('lal_char(abc), z')
 
 exp = meaut('ladybird-2.gv')
-CHECK_EQ(exp, b.ladybird(2))
+check_ladybird(exp, b.ladybird(2))
 
 exp = vcsn.automaton(str(exp).replace(', b', ', z'))
-CHECK_EQ(exp, z.ladybird(2))
+check_ladybird(exp, z.ladybird(2))
 
-CHECK_EQ(meaut('ladybird-2-zmin.gv'),
-         vcsn.context('lal_char(abc), zmin').ladybird(2))
+check_ladybird(meaut('ladybird-2-zmin.gv'),
+               vcsn.context('lal_char(abc), zmin').ladybird(2))
 
 
 ## ------------- ##

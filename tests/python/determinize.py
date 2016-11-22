@@ -13,14 +13,28 @@ def check(aut, expfile, algo="auto", deterministic=False):
     print("check: {}, algo={}".format(expfile, algo))
 
     CHECK_EQ(deterministic, aut.is_deterministic())
-    CHECK_EQ(deterministic, aut.transpose().strip().is_codeterministic())
+    # Check value in property cache.
+    CHECK_EQ(deterministic, aut.info('is deterministic'))
+
+    t = aut.transpose()
+    CHECK_EQ(deterministic, t.strip().is_codeterministic())
+    # Check that property cache was invalidated.
+    CHECK_EQ('N/A', t.info('is deterministic'))
 
     det = aut.determinize(algo)
     exp = metext(expfile + '-det', 'gv')
     CHECK_EQ(exp, det)
+
+    # Check before calling is_deteministic() to ensure that it retrieves a
+    # cached value.
+    CHECK_EQ(True, det.info('is deterministic'))
     CHECK(det.is_deterministic())
+
     # Idempotence.
-    CHECK_EQ(det, det.determinize(algo))
+    idem = det.determinize(algo)
+    CHECK_EQ(det, idem)
+    CHECK_EQ(True, idem.info('is deterministic'))
+
 
     # Laziness.
     if algo != "boolean" and not aut.is_empty():

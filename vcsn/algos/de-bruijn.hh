@@ -11,11 +11,37 @@
 
 namespace vcsn
 {
-  /*---------------.
-  | Function tag.  |
-  `---------------*/
+  /*------------------------------.
+  | Function tag and properties.  |
+  `------------------------------*/
 
   struct de_bruijn_ftag{};
+
+  template <>
+  struct function_prop<de_bruijn_ftag>
+  {
+    // New automaton, no need to invalidate.
+    static const bool invalidate = false;
+
+    static auto& updated_prop()
+    {
+#if defined __GNUC__ && ! defined __clang__
+      // GCC 4.9 and 5.0 warnings: see
+      // <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65324>.
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+      static auto updated_prop = create_updated_prop(
+        {
+          // By construction, the de bruijn automaton is not deterministic.
+          { is_deterministic_ptag::id(), boost::any{false} }
+        });
+#if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic pop
+#endif
+      return updated_prop;
+    }
+  };
 
   // (a+b)*a(a+b)^n.
   template <typename Context>

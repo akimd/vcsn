@@ -120,7 +120,7 @@ namespace vcsn
     ECHO(3, "is ambiguous", VCSN_IF_FREE(is_ambiguous, aut));
     ECHO(2, "is complete", VCSN_IF_FREE(is_complete, aut));
     ECHO(3, "is cycle ambiguous", VCSN_IF_FREE(is_cycle_ambiguous, aut));
-    ECHO(2, "is deterministic", VCSN_IF_FREE(is_deterministic, aut));
+    ECHO_PROP(2, is_deterministic_ptag{});
     ECHO(2, "is codeterministic", VCSN_IF_FREE(is_codeterministic, aut));
     ECHO(2, "is empty", is_empty(aut));
     ECHO(2, "is eps-acyclic", is_eps_acyclic(aut));

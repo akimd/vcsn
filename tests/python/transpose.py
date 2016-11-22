@@ -50,7 +50,7 @@ a = vcsn.context('lal_char, b').expression('a+b').standard()
 CHECK_EQ({
            'is complete': False,
            'is codeterministic': True,
-           'is deterministic': False,
+           'is deterministic': 'N/A',
            'is empty': False,
            'is eps-acyclic': True,
            'is normalized': False,

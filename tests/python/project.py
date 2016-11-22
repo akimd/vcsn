@@ -58,7 +58,7 @@ def check_aut(function_name, type_):
                'is codeterministic': True,
                'is complete': False,
                'is cycle ambiguous': False,
-               'is deterministic': True,
+               'is deterministic': 'N/A',
                'is empty': False,
                'is eps-acyclic': True,
                'is normalized': True,

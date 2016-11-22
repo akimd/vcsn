@@ -36,6 +36,11 @@ def check(algo, ctx, polynomial, exp):
     p = c.polynomial(polynomial)
     a = trie(algo, p)
     CHECK_EQ(exp, a.format('daut'))
+
+    # Check cached value for 'is deterministic'.
+    if algo == 'trie':
+        CHECK_EQ(True, a.info('is deterministic'))
+
     if ctx.startswith('lal'):
         CHECK(a.is_deterministic() if algo == 'trie' else a.is_codeterministic())
     CHECK_EQ(p, a.shortest(100))
@@ -45,6 +50,9 @@ def check(algo, ctx, polynomial, exp):
     a = trie(algo, c, data=p.format('list'))
     CHECK_EQ(exp, a.format('daut'))
 
+    if algo == 'trie':
+        CHECK_EQ(True, a.info('is deterministic'))
+
     # Likewise, but via a file.
     with open('series.txt', 'w') as file:
         print(p.format('list'), file=file)
@@ -53,6 +61,8 @@ def check(algo, ctx, polynomial, exp):
     os.remove('series.txt')
     CHECK_EQ(exp, a.format('daut'))
 
+    if algo == 'trie':
+        CHECK_EQ(True, a.info('is deterministic'))
 
 
 check('trie',
