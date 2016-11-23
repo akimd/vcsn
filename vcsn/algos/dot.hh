@@ -200,10 +200,11 @@ namespace vcsn
                 bos_ << "\", shape = box";
                 if (format_ == format::latex)
                   {
-                    // Approximate a fixed width based on raw text output
+                    // Approximate a fixed width based on raw text
+                    // output.
                     std::ostringstream oss;
                     aut_->print_state_name(s, oss, format::text);
-                    size_t len = oss.str().size();
+                    float len = oss.str().size();
                     float width = 0.5f + 0.1f * (len / 2);
                     bos_ << ", fixedsize = true"
                          << ", width = " << width;

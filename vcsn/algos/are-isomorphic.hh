@@ -24,12 +24,14 @@
 namespace vcsn
 {
 
+  namespace detail
+  {
   /*-----------------.
   | are_isomorphic.  |
   `-----------------*/
 
   template <Automaton Aut1, Automaton Aut2>
-  class are_isomorphicer
+  class are_isomorphic_impl
   {
   private:
     using automaton1_t = Aut1;
@@ -60,8 +62,6 @@ namespace vcsn
 
     using weightset_t = weightset1_t; // FIXME: join!
     using labelset_t = labelset1_t; // FIXME: join!
-
-    using states_t = std::pair<state1_t, state2_t>;
 
     automaton1_t a1_;
     automaton2_t a2_;
@@ -101,7 +101,6 @@ namespace vcsn
     /// written in Reverse-Polish English.
     using pair_t = std::pair<state1_t, state2_t>;
     using worklist_t = std::stack<pair_t>;
-    worklist_t worklist_;
 
     /// The maps associating the states of a1_ and the states of a2_->
     using s1tos2_t = std::unordered_map<state1_t, state2_t>;
@@ -125,18 +124,18 @@ namespace vcsn
                                   // for non-sequential automata].
         trivially_different  = 3, // Different number of states or transitions,
                                   // of different sequentiality.
-      } response;
+      };
+
+      tag response = tag::never_computed;
 
       /// Only meaningful if the tag is tag::counterexample.
-      pair_t counterexample;
+      pair_t counterexample =
+        { automaton1_t::element_type::null_state(),
+          automaton2_t::element_type::null_state() };
 
       /// Only meaningful if the tag is tag::isomorphic.
-      s1tos2_t s1tos2_;
-      s2tos1_t s2tos1_;
-
-      full_response()
-        : response(tag::never_computed)
-      {}
+      s1tos2_t s1tos2;
+      s2tos1_t s2tos1;
     } fr_;
 
     // Return true and fill \a dout if \a a is sequential; otherwise
@@ -180,14 +179,10 @@ namespace vcsn
       nout2_.clear();
     }
 
-    bool trivially_different()
+    bool trivially_different() const
     {
       // Automata of different sizes are different.
-      if (a1_->num_states() != a2_->num_states())
-        return true;
-      if (a1_->num_transitions() != a2_->num_transitions())
-        return true;
-
+      //
       // The idea of comparing alphabet sizes here is tempting, but
       // it's more useful to only deal with the actually used labels;
       // we consider isomorphic even two automata from labelsets with
@@ -195,17 +190,17 @@ namespace vcsn
       // Building a set of actually used labels has linear complexity,
       // and it's not obvious that performing an additional check now
       // would pay in real usage.  FIXME: benchmark in real cases.
-
-      return false;
+      return (a1_->num_states() != a2_->num_states()
+              || a1_->num_transitions() != a2_->num_transitions());
     }
 
   public:
-    are_isomorphicer(const Aut1 &a1, const Aut2 &a2)
+    are_isomorphic_impl(const Aut1 &a1, const Aut2 &a2)
       : a1_(a1)
       , a2_(a2)
     {}
 
-    const full_response
+    full_response
     get_full_response()
     {
       clear();
@@ -277,14 +272,14 @@ namespace vcsn
             return ls.less(t1.second, t2.second);
         };
 
-#define HASH_TRANSITIONS(expression, endpoint_getter)                   \
+#define HASH_TRANSITIONS(Expression, Endpoint_Getter)                   \
       {                                                                 \
-        std::unordered_set<state_t_of<Aut>> endpoint_states;            \
+        auto endpoint_states = std::unordered_set<state_t_of<Aut>>{};   \
         transitions_t tt;                                               \
-        for (auto& t: expression)                                       \
+        for (auto& t: Expression)                                       \
           {                                                             \
-            tt.emplace_back(transition_t{a->weight_of(t), a->label_of(t)}); \
-            endpoint_states.emplace(a->endpoint_getter(t));             \
+            tt.emplace_back(a->weight_of(t), a->label_of(t));           \
+            endpoint_states.emplace(a->Endpoint_Getter(t));             \
           }                                                             \
         boost::sort(tt, less);                                          \
         for (const auto& t: tt)                                         \
@@ -310,7 +305,8 @@ namespace vcsn
     const state_classes_t make_state_classes()
     {
       // Class left and right states:
-      std::unordered_map<class_id, std::pair<states1_t, states2_t>> table;
+      auto table
+        = std::unordered_map<class_id, std::pair<states1_t, states2_t>>{};
       for (auto s1: a1_->all_states())
         table[state_to_class(s1, a1_)].first.emplace_back(s1);
       for (auto s2: a2_->all_states())
@@ -319,7 +315,7 @@ namespace vcsn
       // Return a table without class hashes sorted by decreasing
       // (left) size, in order to perform the most constrained choices
       // first.
-      state_classes_t res;
+      auto res = state_classes_t{};
       for (const auto& c: table)
         res.emplace_back(std::move(c.second.first), std::move(c.second.second));
       boost::sort(res,
@@ -365,7 +361,7 @@ namespace vcsn
 
     /// Handy debugging method.
     void print_classes(const state_classes_t& cs,
-                       std::ostream& o = std::cerr)
+                       std::ostream& o = std::cerr) const
     {
       for (const auto& c: cs)
         {
@@ -392,11 +388,11 @@ namespace vcsn
     }
     bool is_isomorphism_valid_throwing()
     {
-      std::unordered_set<state1_t> mss1;
-      std::unordered_set<state2_t> mss2;
-      std::stack<pair_t> worklist;
-      worklist.push({a1_->pre(), a2_->pre()});
-      worklist.push({a1_->post(), a2_->post()});
+      auto mss1 = std::unordered_set<state1_t>{};
+      auto mss2 = std::unordered_set<state2_t>{};
+      auto worklist = worklist_t{};
+      worklist.emplace(a1_->pre(), a2_->pre());
+      worklist.emplace(a1_->post(), a2_->post());
       while (! worklist.empty())
         {
           const auto p = std::move(worklist.top()); worklist.pop();
@@ -406,10 +402,10 @@ namespace vcsn
           // Even before checking for marks, check if these two states
           // are supposed to be isomorphic with one another.  We can't
           // avoid this just because we've visited them before.
-          if (fr_.s1tos2_.at(s1) != s2 || fr_.s2tos1_.at(s2) != s1)
+          if (fr_.s1tos2.at(s1) != s2 || fr_.s2tos1.at(s2) != s1)
             return false;
-          const bool m1 = (mss1.find(s1) != mss1.end());
-          const bool m2 = (mss2.find(s2) != mss2.end());
+          const bool m1 = has(mss1, s1);
+          const bool m2 = has(mss2, s2);
           if (m1 != m2)
             return false;
           else if (m1 && m2)
@@ -431,10 +427,10 @@ namespace vcsn
               const auto& w1 = a1_->weight_of(t1);
               const auto& l1 = a1_->label_of(t1);
               const auto& d2s = nout2_.at(s2).at(l1).at(w1);
-              auto d2 = fr_.s1tos2_.at(d1); // according to the isomorphism
+              auto d2 = fr_.s1tos2.at(d1); // according to the isomorphism
               if (!has(d2s, d2))
                 return false;
-              worklist.push({d1, d2});
+              worklist.emplace(d1, d2);
               ++ t1n;
             }
           for (auto t2: all_out(a2_, s2))
@@ -443,10 +439,10 @@ namespace vcsn
               const auto& w2 = a2_->weight_of(t2);
               const auto& l2 = a2_->label_of(t2);
               const auto& d1s = nout1_.at(s1).at(l2).at(w2);
-              auto d1 = fr_.s2tos1_.at(d2); // according to the isomorphism
+              auto d1 = fr_.s2tos1.at(d2); // according to the isomorphism
               if (!has(d1s, d1))
                 return false;
-              worklist.push({d1, d2});
+              worklist.emplace(d1, d2);
               ++ t2n;
             }
           if (t1n != t2n)
@@ -462,8 +458,8 @@ namespace vcsn
           {
             state1_t s1 = c.first[i];
             state2_t s2 = c.second[i];
-            fr_.s1tos2_[s1] = s2;
-            fr_.s2tos1_[s2] = s1;
+            fr_.s1tos2[s1] = s2;
+            fr_.s2tos1[s2] = s1;
           }
     }
 
@@ -543,7 +539,7 @@ namespace vcsn
       return true;
     }
 
-    const full_response
+    full_response
     get_full_response_nonsequential()
     {
       // Initialize state classes, so that later we can only do
@@ -578,18 +574,22 @@ namespace vcsn
       return fr_;
     }
 
-    const full_response
+    full_response
     get_full_response_sequential()
     {
+      // FIXME: beware of the possible use of join on both weightsets.
+      const auto& ws = *a1_->weightset();
+
       // If we prove non-isomorphism from now on, it will be by
       // presenting some specific pair of states.
       fr_.response = full_response::tag::counterexample;
 
-      worklist_.push({a1_->pre(), a2_->pre()});
+      auto worklist = worklist_t{};
+      worklist.emplace(a1_->pre(), a2_->pre());
 
-      while (! worklist_.empty())
+      while (! worklist.empty())
         {
-          const states_t states = worklist_.top(); worklist_.pop();
+          const pair_t states = worklist.top(); worklist.pop();
           const state1_t s1 = states.first;
           const state2_t s2 = states.second;
 
@@ -620,27 +620,27 @@ namespace vcsn
               weight2_t w2 = s2outl->second.first;
               state2_t dst2 = s2outl->second.second;
 
-              if (! weightset_t::equal(w1, w2))
+              if (! ws.equal(w1, w2))
                 return fr_;
 
-              const auto& isomorphics_to_dst1 = fr_.s1tos2_.find(dst1);
-              const auto& isomorphics_to_dst2 = fr_.s2tos1_.find(dst2);
+              const auto& isomorphics_to_dst1 = fr_.s1tos2.find(dst1);
+              const auto& isomorphics_to_dst2 = fr_.s2tos1.find(dst2);
 
-              if (isomorphics_to_dst1 == fr_.s1tos2_.cend())
+              if (isomorphics_to_dst1 == fr_.s1tos2.cend())
                 {
-                  if (isomorphics_to_dst2 == fr_.s2tos1_.cend()) // Both empty.
+                  if (isomorphics_to_dst2 == fr_.s2tos1.cend()) // Both empty.
                     {
-                      fr_.s1tos2_[dst1] = dst2;
-                      fr_.s2tos1_[dst2] = dst1;
-                      worklist_.push({dst1, dst2});
+                      fr_.s1tos2[dst1] = dst2;
+                      fr_.s2tos1[dst2] = dst1;
+                      worklist.emplace(dst1, dst2);
                     }
                   else
                     return fr_;
                 }
-              else if (isomorphics_to_dst1 == fr_.s1tos2_.cend()
+              else if (isomorphics_to_dst1 == fr_.s1tos2.cend()
                        || isomorphics_to_dst1->second != dst2
                        || isomorphics_to_dst2->second != dst1)
-                  return fr_;
+                return fr_;
             } // outer for
         } // while
       fr_.response = full_response::tag::isomorphic;
@@ -655,7 +655,7 @@ namespace vcsn
 
     /// A map from each a2_ state to the corresponding a1_ state.  The
     /// map is ordered, as usual for origins, hence different from
-    /// fr_.s2tos1_.
+    /// fr_.s2tos1.
     using origins_t = std::map<state2_t, state1_t>;
 
     /// Only meaningful if operator() returned true.
@@ -665,7 +665,7 @@ namespace vcsn
       require(fr_.reponse == full_response::tag::isomorphic,
               __func__, ": isomorphism-check not successfully performed");
       origins_t res;
-      for (const auto& s2s1: fr_.s2tos1_)
+      for (const auto& s2s1: fr_.s2tos1)
         res[s2s1.first] = s2s1.second;
       return res;
     }
@@ -686,15 +686,14 @@ namespace vcsn
       o << "*/\n";
       return o;
     }
-
   };
+  }
 
   template <Automaton Aut1, Automaton Aut2>
   bool
   are_isomorphic(const Aut1& a1, const Aut2& a2)
   {
-    are_isomorphicer<Aut1, Aut2> are_isomorphic(a1, a2);
-
+    auto are_isomorphic = detail::are_isomorphic_impl<Aut1, Aut2>{a1, a2};
     return are_isomorphic();
   }
 
@@ -702,7 +701,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
       template <Automaton Aut1, Automaton Aut2>
       bool

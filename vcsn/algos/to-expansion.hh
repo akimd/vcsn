@@ -404,7 +404,7 @@ namespace vcsn
       /// Whether to work transposed.
       bool transposed_ = false;
       /// The result.
-      expansion_t res_;
+      expansion_t res_ = xs_.zero();
     };
   } // rat::
 

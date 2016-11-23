@@ -200,7 +200,7 @@ namespace vcsn
       using output_state_t = state_t_of<output_automaton_t>;
       using weight_t = typename context_t::weight_t;
       using vector_t = std::vector<weight_t>;
-      using matrix_t = std::vector<std::map<std::size_t, weight_t> > ;
+      using matrix_t = std::vector<std::map<std::size_t, weight_t>>;
       using matrix_set_t = std::map<label_t, matrix_t>;
 
     public:
@@ -212,28 +212,28 @@ namespace vcsn
       /// Create the linear representation of the input
       void linear_representation()
       {
-        std::unordered_map<state_t, unsigned> state_to_index;
+        auto state_to_index = std::unordered_map<state_t, unsigned>{};
         unsigned i = 0;
         for (auto s: input_->states())
           state_to_index[s] = i++;
-        dimension = i;
-        if (dimension == 0)
+        dimension_ = i;
+        if (dimension_ == 0)
           return;
-        init.resize(i);
-        final.resize(i);
+        init_.resize(i);
+        final_.resize(i);
         // Computation of the initial vector.
         for (auto t : initial_transitions(input_))
-          init[state_to_index[input_->dst_of(t)]] = input_->weight_of(t);
-        // Computation of the final vector.
+          init_[state_to_index[input_->dst_of(t)]] = input_->weight_of(t);
+        // Computation of the final_ vector.
         for (auto t : final_transitions(input_))
-          final[state_to_index[input_->src_of(t)]] = input_->weight_of(t);
+          final_[state_to_index[input_->src_of(t)]] = input_->weight_of(t);
         // For each letter, we define an adjency matrix.
         for (auto t : transitions(input_))
           {
-            auto it = letter_matrix_set.find(input_->label_of(t));
-            if (it == letter_matrix_set.end())
-              it = letter_matrix_set.emplace(input_->label_of(t),
-                                             matrix_t(dimension)).first;
+            auto it = letter_matrix_set_.find(input_->label_of(t));
+            if (it == letter_matrix_set_.end())
+              it = letter_matrix_set_.emplace(input_->label_of(t),
+                                             matrix_t(dimension_)).first;
             it->second[state_to_index[input_->src_of(t)]]
               [state_to_index[input_->dst_of(t)]] = input_->weight_of(t);
           }
@@ -246,7 +246,7 @@ namespace vcsn
                                  const matrix_t& m,
                                  vector_t& res)
       {
-        for (unsigned i = 0; i < dimension; i++)
+        for (unsigned i = 0; i < dimension_; i++)
           for (auto it : m[i])
             {
               unsigned j = it.first;
@@ -259,7 +259,7 @@ namespace vcsn
                               const vector_t& w)
       {
         weight_t res = ws_.zero();
-        for (unsigned i = 0; i < dimension; ++i)
+        for (unsigned i = 0; i < dimension_; ++i)
           res = ws_.add(res, ws_.mul(v[i], w[i]));
         return res;
       }
@@ -302,10 +302,10 @@ namespace vcsn
                          unsigned* permutation)
       {
         weight_t min;
-        unsigned pivot = dimension;
-        for (unsigned i = begin; i < dimension; ++i)
+        unsigned pivot = dimension_;
+        for (unsigned i = begin; i < dimension_; ++i)
           if (!ws_.is_zero(v[permutation[i]])
-              && (pivot == dimension
+              && (pivot == dimension_
                   || ws_.less(norm(v[permutation[i]]), min)))
             {
               pivot = i;
@@ -374,7 +374,7 @@ namespace vcsn
         weight_t g = gcd(bp, cp, a, b);
         bp /= g;
         cp /= g;
-        for (unsigned i = nb; i < dimension; ++i)
+        for (unsigned i = nb; i < dimension_; ++i)
           {
             weight_t tmp = current[permutation[i]];
             current[permutation[i]] = bp*tmp - cp*vbasis[permutation[i]];
@@ -394,7 +394,7 @@ namespace vcsn
             if (!ws_.is_zero(new_vector[b]))
               {
                 current[pivot] = ws_.zero();
-                for (unsigned i = b+1; i < dimension; ++i)
+                for (unsigned i = b+1; i < dimension_; ++i)
                   current[permutation[i]]
                     -= new_vector[b] * vbasis[permutation[i]];
               }
@@ -413,10 +413,10 @@ namespace vcsn
       unsigned find_pivot(const vector_t& v, unsigned begin,
                           unsigned* permutation)
       {
-        for (unsigned i = begin; i < dimension; ++i)
+        for (unsigned i = begin; i < dimension_; ++i)
           if (!ws_.is_zero(v[permutation[i]]))
             return i;
-        return dimension;
+        return dimension_;
       }
 
       /** Reduce a vector w.r.t. a vector of the basis.
@@ -437,7 +437,7 @@ namespace vcsn
           return ratio;
         // This is safer than current[p] = current[p]-ratio*vbasis[p];
         current[pivot] = ws_.zero();
-        for (unsigned i = b+1; i < dimension; ++i)
+        for (unsigned i = b+1; i < dimension_; ++i)
           current[permutation[i]]
             = ws_.sub(current[permutation[i]],
                       ws_.mul(ratio, vbasis[permutation[i]]));
@@ -452,7 +452,7 @@ namespace vcsn
         if (!ws_.is_one(k))
           {
             v[permutation[pivot]] = ws_.one();
-            for (unsigned r = pivot + 1; r < dimension; ++r)
+            for (unsigned r = pivot + 1; r < dimension_; ++r)
               v[permutation[r]] = ws_.rdivide(v[permutation[r]], k);
           }
       }
@@ -492,25 +492,25 @@ namespace vcsn
         linear_representation();
         // The basis is a list of vectors, each vector is associated with
         // a state of the output
-        std::vector<vector_t> basis;
+        auto basis = std::vector<vector_t>{};
         // The permutation array corresponds to a permutation of the indices
         // (i.e. the columns of the matrices) such that permtuation[k]
         // is the pivot of the k-th vector of the basis.
-        unsigned permutation[dimension];
-        for (unsigned i = 0; i < dimension; ++i)
+        unsigned permutation[dimension_];
+        for (unsigned i = 0; i < dimension_; ++i)
           permutation[i] = i;
         // If the initial vector is null, the function immediatly returns
 
         // A non zero entry is chosen as pivot
-        unsigned pivot = type_t::find_pivot(this, init, 0, permutation);
-        if (pivot == dimension) //all components of init are 0
+        unsigned pivot = type_t::find_pivot(this, init_, 0, permutation);
+        if (pivot == dimension_) //all components of init_ are 0
           return res_;
         // The pivot of the first basis vector is permutation[0];
         permutation[0] = pivot;
         permutation[pivot] = 0;
         // The initial vector is the first element of the new basis
         // (up to the normalisation w.r.t the pivot)
-        vector_t first(init);
+        auto first = vector_t(init_);
         type_t::normalisation_vector(this, first, 0, permutation);
         basis.push_back(first);
         // To each vector of the basis, all the successor vectors are
@@ -519,9 +519,9 @@ namespace vcsn
         // itself.
         for (unsigned nb = 0; nb < basis.size(); ++nb)
           // All the vectors basis[nb].mu(a) are processed
-          for (auto mu : letter_matrix_set) //mu is a pair (letter,matrix)
+          for (auto mu : letter_matrix_set_) //mu is a pair (letter,matrix)
             {
-              vector_t current(dimension);
+              auto current = vector_t(dimension_);
               product_vector_matrix(basis[nb], mu.second, current);
               //reduction of current w.r.t each basis vector;
               for (unsigned b = 0; b < basis.size(); ++b)
@@ -531,7 +531,7 @@ namespace vcsn
               // not null and we search for the pivot of current.
               pivot = type_t::find_pivot(this, current, basis.size(),
                                          permutation);
-              if (pivot != dimension) //otherwise, current is null
+              if (pivot != dimension_) //otherwise, current is null
                 {
                   if (pivot != basis.size())
                     std::swap(permutation[pivot], permutation[basis.size()]);
@@ -546,13 +546,13 @@ namespace vcsn
         type_t::bottom_up_reduction(this, basis, permutation);
 
         // Construction of the output automaton
-        // 1. States
-        std::vector<output_state_t> states(basis.size());
+        // 1. States.
+        auto states = std::vector<output_state_t>(basis.size());
         for (unsigned b = 0; b < basis.size(); ++b)
           states[b] = res_->new_state();
-        // 2. Initial vector
-        vector_t vect_new_basis(basis.size());
-        type_t::vector_in_new_basis(this, basis, init,
+        // 2. Initial vector.
+        auto vect_new_basis = vector_t(basis.size());
+        type_t::vector_in_new_basis(this, basis, init_,
                                     vect_new_basis, permutation);
         for (unsigned b = 0; b < basis.size(); ++b)
           res_->set_initial(states[b], vect_new_basis[b]);
@@ -560,13 +560,13 @@ namespace vcsn
         // final function and the successor function
         for (unsigned v = 0; v < basis.size(); ++v)
           {
-            weight_t k = scalar_product(basis[v],final);
+            weight_t k = scalar_product(basis[v],final_);
             if(!ws_.is_zero(k))
               res_->set_final(states[v],k);
-            for (auto mu : letter_matrix_set)
+            for (auto mu : letter_matrix_set_)
               {
                 // mu is a pair (letter,matrix).
-                vector_t current(dimension);
+                auto current = vector_t(dimension_);
                 product_vector_matrix(basis[v], mu.second, current);
                 type_t::vector_in_new_basis(this, basis, current,
                                             vect_new_basis, permutation);
@@ -585,10 +585,10 @@ namespace vcsn
       output_automaton_t res_;
 
       // Linear representation of the input.
-      unsigned dimension;
-      vector_t init;
-      vector_t final;
-      matrix_set_t letter_matrix_set;
+      unsigned dimension_ = 0;
+      vector_t init_;
+      vector_t final_;
+      matrix_set_t letter_matrix_set_;
     };
 
   }

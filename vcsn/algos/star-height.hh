@@ -135,7 +135,7 @@ namespace vcsn
       /// The expressionset.
       const expressionset_t& rs_;
       /// The current star height.
-      unsigned height_;
+      unsigned height_ = 0;
     };
   } // namespace detail
 

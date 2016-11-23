@@ -57,7 +57,7 @@ namespace vcsn
 
         /// Number of strictly incoming transitions, times the number
         /// of strictly outgoing transitions.
-        size_t size_;
+        size_t size_ = 0;
         bool has_loop_ = false;
         state_t state_;
       };
@@ -130,7 +130,7 @@ namespace vcsn
                    << 's' << p.size_;
         }
 
-        size_t size_;
+        size_t size_ = 0;
         state_t state_;
       };
 
