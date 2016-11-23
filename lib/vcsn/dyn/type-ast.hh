@@ -82,6 +82,7 @@ namespace vcsn
       value_t sets_;
     };
 
+
     class tuple: public ast_node
     {
     public:
@@ -129,6 +130,7 @@ namespace vcsn
       std::shared_ptr<ast_node> ls_;
     };
 
+
     class oneset : public ast_node
     {
     public:
@@ -138,6 +140,7 @@ namespace vcsn
       ACCEPT()
       virtual bool has_one() const { return true; }
     };
+
 
     /// Represents the "alphabets", or "generator set".
     ///
@@ -190,6 +193,7 @@ namespace vcsn
       const std::shared_ptr<const ast_node> gs_;
     };
 
+
     /// Support for wordset<GenSet>.
     class wordset: public ast_node
     {
@@ -238,6 +242,7 @@ namespace vcsn
       rat::identities identities_;
     };
 
+
     class expansionset: public ast_node
     {
     public:
@@ -257,6 +262,7 @@ namespace vcsn
       std::shared_ptr<expressionset> rs_;
     };
 
+
     class weightset: public ast_node
     {
     public:
@@ -274,6 +280,7 @@ namespace vcsn
       std::string type_;
     };
 
+
     class other : public ast_node
     {
     public:
@@ -290,6 +297,7 @@ namespace vcsn
     private:
       std::string type_;
     };
+
 
     class automaton: public ast_node
     {
@@ -327,6 +335,7 @@ namespace vcsn
       std::string type_;
       nodes_t children_;
     };
+
 
     class polynomialset : public ast_node
     {

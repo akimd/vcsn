@@ -524,27 +524,29 @@ namespace vcsn
     template <typename Ctx1, typename Ctx2>
     struct join_impl<expressionset<Ctx1>, expressionset<Ctx2>>
     {
+      using type1 = expressionset<Ctx1>;
+      using type2 = expressionset<Ctx2>;
       using type = expressionset<join_t<Ctx1, Ctx2>>;
 
-      static type join(const expressionset<Ctx1>& lhs,
-                       const expressionset<Ctx2>& rhs)
+      static type join(const type1& a, const type2& b)
       {
-        return {vcsn::join(lhs.context(), rhs.context()),
-                vcsn::join(lhs.identities(), rhs.identities())};
+        return {vcsn::join(a.context(), b.context()),
+                vcsn::join(a.identities(), b.identities())};
       }
     };
 
     /// Join of a letterset and an expressionset.
     // FIXME: what about the other labelsets?
-    template <typename GenSet1,  typename Ctx2>
+    template <typename GenSet1, typename Ctx2>
     struct join_impl<letterset<GenSet1>, expressionset<Ctx2>>
     {
+      using type1 = letterset<GenSet1>;
+      using type2 = expressionset<Ctx2>;
       using context_t = context<join_t<letterset<GenSet1>, labelset_t_of<Ctx2>>,
                                 weightset_t_of<Ctx2>>;
       using type = expressionset<context_t>;
 
-      static type join(const letterset<GenSet1>& a,
-                       const expressionset<Ctx2>& b)
+      static type join(const type1& a, const type2& b)
       {
         return {context_t{vcsn::join(a, *b.labelset()), *b.weightset()},
                           b.identities()};
@@ -556,7 +558,7 @@ namespace vcsn
     struct join_impl<b, expressionset<Context>>
     {
       using type = expressionset<Context>;
-      static type join(const b&, const expressionset<Context>& rhs)
+      static type join(const b&, const type& rhs)
       {
         return rhs;
       }
@@ -568,10 +570,12 @@ namespace vcsn
     template <typename WeightSet, typename Context>
     struct join_impl_simple<WeightSet, expressionset<Context>>
     {
+      using type1 = WeightSet;
+      using type2 = expressionset<Context>;
       using context_t = context<labelset_t_of<Context>,
                                 join_t<WeightSet, weightset_t_of<Context>>>;
       using type = expressionset<context_t>;
-      static type join(const WeightSet& ws, const expressionset<Context>& rs)
+      static type join(const type1& ws, const type2& rs)
       {
         return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
                 rs.identities()};

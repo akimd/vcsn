@@ -45,7 +45,7 @@ namespace vcsn
     /// E.g., 'lan_char(ab), b' -> 'lan<letterset<char_letters(ab)>, b'.
     ///
     /// \param ctx   the context to normalize.
-    /// \param full  whether to keep the runtime values
+    /// \param full  whether to print the runtime values.
     ///    (e.g., the generators: 'lan<letterset<char_letters(ab)>, b' or
     ///                           'lan<letterset<char_letters>, b').
     std::string normalize_context(const std::string& ctx, bool full = true);

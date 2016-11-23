@@ -13,7 +13,7 @@ namespace vcsn
     std::string normalize_context(const std::string& ctx, bool full)
     {
       std::ostringstream os;
-      ast::signature_printer printer(os, full);
+      auto printer = ast::signature_printer{os, full};
       auto ast = parse_context(ctx);
       ast->accept(printer);
       return os.str();

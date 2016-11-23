@@ -67,7 +67,7 @@ namespace vcsn
         if (peek_() != EOF)
         {
           std::ostringstream o;
-          signature_printer printer(o, true);
+          auto printer = signature_printer{o, true};
           res->accept(printer);
           vcsn::fail_reading(is_,
               "unexpected trailing characters after '",
