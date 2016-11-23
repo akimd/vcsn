@@ -128,16 +128,14 @@ namespace vcsn
           res = context_(w);
         else if (w == "expansionset")
           res = expansionset_();
-        else if (w == "expressionset")
-          res = expressionset_();
+        else if (w == "expressionset" || w == "seriesset")
+          res = expressionset_(w);
         else if (has(labelsets_, w))
           res = labelset_(w);
         else if (w == "lat")
           res = tupleset_();
         else if (w == "polynomialset")
           res = polynomialset_();
-        else if (w == "seriesset")
-          res = seriesset_();
         else if (w == "std::tuple")
           res = tuple_();
         else if (has(weightsets_, w))
@@ -260,10 +258,8 @@ namespace vcsn
               res = std::make_shared<nullableset>(res);
             return res;
           }
-        else if (ls == "expressionset")
-          return expressionset_();
-        else if (ls == "seriesset")
-          return seriesset_();
+        else if (ls == "expressionset" || ls == "seriesset")
+          return expressionset_(ls);
         else
           raise("invalid labelset name: ", str_escape(ls));
       }
@@ -279,10 +275,8 @@ namespace vcsn
       {
         if (has(weightsets_, ws))
           return std::make_shared<weightset>(ws);
-        else if (ws == "expressionset")
-          return expressionset_();
-        else if (ws == "seriesset")
-          return seriesset_();
+        else if (ws == "expressionset" || ws == "seriesset")
+          return expressionset_(ws);
         else if (ws == "polynomialset")
           return polynomialset_();
         else if (ws == "lat")
@@ -350,7 +344,7 @@ namespace vcsn
         // xxx_automaton<ExpresionSet>.
         else if (prefix == "derived_term_automaton")
           {
-            eat_("<expressionset");
+            eat_('<');
             res = std::make_shared<automaton>(prefix, expressionset_());
             eat_('>');
           }
@@ -415,13 +409,25 @@ namespace vcsn
         return std::make_shared<tupleset>(res);
       }
 
-      /// `"expressionset" "<" <Context> ">"`, possibly followed by identities.
+      /// `("expressionset"|"seriesset") "<" <Context> ">"`,
+      /// possibly followed by identities.
       std::shared_ptr<expressionset> expressionset_()
       {
+        return expressionset_(word_());
+      }
+
+      /// `"expressionset" "<" <Context> ">"`, possibly followed by identities.
+      /// \a w is `"expressionset"` or `"seriesset"`, already eaten.
+      std::shared_ptr<expressionset> expressionset_(const std::string& w)
+      {
+        require(w == "expressionset" || w == "seriesset",
+                "invalid expressionset type: ", w,
+                " expected expressionset or seriesset");
         eat_('<');
         auto context = context_();
         eat_('>');
-        auto ids = rat::identities{};
+        auto ids =
+          w == "seriesset" ? rat::identities::distributive : rat::identities{};
         if (peek_() == '(')
           {
             eat_('(');
@@ -431,21 +437,10 @@ namespace vcsn
         return std::make_shared<expressionset>(context, ids);
       }
 
-      /// No optional argument.
-      std::shared_ptr<expressionset> seriesset_()
-      {
-        eat_('<');
-        auto context = context_();
-        eat_('>');
-        return std::make_shared<expressionset>(context,
-                                               rat::identities::distributive);
-      }
-
       /// `"expansionset" "<" <Expressionset> ">"`.
       std::shared_ptr<expansionset> expansionset_()
       {
         eat_('<');
-        eat_("expressionset");
         auto res = std::make_shared<expansionset>(expressionset_());
         eat_('>');
         return res;
@@ -471,10 +466,8 @@ namespace vcsn
       {
         if (w == "lat")
           return tupleset_();
-        else if (w == "expressionset")
-          return expressionset_();
-        else if (w == "seriesset")
-          return seriesset_();
+        else if (w == "expressionset" || w == "seriesset")
+          return expressionset_(w);
         else if (has(labelsets_, w))
           return labelset_(w);
         else if (has(weightsets_, w))
