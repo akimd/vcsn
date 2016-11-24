@@ -54,15 +54,15 @@ else:
     try: # Check that ipython is running Python 3
         subprocess.check_output([config['ipython'], '-c',
             'import sys; assert sys.version_info.major >= 3'])
-    except Error as e:
+    except Exception as e:
         SKIP(config['ipython'], 'runs Python < 3', e)
     else:
         # Check that IPython is at least IPython 3
         try:
-            subprocess.check_output([config['ipython'], '-c',
-                'import IPython; assert IPython.version_info[0] >= 3'])
-        except Error as e:
-            SKIP("runs IPython <= 3, tracebacks won't be filtered correctly")
+            assert subprocess.check_output([config['ipython'], '-c',
+                'import IPython; assert IPython.version_info[0] >= 3']) == ""
+        except Exception as e:
+            SKIP("runs IPython <= 3, tracebacks won't be filtered correctly", e)
         else:
             ipython = config['ipython']
 
