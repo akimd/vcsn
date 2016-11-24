@@ -105,6 +105,13 @@ namespace vcsn
       os_ << '>';
     }
 
+    DEFINE(automatonset)
+    {
+      os_ << "automatonset<";
+      t.get_context()->accept(*this);
+      os_ << '>';
+    }
+
     DEFINE(expressionset)
     {
       os_ << "expressionset<";

@@ -275,6 +275,8 @@ namespace vcsn
       {
         if (has(weightsets_, ws))
           return std::make_shared<weightset>(ws);
+        else if (ws == "automatonset")
+          return automatonset_();
         else if (ws == "expressionset" || ws == "seriesset")
           return expressionset_(ws);
         else if (ws == "polynomialset")
@@ -407,6 +409,15 @@ namespace vcsn
         }
         eat_('>');
         return std::make_shared<tupleset>(res);
+      }
+
+      /// `"automatonset" "<" <Context> ">"`.
+      std::shared_ptr<automatonset> automatonset_()
+      {
+        eat_('<');
+        auto res = std::make_shared<automatonset>(context_());
+        eat_('>');
+        return res;
       }
 
       /// `("expressionset"|"seriesset") "<" <Context> ">"`,

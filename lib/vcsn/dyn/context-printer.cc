@@ -166,6 +166,14 @@ namespace vcsn
       os_ << '>';
     }
 
+    DEFINE(automatonset)
+    {
+      header("vcsn/core/automatonset.hh");
+      os_ << "vcsn::automatonset<" << incendl;
+      t.get_context()->accept(*this);
+      os_ << decendl << '>';
+    }
+
     DEFINE(expressionset)
     {
       header("vcsn/core/rat/expressionset.hh");

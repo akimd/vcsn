@@ -7,6 +7,7 @@ namespace vcsn
   {
     class ast_node;
     class automaton;
+    class automatonset;
     class context;
     class expansionset;
     class expressionset;

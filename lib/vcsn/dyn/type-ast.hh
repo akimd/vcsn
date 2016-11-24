@@ -215,6 +215,27 @@ namespace vcsn
       const std::shared_ptr<const ast_node> gs_;
     };
 
+
+    class automatonset: public ast_node
+    {
+    public:
+      automatonset(std::shared_ptr<context> ctx)
+        : ctx_(ctx)
+      {}
+
+      const std::shared_ptr<context> get_context() const
+      {
+        return ctx_;
+      }
+
+      ACCEPT()
+      virtual bool has_one() const { return true; }
+
+    private:
+      std::shared_ptr<context> ctx_;
+    };
+
+
     class expressionset: public ast_node
     {
     public:

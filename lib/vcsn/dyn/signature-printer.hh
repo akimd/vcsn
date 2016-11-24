@@ -19,6 +19,7 @@ namespace vcsn
       virtual void visit(const Type& t)
 
       DEFINE(automaton);
+      DEFINE(automatonset);
       DEFINE(context);
       DEFINE(expansionset);
       DEFINE(expressionset);

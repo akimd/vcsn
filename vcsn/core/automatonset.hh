@@ -1,26 +1,46 @@
 #pragma once
 
+#include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/complement.hh>
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/compose.hh>
 #include <vcsn/algos/conjunction.hh>
+#include <vcsn/algos/dot.hh>
 #include <vcsn/algos/weight.hh>
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/add.hh>
 #include <vcsn/algos/tuple-automaton.hh>
+#include <vcsn/algos/read.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/context.hh>
+#include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
+  namespace detail
+  {
+    template <typename Context, typename Tag>
+    class automatonset_impl;
+  }
+  template <typename Context, typename Tag = standard_tag>
+  using automatonset
+    = weightset_mixin<detail::automatonset_impl<Context, Tag>>;
 
-  template <typename Context, typename Tag>
-  class automatonset
+  namespace detail
+  {
+  /// A valueset for mutable automata.
+  ///
+  /// \param Context  the context defining the automata
+  /// \param Tag      the family of automata (standard, etc.)
+  template <typename Context, typename Tag = standard_tag>
+  class automatonset_impl
   {
   public:
     using context_t = Context;
     using tag_t = Tag;
+    /// Our type, *once wrapped into a weightset_mixin*.
+    using self_t = automatonset<context_t, tag_t>;
     using value_t = mutable_automaton<context_t>;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
@@ -38,13 +58,24 @@ namespace vcsn
     static symbol sname()
     {
       static auto res = symbol{"automatonset<" + context_t::sname()
-                               + ", " + tag_t::sname() + '>'};
+                               // + ", " + tag_t::sname()
+                               + '>'};
       return res;
     }
 
-    automatonset(const context_t& c)
+    automatonset_impl(const context_t& c)
       : ctx_{c}
     {}
+
+    static auto make(std::istream& is)
+      -> self_t
+    {
+      // "automatonset<lal_char(abcd), z>".
+      eat(is, "automatonset<");
+      auto ctx = Context::make(is);
+      eat(is, '>');
+      return {ctx};
+    }
 
     /// Format the description of this automatonset.
     auto print_set(std::ostream& o, format fmt = {}) const
@@ -55,18 +86,21 @@ namespace vcsn
         case format::latex:
           o << "\\mathsf{Aut}[";
           ctx_.print_set(o, fmt);
-          o << ", " << tag_t::sname() << ']';
+          //          o << ", " << tag_t::sname();
+          o << ']';
           break;
         case format::sname:
           o << "automatonset<";
           ctx_.print_set(o, fmt);
-          o << ", " << tag_t::sname() << '>';
+          //          o << ", " << tag_t::sname();
+          o << '>';
           break;
         case format::text:
         case format::utf8:
           o << "Aut[";
           ctx_.print_set(o, fmt);
-          o << ", " << tag_t::sname() << ']';
+          //          o << ", " << tag_t::sname();
+          o << ']';
           break;
         case format::raw:
           assert(!"automatonset::print_set: invalid format: rat");
@@ -75,6 +109,75 @@ namespace vcsn
       return o;
     }
 
+    /// The context.
+    auto context() const -> const context_t&
+    {
+      return ctx_;
+    }
+
+    /// Whether automata are starrable.
+    static constexpr star_status_t star_status()
+    {
+      return star_status_t::STARRABLE;
+    }
+
+    /// Whether multiplication is commutative.
+    static constexpr bool is_commutative() { return false; }
+    /// Whether addition is idempotent.
+    static constexpr bool is_idempotent()
+    {
+      return weightset_t::is_idempotent();
+    }
+    /// Whether it is possible that `a + b < a`.
+    static constexpr bool has_lightening_weights() { return true; }
+
+    /// Whether to display the weight one.
+    static constexpr bool show_one() { return false; }
+
+    /// Print a value.
+    static std::ostream&
+    print(const value_t& v, std::ostream& o = std::cout,
+          format fmt = {})
+    {
+      return dot(v, o, fmt);
+    }
+
+    /// Three-way comparison.
+    static auto compare(const value_t& l, const value_t& r) -> int
+    {
+      return compare(l, r);
+    }
+
+    /// Whether \a l == \a r.
+    static auto equal(const value_t& l, const value_t& r) -> bool
+    {
+      // FIXME: this is not the same as compare == 0.
+      return are_isomorphic(l, r);
+    }
+
+    /// Whether \a l < \a r.
+    static auto less(const value_t& l, const value_t& r) -> bool
+    {
+      return compare(l, r) < 0;
+    }
+
+    /// Hash value for an automaton.
+    static auto hash(const value_t& v) -> size_t
+    {
+      // FIXME: hash the contexts?  What about the states that are not
+      // part of a transition?
+      auto res = size_t{0};
+      for (auto t: v->all_transitions())
+        {
+          hash_combine(res, v->src_of(t));
+          hash_combine(res, v->labelset()->hash(v->label_of(t)));
+          hash_combine(res, v->weightset()->hash(v->weight_of(t)));
+          hash_combine(res, v->dst_of(t));
+        }
+      return res;
+    }
+
+    /// The zero automaton.
     auto zero() const -> value_t
     {
       auto res = make_mutable_automaton(ctx_);
@@ -83,6 +186,13 @@ namespace vcsn
       return res;
     }
 
+    /// Whether is the zero automaton.
+    auto is_zero(const value_t& e) const -> bool
+    {
+      return equal(e, zero());
+    }
+
+    /// The one automaton.
     auto one() const -> value_t
     {
       auto res = make_mutable_automaton(ctx_);
@@ -90,6 +200,12 @@ namespace vcsn
       res->set_initial(s);
       res->set_final(s);
       return res;
+    }
+
+    /// Whether is the one automaton.
+    auto is_one(const value_t& e) const -> bool
+    {
+      return equal(e, one());
     }
 
     auto atom(const label_t& l) const -> value_t
@@ -167,7 +283,8 @@ namespace vcsn
 
       auto res = make_mutable_automaton(ctx_);
       // ldivide might introduce several initial states, e.g. a? \ a.
-      copy_into(v::proper(v::accessible(v::standard(v::ldivide(lhs, rhs)))), res);
+      copy_into(v::proper(v::accessible(v::standard(v::ldivide(lhs, rhs)))),
+                res);
       return v::is_empty(res) ? zero() : res;
     }
 
@@ -231,6 +348,12 @@ namespace vcsn
       return ::vcsn::standard(::vcsn::transpose(e)->automaton());
     }
 
+    /// Transpose.
+    auto transpose(const value_t& e) const -> value_t
+    {
+      return transposition(e);
+    }
+
     /// Right-multiplication by a weight.
     auto rweight(const value_t& e, const weight_t& w) const -> value_t
     {
@@ -243,7 +366,37 @@ namespace vcsn
       return ::vcsn::lweight(w, e, tag_t{});
     }
 
+    /// Conversion from another weightset.
+    static auto
+    conv(self_t, const value_t& v) -> value_t
+    {
+      return v;
+    }
+
+    /// The next automaton in a stream.
+    auto conv(std::istream& is, bool = true) const -> value_t
+    {
+      return read_automaton<value_t>(is, "dot");
+    }
+
+
   protected:
     context_t ctx_;
   };
+
+    /// The join of two automatonsets.
+    template <typename Ctx1, typename Ctx2, typename Tag>
+    struct join_impl<automatonset<Ctx1, Tag>,
+                     automatonset<Ctx2, Tag>>
+    {
+      using type1 = automatonset<Ctx1, Tag>;
+      using type2 = automatonset<Ctx2, Tag>;
+      using type = automatonset<join_t<Ctx1, Ctx2>, Tag>;
+
+      static type join(const type1& lhs, const type2& rhs)
+      {
+        return {vcsn::join(lhs.context(), rhs.context())};
+      }
+    };
+  }
 }

@@ -23,7 +23,10 @@ namespace vcsn
     int c;
     while ((c = i.get()) != -1)
       {
-        if (c == lbracket)
+        if (c == '\\'
+            && (i.peek() == lbracket || i.peek() == rbracket))
+          c = i.get();
+        else if (c == lbracket)
           ++level;
         else if (c == rbracket
                  && !--level)

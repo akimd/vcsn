@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/value.hh>
@@ -7,6 +9,28 @@
 
 namespace vcsn
 {
+
+  /*------------------.
+  | read_automaton.   |
+  `------------------*/
+
+  /// Static version of the read_automaton function.
+  ///
+  /// Read an automaton with a specified context (from the Aut
+  /// template parameter).
+  template <Automaton Aut>
+  Aut
+  read_automaton(std::istream& is, const std::string& format)
+  {
+    auto aut = dyn::read_automaton(is, format, true);
+    // Automaton typename.
+    auto vname = aut->vname();
+    VCSN_REQUIRE(vname == Aut::element_type::sname(),
+                 format, ": invalid context: ", vname,
+                 ", expected: ", Aut::element_type::sname());
+    return std::move(aut->as<Aut>());
+  }
+
 
   /*-------------.
   | read_label.  |
