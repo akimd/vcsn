@@ -89,6 +89,9 @@ namespace vcsn
 
       using super_t = typename expressionset_t::const_visitor;
 
+      template <type_t Type>
+      using variadic_t = typename super_t::template variadic_t<Type>;
+
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "split"; }
 
@@ -138,8 +141,9 @@ namespace vcsn
       /// The split-product of \a l with \a r.
       ///
       /// Returns split(l) x split(r).
-      /// FIXME: This is inefficient, we split the lhs way too often.
-      polynomial_t product(const expression_t& l, const expression_t& r)
+      template <typename Product>
+      polynomial_t product(Product&& prod,
+                           const expression_t& l, const expression_t& r)
       {
         // B(l).
         polynomial_t l_split = split(l);
@@ -148,72 +152,57 @@ namespace vcsn
         // proper(B(l)).
         ps_.del_weight(l_split, rs_.one());
 
-        // res = proper(B(l)).r + constant-term(B(l))B(r).
-        return ps_.add(ps_.rmul_label(l_split, r),
-                       ps_.lweight(l_split_const, split(r)));
-      }
-
-      /// The split-product of \a l with \a r.
-      ///
-      /// Returns l x split(r).
-      polynomial_t product(const polynomial_t& l, const expression_t& r)
-      {
-        auto res = ps_.zero();
-        for (const auto& m: l)
-          ps_.add_here(res, ps_.lweight(weight_of(m), product(label_of(m), r)));
-        return res;
-      }
-
-      /// Handle an n-ary product.
-      VCSN_RAT_VISIT(mul, e)
-      {
-        auto res = product(e[0], e[1]);
-        for (unsigned i = 2, n = e.size(); i < n; ++i)
-          res = product(res, e[i]);
-        res_ = std::move(res);
-      }
-
-      /// The split-product of \a l with \a r.
-      ///
-      /// Returns split(l) x split(r).
-      /// FIXME: This is inefficient, we split the lhs way too often.
-      polynomial_t conjunction(const expression_t& l, const expression_t& r)
-      {
-        // B(l).
-        polynomial_t l_split = split(l);
-        // constant-term(B(l)).
-        weight_t l_split_const = ps_.get_weight(l_split, rs_.one());
-        // proper(B(l)).
-        ps_.del_weight(l_split, rs_.one());
-
-        // res = proper(B(l))&r.
+        // res = proper(B(l)) x r.
         auto res = ps_.zero();
         for (const auto& e: l_split)
-          ps_.add_here(res, rs_.conjunction(label_of(e), r), weight_of(e));
-        // res += constant-term(B(l))B(r)
+          // FIXME: C++17: invoke.
+          ps_.add_here(res, (rs_.*prod)(label_of(e), r), weight_of(e));
+        // res += ⟨constant-term(B(l))⟩.B(r)
         ps_.add_here(res,
-                       ps_.lweight(l_split_const, split(r)));
+                     ps_.lweight(l_split_const, split(r)));
         return res;
       }
 
       /// The split-product of \a l with \a r.
       ///
       /// Returns l x split(r).
-      polynomial_t conjunction(const polynomial_t& l, const expression_t& r)
+      template <typename Product>
+      polynomial_t product(Product&& prod,
+                           const polynomial_t& l, const expression_t& r)
       {
         auto res = ps_.zero();
+        /// FIXME: This is inefficient, we split the lhs way too often.
         for (const auto& m: l)
-          ps_.add_here(res, ps_.lweight(weight_of(m), conjunction(label_of(m), r)));
+          ps_.add_here(res,
+                       ps_.lweight(weight_of(m),
+                                   product(prod, label_of(m), r)));
         return res;
+      }
+
+      /// The split-product of a variadic product.
+      template <typename Product, exp::type_t Type>
+      polynomial_t product(Product&& prod,
+                           const variadic_t<Type>& e)
+      {
+        auto res = product(prod, e[0], e[1]);
+        for (unsigned i = 2, n = e.size(); i < n; ++i)
+          res = product(prod, res, e[i]);
+        return res;
+      }
+
+      /// Handle an n-ary multiplication.
+      VCSN_RAT_VISIT(mul, e)
+      {
+        using bin_t =
+          expression_t (expressionset_t::*)(const expression_t&,
+                                            const expression_t&) const;
+        res_ = product(static_cast<bin_t>(&expressionset_t::mul), e);
       }
 
       /// Handle an n-ary conjunction.
       VCSN_RAT_VISIT(conjunction, e)
       {
-        auto res = conjunction(e[0], e[1]);
-        for (unsigned i = 2, n = e.size(); i < n; ++i)
-          res = conjunction(res, e[i]);
-        res_ = std::move(res);
+        res_ = product(&expressionset_t::conjunction, e);
       }
 
       VCSN_RAT_UNSUPPORTED(complement)

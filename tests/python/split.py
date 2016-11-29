@@ -8,7 +8,7 @@ ctx = vcsn.context('lal_char(abc), expressionset<lal_char(wxyz), q>')
 # check INPUT [RESULT = INPUT]
 # ----------------------------
 # Check that the splitting of INPUT is RESULT.
-def check(re, exp = None):
+def check(re, exp=None):
     if exp is None:
         exp = re
     r = ctx.expression(re)
