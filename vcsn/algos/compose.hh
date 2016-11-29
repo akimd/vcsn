@@ -186,7 +186,7 @@ namespace vcsn
       template <Automaton A>
       static auto real_aut(const insplit_automaton<A>& aut)
       {
-        return aut->aut_out();
+        return aut->strip();
       }
 
       /// The type of our transition maps: convert the weight to weightset_t,

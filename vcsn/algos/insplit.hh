@@ -109,7 +109,7 @@ namespace vcsn
           {
             if (delimit)
               o << '(';
-            aut_in()->print_state_name(i->second.first, o, fmt, true);
+            in_->print_state_name(i->second.first, o, fmt, true);
             o << ", ";
             if (fmt == format::latex)
               o << (i->second.second ? "" : "\\not ") << "\\varepsilon";
@@ -142,18 +142,6 @@ namespace vcsn
         return aut_->all_out(s);
       }
 
-      // FIXME: make private
-      out_automaton_t& aut_out()
-      {
-        return aut_;
-      }
-
-      // FIXME: return shared_ptr to const automaton_impl?
-      const out_automaton_t& aut_out() const
-      {
-        return aut_;
-      }
-
       /// A map from result state to original state and status (spontaneous or
       /// proper state).
       const origins_t& origins() const
@@ -161,23 +149,16 @@ namespace vcsn
         return bimap_.right;
       }
 
-
     private:
-      /// The input automaton.
-      const automaton_t& aut_in() const
-      {
-        return in_;
-      }
-
       void initialize_insplit_()
       {
-        pmap_().insert({state_name_t(aut_in()->pre(), false),
-                        aut_out()->pre()});
-        pmap_().insert({state_name_t(aut_in()->post(), false),
-                        aut_out()->post()});
-        todo_.emplace_back(pre_(), aut_out()->pre());
+        pmap_().insert({state_name_t(in_->pre(), false),
+                        aut_->pre()});
+        pmap_().insert({state_name_t(in_->post(), false),
+                        aut_->post()});
+        todo_.emplace_back(pre_(), aut_->pre());
         if (lazy_)
-          aut_out()->set_lazy(aut_out()->pre());
+          aut_->set_lazy(aut_->pre());
       }
 
       state_name_t pre_() const
@@ -190,17 +171,17 @@ namespace vcsn
       void add_insplit_transitions_(const state_t s,
                                     const state_name_t& sn)
       {
-        for (auto t : aut_in()->all_out(std::get<0>(sn)))
-          aut_out()->new_transition_copy(s,
-                                         state({aut_in()->dst_of(t),
-                                               is_spontaneous_(t)}),
-                                         aut_in(), t);
+        for (auto t : in_->all_out(std::get<0>(sn)))
+          aut_->new_transition_copy(s,
+                                    state({in_->dst_of(t),
+                                          is_spontaneous_(t)}),
+                                    in_, t);
       }
 
       /// Whether transition \a t is labeled by one.
       bool is_spontaneous_(transition_t t) const
       {
-        return aut_in()->labelset()->is_one(aut_in()->label_of(t));
+        return in_->labelset()->is_one(in_->label_of(t));
       }
 
       /// The state in the insplit corresponding to a state and a status
