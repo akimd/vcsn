@@ -118,7 +118,7 @@ namespace vcsn
         auto queue = queue_t{profile_t{src, ls_.one(), ws_.one()}};
 
         // The approximated behavior: the first orders to post's past.
-        polynomial_t output;
+        auto output = ps_.zero();
         for (unsigned i = 0;
              !queue.empty() && i < len && output.size() < num;
              ++i)
@@ -147,7 +147,7 @@ namespace vcsn
             queue.swap(q2);
           }
 
-        polynomial_t res;
+        auto res = ps_.zero();
         for (const auto& m: output)
           {
             ps_.add_here(res, m);
@@ -177,7 +177,7 @@ namespace vcsn
         queue.emplace(src, ls_.one(), ws_.one());
 
         // The approximated behavior: the first orders to post's past.
-        polynomial_t res;
+        auto res = ps_.zero();
         while (!queue.empty())
           {
             state_t s; word_t l; weight_t w;

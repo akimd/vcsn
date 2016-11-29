@@ -126,7 +126,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(add, e)
       {
-        polynomial_t res = ps_.zero();
+        auto res = ps_.zero();
         for (const auto& v: e)
           {
             v->accept(*this);
@@ -158,7 +158,7 @@ namespace vcsn
       /// Returns l x split(r).
       polynomial_t product(const polynomial_t& l, const expression_t& r)
       {
-        polynomial_t res;
+        auto res = ps_.zero();
         for (const auto& m: l)
           ps_.add_here(res, ps_.lweight(weight_of(m), product(label_of(m), r)));
         return res;
@@ -187,7 +187,7 @@ namespace vcsn
         ps_.del_weight(l_split, rs_.one());
 
         // res = proper(B(l))&r.
-        polynomial_t res;
+        auto res = ps_.zero();
         for (const auto& e: l_split)
           ps_.add_here(res, rs_.conjunction(label_of(e), r), weight_of(e));
         // res += constant-term(B(l))B(r)
@@ -201,7 +201,7 @@ namespace vcsn
       /// Returns l x split(r).
       polynomial_t conjunction(const polynomial_t& l, const expression_t& r)
       {
-        polynomial_t res;
+        auto res = ps_.zero();
         for (const auto& m: l)
           ps_.add_here(res, ps_.lweight(weight_of(m), conjunction(label_of(m), r)));
         return res;
@@ -288,10 +288,9 @@ namespace vcsn
   split_polynomial(const PolynomialSet& ps,
                    const typename PolynomialSet::value_t& p)
   {
-    using polynomial_t = typename PolynomialSet::value_t;
     // This is a polynomial of rational expressions.
     const auto& rs = *ps.labelset();
-    polynomial_t res;
+    auto res = ps.zero();
     for (const auto& m: p)
       res = ps.add(res, ps.lweight(weight_of(m), split(rs, label_of(m))));
     return res;
