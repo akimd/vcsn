@@ -443,6 +443,10 @@ bench('a.shortest(5000)',
 #              'r = "{}"'.format(r),
 #              'a = c.expression(r).standard()'])
 
+## ---------- ##
+## lightest.  ##
+## ---------- ##
+
 # lightest
 ctx = 'lal_char(a-e), nmin'
 r = "[a-e]?{150}"
@@ -492,6 +496,14 @@ bench('a.sort()',
       setup=['c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).standard()'])
+
+# split.
+ctx = "lal(a-e), q"
+e = "[a-e]?{15}"
+bench('e.split()',
+      'e = {}'.format(e),
+      setup=['c = vcsn.context(ctx)',
+             'e = c.expression("{}")'.format(e)])
 
 # proper.
 r = "a?{1200}"
