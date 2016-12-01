@@ -117,16 +117,6 @@ namespace vcsn
         res_ = ps_.zero();
       }
 
-      VCSN_RAT_VISIT(one,)
-      {
-        res_ = polynomial_t{{rs_.one(), ws_.one()}};
-      }
-
-      VCSN_RAT_VISIT(atom, e)
-      {
-        res_ = polynomial_t{{rs_.atom(e.value()), ws_.one()}};
-      }
-
       VCSN_RAT_VISIT(add, e)
       {
         auto res = ps_.zero();
@@ -138,12 +128,10 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      /// The split-product of \a l with \a r.
+      /// The split-multiplation of \a l with \a r.
       ///
       /// Returns split(l) x split(r).
-      template <typename Product>
-      polynomial_t product(Product&& prod,
-                           const expression_t& l, const expression_t& r)
+      polynomial_t multiply(const expression_t& l, const expression_t& r)
       {
         // B(l).
         polynomial_t l_split = split(l);
@@ -155,72 +143,59 @@ namespace vcsn
         // res = proper(B(l)) x r.
         auto res = ps_.zero();
         for (const auto& e: l_split)
-          // FIXME: C++17: invoke.
-          ps_.add_here(res, (rs_.*prod)(label_of(e), r), weight_of(e));
+          ps_.add_here(res, rs_.mul(label_of(e), r), weight_of(e));
         // res += ⟨constant-term(B(l))⟩.B(r)
         ps_.add_here(res,
                      ps_.lweight(l_split_const, split(r)));
         return res;
       }
 
-      /// The split-product of \a l with \a r.
+      /// The split-multiplation of \a l with \a r.
       ///
       /// Returns l x split(r).
-      template <typename Product>
-      polynomial_t product(Product&& prod,
-                           const polynomial_t& l, const expression_t& r)
+      polynomial_t multiply(const polynomial_t& l, const expression_t& r)
       {
         auto res = ps_.zero();
         /// FIXME: This is inefficient, we split the lhs way too often.
         for (const auto& m: l)
           ps_.add_here(res,
                        ps_.lweight(weight_of(m),
-                                   product(prod, label_of(m), r)));
-        return res;
-      }
-
-      /// The split-product of a variadic product.
-      template <typename Product, exp::type_t Type>
-      polynomial_t product(Product&& prod,
-                           const variadic_t<Type>& e)
-      {
-        auto res = product(prod, e[0], e[1]);
-        for (unsigned i = 2, n = e.size(); i < n; ++i)
-          res = product(prod, res, e[i]);
+                                   multiply(label_of(m), r)));
         return res;
       }
 
       /// Handle an n-ary multiplication.
       VCSN_RAT_VISIT(mul, e)
       {
-        using bin_t =
-          expression_t (expressionset_t::*)(const expression_t&,
-                                            const expression_t&) const;
-        res_ = product(static_cast<bin_t>(&expressionset_t::mul), e);
+        auto res = multiply(e[0], e[1]);
+        for (unsigned i = 2, n = e.size(); i < n; ++i)
+          res = multiply(res, e[i]);
+        res_ = std::move(res);
       }
 
-      /// Handle an n-ary conjunction.
-      VCSN_RAT_VISIT(conjunction, e)
-      {
-        res_ = product(&expressionset_t::conjunction, e);
+      /// These are just propagated as monomials.
+#define DEFINE(Type)                                            \
+      VCSN_RAT_VISIT(Type, e)                                   \
+      {                                                         \
+        res_ = polynomial_t{{e.shared_from_this(), ws_.one()}}; \
       }
 
-      VCSN_RAT_UNSUPPORTED(complement)
-      VCSN_RAT_UNSUPPORTED(compose)
-      VCSN_RAT_UNSUPPORTED(infiltrate)
-      VCSN_RAT_UNSUPPORTED(ldivide)
-      VCSN_RAT_UNSUPPORTED(shuffle)
-      VCSN_RAT_UNSUPPORTED(transposition)
+      DEFINE(atom)
+      DEFINE(complement)
+      DEFINE(compose)
+      DEFINE(conjunction)
+      DEFINE(infiltrate)
+      DEFINE(ldivide)
+      DEFINE(one)
+      DEFINE(shuffle)
+      DEFINE(star)
+      DEFINE(transposition)
+#undef DEFINE
 
       using tuple_t = typename super_t::tuple_t;
       void visit(const tuple_t&, std::true_type) override
       {
         raise(me(), ": tuple is not supported");
-      }
-
-      VCSN_RAT_VISIT(star, e)
-      {
-        res_ = polynomial_t{{e.shared_from_this(), ws_.one()}};
       }
 
       VCSN_RAT_VISIT(lweight, e)

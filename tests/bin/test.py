@@ -240,10 +240,16 @@ def can_test_equivalence(a):
         return False
     return True
 
+def shortest(e, num=20):
+    if isinstance(e, vcsn.automaton):
+        e = e.proper()
+    return e.shortest(num)
 
 def CHECK_EQUIV(a1, a2):
     '''Check that `a1` and `a2` are equivalent.  Works for
     two automata, or two expressions.'''
+    # If we cannot check equivalence, check equality of the `num`
+    # shortest monomials.
     num = 20
     # Cannot compute equivalence on Zmin, approximate with shortest.
     try:
@@ -251,11 +257,12 @@ def CHECK_EQUIV(a1, a2):
             res = a1.is_equivalent(a2)
             via = '(via is_equivalent)'
         else:
-            res = a1.proper().shortest(num) == a2.proper().shortest(num)
+            res = shortest(a1, num) == shortest(a2, num)
             via = '(via shortests)'
     except RuntimeError as e:
         FAIL("cannot check equivalence: " + str(e))
         res = False
+        via = ''
 
     if res:
         PASS()
@@ -264,8 +271,8 @@ def CHECK_EQUIV(a1, a2):
         rst_file("Left", format(a1))
         rst_file("Right", format(a2))
         try:
-            s1 = a1.proper().shortest(num).format('list')
-            s2 = a2.proper().shortest(num).format('list')
+            s1 = shortest(a1, num).format('list')
+            s2 = shortest(a2, num).format('list')
             rst_file("Left shortest", s1)
             rst_file("Right shortest", s2)
             rst_diff(s1, s2)
