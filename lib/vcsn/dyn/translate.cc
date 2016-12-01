@@ -301,8 +301,13 @@ namespace vcsn
               lt_dlinit();
               first = false;
             }
-          lt_dlhandle lib = lt_dlopen((base + ".so").c_str());
+
+          auto advise = lt_dladvise{};
+          lt_dladvise_init(&advise);
+          lt_dladvise_global(&advise);
+          auto lib = lt_dlopenadvise((base + ".so").c_str(), advise);
           VCSN_REQUIRE(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
+          lt_dladvise_destroy(&advise);
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.
