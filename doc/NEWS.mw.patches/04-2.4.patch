@@ -1,0 +1,18 @@
+--- /tmp/NEWS.mw	2016-12-01 09:42:26.000000000 +0100
++++ _build/39s/NEWS.mw	2016-12-01 09:54:51.000000000 +0100
+@@ -58,7 +58,9 @@
+ Out[11]: \e+cc*</pre>
+ <ul>
+ <li><p><code>automaton.evaluate</code> works properly on non-free automata, including multitape automata:</p>
+-<pre>In [2]: c = vcsn.context('lan(a-z), nmin') a = (c|c).levenshtein() a('foo|bar')
++<pre>In [2]: c = vcsn.context('lan(a-z), nmin')
++   ...: a = (c|c).levenshtein()
++   ...: a('foo|bar')
+ Out[2]: 3</pre></li>
+ <li><p>input/output support for FAdo's format for transducers, and improved compatibility with OpenFST.</p></li></ul>
+ 
+@@ -4745,4 +4747,3 @@
+  {{{120}a}u}x</pre>
+ 
+ LocalWords: Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt
+-
