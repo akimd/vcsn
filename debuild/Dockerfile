@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:sid
 MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 
 COPY sources.list /etc/apt/sources.list
@@ -9,7 +9,6 @@ RUN apt-get update                                              \
      apt-get install -y --force-yes --no-install-recommends     \
         autoconf                                                \
         automake                                                \
-        autotools-dev                                           \
         bison                                                   \
         build-essential                                         \
         ccache                                                  \
@@ -26,18 +25,18 @@ RUN apt-get update                                              \
         imagemagick                                             \
         libboost-all-dev                                        \
         libgmp-dev                                              \
-        libmagickcore-extra                                     \
         libtool                                                 \
+        lintian                                                 \
         locales                                                 \
         pdf2svg                                                 \
         python-matplotlib                                       \
         python3-all-dev                                         \
-        python3-pip                                             \
-        python3.4-dev                                           \
+        python3.5-dev                                           \
         texlive-latex-extra                                     \
         texlive-pictures                                        \
   && apt-get autoremove                                         \
   && apt-get clean
+RUN ccache -M 20G
 
 # Set the locale
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
