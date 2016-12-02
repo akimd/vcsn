@@ -27,4 +27,4 @@ find . -name '*.log' -exec tar cvf - {} '+' | (cd "$package_dir" && tar xvf -)
 $pass
 
 make deb
-mv vcsn_* "$package_dir"
+mv vcsn_* vcsn-dbgsym_* "$package_dir"
