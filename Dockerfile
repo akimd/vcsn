@@ -16,7 +16,7 @@ RUN apt-get update                                              \
         imagemagick                                             \
         libboost-all-dev                                        \
         libgmp-dev                                              \
-        libmagickcore-extra                                     \
+        libmagickcore-6.q16-2-extra                             \
         libzmq3-dev                                             \
         locales                                                 \
         pdf2svg                                                 \
@@ -37,6 +37,7 @@ RUN apt-get update                                              \
   && apt-get autoremove                                         \
   && apt-get clean                                              \
   && pip3 install jupyter
+RUN ccache -M 20G
 
 # Set the locale.
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
