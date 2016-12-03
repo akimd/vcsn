@@ -36,12 +36,10 @@ namespace vcsn LIBVCSN_API
             return node_.as<T>();
           }
 
-
           std::string str() const;
 
           config_value operator[](const std::string& key) const;
           std::vector<std::string> keys() const;
-
 
           bool is_valid(const std::string& key) const;
           void remove(const std::string& key);
@@ -73,7 +71,6 @@ namespace vcsn LIBVCSN_API
       static void merge_recurse(const YAML::Node& from, T&& out);
 
       YAML::Node config_tree;
-
   };
 
   inline
@@ -99,16 +96,16 @@ namespace vcsn LIBVCSN_API
       out = from;
     else if (from.IsMap())
     {
-      for(auto e : from)
+      for (auto e : from)
       {
         auto key = e.first.as<std::string>();
-        if(!out[key])
+        if (!out[key])
         {
           auto node = YAML::Node();
           merge_recurse(e.second, node);
           out[key] = node;
         }
-        else if(out.Tag() != "!StyleList")
+        else if (out.Tag() != "!StyleList")
           merge_recurse(e.second, out[key]);
         else
           raise("bad config value");

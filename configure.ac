@@ -293,6 +293,17 @@ AC_CHECK_PROGS([PERL], [perl])
 AC_CHECK_HEADERS([ltdl.h], [],
                  [AC_MSG_ERROR([libltdl (a component from Libtool) is needed])])
 
+AC_CHECK_HEADERS([yaml-cpp/yaml.h], [],
+                 [AC_MSG_ERROR([yaml-cpp is needed])])
+save_LIBS=$LIBS
+LIBS="$LIBS -lyaml-cpp"
+# This symbol is really in the library.  At least in 0.5.1.
+AC_LINK_IFELSE([AC_LANG_PROGRAM([@%:@include <yaml-cpp/yaml.h>],
+                                [YAML::Parser p();])],
+               [AC_SUBST([YAMLCPP_LIBS], [-lyaml-cpp])],
+               [AC_MSG_ERROR([yaml-cpp is needed])])
+LIBS=$sa_LIBS
+
 
 ## --------------- ##
 ## Documentation.  ##

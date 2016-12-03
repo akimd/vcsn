@@ -75,11 +75,12 @@ lib_libvcsn_la_SOURCES =                        \
 
 lib_libvcsn_la_LDFLAGS =					\
   $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\
-  $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS) -lyaml-cpp
+  $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)
 lib_libvcsn_la_LIBADD =					\
   $(BOOST_FLYWEIGHT_LIBS) $(BOOST_FILESYSTEM_LIBS)	\
   $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)		\
-  -lltdl $(RT_LIBS)
+  -lltdl $(RT_LIBS)                                     \
+  $(YAMLCPP_LIBS)
 
 # expressionset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads expressionset.hxx, so we _must_
