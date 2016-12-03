@@ -6,17 +6,17 @@ from test import *
 from vcsn_tools.config import config
 
 def canonical(s):
-     '''Clean up paths (keep only the last two directories to be
-     independent of where vcsn was installed), and the line numbers (so
-     that we may edit files in vcsn/ without having to tweak the
-     lines here). Also remove the escape sequence trying to set the window
-     title.
-     '''
-     s = re.sub('\033]0;[^\a]*\a', '', s)
-     def place(m):
-         line = "??" if 'vcsn' in m.group(1) else m.group(2)
-         return '"{}", line {}'.format(m.group(1), line)
-     return re.sub('".*?([^/\n]+/[^/\n]+)", line (\d+)', place, s)
+    '''Clean up paths (keep only the last two directories to be
+    independent of where vcsn was installed), and the line numbers (so
+    that we may edit files in vcsn/ without having to tweak the
+    lines here). Also remove the escape sequence trying to set the window
+    title.
+    '''
+    s = re.sub('\033]0;[^\a]*\a', '', s)
+    def place(m):
+        line = "??" if 'vcsn' in m.group(1) else m.group(2)
+        return '"{}", line {}'.format(m.group(1), line)
+    return re.sub('".*?([^/\n]+/[^/\n]+)", line (\d+)', place, s)
 
 tests = ['non-verbose', 'verbose']
 
@@ -59,8 +59,11 @@ else:
     else:
         # Check that IPython is at least IPython 3
         try:
-            assert subprocess.check_output([config['ipython'], '-c',
-                'import IPython; assert IPython.version_info[0] >= 3']) == ""
+            res = subprocess.check_output([config['ipython'], '-c',
+                'import IPython; assert IPython.version_info[0] >= 3'])
+            # Eliminate possible escapes to change the terminal title.
+            res = canonical(res.decode("utf-8"))
+            assert res == ""
         except Exception as e:
             SKIP("runs IPython <= 3, tracebacks won't be filtered correctly", e)
         else:
