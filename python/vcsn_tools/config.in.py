@@ -28,7 +28,7 @@ config = {
     'ldflags':  env('VCSN_LDFLAGS',  r'''@VCSN_LDFLAGS@'''),
 
     # Where out files are installed.
-    'datadir':    env('VCSN_DATA_PATH',  r'''@DATADIR@'''),
+    'datadir':    env('VCSN_DATADIR',    r'''@DATADIR@'''),
     'includedir': env('VCSN_INCLUDEDIR', r'''@INCLUDEDIR@'''),
     'libdir':     env('VCSN_LIBDIR',     r'''@LIBDIR@'''),
     'pyexecdir':  env('VCSN_PYEXECDIR',  r'''@PYEXECDIR@'''),

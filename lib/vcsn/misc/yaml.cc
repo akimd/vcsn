@@ -1,6 +1,7 @@
 #include <boost/filesystem.hpp>
 
 #include <vcsn/config.hh>
+#include <vcsn/misc/file-library.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/yaml.hh>
 
@@ -102,13 +103,15 @@ namespace vcsn
 
   config::config(const char* dir_path)
   {
-    if (!dir_path) //We're running an installed VCSN
-      dir_path = VCSN_DATADIR;
+    const char* path = getenv("VCSN_DATA_PATH");
+    if (!path)
+      path = VCSN_DATADIR;
+    auto flib = file_library{std::string{path}, ":"};
 
-    auto file_path = std::string{dir_path} + "/config.yaml";
+    auto file_path = flib.find_file("config.yaml").string();
 
     if (!boost::filesystem::exists(file_path))
-      raise("config file does not exists");
+      raise("config file does not exists:", file_path);
 
     config_tree = YAML::LoadFile(file_path);
     // Now we must merge the user config

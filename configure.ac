@@ -336,5 +336,6 @@ AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
 AC_CONFIG_FILES([python/vcsn_tools/config.py:python/vcsn_tools/config.in.py])
+AC_CONFIG_FILES([share/vcsn/config.yaml:share/vcsn/config.in.yaml])
 
 AC_OUTPUT

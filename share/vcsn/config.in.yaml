@@ -1,0 +1,40 @@
+configuration:
+  # Package version.
+  version: @PACKAGE_VERSION@
+
+  # Running Python.
+  python: @PYTHON@
+  ipython: @IPYTHON@
+
+  # Running a C++ compilation.
+  ccache: @CCACHE@
+  cppflags: @VCSN_CPPFLAGS@
+  cxx: @VCSN_CXX@
+  cxxflags: @CXXFLAGS@
+  ldflags: @VCSN_LDFLAGS@
+
+  # Where out files are installed.
+  datadir: @DATADIR@
+  includedir: @INCLUDEDIR@
+  libdir: @LIBDIR@
+  pyexecdir: @PYEXECDIR@
+
+dot:
+  styles: !StyleList
+    square:
+      node:
+        shape: square
+    default:
+      node:
+        shape: circle
+        style: rounded
+        width: 0.5
+      edge:
+        arrowhead: vee
+        arrowsize: .6
+    important:
+      inherits: square
+      node:
+        style: filled
+        fillcolor: red
+  default-style: default

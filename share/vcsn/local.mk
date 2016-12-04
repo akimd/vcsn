@@ -11,7 +11,7 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_pkgdata_DATA = %D%/config.yaml
+nodist_pkgdata_DATA = %D%/config.yaml
 
 jsdir = $(pkgdatadir)/js
 dist_js_DATA =                                  \

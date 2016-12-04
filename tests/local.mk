@@ -99,13 +99,14 @@ CHECK_ENVIRONMENT +=                                \
   VCSN_NO_HOME_CONFIG= ; export VCSN_NO_HOME_CONFIG
 
 # Use the wrappers to run the non-installed executables.
-BUILDCHECK_ENVIRONMENT +=                       \
-  $(CHECK_ENVIRONMENT);                         \
-  PATH=$(abs_builddir)/tests/bin:$$PATH;        \
-  export PATH;                                  \
-  : $${VCSN_DATADIR=$(abs_srcdir)/share/vcsn};  \
-  export VCSN_DATADIR;                          \
-  : $${VCSN_DATA_PATH=$$VCSN_DATADIR};          \
+# Find the config file in share/vcsn.
+BUILDCHECK_ENVIRONMENT +=						\
+  $(CHECK_ENVIRONMENT);							\
+  PATH=$(abs_top_builddir)/tests/bin:$$PATH;				\
+  export PATH;								\
+  : $${VCSN_DATADIR=$(abs_top_srcdir)/share/vcsn};			\
+  export VCSN_DATADIR;							\
+  : $${VCSN_DATA_PATH=$$VCSN_DATADIR:$(abs_builddir)/share/vcsn};	\
   export VCSN_DATA_PATH;
 
 # Find test.py which is in tests/bin.
@@ -113,7 +114,7 @@ INSTALLCHECK_ENVIRONMENT +=                                                     
   $(CHECK_ENVIRONMENT);                                                         \
   PATH=$(DESTDIR)$(bindir):$$PATH;                                              \
   export PATH;                                                                  \
-  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH;   \
+  PYTHONPATH=$(abs_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH;       \
   export PYTHONPATH;
 
 # Run the tests with the install-environment.

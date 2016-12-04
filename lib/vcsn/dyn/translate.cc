@@ -8,6 +8,7 @@
 #include <string>
 #include <unistd.h> // getpid
 
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/filesystem.hpp>
 
 #include <lib/vcsn/dyn/context-parser.hh>
@@ -15,7 +16,6 @@
 #include <lib/vcsn/dyn/type-ast.hh>
 #include <lib/vcsn/misc/xltdl.hh>
 
-#include <vcsn/config.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
@@ -23,6 +23,7 @@
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/stream.hh>
+#include <vcsn/misc/yaml.hh>
 
 namespace vcsn
 {
@@ -45,6 +46,18 @@ namespace vcsn
       }
 
 #define XGETENV(Name) xgetenv(#Name, Name)
+
+      /// Get a var from the config, unless an envvar override it.
+      /// For instance `configuration.cxx` and `$VCSN_CXX`.
+      std::string
+      config(const std::string& var)
+      {
+        auto envvar = "VCSN_" + boost::algorithm::to_upper_copy(var);
+        if (auto cp = getenv(envvar.c_str()))
+          return cp;
+        else
+          return get_config()["configuration"][var].str();
+      }
 
       /// Expand initial "~" in res.
       // http://stackoverflow.com/questions/4891006.
@@ -170,7 +183,7 @@ namespace vcsn
         {
           auto err = tmp + ".err";
           if (getenv("VCSN_DEBUG"))
-            std::cerr << "run: " << cmd << std::endl;
+            std::cerr << "run: " << cmd << '\n';
           if (system((cmd + " 2>'" + err + "'").c_str()))
             throw_compiler_errors(cmd, err);
           else
@@ -195,10 +208,10 @@ namespace vcsn
           // We try to read the error message via a regexp below.  So
           // avoid translation (we once had "erreur" instead of "error").
           auto cmd = (std::string{"LC_ALL=C"}
-                      + " " + XGETENV(VCSN_CCACHE)
-                      + " " + XGETENV(VCSN_CXX)
-                      + " " + XGETENV(VCSN_CXXFLAGS)
-                      + " " + XGETENV(VCSN_CPPFLAGS)
+                      + " " + config("ccache")
+                      + " " + config("cxx")
+                      + " " + config("cxxflags")
+                      + " " + config("cppflags")
                       + " -fPIC '" + base + ".cc' -c"
                       + " -o '" + tmp + ".o'");
           cxx(cmd, tmp);
@@ -211,9 +224,9 @@ namespace vcsn
         {
           auto tmp = tmpname(base);
           auto cmd = (std::string{"LC_ALL=C"}
-                      + " " + XGETENV(VCSN_CXX)
-                      + " " + XGETENV(VCSN_CXXFLAGS)
-                      + " " + XGETENV(VCSN_LDFLAGS)
+                      + " " + config("cxx")
+                      + " " + config("cxxflags")
+                      + " " + config("ldflags")
                       + " -fPIC -lvcsn '" + tmp + ".o' -shared"
                       + " -o '" + tmp + ".so'"
                       + printer_.linkflags());
