@@ -9,7 +9,7 @@
 #include <list>
 #include <string>
 
-#include <vcsn/misc/path.hh>
+#include <boost/filesystem/path.hpp>
 
 #include <vcsn/misc/export.hh>
 
@@ -24,8 +24,8 @@ namespace vcsn LIBVCSN_API
   public:
     using self_t = file_library;
 
-    /// Broken on Mac OS X (https://trac.macports.org/ticket/41588).
-    // using path = boost::filesystem::path;
+    using path = boost::filesystem::path;
+    /// Yes, a list is really handy here, for push/pop front.
     using path_list_type = std::list<path>;
 
     /// Exception thrown when a file cannot be located.
@@ -93,7 +93,7 @@ namespace vcsn LIBVCSN_API
     /// \}
 
 
-    using strings_type = std::list<std::string>;
+    using strings_type = std::vector<std::string>;
     /// Split \a lib at each occurrence of \a sep, return the list
     /// of components.
     /// Behaves especially on Windows when splitting on ":", in

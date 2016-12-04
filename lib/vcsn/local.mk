@@ -65,7 +65,6 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/file-library.cc                      \
   %D%/misc/format.cc                            \
   %D%/misc/indent.cc                            \
-  %D%/misc/path.cc                              \
   %D%/misc/random.cc                            \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc

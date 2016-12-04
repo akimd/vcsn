@@ -3,8 +3,7 @@
  ** \brief Implement inline functions of vcsn/misc/file-library.hh
  */
 
-#ifndef LIBPORT_FILE_LIBRARY_HXX
-# define LIBPORT_FILE_LIBRARY_HXX
+#include <iterator>
 
 namespace vcsn
 {
@@ -105,5 +104,3 @@ namespace vcsn
     return l.dump(ostr);
   }
 }
-
-#endif // !LIBPORT_FILE_LIBRARY_HXX

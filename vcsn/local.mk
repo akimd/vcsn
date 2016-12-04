@@ -261,8 +261,6 @@ nobase_include_HEADERS =                        \
   %D%/misc/memory.hh                            \
   %D%/misc/military-order.hh                    \
   %D%/misc/pair.hh                              \
-  %D%/misc/path.hh                              \
-  %D%/misc/path.hxx                             \
   %D%/misc/queue.hh                             \
   %D%/misc/raise.hh                             \
   %D%/misc/random.hh                            \

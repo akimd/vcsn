@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <unistd.h>
 
+#include <boost/filesystem.hpp>
 #include <boost/tokenizer.hpp>
 
 #include <vcsn/misc/escape.hh>
@@ -25,7 +26,7 @@ namespace vcsn
   void
   file_library::push_cwd()
   {
-    push_current_directory(path::cwd());
+    push_current_directory(boost::filesystem::current_path());
   }
 
 
