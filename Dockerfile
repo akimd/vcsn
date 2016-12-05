@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:sid
 MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 
 COPY sources.list /etc/apt/sources.list
@@ -27,6 +27,7 @@ RUN apt-get update                                              \
         python3-pip                                             \
         python3-psutil                                          \
         python3-regex                                           \
+        python3-setuptools                                      \
         texlive-latex-extra                                     \
         texlive-pictures                                        \
         wamerican                                               \
