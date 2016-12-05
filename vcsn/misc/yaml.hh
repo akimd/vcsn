@@ -23,6 +23,7 @@ namespace vcsn LIBVCSN_API
         public:
           class BadNode{};
           config_value(YAML::Node n);
+          config_value(const config&);
           config_value(const config_value& other);
 
           config_value&
@@ -85,6 +86,8 @@ namespace vcsn LIBVCSN_API
     static auto conf = config{std::getenv("VCSN_DATADIR")};
     return conf;
   }
+
+  std::string configuration(const std::string& key);
 
   // Templated because node[] gives us rvalues
   template <typename T>

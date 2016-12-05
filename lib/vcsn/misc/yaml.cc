@@ -1,4 +1,5 @@
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <vcsn/config.hh>
 #include <vcsn/misc/file-library.hh>
@@ -14,6 +15,10 @@ namespace vcsn
   config::config_value::config_value(const config_value& other)
     : node_{other.node_}
   {}
+
+  config::config_value::config_value(const config& c)
+      : node_{c.config_tree}
+    {}
 
   config::config_value&
   config::config_value::operator=(config_value rhs)
@@ -141,8 +146,29 @@ namespace vcsn
   {
     // We don't return the YAML node directly
     // to make sure to be able to change the
-
+    // underlying library.
     return config_value(config_tree)[key];
+  }
+
+  std::string configuration(const std::string& key)
+  {
+    auto config = std::make_unique<config::config_value>(get_config());
+    std::vector<std::string> subkeys;
+    boost::split(subkeys, key, boost::is_any_of("."));
+
+    if (subkeys.size() == 2 && subkeys[0] == "configuration")
+    {
+      auto env_var = "VCSN_" + boost::to_upper_copy(subkeys[1]);
+      if (std::getenv(env_var.c_str()))
+        return std::getenv(env_var.c_str());
+    }
+
+    for (const auto& subkey : subkeys)
+    {
+      config = std::make_unique<config::config_value>((*config)[subkey]);
+    }
+
+    return config->str();
   }
 
 }
