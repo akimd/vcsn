@@ -21,6 +21,7 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using dijkstra_node_t = dijkstra_node<automaton_t>;
+      using dijkstra_map_t = std::unordered_map<state_t, dijkstra_node_t>;
 
     public:
       shortest_path_tree(const automaton_t& aut, state_t root)
@@ -38,7 +39,7 @@ namespace vcsn
       set_parent_of(state_t s, state_t parent)
       {
         if (has(states_, s))
-          states_[s].parent_ = parent;
+          states_[s].set_parent(parent);
         else
           states_[s] = dijkstra_node_t{aut_, s, {}, parent};
       }
@@ -71,7 +72,7 @@ namespace vcsn
       {
         auto it = states_.find(s);
         if (it != states_.end())
-          return it->second.parent_;
+          return it->second.get_parent();
         else
           return automaton_t::element_type::null_state();
       }
@@ -81,13 +82,24 @@ namespace vcsn
       {
         auto it = states_.find(s);
         if (it != states_.end())
-          return it->second.parent_;
+          return it->second.get_parent();
         else
           return automaton_t::element_type::null_state();
       }
 
-    // FIXME: private
-      std::unordered_map<state_t, dijkstra_node_t> states_;
+      state_t
+      get_root() const
+      {
+        return root_;
+      }
+
+      dijkstra_node_t& operator[](state_t s)
+      {
+        return states_[s];
+      }
+
+    private:
+      dijkstra_map_t states_;
       state_t root_;
       const automaton_t& aut_;
     };
@@ -109,20 +121,20 @@ namespace vcsn
 
       auto predecessor_tree = shortest_path_tree<automaton_t>(aut, src);
       auto queue = queue_t{};
-      auto& src_node = predecessor_tree.get_node_of(predecessor_tree.root_);
+      auto& src_node = predecessor_tree.get_node_of(predecessor_tree.get_root());
       src_node.set_weight(weightset_t_of<automaton_t>::one());
-      src_node.depth_ = 0;
-      handles[src_node.state_] = queue.emplace(src_node);
+      src_node.set_depth(0);
+      handles[src_node.get_state()] = queue.emplace(src_node);
 
       const auto& ws = *aut->weightset();
       while (!queue.empty())
       {
         auto current = std::move(queue.top());
         queue.pop();
-        auto s = current.state_;
+        auto s = current.get_state();
         // This saves us very little time compared to retrieval at each iteration.
         const auto curr_weight = current.get_weight();
-        const auto curr_depth = current.depth_;
+        const auto curr_depth = current.get_depth();
 
         for (auto tr : all_in(aut, s))
         {
@@ -135,9 +147,9 @@ namespace vcsn
           if (ws.less(new_dist, dist))
           {
             neighbor.set_weight(new_dist);
-            neighbor.depth_ = curr_depth + 1;
-            neighbor.parent_ = s;
-            auto p = handles.emplace(neighbor.state_, handle_t{});
+            neighbor.set_depth(curr_depth + 1);
+            neighbor.set_parent(s);
+            auto p = handles.emplace(neighbor.get_state(), handle_t{});
             if (p.second)
               p.first->second = queue.emplace(neighbor);
             else

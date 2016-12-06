@@ -19,6 +19,7 @@ namespace vcsn
       using weight_t = weight_t_of<Aut>;
       using transition_t = transition_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
+      using path_t = std::vector<transition_t>;
     public:
 
       weight_t
@@ -78,8 +79,13 @@ namespace vcsn
         return {l, w};
       }
 
-    // FIXME: private
-      std::vector<transition_t> path_;
+      const path_t& get_path() const
+      {
+        return path_;
+      }
+
+    private:
+      path_t path_;
       weight_t weight_;
       const automaton_t& aut_;
       const weightset_t_of<automaton_t>& ws_;

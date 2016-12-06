@@ -50,7 +50,7 @@ namespace vcsn
           queue.pop();
 
           auto k_path = k_path_implicit.explicit_path(res, tree, src);
-          if (k_path.path_.empty())
+          if (k_path.get_path().empty())
             return res;
 
           res.emplace_back(std::move(k_path));
@@ -72,9 +72,9 @@ namespace vcsn
                              queue_t& queue, shortest_path_tree<automaton_t>& tree)
       {
         const auto& ws = *aut_->weightset();
-        auto k_path_cost = k_path_implicit.weight_;
+        const auto& k_path_cost = k_path_implicit.get_weight();
         auto transition_stack = std::vector<transition_t>{};
-        auto s = k == 0 ? src : aut_->dst_of(k_path_implicit.sidetrack_);
+        auto s = k == 0 ? src : aut_->dst_of(k_path_implicit.get_sidetrack());
         for (auto tr : all_out(aut_, s))
           transition_stack.push_back(tr);
 

@@ -51,7 +51,7 @@ namespace vcsn
         if (parent_path_ != null_parent_path)
           {
             auto& explicit_pref_path = ksp[parent_path_];
-            auto& path = explicit_pref_path.path_;
+            const auto& path = explicit_pref_path.get_path();
 
             // The index of the last transition of the path before the sidetrack.
             int last_transition_index = -1;
@@ -74,13 +74,13 @@ namespace vcsn
         auto s = parent_path_ == null_parent_path ? src : aut_->dst_of(sidetrack_);
 
         const auto& ws = *aut_->weightset();
-        while (s != tree.root_)
+        while (s != tree.get_root())
           {
             auto next = tree.get_parent_of(s);
             if (s == aut_->null_state() || next == aut_->null_state())
               return path<automaton_t>(aut_);
-            auto weight = ws.rdivide(tree.states_[s].get_weight(),
-                                     tree.states_[next].get_weight());
+            auto weight = ws.rdivide(tree[s].get_weight(),
+                                     tree[next].get_weight());
             auto t = find_transition(s, next);
             assert(t != aut_->null_transition());
             res.emplace_back(weight, t);
@@ -108,7 +108,17 @@ namespace vcsn
         return aut_->weightset()->less(weight_, other.weight_);
       }
 
-      // FIXME: private
+      const weight_t& get_weight() const
+      {
+        return weight_;
+      }
+
+      transition_t get_sidetrack() const
+      {
+        return sidetrack_;
+      }
+
+    private:
       const automaton_t& aut_;
       transition_t sidetrack_;
       int parent_path_;

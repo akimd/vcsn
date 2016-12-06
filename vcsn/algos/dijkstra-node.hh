@@ -72,11 +72,40 @@ namespace vcsn
         weight_ = weight;
       }
 
-      // FIXME: private
+      state_t
+      get_state() const
+      {
+        return state_;
+      }
+
+      unsigned
+      get_depth() const
+      {
+        return depth_;
+      }
+
+      void
+      set_depth(unsigned depth)
+      {
+        depth_ = depth;
+      }
+
+      void
+      set_parent(state_t parent)
+      {
+        parent_ = parent;
+      }
+
+      state_t
+      get_parent() const
+      {
+        return parent_;
+      }
+
+    private:
       unsigned depth_;
       state_t state_;
       state_t parent_;
-    private:
       boost::optional<weight_t> weight_;
       weightset_ptr ws_;
     };
