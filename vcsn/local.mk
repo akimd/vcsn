@@ -76,6 +76,7 @@ algo_headers =                                  \
   %D%/algos/is-valid.hh                         \
   %D%/algos/k-lightest-path.hh                  \
   %D%/algos/ladybird.hh                         \
+  %D%/algos/less-than-automaton.hh              \
   %D%/algos/letterize.hh                        \
   %D%/algos/levenshtein.hh                      \
   %D%/algos/lift.hh                             \

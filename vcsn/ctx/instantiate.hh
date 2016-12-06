@@ -32,6 +32,7 @@
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/ladybird.hh>
+#include <vcsn/algos/less-than-automaton.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
 #include <vcsn/algos/multiply.hh>
@@ -147,8 +148,9 @@ namespace vcsn
       {
         using aut_t = Aut;
         REGISTER(copy, aut_t);
-        REGISTER(print, aut_t, std::ostream, const std::string);
         REGISTER(info, aut_t, std::ostream, bool);
+        REGISTER(less_than, aut_t, aut_t);
+        REGISTER(print, aut_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, direction, bool, const std::string);
         return true;
       }

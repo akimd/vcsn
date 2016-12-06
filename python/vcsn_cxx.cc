@@ -387,6 +387,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
     .def("ldivide", &automaton::ldivide)
+    .def("less_than", &automaton::less_than)
     .def("lweight", &automaton::lweight,
          (arg("weight"), arg("algo") = "auto"))
     .def("letterize", &automaton::letterize)
