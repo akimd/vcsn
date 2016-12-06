@@ -5,6 +5,7 @@
 #include <vcsn/algos/are-equivalent.hh> // difference
 #include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/cerny.hh>
+#include <vcsn/algos/compare-automaton.hh>
 #include <vcsn/algos/compare-expression.hh>
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/conjunction.hh>
@@ -32,7 +33,6 @@
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/ladybird.hh>
-#include <vcsn/algos/less-than-automaton.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
 #include <vcsn/algos/multiply.hh>
@@ -147,6 +147,7 @@ namespace vcsn
       register_automaton_functions()
       {
         using aut_t = Aut;
+        REGISTER(are_equal, aut_t, aut_t);
         REGISTER(copy, aut_t);
         REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(less_than, aut_t, aut_t);
