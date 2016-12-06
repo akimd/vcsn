@@ -64,9 +64,6 @@ vcsn_tools_python_PYTHON =                      \
   %D%/vcsn_tools/demangle.py                    \
   %D%/vcsn_tools/gdb-demangle.py
 
-nodist_vcsn_tools_python_PYTHON =               \
-  %D%/vcsn_tools/config.py
-
 vcsn_python_demodir = $(vcsn_pythondir)/demo
 vcsn_python_demo_PYTHON =                       \
   %D%/vcsn/demo/__init__.py                     \

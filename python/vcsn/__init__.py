@@ -23,12 +23,12 @@ from vcsn.label      import label
 from vcsn.polynomial import polynomial
 from vcsn.weight     import weight
 
-from vcsn_tools.config import config # pylint: disable=wrong-import-order
+from vcsn_cxx import configuration as config # pylint: disable=wrong-import-order
 
 # pylint: enable=wrong-import-position
 
-datadir = config['datadir']
-version = config['version']
+datadir = config('configuration.datadir')
+version = config('configuration.version')
 
 sys.setdlopenflags(oldflags)
 

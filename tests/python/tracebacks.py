@@ -3,7 +3,7 @@
 import re
 import subprocess
 from test import *
-from vcsn_tools.config import config
+from vcsn_cxx import configuration as config
 
 def canonical(s):
     '''Clean up paths (keep only the last two directories to be
@@ -28,7 +28,7 @@ for t in tests:
     try:
         # IPython needs `.ipy` files, but Python doesn't care,
         # so the tests scripts have the `ipy` extension.
-        subprocess.check_output([config['python'], mefile(t, 'ipy')],
+        subprocess.check_output([config('configuration.python'), mefile(t, 'ipy')],
                                 stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         output = e.output.decode('utf-8')
@@ -48,18 +48,18 @@ for t in tests:
 
 # Check for IPython
 ipython = None
-if 'missing' in config['ipython']:
+if 'missing' in config('configuration.ipython'):
     SKIP('missing IPython')
 else:
     try: # Check that ipython is running Python 3
-        subprocess.check_output([config['ipython'], '-c',
+        subprocess.check_output([config('configuration.ipython'), '-c',
             'import sys; assert sys.version_info.major >= 3'])
     except Exception as e:
-        SKIP(config['ipython'], 'runs Python < 3', e)
+        SKIP(config('configuration.ipython'), 'runs Python < 3', e)
     else:
         # Check that IPython is at least IPython 3
         try:
-            res = subprocess.check_output([config['ipython'], '-c',
+            res = subprocess.check_output([config('configuration.ipython'), '-c',
                 'import IPython; assert IPython.version_info[0] >= 3'])
             # Eliminate possible escapes to change the terminal title.
             res = canonical(res.decode("utf-8"))
@@ -67,7 +67,7 @@ else:
         except Exception as e:
             SKIP("runs IPython <= 3, tracebacks won't be filtered correctly", e)
         else:
-            ipython = config['ipython']
+            ipython = config('configuration.ipython')
 
 if ipython:
     for t in tests:
