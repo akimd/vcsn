@@ -22,6 +22,9 @@ namespace vcsn
     /// An ambiguous word, or raise if there is none.
     word ambiguous_word(const automaton& aut);
 
+    /// Whether are the same automaton.
+    bool are_equal(const automaton& lhs, const automaton& rhs);
+
     /// Whether are the same expression.
     bool are_equal(const expression& lhs, const expression& rhs);
 
