@@ -102,18 +102,10 @@ namespace vcsn
   };
 
   template <Automaton Aut>
-  std::enable_if_t<std::is_same<weightset_t_of<Aut>, vcsn::nmin>::value, std::vector<path<Aut>>>
+  std::vector<path<Aut>>
   compute_eppstein(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst, unsigned num)
   {
     auto ksp = eppstein<Aut>(aut);
     return ksp.k_shortest_path(aut->pre(), aut->post(), num);
-  }
-
-  template <Automaton Aut>
-  std::enable_if_t<!std::is_same<weightset_t_of<Aut>, vcsn::nmin>::value, std::vector<path<Aut>>>
-  compute_eppstein(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst, unsigned num)
-  {
-    raise("eppstein: invalid algorithm with specified weightset: ",
-          *aut->weightset(), " is not nmin");
   }
 }
