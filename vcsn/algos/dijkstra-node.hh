@@ -8,6 +8,15 @@
 
 namespace vcsn
 {
+  /// Dijkstra Node implementation.
+  ///
+  /// Abstract representation of each node in shortest paths.
+  /// Represented by their corresponding state, weight, depth in the automaton,
+  /// and parent in the shortest path tree.
+  /// Used by Eppstein algorithm to retrieve the next best predecessor to be
+  /// treated. Sorted in a heap considering their weights (during the first path
+  /// computation). Default constructed weights correspond to the maximum value
+  /// of the weightset.
   template <Automaton Aut>
   class dijkstra_node
   {
@@ -35,6 +44,7 @@ namespace vcsn
       , ws_{aut->weightset().get()}
     {}
 
+    /// Compare weights, used to order nodes in the shortest path heap.
     bool
     operator<(const dijkstra_node& other) const
     {
@@ -46,6 +56,8 @@ namespace vcsn
         return ws_->less(*weight_, *other.weight_);
     }
 
+    /// If there is no weight in the node then its weight is the weightset's
+    /// maximum.
     weight_t
     get_weight() const
     {

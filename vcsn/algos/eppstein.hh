@@ -60,6 +60,10 @@ namespace vcsn
     }
 
   private:
+    /// Update queue with children of the first state in the sidetrack path.
+    ///
+    /// On-the-fly update of the sidetrack costs map (avoid computing every
+    /// sidetrack costs when not needed).
     void
     add_children_to_queue_(sidetrack_costs_t& sidetracks, state_t src,
                            const implicit_path_t& k_path_implicit, int k,
@@ -101,6 +105,8 @@ namespace vcsn
     const automaton_t& aut_;
   };
 
+  /// Compute the \a num lightest paths in the automaton \a aut from \a src to
+  /// \a dst. Use Eppstein algorithm.
   template <Automaton Aut>
   std::vector<path<Aut>>
   compute_eppstein(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst, unsigned num)

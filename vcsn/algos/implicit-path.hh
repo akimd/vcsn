@@ -6,6 +6,13 @@
 
 namespace vcsn
 {
+  /// Implicit Path representation.
+  ///
+  /// Abstract representation of paths represented by their parent path (N-th
+  /// shortest path, previously computed) and the sidetrack transition
+  /// (variation of the previous shortet path with a sidetrack transition).
+  /// The path's weight is stored to be able to sort these paths in the next
+  /// shortest path retrieval.
   template <Automaton Aut>
   class implicit_path
   {
@@ -19,12 +26,19 @@ namespace vcsn
 
     implicit_path(const automaton_t& aut, transition_t sidetrack,
                   int parent_path, weight_t weight)
-    : aut_{aut}
-    , sidetrack_{sidetrack}
-    , parent_path_{parent_path}
-    , weight_{weight}
+      : aut_{aut}
+      , sidetrack_{sidetrack}
+      , parent_path_{parent_path}
+      , weight_{weight}
     {}
 
+    /// Create the explicit representation of the implicit path.
+    ///
+    /// Use the vector of previous \a ksp results to retrieve the parent path.
+    /// Find the prefix path of sidetrack in the parent path and push it in the
+    /// result path. Then, add transitions from sidetrack_ to the destination
+    /// using \a tree.
+    /// In case of initial path, use \a src as the prefix path.
     path<automaton_t>
     explicit_path(const std::vector<path<automaton_t>>& ksp,
                   shortest_path_tree<automaton_t>& tree,
@@ -74,6 +88,7 @@ namespace vcsn
       return res;
     }
 
+    /// Find the lightest transition from \a src to \a dst.
     transition_t
     find_transition(state_t src, state_t dst) const
     {

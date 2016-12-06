@@ -6,6 +6,10 @@
 
 namespace vcsn
 {
+  /// Explicit path representation.
+  ///
+  /// Held in the resulting Eppstein vector. Represented by the actual vector
+  /// of transitions and the total weight of the path.
   template <Automaton Aut>
   class path
   {
@@ -51,6 +55,7 @@ namespace vcsn
       return ws_.less(weight_, other.weight_);
     }
 
+    /// Construct a monomial from the path.
     template <typename PolynomialSet>
     auto
     make_monomial(const PolynomialSet& ps) const

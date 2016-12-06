@@ -7,6 +7,11 @@
 
 namespace vcsn
 {
+  /// Shortest Path Tree
+  ///
+  /// Represents the tree of nodes in the graph with each node's parent being
+  /// their lightest successor in the automaton (the path is computed from
+  /// destination to source).
   template <typename Aut>
   class shortest_path_tree
   {
@@ -85,6 +90,11 @@ namespace vcsn
     const automaton_t& aut_;
   };
 
+  /// Compute the shortest path tree of \a aut starting from src.
+  ///
+  /// Create a shortest path tree with src as root, then construct the tree by
+  /// going backwards in the automaton with a basic shortest path method (heap
+  /// of incoming nodes sorted by nodes' weight).
   template <typename Aut>
   shortest_path_tree<Aut>
   compute_shortest_path_tree(const Aut& aut, state_t_of<Aut> src)
