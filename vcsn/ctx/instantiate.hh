@@ -5,6 +5,7 @@
 #include <vcsn/algos/are-equivalent.hh> // difference
 #include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/cerny.hh>
+#include <vcsn/algos/compare-expression.hh>
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/constant-term.hh>
@@ -31,7 +32,6 @@
 #include <vcsn/algos/is-valid-expression.hh>
 #include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/ladybird.hh>
-#include <vcsn/algos/less-than.hh>
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/minimize.hh>
 #include <vcsn/algos/multiply.hh>
@@ -163,6 +163,7 @@ namespace vcsn
         using ws_t = weightset_t_of<ctx_t>;
 
         REGISTER(add_expression, rs_t, rs_t);
+        REGISTER(are_equal_expression, rs_t, rs_t);
         REGISTER(complement_expression, rs_t);
         REGISTER(concatenate_expression, rs_t, rs_t);
         REGISTER(conjunction_expression, rs_t, rs_t);

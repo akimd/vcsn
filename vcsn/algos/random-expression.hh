@@ -6,7 +6,6 @@
 #include <boost/tokenizer.hpp>
 
 #include <vcsn/core/rat/expressionset.hh> // make_expressionset
-#include <vcsn/core/rat/less.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/cast.hh>

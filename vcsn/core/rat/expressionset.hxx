@@ -6,10 +6,10 @@
 #include <boost/range/algorithm/lower_bound.hpp>
 
 #include <vcsn/algos/fwd.hh> // is-valid
+#include <vcsn/core/rat/compare.hh>
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/hash.hh>
-#include <vcsn/core/rat/less.hh>
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/algos.hh> // dyn::read_expression
@@ -959,11 +959,17 @@ namespace vcsn
     return rat::size<self_t>(v);
   }
 
+  DEFINE::compare(const value_t& lhs, const value_t& rhs)
+    -> int
+  {
+    auto cmp = rat::compare<self_t>{};
+    return cmp(lhs, rhs);
+  }
+
   DEFINE::less(const value_t& lhs, const value_t& rhs)
     -> bool
   {
-    auto lt = rat::less<self_t>{};
-    return lt(lhs, rhs);
+    return compare(lhs, rhs) < 0;
   }
 
   DEFINE::less_linear(const value_t& lhs, const value_t& rhs)
@@ -976,7 +982,7 @@ namespace vcsn
   DEFINE::equal(const value_t& lhs, const value_t& rhs)
     -> bool
   {
-    return ! less(lhs, rhs) && ! less(rhs, lhs);
+    return compare(lhs, rhs) == 0;
   }
 
   DEFINE::hash(const value_t& v)

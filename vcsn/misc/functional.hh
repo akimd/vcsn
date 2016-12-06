@@ -4,6 +4,21 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
+    /// Functor to three-way comparison Values of ValueSets.
+    template <typename ValueSet, typename Value = typename ValueSet::value_t>
+    struct compare
+    {
+      using valueset_t = ValueSet;
+      using value_t = Value;
+
+      int operator()(const value_t& lhs, const value_t& rhs) const
+      {
+        return valueset_t::compare(lhs, rhs);
+      }
+    };
+  }
 
   /// This is useful to make hashes with labels or weights as keys
   /// without using non-default constructors; to be used along with

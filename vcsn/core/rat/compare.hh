@@ -18,11 +18,12 @@ namespace vcsn
     /// (strictly) less than another one.  Implements the shortlex
     /// order.
     template <typename ExpSet>
-    class less
+    class compare
       : public ExpSet::const_visitor
     {
     public:
       using expressionset_t = ExpSet;
+      using self_t = compare;
       using context_t = context_t_of<expressionset_t>;
       using labelset_t = labelset_t_of<context_t>;
       using weightset_t = weightset_t_of<context_t>;
@@ -44,23 +45,19 @@ namespace vcsn
       /// level.  In particular, that's where size and node types are
       /// considered, routines below handle the case of nodes of same
       /// sizes and same type.
-      bool operator()(expression_t lhs, expression_t rhs)
+      int operator()(expression_t lhs, expression_t rhs)
       {
         if (lhs == rhs)
-          return false;
+          return 0;
         else
           {
-            size_t lhss = size<ExpSet>(lhs);
-            size_t rhss = size<ExpSet>(rhs);
+            auto lhss = int(size<ExpSet>(lhs));
+            auto rhss = int(size<ExpSet>(rhs));
 
-            if (lhss < rhss)
-              return true;
-            else if (lhss > rhss)
-              return false;
-            else if (lhs->type() < rhs->type())
-              return true;
-            else if (lhs->type() > rhs->type())
-              return false;
+            if (auto res = lhss - rhss)
+              return res;
+            else if (auto res = int(lhs->type()) - int(rhs->type()))
+              return res;
             else
               {
                 rhs_ = rhs;
@@ -78,7 +75,7 @@ namespace vcsn
 #define DEFINE(Type)                                                    \
       VCSN_RAT_VISIT(Type, lhs)                                         \
       {                                                                 \
-        res_ = less_(lhs, *down_pointer_cast<const Type ## _t>(rhs_));  \
+        res_ = cmp_(lhs, *down_pointer_cast<const Type ## _t>(rhs_));   \
       }
 
       DEFINE(add);
@@ -105,19 +102,19 @@ namespace vcsn
       {
         using tupleset_t = typename expressionset_t::template as_tupleset_t<>;
         /// Entry point: down_cast rhs_ and bounce to binary operator().
-        bool operator()(const tuple_t& lhs)
+        int operator()(const tuple_t& lhs)
         {
           return operator()(lhs,
-                            *down_pointer_cast<const tuple_t>(visitor_.rhs_));
+                            *down_pointer_cast<const tuple_t>(self_.rhs_));
         }
 
         /// Binary operator().
-        bool operator()(const tuple_t& lhs, const tuple_t& rhs)
+        int operator()(const tuple_t& lhs, const tuple_t& rhs)
         {
-          return tupleset_t::less(lhs.sub(), rhs.sub());
+          return tupleset_t::compare(lhs.sub(), rhs.sub());
         }
 
-        const less& visitor_;
+        const self_t& self_;
       };
 
       void visit(const tuple_t& v, std::true_type) override
@@ -134,52 +131,52 @@ namespace vcsn
       | Binary functions that compare two nodes of same type.  |
       `-------------------------------------------------------*/
 
-      bool less_(const zero_t&, const zero_t&)
+      int cmp_(const zero_t&, const zero_t&)
       {
-        return false;
+        return 0;
       }
 
-      bool less_(const one_t&, const one_t&)
+      int cmp_(const one_t&, const one_t&)
       {
-        return false;
+        return 0;
       }
 
-      bool less_(const atom_t& lhs, const atom_t& rhs)
+      int cmp_(const atom_t& lhs, const atom_t& rhs)
       {
-        return labelset_t::less(lhs.value(), rhs.value());
+        return (labelset_t::less(rhs.value(), lhs.value())
+                - labelset_t::less(lhs.value(), rhs.value()));
       }
 
       template <rat::exp::type_t Type>
-      bool less_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
+      int cmp_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
       {
-        using boost::range::lexicographical_compare;
-        auto ls = lhs.size();
-        auto rs = rhs.size();
-        if (ls < rs)
-          return true;
-        else if (rs < ls)
-          return false;
+        auto ls = int(lhs.size());
+        auto rs = int(rhs.size());
+        if (auto res = ls - rs)
+          return res;
         else
-          return lexicographical_compare(lhs, rhs,
-                                         vcsn::less<expressionset_t>{});
+          return lexicographical_cmp(lhs, rhs,
+                                     vcsn::detail::compare<expressionset_t>{});
       }
 
       template <rat::exp::type_t Type>
-      bool less_(const unary_t<Type>& lhs, const unary_t<Type>& rhs)
+      int cmp_(const unary_t<Type>& lhs, const unary_t<Type>& rhs)
       {
-        return expressionset_t::less(lhs.sub(), rhs.sub());
+        return (*this)(lhs.sub(), rhs.sub());
       }
 
       template <rat::exp::type_t Type>
-      bool less_(const weight_node_t<Type>& lhs, const weight_node_t<Type>& rhs)
+      int cmp_(const weight_node_t<Type>& lhs, const weight_node_t<Type>& rhs)
       {
         // Lexicographic comparison on sub-expression, and then weight.
-        if (expressionset_t::less(lhs.sub(), rhs.sub()))
-          return true;
-        else if (expressionset_t::less(rhs.sub(), lhs.sub()))
-          return false;
+        if (auto res = (*this)(lhs.sub(), rhs.sub()))
+          return res;
+        else if (weightset_t::less(lhs.weight(), rhs.weight()))
+          return -1;
+        else if (weightset_t::less(rhs.weight(), lhs.weight()))
+          return +1;
         else
-          return weightset_t::less(lhs.weight(), rhs.weight());
+          return 0;
       }
 
    private:
@@ -187,7 +184,7 @@ namespace vcsn
       /// is compared.  Updated by the recursion.
       expression_t rhs_;
       /// The current result.
-      bool res_;
+      int res_;
     };
   }
 }

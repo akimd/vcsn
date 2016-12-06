@@ -35,8 +35,8 @@ class expression:
     __le__ = lambda l, r: not r < l
     __ge__ = lambda l, r: not l < r
     __gt__ = lambda l, r: r < l
-    __eq__ = lambda l, r: not l < r and not r < l
-    __ne__ = lambda l, r: l < r or r < l
+    __eq__ = expression.is_equal
+    __ne__ = lambda l, r: not l == r
 
 
     # Turn automaton into a native Python function

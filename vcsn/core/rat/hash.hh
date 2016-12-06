@@ -12,6 +12,7 @@ namespace vcsn
     {
     public:
       using expressionset_t = ExpSet;
+      using self_t = hash;
       using context_t = context_t_of<expressionset_t>;
       using super_t = typename expressionset_t::const_visitor;
 

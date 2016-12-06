@@ -229,6 +229,9 @@ namespace vcsn
     /// The size of v
     static size_t size(const value_t& v);
 
+    /// Three-way comparison.
+    static int compare(const value_t& l, const value_t& r);
+
     /// Whether \a l < \a r.
     static bool less(const value_t& l, const value_t& r);
 

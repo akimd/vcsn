@@ -114,6 +114,44 @@ namespace vcsn
       return true;
     }
 
+    /// Lexicographical three-way comparison between two ranges.
+    /// \param first1  the beginning of the first range
+    /// \param last1   the end of the first range
+    /// \param first2  the beginning of the second range
+    /// \param last2   the end of the second range
+    /// \param comp    a three-way comparison operator
+    template <typename InputIt1, typename InputIt2, class Compare>
+    int lexicographical_cmp(InputIt1 first1, InputIt1 last1,
+                            InputIt2 first2, InputIt2 last2,
+                            Compare comp)
+    {
+      for ( ; first1 != last1 && first2 != last2; ++first1, ++first2)
+        if (auto res = comp(*first1, *first2))
+          return res;
+      // f1 == l1 && f2 != l2 -> -1
+      // f1 == l1 && f2 == l2 ->  0
+      // f1 != l1 && f2 == l2 -> +1
+      return (first1 != last1) - (first2 != last2);
+    }
+
+    /// Lexicographical three-way comparison between two ranges.
+    /// \param cont1  a range
+    /// \param cont2  another range
+    /// \param comp   a three-way comparison operator
+    template <typename Cont1, typename Cont2, typename Compare>
+    int
+    lexicographical_cmp(const Cont1& cont1,
+                        const Cont2& cont2,
+                        Compare comp)
+    {
+      // FIXME: clang 3.5 does not feature cbegin/cend.
+      using std::begin;
+      using std::end;
+      return lexicographical_cmp(begin(cont1), end(cont1),
+                                 begin(cont2), end(cont2),
+                                 comp);
+    }
+
     /// Same as \c *std\::max_element, but works with an input iterator,
     /// not just a forward iterator.
     template <typename Container>

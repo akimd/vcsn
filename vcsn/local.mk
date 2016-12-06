@@ -19,6 +19,7 @@ algo_headers =                                  \
   %D%/algos/are-isomorphic.hh                   \
   %D%/algos/bellman-ford.hh                     \
   %D%/algos/cerny.hh                            \
+  %D%/algos/compare-expression.hh               \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
   %D%/algos/compose-expression.hh               \
@@ -34,8 +35,8 @@ algo_headers =                                  \
   %D%/algos/derived-term.hh                     \
   %D%/algos/detail/printer.hh                   \
   %D%/algos/determinize.hh                      \
-  %D%/algos/dijkstra.hh                         \
   %D%/algos/dijkstra-node.hh                    \
+  %D%/algos/dijkstra.hh                         \
   %D%/algos/distance.hh                         \
   %D%/algos/divide.hh                           \
   %D%/algos/divkbaseb.hh                        \
@@ -75,7 +76,6 @@ algo_headers =                                  \
   %D%/algos/is-valid.hh                         \
   %D%/algos/k-lightest-path.hh                  \
   %D%/algos/ladybird.hh                         \
-  %D%/algos/less-than.hh                        \
   %D%/algos/letterize.hh                        \
   %D%/algos/levenshtein.hh                      \
   %D%/algos/lift.hh                             \
@@ -92,8 +92,8 @@ algo_headers =                                  \
   %D%/algos/multiply.hh                         \
   %D%/algos/normalize.hh                        \
   %D%/algos/pair.hh                             \
-  %D%/algos/partial-identity.hh                 \
   %D%/algos/partial-identity-expression.hh      \
+  %D%/algos/partial-identity.hh                 \
   %D%/algos/path.hh                             \
   %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
@@ -109,8 +109,8 @@ algo_headers =                                  \
   %D%/algos/read.hh                             \
   %D%/algos/reduce.hh                           \
   %D%/algos/scc.hh                              \
-  %D%/algos/shortest.hh                         \
   %D%/algos/shortest-path-tree.hh               \
+  %D%/algos/shortest.hh                         \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \
@@ -156,6 +156,7 @@ nobase_include_HEADERS =                        \
   %D%/core/partition-automaton.hh               \
   %D%/core/permutation-automaton.hh             \
   %D%/core/polystate-automaton.hh               \
+  %D%/core/rat/compare.hh                       \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/dot.hh                           \
   %D%/core/rat/expansionset.hh                  \
@@ -167,7 +168,6 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/hash.hh                          \
   %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
-  %D%/core/rat/less.hh                          \
   %D%/core/rat/partial-identity.hh              \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \

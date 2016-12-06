@@ -245,6 +245,15 @@ namespace vcsn
       return equal_(l, r, indices);
     }
 
+    /// Three-way comparison between \a l and \a r.
+    template <typename LhsValue, typename RhsValue>
+    static auto
+    compare(const LhsValue& l, const RhsValue& r)
+      -> int
+    {
+      return less(r, l) - less(l, r);
+    }
+
     /// Whether \a l < \a r.
     template <typename LhsValue, typename RhsValue>
     static auto
