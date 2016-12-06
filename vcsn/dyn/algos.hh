@@ -476,6 +476,9 @@ namespace vcsn
     /// The left-multiplication of a polynomial with \a w as weight.
     polynomial lweight(const weight& w, const polynomial& p);
 
+    /// Ordering between automata.
+    bool less_than(const automaton& lhs, const automaton& rhs);
+
     /// Ordering between expressions.
     bool less_than(const expression& lhs, const expression& rhs);
 
