@@ -19,6 +19,8 @@ configuration:
   libdir: @LIBDIR@
   pyexecdir: @PYEXECDIR@
 
+  verbose: 0
+
 dot:
   styles: !StyleList
     square:

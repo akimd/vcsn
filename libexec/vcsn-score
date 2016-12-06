@@ -16,10 +16,10 @@ import warnings
 
 import vcsn
 
-if '-DNDEBUG' not in ' '.join([vcsn.config['cppflags'],
-                               vcsn.config['cxxflags']]):
+if '-DNDEBUG' not in ' '.join([vcsn.config('configuration.cppflags'),
+                               vcsn.config('configuration.cxxflags')]):
     warnings.warn('not compiled with -DNDEBUG, benches are irrelevant')
-if '-O3' not in vcsn.config['cxxflags']:
+if '-O3' not in vcsn.config('configuration.cxxflags'):
     warnings.warn('not compiled with -O3, benches are irrelevant')
 
 

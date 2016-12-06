@@ -8,7 +8,7 @@ import subprocess
 import sys
 import warnings
 
-from vcsn_tools.config import config
+from vcsn_cxx import configuration
 
 me = sys.argv[0]
 
@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-shared', help='create a shared lib instead of an executable',
                         action='store_true')
     parser.add_argument('-v', '--verbose', help='be verbose',
-                        action='count', default=config['verbose'])
+                        action='count', default=int(configuration('configuration.verbose')))
     parser.add_argument('-q', '--quiet', help='hide warnings (including compiler warnings)',
                         action='store_true')
     parser.add_argument('-c', '--color', dest='color', action='store',
@@ -32,8 +32,17 @@ def parse_args():
 
     # Parse the arguments, and complete the 'args' object with the value
     # from the configuration (cxx, cxxflags, etc.).
-    args = parser.parse_args()
-    for v in args.vars:
+    args = parser.parse_args().__dict__.copy()
+
+    # List of configuration keys coming from autoconf.
+    config = ['ccache', 'cppflags', 'cxx', 'cxxflags',
+              'datadir', 'includedir', 'ipython', 'ldflags',
+              'libdir', 'pyexecdir', 'python', 'verbose', 'version',]
+    for k in config:
+        if not k in args:
+            args[k] = configuration('configuration.'+k)
+
+    for v in args['vars']:
         # Process VAR=VAL, VAR+=VAL, VAR-=VAL.
         m = re.match(r'(\w+)([-+]?=)(.*)', v)
         if not m:
@@ -43,48 +52,44 @@ def parse_args():
         op  = m.group(2)
         val = m.group(3)
         if op == '=':
-            config[var] = val
+            args[var] = val
         elif op == '+=':
-            config[var] += ' ' + val
+            args[var] += ' ' + val
         elif op == '-=':
-            config[var] = config[var].replace(val, '')
+            args[var] = config[var].replace(val, '')
 
-    for k in config:
-        if not k in args:
-            setattr(args, k, config[k])
-    if 2 <= args.verbose:
+    if 2 <= args['verbose']:
         print('args:', file=sys.stderr)
-        for k in sorted(args.__dict__):
-            print('  {}: {}'.format(k, getattr(args, k)), file=sys.stderr)
+        for k in sorted(args):
+            print('  {}: {}'.format(k, args[k]), file=sys.stderr)
 
     # Strip extension.
-    args.base = args.input[:-3]
+    args['base'] = args['input'][:-3]
     # Beware of concurrency issues: insert pid in the name to avoid problem.
-    args.pid = str(os.getpid())
-    args.tmp = args.base + '.' + args.pid
+    args['pid'] = str(os.getpid())
+    args['tmp'] = args['base'] + '.' + args['pid']
 
     # Obey --quiet.
-    if args.quiet:
+    if args['quiet']:
         warnings.filterwarnings('ignore', 'you should install')
 
     return args
 
 def log(*msg, level=0):
-    if level <= args.verbose:
+    if level <= args['verbose']:
         print(me + ":", *msg, file=sys.stderr)
 
 
 def fmt(s, **kwargs):
     '''Substitute the value in args.'''
     # Can be nicer once we require Python 3.5.
-    d = args.__dict__.copy()
-    d.update(kwargs)
-    return s.format_map(d)
+    args.update(kwargs)
+    return s.format_map(args)
 
 
 def notify():
     '''Notify the user that a compilation was finished.'''
-    title, message = pretty_plugin(args.base)
+    title, message = pretty_plugin(args['base'])
     # For some reason, the some first characters (such as open paren
     # or bracket) must be escaped.  Fortunately, a leading backlash
     # suffices.
@@ -108,10 +113,10 @@ def run(cmd):
     if out:
         out = out.decode('utf-8')
         print(out)
-    if err and (retcode or not args.quiet):
+    if err and (retcode or not args['quiet']):
         err = err.decode('utf-8')
-        if not args.plain:
-            err = demangle(err, color=args.color)
+        if not args['plain']:
+            err = demangle(err, color=args['color'])
         print(err, file=sys.stderr)
     if retcode:
         if retcode < 0:
@@ -125,7 +130,7 @@ def run(cmd):
 args = parse_args()
 from vcsn_tools.demangle import demangle, pretty_plugin # pylint: disable=wrong-import-position
 
-if args.shared:
+if args['shared']:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so' '{tmp}.o'")
     os.rename(fmt('{tmp}.so'), fmt('{base}.so'))
