@@ -377,7 +377,7 @@ bench('a.evaluate("a"*{})'.format(n + 1),
       number=10000)
 # Something less wide.
 for ctx, number in [('lal(a-z), z', 20000),
-                    ('lan(a-z), z', 20000),
+                    ('lan(a-z), z', 10000),
                     ('law(a-z), z', 10000)]:
     n = 25
     r = '[a-z]*'
