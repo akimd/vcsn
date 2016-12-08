@@ -120,6 +120,12 @@ namespace vcsn
       return l == r;
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t l, const value_t r)
+    {
+      return int(l) - int(r);
+    }
+
     /// Whether \a lhs < \a rhs.
     static bool less(const value_t lhs, const value_t rhs)
     {

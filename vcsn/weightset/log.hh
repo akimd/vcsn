@@ -105,15 +105,21 @@ namespace vcsn
       return std::log1p(-std::exp(-v));
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t l, const value_t r)
+    {
+      return l - r;
+    }
+
     static bool equal(const value_t l, const value_t r)
     {
       return l == r;
     }
 
-    /// Whether \a lhs < \a rhs.
-    static bool less(const value_t lhs, const value_t rhs)
+    /// Whether \a l < \a r.
+    static bool less(const value_t l, const value_t r)
     {
-      return lhs < rhs;
+      return l < r;
     }
 
     constexpr static bool is_special(const value_t)

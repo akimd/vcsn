@@ -101,6 +101,12 @@ namespace vcsn
         raise_not_starrable(*this, v);
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t l, const value_t r)
+    {
+      return l - r;
+    }
+
     static bool
     equal(const value_t l, const value_t r)
     {
@@ -108,9 +114,9 @@ namespace vcsn
     }
 
     /// Whether \a lhs < \a rhs.
-    static bool less(value_t lhs, value_t rhs)
+    static bool less(value_t l, value_t r)
     {
-      return lhs < rhs;
+      return l < r;
     }
 
     constexpr static bool is_special(value_t)

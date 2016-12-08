@@ -127,13 +127,19 @@ namespace vcsn
       return v.get_num() == 1 && v.get_den() == 1;
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t& l, const value_t& r)
+    {
+      return cmp(l, r);
+    }
+
     static bool equal(const value_t& l, const value_t& r)
     {
       return l == r;
     }
 
     /// Whether \a  < \a r.
-    static bool less(value_t l, value_t r)
+    static bool less(const value_t& l, const value_t& r)
     {
       return l < r;
     }
@@ -156,14 +162,14 @@ namespace vcsn
       return v;
     }
 
-    static size_t hash(value_t v)
+    static size_t hash(const value_t& v)
     {
       // FIXME: be serious...
       return hash_value(to_string(qmp_impl(), v));
     }
 
     static value_t
-    conv(self_t, value_t v)
+    conv(self_t, const value_t& v)
     {
       return v;
     }

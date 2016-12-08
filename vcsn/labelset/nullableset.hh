@@ -335,6 +335,15 @@ namespace vcsn
       return letters_of_padded(word(v), l);
     }
 
+    /// Three way comparison between \a l and \a r.
+    static int compare(const value_t& l, const value_t& r)
+    {
+      if (auto res = int(is_one(r)) - int(is_one(l)))
+        return res;
+      else
+        return labelset_t::compare(get_value(l), get_value(r));
+    }
+
     /// Whether l == r.
     static bool equal(const value_t& l, const value_t& r)
     {

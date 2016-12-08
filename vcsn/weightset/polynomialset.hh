@@ -1043,6 +1043,48 @@ namespace vcsn
     }
 
 
+    /*-----------------.
+    | compare(l, r).   |
+    `-----------------*/
+
+    ATTRIBUTE_PURE
+    static int
+    monomial_compare(const monomial_t& lhs, const monomial_t& rhs)
+    {
+      if (auto res = labelset_t::compare(label_of(lhs), label_of(rhs)))
+        return res;
+      else
+        return weightset_t::compare(weight_of(lhs), weight_of(rhs));
+    }
+
+    template <wet_kind_t WetType>
+    ATTRIBUTE_PURE
+    static auto
+    compare_impl_(const value_t& l, const value_t& r)
+      -> std::enable_if_t<WetType != wet_kind_t::bitset,
+                          int>
+    {
+      return lexicographical_cmp(l, r, monomial_compare);
+    }
+
+    template <wet_kind_t WetType>
+    ATTRIBUTE_PURE
+    static auto
+    compare_impl_(const value_t& l, const value_t& r)
+      -> std::enable_if_t<WetType == wet_kind_t::bitset,
+                          int>
+    {
+      return l.set() - r.set();
+    }
+
+    ATTRIBUTE_PURE
+    static int
+    compare(const value_t& l, const value_t& r)
+    {
+      return compare_impl_<value_t::kind>(l, r);
+    }
+
+
     /*--------------.
     | less(l, r).   |
     `--------------*/
@@ -1063,7 +1105,7 @@ namespace vcsn
     static auto
     less_impl_(const value_t& l, const value_t& r)
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
-                     bool>
+                          bool>
     {
       return boost::range::lexicographical_compare(l, r, monomial_less);
     }
@@ -1073,7 +1115,7 @@ namespace vcsn
     static auto
     less_impl_(const value_t& l, const value_t& r)
       -> std::enable_if_t<WetType == wet_kind_t::bitset,
-                     bool>
+                          bool>
     {
       return l.set() < r.set();
     }

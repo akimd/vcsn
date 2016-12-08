@@ -6,6 +6,7 @@
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/format.hh>
+#include <vcsn/misc/functional.hh> // vcsn::lexicographical_cmp
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -20,6 +21,7 @@ namespace vcsn
   class string_letters
   {
   public:
+    using self_t = string_letters;
     /// Internalize the letters to save trees.
     using letter_t = symbol;
     using word_t = std::vector<letter_t>;
@@ -144,6 +146,19 @@ namespace vcsn
     transpose(letter_t l) const
     {
       return l;
+    }
+
+    /// Three-way comparison between two letters.
+    static int compare(const letter_t l, const letter_t r)
+    {
+      return l.get().compare(r.get());
+    }
+
+    /// Three-way comparison between two words.
+    static int compare(const word_t& l, const word_t& r)
+    {
+      return lexicographical_cmp(l, r,
+                                 vcsn::detail::compare<self_t, letter_t>{});
     }
 
     /// Whether \a l == \a r.

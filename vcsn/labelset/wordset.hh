@@ -106,6 +106,12 @@ namespace vcsn
       return v;
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t& l, const value_t& r)
+    {
+      return genset_t::compare(l, r);
+    }
+
     /// Whether \a l == \a r.
     static bool
     equal(const value_t& l, const value_t& r)

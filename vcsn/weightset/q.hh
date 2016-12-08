@@ -166,16 +166,21 @@ namespace vcsn
       return v.num == 1 && v.den == 1;
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t& l, const value_t& r)
+    {
+      return l.num * long(r.den) - r.num * long(l.den);
+    }
+
     static bool equal(const value_t& l, const value_t& r)
     {
       return l.num == r.num && l.den == r.den;
     }
 
-    /// Whether \a lhs < \a rhs.
-    static bool less(const value_t& lhs, const value_t& rhs)
+    /// Whether \a l < \a r.
+    static bool less(const value_t& l, const value_t& r)
     {
-      return lhs.num * static_cast<long>(rhs.den)
-             < rhs.num * static_cast<long>(lhs.den);
+      return l.num * long(r.den) < r.num * long(l.den);
     }
 
     static constexpr bool is_commutative() { return true; }

@@ -95,6 +95,7 @@ namespace vcsn
       }
 
       DEFINE(begin,);
+      DEFINE(compare, ATTRIBUTE_PURE);
       DEFINE(delimit,);
       DEFINE(end,);
       DEFINE(equal, ATTRIBUTE_PURE);

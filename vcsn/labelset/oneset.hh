@@ -11,8 +11,11 @@
 
 namespace vcsn
 {
-  /// Implementation of labels are ones: there is a single instance
-  /// of label.
+  /// Implementation of labels are ones: there is a single instance of
+  /// label.
+  ///
+  /// Actually, this is untrue: there are two labels: one() and
+  /// special().
   class oneset
   {
   public:
@@ -55,6 +58,12 @@ namespace vcsn
     value_t value(Args&&... args) const
     {
       return value_t{std::forward<Args>(args)...};
+    }
+
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t l, const value_t r)
+    {
+      return int(l) - int(r);
     }
 
     /// Whether \a l == \a r.

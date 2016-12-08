@@ -135,6 +135,12 @@ namespace vcsn
       return v == 1;
     }
 
+    /// Three-way comparison between \a l and \a r.
+    static int compare(const value_t l, const value_t r)
+    {
+      return int(l) - int(r);
+    }
+
     static bool
     equal(const value_t l, const value_t r)
     {

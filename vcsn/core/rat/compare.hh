@@ -1,12 +1,10 @@
 #pragma once
 
-#include <boost/range/algorithm/lexicographical_compare.hpp>
-
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/misc/cast.hh>
-#include <vcsn/misc/functional.hh> // vcsn::less
+#include <vcsn/misc/functional.hh> // vcsn::lexicographical_cmp
 
 namespace vcsn
 {
@@ -14,9 +12,8 @@ namespace vcsn
   namespace rat
   {
 
-    /// A functor to check whether one rational expression is
-    /// (strictly) less than another one.  Implements the shortlex
-    /// order.
+    /// A functor for three-way comparison between two expressions.
+    /// Implements the shortlex order.
     template <typename ExpSet>
     class compare
       : public ExpSet::const_visitor
@@ -143,16 +140,13 @@ namespace vcsn
 
       int cmp_(const atom_t& lhs, const atom_t& rhs)
       {
-        return (labelset_t::less(rhs.value(), lhs.value())
-                - labelset_t::less(lhs.value(), rhs.value()));
+        return labelset_t::compare(lhs.value(), rhs.value());
       }
 
       template <rat::exp::type_t Type>
       int cmp_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
       {
-        auto ls = int(lhs.size());
-        auto rs = int(rhs.size());
-        if (auto res = ls - rs)
+        if (auto res = int(lhs.size()) - int(rhs.size()))
           return res;
         else
           return lexicographical_cmp(lhs, rhs,
@@ -171,12 +165,8 @@ namespace vcsn
         // Lexicographic comparison on sub-expression, and then weight.
         if (auto res = (*this)(lhs.sub(), rhs.sub()))
           return res;
-        else if (weightset_t::less(lhs.weight(), rhs.weight()))
-          return -1;
-        else if (weightset_t::less(rhs.weight(), lhs.weight()))
-          return +1;
         else
-          return 0;
+          return weightset_t::compare(lhs.weight(), rhs.weight());
       }
 
    private:

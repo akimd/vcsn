@@ -122,6 +122,18 @@ namespace vcsn
       return l;
     }
 
+    /// Three-way comparison between two letters.
+    static int compare(const letter_t l, const letter_t r)
+    {
+      return int(l) - int(r);
+    }
+
+    /// Three-way comparison between two words.
+    static int compare(const word_t& l, const word_t& r)
+    {
+      return l.compare(r);
+    }
+
     /// Whether \a l == \a r.
     static bool equal(const letter_t l, const letter_t r)
     {
