@@ -108,6 +108,8 @@ namespace vcsn
 
       using super_t = automaton_decorator<automaton_t, context_t>;
 
+      static constexpr std::size_t tape = Tape;
+
     public:
 
       focus_automaton_impl(const full_context_t& ctx)

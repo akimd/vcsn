@@ -46,14 +46,14 @@ namespace vcsn
   bool
   is_proper(const Aut& aut)
   {
-    if (aut->properties().is_unknown(is_proper_ptag{}))
+    if (aut->properties().is_unknown(*aut, is_proper_ptag{}))
     {
       auto res = detail::is_proper_(aut);
-      aut->properties().put(is_proper_ptag{}, res);
+      aut->properties().put(*aut, is_proper_ptag{}, res);
       return res;
     }
     else
-      return aut->properties().get(is_proper_ptag{});
+      return aut->properties().get(*aut, is_proper_ptag{});
   }
 
   namespace dyn

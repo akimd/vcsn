@@ -86,14 +86,14 @@ namespace vcsn
       sep = "\n";                                \
   } while (false)
 
-#define ECHO_PROP(Level, Property)                      \
-    do {                                                \
-      if (Level <= details)                             \
-        {                                               \
-          out << sep;                                   \
-          aut->properties().print_prop(Property, out);  \
-        }                                               \
-      sep = "\n";                                       \
+#define ECHO_PROP(Level, Property)                           \
+    do {                                                     \
+      if (Level <= details)                                  \
+        {                                                    \
+          out << sep;                                        \
+          aut->properties().print_prop(*aut, Property, out); \
+        }                                                    \
+      sep = "\n";                                            \
   } while (false)
 
 #define VCSN_IF_FREE(Fun, Aut)                                  \

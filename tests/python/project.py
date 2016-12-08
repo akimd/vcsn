@@ -47,8 +47,9 @@ def check_aut(function_name, type_):
     of type `type_`.'''
     print("Checking:", function_name)
     fun = getattr(t, function_name)
+    f0 = fun(0)
     CHECK_EQ('(ab+ba)c+(ac+ca)b+(bc+cb)a',
-             fun(0).expression())
+             f0.expression())
     CHECK_EQ('(ef+fe)g+(eg+ge)f+(fg+gf)e',
              fun(1).expression())
     CHECK_EQ('(xy+yx)z+(xz+zx)y+(yz+zy)x',
@@ -83,6 +84,24 @@ def check_aut(function_name, type_):
                'type': type_,
                },
              fun(0).info(details=3))
+    # Check properties on tape.
+    if function_name == 'focus':
+        t_info = t.info()
+        t_proper = t_info['is proper']
+        t_deter = t_info['is deterministic']
+
+        f0_info = f0.info()
+        CHECK_EQ('N/A', f0_info['is proper'])
+        CHECK_EQ('N/A', f0_info['is deterministic'])
+
+        f0_proper = f0.is_proper()
+        CHECK_EQ(t_proper, t.info('is proper'))
+        CHECK_EQ(f0_proper, f0.info('is proper'))
+
+        f0_deter = f0.is_deterministic()
+        CHECK_EQ(t_deter, t.info('is deterministic'))
+        CHECK_EQ(f0_deter, f0.info('is deterministic'))
+
 
 check_aut('focus',
           'focus_automaton<0, mutable_automaton<lat<letterset<char_letters(abc)>, letterset<char_letters(efg)>, letterset<char_letters(xyz)>>, q>>')

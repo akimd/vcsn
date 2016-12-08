@@ -74,14 +74,14 @@ namespace vcsn
   bool
   is_deterministic(const Aut& aut)
   {
-    if (aut->properties().is_unknown(is_deterministic_ptag{}))
+    if (aut->properties().is_unknown(*aut, is_deterministic_ptag{}))
     {
       auto res = detail::is_deterministic_(aut);
-      aut->properties().put(is_deterministic_ptag{}, res);
+      aut->properties().put(*aut, is_deterministic_ptag{}, res);
       return res;
     }
     else
-      return aut->properties().get(is_deterministic_ptag{});
+      return aut->properties().get(*aut, is_deterministic_ptag{});
   }
 
   /// Whether the transposed automaton is deterministic.

@@ -159,7 +159,7 @@ namespace vcsn
         aut_->properties().update(add_ftag{});
         // All implementations of add are not deterministic, thus the need to
         // specify it here.
-        aut_->properties().put(is_deterministic_ptag{}, true);
+        aut_->properties().put(*aut_, is_deterministic_ptag{}, true);
       }
 
       /// Compute the left quotient in-place.
