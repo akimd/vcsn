@@ -81,7 +81,7 @@ namespace vcsn
       }
 
     private:
-      vcsn::config::config_value get_style(const std::string& style_name)
+      config::config_value get_style(const std::string& style_name)
       {
          auto conf = get_config()["dot"]["styles"];
          auto style = conf[style_name];
