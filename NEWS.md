@@ -78,6 +78,29 @@ still using a safer, but much slower, comparison.
     In [5]: exp('<3>a').compare(exp('a'))
     Out[5]: 1
 
+## 2016-12-12
+### k shortest paths algorithms
+Two algorithms for searching k shortest paths in graphs have been implemented:
+"Eppstein" and "Yen".  Hence, we can now search for the k lightest (smallest
+with respect to weights, aka "best" paths) paths in an automaton through the
+"lightest" algorithm.
+"lightest" used to compute these paths with an inefficient heap-based implementation:
+
+    aut.lightest(5)
+    aut.lightest(5, "auto")
+
+Note that "auto" does not use the latter algorithm when returning only one path,
+as simpler shortest path algorithms would apply to the situation and be more
+efficient. It then uses Dijkstra's algorithm.
+It can now be called with the given Yen and Eppstein algorithms as follows:
+
+    aut.lightest(5, "eppstein")
+    aut.lightest(5, "yen")
+
+Yen's algorithm requires the given automaton to have no cycles, while Eppstein
+supports any type of automaton. For small values of k, Yen's algorithm has better
+performances than Eppstein, but with increasing values of k, Eppstein is always
+more efficient.
 
 # Vcsn 2.4 (2016-11-16)
 
