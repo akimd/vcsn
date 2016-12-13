@@ -1,6 +1,19 @@
-import inspect, sys, traceback
+import inspect, os, sys, traceback
 
 import vcsn.python3
+
+# By default, python will not use RTLD_GLOBAL flag in dlopen.
+# vcsn_cxx symbols were not shared with other shared libraries.
+# Thus, when using some cached properties on automata, we had their static
+# methods' symbols not properly resolved, resulting in the existence of 2
+# values for properties' indices: one in lal_char_(b|q|z) and one in shared
+# libraries (loaded with the RTLD_GLOBAL flag, see lib/vcsn/dyn/translate.cc).
+# See https://docs.python.org/3.5/library/sys.html#sys.setdlopenflags
+# and dlopen(3).
+oldflags = sys.getdlopenflags()
+sys.setdlopenflags(os.RTLD_NOW | os.RTLD_GLOBAL)
+
+# pylint: disable=wrong-import-position
 
 from vcsn.automaton  import automaton
 from vcsn.context    import context
@@ -11,8 +24,13 @@ from vcsn.polynomial import polynomial
 from vcsn.weight     import weight
 
 from vcsn_tools.config import config # pylint: disable=wrong-import-order
+
+# pylint: enable=wrong-import-position
+
 datadir = config['datadir']
 version = config['version']
+
+sys.setdlopenflags(oldflags)
 
 # Load IPython specific support if we can.
 try:
