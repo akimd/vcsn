@@ -148,6 +148,7 @@ nobase_include_HEADERS =                        \
   %D%/core/automaton.hh                         \
   %D%/core/automatonset.hh                      \
   %D%/core/expression-automaton.hh              \
+  %D%/core/function-property.hh                 \
   %D%/core/fwd.hh                               \
   %D%/core/join-automata.hh                     \
   %D%/core/join.hh                              \

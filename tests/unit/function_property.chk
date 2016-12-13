@@ -1,0 +1,37 @@
+#! /bin/sh
+
+cat >out.exp <<\EOF
+***UPDATE is proper TO 1 BY keep***
+***UPDATE is proper TO 0 BY keep***
+***UPDATE is proper TO 1 BY invalidate***
+***UPDATE is proper TO 0 BY invalidate***
+***REMOVE UPDATE is proper FOR keep***
+***REMOVE UPDATE is proper FOR invalidate***
+***UPDATE is deterministic TO 1 BY keep***
+***UPDATE is deterministic TO 0 BY keep***
+***UPDATE is deterministic TO 1 BY invalidate***
+***UPDATE is deterministic TO 0 BY invalidate***
+***REMOVE UPDATE is deterministic FOR keep***
+***REMOVE UPDATE is deterministic FOR invalidate***
+***PRESERVE is proper BY keep***
+***PRESERVE is proper BY invalidate***
+***REMOVE PRESERVE is proper FOR invalidate***
+***REMOVE PRESERVE is proper FOR keep***
+***PRESERVE is deterministic BY keep***
+***PRESERVE is deterministic BY invalidate***
+***REMOVE PRESERVE is deterministic FOR invalidate***
+***REMOVE PRESERVE is deterministic FOR keep***
+***PRESERVE is proper BY keep***
+***PRESERVE is proper BY invalidate***
+***PRESERVE is deterministic BY keep***
+***PRESERVE is deterministic BY invalidate***
+***INVALIDATE is proper BY keep***
+***INVALIDATE is proper BY invalidate***
+***REMOVE INVALIDATE is proper FOR keep***
+***REMOVE INVALIDATE is proper FOR invalidate***
+***INVALIDATE is deterministic BY keep***
+***INVALIDATE is deterministic BY invalidate***
+***REMOVE INVALIDATE is deterministic FOR keep***
+***REMOVE INVALIDATE is deterministic FOR invalidate***
+EOF
+run 0 out.exp tests/unit/function_property

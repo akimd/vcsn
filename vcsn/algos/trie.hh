@@ -28,6 +28,12 @@ namespace vcsn
   {
     static const bool invalidate = false;
 
+    static auto& ignored_prop()
+    {
+      static auto ignored = ignored_prop_t{};
+      return ignored;
+    }
+
     static auto& updated_prop()
     {
 #if defined __GNUC__ && ! defined __clang__

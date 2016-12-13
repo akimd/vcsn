@@ -6,6 +6,7 @@
 
 #include <vcsn/algos/fwd.hh>          // focus_automaton_impl.
 #include <vcsn/concepts/automaton.hh> // Automaton.
+#include <vcsn/core/function-property.hh>
 #include <vcsn/core/property.hh>
 #include <vcsn/misc/symbol.hh>
 
@@ -138,6 +139,24 @@ namespace vcsn
         p = boost::any{};
     }
 
+    /// Invalidate properties except some defined for the function.
+    template <typename FunctionTag>
+    void invalidate(FunctionTag)
+    {
+      auto& ignored = function_prop<FunctionTag>::ignored_prop();
+
+      if (ignored.empty())
+        invalidate();
+      else
+        {
+          for (index_t i = 0; i < p_values_.size(); ++i)
+            {
+              if (ignored.find(i) == ignored.end())
+                p_values_[i] = boost::any{};
+            }
+        }
+    }
+
     /*-------------.
     | is_unknown.  |
     `-------------*/
@@ -171,10 +190,10 @@ namespace vcsn
     /// tag (see property.hh). All values can be first invalidated, then
     /// some properties can have their values updated with defined values.
     template <typename FunctionTag>
-    void update(FunctionTag)
+    void update(FunctionTag f)
     {
       if (function_prop<FunctionTag>::invalidate)
-        invalidate();
+        invalidate(f);
       for (const auto& p: function_prop<FunctionTag>::updated_prop())
         put(p.first, p.second);
     }
