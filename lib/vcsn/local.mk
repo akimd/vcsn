@@ -67,7 +67,9 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/indent.cc                            \
   %D%/misc/random.cc                            \
   %D%/misc/signature.cc                         \
-  %D%/misc/stream.cc
+  %D%/misc/stream.cc                            \
+  %D%/misc/xltdl.cc                             \
+  %D%/misc/xltdl.hh
 
 lib_libvcsn_la_LDFLAGS =					\
   $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\

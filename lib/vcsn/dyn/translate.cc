@@ -10,11 +10,10 @@
 
 #include <boost/filesystem.hpp>
 
-#include <ltdl.h>
-
 #include <lib/vcsn/dyn/context-parser.hh>
-#include <lib/vcsn/dyn/type-ast.hh>
 #include <lib/vcsn/dyn/context-printer.hh>
+#include <lib/vcsn/dyn/type-ast.hh>
+#include <lib/vcsn/misc/xltdl.hh>
 
 #include <vcsn/config.hh>
 #include <vcsn/dyn/context.hh>
@@ -234,7 +233,7 @@ namespace vcsn
         /// inserted to avoid file name limits.
         std::string split(const std::string& s) const
         {
-          std::string res;
+          auto res = std::string{};
           const size_t size = 150;
           for (unsigned i = 0; i < s.length(); i += size)
             {
@@ -295,27 +294,14 @@ namespace vcsn
                   std::cerr << d.count() << "ms: " << base << '\n';
               }
           }
-          static bool first = true;
-          if (first)
-            {
-              lt_dlinit();
-              first = false;
-            }
-
-          auto advise = lt_dladvise{};
-          lt_dladvise_init(&advise);
-          lt_dladvise_global(&advise);
-          auto lib = lt_dlopenadvise((base + ".so").c_str(), advise);
-          VCSN_REQUIRE(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
-          lt_dladvise_destroy(&advise);
+          vcsn::detail::xlt_openext(base + ".so", true);
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.
         void compile(const std::string& ctx)
         {
           printer_.header("vcsn/ctx/instantiate.hh");
-          std::string base =
-            plugindir() + "contexts/" + split(ctx);
+          auto base = plugindir() + "contexts/" + split(ctx);
           os << "using ctx_t =" << incendl;
           print_context(ctx);
           os << ';' << decendl
