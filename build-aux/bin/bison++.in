@@ -110,8 +110,8 @@ s{$tmp/}{$output_dir/}g;
 s{$TMP}{$OUTPUT_DIR}g;
 
 # In case position.hh and location.hh were moved.
-s{include \"(position.hh|location.hh)\"}
- {include <$location_prefix\$1>}g
+s{include "(position.hh|location.hh)"}
+ {include <$location_prefix$1>}g
   if $location_prefix ne "";
 
 # Something fishy that needs more examination in GNU Bison itself.

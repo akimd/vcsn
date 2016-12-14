@@ -275,15 +275,11 @@ AC_DEFINE_UNQUOTED([LIBEXECDIR], ["$LIBEXECDIR"],
 ## Programs.  ##
 ## ---------- ##
 
-# Ask for Flex support from Automake, yet do not require Flex here, so
-# that casual users can install Vcsn without having Flex.  Flex++ will
-# check the existance of Flex when really needed.
+# Don't use AM_PROG_LEX since we don't use Flex support from Automake.
+# Flex++ will check the existance of Flex when really needed.
 AC_ARG_VAR([FLEX], [Flex, the scanner generator])
 AC_CHECK_PROGS([FLEX], [flex], [no])
-LEX=$FLEX
-AM_PROG_LEX
 AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
-FLEX_VERSION
 AC_ARG_VAR([BISON], [Bison parser generator])
 AC_CHECK_PROGS([BISON], [bison])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])

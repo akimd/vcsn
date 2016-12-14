@@ -15,19 +15,37 @@
 ## The Scanner.  ##
 ## ------------- ##
 
-BUILT_SOURCES += %D%/scan.cc
-MAINTAINERCLEANFILES += %D%/scan.cc
+SOURCES_%C%_SCAN_LL =                           \
+  %D%/scan.cc                                   \
+  %D%/scan-version.hh
+BUILT_SOURCES += $(SOURCES_%C%_SCAN_LL)
+MAINTAINERCLEANFILES +=					\
+  $(addprefix $(srcdir)/,$(SOURCES_%C%_SCAN_LL))
 
-EXTRA_DIST += %D%/scan.ll
+EXTRA_DIST +=                                   \
+  %D%/scan.stamp                                \
+  %D%/scan.ll
 # The dependency is on flex++.in and not flex++, since flex++ is
 # regenerated at distribution time, and voids the time stamps (which
 # we don't want!).
-%D%/scan.cc: %D%/scan.ll $(FLEXXX_IN)
+%D%/scan.stamp: %D%/scan.ll $(FLEXXX_IN)
 	$(AM_V_GEN)mkdir -p $(@D)
-	$(AM_V_at)rm -f $@
+	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) $(FLEXXX)
-# Guarantees atomic generation of the output.
-	$(AM_V_at)$(FLEXXX) $< $@ $(FLEXXXFLAGS)
+	$(AM_V_at)$(FLEXXX) $< $(srcdir)/%D%/scan.cc $(srcdir) $(FLEXXXFLAGS)
+	$(AM_V_at)mv -f $@.tmp $@
+
+## If Make does not know it will generate in the srcdir, then when
+## trying to compile from *.cc to *.lo, it will not apply VPATH
+## lookup, since it expects the file to be in builddir.  So *here*,
+## make srcdir explicit.
+$(addprefix $(srcdir)/, $(SOURCES_%C%_SCAN_LL)):  %D%/scan.stamp
+	@if test ! -f $@; then			\
+	  rm -f $<;				\
+	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
+	fi
+
 
 ## ------------ ##
 ## The parser.  ##
@@ -80,6 +98,7 @@ $(addprefix $(srcdir)/, $(SOURCES_%C%_PARSE_YY)): %D%/parse.stamp
 
 lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_%C%_PARSE_YY)                       \
+  $(SOURCES_%C%_SCAN_LL)			\
   %D%/driver.hh  %D%/driver.cc                  \
   %D%/fwd.hh                                    \
-  %D%/scan.hh %D%/scan.cc
+  %D%/scan.hh

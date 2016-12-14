@@ -47,12 +47,17 @@ input=$1
 input_base=$(basename "$input")
 shift
 output=$1
+shift
+srcdir=$1
+shift
+
 output_base=$(basename "$output")
 output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
 output_dir=$(dirname "$output")
-output_log=$output_dir/$output_base_noext.log
-output_header=$output_dir/$output_base_noext.hh
-shift
+output_noext=$output_dir/$output_base_noext
+output_log=$output_noext.log
+output_header=$output_noext.hh
+output_version_header=$output_noext-version.hh
 
 options="$@"
 
@@ -71,14 +76,21 @@ perl >&2 -p                                     \
 
 if test -s $output_log; then
   rm -f $output_log
-  exit 1
+  exit $status
 else
   rm -f $output_log
 fi
 
 # Address a number of shortcomings, and portability issues.  See
 # comments below.
-perl -pi -e '
+perl -pi -e "
+BEGIN
+{
+  \$output = '$output';
+  \$output_header = '$output_header';
+  \$srcdir = '$srcdir';
+}" \
+ -e '
   # Paste the pragma bits which will save us from stupid warnings.
   #
   # Cannot use a print in a BEGIN here, stdout is not set up.
@@ -103,10 +115,10 @@ EOF
   }
 
   # Use "output.hh" as header.
-  s{<FlexLexer\.h>}{<'"$output_header"'>}g;
+  s{<FlexLexer\.h>}{<$output_header>}g;
 
   # Use "output" in synclines, not output.tmp.
-  s{\Q'"$output"'.tmp\E}{'"$output"'}g;
+  s{\Q$output.tmp\E}{$output}g;
 
   # Disable the declarations of yyalloc, yyrealloc and yyfree
   # declarations, which are not in YY_FLEX_NAMESPACE, while the
@@ -122,10 +134,19 @@ EOF
   # We do not want to use the "register" keyword, which is withdrawn
   # from C++17 but used by Flex before 2.6.
   s{\bregister (char\b|int\b|YY_|yy_)}{$1}g;
+
+  # Do not keep an open coded absolute directory.
+  s{\Q$srcdir/\E}{}g;
 ' "$output.tmp"
 ## For some reason, on Windows perl does not remove the back up file.
 rm -f "$output.bak"
 
+# Extract the version information.
+perl -ne '/#define YY_FLEX_\w+_VERSION/ && print'       \
+     <$output.tmp                                       \
+     >$output_version_header
+
+# Atomic validation of the whole process.
 mv $output.tmp $output
 
 exit $status

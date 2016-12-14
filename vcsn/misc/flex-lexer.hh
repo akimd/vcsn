@@ -50,8 +50,6 @@
 # include <iosfwd>
 # include <ostream>
 
-# include <vcsn/config.hh>
-
 # ifndef FLEX_STD
 #  define FLEX_STD std::
 # endif
@@ -72,7 +70,7 @@ public:
   virtual void yy_delete_buffer( yy_buffer_state* b ) = 0;
   virtual void yyrestart( std::istream* s ) = 0;
 
-#if 2 <= VCSN_FLEX_MAJOR_VERSION && 6 <= VCSN_FLEX_MINOR_VERSION
+#if 2 <= YY_FLEX_MAJOR_VERSION && 6 <= YY_FLEX_MINOR_VERSION
   virtual yy_buffer_state* yy_create_buffer( std::istream& s, int size ) = 0;
   virtual void switch_streams(std::istream& new_in, std::ostream& new_out ) = 0;
   virtual void yyrestart( std::istream& s ) = 0;
@@ -136,7 +134,7 @@ public:
                               std::ostream* new_out = nullptr );
   virtual int yywrap();
 
-#if 2 <= VCSN_FLEX_MAJOR_VERSION && 6 <= VCSN_FLEX_MINOR_VERSION
+#if 2 <= YY_FLEX_MAJOR_VERSION && 6 <= YY_FLEX_MINOR_VERSION
   virtual yy_buffer_state* yy_create_buffer( std::istream& s, int size );
   void yy_init_buffer( yy_buffer_state* b, std::istream& s );
   virtual void switch_streams(std::istream& new_in, std::ostream& new_out );
@@ -173,7 +171,7 @@ protected:
   yy_state_type yy_try_NUL_trans( yy_state_type current_state );
   int yy_get_next_buffer();
 
-#if 2 <= VCSN_FLEX_MAJOR_VERSION && 6 <= VCSN_FLEX_MINOR_VERSION
+#if 2 <= YY_FLEX_MAJOR_VERSION && 6 <= YY_FLEX_MINOR_VERSION
   std::ostream yyout;  // output sink for default LexerOutput
 #else
   std::ostream * yyout;  // output sink for default LexerOutput
