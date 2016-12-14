@@ -99,10 +99,12 @@ namespace vcsn
             state_t parent = tree.get_parent_of(aut_->src_of(curr));
             if (parent == aut_->null_state() || parent != aut_->dst_of(curr))
             {
+              // Use (weight_of(curr) + weight_of(dst)) - weight_of(src) to
+              // avoid underflow of unsigned value (2+(3-4) gives 4294967295).
               sidetracks[curr]
-                = ws.mul(aut_->weight_of(curr),
-                         ws.rdivide(tree.get_weight_of(aut_->dst_of(curr)),
-                                    tree.get_weight_of(aut_->src_of(curr))));
+                = ws.rdivide(ws.mul(aut_->weight_of(curr),
+                                    tree.get_weight_of(aut_->dst_of(curr))),
+                             tree.get_weight_of(aut_->src_of(curr)));
               has_curr = true;
             }
           }
