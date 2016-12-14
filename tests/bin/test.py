@@ -315,8 +315,8 @@ def PLAN():
     print('PASS:', npass)
     print('FAIL:', nfail)
 
-def weightset_is(ctx, expected):
+def weightset_of(ctx):
     s = str(ctx).lower().split('-> ')
-    return 0 < len(s) and s[-1] == expected.lower()
+    return s[-1] if 0 < len(s) else None
 
 atexit.register(PLAN)

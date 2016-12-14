@@ -11,7 +11,7 @@ k_algos = ['auto', 'breadth-first', 'yen', 'eppstein']
 
 def check_aut(aut, re, num, exp, tests = []):
   for algo in tests if tests else algos if num == 1 else k_algos:
-      if algo != 'eppstein' or weightset_is(ctx, 'nmin'):
+      if algo != 'eppstein' or weightset_of(ctx) in ['nmin', 'rmin', 'zmin']:
           print(algo + ':' + re)
           p = aut.lightest(num=num, algo=algo)
           CHECK_EQ(exp, p)
@@ -61,7 +61,7 @@ check(r'\z', 3, r'\z')
 check(r'\e', 3, r'<0>\e')
 check('a+b', 2, '<0>a + <0>b')
 check('ababab', 10, '<0>ababab')
-check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb', ['auto'])
+check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb', ['auto', 'eppstein'])
 check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c')
 
 zero = ctx.expression(r'\z').standard()
