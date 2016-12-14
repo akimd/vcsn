@@ -118,6 +118,10 @@ EOF
   # regarding yyFlexLexer::LexerInput and yyFlexLexer::LexerOutput.
   s{size_t(.*)LexerInput\((.*)size_t}{int$1LexerInput($2int};
   s{void(.*)LexerOutput\((.*)size_t}{void$1LexerOutput($2int};
+
+  # We do not want to use the "register" keyword, which is withdrawn
+  # from C++17 but used by Flex before 2.6.
+  s{\bregister (char\b|int\b|YY_|yy_)}{$1}g;
 ' "$output.tmp"
 ## For some reason, on Windows perl does not remove the back up file.
 rm -f "$output.bak"
