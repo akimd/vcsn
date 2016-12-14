@@ -6,4 +6,4 @@
 
 #include <lib/vcsn/rat/scan-version.hh>
 
-#include <vcsn/misc/flex-lexer.hh>
+#include <lib/vcsn/misc/flex-lexer.hh>

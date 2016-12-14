@@ -19,4 +19,4 @@ YY_FLEX_NAMESPACE_END
 
 #include <lib/vcsn/dot/scan-version.hh>
 
-#include <vcsn/misc/flex-lexer.hh>
+#include <lib/vcsn/misc/flex-lexer.hh>

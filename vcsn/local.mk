@@ -246,7 +246,6 @@ nobase_include_HEADERS =                        \
   %D%/misc/file-library.hh                      \
   %D%/misc/file-library.hxx                     \
   %D%/misc/filter.hh                            \
-  %D%/misc/flex-lexer.hh                        \
   %D%/misc/format.hh                            \
   %D%/misc/functional.hh                        \
   %D%/misc/fwd.hh                               \
