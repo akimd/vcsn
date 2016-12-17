@@ -91,8 +91,7 @@ Vcsn is a very long process, also consider `-j3`.
 ### Build Requirements
 
 Vcsn was tested with the [GNU Compiler Collection (GCC)](http://gcc.gnu.org)
-versions 4.9, 5, 6 and [Clang](http://clang.llvm.org) 3.5, 3.6, 3.7, 3.8,
-3.9.
+versions 5, 6 and [Clang](http://clang.llvm.org) 3.5, 3.6, 3.7, 3.8, 3.9.
 
 [Boost](http://www.boost.org) is a C++ library which provides many useful
 features.  You must install this library on your system.  Vcsn should
