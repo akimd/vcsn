@@ -10,7 +10,7 @@ cd "$DIR_BUILD"
 # Build the docker package.
 cp "$DIR_SOURCE/Dockerfile" .
 cp "$DIR_SOURCE/debuild/sources.list" .
-docker build --no-cache --rm -t lrde/vcsn .
+docker build -t lrde/vcsn .
 
 # Save it locally, to provide it as an artifact for instance.
 docker save lrde/vcsn | gzip > vcsn-docker-image.tar.gz

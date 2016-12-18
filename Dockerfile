@@ -6,38 +6,40 @@ COPY sources.list /etc/apt/sources.list
 # pandas is used in some notebooks (e.g., Expressions.ipynb).
 # psutil is used by vcsn ps.
 # regex is used by vcsn demangle.
-RUN apt-get update                                              \
-   && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive                 \
-     apt-get install -y --force-yes --no-install-recommends     \
-        ccache                                                  \
-        dot2tex                                                 \
-        g++                                                     \
-        graphviz                                                \
-        imagemagick                                             \
-        libboost-all-dev                                        \
-        libgmp-dev                                              \
-        libmagickcore-6.q16-2-extra                             \
-        libzmq3-dev                                             \
-        locales                                                 \
-        pdf2svg                                                 \
-        python3-colorama                                        \
-        python3-dev                                             \
-        python3-matplotlib                                      \
-        python3-pandas                                          \
-        python3-pip                                             \
-        python3-psutil                                          \
-        python3-regex                                           \
-        python3-setuptools                                      \
-        texlive-latex-extra                                     \
-        texlive-pictures                                        \
-        wamerican                                               \
-        wamerican-insane                                        \
-        wamerican-large                                         \
-        wamerican-small                                         \
-        wfrench                                                 \
-  && apt-get autoremove                                         \
-  && apt-get clean                                              \
+RUN apt-get update                              \
+   && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive \
+     apt-get install -y --no-install-recommends \
+        ccache                                  \
+        dot2tex                                 \
+        g++                                     \
+        graphviz                                \
+        imagemagick                             \
+        libboost-all-dev                        \
+        libgmp-dev                              \
+        libmagickcore-6.q16-2-extra             \
+        libzmq3-dev                             \
+        locales                                 \
+        pdf2svg                                 \
+        python3-colorama                        \
+        python3-dev                             \
+        python3-matplotlib                      \
+        python3-pandas                          \
+        python3-pip                             \
+        python3-psutil                          \
+        python3-regex                           \
+        python3-setuptools                      \
+        texlive-latex-extra                     \
+        texlive-pictures                        \
+        wamerican                               \
+        wamerican-insane                        \
+        wamerican-large                         \
+        wamerican-small                         \
+        wfrench                                 \
+  && apt-get autoremove                         \
+  && apt-get clean                              \
   && pip3 install jupyter
+
+# Ccache saves us from useless recompilations.
 RUN ccache -M 20G
 
 # Set the locale.
@@ -53,20 +55,39 @@ RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  
     && echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/'                 \
              >>/etc/apt/sources.list.d/lrde.list                                \
     && apt-get update                                                           \
-    && apt-get install -y --force-yes --no-install-recommends vcsn              \
-        libfst3 libfst3-plugins-base libfst-dev libfst-tools                    \
+    && apt-get install --no-install-recommends -y --allow-unauthenticated       \
+            libfst-dev                                                          \
+            libfst-tools                                                        \
+            libfst3                                                             \
+            libfst3-plugins-base                                                \
+            vcsn                                                                \
     && jupyter nbextension enable --py --sys-prefix widgetsnbextension          \
-    && useradd -d /vcsn -m -r vcsn                                              \
-    && mkdir /vcsn/.jupyter                                                     \
-    && chown vcsn:vcsn /vcsn/.jupyter                                           \
-    && su vcsn -s /bin/bash -c 'cp -r /usr/share/doc/vcsn/notebooks /vcsn/Doc'  \
-    && su vcsn -s /bin/bash -c 'vcsn jupyter trust /vcsn/Doc/*'                 \
-    && ln -s /usr/share/doc/vcsn/notebooks '/vcsn/Doc (read only)'              \
-    && touch "/vcsn/Please read the !Read-me-first.ipynb file in Doc"
+    && useradd -d /vcsn -m -r vcsn
+
+# Install Tini. Tini operates as a process subreaper for jupyter. This
+# prevents kernel crashes.
+#
+# See http://jupyter-notebook.readthedocs.io/en/latest/public_server.html.
+ENV TINI_VERSION v0.13.2
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+
+## ----- ##
+## Run.  ##
+## ----- ##
 
 EXPOSE 8888
 
+# Set up the `vcsn` user.
 WORKDIR /vcsn
-ENV VCSN_DATADIR /vcsn/.jupyter
+USER vcsn
+RUN mkdir /vcsn/.jupyter                                        \
+    && cp -r /usr/share/doc/vcsn/notebooks Doc                  \
+    && vcsn jupyter trust Doc/*                                 \
+    && ln -s /usr/share/doc/vcsn/notebooks 'Doc (read only)'    \
+    && touch 'Please read the !Read-me-first.ipynb file in Doc'
 
-CMD su vcsn -s /bin/bash -c 'IPYTHON=ipython3 vcsn notebook --ip=* --port 8888'
+ENV VCSN_DATADIR /vcsn/.jupyter
+CMD ["vcsn", "notebook", "--ip=0.0.0.0", "--port", "8888", "--no-browser"]

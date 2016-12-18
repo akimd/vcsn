@@ -4,38 +4,42 @@ MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 COPY sources.list /etc/apt/sources.list
 COPY 02proxy /etc/apt/apt.conf.d/02proxy
 
-RUN apt-get update                                              \
-   && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive                 \
-     apt-get install -y --force-yes --no-install-recommends     \
-        autoconf                                                \
-        automake                                                \
-        bison                                                   \
-        build-essential                                         \
-        ccache                                                  \
-        debhelper                                               \
-        devscripts                                              \
-        dh-python                                               \
-        dot2tex                                                 \
-        doxygen                                                 \
-        fakeroot                                                \
-        flex                                                    \
-        g++                                                     \
-        git                                                     \
-        graphviz                                                \
-        imagemagick                                             \
-        libboost-all-dev                                        \
-        libgmp-dev                                              \
-        libtool                                                 \
-        lintian                                                 \
-        locales                                                 \
-        pdf2svg                                                 \
-        python-matplotlib                                       \
-        python3-all-dev                                         \
-        python3.5-dev                                           \
-        texlive-latex-extra                                     \
-        texlive-pictures                                        \
-  && apt-get autoremove                                         \
+RUN apt-get update                              \
+   && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive \
+     apt-get install                            \
+        --no-install-recommends                 \
+        -y --allow-unauthenticated              \
+        autoconf                                \
+        automake                                \
+        bison                                   \
+        build-essential                         \
+        ccache                                  \
+        debhelper                               \
+        devscripts                              \
+        dh-python                               \
+        dot2tex                                 \
+        doxygen                                 \
+        fakeroot                                \
+        flex                                    \
+        g++                                     \
+        git                                     \
+        graphviz                                \
+        imagemagick                             \
+        libboost-all-dev                        \
+        libgmp-dev                              \
+        libtool                                 \
+        lintian                                 \
+        locales                                 \
+        pdf2svg                                 \
+        python-matplotlib                       \
+        python3-all-dev                         \
+        python3.5-dev                           \
+        texlive-latex-extra                     \
+        texlive-pictures                        \
+  && apt-get autoremove                         \
   && apt-get clean
+
+# Ccache saves us from useless recompilations.
 RUN ccache -M 20G
 
 # Set the locale
