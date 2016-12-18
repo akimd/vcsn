@@ -39,17 +39,23 @@ RUN apt-get update                              \
   && apt-get clean                              \
   && pip3 install jupyter
 
-# Ccache saves us from useless recompilations.
-RUN ccache -M 20G
-
 # Set the locale.
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
   && locale-gen
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8   \
+    LANGUAGE=en_US:en  \
+    LC_ALL=en_US.UTF-8
 
-# Install vcsn and its dependencies.
+# Install Tini. Tini operates as a process subreaper for jupyter. This
+# prevents kernel crashes.
+#
+# See http://jupyter-notebook.readthedocs.io/en/latest/public_server.html.
+ENV TINI_VERSION=v0.13.2
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# Install vcsn dependencies.
 RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  \
            >/etc/apt/sources.list.d/lrde.list                                   \
     && echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/'                 \
@@ -59,19 +65,13 @@ RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  
             libfst-dev                                                          \
             libfst-tools                                                        \
             libfst3                                                             \
-            libfst3-plugins-base                                                \
-            vcsn                                                                \
-    && jupyter nbextension enable --py --sys-prefix widgetsnbextension          \
-    && useradd -d /vcsn -m -r vcsn
+            libfst3-plugins-base
 
-# Install Tini. Tini operates as a process subreaper for jupyter. This
-# prevents kernel crashes.
-#
-# See http://jupyter-notebook.readthedocs.io/en/latest/public_server.html.
-ENV TINI_VERSION v0.13.2
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
-RUN chmod +x /usr/bin/tini
-ENTRYPOINT ["/usr/bin/tini", "--"]
+# Install vcsn.
+RUN apt-get install --no-install-recommends -y --allow-unauthenticated       \
+            vcsn                                                             \
+    && jupyter nbextension enable --py --sys-prefix widgetsnbextension       \
+    && useradd -d /vcsn -m -r vcsn
 
 
 ## ----- ##
@@ -83,11 +83,13 @@ EXPOSE 8888
 # Set up the `vcsn` user.
 WORKDIR /vcsn
 USER vcsn
-RUN mkdir /vcsn/.jupyter                                        \
+
+# Ccache saves us from useless recompilations.
+RUN ccache -M 20G                                               \
+    && mkdir /vcsn/.jupyter                                     \
     && cp -r /usr/share/doc/vcsn/notebooks Doc                  \
-    && vcsn jupyter trust Doc/*                                 \
+    && jupyter trust Doc/*                                      \
     && ln -s /usr/share/doc/vcsn/notebooks 'Doc (read only)'    \
     && touch 'Please read the !Read-me-first.ipynb file in Doc'
 
-ENV VCSN_DATADIR /vcsn/.jupyter
 CMD ["vcsn", "notebook", "--ip=0.0.0.0", "--port", "8888", "--no-browser"]
