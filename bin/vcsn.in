@@ -127,7 +127,7 @@ case $1 in
       exec "$@";;
 
   (python) shift; exec "$PYTHON" "$@";;
-  (ipython) shift; exec "IPYTHON" "$@";;
+  (ipython) shift; exec "$IPYTHON" "$@";;
   (python*|ipython*|jupyter*) exec "$@";;
 
   (*)
