@@ -39,6 +39,28 @@ RUN apt-get update                              \
   && apt-get autoremove                         \
   && apt-get clean
 
+## Debian unstable features 0.5.2, which is broken.  We need
+## https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=847099 to be
+## fixed.
+##
+## Yes, the tarball does not match the name of the directory...
+ADD https://github.com/jbeder/yaml-cpp/archive/yaml-cpp-0.5.3.tar.gz /tmp
+RUN apt-get update                                      \
+    && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive        \
+      apt-get install                                   \
+        --no-install-recommends                         \
+        -y --allow-unauthenticated                      \
+        cmake                                           \
+    && cd /tmp/                                         \
+    && tar xf yaml-cpp-0.5.3.tar.gz                     \
+    && cd yaml-cpp-yaml-cpp-0.5.3                       \
+    && cmake                                            \
+       -DCMAKE_INSTALL_PREFIX:PATH=/usr .               \
+       -DBUILD_SHARED_LIBS=ON                           \
+       -DBUILD_STATIC_LIBS=OFF                          \
+    && make all                                         \
+    && make install
+
 # Ccache saves us from useless recompilations.
 RUN ccache -M 20G
 
