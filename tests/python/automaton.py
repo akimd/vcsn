@@ -482,17 +482,18 @@ CHECK_EQ(exp, a.format('tikz'))
 ## ----------- ##
 
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
+    print('Checking:', fn)
     a = vcsn.automaton(filename=fn)
 
     # Check output.
     daut = a.format('daut')
-    exp = open(fn.replace('.in.gv', '.daut')).read().strip()
+    ref = open(fn.replace('.in.gv', '.daut')).read().strip()
     CHECK_EQ(exp, daut)
 
     # Check input: make sure we can read it.
-    CHECK_EQ(a, vcsn.automaton(exp, 'daut'))
-    CHECK_EQ(a, vcsn.automaton(exp, 'auto'))
-    CHECK_EQ(a, vcsn.automaton(exp))
+    CHECK_EQ(a, vcsn.automaton(ref, 'daut'))
+    CHECK_EQ(a, vcsn.automaton(ref, 'auto'))
+    CHECK_EQ(a, vcsn.automaton(ref))
 
 
 # A daut file whose names have quotes: beware of building "Ifoo" and
