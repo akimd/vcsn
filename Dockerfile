@@ -85,11 +85,12 @@ WORKDIR /vcsn
 USER vcsn
 
 # Ccache saves us from useless recompilations.
-RUN ccache -M 20G                                               \
-    && mkdir /vcsn/.jupyter                                     \
-    && cp -r /usr/share/doc/vcsn/notebooks Doc                  \
-    && jupyter trust Doc/*                                      \
-    && ln -s /usr/share/doc/vcsn/notebooks 'Doc (read only)'    \
+RUN ccache -M 20G                                                                       \
+    && jupyter notebook --generate-config                                               \
+    && echo "c.NotebookApp.token = ''"    >> .jupyter/jupyter_notebook_config.py        \
+    && cp -r /usr/share/doc/vcsn/notebooks Doc                                          \
+    && jupyter trust Doc/*                                                              \
+    && ln -s /usr/share/doc/vcsn/notebooks 'Doc (read only)'                            \
     && touch 'Please read the !Read-me-first.ipynb file in Doc'
 
-CMD ["vcsn", "notebook", "--ip=0.0.0.0", "--port", "8888", "--no-browser"]
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port", "8888", "--no-browser"]
