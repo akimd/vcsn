@@ -482,17 +482,18 @@ CHECK_EQ(exp, a.format('tikz'))
 ## ----------- ##
 
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
+    print('Checking:', fn)
     a = vcsn.automaton(filename=fn)
 
     # Check output.
     daut = a.format('daut')
-    exp = open(fn.replace('.in.gv', '.daut')).read().strip()
-    CHECK_EQ(exp, daut)
+    ref = open(fn.replace('.in.gv', '.daut')).read().strip()
+    CHECK_EQ(ref, daut)
 
     # Check input: make sure we can read it.
-    CHECK_EQ(a, vcsn.automaton(exp, 'daut'))
-    CHECK_EQ(a, vcsn.automaton(exp, 'auto'))
-    CHECK_EQ(a, vcsn.automaton(exp))
+    CHECK_EQ(a, vcsn.automaton(ref, 'daut'))
+    CHECK_EQ(a, vcsn.automaton(ref, 'auto'))
+    CHECK_EQ(a, vcsn.automaton(ref))
 
 
 # A daut file whose names have quotes: beware of building "Ifoo" and
@@ -565,15 +566,15 @@ def check_fado(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.fado')):
-    exp = vcsn.automaton(filename=fn.replace('.fado', '.gv'))
+    ref = vcsn.automaton(filename=fn.replace('.fado', '.gv'))
     # Check that we can read FAdo.
-    CHECK_EQ(exp, vcsn.automaton(filename=fn, format='fado'))
-    CHECK_EQ(exp, vcsn.automaton(filename=fn, format='auto'))
+    CHECK_EQ(ref, vcsn.automaton(filename=fn, format='fado'))
+    CHECK_EQ(ref, vcsn.automaton(filename=fn, format='auto'))
 
     # Check that we can print FAdo.
     fado = open(fn).read().strip()
-    CHECK_EQ(fado, exp.format('fado'))
-    check_fado(exp)
+    CHECK_EQ(fado, ref.format('fado'))
+    check_fado(ref)
 
 # Invalid kind
 XFAIL(lambda: vcsn.automaton('''@GFA 0 1 * 2 3
