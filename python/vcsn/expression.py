@@ -31,12 +31,12 @@ class expression:
     __truediv__ = expression.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
-    __lt__ = expression.less_than
-    __le__ = lambda l, r: not r < l
-    __ge__ = lambda l, r: not l < r
-    __gt__ = lambda l, r: r < l
-    __eq__ = expression.is_equal
-    __ne__ = lambda l, r: not l == r
+    __lt__ = lambda l, r: l.compare(r) <  0
+    __le__ = lambda l, r: l.compare(r) <= 0
+    __ge__ = lambda l, r: l.compare(r) >= 0
+    __gt__ = lambda l, r: l.compare(r) >  0
+    __eq__ = lambda l, r: l.compare(r) == 0
+    __ne__ = lambda l, r: l.compare(r) != 0
 
 
     # Turn automaton into a native Python function

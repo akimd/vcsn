@@ -210,6 +210,7 @@ nobase_include_HEADERS =                        \
   %D%/ctx/project-context.hh                    \
   %D%/ctx/traits.hh                             \
   %D%/dyn/algos.hh                              \
+  %D%/dyn/algos.hxx                             \
   %D%/dyn/automaton.hh                          \
   %D%/dyn/cast.hh                               \
   %D%/dyn/context.hh                            \
