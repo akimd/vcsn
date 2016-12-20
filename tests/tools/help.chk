@@ -171,3 +171,9 @@ Available versions:
 
 Try 'vcsn tools --help' for more information.
 EOF
+
+run 1 - -"$builddir/tests/bin/vcsn tools foobarbaz" </dev/null
+
+if [[ $(cat err.eff) != "error: unknown algorithm: foobarbaz" ]]; then
+  tap_not_ok
+fi
