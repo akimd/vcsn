@@ -44,7 +44,7 @@ run 0 2 -/bin/sh -c "( $vcsn thompson -Ee -ab |
 run 1 - -/bin/sh -c "$vcsn evaluate 2>&1" <<EOF
 error: evaluate: no matching algorithm
   candidates are:
-      AUT:automaton P:polynomial -> weight
       AUT:automaton L:word -> weight
+      AUT:automaton P:polynomial -> weight
 Try 'vcsn evaluate --help' for more information.
 EOF
