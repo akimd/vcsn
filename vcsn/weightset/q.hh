@@ -172,6 +172,7 @@ namespace vcsn
       return l.num * long(r.den) - r.num * long(l.den);
     }
 
+    /// Whether \a l == \a r.
     static bool equal(const value_t& l, const value_t& r)
     {
       return l.num == r.num && l.den == r.den;

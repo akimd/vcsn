@@ -133,6 +133,7 @@ namespace vcsn
       return cmp(l, r);
     }
 
+    /// Whether \a l == \a r.
     static bool equal(const value_t& l, const value_t& r)
     {
       return l == r;

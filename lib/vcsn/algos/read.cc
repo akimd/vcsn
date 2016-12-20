@@ -34,7 +34,6 @@ namespace vcsn
     read_automaton(std::istream& is, const std::string& f,
                    bool strip_p)
     {
-#if 1
       static const auto map
         = getarg<std::function<automaton(std::istream&)>>
         {
@@ -49,7 +48,6 @@ namespace vcsn
         };
       auto res = map[f](is);
       return strip_p ? strip(res) : res;
-#endif
     }
 
     /*-------------------.

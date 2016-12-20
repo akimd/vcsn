@@ -958,6 +958,7 @@ namespace vcsn
       return l.set() == r.set();
     }
 
+    /// Whether \a l == \a r.
     ATTRIBUTE_PURE
     static bool
     equal(const value_t& l, const value_t& r)

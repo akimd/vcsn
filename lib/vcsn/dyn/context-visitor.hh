@@ -6,7 +6,7 @@ namespace vcsn
 {
   namespace ast
   {
-
+    /// Traverse a type-ast.
     class context_visitor
     {
     public:

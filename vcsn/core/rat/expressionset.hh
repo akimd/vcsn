@@ -227,13 +227,13 @@ namespace vcsn
                  typename expressionset<Ctx2>::value_t v) const -> value_t;
 
     /// The size of v
-    static size_t size(const value_t& v);
+    static auto size(const value_t& v) -> size_t;
 
     /// Three-way comparison.
-    static int compare(const value_t& l, const value_t& r);
+    static auto compare(const value_t& l, const value_t& r) -> int;
 
     /// Whether \a l < \a r.
-    static bool less(const value_t& l, const value_t& r);
+    static auto less(const value_t& l, const value_t& r) -> bool;
 
     /// Whether \a l < \a r, ignoring lweight.
     ///
@@ -242,14 +242,13 @@ namespace vcsn
     static bool less_linear(const value_t& l, const value_t& r);
 
     /// Whether \a l == \a r.
-    static bool equal(const value_t& l, const value_t& r);
+    static auto equal(const value_t& l, const value_t& r) -> bool;
 
     /// Hash \a v.
-    static size_t hash(const value_t& v);
+    static auto hash(const value_t& v) -> size_t;
 
     /// Build a label.
-    static auto atom(const label_t& v)
-      -> value_t;
+    static auto atom(const label_t& v) -> value_t;
 
     // Concrete type implementation.
     auto zero() const -> value_t;
