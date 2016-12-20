@@ -69,6 +69,18 @@ namespace vcsn
     automaton cominimize(const automaton& aut,
                          const std::string& algo = "auto");
 
+    /// Three-way comparison between automata.
+    /// \returns negative if `lhs < rhs`
+    ///          null     if `lhs = rhs`
+    ///          positive if `lhs > rhs`
+    int compare(const automaton& lhs, const automaton& rhs);
+
+    /// Three-way comparison between expressions.
+    /// \returns negative if `lhs < rhs`
+    ///          null     if `lhs = rhs`
+    ///          positive if `lhs > rhs`
+    int compare(const expression& lhs, const expression& rhs);
+
     /// The complement of \a aut.
     ///
     /// \pre aut is lal
@@ -1138,3 +1150,5 @@ namespace vcsn
     std::ostream& operator<<(std::ostream& o, const weight& w);
   }
 }
+
+#include <vcsn/dyn/algos.hxx>

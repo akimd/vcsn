@@ -147,10 +147,9 @@ namespace vcsn
       register_automaton_functions()
       {
         using aut_t = Aut;
-        REGISTER(are_equal, aut_t, aut_t);
+        REGISTER(compare, aut_t, aut_t);
         REGISTER(copy, aut_t);
         REGISTER(info, aut_t, std::ostream, bool);
-        REGISTER(less_than, aut_t, aut_t);
         REGISTER(print, aut_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, direction, bool, const std::string);
         return true;
@@ -166,7 +165,7 @@ namespace vcsn
         using ws_t = weightset_t_of<ctx_t>;
 
         REGISTER(add_expression, rs_t, rs_t);
-        REGISTER(are_equal_expression, rs_t, rs_t);
+        REGISTER(compare_expression, rs_t, rs_t);
         REGISTER(complement_expression, rs_t);
         REGISTER(concatenate_expression, rs_t, rs_t);
         REGISTER(conjunction_expression, rs_t, rs_t);
@@ -181,7 +180,6 @@ namespace vcsn
         REGISTER(infiltrate_expression, rs_t, rs_t);
         REGISTER(info_expression, rs_t, std::ostream);
         REGISTER(ldivide_expression, rs_t, rs_t);
-        REGISTER(less_than_expression, rs_t, rs_t);
         REGISTER(lweight_expression, ws_t, rs_t);
         REGISTER(multiply_expression, rs_t, rs_t);
         REGISTER(multiply_expression_repeated, rs_t, int, int);

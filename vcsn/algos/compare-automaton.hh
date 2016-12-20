@@ -49,6 +49,22 @@ namespace vcsn
        });
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (compare).
+      template <Automaton Lhs, Automaton Rhs>
+      int
+      compare(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return ::vcsn::compare(l, r);
+      }
+    }
+  }
+
   /// Whether lhs is equal to rhs.
   template <Automaton Lhs, Automaton Rhs>
   bool
@@ -57,43 +73,11 @@ namespace vcsn
     return compare(lhs, rhs) == 0;
   }
 
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (are_equal).
-      template <Automaton Lhs, Automaton Rhs>
-      bool
-      are_equal(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return ::vcsn::are_equal(l, r);
-      }
-    }
-  }
-
   /// Whether lhs precedes rhs.
   template <Automaton Lhs, Automaton Rhs>
   bool
   less_than(const Lhs& lhs, const Rhs& rhs)
   {
     return compare(lhs, rhs) < 0;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (less_than).
-      template <Automaton Lhs, Automaton Rhs>
-      bool
-      less_than(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return ::vcsn::less_than(l, r);
-      }
-    }
   }
 } // namespace vcsn

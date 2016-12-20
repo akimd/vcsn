@@ -108,7 +108,6 @@ class automaton:
 
     __add__ = automaton.add
     __and__ = lambda l, r: Conjunction(l, r)
-    __eq__ = lambda self, other: str(self.strip()) == str(other.strip())
     __invert__ = automaton.complement
     __mod__ = automaton.difference
     __matmul__ = automaton.compose
@@ -121,6 +120,14 @@ class automaton:
     __sub__ = automaton.difference
     __truediv__ = automaton.rdivide
     _repr_svg_ = lambda self: self.SVG()
+
+    __lt__ = lambda l, r: l.compare(r) <  0
+    __le__ = lambda l, r: l.compare(r) <= 0
+    __ge__ = lambda l, r: l.compare(r) >= 0
+    __gt__ = lambda l, r: l.compare(r) >  0
+
+    __eq__ = lambda l, r: str(l.strip()) == str(r.strip())
+    __ne__ = lambda l, r: not l == r
 
     as_boxart = lambda self: _dot_to_boxart(self.dot())
 

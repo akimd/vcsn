@@ -5,6 +5,31 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+
+## 2016-12-20
+### compare: new algorithm
+Three-way comparison is now available in all the layers, as `compare`, for
+automata and expressions.  This is used in Python to implement the
+comparisons (`<`, `<=`, `>`, `=>`, `==`, `!=`) of expressions, and of
+automata (`<`, `<=`, `>`, `=>`).
+
+However, since the comparison on automata is performed on the _list_ of
+transitions, automata that are "very much alike" (i.e., different only by
+superficial details) will be considered different, so `==` and `!=` are
+still using a safer, but much slower, comparison.
+
+    In [2]: exp = vcsn.Q.expression
+
+    In [3]: exp('a').compare(exp('b'))
+    Out[3]: -1
+
+    In [4]: exp('a').compare(exp('a'))
+    Out[4]: 0
+
+    In [5]: exp('<3>a').compare(exp('a'))
+    Out[5]: 1
+
+
 # Vcsn 2.4 (2016-11-16)
 
 The Vcsn team is happy to announce the release of Vcsn 2.4, code-named "the
