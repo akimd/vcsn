@@ -163,6 +163,9 @@ namespace vcsn
     /// The conjugate of \a aut
     automaton conjugate(const automaton& aut);
 
+    /// Access a configuration value
+    std::string configuration(const std::string& key);
+
     /// The weight associated to the empty word in \a e.
     weight constant_term(const expression& e);
 
