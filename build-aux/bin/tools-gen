@@ -39,8 +39,7 @@ $body
 
 fun_body_return =\
 '''$conversions
-           auto res = dyn::$dynfun($args);
-           std::cout << res;'''
+          std::cout << dyn::$dynfun($args);'''
 
 fun_body_void =\
 '''$conversions
@@ -48,7 +47,7 @@ fun_body_void =\
            $args
      );'''
 
-conversions_indent = '           '
+conversions_indent = '          '
 
 fun_doc_def = '''
       {{"{dynfun}",
@@ -285,8 +284,10 @@ def gen_function_decl(fun, formals):
         # Convert the argument from a string to
         # the actual type for the function call.
         conversions.append(conversions_indent+
-                "auto a{} = vcsn::tools::convert<{}>(args[{}].arg, {}, args[{}].input_format);"
-                .format(i, formal['class'], i, formal['context'], i))
+                           "auto a{i} = convert<{type}>(args[{i}], {ctx});"
+                           .format(type=formal['class'],
+                                   ctx=formal['context'],
+                                   i=i))
 
         args.append('a{}'.format(i))
         types.append('type::'+formal['type_enum'])

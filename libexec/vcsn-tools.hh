@@ -201,6 +201,13 @@ namespace vcsn
     {
       return str;
     }
+
+    template <typename T>
+    T
+    convert(const parsed_arg& arg, const dyn::context& ctx)
+    {
+      return vcsn::tools::convert<T>(arg.arg, ctx, arg.input_format);
+    }
   }
 
   namespace dyn
