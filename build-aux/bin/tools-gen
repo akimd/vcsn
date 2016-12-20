@@ -28,8 +28,8 @@ class Indent(str):
 
 
 fun_def = string.Template('''
-      {"$algo_name",
-       {{$type_list},
+      {"$command",
+       {{$types},
         $declaration,
         [](const auto& args, const dyn::context& ctx)
         {
@@ -38,20 +38,20 @@ $body
 ''')
 
 fun_body_return =\
-'''$conversion_list
-           auto res = dyn::$algo_name($arg_list);
+'''$conversions
+           auto res = dyn::$dynfun($args);
            std::cout << res;'''
 
 fun_body_void =\
-'''$conversion_list
-           dyn::$algo_name(
-           $arg_list
+'''$conversions
+           dyn::$dynfun(
+           $args
      );'''
 
 conversions_indent = '           '
 
 fun_doc_def = '''
-      {{"{algo_name}",
+      {{"{dynfun}",
        {{{declaration},
         {doc:i8}
        }}}},
@@ -106,7 +106,7 @@ def gen_function_doc_decl(fun, formals):
     declaration = gen_doc_sig(fun, formals)
 
     return fun_doc_def.format(
-            algo_name=fun['dynfun'],
+            dynfun=fun['dynfun'],
             declaration=declaration,
             doc=Indent(format_function_doc(fun, formals)))
 
@@ -292,11 +292,12 @@ def gen_function_decl(fun, formals):
         types.append('type::'+formal['type_enum'])
 
     return fun_def_template(fun).substitute(
-            algo_name=fun['dynfun'],
+            dynfun=fun['dynfun'],
+            command=fun['dynfun'].replace('_', '-'),
             declaration=declaration,
-            conversion_list='\n'.join(conversions),
-            type_list=', '.join(types),
-            arg_list=(', ').join(args))
+            conversions='\n'.join(conversions),
+            types=', '.join(types),
+            args=(', ').join(args))
 
 # The list of generated bindings.
 algos = []
@@ -356,10 +357,10 @@ namespace vcsn
 {
   namespace tools
   {
-    const std::unordered_multimap<std::string, algo> algos
+    const std::multimap<std::string, algo> algos
     {$algos    };
 
-    const std::unordered_multimap<std::string, algo_doc> algos_doc
+    const std::multimap<std::string, algo_doc> algos_doc
     {$algos_doc    };
   }
 }''')

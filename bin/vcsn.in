@@ -57,7 +57,7 @@ commands_pattern ()
 {
   commands |
     tr -d '\n' |
-    sed -e 's/^ */^(/;s/-/(_|-)/;s/  */|/g;s/$/)$/'
+    sed -e 's/^ */^(/;s/  */|/g;s/$/)$/'
 }
 
 help ()
@@ -132,9 +132,7 @@ case $1 in
 
   (*)
       if echo "$1" | grep -E "$(commands_pattern)" >/dev/null; then
-          cmd=$(echo "$1" | sed -e 's/-/_/g')
-          shift
-          exec vcsn-tools "$cmd" "$@"
+          exec vcsn-tools "$@"
       else
           prog=vcsn-$1
           shift

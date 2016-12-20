@@ -1,8 +1,8 @@
 #pragma once
 
 #include <functional>
+#include <map>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include <boost/optional.hpp>
@@ -65,8 +65,8 @@ namespace vcsn
     };
 
     /// Map from an algo name to its descriptor structure.
-    extern const std::unordered_multimap<std::string, algo> algos;
-    extern const std::unordered_multimap<std::string, algo_doc> algos_doc;
+    extern const std::multimap<std::string, algo> algos;
+    extern const std::multimap<std::string, algo_doc> algos_doc;
 
     /// Conversion functions.
     template <typename T>

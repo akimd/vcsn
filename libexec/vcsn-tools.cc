@@ -222,32 +222,26 @@ namespace
   int
   list_commands()
   {
-    // The list of algorithm names.
-    auto names = std::set<std::string>{};
-    std::transform(begin(vcsn::tools::algos), end(vcsn::tools::algos),
-                   std::inserter(names, begin(names)),
-                   [](const auto& a)
-                   {
-                     auto name = a.first;
-                     std::replace(name.begin(), name.end(), '_', '-');
-                     return name;
-                   });
-
-    // Pretty-print it.
     constexpr size_t max_width = 70;
     size_t space_left = max_width - 2;
     std::cout << ' ';
-    for (const auto& a : names)
-      if (space_left < (a.size()+1))
-        {
-          std::cout << "\n  " << a;
-          space_left = max_width - (a.size() + 2);
-        }
-      else
-        {
-          std::cout << ' ' << a ;
-          space_left -= a.size() + 1;
-        }
+    for (auto i = std::begin(vcsn::tools::algos),
+           end = std::end(vcsn::tools::algos);
+         i != end;
+         i = vcsn::tools::algos.upper_bound(i->first))
+      {
+        const auto& a = i->first;
+        if (space_left < (a.size()+1))
+          {
+            std::cout << "\n  " << a;
+            space_left = max_width - (a.size() + 2);
+          }
+        else
+          {
+            std::cout << ' ' << a ;
+            space_left -= a.size() + 1;
+          }
+      }
 
     std::cout << '\n';
     return 0;
@@ -352,7 +346,6 @@ try
   if (algo == "-h" || algo == "--help")
     return print_usage();
 
-  std::replace(algo.begin(), algo.end(), '-', '_');
   vcsn::require(algos.find(algo) != end(algos),
                 "unknown algorithm: ", argv[1]);
 
