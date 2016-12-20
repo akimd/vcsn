@@ -55,7 +55,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/
 RUN chmod +x /usr/bin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-# Install vcsn dependencies.
+# Install vcsn runtime dependencies.
 RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  \
            >/etc/apt/sources.list.d/lrde.list                                   \
     && echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/'                 \
