@@ -1,3 +1,5 @@
+#include <vcsn/misc/yaml.hh>
+
 namespace vcsn
 {
   namespace dyn LIBVCSN_API
@@ -24,6 +26,12 @@ namespace vcsn
     bool less_than(const expression& lhs, const expression& rhs)
     {
       return compare(lhs, rhs) < 0;
+    }
+
+    inline
+    std::string configuration(const std::string& key)
+    {
+      return vcsn::configuration(key);
     }
   }
 }

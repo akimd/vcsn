@@ -22,7 +22,6 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
-#include <vcsn/misc/yaml.hh>
 
 #include "python/oodyn.hh"
 
@@ -314,7 +313,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   python_string__enum<vcsn::dyn::direction>();
   python_string__enum<vcsn::dyn::identities>();
 
-  bp::def("configuration", &vcsn::configuration);
+  // Free functions.
+  bp::def("configuration", &vcsn::dyn::configuration);
 
   // We use bp::no_init to disable the use of the default ctor from
   // our classes, and prefer to use "def(init<...>)" to define our

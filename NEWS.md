@@ -5,6 +5,23 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2016-12-25
+### Configuration
+Vcsn now supports configuration files.  They will be used to provide users
+with a means to customize Vcsn, for instance to tune the graphical rendering
+of the automata, etc.
+
+For a start, it provides the users with a simple means to get the
+configuration information, including from the tools.
+
+    $ vcsn ipython --no-banner
+    In [1]: import vcsn
+
+    In [2]: vcsn.config('configuration.cxxflags')
+    Out[2]: '-Qunused-arguments -O3 -g -std=c++1z'
+
+    $ vcsn configuration configuration.cxxflags
+    -Qunused-arguments -O3 -g -std=c++1z
 
 ## 2016-12-20
 ### compare: new algorithm
