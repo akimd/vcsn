@@ -303,6 +303,17 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([@%:@include <yaml-cpp/yaml.h>],
                [AC_SUBST([YAMLCPP_LIBS], [-lyaml-cpp])],
                [AC_MSG_ERROR([yaml-cpp is needed])])
 LIBS=$sa_LIBS
+# yaml-cpp 0.5.2 has a broken implementation of remove.
+AC_CACHE_CHECK([whether yaml-cpp's Node::remove works],
+               [ac_cv_yaml_cpp_remove_works],
+    [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([@%:@include <yaml-cpp/yaml.h>],
+                                        [YAML::Node n; n.remove("foo");])],
+                       [ac_cv_yaml_cpp_remove_works=yes],
+                       [ac_cv_yaml_cpp_remove_works=no])])
+if test $ac_cv_yaml_cpp_remove_works = yes; then
+  AC_DEFINE([YAML_CPP_REMOVE_WORKS], 1,
+            [Define if YAML::Node::remove works (broken in 0.5.2)])
+fi
 
 
 ## --------------- ##

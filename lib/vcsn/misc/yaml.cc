@@ -59,7 +59,13 @@ namespace vcsn
 
     void config::config_value::remove(const std::string& key)
     {
+#if VCSN_YAML_CPP_REMOVE_WORKS
       node_.remove(key);
+#else
+      std::cerr
+        << "vcsn: warning: libyaml-cpp is broken, cannot remove node "
+        << key << '\n';
+#endif
     }
 
     using iterator = YAML::Node::iterator;
