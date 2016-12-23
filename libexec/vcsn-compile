@@ -3,12 +3,14 @@
 
 import argparse
 import os
+import os.path
 import re
 import subprocess
 import sys
 import warnings
 
 from vcsn_cxx import configuration
+from vcsn_tools.demangle import demangle, pretty_plugin
 
 me = sys.argv[0]
 
@@ -125,24 +127,61 @@ def run(cmd):
             log('child returned', retcode)
         sys.exit(retcode)
 
+def need_compiling():
+    try:
+        target = args['base'] + ('.so' if args['shared'] else '')
+
+        # Check that the build parameters didn't change.
+        with open(args['base']+'.cmd') as f:
+            if '{cxx} {cppflags} {cxxflags} {ldflags}\n'.format(**args) != f.read():
+                return True
+
+        depfile = args['base'] + '.d'
+        target_time = os.path.getmtime(target)
+        lines = []
+        with open(depfile) as f:
+            lines = f.readlines()
+
+        # The two first lines are the output file and its .cc
+        # file. Skip them.
+        lines = lines[2:]
+
+        lines = re.findall(r'[^ \\\n]+', ' '.join(lines))
+
+        for l in lines:
+            if os.path.getmtime(l) > target_time:
+                return True
+        return False
+    except os.error:
+        # If the dependency file doesn't exist or a file was deleted,
+        # we need to recompile anyways.
+        return True
+
 
 # Main.
 args = parse_args()
-from vcsn_tools.demangle import demangle, pretty_plugin # pylint: disable=wrong-import-position
+
+if not need_compiling():
+    exit(0)
+
+with open(args['base']+'.cmd', 'w') as f: # Write our build parameters to a file
+    print('{cxx} {cppflags} {cxxflags} {ldflags}'.format(**args), file=f)
 
 if args['shared']:
-    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' '{base}.cc'")
+    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' "+\
+            "-MMD -MF '{base}.d' '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so' '{tmp}.o'")
     os.rename(fmt('{tmp}.so'), fmt('{base}.so'))
     # Upon success, remove the .o file, it is large (10x compared to
-    # the *.so on erebus using clang) and not required.  However the
+    # the *.so on erebus using clang) and not required. However the
     # debug symbols are in there, so when debugging, leave them!
     if 'VCSN_DEBUG' not in os.environ:
         os.remove(fmt('{tmp}.o'))
     notify()
 else:
     # Exploit ccache: use separate compilation.
-    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o' '{base}.cc'")
+    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o' "+\
+            "-MMD -MF '{base}.d' '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
     os.rename(fmt('{tmp}'), fmt('{base}'))
     if 'VCSN_DEBUG' not in os.environ:
