@@ -7,6 +7,7 @@ import os.path
 import re
 import subprocess
 import sys
+import time
 import warnings
 
 from vcsn_cxx import configuration
@@ -15,7 +16,7 @@ from vcsn_tools.demangle import demangle, pretty_plugin
 me = sys.argv[0]
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Compile Vcsn programs.')
+    parser = argparse.ArgumentParser(description='Compile Vcsn programs or libraries.')
     parser.add_argument('vars', nargs='*', help='''variable assignments such
                         as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
     parser.add_argument('input', help='source file to compile')
@@ -31,6 +32,8 @@ def parse_args():
                         help='whether to use colors in the output')
     parser.add_argument('-p', '--plain', action='store_true',
                         help='disable all extra features (color and demangle)')
+    parser.add_argument('-f', '--force', action='store_true',
+                        help='force build even if not needed')
 
     # Parse the arguments, and complete the 'args' object with the value
     # from the configuration (cxx, cxxflags, etc.).
@@ -43,6 +46,8 @@ def parse_args():
     for k in config:
         if not k in args:
             args[k] = configuration('configuration.'+k)
+    if 'VCSN_FORCE' in os.environ:
+        args['force'] = os.environ['VCSN_FORCE']
 
     for v in args['vars']:
         # Process VAR=VAL, VAR+=VAL, VAR-=VAL.
@@ -60,7 +65,7 @@ def parse_args():
         elif op == '-=':
             args[var] = config[var].replace(val, '')
 
-    if 2 <= args['verbose']:
+    if 3 <= args['verbose']:
         print('args:', file=sys.stderr)
         for k in sorted(args):
             print('  {}: {}'.format(k, args[k]), file=sys.stderr)
@@ -77,6 +82,7 @@ def parse_args():
 
     return args
 
+
 def log(*msg, level=0):
     if level <= args['verbose']:
         print(me + ":", *msg, file=sys.stderr)
@@ -87,6 +93,12 @@ def fmt(s, **kwargs):
     # Can be nicer once we require Python 3.5.
     args.update(kwargs)
     return s.format_map(args)
+
+
+def build_signature():
+    '''A string that describes the build we are making: compiler, options,
+    etc.'''
+    return fmt('{cxx} {cppflags} {cxxflags} {ldflags}').strip()
 
 
 def notify():
@@ -128,16 +140,24 @@ def run(cmd):
         sys.exit(retcode)
 
 def need_compiling():
-    try:
-        target = args['base'] + ('.so' if args['shared'] else '')
+    if args['force']:
+        log('compilation needed: --force was used')
+        return True
 
+    target = args['base'] + ('.so' if args['shared'] else '')
+    try:
         # Check that the build parameters didn't change.
         with open(args['base']+'.cmd') as f:
-            if '{cxx} {cppflags} {cxxflags} {ldflags}\n'.format(**args) != f.read():
+            cmd = f.read().strip()
+            if build_signature() != cmd:
+                log('compilation needed: command signature changed\n'
+                    '   from: {}\n'
+                    '     to: {}'
+                    .format(cmd, build_signature()), level=2)
                 return True
 
         depfile = args['base'] + '.d'
-        target_time = os.path.getmtime(target)
+        target_mtime = os.path.getmtime(target)
         lines = []
         with open(depfile) as f:
             lines = f.readlines()
@@ -147,14 +167,23 @@ def need_compiling():
         lines = lines[2:]
 
         lines = re.findall(r'[^ \\\n]+', ' '.join(lines))
-
         for l in lines:
-            if os.path.getmtime(l) > target_time:
+            if os.path.getmtime(l) > target_mtime:
+                def date(mtime):
+                    return time.strftime('%x %X', time.localtime(mtime))
+                log('compilation needed: dependency is more recent than target\n'
+                    '      target: {}: {}\n'
+                    '  dependency: {}: {}'
+                    .format(date(target_mtime),        target,
+                            date(os.path.getmtime(l)), l),
+                    level=2)
                 return True
+        log('compilation not needed', level=2)
         return False
-    except os.error:
+    except os.error as err:
         # If the dependency file doesn't exist or a file was deleted,
         # we need to recompile anyways.
+        log('compilation needed: an error was raised: {}' .format(err), level=2)
         return True
 
 
@@ -164,13 +193,15 @@ args = parse_args()
 if not need_compiling():
     exit(0)
 
-with open(args['base']+'.cmd', 'w') as f: # Write our build parameters to a file
-    print('{cxx} {cppflags} {cxxflags} {ldflags}'.format(**args), file=f)
+# Save build signature.
+with open(args['base']+'.cmd', 'w') as f:
+    print(build_signature(), file=f)
 
 if args['shared']:
-    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o' "+\
-            "-MMD -MF '{base}.d' '{base}.cc'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so' '{tmp}.o'")
+    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o'"
+        " -MMD -MF '{base}.d' '{base}.cc'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so'"
+        " '{tmp}.o'")
     os.rename(fmt('{tmp}.so'), fmt('{base}.so'))
     # Upon success, remove the .o file, it is large (10x compared to
     # the *.so on erebus using clang) and not required. However the
@@ -179,9 +210,10 @@ if args['shared']:
         os.remove(fmt('{tmp}.o'))
     notify()
 else:
-    # Exploit ccache: use separate compilation.
-    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o' "+\
-            "-MMD -MF '{base}.d' '{base}.cc'")
+    # Exploit ccache: use separate compilation and then linking
+    # instead of a single compiler invocation.
+    run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o'"
+        " -MMD -MF '{base}.d' '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
     os.rename(fmt('{tmp}'), fmt('{base}'))
     if 'VCSN_DEBUG' not in os.environ:
