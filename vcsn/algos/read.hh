@@ -7,7 +7,6 @@
 
 namespace vcsn
 {
-
   /*-------------.
   | read_label.  |
   `-------------*/

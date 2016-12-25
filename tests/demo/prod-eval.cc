@@ -3,12 +3,13 @@
 #include <stdexcept>
 #include <string>
 
+#include <vcsn/algos/read-automaton.hh>
 #include <vcsn/core/mutable-automaton.hh>
-#include <vcsn/ctx/traits.hh>
 #include <vcsn/ctx/lal_char_z.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -42,13 +43,8 @@ namespace vcsn
   Aut
   read_automaton(const std::string& f)
   {
-    dyn::automaton res = dyn::read_automaton(f);
-    // Automaton typename.
-    auto vname = res->vname();
-    VCSN_REQUIRE(vname == Aut::element_type::sname(),
-                 f, ": invalid context: ", vname,
-                 ", expected: ", Aut::element_type::sname());
-    return std::move(res->as<Aut>());
+    auto is = open_input_file(f);
+    return read_automaton<Aut>(*is);
   }
 
   /// Read a label which is a word for context ctx.
@@ -129,13 +125,13 @@ try
     sta_prod_eval<vcsn::ctx::lal_char_z>(argv[1], argv[2], argv[3]);
     std::cout << '\n';
   }
- catch (const std::exception& e)
-   {
-     std::cerr << argv[0] << ": " << e.what() << '\n';
-     exit(EXIT_FAILURE);
-   }
- catch (...)
-   {
-     std::cerr << argv[0] << ": unknown exception caught\n";
-     exit(EXIT_FAILURE);
-   }
+catch (const std::exception& e)
+  {
+    std::cerr << argv[0] << ": " << e.what() << '\n';
+    exit(EXIT_FAILURE);
+  }
+catch (...)
+  {
+    std::cerr << argv[0] << ": unknown exception caught\n";
+    exit(EXIT_FAILURE);
+  }
