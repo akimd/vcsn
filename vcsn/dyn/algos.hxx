@@ -179,5 +179,26 @@ namespace vcsn
     {
       return compare(l, r) >= 0;
     }
+
+    template <typename Lhs, typename Rhs>
+    auto operator+(const Lhs& l, const Rhs& r)
+      -> decltype(add(l, r))
+    {
+      return add(l, r);
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator&(const Lhs& l, const Rhs& r)
+      -> decltype(conjunction(l, r))
+    {
+      return conjunction(l, r);
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator*(const Lhs& l, const Rhs& r)
+      -> decltype(multiply(l, r))
+    {
+      return multiply(l, r);
+    }
   }
 }
