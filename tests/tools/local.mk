@@ -21,4 +21,4 @@ $(%C%_TESTS:.chk=.log): libexec/vcsn-tools
 
 .PHONY: check-tools
 check-tools:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS) doc/notebooks/Tools.ipynb'

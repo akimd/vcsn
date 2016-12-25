@@ -8,6 +8,26 @@ check ()
   run 0 - tests/bin/vcsn $@
 }
 
+# Make sure it works when there are underscores in the function name.
+check derived-term --help <<EOF
+usage: vcsn derived-term [OPTIONS...] [ARGS...]
+
+Available versions:
+  EXP:expression [ALGO="auto":string] -> automaton
+    The derived-term automaton of EXP.
+    Parameters:
+      EXP    the input expression
+      ALGO   how the derived terms are computed:
+         - "auto"                  alias for "expansion"
+         - "derivation"            compute by derivation
+         - "breaking_derivation"   compute by breaking derivation
+         - "expansion"             compute by expansion
+         - "breaking_expansion"    compute by breaking expansion
+
+Try 'vcsn tools --help' for more information.
+EOF
+
+
 check rweight -h <<EOF
 usage: vcsn rweight [OPTIONS...] [ARGS...]
 
@@ -50,21 +70,6 @@ Available versions:
 
   AUT:automaton P:polynomial -> weight
     Evaluate P on AUT.
-
-Try 'vcsn tools --help' for more information.
-EOF
-
-
-check shortest --help <<EOF
-usage: vcsn shortest [OPTIONS...] [ARGS...]
-
-Available versions:
-  AUT:automaton [NUM:number] [LEN:number] -> polynomial
-    The approximated behavior of an automaton.
-    Parameters:
-      AUT   the automaton whose behavior to approximate
-      NUM   number of words looked for.
-      LEN   maximum length of words looked for.
 
 Try 'vcsn tools --help' for more information.
 EOF

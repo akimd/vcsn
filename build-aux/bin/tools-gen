@@ -27,6 +27,7 @@ class Indent(str):
             return super(Indent, self).__format__(format_spec)
 
 
+# Template to generate the first part of a command call.
 fun_def = string.Template('''
       {"$command",
        {{$types},
@@ -37,20 +38,22 @@ $body
         }}},
 ''')
 
+# Template to generate the last part of a command call that returns a
+# value.
 fun_body_return =\
 '''$conversions
           std::cout << dyn::$dynfun($args);'''
 
+# Template to generate the last part of a command call that returns
+# void.
 fun_body_void =\
 '''$conversions
-           dyn::$dynfun(
-           $args
-     );'''
+          dyn::$dynfun($args);'''
 
 conversions_indent = '          '
 
 fun_doc_def = '''
-      {{"{dynfun}",
+      {{"{command}",
        {{{declaration},
         {doc:i8}
        }}}},
@@ -105,7 +108,7 @@ def gen_function_doc_decl(fun, formals):
     declaration = gen_doc_sig(fun, formals)
 
     return fun_doc_def.format(
-            dynfun=fun['dynfun'],
+            command=fun['command'],
             declaration=declaration,
             doc=Indent(format_function_doc(fun, formals)))
 
@@ -200,8 +203,9 @@ def format_function_doc(fun, formals):
     return '"{}"'.format(escape('\n'.join(res)))
 
 def process_function(fun):
-    '''Process a function in dyn/algo.hh'''
+    '''Process a function in `dyn/algo.hh`.'''
     formals = fun['formals']
+    fun['command'] = fun['dynfun'].replace('_', '-')
 
     decl = gen_function_decl(fun, formals)
     algos.append(decl)
@@ -294,7 +298,7 @@ def gen_function_decl(fun, formals):
 
     return fun_def_template(fun).substitute(
             dynfun=fun['dynfun'],
-            command=fun['dynfun'].replace('_', '-'),
+            command=fun['command'],
             declaration=declaration,
             conversions='\n'.join(conversions),
             types=', '.join(types),
@@ -331,8 +335,8 @@ def add_cat(algos):
                     }
                 })
 
-def process_header(fn):
-    '''Process all functions from a header `fn`.'''
+def process_json(fn):
+    '''Read the Json file `fn`.'''
     with open(fn, mode='r') as f:
         json_ = json.load(f)
         dyn_types.extend(json_['dyn_types'])
@@ -366,7 +370,9 @@ namespace vcsn
   }
 }''')
 
-    return res.substitute(header=header, algos=''.join(algos), algos_doc=''.join(algos_doc))
+    return res.substitute(header=header,
+                          algos=''.join(algos),
+                          algos_doc=''.join(algos_doc))
 
 
 
@@ -386,6 +392,6 @@ parser.add_argument('input', type=str, default=None,
                     help='''JSON file to process.''')
 args = parser.parse_args()
 
-process_header(args.input)
+process_json(args.input)
 
 print(output(args.header), file=args.output)
