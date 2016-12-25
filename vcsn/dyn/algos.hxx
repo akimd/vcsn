@@ -137,5 +137,47 @@ namespace vcsn
           vcsn::raise(e, "  while reading weight: ", s);
         }
     }
+
+    template <typename Lhs, typename Rhs>
+    auto operator==(const Lhs& l, const Rhs& r)
+      -> decltype(l->vname(), r->vname(), bool())
+    {
+      return compare(l, r) == 0;
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator!=(const Lhs& l, const Rhs& r)
+      -> decltype(l->vname(), r->vname(), bool())
+    {
+      return !(l == r);
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator<(const Lhs& l, const Rhs& r)
+      -> decltype(compare(l, r) < 0)
+    {
+      return compare(l, r) < 0;
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator<=(const Lhs& l, const Rhs& r)
+      -> decltype(compare(l, r) <= 0)
+    {
+      return compare(l, r) <= 0;
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator>(const Lhs& l, const Rhs& r)
+      -> decltype(compare(l, r) > 0)
+    {
+      return compare(l, r) > 0;
+    }
+
+    template <typename Lhs, typename Rhs>
+    auto operator>=(const Lhs& l, const Rhs& r)
+      -> decltype(compare(l, r) >= 0)
+    {
+      return compare(l, r) >= 0;
+    }
   }
 }

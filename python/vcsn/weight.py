@@ -3,17 +3,24 @@
 ## -------- ##
 
 from vcsn_cxx import weight
-from vcsn.tools import _extend, _format, _is_equal
+from vcsn.tools import _extend, _format
 
 @_extend(weight)
 class weight:
-    __eq__ = _is_equal
     __add__ = weight.add
     __floordiv__ = weight.ldivide
     __pow__ = weight.multiply
     __repr__ = lambda self: self.format('text')
     __truediv__ = weight.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
+    __lt__ = lambda l, r: l.compare(r) <  0
+    __le__ = lambda l, r: l.compare(r) <= 0
+    __ge__ = lambda l, r: l.compare(r) >= 0
+    __gt__ = lambda l, r: l.compare(r) >  0
+    __eq__ = lambda l, r: l.compare(r) == 0
+    __ne__ = lambda l, r: l.compare(r) != 0
+
 
     def __format__(self, spec):
         """Format the weight according to `spec`.

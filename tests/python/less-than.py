@@ -65,9 +65,7 @@ check_lt(a1, a2)
 ## Expressions.  ##
 ## ------------- ##
 
-def check_lt(r1, r2):
-    e1 = ctx.expression(r1)
-    e2 = ctx.expression(r2)
+def check_lt_(e1, e2):
     CHECK_EQ(True, e1 < e2)
     CHECK_EQ(True, e1 <= e2)
     CHECK_EQ(True, e2 > e1)
@@ -76,6 +74,9 @@ def check_lt(r1, r2):
     CHECK_EQ(e2, e2)
     CHECK_NE(e1, e2)
     CHECK_NE(e2, e1)
+
+def check_lt(r1, r2):
+    check_lt_(ctx.expression(r1), ctx.expression(r2))
 
 ctx = vcsn.context('lal_char, q')
 check_lt(r'\z', r'\e')
@@ -93,3 +94,46 @@ check_lt('a+b', 'ab')
 check_lt('ab', 'abc')
 check_lt('ab', 'a**')
 check_lt('a*', 'a**')
+
+
+## -------- ##
+## Labels.  ##
+## -------- ##
+
+def check_lt(r1, r2):
+    check_lt_(ctx.label(r1), ctx.label(r2))
+
+ctx = vcsn.context('law_char, q')
+# This is lexicographical order, not shortlex.
+check_lt('', r'a')
+check_lt('a', 'b')
+check_lt('a', 'aa')
+check_lt('aa', 'b')
+
+
+
+## --------- ##
+## Weights.  ##
+## --------- ##
+
+def check_lt(w1, w2):
+    check_lt_(ctx.weight(w1), ctx.weight(w2))
+    # Applies for weights in polynomials.
+    p1 = '<{}>a'.format(w1)
+    p2 = '<{}>a'.format(w2)
+    # In the case of polynomials, the weight 0, being absorbant, is
+    # actually smaller than any other polynomial.
+    if w2 == '0':
+        p1, p2 = p2, p1
+    check_lt_(ctx.polynomial(p1), ctx.polynomial(p2))
+
+ctx = vcsn.context('lal_char, q')
+check_lt('0', '1')
+check_lt('-1', '0')
+
+check_lt('-1/2', '0')
+check_lt('0', '1/2')
+check_lt('1/2', '1')
+
+check_lt('1/3', '1/2')
+check_lt('1/2', '2/3')

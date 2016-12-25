@@ -108,7 +108,11 @@ namespace vcsn
     /// Three-way comparison between \a l and \a r.
     static int compare(const value_t l, const value_t r)
     {
-      return l - r;
+      // Beware of infinity.
+      if (equal(l, r))
+        return 0;
+      else
+        return l - r;
     }
 
     /// Whether \a l == \a r.

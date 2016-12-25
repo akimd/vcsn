@@ -106,6 +106,24 @@ namespace vcsn
     ///          positive if `lhs > rhs`
     int compare(const expression& lhs, const expression& rhs);
 
+    /// Three-way comparison between labels.
+    /// \returns negative if `lhs < rhs`
+    ///          null     if `lhs = rhs`
+    ///          positive if `lhs > rhs`
+    int compare(const label& lhs, const label& rhs);
+
+    /// Three-way comparison between polynomials.
+    /// \returns negative if `lhs < rhs`
+    ///          null     if `lhs = rhs`
+    ///          positive if `lhs > rhs`
+    int compare(const polynomial& lhs, const polynomial& rhs);
+
+    /// Three-way comparison between weights.
+    /// \returns negative if `lhs < rhs`
+    ///          null     if `lhs = rhs`
+    ///          positive if `lhs > rhs`
+    int compare(const weight& lhs, const weight& rhs);
+
     /// The complement of \a aut.
     ///
     /// \pre aut is lal

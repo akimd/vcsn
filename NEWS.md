@@ -29,9 +29,9 @@ and will not work properly.  Use 0.5.1, or 0.5.3 or more recent.
 ## 2016-12-20
 ### compare: new algorithm
 Three-way comparison is now available in all the layers, as `compare`, for
-automata and expressions.  This is used in Python to implement the
-comparisons (`<`, `<=`, `>`, `=>`, `==`, `!=`) of expressions, and of
-automata (`<`, `<=`, `>`, `=>`).
+automata, expressions, labels, polynomials and weights.  This is used in
+Python to implement the comparisons (`<`, `<=`, `>`, `=>`, `==`, `!=`) of
+expressions, and of automata (`<`, `<=`, `>`, `=>`).
 
 However, since the comparison on automata is performed on the _list_ of
 transitions, automata that are "very much alike" (i.e., different only by

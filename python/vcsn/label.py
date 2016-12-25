@@ -3,11 +3,10 @@
 ## ------- ##
 
 from vcsn_cxx import label
-from vcsn.tools import _extend, _format, _is_equal
+from vcsn.tools import _extend, _format
 
 @_extend(label)
 class label:
-    __eq__ = _is_equal
     __floordiv__ = label.ldivide
     __mul__ = label.multiply
     __pow__ = label.multiply
@@ -15,6 +14,12 @@ class label:
     __truediv__ = label.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
+    __lt__ = lambda l, r: l.compare(r) <  0
+    __le__ = lambda l, r: l.compare(r) <= 0
+    __ge__ = lambda l, r: l.compare(r) >= 0
+    __gt__ = lambda l, r: l.compare(r) >  0
+    __eq__ = lambda l, r: l.compare(r) == 0
+    __ne__ = lambda l, r: l.compare(r) != 0
 
     def __format__(self, spec):
         """Format the label according to `spec`.

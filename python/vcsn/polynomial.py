@@ -3,13 +3,12 @@
 ## ------------ ##
 
 from vcsn_cxx import polynomial
-from vcsn.tools import _extend, _format, _is_equal, _lweight, _rweight
+from vcsn.tools import _extend, _format, _lweight, _rweight
 
 @_extend(polynomial)
 class polynomial:
     __add__ = polynomial.add
     __and__ = polynomial.conjunction
-    __eq__ = _is_equal
     __floordiv__ = polynomial.ldivide
     __matmul__ = polynomial.compose
     __mul__ = _rweight
@@ -17,6 +16,13 @@ class polynomial:
     __repr__ = lambda self: self.format('text')
     __rmul__ = _lweight
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
+    __lt__ = lambda l, r: l.compare(r) <  0
+    __le__ = lambda l, r: l.compare(r) <= 0
+    __ge__ = lambda l, r: l.compare(r) >= 0
+    __gt__ = lambda l, r: l.compare(r) >  0
+    __eq__ = lambda l, r: l.compare(r) == 0
+    __ne__ = lambda l, r: l.compare(r) != 0
 
     def __format__(self, spec):
         """Format the polynomial according to `spec`.
