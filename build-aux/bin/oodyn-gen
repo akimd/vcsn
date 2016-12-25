@@ -70,7 +70,7 @@ classes_prologue_header = {
             const std::string& format = "default",
             const std::string& filename = "",
             bool strip = true);
-    ''',
+''',
 
     'context':
     r'''
@@ -87,7 +87,7 @@ classes_prologue_header = {
   automaton trie(const std::string& data,
                  const std::string& format,
                  const std::string& filename) const;
-    ''',
+''',
 
     'expression':
     r'''
@@ -97,23 +97,22 @@ classes_prologue_header = {
   /// Convert \a this to \a ctx, using \a ids.
   expression as(const struct context& ctx = {},
                 identities ids = "default") const;
-
-    ''',
+''',
 
     'label':
     r'''
   label(const context& ctx, const std::string& s);
-    ''',
+''',
 
     'polynomial':
     r'''
   polynomial(const struct context& ctx, const std::string& s);
-    ''',
+''',
 
     'weight':
     r'''
   weight(const context& ctx, const std::string& s);
-    ''',
+''',
 }
 
 
@@ -122,138 +121,137 @@ classes_prologue_header = {
 classes_prologue_impl = {
     'automaton':
     r'''
-  automaton::automaton(const std::string& data, const std::string& format,
-                       const std::string& filename, bool strip)
-    : val_{nullptr}
-  {
-    auto is = make_istream(data, filename);
-    try
-      {
-        val_ = vcsn::dyn::read_automaton(*is, format, strip);
-        vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-      }
-    catch (const std::runtime_error& e)
-      {
-        if (data.empty())
-          vcsn::raise(e, "  while reading automaton: ", filename);
-        else if (std::count(data.begin(), data.end(), '\n') < 30)
-          vcsn::raise(e, "  while reading automaton: ", data);
-        else
-          vcsn::raise(e, "  while reading automaton");
-      }
-  }
-    ''',
+automaton::automaton(const std::string& data, const std::string& format,
+                     const std::string& filename, bool strip)
+  : val_{nullptr}
+{
+  auto is = make_istream(data, filename);
+  try
+    {
+      val_ = vcsn::dyn::read_automaton(*is, format, strip);
+      vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+    }
+  catch (const std::runtime_error& e)
+    {
+      if (data.empty())
+        vcsn::raise(e, "  while reading automaton: ", filename);
+      else if (std::count(data.begin(), data.end(), '\n') < 30)
+        vcsn::raise(e, "  while reading automaton: ", data);
+      else
+        vcsn::raise(e, "  while reading automaton");
+    }
+}
+''',
 
     'context':
     r'''
-  context::context()
-  {}
+context::context()
+{}
 
-  context::context(const std::string& ctx)
-    : context(vcsn::dyn::make_context(ctx))
-  {}
+context::context(const std::string& ctx)
+  : context(vcsn::dyn::make_context(ctx))
+{}
 
-  context::operator bool() const
-  {
-    return bool(val_);
-  }
+context::operator bool() const
+{
+  return bool(val_);
+}
 
-  automaton context::cotrie(const std::string& data,
-                            const std::string& format,
-                            const std::string& filename) const
-  {
-    auto is = make_istream(data, filename);
-    auto res = cotrie(*is, format);
-    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-    return res;
-  }
-
-  automaton context::trie(const std::string& data,
+automaton context::cotrie(const std::string& data,
                           const std::string& format,
                           const std::string& filename) const
-  {
-    auto is = make_istream(data, filename);
-    auto res = trie(*is, format);
-    vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-    return res;
-  }
-    ''',
+{
+  auto is = make_istream(data, filename);
+  auto res = cotrie(*is, format);
+  vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+  return res;
+}
+
+automaton context::trie(const std::string& data,
+                        const std::string& format,
+                        const std::string& filename) const
+{
+  auto is = make_istream(data, filename);
+  auto res = trie(*is, format);
+  vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+  return res;
+}
+''',
 
     'expression':
     r'''
-  expression::expression(const struct context& ctx, const std::string& r,
-                         identities ids)
-  {
-    std::istringstream is{r};
-    try
-      {
-        val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
-        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-      }
-    catch (const std::runtime_error& e)
-      {
-        vcsn::raise(e, "  while reading expression: ", r);
-      }
-  }
+expression::expression(const struct context& ctx, const std::string& r,
+                       identities ids)
+{
+  std::istringstream is{r};
+  try
+    {
+      val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
+      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    }
+  catch (const std::runtime_error& e)
+    {
+      vcsn::raise(e, "  while reading expression: ", r);
+    }
+}
 
-  expression expression::as(const struct context& ctx,
-                            identities ids) const
-  {
-    return copy((ctx ? ctx : context()), ids);
-  }
-
-    ''',
+expression expression::as(const struct context& ctx,
+                          identities ids) const
+{
+  return copy((ctx ? ctx : context()), ids);
+}
+''',
 
     'label':
     r'''
 
-  label::label(const context& ctx, const std::string& s)
-  {
-    std::istringstream is{s};
-    try
-      {
-        val_ = vcsn::dyn::read_label(ctx.val_, is);
-        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-      }
-    catch (const std::runtime_error& e)
-      {
-        vcsn::raise(e, "  while reading label: ", s);
-      }
-  }
+label::label(const context& ctx, const std::string& s)
+{
+  std::istringstream is{s};
+  try
+    {
+      val_ = vcsn::dyn::read_label(ctx.val_, is);
+      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    }
+  catch (const std::runtime_error& e)
+    {
+      vcsn::raise(e, "  while reading label: ", s);
+    }
+}
 ''',
 
     'polynomial':
     r'''
-  polynomial::polynomial(const struct context& ctx, const std::string& s)
-  {
-    std::istringstream is{s};
-    try
-      {
-        val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
-        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-      }
-    catch (const std::runtime_error& e)
-      {
-        vcsn::raise(e, "  while reading polynomial: ", s);
-      }
-  }
+polynomial::polynomial(const struct context& ctx, const std::string& s)
+{
+  std::istringstream is{s};
+  try
+    {
+      val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
+      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    }
+  catch (const std::runtime_error& e)
+    {
+      vcsn::raise(e, "  while reading polynomial: ", s);
+    }
+}
 ''',
 
     'weight':
     r'''
-  weight::weight(const context& ctx, const std::string& s)
-  {
-    std::istringstream is(s);
-    try
-      {
-        val_ = vcsn::dyn::read_weight(ctx.val_, is);
-        vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-      }
-    catch (const std::runtime_error& e)
-      {
-        vcsn::raise(e, "  while reading weight: ", s);
-      }
-  }
+weight::weight(const context& ctx, const std::string& s)
+{
+  std::istringstream is(s);
+  try
+    {
+      val_ = vcsn::dyn::read_weight(ctx.val_, is);
+      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
+    }
+  catch (const std::runtime_error& e)
+    {
+      vcsn::raise(e, "  while reading weight: ", s);
+    }
+}
 ''',
 }
 
@@ -273,38 +271,35 @@ public:
 class_close = '''\
   /// The wrapped dyn::{class}.
   vcsn::dyn::{class} val_;
-}};
-
-'''
+}};'''
 
 memfn_declaration = '''\
   {doc:i2}
   {static}auto {fun}({formals}){const}
     -> {result};
-
 '''
 
 memfn_definition = '''\
-  {result} {class}::{fun}({formals_impl}){const}
-  {{
-    return vcsn::dyn::{dynfun}({args});
-  }}
-
+{result} {class}::{fun}({formals_impl}){const}
+{{
+  return vcsn::dyn::{dynfun}({args});
+}}
 '''
 
 def ignore(fun):
-    '''Report that we don't process this case.'''
+    "Report that we don't process this case."
     print('warning: ignoring: {fun}({formals}) -> {result}'
           .format_map(fun), file=sys.stderr)
 
 def process_doc(doc, args):
+    "Generate the documentation."
     params = [r'\param {} {}'.format(p['name'], '\n'.join(p['desc']))
             for p in doc['params'] if p['name'] in args]
 
     res = '\n'.join(doc['desc'] + params + doc['pre'] + doc['returns'])
-    res = ['  /// ' + l.rstrip() for l in res.split('\n')]
+    res = [('  /// ' + l).rstrip() for l in res.split('\n')]
 
-    if res[-1] == '  /// ':
+    if res[-1] == '  ///':
         del res[-1]
 
     return '\n'.join(res)
@@ -410,13 +405,14 @@ def process_header(fn):
 def output_memfn(format, cls):
     res = ''
     for f in cls:
+        res += '\n'
         res += format.format_map(f)
     return res
 
 
 def header():
     '''Generate the header of the C++ OO Bindings.'''
-    res = r'''// Generated, do not edit by hand.
+    res = r'''// Generated by oodyn-gen, do not edit by hand.
 
 #include <boost/optional.hpp>
 
@@ -433,21 +429,21 @@ using identities = vcsn::dyn::identities;
     # Forward declarations.
     for c, _ in sorted(classes.items()):
         res += class_declare.format_map({'class': c})
-    res += '\n\n'
-
     # Class definitions.
     for c, cls in sorted(classes.items()):
+        res += '\n\n'
         res += class_open.format_map({'class': c})
         if c in classes_prologue_header:
             res += classes_prologue_header[c].rstrip(' ')
         res += output_memfn(memfn_declaration, cls)
+        res += '\n'
         res += class_close.format_map({'class': c})
     return res
 
 
 def output():
     '''Generate the implementation of the C++ OO Bindings.'''
-    res = r'''// Generated, do not edit by hand.
+    res = r'''// Generated by oodyn-gen, do not edit by hand.
 #include "python/oodyn.hh"
 
 #include <vcsn/dyn/algos.hh>
@@ -477,14 +473,13 @@ auto make_istream(const std::string& data = "",
   else
     return std::make_shared<std::istringstream>(data);
 }
-
 '''
     for c, cls in sorted(classes.items()):
         if c in classes_prologue_impl:
             res += classes_prologue_impl[c].rstrip(' ')
         res += output_memfn(memfn_definition, cls)
 
-    return res
+    return res.rstrip()
 
 
 
