@@ -341,6 +341,7 @@ def process_json(fn):
         json_ = json.load(f)
         dyn_types.extend(json_['dyn_types'])
         add_cat(json_['algos'])
+        json_['algos'].sort(key=lambda d: d['dynfun'])
         for fun in json_['algos']:
             process_function(fun)
 
