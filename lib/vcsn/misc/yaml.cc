@@ -37,10 +37,10 @@ namespace vcsn
     config::config_value
     config::config_value::operator[](const std::string& key) const
     {
-      if (!node_.IsMap())
-        raise("YAML node is not a map. Key: ", key);
-      if (!node_[key].IsDefined())
-        raise("YAML: invalid key: ", key);
+      require(node_.IsMap(),
+              "YAML node is not a map. Key: ", key);
+      require(node_[key].IsDefined(),
+              "YAML: invalid key: ", key);
       return config_value(node_[key]);
     }
 
@@ -62,9 +62,7 @@ namespace vcsn
 #if VCSN_YAML_CPP_REMOVE_WORKS
       node_.remove(key);
 #else
-      std::cerr
-        << "vcsn: warning: libyaml-cpp is broken, cannot remove node "
-        << key << '\n';
+      raise("YAML: libyaml-cpp is broken, cannot remove node ", key);
 #endif
     }
 
@@ -123,8 +121,8 @@ namespace vcsn
 
       auto file_path = flib.find_file("config.yaml").string();
 
-      if (!boost::filesystem::exists(file_path))
-        raise("config file does not exists:", file_path);
+      require(boost::filesystem::exists(file_path),
+              "config file does not exists:", file_path);
 
       config_tree = YAML::LoadFile(file_path);
       // Now we must merge the user config
