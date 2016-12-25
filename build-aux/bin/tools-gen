@@ -78,12 +78,13 @@ def ignore(fun):
 # any function using them as parameter types will be ignored
 # when generating the bindings and won't be callable from
 # tools.
-# FIXME: Add support for these types.
+# FIXME: Add support for some of these types.
 unsupported_types = [
     'direction',
     'expansion',
     'letter_class_t',
     'std::istream',
+    'std::ostream',
     'std::vector<automaton>',
     'std::vector<context>',
     'std::vector<expansion>',
@@ -260,15 +261,6 @@ def gen_function_decl(fun, formals):
             formal['context'] = 'make_word_context(ctx)'
         else:
             formal['context'] = 'ctx'
-
-        # The only ostream supported is std::cout.
-        if formal['class'] == "std::ostream":
-            if formal['default'] is None:
-                args.append('std::cout')
-                removed_args += 1
-                continue
-            else:
-                return ""
 
         # Remove std:: and dyn:: for the Type enum.
         if formal['class'][3:5] == "::":
