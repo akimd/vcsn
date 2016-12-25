@@ -7,7 +7,7 @@ cd "$DIR_BUILD"
 
 distcheck()
 {
-  if make -j${NBPROC:-2} vcsn-distcheck "$@"; then
+  if make -j${NBPROC:-2} vcsn-distcheck "$@" </dev/null; then
     :
   else
     sta=$?

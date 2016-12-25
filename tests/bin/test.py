@@ -152,14 +152,20 @@ def XFAIL(fun, exp=None):
     try:
         fun()
     except RuntimeError as e:
+        # Error messages about files that we read will have $srcdir as
+        # prefix.  Remove it.  E.g., from
+        #   while reading automaton: ../../tests/python/efsm.dir/bad_final_weight.efsm
+        # to
+        #   while reading automaton: efsm.dir/bad_final_weight.efsm
+        eff = str(e).replace(medir + '/', '')
         if (exp is None
-            or isinstance(exp, re._pattern_type) and re.match(exp, str(e))
-            or isinstance(exp, str) and exp in str(e)):
+            or isinstance(exp, re._pattern_type) and re.match(exp, eff)
+            or isinstance(exp, str) and exp in eff):
             PASS()
         else:
             FAIL('Unexpected error message')
             rst_file("Expected error", exp)
-            rst_file("Effective error", str(e))
+            rst_file("Effective error", eff)
             rst_diff(exp, str(e))
     else:
         FAIL('did not raise an exception', str(fun))

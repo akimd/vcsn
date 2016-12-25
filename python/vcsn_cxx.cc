@@ -93,7 +93,7 @@ auto make_value_vector(const boost::python::list& list)
 /// Convert this value to string.
 template <typename Value>
 std::string format(const Value& v,
-                   const std::string& format = "text")
+                   const std::string& format = "default")
 {
   std::ostringstream os;
   vcsn::dyn::print(v.val_, os, format);

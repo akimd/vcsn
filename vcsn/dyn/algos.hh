@@ -559,11 +559,37 @@ namespace vcsn
                                  unsigned num = 1,
                                  const std::string& algo = "auto");
 
+    /// Read an automaton from a string.
+    /// \param data    the input string.
+    /// \param format  its format.
+    /// \param strip   whether to return a stripped automaton,
+    ///                or a named automaton.
+    automaton make_automaton(const std::string& data,
+                             const std::string& format = "default",
+                             bool strip = true);
+
+    /// Build an automaton editor from its context.
+    automaton_editor* make_automaton_editor(const context& ctx);
+
     /// Build a context from its name.
     context make_context(const std::string& name);
 
-    /// Build an automatonset from its context.
-    automaton_editor* make_automaton_editor(const context& ctx);
+    /// Read an expression from a stream.
+    ///
+    /// \param ctx     the context.
+    /// \param s       the input string.
+    /// \param ids     the identities to apply.
+    expression make_expression(const context& ctx,
+                               const std::string& s, identities ids = {});
+
+    /// Build a label from a string.
+    label make_label(const context& ctx, const std::string& s);
+
+    /// Build a polynomial from a string.
+    polynomial make_polynomial(const context& ctx, const std::string& s);
+
+    /// Build a weight from a string.
+    weight make_weight(const context& ctx, const std::string& s);
 
     /// The context for words.
     context make_word_context(const context& ctx);

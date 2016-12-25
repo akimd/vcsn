@@ -35,7 +35,7 @@ namespace vcsn LIBVCSN_API
       {
         const auto res = vs.conv(i, std::forward<Args>(args)...);
         VCSN_REQUIRE(i.peek() == EOF,
-                     vs, ": unexpected ", str_escape(i.peek()));
+                     vs, ": unexpected trailing characters: ", i);
         return res;
       }
     catch (const std::runtime_error& e)

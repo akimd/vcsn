@@ -92,7 +92,7 @@ classes_prologue_header = {
     'expression':
     r'''
   expression(const struct context& ctx, const std::string& r,
-             identities ids);
+             identities ids = {});
 
   /// Convert \a this to \a ctx, using \a ids.
   expression as(const struct context& ctx = {},
@@ -125,21 +125,23 @@ automaton::automaton(const std::string& data, const std::string& format,
                      const std::string& filename, bool strip)
   : val_{nullptr}
 {
-  auto is = make_istream(data, filename);
-  try
+  // It is possible to have an empty data to mean an empty automaton.
+  // Check the filename instead.
+  if (filename.empty())
+    val_ = vcsn::dyn::make_automaton(data, format, strip);
+  else
     {
-      val_ = vcsn::dyn::read_automaton(*is, format, strip);
-      vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
-    }
-  catch (const std::runtime_error& e)
-    {
-      if (data.empty())
-        vcsn::raise(e, "  while reading automaton: ", filename);
-      else if (std::count(data.begin(), data.end(), '\n') < 30)
-        vcsn::raise(e, "  while reading automaton: ", data);
-      else
-        vcsn::raise(e, "  while reading automaton");
-    }
+      auto is = vcsn::open_input_file(filename);
+      try
+        {
+          val_ = vcsn::dyn::read_automaton(*is, format, strip);
+          vcsn::require(is->peek() == EOF, "unexpected trailing characters: ", *is);
+        }
+      catch (const std::runtime_error& e)
+        {
+          vcsn::raise(e, "  while reading automaton: ", filename);
+        }
+   }
 }
 ''',
 
@@ -148,8 +150,8 @@ automaton::automaton(const std::string& data, const std::string& format,
 context::context()
 {}
 
-context::context(const std::string& ctx)
-  : context(vcsn::dyn::make_context(ctx))
+context::context(const std::string& s)
+  : context(vcsn::dyn::make_context(s))
 {}
 
 context::operator bool() const
@@ -180,20 +182,10 @@ automaton context::trie(const std::string& data,
 
     'expression':
     r'''
-expression::expression(const struct context& ctx, const std::string& r,
+expression::expression(const struct context& ctx, const std::string& e,
                        identities ids)
-{
-  std::istringstream is{r};
-  try
-    {
-      val_ = vcsn::dyn::read_expression(ctx.val_, ids, is);
-      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-    }
-  catch (const std::runtime_error& e)
-    {
-      vcsn::raise(e, "  while reading expression: ", r);
-    }
-}
+  : val_{make_expression(ctx.val_, e, ids)}
+{}
 
 expression expression::as(const struct context& ctx,
                           identities ids) const
@@ -206,52 +198,22 @@ expression expression::as(const struct context& ctx,
     r'''
 
 label::label(const context& ctx, const std::string& s)
-{
-  std::istringstream is{s};
-  try
-    {
-      val_ = vcsn::dyn::read_label(ctx.val_, is);
-      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-    }
-  catch (const std::runtime_error& e)
-    {
-      vcsn::raise(e, "  while reading label: ", s);
-    }
-}
+  : val_{make_label(ctx.val_, s)}
+{}
 ''',
 
     'polynomial':
     r'''
 polynomial::polynomial(const struct context& ctx, const std::string& s)
-{
-  std::istringstream is{s};
-  try
-    {
-      val_ = vcsn::dyn::read_polynomial(ctx.val_, is);
-      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-    }
-  catch (const std::runtime_error& e)
-    {
-      vcsn::raise(e, "  while reading polynomial: ", s);
-    }
-}
+  : val_{make_polynomial(ctx.val_, s)}
+{}
 ''',
 
     'weight':
     r'''
 weight::weight(const context& ctx, const std::string& s)
-{
-  std::istringstream is(s);
-  try
-    {
-      val_ = vcsn::dyn::read_weight(ctx.val_, is);
-      vcsn::require(is.peek() == EOF, "unexpected trailing characters: ", is);
-    }
-  catch (const std::runtime_error& e)
-    {
-      vcsn::raise(e, "  while reading weight: ", s);
-    }
-}
+  : val_{make_weight(ctx.val_, s)}
+{}
 ''',
 }
 

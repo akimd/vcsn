@@ -8,4 +8,4 @@ set -e
 ## ------ ##
 
 cd "$DIR_BUILD"
-make -j${NBPROC:-2} check
+make -j${NBPROC:-2} check </dev/null

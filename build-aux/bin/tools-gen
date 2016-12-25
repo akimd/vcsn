@@ -71,7 +71,7 @@ def fun_def_template(fun):
 
 def ignore(fun):
     '''Report that we don't process this case.'''
-    print('warning: ignoring: {fun}({formals}) -> {result}'
+    print('warning: ignoring: {dynfun}({formals}) -> {result}'
           .format_map(fun), file=sys.stderr)
 
 # These types are not supported by tools yet, meaning that
@@ -123,6 +123,7 @@ def clean(res):
     res = ugly_types.get(res, res)
     return res
 
+
 def gen_doc_sig(fun, formals, gen_defaults=True):
     '''Generate a function signature for use
        in help and error messages.'''
@@ -164,7 +165,7 @@ def format_function_doc(fun, formals):
     doc = fun['doc']
     res = fun['doc']['desc']
 
-    # Indent all lines but the first
+    # Indent all lines but the first.
     res = [res[0]] + ['  ' + l for l in res[1:]]
 
     def is_supported(name):
@@ -215,6 +216,10 @@ def format_function_doc(fun, formals):
 
 def process_function(fun):
     '''Process a function in `dyn/algo.hh`.'''
+    if fun['dynfun'].startswith('make_'):
+        ignore(fun)
+        return
+
     formals = fun['formals']
     fun['command'] = fun['dynfun'].replace('_', '-')
 
@@ -262,7 +267,8 @@ def gen_function_decl(fun, formals):
     for i, formal in enumerate(formals):
         i = i - removed_args
         if formal['class'] in unsupported_types:
-            return ""
+            ignore(fun)
+            return ''
 
         # We don't match on the context, and don't require it
         # as an argument in tools.
@@ -272,7 +278,8 @@ def gen_function_decl(fun, formals):
                 removed_args += 1
                 continue
             else:
-                return ""
+                ignore(fun)
+                return ''
 
         # dyn::word isn't really a type, it's just
         # an indication for us to use a word context.
