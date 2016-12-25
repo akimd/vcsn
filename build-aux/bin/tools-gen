@@ -93,13 +93,6 @@ unsupported_types = [
     'std::vector<unsigned>',
     ]
 
-# We don't want to see these types in the documentation.
-# This dictionnary map them to the name used instead.
-ugly_types = {
-    'int': 'number',
-    'unsigned': 'number',
-    'boost::optional<unsigned>': 'number',
-    }
 
 def gen_function_doc_decl(fun, formals):
     '''Generate the documentation entry of an algorithm
@@ -113,11 +106,29 @@ def gen_function_doc_decl(fun, formals):
             declaration=declaration,
             doc=Indent(format_function_doc(fun, formals)))
 
+
+def clean(res):
+    'Clean a type for documentation.'
+    # We don't want to see these types in the documentation.
+    # This dictionnary map them to the name used instead.
+    ugly_types = {
+        'boost::optional<unsigned>': 'number',
+        'int': 'number',
+        'size_t': 'number',
+        'unsigned': 'number',
+    }
+
+    if res[:5] in ['dyn::', 'std::']:
+        res = res[5:]
+    res = ugly_types.get(res, res)
+    return res
+
 def gen_doc_sig(fun, formals, gen_defaults=True):
     '''Generate a function signature for use
        in help and error messages.'''
     formals_def = []
 
+    # Clean input arguments.
     for f in formals:
         f_def = {}
         f_def['arg'] = f['arg'].upper()
@@ -125,12 +136,7 @@ def gen_doc_sig(fun, formals, gen_defaults=True):
         if f['class'] == 'context':
             continue
 
-        if f['class'][3:5] == "::":
-            f_def['class'] = f['class'][5:]
-        else:
-            f_def['class'] = f['class']
-
-        f_def['type'] = ugly_types.get(f_def['class'], f_def['class'])
+        f_def['type'] = clean(f['class'])
 
         if f['class'].startswith("boost::optional"):
             f_def['default'] = ""
@@ -145,9 +151,13 @@ def gen_doc_sig(fun, formals, gen_defaults=True):
             default=f_def['default'],
             type=f_def['type']).lstrip())
 
+    # Clean the output argument.
+    result = clean(fun['result'])
+    # Documentation string.
     return  '"  {formals} -> {result}"' \
                     .format(formals=escape(' '.join(formals_def)),
-                            result=fun['result'])
+                            result=result)
+
 
 def format_function_doc(fun, formals):
     res = []
@@ -225,6 +235,15 @@ def process_function(fun):
 
     algos_doc.append(doc_decl)
 
+
+def type_enum(cls):
+    'Turn a class name into its type_enum.'
+    res = clean(cls)
+    if res in ['bool', 'float']:
+        return res + '_'
+    return res
+
+
 def gen_function_decl(fun, formals):
     '''Generate the binding of an algorithm from its declaration
         and its parameters and return it (as a string).'''
@@ -239,6 +258,7 @@ def gen_function_decl(fun, formals):
     # Construct the function declaration for documentation.
     declaration = gen_doc_sig(fun, formals, gen_defaults=False)
 
+    # Clean the input arguments.
     for i, formal in enumerate(formals):
         i = i - removed_args
         if formal['class'] in unsupported_types:
@@ -262,16 +282,7 @@ def gen_function_decl(fun, formals):
         else:
             formal['context'] = 'ctx'
 
-        # Remove std:: and dyn:: for the Type enum.
-        if formal['class'][3:5] == "::":
-            formal['type_enum'] = formal['class'][5:]
-        # and append an underscore for built-in types.
-        elif formal['class'] in ['bool', 'float']:
-            formal['type_enum'] = formal['class'] + '_'
-        elif formal['class'] in ['int', 'unsigned', 'boost::optional<unsigned>']:
-            formal['type_enum'] = 'number'
-        else:
-            formal['type_enum'] = formal['class']
+        formal['type_enum'] = type_enum(formal['class'])
 
         # Qualify dyn types to avoid possible conflicts.
         if formal['class'] in dyn_types:

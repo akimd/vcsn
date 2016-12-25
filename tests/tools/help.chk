@@ -27,35 +27,13 @@ Available versions:
 Try 'vcsn tools --help' for more information.
 EOF
 
-
-check rweight -h <<EOF
-usage: vcsn rweight [OPTIONS...] [ARGS...]
+# The return type is prettyfied: from `size_t` to `number`.
+check num-components --help <<EOF
+usage: vcsn num-components [OPTIONS...] [ARGS...]
 
 Available versions:
-  AUT:automaton W:weight [ALGO="auto":string] -> automaton
-    The right-mult automaton with W as weight.
-    Parameters:
-      AUT   the input automaton.
-      W     the weight to right-multiply
-      ALGO  how to compute the result.
-            In most cases, "standard" and "general" have
-            equal results.  The only difference in when
-            when W is null, in which case "general"
-            produces an empty automaton, while "standard"
-            produces an automaton with a single state, which
-            is initial (and, of course, no final states).
-        - "standard"    AUT is standard,
-                        build a standard automaton.
-        - "general"     no requirement on AUT,
-                        but add spontaneous transitions.
-        - "auto"        "standard" if AUT is standard,
-                        "general" otherwise.
-
-  EXP:expression W:weight -> expression
-    The right-multiplication of an expression with W as weight.
-
-  P:polynomial W:weight -> polynomial
-    The right-multiplication of a polynomial with W as weight.
+  AUT:automaton -> number
+    The number of strongly connected components.
 
 Try 'vcsn tools --help' for more information.
 EOF
@@ -177,6 +155,40 @@ Available versions:
 Try 'vcsn tools --help' for more information.
 EOF
 
+check rweight -h <<EOF
+usage: vcsn rweight [OPTIONS...] [ARGS...]
+
+Available versions:
+  AUT:automaton W:weight [ALGO="auto":string] -> automaton
+    The right-mult automaton with W as weight.
+    Parameters:
+      AUT   the input automaton.
+      W     the weight to right-multiply
+      ALGO  how to compute the result.
+            In most cases, "standard" and "general" have
+            equal results.  The only difference in when
+            when W is null, in which case "general"
+            produces an empty automaton, while "standard"
+            produces an automaton with a single state, which
+            is initial (and, of course, no final states).
+        - "standard"    AUT is standard,
+                        build a standard automaton.
+        - "general"     no requirement on AUT,
+                        but add spontaneous transitions.
+        - "auto"        "standard" if AUT is standard,
+                        "general" otherwise.
+
+  EXP:expression W:weight -> expression
+    The right-multiplication of an expression with W as weight.
+
+  P:polynomial W:weight -> polynomial
+    The right-multiplication of a polynomial with W as weight.
+
+Try 'vcsn tools --help' for more information.
+EOF
+
+
+# An unknown algorithm.
 run 1 - -"$builddir/tests/bin/vcsn tools foobarbaz" </dev/null
 mv err.eff error-message
 run 0 - -cat error-message <<EOF
