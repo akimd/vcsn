@@ -19,6 +19,31 @@ namespace vcsn
     /// The accessible subautomaton of \a aut.
     automaton accessible(const automaton& aut);
 
+    /// Sum of two automata.
+    ///
+    /// \param lhs   an automaton.
+    /// \param rhs   another one.
+    /// \param algo  how to compute the result
+    ///   - "standard"    both \a lhs and \a rhs are standard,
+    ///                   build a standard automaton.
+    ///   - "general"     no requirement on \a lhs and and \a rhs.
+    ///   - "auto"        "standard" if both automata are standard,
+    ///                   "general" otherwise.
+    automaton add(const automaton& lhs, const automaton& rhs,
+                  const std::string& algo = "auto");
+
+    /// Sum of two expressions.
+    expression add(const expression& lhs, const expression& rhs);
+
+    /// Sum of two expansions.
+    expansion add(const expansion& lhs, const expansion& rhs);
+
+    /// Sum of two polynomials.
+    polynomial add(const polynomial& lhs, const polynomial& rhs);
+
+    /// Sum of two weights.
+    weight add(const weight& lhs, const weight& rhs);
+
     /// An ambiguous word, or raise if there is none.
     word ambiguous_word(const automaton& aut);
 
@@ -961,31 +986,6 @@ namespace vcsn
     /// For each non-spontaneous transition, add a spontaneous
     /// transition with same source, destination, and weight.
     automaton subword(const automaton& aut);
-
-    /// Sum of two automata.
-    ///
-    /// \param lhs   an automaton.
-    /// \param rhs   another one.
-    /// \param algo  how to compute the result
-    ///   - "standard"    both \a lhs and \a rhs are standard,
-    ///                   build a standard automaton.
-    ///   - "general"     no requirement on \a lhs and and \a rhs.
-    ///   - "auto"        "standard" if both automata are standard,
-    ///                   "general" otherwise.
-    automaton add(const automaton& lhs, const automaton& rhs,
-                  const std::string& algo = "auto");
-
-    /// Sum of two expressions.
-    expression add(const expression& lhs, const expression& rhs);
-
-    /// Sum of two expansions.
-    expansion add(const expansion& lhs, const expansion& rhs);
-
-    /// Sum of two polynomials.
-    polynomial add(const polynomial& lhs, const polynomial& rhs);
-
-    /// Sum of two weights.
-    weight add(const weight& lhs, const weight& rhs);
 
     /// Create a synchronized transducer from \a aut.
     automaton synchronize(const automaton& aut);
