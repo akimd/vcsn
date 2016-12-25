@@ -23,6 +23,9 @@ configuration information, including from the tools.
     $ vcsn configuration configuration.cxxflags
     -Qunused-arguments -O3 -g -std=c++1z
 
+This adds a new dependency: libyaml-cpp.  Beware that version 0.5.2 is buggy
+and will not work properly.  Use 0.5.1, or 0.5.3 or more recent.
+
 ## 2016-12-20
 ### compare: new algorithm
 Three-way comparison is now available in all the layers, as `compare`, for

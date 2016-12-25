@@ -127,7 +127,8 @@ Arithmetic Library](https://gmplib.org).
 documentation.
 
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) is used to handle the
-configuration files.
+configuration files.  Beware that version 0.5.2 is buggy and will not work
+properly.  Use 0.5.1, or 0.5.3 or more recent.
 
 ### Libraries installed in non-standard directories
 
