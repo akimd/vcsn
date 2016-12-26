@@ -23,6 +23,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/add.py                                    \
   %D%/automaton.py                              \
   %D%/chain.py                                  \
+  %D%/compare.py                                \
   %D%/complement.py                             \
   %D%/complete.py                               \
   %D%/compose.py                                \
@@ -59,7 +60,6 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
-  %D%/less-than.py                              \
   %D%/letterize.py                              \
   %D%/lift.py                                   \
   %D%/lightest-automaton.py                     \
@@ -97,8 +97,8 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/tuples.py                                 \
   %D%/union.py                                  \
   %D%/universal.py                              \
-  %D%/weight.py                                 \
   %D%/weight-series.py                          \
+  %D%/weight.py                                 \
   %D%/zpc.py
 
 $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) $(srcdir)/tests/bin/test.py

@@ -20,7 +20,7 @@ algo_headers =                                  \
   %D%/algos/bellman-ford.hh                     \
   %D%/algos/cerny.hh                            \
   %D%/algos/compare-automaton.hh                \
-  %D%/algos/compare-expression.hh               \
+  %D%/algos/compare.hh                          \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
   %D%/algos/compose-expression.hh               \

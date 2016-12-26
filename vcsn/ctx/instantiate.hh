@@ -6,7 +6,7 @@
 #include <vcsn/algos/are-isomorphic.hh>
 #include <vcsn/algos/cerny.hh>
 #include <vcsn/algos/compare-automaton.hh>
-#include <vcsn/algos/compare-expression.hh>
+#include <vcsn/algos/compare.hh>
 #include <vcsn/algos/complete.hh>
 #include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/constant-term.hh>
