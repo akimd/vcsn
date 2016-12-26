@@ -25,6 +25,16 @@ namespace vcsn
     {
       return vcsn::configuration(key);
     }
+
+    template <typename Value>
+    std::string format(const Value& v,
+                       const std::string& format = "default")
+    {
+      std::ostringstream os;
+      vcsn::dyn::print(v, os, format);
+      return os.str();
+    }
+
     inline
     bool less_than(const automaton& lhs, const automaton& rhs)
     {

@@ -93,11 +93,11 @@ namespace vcsn
           {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
           {"default",      "dot"},
           {"dot,latex",    [](const Aut& a, std::ostream& o)
-                              { dot(a, o, format("latex")); }},
+                              { dot(a, o, vcsn::format{"latex"}); }},
           {"dot,mathjax",  [](const Aut& a, std::ostream& o)
-                              { dot(a, o, format("latex"), true); }},
+                              { dot(a, o, vcsn::format{"latex"}, true); }},
           {"dot,utf8",     [](const Aut& a, std::ostream& o)
-                              { dot(a, o, format("utf8")); }},
+                              { dot(a, o, vcsn::format{"utf8"}); }},
           {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},
           {"fado",         detail::fado_impl_<Aut>},
           {"grail",        detail::grail_impl_<Aut>},
@@ -141,7 +141,7 @@ namespace vcsn
                                   const std::string& fmt)
       {
         const auto& c = ctx->as<Context>();
-        return c.print_set(o, format(fmt));
+        return c.print_set(o, vcsn::format{fmt});
       }
     }
   }
@@ -160,7 +160,7 @@ namespace vcsn
   print(const ValueSet& vs, const typename ValueSet::value_t& v,
         std::ostream& o = std::cout, format fmt = {})
   {
-    return vs.print(v, o, format(fmt));
+    return vs.print(v, o, vcsn::format{fmt});
   }
 
   namespace dyn
@@ -174,7 +174,7 @@ namespace vcsn
                                     const std::string& fmt)
       {
         const auto& e = expansion->as<ExpansionSet>();
-        return vcsn::print(e.valueset(), e.value(), o, format(fmt));
+        return vcsn::print(e.valueset(), e.value(), o, vcsn::format{fmt});
       }
     }
   }
@@ -202,7 +202,7 @@ namespace vcsn
         return print(r);
       }
     else
-      return print(rs, r, o, format(fmt));
+      return print(rs, r, o, vcsn::format{fmt});
   }
 
   namespace dyn
@@ -235,7 +235,7 @@ namespace vcsn
       {
         const auto& l = label->as<LabelSet>();
         return vcsn::print(l.valueset(), l.value(),
-                           o, format(fmt).for_labels());
+                           o, vcsn::format{fmt}.for_labels());
       }
     }
   }
@@ -289,7 +289,7 @@ namespace vcsn
                                      std::ostream& o, const std::string& fmt)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::print(p.valueset(), p.value(), o, format(fmt));
+        return vcsn::print(p.valueset(), p.value(), o, vcsn::format{fmt});
       }
     }
   }
@@ -309,7 +309,7 @@ namespace vcsn
                                  const std::string& fmt)
       {
         const auto& w = weight->as<WeightSet>();
-        return vcsn::print(w.valueset(), w.value(), o, format(fmt));
+        return vcsn::print(w.valueset(), w.value(), o, vcsn::format{fmt});
       }
     }
   }

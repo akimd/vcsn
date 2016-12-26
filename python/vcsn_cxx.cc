@@ -95,9 +95,7 @@ template <typename Value>
 std::string format(const Value& v,
                    const std::string& format = "default")
 {
-  std::ostringstream os;
-  vcsn::dyn::print(v.val_, os, format);
-  return os.str();
+  return vcsn::dyn::format(v.val_, format);
 }
 
 label context_word(const context& ctx, const std::string& s)
