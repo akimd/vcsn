@@ -44,6 +44,10 @@ namespace vcsn LIBVCSN_API
       }
   }
 
+  /// Whether two files have exactly equal contents.
+  bool
+  equal_files(const std::string& fn1, const std::string& fn2);
+
   /// Check lookahead character and advance.
   /// \param is the stream to read.
   /// \param c  the expected character.

@@ -107,6 +107,9 @@ namespace vcsn
         /// BASE.so.  Rather, we use BASE.PID.cc -> BASE.cc ->
         /// BASE.PID.o, other ccache will always fail to find
         /// "BASE.PID.cc" in its cache.
+        ///
+        /// Do it only if needed: keep the mtime old if the file
+        /// contents is the same anyway.
         void print(const std::string& base)
         {
           ensure_parent_directory(base);
@@ -117,7 +120,10 @@ namespace vcsn
             std::ofstream o{tmp + ".cc"};
             printer_.print(o);
           }
-          boost::filesystem::rename(tmp + ".cc", base + ".cc");
+          if (equal_files(tmp + ".cc", base + ".cc"))
+            boost::filesystem::remove(tmp + ".cc");
+          else
+            boost::filesystem::rename(tmp + ".cc", base + ".cc");
         }
 
         /// Generate C++ syntax for context \a ctx (which might use
@@ -358,19 +364,23 @@ namespace vcsn
                 }
               os <<
                 "\n"
-                "static bool vcsn_" << algo.first << " ATTRIBUTE_USED =" << incendl
-                 << "vcsn::dyn::detail::" << algo.first << "_register(" << incendl
-                 << "vcsn::ssignature<" << types << ">()," << iendl
-                 << "vcsn::dyn::detail::" << algo.first << "<" << types << ">" << decendl
+                "static bool vcsn_" << algo.first << " ATTRIBUTE_USED ="
+                 << incendl
+                 << "vcsn::dyn::detail::" << algo.first << "_register("
+                 << incendl
+                 << "vcsn::ssignature<" << types << ">(),"
+                 << iendl
+                 << "vcsn::dyn::detail::" << algo.first << "<" << types << ">"
+                 << decendl
                  << ");" << decendl;
             }
 
           // The first algo is the once that gives its name to the
           // file to compile.
-          std::string base = (plugindir()
-                              + "algos/"
-                              + begin(algos)->first + "/"
-                              + split(begin(algos)->second.to_string()));
+          auto base = (plugindir()
+                       + "algos/"
+                       + begin(algos)->first + "/"
+                       + split(begin(algos)->second.to_string()));
           print(base);
           jit(base);
         }
