@@ -155,6 +155,32 @@ namespace vcsn
       // underlying library.
       return config_value(config_tree)[key];
     }
+
+    template <typename T>
+    void config::merge_recurse(const YAML::Node& from, T&& out)
+    {
+      if (from.IsScalar())
+        out = from;
+      else if (from.IsSequence())
+        out = from;
+      else if (from.IsMap())
+      {
+        for (auto e : from)
+        {
+          auto key = e.first.as<std::string>();
+          if (!out[key])
+          {
+            auto node = YAML::Node();
+            merge_recurse(e.second, node);
+            out[key] = node;
+          }
+          else if (out.Tag() != "!StyleList")
+            merge_recurse(e.second, out[key]);
+          else
+            raise("bad config value");
+        }
+      }
+    }
   }
 
   std::string configuration(const std::string& key)
@@ -177,5 +203,4 @@ namespace vcsn
 
     return config->str();
   }
-
 }

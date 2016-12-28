@@ -105,34 +105,4 @@ namespace vcsn LIBVCSN_API
   /// key it the 'path' to the desired key using periofs
   /// as a separator.
   std::string configuration(const std::string& key);
-
-  namespace detail
-  {
-    // Templated because node[] gives us rvalues.
-    template <typename T>
-    void config::merge_recurse(const YAML::Node& from, T&& out)
-    {
-      if (from.IsScalar())
-        out = from;
-      else if (from.IsSequence())
-        out = from;
-      else if (from.IsMap())
-      {
-        for (auto e : from)
-        {
-          auto key = e.first.as<std::string>();
-          if (!out[key])
-          {
-            auto node = YAML::Node();
-            merge_recurse(e.second, node);
-            out[key] = node;
-          }
-          else if (out.Tag() != "!StyleList")
-            merge_recurse(e.second, out[key]);
-          else
-            raise("bad config value");
-        }
-      }
-    }
-  }
 }
