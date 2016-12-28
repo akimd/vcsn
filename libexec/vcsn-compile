@@ -144,10 +144,9 @@ def need_compiling():
         log('compilation needed: --force was used')
         return True
 
-    target = args['base'] + ('.so' if args['shared'] else '')
     try:
         # Check that the build parameters didn't change.
-        with open(args['base']+'.cmd') as f:
+        with open(args['target']+'.cmd') as f:
             cmd = f.read().strip()
             if build_signature() != cmd:
                 log('compilation needed: command signature changed\n'
@@ -156,31 +155,32 @@ def need_compiling():
                     .format(cmd, build_signature()), level=2)
                 return True
 
-        depfile = args['base'] + '.d'
-        target_mtime = os.path.getmtime(target)
-        lines = []
+        depfile = args['target'] + '.d'
         with open(depfile) as f:
-            lines = f.readlines()
-
-        # The two first lines are the output file and its .cc
-        # file. Skip them.
-        lines = lines[2:]
-
-        lines = re.findall(r'[^ \\\n]+', ' '.join(lines))
-        for l in lines:
-            if os.path.getmtime(l) > target_mtime:
+            deps = f.read()
+        target = None
+        for m in re.finditer(r'[^ \\\n:]+', deps):
+            file = m.group(0)
+            # The first file is the target.
+            if target is None:
+                if file != args['target']:
+                    raise RuntimeError('unexpected target: {} instead of {}'
+                                       .format(file, args['target']))
+                target = file
+                target_mtime = os.path.getmtime(target)
+            elif os.path.getmtime(file) > target_mtime:
                 def date(mtime):
                     return time.strftime('%x %X', time.localtime(mtime))
                 log('compilation needed: dependency is more recent than target\n'
                     '      target: {}: {}\n'
                     '  dependency: {}: {}'
-                    .format(date(target_mtime),        target,
-                            date(os.path.getmtime(l)), l),
+                    .format(date(target_mtime),           target,
+                            date(os.path.getmtime(file)), file),
                     level=2)
                 return True
         log('compilation not needed', level=2)
         return False
-    except os.error as err:
+    except (os.error, RuntimeError) as err:
         # If the dependency file doesn't exist or a file was deleted,
         # we need to recompile anyways.
         log('compilation needed: an error was raised: {}' .format(err), level=2)
@@ -189,20 +189,22 @@ def need_compiling():
 
 # Main.
 args = parse_args()
+args['target'] = args['base'] + ('.so' if args['shared'] else '')
 
 if not need_compiling():
     exit(0)
 
 # Save build signature.
-with open(args['base']+'.cmd', 'w') as f:
+with open(args['target']+'.cmd', 'w') as f:
     print(build_signature(), file=f)
 
 if args['shared']:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o'"
-        " -MMD -MF '{base}.d' '{base}.cc'")
+        " -MMD -MF '{base}.d' -MQ '{target}'"
+        " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so'"
         " '{tmp}.o'")
-    os.rename(fmt('{tmp}.so'), fmt('{base}.so'))
+    os.rename(fmt('{tmp}.so'), fmt('{target}'))
     # Upon success, remove the .o file, it is large (10x compared to
     # the *.so on erebus using clang) and not required. However the
     # debug symbols are in there, so when debugging, leave them!
@@ -213,8 +215,9 @@ else:
     # Exploit ccache: use separate compilation and then linking
     # instead of a single compiler invocation.
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o'"
-        " -MMD -MF '{base}.d' '{base}.cc'")
+        " -MMD -MF '{base}.d' -MQ '{target}'"
+        " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
-    os.rename(fmt('{tmp}'), fmt('{base}'))
+    os.rename(fmt('{tmp}'), fmt('{target}'))
     if 'VCSN_DEBUG' not in os.environ:
         os.remove(fmt('{tmp}.o'))
