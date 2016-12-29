@@ -13,7 +13,7 @@ configuration:
   cxxflags: @CXXFLAGS@
   ldflags: @VCSN_LDFLAGS@
 
-  # Where out files are installed.
+  # Where our files are installed.
   datadir: @DATADIR@
   includedir: @INCLUDEDIR@
   libdir: @LIBDIR@
