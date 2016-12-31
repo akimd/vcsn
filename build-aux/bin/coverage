@@ -32,11 +32,11 @@ lcov --remove vcsn.info.tmp -o vcsn.info                \
      'lib/vcsn/algos/algos.cc'                          \
      'lib/vcsn/dot/stack.hh'                            \
      'lib/vcsn/dyn/context-printer-header-algo.cc'      \
+     'lib/vcsn/odyn/odyn.cc'                            \
      'lib/vcsn/rat/location.hh'                         \
      'lib/vcsn/rat/position.hh'                         \
      'libexec/vcsn-tools-algos.cc'                      \
-     'python/odyn.cc'                                   \
-     'python/odyn.hh'
+     'vcsn/odyn/odyn.hh'
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn.cov.html           \

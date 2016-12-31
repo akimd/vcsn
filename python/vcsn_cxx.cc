@@ -32,8 +32,7 @@
 #include <boost/python.hpp>
 #include <boost/python/args.hpp>
 
-#include "python/odyn.hh"
-
+#include <vcsn/odyn/odyn.hh>
 #include <vcsn/dyn/algos.hh>
 
 using namespace vcsn::odyn;
