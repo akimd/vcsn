@@ -3,6 +3,8 @@
 # Any tool failure is a failure of the script.
 set -e
 
+me=$(basename $0)
+
 stderr ()
 {
   local i
@@ -210,8 +212,17 @@ install ()
 status=0
 
 : ${BISON='@BISON@'}
+if test "x$BISON" = x; then
+   fatal "$BISON is empty: configure probably did not find it." \
+         "install Bison and rerun configure."
+fi
 
-me=$(basename $0)
+if ! $BISON --version >/dev/null 2>&1; then
+   fatal "cannot run '$BISON --version'." \
+         "check that Bison is properly installed."
+fi
+
+
 fuse_switch='@abs_srcdir@/fuse-switch'
 move_if_change='@abs_srcdir@/move-if-change --color'
 verbose=false
