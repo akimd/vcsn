@@ -1,3 +1,17 @@
+// Apple's /usr/include/sys/ucred.h forward-declares `::label` as
+// `struct label;`.  It only needs to define a pointer to it (label*).
+// But since it declares `label` as a struct, we no longer can use
+// `using label` to introduce it in `::`, as it changes the nature of
+// the symbol.
+//
+// I don't know which of our headers includes `ucred.h`, so let's play
+// it safe: include it first, mascarading `label`.
+#if defined __APPLE__
+# define label macos_label
+# include </usr/include/sys/ucred.h>
+# undef label
+#endif
+
 #if defined __clang__
 # if 3 <= __clang_major__ && 6 <= __clang_minor__
 // python/vcsn_cxx.cc: In constructor
@@ -18,12 +32,11 @@
 #include <boost/python.hpp>
 #include <boost/python/args.hpp>
 
-#include <vcsn/core/rat/identities.hh>
-#include <vcsn/dyn/algos.hh>
-#include <vcsn/misc/escape.hh>
-#include <vcsn/misc/raise.hh>
-
 #include "python/odyn.hh"
+
+#include <vcsn/dyn/algos.hh>
+
+using namespace vcsn::odyn;
 
 /// The type of the repeated conjunction function.
 using automaton_conjunction_repeated_t
@@ -308,8 +321,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   // Activate support for boost::optional and identities.
   python_optional<unsigned>();
-  python_string__enum<vcsn::dyn::direction>();
-  python_string__enum<vcsn::dyn::identities>();
+  python_string__enum<automaton::direction>();
+  python_string__enum<identities>();
 
   // Free functions.
   bp::def("configuration", &vcsn::dyn::configuration);
