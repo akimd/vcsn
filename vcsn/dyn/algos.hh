@@ -612,6 +612,9 @@ namespace vcsn
     /// The context for words.
     context make_word_context(const context& ctx);
 
+    /// Build a word from a string.
+    label make_word(const context& ctx, const std::string& s);
+
     /// Multiply (concatenate) two automata.
     ///
     /// \param lhs   an automaton.

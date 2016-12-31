@@ -1,6 +1,7 @@
 #include <sstream>
 
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/yaml.hh>
 
@@ -136,6 +137,12 @@ namespace vcsn
         {
           vcsn::raise(e, "  while reading weight: ", s);
         }
+    }
+
+    inline
+    label make_word(const context& ctx, const std::string& s)
+    {
+      return make_label(make_word_context(ctx), s);
     }
 
     template <typename Lhs, typename Rhs>
