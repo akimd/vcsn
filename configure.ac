@@ -278,7 +278,7 @@ AC_DEFINE_UNQUOTED([LIBEXECDIR], ["$LIBEXECDIR"],
 # Don't use AM_PROG_LEX since we don't use Flex support from Automake.
 # Flex++ will check the existance of Flex when really needed.
 AC_ARG_VAR([FLEX], [Flex, the scanner generator])
-AC_CHECK_PROGS([FLEX], [flex], [no])
+AC_CHECK_PROGS([FLEX], [flex])
 AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
 AC_ARG_VAR([BISON], [Bison parser generator])
 AC_CHECK_PROGS([BISON], [bison])

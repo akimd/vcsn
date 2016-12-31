@@ -16,13 +16,35 @@ status=0
 # Any tool failure is a failure of the script.
 set -e
 
+me=$(basename $0)
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo "$i"
+  done | sed >&2 -e "s/^/$me: /"
+}
+
 fatal ()
 {
-  echo >&2 "$me: $1"
+  stderr "$@"
   exit 1
 }
 
 : ${FLEX='@FLEX@'}
+
+if test "x$FLEX" = x; then
+   fatal "$FLEX is empty: configure probably did not find it." \
+         "install Flex and rerun configure."
+fi
+
+if ! $FLEX --version >/dev/null 2>&1; then
+   fatal "cannot run '$FLEX --version'." \
+         "check that Flex is properly installed."
+fi
+
 
 # flex++ INPUT OUTPUT OPTIONS
 # ---------------------------
