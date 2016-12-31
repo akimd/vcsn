@@ -34,9 +34,9 @@ lcov --remove vcsn.info.tmp -o vcsn.info                \
      'lib/vcsn/dyn/context-printer-header-algo.cc'      \
      'lib/vcsn/rat/location.hh'                         \
      'lib/vcsn/rat/position.hh'                         \
-     'libexec/vcsn-tools-algos.cc'                     \
-     'python/oodyn.cc'                                  \
-     'python/oodyn.hh'
+     'libexec/vcsn-tools-algos.cc'                      \
+     'python/odyn.cc'                                   \
+     'python/odyn.hh'
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn.cov.html           \

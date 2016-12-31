@@ -23,7 +23,7 @@
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
 
-#include "python/oodyn.hh"
+#include "python/odyn.hh"
 
 /// The type of the repeated conjunction function.
 using automaton_conjunction_repeated_t

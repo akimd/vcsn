@@ -8,7 +8,7 @@ import string
 import sys
 import textwrap
 
-# FIXME: Duplicate with oodyn-gen.
+# FIXME: Duplicate with odyn-gen.
 class Indent(str):
     '''
     An indenting string, to be used with str.format.
