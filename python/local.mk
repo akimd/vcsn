@@ -61,6 +61,7 @@ vcsn_python_PYTHON =                            \
 
 vcsn_tools_pythondir = $(pythondir)/vcsn_tools
 vcsn_tools_python_PYTHON =                      \
+  %D%/vcsn_tools/__init__.py                    \
   %D%/vcsn_tools/demangle.py                    \
   %D%/vcsn_tools/gdb-demangle.py
 
