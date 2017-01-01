@@ -4,6 +4,7 @@
 #include <vcsn/config.hh>
 #include <vcsn/misc/file-library.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/stream.hh>
 #include <vcsn/misc/yaml.hh>
 
 namespace vcsn
@@ -114,10 +115,8 @@ namespace vcsn
 
     config::config()
     {
-      const char* path = getenv("VCSN_DATA_PATH");
-      if (!path)
-        path = VCSN_DATADIR;
-      auto flib = file_library{std::string{path}, ":"};
+      auto path = xgetenv("VCSN_DATA_PATH", VCSN_DATADIR);
+      auto flib = file_library{path, ":"};
 
       auto file_path = flib.find_file("config.yaml").string();
 
@@ -125,17 +124,9 @@ namespace vcsn
               "config file does not exists:", file_path);
 
       config_tree = YAML::LoadFile(file_path);
-      // Now we must merge the user config
-      // FIXME: Error management - altough not having a
-      // HOME variable may not be an error...
-      // FIXME: We should probably do a more thorought scan of the possible locations
-      // Maybe something like
-      //   - $XDG_CONFIG_HOME/vcsn/config
-      //   - $HOME/.config/vcsn/config
-      //   - $HOME/.vcsn_config.yaml
-      //   - /etc/vcsn_config.yaml
-      if (std::getenv("HOME") && !std::getenv("VCSN_NO_HOME_CONFIG"))
-        load_home_config(std::getenv("HOME") + std::string("/VCSN_config.yaml"));
+      // Merge the user config.
+      if (!std::getenv("VCSN_NO_HOME_CONFIG"))
+        load_home_config(expand_tilda("~/.vcsn/config.yaml"));
     }
 
     void config::load_home_config(const std::string& filename)

@@ -44,10 +44,6 @@ namespace vcsn LIBVCSN_API
       }
   }
 
-  /// Whether two files have exactly equal contents.
-  bool
-  equal_files(const std::string& fn1, const std::string& fn2);
-
   /// Check lookahead character and advance.
   /// \param is the stream to read.
   /// \param c  the expected character.
@@ -61,6 +57,14 @@ namespace vcsn LIBVCSN_API
   /// \returns s
   /// \throws std::runtime_error if the next character is not \a s.
   const std::string& eat(std::istream& is, const std::string& s);
+
+  /// Whether two files have exactly equal contents.
+  bool
+  equal_files(const std::string& fn1, const std::string& fn2);
+
+  /// Expand initial "~" in res.
+  // http://stackoverflow.com/questions/4891006.
+  std::string expand_tilda(const std::string& res);
 
   /// Throw an exception after failing to read from \a is.  Reset the
   /// stream to a "good" state, and read the presumably ill-formed
@@ -101,4 +105,8 @@ namespace vcsn LIBVCSN_API
   /// Ignore spaces.
   /// \param is the stream to read.
   void skip_space(std::istream& is);
+
+  /// \a getenv(var) if defined, otherwise \a val.
+  std::string
+  xgetenv(const std::string& var, const std::string& val = "");
 }

@@ -37,14 +37,6 @@ namespace vcsn
 
     namespace
     {
-      /// \a getenv(var) if defined, otherwise \a val.
-      std::string
-      xgetenv(const std::string& var, const std::string& val = "")
-      {
-        const char* cp = getenv(var.c_str());
-        return cp ? cp : val;
-      }
-
 #define XGETENV(Name) xgetenv(#Name, Name)
 
       /// Get a var from the config, unless an envvar override it.

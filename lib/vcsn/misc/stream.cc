@@ -55,6 +55,25 @@ namespace vcsn
   }
 
 
+  std::string expand_tilda(const std::string& s)
+  {
+    auto res = s;
+    if (!res.empty() && res[0] == '~')
+      {
+        assert(res.size() == 1 || res[1] == '/');
+        auto home = xgetenv("HOME", xgetenv("USERPROFILE"));
+        char const *hdrive = getenv("HOMEDRIVE");
+        char const *hres = getenv("HOMERES");
+        if (!home.empty())
+          res.replace(0, 1, home);
+        else if (hdrive && hres)
+          res.replace(0, 1, std::string(hdrive) + hres);
+        else
+          res.replace(0, 1, xgetenv("VCSN_TMPDIR", "/tmp"));
+      }
+    return res;
+  }
+
   char get_char(std::istream& i)
   {
     int res = i.get();
@@ -185,5 +204,12 @@ namespace vcsn
   {
     while (isspace(is.peek()))
       is.ignore();
+  }
+
+  std::string
+  xgetenv(const std::string& var, const std::string& val)
+  {
+    const char* cp = getenv(var.c_str());
+    return cp ? cp : val;
   }
 }
