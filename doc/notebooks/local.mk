@@ -1,5 +1,5 @@
 ## Vaucanson 2, a generic library for finite state machines.
-## Copyright (C) 2014-2016 Vaucanson Group.
+## Copyright (C) 2014-2017 Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
