@@ -145,6 +145,11 @@ namespace vcsn
       return make_label(make_word_context(ctx), s);
     }
 
+
+    /*---------------.
+    | Comparisons.   |
+    `---------------*/
+
     template <typename Lhs, typename Rhs>
     auto operator==(const Lhs& l, const Rhs& r)
       -> decltype(l->vname(), r->vname(), bool())
@@ -186,6 +191,11 @@ namespace vcsn
     {
       return compare(l, r) >= 0;
     }
+
+
+    /*--------------.
+    | Operations.   |
+    `--------------*/
 
     template <typename Lhs, typename Rhs>
     auto operator+(const Lhs& l, const Rhs& r)

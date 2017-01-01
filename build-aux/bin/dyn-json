@@ -8,7 +8,7 @@ import re
 dyn_types = ['automaton', 'context', 'expansion', 'expression', 'label',
              'polynomial', 'weight']
 
-# A regexp to "parse" a function declaration in `vcsn/dyn/algos.hh`.
+# A regex to "parse" a function declaration in `vcsn/dyn/algos.hh`.
 function_re = re.compile(r'''(?P<doc>(?:^\s*///[^\n]*\n)*)?
 ^\s*(?P<result>[:\w]+)
 \s+(?P<dynfun>\w+)\s*\((?P<formals>.*?)\);''',
@@ -130,7 +130,7 @@ def process_header(header, out):
     json.dump({'algos':algos, 'dyn_types':dyn_types}, out, sort_keys=True, indent=4)
 
 
-parser = argparse.ArgumentParser(description='Generate registries file.',
+parser = argparse.ArgumentParser(description='Generate `dyn.json` file.',
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 
 parser.add_argument('--output',

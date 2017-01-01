@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcsn/core/rat/fwd.hh>
+
 namespace vcsn
 {
   namespace dyn
@@ -9,6 +11,9 @@ namespace vcsn
 
     // vcsn/dyn/context.hh.
     class context;
+
+    // vcsn/dyn/types.hh.
+    using identities = ::vcsn::rat::identities;
 
     // vcsn/dyn/value.hh.
     namespace detail

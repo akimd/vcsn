@@ -9,7 +9,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <vcsn/misc/export.hh> // LIBVCSN_API
+#include <vcsn/misc/export.hh>
 #include <vcsn/misc/raise.hh>
 
 namespace vcsn LIBVCSN_API

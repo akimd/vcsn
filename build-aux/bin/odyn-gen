@@ -378,7 +378,7 @@ def header():
 
 #include <boost/optional.hpp>
 
-#include <vcsn/algos/fwd.hh> // letter_class_t
+#include <vcsn/algos/fwd.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/types.hh>

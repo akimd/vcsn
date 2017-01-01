@@ -10,7 +10,6 @@ namespace vcsn LIBVCSN_API
 {
   namespace rat
   {
-
     /// An expressionset can implement several different sets of
     /// identities on expressions.  This type represents one of those
     /// sets.

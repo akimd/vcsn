@@ -6,7 +6,6 @@
 
 namespace vcsn
 {
-
   /// Whether \a e is in \a s.
   template <typename Map, typename Key>
   auto
@@ -15,5 +14,4 @@ namespace vcsn
   {
     return s.find(e) != std::end(s);
   }
-
 }

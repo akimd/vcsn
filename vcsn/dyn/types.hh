@@ -9,14 +9,13 @@ namespace vcsn
   namespace dyn LIBVCSN_API
   {
     /// Direction for proper on automata.
-    using ::vcsn::direction;
+    using direction = ::vcsn::direction;
 
     /// Sets of identities on expressions.
-    using ::vcsn::rat::identities;
+    using identities = ::vcsn::rat::identities;
 
     /// The type of a word.
-    /// This is used by Tools to infer
-    //  how to convert its arguments.
+    /// Used by the Tools to infer how to convert such arguments.
     using word = label;
   }
 }

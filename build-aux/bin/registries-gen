@@ -74,7 +74,7 @@ def header():
 #include <vcsn/dyn/fwd.hh> // dyn::automaton, etc.
 #include <vcsn/dyn/name.hh> // integral_constant
 #include <vcsn/dyn/types.hh> // identities, etc.
-#include <vcsn/misc/export.hh> // LIBVCSN_API
+#include <vcsn/misc/export.hh>
 #include <vcsn/misc/fwd.hh> // signature
 
 namespace vcsn

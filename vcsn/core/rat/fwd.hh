@@ -2,14 +2,18 @@
 
 #include <memory>
 
-#include <vcsn/core/rat/identities.hh>
-#include <vcsn/misc/type_traits.hh> // detect
-#include <vcsn/weightset/weightset.hh>
+#include <vcsn/weightset/fwd.hh>
 
 namespace vcsn
 {
   namespace rat
   {
+    // identities.hh
+    class identities;
+
+    /*---------------.
+    | expressions.   |
+    `---------------*/
 
     /// Base class for the AST.
     class exp;

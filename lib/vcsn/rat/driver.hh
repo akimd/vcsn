@@ -1,19 +1,18 @@
 #pragma once
 
+#include <lib/vcsn/rat/fwd.hh>
+#include <lib/vcsn/rat/location.hh>
+#include <lib/vcsn/rat/parse.hh>
 #include <vcsn/core/rat/fwd.hh>
+#include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
-#include <lib/vcsn/rat/location.hh>
 #include <vcsn/misc/export.hh>
-
-#include <lib/vcsn/rat/fwd.hh>
-#include <lib/vcsn/rat/parse.hh>
 
 namespace vcsn
 {
   namespace rat
   {
-
     /// State and public interface for rational expression parsing.
     class LIBVCSN_API driver
     {

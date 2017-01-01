@@ -3,9 +3,7 @@
 #include <sstream>
 #include <string>
 
-#include <vcsn/misc/export.hh> // LIBVCSN_API
-
-namespace vcsn LIBVCSN_API
+namespace vcsn
 {
   /// Format v via vs.print.
   template <typename ValueSet, typename Value = typename ValueSet::value_t,
