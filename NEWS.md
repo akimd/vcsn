@@ -5,14 +5,43 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2017-01-01
+### A richer dyn
+The `vcsn::dyn` API was enriched.  All the dyn types now support the usual
+operators: comparisons (`==`, `!=`, `<`, `<=`, `>`, `>=`), and compositions
+(`+`, `*`, `&`).  New functions facilitate the creation of `dyn` values from
+strings (`make_word`, etc.).  The file `tests/demos/operators.cc` shows
+several examples, explained in the `C++-Library.ipynb` notebook.  For
+instance:
+
+    // A simple automaton.
+    auto a1 = make_automaton("context = lal, q\n"
+                             "$ 0 <1/2>\n"
+                             "0 1 <2>a, <6>b\n"
+                             "1 $\n", "daut");
+    // Its context.
+    auto ctx = context_of(a1);
+
+    // Evaluate it.
+    assert(evaluate(a1, make_word(ctx, "a")) == make_weight(ctx, "1"));
+    assert(evaluate(a1, make_word(ctx, "b")) == make_weight(ctx, "3"));
+
+    // Concatenate to itself.
+    auto a2 = a1 * a1;
+    assert(evaluate(a2, make_word(ctx, "ab")) == make_weight(ctx, "3"));
+
+    // Self-conjunction, aka "power 2".
+    auto a3 = a1 & a1;
+    assert(evaluate(a3, make_word(ctx, "b")) == make_weight(ctx, "9"));
+
 ## 2016-12-25
 ### Configuration
 Vcsn now supports configuration files.  They will be used to provide users
 with a means to customize Vcsn, for instance to tune the graphical rendering
-of the automata, etc.
+of the automata, to tailor the display of expressions, etc.
 
-For a start, it provides the users with a simple means to get the
-configuration information, including from the tools.
+For a start, it provides a simple means to get the configuration
+information, including from Vcsn Tools.
 
     $ vcsn ipython --no-banner
     In [1]: import vcsn

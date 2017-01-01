@@ -12,20 +12,15 @@ Copyright (C) 2012-2016 The Vaucanson Group.
 Overview
 --------
 
-Initiated by Jacques Sakarovitch and Sylvain Lombardy in 2000, Vcsn is the
-result of a collaboration between [Télécom
-ParisTech](http://www.telecom-paristech.fr) and the [EPITA Research and
-Development Laboratory (LRDE)](http://www.lrde.epita.fr).
+The Vcsn platform enables the development of C++ programs manipulating
+weighted finite automata in an abstract and general way with, at the same
+time, a large specialization power.  On the one hand, we can write
+algorithms working on every automaton with weights in any semiring and with
+words from any free monoids.  And on the other hand, a particular algorithm
+can be specialized for a particular data structure.
 
-The goal of this platform is to enable the development of C++ programs
-manipulating weighted finite automata in an abstract and general way with,
-at the same time, a large specialization power. On the one hand, we can
-write algorithms working on every automaton with weights in any semiring and
-with words from any free monoids. And on the other hand, a particular
-algorithm can be specialized for a particular data structure.
-
-The Python bindings, and particularly the IPython interface, make Vcsn a
-tool particularly well suited for practical sessions in courses of Formal
+The Python bindings, and especially the IPython interface, make Vcsn a tool
+particularly well suited for practical sessions in courses of Formal
 Language Theory.  More generally, it proves to be a handy means to explore
 compositions of algorithms on automata from small sizes to "real world"
 cases.
