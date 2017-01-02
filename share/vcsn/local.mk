@@ -12,6 +12,17 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 nodist_pkgdata_DATA = %D%/config.yaml
+dist_pkgdata_DATA = %D%/version.yaml
+
+.PHONY: %D%/version.yaml
+%D%/version.yaml:
+	$(AM_V_GEN)							\
+	version=$$(git -C $(srcdir) describe | sed -e 's/^v//');	\
+	if test x"$$version" != x; then					\
+	  echo "configuration:" > $@.tmp;				\
+	  echo "  version: $$version" >>$@.tmp;				\
+	  $(move_if_change) $@.tmp $(srcdir)/$@;			\
+	fi
 
 jsdir = $(pkgdatadir)/js
 dist_js_DATA =                                  \

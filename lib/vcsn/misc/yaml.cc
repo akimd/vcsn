@@ -111,32 +111,35 @@ namespace vcsn
       swap(first.keys_, second.keys_);
     }
 
+    namespace
+    {
+      config::Node load_file(const boost::filesystem::path& p)
+      {
+        require(boost::filesystem::exists(p),
+                "config file does not exist:", p);
+        return YAML::LoadFile(p.string());
+      }
+    }
+
     config::config()
     {
       auto path = xgetenv("VCSN_DATA_PATH", VCSN_DATADIR);
       auto flib = file_library{path, ":"};
 
-      {
-        auto file_path = flib.find_file("config.yaml").string();
-        require(boost::filesystem::exists(file_path),
-                "config file does not exists:", file_path);
-        config_tree = YAML::LoadFile(file_path);
-      }
-
-      // Merge the user config.
+      // Base config.
+      config_tree = load_file(flib.find_file("config.yaml"));
+      // Version file.
+      merge_recurse(load_file(flib.find_file("version.yaml")),
+                    config_tree);
+      // User config.
       if (!std::getenv("VCSN_NO_HOME_CONFIG"))
-        load_home_config(expand_tilda("~/.vcsn/config.yaml"));
+        {
+          auto p = expand_tilda("~/.vcsn/config.yaml");
+          if (boost::filesystem::exists(p))
+            merge_recurse(YAML::LoadFile(p),
+                          config_tree);
+        }
     }
-
-    void config::load_home_config(const std::string& filename)
-    {
-      if (boost::filesystem::exists(filename))
-      {
-        auto to_merge = YAML::LoadFile(filename);
-        merge_recurse(to_merge, config_tree);
-      }
-    }
-
 
     config::config_value config::operator[](const std::string& key)
     {

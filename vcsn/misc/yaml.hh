@@ -73,8 +73,8 @@ namespace vcsn LIBVCSN_API
         Node node_;
       };
 
+      /// Load all the configuration files.
       config();
-      void load_home_config(const std::string& filename);
 
       /// Access a subkey.
       config_value operator[](const std::string& key);
