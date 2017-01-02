@@ -11,6 +11,39 @@ namespace vcsn
 {
   namespace detail
   {
+    namespace
+    {
+      config::Node load_file(const boost::filesystem::path& p)
+      {
+        require(boost::filesystem::exists(p),
+                "config file does not exist:", p);
+        return YAML::LoadFile(p.string());
+      }
+
+      // Templated because node[] gives us rvalues.
+      template <typename T>
+      void merge_recurse(const config::Node& from, T&& out)
+      {
+        if (from.IsScalar() || from.IsSequence())
+          out = from;
+        else if (from.IsMap())
+          for (auto e : from)
+          {
+            auto key = e.first.as<std::string>();
+            if (!out[key])
+            {
+              auto node = config::Node{};
+              merge_recurse(e.second, node);
+              out[key] = node;
+            }
+            else if (out.Tag() != "!StyleList")
+              merge_recurse(e.second, out[key]);
+            else
+              raise("bad config value");
+          }
+      }
+    }
+
     config::config_value::config_value(Node n)
       : node_{n}
     {}
@@ -20,7 +53,7 @@ namespace vcsn
     {}
 
     config::config_value::config_value(const config& c)
-        : node_{c.config_tree}
+        : node_{c.config_tree_}
       {}
 
     config::config_value&
@@ -111,33 +144,23 @@ namespace vcsn
       swap(first.keys_, second.keys_);
     }
 
-    namespace
-    {
-      config::Node load_file(const boost::filesystem::path& p)
-      {
-        require(boost::filesystem::exists(p),
-                "config file does not exist:", p);
-        return YAML::LoadFile(p.string());
-      }
-    }
-
     config::config()
     {
       auto path = xgetenv("VCSN_DATA_PATH", VCSN_DATADIR);
       auto flib = file_library{path, ":"};
 
       // Base config.
-      config_tree = load_file(flib.find_file("config.yaml"));
+      config_tree_ = load_file(flib.find_file("config.yaml"));
       // Version file.
       merge_recurse(load_file(flib.find_file("version.yaml")),
-                    config_tree);
+                    config_tree_);
       // User config.
       if (!std::getenv("VCSN_NO_HOME_CONFIG"))
         {
           auto p = expand_tilda("~/.vcsn/config.yaml");
           if (boost::filesystem::exists(p))
             merge_recurse(YAML::LoadFile(p),
-                          config_tree);
+                          config_tree_);
         }
     }
 
@@ -146,33 +169,7 @@ namespace vcsn
       // We don't return the YAML node directly
       // to make sure to be able to change the
       // underlying library.
-      return config_value(config_tree)[key];
-    }
-
-    template <typename T>
-    void config::merge_recurse(const Node& from, T&& out)
-    {
-      if (from.IsScalar())
-        out = from;
-      else if (from.IsSequence())
-        out = from;
-      else if (from.IsMap())
-      {
-        for (auto e : from)
-        {
-          auto key = e.first.as<std::string>();
-          if (!out[key])
-          {
-            auto node = Node();
-            merge_recurse(e.second, node);
-            out[key] = node;
-          }
-          else if (out.Tag() != "!StyleList")
-            merge_recurse(e.second, out[key]);
-          else
-            raise("bad config value");
-        }
-      }
+      return config_value(config_tree_)[key];
     }
   }
 

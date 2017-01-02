@@ -80,11 +80,7 @@ namespace vcsn LIBVCSN_API
       config_value operator[](const std::string& key);
 
     private:
-      // Templated because node[] gives us rvalues.
-      template <typename T>
-      static void merge_recurse(const Node& from, T&& out);
-
-      Node config_tree;
+      Node config_tree_;
     };
 
     inline
