@@ -20,70 +20,71 @@ namespace vcsn LIBVCSN_API
     /// (act as the top of the configuration tree).
     class config
     {
+    public:
+      using Node = YAML::Node;
+
+      /// The class returned by [] operators.
+      class config_value
+      {
       public:
-        /// The class returned by [] operators.
-        class config_value
+        class BadNode {};
+        config_value(Node n);
+        config_value(const config&);
+        config_value(const config_value& other);
+
+        /// Assign a new value to this key.
+        config_value&
+        operator=(config_value rhs);
+
+
+        template <typename T>
+        T as() const
         {
-          public:
-            class BadNode{};
-            config_value(YAML::Node n);
-            config_value(const config&);
-            config_value(const config_value& other);
+          if (!node_.IsScalar())
+            throw BadNode{};
+          return node_.as<T>();
+        }
 
-            /// Assign a new value to this key.
-            config_value&
-            operator=(config_value rhs);
+        /// Get the node value as a string.
+        std::string str() const;
 
+        config_value operator[](const std::string& key) const;
+        std::vector<std::string> keys() const;
 
-            template <typename T>
-            T as() const
-            {
-              if (!node_.IsScalar())
-                throw new BadNode;
-              return node_.as<T>();
-            }
+        /// Check that this node refers to a key that exists in the tree.
+        bool is_valid(const std::string& key) const;
+        /// Remove a key.
+        void remove(const std::string& key);
 
-            /// Get the node value as a string.
-            std::string str() const;
+        using iterator = Node::iterator;
+        iterator begin();
+        iterator end();
 
-            config_value operator[](const std::string& key) const;
-            std::vector<std::string> keys() const;
+        /// Merge a value into another one - and modify the first.
+        void merge(const config_value& from);
 
-            /// Check that this node refers to a key that exists in the tree.
-            bool is_valid(const std::string& key) const;
-            /// Remove a key.
-            void remove(const std::string& key);
-
-            using iterator = YAML::Node::iterator;
-            iterator begin();
-            iterator end();
-
-            /// Merge a value into another one - and modify the first.
-            void merge(const config_value& from);
-
-            std::ostream& print(std::ostream& out) const;
-            friend void swap(config_value& first, config_value& second);
-
-          private:
-            std::unique_ptr<std::vector<std::string>> gen_keys() const;
-
-            mutable std::unique_ptr<const std::vector<std::string>> keys_;
-            YAML::Node node_;
-        };
-
-        config();
-        void load_home_config(const std::string& filename);
-
-        /// Access a subkey.
-        config_value operator[](const std::string& key);
+        std::ostream& print(std::ostream& out) const;
+        friend void swap(config_value& first, config_value& second);
 
       private:
+        std::unique_ptr<std::vector<std::string>> gen_keys() const;
 
-        // Templated because node[] gives us rvalues.
-        template <typename T>
-        static void merge_recurse(const YAML::Node& from, T&& out);
+        mutable std::unique_ptr<const std::vector<std::string>> keys_;
+        Node node_;
+      };
 
-        YAML::Node config_tree;
+      config();
+      void load_home_config(const std::string& filename);
+
+      /// Access a subkey.
+      config_value operator[](const std::string& key);
+
+    private:
+      // Templated because node[] gives us rvalues.
+      template <typename T>
+      static void merge_recurse(const Node& from, T&& out);
+
+      Node config_tree;
     };
 
     inline

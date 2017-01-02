@@ -11,7 +11,7 @@ namespace vcsn
 {
   namespace detail
   {
-    config::config_value::config_value(YAML::Node n)
+    config::config_value::config_value(Node n)
       : node_{n}
     {}
 
@@ -67,15 +67,13 @@ namespace vcsn
 #endif
     }
 
-    using iterator = YAML::Node::iterator;
-
-    iterator config::config_value::begin()
+    auto config::config_value::begin() -> iterator
     {
       require(node_.IsSequence(), "YAML node is not a sequence");
       return node_.begin();
     }
 
-    iterator config::config_value::end()
+    auto config::config_value::end() -> iterator
     {
       return node_.end();
     }
@@ -118,12 +116,13 @@ namespace vcsn
       auto path = xgetenv("VCSN_DATA_PATH", VCSN_DATADIR);
       auto flib = file_library{path, ":"};
 
-      auto file_path = flib.find_file("config.yaml").string();
+      {
+        auto file_path = flib.find_file("config.yaml").string();
+        require(boost::filesystem::exists(file_path),
+                "config file does not exists:", file_path);
+        config_tree = YAML::LoadFile(file_path);
+      }
 
-      require(boost::filesystem::exists(file_path),
-              "config file does not exists:", file_path);
-
-      config_tree = YAML::LoadFile(file_path);
       // Merge the user config.
       if (!std::getenv("VCSN_NO_HOME_CONFIG"))
         load_home_config(expand_tilda("~/.vcsn/config.yaml"));
@@ -148,7 +147,7 @@ namespace vcsn
     }
 
     template <typename T>
-    void config::merge_recurse(const YAML::Node& from, T&& out)
+    void config::merge_recurse(const Node& from, T&& out)
     {
       if (from.IsScalar())
         out = from;
@@ -161,7 +160,7 @@ namespace vcsn
           auto key = e.first.as<std::string>();
           if (!out[key])
           {
-            auto node = YAML::Node();
+            auto node = Node();
             merge_recurse(e.second, node);
             out[key] = node;
           }
