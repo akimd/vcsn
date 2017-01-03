@@ -182,8 +182,8 @@ namespace vcsn
     if (subkeys.size() == 2 && subkeys[0] == "configuration")
     {
       auto env_var = "VCSN_" + boost::to_upper_copy(subkeys[1]);
-      if (std::getenv(env_var.c_str()))
-        return std::getenv(env_var.c_str());
+      if (auto res = std::getenv(env_var.c_str()))
+        return res;
     }
 
     for (const auto& subkey : subkeys)
