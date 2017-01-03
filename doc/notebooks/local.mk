@@ -195,6 +195,7 @@ dist_notebooks_DATA =                           \
 
 if HAVE_NBCONVERT
 nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html) %D%/index.html
+DISTCLEANFILES += $(nodist_notebooks_DATA)
 endif
 
 
