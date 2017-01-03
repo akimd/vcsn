@@ -2,7 +2,7 @@ Source: vcsn
 Section: science
 Priority: optional
 Maintainer: Clément Démoulins <demoulins@lrde.epita.fr>
-Build-Depends: debhelper (>= 9), autotools-dev, bison, flex, libboost-all-dev, graphviz, doxygen, ccache, g++ (>= 4.9), dh-python, python3-all-dev, python3.5-dev
+Build-Depends: debhelper (>= 9), autotools-dev, bison, ccache, dh-python, doxygen, flex, graphviz, g++ (>= 4.9), libboost-all-dev, libyaml-cpp-dev, python3-all-dev, python3.5-dev
 Standards-Version: 3.9.8
 X-Python3-Version: >= 3.5
 Homepage: https://vcsn.lrde.epita.fr/
@@ -10,7 +10,7 @@ Homepage: https://vcsn.lrde.epita.fr/
 Package: vcsn
 Architecture: any
 Suggests: jupyter
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, ccache, g++ (>= 4.9)
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, ccache, libyaml-cpp-dev, g++ (>= 4.9)
 Description: Platform for weighted automata and rational expressions.
   It consists of an efficient C++ generic library, shell tools, Python
   bindings, and a graphical interactive environment on top of IPython.
