@@ -93,15 +93,19 @@ $(TEST_LOGS): %D%/bin/vcsn
 # By default, tests are buildcheck.
 AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
-# Common to build and install check.
+# Common to build and install check (initializes
+# BUILDCHECK_ENVIRONMENT and INSTALLCHECK_ENVIRONMENT).
+#
+# Set verbosity to get compiler logs, or more if the envvar is already
+# set.  Do not load the user's config file, which might mess with our
+# base configuration.
 CHECK_ENVIRONMENT +=                                \
-  VCSN_VERBOSE=1; export VCSN_VERBOSE;              \
-  VCSN_NO_HOME_CONFIG= ; export VCSN_NO_HOME_CONFIG
+  : $${VCSN_VERBOSE=1}; export VCSN_VERBOSE;        \
+  VCSN_NO_HOME_CONFIG=; export VCSN_NO_HOME_CONFIG
 
 # Use the wrappers to run the non-installed executables.
 # Find the config file in share/vcsn.
 BUILDCHECK_ENVIRONMENT +=						\
-  $(CHECK_ENVIRONMENT);							\
   PATH=$(abs_top_builddir)/tests/bin:$$PATH;				\
   export PATH;								\
   : $${VCSN_DATADIR=$(abs_top_srcdir)/share/vcsn};			\
@@ -110,11 +114,10 @@ BUILDCHECK_ENVIRONMENT +=						\
   export VCSN_DATA_PATH;
 
 # Find test.py which is in tests/bin.
-INSTALLCHECK_ENVIRONMENT +=                                                     \
-  $(CHECK_ENVIRONMENT);                                                         \
-  PATH=$(DESTDIR)$(bindir):$$PATH;                                              \
-  export PATH;                                                                  \
-  PYTHONPATH=$(abs_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH;       \
+INSTALLCHECK_ENVIRONMENT +=                                               \
+  PATH=$(DESTDIR)$(bindir):$$PATH;                                        \
+  export PATH;                                                            \
+  PYTHONPATH=$(abs_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH; \
   export PYTHONPATH;
 
 # Run the tests with the install-environment.
