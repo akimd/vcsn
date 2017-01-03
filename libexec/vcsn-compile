@@ -146,7 +146,7 @@ def need_compiling():
 
     try:
         # Check that the build parameters didn't change.
-        with open(args['target']+'.cmd') as f:
+        with open(args['output']+'.cmd') as f:
             cmd = f.read().strip()
             if build_signature() != cmd:
                 log('compilation needed: command signature changed\n'
@@ -155,26 +155,37 @@ def need_compiling():
                     .format(cmd, build_signature()), level=2)
                 return True
 
-        depfile = args['target'] + '.d'
-        with open(depfile) as f:
+        with open(args['deps']) as f:
             deps = f.read()
-        target = None
-        for m in re.finditer(r'[^ \\\n:]+', deps):
-            file = m.group(0)
-            # The first file is the target.
-            if target is None:
-                if file != args['target']:
-                    raise RuntimeError('unexpected target: {} instead of {}'
-                                       .format(file, args['target']))
-                target = file
-                target_mtime = os.path.getmtime(target)
-            elif os.path.getmtime(file) > target_mtime:
+        output = None
+
+        # Read the files names in the dependency file.
+        #
+        # Be ready to accept some escaped characters (e.g., the
+        # spaces, and we do have spaces in the plugin names), but also
+        # colons when they come by two as in `std::string`.
+        #
+        # This is not supported by Make, but we don't care (so far):
+        # we don't use make.
+        for m in re.finditer(r'([^ \\\n:]|\\.|::)+', deps):
+            # Escaped characters.
+            file = re.sub(r'\\(.)', r'\1', m.group(0))
+            # The first file is the output.
+            if output is None:
+                if file != args['output']:
+                    raise RuntimeError('unexpected target in dependency file'
+                                       '  unexpected: {}\n'
+                                       '    expected: {}'
+                                       .format(file, args['output']))
+                output = file
+                output_mtime = os.path.getmtime(output)
+            elif os.path.getmtime(file) > output_mtime:
                 def date(mtime):
                     return time.strftime('%x %X', time.localtime(mtime))
-                log('compilation needed: dependency is more recent than target\n'
-                    '      target: {}: {}\n'
+                log('compilation needed: dependency is more recent than output\n'
+                    '      output: {}: {}\n'
                     '  dependency: {}: {}'
-                    .format(date(target_mtime),           target,
+                    .format(date(output_mtime),           output,
                             date(os.path.getmtime(file)), file),
                     level=2)
                 return True
@@ -189,22 +200,25 @@ def need_compiling():
 
 # Main.
 args = parse_args()
-args['target'] = args['base'] + ('.so' if args['shared'] else '')
+# The output.
+args['output'] = args['base'] + ('.so' if args['shared'] else '')
+# The deps file.
+args['deps'] = fmt('{output}.d')
 
 if not need_compiling():
     exit(0)
 
 # Save build signature.
-with open(args['target']+'.cmd', 'w') as f:
+with open(args['output']+'.cmd', 'w') as f:
     print(build_signature(), file=f)
 
 if args['shared']:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o'"
-        " -MMD -MF '{base}.d' -MQ '{target}'"
+        " -MMD -MF '{deps}' -MQ '{output}'"
         " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so'"
         " '{tmp}.o'")
-    os.rename(fmt('{tmp}.so'), fmt('{target}'))
+    os.rename(fmt('{tmp}.so'), fmt('{output}'))
     # Upon success, remove the .o file, it is large (10x compared to
     # the *.so on erebus using clang) and not required. However the
     # debug symbols are in there, so when debugging, leave them!
@@ -215,9 +229,9 @@ else:
     # Exploit ccache: use separate compilation and then linking
     # instead of a single compiler invocation.
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o'"
-        " -MMD -MF '{base}.d' -MQ '{target}'"
+        " -MMD -MF '{deps}' -MQ '{output}'"
         " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
-    os.rename(fmt('{tmp}'), fmt('{target}'))
+    os.rename(fmt('{tmp}'), fmt('{output}'))
     if 'VCSN_DEBUG' not in os.environ:
         os.remove(fmt('{tmp}.o'))
