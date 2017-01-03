@@ -4,7 +4,7 @@
 
 # Known pylint issue: https://github.com/PyCQA/pylint/issues/848
 # Reported pylint issue: https://github.com/PyCQA/pylint/issues/931
-# Last seen in pylint 1.6.1, astroid 1.4.7
+# Last seen in pylint 1.6.4, astroid 1.4.9
 # FIXME: Remove comment once issues are fixed.
 # pylint: disable=unused-import,undefined-variable
 from vcsn_cxx import context, label, polynomial, expression, weight

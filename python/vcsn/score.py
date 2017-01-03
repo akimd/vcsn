@@ -1,12 +1,12 @@
 import re
 import sys
 
-import ipywidgets as widgets # pylint: disable=import-error
+# pylint: disable=import-error
+import ipywidgets as widgets
 from IPython.core.magic import (Magics, magics_class, line_magic)
 from IPython.core.magic_arguments import (
     argument, magic_arguments, parse_argstring)
 
-# pylint: disable=import-error
 import matplotlib.pyplot as plt
 import pandas as pd
 

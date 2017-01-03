@@ -25,8 +25,6 @@ from vcsn.weight     import weight
 
 from vcsn_cxx import configuration as config # pylint: disable=wrong-import-order
 
-# pylint: enable=wrong-import-position
-
 datadir = config('configuration.datadir')
 version = config('configuration.version')
 
@@ -37,12 +35,12 @@ try:
     # Load only if we are running IPython.
     __IPYTHON__
     # pylint: disable=ungrouped-imports
-    from vcsn.ipython import * # pylint: disable=wrong-import-position
+    from vcsn.ipython import *
 
     ip = get_ipython()
     # If we are running in a notebook.
     if 'connection_file' in ip.config['IPKernelApp']:
-        from vcsn.score import * # pylint: disable=wrong-import-position
+        from vcsn.score import *
 except (ImportError, NameError):
     pass
 
@@ -93,7 +91,7 @@ sys.excepthook = vcsn_exception_handler
 
 try:
     __IPYTHON__
-    # pylint: disable=wrong-import-order,wrong-import-position
+    # pylint: disable=wrong-import-order
     from IPython.core.ultratb import AutoFormattedTB
     ip = get_ipython()
     mode = ip.InteractiveTB.mode
