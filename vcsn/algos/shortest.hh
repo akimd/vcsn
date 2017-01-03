@@ -134,10 +134,12 @@ namespace vcsn
                     auto nw = ws_.mul(w, aut_->weight_of(t));
                     if (t_dst == aut_->post() && t_dst == dst)
                       ps_.add_here(output, l, std::move(nw));
-                    else if (aut_->src_of(t) == aut_->pre() || t_dst == aut_->post())
+                    else if (aut_->src_of(t) == aut_->pre()
+                             || t_dst == aut_->post())
                       q2.emplace_back(t_dst, l, std::move(nw));
                     else if (t_dst == dst)
-                      ps_.add_here(output, ls_.mul(l, aut_->label_of(t)), std::move(nw));
+                      ps_.add_here(output, ls_.mul(l, aut_->label_of(t)),
+                                   std::move(nw));
                     else
                       q2.emplace_back(t_dst,
                                       ls_.mul(l, aut_->label_of(t)),
@@ -147,6 +149,7 @@ namespace vcsn
             queue.swap(q2);
           }
 
+        // Extract the num first terms in `output`.
         auto res = ps_.zero();
         for (const auto& m: output)
           {
@@ -207,7 +210,8 @@ namespace vcsn
                 auto nw = ws_.mul(w, aut_->weight_of(t));
                 if (t_dst == aut_->post() && t_dst == dst)
                   ps_.add_here(res, l, std::move(nw));
-                else if (aut_->src_of(t) == aut_->pre() || t_dst == aut_->post())
+                else if (aut_->src_of(t) == aut_->pre()
+                         || t_dst == aut_->post())
                   queue.emplace(t_dst, l, std::move(nw));
                 else if (t_dst == dst)
                 {

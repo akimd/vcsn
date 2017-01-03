@@ -3,8 +3,12 @@
 import vcsn
 from test import *
 
+# The algos that can compute the (1) lightest path.
 algos = ['auto', 'a-star', 'bellman-ford', 'breadth-first', 'dijkstra', 'yen']
+
+# The algos that can compute the k lightest paths.
 k_algos = ['auto', 'breadth-first', 'yen', 'eppstein']
+
 def check(re, num, exp, tests = []):
   a = ctx.expression(re, 'none').standard()
   for algo in tests if tests else algos if num == 1 else k_algos:

@@ -32,7 +32,8 @@ namespace vcsn
 
       using queue_t = vcsn::min_fibonacci_heap<implicit_path_t>;
 
-      /// Compute the \a K shortest paths in the automaton from \a src to \a dst.
+      /// Compute the \a K shortest paths in the automaton from \a src
+      /// to \a dst.
       std::vector<path<automaton_t>>
       k_shortest_path(state_t src, state_t dst, int K)
       {
@@ -41,6 +42,12 @@ namespace vcsn
         auto res = std::vector<path<automaton_t>>{};
         auto queue = queue_t{};
         queue.emplace(aut_, aut_->null_transition(),
+                      // This `int()` hardly makes sense, as
+                      // `null_parent_path` is an `int`.  But actually
+                      // it's a `static constexpr int`, and clang-3.5
+                      // behaves incorrectly on this regard.  Remove
+                      // this `int()` once we drop support for clang
+                      // 3.5.
                       int(implicit_path_t::null_parent_path),
                       tree.get_weight_of(src));
 
@@ -55,7 +62,9 @@ namespace vcsn
 
           res.emplace_back(std::move(k_path));
 
-          add_children_to_queue_(sidetrack_edge_costs_map, src, k_path_implicit, k, queue, tree);
+          add_children_to_queue_(sidetrack_edge_costs_map, src,
+                                 k_path_implicit, k,
+                                 queue, tree);
         }
 
         return res;
@@ -69,7 +78,8 @@ namespace vcsn
       void
       add_children_to_queue_(sidetrack_costs_t& sidetracks, state_t src,
                              const implicit_path_t& k_path_implicit, int k,
-                             queue_t& queue, shortest_path_tree<automaton_t>& tree)
+                             queue_t& queue,
+                             shortest_path_tree<automaton_t>& tree)
       {
         const auto& ws = *aut_->weightset();
         const auto& k_path_cost = k_path_implicit.get_weight();
@@ -89,15 +99,17 @@ namespace vcsn
             state_t parent = tree.get_parent_of(aut_->src_of(curr));
             if (parent == aut_->null_state() || parent != aut_->dst_of(curr))
             {
-              sidetracks[curr] = ws.mul(aut_->weight_of(curr),
-                                        ws.rdivide(tree.get_weight_of(aut_->dst_of(curr)),
-                                                   tree.get_weight_of(aut_->src_of(curr))));
+              sidetracks[curr]
+                = ws.mul(aut_->weight_of(curr),
+                         ws.rdivide(tree.get_weight_of(aut_->dst_of(curr)),
+                                    tree.get_weight_of(aut_->src_of(curr))));
               has_curr = true;
             }
           }
 
           if (has_curr)
-            queue.emplace(aut_, curr, k, ws.mul(k_path_cost, sidetracks[curr]));
+            queue.emplace(aut_, curr, k,
+                          ws.mul(k_path_cost, sidetracks[curr]));
           else
             for (auto tr : all_out(aut_, aut_->dst_of(curr)))
               transition_stack.push_back(tr);
@@ -112,7 +124,9 @@ namespace vcsn
   /// \a dst. Use Eppstein algorithm.
   template <Automaton Aut>
   std::vector<detail::path<Aut>>
-  compute_eppstein(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst, unsigned num)
+  compute_eppstein(const Aut& aut,
+                   state_t_of<Aut> src, state_t_of<Aut> dst,
+                   unsigned num)
   {
     auto ksp = detail::eppstein<Aut>(aut);
     return ksp.k_shortest_path(aut->pre(), aut->post(), num);

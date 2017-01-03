@@ -10,11 +10,12 @@ namespace vcsn
   {
     /// Implicit Path representation.
     ///
-    /// Abstract representation of paths represented by their parent path (N-th
-    /// shortest path, previously computed) and the sidetrack transition
-    /// (variation of the previous shortet path with a sidetrack transition).
-    /// The path's weight is stored to be able to sort these paths in the next
-    /// shortest path retrieval.
+    /// Abstract representation of paths represented by their parent
+    /// path (N-th shortest path, previously computed) and the
+    /// sidetrack transition (variation of the previous shortet path
+    /// with a sidetrack transition).  The path's weight is stored to
+    /// be able to sort these paths in the next shortest path
+    /// retrieval.
     template <Automaton Aut>
     class implicit_path
     {
@@ -36,11 +37,12 @@ namespace vcsn
 
       /// Create the explicit representation of the implicit path.
       ///
-      /// Use the vector of previous \a ksp results to retrieve the parent path.
-      /// Find the prefix path of sidetrack in the parent path and push it in the
-      /// result path. Then, add transitions from sidetrack_ to the destination
-      /// using \a tree.
-      /// In case of initial path, use \a src as the prefix path.
+      /// Use the vector of previous \a ksp results to retrieve the
+      /// parent path.  Find the prefix path of sidetrack in the
+      /// parent path and push it in the result path. Then, add
+      /// transitions from sidetrack_ to the destination using \a
+      /// tree.  In case of initial path, use \a src as the prefix
+      /// path.
       path<automaton_t>
       explicit_path(const std::vector<path<automaton_t>>& ksp,
                     shortest_path_tree<automaton_t>& tree,
@@ -53,7 +55,8 @@ namespace vcsn
             auto& explicit_pref_path = ksp[parent_path_];
             const auto& path = explicit_pref_path.get_path();
 
-            // The index of the last transition of the path before the sidetrack.
+            // The index of the last transition of the path before the
+            // sidetrack.
             int last_transition_index = -1;
             for (int i = path.size() - 1; 0 <= i; i--)
               {
@@ -71,7 +74,8 @@ namespace vcsn
             res.emplace_back(aut_->weight_of(sidetrack_), sidetrack_);
           }
 
-        auto s = parent_path_ == null_parent_path ? src : aut_->dst_of(sidetrack_);
+        auto s = parent_path_ == null_parent_path
+          ? src : aut_->dst_of(sidetrack_);
 
         const auto& ws = *aut_->weightset();
         while (s != tree.get_root())
