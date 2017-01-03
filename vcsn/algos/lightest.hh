@@ -201,8 +201,11 @@ namespace vcsn
             ps.add_here(res, *m);
         return res;
       }
-    else if (algo == "eppstein" && std::is_same<weightset_t_of<Aut>, vcsn::nmin>::value)
+    else if (algo == "eppstein")
       {
+        require(std::is_same<weightset_t_of<Aut>, vcsn::nmin>::value,
+                "lightest: eppstein: invalid weightset: ",
+                aut->weightset());
         const auto ps = make_word_polynomialset(aut->context());
         auto res = ps.zero();
         auto computed = compute_eppstein(aut, aut->pre(), aut->post(), num);
