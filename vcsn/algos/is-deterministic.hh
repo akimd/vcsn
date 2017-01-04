@@ -84,7 +84,12 @@ namespace vcsn
       bool
       is_deterministic(const automaton& aut)
       {
-        return is_deterministic(aut->as<Aut>());
+        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
+          ([](const auto& aut)
+           { return is_deterministic(aut->template as<Aut>()); },
+           [](const auto&) -> bool
+           { raise("is_deterministic: requires free labelset"); })
+          (aut);
       }
 
       /// Bridge.
@@ -92,7 +97,12 @@ namespace vcsn
       bool
       is_codeterministic(const automaton& aut)
       {
-        return is_codeterministic(aut->as<Aut>());
+        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
+          ([](const auto& aut)
+           { return is_codeterministic(aut->template as<Aut>()); },
+           [](const auto&) -> bool
+           { raise("is_codeterministic: requires free labelset"); })
+          (aut);
       }
     }
   }

@@ -356,7 +356,12 @@ namespace vcsn
       automaton
       determinize(const automaton& aut, const std::string& algo)
       {
-        return determinize_<Aut, String>(aut, algo);
+        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
+          ([](const auto& aut, const auto& algo)
+           { return determinize_<Aut, String>(aut, algo); },
+           [](const auto&, const auto&) -> automaton
+           { raise("determinize: requires free labelset"); })
+          (aut, algo);
       }
     }
   }
@@ -429,7 +434,12 @@ namespace vcsn
       automaton
       codeterminize(const automaton& aut, const std::string& algo)
       {
-        return codeterminize_<Aut, String>(aut, algo);
+        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
+          ([](const auto& aut, const auto& algo)
+           { return codeterminize_<Aut, String>(aut, algo); },
+           [](const auto&, const auto&) -> automaton
+           { raise("codeterminize: requires free labelset"); })
+          (aut, algo);
       }
     }
   }
