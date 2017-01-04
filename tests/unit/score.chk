@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# Do not run Python under Valgrind.
+unset PREPROG
+
 # Check the warm up: don't run the test cases.
 run 0 ignore -vcsn score -r 0
 

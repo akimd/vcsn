@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# Do not run Python under Valgrind.
+unset PREPROG
+
 # check OUTPUT ARGS...
 check ()
 {
