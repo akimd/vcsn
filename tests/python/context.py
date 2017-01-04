@@ -106,7 +106,15 @@ c2 = vcsn.context('lan(xyz), q')
 CHECK_EQ(vcsn.context('lat<lal(abc), lan(xyz)>, q'), c1 | c2)
 
 
-# End of level bosses.
+## --------------------- ##
+## End of level bosses.  ##
+## --------------------- ##
+
+# This one triggered a bug: shortest is not instantiable because we
+# fail to support label * word in this context.
+check('nullableset<lat<lal>>, b',
+      'nullableset<lat<letterset<char_letters()>>>, b')
+
 check('lat<lat<lal_char(a)>>, b',
       'lat<lat<letterset<char_letters(a)>>>, b')
 
