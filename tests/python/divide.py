@@ -17,10 +17,17 @@ def label(l):
 def aut(e):
     return exp(e).automaton()
 
+def divide(fun, l, r):
+    if fun == 'ldivide':
+        return l.ldivide(r)
+    else:
+        return l.rdivide(r)
+
+
 def check_fun(fun, res, l, r):
     lhs = aut(l)
     rhs = aut(r)
-    eff = fun(lhs, rhs)
+    eff = divide(fun, lhs, rhs)
     # Make sure that we did not modify the rhs.  This did happen with
     # ldivide.
     CHECK_EQ(lhs, aut(l))
@@ -32,19 +39,11 @@ def check_fun(fun, res, l, r):
         SKIP('invalid expression', res)
     return eff
 
-def ldivide(l, r):
-    return l.ldivide(r)
-
-def rdivide(l, r):
-    return l.rdivide(r)
-
-def check(l, r, resl, resr = None):
+def check(l, r, resl, resr=None):
     if resr is None:
         resr = resl
-    print('ldivide', file=sys.stderr)
-    check_fun(ldivide, resl, l, r)
-    print('rdivide', file=sys.stderr)
-    check_fun(rdivide, resr, r, l)
+    check_fun('ldivide', resl, l, r)
+    check_fun('rdivide', resr, r, l)
 
 # Boolean.  Very important, as we have two different implementations.
 ctx = 'lal, b'
@@ -76,11 +75,10 @@ CHECK_EQ(metext('rdiv.gv'), aut('a*b*').rdivide(aut('a+b')))
 
 # Cross check with derived_term and inductive,standard.
 def check(l, r):
-    for f in [ldivide, rdivide]:
-        print("Checking: {}, {}".format(l, r))
-
-        divide_exp = f(l, r)
-        divide_aut = check_fun(f, divide_exp, l, r)
+    for fun in ['ldivide', 'rdivide']:
+        print("{}: {}, {}".format(fun, l, r))
+        divide_exp = divide(fun, l, r)
+        divide_aut = check_fun(fun, divide_exp, l, r)
 
         if divide_aut.is_valid():
             for algo in ['expansion', 'inductive,standard']:
@@ -127,21 +125,23 @@ check_div(r'<2>c+<3>d', '<2>ab')
 ## --------------------- ##
 
 def check(fun, l, r, res):
-    CHECK_EQ(res, fun(label(l), label(r)))
+    CHECK_EQ(res, divide(fun, label(l), label(r)))
 
-check(ldivide, 'a', 'ab', 'b')
-check(ldivide, 'aba', 'abaaba', 'aba')
-check(ldivide, r'\e', 'abaaba', 'abaaba')
-check(ldivide, r'\e', r'\e', r'\e')
+check('ldivide', 'a', 'ab', 'b')
+check('ldivide', 'aba', 'abaaba', 'aba')
+check('ldivide', r'\e', 'abaaba', 'abaaba')
+check('ldivide', r'\e', r'\e', r'\e')
 
-XFAIL(lambda: ldivide(label('b'), label('ab')), "ldivide: invalid arguments: b, ab")
+XFAIL(lambda: label('b').ldivide(label('ab')),
+      'ldivide: invalid arguments: b, ab')
 
-check(rdivide, 'ba', 'a', 'b')
-check(rdivide, 'abaaba', 'aba', 'aba')
-check(rdivide, 'abaaba', r'\e', 'abaaba')
-check(rdivide, r'\e', r'\e', r'\e')
+check('rdivide', 'ba', 'a', 'b')
+check('rdivide', 'abaaba', 'aba', 'aba')
+check('rdivide', 'abaaba', r'\e', 'abaaba')
+check('rdivide', r'\e', r'\e', r'\e')
 
-XFAIL(lambda: rdivide(label('a'), label('ab')), "rdivide: invalid arguments: a, ab")
+XFAIL(lambda: label('a').rdivide(label('ab')),
+      'rdivide: invalid arguments: a, ab')
 
 ## --------------------------------- ##
 ## ldivide(polynomial, polynomial).  ##

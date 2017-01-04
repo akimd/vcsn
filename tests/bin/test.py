@@ -122,9 +122,9 @@ def FAIL(*msg, **kwargs):
     # will be reported anyway by the TAP driver.
     m = ' '.join(msg)
     if m.count("\n") == 0:
-        print('not ok ', count, m)
+        print('not ok', count, m)
     else:
-        print('not ok ', count)
+        print('not ok', count)
     loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] else here()
     print(loc + ": fail:", *msg)
     print()
