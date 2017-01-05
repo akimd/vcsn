@@ -226,7 +226,7 @@ def demangle(s, color="auto"):
     s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters> >',
             r'law_\1',
             s)
-    s = sub(r'(?:vcsn::)?(nullableset|tupleset)<({param})>',
+    s = sub(r'vcsn::(nullableset|tupleset)<({param})>',
             r'\1<\2>',
             s)
 
@@ -244,7 +244,7 @@ def demangle(s, color="auto"):
             s)
 
     # Contexts.
-    s = sub(r'(?:vcsn::)?(context)<({param})>',
+    s = sub(r'vcsn::(context)<({param})>',
             r'\1<\2>',
             s)
 
