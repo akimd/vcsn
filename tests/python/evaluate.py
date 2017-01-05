@@ -246,6 +246,14 @@ check(a, "|", '0')
 check(a, "aaa|ab", '3')
 
 
+# Labels are expressions.
+ctx = vcsn.context('expressionset<lal, b>, b')
+e = ctx.expression('a')
+a = e.automaton()
+XFAIL(lambda: a('a'),
+      'evaluate: unsupported labelset: RatE[{a...} -> B]')
+
+
 ## check AUTOMATON POLYNOMIAL EXP
 ## ------------------------------
 

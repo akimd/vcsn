@@ -73,7 +73,7 @@ namespace vcsn
 
             for (auto t : all_out(aut_, cur.s))
               if (aut_->dst_of(t) == aut_->post() && wordset_.is_special(cur.l))
-              // The word is accepted.
+                // The word is accepted.
                 {
                   cur.w = ws_.mul(cur.w, aut_->weight_of(t));
                   res = ws_.add(res, cur.w);
@@ -211,10 +211,26 @@ namespace vcsn
       weight
       evaluate(const automaton& aut, const label& lbl)
       {
-        const auto& a = aut->as<Aut>();
-        const auto& l = lbl->as<LabelSet>().value();
-        auto res = ::vcsn::evaluate(a, l);
-        return {*a->weightset(), res};
+        using ctx_t = context_t_of<Aut>;
+        // This is utterly wrong, as we do not support
+        // lat<expressionset, ...>.  but currently we have no means to
+        // tell the difference.  We probably need something like
+        // "is_graduated".
+        constexpr auto valid
+          = (ctx_t::is_lal || ctx_t::is_lan || ctx_t::is_lao
+             || ctx_t::is_lat || ctx_t::is_law);
+        return vcsn::detail::static_if<valid>
+          ([](const auto& a, const auto& l) -> weight
+           {
+             auto res = ::vcsn::evaluate(a, l);
+             return {*a->weightset(), res};
+           },
+           [](const auto& a, const auto&) -> weight
+           {
+             raise("evaluate: unsupported labelset: ",
+                   *a->labelset());
+           })
+          (aut->as<Aut>(), lbl->as<LabelSet>().value());
       }
     }
   }
@@ -223,7 +239,7 @@ namespace vcsn
   template <Automaton Aut>
   auto
   evaluate(const Aut& a,
-      const typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t& p)
+           const typename detail::word_polynomialset_t<context_t_of<Aut>>::value_t& p)
     -> weight_t_of<Aut>
   {
     auto e = detail::evaluator<Aut>{a};
@@ -238,7 +254,7 @@ namespace vcsn
       /// Bridge (evaluate).
       template <Automaton Aut, typename PolynomialSet>
       weight
-      eval_polynomial(const automaton& aut, const polynomial& poly)
+      evaluate_polynomial(const automaton& aut, const polynomial& poly)
       {
         const auto& a = aut->as<Aut>();
         const auto& p = poly->as<PolynomialSet>().value();
