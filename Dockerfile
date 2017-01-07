@@ -16,7 +16,6 @@ RUN apt-get update                              \
         imagemagick                             \
         libboost-all-dev                        \
         libgmp-dev                              \
-        libmagickcore-6.q16-2-extra             \
         libzmq3-dev                             \
         locales                                 \
         pdf2svg                                 \
