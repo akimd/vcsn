@@ -183,7 +183,7 @@ namespace vcsn
   /// initial and final transitions. Sum the weight of these paths.
   template <Automaton Aut>
   auto
-  evaluate(const Aut& a)
+  evaluate(const Aut& a, const label_t_of<Aut>& = {})
     -> std::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
     require(is_proper(a), "evaluate: cannot evaluate with spontaneous transitions");
