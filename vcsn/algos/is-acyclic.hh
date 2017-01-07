@@ -4,17 +4,17 @@
 
 #include <boost/optional.hpp>
 
+#include <vcsn/core/automaton.hh>
+#include <vcsn/core/fwd.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/builtins.hh>
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/core/fwd.hh>
 
 namespace vcsn
 {
   namespace detail
   {
-
     /// Detect circuits.
     template <Automaton Aut>
     class is_acyclic_impl
@@ -33,14 +33,12 @@ namespace vcsn
       /// Whether the automaton is acyclic.
       bool operator()()
       {
-        for (auto s : aut_->states())
-          if (has_circuit_(s))
-            return false;
-        return true;
+        return none_of(aut_->states(),
+                       [this](auto s) { return this->has_circuit_(s); });
       }
 
     private:
-      /// Return true if an circuit is accessible from s.
+      /// Whether a circuit is accessible from s.
       bool has_circuit_(state_t s)
       {
         auto it = tag_.find(s);
