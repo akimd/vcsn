@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <vcsn/concepts/automaton.hh>
+#include <vcsn/core/automaton.hh> // states_size
 #include <vcsn/misc/map.hh> // vcsn::less
 
 namespace vcsn
