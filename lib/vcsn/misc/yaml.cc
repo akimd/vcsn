@@ -72,9 +72,10 @@ namespace vcsn
     config::config_value::operator[](const std::string& key) const
     {
       require(node_.IsMap(),
-              "YAML node is not a map. Key: ", key);
+              "configuration: requesting a key (", key,
+              ") in a leaf");
       require(node_[key].IsDefined(),
-              "YAML: invalid key: ", key);
+              "configuration: invalid key: ", key);
       return config_value(node_[key]);
     }
 
@@ -96,13 +97,13 @@ namespace vcsn
 #if VCSN_YAML_CPP_REMOVE_WORKS
       node_.remove(key);
 #else
-      raise("YAML: libyaml-cpp is broken, cannot remove node ", key);
+      raise("configuration: libyaml-cpp is broken, cannot remove node ", key);
 #endif
     }
 
     auto config::config_value::begin() -> iterator
     {
-      require(node_.IsSequence(), "YAML node is not a sequence");
+      require(node_.IsSequence(), "configuration: node is not a sequence");
       return node_.begin();
     }
 
@@ -127,7 +128,7 @@ namespace vcsn
     config::config_value::gen_keys() const
     {
       auto res = std::make_unique<std::vector<std::string>>();
-      require(node_.IsMap(), "YAML node is not a map");
+      require(node_.IsMap(), "configuration: node is not a map");
 
       for (auto e : node_)
         res->emplace_back(e.first.as<std::string>());
@@ -159,16 +160,14 @@ namespace vcsn
         {
           auto p = expand_tilda("~/.vcsn/config.yaml");
           if (boost::filesystem::exists(p))
-            merge_recurse(YAML::LoadFile(p),
-                          config_tree_);
+            merge_recurse(YAML::LoadFile(p), config_tree_);
         }
     }
 
     config::config_value config::operator[](const std::string& key)
     {
-      // We don't return the YAML node directly
-      // to make sure to be able to change the
-      // underlying library.
+      // We don't return the YAML node directly to make sure to be
+      // able to change the underlying library.
       return config_value(config_tree_)[key];
     }
   }
