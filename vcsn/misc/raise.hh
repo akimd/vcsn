@@ -34,7 +34,7 @@ namespace vcsn
     inline void print_(std::ostream& o, std::istream& is, long)
     {
       is.clear();
-      std::string buf;
+      auto buf = std::string{};
       std::getline(is, buf, '\n');
       if (!is.good())
         // This shouldn't really happen; however it's best to fail cleanly.

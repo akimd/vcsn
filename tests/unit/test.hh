@@ -4,6 +4,7 @@
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/show.hh>
+#include <vcsn/misc/to-string.hh>
 
 // A macro, because we capture __LINE__ and __FILE__ and #Lhs etc.
 #define ASSERT_EQ(Lhs, Rhs)                                             \
@@ -29,11 +30,13 @@
     auto rhs_ = Rhs;                                                    \
     if (!vs.equal(lhs_, rhs_))                                          \
       {                                                                 \
-        SHOWH("FAIL: assertion failed: equal(" #Lhs ", " #Rhs ")");     \
+        SHOWH("FAIL: assertion failed: " << vcsn::to_string(vs)         \
+              << ".equal(" #Lhs ", " #Rhs ")");                         \
         SHOW("expected:\n\t\"" << vcsn::to_string(vs, lhs_) << '"');    \
         SHOW("effective:\n\t\"" << vcsn::to_string(vs, rhs_) << '"');   \
         ++nerrs;                                                        \
       }                                                                 \
     else if (getenv("VERBOSE"))                                         \
-      SHOWH("PASS: equal(" #Lhs ", " #Rhs ")");                         \
+      SHOWH("PASS: " << vcsn::to_string(vs)                             \
+            << ".equal(" #Lhs ", " #Rhs ")");   \
   } while (false)

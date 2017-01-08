@@ -5,6 +5,8 @@
 #include <vcsn/weightset/log.hh>
 #include <vcsn/weightset/r.hh>
 #include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/nmin.hh>
+#include <vcsn/weightset/rmin.hh>
 #include <vcsn/weightset/zmin.hh>
 
 #include "tests/unit/weight.hh"
@@ -202,10 +204,13 @@ static size_t check_r()
   return nerrs;
 }
 
-static size_t check_zmin()
+/// Check Nmin, Zmin or Rmin.
+template <typename WeightSet>
+static size_t check_tropical_min()
 {
   size_t nerrs = 0;
-  vcsn::zmin ws;
+  WeightSet ws;
+  constexpr auto is_signed = std::is_signed<typename WeightSet::value_t>{};
 
   // format.
   ASSERT_EQ(to_string(ws, ws.zero()), "oo");
@@ -221,23 +226,40 @@ static size_t check_zmin()
   ASSERT_VS_EQ(ws, ws.add(23, 42), 23);
   ASSERT_VS_EQ(ws, ws.add(42, 23), 23);
   ASSERT_VS_EQ(ws, ws.add(ws.zero(), 12), 12);
-  ASSERT_VS_EQ(ws, ws.add(-12, ws.zero()), -12);
+  if (is_signed)
+    ASSERT_VS_EQ(ws, ws.add(-12, ws.zero()), -12);
 
   // mul: add.
   ASSERT_VS_EQ(ws, ws.mul(23, 42), 23+42);
   ASSERT_VS_EQ(ws, ws.mul(42, 23), 42+23);
   ASSERT_VS_EQ(ws, ws.mul(ws.zero(), 12), ws.zero());
-  ASSERT_VS_EQ(ws, ws.mul(-12, ws.zero()), ws.zero());
+  if (is_signed)
+    ASSERT_VS_EQ(ws, ws.mul(-12, ws.zero()), ws.zero());
   ASSERT_VS_EQ(ws, ws.mul(ws.one(), 12), 12);
-  ASSERT_VS_EQ(ws, ws.mul(-12, ws.one()), -12);
+  if (is_signed)
+    ASSERT_VS_EQ(ws, ws.mul(-12, ws.one()), -12);
 
   // div: sub.
-  ASSERT_VS_EQ(ws, ws.rdivide(23, 42), 23-42);
+  if (is_signed)
+    ASSERT_VS_EQ(ws, ws.rdivide(23, 42), 23-42);
   ASSERT_VS_EQ(ws, ws.rdivide(42, 23), 42-23);
   ASSERT_VS_EQ(ws, ws.rdivide(ws.zero(), 12), ws.zero());
-  ASSERT_VS_EQ(ws, ws.rdivide(ws.one(), 12), -12);
-  ASSERT_VS_EQ(ws, ws.rdivide(-12, ws.one()), -12);
+  if (is_signed)
+    ASSERT_VS_EQ(ws, ws.rdivide(ws.one(), 12), -12);
+  if (is_signed)
+    ASSERT_VS_EQ(ws, ws.rdivide(-12, ws.one()), -12);
 
+  // This is not associative: ws.mul(A, ws.rdivide(B, C)) gives a
+  // different result in the last case: 2+(3-4)=4294967295.  That
+  // matters in the implementation of eppstein's k-shortest paths.
+#define CHECK(A, B, C)                                          \
+  ASSERT_VS_EQ(ws, ws.rdivide(ws.mul(A, B), C), (A + B) - C)
+
+  CHECK(2, 0, 0);
+  CHECK(2, 4, 0);
+  CHECK(2, 0, 4);
+  CHECK(2, 3, 4);
+#undef CHECK
 
   // equal
 #define CHECK(Lhs, Rhs, Out)                            \
@@ -248,6 +270,8 @@ static size_t check_zmin()
 
   return nerrs;
 }
+
+
 
 static size_t check_log()
 {
@@ -307,7 +331,9 @@ int main()
   nerrs += check_b();
   nerrs += check_f2();
   nerrs += check_log();
-  nerrs += check_zmin();
+  nerrs += check_tropical_min<vcsn::nmin>();
+  nerrs += check_tropical_min<vcsn::zmin>();
+  nerrs += check_tropical_min<vcsn::rmin>();
   nerrs += check_r();
   nerrs += check_q();
   return !!nerrs;
