@@ -72,7 +72,6 @@ namespace vcsn
           raise("failed to dlsym ", s);
       }
 
-
       /// The handle.
       /// Exposed, as currently we don't cover the whole lt_ interface.
       lt_dlhandle handle;

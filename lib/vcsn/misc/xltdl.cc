@@ -31,7 +31,7 @@ namespace vcsn
     {
       init();
       if (lt_dladvise_init(&advise_))
-        raise("failed to initialize dladvise");
+        raise("failed to initialize dladvise: ", lt_dlerror());
     }
 
     // FIXME: Bad: dtors must not throw.
@@ -39,14 +39,15 @@ namespace vcsn
     {
       // FIXME: lt_dlexit when we refcount.
       if (lt_dladvise_destroy(&advise_))
-        raise("failed to destroy dladvise");
+        raise("failed to destroy dladvise: ", lt_dlerror());
     }
 
     xlt_advise&
     xlt_advise::global(bool global)
     {
       if (global ? lt_dladvise_global(&advise_) : lt_dladvise_local(&advise_))
-        raise("failed to set dladvise to ", global ? "global" : "local");
+        raise("failed to set dladvise to ", global ? "global" : "local",
+              ": ", lt_dlerror());
       return *this;
     }
 
@@ -54,7 +55,7 @@ namespace vcsn
     xlt_advise::ext()
     {
       if (lt_dladvise_ext(&advise_))
-        raise("failed to set dladvise to ext");
+        raise("failed to set dladvise to ext: ", lt_dlerror());
       return *this;
     }
 
@@ -86,18 +87,7 @@ namespace vcsn
     xlt_handle
     xlt_advise::open(const std::string& s)
     {
-      // Clear the error flags from previous runs.
-      //
-      // FIXME: This should be done in libltdl itself.  The problem
-      // probably arose from our patches to preserve the first error
-      // when traversing the user path: now, even on success, the error
-      // flag remains set, and the following run is hindered by it.  We
-      // need to complete this patch with a means to ensure that the
-      // error flags is restored to its previous state (typically
-      // no-error) when eventually we managed to load the file.
-      lt_dlerror();
-
-      lt_dlhandle res = nullptr;
+      auto res = lt_dlhandle{nullptr};
       // We cannot simply use search_file in file_library, because we
       // don't know the extension of the file we are looking for (*.la,
       // *.so, *.dyld etc.).  That's an implementation detail that ltdl
@@ -111,7 +101,7 @@ namespace vcsn
             break;
 
       if (!res)
-        raise("failed to open ", s);
+        raise("failed to dlopen module ", s, ": ", lt_dlerror());
 
       return res;
     }
@@ -143,7 +133,7 @@ namespace vcsn
           int errors = lt_dlclose(handle);
           handle = nullptr;
           if (errors)
-            raise("cannot close");
+            raise("failed to dlclose module: ", lt_dlerror());
         }
     }
 
