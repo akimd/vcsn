@@ -96,10 +96,12 @@ namespace vcsn LIBVCSN_API
 
   /// Open \a file for reading and return its autoclosing stream.
   /// \param file   the file name.  "-" and "" denote stdin.
+  /// \throws std::runtime_error on failure.
   std::shared_ptr<std::istream> open_input_file(const std::string& file);
 
   /// Open \a file for writing and return its autoclosing stream.
   /// \param file   the file name.  "-" and "" denote stdout.
+  /// \throws std::runtime_error on failure.
   std::shared_ptr<std::ostream> open_output_file(const std::string& file);
 
   /// Ignore spaces.

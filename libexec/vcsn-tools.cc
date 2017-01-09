@@ -1,5 +1,3 @@
-#include <cstdio>
-#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -28,7 +26,7 @@ namespace
     used_stdin = true;
     std::cin >> std::noskipws;
     std::istreambuf_iterator<char> begin(std::cin), end;
-    return std::string(begin, end);
+    return {begin, end};
   }
 
   struct options
@@ -361,11 +359,8 @@ try
   if (!options.output_file.empty())
     {
       // Redirect std::cout.
-      if (out = open_output_file(options.output_file))
-        std::cout.rdbuf(out->rdbuf());
-      else
-        // FIXME: strerror
-        raise("can't open output file: ", options.output_file);
+      out = open_output_file(options.output_file);
+      std::cout.rdbuf(out->rdbuf());
     }
 
   dyn::set_format(std::cout, options.output_format);
