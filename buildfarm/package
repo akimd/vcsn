@@ -10,7 +10,10 @@ cd "$DIR_BUILD"
 # Build the docker package.
 cp "$DIR_SOURCE/Dockerfile" .
 cp "$DIR_SOURCE/debuild/sources.list" .
-docker build -t lrde/vcsn .
+
+# --no-cache because otherwise we download the images once (e.g.,
+# --Debian Sid) and keep using them, never updating them.
+docker build --no-cache -t lrde/vcsn .
 
 # Save it locally, to provide it as an artifact for instance.
 docker save lrde/vcsn | gzip > vcsn-docker-image.tar.gz
