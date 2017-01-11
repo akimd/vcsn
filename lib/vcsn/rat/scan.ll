@@ -113,6 +113,11 @@ namespace
   /* White spaces. */
   [ \t]+   loc.step(); continue;
   "\n"+    LINE(yyleng); loc.step(); continue;
+
+  [{}>]|"⟩"    {
+    throw parser::syntax_error(loc,
+                               std::string{"unexpected character: "} + yytext);
+  }
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
@@ -138,7 +143,7 @@ namespace
   \\[0-7]{3}        |
   \\x[0-9a-fA-F]{2} |
   "\\".             |
-    .               return parser::make_LETTER({yytext, size_t(yyleng)}, loc);
+  .                 return parser::make_LETTER({yytext, size_t(yyleng)}, loc);
 }
 
 
