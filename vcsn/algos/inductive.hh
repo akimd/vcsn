@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vcsn/core/rat/visitor.hh>
 #include <vcsn/core/automatonset.hh>
+#include <vcsn/core/rat/visitor.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/value.hh>
 

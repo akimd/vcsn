@@ -3,12 +3,12 @@
 #include <unordered_map>
 #include <vector>
 
-#include <vcsn/misc/attributes.hh>
-#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/is-free-boolean.hh>
 #include <vcsn/algos/quotient.hh>
 #include <vcsn/core/transition-map.hh>
+#include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/fwd.hh> // b
 

@@ -2,11 +2,11 @@
 
 #include <unordered_map>
 
+#include <vcsn/algos/add.hh>
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star.hh>
-#include <vcsn/algos/add.hh>
 #include <vcsn/algos/tags.hh>
 #include <vcsn/core/automaton.hh>
 #include <vcsn/core/join.hh>

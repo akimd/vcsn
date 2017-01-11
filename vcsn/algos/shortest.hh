@@ -7,14 +7,13 @@
 #include <boost/heap/binomial_heap.hpp>
 #include <boost/optional.hpp>
 
+#include <vcsn/algos/is-acyclic.hh>
+#include <vcsn/algos/lightest-path.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/word-polynomialset.hh>
-
-#include <vcsn/algos/lightest-path.hh>
-#include <vcsn/algos/is-acyclic.hh>
 
 namespace vcsn
 {
