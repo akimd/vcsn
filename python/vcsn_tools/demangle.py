@@ -219,7 +219,7 @@ def demangle(s, color="auto"):
             r'vcsn::symbol',
             s)
 
-    # Labesets.
+    # Labelsets.
     s = sub(r'(?:vcsn::)?letterset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters> >',
             r'lal_\1',
             s)

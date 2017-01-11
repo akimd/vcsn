@@ -71,7 +71,7 @@ XFAIL(lambda: e.constant_term(),
 # tuple.
 #
 # We have to request for construction based on the derivation, not the
-# expansion, becase expansion wants the label one, i.e., it requires
+# expansion, because expansion wants the label one, i.e., it requires
 # the labelsets to be lan, not lal.
 ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
 check('0',  ' (<2>a)|(<3>x)',  'derivation')

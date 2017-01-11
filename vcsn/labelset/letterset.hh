@@ -265,7 +265,7 @@ namespace vcsn
           to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    /// Compute w1 \ w2 = w1^{-1}w2.
+    /// Compute l \ r = l^{-1}r.
     value_t ldivide(const value_t l, const value_t r) const
     {
       raise(*this, ": ldivide: impossible operation. Arguments: ",
@@ -279,7 +279,7 @@ namespace vcsn
           to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    /// Compute w1 / w2.
+    /// Compute l / r.
     value_t rdivide(const value_t l, const value_t r) const
     {
       raise(*this, ": rdivide: impossible operation. Arguments: ",
@@ -389,6 +389,10 @@ namespace vcsn
       }
     };
   }
+
+  /*-------.
+  | Meet.  |
+  `-------*/
 
   /// Compute the meet with another labelset.
   template <typename GenSet>

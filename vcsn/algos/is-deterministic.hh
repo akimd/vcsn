@@ -27,7 +27,7 @@ namespace vcsn
     return true;
   }
 
-  /// Number of non-deterministic states.
+  /// Number of deterministic states.
   template <Automaton Aut>
   size_t
   num_deterministic_states(const Aut& aut)
@@ -41,7 +41,7 @@ namespace vcsn
     return res;
   }
 
-  /// Number of non-deterministic states of transposed automaton.
+  /// Number of deterministic states of transposed automaton.
   template <Automaton Aut>
   size_t
   num_codeterministic_states(const Aut& aut)
