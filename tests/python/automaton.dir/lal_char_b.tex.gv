@@ -17,10 +17,10 @@ digraph
     7 [style = "state, accepting"]
   }
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "\", \\'"]
-  0 -> 3 [label = "\\,, \\|"]
+  0 -> 2 [label = "\", '"]
+  0 -> 3 [label = ",, |"]
   0 -> 4 [label = "(, )"]
-  0 -> 5 [label = "{, }"]
-  0 -> 6 [label = "\\<, \\>"]
-  0 -> 7 [label = "\\[, \\]"]
+  0 -> 5 [label = "\\{, \\}"]
+  0 -> 6 [label = "<, >"]
+  0 -> 7 [label = "[, ]"]
 }

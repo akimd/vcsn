@@ -18,18 +18,26 @@ def check(ctx, l, output, latex = None):
 
 
 # letterset.
-check('lal_char(a), b', 'a', 'a')
-check('lal_char(#), b', '#', '#', '\\#')
+check('lal, b', 'a',   'a')
+check('lal, b', '#',   '#', r'\#')
+check('lal, b', '[', r'\[', '[')
+check('lal, b', '{',   '{', r'\{')
 # This is not a label, it's a word.
-XFAIL(lambda: vcsn.context('lal_char(ab), b').label('ab'))
-CHECK_EQ(vcsn.context('law_char(ab), b').label('ab'),
-         vcsn.context('law_char(ab), b').word('ab'))
+XFAIL(lambda: vcsn.context('lal, b').label('ab'),
+      '''unexpected trailing characters: b
+  while reading label: ab''')
+CHECK_EQ(vcsn.context('law, b').label('ab'),
+         vcsn.context('law, b').word('ab'))
 
 # wordset.
-check('law_char(a), b',  'a',  'a',  r'\mathit{a}')
-check('law_char(ab), b', 'ab', 'ab', r'\mathit{ab}')
+check('law, b',   'a',     'a',      r'\mathit{a}')
+check('law, b',  'ab',    'ab',     r'\mathit{ab}')
+check('law, b', '[#]{}', '\[#\]{}', r'\mathit{[\#]\{\}}')
+
 # Trailing characters.
-XFAIL(lambda: vcsn.context('law_char(ab), b').label('ab*'))
+XFAIL(lambda: vcsn.context('law(ab), b').label('ab*'),
+      '''{ab}: invalid letter: *
+  while reading label: ab*''')
 
 # tupleset.
 check('lat<lan, lan>, q',   'a|x',   'a|x', r'a|x')

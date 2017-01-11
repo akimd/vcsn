@@ -91,7 +91,8 @@ check_wordset_make(const std::string& range)
     for (int i = 1; i < 255; ++i)
       o << "\\x" << std::hex << std::setw(2) << std::setfill('0') << i;
     std::cerr << "Test: " << o.str() << '\n';
-    ASSERT_EQ(vcsn::str_escape(all), to_string(ls, conv(ls, o.str())));
+    ASSERT_EQ(vcsn::str_escape(all, "<>|[]- ',"),
+              to_string(ls, conv(ls, o.str())));
   }
 
   return nerrs;

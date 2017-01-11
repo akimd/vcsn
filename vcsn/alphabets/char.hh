@@ -227,7 +227,7 @@ namespace vcsn
             if (l == '\\')
               o << "\\backslash{}";
             else
-              str_escape(o, l, "|',[-]<>#");
+              str_escape(o, l, "#{}");
             break;
 
           case format::raw:
@@ -261,7 +261,8 @@ namespace vcsn
         {
           if (fmt == format::latex)
             o << "\\mathit{";
-          o << str_escape(w);
+          for (auto c: w)
+            print(c, o, fmt);
           if (fmt == format::latex)
             o << '}';
         }
