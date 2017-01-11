@@ -35,8 +35,6 @@ namespace vcsn
   {
     using state_t = state_t_of<Aut>;
     using stateset_t = stateset<Aut>;
-    require(std::is_same<weightset_t_of<Aut>, b>::value,
-            "hopcroft: require boolean weightset");
     auto ctx = make_context(stateset_t(a), *a->weightset());
     auto ps = detail::make_polynomialset<decltype(ctx),
                                          wet_kind_t::bitset>(ctx);
