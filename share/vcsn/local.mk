@@ -68,3 +68,8 @@ dist_lal_char_zmin_DATA =                       \
   %D%/lal_char_zmin/minab.gv                    \
   %D%/lal_char_zmin/minblocka.gv                \
   %D%/lal_char_zmin/slowgrow.gv
+
+sms2frdir = $(pkgdatadir)/sms2fr
+dist_sms2fr_DATA =                              \
+  %D%/sms2fr/graphemic.efsm                     \
+  %D%/sms2fr/syntactic.efsm
