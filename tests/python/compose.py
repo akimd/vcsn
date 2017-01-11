@@ -12,14 +12,14 @@ def check(a1, a2, exp):
 ## Composition ##
 #################
 
-c1 = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, b")
-c2 = vcsn.context("lat<lan_char(xyz),lan_char(def)>, b")
+c1 = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, b")
+c2 = vcsn.context("lat<lal_char(xyz),lal_char(def)>, b")
 
 check(c1.expression("a|x").standard(),
       c2.expression("x|d").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -39,7 +39,7 @@ check(c1.expression("a|x").standard(),
 
 a = r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -79,11 +79,11 @@ b = r'''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "1, 1", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "1, (1, !\\e)", shape = box]
   }
   I0 -> 0
-  0 -> 1 [label = "<2>[^]"]
+  0 -> 1 [label = "<2>[a|aa|bb|ab|b]"]
   1 -> F1
 }'''
 check(aut, aut, b)
@@ -101,7 +101,7 @@ check(c1.expression("(a|x)*").standard(),
       c2.expression("(y|d)*").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -121,13 +121,13 @@ check(c1.expression("(a|x)*").standard(),
 ## Heterogeneous contexts ##
 ############################
 
-c_ratb = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, expressionset<lal_char(mno), b>")
-c_q = vcsn.context("lat<lan_char(xyz),lan_char(def)>, q")
+c_ratb = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, expressionset<lal_char(mno), b>")
+c_q = vcsn.context("lat<lal_char(xyz),lal_char(def)>, q")
 check(c_ratb.expression("<o>(a|x)").standard(),
       c_q.expression("<3/2>(x|d)").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, expressionset<letterset<char_letters(mno)>, q>"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, expressionset<letterset<char_letters(mno)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -152,7 +152,7 @@ check(c_ratb.expression("<o>(a|x)").standard(),
 
 a1 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lan_char(xyz), lan_char(abc)>, b"
+  vcsn_context = "lat<lal_char(xyz), lal_char(abc)>, b"
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   1 -> F1
@@ -163,7 +163,7 @@ a1 = vcsn.automaton(r'''digraph
 
 a2 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lan_char(abc), lan_char(def)>, b"
+  vcsn_context = "lat<lal_char(abc), lal_char(def)>, b"
   I0 -> 0
   0 -> 1 [label = "(\\e, d)"]
   1 -> 2 [label = "(a, e)"]
@@ -172,7 +172,7 @@ a2 = vcsn.automaton(r'''digraph
 
 res = r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(xyz)>>, nullableset<letterset<char_letters(def)>>>, b"
+  vcsn_context = "lat<letterset<char_letters(xyz)>, letterset<char_letters(def)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -199,12 +199,12 @@ res = r'''digraph
 check(a1, a2, res)
 
 
-c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, r")
+c_r = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, r")
 check(c_r.expression("<3.1>(a|x)").standard(),
       c2.expression("x|d").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(def)>>>, r"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, r"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -239,7 +239,7 @@ CHECK_EQ(metext('result.gv'),
 
 
 # Test laziness on strict composition
-ctx = vcsn.context("lat<lan<char>, lan<char>>, b")
+ctx = vcsn.context("lat<lal<char>, lal<char>>, b")
 fr_to_en = ctx.expression("chien|dog + chat|cat").automaton()
 en_to_es = ctx.expression("dog|perro + cat|gato").automaton()
 fr_to_es_lazy = fr_to_en.compose(en_to_es, lazy=True)

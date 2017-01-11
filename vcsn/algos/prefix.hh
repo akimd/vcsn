@@ -170,9 +170,9 @@ namespace vcsn
   template <Automaton Aut>
   auto
   subword(const Aut& aut)
-    -> decltype(make_nullable_automaton(aut->context()))
+    -> decltype(make_mutable_automaton(aut->context()))
   {
-    auto res = make_nullable_automaton(aut->context());
+    auto res = make_mutable_automaton(aut->context());
     copy_into(aut, res);
     subword_here(res);
     return res;

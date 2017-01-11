@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/is-proper.hh>
 #include <vcsn/core/automaton.hh> // out
 #include <vcsn/ctx/traits.hh>
@@ -54,10 +55,27 @@ namespace vcsn
         }
       };
 
-      template <typename LabelSet = labelset_t>
-      std::enable_if_t<!LabelSet::is_free(),
-                      weight_t>
+      weight_t
       operator()(const word_t& word) const
+      {
+        if (is_free(aut_))
+          return eval_free(word);
+        else
+          return eval_non_free(word);
+      }
+
+      /// Polynomial implementation.
+      weight_t operator()(const polynomial_t& poly) const
+      {
+        weight_t res = ws_.zero();
+        for (const auto& m: poly)
+          res = ws_.add(res, ws_.mul(weight_of(m), (*this)(label_of(m))));
+
+        return res;
+      }
+
+    private:
+      weight_t eval_non_free(const word_t& word) const
       {
         // Initialization.
         weight_t res = ws_.zero();
@@ -89,10 +107,11 @@ namespace vcsn
         return res;
       }
 
+      // This does not work with wordset, thus the is_letterized requirement.
       template <typename LabelSet = labelset_t>
-      std::enable_if_t<LabelSet::is_free(),
-                      weight_t>
-      operator()(const word_t& word) const
+      std::enable_if_t<LabelSet::is_letterized(),
+                       weight_t>
+      eval_free(const word_t& word) const
       {
         // Initialization.
         const weight_t zero = ws_.zero();
@@ -118,6 +137,8 @@ namespace vcsn
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
+                // With wordset,  `out` expects a label as 3rd parameter,
+                // not a letter.
                 for (auto t : out(aut_, s, l))
                   {
                     // Make sure the vectors are large enough for dst.
@@ -146,17 +167,16 @@ namespace vcsn
         return v1[aut_->post()];
       }
 
-      /// Polynomial implementation.
-      weight_t operator()(const polynomial_t& poly) const
+      // We should never call this with a non-letterized labelset:
+      // only lal or tupleset of lal can be free.
+      template <typename LabelSet = labelset_t>
+      std::enable_if_t<!LabelSet::is_letterized(),
+                       weight_t>
+      eval_free(const word_t&) const
       {
-        weight_t res = ws_.zero();
-        for (const auto& m: poly)
-          res = ws_.add(res, ws_.mul(weight_of(m), (*this)(label_of(m))));
-
-        return res;
+        BUILTIN_UNREACHABLE();
       }
 
-    private:
       automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
       const labelset_t& ls_ = *aut_->labelset();
@@ -217,8 +237,7 @@ namespace vcsn
         // tell the difference.  We probably need something like
         // "is_graduated".
         constexpr auto valid
-          = (ctx_t::is_lal || ctx_t::is_lan || ctx_t::is_lao
-             || ctx_t::is_lat || ctx_t::is_law);
+          = (ctx_t::is_lal || ctx_t::is_lao || ctx_t::is_lat || ctx_t::is_law);
         return vcsn::detail::static_if<valid>
           ([](const auto& a, const auto& l) -> weight
            {

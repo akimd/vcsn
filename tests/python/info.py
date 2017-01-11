@@ -27,8 +27,9 @@ check(vcsn.context('lal_char(:a-z), q')
           'is deterministic': 'N/A',
           'is empty': False,
           'is eps-acyclic': True,
+          'is free': True,
           'is normalized': False,
-          'is proper': 'N/A',
+          'is proper': True,
           'is standard': True,
           'is synchronizing': False,
           'is trim': True,
@@ -59,8 +60,9 @@ check(vcsn.context('lal_char(a-z), q')
           'is deterministic': 'N/A',
           'is empty': False,
           'is eps-acyclic': True,
+          'is free': True,
           'is normalized': False,
-          'is proper': 'N/A',
+          'is proper': True,
           'is standard': True,
           'is synchronizing': False,
           'is trim': True,
@@ -92,6 +94,7 @@ check(vcsn.context('law_char(ab), b')
           'is deterministic': 'N/A',
           'is empty': False,
           'is eps-acyclic': True,
+          'is free': 'N/A',
           'is normalized': False,
           'is proper': 'N/A',
           'is standard': True,
@@ -252,7 +255,7 @@ check(q.expression(r'(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
           'zero': 1,
       })
 
-c = vcsn.context('lat<lan_char, lan_char>, q')
+c = vcsn.context('lat<lal_char, lal_char>, q')
 check(c.expression(r'a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
       {
           'add': 3,
@@ -273,7 +276,7 @@ check(c.expression(r'a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
           'star': 1,
           'transposition': 0,
           'tuple': 3,
-          'type': 'expressionset<lat<nullableset<letterset<char_letters(abcxyz)>>, nullableset<letterset<char_letters(xyz)>>>, q>',
+          'type': 'expressionset<lat<letterset<char_letters(abcxyz)>, letterset<char_letters(xyz)>>, q>',
           'width': 10,
           'zero': 0,
       })

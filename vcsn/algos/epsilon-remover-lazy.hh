@@ -13,8 +13,6 @@ namespace vcsn
   namespace detail
   {
     /// Build a "lazy proper" automaton from the input with nullable labels.
-    /// The resulting automaton has the `proper_context` matching the context
-    /// of the input.
     ///
     /// We use the epsilon-remover-separate algorithm to build two separate
     /// automata: the spontaneous one and the proper one. The methods of
@@ -30,13 +28,13 @@ namespace vcsn
               bool has_one = labelset_t_of<Aut>::has_one()>
     class lazy_proper_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut,
-                                   detail::proper_context<context_t_of<Aut>>>>
+                                   context_t_of<Aut>>>
     {
     public:
       using in_automaton_t = Aut;
       using in_context_t = context_t_of<in_automaton_t>;
 
-      using context_t = detail::proper_context<context_t_of<Aut>>;
+      using context_t = context_t_of<Aut>;
       using automaton_t = fresh_automaton_t_of<Aut, context_t>;
 
       using self_t = lazy_proper_automaton_impl;
@@ -44,7 +42,7 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
-      using transpose_in_automaton_t = transpose_automaton<in_automaton_t>;
+      using transpose_in_automaton_t = decltype(transpose(std::declval<in_automaton_t>()));
 
       static symbol sname()
       {
@@ -65,7 +63,7 @@ namespace vcsn
       /// call remover_() first with the transposed input, then assign the
       /// proper automaton from the remover to this->aut_.
       lazy_proper_automaton_impl(const in_automaton_t& a, bool prune = true)
-        : super_t(make_proper_context(a->context()))
+        : super_t(a->context())
         , remover_(transpose(a), prune)
       {
         this->aut_ = transpose(remover_.get_proper());

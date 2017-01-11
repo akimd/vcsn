@@ -394,7 +394,7 @@ namespace vcsn
     /// \param aut   automaton to insplit
     /// \param lazy  whether to perform the computations on demand.
     ///
-    /// \pre aut is lal or lan.
+    /// \pre aut is lal.
     automaton insplit(const automaton& aut, bool lazy = false);
 
     /// Whether \a aut is accessible.
@@ -434,6 +434,9 @@ namespace vcsn
 
     /// Whether has no cycle of spontaneous transitions.
     bool is_eps_acyclic(const automaton& aut);
+
+    /// Whether \a aut is free.
+    bool is_free(const automaton& aut);
 
     /// Whether \a aut is functional.
     ///

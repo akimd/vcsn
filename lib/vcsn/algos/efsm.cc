@@ -181,10 +181,10 @@ namespace vcsn
 
       // We don't want to read it as a `law<char>` automaton, as for
       // OpenFST, these "words" are insecable.  The proper
-      // interpretation is lal<string> (or lan<string>).
+      // interpretation is lal<string>.
       using boost::algorithm::replace_all_copy;
       auto ctx = replace_all_copy(edit.result_context(),
-                                  "law<char>", "lan<string>");
+                                  "law<char>", "lal<string>");
       return edit.result(ctx);
     }
   }

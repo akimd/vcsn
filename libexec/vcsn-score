@@ -63,9 +63,6 @@ def ctx_signature(ctx):
     ctx = re.sub(r'lal(?:_char)?\((.*?)\)',
                  r'[\1]',
                  ctx)
-    ctx = re.sub(r'lan(?:_char)?\((.*?)\)',
-                 r'[\1]?',
-                 ctx)
     ctx = re.sub(r'law(?:_char)?\((.*?)\)',
                  r'[\1]*',
                  ctx)
@@ -167,8 +164,8 @@ def bench(stmt, comment, title=None, setup=None, number=1):
 # We used to check a call to "b.format('text')", but that makes us too
 # sensitive to the cost of the formatting itself.  Any operation can
 # hardly be simpler than `automaton.is_proper`, which just returns
-# "true" for an automaton on a free labelset.  So this does measure
-# the pure speed of our interface with Python, and dispatch.
+# "true" for a free automaton.  So this does measure the pure speed of
+# our interface with Python, and dispatch.
 #
 # To check the cost of the dispatch, it must be done in C++.
 #
@@ -286,7 +283,7 @@ bench('r.standard()',
       number=10)
 
 # thompson
-ctx = 'lan_char(a-z), z'
+ctx = 'lal_char(a-z), z'
 bench('r.thompson()',
       'r = {}, c = {}'.format(e, ctx_signature(ctx)),
       setup=['ctx = "{}"'.format(ctx),
@@ -377,7 +374,6 @@ bench('a.evaluate("a"*{})'.format(n + 1),
       number=10000)
 # Something less wide.
 for ctx, number in [('lal(a-z), z', 20000),
-                    ('lan(a-z), z', 10000),
                     ('law(a-z), z', 10000)]:
     n = 25
     r = '[a-z]*'
@@ -425,7 +421,7 @@ bench('a.shortest(5)',
              'a = c.expression(r).standard()'],
       number=5)
 
-ctx = 'lat<lan_char(a), lan_char(x)>, q'
+ctx = 'lat<lal_char(a), lal_char(x)>, q'
 r = r'(\e|x + a|\e)*'
 bench('a.shortest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -468,7 +464,7 @@ bench('a.lightest()',
              'a = c.expression(r).standard()'],
       number=500)
 
-ctx = 'lat<lan_char(a), lan_char(x)>, q'
+ctx = 'lat<lal_char(a), lal_char(x)>, q'
 r = r'(\e|x + a|\e)*'
 bench('a.lightest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -510,7 +506,7 @@ r = "a?{1200}"
 bench('a.proper()',
       'a = thompson({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lan_char(a), b").expression(r).thompson()'])
+             'a = vcsn.context("lal_char(a), b").expression(r).thompson()'])
 
 # to-expression.
 bench('a.expression("associative", "delgado")',
@@ -579,13 +575,13 @@ r = "[a-e]?{80}"
 bench('a.conjunction(a)',
       'a = thompson({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
+             'a = vcsn.context("lal_char(a-e), z").expression(r).thompson()'])
 
 r = "[a-e]?{5}"
 bench('a.conjunction(a, a, a)',
       'a = thompson({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lan_char(a-e), z").expression(r).thompson()'])
+             'a = vcsn.context("lal_char(a-e), z").expression(r).thompson()'])
 
 # power.
 n = 12
@@ -596,7 +592,7 @@ bench('a & {}'.format(n),
              'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
 
 # compose.
-ctx = "lat<lan<char(a-z)>, lan<char(a-z)>>, b"
+ctx = "lat<lal<char(a-z)>, lal<char(a-z)>>, b"
 r = "([a-z]|[a-z])?{20}"
 bench('a.compose(a2)',
       'a2 = std({}), a = std(a|a)'.format(r),
@@ -624,18 +620,17 @@ def bench_compose(ls, r, a, number=50):
 # meaning of this expression when in LAN (see #119).
 r = "['(a,a)'-'(i,z)']{4}"
 bench_compose('lal', r, 'std', 1)
-# bench_compose('lan', r, 'thm', 2)
+# bench_compose('lal', r, 'thm', 2)
 
 r = '((a|b+b|c+c|d+d|a)(w|x+x|y+y|z+z|w)){300}'
 bench_compose('lal', r, 'std')
-bench_compose('lan', r, 'std')
-bench_compose('lan', r, 'thm', 20)
+bench_compose('lal', r, 'thm', 20)
 r = r'((\e|a+a|b+b|c+c|d+d|a)(w|x+x|y+y|z+z|w+z|\e)){300}'
-bench_compose('lan', r, 'std', 20)
-bench_compose('lan', r, 'thm', 10)
+bench_compose('lal', r, 'std', 20)
+bench_compose('lal', r, 'thm', 10)
 
 # automaton.has_bounded_lag.
-ctx = "lat<lan_char(abc), lan_char(xyz)>, b"
+ctx = "lat<lal_char(abc), lal_char(xyz)>, b"
 r1 = "['(a,x)'-'(b,y)']{1000}*"
 r2 = "(a|x+a|y+a|z+b|x+b|y){1000}*"
 bench('a.has_bounded_lag()',
@@ -645,7 +640,7 @@ bench('a.has_bounded_lag()',
              'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'],
       number=10)
-ctx = "lat<lan_char(abc), lan_char(xyz)>, b"
+ctx = "lat<lal_char(abc), lal_char(xyz)>, b"
 r1 = "['(a,x)'-'(b,y)']*{600}"
 r2 = "(a|x+a|y+a|z+b|x+b|y)*{600}"
 bench('a.has_bounded_lag()',
@@ -736,7 +731,7 @@ bench('a.is_functional()',
       number=100)
 
 # accessible.
-ctx = "lan_char(a-z), b"
+ctx = "lal_char(a-z), b"
 r = "[a-m]{20000}"
 bench('a.accessible()',
       'a = thompson({}).proper(prune=False)'.format(r),

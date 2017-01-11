@@ -70,7 +70,7 @@ namespace vcsn
       using labelset_t = labelset_t_of<automaton_t>;
       /// The result type.
       using aut_proper_t = fresh_automaton_t_of<automaton_t,
-                            detail::proper_context<context_t_of<automaton_t>>>;
+                            context_t_of<automaton_t>>;
 
     public:
       /**\brief Remove the epsilon-transitions of the input
@@ -282,7 +282,7 @@ namespace vcsn
   auto
   proper(const Aut& aut, direction dir = direction::backward,
          bool prune = true, const std::string& algo = "auto")
-    -> fresh_automaton_t_of<Aut, detail::proper_context<context_t_of<Aut>>>
+    -> fresh_automaton_t_of<Aut, context_t_of<Aut>>
   {
     switch (dir)
       {

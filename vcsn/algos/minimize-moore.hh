@@ -5,7 +5,7 @@
 
 #include <vcsn/algos/accessible.hh> // is_trim
 #include <vcsn/algos/is-deterministic.hh>
-#include <vcsn/algos/is-free-boolean.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/quotient.hh>
 #include <vcsn/core/transition-map.hh>
 #include <vcsn/misc/attributes.hh>
@@ -29,8 +29,8 @@ namespace vcsn
     {
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "minimize: moore: requires Boolean weights");
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "minimize: moore: requires free labelset");
+      static_assert(labelset_t_of<Aut>::is_letterized(),
+                    "minimize: moore: requires letterized labelset");
 
       using automaton_t = Aut;
 
@@ -119,6 +119,10 @@ namespace vcsn
         , gs_(a_->labelset()->generators())
         , transition_map_(a)
       {
+        require(is_free(a),
+                "minimize: invalid algorithm"
+                " (non-free automaton):",
+                " moore");
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
         require(is_deterministic(a_), me(), ": input must be deterministic");
@@ -199,11 +203,11 @@ namespace vcsn
     {
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
+      std::enable_if_t<!is_letterized_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, moore_tag)
       {
         raise("minimize: invalid algorithm"
-              " (non-Boolean or non-free labelset):",
+              " (non-Boolean or non-free automaton):",
               " moore");
       }
     }

@@ -1,7 +1,7 @@
 // Invalid star in polynomials: (<1/2>a)*.
 digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters()>>, polynomialset<wordset<char_letters(a)>, q>"
+  vcsn_context = "letterset<char_letters()>, polynomialset<wordset<char_letters(a)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

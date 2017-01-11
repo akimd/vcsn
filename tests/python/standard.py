@@ -47,15 +47,7 @@ def check(r, exp=None, file=None):
 
     # Check that we are equivalent to derived-term.  However,
     # derived-term sometimes needs a neutral to compute ldivide/rdivide.
-    if r.info('ldivide'):
-        # FIXME: Not very elegant...  We need means to derive context
-        # from others.  Unless we get rid of lal.
-        nctx = vcsn.context(re.sub('(.*?), *(.*)', r'nullableset<\1>, \2',
-                                   r.context().format('sname')))
-        nr = r.expression(nctx)
-        a_dt = nr.automaton('expansion')
-    else:
-        a_dt = r.automaton('expansion')
+    a_dt = r.automaton('expansion')
     CHECK_EQUIV(a, a_dt)
 
     if r.is_extended():
@@ -906,7 +898,7 @@ check(qexp('<4>a*bcd {/} <2>bcd'), file='rdivide-1')
 
 # Tuple.
 def tuple(*exps):
-    return vcsn.expression._tuple([vcsn.context('lan, q').expression(e)
+    return vcsn.expression._tuple([vcsn.context('lal, q').expression(e)
                                    for e in exps])
 check(tuple('abc', 'xyz'), file='tuple-1')
 check(tuple('abc', 'xy'),  file='tuple-2')
@@ -914,7 +906,7 @@ check(tuple('ab*', 'cd*', 'ef*'), file='tuple-3')
 
 # Compose.
 def q2(e):
-    return exp(e, vcsn.context('lat<lan, lan>, q'))
+    return exp(e, vcsn.context('lat<lal, lal>, q'))
 check(q2('[abc]|[xyz] @ [xz]|Y'), file='compose-1')
 
 # Transpose.

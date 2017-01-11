@@ -6,6 +6,7 @@
 #include <vcsn/core/kind.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // make_automaton
+#include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/attributes.hh>
 
 namespace vcsn
@@ -13,6 +14,24 @@ namespace vcsn
 
   namespace detail
   {
+    /// Check if an epsilon appears on at least one tape of any transition.
+    template <Automaton Aut>
+    std::enable_if_t<is_multitape<labelset_t_of<Aut>>{}, bool>
+    is_proper_tapes_(const Aut& aut)
+    {
+      for (auto t: transitions(aut))
+        if (aut->labelset()->show_one(aut->label_of(t)))
+          return false;
+      return true;
+    }
+
+    template <Automaton Aut>
+    std::enable_if_t<!is_multitape<labelset_t_of<Aut>>{}, bool>
+    is_proper_tapes_(const Aut& aut)
+    {
+      return is_proper(aut);
+    }
+
     template <Automaton Aut>
     std::enable_if_t<labelset_t_of<Aut>::has_one(), bool>
     is_proper_(const Aut& aut)

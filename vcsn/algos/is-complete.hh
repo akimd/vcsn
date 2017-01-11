@@ -2,6 +2,7 @@
 
 #include <set>
 
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/core/automaton.hh> // all_out
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
@@ -13,8 +14,10 @@ namespace vcsn
   template <Automaton Aut>
   bool is_complete(const Aut& aut)
   {
-    static_assert(labelset_t_of<Aut>::is_free(),
-                  "is_complete: requires free labelset");
+    static_assert(labelset_t_of<Aut>::is_letterized(),
+                  "is_complete: requires letterized labelset");
+    require(is_free(aut),
+            "is_complete: requires free automaton");
 
     if (aut->num_initials() == 0)
       return false;

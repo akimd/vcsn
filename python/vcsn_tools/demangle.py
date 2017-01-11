@@ -76,8 +76,7 @@ def sugar(s):
     s = s.replace('/', '')
     s = sub(r'(char|string)_letter', r'\1', s)
     s = sub(r'(\w+)_automaton', r'\1', s)
-    s = sub(r'nullableset<{param}>', r'(\1)?', s)
-    s = sub(r'letterset<{param}>', r'\1', s)
+    s = sub(r'letterset<{param}>', r'(\1)?', s)
     s = sub(r'wordset<{param}>', r'(\1)*', s)
     s = sub(r'context<{param},\s*{param}>', r'\1 → \2', s)
     s = sub(r'^context<(.*)>$', r'\1', s)
@@ -226,7 +225,7 @@ def demangle(s, color="auto"):
     s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters> >',
             r'law_\1',
             s)
-    s = sub(r'vcsn::(nullableset|tupleset)<({param})>',
+    s = sub(r'vcsn::tupleset<({param})>',
             r'\1<\2>',
             s)
 

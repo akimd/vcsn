@@ -881,10 +881,4 @@ namespace vcsn
     return make_shared_ptr<mutable_automaton<Context>>(ctx);
   }
 
-  template <typename Context>
-  auto
-  make_nullable_automaton(const Context& ctx)
-  {
-    return make_mutable_automaton(make_nullableset_context(ctx));
-  }
 }

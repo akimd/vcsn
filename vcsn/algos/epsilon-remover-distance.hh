@@ -35,7 +35,7 @@ namespace vcsn
       using state_dirty_t = state_t_of<aut_dirty_t>;
 
       /// Context for proper automaton (only proper transitions).
-      using proper_ctx_t = detail::proper_context<context_t_of<Aut>>;
+      using proper_ctx_t = context_t_of<Aut>;
       /// Proper automaton.
       using aut_proper_t = fresh_automaton_t_of<Aut, proper_ctx_t>;
       using state_proper_t = state_t_of<aut_proper_t>;
@@ -51,7 +51,7 @@ namespace vcsn
                aut_dirty_t::element_type::null_state())
       {
         auto dirty_ctx = dirty_ctx_t{{}, ws_};
-        auto proper_ctx = make_proper_context(aut->context());
+        auto proper_ctx = aut->context();
         aut_dirty_ = make_shared_ptr<aut_dirty_t>(dirty_ctx);
         aut_proper_ = make_shared_ptr<aut_proper_t>(proper_ctx);
 

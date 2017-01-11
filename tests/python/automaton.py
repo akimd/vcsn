@@ -75,16 +75,6 @@ xfail(r'''digraph
 }
 ''')
 
-# Invalid label: \e is not valid in LAL.
-xfail(r'''digraph
-{
-  vcsn_context = "lal_char(a), b"
-  0 -> 1 [label = "\\e"]
-  1 -> F1
-  I0 -> 0
-}
-''')
-
 # Invalid label: aa is not valid in LAL.
 xfail(r'''digraph
 {
@@ -142,14 +132,6 @@ xfail(r'''digraph
   0 -> 1 [label = a]
   1 -> F1 [label = a]
   I0 -> 0
-}
-''')
-
-# \e makes no sense when not in lan.
-xfail(r'''digraph
-{
-  vcsn_context = "lal_char(\\e), b"
-  0 -> 1 [label = "\\e"]
 }
 ''')
 
@@ -228,7 +210,7 @@ vcsn.automaton(r'''digraph
 }'''))
 
 # A dot file which uses the HTML strings.  And a subgraph.
-CHECK_EQ(r'''context = nullableset<letterset<char_letters(ab)>>, q
+CHECK_EQ(r'''context = letterset<char_letters(ab)>, q
 $ -> 0
 $ -> 3
 0 -> 1 a, b
@@ -244,11 +226,11 @@ $ -> 3
 
 # Make sure to check the rendering useful/useless named/nameless
 # states, weights, and spontaneous transitions.
-c = vcsn.context('lan_char(ab), z')
+c = vcsn.context('lal_char(ab), z')
 a = c.expression('<2>a+<2>b').thompson()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -279,7 +261,7 @@ CHECK_EQ('''digraph
 # conjunction: state names, and useless states, etc.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -322,7 +304,7 @@ CHECK_EQ('''digraph
 # Tooltip.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -365,7 +347,7 @@ CHECK_EQ('''digraph
 # Transitions.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

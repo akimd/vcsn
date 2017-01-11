@@ -49,13 +49,13 @@ check_lift('''digraph
 ## Lift(tape...).  ##
 ## --------------- ##
 
-c = vcsn.context('lat<lal_char(abc), lan_char(def), law_char(ghi)>, q')
+c = vcsn.context('lat<lal_char(abc), lal_char(def), law_char(ghi)>, q')
 a = c.expression("(a|d|gh)<2>").standard()
 
 # lift(0).
 aref = '''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(def)>>, wordset<char_letters(ghi)>>, expressionset<lat<letterset<char_letters(abc)>>, q>"
+  vcsn_context = "lat<letterset<char_letters(def)>, wordset<char_letters(ghi)>>, expressionset<lat<letterset<char_letters(abc)>>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -77,7 +77,7 @@ check_lift(aref, a.lift(0))
 # lift(1).
 aref = '''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, wordset<char_letters(ghi)>>, expressionset<lat<nullableset<letterset<char_letters(def)>>>, q>"
+  vcsn_context = "lat<letterset<char_letters(abc)>, wordset<char_letters(ghi)>>, expressionset<lat<letterset<char_letters(def)>>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -99,7 +99,7 @@ check_lift(aref, a.lift(1))
 # lift(1, 2).
 aref = '''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>>, expressionset<lat<nullableset<letterset<char_letters(def)>>, wordset<char_letters(ghi)>>, q>"
+  vcsn_context = "lat<letterset<char_letters(abc)>>, expressionset<lat<letterset<char_letters(def)>, wordset<char_letters(ghi)>>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

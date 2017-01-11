@@ -8,8 +8,8 @@
 #include <vcsn/core/kind.hh>
 #include <vcsn/labelset/genset-labelset.hh>
 #include <vcsn/labelset/labelset.hh>
-#include <vcsn/labelset/nullableset.hh>
 #include <vcsn/labelset/wordset.hh>
+#include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/raise.hh>
@@ -34,6 +34,8 @@ namespace vcsn
     using values_t = std::set<value_t, vcsn::less<self_t>>;
 
     using kind_t = labels_are_letters;
+
+    using super_t::mul;
 
     letterset(const genset_ptr& gs)
       : super_t{gs}
@@ -73,11 +75,6 @@ namespace vcsn
       return this->genset()->open(o);
     }
 
-    static constexpr bool is_free()
-    {
-      return true;
-    }
-
     /// Value constructor.
     template <typename... Args>
     value_t value(Args&&... args) const
@@ -88,7 +85,10 @@ namespace vcsn
     /// Convert to a word.
     static word_t word(value_t v)
     {
-      return {v};
+      if (is_one(v))
+        return make_wordset(self_t{}).one();
+      else
+        return {v};
     }
 
     /// Prepare to iterate over the letters of v.
@@ -121,6 +121,11 @@ namespace vcsn
       return word(v);
     }
 
+    static constexpr value_t
+    one() ATTRIBUTE_PURE
+    {
+      return genset_t::one_letter();
+    }
 
     static value_t
     special() ATTRIBUTE_PURE
@@ -131,32 +136,60 @@ namespace vcsn
     /// Three-way comparison between \a l and \a r.
     static int compare(const value_t l, const value_t r)
     {
-      return genset_t::compare(l, r);
+      if (auto res = int(is_one(r)) - int(is_one(l)))
+        return res;
+      else
+        return genset_t::compare(l, r);
     }
 
     /// Whether \a l == \a r.
     static bool
     equal(const value_t l, const value_t r)
     {
-      return genset_t::equal(l, r);
+      if (is_one(l))
+        return is_one(r);
+      else
+        return !is_one(r) && genset_t::equal(l, r);
     }
 
     /// Whether \a l < \a r.
     static bool less(const value_t l, const value_t r)
     {
-      return genset_t::less(l, r);
+      if (is_one(r))
+        return false;
+      else if (is_one(l))
+        return true;
+      else
+        return genset_t::less(l, r);
+    }
+
+    /// The concatenation.
+    value_t mul(const value_t l, const value_t r) const
+    {
+      if (is_one(r))
+        return l;
+      else if (is_one(l))
+        return r;
+      else
+        super_t::mul(l, r);
     }
 
     static constexpr bool
     has_one()
     {
-      return false;
+      return true;
     }
 
     static constexpr bool
     is_expressionset()
     {
       return false;
+    }
+
+    bool
+    is_letter(const value_t v) const
+    {
+      return !is_one(v) && super_t::is_letter(v);
     }
 
     static constexpr bool
@@ -168,29 +201,31 @@ namespace vcsn
     static bool
     is_special(value_t v) ATTRIBUTE_PURE
     {
-      return v == special();
+      return !is_one(v) && v == special();
     }
 
     static constexpr bool
-    is_one(value_t)
+    is_one(value_t v)
     {
-      return false;
+      return v == one();
     }
 
     bool
     is_valid(value_t v) const
     {
-      return this->has(v);
+      return is_one(v) || this->has(v);
     }
 
-    static size_t size(value_t)
+    static size_t size(value_t v)
     {
-      return 1;
+      return !is_one(v);
     }
 
+    // FIXME: specialize for both implementation.
     static size_t hash(value_t v)
     {
-      return hash_value(v);
+      // Do not use get_value when is_one.  Let's hash one() as 0.
+      return is_one(v) ? 0 : hash_value(v);
     }
 
     value_t
@@ -201,30 +236,16 @@ namespace vcsn
       return v;
     }
 
-    /// Convert from nullableset to letterset.
-    template <typename LabelSet_>
     value_t
-    conv(const nullableset<LabelSet_>& ls,
-         typename nullableset<LabelSet_>::value_t v) const
+    conv(oneset, typename oneset::value_t) const
     {
-      require(!ls.is_one(v),
-              *this, ": conv: invalid label: \\e");
-      return conv(*ls.labelset(), ls.get_value(v));
+      return one();
     }
 
     /// Read one letter from i, return the corresponding label.
     value_t
     conv(std::istream& i, bool quoted = true) const
     {
-      // Check for '\e', to generate a nicer error message than the
-      // one from get_letter.
-      if (i.good() && i.peek() == '\\')
-        {
-          i.ignore();
-          require(i.peek() != 'e',
-                  *this, ": cannot represent \\e");
-          !i.unget();
-        }
       return this->get_letter(i, quoted);
     }
 
@@ -243,6 +264,7 @@ namespace vcsn
       this->convs_(i, fun);
     }
 
+    // FIXME: Nullableset removal: update comment.
     /// The longest common prefix.
     ///
     /// It would be better not to define it and to adjust
@@ -261,54 +283,87 @@ namespace vcsn
     /// now.
     value_t lgcd(const value_t l, const value_t r) const
     {
-      raise(*this, ": lgcd: impossible operation. Arguments: ",
+      if (equal(l, r))
+        return l;
+      else if (is_one(l) || is_one(r))
+        return one();
+      else
+        raise(*this, ": lgcd: invalid arguments: ",
           to_string(*this, l), ", ", to_string(*this, r));
     }
 
     /// Compute l \ r = l^{-1}r.
     value_t ldivide(const value_t l, const value_t r) const
     {
-      raise(*this, ": ldivide: impossible operation. Arguments: ",
-          to_string(*this, l), ", ", to_string(*this, r));
+      if (auto res = maybe_ldivide(l, r))
+        return *res;
+      else
+        raise(*this, ": ldivide: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
     }
 
     boost::optional<value_t>
     maybe_ldivide(const value_t l, const value_t r) const
     {
-      raise(*this, ": maybe_ldivide: impossible operation. Arguments: ",
-          to_string(*this, l), ", ", to_string(*this, r));
+      if (equal(l, r))
+        return one();
+      else if (is_one(l))
+        return r;
+      else if (is_one(r))
+        return boost::none;
+      else
+        raise(*this, ": maybe_ldivide: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
     }
 
     /// Compute l / r.
     value_t rdivide(const value_t l, const value_t r) const
     {
-      raise(*this, ": rdivide: impossible operation. Arguments: ",
-          to_string(*this, l), ", ", to_string(*this, r));
+      if (auto res = maybe_rdivide(l, r))
+        return *res;
+      else
+        raise(*this, ": rdivide: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
     }
 
     boost::optional<value_t>
     maybe_rdivide(const value_t l, const value_t r) const
     {
-      raise(*this, ": maybe_rdivide: impossible operation. Arguments: ",
-          to_string(*this, l), ", ", to_string(*this, r));
+      if (equal(l, r))
+        return one();
+      else if (is_one(l))
+        return boost::none;
+      else if (is_one(r))
+        return l;
+      else
+        raise(*this, ": maybe_rdivide: invalid arguments: ",
+              to_string(*this, l), ", ", to_string(*this, r));
     }
 
 
     value_t conjunction(const value_t l, const value_t r) const
     {
-      if (equal(l, r))
+      if (is_one(l) && is_one(r))
+        return l;
+      else if (!is_one(l) && !is_one(r) && equal(l, r))
         return l;
       else
-        raise("conjunction: invalid operation (lhs and rhs are not equal)."
-              " Arguments: ",
-          to_string(*this, l), ", ", to_string(this, r));
+        raise(*this,
+              ": conjunction: invalid operation (lhs and rhs are not equal): ",
+              to_string(*this, l), ", ", to_string(this, r));
     }
 
     std::ostream&
     print(const value_t& l, std::ostream& o = std::cout,
           format fmt = {}) const
     {
-      return this->genset()->print(l, o, fmt);
+      if (is_one(l))
+        o << (fmt == format::latex ? "\\varepsilon"
+              : fmt == format::utf8 ? "ε"
+              : "\\e");
+      else
+        this->genset()->print(l, o, fmt);
+      return o;
     }
 
     std::ostream&
@@ -317,7 +372,9 @@ namespace vcsn
       switch (fmt.kind())
         {
         case format::latex:
+          o << '(';
           this->genset()->print_set(o, fmt);
+          o << ")^?";
           break;
         case format::sname:
           o << "letterset<";
@@ -327,6 +384,7 @@ namespace vcsn
         case format::text:
         case format::utf8:
           this->genset()->print_set(o, fmt);
+          o << '?';
           break;
         case format::raw:
           assert(0);
@@ -338,31 +396,6 @@ namespace vcsn
 
   namespace detail
   {
-    /// Conversion to letterized.
-    template <typename GenSet>
-    struct letterized_traits<letterset<GenSet>>
-    {
-      static constexpr bool is_letterized = true;
-
-      using labelset_t = nullableset<letterset<GenSet>>;
-
-      static labelset_t labelset(const letterset<GenSet>& ls)
-      {
-        return {ls.genset()};
-      }
-    };
-
-    /// Conversion for letterset<GenSet> to a nullableset.
-    template <typename GenSet>
-    struct nullableset_traits<letterset<GenSet>>
-    {
-      using type = nullableset<letterset<GenSet>>;
-      static type value(const letterset<GenSet>& ls)
-      {
-        return ls;
-      }
-    };
-
     /// Conversion for letterset<GenSet> to a super wordset.
     template <typename GenSet>
     struct law_traits<letterset<GenSet>>
@@ -400,5 +433,28 @@ namespace vcsn
   meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
   {
     return {set_intersection(*lhs.genset(), *rhs.genset())};
+  }
+
+  /*----------------.
+  | random_label.   |
+  `----------------*/
+
+  /// Random label from letterset.
+  template <typename GenSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename letterset<GenSet>::value_t
+  random_label(const letterset<GenSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    // FIXME: the proportion should be controllable.
+    auto dis = std::bernoulli_distribution(0.5);
+    if (dis(gen) || ls.generators().empty())
+      return ls.one();
+    else
+      {
+        // Pick a member of a container following a uniform distribution.
+        auto pick = make_random_selector(gen);
+        return ls.value(pick(ls.generators()));
+      }
   }
 }

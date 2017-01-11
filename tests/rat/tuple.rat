@@ -1,6 +1,6 @@
 # We add useless letters (0-9) so that when printing [abcd], we
 # display [a-d], not [^].
-%context: lat<lan_char(abcd0-9), lan_char(efgh0-9)>, q
+%context: lat<lal_char(abcd0-9), lal_char(efgh0-9)>, q
 \z|\z  => \z
 
 # Beware of 'b|\e'.
@@ -13,7 +13,7 @@ a|e   @ a|e   => a|e@a|e
 
 a|e @ a|e + a|e == (a|e @ a|e) + a|e
 
-%context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, q
+%context: lat<lal_char(abcd0-9), lal_char(efgh0-9), lal_char(ijkl0-9)>, q
 
 \z|\z|\z => \z
 \z|e|i   => \z

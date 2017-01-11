@@ -12,7 +12,6 @@ namespace vcsn
     class expressionset;
     class genset;
     class letterset;
-    class nullableset;
     class oneset;
     class other;
     class polynomialset;

@@ -71,13 +71,6 @@ namespace vcsn
       os_ << '>';
     }
 
-    DEFINE(nullableset)
-    {
-      os_ << "nullableset<";
-      t.get_labelset()->accept(*this);
-      os_ << '>';
-    }
-
     DEFINE(oneset)
     {
       (void) t;

@@ -1546,8 +1546,7 @@ namespace vcsn
       return print_without_classes_(v, out, fmt, sep);
     }
 
-    /// Print a non-null value for a letterized labelset (e.g., letterset
-    /// or nullableset.
+    /// Print a non-null value for a letterized labelset (e.g., letterset).
     template <typename Ctx = context_t>
     std::enable_if_t<labelset_t_of<Ctx>::is_letterized(),
                       std::ostream&>

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/automaton.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -194,8 +195,8 @@ namespace vcsn
     template <Automaton Aut>
     class left_reductioner
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "reduce: requires free labelset");
+      static_assert(labelset_t_of<Aut>::is_letterized(),
+                    "reduce: requires letterized labelset");
 
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
@@ -213,7 +214,10 @@ namespace vcsn
       left_reductioner(const automaton_t& input)
         : input_(input)
         , res_(make_fresh_automaton(input))
-      {}
+      {
+        require(is_free(input_),
+                "reduce: requires free automaton");
+      }
 
       /// Create the linear representation of the input
       void linear_representation()

@@ -8,7 +8,6 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/value.hh>
-#include <vcsn/labelset/labelset.hh> // make_nullableset_context
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -386,8 +385,7 @@ namespace vcsn
         // but we should actually be parameterized by its type too.
         using expressionset_t = ExpSet;
         const auto& e = exp->as<expressionset_t>();
-        auto ctx
-          = vcsn::detail::make_nullableset_context(e.valueset().context());
+        auto ctx = e.valueset().context();
         using ctx_t = decltype(ctx);
         using automaton_t = mutable_automaton<ctx_t>;
         return ::vcsn::zpc<automaton_t>(ctx, e.valueset(), e.value(), algo);

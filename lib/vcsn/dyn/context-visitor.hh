@@ -19,7 +19,6 @@ namespace vcsn
       DEFINE(expressionset);
       DEFINE(genset);
       DEFINE(letterset);
-      DEFINE(nullableset);
       DEFINE(oneset);
       DEFINE(other);
       DEFINE(polynomialset);

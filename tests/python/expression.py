@@ -42,14 +42,14 @@ def check(e, ctx=None, ids=None, exp=None):
         ctx = vcsn.context(ctx)
     CHECK_EQ(exp, e.expression(ctx, ids))
 
-q = vcsn.context('lan, q')
+q = vcsn.context('lal, q')
 qexp = q.expression
 
 e = qexp('a+b+<1/2>a', 'none')
 check(e, q, 'none', e)
 check(e, q, 'linear', '<3/2>a+b')
 check(e, 'law, q', 'none', '(a+b)+<1/2>a')
-check(e, 'lan, r', 'none', '(a+b)+<0.5>a')
+check(e, 'lal, r', 'none', '(a+b)+<0.5>a')
 check(e, 'law, r', 'linear', '<1.5>a+b')
 
 check(qexp(r'\z*', 'none'), q, 'none', r'\z*')
@@ -328,6 +328,6 @@ check('\e{2}+\z{2}+a{2}',
       'labels', ['none'])
 
 
-ctx = vcsn.context('lat<lan, lan>, q')
+ctx = vcsn.context('lat<lal, lal>, q')
 check('([ab]{3}|x* + [cd]{2}|y*){2}',
       'lan-lan')

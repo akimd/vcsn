@@ -8,7 +8,7 @@ from test import *
 
 
 # Nullable labelsets to please expansions.
-c = vcsn.context('lat<lan(abc), lan(efg), lan(xyz)>, q')
+c = vcsn.context('lat<lal(abc), lal(efg), lal(xyz)>, q')
 
 def check(v, *p):
     for i in range(3):
@@ -48,6 +48,7 @@ def check_aut(function_name, type_):
     print("Checking:", function_name)
     fun = getattr(t, function_name)
     f0 = fun(0)
+    f0_info = f0.info(details=3)
     CHECK_EQ('(ab+ba)c+(ac+ca)b+(bc+cb)a',
              f0.expression())
     CHECK_EQ('(ef+fe)g+(eg+ge)f+(fg+gf)e',
@@ -62,8 +63,9 @@ def check_aut(function_name, type_):
                'is deterministic': 'N/A',
                'is empty': False,
                'is eps-acyclic': True,
+               'is free': True,
                'is normalized': True,
-               'is proper': 'N/A',
+               'is proper': True,
                'is standard': True,
                'is synchronizing': False,
                'is trim': True,
@@ -83,19 +85,17 @@ def check_aut(function_name, type_):
                'number of lazy states': 0,
                'type': type_,
                },
-             fun(0).info(details=3))
+             f0_info)
     # Check properties on tape.
     if function_name == 'focus':
-        t_info = t.info()
-        t_proper = t_info['is proper']
-        t_deter = t_info['is deterministic']
+        t_deter = t.info('is deterministic')
 
-        f0_info = f0.info()
-        CHECK_EQ('N/A', f0_info['is proper'])
+        # We do not check is_proper for f0 as it could be computed by is_free
+        # or is_valid previously.
         CHECK_EQ('N/A', f0_info['is deterministic'])
 
         f0_proper = f0.is_proper()
-        CHECK_EQ(t_proper, t.info('is proper'))
+        # We do not check is_proper for t for the same reason.
         CHECK_EQ(f0_proper, f0.info('is proper'))
 
         f0_deter = f0.is_deterministic()
@@ -121,7 +121,7 @@ check(c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y'),
 
 # Check identities.
 check(vcsn
-      .context('lat<lan, lan, lan>, b')
+      .context('lat<lal, lal, lal>, b')
       .expression('(a{c}|e{c}|x{c}){c}'),
       'a', 'e', 'x')
 

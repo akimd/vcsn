@@ -69,7 +69,7 @@ ctx = vcsn.context('law_char(a), q')
 check_shortest('(a+aaa)*', 7, r'\e + a + aa + <2>aaa + <3>aaaa + <4>aaaaa + <6>aaaaaa')
 
 # LAN x LAN
-ctx = vcsn.context('lat<lan_char(a), lan_char(x)>, q')
+ctx = vcsn.context('lat<lal_char(a), lal_char(x)>, q')
 check_shortest(r'(\e|x + a|\e)*', 9,
                r'\e|\e + \e|x + a|\e + <2>a|x + \e|xx + <3>a|xx + aa|\e + <3>aa|x + <6>aa|xx')
 check_enumerate(r'(\e|x + a|\e)*', 2,

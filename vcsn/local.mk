@@ -68,7 +68,7 @@ algo_headers =                                  \
   %D%/algos/is-ambiguous.hh                     \
   %D%/algos/is-complete.hh                      \
   %D%/algos/is-deterministic.hh                 \
-  %D%/algos/is-free-boolean.hh                  \
+  %D%/algos/is-free.hh                          \
   %D%/algos/is-functional.hh                    \
   %D%/algos/is-partial-identity.hh              \
   %D%/algos/is-proper.hh                        \
@@ -196,11 +196,6 @@ nobase_include_HEADERS =                        \
   %D%/ctx/lal_char_z.hh                         \
   %D%/ctx/lal_char_zr.hh                        \
   %D%/ctx/lal_char_zrr.hh                       \
-  %D%/ctx/lan_char.hh                           \
-  %D%/ctx/lan_char_b.hh                         \
-  %D%/ctx/lan_char_r.hh                         \
-  %D%/ctx/lan_char_z.hh                         \
-  %D%/ctx/lan_char_zr.hh                        \
   %D%/ctx/lao_br.hh                             \
   %D%/ctx/lao_z.hh                              \
   %D%/ctx/law_char.hh                           \
@@ -227,7 +222,6 @@ nobase_include_HEADERS =                        \
   %D%/labelset/genset-labelset.hh               \
   %D%/labelset/labelset.hh                      \
   %D%/labelset/letterset.hh                     \
-  %D%/labelset/nullableset.hh                   \
   %D%/labelset/oneset.hh                        \
   %D%/labelset/stateset.hh                      \
   %D%/labelset/tupleset.hh                      \

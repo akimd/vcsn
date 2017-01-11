@@ -39,10 +39,10 @@ check('lal_char(abc), expressionset<lal_char(xyz), q>',
 
 # Be sure to have proper ordering on tuples with LAN.
 # For the time being, we support both | and , as separators.
-check('lat<lan_char(abc), lan_char(xyz)>, q',
+check('lat<lal_char(abc), lal_char(xyz)>, q',
       r'a|\e + \e|x + a|\e + a|x + \e|y',
       r'\e|x + \e|y + <2>a|\e + a|x')
-check('lat<lan_char(abc), lan_char(xyz)>, q',
+check('lat<lal_char(abc), lal_char(xyz)>, q',
       r'(a,\e) + (\e,x) + (a,\e) + (a, x) + (\e,y)',
       r'\e|x + \e|y + <2>a|\e + a|x')
 
@@ -62,7 +62,7 @@ CHECK_EQ(r'\left\langle  \left\langle 2 \right\rangle \,\varepsilon\right\rangle
 ## Add.  ##
 ## ----- ##
 
-poly = vcsn.context('lan, q').polynomial
+poly = vcsn.context('lal, q').polynomial
 CHECK_EQ('a + b + x + y', poly('a+b') + poly('x+y'))
 CHECK_EQ('<7>a + <7>c',
          poly('<2>a+<3>b') + poly('<5>a + <-3>b + <7>c'))
@@ -106,9 +106,6 @@ CHECK_EQ('<20>a + <30>b',
 ## Pow.  ##
 ## ----- ##
 
-poly = vcsn.context('lal, q').polynomial
-XFAIL(lambda: poly('a') ** 0,
-      'cannot represent polynomial one')
 poly = vcsn.context('law, q').polynomial
 CHECK_EQ(r'\e',                  poly('a') ** 0)
 CHECK_EQ('<4>a + <12>b + <-3>c', poly('<4>a + <12>b + <-3>c') ** 1)
@@ -120,7 +117,7 @@ CHECK_EQ('aaa + aab + aba + abb + baa + bab + bba + bbb', poly('a + b') ** 3)
 ## Conjunction.  ##
 ## ------------- ##
 
-poly = vcsn.context('lan, q').polynomial
+poly = vcsn.context('lal, q').polynomial
 CHECK_EQ(r'\z', poly('a+b') & poly('x+y'))
 CHECK_EQ('<10>a',
          poly('<2>a+<3>b') & poly('<5>a+<7>c'))
@@ -130,7 +127,7 @@ CHECK_EQ('<10>a',
 ## Tuple.  ##
 ## ------- ##
 
-poly = vcsn.context('lan, q').polynomial
+poly = vcsn.context('lal, q').polynomial
 CHECK_EQ('a|x + a|y + b|x + b|y', poly('a+b') | poly('x+y'))
 CHECK_EQ('<10>a|x + <14>a|y + <15>b|x + <21>b|y',
          poly('<2>a+<3>b') | poly('<5>x+<7>y'))
@@ -140,7 +137,7 @@ CHECK_EQ('<10>a|x + <14>a|y + <15>b|x + <21>b|y',
 ## Compose.  ##
 ## --------- ##
 
-poly = vcsn.context('lat<lan, lan>, q').polynomial
+poly = vcsn.context('lat<lal, lal>, q').polynomial
 CHECK_EQ('a|A + b|B', poly('a|x + b|y').compose(poly('x|A + y|B')))
 CHECK_EQ('<10>a|A + <21>b|B',
          poly('<2>a|x + <3>b|y + c|z').compose(poly('<5>x|A + <7>y|B + c|C')))

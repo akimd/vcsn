@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/misc/attributes.hh>
-#include <vcsn/algos/is-free-boolean.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/transpose.hh>
@@ -33,10 +33,14 @@ namespace vcsn
   template <Automaton Aut>
   auto
   minimize(const Aut& a, brzozowski_tag)
-    -> std::enable_if_t<is_free_boolean<Aut>(),
+    -> std::enable_if_t<is_letterized_boolean<Aut>(),
                         determinized_automaton<codeterminized_automaton<Aut>,
                                                wet_kind_t::bitset>>
   {
+    require(is_free(a),
+            "minimize: invalid algorithm"
+            " (non-free automaton):",
+            " brzozowski");
     auto res = determinize(codeterminize(a));
     res->properties().update(minimize_ftag{});
     return res;
@@ -49,11 +53,11 @@ namespace vcsn
       /// Handling of errors for dyn::minimize.
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      std::enable_if_t<!is_free_boolean<Aut>(), Aut>
+      std::enable_if_t<!is_letterized_boolean<Aut>(), Aut>
       minimize(const Aut&, brzozowski_tag)
       {
         raise("minimize: invalid algorithm"
-              " (non-Boolean or non-free labelset):",
+              " (non-Boolean or non-free automaton):",
               " brzozowski");
       }
     }

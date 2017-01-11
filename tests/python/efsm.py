@@ -65,7 +65,7 @@ check(a, 'one.efsm')
 # Note that "sort" is critical here, otherwise the transitions
 # are not issued in the state-order, so when we read back, the
 # states numbers are different.
-a = vcsn.context('lan_char(ab), b').expression('ab*').thompson().sort().strip()
+a = vcsn.context('lal_char(ab), b').expression('ab*').thompson().sort().strip()
 check(a, 'abs.efsm')
 
 # Don't try law<char>, it does not make any sense for OpenFST.
@@ -85,7 +85,7 @@ a = vcsn.context('lat<lal_char(a),lal_char(xyz)>, b')\
 check(a, 'a2xyz.efsm')
 
 # A transducer that mixes char and string.
-a = vcsn.context('lat<lal<char>,lan<string>>, b')\
+a = vcsn.context('lat<lal<char>,lal<string>>, b')\
     .expression("(c|'child'+p|'parent')*").standard().sort().strip()
 check(a, 'char-string.efsm')
 
@@ -94,7 +94,7 @@ def compose(l, r):
     print("Compose:", l, r)
     # We need to enforce the letters, otherwise fstcompose complains
     # about incompatible symbol tables.
-    ctx = vcsn.context('lat<lan(amxy), lan(amxy)>, zmin')
+    ctx = vcsn.context('lat<lal(amxy), lal(amxy)>, zmin')
     l = ctx.expression(l).automaton()
     r = ctx.expression(r).automaton()
     c_vcsn = l.compose(r).strip()

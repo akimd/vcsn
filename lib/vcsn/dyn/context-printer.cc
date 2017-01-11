@@ -133,14 +133,6 @@ namespace vcsn
       os_ << decendl << '>';
     }
 
-    DEFINE(nullableset)
-    {
-      header("vcsn/labelset/nullableset.hh");
-      os_ << "vcsn::nullableset<" << incendl;
-      t.get_labelset()->accept(*this);
-      os_ << decendl << ">";
-    }
-
     DEFINE(oneset)
     {
       (void) t;

@@ -77,6 +77,20 @@ namespace vcsn
       letter_t
       get_letter(std::istream& i, bool quoted = true) const
       {
+        // Check for '\e'.
+        if (i.good() && i.peek() == '\\')
+        {
+          i.ignore();
+          int c = i.peek();
+          if (c == 'e')
+            {
+              i.ignore();
+              return {};
+            }
+          else
+            i.unget();
+        }
+
         letter_t res = this->genset()->get_letter(i, quoted);
         VCSN_REQUIRE(this->has(res),
                      "invalid label: unexpected ", str_escape(res));

@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lan_char(abc), q')
+ctx = vcsn.context('lal_char(abc), q')
 expr = ctx.expression
 
 # check(OUTPUT, RAT_EXP)
@@ -35,7 +35,7 @@ XFAIL(lambda: e.is_valid(),
       r'''is_valid: operator ldivide not supported: a{\}a
   while computing constant-term of: a{\}a''')
 
-e = vcsn.context('lat<lan, lan>, q').expression(r'a|\e @ \e|a')
+e = vcsn.context('lat<lal, lal>, q').expression(r'a|\e @ \e|a')
 XFAIL(lambda: e.is_valid(),
       r'''is_valid: operator compose not supported: a|\e@\e|a
   while computing constant-term of: a|\e@\e|a''')

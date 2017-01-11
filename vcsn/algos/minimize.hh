@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/is-deterministic.hh>
-#include <vcsn/algos/is-free-boolean.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/minimize-brzozowski.hh>
 #include <vcsn/algos/minimize-hopcroft.hh>
 #include <vcsn/algos/minimize-moore.hh>
@@ -55,14 +55,27 @@ namespace vcsn
     return minimize(a, weighted_tag{});
   }
 
-  /// Minimization for Boolean automata on a free labelset: algo
-  /// selection.
+  /// Minimization for Boolean automata: algo selection.
   ///
   /// \param a     the automaton
   /// \param algo  the algorithm to run.
   template <Automaton Aut>
-  std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
+  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
+                   quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
+  {
+    if (is_free(a))
+      return minimize_free_boolean(a, algo);
+    else
+      return minimize_non_free_boolean(a, algo);
+  }
+
+  /// Minimization for free Boolean automata: algo selection.
+  ///
+  /// \param a     the automaton
+  /// \param algo  the algorithm to run.
+  template <Automaton Aut>
+  auto minimize_free_boolean(const Aut& a, const std::string& algo)
   {
     static const auto map
       = getarg<std::function<quotient_t<Aut>(const Aut&)>>
@@ -80,16 +93,12 @@ namespace vcsn
   }
 
 
-  /// Minimization for Boolean automata on a non-free labelset: algo
-  /// selection.
+  /// Minimization for non-free Boolean automata: algo selection.
   ///
   /// \param a     the automaton
   /// \param algo  the algorithm to run.
   template <Automaton Aut>
-  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value
-                    && !labelset_t_of<Aut>::is_free(),
-                    quotient_t<Aut>>
-  minimize(const Aut& a, const std::string& algo)
+  auto minimize_non_free_boolean(const Aut& a, const std::string& algo)
   {
     static const auto map
       = getarg<std::function<quotient_t<Aut>(const Aut&)>>

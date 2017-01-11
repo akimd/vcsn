@@ -38,15 +38,15 @@ for c in ['letterset<char_letters()>, b',
     check(c, 'letterset<char_letters()>, b')
 
 # An open context is printed as open in LaTeX.
-check('lal_char, b',      r'\{\ldots\}\to\mathbb{B}', 'latex')
-check('lal_char, b',      r'{...} -> B',               'text')
-check('lal_char, b',      r'{...} → 𝔹',               'utf8')
-check('lal_char(abc), b', r'\{a, b, c\}\to\mathbb{B}', 'latex')
-check('lal_char(abc), b', r'{abc} -> B',          'text')
-check('lal_char(abc), b', r'{abc} → 𝔹',          'utf8')
-check('lal_char(), b',    r'\{\}\to\mathbb{B}',  'latex')
-check('lal_char(), b',    r'{} -> B',             'text')
-check('lal_char(), b',    r'{} → 𝔹',             'utf8')
+check('lal_char, b',      r'(\{\ldots\})^?\to\mathbb{B}', 'latex')
+check('lal_char, b',      r'{...}? -> B',               'text')
+check('lal_char, b',      r'{...}? → 𝔹',               'utf8')
+check('lal_char(abc), b', r'(\{a, b, c\})^?\to\mathbb{B}', 'latex')
+check('lal_char(abc), b', r'{abc}? -> B',          'text')
+check('lal_char(abc), b', r'{abc}? → 𝔹',          'utf8')
+check('lal_char(), b',    r'(\{\})^?\to\mathbb{B}',  'latex')
+check('lal_char(), b',    r'{}? -> B',             'text')
+check('lal_char(), b',    r'{}? → 𝔹',             'utf8')
 
 # letterset and different char_letters.
 check(r'lal_char(), b',       r'letterset<char_letters()>, b')
@@ -102,8 +102,8 @@ check('lal_char(ab), lat<b, z>', 'letterset<char_letters(ab)>, lat<b, z>')
 
 # Tuple contexts.
 c1 = vcsn.context('lal(abc), b')
-c2 = vcsn.context('lan(xyz), q')
-CHECK_EQ(vcsn.context('lat<lal(abc), lan(xyz)>, q'), c1 | c2)
+c2 = vcsn.context('lal(xyz), q')
+CHECK_EQ(vcsn.context('lat<lal(abc), lal(xyz)>, q'), c1 | c2)
 
 
 ## --------------------- ##
@@ -112,35 +112,34 @@ CHECK_EQ(vcsn.context('lat<lal(abc), lan(xyz)>, q'), c1 | c2)
 
 # This one triggered a bug: shortest is not instantiable because we
 # fail to support label * word in this context.
-check('nullableset<lat<lal>>, b',
-      'nullableset<lat<letterset<char_letters()>>>, b')
+check('lat<lal>, b',
+      'lat<letterset<char_letters()>>, b')
 
 check('lat<lat<lal_char(a)>>, b',
       'lat<lat<letterset<char_letters(a)>>>, b')
 
-ctx = '''lat<lal_char(ba),lan_char(vu), law_char(x-z)>,
+ctx = '''lat<lal_char(ba),lal_char(vu), law_char(x-z)>,
          lat<expressionset<lat<lal_char(fe), lal_char(hg)>, q>, r, q>'''
 check(ctx,
-      'lat<letterset<char_letters(ab)>, nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>', 'sname')
+      'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>', 'sname')
 check(ctx,
-      '{ab} x {uv}? x {xyz}* -> RatE[{ef} x {gh} -> Q] x R x Q', 'text')
+      '{ab}? x {uv}? x {xyz}* -> RatE[{ef}? x {gh}? -> Q] x R x Q', 'text')
 check(ctx,
-      '{ab} × {uv}? × {xyz}* → RatE[{ef} × {gh} → ℚ] × ℝ × ℚ', 'utf8')
+      '{ab}? × {uv}? × {xyz}* → RatE[{ef}? × {gh}? → ℚ] × ℝ × ℚ', 'utf8')
 
 
 # Check that spaces are generously accepted.
 ctx = '''
-nullableset < lat < lal_char (ba) ,
-                    lat < lan_char(vu) , law_char(x-z) >
+lat < lal_char (ba) ,
+                    lat < lal_char(vu) , law_char(x-z) >
                >
-           >
 ,
-lat < expressionset < nullableset <lat < lan < char (fe) > , lan_char (hg) > > ,
+lat < expressionset < lat < lal < char (fe) > , lal_char (hg) >  ,
                       lat < r, q > > ,
       lat < b , q >
     >
 '''
-exp = 'nullableset<lat<letterset<char_letters(ab)>, lat<nullableset<letterset<char_letters(uv)>>, wordset<char_letters(xyz)>>>>, lat<expressionset<lat<nullableset<letterset<char_letters(ef)>>, nullableset<letterset<char_letters(gh)>>>, lat<r, q>>, lat<b, q>>'
+exp = 'lat<letterset<char_letters(ab)>, lat<letterset<char_letters(uv)>, wordset<char_letters(xyz)>>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, lat<r, q>>, lat<b, q>>'
 check(ctx, exp)
 ctx = re.sub(r'\s+', '', ctx)
 check(ctx, exp)

@@ -8,6 +8,7 @@
 #include <boost/optional.hpp>
 
 #include <vcsn/algos/is-acyclic.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/lightest-path.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -44,7 +45,7 @@ namespace vcsn
       using weight_t = weight_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
 
-      /// Used in the case of non-free labelsets.
+      /// Used in the case of non-free automata.
       using profile_t = std::tuple<state_t, word_t, weight_t>;
       struct profile_less
       {
@@ -93,7 +94,17 @@ namespace vcsn
       }
 
     private:
-      /// Case of free labelsets (e.g., `lal` or `lal x lal`).
+      auto shortest_(unsigned num, unsigned len,
+                     state_t_of<Aut> src = Aut::element_type::pre(),
+                     state_t_of<Aut> dst = Aut::element_type::post())
+      {
+        if (is_free(aut_))
+          return shortest_free_(num, len, src, dst);
+        else
+          return shortest_non_free_(num, len, src, dst);
+      }
+
+      /// Case of free automata (e.g., `lal` or `lal x lal`).
       ///
       /// We maintain a list of current tuples of (state, label, weight).
       /// During one round we pass them all through outgoing
@@ -103,10 +114,8 @@ namespace vcsn
       /// once we ran `len` rounds, we have all the words shorter than
       /// `len` letters.
       template <typename LabelSet = labelset_t_of<context_t>>
-      auto shortest_(unsigned num, unsigned len,
-                     state_t_of<Aut> src = Aut::element_type::pre(),
-                     state_t_of<Aut> dst = Aut::element_type::post())
-        -> std::enable_if_t<LabelSet::is_free(), polynomial_t>
+      auto shortest_free_(unsigned num, unsigned len, state_t_of<Aut> src,
+                          state_t_of<Aut> dst)
       {
         // Each step of propagation contributes a letter.  We need to
         // take the initial and final special characters into account.
@@ -159,15 +168,13 @@ namespace vcsn
         return res;
       }
 
-      /// Case of non free labelsets (e.g., `law`, `lan x lan`).
+      /// Case of non free automata (e.g., `law`, `lal x lal` with epsilon).
       ///
       /// We use a unique queue composed of (state, word, weight),
       /// shortest words first.
       template <typename LabelSet = labelset_t_of<context_t>>
-      auto shortest_(unsigned num, unsigned len,
-                     state_t_of<Aut> src = Aut::element_type::pre(),
-                     state_t_of<Aut> dst = Aut::element_type::post())
-        -> std::enable_if_t<!LabelSet::is_free(), polynomial_t>
+      auto shortest_non_free_(unsigned num, unsigned len, state_t_of<Aut> src,
+                              state_t_of<Aut> dst)
       {
         // Benched as better than Fibonacci, Pairing and Skew Heaps.
         // D-ary heaps and Priority Queue fail to compile.

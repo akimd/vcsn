@@ -4,18 +4,20 @@ import vcsn
 import os
 from test import *
 
-# check EXPECTED INPUT
-# --------------------
-# Check that vcsn is-proper gives EXPECTED.
-def check(exp, aut):
+# check FUNCTION_NAME EXPECTED INPUT
+# ----------------------------------
+# Check that vcsn FUNCTION gives EXPECTED.
+def check(fname, exp, aut):
   a = vcsn.automaton(aut)
-  CHECK_EQ('N/A', a.info('is proper'))
-  CHECK_EQ(exp, a.is_proper())
-  CHECK_EQ(exp, a.info('is proper'))
+  fun = getattr(a, fname)
+  # We don't check that the initial cache value is N/A as it can be computed
+  # when calling info.
+  CHECK_EQ(exp, fun())
+  CHECK_EQ(exp, a.info(fname.replace('_', ' ')))
 
-def check_context(exp, aut, ctx):
+def check_context(fname, exp, aut, ctx):
   print('Context: {}'.format(ctx))
-  check(exp, aut.replace('CTX', ctx))
+  check(fname, exp, aut.replace('CTX', ctx))
 
 a = r'''
 digraph
@@ -31,9 +33,10 @@ digraph
   1 -> F1
 }'''
 
-for ls in ["lal", "lan", "law"]:
+for ls in [("lal", True, True), ("law", True, False)]:
   for ws in ["b", "q"]:
-    check_context(True, a, ls + "_char(ab), " + ws)
+    check_context('is_proper', ls[1], a, ls[0] + "_char(ab), " + ws)
+    check_context('is_free', ls[2], a, ls[0] + "_char(ab), " + ws)
 
 a = r'''
 digraph
@@ -45,15 +48,16 @@ digraph
 }'''
 
 
-for ls in ["lan", "law"]:
+for ls in ["lal", "law"]:
   for ws in ["b", "z"]:
-    check_context(False, a, ls + "_char(ab), " + ws)
+    for f in ["is_proper", "is_free"]:
+      check_context(f, False, a, ls + "_char(ab), " + ws)
 
-# Tuples of lan
+# Tuples of lal
 a = r'''
 digraph
 {
-  vcsn_context = "lat<lan_char(ab), lan_char(xy)>, b"
+  vcsn_context = "lat<lal_char(ab), lal_char(xy)>, b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -62,12 +66,13 @@ digraph
   1 -> F1
 }'''
 
-check(True, a)
+check('is_proper', True, a)
+check('is_free', False, a)
 
 a = r'''
 digraph
 {
-  vcsn_context = "lat<lan_char(ab), lan_char(xy)>, b"
+  vcsn_context = "lat<lal_char(ab), lal_char(xy)>, b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -77,13 +82,13 @@ digraph
   1 -> F1
 }'''
 
-check(False, a)
+check('is_proper', False, a)
+check('is_free', False, a)
 
-# Tuple of lal x lan
 a = r'''
 digraph
 {
-  vcsn_context = "lat<lal_char(ab), lan_char(xy)>, b"
+  vcsn_context = "lat<lal_char(ab), lal_char(xy)>, b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -92,4 +97,5 @@ digraph
   1 -> F1
 }'''
 
-check(True, a)
+check('is_proper', True, a)
+check('is_free', False, a)

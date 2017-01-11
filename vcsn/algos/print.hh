@@ -30,14 +30,12 @@ namespace vcsn
     using has_fado_t
     = std::integral_constant<bool,
                              ((context_t_of<Aut>::is_lal
-                               || context_t_of<Aut>::is_lan
                                || context_t_of<Aut>::is_lat)
                               && std::is_same<weightset_t_of<Aut>, b>::value)>;
     template <Automaton Aut>
     using has_grail_t
     = std::integral_constant<bool,
-                             ((context_t_of<Aut>::is_lal
-                               || context_t_of<Aut>::is_lan)
+                             (context_t_of<Aut>::is_lal
                               && std::is_same<weightset_t_of<Aut>, b>::value)>;
 
 

@@ -11,6 +11,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <vcsn/algos/distance.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/pair.hh>
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
@@ -18,6 +19,7 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/labelset/labelset.hh> // make_wordset
+#include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/algorithm.hh> // erase_if
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/pair.hh>
@@ -289,6 +291,23 @@ namespace vcsn
         return res_;
       }
 
+      /// Whether one appears in the label.
+      template<typename LabelSet = labelset_t_of<pair_automaton_t>>
+      auto
+      has_one_(const label_t& l)
+        -> std::enable_if_t<detail::is_multitape<LabelSet>{}, bool>
+      {
+        return pair_->labelset()->show_one(l);
+      }
+
+      template<typename LabelSet = labelset_t_of<pair_automaton_t>>
+      auto
+      has_one_(const label_t& l)
+        -> std::enable_if_t<!detail::is_multitape<LabelSet>{}, bool>
+      {
+        return pair_->labelset()->is_one(l);
+      }
+
       word_t fastsynchro_()
       {
         init_synchro();
@@ -303,6 +322,10 @@ namespace vcsn
             int min = std::numeric_limits<int>::max();
             for (const auto& l : pair_->labelset()->generators())
               {
+                // If we have a lat<lal, lal> and the automaton is free,
+                // we should not consider anything with one.
+                if (is_free(aut_) && has_one_(l))
+                  continue;
                 int cur_min = phi_3(l);
                 if (cur_min < min)
                   {

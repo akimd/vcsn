@@ -5,7 +5,7 @@ from test import *
 
 # We are checking the support for quotients, which requires the label
 # one.
-ctx = vcsn.context('lan, expressionset<lal, q>')
+ctx = vcsn.context('lal, expressionset<lal, q>')
 cexp = ctx.expression
 
 # check INPUT [RESULT = INPUT]

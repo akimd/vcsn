@@ -35,7 +35,7 @@ xfail(r'(ab){T}')
 check(r'(?@lal_char(), z)\z',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters()>>, z"
+  vcsn_context = "letterset<char_letters()>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -56,7 +56,7 @@ r'''digraph
 check(r'(?@lal_char(a), z)<12>\e',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(a)>>, z"
+  vcsn_context = "letterset<char_letters(a)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -82,7 +82,7 @@ r'''digraph
 check(r'(?@lal_char(ab), z)\e+a+\e',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -146,10 +146,10 @@ r'''digraph
 }''')
 
 # left weight.
-check(r'(?@lan_char(ab), z)<10>(<2>\e+<3>a+<5>b)',
+check(r'(?@lal_char(ab), z)<10>(<2>\e+<3>a+<5>b)',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -182,11 +182,11 @@ r'''digraph
 }''')
 
 # right weight.
-check(vcsn.context('lan_char(ab), z')
+check(vcsn.context('lal_char(ab), z')
       .expression(r'(<2>\e+<3>a+<5>b)<10>', 'associative'),
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -226,7 +226,7 @@ r'''digraph
 check(vcsn.Z.expression('<12>(ab)<23>', 'associative'),
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -252,10 +252,10 @@ r'''digraph
 ## Z: star.  ##
 ## --------- ##
 
-check(r'(?@lan_char(ab), z)\z*',
+check(r'(?@lal_char(ab), z)\z*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -273,10 +273,10 @@ r'''digraph
   1 -> F1
 }''')
 
-check(r'(?@lan_char(ab), b)\e*',
+check(r'(?@lal_char(ab), b)\e*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, b"
+  vcsn_context = "letterset<char_letters(ab)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -300,10 +300,10 @@ r'''digraph
   3 -> F3
 }''')
 
-check('(?@lan_char(ab), z)(<2>a)*',
+check('(?@lal_char(ab), z)(<2>a)*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -327,10 +327,10 @@ r'''digraph
   3 -> F3
 }''')
 
-check(vcsn.context('lan_char(ab), z').expression('<2>a*<3>', 'associative'),
+check(vcsn.context('lal_char(ab), z').expression('<2>a*<3>', 'associative'),
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -354,10 +354,10 @@ r'''digraph
   3 -> F3
 }''')
 
-check('(?@lan_char(ab), z)(<2>a+<3>b)*',
+check('(?@lal_char(ab), z)(<2>a+<3>b)*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -390,11 +390,11 @@ r'''digraph
   7 -> F7
 }''')
 
-check(vcsn.context('lan_char(ab), z')
+check(vcsn.context('lal_char(ab), z')
       .expression('<2>(<3>a+<5>b)*<7>', 'associative'),
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -427,11 +427,11 @@ r'''digraph
   7 -> F7
 }''')
 
-check(vcsn.context('lan_char(ab), z')
+check(vcsn.context('lal_char(ab), z')
       .expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -459,10 +459,10 @@ r'''digraph
   5 -> F5
 }''')
 
-check('(?@lan_char(ab), z)a**',
+check('(?@lal_char(ab), z)a**',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(ab)>>, z"
+  vcsn_context = "letterset<char_letters(ab)>, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -496,10 +496,10 @@ r'''digraph
 ## ZR: star.  ##
 ## ---------- ##
 
-check(r'(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
+check(r'(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+abc)*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, q>"
+  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -540,10 +540,10 @@ r'''digraph
   11 -> F11
 }''')
 
-check(r'(?@lan_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+ab<f>)*',
+check(r'(?@lal_char(abcd), expressionset<lal_char(efgh), q>)(<e>\e+ab<f>)*',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abcd)>>, expressionset<letterset<char_letters(efgh)>, q>"
+  vcsn_context = "letterset<char_letters(abcd)>, expressionset<letterset<char_letters(efgh)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -582,10 +582,10 @@ r'''digraph
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check(r'(?@lan_char(a), expressionset<lal_char(xyz), q>)<x>a(<y>\e+<z>a)',
+check(r'(?@lal_char(a), expressionset<lal_char(xyz), q>)<x>a(<y>\e+<z>a)',
 r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(a)>>, expressionset<letterset<char_letters(xyz)>, q>"
+  vcsn_context = "letterset<char_letters(a)>, expressionset<letterset<char_letters(xyz)>, q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

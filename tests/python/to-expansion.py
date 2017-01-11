@@ -111,7 +111,7 @@ check('(<xy>(abc)<yz>)*{T}', r'<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 ## With spontaneous transitions.  ##
 ## ------------------------------ ##
 
-c = vcsn.context("lan_char(abcd), expressionset<lal_char(xyz), q>")
+c = vcsn.context("lal_char(abcd), expressionset<lal_char(xyz), q>")
 
 # Ldivide with spontaneous transitions.
 check(r'\e{\}\z', r'<\z>')
@@ -241,7 +241,7 @@ check_prod('(a+b+c)*<x>a(a+b+c)*',
            '(a+b+c)*<z>c(a+b+c)*')
 
 # Use ab{\}ab to introduce expansions with the empty word as label.
-ctx = vcsn.context('lan_char(abcd), q')
+ctx = vcsn.context('lal_char(abcd), q')
 # FIXME: See issues #86 and #87: we cannot trust these computations.
 # They appear to work, but more by luck than correctness.  Reenable
 # once it works for real.
@@ -306,7 +306,7 @@ check('(abc|xyz) & (a|xy)*(bc|z)*',
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
       'a|xy.[<XY>bc|z&(<Y>a|xy)*(<Z>(bc)|z)*]')
 
-c = vcsn.context("lat<lan<char(abc)>, lan<char(xyz)>>, q")
+c = vcsn.context("lat<lal<char(abc)>, lal<char(xyz)>>, q")
 check(r'\e|\e',
       '<1>')
 check('a|x',
@@ -323,7 +323,7 @@ XFAIL(lambda: c.expression('a*|x*').expansion(),
       'to-expansion: cannot denormalize')
 
 # Check the tupling of expansions: d(e|f) = d(e) | d(f).
-c = vcsn.context('lan<char>, q')
+c = vcsn.context('lal<char>, q')
 def check(e1, e2):
     e1 = c.expression(e1)
     e2 = c.expression(e2)

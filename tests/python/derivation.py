@@ -305,7 +305,7 @@ check_bdt(fig3, 'h3-dt-breaking')
 ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
 check('ab|xy', 'a|x', 'b|y')
 
-ctx = vcsn.context('lat<lan<char>, lan<char>>, q')
+ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
 check('ab|xy', 'a|x', 'b|y')
 check('ab|xy', r'a|\e', r'\z')
 check('a*|x*', 'a|x', 'a*|x*')

@@ -63,15 +63,10 @@ namespace vcsn
     /// \brief The subset construction automaton from another.
     ///
     /// \tparam Aut the input automaton type.
-    ///
-    /// \pre labelset is free.
     template <Automaton Aut, wet_kind_t Kind, bool Lazy = false>
     class determinized_automaton_impl
       : public automaton_decorator<polystate_automaton<Aut, Kind, Lazy>>
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: requires free labelset");
-
     public:
       using automaton_t = Aut;
       constexpr static wet_kind_t kind = Kind;
@@ -395,12 +390,7 @@ namespace vcsn
       automaton
       determinize(const automaton& aut, const std::string& algo)
       {
-        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
-          ([](const auto& aut, const auto& algo)
-           { return determinize_<Aut, String>(aut, algo); },
-           [](const auto&, const auto&) -> automaton
-           { raise("determinize: requires free labelset"); })
-          (aut, algo);
+        return determinize_<Aut, String>(aut, algo);
       }
     }
   }
@@ -475,12 +465,7 @@ namespace vcsn
       automaton
       codeterminize(const automaton& aut, const std::string& algo)
       {
-        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
-          ([](const auto& aut, const auto& algo)
-           { return codeterminize_<Aut, String>(aut, algo); },
-           [](const auto&, const auto&) -> automaton
-           { raise("codeterminize: requires free labelset"); })
-          (aut, algo);
+        return codeterminize_<Aut, String>(aut, algo);
       }
     }
   }

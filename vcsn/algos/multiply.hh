@@ -5,6 +5,7 @@
 #include <vcsn/algos/add.hh>
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/star.hh>
 #include <vcsn/algos/tags.hh>
@@ -33,14 +34,16 @@ namespace vcsn
   /// Append automaton \a b to \a res.
   ///
   /// \pre The context of \a res must include that of \a b.
-  /// \pre The context of res is free.
+  /// \pre \a res is free.
   /// \post The result is a deterministic automaton.
   template <Automaton Aut1, Automaton Aut2>
   Aut1&
   multiply_here(Aut1& res, const Aut2& b, deterministic_tag)
   {
-    static_assert(labelset_t_of<Aut1>::is_free(),
-                  "multiply_here: requires free labelset");
+    static_assert(labelset_t_of<Aut1>::is_letterized(),
+                  "multiply_here: requires letterized labelset");
+    require(is_free(res),
+            "multiply_here: requires free automaton");
     multiply_here(res, b, standard_tag{});
     res = determinize(res)->strip();
     res->properties().update(multiply_ftag{});

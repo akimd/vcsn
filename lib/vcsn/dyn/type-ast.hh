@@ -110,27 +110,6 @@ namespace vcsn
       value_t sets_;
     };
 
-    class nullableset : public ast_node
-    {
-    public:
-      nullableset(std::shared_ptr<ast_node> ls)
-        : ls_(ls)
-      {}
-
-      const std::shared_ptr<ast_node> get_labelset() const
-      {
-        return ls_;
-      }
-
-      ACCEPT()
-
-      virtual bool has_one() const { return true; }
-
-    private:
-      std::shared_ptr<ast_node> ls_;
-    };
-
-
     class oneset : public ast_node
     {
     public:

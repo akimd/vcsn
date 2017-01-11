@@ -10,7 +10,7 @@ from test import *
 #
 
 aut = vcsn.automaton(r'''
-context = "lan_char(a), b"
+context = "lal_char(a), b"
 $ -> 0
 0 -> 1 a
 1 -> 2 \e

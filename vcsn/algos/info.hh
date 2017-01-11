@@ -4,13 +4,13 @@
 
 #include <vcsn/algos/accessible.hh>
 #include <vcsn/algos/has-twins-property.hh>
+#include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-ambiguous.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
-#include <vcsn/algos/is-acyclic.hh>
-#include <vcsn/algos/normalize.hh>
-#include <vcsn/algos/is-valid.hh>
 #include <vcsn/algos/is-valid-expression.hh>
+#include <vcsn/algos/is-valid.hh>
+#include <vcsn/algos/normalize.hh>
 #include <vcsn/algos/scc.hh>
 #include <vcsn/algos/standard.hh>
 #include <vcsn/algos/synchronizing-word.hh>
@@ -96,10 +96,16 @@ namespace vcsn
       sep = "\n";                                            \
   } while (false)
 
-#define VCSN_IF_FREE(Fun, Aut)                                  \
-    detail::static_if<labelset_t_of<decltype(Aut)>::is_free()>  \
-        ([](auto a) { return Fun(a); },                         \
+#define VCSN_IF_STATIC(Pred, Fun, Aut)                       \
+    detail::static_if<Pred()>                                \
+        ([](auto a) { return Fun(a); },                      \
          [](auto)   { return "N/A";  })(Aut)
+
+#define VCSN_IF_FREE(Fun, Aut)                                            \
+    VCSN_IF_STATIC(                                                       \
+      labelset_t_of<decltype(Aut)>::is_letterized,                        \
+      [](auto a){ return is_free(a) ? std::to_string(Fun(a)) : "N/A"; },  \
+      Aut)
 
     ECHO(1, "number of states", aut->num_states());
     ECHO(2, "number of lazy states", detail::num_lazy_states(aut));
@@ -124,6 +130,7 @@ namespace vcsn
     ECHO(2, "is codeterministic", VCSN_IF_FREE(is_codeterministic, aut));
     ECHO(2, "is empty", is_empty(aut));
     ECHO(2, "is eps-acyclic", is_eps_acyclic(aut));
+    ECHO_PROP(2, is_free_ptag{});
     ECHO(2, "is normalized", is_normalized(aut));
     ECHO_PROP(2, is_proper_ptag{});
     ECHO(2, "is standard", is_standard(aut));

@@ -45,10 +45,13 @@ namespace vcsn
     auto
     dispatch_tags(std::string algo, Operation op, Aut&&... auts)
     {
-      // Whether all the labelsets are free.  Requirement to call
-      // determinize/is_deterministic.
-      constexpr bool are_free
-        = all_<labelset_t_of<decltype(auts)>::is_free()...>();
+      // Whether all the labelsets are letterized.  Used to require is_free
+      // to call determinize/is_deterministic.
+      // FIXME: Nullableset removal: is_deterministic now accepts non-free
+      // automaton. It could be wrong to use deterministic_tag this way.
+      // At least, keep check on is_letterized for the moment.
+      constexpr bool are_letterized
+        = all_<labelset_t_of<decltype(auts)>::is_letterized()...>();
 
       if (algo == "auto")
         {
@@ -60,7 +63,7 @@ namespace vcsn
 #endif
           if (all(is_standard(std::forward<Aut>(auts))...))
             algo = "standard";
-          else if (static_if<are_free>
+          else if (static_if<are_letterized>
                    ([](auto&&... as){ return all(is_deterministic(as)...); },
 #if (defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6   \
      || defined __GNUC__ && !defined __clang__ && __GNUC__ < 5)
@@ -88,7 +91,7 @@ namespace vcsn
           using res_t = decltype(op(standard_tag{}));
           res_t res = nullptr;
           if (algo == "deterministic")
-            static_if<are_free>([&res](auto&& op)
+            static_if<are_letterized>([&res](auto&& op)
                                 { res = op(deterministic_tag{}); })(op);
           require(res, "invalid algorithm: ", str_escape(algo));
           return res;
@@ -105,15 +108,16 @@ namespace vcsn
       return join_automata(std::forward<Auts>(auts)...);
     }
 
-    /// Make an empty automaton which is a supertype of others, and
-    /// with a nullable labelset.
+    /// Make an empty automaton which is a supertype of others.
+    // FIXME: Nullableset removal: possible factorization with
+    // deterministic and standard tags version?
     template <Automaton... Auts>
     auto
     make_join_automaton(general_tag, Auts&&... auts)
       // SFINAE
-      -> decltype(nullable_join_automata(std::forward<Auts>(auts)...))
+      -> decltype(join_automata(std::forward<Auts>(auts)...))
     {
-      return nullable_join_automata(std::forward<Auts>(auts)...);
+      return join_automata(std::forward<Auts>(auts)...);
     }
 
     /// Make an empty automaton which is a supertype of others.

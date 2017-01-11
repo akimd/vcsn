@@ -70,6 +70,7 @@ XFAIL(lambda: e.constant_term(),
 
 # tuple.
 #
+# FIXME: Nullableset removal: What to do now?
 # We have to request for construction based on the derivation, not the
 # expansion, because expansion wants the label one, i.e., it requires
 # the labelsets to be lan, not lal.

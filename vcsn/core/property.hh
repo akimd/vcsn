@@ -46,6 +46,7 @@ namespace vcsn LIBVCSN_API
 
   CREATE_PROP(is_proper, bool);
   CREATE_PROP(is_deterministic, bool);
+  CREATE_PROP(is_free, bool);
 
   /*----------.
   | on_tape.  |

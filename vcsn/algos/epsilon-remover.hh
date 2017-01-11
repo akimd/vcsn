@@ -41,7 +41,7 @@ namespace vcsn
       using transition_t = transition_t_of<automaton_t>;
 
       using aut_proper_t = fresh_automaton_t_of<automaton_t,
-                            detail::proper_context<context_t_of<automaton_t>>>;
+                            context_t_of<automaton_t>>;
 
     public:
 
@@ -87,8 +87,7 @@ namespace vcsn
 
       aut_proper_t operator()()
       {
-        auto proper_ctx = make_proper_context(aut_->context());
-        auto res = make_shared_ptr<aut_proper_t>(proper_ctx);
+        auto res = make_fresh_automaton(aut_);
 
         in_situ_remover();
 

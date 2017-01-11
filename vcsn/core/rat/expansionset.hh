@@ -475,11 +475,7 @@ namespace vcsn
       /// The complement of v.
       value_t complement(const value_t& v) const
       {
-        // We need an expansion whose firsts are letters.  However,
-        // requiring a free labelset, i.e., rulling out lan, is too
-        // demanding, since, for instance, to compute {\} requires lan
-        // instead of lal.
-        //
+        // We need an expansion whose firsts are letters.
         // So require a letterized labelset.
         return complement_<detail::is_letterized_t<labelset_t>{}>(v);
       }

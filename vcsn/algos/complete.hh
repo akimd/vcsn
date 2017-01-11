@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/algos/copy.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/unordered_set.hh>
@@ -18,8 +19,10 @@ namespace vcsn
   Aut&
   complete_here(Aut& aut)
   {
-    static_assert(labelset_t_of<Aut>::is_free(),
-                  "complete: requires free labelset");
+    static_assert(labelset_t_of<Aut>::is_letterized(),
+                  "complete: requires letterized labelset");
+    require(is_free(aut),
+            "complete: requires free automaton");
 
     using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;

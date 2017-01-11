@@ -45,7 +45,6 @@ namespace vcsn
   {}
 
   DEFINE(lal, letters);
-  DEFINE(lan, nullable);
   DEFINE(lao, one);
   DEFINE(lar, expressions);
   DEFINE(lat, tuples);

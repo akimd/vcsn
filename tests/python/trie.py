@@ -115,7 +115,7 @@ check('trie',
       'lat<law_char, law_char>, q',
       '<1>one|un + <2>two|deux + <3>three|trois  + <4>four|quatre'
       + ' + <14>forteen|quatorze + <40>forty|quarante',
-      r'''context = lat<nullableset<letterset<char_letters(efhnortuwy)>>, nullableset<letterset<char_letters(adeinoqrstuxz)>>>, q
+      r'''context = lat<letterset<char_letters(efhnortuwy)>, letterset<char_letters(adeinoqrstuxz)>>, q
 $ -> 0
 0 -> 1 o|u
 0 -> 4 t|d

@@ -42,10 +42,10 @@ check('abab')
 check('a*')
 check('(<1/2>a)*')
 
-# Also check with lan.
-lan = vcsn.context('lan, b')
-check(lan.expression('abc'))
-check(lan.expression(r'\z'))
+# Also check with lal, b.
+lalb = vcsn.context('lal, b')
+check(lal.expression('abc'))
+check(lal.expression(r'\z'))
 
 # And with LAO.
 lao = vcsn.context('lao, q')
@@ -57,7 +57,7 @@ check(lao.expression(r'(<1/2>\e)*'))
 ## --------- ##
 ## Compose.  ##
 ## --------- ##
-ctx = vcsn.context('lat<lan(abcde), lan(abcde)>, q')
+ctx = vcsn.context('lat<lal(abcde), lal(abcde)>, q')
 def check(r1, r2):
     '''Check that `@` between expansions corresponds to the expansion of
     `@` between expressions.'''
@@ -102,7 +102,7 @@ check('a', r'\z')
 ## --------- ##
 ## Division. ##
 ## --------- ##
-ctx = vcsn.context('lan_char(abcd), q')
+ctx = vcsn.context('lal_char(abcd), q')
 def check(r1, r2):
     exp1 = expr(r1)
     CHECK_EQ(r2, str(exp1.expansion()))
@@ -156,7 +156,7 @@ check('a', r'\z')
 ## ------- ##
 ## Tuple.  ##
 ## ------- ##
-ctx = vcsn.context('lan_char(abcd), q')
+ctx = vcsn.context('lal_char(abcd), q')
 def check(r1, r2):
     '''Check that `|` between expansions corresponds to the expansion of
     `|` between expressions.'''

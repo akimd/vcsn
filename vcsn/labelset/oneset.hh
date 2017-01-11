@@ -45,14 +45,6 @@ namespace vcsn
       return !o;
     }
 
-    static constexpr bool is_free()
-    {
-      // This is debatable.  However, in Vcsn, if a labelset
-      // is_free, then we expect to be able to iterate on its genset,
-      // and I don't plan to provide a genset here.
-      return false;
-    }
-
     /// Value constructor.
     template <typename... Args>
     value_t value(Args&&... args) const
@@ -213,17 +205,6 @@ namespace vcsn
 
   namespace detail
   {
-    /// Conversion to a nullableset: identity.
-    template <>
-    struct nullableset_traits<oneset>
-    {
-      using type = oneset;
-      static type value(oneset)
-      {
-        return {};
-      }
-    };
-
     /// Conversion to a wordset: identity.
     template <>
     struct law_traits<oneset>
@@ -238,6 +219,18 @@ namespace vcsn
     /*-------.
     | Join.  |
     `-------*/
+
+    /// `oneset v LS -> LS` if \c LS\::has_one.
+    template <typename LS>
+    struct join_impl<oneset, LS,
+                     std::enable_if_t<LS::has_one()>>
+    {
+      using type = LS;
+      static type join(const oneset&, const LS& ls)
+      {
+        return ls;
+      }
+    };
 
     template <>
     struct join_impl<oneset, oneset>

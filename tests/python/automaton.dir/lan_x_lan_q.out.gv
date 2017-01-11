@@ -18,10 +18,10 @@ digraph
     5
   }
   I0 -> 0 [label = "<3>"]
-  0 -> 1 [label = "[^]"]
+  0 -> 1 [label = "[^\\e|x-a|\\e]"]
   1 -> 2 [label = "<2>[a|x-a|z], <3>[b|x-b|z], <4>[c|x-c|z]"]
   2 -> 3 [label = "<2>[a|x-a|z], <3>b|x, <3>b|y, <4>c|z"]
-  3 -> 4 [label = "<2>[b|x-c|xc|z]"]
-  4 -> 5 [label = "<2>[a|x-a|z], <3>[b|x-c|z]"]
+  3 -> 4 [label = "<2>[^a|x-a|zc|y]"]
+  4 -> 5 [label = "<3>[^a|x-a|z], <2>[a|x-a|z]"]
   5 -> F5
 }

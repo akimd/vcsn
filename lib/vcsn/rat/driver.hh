@@ -83,8 +83,8 @@ namespace vcsn
       /// The stack of tape numbers.
       ///
       /// The concept of tape number does not suffice.  For instance,
-      /// it cannot deal with `(a|b)|(x|y)` which is a `lat<lat<lan,
-      /// lan>, lat<lan, lan>>`.  Not that it really matters as of
+      /// it cannot deal with `(a|b)|(x|y)` which is a `lat<lat<lal,
+      /// lal>, lat<lal, lal>>`.  Not that it really matters as of
       /// today...
       std::vector<unsigned> tapes_ = {0};
       /// The context for each tape.  If single-tape, [0] is ctx_.

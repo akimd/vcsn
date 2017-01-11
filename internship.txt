@@ -97,9 +97,9 @@ you:
     - the type of labels.
     - the type of weights.
 Here is an example:
-lan_char(abc), b: The labels are nullable (either epsilon or a letter). The
+lal_char(abc), b: The labels are letters (or epsilon). The
 alphabet is "abc" and the weights are booleans.
-Labels can also be words (law), or letters (lal).
+Labels can also be words (law).
 Weights can be:
     - Real (_r)
     - Rational expressions (_expressionset<lal_char(ab), b)

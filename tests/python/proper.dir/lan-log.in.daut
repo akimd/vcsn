@@ -1,4 +1,4 @@
-context = lan, log
+context = lal, log
 $ -> 0
 0 -> 0 <.5>\e
 0 -> $

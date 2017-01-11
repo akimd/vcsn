@@ -20,7 +20,7 @@ namespace vcsn
       if (lbl.get().empty())
         return labelset_type::empty;
       else if (lbl == "\\e")
-        return labelset_type::lan;
+        return labelset_type::lal;
       else if (1 < lbl.get().size())
         return labelset_type::law;
       else
@@ -33,7 +33,6 @@ namespace vcsn
         {
         case labelset_type::empty: return {};
         case labelset_type::lal: return "lal<char>";
-        case labelset_type::lan: return "lan<char>";
         case labelset_type::law: return "law<char>";
         }
       BUILTIN_UNREACHABLE();

@@ -75,7 +75,7 @@ namespace vcsn
 
     /// A traits to compute the letterized context.
     ///
-    /// For instance LAL -> LAL, LAW -> LAN, LAW x LAW -> LAN x LAN.
+    /// For instance LAL -> LAL, LAW -> LAL, LAW x LAW -> LAL x LAL.
     template <typename LabelSet>
     struct letterized_traits
     {
@@ -84,7 +84,7 @@ namespace vcsn
       using labelset_t = LabelSet;
       static labelset_t labelset(const labelset_t& ls)
       {
-        return std::make_shared<labelset_t>(labelset_t{ls.genset()});
+        return {ls.genset()};
       }
     };
 
@@ -122,112 +122,13 @@ namespace vcsn
     }
 
 
-    /*--------------------.
-    | make_nullableset.   |
-    `--------------------*/
-
-    /// The smallest nullableset which includes LabelSet.
-    ///
-    /// Made to be specialized (e.g., in nullableset and wordset).
-    ///
-    /// \tparam LabelSet
-    ///         the labelset for which we look for a nullable superset.
-    /// \tparam Enable
-    ///         place for easy SFINAE tricks (e.g., in tupleset).
-    template <typename LabelSet,
-              typename Enable = void>
-    struct nullableset_traits
-    {};
-
-    /// The smallest nullableset that includes LabelSet.
-    template <typename LabelSet>
-    using nullableset_t = typename nullableset_traits<LabelSet>::type;
-
-    /// The nullableset of a labelset.
-    template <typename LabelSet>
-    inline nullableset_t<LabelSet>
-    make_nullableset(const LabelSet& ls)
-    {
-      return nullableset_traits<LabelSet>::value(ls);
-    };
-
-    /*----------------------------.
-    | make_nullableset_context.   |
-    `----------------------------*/
-
-    template <typename Ctx>
-    using nullableset_context_t
-      = context<nullableset_t<labelset_t_of<Ctx>>, weightset_t_of<Ctx>>;
-
-    /// The nullableset context of a context.
-    template <typename LabelSet, typename WeightSet>
-    inline nullableset_context_t<context<LabelSet, WeightSet>>
-    make_nullableset_context(const context<LabelSet, WeightSet>& ctx)
-    {
-      return {make_nullableset(*ctx.labelset()), *ctx.weightset()};
-    }
-
-
-    /*---------------.
-    | make_proper.   |
-    `---------------*/
-
-    /// From a labelset, its non-nullable labelset.
-    ///
-    /// Unfortunately cannot be always done.  For instance,
-    /// `tupleset<nullableset<letterset>, nullableset<letterset>>`
-    /// cannot be turned in `tupleset<letterset, letterset>`, as it
-    /// also forbids `(a, \\e)` and `(\\e, x)` which should be kept
-    /// legitimate.
-    template <typename LabelSet>
-    struct proper_traits
-    {
-      using type = LabelSet;
-      static type value(const LabelSet& ls)
-      {
-        return ls;
-      }
-    };
-
-    /// The type of the corresponding proper LabelSet.
-    template <typename LabelSet>
-    using proper_t = typename proper_traits<LabelSet>::type;
-
-    /// The corresponding proper LabelSet.
-    template <typename LabelSet>
-    proper_t<LabelSet>
-    make_proper(const LabelSet& ls)
-    {
-      return proper_traits<LabelSet>::value(ls);
-    }
-
-
-    /*-----------------------.
-    | make_proper_context.   |
-    `-----------------------*/
-
-    template <typename Context>
-    using proper_context =
-      context<proper_t<labelset_t_of<Context>>,
-              weightset_t_of<Context>>;
-
-    /// From a context, its non-nullable context.
-    template <typename LabelSet, typename WeightSet>
-    auto
-    make_proper_context(const context<LabelSet, WeightSet>& ctx)
-      -> proper_context<context<LabelSet, WeightSet>>
-    {
-      return {make_proper(*ctx.labelset()), *ctx.weightset()};
-    }
-
-
     /*---------------------.
     | make_free_context.   |
     `---------------------*/
 
     template <typename Context>
     using free_context =
-      context<proper_t<letterized_t<labelset_t_of<Context>>>,
+      context<letterized_t<labelset_t_of<Context>>,
               weightset_t_of<Context>>;
 
     /// The free context for c.
@@ -235,7 +136,7 @@ namespace vcsn
     free_context<context<LabelSet, WeightSet>>
     make_free_context(const context<LabelSet, WeightSet>& c)
     {
-      return {make_proper(make_letterized(*c.labelset())), *c.weightset()};
+      return {make_letterized(*c.labelset()), *c.weightset()};
     }
 
 
@@ -450,7 +351,7 @@ namespace vcsn
     }
   }
 
-  /// Random label from general case such as letterset.
+  /// Random label from general case.
   template <typename LabelSet,
             typename RandomGenerator = std::default_random_engine>
   typename LabelSet::value_t

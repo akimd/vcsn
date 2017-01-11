@@ -202,12 +202,6 @@ namespace vcsn
     }
 
     /// When used as WeightSet.
-    static constexpr bool is_free()
-    {
-      return false;
-    }
-
-    /// When used as WeightSet.
     static constexpr star_status_t star_status()
     {
       return star_status_t::STARRABLE;
@@ -500,17 +494,6 @@ namespace vcsn
 
   namespace detail
   {
-    /// Conversion to a nullableset: identity.
-    template <typename Ctx>
-    struct nullableset_traits<expressionset<Ctx>>
-    {
-      using type = expressionset<Ctx>;
-      static type value(const type& ls)
-      {
-        return ls;
-      }
-    };
-
     /// Conversion to a wordset: identity.
     template <typename Ctx>
     struct law_traits<expressionset<Ctx>>

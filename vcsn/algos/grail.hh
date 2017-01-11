@@ -20,9 +20,8 @@ namespace vcsn
     template <Automaton Aut>
     class fado_impl: public printer<Aut>
     {
-      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan
-                    || context_t_of<Aut>::is_lat,
-                    "fado: requires tuple, letter or nullable labels");
+      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lat,
+                    "fado: requires tuple or letter labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "fado: requires Boolean weights");
 
@@ -45,7 +44,7 @@ namespace vcsn
       // http://www.dcc.fc.up.pt/~rvr/FAdoDoc/_modules/fio.html#saveToFile
       void operator()()
       {
-        bool is_deter = is_deterministic_(aut_);
+        bool is_deter = is_deterministic_(aut_) && is_proper_(aut_);
         os_ << (is_transducer_ ? "@Transducer" : is_deter ? "@DFA" : "@NFA");
         list_states_(finals_());
         if (!is_deter)
@@ -92,17 +91,15 @@ namespace vcsn
       }
 
       template <Automaton A>
-      std::enable_if_t<labelset_t_of<A>::is_free(), bool>
-      is_deterministic_(const A& a)
+      bool is_deterministic_(const A& a)
       {
         return vcsn::is_deterministic(a);
       }
 
       template <Automaton A>
-      std::enable_if_t<!labelset_t_of<A>::is_free(), bool>
-      is_deterministic_(const A&)
+      bool is_proper_(const A& a)
       {
-        return false;
+        return vcsn::is_proper(a);
       }
     };
   }
@@ -135,8 +132,8 @@ namespace vcsn
     template <Automaton Aut>
     class grail_impl: public printer<Aut>
     {
-      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
-                    "grail: requires letter or nullable labels");
+      static_assert(context_t_of<Aut>::is_lal,
+                    "grail: requires letter labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "grail: requires Boolean weights");
 

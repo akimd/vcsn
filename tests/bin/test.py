@@ -224,12 +224,7 @@ def CHECK_NE(expected, effective, loc=None):
 def normalize(a):
     '''Turn automaton `a` into something we can check equivalence with.'''
     a = a.strip().realtime()
-    # Eliminate nullablesets if there are that remain.  This is safe:
-    # if there are \e that remain, the following conversion _will_
-    # fail.
-    to = re.sub(r'nullableset<(lal_char\(.*?\)|letterset<char_letters\(.*?\)>)>',
-                r'\1',
-                a.context().format('sname'))
+    to = a.context().format('sname')
     return a.automaton(vcsn.context(to))
 
 

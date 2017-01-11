@@ -12,7 +12,7 @@ def check(i, exp=None):
   CHECK_ISOMORPHIC(vcsn.automaton(exp), i.insplit().insplit())
 
 
-check('''digraph
+check(r'''digraph
 {
   vcsn_context = "letterset<char_letters(abc)>, q"
   rankdir = LR
@@ -24,9 +24,9 @@ check('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
+    0 [label = "0, !\\e", shape = box]
+    1 [label = "1, !\\e", shape = box]
+    2 [label = "2, !\\e", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -39,7 +39,7 @@ check('''digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lan_char(abc), q"
+  vcsn_context = "lal_char(abc), q"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -48,7 +48,7 @@ digraph
   2 -> F2
 }''',r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abc)>>, q"
+  vcsn_context = "letterset<char_letters(abc)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -75,7 +75,7 @@ digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lan_char(abc), q"
+  vcsn_context = "lal_char(abc), q"
 
   I0 -> 0
   0 -> 1 [label = "\\e"]
@@ -84,7 +84,7 @@ digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abc)>>, q"
+  vcsn_context = "letterset<char_letters(abc)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

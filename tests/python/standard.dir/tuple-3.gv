@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(ab)>>, nullableset<letterset<char_letters(cd)>>, nullableset<letterset<char_letters(ef)>>>, q"
+  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(cd)>, letterset<char_letters(ef)>>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

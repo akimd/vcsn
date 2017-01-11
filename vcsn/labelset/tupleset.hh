@@ -224,11 +224,6 @@ namespace vcsn
       return this->generators_(indices);
     }
 
-    static constexpr bool is_free()
-    {
-      return is_free_(indices);
-    }
-
     /// Convert to a word.
     template <typename... Args>
     auto
@@ -347,6 +342,13 @@ namespace vcsn
     show_one()
     {
       return show_one_(indices);
+    }
+
+    /// Check if one appears for one of the valueset in the given tuple.
+    static bool
+    show_one(const value_t& v)
+    {
+      return show_one_(v, indices);
     }
 
     bool
@@ -538,15 +540,6 @@ namespace vcsn
       return this->conv_(vs, v, indices);
     }
 
-    /// Convert a value from nullableset<tupleset<...>> to value_t.
-    template <typename... VS>
-    value_t
-    conv(const nullableset<tupleset<VS...>>& vs,
-         const typename nullableset<tupleset<VS...>>::value_t& v) const
-    {
-      return conv(*vs.labelset(), vs.get_value(v));
-    }
-
     /// Read one label from i, return the corresponding value.
     value_t
     conv(std::istream& i, bool quoted = true) const
@@ -707,13 +700,6 @@ namespace vcsn
                     std::ref(p));
     }
 
-    template <std::size_t... I>
-    static constexpr bool
-    is_free_(seq<I...>)
-    {
-      return all_<valueset_t<I>::is_free()...>();
-    }
-
     template <typename... Args, std::size_t... I>
     word_t
     word_(const std::tuple<Args...>& l, seq<I...>) const
@@ -838,6 +824,13 @@ namespace vcsn
         if (n)
           return true;
       return false;
+    }
+
+    template <std::size_t... I>
+    static bool
+    show_one_(const value_t& v, seq<I...>)
+    {
+      return any{}(valueset_t<I>::is_one(std::get<I>(v))...);
     }
 
     /// Apply a unary function pointwise, and return the tuple of results.
@@ -1241,43 +1234,6 @@ namespace vcsn
     }
   };
 
-  /// Conversion to a nullableset: all the labelsets support one.
-  template <typename... LabelSets>
-  struct nullableset_traits<tupleset<LabelSets...>,
-                            std::enable_if_t<tupleset<LabelSets...>::has_one()>>
-  {
-    using labelset_t = tupleset<LabelSets...>;
-    using type = labelset_t;
-    static type value(const labelset_t& ls)
-    {
-      return ls;
-    }
-  };
-
-  /// Conversion to a nullableset: not all the labelsets support one.
-  template <typename... LabelSets>
-  struct nullableset_traits<tupleset<LabelSets...>,
-                            std::enable_if_t<!tupleset<LabelSets...>::has_one()>>
-  {
-    using labelset_t = tupleset<LabelSets...>;
-    using type = nullableset<labelset_t>;
-
-    static type value(const labelset_t& ls)
-    {
-      return ls;
-    }
-  };
-
-  /// Transform a tupleset of one element to a tupleset of the proper version
-  template <typename LabelSet>
-  struct proper_traits<tupleset<LabelSet>>
-  {
-    using type = tupleset<typename proper_traits<LabelSet>::type>;
-    static type value(const tupleset<LabelSet>& ls)
-    {
-      return {proper_traits<LabelSet>::value(ls.template set<0>())};
-    }
-  };
 
   /// Conversion to wordset.
   template <typename... LabelSets>

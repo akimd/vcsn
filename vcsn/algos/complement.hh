@@ -5,6 +5,7 @@
 #include <vcsn/algos/copy.hh>
 #include <vcsn/algos/is-complete.hh>
 #include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/weightset/fwd.hh> // b
@@ -57,8 +58,11 @@ namespace vcsn
   complement_here(Aut& aut)
   {
     using automaton_t = Aut;
-    static_assert(labelset_t_of<automaton_t>::is_free(),
-                  "complement: requires free labelset");
+    static_assert(labelset_t_of<Aut>::is_letterized(),
+                  "complement: requires letterized labelset");
+
+    require(is_free(aut),
+            "complement: requires free automaton");
     require(is_deterministic(aut),
             "complement: requires a deterministic automaton");
     require(is_complete(aut),

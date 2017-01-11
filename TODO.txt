@@ -216,7 +216,7 @@ one?
 
 ** efsm (SP)
 When passing a LAW, maybe we should letterize it transparently?  Currently,
-we treat it as if it were lan<string> instead of law<char>.
+we treat it as if it were lal<string> instead of law<char>.
 
 ** eliminate-state
 Support several arguments.
@@ -490,7 +490,7 @@ is forbidden (this should be the empty polynomial).
 
 * Optimizations
 ** Simplify contexts
-Remove useless stacks of lat, lan, etc.
+Remove useless stacks of lat, etc.
 
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several

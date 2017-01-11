@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include <vcsn/algos/is-free-boolean.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/minimize-brzozowski.hh>
 #include <vcsn/algos/quotient.hh>
 #include <vcsn/labelset/stateset.hh>
@@ -30,9 +30,13 @@ namespace vcsn
   struct hopcroft_tag {};
 
   template <Automaton Aut>
-  std::enable_if_t<is_free_boolean<Aut>(), quotient_t<Aut>>
+  std::enable_if_t<is_letterized_boolean<Aut>(), quotient_t<Aut>>
   minimize(const Aut& a, hopcroft_tag)
   {
+    require(is_free(a),
+            "minimize: invalid algorithm"
+            " (non-free automaton):",
+            " hopcroft");
     using state_t = state_t_of<Aut>;
     using stateset_t = stateset<Aut>;
     auto ctx = make_context(stateset_t(a), *a->weightset());
@@ -112,11 +116,11 @@ namespace vcsn
     {
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      std::enable_if_t<!is_free_boolean<Aut>(), quotient_t<Aut>>
+      std::enable_if_t<!is_letterized_boolean<Aut>(), quotient_t<Aut>>
       minimize(const Aut&, hopcroft_tag)
       {
         raise("minimize: invalid algorithm"
-              " (non-Boolean or non-free labelset):",
+              " (non-Boolean or non-free automaton):",
               " hopcroft");
       }
     }

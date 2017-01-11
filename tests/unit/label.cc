@@ -217,7 +217,7 @@ check_tupleset()
 
   // has_one.
   ASSERT_EQ(wwset_t::has_one(), true);
-  ASSERT_EQ(wlset_t::has_one(), false);
+  ASSERT_EQ(wlset_t::has_one(), true);
 
   // format, transpose.
   ASSERT_EQ(to_string(wwset, ww_t{"abc", "xyz"}), "abc,xyz");
@@ -311,9 +311,6 @@ static unsigned check_generators(const std::string& exp)
   return nerrs;
 }
 
-template <typename GenSet>
-using nullableset = vcsn::nullableset<vcsn::letterset<GenSet>>;
-
 int main()
 {
   size_t nerrs = 0;
@@ -321,13 +318,10 @@ int main()
   nerrs += check_wordset();
   nerrs += check_tupleset();
 
-  nerrs += check_generators<vcsn::letterset>("a|a, a|b, a|c, "
-                                             "b|a, b|b, b|c, "
-                                             "c|a, c|b, c|c");
-  nerrs += check_generators<nullableset>("\\e|a, \\e|b, \\e|c, "
-                                         "a|\\e, a|a, a|b, a|c, "
-                                         "b|\\e, b|a, b|b, b|c, "
-                                         "c|\\e, c|a, c|b, c|c");
+  nerrs += check_generators<vcsn::letterset>("\\e|a, \\e|b, \\e|c, "
+                                             "a|\\e, a|a, a|b, a|c, "
+                                             "b|\\e, b|a, b|b, b|c, "
+                                             "c|\\e, c|a, c|b, c|c");
 
   return !!nerrs;
 }

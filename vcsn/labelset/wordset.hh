@@ -73,11 +73,6 @@ namespace vcsn
       return this->genset()->open(o);
     }
 
-    static constexpr bool is_free()
-    {
-      return false;
-    }
-
     /// Value constructor.
     template <typename... Args>
     value_t value(Args&&... args) const
@@ -213,7 +208,9 @@ namespace vcsn
     conv(const letterset<GenSet_>& ls,
          typename letterset<GenSet_>::value_t v) const
     {
-      if (ls.is_special(v))
+      if (ls.is_one(v))
+        return one();
+      else if (ls.is_special(v))
         return special();
       else
         {
@@ -222,17 +219,6 @@ namespace vcsn
                        *this, ": conv: invalid label: ", str_escape(v));
           return res;
         }
-    }
-
-    template <typename LabelSet_>
-    value_t
-    conv(const nullableset<LabelSet_>& ls,
-         const typename nullableset<LabelSet_>::value_t& v) const
-    {
-      if (ls.is_one(v))
-        return one();
-      else
-        return conv(*ls.labelset(), ls.get_value(v));
     }
 
     /// Read a word from this stream.
@@ -379,22 +365,11 @@ namespace vcsn
     {
       static constexpr bool is_letterized = false;
 
-      using labelset_t = nullableset<letterset<GenSet>>;
+      using labelset_t = letterset<GenSet>;
 
       static labelset_t labelset(const wordset<GenSet>& ls)
       {
         return {ls.genset()};
-      }
-    };
-
-    /// wordset is already a nullableset.
-    template <typename GenSet>
-    struct nullableset_traits<wordset<GenSet>>
-    {
-      using type = wordset<GenSet>;
-      static type value(const wordset<GenSet>& ls)
-      {
-        return ls;
       }
     };
 
@@ -426,7 +401,6 @@ namespace vcsn
 
     /// The join with another labelset.
     DEFINE(letterset<GenSet>,              wordset<GenSet>);
-    DEFINE(nullableset<letterset<GenSet>>, wordset<GenSet>);
     DEFINE(wordset<GenSet>,                wordset<GenSet>);
 #undef DEFINE
   }

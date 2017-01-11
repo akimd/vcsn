@@ -30,7 +30,7 @@ CHECK_EQ('a*a', a2.expression())
 
 lhs = std('lal_char(ab), b', '(a+b)*')
 rhs = std('lal_char(bc), b', '(b+c)*')
-CHECK_EQ('''digraph
+CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters(b)>, b"
   rankdir = LR
@@ -43,8 +43,8 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "3, 1", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "3, (1, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -60,7 +60,7 @@ CHECK_EQ('''digraph
 
 lhs = std('lal_char(ab), b', 'ab')
 rhs = std('lal_char(cd), b', 'cd')
-CHECK_EQ('''digraph
+CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
   rankdir = LR
@@ -71,7 +71,7 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box, color = DimGray]
+    0 [label = "0, (0, !\\e)", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
 }''', lhs & rhs)
@@ -84,7 +84,7 @@ CHECK_EQ('''digraph
 
 lhs = std('lal_char(ab), b', '(a+b)*')
 rhs = std('lal_char(cd), b', '(c+d)*')
-CHECK_EQ('''digraph
+CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
   rankdir = LR
@@ -96,7 +96,7 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -110,7 +110,7 @@ CHECK_EQ('''digraph
 ## ------------ ##
 
 # <2>(a*b*a*)
-lhs = vcsn.automaton('''
+lhs = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc), z"
@@ -142,7 +142,7 @@ digraph
 ''')
 
 # (<3>(ab))*
-rhs = vcsn.automaton('''
+rhs = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc), z"
@@ -164,7 +164,7 @@ digraph
 }
 ''')
 
-exp = '''digraph
+exp = r'''digraph
 {
   vcsn_context = "letterset<char_letters(abc)>, z"
   rankdir = LR
@@ -177,10 +177,10 @@ exp = '''digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "0, 1", shape = box]
-    2 [label = "2, 1", shape = box, color = DimGray]
-    3 [label = "1, 0", shape = box]
+    0 [label = "0, (0, !\\e)", shape = box]
+    1 [label = "0, (1, !\\e)", shape = box]
+    2 [label = "2, (1, !\\e)", shape = box, color = DimGray]
+    3 [label = "1, (0, !\\e)", shape = box]
   }
   I0 -> 0 [label = "<6>"]
   0 -> F0
@@ -315,7 +315,7 @@ CHECK_EQ('<6>b', b & a)
 CHECK_EQ(r'\z', a & c)
 CHECK_EQ('<9>c', b & c)
 
-poly = vcsn.context('lan_char, q').polynomial
+poly = vcsn.context('lal_char, q').polynomial
 a = poly(r'<2>\e')
 b = poly(r'<2>a+<3>\e')
 c = poly('<2>a+<3>c')
@@ -334,11 +334,11 @@ CHECK_EQ('aa', a & a)
 ## nullable labels.  ##
 ## ----------------- ##
 
-lhs = aut('lan_char(ab), b', '(a+b)*', 'thompson')
-rhs = aut('lan_char(bc), b', '(b+c)*', 'thompson')
+lhs = aut('lal_char(ab), b', '(a+b)*', 'thompson')
+rhs = aut('lal_char(bc), b', '(b+c)*', 'thompson')
 res = r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(b)>>, b"
+  vcsn_context = "letterset<char_letters(b)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -413,10 +413,10 @@ CHECK_EQ(res, lhs & rhs)
 CHECK_EQUIV(vcsn.automaton(res),
             std('lal_char(b), b', 'b*'))
 
-third = aut('lan_char(bcd), b', '(b+c+d)*', 'thompson')
+third = aut('lal_char(bcd), b', '(b+c+d)*', 'thompson')
 res = r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(b)>>, b"
+  vcsn_context = "letterset<char_letters(b)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -639,12 +639,12 @@ CHECK_EQUIV(vcsn.automaton(res),
 # Simple micro-optimization: don't build states which have no possible
 # outgoing transitions.
 a1 = vcsn.automaton(r'''
-context = "lan, b"
+context = "lal, b"
 $ -> 0
 ''')
 
 a2 = vcsn.automaton(r'''
-context = "lan, b"
+context = "lal, b"
 $ -> 0
 0 -> 1 \e
 1 -> $
@@ -652,7 +652,7 @@ $ -> 0
 
 res = r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters()>>, b"
+  vcsn_context = "letterset<char_letters()>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -672,7 +672,7 @@ CHECK_EQ(res, a1 & a2)
 # Because of stupid implementation details, we used to _not_ insplit
 # the automaton in repeated conjunction, yielding an incorrect result.
 a = vcsn.automaton(r'''
-context = "lan, q"
+context = "lal, q"
 $ -> 0
 0 -> 0 <1/2>\e, <2>a
 0 -> $
@@ -684,7 +684,7 @@ CHECK_EQ((a & a & a).strip(), a & 3)
 # An automaton such that the insplit-based and the rank-based
 # algorithm give different results.
 a = vcsn.automaton(r'''
-context = "lan, q"
+context = "lal, q"
 $ -> 0
 0 -> 0 <1/2>\e, a
 0 -> $
@@ -692,7 +692,7 @@ $ -> 0
 
 insplit_res = r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(a)>>, q"
+  vcsn_context = "letterset<char_letters(a)>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -737,7 +737,7 @@ CHECK_EQ(insplit_res, a & a & a)
 ###############################################
 
 a1 = vcsn.automaton(r'''
-context = "lan_char(abc), b"
+context = "lal_char(abc), b"
   $ -> 0
   0 -> 1 a
   1 -> $
@@ -746,7 +746,7 @@ context = "lan_char(abc), b"
 ''')
 
 a2 = vcsn.automaton(r'''
-context = "lan_char(abc), b"
+context = "lal_char(abc), b"
   $ -> 0
   0 -> 1 \e
   1 -> 2 a
@@ -755,7 +755,7 @@ context = "lan_char(abc), b"
 
 res = r'''digraph
 {
-  vcsn_context = "nullableset<letterset<char_letters(abc)>>, b"
+  vcsn_context = "letterset<char_letters(abc)>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

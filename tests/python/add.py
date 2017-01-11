@@ -28,10 +28,10 @@ b = std('lal_char(b), q', '<1/2>b*')
 CHECK_EQ(metext('join.gv'), a.add(b))
 
 
-# lan x lal + lal x lan = lan x lan.
-a = std('lat<lan_char, lal_char>, b', r"\e|x")
-b = std('lat<lal_char, lan_char>, b', r"a|\e")
-c = std('lat<lan_char, lan_char>, b', r"\e|x+a|\e")
+# lal x lal + lal x lal = lal x lal.
+a = std('lat<lal_char, lal_char>, b', r"\e|x")
+b = std('lat<lal_char, lal_char>, b', r"a|\e")
+c = std('lat<lal_char, lal_char>, b', r"\e|x+a|\e")
 # Not the same states numbers, so not CHECK_EQ.
 CHECK_ISOMORPHIC(c, a + b)
 

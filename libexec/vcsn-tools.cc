@@ -284,7 +284,7 @@ namespace
          "\n"
          "Input/Output:\n"
          "  -C CONTEXT    the context to use\n"
-         "                'lal, b', 'law, q', 'lan(abc), zmin', etc.\n"
+         "                'lal, b', 'law, q', 'lal(abc), zmin', etc.\n"
          "  -A            input is an automaton\n"
          "  -B            input is a boolean\n"
          "  -D            input is an identity\n"
@@ -328,7 +328,7 @@ namespace
          "      vcsn determinize -f - |\n"
          "      vcsn evaluate -f - -L 'abba'\n"
          "\n"
-         "  $ vcsn derived-term -C 'lat<lan, lan>, q' -Ee 'a*|b*' |\n"
+         "  $ vcsn derived-term -C 'lat<lal, lal>, q' -Ee 'a*|b*' |\n"
          "      vcsn shortest 10\n";
     }
     return 0;

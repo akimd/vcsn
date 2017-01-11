@@ -2,6 +2,7 @@
 
 #include <vcsn/algos/copy.hh> // make_fresh_automaton
 #include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/is-free.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/weightset/fwd.hh> // b
 
@@ -20,8 +21,8 @@ namespace vcsn
     class universal_impl
     {
     public:
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "universal: requires free labelset");
+      static_assert(labelset_t_of<Aut>::is_letterized(),
+                    "universal: requires letterized labelset");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "universal: requires Boolean weights");
 
@@ -34,6 +35,8 @@ namespace vcsn
       /// The universal automaton of \a automaton.
       automaton_t operator()(const Aut& automaton)
       {
+        require(is_free(automaton),
+                "universal: requires free automaton");
         if (!is_deterministic(automaton))
           return work_(determinize(automaton)->strip());
         else if (!is_complete(automaton))

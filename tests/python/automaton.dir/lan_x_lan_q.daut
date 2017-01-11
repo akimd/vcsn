@@ -1,8 +1,8 @@
 context = lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, q
 $ -> 0 <3>
-0 -> 1 [^]
+0 -> 1 [^\e|x-a|\e]
 1 -> 2 <2>[a|x-a|z], <3>[b|x-b|z], <4>[c|x-c|z]
 2 -> 3 <2>[a|x-a|z], <3>b|x, <3>b|y, <4>c|z
-3 -> 4 <2>[b|x-c|xc|z]
-4 -> 5 <2>[a|x-a|z], <3>[b|x-c|z]
+3 -> 4 <2>[^a|x-a|zc|y]
+4 -> 5 <3>[^a|x-a|z], <2>[a|x-a|z]
 5 -> $

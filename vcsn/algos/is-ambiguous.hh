@@ -31,7 +31,9 @@ namespace vcsn
       is_ambiguous_impl(const automaton_t& aut)
         // FIXME: this product should not take weights into account!
         : conj_{conjunction(aut, aut)}
-      {}
+      {
+        // FIXME: check is_free?
+      }
 
       /// Whether an automaton is ambiguous.
       ///
@@ -43,7 +45,8 @@ namespace vcsn
         // coaccessibles states.
         auto coaccessible = coaccessible_states(conj_);
         for (const auto& o: conj_->origins())
-          if (std::get<0>(o.second) != std::get<1>(o.second)
+          if (std::get<0>(o.second) != real_state_(std::get<1>(conj_->auts_),
+                                                   std::get<1>(o.second))
               && has(coaccessible, o.first))
             {
               witness_ = o.first;
@@ -74,6 +77,22 @@ namespace vcsn
       /// State index in the conjunction of a state that is not on the
       /// diagonal.
       state_t_of<conjunction_t> witness_ = conj_->null_state();
+
+    private:
+      /// Retrieve the original state in case of insplit automaton.
+      template <Automaton Aut2>
+      auto real_state_(const insplit_automaton<Aut2>& aut,
+                       state_t_of<insplit_automaton<Aut2>> s)
+      {
+        auto origins = aut->origins();
+        return origins.find(s)->second.first;
+      }
+
+      template <Automaton Aut2>
+      auto real_state_(const Aut2&, state_t_of<Aut2> s)
+      {
+        return s;
+      }
     };
   }
 

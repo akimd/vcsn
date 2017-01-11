@@ -157,6 +157,7 @@ namespace vcsn
         REGISTER(determinize, aut_t, const std::string);
         REGISTER(evaluate, aut_t, wls_t);
         REGISTER(info, aut_t, std::ostream, bool);
+        REGISTER(is_free, aut_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(print, aut_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, direction, bool, const std::string);
@@ -282,7 +283,7 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_functions_is_free(std::true_type)
+      register_functions_is_letterized(std::true_type)
       {
         using ctx_t = Ctx;
         using rs_t = expressionset<ctx_t>;
@@ -308,7 +309,7 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_functions_is_free(std::false_type)
+      register_functions_is_letterized(std::false_type)
       {
         return true;
       }
@@ -322,13 +323,6 @@ namespace vcsn
 
         REGISTER(eliminate_state, aut_t, int);
 
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
-      register_kind_functions(labels_are_nullable)
-      {
         return true;
       }
 
@@ -392,8 +386,8 @@ namespace vcsn
         REGISTER(to_expression_class, ctx_t, rat::identities, const letter_class_t, bool);
         REGISTER(to_expression_label, ctx_t, rat::identities, ls_t);
 
-        using is_free_t = bool_constant<ctx_t::labelset_t::is_free()>;
-        register_functions_is_free<ctx_t>(is_free_t());
+        using is_letterized_t = bool_constant<ctx_t::labelset_t::is_letterized()>;
+        register_functions_is_letterized<ctx_t>(is_letterized_t());
 
         return register_kind_functions<ctx_t>(typename ctx_t::kind_t());
       }

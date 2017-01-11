@@ -16,8 +16,6 @@ namespace vcsn
   is_deterministic(const Aut& aut, state_t_of<Aut> s)
   {
     using automaton_t = Aut;
-    static_assert(labelset_t_of<automaton_t>::is_free(),
-                  "is_deterministic: requires free labelset");
 
     using label_t = label_t_of<automaton_t>;
     auto seen = std::unordered_set<label_t>{};
@@ -32,9 +30,6 @@ namespace vcsn
   size_t
   num_deterministic_states(const Aut& aut)
   {
-    static_assert(labelset_t_of<Aut>::is_free(),
-                  "num_deterministic_states: requires free labelset");
-
     size_t res = 0;
     for (auto s: aut->states())
       res += is_deterministic(aut, s);
@@ -55,9 +50,6 @@ namespace vcsn
     bool
     is_deterministic_(const Aut& aut)
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "is_deterministic: requires free labelset");
-
       if (1 < initial_transitions(aut).size())
         return false;
 
@@ -101,12 +93,7 @@ namespace vcsn
       bool
       is_deterministic(const automaton& aut)
       {
-        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
-          ([](const auto& aut)
-           { return is_deterministic(aut->template as<Aut>()); },
-           [](const auto&) -> bool
-           { raise("is_deterministic: requires free labelset"); })
-          (aut);
+        return is_deterministic(aut->template as<Aut>());
       }
 
       /// Bridge.
@@ -114,12 +101,7 @@ namespace vcsn
       bool
       is_codeterministic(const automaton& aut)
       {
-        return vcsn::detail::static_if<labelset_t_of<Aut>::is_free()>
-          ([](const auto& aut)
-           { return is_codeterministic(aut->template as<Aut>()); },
-           [](const auto&) -> bool
-           { raise("is_codeterministic: requires free labelset"); })
-          (aut);
+        return is_codeterministic(aut->template as<Aut>());
       }
     }
   }

@@ -234,11 +234,9 @@ namespace vcsn
           return std::make_shared<letterset>(genset_("char_letters"));
         else if (ls == "lan")
           // lan<GENSET> => nullableset<letterset<GENSET>>.
-          return std::make_shared<nullableset>(std::make_shared<letterset>
-                                               (genset_()));
+          return std::make_shared<letterset>(genset_());
         else if (ls == "lan_char")
-          return std::make_shared<nullableset>(std::make_shared<letterset>
-                                               (genset_("char_letters")));
+          return std::make_shared<letterset>(genset_("char_letters"));
         else if (ls == "lao")
           return std::make_shared<oneset>();
         else if (ls == "lat")
@@ -254,8 +252,6 @@ namespace vcsn
             eat_('<');
             auto res = labelset_();
             eat_('>');
-            if (!res->has_one())
-              res = std::make_shared<nullableset>(res);
             return res;
           }
         else if (ls == "expressionset" || ls == "seriesset")

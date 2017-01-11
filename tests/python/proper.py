@@ -32,10 +32,6 @@ def check_algo(i, o, algo):
     iprop = i.proper(prune=False, algo=algo).accessible()
     CHECK_EQ(o.accessible(), iprop)
 
-    print("checking proper(prune=False).accessible() cache")
-    # Check that proper is invalidated.
-    CHECK_EQ('N/A', iprop.info('is proper'))
-
     # FIXME: Because proper uses copy, state numbers are changed.
     #
     # FIXME: cannot use is_isomorphic because some of our test cases
@@ -76,13 +72,13 @@ def check_fail(i, algs=algos):
 check(metext('lao-r.in.gv'), metext('lao-r.out.gv'))
 
 ## -------------------------------------------- ##
-## lan_char, r: check the computation of star.  ##
+## lal_char, r: check the computation of star.  ##
 ## -------------------------------------------- ##
 
 check(metext('lan-r.in.gv'), metext('lan-r.out.gv'))
 
 ## ---------------------------------------------- ##
-## lan_char, log: check the computation of star.  ##
+## lal_char, log: check the computation of star.  ##
 ## ---------------------------------------------- ##
 
 check(metext('lan-log.in.daut'), metext('lan-log.out.daut'))
@@ -96,14 +92,14 @@ check(metext('law-b.in.gv'), metext('law-b.out.gv'))
 
 
 ## ------------------------------------------------- ##
-## lan_char, z: invalid \e-cycle (weight is not 0).  ##
+## lal_char, z: invalid \e-cycle (weight is not 0).  ##
 ## ------------------------------------------------- ##
 
 check_fail(metext('lan-z.fail.gv'))
 
 
 ## ------------- ##
-## lan_char, z.  ##
+## lal_char, z.  ##
 ## ------------- ##
 
 check(metext('lan-z.in.gv'), metext('lan-z.out.gv'))
@@ -141,7 +137,7 @@ check_fail(r'''digraph
 
 
 ## ---------------------------- ##
-## lan_char, qr: a long cycle.  ##
+## lal_char, qr: a long cycle.  ##
 ## ---------------------------- ##
 
 # FIXME(ap): with distance, weights are equivalent but not the same
@@ -150,7 +146,7 @@ check(metext('lan-qr.in.gv'), metext('lan-qr.out.gv'),
 
 
 ## ----------------------------------------- ##
-## lan_char, qr: remove now-useless states.  ##
+## lal_char, qr: remove now-useless states.  ##
 ## ----------------------------------------- ##
 
 # Check that we remove states that _end_ without incoming transitions,
@@ -160,7 +156,7 @@ check(metext('lan-qr.in.gv'), metext('lan-qr.out.gv'),
 # FIXME(ap): with distance, inaccessible states get pruned
 check(r'''digraph
 {
-  vcsn_context = "lan_char(z), expressionset<lal_char(abcdefgh), q>"
+  vcsn_context = "lal_char(z), expressionset<lal_char(abcdefgh), q>"
   rankdir = LR
   node [shape = circle]
   {
@@ -207,19 +203,19 @@ check(r'''digraph
 
 
 ## ------------- ##
-## lan_char, b.  ##
+## lal_char, b.  ##
 ## ------------- ##
 
 check(metext('lan-b.in.gv'), metext('lan-b.out.gv'))
 
 
 ## ---------------------------- ##
-## lat<lan_char, lan_char>, b.  ##
+## lat<lal_char, lal_char>, b.  ##
 ## ---------------------------- ##
 
 check(r'''digraph
 {
-  vcsn_context = "lat<lan_char(ab),lan_char(xy)>, b"
+  vcsn_context = "lat<lal_char(ab),lal_char(xy)>, b"
   I0 -> 0
   0 -> 1 [label = "(\\e,\\e)"]
   0 -> 1 [label = "(a,x)"]
@@ -229,7 +225,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(ab)>>, nullableset<letterset<char_letters(xy)>>>, b"
+  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(xy)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -256,12 +252,12 @@ check(r'''digraph
 
 
 ## ---------------------------- ##
-## lat<lan_char, lal_char>, b.  ##
+## lat<lal_char, lal_char>, b.  ##
 ## ---------------------------- ##
 
 check(r'''digraph
 {
-  vcsn_context = "lat<lan_char(ab),lal_char(xy)>, b"
+  vcsn_context = "lat<lal_char(ab),lal_char(xy)>, b"
   I0 -> 0
   0 -> 1 [label = "(a,x)"]
   0 -> 2 [label = "(b,y)"]
@@ -270,7 +266,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(ab)>>, letterset<char_letters(xy)>>, b"
+  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(xy)>>, b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -295,7 +291,7 @@ check(r'''digraph
 
 
 ## ------------------------- ##
-## lan, polynomial<law, q>.  ##
+## lal, polynomial<law, q>.  ##
 ## ------------------------- ##
 
 check(metext('lan-poly.1.in.gv'), metext('lan-poly.1.out.gv'))
@@ -307,7 +303,7 @@ check_fail(metext('lan-poly.3.fail.gv'))
 ## Forward vs. backward.  ##
 ## ---------------------- ##
 
-a = vcsn.context('lan_char(ab), b').expression('a*').thompson()
+a = vcsn.context('lal_char(ab), b').expression('a*').thompson()
 for algo in algos:
     for dir in ['backward', 'forward']:
         CHECK_EQ(meaut('astar-' + dir, 'gv').sort().strip(),

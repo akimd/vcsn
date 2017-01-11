@@ -19,8 +19,9 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
-is proper: N/A
+is proper: 1
 is standard: 0
 is trim: 1
 is useless: 0
@@ -43,6 +44,7 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -67,6 +69,7 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -91,6 +94,7 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -115,6 +119,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
+is free: N/A
 is normalized: 0
 is proper: N/A
 is standard: 0
@@ -139,6 +144,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -163,6 +169,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -187,6 +194,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -211,8 +219,9 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
-is proper: N/A
+is proper: 1
 is standard: 0
 is trim: 1
 is useless: 0
@@ -235,6 +244,7 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -259,6 +269,7 @@ is deterministic: N/A
 is codeterministic: 1
 is empty: 0
 is eps-acyclic: 1
+is free: 1
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -284,6 +295,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
+is free: N/A
 is normalized: 0
 is proper: N/A
 is standard: 0
@@ -309,6 +321,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 0
 is standard: 0
@@ -333,6 +346,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -357,6 +371,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -381,6 +396,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -406,6 +422,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
+is free: N/A
 is normalized: 0
 is proper: N/A
 is standard: 0
@@ -431,6 +448,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 0
+is free: N/A
 is normalized: 0
 is proper: 0
 is standard: 0
@@ -455,6 +473,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -479,6 +498,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0
@@ -535,6 +555,7 @@ is deterministic: N/A
 is codeterministic: N/A
 is empty: 0
 is eps-acyclic: 1
+is free: N/A
 is normalized: 0
 is proper: 1
 is standard: 0

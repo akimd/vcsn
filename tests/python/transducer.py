@@ -6,7 +6,7 @@ from test import *
 ## ---------------- ##
 ## LAN x LAN -> Q.  ##
 ## ---------------- ##
-c = vcsn.context("lat<lan_char(abc), lan_char(xyz)>, q")
+c = vcsn.context("lat<lal_char(abc), lal_char(xyz)>, q")
 
 # Make sure we can copy/convert a k-tape expression.
 e = c.expression('a|x')
@@ -27,7 +27,7 @@ CHECK_EQ('(a+b)|x', e)
 CHECK_EQ(r'''a|x.[\e] + b|x.[\e]''', e.expansion())
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(abc)>>, nullableset<letterset<char_letters(xyz)>>>, q"
+  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -51,12 +51,12 @@ CHECK_EQ(r'''digraph
 ## ---------------------- ##
 
 # Using expression._tuple.
-exp = lambda e: vcsn.context("lan_char, q").expression(e)
+exp = lambda e: vcsn.context("lal_char, q").expression(e)
 f = vcsn.expression._tuple([exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*')])
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
 
 # Using the operator |.
-c = vcsn.context("lat<lan_char(a), lan_char(b), lan_char(c)>, q")
+c = vcsn.context("lat<lal_char(a), lal_char(b), lal_char(c)>, q")
 e = c.expression('(<2>a)*|(<3>b)*|(<5>c)*')
 CHECK_EQ(f, e)
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', e)
@@ -64,7 +64,7 @@ CHECK_EQ(r'''<1> + \e|\e|c.[<5>\e|\e|(<5>c)*] + \e|b|\e.[<3>\e|(<3>b)*|\e] + \e|
 CHECK_EQ(r'''\left\langle 1\right\rangle  \oplus \varepsilon|\varepsilon|c \odot \left[\left\langle 5\right\rangle  \left. \varepsilon \middle| \varepsilon \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus \varepsilon|b|\varepsilon \odot \left[\left\langle 3\right\rangle  \left. \varepsilon \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \varepsilon \right. \right] \oplus \varepsilon|b|c \odot \left[\left\langle 15\right\rangle  \left. \varepsilon \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus a|\varepsilon|\varepsilon \odot \left[\left\langle 2\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \varepsilon \middle| \varepsilon \right. \right] \oplus a|\varepsilon|c \odot \left[\left\langle 10\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \varepsilon \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus a|b|\varepsilon \odot \left[\left\langle 6\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \varepsilon \right. \right] \oplus a|b|c \odot \left[\left\langle 30\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right]''', e.expansion().format('latex'))
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "lat<nullableset<letterset<char_letters(a)>>, nullableset<letterset<char_letters(b)>>, nullableset<letterset<char_letters(c)>>>, q"
+  vcsn_context = "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, q"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

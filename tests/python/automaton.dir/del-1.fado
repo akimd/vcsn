@@ -1,4 +1,4 @@
-@Transducer 0 2 * 0
+@Transducer 0 2
 0 0 @epsilon 1
 0 0 0 0
 0 1 @epsilon 1

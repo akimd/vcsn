@@ -50,7 +50,7 @@ XFAIL(lambda: b.divkbaseb(2, 11),
       "divkbaseb: base (11) must be less than " +
       "or equal to the alphabet size (10)")
 
-b2 = vcsn.context('lat<lan(0-9), lan(0-2)>, b')
+b2 = vcsn.context('lat<lal(0-9), lal(0-2)>, b')
 
 XFAIL(lambda: b2.quotkbaseb(0, 2), "quotkbaseb: divisor cannot be 0")
 XFAIL(lambda: b2.quotkbaseb(2, 1), "quotkbaseb: base (1) must be at least 2")
@@ -61,7 +61,7 @@ XFAIL(lambda: b2.quotkbaseb(2, 11),
       "quotkbaseb: base (11) must be less than " +
       "or equal to the left alphabet size (10)")
 
-b3 = vcsn.context('lat<lan(0-9), lan(0-9)>, b')
+b3 = vcsn.context('lat<lal(0-9), lal(0-9)>, b')
 
 def check(k, base, exp):
     a = b3.quotkbaseb(k, base)
@@ -125,7 +125,7 @@ check_ladybird(meaut('ladybird-2-zmin.gv'),
 ## levenshtein.  ##
 ## ------------- ##
 
-nmin = vcsn.context('lat<lan(abc), lan(bcd)>, nmin')
+nmin = vcsn.context('lat<lal(abc), lal(bcd)>, nmin')
 CHECK_EQ(meaut('levenshtein.gv'), nmin.levenshtein())
 
 
@@ -134,7 +134,7 @@ CHECK_EQ(meaut('levenshtein.gv'), nmin.levenshtein())
 ## ------------------ ##
 
 # Expect a clique.
-c1 = vcsn.context('lal_char(a), b').random_automaton(4, 1, 4, 4)
+c1 = vcsn.context('lal_char(), b').random_automaton(4, 1, 4, 4)
 c2 = meaut('clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
@@ -150,7 +150,7 @@ CHECK_EQ(30, a.info('number of final states'))
 
 # For a while, we were only able to get matching letters (a|A, b|B,
 # etc.).
-ctx = vcsn.context('lat<lan(a-z), lan(a-z)>, b')
+ctx = vcsn.context('lat<lal(a-z), lal(a-z)>, b')
 a = ctx.random_automaton(num_states=10, density=1, max_labels=1)
 # Get all the labels.
 print("random_automaton: {:d}".format(a))
@@ -167,12 +167,9 @@ CHECK_NE([l for l in labels
 CHECK(r'\e|\e' in labels)
 
 
-# Random on an empty labelset doesn't work
-XFAIL(lambda: vcsn.context('lal(), b').random_automaton(2),
-      "random_automaton: empty labelset: {}")
-
 # Check that we check that max_labels is <= number of generators.
-XFAIL(lambda: vcsn.context('lal(a), b').random_automaton(2, max_labels=2),
+# lal has one so the maximum value for max_labels is 2.
+XFAIL(lambda: vcsn.context('lal(a), b').random_automaton(2, max_labels=3),
       "random_automaton: max number of labels cannot be greater than "
       "the number of generators")
 
@@ -185,11 +182,13 @@ print("labels: {}".format(labels))
 # Expect from 1 to 5 labels per entry.
 for n in range(1, 7):
     if n == 1:
-        pat = r'[a-z]'
+        pat = r'^(\\e|[a-z])$'
     elif n == 2:
-        pat = r'[a-z], [a-z]'
+        pat = r'^((\\e|[a-z]), [a-z])$'
+    elif n == 3:
+        pat = r'^(((\\e|[a-z])(, [a-z]){2})|(\[[a-z-]{3}\]))$'
     else:
-        pat = r'\[[a-z]{{{}}}\]'.format(n)
+        pat = r'^((\\e, \[[a-z-]{{{}}}\])|(\[[a-z-]{{{}}}\]))$'.format(n - 1, n)
     ls = [l for l in labels if re.match(pat, l)]
     print("Number of labels:", n, ls)
     if n == 6:
@@ -199,9 +198,14 @@ for n in range(1, 7):
 
 # Check that we do generate weights on transitions
 ctx = vcsn.context('lal(a), z')
-a = ctx.random_automaton(num_states=2, loop_chance=1, weights='5=1')
+# Generating an automaton with new lal can introduce spontaneous cycle and
+# evaluate will never terminate.
+a = ctx.random_automaton(num_states=2, loop_chance=0, weights='5=1')
 print("random_automaton: {:d}".format(a))
-CHECK(a('a') != ctx.weight_one())
+if a.is_eps_acyclic():
+    CHECK(a('a') != ctx.weight_one())
+else:
+    SKIP("Cannot evaluate random automaton, require is_eps_acyclic")
 
 ## ------------------- ##
 ## random_expression.  ##
@@ -216,7 +220,7 @@ def randexp(c, *args, **kwargs):
 
 # Check that a random expression without any operator return only a
 # label.  FIXME: not so nice!
-exp = randexp('lan(a-z), b')
+exp = randexp('lal(a-z), b')
 CHECK(re.match(r'\w{1}|\\e', str(exp)))
 
 # Check that operators are present only if the user has specified them.
@@ -233,7 +237,6 @@ CHECK_EQ(info['infiltrate'], 0)
 CHECK_EQ(info['ldivide'], 0)
 CHECK_EQ(info['lweight'], 0)
 CHECK_EQ(info['mul'], 0)
-CHECK_EQ(info['one'], 0)
 CHECK_EQ(info['rweight'], 0)
 CHECK_EQ(info['shuffle'], 0)
 CHECK_EQ(info['zero'], 0)

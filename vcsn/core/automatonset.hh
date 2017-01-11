@@ -159,10 +159,10 @@ namespace vcsn
     auto ldivide(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
-      // We need a free labelset, but proper automata.
-      auto lhs = make_nullable_automaton(ctx_);
+      // We need a proper automata.
+      auto lhs = make_mutable_automaton(ctx_);
       copy_into(v::proper(l), lhs);
-      auto rhs = make_nullable_automaton(ctx_);
+      auto rhs = make_mutable_automaton(ctx_);
       copy_into(v::proper(r), rhs);
 
       auto res = make_mutable_automaton(ctx_);
@@ -175,10 +175,10 @@ namespace vcsn
     auto rdivide(const value_t& l, const value_t& r) const -> value_t
     {
       namespace v = ::vcsn;
-      // We need a free labelset, but proper automata.
-      auto lhs = make_nullable_automaton(ctx_);
+      // We need a proper automata.
+      auto lhs = make_mutable_automaton(ctx_);
       copy_into(v::proper(l), lhs);
-      auto rhs = make_nullable_automaton(ctx_);
+      auto rhs = make_mutable_automaton(ctx_);
       copy_into(v::proper(r), rhs);
 
       auto res = make_mutable_automaton(ctx_);
@@ -197,6 +197,7 @@ namespace vcsn
     auto complement(const value_t& e, std::true_type) const -> value_t
     {
       namespace v = ::vcsn;
+      // FIXME: Nullableset removal: what to do now?
       // The automaton for e does not have spontaneous transitions,
       // but we call proper because determinize needs the labelset to
       // be free.  But then the result is free too, we might have to

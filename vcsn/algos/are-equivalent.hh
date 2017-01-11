@@ -21,7 +21,7 @@ namespace vcsn
   | are_equivalent(automaton, automaton).  |
   `---------------------------------------*/
 
-  /// Check equivalence between Boolean automata on a free labelset.
+  /// Check equivalence between free Boolean automata.
   template <Automaton Aut1, Automaton Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)

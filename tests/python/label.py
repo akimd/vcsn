@@ -40,5 +40,5 @@ XFAIL(lambda: vcsn.context('law(ab), b').label('ab*'),
   while reading label: ab*''')
 
 # tupleset.
-check('lat<lan, lan>, q',   'a|x',   'a|x', r'a|x')
-check('lat<lan, lan>, q', r'\e|x', r'\e|x', r'\varepsilon|x')
+check('lat<lal, lal>, q',   'a|x',   'a|x', r'a|x')
+check('lat<lal, lal>, q', r'\e|x', r'\e|x', r'\varepsilon|x')

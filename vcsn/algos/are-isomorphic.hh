@@ -55,6 +55,7 @@ namespace vcsn
     // FIXME: do we want to generalize this to heterogeneous contexts?
     // It is not completely clear whether such behavior is desirable.
     //
+    // FIXME: Nullableset removal: update reason?
     // We don't check labelsets, because currently, by sheer luck,
     // comparing lan vs. lal works.
     static_assert(std::is_same<weightset1_t, weightset2_t>{},

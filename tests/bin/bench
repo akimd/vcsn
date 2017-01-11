@@ -382,7 +382,7 @@ sub setup_eps_aopt ($)
 
   verbose 1, "Aopt $size\n";
   my $base = "tho-aopt-$size";
-  thompson ($base, "(\\e+a){$size}", "lan_char(a), b");
+  thompson ($base, "(\\e+a){$size}", "lal_char(a), b");
   # Set up the benches as expected by timethese.
   my %res;
   for my $d (@tool)

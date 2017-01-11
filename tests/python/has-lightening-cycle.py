@@ -7,7 +7,7 @@ def check(exp, has):
     a = ctx.expression(exp).standard()
     CHECK(a.has_lightening_cycle() == has)
 
-ctx = vcsn.context('lan_char(a), nmin')
+ctx = vcsn.context('lal_char(a), nmin')
 check(r'\e', False)
 
 ctx = vcsn.context('lal_char(a), zmin')

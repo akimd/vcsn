@@ -28,7 +28,7 @@ check('(a*{c})*', 2)
 check('(a*{T})*', 2)
 check(r'(a*{\}b*)*', 2)
 
-ctx = vcsn.context('lat<lan, lan>, q')
+ctx = vcsn.context('lat<lal, lal>, q')
 check('a*|b', 1)
 check('(a|b)*', 1)
 check('(a*|b*)*', 2)

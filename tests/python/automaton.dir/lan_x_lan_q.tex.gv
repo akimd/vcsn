@@ -14,9 +14,9 @@ digraph
     4 []
     5 [style = "state, accepting"]
   }
-  0 -> 1 [label = "[\\hat{}]"]
+  0 -> 1 [label = "[\\hat{}\\varepsilon|x\\textrm{-}a|\\varepsilon]"]
   1 -> 2 [label = "\\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z], \\left\\langle 3\\right\\rangle [b|x\\textrm{-}b|z], \\left\\langle 4\\right\\rangle [c|x\\textrm{-}c|z]"]
   2 -> 3 [label = "\\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z], \\left\\langle 3\\right\\rangle b|x, \\left\\langle 3\\right\\rangle b|y, \\left\\langle 4\\right\\rangle c|z"]
-  3 -> 4 [label = "\\left\\langle 2\\right\\rangle [b|x\\textrm{-}c|xc|z]"]
-  4 -> 5 [label = "\\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z], \\left\\langle 3\\right\\rangle [b|x\\textrm{-}c|z]"]
+  3 -> 4 [label = "\\left\\langle 2\\right\\rangle [\\hat{}a|x\\textrm{-}a|zc|y]"]
+  4 -> 5 [label = "\\left\\langle 3\\right\\rangle [\\hat{}a|x\\textrm{-}a|z], \\left\\langle 2\\right\\rangle [a|x\\textrm{-}a|z]"]
 }

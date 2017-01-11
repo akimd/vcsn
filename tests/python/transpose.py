@@ -53,8 +53,9 @@ CHECK_EQ({
            'is deterministic': 'N/A',
            'is empty': False,
            'is eps-acyclic': True,
+           'is free': True,
            'is normalized': False,
-           'is proper': 'N/A',
+           'is proper': True,
            'is standard': False,
            'is trim': True,
            'is useless': False,
@@ -123,5 +124,5 @@ ctx = vcsn.context('law_char(abcd), expressionset<law_char(efgh), expressionset<
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')
 
-ctx = vcsn.context('lat<lan, lan>, q')
+ctx = vcsn.context('lat<lal, lal>, q')
 check('a(bc)*d | uvw*yz', 'd(cb)*a | zyw*vu')

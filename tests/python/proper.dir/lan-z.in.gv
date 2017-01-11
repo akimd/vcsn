@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lan_char(ab), z"
+  vcsn_context = "lal_char(ab), z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

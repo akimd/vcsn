@@ -269,14 +269,15 @@ namespace vcsn
 
       VCSN_RAT_VISIT(complement, e)
       {
-        detail::static_if<labelset_t::is_free()>
+        detail::static_if<labelset_t::is_letterized()>
           ([this](const auto& e)
            {
+             // Complement checks if it is really free.
              res_ = as_.complement(recurse(e.sub()));
            },
            [this](const auto&)
            {
-             raise("complement: labelset must be free: ",
+             raise("complement: labelset must be letterized: ",
                    *rs_.labelset());
            })
           (e);

@@ -272,7 +272,7 @@ namespace vcsn
     using string_t = automaton_editor::string_t;
 
     /// Labelset types, increasing generality.
-    enum class labelset_type { empty, lal, lan, law };
+    enum class labelset_type { empty, lal, law };
 
     /// Weightset types.
     enum class weightset_type { logarithmic, numerical, tropical };
