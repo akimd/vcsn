@@ -2,6 +2,7 @@
 ## automaton.  ##
 ## ----------- ##
 
+import os
 import re
 from subprocess import Popen, PIPE
 
@@ -56,8 +57,28 @@ def _automaton_fst_files(cmd, *aut):
 
 
 def _guess_format(data=None, filename=None):
-    '''Try to find out what is the format used to encode this automaton.'''
-    for line in open(filename) if filename else data.splitlines():
+    '''Try to find out the format of this automaton.'''
+    # Maybe the filename will suffice.
+    if filename:
+        ext = os.path.splitext(filename)[1]
+        exts = {
+            'daut': 'daut',
+            'dot': 'dot',
+            'efsm': 'efsm',
+            'fado': 'fado',
+            'grail': 'grail',
+            'gv': 'dot',
+        }
+        if ext in exts:
+            return exts[ext]
+
+    # Open in binary mode, it might not be valid UTF-8 (e.g., an
+    # automaton is ISO-8859-1).
+    for line in open(filename, 'rb') if filename else data.splitlines():
+        # However we need these first few lines to be strings.
+        # Hopefully UTF-8.
+        if filename:
+            line = line.decode('utf-8')
         if re.match(r'^\s*digraph', line):
             return 'dot'
         elif re.match('context *=', line) \
