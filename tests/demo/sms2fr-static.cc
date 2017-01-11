@@ -2,6 +2,9 @@
 #include <fstream>
 #include <getopt.h>
 
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string.hpp>
+
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/labelset/tupleset.hh>
 #include <vcsn/misc/symbol.hh>
@@ -16,6 +19,7 @@
 #include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/complement.hh>
 #include <vcsn/algos/focus.hh>
+#include <vcsn/algos/read-automaton.hh>
 #include <vcsn/algos/strip.hh>
 #include <vcsn/algos/accessible.hh>
 #include <vcsn/core/mutable-automaton.hh>
@@ -38,32 +42,25 @@ using state_t = vcsn::state_t_of<automaton_t>;
 using snd_context_t = vcsn::context<null_letterset_t, vcsn::rmin>;
 using snd_automaton_t = vcsn::mutable_automaton<snd_context_t>;
 
-namespace vcsn
+/// Read an efsm automaton. Convert it to the requested type (Aut).
+template <typename Aut>
+Aut
+read_automaton(const std::string& f)
 {
-  namespace dyn
-  {
-    static automaton read_automaton(const std::string& f)
-    {
-      auto is = open_input_file(f);
-      return read_automaton(*is, "efsm");
-    }
-  }
+  auto is = vcsn::open_input_file(f);
+  std::cerr << "Reading: " << f << std::endl;
+  return vcsn::read_automaton<Aut>(*is);
+}
 
-  /// Read an efsm automaton. Convert it to the requested type (Aut).
-  template <typename Aut>
-  Aut
-  read_automaton(const std::string& f)
-  {
-    std::cout << "Reading: " << f << std::endl;
-    dyn::automaton res = dyn::read_automaton(f);
-    std::cout << "Done with: " << f << std::endl;
-    // Automaton typename.
-    auto vname = res->vname();
-    require(vname == Aut::element_type::sname(),
-            f, ": invalid context: ", vname,
-            ", expected: ", Aut::element_type::sname());
-    return std::move(res->as<Aut>());
-  }
+/// Sms2fr manipulates sentences in a particular format, format it back to
+/// normal text: [#la#phrase#] -> la phrase.
+std::string format(const std::string& str)
+{
+  using boost::replace_all_copy;
+  using boost::replace_all;
+  auto res = replace_all_copy(str.substr(2, str.size() - 4), "#", " ");
+  replace_all(res, "\'", "\\\'");
+  return res;
 }
 
 /// Create the unknown automaton used to re-insert ponctuation. Composed of
@@ -187,11 +184,13 @@ int main(int argc, char* argv[])
 {
   std::string graphemic_file;
   std::string syntactic_file;
+  bool prompt = true;
   { /// Options
     struct option longopts[] =
     {
       {"graphemic", required_argument,  NULL, 'g'},
       {"syntactic", required_argument,  NULL, 's'},
+      {"no-prompt", no_argument,        0,    'n'},
       {0, 0, 0, 0}
     };
     int opti;
@@ -206,6 +205,9 @@ int main(int argc, char* argv[])
         case 's': // --syntactic
           syntactic_file = optarg;
           break;
+        case 'n': // Do not display the prompt.
+          prompt = false;
+          break;
         default:
           std::cerr << opt << " : unkown option ! \n";
           return -1;
@@ -215,15 +217,16 @@ int main(int argc, char* argv[])
   }
 
   // Read the graphemic automaton.
-  auto grap = vcsn::read_automaton<automaton_t>(graphemic_file);
+  auto grap = read_automaton<automaton_t>(graphemic_file);
   // Read the syntactic automaton (partial identity for composition).
-  auto synt = vcsn::partial_identity(vcsn::read_automaton<snd_automaton_t>(syntactic_file));
+  auto synt = vcsn::partial_identity(read_automaton<snd_automaton_t>(syntactic_file));
 
   std::string sms;
   automaton_t unknown_aut = sms_to_unk(grap->context());
   automaton_t edit_aut = sms_to_edit(grap->context());
 
-  std::cout << "sms > ";
+  if (prompt)
+    std::cout << "sms > ";
 
   while (getline(std::cin, sms))
     {
@@ -236,7 +239,7 @@ int main(int argc, char* argv[])
       auto aut_p = vcsn::proper(kill_unk);
 
       // First composition with the graphemic automaton.
-      auto aut_g = vcsn::strip(vcsn::coaccessible(vcsn::compose(aut_p, grap)));
+      auto aut_g = vcsn::strip(vcsn::coaccessible(vcsn::compose(sms_aut, grap)));
 
       // Second composition with the syntactic automaton.
       auto aut_s = vcsn::strip(vcsn::coaccessible(vcsn::compose(aut_g, synt)));
@@ -271,11 +274,12 @@ int main(int argc, char* argv[])
 
       // Retrieve the path likeliest (automaton is weighted) to correspond
       // to the text with ponctuation.
-      auto lightest = vcsn::lightest(edited_proper, 1);
+      auto lightest = vcsn::lightest(vcsn::project<1>(lightest_aut), 1);
       // Print the result.
       for (auto it = lightest.begin(); it != lightest.end(); it++)
-        std::cout << it->first << ":" << it->second << '\n';
+        std::cout << format(it->first) << '\n';
 
-      std::cout << "sms > ";
+      if (prompt)
+        std::cout << "sms > ";
     }
 }

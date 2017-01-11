@@ -1,0 +1,28 @@
+#! /bin/sh
+
+graphs_dir=$(vcsn configuration configuration.datadir)/sms2fr
+demo_dir=tests/demo
+args="-s $graphs_dir/syntactic.efsm -g $graphs_dir/graphemic.efsm"
+
+cat >sms.in <<\EOF
+slt
+bjr
+stp
+cmt c tro bi1
+difissil
+jpeu pa
+EOF
+
+cat >out.exp <<\EOF
+salut
+bonjour
+s\' il te plait
+comment c\' est trop bien
+difficile
+je peux pas
+EOF
+
+run 0 out.exp -vcsn python3 $srcdir/$demo_dir/sms2fr-tests.py $args < sms.in
+vcsn_env
+run 0 out.exp $demo_dir/sms2fr-dyn --no-prompt $args < sms.in
+run 0 out.exp $demo_dir/sms2fr-static --no-prompt $args < sms.in

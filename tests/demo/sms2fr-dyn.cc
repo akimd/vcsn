@@ -2,6 +2,8 @@
 #include <fstream>
 #include <getopt.h>
 
+#include <boost/algorithm/string/replace.hpp>
+
 #include <vcsn/dyn/value.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh>
@@ -22,17 +24,30 @@ namespace vcsn
   }
 }
 
+/// Sms2fr manipulates sentences in a particular format, format it back to
+/// normal text: [#la#phrase#] -> la phrase.
+std::string format(const vcsn::dyn::polynomial& lightest)
+{
+  auto str = vcsn::dyn::format(lightest);
+  auto begin = str.find('#');
+  auto end = str.rfind('#');
+  using boost::algorithm::replace_all_copy;
+  return replace_all_copy(str.substr(begin + 1, end - begin - 1), "#", " ");
+}
+
 int main(int argc, char* argv[])
 {
   std::string graphemic_file;
   std::string syntactic_file;
   int debug = 0;
+  bool prompt = true;
 
   { /// Options
     struct option longopts[] =
     {
       {"graphemic", required_argument,  NULL, 'g'},
       {"syntactic", required_argument,  NULL, 's'},
+      {"no-prompt", no_argument,        0,    'n'},
       {0, 0, 0, 0}
     };
     int opti;
@@ -47,6 +62,9 @@ int main(int argc, char* argv[])
             break;
           case 's': // --syntactic
             syntactic_file = std::string(optarg);
+            break;
+          case 'n': // Do not display the prompt.
+            prompt = false;
             break;
           default:
             std::cerr << opt << " : unkown option ! \n";
@@ -63,7 +81,8 @@ int main(int argc, char* argv[])
   auto synt = vcsn::dyn::partial_identity(vcsn::dyn::read_automaton(syntactic_file));
 
   std::string sms;
-  std::cout << "sms > ";
+  if (prompt)
+    std::cout << "sms > ";
 
   auto ctx = vcsn::dyn::make_context("lan_char, rmin");
   while (getline(std::cin, sms))
@@ -92,8 +111,12 @@ int main(int argc, char* argv[])
       // Retrieve the path more likely (automaton is weighted) to correspond
       // to the translation in actual french. Then print it.
       auto lightest = vcsn::dyn::lightest(aut_s_proper, 1);
-      std::cout << lightest << '\n';
+      if (prompt)
+        std::cout << lightest << '\n';
 
-      std::cout << "sms > ";
+      std::cout << format(lightest) << '\n';
+
+      if (prompt)
+        std::cout << "sms > ";
     }
 }
