@@ -43,7 +43,7 @@ namespace vcsn
       conv(std::istream& is, bool = true) const
       {
         if (is.peek() == '-')
-          fail_reading(is, *this, ": negative values are invalid");
+          raise_invalid_value(*this, is);
         else
           return super_t::conv(is);
       }

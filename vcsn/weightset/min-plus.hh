@@ -151,20 +151,21 @@ namespace vcsn
         return v ? one() : zero();
       }
 
-      static value_t
-      conv(std::istream& is, bool = true)
+      value_t
+      conv(std::istream& is, bool = true) const
       {
         value_t res;
         if (is.peek() == 'o')
           {
             is.ignore();
             int c = is.get();
-            VCSN_REQUIRE(c == 'o', "invalid value: o", str_escape(c));
-            res = zero();
+            if (c == 'o')
+              res = zero();
+            else
+              raise_invalid_value(self(), "o", c);
           }
         else if (!(is >> res))
-          // FIXME: sname.
-          vcsn::fail_reading(is, "invalid value");
+          raise_invalid_value(self(), is);
         return res;
       }
 

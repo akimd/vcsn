@@ -179,7 +179,7 @@ namespace vcsn
           res = zero();
         }
       else if (! (i >> res))
-        raise(*this, ": invalid value: ", i);
+        raise_invalid_value(*this, i);
       return res;
     }
 

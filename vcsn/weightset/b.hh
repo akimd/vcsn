@@ -183,12 +183,12 @@ namespace vcsn
       int i;
       if (is >> i)
         {
-          require(i == 0 || i == 1,
-                  *this, ": invalid value: ", i);
+          if (i != 0 && i != 1)
+            raise_invalid_value(*this, i);
           return i;
         }
       else
-        raise(*this, ": invalid value: ", is);
+        raise_invalid_value(*this, is);
     }
 
     static std::ostream&

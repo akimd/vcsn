@@ -93,15 +93,6 @@ namespace vcsn
     if (!b)
       raise(std::forward<Args>(args)...);
   }
-
-  /// This value is not starrable.
-  template <typename WeightSet>
-  ATTRIBUTE_NORETURN
-  void raise_not_starrable(const WeightSet& ws,
-                           const typename WeightSet::value_t& w)
-  {
-    raise(ws, ": value is not starrable: ", to_string(ws, w));
-  }
 }
 
 /// A macro similar to require.

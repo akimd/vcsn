@@ -29,6 +29,9 @@
 
 namespace vcsn
 {
+  /*-------------------.
+  | weightset_mixin.   |
+  `-------------------*/
   namespace detail
   {
     /// The signature of power.
@@ -102,6 +105,9 @@ namespace vcsn
   };
 
 
+  /*-----------------.
+  | random_weight.   |
+  `-----------------*/
   namespace detail
   {
     /// Abstract class for random weight generation.
@@ -205,9 +211,33 @@ namespace vcsn
     class random_weight;
   }
 
+  /*----------.
+  | traits.   |
+  `----------*/
 
   // FIXME: find generic implementation for min-plus.
   template <typename T>
   struct is_tropical : std::false_type
   {};
+
+  /*----------.
+  | Errors.   |
+  `----------*/
+
+  /// Cannot make a value from this.
+  template <typename ValueSet, typename... Args>
+  ATTRIBUTE_NORETURN
+  void raise_invalid_value(const ValueSet& vs, Args&&... args)
+  {
+    raise(vs, ": invalid value: ", std::forward<Args>(args)...);
+  }
+
+  /// This value is not starrable.
+  template <typename WeightSet>
+  ATTRIBUTE_NORETURN
+  void raise_not_starrable(const WeightSet& ws,
+                           const typename WeightSet::value_t& w)
+  {
+    raise(ws, ": value is not starrable: ", to_string(ws, w));
+  }
 }

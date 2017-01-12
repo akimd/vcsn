@@ -192,7 +192,7 @@ namespace vcsn
       if (is >> res)
         return res;
       else
-        vcsn::fail_reading(is, *this, ": invalid value");
+        raise_invalid_value(*this, is);
      }
 
     static std::ostream&
