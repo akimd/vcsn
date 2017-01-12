@@ -10,6 +10,17 @@ the internal API may also be documented.
 Pass "auto" to read_automaton (in dyn, static, Python or the Tools) to let
 the system guess the automaton file format (daut, dot, etc.).
 
+## 2017-01-11
+### Sms2fr
+New Natural Language Processing demonstration of the computations of the
+lightest paths. This application is a translator from SMS (i.e., text messages)
+to proper French.  The implementation is based on _Rewriting the orthography of
+SMS messages_, François Yvon, In Natural Language Engineering, volume 16, 2010.
+The translator uses pre-trained automata and through compositions with the
+automaton representing the text message, generates all possible translations of
+the word. The best solution is then found with a shortest path algorithm.
+An example is given in the `Sms2fr.ipynb` notebook.
+
 ## 2017-01-01
 ### A richer dyn
 The `vcsn::dyn` API was enriched.  All the dyn types now support the usual
