@@ -6,6 +6,18 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## 2017-01-13
+### Nullableset removal
+Nullableset was merged with letterset.  This means that being free (labels
+being letters, not epsilon) is now a dynamic property of the automaton
+instead of a static property of the labelset.  Some algorithms are meant to
+work on a free labelset and had compile-time checks on it.  Most of them
+now check only the letterized aspect at compile-time and check the new free
+property at runtime.  However, `determinize` related functions do not require
+this free property anymore.  Moreover, as letterset now accepts epsilon,
+tupleset of letterset now considers epsilon in the generators.  This can be
+seen in functions like `complete`.  More details can be found in the
+`Nullableset_removal.ipynb` notebook.
+
 ### A property cache
 Automata now have a `cache` for properties like `is_deterministic` or
 `is_proper`. Properties can be of any type and are updated across some
