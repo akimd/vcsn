@@ -5,6 +5,31 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2017-01-13
+### A property cache
+Automata now have a `cache` for properties like `is_deterministic` or
+`is_proper`. Properties can be of any type and are updated across some
+function calls on automata.  Properties can refer to the global automaton or
+to a focused tape of the automaton.  Users can define their own properties,
+modify how a function update a cache, and update the properties themselves,
+as they wish in their own functions.  The file `tests/demos/property.cc` shows
+several examples. The `Properties.ipynb` notebook shows how this new `cache`
+can be seen from the Python interface.  For example:
+
+    In [1]: import vcsn
+    In [2]: a = vcsn.automaton('''context = lal_char(a), b
+            $ -> 0
+            0 -> 1 a
+            0 -> 2 a
+            1 -> $
+            2 -> $''')
+    In [3]: a.info('is deterministic')
+    Out[3]: 'N/A'
+    In [4]: a.is_deterministic()
+    Out[4]: False
+    In [5]: a.info('is deterministic')
+    Out[5]: False
+
 ## 2017-01-01
 ### A richer dyn
 The `vcsn::dyn` API was enriched.  All the dyn types now support the usual
