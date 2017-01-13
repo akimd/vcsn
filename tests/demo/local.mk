@@ -15,16 +15,19 @@
 EXTRA_PROGRAMS +=                               \
   %D%/compose                                   \
   %D%/operators                                 \
-  %D%/prod-eval
+  %D%/prod-eval                                 \
+  %D%/property
 
 %C%_compose_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_operators_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_prod_eval_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_property_LDADD = $(all_libctx) $(unit_ldadd)
 
 %C%_TESTS =                                     \
   %D%/compose.chk                               \
   %D%/operators.chk                             \
-  %D%/prod-eval.chk
+  %D%/prod-eval.chk                             \
+  %D%/property.chk
 
 dist_TESTS += $(%C%_TESTS)
 
@@ -34,6 +37,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/compose.log: %D%/compose
 %D%/operators.log: %D%/operators
 %D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tools
+%D%/property.log: %D%/property
 
 .PHONY: check-demo
 check-demo:

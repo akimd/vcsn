@@ -1,0 +1,31 @@
+#! /bin/sh
+
+cat >out.exp <<\EOF
+# Properties on a single tape automaton.
+is deterministic: N/A
+is deterministic: 1
+is deterministic: 1
+is deterministic: N/A
+No value for a_number.
+Retrieve a_number value = 10
+is happy: 1
+is happy: N/A
+is happy: 0
+is happy: N/A
+a number: 12
+a number: 12
+a number: N/A
+is happy: 0
+is happy: N/A
+a number: 18
+a number: 18
+# Properties on a double tape automaton.
+is deterministic: N/A
+on_tape<0, is deterministic>: N/A
+is deterministic: 1
+on_tape<0, is deterministic>: N/A
+is deterministic: 1
+on_tape<0, is deterministic>: 0
+is deterministic: 0
+EOF
+run 0 out.exp tests/demo/property
