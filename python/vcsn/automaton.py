@@ -266,9 +266,12 @@ class automaton:
     fstis_equivalent = lambda a, b: _automaton_fst_files("fstequivalent", a, b)
     fstminimize      = lambda self: _automaton_fst("fstminimize", self)
     fstproper        = lambda self: _automaton_fst("fstrmepsilon", self)
-    fstlightestpath  = lambda self: _automaton_fst("fstshortestpath", self)
     fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
     fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
+
+    def fstlightestpath(self, k=1):
+        return _automaton_fst(["fstshortestpath", "--nshortest={}".format(k)],
+                              self)
 
     def HTML(self):
         """Display `self` with SVG and MathJax together."""
