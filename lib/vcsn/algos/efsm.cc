@@ -27,8 +27,9 @@ namespace vcsn
       std::string
       read_here_doc(std::istream& is)
       {
-        static std::regex re("cat >\\$medir/([a-z]+)\\.[a-z]* <<\\\\EOFSM",
-                             std::regex::extended);
+        static const auto re
+          = std::regex("cat >\\$medir/([a-z]+)\\.[a-z]* <<\\\\EOFSM",
+                       std::regex::extended);
         std::string line;
         std::smatch res;
         while (is.good())

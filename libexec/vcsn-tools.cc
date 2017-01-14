@@ -32,9 +32,9 @@ namespace
   struct options
   {
     std::vector<parsed_arg> args;
-    std::string output_file;
-    std::string output_format;
-    std::string context_string;
+    std::string output_file = "";
+    std::string output_format = "default";
+    std::string context_string = "lal, b";
   };
 
   options parse_arguments(int argc, char** argv)
@@ -43,10 +43,11 @@ namespace
     --argc;
     ++argv;
 
-    auto res
-      = options{std::vector<parsed_arg>{}, "", "default", "lal_char, b"};
-
+    auto res = options{};
     auto t = type::unknown;
+
+    // Not part of the options, as it may be set several times on the
+    // command line.
     std::string input_format = "default";
 
     const char optstring[] =
@@ -60,12 +61,14 @@ namespace
       switch (char opt = getopt(argc, argv, optstring))
       {
         case 'f':
-          if (optarg == std::string("-"))
-            res.args.push_back({read_stdin(), t, input_format});
-          else
-            res.args.push_back({get_file_contents(optarg), t, input_format});
-          t = type::unknown;
-          input_format = "default";
+          {
+            auto in = optarg == std::string("-")
+              ? read_stdin()
+              : get_file_contents(optarg);
+            res.args.emplace_back(in, t, input_format);
+            t = type::unknown;
+            input_format = "default";
+          }
           break;
 
         case 'O':
@@ -90,15 +93,15 @@ namespace
         case -1:
           if (optind == argc)
             return res;
-          else if (!strcmp(argv[optind], "-")) //We need to read stdin.
+          else if (!strcmp(argv[optind], "-")) // We need to read stdin.
             {
-              res.args.push_back({read_stdin(), t, input_format});
+              res.args.emplace_back(read_stdin(), t, input_format);
               t = type::unknown;
               input_format = "default";
             }
           else
             {
-              res.args.push_back({std::string(argv[optind]), t, input_format});
+              res.args.emplace_back(argv[optind], t, input_format);
               t = type::unknown;
               input_format = "default";
             }
@@ -106,7 +109,7 @@ namespace
           break;
 
         case 'e':
-          res.args.push_back({optarg, t, input_format});
+          res.args.emplace_back(optarg, t, input_format);
           t = type::unknown;
           input_format = "default";
           break;

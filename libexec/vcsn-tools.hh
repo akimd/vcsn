@@ -39,6 +39,13 @@ namespace vcsn
     /// A parsed argument: its value, its type, and its input format.
     struct parsed_arg
     {
+      parsed_arg(std::string arg_, type t_, std::string input_format_)
+        : arg{std::move(arg_)}
+        , t{t_}
+        , input_format{std::move(input_format_)}
+      {}
+      parsed_arg() = default;
+
       std::string arg;
       type t;
       // Can't use a default initializer here as GCC 4.9 doesn't
