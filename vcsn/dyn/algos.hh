@@ -886,7 +886,9 @@ namespace vcsn
 
     /// Read an automaton from a stream.
     /// \param is      the input stream.
-    /// \param format  its format.
+    /// \param format  its format ("auto", "daut", "default", "dot",
+    ///                "efsm", "fado", "grail").  "default" means
+    ///                "auto": try to guess the format.
     /// \param strip   whether to return a stripped automaton,
     ///                or a named automaton.
     automaton read_automaton(std::istream& is,

@@ -56,6 +56,7 @@ algo_headers =                                  \
   %D%/algos/focus.hh                            \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
+  %D%/algos/guess-automaton-format.hh           \
   %D%/algos/has-bounded-lag.hh                  \
   %D%/algos/has-lightening-cycle.hh             \
   %D%/algos/has-twins-property.hh               \

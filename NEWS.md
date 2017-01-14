@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## 2017-01-14
+### "auto" automaton file format
+Pass "auto" to read_automaton (in dyn, static, Python or the Tools) to let
+the system guess the automaton file format (daut, dot, etc.).
+
 ## 2017-01-01
 ### A richer dyn
 The `vcsn::dyn` API was enriched.  All the dyn types now support the usual

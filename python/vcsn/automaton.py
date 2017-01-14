@@ -2,7 +2,6 @@
 ## automaton.  ##
 ## ----------- ##
 
-import os
 import re
 from subprocess import Popen, PIPE
 
@@ -55,43 +54,6 @@ def _automaton_fst_files(cmd, *aut):
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
 
-
-def _guess_format(data=None, filename=None):
-    '''Try to find out the format of this automaton.'''
-    # Maybe the filename will suffice.
-    if filename:
-        ext = os.path.splitext(filename)[1]
-        exts = {
-            'daut': 'daut',
-            'dot': 'dot',
-            'efsm': 'efsm',
-            'fado': 'fado',
-            'grail': 'grail',
-            'gv': 'dot',
-        }
-        if ext in exts:
-            return exts[ext]
-
-    # Open in binary mode, it might not be valid UTF-8 (e.g., an
-    # automaton is ISO-8859-1).
-    for line in open(filename, 'rb') if filename else data.splitlines():
-        # However we need these first few lines to be strings.
-        # Hopefully UTF-8.
-        if filename:
-            line = line.decode('utf-8')
-        if re.match(r'^\s*digraph', line):
-            return 'dot'
-        elif re.match('context *=', line) \
-                or re.match(r'^\s*(\$|\w+|".*?")\s*->\s*(\$|\w+|".*?")', line):
-            return 'daut'
-        elif line.startswith('#! /bin/sh'):
-            return 'efsm'
-        elif line.startswith('(START)'):
-            return 'grail'
-        elif re.match('^@([DN]FA|Transducer) ', line):
-            return 'fado'
-    raise RuntimeError('cannot guess automaton format: ',
-                       data if data else filename)
 
 @variadicProxy('__and__')
 class Conjunction:
@@ -202,8 +164,6 @@ class automaton:
 
     def __init__(self, data='', format='auto', filename='',
                  strip=True):
-        if format == "auto":
-            format = _guess_format(data, filename)
         self._init_orig(data=data, format=format, filename=filename,
                         strip=strip)
 
