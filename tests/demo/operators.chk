@@ -1,3 +1,4 @@
 #! /bin/sh
 
+vcsn_env
 run 0 '' tests/demo/operators

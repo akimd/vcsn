@@ -3,13 +3,11 @@
 # check AUTOMATON INPUT OUTPUT
 # ----------------------------
 
-vcsn="$builddir/tests/bin/vcsn"
-
 check ()
 {
   local expected=$1
   shift
-  run 0 "$expected" tests/bin/vcsn evaluate $@
+  run 0 "$expected" -vcsn evaluate $@
 }
 
 cat >simple.gv <<EOF
@@ -36,12 +34,13 @@ check 4 -A - -L aab <simple.gv
 check 4 -Af - -L aab <simple.gv
 check 4 -f simple.gv -L aab
 
-run 0 2 -/bin/sh -c "( $vcsn thompson -Ee -ab |
-                       $vcsn proper |
-                       $vcsn lweight -C 'lal_char, q' -W 2 -A - |
-                       $vcsn evaluate -L -e-ab )"
 
-run 1 - -/bin/sh -c "$vcsn evaluate 2>&1" <<EOF
+run 0 2 -/bin/sh -c "vcsn thompson -Ee -ab |
+                     vcsn proper |
+                     vcsn lweight -C 'lal, q' -W 2 -A - |
+                     vcsn evaluate -L -e-ab"
+
+run 1 - -/bin/sh -c "vcsn evaluate 2>&1" <<EOF
 error: evaluate: no matching algorithm
   candidates are:
       AUT:automaton L:word -> weight

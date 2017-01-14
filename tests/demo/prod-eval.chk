@@ -12,6 +12,7 @@ check ()
   run 0 "$2, $2" tests/demo/prod-eval bin.gv even.gv $1
 }
 
+vcsn_env
 check '0' '0'
 check '1' '0'
 check '10' '2'

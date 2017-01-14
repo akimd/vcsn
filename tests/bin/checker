@@ -27,6 +27,28 @@ number=0
 nfailures=0
 
 
+# If there are environment variables that we wish to set, do it now.
+# For instance VCSN_ENV=LD_PRELOAD=libclang_rt.asan-x86_64.so`.  This
+# is especially useful on macOS with SIP enabled.
+#
+# Tests run by `vcsn run` do not need to install VCSN_ENV because it
+# does it itself.  Some tests, especially in demo/, are run directly
+# (and we don't want `vcsn run`, to make sure that our program can run
+# without it).  In that case, install VCSN_ENV by hand.
+vcsn_env ()
+{
+  if test x"$VCSN_ENV" != x; then
+    save_IFS=$IFS
+    IFS=';'
+    for v in $VCSN_ENV
+    do
+      eval "export $v"
+    done
+    IFS=$save_IFS
+  fi
+}
+
+
 ## ------------- ##
 ## TAP support.  ##
 ## ------------- ##
@@ -199,6 +221,10 @@ rst_expect ()
   return $res
 }
 
+
+## ------- ##
+## Check.  ##
+## ------- ##
 
 # run [OPTION...] EXPECTED-EXIT-STATUS EXPECTED-OUTPUT PROG [PROG-OPTIONS]
 # ------------------------------------------------------------------------
