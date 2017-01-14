@@ -118,13 +118,11 @@ namespace vcsn
     class random_weight_base
     {
     public:
-      using weight_weight_t = std::vector<float>;
-      using weight_map_t = std::map<typename WeightSet::value_t, float,
-                                    vcsn::less<WeightSet>>;
-      using randomGenerator_t = RandomGenerator;
-      using weight_t = typename WeightSet::value_t;
+      using weightset_t = WeightSet;
+      using weight_t = typename weightset_t::value_t;
+      using random_generator_t = RandomGenerator;
 
-      random_weight_base(RandomGenerator& gen, const WeightSet& ws)
+      random_weight_base(random_generator_t& gen, const weightset_t& ws)
         : gen_{gen}
         , ws_{ws}
         , min_{ws.min()}
@@ -146,22 +144,20 @@ namespace vcsn
       virtual void parse_param_(const std::string& weights)
       {
         using tokenizer = boost::tokenizer<boost::char_separator<char>>;
+        using boost::algorithm::erase_all_copy;
         auto sep = boost::char_separator<char>{","};
-        auto tok = tokenizer(weights, sep);
-        for (auto it = tok.begin(); it != tok.end(); ++it)
+        for (const auto& arg: tokenizer(weights, sep))
         {
-          auto tok_arg = std::string{*it};
-          auto eq = tok_arg.find_first_of('=');
-          auto weight = tok_arg.substr(0, eq);
-          boost::algorithm::erase_all(weight, " ");
+          auto eq = arg.find('=');
+          auto weight = erase_all_copy(arg.substr(0, eq), " ");
           if (weight == "min")
-            min_ = conv(ws_, tok_arg.substr(eq + 1));
+            min_ = conv(ws_, arg.substr(eq + 1));
           else if (weight == "max")
-            max_ = conv(ws_, tok_arg.substr(eq + 1));
+            max_ = conv(ws_, arg.substr(eq + 1));
           else
           {
             float value = (eq != std::string::npos)
-              ? value = detail::lexical_cast<float>(tok_arg.substr(eq + 1))
+              ? detail::lexical_cast<float>(arg.substr(eq + 1))
               : 1;
             auto w = conv(ws_, weight);
             weight_[w] = value;
@@ -177,32 +173,33 @@ namespace vcsn
       /// A random weight.
       weight_t print_random_weight_() const
       {
-        /// There is a probability to choose a value
-        /// specified on the parameters.
         if (choose_map(weight_weight_, gen_))
         {
+          /// There is a biased probability to choose a value
+          /// specified on the parameters.
           auto it = chooser_it_(weight_weight_, weight_);
           return it->first;
         }
-        /// If not, then choose a random value from the WeightSet.
+        /// Otherwise, choose a random value from the WeightSet.
         else
         {
           return pick_value_();
         }
       }
 
-      WeightSet ws_;
-      /// The min and the max given by the user.
-      /// If not precised, then it takes the min
-      /// and max of the weighset by default.
+      random_generator_t& gen_;
+      weightset_t ws_;
+      /// The min and the max given by the user.  If unspecified, then
+      /// it takes the min and max of the weighset by default.
       weight_t min_;
       weight_t max_;
-      RandomGenerator& gen_;
-      /// Elements given by the user
-      /// and their associated probabilities (weight_weight_).
+      /// Elements given by the user and their associated
+      /// probabilities (weight_weight_).
+      using weight_map_t = std::map<weight_t, float, vcsn::less<weightset_t>>;
       weight_map_t weight_;
+      using weight_weight_t = std::vector<float>;
       weight_weight_t weight_weight_;
-      discrete_chooser<RandomGenerator> chooser_it_{gen_};
+      discrete_chooser<random_generator_t> chooser_it_{gen_};
     };
 
     /// Generic declaration of the class which is specialized

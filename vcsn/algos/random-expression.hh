@@ -73,21 +73,19 @@ namespace vcsn
         // Set default value.
         length_ = 6;
         using tokenizer = boost::tokenizer<boost::escaped_list_separator<char>>;
+        using boost::algorithm::erase_all_copy;
         auto sep = boost::escaped_list_separator<char>("#####", ",", "\"");
-        auto tok = tokenizer(param, sep);
-        for (auto it = tok.begin(); it != tok.end(); ++it)
+        for (const auto& arg: tokenizer(param, sep))
         {
-          auto tok_arg = std::string{*it};
-          auto eq = tok_arg.find_first_of('=');
-          auto op = tok_arg.substr(0, eq);
-          boost::algorithm::erase_all(op, " ");
+          auto eq = arg.find('=');
+          auto op = erase_all_copy(arg.substr(0, eq), " ");
           if (op == "w")
-            random_weight_.parse_param(tok_arg.substr(eq + 1));
+            random_weight_.parse_param(arg.substr(eq + 1));
           else
           {
-            float value = 1;
-            if (eq != std::string::npos)
-              value = lexical_cast<float>(tok_arg.substr(eq + 1));
+            float value = (eq != std::string::npos)
+              ? detail::lexical_cast<float>(arg.substr(eq + 1))
+              : 1;
             if (has(arities_, op))
               operators_[op] = value;
             else if (op == "length")
