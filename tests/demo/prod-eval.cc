@@ -60,14 +60,19 @@ namespace vcsn
   }
 }
 
+// static: begin
 /// Static implementation of the prod_eval.
 ///
 /// Read two automata and a word. Compute the product of these
-/// automata and evaluate the word from it.
+/// automata and evaluate the word on it.
 ///
 /// \tparam Ctx the specified context of the automata and the
 ///    word. Each of them have to be from these context or the program
 ///    will fail.
+///
+/// \param lhs  name of a file containing the first automaton
+/// \param rhs  name of a file containing the second automaton
+/// \param word the word to evaluate
 template <typename Ctx>
 void
 sta_prod_eval(const std::string& lhs, const std::string& rhs,
@@ -90,12 +95,18 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   // to print the weight as the print function cannot be generic in static.
   prod->context().weightset()->print(w, std::cout);
 }
+// static: end
 
+// dyn: begin
 /// Dyn implementation of the prod_eval.
 ///
 /// Read two automata and a word. Compute the product of these automata and
-/// evaluate the word from it. The context does not have to be specified as
+/// evaluate the word on it. The context does not have to be specified as
 /// the context of the parameters is computed dynamically.
+///
+/// \param lhs  name of a file containing the first automaton
+/// \param rhs  name of a file containing the second automaton
+/// \param word the word to evaluate
 static void
 dyn_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
@@ -114,6 +125,7 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
   // Display of the result, no need to use the weightset.
   std::cout << w;
 }
+// dyn: end
 
 int
 main(int argc, const char* argv[])
