@@ -29,6 +29,7 @@ namespace
     return {begin, end};
   }
 
+  /// All the parameters of a command.
   struct options
   {
     std::vector<parsed_arg> args;
@@ -46,8 +47,7 @@ namespace
     auto res = options{};
     auto t = type::unknown;
 
-    // Not part of the options, as it may be set several times on the
-    // command line.
+    /// The input format of the next argument.
     std::string input_format = "default";
 
     const char optstring[] =
@@ -58,11 +58,11 @@ namespace
       "ABDEFLNPSWchf:e:C:O:o:qI:";
 
     while (true)
-      switch (char opt = getopt(argc, argv, optstring))
-      {
+      switch (auto opt = getopt(argc, argv, optstring))
+        {
         case 'f':
           {
-            auto in = optarg == std::string("-")
+            auto in = std::string{optarg} == "-"
               ? read_stdin()
               : get_file_contents(optarg);
             res.args.emplace_back(in, t, input_format);
@@ -76,10 +76,10 @@ namespace
          break;
 
         case 'I':
-         if (input_format != "default")
-           raise("too many input formats for one argument");
-         else
+         if (input_format == "default")
            input_format = optarg;
+         else
+           raise("too many input formats for one argument");
          break;
 
         case 'o':
@@ -93,7 +93,7 @@ namespace
         case -1:
           if (optind == argc)
             return res;
-          else if (!strcmp(argv[optind], "-")) // We need to read stdin.
+          else if (std::string{argv[optind]} == "-")
             {
               res.args.emplace_back(read_stdin(), t, input_format);
               t = type::unknown;
@@ -105,7 +105,7 @@ namespace
               t = type::unknown;
               input_format = "default";
             }
-          optind++;
+          ++optind;
           break;
 
         case 'e':
@@ -145,9 +145,8 @@ namespace
           exit(0);
 
         case '?':
-          //ERROR
           raise("unknown option: ", optarg);
-      }
+        }
   }
 
   bool is_match(const algo& a, const std::vector<parsed_arg>& args)
