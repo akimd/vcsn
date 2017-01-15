@@ -19,6 +19,8 @@ namespace vcsn
   guess_automaton_format(std::istream& is)
   {
     const auto pos = is.tellg();
+    require(pos != -1,
+            "cannot keep file position while guessing automaton file format");
     using r = std::regex;
     // Probes for each mode.
     const static auto probes = std::multimap<std::string, std::regex>
@@ -38,18 +40,11 @@ namespace vcsn
         for (const auto& p: probes)
           if (std::regex_search(line, p.second))
             {
-              try
-                {
-                  is.seekg(pos);
-                }
-              catch (const std::ios_base::failure& e)
-                {
-                  raise("cannot rewing automaton file: ", e.what());
-                }
+              is.seekg(pos);
+              require(is.good(), "cannot rewind automaton file");
               return p.first;
             }
       }
-    is.seekg(pos);
     raise("cannot guess automaton format: ", is);
   }
 
