@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -x
+
 # --no-external was introduced in lcov 1.10.
 if lcov --no-external --version; then
   no_external=--no-external
