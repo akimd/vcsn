@@ -21,14 +21,6 @@ namespace
 
   bool used_stdin = false;
 
-  std::string read_stdin()
-  {
-    used_stdin = true;
-    std::cin >> std::noskipws;
-    std::istreambuf_iterator<char> begin(std::cin), end;
-    return {begin, end};
-  }
-
   /// All the parameters of a command.
   struct options
   {
@@ -61,14 +53,9 @@ namespace
       switch (auto opt = getopt(argc, argv, optstring))
         {
         case 'f':
-          {
-            auto in = std::string{optarg} == "-"
-              ? read_stdin()
-              : get_file_contents(optarg);
-            res.args.emplace_back(in, t, input_format);
-            t = type::unknown;
-            input_format = "default";
-          }
+          res.args.emplace_back(optarg, true, t, input_format);
+          t = type::unknown;
+          input_format = "default";
           break;
 
         case 'O':
@@ -93,15 +80,13 @@ namespace
         case -1:
           if (optind == argc)
             return res;
-          else if (std::string{argv[optind]} == "-")
-            {
-              res.args.emplace_back(read_stdin(), t, input_format);
-              t = type::unknown;
-              input_format = "default";
-            }
           else
             {
-              res.args.emplace_back(argv[optind], t, input_format);
+              // A lone `-` denotes stdin (`-f`), anything else is
+              // interpreted as a literal (`-e`).
+              res.args.emplace_back(argv[optind],
+                                    std::string{argv[optind]} == "-",
+                                    t, input_format);
               t = type::unknown;
               input_format = "default";
             }
@@ -109,7 +94,7 @@ namespace
           break;
 
         case 'e':
-          res.args.emplace_back(optarg, t, input_format);
+          res.args.emplace_back(optarg, false, t, input_format);
           t = type::unknown;
           input_format = "default";
           break;
@@ -128,8 +113,8 @@ namespace
         case 'P':
         case 'S':
         case 'W':
-          // This cast is safe as long as the
-          // case list is properly maintened.
+          // This cast is safe as long as the case list is properly
+          // maintained.
           if (t == type::unknown)
             t = static_cast<type>(opt);
           else
@@ -163,8 +148,7 @@ namespace
   }
 
   const algo* match(const std::string& algo_name,
-                    std::vector<parsed_arg>& args,
-                    const dyn::context& context)
+                    const std::vector<parsed_arg>& args)
   {
     const algo* a = nullptr;
     auto range = vcsn::tools::algos.equal_range(algo_name);
@@ -176,11 +160,11 @@ namespace
         else if (a)
           {
             std::ostringstream ss;
-            ss << "more than one algorithm found.\n"
-               << "candidates are:\n";
+            ss << "more than one algorithm found\n"
+               << "  candidates are:\n";
             for (auto it = range.first; it != range.second; it++)
-              if(is_match(it->second, args))
-                ss << "  "<< it->second.declaration << '\n';
+              if (is_match(it->second, args))
+                ss << "    " << it->second.declaration << '\n';
             ss << "Try 'vcsn " << algo_name << " --help' for more information.";
             raise(ss.str());
           }
@@ -195,14 +179,12 @@ namespace
                       std::vector<parsed_arg>& args,
                       const dyn::context& context)
   {
-    auto a = match(algo_name, args, context);
+    auto a = match(algo_name, args);
     if (!a && !used_stdin)
       {
         // Let's try with stdin as an input.
-        args.insert(args.begin(), {"", type::unknown, "default"});
-        a = match(algo_name, args, context);
-        if (a) // We found an algo, time to read stdin
-          args[0].arg = read_stdin();
+        args.insert(args.begin(), {"-", true, type::unknown, "default"});
+        a = match(algo_name, args);
       }
     if (!a)
       {

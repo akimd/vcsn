@@ -11,6 +11,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -39,17 +40,19 @@ namespace vcsn
     /// A parsed argument: its value, its type, and its input format.
     struct parsed_arg
     {
-      parsed_arg(std::string arg_, type t_, std::string input_format_)
+      parsed_arg(std::string arg_, bool file_,
+                 type t_, std::string input_format_)
         : arg{std::move(arg_)}
+        , file{file_}
         , t{t_}
         , input_format{std::move(input_format_)}
       {}
       parsed_arg() = default;
 
       std::string arg;
+      /// Whether arg is a file name (-f) instead of actual contents (-e).
+      bool file;
       type t;
-      // Can't use a default initializer here as GCC 4.9 doesn't
-      // support them in aggregate types.
       std::string input_format;
     };
 
@@ -77,143 +80,117 @@ namespace vcsn
 
     /// Conversion functions.
     template <typename T>
-    T convert(const std::string &, const dyn::context&,
-              const std::string& format);
-
-    /*
-    template <>
-    inline T convert<T>(const std::string& str, const dyn::context& ctx,
-                        const std::string& format)
+    struct convert_impl
     {
-      auto stream = std::istringstream(str);
-      return read_T(stream);
-    }
-    */
+      static
+      auto conv(std::istream& in,
+                const dyn::context&, const std::string&)
+        -> T
+      {
+        auto res = T{};
+        in >> res;
+        return res;
+      }
+    };
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
-    template <>
-    inline dyn::automaton
-    convert<dyn::automaton>(const std::string& str, const dyn::context& ctx,
-                            const std::string& format)
+    template <typename T>
+    struct convert_impl<boost::optional<T>>
     {
-      std::istringstream stream{str};
-      return dyn::read_automaton(stream, format);
-    }
-
-    template <>
-    inline dyn::label
-    convert<dyn::label>(const std::string& str, const dyn::context& ctx,
-                        const std::string& format)
-    {
-      std::istringstream stream{str};
-      return dyn::read_label(ctx, stream);
-    }
+      static
+      boost::optional<T>
+      conv(std::istream& in,
+           const dyn::context& ctx, const std::string& fmt)
+      {
+        return convert_impl<T>::conv(in, ctx, fmt);
+      }
+    };
 
     template <>
-    inline dyn::expression
-    convert<dyn::expression>(const std::string& str, const dyn::context& ctx,
-                             const std::string& format)
+    struct convert_impl<std::string>
     {
-      std::istringstream stream{str};
-      return dyn::read_expression(ctx, dyn::identities::deflt, stream, format);
-    }
+      static
+      std::string
+      conv(std::istream& in,
+           const dyn::context&, const std::string&)
+      {
+        return std::string{std::istreambuf_iterator<char>{in}, {}};
+      }
+    };
 
     template <>
-    inline dyn::polynomial
-    convert<dyn::polynomial>(const std::string& str, const dyn::context& ctx,
-                             const std::string& format)
+    struct convert_impl<dyn::automaton>
     {
-      std::istringstream stream{str};
-      return dyn::read_polynomial(ctx, stream);
-    }
+      static
+      dyn::automaton
+      conv(std::istream& in,
+           const dyn::context&, const std::string& fmt)
+      {
+        return dyn::read_automaton(in, fmt);
+      }
+    };
 
     template <>
-    inline dyn::weight
-    convert<dyn::weight>(const std::string& str, const dyn::context& ctx,
-                         const std::string& format)
+    struct convert_impl<dyn::expression>
     {
-      std::istringstream stream{str};
-      return dyn::read_weight(ctx, stream);
-    }
+      static
+      dyn::expression
+      conv(std::istream& in,
+           const dyn::context& ctx, const std::string& fmt)
+      {
+        return dyn::read_expression(ctx, dyn::identities::deflt, in, fmt);
+      }
+    };
 
     template <>
-    inline std::string
-    convert<std::string>(const std::string& str, const dyn::context& ctx,
-                         const std::string& format)
+    struct convert_impl<dyn::label>
     {
-      return str;
-    }
+      static
+      dyn::label
+      conv(std::istream& in,
+           const dyn::context& ctx, const std::string& fmt)
+      {
+        return dyn::read_label(ctx, in, fmt);
+      }
+    };
+
 
     template <>
-    inline bool
-    convert<bool>(const std::string& str, const dyn::context& ctx,
-                  const std::string& format)
+    struct convert_impl<dyn::polynomial>
     {
-      std::istringstream stream{str};
-      bool res;
-      stream >> res;
-      return res;
-    }
+      static
+      dyn::polynomial
+      conv(std::istream& in,
+           const dyn::context& ctx, const std::string&)
+      {
+        return dyn::read_polynomial(ctx, in);
+      }
+    };
+
 
     template <>
-    inline int
-    convert<int>(const std::string& str, const dyn::context& ctx,
-                 const std::string& format)
+    struct convert_impl<dyn::weight>
     {
-      std::istringstream stream{str};
-      int res;
-      stream >> res;
-      return res;
-    }
-
-    template <>
-    inline float
-    convert<float>(const std::string& str, const dyn::context& ctx,
-                   const std::string& format)
-    {
-      std::istringstream stream{str};
-      float res;
-      stream >> res;
-      return res;
-    }
-
-    template <>
-    inline unsigned
-    convert<unsigned>(const std::string& str, const dyn::context& ctx,
-                      const std::string& format)
-    {
-      std::istringstream stream{str};
-      unsigned res;
-      stream >> res;
-      return res;
-    }
-
-    template <>
-    inline boost::optional<unsigned>
-    convert<boost::optional<unsigned>>(const std::string& str,
-                                       const dyn::context& ctx,
-                                       const std::string& format)
-    {
-      std::istringstream stream{str};
-      unsigned res;
-      stream >> res;
-      return res;
-    }
-
-    template <>
-    inline dyn::identities
-    convert<dyn::identities>(const std::string& str, const dyn::context& ctx,
-                             const std::string& format)
-    {
-      return str;
-    }
+      static
+      dyn::weight
+      conv(std::istream& in,
+           const dyn::context& ctx, const std::string&)
+      {
+        return dyn::read_weight(ctx, in);
+      }
+    };
 
     template <typename T>
     T
     convert(const parsed_arg& arg, const dyn::context& ctx)
     {
-      return vcsn::tools::convert<T>(arg.arg, ctx, arg.input_format);
+      auto in = [&]() -> std::shared_ptr<std::istream>
+        {
+          if (arg.file)
+            return open_input_file(arg.arg);
+          else
+            return std::make_shared<std::istringstream>(arg.arg);
+        }();
+      return convert_impl<T>::conv(*in, ctx, arg.input_format);
     }
   }
 
