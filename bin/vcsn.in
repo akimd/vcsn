@@ -97,9 +97,11 @@ EOF
 
 version ()
 {
+  version=$(vcsn configuration configuration.version)
+  url=$(vcsn configuration configuration.url)
 cat <<EOF
-vcsn (@PACKAGE_STRING@)
-<@PACKAGE_URL@>
+vcsn ($version)
+<$url>
 EOF
   exit 0
 }
