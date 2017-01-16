@@ -87,8 +87,18 @@ def canonicalize(s):
     # Normalize whether data was already there or not.
     s = re.sub(r'(Over)?[Ww]rit', 'Writ', s)
 
-    # Normalize paths.
-    # s = re.sub('/([^/]+/){2,}', '', s)
+    # The following patterns from graphviz 2.40 are rewritten as they used to
+    # be in 2.38.  This was shamelessly stolen from Spot.
+    s = re.sub(r'"#000000"', '"black"', s)
+    s = re.sub(r'"#00ff00"', '"green"', s)
+    s = re.sub(r'"#696969"', '"DimGray"', s)
+    s = re.sub(r'"#d3d3d3"', '"lightgray"', s)
+    s = re.sub(r'"#ff0000"', '"red"', s)
+    s = re.sub(r'"#ffa500"', '"orange"', s)
+    s = re.sub(r'"#ffffff"', '"white"', s)
+    s = re.sub(r' fill="black"', '', s)
+    s = re.sub(r' stroke="transparent"', ' stroke="none"', s)
+    s = re.sub(r'><title>', '>\n<title>', s)
 
     return s
 
