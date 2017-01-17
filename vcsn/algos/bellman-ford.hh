@@ -25,13 +25,12 @@ namespace vcsn
     /// given as parameter. Return the array of lightest 'in'
     /// transition of each state.
     template <Automaton Aut>
-    boost::optional<std::vector<transition_t_of<Aut>>>
+    boost::optional<predecessors_t_of<Aut>>
     bellman_ford_impl(const Aut& aut, state_t_of<Aut> source)
     {
-      using transition_t = transition_t_of<Aut>;
       auto size = states_size(aut);
       auto dist = std::vector<weight_t_of<Aut>>(size);
-      auto res = std::vector<transition_t>(size, aut->null_transition());
+      auto res = predecessors_t_of<Aut>(size, aut->null_transition());
       auto ws = *aut->weightset();
 
       dist[source] = ws.one();
@@ -56,24 +55,25 @@ namespace vcsn
           }
 
       // Check for lightening cycles.
-      for (auto t: transitions(aut))
-        {
+      auto has_lightening_cycle = any_of(transitions(aut), [&](auto t) {
           auto src = aut->src_of(t);
           auto dst = aut->dst_of(t);
-          if (res[src] != aut->null_transition()
-              && (res[dst] == aut->null_transition()
-                 || ws.less(ws.mul(dist[src], aut->weight_of(t)), dist[dst])))
-            return boost::none;
-        }
-
-      return std::move(res);
+          return (res[src] != aut->null_transition()
+                  && (res[dst] == aut->null_transition()
+                      || ws.less(ws.mul(dist[src], aut->weight_of(t)),
+                                 dist[dst])));
+        });
+      if (has_lightening_cycle)
+        return boost::none;
+      else
+        return res;
     }
   }
 
   /// Destination is ignored as bellman-ford does not stop when reaching dest,
   /// but when each iteration has been done.
   template <Automaton Aut>
-  std::vector<transition_t_of<Aut>>
+  predecessors_t_of<Aut>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut>,
                 bellman_ford_tag)
   {

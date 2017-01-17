@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <boost/range/algorithm/mismatch.hpp>
+
 #include <vcsn/misc/fibonacci_heap.hh>
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/algos/dijkstra.hh>
@@ -17,7 +19,7 @@ namespace vcsn
 
   namespace detail
   {
-    /// Yen implementation of the K lightest automaton algorithm.
+    /// Yen's algorithm of the K lightest paths.
     ///
     /// Functor initialized by the automaton on which the lightest paths will
     /// be computed. And called with the source and destination states of the
@@ -119,7 +121,7 @@ namespace vcsn
                             state_t_of<AnyAut> dst = Aut::element_type::post())
       {
         auto algo = detail::make_dijkstra_impl(aut, vs_, mul_);
-        return std::move(algo(src, dst));
+        return algo(src, dst);
       }
 
       paths_t
@@ -145,8 +147,10 @@ namespace vcsn
                 for (const auto& selected_path: res)
                   if (j < selected_path.size())
                     {
-                      auto diff = std::mismatch(root_path.begin(), root_path.end(),
-                                                selected_path.begin(), selected_path.begin() + j);
+                      auto diff = std::mismatch(root_path.begin(),
+                                                root_path.end(),
+                                                selected_path.begin(),
+                                                selected_path.begin() + j);
                       if (diff.first == root_path.end()
                           && filter_aut->has_transition(selected_path[j]))
                         filter_aut->hide_transition(selected_path[j]);
@@ -175,8 +179,8 @@ namespace vcsn
                         const auto& selected_path = profile.path_;
                         if (root_path.size() == selected_path.size())
                           {
-                            auto diff = std::mismatch(root_path.begin(), root_path.end(),
-                                                      selected_path.begin(), selected_path.end());
+                            auto diff = boost::mismatch(root_path,
+                                                        selected_path);
                             if (diff.first == root_path.end())
                             {
                               already_found = true;
@@ -186,7 +190,9 @@ namespace vcsn
                       }
                     if (!already_found)
                       {
-                        auto m = *path_monomial(filter_aut, format_lightest(filter_aut, root_path), src, dst);
+                        auto m = *path_monomial(filter_aut,
+                                                format_lightest(filter_aut, root_path),
+                                                src, dst);
                         heap.emplace(std::move(root_path), vs_, get_value_(m));
                       }
                   }
@@ -252,8 +258,7 @@ namespace vcsn
                 yen_tag)
   {
     auto paths = k_lightest_path(aut, src, dst, 1);
-    auto res
-      = paths.empty() ? std::vector<transition_t_of<Aut>>() : paths.front();
+    auto res = paths.empty() ? predecessors_t_of<Aut>() : paths.front();
     return format_lightest(aut, res);
   }
 }

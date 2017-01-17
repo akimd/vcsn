@@ -79,7 +79,7 @@ namespace vcsn
       using heap_t = vcsn::min_fibonacci_heap<profile>;
 
       template <typename Heuristic>
-      std::vector<transition_t>
+      predecessors_t_of<automaton_t>
       operator()(state_t source, state_t dest, Heuristic heuristic)
       {
         auto ws = *aut_->weightset();
@@ -88,7 +88,7 @@ namespace vcsn
         auto done = std::set<state_t>();
 
         auto todo = heap_t();
-        std::vector<typename heap_t::handle_type> handles(size);
+        auto handles = std::vector<typename heap_t::handle_type>(size);
 
         auto dist = distance_t(size);
 
@@ -122,7 +122,7 @@ namespace vcsn
               }
           }
 
-        return std::vector<transition_t>(size, aut_->null_transition());
+        return predecessors_t_of<automaton_t>(size, aut_->null_transition());
       }
 
     private:
@@ -141,7 +141,7 @@ namespace vcsn
     public:
       const automaton_t& aut_;
       /// For each state, its predecessor.
-      std::vector<transition_t> res_;
+      predecessors_t_of<automaton_t> res_;
       distance_t heuristic_dist_;
     };
   }

@@ -19,10 +19,11 @@ namespace vcsn
 
   /// A list of transitions representing a path.
   ///
-  /// Transitions are listed from source (front) to destination (back).
-  /// The destination of each transition is the source of the following one in
-  /// the vector. By definition, none of these transitions can be `null_transition`
-  /// or this path would be considered ill-formed.
+  /// Transitions are listed from source (front) to destination
+  /// (back).  The destination of each transition is the source of the
+  /// following one in the vector. By definition, none of these
+  /// transitions can be `null_transition` or this path would be
+  /// considered ill-formed.
   template <typename Aut>
   using path_t_of = std::vector<transition_t_of<Aut>>;
 
