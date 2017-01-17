@@ -5,6 +5,39 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+# Vcsn 2.5 (2017-01-17)
+
+The Vcsners are proud to announce the release of Vcsn 2.5, aka the
+k-lightest release!
+
+Noteworthy changes include:
+
+- two new implementations to compute the k-lightest paths (aka "best" paths:
+  with the smallest weights) in tropical automata.
+
+- several new demos showing how to use the C++ library, including a
+  translator from (French) text messages (aka SMS) into French.
+
+- a new means for the users to configure Vcsn.  This adds a new prerequisite
+  to build Vcsn: libyaml-cpp.
+
+- a much better and faster caching system of runtime generated C++ code.
+  Users of dyn (and therefore of Python) should note an improved
+  amortization of the compilation costs.
+
+- several portability issues reported by users were fixed.
+
+For more information, please, see the detailed news below.
+
+People who worked on this release:
+
+- Akim Demaille
+- Clément Démoulins
+- Clément Gillard
+- Sarasvati Moutoucomarapoulé
+- Sébastien Piat
+- Younes Khoudli
+
 ## 2017-01-14
 ### "auto" automaton file format
 Pass "auto" to read_automaton (in dyn, static, Python or the Tools) to let
@@ -5304,6 +5337,9 @@ LocalWords:  expressionsets involutivity hopcroft starrable Gillard Boillod
 LocalWords:  Thibaud Michaud executables ldiv ldivide lweight rdiv rdivide
 LocalWords:  rweight bd quotkbaseb abcac SVG demangle gdb Vcsn's boxart baz
 LocalWords:  dijkstra acca FAdo's Sarasvati Moutoucomarapoulé Younes param
+LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt Vcsners
+LocalWords:  SMS libyaml cpp Sms François Yvon ipynb ipython Qunused
+LocalWords:  cxxflags Eppstein eppstein
 
 Local Variables:
 coding: utf-8
@@ -5313,4 +5349,3 @@ mode: markdown
 End:
 
 -->
-LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt
