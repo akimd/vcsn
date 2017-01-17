@@ -39,7 +39,6 @@ int main(int argc, char* argv[])
 {
   std::string graphemic_file;
   std::string syntactic_file;
-  int debug = 0;
   bool prompt = true;
 
   { /// Options

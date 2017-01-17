@@ -133,7 +133,6 @@ automaton_t sms_to_aut(const context_t& context, automaton_t& unk,
                        automaton_t& edit, std::string& line)
 {
   auto res = vcsn::make_mutable_automaton(context);
-  int new_number = 0;
   const auto& ls = *res->labelset();
 
   const auto& ls0 = edit->labelset()->template set<0>();
@@ -146,7 +145,6 @@ automaton_t sms_to_aut(const context_t& context, automaton_t& unk,
   res->add_transition(snd, trd, ls.tuple('#', '#'), 0);
 
   size_t p = 0;
-  int label = 0;
   state_t prev = trd;
 
   while (p < line.length())

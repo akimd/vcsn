@@ -56,21 +56,19 @@ namespace vcsn
             const auto& path = explicit_pref_path.get_path();
 
             // The index of the last transition of the path before the
-            // sidetrack.
-            int last_transition_index = -1;
-            for (int i = path.size() - 1; 0 <= i; i--)
-              {
-                auto curr = path[i];
-                if (aut_->dst_of(curr) == aut_->src_of(sidetrack_))
-                  {
-                    last_transition_index = i;
-                    break;
-                  }
-              }
-
-            for (unsigned i = 0; i <= last_transition_index; i++)
-              res.emplace_back(aut_->weight_of(path[i]), path[i]);
-
+            // sidetrack. Using the last occurence of the sidetrack is necessary
+            // to avoid computing the same path each time in the case of loops.
+            // If the sidetrack appears twice and we rebuild our path after the
+            // first one then we lost the previous path.
+            auto i = std::find_if(path.rbegin(), path.rend(), [&] (auto curr) {
+                return aut_->dst_of(curr) == aut_->src_of(sidetrack_);
+              });
+            assert(i != path.rend());
+            // Make it forward iterator, but one iteration further (in
+            // the forward direction).
+            auto last = i.base();
+            for (auto i = path.begin(); i != last; ++i)
+              res.emplace_back(aut_->weight_of(*i), *i);
             res.emplace_back(aut_->weight_of(sidetrack_), sidetrack_);
           }
 

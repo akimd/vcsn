@@ -131,6 +131,6 @@ namespace vcsn
                    unsigned num)
   {
     auto ksp = detail::eppstein<Aut>(aut);
-    return ksp.k_shortest_path(aut->pre(), aut->post(), num);
+    return ksp.k_shortest_path(src, dst, num);
   }
 }

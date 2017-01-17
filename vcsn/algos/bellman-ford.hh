@@ -35,24 +35,27 @@ namespace vcsn
 
       dist[source] = ws.one();
 
-      // Iterate one time for each state over each transitions.
+      // Iterate once for each state over each transitions.
       for (auto _: aut->all_states())
-        for (auto t: all_transitions(aut))
-          {
-            auto src = aut->src_of(t);
+        {
+          (void) _;
+          for (auto t: all_transitions(aut))
+            {
+              auto src = aut->src_of(t);
 
-            if (res[src] != aut->null_transition() || src == source)
-              {
-                auto dst = aut->dst_of(t);
-                auto nw = ws.mul(dist[src], aut->weight_of(t));
-                if (res[dst] == aut->null_transition()
-                    || ws.less(nw, dist[dst]))
-                  {
-                    dist[dst] = nw;
-                    res[dst] = t;
-                  }
-              }
-          }
+              if (res[src] != aut->null_transition() || src == source)
+                {
+                  auto dst = aut->dst_of(t);
+                  auto nw = ws.mul(dist[src], aut->weight_of(t));
+                  if (res[dst] == aut->null_transition()
+                      || ws.less(nw, dist[dst]))
+                    {
+                      dist[dst] = nw;
+                      res[dst] = t;
+                    }
+                }
+            }
+        }
 
       // Check for lightening cycles.
       auto has_lightening_cycle = any_of(transitions(aut), [&](auto t) {
