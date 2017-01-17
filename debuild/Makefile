@@ -8,7 +8,7 @@ build-image: Dockerfile 02proxy build.sh sources.list
 build:
 	rm -rf ../_package
 	mkdir ../_package
-	cd .. && docker run --rm -e NBPROC=$$NBPROC -v $$PWD:/build/vcsn $(DOCKER_TAG) /build/build.sh
+	cd .. && docker run --rm -e NBPROC=$$NBPROC --user=$$(id -u):$$(id -g) -v $$PWD:/build/vcsn $(DOCKER_TAG) /build/build.sh
 
 push:
 	docker push $(DOCKER_TAG)
