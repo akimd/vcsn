@@ -127,10 +127,10 @@ def canonical_dict(dict):
             exit(0)
 
     if 'text' in dict:
-        if 'fstcompile: command not found' in dict['text']:
+        if re.search('fstcompile: (command )?not found', dict['text']):
             SKIP('OpenFST not installed')
             exit(0)
-        if 'pygmentize: command not found' in dict['text']:
+        if re.search('pygmentize: (command )?not found', dict['text']):
             SKIP('pygmentize (from python-pygments) not installed')
             exit(0)
         if 'ERROR:root:Cell magic `%%automaton` not found.' in dict['text']:
@@ -139,8 +139,7 @@ def canonical_dict(dict):
         if 'ERROR:root:Line magic function `%demo` not found' in dict['text']:
             SKIP("line magic doesn't work")
             exit(0)
-        if re.search('Use of this header .* is deprecated',
-                    dict['text']):
+        if re.search('Use of this header .* is deprecated', dict['text']):
             SKIP('spurious warnings about deprecated header')
             print(dict['text'])
             exit(0)
