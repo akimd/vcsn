@@ -41,37 +41,41 @@ int main(int argc, char* argv[])
   std::string syntactic_file;
   bool prompt = true;
 
-  { /// Options
+  {
+    /// Options
     struct option longopts[] =
     {
-      {"graphemic", required_argument,  NULL, 'g'},
-      {"syntactic", required_argument,  NULL, 's'},
-      {"no-prompt", no_argument,        0,    'n'},
-      {0, 0, 0, 0}
+      {"graphemic", required_argument,  nullptr, 'g'},
+      {"syntactic", required_argument,  nullptr, 's'},
+      {"no-prompt", no_argument,        nullptr, 'n'},
+      {nullptr, 0, nullptr, 0}
     };
+
     int opti;
     char opt;
 
     while ((opt = getopt_long(argc, argv, "g:s:", longopts, &opti)) != EOF)
       {
         switch(opt)
-        {
+          {
           case 'g': // --graphemic
-            graphemic_file = std::string(optarg);
+            graphemic_file = optarg;
             break;
           case 's': // --syntactic
-            syntactic_file = std::string(optarg);
+            syntactic_file = optarg;
             break;
           case 'n': // Do not display the prompt.
             prompt = false;
             break;
           default:
-            std::cerr << opt << " : unkown option ! \n";
+            std::cerr << "invalid option: " << opt << std::endl;
             return -1;
-        }
+          }
       }
-    vcsn::require(!graphemic_file.empty() && !syntactic_file.empty(),
-                  "Either graphemic or syntactic file not given.\n");
+    vcsn::require(!graphemic_file.empty(),
+                  "graphemic file not specified");
+    vcsn::require(!syntactic_file.empty(),
+                  "syntactic file not specified");
   }
 
   // Read the graphemic automaton.
