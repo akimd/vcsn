@@ -80,7 +80,7 @@ automaton_t sms_to_unk(const context_t& context)
   generators0.push_back(ls0.one());
 
   for (const auto l0: generators0)
-    if (!ls0.is_one(l0) && (l0 == '#' || ('a' <= l0 && l0 <= 'z')))
+    if (!ls0.is_one(l0) && (l0 == '#' || std::islower(l0)))
       unk->add_transition(init_unk, init_unk,
                                   ls.tuple(l0, l0), 0);
 
@@ -110,7 +110,7 @@ automaton_t sms_to_edit(const context_t& context)
 
   for (const auto l0: generators0)
     for (const auto l1: generators1)
-      if (!ls0.is_one(l0) || !ls1.is_one(l1)
+      if ((!ls0.is_one(l0) || !ls1.is_one(l1))
           && l0 != '[' && l1 != '['
           && l0 != ']' && l1 != ']')
         edit->add_transition(init, init,
@@ -178,11 +178,10 @@ automaton_t sms_to_aut(const context_t& context, automaton_t& unk,
   return res;
 }
 
-int main(int argc, char* argv[])
+/// Command line arguments.
+struct options
 {
-  std::string graphemic_file;
-  std::string syntactic_file;
-  bool prompt = true;
+  options(int argc, char* argv[])
   {
     /// Options
     struct option longopts[] =
@@ -197,43 +196,54 @@ int main(int argc, char* argv[])
     char opt;
 
     while ((opt = getopt_long(argc, argv, "g:s:", longopts, &opti)) != EOF)
-      switch(opt)
-        {
-        case 'g': // --graphemic
-          graphemic_file = optarg;
-          break;
-        case 's': // --syntactic
-          syntactic_file = optarg;
-          break;
-        case 'n': // Do not display the prompt.
-          prompt = false;
-          break;
-        default:
-          std::cerr << "invalid option: " << opt << std::endl;
-          return -1;
-        }
+      {
+        switch(opt)
+          {
+          case 'g': // --graphemic
+            graphemic_file = optarg;
+            break;
+          case 's': // --syntactic
+            syntactic_file = optarg;
+            break;
+          case 'n': // Do not display the prompt.
+            prompt = false;
+            break;
+          default:
+            vcsn::raise("invalid option: ", opt);
+          }
+      }
     vcsn::require(!graphemic_file.empty(),
                   "graphemic file not specified");
     vcsn::require(!syntactic_file.empty(),
                   "syntactic file not specified");
   }
 
+  std::string graphemic_file;
+  std::string syntactic_file;
+  bool prompt = true;
+};
+
+int main(int argc, char* argv[])
+{
+  auto opts = options{argc, argv};
+
   // Read the graphemic automaton.
-  auto grap = read_automaton<automaton_t>(graphemic_file);
+  auto grap = read_automaton<automaton_t>(opts.graphemic_file);
   // Read the syntactic automaton (partial identity for composition).
-  auto synt = vcsn::partial_identity(read_automaton<snd_automaton_t>(syntactic_file));
+  auto synt = vcsn::partial_identity(read_automaton<snd_automaton_t>(opts.syntactic_file));
 
   std::string sms;
   automaton_t unknown_aut = sms_to_unk(grap->context());
   automaton_t edit_aut = sms_to_edit(grap->context());
 
-  if (prompt)
+  if (opts.prompt)
     std::cout << "sms > ";
 
   while (getline(std::cin, sms))
     {
       // Create the automaton corresponding to the sms.
-      automaton_t sms_aut = sms_to_aut(grap->context(), unknown_aut, edit_aut, sms);
+      automaton_t sms_aut
+        = sms_to_aut(grap->context(), unknown_aut, edit_aut, sms);
 
       // Remove unknown letters.
       auto kill_unk = vcsn::compose(sms_aut, unknown_aut);
@@ -241,7 +251,8 @@ int main(int argc, char* argv[])
       auto aut_p = vcsn::proper(kill_unk);
 
       // First composition with the graphemic automaton.
-      auto aut_g = vcsn::strip(vcsn::coaccessible(vcsn::compose(sms_aut, grap)));
+      auto aut_g
+        = vcsn::strip(vcsn::coaccessible(vcsn::compose(sms_aut, grap)));
 
       // Second composition with the syntactic automaton.
       auto aut_s = vcsn::strip(vcsn::coaccessible(vcsn::compose(aut_g, synt)));
@@ -253,7 +264,8 @@ int main(int argc, char* argv[])
 
       // Retrieve the path more likely (automaton is weighted) to correspond
       // to the translation in actual french.
-      auto lightest_aut = vcsn::partial_identity(vcsn::lightest_automaton(aut_s_null, 1));
+      auto lightest_aut
+        = vcsn::partial_identity(vcsn::lightest_automaton(aut_s_null, 1));
 
       // Add possibility to insert unknown letters between each letter.
       auto add_unk = vcsn::compose<decltype(lightest_aut),
@@ -278,10 +290,10 @@ int main(int argc, char* argv[])
       // to the text with ponctuation.
       auto lightest = vcsn::lightest(vcsn::project<1>(lightest_aut), 1);
       // Print the result.
-      for (auto it = lightest.begin(); it != lightest.end(); it++)
-        std::cout << format(it->first) << '\n';
+      for (const auto& m: lightest)
+        std::cout << format(m.first) << '\n';
 
-      if (prompt)
+      if (opts.prompt)
         std::cout << "sms > ";
     }
 }

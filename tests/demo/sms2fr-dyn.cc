@@ -35,12 +35,10 @@ std::string format(const vcsn::dyn::polynomial& lightest)
   return replace_all_copy(str.substr(begin + 1, end - begin - 1), "#", " ");
 }
 
-int main(int argc, char* argv[])
+/// Command line arguments.
+struct options
 {
-  std::string graphemic_file;
-  std::string syntactic_file;
-  bool prompt = true;
-
+  options(int argc, char* argv[])
   {
     /// Options
     struct option longopts[] =
@@ -68,8 +66,7 @@ int main(int argc, char* argv[])
             prompt = false;
             break;
           default:
-            std::cerr << "invalid option: " << opt << std::endl;
-            return -1;
+            vcsn::raise("invalid option: ", opt);
           }
       }
     vcsn::require(!graphemic_file.empty(),
@@ -78,13 +75,22 @@ int main(int argc, char* argv[])
                   "syntactic file not specified");
   }
 
+  std::string graphemic_file;
+  std::string syntactic_file;
+  bool prompt = true;
+};
+
+int main(int argc, char* argv[])
+{
+  auto opts = options{argc, argv};
+
   // Read the graphemic automaton.
-  auto grap = vcsn::dyn::read_automaton(graphemic_file);
+  auto grap = vcsn::dyn::read_automaton(opts.graphemic_file);
   // Read the syntactic automaton (partial identity for composition).
-  auto synt = vcsn::dyn::partial_identity(vcsn::dyn::read_automaton(syntactic_file));
+  auto synt = vcsn::dyn::partial_identity(vcsn::dyn::read_automaton(opts.syntactic_file));
 
   std::string sms;
-  if (prompt)
+  if (opts.prompt)
     std::cout << "sms > ";
 
   auto ctx = vcsn::dyn::make_context("lan_char, rmin");
@@ -102,10 +108,16 @@ int main(int argc, char* argv[])
       auto aut_p = vcsn::dyn::partial_identity(sms_aut);
 
       // First composition with the graphemic automaton.
-      auto aut_g = vcsn::dyn::strip(vcsn::dyn::coaccessible(vcsn::dyn::compose(aut_p, grap)));
+      auto aut_g =
+        vcsn::dyn::strip
+        (vcsn::dyn::coaccessible
+         (vcsn::dyn::compose(aut_p, grap)));
 
       // Second composition with the syntactic automaton.
-      auto aut_s = vcsn::dyn::strip(vcsn::dyn::coaccessible(vcsn::dyn::compose(aut_g, synt)));
+      auto aut_s =
+        vcsn::dyn::strip
+        (vcsn::dyn::coaccessible
+         (vcsn::dyn::compose(aut_g, synt)));
 
       // Prepare automaton for lightest.
       auto aut_s_out = vcsn::dyn::project(aut_s, 1);
@@ -114,12 +126,12 @@ int main(int argc, char* argv[])
       // Retrieve the path more likely (automaton is weighted) to correspond
       // to the translation in actual french. Then print it.
       auto lightest = vcsn::dyn::lightest(aut_s_proper, 1);
-      if (prompt)
+      if (opts.prompt)
         std::cout << lightest << '\n';
 
       std::cout << format(lightest) << '\n';
 
-      if (prompt)
+      if (opts.prompt)
         std::cout << "sms > ";
     }
 }
