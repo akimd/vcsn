@@ -14,6 +14,8 @@ disable=
 # many conventions are incompatible with the coding style
         invalid-name,misplaced-comparison-constant,missing-docstring,
         bad-whitespace,bad-continuation,
+# I strongly disagree with this one.
+        no-else-return,
 # disable info when we disable checkers in-file
         I,
 # mixin members of vcsn_cxx are not detected

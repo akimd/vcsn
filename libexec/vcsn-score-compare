@@ -157,7 +157,7 @@ class Latex(Format):
             return '{:>5}'.format(score)
         else:
             c = self.color(score, avg)
-            if c is 'black':
+            if c == 'black':
                 return r'\num{{{:5.2f}}}'.format(score)
             else:
                 return (r'\textcolor{{{}}}{{\num{{{:5.2f}}}}}'

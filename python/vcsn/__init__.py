@@ -97,6 +97,7 @@ try:
     mode = ip.InteractiveTB.mode
     offset = ip.InteractiveTB.tb_offset
     class vcsnTB(AutoFormattedTB):
+        # pylint: disable=arguments-differ
         def structured_traceback(self, type, value, tb, tb_offset=None,
                                  *args, **kwargs):
             # If an offset is given, use it, else use the default

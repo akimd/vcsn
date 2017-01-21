@@ -36,7 +36,7 @@ def variadicProxy(fun):
 
             def __getattribute__(self, name):
                 val = object.__getattribute__(self, "__value__")
-                if name is "__value__":
+                if name == '__value__':
                     return val
                 else:
                     return getattr(val(), name)
