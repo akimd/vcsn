@@ -96,9 +96,10 @@ int main(int argc, char* argv[])
   auto ctx = vcsn::dyn::make_context("lan_char, rmin");
   while (getline(std::cin, sms))
     {
-      // The sms automaton is the automaton accepting the original text message,
-      // changed to this format: '[#my#text#message#]'. Partial identity for
-      // future composition.
+      // The sms automaton is the automaton accepting the original
+      // text message, changed to this format:
+      // '[#my#text#message#]'.  Partial identity for future
+      // composition.
       std::replace(begin(sms), end(sms), ' ', '#');
       std::stringstream ss;
       ss << "\\[#" << sms << "#\\]";

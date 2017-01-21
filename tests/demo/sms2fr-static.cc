@@ -63,17 +63,17 @@ std::string format(const std::string& str)
   return res;
 }
 
-/// Create the unknown automaton used to re-insert ponctuation. Composed of
-/// identity transition for known letters and the letter to epsilon for unknown
-/// ones.
-automaton_t sms_to_unk(const context_t& context)
+/// Create the unknown automaton used to re-insert punctuation.
+/// Composed of identity transition for known letters and the letter
+/// to epsilon for unknown ones.
+automaton_t unknown_automaton(const context_t& context)
 {
-  auto unk = vcsn::make_mutable_automaton(context);
+  auto res = vcsn::make_mutable_automaton(context);
+  const auto& ls = *res->labelset();
 
-  const auto& ls = *unk->labelset();
-
-  state_t init_unk = unk->new_state();
-  unk->set_initial(init_unk);
+  // Unique state.
+  state_t s = res->new_state();
+  res->set_initial(s);
 
   const auto& ls0 = ls.template set<0>();
   auto generators0 = vcsn::detail::make_vector(ls0.generators());
@@ -81,98 +81,89 @@ automaton_t sms_to_unk(const context_t& context)
 
   for (const auto l0: generators0)
     if (!ls0.is_one(l0) && (l0 == '#' || std::islower(l0)))
-      unk->add_transition(init_unk, init_unk,
-                                  ls.tuple(l0, l0), 0);
+      res->add_transition(s, s, ls.tuple(l0, l0));
 
-  unk->add_transition(init_unk, init_unk, ls.tuple('[', '['), 0);
-  unk->add_transition(init_unk, init_unk, ls.tuple(']', ']'), 0);
-  unk->set_final(init_unk);
+  res->add_transition(s, s, ls.tuple('[', '['));
+  res->add_transition(s, s, ls.tuple(']', ']'));
+  res->set_final(s);
 
-  return unk;
+  return res;
 }
 
-/// Create the edit automata used to re-insert ponctuation. Composed of every
-/// possible combination of letters (except with enclosing characters: brackets).
-automaton_t sms_to_edit(const context_t& context)
+/// Create the edit automata used to re-insert punctuation.  Composed
+/// of every possible combination of letters (except with enclosing
+/// characters: brackets).
+automaton_t edit_automaton(const context_t& context)
 {
-  auto edit = vcsn::make_mutable_automaton(context);
+  auto res = vcsn::make_mutable_automaton(context);
+  const auto& ls = *res->labelset();
 
-  state_t init = edit->new_state();
-  edit->set_initial(init);
+  state_t s = res->new_state();
+  res->set_initial(s);
 
-  const auto& ls = *edit->labelset();
-  const auto& ls0 = ls.template set<0>();
-  const auto& ls1 = ls.template set<1>();
-  auto generators0 = vcsn::detail::make_vector(ls0.generators());
-  auto generators1 = vcsn::detail::make_vector(ls1.generators());
-  generators0.push_back(ls0.one());
-  generators1.push_back(ls1.one());
+  for (const auto l: ls.generators())
+    if (std::get<0>(l) != '[' && std::get<1>(l) != '['
+        && std::get<0>(l) != ']' && std::get<1>(l) != ']')
+      res->add_transition(s, s, l,
+                           (std::get<0>(l) == std::get<1>(l)) ? 0 : 1);
 
-  for (const auto l0: generators0)
-    for (const auto l1: generators1)
-      if ((!ls0.is_one(l0) || !ls1.is_one(l1))
-          && l0 != '[' && l1 != '['
-          && l0 != ']' && l1 != ']')
-        edit->add_transition(init, init,
-                             ls.tuple(l0, l1),
-                             (l0 == l1) ? 0 : 1);
+  res->add_transition(s, s, ls.tuple('[', '['));
+  res->add_transition(s, s, ls.tuple(']', ']'));
+  res->set_final(s);
 
-  edit->add_transition(init, init, ls.tuple('[', '['), 0);
-  edit->add_transition(init, init, ls.tuple(']', ']'), 0);
-  edit->set_final(init);
-
-  return edit;
+  return res;
 }
 
-/// The sms automaton is the automaton accepting the original text message,
-/// changed to this format: '[#my#text#message#]'. Hence, the characters
-/// ('#', '[' and ']') are handled as special characters in the trained automata
-/// and not accepted in the original text. We create the sms automaton as a
-/// double tape automaton for future composition.
-automaton_t sms_to_aut(const context_t& context, automaton_t& unk,
-                       automaton_t& edit, std::string& line)
+/// The sms automaton is the automaton accepting the original text
+/// message, changed to this format: '[#my#text#message#]'. Hence, the
+/// characters ('#', '[' and ']') are handled as special characters in
+/// the trained automata and not accepted in the original text. We
+/// create the sms automaton as a double tape automaton for future
+/// composition.
+automaton_t sms_to_aut(const context_t& context,
+                       const automaton_t& unk,
+                       const automaton_t& edit,
+                       const std::string& line)
 {
   auto res = vcsn::make_mutable_automaton(context);
   const auto& ls = *res->labelset();
 
   const auto& ls0 = edit->labelset()->template set<0>();
 
-  state_t init = res->new_state();
-  res->set_initial(init);
-  state_t snd = res->new_state();
-  res->add_transition(init, snd, ls.tuple('[', '['), 0);
-  state_t trd = res->new_state();
-  res->add_transition(snd, trd, ls.tuple('#', '#'), 0);
+  state_t s0 = res->new_state();
+  res->set_initial(s0);
+  state_t s1 = res->new_state();
+  res->add_transition(s0, s1, ls.tuple('[', '['));
+  state_t s2 = res->new_state();
+  res->add_transition(s1, s2, ls.tuple('#', '#'));
 
-  size_t p = 0;
-  state_t prev = trd;
+  state_t prev = s2;
 
-  while (p < line.length())
+  for (auto letter: line)
     {
       state_t s = res->new_state();
-      auto letter = line[p];
       if (isspace(letter))
         letter = '#';
-      res->add_transition(prev, s, ls.tuple(letter, letter), 0);
-      if (!ls0.is_valid(letter) || (letter != '#' && letter < 'a' || 'z' < letter))
+      res->add_transition(prev, s, ls.tuple(letter, letter));
+      if (!ls0.is_valid(letter)
+          || letter != '#' && !islower(letter))
         {
           auto unk_state = unk->dst_of(initial_transitions(unk).front());
           unk->add_transition(unk_state, unk_state,
-                              unk->labelset()->tuple(letter, ls0.one()), 0);
+                              unk->labelset()->tuple(letter, ls0.one()));
         }
       if (!ls0.is_valid(letter))
         {
           auto edit_state = edit->dst_of(initial_transitions(edit).front());
           edit->add_transition(edit_state, edit_state,
-                               edit->labelset()->tuple(letter, letter), 0);
+                               edit->labelset()->tuple(letter, letter));
         }
-      p++;
       prev = s;
     }
   state_t sep = res->new_state();
-  res->add_transition(prev, sep, ls.tuple('#', '#'), 0);
+  res->add_transition(prev, sep, ls.tuple('#', '#'));
   state_t end = res->new_state();
-  res->add_transition(sep, end, ls.tuple(']', ']'), 0);
+  res->add_transition(sep, end, ls.tuple(']', ']'));
   res->set_final(end);
 
   return res;
@@ -233,8 +224,8 @@ int main(int argc, char* argv[])
   auto synt = vcsn::partial_identity(read_automaton<snd_automaton_t>(opts.syntactic_file));
 
   std::string sms;
-  automaton_t unknown_aut = sms_to_unk(grap->context());
-  automaton_t edit_aut = sms_to_edit(grap->context());
+  automaton_t unknown_aut = unknown_automaton(grap->context());
+  automaton_t edit_aut = edit_automaton(grap->context());
 
   if (opts.prompt)
     std::cout << "sms > ";
@@ -278,7 +269,7 @@ int main(int argc, char* argv[])
       auto edit_sms = vcsn::compose(sms_aut, edit_aut);
 
       // Intersection between the possible editions and the translation with
-      // possible ponctuation.
+      // possible punctuation.
       auto edited = vcsn::conjunction(
                       vcsn::project<1>(add_unk),
                       vcsn::sort(vcsn::project<1>(edit_sms))
@@ -287,7 +278,7 @@ int main(int argc, char* argv[])
       auto edited_proper = vcsn::proper(edited);
 
       // Retrieve the path likeliest (automaton is weighted) to correspond
-      // to the text with ponctuation.
+      // to the text with punctuation.
       auto lightest = vcsn::lightest(vcsn::project<1>(lightest_aut), 1);
       // Print the result.
       for (const auto& m: lightest)
