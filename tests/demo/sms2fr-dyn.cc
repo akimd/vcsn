@@ -35,6 +35,45 @@ std::string format(const vcsn::dyn::polynomial& lightest)
   return replace_all_copy(str.substr(begin + 1, end - begin - 1), "#", " ");
 }
 
+struct sms2fr_impl
+{
+  std::string operator()(const std::string& sms) const
+  {
+    // The sms automaton is the automaton accepting the original text
+    // message, changed to this format: '[#my#text#message#]'.  Partial
+    // identity for future composition.
+    auto s = "\\[#" + boost::replace_all_copy(sms, " ", "#") +  "#\\]";
+    auto sms_exp = vcsn::dyn::make_expression(ctx, s);
+    auto sms_aut = vcsn::dyn::to_automaton(sms_exp);
+    auto aut_p = vcsn::dyn::partial_identity(sms_aut);
+
+    // First composition with the graphemic automaton.
+    auto aut_g =
+      vcsn::dyn::strip
+      (vcsn::dyn::coaccessible
+       (vcsn::dyn::compose(aut_p, grap)));
+
+    // Second composition with the syntactic automaton.
+    auto aut_s =
+      vcsn::dyn::strip
+      (vcsn::dyn::coaccessible
+       (vcsn::dyn::compose(aut_g, synt)));
+
+    // Prepare automaton for lightest.
+    auto aut_s_out = vcsn::dyn::project(aut_s, 1);
+    auto aut_s_proper = vcsn::dyn::proper(aut_s_out);
+
+    // Retrieve the path more likely (automaton is weighted) to correspond
+    // to the translation in actual french. Then print it.
+    auto lightest = vcsn::dyn::lightest(aut_s_proper, 1);
+    return format(lightest);
+  }
+
+  const vcsn::dyn::automaton &grap;
+  const vcsn::dyn::automaton &synt;
+  const vcsn::dyn::context ctx = vcsn::dyn::make_context("lan_char, rmin");
+};
+
 /// Command line arguments.
 struct options
 {
@@ -85,51 +124,20 @@ int main(int argc, char* argv[])
   auto opts = options{argc, argv};
 
   // Read the graphemic automaton.
-  auto grap = vcsn::dyn::read_automaton(opts.graphemic_file);
+  auto graphemic = vcsn::dyn::read_automaton(opts.graphemic_file);
   // Read the syntactic automaton (partial identity for composition).
-  auto synt = vcsn::dyn::partial_identity
+  auto syntactic = vcsn::dyn::partial_identity
     (vcsn::dyn::read_automaton(opts.syntactic_file));
+
+  auto sms2fr = sms2fr_impl{graphemic, syntactic};
 
   std::string sms;
   if (opts.prompt)
     std::cout << "sms > ";
 
-  auto ctx = vcsn::dyn::make_context("lan_char, rmin");
   while (getline(std::cin, sms))
     {
-      // The sms automaton is the automaton accepting the original
-      // text message, changed to this format:
-      // '[#my#text#message#]'.  Partial identity for future
-      // composition.
-      auto s = "\\[#" + boost::replace_all_copy(sms, " ", "#") +  "#\\]";
-      auto sms_exp = vcsn::dyn::make_expression(ctx, s);
-      auto sms_aut = vcsn::dyn::to_automaton(sms_exp);
-      auto aut_p = vcsn::dyn::partial_identity(sms_aut);
-
-      // First composition with the graphemic automaton.
-      auto aut_g =
-        vcsn::dyn::strip
-        (vcsn::dyn::coaccessible
-         (vcsn::dyn::compose(aut_p, grap)));
-
-      // Second composition with the syntactic automaton.
-      auto aut_s =
-        vcsn::dyn::strip
-        (vcsn::dyn::coaccessible
-         (vcsn::dyn::compose(aut_g, synt)));
-
-      // Prepare automaton for lightest.
-      auto aut_s_out = vcsn::dyn::project(aut_s, 1);
-      auto aut_s_proper = vcsn::dyn::proper(aut_s_out);
-
-      // Retrieve the path more likely (automaton is weighted) to correspond
-      // to the translation in actual french. Then print it.
-      auto lightest = vcsn::dyn::lightest(aut_s_proper, 1);
-      if (opts.prompt)
-        std::cout << lightest << '\n';
-
-      std::cout << format(lightest) << '\n';
-
+      std::cout << sms2fr(sms) << '\n';
       if (opts.prompt)
         std::cout << "sms > ";
     }
