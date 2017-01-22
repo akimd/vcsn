@@ -16,8 +16,8 @@ namespace vcsn LIBVCSN_API
 {
   namespace detail
   {
-    /// The class representing the YAML configuration
-    /// (act as the top of the configuration tree).
+    /// The YAML configuration (acts as the top of the configuration
+    /// tree).
     class config
     {
     public:

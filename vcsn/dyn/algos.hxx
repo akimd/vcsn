@@ -3,7 +3,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
-#include <vcsn/misc/yaml.hh>
+#include <vcsn/misc/configuration.hh>
 
 namespace vcsn
 {

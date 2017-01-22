@@ -61,6 +61,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/dyn/translate.cc                          \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \
+  %D%/misc/configuration.cc                     \
   %D%/misc/direction.cc                         \
   %D%/misc/escape.cc                            \
   %D%/misc/file-library.cc                      \
@@ -71,8 +72,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc                            \
   %D%/misc/xltdl.cc                             \
-  %D%/misc/xltdl.hh                             \
-  %D%/misc/yaml.cc
+  %D%/misc/xltdl.hh
 
 lib_libvcsn_la_LDFLAGS =					\
   $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\

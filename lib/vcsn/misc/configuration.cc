@@ -5,7 +5,7 @@
 #include <vcsn/misc/file-library.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
-#include <vcsn/misc/yaml.hh>
+#include <vcsn/misc/configuration.hh>
 
 namespace vcsn
 {

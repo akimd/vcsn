@@ -8,10 +8,10 @@
 #include <vcsn/algos/detail/printer.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/fwd.hh>
+#include <vcsn/misc/configuration.hh>
 #include <vcsn/misc/iostream.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/unordered_set.hh>
-#include <vcsn/misc/yaml.hh>
 
 namespace vcsn
 {

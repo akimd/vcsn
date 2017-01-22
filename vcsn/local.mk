@@ -236,6 +236,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/bimap.hh                             \
   %D%/misc/builtins.hh                          \
   %D%/misc/cast.hh                              \
+  %D%/misc/configuration.hh                     \
   %D%/misc/crange.hh                            \
   %D%/misc/cross.hh                             \
   %D%/misc/debug-level.hh                       \
@@ -302,7 +303,6 @@ nobase_include_HEADERS =                        \
   %D%/weightset/r.hh                            \
   %D%/weightset/rmin.hh                         \
   %D%/weightset/weightset.hh                    \
-  %D%/misc/yaml.hh                              \
   %D%/weightset/z.hh                            \
   %D%/weightset/zmin.hh
 
