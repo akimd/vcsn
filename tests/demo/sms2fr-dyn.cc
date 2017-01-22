@@ -25,7 +25,7 @@ namespace vcsn
 }
 
 /// Sms2fr manipulates sentences in a particular format, format it back to
-/// normal text: [#la#phrase#] -> la phrase.
+/// normal text: "[#la#phrase#]" -> "la phrase".
 std::string format(const vcsn::dyn::polynomial& lightest)
 {
   auto str = vcsn::dyn::format(lightest);
@@ -87,7 +87,8 @@ int main(int argc, char* argv[])
   // Read the graphemic automaton.
   auto grap = vcsn::dyn::read_automaton(opts.graphemic_file);
   // Read the syntactic automaton (partial identity for composition).
-  auto synt = vcsn::dyn::partial_identity(vcsn::dyn::read_automaton(opts.syntactic_file));
+  auto synt = vcsn::dyn::partial_identity
+    (vcsn::dyn::read_automaton(opts.syntactic_file));
 
   std::string sms;
   if (opts.prompt)
@@ -100,11 +101,8 @@ int main(int argc, char* argv[])
       // text message, changed to this format:
       // '[#my#text#message#]'.  Partial identity for future
       // composition.
-      std::replace(begin(sms), end(sms), ' ', '#');
-      std::stringstream ss;
-      ss << "\\[#" << sms << "#\\]";
-      std::istringstream iss(ss.str());
-      auto sms_exp = vcsn::dyn::read_expression(ctx, {}, iss);
+      auto s = "\\[#" + boost::replace_all_copy(sms, " ", "#") +  "#\\]";
+      auto sms_exp = vcsn::dyn::make_expression(ctx, s);
       auto sms_aut = vcsn::dyn::to_automaton(sms_exp);
       auto aut_p = vcsn::dyn::partial_identity(sms_aut);
 
