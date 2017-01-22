@@ -274,8 +274,14 @@ struct options
                   "syntactic file not specified");
   }
 
-  std::string graphemic_file;
-  std::string syntactic_file;
+  std::string datafile(const std::string& f)
+  {
+    auto datadir = vcsn::dyn::configuration("configuration.datadir");
+    return datadir + "/sms2fr/" + f + ".efsm";
+  }
+
+  std::string graphemic_file = datafile("graphemic");
+  std::string syntactic_file = datafile("syntactic");
   bool prompt = true;
 };
 

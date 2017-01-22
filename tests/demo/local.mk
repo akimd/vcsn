@@ -41,7 +41,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/compose.log: %D%/compose
 %D%/operators.log: %D%/operators
 %D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tools
-%D%/sms2fr.log: %D%/sms2fr-static %D%/sms2fr-dyn
+%D%/sms2fr.log: %D%/sms2fr-static %D%/sms2fr-dyn %D%/sms2fr.py %D%/sms2fr-tests.py
 
 .PHONY: check-demo
 check-demo:
