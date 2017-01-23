@@ -11,7 +11,7 @@
     }                                           \
   }
 
-#include <lib/vcsn/rat/location.hh>
+#include <vcsn/misc/location.hh>
 
 YY_FLEX_NAMESPACE_BEGIN
   using location = vcsn::rat::location;

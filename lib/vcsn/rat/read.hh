@@ -1,9 +1,9 @@
 #pragma once
 
-#include <lib/vcsn/rat/location.hh>
 #include <vcsn/core/rat/fwd.hh> // identities
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/export.hh>
+#include <vcsn/misc/location.hh>
 
 namespace vcsn
 {

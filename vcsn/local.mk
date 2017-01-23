@@ -260,11 +260,13 @@ nobase_include_HEADERS =                        \
   %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \
   %D%/misc/irange.hh                            \
+  %D%/misc/location.hh                          \
   %D%/misc/map.hh                               \
   %D%/misc/math.hh                              \
   %D%/misc/memory.hh                            \
   %D%/misc/military-order.hh                    \
   %D%/misc/pair.hh                              \
+  %D%/misc/position.hh                          \
   %D%/misc/queue.hh                             \
   %D%/misc/raise.hh                             \
   %D%/misc/random.hh                            \

@@ -16,9 +16,9 @@
 {
   #include <iostream>
   #include <tuple>
-  #include "location.hh"
   #include <vcsn/core/rat/expression.hh>
   #include <vcsn/dyn/value.hh>
+  #include <vcsn/misc/location.hh>
   #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn

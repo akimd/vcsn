@@ -1,12 +1,11 @@
 #pragma once
 
+#include <lib/vcsn/dot/fwd.hh>
+#include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/core/fwd.hh>
 #include <vcsn/core/rat/fwd.hh>
-#include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/misc/export.hh>
-
-#include <lib/vcsn/dot/fwd.hh>
-#include <lib/vcsn/rat/location.hh>
+#include <vcsn/misc/location.hh>
 
 namespace vcsn
 {

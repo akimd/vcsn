@@ -18,8 +18,8 @@
   #include <iostream>
   #include <string>
 
+  #include <vcsn/misc/location.hh>
   #include <vcsn/misc/symbol.hh>
-  #include <lib/vcsn/rat/location.hh>
   #include <lib/vcsn/dot/driver.hh>
 
   namespace vcsn
