@@ -252,22 +252,20 @@ struct options
     char opt;
 
     while ((opt = getopt_long(argc, argv, "g:s:", longopts, &opti)) != EOF)
-      {
-        switch(opt)
-          {
-          case 'g': // --graphemic
-            graphemic_file = optarg;
-            break;
-          case 's': // --syntactic
-            syntactic_file = optarg;
-            break;
-          case 'n': // Do not display the prompt.
-            prompt = false;
-            break;
-          default:
-            vcsn::raise("invalid option: ", opt);
-          }
-      }
+      switch(opt)
+        {
+        case 'g': // --graphemic
+          graphemic_file = optarg;
+          break;
+        case 's': // --syntactic
+          syntactic_file = optarg;
+          break;
+        case 'n': // Do not display the prompt.
+          prompt = false;
+          break;
+        default:
+          vcsn::raise("invalid option: ", opt);
+        }
     vcsn::require(!graphemic_file.empty(),
                   "graphemic file not specified");
     vcsn::require(!syntactic_file.empty(),

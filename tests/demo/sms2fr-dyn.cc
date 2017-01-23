@@ -24,17 +24,6 @@ namespace vcsn
   }
 }
 
-/// Sms2fr manipulates sentences in a particular format, format it back to
-/// normal text: "[#la#phrase#]" -> "la phrase".
-std::string format(const vcsn::dyn::polynomial& lightest)
-{
-  auto str = vcsn::dyn::format(lightest);
-  auto begin = str.find('#');
-  auto end = str.rfind('#');
-  using boost::algorithm::replace_all_copy;
-  return replace_all_copy(str.substr(begin + 1, end - begin - 1), "#", " ");
-}
-
 struct sms2fr_impl
 {
   std::string operator()(const std::string& sms) const
@@ -69,6 +58,17 @@ struct sms2fr_impl
     return format(lightest);
   }
 
+  /// Sms2fr manipulates sentences in a particular format, format it
+  /// back to normal text: "[#la#phrase#]" -> "la phrase".
+  std::string format(const vcsn::dyn::polynomial& lightest) const
+  {
+    auto str = vcsn::dyn::format(lightest);
+    auto begin = str.find('#');
+    auto end = str.rfind('#');
+    using boost::algorithm::replace_all_copy;
+    return replace_all_copy(str.substr(begin + 1, end - begin - 1), "#", " ");
+  }
+
   const vcsn::dyn::automaton &grap;
   const vcsn::dyn::automaton &synt;
   const vcsn::dyn::context ctx = vcsn::dyn::make_context("lan_char, rmin");
@@ -92,22 +92,20 @@ struct options
     char opt;
 
     while ((opt = getopt_long(argc, argv, "g:s:", longopts, &opti)) != EOF)
-      {
-        switch(opt)
-          {
-          case 'g': // --graphemic
-            graphemic_file = optarg;
-            break;
-          case 's': // --syntactic
-            syntactic_file = optarg;
-            break;
-          case 'n': // Do not display the prompt.
-            prompt = false;
-            break;
-          default:
-            vcsn::raise("invalid option: ", opt);
-          }
-      }
+      switch(opt)
+        {
+        case 'g': // --graphemic
+          graphemic_file = optarg;
+          break;
+        case 's': // --syntactic
+          syntactic_file = optarg;
+          break;
+        case 'n': // Do not display the prompt.
+          prompt = false;
+          break;
+        default:
+          vcsn::raise("invalid option: ", opt);
+        }
     vcsn::require(!graphemic_file.empty(),
                   "graphemic file not specified");
     vcsn::require(!syntactic_file.empty(),
