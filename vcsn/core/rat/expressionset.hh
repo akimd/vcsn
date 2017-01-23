@@ -12,6 +12,7 @@
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star-status.hh>
+#include <vcsn/misc/symbol.hh>
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/nmin.hh>
 #include <vcsn/weightset/q.hh>

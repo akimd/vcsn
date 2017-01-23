@@ -1,3 +1,11 @@
+* Bison
+** Generation of position/location.hh
+We need to be able to specify the destination directory.  Actually,
+it could be useful to be able to generate just them.
+
+** Explicit default ctor
+This is troublesome: we can't just `location loc = {}` in formals.
+
 * Exercises
 ** subword, prefix, suffix, factor
 Provide the same routines for expressions.
