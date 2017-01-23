@@ -26,6 +26,10 @@ args = parser.parse_args()
 
 subst = dict()
 
+def log(*args_):
+  if args.verbose:
+    print(*args_)
+
 def contents(file):
   '''The contents of a file.'''
   f = open(file)
@@ -67,27 +71,24 @@ def exp_eff_to_re(match):
     to += l[1:]
   to = to[:-1]
   subst[fr] = to
-  if args.verbose:
-    print("SUBST: {} -> {}".format(fr, to))
+  log("SUBST: {} -> {}".format(fr, to))
 
 def update(test, logfile):
   logfile = args.builddir + '/' + logfile
   try:
-    log = contents(logfile)
-    if args.verbose:
-      print("LOG: ", logfile)
+    l = contents(logfile)
+    log("LOG: ", logfile)
     global subst # pylint: disable=global-statement
     subst = dict()
-    re.sub(r'Expected out.*?::\n\n((?:^\t.*\n)+)\n'
-           +'Effective out.*?::\n\n((?:^\t.*\n)+)\n',
-           exp_eff_to_re, log, flags = re.MULTILINE)
+    re.sub(r'Expected (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n'
+           +'Effective (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n',
+           exp_eff_to_re, l, flags = re.MULTILINE)
 #    re.sub(r'((?:^\t[-+ ].*\n)+)',
-#           diff_to_re, log, flags = re.MULTILINE)
+#           diff_to_re, l, flags = re.MULTILINE)
     if subst != dict():
       # Turn "subst{frm} -> to" into a large RE.
       frm = '|'.join([re.escape(x) for x in subst.keys()])
-      if args.verbose:
-        print("FROM:", frm)
+      log("FROM:", frm)
       test = re.sub("(" + frm + ")",
                     lambda m: subst[m.group(1)],
                     test, flags = re.MULTILINE)
@@ -96,8 +97,7 @@ def update(test, logfile):
     return test
 
 for t in args.tests:
-  if args.verbose:
-    print("FILE:", t)
+  log("FILE:", t)
   old = contents(t)
   new = old
   # Use the logs provided by the user, and the ones computed from the
