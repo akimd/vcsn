@@ -141,11 +141,12 @@ public:
   virtual void yyrestart( std::istream& s );
 
   std::istream yyin;   // input source for default LexerInput
-  void putback(char c) { yyin.putback(c); }
+  std::istream& yyinput_stream() { return yyin; }
 #else
   std::istream * yyin;   // input source for default LexerInput
-  void putback(char c) { yyin->putback(c); }
+  std::istream& yyinput_stream() { return *yyin; }
 #endif
+  void putback(char c) { yyinput_stream().putback(c); }
 
 protected:
   virtual int LexerInput( char* buf, int max_size );

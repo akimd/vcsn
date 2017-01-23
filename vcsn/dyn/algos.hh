@@ -903,7 +903,8 @@ namespace vcsn
     /// \param format  the expression's format.
     expression read_expression(const context& ctx, identities ids,
                                std::istream& is,
-                               const std::string& format = "default");
+                               const std::string& format = "default",
+                               const location& loc = location{});
 
     /// Read a label from a stream.
     ///

@@ -2,6 +2,7 @@
 
 #include <boost/algorithm/string/predicate.hpp> // boost::algorithm::contains
 
+#include <lib/vcsn/rat/caret.hh>
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 #include <lib/vcsn/rat/scan.hh>
@@ -73,8 +74,9 @@ namespace vcsn
     {
       std::ostringstream er;
       er << l << ": " << m;
+      detail::print_caret(scanner_->yyinput_stream(), er, l);
       if (!!getenv("YYDEBUG"))
-        std::cerr << er.str() << std::endl;
+        std::cerr << "ERROR: " << er.str() << std::endl;
       errors += (errors.empty() ? "" : "\n") + er.str();
     }
 

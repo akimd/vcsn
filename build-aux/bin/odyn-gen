@@ -390,6 +390,7 @@ namespace vcsn
   namespace odyn LIBVCSN_API
   {
     using identities = vcsn::dyn::identities;
+    using location = vcsn::dyn::location;
 
 '''
     # Forward declarations.

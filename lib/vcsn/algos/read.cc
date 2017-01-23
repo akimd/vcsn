@@ -98,22 +98,23 @@ namespace vcsn
 
     expression
     read_expression(const context& ctx, rat::identities ids,
-                    std::istream& is, const std::string& f)
+                    std::istream& is, const std::string& f,
+                    const location& loc)
     {
       using fun_t = auto (const context&, rat::identities,
-                          std::istream&) -> expression;
+                          std::istream&, const location& loc) -> expression;
       static const auto map = getarg<std::function<fun_t>>
         {
           "expression input format",
           {
             {"default", "text"},
             {"text",    [](const context& ctx, rat::identities ids,
-                           std::istream& is) {
-                return rat::read(ctx, ids, is);
+                           std::istream& is, const location& loc) {
+                return rat::read(ctx, ids, is, loc);
               }},
           }
         };
-      return map[f](ctx, ids, is);
+      return map[f](ctx, ids, is, loc);
     }
 
     /*-------------.
