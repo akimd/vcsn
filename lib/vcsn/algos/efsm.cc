@@ -101,7 +101,7 @@ namespace vcsn
     }
 
     automaton
-    read_efsm(std::istream& is)
+    read_efsm(std::istream& is, const location&)
     {
       std::string file = "file.efsm";
       using string_t = symbol;

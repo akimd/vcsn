@@ -6,6 +6,7 @@
 
 #include <lib/vcsn/dot/parse.hh>
 #include <lib/vcsn/dot/scan.hh>
+#include <lib/vcsn/rat/caret.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -17,7 +18,6 @@ namespace vcsn
   {
     namespace dot
     {
-
       driver::driver()
         : scanner_(new yyFlexLexer)
         , edit_{nullptr}
@@ -53,16 +53,20 @@ namespace vcsn
       void
       driver::setup_(const location_t& l, const std::string& ctx)
       {
+        auto c = vcsn::dyn::context{};
         try
           {
-            auto c = vcsn::dyn::make_context(ctx);
-            edit_.reset(vcsn::dyn::make_automaton_editor(c));
+            c = vcsn::dyn::make_context(ctx);
           }
         catch (std::runtime_error& e)
           {
-            raise(l, ": ", e.what());
+            error(l, e.what());
           }
-        edit_->set_separator(',');
+        if (c)
+          {
+            edit_.reset(vcsn::dyn::make_automaton_editor(c));
+            edit_->set_separator(',');
+          }
       }
 
       void
@@ -70,8 +74,9 @@ namespace vcsn
       {
         std::ostringstream er;
         er  << l << ": " << m;
+        detail::print_caret(scanner_->yyinput_stream(), er, l);
         if (!!getenv("YYDEBUG"))
-          std::cerr << er.str() << std::endl;
+          std::cerr << "ERROR: " << er.str() << std::endl;
         errors += (errors.empty() ? "" : "\n") + er.str();
       }
 

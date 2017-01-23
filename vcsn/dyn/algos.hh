@@ -893,7 +893,8 @@ namespace vcsn
     ///                or a named automaton.
     automaton read_automaton(std::istream& is,
                              const std::string& format = "default",
-                             bool strip = true);
+                             bool strip = true,
+                             const location& loc = location{});
 
     /// Read an expression from a stream.
     ///

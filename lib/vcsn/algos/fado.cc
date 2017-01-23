@@ -39,7 +39,7 @@ namespace vcsn
     }
 
     automaton
-    read_fado(std::istream& is)
+    read_fado(std::istream& is, const location&)
     {
       std::string file = "file.fado";
       using string_t = symbol;

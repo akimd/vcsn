@@ -56,12 +56,12 @@ namespace vcsn
 
     namespace
     {
-      automaton read_auto(std::istream& is)
+      automaton read_auto(std::istream& is, const location& loc)
       {
-        return read_automaton(is, guess_automaton_format(is), false);
+        return read_automaton(is, guess_automaton_format(is), false, loc);
       }
 
-      automaton read_dot(std::istream& is)
+      automaton read_dot(std::istream& is, const location&)
       {
         vcsn::detail::dot::driver d;
         auto res = d.parse(is);
@@ -73,10 +73,10 @@ namespace vcsn
 
     automaton
     read_automaton(std::istream& is, const std::string& f,
-                   bool strip_p)
+                   bool strip_p, const location& loc)
     {
       static const auto map
-        = getarg<std::function<automaton(std::istream&)>>
+        = getarg<std::function<automaton(std::istream&, const location& loc)>>
         {
           "automaton input format",
           {
@@ -88,7 +88,7 @@ namespace vcsn
             {"fado",    read_fado},
           }
         };
-      auto res = map[f](is);
+      auto res = map[f](is, loc);
       return strip_p ? strip(res) : res;
     }
 

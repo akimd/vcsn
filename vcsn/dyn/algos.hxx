@@ -63,10 +63,7 @@ namespace vcsn
         }
       catch (const std::runtime_error& e)
         {
-          if (std::count(data.begin(), data.end(), '\n') < 30)
-            vcsn::raise(e, "  while reading automaton: ", data);
-          else
-            vcsn::raise(e, "  while reading automaton");
+          vcsn::raise(e, "  while reading automaton");
         }
     }
 

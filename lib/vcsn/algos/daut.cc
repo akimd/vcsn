@@ -122,7 +122,7 @@ namespace vcsn
     }
 
     automaton
-    read_daut(std::istream& is)
+    read_daut(std::istream& is, const location&)
     {
       auto first = true;
       std::shared_ptr<vcsn::automaton_editor> edit = nullptr;

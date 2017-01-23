@@ -38,6 +38,24 @@ People who worked on this release:
 - Sébastien Piat
 - Younes Khoudli
 
+## 2017-01-23
+### Improved error messages
+Parse errors were improved with caret-style reports for expressions and
+automata in dot (Graphviz) syntax.
+
+    In [5]: vcsn.Q.expression('<1/2>a + <1/0>b')
+    RuntimeError: 1.10-14: Q: null denominator
+    <1/2>a + <1/0>b
+             ^^^^^
+      while reading expression: <1/2>a + <1/0>b
+    In [6]: vcsn.automaton('digraph{vcsn_context="lal, b" 0->1[label="<2>a"]}')
+    RuntimeError: 1.35-48: B: invalid value: 2
+      while reading: 2
+      while reading: <2>a
+    digraph{vcsn_context="lal, b" 0->1[label="<2>a"]}
+                                      ^^^^^^^^^^^^^^
+      while reading automaton
+
 ## 2017-01-14
 ### "auto" automaton file format
 Pass "auto" to read_automaton (in dyn, static, Python or the Tools) to let

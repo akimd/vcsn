@@ -18,12 +18,16 @@ namespace vcsn
         auto line = 1u;
         while (getline(is, buf) && line != loc.begin.line)
           ++line;
-        // Print the line and then the caret info.
+        // If it's on several lines, just display the first one.
+        auto end_col
+          = loc.begin.line == loc.end.line
+          ? loc.end.column
+          : buf.size() + 1;
         os << '\n'
            << buf
            << '\n'
            << std::string(loc.begin.column - 1, ' ')
-           << std::string(loc.end.column - loc.begin.column, '^');
+           << std::string(std::max(1ul, end_col - loc.begin.column), '^');
         // Restore position.
         is.seekg(pos);
       }

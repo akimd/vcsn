@@ -9,21 +9,36 @@ from test import *
 ## -------------- ##
 
 # Check invalid input.
-def xfail(a):
-    XFAIL(lambda: vcsn.automaton(a))
+def xfail(a, *args):
+    XFAIL(lambda: vcsn.automaton(a), *args)
 
 # Syntax error: missing }.
 xfail(r'''digraph
 {
   vcsn_context = "lal_char(a), b"
-''')
+''', r'''4.1: syntax error, unexpected end
+
+^
+  while reading automaton''')
 
 # Syntax error: string not closed.
 xfail(r'''digraph
 {
   vcsn_context = "lal_char(a), b
 }
-''')
+''', r'''3.18-5.0: unexpected end of file in a string
+  vcsn_context = "lal_char(a), b
+                 ^^^^^^^^^^^^^^^
+3.18-5.0: invalid weightset name: b\n}
+  while reading context: lal_char(a), b
+}
+
+  vcsn_context = "lal_char(a), b
+                 ^^^^^^^^^^^^^^^
+5.1: syntax error, unexpected end
+
+^
+  while reading automaton''')
 
 # Syntax error: attributes are assignments.
 xfail(r'''digraph
@@ -31,7 +46,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [attribute]
 }
-''')
+''', r'''4.15: syntax error, unexpected ], expecting =
+  a [attribute]
+              ^
+  while reading automaton''')
 
 # Syntax error: attributes are assignments.
 xfail(r'''digraph
@@ -39,7 +57,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [attribute =]
 }
-''')
+''', r'''4.17: syntax error, unexpected ], expecting ID
+  a [attribute =]
+                ^
+  while reading automaton''')
 
 # Syntax error: comma used after empty attribute.
 xfail(r'''digraph
@@ -47,7 +68,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [,a=a]
 }
-''')
+''', r'''4.6: syntax error, unexpected ",", expecting ]
+  a [,a=a]
+     ^
+  while reading automaton''')
 
 # Syntax error: semicolon used after empty attribute
 xfail(r'''digraph
@@ -55,7 +79,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [;a=a]
 }
-''')
+''', r'''4.6: syntax error, unexpected ;, expecting ]
+  a [;a=a]
+     ^
+  while reading automaton''')
 
 # Syntax error: semicolon used after empty attribute
 xfail(r'''digraph
@@ -63,7 +90,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [a=a,;]
 }
-''')
+''', r'''4.10: syntax error, unexpected ;, expecting ]
+  a [a=a,;]
+         ^
+  while reading automaton''')
 
 # Invalid label: letter not in alphabet.
 xfail(r'''digraph
@@ -73,7 +103,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-20: invalid label: unexpected a
+  while reading: a
+  0 -> 1 [label = a]
+         ^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid label: \e is not valid in LAL.
 xfail(r'''digraph
@@ -83,7 +117,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-24: {a}: cannot represent \e
+  while reading: \\e
+  0 -> 1 [label = "\\e"]
+         ^^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid label: aa is not valid in LAL.
 xfail(r'''digraph
@@ -93,7 +131,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-23: Poly[{a} -> B]: unexpected trailing characters: a
+  while reading: aa
+  0 -> 1 [label = "aa"]
+         ^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid label: missing '>'.
 xfail(r'''digraph
@@ -103,7 +145,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-23: missing  > after <2
+  while reading: <2
+  0 -> 1 [label = "<2"]
+         ^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # No context defined (see the typo in vcsn_context).
 xfail(r'''digraph
@@ -113,7 +159,10 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.3: no vcsn_context defined
+  0 -> 1 [label = a]
+  ^
+  while reading automaton''')
 
 # Invalid context.
 xfail(r'''digraph
@@ -123,7 +172,14 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''3.18-26: invalid labelset name: unknown
+  while reading context: unknown
+  vcsn_context = "unknown"
+                 ^^^^^^^^^
+4.3: no vcsn_context defined
+  0 -> 1 [label = a]
+  ^
+  while reading automaton''')
 
 # Invalid initial label.
 xfail(r'''digraph
@@ -133,7 +189,10 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0 [label = a]
 }
-''')
+''', r'''6.11-21: edit_automaton: invalid initial entry: a
+  I0 -> 0 [label = a]
+          ^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid final label.
 xfail(r'''digraph
@@ -143,7 +202,10 @@ xfail(r'''digraph
   1 -> F1 [label = a]
   I0 -> 0
 }
-''')
+''', r'''5.11-21: edit_automaton: invalid final entry: a
+  1 -> F1 [label = a]
+          ^^^^^^^^^^^
+  while reading automaton''')
 
 # \e makes no sense when not in lan.
 xfail(r'''digraph
@@ -151,7 +213,14 @@ xfail(r'''digraph
   vcsn_context = "lal_char(\\e), b"
   0 -> 1 [label = "\\e"]
 }
-''')
+''', r'''3.18-35: get_char: invalid escape: \e in \e)>, b>
+  while reading context: context<letterset<char_letters(\e)>, b>
+  vcsn_context = "lal_char(\\e), b"
+                 ^^^^^^^^^^^^^^^^^^
+4.3: no vcsn_context defined
+  0 -> 1 [label = "\\e"]
+  ^
+  while reading automaton''')
 
 # There are spaces before 'digraph'.
 CHECK_EQ(vcsn.automaton(r'''digraph

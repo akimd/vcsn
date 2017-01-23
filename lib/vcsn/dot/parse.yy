@@ -161,7 +161,7 @@
   COLON    ":"
   COMMA    ","
   SEMI     ";"
-  END      0
+  END      0 "end"
 ;
 
 %token <string_t> ID;
@@ -225,11 +225,11 @@ attr_list.opt:
 attr_assign:
   ID[var] "=" ID[val]
   {
-    static const string_t label{"label"};
-    static const string_t vcsn_context{"vcsn_context"};
+    static const auto label = string_t{"label"};
+    static const auto ctx = string_t{"vcsn_context"};
     if ($var == label)
       std::swap($$, $val);
-    else if ($var == vcsn_context)
+    else if ($var == ctx)
       driver_.setup_(@val, $val);
     else
       // Beware of the default "$$ = $1;" action.
@@ -315,7 +315,11 @@ node_id:
   ID port.opt
   {
     // We need the editor to exist.
-    require(bool(driver_.edit_), @$, ": no vcsn_context");
+    if (!driver_.edit_)
+      {
+        error(@$, "no vcsn_context defined");
+        YYERROR;
+      }
     std::swap($$, $1);
     if ($$.get()[0] == 'I')
       TRY(@1, driver_.edit_->add_pre($$));
