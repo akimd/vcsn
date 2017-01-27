@@ -76,11 +76,6 @@ struct sms2fr_impl
     // Create the automaton corresponding to the sms.
     auto sms_aut = sms_to_aut(sms);
 
-    // Remove unknown letters.
-    auto kill_unk = vcsn::compose(sms_aut, unknown_aut);
-
-    auto aut_p = vcsn::proper(kill_unk);
-
     // First composition with the graphemic automaton.
     auto aut_g
       = vcsn::strip(vcsn::coaccessible(vcsn::compose(sms_aut, grap)));
@@ -90,32 +85,9 @@ struct sms2fr_impl
 
     // Prepare automaton for lightest.
     auto aut_s_proper = vcsn::proper(vcsn::project<1>(aut_s));
-    auto aut_s_null = make_nullable_automaton(aut_s_proper->context());
-    copy_into(aut_s_proper, aut_s_null);
 
-    // Retrieve the path more likely (automaton is weighted) to correspond
-    // to the translation in actual french.
-    auto lightest_aut
-      = vcsn::partial_identity(vcsn::lightest_automaton(aut_s_null, 1));
-
-    // Add possibility to insert unknown letters between each letter.
-    auto add_unk = vcsn::compose<decltype(lightest_aut),
-                                 decltype(unknown_aut), 1, 1>
-      (lightest_aut, unknown_aut);
-
-    // All possible editions of the original sms automaton.
-    auto edit_sms = vcsn::compose(sms_aut, edit_aut);
-
-    // Intersection between the possible editions and the translation with
-    // possible punctuation.
-    auto edited = vcsn::conjunction(vcsn::project<1>(add_unk),
-                                    vcsn::sort(vcsn::project<1>(edit_sms)));
-
-    auto edited_proper = vcsn::proper(edited);
-
-    // Retrieve the path likeliest (automaton is weighted) to correspond
     // to the text with punctuation.
-    auto lightest = vcsn::lightest(vcsn::project<1>(lightest_aut), 1);
+    auto lightest = vcsn::lightest(aut_s_proper, 1);
 
     // The result: the first monomial's label.
     return format(lightest.begin()->first);
@@ -132,8 +104,6 @@ struct sms2fr_impl
     auto res = vcsn::make_mutable_automaton(ctx);
     const auto& ls = *res->labelset();
 
-    const auto& ls0 = edit_aut->labelset()->template set<0>();
-
     state_t s0 = res->new_state();
     res->set_initial(s0);
     state_t s1 = res->new_state();
@@ -149,22 +119,6 @@ struct sms2fr_impl
         if (isspace(letter))
           letter = '#';
         res->add_transition(prev, s, ls.tuple(letter, letter));
-        if (!ls0.is_valid(letter)
-            || letter != '#' && !islower(letter))
-          {
-            auto unk_state
-              = unknown_aut->dst_of(initial_transitions(unknown_aut).front());
-            unknown_aut
-              ->add_transition(unk_state, unk_state,
-                               unknown_aut->labelset()->tuple(letter, ls0.one()));
-          }
-        if (!ls0.is_valid(letter))
-          {
-            auto edit_state
-              = edit_aut->dst_of(initial_transitions(edit_aut).front());
-            edit_aut->add_transition(edit_state, edit_state,
-                                     edit_aut->labelset()->tuple(letter, letter));
-          }
         prev = s;
       }
     state_t sep = res->new_state();
@@ -176,62 +130,9 @@ struct sms2fr_impl
     return res;
   }
 
-  /// Create the unknown automaton used to re-insert punctuation.
-  /// Composed of identity transition for known letters and the letter
-  /// to epsilon for unknown ones.
-  automaton_t unknown_automaton()
-  {
-    auto res = vcsn::make_mutable_automaton(ctx);
-    const auto& ls = *res->labelset();
-
-    // Unique state.
-    state_t s = res->new_state();
-    res->set_initial(s);
-
-    const auto& ls0 = ls.template set<0>();
-    auto generators0 = vcsn::detail::make_vector(ls0.generators());
-    generators0.push_back(ls0.one());
-
-    for (const auto l0: generators0)
-      if (!ls0.is_one(l0) && (l0 == '#' || std::islower(l0)))
-        res->add_transition(s, s, ls.tuple(l0, l0));
-
-    res->add_transition(s, s, ls.tuple('[', '['));
-    res->add_transition(s, s, ls.tuple(']', ']'));
-    res->set_final(s);
-
-    return res;
-  }
-
-  /// Create the edit automata used to re-insert punctuation.
-  /// Composed of every possible combination of letters (except with
-  /// enclosing characters: brackets).
-  automaton_t edit_automaton()
-  {
-    auto res = vcsn::make_mutable_automaton(ctx);
-    const auto& ls = *res->labelset();
-
-    state_t s = res->new_state();
-    res->set_initial(s);
-
-    for (const auto l: ls.generators())
-      if (std::get<0>(l) != '[' && std::get<1>(l) != '['
-          && std::get<0>(l) != ']' && std::get<1>(l) != ']')
-        res->add_transition(s, s, l,
-                            (std::get<0>(l) == std::get<1>(l)) ? 0 : 1);
-
-    res->add_transition(s, s, ls.tuple('[', '['));
-    res->add_transition(s, s, ls.tuple(']', ']'));
-    res->set_final(s);
-
-    return res;
-  }
-
   const automaton_t grap;
   const automaton_t synt;
   const context_t ctx = grap->context();
-  const automaton_t unknown_aut = unknown_automaton();
-  const automaton_t edit_aut = edit_automaton();
 };
 
 /// Command line arguments.
