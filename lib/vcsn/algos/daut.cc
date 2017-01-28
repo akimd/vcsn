@@ -6,12 +6,11 @@
 
 #include <lib/vcsn/algos/fwd.hh>
 #include <vcsn/algos/edit-automaton.hh>
-#include <vcsn/algos/read.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/regex.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
-#include <vcsn/misc/regex.hh>
 
 namespace vcsn
 {
@@ -42,16 +41,16 @@ namespace vcsn
       }
 
       /// Get the escaped string between quotes.
-      std::string read_quotes(std::istream& is)
+      string_t read_quotes(std::istream& is)
       {
-        std::string res;
+        auto res = std::string{};
         int c;
         while ((c = is.peek()) != EOF && c != '"')
           res += get_char(is);
         if (c != '"')
-          raise("invalid daut file: missing '\"' after '" + res + "'");
+          raise("invalid daut file: missing '\"' after '", res, "'");
         is.ignore(); // Eat the final '"'
-        return res;
+        return string_t{res};
       }
 
       /// Check if there is a comment. In case of "//", put the first '/' back
@@ -67,11 +66,10 @@ namespace vcsn
           return c == '#';
       }
 
-
       /// Read a state or possibly an arrow ("->")
-      std::string read_state(std::istream& is)
+      string_t read_state(std::istream& is)
       {
-        std::string res;
+        auto res = std::string{};
         int c;
         skip_space(is);
         while ((c = is.get()) != EOF)
@@ -89,14 +87,13 @@ namespace vcsn
             res += c;
           }
         boost::algorithm::trim_right(res);
-        return res;
-
+        return string_t{res};
       }
 
       /// Read string until the end or a comment.
-      std::string read_entry(std::istream& is)
+      string_t read_entry(std::istream& is)
       {
-        std::string res;
+        auto res = std::string{};
         int c;
         skip_space(is);
         while ((c = is.get()) != EOF)
@@ -107,16 +104,19 @@ namespace vcsn
               break;
             res += c;
           }
-        return res;
+        return string_t{res};
       }
+
+      const static string_t pre = string_t{"$pre"};
+      const static string_t post = string_t{"$post"};
 
       vcsn::automaton_editor* make_editor(std::string ctx)
       {
         auto c = vcsn::dyn::make_context(ctx.empty() ? "lal_char, b" : ctx);
         auto res = vcsn::dyn::make_automaton_editor(c);
         res->set_separator(',');
-        res->add_pre(string_t{"$pre"});
-        res->add_post(string_t{"$post"});
+        res->add_pre(pre);
+        res->add_post(post);
         return res;
       }
     }
@@ -125,10 +125,10 @@ namespace vcsn
     read_daut(std::istream& is, const location&)
     {
       auto first = true;
-      std::shared_ptr<vcsn::automaton_editor> edit = nullptr;
+      auto edit = std::shared_ptr<vcsn::automaton_editor>{};
 
       // Line: Source [->] Dest [Entry]
-      std::string line;
+      auto line = std::string{};
       while (is.good())
         {
           std::getline(is, line, '\n');
@@ -147,8 +147,8 @@ namespace vcsn
             }
 
           std::istringstream ss{line};
-          auto s = string_t{read_state(ss)};
-          auto d = string_t{read_state(ss)};
+          auto s = read_state(ss);
+          auto d = read_state(ss);
           if (d.get().empty()) // Declaring a state with no transitions
             {
               edit->add_state(s);
@@ -158,11 +158,11 @@ namespace vcsn
             d = read_state(ss);
           require(!d.get().empty(),
                   "invalid daut file: expected destination after: ", s);
-          auto entry = string_t{read_entry(ss)};
+          auto entry = read_entry(ss);
           try
             {
-              edit->add_entry(s == "$" ? string_t{"$pre"} : s,
-                              d == "$" ? string_t{"$post"} : d, entry);
+              edit->add_entry(s == "$" ? pre  : s,
+                              d == "$" ? post : d, entry);
             }
           catch (const std::runtime_error& e)
             {
