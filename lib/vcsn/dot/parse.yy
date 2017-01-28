@@ -164,7 +164,7 @@
   END      0 "end"
 ;
 
-%token <string_t> ID;
+%token <string_t> ID "identifier";
 %type <string_t> id.opt;
 
 // A single state.
@@ -200,6 +200,7 @@ stmt:
 | attr_stmt   {}
 | attr_assign {}
 | subgraph    { std::swap($$, $1); }
+| error       {}
 ;
 
 attr_stmt:
@@ -256,6 +257,7 @@ semi.opt:
 // Zero or more attributes.
 a_list.0:
   %empty       {}
+| error        {}
 | a_list.1     { std::swap($$, $1); }
 ;
 
@@ -299,8 +301,9 @@ path:
 edge_stmt:
   path attr_list.opt[label]
   {
-    for (auto t: $path.transitions)
-      TRY(@2, driver_.edit_->add_entry(t.first, t.second, $label));
+    if (driver_.has_edit_(@1))
+      for (auto t: $path.transitions)
+        TRY(@2, driver_.edit_->add_entry(t.first, t.second, $label));
   }
 ;
 
@@ -314,21 +317,18 @@ node_stmt:
 node_id:
   ID port.opt
   {
-    // We need the editor to exist.
-    if (!driver_.edit_)
-      {
-        error(@$, "no vcsn_context defined");
-        YYERROR;
-      }
     std::swap($$, $1);
-    if ($$.get()[0] == 'I')
-      TRY(@1, driver_.edit_->add_pre($$));
-    else if ($$.get()[0] == 'F')
-      TRY(@1, driver_.edit_->add_post($$));
-    else
-      // This is not needed, but it ensures that the states will be
-      // numbered by their order of appearance in the file.
-      TRY(@1, driver_.edit_->add_state($$));
+    if (driver_.has_edit_(@1))
+      {
+        if ($$.get()[0] == 'I')
+          TRY(@1, driver_.edit_->add_pre($$));
+        else if ($$.get()[0] == 'F')
+          TRY(@1, driver_.edit_->add_post($$));
+        else
+          // This is not needed, but it ensures that the states will be
+          // numbered by their order of appearance in the file.
+          TRY(@1, driver_.edit_->add_state($$));
+      }
   }
 ;
 

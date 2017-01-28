@@ -35,9 +35,6 @@ xfail(r'''digraph
 
   vcsn_context = "lal_char(a), b
                  ^^^^^^^^^^^^^^^
-5.1: syntax error, unexpected end
-
-^
   while reading automaton''')
 
 # Syntax error: attributes are assignments.
@@ -57,7 +54,7 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [attribute =]
 }
-''', r'''4.17: syntax error, unexpected ], expecting ID
+''', r'''4.17: syntax error, unexpected ], expecting identifier
   a [attribute =]
                 ^
   while reading automaton''')
@@ -68,7 +65,7 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [,a=a]
 }
-''', r'''4.6: syntax error, unexpected ",", expecting ]
+''', r'''4.6: syntax error, unexpected ",", expecting ] or identifier
   a [,a=a]
      ^
   while reading automaton''')
@@ -79,7 +76,7 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [;a=a]
 }
-''', r'''4.6: syntax error, unexpected ;, expecting ]
+''', r'''4.6: syntax error, unexpected ;, expecting ] or identifier
   a [;a=a]
      ^
   while reading automaton''')
@@ -90,7 +87,7 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [a=a,;]
 }
-''', r'''4.10: syntax error, unexpected ;, expecting ]
+''', r'''4.10: syntax error, unexpected ;, expecting ] or identifier
   a [a=a,;]
          ^
   while reading automaton''')
@@ -176,9 +173,17 @@ xfail(r'''digraph
   while reading context: unknown
   vcsn_context = "unknown"
                  ^^^^^^^^^
-4.3: no vcsn_context defined
-  0 -> 1 [label = a]
-  ^
+''')
+
+# Invalid context.
+xfail(r'''digraph
+{
+  vcsn_context = "lal, unknown"
+}
+''', r'''3.18-31: invalid weightset name: unknown
+  while reading context: lal, unknown
+  vcsn_context = "lal, unknown"
+                 ^^^^^^^^^^^^^^
   while reading automaton''')
 
 # Invalid initial label.

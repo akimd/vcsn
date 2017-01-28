@@ -19,7 +19,7 @@ namespace vcsn
     namespace dot
     {
       driver::driver()
-        : scanner_(new yyFlexLexer)
+        : scanner_{std::make_unique<yyFlexLexer>()}
         , edit_{nullptr}
       {}
 
@@ -37,11 +37,13 @@ namespace vcsn
         parser p(*this);
         p.set_debug_level(!!getenv("YYDEBUG"));
         dyn::automaton res = nullptr;
-        // If success.
-        if (p.parse() == 0)
+        auto status = p.parse();
+        if (!errors.empty())
+          raise(errors);
+        if (status == 0)
           {
             require(bool(edit_),
-                    "missing vcsn_context definition");
+                    "no vcsn_context defined");
             res = edit_->result();
             edit_->reset();
           }
@@ -53,20 +55,29 @@ namespace vcsn
       void
       driver::setup_(const location_t& l, const std::string& ctx)
       {
-        auto c = vcsn::dyn::context{};
         try
           {
-            c = vcsn::dyn::make_context(ctx);
-          }
-        catch (std::runtime_error& e)
-          {
-            error(l, e.what());
-          }
-        if (c)
-          {
+            auto c = vcsn::dyn::make_context(ctx);
             edit_.reset(vcsn::dyn::make_automaton_editor(c));
             edit_->set_separator(',');
           }
+        catch (std::runtime_error& e)
+          {
+            throw parser::syntax_error(l, e.what());
+          }
+      }
+
+      bool
+      driver::has_edit_(const location_t& l)
+      {
+        if (!require_context_done_)
+          {
+            require_context_done_ = true;
+            if (!edit_)
+              throw parser::syntax_error(l,
+                                         "no vcsn_context defined");
+          }
+        return bool(edit_);
       }
 
       void
@@ -83,7 +94,7 @@ namespace vcsn
       void
       driver::invalid(const location_t& l, const std::string& s)
       {
-        error(l, "invalid input: " + s);
+        throw parser::syntax_error(l, "invalid input: " + s);
       }
     }
   }

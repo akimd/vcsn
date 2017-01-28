@@ -63,11 +63,8 @@ namespace vcsn
 
       automaton read_dot(std::istream& is, const location&)
       {
-        vcsn::detail::dot::driver d;
-        auto res = d.parse(is);
-        if (!d.errors.empty())
-          raise(d.errors);
-        return res;
+        vcsn::detail::dot::driver d{};
+        return d.parse(is);
       }
     }
 
