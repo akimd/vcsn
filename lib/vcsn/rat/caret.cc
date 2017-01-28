@@ -1,6 +1,8 @@
 #include <lib/vcsn/rat/caret.hh>
 
-#include <fstream>
+#include <istream>
+#include <sstream>
+#include <ostream>
 
 namespace vcsn
 {
@@ -12,6 +14,9 @@ namespace vcsn
                             std::ostream& os, const rat::location& loc)
       {
         const auto pos = is.tellg();
+        // If we hit EOF, the stream is bad.  Clear that so that we
+        // can seekg etc.
+        is.clear();
         is.seekg(0);
         // Look for the right line.
         auto buf = std::string{};
@@ -23,8 +28,7 @@ namespace vcsn
           = loc.begin.line == loc.end.line
           ? loc.end.column
           : buf.size() + 1;
-        os << '\n'
-           << buf
+        os << buf
            << '\n'
            << std::string(loc.begin.column - 1, ' ')
            << std::string(std::max(1ul, end_col - loc.begin.column), '^');
@@ -36,7 +40,15 @@ namespace vcsn
     void print_caret(std::istream& is,
                      std::ostream& os, const rat::location& loc)
     {
+      os << '\n';
       print_caret_impl(is, os, loc);
+    }
+
+    std::string caret(std::istream& is, const rat::location& loc)
+    {
+      std::ostringstream os;
+      print_caret_impl(is, os, loc);
+      return os.str();
     }
   }
 }

@@ -595,25 +595,31 @@ CHECK_EQ(r'''digraph
 # Invalid transitions
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <a>
-0 -> $ <1/2>''', 'daut'), '''Q: invalid numerator: a
+0 -> $ <1/2>'''), '''2.1-10: Q: invalid numerator: a
   while reading: a
   while reading: <a>
-  while adding transitions: ($, <a>, 0)''')
+$ -> 0 <a>
+^^^^^^^^^^
+  while reading automaton''')
 
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
-0 -> $ <a>''', 'daut'), '''Q: invalid numerator: a
+0 -> $ <a>'''), '''3.1-10: Q: invalid numerator: a
   while reading: a
   while reading: <a>
-  while adding transitions: (0, <a>, $)''')
+0 -> $ <a>
+^^^^^^^^^^
+  while reading automaton''')
 
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
-1 -> $ <2>''', 'daut'), '''Q: invalid denominator: a
+1 -> $ <2>'''), '''3.1-13: Q: invalid denominator: a
   while reading: 2/a
   while reading: <2/a>a
-  while adding transitions: (0, <2/a>a, 1)''')
+0 -> 1 <2/a>a
+^^^^^^^^^^^^^
+  while reading automaton''')
 
 
 ## ----------- ##

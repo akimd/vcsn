@@ -5,9 +5,11 @@
 #include <boost/algorithm/string/trim.hpp>
 
 #include <lib/vcsn/algos/fwd.hh>
+#include <lib/vcsn/rat/caret.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/location.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
@@ -122,8 +124,10 @@ namespace vcsn
     }
 
     automaton
-    read_daut(std::istream& is, const location&)
+    read_daut(std::istream& is, const location& l)
     {
+      // FIXME: Making `loc` const was not a good idea.
+      location loc = l;
       auto first = true;
       auto edit = std::shared_ptr<vcsn::automaton_editor>{};
 
@@ -131,7 +135,10 @@ namespace vcsn
       auto line = std::string{};
       while (is.good())
         {
+          loc.step();
+          loc.lines(1);
           std::getline(is, line, '\n');
+          auto locline = location{loc.begin, loc.begin + line.size()};
           // Trim here to handle line full of blanks.
           boost::algorithm::trim_right(line);
           if (line.empty() || boost::starts_with(line, "//"))
@@ -140,7 +147,14 @@ namespace vcsn
           if (first)
             {
               auto ctx = read_context(line);
-              edit.reset(make_editor(ctx));
+              try
+                {
+                  edit.reset(make_editor(ctx));
+                }
+              catch (const std::runtime_error& e)
+                {
+                  raise(locline, ": ", e, vcsn::detail::caret(is, locline));
+                }
               first = false;
               if (!ctx.empty())
                 continue;
@@ -157,7 +171,9 @@ namespace vcsn
           if (d == "->")
             d = read_state(ss);
           require(!d.get().empty(),
-                  "invalid daut file: expected destination after: ", s);
+                  locline, ": ",
+                  "invalid daut file: expected destination after: ", s,
+                   vcsn::detail::caret(is, locline));
           auto entry = read_entry(ss);
           try
             {
@@ -166,8 +182,7 @@ namespace vcsn
             }
           catch (const std::runtime_error& e)
             {
-              raise(e, "  while adding transitions: (", s, ", ", entry, ", ",
-                    d, ')');
+              raise(locline, ": ", e, vcsn::detail::caret(is, locline));
             }
         }
 

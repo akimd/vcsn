@@ -5,7 +5,7 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
-# Vcsn 2.5 (2017-01-17)
+# Vcsn 2.5 (2017-01-28)
 
 The Vcsners are proud to announce the release of Vcsn 2.5, aka the
 k-lightest release!
@@ -41,20 +41,33 @@ People who worked on this release:
 ## 2017-01-23
 ### Improved error messages
 Parse errors were improved with caret-style reports for expressions and
-automata in dot (Graphviz) syntax.
+automata in dot (Graphviz) and daut syntax.
 
     In [5]: vcsn.Q.expression('<1/2>a + <1/0>b')
     RuntimeError: 1.10-14: Q: null denominator
     <1/2>a + <1/0>b
              ^^^^^
       while reading expression: <1/2>a + <1/0>b
-    In [6]: vcsn.automaton('digraph{vcsn_context="lal, b" 0->1[label="<2>a"]}')
+
+    In [6]: vcsn.automaton('''
+       ...: $ -> 0
+       ...: 0 -> 1 <1/2>a, b
+       ...: 1 -> $''')
+    RuntimeError: 3.1-16: B: unexpected trailing characters: /2
+      while reading: 1/2
+      while reading: <1/2>a, b
+    0 -> 1 <1/2>a, b
+    ^^^^^^^^^^^^^^^^
+      while reading automaton
+
+    In [7]: vcsn.automaton('digraph{vcsn_context="lal, b" 0->1[label="<2>a"]}')
     RuntimeError: 1.35-48: B: invalid value: 2
       while reading: 2
       while reading: <2>a
     digraph{vcsn_context="lal, b" 0->1[label="<2>a"]}
                                       ^^^^^^^^^^^^^^
       while reading automaton
+
 
 ## 2017-01-14
 ### "auto" automaton file format
