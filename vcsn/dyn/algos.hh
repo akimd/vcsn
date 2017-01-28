@@ -598,10 +598,12 @@ namespace vcsn
     /// \param s       the input string.
     /// \param ids     the identities to apply.
     expression make_expression(const context& ctx,
-                               const std::string& s, identities ids = {});
+                               const std::string& s, identities ids = {},
+                               const std::string& format = "default");
 
     /// Build a label from a string.
-    label make_label(const context& ctx, const std::string& s);
+    label make_label(const context& ctx, const std::string& s,
+                     const std::string& format = "default");
 
     /// Build a polynomial from a string.
     polynomial make_polynomial(const context& ctx, const std::string& s);
@@ -613,7 +615,8 @@ namespace vcsn
     context make_word_context(const context& ctx);
 
     /// Build a word from a string.
-    label make_word(const context& ctx, const std::string& s);
+    label make_word(const context& ctx, const std::string& s,
+                    const std::string& format = "default");
 
     /// Multiply (concatenate) two automata.
     ///

@@ -69,12 +69,13 @@ namespace vcsn
 
     inline
     expression make_expression(const context& ctx,
-                               const std::string& s, identities ids)
+                               const std::string& s, identities ids,
+                               const std::string& format)
     {
       std::istringstream is{s};
       try
         {
-          auto res = vcsn::dyn::read_expression(ctx, ids, is);
+          auto res = vcsn::dyn::read_expression(ctx, ids, is, format);
           vcsn::require(is.peek() == EOF,
                         "unexpected trailing characters: ", is);
           return res;
@@ -86,12 +87,13 @@ namespace vcsn
     }
 
     inline
-    label make_label(const context& ctx, const std::string& s)
+    label make_label(const context& ctx, const std::string& s,
+                     const std::string& format)
     {
       std::istringstream is{s};
       try
         {
-          auto res = read_label(ctx, is);
+          auto res = read_label(ctx, is, format);
           vcsn::require(is.peek() == EOF,
                         "unexpected trailing characters: ", is);
           return res;
@@ -137,9 +139,10 @@ namespace vcsn
     }
 
     inline
-    label make_word(const context& ctx, const std::string& s)
+    label make_word(const context& ctx, const std::string& s,
+                    const std::string& format)
     {
-      return make_label(make_word_context(ctx), s);
+      return make_label(make_word_context(ctx), s, format);
     }
 
 
