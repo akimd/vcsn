@@ -82,7 +82,7 @@ namespace vcsn
 
     void driver::invalid(const location& l, const std::string& s)
     {
-      error(l, "invalid input: " + s);
+      throw parser::syntax_error(l, "invalid input: " + s);
     }
 
     /// The nesting limit for parser traces, as specified per
@@ -119,7 +119,8 @@ namespace vcsn
         result_ = nullptr;
       scanner_->scan_close_();
       --nesting;
-
+      if (!errors.empty())
+        raise(errors);
       return std::move(result_);
     }
 

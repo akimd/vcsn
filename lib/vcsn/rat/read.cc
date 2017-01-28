@@ -12,10 +12,7 @@ namespace vcsn
          std::istream& is, const location& l)
     {
       vcsn::rat::driver d{ctx, ids};
-      auto res = d.parse(is, l);
-      if (!d.errors.empty())
-        throw std::runtime_error(d.errors);
-      return res;
+      return d.parse(is, l);
     }
   }
 }
