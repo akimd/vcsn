@@ -710,23 +710,23 @@ CHECK_EQ(vcsn.automaton('''context = "law_char, z"
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
-  1 -> $''', 'daut'),
+  1 -> $'''),
          vcsn.automaton('''context = "lal_char(abc), b"
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
-  1 -> $''', 'daut').automaton(vcsn.context("law_char(abc), z")))
+  1 -> $''').automaton(vcsn.context("law_char(abc), z")))
 
 # Convert an automaton to a smaller, valid, alphabet.
 CHECK_EQ(vcsn.automaton('''context = "law_char(abc), z"
-  0 -> 1 a, b''', 'daut'),
+  0 -> 1 a, b'''),
          vcsn.automaton('''context = "lal_char(a-z), b"
-  0 -> 1 a, b''', 'daut').automaton(vcsn.context("law_char(abc), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("law_char(abc), z")))
 
 # Convert an automaton to a smaller, invalid, alphabet.
 XFAIL(lambda: vcsn.automaton('''context = "lal_char(abc), b"
-  0 -> 1 a, b''', 'daut').automaton(vcsn.context("law_char(xy), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("law_char(xy), z")))
 
 # Convert to an invalid smaller weightset.
 XFAIL(lambda: vcsn.automaton('''context = "lal_char(abc), z"
-  0 -> 1 <3>a, b''', 'daut').automaton(vcsn.context("lal_char(xy), b")))
+  0 -> 1 <3>a, b''').automaton(vcsn.context("lal_char(xy), b")))
