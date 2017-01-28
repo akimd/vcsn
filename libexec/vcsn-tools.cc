@@ -163,8 +163,7 @@ namespace
   }
 
   const algo* match(const std::string& algo_name,
-                    std::vector<parsed_arg>& args,
-                    const dyn::context& context)
+                    std::vector<parsed_arg>& args)
   {
     const algo* a = nullptr;
     auto range = vcsn::tools::algos.equal_range(algo_name);
@@ -195,12 +194,12 @@ namespace
                       std::vector<parsed_arg>& args,
                       const dyn::context& context)
   {
-    auto a = match(algo_name, args, context);
+    auto a = match(algo_name, args);
     if (!a && !used_stdin)
       {
         // Let's try with stdin as an input.
         args.insert(args.begin(), {"", type::unknown, "default"});
-        a = match(algo_name, args, context);
+        a = match(algo_name, args);
         if (a) // We found an algo, time to read stdin
           args[0].arg = read_stdin();
       }
