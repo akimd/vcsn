@@ -48,6 +48,7 @@ namespace vcsn
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
       /// The string \a s is invalid at \a l.
+      ATTRIBUTE_NORETURN
       void invalid(const location& l, const std::string& s);
 
       /// The error messages.
