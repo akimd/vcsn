@@ -72,15 +72,14 @@ namespace
           break;
 
         case 'O':
-         res.output_format = optarg;
-         break;
+          res.output_format = optarg;
+          break;
 
         case 'I':
-         if (input_format == "default")
-           input_format = optarg;
-         else
-           raise("too many input formats for one argument");
-         break;
+          require(input_format == "default",
+                  "too many input formats for one argument");
+          input_format = optarg;
+          break;
 
         case 'o':
           res.output_file = optarg;
@@ -128,12 +127,11 @@ namespace
         case 'P':
         case 'S':
         case 'W':
-          // This cast is safe as long as the
-          // case list is properly maintened.
-          if (t == type::unknown)
-            t = static_cast<type>(opt);
-          else
-            raise("too many type qualifiers for one argument");
+          // This cast is safe as long as the case list is properly
+          // maintained.
+          require(t == type::unknown,
+                  "too many type qualifiers for one argument");
+          t = static_cast<type>(opt);
           break;
 
         case 'c':
@@ -200,10 +198,13 @@ namespace
         // Let's try with stdin as an input.
         args.insert(args.begin(), {"", type::unknown, "default"});
         a = match(algo_name, args);
-        if (a) // We found an algo, time to read stdin
+        if (a)
+          // We found an algo, read stdin.
           args[0].arg = read_stdin();
       }
-    if (!a)
+    if (a)
+      a->exec(args, context);
+    else
       {
         std::ostringstream ss;
         ss << algo_name << ": no matching algorithm\n"
@@ -214,8 +215,6 @@ namespace
         ss << "Try 'vcsn " << algo_name << " --help' for more information.";
         raise(ss.str());
       }
-    else
-      a->exec(args, context);
   }
 
   int
