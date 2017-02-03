@@ -106,8 +106,9 @@ namespace vcsn
             const auto& ls = *aut_->labelset();
             const auto& ws = *aut_->weightset();
             // A blank label: the labels of each tape will be inserted
-            // one after the other.  Using `one` instead `special` is
+            // one after the other.  Using `one` instead of `special` is
             // tempting, but `one` is not always available.
+            // FIXME: it will be available in Vcsn 3.
             auto label = ls.special();
             auto weight = ws.one();
             auto dst = psrc;
@@ -115,58 +116,57 @@ namespace vcsn
           }
       }
 
+      /// Add outgoing transitions from `src` computed by looking at
+      /// tape I and beyond.
+      ///
+      /// \param src    source state in the result automaton
+      /// \param srcn   tuple of source states (immutable)
+      /// \param dstn   incrementally built tuple of destination states
+      /// \param label  incrementally built tuple of labels
+      /// \param weight product of the weights seen so far (immutable)
       template <std::size_t I>
-      void add_tape_transitions_(const state_t src, const state_name_t& psrc,
-                                 state_name_t dst,
+      void add_tape_transitions_(const state_t src, const state_name_t& srcn,
+                                 state_name_t dstn,
                                  label_t label, weight_t weight)
       {
         const auto& ls = *aut_->labelset();
         const auto& ws = *aut_->weightset();
         const auto& aut = std::get<I>(aut_->auts_);
-        // FIXME: too much code duplication between both branches,
-        // something is missing.  FIXME: a lot of passing by value on
-        // dst, label and weight.  We can probably be more economical.
-        if (std::get<I>(psrc) == aut->post())
+        // Add an outgoing transition from `src` to `dst` with
+        // `<weight>label`.
+        auto add =
+          static_if<I + 1 == sizeof...(Auts)>
+          ([this](auto src, const auto&, const auto& dstn,
+                  const auto& label, const auto& weight)
+           {
+             if (state(dstn) == aut_->post())
+               // The label is actually a tuple of \e (instead of a
+               // tuple of special), don't use it.
+               aut_->set_final(src, weight);
+             else
+               aut_->new_transition(src, state(dstn), label, weight);
+           },
+           [this](auto src, const auto& srcn, const auto& dstn,
+                  const auto& label, const auto& weight)
+           {
+             add_tape_transitions_<I + 1>(src, srcn, dstn, label, weight);
+           });
+
+        if (std::get<I>(srcn) == aut->post())
           {
             std::get<I>(label) = label_one(ls.template set<I>());
-            static_if<I + 1 == sizeof...(Auts)>
-              ([this](auto src, auto, auto dst, auto label, auto weight)
-               {
-                 if (state(dst) == aut_->post())
-                   // The label is actually a tuple of \e, don't use it.
-                   aut_->set_final(src, weight);
-                 else
-                   aut_->new_transition(src, state(dst), label, weight);
-               },
-               [this](auto src, auto psrc, auto dst, auto label, auto weight)
-               {
-                 add_tape_transitions_<I + 1>(src, psrc, dst, label, weight);
-               })
-              (src, psrc, dst, label, weight);
+            add(src, srcn, dstn, label, weight);
           }
         else
-          for (auto t: aut->all_out(std::get<I>(psrc)))
+          for (auto t: aut->all_out(std::get<I>(srcn)))
             {
               std::get<I>(label)
                 = aut->dst_of(t) == aut->post()
                 ? label_one(ls.template set<I>())
                 : aut->label_of(t);
               weight = ws.mul(weight, aut->weight_of(t));
-              std::get<I>(dst) = aut->dst_of(t);
-              static_if<I + 1 == sizeof...(Auts)>
-                ([this,&ls,&ws](auto src, auto, auto dst, auto label, auto weight)
-                 {
-                   if (state(dst) == aut_->post())
-                     // The label is actually a tuple of \e, don't use it.
-                     aut_->set_final(src, weight);
-                   else
-                     aut_->new_transition(src, state(dst), label, weight);
-                 },
-                 [this](auto src, auto psrc, auto dst, auto label, auto weight)
-                 {
-                   add_tape_transitions_<I + 1>(src, psrc, dst, label, weight);
-                 })
-                (src, psrc, dst, label, weight);
+              std::get<I>(dstn) = aut->dst_of(t);
+              add(src, srcn, dstn, label, weight);
             }
       }
     };
