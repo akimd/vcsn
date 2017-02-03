@@ -181,7 +181,7 @@ def need_compiling():
                 output_mtime = os.path.getmtime(output)
             elif os.path.getmtime(file) > output_mtime:
                 def date(mtime):
-                    return time.strftime('%x %X', time.localtime(mtime))
+                    return time.strftime('%F %T', time.localtime(mtime))
                 log('compilation needed: dependency is more recent than output\n'
                     '      output: {}: {}\n'
                     '  dependency: {}: {}'
