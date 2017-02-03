@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## Bug Fixes
+### Tupling of automata could be wrong on weights
+As a result, `expression.inductive` was also producing incorrect automata
+from multitape expressions.
+
+
 # Vcsn 2.5 (2017-01-28)
 
 The Vcsners are proud to announce the release of Vcsn 2.5, aka the

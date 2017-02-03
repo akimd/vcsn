@@ -127,7 +127,7 @@ namespace vcsn
       template <std::size_t I>
       void add_tape_transitions_(const state_t src, const state_name_t& srcn,
                                  state_name_t dstn,
-                                 label_t label, weight_t weight)
+                                 label_t label, const weight_t& weight)
       {
         const auto& ls = *aut_->labelset();
         const auto& ws = *aut_->weightset();
@@ -164,9 +164,8 @@ namespace vcsn
                 = aut->dst_of(t) == aut->post()
                 ? label_one(ls.template set<I>())
                 : aut->label_of(t);
-              weight = ws.mul(weight, aut->weight_of(t));
               std::get<I>(dstn) = aut->dst_of(t);
-              add(src, srcn, dstn, label, weight);
+              add(src, srcn, dstn, label, ws.mul(weight, aut->weight_of(t)));
             }
       }
     };
