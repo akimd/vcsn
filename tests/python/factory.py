@@ -192,6 +192,7 @@ a = ctx.random_automaton(num_states=2, loop_chance=1, weights='5=1')
 print("random_automaton: {:d}".format(a))
 CHECK(a('a') != ctx.weight_one())
 
+
 ## ------------------- ##
 ## random_expression.  ##
 ## ------------------- ##
@@ -256,6 +257,11 @@ for m in re.findall('<(.*?)>', str(exp)):
     CHECK(-10 <= int(m))
     CHECK(int(m) <= 10)
 
+
+# Check that we generate valid expression on multitape contexts.
+for i in range(10):
+    randexp('lat<lan(abc), lan(abc)>, q',
+            '+,*,.', length=20)
 
 
 ## ---------------------- ##

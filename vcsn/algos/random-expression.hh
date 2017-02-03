@@ -44,9 +44,10 @@ namespace vcsn
 
       /// Print a random expression string (not parsed, so there might
       /// be some syntactic sugar such as `<+`).
-      std::ostream& print_random_expression(std::ostream& out) const
+      std::ostream& print_random_expression(std::ostream& out,
+                                            const format& fmt = {}) const
       {
-        return print_random_expression_(out, length_);
+        return print_random_expression_(out, length_, fmt);
       }
 
       /// A random expression string (not parsed, so there might be
@@ -99,41 +100,43 @@ namespace vcsn
       }
 
       /// Print random weight.
-      void print_weight_(std::ostream& out) const
+      void print_weight_(std::ostream& out, const format& fmt) const
       {
         out << "<";
-        rs_.weightset()->print(random_weight_.generate_random_weight(), out);
+        rs_.weightset()->print(random_weight_.generate_random_weight(), out,
+                               fmt.for_weights());
         out << ">";
       }
 
       /// Print label.
-      void print_label_(std::ostream& out) const
+      void print_label_(std::ostream& out, const format& fmt) const
       {
-        rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out);
+        rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out,
+                              fmt.for_labels().delimit(true));
       }
 
       /// Print expression with unary operator.
       void print_unary_exp_(std::ostream& out, unsigned length,
-                            const std::string& op) const
+                            const std::string& op, const format& fmt) const
       {
         // Prefix.
         if (op == "!" || op == "w.")
         {
           out << '(';
           if (op == "w.")
-            print_weight_(out);
+            print_weight_(out, fmt);
           else
             out << op;
-          print_random_expression_(out, length - 1);
+          print_random_expression_(out, length - 1, fmt);
           out << ')';
         }
         // Postfix.
         else
         {
           out << '(';
-          print_random_expression_(out, length - 1);
+          print_random_expression_(out, length - 1, fmt);
           if (op == ".w")
-            print_weight_(out);
+            print_weight_(out, fmt);
           else
             out << op;
           out << ")";
@@ -144,33 +147,34 @@ namespace vcsn
       /// It is composed of the left and right side, and the operator.
       /// The number of symbols is randomly distribued between both side.
       void print_binary_exp_(std::ostream& out, unsigned length,
-                             const std::string& op) const
+                             const std::string& op, const format& fmt) const
       {
         if (length < 3)
-          print_label_(out);
+          print_label_(out, fmt);
         else
         {
           auto dis = std::uniform_int_distribution<>(1, length - 2);
           auto num_lhs = dis(gen_);
           out << "(";
-          print_random_expression_(out, num_lhs);
+          print_random_expression_(out, num_lhs, fmt);
           out << op;
-          print_random_expression_(out, length - 1 - num_lhs);
+          print_random_expression_(out, length - 1 - num_lhs, fmt);
           out << ")";
         }
       }
 
       std::ostream&
-      print_random_expression_(std::ostream& out, unsigned length) const
+      print_random_expression_(std::ostream& out, unsigned length,
+                               const format& fmt) const
       {
         // If there is no operators at all, that's impossible to
         // construct an expression, so just return a label.
         if (operators_.empty())
-          print_label_(out);
+          print_label_(out, fmt);
 
         // One symbol left: print a label.
         else if (length == 1)
-          print_label_(out);
+          print_label_(out, fmt);
 
         // All operators are possible, choose one randomly (with
         // associated weight probability) and print the associated
@@ -185,10 +189,10 @@ namespace vcsn
               out << op;
               break;
             case 1:
-              print_unary_exp_(out, length, op);
+              print_unary_exp_(out, length, op, fmt);
               break;
             case 2:
-              print_binary_exp_(out, length, op);
+              print_binary_exp_(out, length, op, fmt);
               break;
             default:
               assert(!"invalid arity");
@@ -246,7 +250,6 @@ namespace vcsn
     {
       return {rs, param, gen};
     }
-
   } // end namespace vcsn::detail
 
 
