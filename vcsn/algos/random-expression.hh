@@ -229,6 +229,7 @@ namespace vcsn
         {"+", 2},
         {"{/}", 2},
         {"{\\}",2},
+        {"@",2},
       };
 
       /// Vector of weights associated with the operators, i.e., the

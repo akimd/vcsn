@@ -204,29 +204,43 @@ def randexp(c, *args, **kwargs):
     print("Expression: ", res)
     return res
 
-# Check that a random expression without any operator return only a
-# label.  FIXME: not so nice!
+operators = [
+    'add',
+    'atom',
+    'complement',
+    'compose',
+    'conjunction',
+    'infiltrate',
+    'ldivide',
+    'lweight',
+    'mul',
+    'one',
+    'rweight',
+    'shuffle',
+    'star',
+    'transposition',
+    'tuple',
+    'zero'
+]
+
+def check_operators(e, ops):
+    info = e.info()
+    print("Info: ", info)
+    for o in operators:
+        print('check:', o)
+        if o in ops:
+            CHECK_NE(0, info[o])
+        else:
+            CHECK_EQ(0, info[o])
+
+# A random expression without any operator is only a label.
 exp = randexp('lan(a-z), b')
 CHECK(re.match(r'\w{1}|\\e', str(exp)))
 
 # Check that operators are present only if the user has specified them.
 exp = randexp('lal(a), b',
               '+=1,*=0.5,{c}=1,{\\}=0', length=100, identities='none')
-info = exp.info()
-print("Info: ", info)
-CHECK_NE(info['add'], 0)
-CHECK_NE(info['complement'], 0)
-CHECK_NE(info['star'], 0)
-
-CHECK_EQ(info['conjunction'], 0)
-CHECK_EQ(info['infiltrate'], 0)
-CHECK_EQ(info['ldivide'], 0)
-CHECK_EQ(info['lweight'], 0)
-CHECK_EQ(info['mul'], 0)
-CHECK_EQ(info['one'], 0)
-CHECK_EQ(info['rweight'], 0)
-CHECK_EQ(info['shuffle'], 0)
-CHECK_EQ(info['zero'], 0)
+check_operators(exp, ['add', 'complement', 'star', 'atom'])
 
 # Check the length.
 for _ in range(10):
@@ -239,10 +253,8 @@ for _ in range(10):
 # Check rweight and lweight.
 exp = randexp('lal_char(abc), b',
               '+=1, w.=1', length=50, identities='none')
-info = exp.info()
-print("Info: ", info)
-CHECK_NE(info['lweight'], 0)
-CHECK_EQ(info['rweight'], 0)
+check_operators(exp, ['add', 'atom', 'lweight'])
+
 
 # Check the weight generation on expression.
 exp = randexp('lal_char(abc), b',
@@ -258,10 +270,13 @@ for m in re.findall('<(.*?)>', str(exp)):
     CHECK(int(m) <= 10)
 
 
-# Check that we generate valid expression on multitape contexts.
+# Check that we generate valid expressions on multitape contexts.
 for i in range(10):
     randexp('lat<lan(abc), lan(abc)>, q',
             '+,*,.', length=20)
+exp = randexp('lat<lan(abc), lan(abc)>, q',
+              '@,+,*,.', length=100, identities='none')
+check_operators(exp, ['add', 'atom', 'mul', 'one', 'star', 'compose'])
 
 
 ## ---------------------- ##
@@ -275,6 +290,8 @@ CHECK_EQ(100, a.info('number of states'))
 CHECK_EQ(1, a.info('number of initial states'))
 CHECK_EQ(1, a.info('number of final states'))
 CHECK(a.is_complete())
+
+
 
 ## --- ##
 ## u.  ##
