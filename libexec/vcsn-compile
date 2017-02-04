@@ -173,7 +173,7 @@ def need_compiling():
             # The first file is the output.
             if output is None:
                 if file != args['output']:
-                    raise RuntimeError('unexpected target in dependency file'
+                    raise RuntimeError('unexpected target in dependency file\n'
                                        '  unexpected: {}\n'
                                        '    expected: {}'
                                        .format(file, args['output']))
