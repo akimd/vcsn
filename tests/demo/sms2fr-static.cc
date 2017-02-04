@@ -41,17 +41,6 @@ read_automaton(const std::string& f)
   return vcsn::read_automaton<Aut>(*is);
 }
 
-/// Sms2fr manipulates sentences in a particular format, format it back to
-/// normal text: [#la#phrase#] -> la phrase.
-std::string format(const std::string& str)
-{
-  using boost::replace_all_copy;
-  using boost::replace_all;
-  auto res = replace_all_copy(str.substr(2, str.size() - 4), "#", " ");
-  replace_all(res, "\'", "\\\'");
-  return res;
-}
-
 struct sms2fr_impl
 {
   using letterset_t = vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
@@ -127,6 +116,17 @@ struct sms2fr_impl
     res->add_transition(sep, end, ls.tuple(']', ']'));
     res->set_final(end);
 
+    return res;
+  }
+
+  /// Sms2fr manipulates sentences in a particular format, format it
+  /// back to normal text: `[#la#phrase#]` -> `la phrase`.
+  std::string format(const std::string& str) const
+  {
+    using boost::replace_all;
+    auto res = str.substr(2, str.size() - 4);
+    replace_all(res, "#", " ");
+    replace_all(res, "\'", "\\\'");
     return res;
   }
 
