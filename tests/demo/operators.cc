@@ -1,4 +1,4 @@
-// We really assert to do its job.
+// We really want assert to do its job.
 #undef NDEBUG
 #include <iostream>
 #include <stdexcept>
