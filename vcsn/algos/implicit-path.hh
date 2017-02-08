@@ -123,8 +123,8 @@ namespace vcsn
     private:
       const automaton_t& aut_;
       transition_t sidetrack_;
-      /// Parent path indexes in the results array. -1 if the path has no parent,
-      /// superior to 0 otherwise.
+      /// Parent path indexes in the results array. `null_parent_path`
+      /// if the path has no parent.
       int parent_path_;
       weight_t weight_;
     };
