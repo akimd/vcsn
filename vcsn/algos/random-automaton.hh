@@ -5,6 +5,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/misc/irange.hh>
 
 namespace vcsn
 {
