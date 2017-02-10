@@ -139,8 +139,6 @@ namespace vcsn
             for (unsigned j = 0u; j < prev.size(); j++)
               {
                 auto filter_aut = filter<automaton_t, true>(aut_);
-                filter_aut->unhide_all_states();
-                filter_aut->unhide_all_transition();
                 auto spur_node = filter_aut->src_of(prev[j]);
                 auto root_path = path_t(prev.begin(), prev.begin() + j);
 
