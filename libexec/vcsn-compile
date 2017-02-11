@@ -69,6 +69,7 @@ def parse_args():
         print('args:', file=sys.stderr)
         for k in sorted(args):
             print('  {}: {}'.format(k, args[k]), file=sys.stderr)
+        sys.stderr.flush()
 
     # Strip extension.
     args['base'] = args['input'][:-3]
@@ -85,7 +86,7 @@ def parse_args():
 
 def log(*msg, level=0):
     if level <= args['verbose']:
-        print(me + ":", *msg, file=sys.stderr)
+        print(me + ":", *msg, file=sys.stderr, flush=True)
 
 
 def fmt(s, **kwargs):
@@ -131,7 +132,7 @@ def run(cmd):
         err = err.decode('utf-8')
         if not args['plain']:
             err = demangle(err, color=args['color'])
-        print(err, file=sys.stderr)
+        print(err, file=sys.stderr, flush=True)
     if retcode:
         if retcode < 0:
             log('child was terminated by signal', -retcode)
@@ -140,8 +141,9 @@ def run(cmd):
         sys.exit(retcode)
 
 def need_compiling():
+    log('checking whether compilation is needed', level=2)
     if args['force']:
-        log('compilation needed: --force was used')
+        log('compilation needed: --force was used', level=2)
         return True
 
     try:
