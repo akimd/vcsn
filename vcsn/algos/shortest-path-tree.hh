@@ -41,7 +41,7 @@ namespace vcsn
         if (has(states_, s))
           states_[s].set_parent(parent);
         else
-          states_[s] = node_t{aut_, s, {}, parent};
+          states_[s] = node_t{aut_, s, parent};
       }
 
       weight_t
@@ -60,7 +60,7 @@ namespace vcsn
         auto it = states_.find(s);
         if (it == states_.end())
         {
-          auto elt = node_t{aut_, s, {}, Aut::element_type::null_state()};
+          auto elt = node_t{aut_, s, aut_->null_state()};
           auto p = states_.emplace(s, elt);
           it = p.first;
         }
@@ -72,7 +72,7 @@ namespace vcsn
       {
         auto it = states_.find(s);
         if (it == states_.end())
-          return automaton_t::element_type::null_state();
+          return aut_->null_state();
         else
           return it->second.get_parent();
       }
