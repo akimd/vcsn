@@ -11,17 +11,17 @@ namespace vcsn
   {
     /// Shortest Path Tree
     ///
-    /// Represents the tree of nodes in the graph with each node's parent being
-    /// their lightest successor in the automaton (the path is computed from
-    /// destination to source).
+    /// Represent the tree of nodes in the graph with each node's
+    /// parent being their lightest predecessor in the automaton
+    /// (i.e., the path is from destination to source).
     template <typename Aut>
     class shortest_path_tree
     {
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
-      using dijkstra_node_t = dijkstra_node<automaton_t>;
-      using dijkstra_map_t = std::unordered_map<state_t, dijkstra_node_t>;
+      using node_t = dijkstra_node<automaton_t>;
+      using map_t = std::unordered_map<state_t, node_t>;
 
     public:
       shortest_path_tree(const automaton_t& aut, state_t root)
@@ -30,7 +30,7 @@ namespace vcsn
       {}
 
       void
-      add(const dijkstra_node_t& n)
+      add(const node_t& n)
       {
         states_[n.state_] = n;
       }
@@ -41,26 +41,26 @@ namespace vcsn
         if (has(states_, s))
           states_[s].set_parent(parent);
         else
-          states_[s] = dijkstra_node_t{aut_, s, {}, parent};
+          states_[s] = node_t{aut_, s, {}, parent};
       }
 
       weight_t
-      get_weight_of(state_t s)
+      get_weight_of(state_t s) const
       {
         auto it = states_.find(s);
-        if (it != states_.end())
-          return it->second.get_weight();
-        else
+        if (it == states_.end())
           return aut_->weightset()->max();
+        else
+          return it->second.get_weight();
       }
 
-      dijkstra_node_t&
+      node_t&
       get_node_of(state_t s)
       {
         auto it = states_.find(s);
         if (it == states_.end())
         {
-          auto elt = dijkstra_node_t{aut_, s, {}, Aut::element_type::null_state()};
+          auto elt = node_t{aut_, s, {}, Aut::element_type::null_state()};
           auto p = states_.emplace(s, elt);
           it = p.first;
         }
@@ -68,23 +68,13 @@ namespace vcsn
       }
 
       state_t
-      get_parent_of(state_t s)
-      {
-        auto it = states_.find(s);
-        if (it != states_.end())
-          return it->second.get_parent();
-        else
-          return automaton_t::element_type::null_state();
-      }
-
-      state_t
       get_parent_of(state_t s) const
       {
         auto it = states_.find(s);
-        if (it != states_.end())
-          return it->second.get_parent();
-        else
+        if (it == states_.end())
           return automaton_t::element_type::null_state();
+        else
+          return it->second.get_parent();
       }
 
       state_t
@@ -93,35 +83,37 @@ namespace vcsn
         return root_;
       }
 
-      dijkstra_node_t& operator[](state_t s)
+      node_t& operator[](state_t s)
       {
         return states_[s];
       }
 
     private:
-      dijkstra_map_t states_;
+      map_t states_;
       state_t root_;
       const automaton_t& aut_;
     };
 
     /// Compute the shortest path tree of \a aut starting from src.
     ///
-    /// Create a shortest path tree with src as root, then construct the tree by
-    /// going backwards in the automaton with a basic shortest path method (heap
-    /// of incoming nodes sorted by nodes' weight).
+    /// Create a shortest path tree with src as root, then construct
+    /// the tree by going backwards in the automaton with a basic
+    /// shortest path method (heap of incoming nodes sorted by nodes'
+    /// weight).
     template <typename Aut>
     shortest_path_tree<Aut>
     compute_shortest_path_tree(const Aut& aut, state_t_of<Aut> src)
     {
       using automaton_t = Aut;
-      using dijkstra_node_t = dijkstra_node<automaton_t>;
-      using queue_t = vcsn::min_fibonacci_heap<dijkstra_node_t>;
+      using node_t = dijkstra_node<automaton_t>;
+      using queue_t = vcsn::min_fibonacci_heap<node_t>;
       using handle_t = typename queue_t::handle_type;
       auto handles = std::unordered_map<state_t_of<automaton_t>, handle_t>{};
 
       auto predecessor_tree = shortest_path_tree<automaton_t>(aut, src);
       auto queue = queue_t{};
-      auto& src_node = predecessor_tree.get_node_of(predecessor_tree.get_root());
+      auto& src_node
+        = predecessor_tree.get_node_of(predecessor_tree.get_root());
       src_node.set_weight(weightset_t_of<automaton_t>::one());
       src_node.set_depth(0);
       handles[src_node.get_state()] = queue.emplace(src_node);
@@ -132,7 +124,8 @@ namespace vcsn
         auto current = std::move(queue.top());
         queue.pop();
         auto s = current.get_state();
-        // This saves us very little time compared to retrieval at each iteration.
+        // This saves us very little time compared to retrieval at
+        // each iteration.
         const auto curr_weight = current.get_weight();
         const auto curr_depth = current.get_depth();
 
