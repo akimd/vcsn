@@ -170,10 +170,10 @@ namespace vcsn
             }
           if (d == "->")
             d = read_state(ss);
-          require(!d.get().empty(),
-                  locline, ": ",
-                  "invalid daut file: expected destination after: ", s,
-                   vcsn::detail::caret(is, locline));
+          VCSN_REQUIRE(!d.get().empty(),
+                       locline, ": ",
+                       "invalid daut file: expected destination after: ", s,
+                       vcsn::detail::caret(is, locline));
           auto entry = read_entry(ss);
           try
             {

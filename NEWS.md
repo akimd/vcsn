@@ -6,9 +6,13 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 ## Bug Fixes
+### Severe performance regression when reading daut
+Version 2.5 introduced a very large penalty when reading daut files,
+especially large ones.
+
 ### Tupling of automata could be wrong on weights
-As a result, `expression.inductive` was also producing incorrect automata
-from multitape expressions.
+As a consequence, `expression.inductive` was also producing incorrect
+automata from multitape expressions.
 
 
 # Vcsn 2.5 (2017-01-28)
