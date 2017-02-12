@@ -37,7 +37,7 @@ namespace vcsn
       std::vector<path<automaton_t>>
       k_shortest_path(state_t src, state_t dst, int K)
       {
-        auto tree = compute_shortest_path_tree(aut_, dst);
+        auto tree = make_shortest_path_tree(aut_, dst);
         auto sidetrack_edge_costs_map = sidetrack_costs_t();
         auto res = std::vector<path<automaton_t>>{};
         auto queue = queue_t{};
