@@ -40,3 +40,21 @@ $ -> 0
 0 -> 2 <2>b|x
 1 -> $
 2 -> $''', (a1 | a2).format('daut'))
+
+
+## ------------------- ##
+## tuple(expression).  ##
+## ------------------- ##
+
+# Regression: Make sure the expressions of one-tuple contexts are
+# indeed one-tuple expressions.
+c = vcsn.context('lat<lan(abc)>, b')
+e = c.expression('[^]')
+CHECK_EQ(c, e.context())
+
+# FIXME: this shows that we really need to visit (in the sense of
+# visitors) the context to parse it properly.
+#
+# c = vcsn.context('lat<lat<lan(abc)>>, b')
+# e = c.expression('[^]')
+# CHECK_EQ(c, e.context())

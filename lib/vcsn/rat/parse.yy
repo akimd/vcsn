@@ -206,15 +206,21 @@ input:
   {
     auto dim_exp = dyn::num_tapes(dyn::context_of($1.exp));
     auto dim_ctx = dyn::num_tapes(driver_.ctx_);
-    if (dim_exp != dim_ctx)
-      // num_tapes returns 0 on non lat.  In this case, 1 is clearer.
+    if (dim_exp == 0 && dim_ctx == 1)
+      // tuple never returns a tuple of rank 1 (see the case
+      // `$2.size() == 1`).  Time to make it for such contexts.
+      $$ = vcsn::dyn::tuple({$1.exp});
+    else if (dim_exp == dim_ctx)
+      // Provide a value for $$ only for sake of traces: shows the result.
+      $$ = $1;
+    else
       throw syntax_error(@$,
                          "not enough tapes: "
+                         // num_tapes returns 0 on non lat.  In this
+                         // case, 1 is clearer.
                          + std::to_string(std::max(size_t{1}, dim_exp))
                          + " expected "
-                         + std::to_string(std::max(size_t{1}, dim_ctx)));
-    // Provide a value for $$ only for sake of traces: shows the result.
-    $$ = $1;
+                         + std::to_string(dim_ctx));
     driver_.result_ = $$.exp;
     YYACCEPT;
   }
