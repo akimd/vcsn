@@ -467,6 +467,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("join", &context::join)
     .def("ladybird", &context::ladybird)
     .def("levenshtein", &context::levenshtein)
+    .def("num_tapes", &context::num_tapes)
     .def("project", &context::project)
     .def("quotkbaseb", &context::quotkbaseb)
     .def("random_automaton", &context::random_automaton,

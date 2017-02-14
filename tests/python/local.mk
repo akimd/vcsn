@@ -67,6 +67,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/minimize.py                               \
   %D%/multiply.py                               \
   %D%/normalize.py                              \
+  %D%/num-tapes.py                              \
   %D%/partial-identity.py                       \
   %D%/polynomial.py                             \
   %D%/power.py                                  \
