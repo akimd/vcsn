@@ -63,7 +63,7 @@ def parse_args():
         elif op == '+=':
             args[var] += ' ' + val
         elif op == '-=':
-            args[var] = config[var].replace(val, '')
+            args[var] = args[var].replace(val, '')
 
     if 3 <= args['verbose']:
         print('args:', file=sys.stderr)
