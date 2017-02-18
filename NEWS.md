@@ -5,6 +5,10 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+## New features
+### vcsn compile now supports --debug
+Use this to avoid the removal of intermediate object files.
+
 ## Bug Fixes
 ### Severe performance regression when reading daut
 Version 2.5 introduced a very large penalty when reading daut files,

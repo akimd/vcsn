@@ -16,28 +16,37 @@ from vcsn_tools.demangle import demangle, pretty_plugin
 me = sys.argv[0]
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Compile Vcsn programs or libraries.')
-    parser.add_argument('vars', nargs='*', help='''variable assignments such
-                        as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
-    parser.add_argument('input', help='source file to compile')
-    parser.add_argument('-shared', help='create a shared lib instead of an executable',
-                        action='store_true')
-    parser.add_argument('-v', '--verbose', help='be verbose',
-                        action='count', default=int(configuration('configuration.verbose')))
-    parser.add_argument('-q', '--quiet', help='hide warnings (including compiler warnings)',
-                        action='store_true')
-    parser.add_argument('-c', '--color', dest='color', action='store',
-                        default='auto',
-                        choices=['auto', 'always', 'never'],
-                        help='whether to use colors in the output')
-    parser.add_argument('-p', '--plain', action='store_true',
-                        help='disable all extra features (color and demangle)')
-    parser.add_argument('-f', '--force', action='store_true',
-                        help='force build even if not needed')
+    p = argparse.ArgumentParser(description='''Compile Vcsn programs
+                                               or libraries.''')
+    p.add_argument('vars', nargs='*',
+                   help='''variable assignments such
+                   as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
+    p.add_argument('input', help='source file to compile')
+    p.add_argument('-v', '--verbose', help='be verbose',
+                   action='count',
+                   default=int(configuration('configuration.verbose')))
+    p.add_argument('-q', '--quiet',
+                   help='hide warnings (including compiler warnings)',
+                   action='store_true')
+    p.add_argument('-c', '--color', dest='color', action='store',
+                   default='auto',
+                   choices=['auto', 'always', 'never'],
+                   help='whether to use colors in the output')
+    p.add_argument('-p', '--plain', action='store_true',
+                   help='disable all extra features (color and demangle)')
+    p.add_argument('-f', '--force', action='store_true',
+                   help='force build even if not needed')
+    p.add_argument('-d', '--debug', action='store_true',
+                   default='VCSN_DEBUG' in os.environ,
+                   help='''do not remove object file (needed to
+                   debug in C++)''')
+    p.add_argument('-shared',
+                   help='create a shared lib instead of an executable',
+                   action='store_true')
 
     # Parse the arguments, and complete the 'args' object with the value
     # from the configuration (cxx, cxxflags, etc.).
-    args = parser.parse_args().__dict__.copy()
+    args = p.parse_args().__dict__.copy()
 
     # List of configuration keys coming from autoconf.
     config = ['ccache', 'cppflags', 'cxx', 'cxxflags',
@@ -200,6 +209,14 @@ def need_compiling():
         return True
 
 
+def clean():
+    '''Upon success, remove the .o file, it is large (10x compared to
+    the *.so on erebus using clang) and not required. However the
+    debug symbols are in there, so when debugging, leave them!'''
+    if not args['debug']:
+        log('remove {tmp}.o', level=2)
+        os.remove(fmt('{tmp}.o'))
+
 # Main.
 args = parse_args()
 # The output.
@@ -221,11 +238,7 @@ if args['shared']:
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so'"
         " '{tmp}.o'")
     os.rename(fmt('{tmp}.so'), fmt('{output}'))
-    # Upon success, remove the .o file, it is large (10x compared to
-    # the *.so on erebus using clang) and not required. However the
-    # debug symbols are in there, so when debugging, leave them!
-    if 'VCSN_DEBUG' not in os.environ:
-        os.remove(fmt('{tmp}.o'))
+    clean()
     notify()
 else:
     # Exploit ccache: use separate compilation and then linking
@@ -235,5 +248,4 @@ else:
         " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
     os.rename(fmt('{tmp}'), fmt('{output}'))
-    if 'VCSN_DEBUG' not in os.environ:
-        os.remove(fmt('{tmp}.o'))
+    clean()

@@ -20,6 +20,7 @@ configuration:
   libdir: @LIBDIR@
   pyexecdir: @PYEXECDIR@
 
+  # Verbosity level of debug messages.
   verbose: 0
 
 dot:
