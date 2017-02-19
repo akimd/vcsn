@@ -78,6 +78,16 @@ namespace vcsn
       return true;
     }
 
+    auto generators() const
+    {
+      return super_t::generators();
+    }
+
+    auto pregenerators() const
+    {
+      return super_t::generators();
+    }
+
     /// Value constructor.
     template <typename... Args>
     value_t value(Args&&... args) const

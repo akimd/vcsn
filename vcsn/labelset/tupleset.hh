@@ -111,7 +111,10 @@ namespace vcsn
     {}
 
     tupleset_impl(ValueSets... ls)
-      : sets_(ls...)
+      : sets_(std::move(ls)...)
+    {}
+
+    ~tupleset_impl()
     {}
 
     static symbol sname()
@@ -217,11 +220,21 @@ namespace vcsn
       return this->genset_(indices);
     }
 
+    /// The pregenerators.  Meaningful for labelsets only.
+    auto
+    pregenerators() const
+    {
+      return this->pregenerators_(indices);
+    }
+
     /// The generators.  Meaningful for labelsets only.
     auto
     generators() const
     {
-      return this->generators_(indices);
+      if (has_one())
+        return pregenerators().skip_first();
+      else
+        return pregenerators();
     }
 
     static constexpr bool is_free()
@@ -563,7 +576,9 @@ namespace vcsn
       eat(i, '[');
       conv_label_class_(*this, i,
                         [this,fun](const letter_t& l)
-                        { fun(this->value(l)); });
+                        {
+                          fun(this->value(l));
+                        });
       eat(i, ']');
     }
 
@@ -676,35 +691,11 @@ namespace vcsn
       return genset_ptr{set<I>().genset()...};
     }
 
-    template <std::size_t I>
-    decltype(auto) generators_() const
-    {
-      return static_if<valueset_t<I>::is_letterized()
-                       && valueset_t<I>::has_one()>
-        ([](const auto& ls)
-         {
-           using label_t = typename valueset_t<I>::value_t;
-           static const auto one = std::array<label_t, 1>{{ls.one()}};
-           return boost::range::join(one, ls.generators());
-         },
-         [](const auto& ls)
-         {
-           return ls.generators();
-         })(set<I>());
-    }
-
     template <std::size_t... I>
-    decltype(auto)
-    generators_(seq<I...>) const
+    auto
+    pregenerators_(seq<I...>) const
     {
-      // Need value(), since we might have to convert from letter_t to
-      // value_t.
-      auto p = [this](const auto& g)
-        { return !this->is_one(this->value(g)); };
-      return filter(vcsn::cross(generators_<I>()...),
-                    // Need std::ref so that we can copy-assignment
-                    // (filtered) iterators, which is needed with lat<lat<>>.
-                    std::ref(p));
+      return vcsn::cross(set<I>().pregenerators()...);
     }
 
     template <std::size_t... I>

@@ -420,6 +420,7 @@ namespace vcsn
                      i != std::end(gens) && ls.less(*i, l2);
                      ++i)
                   fun(*i);
+
                 // The last letter.  Do not do this in the loop, we
                 // might overflow the capacity of char.  Check
                 // validity, so that 'z-a' is empty.

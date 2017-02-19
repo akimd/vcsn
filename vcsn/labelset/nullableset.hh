@@ -94,6 +94,16 @@ namespace vcsn
       {
         return std::get<0>(v);
       }
+
+      static auto generators(const labelset_t& ls)
+      {
+        return ls.generators();
+      }
+
+      static auto pregenerators(const labelset_t& ls)
+      {
+        return ls.pregenerators();
+      }
     };
 
     /// Add support for an empty word to a letterset thanks to the
@@ -150,6 +160,16 @@ namespace vcsn
       {
         return v;
       }
+
+      static auto generators(const labelset_t& ls)
+      {
+        return ls.generators();
+      }
+
+      static auto pregenerators(const labelset_t& ls)
+      {
+        return ls.genset()->pregenerators();
+      }
     };
   }
 
@@ -184,6 +204,9 @@ namespace vcsn
 
     nullableset(const labelset_t& ls = {})
       : nullableset{std::make_shared<const labelset_t>(ls)}
+    {}
+
+    ~nullableset()
     {}
 
     static symbol sname()
@@ -261,11 +284,18 @@ namespace vcsn
       return ls_->genset();
     }
 
-    /// The generators.  Meaningful for labelsets only.
+    /// The generators.
     decltype(auto)
     generators() const
     {
-      return ls_->generators();
+      return helper_t::generators(*ls_);
+    }
+
+    /// The pregenerators.
+    decltype(auto)
+    pregenerators() const
+    {
+      return helper_t::pregenerators(*ls_);
     }
 
     value_t

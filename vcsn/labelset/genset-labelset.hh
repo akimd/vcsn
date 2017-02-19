@@ -38,11 +38,6 @@ namespace vcsn
         return gs_;
       }
 
-      const genset_t& generators() const
-      {
-        return *gs_;
-      }
-
       static symbol sname()
       {
         static auto res = symbol{genset_t::sname()};
@@ -99,11 +94,13 @@ namespace vcsn
       DEFINE(delimit,);
       DEFINE(end,);
       DEFINE(equal, ATTRIBUTE_PURE);
+      DEFINE(generators,);
       DEFINE(get_word,);
       DEFINE(has, ATTRIBUTE_PURE);
       DEFINE(is_letter, ATTRIBUTE_PURE);
       DEFINE(less, ATTRIBUTE_PURE);
       DEFINE(mul,);
+      DEFINE(pregenerators,);
       DEFINE(transpose, ATTRIBUTE_PURE);
       DEFINE(undelimit,);
 
