@@ -68,6 +68,13 @@ cross(ints, floats, strings)
 (40, 4.4, four)
 
 
+cross(ints)
+(1)
+(20)
+(30)
+(40)
+
+
 cross(cross(ints), cross(floats, strings))
 ((1), (1.1, one))
 ((1), (1.1, deux))
