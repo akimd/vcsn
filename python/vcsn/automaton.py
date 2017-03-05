@@ -92,6 +92,7 @@ class automaton:
     __add__ = automaton.add
     __and__ = lambda l, r: Conjunction(l, r)
     __invert__ = automaton.complement
+    __floordiv__ = automaton.ldivide
     __mod__ = automaton.difference
     __matmul__ = automaton.compose
     __mul__ = _rweight
