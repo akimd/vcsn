@@ -73,8 +73,15 @@ namespace vcsn
     private:
       automaton_t recurse(const expression_t& v)
       {
-        v->accept(*this);
-        return std::move(res_);
+        try
+          {
+            v->accept(*this);
+            return std::move(res_);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e, "  while computing inductive of: ", to_string(rs_, v));
+          }
       }
 
       using tuple_t = typename super_t::tuple_t;
