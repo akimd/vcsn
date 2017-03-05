@@ -632,7 +632,16 @@ namespace vcsn
     {
       for (const auto& lm: l)
         for (const auto& rm: r)
-          add_here(res, ldivide(lm, rm));
+          // Our implementation of the {\} operator in the expressions
+          // requires that we *multiply* the weights, which is not
+          // what the division of monomials does.  So don't use it.
+          // Don't change the division of monomials to use the
+          // multiplication though, or you would break simple things
+          // such as `poly('<2>\e') // poly('a+<2>b')` => `<1/2>a + b`.
+          // Actually, it would not even terminate.
+          add_here(res,
+                   {labelset()->ldivide(label_of(lm), label_of(rm)),
+                    weightset()->mul(weight_of(lm), weight_of(rm))});
       return res;
     }
 

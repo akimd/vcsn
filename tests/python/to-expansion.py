@@ -124,13 +124,13 @@ check(r'a{\}b', r'<\z>')
 check('!a', r'<\e> + a.[\e{c}] + b.[\z{c}] + c.[\z{c}] + d.[\z{c}]')
 
 check(r'a{\}<x>a', '<x>')
-check(r'<x>a{\}<y>a', r'<x{\}y>')
-check(r'<x>a{\}<x>a', r'<x{\}x>')
+check(r'<x>a{\}<y>a', r'<xy>')
+check(r'<x>a{\}<x>a', r'<xx>')
 check(r'a{\}(<x>a)*', r'\e.[a{\}\e + <x>(<x>a)*]')
 check(r'a*{\}a', r'\e.[a + a*{\}\e]')
 check(r'a*{\}a*', r'<\e> + \e.[aa* + a*{\}a* + aa*{\}\e]')
-check(r'(<x>a)*{\}(<y>a)*', r'<\e> + \e.[<y>a(<y>a)* + <x{\}y>(<x>a)*{\}(<y>a)* + <x{\}\e>a(<x>a)*{\}\e]')
-check(r'<x>(<y>a)* {\} <z>a*', r'<x{\}z> + \e.[<x{\}z>aa* + <xy{\}z>(<y>a)*{\}a* + <xy{\}z>a(<y>a)*{\}\e]')
+check(r'(<x>a)*{\}(<y>a)*', r'<\e> + \e.[<y>a(<y>a)* + <xy>(<x>a)*{\}(<y>a)* + <x>a(<x>a)*{\}\e]')
+check(r'<x>(<y>a)* {\} <z>a*', r'<xz> + \e.[<xz>aa* + <xyz>(<y>a)*{\}a* + <xyz>a(<y>a)*{\}\e]')
 
 # Left quotient vs. conjunction.
 check(r'(ab{\}ab)c&c', r'\e.[(b{\}b)c&c]')

@@ -17,9 +17,9 @@ digraph
   }
   I3 -> 3
   0 -> F0
-  2 -> 0 [label = "<1/2>a"]
+  2 -> 0 [label = "<2>a"]
   2 -> 2 [label = "a"]
-  3 -> F3 [label = "<2>"]
-  3 -> 0 [label = "<2>a"]
+  3 -> F3 [label = "<8>"]
+  3 -> 0 [label = "<8>a"]
   3 -> 2 [label = "<4>a"]
 }

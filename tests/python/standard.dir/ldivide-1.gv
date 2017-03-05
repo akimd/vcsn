@@ -15,8 +15,8 @@ digraph
     1
   }
   I0 -> 0
-  0 -> F0 [label = "<2>"]
-  0 -> 1 [label = "<2>d"]
+  0 -> F0 [label = "<8>"]
+  0 -> 1 [label = "<8>d"]
   1 -> F1
   1 -> 1 [label = "d"]
 }

@@ -333,7 +333,7 @@ namespace vcsn
             this->new_transition(src,
                                  state(lhs->post(), rhs->dst_of(ts)),
                                  rhs->label_of(ts),
-                                 ws_.ldivide(lweight, rhs->weight_of(ts)));
+                                 ws_.mul(lweight, rhs->weight_of(ts)));
           }
         }
         for (const auto& t: zip_map_tuple(out_(psrc)))
@@ -346,7 +346,7 @@ namespace vcsn
                  this->add_transition(src, state(ts.dst...),
                                       ls.is_special(t.first)
                                       ? t.first : ls.one(),
-                                      ws_.ldivide(ts.weight()...));
+                                      ws_.mul(ts.weight()...));
                },
                t.second);
       }

@@ -20,20 +20,29 @@ def aut(e):
 def divide(fun, l, r):
     if fun == 'ldivide':
         return l.ldivide(r)
-    else:
+    elif fun == 'rdivide':
         return l.rdivide(r)
+    else:
+        FAIL('invalid operation: {}'.format(fun))
 
 
 def check_fun(fun, res, l, r):
+    print("check: {} == {}.{}({})".format(res, l, fun, r))
+    print("check", fun, res, l, r)
     lhs = aut(l)
     rhs = aut(r)
     eff = divide(fun, lhs, rhs)
     # Make sure that we did not modify the rhs.  This did happen with
     # ldivide.
+    print("check lhs did not change", fun)
     CHECK_EQ(lhs, aut(l))
+    print("check rhs did not change", fun)
     CHECK_EQ(rhs, aut(r))
+    print("check validity", fun)
     CHECK_EQ(aut(res).is_valid(), eff.is_valid())
     if eff.is_valid():
+        print("check equivalence: {} == {} = {}.{}({})"
+              .format(res, eff.expression(), l, fun, r))
         CHECK_EQUIV(aut(res), eff)
     else:
         SKIP('invalid expression', res)
@@ -54,20 +63,20 @@ check('abcd+bbcd', 'a+b', '\z', 'bcd')
 # Weighted.
 ctx = 'lan_char, q'
 # Addition
-check('<2>a', '<6>(a+b)', r'<3>\e')
+check('<2>a', '<6>(a+b)', r'<12>\e')
 # Concatenation
-check('<2>a', '<6>ab', '<3>b', '\z')
-check('<2>b', '<6>ab', '\z', '<3>a')
+check('<2>a', '<6>ab', '<12>b', '\z')
+check('<2>b', '<6>ab', '\z', '<12>a')
 # Star
-check('<2>a', '<6>a*', '<3>a*')
+check('<2>a', '<6>a*', '<12>a*')
 # Epsilon cycles
-check('(<2>a)*', 'a*', r'(<1/2>\e)*a*')
+check('(<1/2>a)*', 'a*', r'(<1/2>\e)*a*')
 print('misc')
 # Empty result
 check('ab', '<2>a', r'\z')
 # Misc
-check('<2>a+<3>b', '<6>a*b', r'<3>a*b+<2>\e', r'<2>a{+}+<2>\e')
-check('<2>a+<3>b', '<6>ab*', r'<3>b*', r'<2>ab*+<3>\e')
+check('<2>a+<3>b', '<6>a*b', r'<12>a*b+<18>\e', r'<18>a*')
+check('<2>a+<3>b', '<6>ab*', r'<12>b*', r'<12>\e+<18>ab*')
 check('a+b', '(a+b)c', '<2>c', '\z')
 
 CHECK_EQ(metext('ldiv.gv'), aut('a+b').ldivide(aut('a*b*')))
@@ -103,7 +112,7 @@ z = vcsn.context('law_char(abcd), z')
 ## div(expression, expression).  ##
 ## ----------------------------- ##
 
-def check_div(l, r):
+def check(l, r):
     make = z.expression
     CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l) // make(r))
     CHECK_EQ(make(r'({}){{\}}({})'.format(l, r)), make(l).ldivide(make(r)))
@@ -111,14 +120,14 @@ def check_div(l, r):
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l) / make(r))
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l).rdivide(make(r)))
 
-check_div(r'\e', 'a')
-check_div(r'\e', '<2>a')
-check_div(r'<2>\e', '<2>a')
-check_div(r'\e', 'a+b')
-check_div(r'\e', 'a+<2>b')
-check_div(r'c+d', 'ab')
-check_div(r'<2>c+<3>d', 'ab')
-check_div(r'<2>c+<3>d', '<2>ab')
+check(r'\e', 'a')
+check(r'\e', '<2>a')
+check(r'<2>\e', '<2>a')
+check(r'\e', 'a+b')
+check(r'\e', 'a+<2>b')
+check(r'c+d', 'ab')
+check(r'<2>c+<3>d', 'ab')
+check(r'<2>c+<3>d', '<2>ab')
 
 ## --------------------- ##
 ## div(label, label).    ##
