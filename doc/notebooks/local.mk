@@ -24,7 +24,7 @@ dist_notebooks_DATA =                           \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
   %D%/ICTAC-2016.ipynb                          \
-  %D%/LATA-2017.ipynb                           \
+  %D%/CIAA-2017.ipynb                           \
   %D%/References.ipynb                          \
   %D%/Sms2fr.ipynb                              \
   %D%/Spell-checker.ipynb                       \
