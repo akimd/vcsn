@@ -28,20 +28,23 @@ if test -z "$pylint"; then
     exit 0
 fi
 
-pylintflags=--rcfile=$srcdir/python/pylintrc
+# Apparently pylint is having problems with symlinks.
+srcdir=$(perl -MCwd -le 'print Cwd::abs_path(shift)' "$srcdir")
+
+pylintflags=--rcfile="$srcdir"/python/pylintrc
 
 # Print version in log.
 run 0 ignore -$pylint $pylintflags --version
 
 # Run Pylint on our modules.
-run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn
-run 0 ignore -vcsn run $pylint $pylintflags $srcdir/python/vcsn_tools
+run 0 ignore -vcsn run $pylint "$pylintflags" "$srcdir"/python/vcsn
+run 0 ignore -vcsn run $pylint "$pylintflags" "$srcdir"/python/vcsn_tools
 
 # Get all the Python scripts from libexec/.
-pyscripts=$(grep -l '/usr/bin/env python' $srcdir/libexec/*)
-run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
+pyscripts=$(grep -l '/usr/bin/env python' "$srcdir"/libexec/*)
+run 0 ignore -vcsn run $pylint "$pylintflags" $pyscripts
 
 # Get all the Python scripts from build-aux/bin.
-pyscripts=$(grep -lr '/usr/bin/env python' $srcdir/build-aux/bin/ \
+pyscripts=$(grep -lr '/usr/bin/env python' "$srcdir"/build-aux/bin/ \
            | grep -Ev '\..*\.swp') # Ignore Vim swap files
-run 0 ignore -vcsn run $pylint $pylintflags $pyscripts
+run 0 ignore -vcsn run $pylint "$pylintflags" $pyscripts
