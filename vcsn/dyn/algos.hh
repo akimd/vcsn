@@ -894,6 +894,7 @@ namespace vcsn
     ///                "auto": try to guess the format.
     /// \param strip   whether to return a stripped automaton,
     ///                or a named automaton.
+    /// \param loc     the location before the first character in \a is
     automaton read_automaton(std::istream& is,
                              const std::string& format = "default",
                              bool strip = true,
@@ -905,6 +906,7 @@ namespace vcsn
     /// \param ids     the identities to apply.
     /// \param is      the input stream.
     /// \param format  the expression's format.
+    /// \param loc     the location before the first character in \a is
     expression read_expression(const context& ctx, identities ids,
                                std::istream& is,
                                const std::string& format = "default",
