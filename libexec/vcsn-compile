@@ -214,8 +214,7 @@ def clean():
     the *.so on erebus using clang) and not required. However the
     debug symbols are in there, so when debugging, leave them!'''
     if not args['debug']:
-        log('remove {tmp}.o', level=2)
-        os.remove(fmt('{tmp}.o'))
+        run("rm -f '{tmp}.o'")
 
 # Main.
 args = parse_args()
@@ -237,7 +236,7 @@ if args['shared']:
         " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so'"
         " '{tmp}.o'")
-    os.rename(fmt('{tmp}.so'), fmt('{output}'))
+    run("mv -f '{tmp}.so' '{output}'")
     clean()
     notify()
 else:
@@ -247,5 +246,5 @@ else:
         " -MMD -MF '{deps}' -MQ '{output}'"
         " '{base}.cc'")
     run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
-    os.rename(fmt('{tmp}'), fmt('{output}'))
+    run("mv -f '{tmp}' '{output}'")
     clean()
