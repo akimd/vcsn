@@ -22,8 +22,12 @@ export VCSN_DATA_PATH
 : ${VCSN_LIBEXECDIR=$abs_srcdir/libexec:$abs_builddir/libexec}
 export VCSN_LIBEXECDIR
 
+# Let bin/vcsn know what path it should use.
+: ${VCSN_PATH=$abs_builddir/bin:$abs_srcdir/bin:$VCSN_LIBEXECDIR:$PATH}
+export VCSN_PATH
+
 # Use the non-installed binaries.
-PATH=$abs_builddir/bin:$abs_srcdir/bin:$PATH
+PATH=$VCSN_PATH
 export PATH
 
 # Use the non-installed Python modules, and its libraries.

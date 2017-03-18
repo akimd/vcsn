@@ -20,6 +20,10 @@ export PYTHONPATH
 : ${VCSN_DATADIR='@DATADIR@'}
 export VCSN_DATADIR
 
+# Where our main executables are.
+: ${VCSN_BINDIR='@BINDIR@'}
+export VCSN_BINDIR
+
 # Where our auxiliary executables are.
 : ${VCSN_LIBEXECDIR='@LIBEXECDIR@'}
 export VCSN_LIBEXECDIR
@@ -43,8 +47,12 @@ if test x"$VCSN_ENV" != x; then
   IFS=$save_IFS
 fi
 
-# Find our auxiliary executables.
-PATH=$VCSN_LIBEXECDIR:$PATH
+# Find our auxiliary executables.  Also find our public tools: think
+# for instance that we are not in the path, but the user called `vcsn`
+# with a qualified path: we must be able to call `vcsn compile`
+# etc. without requiring the user to put us in her path.
+: ${VCSN_PATH=$VCSN_BINDIR:$VCSN_LIBEXECDIR:$PATH}
+PATH=$VCSN_PATH
 export PATH
 
 # The Tools commands.
@@ -122,7 +130,7 @@ case $1 in
   (-v|--version) version;;
 
   (compile|demangle|ps|score|score-compare)
-      prog=$(which "vcsn-$1")
+      prog=$(command -v "vcsn-$1")
       shift
       exec "$PYTHON" "$prog" "$@";;
 
