@@ -28,6 +28,8 @@ namespace vcsn
       {}
 
       Registry() = delete;
+      Registry(const Registry&) = delete;
+      Registry(Registry&&) = delete;
 
       /// Whether log messages should be issued.
       bool debug = getenv("VCSN_DYN");
@@ -35,6 +37,7 @@ namespace vcsn
       /// Register function \a fn for signature \a sig.
       bool set(const signature& sig, Fun* fn)
       {
+        assert(fn);
         if (debug)
           std::cerr << "Register(" << name_ << ").set(" << sig << ")\n";
         map_[sig] = fn;
@@ -62,7 +65,7 @@ namespace vcsn
           sigs.emplace_back(p.first.to_string());
         boost::sort(sigs);
 
-        std::string res;
+        auto res = std::string{};
         res += "  failed signature:\n";
         res += "    " + sig.to_string() + "\n";
         res += "  available versions:\n";
