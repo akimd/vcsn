@@ -18,6 +18,10 @@ especially large ones.
 As a consequence, `expression.inductive` was also producing incorrect
 automata from multitape expressions.
 
+## Changes
+The division of expressions and automata now compute the product of the
+weights, not their quotient.
+
 
 # Vcsn 2.5 (2017-01-28)
 
