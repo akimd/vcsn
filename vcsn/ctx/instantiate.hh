@@ -297,11 +297,13 @@ namespace vcsn
         using b_ctx_t = context<labelset_t_of<Ctx>, b>;
         using b_rs_t = expressionset<b_ctx_t>;
 
+#if 2 <= VCSN_INSTANTIATION
         REGISTER(derivation, rs_t, wls_t, bool);
         REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(multiply_polynomial, wps_t, wps_t);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
+#endif
 
         return true;
       }
@@ -320,7 +322,9 @@ namespace vcsn
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
 
+#if 2 <= VCSN_INSTANTIATION
         REGISTER(eliminate_state, aut_t, int);
+#endif
 
         return true;
       }
@@ -376,15 +380,9 @@ namespace vcsn
         register_context_functions<ctx_t>();
         register_expression_functions<rs_t>();
 
-        REGISTER(add_weight, ws_t, ws_t);
-        REGISTER(list_polynomial, rps_t, std::ostream);
-        REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(num_tapes, ctx_t);
         REGISTER(print_context, ctx_t, std::ostream, const std::string);
-        REGISTER(print_expansion, es_t, std::ostream, const std::string);
-        REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
-        REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
@@ -392,6 +390,14 @@ namespace vcsn
         REGISTER(to_expression_class, ctx_t, rat::identities, const letter_class_t, bool);
         REGISTER(to_expression_label, ctx_t, rat::identities, ls_t);
 
+#if 2 <= VCSN_INSTANTIATION
+        REGISTER(add_weight, ws_t, ws_t);
+        REGISTER(list_polynomial, rps_t, std::ostream);
+        REGISTER(multiply_weight, ws_t, ws_t);
+        REGISTER(print_expansion, es_t, std::ostream, const std::string);
+        REGISTER(print_label, ls_t, std::ostream, const std::string);
+        REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
+#endif
         using is_free_t = bool_constant<ctx_t::labelset_t::is_free()>;
         register_functions_is_free<ctx_t>(is_free_t());
 
@@ -423,5 +429,4 @@ namespace vcsn
 #ifndef MAYBE_EXTERN
 # define MAYBE_EXTERN extern
 #endif
-
 }
