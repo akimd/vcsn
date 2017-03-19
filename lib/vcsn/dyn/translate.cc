@@ -285,10 +285,13 @@ namespace vcsn
               }
             else
               {
+                auto cmd
+                  = xgetenv("VCSN_COMPILE",
+                            xgetenv("VCSN", "vcsn") + " compile");
                 auto linkflags = printer_.linkflags();
                 if (!linkflags.empty())
                   linkflags = " LDFLAGS+='" + linkflags + "'";
-                cxx("vcsn compile -shared" + linkflags + " '" + base + ".cc'",
+                cxx(cmd + " -shared" + linkflags + " '" + base + ".cc'",
                     tmp);
               }
             auto d
