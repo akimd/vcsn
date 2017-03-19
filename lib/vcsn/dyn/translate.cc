@@ -25,6 +25,18 @@
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/stream.hh>
 
+namespace
+{
+  /// Level of verbosity.
+  int verbose = []{
+    auto res = 0;
+    auto cp = getenv("VCSN_VERBOSE");
+    std::istringstream is{cp ? cp : "0"};
+    is >> res;
+    return res;
+  }();
+}
+
 namespace vcsn
 {
   namespace dyn
@@ -165,7 +177,7 @@ namespace vcsn
             if (std::regex_search(line, smatch, r1)
                 || std::regex_search(line, smatch, r2))
               assertions += std::string(smatch[1]) + '\n';
-          if (getenv("VCSN_VERBOSE"))
+          if (verbose)
             {
               cmd += "\n  compiler error messages:\n";
               cmd += get_file_contents(err);
@@ -308,7 +320,11 @@ namespace vcsn
                   std::cerr << d.count() << "ms: " << base << '\n';
               }
           }
-          vcsn::detail::xlt_openext(base + ".so", true);
+          vcsn::detail::xlt_advise()
+            .global(true)
+            .ext()
+            .verbose(1 < verbose)
+            .open(base + ".so");
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.

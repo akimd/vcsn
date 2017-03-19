@@ -22,6 +22,8 @@ namespace vcsn
 
       xlt_advise& global(bool global);
       xlt_advise& ext();
+      /// Whether to report dlopen attempts.
+      xlt_advise& verbose(int v);
 
       const file_library& path() const noexcept;
       file_library& path() noexcept;
@@ -43,6 +45,7 @@ namespace vcsn
 
       lt_dladvise advise_;
       file_library path_;
+      int verbose_ = 0;
     };
 
 
