@@ -1,7 +1,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include <vcsn/config.hh>
+#include <vcsn/config.hh> // VCSN_DATADIR
 #include <vcsn/misc/file-library.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>

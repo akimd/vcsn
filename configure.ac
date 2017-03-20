@@ -219,8 +219,6 @@ esac
 LIBS=$save_LIBS
 AM_PATH_PYTHON([3.0])
 BOOST_PYTHON
-AC_DEFINE_UNQUOTED([PYTHON], ["$PYTHON"],
-                   [Define to a path to Python 3.])
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
 VCSN_REGEX
@@ -254,22 +252,8 @@ AC_SUBST([VCSN_LDFLAGS], ["$LDFLAGS -L$LIBDIR -Wl,-rpath,$LIBDIR $RT_LIBS $BOOST
 
 # We compile C++ at runtime.
 VCSN_PROG_CCACHE
-AC_DEFINE_UNQUOTED([CCACHE], ["$CCACHE"],
-                   [Define to the ccache program name.])
-AC_DEFINE_UNQUOTED([CPPFLAGS], ["$VCSN_CPPFLAGS"],
-                   [Define to the preprocessor flags.])
-AC_DEFINE_UNQUOTED([CXX], ["$VCSN_CXX"],
-                   [Define to the C++ compiler (without ccache).])
-AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
-                   [Define to the C++ compiler flags.])
 AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
                    [Define to the location of the data files.])
-AC_DEFINE_UNQUOTED([LDFLAGS], ["$VCSN_LDFLAGS"],
-                   [Define to the linker flags.])
-AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
-                   [Define to the location of the libraries.])
-AC_DEFINE_UNQUOTED([LIBEXECDIR], ["$LIBEXECDIR"],
-                   [Define to the location of the auxiliary executables.])
 
 
 ## ---------- ##
