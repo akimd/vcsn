@@ -69,7 +69,8 @@ command prompt:
     make install (as root)
 
 Do not hesitate to run `make -j3` if, for instance, your CPU features 4
-threads.
+threads.  To enable the generation of the Doxygen documentation, pass
+`--enable-doxygen` to configure.
 
 Note that an installation is specific to the compiler used to install
 it. Indeed, the call to `./configure` enables some workarounds and,
