@@ -86,11 +86,11 @@ EXTRA_DIST +=                                   \
 %D%/cross.log:          %D%/cross
 %D%/distance.log:       %D%/distance
 %D%/dyn.log:            %D%/dyn
-%D%/ipython.log:        $(vcsn_python_PYTHON)
+%D%/ipython.log:        $(vcsn_python)
 %D%/label.log:          %D%/label
 %D%/polynomialset.log:  %D%/polynomialset
 %D%/proper.log:         %D%/proper
-%D%/pylint.log:         $(vcsn_python_PYTHON) $(dist_pkglibexec_SCRIPTS) $(vcsn_python_pylint) $(dist_noinst_python)
+%D%/pylint.log:         $(vcsn_python) $(vcsn_python_pylint)
 %D%/score-compare.log:  $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
 %D%/score.log:          $(VCSN_PYTHON_DEPS) $(top_srcdir)/libexec/vcsn-score
 %D%/transpose.log:      %D%/transpose

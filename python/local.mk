@@ -31,17 +31,24 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/tools.py                             \
   %D%/vcsn/weight.py
 
+vcsn_python_demodir = $(vcsn_pythondir)/demo
+vcsn_python_demo_PYTHON =                       \
+  %D%/vcsn/demo/__init__.py                     \
+  %D%/vcsn/demo/automaton.py                    \
+  %D%/vcsn/demo/eliminate_state.py
+
 vcsn_tools_pythondir = $(pythondir)/vcsn_tools
 vcsn_tools_python_PYTHON =                      \
   %D%/vcsn_tools/__init__.py                    \
   %D%/vcsn_tools/demangle.py                    \
   %D%/vcsn_tools/gdb-demangle.py
 
-vcsn_python_demodir = $(vcsn_pythondir)/demo
-vcsn_python_demo_PYTHON =                       \
-  %D%/vcsn/demo/__init__.py                     \
-  %D%/vcsn/demo/automaton.py                    \
-  %D%/vcsn/demo/eliminate_state.py
+# All our Python sources.
+vcsn_python =                                   \
+  $(python_scripts)                             \
+  $(vcsn_python_PYTHON)                         \
+  $(vcsn_python_demo_PYTHON)                    \
+  $(vcsn_tools_python_PYTHON)
 
 vcsn_python_pylint = %D%/pylintrc
 
@@ -65,13 +72,10 @@ DASH = -
 install$(DASH)pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
 # A simple means to express dependencies for Python tests.
-VCSN_PYTHON_DEPS =				\
-  $(HEADERS)					\
-  $(nodist_python_PYTHON)			\
-  $(nodist_vcsn_tools_python_PYTHON)		\
-  $(pyexec_LTLIBRARIES)				\
-  $(top_srcdir)/libexec/vcsn-compile		\
-  $(vcsn_python_PYTHON)
+VCSN_PYTHON_DEPS =                              \
+  $(HEADERS)                                    \
+  $(pyexec_LTLIBRARIES)                         \
+  $(vcsn_python)
 
 # A short-hand to update all the python dependencies.
 .PHONY: python

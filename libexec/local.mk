@@ -11,14 +11,17 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_pkglibexec_SCRIPTS =                       \
+# Our scripts that are actually in Python.
+python_scripts =                                \
   %D%/vcsn-compile                              \
-  %D%/vcsn-gdb                                  \
-  %D%/vcsn-notebook                             \
   %D%/vcsn-ps                                   \
   %D%/vcsn-score                                \
   %D%/vcsn-score-compare
 
+dist_pkglibexec_SCRIPTS =                       \
+  $(python_scripts)                             \
+  %D%/vcsn-gdb                                  \
+  %D%/vcsn-notebook
 
 # The generator.
 tools_gen = build-aux/bin/tools-gen
