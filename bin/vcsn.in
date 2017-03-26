@@ -6,14 +6,19 @@ export PYTHON
 : ${IPYTHON='@IPYTHON@'}
 export IPYTHON
 
-# _Append_ VCSN_PYTHONDIR, not prepend, so that the user can still override this
-# path via $PYTHONPATH.  Note in particular that the builddir-tests need to
-# override $PYTHONPATH to use non-installed modules, which would them be
-# overriden here and installed files would be used instead.
+# _Append_ VCSN_PYTHONDIR, not prepend, so that the user can still
+# override this path via $PYTHONPATH.  Note in particular that the
+# builddir-tests need to override $PYTHONPATH to use non-installed
+# modules, which would them be overridden here and installed files
+# would be used instead.
 : ${VCSN_PYTHONDIR='@PYEXECDIR@'}
 export VCSN_PYTHONDIR
 PYTHONPATH=$PYTHONPATH:$VCSN_PYTHONDIR
 export PYTHONPATH
+
+# Also import our changes to PYTHONPATH.
+MYPYPATH=$MYPYPATH:$PYTHONPATH:$VCSN_PYTHONDIR
+export MYPYPATH
 
 # Used by commands such as vcsn-notebook.  Avoids the need for a
 # vcsn-notebook.in.
@@ -35,8 +40,8 @@ if test x"$VCSN_DYLD_LIBRARY_PATH" != x; then
 fi
 
 # If there are environment variables that we wish to set, do it now.
-# For instance VCSN_ENV=LD_PRELOAD=libclang_rt.asan-x86_64.so`.
-# This is especially useful on macOS with SIP enabled.
+# For instance VCSN_ENV=LD_PRELOAD=libclang_rt.asan-x86_64.so`.  This
+# is especially useful on macOS with SIP enabled.
 if test x"$VCSN_ENV" != x; then
   save_IFS=$IFS
   IFS=';'

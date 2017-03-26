@@ -1,4 +1,5 @@
 import os
+# import typing
 
 # pylint: disable=line-too-long
 import sys
@@ -30,10 +31,10 @@ except ImportError:
 
 
 param_num = 0
-def param(name=None):
+def param(name: str=None) -> str:
     if name is None:
         global param_num # pylint: disable=global-statement
-        name = param_num
+        name = str(param_num)
         param_num += 1
     # Here, we use a backtracking group, which is *much* slower, but
     # it allows to write patterns such as `context<{param}, {param}>`,
@@ -51,7 +52,7 @@ def param(name=None):
 )'''.format(name=name)
 
 
-def sub(pattern, repl, string, *args, **kwargs):
+def sub(pattern: str, repl: str, string: str, *args, **kwargs) -> str:
     r'''Apply `s/pattern/repl/g` as many times as possible in `string`.
 
     Spaces in the pattern are mapped to `\s*`.'''
@@ -69,7 +70,7 @@ def sub(pattern, repl, string, *args, **kwargs):
     return string
 
 
-def sugar(s):
+def sugar(s: str) -> str:
     '''Perform some transformations that aim at displaying a cuter version
     of a Vcsn type string.'''
     # Long specs are split into subdirs.  Remove the subdirs.
@@ -84,7 +85,9 @@ def sugar(s):
     return s
 
 
-def pretty_plugin(filename):
+# Can't use this, as we can't require typing just yet.
+# -> typing.Tuple[str, str]: # pylint: disable=invalid-sequence-index
+def pretty_plugin(filename: str):
     '''Split compilation type with its arguments and add sugar to the message.'''
     # what = algos|contexts, specs = argument specifications.
     m = re.match(r'.*/plugins/([^/]+)/(.*)', filename)
@@ -101,7 +104,8 @@ def pretty_plugin(filename):
         message = os.path.basename(filename)
     return title, message
 
-def has_color(color):
+def has_color(color: str) -> bool:
+    '''Whether to support colors.'''
     color_dict = {
         "always": True,
         # Emacs is having too hard a time with the colors here.
@@ -138,18 +142,18 @@ if colors_enabled:
     ]
 
 
-def colorize_pattern(line):
+def colorize_pattern(line: str):
     '''Highlight some interesting part of the error messages.'''
     for p in color_patterns:
         line = line.replace(p[0], p[1] + p[0] + std)
     return line
 
 
-def colorize_line(line):
+def colorize_line(line: str):
     '''Give matching colors to left/right pairs of parens/angles/brackets.'''
 
     res = ""
-    delim_stack = []
+    delim_stack = [] # type: typing.List[str]
 
     for c in line:
         if c in delimiters_open:
@@ -186,17 +190,16 @@ def colorize_line(line):
     return res
 
 
-def colorize(line):
+def colorize(line: str) -> str:
     if colors_enabled:
         line = "".join([colorize_line(l) for l in line.splitlines(True)])
         line = colorize_pattern(line)
     return line
 
-def demangle(s, color="auto"):
+def demangle(s: str, color: str="auto") -> str:
     '''Improve the legibility of `s` (which can be several lines long) by
     using more friendly type names.'''
 
-    color = has_color(color)
     # C++.
     s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|equal_to|forward|function|hash|less|make_shared|(unordered_)?map|pair|(unordered_)?set|shared_ptr|string|tuple|vector)',
             r'std::\1',
@@ -277,7 +280,7 @@ def demangle(s, color="auto"):
             r'dyn::\1',
             s)
 
-    if color:
+    if has_color(color):
         s = colorize(s)
 
     return s
