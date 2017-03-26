@@ -21,10 +21,6 @@ http://en.wikipedia.org/wiki/Levenshtein_automata
 ** Doxygen
 The Doxygen style documentation is way too poor.  Aim at completion.
 
-** Make it optional
-It is not nice that doxygen is required.  Besides, using it requires too
-many packages.
-
 ** Documentation notebooks
 They should also include complexity information.
 
