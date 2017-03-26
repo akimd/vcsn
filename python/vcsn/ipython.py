@@ -120,6 +120,10 @@ class ContextText:
                 raise NameError(
                         '`{}` is not a valid variable name'.format(name))
             elif self.name in self.ipython.shell.user_ns:
+                if not isinstance(self.ipython.shell.user_ns[self.name],
+                                  vcsn.context):
+                    raise TypeError(
+                            '`{}` exists but is not a context'.format(name))
                 ctx = self.ipython.shell.user_ns[self.name]
                 text = ctx.format('sname')
             else:
@@ -195,6 +199,10 @@ class AutomatonText:
         self.name = name
         self.format = format
         if self.name in self.ipython.shell.user_ns:
+            if not isinstance(self.ipython.shell.user_ns[self.name],
+                              vcsn.automaton):
+                raise TypeError(
+                        '`{}` exists but is not an automaton'.format(name))
             # Strip the automaton, as we cannot preserve the state names
             # anyway.
             aut = self.ipython.shell.user_ns[self.name].strip()
@@ -302,10 +310,11 @@ class ExpressionText:
         self.ipython = ipython
         self.name = name
         if self.name in self.ipython.shell.user_ns:
+            if not isinstance(self.ipython.shell.user_ns[self.name],
+                              vcsn.expression):
+                raise TypeError(
+                        '`{}` exists but is not an expression'.format(name))
             exp = self.ipython.shell.user_ns[self.name]
-            if not isinstance(exp, vcsn.expression):
-                raise NameError(
-                        '`{}` is defined but is not an expression'.format(name))
             text = exp.format('utf8')
             identities = exp.identities()
             cont = exp.context().format('sname')
