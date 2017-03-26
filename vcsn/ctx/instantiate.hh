@@ -284,6 +284,7 @@ namespace vcsn
       bool
       register_functions_is_free(std::true_type)
       {
+#if 2 <= VCSN_INSTANTIATION
         using ctx_t = Ctx;
         using rs_t = expressionset<ctx_t>;
 
@@ -297,7 +298,6 @@ namespace vcsn
         using b_ctx_t = context<labelset_t_of<Ctx>, b>;
         using b_rs_t = expressionset<b_ctx_t>;
 
-#if 2 <= VCSN_INSTANTIATION
         REGISTER(derivation, rs_t, wls_t, bool);
         REGISTER(difference_expression, rs_t, b_rs_t);
         REGISTER(list_polynomial, wps_t, std::ostream);
@@ -319,10 +319,10 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_one)
       {
+#if 2 <= VCSN_INSTANTIATION
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
 
-#if 2 <= VCSN_INSTANTIATION
         REGISTER(eliminate_state, aut_t, int);
 #endif
 
@@ -371,10 +371,6 @@ namespace vcsn
 
         // label polynomialset.
         using lps_t = polynomialset<ctx_t>;
-        // expression polynomialset.
-        using rps_t = rat::expression_polynomialset_t<rs_t>;
-        // expansionset.
-        using es_t = rat::expansionset<rs_t>;
 
         register_automaton_functions<aut_t>();
         register_context_functions<ctx_t>();
@@ -391,6 +387,11 @@ namespace vcsn
         REGISTER(to_expression_label, ctx_t, rat::identities, ls_t);
 
 #if 2 <= VCSN_INSTANTIATION
+        // expression polynomialset.
+        using rps_t = rat::expression_polynomialset_t<rs_t>;
+        // expansionset.
+        using es_t = rat::expansionset<rs_t>;
+
         REGISTER(add_weight, ws_t, ws_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(multiply_weight, ws_t, ws_t);
