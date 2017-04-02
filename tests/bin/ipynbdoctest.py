@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import argparse
+import itertools
 import os
 import pprint
 import re
@@ -172,19 +173,36 @@ def canonical_dict(dict):
     return dict
 
 
-def compare_outputs(ref, test):
-    exp = pprint.pformat([canonical_dict(d) for d in ref], width=132)
+def check_outputs(ref, test):
+    '''Check that two lists of outputs are equivalent and report the
+    result.'''
+
+    # The embedding of widgets does not seem to work the same way
+    # everywhere.
+    for ds in [ref, test]:
+        for d in ds:
+            if 'data' in d and \
+               'application/vnd.jupyter.widget-view+json' in d['data']:
+                SKIP('widgets are used')
+                return
+
+    # There can be several outputs.  For instance wnen the cell both
+    # prints a result (goes to "stdout") and displays an automaton
+    # (goes to "data").
+    exp = pprint.pformat([canonical_dict(d) for d in ref],  width=132)
     eff = pprint.pformat([canonical_dict(d) for d in test], width=132)
+
     if exp == eff:
-        return True
+        PASS()
     else:
         rst_file("Expected output", exp)
         rst_file("Effective output", eff)
         rst_diff(exp, eff)
-        return False
+        FAIL()
 
 
 def run_cell(kc, cell):
+    print("Running:", cell['source'])
     kc.execute(cell['source'])
     # This is useful but will make the notebook crash on long
     # executions, such as when the cache is empty, which can cause
@@ -240,55 +258,48 @@ def test_notebook(ipynb):
     except Exception as e:
         SKIP('cannot start Jupyter kernel:', repr(e))
         exit(0)
-    npass, nfail, nerror = 0, 0, 0
-    i = 0
-    for n, cell in enumerate(nb['cells']):
+    nerror = 0
+    for i, cell in enumerate(nb['cells']):
         if cell['cell_type'] != 'code':
             continue
+        # i counts all the cells (included those without code), n
+        # counts only the executable cells.
+        n = cell['execution_count']
+        print('cell [{}] ({}): '.format(n, i))
         # `%timeit`s shall count in execution count
         if cell['source'].startswith('%timeit'):
             run_cell(kc, {'source': 'pass'})
             continue
-        i = cell['execution_count']
         try:
             outs = run_cell(kc, cell)
         except Empty:
-            print('Failed to run cell #{} ({}):'.format(i, n),
+            print('Failed to run cell [{}] ({}):'.format(n, i),
                   '    Kernel Client is Empty; this is most likely due to a',
                   '    timeout issue. Check with `vcsn ps` or run the notebook',
                   '    manually, then retry.', sep='\n')
             print('Source was:\n', cell['source'])
-            FAIL('failed to run cell #{}'.format(i))
+            FAIL('failed to run cell [{}]'.format(n))
             nerror += 1
             continue
         except Exception as e:
-            print('Failed to run cell #{} ({}):'.format(i, n), repr(e))
+            print('Failed to run cell [{}] ({}):'.format(n, i), repr(e))
             print('Source was:', cell['source'], sep='\n')
-            FAIL('failed to run cell #{}'.format(i))
+            FAIL('failed to run cell [{}]'.format(n))
             nerror += 1
             continue
         if 'source' in cell and 'VCSN_SEED' in cell['source'] and not is_libcpp():
             SKIP('random number generation not on libc++')
             exit(0)
-        failed = not compare_outputs(cell.outputs, outs)
-        print('cell #{} ({}): '.format(i, n), end='')
-        if failed:
-            print('FAIL')
-            FAIL('cell #{}'.format(i))
-            nfail += 1
-        else:
-            print('OK')
-            PASS('cell #{}'.format(i))
-            npass += 1
+        check_outputs(cell.outputs, outs)
     print("Tested notebook {}".format(ipynb))
-    print("    {:3} cells successfully replicated".format(npass))
-    if nfail:
-        print("    {:3} cells mismatched output".format(nfail))
+    print("    {:3} cells successfully replicated".format(num_pass()))
+    if num_fail():
+        print("    {:3} cells mismatched output".format(num_fail()))
     if nerror:
         print("    {:3} cells failed to complete".format(nerror))
-    if i == 0:
+    if num_test() == 0:
         # The TAP protocol does not like empty test suite.
-        PASS('no tests')
+        PASS('no test')
 
     kc.stop_channels()
     km.shutdown_kernel()
