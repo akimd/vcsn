@@ -417,13 +417,13 @@ namespace vcsn
                 if (i != std::end(gens))
                   ++i;
                 for (;
-                     i != std::end(gens) && *i < l2;
+                     i != std::end(gens) && ls.less(*i, l2);
                      ++i)
                   fun(*i);
-                // The last letter.  Do not do this in the loop,
-                // we might overflow the capacity of char.
-                // Check validity, so that 'z-a' is empty.
-                if (*prev < l2)
+                // The last letter.  Do not do this in the loop, we
+                // might overflow the capacity of char.  Check
+                // validity, so that 'z-a' is empty.
+                if (ls.less(*prev, l2))
                   fun(l2);
 
                 prev = boost::none;
@@ -445,7 +445,7 @@ namespace vcsn
       using letter_t = typename LabelSet::letter_t;
       using letters_t = typename LabelSet::letters_t;
 
-      letters_t res;
+      auto res = letters_t{};
       conv_label_class_(ls, i, [&res](letter_t l){ res.insert(l); });
       return res;
     }
