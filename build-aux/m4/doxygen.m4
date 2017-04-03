@@ -6,5 +6,5 @@ AC_DEFUN([VCSN_PROG_DOXYGEN],
                  [generate the documentation with Doxygen],
                  [no|yes], [no])
 VCSN_ARG_PROGS([doxygen], [the Doxygen documentation generation program])
-AM_CONDITIONAL([ENABLE_DOXYGEN], [test $ENABLE_DOXYGEN = yes])
+AM_CONDITIONAL([ENABLE_DOXYGEN], [test $enable_doxygen = yes])
 ])
