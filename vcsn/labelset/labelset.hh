@@ -2,7 +2,6 @@
 
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/algorithm_ext/is_sorted.hpp>
 
@@ -299,7 +298,7 @@ namespace vcsn
            it != letters_end; ++it)
         {
           auto end = std::mismatch(it, letters_end,
-                                   boost::range::find(alphabet, *it),
+                                   boost::find(alphabet, *it),
                                    alphabet.end()).first;
           ls.print(*it, out, fmt);
           // No range for two letters or less.
@@ -411,7 +410,9 @@ namespace vcsn
                 letter_t l2 = ls.get_letter(i);
                 // Skip prev, which was already processed.
                 auto gens = ls.generators();
-                auto i = std::find(std::begin(gens), std::end(gens), *prev);
+                // boost::find is ambiguous between Boost.Range and
+                // Boost.Algorithms.
+                auto i = boost::range::find(gens, *prev);
                 // FIXME: Cannot use std::next here, in the case of tuples.
                 if (i != std::end(gens))
                   ++i;
