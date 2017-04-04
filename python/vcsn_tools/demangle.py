@@ -216,6 +216,9 @@ def demangle(s: str, color: str="auto") -> str:
     s = sub(r'std::unordered_set<{param},  std::hash<\1 >, std::equal_to<\1 >,  std::allocator<\1 >',
             r'std::unordered_set<\1>',
             s)
+    s = sub(r'std::__1::mersenne_twister_engine<unsigned int, 32, 624, 397, 31, 2567483615, 11, 4294967295, 7, 2636928640, 15, 4022730752, 18, 1812433253>',
+            r'std::default_random_engine',
+            s)
 
     # Misc.
     s = sub(r'boost::flyweights::flyweight<std::string, boost::flyweights::no_tracking, boost::flyweights::intermodule_holder(?:, boost::parameter::void_)*>',
