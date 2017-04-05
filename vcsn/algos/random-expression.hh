@@ -17,9 +17,7 @@ namespace vcsn
 {
   namespace detail
   {
-
-    /// Class random expression generator.
-    /// \brief Generate a random expression from a context.
+    /// Random expression generator.
     ///
     /// \tparam ExpressionSet the expression set type.
     /// \tparam RandomGenerator the random number engine type.
@@ -33,10 +31,10 @@ namespace vcsn
       using weight_t        = typename expressionset_t::weight_t;
       using weightset_t     = typename expressionset_t::weightset_t;
 
-      random_expression_impl(const expressionset_t& rs,
+      random_expression_impl(const expressionset_t& es,
                              const std::string& param,
                              RandomGenerator& gen)
-        : rs_{rs}
+        : es_{es}
         , gen_{gen}
       {
         parse_param_(param);
@@ -63,12 +61,12 @@ namespace vcsn
       /// sugar such as `<+`).
       expression_t random_expression() const
       {
-        return conv(rs_, random_expression_string());
+        return conv(es_, random_expression_string());
       }
 
     private:
-      /// FIXME: maybe use something similar to Boost.ProgramOptions
-      /// or getargs.
+      // FIXME: maybe use something similar to Boost.ProgramOptions or
+      // getargs.
       void parse_param_(const std::string& param)
       {
         // Set default value.
@@ -103,7 +101,7 @@ namespace vcsn
       void print_weight_(std::ostream& out, const format& fmt) const
       {
         out << "<";
-        rs_.weightset()->print(random_weight_.generate_random_weight(), out,
+        es_.weightset()->print(random_weight_.generate_random_weight(), out,
                                fmt.for_weights());
         out << ">";
       }
@@ -111,8 +109,9 @@ namespace vcsn
       /// Print label.
       void print_label_(std::ostream& out, const format& fmt) const
       {
-        rs_.labelset()->print(random_label(*rs_.labelset(), gen_), out,
-                              fmt.for_labels().delimit(true));
+        const auto& ls = *es_.labelset();
+        ls.print(random_label(ls, gen_), out,
+                 fmt.for_labels().delimit(true));
       }
 
       /// Print expression with unary operator.
@@ -182,7 +181,7 @@ namespace vcsn
         else
         {
           // Choose an operator.
-          auto op = chooser_it_(proba_op_, operators_)->first;
+          auto op = choose_(proba_op_, operators_)->first;
           switch (arities_.at(op))
             {
             case 0:
@@ -201,7 +200,7 @@ namespace vcsn
         return out;
       }
 
-      expressionset_t rs_;
+      expressionset_t es_;
       weightset_t ws_;
       unsigned length_;
       /// For each operator, its probability.
@@ -239,17 +238,18 @@ namespace vcsn
       RandomGenerator& gen_;
       /// Random weights generator.
       random_weight<weightset_t, RandomGenerator> random_weight_{gen_, ws_};
-      discrete_chooser<RandomGenerator> chooser_it_{gen_};
+      /// Random selection in containers.
+      discrete_chooser<RandomGenerator> choose_{gen_};
     };
 
     /// Convenience constructor.
     template <typename ExpressionSet, typename RandomGenerator = std::mt19937>
     random_expression_impl<ExpressionSet, RandomGenerator>
-    make_random_expression_impl(const ExpressionSet& rs,
+    make_random_expression_impl(const ExpressionSet& es,
                                 const std::string& param,
                                 RandomGenerator& gen = make_random_engine())
     {
-      return {rs, param, gen};
+      return {es, param, gen};
     }
   } // end namespace vcsn::detail
 
@@ -262,9 +262,9 @@ namespace vcsn
   /// to apply to the resulting expression.
   template <typename ExpressionSet>
   std::string
-  random_expression_string(const ExpressionSet& rs, const std::string& param)
+  random_expression_string(const ExpressionSet& es, const std::string& param)
   {
-    auto random_exp = detail::make_random_expression_impl(rs, param);
+    auto random_exp = detail::make_random_expression_impl(es, param);
     return random_exp.random_expression_string();
   }
 
@@ -272,9 +272,9 @@ namespace vcsn
   /// Generate a random expression.
   template <typename ExpressionSet>
   typename ExpressionSet::value_t
-  random_expression(const ExpressionSet& rs, const std::string& param)
+  random_expression(const ExpressionSet& es, const std::string& param)
   {
-    auto random_exp = detail::make_random_expression_impl(rs, param);
+    auto random_exp = detail::make_random_expression_impl(es, param);
     return random_exp.random_expression();
   }
 
@@ -289,8 +289,8 @@ namespace vcsn
                         identities ids)
       {
         const auto& c = ctx->as<Context>();
-        auto rs = make_expressionset(c, ids);
-        return {rs, random_expression(rs, param)};
+        auto es = make_expressionset(c, ids);
+        return {es, random_expression(es, param)};
       }
     }
   }

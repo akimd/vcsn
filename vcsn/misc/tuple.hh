@@ -153,6 +153,7 @@ namespace vcsn
       = typename index_sequence_difference<typename S1::type,
                                            typename S2::type>::type;
 
+    /// Run function \a f on each member of \a ts.
     template <typename Fun, typename... Ts>
     void
     for_(const std::tuple<Ts...>& ts, Fun f)

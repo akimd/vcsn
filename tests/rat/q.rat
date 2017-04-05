@@ -1,5 +1,3 @@
-# -*- shell-script, coding:utf-8 -*-
-
 %context: q
 %include: common-weights.rat
 
@@ -93,3 +91,9 @@ ab => ab
 
 %identities: agressive
 a** => a**
+
+
+# Local Variables:
+# mode: shell-script
+# coding: utf-8
+# End:

@@ -13,3 +13,8 @@
 <<<0>x>i>a  => \z
 <<<2><3>x>i>a => <<<6>x>i>a
 <<<2><3>x>i>a<<<4><5>\e>\e> => <<<120>x>i>a
+
+# Local Variables:
+# mode: shell-script
+# coding: utf-8
+# End:
