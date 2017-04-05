@@ -13,7 +13,7 @@ a|e   @ a|e   => a|e@a|e
 
 a|e @ a|e + a|e == (a|e @ a|e) + a|e
 
-
+a + a|e   ! join: cannot mix tuplesets and non tuplesets: a and a|e\n!   while reading expression: a + a|e
 
 
 %context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, q
@@ -40,6 +40,8 @@ abcd|efgh|ijkl       => abcd|efgh|ijkl
 a|e|i|z ! 1.6: too many tapes\n! a|e|i|z\n!      ^\n!   while reading expression: a|e|i|z
 a|e     ! 1.1-3: not enough tapes: 2 expected 3\n! a|e\n! ^^^\n!   while reading expression: a|e
 a       ! 1.1: not enough tapes: 1 expected 3\n! a\n! ^\n!   while reading expression: a
+
+a|e + a|e|i ! 1.1-3: not enough tapes: 2 expected 3\n! a|e + a|e|i\n! ^^^\n!   while reading expression: a|e + a|e|i
 
 %identities: linear
 b|f|j+a|e|i          => a|e|i+b|f|j
