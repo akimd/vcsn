@@ -198,10 +198,12 @@ CHECK(a('a') != ctx.weight_one())
 ## ------------------- ##
 
 def randexp(c, *args, **kwargs):
+    '''Generate a random expression.'''
+
     if not isinstance(c, vcsn.context):
         c = vcsn.context(c)
     res = c.random_expression(*args, **kwargs)
-    print("Expression: ", res)
+    print('randexp:', res)
     return res
 
 operators = [
@@ -225,7 +227,7 @@ operators = [
 
 def check_operators(e, ops):
     info = e.info()
-    print("Info: ", info)
+    print('Info:', info)
     for o in operators:
         print('check:', o)
         if o in ops:
@@ -271,12 +273,22 @@ for m in re.findall('<(.*?)>', str(exp)):
 
 
 # Check that we generate valid expressions on multitape contexts.
-for i in range(10):
+for i in range(100):
     randexp('lat<lan(abc), lan(abc)>, q',
             '+,*,.', length=20)
 exp = randexp('lat<lan(abc), lan(abc)>, q',
               '@,+,*,.', length=100, identities='none')
-check_operators(exp, ['add', 'atom', 'mul', 'one', 'star', 'compose'])
+check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star'])
+
+# Check that we use | correctly.
+for i in range(100):
+    randexp('lat<lan(abc), lan(abc)>, q',
+            '+,*=.2,.,|,@', length=20)
+# Since @ can only appear on top of |, it is less likely to appear.
+# So make a very large expression.
+exp = randexp('lat<lan(abc), lan(abc)>, q',
+              '+,*=.2,.,|=.1,@=2', length=1000, identities='none')
+check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 
 
 ## ---------------------- ##

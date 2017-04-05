@@ -11,10 +11,15 @@
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/random.hh>
+#include <vcsn/misc/tuple.hh>
 #include <vcsn/misc/unordered_map.hh>
 
 namespace vcsn
 {
+  template <typename ExpressionSet>
+  std::string
+  random_expression_string(const ExpressionSet& es, const std::string& param);
+
   namespace detail
   {
     /// Random expression generator.
@@ -79,14 +84,22 @@ namespace vcsn
           auto eq = arg.find('=');
           auto op = erase_all_copy(arg.substr(0, eq), " ");
           if (op == "w")
-            random_weight_.parse_param(arg.substr(eq + 1));
+            {
+              random_weight_params_ = arg.substr(eq + 1);
+              random_weight_.parse_param(random_weight_params_);
+            }
           else
           {
             float value = (eq != std::string::npos)
               ? detail::lexical_cast<float>(arg.substr(eq + 1))
               : 1;
             if (has(arities_, op))
-              operators_[op] = value;
+              {
+                // Ignore operators that don't make sense.
+                if ((op != "|" && op != "@")
+                    || context_t_of<expressionset_t>::is_lat)
+                  operators_[op] = value;
+              }
             else if (op == "length")
               length_ = value;
             else
@@ -95,6 +108,18 @@ namespace vcsn
         }
         proba_op_ = transform(operators_,
                               [](const auto& v){ return v.second; });
+      }
+
+      /// A string that specifies the current parameters.
+      std::string make_param_(unsigned length) const
+      {
+        auto res = std::string{};
+        for (const auto& p: operators_)
+          res += p.first + "=" + std::to_string(p.second) + ", ";
+        if (!random_weight_params_.empty())
+          res += "w=\"" + random_weight_params_ + "\", ";
+        res += "length=" + std::to_string(length);
+        return res;
       }
 
       /// Print random weight.
@@ -162,6 +187,48 @@ namespace vcsn
         }
       }
 
+
+      /// Print a tuple operator.
+      ///
+      /// GCC5 crashes on the equivalent code with static_if.
+      template <typename ExpSet = expressionset_t>
+      auto
+      print_tuple_exp_(std::ostream& out, unsigned length,
+                       const std::string& op, const format& fmt) const
+        -> std::enable_if_t<context_t_of<ExpSet>::is_lat,
+                            void>
+      {
+        assert(op == "|");
+        const auto len = length / es_.labelset()->size();
+        const auto param = make_param_(std::max(size_t{1}, len));
+        out << '(';
+        const auto* sep = "";
+        es_.as_tupleset().map([&out, &param, &sep](const auto& subes)
+           {
+             out << sep
+                 << '('
+                 << vcsn::random_expression_string(subes, param)
+                 << ')';
+             sep = "|";
+             // Please make_tuple.
+             return 0;
+           });
+        out << ')';
+      }
+
+      /// Print a tuple operator.
+      template <typename ExpSet = expressionset_t>
+      auto
+      print_tuple_exp_(std::ostream& out, unsigned length,
+                       const std::string& op, const format& fmt) const
+        -> std::enable_if_t<!context_t_of<ExpSet>::is_lat,
+                            void>
+      {
+        assert(op == "|");
+        raise(es_, "random_expression: invalid use of '|'");
+      }
+
+
       std::ostream&
       print_random_expression_(std::ostream& out, unsigned length,
                                const format& fmt) const
@@ -192,6 +259,9 @@ namespace vcsn
               break;
             case 2:
               print_binary_exp_(out, length, op, fmt);
+              break;
+            case 3:
+              print_tuple_exp_(out, length, op, fmt);
               break;
             default:
               assert(!"invalid arity");
@@ -228,7 +298,9 @@ namespace vcsn
         {"+", 2},
         {"{/}", 2},
         {"{\\}",2},
-        {"@",2},
+        {"@", 2},
+        // Special.
+        {"|", 3},
       };
 
       /// Vector of weights associated with the operators, i.e., the
@@ -236,6 +308,8 @@ namespace vcsn
       std::vector<float> proba_op_;
       /// Random generator.
       RandomGenerator& gen_;
+      /// Random weights generator parameters.
+      std::string random_weight_params_;
       /// Random weights generator.
       random_weight<weightset_t, RandomGenerator> random_weight_{gen_, ws_};
       /// Random selection in containers.

@@ -251,6 +251,14 @@ namespace vcsn
       return this->word_(v, indices);
     }
 
+    /// Run a function per set, and return the tuple of results.
+    template <typename Fun>
+    auto
+    map(Fun&& fun) const
+    {
+      return map_impl_(std::forward<Fun>(fun), indices);
+    }
+
     /// Whether \a l equals \a r.
     static bool
     equal(const value_t& l, const value_t& r)
@@ -829,6 +837,14 @@ namespace vcsn
         if (n)
           return true;
       return false;
+    }
+
+    /// Run a nullary function pointwise, and return the tuple of results.
+    template <typename Fun, std::size_t... I>
+    auto
+    map_impl_(Fun&& fun, seq<I...>) const
+    {
+      return std::make_tuple(fun(set<I>())...);
     }
 
     /// Apply a unary function pointwise, and return the tuple of results.
