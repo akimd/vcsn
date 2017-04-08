@@ -20,9 +20,18 @@ c2 = make('lat<lan(xyz), lan(EFG), lal(ABC)>, q')
 c3 = make('lat<lan(abc), lan(efg), lan(EFG), lal(ABC)>, q')
 check(c1, c2, c3)
 
-## ------------- ##
-## Composition.  ##
-## ------------- ##
+## -------- ##
+## Labels.  ##
+## -------- ##
+
+check(c1.label('a|e|x'),
+      c2.label('x|E|A'),
+      c3.label('a|e|E|A'))
+
+
+## ---------- ##
+## Automata.  ##
+## ---------- ##
 
 c1 = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, b")
 c2 = vcsn.context("lat<lan_char(xyz),lan_char(def)>, b")

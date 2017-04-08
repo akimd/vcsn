@@ -129,6 +129,29 @@ namespace vcsn
     }
   }
 
+  /*-------------------------.
+  | compose(label, label).   |
+  `-------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (compose).
+      template <typename LabelSetLhs, typename LabelSetRhs>
+      label
+      compose_label(const label& lhs, const label& rhs)
+      {
+        const auto& l1 = lhs->as<LabelSetLhs>();
+        const auto& l2 = rhs->as<LabelSetRhs>();
+        auto ls = compose_labelset(l1.valueset(), l2.valueset());
+        return {ls,
+                ls.compose(l1.valueset(), l1.value(),
+                           l2.valueset(), l2.value())};
+      }
+    }
+  }
+
   /*-----------------------------------.
   | compose(polynomial, polynomial).   |
   `-----------------------------------*/

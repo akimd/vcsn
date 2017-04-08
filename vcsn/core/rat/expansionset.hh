@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcsn/algos/num-tapes.hh>
 #include <vcsn/algos/project.hh>
 #include <vcsn/algos/split.hh> // expression_polynomialset_t
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/static-if.hh>
 
@@ -795,19 +795,25 @@ namespace vcsn
       /// The composition of \a l and \a r.
       template <typename Ctx = context_t>
       auto compose(value_t l, value_t r) const
-        -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
+        -> std::enable_if_t<are_composable<Ctx, Ctx>()
+                            && number_of_tapes<Ctx>::value == 2,
+                            value_t>
       {
+        // Tape of the lhs on which we compose.
+        constexpr auto out = labelset_t::size() - 1;
+        // Tape of the rhs on which we compose.
+        constexpr auto in = 0;
         value_t res = zero();
         denormalize(l);
         denormalize(r);
         res.constant = ws_.mul(l.constant, r.constant);
         for (const auto& lm: l.polynomials)
           for (const auto& rm: r.polynomials)
-            if (ls_.template set<0>().equal(std::get<1>(label_of(lm)),
-                                            std::get<0>(label_of(rm))))
+            if (ls_.template set<out>().equal(std::get<out>(label_of(lm)),
+                                              std::get<in>(label_of(rm))))
               {
-                auto l = ls_.tuple(std::get<0>(label_of(lm)),
-                                   std::get<1>(label_of(rm)));
+                auto l = ls_.compose(ls_, label_of(lm),
+                                     ls_, label_of(rm));
                 ps_.add_here(res.polynomials[l],
                              ps_.compose(lm.second, rm.second));
               }

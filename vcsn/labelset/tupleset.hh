@@ -214,6 +214,27 @@ namespace vcsn
       return value_t{args...};
     }
 
+    /// Compose, aka `join` in the world of databases.
+    /// Beware that we don't even check that the common tapes match.
+    template <typename... LS1, typename... LS2>
+    auto compose(const tupleset<LS1...>& ls1,
+                 const typename tupleset<LS1...>::value_t& l1,
+                 const tupleset<LS2...>& ls2,
+                 const typename tupleset<LS2...>::value_t& l2) const
+      -> std::enable_if_t<are_labelsets_composable<tupleset<LS1...>,
+                                                   tupleset<LS2...>>{},
+                          value_t>
+    {
+      // Tape of the lhs on which we compose.
+      constexpr auto out = tupleset<LS1...>::size() - 1;
+      // Tape of the rhs on which we compose.
+      constexpr auto in = 0;
+      using indices1_t = punched_sequence<tupleset<LS1...>::size(), out>;
+      using indices2_t = punched_sequence<tupleset<LS2...>::size(), in>;
+      return compose_(ls1, l1, ls2, l2,
+                      indices1_t{}, indices2_t{});
+    }
+
     genset_ptr
     genset() const
     {
@@ -690,6 +711,17 @@ namespace vcsn
     value_t value_(const std::tuple<Args...>& args, seq<I...>) const
     {
       return value_t{set<I>().value(std::get<I>(args))...};
+    }
+
+    template <typename... LS1, typename... LS2,
+              std::size_t... I1, std::size_t... I2>
+    value_t compose_(const tupleset<LS1...>&,
+                     const typename tupleset<LS1...>::value_t& l1,
+                     const tupleset<LS2...>&,
+                     const typename tupleset<LS2...>::value_t& l2,
+                     seq<I1...>, seq<I2...>) const
+    {
+      return tuple(std::get<I1>(l1)..., std::get<I2>(l2)...);
     }
 
     template <std::size_t... I>

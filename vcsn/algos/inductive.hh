@@ -1,9 +1,11 @@
 #pragma once
 
+#include <vcsn/algos/num-tapes.hh>
 #include <vcsn/core/automatonset.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -160,7 +162,8 @@ namespace vcsn
 
       VCSN_RAT_VISIT(compose, e)
       {
-        detail::static_if<has_compose_mem_fn<automatonset_t>{}>
+        detail::static_if<has_compose_mem_fn<automatonset_t>()
+                          && num_tapes<context_t>() == 2>
           ([this](const auto& e)
            {
              auto res = recurse(e.head());
@@ -172,7 +175,7 @@ namespace vcsn
            {
              raise("compose: context is not composable");
            })
-            (e);
+          (e);
       }
 
       VCSN_RAT_VISIT(conjunction, e)

@@ -873,13 +873,19 @@ namespace vcsn
     compose(const value_t& l, const value_t& r) const
       -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
     {
-      value_t res;
+      const auto& ls = *labelset();
+      // Tape of the lhs on which we compose.
+      constexpr auto out = labelset_t::size() - 1;
+      // Tape of the rhs on which we compose.
+      constexpr auto in = 0;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
-          if (labelset()->template set<0>().equal(std::get<1>(label_of(lm)),
-                                                  std::get<0>(label_of(rm))))
-            add_here(res, labelset()->tuple(std::get<0>(label_of(lm)),
-                                            std::get<1>(label_of(rm))),
+          if (ls.template set<out>().equal(std::get<out>(label_of(lm)),
+                                           std::get<in>(label_of(rm))))
+            add_here(res,
+                     ls.compose(ls, label_of(lm),
+                                ls, label_of(rm)),
                      weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
