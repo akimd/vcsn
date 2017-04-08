@@ -156,6 +156,9 @@ namespace vcsn
     automaton compose(const automaton& lhs, const automaton& rhs,
                       bool lazy = false);
 
+    /// The composition of two contexts.
+    context compose(const context& lhs, const context& rhs);
+
     /// The composition of two expansions.
     expansion compose(const expansion& lhs, const expansion& rhs);
 

@@ -181,6 +181,18 @@ namespace vcsn
       using type = typename index_sequence<>::type;
     };
 
+
+    /*--------------------.
+    | punched_sequence.   |
+    `--------------------*/
+
+    /// An index sequence with a gap.
+    template <std::size_t N, std::size_t Gap>
+    using punched_sequence
+      = concat_sequence<make_index_range_t<0, Gap>,
+                        make_index_range_t<Gap + 1, N>>;
+
+
     /*--------.
     | for_.   |
     `--------*/

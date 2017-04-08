@@ -457,6 +457,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<context>("context", bp::no_init)
     .def(bp::init<const std::string&>())
     .def("cerny", &context::cerny)
+    .def("compose", &context::compose)
     .def("cotrie", static_cast<string_trie_t>(&context::cotrie),
          (arg("data") = "", arg("format") = "default",
           arg("filename") = ""))

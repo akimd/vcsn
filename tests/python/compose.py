@@ -1,16 +1,28 @@
 #! /usr/bin/env python
 
 import re
+import sys
 import vcsn
+
 from test import *
 
 def check(a1, a2, exp):
-    res = a1.compose(a2)
-    CHECK_EQ(exp, res)
+    # @ is only supported since Python 3.5.
+    CHECK_EQ(exp, a1.compose(a2))
 
-#################
-## Composition ##
-#################
+## ---------- ##
+## Contexts.  ##
+## ---------- ##
+
+make = vcsn.context
+c1 = make('lat<lan(abc), lan(efg), lan(xyz)>, b')
+c2 = make('lat<lan(xyz), lan(EFG), lal(ABC)>, q')
+c3 = make('lat<lan(abc), lan(efg), lan(EFG), lal(ABC)>, q')
+check(c1, c2, c3)
+
+## ------------- ##
+## Composition.  ##
+## ------------- ##
 
 c1 = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, b")
 c2 = vcsn.context("lat<lan_char(xyz),lan_char(def)>, b")
