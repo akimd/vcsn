@@ -12,7 +12,7 @@ namespace vcsn
   | inductive(expression).   |
   `-------------------------*/
 
-  /// Build a inductive automaton from an expression.
+  /// Build an automaton by induction from an expression.
   ///
   /// \tparam Aut      the type of the generated automaton.
   /// \tparam ExpSet   the expressionset.

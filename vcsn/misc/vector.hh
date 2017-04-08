@@ -7,11 +7,9 @@
 
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/functional.hh> // hash_combine
-#include <vcsn/misc/tuple.hh> // make_index_sequence.
 
 namespace vcsn
 {
-
   namespace detail
   {
     /// The content of \a cont as a vector.

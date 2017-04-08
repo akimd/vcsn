@@ -88,9 +88,9 @@ b = r'''digraph
 }'''
 check(aut, aut, b)
 
-###############################
+## ------------------------- ##
 ## Spontaneous transitions.  ##
-###############################
+## ------------------------- ##
 
 t1 = c1.expression("(a|x)*").thompson()
 t2 = c2.expression("(x|d)*").thompson()
@@ -117,9 +117,9 @@ check(c1.expression("(a|x)*").standard(),
   0 -> F0
 }''')
 
-############################
-## Heterogeneous contexts ##
-############################
+## ------------------------ ##
+## Heterogeneous contexts.  ##
+## ------------------------ ##
 
 c_ratb = vcsn.context("lat<lan_char(abc),lan_char(xyz)>, expressionset<lal_char(mno), b>")
 c_q = vcsn.context("lat<lan_char(xyz),lan_char(def)>, q")
@@ -145,9 +145,9 @@ check(c_ratb.expression("<o>(a|x)").standard(),
   1 -> F1
 }''')
 
-###############################################
-## Check mixed epsilon and letters going out ##
-###############################################
+## ------------------------------------------- ##
+## Check mixed epsilon and letters going out.  ##
+## ------------------------------------------- ##
 
 
 a1 = vcsn.automaton(r'''digraph
@@ -222,17 +222,17 @@ check(c_r.expression("<3.1>(a|x)").standard(),
   1 -> F1
 }''')
 
-##########################
-## Fibonacci normalizer ##
-##########################
+## ---------------------- ##
+## Fibonacci normalizer.  ##
+## ---------------------- ##
 
 check(meaut('left.gv'),
       meaut('right.gv'),
       metext('result.gv'))
 
-######################
-## Lazy composition ##
-######################
+## ------------------ ##
+## Lazy composition.  ##
+## ------------------ ##
 
 CHECK_EQ(metext('result.gv'),
          meaut('left.gv').compose(meaut('right.gv'), lazy=True).accessible())

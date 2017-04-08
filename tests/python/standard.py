@@ -48,7 +48,7 @@ def check(r, exp=None, file=None):
     # Check that we are equivalent to derived-term.  However,
     # derived-term sometimes needs a neutral to compute ldivide/rdivide.
     if r.info('ldivide'):
-        # FIXME: Not very elegant...  We need means to derive context
+        # FIXME: Not very elegant...  We need means to derive contexts
         # from others.  Unless we get rid of lal.
         nctx = vcsn.context(re.sub('(.*?), *(.*)', r'nullableset<\1>, \2',
                                    r.context().format('sname')))

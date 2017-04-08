@@ -857,9 +857,9 @@ namespace vcsn
     /// Detect whether the labelset features `compose`.
     template <typename Ctx>
     using compose_t
-    = decltype(std::declval<labelset_t_of<Ctx>>()
-               .compose(std::declval<label_t_of<Ctx>>(),
-                        std::declval<label_t_of<Ctx>>()));
+      = decltype(std::declval<labelset_t_of<Ctx>>()
+                .compose(std::declval<label_t_of<Ctx>>(),
+                         std::declval<label_t_of<Ctx>>()));
 
     /// Whether LabelSet features `compose`.
     template <typename Ctx>
