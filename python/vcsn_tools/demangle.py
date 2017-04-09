@@ -8,8 +8,11 @@ try:
     import regex as re
     has_regex = True
 except ImportError:
-    import warnings
-    warnings.warn('you should install regex for Python')
+# This triggers way too many warnings, including each time we compile
+# an algorithm, which is often.
+#
+#    import warnings
+#    warnings.warn('you should install regex for Python')
     has_regex = False
     import re
 
