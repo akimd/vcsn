@@ -3,6 +3,7 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/tuple.hh>
+#include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
@@ -156,6 +157,15 @@ namespace vcsn
   | compose(polynomial, polynomial).   |
   `-----------------------------------*/
 
+  template <typename Ctx1, typename Ctx2>
+  auto
+  compose_polynomialset(const polynomialset<Ctx1>& ps1,
+                        const polynomialset<Ctx2>& ps2)
+  {
+    return make_polynomialset(compose_context(ps1.context(),
+                                              ps2.context()));
+  }
+
   namespace dyn
   {
     namespace detail
@@ -165,11 +175,12 @@ namespace vcsn
       polynomial
       compose_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto join_elts = join<PolSetLhs, PolSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::compose(std::get<0>(join_elts),
-                                std::get<1>(join_elts),
-                                std::get<2>(join_elts))};
+        const auto& p1 = lhs->as<PolSetLhs>();
+        const auto& p2 = rhs->as<PolSetRhs>();
+        auto ps = compose_polynomialset(p1.valueset(), p2.valueset());
+        return {ps,
+                ps.compose(p1.valueset(), p1.value(),
+                           p2.valueset(), p2.value())};
       }
     }
   }

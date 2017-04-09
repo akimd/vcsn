@@ -854,39 +854,47 @@ namespace vcsn
     | compose.   |
     `-----------*/
 
-    /// Detect whether the labelset features `compose`.
+    /// Detect whether the labelset features a binary `compose`.
     template <typename Ctx>
     using compose_t
       = decltype(std::declval<labelset_t_of<Ctx>>()
                 .compose(std::declval<label_t_of<Ctx>>(),
                          std::declval<label_t_of<Ctx>>()));
 
-    /// Whether LabelSet features `compose`.
+    /// Whether LabelSet features `compose`.  This is actually meant
+    /// to detect the case of expressionset.
     template <typename Ctx>
     using has_compose_fn = detect<Ctx, compose_t>;
 
 
     /// The composition of polynomials \a l and \a r when the context is a
     /// composable tupleset.
-    template <typename Ctx = context_t>
+    template <typename Ctx1, typename Ctx2>
     auto
-    compose(const value_t& l, const value_t& r) const
-      -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
+    compose(const polynomialset<Ctx1>& ps1,
+            const typename polynomialset<Ctx1>::value_t& p1,
+            const polynomialset<Ctx2>& ps2,
+            const typename polynomialset<Ctx2>::value_t& p2) const
+      -> std::enable_if_t<are_composable<Ctx1, Ctx2>{}, value_t>
     {
       const auto& ls = *labelset();
+      const auto& ls1 = *ps1.labelset();
+      const auto& ls2 = *ps2.labelset();
       // Tape of the lhs on which we compose.
-      constexpr auto out = labelset_t::size() - 1;
+      constexpr auto out = number_of_tapes<Ctx2>::value - 1;
       // Tape of the rhs on which we compose.
       constexpr auto in = 0;
+      // A labelset for the common tape type.
+      const auto& midls = ls1.template set<out>();
       auto res = value_t{};
-      for (const auto& lm: l)
-        for (const auto& rm: r)
-          if (ls.template set<out>().equal(std::get<out>(label_of(lm)),
-                                           std::get<in>(label_of(rm))))
+      for (const auto& m1: p1)
+        for (const auto& m2: p2)
+          if (midls.equal(std::get<out>(label_of(m1)),
+                          std::get<in>(label_of(m2))))
             add_here(res,
-                     ls.compose(ls, label_of(lm),
-                                ls, label_of(rm)),
-                     weightset()->mul(weight_of(lm), weight_of(rm)));
+                     ls.compose(ls1, label_of(m1),
+                                ls2, label_of(m2)),
+                     weightset()->mul(weight_of(m1), weight_of(m2)));
       return res;
     }
 
@@ -900,9 +908,9 @@ namespace vcsn
       value_t res;
       for (const auto& lm: l)
         for (const auto& rm: r)
-          add_here(res, labelset()->compose(label_of(lm), label_of(rm)),
-                                            weightset()->mul(weight_of(lm),
-                                                             weight_of(rm)));
+          add_here(res,
+                   labelset()->compose(label_of(lm), label_of(rm)),
+                   weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
 

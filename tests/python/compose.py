@@ -29,6 +29,31 @@ check(c1.label('a|e|x'),
       c3.label('a|e|E|A'))
 
 
+## ------------- ##
+## Polynomials.  ##
+## ------------- ##
+
+check(c1.polynomial('a|e|x'),
+      c2.polynomial('x|E|A'),
+      c3.polynomial('a|e|E|A'))
+
+check(c1.polynomial('a|e|x'),
+      c2.polynomial('y|E|A'),
+      c3.polynomial(r'\z'))
+
+check(c1.polynomial('a|e|x + b|f|y + c|g|z'),
+      c2.polynomial('x|E|A'),
+      c3.polynomial('a|e|E|A'))
+
+check(c1.polynomial('a|e|x + b|f|y + c|g|z'),
+      c2.polynomial('y|F|B'),
+      c3.polynomial('b|f|F|B'))
+
+check(c1.polynomial('a|e|x + a|e|y + a|e|\e'),
+      c2.polynomial('x|E|A + y|E|A + \e|E|A'),
+      c3.polynomial('<3>a|e|E|A'))
+
+
 ## ---------- ##
 ## Automata.  ##
 ## ---------- ##
