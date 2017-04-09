@@ -1,15 +1,15 @@
 #pragma once
 
-#include <array>
 #include <iosfwd>
 #include <istream>
 #include <set>
 #include <tuple>
 
-#include <boost/range/join.hpp>
 #include <boost/optional.hpp>
+#include <boost/range/join.hpp>
 
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+#include <vcsn/ctx/traits.hh>
 //#include <vcsn/core/rat/expressionset.hh> needed, but breaks everythying...
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/labelset/labelset.hh>
@@ -1175,29 +1175,6 @@ namespace vcsn
   | is_multitape.   |
   `----------------*/
 
-  /// Whether a ValueSet, or a context, is multitape.
-  template <typename ValueSet>
-  struct is_multitape
-    : std::false_type
-  {};
-
-  template <typename... ValueSet>
-  struct is_multitape<tupleset<ValueSet...>>
-    : std::true_type
-  {};
-
-  template <typename LabelSet, typename WeightSet>
-  struct is_multitape<context<LabelSet, WeightSet>>
-    : is_multitape<LabelSet>
-  {};
-
-  template <typename Context>
-  struct is_multitape<expressionset<Context>>
-    : is_multitape<Context>
-  {};
-
-
-
   template <typename T1, typename T2>
   struct concat_tupleset;
 
@@ -1385,6 +1362,17 @@ namespace vcsn
 
   }// detail::
 
+  template <typename... ValueSet>
+  struct is_multitape<tupleset<ValueSet...>>
+    : std::true_type
+  {};
+
+  template <typename... ValueSets>
+  struct number_of_tapes<tupleset<ValueSets...>>
+  {
+    constexpr static auto value = sizeof...(ValueSets);
+  };
+
 
   /*----------------.
   | random_label.   |
@@ -1414,6 +1402,4 @@ namespace vcsn
     // each sub-labelset.
     return ls.tuple(random_label(ls.template set<I>(), gen)...);
   }
-
-
 }// vcsn::

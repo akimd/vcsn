@@ -104,4 +104,25 @@ namespace vcsn
   struct are_composable
     : are_labelsets_composable<labelset_t_of<Ctx1>, labelset_t_of<Ctx2>>
   {};
+
+  /*----------------.
+  | is_multitape.   |
+  `----------------*/
+
+  /// Whether a ValueSet, or a context, is multitape.
+  template <typename ValueSet>
+  struct is_multitape
+    : std::false_type
+  {};
+
+
+  /*-------------------.
+  | Number of tapes.   |
+  `-------------------*/
+
+  template <typename LabelSet>
+  struct number_of_tapes
+  {
+    constexpr static auto value = 0;
+  };
 }

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <vcsn/algos/project.hh> // project
+#include <vcsn/algos/num-tapes.hh>
+#include <vcsn/algos/project.hh>
 #include <vcsn/algos/split.hh> // expression_polynomialset_t
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/static-if.hh>

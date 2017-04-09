@@ -3,12 +3,11 @@
 #include <memory>
 #include <string>
 
+#include <vcsn/ctx/traits.hh> // is_multitape.
 #include <vcsn/dyn/cast.hh>
 #include <vcsn/misc/export.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/symbol.hh>
-
-// FIXME: we do not want this include!
-#include <vcsn/labelset/tupleset.hh> // is_multitape
 
 namespace vcsn
 {
@@ -144,8 +143,8 @@ namespace vcsn
     join(const value_impl<Tag>& lhs, const value_impl<Tag>& rhs)
     {
       constexpr auto valid
-        = vcsn::detail::is_multitape<ValueSetLhs>()
-        == vcsn::detail::is_multitape<ValueSetRhs>();
+        = vcsn::is_multitape<ValueSetLhs>()
+        == vcsn::is_multitape<ValueSetRhs>();
       // The type used when throwing an error.
       using stub_t = std::tuple<ValueSetLhs,
                                 typename ValueSetLhs::value_t,

@@ -93,6 +93,7 @@ algo_headers =                                  \
   %D%/algos/minimize.hh                         \
   %D%/algos/multiply.hh                         \
   %D%/algos/normalize.hh                        \
+  %D%/algos/num-tapes.hh                        \
   %D%/algos/pair.hh                             \
   %D%/algos/partial-identity-expression.hh      \
   %D%/algos/partial-identity.hh                 \

@@ -37,6 +37,7 @@
 #include <vcsn/algos/minimize.hh>
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/normalize.hh>
+#include <vcsn/algos/num-tapes.hh>
 #include <vcsn/algos/print.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/push-weights.hh>

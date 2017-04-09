@@ -222,7 +222,7 @@ namespace vcsn
     /// Add a complement operator: `e{c}`.
     auto complement(const value_t& e) const -> value_t
     {
-      return complement(e, bool_constant<!detail::is_multitape<context_t>{}>{});
+      return complement(e, bool_constant<!is_multitape<context_t>{}>{});
     }
 
     /// Add a transposition operator.

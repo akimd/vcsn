@@ -620,6 +620,12 @@ namespace vcsn
     return {rs.context(), ids};
   }
 
+  /// Number of tapes of an expressionset.
+  template <typename Context>
+  struct is_multitape<expressionset<Context>>
+    : is_multitape<Context>
+  {};
+
   /// The meet of two expressionsets.
   template <typename Ctx1, typename Ctx2>
   auto
