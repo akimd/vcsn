@@ -10,14 +10,14 @@ namespace vcsn
   {
     /// Execute the then-clause.
     template <typename Then, typename Else>
-    auto static_if(std::true_type, Then&& then, Else&&)
+    auto static_if_impl(std::true_type, Then&& then, Else&&)
     {
       return std::forward<Then>(then);
     }
 
     /// Execute the else-clause.
     template <typename Then, typename Else>
-    auto static_if(std::false_type, Then&&, Else&& else_)
+    auto static_if_impl(std::false_type, Then&&, Else&& else_)
     {
       return std::forward<Else>(else_);
     }
@@ -26,9 +26,9 @@ namespace vcsn
     template <bool cond, typename Then, typename Else>
     auto static_if(Then&& then, Else&& else_)
     {
-      return static_if(bool_constant<cond>{},
-                       std::forward<Then>(then),
-                       std::forward<Else>(else_));
+      return static_if_impl(bool_constant<cond>{},
+                            std::forward<Then>(then),
+                            std::forward<Else>(else_));
     }
 
     /// Execute the then-clause if \a cond is verified.
