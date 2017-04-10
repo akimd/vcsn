@@ -125,7 +125,8 @@ namespace vcsn
       }
 
       /// Print an expansion.
-      std::ostream& print_(const expansion_t& v, std::ostream& o) const
+      std::ostream&
+      print_(const expansion_t& v, std::ostream& o = std::cerr) const
       {
         xs_.print(v, o);
         if (transposed_)
@@ -164,7 +165,7 @@ namespace vcsn
         for (size_t i = 0, size = e.size(); i < size; ++i)
           {
             auto r = e[transposed_ ? size-1 - i : i];
-            expansion_t rhs = to_expansion(r);
+            auto rhs = to_expansion(r);
             if (transposed_)
               r = rs_.transposition(r);
 
@@ -224,8 +225,8 @@ namespace vcsn
         assert(e.size() == 2);
         bool transposed = transposed_;
         transposed_ = false;
-        expansion_t lhs = to_expansion(e[0]);
-        expansion_t rhs = to_expansion(e[1]);
+        auto lhs = to_expansion(e[0]);
+        auto rhs = to_expansion(e[1]);
         res_ = xs_.ldivide(lhs, rhs);
         if (transposed)
           res_ = xs_.transpose(res_);

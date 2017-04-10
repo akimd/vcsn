@@ -44,7 +44,9 @@ namespace vcsn
       struct value_t
       {
         weight_t constant;
-        polys_t polynomials;
+        // Default value to silence the warnings from
+        // -Wmissing-field-initializers with `value_t{weight}`.
+        polys_t polynomials = {};
       };
 
       expansionset(const expressionset_t& rs)
@@ -177,6 +179,12 @@ namespace vcsn
       }
 
       /// Move the constant to the polynomial associated to one.
+      ///
+      /// Note that this should be named `maybe_denormalize`, as if
+      /// the labelset has no one, the input argument is returned
+      /// unmodified.  In particular, be sure to use the constant term
+      /// of the result, even if in typically cases it is expected to
+      /// be zero.
       value_t& denormalize(value_t& res) const
       {
         auto has_one = bool_constant<context_t::has_one()>();
@@ -229,13 +237,13 @@ namespace vcsn
       /// The zero.
       value_t zero() const
       {
-        return {ws_.zero(), polys_t{}};
+        return {ws_.zero()};
       }
 
       /// The one.
       value_t one() const
       {
-        return {ws_.one(), polys_t{}};
+        return {ws_.one()};
       }
 
       /// A single label.
@@ -255,7 +263,7 @@ namespace vcsn
       /// Addition.
       value_t add(const value_t& lhs, const value_t& rhs) const
       {
-        value_t res = lhs;
+        auto res = lhs;
         add_here(res, rhs);
         return res;
       }
@@ -263,7 +271,7 @@ namespace vcsn
       /// Left-multiplication by \a w of \a rhs.
       value_t lweight(const weight_t& w, const value_t& rhs) const
       {
-        value_t res = rhs;
+        auto res = rhs;
         lweight_here(w, res);
         return res;
       }
@@ -280,7 +288,7 @@ namespace vcsn
       /// Right-multiplication of \a lhs by \a w.
       value_t rweight(const value_t& lhs, const weight_t& w) const
       {
-        value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
+        auto res = value_t{ws_.mul(lhs.constant, w)};
         for (auto& p: lhs.polynomials)
           for (const auto& m: p.second)
             ps_.add_here(res.polynomials[p.first],
@@ -356,10 +364,9 @@ namespace vcsn
         -> std::enable_if_t<detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
-        value_t res = zero();
         denormalize(l);
         denormalize(r);
-        res.constant = ws_.mul(l.constant, r.constant);
+        auto res = value_t{ws_.mul(l.constant, r.constant)};
         for (const auto& p: zip_maps(l.polynomials, r.polynomials))
           res.polynomials[p.first]
             = conjunction(std::get<0>(p.second), std::get<1>(p.second));
@@ -379,8 +386,7 @@ namespace vcsn
         -> std::enable_if_t<!detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
-        value_t res = zero();
-        res.constant = ws_.mul(lhs.constant, rhs.constant);
+        auto res = value_t{ws_.mul(lhs.constant, rhs.constant)};
         for (const auto& l: lhs.polynomials)
           for (const auto& r: rhs.polynomials)
             {
@@ -437,8 +443,7 @@ namespace vcsn
       value_t shuffle(const value_t& de, const expression_t& e,
                       const value_t& df, const expression_t& f) const
       {
-        value_t res;
-        res.constant = ws_.mul(de.constant, df.constant);
+        auto res = value_t{ws_.mul(de.constant, df.constant)};
         return shuffle_(res,
                         de, e, df, f,
                         [this](const expression_t& l, const expression_t& r)
@@ -452,7 +457,7 @@ namespace vcsn
                          const value_t& df, const expression_t& f) const
       {
         // Conjunction part: de&:df.
-        value_t res =
+        auto res =
           conjunction_(de, df,
                        [this](const polynomial_t& l, const polynomial_t& r)
                        {
@@ -500,8 +505,7 @@ namespace vcsn
       std::enable_if_t<IsLetterized, value_t>
       complement_(const value_t& v) const
       {
-        value_t res;
-        res.constant = ws_.is_zero(v.constant) ? ws_.one() : ws_.zero();
+        auto res = value_t{ws_.is_zero(v.constant) ? ws_.one() : ws_.zero()};
 
         detail::static_if<labelset_t::has_one()>
           ([this](const auto& v, const auto& ls)
@@ -535,7 +539,7 @@ namespace vcsn
       /// Transpose an expansion.  The firsts must be reduced to one.
       value_t transpose(const value_t& v) const
       {
-        value_t res = {ws_.transpose(v.constant), polys_t{}};
+        auto res = value_t{ws_.transpose(v.constant)};
         for (const auto& p: v.polynomials)
           {
             VCSN_REQUIRE(ls_.is_one(p.first),
@@ -548,9 +552,9 @@ namespace vcsn
 
       value_t ldivide(value_t lhs, value_t rhs) const
       {
-        value_t res = zero();
         denormalize(lhs);
         denormalize(rhs);
+        auto res = value_t{ws_.mul(lhs.constant, rhs.constant)};
         auto one = detail::label_one(ls_);
         auto& res_one = res.polynomials[one];
 
@@ -590,8 +594,7 @@ namespace vcsn
       value_t
       determinize(const value_t& v) const
       {
-        value_t res;
-        res.constant = v.constant;
+        auto res = value_t{v.constant};
         for (const auto& lp: v.polynomials)
           res.polynomials[lp.first] = {ps_.determinize(lp.second)};
         return res;
@@ -667,9 +670,9 @@ namespace vcsn
                                   eset_.ps_.tuple(ps.second...));
              },
              polys);
-        eset_.normalize(res);
-        return res;
-      }
+          eset_.normalize(res);
+          return res;
+        }
 
         const expansionset& eset_;
       };
@@ -680,8 +683,7 @@ namespace vcsn
       /// Another implementation is possible, based on the following
       /// two-tape example taking e0 and e1, two single-tape expansions:
       ///
-      /// auto res = zero();
-      /// res.constant = ws_.mul(e0.constant, e1.constant);
+      /// auto res = value_t{ws_.mul(e0.constant, e1.constant)};
       /// for (const auto& p0: e0.polynomials)
       ///     for (const auto& p1: e1.polynomials)
       ///       {
@@ -803,10 +805,9 @@ namespace vcsn
         constexpr auto out = labelset_t::size() - 1;
         // Tape of the rhs on which we compose.
         constexpr auto in = 0;
-        value_t res = zero();
         denormalize(l);
         denormalize(r);
-        res.constant = ws_.mul(l.constant, r.constant);
+        auto res = value_t{ws_.mul(l.constant, r.constant)};
         for (const auto& lm: l.polynomials)
           for (const auto& rm: r.polynomials)
             if (ls_.template set<out>().equal(std::get<out>(label_of(lm)),
