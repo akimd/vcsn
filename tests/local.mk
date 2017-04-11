@@ -99,9 +99,10 @@ AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 # Set verbosity to get compiler logs, or more if the envvar is already
 # set.  Do not load the user's config file, which might mess with our
 # base configuration.
-CHECK_ENVIRONMENT +=                                \
-  : $${VCSN_VERBOSE=1}; export VCSN_VERBOSE;        \
-  VCSN_NO_HOME_CONFIG=; export VCSN_NO_HOME_CONFIG
+CHECK_ENVIRONMENT +=						\
+  : $${VCSN_VERBOSE=1}; export VCSN_VERBOSE;			\
+  VCSN_NO_HOME_CONFIG=1; export VCSN_NO_HOME_CONFIG;		\
+  abs_top_srcdir=$(abs_top_srcdir); export abs_top_srcdir
 
 # Use the wrappers to run the non-installed executables.
 # Find the config file in share/vcsn.

@@ -199,6 +199,8 @@ nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html) %D%/index.html
 DISTCLEANFILES += $(nodist_notebooks_DATA)
 endif
 
+# Files generated when running the notebooks.
+DISTCLEANFILES += abc.gv fr2en en2es words
 
 ## ------- ##
 ## check.  ##

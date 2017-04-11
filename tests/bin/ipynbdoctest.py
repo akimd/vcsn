@@ -284,6 +284,9 @@ def test_notebook(ipynb):
             # Of course, we can't run the remainder as we certainly
             # have skipped definitions used later in the notebook.
             exit(0)
+        # Adjust the paths to files used in the notebooks.
+        source = source.replace('../../tests/demo',
+                                os.environ['abs_top_srcdir'] + '/tests/demo')
         try:
             outs = run_cell(kc, source)
         except Empty:
@@ -331,10 +334,5 @@ if __name__ == '__main__':
     success = True
     cwd = os.getcwd()
     for ipynb in args.notebooks:
-        # Go into the directory of the notebook, so that the path to
-        # the rest of the package is really identical as if we were
-        # running the notebook.
-        os.chdir(os.path.dirname(ipynb))
-        success &= test_notebook(os.path.basename(ipynb))
-        os.chdir(cwd)
+        success &= test_notebook(ipynb)
     sys.exit(0 if success or args.tap else 1)
