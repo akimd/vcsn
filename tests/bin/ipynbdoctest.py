@@ -209,9 +209,9 @@ def check_outputs(ref, test):
         FAIL()
 
 
-def run_cell(kc, cell):
-    print("Running:", cell['source'])
-    kc.execute(cell['source'])
+def run_cell(kc, source):
+    print("Running:", source)
+    kc.execute(source)
     # This is useful but will make the notebook crash on long
     # executions, such as when the cache is empty, which can cause
     # problems when doing bulk testing.
@@ -274,30 +274,33 @@ def test_notebook(ipynb):
         # counts only the executable cells.
         n = cell['execution_count']
         print('cell [{}] ({}): '.format(n, i))
+        source = cell['source']
         # `%timeit`s shall count in execution count
-        if cell['source'].startswith('%timeit'):
-            run_cell(kc, {'source': 'pass'})
+        if source.startswith('%timeit'):
+            run_cell(kc, 'pass')
             continue
+        if 'VCSN_SEED' in source and not is_libcpp():
+            SKIP('random number generation not on libc++')
+            # Of course, we can't run the remainder as we certainly
+            # have skipped definitions used later in the notebook.
+            exit(0)
         try:
-            outs = run_cell(kc, cell)
+            outs = run_cell(kc, source)
         except Empty:
             print('Failed to run cell [{}] ({}):'.format(n, i),
                   '    Kernel Client is Empty; this is most likely due to a',
                   '    timeout issue. Check with `vcsn ps` or run the notebook',
                   '    manually, then retry.', sep='\n')
-            print('Source was:\n', cell['source'])
+            print('Source was:\n', source)
             FAIL('failed to run cell [{}]'.format(n))
             nerror += 1
             continue
         except Exception as e:
             print('Failed to run cell [{}] ({}):'.format(n, i), repr(e))
-            print('Source was:', cell['source'], sep='\n')
+            print('Source was:', source, sep='\n')
             FAIL('failed to run cell [{}]'.format(n))
             nerror += 1
             continue
-        if 'source' in cell and 'VCSN_SEED' in cell['source'] and not is_libcpp():
-            SKIP('random number generation not on libc++')
-            exit(0)
         check_outputs(cell.outputs, outs)
     print("Tested notebook {}".format(ipynb))
     print("    {:3} cells successfully replicated".format(num_pass()))
