@@ -177,7 +177,10 @@ def canonical_dict(dict):
                '\\\\xc3)>>,' in dict['data']['text/plain']:
                 SKIP('dictionary file contains unknown characters')
                 exit(0)
-
+    # It is unclear what this is made for, but `'transient': {}`
+    # entries recently appeared in the outputs.
+    if 'transient' in dict:
+        del dict['transient']
     return dict
 
 
