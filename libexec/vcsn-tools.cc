@@ -2,6 +2,9 @@
 #include <string>
 #include <unistd.h>
 
+#include <boost/range/algorithm/sort.hpp>
+#include <boost/range/algorithm/transform.hpp>
+
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/stream.hh> // get_file_contents().
 
@@ -254,13 +257,13 @@ namespace
       std::cout << "Available versions:\n";
       auto range = vcsn::tools::algos_doc.equal_range(algo_name);
       auto v = std::vector<algo_doc>(algos_doc.count(algo_name));
-      std::transform(range.first, range.second, v.begin(),
-                     [](auto e){ return e.second; });
-      std::sort(v.begin(), v.end(),
-                [](const algo_doc& l, const algo_doc& r)
-                {
-                  return l.declaration < r.declaration;
-                });
+      boost::transform(range, v.begin(),
+                       [](auto e){ return e.second; });
+      boost::sort(v,
+                  [](const algo_doc& l, const algo_doc& r)
+                  {
+                    return l.declaration < r.declaration;
+                  });
       for (const auto& a : v)
         std::cout << a.declaration << '\n'
                   << "  " << a.doc << "\n\n";
@@ -336,7 +339,7 @@ try
   if (argc < 2)
     return print_usage();
 
-  auto algo = std::string(argv[1]);
+  const auto algo = std::string(argv[1]);
   if (algo == "--commands" || algo == "commands" || algo == "-c")
     return list_commands();
   if (algo == "-h" || algo == "--help")
