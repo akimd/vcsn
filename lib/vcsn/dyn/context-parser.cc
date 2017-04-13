@@ -5,7 +5,6 @@
 #include <lib/vcsn/dyn/signature-printer.hh>
 
 #include <vcsn/misc/escape.hh>
-#include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/stream.hh>

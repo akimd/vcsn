@@ -1,5 +1,4 @@
 #include <fstream>
-#include <set>
 #include <string>
 
 #include <boost/algorithm/string/erase.hpp>
@@ -7,9 +6,7 @@
 #include <boost/algorithm/string/replace.hpp> // replace_all_copy
 
 #include <lib/vcsn/algos/fwd.hh>
-#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
-#include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/getargs.hh>

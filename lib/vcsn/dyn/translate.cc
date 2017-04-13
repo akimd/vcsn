@@ -20,7 +20,6 @@
 #include <vcsn/misc/configuration.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
-#include <vcsn/misc/raise.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/stream.hh>

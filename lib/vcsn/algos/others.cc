@@ -6,7 +6,6 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/registries.hh>
 #include <vcsn/dyn/value.hh>
-#include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
 
 namespace vcsn

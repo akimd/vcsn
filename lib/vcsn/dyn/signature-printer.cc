@@ -1,4 +1,3 @@
-#include <ostream>
 #include <sstream>
 
 #include <lib/vcsn/dyn/context-parser.hh>

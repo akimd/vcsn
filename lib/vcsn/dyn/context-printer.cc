@@ -1,13 +1,10 @@
 #include <lib/vcsn/dyn/context-printer.hh>
 
-#include <map>
-
 #include <boost/algorithm/string/predicate.hpp>
 
 #include <lib/vcsn/dyn/type-ast.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/indent.hh>
-#include <vcsn/misc/raise.hh>
 
 
 namespace vcsn

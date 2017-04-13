@@ -1,11 +1,8 @@
 #include <cctype>
-#include <map>
 
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/format.hh>
 #include <vcsn/misc/getargs.hh>
-#include <vcsn/misc/map.hh>
-#include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {

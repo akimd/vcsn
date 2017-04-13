@@ -1,5 +1,4 @@
 #include <fstream>
-#include <set>
 #include <string>
 
 #include <lib/vcsn/algos/fwd.hh>

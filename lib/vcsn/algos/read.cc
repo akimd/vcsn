@@ -7,7 +7,6 @@
 #include <lib/vcsn/rat/read.hh> // rat::read
 #include <vcsn/algos/read.hh>
 #include <vcsn/algos/guess-automaton-format.hh>
-#include <vcsn/core/rat/expressionset.hh> // make_expressionset
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/registries.hh>
