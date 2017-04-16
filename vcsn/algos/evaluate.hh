@@ -134,9 +134,9 @@ namespace vcsn
                         v1.resize(dst + 1, zero);
                         v2.resize(dst + 1, zero);
                       }
-                    // Introducing a reference to v2[aut_->dst_of(tr)] is
-                    // tempting, but won't work for std::vector<bool>.
-                    // FIXME: Specialize for Boolean?
+                    // Introducing a reference to v2[dst] is tempting,
+                    // but won't work for std::vector<bool>.  FIXME:
+                    // Specialize for Boolean?  Or introduce add_here.
                     v2[dst] =
                       ws_.add(v2[dst],
                               ws_.mul(v1[s], aut_->weight_of(t)));

@@ -76,6 +76,10 @@ namespace vcsn
       predecessors_t_of<automaton_t>
       operator()(state_t source, state_t dest)
       {
+        // FIXME: this will not work if the automaton is lazy.  We
+        // must _never_ depend on states_size.  We really need
+        // something like state_map_t that is able to grow on demand
+        // with lazy automata.
         auto size = states_size(aut_);
         auto handles = std::vector<typename heap_t::handle_type>(size);
         auto todo = heap_t();
