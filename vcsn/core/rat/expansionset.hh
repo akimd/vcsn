@@ -799,8 +799,21 @@ namespace vcsn
                         const value_t& l, const value_t& r,
                         std::true_type) const
       {
+        if (getenv("VCSN_NEWWAY"))
+          return compose_with_one_new_(res, l, r);
+        else
+          return compose_with_one_old_(res, l, r);
+      }
+
+      void
+      compose_with_one_old_(value_t& res,
+                            const value_t& l, const value_t& r) const
+      {
+        assert(ws_.is_zero(l.constant));
+        assert(ws_.is_zero(r.constant));
         const auto& ls0 = ls_.template set<0>();
         const auto& ls1 = ls_.template set<1>();
+
         // Handle lhs labels with one on the second tape.
         for (const auto& lhs: l.polynomials)
           if (ls1.is_one(std::get<1>(lhs.first)))
@@ -822,6 +835,74 @@ namespace vcsn
                                                         lhs.second),
                                          rhs.second));
       }
+
+      void
+      compose_with_one_new_(value_t& res,
+                            const value_t& l, const value_t& r) const
+      {
+        const auto& ls0 = ls_.template set<0>();
+        const auto& ls1 = ls_.template set<1>();
+
+        // Handle lhs labels with one on the second tape.
+        for (const auto& lhs: l.polynomials)
+          if (ls1.is_one(std::get<1>(lhs.first)))
+            for (const auto& rhs: r.polynomials)
+              if (!ls0.is_one(std::get<0>(rhs.first)))
+                // a|\e . [P1] @ b|c . [P2] becomes a|c . [P1 @ (b|\e)P2]
+                {
+                  // a|c.
+                  auto l0 = ls_.tuple(ls_.template project<0>(lhs.first),
+                                      ls_.template project<1>(rhs.first));
+                  // b|\e.
+                  auto l1 = ls_.tuple(ls_.template project<0>(rhs.first),
+                                      ls_.template project<1>(lhs.first));
+                  ps_.add_here(res.polynomials[l0],
+                               ps_.compose(lhs.second,
+                                           ps_.lmul_label(rs_.atom(l1),
+                                                          rhs.second)));
+                }
+        // Left constant.
+        //
+        // `$|$ . [<k>1] @ \e|c . [P2]` => `$|c . [(\e|$)<k>1 @ P2]`
+        // `<k> @ \e|c . [P2]` => `\e|c . [<k>1 @ P2]`
+        if (!ws_.is_zero(l.constant))
+          for (const auto& rhs: r.polynomials)
+            if (ls0.is_one(std::get<0>(rhs.first)))
+              ps_.add_here(res.polynomials[rhs.first],
+                           ps_.compose(ps_.lweight(l.constant, ps_.one()),
+                                       rhs.second));
+
+        // Handle rhs labels with one on the first tape.
+        for (const auto& rhs: r.polynomials)
+          if (ls0.is_one(std::get<0>(rhs.first)))
+            for (const auto& lhs: l.polynomials)
+              if (!ls1.is_one(std::get<1>(lhs.first)))
+                // a|b . [P1] @ \e|c . [P2] becomes a|c . [(\e|b)P1 @ P2]
+                {
+                  // a|c.
+                  auto l0 = ls_.tuple(ls_.template project<0>(lhs.first),
+                                      ls_.template project<1>(rhs.first));
+                  // \e|b.
+                  auto l1 = ls_.tuple(ls_.template project<0>(rhs.first),
+                                      ls_.template project<1>(lhs.first));
+                  ps_.add_here(res.polynomials[l0],
+                               ps_.compose(ps_.lmul_label(rs_.atom(l1),
+                                                          lhs.second),
+                                           rhs.second));
+                }
+
+        // Right constant.
+        //
+        // `a|\e . [P1] @ $|$ . [<k>1] ` => `a|$ . [P1 @ ($|\e)<k>1]`
+        // `a|\e . [P1] @ <k>` => `a|\e . [P1 @ <k>1]`.
+        if (!ws_.is_zero(r.constant))
+          for (const auto& lhs: l.polynomials)
+            if (ls0.is_one(std::get<1>(lhs.first)))
+              ps_.add_here(res.polynomials[lhs.first],
+                           ps_.compose(lhs.second,
+                                       ps_.lweight(r.constant, ps_.one())));
+      }
+
 
       /// The composition of \a l and \a r.
       template <typename Ctx = context_t>
