@@ -53,7 +53,10 @@ def process_header(fn):
                                               r'\1',
                                               bridge['formals']).split(','))
             if reg in bridges:
-                raise RuntimeError("bridge multiply defined: " + reg)
+                raise RuntimeError("bridge multiply defined: {}\n"
+                                   "  first: {}\n"
+                                   "  second: {})"
+                                   .format(reg, bridges[reg]['file'], bridge['file']))
             bridges[reg] = bridge
 
 def process_implem(fn):
