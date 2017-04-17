@@ -35,6 +35,7 @@ algo_headers =                                  \
   %D%/algos/derivation.hh                       \
   %D%/algos/derived-term.hh                     \
   %D%/algos/detail/printer.hh                   \
+  %D%/algos/determinize-expansion.hh            \
   %D%/algos/determinize.hh                      \
   %D%/algos/dijkstra-node.hh                    \
   %D%/algos/dijkstra.hh                         \
@@ -92,6 +93,7 @@ algo_headers =                                  \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
   %D%/algos/multiply.hh                         \
+  %D%/algos/normalize-expansion.hh              \
   %D%/algos/normalize.hh                        \
   %D%/algos/num-tapes.hh                        \
   %D%/algos/pair.hh                             \

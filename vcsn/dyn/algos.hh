@@ -265,6 +265,9 @@ namespace vcsn
     /// The automaton with the delay of each state.
     automaton delay_automaton(const automaton& a);
 
+    /// Denormalize expansion \a x.
+    expansion denormalize(const expansion& x);
+
     /// Derive \a exp with respect to \a s.
     ///
     /// \param exp       the input expression
@@ -297,6 +300,9 @@ namespace vcsn
     /// \pre  the labelset of \a aut must be free.
     automaton determinize(const automaton& aut,
                           const std::string& algo = "auto");
+
+    /// The determinized expansion.
+    expansion determinize(const expansion& x);
 
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.
@@ -702,6 +708,9 @@ namespace vcsn
 
     /// Normalize automaton \a aut.
     automaton normalize(const automaton& aut);
+
+    /// Normalize expansion \a x.
+    expansion normalize(const expansion& x);
 
     /// The number of strongly connected components.
     std::size_t num_components(const automaton& aut);
