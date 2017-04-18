@@ -259,20 +259,20 @@ class automaton:
             raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
         return fst
 
-    fstcat           = lambda self: _automaton_fst("cat", self)
-    fstcompose       = lambda a, b: _automaton_fst_files("fstcompose", a, b)
-    fstconjunction   = lambda a, b: _automaton_fst_files("fstintersect", a, b)
-    fstdeterminize   = lambda self: _automaton_fst("fstdeterminize", self)
-    fstis_equal      = lambda a, b: _automaton_fst_files("fstequal", a, b)
-    fstis_equivalent = lambda a, b: _automaton_fst_files("fstequivalent", a, b)
-    fstminimize      = lambda self: _automaton_fst("fstminimize", self)
-    fstproper        = lambda self: _automaton_fst("fstrmepsilon", self)
-    fstlightestpath  = lambda self: _automaton_fst("fstshortestpath", self)
-    fstsynchronize   = lambda self: _automaton_fst("fstsynchronize", self)
-    fsttranspose     = lambda self: _automaton_fst("fstreverse", self)
+    fstcat           = lambda self: _automaton_fst('cat', self)
+    fstcompose       = lambda a, b: _automaton_fst_files('fstcompose', a, b)
+    fstconjunction   = lambda a, b: _automaton_fst_files('fstintersect', a, b)
+    fstdeterminize   = lambda self: _automaton_fst('fstdeterminize', self)
+    fstis_equal      = lambda a, b: _automaton_fst_files('fstequal', a, b)
+    fstis_equivalent = lambda a, b: _automaton_fst_files('fstequivalent', a, b)
+    fstminimize      = lambda self: _automaton_fst('fstminimize', self)
+    fstproper        = lambda self: _automaton_fst('fstrmepsilon', self)
+    fstlightestpath  = lambda self: _automaton_fst('fstshortestpath', self)
+    fstsynchronize   = lambda self: _automaton_fst('fstsynchronize', self)
+    fsttranspose     = lambda self: _automaton_fst('fstreverse', self)
 
     def HTML(self):
-        """Display `self` with SVG and MathJax together."""
+        '''Display `self` with SVG and MathJax together.'''
         svg = _dot_to_svg(_dot_pretty(self.format('dot,mathjax'), 'pretty'))
         # Any <text> that contains at least 2 $s.
         svg = re.sub(r'<text ([^>]*)>(.*?\$.*?\$.*?)</text>',
