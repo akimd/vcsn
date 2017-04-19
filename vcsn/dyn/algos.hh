@@ -460,6 +460,9 @@ namespace vcsn
     /// \pre \a aut is a transducer.
     bool is_partial_identity(const automaton& aut);
 
+    /// Whether has no polynomial for the empty word.
+    bool is_normal(const expansion& x);
+
     /// Whether is normalized (in the Thompson sense), i.e., standard
     /// and co-standard.
     bool is_normalized(const automaton& aut);

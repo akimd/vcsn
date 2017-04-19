@@ -142,6 +142,21 @@ namespace vcsn
         return o;
       }
 
+      /// Whether an expansion is normal.
+      bool is_normal(const value_t& x) const
+      {
+        return detail::static_if<context_t::has_one()>
+          ([this](const auto& ls, const value_t& x)
+           {
+             return !has(x.polynomials, ls.one());
+           },
+           [](const auto&, const value_t&)
+           {
+             return true;
+           })
+          (ls_, x);
+      }
+
       /// Normalize: move the constant term to the label one.
       value_t& normalize(value_t& res) const
       {
