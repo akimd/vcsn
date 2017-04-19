@@ -18,6 +18,8 @@ def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
     format via pipes.
     '''
+    if not isinstance(cmd, list):
+        cmd = [cmd]
     p1 = Popen(['efstcompile'],   stdin=PIPE,      stdout=PIPE, stderr=PIPE)
     p2 = Popen(cmd,               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
     p3 = Popen(['efstdecompile'], stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
@@ -31,7 +33,7 @@ def _automaton_fst(cmd, aut):
             "efstcompile failed: " + p1.stderr.read().decode('utf-8'))
     if p2.wait():
         raise RuntimeError(
-            cmd + " failed: " + p2.stderr.read().decode('utf-8'))
+            ' '.join(cmd) + " failed: " + p2.stderr.read().decode('utf-8'))
     if p3.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
@@ -41,15 +43,23 @@ def _automaton_fst_files(cmd, *aut):
     '''Run the command `cmd` on the automata `aut` coded in OpenFST
     format, via files.
     '''
-    files = [a.as_fst() for a in aut]
-    proc = Popen([cmd] + [f.name for f in files],
-                 stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    args = []
+    files = []
+    for a in [cmd, *aut]:
+        if isinstance(a, automaton):
+            f = a.as_fst()
+            files.append(f)
+            args.append(f.name)
+        else:
+            args.append(a)
+    print(args)
+    proc = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     decode = Popen(['efstdecompile'],
                    stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
     res, err = decode.communicate()
     if proc.wait():
         raise RuntimeError(
-            cmd + " failed: " + proc.stderr.read().decode('utf-8'))
+            ' '.join(cmd) + " failed: " + proc.stderr.read().decode('utf-8'))
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
@@ -152,10 +162,13 @@ class automaton:
             algo = 'lazy,' + algo
         return self._determinize_orig(algo)
 
-    def _display(self, mode, engine="dot"):
+    def _display(self, mode:str, engine:str = 'dot'):
         '''Display automaton `self` in `mode` with Graphviz `engine`.'''
         from IPython.display import display
-        display(self._convert(mode, engine))
+        if mode in ['dot', 'tikz']:
+            print(self.format(mode))
+        else:
+            display(self._convert(mode, engine))
 
     # automaton.__init__
     # The point is to add support for the format guessing.  So we save
@@ -185,7 +198,8 @@ class automaton:
 
     display.modes = ['simple', 'pretty', 'info,size', 'info',
                      'info,detailed', 'tooltip',
-                     'transitions', 'type', 'dot', 'dot2tex']
+                     'transitions', 'type', 'plain', 'dot2tex',
+                     'dot', 'tikz']
     display.engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp',
                        'patchwork']
 
