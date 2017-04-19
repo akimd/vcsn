@@ -242,7 +242,8 @@ memfn_declaration = '''\
 '''
 
 memfn_definition = '''\
-{result} {class}::{fun}({formals_impl}){const}
+auto {class}::{fun}({formals_impl}){const}
+  -> {result}
 {{
   return vcsn::dyn::{dynfun}({args});
 }}
@@ -280,7 +281,7 @@ def process_function(fun):
 
     fs = fun['formals']
 
-    #A dyn::word is really a dyn::label
+    # A dyn::word is really a dyn::label.
     fs = [{
             'class': formal['class'].replace('word', 'label'),
             'type': formal['type'].replace('word', 'label'),
@@ -341,6 +342,7 @@ def process_function(fun):
 
     # We both have both a function and a type named 'context'.  To
     # avoid clashes, we need to prefix the type by 'struct'.
+    fun['result'] = re.sub(r'\b(context)\b', r'struct \1', fun['result'])
     fs = [re.sub(r'\b(context)\b', r'struct \1', f) for f in fs]
     fun['formals'] = ', '.join(fs)
     fun['formals_impl'] = ', '.join([re.sub(r'\s+=.*', '', f) for f in fs])
