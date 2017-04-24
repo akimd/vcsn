@@ -27,6 +27,9 @@ namespace vcsn LIBVCSN_API
           /// Strictly obey to the syntax.
           none,
 
+          /// Just what it takes for derived term to work.
+          essential,
+
           /// Trivial identities only.
           trivial,
 
@@ -78,6 +81,12 @@ namespace vcsn LIBVCSN_API
       bool is_distributive() const
       {
         return ids_ == distributive;
+      }
+
+      /// Whether essential identities are on.
+      bool is_essential() const
+      {
+        return essential <= ids_;
       }
 
       /// Whether linear identities are on.

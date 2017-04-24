@@ -22,6 +22,7 @@ namespace vcsn
             {"binary",       "trivial"},
             {"default",      identities::deflt},
             {"distributive", identities::distributive},
+            {"essential",    identities::essential},
             {"linear",       identities::linear},
             {"none",         identities::none},
             {"series",       "distributive"},
@@ -47,6 +48,8 @@ namespace vcsn
           return "linear";
         case identities::distributive:
           return "distributive";
+        case identities::essential:
+          return "essential";
         case identities::trivial:
           return "trivial";
         case identities::none:
