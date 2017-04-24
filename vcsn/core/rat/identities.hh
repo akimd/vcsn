@@ -65,25 +65,31 @@ namespace vcsn LIBVCSN_API
       /// Whether agressive optimizations are on.
       bool is_agressive() const
       {
-        return ids_ == agressive;
+        return agressive <= ids_;
       }
 
-      /// Whether associative.
+      /// Whether associative identities are on.
       bool is_associative() const
       {
         return associative <= ids_;
       }
 
-      /// Whether distributive.
+      /// Whether distributive identities are on.
       bool is_distributive() const
       {
         return ids_ == distributive;
       }
 
-      /// Whether linear.
+      /// Whether linear identities are on.
       bool is_linear() const
       {
         return linear <= ids_;
+      }
+
+      /// Whether trivial identities are on.
+      bool is_trivial() const
+      {
+        return trivial <= ids_;
       }
 
       /// Whether not none.
