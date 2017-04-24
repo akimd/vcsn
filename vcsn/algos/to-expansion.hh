@@ -172,11 +172,10 @@ namespace vcsn
             // Instead of performing successive binary
             // multiplications, we immediately multiply the current
             // expansion by all the remaining operands on its right
-            // hand side.  This will also allow us to break the
-            // iterations as soon as an expansion has a null constant
-            // term.
+            // hand side.  This also allows to break the iterations as
+            // soon as an expansion has a null constant term.
             //
-            // In essence, it allows us to treat the product as if it
+            // In essence, it allows to treat the product as if it
             // were right-associative: in `E.(FG)`, if `c(E) != 0`, we
             // don't need to traverse `FG`, just append it to
             // `d_p(E)`.
@@ -191,7 +190,12 @@ namespace vcsn
               ? rs_.transposition(prod_(e.begin(),
                                         std::next(e.begin(), size-(i+1))))
               : prod_(std::next(e.begin(), i + 1), std::end(e));
-            xs_.rweight_here(rhs, rhss);
+            // rmul_label_here requires a null constant term,
+            // please it.
+            auto w = std::move(rhs.constant);
+            rhs.constant = ws_.zero();
+            xs_.rmul_label_here(rhs, rhss);
+            rhs.constant = std::move(w);
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
