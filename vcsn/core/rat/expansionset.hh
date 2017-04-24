@@ -312,8 +312,9 @@ namespace vcsn
       }
 
       /// In place right multiplication by an expression.
-      value_t& rweight_here(value_t& res, const expression_t& rhs) const
+      value_t& rmul_label_here(value_t& res, const expression_t& rhs) const
       {
+        assert(ws_.is_zero(res.constant));
         for (auto& p: res.polynomials)
           p.second = ps_.rmul_label(p.second, rhs);
         return res;

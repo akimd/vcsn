@@ -191,7 +191,7 @@ namespace vcsn
               ? rs_.transposition(prod_(e.begin(),
                                         std::next(e.begin(), size-(i+1))))
               : prod_(std::next(e.begin(), i + 1), std::end(e));
-            xs_.rweight_here(rhs, rhss);
+            xs_.rmul_label_here(rhs, rhss);
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
