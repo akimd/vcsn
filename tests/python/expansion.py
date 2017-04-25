@@ -112,28 +112,14 @@ check(r'(a*{\}a){\}\e', r'\e.[a{\}\e + (a*{\}\e){\}\e]')
 check(r'(a{\}ab){\}bc', r'\e.[b{\}bc]')
 
 
-## ---------- ##
-## Multiply.  ##
-## ---------- ##
-def check(r, w):
-    '''Check that `weight * expansion` corresponds to `expansion * weight`
-    and to the expansion of `weight * expression` '''
-    e = expr(r, 'trivial')
-    leff = e.expansion() * w
-    lexp = (e * w).expansion()
-    CHECK_EQ(lexp, leff)
-    reff = w * e.expansion()
-    rexp = (w * e).expansion()
-    CHECK_EQ(rexp, reff)
-
-check('abab', 2)
-check('a*', 10)
-check('[ab]{3}', 4)
-check('a*+b*+c+c*', 3)
-check('a', 1)
-
-
 ## ----- ##
+## Mul.  ##
+## ----- ##
+CHECK_EQ(r'a.[\e(b(cd))]', ctx.expression('a(b(cd))', 'none').expansion())
+CHECK_EQ(r'a.[((\eb)c)d]', ctx.expression('((ab)c)d', 'none').expansion())
+CHECK_EQ(r'a.[(\eb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
+
+         ## ----- ##
 ## Sum.  ##
 ## ----- ##
 def check(r1, r2):
@@ -172,3 +158,24 @@ check('abab', 'bbbb')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
 check('a', r'\e')
 check('a', r'\z')
+
+
+## -------- ##
+## Weight.  ##
+## -------- ##
+def check(r, w):
+    '''Check that `weight * expansion` corresponds to `expansion * weight`
+    and to the expansion of `weight * expression` '''
+    e = expr(r, 'trivial')
+    leff = e.expansion() * w
+    lexp = (e * w).expansion()
+    CHECK_EQ(lexp, leff)
+    reff = w * e.expansion()
+    rexp = (w * e).expansion()
+    CHECK_EQ(rexp, reff)
+
+check('abab', 2)
+check('a*', 10)
+check('[ab]{3}', 4)
+check('a*+b*+c+c*', 3)
+check('a', 1)

@@ -185,17 +185,23 @@ namespace vcsn
             // have already been applied.  Large performance impact.
             //
             // The gain is very effective.
-            expression_t rhss
-              = transposed_
-              ? rs_.transposition(prod_(e.begin(),
-                                        std::next(e.begin(), size-(i+1))))
-              : prod_(std::next(e.begin(), i + 1), std::end(e));
-            // rmul_label_here requires a null constant term,
-            // please it.
-            auto w = std::move(rhs.constant);
-            rhs.constant = ws_.zero();
-            xs_.rmul_label_here(rhs, rhss);
-            rhs.constant = std::move(w);
+            //
+            // Do it only if there is really something left though, so
+            // that we don't need any particular identity.
+            if (i + 1 < size)
+              {
+                expression_t rhss
+                  = transposed_
+                  ? rs_.transposition(prod_(e.begin(),
+                                            std::next(e.begin(), size-(i+1))))
+                  : prod_(std::next(e.begin(), i + 1), std::end(e));
+                // rmul_label_here requires a null constant term,
+                // please it.
+                auto w = std::move(rhs.constant);
+                rhs.constant = ws_.zero();
+                xs_.rmul_label_here(rhs, rhss);
+                rhs.constant = std::move(w);
+              }
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
@@ -216,9 +222,8 @@ namespace vcsn
             typename mul_t::iterator end) const
       {
         using expressions_t = typename mul_t::values_t;
-        if (begin == end)
-          return rs_.one();
-        else if (std::next(begin, 1) == end)
+        assert(begin != end);
+        if (std::next(begin, 1) == end)
           return *begin;
         else
           return std::make_shared<mul_t>(expressions_t{begin, end});
