@@ -26,6 +26,7 @@ dist_notebooks_DATA =                           \
   %D%/ICTAC-2016.ipynb                          \
   %D%/ICTAC-2017.ipynb                          \
   %D%/References.ipynb                          \
+  %D%/SACS-2017.ipynb                           \
   %D%/Sms2fr.ipynb                              \
   %D%/Spell-checker.ipynb                       \
   %D%/Stackoverflow.ipynb                       \
