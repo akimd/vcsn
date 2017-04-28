@@ -249,7 +249,9 @@ def run_cell(kc, source):
     log("run_cell: execute:", source)
     kc.execute(source)
     log("run_cell: done")
-    kc.get_shell_msg(timeout=600)
+    # SACS-2017 has a cell with many compilation and timings.  This
+    # can be really long.
+    kc.get_shell_msg(timeout=900)
     log("run_cell: get_shell_msg done")
     outs = []
     while True:
