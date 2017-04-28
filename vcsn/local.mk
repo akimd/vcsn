@@ -174,7 +174,6 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/hash.hh                          \
   %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
-  %D%/core/rat/partial-identity.hh              \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \
   %D%/core/rat/project.hh                       \

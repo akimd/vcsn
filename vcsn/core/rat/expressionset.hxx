@@ -10,7 +10,6 @@
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/expression.hh>
 #include <vcsn/core/rat/hash.hh>
-#include <vcsn/core/rat/partial-identity.hh>
 #include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/algos.hh> // dyn::read_expression
@@ -1050,16 +1049,7 @@ namespace vcsn
     const
     -> value_t
   {
-    constexpr auto replicate = Context::is_lat && !Ctx2::is_lat;
-    return  detail::static_if<replicate>
-      ([this](auto const& es, auto const& e)
-       {
-         return vcsn::rat::partial_identity(es, self(), e);
-       },
-       [this](auto const& es, auto const& e)
-       {
-         return vcsn::rat::copy(es, self(), e);
-       })(rs, r);
+    return vcsn::rat::copy(rs, self(), r);
   }
 
   DEFINE::conv(std::istream& is, bool) const
