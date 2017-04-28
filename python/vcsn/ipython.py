@@ -1,6 +1,7 @@
 # pylint: disable=protected-access, too-many-instance-attributes
 from html import escape
 from threading import Thread, Event
+import re
 
 import ipywidgets as widgets
 from IPython.core.magic import (Magics, magics_class,
@@ -506,27 +507,66 @@ class table(list):
 
     def to_html(self, s):
         try:
-            return s.SVG()
+            return s._repr_html_()
         except AttributeError:
             pass
+        # Try LaTeX first: when printing a table with expressions, we
+        # don't want to display some SVG, but rather the LaTeX
+        # version.
         try:
             return s._repr_latex_()
         except AttributeError:
             pass
         try:
-            return s._repr_html_()
+            return s.SVG()
         except AttributeError:
             pass
-        return s
+        return str(s)
+
+    def to_latex_expression(self, e):
+        '''Turn an expression in a LaTex representation that uses
+        our conventions.'''
+        # FIXME: use vcsn.configs instead.
+        res = e if isinstance(e, str) else e.format('latex')
+        res = re.sub(r' *\\, *', '', res)
+        res = re.sub(r'\\left\\langle *(.*?) *\\right\\rangle', r'\\bra{\1}', res)
+        res = re.sub(r'\\left\( *(.*?) *\\right\)', r'\\paren{\1}', res)
+        res = res \
+            .replace(r'\left. ', '') \
+            .replace(r'\right. ', '') \
+            .replace(r'\middle|', r'\tuple') \
+            .replace(r'{*}', '*') \
+            .replace('varepsilon', 'eword') \
+            .replace('{*}', '*')
+        return res
+
+    def to_latex(self, s):
+        if isinstance(s, vcsn.expression):
+            return self.to_latex_expression(s)
+        try:
+            return s._repr_latex_()
+        except AttributeError:
+            pass
+        return str(s)
 
     def _repr_html_(self):
-        html = ["<table>"]
+        res = ["<table>"]
         for row in self:
-            html.append("<tr>")
+            res.append("<tr>")
 
-            for col in row:
-                html.append("<td>{0}</td>".format(self.to_html(col)))
+            for cell in row:
+                res.append("<td>{0}</td>".format(self.to_html(cell)))
 
-            html.append("</tr>")
-        html.append("</table>")
-        return ''.join(html)
+            res.append("</tr>")
+        res.append("</table>")
+        return '\n'.join(res)
+
+    def _repr_latex_(self):
+        ncol = len(self[0])
+        res = [r'\begin{array}{' + 'c' * ncol + '}']
+        for row in self:
+            res.append('  '
+                       + ' & '.join([self.to_latex(c) for c in row])
+                       + r' \\')
+        res.append(r'\end{array}')
+        return '\n'.join(res)
