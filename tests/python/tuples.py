@@ -5,7 +5,23 @@ from test import *
 
 # FIXME: we should probably merge transducers.py in here.
 
+## ---------- ##
+## Contexts.  ##
+## ---------- ##
+
+c1 = vcsn.context('lan(ab), b')
+c2 = vcsn.context('lal(xy), q')
+c3 = vcsn.context('lan(abxy), q')
+CHECK_EQ(c3, c1.join(c2))
+CHECK_EQ(c3, c2.join(c1))
+
+
+## ------------- ##
+## Expressions.  ##
+## ------------- ##
+
 def check(ctx, exp):
+    '''Check round-tripping a multitape expression.'''
     c = vcsn.context(ctx)
     try:
         r = c.expression(exp)
@@ -14,15 +30,13 @@ def check(ctx, exp):
     else:
         CHECK_EQ(exp, r)
 
-check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
-      'a')
+ctx1 = 'lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>'
+check(ctx1, 'a')
+check(ctx1, '<2/3,x,-3>a')
+check(ctx1, '<2/3,x+y*,-3>a')
 # Yes, once we worked properly with 3 tapes, but not 4.  So check 5.
 check('lat<lan, lan, lan, lan, lan>, q',
       '1|2|3|4|5')
-check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
-      '<2/3,x,-3>a')
-check('lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>',
-      '<2/3,x+y*,-3>a')
 check('lal_char(ab), lat<expressionset<lal_char(xyz), lat<q, q>>, lat<q, q>>',
       '<<(1,2)>x+<(2,1/3)>y*,(2,3)>a')
 

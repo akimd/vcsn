@@ -13,7 +13,8 @@ a|e   @ a|e   => a|e@a|e
 
 a|e @ a|e + a|e == (a|e @ a|e) + a|e
 
-a + a|e   ! join: cannot mix tuplesets and non tuplesets: a and a|e\n!   while reading expression: a + a|e
+0 + a|e  => 0|0+a|e
+(0+12*)(a|e)(3+4*5)  => (0|0+(1|1)(2|2)*)(a|e)(3|3+(4|4)*(5|5))
 
 
 %context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, q

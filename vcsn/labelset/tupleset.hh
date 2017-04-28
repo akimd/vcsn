@@ -589,6 +589,14 @@ namespace vcsn
       return conv(*vs.labelset(), vs.get_value(v));
     }
 
+    /// Convert a single tape expression to multitape.
+    template <typename VS>
+    value_t
+    conv(const VS& vs, const typename VS::value_t& v) const
+    {
+      return tuple(set<0>().conv(vs, v), set<1>().conv(vs, v));
+    }
+
     /// Read one label from i, return the corresponding value.
     value_t
     conv(std::istream& i, bool quoted = true) const
@@ -1344,10 +1352,24 @@ namespace vcsn
   template <typename... VS1, typename VS2>
   struct join_impl<tupleset<VS1...>, VS2>
   {
-    // Cannot just leave "false" as condition: the assertion is then
-    // always checked, even if the template is not instantiated.
-    static_assert(is_multitape<VS2>{},
-                  "join: cannot mix tuplesets and non tuplesets");
+    using vs1_t = tupleset<VS1...>;
+    using vs2_t = VS2;
+    /// The resulting type.
+    using type = tupleset<join_t<VS1, VS2>...>;
+
+    template <std::size_t... I>
+    static type join(const vs1_t& lhs, const vs2_t& rhs,
+                     index_sequence<I...>)
+    {
+      return {::vcsn::join(lhs.template set<I>(), rhs)...};
+    }
+
+    /// The resulting valueset.
+    static type join(const vs1_t& lhs, const vs2_t& rhs)
+    {
+      return join(lhs, rhs,
+                  make_index_sequence<sizeof...(VS1)>{});
+    }
   };
 
 

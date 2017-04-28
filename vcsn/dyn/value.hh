@@ -142,30 +142,12 @@ namespace vcsn
     auto
     join(const value_impl<Tag>& lhs, const value_impl<Tag>& rhs)
     {
-      constexpr auto valid
-        = vcsn::is_multitape<ValueSetLhs>()
-        == vcsn::is_multitape<ValueSetRhs>();
-      // The type used when throwing an error.
-      using stub_t = std::tuple<ValueSetLhs,
-                                typename ValueSetLhs::value_t,
-                                typename ValueSetLhs::value_t>;
-      return vcsn::detail::static_if<valid>
-        ([](const auto& l, const auto& r)
-         {
-           auto rs = join(l.valueset(), r.valueset());
-           auto lr = rs.conv(l.valueset(), l.value());
-           auto rr = rs.conv(r.valueset(), r.value());
-           return std::make_tuple(rs, lr , rr);
-         },
-         [](const auto& l, const auto& r) -> stub_t
-         {
-           raise("join: cannot mix tuplesets and non tuplesets: ",
-                 to_string(l.valueset(), l.value()),
-                 " and ",
-                 to_string(r.valueset(), r.value()));
-         })
-        (lhs->template as<ValueSetLhs>(),
-         rhs->template as<ValueSetRhs>());
+      const auto& l = lhs->template as<ValueSetLhs>();
+      const auto& r = rhs->template as<ValueSetRhs>();
+      auto rs = join(l.valueset(), r.valueset());
+      auto lr = rs.conv(l.valueset(), l.value());
+      auto rr = rs.conv(r.valueset(), r.value());
+      return std::make_tuple(rs, lr , rr);
     }
 
     // A class representing an expansion/expansionset.
