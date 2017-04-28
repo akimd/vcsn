@@ -71,13 +71,12 @@ namespace vcsn
       }
 
       /// Factor the handling of unary operations.
-      template <exp::type_t Type>
+      template <exp::type_t Type, typename Fun>
       void
-      recurse_(const unary_t<Type>& v)
+      recurse_(const unary_t<Type>& v, Fun&& fun)
       {
-        using out_unary_t
-          = typename out_expressionset_t::template unary_t<Type>;
-        res_ = std::make_shared<out_unary_t>(recurse(v.sub()));
+        // FIXME: C++17: invoke.
+        res_ = (out_rs_.*fun)(recurse(v.sub()));
       }
 
       /// Factor the handling of n-ary operations.
@@ -85,29 +84,29 @@ namespace vcsn
       void
       recurse_(const variadic_t<Type>& v, Fun&& fun)
       {
-        using out_variadic_t
-          = typename out_expressionset_t::template variadic_t<Type>;
-        auto sub = typename out_expressionset_t::values_t{};
-        for (const auto& s: v)
-          sub.emplace_back(recurse(s));
-        res_ = std::make_shared<out_variadic_t>(sub);
+        auto res = recurse(v.head());
+        for (const auto& c: v.tail())
+          // FIXME: C++17: invoke.
+          res = (out_rs_.*fun)(res, recurse(c));
+        res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(add, v)          { recurse_(v, &out_expressionset_t::add); }
-      VCSN_RAT_VISIT(complement, v)   { recurse_(v); }
-      VCSN_RAT_VISIT(compose, v)      { recurse_(v, &out_expressionset_t::compose); }
-      VCSN_RAT_VISIT(conjunction, v)  { recurse_(v, &out_expressionset_t::conjunction); }
-      VCSN_RAT_VISIT(infiltrate, v)   { recurse_(v, &out_expressionset_t::infiltrate); }
-      VCSN_RAT_VISIT(ldivide, v)      { recurse_(v, &out_expressionset_t::ldivide); }
+      using ors_t = out_expressionset_t;
+      VCSN_RAT_VISIT(add, v)          { recurse_(v, &ors_t::add); }
+      VCSN_RAT_VISIT(complement, v)   { recurse_(v, &ors_t::complement); }
+      VCSN_RAT_VISIT(compose, v)      { recurse_(v, &ors_t::compose); }
+      VCSN_RAT_VISIT(conjunction, v)  { recurse_(v, &ors_t::conjunction); }
+      VCSN_RAT_VISIT(infiltrate, v)   { recurse_(v, &ors_t::infiltrate); }
+      VCSN_RAT_VISIT(ldivide, v)      { recurse_(v, &ors_t::ldivide); }
       using bin_t =
         out_expression_t
-        (out_expressionset_t::*)(const out_expression_t&, const out_expression_t&) const;
+        (ors_t::*)(const out_expression_t&, const out_expression_t&) const;
       VCSN_RAT_VISIT(mul, v)          { recurse_(v,
-                                                 static_cast<bin_t>(&out_expressionset_t::mul)); }
+                                                 static_cast<bin_t>(&ors_t::mul)); }
       VCSN_RAT_VISIT(one,)            { res_ = out_rs_.one(); }
-      VCSN_RAT_VISIT(shuffle, v)      { recurse_(v, &out_expressionset_t::shuffle); }
-      VCSN_RAT_VISIT(star, v)         { recurse_(v); }
-      VCSN_RAT_VISIT(transposition, v){ recurse_(v); }
+      VCSN_RAT_VISIT(shuffle, v)      { recurse_(v, &ors_t::shuffle); }
+      VCSN_RAT_VISIT(star, v)         { recurse_(v, &ors_t::star); }
+      VCSN_RAT_VISIT(transposition, v){ recurse_(v, &ors_t::transposition); }
       VCSN_RAT_VISIT(zero,)           { res_ = out_rs_.zero(); }
 
       VCSN_RAT_VISIT(atom, v)
@@ -172,7 +171,7 @@ namespace vcsn
       /// expressionset to decode the input value.
       const in_expressionset_t& in_rs_;
       /// expressionset to build the output value.
-      const out_expressionset_t& out_rs_;
+      const ors_t& out_rs_;
       /// Output value, under construction.
       out_value_t res_;
     };
