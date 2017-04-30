@@ -22,6 +22,7 @@ check('lal, b', 'a',   'a')
 check('lal, b', '#',   '#', r'\#')
 check('lal, b', '[', r'\[', '[')
 check('lal, b', '{',   '{', r'\{')
+check('lal, b', '$',   '$', r'\$')
 # This is not a label, it's a word.
 XFAIL(lambda: vcsn.context('lal, b').label('ab'),
       '''unexpected trailing characters: b
