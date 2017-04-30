@@ -1,4 +1,7 @@
-import inspect, os, sys, traceback
+import inspect
+import os
+import sys
+import traceback
 
 import vcsn.python3
 
@@ -69,6 +72,25 @@ def is_vcsn(tb):
         return 'vcsn' == inspect.getmodule(tb.tb_frame).__package__
     except AttributeError:
         return False
+
+def setenv(**vars):
+    '''Set/unset environment variables for Vcsn.  Pass a list
+    of assignments:
+
+    vcsn.setenv(FOO=0, BAR=1)
+
+    is equivalent to:
+
+    unsetenv('VCSN_FOO')
+    setenv('VCSN_BAR', '1')
+    '''
+    for k, v in vars.items():
+        k = 'VCSN_' + k
+        if not v:
+            if k in os.environ:
+                del os.environ[k]
+        else:
+            os.environ[k] = str(v)
 
 def vcsn_traceback_levels(tb):
     '''Returns the amount of frames deep into the traceback
