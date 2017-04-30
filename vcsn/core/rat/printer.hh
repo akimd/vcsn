@@ -321,7 +321,9 @@ namespace vcsn
       /// The expressionset.
       const expressionset_t& rs_;
       /// Whether to be overly verbose.
-      const bool debug_ = !!getenv("VCSN_PARENS");
+      const bool parens_ = !!getenv("VCSN_PARENS");
+      /// Whether to use XML-like tags to highlight the structure.
+      const bool tagged_ = !!getenv("VCSN_PRINT");
 
       /// Left and right boundaries (typically braces for LaTeX).
       ///
