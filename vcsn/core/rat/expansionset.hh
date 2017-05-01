@@ -108,7 +108,8 @@ namespace vcsn
       }
 
       /// Print this expansion.
-      std::ostream& print(const value_t& v, std::ostream& o,
+      std::ostream& print(const value_t& v,
+                          std::ostream& o = std::cout,
                           format fmt = {}) const
       {
         bool first = true;

@@ -42,8 +42,22 @@ namespace vcsn
       struct classset
       {
         using value_t = class_t;
-
         using kind_t = void;
+
+        static constexpr bool
+        is_letterized()
+        {
+          // FIXME: We should not need this.  This is to please
+          // polynomialset::print.
+          return false;
+        }
+
+        static std::ostream&
+        print(value_t v, std::ostream& out = std::cout, format = {})
+        {
+          return out << v;
+        }
+
         static bool equal(class_t l, class_t r)
         {
           return l == r;

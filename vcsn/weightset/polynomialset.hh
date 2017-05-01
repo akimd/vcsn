@@ -1416,7 +1416,7 @@ namespace vcsn
 
     /// Print a monomial.
     std::ostream&
-    print(const monomial_t& m, std::ostream& out,
+    print(const monomial_t& m, std::ostream& out = std::cout,
           format fmt = {}) const
     {
       static bool parens = getenv("VCSN_PARENS");
@@ -1436,7 +1436,7 @@ namespace vcsn
     /// \param fmt     the format: "text" or "latex"
     /// \param sep     the separator between monomials
     std::ostream&
-    print(const value_t& v, std::ostream& out,
+    print(const value_t& v, std::ostream& out = std::cout,
           format fmt = {},
           const std::string& sep = " + ") const
     {
