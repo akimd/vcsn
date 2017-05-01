@@ -267,7 +267,7 @@ namespace vcsn
     /// The sum of polynomials \a l and \a r.
     value_t add(const value_t& l, const value_t& r) const
     {
-      value_t res = l;
+      auto res = l;
       add_here(res, r);
       return res;
     }
@@ -307,7 +307,7 @@ namespace vcsn
     value_t
     sub(const value_t& l, const value_t& r) const
     {
-      value_t res = l;
+      auto res = l;
       for (const auto& rm: r)
         sub_here(res, rm);
       return res;
@@ -334,7 +334,7 @@ namespace vcsn
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      value_t>
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -367,7 +367,7 @@ namespace vcsn
     mul(const value_t& p, const label_t& l, const weight_t w) const
       -> value_t
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: p)
         add_here(res,
                  labelset()->mul(label_of(m), l),
@@ -386,7 +386,7 @@ namespace vcsn
     std::enable_if_t<Ctx::is_lar, value_t>
     conjunction_impl_(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -401,7 +401,7 @@ namespace vcsn
     std::enable_if_t<!Ctx::is_lar, value_t>
     conjunction_impl_(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& p: zip_maps<vcsn::as_tuple>(l, r))
         add_here(res,
                  label_of(std::get<0>(p)),
@@ -421,7 +421,7 @@ namespace vcsn
     value_t
     infiltrate(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -473,7 +473,7 @@ namespace vcsn
     /// Map all weights to their absolute value.
     value_t abs(const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res, label_of(m), weightset()->abs(weight_of(m)));
       return res;
@@ -501,7 +501,7 @@ namespace vcsn
     value_t
     lweight(const weight_t w, const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       if (weightset()->is_one(w))
         res = v;
       else if (!weightset()->is_zero(w))
@@ -514,7 +514,7 @@ namespace vcsn
     value_t
     lmul_label(const label_t& lhs, const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res,
                  labelset()->mul(lhs, label_of(m)),
@@ -526,7 +526,7 @@ namespace vcsn
     value_t
     mul(const monomial_t& lhs, const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res,
                  labelset()->mul(label_of(lhs), label_of(m)),
@@ -550,7 +550,7 @@ namespace vcsn
     rweight(const value_t& v, const weight_t w) const
       -> value_t
     {
-      value_t res;
+      auto res = value_t{};
       if (weightset()->is_one(w))
         res = v;
       else if (!weightset()->is_zero(w))
@@ -579,7 +579,7 @@ namespace vcsn
     value_t
     rmul_label(const value_t& v, const label_t& rhs) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lhs: v)
         add_here(res,
                  labelset()->mul(label_of(lhs), rhs),
@@ -591,7 +591,7 @@ namespace vcsn
     value_t
     mul(const value_t& l, const monomial_t& rhs) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lhs: l)
         add_here(res,
                  labelset()->mul(label_of(lhs), label_of(rhs)),
@@ -618,7 +618,7 @@ namespace vcsn
     value_t
     ldivide(const monomial_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: r)
         add_here(res, ldivide(l, m));
       return res;
@@ -655,7 +655,7 @@ namespace vcsn
         raise(*this, ": ldivide: division by zero");
       else
         {
-          value_t remainder = r;
+          auto remainder = r;
           while (!is_zero(remainder))
             {
               auto factor = ldivide(detail::front(l), detail::front(remainder));
@@ -674,7 +674,7 @@ namespace vcsn
     value_t
     ldivide(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       add_ldivide_here(res, l, r);
       return res;
     }
@@ -709,7 +709,7 @@ namespace vcsn
     {
       using std::begin;
       using std::end;
-      value_t res;
+      auto res = value_t{};
       // For each monomial, look for the matching GCD of the weight.
       auto i = begin(lhs), i_end = end(lhs);
       auto j = begin(rhs), j_end = end(rhs);
@@ -905,7 +905,7 @@ namespace vcsn
     compose(const value_t& l, const value_t& r) const
       -> std::enable_if_t<has_compose_fn<Ctx>{}, value_t>
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -992,14 +992,14 @@ namespace vcsn
     /// The unit polynomial.
     static const value_t& one()
     {
-      static value_t res{monomial_one()};
+      static auto res = value_t{monomial_one()};
       return res;
     }
 
     /// The unit monomial.
     static const monomial_t& monomial_one()
     {
-      static monomial_t res{labelset_t::one(), weightset_t::one()};
+      static auto res = monomial_t{labelset_t::one(), weightset_t::one()};
       return res;
     }
 
@@ -1017,7 +1017,7 @@ namespace vcsn
     const value_t&
     zero() const
     {
-      static value_t res;
+      static auto res = value_t{};
       return res;
     }
 
@@ -1060,7 +1060,7 @@ namespace vcsn
       const typename C::weightset_t& sws = *sps.weightset();
       const labelset_t&  tls = *labelset();
       const weightset_t& tws = *weightset();
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res, tls.conv(sls, label_of(m)), tws.conv(sws, weight_of(m)));
       return res;
@@ -1160,7 +1160,7 @@ namespace vcsn
     value_t
     transpose(const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       auto label_transpose
         = static_if<context_t::is_lar>
         ([](const auto& ls, const auto& l) { return ls.transposition(l); },
@@ -1366,16 +1366,16 @@ namespace vcsn
 
     /// Read a polynomial from a stream.
     ///
-    /// Somewhat more general than a mere reversal of "format",
-    /// in particular "a+a" is properly understood as "<2>a" in
-    /// char_z.
+    /// Somewhat more general than a mere inverse of `print`,
+    /// in particular `a+a` is properly understood as `<2>a` in `lal,
+    /// z`.
     ///
     /// \param i    the stream to parse.
     /// \param sep  the separator between monomials.
     value_t
     conv(std::istream& i, const char sep = '+') const
     {
-      value_t res;
+      auto res = value_t{};
 #define SKIP_SPACES()                           \
       while (isspace(i.peek()))                 \
         i.ignore()

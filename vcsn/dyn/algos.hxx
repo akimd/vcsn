@@ -53,7 +53,7 @@ namespace vcsn
                              const std::string& format,
                              bool strip)
     {
-      std::istringstream is{data};
+      auto&& is = std::istringstream{data};
       try
         {
           auto res = vcsn::dyn::read_automaton(is, format, strip);
@@ -90,7 +90,7 @@ namespace vcsn
     label make_label(const context& ctx, const std::string& s,
                      const std::string& format)
     {
-      std::istringstream is{s};
+      auto&& is = std::istringstream{s};
       try
         {
           auto res = read_label(ctx, is, format);
@@ -107,7 +107,7 @@ namespace vcsn
     inline
     polynomial make_polynomial(const context& ctx, const std::string& s)
     {
-      std::istringstream is{s};
+      auto&& is = std::istringstream{s};
       try
         {
           auto res = vcsn::dyn::read_polynomial(ctx, is);
@@ -124,7 +124,7 @@ namespace vcsn
     inline
     weight make_weight(const context& ctx, const std::string& s)
     {
-      std::istringstream is(s);
+      auto&& is = std::istringstream{s};
       try
         {
           auto res = vcsn::dyn::read_weight(ctx, is);
