@@ -61,6 +61,7 @@ namespace
 
   "("         return TOK(LPAREN);
   ")"         return TOK(RPAREN);
+  "]"         return TOK(RBRACKET);
 
   "&"         return TOK(AMPERSAND);
   ":"         return TOK(COLON);
@@ -108,7 +109,7 @@ namespace
   "<"|"⟨"     yy_push_state(SC_WEIGHT);
 
   /* Character classes.  */
-  "["     yy_push_state(SC_CLASS); return parser::make_LBRACKET(loc);
+  "["     yy_push_state(SC_CLASS); return TOK(LBRACKET);
 
   /* White spaces. */
   [ \t]+   loc.step(); continue;
@@ -123,10 +124,10 @@ namespace
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
   "]" {
     yy_pop_state();
-    return parser::make_RBRACKET(loc);
+    return TOK(RBRACKET);
   }
-  "^" return parser::make_CARET(loc);
-  "-" return parser::make_DASH(loc);
+  "^" return TOK(CARET);
+  "-" return TOK(DASH);
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a character-class");

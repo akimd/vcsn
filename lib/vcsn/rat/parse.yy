@@ -230,6 +230,7 @@ terminator.opt:
   %empty     {}
 | ","        { driver_.scanner_->putback(','); }
 | ")"        { driver_.scanner_->putback(')'); }
+| "]"        { driver_.scanner_->putback(']'); }
 ;
 
 add:
