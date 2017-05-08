@@ -40,7 +40,7 @@ namespace vcsn LIBVCSN_API
           /// Linear plus distribution.  Used for series identities.
           distributive,
 
-          /// Linear plus optimizations.
+          /// Distributive plus optimizations.
           agressive,
 
           /// The default value.
@@ -126,12 +126,13 @@ namespace vcsn LIBVCSN_API
     /// Output in string form.
     std::ostream& operator<<(std::ostream& os, identities i);
 
+    /// More restricted of these identities (min).
     identities meet(identities i1, identities i2);
-
   } // namespace rat
 
   namespace detail
   {
+    /// More general of these identities (max).
     template <>
     struct join_impl<rat::identities, rat::identities>
     {

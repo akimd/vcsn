@@ -47,8 +47,12 @@ namespace vcsn
       return res;
     }
 
+    /// In place removal of entries matching the predicate.
+    ///
+    /// Similar to boost::remove_erase_if, but for associative
+    /// containers.
     template <typename Container, typename Predicate>
-    void erase_if(Container& c, const Predicate& p)
+    void erase_if(Container& c, Predicate p)
     {
       using std::begin;
       using std::end;
