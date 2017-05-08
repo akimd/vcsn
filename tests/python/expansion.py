@@ -3,22 +3,32 @@
 import vcsn
 from test import *
 
-lal = vcsn.context('lal_char(abcd), q')
 
-ctx = lal
 def expr(e, *args):
     if not isinstance(e, vcsn.expression):
         e = ctx.expression(e, *args)
     return e
 
 
-## ------ ##
-## Star.  ##
-## ------ ##
+## ----- ##
+## Add.  ##
+## ----- ##
+ctx = vcsn.context('lan, q')
+def check(r1, r2, exp):
+    e1 = expr(r1)
+    e2 = expr(r2)
+    CHECK_EQ(exp, e1.expansion() + e2.expansion())
+    CHECK_EQ(exp, (e1 + e2).expansion())
 
-XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
-      r'''Q: value is not starrable: 1
-  while computing expansion of: a**''')
+check('a', '<-1>a', '<0>')
+check('a', 'a', 'a.[<2>\e]')
+
+check('ab', 'cd', 'a.[b] + c.[d]')
+check('a', 'bcd', 'a.[\e] + b.[cd]')
+check('abab', 'bbbb', 'a.[bab] + b.[b{3}]')
+check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*', '<2> + a.[<1/2>(<1/2>a)* + <1/2>(<1/2>a)*(<1/3>b)*] + b.[<1/3>(<1/3>b)*]')
+check('a', r'\e', '<1> + a.[\e]')
+check('a', r'\z', 'a.[\e]')
 
 
 ## ------------ ##
@@ -81,28 +91,32 @@ CHECK_EQ(r'a|d.[b|\e@\e]', ctx.expression(r'(a|c)(b|\e) @ c|d').expansion())
 ## ------------- ##
 ## Conjunction.  ##
 ## ------------- ##
-ctx = lal
+ctx = vcsn.context('lan, q')
 def check(r1, r2, exp):
     '''Check that `&` between expansions corresponds to the expansion of
     `&` between expressions.'''
-    exp1 = expr(r1)
-    exp2 = expr(r2)
-    CHECK_EQ(exp, exp1.expansion() & exp2.expansion())
-    CHECK_EQ(exp, (exp1 & exp2).expansion())
+    e1 = expr(r1)
+    e2 = expr(r2)
+    CHECK_EQ(exp, e1.expansion() & e2.expansion())
+    CHECK_EQ(exp, (e1&e2).expansion())
 
-check('ab', 'cd', r'<0>')
-check('ab', 'ac', r'a.[\z]') # Wrong, but will be fixed.
-check('(ab)*', 'a*b*', r'<1> + a.[b(ab)*&a*b*]')
-check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*', r'<1> + a.[<1/4>(<1/2>a)*&(<1/2>a)*(<1/3>b)*]')
-check('a', r'\e', r'<0>')
-check('a', r'\z', r'<0>')
+check('ab', 'cd', '<0>')
+check('(ab)*', 'a*b*', '<1> + \e.[\e&bb* + \e&aa*b* + ab(ab)*&\e] + a.[b(ab)*&a*b*]')
+check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*',
+      r'<1>'
+      r' + \e.[<1/3>\e&b(<1/3>b)* + <1/2>a(<1/2>a)*&\e + <1/2>\e&a(<1/2>a)*(<1/3>b)*]'
+      r' + a.[<1/4>(<1/2>a)*&(<1/2>a)*(<1/3>b)*]')
+check('a', r'\e', '<0>')
+check('a', r'\z', '<0>')
 
+# Check that ab&ac = 0, not a.[0].
+check('ab', 'ac', '<0>')
 
 
 ## --------- ##
 ## Division. ##
 ## --------- ##
-ctx = vcsn.context('lan_char(abcd), q')
+ctx = vcsn.context('lan, q')
 def check(r1, r2):
     exp1 = expr(r1)
     CHECK_EQ(r2, str(exp1.expansion()))
@@ -119,30 +133,21 @@ CHECK_EQ(r'a.[\e(b(cd))]', ctx.expression('a(b(cd))', 'none').expansion())
 CHECK_EQ(r'a.[((\eb)c)d]', ctx.expression('((ab)c)d', 'none').expansion())
 CHECK_EQ(r'a.[(\eb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
 
-         ## ----- ##
-## Sum.  ##
-## ----- ##
-def check(r1, r2):
-    '''Check that `+` between expansions corresponds to the expansion of
-    `+` between expressions.'''
-    exp1 = expr(r1)
-    exp2 = expr(r2)
-    eff = exp1.expansion() + exp2.expansion()
-    exp = (exp1 + exp2).expansion()
-    CHECK_EQ(exp, eff)
 
-check('ab', 'cd')
-check('a', 'bcd')
-check('abab', 'bbbb')
-check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
-check('a', r'\e')
-check('a', r'\z')
+## ------ ##
+## Star.  ##
+## ------ ##
+
+XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
+      r'''Q: value is not starrable: 1
+  while computing expansion of: a**''')
+
 
 
 ## ------- ##
 ## Tuple.  ##
 ## ------- ##
-ctx = vcsn.context('lan_char(abcd), q')
+ctx = vcsn.context('lan, q')
 def check(r1, r2):
     '''Check that `|` between expansions corresponds to the expansion of
     `|` between expressions.'''
@@ -163,9 +168,9 @@ check('a', r'\z')
 ## -------- ##
 ## Weight.  ##
 ## -------- ##
-def check(r, w):
+def check(r, w, exp):
     '''Check that `weight * expansion` corresponds to `expansion * weight`
-    and to the expansion of `weight * expression` '''
+    and to the expansion of `weight * expression`.'''
     e = expr(r, 'trivial')
     leff = e.expansion() * w
     lexp = (e * w).expansion()
@@ -174,8 +179,9 @@ def check(r, w):
     rexp = (w * e).expansion()
     CHECK_EQ(rexp, reff)
 
-check('abab', 2)
-check('a*', 10)
-check('[ab]{3}', 4)
-check('a*+b*+c+c*', 3)
-check('a', 1)
+check('abcd', 2, 'a.[<2>bcd]')
+check('a*', 10, '<10> + a.[<10>a*]')
+check('[ab]{3}', 4, 'a.[<4>[ab]{2}] + b.[<4>[ab]{2}]')
+check('a*+b*+c+c*', 3, 'toto')
+check('a', 1, 'a.[\e]')
+check('a', 0, '<0>')

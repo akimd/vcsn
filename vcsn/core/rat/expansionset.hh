@@ -3,6 +3,7 @@
 #include <vcsn/algos/project.hh>
 #include <vcsn/algos/split.hh> // expression_polynomialset_t
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/static-if.hh>
 
@@ -158,9 +159,15 @@ namespace vcsn
           (ls_, x);
       }
 
-      /// Normalize: move the constant term to the label one.
+      /// Normalize: eliminate null polynomials and move the constant
+      /// term from the label one.
       value_t& normalize(value_t& res) const
       {
+        detail::erase_if(res.polynomials,
+                         [this](auto& p)
+                         {
+                           return ps_.is_zero(p.second);
+                         });
         auto has_one = bool_constant<context_t::has_one()>();
         return normalize_(res, has_one);
       }
@@ -181,7 +188,7 @@ namespace vcsn
               {
                 res.constant = ws_.add(res.constant, weight_of(*j));
                 i->second.erase(j);
-                if (i->second.empty())
+                if (ps_.is_zero(i->second))
                   res.polynomials.erase(i);
               }
           }
@@ -274,20 +281,19 @@ namespace vcsn
         lhs.constant = ws_.add(lhs.constant, rhs.constant);
         for (const auto& p: rhs.polynomials)
           ps_.add_here(lhs.polynomials[p.first], p.second);
+        normalize(lhs);
       }
 
       /// Addition.
-      value_t add(const value_t& lhs, const value_t& rhs) const
+      value_t add(value_t res, const value_t& rhs) const
       {
-        auto res = lhs;
         add_here(res, rhs);
         return res;
       }
 
       /// Left-multiplication by \a w of \a rhs.
-      value_t lweight(const weight_t& w, const value_t& rhs) const
+      value_t lweight(const weight_t& w, value_t res) const
       {
-        auto res = rhs;
         lweight_here(w, res);
         return res;
       }
@@ -295,9 +301,14 @@ namespace vcsn
       /// Inplace left-multiplication by \a w of \a res.
       value_t& lweight_here(const weight_t& w, value_t& res) const
       {
-        res.constant = ws_.mul(w, res.constant);
-        for (auto& p: res.polynomials)
-          p.second = ps_.lweight(w, p.second);
+        if (ws_.is_zero(w))
+          res = zero();
+        else
+          {
+            res.constant = ws_.mul(w, res.constant);
+            for (auto& p: res.polynomials)
+              p.second = ps_.lweight(w, p.second);
+          }
         return res;
       }
 
@@ -305,10 +316,11 @@ namespace vcsn
       value_t rweight(const value_t& lhs, const weight_t& w) const
       {
         auto res = value_t{ws_.mul(lhs.constant, w)};
-        for (auto& p: lhs.polynomials)
-          for (const auto& m: p.second)
-            ps_.add_here(res.polynomials[p.first],
-                         rs_.rweight(label_of(m), w), weight_of(m));
+        if (!ws_.is_zero(w))
+          for (auto& p: lhs.polynomials)
+            for (const auto& m: p.second)
+              ps_.add_here(res.polynomials[p.first],
+                           rs_.rweight(label_of(m), w), weight_of(m));
         return res;
       }
 
@@ -418,6 +430,7 @@ namespace vcsn
                                            ps_.lmul_label(right, r.second)));
                 }
             }
+        normalize(res);
         return res;
       }
 
@@ -438,7 +451,7 @@ namespace vcsn
           for (const auto& m: p.second)
             ps_.add_here(res.polynomials[p.first],
                          shuffle(lhs_xpr, label_of(m)), weight_of(m));
-
+        // FIXME: normalize?
         return res;
       }
 
@@ -488,6 +501,7 @@ namespace vcsn
                  {
                    return rs_.infiltrate(l, r);
                  });
+        // FIXME: normalize?
         return res;
       }
 
