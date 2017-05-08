@@ -16,9 +16,24 @@ a|e @ a|e + a|e == (a|e @ a|e) + a|e
 0 + a|e  => 0|0+a|e
 (0+12*)(a|e)(3+4*5)  => (0|0+(1|1)(2|2)*)(a|e)(3|3+(4|4)*(5|5))
 
+%identities: linear
+a|0  @  0|e  => a|e
+a|0  @  1|e  => \z
+a|\e @ \e|e  => a|e
+a|\e @  0|e  => \z
+a|0  @ \e|e  => \z
+
+\e|0  @ 0|\e  => \e
+\e|0  @ \e    => \z
+\e|\e @ \e|\e => \e
+0|\e  @ \e    => 0|\e
+\e    @ \e|0  => \e|0
+\e    @ 0|\e  => \z
+
 
 %context: lat<lan_char(abcd0-9), lan_char(efgh0-9), lan_char(ijkl0-9)>, q
 
+%identities: associative
 \z|\z|\z => \z
 \z|e|i   => \z
 a|\z|i   => \z

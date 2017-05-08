@@ -276,9 +276,13 @@ for m in re.findall('<(.*?)>', str(exp)):
 for i in range(100):
     randexp('lat<lan(abc), lan(abc)>, q',
             '+,*,.', length=20)
+# FIXME: We did not ask for tuple, but we will have some anyway, as
+# when we generate multitape labels, we pretty-print them, which turns
+# them into multitape expressions. And with identities = none, that's
+# all we have left: tupling operator on single-tape labels.
 exp = randexp('lat<lan(abc), lan(abc)>, q',
               '@,+,*,.', length=100, identities='none')
-check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star'])
+check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 
 # Check that we use | correctly.
 for i in range(100):
@@ -298,6 +302,7 @@ check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 a = vcsn.context('lal_char(a), b').random_deterministic(100)
 CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>',
          a.info('type'))
+print('automaton {:d}'.format(a))
 CHECK_EQ(100, a.info('number of states'))
 CHECK_EQ(1, a.info('number of initial states'))
 CHECK_EQ(1, a.info('number of final states'))

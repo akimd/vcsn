@@ -78,11 +78,12 @@ namespace vcsn
         length_ = 6;
         using tokenizer = boost::tokenizer<boost::escaped_list_separator<char>>;
         using boost::algorithm::erase_all_copy;
-        auto sep = boost::escaped_list_separator<char>("#####", ",", "\"");
+        const auto sep
+          = boost::escaped_list_separator<char>("#####", ",", "\"");
         for (const auto& arg: tokenizer(param, sep))
         {
-          auto eq = arg.find('=');
-          auto op = erase_all_copy(arg.substr(0, eq), " ");
+          const auto eq = arg.find('=');
+          const auto op = erase_all_copy(arg.substr(0, eq), " ");
           if (op == "w")
             {
               random_weight_params_ = arg.substr(eq + 1);
@@ -90,7 +91,7 @@ namespace vcsn
             }
           else
           {
-            float value = (eq != std::string::npos)
+            const float value = (eq != std::string::npos)
               ? detail::lexical_cast<float>(arg.substr(eq + 1))
               : 1;
             if (has(arities_, op))
@@ -178,7 +179,7 @@ namespace vcsn
         else
         {
           auto dis = std::uniform_int_distribution<>(1, length - 2);
-          auto num_lhs = dis(gen_);
+          const auto num_lhs = dis(gen_);
           out << "(";
           print_random_expression_(out, num_lhs, fmt);
           out << op;
@@ -276,7 +277,7 @@ namespace vcsn
       /// For each operator, its probability.
       std::map<std::string, float> operators_;
       /// Number of arguments of each operator.
-      std::unordered_map<std::string, int> arities_
+      const std::unordered_map<std::string, int> arities_
       {
         // Nullary.
         {"\\e", 0},

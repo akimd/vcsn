@@ -376,6 +376,7 @@ namespace vcsn
              && (l->type() == type_t::lweight
                  || r->type() == type_t::lweight))
       {
+        // FIXME: check that it can't shadow the following items.
         weight_t
           lw = possibly_implicit_lweight_(l),
           rw = possibly_implicit_lweight_(r);
@@ -429,6 +430,72 @@ namespace vcsn
       res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
                                      possibly_implicit_lweight_(r)),
                     one());
+
+    // a|\e @ 1 => a|\e, 1@\e|a => \e|a, a|x@x|b => a|x, a|x@y|b => 0.
+    else if (ids_.is_linear()
+             && are_composable<context_t>()
+             && context_t::has_one()
+             && number_of_tapes<context_t>::value == 2
+             && (type_ignoring_lweight_(l) == type_t::atom
+                 || type_ignoring_lweight_(l) == type_t::one)
+             && (type_ignoring_lweight_(r) == type_t::atom
+                 || type_ignoring_lweight_(r) == type_t::one))
+      // 1 behaves exactly like `\e|\e`.
+      //
+      // So we want the `out` label of l, and the `in` label of r.
+      // FIXME: this piece of code does not belong to here, it should
+      // be handled in the realm of labelsets.
+      detail::static_if<are_composable<context_t>()
+                        && context_t::has_one()
+                        && number_of_tapes<context_t>::value == 2>
+        ([this, &res](const auto& ls, const auto& l, const auto& r)
+         {
+           // Tape of the lhs on which we compose.  Cannot use just
+           // `ls.size()`, clang++ 3.9 and 4.0 do not accept it, which
+           // seems like a bug to me.
+           constexpr auto out
+             = std::remove_reference_t<decltype(ls)>::size() - 1;
+           // Tape of the rhs on which we compose.
+           constexpr auto in = 0;
+           // The common (single-tape) labelset.
+           const auto& ls0 = ls.template set<out>();
+           // FIXME: maybe_compose, or dynamic are_composable.
+           auto get_label = [&](const auto& e, auto tape)
+             {
+               if (e->type() == type_t::atom)
+                 return std::get<decltype(tape){}>
+                        (down_pointer_cast<const atom_t>(e)->value());
+               else
+                 return ls0.one();
+             };
+           auto lhs = unwrap_possible_lweight_(l);
+           auto rhs = unwrap_possible_lweight_(r);
+           auto lout = get_label(l, std::integral_constant<int, out>{});
+           auto lin = get_label(r, std::integral_constant<int, in>{});
+           // 1 @ x|b => x|b if x == \e, 0 otherwise.
+           if (lhs->type() == type_t::one && rhs->type() == type_t::atom)
+             res = ls0.is_one(lin) ? rhs : zero();
+           // a|x @ 1 => a|x if x == \e, 0 otherwise.
+           else if (lhs->type() == type_t::atom && rhs->type() == type_t::one)
+             res = ls0.is_one(lout) ? lhs : zero();
+           // a|x @ y|b => a|b if x == y, 0 otherwise.
+           else
+             res = (ls0.equal(lout, lin)
+                    ? atom(ls.compose
+                           (ls,
+                            down_pointer_cast<const atom_t>(lhs)->value(),
+                            ls,
+                            down_pointer_cast<const atom_t>(rhs)->value()))
+                    : zero());
+           res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
+                                          possibly_implicit_lweight_(r)),
+                         res);
+         },
+         [](const auto&, const auto&, const auto&)
+         {
+           BUILTIN_UNREACHABLE();
+         })
+          (*labelset(), l, r);
 
     // General case.
     else
@@ -530,26 +597,39 @@ namespace vcsn
   {
     auto ts = as_tupleset();
     auto t = ts.tuple(v...);
+
+    // \e | \e => \e.
+    //
+    // This is critical, it is not a identity, it is more important
+    // than that.  For instance, the tupling of expansions starts by
+    // denormalizing them and then normalizes the result.  So
+    // `<2>|<3>` becomes `\e.[<2>\e] | \e.[<3>\e]` which becomes
+    // `\e|\e.[<6>(\e|\e]` But if we don't recognize that `\e|\e` is
+    // really `\e`, the normalization fails to turn it into `<6>`.
+    if (ts.is_one(t))
+      return one();
+
     // \z | E => \z.
     //
     // FIXME: maybe we should introduce a short-circuiting version
     // that would not make useless invocation when a \z was found.
-    if (detail::apply(any{},
-                      detail::apply(([](const auto& rs, const auto& r)
-                                     { return rs.is_zero(r); }),
-                                    ts.sets(), t)))
+    else if (ids_.is_trivial()
+             && detail::apply(any{},
+                              detail::apply(([](const auto& rs, const auto& r)
+                                             { return rs.is_zero(r); }),
+                                            ts.sets(), t)))
       return zero();
-    // \e | \e => \e.
-    if (ts.is_one(t))
-      return one();
+
     // If this is a tuple of labels, make it a (multitape) label.
     // That allows algorithms such as standard, thompson, etc. to work
     // on lal x lal.
     //
     // Note that `\e|a` remains a tuple of expressions on lal x lal,
     // but it is turned into a (multitape) label on lan x lal.
-    else if (tuple_of_label<>{self()}.is_label(t))
+    else if (ids_.is_trivial() && tuple_of_label<>{self()}.is_label(t))
       return atom(tuple_of_label<>{self()}.as_label(t));
+
+    // General case.
     else
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }

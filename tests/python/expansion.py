@@ -84,7 +84,7 @@ check(r'a|\e', r'\e|b')
 check(r'(a|\e)(b|c)', 'c|a')
 check('a|b', r'(\e|a)(b|c)')
 check(r'(a|c) + (b|\e)', r'(c|d)(\e|e)')
-CHECK_EQ(r'a|d.[b|\e@\e]', ctx.expression(r'(a|c)(b|\e) @ c|d').expansion())
+CHECK_EQ(r'a|d.[b|\e]', ctx.expression(r'(a|c)(b|\e) @ c|d').expansion())
 
 
 

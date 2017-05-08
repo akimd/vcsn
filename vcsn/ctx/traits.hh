@@ -103,7 +103,7 @@ namespace vcsn
   {};
 
   /// Whether two contexts are composable.
-  template <typename Ctx1, typename Ctx2>
+  template <typename Ctx1, typename Ctx2 = Ctx1>
   struct are_composable
     : are_labelsets_composable<labelset_t_of<Ctx1>, labelset_t_of<Ctx2>>
   {};
