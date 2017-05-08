@@ -67,24 +67,25 @@ check(lao.expression(r'(<1/2>\e)*'))
 ## --------- ##
 ## Compose.  ##
 ## --------- ##
-ctx = vcsn.context('lat<lan(abcde), lan(abcde)>, q')
-def check(r1, r2):
+ctx = vcsn.context('lat<lan, lan>, q')
+def check(r1, r2, exp):
     '''Check that `@` between expansions corresponds to the expansion of
     `@` between expressions.'''
-    exp1 = expr(r1)
-    exp2 = expr(r2)
-    eff = exp1.expansion().compose(exp2.expansion())
-    exp = exp1.compose(exp2).expansion()
-    CHECK_EQ(exp, eff)
+    e1 = expr(r1)
+    e2 = expr(r2)
+    # Cannot yet require @ support from Python.
+    CHECK_EQ(exp, e1.expansion().compose(e2.expansion()))
+    CHECK_EQ(exp, e1.compose(e2).expansion())
 
-check('a|a', 'a|a')
-check('a|b', 'b|c')
-check('a*|b*', 'b*|c*')
-check(r'a|\e', r'\e|b')
-check(r'(a|\e)(b|c)', 'c|a')
-check('a|b', r'(\e|a)(b|c)')
-check(r'(a|c) + (b|\e)', r'(c|d)(\e|e)')
-CHECK_EQ(r'a|d.[b|\e]', ctx.expression(r'(a|c)(b|\e) @ c|d').expansion())
+check('a|a', 'a|a', 'a|a.[\e]')
+check('a|b', 'b|c', 'a|c.[\e]')
+check('a*|b*', 'b*|c*',
+      '<1> + \e|\e.[\e@(b|\e)(b*|\e) + \e|b*@b*|\e + (\e|b)(\e|b*)@\e + \e@(b|c)(b*|c*) + (a|b)(a*|b*)@\e] + \e|c.[\e@\e|c* + \e|b*@b*|c* + (\e|b)(\e|b*)@\e|c* + (a|b)(a*|b*)@\e|c*] + a|\e.[a*|\e@\e + a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e) + a*|\e@(b|c)(b*|c*)] + a|c.[a*|\e@\e|c* + a*|b*@b*|c*]')
+check(r'a|\e', r'\e|b', 'a|b.[\e]')
+check(r'(a|\e)(b|c)', 'c|a', 'a|\e.[b|a]')
+check('a|b', r'(\e|a)(b|c)', '\e|a.[a|c]')
+check(r'(a|c)+(b|\e)', r'(c|d)(\e|e)', 'a|d.[\e|e] + b|\e.[\e@(c|d)(\e|e)]')
+check(r'(a|c)(b|\e)', 'c|d', r'a|d.[b|\e]')
 
 
 

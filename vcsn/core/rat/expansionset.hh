@@ -799,30 +799,28 @@ namespace vcsn
                         const value_t& l, const value_t& r,
                         std::true_type) const
       {
+        const auto& ls0 = ls_.template set<0>();
+        const auto& ls1 = ls_.template set<1>();
         // Handle lhs labels with one on the second tape.
-        {
-          for (const auto& lhs: l.polynomials)
-            if (ls_.template set<1>().is_one(std::get<1>(lhs.first)))
-              for (const auto& rhs: r.polynomials)
-                if (!ls_.template set<0>().is_one(std::get<0>(rhs.first)))
-                  // a|\e . [P1] @ b|c . [P2] becomes a|\e . [P1 @ (b|c)P2]
-                  ps_.add_here(res.polynomials[lhs.first],
-                               ps_.compose(lhs.second,
-                                           ps_.lmul_label(rs_.atom(rhs.first),
-                                                          rhs.second)));
-        }
+        for (const auto& lhs: l.polynomials)
+          if (ls1.is_one(std::get<1>(lhs.first)))
+            for (const auto& rhs: r.polynomials)
+              if (!ls0.is_one(std::get<0>(rhs.first)))
+                // a|\e . [P1] @ b|c . [P2] becomes a|\e . [P1 @ (b|c)P2]
+                ps_.add_here(res.polynomials[lhs.first],
+                             ps_.compose(lhs.second,
+                                         ps_.lmul_label(rs_.atom(rhs.first),
+                                                        rhs.second)));
         // Handle rhs labels with one on the first tape.
-        {
-          for (const auto& rhs: r.polynomials)
-            if (ls_.template set<0>().is_one(std::get<0>(rhs.first)))
-              for (const auto& lhs: l.polynomials)
-                if (!ls_.template set<1>().is_one(std::get<1>(lhs.first)))
-                  // a|b . [P1] @ \e|c . [P2] becomes \e|c . [(a|b)P1 @ P2]
-                  ps_.add_here(res.polynomials[rhs.first],
-                               ps_.compose(ps_.lmul_label(rs_.atom(lhs.first),
-                                                          lhs.second),
-                                           rhs.second));
-        }
+        for (const auto& rhs: r.polynomials)
+          if (ls0.is_one(std::get<0>(rhs.first)))
+            for (const auto& lhs: l.polynomials)
+              if (!ls1.is_one(std::get<1>(lhs.first)))
+                // a|b . [P1] @ \e|c . [P2] becomes \e|c . [(a|b)P1 @ P2]
+                ps_.add_here(res.polynomials[rhs.first],
+                             ps_.compose(ps_.lmul_label(rs_.atom(lhs.first),
+                                                        lhs.second),
+                                         rhs.second));
       }
 
       /// The composition of \a l and \a r.
@@ -851,6 +849,8 @@ namespace vcsn
               }
         auto has_one = bool_constant<context_t::has_one()>();
         compose_with_one_(res, l, r, has_one);
+        // Beware that we might have introduced some constant terms
+        // (e.g., \e|x @ x|\e), and some polynomials equal to 0 (\e|x @ y|\e).
         normalize(res);
         return res;
       }
