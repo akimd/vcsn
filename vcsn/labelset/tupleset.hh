@@ -324,12 +324,6 @@ namespace vcsn
       return is_special_(l, indices);
     }
 
-    value_t
-    zero() const
-    {
-      return this->zero_(indices);
-    }
-
     bool
     is_zero(const value_t& l) const
     {
@@ -815,12 +809,24 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    value_t
-    zero_(seq<I...>) const
+    static auto zero_(seq<I...>)
+      -> decltype(value_t{valueset_t<I>::zero()...})
     {
-      return value_t{set<I>().zero()...};
+      return value_t{valueset_t<I>::zero()...};
     }
 
+  public:
+    /// A tuple of zeros.
+    ///
+    /// Template + decltype so that this is not defined when not all
+    /// the valuesets support zero().
+    template <typename Indices = indices_t>
+    static auto zero() -> decltype(zero_(Indices{}))
+    {
+      return zero_(Indices{});
+    }
+
+  private:
     template <std::size_t... I>
     bool
     is_zero_(const value_t& l, seq<I...>) const

@@ -252,7 +252,7 @@ namespace vcsn
     static auto atom(const label_t& v) -> value_t;
 
     // Concrete type implementation.
-    auto zero() const -> value_t;
+    static auto zero() -> value_t;
     static auto one() -> value_t;
     auto add(const value_t& l, const value_t& r) const -> value_t;
     auto mul(const value_t& l, const value_t& r) const -> value_t;

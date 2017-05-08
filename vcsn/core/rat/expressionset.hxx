@@ -145,7 +145,7 @@ namespace vcsn
       return std::make_shared<atom_t>(v);
   }
 
-  DEFINE::zero() const
+  DEFINE::zero()
     -> value_t
   {
     return std::make_shared<zero_t>();

@@ -82,20 +82,20 @@ CHECK_EQ(r'a|d.[b|\e@\e]', ctx.expression(r'(a|c)(b|\e) @ c|d').expansion())
 ## Conjunction.  ##
 ## ------------- ##
 ctx = lal
-def check(r1, r2):
+def check(r1, r2, exp):
     '''Check that `&` between expansions corresponds to the expansion of
     `&` between expressions.'''
     exp1 = expr(r1)
     exp2 = expr(r2)
-    eff = exp1.expansion() & exp2.expansion()
-    exp = (exp1 & exp2).expansion()
-    CHECK_EQ(exp, eff)
+    CHECK_EQ(exp, exp1.expansion() & exp2.expansion())
+    CHECK_EQ(exp, (exp1 & exp2).expansion())
 
-check('ab', 'cd')
-check('(ab)*', 'a*b*')
-check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*')
-check('a', r'\e')
-check('a', r'\z')
+check('ab', 'cd', r'<0>')
+check('ab', 'ac', r'a.[\z]') # Wrong, but will be fixed.
+check('(ab)*', 'a*b*', r'<1> + a.[b(ab)*&a*b*]')
+check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*', r'<1> + a.[<1/4>(<1/2>a)*&(<1/2>a)*(<1/3>b)*]')
+check('a', r'\e', r'<0>')
+check('a', r'\z', r'<0>')
 
 
 

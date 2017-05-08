@@ -30,34 +30,34 @@
 
 namespace vcsn
 {
-  // http://llvm.org/bugs/show_bug.cgi?id=18571
-#if defined __clang__
-# pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wunused-value"
-#endif
-  template <typename LabelSet>
-  auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t* l)
-    -> decltype(ls.is_zero(l), bool())
-  {
-    return ls.is_zero(*l);
-  }
-
-#if defined __clang__
-# pragma clang diagnostic pop
-#endif
-
-  template <typename LabelSet>
-  bool label_is_zero(const LabelSet&, ...)
-  ATTRIBUTE_CONST;
-
-  template <typename LabelSet>
-  bool label_is_zero(const LabelSet&, ...)
-  {
-    return false;
-  }
-
   namespace detail
   {
+    /*-----------------.
+    | label_is_zero.   |
+    `-----------------*/
+
+    /// The type of the LabelSet::zero() member function.
+    template <typename LabelSet>
+    using zero_mem_fn_t
+      = decltype(std::declval<LabelSet>().zero());
+
+    /// Whether LabelSet features a zero() member function.
+    template <typename LabelSet>
+    using has_zero_mem_fn = detail::detect<LabelSet, zero_mem_fn_t>;
+
+    template <typename LabelSet>
+    auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t& l)
+    {
+      return detail::static_if<has_zero_mem_fn<LabelSet>{}>
+        ([](const auto& ls, const auto& l){ return ls.is_zero(l);},
+         [](const auto&,    const auto&)  { return false; })
+        (ls, l);
+    }
+
+    /*--------------------.
+    | is_division_ring.   |
+    `--------------------*/
+
     template <typename WeightSet>
     struct is_division_ring
       : std::true_type
@@ -194,13 +194,11 @@ namespace vcsn
     value_t&
     add_here(value_t& v, const label_t& l, const weight_t k) const
     {
-      if (!label_is_zero(*labelset(), &l))
+      if (!label_is_zero(*labelset(), l))
         {
           auto i = v.find(l);
           if (i == v.end())
-            {
-              set_weight(v, l, k);
-            }
+            set_weight(v, l, k);
           else
             {
               // Do not use set_weight() because it would lookup l
@@ -265,9 +263,8 @@ namespace vcsn
     }
 
     /// The sum of polynomials \a l and \a r.
-    value_t add(const value_t& l, const value_t& r) const
+    value_t add(value_t res, const value_t& r) const
     {
-      auto res = l;
       add_here(res, r);
       return res;
     }
@@ -281,7 +278,7 @@ namespace vcsn
     value_t&
     sub_here(value_t& v, const monomial_t& m) const
     {
-      if (!label_is_zero(*labelset(), &label_of(m)))
+      if (!label_is_zero(*labelset(), label_of(m)))
         {
           auto i = v.find(label_of(m));
           if (i == v.end())
