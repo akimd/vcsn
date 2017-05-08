@@ -93,11 +93,11 @@ def check(r1, r2, exp):
 check('a|a', 'a|a', 'a|a.[\e]')
 check('a|b', 'b|c', 'a|c.[\e]')
 check('a*|b*', 'b*|c*',
-      '<1> + \e|\e.[\e|b*@b*|\e] + \e|c.[\e|b*@b*|c* + (\e|b)(\e|b*)@\e|c* + (a|b)(a*|b*)@\e|c*] + a|\e.[a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e) + a*|\e@(b|c)(b*|c*)] + a|c.[a*|\e@\e|c* + a*|b*@b*|c*]')
+      '<1> + \e|\e.[\e|b*@b*|\e] + \e|c.[\e@\e|c* + \e|b*@b*|c* + (\e|b)(\e|b*)@\e|c*] + a|\e.[a*|\e@\e + a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e)] + a|c.[a*|\e@\e|c* + a*|b*@b*|c* + a*|\e@(b|\e)(b*|c*) + (\e|b)(a*|b*)@\e|c*]')
 check(r'a|\e', r'\e|b', 'a|b.[\e]')
-check(r'(a|\e)(b|c)', 'c|a', 'a|\e.[b|a]')
-check('a|b', r'(\e|a)(b|c)', '\e|a.[a|c]')
-check(r'(a|c)+(b|\e)', r'(c|d)(\e|e)', 'a|d.[\e|e] + b|\e.[\e@(c|d)(\e|e)]')
+check(r'(a|\e)(b|c)', 'c|a', 'a|a.[b|\e]')
+check('a|b', r'(\e|a)(b|c)', 'a|a.[\e|c]')
+check(r'(a|c)+(b|\e)', r'(c|d)(\e|e)', 'a|d.[\e|e] + b|d.[\e@(c|\e)(\e|e)]')
 check(r'(a|c)(b|\e)', 'c|d', r'a|d.[b|\e]')
 
 

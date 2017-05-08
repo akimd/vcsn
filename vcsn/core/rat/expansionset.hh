@@ -799,10 +799,10 @@ namespace vcsn
                         const value_t& l, const value_t& r,
                         std::true_type) const
       {
-        if (getenv("VCSN_NEWWAY"))
-          return compose_with_one_new_(res, l, r);
-        else
+        if (old_way_)
           return compose_with_one_old_(res, l, r);
+        else
+          return compose_with_one_new_(res, l, r);
       }
 
       void
@@ -915,8 +915,7 @@ namespace vcsn
         constexpr auto out = labelset_t::size() - 1;
         // Tape of the rhs on which we compose.
         constexpr auto in = 0;
-        auto denorm = !!getenv("VCSN_DENORM");
-        if (denorm)
+        if (denorm_)
           {
             denormalize(l);
             denormalize(r);
@@ -950,6 +949,10 @@ namespace vcsn
       const weightset_t& ws_ = *rs_.weightset();
       /// The polynomialset for the polynomials.
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
+      /// Whether to running the old composition code.
+      bool old_way_ = !!getenv("VCSN_OLDWAY");
+      /// Denormalize if requested explicitly, or if running the old way.
+      bool denorm_ = old_way_ || !!getenv("VCSN_DENORM");
     };
   }
 
