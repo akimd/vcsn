@@ -562,18 +562,6 @@ namespace vcsn
       return o;
     }
 
-    value_t
-    zero() const
-    {
-      return value(ls_->zero());
-    }
-
-    bool
-    is_zero(const value_t& v) const
-    {
-      return !is_one(v) && ls_->is_zero(get_value(v));
-    }
-
     bool
     is_letter(const value_t& v) const
     {
