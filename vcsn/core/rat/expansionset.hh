@@ -809,8 +809,8 @@ namespace vcsn
       compose_with_one_old_(value_t& res,
                             const value_t& l, const value_t& r) const
       {
-        assert(ws_.is_zero(l.constant));
-        assert(ws_.is_zero(r.constant));
+        // assert(ws_.is_zero(l.constant));
+        // assert(ws_.is_zero(r.constant));
         const auto& ls0 = ls_.template set<0>();
         const auto& ls1 = ls_.template set<1>();
 
@@ -915,8 +915,12 @@ namespace vcsn
         constexpr auto out = labelset_t::size() - 1;
         // Tape of the rhs on which we compose.
         constexpr auto in = 0;
-        denormalize(l);
-        denormalize(r);
+        auto denorm = !!getenv("VCSN_DENORM");
+        if (denorm)
+          {
+            denormalize(l);
+            denormalize(r);
+          }
         auto res = value_t{ws_.mul(l.constant, r.constant)};
         for (const auto& lm: l.polynomials)
           for (const auto& rm: r.polynomials)

@@ -83,6 +83,7 @@ def check(r1, r2, exp):
     `@` between expressions.'''
     e1 = expr(r1)
     e2 = expr(r2)
+    print('check: {} @ {}'.format(e1, e2))
     # Cannot yet require @ support from Python.
     e = e1.compose(e2)
     CHECK_EQ(exp, e1.expansion().compose(e2.expansion()))
@@ -92,7 +93,7 @@ def check(r1, r2, exp):
 check('a|a', 'a|a', 'a|a.[\e]')
 check('a|b', 'b|c', 'a|c.[\e]')
 check('a*|b*', 'b*|c*',
-      '<1> + \e|\e.[\e@(b|\e)(b*|\e) + \e|b*@b*|\e + (\e|b)(\e|b*)@\e + \e@(b|c)(b*|c*) + (a|b)(a*|b*)@\e] + \e|c.[\e@\e|c* + \e|b*@b*|c* + (\e|b)(\e|b*)@\e|c* + (a|b)(a*|b*)@\e|c*] + a|\e.[a*|\e@\e + a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e) + a*|\e@(b|c)(b*|c*)] + a|c.[a*|\e@\e|c* + a*|b*@b*|c*]')
+      '<1> + \e|\e.[\e|b*@b*|\e] + \e|c.[\e|b*@b*|c* + (\e|b)(\e|b*)@\e|c* + (a|b)(a*|b*)@\e|c*] + a|\e.[a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e) + a*|\e@(b|c)(b*|c*)] + a|c.[a*|\e@\e|c* + a*|b*@b*|c*]')
 check(r'a|\e', r'\e|b', 'a|b.[\e]')
 check(r'(a|\e)(b|c)', 'c|a', 'a|\e.[b|a]')
 check('a|b', r'(\e|a)(b|c)', '\e|a.[a|c]')
