@@ -186,6 +186,16 @@ namespace vcsn
 
       VCSN_RAT_VISIT(mul, e)
       {
+        if (getenv("VCSN_NAIVE_MUL"))
+          {
+            assert(!transposed_);
+            res_ = to_expansion(e[0]);
+            xs_.denormalize(res_);
+            xs_.rmul_label_here(res_,
+                                prod_(std::next(e.begin()), std::end(e)));
+          }
+        else
+          {
         res_ = xs_.one();
         for (size_t i = 0, size = e.size(); i < size; ++i)
           {
@@ -235,6 +245,7 @@ namespace vcsn
             // Nothing else will be added.
             if (ws_.is_zero(res_.constant))
               break;
+          }
           }
       }
 
@@ -326,11 +337,22 @@ namespace vcsn
         transposed_ = !transposed_;
       }
 
+      /// If E is normal, d(E*) = <c(E)*> + <c(E)*> dp(E) E*.
+      /// otherwise       d(E*) = 1 + d(E) E*.
       VCSN_RAT_VISIT(star, e)
       {
-        expansion_t res = to_expansion(e.sub());
-        res_.constant = ws_.star(res.constant);
+        // F = E*.
         auto f = me(e.shared_from_this());
+        // d(E).
+        auto x = to_expansion(e.sub());
+        if (xs_.is_normal(x) && !getenv("VCSN_NAIVE_STAR"))
+          res_.constant = ws_.star(x.constant);
+        else
+          {
+            // Do not leave any constant-term.
+            xs_.denormalize(x);
+            res_.constant = ws_.one();
+          }
         if (transposed_)
           {
             // FIXME: check the case of named expression.
@@ -338,10 +360,12 @@ namespace vcsn
             f = rs_.transposition(f);
           }
 
-        for (const auto& p: res.polynomials)
+        for (const auto& p: x.polynomials)
           res_.polynomials[label_of(p)]
             = ps_.lweight(res_.constant,
-                       ps_.rmul_label(weight_of(p), f));
+                          ps_.rmul_label(weight_of(p), f));
+        if (getenv("VCSN_DENORMALIZE_STAR"))
+          xs_.denormalize(res_);
       }
 
       VCSN_RAT_VISIT(lweight, e)
