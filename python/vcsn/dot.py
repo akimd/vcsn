@@ -31,6 +31,8 @@ state_point = 'node [shape = point, width = 0]'
 # Style of transitions in dot.
 edge_style = 'edge [arrowhead = vee, arrowsize = .6]'
 
+# Process timeout (in seconds).
+timeout = 60
 
 def _states_as_tooltips(s):
     s = re.sub(r'label = (".*?"), shape = box', r'tooltip = \1', s)
@@ -114,40 +116,43 @@ def _dot_to_boxart(dot):
               stdin=PIPE, stdout=PIPE, stderr=PIPE,
               universal_newlines=True)
     p.stdin.write(dot)
-    out, err = p.communicate()
+    out, err = p.communicate(timeout=timeout)
     if p.wait():
         raise RuntimeError('graph-easy failed: ' + err)
-    if isinstance(out, bytes):
-        out = out.decode('utf-8')
     return out
 
 
 @lru_cache(maxsize=32)
 def _dot_to_svg(dot, engine='dot', *args):
     "The conversion of a Dot source into SVG by dot."
-    # http://www.graphviz.org/content/rendering-automata
-    p1 = Popen([engine] + list(args),
-               stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    p2 = Popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
-               stdin=p1.stdout, stdout=PIPE, stderr=PIPE,
+    # http://www.graphviz.org/content/rendering-automata.
+    #
+    # This routine used to be composed of a pipe between these three
+    # processes.  But it failed to end on large input.  On a typical
+    # use case (ladybird 10), we get no significant difference with
+    # %timeit: 1.37s before, 1.39s after.
+    p = Popen([engine] + list(args),
+               stdin=PIPE, stdout=PIPE, stderr=PIPE,
                universal_newlines=True)
-    p3 = Popen(['neato', '-n2', '-Tsvg'],
-               stdin=p2.stdout, stdout=PIPE, stderr=PIPE,
-               universal_newlines=True)
-    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
-    p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(dot)
-    p1.stdin.close()
-    out, err = p3.communicate()
-    if p1.wait():
-        raise RuntimeError(engine + " failed: " + p1.stderr.read())
-    if p2.wait():
-        raise RuntimeError("gvpr failed: " + p2.stderr.read())
-    if p3.wait():
-        raise RuntimeError("neato failed: " + err)
-    if isinstance(out, bytes):
-        out = out.decode('utf-8')
-    return out
+    res, err = p.communicate(dot, timeout=timeout)
+    if p.wait():
+        raise RuntimeError("{} failed: {}", format(engine, err))
+
+    p = Popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
+              stdin=PIPE, stdout=PIPE, stderr=PIPE,
+              universal_newlines=True)
+    res, err = p.communicate(res, timeout=timeout)
+    if p.wait():
+        raise RuntimeError("{} failed: {}", format('gvpr', err))
+
+    p = Popen(['neato', '-n2', '-Tsvg'],
+              stdin=PIPE, stdout=PIPE, stderr=PIPE,
+              universal_newlines=True)
+    res, err = p.communicate(res, timeout=timeout)
+    if p.wait():
+        raise RuntimeError("{} failed: {}", format('neato', err))
+
+    return res
 
 
 @lru_cache(maxsize=32)
@@ -162,15 +167,13 @@ def _dot_to_svg_dot2tex(dot, engine="dot"):
         p1 = Popen(['dot2tex', '--prog', engine],
                    stdin=PIPE, stdout=tex, stderr=PIPE,
                    universal_newlines=True)
-        _, err = p1.communicate(dot)
+        _, err = p1.communicate(dot, timeout=timeout)
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err)
         check_call(["texi2pdf", "--batch", "--clean", "--quiet",
-                    "--output", pdf.name, tex.name])
-        check_call(["pdf2svg", pdf.name, svg.name])
+                    "--output", pdf.name, tex.name], timeout=timeout)
+        check_call(["pdf2svg", pdf.name, svg.name], timeout=timeout)
         res = open(svg.name).read()
-        if isinstance(res, bytes):
-            res = res.decode('utf-8')
         return res
 
 def daut_to_transitions(s):
