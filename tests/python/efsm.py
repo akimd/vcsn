@@ -34,16 +34,20 @@ def check(aut, fefsm):
     # So (read | print) is not the identity.
     aut2 = vcsn.automaton(efsm, 'efsm')
     if aut.is_standard():
+        print(here(), 'case standard')
         CHECK_EQ(aut, aut2)
         CHECK_EQ(efsm, aut2.format('efsm'))
     else:
+        print(here(), 'case non standard')
         CHECK_EQUIV(aut, normalize(aut2))
 
     # Check that OpenFST accepts and reproduces our EFSM files.
     if have_ofst:
         if aut.is_standard():
+            print(here(), 'fstcat: eq')
             CHECK_EQ(aut, aut.fstcat())
         else:
+            print(here(), 'fstcat: equiv')
             CHECK_EQUIV(aut, normalize(aut.fstcat()))
     else:
         SKIP('OpenFST is missing')

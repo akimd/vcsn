@@ -115,8 +115,7 @@ def _dot_to_boxart(dot):
                '--from=graphviz', '--as=boxart'],
               stdin=PIPE, stdout=PIPE, stderr=PIPE,
               universal_newlines=True)
-    p.stdin.write(dot)
-    out, err = p.communicate(timeout=timeout)
+    out, err = p.communicate(dot, timeout=timeout)
     if p.wait():
         raise RuntimeError('graph-easy failed: ' + err)
     return out

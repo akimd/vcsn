@@ -253,8 +253,7 @@ class automaton:
         fst = _tmp_file(suffix='fst')
         proc = Popen(['efstcompile'],
                      stdin=PIPE, stdout=fst, stderr=PIPE)
-        proc.stdin.write(self.format('efsm').encode('utf-8'))
-        _, err = proc.communicate()
+        _, err = proc.communicate(self.format('efsm').encode('utf-8'))
         if proc.wait():
             raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
         return fst
