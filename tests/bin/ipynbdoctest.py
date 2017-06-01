@@ -11,6 +11,15 @@ import tempfile
 
 from test import *
 
+# Useful sources of inspiration:
+#
+# - https://gist.github.com/minrk/2620735
+# The original version.
+#
+# - https://github.com/chembl/mychembl/blob/master/ipython_notebooks/ipnbdoctest.py
+# With Travis support, a lot of OO modeling, options, context manager
+# to close properly the kernel, etc.
+
 try:
     from queue import Empty
     from difflib import ndiff as diff
@@ -20,6 +29,9 @@ except ImportError as e:
     SKIP('cannot run ipynbdoctest: ', e)
     exit(0)
 
+def log(*msg, level=0):
+    if False:
+        print('ipynbdoctest:', *msg, file=sys.stderr, flush=True)
 
 def is_libcpp():
     '''Whether `vcsn compile` uses libc++.  Matters when we use random
@@ -33,7 +45,10 @@ def is_libcpp():
         #endif
         int main() {}''', file=f)
         f.flush()
-        return subprocess.call(['vcsn', 'compile', f.name]) == 0
+        log("vcsn compile: run", level=2)
+        res = subprocess.call(['vcsn', 'compile', f.name]) == 0
+        log("vcsn compile: result: ", res, level=2)
+        return res
 
 
 def truncate(text):
@@ -57,7 +72,8 @@ def canonicalize(s):
     Fix newlines, strip trailing newlines, and normalize likely
     random values (memory addresses and UUIDs).
     '''
-    s = str(s)
+    in_ = str(s)
+    s = in_
     # Normalize newline.
     s = s.replace('\r\n', '\n')
 
@@ -108,6 +124,7 @@ def canonicalize(s):
     s = re.sub(r' stroke="transparent"', ' stroke="none"', s)
     s = re.sub(r'><title>', '>\n<title>', s)
 
+    log('canonicalize:', in_, '->', s, level=3)
     return s
 
 
@@ -116,7 +133,7 @@ def canonical_dict(dict):
 
     For instance, neutralize different Graphviz layouts in SVG.
     '''
-
+    log('canonical_dict: run', level=2)
     if 'evalue' in dict:
         if dict['evalue'] == "No module named 'pandas'":
             SKIP('pandas not installed')
@@ -181,6 +198,7 @@ def canonical_dict(dict):
     # entries recently appeared in the outputs.
     if 'transient' in dict:
         del dict['transient']
+    log('canonical_dict: ran', level=2)
     return dict
 
 
@@ -188,12 +206,14 @@ def check_outputs(ref, test):
     '''Check that two lists of outputs are equivalent and report the
     result.'''
 
+    log('check_outputs', 'run', level=2)
     # The embedding of widgets does not seem to work the same way
     # everywhere.
     for ds in [ref, test]:
         for d in ds:
             if 'data' in d and \
                'application/vnd.jupyter.widget-view+json' in d['data']:
+                log('check_outputs', 'skip', level=2)
                 SKIP('widgets are used')
                 return
 
@@ -204,26 +224,27 @@ def check_outputs(ref, test):
     eff = pprint.pformat([canonical_dict(d) for d in test], width=132)
 
     if exp == eff:
+        log('check_outputs', 'pass', level=2)
         PASS()
     else:
         rst_file("Expected output", exp)
         rst_file("Effective output", eff)
         rst_diff(exp, eff)
+        log('check_outputs', 'fail', level=2)
         FAIL()
 
 
 def run_cell(kc, source):
-    print("Running:", source)
+    log("run_cell: execute:", source)
     kc.execute(source)
-    # This is useful but will make the notebook crash on long
-    # executions, such as when the cache is empty, which can cause
-    # problems when doing bulk testing.
-    #
-    # kc.get_shell_msg(timeout=20)
-    kc.get_shell_msg()
+    log("run_cell: done")
+    kc.get_shell_msg(timeout=600)
+    log("run_cell: get_shell_msg done")
     outs = []
     while True:
+        log('run_cell: get_iopub_msg')
         msg = kc.get_iopub_msg(timeout=0.2)
+        log('run_cell: get_iopub_msg: done:', msg)
         msg_type = msg['msg_type']
         content = msg['content']
         if msg_type == 'status' and content['execution_state'] == 'idle':
@@ -251,21 +272,27 @@ def run_cell(kc, source):
             continue
         content['output_type'] = msg_type
         outs.append(content)
+    log('run_cell: return')
     return outs
 
 def test_notebook(ipynb):
     print('\nTesting notebook {}'.format(ipynb))
     with open(ipynb) as f:
         nb = formatter.reads_json(f.read())
+    log('test_notebook: create KernelManager', level=2)
     km = KernelManager()
     # Do not save the history to disk, as it can yield spurious lock errors.
     # See https://github.com/ipython/ipython/issues/2845
+    log('test_notebook: start_kernel', level=2)
     km.start_kernel(extra_arguments=['--HistoryManager.hist_file=:memory:'],
                     stderr=subprocess.DEVNULL)
     kc = km.client()
+    log('test_notebook: start_channels', level=2)
     kc.start_channels()
     try:
+        log('test_notebook: wait_for_ready', level=2)
         kc.wait_for_ready()
+        log('test_notebook: wait_for_ready: done', level=2)
     except Exception as e:
         SKIP('cannot start Jupyter kernel:', repr(e))
         exit(0)
@@ -318,9 +345,12 @@ def test_notebook(ipynb):
         # The TAP protocol does not like empty test suite.
         PASS('no test')
 
+    log('test_notebook: stop_channels', level=2)
     kc.stop_channels()
+    log('test_notebook: shutdown_kernel', level=2)
     km.shutdown_kernel()
     del km
+    log('test_notebook: return', level=2)
     return False if nfail or nerror else True
 
 
@@ -335,7 +365,6 @@ if __name__ == '__main__':
     os.environ['LC_MESSAGES'] = 'C'
 
     success = True
-    cwd = os.getcwd()
     for ipynb in args.notebooks:
         success &= test_notebook(ipynb)
     sys.exit(0 if success or args.tap else 1)
