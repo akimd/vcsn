@@ -10,14 +10,14 @@ if ($JUPYTER --version) >/dev/null 2>&1; then
 elif ($IPYTHON --version) >/dev/null 2>&1; then
   version=$($IPYTHON --version)
   case $version in
-    (4.*)
-      export JUPYTER_CONFIG_DIR=$VCSN_DATADIR/jupyter_profile
-      exec $IPYTHON notebook "$@"
-      ;;
-    (*)
+    ([23].*)
       # Supported by IPython 3, but not IPython 4.
       ipythonflags="--profile-dir=$VCSN_DATADIR/notebook_profile"
       exec $IPYTHON notebook $ipythonflags "$@"
+      ;;
+    (*)
+      export JUPYTER_CONFIG_DIR=$VCSN_DATADIR/jupyter_profile
+      exec $IPYTHON notebook "$@"
       ;;
   esac
 else
