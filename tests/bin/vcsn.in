@@ -10,7 +10,6 @@ export abs_builddir
 # Where the instantiated contexts are generated and compiled.
 VCSN_PLUGINDIR=$abs_builddir/lib/plugins
 export VCSN_PLUGINDIR
-test -d $VCSN_PLUGINDIR || mkdir -p $VCSN_PLUGINDIR
 
 # Use the shipped files, not those installed.
 : ${VCSN_DATADIR=$abs_srcdir/share/vcsn}
