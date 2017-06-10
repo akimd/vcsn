@@ -26,6 +26,7 @@ algo_headers =                                  \
   %D%/algos/compose-expression.hh               \
   %D%/algos/compose.hh                          \
   %D%/algos/conjugate.hh                        \
+  %D%/algos/conjunction-expression.hh           \
   %D%/algos/conjunction.hh                      \
   %D%/algos/constant-term.hh                    \
   %D%/algos/constant.hh                         \
@@ -64,6 +65,7 @@ algo_headers =                                  \
   %D%/algos/identities-of.hh                    \
   %D%/algos/implicit-path.hh                    \
   %D%/algos/inductive.hh                        \
+  %D%/algos/infiltrate-expression.hh            \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
   %D%/algos/is-acyclic.hh                       \
@@ -118,6 +120,7 @@ algo_headers =                                  \
   %D%/algos/scc.hh                              \
   %D%/algos/shortest-path-tree.hh               \
   %D%/algos/shortest.hh                         \
+  %D%/algos/shuffle-expression.hh               \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \

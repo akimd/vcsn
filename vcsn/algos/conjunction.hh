@@ -17,7 +17,6 @@
 #include <vcsn/ctx/context.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-#include <vcsn/dyn/value.hh>
 #include <vcsn/misc/set.hh> // has
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/to.hh>
@@ -818,39 +817,6 @@ namespace vcsn
   }
 
 
-  /*-----------------------------------.
-  | shuffle(expression, expression).   |
-  `-----------------------------------*/
-
-  /// Shuffle product of expressions.
-  template <typename ValueSet>
-  typename ValueSet::value_t
-  shuffle(const ValueSet& vs,
-          const typename ValueSet::value_t& lhs,
-          const typename ValueSet::value_t& rhs)
-  {
-    return vs.shuffle(lhs, rhs);
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (shuffle).
-      template <typename ExpSetLhs, typename ExpSetRhs>
-      expression
-      shuffle_expression(const expression& lhs, const expression& rhs)
-      {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::shuffle(std::get<0>(join_elts),
-                                std::get<1>(join_elts),
-                                std::get<2>(join_elts))};
-      }
-    }
-  }
-
-
   /*----------------------------.
   | infiltrate(automaton...).   |
   `----------------------------*/
@@ -902,39 +868,6 @@ namespace vcsn
       }
     }
   }
-
-  /*--------------------------------------.
-  | infiltrate(expression, expression).   |
-  `--------------------------------------*/
-
-  /// Infiltration product of expressions.
-  template <typename ValueSet>
-  typename ValueSet::value_t
-  infiltrate(const ValueSet& vs,
-               const typename ValueSet::value_t& lhs,
-               const typename ValueSet::value_t& rhs)
-  {
-    return vs.infiltrate(lhs, rhs);
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (infiltrate).
-      template <typename ExpSetLhs, typename ExpSetRhs>
-      expression
-      infiltrate_expression(const expression& lhs, const expression& rhs)
-      {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::infiltrate(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
-      }
-    }
-  }
-
 
   /*-----------------------------.
   | conjunction(automaton, n).   |
@@ -1013,86 +946,6 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         return ::vcsn::conjunction(a, to{n});
-      }
-    }
-  }
-
-  /*-----------------------------.
-  | conjunction(value, value).   |
-  `-----------------------------*/
-
-  /// Intersection/Hadamard product of expressions/polynomials.
-  template <typename ValueSet>
-  typename ValueSet::value_t
-  conjunction(const ValueSet& rs,
-              const typename ValueSet::value_t& lhs,
-              const typename ValueSet::value_t& rhs)
-  {
-    return rs.conjunction(lhs, rhs);
-  }
-
-  /*---------------------------------------.
-  | conjunction(expression, expression).   |
-  `---------------------------------------*/
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (conjunction).
-      template <typename ExpSetLhs, typename ExpSetRhs>
-      expression
-      conjunction_expression(const expression& lhs, const expression& rhs)
-      {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::conjunction(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
-      }
-    }
-  }
-
-  /*-------------------------------------.
-  | conjunction(expansion, expansion).   |
-  `-------------------------------------*/
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (conjunction).
-      template <typename ExpSetLhs, typename ExpSetRhs>
-      expansion
-      conjunction_expansion(const expansion& lhs, const expansion& rhs)
-      {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::conjunction(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
-      }
-    }
-  }
-
-  /*---------------------------------------.
-  | conjunction(polynomial, polynomial).   |
-  `---------------------------------------*/
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge (conjunction).
-      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
-      polynomial
-      conjunction_polynomial(const polynomial& lhs, const polynomial& rhs)
-      {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::conjunction(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
       }
     }
   }
