@@ -385,6 +385,9 @@ namespace vcsn
     /// Performs the join of their type.
     expression infiltrate(const expression& lhs, const expression& rhs);
 
+    /// The infiltration product of polynomial \a lhs and \a rhs.
+    polynomial infiltrate(const polynomial& lhs, const polynomial& rhs);
+
     /// Output various facts about an automaton.
     ///
     /// \param aut  the automaton under study
@@ -1015,6 +1018,9 @@ namespace vcsn
     /// The shuffle product of expressions \a lhs and \a rhs.
     /// Performs the join of their type.
     expression shuffle(const expression& lhs, const expression& rhs);
+
+    /// The shuffle product of polynomial \a lhs and \a rhs.
+    polynomial shuffle(const polynomial& lhs, const polynomial& rhs);
 
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
