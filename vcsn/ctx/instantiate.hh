@@ -8,6 +8,7 @@
 #include <vcsn/algos/compare-automaton.hh>
 #include <vcsn/algos/compare.hh>
 #include <vcsn/algos/complete.hh>
+#include <vcsn/algos/conjunction-expression.hh>
 #include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/constant-term.hh>
 #include <vcsn/algos/constant.hh>
@@ -24,6 +25,7 @@
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities-of.hh>
 #include <vcsn/algos/inductive.hh>
+#include <vcsn/algos/infiltrate-expression.hh>
 #include <vcsn/algos/info.hh>
 #include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-ambiguous.hh>
@@ -43,6 +45,7 @@
 #include <vcsn/algos/push-weights.hh>
 #include <vcsn/algos/read.hh>
 #include <vcsn/algos/shortest.hh>
+#include <vcsn/algos/shuffle-expression.hh>
 #include <vcsn/algos/sort.hh>
 #include <vcsn/algos/split.hh>
 #include <vcsn/algos/standard.hh>
