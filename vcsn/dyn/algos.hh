@@ -1106,6 +1106,9 @@ namespace vcsn
                              identities ids = {},
                              const std::string& algo = "auto");
 
+    /// Projection as a expression.
+    expression to_expression(const expansion& exp);
+
     /// An expression denoting the label of \a l.
     expression to_expression(const context& ctx, identities ids,
                              const label& l);
