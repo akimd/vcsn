@@ -134,6 +134,7 @@ algo_headers =                                  \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
   %D%/algos/to-expansion.hh                     \
+  %D%/algos/to-expression-expansion.hh          \
   %D%/algos/to-expression.hh                    \
   %D%/algos/to-spontaneous.hh                   \
   %D%/algos/transpose.hh                        \
