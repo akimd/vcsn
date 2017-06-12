@@ -9,6 +9,13 @@ def expr(e, *args):
         e = ctx.expression(e, *args)
     return e
 
+def check_aut(e):
+    ind = e.automaton('inductive')
+    exp = e.automaton('expansion')
+    CHECK_EQ(ind.is_valid(), exp.is_valid())
+    if ind.is_valid():
+        CHECK_EQUIV(ind, exp)
+
 
 ## ----- ##
 ## Add.  ##
@@ -19,6 +26,7 @@ def check(r1, r2, exp):
     e2 = expr(r2)
     CHECK_EQ(exp, e1.expansion() + e2.expansion())
     CHECK_EQ(exp, (e1 + e2).expansion())
+    check_aut(e1+e2)
 
 check('a', '<-1>a', '<0>')
 check('a', 'a', 'a.[<2>\e]')
@@ -41,6 +49,8 @@ def check(r):
     eff = ~(e.expansion())
     exp = (~e).expansion()
     CHECK_EQ(exp, eff)
+# Currently, inductive does not support ~ with nullable.
+#    check_aut(~e)
 
 check(r'\z')
 check(r'\e')
@@ -74,8 +84,10 @@ def check(r1, r2, exp):
     e1 = expr(r1)
     e2 = expr(r2)
     # Cannot yet require @ support from Python.
+    e = e1.compose(e2)
     CHECK_EQ(exp, e1.expansion().compose(e2.expansion()))
-    CHECK_EQ(exp, e1.compose(e2).expansion())
+    CHECK_EQ(exp, e.expansion())
+    check_aut(e)
 
 check('a|a', 'a|a', 'a|a.[\e]')
 check('a|b', 'b|c', 'a|c.[\e]')
@@ -100,6 +112,7 @@ def check(r1, r2, exp):
     e2 = expr(r2)
     CHECK_EQ(exp, e1.expansion() & e2.expansion())
     CHECK_EQ(exp, (e1&e2).expansion())
+    check_aut(e1&e2)
 
 check('ab', 'cd', '<0>')
 check('(ab)*', 'a*b*', '<1> + \e.[\e&bb* + \e&aa*b* + ab(ab)*&\e] + a.[b(ab)*&a*b*]')
@@ -118,13 +131,17 @@ check('ab', 'ac', '<0>')
 ## Division. ##
 ## --------- ##
 ctx = vcsn.context('lan, q')
-def check(r1, r2):
-    exp1 = expr(r1)
-    CHECK_EQ(r2, str(exp1.expansion()))
+def check(e1, e2, exp):
+    e1 = expr(e1)
+    e2 = expr(e2)
+    e = e1.ldivide(e2)
+    CHECK_EQ(exp, e.expansion())
+    CHECK_EQ(exp, e1.expansion().ldivide(e2.expansion()))
+    check_aut(e)
 
-check(r'a{\}ab', r'\e.[b]')
-check(r'(a*{\}a){\}\e', r'\e.[a{\}\e + (a*{\}\e){\}\e]')
-check(r'(a{\}ab){\}bc', r'\e.[b{\}bc]')
+check(r'a', r'ab', r'\e.[b]')
+check(r'a*{\}a', r'\e', r'\e.[a{\}\e + (a*{\}\e){\}\e]')
+check(r'a{\}ab', r'bc', r'\e.[b{\}bc]')
 
 
 ## ----- ##
@@ -157,6 +174,7 @@ def check(r1, r2):
     eff = exp1.expansion() | exp2.expansion()
     exp = (exp1 | exp2).expansion()
     CHECK_EQ(exp, eff)
+    check_aut(exp1|exp2)
 
 check('ab', 'cd')
 check('a', 'bcd')
@@ -176,9 +194,11 @@ def check(r, w, exp):
     leff = e.expansion() * w
     lexp = (e * w).expansion()
     CHECK_EQ(lexp, leff)
+    check_aut(e*w)
     reff = w * e.expansion()
     rexp = (w * e).expansion()
     CHECK_EQ(rexp, reff)
+    check_aut(w*e)
 
 check('abcd', 2, 'a.[<2>bcd]')
 check('a*', 10, '<10> + a.[<10>a*]')
