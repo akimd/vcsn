@@ -30,7 +30,7 @@ except ImportError as e:
     exit(0)
 
 def log(*msg, level=0):
-    if False:
+    if True:
         print('ipynbdoctest:', *msg, file=sys.stderr, flush=True)
 
 def is_libcpp():
@@ -65,7 +65,7 @@ def truncate(text):
     return text
 
 
-def canonicalize(s):
+def canonicalize(s, type, ignores):
     '''Canonicalize the `data` field of a `image/svg+xml` or `text/html`
     output for comparison.
 
@@ -124,11 +124,14 @@ def canonicalize(s):
     s = re.sub(r' stroke="transparent"', ' stroke="none"', s)
     s = re.sub(r'><title>', '>\n<title>', s)
 
+    # Run the user's canonicalization.
+    for n, p in enumerate(ignores):
+        s = re.sub(p, 'IGN{}'.format(n), s)
     log('canonicalize:', in_, '->', s, level=3)
     return s
 
 
-def canonical_dict(dict):
+def canonical_dict(dict, ignores):
     '''Neutralize gratuitous differences in a Jupyter dictionary.
 
     For instance, neutralize different Graphviz layouts in SVG.
@@ -192,9 +195,8 @@ def canonical_dict(dict):
         dict['text'] = re.sub(r'\x1b\[39;49;00m\x1b\[33m', '', dict['text'])
 
     if 'data' in dict:
-        for k in ['image/svg+xml', 'text/html']:
-            if k in dict['data']:
-                dict['data'][k] = canonicalize(dict['data'][k])
+        for k, v in dict['data'].items():
+            dict['data'][k] = canonicalize(dict['data'][k], k, ignores)
         # FIXME: Probably not the best way to deal with this, but right know
         # I want the test skip to be green again
         if 'text/plain' in dict['data']:
@@ -211,7 +213,7 @@ def canonical_dict(dict):
     return dict
 
 
-def check_outputs(ref, test):
+def check_outputs(ref, test, ignores):
     '''Check that two lists of outputs are equivalent and report the
     result.'''
 
@@ -229,8 +231,8 @@ def check_outputs(ref, test):
     # There can be several outputs.  For instance wnen the cell both
     # prints a result (goes to "stdout") and displays an automaton
     # (goes to "data").
-    exp = pprint.pformat([canonical_dict(d) for d in ref],  width=132)
-    eff = pprint.pformat([canonical_dict(d) for d in test], width=132)
+    exp = pprint.pformat([canonical_dict(d, ignores) for d in ref],  width=132)
+    eff = pprint.pformat([canonical_dict(d, ignores) for d in test], width=132)
 
     if exp == eff:
         log('check_outputs', 'pass', level=2)
@@ -314,7 +316,8 @@ def test_notebook(ipynb):
         n = cell['execution_count']
         print('cell [{}] ({}): '.format(n, i))
         source = cell['source']
-        # `%timeit`s shall count in execution count
+        # `%timeit`s shall count in execution count but its result
+        # cannot be compared.
         if source.startswith('%timeit'):
             run_cell(kc, 'pass')
             continue
@@ -326,6 +329,9 @@ def test_notebook(ipynb):
         # Adjust the paths to files used in the notebooks.
         source = source.replace('../../tests/demo',
                                 os.environ['abs_top_srcdir'] + '/tests/demo')
+        # Check if there are neutralization patterns to apply.
+        ignores = re.findall('^# ignore: (.*)$', source, re.M)
+        log('Ignores: ', ignores)
         try:
             outs = run_cell(kc, source)
         except Empty:
@@ -343,7 +349,10 @@ def test_notebook(ipynb):
             FAIL('failed to run cell [{}]'.format(n))
             nerror += 1
             continue
-        check_outputs(cell.outputs, outs)
+        if re.search('^# ignore cell$', source, re.M):
+            SKIP('ignore cell request')
+            continue
+        check_outputs(cell.outputs, outs, ignores)
     print("Tested notebook {}".format(ipynb))
     print("    {:3} cells successfully replicated".format(num_pass()))
     if num_fail():
@@ -364,9 +373,22 @@ def test_notebook(ipynb):
 
 
 if __name__ == '__main__':
-    p = argparse.ArgumentParser(description='Update test cases.')
-    p.add_argument('--tap', action='store_true', help='enable TAP mode')
-    p.add_argument('notebooks', nargs='+', help='IPython notebook to check')
+    p = argparse.ArgumentParser(
+        description='Check IPython notebooks.',
+        epilog='''Cells may use some special comments:
+
+        `# ignore cell` -- will cause the cell to be run, but
+        its output will not be checked.
+
+        `# ignore: RE` -- will cause each match of the regex
+        RE to be neutralized to a constant string.  Use this for instance
+        for timers `# ignore: \d+ms`.  Of course this is easier if the output
+        is easy to recognize, here thanks to the unit `ms`.
+        '''
+    )
+    opt = p.add_argument
+    opt('--tap', action='store_true', help='enable TAP mode')
+    opt('notebooks', nargs='+', help='IPython notebook to check')
     args = p.parse_args()
 
     # Set the locale to something simple, so that we don't have
