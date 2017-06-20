@@ -809,8 +809,8 @@ namespace vcsn
       compose_with_one_old_(value_t& res,
                             const value_t& l, const value_t& r) const
       {
-        // assert(ws_.is_zero(l.constant));
-        // assert(ws_.is_zero(r.constant));
+        assert(ws_.is_zero(l.constant));
+        assert(ws_.is_zero(r.constant));
         const auto& ls0 = ls_.template set<0>();
         const auto& ls1 = ls_.template set<1>();
 
