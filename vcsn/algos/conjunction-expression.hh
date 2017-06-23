@@ -20,6 +20,25 @@ namespace vcsn
     return rs.conjunction(lhs, rhs);
   }
 
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename ValueSetLhs, typename ValueSetRhs,
+                typename Value>
+      Value
+      conjunction_value(const Value& lhs, const Value& rhs)
+      {
+        auto join_elts = join<ValueSetLhs, ValueSetRhs>(lhs, rhs);
+        return {std::get<0>(join_elts),
+                ::vcsn::conjunction(std::get<0>(join_elts),
+                                    std::get<1>(join_elts),
+                                    std::get<2>(join_elts))};
+      }
+    }
+  }
+
   /*-------------------------------------.
   | conjunction(expansion, expansion).   |
   `-------------------------------------*/
@@ -33,11 +52,7 @@ namespace vcsn
       expansion
       conjunction_expansion(const expansion& lhs, const expansion& rhs)
       {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::conjunction(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
+        return conjunction_value<ExpSetLhs, ExpSetRhs>(lhs, rhs);
       }
     }
   }
@@ -55,11 +70,7 @@ namespace vcsn
       expression
       conjunction_expression(const expression& lhs, const expression& rhs)
       {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::conjunction(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
+        return conjunction_value<ExpSetLhs, ExpSetRhs>(lhs, rhs);
       }
     }
   }
@@ -77,11 +88,7 @@ namespace vcsn
       polynomial
       conjunction_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::conjunction(std::get<0>(join_elts),
-                                    std::get<1>(join_elts),
-                                    std::get<2>(join_elts))};
+        return conjunction_value<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
       }
     }
   }
