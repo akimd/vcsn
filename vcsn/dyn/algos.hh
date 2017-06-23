@@ -381,6 +381,9 @@ namespace vcsn
     /// Performs the join of their types.
     automaton infiltrate(const std::vector<automaton>& as);
 
+    /// The infiltration product of expansions \a lhs and \a rhs.
+    expansion infiltrate(const expansion& lhs, const expansion& rhs);
+
     /// The infiltration product of expressions \a lhs and \a rhs.
     /// Performs the join of their type.
     expression infiltrate(const expression& lhs, const expression& rhs);
@@ -1014,6 +1017,9 @@ namespace vcsn
     /// The shuffle product of automata.
     /// Performs the join of their types.
     automaton shuffle(const std::vector<automaton>& as);
+
+    /// The shuffle product of expansions \a lhs and \a rhs.
+    expansion shuffle(const expansion& lhs, const expansion& rhs);
 
     /// The shuffle product of expressions \a lhs and \a rhs.
     /// Performs the join of their type.

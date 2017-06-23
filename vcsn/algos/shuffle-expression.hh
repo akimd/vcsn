@@ -40,6 +40,29 @@ namespace vcsn
   }
 
 
+  /*---------------------------------.
+  | shuffle(expansion, expansion).   |
+  `---------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (shuffle).
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      expansion
+      shuffle_expansion(const expansion& lhs, const expansion& rhs)
+      {
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        const auto& xs = std::get<0>(join_elts);
+        const auto& x1 = std::get<1>(join_elts);
+        const auto& x2 = std::get<2>(join_elts);
+        return {xs,
+            xs.shuffle(x1, to_expression(xs, x1),
+                       x2, to_expression(xs, x2))};
+      }
+    }
+  }
 
   /*-----------------------------------.
   | shuffle(expression, expression).   |

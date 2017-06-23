@@ -41,6 +41,30 @@ namespace vcsn
   }
 
 
+  /*------------------------------------.
+  | infiltrate(expansion, expansion).   |
+  `------------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge (infiltrate).
+      template <typename ExpSetLhs, typename ExpSetRhs>
+      expansion
+      infiltrate_expansion(const expansion& lhs, const expansion& rhs)
+      {
+        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        const auto& xs = std::get<0>(join_elts);
+        const auto& x1 = std::get<1>(join_elts);
+        const auto& x2 = std::get<2>(join_elts);
+        return {xs,
+            xs.infiltrate(x1, to_expression(xs, x1),
+                          x2, to_expression(xs, x2))};
+      }
+    }
+  }
+
   /*--------------------------------------.
   | infiltrate(expression, expression).   |
   `--------------------------------------*/

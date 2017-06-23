@@ -73,7 +73,6 @@ check(lao.expression(r'(<1/2>\e)*'))
 
 
 
-
 ## --------- ##
 ## Compose.  ##
 ## --------- ##
@@ -145,12 +144,34 @@ check(r'a*{\}a', r'\e', r'\e.[a{\}\e + (a*{\}\e){\}\e]')
 check(r'a{\}ab', r'bc', r'\e.[b{\}bc]')
 
 
+## ------------ ##
+## Infiltrate.  ##
+## ------------ ##
+ctx = vcsn.context('lan, q')
+def check(r1, r2, exp):
+    '''Check that `&:` between expansions corresponds to the expansion of
+    `&:` between expressions.'''
+    e1 = expr(r1)
+    e2 = expr(r2)
+#    CHECK_EQ(exp, e1.expansion().infiltrate(e2.expansion()))
+    CHECK_EQ(exp, (e1.infiltrate(e2)).expansion())
+
+check('ab', 'cd', 'a.[b&:cd] + c.[ab&:d]')
+check('ab', 'ac', 'a.[b&:c + b&:ac + ab&:c]')
+check('a*', 'b*', '<1> + \e.[aa* + bb*] + a.[a*&:b*] + b.[a*&:b*]')
+check('a', r'\e', 'a.[\e]')
+check('\ea', r'\z', '<0>')
+
+
 ## ----- ##
 ## Mul.  ##
 ## ----- ##
-CHECK_EQ(r'a.[\e(b(cd))]', ctx.expression('a(b(cd))', 'none').expansion())
-CHECK_EQ(r'a.[((\eb)c)d]', ctx.expression('((ab)c)d', 'none').expansion())
-CHECK_EQ(r'a.[(\eb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
+def check(e, exp):
+    CHECK_EQ(exp, expr(e, 'none').expansion())
+
+check('a(b(cd))', r'a.[\e(b(cd))]')
+check('((ab)c)d', r'a.[((\eb)c)d]')
+check('(ab)(cd)', r'a.[(\eb)(cd)]')
 
 
 ## ------ ##
@@ -160,6 +181,26 @@ CHECK_EQ(r'a.[(\eb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
 XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
       r'''Q: value is not starrable: 1
   while computing expansion of: a**''')
+
+
+
+## --------- ##
+## Shuffle.  ##
+## --------- ##
+ctx = vcsn.context('lan, q')
+def check(r1, r2, exp):
+    '''Check that `:` between expansions corresponds to the expansion of
+    `:` between expressions.'''
+    e1 = expr(r1)
+    e2 = expr(r2)
+    CHECK_EQ(exp, e1.expansion().shuffle(e2.expansion()))
+    CHECK_EQ(exp, (e1.shuffle(e2)).expansion())
+
+check('ab', 'cd', 'a.[b:cd] + c.[ab:d]')
+check('ab', 'ac', 'a.[b:ac + ab:c]')
+check('a*', 'b*', '<1> + a.[a*:b*] + b.[a*:b*]')
+check('a', r'\e', 'a.[\e]')
+check('a', r'\z', '<0>')
 
 
 
