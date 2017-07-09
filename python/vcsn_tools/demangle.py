@@ -204,7 +204,7 @@ def demangle(s: str, color: str="auto") -> str:
     using more friendly type names.'''
 
     # C++.
-    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|equal_to|forward|function|hash|less|make_shared|(unordered_)?map|pair|(unordered_)?set|shared_ptr|string|tuple|vector)',
+    s = sub(r'std::(?:__1|__cxx11)::(allocator|basic_string|basic_ostream|char_traits|default_delete|equal_to|forward|function|hash|less|make_shared|(unordered_)?map|pair|(unordered_)?set|shared_ptr|string|tuple|unique_ptr|vector)',
             r'std::\1',
             s)
     s = sub(r'std::basic_string<char(?:, (?:std::)?char_traits<char>, (?:std::)?allocator<char> )?>',
@@ -221,6 +221,9 @@ def demangle(s: str, color: str="auto") -> str:
             s)
     s = sub(r'std::__1::mersenne_twister_engine<unsigned int, 32, 624, 397, 31, 2567483615, 11, 4294967295, 7, 2636928640, 15, 4022730752, 18, 1812433253>',
             r'std::default_random_engine',
+            s)
+    s = sub(r'std::unique_ptr<{param}, std::default_delete<\1> >',
+            r'std::unique_ptr<\1>',
             s)
 
     # Misc.
