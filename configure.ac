@@ -185,7 +185,10 @@ AC_CACHE_CHECK([whether $CXX is clang], [vcsn_cv_cxx_is_clang],
 #endif
 ]])], [vcsn_cv_cxx_is_clang=yes],
       [vcsn_cv_cxx_is_clang=no])])
-if test "$vcsn_cv_cxx_is_clang" = no; then
+# GCC7 changed something, and now the linkage with Boost.Python3 fails
+# when we use visibility.  Let's make our lives simpler as a first
+# step.
+if false && test "$vcsn_cv_cxx_is_clang" = no; then
   AC_SUBST([VISIBILITY_CXXFLAGS])
   AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
     [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility=hidden"
