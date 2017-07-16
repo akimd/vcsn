@@ -290,6 +290,7 @@ def run_cell(kc, source):
 
 def test_notebook(ipynb):
     print('\nTesting notebook {}'.format(ipynb))
+    global_ignores = []
     with open(ipynb) as f:
         nb = formatter.reads_json(f.read())
     log('test_notebook: create KernelManager', level=2)
@@ -332,7 +333,8 @@ def test_notebook(ipynb):
         source = source.replace('../../tests/demo',
                                 os.environ['abs_top_srcdir'] + '/tests/demo')
         # Check if there are neutralization patterns to apply.
-        ignores = re.findall('^# ignore: (.*)$', source, re.M)
+        global_ignores += re.findall('^# global ignore: (.*)$', source, re.M)
+        ignores = global_ignores + re.findall('^# ignore: (.*)$', source, re.M)
         log('Ignores: ', ignores)
         try:
             outs = run_cell(kc, source)
@@ -386,6 +388,9 @@ if __name__ == '__main__':
         RE to be neutralized to a constant string.  Use this for instance
         for timers `# ignore: \d+ms`.  Of course this is easier if the output
         is easy to recognize, here thanks to the unit `ms`.
+
+        `# global ignore: RE` -- same as above, but applies to all the
+        following cells.
         '''
     )
     opt = p.add_argument
