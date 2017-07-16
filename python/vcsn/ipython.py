@@ -74,7 +74,7 @@ class AsyncUpdater:
             self.widget.update()
 
 class TextLatexWidget:
-    '''A class to eliminate redundancy over our widgets.
+    '''A text area with LaTeX display for feedback.
     Parameters:
         name: the name for the label.
         value: the default value of the text box.
@@ -175,6 +175,7 @@ class EditContext(Magics):
               help='The name of the context to edit')
     @line_cell_magic
     def context(self, line, cell=None):
+        '''A context editor.'''
         args = parse_argstring(self.context, line)
         if cell is None:
             ContextText(self, args.var)
@@ -184,14 +185,19 @@ ip.register_magics(EditContext)
 
 class AutomatonText:
 
-    def __init__(self, ipython, name, format, horizontal=True):
+    # pylint: disable=too-many-arguments
+    def __init__(self, ipython, name, format, layout='h', strip=False):
         '''A wrapper of widgets to edit an automaton interactively.
 
         Parameters:
           - ipython: a reference to the caller shell
           - name: the name of the variable to edit
           - format: the format in which we want to edit it
-          - horizontal (optional): layout the widgets horizontally, default: True
+          - layout: layout the widgets horizontally or vertically, default: h
+          - strip: whether the returned automaton should be stripped.
+                   Note that the interactive automaton is never stripped, as
+                   it would be very confusing that state name do not correspond
+                   between entered and displayed.
         '''
         if not name.isidentifier():
             raise NameError(
@@ -199,6 +205,7 @@ class AutomatonText:
         self.ipython = ipython
         self.name = name
         self.format = format
+        self.strip = strip
         if self.name in self.ipython.shell.user_ns:
             if not isinstance(self.ipython.shell.user_ns[self.name],
                               vcsn.automaton):
@@ -232,7 +239,7 @@ class AutomatonText:
 
         dropdowns = widgets.HBox(children=[self.mode, self.engine])
         displayer = widgets.VBox(children=[dropdowns, self.out])
-        if horizontal:
+        if layout == 'h':
             interface = widgets.HBox(children=[self.text, displayer])
         else:
             interface = widgets.VBox(children=[self.text, displayer])
@@ -252,7 +259,8 @@ class AutomatonText:
         try:
             txt = self.text.value
             a = vcsn.automaton(txt, self.format, strip=False)
-            self.ipython.shell.user_ns[self.name] = a
+            self.ipython.shell.user_ns[self.name] = \
+                a.strip() if self.strip else a
             # There is currently no official documentation on this,
             # so please check out `ipywidgets.Output`'s docstring.
             with self.out:
@@ -265,18 +273,19 @@ class AutomatonText:
 class EditAutomaton(Magics):
 
     @magic_arguments()
-    @argument('-s', '--strip', action='store_true', default=False,
-              help='''Whether to strip the result (i.e., discard user names
-              and use the "real" state numbers).''')
     @argument('var', type=str, help='The name of the variable to edit.')
     @argument('format', type=str, nargs='?', default='auto',
               help='''The name of the format to edit the automaton in
               (auto, daut, dot, efsm, fado, grail).  Default: auto.''')
-    @argument('mode', type=str, nargs='?', default='h',
+    @argument('-l', '--layout', type=str, nargs='?', default='h',
               help='''The name of the visual mode to display the automaton
               (h for horizontal and v for vertical).  Default: h.''')
+    @argument('-s', '--strip', action='store_true', default=False,
+              help='''Whether to strip the result (i.e., discard user names
+              and use the "real" state numbers).''')
     @line_cell_magic
     def automaton(self, line, cell=None):
+        '''An automaton editor.'''
         args = parse_argstring(self.automaton, line)
         if not args.var.isidentifier():
             raise NameError(
@@ -289,7 +298,8 @@ class EditAutomaton(Magics):
                 a = d3Widget.VcsnD3DataFrame(self, args.var)
                 a.show()
             else:
-                AutomatonText(self, args.var, args.format, args.mode != 'v')
+                AutomatonText(self, args.var, args.format,
+                              layout=args.layout, strip=args.strip)
         else:
             # Cell magic.
             a = vcsn.automaton(cell, format=args.format, strip=args.strip)
@@ -300,9 +310,11 @@ ip.register_magics(EditAutomaton)
 
 
 class ExpressionText:
-    '''A widgets that allows us to edit an expression and its context, save it
-    under chosen identities, and render an automaton of it using a chosen
-    algorithm.'''
+    '''A widget to edit an expression and its context, save it under
+    chosen identities, and render an automaton of it using a chosen
+    algorithm.
+
+    '''
     # pylint: disable=too-many-locals
     def __init__(self, ipython, name):
         if not name.isidentifier():
