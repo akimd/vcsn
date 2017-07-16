@@ -69,9 +69,10 @@ def fun_def_template(fun):
     return string.Template(fun_def.safe_substitute(body=body))
 
 
-def ignore(fun):
+def ignore(fun, why):
     '''Report that we don't process this case.'''
-    print('warning: ignoring: {dynfun}({formals}) -> {result}'
+    fun.update(why=why)
+    print('tools-gen: info: {why}: {dynfun}({formals}) -> {result}'
           .format_map(fun), file=sys.stderr)
 
 # These types are not supported by tools yet, meaning that
@@ -217,7 +218,7 @@ def format_function_doc(fun, formals):
 def process_function(fun):
     '''Process a function in `dyn/algo.hh`.'''
     if fun['dynfun'].startswith('make_'):
-        ignore(fun)
+        ignore(fun, "constructor function")
         return
 
     formals = fun['formals']
@@ -267,7 +268,7 @@ def gen_function_decl(fun, formals):
     for i, formal in enumerate(formals):
         i = i - removed_args
         if formal['class'] in unsupported_types:
-            ignore(fun)
+            ignore(fun, "unsupported type: {}".format(formal['class']))
             return ''
 
         # We don't match on the context, and don't require it
@@ -278,7 +279,7 @@ def gen_function_decl(fun, formals):
                 removed_args += 1
                 continue
             else:
-                ignore(fun)
+                ignore(fun, "`context` member function")
                 return ''
 
         # dyn::word isn't really a type, it's just
@@ -386,23 +387,19 @@ namespace vcsn
                           algos_doc=''.join(algos_doc))
 
 
+def get_args():
+    p = argparse.ArgumentParser(description='Generate tools functions',
+                                formatter_class=argparse.RawDescriptionHelpFormatter,
+                                epilog='''
+        Read `dyn/algos.hh` and generate its functions in C++,
+        to be used by the tools CLI interface.''')
+    opt = p.add_argument
+    opt('--output', type=argparse.FileType('w'), default='-',
+        help='implementation file to generate')
+    opt('--header', help='location of vcsn-tools.hh')
+    opt('input', type=str, default=None, help='JSON file to process')
+    return p.parse_args()
 
-parser = argparse.ArgumentParser(description='Generate tools functions',
-                                 formatter_class=argparse.RawDescriptionHelpFormatter,
-                                 epilog='''
-Read `dyn/algos.hh` and generate its functions in C++,
-to be used by the tools CLI interface.
-''')
-
-parser.add_argument('--output',
-                    type=argparse.FileType('w'), default='-',
-                    help='implementation file to generate')
-parser.add_argument('--header',
-                    help='location of vcsn-tools.hh')
-parser.add_argument('input', type=str, default=None,
-                    help='''JSON file to process.''')
-args = parser.parse_args()
-
+args = get_args()
 process_json(args.input)
-
 print(output(args.header), file=args.output)
