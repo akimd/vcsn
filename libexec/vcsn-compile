@@ -15,6 +15,9 @@ from vcsn_tools.demangle import demangle, pretty_plugin
 
 me = sys.argv[0]
 
+# Allow the use of log in parse_args.
+args = {'verbose': 0}
+
 def parse_args():
     p = argparse.ArgumentParser(description='''Compile Vcsn programs
                                                or libraries.''')
@@ -51,7 +54,7 @@ def parse_args():
     # List of configuration keys coming from autoconf.
     config = ['ccache', 'cppflags', 'cxx', 'cxxflags',
               'datadir', 'includedir', 'ipython', 'ldflags',
-              'libdir', 'pyexecdir', 'python', 'verbose', 'version',]
+              'libdir', 'libs', 'pyexecdir', 'python', 'verbose', 'version',]
     for k in config:
         if not k in args:
             args[k] = configuration('configuration.'+k)
@@ -81,7 +84,12 @@ def parse_args():
         sys.stderr.flush()
 
     # Strip extension.
-    args['base'] = args['input'][:-3]
+    base, ext = os.path.splitext(args['input'])
+    if ext not in ['.C', '.cc', '.cpp', '.cxx', '.c++']:
+        log('warning: unexpected extension: "{}" in {}'
+            .format(ext, args['input']))
+
+    args['base'] = base
     # Beware of concurrency issues: insert pid in the name to avoid problem.
     args['pid'] = str(os.getpid())
     args['tmp'] = args['base'] + '.' + args['pid']
@@ -233,8 +241,8 @@ with open(args['output']+'.cmd', 'w') as f:
 if args['shared']:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o'"
         " -MMD -MF '{deps}' -MQ '{output}'"
-        " '{base}.cc'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -lvcsn -shared -o '{tmp}.so'"
+        " '{input}'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC {libs} -shared -o '{tmp}.so'"
         " '{tmp}.o'")
     run("mv -f '{tmp}.so' '{output}'")
     clean()
@@ -244,7 +252,7 @@ else:
     # instead of a single compiler invocation.
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o'"
         " -MMD -MF '{deps}' -MQ '{output}'"
-        " '{base}.cc'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -lvcsn -o '{tmp}' '{tmp}.o'")
+        " '{input}'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} {libs} -o '{tmp}' '{tmp}.o'")
     run("mv -f '{tmp}' '{output}'")
     clean()
