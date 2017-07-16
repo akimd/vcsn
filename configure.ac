@@ -26,6 +26,26 @@ AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
                   color-tests parallel-tests nostdinc silent-rules
                   subdir-objects])
+# install-sh and GNU install support -C (aka --compare for the
+# latter).  Until we discover that we sometimes use other `install`
+# programs, let's keep our old time stamps when we can, so that
+# repeated `make install` keep `vcsn compile` lazy.
+#
+# If --preserve-timestamps is supported, use it: headers will be
+# installed with their build time, not their install time.  This is
+# quite critical for Vcsn: during build, we build for instance
+# liblal_b`, installed with `make install`.  But now the headers are
+# possibly younger than the libraries when installed, so `vcsn
+# compile` will fire a useless compilation of `liblal_b`, as if it
+# were obsolete.
+#
+# Unfortunately, --preserve-timestamps and --compare are mutually
+# exclusive in GNU install, not sure why.
+if ($INSTALL --preserve-timestamps --help) >/dev/null 2>&1; then
+  INSTALL="$INSTALL --preserve-timestamps"
+else
+  INSTALL="$INSTALL -C"
+fi
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AM_SILENT_RULES([yes])
 
