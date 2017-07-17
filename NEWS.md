@@ -5,7 +5,56 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+
+# Vcsn 2.6 (2017-07-22)
+The Vcsn group is happy to announce the release of Vcsn 2.6.  Most of our
+work was devoted to providing a better, smoother, user experience.  This
+includes improvements in the build system, better performances, and extended
+consistency.
+
+For more information, please, see the detailed news below.
+
+We warmly thank our users who made valuable feedback (read "bug reports"):
+Victor Miller, Dominique Soudière and Harald Schilly.  Dominique and Harald
+helped integrating Vcsn into SageMathCloud.
+
+People who contributed to this release:
+
+- Akim Demaille
+- Clément Démoulins
+- Clément Gillard
+- Sarasvati Moutoucomarapoulé
+
 ## New features
+### Promotion from single to multitape
+It is now possible to mix single-tape expressions with multitape
+expressions.  This is especially handy when using labels classes (`[abc]`).
+For instance:
+
+    In [2]: zmin2 = vcsn.context('lat<lan, lan>, zmin')
+
+    In [3]: zmin2.expression(r'([ab] + ⟨1⟩(\e|[ab] + [ab]|\e))*')
+    Out[3]: (a|a+b|b+<1>(\e|(a+b)+(a+b)|\e))*
+
+is a easy means to specify an expression generating an automaton that
+computes the edit-distance (between words or languages).  Or, with a wide
+alphabet:
+
+    In [4]: zmin = vcsn.context('lan(a-z), zmin')
+
+    In [5]: zmin2 = zmin | zmin
+
+    In [6]: zmin2
+    Out[6]: {abcdefghijklmnopqrstuvwxyz}? x {abcdefghijklmnopqrstuvwxyz}? -> Zmin
+
+    In [7]: zmin2.expression(r'([^] + ⟨1⟩(\e|[^] + [^]|\e))*')
+
+In the future the display of expressions will also exploit this approach.
+
+### vcsn compile now links with precompiled contexts
+If you write a program using dyn::, then it will benefit from all the
+precompiled algorithms.
+
 ### vcsn compile now supports --debug
 Use this to avoid the removal of intermediate object files.  On some
 platforms, such as macOS, the object file contains the debug symbols, so
@@ -45,6 +94,54 @@ such as `(a|x)*`.
     ε+a|a+⟨2⟩(b|ε)
     (ε+ε*)|ε
 
+Generating expressions with compose operators is also supported.
+
+    In [5]: for i in range(10):
+       ...:     e = c2.random_expression('|=.5, +, ., @=2', length=10, identities='none')
+       ...:     print('{:u}'.format(e))
+       ...:
+    ((b|ε)ε)(ε(ε|a))
+    ε(ε|c)+((ε|a)(a|b)+ε|c)
+    ((ε|a)(ε|b))((b|a)(c|c)@b|b)
+    (b|b@ε+a|b)@(c|ε@b|ε)
+    (ε+ε|a)@(ε|c@ε|a+b|ε)
+    (ε|a+ε|c)((ε|b)(c|ε))
+    (a|ε)((ε+c)|(a+ε))
+    c|ε@(a|ε)(ε|b@b|ε)
+    (ε+ε|b)@ε|b+ε|a
+    b(ε²)|((ε+ε)+a)
+
+### New algorithms
+A few algorithms were added:
+
+  - context.compose
+
+    Composing `{abc} x {xyz}` with `{xyz} x {ABC}` gives, of course,
+    `{abc} x {ABC}`.
+
+  - expansion.normalize, expansion.determinize
+
+    These are rather low-level features.  The latter is used internally when
+    derived-term is asked for a deterministic automaton.
+
+  - expansion.expression
+
+    The "projection" of an expansion as an expression.
+
+  - label.compose
+
+    For instance `a|b|x @ x|c` -> `a|b|c`.
+
+  - polynomial.compose
+
+    Additive extension of monomial composition.  For instance composing
+    `a|e|x + a|e|y + a|e|\e` with `x|E|A + y|E|A + \e|E|A` gives
+    `<3>a|e|E|A`.
+
+  - polynomial.shuffle and polynomial.infiltrate
+
+    The missing brothers of polynomial.conjunction.
+
 ### Doxygen is no longer needed
 By default, `make install` generated and installed the C++ API documentation
 using Doxygen.  It is now disabled by default, pass `--enable-doxygen` to
@@ -59,9 +156,26 @@ especially large ones.
 As a consequence, `expression.inductive` was also producing incorrect
 automata from multitape expressions.
 
+### Polynomials featuring the zero-label
+Under some circumstances it was possible to have polynomials featuring
+monomials whose label is the zero of the labelset (e.g., `\z` with
+expressions as labels).  This is fixed.
+
+### Portability issues
+Newest compilers are now properly supported.
+
 ## Changes
+### Divisions
 The division of expressions and automata now compute the product of the
 weights, not their quotient.
+
+### Handling of the compose operator
+The support of the compose operators in expansions was completely rewritten.
+As a result, the derived-term automata are often much smaller, since many
+useless states (non coaccessible) are no longer generated.
+
+For instance the derived-term automaton of `(\e|a)* @ (aa|\e)*` has exactly
+two states.  It used to have three additional useless states.
 
 
 # Vcsn 2.5 (2017-01-28)
@@ -5428,8 +5542,9 @@ LocalWords:  Thibaud Michaud executables ldiv ldivide lweight rdiv rdivide
 LocalWords:  rweight bd quotkbaseb abcac SVG demangle gdb Vcsn's boxart baz
 LocalWords:  dijkstra acca FAdo's Sarasvati Moutoucomarapoulé Younes param
 LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt Vcsners
-LocalWords:  SMS libyaml cpp Sms François Yvon ipynb ipython Qunused
-LocalWords:  cxxflags Eppstein eppstein
+LocalWords:  SMS libyaml cpp Sms François Yvon ipynb ipython Qunused Harald
+LocalWords:  cxxflags Eppstein eppstein Soudière Schilly SageMathCloud prog
+LocalWords:  abcdefghijklmnopqrstuvwxyz macOS rpath Doxygen doxygen Tupling
 
 Local Variables:
 coding: utf-8
