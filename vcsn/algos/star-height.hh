@@ -58,6 +58,7 @@ namespace vcsn
       VCSN_RAT_VISIT(ldivide, v)      { visit_(v); }
       VCSN_RAT_VISIT(lweight, v)      { v.sub()->accept(*this); }
       VCSN_RAT_VISIT(mul, v)          { visit_(v); }
+      VCSN_RAT_VISIT(name, e)         { super_t::visit(e); }
       VCSN_RAT_VISIT(one,)            {}
       VCSN_RAT_VISIT(rweight, v)      { v.sub()->accept(*this); }
       VCSN_RAT_VISIT(shuffle, v)      { visit_(v); }

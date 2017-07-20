@@ -49,8 +49,8 @@ namespace vcsn
         hash_combine(res_, h);
       }
 
-      /// Update res_ by hashing the node type.  Must be for every
-      /// node.
+      /// Update res_ by hashing the node type.  Must be called for
+      /// every node.
       void combine_type_(const node_t& node)
       {
         combine_(int(node.type()));
@@ -75,6 +75,12 @@ namespace vcsn
       {
         combine_type_(v);
         combine_(ExpSet::labelset_t::hash(v.value()));
+      }
+
+      VCSN_RAT_VISIT(name, v)
+      {
+        combine_type_(v);
+        combine_(hash_value(v.name_get()));
       }
 
       using tuple_t = typename super_t::tuple_t;

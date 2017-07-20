@@ -148,6 +148,11 @@ namespace vcsn
         res_ = as_.atom(e.value());
       }
 
+      VCSN_RAT_VISIT(name, e)
+      {
+        super_t::visit(e);
+      }
+
       /// The type of the AutSet::compose() member function.
       template <Automaton AutSet>
       using compose_mem_fn_t =

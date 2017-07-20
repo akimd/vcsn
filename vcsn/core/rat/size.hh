@@ -53,9 +53,10 @@ namespace vcsn
       VCSN_RAT_VISIT(compose, v)      { visit_(v); }
       VCSN_RAT_VISIT(conjunction, v)  { visit_(v); }
       VCSN_RAT_VISIT(infiltrate, v)   { visit_(v); };
-      VCSN_RAT_VISIT(ldivide, v)         { visit_(v); }
+      VCSN_RAT_VISIT(ldivide, v)      { visit_(v); }
       VCSN_RAT_VISIT(lweight, v)      { ++size_; v.sub()->accept(*this); }
       VCSN_RAT_VISIT(mul, v)          { visit_(v); };
+      VCSN_RAT_VISIT(name, v)         { super_t::visit(v); };
       VCSN_RAT_VISIT(one,)            { ++size_; }
       VCSN_RAT_VISIT(rweight, v)      { ++size_; v.sub()->accept(*this); }
       VCSN_RAT_VISIT(shuffle, v)      { visit_(v); };

@@ -77,6 +77,11 @@ namespace vcsn
         res_ = rs_.atom(rs_.labelset()->transpose(e.value()));
       }
 
+      VCSN_RAT_VISIT(name, e)
+      {
+        res_ = rs_.name(transpose(e.sub()), e.name_get());
+      }
+
       /// Binary member functions of the expressionset.
       using binary_t =
         expression_t (expressionset_t::*)(const expression_t&,

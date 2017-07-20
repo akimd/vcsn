@@ -73,6 +73,11 @@ namespace vcsn
         res_ = rs_.atom(v.value());
       }
 
+      VCSN_RAT_VISIT(name, v)
+      {
+        res_ = rs_.name(v.sub(), v.name_get());
+      }
+
       // Plain traversal for sums.
       VCSN_RAT_VISIT(add, v)
       {

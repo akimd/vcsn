@@ -82,6 +82,11 @@ namespace vcsn
         res_ = ws_.zero();
       }
 
+      VCSN_RAT_VISIT(name, v)
+      {
+        res_ = constant_term(v.sub());
+      }
+
       VCSN_RAT_VISIT(add, v)
       {
         weight_t res = ws_.zero();

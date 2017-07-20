@@ -186,6 +186,7 @@ namespace vcsn
       DEFINE(conjunction)
       DEFINE(infiltrate)
       DEFINE(ldivide)
+      DEFINE(name)
       DEFINE(one)
       DEFINE(shuffle)
       DEFINE(star)

@@ -50,6 +50,7 @@ namespace vcsn
         ldivide = 0;
         lweight = 0;
         mul = 0;
+        name = 0;
         one = 0;
         rweight = 0;
         shuffle = 0;
@@ -73,6 +74,7 @@ namespace vcsn
         ldivide += other.ldivide;
         lweight += other.lweight;
         mul += other.mul;
+        name += other.name;
         one += other.one;
         rweight += other.rweight;
         shuffle += other.shuffle;
@@ -104,6 +106,7 @@ namespace vcsn
       DEFINE(ldivide)      { ++ldivide;         visit_(v); }
       DEFINE(lweight)      { ++lweight; v.sub()->accept(*this); ++depth; }
       DEFINE(mul)          { ++mul;         visit_(v);}
+      DEFINE(name)         { ++name;        super_t::visit(v);}
       DEFINE(one)          { ++one; (void) v; depth = 0; }
       DEFINE(rweight)      { ++rweight; v.sub()->accept(*this); ++depth; }
       DEFINE(shuffle)      { ++shuffle;      visit_(v); }

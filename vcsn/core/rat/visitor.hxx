@@ -41,6 +41,11 @@ namespace vcsn
         t->accept(*this);
     }
 
+    VISIT(name, v)
+    {
+      v.sub()->accept(*this);
+    }
+
     VISIT(shuffle, v)
     {
       for (const auto& t : v)
