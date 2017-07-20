@@ -54,8 +54,14 @@ namespace vcsn
       operator()(const expression_t& v)
       {
         operation_ = dot;
+        return rec_(v);
+      }
+    private:
+      /// Easy recursion.
+      expression_t rec_(const expression_t& v)
+      {
         v->accept(*this);
-        return std::move(res_);
+        return res_;
       }
 
       VCSN_RAT_VISIT(zero,)
@@ -75,7 +81,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(name, v)
       {
-        res_ = rs_.name(v.sub(), v.name_get());
+        res_ = rs_.name(rec_(v.sub()), v.name_get());
       }
 
       // Plain traversal for sums.
@@ -84,10 +90,7 @@ namespace vcsn
         v.head()->accept(*this);
         expression_t res = res_;
         for (auto c: v.tail())
-          {
-            c->accept(*this);
-            res = rs_.add(res, res_);
-          }
+          res = rs_.add(res, rec_(c));
         res_ = std::move(res);
       }
 
@@ -132,13 +135,9 @@ namespace vcsn
         else
           {
             // All the factors have a non null constant-term.
-            v.head()->accept(*this);
-            expression_t res = res_;
+            expression_t res = rec_(v.head());
             for (auto c: v.tail())
-              {
-                c->accept(*this);
-                res = rs_.add(res, res_);
-              }
+              res = rs_.add(res, rec_(c));
             res_ = std::move(res);
           }
       }
@@ -146,13 +145,9 @@ namespace vcsn
       /// Handling of a product by the dot operator.
       void dot_of(const mul_t& v)
       {
-        v.head()->accept(*this);
-        expression_t res = res_;
+        expression_t res = rec_(v.head());
         for (auto c: v.tail())
-          {
-            c->accept(*this);
-            res = rs_.mul(res, res_);
-          }
+          res = rs_.mul(res, rec_(c));
         res_ = std::move(res);
       }
 
@@ -161,15 +156,12 @@ namespace vcsn
         if (operation_ == dot)
           {
             operation_ = box;
-            v.sub()->accept(*this);
-            res_ = rs_.star(res_);
-            res_ = rs_.lweight(ws_.star(constant_term(rs_, v.sub())), res_);
+            res_ = rs_.lweight(ws_.star(constant_term(rs_, v.sub())),
+                               rs_.star(rec_(v.sub())));
             operation_ = dot;
           }
         else
-          {
-            v.sub()->accept(*this);
-          }
+          rec_(v.sub());
       }
 
     private:
