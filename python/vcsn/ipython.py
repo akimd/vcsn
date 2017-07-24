@@ -7,7 +7,8 @@ import ipywidgets as widgets
 from IPython.core.magic import (Magics, magics_class,
                                 line_magic, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
-from IPython.display import display
+import IPython.display
+
 import vcsn
 
 from vcsn import d3Widget
@@ -498,6 +499,11 @@ class DemoAutomaton(Magics):
     demo.__doc__ = __doc__
 
 ip.register_magics(DemoAutomaton)
+
+
+def display(*args):
+    for a in args:
+        IPython.display.display(a)
 
 
 def interact_h(_interact_f, *args, **kwargs):

@@ -349,6 +349,12 @@ class automaton:
 
     state_number = lambda self: self.info('number of states')
 
+    def states(self):
+        '''The states of an automaton, sorted.'''
+        res = re.findall(r'label = "(.*?)", shape', self.dot(), re.M)
+        res.sort()
+        return res
+
     def SVG(self, format="dot", engine="dot"):
         if format == "dot":
             return _dot_to_svg(self.dot(), engine)

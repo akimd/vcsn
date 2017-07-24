@@ -405,4 +405,5 @@ if __name__ == '__main__':
     success = True
     for ipynb in args.notebooks:
         success &= test_notebook(ipynb)
+    log('done, exiting')
     sys.exit(0 if success or args.tap else 1)
