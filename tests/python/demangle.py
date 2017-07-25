@@ -84,6 +84,11 @@ check('''/Users/akim/src/lrde/2/vcsn/algos/shortest.hh:83:16: note: in instantia
       '''/Users/akim/src/lrde/2/vcsn/algos/shortest.hh:83:16: note: in instantiation of function template specialization 'vcsn::detail::enumerater<std::shared_ptr<vcsn::detail::mutable_automaton_impl<vcsn::context<vcsn::nullableset<vcsn::weightset_mixin<vcsn::detail::tupleset_impl<lal_char, vcsn::weightset_mixin<vcsn::detail::tupleset_impl<vcsn::nullableset<lal_char >, law_char > > > > >, vcsn::weightset_mixin<vcsn::detail::tupleset_impl<vcsn::weightset_mixin<vcsn::rat::expressionset_impl<vcsn::context<vcsn::weightset_mixin<vcsn::detail::tupleset_impl<vcsn::nullableset<lal_char >, vcsn::nullableset<lal_char > > >, vcsn::weightset_mixin<vcsn::detail::tupleset_impl<r, q > > > > >, vcsn::weightset_mixin<vcsn::detail::tupleset_impl<b, z > > > > > > > >::shortest_<vcsn::nullableset<vcsn::weightset_mixin<vcsn::detail::tupleset_impl<lal_char, vcsn::weightset_mixin<vcsn::detail::tupleset_impl<vcsn::nullableset<lal_char >, law_char > > > > > >' requested here''')
 
 
+check('''Symbol not found: foo(std::__1::unordered_map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, boost::filesystem::path, std::__1::hash<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::equal_to<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, boost::filesystem::path> > > const&)''',
+      '''Symbol not found: foo(std::unordered_map<std::string, boost::filesystem::path> > const&)''',
+      '''Symbol not found: foo(std::unordered_map<std::string, boost::filesystem::path, std::hash<std::string >, std::equal_to<std::string >, std::allocator<std::pair<std::string const, boost::filesystem::path> > > const&)''')
+
+
 ## ------- ##
 ## sugar.  ##
 ## ------- ##

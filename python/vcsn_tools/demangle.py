@@ -216,6 +216,9 @@ def demangle(s: str, color: str="auto") -> str:
     s = sub(r'std::vector<{param}, std::allocator<\1 > >',
             r'std::vector<\1>',
             s)
+    s = sub(r'std::unordered_map<{param}, {param}, std::hash<\1 >, std::equal_to<\1 >,  std::allocator<std::pair<\1 const, \2> >',
+            r'std::unordered_map<\1, \2>',
+            s)
     s = sub(r'std::unordered_set<{param},  std::hash<\1 >, std::equal_to<\1 >,  std::allocator<\1 >',
             r'std::unordered_set<\1>',
             s)
