@@ -6,17 +6,17 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 
-# Vcsn 2.6 (2017-07-22)
+# Vcsn 2.6 (2017-07-26)
 The Vcsn group is happy to announce the release of Vcsn 2.6.  Most of our
 work was devoted to providing a better, smoother, user experience.  This
 includes improvements in the build system, better performances, and extended
-consistency.
+consistency.  Multitape expressions also received a lot of attention.
 
-For more information, please, see the detailed news below.
+For more information see the detailed news below.
 
 We warmly thank our users who made valuable feedback (read "bug reports"):
 Victor Miller, Dominique Soudière and Harald Schilly.  Dominique and Harald
-helped integrating Vcsn into SageMathCloud.
+helped integrating Vcsn into CoCalc (formerly SageMathCloud).
 
 People who contributed to this release:
 
