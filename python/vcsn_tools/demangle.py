@@ -229,6 +229,11 @@ def demangle(s: str, color: str="auto") -> str:
             r'std::unique_ptr<\1>',
             s)
 
+    # Boost.
+    s = sub(r'(?:, mpl_::na)+>',
+            r'>',
+            s)
+
     # Misc.
     s = sub(r'boost::flyweights::flyweight<std::string, boost::flyweights::no_tracking, boost::flyweights::intermodule_holder(?:, boost::parameter::void_)*>',
             r'vcsn::symbol',
